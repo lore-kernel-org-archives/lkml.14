@@ -1,53 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2F714EC60
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC1A14F120
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943341; cv=none; b=lrk7wBRbnXtYtf5Wpxh41Cieh7cfg52qR5KimzuLHYf0cXzHYJHrJIpGVy0snutibsYtTM0xBEUrP1P3Js+OVlhL9kGq8RD1Ky7ZKYAzvKOwx7KqDcSFgX8sV3C2dEz2IAYOs+ldgRMFNhD3ufXr9JeK+8UAnZASpT5ImWw1gBI=
+	t=1712943342; cv=none; b=L3JNoTeG+DStpzNmzadTJzSh7UyaVIXdhuCiQ/v7wLls+4gXX37xc1QkQCFEfLveBf73uULjzpZrEVs0S1B0mhASmRd1E81ajtaswyKBATM0bCyISqjf/hhrN2UQn4kotuqMOLVlmyY/ZaLk+rrECx2coF0gWkaY036X0suH6X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943341; c=relaxed/simple;
-	bh=ufzS21/7youUNMjyVUvni0StGellwHU8hcLjTR6wauA=;
+	s=arc-20240116; t=1712943342; c=relaxed/simple;
+	bh=1B/zUTkP+xSjtPWcsP8oG3U9mKuxHuCkDO5ODjKdKFc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QpArrsD2NFI58+TGMA77O0zJGX8/shPTGA2f0akGuGsZ4R2aNeMi1ec82r64m1g7xEUOkibwtln1CJEngIV9nu0iJtwpgff9GWKjzPSMPG7hKsX+olmqB43eztXgea+E0QcvdI8GicE3pIi3QuWrn77ZigfJE7XA+MJ3eHb9kek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+1R5hv5; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=AKKOmM2WHA1rqcqC8q1Ta582vppabmpz+tIy5d6GezFhRAyZQ5RJg9KQvTW02XVXQgnUrrizyPxhHoiYlRueg7gLnjmpWULkGnTtZCCeJ2zD/iMY0Rh7wKZTdox/b/T2sxkaIwY0wYBEupYXPykw6iyOZQcD2Lir/Qd106rD3QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpTusK/v; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+1R5hv5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpTusK/v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712943338;
+	s=mimecast20190719; t=1712943339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=75waKXSmIYtMtrXauv2s2wb+S8RC+sVEfUlq8dP5Jvo=;
-	b=f+1R5hv59tFyBebakd5UfcAkgV+mklyGtmFhxka3IhG8BoaZbhIOEkVZ1xzJGF1QxjfL8l
-	wRvNIygJpjy/QhjDCfXFreLeOSX2bBSIFvi4WsyFod6hWqkxM5VcwZDuU+FoljWqPkp1SZ
-	BUQptJVTG29o1RtsffU4tAyVng222DA=
+	bh=MMoankSPnsr51NzQw3GN0rThmSlkSJ5vluBsBS+Wb58=;
+	b=EpTusK/vHZ7vMqT11GgO+DcHeHo0ZXp4FW98/w88q9qgOaERD68zDuGBQDP0Xs/fIL1Nyh
+	U9YFH4EsBRl01zwEUI5P3S76LNLoBe18BYWxtrx6pQFeX5VHljH1vgp/slrpq5ry+MxaSV
+	rHI2lthgkzBGUrZhFexp89lpd9251eA=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-226-9pAF9ZHjMvGpQH_CH-Vjkg-1; Fri, 12 Apr 2024 13:35:34 -0400
-X-MC-Unique: 9pAF9ZHjMvGpQH_CH-Vjkg-1
+ us-mta-665-zw4_kvqcO7-rgx4dU9lCjQ-1; Fri, 12 Apr 2024 13:35:34 -0400
+X-MC-Unique: zw4_kvqcO7-rgx4dU9lCjQ-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 86E2A80171B;
-	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D718280021A;
+	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 652CD492BC7;
-	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B58A1492BC7;
+	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: Isaku Yamahata <isaku.yamahata@intel.com>,
-	Michael Roth <michael.roth@amd.com>
-Subject: [PATCH 08/10] KVM: x86/mmu: Pass around full 64-bit error code for KVM page faults
-Date: Fri, 12 Apr 2024 13:35:30 -0400
-Message-ID: <20240412173532.3481264-9-pbonzini@redhat.com>
+	Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH 04/10] KVM: x86/mmu: Add Suppress VE bit to EPT shadow_mmio_mask/shadow_present_mask
+Date: Fri, 12 Apr 2024 13:35:26 -0400
+Message-ID: <20240412173532.3481264-5-pbonzini@redhat.com>
 In-Reply-To: <20240412173532.3481264-1-pbonzini@redhat.com>
 References: <20240412173532.3481264-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,91 +62,60 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-In some cases the full 64-bit error code for the KVM page fault will be
-needed to determine things like whether or not a fault was for a private
-or shared guest page, so update related code to accept the full 64-bit
-value so it can be plumbed all the way through to where it is needed.
+To make use of the same value of shadow_mmio_mask and shadow_present_mask
+for TDX and VMX, add Suppress-VE bit to shadow_mmio_mask and
+shadow_present_mask so that they can be common for both VMX and TDX.
 
-The use of lower_32_bits() moves from kvm_mmu_page_fault() to
-FNAME(page_fault), since walking is independent of the data in the
-upper bits of the error code.
+TDX will require shadow_mmio_mask and shadow_present_mask to include
+VMX_SUPPRESS_VE for shared GPA so that EPT violation is triggered for
+shared GPA.  For VMX, VMX_SUPPRESS_VE doesn't matter for MMIO because the
+spte value is defined so as to cause EPT misconfig.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Link: https://lore.kernel.org/kvm/20230612042559.375660-1-michael.roth@amd.com/T/#mbd0b20c9a2cf50319d5d2a27b63f73c772112076
-[mdr: drop references/changes to code not in current gmem tree, update
-      commit message]
-Signed-off-by: Michael Roth <michael.roth@amd.com>
-Message-Id: <20231230172351.574091-7-michael.roth@amd.com>
+Message-Id: <97cc616b3563cd8277be91aaeb3e14bce23c3649.1705965635.git.isaku.yamahata@intel.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c          | 3 +--
- arch/x86/kvm/mmu/mmu_internal.h | 4 ++--
- arch/x86/kvm/mmu/mmutrace.h     | 2 +-
- arch/x86/kvm/mmu/paging_tmpl.h  | 2 +-
- 4 files changed, 5 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/vmx.h | 1 +
+ arch/x86/kvm/mmu/spte.c    | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index edfc6d67692b..8c56d278d8a2 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5824,8 +5824,7 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
- 	}
- 
- 	if (r == RET_PF_INVALID) {
--		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa,
--					  lower_32_bits(error_code), false,
-+		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, error_code, false,
- 					  &emulation_type);
- 		if (KVM_BUG_ON(r == RET_PF_INVALID, vcpu->kvm))
- 			return -EIO;
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 5390a591a571..49b428cca04e 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -190,7 +190,7 @@ static inline bool is_nx_huge_page_enabled(struct kvm *kvm)
- struct kvm_page_fault {
- 	/* arguments to kvm_mmu_do_page_fault.  */
- 	const gpa_t addr;
--	const u32 error_code;
-+	const u64 error_code;
- 	const bool prefetch;
- 
- 	/* Derived from error_code.  */
-@@ -280,7 +280,7 @@ enum {
- };
- 
- static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--					u32 err, bool prefetch, int *emulation_type)
-+					u64 err, bool prefetch, int *emulation_type)
- {
- 	struct kvm_page_fault fault = {
- 		.addr = cr2_or_gpa,
-diff --git a/arch/x86/kvm/mmu/mmutrace.h b/arch/x86/kvm/mmu/mmutrace.h
-index ae86820cef69..195d98bc8de8 100644
---- a/arch/x86/kvm/mmu/mmutrace.h
-+++ b/arch/x86/kvm/mmu/mmutrace.h
-@@ -260,7 +260,7 @@ TRACE_EVENT(
- 	TP_STRUCT__entry(
- 		__field(int, vcpu_id)
- 		__field(gpa_t, cr2_or_gpa)
--		__field(u32, error_code)
-+		__field(u64, error_code)
- 		__field(u64 *, sptep)
- 		__field(u64, old_spte)
- 		__field(u64, new_spte)
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index bebd73cd61bb..ed2923d9a934 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -787,7 +787,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	 * The bit needs to be cleared before walking guest page tables.
- 	 */
- 	r = FNAME(walk_addr)(&walker, vcpu, fault->addr,
--			     fault->error_code & ~PFERR_RSVD_MASK);
-+			     lower_32_bits(fault->error_code) & ~PFERR_RSVD_MASK);
- 
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 4dba17363008..ac6da0a5f5e6 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -514,6 +514,7 @@ enum vmcs_field {
+ #define VMX_EPT_IPAT_BIT    			(1ull << 6)
+ #define VMX_EPT_ACCESS_BIT			(1ull << 8)
+ #define VMX_EPT_DIRTY_BIT			(1ull << 9)
++#define VMX_EPT_SUPPRESS_VE_BIT			(1ull << 63)
+ #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
+ 						 VMX_EPT_WRITABLE_MASK |       \
+ 						 VMX_EPT_EXECUTABLE_MASK)
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index 6c7ab3aa6aa7..d97c4725c0b7 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -413,7 +413,9 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+ 	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
+ 	shadow_nx_mask		= 0ull;
+ 	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
+-	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
++	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
++	shadow_present_mask	=
++		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_BIT;
  	/*
- 	 * The page is not mapped by the guest.  Let the guest handle it.
+ 	 * EPT overrides the host MTRRs, and so KVM must program the desired
+ 	 * memtype directly into the SPTEs.  Note, this mask is just the mask
+@@ -430,7 +432,7 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+ 	 * of an EPT paging-structure entry is 110b (write/execute).
+ 	 */
+ 	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE,
+-				   VMX_EPT_RWX_MASK, 0);
++				   VMX_EPT_RWX_MASK | VMX_EPT_SUPPRESS_VE_BIT, 0);
+ }
+ EXPORT_SYMBOL_GPL(kvm_mmu_set_ept_masks);
+ 
 -- 
 2.43.0
 
