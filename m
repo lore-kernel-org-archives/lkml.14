@@ -1,126 +1,143 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAD13CF8A;
-	Fri, 12 Apr 2024 14:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 53F441419B1
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712932825; cv=none; b=tAWE4TlTWUDFkP1aW3QAJ6Q0si4jHMD5DFrW10wnwobbFXb3YZqYKdWNrvFhvaGddr8R9bC2x6hcWZWvkZfbr9LIhSNE+/SZiVu+EvUGsBqSmakoLfn5fCNATFJRBfGuUl3qJMMxdOcVMcfqJTAXrZA4Kf3eMs3cFsYF4ym6pJY=
+	t=1712932839; cv=none; b=Hyn3iQ97UtUWok1pl2o20j+bC29fD82sUITkC+j9Su68dyMioT8bgBVRsEJ9NBlGzjNWOsk/LgyZug7aGHzz2igJrGLprkUSROmie8o5qybGn2gsIeWRU2pTlKd2GXyxoji/l+7WNDEi3sty1wCdlqoH6HKnd3bB9xRi8ixnQD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712932825; c=relaxed/simple;
-	bh=z2WhAVTrf637bDu11h6vBJFFF/4AH5cUHWm5PG3cdck=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uzbIqahyA0UUxZVEMJNXv0JmyshuSeupKvlhj1bk6jBxXOmlJ1kNOoLyh2XMOjRS1HfHYDTdVQl6kZkxmNuHc7XgETmaNgj5RfEod6M/uFPC0ZtfTFwknyh0Y3rWmMDMSxgclu+f0VlAeHz4L3E7gdxPfyIOAocOAM4AlT8P//c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGK1l59lbz6J9bP;
-	Fri, 12 Apr 2024 22:38:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 70E54140B55;
-	Fri, 12 Apr 2024 22:40:21 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 15:40:20 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
-	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, Miguel
- Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: <linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v5 06/18] ACPI: scan: Add parameter to allow defering some actions in acpi_scan_check_and_detach.
-Date: Fri, 12 Apr 2024 15:37:07 +0100
-Message-ID: <20240412143719.11398-7-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712932839; c=relaxed/simple;
+	bh=ShGPl1cFxs2KT93wGPWsQ+fVDhsk7CoQz0Ic6PzBBEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hXDbw18awErRf9RnwtExIXqsYXU9aJB/48nvT3E1FIFYqCks2UHayLHX3hlLmVsWWO7aRuVNNbsTfmluRe/Em2PtY4i1gD/7Gm4aZ78N4lRx1AeklCsOMOXIHuVrl/Ix1CEV3mJ2oEggO6NP+GdikYD8pi5QmgjiZeIg0KgmI34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 36157 invoked by uid 1000); 12 Apr 2024 10:40:35 -0400
+Date: Fri, 12 Apr 2024 10:40:35 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Sam Sun <samsun1006219@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+  Greg KH <gregkh@linuxfoundation.org>, swboyd@chromium.org,
+  ricardo@marliere.net, hkallweit1@gmail.com, heikki.krogerus@linux.intel.com,
+  mathias.nyman@linux.intel.com, royluo@google.com,
+  syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
+Subject: Re: [Linux kernel bug] general protection fault in disable_store
+Message-ID: <45e246ab-01e8-40b7-8ede-b47957df0d7b@rowland.harvard.edu>
+References: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
+ <92fe8e95-bc01-4d7d-9678-8cfc55cc4a7b@rowland.harvard.edu>
+ <CAEkJfYORHKO16xT3DCS04JFzkquz6oZ5CdC2USJ5-c0WihAMXg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEkJfYORHKO16xT3DCS04JFzkquz6oZ5CdC2USJ5-c0WihAMXg@mail.gmail.com>
 
-Precursor patch adds the ability to pass a flag (not yet used) into
-acpi_scan_check_and detach().  Done in a separate patch with no
-functional changes to reduce complexity of the actual deferal which
-follows.
+On Fri, Apr 12, 2024 at 09:08:12PM +0800, Sam Sun wrote:
+> Sorry for the mistake I made when debugging this bug. Now I have more
+> information about it. Disassembly of function disable_store() in the
+> latest upstream kernel is listed below.
+> ```
+> Dump of assembler code for function disable_store:
+>    ...
+>    0xffffffff86e907eb <+187>:   lea    -0x8(%r14),%r12
+>    0xffffffff86e907ef <+191>:   mov    (%rbx),%rax
+>    0xffffffff86e907f2 <+194>:   mov    %rax,0x20(%rsp)
+>    0xffffffff86e907f7 <+199>:   lea    -0xa8(%rax),%rdi
+>    0xffffffff86e907fe <+206>:   mov    %rdi,0x18(%rsp)
+>    0xffffffff86e90803 <+211>:   call   0xffffffff86e20220
+> <usb_hub_to_struct_hub>
+>    0xffffffff86e90808 <+216>:   mov    %rax,%rbx
+>    0xffffffff86e9080b <+219>:   shr    $0x3,%rax
+>    0xffffffff86e9080f <+223>:   movabs $0xdffffc0000000000,%rcx
+>    0xffffffff86e90819 <+233>:   cmpb   $0x0,(%rax,%rcx,1)
+>    0xffffffff86e9081d <+237>:   je     0xffffffff86e90827 <disable_store+247>
+>    0xffffffff86e9081f <+239>:   mov    %rbx,%rdi
+>    0xffffffff86e90822 <+242>:   call   0xffffffff81eeb0b0
+> <__asan_report_load8_noabort>
+>    0xffffffff86e90827 <+247>:   lea    0x60(%rsp),%rsi
+>    ...
+> ```
+> The cmpb in disable_store()<+233> is generated by KASAN to check the
+> shadow memory status. If equals 0, which means the load 8 is valid,
+> pass the KASAN check. However, this time rax is 0, so it first
+> triggers general protection fault, since 0xdffffc0000000000 is not a
+> valid address. rax contains the return address of function
+> usb_hub_to_struct_hub(), in this case is a NULL.
+> 
+> In function usb_hub_to_struct_hub(), I checked hdev and its sub
+> domains, and they are not NULL. Is it possible that
+> usb_deauthorized_device() set
+> hdev->actconfig->interface[0]->dev.driver_data to NULL? I cannot
+> confirm that since every time I try to breakpoint the code it crashes
+> differently.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I suspect the usb_hub_to_struct_hub() call is racing with the 
+spinlock-protected region in hub_disconnect() (in hub.c).
 
----
-v5: New patch resulting from rebase.
-    - Internal review suggested we could also do this with flags
-      so I'm looking for feedback on which option people find
-      more readable.
----
- drivers/acpi/scan.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+> If there is any other thing I could help, please let me know.
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 7c157bf92695..79b1f4d2b6bd 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -244,13 +244,19 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
- 	return 0;
- }
+Try the patch below.  It should eliminate that race, which hopefully 
+will fix the problem.
+
+Alan Stern
+
+
+
+Index: usb-devel/drivers/usb/core/hub.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/hub.c
++++ usb-devel/drivers/usb/core/hub.c
+@@ -72,6 +72,9 @@
+  * change to USB_STATE_NOTATTACHED even when the semaphore isn't held. */
+ static DEFINE_SPINLOCK(device_state_lock);
  
--static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
-+struct acpi_scan_c_and_d_param {
-+	bool check_status;
-+	bool eject;
-+};
++/* Protect hdev->maxchild and hub's intfdata */
++static DEFINE_SPINLOCK(hub_state_lock);
 +
-+static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ /* workqueue to process hub events */
+ static struct workqueue_struct *hub_wq;
+ static void hub_event(struct work_struct *work);
+@@ -152,9 +155,13 @@ static inline char *portspeed(struct usb
+ /* Note that hdev or one of its children must be locked! */
+ struct usb_hub *usb_hub_to_struct_hub(struct usb_device *hdev)
  {
- 	struct acpi_scan_handler *handler = adev->handler;
-+	struct acpi_scan_c_and_d_param *param = p;
- 
--	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, check);
-+	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
- 
--	if (check) {
-+	if (param->check_status) {
- 		acpi_bus_get_status(adev);
- 		/*
- 		 * Skip devices that are still there and take the enabled
-@@ -288,7 +294,11 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
- 
- static void acpi_scan_check_subtree(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, (void *)true);
-+	struct acpi_scan_c_and_d_param p = {
-+		.check_status = true, /* Not update until after ej0 */
-+		.eject = false,
-+	};
-+	acpi_scan_check_and_detach(adev, &p);
- }
- 
- static int acpi_scan_hot_remove(struct acpi_device *device)
-@@ -2600,7 +2610,12 @@ EXPORT_SYMBOL(acpi_bus_scan);
-  */
- void acpi_bus_trim(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, NULL);
-+	struct acpi_scan_c_and_d_param p = {
-+		.check_status = false,
-+		.eject = false,
-+	};
+-	if (!hdev || !hdev->actconfig || !hdev->maxchild)
+-		return NULL;
+-	return usb_get_intfdata(hdev->actconfig->interface[0]);
++	struct usb_hub *hub = NULL;
 +
-+	acpi_scan_check_and_detach(adev, &p);
++	spin_lock_irq(&hub_state_lock);
++	if (hdev && hdev->actconfig && hdev->maxchild)
++		hub = usb_get_intfdata(hdev->actconfig->interface[0]);
++	spin_unlock_irq(&hub_state_lock);
++	return hub;
  }
- EXPORT_SYMBOL_GPL(acpi_bus_trim);
  
--- 
-2.39.2
+ int usb_device_supports_lpm(struct usb_device *udev)
+@@ -1714,7 +1721,9 @@ static int hub_configure(struct usb_hub
+ 			break;
+ 		}
+ 	}
++	spin_lock_irq(&hub_state_lock);
+ 	hdev->maxchild = i;
++	spin_unlock_irq(&hub_state_lock);
+ 	for (i = 0; i < hdev->maxchild; i++) {
+ 		struct usb_port *port_dev = hub->ports[i];
+ 
+@@ -1790,9 +1799,11 @@ static void hub_disconnect(struct usb_in
+ 
+ 	/* Avoid races with recursively_mark_NOTATTACHED() */
+ 	spin_lock_irq(&device_state_lock);
++	spin_lock(&hub_state_lock);
+ 	port1 = hdev->maxchild;
+ 	hdev->maxchild = 0;
+ 	usb_set_intfdata(intf, NULL);
++	spin_unlock(&hub_state_lock);
+ 	spin_unlock_irq(&device_state_lock);
+ 
+ 	for (; port1 > 0; --port1)
 
