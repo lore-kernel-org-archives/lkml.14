@@ -1,37 +1,75 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE29E4EB3F;
-	Fri, 12 Apr 2024 08:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AD4F88A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712909158; cv=none; b=q97ZBJD9VJPtBqiH/CJhXCroDxBzvvYjuEl7sSpSGe/fiodbhan8Gln1bcr2el3RPYlGEcMeU64u1iIUc+FGb1it0k83wPMgQAAI15KzWfFa3fdRo9Eb7xv2qtdrHwDJaA50uh46U1rJRwC9+VQYCaVENzRVVpYe/73tIBrx4U0=
+	t=1712909160; cv=none; b=Zkrw9l4xYihewOWxAKAlv4uaNYE0DTnE1XajKvAoKE4MikDsnuqQYAt4AZb7+3IOUvTzQJzSwkTJhzIdte6ug7RVmLMa4UOpB1eL2m+zZCTiwoQO3ZvORoIqHHdKnrtM6eASTCHLNVxuE00aO3KnqIfSxuddRyXUbxnuEnpwj4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712909158; c=relaxed/simple;
-	bh=4CskdLgbUVprZnubh6yZ7NlP7rLNczK+XHRCfd4/p2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPzgosgMZoMhUfVl8VoM8/2BpMFCqI4t/8GnhSxz8CMiZE/UKZleXufLDaQOphqkFhEZy7oH0lwshCvcUSHQHx/DW7yj5dyENRl23wa1kMB5COo5Vs+1mm86Nj+iYT0RyZDcpf4hEXquFUEHkXob9p2iZhbK/pd+8cBN3O2e7ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Iqd20tE2; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1712909160; c=relaxed/simple;
+	bh=Bs7Eyj2uTzbHU1FiuwjH7uFw6khjYQQxyh0Y/f7jfbk=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=mKRArtJZwcuis4hTcRQxqVX77JdF7OBi/CZsO+7/Ogu6f5HiQAAxEDxgrX3HSxPwBaulpKp5y9gaQJ1Km7uJM/ULa9LaamjO/p/6MBJ9n6OepDcYsh8uBk4iSDXM/pGJVtpMkw49WxYL2KmPcTijQ5jjQyTs7zGEOiIijQAPaWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ng4XNfXi; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Iqd20tE2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1712909151;
-	bh=4CskdLgbUVprZnubh6yZ7NlP7rLNczK+XHRCfd4/p2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iqd20tE2EqLaPcWkOTarV4ImSsrSjZQioR/KfOjcx4F/+GEkgpdEC2NC8xmA4wdgN
-	 F2H6Wkla6UU3UWrUX41zc3wi4vHL8kCXampMqR3QwVVvx2S0jA81240JVEGflj1WTL
-	 DOCk/t4r8Ai6omdBgDWdhvPR2WCRYScd9tKOxEGs=
-Date: Fri, 12 Apr 2024 10:05:51 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] misc/pvpanic-pci: register attributes via pci_driver
-Message-ID: <bcf71f9a-5f6c-4bd3-bbbb-b3d84a5e31e6@t-8ch.de>
-References: <20240411-pvpanic-pci-dev-groups-v1-1-db8cb69f1b09@weissschuh.net>
- <2024041228-maximum-aware-f078@gregkh>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ng4XNfXi"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d717603aa5so7083211fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712909156; x=1713513956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q5lJHg5BKe+36ob4JtOUMC2azeL3dTZAz0hL3f6Nmw4=;
+        b=Ng4XNfXixkPunlK3oLDv/So6iuwFPwDnrn/6ASrVcvWO5JSypJK81u7exIt9YeI7O4
+         qbwMeJhiLCtSKJWdPtxxIZN40QSLE74i9u+HS1KdXIWQmVkAQh6zND+R4LtYDogeM3gV
+         tLMIAQqOxmc9hOGsgBczIcxTmOP8ZY3oG1cLztrXlamchrd/2VX1G9BU5rejXzfAqKl0
+         Qx/YhrfK/GXXDmq1orUQv+RDWEj23L10bUOwRvxPU1sGek1JAMSgoZcjg2QdWxQHSODW
+         S/lWITq9LohcBwrLcRoL/4DgslKnexzcf062SX+CnVPw5PGxz7qFqhZx4zPRpOEDt/wE
+         689g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712909156; x=1713513956;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q5lJHg5BKe+36ob4JtOUMC2azeL3dTZAz0hL3f6Nmw4=;
+        b=TidaNYtv7AZDaZuZUVSdw4DhtwuV9IciWBC7vCnkiHBR2qvUp77JfFXGTSBdAmz0l+
+         rZwmU5n5HcqEu/Q34vNp0+F9QtB+wqV+rMIhCRsvfPjn4vtj3j2JeCHJiUdw7biUYkrp
+         p5mi37nkRt/xaSOl+1DO5KhUKTM8lxdK1swPuN7h2FtuzjhTeNbWr2FLE88TWKjf7ZKh
+         rOSGQk/y3qpehnO8Vn7/Ha0Xt8fNNw+Od+YkvHTLPP9j5314FjxoQT5SObmCoH5m0W16
+         sWV8OjLWmBGWtcgJOCI3XL45lMKwsMe3N3ek0hqigdf2UsNlWRo2mWTj9aeeYO7fhrxs
+         ZoHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ciCZdglG9fijTYLWR2ctzTLNYKUNWVenEkpspL4+z32H+7uwTMvp0XzE+CnBt4j5uKx5T2A0S2P+I6lscUVfPxvPrEMQBR+mAaZZ
+X-Gm-Message-State: AOJu0YwWQz/aw/4ARS9b5ufr/bzaPIOM8YmJthszV+5k4fdvW3iqXrjq
+	/IGzemtrvZReQ6AXRad12eDgNBHL1ciwELUb1p7M3BC/y8C+piNp+R0BG41ektQ=
+X-Google-Smtp-Source: AGHT+IGaqXXqQDMlRknVDn9Zctby8wWX5plji2zTKOgGcGEZKQWoEBs0sgqxhVWS467wRkUFWIzLbw==
+X-Received: by 2002:a2e:87c7:0:b0:2d6:c672:b301 with SMTP id v7-20020a2e87c7000000b002d6c672b301mr1251197ljj.50.1712909155792;
+        Fri, 12 Apr 2024 01:05:55 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:b21a:2459:7056:47f0])
+        by smtp.gmail.com with ESMTPSA id a8-20020a05600c348800b00417bc4820acsm4944675wmq.0.2024.04.12.01.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 01:05:55 -0700 (PDT)
+References: <20240221151154.26452-1-jbrunet@baylibre.com>
+ <b6jyherdfnehu3xrg6ulkxlcfknfej6ali2om27d7rjmwncwxz@3wrtx6sv4xm7>
+ <1jsf18skat.fsf@starbuckisacylon.baylibre.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Neil
+ Armstrong
+ <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+  Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao
+ <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v5 0/5] pwm: meson: dt-bindings fixup
+Date: Fri, 12 Apr 2024 10:04:22 +0200
+In-reply-to: <1jsf18skat.fsf@starbuckisacylon.baylibre.com>
+Message-ID: <1ja5lzovj1.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,109 +77,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024041228-maximum-aware-f078@gregkh>
-
-On 2024-04-12 09:45:28+0200, Greg Kroah-Hartman wrote:
-> On Thu, Apr 11, 2024 at 11:33:51PM +0200, Thomas Weißschuh wrote:
-> > In __pci_register_driver(), the pci core overwrites the dev_groups field of
-> > the embedded struct device_driver with the dev_groups from the outer
-> > struct pci_driver unconditionally.
-> > 
-> > Set dev_groups in the pci_driver to make sure it is used.
-> > 
-> > This was broken since the introduction of pvpanic-pci.
-> > 
-> > Fixes: db3a4f0abefd ("misc/pvpanic: add PCI driver")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> > ---
-> > Greg,
-> > 
-> > does it make sense to duplicate fields between struct pci_driver and
-> > struct device_driver?
-> > The fields "name", "groups" and "dev_groups" are duplicated.
-> > 
-> > pci_driver::dev_groups was introduced in
-> > commit ded13b9cfd59 ("PCI: Add support for dev_groups to struct pci_driver")
-> > because "this helps converting PCI drivers sysfs attributes to static"
-> > 
-> > I don't understand the reasoning. The embedded device_driver shares the
-> > same storage lifetime and the fields have the exact same type.
-> 
-> It's "simpler" to have the fields be in the pci_driver structure as then
-> you don't need to do the crazy:
-> 	.driver = {
-> 		.field = FOO,
-> 	},
-> 
-> type of declaration just for simplicity.
-
-You can also do
-
-	.driver.field = FOO
-
-which doesn't seem all that crazy and which is already used in many
-places.
-
-> And as the number overall of these structures is very very small,
-> duplication on the driver level is not really an issue.
-
-For me it's less about an issue about memory usage but correctness and
-developer experience.
-It took me some wondering why the attributes didn't show up.
-
-> Duplication on a device level is another story, there should not be any
-> duplication at all if possible there, as that is where it really
-> matters.
-> 
-> > ---
-> >  drivers/misc/pvpanic/pvpanic-pci.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/misc/pvpanic/pvpanic-pci.c b/drivers/misc/pvpanic/pvpanic-pci.c
-> > index 9ad20e82785b..b21598a18f6d 100644
-> > --- a/drivers/misc/pvpanic/pvpanic-pci.c
-> > +++ b/drivers/misc/pvpanic/pvpanic-pci.c
-> > @@ -44,8 +44,6 @@ static struct pci_driver pvpanic_pci_driver = {
-> >  	.name =         "pvpanic-pci",
-> >  	.id_table =     pvpanic_pci_id_tbl,
-> >  	.probe =        pvpanic_pci_probe,
-> > -	.driver = {
-> > -		.dev_groups = pvpanic_dev_groups,
-> > -	},
-> > +	.dev_groups =   pvpanic_dev_groups,
-> 
-> Maybe we should throw a trace in the pci core if we find that dev_groups
-> is set to something before we override it to catch this type of mistake
-> in the future?
-
-The current state which fields are available on which struct foo_driver
-seem very ad-hoc. From the ones I looked at:
-
-pci_driver duplicates "name", "groups" and "dev_groups".
-(Of which "groups" seems wholly unused)
-
-usb_{device_,}_driver only has "name" and "dev_groups".
-
-platform_driver has none of them.
-
-Instead of adding traces all over the place to me it feels better to
-drop the duplication and let the compiler worry about it.
-
-> Although, given that this never worked in the first place, it seems odd
-> that the original developer never noticed it, so perhaps that's not
-> really an issue here.
-> 
-> Oh wait, it originally did, but the pci change caused it to break,
-> nevermind, it is relevent, thanks.
-
-Indeed. Do you want me to resend it with
-
-    Fixes: ded13b9cfd59 ("PCI: Add support for dev_groups to struct pci_driver")
-
-?
+Content-Transfer-Encoding: quoted-printable
 
 
-Thomas
+On Sat 02 Mar 2024 at 16:50, Jerome Brunet <jbrunet@baylibre.com> wrote:
+
+> On Sat 02 Mar 2024 at 11:04, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengu=
+tronix.de> wrote:
+>
+>> [[PGP Signed Part:Undecided]]
+>> Hello Jerome,
+>>
+>> On Wed, Feb 21, 2024 at 04:11:46PM +0100, Jerome Brunet wrote:
+>>> Jerome Brunet (5):
+>>>   dt-bindings: pwm: amlogic: fix s4 bindings
+>>>   dt-bindings: pwm: amlogic: Add a new binding for meson8 pwm types
+>>>   pwm: meson: generalize 4 inputs clock on meson8 pwm type
+>>>   pwm: meson: don't carry internal clock elements around
+>>>   pwm: meson: add generic compatible for meson8 to sm1
+>>
+>> I applied patches #1 to #3. This doesn't mean #4 and #5 are bad, just
+>> that I need some more time for review.
+>
+> No worries. The change in those, especially #5, are pretty simple but
+> the diff are indeed hard to read :/
+
+Hello Uwe,
+
+Introducing the s4 support depends on this series.
+Is there any news ?
+
+Thanks
+Regards
+
+>
+>>
+>> Best regards
+>> Uwe
+
+
+--=20
+Jerome
