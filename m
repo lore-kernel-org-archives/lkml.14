@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167411350EF;
-	Fri, 12 Apr 2024 08:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA20135A68;
+	Fri, 12 Apr 2024 08:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911498; cv=none; b=ZZQksAf7qsWxIp8Kvk1kfFBugZQgmOosCJfODvtK1a54Wo0U5Aa37fE3yX/vNeutzRPu/jtyGDJLCDbatln8Xg/7gGbVUxIea5i8SGfG/sm28/8IXrF7zlH59KfHqG5GcJTin2WfpYJJRd2OTt69XsFQr/lJw61YHPu+7q7zHic=
+	t=1712911502; cv=none; b=lwEsVdjz2HicJDdTQBH0MmGa2afyGXrrbTpVPsI37kgM2BqJw6YaIV81qn4h5T4RfwgrFrem2bYOE6rdeeXlosHUyuWJp0QlLzLh26aGQcdh6oiaB5OUMFwgXYEOMvgdBh5oeAdI+kJemdC0rAi3X2u3r2MC3b7ZMI3ggKRl3t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911498; c=relaxed/simple;
-	bh=ieeQllqbI5W/TVAn3S965xOTcR7QFSnPeGtc2vSn5Ls=;
+	s=arc-20240116; t=1712911502; c=relaxed/simple;
+	bh=D/cy798s+xsV45CJTqoGeQMFhiJNyrqboCxmbKmTJgo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eKOD+AfamcLecuqOUJ4BFaHn0+SwZYQ5oQJKDmHoXHwfAO+440w2ZmkyBykBm28YolBchDExNhXf0mGxi78Om9kzWa6Pm2O4tXQzwfv4jRmNuD72RyAGTxtiCD8T6ma7+dXgcccmS3Q1o9nsAN1NKZiSGqk5MtdAGzzx+tz5nCE=
+	 MIME-Version; b=PHnmaLl2+1A6l28jQFqDvDdUEvvM+MskYS+YW9lxTBNuVjRAap51w40qg1oWZ7Q+P9o3cgdc5kd5maUl8UklNIAKzFlytpn8Sd4MuXTk+Ro3mhOZlmqQuTYnQrsLBWFL59q9xpHA53KjJIuptSTllqZTjlwRwQBvMqXdgtXNnrA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 022BB339;
-	Fri, 12 Apr 2024 01:45:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B12CC339;
+	Fri, 12 Apr 2024 01:45:29 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 804A83F6C4;
-	Fri, 12 Apr 2024 01:44:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 551093F6C4;
+	Fri, 12 Apr 2024 01:44:58 -0700 (PDT)
 From: Steven Price <steven.price@arm.com>
 To: kvm@vger.kernel.org,
 	kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+Cc: Steven Price <steven.price@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Marc Zyngier <maz@kernel.org>,
 	Will Deacon <will@kernel.org>,
@@ -36,11 +36,10 @@ Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
 	Christoffer Dall <christoffer.dall@arm.com>,
 	Fuad Tabba <tabba@google.com>,
 	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Steven Price <steven.price@arm.com>
-Subject: [PATCH v2 41/43] arm64: RME: Provide accurate register list
-Date: Fri, 12 Apr 2024 09:43:07 +0100
-Message-Id: <20240412084309.1733783-42-steven.price@arm.com>
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: [PATCH v2 43/43] KVM: arm64: Allow activating realms
+Date: Fri, 12 Apr 2024 09:43:09 +0100
+Message-Id: <20240412084309.1733783-44-steven.price@arm.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240412084309.1733783-1-steven.price@arm.com>
 References: <20240412084056.1733704-1-steven.price@arm.com>
@@ -53,266 +52,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Add the ioctl to activate a realm and set the static branch to enable
+access to the realm functionality if the RMM is detected.
 
-Userspace can set a few registers with KVM_SET_ONE_REG (9 GP registers
-at runtime, and 3 system registers during initialization). Update the
-register list returned by KVM_GET_REG_LIST.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/arm64/kvm/guest.c      | 40 ++++++++++++++++++-------
- arch/arm64/kvm/hypercalls.c |  4 +--
- arch/arm64/kvm/sys_regs.c   | 58 ++++++++++++++++++++++++++++---------
- 3 files changed, 75 insertions(+), 27 deletions(-)
+ arch/arm64/kvm/rme.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index f1fe51775649..b6d64a03024c 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -73,6 +73,17 @@ static u64 core_reg_offset_from_id(u64 id)
- 	return id & ~(KVM_REG_ARCH_MASK | KVM_REG_SIZE_MASK | KVM_REG_ARM_CORE);
+diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+index 93aab6caddf5..5901d57ca9d0 100644
+--- a/arch/arm64/kvm/rme.c
++++ b/arch/arm64/kvm/rme.c
+@@ -1167,6 +1167,20 @@ static int kvm_init_ipa_range_realm(struct kvm *kvm,
+ 	return ret;
  }
  
-+static bool kvm_realm_validate_core_reg(u64 off)
++static int kvm_activate_realm(struct kvm *kvm)
 +{
-+	switch (off) {
-+	case KVM_REG_ARM_CORE_REG(regs.regs[0]) ...
-+	     KVM_REG_ARM_CORE_REG(regs.regs[7]):
-+	case KVM_REG_ARM_CORE_REG(regs.pc):
-+		return true;
-+	}
-+	return false;
-+}
++	struct realm *realm = &kvm->arch.realm;
 +
- static int core_reg_size_from_offset(const struct kvm_vcpu *vcpu, u64 off)
- {
- 	int size;
-@@ -115,6 +126,9 @@ static int core_reg_size_from_offset(const struct kvm_vcpu *vcpu, u64 off)
- 	if (vcpu_has_sve(vcpu) && core_reg_offset_is_vreg(off))
- 		return -EINVAL;
- 
-+	if (kvm_is_realm(vcpu->kvm) && !kvm_realm_validate_core_reg(off))
-+		return -EPERM;
++	if (kvm_realm_state(kvm) != REALM_STATE_NEW)
++		return -EINVAL;
 +
- 	return size;
- }
- 
-@@ -599,8 +613,6 @@ static const u64 timer_reg_list[] = {
- 	KVM_REG_ARM_PTIMER_CVAL,
- };
- 
--#define NUM_TIMER_REGS ARRAY_SIZE(timer_reg_list)
--
- static bool is_timer_reg(u64 index)
- {
- 	switch (index) {
-@@ -615,9 +627,14 @@ static bool is_timer_reg(u64 index)
- 	return false;
- }
- 
-+static unsigned long num_timer_regs(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_is_realm(vcpu->kvm) ? 0 : ARRAY_SIZE(timer_reg_list);
-+}
++	if (rmi_realm_activate(virt_to_phys(realm->rd)))
++		return -ENXIO;
 +
- static int copy_timer_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
--	for (int i = 0; i < NUM_TIMER_REGS; i++) {
-+	for (int i = 0; i < num_timer_regs(vcpu); i++) {
- 		if (put_user(timer_reg_list[i], uindices))
- 			return -EFAULT;
- 		uindices++;
-@@ -655,6 +672,9 @@ static unsigned long num_sve_regs(const struct kvm_vcpu *vcpu)
- 	if (!vcpu_has_sve(vcpu) || !kvm_arm_vcpu_sve_finalized(vcpu))
- 		return 0;
- 
-+	if (kvm_is_realm(vcpu->kvm))
-+		return 1; /* KVM_REG_ARM64_SVE_VLS */
-+
- 	return slices * (SVE_NUM_PREGS + SVE_NUM_ZREGS + 1 /* FFR */)
- 		+ 1; /* KVM_REG_ARM64_SVE_VLS */
- }
-@@ -682,6 +702,9 @@ static int copy_sve_reg_indices(const struct kvm_vcpu *vcpu,
- 		return -EFAULT;
- 	++num_regs;
- 
-+	if (kvm_is_realm(vcpu->kvm))
-+		return num_regs;
-+
- 	for (i = 0; i < slices; i++) {
- 		for (n = 0; n < SVE_NUM_ZREGS; n++) {
- 			reg = KVM_REG_ARM64_SVE_ZREG(n, i);
-@@ -720,7 +743,7 @@ unsigned long kvm_arm_num_regs(struct kvm_vcpu *vcpu)
- 	res += num_sve_regs(vcpu);
- 	res += kvm_arm_num_sys_reg_descs(vcpu);
- 	res += kvm_arm_get_fw_num_regs(vcpu);
--	res += NUM_TIMER_REGS;
-+	res += num_timer_regs(vcpu);
- 
- 	return res;
- }
-@@ -754,7 +777,7 @@ int kvm_arm_copy_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- 	ret = copy_timer_indices(vcpu, uindices);
- 	if (ret < 0)
- 		return ret;
--	uindices += NUM_TIMER_REGS;
-+	uindices += num_timer_regs(vcpu);
- 
- 	return kvm_arm_copy_sys_reg_indices(vcpu, uindices);
- }
-@@ -794,12 +817,7 @@ static bool validate_realm_set_reg(struct kvm_vcpu *vcpu,
- 	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_CORE) {
- 		u64 off = core_reg_offset_from_id(reg->id);
- 
--		switch (off) {
--		case KVM_REG_ARM_CORE_REG(regs.regs[0]) ...
--		     KVM_REG_ARM_CORE_REG(regs.regs[7]):
--		case KVM_REG_ARM_CORE_REG(regs.pc):
--			return true;
--		}
-+		return kvm_realm_validate_core_reg(off);
- 	} else {
- 		switch (reg->id) {
- 		case KVM_REG_ARM_PMCR_EL0:
-diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
-index 5763d979d8ca..28b4166cf234 100644
---- a/arch/arm64/kvm/hypercalls.c
-+++ b/arch/arm64/kvm/hypercalls.c
-@@ -407,14 +407,14 @@ void kvm_arm_teardown_hypercalls(struct kvm *kvm)
- 
- int kvm_arm_get_fw_num_regs(struct kvm_vcpu *vcpu)
- {
--	return ARRAY_SIZE(kvm_arm_fw_reg_ids);
-+	return kvm_is_realm(vcpu->kvm) ? 0 : ARRAY_SIZE(kvm_arm_fw_reg_ids);
- }
- 
- int kvm_arm_copy_fw_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(kvm_arm_fw_reg_ids); i++) {
-+	for (i = 0; i < kvm_arm_get_fw_num_regs(vcpu); i++) {
- 		if (put_user(kvm_arm_fw_reg_ids[i], uindices++))
- 			return -EFAULT;
- 	}
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 5703b63186fd..f1239a8c041b 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -3869,18 +3869,18 @@ int kvm_arm_sys_reg_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg
- 				    sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
- }
- 
--static unsigned int num_demux_regs(void)
-+static unsigned int num_demux_regs(struct kvm_vcpu *vcpu)
- {
--	return CSSELR_MAX;
-+	return kvm_is_realm(vcpu->kvm) ? 0 : CSSELR_MAX;
- }
- 
--static int write_demux_regids(u64 __user *uindices)
-+static int write_demux_regids(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
- 	u64 val = KVM_REG_ARM64 | KVM_REG_SIZE_U32 | KVM_REG_ARM_DEMUX;
- 	unsigned int i;
- 
- 	val |= KVM_REG_ARM_DEMUX_ID_CCSIDR;
--	for (i = 0; i < CSSELR_MAX; i++) {
-+	for (i = 0; i < num_demux_regs(vcpu); i++) {
- 		if (put_user(val | i, uindices))
- 			return -EFAULT;
- 		uindices++;
-@@ -3888,6 +3888,23 @@ static int write_demux_regids(u64 __user *uindices)
- 	return 0;
- }
- 
-+static unsigned int num_invariant_regs(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_is_realm(vcpu->kvm) ? 0 : ARRAY_SIZE(invariant_sys_regs);
-+}
-+
-+static int write_invariant_regids(struct kvm_vcpu *vcpu, u64 __user *uindices)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < num_invariant_regs(vcpu); i++) {
-+		if (put_user(sys_reg_to_index(&invariant_sys_regs[i]), uindices))
-+			return -EFAULT;
-+		uindices++;
-+	}
++	WRITE_ONCE(realm->state, REALM_STATE_ACTIVE);
 +	return 0;
 +}
 +
- static u64 sys_reg_to_index(const struct sys_reg_desc *reg)
- {
- 	return (KVM_REG_ARM64 | KVM_REG_SIZE_U64 |
-@@ -3911,11 +3928,27 @@ static bool copy_reg_to_user(const struct sys_reg_desc *reg, u64 __user **uind)
- 	return true;
+ /* Protects access to rme_vmid_bitmap */
+ static DEFINE_SPINLOCK(rme_vmid_lock);
+ static unsigned long *rme_vmid_bitmap;
+@@ -1314,6 +1328,9 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+ 		r = kvm_populate_realm(kvm, &args);
+ 		break;
+ 	}
++	case KVM_CAP_ARM_RME_ACTIVATE_REALM:
++		r = kvm_activate_realm(kvm);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		break;
+@@ -1567,7 +1584,7 @@ int kvm_init_rme(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Future patch will enable static branch kvm_rme_is_available */
++	static_branch_enable(&kvm_rme_is_available);
+ 
+ 	return 0;
  }
- 
-+static bool kvm_realm_sys_reg_hidden_user(const struct kvm_vcpu *vcpu, u64 reg)
-+{
-+	if (!kvm_is_realm(vcpu->kvm))
-+		return false;
-+
-+	switch (reg) {
-+	case SYS_ID_AA64DFR0_EL1:
-+	case SYS_PMCR_EL0:
-+		return false;
-+	}
-+	return true;
-+}
-+
- static int walk_one_sys_reg(const struct kvm_vcpu *vcpu,
- 			    const struct sys_reg_desc *rd,
- 			    u64 __user **uind,
- 			    unsigned int *total)
- {
-+	if (kvm_realm_sys_reg_hidden_user(vcpu, reg_to_encoding(rd)))
-+		return 0;
-+
- 	/*
- 	 * Ignore registers we trap but don't save,
- 	 * and for which no custom user accessor is provided.
-@@ -3953,29 +3986,26 @@ static int walk_sys_regs(struct kvm_vcpu *vcpu, u64 __user *uind)
- 
- unsigned long kvm_arm_num_sys_reg_descs(struct kvm_vcpu *vcpu)
- {
--	return ARRAY_SIZE(invariant_sys_regs)
--		+ num_demux_regs()
-+	return num_invariant_regs(vcpu)
-+		+ num_demux_regs(vcpu)
- 		+ walk_sys_regs(vcpu, (u64 __user *)NULL);
- }
- 
- int kvm_arm_copy_sys_reg_indices(struct kvm_vcpu *vcpu, u64 __user *uindices)
- {
--	unsigned int i;
- 	int err;
- 
--	/* Then give them all the invariant registers' indices. */
--	for (i = 0; i < ARRAY_SIZE(invariant_sys_regs); i++) {
--		if (put_user(sys_reg_to_index(&invariant_sys_regs[i]), uindices))
--			return -EFAULT;
--		uindices++;
--	}
-+	err = write_invariant_regids(vcpu, uindices);
-+	if (err)
-+		return err;
-+	uindices += num_invariant_regs(vcpu);
- 
- 	err = walk_sys_regs(vcpu, uindices);
- 	if (err < 0)
- 		return err;
- 	uindices += err;
- 
--	return write_demux_regids(uindices);
-+	return write_demux_regids(vcpu, uindices);
- }
- 
- #define KVM_ARM_FEATURE_ID_RANGE_INDEX(r)			\
 -- 
 2.34.1
 
