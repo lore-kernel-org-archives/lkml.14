@@ -1,241 +1,138 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616E31487F2
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E6A146A75;
+	Fri, 12 Apr 2024 15:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712937066; cv=none; b=Zo3/w5gFYADbgWaGzgERuTivXKj+LGQlt6+GZq39R4+b1E/y7ptCoGxtiy7f9+/maH4MONrVJJR3l+orIskddEisnxRsuMQR7BM45DC/t8QU/93ErVkklhgD8vNYMXcfgFlzU4HB/V3oW1mbHblSww9IS75gInXdsYVLBCjd2hw=
+	t=1712937132; cv=none; b=dPcDeVQP3K0ybSk5aO+8knfK0h8st/gIOtcpBWBbhgzHqxb1w6ohFODKXO8+mdIp1EGkxrSrOaoxvTXI8H7b6XCHyV+PmxoRSNu50QZP0NE9mD4abY5ZYToM4R8k7bEK0C3fy/zDNJ7nvOl86uvo8OFnTRm5zyrfWCheATjJ6cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712937066; c=relaxed/simple;
-	bh=N2PKhKVj4vOuIqthZ0upvvRLqO7t9Ims4RxMuplTs4k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aXmdxWIO4WYupfdEJ/yUPXKNEA/npSSWdqMRn1flgwF4DmnpA6Cy+kNz25TjTtjzN35/Z/SJ4bhQGoi/G7jjgHnD1H6Sq/pgo2SQc1wey1zqoDg6AomOKZuwDYkCt73zThNw1c9DVwmj42coTnFtUD3HRcouDu94W5JxKYu7LZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TELDWgjK; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712937132; c=relaxed/simple;
+	bh=n3FhrSSGNYinFWKOLI9XEyvtmcy6wfy49qe1cma28H4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=eCtXzx6Fpe0/wUwnLpXeaHwxH7tt37IMQSa34dPGfQA53pDd9MydbQYfHyps7ZHxQLcWaHi9q8Up1G9rQq6RX/ygeYFs9/x/9TMacINvgXZImJ0OTZIIs4Dbcf8+IS6Pqf4Mn1eLUoQKBweBZ941Kh1azPZ0AXtsxonkq/c43zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDGnhZZS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TELDWgjK"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-479edfd02e4so374956137.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712937063; x=1713541863; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=92R7Tt002+szgQqwlNMaYrd6FqA0RwfRXhl8UHoQOco=;
-        b=TELDWgjKxeoPuBwtW0IdPjb1bG6wpDq/1cbMuniKikgmzkyf8dqlRL3wOUDPPEbIGU
-         5T43CGmDpWEK1uteGhLOHRJkr3jpIYRMUpAbVowvND6bEjopTzbfVGHVt/QxASqTcFei
-         V79GSpvVr8LZlirxgEz5NUFo7m3f54ZuY1w3QoVrN4UNa53HCmb1AwZmHdH8pEG3KSnA
-         EYBliBhY/9rfKfiYb1uKVEjZvBbFEf7A5eDyl3JESRRXzZpB2pwiUmrqwWITAWjVbkMN
-         T+EUzfW+v+TtF7iqX1ntK2ReTR12ReOju64nYSLFAPXjvTc60hpdQetuYSXPnRR6UKzf
-         bV8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712937063; x=1713541863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=92R7Tt002+szgQqwlNMaYrd6FqA0RwfRXhl8UHoQOco=;
-        b=jGjKvrmBwANY7iJfb8wV4QBTFzvJiqDo+V+MoowHX95fjqNatfGYNDXqJkCPQKOBl/
-         Y5Hfjg7XHe9HL39ordR3YuaQRxsaHvcRNncdmRLfrkZKfe60ImgGRrrywmNdbDW/ErJN
-         sG6AAMFCY7idw3CKCTsJCtAePklj/xCxmHLebF3WH5E1rE9J4LJzgWYCQcveP8SzKLCS
-         n+3DKvjx1q0WqxRD9Gl2aqRpNHeIb+Au5vOTPpEDSXoCQki2wHgwgGiy5H/JkYvzHLYf
-         8eejRFoPnogk6NgA8Zr9LnCyDxRPzxLHsNOiHgJkPTWB17PGZpjEzkAGvkgyYS9rvFIB
-         IK+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXpjfPzhVu0SaKLXiy4WZBkj/RNDM0FcvKCrGPNdRNKu6pGmGOxltKVExjCw7S6wT5Cgv7wBaxwJ+Qu1EfBg5QXJdvrgw1CtxLyS5L+
-X-Gm-Message-State: AOJu0YwIgD/fHPqS65u1EEu3PLsC/1G2Eo1v9PUflArMl/MKLu0lcvjV
-	2RnDR+dCIG+TbaIfY79eJN8UDe60osA0MWoctqOOA/U40OVsyX7GQCiRj1SRJ93nHCv5s6LWfxY
-	dSFVX7n+DYPfrIDFimhBVg95BJGNdAqZrOQkOpg==
-X-Google-Smtp-Source: AGHT+IE5gWWw3tzQD7rDayWyxRVTVHjRobGJko3lvmoSOOqVtUUWsz435Qtri/FpaqKsxh9mMM5R1F9iQ3Ac1+c45bo=
-X-Received: by 2002:a05:6102:38cd:b0:47a:28d7:55ba with SMTP id
- k13-20020a05610238cd00b0047a28d755bamr3842878vst.0.1712937063266; Fri, 12 Apr
- 2024 08:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDGnhZZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23881C3277B;
+	Fri, 12 Apr 2024 15:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712937131;
+	bh=n3FhrSSGNYinFWKOLI9XEyvtmcy6wfy49qe1cma28H4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=SDGnhZZS5hf5QwVfBTJ6uevszB2ptzmTwOips9QfzlEs1pqGzbzioFNWpFk/T6KdY
+	 dcXdNeRze7eBE84N2WBpgYuzDAJjg+BphAPJssccka1Ml+DcJEp+X4N6x3KGweOicI
+	 +mZTLTMdmEcIpnEFx3zQ8KjPA9+hFIFNqdKZaKFrpgiGy4lvGBcamaV2/bDQ8Xt14Q
+	 EU8R0M9oDpqcLaCobgvEoGDC7bjIaQ6UAg/TM87nLBrk1rtUoGSKoPwK36lYMk5bIl
+	 hYYMhQlVFgOcW/w2YBAHkb3speBI66/06v4LxVFv1PGhAiScXTco+l1MN5x0Y5w+AW
+	 DQL6kjT+QLPzA==
+Date: Fri, 12 Apr 2024 17:52:09 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Stefan Berzl <stefanberzl@gmail.com>
+cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Nikolai Kondrashov <spbnick@gmail.com>
+Subject: Re: [PATCH] HID: uclogic: Remove useless loop
+In-Reply-To: <20240401004757.22708-1-stefanberzl@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2404121751250.5680@cbobk.fhfr.pm>
+References: <20240401004757.22708-1-stefanberzl@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411095435.633465671@linuxfoundation.org>
-In-Reply-To: <20240411095435.633465671@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Apr 2024 21:20:51 +0530
-Message-ID: <CA+G9fYt7okLBbGsSoA=Pyv2aVKmFEvttJywmJEUJ+FDp1SA7VQ@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/294] 5.10.215-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 11 Apr 2024 at 16:01, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.10.215 release.
-> There are 294 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.10.215-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, 1 Apr 2024, Stefan Berzl wrote:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> The while in question does nothing except provide the possibility
+> to have an infinite loop in case the subreport id is actually the same
+> as the pen id.
+> 
+> Signed-off-by: Stefan Berzl <stefanberzl@gmail.com>
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Let me CC Nicolai, the author of the code of question (8b013098be2c9).
 
-## Build
-* kernel: 5.10.215-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.10.y
-* git commit: 244ca117cb3cec4bb8f936b136312bb8482eeae3
-* git describe: v5.10.214-295-g244ca117cb3c
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10=
-.214-295-g244ca117cb3c
+> ---
+>  drivers/hid/hid-uclogic-core.c | 55 ++++++++++++++++------------------
+>  1 file changed, 25 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-uclogic-core.c b/drivers/hid/hid-uclogic-core.c
+> index ad74cbc9a0aa..a56f4de216de 100644
+> --- a/drivers/hid/hid-uclogic-core.c
+> +++ b/drivers/hid/hid-uclogic-core.c
+> @@ -431,40 +431,35 @@ static int uclogic_raw_event(struct hid_device *hdev,
+>  	if (uclogic_exec_event_hook(params, data, size))
+>  		return 0;
+>  
+> -	while (true) {
+> -		/* Tweak pen reports, if necessary */
+> -		if ((report_id == params->pen.id) && (size >= 2)) {
+> -			subreport_list_end =
+> -				params->pen.subreport_list +
+> -				ARRAY_SIZE(params->pen.subreport_list);
+> -			/* Try to match a subreport */
+> -			for (subreport = params->pen.subreport_list;
+> -			     subreport < subreport_list_end; subreport++) {
+> -				if (subreport->value != 0 &&
+> -				    subreport->value == data[1]) {
+> -					break;
+> -				}
+> -			}
+> -			/* If a subreport matched */
+> -			if (subreport < subreport_list_end) {
+> -				/* Change to subreport ID, and restart */
+> -				report_id = data[0] = subreport->id;
+> -				continue;
+> -			} else {
+> -				return uclogic_raw_event_pen(drvdata, data, size);
+> +	/* Tweak pen reports, if necessary */
+> +	if ((report_id == params->pen.id) && (size >= 2)) {
+> +		subreport_list_end =
+> +			params->pen.subreport_list +
+> +			ARRAY_SIZE(params->pen.subreport_list);
+> +		/* Try to match a subreport */
+> +		for (subreport = params->pen.subreport_list;
+> +		     subreport < subreport_list_end; subreport++) {
+> +			if (subreport->value != 0 &&
+> +			    subreport->value == data[1]) {
+> +				break;
+>  			}
+>  		}
+> -
+> -		/* Tweak frame control reports, if necessary */
+> -		for (i = 0; i < ARRAY_SIZE(params->frame_list); i++) {
+> -			if (report_id == params->frame_list[i].id) {
+> -				return uclogic_raw_event_frame(
+> -					drvdata, &params->frame_list[i],
+> -					data, size);
+> -			}
+> +		/* If a subreport matched */
+> +		if (subreport < subreport_list_end) {
+> +			/* Change to subreport ID, and restart */
+> +			report_id = data[0] = subreport->id;
+> +		} else {
+> +			return uclogic_raw_event_pen(drvdata, data, size);
+>  		}
+> +	}
+>  
+> -		break;
+> +	/* Tweak frame control reports, if necessary */
+> +	for (i = 0; i < ARRAY_SIZE(params->frame_list); i++) {
+> +		if (report_id == params->frame_list[i].id) {
+> +			return uclogic_raw_event_frame(
+> +				drvdata, &params->frame_list[i],
+> +				data, size);
+> +		}
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.43.0
+> 
 
-## Test Regressions (compared to v5.10.214)
+-- 
+Jiri Kosina
+SUSE Labs
 
-## Metric Regressions (compared to v5.10.214)
-
-## Test Fixes (compared to v5.10.214)
-
-## Metric Fixes (compared to v5.10.214)
-
-## Test result summary
-total: 94495, pass: 74097, fail: 3307, skip: 17023, xfail: 68
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 104 total, 104 passed, 0 failed
-* arm64: 31 total, 31 passed, 0 failed
-* i386: 25 total, 25 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 23 total, 23 passed, 0 failed
-* riscv: 9 total, 9 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
