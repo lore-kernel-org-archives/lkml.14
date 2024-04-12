@@ -1,122 +1,86 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE83199D9;
-	Fri, 12 Apr 2024 03:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from njjs-sys-mailin01.njjs.baidu.com (mx309.baidu.com [180.101.52.12])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AFEA12E4E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 03:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.101.52.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712891698; cv=none; b=OoyWpVzCc+Btcr5+bocYz5kqU5SWmCHoyipDuTRsuxaloXEde4g9TCY7EzVt1YUzphF7VtdRGiCoAKUhnCK06eNE1HnTTVSrRR5DC9oaE9UOByFP8YvZxwl9Ka2behMH2s9BAHXVIKGuQILpA8T2n7SteALK1cL/GIVm/L+VuaI=
+	t=1712891825; cv=none; b=Wl5mTXtHmwRfZgHhbPUuV/C2Oex/JekBAJ2SU8utIrUVnhCWI7ZXWlIIe1eFFgcxmTXcafJmmzq+kduAPt6JBWTxLwqTfQdSrRqYFIaqsCw/7jq+/3zjm+tddkK7jvmZgSjC1L3tVSvhxfci6ZLFxVQfUh1lWKCghURrQGwvkmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712891698; c=relaxed/simple;
-	bh=GMSCKdtp7p5x5tKn0fvsWFlKFRuMmTOJXY3eOciD3LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pUg3hWwhnFxiSbGqz3x3XyMjaqfXzua2fybZ5NFuoHqFZQZ9y9p4cU16FrGqDWXKzamPjwj4vXzuqaSBzQ8dUUL1d57ke7x2zgGDHAeWJPG1rDYFhti7SNzVZxLM1fLzWZrEfp5W6xiCn9O/8VvjeQeLNWErM9mDYxYQ5HViyqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WeOSneIB; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WeOSneIB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1712891691;
-	bh=EY3WqoWVQVYhu6CX8mA3X80QuETTVo1FlNuaCnjkIEI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=WeOSneIBpWl5HEVoW37Hhd4Oh891LmOTg4am5vxz4vGFE/H2ppo7Ai0uCK7nf3veB
-	 MnGA0ZrABbEscv9fWrM+Chi7LzyJQNXDQ7vKCvcv7Xh+oSdD2Qu+rnWpfpUdbjeBPO
-	 aem/qZbAM09Mj638suQEdlOfTkLW7zK8dDhQaKo7vEy01XFeCqRjuOwBr9gEDqpJJa
-	 e0tanMd3TonJ3JZMVVM8zcYuw5kSOscyjPAEheRdMS+5cBXB2dWK1mC3iBWNTF5A1h
-	 vZA3jylkhYRWc+xu5jKliDSUpwiAGcrrzH3p5v++BVeE3nB0NErqc4O7wN/CuBWYaB
-	 pBzBp9caDZ9Qg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VG1rp6TzWz4wqM;
-	Fri, 12 Apr 2024 13:14:50 +1000 (AEST)
-Date: Fri, 12 Apr 2024 13:14:48 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>
-Cc: KVM <kvm@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the kvm-x86 tree with the kvm tree
-Message-ID: <20240412131448.4403df6a@canb.auug.org.au>
+	s=arc-20240116; t=1712891825; c=relaxed/simple;
+	bh=ZbqwmPgrkigCftAY4kWOWC9DW9S6DixYjAuHCk5fars=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=iEc3erhkJhUVVZgn8E4N6jKIpGy3aFMqXg450oQuRb9bY/AiGkr7dsjd9KskUfwekbUqaLMArry2qf68tJa3ZBnrMHZwY6GcDbcuZY26tspjiuyVr5TRc4/inClGzd0AWY9vENZ6mImCZLQON9K9UJWXIjwhRylQkZd13dZDxn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=180.101.52.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+Received: from localhost (bjhw-sys-rpm015653cc5.bjhw.baidu.com [10.227.53.39])
+	by njjs-sys-mailin01.njjs.baidu.com (Postfix) with ESMTP id 462317F00043;
+	Fri, 12 Apr 2024 11:01:32 +0800 (CST)
+From: Li RongQing <lirongqing@baidu.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	peterz@infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Li RongQing <lirongqing@baidu.com>
+Subject: [PATCH] x86/sev: take NUMA node into account when allocating memory for per-CPU variables
+Date: Fri, 12 Apr 2024 11:01:30 +0800
+Message-Id: <20240412030130.49704-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.9.4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3N_WPBCBiQSNIeSEhY.ZcO9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/3N_WPBCBiQSNIeSEhY.ZcO9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+per-CPU variables are dominantly accessed from their own local CPUs,
+so allocate them node-local to improve performance.
 
-Hi all,
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ arch/x86/kernel/sev.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Today's linux-next merge of the kvm-x86 tree got a conflict in:
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 7e1e63cc..dfe7c69 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -938,7 +938,7 @@ static int snp_set_vmsa(void *va, bool vmsa)
+ #define INIT_LDTR_ATTRIBS	(SVM_SELECTOR_P_MASK | 2)
+ #define INIT_TR_ATTRIBS		(SVM_SELECTOR_P_MASK | 3)
+ 
+-static void *snp_alloc_vmsa_page(void)
++static void *snp_alloc_vmsa_page(int cpu)
+ {
+ 	struct page *p;
+ 
+@@ -950,7 +950,7 @@ static void *snp_alloc_vmsa_page(void)
+ 	 *
+ 	 * Allocate an 8k page which is also 8k-aligned.
+ 	 */
+-	p = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
++	p = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
+ 	if (!p)
+ 		return NULL;
+ 
+@@ -1019,7 +1019,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+ 	 * #VMEXIT of that vCPU would wipe out all of the settings being done
+ 	 * here.
+ 	 */
+-	vmsa = (struct sev_es_save_area *)snp_alloc_vmsa_page();
++	vmsa = (struct sev_es_save_area *)snp_alloc_vmsa_page(cpu);
+ 	if (!vmsa)
+ 		return -ENOMEM;
+ 
+@@ -1341,7 +1341,7 @@ static void __init alloc_runtime_data(int cpu)
+ {
+ 	struct sev_es_runtime_data *data;
+ 
+-	data = memblock_alloc(sizeof(*data), PAGE_SIZE);
++	data = memblock_alloc_node(sizeof(*data), PAGE_SIZE, cpu_to_node(cpu));
+ 	if (!data)
+ 		panic("Can't allocate SEV-ES runtime data");
+ 
+-- 
+2.9.4
 
-  arch/x86/kvm/svm/svm.c
-
-between commit:
-
-  605bbdc12bc8 ("KVM: SEV: store VMSA features in kvm_sev_info")
-
-from the kvm tree and commit:
-
-  c92be2fd8edf ("KVM: SVM: Save/restore non-volatile GPRs in SEV-ES VMRUN v=
-ia host save area")
-
-from the kvm-x86 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/kvm/svm/svm.c
-index 0f3b59da0d4a,9aaf83c8d57d..000000000000
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@@ -1511,12 -1524,8 +1516,8 @@@ static void svm_prepare_switch_to_guest
-  	 * or subsequent vmload of host save area.
-  	 */
-  	vmsave(sd->save_area_pa);
-- 	if (sev_es_guest(vcpu->kvm)) {
-- 		struct sev_es_save_area *hostsa;
-- 		hostsa =3D (struct sev_es_save_area *)(page_address(sd->save_area) + 0x=
-400);
--=20
-- 		sev_es_prepare_switch_to_guest(svm, hostsa);
-- 	}
-+ 	if (sev_es_guest(vcpu->kvm))
- -		sev_es_prepare_switch_to_guest(sev_es_host_save_area(sd));
-++		sev_es_prepare_switch_to_guest(svm, sev_es_host_save_area(sd));
- =20
-  	if (tsc_scaling)
-  		__svm_write_tsc_multiplier(vcpu->arch.tsc_scaling_ratio);
-
---Sig_/3N_WPBCBiQSNIeSEhY.ZcO9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYYpygACgkQAVBC80lX
-0GxBPwf/VFRBOWGuSGfmrscNLd6XvmE0R0vpMIqwr5pdezQfl130qO1JY1QoZiFj
-rvYF7lsDnxpRWNG2uYw6to5xtj4JX+dGvy6qMPUdYCLCD5uYO6JzE0w/rOcXit05
-zjcseqoGqo00wKRxSlj4vTflz4/Z6stt5HQnq8F1kqPuvQNpwAAxxgOa4XIgQzHP
-7w3ojlToNlsDOR8/JYHE1cvKvCwG5cbgqjbxdeeE7moQBR/omoCE8Rl7zslH3Xar
-/KgFryHn7kZJlNAvYQZcezZZIaV8dSygIa3brBD4bAzxjLt4LMk261ieW5ZOyS84
-Cdfi4OkLQYUxK0pqQ0OIVTRoa4xlhw==
-=AyeR
------END PGP SIGNATURE-----
-
---Sig_/3N_WPBCBiQSNIeSEhY.ZcO9--
