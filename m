@@ -1,181 +1,241 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9EB14D6F5;
-	Fri, 12 Apr 2024 15:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA3B1482ED
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712934818; cv=none; b=G1vqYy0RR6i7CT7a5FJav1UaccVpAZtnnmNriHvHtnhTRN8WYOBq/jVM5VLcFB/V9FbN4d++ZnYzZsArV/o8KSpGQGqyvh8GIrfyvoFWBaIbqCkmd3RjXHb3LvgHSRi/3cuHAZFLPo38oNmA4bc2tKT00lPFCK2lw90Jxs7tzm0=
+	t=1712934819; cv=none; b=gllRK1sUrDejbkCRtPInHRUQdQ8yV43HfcRoTqtnNq9a6/+Xo9txOy6ISP4eKkK7UmlVSl31BXZ1XUkEMs+YHDOMck1Fq88PtHxR5/VPIcCjkPjCZ5GREzrv4spO0paGIC1NkFOshPfh/pkxh2krssaV/sH1hdqTEyvK4eCu9jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712934818; c=relaxed/simple;
-	bh=EYtkPvt5rIZgNbaUo5mvA5zPA1D10VYmYNfdrZbw4sI=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=PXMCygo5Q90vp9Ls5VUj/8KeRqTIvCqblcE/mBKtLogUc+g3LWRLzyHt7qv9AW5Qnab0DBBb3WIzXPlLoxxK5xY+RDrCg7N4vIBgqiwRVtGxTvHECFnpsEsUR8kEj/sWX13GNqouNp+/b6Xm+Mixe8kCiD6+8w/XSG6JJK0rdy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0Vx0AOl; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712934819; c=relaxed/simple;
+	bh=7ZATv9FDwuL7DkpjJIpgT4aYqLVn3V0wxJUMj5+sp6w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uk7t6XiQGBupdOfRUrau8iFHVGRKnhQ4Tn065gVq9RuUd9zOGJnjCGnwspOQkHy1CZ7xhFWZXQJup0H+14FEnMtbi6E1cTtIySWRg5vnnnbJA+NnsTc9qvgeEs4ZLRAHTRbvZyao45pDBRbRBOpjqyCcDOHFj3kcnk0XlyCwehg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=jH6DHQ21; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=jH6DHQ21; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0Vx0AOl"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-78d70890182so88339885a.0;
-        Fri, 12 Apr 2024 08:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712934815; x=1713539615; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XpfD6u8jtZPH354BgVW6JCHeTIS8N0DJrzcBwnJFIJQ=;
-        b=b0Vx0AOleg/HaN5ufOmGPU8Ev9qY9YOo8Y0hHTzRhu/5b8VQ0BIKD9usXF8d5OWbwK
-         iXpLOLPwJVqyWDC4phxXt0Lb8ctKvAz/PDRVeYYLj2FU0aM+t+qVX0qAJqKKVRSR/S3D
-         48pXxj+3i9US7LjWR+vOLWZ4oe7M2ktWi5YdFqkdPkzPL7LAyNvDt3LVbNB+x8nSsgEm
-         7UvQZ6lLC0RkmH4WqQA5uFixZnkzUJyG6vBm+Pc8VV0e31zajDujU06GVHKzjeh6zrs+
-         Wu4zeMIZQvsfL3pfZJSeXH5Ku0H3NYrq1HNAu3khBCkEmY/7NWTUQBoIn0Dhhe+BTVrS
-         dX0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712934815; x=1713539615;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XpfD6u8jtZPH354BgVW6JCHeTIS8N0DJrzcBwnJFIJQ=;
-        b=PACIqVafbaoU4+nUZziO21qRiysXvODa08Dy3tOxPAiNGQyp8YlGTEwxE8jTt/yg9Z
-         +5hrMPRVse5IYlTKwaV1ICCtwOHzWvvlGDEvEHFoS12BU6xKGDSS7Panx2TsMUlRDUE0
-         HU3+6tl3yUrZDNQHB6uucuc+0SpZejAu9BO8tHxh1d9wQxkR4ibkE/RZLws7kJnmpaJj
-         VWApjCSSzfWVgr4wxBvcZTjQnQjN7NEUY0jxNv6GDU+szqpUDhYG8AuIZ4dRuscdtthE
-         6eYo1xA3/XZjU4YsxR+b1u6qy2rulYUzoqvxjSdt72W0hn0L89yE4yAWgOKy0p3gM5/5
-         kHEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJk5UuNjo5aNCm73WEwNk+vC+7kbWYQG/2zwabOroK5KEhf4c+EJz/vhLMaHaqChydrsVrM/KEKjhBN95FsXJTnSGfNRJIUb7ObOJoHrESMBzrwRMKxM7mkEEcrIeD90Wg1cz7
-X-Gm-Message-State: AOJu0Yymfp5bYl5BPqkyx1lKNxgfkCbAqIxLmesLt1zANXzb7LVAMVCZ
-	milTvUqwPexGwg3JAfqjdDRVWeQIJk27xSdSUeuPIy7do5UvLDD2mZ3Y6A==
-X-Google-Smtp-Source: AGHT+IE4pkAtBZInQBOBmh07ahKbsjMG3RcYg42WT0ls6T6f8ANhbYG4GCoPno+8JVlUtqA7CTFHow==
-X-Received: by 2002:a05:620a:298c:b0:78e:d1fc:5121 with SMTP id r12-20020a05620a298c00b0078ed1fc5121mr2391998qkp.0.1712934815376;
-        Fri, 12 Apr 2024 08:13:35 -0700 (PDT)
-Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
-        by smtp.gmail.com with ESMTPSA id z14-20020a05620a100e00b0078d60595ff8sm2481662qkj.59.2024.04.12.08.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 08:13:35 -0700 (PDT)
-Date: Fri, 12 Apr 2024 11:13:34 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Lei Chen <lei.chen@smartx.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Lei Chen <lei.chen@smartx.com>, 
- Willem de Bruijn <willemb@google.com>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Message-ID: <66194f9ecacea_38e253294ed@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240412065841.2148691-1-lei.chen@smartx.com>
-References: <20240412065841.2148691-1-lei.chen@smartx.com>
-Subject: Re: [PATCH net-next v3] net:tun: limit printing rate when illegal
- packet received by tun dev
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="jH6DHQ21";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="jH6DHQ21"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 34A065FE6E;
+	Fri, 12 Apr 2024 15:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712934816; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uPYxr/Er+fWtv8wZe5AP8h36917nOHnZyZPf9ZFqN/I=;
+	b=jH6DHQ21N/Q5KuPdBFHykQKzyWAp3ww+K0ijb/3kTFifHOv1xhXmP2SJZ3Eytkw8FnNg+1
+	Tya2cG8kp1tR/AsYPQr0kEmrFSrqJi9EyIqcuNAZaMikUmB77ifzsNaFACYqEEM6kbqM53
+	T6Il3To6krAhyLz2HetKtbZ6t+fsFJU=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712934816; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uPYxr/Er+fWtv8wZe5AP8h36917nOHnZyZPf9ZFqN/I=;
+	b=jH6DHQ21N/Q5KuPdBFHykQKzyWAp3ww+K0ijb/3kTFifHOv1xhXmP2SJZ3Eytkw8FnNg+1
+	Tya2cG8kp1tR/AsYPQr0kEmrFSrqJi9EyIqcuNAZaMikUmB77ifzsNaFACYqEEM6kbqM53
+	T6Il3To6krAhyLz2HetKtbZ6t+fsFJU=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D21FF1368B;
+	Fri, 12 Apr 2024 15:13:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zxaPLp5PGWbDAQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 12 Apr 2024 15:13:34 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Jason Andryuk <jandryuk@gmail.com>
+Subject: [PATCH v2 4/4] x86/pat: fix W^X violation false-positives when running as Xen PV guest
+Date: Fri, 12 Apr 2024 17:12:58 +0200
+Message-Id: <20240412151258.9171-5-jgross@suse.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240412151258.9171-1-jgross@suse.com>
+References: <20240412151258.9171-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[suse.com,linux.intel.com,kernel.org,infradead.org,linutronix.de,redhat.com,alien8.de,zytor.com,gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
 
-Lei Chen wrote:
-> vhost_worker will call tun call backs to receive packets. If too many
-> illegal packets arrives, tun_do_read will keep dumping packet contents.
-> When console is enabled, it will costs much more cpu time to dump
-> packet and soft lockup will be detected.
-> 
-> net_ratelimit mechanism can be used to limit the dumping rate.
-> 
-> PID: 33036    TASK: ffff949da6f20000  CPU: 23   COMMAND: "vhost-32980"
->  #0 [fffffe00003fce50] crash_nmi_callback at ffffffff89249253
->  #1 [fffffe00003fce58] nmi_handle at ffffffff89225fa3
->  #2 [fffffe00003fceb0] default_do_nmi at ffffffff8922642e
->  #3 [fffffe00003fced0] do_nmi at ffffffff8922660d
->  #4 [fffffe00003fcef0] end_repeat_nmi at ffffffff89c01663
->     [exception RIP: io_serial_in+20]
->     RIP: ffffffff89792594  RSP: ffffa655314979e8  RFLAGS: 00000002
->     RAX: ffffffff89792500  RBX: ffffffff8af428a0  RCX: 0000000000000000
->     RDX: 00000000000003fd  RSI: 0000000000000005  RDI: ffffffff8af428a0
->     RBP: 0000000000002710   R8: 0000000000000004   R9: 000000000000000f
->     R10: 0000000000000000  R11: ffffffff8acbf64f  R12: 0000000000000020
->     R13: ffffffff8acbf698  R14: 0000000000000058  R15: 0000000000000000
->     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
->  #5 [ffffa655314979e8] io_serial_in at ffffffff89792594
->  #6 [ffffa655314979e8] wait_for_xmitr at ffffffff89793470
->  #7 [ffffa65531497a08] serial8250_console_putchar at ffffffff897934f6
->  #8 [ffffa65531497a20] uart_console_write at ffffffff8978b605
->  #9 [ffffa65531497a48] serial8250_console_write at ffffffff89796558
->  #10 [ffffa65531497ac8] console_unlock at ffffffff89316124
->  #11 [ffffa65531497b10] vprintk_emit at ffffffff89317c07
->  #12 [ffffa65531497b68] printk at ffffffff89318306
->  #13 [ffffa65531497bc8] print_hex_dump at ffffffff89650765
->  #14 [ffffa65531497ca8] tun_do_read at ffffffffc0b06c27 [tun]
->  #15 [ffffa65531497d38] tun_recvmsg at ffffffffc0b06e34 [tun]
->  #16 [ffffa65531497d68] handle_rx at ffffffffc0c5d682 [vhost_net]
->  #17 [ffffa65531497ed0] vhost_worker at ffffffffc0c644dc [vhost]
->  #18 [ffffa65531497f10] kthread at ffffffff892d2e72
->  #19 [ffffa65531497f50] ret_from_fork at ffffffff89c0022f
-> 
-> Fixes: ef3db4a59542 (\"tun: avoid BUG, dump packet on GSO errors\")
+When running as Xen PV guest in some cases W^X violation WARN()s have
+been observed. Those WARN()s are produced by verify_rwx(), which looks
+into the PTE to verify that writable kernel pages have the NX bit set
+in order to avoid code modifications of the kernel by rogue code.
 
-Nit: no escaped parentheses in the Fixes string.
+As the NX bits of all levels of translation entries are or-ed and the
+RW bits of all levels are and-ed, looking just into the PTE isn't enough
+for the decision that a writable page is executable, too.
 
-Since there is this small issue, another: target is tun, not net:tun
+When running as a Xen PV guest, the direct map PMDs and kernel high
+map PMDs share the same set of PTEs. Xen kernel initialization will set
+the NX bit in the direct map PMD entries, and not the shared PTEs.
 
-> Signed-off-by: Lei Chen <lei.chen@smartx.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> 
-> Changes from v2:
-> https://lore.kernel.org/netdev/20240410042245.2044516-1-lei.chen@smartx.com/
->  1. Add net-dev to patch subject-prefix.
->  2. Add fix tag.
-> 
-> Changes from v1:
-> https://lore.kernel.org/all/20240409062407.1952728-1-lei.chen@smartx.com/
->  1. Use net_ratelimit instead of raw __ratelimit.
->  2. Use netdev_err instead of pr_err to print more info abort net dev.
->  3. Adjust git commit message to make git am happy.
-> ---
->  drivers/net/tun.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> index 0b3f21cba552..ca9b4bc89de7 100644
-> --- a/drivers/net/tun.c
-> +++ b/drivers/net/tun.c
-> @@ -2125,14 +2125,16 @@ static ssize_t tun_put_user(struct tun_struct *tun,
->  					    tun_is_little_endian(tun), true,
->  					    vlan_hlen)) {
->  			struct skb_shared_info *sinfo = skb_shinfo(skb);
-> -			pr_err("unexpected GSO type: "
-> -			       "0x%x, gso_size %d, hdr_len %d\n",
-> -			       sinfo->gso_type, tun16_to_cpu(tun, gso.gso_size),
-> -			       tun16_to_cpu(tun, gso.hdr_len));
-> -			print_hex_dump(KERN_ERR, "tun: ",
-> -				       DUMP_PREFIX_NONE,
-> -				       16, 1, skb->head,
-> -				       min((int)tun16_to_cpu(tun, gso.hdr_len), 64), true);
-> +
-> +			if (net_ratelimit()) {
-> +				netdev_err(tun->dev, "unexpected GSO type: 0x%x, gso_size %d, hdr_len %d\n",
-> +				       sinfo->gso_type, tun16_to_cpu(tun, gso.gso_size),
-> +				       tun16_to_cpu(tun, gso.hdr_len));
-> +				print_hex_dump(KERN_ERR, "tun: ",
-> +					       DUMP_PREFIX_NONE,
-> +					       16, 1, skb->head,
-> +					       min((int)tun16_to_cpu(tun, gso.hdr_len), 64), true);
-> +			}
->  			WARN_ON_ONCE(1);
->  			return -EINVAL;
->  		}
-> -- 
-> 2.44.0
-> 
+Fixes: 652c5bf380ad ("x86/mm: Refuse W^X violations")
+Reported-by: Jason Andryuk <jandryuk@gmail.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+V2:
+- patch split (Ingo Molnar)
+- commit message reworded (Jason Andryuk)
+---
+ arch/x86/mm/pat/set_memory.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 4ebccaf29bf2..19fdfbb171ed 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -619,7 +619,8 @@ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
+  * Validate strict W^X semantics.
+  */
+ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long start,
+-				  unsigned long pfn, unsigned long npg)
++				  unsigned long pfn, unsigned long npg,
++				  bool nx, bool rw)
+ {
+ 	unsigned long end;
+ 
+@@ -641,6 +642,10 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+ 	if ((pgprot_val(new) & (_PAGE_RW | _PAGE_NX)) != _PAGE_RW)
+ 		return new;
+ 
++	/* Non-leaf translation entries can disable writing or execution. */
++	if (!rw || nx)
++		return new;
++
+ 	end = start + npg * PAGE_SIZE - 1;
+ 	WARN_ONCE(1, "CPA detected W^X violation: %016llx -> %016llx range: 0x%016lx - 0x%016lx PFN %lx\n",
+ 		  (unsigned long long)pgprot_val(old),
+@@ -742,7 +747,7 @@ pte_t *lookup_address(unsigned long address, unsigned int *level)
+ EXPORT_SYMBOL_GPL(lookup_address);
+ 
+ static pte_t *_lookup_address_cpa(struct cpa_data *cpa, unsigned long address,
+-				  unsigned int *level)
++				  unsigned int *level, bool *nx, bool *rw)
+ {
+ 	pgd_t *pgd;
+ 
+@@ -751,7 +756,7 @@ static pte_t *_lookup_address_cpa(struct cpa_data *cpa, unsigned long address,
+ 	else
+ 		pgd = cpa->pgd + pgd_index(address);
+ 
+-	return lookup_address_in_pgd(pgd, address, level);
++	return lookup_address_in_pgd_attr(pgd, address, level, nx, rw);
+ }
+ 
+ /*
+@@ -879,12 +884,13 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
+ 	pgprot_t old_prot, new_prot, req_prot, chk_prot;
+ 	pte_t new_pte, *tmp;
+ 	enum pg_level level;
++	bool nx, rw;
+ 
+ 	/*
+ 	 * Check for races, another CPU might have split this page
+ 	 * up already:
+ 	 */
+-	tmp = _lookup_address_cpa(cpa, address, &level);
++	tmp = _lookup_address_cpa(cpa, address, &level, &nx, &rw);
+ 	if (tmp != kpte)
+ 		return 1;
+ 
+@@ -995,7 +1001,8 @@ static int __should_split_large_page(pte_t *kpte, unsigned long address,
+ 	new_prot = static_protections(req_prot, lpaddr, old_pfn, numpages,
+ 				      psize, CPA_DETECT);
+ 
+-	new_prot = verify_rwx(old_prot, new_prot, lpaddr, old_pfn, numpages);
++	new_prot = verify_rwx(old_prot, new_prot, lpaddr, old_pfn, numpages,
++			      nx, rw);
+ 
+ 	/*
+ 	 * If there is a conflict, split the large page.
+@@ -1076,6 +1083,7 @@ __split_large_page(struct cpa_data *cpa, pte_t *kpte, unsigned long address,
+ 	pte_t *pbase = (pte_t *)page_address(base);
+ 	unsigned int i, level;
+ 	pgprot_t ref_prot;
++	bool nx, rw;
+ 	pte_t *tmp;
+ 
+ 	spin_lock(&pgd_lock);
+@@ -1083,7 +1091,7 @@ __split_large_page(struct cpa_data *cpa, pte_t *kpte, unsigned long address,
+ 	 * Check for races, another CPU might have split this page
+ 	 * up for us already:
+ 	 */
+-	tmp = _lookup_address_cpa(cpa, address, &level);
++	tmp = _lookup_address_cpa(cpa, address, &level, &nx, &rw);
+ 	if (tmp != kpte) {
+ 		spin_unlock(&pgd_lock);
+ 		return 1;
+@@ -1624,10 +1632,11 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
+ 	int do_split, err;
+ 	unsigned int level;
+ 	pte_t *kpte, old_pte;
++	bool nx, rw;
+ 
+ 	address = __cpa_addr(cpa, cpa->curpage);
+ repeat:
+-	kpte = _lookup_address_cpa(cpa, address, &level);
++	kpte = _lookup_address_cpa(cpa, address, &level, &nx, &rw);
+ 	if (!kpte)
+ 		return __cpa_process_fault(cpa, address, primary);
+ 
+@@ -1649,7 +1658,8 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
+ 		new_prot = static_protections(new_prot, address, pfn, 1, 0,
+ 					      CPA_PROTECT);
+ 
+-		new_prot = verify_rwx(old_prot, new_prot, address, pfn, 1);
++		new_prot = verify_rwx(old_prot, new_prot, address, pfn, 1,
++				      nx, rw);
+ 
+ 		new_prot = pgprot_clear_protnone_bits(new_prot);
+ 
+-- 
+2.35.3
 
