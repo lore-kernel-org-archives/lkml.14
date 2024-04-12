@@ -1,95 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B921D1DFD9;
-	Fri, 12 Apr 2024 13:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F06E84DEA;
+	Fri, 12 Apr 2024 13:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929074; cv=none; b=sMhe2lseVgyl6s0ShnZewntoXZRWOpG9S2yR8J+Akz3nwuCuTNZocS8XciUlnrl1KDaA4AbqTIACOwmxWC3WcCohjMQ0rKYJ7MENY6X5pY0BKBmo5/BhRBdRgqaQTe4unC/Ygrtj5bmw5YmbyLv4HWcFkf7G1jDMEclFVjjYcog=
+	t=1712929076; cv=none; b=mF4eMCiau9rs8lRFvFGXn3BAnJjvDkmD2qJ293Ike8J2zJMW3bVnbPedqN0P+HliBnMpWWX1MFlPmAOmYPjvvIHU/7Co+9tt6+dwUwALiokpYhkf6VZyT7G00KbSchqBr2zVM3RS+DHFZha+BjQTsPakHLp+0KuqeVZdi3ZLoUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712929074; c=relaxed/simple;
-	bh=BtXw/kQS9H2R5Z9NHOeu97SUGojR8hmFg+yh11PQUcc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RXrCGu4ki9la631m0siHNlUnfWlu/XYSMTt0rhwjIgn4//zmJDa6rJpoc/cbfN9imRIjDwEmlRhBOCTrN61OL7uJlROzPRnsS2qd+j9DRITm0NrHEVsOkhJhBN3MQERj4GIM11J5F4XH0e43M8CjstcaYUW1yUcxuyJSyV2QILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXeKwuen; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712929076; c=relaxed/simple;
+	bh=RtPHTSwAiDMZibFKSA4Jdowqk+RE3EK7sCxTQ9Eflpg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dj0w9KeUCW2XKk0m8rwCv5wFDnZJ4UHFZzIJ8vjK9zu5g336rZrUuj82ZDyq2aKUP4Zmqs5Mvtok/BTmxE+6cSIEOEY+dO8ZNgumDPwbSyQl54I3Yz/e4lycujlTSBKGuYO/FJ9/8g9ysQS6TzQ2zRzmTfT2FbuzQ5ijGFoEr+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MSMaEXef; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXeKwuen"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69051C3277B;
-	Fri, 12 Apr 2024 13:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712929074;
-	bh=BtXw/kQS9H2R5Z9NHOeu97SUGojR8hmFg+yh11PQUcc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DXeKwuencmMy8ddA+0WHxID67LX0wCavx41hTotgshniEDU9JeRGoUaiJlQtLxQa7
-	 t9sALtTijN1Rg3DJpT3+48FRvUnsmzdySfXaNfS1yV3HeJA2UMuS5jQzaO6FqjeSfs
-	 KA9Pz4MsIZtsINxAe6bUuNaEvxKGRLgfXN1p0X3qtZS8jQ9k9JdUXSn5yn1ufLxnfr
-	 neXrCOi0YEez7QJZa+kGtCeXK81uHxtYsRYNiTYJ3e8H249Bd+l6OacxSC3ombOl1h
-	 A8x/WhkZWirauZOSH5FEgWNivzSg0Xk9j7QqKpcjeabgYuwsiI4xI8lKQw6e1eEBq2
-	 6KoTgp6yhNVSA==
-Date: Fri, 12 Apr 2024 15:37:48 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, helgaas@kernel.org,
-	bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-	imx@lists.linux.dev, jdmason@kudzu.us, jingoohan1@gmail.com,
-	kw@linux.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v3 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <Zhk5LERFKTFkPl4b@ryzen>
-References: <20240326193540.3610570-1-Frank.Li@nxp.com>
- <ZhPFmFYorWa-sfLp@ryzen>
- <20240410180341.GF16629@thinkpad>
- <ZhbXlOMNxc2nMIW8@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSMaEXef"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-516d04fc04bso1502109e87.2;
+        Fri, 12 Apr 2024 06:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712929073; x=1713533873; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZBZ/trnMtit0L5nOLjCK4i4uNbzRJ+y85cwstMMxmcc=;
+        b=MSMaEXefpKDDc2uYMIpOFc2i2hOxYu0eSZTRHqnSxo7CNMytbY79q2YBxCdcwMDP3v
+         x4Mj4nCuoEgBXE/1FhIJnV3qq65+FwY3z/9ZOer636GPaF2hrA5qUZZHESbkYm8kqp3k
+         g7+/B8TwTkHdqHbsmW16C5KBMdzueFFfwvQb1OiI08FvoCvFc+19KUaLrxWQPUW5Qiqb
+         ZikI0L5Q/GUH3sV1VlSmil9lLJbazMfI6ujoRkGQVuThMFcjoFbSJHDoCpyKWC4QAQ7F
+         TOea65qFLHtxL0ywCMJXt+jTsdegEI72D5s9KVWvo4Oa/RpP1h0Ge+zF3z/8pdINMedA
+         cOrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712929073; x=1713533873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZBZ/trnMtit0L5nOLjCK4i4uNbzRJ+y85cwstMMxmcc=;
+        b=W9Pp6LQYh1iAEa3FGoUmiVeO5YB0X3aapLBKwUwCqQ3KNEC/A7Bgs/LcKALLyhlz75
+         AUiiG2bj8/WnoynGgIQf3kWwF+qKYoqM1S9zM35vMrY1kXrJqdV9sz0apvrKCksc/4sL
+         5LVn9ZIggXqjZGw1ktBEmkQ8Hn/L8cvibXaz47ENnjr+hwJUc6wqh+kinrlslNzptytl
+         +OKwm8yjRy3RCSXv1j3AKVU63FsFHvxM+2HacxUp6AAgCZcJNr6PXJqdutXKX9Gr9yP3
+         bxCLCNmTu1TqY30bmnq3hG6Go7BKpvEdfKNpYSyhxFS8CgSeYja9uzjk8Tl8E6CO65M/
+         FR1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqa9C0zhFDF4QAzmgDLOEmWjg6SXDjHeCCjGyaYXLXq7nfS7lUzDVqZnhbzdnXx/pbexNzBjDxX/0bHCXEGEGtb3wqj/JbKaTg6f2rl2gLO7ObW3dja+DufzufGHAVdc8nD/IGeDQPvdXilsWQrkOncEwOmG6NZtQJA4eYbfuVAIuNmx8=
+X-Gm-Message-State: AOJu0Yyopy9yiP4kGBgCOJNHKpyzc/eqsUtDZgR+mOr8iOquqAKVz2o7
+	WR/yNp6tfSTbL2EtRUWED/jqcEJLqJgXIeE4mDSagVmwx3z22P74ZDX0QOC0PTuBY3bxNvIU+83
+	uI7BA3zu5fIR7SeStUg6tMxqyxWg=
+X-Google-Smtp-Source: AGHT+IHNCOxpEcg7kq0YLqhVyBPLSvQx/KccK2KXiNpUI+6rMUuNO8y0wPk5vLRyn20x610DSEMMlhpS/tWB09yu4rg=
+X-Received: by 2002:a05:6512:21d1:b0:513:d5ec:afb with SMTP id
+ d17-20020a05651221d100b00513d5ec0afbmr1556007lft.40.1712929073158; Fri, 12
+ Apr 2024 06:37:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhbXlOMNxc2nMIW8@lizhi-Precision-Tower-5810>
+References: <20240412-pinctrl-scmi-v9-0-b817344d3a9a@nxp.com>
+ <CAHp75VfBaU+F-+3zte66mxgJ+gW9N7j8E+0gw9_T9J5DHTnsBA@mail.gmail.com> <DU0PR04MB9417DF1519C59AEBE156BC2488042@DU0PR04MB9417.eurprd04.prod.outlook.com>
+In-Reply-To: <DU0PR04MB9417DF1519C59AEBE156BC2488042@DU0PR04MB9417.eurprd04.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 12 Apr 2024 16:37:16 +0300
+Message-ID: <CAHp75Vch7TzevZQK4CE_WSVOgUdzODkJXiv0=OuqrmDfgevV+A@mail.gmail.com>
+Subject: Re: [PATCH v9 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Cristian Marussi <cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Dhruva Gole <d-gole@ti.com>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 02:16:52PM -0400, Frank Li wrote:
-> On Wed, Apr 10, 2024 at 11:33:41PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Apr 08, 2024 at 12:23:20PM +0200, Niklas Cassel wrote:
-> > > On Tue, Mar 26, 2024 at 03:35:40PM -0400, Frank Li wrote:
-> > > > When PERST# assert and deassert happens on the PERST# supported platforms,
-> > > > the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
-> > > > to the area that was previously allocated (iATU0) for BAR0, instead of the
-> > > > new area (iATU6) for BAR0.
-> > > 
-> > > Nit: If we want additional clarity, we could also add:
-> > > ""
-> > > Right now, we dodge the bullet because both iATU0 and iATU6 should currently
-> > > translate inbound accesses to BAR0 to the same allocated memory area. However,
-> > > having two separate inbound mappings for the same BAR is a disaster waiting to
-> > > happen.
-> > > ""
-> > 
-> > Since Bjorn asked for the above info, it should get added.
-> > 
-> > With that,
-> > 
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Mani:
-> 
-> Do you need me rework patch? Or you can handle it by yourself when apply?
+On Fri, Apr 12, 2024 at 10:01=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
+> > Subject: Re: [PATCH v9 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontro=
+l
+> > protocol basic support
+> > On Fri, Apr 12, 2024 at 3:13=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nx=
+p.com>
+> > wrote:
 
-It appears that Krzysztof is the one picking up patches for:
-drivers/pci/controller/dwc/
+...
 
-Since he has the bottommost Signed-off-by on patches in:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller%2Fdwc
+> > > - Because "pinctrl: pinconf-generic: check error value EOPNOTSUPP" wa=
+s
+> > >   applied, so pinctrl-scmi.c not convert to err return value for
+> > >   'pinctrl_ops->settings_get_one()'.
+> >
+> > Because it's there it does not mean we want it right now. I pinged Linu=
+s about
+> > it again.
+>
+> ok, let me include the diff[1], is this ok for you?
+>
+> [1]https://lore.kernel.org/all/DU0PR04MB941754A6D751E80840F9A79888012@DU0=
+PR04MB9417.eurprd04.prod.outlook.com/
 
-So I don't think that Mani can amend it, since he is most likely not the
-one picking up this patch.
+Yes.
 
-The fastest way is probably just to send out a v4.
-(But I feel you... this patch has already taken too long :P)
-
-
-Kind regards,
-Niklas
+--=20
+With Best Regards,
+Andy Shevchenko
