@@ -1,58 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E646CDB4
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C789976C76;
+	Fri, 12 Apr 2024 08:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911424; cv=none; b=S57bguoXIbmcB6vxBz07kVacjldVmWGtW0aXXpAobE6uEP5OPZvvhFBFsXl1IwlJycaYS1Fp9G23s0LQWTmazOYlnQq2o0ouErOk2qtZPU1FCs+IGGeGGn9X2pdpyb4eH7XvtEahsoZunYQrajmQiwDHb6W6h6Ii49DOeQich/g=
+	t=1712911428; cv=none; b=C93ArHmPSqF/OByOVe24I4QcT5P5y4/MY1Bha2fKEJ1fZls2yy0kNE2unytLHxPUqEQojD3lRTtLrRBjx1UD+WpScwhb0HisE4YqOZ2k3oqH3SQyNrLKZST1emdA7yeEsg9YrOKIlVPoXIx6lu1ekuW4QH91JbAROwXT0YYUoRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911424; c=relaxed/simple;
-	bh=j7Y4ZpRE0Th2mRGXrMufOMFA5pgpOzLmfPeNzLiOs4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dIKdKemm9r5xENt7PiDPupp8CIY9htMXEhzu16+32PpoOZ6auKGHJ3YmV4pEBf2NZKanm86uFDQLH9v3pv9X8mCDuVGzXBU0HJtlNIUeB0L2tqnx/iT9WklVUuUP9O4wTMeHFzuHyPWIa6V11DZuNhKgy+aKELxPlOIO9ure8qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XBkbwxeD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBkbwxeD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712911422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WhIdLWivIqIvKp3FSm9AKW2RcexApWfnR7lW4YKH3gc=;
-	b=XBkbwxeDPSiyjyudeIz2aT1e/kknGLHpY+mIdG0+MCuyaKL9akmvqF1yZsKpcyfgupjPry
-	Da9/5FRT+tAGozKMRPJ7VT3TIfYVIv8apZkdiI2xO3CiHu9HcN9paXY92Xd+4v/seAGHs5
-	8U6ltEt34S0HH6KOiFJqVy+8Aq3LaM0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-463-nKXeVBXSP6uT3Uv1kyZYYA-1; Fri,
- 12 Apr 2024 04:43:37 -0400
-X-MC-Unique: nKXeVBXSP6uT3Uv1kyZYYA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 34CAE1C05AAC;
-	Fri, 12 Apr 2024 08:43:37 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.193.165])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 616F2C13FA0;
-	Fri, 12 Apr 2024 08:43:34 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>
-Subject: [PATCH v1] KVM: s390x: selftests: Add shared zeropage test
-Date: Fri, 12 Apr 2024 10:43:29 +0200
-Message-ID: <20240412084329.30315-1-david@redhat.com>
+	s=arc-20240116; t=1712911428; c=relaxed/simple;
+	bh=eFci8/D3KfsTC/UJni2cC6b8pORcVfFzYuza+HLKhBA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BjbamK5901Mlgi5Yhhx5uN8vQW4yHp4uvsGxrr83s+sJZQM3X/rSLB4QUKXxgfg8aiEq/UZ8cPmD9q94BT1bA/nfEq9jGrUIc5m6F6mf90Oro5n/X9PO/v86TjvueEVGsjSiW5csRPqDuYN55QexapJwnTWIk3k7Ufp7LS8ytH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82B21576;
+	Fri, 12 Apr 2024 01:44:15 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C5003F6C4;
+	Fri, 12 Apr 2024 01:43:44 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: [PATCH v2 12/43] arm64: RME: Keep a spare page delegated to the RMM
+Date: Fri, 12 Apr 2024 09:42:38 +0100
+Message-Id: <20240412084309.1733783-13-steven.price@arm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412084309.1733783-1-steven.price@arm.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,185 +51,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Let's test that we can have shared zeropages in our process as long as
-storage keys are not getting used, that shared zeropages are properly
-unshared (replaced by anonymous pages) once storage keys are enabled,
-and that no new shared zeropages are populated after storage keys
-were enabled.
+Pages can only be populated/destroyed on the RMM at the 4KB granule,
+this requires creating the full depth of RTTs. However if the pages are
+going to be combined into a 4MB huge page the last RTT is only
+temporarily needed. Similarly when freeing memory the huge page must be
+temporarily split requiring temporary usage of the full depth oF RTTs.
 
-We require the new pagemap interface to detect the shared zeropage.
+To avoid needing to perform a temporary allocation and delegation of a
+page for this purpose we keep a spare delegated page around. In
+particular this avoids the need for memory allocation while destroying
+the realm guest.
 
-On an old kernel (zeropages always disabled):
-	# ./s390x/shared_zeropage_test
-	TAP version 13
-	1..3
-	not ok 1 Shared zeropages should be enabled
-	ok 2 Shared zeropage should be gone
-	ok 3 Shared zeropages should be disabled
-	# Totals: pass:2 fail:1 xfail:0 xpass:0 skip:0 error:0
-
-On a fixed kernel:
-	# ./s390x/shared_zeropage_test
-	TAP version 13
-	1..3
-	ok 1 Shared zeropages should be enabled
-	ok 2 Shared zeropage should be gone
-	ok 3 Shared zeropages should be disabled
-	# Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-Testing of UFFDIO_ZEROPAGE can be added later.
-
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Thomas Huth <thuth@redhat.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
+ arch/arm64/include/asm/kvm_rme.h | 5 +++++
+ arch/arm64/kvm/rme.c             | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
-To get it right this time, test the relevant cases.
-
-v3 of fixes are at:
- https://lore.kernel.org/all/20240411161441.910170-1-david@redhat.com/T/#u
-
----
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../kvm/s390x/shared_zeropage_test.c          | 110 ++++++++++++++++++
- 2 files changed, 111 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 741c7dc16afc..ed4ad591f193 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -180,6 +180,7 @@ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
- TEST_GEN_PROGS_s390x += s390x/tprot
- TEST_GEN_PROGS_s390x += s390x/cmma_test
- TEST_GEN_PROGS_s390x += s390x/debug_test
-+TEST_GEN_PROGS_s390x += s390x/shared_zeropage_test
- TEST_GEN_PROGS_s390x += demand_paging_test
- TEST_GEN_PROGS_s390x += dirty_log_test
- TEST_GEN_PROGS_s390x += guest_print_test
-diff --git a/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
-new file mode 100644
-index 000000000000..74e829748fb1
---- /dev/null
-+++ b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Test shared zeropage handling (with/without storage keys)
-+ *
-+ * Copyright (C) 2024, Red Hat, Inc.
-+ */
-+#include <sys/mman.h>
+diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+index cf8cc4d30364..fba85e9ce3ae 100644
+--- a/arch/arm64/include/asm/kvm_rme.h
++++ b/arch/arm64/include/asm/kvm_rme.h
+@@ -50,6 +50,9 @@ enum realm_state {
+  * @state: The lifetime state machine for the realm
+  * @rd: Kernel mapping of the Realm Descriptor (RD)
+  * @params: Parameters for the RMI_REALM_CREATE command
++ * @spare_page: A physical page that has been delegated to the Realm world but
++ *              is otherwise free. Used to avoid temporary allocation during
++ *              RTT operations.
+  * @num_aux: The number of auxiliary pages required by the RMM
+  * @vmid: VMID to be used by the RMM for the realm
+  * @ia_bits: Number of valid Input Address bits in the IPA
+@@ -60,6 +63,8 @@ struct realm {
+ 	void *rd;
+ 	struct realm_params *params;
+ 
++	phys_addr_t spare_page;
 +
-+#include <linux/fs.h>
+ 	unsigned long num_aux;
+ 	unsigned int vmid;
+ 	unsigned int ia_bits;
+diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+index 658d14e8d87d..9652ec6ab2fd 100644
+--- a/arch/arm64/kvm/rme.c
++++ b/arch/arm64/kvm/rme.c
+@@ -103,6 +103,7 @@ static int realm_create_rd(struct kvm *kvm)
+ 	}
+ 
+ 	realm->rd = rd;
++	realm->spare_page = PHYS_ADDR_MAX;
+ 
+ 	if (WARN_ON(rmi_rec_aux_count(rd_phys, &realm->num_aux))) {
+ 		WARN_ON(rmi_realm_destroy(rd_phys));
+@@ -283,6 +284,13 @@ void kvm_destroy_realm(struct kvm *kvm)
+ 
+ 	rme_vmid_release(realm->vmid);
+ 
++	if (realm->spare_page != PHYS_ADDR_MAX) {
++		/* Leak the page if the undelegate fails */
++		if (!WARN_ON(rmi_granule_undelegate(realm->spare_page)))
++			free_page((unsigned long)phys_to_virt(realm->spare_page));
++		realm->spare_page = PHYS_ADDR_MAX;
++	}
 +
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "kselftest.h"
-+
-+static void set_storage_key(void *addr, uint8_t skey)
-+{
-+	asm volatile("sske %0,%1" : : "d" (skey), "a" (addr));
-+}
-+
-+static void guest_code(void)
-+{
-+	/* Issue some storage key instruction. */
-+	set_storage_key((void *)0, 0x98);
-+	GUEST_DONE();
-+}
-+
-+/*
-+ * Returns 1 if the shared zeropage is mapped, 0 if something else is mapped.
-+ * Returns < 0 on error or if nothing is mapped.
-+ */
-+static int maps_shared_zeropage(int pagemap_fd, void *addr)
-+{
-+	struct page_region region;
-+	struct pm_scan_arg arg = {
-+		.start = (uintptr_t)addr,
-+		.end = (uintptr_t)addr + 4096,
-+		.vec = (uintptr_t)&region,
-+		.vec_len = 1,
-+		.size = sizeof(struct pm_scan_arg),
-+		.category_mask = PAGE_IS_PFNZERO,
-+		.category_anyof_mask = PAGE_IS_PRESENT,
-+		.return_mask = PAGE_IS_PFNZERO,
-+	};
-+	return ioctl(pagemap_fd, PAGEMAP_SCAN, &arg);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	char *mem, *page0, *page1, *page2, tmp;
-+	const size_t pagesize = getpagesize();
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+	struct ucall uc;
-+	int pagemap_fd;
-+
-+	ksft_print_header();
-+	ksft_set_plan(3);
-+
-+	/*
-+	 * We'll use memory that is not mapped into the VM for simplicity.
-+	 * Shared zeropages are enabled/disabled per-process.
-+	 */
-+	mem = mmap(0, 3 * pagesize, PROT_READ, MAP_PRIVATE|MAP_ANON, -1, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "mmap() failed");
-+
-+	/* Disable THP. Ignore errors on older kernels. */
-+	madvise(mem, 3 * pagesize, MADV_NOHUGEPAGE);
-+
-+	page0 = mem;
-+	page1 = page0 + pagesize;
-+	page2 = page1 + pagesize;
-+
-+	/* Can we even detect shared zeropages? */
-+	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
-+	TEST_REQUIRE(pagemap_fd >= 0);
-+
-+	tmp = *page0;
-+	asm volatile("" : "+r" (tmp));
-+	TEST_REQUIRE(maps_shared_zeropage(pagemap_fd, page0) == 1);
-+
-+	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
-+
-+	/* Verify that we get the shared zeropage after VM creation. */
-+	tmp = *page1;
-+	asm volatile("" : "+r" (tmp));
-+	ksft_test_result(maps_shared_zeropage(pagemap_fd, page1) == 1,
-+			 "Shared zeropages should be enabled\n");
-+
-+	/*
-+	 * Let our VM execute a storage key instruction that should
-+	 * unshare all shared zeropages.
-+	 */
-+	vcpu_run(vcpu);
-+	get_ucall(vcpu, &uc);
-+	TEST_ASSERT_EQ(uc.cmd, UCALL_DONE);
-+
-+	/* Verify that we don't have a shared zeropage anymore. */
-+	ksft_test_result(!maps_shared_zeropage(pagemap_fd, page1),
-+			 "Shared zeropage should be gone\n");
-+
-+	/* Verify that we don't get any new shared zeropages. */
-+	tmp = *page2;
-+	asm volatile("" : "+r" (tmp));
-+	ksft_test_result(!maps_shared_zeropage(pagemap_fd, page2),
-+			 "Shared zeropages should be disabled\n");
-+
-+	kvm_vm_free(vm);
-+
-+	ksft_finished();
-+}
+ 	for (i = 0; i < pgt->pgd_pages; i++) {
+ 		phys_addr_t pgd_phys = kvm->arch.mmu.pgd_phys + i * PAGE_SIZE;
+ 
 -- 
-2.44.0
+2.34.1
 
