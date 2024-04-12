@@ -1,171 +1,136 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DDB14388E
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E821448E3;
+	Fri, 12 Apr 2024 14:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712933242; cv=none; b=L6RsSTQqf4cwiyfNIhhZUARFdssuqIqKVczwskt9lXAeEW83s4N2AEYXbVIGj6uVW8g7/PZHSfRxQj3gDAzEfdBbIoG4pGI7tV7NV6C3F5/6RnD8lcGQ53slUH+Z0kdCtLaDaiWmQ+fmeugSjtKNutk/WmcCFncigUrmCLQy0XM=
+	t=1712933327; cv=none; b=cKsyRmBVRe8lyM2nKvMGv/dTiOtEsgq1tHTgMaYZbBXbudcXnZ7qEGLnOFfjI4W5cJB9egU81CxdNvU8wHqx2bdtPtwz6zviSKyaVb0lPYx2d9Hrf0yBpX7m++Dlyjnw4th5cbyMfIOAmlrkJ78a57cJ/M+pe+EfCB/jKzq1aUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712933242; c=relaxed/simple;
-	bh=TcAKeIAD4FI6V9EJTyRm4kVDYMy0g1VhCv2E013IWgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7kKx/LrPNIcp0gIYvtAz66sTkZFow8IAYR0EGuopOEzx/Tc55AMk5TVFpGa1NLlKe7JhigwyYqzQocn3fCisoAOM2n5blq69S/aGts/K/DWOa8pudR5z7U4u+bq+NcnPkCm6JxfnBtcrdiKweLEIi3rojdUhX0uL173YBeRktg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tl8dbV8m; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712933327; c=relaxed/simple;
+	bh=jrbuO52ZBSIAk7BVgz4HVemMnghQxGKVn3QHhdB/BIY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=btWnWs2I2zsiC25bK2WdHsvMh+PpK96mE44xUb5tOt7atujD7Oi7A5EPHnCX/Vn3WXz6JpMDaQNS+D4vTKIOzJVUVJ9I8i8rKUiF6sHkJWXcFKeS9Y2nZl4sDivz8LTcwfiC7ootGWQND0845wXYq7CmTUi7Sd8xA2nKLCkSvEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8zr0nsJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tl8dbV8m"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-417db45fe01so6986185e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712933239; x=1713538039; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9On/12QgOndZa7hunUmoB6GwxdTLfDtaIfjJMR0hWE=;
-        b=Tl8dbV8mG32rYvbfD0kqBjWicI7wEJol/58oqI/VBzf5Cppk9GiC29xlj4pLZoXoQm
-         tWTxLjLYvTOVEQyCy3zjnMYW6APmaqH9rF7esE81tR4lpj9OCykdI39lPFiuoN2PUEWJ
-         M7TbJ00lw4msrlPMWS9n/IHVkoZm9KPrnf4f0JGg+sUqHsT0OlLIGkUb0H9KaiyOvtpP
-         +SvFUSnATuYcoF/nmlY3pBltRvnC/43MfSfnCq/MKDh8aveGzy3fhKwHiG2oKq3GdPz0
-         etfZAKicgoiDBpuCVDPCqvbMxw4uD6NKck5Gfvrnw23D/ee8vW13g9hD9GwzF6tLgRBN
-         KkzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712933239; x=1713538039;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B9On/12QgOndZa7hunUmoB6GwxdTLfDtaIfjJMR0hWE=;
-        b=r/dmMgZ6NI3mIt0V/09C4lCTMLjWtWDowrJ3b9ChWc8hpQmOv7aCXWAAVRuPTYXEqi
-         JyQlratoo3ePVJOkN7D3vmXr7VzHI/yKeuoJZerpmVVqssInNKmi4Dljx+DdxSlZgpGX
-         SEB+X0ImsSxRT7dNZFSdYLTnmF262mzNozbz/FcOwz2670zKOFIC5M4PvtXhqgSgLiVL
-         Fj0aTr6ByLGtTkV1eFfj8IzmprzRFEIPCxHCJsVpzHmNgVw5d38v3qW6uAfrwEJQj7/N
-         LjsC6xffPmwl/iQ+XVyUkCY2Bawn26EAaZ8s0J5N3RpkVfhj5S85pkAzhFp6XWbps8ok
-         EK4g==
-X-Gm-Message-State: AOJu0YzwSp90ZCkvGyMx+T+X64hkL/pWhhbiUFRt5llGEh9PXIxqx7gT
-	bun5C+rz3AdF+1ZczgIJ8xmlUYmWbLNk6ythWmKj5Ay4J2T6Njb7xRUc5yqpsta43YknFqW/0E8
-	skAom
-X-Google-Smtp-Source: AGHT+IFt27/j/DJEWe+JM8KZ20gBHWLTRe2a2NjdXivl0luS1r6aIkKVTKx7gFAfv4NXA5mox/v5eQ==
-X-Received: by 2002:a05:600c:3b25:b0:416:2a95:6e8b with SMTP id m37-20020a05600c3b2500b004162a956e8bmr2072128wms.26.1712933238941;
-        Fri, 12 Apr 2024 07:47:18 -0700 (PDT)
-Received: from google.com (161.126.77.34.bc.googleusercontent.com. [34.77.126.161])
-        by smtp.gmail.com with ESMTPSA id f20-20020a05600c155400b0041665d968f1sm5821885wmg.47.2024.04.12.07.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 07:47:18 -0700 (PDT)
-Date: Fri, 12 Apr 2024 15:47:15 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, suleiman@google.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Youssef Esmat <youssefesmat@google.com>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH v2 01/11] ring-buffer: Allow mapped field to be set
- without mapping
-Message-ID: <ZhlJc6gni3rcOWW7@google.com>
-References: <20240411012541.285904543@goodmis.org>
- <20240411012904.237435058@goodmis.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8zr0nsJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C74EC4AF0F;
+	Fri, 12 Apr 2024 14:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712933326;
+	bh=jrbuO52ZBSIAk7BVgz4HVemMnghQxGKVn3QHhdB/BIY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=f8zr0nsJxy5LvDnNDmnQ+P4VqSlqhvFf2lvS7fWg6H+fGg4QVkERQTANdOfCMaqi8
+	 MiPOi3hy9LTpjTE9DIaO3/L96bQxmwlzj02kDdJDTXppFsklPGHPZbgqM1ojrPeGFt
+	 MYkjra6/naj7ziq8hauy/GaDUg9Gc6ceSIxeoYbgFIs4ICK92Kx/L6DtFUk1UJIXFr
+	 U01FGDXMOLcIuSQ7cjgnMKHDvFVH6y/tag3UH8PGIZJgxVSTzdDpinGASl2cf9ENdE
+	 XE7RZg0m3o/lDcE6BBPwCf5riMIfpSVtlu3A8Uo0WE3ffYrVh0wyp+7lbTYzY9iS5z
+	 fufK1yBQIoznQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46119C04FF8;
+	Fri, 12 Apr 2024 14:48:46 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Fri, 12 Apr 2024 16:48:31 +0200
+Subject: [PATCH v3 3/4] appletalk: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411012904.237435058@goodmis.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240412-jag-sysctl_remset_net-v3-3-11187d13c211@samsung.com>
+References: <20240412-jag-sysctl_remset_net-v3-0-11187d13c211@samsung.com>
+In-Reply-To: <20240412-jag-sysctl_remset_net-v3-0-11187d13c211@samsung.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, 
+ Stefan Schmidt <stefan@datenfreihafen.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>, 
+ Steffen Klassert <steffen.klassert@secunet.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, 
+ Remi Denis-Courmont <courmisch@gmail.com>, 
+ Allison Henderson <allison.henderson@oracle.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+ Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, 
+ Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, 
+ Pablo Neira Ayuso <pablo@netfilter.org>, 
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, 
+ Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, 
+ Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, 
+ Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Kees Cook <keescook@chromium.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dccp@vger.kernel.org, linux-wpan@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-afs@lists.infradead.org, 
+ linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+ linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=openpgp-sha256; l=954;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=XDIcCkZ78Jc0dTs1FMG4vIEa4qRq4WIrQqvTanRSSyI=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYZScsPYrpPiMEhQtTWZeyDzwGKKkqrNx1Y5
+ blH40PV/tbg0okBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmGUnLAAoJELqXzVK3
+ lkFPYU0L+wdiNX0+Oq9km4WCDWgZjYmZPl2GKaZZ/YhkEiKhU0DCpHyVq+kR+z84jZe1Qun6y3X
+ 1BLWRgjdk8yz8v1hNZPrfIKBEANTRfx6/bb9H1DXKnmGYvj0JTpCSkRQnLEOhwNXcL7LoYWozWH
+ zISe3iPA0j7a5t2s7UJBp2zfDLzZuui9ldhlvQpXIYF4o/jvJMV+IcMvziaASUq/SGlGoxjv6/A
+ iIfVcVM7URaA4472C8F5y8TAheOaNI6kQqEonolMTsZnr/safBo9YWvKuHAx3iitOgvDKLKAkaI
+ FrIFG4n7l2p81s2oUoDZr4Q2Mx5ubOrh/bxJWK9TzkxtsPiHw3OqoviwjQ72k0HWkPw4DqIIc4k
+ P7IQFbSkwQxS1Csj2vtNJDqcIwxOBA7OS78s91U3QG1+4i51wohjEl86pul3m+aWCcJaML6bonM
+ ZmImGHv4gHL19ZjdepmJPNbiIQnFNIK+zGd1VKwRaXFAbZOxa4zqhiYsNqE5LjrPPUr+BNzb6w7
+ BY=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On Wed, Apr 10, 2024 at 09:25:42PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> In preparation for having the ring buffer mapped to a dedicated location,
-> which will have the same restrictions as user space memory mapped buffers,
-> allow it to use the "mapped" field of the ring_buffer_per_cpu structure
-> without having the user space meta page mapping.
-> 
-> When this starts using the mapped field, it will need to handle adding a
-> user space mapping (and removing it) from a ring buffer that is using a
-> dedicated memory range.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 793ecc454039..44b1d5f1a99a 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -5223,6 +5223,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->  {
->  	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
->  
-> +	if (!meta)
-> +		return;
-> +
->  	meta->reader.read = cpu_buffer->reader_page->read;
->  	meta->reader.id = cpu_buffer->reader_page->id;
->  	meta->reader.lost_events = cpu_buffer->lost_events;
-> @@ -6167,7 +6170,7 @@ rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
->  
->  	mutex_lock(&cpu_buffer->mapping_lock);
->  
-> -	if (!cpu_buffer->mapped) {
-> +	if (!cpu_buffer->mapped || !cpu_buffer->meta_page) {
->  		mutex_unlock(&cpu_buffer->mapping_lock);
->  		return ERR_PTR(-ENODEV);
->  	}
-> @@ -6345,12 +6348,13 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+From: Joel Granados <j.granados@samsung.com>
 
-IIUC, we still allow to map from user-space this buffer. So we now can have
-mapped && !meta_page.
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which will
+reduce the overall build time size of the kernel and run time memory
+bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Then the "if (cpu_buffer->mapped) {" that skips the meta_page creation in
-ring_buffer_map() should be replaced by if (cpu_buffer->meta_page).
+Remove sentinel from atalk_table ctl_table array.
 
->  	 */
->  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->  	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
-> +
->  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  
->  	err = __rb_map_vma(cpu_buffer, vma);
->  	if (!err) {
->  		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> -		cpu_buffer->mapped = 1;
-> +		cpu_buffer->mapped++;
->  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  	} else {
->  		kfree(cpu_buffer->subbuf_ids);
-> @@ -6388,7 +6392,7 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
->  	mutex_lock(&buffer->mutex);
->  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ net/appletalk/sysctl_net_atalk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-In this function, there's also a check for cpu_buffer->mapped > 1. This avoids
-killing the meta-page while someone is still in use.
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index d945b7c0176d..7aebfe903242 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -40,7 +40,6 @@ static struct ctl_table atalk_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_jiffies,
+ 	},
+-	{ },
+ };
+ 
+ static struct ctl_table_header *atalk_table_header;
 
-It seems like a dedicated meta_page counter will be necessary. Otherwise, in the
-event of a ring-buffer mapped at boot we, would setup the meta-page on the first
-mmap() and never tear it down.
+-- 
+2.43.0
 
->  
-> -	cpu_buffer->mapped = 0;
-> +	cpu_buffer->mapped--;
->  
->  	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->  
-> -- 
-> 2.43.0
-> 
-> 
+
