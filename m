@@ -1,216 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6988148827;
-	Fri, 12 Apr 2024 15:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A5A148FEE;
+	Fri, 12 Apr 2024 15:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712935331; cv=none; b=punu11N6u/hoq12nTm0WkvEUFIHVf3NPOIPq+uoTxbC+1tU9QxEy5GnZcWBU/Dp7K/X7Mh82X4rPIc86yW1zOdHRRCkEoNuIP/SHVV323HMrKtc16VKHSOc1wgz9JxdG8DEKXb7WSMz8Uy8JGH3uveJm4SQDoK1/xQGJ9/Hj3H0=
+	t=1712935336; cv=none; b=diuax6p3YasavAsQ17s3vPSrYViqCo8hV1Tui+Z/pmexuTpwx9lWFNntpw835kjznlLiRWDG+PzDiVW334sQkT8ND0/hjkIdEFIr0LjTyDGeb+xCBA+HRB89Vh8IwixOqVt//zpSdxF2NgpDYl+ANunFXt67zErgbTRezxJQvUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712935331; c=relaxed/simple;
-	bh=GWI+u4qjsUPEJ+fxWTkTzIEPGmAcqzYbivpR7z2fEe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sok5OjeJnyngF3Iq+8MjxRjPMv8SyQqtaDaLU2WpJ5+VPasMCkSwYpjkWybA+ObXPh8eIogAfxInL0AjB2AwvzJ3pTOtMNsugjTT/496CEESP2zX0FNyttO4mgNZeXTeNSMbhtOl4jAA8ghbB3vYiO21Ykj646/8UDo+/uBSjm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxVWIHeu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712935336; c=relaxed/simple;
+	bh=vWx8hjmgbGaYijZPOHAFQF3Diarftvn5nTcDZWxUfWQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=l+pzAjOZoTv16nCqicd22IbaLOnmi1EcughVFTUi8LwjSMHesYh3oIHTmV3s5P5WGiwqg2LdSv0Q2/oOt4pwMX0e+qXZ4duh7oMdn7WlIn9caiPXHN3K/y34A6CBOn7KlHysnDyqa9O5K6gJ3vhlE7gbW0p0xKUEJYc6J8M3MxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bk1bW2Vl; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxVWIHeu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E866C2BD11;
-	Fri, 12 Apr 2024 15:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712935331;
-	bh=GWI+u4qjsUPEJ+fxWTkTzIEPGmAcqzYbivpR7z2fEe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bxVWIHeuV57J9RMesi0j36PpkdWXu7fFZsXHcxtjvg6SD6LEA/6CJeFxGGSWDNbFC
-	 xlFesC8XpFFDpWdfLiE8wAj3ULMWFO1fIn24Ot3T603B1raWNQGHEgRE1IlaQSDAEM
-	 XxCx9nzJLTPHiHxfF/x6ibt06xvWOPATwlovkvIoFKqbUxVAcdsOwBGJFq9IsVIrr+
-	 VnEmtedxD4mmSRHYFgwzikUR28XeeO1fsV+sf01HI1hw07yOPo7T28S6gmUqEDqlS8
-	 uLJntrlCKSEOYAFS1oJyhmzClJqfDJdGBMAzoeGHvs9eHxVcZA+izUoFnaHODMUu8U
-	 ioT9lwB3RMK8Q==
-Date: Fri, 12 Apr 2024 12:22:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the perf tree
-Message-ID: <ZhlRn0TUkcDaAZT5@x1>
-References: <20240402094116.79751030@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bk1bW2Vl"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-417f5268b12so9539265e9.1;
+        Fri, 12 Apr 2024 08:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712935333; x=1713540133; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
+        b=bk1bW2Vl0rAKZh3WwPhZlovjXbexko1sJNYuqP7OmCoktMa5e4eyj5KOzyY/4myE4Q
+         5xhfRslGXb/R8aoq+Sl7Q1YGKf7jJLDbO9ROujuqUGC48l0xUGWFg1ztNarzUntp08Vp
+         jN3Q0TGlKqR+4DciDAcPvwFLalMJ/TN9Mie+m9PAuh1C68tgXS6DMct6use87Bip7GB8
+         f0BopJTotNGcsxQxfVhcj5U/L+4gWKcdFK/eVhPB7GOQ1rsgQ7WawtdBX2h5N0MUELQ8
+         xF4BvbAsM+8ykr9acs4KK8zKSrQMumr/0ipTUSw3QaRCDxojIjA5+LWjMECMBHE/6vr4
+         gQkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712935333; x=1713540133;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
+        b=CkJJtzdrbqegLDqQjK1fxgmJoRbcrlvSVfbDptNVSY0FSRSaTsztHYBlJ0irvTyFPe
+         KzcvNEuUWIyneygjyC9aTBUi2+qXPqwD+x4u3m7N1NH4a3KPDFKIGsQCkUsPwCxu3Osd
+         vfZr/nODqJIk5fwEiQHyWy4znZo2JdNJo/8bTEfVn4SZxmo97JmCzG5cBEpP4DkxF8Kb
+         xxZlwtxJyYw+MG/YNR2xEMusWk25eleI3F3CuWFrpT6QCjZ1qc/wmRGwg4z2boTzkXPs
+         pDt/XJY4dTF7BVCtL8MiUAmMTul7o12CFK3TsToARiLrzVrzgE1v7mpl+q3bntvHLf3T
+         dhEg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8ZAhvVV/WWTmn6uB1z2Zyoe9jHDvtye1lIHYLPJiAq8fPEBQsurMDFr+eQC8l9g5AVsQdoSShSnSVbSc1kJwBP3fPyNGbY5NExU9riDc39KnBdN4CkswRoN8XXBzrrAqZNG4u
+X-Gm-Message-State: AOJu0YwqXcLNEJNCvaB5AyyWexAHIQeG+DMDOuaY6ShzT+6mc6N4mR4D
+	LMI5JIQriYHxDba9Cv0RBNQoejNsmBZHkpT0VzA38gbJqgwMCsIx
+X-Google-Smtp-Source: AGHT+IHJyw+CGlklDUs7/JfZQA6jFaqmzKSrHFQcXrVE9ebzzfRJacwFjzdAXVcDcos/3UyuhpFQnA==
+X-Received: by 2002:a05:600c:1e0b:b0:418:1447:711d with SMTP id ay11-20020a05600c1e0b00b004181447711dmr453539wmb.24.1712935332801;
+        Fri, 12 Apr 2024 08:22:12 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b00416928e239csm6005029wms.35.2024.04.12.08.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 08:22:12 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	dsahern@kernel.org,
+	aleksander.lobakin@intel.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net v1 1/2] net: gro: add flush check in udp_gro_receive_segment
+Date: Fri, 12 Apr 2024 17:21:19 +0200
+Message-Id: <20240412152120.115067-2-richardbgobert@gmail.com>
+In-Reply-To: <20240412152120.115067-1-richardbgobert@gmail.com>
+References: <20240412152120.115067-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240402094116.79751030@canb.auug.org.au>
 
-On Tue, Apr 02, 2024 at 09:41:16AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the perf tree, today's linux-next build (native i.e. ppc64le
-> perf) failed like this:
-> 
-> make[3]: *** No rule to make target '/home/sfr/next/next/tools/include/uapi/linux/stat.h', needed by '/home/sfr/next/perf/libbpf/staticobjs/libbpf.o'.  Stop.
+GRO-GSO path is supposed to be transparent and as such L3 flush checks are
+relevant to all flows which call skb_gro_receive. This patch uses the same
+logic and code from tcp_gro_receive but in the relevant flow path in
+udp_gro_receive_segment.
 
-How is this built? Using O=/home/sfr/next/perf?
+Fixes: 36707061d6ba ("udp: allow forwarding of plain (non-fraglisted) UDP GRO packets")
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ net/ipv4/udp_offload.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 3498dd1d0694..1f4e08f43c4b 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 	struct sk_buff *p;
+ 	unsigned int ulen;
+ 	int ret = 0;
++	int flush;
  
-> Maybe caused by commit
-> 
->   f122b3d6d179 ("perf beauty: Introduce scrape script for the 'statx' syscall 'mask' argument")
-> 
-> or
-> 
->   a672af9139a8 ("tools headers: Remove almost unused copy of uapi/stat.h, add few conditional defines")
-> 
-> or a combination of them?
-> 
-> This is an incremental build but doing 'make -C tools/perf clean' and then
-> rebuilding works, so maybe there is a dependency missing?
+ 	/* requires non zero csum, for symmetry with GSO */
+ 	if (!uh->check) {
+@@ -528,7 +529,17 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 				skb_gro_postpull_rcsum(skb, uh,
+ 						       sizeof(struct udphdr));
+ 
+-				ret = skb_gro_receive(p, skb);
++				flush = NAPI_GRO_CB(p)->flush;
++
++				if (NAPI_GRO_CB(p)->flush_id != 1 ||
++				    NAPI_GRO_CB(p)->count != 1 ||
++				    !NAPI_GRO_CB(p)->is_atomic)
++					flush |= NAPI_GRO_CB(p)->flush_id;
++				else
++					NAPI_GRO_CB(p)->is_atomic = false;
++
++				if (flush || skb_gro_receive(p, skb))
++					ret = 1;
+ 			}
+ 		}
+ 
+-- 
+2.36.1
 
-So I'm trying to revisit this, I did:
-
-⬢[acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
-⬢[acme@toolbox perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test python'
-⬢[acme@toolbox perf-tools-next]$ git remote update torvalds
-Fetching torvalds
-⬢[acme@toolbox perf-tools-next]$ m
-<SNIP>
-  LD      /tmp/build/perf-tools-next/perf-in.o
-  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-  LINK    /tmp/build/perf-tools-next/perf
-  INSTALL binaries
-  INSTALL tests
-  INSTALL libperf-jvmti.so
-  INSTALL libexec
-  INSTALL perf-archive
-  INSTALL perf-iostat
-  INSTALL strace/groups
-  INSTALL perl-scripts
-  INSTALL python-scripts
-  INSTALL dlfilters
-  INSTALL perf_completion-script
-  INSTALL perf-tip
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
- 17: 'import perf' in python                                         : Ok
-⬢[acme@toolbox perf-tools-next]$
-
-Then left this there and merged perf-tools-next:
-
-⬢[acme@toolbox perf-tools-next]$ git merge perf-tools-next
-Auto-merging MAINTAINERS
-Merge made by the 'ort' strategy.
- MAINTAINERS                                                            |    1 +
- tools/include/uapi/asm-generic/fcntl.h                                 |  221 -----------
- tools/include/uapi/linux/openat2.h                                     |   43 ---
- tools/lib/perf/cpumap.c                                                |   33 +-
- tools/lib/perf/include/perf/cpumap.h                                   |   16 +
- tools/lib/perf/libperf.map                                             |    4 +
-<SNIP>
- tools/perf/util/vdso.c                                                 |   48 +--
- 186 files changed, 7217 insertions(+), 3829 deletions(-)
- delete mode 100644 tools/include/uapi/asm-generic/fcntl.h
- delete mode 100644 tools/include/uapi/linux/openat2.h
- rename tools/{ => perf/trace/beauty}/arch/x86/include/asm/irq_vectors.h (100%)
- rename tools/{ => perf/trace/beauty}/arch/x86/include/uapi/asm/prctl.h (100%)
- create mode 100755 tools/perf/trace/beauty/clone.sh
- create mode 100644 tools/perf/trace/beauty/fs_at_flags.c
- create mode 100755 tools/perf/trace/beauty/fs_at_flags.sh
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/fcntl.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/fs.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/mount.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/prctl.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/sched.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/stat.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/usbdevice_fs.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/linux/vhost.h (100%)
- rename tools/{ => perf/trace/beauty}/include/uapi/sound/asound.h (100%)
- create mode 100755 tools/perf/trace/beauty/statx_mask.sh
- create mode 100644 tools/perf/ui/browsers/annotate-data.c
- create mode 100644 tools/perf/util/disasm.c
- create mode 100644 tools/perf/util/disasm.h
-⬢[acme@toolbox perf-tools-next]$ 
-
-And:
-
-⬢[acme@toolbox perf-tools-next]$ m
-rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-312.pyc': Permission denied
-make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-  BUILD:   Doing 'make -j28' parallel build
-Warning: Kernel ABI header differences:
-<SNIP>
-Auto-detecting system features:
-...                                   dwarf: [ on  ]
-...                      dwarf_getlocations: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libcap: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ on  ]
-...                      libdw-dwarf-unwind: [ on  ]
-...                             libcapstone: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-  GEN     /tmp/build/perf-tools-next/common-cmds.h
-  LINK    /tmp/build/perf-tools-next/libperf-jvmti.so
-  INSTALL /tmp/build/perf-tools-next/libsubcmd/include/subcmd/run-command.h
-<SNIP>
-INSTALL libbpf_headers
-  LD      /tmp/build/perf-tools-next/libperf/libperf-in.o
-  CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
-  AR      /tmp/build/perf-tools-next/libperf/libperf.a
-  GENSKEL /tmp/build/perf-tools-next/util/bpf_skel/augmented_raw_syscalls.skel.h
-  GEN     /tmp/build/perf-tools-next/python/perf.cpython-312-x86_64-linux-gnu.so
-  GEN     /tmp/build/perf-tools-next/pmu-events/pmu-events.c
-  CC      /tmp/build/perf-tools-next/builtin-bench.o
-  CC      /tmp/build/perf-tools-next/builtin-annotate.o
-<SNIP>
-  CC      /tmp/build/perf-tools-next/util/bpf-event.o
-  CC      /tmp/build/perf-tools-next/util/bpf-utils.o
-  CC      /tmp/build/perf-tools-next/util/pfm.o
-  LD      /tmp/build/perf-tools-next/util/scripting-engines/perf-in.o
-  LD      /tmp/build/perf-tools-next/util/perf-in.o
-  LD      /tmp/build/perf-tools-next/perf-in.o
-  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-  LINK    /tmp/build/perf-tools-next/perf
-  INSTALL binaries
-  INSTALL tests
-  INSTALL libperf-jvmti.so
-  INSTALL libexec
-  INSTALL perf-archive
-  INSTALL perf-iostat
-  INSTALL strace/groups
-  INSTALL perl-scripts
-  INSTALL python-scripts
-  INSTALL dlfilters
-  INSTALL perf_completion-script
-  INSTALL perf-tip
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
- 17: 'import perf' in python                                         : Ok
-⬢[acme@toolbox perf-tools-next]$
-
-⬢[acme@toolbox perf-tools-next]$ ls -la tools/include/uapi/linux/stat.h
-ls: cannot access 'tools/include/uapi/linux/stat.h': No such file or directory
-⬢[acme@toolbox perf-tools-next]$
-
-I'm not being able to reproduce that problem, can you see where am I
-doing some mistake in the above steps?
-
-Thanks,
-
-- Arnaldo
