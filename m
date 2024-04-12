@@ -1,52 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E2514D70F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7C714EC4A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943340; cv=none; b=mHuIQtmV+nsYz1dt+zpuAyLDjK4opC4ftPQ5b441L/KvyjkgQ3a5M3+x+Cw05aaDwzCKSKijxbghnUXGUQtIEz8zBnc64vu/BxYPFDTnRayPJRSpek8VdBtt00F6u3BZKIOHKLB+m+FY64ANiN++7Yr3P743E5FK0xE5KAKfGBs=
+	t=1712943341; cv=none; b=FMlmS/0GbPAvlYvawS8wZzo6TVsoLspz99iBqFP6U6TZE8daMsPbJ/RNsON6OWD5gHOcXBJzHNwFMS0jXHSoNybcGndgdVXhtZfLZka6DJDalXGPK/l1kQ/lHKFzzSAojwZRt0IeTP8Q1X9SO0CafeSFVvkqk36P1OsvhmC7TFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943340; c=relaxed/simple;
-	bh=bPjAUZMA01b9lUF0UD8JVCw3aUt22kqfXXw3vYFxhg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VavJ2f1zAQVMkwFepH6L4noHi4lVRCSzdVDggJbo2Wh7BzASa6zMfKPSd0IJY1j/C0F9gwdnDVfyrgLGMc01gWPfu4nW1Sgw8wy5TPt9mOPiXz6EFcNsmkRs5JA85AFJD1Z/+4EY7ubcCdMy4/aLG/PRYd1GdUBpPiQ2Bt/B3fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a6Lwt/Qn; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1712943341; c=relaxed/simple;
+	bh=SblgvMbXzd2Ze5EwcGXr9NfOC6NhtN8U7V3X2qt0Jrc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F/tmvwKGnG+MtNf87qMXaF86bDioD9IFz+p9EXnKQKgjx4gao8lq+ZJJJ3tJZooMVFkWCAdfQNCRmoe7dNXmGCc20dZzD/iPr9E7ufW5V7y0wGn2sZV980rfIMd0lfZK00VY28v2M3UaH/ZlwM7G2FjoihHWA6w1sDFMUUB1qdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U22Zr0Vh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a6Lwt/Qn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U22Zr0Vh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712943337;
+	s=mimecast20190719; t=1712943338;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=08wrH4E5iMZpPUrk1H4xeC+yRmkAmHopAddNodFzADc=;
-	b=a6Lwt/QnMw7dYZtb5hfDcVBZOLyFhsZ2Xg+XKiT+7ndzwKDVELxXco+Y3AdFysoVUY6xvx
-	dc3xeE3DjFFhDYbAAypab2hd3cP8xumebCPTLz31XIca0p5rweMcK9Z88sV4tCp49nZO3z
-	DhCBqCRJUZGRbLLPSVqc7dRSnt+wz98=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-CrK2vUYrNbmLuiFSkaIp7Q-1; Fri,
- 12 Apr 2024 13:35:36 -0400
-X-MC-Unique: CrK2vUYrNbmLuiFSkaIp7Q-1
+	bh=hxUVcXbFfmeqgMIAoI895HcOMlTFsPTHP3NiqFn31Sg=;
+	b=U22Zr0VhcMMoAzyrK25qVLq9s+grvC+QT0k3F/fZ7eKJGYtukX75ybLA2eEgu1w2Qt6evg
+	tteeBbxEeP81eYbFqi+vWYmBmd/JF+oiNuc+xjoQ1DSY942fonji01JBZ90c9ts4sJ3PZT
+	LHmLfBLyLn8KYGFQLH4a07JUpswxJ08=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-258-uMLvgyG0MV6Qrudf1UeWYA-1; Fri, 12 Apr 2024 13:35:35 -0400
+X-MC-Unique: uMLvgyG0MV6Qrudf1UeWYA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CDF638049FC;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A5980104B505;
 	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3FDCB492BC7;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8E4F7492BC7;
 	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH 07/10] KVM: VMX: Introduce test mode related to EPT violation VE
-Date: Fri, 12 Apr 2024 13:35:29 -0400
-Message-ID: <20240412173532.3481264-8-pbonzini@redhat.com>
+Subject: [PATCH 09/10] KVM: x86/mmu: Use PFERR_GUEST_ENC_MASK to indicate fault is private
+Date: Fri, 12 Apr 2024 13:35:31 -0400
+Message-ID: <20240412173532.3481264-10-pbonzini@redhat.com>
 In-Reply-To: <20240412173532.3481264-1-pbonzini@redhat.com>
 References: <20240412173532.3481264-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,196 +58,90 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+SEV-SNP defines PFERR_GUEST_ENC_MASK (bit 34) in page-fault error bits to
+represent the guest page is encrypted.  Use the bit to designate that the
+page fault is private and that it requires looking up memory attributes.
 
-To support TDX, KVM is enhanced to operate with #VE.  For TDX, KVM uses the
-suppress #VE bit in EPT entries selectively, in order to be able to trap
-non-present conditions.  However, #VE isn't used for VMX and it's a bug
-if it happens.  To be defensive and test that VMX case isn't broken
-introduce an option ept_violation_ve_test and when it's set, BUG the vm.
+The vendor kvm page fault handler should set PFERR_GUEST_ENC_MASK bit based
+on their fault information.  It may or may not use the hardware value
+directly or parse the hardware value to set the bit.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-Id: <d6db6ba836605c0412e166359ba5c46a63c22f86.1705965635.git.isaku.yamahata@intel.com>
+Based on a patch by Isaku Yamahata.
+
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/Kconfig    | 13 ++++++++++
- arch/x86/kvm/vmx/vmcs.h |  5 ++++
- arch/x86/kvm/vmx/vmx.c  | 53 ++++++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.h  |  6 ++++-
- 4 files changed, 75 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 ++
+ arch/x86/kvm/mmu/mmu.c          | 9 +++++++++
+ arch/x86/kvm/mmu/mmu_internal.h | 2 +-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 3aaf7e86a859..7632fe6e4db9 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -95,6 +95,19 @@ config KVM_INTEL
- 	  To compile this as a module, choose M here: the module
- 	  will be called kvm-intel.
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 23f1b123830a..0b73f78dd70a 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -264,6 +264,7 @@ enum x86_intercept_stage;
+ #define PFERR_SGX_BIT 15
+ #define PFERR_GUEST_FINAL_BIT 32
+ #define PFERR_GUEST_PAGE_BIT 33
++#define PFERR_GUEST_ENC_BIT 34
+ #define PFERR_IMPLICIT_ACCESS_BIT 48
  
-+config KVM_INTEL_PROVE_VE
-+        bool "Check that guests do not receive #VE exceptions"
-+        default KVM_PROVE_MMU || DEBUG_KERNEL
-+        depends on KVM_INTEL
-+        help
-+
-+          Checks that KVM's page table management code will not incorrectly
-+          let guests receive a virtualization exception.  Virtualization
-+          exceptions will be trapped by the hypervisor rather than injected
-+          in the guest.
-+
-+          If unsure, say N.
-+
- config X86_SGX_KVM
- 	bool "Software Guard eXtensions (SGX) Virtualization"
- 	depends on X86_SGX && KVM_INTEL
-diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-index 7c1996b433e2..b25625314658 100644
---- a/arch/x86/kvm/vmx/vmcs.h
-+++ b/arch/x86/kvm/vmx/vmcs.h
-@@ -140,6 +140,11 @@ static inline bool is_nm_fault(u32 intr_info)
- 	return is_exception_n(intr_info, NM_VECTOR);
- }
+ #define PFERR_PRESENT_MASK	BIT(PFERR_PRESENT_BIT)
+@@ -275,6 +276,7 @@ enum x86_intercept_stage;
+ #define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
+ #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
+ #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
++#define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
+ #define PFERR_IMPLICIT_ACCESS	BIT_ULL(PFERR_IMPLICIT_ACCESS_BIT)
  
-+static inline bool is_ve_fault(u32 intr_info)
-+{
-+	return is_exception_n(intr_info, VE_VECTOR);
-+}
-+
- /* Undocumented: icebp/int1 */
- static inline bool is_icebp(u32 intr_info)
+ #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 8c56d278d8a2..0fb175ad6b9b 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5801,6 +5801,7 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
  {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2c746318c6c3..1a5ad18a1fee 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -869,6 +869,12 @@ void vmx_update_exception_bitmap(struct kvm_vcpu *vcpu)
+ 	int r, emulation_type = EMULTYPE_PF;
+ 	bool direct = vcpu->arch.mmu->root_role.direct;
++	struct kvm *kvm = vcpu->kvm;
  
- 	eb = (1u << PF_VECTOR) | (1u << UD_VECTOR) | (1u << MC_VECTOR) |
- 	     (1u << DB_VECTOR) | (1u << AC_VECTOR);
-+	/*
-+	 * #VE isn't used for VMX.  To test against unexpected changes
-+	 * related to #VE for VMX, intercept unexpected #VE and warn on it.
-+	 */
-+	if (IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		eb |= 1u << VE_VECTOR;
  	/*
- 	 * Guest access to VMware backdoor ports could legitimately
- 	 * trigger #GP because of TSS I/O permission bitmap.
-@@ -2602,6 +2608,9 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 					&_cpu_based_2nd_exec_control))
- 			return -EIO;
- 	}
-+	if (!IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
-+
- #ifndef CONFIG_X86_64
- 	if (!(_cpu_based_2nd_exec_control &
- 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES))
-@@ -2626,6 +2635,7 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 			return -EIO;
- 
- 		vmx_cap->ept = 0;
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 	}
- 	if (!(_cpu_based_2nd_exec_control & SECONDARY_EXEC_ENABLE_VPID) &&
- 	    vmx_cap->vpid) {
-@@ -4588,6 +4598,7 @@ static u32 vmx_secondary_exec_control(struct vcpu_vmx *vmx)
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_VPID;
- 	if (!enable_ept) {
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_EPT;
-+		exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 		enable_unrestricted_guest = 0;
- 	}
- 	if (!enable_unrestricted_guest)
-@@ -4711,8 +4722,40 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 
- 	exec_controls_set(vmx, vmx_exec_control(vmx));
- 
--	if (cpu_has_secondary_exec_ctrls())
-+	if (cpu_has_secondary_exec_ctrls()) {
- 		secondary_exec_controls_set(vmx, vmx_secondary_exec_control(vmx));
-+		if (secondary_exec_controls_get(vmx) &
-+		    SECONDARY_EXEC_EPT_VIOLATION_VE) {
-+			if (!vmx->ve_info) {
-+				/* ve_info must be page aligned. */
-+				struct page *page;
-+
-+				BUILD_BUG_ON(sizeof(*vmx->ve_info) > PAGE_SIZE);
-+				page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-+				if (page)
-+					vmx->ve_info = page_to_virt(page);
-+			}
-+			if (vmx->ve_info) {
-+				/*
-+				 * Allow #VE delivery. CPU sets this field to
-+				 * 0xFFFFFFFF on #VE delivery.  Another #VE can
-+				 * occur only if software clears the field.
-+				 */
-+				vmx->ve_info->delivery = 0;
-+				vmcs_write64(VE_INFORMATION_ADDRESS,
-+					     __pa(vmx->ve_info));
-+			} else {
-+				/*
-+				 * Because SECONDARY_EXEC_EPT_VIOLATION_VE is
-+				 * used only for debugging, it's okay to leave
-+				 * it disabled.
-+				 */
-+				pr_err("Failed to allocate ve_info. disabling EPT_VIOLATION_VE.\n");
-+				secondary_exec_controls_clearbit(vmx,
-+								 SECONDARY_EXEC_EPT_VIOLATION_VE);
-+			}
-+		}
-+	}
- 
- 	if (cpu_has_tertiary_exec_ctrls())
- 		tertiary_exec_controls_set(vmx, vmx_tertiary_exec_control(vmx));
-@@ -5200,6 +5243,12 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	if (is_invalid_opcode(intr_info))
- 		return handle_ud(vcpu);
+ 	 * IMPLICIT_ACCESS is a KVM-defined flag used to correctly perform SMAP
+@@ -5816,6 +5817,14 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
+ 	if (WARN_ON_ONCE(!VALID_PAGE(vcpu->arch.mmu->root.hpa)))
+ 		return RET_PF_RETRY;
  
 +	/*
-+	 * #VE isn't supposed to happen.  Block the VM if it does.
++	 * There is no vendor code that can set PFERR_GUEST_ENC_MASK for
++	 * software-protected VMs.  Compute it here.
 +	 */
-+	if (KVM_BUG_ON(is_ve_fault(intr_info), vcpu->kvm))
-+		return -EIO;
++	if (kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
++	    kvm_mem_is_private(kvm, cr2_or_gpa >> PAGE_SHIFT))
++		error_code |= PFERR_GUEST_ENC_MASK;
 +
- 	error_code = 0;
- 	if (intr_info & INTR_INFO_DELIVER_CODE_MASK)
- 		error_code = vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
-@@ -7474,6 +7523,8 @@ void vmx_vcpu_free(struct kvm_vcpu *vcpu)
- 	free_vpid(vmx->vpid);
- 	nested_vmx_free_vcpu(vcpu);
- 	free_loaded_vmcs(vmx->loaded_vmcs);
-+	if (vmx->ve_info)
-+		free_page((unsigned long)vmx->ve_info);
- }
+ 	r = RET_PF_INVALID;
+ 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
+ 		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 49b428cca04e..7c2ba50cec68 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -290,6 +290,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		.present = err & PFERR_PRESENT_MASK,
+ 		.rsvd = err & PFERR_RSVD_MASK,
+ 		.user = err & PFERR_USER_MASK,
++		.is_private = vcpu->kvm->arch.has_private_mem && (err & PFERR_GUEST_ENC_MASK),
+ 		.prefetch = prefetch,
+ 		.is_tdp = likely(vcpu->arch.mmu->page_fault == kvm_tdp_page_fault),
+ 		.nx_huge_page_workaround_enabled =
+@@ -298,7 +299,6 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
+ 		.req_level = PG_LEVEL_4K,
+ 		.goal_level = PG_LEVEL_4K,
+-		.is_private = kvm_mem_is_private(vcpu->kvm, cr2_or_gpa >> PAGE_SHIFT),
+ 	};
+ 	int r;
  
- int vmx_vcpu_create(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 65786dbe7d60..0da79a386825 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -362,6 +362,9 @@ struct vcpu_vmx {
- 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 	} shadow_msr_intercept;
-+
-+	/* ve_info must be page aligned. */
-+	struct vmx_ve_information *ve_info;
- };
- 
- struct kvm_vmx {
-@@ -574,7 +577,8 @@ static inline u8 vmx_get_rvi(void)
- 	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
- 	 SECONDARY_EXEC_BUS_LOCK_DETECTION |				\
- 	 SECONDARY_EXEC_NOTIFY_VM_EXITING |				\
--	 SECONDARY_EXEC_ENCLS_EXITING)
-+	 SECONDARY_EXEC_ENCLS_EXITING |					\
-+	 SECONDARY_EXEC_EPT_VIOLATION_VE)
- 
- #define KVM_REQUIRED_VMX_TERTIARY_VM_EXEC_CONTROL 0
- #define KVM_OPTIONAL_VMX_TERTIARY_VM_EXEC_CONTROL			\
 -- 
 2.43.0
 
