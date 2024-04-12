@@ -1,136 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916FA5478B;
-	Fri, 12 Apr 2024 11:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03A354918;
+	Fri, 12 Apr 2024 11:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712921185; cv=none; b=GQ4VuOUhzf1vqRtj6VRJ58u9IrO/jnwWGQCBM12CYnhNuJOicEB75NMq0GGckSmEYVO1UXn8C35MckeSs19Cx4MBXs83mTIkRA1bBL/lYKV8eEKNBWAZGxYMzKR+JbXfielq3qJFVPqYHleNSHEb1/sf1Z/ZEFG8Fi7Iruj8XEI=
+	t=1712921202; cv=none; b=F2wRJRVRsS74oHx7d85BaHr/ImjUhO3hVYB1+0n/rRp/Z9twa9jZetyzNMXxN2xAYcYOphPaj+9rlNPvdQCersLbcqtbR9g0qDvnB9gDD+c8sMnoT/FdDR1EL1STsvOUak7JvFEw5q7HlwkXqcBml7oKreRtbNc80Sfvz02Rvog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712921185; c=relaxed/simple;
-	bh=cf+9acvqV2baUaHRsKZuq4lKdIkB1KKqIBIIHYYkN4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MyBzDvgdrvqGDYGFJkSMqIIvshFVPVZnrS2gMKPwiJSOtq/978udCF3vQ/QbthDyi1WqXOcU6g3V6TXU6wCi05hTy/D+oFRAMdeeAITC3BiGglgBkPoynMyeS9wLcbt85rzbHzOWHZQUlQb8wRJHrRz0xVIReLpkDRFVoyZnO3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CasIk1oU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712921202; c=relaxed/simple;
+	bh=z+QWmlRkXyiZHeyBdGOBMyt0lCNZkClZvYp8kEJVhsQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyjEpVtZbPdbPpKRW1oPa+lwHAbGPYe7KRkuS7QuRexr6tF9WYZRcbj9skc8U/CruEaZALDy4rVt32eFZ4uQMvBOtL45JEkm9cvieN7xgfs3yIT5XoNSk0RuuQtI3kdYeK6FI6AQk14QmlIgVaJolN091O6p8L8BKUIzZwOvvqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=c4Lh99Ue; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CasIk1oU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62DE1C2BD11;
-	Fri, 12 Apr 2024 11:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712921185;
-	bh=cf+9acvqV2baUaHRsKZuq4lKdIkB1KKqIBIIHYYkN4s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CasIk1oU0cpM9fe3xe6ZxDA+6otQcfrT/tj8gnC+V/aq9vwdm46GuOEGkF1YEhvsJ
-	 IP4Z12ukzQGc9NZVIVBj9J65hUpCAdfRl+E9OBRrhxxYhTtKUK13DXHET2IVWstp0C
-	 iDgyRgfvGL6nXylvANyfaHBf9wm0Z4OUpw+wjTM6oaYYFteTS61WtFlMjrjteDmtWI
-	 33On5pqpw/5Sus0C35haU3MJ+jw6YBNB9JyMvi6hIYRofRQ6eV/fHzmzbngWsOCdsH
-	 GVEPa/eqc+y+JrBCzVKn5fnWPfXdaDi6oMRmbqQPCbVqzXQKHEOaQvdwW++0nx4GSx
-	 eVniaswAbICHg==
-Message-ID: <ced83bf0-e334-4020-be45-ef512fe3cd59@kernel.org>
-Date: Fri, 12 Apr 2024 14:26:19 +0300
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="c4Lh99Ue"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1712921200; x=1744457200;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z+QWmlRkXyiZHeyBdGOBMyt0lCNZkClZvYp8kEJVhsQ=;
+  b=c4Lh99UeYj4OVZPo8ToZKnV67HgdkbhLPdqx1NykFNqIIQTax6+JcWzT
+   QCNOXOkr79UwP099CD182TDlD4S4O6up3dmqejjYTuoBAI8FtuzSeFE+g
+   frdXqe2UB8RSRGKR9trxXTzpsPGGh+0iCMF9WgDj+DRFrNRJCnr3yX/Ot
+   lWUu5LKipiztOrbNZ2scUqPcNdO0JCo6SBzZnecivW5AnO9GE/TvxHOaW
+   BEYGgBzLpeL/m6/e9CBhA56U0GtYRh4YABFSRuUrxJqNHElXxx3twNG/1
+   MgcXGdCBSreVxjoeC4/jBu52WsO9+3oMl38Dvr8g+L+NjshhtiBUuScSD
+   g==;
+X-CSE-ConnectionGUID: mMLqTC6MQs2jRulaBFM8hA==
+X-CSE-MsgGUID: cKKh0uYiRwyg+O5MVbf/Iw==
+X-IronPort-AV: E=Sophos;i="6.07,195,1708412400"; 
+   d="asc'?scan'208";a="22708176"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Apr 2024 04:26:38 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 12 Apr 2024 04:26:37 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 12 Apr 2024 04:26:33 -0700
+Date: Fri, 12 Apr 2024 12:25:42 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Evan Green
+	<evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
+	<cleger@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<shuah@kernel.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Palmer Dabbelt
+	<palmer@rivosinc.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-doc@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 05/19] riscv: Fix extension subset checking
+Message-ID: <20240412-underuse-manliness-56d328666ce9@wendy>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-5-4af9815ec746@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: ti: beagleplay: Fix Ethernet PHY RESET
- GPIOs
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: srk@ti.com, s-vadapalli@ti.com, r-gunasekaran@ti.com,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240305-b4-for-v6-9-am65-beagleplay-ethernet-reset-v2-1-2bf463a7bf13@kernel.org>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20240305-b4-for-v6-9-am65-beagleplay-ethernet-reset-v2-1-2bf463a7bf13@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="q4bmFTLuVU/tA/Al"
+Content-Disposition: inline
+In-Reply-To: <20240411-dev-charlie-support_thead_vector_6_9-v1-5-4af9815ec746@rivosinc.com>
 
-Hi Vignesh & Nishanth,
+--q4bmFTLuVU/tA/Al
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 05/03/2024 15:15, Roger Quadros wrote:
-> The RESET GPIO pinmux should be part of MDIO bus node
-> so that they can be in the right state before the PHY
-> can be probed via MDIO bus scan.
-> 
-> The GPIO pin should be setup with PIN_INPUT so that
-> input circuitry is enabled in case software wants to
-> check pin status. Without this, incorrect status is shown
-> in /sys/kernel/debug/gpio.
-> 
-> Add GPIO reset for the Gigabit Ethernet PHY. As per
-> RTL8211F datasheet, reset assert width is 10ms and
-> PHY registers can be access accessed after 50ms of
-> reset deassert.
-> 
-> Fixes: f5a731f0787f ("arm64: dts: ti: Add k3-am625-beagleplay")
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
+On Thu, Apr 11, 2024 at 09:11:11PM -0700, Charlie Jenkins wrote:
+> This loop is supposed to check if ext->subset_ext_ids[j] is valid, rather
+> than if ext->subset_ext_ids[i] is valid, before setting the extension
+> id ext->subset_ext_ids[j] in isainfo->isa.
+>=20
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: 0d8295ed975b ("riscv: add ISA extension parsing for scalar crypto")
 
-Could you please pick this for -next.
-It should apply cleanly. Thanks!
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
 
 > ---
-> Changes in v2:
-> - Fix Subject to "arm64"
-> - Enable PIN_INPUT for SPE_RESET to fix GPIO status.
-> - Add Fixes tag.
-> - Link to v1: https://lore.kernel.org/r/20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-v1-1-b3e4b33378bd@kernel.org
-> ---
->  arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> index a34e0df2ab86..8ab838f1697c 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-> @@ -292,6 +292,8 @@ mdio0_pins_default: mdio0-default-pins {
->  		pinctrl-single,pins = <
->  			AM62X_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AD24) MDIO0_MDC */
->  			AM62X_IOPAD(0x015c, PIN_INPUT, 0) /* (AB22) MDIO0_MDIO */
-> +			AM62X_IOPAD(0x003c, PIN_INPUT, 7) /* (M25) GPMC0_AD0.GPIO0_15 */
-> +			AM62X_IOPAD(0x018c, PIN_INPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
->  		>;
->  	};
->  
-> @@ -383,7 +385,6 @@ AM62X_IOPAD(0x017c, PIN_INPUT, 1) /* (AD22) RGMII2_RX_CTL.RMII2_RX_ER */
->  			AM62X_IOPAD(0x016c, PIN_INPUT, 1) /* (Y18) RGMII2_TD0.RMII2_TXD0 */
->  			AM62X_IOPAD(0x0170, PIN_INPUT, 1) /* (AA18) RGMII2_TD1.RMII2_TXD1 */
->  			AM62X_IOPAD(0x0164, PIN_INPUT, 1) /* (AA19) RGMII2_TX_CTL.RMII2_TX_EN */
-> -			AM62X_IOPAD(0x018c, PIN_OUTPUT, 7) /* (AC21) RGMII2_RD2.GPIO1_5 */
->  			AM62X_IOPAD(0x0190, PIN_INPUT, 7) /* (AE22) RGMII2_RD3.GPIO1_6 */
->  			AM62X_IOPAD(0x01f0, PIN_OUTPUT, 5) /* (A18) EXT_REFCLK1.CLKOUT0 */
->  		>;
-> @@ -597,6 +598,9 @@ &cpsw3g_mdio {
->  
->  	cpsw3g_phy0: ethernet-phy@0 {
->  		reg = <0>;
-> +		reset-gpios = <&main_gpio0 15 GPIO_ACTIVE_LOW>;
-> +		reset-assert-us = <10000>;
-> +		reset-deassert-us = <50000>;
->  	};
->  
->  	cpsw3g_phy1: ethernet-phy@1 {
-> @@ -615,7 +619,7 @@ &main_gpio0 {
->  		"USR0", "USR1", "USR2", "USR3", "", "", "USR4",	/* 3-9 */
->  		"EEPROM_WP",					/* 10 */
->  		"CSI2_CAMERA_GPIO1", "CSI2_CAMERA_GPIO2",	/* 11-12 */
-> -		"CC1352P7_BOOT", "CC1352P7_RSTN", "", "", "",	/* 13-17 */
-> +		"CC1352P7_BOOT", "CC1352P7_RSTN", "GBE_RSTN", "", "",	/* 13-17 */
->  		"USR_BUTTON", "", "", "", "", "", "", "", "",	/* 18-26 */
->  		"", "", "", "", "", "", "", "", "", "HDMI_INT",	/* 27-36 */
->  		"", "VDD_WLAN_EN", "", "", "WL_IRQ", "GBE_INTN",/* 37-42 */
-> 
-> ---
-> base-commit: bbef42084cc170cbfc035bf784f2ff055c939d7e
-> change-id: 20240229-b4-for-v6-9-am65-beagleplay-ethernet-reset-098f274fbf15
-> 
-> Best regards,
+>  arch/riscv/kernel/cpufeature.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index cd156adbeb66..5eb52d270a9a 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -617,7 +617,7 @@ static int __init riscv_fill_hwcap_from_ext_list(unsi=
+gned long *isa2hwcap)
+> =20
+>  			if (ext->subset_ext_size) {
+>  				for (int j =3D 0; j < ext->subset_ext_size; j++) {
+> -					if (riscv_isa_extension_check(ext->subset_ext_ids[i]))
+> +					if (riscv_isa_extension_check(ext->subset_ext_ids[j]))
+>  						set_bit(ext->subset_ext_ids[j], isainfo->isa);
+>  				}
+>  			}
+>=20
+> --=20
+> 2.44.0
+>=20
 
--- 
-cheers,
--roger
+--q4bmFTLuVU/tA/Al
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhkaNgAKCRB4tDGHoIJi
+0jF+AP0aO4m1oyhnqLkpU2nu54aTKQxfBfGaf5fonL4sFryyhgD/dWIvHo6yBxxP
+Nl1Ow+f7aIxbclA0UIvZgnXGzIHIIgQ=
+=wY2O
+-----END PGP SIGNATURE-----
+
+--q4bmFTLuVU/tA/Al--
