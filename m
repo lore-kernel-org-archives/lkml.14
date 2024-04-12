@@ -1,80 +1,137 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtpcmd03117.aruba.it (smtpcmd03117.aruba.it [62.149.158.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15C638DC9;
-	Fri, 12 Apr 2024 06:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2344085A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712904394; cv=none; b=nEpiUMrEd+RBK5k2dNePrVpwQYIiIgaDeHuCL8A1kN98PlHlqLIQg/h+X01vKPHbKk6FNwlwehvkSI/mibhaf6hBY0T4RzY5UJKpUz5HDJJ/ne5sRprz5w4if7zJ2EYaQVWZPRiphy4DrAURih72zFoL1yPWc+9QdX9rkKoX/xQ=
+	t=1712904443; cv=none; b=fe1dJc/q4TSHuoL2psv4wB0d+CIaDqf1lvLKMdrvG983UCviQRscOSZz9s4mHnXGIPu9s84IYjWv5RYFUiVi7/JRF3/qvnDzm1ycZjr5ukbqFdKy3P6Bul8dqeRwinym1+yuFc9HVi6QLHmPQYMVT7sGwE8hjpAPwNbmcl4Ulu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712904394; c=relaxed/simple;
-	bh=Oy+Hel7q1Y3lqePMTMMYyggkM6XZ16QFNOxSp8Nh4PI=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=MHGhET9DI6vJAH5qeMowKrtT3WF6WPbkmkYxa/sl/jyZaq8cn5akOZZX0yWn9G9JZ8+rvmh4cfK5zRxCfYlO4Y0lNtIIt/e7vApfDTsulYS/5aadFh04X6ilnU8PWpEzwZxadp7HcKD16Rb6zyxQ4IAX/kUORgF4mJfNf0cOpmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 9EDC53780C22;
-	Fri, 12 Apr 2024 06:46:29 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240411095416.853744210@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240411095416.853744210@linuxfoundation.org>
-Date: Fri, 12 Apr 2024 07:46:29 +0100
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+	s=arc-20240116; t=1712904443; c=relaxed/simple;
+	bh=WyC9PNxXS/aVAIKL5oIDw9u87fuWEC6J4MSR68MMGAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L69qhSKiFAMdlaEpRzBhR/dTJdvsy0W1tVCJqwbZfIC8m+6gv2aAKjyfq02h/+JiCK2txh8UNLLcX0SpzqqOYjQXR2t68vADnY5TRNbAn7qnmwu+Bz+VAx4CPs7RWiYpOQOzMVdKqMczGjaa5rPnVrSmqE6Awhmg5Wf/fA0Pic8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=QUPni0M9; arc=none smtp.client-ip=62.149.158.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="QUPni0M9"
+Received: from [192.168.1.57] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id vAdsrE8KkQF1DvAdtre770; Fri, 12 Apr 2024 08:44:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712904249; bh=WyC9PNxXS/aVAIKL5oIDw9u87fuWEC6J4MSR68MMGAg=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=QUPni0M9weIIkUhjH94dlpYJX2G5U0niAyW1687kg5ZHZ2sYsqt9o21+502WUgO3F
+	 OXZOaihb12N76O9FnYSAXQI9lvs4r7l8xNfB4t9bqaA38anKU8JfIYWqKHkUeaFZqo
+	 atQCkeR9/XPcHpF3t7tWGLpSLwo33I1RcOZv/T357tblHHQZnb/IjXdJC/tgzSYu5W
+	 1LL0MjxVLS1gEAitP8Iogfw30/z6YSQ1ImnqQIciovHjNOg3TH7rTWsgzUmDYeus8N
+	 Z8mECTFlyHk9QBk8Qqjpp22QVOEq/dbU6goShwcaRfUYqIzB3z/zpJ8aZS47UjQqLa
+	 waYypwbIcut2w==
+Message-ID: <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
+Date: Fri, 12 Apr 2024 08:44:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3c0c9c-6618d900-5d3-194ac52@77440530>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E6?= 000/114] 
- =?utf-8?q?6=2E6=2E27-rc1?= review
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
+ when not needed
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
+ <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
+ <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
+ <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
+ <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
+ <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
+ <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+Content-Language: en-US, it, it-IT
+In-Reply-To: <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfKB456YBgpqZ634JB5dUeyybZMVwsuXswVSVYhCb/VUND8r2xEhF5iSPw6RggeNGxEOctbMtAGW9qerebBZB1Afzf05oP6MgLrUj7bQSvPcktEvBrXAA
+ W2nFtMwtaFDJF5Ulzb1sLAmquMPugbcQA7OvwM/7f0H4dvJXWRnXq08fmOC4+fAv0vvyAcNFO/Bdr2ydRZl0dTumjF+f3fUieGKiuStqPKyengfT5hSawCj5
+ jbQ9IsMZ6POTZPVls34udWv8bTJzac5xEJFsgn0rU0nxVFF3gBxK+NPtdDG0Lh4OWhQDDm0GAdh8GbbyyqlYav3GzLUjrMxiVJgSKPEn+mVvjtfdcnOJPCI0
+ LymDJgEKOwtX+UoMusQSdwrYGObTvA==
 
-On Thursday, April 11, 2024 15:25 IST, Greg Kroah-Hartman <gregkh@linux=
-foundation.org> wrote:
+On 11/04/24 14:44, Bastien Curutchet wrote:
+> Hi Rodolfo
+> 
+>>>> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+>>>> index 2f4b11b4dfcd..f05fb15ed7f4 100644
+>>>> --- a/drivers/pps/clients/pps-gpio.c
+>>>> +++ b/drivers/pps/clients/pps-gpio.c
+>>>> @@ -52,7 +52,9 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
+>>>>
+>>>>          info = data;
+>>>>
+>>>> -       rising_edge = gpiod_get_value(info->gpio_pin);
+>>>> +       rising_edge = info->capture_clear ? \
+>>>> +                       gpiod_get_value(info->gpio_pin) : \
+>>>> +                       !info->assert_falling_edge;
+>>>>          if ((rising_edge && !info->assert_falling_edge) ||
+>>>>                          (!rising_edge && info->assert_falling_edge))
+>>>>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
+>>>>
+>>>> Please, review and test it before resubmitting. :)
+>>>>
+>>>
+>>> I'll try this and send a V2 after my tests, thank you.
+>>
+>> OK, thanks.
+>>
+>> However we should think very well about this modification since it could be 
+>> the case where we have a device sending both assert and clear events but we 
+>> wish to catch just the asserts... in this case we will get doubled asserts!
+>>
+> 
+> My understanding is that clear events are to be captured only when this
+> capture_clear boolean is set. If it is not set, the PPS_CAPTURECLEAR
+> flag is not added to pps_source_info->mode and get_irqf_trigger_flags()
+> will return only one edge flag (rising or falling depending on
+> assert-falling-edge DT property).
 
-> This is the start of the stable review cycle for the 6.6.27 release.
-> There are 114 patches in this series, all will be posted as a respons=
-e
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6=
-.27-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
-.git linux-6.6.y
-> and the diffstat can be found below.
->=20
+Yes. You are right.
 
-KernelCI report for stable-rc/linux-6.6.y for this week :-
+> By the way, I see that the capture_clear is never set since the legacy
+> platform data support has been dropped (commit ee89646619ba).
 
-## stable-rc HEAD for linux-6.6.y:
-Date: 2024-04-11
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3D3126167a036c76b2c9a53d19f7387cdcaf2ffd19
+I see, but it can be re-enabled in the future... In this scenario, I think we 
+should add a DT entry to enable this special behavior. Maybe we can also add a 
+warning as below:
 
-## Build failures:
-No build failures seen for the stable-rc/linux-6.6.y commit head \o/
+static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
+{
+         ...
+         if ((rising_edge && !info->assert_falling_edge) ||
+                         (!rising_edge && info->assert_falling_edge))
+                 pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
+         else if (info->capture_clear &&
+                         ((rising_edge && info->assert_falling_edge) ||
+                         (!rising_edge && !info->assert_falling_edge)))
+                 pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
+	else
+		dev_warn_ratelimited(dev, "no ASSERT or CAPTURE event? "
+			"Maybe you need support-tiny-assert-pulse?");
 
-## Boot failures:
-No **new** boot failures seen for the stable-rc/linux-6.6.y commit head=
- \o/
+         return IRQ_HANDLED;
+}
 
-Tested-by: kernelci.org bot <bot@kernelci.org>
+Ciao,
 
-Thanks,
-Shreeya Patel
+Rodolfo
+
+P.S. I'm sorry, but I'm not good at finding names... ^_^"
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
