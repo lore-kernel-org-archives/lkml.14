@@ -1,119 +1,109 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E5E53378;
-	Fri, 12 Apr 2024 09:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACD850A9D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712914824; cv=none; b=Hu7b2agH0tWMBIjx+Dg1PZdR/7XUbmE4ZjtqgsPNHhYaHg9Rb83sW24zMbkesWFRzGB29zsK1VM1B5SwuJvMft6rA27CnmLWw34rHhEcR0XhtLY9bQmsg7Em/bO6wIAz8MUgf4o0eY4qNenuCzIT7Qk/DgdbMlEMJkPd9+G3pJ8=
+	t=1712914957; cv=none; b=MFdqXWrgYj0OcxVyqPCYCldDXV6bl0S3/5BtSzvE1Q8+Xy54NBOxf/biS8oQJjKDmlKhCbOUjX++S+p88sbxSY6Aod59PDMO34uZ+mSxXAnrWWZPaEQJs+99b8xz+Chprxh46OBb31pvhozR3XaisSzfyHZBIVMyaUJM8S0cn8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712914824; c=relaxed/simple;
-	bh=AyddXRv/DnT91t6B+nxCTZtHVLA1ljNAIxVGwn0e3Vk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hutN5Rz6U1WhJx6LpFrlk+83kUwWq2XV5mBQtofKrO5pM9lT4x1d49lY9s2wylPwl8zUf4wJ4qGwzi6NK4kDLWkpfRIeBInKbLOfWmurGut48nzIZ94MjNo2yYV0QL0zMjSpprvcXm487owvMpE8uRIoNzJd/2m9OaGNvoOlzS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=N2Q8CcG+; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712914957; c=relaxed/simple;
+	bh=ze1DWENhxjeSOlCRPZPYtxubM7dRkcTEXeXj/CC5r3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E9nNunqkMtSnJZi7GpI7Zmozl4mkeTv7jz5quLIzMBujFV9Zl37M12v3rzg0scA4cLSNTiUKpsBcPzObsxfP84oJlWQgxDbugqslwAe3lIPtNiZkOPKrG2AehLOi20OhKzWN0gCLS/EI5crIGXwtwTzDInVO6461MST7o5gVD4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IWTIrlwY; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N2Q8CcG+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712914821; x=1744450821;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AyddXRv/DnT91t6B+nxCTZtHVLA1ljNAIxVGwn0e3Vk=;
-  b=N2Q8CcG+WSHt61QHSiIgZlntd6c+kdrYKfup268hI/TXB3SBD73Rz5hK
-   mStCII/48F0Y6KW4Q0mnZ7pj8YVkzG//6txzOQ8Hd71M9sC/rJ1enFyoF
-   2P/vz0JEWUOwglHBorqSlUcu3sDh8n1kgpmNULrdQNXq7chX5nRimdj60
-   MQX1LU1umGJs188H8U3VkyY+bpvohleNmbC3LrVc+UKTn88fDOHeCUkbL
-   DTZEEvcF0HViQlG++IMVmHSPLLx3Z7bVS6/o/9KNmJ5nHBObZTprqZvfL
-   i+ulk5ID2c1BUzP6arcw9fXvu/kAx1/o7za3kIILJkgmcLv1dRjK2/KnU
-   w==;
-X-CSE-ConnectionGUID: yozmjWR8Rd+BhRpS7jT2WA==
-X-CSE-MsgGUID: 7iK6SCRqSQyqm/KKGnCunw==
-X-IronPort-AV: E=Sophos;i="6.07,195,1708412400"; 
-   d="asc'?scan'208";a="187998476"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Apr 2024 02:40:19 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Apr 2024 02:40:10 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 12 Apr 2024 02:40:08 -0700
-Date: Fri, 12 Apr 2024 10:39:17 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: <wefu@redhat.com>, <jszhang@kernel.org>, <alexandre.belloni@bootlin.com>,
-	<robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <guoren@kernel.org>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH 3/5] drivers/rtc/rtc-xgene: Add "snps,dw-apb-rtc" into
- the "compatible"
-Message-ID: <20240412-rummage-superbowl-a342f179e482@wendy>
-References: <20240412080238.134191-1-wefu@redhat.com>
- <20240412080238.134191-4-wefu@redhat.com>
- <86bf8248-2443-4ced-a67c-7845fef98fd3@linaro.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IWTIrlwY"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-23333dddd8aso485665fac.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 02:42:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712914955; x=1713519755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ze1DWENhxjeSOlCRPZPYtxubM7dRkcTEXeXj/CC5r3A=;
+        b=IWTIrlwYJ4ebmbn5rm/qdkw/s+/ZIu6L5dHoC/3auUKZAO56T9x4tRxDDyCYaupbKt
+         B9Iwu3j1SUy4yRSyZ8exefJsfNwRc9ne+0DMwA1YipgQ9LNDzAtegh/J3SNmkgS+g1a8
+         p28Me2LWBqf0zfTn09fpoYwRxpsBVPvNwGKsBKZTFR+QONTglsw4+GvumZN/f4SaYA9i
+         W1Iz9taRP5nfNzQw1a1xr2TmKClggCRRAW3tXNBET1zpIAjlSZjqa1PzJOq2lsy8EHpi
+         5AoIAljxA6SIsqoNh3YV3FLdOoVxkqYWFVrP6z6AioH3tzJIcFwjrGfCQ2jyE/IjQMlU
+         tJlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712914955; x=1713519755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ze1DWENhxjeSOlCRPZPYtxubM7dRkcTEXeXj/CC5r3A=;
+        b=swJkpYN6WEDkXdsUbdyCNPimi1c1O5QPeOKcTzAYhcCHBfEPQIrjiJKEerkG7AiukK
+         sY4qi8st8M1UkccgZXxWAyKKxOtfHqxHtcqIMfzpKlIcEPxpeCnPnlb4iE3qROW8va4x
+         n6a+1Wdvwk4eo/3vWpM/uFoTJALWBaIDMGrGXVtScH0tmYyMoz5cLTqpLECJYYKaPLXN
+         zKVB5SFqnQfLyc14/K+/1g7w4Qvb2EY4TRQfCkMWwZncu1mtOeJchpypaSPBe1erbdN5
+         BLu5trVhgIqrOCUI7DT2rArJOeTzLLn9hP0Xvu5W8O58QRdjpb0/NcaEfFxlQ0DOnREY
+         kJ2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXFKCdUwhKDfNqSfgg6v172qmfitbzVCNJAXyGGZg/av3QR1J1I4pfKc6MLY6T2xXyIFsA1pdx9SPCFRBXIP4aGsRQheJ/RJrsMFSJ6
+X-Gm-Message-State: AOJu0Yx/QOd0SE0HyRoT3GhrF7gIBGExWByDElriA8fs0Qw1TI+ZQUNU
+	e146ZeyKSZOxt8XYPPJsoxlFH+xbevXekKnyAzaNcElktPupORrMq4aTANPp/sLxNO6ZroLAdOf
+	ort+zjuE2X7wVvddJAuDyCJdjpFFyOMo8GdJ5kQ==
+X-Google-Smtp-Source: AGHT+IH/sAzC/4m+8OjoiblQKBrR8gWNhfHFXTBCOEtjXxsaKNwMpXmrJzZaRa5j0HjVtDAPxdFhGnqZozPIYpPkLcA=
+X-Received: by 2002:a05:6871:5a05:b0:21e:b4d0:9961 with SMTP id
+ on5-20020a0568715a0500b0021eb4d09961mr1977670oac.55.1712914954014; Fri, 12
+ Apr 2024 02:42:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Ge0GmYIBWwIaJ/Yq"
-Content-Disposition: inline
-In-Reply-To: <86bf8248-2443-4ced-a67c-7845fef98fd3@linaro.org>
-
---Ge0GmYIBWwIaJ/Yq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240407123829.36474-1-cuiyunhui@bytedance.com>
+ <ZhetojJewygmTf6N@bogus> <CAEEQ3wkfHvH4jXNO5NRDf0Fc3xUkY64hp7BDBmgNVdcsmYy-kA@mail.gmail.com>
+ <Zhj-4C7xlklG1m5B@bogus>
+In-Reply-To: <Zhj-4C7xlklG1m5B@bogus>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 12 Apr 2024 17:42:22 +0800
+Message-ID: <CAEEQ3wkO4WPaY+bPidg-fDqV5MrQwh8ESbSv-+q8Odhat9XDrQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH 1/2] ACPI: PPTT: Populate cacheinfo
+ entirely with PPTT
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 12, 2024 at 11:17:38AM +0200, Krzysztof Kozlowski wrote:
-> On 12/04/2024 10:01, wefu@redhat.com wrote:
-> > From: Wei Fu <wefu@redhat.com>
-> >=20
-> > This patch add "snps,dw-apb-rtc" into the "compatible".
->=20
->=20
-> Please do not use "This commit/patch/change", but imperative mood. See
-> longer explanation here:
-> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/sub=
-mitting-patches.rst#L95
->=20
-> This we see from the patch. Say what hardware are you adding?
+Hi Sudeep,
 
-The compatible, unless I misread the patchset, isn't actually documented
-either, only the new property is.
+On Fri, Apr 12, 2024 at 5:29=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
+>
+> On Fri, Apr 12, 2024 at 10:10:05AM +0800, yunhui cui wrote:
+> > Hi Sudeep,
+> >
+> > On Thu, Apr 11, 2024 at 5:30=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.=
+com> wrote:
+> > >
+> > > On Sun, Apr 07, 2024 at 08:38:28PM +0800, Yunhui Cui wrote:
+> > > > When the type and level information of this_leaf cannot be obtained
+> > > > from arch, cacheinfo is completely filled in with the content of PP=
+TT.
+> > > >
+> > >
+> > > Which platform is this ? Is this arm64 based or something else like R=
+ISC-V
+> > > based ? That would help to understand some context here.
+> > >
+> >
+> > Thanks for your response, RISC-V currently has this requirement.
+> > Please see: https://patchwork.kernel.org/project/linux-riscv/patch/2024=
+0407123829.36474-2-cuiyunhui@bytedance.com/
+> >
+>
+> It would be helpful for the review if you have such information in the
+> commit message.
 
->=20
-> Please run scripts/checkpatch.pl and fix reported warnings. Then please
-> run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
-> Some warnings can be ignored, especially from --strict run, but the code
-> here looks like it needs a fix. Feel free to get in touch if the warning
-> is not clear.
->=20
->=20
-> Best regards,
-> Krzysztof
->=20
+Okay, I will update it in the commit message in v2. Do you have some
+comments on the content of the patch?
 
---Ge0GmYIBWwIaJ/Yq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhkBOQAKCRB4tDGHoIJi
-0nF3AQCpqrVUssnT4yWndlvpuzz0fOX4zka9/Ej3nX5vfZgsawEAzVtgKBzcU07+
-FaxCvDk/mWbBtLR+GALH91nw0Q+wEg8=
-=Cg5S
------END PGP SIGNATURE-----
-
---Ge0GmYIBWwIaJ/Yq--
+Thanks,
+Yunhui
