@@ -1,147 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AECC147C7D
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C94149016;
+	Fri, 12 Apr 2024 16:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938846; cv=none; b=XFcUCSTtjpxk62mke+bQXNNdcX9lRCBlNdTGuRv0by0b4/MEr04+aM3GGuMC0xvH8KQiJFi51uXsfTpAKmIMgPY50O0MsdJ3xvaCKiNeCBC9Llo1dBAzNaEV4khr54Y4nXeIj7KWq0ablqo6FJaIAk5oy9kwnt2mClyRT84Ja2g=
+	t=1712938847; cv=none; b=oieCjVv+iHj4YAULvcAUd+EAQNSEp+bgSy3aGiXcWd+/kMWjeRlR6M0BlwWZUkASKANi1TLi08uRlE3RhNwaG0r871D/4SoE9Lz7sBZNUN2GyUWyfolpQZ9oiOmK0zJotQfUhL2/4PLr5dJ5cc+4AIVs7nXlKwOoClxW9otcWh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938846; c=relaxed/simple;
-	bh=yC3XTUFwDh0xSStE/nTpmKIcliT8G1Hdq6DqZfDKtq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovZyEqdGCO5B/xqYBjR8OeHAG93I1ExmvT0uogaUFw3aQDn10fv6PbsBWUUazAPrNgmyB5ulW2O8uADTamedxHQ3CRk/x+sx+CFXqBzs5WbmEwrmSUIHuEwCWXXG3X/Z77sukLUemys0owm7cNbJpQwKBk1+hl2lLKvNJ04zkJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CDD3339;
-	Fri, 12 Apr 2024 09:21:13 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 866883F64C;
-	Fri, 12 Apr 2024 09:20:41 -0700 (PDT)
-Date: Fri, 12 Apr 2024 17:20:39 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 30/31] x86/resctrl: Move the filesystem bits to
- headers visible to fs/resctrl
-Message-ID: <ZhlfV446640jF/rd@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-31-james.morse@arm.com>
- <8f4a05d5-2040-4cf2-8c05-a190c25d64db@intel.com>
- <ZhfznA2Sp3KFdjrA@e133380.arm.com>
- <0baf690b-4ed4-4dad-9f50-e5df93d599fd@intel.com>
+	s=arc-20240116; t=1712938847; c=relaxed/simple;
+	bh=eBjAc1QnHYXLeH29VZzSz5/+O9flS8D/PAA7XN38YGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=azOEOPqFClc+sqbPtjTV17Tzrx3+Bbn0qJzmSQO7sFw1rbxCTjv6VzxwkFAbiPO9ou6khVni+LawVQcbI82ow+zNLgzllQN5uIVmoF4RXcwJxnNtIbZHs1xigfk0mona/47RDIlfQlfPrUzd2KcDxhjzFTKsyYI+L8NSmHd+aHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbjFlzhK; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbjFlzhK"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-416a8ec0239so6444165e9.0;
+        Fri, 12 Apr 2024 09:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712938844; x=1713543644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g9/w1K727Z6rHmZvSAQJjGDlFmk/+J/GPSglkwvTa3A=;
+        b=kbjFlzhKgbk5FpPPmnTjbo9Ch/Gs3Wr54taonDoymq/rKQ8zY1js+zRxqg7q+97YsC
+         Yp0LXT1AYG5Jhh4/U5sgc9DU3VkX8zUZpCLusxGuOXcYFMRQIpJX5VcAfK4SjuK9+uTg
+         67vy5il1bc1E3fhBMBXItDdhjrmsmYLNRgzv/8yHghkiIwdQifGW3fWXfOIPRlxt5N20
+         gOx95cGXvlVGcBW9SovazbplGhJec081AvRLygjC9u6tYt2rTlOaiuhDAZ+8ztCIWC6A
+         YW4yKOz9sxCIZBiQ1+grTnLtLRLIp2WzeXZi0SR+qljHnkTLi1PcA2bzAzCPoWDDxPLK
+         yzXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712938844; x=1713543644;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g9/w1K727Z6rHmZvSAQJjGDlFmk/+J/GPSglkwvTa3A=;
+        b=Qgqo0GHl8LNpMigtAqeSR/X3LYf/Wu9oJJyOGvmJmONIl5pWWAol04mkK80kFIORVj
+         0hrBVk1lOGdwgWwTWSOZHNNEYrkNEqH+oz2OfI4MUl0rhTcranRbtzmA7ECeslC4AGYz
+         K7Ds1BgZRiRVv3wRVq28J4GN5IJFrO3DWTzkvwsUisgZcVfjlEj5MJ3Vih5r9yEEOcKy
+         yIQ+Xphvy7FRJSYWOWzD+UXxvfrM51faEIDF68QzrLMlwmCd5HgKCKqRgQmsC49YKUWj
+         XMI0AMUh22xxwSa9Xj2OwuMWHiKHC2eNtOmS8z3by0w75UjVb59enUxCXeOz0jh+NrsM
+         fLpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZEtyUkVTkVMjb38sRz/8NOgQsbbldDTCHQD3Gj3BvX9ranjxyPfZqp60g8Whw9eJDhlHILQ/BdCpWL12q+93Kl8OW8o80xDEMjjZw
+X-Gm-Message-State: AOJu0YyhGBWAuYgHgmzQlt1fsHNY7N6mh655RxKhJKi6ZzxaLdkBh8rC
+	UKEPrl8zLA7kGP1r7UAct3gFBdx0SZG6RtO+x4yLykvUtFyf4ecnj6MxEA==
+X-Google-Smtp-Source: AGHT+IH5jjP1wWZqDpw0dAgvQx37euPxQow/bOtATu4l4TggXccRq7DHV2UiUHhygH26BwjvwOaSXQ==
+X-Received: by 2002:a05:600c:1d2a:b0:415:4379:d36d with SMTP id l42-20020a05600c1d2a00b004154379d36dmr6090204wms.2.1712938843839;
+        Fri, 12 Apr 2024 09:20:43 -0700 (PDT)
+Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
+        by smtp.gmail.com with ESMTPSA id q10-20020a05600c2e4a00b00418176845ddsm126355wmf.0.2024.04.12.09.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 09:20:42 -0700 (PDT)
+From: Ilya Dryomov <idryomov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ceph-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 6.9-rc4
+Date: Fri, 12 Apr 2024 18:20:27 +0200
+Message-ID: <20240412162028.2447687-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0baf690b-4ed4-4dad-9f50-e5df93d599fd@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 10:43:55AM -0700, Reinette Chatre wrote:
-> Hi Dave,
-> 
-> On 4/11/2024 7:28 AM, Dave Martin wrote:
-> > On Mon, Apr 08, 2024 at 08:42:00PM -0700, Reinette Chatre wrote:
-> >> Hi James,
-> >>
-> >> On 3/21/2024 9:51 AM, James Morse wrote:
-> >> ..
-> >>> diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
-> >>> index 4788bd95dac6..fe0b10b589c0 100644
-> >>> --- a/include/linux/resctrl_types.h
-> >>> +++ b/include/linux/resctrl_types.h
-> >>> @@ -7,6 +7,36 @@
-> >>>  #ifndef __LINUX_RESCTRL_TYPES_H
-> >>>  #define __LINUX_RESCTRL_TYPES_H
-> >>>  
-> >>> +#define CQM_LIMBOCHECK_INTERVAL	1000
-> >>> +
-> >>> +#define MBM_CNTR_WIDTH_BASE		24
-> >>> +#define MBM_OVERFLOW_INTERVAL		1000
-> >>> +#define MAX_MBA_BW			100u
-> >>> +#define MBA_IS_LINEAR			0x4
-> >>> +
-> >>> +/* rdtgroup.flags */
-> >>> +#define	RDT_DELETED		1
-> >>> +
-> >>> +/* rftype.flags */
-> >>> +#define RFTYPE_FLAGS_CPUS_LIST	1
-> >>> +
-> >>> +/*
-> >>> + * Define the file type flags for base and info directories.
-> >>> + */
-> >>> +#define RFTYPE_INFO			BIT(0)
-> >>> +#define RFTYPE_BASE			BIT(1)
-> >>> +#define RFTYPE_CTRL			BIT(4)
-> >>> +#define RFTYPE_MON			BIT(5)
-> >>> +#define RFTYPE_TOP			BIT(6)
-> >>> +#define RFTYPE_RES_CACHE		BIT(8)
-> >>> +#define RFTYPE_RES_MB			BIT(9)
-> >>> +#define RFTYPE_DEBUG			BIT(10)
-> >>> +#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
-> >>> +#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
-> >>> +#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
-> >>> +#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
-> >>> +#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
-> >>> +
-> >>>  /* Reads to Local DRAM Memory */
-> >>>  #define READS_TO_LOCAL_MEM		BIT(0)
-> >>>  
-> >>
-> >> Not all these new seem to belong in this file. Could you please confirm?
-> >>
-> >> For example:
-> >> Earlier in series it was mentioned that struct rdtgroup is private to the
-> >> fs so having RDT_DELETED is unexpected as it implies access to struct rdtgroup.
-> >>
-> >> CQM_LIMBOCHECK_INTERVAL seems private to the fs code, so too
-> >> RFTYPE_FLAGS_CPUS_LIST.
-> >>
-> >> Reinette
-> >>
-> > 
-> > I'll flag this for James to review.
-> > 
-> > These have to be moved out of the x86 private headers, but you're right
-> > that some of them seem logically private to the resctrl core.
-> > 
-> > I guess some of these could move to fs/resctrl/internal.h?
-> 
-> It looks to me that way.
-> 
-> > 
-> > OTOH, might it be preferable to keep all the flag definitions for a
-> > given member together for ease of maintenance, even if some are for
-> > resctrl internal use only?
-> 
-> Indeed, those RFTYPE flags really seem to be fs code but I agree that
-> architectures' use of RFTYPE_RES_CACHE and RFTYPE_RES_MB does make this
-> complicated and having these in a central place is reasonable to me.
-> 
-> Reinette
+Hi Linus,
 
-Maybe we could split these into two groups, and clearly comment the ones
-that have no user outside resctrl as internal use only?
+The following changes since commit fec50db7033ea478773b159e0e2efb135270e3b7:
 
-That's not as clean as removing those definitions from a shared header,
-but at least would help document the issue until/unless a better
-solution is found...
+  Linux 6.9-rc3 (2024-04-07 13:22:46 -0700)
 
-Cheers
----Dave
+are available in the Git repository at:
+
+  https://github.com/ceph/ceph-client.git tags/ceph-for-6.9-rc4
+
+for you to fetch changes up to d3e0469306793972fd2b1ea016fa7ab0658c9849:
+
+  MAINTAINERS: remove myself as a Reviewer for Ceph (2024-04-11 22:56:54 +0200)
+
+----------------------------------------------------------------
+Two CephFS fixes marked for stable and a MAINTAINERS update.
+
+----------------------------------------------------------------
+Jeff Layton (1):
+      MAINTAINERS: remove myself as a Reviewer for Ceph
+
+NeilBrown (1):
+      ceph: redirty page before returning AOP_WRITEPAGE_ACTIVATE
+
+Xiubo Li (1):
+      ceph: switch to use cap_delay_lock for the unlink delay list
+
+ MAINTAINERS          | 2 --
+ fs/ceph/addr.c       | 4 +++-
+ fs/ceph/caps.c       | 4 ++--
+ fs/ceph/mds_client.c | 9 ++++-----
+ fs/ceph/mds_client.h | 3 +--
+ 5 files changed, 10 insertions(+), 12 deletions(-)
