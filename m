@@ -1,222 +1,224 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2087.outbound.protection.outlook.com [40.107.8.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9080C149E03
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938122; cv=none; b=swhpS7C1jP9hQigBg5CYiJX3wu9rr7OYWcwrOUWJ9w3EphOOD9sQnL+fZlTVV/DP73rJwba8/ykWD7fmx1F9bVkgC/XFp75xVcpVFDsAhBsOdbk5kGFE65fZBvAWLGwLB/fVFTQ3s1Gu+le7B3zSF54SmCKOQL0wtv9VU5R9e1E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938122; c=relaxed/simple;
-	bh=aZ/P73mUhmx64gcqfpqiqbfDua3KGlA/ZWvGXvrP2Qw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AqhfieFyFuGYFYdmriKTzDif14Ul5HC/f+SZg8V1rSNr01uVk1ls2t4pMMeurozroZ6ayhb4CNFpEaWbc36KSH+osuWNhvU2CC17csX5sLUF3oGjD1jf4bElVuI5fJgqog/QvGSpDsuvFNrzr3M7U0lEasiC7dgxf17CmZrQ88c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BwH7YFM3; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6169814900A;
+	Fri, 12 Apr 2024 16:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712938150; cv=fail; b=lYnnC/ymbXX/x0wRFoO7ucvsU2hIeQQuz4LTP5FJg9OfE95luqjIobSuFhfXeaxiGAXgDzKwwyqcliwbFlfYivEUdUbmItSMX2uYCje7LhFexid+5DdhUOq48dUDRaOxOzS5VlUVXxp0841uPMs3xBbwg2Z6m/94rTdHS74v5kI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712938150; c=relaxed/simple;
+	bh=14QaVJp1PZG1/XG0XoWT//cMaejeB36UdS94KQbcBsE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=L4Jo+aElbJIHE+0A9nB5gZ6WoWsv6kr5OJ8g/Ktk53jkr21LaYXBe9YVIVCoKtGaZ0WqMLqKiEIPErDcok3rmE3+oggEK4Jypx+clYHO0GpTD24Z3M4ZOBHkjkQlA4JZHgYSoTKLkULOFrIEPVn7Qs/kdBREtbX2xoau7Ajbr6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ntpXF88l; arc=fail smtp.client-ip=40.107.8.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BwH7YFM3"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-417e326fceaso79415e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712938119; x=1713542919; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FNYirPwNVr+GTWxU7VfrVwFiMeqJyrofCKy1YE+ANNY=;
-        b=BwH7YFM3WdEzqcdTswddgNrUGa/I8LkJkS669RkIesDmZZvf9TuFAjHVBzwLOJnRp6
-         WfviyB+zdIHcntr3bk33JWtCAOBtwo0q7pLmd6dIbHJjgbKv7Aj82DQxHW6xT0kn8wKh
-         9wJTnClSS8Fu4AEcQ9abwanWeWouHlW/pCYpkmq5z5KJ5Qw5Bjc3rFFNJYwP0NRwdSSF
-         rIPKrrqrpzcrWW/0lLIAZExUYGc0ekZwh0dXK1+LJfsT+SK4lICUimIWecQmlWBYlaCj
-         WNLebngb/k/+WlefH+5appyX0GwK2afZzN8Pbt3zHCZsu2mo3jHfyp0B01IutsPRo10r
-         kHqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712938119; x=1713542919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FNYirPwNVr+GTWxU7VfrVwFiMeqJyrofCKy1YE+ANNY=;
-        b=Vr4vUjmX/BDbdGs4IdDoF9vi/JO7L0A59luBWyj7rPAc0Fupn+TyXfKnseAKk8WZfo
-         9bptyZUGQhZUka0kUYpkugvFF3n7FqYdoDK9LDJEPLUo8tWXY+BBM0HHvdlf5xO1jfmh
-         FeGZ94/gcxJ9/SMzYZDezYIY4rCRhLiFx2zSjseqfqZxjtNpVRC8gkFQweRZ6yktxN3/
-         JUOjFb8XfaDBBs10bK6jYPTevLbmaoYnKo0kpSyK5pEVTVl9yiMZArAweAZ0X6tDDvxj
-         QpYCckQeADpaBO4m2VzukFa5Gqc4WzXvV7Oj7iL5Xek28gySkV6WdOxJf1qLCIxmRRIm
-         1sYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUW0FQds3iA+TfZNy0MZITYM9E+qizbIxnZ/oJsg95eBdlIT/85fn9rd1zrjLMwzY+U7Stdh6ENoN7SN0cs58+c/an4v5KfMW6GVReG
-X-Gm-Message-State: AOJu0YwvSpLfrFd9gRV5SdSIgX7TAQ6pLVDsnG+m1rdSiHsucxDsmMVV
-	MGZuyQzN7OD9GInTLWV9YuCc3nrJhNVwOYdVQ9aIzk4ym1WiwP6orjHVkwrEzbdPCE4tMpZo49U
-	B+9s+BV4MD1MFaY+pb6CtrUN6LRCDzqfqt6A=
-X-Google-Smtp-Source: AGHT+IFVDRZZizAvAAJdzt4RivJzgfJ0OODeVjij/yWDYakPFhhDIwnAAwlI5ZQ7ZkMZMDlD2eoOIKw5yvDXbHLUd5c=
-X-Received: by 2002:a05:600c:19c9:b0:416:3014:63f8 with SMTP id
- u9-20020a05600c19c900b00416301463f8mr222985wmq.0.1712938118606; Fri, 12 Apr
- 2024 09:08:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ntpXF88l"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VRSjJLZKhWP5mM0XNCbEqbj96v5ZY994OR6hG0g3HoyY3fZl/euuAuyl6YHlpEW6r9NM5q66+4WlT706I9iN6ZR6qCDpsgP9V5J7jacM2QBZcR6fGlENVLguHA0poXKoOtA1b+/HMHkd/o2Hx3CE2LqRpGv1Pptd3zKt+90Gi4mS2rVSb3KuQz2UPl14z9vuC9tZz+Gn0dva0e+Bn1z7Ocw5p4r/2UnOaYEgllUvsUAo3ObcmooYSxjlzX0m2SFoTqOSyM8o630r/7VCS412YlmGQNQb/ICiosV50RlDNsRKijCGQXpeKUA2MkDzIrumrTTDInUvUpg9hsCw2KeyWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4D3g1yKn1DkeyVV3av44X1Wyra+mTLKgpM+gTzeXlmM=;
+ b=JNOLhXTQScj7GujJLUCsyfoKV9T5XG04S/JQxMzFyn7czfEX4opIJftt5zB3Fk713ZnvPMcNmw+EAWGOtj6ZCjW+uli90llMHePCXIewj9zrOIW4QoTFshZJrHAHkUnMrCojPL2tjCWnP/CED2JigKYNNum6okq1V7iY8hz9jXT67yS+bTEjjqBwciw4WAS6vFDUyisvJYN3wDsVNwJrhtDGFQhQEo64fkq/usFFhF3Upv5NdX1Ez8OOCZr4rP0HR/cMqmONiXx3NG21Ye3Z/Xji3O09fAvepsBn4HQvabkcX1bsINgJegh4lwHzi9gS8OlbeFOIv8zHe2hOwMxhBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4D3g1yKn1DkeyVV3av44X1Wyra+mTLKgpM+gTzeXlmM=;
+ b=ntpXF88lOD+kq6aNwFmnIj/w+LjIJUWTrvRyvM150MFXeDLeWZu/FDTytstPA6tkDbmERkhzhGTwB1+Usl+3xOJfKkVPnfQiYxLpNMYPxneZhbnqVcA4POK7jYlaQ4rL1IUopR8ndClXd82O/6aSUWUwVpacVew4IcPosdf70ek=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA4PR04MB9462.eurprd04.prod.outlook.com (2603:10a6:102:2aa::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Fri, 12 Apr
+ 2024 16:09:03 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7409.055; Fri, 12 Apr 2024
+ 16:09:02 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: cassel@kernel.org
+Cc: Frank.li@nxp.com,
+	bhelgaas@google.com,
+	gustavo.pimentel@synopsys.com,
+	helgaas@kernel.org,
+	imx@lists.linux.dev,
+	jdmason@kudzu.us,
+	jingoohan1@gmail.com,
+	kw@linux.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org
+Subject: [PATCH v4 1/1] PCI: dwc: Fix index 0 incorrectly being interpreted as a free ATU slot
+Date: Fri, 12 Apr 2024 12:08:41 -0400
+Message-Id: <20240412160841.925927-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0036.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::11) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411-mark-kselftest-exit-funcs-noreturn-v1-1-b027c948f586@kernel.org>
-In-Reply-To: <20240411-mark-kselftest-exit-funcs-noreturn-v1-1-b027c948f586@kernel.org>
-From: Bill Wendling <morbo@google.com>
-Date: Fri, 12 Apr 2024 09:08:20 -0700
-Message-ID: <CAGG=3QUNPGtQ7OqzEtNW9BQET+a+1WW=h++CqRTHRY=YLrOAcw@mail.gmail.com>
-Subject: Re: [PATCH] kselftest: Mark functions that unconditionally call
- exit() as __noreturn
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: tglx@linutronix.de, shuah@kernel.org, oleg@redhat.com, 
-	anna-maria@linutronix.de, frederic@kernel.org, ndesaulniers@google.com, 
-	justinstitt@google.com, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
-	John Stultz <jstultz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB9462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 470e145d-9b64-4b30-f9c2-08dc5b0ade87
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lMff4ase7yGBkRL8B4k5EY8riQ9pug83NfyWv/WKzgEW+tPaiO34Ji66aFCvtY+XAlkm60KB1nXORddzgQfa59priCzMWmixvoZ0u2MW+NLjw36OgYaLlbEmZl0IJDXaJyDkby5ipKt12WnBR3RK2mvMwbsFD5ws7w/AayvBTJ6j4n7DLq6HZ7DrAKZE6Rrq0Bh1t5dDz5Yx8d5VibLsqtGEO5G1jIHMxCjA8tugONVG6uygKhEEhDsiNGhdBA5UfP2Tjg3n599jypBOuSTFMAvmHfIlww27zOGeyA1Dr1MKyjX90xJAhxJkRUlGerk9DoSn3r6tncIp9tnVAKdnoICjydllh0DdLWqASU3bTX3MZqG0vSC1Y8+zIqiMw7qQVleXqjgtei0eghMakykjTnutIYvDkNRWlDENxVVtzKSsvuKkXsZgPtRluj35YQ9ohWiSGj+jwzA2xh3K2jfg1P0F5xcRqTyrGjdRRjjTeEP7/YNjzTwyJnGGVmRvYcCYGRLGcFhOcSIY0qpEx+ZzG3WsbAm45X0K2LQ/nze0zi+Y+OrBx/ZtzkaZ8N7wzTGJmqIL8lFSmmjWVqsH/FzUI9iGWqVY1IFAkWfe4jxmtjEboKBWPE5pXeeKPfZ+Pe6e/zg8Ov/WCAWyEIsTjVsnYO6uKwLjfZllWnOVa6ZV7Jo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ptMG9Uq2yShwzBpoL8f17tzE1qfxdC/qPC358hKCU9F9EDOr/f8sfpcTAvL1?=
+ =?us-ascii?Q?xYAQ7QVhwqa7pvc9Ay33Lm4uC7dMRS0UKB309Ikb5PXRZ3AXCMbBl7KdtM2L?=
+ =?us-ascii?Q?n2aWFFzXwa9AY9xrDpIK2BF55cnSU90LWHlYb71rL3qgwHLSYCae8R818viB?=
+ =?us-ascii?Q?5/RzAQICD55j+J+ll/6cntTPz4yMRyskqqUDTiXoRFvAxv1fYBqFoxXsxR2V?=
+ =?us-ascii?Q?F6fs6uDP4cN6pyUjwksoaj8SwbTBiCXGnwqHuopQktthEXsS1foksvNqrou7?=
+ =?us-ascii?Q?xCTpDw9ugk1SwXMP4Hc2Fnrd7cYTev75V3DRY2eQaABQHk+Tg8CEURmOSev1?=
+ =?us-ascii?Q?Md0CXEsY4cNnDV91pZ7RT0lzaqZgDmNJWuvUI6ono5hSeSRnwJq9eHwdgNz6?=
+ =?us-ascii?Q?nf24KLDoyXPsyCcBipV3qfeh0vmuGXjJXAJa8iTkKmW5ZwnbTfzNxJWL8JoC?=
+ =?us-ascii?Q?G05SXiBDLyq1LR3KAbTMwzEgKytL8f6YJ12zatb/ZhLhA28GSoTtpVuVZgBP?=
+ =?us-ascii?Q?uKbQ1sNzOkuL4r1NoxJj2sOnPq7VYLCOZRDZJF9Im5nXf9U26XfL1SeU1rm9?=
+ =?us-ascii?Q?kO+bsZMhweCeoCJFYO7WIPIz8ZyB0SV2N0JfycsYITTdaT120cRocEawQO/S?=
+ =?us-ascii?Q?R1XkGRH/9ZPXWnXkCsr0ZF+vGysZxTTqUidNiQtcqre+eYDukGK7dxEchbW2?=
+ =?us-ascii?Q?O0RECqph225JNlOz/gT2R81LimZatqc7dmRKWYKrVu1UlyjJwtcqqnPWTyc0?=
+ =?us-ascii?Q?3OiWCqFRo/h1s5WaSromGWxvN5IegiCqzrjSuNGXk1xbEZimvJqizeCBLqiI?=
+ =?us-ascii?Q?j0CyrSaNolxewtKUw2XsuioTRcXqtSHKgA7dziqHkYUX3Jg+j4GLSgTVwKnO?=
+ =?us-ascii?Q?hv3xNpazdaDCV2m0n8fXo0Sdjv3oIII66YKgpVZMIX54UOsil3USK2jVaSQl?=
+ =?us-ascii?Q?pqFkQ2bIb0w4IAOkF1fOtt1PJFQJPiCHYuCmmYMpW0ICbL5V4kbt18KndYSD?=
+ =?us-ascii?Q?24hkutWWI0I+BPd0N1HwC4jn2GELLH4eQGmWkbDkrLCj3aFM6AWqMsRFA0oH?=
+ =?us-ascii?Q?fC3iWZlp1Troryf4x4YdhtLrCDHzqKqwJfmdGe97EbjsJkT+5eAfyZwENHs3?=
+ =?us-ascii?Q?p8JoWqfuFKgIxDywJYlHNlfLKGpG3cb6LebnZzkoZ83ugegJUdRrB4kXgS+s?=
+ =?us-ascii?Q?ugdtqINAjdKYTH+NdkeWmxI7uIN3bidtBvmyTbRPxhyDVkMToy/M+sFPSgQZ?=
+ =?us-ascii?Q?xwFg7NOu0WytXVTR0kUsS3LgooI0jVgh1VDsxiw812tEyLaC77kt4Wd6raAs?=
+ =?us-ascii?Q?XZo+3dPaOGgN3iE7AWhM4kpkE/o5YLOEU+OH6uVikcvTiOds5kYbCSzYRa+I?=
+ =?us-ascii?Q?JzXLfWeCcN00mBrsQKudbKgbeAU6Sjoerb6UsAfOKKmw8cDXKaWM8wlng23u?=
+ =?us-ascii?Q?B2miOPXGGHQPgPA5gCIFEywBAVzDRzBT2ZW6DgC1yIl0E420AAYmo3oYXXh7?=
+ =?us-ascii?Q?0ogbaBjnMtoZuGY0XCYYlinGoqXRdcvPujhALoUfITyRVBSPNbzGq8oQqNvk?=
+ =?us-ascii?Q?KWag2ygmbG5CO0Cs9j0wUIslly9whARf3VM2dBq7?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 470e145d-9b64-4b30-f9c2-08dc5b0ade87
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 16:09:02.2243
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +oZOkwLLiDVHg08QTcRkU6RH+dtVSHH1bR6hRezXytCG11jXzhKTnvtFJFzmzO+CvlMU0NorlpJpc5ZFwXxeQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9462
 
-On Thu, Apr 11, 2024 at 11:45=E2=80=AFAM Nathan Chancellor <nathan@kernel.o=
-rg> wrote:
->
-> After commit 6d029c25b71f ("selftests/timers/posix_timers: Reimplement
-> check_timer_distribution()"), clang warns:
->
->   tools/testing/selftests/timers/../kselftest.h:398:6: warning: variable =
-'major' is used uninitialized whenever '||' condition is true [-Wsometimes-=
-uninitialized]
->     398 |         if (uname(&info) || sscanf(info.release, "%u.%u.", &maj=
-or, &minor) !=3D 2)
->         |             ^~~~~~~~~~~~
->   tools/testing/selftests/timers/../kselftest.h:401:9: note: uninitialize=
-d use occurs here
->     401 |         return major > min_major || (major =3D=3D min_major && =
-minor >=3D min_minor);
->         |                ^~~~~
->   tools/testing/selftests/timers/../kselftest.h:398:6: note: remove the '=
-||' if its condition is always false
->     398 |         if (uname(&info) || sscanf(info.release, "%u.%u.", &maj=
-or, &minor) !=3D 2)
->         |             ^~~~~~~~~~~~~~~
->   tools/testing/selftests/timers/../kselftest.h:395:20: note: initialize =
-the variable 'major' to silence this warning
->     395 |         unsigned int major, minor;
->         |                           ^
->         |                            =3D 0
->
-> This is a false positive because if uname() fails, ksft_exit_fail_msg()
-> will be called, which unconditionally calls exit(), a noreturn function.
-> However, clang does not know that ksft_exit_fail_msg() will call exit()
-> at the point in the pipeline that the warning is emitted because
-> inlining has not occurred, so it assumes control flow will resume
-> normally after ksft_exit_fail_msg() is called.
->
-> Make it clear to clang that all of the functions that call exit()
-> unconditionally in kselftest.h are noreturn transitively by marking them
-> explicitly with '__attribute__((__noreturn__))', which clears up the
-> warning above and any future warnings that may appear for the same
-> reason.
->
-> Fixes: 6d029c25b71f ("selftests/timers/posix_timers: Reimplement check_ti=
-mer_distribution()")
-> Reported-by: John Stultz <jstultz@google.com>
-> Closes: https://lore.kernel.org/all/20240410232637.4135564-2-jstultz@goog=
-le.com/
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
-> I have based this change on timers/urgent, as the commit that introduces
-> this particular warning is there and it is marked for stable, even
-> though this appears to be a generic kselftest issue. I think it makes
-> the most sense for this change to go via timers/urgent with Shuah's ack.
-> While __noreturn with a return type other than 'void' does not make much
-> sense semantically, there are many places that these functions are used
-> as the return value for other functions such as main(), so I did not
-> change the return type of these functions from 'int' to 'void' to
-> minimize the necessary changes for a backport (it is an existing issue
-> anyways).
->
-> I see there is another instance of this problem that will need to be
-> addressed in -next, introduced by commit f07041728422 ("selftests: add
-> ksft_exit_fail_perror()").
-> ---
->  tools/testing/selftests/kselftest.h | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftest=
-s/kselftest.h
-> index 973b18e156b2..0591974b57e0 100644
-> --- a/tools/testing/selftests/kselftest.h
-> +++ b/tools/testing/selftests/kselftest.h
-> @@ -80,6 +80,9 @@
->  #define KSFT_XPASS 3
->  #define KSFT_SKIP  4
->
-> +#ifndef __noreturn
-> +#define __noreturn       __attribute__((__noreturn__))
-> +#endif
->  #define __printf(a, b)   __attribute__((format(printf, a, b)))
->
->  /* counters */
-> @@ -300,13 +303,13 @@ void ksft_test_result_code(int exit_code, const cha=
-r *test_name,
->         va_end(args);
->  }
->
-> -static inline int ksft_exit_pass(void)
-> +static inline __noreturn int ksft_exit_pass(void)
+When PERST# assert and deassert happens on the PERST# supported platforms,
+the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
+to the area that was previously allocated (iATU0) for BAR0, instead of the
+new area (iATU6) for BAR0.
 
-Orthogonal to this fix, but why does a "no return" function have a
-non-void return type?
+Right now, we dodge the bullet because both iATU0 and iATU6 should
+currently translate inbound accesses to BAR0 to the same allocated memory
+area. However, having two separate inbound mappings for the same BAR is a
+disaster waiting to happen.
 
->  {
->         ksft_print_cnts();
->         exit(KSFT_PASS);
->  }
->
-> -static inline int ksft_exit_fail(void)
-> +static inline __noreturn int ksft_exit_fail(void)
->  {
->         ksft_print_cnts();
->         exit(KSFT_FAIL);
-> @@ -333,7 +336,7 @@ static inline int ksft_exit_fail(void)
->                   ksft_cnt.ksft_xfail + \
->                   ksft_cnt.ksft_xskip)
->
-> -static inline __printf(1, 2) int ksft_exit_fail_msg(const char *msg, ...=
-)
-> +static inline __noreturn __printf(1, 2) int ksft_exit_fail_msg(const cha=
-r *msg, ...)
->  {
->         int saved_errno =3D errno;
->         va_list args;
-> @@ -348,19 +351,19 @@ static inline __printf(1, 2) int ksft_exit_fail_msg=
-(const char *msg, ...)
->         exit(KSFT_FAIL);
->  }
->
-> -static inline int ksft_exit_xfail(void)
-> +static inline __noreturn int ksft_exit_xfail(void)
->  {
->         ksft_print_cnts();
->         exit(KSFT_XFAIL);
->  }
->
-> -static inline int ksft_exit_xpass(void)
-> +static inline __noreturn int ksft_exit_xpass(void)
->  {
->         ksft_print_cnts();
->         exit(KSFT_XPASS);
->  }
->
-> -static inline __printf(1, 2) int ksft_exit_skip(const char *msg, ...)
-> +static inline __noreturn __printf(1, 2) int ksft_exit_skip(const char *m=
-sg, ...)
->  {
->         int saved_errno =3D errno;
->         va_list args;
->
-> ---
-> base-commit: 076361362122a6d8a4c45f172ced5576b2d4a50d
-> change-id: 20240411-mark-kselftest-exit-funcs-noreturn-17d8ff729a7a
->
-> Best regards,
-> --
-> Nathan Chancellor <nathan@kernel.org>
->
->
+The mapping between PCI BAR and iATU inbound window are maintained in the
+dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for
+a BAR, dw_pcie_ep_inbound_atu() API will first check for the availability
+of the existing mapping in the array and if it is not found (i.e., value in
+the array indexed by the BAR is found to be 0), then it will allocate a new
+map value using find_first_zero_bit().
+
+The issue here is, the existing logic failed to consider the fact that the
+map value '0' is a valid value for BAR0. Because, find_first_zero_bit()
+will return '0' as the map value for BAR0 (note that it returns the first
+zero bit position).
+
+Due to this, when PERST# assert + deassert happens on the PERST# supported
+platforms, the inbound window allocation restarts from BAR0 and the
+existing logic to find the BAR mapping will return '6' for BAR0 instead of
+'0' due to the fact that it considers '0' as an invalid map value.
+
+So fix this issue by always incrementing the map value before assigning to
+bar_to_atu[] array and then decrementing it while fetching. This will make
+sure that the map value '0' always represents the invalid mapping."
+
+Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+Closes: https://lore.kernel.org/linux-pci/ZXsRp+Lzg3x%2Fnhk3@x1-carbon/
+Tested-by: Niklas Cassel <niklas.cassel@wdc.com>
+Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
+Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+
+Notes:
+    Change from v3 to v4
+    - commit message add "Right now, we dodge..."
+    - Add Reviewed-by: Manivannan Sadhasivam
+    
+    Change from v2 to v3
+    - Add impact in commit message
+    - Add mani's detail description
+    - Fix Closes link
+    
+    Change from v1 to v2
+    - update subject
+    - use free_win + 1 solution
+    - still leave MAX_IATU_IN as 256. I am not sure if there are platfrom have
+    256 ATU. Suppose it only use max 6 in current EP framework.
+    - @Niklas, can you help test it. My platform become unstable today.
+
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b7..ba932bafdb230 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -139,7 +139,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 	if (!ep->bar_to_atu[bar])
+ 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+ 	else
+-		free_win = ep->bar_to_atu[bar];
++		free_win = ep->bar_to_atu[bar] - 1;
+ 
+ 	if (free_win >= pci->num_ib_windows) {
+ 		dev_err(pci->dev, "No free inbound window\n");
+@@ -153,7 +153,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 		return ret;
+ 	}
+ 
+-	ep->bar_to_atu[bar] = free_win;
++	/*
++	 * Always increment free_win before assignment, since value 0 is used to identify
++	 * unallocated mapping.
++	 */
++	ep->bar_to_atu[bar] = free_win + 1;
+ 	set_bit(free_win, ep->ib_window_map);
+ 
+ 	return 0;
+@@ -190,7 +194,10 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar = epf_bar->barno;
+-	u32 atu_index = ep->bar_to_atu[bar];
++	u32 atu_index = ep->bar_to_atu[bar] - 1;
++
++	if (!ep->bar_to_atu[bar])
++		return;
+ 
+ 	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+ 
+-- 
+2.34.1
+
