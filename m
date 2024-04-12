@@ -1,121 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1386824B3;
-	Fri, 12 Apr 2024 13:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC2A5644E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712928572; cv=none; b=nhydOyVvhSK3ecvIdtpvFqXCebYqroD0iHlb29F7uvp4snknKzJUTBhxEWq9d2fYejElllXm8N+cbliZOanJBizkq71dnMCBiPyFXKL+jn8oT9kwLzE2FcmRxNC/yQFFMSIOBGBBGdwSmhnHAZaVGzbJ1yewAjgM8CqtG0FT8yc=
+	t=1712928653; cv=none; b=upupkn8Xii5Z1enlYnnloFlv9YVc0cV1RJXdwxV1u0+VgtKAMBpVqEWF3L5EXWlegosmc9cJWbP4ZMyly2u/EtgHgcl5fAn7U9lfbIiW3chFev0mp+mPJ+XP6G93H0O//OKicFLLd39b4z1EOF34rHZDJmINpGm3LFBpXv1arrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712928572; c=relaxed/simple;
-	bh=u8dMeeeKnX/l6l8EK0qzPoKX+NXDcA9+9DlJCRADEYA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MsGnacRSfQqEDLfrJACznESvKKDLG8bMq7ZmLTOTBcaLpwgRZ+3SgWIoCH8hTC7kpcUxyvOfLaW/AlTZBrMy+1JF2RINpazhiePUBeg/6DPpZ7dawgcFCPCEEcS6IwAjQFN90RGyC4BIrg4tZGpqMU6nPFNCc+4vP+1n8iNdy3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7FCC4AF07;
-	Fri, 12 Apr 2024 13:29:32 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rvH0o-000000012qu-1r4T;
-	Fri, 12 Apr 2024 09:32:14 -0400
-Message-ID: <20240412133214.307818654@goodmis.org>
-User-Agent: quilt/0.67
-Date: Fri, 12 Apr 2024 09:31:56 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-Subject: [for-linus][PATCH 4/4] ring-buffer: Only update pages_touched when a new page is touched
-References: <20240412133152.723632549@goodmis.org>
+	s=arc-20240116; t=1712928653; c=relaxed/simple;
+	bh=dos5mFR7OGlo/0+OT1mBqy46jgg02Ze4GK+u8PA+3W4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Ux4qfw/EV+YpftajZLOgRmsl76RyiqMIwXBp7Tq8lwE+rqVITJ34R6Gfdw4uxFhKtWKxcLimJts+QZsBA8YfEzeczzvc2hEJap0FQCDfco16HjFEG1Etbdl37TYsVXUViC/g9lUY9377tA4fhqzDLjI/hNdWBzg+rbqezJCshg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kb1oBwk0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kb1oBwk0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712928650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vN5LU15jD5iu/2/mvrypQik1qqqlfRZO/11n/IoWnz0=;
+	b=Kb1oBwk0qu7CJFZiBeFAPVn+qwMMBc2bbQ7T7A85wSiAzIMocKDWVejNEwG2jkNKYE0ZZE
+	p22a7OjvF6GyAvh8RFd0eaLmwdrVP0UIL0jW45kll3aVfVyyADUNPNBHB73tEbeLd8Pt26
+	dpN3ccd1UBtp7ne6JN0lG+1zOa0jY8A=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-mnuFJhWMNgacB_b7a-sh5Q-1; Fri, 12 Apr 2024 09:30:48 -0400
+X-MC-Unique: mnuFJhWMNgacB_b7a-sh5Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A42FF104D503;
+	Fri, 12 Apr 2024 13:30:48 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3A74F40C6DAE;
+	Fri, 12 Apr 2024 13:30:45 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org
+Subject: [PATCH v5 0/5] vduse: Add support for reconnection
+Date: Fri, 12 Apr 2024 21:28:20 +0800
+Message-ID: <20240412133017.483407-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Here is the reconnect support in vduse
 
-The "buffer_percent" logic that is used by the ring buffer splice code to
-only wake up the tasks when there's no data after the buffer is filled to
-the percentage of the "buffer_percent" file is dependent on three
-variables that determine the amount of data that is in the ring buffer:
+Kernel will allocate pages for reconnection.
+Userspace needs to use mmap to map the memory to userspace and use these pages to
+save the reconnect information.
 
- 1) pages_read - incremented whenever a new sub-buffer is consumed
- 2) pages_lost - incremented every time a writer overwrites a sub-buffer
- 3) pages_touched - incremented when a write goes to a new sub-buffer
+test passd in vduse+dpdk-testpmd
 
-The percentage is the calculation of:
+change in V2
+1. Address the comments from v1
+2. Add the document for reconnect process
 
-  (pages_touched - (pages_lost + pages_read)) / nr_pages
+change in V3
+1. Move the vdpa_vq_state to the uAPI.  vduse will use this to synchronize the vq info between the kernel and userspace app.
+2. Add a new ioctl VDUSE_DEV_GET_CONFIG. userspace app use this to get config space
+3. Rewrite the commit message.
+4. Only save the address for the page address and remove the index.
+5. remove the ioctl VDUSE_GET_RECONNECT_INFO, userspace app will use uAPI VDUSE_RECONNCT_MMAP_SIZE to mmap
+6. Rewrite the document for the reconnect process to make it clearer.
 
-Basically, the amount of data is the total number of sub-bufs that have been
-touched, minus the number of sub-bufs lost and sub-bufs consumed. This is
-divided by the total count to give the buffer percentage. When the
-percentage is greater than the value in the "buffer_percent" file, it
-wakes up splice readers waiting for that amount.
+change in v4
+1. Change the number of map pages to VQ numbers. UserSpace APP can define and maintain the structure for saving reconnection information in userspace. The kernel will not maintain this information.
+2. Rewrite the document for the reconnect process to make it clearer.
+3. add the new ioctl for VDUSE_DEV_GET_CONFIG/VDUSE_DEV_GET_STATUS
 
-It was observed that over time, the amount read from the splice was
-constantly decreasing the longer the trace was running. That is, if one
-asked for 60%, it would read over 60% when it first starts tracing, but
-then it would be woken up at under 60% and would slowly decrease the
-amount of data read after being woken up, where the amount becomes much
-less than the buffer percent.
+change in V5
+1. update the Documentation for vduse reconnection 
+2. merge the patch from Dan Carpenter <dan.carpenter@linaro.org> vduse: Fix off by one in vduse_dev_mmap()
+3. fix the wrong comment in the code 
 
-This was due to an accounting of the pages_touched incrementation. This
-value is incremented whenever a writer transfers to a new sub-buffer. But
-the place where it was incremented was incorrect. If a writer overflowed
-the current sub-buffer it would go to the next one. If it gets preempted
-by an interrupt at that time, and the interrupt performs a trace, it too
-will end up going to the next sub-buffer. But only one should increment
-the counter. Unfortunately, that was not the case.
+Signed-off-by: Cindy Lu <lulu@redhat.com>
 
-Change the cmpxchg() that does the real switch of the tail-page into a
-try_cmpxchg(), and on success, perform the increment of pages_touched. This
-will only increment the counter once for when the writer moves to a new
-sub-buffer, and not when there's a race and is incremented for when a
-writer and its preempting writer both move to the same new sub-buffer.
+Cindy Lu (5):
+  vduse: Add new ioctl VDUSE_DEV_GET_CONFIG
+  vduse: Add new ioctl VDUSE_DEV_GET_STATUS
+  vduse: Add function to get/free the pages for reconnection
+  vduse: Add file operation for mmap
+  Documentation: Add reconnect process for VDUSE
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240409151309.0d0e5056@gandalf.local.home
+ Documentation/userspace-api/vduse.rst |  41 +++++++++
+ drivers/vdpa/vdpa_user/vduse_dev.c    | 125 ++++++++++++++++++++++++++
+ include/uapi/linux/vduse.h            |   5 ++
+ 3 files changed, 171 insertions(+)
 
-Cc: stable@vger.kernel.org
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Fixes: 2c2b0a78b3739 ("ring-buffer: Add percentage of ring buffer full to wake up reader")
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 25476ead681b..6511dc3a00da 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1393,7 +1393,6 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
- 	old_write = local_add_return(RB_WRITE_INTCNT, &next_page->write);
- 	old_entries = local_add_return(RB_WRITE_INTCNT, &next_page->entries);
- 
--	local_inc(&cpu_buffer->pages_touched);
- 	/*
- 	 * Just make sure we have seen our old_write and synchronize
- 	 * with any interrupts that come in.
-@@ -1430,8 +1429,9 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
- 		 */
- 		local_set(&next_page->page->commit, 0);
- 
--		/* Again, either we update tail_page or an interrupt does */
--		(void)cmpxchg(&cpu_buffer->tail_page, tail_page, next_page);
-+		/* Either we update tail_page or an interrupt does */
-+		if (try_cmpxchg(&cpu_buffer->tail_page, &tail_page, next_page))
-+			local_inc(&cpu_buffer->pages_touched);
- 	}
- }
- 
 -- 
 2.43.0
-
 
