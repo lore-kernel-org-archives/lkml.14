@@ -1,123 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67A7C824A3
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F88082883;
+	Fri, 12 Apr 2024 13:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927964; cv=none; b=K3C311ImXdhtEmMphDz1Fa5MeGIHPkMl25H51ww8Wj//4wTJcSjlGfLh2mum3mjYyz7HeLo0SEPAmS37BEGBYcb/xufiOEFaqrpa+DN9xlYdVWXCfBGHOzj2NjkBppSEskacurZrVRL+XPR4EA23I+OG2al+q2m635fR1g8cmDI=
+	t=1712927963; cv=none; b=VBxFq2enrn0fdRHKSNFBGXeXjSX6PREf5ws2D2QTgG/r+kBYgxNSdDwJTXehpmVLghWIA8oAwXJ8VbNPwR5jmyqJfXZnXOryTHFqw62aLwdflAStCfd6gvvDKcifuxi6lA0iPCXqidqVKQp4gTzNnUR5FjOvhyWms1Sulz8FeqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927964; c=relaxed/simple;
-	bh=rTIiiTX/0GDPQFzvBo0C+aUzO0YBV2V1wPty4ExbMiM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zjn1tYl5M8ik9Y+6DEKfY4VlNnK+QPMxXQVNoqgEXCdQ2JWZtosGr7ep6IqGlwaLu2t/kwl/a0AHZjIYnAIF1FmjVt3mlYq9jAJ25a1RbxlqQ8pdIEgIkjFPVi8I4shX5kLr4QXL9z4kxbNCcKehxwuD3/dytJ19VrnB5B5RR/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2A111474;
-	Fri, 12 Apr 2024 06:19:50 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 602A43F766;
-	Fri, 12 Apr 2024 06:19:20 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Subject: [PATCH v3 2/3] arm64: mm: Batch dsb and isb when populating pgtables
-Date: Fri, 12 Apr 2024 14:19:07 +0100
-Message-Id: <20240412131908.433043-3-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240412131908.433043-1-ryan.roberts@arm.com>
-References: <20240412131908.433043-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1712927963; c=relaxed/simple;
+	bh=v7yDfXdGtUw89/5GbhmOHtChgqA0aA+RkQQTkojn9CI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KNOwdJ8H4TA8smKzHO2bQoSx7OypGC+twcwHp/2wofGfubvgElvfwwiz4/k9vuDU0SIkukTIHCUqxDxuZB+v3l4WhtQmln12nOAkmMWi3BA7eEUCk7lCaUbZQOtQ1nR3C4uAijQ7cSuiauawFB9Jn7CAPDXAoPzP6Ssy2ZlNDAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMStQqxS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMStQqxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BF0C3277B;
+	Fri, 12 Apr 2024 13:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712927963;
+	bh=v7yDfXdGtUw89/5GbhmOHtChgqA0aA+RkQQTkojn9CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HMStQqxSco8CFI5JI1wHWcnj+jsuZIdu1UBt62gcX8aFu0wcJU5o59tJGNgjZpR80
+	 nwNRy8/gfrJMpa3tqKkznNm3s09i7jegekk2DradJ9tK+/hDXdvvmiuWBEePDW5emE
+	 a8CXYn4XcmX1eo9Q3R15cuv/+u5zuUaBX8DRPSU0kXAaSIVPJnMJreYMHg7IMaY8Tz
+	 hW+5Gi3PIhkL4oFRmN++lfAq3SIXYItPaRaWw+jf9pBF4oH8XgwYsrw2YiHtloggn7
+	 LaR9Vbikf2m9Mg+qpBtjlOwYpck+GjHNJ6P17qn5woOyoQZNPp4tEoqVJ/ygj7N7DS
+	 6te7oLKfAMIAA==
+Date: Fri, 12 Apr 2024 15:19:18 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Documentation: PCI: pci-endpoint: Fix EPF ops list
+Message-ID: <Zhk01vZODbh0bRBH@ryzen>
+References: <20240412095031.256163-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412095031.256163-1-alexander.stein@ew.tq-group.com>
 
-After removing uneccessary TLBIs, the next bottleneck when creating the
-page tables for the linear map is DSB and ISB, which were previously
-issued per-pte in __set_pte(). Since we are writing multiple ptes in a
-given pte table, we can elide these barriers and insert them once we
-have finished writing to the table.
+On Fri, Apr 12, 2024 at 11:50:31AM +0200, Alexander Stein wrote:
+> With commit 5779dd0a7dbd7 ("PCI: endpoint: Use notification chain
+> mechanism to notify EPC events to EPF") the linkup callback has been
+> removed and replaced by EPC event notifications.
+> 
+> With commit 256ae475201b1 ("PCI: endpoint: Add pci_epf_ops to expose
+> function-specific attrs") a new (optional) add_cfs callback was added.
+> Update documentation accordingly.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> Changes in v2:
+> * Separated paragraphs by blank line
+> 
+>  Documentation/PCI/endpoint/pci-endpoint.rst | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
+> index 4f5622a65555..3961ff4e5beb 100644
+> --- a/Documentation/PCI/endpoint/pci-endpoint.rst
+> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+> @@ -172,8 +172,7 @@ by the PCI endpoint function driver.
+>  	 * bind: ops to perform when a EPC device has been bound to EPF device
+>  	 * unbind: ops to perform when a binding has been lost between a EPC
+>  	   device and EPF device
+> -	 * linkup: ops to perform when the EPC device has established a
+> -	   connection with a host system
+> +	 * add_cfs: optional ops to create function specific config attributes
 
-Execution time of map_mem(), which creates the kernel linear map page
-tables, was measured on different machines with different RAM configs:
+I think it is much clearer if you:
+s/config/configfs/
+here.
 
-               | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere Altra
-               | VM, 16G     | VM, 64G     | VM, 256G    | Metal, 512G
----------------|-------------|-------------|-------------|-------------
-               |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
----------------|-------------|-------------|-------------|-------------
-before         |   78   (0%) |  435   (0%) | 1723   (0%) |  3779   (0%)
-after          |   11 (-86%) |  161 (-63%) |  656 (-62%) |  1654 (-56%)
-
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Tested-by: Eric Chanudet <echanude@redhat.com>
----
- arch/arm64/include/asm/pgtable.h |  7 ++++++-
- arch/arm64/mm/mmu.c              | 11 ++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index afdd56d26ad7..105a95a8845c 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -271,9 +271,14 @@ static inline pte_t pte_mkdevmap(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
- }
- 
--static inline void __set_pte(pte_t *ptep, pte_t pte)
-+static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
- {
- 	WRITE_ONCE(*ptep, pte);
-+}
-+
-+static inline void __set_pte(pte_t *ptep, pte_t pte)
-+{
-+	__set_pte_nosync(ptep, pte);
- 
- 	/*
- 	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 9f1d69b7b494..ac88b89770a6 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -178,7 +178,11 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
- 	do {
- 		pte_t old_pte = __ptep_get(ptep);
- 
--		__set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
-+		/*
-+		 * Required barriers to make this visible to the table walker
-+		 * are deferred to the end of alloc_init_cont_pte().
-+		 */
-+		__set_pte_nosync(ptep, pfn_pte(__phys_to_pfn(phys), prot));
- 
- 		/*
- 		 * After the PTE entry has been populated once, we
-@@ -232,6 +236,11 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
- 		phys += next - addr;
- 	} while (addr = next, addr != end);
- 
-+	/*
-+	 * Note: barriers and maintenance necessary to clear the fixmap slot
-+	 * ensure that all previous pgtable writes are visible to the table
-+	 * walker.
-+	 */
- 	pte_clear_fixmap();
- }
- 
--- 
-2.25.1
-
+With that:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
