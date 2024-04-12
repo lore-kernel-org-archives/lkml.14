@@ -1,138 +1,97 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6214E14EC4E;
-	Fri, 12 Apr 2024 19:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712951979; cv=pass; b=tM02eqSb0VXaU5aseqDfndC4vmK/DfD1l3sZPRySJSKEghbYm0IsV7w+79SCv/uilQ3/lAQNvQx71jCIqhnCTnwFZgsUULP3NBfpYUF2rJr9fzISIO15n8dO3EVJGBf+PvIT0HG6aFw7M3KGa+b3mpLkxf/wZzqdeNAK4c6FdMo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712951979; c=relaxed/simple;
-	bh=9GILyS5wOQePaTKkVr8cMkodqWg8VGVjdnrVrcN1rW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1nm87q+sp2g+CV3VmLD3GgnE+08gH9pWgSTcAElVZ63ha8tp6nMgPMYDYiECeoeFzYKGl6RtrpWTcXb5S76Qn2AKyg/ifHQzg0xEdOSluX+eXpeh8pmkgycbmOkm+lNR+pG/vJXsoHzAAsoXK81PXIn3sRNIH80GpWKXMIJP4g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=gpteDel6; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=5caQbqJE; arc=pass smtp.client-ip=85.215.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748915099F
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712951996; cv=none; b=DfNfppzUuVDkGfovf4RHuDeRfvhYzHB1zF7IPpfq6hpp3e7o1oDxS2r0qX9hI1CTQ1n4jK9yGRADkwG++WeUdLNw2gELmIhe37Ab/YWrmgjRIBbeEM0Ac2qDh+1vOlVGm57gbVoNpxXt8hBQ1bRsXLGc/j+wKEgRLgFKKQ8aZ6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712951996; c=relaxed/simple;
+	bh=36OsBtzi8touilTyPMVCVeWyHaAC35RPhFw91LknUmE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sfIK2faAwLoU8jcYZ88Uo8EE0kewo4nUYozqk5ojIDqQmk3YOnvx6UlAZr94eRsWLtFw5yiQ6yco7H83VS5oQtDi0+WJeT+b1OmZ5O9Fj5J/DaOuf9FSC1fTuD7o75vasV4hOl9ayFbeVjFF1DJORXrqWPft/U3ZUCvIrCOFgLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YFO3sae4; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="gpteDel6";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="5caQbqJE"
-ARC-Seal: i=1; a=rsa-sha256; t=1712951603; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=mXyGqxePBmd8lepTK9pbK2hPDvbmzxqP0x17Md01t23w2aU7a5WkCyRHk1r/1usGiH
-    FX1oxFNvY/JCYdHn/28AN8z3OwDjmngIxWPyghO5ntAPLnEo/xA8jYtkZkmOZsO7ic13
-    C8z8DLohWxvChxLviNf24oeUSzd8w1bq3CLQSHY7X01aa1YrI0WZXbqnQHgjX8lKRiBK
-    H3GFTa696yq0mBsep4FP+NSibjrmSwqkNGIP95uEUvyP5P9Nc8Awr09LqtRE2l6XW0LI
-    OJF7tNzLn27AgpJc60ivEkp1ZmSDjjn+8kCjaW/O95fUNYRX+yy8Kb8RpyVEjlJP8VSs
-    Vfww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951603;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
-    b=TRhtcnenJDtY7Ywd7qaePVOa/MlvA+jL4MBT/8FcsbHJDGj99IDVgKDNVo9/oA38MS
-    1m3ZjXHtxjpT12QbrNb976NX9JiV9nctmeJhwIxtXzW1N+yAo/8FZT5bDwueE4c1ET0s
-    7KHgowHbNlhGUnEY3F8UTIofU7GQikxoNwIviT1jTLOk0SFlOvvtY/kqGG3ds9XIDCPY
-    bOJLM4T5KAde+qGHNj5BqdMORRYV3JPUu5OsicFlQ4Ll8osh4BqfbWDXFjOCZINdTDOf
-    1jPpQTdSFqzcLgFhrxjtKq2hW6xsWkP3IBNVJVpTKRTvkOvDsk+ZHD3Z/FYi+a3tVeiB
-    8qkg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951603;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
-    b=gpteDel69DQ0ThyZf+szYkf4LEln0Uw1Gu4zbWYDyHCJnQEWy5jUlX4CPTTz5q1eS4
-    //3LzhIGq9zSuCyyC3ffb0DSD2qUhYe0i6rd7nNwpz4cwe2xrFmG6AxZClI4KrpJlNU8
-    sFfhvxXp5YibwGMPOZMEaR3yZyIBBw+5y4LnUEU2xu/RcxW6Na6OVZ1I9t+sxvXKbe0R
-    TfVZdfAOtgtiwx7HTL7+pqVh9BqkvFctfT16uMo1WYxT/fKjTr/UdaviSwD11VaDMR24
-    B3NN2KUSOaLabW2uzlQd13cOWFeRAHUUoLP9pxfHgValNPsZil+ElxGhcfEjZ4/aEBlG
-    rWnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712951603;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
-    b=5caQbqJEeEmju7YbfP7/x+LNKYr7C1dExLHSFFtXhfpc4JddZWWvOctbNhJhcsdsEh
-    r2UB+9Dx32Fzfgp3yLBw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA+p3h"
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
-    with ESMTPSA id Raf12503CJrModL
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Fri, 12 Apr 2024 21:53:22 +0200 (CEST)
-Date: Fri, 12 Apr 2024 21:53:16 +0200
-From: Stephan Gerhold <stephan@gerhold.net>
-To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sa8155p-adp: lower min volt for
- L13C regulator
-Message-ID: <ZhmRJPAZUSlc1CSH@gerhold.net>
-References: <20240412190310.1647893-1-volodymyr_babchuk@epam.com>
- <20240412190310.1647893-2-volodymyr_babchuk@epam.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFO3sae4"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-69b40061bbeso6745006d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712951994; x=1713556794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KPQz4q6QEnMsxEgXrxtOlOJIEb7W/IfVxZZ4u95+bqo=;
+        b=YFO3sae4HNlgkYsTfIyaRrIatrclSzO4FQLhdyiQO4+wICgoVNpzS1VqSsZZynBOIL
+         F04xY8YNmW8bsRtEee9u6ElYlb1vGmat2/CwMfwufEykfitqe6fc9opX6Wn/NsYv/K++
+         x2WGV5HQAdQHiVGi1hvoccV8LKYBB+2fI0vh1MKK3vdT/9rTuh0h0kOw+Y8KsmHF1UaH
+         1OrKxstmrq/URumxrpEAzroFANst5Rd/4UdeUtIP6PtJw4Ire9be85ctps/y+tMLafyz
+         pnZMrAN884DhjpS8npBvrWJyxg/Dx0zavKUsNj2t6zpSQ8Y4gJ904//t7GeJxhe2jI2p
+         OcXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712951994; x=1713556794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KPQz4q6QEnMsxEgXrxtOlOJIEb7W/IfVxZZ4u95+bqo=;
+        b=Wo3hyTqp21FhtTTAM0bym3xouo06DewDXqPPKqX64a/v50JAcakQyj+CU/kTe3gZbk
+         6E5Ked2UPLpt4xKb1gw1uVARen9FPCVho3pgebsh4vEP0AG+3S5ikw2IPXFuzAmfXazH
+         mbt0k/xUBUtScVKyrD9DGa31BpIF+YiWv2ue7Cl+A2PbPYlIqQcp/C8brX/8QqQYxKKT
+         opyKp14l1hOi7C20qY4r1cgXdGoJ4xXNfgNo+zLvI4nau7GxRWP0h2Oxpzh5CwkUUtWu
+         YJLqmXsHzZaFYC4MQOsGykTVxQ71TXNC5tJCks7FI3UFZBFUDrasQurhA+KSPv0pE2Uo
+         UCWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUu1JKbXkwGIr246LsmGumlysyuiqWKXq2wsYwnjW6ITh0a15SaM09TqnCepDF1Qs87mC1q/AIT+kQQx5MnDGXjkcJozvaBwbuKhR8G
+X-Gm-Message-State: AOJu0YyIfQXnxaAtFSMATxP3OTaP1rK1l38DkRkRotGtwjZK4K7l7ZJR
+	3oLVgdFHEwGxkFUgeb21VA7Am8hBQhsA3burhsEFg+eVNL+FDJjolwuV4YJ028L/bInjvESKXv6
+	6ieVTZyxkS2tsHgooc6aTLalgk9tJxU7ROZZh
+X-Google-Smtp-Source: AGHT+IGeK6dgxqFFgjk4xeptvd+7a1JVOXy1GhRKD0oaMUJXxGZcYPZIaApdK65tlnPduDc4wy1hnWEc/ndpj12FbN4=
+X-Received: by 2002:a05:6214:2a1:b0:69b:1f8d:300b with SMTP id
+ m1-20020a05621402a100b0069b1f8d300bmr4083789qvv.30.1712951994075; Fri, 12 Apr
+ 2024 12:59:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412190310.1647893-2-volodymyr_babchuk@epam.com>
-Content-Transfer-Encoding: 7bit
+References: <20240412053245.3328123-1-jfraker@google.com> <661953c285139_38e2532941f@willemb.c.googlers.com.notmuch>
+In-Reply-To: <661953c285139_38e2532941f@willemb.c.googlers.com.notmuch>
+From: John Fraker <jfraker@google.com>
+Date: Fri, 12 Apr 2024 12:59:42 -0700
+Message-ID: <CAGH0z2Hp_tXb1dBUDDbWn8J4VG4E9COBkYdWT3HB2NAHB4tXVA@mail.gmail.com>
+Subject: Re: [PATCH net-next 12] gve: Correctly report software timestamping capabilities
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shailend Chand <shailend@google.com>, Willem de Bruijn <willemb@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jeroen de Borst <jeroendb@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Junfeng Guo <junfeng.guo@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 12, 2024 at 07:03:26PM +0000, Volodymyr Babchuk wrote:
-> Voltage regulator L13C is used by SD card IO interface. In order to
-> support UHS modes, IO interface voltage needs to be set to 1.8V. This
-> patch extends minimum voltage range of L13C regulator to allow this.
-> 
+On Fri, Apr 12, 2024 at 8:31=E2=80=AFAM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> John Fraker wrote:
+> > gve has supported software timestamp generation since its inception,
+> > but has not advertised that support via ethtool. This patch correctly
+> > advertises that support.
+> >
+> > Signed-off-by: John Fraker <jfraker@google.com>
+> > Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
 
-I think this one also deserves a Fixes and stable tag. One could argue
-that enabling UHS modes is a new "feature" but I would say the original
-commit just missed setting the correct voltages with the intended use
-case. I doubt limiting to high speed was intended.
+Thank you
 
-Maybe also add a Suggested-by tag from myself:
+> > ---
+> > v2: Used ethtool_op_get_ts_info instead of our own implementation, as
+> >     suggested by Jakub
+>
+> FYI: the subject says "net-next 12", not "net-next v2"
+>
+Sorry about that!
 
-Fixes: 0deb2624e2d0 ("arm64: dts: qcom: sa8155p-adp: Add support for uSD card")
-Cc: stable@vger.kernel.org
-Suggested-by: Stephan Gerhold <stephan@gerhold.net>
-
-I believe you do not need to resend just to add these tags, the b4 tool
-should pick them up while applying. It looks like this might not work
-for the Cc: stable tag though...
-
-Thanks,
-Stephan
-
-> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> index b2cf2c988336c..9e9c7f81096bb 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> @@ -283,7 +283,7 @@ vreg_l12c_1p808: ldo12 {
->  
->  		vreg_l13c_2p96: ldo13 {
->  			regulator-name = "vreg_l13c_2p96";
-> -			regulator-min-microvolt = <2504000>;
-> +			regulator-min-microvolt = <1800000>;
->  			regulator-max-microvolt = <2960000>;
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
-> -- 
-> 2.44.0
+I made two rookie mistakes haha. Sending the patch late at night, and
+not re-doing my test email after editing.
