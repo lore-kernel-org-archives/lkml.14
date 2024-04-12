@@ -1,93 +1,118 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F97F225D7
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 22:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BB48827
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 22:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712961881; cv=none; b=ibocq9HvsjZa+vL35eMqfGujya4bHkMnEDTvokzZ1cdarVZmEgZGb7RPz2crM1X5VhvvVl5c151hDLVe1M2tsTqH2Q7VC61HdF3wd71yRBGHolihTMKRqv9uGQ14wsyA2s/58sGq/qGxF9YS1XyKdyJ7xAFZ2PxCuw1uG6KhUhc=
+	t=1712961970; cv=none; b=d0VVO278jOftmiYWJw7GPmQuWntc3M7scknfjFqiIQDWZGwckiGWM0QtCwqIPhr8p6CCB4213ZHkUsCPENP5NjgNVAKA7mX2uTiLgXK+yzXgQI87hYEwlrTK5WjdcgMG/4OwmMpuKnz6g+KEXk6UYt+IbfULTz91aAg/m30ZyqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712961881; c=relaxed/simple;
-	bh=2/G8pva0QKXdcG7pAlRPcQQaEkGLUnJpeXwjjOIqChY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/xGacUho4Eu1q3lFEI1kVQnRN9Ri6knlooKyPgh54ogcF97+D+Rk02239ZgSkP4p/z7CBwjbFAZlVH9/RplrB5ThTVqyD259YxvM0/LIj5tNPPk46Z6x1fT+yOOOkcYHM+1/BBi0Uc68gXXp/nKDd+SZLt88TcTXKetdR9448M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S9p6DXVR; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712961970; c=relaxed/simple;
+	bh=CVh3GoQ0Uj5EBqBGfQw29CTm8/4AiBhdQKue4WhQnYU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uA+yer486yedxFmA98ewFOvr57uMH0IAOYK81/yD4hVF5wS7KrMyY/BNBXCjd1hhjE5QSSGo8ijwRdhfV8a9U3LjyDSp32//Bi05IEclXj9pe/G59ld7hraVvlN3Xab2il+dXT1BIzvlrCp4wAG+SpCY1GJySmj15hCOFrJUQcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gfb0AnLA; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S9p6DXVR"
-Date: Wed, 10 Apr 2024 21:53:41 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712961877;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bK7KfBMPyOIucwDtN0e7NfhXAX7dIzQN2rgbT78Breo=;
-	b=S9p6DXVRqT4Q3RBVm7Uq9aPDAJOOzIiSGngKqvRMvNWI8kHldgoRu+I3oxpRc8RPeCTXYE
-	rNPpTaRupbgiEaYYO+Wb9MdGx5CS1G/ZS+NpHFGPZgs4dI7FECqKaBUKjvrNuPLzlwPpCm
-	KonJVHhiEGrZwSX6WL6pvVmUyuIlROA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, kernel-team@android.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Speed up boot with faster linear map creation
-Message-ID: <ZhaL1TABj0Qf7UKR@vm3>
-References: <20240412131908.433043-1-ryan.roberts@arm.com>
- <171293670589.3659902.6442840474459477952.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfb0AnLA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a482a2360aso1874055a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712961968; x=1713566768; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=azAaAXQ+5slCG5tLzAxZ1/q0F1Xu5c3tqFk5gSJfnGk=;
+        b=gfb0AnLAz5bQDguarqegI62fEl7QhQxdhTLJvbWhhi7FN6MfeZSqs05/8EcIQmHUf1
+         /IfV749FMMl8LiA0JGJM2km8cTl/NCuIyy/dw2EHsXT0oVWlPEbB8zUPBDn6H2DTxUOY
+         xCCjJaGyUELxscJ5eLaXyTaB+7rQjCiRaQ+OzeAmbqOE6hQhGOF0IipR9hLB2vizyDU4
+         ZKr5uVuOxcQR/3/yONHemnM40qwh2C0tmmvQ5xgwb/Pti89TXhZtZk4z/t0KqI8Y7+wh
+         82ExeSqQO1G6VO2HVdENfgcNeXIMSGvKdI6qAez06CeiPj9MmnUOUEHQZKRH2H8L8aUC
+         O37g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712961968; x=1713566768;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=azAaAXQ+5slCG5tLzAxZ1/q0F1Xu5c3tqFk5gSJfnGk=;
+        b=nHfaAPwLeDjOnMfuhSUpmN1Aya7Y6gxOxRuuHApVWPYvytuDVBdxdSg9WPFbM6xpi9
+         /aWkUML8MWAqww42I8a0dBiErRQ8GidHqZNcLWwa7rbvtLS059Xw2ywvGDi0O4zASCUP
+         VEYCnnt/d6DXgWRFzwqAe1jAYjmTKhaps53xEEW1iSAxBcZ3vyyhEbe1aCWr2RRdIXVf
+         DWX7nouX+t3T0hVTpK+E4kemx57jlzUqDTOeL0yDBq95tbYsdG4EeS5dW8ZHD9cLDFko
+         8Wfh/Pz/mpNXsutpvSLX/bpN5L+WjS91gOSSrrwngG/vuxgY7OHjYBrgcRJ7DZpLcYIT
+         O87Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUs52hcI4nZr46rAzY5CuxFGj6lE47WD1EM7FuXYoNeKCoJAtxu+8+M9GgprAyj12rQssutcGYRkdjLKFaR+GbXxggQsPL4rgSro6WE
+X-Gm-Message-State: AOJu0Yx31XiJCs9UH4x75V4kj7OT0K9N+1NKV+uy3tg9jqMh12pLjKLw
+	SLt575slUFFmHaSbZQTBfY1yHJ53UJslLSFjpEkFHlE+ck4eRBDDtgwe+NinCRzOcJmC0UifH9n
+	J3g==
+X-Google-Smtp-Source: AGHT+IEa78IMUBOreaXnhO8WKAdssc3iFz0oqiOvqMH5Yz6szB/OqGs806267bfnDoRjxI6Hb7/ZXyDX410=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:a392:b0:2a6:f288:53da with SMTP id
+ x18-20020a17090aa39200b002a6f28853damr12661pjp.3.1712961967328; Fri, 12 Apr
+ 2024 15:46:07 -0700 (PDT)
+Date: Fri, 12 Apr 2024 15:46:05 -0700
+In-Reply-To: <20240412214201.GO3039520@ls.amr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171293670589.3659902.6442840474459477952.b4-ty@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <b9fe57ceeaabe650f0aecb21db56ef2b1456dcfe.1708933498.git.isaku.yamahata@intel.com>
+ <0c3efffa-8dd5-4231-8e90-e0241f058a20@intel.com> <20240412214201.GO3039520@ls.amr.corp.intel.com>
+Message-ID: <Zhm5rYA8eSWIUi36@google.com>
+Subject: Re: [PATCH v19 087/130] KVM: TDX: handle vcpu migration over logical processor
+From: Sean Christopherson <seanjc@google.com>
+To: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, Sagi Shahar <sagis@google.com>, 
+	Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com, 
+	tina.zhang@intel.com, isaku.yamahata@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Apr 12, 2024 at 05:06:41PM +0100, Will Deacon wrote:
-> On Fri, 12 Apr 2024 14:19:05 +0100, Ryan Roberts wrote:
-> > It turns out that creating the linear map can take a significant proportion of
-> > the total boot time, especially when rodata=full. And most of the time is spent
-> > waiting on superfluous tlb invalidation and memory barriers. This series reworks
-> > the kernel pgtable generation code to significantly reduce the number of those
-> > TLBIs, ISBs and DSBs. See each patch for details.
+On Fri, Apr 12, 2024, Isaku Yamahata wrote:
+> On Fri, Apr 12, 2024 at 09:15:29AM -0700, Reinette Chatre <reinette.chatre@intel.com> wrote:
+> > > +void tdx_mmu_release_hkid(struct kvm *kvm)
+> > > +{
+> > > +	while (__tdx_mmu_release_hkid(kvm) == -EBUSY)
+> > > +		;
+> > >  }
 > > 
-> > The below shows the execution time of map_mem() across a couple of different
-> > systems with different RAM configurations. We measure after applying each patch
-> > and show the improvement relative to base (v6.9-rc2):
+> > As I understand, __tdx_mmu_release_hkid() returns -EBUSY
+> > after TDH.VP.FLUSH has been sent for every vCPU followed by
+> > TDH.MNG.VPFLUSHDONE, which returns TDX_FLUSHVP_NOT_DONE.
 > > 
-> > [...]
+> > Considering earlier comment that a retry of TDH.VP.FLUSH is not
+> > needed, why is this while() loop here that sends the
+> > TDH.VP.FLUSH again to all vCPUs instead of just a loop within
+> > __tdx_mmu_release_hkid() to _just_ resend TDH.MNG.VPFLUSHDONE?
+> > 
+> > Could it be possible for a vCPU to appear during this time, thus
+> > be missed in one TDH.VP.FLUSH cycle, to require a new cycle of
+> > TDH.VP.FLUSH?
 > 
-> Applied to arm64 (for-next/mm), thanks!
+> Yes. There is a race between closing KVM vCPU fd and MMU notifier release hook.
+> When KVM vCPU fd is closed, vCPU context can be loaded again.
+
+But why is _loading_ a vCPU context problematic?  If I'm reading the TDX module
+code correctly, TDX_FLUSHVP_NOT_DONE is returned when a vCPU is "associated" with
+a pCPU, and association only happens during TDH.VP_ENTER, TDH.MNG.RD, and TDH.MNG.WR,
+none of which I see in tdx_vcpu_load().
+
+Assuming there is something problematic lurking under vcpu_load(), I would love,
+love, LOVE an excuse to not do vcpu_{load,put}() in kvm_unload_vcpu_mmu(), i.e.
+get rid of that thing entirely.
+
+I have definitely looked into kvm_unload_vcpu_mmu() on more than one occassion,
+but I can't remember off the top of my head why I have never yanked out the
+vcpu_{load,put}().  Maybe I was just scared of breaking something and didn't have
+a good reason to risk breakage?
+
+> The MMU notifier release hook eventually calls tdx_mmu_release_hkid().  Other
+> kernel thread (concretely, vhost krenel thread) can get reference count to
+> mmu and put it by timer, the MMU notifier release hook can be triggered
+> during closing vCPU fd.
 > 
-> [1/3] arm64: mm: Don't remap pgtables per-cont(pte|pmd) block
->       https://git.kernel.org/arm64/c/5c63db59c5f8
-> [2/3] arm64: mm: Batch dsb and isb when populating pgtables
->       https://git.kernel.org/arm64/c/1fcb7cea8a5f
-> [3/3] arm64: mm: Don't remap pgtables for allocate vs populate
->       https://git.kernel.org/arm64/c/0e9df1c905d8
-
-I confirm this series boots the system on FVP (with my .config and my
-buildroot rootfs using Shrinkwrap).
-
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
-
-Thanks,
-Itaru.
-
-> 
-> Cheers,
-> -- 
-> Will
-> 
-> https://fixes.arm64.dev
-> https://next.arm64.dev
-> https://will.arm64.dev
+> The possible alternative is to make the vCPU closing path complicated not to
+> load vCPU context instead f sending IPI on every retry.
