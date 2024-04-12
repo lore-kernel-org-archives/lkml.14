@@ -1,124 +1,129 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF18564A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4C184DFF;
+	Fri, 12 Apr 2024 13:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929887; cv=none; b=qwsfH/VeDUrsS0uF7CYmb/f9pncbQU3/Jo25Y0Lv/xcdVfp44XwpoKYB6MtKoJDdcCOeB9vc/9MfOFo+Jpw18YZxo7T9DqpC2wtbCuEplRNxn+QSz0TXQgK5TxXi412WkcyLw5JBr7JfOBxfn/cGT/iCCEyNUwW4xjgszx+ukzo=
+	t=1712929918; cv=none; b=JnhRexF1AwwKWed2dQgimGvwYsbwFPulapqgwHi1pMFuG5wCufjSNXC3xK5NxeleHGeWDT7qcHh6P0IrEwkZ1oRa/GneLiMUkrkPbEUmIbKOGk6YriJU24N+jdrzDvpXMJ7G5+maPm+gGl1O/wfvHsDNP6PB0+MFwUROiJifFnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712929887; c=relaxed/simple;
-	bh=53Cs+42uICznC+Xas0chinXqpYt7sWkCvzQ690iV654=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AfxA8NscJBBQNPwSYX1mgJIXEl8hslnIn8+RuNcUvCWtVu67XSlkghhcSEhmtsA0I0P3eRzih84kZK3sF76ZpXjZq+w9EJ8atAauudJsVRuhE6vSCqVa/nZzUYvmvsTuVVL9U1Z44T8XQHcMBo2mFKrxWCfmuLhsRpieJSi/Blg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dphFY/ob; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712929918; c=relaxed/simple;
+	bh=uO3kNffPt8k6Rw16SW5d5r2nyLGqqfTi0dbeoGQYHb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HfjLMx85MXP9svnlZD7Q1IJfhOXsRAtVeCPTKIPwzdf7xF4KfHoz8ek6PETNosRAJjZAD+5Nq5bksPiZ6Kj0L+y6JufTuxelgX7hFr5EtCQuGsmApZRFQ46AI/OuZ68t2+94dFluN7HJxltbHW4jy1Bxd6aOMmZyZlPfJ4SzY/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6MJz8cN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dphFY/ob"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7e61a25900cso211832241.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712929884; x=1713534684; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tJnR5552tR98GvdFl2I9gJzxKsxtaACk6KQyxfOH2CQ=;
-        b=dphFY/obs5pjYf4o3FSjgCLJBTcJ5+J+d6Nj3Xr8Vh3rlZExJMe13QB67253zP/c/l
-         QIR+hqVyoDeIivtI1e2aZDdRbH9wM0RpMn6C1cGzUoes85ok1cNlCAvIq3M9+p/Pk/ba
-         Hc/coAOxhbGvVSzefTAA1fnoP/6TXU5bJRkuSNQD45a6cPrEM5vwTfnjowBMuEMC6CUb
-         gxUIlHDNSO360mWTLE9uP/qildXmKhKNqhqxPu2GD0GpJHf9zY+WXuV0RwjsRIgEsv9t
-         RgzCAvmf9PPTWpNqAyDyI8ojxFQxtPhC2B6N8FuNww4p8k/o+Z9P2GfIDrqIO1Y43Mwf
-         B0cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712929884; x=1713534684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tJnR5552tR98GvdFl2I9gJzxKsxtaACk6KQyxfOH2CQ=;
-        b=n4Z3thGdBPRFWLRRaMHQYL9vpJIlZc+0o85jhe0qEnQN1UNngyLEj4SprnU5U9EfgP
-         Kh5paiAEEqAqXXNKUvbuQpBvIVjb8l4wd9qZPtjhumYYt+iO+1gFoZ5dZUqYV0DwrRwW
-         ctoqAtD0IHTVCUF7PBKqTnMUMx5npPD2p3S7ZhglbEMvQQAZ3HmyGeO/m2v0T7M7AK5O
-         I5mBdDoGF5R2T14M6mhwDi25LoVuyaKTZEkuEhvJKsZJUVuDzOzvE37qLCuGJ5MuZL9D
-         35qQyD0OqjsAPPi/88yNPRpUatszCy2cY98nvglbQYzmjabB3/P3E6wHX173rpoPVdSX
-         6C7w==
-X-Forwarded-Encrypted: i=1; AJvYcCV+VOHDa+pGzI0Wx5xDUiTYFLKOXAgoTnMbSKFmfULqCAMOqLNHrqDLnNt3jQurlklZV4jcG86KInfwHs/Y2+GjGdwrVpjJBbCDWnx8
-X-Gm-Message-State: AOJu0Yy7thXfbmlPQYb1hK2tvMapgZkeH4Gl1tCQBw3CSz12+Z+k3STh
-	vlAKqa6NNvLtUqLFGsYcSZCs+Ix6X5ETggRHn7f5BKSpEv5pmQnDMNEu49pPbQy8W1V9n9/xhza
-	TP11N49RiE4389C81MiFMFjKMUP4c9f0T5Inw
-X-Google-Smtp-Source: AGHT+IHxgfhOwDhXlQkc4GDre4LJSpeZ5vnnJ1PuHWiqe7qJwFHXNft4Odbv4126CJsS+HrJIjBy3eOB/r89t4EkPWM=
-X-Received: by 2002:a05:6102:160b:b0:47a:3ce6:6cfb with SMTP id
- cu11-20020a056102160b00b0047a3ce66cfbmr3725899vsb.19.1712929884209; Fri, 12
- Apr 2024 06:51:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6MJz8cN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB845C113CC;
+	Fri, 12 Apr 2024 13:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712929917;
+	bh=uO3kNffPt8k6Rw16SW5d5r2nyLGqqfTi0dbeoGQYHb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C6MJz8cNAjnyoHwQDegU15ad3V+cn/IzLHefnStqNB8OABQKrb+zcESQ/EENBPeHz
+	 iscHoBx1l6hGSfwv3g21ZWMOExNMi2rPgMDz3Z0JK4cPh9QnCq9R6wEd7OT7sbPxGf
+	 I1xlx3M9CEHaJ93aAmFdr6wrIPmFof8c4EDZGWmQUlupVxHvbHKbyY/rXQgqCITXD0
+	 UGuH0/va4PurxwDcuB8pJ/t3Y3krObZxB2/1sJZcFXP6wNtIYJ2Q6SgDr5j+JHxjm4
+	 bBQwYxhkCIc//HLBM/apynk9cA0zzT3/xtt4SI+JbUYiiGKVx5fyv+t7UK0v2Emxci
+	 tZvKeDnLBsLrA==
+Date: Fri, 12 Apr 2024 14:50:23 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject: Re: [PATCH net-next v1 11/12] mm: page_frag: add a test module for
+ page_frag
+Message-ID: <20240412135023.GS514426@kernel.org>
+References: <20240407130850.19625-1-linyunsheng@huawei.com>
+ <20240407130850.19625-12-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com> <CAH5fLgg0CkZO9KF58boui6Y5ajpXHuGh0OxyNru2aEG5pNObwQ@mail.gmail.com>
- <Zhk0q-0eM4z5JHqn@Boquns-Mac-mini.home>
-In-Reply-To: <Zhk0q-0eM4z5JHqn@Boquns-Mac-mini.home>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 12 Apr 2024 15:51:12 +0200
-Message-ID: <CAH5fLghL=G-ihevf1_D0aGffmJMtxtSpMDoTGtrmdiDfhwpKnw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Miguel Ojeda <ojeda@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240407130850.19625-12-linyunsheng@huawei.com>
 
-On Fri, Apr 12, 2024 at 3:18=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Fri, Apr 12, 2024 at 10:36:05AM +0200, Alice Ryhl wrote:
-> > On Fri, Apr 12, 2024 at 1:08=E2=80=AFAM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > Currently since Rust code is compiled with "-Coverflow-checks=3Dy", s=
-o a
-> > > normal substraction may be compiled as an overflow checking and panic
-> > > if overflow happens:
-> > >
-> > >         subq    %rsi, %rdi
-> > >         jo      .LBB0_2
-> > >         movq    %rdi, %rax
-> > >         retq
-> > > .LBB0_2:
-> > >         pushq   %rax
-> > >         leaq    str.0(%rip), %rdi
-> > >         leaq    .L__unnamed_1(%rip), %rdx
-> > >         movl    $33, %esi
-> > >         callq   *core::panicking::panic::h59297120e85ea178@GOTPCREL(%=
-rip)
-> > >
-> > > although overflow detection is nice to have, however this makes
-> > > `Ktime::sub()` behave differently than `ktime_sub()`, moreover it's n=
-ot
-> > > clear that the overflow checking is helpful, since for example, the
-> > > current binder usage[1] doesn't have the checking.
-> >
-> > I don't think this is a good idea at all. Any code that triggers an
-> > overflow in Ktime::sub is wrong, and anyone who enables
-> > CONFIG_RUST_OVERFLOW_CHECKS does so because they want such bugs to be
-> > caught. You may have been able to find one example of a subtraction
-> > that doesn't have a risk of overflow, but overflow bugs really do
->
-> The point is you won't panic the kernel because of an overflow. I
-> agree that overflow is something we want to catch, but currently
-> ktime_t doesn't panic if overflow happens.
+On Sun, Apr 07, 2024 at 09:08:48PM +0800, Yunsheng Lin wrote:
+> Basing on the lib/objpool.c, change it to something like a
+> ptrpool, so that we can utilize that to test the correctness
+> and performance of the page_frag.
+> 
+> The testing is done by ensuring that the fragments allocated
+> from a frag_frag_cache instance is pushed into a ptrpool
+> instance in a kthread binded to the first cpu, and a kthread
+> binded to the current node will pop the fragmemt from the
+> ptrpool and call page_frag_alloc_va() to free the fragmemt.
+> 
+> We may refactor out the common part between objpool and ptrpool
+> if this ptrpool thing turns out to be helpful for other place.
+> 
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 
-What the CONFIG_RUST_OVERFLOW_CHECKS option does is enable panics on
-overflow. So I don't understand how "it panics on overflow" is an
-argument for removing the overflow check. That's what you asked for!
-One could perhaps argue about whether CONFIG_RUST_OVERFLOW_CHECKS is a
-good idea (I think it is), but that is orthogonal. When
-CONFIG_RUST_OVERFLOW_CHECKS is enabled, you should respect the flag.
+...
 
-Alice
+> diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
+
+...
+
+> +/* allocate and initialize percpu slots */
+> +static int objpool_init_percpu_slots(struct objpool_head *pool,
+> +				     int nr_objs, gfp_t gfp)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pool->nr_cpus; i++) {
+> +		struct objpool_slot *slot;
+> +		int size;
+> +
+> +		/* skip the cpu node which could never be present */
+> +		if (!cpu_possible(i))
+> +			continue;
+> +
+> +		size = struct_size(slot, entries, pool->capacity);
+> +
+> +		/*
+> +		 * here we allocate percpu-slot & objs together in a single
+> +		 * allocation to make it more compact, taking advantage of
+> +		 * warm caches and TLB hits. in default vmalloc is used to
+> +		 * reduce the pressure of kernel slab system. as we know,
+> +		 * mimimal size of vmalloc is one page since vmalloc would
+
+nit: minimal
+
+> +		 * always align the requested size to page size
+> +		 */
+> +		if (gfp & GFP_ATOMIC)
+> +			slot = kmalloc_node(size, gfp, cpu_to_node(i));
+> +		else
+> +			slot = __vmalloc_node(size, sizeof(void *), gfp,
+> +					      cpu_to_node(i),
+> +					      __builtin_return_address(0));
+> +		if (!slot)
+> +			return -ENOMEM;
+> +
+> +		memset(slot, 0, size);
+> +		pool->cpu_slots[i] = slot;
+> +
+> +		objpool_init_percpu_slot(pool, slot);
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static struct objpool_head ptr_pool;
+> +static int nr_objs = 512;
+> +static int nr_test = 5120000;
+> +static atomic_t nthreads;
+> +static struct completion wait;
+> +struct page_frag_cache test_frag;
+
+nit: Is test_frag used outside of this file?
+     If not, should it be static?
+
+...
