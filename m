@@ -1,198 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD001474A2
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593DB1487E4;
+	Fri, 12 Apr 2024 16:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938340; cv=none; b=HlFxH+889plT4PyHlexVVIPQD4RfqSFXdKMl17WCUaZId9Q9DtVaYvVeeCeaxWewRiOE3sJ3s/xQfEaqaR7XaChrrKPeO0idJANzY7ulom9lBEyXUITq9eJhTBaMWlPwn8d4/lE5i71lZmDBoM7EVcNtF/LB6UA+21JL0Ba/9rs=
+	t=1712938351; cv=none; b=h938hvGczyoHHSJaloe5myTy31N2iNpdSBGxwotZRRXKlqnaEvo3loix5jx6TEe+ye1RmlZXWR7L4FcLpsUuEd4xJJShnygDlnZAXBJ+q5ZUTuQs/jYR4NW4UKdMX0WbChl7UP1aDw7j3IsJnd11hdJt3qkC7F3Ibn0TiCMo9ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938340; c=relaxed/simple;
-	bh=iFq6HUwsZ+yQ51vSn3XxUBy2Qqrq2aWHcrC3qBN9gc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VJWK02o0k3sLfCHlH1+zftEWiu+SYBW+TXNlppcohRUJfwLd+ikqEvz0D09c0ubTK19/WxGtelTkYjsKCOorPec01nxEPoBWiyeXHhPkjAXzZSViQjkVgVD7M1fzckiZlWiHqhv/CcKTQ5AJWjahvTBNzve/Ei3TacR3hxMY23k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99DBC339;
-	Fri, 12 Apr 2024 09:12:46 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D7603F64C;
-	Fri, 12 Apr 2024 09:12:14 -0700 (PDT)
-Date: Fri, 12 Apr 2024 17:12:08 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 05/31] x86/resctrl: Remove rdtgroup from
- update_cpu_closid_rmid()
-Message-ID: <ZhldWJVck7VmU3G3@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-6-james.morse@arm.com>
- <6bbff669-cbe5-4284-b64a-4825a541b35f@intel.com>
+	s=arc-20240116; t=1712938351; c=relaxed/simple;
+	bh=ZB+kqkDFMBi520BBY6bwYCKsFdTW+wu7W+V5/gnp8jk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z6a6gTGHqnyQS8xmo/sRP0lh3UsDi5PltF0dI0hzWh9qQ9U2Cacjgcn7fCJqV5pQeK+I1nYlHYdghJbToaE0goPk0dNUoJo+uAf1Z5nVz7C4W1TjGwRvLNM/xt/ydxfQJ8h7SRq49ul/dKu8+i3pSYU4tQMegSwBBwRcTj53R/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM4206Ntz689rj;
+	Sat, 13 Apr 2024 00:10:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id EE80B140B3C;
+	Sat, 13 Apr 2024 00:12:27 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:12:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 03/30] perf/hisi-uncore: Assign parents for event_source devices
+Date: Fri, 12 Apr 2024 17:10:30 +0100
+Message-ID: <20240412161057.14099-4-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6bbff669-cbe5-4284-b64a-4825a541b35f@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Apr 08, 2024 at 08:16:08PM -0700, Reinette Chatre wrote:
-> Hi James,
-> 
-> On 3/21/2024 9:50 AM, James Morse wrote:
-> > update_cpu_closid_rmid() takes a struct rdtgroup as an argument, which
-> > it uses to update the local CPUs default pqr values. This is a problem
-> > once the resctrl parts move out to /fs/, as the arch code cannot
-> > poke around inside struct rdtgroup.
-> > 
-> > Rename update_cpu_closid_rmid() as resctrl_arch_sync_cpus_defaults()
-> > to be used as the target of an IPI, and pass the effective CLOSID
-> > and RMID in a new struct.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > ---
-> >  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 19 +++++++++++++++----
-> >  include/linux/resctrl.h                | 11 +++++++++++
-> >  2 files changed, 26 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> > index 5d2c1ce5b6b1..18f097fce51e 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> > @@ -341,13 +341,13 @@ static int rdtgroup_cpus_show(struct kernfs_open_file *of,
-> >   * from update_closid_rmid() is protected against __switch_to() because
-> >   * preemption is disabled.
-> >   */
-> > -static void update_cpu_closid_rmid(void *info)
-> > +void resctrl_arch_sync_cpu_defaults(void *info)
-> >  {
-> > -	struct rdtgroup *r = info;
-> > +	struct resctrl_cpu_sync *r = info;
-> >  
-> >  	if (r) {
-> >  		this_cpu_write(pqr_state.default_closid, r->closid);
-> > -		this_cpu_write(pqr_state.default_rmid, r->mon.rmid);
-> > +		this_cpu_write(pqr_state.default_rmid, r->rmid);
-> >  	}
-> >  
-> >  	/*
-> > @@ -362,11 +362,22 @@ static void update_cpu_closid_rmid(void *info)
-> >   * Update the PGR_ASSOC MSR on all cpus in @cpu_mask,
-> >   *
-> >   * Per task closids/rmids must have been set up before calling this function.
-> > + * @r may be NULL.
-> >   */
-> >  static void
-> >  update_closid_rmid(const struct cpumask *cpu_mask, struct rdtgroup *r)
-> >  {
-> > -	on_each_cpu_mask(cpu_mask, update_cpu_closid_rmid, r, 1);
-> > +	struct resctrl_cpu_sync defaults;
-> > +	struct resctrl_cpu_sync *defaults_p = NULL;
-> 
-> Please maintain reverse fir order.
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the platform device.
 
-Or, more tersely as follows?
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/hisilicon/hisi_uncore_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	struct resctrl_cpu_sync defaults, *defaults_p = NULL;
+diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+index 04031450d5fe..5519965600dc 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+@@ -538,6 +538,7 @@ void hisi_pmu_init(struct hisi_pmu *hisi_pmu, struct module *module)
+ 	struct pmu *pmu = &hisi_pmu->pmu;
+ 
+ 	pmu->module             = module;
++	pmu->parent             = hisi_pmu->dev;
+ 	pmu->task_ctx_nr        = perf_invalid_context;
+ 	pmu->event_init         = hisi_uncore_pmu_event_init;
+ 	pmu->pmu_enable         = hisi_uncore_pmu_enable;
+-- 
+2.39.2
 
-"Reverse fir order" seems to be documented as a preference rather than a
-rule.
-
-The declarations can be swapped, but defaults_p is in some sense a weak
-pointer to defaults, so it feels a bit strange to declare them backwards.
-
-Alternatively, could we rename defaults_p to p?  Given the size of this
-function I don't think that impacts clarity.
-
-I'll wait for your opinion on this.
-
-
-> > +
-> > +	if (r) {
-> > +		defaults.closid = r->closid;
-> > +		defaults.rmid = r->mon.rmid;
-> > +		defaults_p = &defaults;
-> > +	}
-> > +
-> > +	on_each_cpu_mask(cpu_mask, resctrl_arch_sync_cpu_defaults, defaults_p,
-> > +			 1);
-> >  }
-> >  
-> >  static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
-> > diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> > index 6e87bc95f5ea..2b79e4159507 100644
-> > --- a/include/linux/resctrl.h
-> > +++ b/include/linux/resctrl.h
-> > @@ -220,6 +220,17 @@ struct resctrl_schema {
-> >  	u32				num_closid;
-> >  };
-> >  
-> > +struct resctrl_cpu_sync {
-> > +	u32 closid;
-> > +	u32 rmid;
-> > +};
-> > +
-> > +/*
-> > + * Update and re-load this CPUs defaults. Called via IPI, takes a pointer to
-> 
-> "this CPU's defaults"?
-
-Ack (also in the commit message).
-
-> 
-> > + * struct resctrl_cpu_sync, or NULL.
-> > + */
-> 
-> Updating the CPU's defaults is not the primary goal of this function and because
-> of that I do not think this should be the focus with the main goal (updating
-> RMID and CLOSID on CPU) ignored. Specifically, this function only updates
-> the defaults if *info is set but it _always_ ensures CPU is running with
-> appropriate CLOSID/RMID (which may or may not be from a CPU default).
-> 
-> I think resctrl_arch_sync_cpu_closid_rmid() may be more appropriate
-> and the comment needs to elaborate what the function does.
->
-> > +void resctrl_arch_sync_cpu_defaults(void *info);
-
-That seems reasonable, and follows the original naming and what the
-code does:
-
-What about:
-
-/**
- * resctrl_arch_sync_cpu_defaults() - Refresh the CPU's CLOSID and RMID.
- *				      Call via IPI.
- * @info:	If non-NULL, a pointer to a struct resctrl_cpu_sync specifying
- *		the new CLOSID and RMID for tasks in the default resctrl ctrl
- *		and mon group when running on this CPU.  If NULL, the default
- *		CLOSID and RMID are not changed.
- *
- * This is how reassignment of CPUs and/or tasks to different resctrl groups
- * is propagated when requested by the resctrl fs core code.
- *
- * This function should typically record the per-cpu defaults specified by
- * @info (if any), and then reconfigure the CPU's hardware CLOSID and RMID
- * for subsequent execution based on @current, in the same way as during a
- * task switch.
- */
-
-...?
-
-
-Cheers
----Dave
