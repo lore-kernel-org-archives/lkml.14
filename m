@@ -1,106 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDABB148313;
-	Fri, 12 Apr 2024 16:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E85149013;
+	Fri, 12 Apr 2024 16:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938382; cv=none; b=NA2iYWcL1IkjvOxn9I/uGSoEnU5pmO78/iX6Y3fwARJbjlepVlL+XWp+LwH1YmSP0RM5GiuKDPV7V+2E/KN9IITKx3FvhTz8HqKpqSir+JueIZ/uTQXhNxB7cPms/IACDj/nvLs0mDm12DnCc7OMyFRvEIWDyOiQQnfe9i0Imlc=
+	t=1712938388; cv=none; b=qqCS/d3ZlQTyNBNC12n/gwUm3fmzBGHQ8vlPl7s9Cw3DG4o7AJNg6jyFkV4cVyRczho2hSN7wyjC1ANZeFL89VPoMgIjRVhmSZYQ54BHXLKTfg0YeojjSowpcxQgqRwMzjUCQ6ENeuY5+fimyrfaOOk0FXL7i4OgpggvQFly8js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938382; c=relaxed/simple;
-	bh=JIdm2DYz2lilYR3ajuwXs1ec1aKJM0YI7TKLW6JFx2g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uHsw9G8nvJXm4HeaqqQZk4wzdZle+RqpHLCb7pYV9TlHe73wCgFmKLlBcVuuSIjpk4eMc52XyzggpsfzK4IwRKD5IBJjmZoMGEK1paiw78bvlSHxL6eEmVgxnZLhXV4c2ANBIw3R/R8Lo7rIh/2cvOPUZ2DCWwqpX+3oce9YFSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM4c5Y7cz6J9hN;
-	Sat, 13 Apr 2024 00:11:12 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A96E41400CF;
-	Sat, 13 Apr 2024 00:12:58 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:12:58 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 04/30] Documentation: hns-pmu: Use /sys/bus/event_source/devices paths
-Date: Fri, 12 Apr 2024 17:10:31 +0100
-Message-ID: <20240412161057.14099-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712938388; c=relaxed/simple;
+	bh=r9WaCo8AsteMJKMuCry4QLLOt5QJS8GtJCslkwm4RRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQt6qBkE3tYhFHpI1IJJ5FE9xtsOMHyqtTjfcqL0UoeCc931yCfkAX0SWw5XldL3SeV6A7jqhFRb6lLax+LTC/qLogiU9Nq3hblCkVM1KwAKc3B8I0YQ3IhogCVwfBQSQc+l4pVEieI3Folv9r9X/JlSQHP9baGCv7YiuSMfZTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pq4LaE6/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pq4LaE6/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712938387; x=1744474387;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=r9WaCo8AsteMJKMuCry4QLLOt5QJS8GtJCslkwm4RRg=;
+  b=Pq4LaE6/F3x8DNJRlqP2EtkETduvAbpIktYXzR2VGTbMCL1bVvUnWgl5
+   GVa/OYMWpov9M8S09zRWFsf7d9wLJKbiLOhOq5Qn9FO2bM2/Z7+SwJNxW
+   b/7SObTfGSbzCGb/UPdig+nSz6m5Rk/kIP2QaDEbBRCzBqyfHEvP9En/x
+   hTftdSduofXve9u1xjkMH7iPnCFc6qofUssKBMG/uKnen0a8ipUfY4Dnm
+   jSnTIzuXgTckr8QdtpdmWP1QC2E7cTEE9R0O0MmDCzjGGg18q4jkXu70G
+   mDLAAN+tFLPhA5wz8HgcLU2APAtNAShGhZQeHh3JHDjKc35qsyi+aqrbH
+   Q==;
+X-CSE-ConnectionGUID: vVAMHv+xQg+untUz1c2mTA==
+X-CSE-MsgGUID: vXZ09wXyQN6EvhquuLccyg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19004074"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="19004074"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:12:45 -0700
+X-CSE-ConnectionGUID: KzmtAe7WRUi18L9Yy/ABFg==
+X-CSE-MsgGUID: FD2R05LQTP+6SOIcx/DkCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="58696027"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:12:42 -0700
+Date: Fri, 12 Apr 2024 19:12:39 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
+Message-ID: <Zhldd6D7ts_QJ7rt@black.fi.intel.com>
+References: <20240412060812.20412-1-raag.jadav@intel.com>
+ <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
+ <Zhk-7Tp4HzF41Is5@black.fi.intel.com>
+ <ZhlXLNlsHEWrxEjF@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+In-Reply-To: <ZhlXLNlsHEWrxEjF@smile.fi.intel.com>
 
-To allow setting an appropriate parent for the struct pmu device
-remove existing references to /sys/devices/ path.
+On Fri, Apr 12, 2024 at 06:45:48PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 12, 2024 at 06:38:24PM +0300, Raag Jadav wrote:
+> > On Fri, Apr 12, 2024 at 01:12:48PM +0200, Uwe Kleine-König wrote:
+> > > On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > Otherwise I (only slightly) dislike
+> > > > +	struct dwc_pwm_drvdata *data;
+> > > because "data" is very generic. I'd call it ddata. But I don't feel
+> > > strong here. I'm happy if you change to "ddata" in v2, I will silently
+> > > apply anyhow if you prefer "data".
+> > 
+> > I think "data" is more readable, something like "ddata" would make me
+> > re-adjust my glasses ;)
+> 
+> ddata is _kinda_ idiomatic, there at least several drivers use this name
+> (as of my knowledge). I am bending towards Uwe's suggestion here.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Documentation/admin-guide/perf/hns3-pmu.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Will update in v2.
 
-diff --git a/Documentation/admin-guide/perf/hns3-pmu.rst b/Documentation/admin-guide/perf/hns3-pmu.rst
-index 75a40846d47f..1195e570f2d6 100644
---- a/Documentation/admin-guide/perf/hns3-pmu.rst
-+++ b/Documentation/admin-guide/perf/hns3-pmu.rst
-@@ -16,7 +16,7 @@ HNS3 PMU driver
- 
- The HNS3 PMU driver registers a perf PMU with the name of its sicl id.::
- 
--  /sys/devices/hns3_pmu_sicl_<sicl_id>
-+  /sys/bus/event_source/devices/hns3_pmu_sicl_<sicl_id>
- 
- PMU driver provides description of available events, filter modes, format,
- identifier and cpumask in sysfs.
-@@ -40,9 +40,9 @@ device.
- 
- Example usage of checking event code and subevent code::
- 
--  $# cat /sys/devices/hns3_pmu_sicl_0/events/dly_tx_normal_to_mac_time
-+  $# cat /sys/bus/event_source/devices/hns3_pmu_sicl_0/events/dly_tx_normal_to_mac_time
-   config=0x00204
--  $# cat /sys/devices/hns3_pmu_sicl_0/events/dly_tx_normal_to_mac_packet_num
-+  $# cat /sys/bus/event_source/devices/hns3_pmu_sicl_0/events/dly_tx_normal_to_mac_packet_num
-   config=0x10204
- 
- Each performance statistic has a pair of events to get two values to
-@@ -60,7 +60,7 @@ computation to calculate real performance data is:::
- 
- Example usage of checking supported filter mode::
- 
--  $# cat /sys/devices/hns3_pmu_sicl_0/filtermode/bw_ssu_rpu_byte_num
-+  $# cat /sys/bus/event_source/devices/hns3_pmu_sicl_0/filtermode/bw_ssu_rpu_byte_num
-   filter mode supported: global/port/port-tc/func/func-queue/
- 
- Example usage of perf::
--- 
-2.39.2
-
+Raag
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
