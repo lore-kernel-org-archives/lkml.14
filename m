@@ -1,113 +1,93 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B321B5AA;
-	Fri, 12 Apr 2024 09:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEAC205E3C;
+	Fri, 12 Apr 2024 09:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712912888; cv=none; b=AIaxB0lG8UJ+0aWlCF2Oo7pn8wEnrvybhvDue5zON3GYEoz/X+ZzPlJ0SrspiKbL4dRZ9QL+b0+N4MZt7g+O0TLVquYXBVv+8eC0qz18xoOwMWyreJhVGnebdDJEhMBAFKsBx/4thLgCV9R1P1zOjcKmlyKqPbrcHMZdw9CRFcw=
+	t=1712912919; cv=none; b=CJ2pF5SWV1HMLq/KM37iYKhP7b827jVmdaym2hDgH7WzWKKMkWl/odswdAKwsC6O+DVRAc0ICUidj0I+Iy0lTRnrwOUWGuKRjivf/1Jk1qKxNnRC2hedXMvDpEU9MpIp4gAxzpU9rl+0Xi6bbhU6xNYDhhZH4pipkVMAVtr2PWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712912888; c=relaxed/simple;
-	bh=MVi0TpJWrP3KG1T/04QJfQzY+bs7CEwX4l3nbgbsSjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cEMm+9imXYMJunlsVDxU+nBVt3yZaIAl+Y8xooSaEzxrroP1LLbZ/hXwYpJ55tdNHnIBYmCA77ZkRox1OCRKGfMDHrsn4Z+OGPeK/4NRszDMbsebEC953Lp7GrvQOHdGMkqGSXmicJb1WypoZqN2fOS5zDHlxd3TW1KRiDmdm6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DxaisTxM; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712912919; c=relaxed/simple;
+	bh=ii/Uc392uqc7ct/GqIg5jcnCdezu834MOoemDCDL4jM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ovJcc5q2sSB5Aa7goa7CE/y2gP9Q4FRK7p8FW/ajTnaIbYTK+O7POz24r0Nf6T9ImGP6iegvgqyvp8bQojC72kJ8bi2IcoXcHf3+/sdRctmyPRiwirKxMNLm7ht5ZeWZv8+v+lEtfCvStsV9+dQ6R0ezvpRS6AFnnNP9b/NId2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFL2n0xd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxaisTxM"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a46a7208eedso89413466b.0;
-        Fri, 12 Apr 2024 02:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712912885; x=1713517685; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yPUGnUPFGvIHpfCf2GVNK2vLyHGdD2DrkaoFCTmwcrI=;
-        b=DxaisTxMOqBaoHIfgWX/DJdCkgysHeh9kBGMR6IRLAU5Elel/+u6XHQR3h2JafdaRm
-         i1YzM+Z/rhOWwJ05myMM+co1IhPpsJeJmx1bL5yFjZ8ZMO8EQrAraRA14yQqYL01AWw7
-         yKryVIZL+MBrU2SxsaCAWBJjQ/VarcvGUOBwU1f9Q8WmacnAU+KN6tFnpA25lglCupaN
-         6wrPsYwbYms7ZBvcH15+0v8KIG4S0aDg3sfDkRUySEiVhmGR8d+JLDWBGYeIpprWJSPQ
-         qjIoS/0msQq+AYD0N5DSuvY7VHHtm4pnW6CXe4uiQg/5idYgYUvvz5nzl5NxuHiXsYVz
-         ed4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712912885; x=1713517685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yPUGnUPFGvIHpfCf2GVNK2vLyHGdD2DrkaoFCTmwcrI=;
-        b=NUzedmvLnyleC7OEFfd69dCO2x7AB5ybG34MLQjMhTeL+vmaVpNBiZ44S4toCTawlC
-         v/+EQ6WQd2a7sRvpVlcpYebEFmrGEw1G6uU/IfXL8rTY+iz6Ggn+FQxk1wJ6qdMPOTv7
-         is6ekQdMkPbulKEH4UVEjzJs23kmUps5+OC0DQx2xmXVx4BZbD+XdLuN47ZD1xbUcK8Y
-         ZRYTA38SalWhFYJaaG/rEVIoMxtM63TH9mYnXkWhWlZwazU9OLb21CbyqYolyesv9ymS
-         pc4l7n/xRXLx6MGKI86bxwe/gRC9nepwMxh4zbvD6EbOx3sCc0Nwat0Z1Wn8zp9Z4dNW
-         X/MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGK07TSTeDN/SrtTSAbwsb2s16soMnO5PfwAahBwe+GW3oYqOeM13qRTS8OkxlM62MXLRnue0udqZE7lLdUbTLL/48mvjCL4TxBu6aCUPpWEx/YXSHG0cTEP5p9FxYoSbvoEg4dH2eSSFdzMDms+IHcacz6+obbTXFHa/mHIDfg8m0DoeNJo17y+3UcJdho8NBAXO9T5xB2MN8LTTfTkkHB/TnGOIRtJKW2F3UUXGVpt3+47sf5jQqGsDraQMpspk=
-X-Gm-Message-State: AOJu0YxB9EGVB8xRyQXVP5uWxh8iksXegdIKlbFEACjwFWpmF0QphNb8
-	UbFPRHIBazVI0VkNq/hZBhb6ucdfmjA7+d6rJ++6TcRcZioqyrrz
-X-Google-Smtp-Source: AGHT+IE1JXTG/LcQoI+lnHKGTMryNiPMKyUlJP80kVd4eHhaWi8p2N8JmnjvJqW2HLQ210FFl8qPZA==
-X-Received: by 2002:a17:906:345a:b0:a51:80d9:56de with SMTP id d26-20020a170906345a00b00a5180d956demr1236428ejb.5.1712912884326;
-        Fri, 12 Apr 2024 02:08:04 -0700 (PDT)
-Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
-        by smtp.gmail.com with ESMTPSA id zg22-20020a170907249600b00a51b18a77b2sm1572994ejb.180.2024.04.12.02.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 02:08:03 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Fri, 12 Apr 2024 11:08:00 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>, Helge Deller <deller@gmx.de>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [RFC PATCH 5/7] x86/module: perpare module loading for ROX
- allocations of text
-Message-ID: <Zhj58NVS/iQnPeIq@gmail.com>
-References: <20240411160526.2093408-1-rppt@kernel.org>
- <20240411160526.2093408-6-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFL2n0xd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B88C9C113CC;
+	Fri, 12 Apr 2024 09:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712912919;
+	bh=ii/Uc392uqc7ct/GqIg5jcnCdezu834MOoemDCDL4jM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SFL2n0xdOY8vILWBr2XPdtHuPRvh9nxfe5aVeijcCB9ejqQkO4anyUZJ+G7pAjKaX
+	 92+ZSLFPWMbSV1rtBV5KBEZMNEvPY81SCESoV4p3Cgci4Ufvnc5/AeMHRYsR88PLw1
+	 sA+EHA3+A/gCOVBEGnMrVXtuXis4mYIOktq0KaqmzU9xVZhzf80ccnfMqhnA/h4RqW
+	 7VSccRO9yYbJdjfMzCVzzJrTfo2aDYgM5hK3xkwCoacNOZONF+0xcisQskx1XquL2o
+	 GYhjo2E6SpsqpinK3snW4f8x+LWisFwH7qp7specjcbb1maIkP8OCqeAQgkQ5rx0qA
+	 WJyi2Rf7ABRPA==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Lutomirski <luto@kernel.org>,
+	Peter Anvin <hpa@zytor.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+Date: Fri, 12 Apr 2024 11:07:36 +0200
+Message-ID: <20240412-vegetarisch-installieren-1152433bd1a7@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411001012.12513-1-torvalds@linux-foundation.org>
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160526.2093408-6-rppt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1500; i=brauner@kernel.org; h=from:subject:message-id; bh=ii/Uc392uqc7ct/GqIg5jcnCdezu834MOoemDCDL4jM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRJ/LwZ0Jm5L/jxOlXntDyXCvO/Sp9nbd2tO1ns2t6fX 2WnTjs6taOUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAi7zYzMhzg/P30wu+TgU3p TnambTsbzPvTE3wtmlUUF+/U5Kjtm8nI8CLp6DyDyz9/xl1iNJLYffjO2hmmC3/xPxbN7Ts8NT3 GhBsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
+On Wed, 10 Apr 2024 17:10:12 -0700, Linus Torvalds wrote:
+>    "The definition of insanity is doing the same thing over and over
+>     again and expecting different results”
+> 
+> We've tried to do this before, most recently with commit bb2314b47996
+> ("fs: Allow unprivileged linkat(..., AT_EMPTY_PATH) aka flink") about a
+> decade ago.
+> 
+> [...]
 
-* Mike Rapoport <rppt@kernel.org> wrote:
+So it seems that this might be worth trying. I've picked up the patch
+with two modifications:
 
->  	for (s = start; s < end; s++) {
->  		void *addr = (void *)s + *s;
-> +		void *wr_addr = addr + module_writable_offset(mod, addr);
+(1) added the relaxed capability check.
+(2) renamed the flag to LOOKUP_LINKAT_EMPTY
+(3) slight adjustment to commit message
 
-So instead of repeating this pattern in a dozen of places, why not use a 
-simpler method:
+Should show up in -next if I don't hear objections or you want to apply
+this directly. Fingers crossed we don't see regressions.
 
-		void *wr_addr = module_writable_address(mod, addr);
+---
 
-or so, since we have to pass 'addr' to the module code anyway.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-The text patching code is pretty complex already.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Thanks,
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-	Ingo
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+      https://git.kernel.org/vfs/vfs/c/fa75d6e377fd
