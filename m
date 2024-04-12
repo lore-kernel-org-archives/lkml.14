@@ -1,93 +1,86 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1758714A4EC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD875148FE8;
+	Fri, 12 Apr 2024 16:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938939; cv=none; b=aVt41rXAa5tZkncomCwgkCWpnqKmwNQwjrI8iICzGaMGBcCT9v1MvM6cBntXmBysIoCVmavyOGs5oP3ZOb89kRzELghFO0UsmZl0Bch5/Tp6JStQSeqf1Ny5CB5lK9FfJB8NNadZcaLlL+DBAW3ySD6/eAvh0+N6TPh8QtPYXhw=
+	t=1712938966; cv=none; b=KChfHhSgx5YGjD9RRuBNPxL3KpGPp/z052ypJKAxFYJfbnlU2ezeeI4vnNq3O+0PrF15T8+upU5lRJCNvwLwoLPBb1RRfBwvoTgQmRJTiGCCejtREqNpwqERLTYIM9hMLEH11LiuLPitCvZZNBGMhsG7Ea0gw4ChyAfzp4VHK9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938939; c=relaxed/simple;
-	bh=IzlxdJ+mZtjTQeO2IVOi0abdb9couLeImodhhBSYr5o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ifFj1MJhw+u16U6blRaJ2NejOy6gfVGjfOm3WcR0sd5+HyUjj5iwKn2LP9jOXiT14XwzzdmuZ3mFxUbm5/Cec0mxxJTQAtaENRfcYOkN2kL64OTEckJzh5sD2npTcrrXjHSBgeCUwAIxQTjI2bwH/JJ7zosJjzQI85e1OuQHINs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NzKX1LLL; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NzKX1LLL"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso11917091fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1712938936; x=1713543736; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=utRlliweFDNJdF9kvWRJ+k7pG5tatGAFIzow7u+hheo=;
-        b=NzKX1LLLd1Maw51AD0MBQcKXbGJZPx9hn2tBImtWJ+U/zjMtrPc2upyc6p0uYwHVxq
-         VzjSGYu/BQJKVMrro4avRd/Iez18VNnKezkD7/i0XYkMGZTGEAJL+lxTVPWnkZ4HeQ1U
-         I3CCv8Z4LuJ0qGNGKptX/PKpaxte+ZK4AcsGY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712938936; x=1713543736;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=utRlliweFDNJdF9kvWRJ+k7pG5tatGAFIzow7u+hheo=;
-        b=TSxD2RlDLYK5hQz6XNi29ytxaOQa34Ma1f70K7buwpBCuobs19+/YVaGKk370y63Vm
-         vpL9gWpMQL6HpEZesympfb25t7pEaKPBiUW0o1F6Dr3kzporPVmDCFcy3moqAS+LJgER
-         JQziCIe77lyiWdRWcatxBBUXsivK8av/etaGKo2CB8F0zAkMse1HH9ujsqH6pw8HecDy
-         Boxkca4xtdpicsfg9ZEyqR92iCasnsxq3exWOsE48dPHs18EVYT65FLNrOgn7n33VJH2
-         NzKjrqr1iFn6dlJU6tvgvu6DOnGqnjbL/QcPzYLXZ8ijFy6CgBT+tj1YZFuORk/NN075
-         bq3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWfrdeVYCxa7LDspvJx4+Ip4xcruvnMUUSW8D1TkEMST95bRtzNzLXt00D99QLJ3IuPGLmiprYngA+7yUU4wgrOvDxYPv0D2PyVy/r6
-X-Gm-Message-State: AOJu0YzOOV0Hd9byKTF+ezULQjo8rzQIbAg9VDJFdIvms0IXSij07kan
-	DhuWajZ2NFa+qj6ovsWBfOeLokVAMH59OCMz/em6SkxSUnlz+Gjg8oElZkWnDuL+15GuVoUuaX1
-	4ZNX0RQ==
-X-Google-Smtp-Source: AGHT+IGs0FdppodY5v+fctDOGASU8u8CiaHQf+xNvWZJIcWGTSKe3ABJ93NA47hZMT05Bd2NIGD49g==
-X-Received: by 2002:a05:651c:1242:b0:2d9:b2c0:a212 with SMTP id h2-20020a05651c124200b002d9b2c0a212mr2148771ljh.27.1712938936202;
-        Fri, 12 Apr 2024 09:22:16 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id f1-20020a2e9501000000b002d69186df71sm543807ljh.54.2024.04.12.09.22.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Apr 2024 09:22:15 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-516d0162fa1so1322523e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:22:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUyYjuuC6VvYcDLm1j/9Hf2jEWmiIbza4ixsufCB99MI95KLwt3BMgrF6fPavKW2m7F7e5rAAbEUhVaXg3uN337xihyue3P52Zey2it
-X-Received: by 2002:ac2:48b7:0:b0:518:6d35:e4cc with SMTP id
- u23-20020ac248b7000000b005186d35e4ccmr2329676lfg.25.1712938935003; Fri, 12
- Apr 2024 09:22:15 -0700 (PDT)
+	s=arc-20240116; t=1712938966; c=relaxed/simple;
+	bh=pPgqQ7CwSD5D134RpI9fojYTp33T0bcTvVNFf4GDsDw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gWbLx6iGlCfSzsTj9PkMpEiBxfHHLBq4lIcdzEDvvC2Q0Z4gpDcTeq65upN6ELLcRRSXm/JwhmZ84TBHqdckkv/M+JanFMHp+evON8Bh1ktYAz+2hHNekhfCFJBjytkw9hWAH3V6DqOHg70a7xRKvB8egU1QfxbCfjsXONDb80g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMHr5Ntsz689rj;
+	Sat, 13 Apr 2024 00:20:56 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A938E140119;
+	Sat, 13 Apr 2024 00:22:42 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:22:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 23/30] perf/arm-spe: Assign parents for event_source device
+Date: Fri, 12 Apr 2024 17:10:50 +0100
+Message-ID: <20240412161057.14099-24-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412103204.453d912c@gandalf.local.home> <CAHk-=wgw2NW5tar-Xew614JZPKfyTdet5fC0mgwK+2sUsZ0Ekw@mail.gmail.com>
- <20240412121531.24669544@gandalf.local.home> <5ab77ba9-721a-413e-bb26-6c842679f61a@infradead.org>
-In-Reply-To: <5ab77ba9-721a-413e-bb26-6c842679f61a@infradead.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 12 Apr 2024 09:21:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiJgRfOnt4TVFOaXfjkjTAh1AdY64zw1ohZxv7yzqzBxQ@mail.gmail.com>
-Message-ID: <CAHk-=wiJgRfOnt4TVFOaXfjkjTAh1AdY64zw1ohZxv7yzqzBxQ@mail.gmail.com>
-Subject: Re: [GIT PULL] tracing: Fixes for v6.9
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Prasad Pandit <pjp@fedoraproject.org>, Yang Li <yang.lee@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 12 Apr 2024 at 09:20, Randy Dunlap <rdunlap@infradead.org> wrote:
-> >>
-> >> Argh. What parser is this? We need to fix this craziness.
->
-> something that fedora cares about.
-> out-of-tree I expect.
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the platform device.
 
-Ok, that shit will now be broken immediately by me adding tabs to our
-Kconfig file.
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/arm_spe_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Because no, some out-of-tree garbage is not relevant, and if they
-don't fix it out of tree, that's *their* problem, not ours.
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 35f0de03416f..9100d82bfabc 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -932,6 +932,7 @@ static int arm_spe_pmu_perf_init(struct arm_spe_pmu *spe_pmu)
+ 
+ 	spe_pmu->pmu = (struct pmu) {
+ 		.module = THIS_MODULE,
++		.parent		= &spe_pmu->pdev->dev,
+ 		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+ 		.attr_groups	= arm_spe_pmu_attr_groups,
+ 		/*
+-- 
+2.39.2
 
-                Linus
