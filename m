@@ -1,138 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FC3130E44
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0D8127E2A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931749; cv=none; b=sRudGQVvROEASPrAwN7m8aAPb9MjaDoz1Lp6jAEj/0/VehbQJYwMlPXtcBwMM+QP9rSYEPbaihHZdfBSco8b4SiBVLLHwLjfeliIaKo7RWuTNdDwTMw+0B0vKxA1eJp8GSunijh5nFxkSmfE4BnZ6abtikO0CizVZOagasDHt8s=
+	t=1712931761; cv=none; b=P/5Yxzf/GwjiIVViib4oYhBCMKY0yInHgTIkffvsjeS3mmbdxUm1i/aQMloPofOiIdLPmhQ0yxRaDg090ppjJTxvvStgFOJyeQpuFvEmJEDMWl9tFKfJge8I9R6570SfR1lzhB5Pv0HNvIllQx8svOwftl9dT35f0Bp+qjgQRhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931749; c=relaxed/simple;
-	bh=u4jveH2EIzl1xqJEs2ZcFZUQ2YbXX3eXQ3sMb6x71k4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EbNS5ht0Dk36IuFkORExsxTDAK7zullshKvudikWY9wzZ5zxpwrxPl10kc0n3WtDecDTPcg8lF6iXDo2wVTu8exX5P0/YWdrz6eB4rio52vHpYDYRA28AwMe0h7qfia1lCN6I94hS34pDtknAtsHKJbutYMVglAueZ7jrTptUAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fIg5pzM8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712931761; c=relaxed/simple;
+	bh=+IRxEFwc9i6oI9P2rF2fRA5JFBSoqOhGYWv9Q4jR2Mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4QmcRLY6ZNmd/ZuD4qETcMg1hwpxwx++ZSy0yDvECAK1C5n2M2r37vf841YcWpfO5yxTExj1XKHXCrnA57BnSZy37SRJMT/HQ8Qfds/WEu+uHHkyvXVy53pL65LLlF1etA3/5E4cT4/v9e+KQgJMa9S27UUuLQVFemLEpwdbFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cYNPXzJe; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIg5pzM8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712931745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KWRmug5O+fgsfYD+sP/4mX7PdwrqikXbqWpiomCHNOQ=;
-	b=fIg5pzM83nSUmhc7f749GnA3EChVdI58D+VNLlpXreHuuJZGXO7U6RVGerHvLVpVcvlfuN
-	02GtY+6DnhqpFFCjQKSgxXdefYT0I2fQmY+EJ/Itbr0STc6FUQT1LtTTwCmdlY/LZs2rp5
-	r5FSdXm9aH+pzjWn84MuJA2vCKL7ETs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-rBEa3xiWN8m0NTwYBymYPQ-1; Fri, 12 Apr 2024 10:22:21 -0400
-X-MC-Unique: rBEa3xiWN8m0NTwYBymYPQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3F1C80021A;
-	Fri, 12 Apr 2024 14:22:20 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.193.165])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 841B140C6CBF;
-	Fri, 12 Apr 2024 14:22:17 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v2 10/10] s390/hugetlb: convert PG_arch_1 code to work on folio->flags
-Date: Fri, 12 Apr 2024 16:21:20 +0200
-Message-ID: <20240412142120.220087-11-david@redhat.com>
-In-Reply-To: <20240412142120.220087-1-david@redhat.com>
-References: <20240412142120.220087-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cYNPXzJe"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d9fe2b37acso10577361fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1712931757; x=1713536557; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZjz6ebT5RoHibV4k+w7N5R6e/euEWfeOaFuElHwClw=;
+        b=cYNPXzJeSH3AUQL2I8iczpu8hzMGR7/lS+eOewbNYWYieZy4SdtrFpkBXpycy1bnvS
+         s/TsFKK/mHEYJWSK3U9nR54WJ5IsgChkSAxQG+dAlevhTe2YFMIDCVk6pYnd9P5ikx9j
+         dFpCGry9k43K2Wwz/AG0aNGgduSg62a8YQgde3BWXA/tE0wdxAYG4VrLFT/0akeaNtRh
+         3gx/LEAsVuYOK2xy+gg37tLzGBgyyUHLJGy6zOTnhsPh7cmn1hHa4izlxz87OPQHHcXm
+         CDaO4/QEm7vMgSqrd2jUdUF8rbEknfDoIXfOnKm/MAumbfcAnWfaQtRDBNGOW3Uz/H5D
+         BT6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712931757; x=1713536557;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KZjz6ebT5RoHibV4k+w7N5R6e/euEWfeOaFuElHwClw=;
+        b=INpYNB0sWK1qVmu8E56k/4Vmx9ShNk5NR1bAdJfkOvA0PS+K4tthAaqYM89uWQ0oDf
+         nEIZEJ9CXkzaOh/fWcGOdxT0OqncadpHPRpqsnQtM0qZXG1Myup0aAYRDXWxcKsS3yOi
+         tKudgU0GkeiTbfTczCbWckNHFybwn1fhORdvWsOnI2hogrZ/s19ihpiquTPRYTWoGAOH
+         DoYbLYXNW0DWTrZY6XyXQ68Ckol2tmiI297wRY2qVDZZvxG/Mr+HK1AJyTQLkEOlcXfF
+         D5gxjw1Cvexm6KkJYDXKVIlZ0vLx/op+vM2PlKVStHkyZ/7tix2NTf8+oVtofK8w+Zx2
+         KUXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJa/9DUD0NL7afhEsSDBRJcRNR3Nocj3DSAY3jV4PVNcvhtE3wyKz9tpa8gk1nu4Z1lYRIYJ1/5O4NZ/ChhjSdPT+JOVYAtxLvADbT
+X-Gm-Message-State: AOJu0YzjVNIhSnNKSQq+fDceTncCY1iAjVt86KTHthGVXBdnGPhRE7Fm
+	4yBT/cWLdi6BUASDnMAkyqw0vr8foUzDLMDNxdKSjHeYdRPAhlfeFIaNDs0/AtA=
+X-Google-Smtp-Source: AGHT+IEUU8x1l7wjbdeKsMq+FPv/J7wq2z9f4xVy6YCVoWFTDymS5ycv2fhymEL1ZS92Bi65H1pLsw==
+X-Received: by 2002:a2e:8046:0:b0:2d8:8368:e22d with SMTP id p6-20020a2e8046000000b002d88368e22dmr1347399ljg.42.1712931757637;
+        Fri, 12 Apr 2024 07:22:37 -0700 (PDT)
+Received: from localhost.localdomain ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id n18-20020a05600c4f9200b00417caec4135sm5820623wmq.4.2024.04.12.07.22.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 07:22:37 -0700 (PDT)
+Date: Fri, 12 Apr 2024 16:22:35 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v4 21/27] printk: Track nbcon consoles
+Message-ID: <ZhlDqyYw0JxmfUsr@localhost.localdomain>
+References: <20240402221129.2613843-1-john.ogness@linutronix.de>
+ <20240402221129.2613843-22-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402221129.2613843-22-john.ogness@linutronix.de>
 
-Let's make it clearer that we are always working on folio flags and
-never page flags of tail pages.
+On Wed 2024-04-03 00:17:23, John Ogness wrote:
+> Add a global flag @have_nbcon_console to identify if any nbcon
+> consoles are registered. This will be used in follow-up commits
+> to preserve legacy behavior when no nbcon consoles are registered.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/mm/gmap.c        | 4 ++--
- arch/s390/mm/hugetlbpage.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 0351cb139df4..9eea05cd93b7 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2648,7 +2648,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
- {
- 	pmd_t *pmd = (pmd_t *)pte;
- 	unsigned long start, end;
--	struct page *page = pmd_page(*pmd);
-+	struct folio *folio = page_folio(pmd_page(*pmd));
- 
- 	/*
- 	 * The write check makes sure we do not set a key on shared
-@@ -2663,7 +2663,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
- 	start = pmd_val(*pmd) & HPAGE_MASK;
- 	end = start + HPAGE_SIZE - 1;
- 	__storage_key_init_range(start, end);
--	set_bit(PG_arch_1, &page->flags);
-+	set_bit(PG_arch_1, &folio->flags);
- 	cond_resched();
- 	return 0;
- }
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index c2e8242bd15d..a32047315f9a 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -121,7 +121,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
- 
- static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
- {
--	struct page *page;
-+	struct folio *folio;
- 	unsigned long size, paddr;
- 
- 	if (!mm_uses_skeys(mm) ||
-@@ -129,16 +129,16 @@ static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
- 		return;
- 
- 	if ((rste & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
--		page = pud_page(__pud(rste));
-+		folio = page_folio(pud_page(__pud(rste)));
- 		size = PUD_SIZE;
- 		paddr = rste & PUD_MASK;
- 	} else {
--		page = pmd_page(__pmd(rste));
-+		folio = page_folio(pmd_page(__pmd(rste)));
- 		size = PMD_SIZE;
- 		paddr = rste & PMD_MASK;
- 	}
- 
--	if (!test_and_set_bit(PG_arch_1, &page->flags))
-+	if (!test_and_set_bit(PG_arch_1, &folio->flags))
- 		__storage_key_init_range(paddr, paddr + size - 1);
- }
- 
--- 
-2.44.0
-
+Best Regards,
+Petr
