@@ -1,113 +1,180 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AD94D5A5
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C56F1DFF7
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712907719; cv=none; b=l+PXI3uh8augpbB7cSmzUOftSiTbw8RFVUMhNOy+uUuEJdC5nC+Bs/DoHvgkzAFiFSl2XoBAeGk3NWOXgQ0MU0ulQjPlrpe8d/DEWkp3Os/uakH9cPUE/3LiE8bY22qNv18vjxMbDGPeobWtCyUh0Ib3ekcEA162En2WZderP6Q=
+	t=1712907782; cv=none; b=ATXRn+9gWfw76bnYdVbipYhEuHP8oTDBFmrdPGOwul20b50WFc1742HtvO4nA4mg1QmWRfshoa7+Yan4KtIvOE3oqxc33WhYDaOW4D8AQx3qhvYpEP8gGFb5jAOzUbpn8+t8Y+d+Naw8dEVs9PWoHR2IZkbNWYnnmg1fg3npajY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712907719; c=relaxed/simple;
-	bh=vRauUdjmEXaNb3aJ9t3FYkcm7oavR/ToqvPX7bbz4uw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F9RJ2KfdUQNqJtmLDMXhtbY6tDD68DpmVcR2RgtiZ7OfXFFP4TFOSSXSx4WPxy/QipdaKkbdsjDP3IkSzHg9xBpz57kEpxId5wATV6iHLVjaXAKBPM6rZjCMS7sdiUIW3dul7jS9u3dOuP/cCKAo72oskvpOy5xtQYcwUvGjHJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wBZqaEaU; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712907782; c=relaxed/simple;
+	bh=hi1ek4H1Sl9fwCdAI2V9cU6Oyh2d+MFh/nNIBD/zwX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OwIWpHyAcaMnshbDvbQGSOGw/wv7nsnsvlJf0mBtUN8qRMAi47zc5ymcAm4hQoQOg2PO+Iw6IoiVW70YRy6JeLiwZryIdrLCBmUf5268nkx1XBYXhuVm4pz2WSUjnYqHpxwggHCcQHNzn/CD04yNp18bfs11JHXsNngKwuV34l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ah/LE93f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wBZqaEaU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712907716; x=1744443716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vRauUdjmEXaNb3aJ9t3FYkcm7oavR/ToqvPX7bbz4uw=;
-  b=wBZqaEaUbJMnsVsy3++tOZQjlioV6g2rEU5pfuINxF22EjjdeBUsuRtG
-   zU34U2SAXHDPE3uwJ/68ehPWmvMH0gdqSlkZZiz53nHvkZ3JQ7TqT9FYA
-   94EIj89EbXmXV+eycRxCptPXxsbbzJHmBf5nL3EqafpNcFlb0VzNK1Aie
-   hYin9gbXw/gEPfRIS+jc4cl+z92MhSt7VheciH0i3WgHVIvgZqU+JlDrv
-   wVmjCe1ROzEphHZWT3LHOKdpdJXoHbCRepaTYh1ycbWo0UD7YzESUtHbS
-   ij7iipFEPAeKm/ugB8yDppHdARm6yrHM+kurfhg1uY/zji5HDX1x2HvvF
-   w==;
-X-CSE-ConnectionGUID: E4sSRy7HTmSlkU9T5OWDeg==
-X-CSE-MsgGUID: KFqPtSAzSbOvrsO8JAXZEw==
-X-IronPort-AV: E=Sophos;i="6.07,195,1708412400"; 
-   d="asc'?scan'208";a="20655805"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Apr 2024 00:41:49 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Apr 2024 00:41:40 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 12 Apr 2024 00:41:37 -0700
-Date: Fri, 12 Apr 2024 08:40:46 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yangyu Chen <cyy@cyyself.name>
-CC: <conor@kernel.org>, <ajones@ventanamicro.com>, <anup@brainfault.org>,
-	<aou@eecs.berkeley.edu>, <atishp@atishpatra.org>, <dqfext@gmail.com>,
-	<guoren@kernel.org>, <heiko@sntech.de>, <inochiama@outlook.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <mark.rutland@arm.com>,
-	<palmer@dabbelt.com>, <paul.walmsley@sifive.com>, <will@kernel.org>
-Subject: Re: [PATCH] perf: RISC-V: fix IRQ detection on T-Head C908
-Message-ID: <20240412-ivy-excitable-b740ff80c0d1@wendy>
-References: <20240314-pep-announcer-2d7f10ff8b65@spud>
- <tencent_49E156C63C84E435E6F16509D6699339520A@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ah/LE93f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7FEC113CC;
+	Fri, 12 Apr 2024 07:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712907782;
+	bh=hi1ek4H1Sl9fwCdAI2V9cU6Oyh2d+MFh/nNIBD/zwX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ah/LE93fr2qg3tg8PBLedjLnN0qhcOibXIu9JJyHYqLtwZgXn/rxgasWGzJGU5c9w
+	 bzhSW9TE5LWgj45nwwkZDjXP2va8nPJx25sbnGbV5IQ4Gx0taqzEkUSJlGbTEWjAy/
+	 3oGH3ZuSFmf8ek4cWX7rRSml6AhfyVHMKiNXir6Eud0yESMFnI1Cmnby37uO+9QlWU
+	 nmKOxTy5B21aJ0d2pT1dl6L3115r4N/LfbCU1A2JV483MkJDJp8/UhmlvE0bT5xLmc
+	 ThChiw9RDOnSDgr73AoumEdNoV3bL7peeqz9LWfifVsDkHikR1IgmhAxw2sOZlJc92
+	 vXw7fQisxv1Ug==
+Date: Fri, 12 Apr 2024 08:42:58 +0100
+From: Lee Jones <lee@kernel.org>
+To: Min Li <lnimi@hotmail.com>
+Cc: linux-kernel@vger.kernel.org, Min Li <min.li.xe@renesas.com>
+Subject: Re: [PATCH mfd v1 2/2] mfd: rsmu: add FemtoClock3 support
+Message-ID: <20240412074258.GP2399047@google.com>
+References: <53efc0ac491055cedbef156b3c3410fa5342e637.1712857691.git.lnimi@hotmail.com>
+ <LV3P220MB12025D3DF84F591EC0A9262FA0052@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YcE8yn2YH89m/k/Y"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <tencent_49E156C63C84E435E6F16509D6699339520A@qq.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <LV3P220MB12025D3DF84F591EC0A9262FA0052@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
 
---YcE8yn2YH89m/k/Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Did you submit this set as --thread?
 
-On Fri, Apr 12, 2024 at 02:27:28PM +0800, Yangyu Chen wrote:
-> >> IMHO, it may be better to use a new DT property like "riscv,cpu-errata=
-" or
-> >> "<vendor>,cpu-errata". It can achieve almost everything like using pse=
-udo
-> >> isa. And the only cost I think is a small amount code to parse this.
-> >=20
-> > I suppose we could do that, but accounting for vendor specifics was one
-> > of the goals for the property I only just added and that I am suggesting
-> > to use here.
->=20
-> I think there is a simpler way to do that. We use T-Head PMU by default
-> for All T-Head CPUs (from mvendor id). Then, to test there is sscofpmf in
-> the ISA string being probed by the kernel. If yes, then use scofpmf.
-> Otherwise, use T-Head PMU.
+The 2 patches are completely separate in my inbox.
 
-I am strongly opposed to doing something like this. Firstly, making it
-unconditional is a time-bomb as if T-Head ever ship something without
-support then we'll be broken on that platform and have to return to
-conditional behaviour. Secondly, we are taking agency away from
-hypervisors etc that may not want a guest to use the PMU.
+On Thu, 11 Apr 2024, Min Li wrote:
 
-Cheers,
-Conor.
+> From: Min Li <min.li.xe@renesas.com>
+> 
+> The RENESAS FemtoClock3 Wireless is a high-performance
+> jitter attenuator, frequency translator, and clock
+> synthesizer. This patch only adds support for I2C.
 
---YcE8yn2YH89m/k/Y
-Content-Type: application/pgp-signature; name="signature.asc"
+54 chars is too short, should be more like 70+.
 
------BEGIN PGP SIGNATURE-----
+What I2C support is being added here?
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhjlaAAKCRB4tDGHoIJi
-0vdsAP9wMESP3pjIW4X/gjaZdmF9qSoS1iPGX2xdeWah9RffBAD+J5sImHAkYWje
-UrhSTPIfH7O2esfADX2481ITlcF4LwY=
-=eWjq
------END PGP SIGNATURE-----
+> Signed-off-by: Min Li <min.li.xe@renesas.com>
+> ---
+>  drivers/mfd/rsmu_core.c  | 10 +++++-----
+>  drivers/mfd/rsmu_i2c.c   | 16 ++++++++--------
+>  include/linux/mfd/rsmu.h |  4 ++--
+>  3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/mfd/rsmu_core.c b/drivers/mfd/rsmu_core.c
+> index 29437fd0b..951ddd92c 100644
+> --- a/drivers/mfd/rsmu_core.c
+> +++ b/drivers/mfd/rsmu_core.c
+> @@ -40,12 +40,12 @@ static struct mfd_cell rsmu_sabre_devs[] = {
+>  	},
+>  };
+>  
+> -static struct mfd_cell rsmu_sl_devs[] = {
+> +static struct mfd_cell rsmu_fc3_devs[] = {
+>  	[RSMU_PHC] = {
+> -		.name = "8v19n85x-phc",
+> +		.name = "rc38xxx-phc",
 
---YcE8yn2YH89m/k/Y--
+You don't say anything about why 8v19n85x-phc is being removed in the
+commit message.  Please describe the whole change properly.
+
+>  	},
+>  	[RSMU_CDEV] = {
+> -		.name = "8v19n85x-cdev",
+> +		.name = "rc38xxx-cdev",
+>  	},
+>  };
+>  
+> @@ -61,8 +61,8 @@ int rsmu_core_init(struct rsmu_ddata *rsmu)
+>  	case RSMU_SABRE:
+>  		cells = rsmu_sabre_devs;
+>  		break;
+> -	case RSMU_SL:
+> -		cells = rsmu_sl_devs;
+> +	case RSMU_FC3:
+> +		cells = rsmu_fc3_devs;
+>  		break;
+>  	default:
+>  		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
+> diff --git a/drivers/mfd/rsmu_i2c.c b/drivers/mfd/rsmu_i2c.c
+> index cba64f107..a3f50a184 100644
+> --- a/drivers/mfd/rsmu_i2c.c
+> +++ b/drivers/mfd/rsmu_i2c.c
+> @@ -262,11 +262,11 @@ static const struct regmap_config rsmu_sabre_regmap_config = {
+>  	.can_multi_write = true,
+>  };
+>  
+> -static const struct regmap_config rsmu_sl_regmap_config = {
+> +static const struct regmap_config rsmu_fc3_regmap_config = {
+>  	.reg_bits = 16,
+>  	.val_bits = 8,
+>  	.reg_format_endian = REGMAP_ENDIAN_BIG,
+> -	.max_register = 0x340,
+> +	.max_register = 0xE88,
+>  	.cache_type = REGCACHE_NONE,
+>  	.can_multi_write = true,
+>  };
+> @@ -302,8 +302,8 @@ static int rsmu_i2c_probe(struct i2c_client *client)
+>  	case RSMU_SABRE:
+>  		cfg = &rsmu_sabre_regmap_config;
+>  		break;
+> -	case RSMU_SL:
+> -		cfg = &rsmu_sl_regmap_config;
+> +	case RSMU_FC3:
+> +		cfg = &rsmu_fc3_regmap_config;
+>  		break;
+>  	default:
+>  		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
+> @@ -336,8 +336,8 @@ static const struct i2c_device_id rsmu_i2c_id[] = {
+>  	{ "8a34001",  RSMU_CM },
+>  	{ "82p33810", RSMU_SABRE },
+>  	{ "82p33811", RSMU_SABRE },
+> -	{ "8v19n850", RSMU_SL },
+> -	{ "8v19n851", RSMU_SL },
+> +	{ "rc38xxx0", RSMU_FC3 },
+> +	{ "rc38xxx1", RSMU_FC3 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(i2c, rsmu_i2c_id);
+> @@ -347,8 +347,8 @@ static const struct of_device_id rsmu_i2c_of_match[] = {
+>  	{ .compatible = "idt,8a34001",  .data = (void *)RSMU_CM },
+>  	{ .compatible = "idt,82p33810", .data = (void *)RSMU_SABRE },
+>  	{ .compatible = "idt,82p33811", .data = (void *)RSMU_SABRE },
+> -	{ .compatible = "idt,8v19n850", .data = (void *)RSMU_SL },
+> -	{ .compatible = "idt,8v19n851", .data = (void *)RSMU_SL },
+> +	{ .compatible = "idt,rc38xxx0", .data = (void *)RSMU_FC3 },
+> +	{ .compatible = "idt,rc38xxx1", .data = (void *)RSMU_FC3 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, rsmu_i2c_of_match);
+> diff --git a/include/linux/mfd/rsmu.h b/include/linux/mfd/rsmu.h
+> index 0379aa207..b4a90fc81 100644
+> --- a/include/linux/mfd/rsmu.h
+> +++ b/include/linux/mfd/rsmu.h
+> @@ -11,11 +11,11 @@
+>  #define RSMU_MAX_WRITE_COUNT	(255)
+>  #define RSMU_MAX_READ_COUNT	(255)
+>  
+> -/* The supported devices are ClockMatrix, Sabre and SnowLotus */
+> +/* The supported devices are ClockMatrix, Sabre and FemtoClock3 */
+>  enum rsmu_type {
+>  	RSMU_CM		= 0x34000,
+>  	RSMU_SABRE	= 0x33810,
+> -	RSMU_SL		= 0x19850,
+> +	RSMU_FC3	= 0x38312,
+>  };
+>  
+>  /**
+> -- 
+> 2.39.2
+> 
+
+-- 
+Lee Jones [李琼斯]
