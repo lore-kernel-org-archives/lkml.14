@@ -1,315 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F133A5029B
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E49F050299
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712914025; cv=none; b=jXlgcFjnYSB2WIFffISlGS7+SKO1xSr+V6oyWDLvE1KSt2//iAZzGZZDbKKYkuxGO7Q7qFXi/9qiCUj2GwgdurQiQtWBBqQbTDx0mhnTm/Bz3/zLg5zTeB0FcKlHzSVfoQgyiqLb3ooxC4WTtr4wF/UMGjU37rJfMh4NrcXElfg=
+	t=1712914059; cv=none; b=Qy71YW4lGdmJQuIJN6RPUN/RzoC8xMB57u4iaePa0a+tzrvWlSz8nieIHZ0EJ4o9pZs07HLDLEb7epv7Yz2sB7xmKC3+HiB24XcEp5GM1wtZhhPuoIjCs7OJTRuK9nSULK3sKZLJXEMlfZkH5C0YGMOWLw4p9nshP8WOXWFK4T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712914025; c=relaxed/simple;
-	bh=bqfbHaueFYu8hnFpzzLWJGVWT3xCWm9tL5XKYCVzzL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jhHKKIOn1DsNDeBaQbCCyp0G6i8VxsaJWTl9Ivd4Nf9ZdH6ov5ygCBHLFXu5eguUJNhVWnz5Et7/W3/dTPCUz0yaORjg/PX0Q1cOOjLnlj/ZjG62YXUtaMorggcrHqmMV2NAScw+ZXWuuaOMGraM+yJoXdC61wxAtvQ/vPjRPig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D68F7339;
-	Fri, 12 Apr 2024 02:27:32 -0700 (PDT)
-Received: from [10.57.73.208] (unknown [10.57.73.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8ECE3F64C;
-	Fri, 12 Apr 2024 02:27:00 -0700 (PDT)
-Message-ID: <ca73cbf1-8304-4790-a721-3c3a42f9d293@arm.com>
-Date: Fri, 12 Apr 2024 10:26:58 +0100
+	s=arc-20240116; t=1712914059; c=relaxed/simple;
+	bh=g/FtSzbMh7UWRlixc9gUFZ3pvuBaLRdoeR0cPDnORLU=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bzGLvz+DI9q/54+3doE5pbPP+SI/gDX1VWa9A2q6Yk2vkos9hUrHNIqBCYwbdFD7e6b7zwlR6twaljcRJZDIFvs8rl8DryXiuh2sd5132ZLF3QR6M0hGHctOC/WtdjblTNk2aNk2L3sTvC5qSm2mEGPUpcIHYacEu13ngjOu0m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxSbqG_hhmGlMmAA--.6523S3;
+	Fri, 12 Apr 2024 17:27:34 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTROD_hhmvKJ4AA--.35435S3;
+	Fri, 12 Apr 2024 17:27:32 +0800 (CST)
+Subject: Re: [PATCH v3 1/4] LoongArch: Move CONFIG_HAVE_SETUP_PER_CPU_AREA
+ related code to smp.c
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20240411010510.22135-1-yangtiezhu@loongson.cn>
+ <20240411010510.22135-2-yangtiezhu@loongson.cn>
+ <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
+ Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <dcf6e475-8219-6b1e-a99b-2cdf1e86289c@loongson.cn>
+Date: Fri, 12 Apr 2024 17:27:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] mm: add per-order mTHP anon_fault_alloc and
- anon_fault_fallback counters
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: cerasuolodomenico@gmail.com, chrisl@kernel.org, david@redhat.com,
- kasong@tencent.com, linux-kernel@vger.kernel.org, peterx@redhat.com,
- surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org,
- yosryahmed@google.com, yuzhao@google.com, corbet@lwn.net
-References: <20240412073740.294272-1-21cnbao@gmail.com>
- <20240412073740.294272-2-21cnbao@gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240412073740.294272-2-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAAhV-H6TVEEB=xdr_ymuUnDqPDXwtM7R7yJBj03YhWpCwqjAiA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxTROD_hhmvKJ4AA--.35435S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKF1kGrWxKryfKF4kKw1xZwc_yoW3KFbE9F
+	s5Wr1DCw18Xw4v9an7X34FvrZxJFyvgws8t3s2vry2yFy5t34rJr4kAFn3uw1FqF4rGr90
+	kayvqF9xCry09osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUU
+	U==
 
-Hi Barry,
 
-2 remaining comments - otherwise looks good. (same comments I just made in the
-v4 conversation).
 
-On 12/04/2024 08:37, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> Profiling a system blindly with mTHP has become challenging due to the
-> lack of visibility into its operations.  Presenting the success rate of
-> mTHP allocations appears to be pressing need.
-> 
-> Recently, I've been experiencing significant difficulty debugging
-> performance improvements and regressions without these figures.  It's
-> crucial for us to understand the true effectiveness of mTHP in real-world
-> scenarios, especially in systems with fragmented memory.
-> 
-> This patch establishes the framework for per-order mTHP
-> counters. It begins by introducing the anon_fault_alloc and
-> anon_fault_fallback counters. Additionally, to maintain consistency
-> with thp_fault_fallback_charge in /proc/vmstat, this patch also tracks
-> anon_fault_fallback_charge when mem_cgroup_charge fails for mTHP.
-> Incorporating additional counters should now be straightforward as well.
-> 
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> Cc: Chris Li <chrisl@kernel.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Domenico Cerasuolo <cerasuolodomenico@gmail.com>
-> Cc: Kairui Song <kasong@tencent.com>
-> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Cc: Peter Xu <peterx@redhat.com>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Yosry Ahmed <yosryahmed@google.com>
-> Cc: Yu Zhao <yuzhao@google.com>
-> ---
->  include/linux/huge_mm.h | 51 ++++++++++++++++++++++++++++++++++
->  mm/huge_memory.c        | 61 +++++++++++++++++++++++++++++++++++++++++
->  mm/memory.c             |  3 ++
->  mm/page_alloc.c         |  4 +++
->  4 files changed, 119 insertions(+)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index e896ca4760f6..c5beb54b97cb 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -264,6 +264,57 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
->  					  enforce_sysfs, orders);
->  }
->  
-> +enum mthp_stat_item {
-> +	MTHP_STAT_ANON_FAULT_ALLOC,
-> +	MTHP_STAT_ANON_FAULT_FALLBACK,
-> +	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
-> +	__MTHP_STAT_COUNT
-> +};
-> +
-> +struct mthp_stat {
-> +	unsigned long stats[0][__MTHP_STAT_COUNT];
-> +};
-> +
-> +extern struct mthp_stat __percpu *mthp_stats;
-> +
-> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
-> +{
-> +	if (order <= 0 || order > PMD_ORDER || !mthp_stats)
-> +		return;
-> +
-> +	this_cpu_inc(mthp_stats->stats[order][item]);
-> +}
-> +
-> +static inline void count_mthp_stats(int order, enum mthp_stat_item item, long delta)
-> +{
-> +	if (order <= 0 || order > PMD_ORDER || !mthp_stats)
-> +		return;
-> +
-> +	this_cpu_add(mthp_stats->stats[order][item], delta);
-> +}
-> +
-> +/*
-> + * Fold the foreign cpu mthp stats into our own.
-> + *
-> + * This is adding to the stats on one processor
-> + * but keeps the global counts constant.
-> + */
-> +static inline void mthp_stats_fold_cpu(int cpu)
-> +{
-> +	struct mthp_stat *fold_stat;
-> +	int i, j;
-> +
-> +	if (!mthp_stats)
-> +		return;
-> +	fold_stat = per_cpu_ptr(mthp_stats, cpu);
-> +	for (i = 1; i <= PMD_ORDER; i++) {
-> +		for (j = 0; j < __MTHP_STAT_COUNT; j++) {
-> +			count_mthp_stats(i, j, fold_stat->stats[i][j]);
-> +			fold_stat->stats[i][j] = 0;
-> +		}
-> +	}
-> +}
+On 04/12/2024 12:12 PM, Huacai Chen wrote:
+> On Thu, Apr 11, 2024 at 9:05 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> Currently, if CONFIG_NUMA is not set but CONFIG_SMP is set, the arch
+>> specified setup_per_cpu_areas() in arch/loongarch/kernel/numa.c will
+>> not be built and the generic setup_per_cpu_areas() in mm/percpu.c is
+>> actually used, this is not reasonable and does not work as intended.
+> Why is the generic version not reasonable? We need a custom version
+> just because it can put the percpu variable in the best node. If NUMA
+> disabled, software can only see one node, how to optimize?
 
-This is a pretty horrible hack; I'm pretty sure just summing for all *possible*
-cpus should work.
+The initial aim is to use the arch specific setup_per_cpu_areas()
+in any case under CONFIG_SMP, this patch can be dropped if it is
+meaningless for the case of !CONFIG_NUMA and CONFIG_SMP.
 
-> +
->  #define transparent_hugepage_use_zero_page()				\
->  	(transparent_hugepage_flags &					\
->  	 (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index dc30139590e6..21c4ac74b484 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -526,6 +526,50 @@ static const struct kobj_type thpsize_ktype = {
->  	.sysfs_ops = &kobj_sysfs_ops,
->  };
->  
-> +struct mthp_stat __percpu *mthp_stats;
-> +
-> +static unsigned long sum_mthp_stat(int order, enum mthp_stat_item item)
-> +{
-> +	unsigned long sum = 0;
-> +	int cpu;
-> +
-> +	cpus_read_lock();
-> +	for_each_online_cpu(cpu) {
-> +		struct mthp_stat *this = per_cpu_ptr(mthp_stats, cpu);
-> +
-> +		sum += this->stats[order][item];
-> +	}
-> +	cpus_read_unlock();
-> +
-> +	return sum;
-> +}
-> +
-> +#define DEFINE_MTHP_STAT_ATTR(_name, _index)					\
-> +static ssize_t _name##_show(struct kobject *kobj,			\
-> +			struct kobj_attribute *attr, char *buf)		\
-> +{									\
-> +	int order = to_thpsize(kobj)->order;				\
-> +									\
-> +	return sysfs_emit(buf, "%lu\n", sum_mthp_stat(order, _index));	\
-> +}									\
-> +static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
-> +
-> +DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
-> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
-> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
-> +
-> +static struct attribute *stats_attrs[] = {
-> +	&anon_fault_alloc_attr.attr,
-> +	&anon_fault_fallback_attr.attr,
-> +	&anon_fault_fallback_charge_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group stats_attr_group = {
-> +	.name = "stats",
-> +	.attrs = stats_attrs,
-> +};
-> +
->  static struct thpsize *thpsize_create(int order, struct kobject *parent)
->  {
->  	unsigned long size = (PAGE_SIZE << order) / SZ_1K;
-> @@ -549,6 +593,12 @@ static struct thpsize *thpsize_create(int order, struct kobject *parent)
->  		return ERR_PTR(ret);
->  	}
->  
-> +	ret = sysfs_create_group(&thpsize->kobj, &stats_attr_group);
-> +	if (ret) {
-> +		kobject_put(&thpsize->kobj);
-> +		return ERR_PTR(ret);
-> +	}
-> +
->  	thpsize->order = order;
->  	return thpsize;
->  }
-> @@ -691,6 +741,11 @@ static int __init hugepage_init(void)
->  	 */
->  	MAYBE_BUILD_BUG_ON(HPAGE_PMD_ORDER < 2);
->  
-> +	mthp_stats = __alloc_percpu((PMD_ORDER + 1) * sizeof(mthp_stats->stats[0]),
-> +			sizeof(unsigned long));
-
-Personally I think it would be cleaner to allocate statically using
-ilog2(MAX_PTRS_PER_PTE) instead of PMD_ORDER.
-
-> +	if (!mthp_stats)
-> +		return -ENOMEM;
-> +
->  	err = hugepage_init_sysfs(&hugepage_kobj);
->  	if (err)
->  		goto err_sysfs;
-> @@ -725,6 +780,8 @@ static int __init hugepage_init(void)
->  err_slab:
->  	hugepage_exit_sysfs(hugepage_kobj);
->  err_sysfs:
-> +	free_percpu(mthp_stats);
-> +	mthp_stats = NULL;
->  	return err;
->  }
->  subsys_initcall(hugepage_init);
-> @@ -880,6 +937,8 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
->  		folio_put(folio);
->  		count_vm_event(THP_FAULT_FALLBACK);
->  		count_vm_event(THP_FAULT_FALLBACK_CHARGE);
-> +		count_mthp_stat(HPAGE_PMD_ORDER, MTHP_STAT_ANON_FAULT_FALLBACK);
-> +		count_mthp_stat(HPAGE_PMD_ORDER, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
->  		return VM_FAULT_FALLBACK;
->  	}
->  	folio_throttle_swaprate(folio, gfp);
-> @@ -929,6 +988,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
->  		mm_inc_nr_ptes(vma->vm_mm);
->  		spin_unlock(vmf->ptl);
->  		count_vm_event(THP_FAULT_ALLOC);
-> +		count_mthp_stat(HPAGE_PMD_ORDER, MTHP_STAT_ANON_FAULT_ALLOC);
->  		count_memcg_event_mm(vma->vm_mm, THP_FAULT_ALLOC);
->  	}
->  
-> @@ -1050,6 +1110,7 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
->  	folio = vma_alloc_folio(gfp, HPAGE_PMD_ORDER, vma, haddr, true);
->  	if (unlikely(!folio)) {
->  		count_vm_event(THP_FAULT_FALLBACK);
-> +		count_mthp_stat(HPAGE_PMD_ORDER, MTHP_STAT_ANON_FAULT_FALLBACK);
->  		return VM_FAULT_FALLBACK;
->  	}
->  	return __do_huge_pmd_anonymous_page(vmf, &folio->page, gfp);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 649a547fe8e3..06048af7cf9a 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4368,6 +4368,7 @@ static struct folio *alloc_anon_folio(struct vm_fault *vmf)
->  		folio = vma_alloc_folio(gfp, order, vma, addr, true);
->  		if (folio) {
->  			if (mem_cgroup_charge(folio, vma->vm_mm, gfp)) {
-> +				count_mthp_stat(order, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
->  				folio_put(folio);
->  				goto next;
->  			}
-> @@ -4376,6 +4377,7 @@ static struct folio *alloc_anon_folio(struct vm_fault *vmf)
->  			return folio;
->  		}
->  next:
-> +		count_mthp_stat(order, MTHP_STAT_ANON_FAULT_FALLBACK);
->  		order = next_order(&orders, order);
->  	}
->  
-> @@ -4485,6 +4487,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->  
->  	folio_ref_add(folio, nr_pages - 1);
->  	add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
-> +	count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_FAULT_ALLOC);
->  	folio_add_new_anon_rmap(folio, vma, addr);
->  	folio_add_lru_vma(folio, vma);
->  setpte:
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index b51becf03d1e..3135b5ca2457 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5840,6 +5840,10 @@ static int page_alloc_cpu_dead(unsigned int cpu)
->  	 */
->  	vm_events_fold_cpu(cpu);
->  
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	mthp_stats_fold_cpu(cpu);
-> +#endif
-> +
->  	/*
->  	 * Zero the differential counters of the dead processor
->  	 * so that the vm statistics are consistent.
+Thanks,
+Tiezhu
 
