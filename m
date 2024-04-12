@@ -1,61 +1,61 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1874D117
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FDB1BC2A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712895117; cv=none; b=K8Ha9kZ2EIR3U5lqa1J84Qr480xjBMDfXJNKKm3R35CHgzko5EFMrGpVHZT07XrPjNqN08VG1Uqkd7LxCloCgoPpUPJwmwz3zQNJaj766SuPL4g0taPMzk7dzBoO+Gs9a8lwcVdErsTEbV2IOcr2n3ZVF4GnuKBr9yjjkd0Lzc8=
+	t=1712895120; cv=none; b=KMQtuYD1YwqTTaW3gzx4bhXfkXb8epqKolrui8Kjwx+9lGbNp8SoANh4HveT90WZfUaxLmGFs98CoQErCq2SwKJ+J5oc6WHvOpcrgsPYPPb1Yt+5ClRgvn7Zye++JteZSbY5sFh6x+1kPFDS+79f9mRbQ+6RZnJoF8MAGvwDkzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712895117; c=relaxed/simple;
-	bh=b+24lxxAnvlUN0+328A+gcU/U3wnp/aT5n2aF7/kAXA=;
+	s=arc-20240116; t=1712895120; c=relaxed/simple;
+	bh=dpMQyQf6EiV3FnyfDhr0ctcgVQcOupbnA1FwXdRflyI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=n/ypyk3feDpnkg1dLOwiILwgpw2+fm1qHOgP1Vi1d+UcTMn7C6Xy1QdJqrighk7OJq3at13JXEk/gBFMd40WQmlqMiSI3XSjK05GM/MAj+EI6faCMON71/wVtbslqOexoJ8Tptx0DrqWdViVsGLNKAJ4VmO6lqBo/jLp4H8igv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=WF0oA/9/; arc=none smtp.client-ip=209.85.210.43
+	 In-Reply-To:To:Cc; b=EE4EjWA955bdZoW7qCwTpzotd2uGVz3XO+J7JSzsdMyHU5t6LB3w8upZ5POf265tlmxSA4arG3Ei+qlqwwZjRE+o3D3VtURKXFH3GQNlGpKE/BSgWMOGIN9jeN7DLKYmVJ5flSLbz6BWqZMlYXZiJkG04jun2RSLzPPpFdyGXq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rywHYn9t; arc=none smtp.client-ip=209.85.210.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="WF0oA/9/"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ea260f51b8so372124a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:11:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rywHYn9t"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ea26393116so439490a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712895114; x=1713499914; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712895118; x=1713499918; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wwc/PeNyJDl6GgnW4cuopcphm/oVDetOGOo/hxv7XcM=;
-        b=WF0oA/9/FZF7RSPDX86GrpLZAYhgPIwWbSjg3tdjxvmCVkRsoh2yCPteemq46wr4Ia
-         ZNWjs7Ts9v1MyRtd7DHB6VTItYsJVaN0aOXo6MTnp6SAkDIazjq4qqSH0xS/9gfQTUbk
-         zXHxNjEd1+AJ9nyclGT4OJiXFhsnrnrfD5Yp2RSMMTA+0zOTQ+uA4csaVcRX8F0jeiER
-         DnJtpyLFSQfKmjptDgTNR8vrF8axw+RpU8U6nr9tPdUD7M1/qkex1ettVr5yMv7AFqHs
-         zOeXpJ4DolcNqJPq1XXC+pLWMITOxRlj/zpiW+PEzddWgUsQktxXTlIJMjc2MzoIX+q2
-         eH8Q==
+        bh=89KkigznkOkTkIiVd8Bev6F1MF+EXqz9OwTBLz7EuqI=;
+        b=rywHYn9tv3v1cE4QI4KzwTiv6PgWbr2Uzof5kCJmXk+KGO9YPbmO4tgLuQ99iEOmqD
+         Zs2Pw7c60AEbLuH3s1LnDHSiGPNDr0NArj1ltBiZuxc+mDgRcvr9GTPmrT3bDM455yUu
+         Cog3Q4dK4UBQJrt81lYYzrcfxE5E6IKTQW7lrb2h2gXaTUA/TduxAEH6s/px/GBcmhpz
+         8a7Teg8kgXuXoMHoMIJaTETE4jRESN1hnokb2EU4EHOPz3cWfK5b7fckO8bjFj87lkrW
+         j1yQROFG9kB9fTLabqO2wa6zrIZ7y7VehTZnYV6GCORJeNgDbiV2hv58Hfk7yU6gD/V4
+         jJfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712895114; x=1713499914;
+        d=1e100.net; s=20230601; t=1712895118; x=1713499918;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wwc/PeNyJDl6GgnW4cuopcphm/oVDetOGOo/hxv7XcM=;
-        b=i5i/uYar9qIklrY9DtqjDIGGtQWfloo98Y7VTW5ZUP1SqIYgqr1cMrh+Zy2MyrvGSi
-         GfmHuc+NceYF8DGeSAZQKeGyiuzLyOFjeDfgDCMpX6pTx/0anCDIF05czKWeHrQZu+3W
-         aU+3j9ZlXp4iArtiZ3iB+9qFe6wTVFEbtep443ppo7EmyhUt0e6bPGcc03RQvFw/dVVK
-         5II+NgTr8Rd3/YCI5tmDFL5R5nsWq4zl3wagK+gUdIJGmHaNLuFwngHFjlqsB8YynhdP
-         150yOIPfV5R98HhIeNQcQqsNHCZhB/zyb+8b0/KZWbvPsbVMfb4Px8xG85zQcPBrZZqP
-         /LeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWw14mqG+VQ6yH6gDMwxAiG562KB27ym11Xil3o7tnPkAhPs3Ee3+SCgZ0whn2NMqt3xxeS0If4W9POZOwpV+S+NdRTz/QTtVp/72D6
-X-Gm-Message-State: AOJu0YxK2ofiIPng+4g457wDMJr7WF5pNqegQNLFjA0I4YGLR350ets9
-	g9zaxcJ1RfmYm7yhrUmpJ1e9Fkr8OZ4hYNNUfv/e+ru3XzFzH9eFbIu8mobCXMEeShQgI3TC6DA
-	Z
-X-Google-Smtp-Source: AGHT+IFOYsbLF0F+gkJeOyJgzaCsQeEF3L5USkF2a5gefrMyQNupps7ab0ysCKPYkK28Wn8+LqBa1w==
-X-Received: by 2002:a05:6808:1b12:b0:3c5:f8b7:caca with SMTP id bx18-20020a0568081b1200b003c5f8b7cacamr1951974oib.0.1712895114722;
-        Thu, 11 Apr 2024 21:11:54 -0700 (PDT)
+        bh=89KkigznkOkTkIiVd8Bev6F1MF+EXqz9OwTBLz7EuqI=;
+        b=QmIR/ir59Jwi7dF93efznZ+dplArvUlz4zAvv1UMbk9fWg9Ge5UEu6jISuI6Ar5fET
+         d6bjuYQ6xN+X0AZd7KdxG6jiHgpai5yQu2MRDHSHCVsHBodhRK6fD6VQYV3hoUIekP58
+         yIelzB6/YraPHiICYCWrjAjiSjor2m8BsMvvxOy/WzX1yclemyit5whs5xxtBQB+rAUk
+         ZrFOEPcCq0bSh4KQdQr6EsglL9iXjy9boQG1Pmdd3G0aeA1R8wqWk2MIF15drhjOIrMA
+         8sHBQi8O2ldj0bwsa8+y9JtntGbAd20O6ReYxLDmBSCTbFipGqeaMZazWacLmBvCDYOV
+         1bAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWL2KRES7u0cfF0/e9ed9wKdDxKps4xeMKtoVMGh2ZdRVnBtTptJdxjEEoVPWpSqvEak5clfQuy3z4qeIsHgI9BnGl7CeFKxriZu+WI
+X-Gm-Message-State: AOJu0YygMsVGnffaazFinnp6wuK8aay82YDGupvt5pqlVdChJ2rRNyc7
+	zoosN8ysCvJ6suuj5S4PYsGRuvIhNvZDgYee6NyY2vx4UZ6IUQBADx5Z277m+aw=
+X-Google-Smtp-Source: AGHT+IGcw1jnW0l0MGMcAPq0tGxntmRUuPWox6H1ipX7MybXPBxYHdvKCOaV97uW9OMyYzsQMOMbXQ==
+X-Received: by 2002:a54:458c:0:b0:3c5:f333:3819 with SMTP id z12-20020a54458c000000b003c5f3333819mr1496177oib.21.1712895118136;
+        Thu, 11 Apr 2024 21:11:58 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id ka13-20020a056a00938d00b006e57247f4e5sm1949712pfb.8.2024.04.11.21.11.53
+        by smtp.gmail.com with ESMTPSA id ka13-20020a056a00938d00b006e57247f4e5sm1949712pfb.8.2024.04.11.21.11.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 21:11:53 -0700 (PDT)
+        Thu, 11 Apr 2024 21:11:57 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 11 Apr 2024 21:11:18 -0700
-Subject: [PATCH 12/19] riscv: Create xtheadvector file
+Date: Thu, 11 Apr 2024 21:11:20 -0700
+Subject: [PATCH 14/19] riscv: hwprobe: Disambiguate vector and xtheadvector
+ in hwprobe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240411-dev-charlie-support_thead_vector_6_9-v1-12-4af9815ec746@rivosinc.com>
+Message-Id: <20240411-dev-charlie-support_thead_vector_6_9-v1-14-4af9815ec746@rivosinc.com>
 References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
 In-Reply-To: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
 To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -83,53 +83,43 @@ Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712895091; l=1663;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712895091; l=1077;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=b+24lxxAnvlUN0+328A+gcU/U3wnp/aT5n2aF7/kAXA=;
- b=tBUd1KU9cHUGPbHmulFHg/OgKEnR6bzENCIMFD8J4yhd09ZA941LBjBGdCqnbgqxhCqWkN+bL
- 8o8eZ4Dh6iFALQU1B4pRcjyHGJQ2j6rg94+Lgm/1CBT+77zQ+CdfjUP
+ bh=dpMQyQf6EiV3FnyfDhr0ctcgVQcOupbnA1FwXdRflyI=;
+ b=yG9+AKMmuUbWWqUzPvnobYPlplrI2ZeAtqu5dbsmkCx71ozS6qstYkuGJ9cZehtHrREk7qb+H
+ OVTyBaKWh53DGh3LtPRjDx7F743TkUYJceC/ov23653q6S2VSI+xJZN
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-These definitions didn't fit anywhere nicely, so create a new file to
-house various xtheadvector instruction encodings.
+Ensure that hwprobe does not flag "v" when xtheadvector is present.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/riscv/include/asm/xtheadvector.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/riscv/kernel/sys_hwprobe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/include/asm/xtheadvector.h b/arch/riscv/include/asm/xtheadvector.h
-new file mode 100644
-index 000000000000..348263ea164c
---- /dev/null
-+++ b/arch/riscv/include/asm/xtheadvector.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Vector 0.7.1 as used for example on T-Head Xuantie cores, uses an older
-+ * encoding for vsetvli (ta, ma vs. d1), so provide an instruction for
-+ * vsetvli	t4, x0, e8, m8, d1
-+ */
-+#define THEAD_VSETVLI_T4X0E8M8D1	".long	0x00307ed7\n\t"
-+#define THEAD_VSETVLI_X0X0E8M8D1	".long	0x00307057\n\t"
-+
-+/*
-+ * While in theory, the vector-0.7.1 vsb.v and vlb.v result in the same
-+ * encoding as the standard vse8.v and vle8.v, compilers seem to optimize
-+ * the call resulting in a different encoding and then using a value for
-+ * the "mop" field that is not part of vector-0.7.1
-+ * So encode specific variants for vstate_save and _restore.
-+ */
-+#define THEAD_VSB_V_V0T0		".long	0x02028027\n\t"
-+#define THEAD_VSB_V_V8T0		".long	0x02028427\n\t"
-+#define THEAD_VSB_V_V16T0		".long	0x02028827\n\t"
-+#define THEAD_VSB_V_V24T0		".long	0x02028c27\n\t"
-+#define THEAD_VLB_V_V0T0		".long	0x012028007\n\t"
-+#define THEAD_VLB_V_V8T0		".long	0x012028407\n\t"
-+#define THEAD_VLB_V_V16T0		".long	0x012028807\n\t"
-+#define THEAD_VLB_V_V24T0		".long	0x012028c07\n\t"
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index 8cae41a502dd..e0a42c851511 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -69,7 +69,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+ 	if (riscv_isa_extension_available(NULL, c))
+ 		pair->value |= RISCV_HWPROBE_IMA_C;
+ 
+-	if (has_vector())
++	if (has_vector() && !riscv_has_vendor_extension_unlikely(RISCV_ISA_VENDOR_EXT_XTHEADVECTOR))
+ 		pair->value |= RISCV_HWPROBE_IMA_V;
+ 
+ 	/*
+@@ -112,7 +112,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+ 		EXT_KEY(ZACAS);
+ 		EXT_KEY(ZICOND);
+ 
+-		if (has_vector()) {
++		if (has_vector() && !riscv_has_vendor_extension_unlikely(RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
+ 			EXT_KEY(ZVBB);
+ 			EXT_KEY(ZVBC);
+ 			EXT_KEY(ZVKB);
 
 -- 
 2.44.0
