@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475684779D;
-	Sat, 13 Apr 2024 11:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8FB5103D;
+	Sat, 13 Apr 2024 11:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713007586; cv=none; b=t/rXp4LBxvKTnZbiepYsaZLKCl+iQk4014cikja2SUDfFsoaGG7ShF6pt8r+SqDywdn5RWLo1mQ213oFBOjDubo/I64KHiX2X87x5xamxQb9X4K2n0rkun7urVbsRzdf/bx9AtRDv97iZ/ZpryrmVYfjGONM8s5b7ToOO+oIBkg=
+	t=1713007593; cv=none; b=jyuWVtlWu4+e22st1uSYY0vb5uaDnsMVwI3CU74cmC503T0L6esy6cw3HQ1lCRvfecW7O910QeJBcg87kuDVKHqZzI5pd+pQXCuSHhqm883AtYmvYtndssayH1OXcWfN7l5yv6bwaXOpGCBs6GsZjEpjveivp8r2qwB4j2ii/CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713007586; c=relaxed/simple;
-	bh=U+4Epc81NtLJwYhnmepMos1ebP+Ln9hteXbt6jYzLBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FKTpD2zfWmsL2bhg/YDiwipAoWPtSWiJxbOuaBtNuuT47wf1NgKoTF/VGPKDt5Qj3c7waJvf3MYxDla3VgbhgW9aa1Zx1ifaF8xnD2Kvlxoiv60O5i3/oHpP2u0mwWlXnqDBDSEjBXInVvaGLgFfCEkJAt4/OiUwlNVVRIGGXnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=y91fwq0L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713007593; c=relaxed/simple;
+	bh=62ynfYKEbp1muvj8yjFYukLLongjZUxI7qEoCltQB/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gJiVSy/tgYXY7QbR6g4Ooduxwj2wMrLs/or2aZ7bBza+nDmU81Ewf0PwZdQr3KpydfCiMhk3RO4sE6SoeVQHuWhG/Ih5sHe/YkAAX3Aw1C7iqaPVMjlSF3U2bnMKnhTtW18xhf3FC3zNqbr31zUAG9nf8IZodKpp43tgfwUvf74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WK9ogubX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="y91fwq0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEBAC3277B;
-	Sat, 13 Apr 2024 11:26:25 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WK9ogubX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84216C4AF0A;
+	Sat, 13 Apr 2024 11:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713007586;
-	bh=U+4Epc81NtLJwYhnmepMos1ebP+Ln9hteXbt6jYzLBs=;
+	s=korg; t=1713007593;
+	bh=62ynfYKEbp1muvj8yjFYukLLongjZUxI7qEoCltQB/E=;
 	h=From:To:Cc:Subject:Date:From;
-	b=y91fwq0LAtPExQMl5kmrWTiIMTDotj4hBOyAr8v6zEuSTJnWkbES66caCXGhBUSCF
-	 YZKpH+6MrZDvrNs3OHICkNmtv1miJJ0DSLRGkABHGJgbt0iN8lwEhiCmA1BzW4NxCk
-	 6GcTjzsI8piqWALSmqXaeUlVZ+N3TaNq8viSfhvk=
+	b=WK9ogubX1sFxAXz//RnePveyaDG6f9j/o9bjd1UKPSiD19hcZu7EnalSF0LUVfwxP
+	 FWUT3P5N3KigLIhvwPpH9H7EqbhgNsq+3ZrEzEbPL+RYNYcz0eVEkA7sBsNdQVllLt
+	 x37/Hhumbh6F2Vp7bC9yMeV9ioeudHBHOWlJlgHU=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.6.27
-Date: Sat, 13 Apr 2024 13:26:22 +0200
-Message-ID: <2024041322-bling-abiding-d32f@gregkh>
+Subject: Linux 6.8.6
+Date: Sat, 13 Apr 2024 13:26:28 +0200
+Message-ID: <2024041329-trickster-conclude-0b20@gregkh>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,12 +43,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 6.6.27 kernel.
+I'm announcing the release of the 6.8.6 kernel.
 
-All users of the 6.6 kernel series must upgrade.
+All users of the 6.8 kernel series must upgrade.
 
-The updated 6.6.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
+The updated 6.8.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.8.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -61,8 +61,12 @@ greg k-h
  Makefile                                                                     |    2 
  arch/arm/boot/dts/rockchip/rk322x.dtsi                                       |   16 +
  arch/arm/boot/dts/rockchip/rk3288.dtsi                                       |   16 +
+ arch/arm64/boot/dts/qcom/qcm6490-idp.dts                                     |   28 +++
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts                                 |   17 ++
+ arch/arm64/boot/dts/qcom/qrb2210-rb1.dts                                     |   18 ++
  arch/arm64/boot/dts/rockchip/rk3328.dtsi                                     |   11 +
  arch/arm64/boot/dts/rockchip/rk3399.dtsi                                     |   12 +
+ arch/x86/entry/vdso/Makefile                                                 |   10 -
  arch/x86/events/amd/lbr.c                                                    |    6 
  arch/x86/include/asm/xen/hypervisor.h                                        |    5 
  arch/x86/pci/fixup.c                                                         |   48 +++++
@@ -73,8 +77,9 @@ greg k-h
  arch/x86/xen/xen-ops.h                                                       |   14 +
  block/blk-stat.c                                                             |    2 
  drivers/accel/habanalabs/common/habanalabs.h                                 |    2 
+ drivers/acpi/resource.c                                                      |    7 
  drivers/acpi/sleep.c                                                         |   12 -
- drivers/acpi/x86/utils.c                                                     |   18 +-
+ drivers/acpi/x86/utils.c                                                     |   38 ++++
  drivers/bluetooth/btintel.c                                                  |    2 
  drivers/bluetooth/btmtk.c                                                    |    1 
  drivers/bluetooth/btmtk.h                                                    |    1 
@@ -84,12 +89,25 @@ greg k-h
  drivers/bus/mhi/host/pm.c                                                    |   20 ++
  drivers/cpufreq/cpufreq.c                                                    |   17 +-
  drivers/cpuidle/driver.c                                                     |    3 
+ drivers/crypto/intel/iaa/iaa_crypto_main.c                                   |    4 
  drivers/firmware/tegra/bpmp-debugfs.c                                        |    2 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c                                   |    2 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c                                   |   14 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c                                      |    5 
  drivers/gpu/drm/amd/amdkfd/kfd_chardev.c                                     |    4 
+ drivers/gpu/drm/amd/display/dc/dc.h                                          |    1 
+ drivers/gpu/drm/amd/display/dc/dc_dmub_srv.c                                 |    4 
+ drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c                         |    2 
+ drivers/gpu/drm/amd/display/dc/resource/dcn35/dcn35_resource.c               |    1 
  drivers/gpu/drm/amd/display/modules/inc/mod_stats.h                          |    4 
+ drivers/gpu/drm/ci/gitlab-ci.yml                                             |   14 +
+ drivers/gpu/drm/ci/test.yml                                                  |    1 
  drivers/gpu/drm/drm_modeset_helper.c                                         |   19 +-
  drivers/gpu/drm/drm_panel_orientation_quirks.c                               |   12 +
  drivers/gpu/drm/drm_probe_helper.c                                           |   21 ++
+ drivers/gpu/drm/nouveau/nvkm/subdev/devinit/gm107.c                          |   12 -
+ drivers/gpu/drm/nouveau/nvkm/subdev/devinit/r535.c                           |    1 
+ drivers/gpu/drm/panel/panel-simple.c                                         |   20 ++
  drivers/gpu/drm/ttm/ttm_bo.c                                                 |    7 
  drivers/gpu/drm/vc4/vc4_plane.c                                              |    5 
  drivers/hid/hid-ids.h                                                        |    1 
@@ -99,6 +117,7 @@ greg k-h
  drivers/input/joystick/xpad.c                                                |    3 
  drivers/input/rmi4/rmi_driver.c                                              |    6 
  drivers/input/touchscreen/imagis.c                                           |   20 --
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c                                  |   22 +-
  drivers/media/pci/sta2x11/sta2x11_vip.c                                      |    9 -
  drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c            |    8 
  drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec_drv.c          |    5 
@@ -109,6 +128,7 @@ greg k-h
  drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h          |    2 
  drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c                 |    2 
  drivers/misc/vmw_vmci/vmci_datagram.c                                        |    6 
+ drivers/net/dsa/qca/qca8k-8xxx.c                                             |    3 
  drivers/net/dummy.c                                                          |    1 
  drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c                              |    9 -
  drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c                          |    2 
@@ -129,17 +149,27 @@ greg k-h
  drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c                       |    9 +
  drivers/net/wireless/intel/iwlwifi/cfg/ax210.c                               |    6 
  drivers/net/wireless/intel/iwlwifi/cfg/bz.c                                  |    2 
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c                                |    1 
+ drivers/net/wireless/intel/iwlwifi/cfg/sc.c                                  |   38 ++++
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h                              |    8 
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c                                |   16 +
  drivers/net/wireless/mediatek/mt76/mt7915/mmio.c                             |   45 ++++-
  drivers/net/wireless/mediatek/mt76/mt7915/mt7915.h                           |    1 
  drivers/net/wireless/mediatek/mt76/mt7996/mac.c                              |    5 
  drivers/net/wireless/mediatek/mt76/mt7996/mmio.c                             |   64 ++++---
  drivers/net/wireless/mediatek/mt76/mt7996/mt7996.h                           |    3 
  drivers/net/wireless/realtek/rtw89/mac80211.c                                |    4 
- drivers/net/wireless/realtek/rtw89/pci.h                                     |    2 
+ drivers/net/wireless/realtek/rtw89/pci.c                                     |   60 ++++++-
+ drivers/net/wireless/realtek/rtw89/pci.h                                     |    6 
+ drivers/net/wireless/realtek/rtw89/rtw8851be.c                               |    2 
+ drivers/net/wireless/realtek/rtw89/rtw8852ae.c                               |    1 
+ drivers/net/wireless/realtek/rtw89/rtw8852be.c                               |    1 
+ drivers/net/wireless/realtek/rtw89/rtw8852ce.c                               |    1 
+ drivers/net/wireless/realtek/rtw89/rtw8922ae.c                               |    1 
  drivers/nvme/host/pci.c                                                      |    3 
  drivers/perf/hisilicon/hisi_uncore_uc_pmu.c                                  |   42 ++++
  drivers/pinctrl/renesas/core.c                                               |    4 
+ drivers/platform/x86/acer-wmi.c                                              |   17 +-
+ drivers/platform/x86/intel/hid.c                                             |    7 
  drivers/platform/x86/intel/vbtn.c                                            |    5 
  drivers/platform/x86/touchscreen_dmi.c                                       |    9 +
  drivers/pmdomain/imx/imx8mp-blk-ctrl.c                                       |   10 -
@@ -150,11 +180,16 @@ greg k-h
  drivers/thunderbolt/quirks.c                                                 |   14 +
  drivers/thunderbolt/tb.c                                                     |   49 +++++
  drivers/thunderbolt/tb.h                                                     |    4 
- drivers/usb/gadget/function/uvc_video.c                                      |    3 
+ drivers/thunderbolt/tunnel.c                                                 |   16 -
+ drivers/tty/serial/8250/8250_of.c                                            |   44 ++++-
+ drivers/tty/serial/8250/8250_port.c                                          |   24 --
+ drivers/ufs/host/ufs-qcom.c                                                  |   13 +
+ drivers/usb/gadget/function/uvc_video.c                                      |   10 -
  drivers/usb/host/sl811-hcd.c                                                 |    2 
  drivers/usb/typec/tcpm/tcpci.c                                               |    1 
  drivers/usb/typec/ucsi/ucsi.c                                                |   26 ++-
  drivers/usb/typec/ucsi/ucsi.h                                                |   11 +
+ drivers/usb/typec/ucsi/ucsi_glink.c                                          |    1 
  drivers/video/fbdev/core/fbmon.c                                             |    7 
  drivers/video/fbdev/via/accel.c                                              |    4 
  drivers/xen/balloon.c                                                        |    2 
@@ -172,6 +207,7 @@ greg k-h
  include/acpi/acpi_bus.h                                                      |   14 -
  include/linux/kernfs.h                                                       |    2 
  include/linux/overflow.h                                                     |   12 -
+ include/linux/printk.h                                                       |    2 
  include/linux/randomize_kstack.h                                             |    2 
  include/linux/rcupdate.h                                                     |    4 
  include/linux/skbuff.h                                                       |   11 +
@@ -181,10 +217,14 @@ greg k-h
  io_uring/io_uring.c                                                          |   25 +-
  kernel/dma/direct.c                                                          |    9 -
  kernel/panic.c                                                               |    8 
+ kernel/printk/internal.h                                                     |    1 
  kernel/printk/printk.c                                                       |    3 
  kernel/rcu/tree_nocb.h                                                       |    2 
  kernel/trace/ring_buffer.c                                                   |    2 
+ lib/dump_stack.c                                                             |   16 +
  net/bluetooth/hci_event.c                                                    |    3 
+ net/core/netdev-genl.c                                                       |   15 -
+ net/core/page_pool_user.c                                                    |    2 
  net/ipv4/ip_tunnel.c                                                         |    1 
  net/ipv6/ip6_gre.c                                                           |    2 
  net/ipv6/ip6_tunnel.c                                                        |    1 
@@ -200,6 +240,7 @@ greg k-h
  sound/pci/hda/patch_realtek.c                                                |   12 +
  sound/soc/amd/yc/acp6x-mach.c                                                |    7 
  sound/soc/intel/avs/board_selection.c                                        |   85 ++++++++++
+ sound/soc/intel/boards/sof_rt5682.c                                          |   40 ----
  sound/soc/intel/boards/sof_sdw.c                                             |   11 +
  sound/soc/soc-core.c                                                         |    3 
  sound/soc/sof/amd/acp.c                                                      |    3 
@@ -208,14 +249,16 @@ greg k-h
  tools/lib/perf/include/internal/evlist.h                                     |    4 
  tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c              |    1 
  tools/testing/ktest/ktest.pl                                                 |    1 
- tools/testing/selftests/net/mptcp/mptcp_join.sh                              |    5 
- 151 files changed, 1134 insertions(+), 309 deletions(-)
+ 191 files changed, 1530 insertions(+), 450 deletions(-)
 
 Abhishek Pandit-Subedi (1):
       usb: typec: ucsi: Limit read size on v1.2
 
 Adam Ford (1):
       pmdomain: imx8mp-blk-ctrl: imx8mp_blk: Add fdcc clock to hdmimix domain
+
+Ahmad Rehman (1):
+      drm/amdgpu: Init zone device and drm client after mode-1 reset on reload
 
 Alban Boyé (1):
       platform/x86: touchscreen_dmi: Add an extra entry for a variant of the Chuwi Vi8 tablet
@@ -229,6 +272,9 @@ Alex Henrie (1):
 Andre Werner (1):
       net: phy: phy_device: Prevent nullptr exceptions on ISR
 
+Andy Shevchenko (1):
+      serial: 8250_of: Drop quirk fot NPCM from 8250_port
+
 Ard Biesheuvel (1):
       gcc-plugins/stackleak: Avoid .head.text section
 
@@ -240,6 +286,15 @@ Arnd Bergmann (1):
 
 Baochen Qiang (1):
       wifi: ath11k: decrease MHI channel buffer length to 8KB
+
+Bjorn Andersson (1):
+      arm64: dts: qcom: qcs6490-rb3gen2: Declare GCC clocks protected
+
+Borislav Petkov (AMD) (1):
+      x86/vdso: Fix rethunk patching for vdso-image-x32.o too
+
+Brent Lu (1):
+      ASoC: Intel: sof_rt5682: dmi quirk cleanup for mtl boards
 
 C Cheng (1):
       cpuidle: Avoid potential overflow in integer multiplication
@@ -267,8 +322,12 @@ Daniel Drake (2):
       PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
       Revert "ACPI: PM: Block ASUS B1400CEAE from suspend to idle by default"
 
-Dave Airlie (1):
+Dave Airlie (2):
       amdkfd: use calloc instead of kzalloc to avoid integer overflow
+      nouveau: fix devinit paths to only handle display on GSP.
+
+David McFarland (1):
+      platform/x86/intel/hid: Don't wake on 5-button releases
 
 David Sterba (3):
       btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
@@ -278,6 +337,9 @@ David Sterba (3):
 Dmitry Antipov (1):
       wifi: ath9k: fix LNA selection in ath_ant_try_scan()
 
+Dmitry Baryshkov (1):
+      arm64: dts: qcom: qrb2210-rb1: disable cluster power domains
+
 Dmitry Torokhov (1):
       HID: input: avoid polling stylus battery on Chromebook Pompom
 
@@ -286,6 +348,9 @@ Duje Mihanović (1):
 
 Edward Adam Davis (1):
       Bluetooth: btintel: Fix null ptr deref in btintel_read_version
+
+Eric Chanudet (1):
+      scsi: ufs: qcom: Avoid re-init quirk when gears match
 
 Eric Dumazet (2):
       net: add netdev_lockdep_set_classes() to virtual drivers
@@ -298,24 +363,28 @@ Florian Westphal (2):
 Geert Uytterhoeven (1):
       pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
 
-Geliang Tang (1):
-      selftests: mptcp: display simult in extra_msg
-
 Gergo Koteles (1):
       Input: allocate keycode for Display refresh rate toggle
 
+Gil Fine (1):
+      thunderbolt: Calculate DisplayPort tunnel bandwidth after DPRX capabilities read
+
 Greg Kroah-Hartman (1):
-      Linux 6.6.27
+      Linux 6.8.6
 
 Gwendal Grignou (1):
       platform/x86: intel-vbtn: Update tablet mode switch at end of probe
 
-Hans de Goede (2):
+Hans de Goede (3):
       wifi: brcmfmac: Add DMI nvram filename quirk for ACEPC W5 Pro
       ACPI: x86: Move acpi_quirk_skip_serdev_enumeration() out of CONFIG_X86_ANDROID_TABLETS
+      ACPI: x86: Add DELL0501 handling to acpi_quirk_skip_serdev_enumeration()
 
 Harshit Mogalapalli (1):
       VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
+
+Hui Liu (1):
+      arm64: dts: qcom: qcm6490-idp: Add definition for three LEDs
 
 Ian Rogers (1):
       libperf evlist: Avoid out-of-bounds access
@@ -323,8 +392,14 @@ Ian Rogers (1):
 Jacob Keller (1):
       ice: use relative VSI index for VFs instead of PF VSI number
 
+Jakub Kicinski (1):
+      netdev: let netlink core handle -EMSGSIZE errors
+
 Jarkko Nikula (1):
       i2c: designware: Fix RX FIFO depth define on Wangxun 10Gb NIC
+
+Jason Gunthorpe (1):
+      iommu/arm-smmu-v3: Hold arm_smmu_asid_lock during all of attach_dev
 
 Jeffrey Hugo (1):
       bus: mhi: host: Add MHI_PM_SYS_ERR_FAIL state
@@ -347,9 +422,13 @@ Johan Jonker (4):
 Johannes Berg (1):
       wifi: cfg80211: check A-MSDU format more carefully
 
-John Ogness (2):
+John Ogness (3):
       printk: For @suppress_panic_printk check for other CPU in panic
       panic: Flush kernel log buffer at the end
+      dump_stack: Do not get cpu_sync for panic CPU
+
+Josh Poimboeuf (1):
+      x86/vdso: Fix rethunk patching for vdso-image-{32,64}.o
 
 Junhao He (1):
       drivers/perf: hisi: Enable HiSilicon Erratum 162700402 quirk for HIP09
@@ -372,6 +451,9 @@ Kunwu Chan (3):
       pmdomain: ti: Add a null pointer check to the omap_prm_domain_init
       pstore/zone: Add a null pointer check to the psz_kmsg_read
       Input: synaptics-rmi4 - fail probing if memory allocation for "phys" fails
+
+Luca Weiss (1):
+      usb: typec: ucsi: Add qcm6490-pmic-glink as needing PDOS quirk
 
 Luiz Augusto von Dentz (1):
       Bluetooth: btintel: Fixe build regression
@@ -403,7 +485,8 @@ Max Kellermann (1):
 Maíra Canal (1):
       drm/vc4: don't check if plane->state->fb == state->fb
 
-Michael Grzeschik (1):
+Michael Grzeschik (2):
+      usb: gadget: uvc: refactor the check for a valid buffer in the pump worker
       usb: gadget: uvc: mark incomplete frames with UVC_STREAM_ERR
 
 Mika Westerberg (1):
@@ -412,8 +495,12 @@ Mika Westerberg (1):
 Mike Marshall (1):
       Julia Lawall reported this null pointer dereference, this should fix it.
 
-Mukesh Sisodiya (1):
+Mukesh Sisodiya (2):
       wifi: iwlwifi: pcie: Add the PCI device id for new hardware
+      wifi: iwlwifi: pcie: Add new PCI device id and CNVI
+
+Nicholas Kazlauskas (1):
+      drm/amd/display: Disable idle reallow as part of command/gpint execution
 
 Nicolas Dufresne (1):
       media: mediatek: vcodec: Fix oops when HEVC init fails
@@ -427,7 +514,8 @@ Peter Chiu (1):
 Petre Rodan (1):
       tools: iio: replace seekdir() in iio_generic_buffer
 
-Ping-Ke Shih (1):
+Ping-Ke Shih (2):
+      wifi: rtw89: pci: validate RX tag for RXQ and RPQ
       wifi: rtw89: pci: enlarge RX DMA buffer to consider size of RX descriptor
 
 Po-Hao Huang (1):
@@ -469,8 +557,21 @@ Shradha Gupta (2):
       drm: Check output polling initialized before disabling
       drm: Check polling initialized before enabling in drm_helper_probe_single_connector_modes
 
+Sohaib Nadeem (1):
+      drm/amd/display: increased min_dcfclk_mhz and min_fclk_mhz
+
 Srinivasan Shanmugam (1):
       drm/amd/amdgpu: Fix potential ioremap() memory leaks in amdgpu_device_init()
+
+Stanley.Yang (1):
+      drm/amdgpu: Skip do PCI error slot reset during RAS recovery
+
+SungHwan Jung (2):
+      platform/x86: acer-wmi: Add support for Acer PH16-71
+      platform/x86: acer-wmi: Add predator_v4 module parameter
+
+Sviatoslav Harasymchuk (1):
+      ACPI: resource: Add IRQ override quirk for ASUS ExpertBook B2502FBA
 
 Takashi Iwai (2):
       wifi: iwlwifi: Add missing MODULE_FIRMWARE() for *.pnvm
@@ -488,14 +589,26 @@ Tetsuo Handa (1):
 Tim Crawford (1):
       ALSA: hda/realtek: Add quirks for some Clevo laptops
 
+Tom Zanussi (1):
+      crypto: iaa - Fix async_disable descriptor leak
+
+Tony Lindgren (1):
+      drm/panel: simple: Add BOE BP082WX1-100 8.2" panel
+
 Vasiliy Kovalev (1):
       VMCI: Fix possible memcpy() run-time warning in vmci_datagram_invoke_guest_handler()
+
+Vignesh Raman (1):
+      drm/ci: uprev mesa version: fix kdl commit fetch
 
 Vinicius Peixoto (1):
       Bluetooth: Add new quirk for broken read key length on ATS2851
 
 Viresh Kumar (1):
       cpufreq: Don't unregister cpufreq cooling on CPU hotplug
+
+Vladimir Oltean (1):
+      net: dsa: qca8k: put MDIO controller OF node if unavailable
 
 Ye Bin (1):
       ext4: forbid commit inconsistent quota data when errors=remount-ro
