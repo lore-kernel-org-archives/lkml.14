@@ -1,72 +1,57 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1552233A
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9E42C695
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712999996; cv=none; b=b7Xcxy0/saVpG88jscNa0HQRE+WqPHmKnzTTLAkc8STEsks6UA/T3CR/CjjLuf4rLcQKxA5ZnZwZWMfCqsnnAIXPYTHGnxD3pJDyF8WXZy+L4Sv74ulmhM0ZTJ0Gr5xcrIrOlJsag7wwxF/LdbqpRr3K5DZAdMHdPBI0OTLttog=
+	t=1713000275; cv=none; b=Bskh5vCbtwGvzm+4MUZLTdneh9wAyDTpPMoX1NQqIfZKZk6ogysuwLYjRGwEr/QBRDyL5xElVA62TA3bmQBrXpQUqBsT1Wpiw6r9l27NpBCGQ4V8Gyv82CPVio1EuuBaua/ATQiIYFcC4qUaqy631rUj3CvyRIF+AfwpSOdEGto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712999996; c=relaxed/simple;
-	bh=xtrhNFYIL5DFjvG5DohoWbQ0qLKf2DBPOxnSj+B1Pv8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mQN5hZwSWUCbzXa4Fd7/HUIUGcNBtMeeypqGsyxQsij2kTBDUbAdkCwYaglq2FzuZeQ8glPRTjOxuvp+nNl94srgMbBdk+nB3j3p/8yHBlUvwkScFm61XOcdzjPlKxQu2wLOu4dyITSdJPvlnwNOTFGDkgPeBH5Og+sVDEFVEjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=IVuWcay+; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1713000275; c=relaxed/simple;
+	bh=l46MXnhC2u19RXq1Wz3lUGvrN/61SBL0e/sJf+7k9oQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Sbtj6LWHAInMonGv94iHJmcBUjfRsofiiKThP8pkUQPZ16fjq3cYnfQFqqrZzWJ78heSeO18n6oZZAfHX8/pQ7lyTGN+nr7UfaE8zLqU7tTL/kXF+AKh3gCY1pJPzI8GGYfHB+5DJ7TMKjITufPEulQ01UtX+/OtIbcsd5+nrYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=O8YIbcsn; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="IVuWcay+"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e4266673bbso14317065ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 02:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712999995; x=1713604795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=69pCu+lIE1wVXKqySWp1XZJt2aC2QI11IyQxjcSF8a4=;
-        b=IVuWcay+iPBZHYrHvYohZYwRfKpDbTXVfyoxKtYc2SkOtRC7N9DSBil0k5CZ3jNifh
-         uEC/e6eLcZ5sSTdsYXkX41S4MhuRq/Qk5QjQV7Wha0S0sQX2JhnhQvmbgbJXLPYcOIn9
-         k75mZ8R+9DN27TnEKcOpmDO3C9dxPQ6TfMLDiS81/yyyupur73VdRD0DbpYuYA9EwgMq
-         p/hPxY8gwsGWxj1qKIyZFUf+uZNlYyU1Fz/d5q/RKYq1XtDexN5nhXbE6I+FzMgJ7vAF
-         EkzntIkH43rBcwe3vSV/06ePjyLs3nLTr/Betc8k1Bqjs42MEdIgA1DLP7yo9Vipb4Bt
-         Zliw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712999995; x=1713604795;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=69pCu+lIE1wVXKqySWp1XZJt2aC2QI11IyQxjcSF8a4=;
-        b=Vw+iT7nfCzPCgL1NEB3EdH2tLFnjO84G2iX86wT6/US9jf5g04FbMu21XTfi/2Eiat
-         XpPIlkDpAqWlO5gtHtgJWie+23810ri5n6MIdMVvrGQa7erkFRXWU0Es2OFubUkajiwA
-         i7r7Htskaj7UwUZlxOABl0qu7IrqvBQj0mCkfr1z0iGLxNyAC/YyhJWG7oDv6hE0/vwJ
-         cPFrpJxmn7NhXqDeEzXvjNlQkPS+5/M+XHLXIj8qoGf4n8QbyBbP9fLQ85CrDc8QlUx6
-         oZB3VMf5j8/ltcmu8P8piGQbQxpcl2Lqg2BTBVnvWfwVs2np/QJYKDLxteGQNajOSyAO
-         8/6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWHnGKLXJ5qAXHbecQVD3lpiP7OOBEQkwDb97X4g2VlOrWaOmXSt1EJHHE5E35qzdktT7Fv1b69z1ZnOMzVmr5diozpR4fYkB2KxynK
-X-Gm-Message-State: AOJu0Yw3btbQsg50/OC1h/JLwDT5F4GcYQlcy9d3Kmfb/nh3uajKJJ01
-	kpgfW/U2DPnlKO0xvH7HidlYmepPonk8SHVnrk5rcZsReIjTEY9mezRWZ5pvi1Q=
-X-Google-Smtp-Source: AGHT+IHtYnolIIRYPs/EmR5EEzZ1sL8+zY8lf7mTvGypESElWwhDypuX4pBANdN1oJ2iOm4IuKjKVA==
-X-Received: by 2002:a17:902:968c:b0:1e2:6d57:c1bb with SMTP id n12-20020a170902968c00b001e26d57c1bbmr3726399plp.21.1712999994631;
-        Sat, 13 Apr 2024 02:19:54 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
-        by smtp.gmail.com with ESMTPSA id n9-20020a170903110900b001e5c0ac3279sm2157153plh.74.2024.04.13.02.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Apr 2024 02:19:54 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v2] of: property: Add fw_devlink support for interrupt-map property
-Date: Sat, 13 Apr 2024 14:49:42 +0530
-Message-Id: <20240413091942.316054-1-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="O8YIbcsn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712999961; bh=Q7kwnaIuI1db8rYJ74Oy5gBkZEV1lOcuhUvY4UDWwd8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=O8YIbcsnzwlRx1HLGKUJLtzbpWK1XqCxSeUTrFWLIDBHJ01BKCC9vwjvjy2Osqoiy
+	 ydxjl4gHH+3GgZQO1UZL3mo1jiVG5iYCUR+ob5oi4KEGnSl4oAz9WeK6u50ruUPVDb
+	 6oG02g/Lmn1CZKK8pUlCZD+NLJj75We6DhkemyO4=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza15-0.qq.com (NewEsmtp) with SMTP
+	id 4D3076D7; Sat, 13 Apr 2024 17:19:19 +0800
+X-QQ-mid: xmsmtpt1712999959tdcxlmpxv
+Message-ID: <tencent_A6684B2C74B976B5674C3DC1375496EC3709@qq.com>
+X-QQ-XMAILINFO: OJYupdf7O4Wt2vYterHmwDfCRmzNMuHNF4qlv+gSDC2kKjUyJJmfrkrwm5+x7V
+	 kfK98qym4iITALVEqueKc1xa0p+iXZM+OBw+vyqn/RDMKycWjifSkuXAGHGkeaMDFZt/rgM0l1y7
+	 STXINFTYxZi/q2XvX49vb5byImSu1ckzT/4mjdccPr86wI3k1TUyqbWD5i4jcqDskeMOcaU5GuJV
+	 nvNaHhllKKvvZ3RY6WJV9pIpHIj699EeSUj6YgC+fwgZ/K6nBExOdnichX4tkwK0nWJX5SvDnm+J
+	 kcXUrXKrfujV6A7beJOA3ss0VVIlKXx2p56BiqAg+sxBPmY6gLKc6QbbqfUEUsqTlxxEPDtpWBDt
+	 RDdhr52PPI+rB0ILU/Fpfqi6pdYMDgwEwlTOH0sw6PAl/6Rl5K54r7wCCAzBFxxkmp79axnbAMkh
+	 pB/TBBjO/bXnnnPMtPgy/QbrBcIAs1g4SZpMtZ6h0A4IADIATOqiXn7LduTZ3EL2YaLzehfWOMKk
+	 Q9SzjNyQO0A2DAOKuAvnvwq12iuF4P4yzINzFAw8TWEzWTRrGFT7NBbnKaswqVc8Dy2h2GGqHfdz
+	 UEAaUyCxMqdLWrcKtSoTjDg+bxuFMbGbpFQCkMdHdHWZ1Omw9wQFzbmhLBGQEVWEOFmph+u4COEw
+	 6EUzLCu3SnX7TgvNBIDguLQQ7zj299WVuA2Qq9xuRdMfJs31yR2x0LITE2ivf6nJaPCpUbjXNn9k
+	 BIXLiI7SnUv/249hASEKJLi1KiL6izPCLg7yqwXQXOWatHRZryzrMZsYEIgHOttNSf2yGtTP0g4D
+	 hpirwsEtGfNK+oxdHXBQkNHaLyNWXdo1IemL7i4DwhLtLe2JioQMJNS39SOpGybpYoP/wKAJKfSD
+	 ncTEbx+o6lfRsE5Sxe9XU+5qKk+4N0hEhT2C89ILbS9gT86S0jUbRCieDJq/JjJS5HnNjOrf8n6Q
+	 xQ1cE+xLmaVeeN0ufU3bxJwxVVqOVOZ/0kpMwTfbfPvTIbIHkHzA==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+3a36aeabd31497d63f6e@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [gfs2?] KASAN: slab-use-after-free Read in gfs2_invalidate_folio
+Date: Sat, 13 Apr 2024 17:19:20 +0800
+X-OQ-MSGID: <20240413091919.2346828-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000004f557c0615d47e6d@google.com>
+References: <0000000000004f557c0615d47e6d@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,105 +60,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some of the PCI controllers (such as generic PCI host controller)
-use "interrupt-map" DT property to describe the mapping between
-PCI endpoints and PCI interrupt pins. This the only case where
-the interrupts are not described in DT.
+please test uaf in gfs2_invalidate_folio
 
-Currently, there is no fw_devlink created based on "interrupt-map"
-DT property so interrupt controller is not guaranteed to be probed
-before PCI host controller. This affects every platform where both
-PCI host controller and interrupt controllers are probed as regular
-platform devices.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e8c39d0f57f3
 
-This creates fw_devlink between consumers (PCI host controller) and
-supplier (interrupt controller) based on "interrupt-map" DT property.
-
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
-Changes since v1:
-- Updated commit description based on Rob's suggestion
-- Use of_irq_parse_raw() for parsing interrupt-map DT property
----
- drivers/of/property.c | 58 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index a6358ee99b74..67be66384dac 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1311,6 +1311,63 @@ static struct device_node *parse_interrupts(struct device_node *np,
- 	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
- }
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index 8cddf955ebc0..698c9d1bfe20 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -1007,6 +1007,7 @@ static void trans_drain(struct gfs2_trans *tr)
+ {
+ 	struct gfs2_bufdata *bd;
+ 	struct list_head *head;
++	struct buffer_head * bh;
  
-+static struct device_node *parse_interrupt_map(struct device_node *np,
-+					       const char *prop_name, int index)
-+{
-+	const __be32 *imap, *imap_end, *addr;
-+	struct of_phandle_args sup_args;
-+	struct device_node *tn, *ipar;
-+	u32 addrcells, intcells;
-+	int i, j, imaplen;
-+
-+	if (!IS_ENABLED(CONFIG_OF_IRQ))
-+		return NULL;
-+
-+	if (strcmp(prop_name, "interrupt-map"))
-+		return NULL;
-+
-+	ipar = of_node_get(np);
-+	do {
-+		if (!of_property_read_u32(ipar, "#interrupt-cells", &intcells))
-+			break;
-+		tn = ipar;
-+		ipar = of_irq_find_parent(ipar);
-+		of_node_put(tn);
-+	} while (ipar);
-+	if (!ipar)
-+		return NULL;
-+	addrcells = of_bus_n_addr_cells(ipar);
-+	of_node_put(ipar);
-+
-+	imap = of_get_property(np, "interrupt-map", &imaplen);
-+	if (!imap || imaplen <= (addrcells + intcells))
-+		return NULL;
-+	imap_end = imap + imaplen;
-+
-+	sup_args.np = NULL;
-+	for (i = 0; i <= index && imap < imap_end; i++) {
-+		if (sup_args.np) {
-+			of_node_put(sup_args.np);
-+			sup_args.np = NULL;
-+		}
-+
-+		addr = imap;
-+		imap += addrcells;
-+
-+		sup_args.np = np;
-+		sup_args.args_count = intcells;
-+		for (j = 0; j < intcells; j++)
-+			sup_args.args[j] = be32_to_cpu(imap[j]);
-+		imap += intcells;
-+
-+		if (of_irq_parse_raw(addr, &sup_args))
-+			return NULL;
-+		imap += sup_args.args_count + 1;
-+	}
-+
-+	return sup_args.np;
-+}
-+
- static struct device_node *parse_remote_endpoint(struct device_node *np,
- 						 const char *prop_name,
- 						 int index)
-@@ -1359,6 +1416,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_msi_parent, },
- 	{ .parse_prop = parse_gpio_compat, },
- 	{ .parse_prop = parse_interrupts, },
-+	{ .parse_prop = parse_interrupt_map, },
- 	{ .parse_prop = parse_regulators, },
- 	{ .parse_prop = parse_gpio, },
- 	{ .parse_prop = parse_gpios, },
--- 
-2.34.1
+ 	if (!tr)
+ 		return;
+@@ -1022,6 +1023,8 @@ static void trans_drain(struct gfs2_trans *tr)
+ 	head = &tr->tr_databuf;
+ 	while (!list_empty(head)) {
+ 		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
++		bh = container_of((void *)bd, struct buffer_head, b_private);
++		bh->b_private = NULL;
+ 		list_del_init(&bd->bd_list);
+ 		if (!list_empty(&bd->bd_ail_st_list))
+ 			gfs2_remove_from_ail(bd);
 
