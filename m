@@ -1,49 +1,65 @@
-Received: from smtpcmd02101.aruba.it (smtpcmd02101.aruba.it [62.149.158.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BDA481BA
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 17:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A6F482D7
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 17:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713028428; cv=none; b=QYmp0dl5BY0w7Lb/ceFWDxOEgIvst15fWWuR81bXe6ucnCUFlYNT0tptCPCphbFyWGELmIcXNxt/C7XPod8BQ6N+vNEgxpzI/e+jdI8SSLSuIVj073XXko/QJW7EMMICpIMAXN+Lxht5pRQlwsYTSlRyjmto2+EW8Stu+J+1ML0=
+	t=1713028454; cv=none; b=lP74jl/OyLE2bFI76Je7RpwGO8/pLD24M+vpzmPU5fJ3xJ9ynRjALkN9evfcudPzKz1MkWwfMVxPcvDAEX0KxmEZtEUVRqmlSvPHcrYvIh+XhvnxdDgphrzBK0ILjmMkmVRSQz2RFms9HV9AMZu4yUU573dVXYPvBW+9v2vNZyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713028428; c=relaxed/simple;
-	bh=IVys/OiNau2OwJaLogqS6aOLz32wgJUF4Aiij97BK7s=;
+	s=arc-20240116; t=1713028454; c=relaxed/simple;
+	bh=XcTA/luCjnxFy1jTuldTqBkbaCVB2SCFFFKdCPF41D0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eurH5nuuamq/MmW5DuQ0erUq0Sf34VCGCLKjXaojzZzmdfyIaGeWg9iXWz5hqK4ZdCegOfmpPsse4F/v1+2Eu+p2SW7h0XINn51r+68m41XldEqjm6Maan87Ua9+1VCiBkAvsPk8ofAVXVDAwtX1GWe2V50bwDpA/ASv1ncNnno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=KyCr+azv; arc=none smtp.client-ip=62.149.158.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGQwgLvdTaGSFEsXR6BCAg+QwTFHyWSl85rWy5so3UZbEf2kmn1qDyPK1/AuwqI1B03fcSW5pRjv+crK4l7z9+5fcSd7QaCqGJ7PoMACIVDA4pt2BUl2a2Xlf0f4zr5Ttp8NySm8mqPjJFFi1u9jHEk4QUC+L81/GVh44t88AmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcMsgQRc; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="KyCr+azv"
-Received: from engicam ([77.32.26.8])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id vgtdrfT9rM2Q6vgterM8lW; Sat, 13 Apr 2024 19:10:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1713028235; bh=IVys/OiNau2OwJaLogqS6aOLz32wgJUF4Aiij97BK7s=;
-	h=Date:From:To:Subject:MIME-Version:Content-Type;
-	b=KyCr+azv28uuA8I7oOf+sQfh3PKzO8LX1VI2yqJurHQhoaiPg7GXAOnDxu6iCqFKr
-	 ezYHXoxV2iXiieykkKY9L9MP9unI06z3KuSC+5n7aeSvEW23clU2hW1EqOXVcmuuqd
-	 lt2HjmvmOcOCvOyWaXACZgTnhn3spurIs2H4klZlrreQ8QiJLC/AF3JCNeM5jNrYwa
-	 qvBJSQ3B1qgSYOP8c1Rjyu6UIKsihFw42wK7MY6Dvn4y91pzxCuAFvKQviVa/3sVds
-	 ojf+U61RxKh/CkD0l6CSZClxMhNQzFdrJX6dqS+nBKLc0/8Kl4M9seB+Jx/CsnCLLP
-	 NV3Pkh/83nllA==
-Date: Sat, 13 Apr 2024 19:10:33 +0200
-From: Fabio Aiuto <fabio.aiuto@engicam.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Robin Gong <yibin.gong@nxp.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: pca9450: add PMIC_RST_B
- warm reset property
-Message-ID: <Zhq8ibYrZH05/AQt@engicam>
-References: <20240411165801.143160-1-fabio.aiuto@engicam.com>
- <20240411165801.143160-2-fabio.aiuto@engicam.com>
- <e86812b3-a3aa-4bdb-9b32-a0339f0f76b5@kernel.org>
- <ZhjhCvVNezy9r7P4@engicam>
- <bd1e6507-dee4-4dcf-bbd3-50539270cd63@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcMsgQRc"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dbed0710c74so1578059276.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 10:14:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713028451; x=1713633251; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NNXqxRVe9CVDdGjQD7K7O+b7VqxredJ801rqRgpXoHs=;
+        b=JcMsgQRc8IR1wSLV888l3xVOHyZ+pV204B2fFWoEWLDRHNe+HoxlZarJ0BfOzSGpP5
+         41rLWrMKaJFRBvGw2Qi0QxKpdye3Jx2owbHR53MbWwWZyHzM+S/RBiyeaUpJfKKw5NRA
+         A7pyqvZjmyVlcyvPxMJ4vCwhVNjy1DVhi80pP/kduPt50esBQY4mOQV0kraB+hh5DkP8
+         UlpetfW7CG7zu/18Cho50jaQxOvoMrGKdIgzzAwMf7tEftpMZtZuQEZ0390ZJ+dyraiw
+         gv2i5PjCyZ41fCM02WKR7f8VJp8tygjr+b7EPP/k3Kc/VIAm+ufy1DdbAa9TjjJpGx2I
+         LzVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713028451; x=1713633251;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NNXqxRVe9CVDdGjQD7K7O+b7VqxredJ801rqRgpXoHs=;
+        b=LCT3pHP8FqAEfJHh+Uf5gZLQIExIxjf5S6S3irdGPoZFzKD8Nw8eiOnxNir9mqip57
+         0A/mQ+VaHOZ8W05gVVFlKZmNrBF3EnIiTaE4Y6cWSwzvDymV4zLHIrTKyPqocIOW1+jy
+         N446FQIDGQ5ImzRb8IpMAl3KqBqIZX3/dufkDjwj9RDAs1oO3nQSbBK4HQwof60aer7v
+         qEjHu7dM4+0mpy0hGP56iZP2AK7CYxGohSU0GF2EPdh6T9HfwWhuYSAj6K4f0zz01v8s
+         jqkzmIaKgRqa3wbIUUZnMJT3hylV+jqwnoKudDWH0Cii7AkIzLOId3ZYmIRDhoqcOkBC
+         mQNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnu1EIL+7OoMRGkdBcZAxai7m0oREri2Aiygk//Njwo/1t1NtMS3vCK1ss6NpAIfS07D6JlXX9lDG7I+7KAF/Lxgx9FDfDm11/hQvv
+X-Gm-Message-State: AOJu0Ywc+b/xcfQZuh0mbFdJeQz0fAIES/Pl8ltbWjJhoIruAGjK+ixR
+	8wrIW16oo/Vah48fIH5WBK4YBWcezHCkmxuquTQYPzgc8NoLl5Jh
+X-Google-Smtp-Source: AGHT+IFPKq/7ygU3GL+7hvY+3YeqGWGW2Apesd2kZj994pHTyKtN1Ipb9nqqqKt8ef/Se5U4ULs7Nw==
+X-Received: by 2002:a05:6902:1024:b0:dcd:19ba:10df with SMTP id x4-20020a056902102400b00dcd19ba10dfmr6222959ybt.56.1713028451509;
+        Sat, 13 Apr 2024 10:14:11 -0700 (PDT)
+Received: from localhost ([69.73.66.55])
+        by smtp.gmail.com with ESMTPSA id u125-20020a256083000000b00dcdb7d232f9sm1262587ybb.4.2024.04.13.10.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Apr 2024 10:14:11 -0700 (PDT)
+Date: Sat, 13 Apr 2024 10:14:10 -0700
+From: Yury Norov <yury.norov@gmail.com>
+To: Chin-Chun Chen <chinchunchen2001@gmail.com>
+Cc: linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
+	Chin-Chun Chen <chinchunchen2001@gmail.com>
+Subject: Re: [PATCH v2] include/linux/bitops.h: Fix function fns
+Message-ID: <Zhq9YpzCbvom3GFx@yury-ThinkPad>
+References: <20240413061204.10382-1-chinchunchen2001@gmail.com>
+ <20240413155635.11486-1-chinchunchen2001@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,76 +68,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd1e6507-dee4-4dcf-bbd3-50539270cd63@kernel.org>
-X-CMAE-Envelope: MS4xfKq1b6hvFtKreRQ6dwzzBYaCof8q+mOwvcHOyjN6qdlRBeO7CC54ocwz3MMSSwDiw5RBvNhaq40l3tLrV4K/rdlCrxdJZ1FvBh5LHyJu2PYCU+40xZzq
- mxxhaS/zhznl9DMGvH/VpwzYSvtqHDfY2+26MBOgPWT5Cm/5XzrFTgiRuuNxyjUpgjz0enliP7p96fHyxrkLkgIBuAFDpd81EIFTOQlTQSdTEdAUAodckqKO
- m8cSBQcErTUBsqO2M1Te4B73M1MxTIddCzRFlVQRGUKeNVzxMBgiUEaZdn7ZGc4G+E+kL5mw/KmsnReu9OcQFJTMRvCjb3c4K+Qowl7cuHOvhbBjIRpAmfkS
- jHfyx/Urx67u3cZiaf2nOB5AEseIKN66ir1JwQNo5utUircvftn2F0b4GiLdKmfoHcaRUxnbrH0h1d1ysX92Nn4wkJL4W9fCkIoBBvdin6C43QLVnK5myM5u
- s4AzYf+LUWmFVjWK
+In-Reply-To: <20240413155635.11486-1-chinchunchen2001@gmail.com>
 
-Dear Krzysztof,
-
-Il Sat, Apr 13, 2024 at 12:58:35PM +0200, Krzysztof Kozlowski ha scritto:
-> On 12/04/2024 09:21, Fabio Aiuto wrote:
-> > Dear Krzysztof,
-> > 
-> > Il Thu, Apr 11, 2024 at 09:52:12PM +0200, Krzysztof Kozlowski ha scritto:
-> >> On 11/04/2024 18:58, Fabio Aiuto wrote:
-> >>> Add property to trigger warm reset on PMIC_RST_B assertion
-> >>>
-> >>
-> >> That's rather vague and does not tell me much why this is supposed to be
-> >> board level configuration. It sounds more like a debugging feature:
-> >> during development you want to retain memory contents for pstore etc.
-> >> Then I could imagine this should be turned runtime, e.g. via
-> >> sysfs/debugfs, because for example you want to start inspecting a
-> >> customer's device.
-> > 
-> > thanks, I spent too few time writing this commit log and I apologize
-> > for that. I was thinking about something like:
-> > 
-> >     The default configuration of the PMIC behavior makes the PMIC
-> >     power cycle most regulators on PMIC_RST_B assertion. This power
-> >     cycling causes the memory contents of OCRAM to be lost.
-> >     Some systems needs some memory that survives reset and
-> >     reboot, therefore add a property to tell PMIC_RST_B is
-> >     wired.
-> > 
-> > The actual configuration is made at probe time, anyway we need
-> > to override the default behavior of the pmic to get a warm reset
-> > everytime the PMIC_RST_B pin is asserted and this property tells
-> > us that "something is wired to that pin" and "it has to behave
-> > that way on pin assertion". Our use cases do not meet the need
-> > of further runtime configuration change.
+On Sat, Apr 13, 2024 at 11:56:35PM +0800, Chin-Chun Chen wrote:
+> Modified the function fns to resolve a calculation error by reducing n first to correctly determine the n-th set bit instead of n+1.
 > 
-> What is the use case?
+> This commit improves the accuracy and reliability of the code.
 
-I just have an external power button connected to that pin, it works
-either with warm reset and cold-reset-except-ldo12. Moreover the default behavior
-is cold reset and not reset-disabled. Anyway I thought it was useful for other
-people to add a property selecting behavior for that pin too as was done for
-WDOG_B. That's why I mainly duplicated the logic. If there is a pin adding a
-reset source it's a good point to provide a way to access the register bits
-related to this signal.
+No it doesn't. Accuracy and reliability is tested in lib/test_bitmap.c.
+Have you tried to run it before sending this patch?
 
+What error did you mean? How does pre-decrement over post-increment fix it?
+
+> ---
+> Changes since v1:
+> * Clarified the commit message.
+> * Fixed the incorrect operation.
 > 
-> Sorry, you did not bring any further argument why this is board
-> specific. And please don't explain how probing works, but address the
-> problem here: why type of reset is specific to board design. To me it is
-> OS policy.
+> Signed-off-by: Chin-Chun Chen <chinchunchen2001@gmail.com>
+> ---
+>  include/linux/bitops.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-Why reset type is specific to board design? I'm sorry but I don't know
-what you mean, as said my intention was to enlarge the number of configurable
-bits in pca9450 register space hoping this would be useful for someone.
-
-All I can say is that is specific to board design for the same reason the
-wdog_b- reset type was specific to board design.
-
-Thank you for your time,
-
-fabio
-
-> Best regards,
-> Krzysztof
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 2ba557e067fe..5842d7d03f19 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -258,7 +258,7 @@ static inline unsigned long fns(unsigned long word, unsigned int n)
+>  
+>  	while (word) {
+>  		bit = __ffs(word);
+> -		if (n-- == 0)
+> +		if (--n == 0)
+>  			return bit;
+>  		__clear_bit(bit, &word);
+>  	}
 > 
+> base-commit: 8f2c057754b25075aa3da132cd4fd4478cdab854
+
+What does this 'base-commit' mean?
+
+Chin-Chun, if it's your first attempt to contribute to a public
+project, you're very welcome. But you have to be more descriptive
+on the error you're facing and trying to fix. The best practice is
+to provide a test together with a fix.
+
+Thanks,
+Yury
+
+--
+
+It may be just my paranoia after UMN and xz stories, but... I
+googled for this person and the email and found that it didn't
+appear in public domain before now. Let's see...
