@@ -1,92 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160A24C7D;
-	Sat, 13 Apr 2024 00:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C037E;
+	Sat, 13 Apr 2024 00:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712968157; cv=none; b=HUyFMFb9bdT5OOKr3dhr9LSHUAHd2e8X6sKglYyxVLY21pfnMOwbere71lmkCocdjg/rcVBfCQlC26QUWW48q+07x4/eceH/g/N+aCSKgJZ68Ppz+5KeAa1NTQDfy6j6Bx2K06YbLazQA4ua+EyjhL3HPKt5wmDav5qGt2wtMwk=
+	t=1712968380; cv=none; b=mTuQwrHETK3iNwA+3iShWdaAaJg/mN0xUYcKGKQhzQvvYBguEq+I8X+3wnEZrqdHqT3VR3hMnDhxHE8Noco17QZqLIDXAI8J2MTmhl7wgZ9QXabs/HsIPJjtn094g9DHEVNxSbULuuR+VdC4dGNl6+ULLIMjl8ZF14z50acfPBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712968157; c=relaxed/simple;
-	bh=YPNNZcGO4R2DMHObIt70evDXCGNHt0rGwdZD3wv0q2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KGx/ZU9sx7t0vcBxS7oxOp3mOekfic077NNBgqM4K5SJIkaxj5CvEG58ucRz7G0R5vmhAzPGvmBIc4K4jvKIqXxXUL8kKpnbRN+2ZfILRrsmfU2PRdQM7M4+auko7DbHN8qnv9GNNAGV87ySCShvEQBbJJluVMwYFm34mpS02NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayE24+QD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712968380; c=relaxed/simple;
+	bh=coyk5nt8YNwTSTgY3qFZSAF1qy56yQEwiyGek0JLb04=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBaq8Ja/qsNL8xOC6HCFPz/HjpQyAY3PPQpHBULFuo/qVDD8hfaqylzApyGwaaaG9weH2aebFCDiExQUPE5W1zydMfKOrjxiuJGnh9YyuhGoU1fhC19H6v53PbeogRZdclWGS5X82ePKI8SUiDO2WRljoK05gHR0PhgEdgfn9f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=I8NcdD/e; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=I8NcdD/e; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayE24+QD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE47C2BD10;
-	Sat, 13 Apr 2024 00:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712968156;
-	bh=YPNNZcGO4R2DMHObIt70evDXCGNHt0rGwdZD3wv0q2M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ayE24+QDoEvkEgu/Cbsu3cgbGiFpzbfO6+X0XHUzR2Zw30UYlbjk9dFOOMuUzi6tQ
-	 NCLiaXER9eAM+4xqr/iOZ3tU3JJpi3KxbGJTGaYtIRu5keB6fHu2JNyr1wALB0+oUh
-	 krlaJfaPaE7Sk89FjGRpq0L66HPJU+796Sy4qGZcbSXOpCetuBX6sbjYoC5FasssBI
-	 gIuf4EmRlyPOIN2vVWtGCELHFtgd7udAvsEwkW5QZ6P9zWoQEDKyc9iuayOoCv+uYJ
-	 ybMZqV6/Qf0d2O8X4d3OW0SGdN7NEcsmpMcm78vQW+iHjfd6K6zC3fcaD44WOpB3bd
-	 +UvhcA8EgGf3A==
-Message-ID: <4e5c88f1-1b24-4f6d-8c11-d7029329ba7a@kernel.org>
-Date: Sat, 13 Apr 2024 09:29:13 +0900
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="I8NcdD/e";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="I8NcdD/e"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DAC6022C4A;
+	Sat, 13 Apr 2024 00:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712968375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Ga9BDy950sqrkymKo/DX0soSuDFkOI9AzOuH62JvhYw=;
+	b=I8NcdD/e1cLEL+nxIyxQnHqKpsUPCfjG7jRi48rRO496Fg9sqJd96AMINZ//aK1SXlaaBk
+	yx4TdpyriWgtaSgGl3g1WhSlTJSfzkL68Mk4dsPaxMgqIS5ivgz8XTOgNTqZPx+CdO/iOO
+	ZzXxGKsXCAQYTDO6ttOJiJVn4fGySh8=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712968375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Ga9BDy950sqrkymKo/DX0soSuDFkOI9AzOuH62JvhYw=;
+	b=I8NcdD/e1cLEL+nxIyxQnHqKpsUPCfjG7jRi48rRO496Fg9sqJd96AMINZ//aK1SXlaaBk
+	yx4TdpyriWgtaSgGl3g1WhSlTJSfzkL68Mk4dsPaxMgqIS5ivgz8XTOgNTqZPx+CdO/iOO
+	ZzXxGKsXCAQYTDO6ttOJiJVn4fGySh8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE3361368B;
+	Sat, 13 Apr 2024 00:32:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /MuCKrfSGWZhGAAAD6G6ig
+	(envelope-from <jeffm@suse.com>); Sat, 13 Apr 2024 00:32:55 +0000
+Received: from localhost.localdomain (silencio.work.jeffm.io [192.168.111.21])
+	by mail.work.jeffm.io (Postfix) with ESMTPS id 52F881014592;
+	Fri, 12 Apr 2024 20:32:50 -0400 (EDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id B6E721079455; Fri, 12 Apr 2024 20:22:54 -0400 (EDT)
+From: Jeff Mahoney <jeffm@suse.com>
+To: Wayne Lin <Wayne.Lin@amd.com>,
+	dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jeff Mahoney <jeffm@suse.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/mst: Fix NULL pointer dereference in drm_dp_add_payload_part2 (again)
+Date: Fri, 12 Apr 2024 20:22:52 -0400
+Message-ID: <20240413002252.30780-1-jeffm@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ata: Add sdev attribute to lower link speed in runtime
-To: Gustav Ekelund <gustav.ekelund@axis.com>, cassel@kernel.org,
- hare@suse.de, martin.petersen@oracle.com
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20240412134838.788502-1-gustav.ekelund@axis.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20240412134838.788502-1-gustav.ekelund@axis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: 0.20
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.20 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	BAYES_HAM(-0.00)[25.85%];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,ffwll.ch,suse.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
 
-On 4/12/24 22:48, Gustav Ekelund wrote:
-> Expose a new sysfs attribute to userspace that gives root the ability to
-> lower the link speed in a scsi_device at runtime. The handle enables
-> programs to, based on external circumstances that may be unbeknownst to
-> the kernel, determine if a link should slow down to perhaps achieve a
-> stabler signal. External circumstances could include the mission time
-> of the connected hardware or observations to temperature trends.
+Commit 54d217406afe (drm: use mgr->dev in drm_dbg_kms in
+drm_dp_add_payload_part2) appears to have been accidentially reverted as
+part of commit 5aa1dfcdf0a42 (drm/mst: Refactor the flow for payload
+allocation/removement).
 
-may, perhaps, could... This does not sound very deterministic. Do you have an
-actual practical use case where this patch is useful and solve a real problem ?
+I've been seeing NULL pointer dereferences in drm_dp_add_payload_part2
+due to state->dev being NULL in the debug message printed if the payload
+allocation has failed.
 
-Strictly speaking, if you are seeing link stability issues due to temperature or
-other environmental factors (humidity, altitude), then either you are operating
-your hardware (board and/or HDD) outside of their environmental specifications,
-or you have some serious hardware issues (which can be a simple as a bad SATA
-cable or an inappropriate power supply). In both cases, I do not think that this
-patch will be of any help.
+This commit restores mgr->dev to avoid the Oops.
 
-Furthermore, libata already lowers a link speed automatically at runtime if it
-sees too many NCQ errors. Isn't that enough ? And we also have the horkage flags
-to force a maximum link speed for a device/adapter, which can also be specified
-as a libata module argument (libata.force).
+Fixes: 5aa1dfcdf0a42 ("drm/mst: Refactor the flow for payload allocation/removement")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+---
+ drivers/gpu/drm/display/drm_dp_mst_topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Writing 1 to /sys/block/*/device/down_link_spd signals the kernel to
-> first lower the link speed one step with sata_down_spd_limit and then
-> finish off with sata_link_hardreset.
-
-We already have "/sys/class/ata_link/*/hw_sata_spd_limit", which is read-only
-for now. So if you can really justify this manual link speed tuning for an
-actual use case (not a hypothetical one), then the way to go would be to make
-that attribute RW and implement its store() method to lower the link speed at
-runtime.
-
-And by the way, looking at what that attribute says, I always get:
-<unknown>
-
-So it looks like there is an issue with it that went unnoticed (because no one
-is using it...). This needs some fixing.
-
+diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+index 03d528209426..3dc966f25c0c 100644
+--- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+@@ -3437,7 +3437,7 @@ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
+ 
+ 	/* Skip failed payloads */
+ 	if (payload->payload_allocation_status != DRM_DP_MST_PAYLOAD_ALLOCATION_DFP) {
+-		drm_dbg_kms(state->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
++		drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
+ 			    payload->port->connector->name);
+ 		return -EIO;
+ 	}
 -- 
-Damien Le Moal
-Western Digital Research
+2.44.0
 
