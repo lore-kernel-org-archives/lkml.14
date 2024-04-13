@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D873E462
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E0018B14
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713001970; cv=none; b=sqOOfahMs+vwIwolHnRuxm3XGAcMWq+w7CCPdV7Z3hY37rxA+L+snKBCml0t/dg1TFgZNvRI/rUQ+AlQY1UlSMROU+FFug5aRVQUJBNGLA/WcBYdBiYSsAwx7oILJOWEM2uADevp8DZjppLIFSYdhLkE54QSdx2FnR5semeqtpM=
+	t=1713001982; cv=none; b=gf4aIN+UqALwr0OQgqypiIETTMsIHRMJHV4jt5wSkk6EoFv14T2/sLc4OAShfNcTduRnEwoB2UJMv8r6vVhMrimunfrhjF1KMvglOIGwvyEGbhrKiDv14uBBo23tUtgGqSWwjQSifBsPIk2sKRWNgYEMJI4y7+B38anibHCxNq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713001970; c=relaxed/simple;
-	bh=Mp/k7oxUFkv2UFyK/q+jMiwjME21YAKpLNPyj5vic3M=;
+	s=arc-20240116; t=1713001982; c=relaxed/simple;
+	bh=rEBv6Uch7IwTGGDlnmOB5YgZdyMlc3kQYiKLZ3AnE34=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xb7xIgGvftWqs6+6cJW38HAw3Ow0cvI1BriB3FijNoM9CYE1SqCx0QIYFczs5isUYb1LP/mWhjSM+c7QTcR73cEYZfB7jstQNw1iRi2e6PS65rhCYl3kMtPAvBqSK3mC1cm80uTLxd0ACfA6ncYSFy75cUvgAmNlvPGutgx+7C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/baFDjr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=b/9ViNx2Zv2yXQmQ8k1byKnNQwooP3gI9NErhIi++mJnjs+BOT7sPV9kgrNqb073jaQq980EMlSMsWvCyGM9l67idzQkzSkj+TA4BbFxOSjY2fvx+fi2mwFJrwFf143a58yRhmRdjQPlTRtX+kx4JLuEzVcCPpZTxNKu8O55FBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kt5RjD8m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/baFDjr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6179DC4AF13;
-	Sat, 13 Apr 2024 09:52:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kt5RjD8m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE67EC4AF1D;
+	Sat, 13 Apr 2024 09:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713001969;
-	bh=Mp/k7oxUFkv2UFyK/q+jMiwjME21YAKpLNPyj5vic3M=;
+	s=k20201202; t=1713001982;
+	bh=rEBv6Uch7IwTGGDlnmOB5YgZdyMlc3kQYiKLZ3AnE34=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H/baFDjrcnsD3y0M27D9f32q5FfOaxBaVIKAp+xYLOxz/I28hP1axDTkLF3+b4BUR
-	 pHDKate8WfXYlB8PpFy/Mhx4j4pvg3rcv2DOpluoWAtCaum7Nk1dnms9ASGebOg0tZ
-	 JP6DnHDWXSyz/bNTO+wsZ9qKBeeJWCXCyBaBKnpQRubOg4QOqPyG+wwrDH31JY9Bop
-	 qyI29Hzi1K27JKKsV/WhtE4IyvFgYB9Sd2xW4B3k+pK08Fk0eA6JtKMX7r2XZSSk27
-	 TkuLbNbxLav25m9JcS8iPuWzyozeoJIeZuOl1oraabPg5rc/rK7utHM/GyFzadD6G2
-	 VVplByDUV7TRQ==
-Message-ID: <ede7ad82-29af-4bc1-946a-d47b59de8e46@kernel.org>
-Date: Sat, 13 Apr 2024 17:52:45 +0800
+	b=Kt5RjD8m0LTt/yzo97q6XHXIozi28GbrYLcc8VAvTKI05Hy+Mqci3x+0HbBR+2oOm
+	 k79n1ip/XV7sRHdsONhueMgPaDJoIdXPkgQz8BVCxLcltf9BMldbmbTSYEiRPkc9Ek
+	 6Pzp/Yge9Za5mkEb/mYNE+Q6kK+bxgSf/Rulve/1DRkCO4NFnKM5uq3F7/x1CsHwwL
+	 2WhPKGk4cJbLgY1MMlV0/sq9TPmiJq+2KL6ie8iImI14iCrFUuALfuFtwxpEXG2nP7
+	 jeZQINGzazCVQEdh2NkN4QiR1apqUNeHcNwoCeeQ7YYUtEdh/f/xZMRZc+LdhW9Tx/
+	 lmYuk7NnENa9Q==
+Message-ID: <5528dc53-20a7-49fa-81f8-4068ff85987a@kernel.org>
+Date: Sat, 13 Apr 2024 17:52:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,24 +35,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: prevent writing without fallocate()
- for pinned files
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: allow direct io of pinned files for
+ zoned storage
 To: Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
 Cc: Daeho Jeong <daehojeong@google.com>
-References: <20240411175410.2406710-1-daeho43@gmail.com>
+References: <20240411183753.2417792-1-daeho43@gmail.com>
 Content-Language: en-US
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240411175410.2406710-1-daeho43@gmail.com>
+In-Reply-To: <20240411183753.2417792-1-daeho43@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024/4/12 1:54, Daeho Jeong wrote:
+On 2024/4/12 2:37, Daeho Jeong wrote:
 > From: Daeho Jeong <daehojeong@google.com>
 > 
-> In a case writing without fallocate(), we can't guarantee it's allocated
-> in the conventional area for zoned stroage. To make it consistent across
-> storage devices, we disallow it regardless of storage device types.
+> Since the allocation happens in conventional LU for zoned storage, we
+> can allow direct io for that.
 > 
 > Signed-off-by: Daeho Jeong <daehojeong@google.com>
 
