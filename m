@@ -1,224 +1,496 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A008663C8;
-	Sat, 13 Apr 2024 01:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91E748D
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 01:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712971841; cv=none; b=O9KnBJWriym+gWDZoZIc6MWvr4MkznOWvB4DfP3uUXNEUS+PwbnE2kb+SrsuT88pCuNy86kDhaBqo8WHMupez+blh/G0oEj4D/vHJQatqaJKU31Pw1SBNVwTQLGVJUS/wEHVsaNyiWJecPFKy/6EJgM36zR8NZyBy8+N5bmpX/8=
+	t=1712972031; cv=none; b=XX3FtvaswFsNgDYBkR0hZ7dLHbutpsWseJf3OL0Fg6HwScz3ON2Bs4bOpSeohoewmwtnBcO6Fv/P/cevbbzH9/Et2TpeFPRIK2/W/59MJg6UlyM0YRhIo+IihQi9bZvGYf4Xm2F4Cm3C79yeS3I0qxeD55D0BbHkPsKz7/kQILw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712971841; c=relaxed/simple;
-	bh=RlBJ6FJhdBQgcIf20qlpXCjBXGhLET1XFZuTUNZ6Yaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PlTXTVGljOLmpmtOs1LxxE9DkPI24dm0SHmGG3WmkWSk78HE1xTZIbDTJAhPt9wmcNpn0JZMF/V+VPYhEiSi0UHuUvAHjQTeki+oqdIeOYQOp+gMWihpjvgS641Fy1no8XHqIU+fdZlWQCD4ctqO9FIlFXbnzKbER+grLuLFuaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSJzKSm6; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712972031; c=relaxed/simple;
+	bh=uBpvCHlQaP8IqddNqpSbpuPHjfVjZsNi3kfMKYnlTEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YGlgB/azVbnvJr+S+BWCeDkNKn2ac9H4yQy9ZRk3vPiM9CZfOmVdunrBibdefn6HijO56RJogFpNhbrdtdh1n3ywq86MwFJpC6DnhwMIi7yrohNOvU6RVd93xylofT8VqgQE8QaOLxW3RzZckSl8YTCil8yKtF2LpY66kK5dMbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFU0lqxi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSJzKSm6"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-479c0e8b1c5so413327137.1;
-        Fri, 12 Apr 2024 18:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712971838; x=1713576638; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WGZV+9Baru/G/BJ7iBWX/ai40r2yV5HMJ8W7pjdUee8=;
-        b=QSJzKSm6XfIKekPqtsNuLo5Wb3MR1lTlXXZg3T4hZBCnJo1dkAGZcAOP2GzeP/faeH
-         oP771Pe0z0nVSXOBLrZe58SSQPGDtag4hwgnPKNynlmoIKN3vzj76V/1gRalpt7UdloT
-         pkHeu632xx7lfI2j+EYHJWkWqI26689mcCtZ41cACl6gcLLU1dmpjXvSJfKUUNdyZack
-         ksdg7dCzX1ze7CRCR68Tp7dfSP+4maxRVxHYv+TX37Urz+s2//DSB7PybXTHmx8965di
-         a1drbW1ciPVcSayNHC2rIMhq7i0NeRs7g/5+BLUw38XUkidsn2DQG6FUIKXfMXQux5pP
-         0jhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712971838; x=1713576638;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WGZV+9Baru/G/BJ7iBWX/ai40r2yV5HMJ8W7pjdUee8=;
-        b=HHUmq/aX9yJkEXz1OjPEY4kdx+KwmI7MFmo26ZOf2BzMXHGdyTQAdwGA7tqoTKAy1I
-         03xB+DSHh6DztB76Kzpz4VKmgWPG+IoqMK2wOv2QB8/MKqp3TH7fCn9cUwKJeJG5dSoT
-         /4nkoaaVKEvZdPx+AGmIq6fwr2zNHrJZupZhcflRTpr/Spdn3mLqd41bCDx83G+YBjvh
-         O1Z/5X7GBQBUwWreZKAjCV9c9U4eK0BkmDUVFwJ7harmevBRavBz8CrChjWzKBrhXA1N
-         0a7kLuWrDKSPcmEH1S5bQCp4/JbuaqnET4CKkpkSsE2REX5bAc99fCy/VdHmL+XwDz7l
-         DsSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWifcDAJQMri2BMoMupIZw6JYkIUrA79GbLYY1ooPsE/XxQ5dZ3l1QocKTBYb5Cc0qvMgZG9jwona/OCaoFfQ2COI+YC2FJ1VNg3pVNg2XFCQV5JBZgo8X3i2YSob5vlqUgMWcji0O6NX4UDI8=
-X-Gm-Message-State: AOJu0Yy05vAnAja5AshHQmZazDL2x55YD0MjMFnOjj64Kkkd/SLYZcNj
-	UFDz64liMY4N2cKBsL8QSjd9P59D6bgXfinQpHbrslys4U3LwUm1
-X-Google-Smtp-Source: AGHT+IHS/N8QDRdQcxdF97ORpJiSqEdWxBgscXHLMzsACh9++T2iQtEGnwLq3nWivu3FBHa+C9qWDQ==
-X-Received: by 2002:a05:6102:f94:b0:47a:42c4:4cde with SMTP id e20-20020a0561020f9400b0047a42c44cdemr5751224vsv.18.1712971838479;
-        Fri, 12 Apr 2024 18:30:38 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d24-20020ac85358000000b004364d940d3dsm2878244qto.96.2024.04.12.18.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 18:30:37 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 11B261200066;
-	Fri, 12 Apr 2024 21:30:37 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 12 Apr 2024 21:30:37 -0400
-X-ME-Sender: <xms:POAZZihf7kZ8o-pThSc6ydkfq_pk4FB6usxnDrWN9MhcHdkC59VS1g>
-    <xme:POAZZjCQ0g31iflkM9t3F4k5P6M-NcwV0nCf8o5_rtmRR_7a24N2ngizzHzIaZVYj
-    ar1VyrT55bLrJu8Jg>
-X-ME-Received: <xmr:POAZZqHc0pN7NsOxptgyVot2cNbAbWu20bsHYvOK_LxPB9HlZVBqUFFcUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeihedgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
-    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:POAZZrQCUKoXT_bnydx2daT60K3T-1r2MO79noUpm_c9eEBTO9w30A>
-    <xmx:POAZZvyisjjaISvpviSNW6f8yp3qDYnX6g2tAjs2nYieq_OT-karwQ>
-    <xmx:POAZZp5ptOs5M9SsEEDxRz7DpmNDE6LleF3CEIkVXC5sLbY5GGzLxw>
-    <xmx:POAZZsx9-kZ_gSdKTGj34w7jx59jk8CadewHA84ku4AZC6CmWLBKUw>
-    <xmx:PeAZZrikbS4JyF6GkM5KxnDoLCGW7vkkFZrtkFuOhR2cYjs2DaO_g2PS>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 12 Apr 2024 21:30:36 -0400 (EDT)
-Date: Fri, 12 Apr 2024 18:30:34 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Miguel Ojeda <ojeda@kernel.org>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>, bjorn3_gh@protonmail.com,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Vegard Nossum <vegard.nossum@oracle.com>
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-Message-ID: <ZhngOs7Xze65i9Qy@Boquns-Mac-mini.home>
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com>
- <CANiq72nSSAVkynVaAq7bQKoL6N8K2JUXp8AOVvu7vN+siAhk-Q@mail.gmail.com>
- <Zhk4Uqc4LImR2n_r@Boquns-Mac-mini.home>
- <CANiq72ka4UvJzb4dN12fpA1WirgDHXcvPurvc7B9t+iPUfWnew@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFU0lqxi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DCAEC113CC;
+	Sat, 13 Apr 2024 01:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712972031;
+	bh=uBpvCHlQaP8IqddNqpSbpuPHjfVjZsNi3kfMKYnlTEg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qFU0lqxiqpIFa6Zn/JKhlC8mG21w5NVE9rpVExsZ1B1Z9k1yBt36o926PupqQxYge
+	 XL1oBlJ9i14i7O5h2fhGDxYzy5ZD+t8mS/7Fis87Mb8ocCPxufZGyHKf1bYYmoz0zH
+	 yo9kSXCyZmmqnDCUAcOVUH0PVT5ntWG4VWrRzfufAW3F3//EUHfiu05kEO+XO2iM/k
+	 RJO7wTjhMhHxMwUfdkJBChizrNcxyV6+mfjnfDpJKJfY4JlG/5LSmDfPiB7Ldpw25j
+	 7TB1425fNsZ4g14ElyVT0up6jvSzVJtEUkIJ/HDSWoq2w/XqH1eTrEtTyMk+0KUUmO
+	 NVL3IZy4q5oIg==
+Message-ID: <2ca3cb91-1db5-4a9b-9dd0-8caad2d09f31@kernel.org>
+Date: Sat, 13 Apr 2024 09:33:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72ka4UvJzb4dN12fpA1WirgDHXcvPurvc7B9t+iPUfWnew@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] f2fs: zone: don't block IO if there is remained open
+ zone
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ Daeho Jeong <daeho43@gmail.com>
+References: <20240407135848.3638669-1-chao@kernel.org>
+ <Zhmje71C7FOTIfom@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Zhmje71C7FOTIfom@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024 at 04:41:26PM +0200, Miguel Ojeda wrote:
-> On Fri, Apr 12, 2024 at 3:34 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > That works for me, although I would prefer `Ktime::sub()` is wrapping
-> > sub and we have another function doing a safe version of sub.
+On 2024/4/13 5:11, Jaegeuk Kim wrote:
+> On 04/07, Chao Yu wrote:
+>> max open zone may be larger than log header number of f2fs, for
+>> such case, it doesn't need to wait last IO in previous zone, let's
+>> introduce available_open_zone semaphore, and reduce it once we
+>> submit first write IO in a zone, and increase it after completion
+>> of last IO in the zone.
+>>
+>> Cc: Daeho Jeong <daeho43@gmail.com>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>> v3:
+>> - avoid race condition in between __submit_merged_bio()
+>> and __allocate_new_segment().
+>>   fs/f2fs/data.c    | 105 ++++++++++++++++++++++++++++++----------------
+>>   fs/f2fs/f2fs.h    |  34 ++++++++++++---
+>>   fs/f2fs/iostat.c  |   7 ++++
+>>   fs/f2fs/iostat.h  |   2 +
+>>   fs/f2fs/segment.c |  43 ++++++++++++++++---
+>>   fs/f2fs/segment.h |  12 +++++-
+>>   fs/f2fs/super.c   |   2 +
+>>   7 files changed, 156 insertions(+), 49 deletions(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 0d88649c60a5..18a4ac0a06bc 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -373,11 +373,10 @@ static void f2fs_write_end_io(struct bio *bio)
+>>   #ifdef CONFIG_BLK_DEV_ZONED
+>>   static void f2fs_zone_write_end_io(struct bio *bio)
+>>   {
+>> -	struct f2fs_bio_info *io = (struct f2fs_bio_info *)bio->bi_private;
+>> +	struct f2fs_sb_info *sbi = iostat_get_bio_private(bio);
+>>   
+>> -	bio->bi_private = io->bi_private;
+>> -	complete(&io->zone_wait);
+>>   	f2fs_write_end_io(bio);
+>> +	up(&sbi->available_open_zones);
+>>   }
+>>   #endif
+>>   
+>> @@ -531,6 +530,24 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
+>>   	if (!io->bio)
+>>   		return;
+>>   
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	if (io->open_zone) {
+>> +		/*
+>> +		 * if there is no open zone, it will wait for last IO in
+>> +		 * previous zone before submitting new IO.
+>> +		 */
+>> +		down(&fio->sbi->available_open_zones);
+>> +		io->open_zone = false;
+>> +		io->zone_openned = true;
+>> +	}
+>> +
+>> +	if (io->close_zone) {
+>> +		io->bio->bi_end_io = f2fs_zone_write_end_io;
+>> +		io->zone_openned = false;
+>> +		io->close_zone = false;
+>> +	}
+>> +#endif
+>> +
+>>   	if (is_read_io(fio->op)) {
+>>   		trace_f2fs_prepare_read_bio(io->sbi->sb, fio->type, io->bio);
+>>   		f2fs_submit_read_bio(io->sbi, io->bio, fio->type);
+>> @@ -601,9 +618,9 @@ int f2fs_init_write_merge_io(struct f2fs_sb_info *sbi)
+>>   			INIT_LIST_HEAD(&sbi->write_io[i][j].bio_list);
+>>   			init_f2fs_rwsem(&sbi->write_io[i][j].bio_list_lock);
+>>   #ifdef CONFIG_BLK_DEV_ZONED
+>> -			init_completion(&sbi->write_io[i][j].zone_wait);
+>> -			sbi->write_io[i][j].zone_pending_bio = NULL;
+>> -			sbi->write_io[i][j].bi_private = NULL;
+>> +			sbi->write_io[i][j].open_zone = false;
+>> +			sbi->write_io[i][j].zone_openned = false;
+>> +			sbi->write_io[i][j].close_zone = false;
+>>   #endif
+>>   		}
+>>   	}
+>> @@ -634,6 +651,31 @@ static void __f2fs_submit_merged_write(struct f2fs_sb_info *sbi,
+>>   	f2fs_up_write(&io->io_rwsem);
+>>   }
+>>   
+>> +void f2fs_blkzoned_submit_merged_write(struct f2fs_sb_info *sbi, int type)
+>> +{
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	struct f2fs_bio_info *io;
+>> +
+>> +	if (!f2fs_sb_has_blkzoned(sbi))
+>> +		return;
+>> +
+>> +	io = sbi->write_io[PAGE_TYPE(type)] + type_to_temp(type);
+>> +
+>> +	f2fs_down_write(&io->io_rwsem);
+>> +	if (io->zone_openned) {
+>> +		if (io->bio) {
+>> +			io->close_zone = true;
+>> +			__submit_merged_bio(io);
+>> +		} else if (io->zone_openned) {
+>> +			up(&sbi->available_open_zones);
+>> +			io->zone_openned = false;
+>> +		}
+>> +	}
+>> +	f2fs_up_write(&io->io_rwsem);
+>> +#endif
+>> +
+>> +}
+>> +
+>>   static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>>   				struct inode *inode, struct page *page,
+>>   				nid_t ino, enum page_type type, bool force)
+>> @@ -918,22 +960,16 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+>>   }
+>>   
+>>   #ifdef CONFIG_BLK_DEV_ZONED
+>> -static bool is_end_zone_blkaddr(struct f2fs_sb_info *sbi, block_t blkaddr)
+>> +static bool is_blkaddr_zone_boundary(struct f2fs_sb_info *sbi,
+>> +					block_t blkaddr, bool start)
+>>   {
+>> -	int devi = 0;
+>> +	if (!f2fs_blkaddr_in_seqzone(sbi, blkaddr))
+>> +		return false;
+>> +
+>> +	if (start)
+>> +		return (blkaddr % sbi->blocks_per_blkz) == 0;
+>> +	return (blkaddr % sbi->blocks_per_blkz == sbi->blocks_per_blkz - 1);
+>>   
+>> -	if (f2fs_is_multi_device(sbi)) {
+>> -		devi = f2fs_target_device_index(sbi, blkaddr);
+>> -		if (blkaddr < FDEV(devi).start_blk ||
+>> -		    blkaddr > FDEV(devi).end_blk) {
+>> -			f2fs_err(sbi, "Invalid block %x", blkaddr);
+>> -			return false;
+>> -		}
+>> -		blkaddr -= FDEV(devi).start_blk;
+>> -	}
+>> -	return bdev_is_zoned(FDEV(devi).bdev) &&
+>> -		f2fs_blkz_is_seq(sbi, devi, blkaddr) &&
+>> -		(blkaddr % sbi->blocks_per_blkz == sbi->blocks_per_blkz - 1);
+>>   }
+>>   #endif
+>>   
+>> @@ -944,20 +980,14 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>>   	struct f2fs_bio_info *io = sbi->write_io[btype] + fio->temp;
+>>   	struct page *bio_page;
+>>   	enum count_type type;
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	bool blkzoned = f2fs_sb_has_blkzoned(sbi) && btype < META;
+>> +#endif
+>>   
+>>   	f2fs_bug_on(sbi, is_read_io(fio->op));
+>>   
+>>   	f2fs_down_write(&io->io_rwsem);
+>>   next:
+>> -#ifdef CONFIG_BLK_DEV_ZONED
+>> -	if (f2fs_sb_has_blkzoned(sbi) && btype < META && io->zone_pending_bio) {
+>> -		wait_for_completion_io(&io->zone_wait);
+>> -		bio_put(io->zone_pending_bio);
+>> -		io->zone_pending_bio = NULL;
+>> -		io->bi_private = NULL;
+>> -	}
+>> -#endif
+>> -
+>>   	if (fio->in_list) {
+>>   		spin_lock(&io->io_lock);
+>>   		if (list_empty(&io->io_list)) {
+>> @@ -985,6 +1015,11 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>>   	type = WB_DATA_TYPE(bio_page, fio->compressed_page);
+>>   	inc_page_count(sbi, type);
+>>   
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	if (blkzoned && is_blkaddr_zone_boundary(sbi, fio->new_blkaddr, true))
+>> +		io->open_zone = true;
+>> +#endif
+>> +
+>>   	if (io->bio &&
+>>   	    (!io_is_mergeable(sbi, io->bio, io, fio, io->last_block_in_bio,
+>>   			      fio->new_blkaddr) ||
+>> @@ -1010,15 +1045,11 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>>   	io->last_block_in_bio = fio->new_blkaddr;
+>>   
+>>   	trace_f2fs_submit_page_write(fio->page, fio);
+>> +
+>>   #ifdef CONFIG_BLK_DEV_ZONED
+>> -	if (f2fs_sb_has_blkzoned(sbi) && btype < META &&
+>> -			is_end_zone_blkaddr(sbi, fio->new_blkaddr)) {
+>> -		bio_get(io->bio);
+>> -		reinit_completion(&io->zone_wait);
+>> -		io->bi_private = io->bio->bi_private;
+>> -		io->bio->bi_private = io;
+>> -		io->bio->bi_end_io = f2fs_zone_write_end_io;
+>> -		io->zone_pending_bio = io->bio;
+>> +	if (blkzoned &&
+>> +		is_blkaddr_zone_boundary(sbi, fio->new_blkaddr, false)) {
+>> +		io->close_zone = true;
+>>   		__submit_merged_bio(io);
+>>   	}
+>>   #endif
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 694f8a52cb84..8a26530cf4fb 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1234,16 +1234,16 @@ struct f2fs_bio_info {
+>>   	struct bio *bio;		/* bios to merge */
+>>   	sector_t last_block_in_bio;	/* last block number */
+>>   	struct f2fs_io_info fio;	/* store buffered io info. */
+>> -#ifdef CONFIG_BLK_DEV_ZONED
+>> -	struct completion zone_wait;	/* condition value for the previous open zone to close */
+>> -	struct bio *zone_pending_bio;	/* pending bio for the previous zone */
+>> -	void *bi_private;		/* previous bi_private for pending bio */
+>> -#endif
+>>   	struct f2fs_rwsem io_rwsem;	/* blocking op for bio */
+>>   	spinlock_t io_lock;		/* serialize DATA/NODE IOs */
+>>   	struct list_head io_list;	/* track fios */
+>>   	struct list_head bio_list;	/* bio entry list head */
+>>   	struct f2fs_rwsem bio_list_lock;	/* lock to protect bio entry list */
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	bool open_zone;			/* open a zone */
+>> +	bool zone_openned;		/* zone has been openned */
+>> +	bool close_zone;		/* close a zone */
+>> +#endif
+>>   };
+>>   
+>>   #define FDEV(i)				(sbi->devs[i])
+>> @@ -1560,6 +1560,7 @@ struct f2fs_sb_info {
+>>   #ifdef CONFIG_BLK_DEV_ZONED
+>>   	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
+>>   	unsigned int max_open_zones;		/* max open zone resources of the zoned device */
+>> +	struct semaphore available_open_zones;	/* available open zones */
+>>   #endif
+>>   
+>>   	/* for node-related operations */
+>> @@ -3822,6 +3823,7 @@ void f2fs_destroy_bio_entry_cache(void);
+>>   void f2fs_submit_read_bio(struct f2fs_sb_info *sbi, struct bio *bio,
+>>   			  enum page_type type);
+>>   int f2fs_init_write_merge_io(struct f2fs_sb_info *sbi);
+>> +void f2fs_blkzoned_submit_merged_write(struct f2fs_sb_info *sbi, int type);
+>>   void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type);
+>>   void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>>   				struct inode *inode, struct page *page,
+>> @@ -4469,6 +4471,28 @@ static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+>>   
+>>   	return test_bit(zno, FDEV(devi).blkz_seq);
+>>   }
+>> +
+>> +static inline bool f2fs_blkaddr_in_seqzone(struct f2fs_sb_info *sbi,
+>> +							block_t blkaddr)
+>> +{
+>> +	int devi = 0;
+>> +
+>> +	if (f2fs_is_multi_device(sbi)) {
+>> +		devi = f2fs_target_device_index(sbi, blkaddr);
+>> +		if (blkaddr < FDEV(devi).start_blk ||
+>> +		    blkaddr > FDEV(devi).end_blk) {
+>> +			f2fs_err(sbi, "Invalid block %x", blkaddr);
+>> +			return false;
+>> +		}
+>> +		blkaddr -= FDEV(devi).start_blk;
+>> +	}
+>> +
+>> +	if (!bdev_is_zoned(FDEV(devi).bdev) ||
+>> +		!f2fs_blkz_is_seq(sbi, devi, blkaddr))
+>> +		return false;
+>> +
+>> +	return true;
 > 
-> Why? It goes against the "normal" case in integers. It is also not
-> what `ktime_sub()` does, which is the "normal" case here, vs.
+> Applied as below.
+> 
+> @@ -4485,11 +4485,8 @@ static inline bool f2fs_blkaddr_in_seqzone(struct f2fs_sb_info *sbi,
+>                  blkaddr -= FDEV(devi).start_blk;
+>          }
+> 
+> -       if (!bdev_is_zoned(FDEV(devi).bdev) ||
+> -               !f2fs_blkz_is_seq(sbi, devi, blkaddr))
+> -               return false;
+> -
+> -       return true;
+> +       return bdev_is_zoned(FDEV(devi).bdev) &&
+> +               f2fs_blkz_is_seq(sbi, devi, blkaddr);
 
-Seems we have a different reading of `ktime_sub()` ;-)
+Looks good, thank you for cleanup.
 
-Based on your reply to Philipp, I take it that
-CONFIG_RUST_CHECK_OVERFLOWS can be enabled in a production kernel,
-right? IOW, it's not a debug-only feature like UBSAN (or maybe I'm way
-wrong, that UBSAN is also a feature that production kernel can or
-already use?). If so, then the current `Ktime::sub()` has a different
-behavior compared to `ktime_sub()`: it will perform overflow checks and
-panic (which is BUG()) in production kernels.
+Thanks,
 
-Now I wasn't trying to say substraction overflows shouldn't be checked
-(by default), the thing is that `Ktime` is just a `ktime_t` wrapper, so
-it's natural that it provides as least difference as possible. If it was
-a standalone abstraction, then by all means let's add different APIs for
-different purpose.
-
-If you look at ktime API, ktime_sub() is the only one doing
-substraction between two ktime_t, there is no raw or unsafe or safe API,
-So as a minimal abstraction, it's natural for a user to expect
-`Ktime::sub()` behaves like `ktime_sub()`.
-
-That's my reasoning, but it depends one a few "if"s and what time
-subsystem wants to do.
-
-> `_unsafe()` and `_safe()` ones.
+>   }
+>   #endif
 > 
-> > Exactly, ktime_add_safe() doesn't panic if overflow happens, right?
-> > I think that's pretty clear on how time subsystem wants to handle
-> > overflow (saturating it, or zeroing it instead of panicing).
-> 
-> There are three variants in C (for addition) that I can see:
-> 
->   - No suffix: not supposed to wrap.
->   - `_unsafe()`: wraps.
->   - `_safe()`: saturates.
-> 
-> The first one, in normal C, would be UB. In kernel C, it wraps but may
-> be detected by UBSAN (this is what Kees is re-introducing very
-> recently with 557f8c582a9b ("ubsan: Reintroduce signed overflow
-> sanitizer")).
-> 
-> So, in Rust terms, the three options above would map to:
-> 
->   - Raw operators.
->   - `wrapping_`.
->   - `saturating_`.
-> 
-> Because the raw operators are what we use for arithmetic that is "not
-> supposed to wrap" too. That is, they wrap, but may be checked by the
-> Kconfig option. Of course, it may be worth having an intermediate
-> option that does not actually go for a full-blown Rust-panic for that,
-> but the point is that the current "not supposed to wrap" methods are
-> the raw operators.
-> 
-> All three, in fact, are "safe" in Rust terms, since none can actually
-> trigger UB (in kernel C at least -- it would be different in normal C:
-> the first one would map to an unsafe Rust method, i.e. `unchecked_`).
-> 
-> Instead, in the C side, `_unsafe()` seems to be used to mean instead
-> "you should be checking for overflow if needed, because it will never
-> be reported by UBSAN unlike the raw one". Again, this is based on my
-> reading of that commit and the docs on `_unsafe()`. It may be wrong,
-> or maybe the subtraction is supposed to be different. It should
-> probably be clarified in the C side anyway.
-> 
-> And, relatedly, I see that when the `union` was removed in commit
-> 2456e8553544 ("ktime: Get rid of the union"), `ktime_add_unsafe()`
-> stopped returning a `ktime_t` even when both inputs are `ktime_t`s
-> themselves:
-> 
->     static_assert(_Generic(ktime_add(a, b), ktime_t: true, default:
-> false)); // OK
->     static_assert(_Generic(ktime_add_unsafe(a, b), ktime_t: true,
-> default: false)); // Bad
-> 
-> It returns an `u64` now, which could surprise users, and probably
-> should be fixed. The only user just puts the result into a `ktime_t`,
-> so there is no actual issue today.
-> 
-> > I must defer this to Thomas.
-> 
-> Yeah, the question on the C API was meant for Thomas et al.
-> 
-
-Maybe it's wise to just wait for them to reply, I don't think you and I
-have much disagree other than ktime_t API semantics ;-)
-
-Regards,
-Boqun
-
-> > Maybe, however neither of this function probably shouldn't have the
-> > panic-on-overflow behavior. So I agree that overflow checking is not a
-> > bad thing, but when to check and how to handle overflow should be
-> > controlled by the users, and making the default behavior
-> > panic-on-overflow doesn't look reasonable to me.
-> 
-> Yes, it should be controlled by callers, but the point above is that,
-> from the looks of it, these interfaces are not meant to overflow to
-> begin with.
-> 
-> Cheers,
-> Miguel
+>> +}
+>>   #endif
+>>   
+>>   static inline int f2fs_bdev_index(struct f2fs_sb_info *sbi,
+>> diff --git a/fs/f2fs/iostat.c b/fs/f2fs/iostat.c
+>> index f8703038e1d8..a8626e297876 100644
+>> --- a/fs/f2fs/iostat.c
+>> +++ b/fs/f2fs/iostat.c
+>> @@ -237,6 +237,13 @@ static inline void __update_iostat_latency(struct bio_iostat_ctx *iostat_ctx,
+>>   	spin_unlock_irqrestore(&sbi->iostat_lat_lock, flags);
+>>   }
+>>   
+>> +void *iostat_get_bio_private(struct bio *bio)
+>> +{
+>> +	struct bio_iostat_ctx *iostat_ctx = bio->bi_private;
+>> +
+>> +	return iostat_ctx->sbi;
+>> +}
+>> +
+>>   void iostat_update_and_unbind_ctx(struct bio *bio)
+>>   {
+>>   	struct bio_iostat_ctx *iostat_ctx = bio->bi_private;
+>> diff --git a/fs/f2fs/iostat.h b/fs/f2fs/iostat.h
+>> index eb99d05cf272..9006c3d41590 100644
+>> --- a/fs/f2fs/iostat.h
+>> +++ b/fs/f2fs/iostat.h
+>> @@ -58,6 +58,7 @@ static inline struct bio_post_read_ctx *get_post_read_ctx(struct bio *bio)
+>>   	return iostat_ctx->post_read_ctx;
+>>   }
+>>   
+>> +extern void *iostat_get_bio_private(struct bio *bio);
+>>   extern void iostat_update_and_unbind_ctx(struct bio *bio);
+>>   extern void iostat_alloc_and_bind_ctx(struct f2fs_sb_info *sbi,
+>>   		struct bio *bio, struct bio_post_read_ctx *ctx);
+>> @@ -68,6 +69,7 @@ extern void f2fs_destroy_iostat(struct f2fs_sb_info *sbi);
+>>   #else
+>>   static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi, struct inode *inode,
+>>   		enum iostat_type type, unsigned long long io_bytes) {}
+>> +static inline void *iostat_get_bio_private(struct bio *bio) { return bio->bi_private; }
+>>   static inline void iostat_update_and_unbind_ctx(struct bio *bio) {}
+>>   static inline void iostat_alloc_and_bind_ctx(struct f2fs_sb_info *sbi,
+>>   		struct bio *bio, struct bio_post_read_ctx *ctx) {}
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index 4fd76e867e0a..4a3cf2888faf 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -3140,6 +3140,9 @@ static int __allocate_new_segment(struct f2fs_sb_info *sbi, int type,
+>>   		return err;
+>>   	stat_inc_seg_type(sbi, curseg);
+>>   	locate_dirty_segment(sbi, old_segno);
+>> +
+>> +	f2fs_blkzoned_submit_merged_write(sbi, type);
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -3461,12 +3464,7 @@ static int __get_segment_type(struct f2fs_io_info *fio)
+>>   		f2fs_bug_on(fio->sbi, true);
+>>   	}
+>>   
+>> -	if (IS_HOT(type))
+>> -		fio->temp = HOT;
+>> -	else if (IS_WARM(type))
+>> -		fio->temp = WARM;
+>> -	else
+>> -		fio->temp = COLD;
+>> +	fio->temp = type_to_temp(type);
+>>   	return type;
+>>   }
+>>   
+>> @@ -4132,6 +4130,27 @@ static int restore_curseg_summaries(struct f2fs_sb_info *sbi)
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	if (f2fs_sb_has_blkzoned(sbi)) {
+>> +		for (type = 0; type < NR_PERSISTENT_LOG; type++) {
+>> +			struct curseg_info *curseg = CURSEG_I(sbi, type);
+>> +			enum page_type ptype;
+>> +			enum temp_type temp;
+>> +
+>> +			if (!(curseg->next_blkoff % sbi->blocks_per_blkz))
+>> +				continue;
+>> +
+>> +			if (!f2fs_blkaddr_in_seqzone(sbi,
+>> +					START_BLOCK(sbi, curseg->segno)))
+>> +				continue;
+>> +
+>> +			ptype = PAGE_TYPE(type);
+>> +			temp = type_to_temp(type);
+>> +			down(&sbi->available_open_zones);
+>> +			sbi->write_io[ptype][temp].zone_openned = true;
+>> +		}
+>> +	}
+>> +#endif
+>>   	return 0;
+>>   }
+>>   
+>> @@ -5451,6 +5470,18 @@ static void destroy_curseg(struct f2fs_sb_info *sbi)
+>>   	for (i = 0; i < NR_CURSEG_TYPE; i++) {
+>>   		kfree(array[i].sum_blk);
+>>   		kfree(array[i].journal);
+>> +
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +		if (f2fs_sb_has_blkzoned(sbi)) {
+>> +			enum page_type ptype = PAGE_TYPE(i);
+>> +			enum temp_type temp = type_to_temp(i);
+>> +
+>> +			if (sbi->write_io[ptype][temp].zone_openned) {
+>> +				up(&sbi->available_open_zones);
+>> +				sbi->write_io[ptype][temp].zone_openned = false;
+>> +			}
+>> +		}
+>> +#endif
+>>   	}
+>>   	kfree(array);
+>>   }
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>> index e1c0f418aa11..855978ca869f 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -24,7 +24,8 @@
+>>   
+>>   #define IS_DATASEG(t)	((t) <= CURSEG_COLD_DATA)
+>>   #define IS_NODESEG(t)	((t) >= CURSEG_HOT_NODE && (t) <= CURSEG_COLD_NODE)
+>> -#define SE_PAGETYPE(se)	((IS_NODESEG((se)->type) ? NODE : DATA))
+>> +#define PAGE_TYPE(t)	(IS_NODESEG(t) ? NODE : DATA)
+>> +#define SE_PAGETYPE(se)	(PAGE_TYPE((se)->type))
+>>   
+>>   static inline void sanity_check_seg_type(struct f2fs_sb_info *sbi,
+>>   						unsigned short seg_type)
+>> @@ -965,3 +966,12 @@ static inline unsigned int first_zoned_segno(struct f2fs_sb_info *sbi)
+>>   			return GET_SEGNO(sbi, FDEV(devi).start_blk);
+>>   	return 0;
+>>   }
+>> +
+>> +static inline enum temp_type type_to_temp(int type)
+>> +{
+>> +	if (IS_HOT(type))
+>> +		return HOT;
+>> +	else if (IS_WARM(type))
+>> +		return WARM;
+>> +	return COLD;
+>> +}
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index fdf358c7f808..954baa6c100d 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -3893,6 +3893,8 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
+>>   				sbi->max_open_zones, F2FS_OPTION(sbi).active_logs);
+>>   			return -EINVAL;
+>>   		}
+>> +
+>> +		sema_init(&sbi->available_open_zones, sbi->max_open_zones);
+>>   	}
+>>   
+>>   	zone_sectors = bdev_zone_sectors(bdev);
+>> -- 
+>> 2.40.1
