@@ -1,158 +1,161 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A034C97;
-	Sat, 13 Apr 2024 01:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBA063C8;
+	Sat, 13 Apr 2024 01:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712971829; cv=none; b=kX24NzR4fn61zW9qFw3L/EvK3IIhi9Dtp4SLnYO3bttovQ8YaSnQyUezD/pS1kvwSmTMwy/PQvXQ3qA4f32/LuTpq2iqAgAl4ydfpsMWGX0MrY8+akaQjUCnpNZZ2KIHqN9ZyOjmbtt5dZWh5jjBTtiAPAh8RnKB6oxT8k9LKeI=
+	t=1712971828; cv=none; b=MBNwKn6J6UA6OHtAQN06P7XxzWXmJ1qj5RzNy9/btmF5XJGoRGrjhMpQlqr6Plzg2kn9no5APSWR95HXQgop2/dVT/GS64wxNGuQ8uuMhVj5duuaqFF3ILTISZTXonyXASwIRpxjho3hdWann0soSquGYPwNn6ySjSP0gnQ1iWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712971829; c=relaxed/simple;
-	bh=uAF58WQTwC70AQ4e42dMPhlqM+08OPyMWwp4j46ePBw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f1va6SUpX6V+FNKDT/KzBJ5OT5krpVaGH4XjnpyOOjf+SSTlp+cv4J54AZv6s1SuzrWBt/IdGEpdHa21LB/Jv+Av6syAbHQ4GHhm9MdLufz+QkaA32NEqOzHr7zrnKG69Tsmlw1jYmCwhB+v0U5eZkgoyqzzKOxYoVTPR46TqEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VGbQK4bmKz1hwV8;
-	Sat, 13 Apr 2024 09:27:21 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id A60D31A0172;
-	Sat, 13 Apr 2024 09:30:15 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Sat, 13 Apr
- 2024 09:30:15 +0800
-From: Ye Bin <yebin10@huawei.com>
-To: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <jack@suse.cz>, Ye Bin
-	<yebin10@huawei.com>
-Subject: [PATCH v2] jbd2: avoid mount failed when commit block is partial submitted
-Date: Sat, 13 Apr 2024 09:30:56 +0800
-Message-ID: <20240413013056.1830515-1-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1712971828; c=relaxed/simple;
+	bh=d2icaWJTTOCZ5p+K61BPO2+gXckymnqiwHcjN9WUKe0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EzXmH94mKSxo0c9J1oWCAOFBleHXrMg8UkY1Rb40hhkM5dH4DTsbP2DXgr3i/v51L2LNwvF24Jgx4LENoXNoQ38M7EpUbkpG9YDKqrMc1glgNLS9rxRnImhyXQXCqkbwtwihe7QSuJwjAfEswzHvU8BPFtHwE4BQmaObzbenc4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzstgtCA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzstgtCA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEA4C113CC;
+	Sat, 13 Apr 2024 01:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712971827;
+	bh=d2icaWJTTOCZ5p+K61BPO2+gXckymnqiwHcjN9WUKe0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nzstgtCALFZLYrHVuB/4ho0QONvxViQK41ZeNBgY1MirDR3BM9reA6wzV3ztKn/4Y
+	 7olDDQ2OiPSG4aBWP6FQKq5GkNFvseLFwAhIKCfOaSTndLaiGXXwbg6YiB/Vf3RwrU
+	 s/6cgMFMYGdfFB9DeQ+VHSdeB5+llLPq4peH4z7be9HlFEbjJ9na80l5IZVYTSJYxk
+	 MYZloJslfAW5QblF1coreliXQcwNQiKovAm2Tljv5rxT1ZASKHUg1fiIubF+y8C+RN
+	 u0U57Vzcoyd256Shgr/BihKR91Jb76oIKFTpxFqSoqd15BItGAeSvWhACmaPxcvarH
+	 N6H4FU+hy7O6A==
+Message-ID: <43f55f4b-cb2a-4845-9ded-40ce68f3351c@kernel.org>
+Date: Sat, 13 Apr 2024 09:30:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500010.china.huawei.com (7.192.105.118)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] quota: fix to propagate error of mark_dquot_dirty() to
+ caller
+To: Jan Kara <jack@suse.cz>
+Cc: Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240412094942.2131243-1-chao@kernel.org>
+ <20240412121517.dydwqiqkdzvwpwf5@quack3>
+ <20240412130130.m4msohzpiojtve7r@quack3>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240412130130.m4msohzpiojtve7r@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-We encountered a problem that the file system could not be mounted in
-the power-off scenario. The analysis of the file system mirror shows that
-only part of the data is written to the last commit block.
-The valid data of the commit block is concentrated in the first sector.
-However, the data of the entire block is involved in the checksum calculation.
-For different hardware, the minimum atomic unit may be different.
-If the checksum of a committed block is incorrect, clear the data except the
-'commit_header' and then calculate the checksum. If the checkusm is correct,
-it is considered that the block is partially committed. However, if there are
-valid description/revoke blocks, it is considered that the data is abnormal
-and the log replay is stopped.
+On 2024/4/12 21:01, Jan Kara wrote:
+> On Fri 12-04-24 14:15:17, Jan Kara wrote:
+>> On Fri 12-04-24 17:49:42, Chao Yu wrote:
+>>> in order to let caller be aware of failure of mark_dquot_dirty().
+>>>
+>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>
+>> Thanks. I've added the patch to my tree.
+> 
+> So this patch was buggy because mark_all_dquots() dirty was returning 1 in
+> case some dquot was indeed dirtied which resulted in e.g.
+> dquot_alloc_inode() to return 1 and consequently __ext4_new_inode() to fail
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- fs/jbd2/recovery.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Correct, I missed that case.
 
-diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
-index 1f7664984d6e..eb0e026f3109 100644
---- a/fs/jbd2/recovery.c
-+++ b/fs/jbd2/recovery.c
-@@ -443,6 +443,27 @@ static int jbd2_commit_block_csum_verify(journal_t *j, void *buf)
- 	return provided == cpu_to_be32(calculated);
- }
- 
-+static bool jbd2_commit_block_csum_partial_verify(journal_t *j, void *buf)
-+{
-+	struct commit_header *h;
-+	__be32 provided;
-+	__u32 calculated;
-+	void *tmpbuf;
-+
-+	tmpbuf = kzalloc(j->j_blocksize, GFP_KERNEL);
-+	if (!tmpbuf)
-+		return false;
-+
-+	memcpy(tmpbuf, buf, sizeof(struct commit_header));
-+	h = tmpbuf;
-+	provided = h->h_chksum[0];
-+	h->h_chksum[0] = 0;
-+	calculated = jbd2_chksum(j, j->j_csum_seed, tmpbuf, j->j_blocksize);
-+	kfree(tmpbuf);
-+
-+	return provided == cpu_to_be32(calculated);
-+}
-+
- static int jbd2_block_tag_csum_verify(journal_t *j, journal_block_tag_t *tag,
- 				      journal_block_tag3_t *tag3,
- 				      void *buf, __u32 sequence)
-@@ -479,6 +500,7 @@ static int do_one_pass(journal_t *journal,
- 	int			descr_csum_size = 0;
- 	int			block_error = 0;
- 	bool			need_check_commit_time = false;
-+	bool                    has_partial_commit = false;
- 	__u64			last_trans_commit_time = 0, commit_time;
- 
- 	/*
-@@ -590,6 +612,14 @@ static int do_one_pass(journal_t *journal,
- 					next_log_block);
- 			}
- 
-+			if (pass == PASS_SCAN && has_partial_commit) {
-+				pr_err("JBD2: Detect validate descriptor block %lu after incomplete commit block\n",
-+				       next_log_block);
-+				err = -EFSBADCRC;
-+				brelse(bh);
-+				goto failed;
-+			}
-+
- 			/* If it is a valid descriptor block, replay it
- 			 * in pass REPLAY; if journal_checksums enabled, then
- 			 * calculate checksums in PASS_SCAN, otherwise,
-@@ -810,6 +840,14 @@ static int do_one_pass(journal_t *journal,
- 			if (pass == PASS_SCAN &&
- 			    !jbd2_commit_block_csum_verify(journal,
- 							   bh->b_data)) {
-+				if (jbd2_commit_block_csum_partial_verify(
-+								  journal,
-+								  bh->b_data)) {
-+					pr_notice("JBD2: Find incomplete commit block in transaction %u block %lu\n",
-+						  next_commit_ID, next_log_block);
-+					has_partial_commit = true;
-+					goto chksum_ok;
-+				}
- 			chksum_error:
- 				if (commit_time < last_trans_commit_time)
- 					goto ignore_crc_mismatch;
-@@ -824,6 +862,7 @@ static int do_one_pass(journal_t *journal,
- 				}
- 			}
- 			if (pass == PASS_SCAN) {
-+			chksum_ok:
- 				last_trans_commit_time = commit_time;
- 				head_block = next_log_block;
- 			}
-@@ -843,6 +882,15 @@ static int do_one_pass(journal_t *journal,
- 					  next_log_block);
- 				need_check_commit_time = true;
- 			}
-+
-+			if (pass == PASS_SCAN && has_partial_commit) {
-+				pr_err("JBD2: Detect validate revoke block %lu after incomplete commit block\n",
-+				       next_log_block);
-+				err = -EFSBADCRC;
-+				brelse(bh);
-+				goto failed;
-+			}
-+
- 			/* If we aren't in the REVOKE pass, then we can
- 			 * just skip over this block. */
- 			if (pass != PASS_REVOKE) {
--- 
-2.31.1
+> and eventually we've crashed in ext4_create().  I've fixed up the patch to
+> make mark_all_dquots() return 0 or error.
 
+Thank you for catching and fixing it.
+
+Thanks,
+
+> 
+> 								Honza
+> 
+>>> ---
+>>>   fs/quota/dquot.c | 21 ++++++++++++++-------
+>>>   1 file changed, 14 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+>>> index dacbee455c03..b2a109d8b198 100644
+>>> --- a/fs/quota/dquot.c
+>>> +++ b/fs/quota/dquot.c
+>>> @@ -1737,7 +1737,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
+>>>   
+>>>   	if (reserve)
+>>>   		goto out_flush_warn;
+>>> -	mark_all_dquot_dirty(dquots);
+>>> +	ret = mark_all_dquot_dirty(dquots);
+>>>   out_flush_warn:
+>>>   	srcu_read_unlock(&dquot_srcu, index);
+>>>   	flush_warnings(warn);
+>>> @@ -1786,7 +1786,7 @@ int dquot_alloc_inode(struct inode *inode)
+>>>   warn_put_all:
+>>>   	spin_unlock(&inode->i_lock);
+>>>   	if (ret == 0)
+>>> -		mark_all_dquot_dirty(dquots);
+>>> +		ret = mark_all_dquot_dirty(dquots);
+>>>   	srcu_read_unlock(&dquot_srcu, index);
+>>>   	flush_warnings(warn);
+>>>   	return ret;
+>>> @@ -1990,7 +1990,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+>>>   	qsize_t inode_usage = 1;
+>>>   	struct dquot __rcu **dquots;
+>>>   	struct dquot *transfer_from[MAXQUOTAS] = {};
+>>> -	int cnt, index, ret = 0;
+>>> +	int cnt, index, ret = 0, err;
+>>>   	char is_valid[MAXQUOTAS] = {};
+>>>   	struct dquot_warn warn_to[MAXQUOTAS];
+>>>   	struct dquot_warn warn_from_inodes[MAXQUOTAS];
+>>> @@ -2087,8 +2087,12 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+>>>   	 * mark_all_dquot_dirty().
+>>>   	 */
+>>>   	index = srcu_read_lock(&dquot_srcu);
+>>> -	mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
+>>> -	mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
+>>> +	err = mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
+>>> +	if (err < 0)
+>>> +		ret = err;
+>>> +	err = mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
+>>> +	if (err < 0)
+>>> +		ret = err;
+>>>   	srcu_read_unlock(&dquot_srcu, index);
+>>>   
+>>>   	flush_warnings(warn_to);
+>>> @@ -2098,7 +2102,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
+>>>   	for (cnt = 0; cnt < MAXQUOTAS; cnt++)
+>>>   		if (is_valid[cnt])
+>>>   			transfer_to[cnt] = transfer_from[cnt];
+>>> -	return 0;
+>>> +	return ret;
+>>>   over_quota:
+>>>   	/* Back out changes we already did */
+>>>   	for (cnt--; cnt >= 0; cnt--) {
+>>> @@ -2726,6 +2730,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>>>   	struct mem_dqblk *dm = &dquot->dq_dqb;
+>>>   	int check_blim = 0, check_ilim = 0;
+>>>   	struct mem_dqinfo *dqi = &sb_dqopt(dquot->dq_sb)->info[dquot->dq_id.type];
+>>> +	int ret;
+>>>   
+>>>   	if (di->d_fieldmask & ~VFS_QC_MASK)
+>>>   		return -EINVAL;
+>>> @@ -2807,7 +2812,9 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>>>   	else
+>>>   		set_bit(DQ_FAKE_B, &dquot->dq_flags);
+>>>   	spin_unlock(&dquot->dq_dqb_lock);
+>>> -	mark_dquot_dirty(dquot);
+>>> +	ret = mark_dquot_dirty(dquot);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>>   
+>>>   	return 0;
+>>>   }
+>>> -- 
+>>> 2.40.1
+>>>
+>> -- 
+>> Jan Kara <jack@suse.com>
+>> SUSE Labs, CR
+>>
