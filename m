@@ -1,57 +1,57 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB1E32C85
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 15:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6789C524C9
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 15:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713021406; cv=none; b=mJ3a8K2CxT+KxrnVvabZyyYXi32WurFVT4Df0nRXwYAB/cNfv55XbPTXzn3t4kXOzqVjbmnOi174mDkdCasZySqTm4s5IWLpThENnZZWtPX75gUi1f6NEOMGGKSBQQWJVSFvAxvaxvoOh53lKRYRWaVOgJNL50loAXr8TC7H8kk=
+	t=1713021413; cv=none; b=UY0Jr5OLmaUUCAgW0EQiHUy3/k+0+Xh6w+IrkY0QkhkbqmjMUHDsR2M222Gb7E+hDKn26yrm4VDoSpWsImt8smxZOE3QHrbAjpdw/gvLjURyiD8Se6e31FFaPUo+e2CYw7pXrVzYhGyluRnWd1gNOE+vyh940UGgzU/FCcdXXOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713021406; c=relaxed/simple;
-	bh=IHhPqznUG4voks9nHUIjXaqoLqCX+AXGap9zXBqCFRs=;
+	s=arc-20240116; t=1713021413; c=relaxed/simple;
+	bh=cFWp70sx3tMkTUxQbFvRrHb6KCDa5fBTXCWoL899f+0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Tc3xugN18f2BuWhuGbxbcOY2KhLdfPyzyHE2zuvcyno8MiPT8gqNEtYRWJbeN2xPPPA7os4I+Y7L35F0FjhYrpYvRP5KxcxPz1MBjrvPEjwe7m6xNcsTDSFLJxdHrV6kMU/42kX8hx3ZZKOM9zvKET6lfHYk0MUkF18g+v3N8jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oN9fFdTc; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=BT8koVPS1gWaHXJmyRlgs/Qp1ZGJZ+zooyYU1NhzvCdENGhbZQwWkSsSOf2GfVabcnRHDjIH9+YeQ8raBPzBOfZ5xXsta4ca+tB30+uOkTrbUv50KvHC6l2YE5ceD+EfGI018+wtC6bsjoFQFFegsYzUAZA+j6rEDTQJ15oYNwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zO9prDnS; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oN9fFdTc"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e509baddaso1793908a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 08:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zO9prDnS"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e2c1650d8so1699773a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 08:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713021403; x=1713626203; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713021410; x=1713626210; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5A7g7qS50UKBu2Vs5SDgCbvvncurtSr/U44kFCGPI8Y=;
-        b=oN9fFdTcFrYAsJmW6RlxzSSAKl7L/yJBSS9SIBH/zkdHnEsx9jZmeTYBMAmCvgdGEa
-         z1Wyg9cLrVk0nfdwRI7YEagdJMOOrOZz7hwLBtmSSMM3Wsfwxe1X/nAdEOQ+haqRBXF7
-         O8yDIVyL8GilkPMZ8SdS6BXpLDFT/7Pbsva791H1R1UI1ZuwdnIm3davtOga1eaIX0et
-         bwt4A3dxbN6zSqde4wghRPoZ6QwTKWkiDiQWMPTX/6NIDco/XUakvbGLF6xFUMOMVKDe
-         q3WgE2AxVapisiDW3Q/asyr7qE+Jq0syfm6MueoG1+Gvokf1bhdLp5O5U+28oN0fWmrS
-         Lcbg==
+        bh=neBvhCn+WPQ4h/ZjCZEYGqL+71G8ilgcVWxHofmS/s8=;
+        b=zO9prDnSTpxuSgaq4Jm0MYfj2B7bBxFYN+oqXinpYuj8hsf2CUWwoLMSgC/Uz8ddjV
+         zhltJjdiMYKvjPghjrVbyo5xfkURZvGqPlrsGaNEkDDm7zmRRVpyjaE8kVbMCa4RKC0L
+         0W5bJVPcbZ//bV7FfOJFTfIRL9j7mHqsXru3ymAzDCqR0D5eX+hU82dfCULIk5N/jy2/
+         MqFCvz4XXUFZVIG16HeCE45yZ/xiuemnLfjUmIgGB7axaSK/0XDV04XSE6cbPOYMtVyH
+         xaVPqqX6X/0irCcjeqfBkTLtykXDjKwTmXYyJ2VfS0Svci4kdVKZwAd0h8KxpfnewNZL
+         gkMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713021403; x=1713626203;
+        d=1e100.net; s=20230601; t=1713021410; x=1713626210;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5A7g7qS50UKBu2Vs5SDgCbvvncurtSr/U44kFCGPI8Y=;
-        b=VkPzKcm9FNhOn0BaaN0oINSyAsn2yvWxcZ5OCnhBcOl23DqekmUQEGSX/FiC1uUtuu
-         oNlNua6X6st1/otlJgwlbbAbDzgt1tRQq9V9hT+CXmQP7vR6N5XJhTydAYpO1dVu4BsP
-         GISOzjTik7b4eik8MQmyKKvkX8sE7VFJd/2JkdRgpRsrP2x+qUrkI7AjZZ4frK0Befuy
-         ark+yZZgSHsyBM3baLyrNlGDHNxmF1Fc/Ai3Zd6m95qwu4Q6ZGtfctFabu6DuSV4UBJd
-         IlCDPtDpIaU9pCW/HRxo3vlE2jBh+9QP15I697Gy/5w4hdzsylMLjVLToCzrqTcEN8Em
-         sZTw==
-X-Forwarded-Encrypted: i=1; AJvYcCX92l5sTBSrXtPyG0lI51WKRGKeg7Q2Jnbqx5M8gdHw99OpU0ZqZnzCKhKX3L2x3baVnpnD9XhmH7aR+4Yw/qrLxMTNFgkywKotsaFA
-X-Gm-Message-State: AOJu0Yz9BmNfMPpcGRVVLs5k27hzrzrW/jJ6GoTb424rALc1UoPZB/Jp
-	HoxbulYw/Nzc6LSHkqh5d5eEU15u8jRl5yX9XuZjslIOADkVwq3pyxai0X5K/Lk=
-X-Google-Smtp-Source: AGHT+IEmo2EuLsiQvKf6UbS7ue4IQL/YRmJZHSgoqwKXTxi3PpsLAoyXQzBVJzA9zQct8EPeoVHm3g==
-X-Received: by 2002:a17:906:36d6:b0:a51:d7f3:324b with SMTP id b22-20020a17090636d600b00a51d7f3324bmr3318859ejc.66.1713021403232;
-        Sat, 13 Apr 2024 08:16:43 -0700 (PDT)
+        bh=neBvhCn+WPQ4h/ZjCZEYGqL+71G8ilgcVWxHofmS/s8=;
+        b=GTL+6ieEN5a43HuZXAo5Lh7gmm72zdaySziXKD7E2L3Zmie0xHCXYhIyEgi9lWK7A2
+         GHjBEgMrEohfb/GMH6z91JfBch6DD1JJFP5QcisMRUDXVv5fmwpqrIic7gEWSmHyHbRG
+         Gl0ZI/hDkzjikuf616RRb0JFDMGkzo51OcCUM6k5efUMcxVXeKOVQraOmqQ9sLgWSbDl
+         Dt/k4t75xoksZ2TFrAYotc0WNmo8BRoT9iXYIQi2mA+1/R6D6qK87+UZZ42+jrDFEwMy
+         jij7CAjTMQDKVEHPp2DNT2vf9M3Ho6+Klbiu/UGX5fRPc3s13kB0F/mxvnBWpdlY4lSo
+         4rsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZMruUdVp6wATgHLRPxkqPGiyP+d9aDKCoazmx8kQViSUizww0KEGWcJxCKHO1KRnWcQfYS8JhyC6NEqR9lk49SsOb8qZZ5H0DEToU
+X-Gm-Message-State: AOJu0Yy0dHQhw6N3LPdj3xB0Q94YJHhYGq3kv56LWeHAReU4cqY9DBla
+	ZxuhV8qqHYLoASVbvtEG72jcSy7IkNnkf25oFVQzeWv3gA/Ak5W7lpp3SvO6zGA=
+X-Google-Smtp-Source: AGHT+IGKb7AoZ69n1AqRbU82SfLvRprWHXeXmnEazQwF4CPLBoqjFQPXhLvrbO4PedaeR1TSm2No+g==
+X-Received: by 2002:a17:907:7f03:b0:a51:b1a2:80bb with SMTP id qf3-20020a1709077f0300b00a51b1a280bbmr3648935ejc.28.1713021409795;
+        Sat, 13 Apr 2024 08:16:49 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id kj15-20020a170907764f00b00a51a60bf400sm3104956ejc.76.2024.04.13.08.16.40
+        by smtp.gmail.com with ESMTPSA id kj15-20020a170907764f00b00a51a60bf400sm3104956ejc.76.2024.04.13.08.16.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Apr 2024 08:16:42 -0700 (PDT)
+        Sat, 13 Apr 2024 08:16:49 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -108,9 +108,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-renesas-soc@vger.kernel.org,
 	linux-rockchip@lists.infradead.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 2/4] dt-bindings: PCI: mediatek,mt7621: add missing child node reg
-Date: Sat, 13 Apr 2024 17:16:15 +0200
-Message-Id: <20240413151617.35630-2-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 4/4] dt-bindings: PCI: mediatek,mt7621-pcie: switch from deprecated pci-bus.yaml
+Date: Sat, 13 Apr 2024 17:16:17 +0200
+Message-Id: <20240413151617.35630-4-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240413151617.35630-1-krzysztof.kozlowski@linaro.org>
 References: <20240413151617.35630-1-krzysztof.kozlowski@linaro.org>
@@ -122,44 +122,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-MT7621 PCI host bridge has children which are PCI root ports.  The
-children have "reg" property, but do not explicitly define it.  Instead
-they rely on pci-bus.yaml schema, but that one has "reg" without any
-constraints.
+dtschema package with core schemas deprecated pci-bus.yaml schema in
+favor of individual schemas per host, device and pci-pci.
 
-Define the "reg" for the children, so the binding will be more specific
-and later will allow dropping reference to deprecated pci-bus.yaml
-schema.
+Switch Mediatek MT7621 PCIe host bridge binding to this new schema.
 
-Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+This requires dtschema package newer than v2024.02 to work fully.
+v2024.02 will partially work: with a warning.
+
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ---
 
+Important: This depends on change recently merged to dtschema, however
+no release was yet made with mentioned change.
+Therefore this patch probably should wait a bit. Previous patches do not
+depend anyhow on future release, so they can be taken as is.
+
 Changes in v3:
-1. Correct commit msg (root port).
+1. None
 
 Changes in v2:
-1. Add tags.
+1. New patch
+2. Split mediatek,mt7621-pcie to separate patch as it uses
+   pci-pci-bridge schema.
 ---
- .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml          | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-index e63e6458cea8..61d027239910 100644
+index 61d027239910..6fba42156db6 100644
 --- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-@@ -36,6 +36,9 @@ patternProperties:
-     $ref: /schemas/pci/pci-bus.yaml#
+@@ -14,7 +14,7 @@ description: |+
+   with 3 Root Ports. Each Root Port supports a Gen1 1-lane Link
+ 
+ allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
+ 
+ properties:
+   compatible:
+@@ -33,7 +33,7 @@ properties:
+ patternProperties:
+   '^pcie@[0-2],0$':
+     type: object
+-    $ref: /schemas/pci/pci-bus.yaml#
++    $ref: /schemas/pci/pci-pci-bridge.yaml#
  
      properties:
-+      reg:
-+        maxItems: 1
-+
-       resets:
-         maxItems: 1
- 
+       reg:
 -- 
 2.34.1
 
