@@ -1,144 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BAC3D579;
-	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60D31C2A5
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 13:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713013362; cv=none; b=dZtkM4QbkvcprPS1pHWyidDe3kG6mkkywiKzCPnlgPYymakmrfxb+hU26gjJwlGK4e9iilEoiLUDF03jBS8Ug0ks+Z9Jvl22OEEFYXQIpgjYZ0h6HRlC8VkBJtdDNqF0XOJBuokoRlBvIYZiXTmbrXoAKhIjOAauy6ou3dBv77Y=
+	t=1713013542; cv=none; b=fFUH0BOVZFD6fgs2mocmzWUBl08xmnngUpIpKAW8YT8MxoyQEg8ZY3TwNqS84ylw1f9XVvikw6iI+Rf+e6Ntqf0N1+pq0UbAQ1b8xHJjWn8SCzL1QuXSrE7gZQv2GUx1HiMjyjVKG29CiQeWMPWNFnzweXsJcTfJnRMDlS8Kx3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713013362; c=relaxed/simple;
-	bh=pVQjuPI57KbahrnQhg6dIo3ahNunEx71IV9EAyTo2nM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nm13z5laI21oo3Z7DYKrLwWZsAbm2Tvp5ZsaHOWIo6Y6OGgtpWX9wulnKOwt+dXzaibJ69e6il281Sb1ANeYXc4WO642supsXVHC/WXZFa/rD9T4GdLrdp26yG9LBW0zj+DnMTxp/zDCVMSaktc7BduElETyao/dXfUCanPadCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwcX/NCf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713013542; c=relaxed/simple;
+	bh=9mQps6gBriAa691971K8dp+F7qu3ElBTZlsuuOPGNuY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YKzibZIeqQIeXy1vIMIuFKHagigU299aRVFdK17sp3r4/YLl4+c8mgfKeqEuV8kcRE+xhtq7jI+F7xXCnRoUdV/4cBocOyqd4lt/gTt6yhIBqYZwXH15M8Yr/kF/weqIQfY+aqX3Vlxtux+0BihNJ12tkwFyEzKRpxjZxkvHT9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E9SUDrHg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwcX/NCf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93C67C2BD10;
-	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713013361;
-	bh=pVQjuPI57KbahrnQhg6dIo3ahNunEx71IV9EAyTo2nM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mwcX/NCf8qv2N83LoXBH8GorBBMYA4JC6D+71nb26IMJ+hioFHNMzDbKTNwfPHIeL
-	 yZZJahmyYQqO4fB7voQM5XndMNeZZb3Y935NFJlvgNlhnQFXNddw+tXDJ9SJNQR0oM
-	 tS5k3l2WO9D1iUlwd/ZqV283bwb8SwZbaFuIj4wWQNP3yzGQ89DUEceCWAyWmdI0HK
-	 MBgalFRd55YDhyyClishmxV0IoGthYOFbVVrwIEvfIHO0S0ktQGpJ81F4ZOT13vm7f
-	 u8S9FCcuCppVbBIKAtCy+Ouavdqdiyd1/mirBiE0nL/WY+8/TgufPB6v6dXE6NkgmZ
-	 P2fJlZIC62KYw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B694C04FFE;
-	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Sat, 13 Apr 2024 16:01:39 +0300
-Subject: [PATCH net 1/2] net: dsa: mt7530: fix mirroring frames received on
- local port
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E9SUDrHg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713013538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LjC/r8afP2Rq17fs73k7VkcEwW9IeRku59pv+b0GDdk=;
+	b=E9SUDrHgjujbIK6V4uLxulC/qGN2i7ZI2x+VISFPUaqzzgaQX0jWr1ZZUbBbT2ygsytljd
+	J6Ol9WW5RA8T8FQLlZbjDMUZU0eqthQ8Y1AxXh/Y5vVs6pE59ojvfeezH0QygVjKsnCvQW
+	oWGRn3e3SbPxBul9uRz9bimVdqeZtmQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-556-_BoiXWH_O5STI0cNsjwTKA-1; Sat, 13 Apr 2024 09:05:33 -0400
+X-MC-Unique: _BoiXWH_O5STI0cNsjwTKA-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-416a844695dso9429775e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 06:05:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713013532; x=1713618332;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LjC/r8afP2Rq17fs73k7VkcEwW9IeRku59pv+b0GDdk=;
+        b=NVwIjssUtJyyj3XaiN0wR20KczwjlVwHJQLXI+hNPr9n4CshsqC3mEoXk0XrJzVNEo
+         cARTK31idJRu3tIbtOtvAY0HaP9pEzXsFGqvrg3gEkqFbbBnDZoiN2HArsbQm8GEgGLT
+         NwIWUOSdn8pY0Nao4dUq6s9tAUoE1BcHt2ky2nM4T9YAanZsSuUTPld9G74ZoN/Fvx8m
+         llFafifzMxwH19V3edj8czZ7SluKsvAioeW7t2ebpuETEvbYs09qs44ViYb0A7uX/hzH
+         xYI+jaAO5jYpDcJwFW+hLESgUunU+HSCRv4ZTFymKj+yvxNwWfLpWIC7IgI/igkrB7Up
+         e56A==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ/GP/raT9cvd+OkkkyxLM+a9THCyf9vRNN2nAkiR2GSVuICrWXMw55BWXUj1Vi7Vbof6ZaFa/vVMA+EOHyebNA2wOnhNVvq1wE8dl
+X-Gm-Message-State: AOJu0YyjExC6Y3CLaRXAVV/RjGXAcEOnRywoDL4RbbSoL9pbm049Xs2p
+	XAu7eXncN8/bWFZpeKdwvkCWLJ6Zp4QYCbf6FuC+cCutwfPh31OaabW1Hf2rhJzd5g2//Djg+ez
+	AevQ2PakuB3vg3zvjdQarnUtaTM4xN2Os2nGOCn0Ve/qXwyGytG/viQgMIVJEYg==
+X-Received: by 2002:a05:600c:5818:b0:414:60fe:8f2b with SMTP id jz24-20020a05600c581800b0041460fe8f2bmr4636646wmb.18.1713013532597;
+        Sat, 13 Apr 2024 06:05:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMW4dxiTvS7n2eWbssZJ0Xn/PGf10S4HVEPbaYyCkOe5omKF1qw+lfUNoMszIeJDG2JRMtxQ==
+X-Received: by 2002:a05:600c:5818:b0:414:60fe:8f2b with SMTP id jz24-20020a05600c581800b0041460fe8f2bmr4636624wmb.18.1713013532067;
+        Sat, 13 Apr 2024 06:05:32 -0700 (PDT)
+Received: from rh (p200300c93f06ef00707ff2f902cfda41.dip0.t-ipconnect.de. [2003:c9:3f06:ef00:707f:f2f9:2cf:da41])
+        by smtp.gmail.com with ESMTPSA id z17-20020a05600c0a1100b00416b8da335esm8914249wmp.48.2024.04.13.06.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Apr 2024 06:05:31 -0700 (PDT)
+Date: Sat, 13 Apr 2024 15:05:30 +0200 (CEST)
+From: Sebastian Ott <sebott@redhat.com>
+To: Marc Zyngier <maz@kernel.org>
+cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
+    James Morse <james.morse@arm.com>, 
+    Suzuki K Poulose <suzuki.poulose@arm.com>, 
+    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 2/4] KVM: arm64: maintain per VM value for CTR_EL0
+In-Reply-To: <86frvpshno.wl-maz@kernel.org>
+Message-ID: <7e9c8367-6e9e-e36b-934e-170c90522134@redhat.com>
+References: <20240405120108.11844-1-sebott@redhat.com> <20240405120108.11844-3-sebott@redhat.com> <86frvpshno.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-1-476deff8cc06@arinc9.com>
-References: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-0-476deff8cc06@arinc9.com>
-In-Reply-To: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-0-476deff8cc06@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Holger Stadali <hs@giax.de>, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com, 
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713013352; l=2274;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=16zG1ybHG9AjnsjIF0xkfp7UyTV+eA87bDmkriEzcpo=;
- b=KcNANl0mubqFS1YqweAnMdHpJB5HByJ1podyxKwJi3gKD5uCCVVgSrXMANiux9wInU0qIHBZo
- 43BL6ZB0k3fAOxpJa8Qf5ES8aB/zvZrk5wlu/eyWfx2L9tbfs1d4OCn
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
- with auth_id=115
-X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Reply-To: arinc.unal@arinc9.com
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+On Sat, 13 Apr 2024, Marc Zyngier wrote:
+> On Fri, 05 Apr 2024 13:01:06 +0100,
+> Sebastian Ott <sebott@redhat.com> wrote:
+>>
+>> In preparation for CTR_EL0 emulation maintain a per VM for this
+>> register and use it where appropriate.
+>>
+>> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+>> ---
+>>  arch/arm64/include/asm/kvm_host.h |  1 +
+>>  arch/arm64/kvm/sys_regs.c         | 22 +++++++++++++++-------
+>>  2 files changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 9e8a496fb284..481216febb46 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -318,6 +318,7 @@ struct kvm_arch {
+>>
+>>  	/* PMCR_EL0.N value for the guest */
+>>  	u8 pmcr_n;
+>> +	u64 ctr_el0;
+>>
+>>  	/* Iterator for idreg debugfs */
+>>  	u8	idreg_debugfs_iter;
+>
+> Please consider the alignment of the fields. This leaves a 7 byte hole
+> that could be avoided (yes, I'm on a mission to reduce the size of the
+> various structures, because they are absolute pigs).
 
-This switch intellectual property provides a bit on the ARL global control
-register which controls allowing mirroring frames which are received on the
-local port (monitor port). This bit is unset after reset.
+OK.
 
-This ability must be enabled to fully support the port mirroring feature on
-this switch intellectual property.
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 131f5b0ca2b9..4d29b1a0842d 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -215,13 +215,21 @@ void vcpu_write_sys_reg(struct kvm_vcpu *vcpu, u64 val, int reg)
+>>  /* CSSELR values; used to index KVM_REG_ARM_DEMUX_ID_CCSIDR */
+>>  #define CSSELR_MAX 14
+>>
+>> +static u64 kvm_get_ctr_el0(struct kvm *kvm)
+>> +{
+>> +	if (kvm->arch.ctr_el0)
+>> +		return kvm->arch.ctr_el0;
+>
+> Is this relying on some bits not being 0?
+>
+>> +
+>> +	return read_sanitised_ftr_reg(SYS_CTR_EL0);
+>
+> Why isn't the shadow value always populated?
 
-Therefore, this patch fixes the traffic not being reflected on a port,
-which would be configured like below:
+The idea was for kvm->arch.ctr_el0 being non zero only if userspace
+set it up to differ from the host value. So it can be used to decide
+if we need to set up a trap for the reg access (without comparing it
+to the host value again).
 
-  tc qdisc add dev swp0 clsact
-
-  tc filter add dev swp0 ingress matchall skip_sw \
-  action mirred egress mirror dev swp0
-
-As a side note, this configuration provides the hairpinning feature for a
-single port.
-
-Fixes: 37feab6076aa ("net: dsa: mt7530: add support for port mirroring")
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
- drivers/net/dsa/mt7530.c | 6 ++++++
- drivers/net/dsa/mt7530.h | 4 ++++
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index c0d0bce0b594..b84e1845fa02 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -2480,6 +2480,9 @@ mt7530_setup(struct dsa_switch *ds)
- 			   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
- 	}
- 
-+	/* Allow mirroring frames received on the local port (monitor port). */
-+	mt7530_set(priv, MT753X_AGC, LOCAL_EN);
-+
- 	/* Setup VLAN ID 0 for VLAN-unaware bridges */
- 	ret = mt7530_setup_vlan0(priv);
- 	if (ret)
-@@ -2591,6 +2594,9 @@ mt7531_setup_common(struct dsa_switch *ds)
- 			   PVC_EG_TAG(MT7530_VLAN_EG_CONSISTENT));
- 	}
- 
-+	/* Allow mirroring frames received on the local port (monitor port). */
-+	mt7530_set(priv, MT753X_AGC, LOCAL_EN);
-+
- 	/* Flush the FDB table */
- 	ret = mt7530_fdb_cmd(priv, MT7530_FDB_FLUSH, NULL);
- 	if (ret < 0)
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 585db03c0548..a08053390b28 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -32,6 +32,10 @@ enum mt753x_id {
- #define SYSC_REG_RSTCTRL		0x34
- #define  RESET_MCM			BIT(2)
- 
-+/* Register for ARL global control */
-+#define MT753X_AGC			0xc
-+#define  LOCAL_EN			BIT(7)
-+
- /* Registers to mac forward control for unknown frames */
- #define MT7530_MFC			0x10
- #define  BC_FFP(x)			(((x) & 0xff) << 24)
-
--- 
-2.40.1
-
+Thanks,
+Sebastian
 
