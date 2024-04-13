@@ -1,490 +1,858 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF46DEEDB;
-	Sat, 13 Apr 2024 03:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827A018E10;
+	Sat, 13 Apr 2024 03:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712978479; cv=none; b=fdACn77Lg42PtVhLvdMLf3UaeOD+4yETbusVMS0xyHe0R5vfk+AeiOeiPc1Dv+Rttq3FaSpuJChc2W+DYIqsLUDuRJBj3sorI2NA76cqLfuqesjapyYiqy0ZCEig/DbhkVUoQj3OjNMiT6SeFheHnRM8Mcy5jnBJLTrr16FGTog=
+	t=1712978645; cv=none; b=DY3GhR9OnLPPp4wWvPs4fZf78IGnLO7E1NtAmMUETxOVYsk0XfkOitzFxS8RlpW+b9QgqCV35rdfS4mwLQpbOWNnL8AtplVNuV6dZKx2h6X04bPxywNfV2HnLVWjYIebCh5PN4wBKAJaBbAqITMEGjH6bD5RBOF709x9K2ZzhIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712978479; c=relaxed/simple;
-	bh=CllIiD3tn6cFwJ63Rz3Y0INqIuTRFjBW46llCI7TCwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ple1yvgaWjZ71nY4cLE5tSigZGakYhI1LDqDoemcwJbhkohAeAqfC5+QxWd0GOnXnjgGJEELFjlj+rDDJoOXfAn76dHu7yXMtQ9nlxBom369LzXidvbsMXPiQCYFaMrO7t4vt3QmR24ObTL8VKFeHzv5YUJ68FukRmL5DZrtZPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLfj+tZe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712978645; c=relaxed/simple;
+	bh=4GqiiVbs2CsiR/QRuMO+ty46zOh2hOquneXIPPP9Ww4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Zp2WdQIu+6vBGRgUcX5mbW4genK93x3ZVlp6HWPbUeIgC2ZLFGF00lQMXjK/2gVzRwcFYtXI03kQFO5nLkWXoQCs7Qn4SRVVS6eQWnKeWGyY2eaCVZUn0BI+0rF3GN7r58HMsd8SWEc+YIgqIJi2USVLE83rstgaMcV7WnNKoNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lydvUt0V; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLfj+tZe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D1EC2BD11;
-	Sat, 13 Apr 2024 03:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712978478;
-	bh=CllIiD3tn6cFwJ63Rz3Y0INqIuTRFjBW46llCI7TCwE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLfj+tZedYDCnO0PE5j+h5XtoVdtIH0fb6eSRqv1A1kihVkNZ7t9q61lptrbXuKdl
-	 EXvKQ0wdHEx63LN7hn+1F3By+lPsiTIPra1EzgS7cofU167/pZ2fsrDSDHRrmFTWw3
-	 DrXRvyYPVM5Zg9AfJ1DDy8Febr74y1Id987+IrQFf1hpDwZ9MKYghq5/KeuRa0wlw9
-	 MVZEqXHdK6A3V/qq8uW3diyfKOjtO7Q7h7qsVqRztOHxwXOIs4TcGLTEDvZvjfWKBa
-	 GsWn/KpMkBc/jbSYNa2TlXysoP3uuKy0XbOtedJD9DLPQTP5w7pcEsj5kIM1nB+S78
-	 vhU1ZXFUCs0sg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Chang S . Bae" <chang.seok.bae@intel.com>
-Subject: [PATCH 1/3] crypto: x86/aes-xts - handle AES-128 and AES-192 more efficiently
-Date: Fri, 12 Apr 2024 20:17:26 -0700
-Message-ID: <20240413031728.159495-2-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240413031728.159495-1-ebiggers@kernel.org>
-References: <20240413031728.159495-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lydvUt0V"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e0b889901bso13108095ad.1;
+        Fri, 12 Apr 2024 20:24:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712978642; x=1713583442; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUwiCL0NqBUFNs2qrI5GW8AzR7qqyWpUZ2kQKtXXd6w=;
+        b=lydvUt0VBcX0zQ4CPBPjXP6XWWTSQ7ddphEIKiL/wv+2FtxCbnFpLvowk7YtoZhPHU
+         sCiprRXdxXdng43ANNjf0cEYIQSe5Kg3EwclCiZ0wCbpxGOfxRXD1AtLGHCM+/i8oOsJ
+         tmxWvi4dZ+PwI0JM97YL9hQSfAadvCvW2JGSB4O68TpuCRTr1s+0WN1trZp3M+jVyAgy
+         bLTPZHRkWsN8FZIgGnspiN5A5cRoTTMq+lEjL4lruOoc/sQOolmSdEFtKS29QkGur2a3
+         U7lUlQZKKB1jDHS194GFbGgUX5785De8d+bPN+SkUtpgPm/AikE/HaBrAqgsL3zJiBKA
+         Ci0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712978642; x=1713583442;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WUwiCL0NqBUFNs2qrI5GW8AzR7qqyWpUZ2kQKtXXd6w=;
+        b=Zmc/sZdVGv5tOp/v8gF2fqrhojG7LBg9FZX3GPNnIqf/gTJuTsKP7w3nJRNUIV4TDN
+         nYVWGsoGkt5BpexZKJ4pzkIYwMbBBE1Ku9b7krO5JtHEVUqOetzIusDnK9sR+ahhbyic
+         BSzoW71s/FYHMgNnaym5GCJ4+JRz71+AYikiXvcSxnQ6Y0qRZjB4Lf3iL7/v14J66XDr
+         pfAKgP/lOlV2gAoNRbM+s4HZlK2dgARGZ+vSy/zG3ZPDv8wVsaMDzjM7Az5CzIHC+tlF
+         cBsOJ1VqMxOXE+PZKFwPYwYhnLW0Zsscr7/JLSSkAC/0Awrs4XPbSJZI4LtXzBgFoK0x
+         PJJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0wvkowQs/Mouxn/DZdf8gG+f4QPZvNMEd9rWaEk3iAaH+35usdzcXnevN0ghxFWQE8NsqXQWSAlSp1uHGgG1/hy3vADf67K8M+fl/
+X-Gm-Message-State: AOJu0YwYiBj6Tfy+bzul/GzLI5oOVGNNTqQSGce+XSiEFKaLl1M2ioZ6
+	EbjYs07n8ms/Hdb4v54pWoYySaZ/P3FbvPdUgjHLZ62XZPXzTZZCKUlE3TEcd99LpA==
+X-Google-Smtp-Source: AGHT+IG82NQ02Qgx/06YTGloTaStWRopRnZ6sAt8JCGM/r+UbNibI84/uKBrMxsItBzObkEiHjgpAA==
+X-Received: by 2002:a17:902:f7ce:b0:1e0:f504:a6f9 with SMTP id h14-20020a170902f7ce00b001e0f504a6f9mr3272446plw.27.1712978641831;
+        Fri, 12 Apr 2024 20:24:01 -0700 (PDT)
+Received: from localhost.localdomain ([221.220.133.103])
+        by smtp.gmail.com with ESMTPSA id t13-20020a170902e84d00b001dde004b31bsm3714183plg.166.2024.04.12.20.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 20:24:01 -0700 (PDT)
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	liujianfeng1994@gmail.com,
+	sfr@canb.auug.org.au,
+	weizhao.ouyang@arm.com
+Subject: [PATCH 1/2] arm64: dts: rockchip: Add ArmSom Sige7 board
+Date: Sat, 13 Apr 2024 11:23:27 +0800
+Message-Id: <20240413032328.784142-1-liujianfeng1994@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+Specification:
+        Rockchip Rk3588 SoC
+        4x ARM Cortex-A76, 4x ARM Cortex-A55
+        8/16/32GB Memory LPDDR4/LPDDR4x
+        Mali G610MP4 GPU
+        2× MIPI-CSI Connector
+        1× MIPI-DSI Connector
+        1x M.2 Key M (PCIe 3.0 4-lanes)
+        2x RTL8125 2.5G Ethernet
+        Onboard AP6275P for WIFI6/BT5
+        32GB/64GB/128GB eMMC
+        MicroSD card slot
+        1x USB2.0, 1x USB3.0 Type-A, 1x US3.0 Type-C
+        1x HDMI Output, 1x type-C DP Output
 
-Decrease the amount of code specific to the different AES variants by
-"right-aligning" the sequence of round keys, and for AES-128 and AES-192
-just skipping irrelevant rounds at the beginning.
+Functions work normally:
+        USB2.0 Host
+        USB3.0 Type-A Host (depend on just applied USBDP driver[1])
+        M.2 Key M (PCIe 3.0 4-lanes)
+        2x RTL8125 2.5G Ethernet
+        eMMC
+        MicroSD card
 
-This shrinks the size of aes-xts-avx-x86_64.o by 13.3%, and it improves
-the efficiency of AES-128 and AES-192.  The tradeoff is that for AES-256
-some additional not-taken conditional jumps are now executed.  But these
-are predicted well and are cheap on x86.
+More information can be obtained from the following website
+        https://docs.armsom.org/armsom-sige7
 
-Note that the ARMv8 CE based AES-XTS implementation uses a similar
-strategy to handle the different AES variants.
+[1] https://lore.kernel.org/all/20240408225109.128953-1-sebastian.reichel@collabora.com/
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
 ---
- arch/x86/crypto/aes-xts-avx-x86_64.S | 178 ++++++++++++++-------------
- 1 file changed, 92 insertions(+), 86 deletions(-)
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3588-armsom-sige7.dts | 725 ++++++++++++++++++
+ 2 files changed, 726 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
 
-diff --git a/arch/x86/crypto/aes-xts-avx-x86_64.S b/arch/x86/crypto/aes-xts-avx-x86_64.S
-index 52f1997ed05a..f5e7ab739105 100644
---- a/arch/x86/crypto/aes-xts-avx-x86_64.S
-+++ b/arch/x86/crypto/aes-xts-avx-x86_64.S
-@@ -80,18 +80,19 @@
- 	.byte	0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80
- .text
- 
- // Function parameters
- .set	KEY,		%rdi	// Initially points to crypto_aes_ctx, then is
--				// advanced to point directly to 7th round key
-+				// advanced to point to 7th-from-last round key
- .set	SRC,		%rsi	// Pointer to next source data
- .set	DST,		%rdx	// Pointer to next destination data
- .set	LEN,		%rcx	// Remaining length in bytes
- .set	TWEAK,		%r8	// Pointer to next tweak
- 
--// %r9d holds the AES key length in bytes.
-+// %r9 holds the AES key length in bytes.
- .set	KEYLEN,		%r9d
-+.set	KEYLEN64,	%r9
- 
- // %rax and %r10-r11 are available as temporaries.
- 
- .macro	_define_Vi	i
- .if VL == 16
-@@ -163,16 +164,22 @@
- 
- 	// V14 holds the constant from .Lgf_poly, copied to all 128-bit lanes.
- 	.set	GF_POLY_XMM,	%xmm14
- 	.set	GF_POLY,	V14
- 
--	// V15 holds the first AES round key, copied to all 128-bit lanes.
-+	// V15 holds the key for AES "round 0", copied to all 128-bit lanes.
- 	.set	KEY0_XMM,	%xmm15
- 	.set	KEY0,		V15
- 
- 	// If 32 SIMD registers are available, then V16-V29 hold the remaining
- 	// AES round keys, copied to all 128-bit lanes.
-+	//
-+	// AES-128, AES-192, and AES-256 use different numbers of round keys.
-+	// To allow handling all three variants efficiently, we align the round
-+	// keys to the *end* of this register range.  I.e., AES-128 uses
-+	// KEY5-KEY14, AES-192 uses KEY3-KEY14, and AES-256 uses KEY1-KEY14.
-+	// (All also use KEY0 for the XOR-only "round" at the beginning.)
- .if USE_AVX10
- 	.set	KEY1_XMM,	%xmm16
- 	.set	KEY1,		V16
- 	.set	KEY2_XMM,	%xmm17
- 	.set	KEY2,		V17
-@@ -338,19 +345,19 @@
- 	.set NEXT_TWEAK, NEXT_TWEAK2
- .elseif \i == 15
- 	.set PREV_TWEAK, NEXT_TWEAK2
- 	.set NEXT_TWEAK, NEXT_TWEAK3
- .endif
--.if \i < 20 && \i % 5 == 0
-+.if \i >= 0 && \i < 20 && \i % 5 == 0
- 	vpshufd		$0x13, PREV_TWEAK, V5
--.elseif \i < 20 && \i % 5 == 1
-+.elseif \i >= 0 && \i < 20 && \i % 5 == 1
- 	vpaddq		PREV_TWEAK, PREV_TWEAK, NEXT_TWEAK
--.elseif \i < 20 && \i % 5 == 2
-+.elseif \i >= 0 && \i < 20 && \i % 5 == 2
- 	vpsrad		$31, V5, V5
--.elseif \i < 20 && \i % 5 == 3
-+.elseif \i >= 0 && \i < 20 && \i % 5 == 3
- 	vpand		GF_POLY, V5, V5
--.elseif \i < 20 && \i % 5 == 4
-+.elseif \i >= 0 && \i < 20 && \i % 5 == 4
- 	vpxor		V5, NEXT_TWEAK, NEXT_TWEAK
- .elseif \i == 1000
- 	vmovdqa		NEXT_TWEAK0, TWEAK0
- 	vmovdqa		NEXT_TWEAK1, TWEAK1
- 	vmovdqa		NEXT_TWEAK2, TWEAK2
-@@ -362,25 +369,25 @@
- // (the same method _next_tweakvec uses for VL > 16).  This means multiplying
- // each tweak by x^(4*VL/16) independently.  Since 4*VL/16 is a multiple of 8
- // when VL > 16 (which it is here), the needed shift amounts are byte-aligned,
- // which allows the use of vpsrldq and vpslldq to do 128-bit wide shifts.
- .macro	_tweak_step_pclmul	i
--.if \i == 2
-+.if \i == 0
- 	vpsrldq		$(128 - 4*VL/16) / 8, TWEAK0, NEXT_TWEAK0
--.elseif \i == 4
-+.elseif \i == 2
- 	vpsrldq		$(128 - 4*VL/16) / 8, TWEAK1, NEXT_TWEAK1
--.elseif \i == 6
-+.elseif \i == 4
- 	vpsrldq		$(128 - 4*VL/16) / 8, TWEAK2, NEXT_TWEAK2
--.elseif \i == 8
-+.elseif \i == 6
- 	vpsrldq		$(128 - 4*VL/16) / 8, TWEAK3, NEXT_TWEAK3
--.elseif \i == 10
-+.elseif \i == 8
- 	vpclmulqdq	$0x00, GF_POLY, NEXT_TWEAK0, NEXT_TWEAK0
--.elseif \i == 12
-+.elseif \i == 10
- 	vpclmulqdq	$0x00, GF_POLY, NEXT_TWEAK1, NEXT_TWEAK1
--.elseif \i == 14
-+.elseif \i == 12
- 	vpclmulqdq	$0x00, GF_POLY, NEXT_TWEAK2, NEXT_TWEAK2
--.elseif \i == 16
-+.elseif \i == 14
- 	vpclmulqdq	$0x00, GF_POLY, NEXT_TWEAK3, NEXT_TWEAK3
- .elseif \i == 1000
- 	vpslldq		$(4*VL/16) / 8, TWEAK0, TWEAK0
- 	vpslldq		$(4*VL/16) / 8, TWEAK1, TWEAK1
- 	vpslldq		$(4*VL/16) / 8, TWEAK2, TWEAK2
-@@ -391,12 +398,12 @@
- 	_vpxor		NEXT_TWEAK3, TWEAK3, TWEAK3
- .endif
- .endm
- 
- // _tweak_step does one step of the computation of the next set of tweaks from
--// TWEAK[0-3].  To complete all steps, this must be invoked with \i values 0
--// through at least 19, then 1000 which signals the last step.
-+// TWEAK[0-3].  To complete all steps, this is invoked with increasing values of
-+// \i that include at least 0 through 19, then 1000 which signals the last step.
- //
- // This is used to interleave the computation of the next set of tweaks with the
- // AES en/decryptions, which increases performance in some cases.
- .macro	_tweak_step	i
- .if VL == 16
-@@ -404,26 +411,60 @@
- .else
- 	_tweak_step_pclmul	\i
- .endif
- .endm
- 
--// Load the round keys: just the first one if !USE_AVX10, otherwise all of them.
--.macro	_load_round_keys
--	_vbroadcast128	-7*16(KEY), KEY0
-+.macro	_setup_round_keys	enc
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 7da198be8..0624c7284 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -111,6 +111,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-roc-pc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-rock-3a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-sige7.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-coolpi-cm5-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-io.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-edgeble-neu6a-wifi.dtbo
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts b/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
+new file mode 100644
+index 000000000..aa45e60bb
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3588-armsom-sige7.dts
+@@ -0,0 +1,725 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
-+	// Select either the encryption round keys or the decryption round keys.
-+.if \enc
-+	.set	OFFS, 0
-+.else
-+	.set	OFFS, 240
-+.endif
++/dts-v1/;
 +
-+	// Load the round key for "round 0".
-+	_vbroadcast128	OFFS(KEY), KEY0
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include "rk3588.dtsi"
 +
-+	// Increment KEY to make it so that 7*16(KEY) is the last round key.
-+	// For AES-128, increment by 3*16, resulting in the 10 round keys (not
-+	// counting the zero-th round key which was just loaded into KEY0) being
-+	// -2*16(KEY) through 7*16(KEY).  For AES-192, increment by 5*16 and use
-+	// 12 round keys -4*16(KEY) through 7*16(KEY).  For AES-256, increment
-+	// by 7*16 and use 14 round keys -6*16(KEY) through 7*16(KEY).
-+	//
-+	// This rebasing provides two benefits.  First, it makes the offset to
-+	// any round key be in the range [-96, 112], fitting in a signed byte.
-+	// This shortens VEX-encoded instructions that access the later round
-+	// keys which otherwise would need 4-byte offsets.  Second, it makes it
-+	// easy to do AES-128 and AES-192 by skipping irrelevant rounds at the
-+	// beginning.  Skipping rounds at the end doesn't work as well because
-+	// the last round needs different instructions.
-+	//
-+	// An alternative approach would be to roll up all the round loops.  We
-+	// don't do that because it isn't compatible with caching the round keys
-+	// in registers which we do when possible (see below), and also because
-+	// it seems unwise to rely *too* heavily on the CPU's branch predictor.
-+	lea		OFFS-16(KEY, KEYLEN64, 4), KEY
++/ {
++	model = "ArmSoM Sige7";
++	compatible = "armsom,sige7", "rockchip,rk3588";
 +
-+	// If all 32 SIMD registers are available, cache all the round keys.
- .if USE_AVX10
-+	cmp		$24, KEYLEN
-+	jl		.Laes128\@
-+	je		.Laes192\@
- 	_vbroadcast128	-6*16(KEY), KEY1
- 	_vbroadcast128	-5*16(KEY), KEY2
-+.Laes192\@:
- 	_vbroadcast128	-4*16(KEY), KEY3
- 	_vbroadcast128	-3*16(KEY), KEY4
-+.Laes128\@:
- 	_vbroadcast128	-2*16(KEY), KEY5
- 	_vbroadcast128	-1*16(KEY), KEY6
- 	_vbroadcast128	0*16(KEY), KEY7
- 	_vbroadcast128	1*16(KEY), KEY8
- 	_vbroadcast128	2*16(KEY), KEY9
- 	_vbroadcast128	3*16(KEY), KEY10
--	// Note: if it's AES-128 or AES-192, the last several round keys won't
--	// be used.  We do the loads anyway to save a conditional jump.
- 	_vbroadcast128	4*16(KEY), KEY11
- 	_vbroadcast128	5*16(KEY), KEY12
- 	_vbroadcast128	6*16(KEY), KEY13
- 	_vbroadcast128	7*16(KEY), KEY14
- .endif
-@@ -464,26 +505,26 @@
- .endif
- .endm
- 
- // Do a single round of AES en/decryption on the blocks in registers V0-V3,
- // using the same key for all blocks.  The round key is loaded from the
--// appropriate register or memory location for round \i.  In addition, does step
--// \i of the computation of the next set of tweaks.  May clobber V4.
-+// appropriate register or memory location for round \i.  In addition, does two
-+// steps of the computation of the next set of tweaks.  May clobber V4.
- .macro	_vaes_4x	enc, last, i
- .if USE_AVX10
--	_tweak_step	(2*(\i-1))
-+	_tweak_step	(2*(\i-5))
- 	_vaes		\enc, \last, KEY\i, V0
- 	_vaes		\enc, \last, KEY\i, V1
--	_tweak_step	(2*(\i-1) + 1)
-+	_tweak_step	(2*(\i-5) + 1)
- 	_vaes		\enc, \last, KEY\i, V2
- 	_vaes		\enc, \last, KEY\i, V3
- .else
- 	_vbroadcast128	(\i-7)*16(KEY), V4
--	_tweak_step	(2*(\i-1))
-+	_tweak_step	(2*(\i-5))
- 	_vaes		\enc, \last, V4, V0
- 	_vaes		\enc, \last, V4, V1
--	_tweak_step	(2*(\i-1) + 1)
-+	_tweak_step	(2*(\i-5) + 1)
- 	_vaes		\enc, \last, V4, V2
- 	_vaes		\enc, \last, V4, V3
- .endif
- .endm
- 
-@@ -491,78 +532,62 @@
- // then XOR with \tweak again) of the block(s) in \data.  To process a single
- // block, use xmm registers and set \xmm_suffix=_XMM.  To process a vector of
- // length VL, use V* registers and leave \xmm_suffix empty.  May clobber V4.
- .macro	_aes_crypt	enc, xmm_suffix, tweak, data
- 	_xor3		KEY0\xmm_suffix, \tweak, \data
-+	cmp		$24, KEYLEN
-+	jl		.Laes128\@
-+	je		.Laes192\@
- 	_vaes_1x	\enc, 0, 1, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 2, \xmm_suffix, \data
-+.Laes192\@:
- 	_vaes_1x	\enc, 0, 3, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 4, \xmm_suffix, \data
-+.Laes128\@:
- 	_vaes_1x	\enc, 0, 5, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 6, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 7, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 8, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 9, \xmm_suffix, \data
--	cmp		$24, KEYLEN
--	jle		.Laes_128_or_192\@
- 	_vaes_1x	\enc, 0, 10, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 11, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 12, \xmm_suffix, \data
- 	_vaes_1x	\enc, 0, 13, \xmm_suffix, \data
- 	_vaes_1x	\enc, 1, 14, \xmm_suffix, \data
--	jmp		.Laes_done\@
--.Laes_128_or_192\@:
--	je		.Laes_192\@
--	_vaes_1x	\enc, 1, 10, \xmm_suffix, \data
--	jmp		.Laes_done\@
--.Laes_192\@:
--	_vaes_1x	\enc, 0, 10, \xmm_suffix, \data
--	_vaes_1x	\enc, 0, 11, \xmm_suffix, \data
--	_vaes_1x	\enc, 1, 12, \xmm_suffix, \data
--.Laes_done\@:
- 	_vpxor		\tweak, \data, \data
- .endm
- 
- .macro	_aes_xts_crypt	enc
- 	_define_aliases
- 
- 	// Load the AES key length: 16 (AES-128), 24 (AES-192), or 32 (AES-256).
- 	movl		480(KEY), KEYLEN
- 
--	// Advance KEY to point to the 7th encryption round key (if encrypting)
--	// or the 7th decryption round key (if decrypting).  This makes the
--	// offset to any round key be in the range [-112, 112], fitting in a
--	// signed byte.  This shortens VEX-encoded instructions that access the
--	// 8th and later round keys which otherwise would need 4-byte offsets.
--.if \enc
--	add		$7*16, KEY
--.else
--	add		$(15+7)*16, KEY
--
-+.if !\enc
- 	// When decrypting a message whose length isn't a multiple of the AES
- 	// block length, exclude the last full block from the main loop by
- 	// subtracting 16 from LEN.  This is needed because ciphertext stealing
- 	// decryption uses the last two tweaks in reverse order.  We'll handle
- 	// the last full block and the partial block specially at the end.
- 	test		$15, LEN
- 	jnz		.Lneed_cts_dec\@
- .Lxts_init\@:
- .endif
- 
--	// Cache as many round keys as possible.
--	_load_round_keys
-+	// Setup the pointer to the round keys and cache as many as possible.
-+	_setup_round_keys	\enc
- 
- 	// Compute the first set of tweaks TWEAK[0-3].
- 	_compute_first_set_of_tweaks
- 
- 	sub		$4*VL, LEN
- 	jl		.Lhandle_remainder\@
- 
- .Lmain_loop\@:
- 	// This is the main loop, en/decrypting 4*VL bytes per iteration.
- 
--	// XOR each source block with its tweak and the first round key.
-+	// XOR each source block with its tweak and the zero-th round key.
- .if USE_AVX10
- 	vmovdqu8	0*VL(SRC), V0
- 	vmovdqu8	1*VL(SRC), V1
- 	vmovdqu8	2*VL(SRC), V2
- 	vmovdqu8	3*VL(SRC), V3
-@@ -578,31 +603,31 @@
- 	vpxor		TWEAK0, V0, V0
- 	vpxor		TWEAK1, V1, V1
- 	vpxor		TWEAK2, V2, V2
- 	vpxor		TWEAK3, V3, V3
- .endif
-+	cmp		$24, KEYLEN
-+	jl		.Laes128\@
-+	je		.Laes192\@
- 	// Do all the AES rounds on the data blocks, interleaved with
- 	// the computation of the next set of tweaks.
- 	_vaes_4x	\enc, 0, 1
- 	_vaes_4x	\enc, 0, 2
-+.Laes192\@:
- 	_vaes_4x	\enc, 0, 3
- 	_vaes_4x	\enc, 0, 4
-+.Laes128\@:
- 	_vaes_4x	\enc, 0, 5
- 	_vaes_4x	\enc, 0, 6
- 	_vaes_4x	\enc, 0, 7
- 	_vaes_4x	\enc, 0, 8
- 	_vaes_4x	\enc, 0, 9
--	// Try to optimize for AES-256 by keeping the code for AES-128 and
--	// AES-192 out-of-line.
--	cmp		$24, KEYLEN
--	jle		.Lencrypt_4x_aes_128_or_192\@
- 	_vaes_4x	\enc, 0, 10
- 	_vaes_4x	\enc, 0, 11
- 	_vaes_4x	\enc, 0, 12
- 	_vaes_4x	\enc, 0, 13
- 	_vaes_4x	\enc, 1, 14
--.Lencrypt_4x_done\@:
- 
- 	// XOR in the tweaks again.
- 	_vpxor		TWEAK0, V0, V0
- 	_vpxor		TWEAK1, V1, V1
- 	_vpxor		TWEAK2, V2, V2
-@@ -676,21 +701,10 @@
- 	// process the last 16 + LEN bytes.  If LEN is zero, we're done.
- 	test		LEN, LEN
- 	jnz		.Lcts\@
- 	jmp		.Ldone\@
- 
--	// Out-of-line handling of AES-128 and AES-192
--.Lencrypt_4x_aes_128_or_192\@:
--	jz		.Lencrypt_4x_aes_192\@
--	_vaes_4x	\enc, 1, 10
--	jmp		.Lencrypt_4x_done\@
--.Lencrypt_4x_aes_192\@:
--	_vaes_4x	\enc, 0, 10
--	_vaes_4x	\enc, 0, 11
--	_vaes_4x	\enc, 1, 12
--	jmp		.Lencrypt_4x_done\@
--
- .if !\enc
- .Lneed_cts_dec\@:
- 	sub		$16, LEN
- 	jmp		.Lxts_init\@
- .endif
-@@ -762,42 +776,34 @@
- 
- // void aes_xts_encrypt_iv(const struct crypto_aes_ctx *tweak_key,
- //			   u8 iv[AES_BLOCK_SIZE]);
- SYM_TYPED_FUNC_START(aes_xts_encrypt_iv)
- 	vmovdqu		(%rsi), %xmm0
--	add		$7*16, %rdi
--	vpxor		-7*16(%rdi), %xmm0, %xmm0
-+	vpxor		(%rdi), %xmm0, %xmm0
-+	movl		480(%rdi), %eax		// AES key length
-+	lea		-16(%rdi, %rax, 4), %rdi
-+	cmp		$24, %eax
-+	jl		.Lencrypt_iv_aes128
-+	je		.Lencrypt_iv_aes192
- 	vaesenc		-6*16(%rdi), %xmm0, %xmm0
- 	vaesenc		-5*16(%rdi), %xmm0, %xmm0
-+.Lencrypt_iv_aes192:
- 	vaesenc		-4*16(%rdi), %xmm0, %xmm0
- 	vaesenc		-3*16(%rdi), %xmm0, %xmm0
-+.Lencrypt_iv_aes128:
- 	vaesenc		-2*16(%rdi), %xmm0, %xmm0
- 	vaesenc		-1*16(%rdi), %xmm0, %xmm0
- 	vaesenc		0*16(%rdi), %xmm0, %xmm0
- 	vaesenc		1*16(%rdi), %xmm0, %xmm0
- 	vaesenc		2*16(%rdi), %xmm0, %xmm0
--	cmpl		$24, 480-(7*16)(%rdi)
--	jle		.Lencrypt_iv_aes_128_or_192
- 	vaesenc		3*16(%rdi), %xmm0, %xmm0
- 	vaesenc		4*16(%rdi), %xmm0, %xmm0
- 	vaesenc		5*16(%rdi), %xmm0, %xmm0
- 	vaesenc		6*16(%rdi), %xmm0, %xmm0
- 	vaesenclast	7*16(%rdi), %xmm0, %xmm0
--.Lencrypt_iv_done:
- 	vmovdqu		%xmm0, (%rsi)
- 	RET
--
--	// Out-of-line handling of AES-128 and AES-192
--.Lencrypt_iv_aes_128_or_192:
--	jz		.Lencrypt_iv_aes_192
--	vaesenclast	3*16(%rdi), %xmm0, %xmm0
--	jmp		.Lencrypt_iv_done
--.Lencrypt_iv_aes_192:
--	vaesenc		3*16(%rdi), %xmm0, %xmm0
--	vaesenc		4*16(%rdi), %xmm0, %xmm0
--	vaesenclast	5*16(%rdi), %xmm0, %xmm0
--	jmp		.Lencrypt_iv_done
- SYM_FUNC_END(aes_xts_encrypt_iv)
- 
- // Below are the actual AES-XTS encryption and decryption functions,
- // instantiated from the above macro.  They all have the following prototype:
- //
--- 
-2.44.0
++	aliases {
++		mmc0 = &sdhci;
++		mmc1 = &sdmmc;
++	};
++
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	analog-sound {
++		compatible = "audio-graph-card";
++		label = "rk3588-es8316";
++
++		widgets = "Microphone", "Mic Jack",
++			  "Headphone", "Headphones";
++
++		routing = "MIC2", "Mic Jack",
++			  "Headphones", "HPOL",
++			  "Headphones", "HPOR";
++
++		dais = <&i2s0_8ch_p0>;
++		hp-det-gpio = <&gpio1 RK_PD5 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hp_detect>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_rgb_g>;
++
++		led_rgb_g {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_BLUE>;
++			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led_rgb_r {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_RED>;
++			gpios = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++	};
++
++	fan: pwm-fan {
++		compatible = "pwm-fan";
++		cooling-levels = <0 95 145 195 255>;
++		fan-supply = <&vcc5v0_sys>;
++		pwms = <&pwm1 0 50000 0>;
++		#cooling-cells = <2>;
++	};
++
++	vcc3v3_pcie2x1l2: vcc3v3-pcie2x1l2-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_pcie2x1l2";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <5000>;
++		vin-supply = <&vcc_3v3_s3>;
++	};
++
++	vcc3v3_pcie30: vcc3v3-pcie30-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpios = <&gpio1 RK_PA4 GPIO_ACTIVE_HIGH>;
++		regulator-name = "vcc3v3_pcie30";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <5000>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
++	vcc5v0_host: vcc5v0-host-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_host";
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vcc5v0_host_en>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
++	vcc5v0_sys: vcc5v0-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0_sys";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	vcc_1v1_nldo_s3: vcc-1v1-nldo-s3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_1v1_nldo_s3";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1100000>;
++		regulator-max-microvolt = <1100000>;
++		vin-supply = <&vcc5v0_sys>;
++	};
++};
++
++&combphy0_ps {
++	status = "okay";
++};
++
++&combphy1_ps {
++	status = "okay";
++};
++
++&combphy2_psu {
++	status = "okay";
++};
++
++&cpu_b0 {
++	cpu-supply = <&vdd_cpu_big0_s0>;
++};
++
++&cpu_b1 {
++	cpu-supply = <&vdd_cpu_big0_s0>;
++};
++
++&cpu_b2 {
++	cpu-supply = <&vdd_cpu_big1_s0>;
++};
++
++&cpu_b3 {
++	cpu-supply = <&vdd_cpu_big1_s0>;
++};
++
++&cpu_l0 {
++	cpu-supply = <&vdd_cpu_lit_s0>;
++};
++
++&cpu_l1 {
++	cpu-supply = <&vdd_cpu_lit_s0>;
++};
++
++&cpu_l2 {
++	cpu-supply = <&vdd_cpu_lit_s0>;
++};
++
++&cpu_l3 {
++	cpu-supply = <&vdd_cpu_lit_s0>;
++};
++
++&gpu {
++	mali-supply = <&vdd_gpu_s0>;
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0m2_xfer>;
++	status = "okay";
++
++	vdd_cpu_big0_s0: regulator@42 {
++		compatible = "rockchip,rk8602";
++		reg = <0x42>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu_big0_s0";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <1050000>;
++		regulator-ramp-delay = <2300>;
++		vin-supply = <&vcc5v0_sys>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
++	vdd_cpu_big1_s0: regulator@43 {
++		compatible = "rockchip,rk8603", "rockchip,rk8602";
++		reg = <0x43>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu_big1_s0";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <1050000>;
++		regulator-ramp-delay = <2300>;
++		vin-supply = <&vcc5v0_sys>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
++&i2c6 {
++	status = "okay";
++
++	hym8563: rtc@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-output-names = "hym8563";
++		pinctrl-names = "default";
++		pinctrl-0 = <&hym8563_int>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
++		wakeup-source;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	es8316: audio-codec@11 {
++		compatible = "everest,es8316";
++		reg = <0x11>;
++		clocks = <&cru I2S0_8CH_MCLKOUT>;
++		clock-names = "mclk";
++		assigned-clocks = <&cru I2S0_8CH_MCLKOUT>;
++		assigned-clock-rates = <12288000>;
++		#sound-dai-cells = <0>;
++
++		port {
++			es8316_p0_0: endpoint {
++				remote-endpoint = <&i2s0_8ch_p0_0>;
++			};
++		};
++	};
++};
++
++&i2s0_8ch {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2s0_lrck
++		     &i2s0_mclk
++		     &i2s0_sclk
++		     &i2s0_sdi0
++		     &i2s0_sdo0>;
++	status = "okay";
++
++	i2s0_8ch_p0: port {
++		i2s0_8ch_p0_0: endpoint {
++			dai-format = "i2s";
++			mclk-fs = <256>;
++			remote-endpoint = <&es8316_p0_0>;
++		};
++	};
++};
++
++/* phy1 - right ethernet port */
++&pcie2x1l0 {
++	reset-gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++/* phy2 - WiFi */
++&pcie2x1l1 {
++	reset-gpios = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++/* phy0 - left ethernet port */
++&pcie2x1l2 {
++	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&pcie30phy {
++	status = "okay";
++};
++
++&pcie3x4 {
++	pinctrl-names = "default";
++	reset-gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
++	vpcie3v3-supply = <&vcc3v3_pcie30>;
++	status = "okay";
++};
++
++&pinctrl {
++	hym8563 {
++		hym8563_int: hym8563-int {
++			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	leds {
++		led_rgb_g: led-rgb-g {
++			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++		led_rgb_r: led-rgb-r {
++			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	sound {
++		hp_detect: hp-detect {
++			rockchip,pins = <1 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	usb {
++		vcc5v0_host_en: vcc5v0-host-en {
++			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&saradc {
++	vref-supply = <&avcc_1v8_s0>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	no-sdio;
++	no-sd;
++	non-removable;
++	mmc-hs200-1_8v;
++	status = "okay";
++};
++
++&sdmmc {
++	max-frequency = <200000000>;
++	no-sdio;
++	no-mmc;
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++	sd-uhs-sdr104;
++	vmmc-supply = <&vcc_3v3_s3>;
++	vqmmc-supply = <&vccio_sd_s0>;
++	status = "okay";
++};
++
++&spi2 {
++	status = "okay";
++	assigned-clocks = <&cru CLK_SPI2>;
++	assigned-clock-rates = <200000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2m2_cs0 &spi2m2_pins>;
++	num-cs = <1>;
++
++	pmic@0 {
++		compatible = "rockchip,rk806";
++		spi-max-frequency = <1000000>;
++		reg = <0x0>;
++
++		interrupt-parent = <&gpio0>;
++		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>,
++			    <&rk806_dvs2_null>, <&rk806_dvs3_null>;
++
++		system-power-controller;
++
++		vcc1-supply = <&vcc5v0_sys>;
++		vcc2-supply = <&vcc5v0_sys>;
++		vcc3-supply = <&vcc5v0_sys>;
++		vcc4-supply = <&vcc5v0_sys>;
++		vcc5-supply = <&vcc5v0_sys>;
++		vcc6-supply = <&vcc5v0_sys>;
++		vcc7-supply = <&vcc5v0_sys>;
++		vcc8-supply = <&vcc5v0_sys>;
++		vcc9-supply = <&vcc5v0_sys>;
++		vcc10-supply = <&vcc5v0_sys>;
++		vcc11-supply = <&vcc_2v0_pldo_s3>;
++		vcc12-supply = <&vcc5v0_sys>;
++		vcc13-supply = <&vcc_1v1_nldo_s3>;
++		vcc14-supply = <&vcc_1v1_nldo_s3>;
++		vcca-supply = <&vcc5v0_sys>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		rk806_dvs1_null: dvs1-null-pins {
++			pins = "gpio_pwrctrl1";
++			function = "pin_fun0";
++		};
++
++		rk806_dvs2_null: dvs2-null-pins {
++			pins = "gpio_pwrctrl2";
++			function = "pin_fun0";
++		};
++
++		rk806_dvs3_null: dvs3-null-pins {
++			pins = "gpio_pwrctrl3";
++			function = "pin_fun0";
++		};
++
++		regulators {
++			vdd_gpu_s0: vdd_gpu_mem_s0: dcdc-reg1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_gpu_s0";
++				regulator-enable-ramp-delay = <400>;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_cpu_lit_s0: vdd_cpu_lit_mem_s0: dcdc-reg2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_cpu_lit_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_log_s0: dcdc-reg3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <675000>;
++				regulator-max-microvolt = <750000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_log_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <750000>;
++				};
++			};
++
++			vdd_vdenc_s0: vdd_vdenc_mem_s0: dcdc-reg4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_vdenc_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_ddr_s0: dcdc-reg5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <675000>;
++				regulator-max-microvolt = <900000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_ddr_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <850000>;
++				};
++			};
++
++			vdd2_ddr_s3: dcdc-reg6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vdd2_ddr_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_2v0_pldo_s3: dcdc-reg7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <2000000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_2v0_pldo_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <2000000>;
++				};
++			};
++
++			vcc_3v3_s3: dcdc-reg8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_3v3_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vddq_ddr_s0: dcdc-reg9 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vddq_ddr_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8_s3: dcdc-reg10 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			avcc_1v8_s0: pldo-reg1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "avcc_1v8_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8_s0: pldo-reg2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			avdd_1v2_s0: pldo-reg3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-name = "avdd_1v2_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_3v3_s0: pldo-reg4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vcc_3v3_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vccio_sd_s0: pldo-reg5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vccio_sd_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			pldo6_s3: pldo-reg6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "pldo6_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vdd_0v75_s3: nldo-reg1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-name = "vdd_0v75_s3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <750000>;
++				};
++			};
++
++			vdd_ddr_pll_s0: nldo-reg2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-name = "vdd_ddr_pll_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <850000>;
++				};
++			};
++
++			avdd_0v75_s0: nldo-reg3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-name = "avdd_0v75_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_0v85_s0: nldo-reg4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-name = "vdd_0v85_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_0v75_s0: nldo-reg5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-name = "vdd_0v75_s0";
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++		};
++	};
++};
++
++&uart2 {
++	pinctrl-0 = <&uart2m0_xfer>;
++	status = "okay";
++};
++
++&u2phy0 {
++	status = "okay";
++};
++
++&u2phy0_otg {
++	status = "okay";
++};
++
++&u2phy1 {
++	status = "okay";
++};
++
++&u2phy1_otg {
++	status = "okay";
++};
++
++&u2phy3 {
++	status = "okay";
++};
++
++&u2phy3_host {
++	phy-supply = <&vcc5v0_host>;
++	status = "okay";
++};
++
++&usbdp_phy1 {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usb_host1_xhci {
++	dr_mode = "host";
++	status = "okay";
++};
+--
+2.34.1
 
