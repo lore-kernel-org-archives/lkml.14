@@ -1,67 +1,66 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87AD208A5
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 06:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F098E14267;
+	Sat, 13 Apr 2024 06:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712990569; cv=none; b=X4U94pDpVYNUAF9xPy21evDphVvQUvcgT5uGBvCf7ggr6UNfTkj6t9pngt4XGWAElZKrSABFiiDKF9hI0NL7o3hr2bF1qsBo1+JBQc/6RKMVXG2/fC/UENlyqaADT3ySYzNRDMYAUDi22TEbGAsGYsnkjH4pP9o7LTDa8uo7eNw=
+	t=1712990685; cv=none; b=CHR+Pn2Y5R/mZf7Z/rwOuPLPGv5rlghkZjSNgVNx6wOuUouSl9Do0XS8xmjAGroJDSLM5Rz380cz/iOwfQ181S+j9N8yrmqr1rfILukI3Gvc0Ryj0ONiEAbrjUJaI1vuLD8ViyYs5ydGrML+9KZzSkLpVfnKN9yGh6dJPTaZSoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712990569; c=relaxed/simple;
-	bh=SBC8s0aw/XVtSUYTrPMNsE3syTSkNpxT2FbQ9YhbyWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ak8HGc1SpFRJrS9iCcnspuY2muzniEnuLnJNyFS9Dw1rUH4kfJBfi3kSMlqhe6sogZNMlv2WDa6sL/RrHQy8GSNwlXil9G1aRJU96LruDuGl/xOZzv+Q9rP7vLEYEOfWpmTFm6HnCKQRyyTBUamlOWVQP7gJhp+B5TYPttOE/wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=J9zJhA6Y; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
+	s=arc-20240116; t=1712990685; c=relaxed/simple;
+	bh=XmFQlhBHV5QBJqC7fe5fkrZpqsD2g+VZXB68l8Ylke4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ssPpUr0Jn46knUq2XjTRNFsLKZyNknwSQpl2Jpv8cg/d6arHr8JO45s5oSDWTMzPrX67RZogHCeSoL3T8kpMzcyxf3E+jeKUjILDSMoHUeCL/B1jXO37Eem7B69O9CkPPj43H7eDCB4deMvrvsz50Hu4+4GVK5r3vfwvTOiDnE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=h+Kv9ugX; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="J9zJhA6Y"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1712990564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wOouSKr5PfyN6X4iAvsI+hn1OYTMkXlDy/dogZ2/0xg=;
-	b=J9zJhA6Y0H65zl6t1AQUWrDFUA6GOFBOejV/FGGcbcLMx0HQ1KHudYGVzTEAzdTYTQH/0t
-	FPZtvGab8DJV9FVfxsjX4inIQtAZ3gCnDKRXnOJCEKfK3PJhQChiRyCWh1+d4N5qJFKn9k
-	5oGtSyJspYfWqd5VvEVvCxFaHLqyyi15LPrAqa9CnAH/XpS+DrybCF/gal7nC40I2GbiP5
-	U6rhJdf0o+zk4a9WeS4PrT3/m82pYWD+nTGL3Jk8m4BF0o9BmKawmkU0m+b5J9cxDZlrQ6
-	DA57Av6IEQTHXrGiVsnQERYDq/dYUxSxqWLjBq8W18PG/SPCOhcMUFUB62gqKw==
-From: Anton Bambura <jenneron@postmarketos.org>
-To: Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Sanyog Kale <sanyog.r.kale@intel.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/1] soundwire: qcom: disable stop clock on 1.3.0 and below
-Date: Sat, 13 Apr 2024 09:42:23 +0300
-Message-ID: <20240413064225.39643-1-jenneron@postmarketos.org>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="h+Kv9ugX"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1712990682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=edjx4KOtZo79KyUa3xCJ0nGWFUnOAaK8oUZd/7k6jA4=;
+	b=h+Kv9ugX3GvZKUIbTEx8bVBDB+8Okx1GG19VKWGu3vcaqOHibm/NkV8ZRtSVdVXgHPiKMa
+	LazIEggQ5THWV9yhIOro3mZ9kdSm+sbCdEJtF06uskKcyysNUBC+gSRrv+rQd9T04Yz8MG
+	VfcL9hCC6UOXI+qiNA2uSP4GMExzESsUsp+n95ZBw8BntnzkUewjZj9gysB7WiNh86nIm2
+	UepkxIQ2UfY4PEExOyTDWrRBd26bIZrbH2zkx2issxmYM8A6AkbygYIcGDcG5X4hgTSat/
+	7MWbp1V06V7cVoY66Z2yHboon7yKWmwvqXy64dYeClEh1WH9Gjo470p9VxtanA==
+Date: Sat, 13 Apr 2024 08:44:41 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-i2c@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Andi Shyti
+ <andi.shyti@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/18] i2c: rk3x: remove printout on handled timeouts
+In-Reply-To: <hgdhrf2jiovfxcppdtsq32sfbk4xuq7ewiwq4awwztj4mp3yez@kj6ixihkcxhe>
+References: <20240410112418.6400-20-wsa+renesas@sang-engineering.com>
+ <20240410112418.6400-33-wsa+renesas@sang-engineering.com>
+ <4bcd397ec377a4932c34d62c85ef28ed@manjaro.org>
+ <hgdhrf2jiovfxcppdtsq32sfbk4xuq7ewiwq4awwztj4mp3yez@kj6ixihkcxhe>
+Message-ID: <af8ac48f10a1636ab2486aef91e01c3f@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-This patch fixes audio on sdm845 + wcd9340 with soundwire. The affected
-devices are AYN Odin and Lenovo Yoga C630.
+On 2024-04-13 08:38, Wolfram Sang wrote:
+>> Maybe it would be good to turn it into a debug message, instead of
+>> simply removing it?  Maybe not all client drivers handle it correctly,
+>> in which case having an easy way for debugging would be beneficial.
+> 
+> Hmm, but it still returns -ETIMEDOUT to distinguish cases?
 
-If this gets applied it should also be backported to stable and 6.6.x LTS.
-
-Anton Bambura (1):
-  soundwire: qcom: disable stop clock on 1.3.0 and below
-
- drivers/soundwire/qcom.c | 3 +++
- 1 file changed, 3 insertions(+)
-
--- 
-2.43.0
-
+Sure, but I think that having such an additional debug facility
+can only help and save the people from adding temporary printk()s
+while debugging.
