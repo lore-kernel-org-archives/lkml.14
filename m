@@ -1,88 +1,90 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9E42C695
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E68218B14;
+	Sat, 13 Apr 2024 09:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713000275; cv=none; b=Bskh5vCbtwGvzm+4MUZLTdneh9wAyDTpPMoX1NQqIfZKZk6ogysuwLYjRGwEr/QBRDyL5xElVA62TA3bmQBrXpQUqBsT1Wpiw6r9l27NpBCGQ4V8Gyv82CPVio1EuuBaua/ATQiIYFcC4qUaqy631rUj3CvyRIF+AfwpSOdEGto=
+	t=1713000451; cv=none; b=cigDI8fwjEBY+ENRke5uvxvC7zWcTs7SjYhry4uhx6dfamSAKH1AN/04xbl7LTrD9rlI+3PoGvxE+tazrTBreaxhPHgmoqBsOtiGyeNcwkUJJlkUbK/dOxQ8opMKCGQ7ususN6U0K12qbTMZWE01rSKZ79bxbRK5qoPkCB1yYPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713000275; c=relaxed/simple;
-	bh=l46MXnhC2u19RXq1Wz3lUGvrN/61SBL0e/sJf+7k9oQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Sbtj6LWHAInMonGv94iHJmcBUjfRsofiiKThP8pkUQPZ16fjq3cYnfQFqqrZzWJ78heSeO18n6oZZAfHX8/pQ7lyTGN+nr7UfaE8zLqU7tTL/kXF+AKh3gCY1pJPzI8GGYfHB+5DJ7TMKjITufPEulQ01UtX+/OtIbcsd5+nrYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=O8YIbcsn; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1713000451; c=relaxed/simple;
+	bh=8FmkxRB0I6lztwgCbDGCSRZG9dB3qR5SIonDflggVww=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=thiaVFUBXXckpyVDIFarEFCDpKkleFsaR1P35cwOFqiXZEFp1HZMC+8uYvi9x3jBAWhgosqi26Ke2PM7DtIEHDRL8cdcfZ2ZB/OLDIXosEOpdyej2osgHWs7+0W38qsWHxJMb5Cv2ADjuGI0ettx/ZTnUMIVC5iK0uUl3w/vOYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9Hn57IX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="O8YIbcsn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712999961; bh=Q7kwnaIuI1db8rYJ74Oy5gBkZEV1lOcuhUvY4UDWwd8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=O8YIbcsnzwlRx1HLGKUJLtzbpWK1XqCxSeUTrFWLIDBHJ01BKCC9vwjvjy2Osqoiy
-	 ydxjl4gHH+3GgZQO1UZL3mo1jiVG5iYCUR+ob5oi4KEGnSl4oAz9WeK6u50ruUPVDb
-	 6oG02g/Lmn1CZKK8pUlCZD+NLJj75We6DhkemyO4=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza15-0.qq.com (NewEsmtp) with SMTP
-	id 4D3076D7; Sat, 13 Apr 2024 17:19:19 +0800
-X-QQ-mid: xmsmtpt1712999959tdcxlmpxv
-Message-ID: <tencent_A6684B2C74B976B5674C3DC1375496EC3709@qq.com>
-X-QQ-XMAILINFO: OJYupdf7O4Wt2vYterHmwDfCRmzNMuHNF4qlv+gSDC2kKjUyJJmfrkrwm5+x7V
-	 kfK98qym4iITALVEqueKc1xa0p+iXZM+OBw+vyqn/RDMKycWjifSkuXAGHGkeaMDFZt/rgM0l1y7
-	 STXINFTYxZi/q2XvX49vb5byImSu1ckzT/4mjdccPr86wI3k1TUyqbWD5i4jcqDskeMOcaU5GuJV
-	 nvNaHhllKKvvZ3RY6WJV9pIpHIj699EeSUj6YgC+fwgZ/K6nBExOdnichX4tkwK0nWJX5SvDnm+J
-	 kcXUrXKrfujV6A7beJOA3ss0VVIlKXx2p56BiqAg+sxBPmY6gLKc6QbbqfUEUsqTlxxEPDtpWBDt
-	 RDdhr52PPI+rB0ILU/Fpfqi6pdYMDgwEwlTOH0sw6PAl/6Rl5K54r7wCCAzBFxxkmp79axnbAMkh
-	 pB/TBBjO/bXnnnPMtPgy/QbrBcIAs1g4SZpMtZ6h0A4IADIATOqiXn7LduTZ3EL2YaLzehfWOMKk
-	 Q9SzjNyQO0A2DAOKuAvnvwq12iuF4P4yzINzFAw8TWEzWTRrGFT7NBbnKaswqVc8Dy2h2GGqHfdz
-	 UEAaUyCxMqdLWrcKtSoTjDg+bxuFMbGbpFQCkMdHdHWZ1Omw9wQFzbmhLBGQEVWEOFmph+u4COEw
-	 6EUzLCu3SnX7TgvNBIDguLQQ7zj299WVuA2Qq9xuRdMfJs31yR2x0LITE2ivf6nJaPCpUbjXNn9k
-	 BIXLiI7SnUv/249hASEKJLi1KiL6izPCLg7yqwXQXOWatHRZryzrMZsYEIgHOttNSf2yGtTP0g4D
-	 hpirwsEtGfNK+oxdHXBQkNHaLyNWXdo1IemL7i4DwhLtLe2JioQMJNS39SOpGybpYoP/wKAJKfSD
-	 ncTEbx+o6lfRsE5Sxe9XU+5qKk+4N0hEhT2C89ILbS9gT86S0jUbRCieDJq/JjJS5HnNjOrf8n6Q
-	 xQ1cE+xLmaVeeN0ufU3bxJwxVVqOVOZ/0kpMwTfbfPvTIbIHkHzA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+3a36aeabd31497d63f6e@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [gfs2?] KASAN: slab-use-after-free Read in gfs2_invalidate_folio
-Date: Sat, 13 Apr 2024 17:19:20 +0800
-X-OQ-MSGID: <20240413091919.2346828-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000004f557c0615d47e6d@google.com>
-References: <0000000000004f557c0615d47e6d@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9Hn57IX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB09C113CD;
+	Sat, 13 Apr 2024 09:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713000450;
+	bh=8FmkxRB0I6lztwgCbDGCSRZG9dB3qR5SIonDflggVww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b9Hn57IX/VvTNUy9obuO8zlFnX+pRlFGrpvIqioTwwuScVCBVb5ogzv9pvoWuvVgg
+	 CdEXKW5u345k2qQWe01PwyguqSgOt41OMYFyGmYKAxuo1rGXj4rZaNOPMgpq0Czysc
+	 wTg+hO8PZMXlaWPGA/ObXguuOdsf/PB08UOazC6pKcfIVrkzggdYDZajDaqUyKHqLg
+	 A2EtU63HpGI7phjtOvR2FFPJWHpuUocLhSy9+Ik/2KFPO7rfW/RbCGrl3dhZRTJslp
+	 NENuo2+7vFLdbaAkEkqOIkNXZQTBGmTt9NVuNZQBGNnAiT18MveFHS938SosRb7dJL
+	 rHDrVDzwbTasw==
+Date: Sat, 13 Apr 2024 10:27:17 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>
+Cc: joel@jms.id.au, bsp-development.geo@leica-geosystems.com, Eddie James
+ <eajames@linux.ibm.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] iio: pressure: dps310: support negative
+ temperature values
+Message-ID: <20240413102717.1ad05f7e@jic23-huawei>
+In-Reply-To: <20240410103604.992989-1-thomas.haemmerle@leica-geosystems.com>
+References: <20240327084937.3801125-1-thomas.haemmerle@leica-geosystems.com>
+	<20240410103604.992989-1-thomas.haemmerle@leica-geosystems.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-please test uaf in gfs2_invalidate_folio
+On Wed, 10 Apr 2024 12:36:00 +0200
+Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com> wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e8c39d0f57f3
+> This patch set fixes the reading of negative temperatures (returned in
+> millidegree celsius). As this requires a change of the error handling
+> other functions are aligned with this.
+> In addition a small code simplification for reading the scale factors
+> for temperature and pressure is included.
+One quick process thing.
+For IIO (and probably most of the rest of the kernel) we strongly discourage
+sending new versions in reply to a previous version.
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 8cddf955ebc0..698c9d1bfe20 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -1007,6 +1007,7 @@ static void trans_drain(struct gfs2_trans *tr)
- {
- 	struct gfs2_bufdata *bd;
- 	struct list_head *head;
-+	struct buffer_head * bh;
- 
- 	if (!tr)
- 		return;
-@@ -1022,6 +1023,8 @@ static void trans_drain(struct gfs2_trans *tr)
- 	head = &tr->tr_databuf;
- 	while (!list_empty(head)) {
- 		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
-+		bh = container_of((void *)bd, struct buffer_head, b_private);
-+		bh->b_private = NULL;
- 		list_del_init(&bd->bd_list);
- 		if (!list_empty(&bd->bd_ail_st_list))
- 			gfs2_remove_from_ail(bd);
+The only real result is that in a typical email client the threads become
+confused and the new version may be missed entirely.
+
+Just sent a fresh thread - the naming makes it easy to connect new
+versions to older ones and tools like b4 deal with this automatically.
+
+Jonathan
+> 
+> ---
+> Changes in v2:
+>  - include fixes tag
+>  - Split up patch
+>  - introduce variables for intermediate results in functions
+>  - simplify scale factor reading
+> 
+> Thomas Haemmerle (4):
+>   iio: pressure: dps310: support negative temperature values
+>   iio: pressure: dps310: introduce consistent error handling
+>   iio: pressure: dps310: consistently check return value of
+>     `regmap_read`
+>   iio: pressure: dps310: simplify scale factor reading
+> 
+>  drivers/iio/pressure/dps310.c | 138 +++++++++++++++++++---------------
+>  1 file changed, 77 insertions(+), 61 deletions(-)
+> 
+> 
+> base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
 
