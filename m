@@ -1,148 +1,69 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m17246.xmail.ntesmail.com (mail-m17246.xmail.ntesmail.com [45.195.17.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FBD45C1C
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 18:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1089C405F7;
+	Sat, 13 Apr 2024 18:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713031517; cv=none; b=Q3u1KfKnWFhDOv0+9IPDSWeXwpWxHohkQntFbcxE+rQH1UtVGhsp6qURSBg9ogiT52L0gNDV7msmmMENMOdD0UyaFVqD+a1L0H6Mj7+pSq0yzw1YF0nM/naI/TGZbhQGpietWT5kxHNWHx8uYmI4HeIpo3K09x6L/1IXfOphShA=
+	t=1713032272; cv=none; b=b9IYhTwpGqs3iAdZ48h9adFWi6Z7h7lCo2zNqU9a9/x7FxgrZOeHk4R7+xPDsTNZD6byxBlMNj3UM1p35Gy+r6xrK7Du+UB0MnoblUDqAGl02+KtIcaZgyMYC0CigYe7yT5SmBB/r7ToWVVtsUT0aPh7kNPg6Q0l8a2YQOynSW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713031517; c=relaxed/simple;
-	bh=xU8AWdw09sdQJi0ncss+TnMzhpb6i7Iz6NmzKQpVxMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nSn0zoK8G8LC59wcDnwGx8Xu385yUwyjE0IS0aERPUhDj4qs8xAkvU1pkHvqju77vuSvoZvIigK8wEV99b9LiHnmKPzt/Tjw4g+qC0VX+AQIuQGO54E2G55FL9Ci4Xg5VdYa3bx895mhJlxbg41hxfOPVAjABLCYgFAhDldT7sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zCJXB4lp; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zCJXB4lp"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d6c9678cbdso23678351fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 11:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713031513; x=1713636313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RjmAmY6mBQ1oGnN53iqp9T7eFLLOILL/++Sux50ZvHM=;
-        b=zCJXB4lplQhgfNouMCxLdJSOaj1kajPYXiIUhWUeV5xsUf44sa1EtHo2wtIwbNukWF
-         VC9YpguKS8UkKM7vu4WJpPTy8u0MoUsoK4BxAN5cta01neRUa0ryyzwjpGY+PAilr09V
-         N/gxgctrFWdpSdmVT4ohosprRR7looYRGvyXYqas6ovGWJpYAwrTfJOPyWNy+C1PzoU3
-         5WLTW6PLfb89SCRF4hejwvfOT3Iwppo1JSXyt97Af35tChbCxmPw84+2bI6oC7rLjyuV
-         9OU6/G8J2PWjxkDm2syU0/7yqjRtv38RuDN9YIx/EHNsnrPmyKFKHL1POidzI40rHDUT
-         ILXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713031513; x=1713636313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RjmAmY6mBQ1oGnN53iqp9T7eFLLOILL/++Sux50ZvHM=;
-        b=VlYrJGhz44QJoMhF31JikQXUFQisRbKdNbW3YjZo4DNybETJWXCU2HCbX8FqTboVB4
-         NdfbEI7F1kiqIBW0Uz/fh1FPwwhpBVyme0JpfHc0/U7iR368EX29Koo/6WuRRp4rxhV9
-         meFXTZRWBXusnnV5KN1Z08Iykd5EgdCVbZHBmaElzVjmyZViJcmhsmEGX2W3o0Cp/ChF
-         Z9WeMGVv3nxJILqP35nEMi3wESITC66NeUq9NqllyHm556tAm656eMmHDlNKpiurJV7k
-         wniECykn5+Rreh39PWetFjkcoI90bG8uovbfO1TzpBZ8tBJtCtOfj24YsHjchiF2Gaug
-         mqEw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3khYWbBX05TzhBR+PC8J+pxOQC3ITcgydv2dHFV4UkIlpzoDoTXP3fkqU58ESZEJQxBK1s/ydOLalz1C9Y5thaFk9WOk9iojByy6K
-X-Gm-Message-State: AOJu0YzPfQLPTap019lUcmswDLMvsFajDWplf3O5vDriQQLpjc782FiB
-	lEcZveQ03sekmF9So2qLxkRN517eiAgRMqY7T0VulCKvWUlmwzxWc2CdhhyDQ4jXD2bSC8vx3wg
-	GpS+m9J7rlWG1brweI0SuIO52DtRKddjBmaXjAA==
-X-Google-Smtp-Source: AGHT+IGLFrcrE0njG/Y3034rH32zmQVanzk/BzsxzsfG/+BIUfh1PSUnlIPxiLhp5Hroy+PgJ41zgV+Sb/sbnKAYcVk=
-X-Received: by 2002:a2e:a586:0:b0:2d8:4169:3a58 with SMTP id
- m6-20020a2ea586000000b002d841693a58mr4205609ljp.41.1713031512592; Sat, 13 Apr
- 2024 11:05:12 -0700 (PDT)
+	s=arc-20240116; t=1713032272; c=relaxed/simple;
+	bh=Mw0Udc146w+DJVcHuKpu3Yw25YQxQGimARuVph8en5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hLkHble++1EhLYGajoNjLf/m3lC7f98k2/wIDhhq3N45/0QNA48bwR4CQz5ssThM/IQjzD38NHmDgyiBHu4JxKu1DmbGHFtLIn7gR3iibcE2d1/nxCETSrWdf8mWKkTwv10I42JrdqnLbbsVvIAhfCzLSU4xhM3Iy8JRT5cb/h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from localhost.localdomain (unknown [IPV6:2409:8a62:79b:ed10:24be:fa63:4b9b:ba6e])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 34398560169;
+	Sat, 13 Apr 2024 16:48:54 +0800 (CST)
+From: "jun.gu" <jun.gu@easystack.cn>
+To: pshelar@ovn.org
+Cc: netdev@vger.kernel.org,
+	dev@openvswitch.org,
+	linux-kernel@vger.kernel.org,
+	"jun.gu" <jun.gu@easystack.cn>
+Subject: [PATCH] net: openvswitch: Check vport name
+Date: Sat, 13 Apr 2024 16:48:26 +0800
+Message-Id: <20240413084826.52417-1-jun.gu@easystack.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240413151152.165682-1-alisa.roman@analog.com> <20240413151152.165682-3-alisa.roman@analog.com>
-In-Reply-To: <20240413151152.165682-3-alisa.roman@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 13 Apr 2024 13:05:01 -0500
-Message-ID: <CAMknhBEwS2O3gWnJcc2RDXbeiUZ54pPm8PskGTTKL9xKYBOZ4A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] dt-bindings: iio: adc: ad7192: Add aincom supply
-To: Alisa-Dariana Roman <alisadariana@gmail.com>
-Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org, 
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org, nuno.sa@analog.com, 
-	marcelo.schmitt@analog.com, bigunclemax@gmail.com, okan.sahin@analog.com, 
-	fr0st61te@gmail.com, alisa.roman@analog.com, marcus.folkesson@gmail.com, 
-	schnelle@linux.ibm.com, liambeguin@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTUNMVk9OGh1MH0gZHUxLTFUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlPS0JBQxpNSUFMQhlBHh9KS0FJTxkeQR0aTUhBTxlCGUEZGk0eWVdZFhoPEhUdFF
+	lBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg++
+X-HM-Tid: 0a8ed6a53217023dkunm34398560169
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Py46Cxw6NzcwGS4NK0pONhUM
+	NBkKCgJVSlVKTEpJQkJDSkhPTkNOVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlJ
+	T0tCQUMaTUlBTEIZQR4fSktBSU8ZHkEdGk1IQU8ZQhlBGRpNHllXWQgBWUFKT0JPNwY+
 
-On Sat, Apr 13, 2024 at 10:12=E2=80=AFAM Alisa-Dariana Roman
-<alisadariana@gmail.com> wrote:
->
-> AINCOM should actually be a supply. If present and it has a non-zero
-> voltage, the pseudo-differential channels are configured as single-ended
-> with an offset. Otherwise, they are configured as differential channels
-> between AINx and AINCOM pins.
->
-> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
-> ---
->  .../devicetree/bindings/iio/adc/adi,ad7192.yaml          | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> index 16def2985ab4..ba506af3b73e 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> @@ -41,6 +41,14 @@ properties:
->    interrupts:
->      maxItems: 1
->
-> +  aincom-supply:
-> +    description: |
-> +      Optional AINCOM voltage supply. If present and it has a non-zero v=
-oltage,
-> +      the pseudo-differential channels are configured as single-ended ch=
-annels
-> +      with the AINCOM voltage as offset. Otherwise, the pseudo-different=
-ial
-> +      channels are configured as differential channels: voltageX-voltage=
-0, with
-> +      AINCOM as the negative input.
+Check vport name from dev_get_by_name, this can avoid to add and remove
+NIC repeatedly when NIC rename failed at system startup.
 
-This description doesn't sound quite right to me. The datasheet has no
-mention of single-ended inputs. And how each AINx input is used is
-independent of whether this property is present or not. And
-voltageX-voltage0 is a driver implementation detail that doesn't
-really belong in the bindings.
+Signed-off-by: Jun Gu <jun.gu@easystack.cn>
+---
+ net/openvswitch/vport-netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also, just FYI, in a similar case, Jonathan recently mentioned that he
-would prefer that these sorts of supplies would be required rather
-than optional [1]. But in this case, I think it needs to be optional
-for backwards compatibility since we are modifying existing DT
-bindings. But the point still stands that this property being present
-or not doesn't mean anything special (other than we might assume the
-AINCOM pin is connected to GND if the property is omitted).
+diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
+index 903537a5da22..de8977d7f329 100644
+--- a/net/openvswitch/vport-netdev.c
++++ b/net/openvswitch/vport-netdev.c
+@@ -78,7 +78,7 @@ struct vport *ovs_netdev_link(struct vport *vport, const char *name)
+ 	int err;
+ 
+ 	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
+-	if (!vport->dev) {
++	if (!vport->dev) || strcmp(name, ovs_vport_name(vport)) {
+ 		err = -ENODEV;
+ 		goto error_free_vport;
+ 	}
+-- 
+2.25.1
 
-[1]: https://lore.kernel.org/linux-iio/20240413181025.39d1a62e@jic23-huawei=
-/
-
-In any case, a better description would be one more like what the
-datasheet says for the AINCOM pin:
-
-"Analog inputs AIN1 to AIN4 are referenced to this input when
-configured for pseudodifferential operation."
-
-> +
->    dvdd-supply:
->      description: DVdd voltage supply
->
-> @@ -117,6 +125,7 @@ examples:
->              clock-names =3D "mclk";
->              interrupts =3D <25 0x2>;
->              interrupt-parent =3D <&gpio>;
-> +            aincom-supply =3D <&aincom>;
->              dvdd-supply =3D <&dvdd>;
->              avdd-supply =3D <&avdd>;
->              vref-supply =3D <&vref>;
-> --
-> 2.34.1
->
