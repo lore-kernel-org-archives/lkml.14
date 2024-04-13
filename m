@@ -1,88 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8232F3FF4;
-	Sat, 13 Apr 2024 20:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5657A23BE;
+	Sat, 13 Apr 2024 21:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713041807; cv=none; b=EPXuKOpoO1lMhCztNF5ABi3pq1a6LrqCbPjARsIKueYkhoc3IQZo4fSC4Jw71joHiRJhBhAIQ1t3fnCjsUg9wVc3+aLBqQTrI61sytSFUSidnch3HkIOMBWZouAN0rI+I9vHQhHTbRR6dQ5T6Q+PyNyi0X9WhOIL03O5pBrRVS0=
+	t=1713042323; cv=none; b=Mlr4u4SFiAJ4fEhu4ApZo+ekzpnyKad5YzZ7R+4e5frJDFmxc4ao69M5nN10LFUv8Xs5nXWTGDzGayAhU5iAxLH+mYE2lnCCE+BO5blfkN0vfaDiWLIdQKMHpDnLdhk88WPnCDJCuJB3/HbRaIyDXps/qtfaEWlwb2IcbI7hJmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713041807; c=relaxed/simple;
-	bh=j6SPsFOqCMJ2cexdWS6A1CoYES7H/ZCka9uTlYN0nGw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=OwptOwF8zQocyzFDarTe9ibAKNGCJI0mcVcIQj/J/JBXJrtyhQtsjeczNLG0phPnEhc0Z0+Rn7iVpbQ1eu7YKhW3r0rEjVGNuG3zBRG9QyaC8PAdmw3wrzSfKS8XR2V8lVviPrwRK49uoAzAdSfZ8b5yYsyXMMontGE/bcfD9C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLA6zCxA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713042323; c=relaxed/simple;
+	bh=jc5CSx3FODBAU6cziQpzfYX2MMDX+QOobH4WDFqX0T4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f5Qau5AG2LNNSnhZDwl1xMCN8mzJnca5hL7Q/pLY79p5iZnOEh4xYHrbsZi4ddNtk4n8xFoE1wPwUwTNXw6l+Sn1Fk+TuF+FOX520FnDbJPlBTOPdK2Y9lRqs9ogdtzkDepdSaCXLrJNVWa6qdWH4yjyv5iBP8bxmgUPOQvcIEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIb9Tt7P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLA6zCxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7EB8C113CD;
-	Sat, 13 Apr 2024 20:56:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIb9Tt7P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34287C113CD;
+	Sat, 13 Apr 2024 21:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713041806;
-	bh=j6SPsFOqCMJ2cexdWS6A1CoYES7H/ZCka9uTlYN0nGw=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=oLA6zCxAvYFwl6Zc67W9UlBsuofL84TItfzvWvZC+srQ2cYuTJo4hDcOw4kBEMrjw
-	 fFY3cSjqj20Z7EvBJWTJdcLns6o9++IALyTWoKwq2vRgSGmqMbya17JpavOSbmg0fv
-	 OWYO1FINy1RwOgqwdtfWhhBBUHLYbaxe74Xfm/njE/fsoLHp5b4tv/2gPFlxB4ikhY
-	 wfbNZRmwVLv1m/zNf4onr4rR+jx/BBxlYaJB4TG3XSZuG8g149XFbNVdpkISMtukYO
-	 T1FFI89SsrIraaBY2M3Kuvg2979AqUMfDtb2k9hiJI2St9FCL3HFkRxYfPdAK031bW
-	 c/9LqCkkqpmQg==
+	s=k20201202; t=1713042322;
+	bh=jc5CSx3FODBAU6cziQpzfYX2MMDX+QOobH4WDFqX0T4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dIb9Tt7Phfd4Iz9XgRpCVE38Nh21WoCCnu/AQyEsSeKxiIV62iy7eT2v7Obp+C7LW
+	 6kGX8OisPCtTeUZ2KkKkiopz/rJz0VkThgjQJxuWA8gNOFz+61xGpXw8lChsvzqXNX
+	 8Bv+T4Ij+ZskhVWZSmYuhH21NMSa2/L3nqxwO4uoEWpXz+x4NRUjybawaVPye+XhWH
+	 pImrCYNA6hEmMGwBp0cVHF68nG9iGFk1UL0SzSFd+y2bUvBUV36/I7nrjb7/LBIiBm
+	 uPSb6Y3FRcHf8P0ZHqFSTZjthf7zF5w+NtdpckI5cCaJzOwUAvrI+tecZykBcUC8cQ
+	 iu5rhvO1P8X6A==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: davidgow@google.com
+Cc: brendan.higgins@linux.dev,
+	dan.carpenter@linaro.org,
+	keescook@chromium.org,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft@linaro.org,
+	mic@digikod.net,
+	naresh.kamboju@linaro.org,
+	rmoar@google.com,
+	skhan@linuxfoundation.org,
+	will@kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH] kunit: Fix race condition in try-catch completion
+Date: Sat, 13 Apr 2024 23:04:10 +0200
+Message-ID: <20240413210411.441424-1-ojeda@kernel.org>
+In-Reply-To: <20240412025903.489470-1-davidgow@google.com>
+References: <20240412025903.489470-1-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 13 Apr 2024 23:56:40 +0300
-Message-Id: <D0JAMYT1JE4V.77DDGSKD7AL1@kernel.org>
-To: "Huang, Kai" <kai.huang@intel.com>, "Mehta, Sohil"
- <sohil.mehta@intel.com>, "mingo@redhat.com" <mingo@redhat.com>,
- "x86@kernel.org" <x86@kernel.org>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "cgroups@vger.kernel.org"
- <cgroups@vger.kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
- "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "mkoutny@suse.com"
- <mkoutny@suse.com>, "haitao.huang@linux.intel.com"
- <haitao.huang@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
- "tj@kernel.org" <tj@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
- <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
- "kristen@linux.intel.com" <kristen@linux.intel.com>,
- "yangjie@microsoft.com" <yangjie@microsoft.com>, "Li, Zhiquan1"
- <zhiquan1.li@intel.com>, "chrisyan@microsoft.com" <chrisyan@microsoft.com>
-Subject: Re: [PATCH v10 08/14] x86/sgx: Add basic EPC reclamation flow for
- cgroup
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240328002229.30264-1-haitao.huang@linux.intel.com>
- <20240328002229.30264-9-haitao.huang@linux.intel.com>
- <e616e520b021e2e7ac385b5b1c41febb781706de.camel@intel.com>
- <op.2lpq2mtswjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <0e406b207c7769359d45ba4e4594174e64ec3faa.camel@intel.com>
-In-Reply-To: <0e406b207c7769359d45ba4e4594174e64ec3faa.camel@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri Apr 5, 2024 at 6:07 AM EEST, Huang, Kai wrote:
-> On Thu, 2024-04-04 at 12:05 -0500, Haitao Huang wrote:
-> > > > -static inline int sgx_cgroup_try_charge(struct sgx_cgroup *sgx_cg)
-> > > > +static inline int sgx_cgroup_try_charge(struct sgx_cgroup *sgx_cg,=
-=C2=A0=20
-> > > > enum sgx_reclaim r)
-> > >=20
-> > > Is the @r here intentional for shorter typing?
-> > >=20
-> >=20
-> > yes :-)
-> > Will speel out to make it consistent if that's the concern.
+On Thu, Apr 11, 2024 at 10:59 PM David Gow <davidgow@google.com> wrote:
 >
-> I kinda prefer the full name to match the CONFIG_CGROUP_SGX_EPC on case. =
- You
-> can put the 'enum sgx_reclaim reclaim' parameter into the new line if nee=
-ded:
+> KUnit's try-catch infrastructure now uses vfork_done, which is always
+> set to a valid completion when a kthread is created, but which is set to
+> NULL once the thread terminates. This creates a race condition, where
+> the kthread exits before we can wait on it.
+>
+> Keep a copy of vfork_done, which is taken before we wake_up_process()
+> and so valid, and wait on that instead.
+>
+> Fixes: 4de2a8e4cca4 ("kunit: Handle test faults")
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/lkml/20240410102710.35911-1-naresh.kamboju@linaro.org/
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Acked-by: Mickaël Salaün <mic@digikod.net>
+> Signed-off-by: David Gow <davidgow@google.com>
 
-Why don't cgroups for SGX get always enabled when SGX and
-cgroups support are enabled?
+I noticed it with the Rust tests too, and indeed this fixed it:
 
-BR, Jarkko
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks!
+
+Cheers,
+Miguel
