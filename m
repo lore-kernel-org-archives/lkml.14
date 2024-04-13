@@ -1,91 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FEB262BD;
-	Sat, 13 Apr 2024 15:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB2345BE1;
+	Sat, 13 Apr 2024 15:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713021652; cv=none; b=EyzT2bf02XH3SWoGkuvVKJf5vGjy6ZXrqaES3K4Juf9Tvj2ccET/nGMJkYOYCdY5ge8K1/SPzRzv0ySQF7CJi0zQSFF0X5MSqO5vpvncb1asW5i7yAoeLPley7QcSqmFqWQiT8bUXbMz+nYjN6U8rbVURACWH7zCqFy15CtH7XU=
+	t=1713021693; cv=none; b=sG8A4C5hQcDy7+I2gFgaZK6+xPJ5D+c7zCoOsqaY39ctXr42Fnj0KNO1q2X7BBnpu7U9ygL42vSwqR6sog8WLvrgYACrwCEwtJSGGOG67+xdzeFaNHTnDm5ZsXONzV2u4w8mussveeKjhS2uT87vsqZYXnmCLTpsf/Ng9r5a6uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713021652; c=relaxed/simple;
-	bh=e9sE+dyxMVm/wZqrlIHJYPdoNQMkHpKh3LVnji1NKjI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Pdmkxx4yTM4LHzC+M896A+Za+Vcl7fo0dDxvj+G/MCz24U8v4lh/6Arzw5jki4zzX971Ap9jf2/HNbeGpaA8mwLh0VWIc2Y+0rO4CvG3el7l9Y27pjZ+0ELmuw2fDcrp4W93eanJ1Qu+NrqXpa2fQ89Nj5oaL58sisPK4iY62Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPqPPQGs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713021693; c=relaxed/simple;
+	bh=yEWjbDnznVC6vT4NO/Xj3JDq3tC38KjlGRoMlOKXXps=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z8gHuB+xB9Y67wFlcx7/QBr86ZfHbUCqN7flFo4hjkLQtTQcrE66rVqp7VQJXIBNiw8nBguZBBXyE7bWxlJQK8V5v6af8eXjzvAtw0W8EgaHDrM48LWamX/jjfo/CRW0LRdbLYfWw6SOcrd30vUP+hhFNPTBufxJKc9W6GBPUTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JQu8t4a6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPqPPQGs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49BCFC113CD;
-	Sat, 13 Apr 2024 15:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713021651;
-	bh=e9sE+dyxMVm/wZqrlIHJYPdoNQMkHpKh3LVnji1NKjI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=UPqPPQGsT44tnV1v64hDHxQL7MTvJtHYutVf0Z1GXK2weBYVXMUZFeq9DyZ6nZ7wv
-	 YqUH3CMUsWktkQrCtRpzOsQmp9Zytyn0bmgShOf4zdyCVKVLaM0IwOrY8yuttHwAZ3
-	 ejXiwByZgKTxL4q/ivOBrfhzuDKczp9qyhGUzkXbdP2msWtPRVE6n7gONhbRlEXvXx
-	 Wi8bHE6xLBBD8BZ6piTuvV8rD2I3BgAzIbRu0Oycg4zqv33qJlzE3wsGV+KYlpmSK8
-	 A/O9u+ifMeM/9Ndk2TRZ0X5CdyFW7Uik/1JS4RVSZmq4zXkge0ovdFBjJzrHN4pAiq
-	 mcQRc+/T1KuUg==
-Date: Sat, 13 Apr 2024 10:20:50 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JQu8t4a6"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43DF8N9f030225;
+	Sat, 13 Apr 2024 15:21:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=v1nRL8Z
+	DfgPlt89U1eI5XAv4EMOC/gfGb5BYwBW6vPk=; b=JQu8t4a655UPNQQ8dGlTmJP
+	oQ9mY2FKlsgjA8ZrFGG9G9gnU1WOdagMFN1FjvjAdU/MJ38/a6PA3S14I3gWG1Hb
+	C+brhU03ryywUQxJu8DLtVwr/hZ3BVDxkUUcwc/1ILZeppcClqEt6JOg2P5yvsQx
+	fuw1bvSdpRu0KIcgFLJRdT2v6u+m3limXExyI5tanwWfxHjXxCnLVwvT8TGBzSpf
+	Q4XrVcY0uOI9K8QHHem5vdxNtqKUs8W234VL8nLQIvHgNzHyoKcN0ZGgV3xcridd
+	Wyx2HTEamHfdjKf90GR0h9xksqjm7FwrYjmonR9qyQFfER1ZLB+zNjqaDlbmaFQ=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xfh2crnw4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Apr 2024 15:21:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43DFL8uV007731
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 13 Apr 2024 15:21:08 GMT
+Received: from hu-jkona-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sat, 13 Apr 2024 08:21:00 -0700
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J .
+ Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>, Pavel Machek
+	<pavel@ucw.cz>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Andy
+ Gross" <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+        "Satya Priya
+ Kakitapalli" <quic_skakitap@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        "Jagadeesh Kona" <quic_jkona@quicinc.com>
+Subject: [PATCH V5 RESEND 0/5] PM: domains: Add control for switching back and forth to HW control
+Date: Sat, 13 Apr 2024 20:50:08 +0530
+Message-ID: <20240413152013.22307-1-quic_jkona@quicinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Etienne Buira <etienne.buira@free.fr>
-Cc: Johan Jonker <jbx6244@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
- Dragan Simic <dsimic@manjaro.org>, shironeko <shironeko@tesaguri.club>, 
- Jonas Karlman <jonas@kwiboo.se>, linux-rockchip@lists.infradead.org, 
- devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, 
- linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
- linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <ZhqO-DEmh-6TeHrt@Z926fQmE5jqhFMgp6>
-References: <ZhqO-DEmh-6TeHrt@Z926fQmE5jqhFMgp6>
-Message-Id: <171302164916.1347779.204678982671031418.robh@kernel.org>
-Subject: Re: [PATCH] Avoid error message on rk3328 use
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: FAzFLGXG3OsMsDAkOAIwv7xrlrnCVhrp
+X-Proofpoint-GUID: FAzFLGXG3OsMsDAkOAIwv7xrlrnCVhrp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-13_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 mlxscore=0 malwarescore=0 clxscore=1011 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 suspectscore=0 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404130113
 
+This series adds support for dev_pm_genpd_set_hwmode() and dev_pm_genpd_get_hwmode() APIs
+and support in gdsc provider drivers to register respective callbacks and venus consumer
+driver example using above API to switch the power domain(GDSC) to HW/SW modes dynamically
+at runtime.
 
-On Sat, 13 Apr 2024 15:56:08 +0200, Etienne Buira wrote:
-> rockchip,rk3328-grf-gpio is handled as syscon, but syscon mandates
-> presence of gpio,syscon-dev node (or it will call dev_err() when probed).
-> Correct rk3328.dtsi and related documentation to follow syscon's
-> expectations.
-> 
-> Signed-off-by: Etienne Buira <etienne.buira@free.fr>
-> ---
->  .../devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml      | 2 ++
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi                        | 1 +
->  2 files changed, 3 insertions(+)
-> 
+This is resend of V5 series, added R-By tags received in V5 for 1st & 2nd patches.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Link to V5: https://lore.kernel.org/all/20240315111046.22136-1-quic_jkona@quicinc.com/
 
-yamllint warnings/errors:
+Changes in V5:
+- Updated 1st patch as per V4 review comments to synchronize the initial HW mode state by
+  invoking ->get_hwmode_dev()callback in genpd_add_device()
+- With above change, SW cached hwmode will contain correct value initially, and it will be
+  updated everytime mode is changed in set_hwmode, hence updated dev_pm_genpd_get_hwmode()
+  to just return SW cached hwmode in 1st patch
+- Updated commit text for 1st, 3rd, 4th and 5th patches
+- Updated 3rd and 5th patches as per review comments received on V4 series
+- Added R-By tags received in older series to 1st and 2nd patches
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.example.dtb: gpio: 'gpio,syscon-dev' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/gpio/rockchip,rk3328-grf-gpio.yaml#
+Previous series:
+V4: https://lore.kernel.org/all/20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org/
+V3: https://lore.kernel.org/lkml/20230823114528.3677667-1-abel.vesa@linaro.org/ 
+V2: https://lore.kernel.org/lkml/20230816145741.1472721-1-abel.vesa@linaro.org/
+V1: https://lore.kernel.org/all/20230628105652.1670316-1-abel.vesa@linaro.org/
 
-doc reference errors (make refcheckdocs):
+Abel Vesa (1):
+  PM: domains: Add the domain HW-managed mode to the summary
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ZhqO-DEmh-6TeHrt@Z926fQmE5jqhFMgp6
+Jagadeesh Kona (3):
+  clk: qcom: gdsc: Add set and get hwmode callbacks to switch GDSC mode
+  clk: qcom: Use HW_CTRL_TRIGGER flag to switch video GDSC to HW mode
+  venus: pm_helpers: Use dev_pm_genpd_set_hwmode to switch GDSC mode on
+    V6
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Ulf Hansson (1):
+  PM: domains: Allow devices attached to genpd to be managed by HW
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+ drivers/clk/qcom/gdsc.c                       | 37 +++++++++
+ drivers/clk/qcom/gdsc.h                       |  1 +
+ drivers/clk/qcom/videocc-sc7280.c             |  2 +-
+ drivers/clk/qcom/videocc-sm8250.c             |  4 +-
+ .../media/platform/qcom/venus/pm_helpers.c    | 39 ++++++----
+ drivers/pmdomain/core.c                       | 78 ++++++++++++++++++-
+ include/linux/pm_domain.h                     | 17 ++++
+ 7 files changed, 157 insertions(+), 21 deletions(-)
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.43.0
 
