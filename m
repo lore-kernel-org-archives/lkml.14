@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B723D56D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383B43F8C7;
 	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713013362; cv=none; b=eLMjk9TKMy8lPkXl9sBGYWFVNp3Lf4d/6AreVUf3e0wSwsE/hsr3/ohNWv8mYXdEI78CaRP+vU4LLXyguaAsJi7sqZPAeXLY/f6MaZdezX8RC23vjMY7AN1Kdq0XBEXjvsvMUh9FDuHto0IO6Nm5g8aXUxqpUtWnoIatv6Mt18Y=
+	t=1713013362; cv=none; b=lyFsH6tSa6xEyviOc3Kf5bKzM7q8gVGLbzexWuaOX5VljObs1ff72N78VwvDbKf5Mxh0iWQFwkL0y2uQ4+LrsSqDPD+e9mZWAYdxbXD1+SvGbHjbwKiTJenfY3+2jq58VqEiAPZ8/xiv/EaXCiMJC6arNzX8JIn8sSeGd88sWO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713013362; c=relaxed/simple;
-	bh=tIwVcmzfuWrvRXOL2CNVlGRiqUSlmA862fC7CswLoWc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OhJ0q6Gp+5quRe1jfz6CpYWjuov2DgvDCTQukvoiNsK2xzPC3irWEc83Tmi5mW1cXuHsFxAf3nn5ps6hFBh4143QdQ9juEknP3Wr5R0MTWdEA67wieJf7eeSyuf2MAy1SyCX6lqJjI41DYsCW/P14XhkjTWRBH68K/78KREbtcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deo0xecY; arc=none smtp.client-ip=10.30.226.201
+	bh=1hfFJpbVy+jRqc4NBcjfKebyqWZeLEI6ADFhHCGKzT4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FsTt7uu8RMFB0nOjFFW+nvJwpMzzI7HfhimcCIzN6C5kTQCSq8UMe7OXDm173ZuE0pFeUv4R4TbLPRulATcpZPIiGMfK/ocdkamfz3KxH+4oNYDaavbs1HGKS/DEw2YKAf3c4G2sBoCC9pf4JA2LdyxCa1LTB4Jxq2UBUMwP1Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCQPqIA0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deo0xecY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E372C113CD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCQPqIA0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3EB9C2BBFC;
 	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713013361;
-	bh=tIwVcmzfuWrvRXOL2CNVlGRiqUSlmA862fC7CswLoWc=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=deo0xecYYCfglU3Qnkjrp+fBSTarRhRzy5Wkb+HRTFB/TCH86sEw1QEtdUg44zetl
-	 8j3+ZwE1Xu/AfpM+HTm2tVamGaXnhq6WRbDEndUL6Vl+33P+FA//XQ4qCIDWsWtPZ7
-	 /6PJ5o346Uut0w9afs9rWXYxBYtdQLfvzFr+vx6M/ZI/5xT+AhurbhIY/fymh9MxtF
-	 Mr/MTN4EjV/YNR2kvxbkoGIfctF1kh0yeUEd5UOy2Z1/wN3iBMOPxOhNkEBAmWqb8f
-	 4LKZjaCXG3Re0/Jcy4qJK10MWiUAg6T+vOmwzanoyGw0GaI5JHAJK6hm6QyYpsfJRr
-	 uOe1zwvE5MQXQ==
+	bh=1hfFJpbVy+jRqc4NBcjfKebyqWZeLEI6ADFhHCGKzT4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=CCQPqIA06KHZZ/+XG8gQbIoK5NvuyjL91mRzOaJYMlENGMi4mzkudX8VdVSe/EAep
+	 Q5aUgzhl3cl1L3gowy5Hw3YE35ElF+LyYQ+r3Zld2CofPeD4Lr5TvL1b5LARxXcQnD
+	 HmAKjbHSYTFOzQxax7D2mniLZoS9fW7vPWoCIY7bFbXcVLol3W1uHc5Uu9I3+p+tHQ
+	 isds+FcGceR080wyqyyBb4UhGgpU3N008ZJ1pBcWAFUcUt+T9SOApBMJhLR+2gsHyO
+	 bq1UZHae8A4WP/sY9MKbN8yqda2ZHOQtatWVH4IIjrX0Yc689WKyqPBc+NmWtlrm5K
+	 Z2Q9+ZRE7BiFw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C374C4345F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0BBC04FFF;
 	Sat, 13 Apr 2024 13:02:41 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Subject: [PATCH net 0/2] Fix port mirroring on MT7530 DSA subdriver
-Date: Sat, 13 Apr 2024 16:01:38 +0300
-Message-Id: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-0-476deff8cc06@arinc9.com>
+Date: Sat, 13 Apr 2024 16:01:40 +0300
+Subject: [PATCH net 2/2] net: dsa: mt7530: fix port mirroring for MT7988
+ SoC switch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIADKCGmYC/x2NQQqDMBBFryKz7kA00cReRbpIY7QDmpFJKAXx7
- k27fPD++yfkKBQz3JsTJL4pE6cK7a2B8PJpjUhzZehUZ5RpNT4NLiyYYsG92F4rXOiDO4mwUFq
- xMG4c/IYHS0Gf5p82Oofa+t51YRhG66HmD4l1+b+eoObgcV1f7Wt53Y8AAAA=
+Message-Id: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-2-476deff8cc06@arinc9.com>
+References: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-0-476deff8cc06@arinc9.com>
+In-Reply-To: <20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-v1-0-476deff8cc06@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
  Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
  Florian Fainelli <f.fainelli@gmail.com>, 
@@ -58,11 +59,11 @@ Cc: Holger Stadali <hs@giax.de>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713013352; l=731;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713013352; l=1595;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=tIwVcmzfuWrvRXOL2CNVlGRiqUSlmA862fC7CswLoWc=;
- b=AIrFvlQc3tcxviGzOLIGmBqZmIxEahKHRc9YPMCzCUupD2yadJp90xxhu93W3CrPfWgGyLLED
- MCUb176IfZaDE61ysaeVKABk/KB1+fYyhH9GXZ9wKbm+94vAREIVkeP
+ bh=J5sBZDEYQ2MZhOw2PxMAD+gQryIOB3G0EIw5h33fGKY=;
+ b=1ey++0YizyHi3vcP2NlwKUdn8ZXxyN89dYXm/TAlv6xdycNAjjkoeViF08Xq34iWLaB/yBlgs
+ 7aq3qAX1yCuA5RcztQ1SxOoidtaDCWL3nktMXq4ac2BoLg8BcYRTy5I
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
@@ -70,28 +71,50 @@ X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
 X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 Reply-To: arinc.unal@arinc9.com
 
-Hi.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This patch series fixes the frames received on the local port (monitor
-port) not being mirrored, and port mirroring for the MT7988 SoC switch.
+The "MT7988A Wi-Fi 7 Generation Router Platform: Datasheet (Open Version)
+v0.1" document shows bits 16 to 18 as the MIRROR_PORT field of the CPU
+forward control register. Currently, the MT7530 DSA subdriver configures
+bits 0 to 2 of the CPU forward control register which breaks the port
+mirroring feature for the MT7988 SoC switch.
 
-Arınç
+Fix this by using the MT7531_MIRROR_PORT_GET() and MT7531_MIRROR_PORT_SET()
+macros which utilise the correct bits.
 
+Fixes: 110c18bfed41 ("net: dsa: mt7530: introduce driver for MT7988 built-in switch")
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
-Arınç ÜNAL (2):
-      net: dsa: mt7530: fix mirroring frames received on local port
-      net: dsa: mt7530: fix port mirroring for MT7988 SoC switch
+ drivers/net/dsa/mt7530.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
- drivers/net/dsa/mt7530.c | 16 ++++++++++++----
- drivers/net/dsa/mt7530.h |  4 ++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
----
-base-commit: 4e1ad31ce3205d9400816e08cf14b7c96295d22e
-change-id: 20240413-b4-for-net-mt7530-fix-mirroring-to-local-port-and-mt7988-37a582c6697a
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index b84e1845fa02..8090390edaf9 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1883,14 +1883,16 @@ mt7530_port_vlan_del(struct dsa_switch *ds, int port,
+ 
+ static int mt753x_mirror_port_get(unsigned int id, u32 val)
+ {
+-	return (id == ID_MT7531) ? MT7531_MIRROR_PORT_GET(val) :
+-				   MIRROR_PORT(val);
++	return (id == ID_MT7531 || id == ID_MT7988) ?
++		       MT7531_MIRROR_PORT_GET(val) :
++		       MIRROR_PORT(val);
+ }
+ 
+ static int mt753x_mirror_port_set(unsigned int id, u32 val)
+ {
+-	return (id == ID_MT7531) ? MT7531_MIRROR_PORT_SET(val) :
+-				   MIRROR_PORT(val);
++	return (id == ID_MT7531 || id == ID_MT7988) ?
++		       MT7531_MIRROR_PORT_SET(val) :
++		       MIRROR_PORT(val);
+ }
+ 
+ static int mt753x_port_mirror_add(struct dsa_switch *ds, int port,
 
-Best regards,
 -- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
+2.40.1
 
 
