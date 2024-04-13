@@ -1,127 +1,96 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3856F2C9D;
-	Sat, 13 Apr 2024 11:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AA46AB8;
+	Sat, 13 Apr 2024 11:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713008290; cv=none; b=JFVODSQtkyJXs2Emv2h3LEGqBDHUKsc8nE2ZigpUIBg7FEqsR5bCYzE5rVt2YbIL4BOxQiLYgsTcNL8eB9fTy4UUZ9+hiiyXMOHxeSbhSdEhY8u1sjWpCs3qdugqDcQ3x1RJWejUqJuOjCx3ZU1qH0iqpsLgqwrpUxBJMAmRD3c=
+	t=1713008861; cv=none; b=OYJttMyE83efSKsaxac+c1iPDwKkGsxky8zelNdWAUETd8DtQeNME1zE6X7H/UKf3GsFZQgf8wgHRjfVrMCFb3Y8MWPlyFywneyDV5lyFo9tkBf+iMYY+d+3Idy1K6bLW3sQRO1O4eG01J+2hLRfpw/1G2BN9HvWOAvQJ1Aq6Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713008290; c=relaxed/simple;
-	bh=eURnQW+uqGSQ/Y+YT+UOu7F4suXVR0cemcfQqJf1+gM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QAitxl7aDA9JdsEedqbheXZgH8Y9d7lj5navj8LDccSp1/tVw6N0kC5vOGJGGxkWfQvJhjZv2KVa6A1zF5/PxhRZ7S+gRF8vIqW3uYlIMhFM5DEBuhY868D2Q6u5EcUdw1Jn9ttWPprGCJovb0kFA1D3MpK97FW/h6iSIk7XJhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.li; spf=pass smtp.mailfrom=gmx.li; dkim=pass (2048-bit key) header.d=gmx.li header.i=thomas.kuehne@gmx.li header.b=mZ0IRgfG; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.li
+	s=arc-20240116; t=1713008861; c=relaxed/simple;
+	bh=S5SKxjqBLEazmK9VzoxpMLNUbW254TmsbmfvUiZKfkU=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=o4LiVlhPz+ok84X+x53dbfVc8JXOOgr/KQpfOpkg2JH5QWjCwqYzcwcQmCra5OePnFPUTtAwo2AbZwOK2wmbQ5oEySGC3LObuZd8tGlwK9did1+FwYFI9D/59jfYkxm6ufyC7gGCJrtRQft9NRnfkESXKxBv5CZNFMOM93M6n9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=y2TfVhAY; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.li header.i=thomas.kuehne@gmx.li header.b="mZ0IRgfG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.li;
-	s=s31663417; t=1713008281; x=1713613081; i=thomas.kuehne@gmx.li;
-	bh=V6CMb3JGrJkWpqnpZmfMM2ApMJs9UEpEUKghePgL/0M=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-	b=mZ0IRgfGQNzCQ2YUklN45m2/RfjtND5e8U8e9tZfCcnOVZDkr8zXxXPeWRsOJ/cq
-	 6/ruHaBdeBNVaIU4pKOTVeNZXOjjsN4r//FXPdWjov6Xr2LuM0f9UfJxVu7wVSMWD
-	 10wOf/LyDaBMeZSoP3Y+aoZ4indXIy5NGpfLaqrgdsNEMvJgGpme01zPg7EUVdZyG
-	 3Uu4HsdTLi5A3L4TqP9RmOrd/HR7CXRPEhMC/C4OzKA48JwkmqIShAhkW0OeBNe/f
-	 iDSFHU7At1LNCpY56UXQneAJvUtNJxAQlSGC7zS7AG9WzFG9zcZHuLHOXFTvD6p2n
-	 hp9x1N2tUhQ5kArVkg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from black ([2.59.120.154]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MdvmY-1sVU9n2tBG-00b5F0; Sat, 13
- Apr 2024 13:38:01 +0200
-Date: Sat, 13 Apr 2024 12:39:17 +0000
-From: Thomas Kuehne <thomas.kuehne@gmx.li>
-To: jikos@kernel.org, bentiss@kernel.org
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: hid-debug: add EV_FF and FF_STATUS mappings
-Message-ID: <Zhp89Q8k13Uua24f@black>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="y2TfVhAY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1713008853; bh=buU/TI1ycm4oXmFV2yW1Moaxa/OBm98bV+Uw5KNRXxo=;
+	h=From:To:Cc:Subject:Date;
+	b=y2TfVhAY8vuaK1fKT5HoU6TzEB/5gm8yMjnTvohjCakZ/Alx3NDR9mc1tNaXotXAu
+	 IRLfBTjTeH9ox6ajJKXF46BbsCOXFw8oeTWC+Erfxtd/hYTx8EsBdlT24UJcLTzGrJ
+	 1jvDDBSAY5yFTk+6o3NTOlX7zCIPw8YYdNRw5eLI=
+Received: from levi-pc.. ([61.186.29.10])
+	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
+	id A4B1F810; Sat, 13 Apr 2024 19:41:11 +0800
+X-QQ-mid: xmsmtpt1713008471t21yb30x3
+Message-ID: <tencent_37EB880C5E5BD99D21C16B288115C4545F06@qq.com>
+X-QQ-XMAILINFO: Nx5llcX2zp4EfIlu/YnLYTHyOv1Fz6LhBZJqmmpegZxljWmX0TmL0/dPqaPKOS
+	 KCFhD788ITjLkg61iwrr8vsW3z9pGQEH0s2IiGeMPKkxDlhcXN9fbH/AWLIx6nP607/KhafMaVZo
+	 MHUBo11WDj+0ZvWJ4wxDm/MlkG+qvLzhxwPW8ofPDm+IcpnUlmN8qb+ak7+ujBeAn6kLPSZiHUfc
+	 wsZNyZiyg6xjS9/7Xq0tu+WgxdJiRUfLtrgVFjm/eyJ487kQo8W7k+sFmFp9QhGX04j4mJ6rB+n1
+	 9gyz365oK+LwYw3WGu/WFn1p39Zg3Hk7CON8d8g/zBrgkEjJIQq1zmcGnqksygIIQd+sS66X/wf2
+	 XVV3doIuc/jeX5LfE6dqL/snOih5Ot1K8i2P01hFdGJMbhIrEedp9v6l7wQtAEA9HgOPHJzf85kt
+	 160+8eW++m86PNawfVoEw+OVXVVroDOUVjtCzUU2qV9A3EQd3R9FYTbkUhjJX0fRsA2eNgYOlgtb
+	 w9dHbvaBFPWn5fu3DPXx0ZLwG/FjshvTxm24MGDSQfU5xmecFTss6wJiTBntOt48pmLr9YP5srHc
+	 AzZIU5pY8Xhct0mV9l5j7eHIaYqR4xiOspoLiD7Ng1z9/k7IbxuzWXcPNmH6/kVYvGqNqrsg8KC3
+	 v3/feApTsq1UfjS6WavSkhI4dqUmOLgoMRPp+fVWgYOOlCTi55DSL6TF3syyP85oz2c9XICYm9c4
+	 V04lVgwR7IfDJwz2MNb/5eXMVGNRS8FQP22PzgM/wUJDrFRhJ9TO5ThCenOQj89e1lEuuZZiz1aH
+	 s4S88lU+cU9VUTaYndXFDvXnAlkgMEQUQRSo0T0HyIJDmvq70+TXPZUoZXLW2Dls9V+BZ8NWkpg1
+	 RA2x5hjlxN1vBwIjYl5X/1tTGCy71Td+ILXxJtv4oL/JkbWrax89fcuSzH/6emOfU+onPOp5etGz
+	 /2nuHsvo2DJzqQZS26Uxf+FOKeZy4ooF/IqJWR6sBGQsvRql+fHzlSLrXpmli0v+uUSHenu/7KGw
+	 A8tIPQZmCXiMeGSUTHr8zKPDCXMVUpIxR0NwyGStAVLY44iA38rJ13EnmtrqAmrRwTZVTNW/Epma
+	 uwVn+Kv6JlkR789QanGE2pnwfH3B+2ieq32BAV
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: zhanghuayu1233@qq.com
+To: perex@perex.cz,
+	tiwai@suse.com,
+	sbinding@opensource.cirrus.com
+Cc: alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	zhanghuayu.dev@gmail.com,
+	zhanghuayu1233@qq.com
+Subject: [PATCH] Fix volumn control of ThinkBook 16P Gen4
+Date: Sat, 13 Apr 2024 19:41:22 +0800
+X-OQ-MSGID: <20240413114122.24524-1-zhanghuayu1233@qq.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:yfDYyEJwUb0Xe8wBgiJpFcSD8oAkG8Uz1oUcteWNSAHC7/+5aAq
- wUCXBVP47cF+6sQcn6zyhz+9o/ZOBLgX8MafzDex+mM0P32BUW9qfJ6V9Q5/6Fu9g0Bk/nf
- 5R8N3QIjmjyDDOQ8TmyvotTj+KcEuPGiTXmAVg5x2wPffPSgJYRxuKqG/YyzwGJbRjrQQZj
- S9lpwy7mHk2eiekVa1Jmg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j7jnh2l+7zk=;867nGBU6mLpqOfJlFkCtij2daPk
- MFZr3bZuaxMc3mcxzErtn9TPvdTgSwr82y0+XeYLKRNWdaX8hrU2ke66FPVesIPKN0sH1+pTs
- iFAlxwLPELsp3WU9935pMl31TPCzmEbjsAa09WMkeJtzkXJB+VOvtZ5odpgpsT6+4kBqmCYrG
- cfpR4XGDkdWPiKGkDifIW5lokdM80DTrzedULZtcDHIhXKLWQ/K4ZrR1VwdOQ+g/Vpe6+qhHv
- 2j1ctWcVTI+X6H2t9gKe76qQj+5I7qF3lSHpVlSanSJpoM1hrEerfB6hV8AUiaAPQ2EVOYdj1
- SYrA9Pr1rep5tWuhKA8fXqShRTW0loYTO5Vp0LaaNXvZ0sAErpas4tfWBBG0fI+EfwNmRISoC
- s8dsbtD7hdspWTsI5hRO01EUpSInJeuGfIn6hXNN6ssF+SSTsZkw1ignMN48+PqH51T2U3bDf
- 722R12iIm8fIvXWVKs9sYfI2je1iUC5A3zZm54X7zEnNY/NVZvLIAHW8TWeFlEptWd6p06Wwr
- XbVJkQf4PX0+yodm+jFsAG0CedjRqx4d6m3MyLin3dKJuW9LWWK8p0yljHr0G9oyEjYqBtRCX
- TXvMKfKiwvgF/+98/n/ElZypZvO8VI0DMTUH1y9nG/Kuyrsyd5v8FOA7ET0+jqHtmkDhVFjva
- A+9C4b2RS8kCpUL7qxjur1iMVw4wOlMZjyQjNSSGWBp1M00LJZLPObYb9mKPDRNnYK3fzSUMP
- wuLp3alFECRcz/YLujt6K3DFB+JFk9ri+TxDYgjugdhydmo6cuMZQvgG6TXUj8QQEj6lSXABN
- 5hefdL1d9q8oqC275LTS64Qs+0zQ1oeq+WqnDzeZDg7u4=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Currently hid-debug only output question marks for all force
-feedback related input mapping making debugging gamepads
-with force feedback a challenge.
+From: Huayu Zhang <zhanghuayu1233@qq.com>
 
-This adds the necessary mapping information to output
-EV_FF and FF_STATUS related information.
+change HDA & AMP configuration from ALC287_FIXUP_CS35L41_I2C_2 to
+ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD for ThinkBook 16P Gen4 models to fix volumn
+control issue (cannot fully mute).
 
-Signed-off-by: Thomas Kuehne <thomas.kuehne@gmx.li>
-=2D--
- drivers/hid/hid-debug.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+Signed-off-by: Huayu Zhang <zhanghuayu1233@qq.com>
+---
+ sound/pci/hda/patch_realtek.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index add353a17853..bd9bb235363f 100644
-=2D-- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -3572,12 +3572,38 @@ static const char *software[SW_CNT] =3D {
- 	[SW_MACHINE_COVER] =3D "MachineCover",
- };
-
-+static const char *force[FF_CNT] =3D {
-+	[FF_RUMBLE] =3D "FF_RUMBLE",
-+	[FF_PERIODIC] =3D "FF_PERIODIC",
-+	[FF_CONSTANT] =3D "FF_CONSTANT",
-+	[FF_SPRING] =3D "FF_SPRING",
-+	[FF_FRICTION] =3D "FF_FRICTION",
-+	[FF_DAMPER] =3D "FF_DAMPER",
-+	[FF_INERTIA] =3D "FF_INERTIA",
-+	[FF_RAMP] =3D "FF_RAMP",
-+	[FF_SQUARE] =3D "FF_SQUARE",
-+	[FF_TRIANGLE] =3D "FF_TRIANGLE",
-+	[FF_SINE] =3D "FF_SINE",
-+	[FF_SAW_UP] =3D "FF_SAW_UP",
-+	[FF_SAW_DOWN] =3D "FF_SAW_DOWN",
-+	[FF_CUSTOM] =3D "FF_CUSTOM",
-+	[FF_GAIN] =3D "FF_GAIN",
-+	[FF_AUTOCENTER] =3D "FF_AUTOCENTER",
-+	[FF_MAX] =3D "FF_MAX",
-+};
-+
-+static const char *force_status[FF_STATUS_MAX + 1] =3D {
-+	[FF_STATUS_STOPPED] =3D "FF_STATUS_STOPPED",
-+	[FF_STATUS_PLAYING] =3D "FF_STATUS_PLAYING",
-+};
-+
- static const char **names[EV_MAX + 1] =3D {
- 	[EV_SYN] =3D syncs,			[EV_KEY] =3D keys,
- 	[EV_REL] =3D relatives,			[EV_ABS] =3D absolutes,
- 	[EV_MSC] =3D misc,			[EV_LED] =3D leds,
- 	[EV_SND] =3D sounds,			[EV_REP] =3D repeats,
--	[EV_SW]  =3D software,
-+	[EV_SW]  =3D software,			[EV_FF] =3D force,
-+	[EV_FF_STATUS] =3D force_status,
- };
-
- static void hid_resolv_event(__u8 type, __u16 code, struct seq_file *f)
-
-base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
-=2D-
-2.40.1
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d6940bc4ec39..1aef223307bb 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10396,8 +10396,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP_TAS2781_I2C),
+-	SND_PCI_QUIRK(0x17aa, 0x38a9, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
+-	SND_PCI_QUIRK(0x17aa, 0x38ab, "Thinkbook 16P", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x17aa, 0x38a9, "Thinkbook 16P", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
++	SND_PCI_QUIRK(0x17aa, 0x38ab, "Thinkbook 16P", ALC287_FIXUP_MG_RTKC_CSAMP_CS35L41_I2C_THINKPAD),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
+-- 
+2.34.1
 
