@@ -1,220 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from rockwork.org (rockwork.org [45.32.92.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25451CFA8;
-	Sat, 13 Apr 2024 10:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E024A0D
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 10:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.32.92.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713003579; cv=none; b=j9U9t2BlWA9OQctnEcwD0xBCZg9ECltG0O1/4TnQfMdSemMdYP8R3+auv8JpvO3Ytpcq/VA5vpA+TEBx3fnHPOdKrkE+xjHjQhkjr84d8qm0srOJmCLgxbT0SwUDr/sL0MvCp+Cl4iMWrXl4MqF/gLLykhu3siEvfOPJU+omxMY=
+	t=1713003732; cv=none; b=JMxA/+3xYKmcT0yrQFMrA2LIfaRt5nE/S5omh6ZdeH4L5aV2IpN2R76W7/L1MW6huTOWlglDDBi1Sy5E6+t7rGqPry4thq7DwL5EP1faqub6fwRsrVr/2oZpscg8tCCrvGM6CLm4UU9KpjPrqCGb4ZwjWhk0jUpy+nozIu7dZFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713003579; c=relaxed/simple;
-	bh=9Hu40LkvlfQcCNkyBLs/RLhZHlI4yg/7v8dPJiVYyEs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=brgSzYd1hRa4gLodZ7ktpKw0OrQiYGIA27scsYAsjgMlOAKijwBdWtK4PQHOEzaKYPuCstQa92KhJD/toz1ah2iHRj4Go3Lj4oXP1pnI3MUsxOVPqI5HUA2628zFZt20U7UjzxrxV2GlZKCn63nAvdV5YLFI1JRB0uN0HWhL9GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c29dNQ+y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c29dNQ+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C37BC4AF07;
-	Sat, 13 Apr 2024 10:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713003579;
-	bh=9Hu40LkvlfQcCNkyBLs/RLhZHlI4yg/7v8dPJiVYyEs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c29dNQ+yEubEhbE3XnXXfhoAGCvaWZ5K9uB9X21vxDxDhDmr4B+n0VE6ouSrj7cG1
-	 pjpqVKhq7uzDJ3WOpuR2H7UCz2V0J4CPBEdUN09AHuQuV3VAXxI+oGYb/LOZMqQ/Q0
-	 eZ5ZP3jd0EkZty/k32oHNI2pTXOM3ZM47DKIJRfetlxyNJXfgt2EXfVGpHHXf3WlM+
-	 PWiZG9yn7GLfpOtiXXYA6zlCFf0813Lc39o8CyLCkaZde2t13pXUW9BWdzGVRUpAIQ
-	 L8FqQc5mvo+ewtlQtGXy7rGYpwNsHbgpdRc1xkgAlUDkv5ZOpmZJGWfZb4Y2RKPXRB
-	 W7XOKRXg7YY/A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rvaTx-0047xk-6h;
-	Sat, 13 Apr 2024 11:19:37 +0100
-Date: Sat, 13 Apr 2024 11:19:35 +0100
-Message-ID: <86edb9sgy0.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 3/4] KVM: arm64: add emulation for CTR_EL0 register
-In-Reply-To: <20240405120108.11844-4-sebott@redhat.com>
-References: <20240405120108.11844-1-sebott@redhat.com>
-	<20240405120108.11844-4-sebott@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1713003732; c=relaxed/simple;
+	bh=cKfJqzwn1UM58rtsZxhexJzGwK67MEdN/QUZgx3CAHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TC/k2do+hJcXlBLvAOnPKeNOGhkLymf0edGRdlmuw8E6/2Lwi45wA/m+hKs+n3CDcqo63/K47LPdV5YA9wrJsi4c189fbqpnMpriO9tIT3Ty7yrRjKjmq9FOZki4vzuVDGNjXukZzwZbm28JC+EKHJFnONQXVuWxWqMp9G+Js7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rockwork.org; spf=pass smtp.mailfrom=rockwork.org; arc=none smtp.client-ip=45.32.92.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rockwork.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rockwork.org
+Received: from [IPV6:2408:8340:c42:16f0:eb78:1cb0:d0a9:e8e3] (unknown [IPv6:2408:8340:c42:16f0:eb78:1cb0:d0a9:e8e3])
+	by rockwork.org (Postfix) with ESMTPSA id 6537B5DD4A;
+	Sat, 13 Apr 2024 10:15:11 +0000 (UTC)
+Message-ID: <2688421d-37c2-4038-8d03-24ae175f137e@rockwork.org>
+Date: Sat, 13 Apr 2024 18:15:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sebott@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] RISC-V: drivers/iommu: Add RISC-V IOMMU - Ziommu
+ support.
+To: Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Anup Patel <apatel@ventanamicro.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux@rivosinc.com, linux-kernel@vger.kernel.org,
+ Sebastien Boeuf <seb@rivosinc.com>, iommu@lists.linux.dev,
+ Palmer Dabbelt <palmer@dabbelt.com>, Nick Kossifidis <mick@ics.forth.gr>,
+ linux-riscv@lists.infradead.org
+References: <cover.1689792825.git.tjeznach@rivosinc.com>
+ <c33c24036c06c023947ecb47177da273569b3ac7.1689792825.git.tjeznach@rivosinc.com>
+Content-Language: en-US
+From: Xingyou Chen <rockrush@rockwork.org>
+In-Reply-To: <c33c24036c06c023947ecb47177da273569b3ac7.1689792825.git.tjeznach@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 05 Apr 2024 13:01:07 +0100,
-Sebastian Ott <sebott@redhat.com> wrote:
-> 
-> CTR_EL0 is currently handled as an invariant register, thus
-> guests will be presented with the host value of that register.
-> Add emulation for CTR_EL0 based on a per VM value.
-> 
-> When CTR_EL0 is changed the reset function for CLIDR_EL1 is
-> called to make sure we present the guest with consistent
-> register values.
 
-Isn't that a change in the userspace ABI? You are now creating an
-explicit ordering between the write to CTR_EL0 and the rest of the
-cache hierarchy registers. It has the obvious capacity to lead to the
-wrong result in a silent way...
+On 7/20/23 03:33, Tomasz Jeznach wrote:
+> ... > +#endif /* _RISCV_IOMMU_BITS_H_ */
+> diff --git a/drivers/iommu/riscv/iommu-pci.c b/drivers/iommu/riscv/iommu-pci.c
+> new file mode 100644
+> index 000000000000..c91f963d7a29
+> --- /dev/null
+> +++ b/drivers/iommu/riscv/iommu-pci.c
+> @@ -0,0 +1,134 @@
+> ...
+> +
+> +static struct pci_driver riscv_iommu_pci_driver = {
+> +	.name = KBUILD_MODNAME,
+> +	.id_table = riscv_iommu_pci_tbl,
+> +	.probe = riscv_iommu_pci_probe,
+> +	.remove = riscv_iommu_pci_remove,
+> +	.driver = {
+> +		   .pm = pm_sleep_ptr(&riscv_iommu_pm_ops),
+> +		   .of_match_table = riscv_iommu_of_match,
+> +		   },
+> +};
+> +
+> +module_driver(riscv_iommu_pci_driver, pci_register_driver, pci_unregister_driver);
 
-> 
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 72 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 64 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 4d29b1a0842d..b0ba292259f9 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1874,6 +1874,55 @@ static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  	return true;
->  }
->  
-> +static u64 reset_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd)
-> +{
-> +	vcpu->kvm->arch.ctr_el0 = 0;
-> +	return kvm_get_ctr_el0(vcpu->kvm);
+There's helper macro to be considered, and not forced to:
+   module_pci_driver(riscv_iommu_pci_driver);
 
-I'd expect the cached value to be reset instead of being set to
-0. What are you achieving by this?
+> diff --git a/drivers/iommu/riscv/iommu-platform.c b/drivers/iommu/riscv/iommu-platform.c
+> new file mode 100644
+> index 000000000000..e4e8ca6711e7
+> --- /dev/null
+> +++ b/drivers/iommu/riscv/iommu-platform.c
+> @@ -0,0 +1,94 @@
+> ...
+> +
+> +static struct platform_driver riscv_iommu_platform_driver = {
+> +	.driver = {
+> +		   .name = "riscv,iommu",
+> +		   .of_match_table = riscv_iommu_of_match,
+> +		   .suppress_bind_attrs = true,
+> +		   },
+> +	.probe = riscv_iommu_platform_probe,
+> +	.remove_new = riscv_iommu_platform_remove,
+> +	.shutdown = riscv_iommu_platform_shutdown,
+> +};
+> +
+> +module_driver(riscv_iommu_platform_driver, platform_driver_register,
+> +	      platform_driver_unregister);
 
-> +}
-> +
-> +static int get_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-> +		   u64 *val)
-> +{
-> +	*val = kvm_get_ctr_el0(vcpu->kvm);
-> +	return 0;
-> +}
-> +
-> +static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding);
-> +
-> +static int set_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-> +		   u64 val)
-> +{
-> +	u64 host_val = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> +	u64 old_val = kvm_get_ctr_el0(vcpu->kvm);
-> +	const struct sys_reg_desc *clidr_el1;
-> +	int ret;
-> +
-> +	if (val == old_val)
-> +		return 0;
-> +
-> +	if (kvm_vm_has_ran_once(vcpu->kvm))
-> +		return -EBUSY;
-> +
-> +	mutex_lock(&vcpu->kvm->arch.config_lock);
-> +	ret = arm64_check_features(vcpu, rd, val);
-> +	if (ret) {
-> +		mutex_unlock(&vcpu->kvm->arch.config_lock);
-> +		return ret;
-> +	}
-> +	if (val != host_val)
-> +		vcpu->kvm->arch.ctr_el0 = val;
-> +	else
-> +		vcpu->kvm->arch.ctr_el0 = 0;
-> +
-> +	mutex_unlock(&vcpu->kvm->arch.config_lock);
-> +
-> +	clidr_el1 = get_sys_reg_desc(SYS_CLIDR_EL1);
-> +	if (clidr_el1)
-> +		clidr_el1->reset(vcpu, clidr_el1);
-> +
-> +	return 0;
-
-No check against what can be changed, and in what direction? You seem
-to be allowing a guest to migrate from a host with IDC==1 to one where
-IDC==0 (same for DIC). How can that work? Same for the cache lines,
-which can be larger on the target... How will the guest survive that?
-
-> +}
-> +
->  static bool access_clidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  			 const struct sys_reg_desc *r)
->  {
-> @@ -2460,7 +2509,11 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
->  	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
->  	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
-> -	{ SYS_DESC(SYS_CTR_EL0), access_ctr },
-> +	{ SYS_DESC(SYS_CTR_EL0), access_ctr, .reset = reset_ctr,
-> +	  .get_user = get_ctr, .set_user = set_ctr, .val = (CTR_EL0_DIC_MASK |
-> +							    CTR_EL0_IDC_MASK |
-> +							    CTR_EL0_DminLine_MASK |
-> +							    CTR_EL0_IminLine_MASK)},
->  	{ SYS_DESC(SYS_SVCR), undef_access },
->  
->  	{ PMU_SYS_REG(PMCR_EL0), .access = access_pmcr, .reset = reset_pmcr,
-> @@ -3623,6 +3676,13 @@ static bool index_to_params(u64 id, struct sys_reg_params *params)
->  	}
->  }
->  
-> +static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding)
-> +{
-> +	struct sys_reg_params params = encoding_to_params(encoding);
-> +
-> +	return find_reg(&params, sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
-> +}
-> +
->  const struct sys_reg_desc *get_reg_by_id(u64 id,
->  					 const struct sys_reg_desc table[],
->  					 unsigned int num)
-> @@ -3676,18 +3736,11 @@ FUNCTION_INVARIANT(midr_el1)
->  FUNCTION_INVARIANT(revidr_el1)
->  FUNCTION_INVARIANT(aidr_el1)
->  
-> -static u64 get_ctr_el0(struct kvm_vcpu *v, const struct sys_reg_desc *r)
-> -{
-> -	((struct sys_reg_desc *)r)->val = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> -	return ((struct sys_reg_desc *)r)->val;
-> -}
-> -
->  /* ->val is filled in by kvm_sys_reg_table_init() */
->  static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
->  	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
->  	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
->  	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
-> -	{ SYS_DESC(SYS_CTR_EL0), NULL, get_ctr_el0 },
->  };
->  
->  static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
-> @@ -4049,6 +4102,9 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
->  			vcpu->arch.hcrx_el2 |= (HCRX_EL2_MSCEn | HCRX_EL2_MCE2);
->  	}
->  
-> +	if (vcpu->kvm->arch.ctr_el0)
-> +		vcpu->arch.hcr_el2 |= HCR_TID2;
-
-Why trap CTR_EL0 if the values are the same as the host? I really
-dislike the use of the value 0 as a such an indication. Why isn't this
-grouped with the traps in vcpu_reset_hcr()?
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+And also:
+   module_platform_driver(riscv_iommu_platform_driver);
