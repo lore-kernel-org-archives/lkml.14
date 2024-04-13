@@ -1,111 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EDF42A96;
-	Sat, 13 Apr 2024 15:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0625647F45
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 15:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713021390; cv=none; b=QK9lCPRVrekkQeKID9z7VVOiG23VrQ/3CvM1Qy7/VETdZoUmvfNggoCPX/PZ/pru06U0RF2yOktu9nD5ijIN/ow19SMi6uT23cM0bNf+UB9usqPZO5q76BiWL/0JMhRAlL8Ee9FiPe8rFW5nY/QtHpYmKFRlNmU3q0VcrYXCe7E=
+	t=1713021405; cv=none; b=rapxjo7vP3eg6rqTPlBb+BSBEj1sB8G3umyRJgjWWSPv2JJabctotN0Y7qAUOvW6z68IAppth/S25shksMuyo9RK/W0ozWaV6sAaV+EZa3mDWh4teU+AX5nq7ONgjs7vPYpPdtqtOM1JHW/J+MUSAX9LF6gEcsHy/UrqQTHPgyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713021390; c=relaxed/simple;
-	bh=29YarKc0WYNTWP1PNRSnD3A3fcc5Wb6BU/OaAvyB/hA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/9HK+zxGxkkYnx4einnpfV9TSb+Pq5zgeqfapZXTNWbnXp3GeM16q2r+jHV6LWessZqMQOnI0AI8MIwgpftrrAQEnYVQML7LEu/qAH0gy1pu9L69fOVgGBI8A+p9DRfg2mi3snWcz+Cz5JxDaGqUh3VxLjtYRRSHyOykhUyuWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4z+86AH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713021405; c=relaxed/simple;
+	bh=hH/i56/VVMXc5h7IY9kB8GOOP4BZo9JkA0T8zeB0y1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pCqEgb9D4SBmh62IK3x5MHFW5jJJiJ77zJFlEhBQqjLqyifTHOc7gRus8Ag10FbkfXkhodoGbWn16Xg1twGlE/FUCVKJMMF9z4cIaFedoVhGTkMjXPtGxkJZI4SEQMg9NYkxRKncFqKq/FVfM1MSBp8cVP0WNn8JSu75pNcWUA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SO+4uYcw; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4z+86AH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A026C113CD;
-	Sat, 13 Apr 2024 15:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713021389;
-	bh=29YarKc0WYNTWP1PNRSnD3A3fcc5Wb6BU/OaAvyB/hA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N4z+86AH0nG+BT1F1V4YYCbQR4fb/rU0cC4UJPobP/ZgaWUvZtMILOxRC5lE2ijJ3
-	 2ZdA2ADpZ/XDl2Z3VafgsCqzB2EqwSo9DZkg9kfHnnz60Qnv/81xem4W3j+eZj3ioU
-	 tLEfkV99gj9E/SM8KqenvLn0RUEt/UVtG+ECerTuLyBLTqBBP+C7qkAIFlMKVxUUvq
-	 14Fz4iCKIuIOaHOe7ixIgYpcByeAAON5VpMUs/glzbgp5X+rLThZ4Y952cU6S5v6tr
-	 YG3tqkBrKGMTt45/tQeYWOH4x5tTj4RBguxgIXEbn51A+HyzB1YjkuhT/nb2RBeTYP
-	 eXuC86M6sFU+g==
-Date: Sat, 13 Apr 2024 17:16:24 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() -
- requirements
-Message-ID: <20240413-armbrust-specht-394d58f53f0f@brauner>
-References: <20240411001012.12513-1-torvalds@linux-foundation.org>
- <20240412-vegetarisch-installieren-1152433bd1a7@brauner>
- <CAHk-=wiYnnv7Kw7v+Cp2xU6_Fd-qxQMZuuxZ61LgA2=Gtftw-A@mail.gmail.com>
- <20240413-aufgaben-feigen-e61a1ec3668f@brauner>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SO+4uYcw"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2da01cb187cso32209391fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 08:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713021400; x=1713626200; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3KLUzTPW+KpN4IRI1ic6uWm66ErzBdD1Xi0Bbn1RRvE=;
+        b=SO+4uYcwgRmR13xE9xpgbjeLoTcy2dS9rLlXQ4iT0DCVUisbhVTPemX8ehvEMZ3foT
+         lOlCCZU299HCe6mm/AmTFLZFKa41W16TbBLBK49PCbJMbLb8ydiuCywSA30abNmKv0sy
+         D98+s49v4V43n+KWWpMvP3ip9Kp1xR9eXol1hY6/eivWTb1wIiirh/9DWsaLIAXYuIZr
+         ko1mDWsz8s8Xa5lgCwtQlWZVg+ZYKD7aMxwP+WoVsYDIdCCeSKiD/ROaPlZ/E+rrfhPu
+         rwIaRSn1iJ9h9cc4sNtFrs77Y24roJQQTsnGC5J+lxzjDf/zbSYu63aK+MNwRS+LY5Xb
+         UmQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713021400; x=1713626200;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3KLUzTPW+KpN4IRI1ic6uWm66ErzBdD1Xi0Bbn1RRvE=;
+        b=wEC3hTYygToRow1CVn2Um0tKRZoURVvEFGvLSeI54yvg9X4LOiZWHjVMeIZRNj3IKC
+         BG/NjSDWiUWZUv+w41UYVziwi1toY7Lwq0+nTcjDbWj5rTWZMs7TG8veyoiEQzAyIRHq
+         UjJoBYCs02hnJER/eQL9OhORXpliE0eYUTP+as2pLy8jYdy97EgP+4Jqq4LesapRYxil
+         a0qe6sd45/1wswJV+wOLSFWy82o/W+WFoJj5xdc68UBGZdcN9XVIvyxrd4bGtIa+cxHM
+         nsD7iomxPXVQrEq7renfTtni0UODqZ0efhiYwTtE3XqqpSUeeSwMxly+0Zv/SxCYZl99
+         micQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQPuSb9cF3IQaPyu1eJaGdUFkXWBCrBu6qFn7YOzPJSFk1ggG8No2D6KO9WXcXw+IdP14tJN3H7w+idYhkvfQf9OmX1DyiwGaH0DHm
+X-Gm-Message-State: AOJu0YzQX3xwIf5f3oIeHfC9ZZ9t6L8b9LekVj7ludS0rjaS1NXJ7Buy
+	ofYz2RU3Jg46mKqhUSRXlQ0bZ4nlZYmJrph02KaiHTzprR3xeDwMgR2BHtWZArM=
+X-Google-Smtp-Source: AGHT+IG1tNnKVrVnl2J/+j+UL2Wl4h4NMws2XRL9Lu8vXwFs1VUku2GIOwL+IkYjq0NdIfadi6221Q==
+X-Received: by 2002:a2e:9ed4:0:b0:2d9:fd90:af57 with SMTP id h20-20020a2e9ed4000000b002d9fd90af57mr3723839ljk.51.1713021399920;
+        Sat, 13 Apr 2024 08:16:39 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id kj15-20020a170907764f00b00a51a60bf400sm3104956ejc.76.2024.04.13.08.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Apr 2024 08:16:39 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/4] dt-bindings: PCI: cdns,cdns-pcie-host: drop redundant msi-parent and pci-bus.yaml
+Date: Sat, 13 Apr 2024 17:16:14 +0200
+Message-Id: <20240413151617.35630-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240413-aufgaben-feigen-e61a1ec3668f@brauner>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 13, 2024 at 11:41:57AM +0200, Christian Brauner wrote:
-> On Fri, Apr 12, 2024 at 10:43:06AM -0700, Linus Torvalds wrote:
-> > Side note: I'd really like to relax another unrelated AT_EMPTY_PATH
-> > issue: we should just allow a NULL path for that case.
-> > 
-> > The requirement that you pass an actual empty string is insane. It's
-> > wrong. And it adds a noticeable amount of expense to this path,
-> > because just getting the single byte and looking it up is fairly
-> > expensive.
-> > 
-> > This was more noticeable because glibc at one point (still?) did
-> > 
-> >         newfstatat(6, "", buf, AT_EMPTY_PATH)
-> > 
-> > when it should have just done a simple "fstat()".
-> > 
-> > So there were (are?) a *LOT* of AT_EMPTY_PATH users, and they all do a
-> > pointless "let's copy a string from user space".
-> > 
-> > And yes, I know exactly why AT_EMPTY_PATH exists: because POSIX
-> > traditionally says that a path of "" has to return -ENOENT, not the
-> > current working directory. So AT_EMPTY_PATH basically says "allow the
-> > empty path for lookup".
-> > 
-> > But while it *allows* the empty path, it does't *force* it, so it
-> > doesn't mean "avoid the lookup", and we really end up doing a lot of
-> > extra work just for this case. Just the user string copy is a big deal
-> > because of the whole overhead of accessing user space, but it's also
-> > the whole "allocate memory for the path etc".
-> > 
-> > If we either said "a NULL path with AT_EMPTY_PATH means empty", or
-> > even just added a new AT_NULL_PATH thing that means "path has to be
-> > NULL, and it means the same as AT_EMPTY_PATH with an empty path", we'd
-> > be able to avoid quite a bit of pointless work.
-> 
-> It also causes issues for sandboxed enviroments (most recently for the
-> Chrome sandbox) because AT_EMPTY_PATH doesn't actually mean
-> AT_EMPTY_PATH unless the string is actually empty. Otherwise
-> AT_EMPTY_PATH is ignored. So I'm all on board for this. I need to think
-> a bit whether AT_NULL_PATH or just allowing NULL would be nicer. Mostly
-> because I want to ensure that userspace can easily detect this new
-> feature.
+The binding reference common cdns-pcie-host.yaml, which already defines
+msi-parent and has a reference to pci-bus.yaml schema.  Drop redundant
+pieces here to make it a bit smaller.
 
-I think it should be ok to allow AT_EMPTY_PATH with NULL because
-userspace can detect whether the kernel allows that by passing
-AT_EMPTY_PATH with a NULL path argument and they would get an error back
-that would tell them that this kernel doesn't support NULL paths.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I'd like to try a patch for this next week. It's a good opportunity to
-get into some of the more gritty details of this area.
+---
 
-From a rough first glance most AT_EMPTY_PATH users should be covered by
-adapting getname_flags() accordingly.
+Changes in v3:
+1. None
 
-Imho, this could likely be done by introducing a single struct filename
-null_filename. That also takes care of audit that reuses the pathname.
-That thing would basically never go away and the refcnt remain fixed at
-one. Kind of similar to what we did for struct mnt_idmap nop_mnt_idmap.
-That's at least what I naively hope for but I haven't yet starting
-looking into all the dark corners.
+Changes in v2:
+1. Add tags.
+---
+ Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+index bc3c48f60fff..a8190d9b100f 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+@@ -10,7 +10,6 @@ maintainers:
+   - Tom Joseph <tjoseph@cadence.com>
+ 
+ allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+   - $ref: cdns-pcie-host.yaml#
+ 
+ properties:
+@@ -25,8 +24,6 @@ properties:
+       - const: reg
+       - const: cfg
+ 
+-  msi-parent: true
+-
+ required:
+   - reg
+   - reg-names
+-- 
+2.34.1
+
