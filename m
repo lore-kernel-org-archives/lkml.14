@@ -1,214 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01D43DB91
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 11:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7A814265;
+	Sat, 13 Apr 2024 11:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713006683; cv=none; b=i2K1JaJ2hhX+xQ/BHKt+UaKgagmzzzF/cIqJKR2dytPnNrkUGxKywUOlqknkwJ9Vse4LZMgu1awqN8ElijKVgHt/Us42YleKFtSFFaw1jvYoQ72OvNoAH0dLcXwpgjg6E8IADwd5wvIqFQoQWrMh1XfM48EN71VYmG7+lB+WzEk=
+	t=1713007342; cv=none; b=BRyqS42GWK0+wi28JC6VMl9vdP+MMZrn4Us+i1zoWpdg2JbR83+etPtF3MJItIpiuBQbZikGItyAfrWoNfuN1xczy6+da+SAA9mSO+L/LkavD9DupaLlaPpWVT3ZQ2vjjOELk7tVqh2BoKZBebnoJOrYsf6lQWtcnyntfz81Duc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713006683; c=relaxed/simple;
-	bh=yqFTGPFpUELq92u6Jwc0LpudMXSZpeOTpg8NEgcDRJI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RnU0dLhRrSZ3In/c5Ny+pf2vXxYqb3TZmav6XFH1FFZZKInz+T/7tjPOPn5clrWm56xwW4XLc3DX+BwX2VJztpwLH2xCD90LmwPWyoMc5eqrcTLyiTvIDsedK4EiL9Q3tPuhcFACDZPw/HakfXAyzQCGFAV/93P46UHuY+H6zk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrAsfsAR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713007342; c=relaxed/simple;
+	bh=Axsr/nzrO25gt5TEC8AG/h4rGLgiv+48O8lzV6yGAUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VcPt69iWZZAZBHrN+6xf2katR0KuiVcGptocXaX3Od6hHfxL67MmUaYjCWhjghbBAlGlB51tPVmHtWi9MVIW+ZnVBVlJ40Pi/DxSkXbhF3QFMzm+STiBbEm4xiaAETxQMqNoHgk77GXXExYR4yWGnXZfhExSuqWJo6n3nV2oOQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.li; spf=pass smtp.mailfrom=gmx.li; dkim=pass (2048-bit key) header.d=gmx.li header.i=thomas.kuehne@gmx.li header.b=nBo/ZaT0; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrAsfsAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF35DC2BD10;
-	Sat, 13 Apr 2024 11:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713006682;
-	bh=yqFTGPFpUELq92u6Jwc0LpudMXSZpeOTpg8NEgcDRJI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KrAsfsARagsovovWhbrM3DzytETGRjjf1eEVd624V+MA957i7JHN7rtdGv64H5p5u
-	 YHtu9XkrauozUBYhf7grICnq/NEQ9Q0uO4k1iUzFg4JtGnElCBkAm2ODfHxscsoNQ4
-	 y1S5hmNEn+iPZjombc6VwQTgBXH83KY+RZ5q7KOX4AKUSAHygbJ5ytWgojWTgt/6bz
-	 daOxYgfnyKwcVYXOBayDT1R6jjOXpfCXNhBYLv4JlCCfhnvIuOQtfenFILxoID7Kt5
-	 N21DStLF6OcAnlHG8lmoYzbFV7qWz0BmiB5wM/sS/qAr7q3zyFZNSdWizL8fcP2yA1
-	 CjWtaMGmS7ptg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rvbI0-0048U7-J8;
-	Sat, 13 Apr 2024 12:11:20 +0100
-Date: Sat, 13 Apr 2024 12:11:20 +0100
-Message-ID: <86cyqtsejr.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Dawei Li <dawei.li@shingroup.cn>
-Cc: tglx@linutronix.de,
-	yury.norov@gmail.com,
-	akpm@linux-foundation.org,
-	florian.fainelli@broadcom.com,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	anup@brainfault.org,
-	palmer@dabbelt.com,
-	samuel.holland@sifive.com,
-	linux@rasmusvillemoes.dk,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] irqchip/gic-v3-its: Avoid explicit cpumask allocation on stack
-In-Reply-To: <08D93AF972A58F13+ZhpegNehN5/RYie5@centos8>
-References: <20240412105839.2896281-1-dawei.li@shingroup.cn>
-	<20240412105839.2896281-4-dawei.li@shingroup.cn>
-	<86il0msn4z.wl-maz@kernel.org>
-	<08D93AF972A58F13+ZhpegNehN5/RYie5@centos8>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmx.li header.i=thomas.kuehne@gmx.li header.b="nBo/ZaT0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.li;
+	s=s31663417; t=1713007335; x=1713612135; i=thomas.kuehne@gmx.li;
+	bh=xJgkLJ9NFMdCgJJK4+x3XxjEan/ok72qczaHR/gYZ3M=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=nBo/ZaT0QlgNpuX5JaqB9pu4tisf4w2AOGsnno8kI3zrnF7xSfPX+Enz2nyB9i2O
+	 Z6wAAU5csALq2BjqlFLelUqxJa+L/r6gO2Iea9FZ4/aRBH1/K4WYcWZz6ojSD7+l4
+	 5rd2CLRxSXMkC/s25EnT0oo9HlYy6IzfXryUjMEbZzjMktUhzQtVrkf9//QO01lWH
+	 KU3YPzpF/3D+0tLgYFV6wqok54gH1HHcQmnHP0qOBal+FECTblA0u4Cah7H7jtQnR
+	 NYDu7icC1zBYof6FhY/zf0r4tdWoLIkzCpMs3PkiWuiwngBvYBd8XHOrAfGuYMo91
+	 +GUuba0Fj/OAilwX+A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from black ([2.59.120.154]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N5GE1-1swc433c5l-0119yX; Sat, 13
+ Apr 2024 13:22:14 +0200
+Date: Sat, 13 Apr 2024 12:23:30 +0000
+From: Thomas Kuehne <thomas.kuehne@gmx.li>
+To: jikos@kernel.org, bentiss@kernel.org
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: hid-debug: more informative output for EV_KEY
+Message-ID: <Zhp5QlMGazcW+RV5@black>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: dawei.li@shingroup.cn, tglx@linutronix.de, yury.norov@gmail.com, akpm@linux-foundation.org, florian.fainelli@broadcom.com, chenhuacai@kernel.org, jiaxun.yang@flygoat.com, anup@brainfault.org, palmer@dabbelt.com, samuel.holland@sifive.com, linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Provags-ID: V03:K1:FBWElY3FxUdH8MS8jlylJx/nxPhCcvvkObWTrVYQAgbb6rfPeKI
+ aebEh7XciVylwX7l1+9KFK4HFSIAXsZBkGB6NKH0Ena4SHSs5ImUgIot3swyrwLIe/UeUES
+ 78r4dSrMAmSVd7nQXJkTKZrVkP40CxT8DY9kkTxaSsn/LnrJad/oRNpwRQMAlgvzeThYpxf
+ 4EcBuhb+H3H0Gg+aKzKnw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:OTqW0KqRI0A=;ve9dM0XsXOdiUM0XSwr9KaqU5TQ
+ RzbwYEn0wWgsSBg6lwaeXT+xiaqlDcLPXdI6NkQOp8Z8E+m8UDsMcjnFHCPDrqIqKYa4iNedD
+ 0g/RHrLGGPYgq307r+lsGdhjg4WgAsMgOeb9fdcFVHrAI5n9ciWV0w/X4uz4h2VdpW8BBzUOI
+ AwhOBi/uk2V8Ekk9pNLbvoA1ZtW9CyCyRdzchmOUYK73/dcQkalIRayo05ltNshR3hMqhuIEy
+ bf3l0+y5sth9QRO6ONsQq+HFgycyXJyglC35BzWFC3GcHXdD80QMW+AxR4bP93oAOT7CCHOo7
+ X555vL33rFKWCNGlc/WeKuRCk2SKv2PQyMOyBRLJdnVcfUZap7P4lqPAoHzIiGzP3elnaziZv
+ AaGnFYeNNoASP8HLkju16Q1aVNrO6ftB/mwapCE5iZq11V7yKBgl+8a23GdI3KnWyoH1NFGUD
+ 7GLu5gROaNJjfYb/e+6h0nFYMlHOyX8GFz9coshoH/fa0IC9XvOEXyMu6jp6sBcfPD4wMKUJK
+ Cp4AkSpUyq7N+ElshWWNPYzNTew/I7kWCx98wWS/j/MszQvUiBHGWcPBMy2f+72tsFnz+b2l4
+ 80v6LhakDquMjqOd/SPpQXdQSElP34AAXrqS8aNVOVd45cw5lMBlVf/3mlIrM8nVHM4bLfHn6
+ rwlJMeuyORnNCVEn0lkOMIMGFMTM1FgY3pBUUirzF+9BYYTb/bAU/ydWS6fPz52wxulgXPbn6
+ dR4mJ5/K2+To5ORv5G9bBMrHrK7n/oebSpQQYwYIAXeIxDr40urwFqrE+4yeVgZPhuj9QdWMV
+ bzN2PHb0PvWCkt6NpNJqVx0JLIzK+4UwSJ3d8d0bRORiA=
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 13 Apr 2024 11:29:20 +0100,
-Dawei Li <dawei.li@shingroup.cn> wrote:
-> 
-> Hi Marc,
-> 
-> Thanks for the review.
-> 
-> On Fri, Apr 12, 2024 at 02:53:32PM +0100, Marc Zyngier wrote:
-> > On Fri, 12 Apr 2024 11:58:36 +0100,
-> > Dawei Li <dawei.li@shingroup.cn> wrote:
-> > > 
-> > > In general it's preferable to avoid placing cpumasks on the stack, as
-> > > for large values of NR_CPUS these can consume significant amounts of
-> > > stack space and make stack overflows more likely.
-> > >
-> > > Remove cpumask var on stack and use proper cpumask API to address it.
-> > 
-> > Define proper. Or better, define what is "improper" about the current
-> > usage.
-> 
-> Sorry for the confusion.
-> 
-> I didn't mean current implementation is 'improper', actually both
-> implementations share equivalent API usages. I will remove this
-> misleading expression from commit message.
-> 
-> > 
-> > >
-> > > Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> > > ---
-> > >  drivers/irqchip/irq-gic-v3-its.c | 9 ++++++---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> > > index fca888b36680..a821396c4261 100644
-> > > --- a/drivers/irqchip/irq-gic-v3-its.c
-> > > +++ b/drivers/irqchip/irq-gic-v3-its.c
-> > > @@ -3826,7 +3826,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
-> > >  				bool force)
-> > >  {
-> > >  	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-> > > -	struct cpumask common, *table_mask;
-> > > +	struct cpumask *table_mask;
-> > >  	unsigned long flags;
-> > >  	int from, cpu;
-> > >  
-> > > @@ -3850,8 +3850,11 @@ static int its_vpe_set_affinity(struct irq_data *d,
-> > >  	 * If we are offered another CPU in the same GICv4.1 ITS
-> > >  	 * affinity, pick this one. Otherwise, any CPU will do.
-> > >  	 */
-> > > -	if (table_mask && cpumask_and(&common, mask_val, table_mask))
-> > > -		cpu = cpumask_test_cpu(from, &common) ? from : cpumask_first(&common);
-> > > +	if (table_mask && cpumask_intersects(mask_val, table_mask)) {
-> > > +		cpu = cpumask_test_cpu(from, mask_val) &&
-> > > +		      cpumask_test_cpu(from, table_mask) ?
-> > > +		      from : cpumask_first_and(mask_val, table_mask);
-> > 
-> > So we may end-up computing the AND of the two bitmaps twice (once for
-> > cpumask_intersects(), once for cpumask_first_and()), instead of only
-> > doing it once.
-> 
-> Actually maybe it's possible to merge these 2 bitmap ops into one:
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index fca888b36680..7a267777bd0b 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -3826,7 +3826,8 @@ static int its_vpe_set_affinity(struct irq_data *d,
->                                 bool force)
->  {
->         struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-> -       struct cpumask common, *table_mask;
-> +       struct cpumask *table_mask;
-> +       unsigned int common;
->         unsigned long flags;
->         int from, cpu;
-> 
-> @@ -3850,10 +3851,13 @@ static int its_vpe_set_affinity(struct irq_data *d,
->          * If we are offered another CPU in the same GICv4.1 ITS
->          * affinity, pick this one. Otherwise, any CPU will do.
->          */
-> -       if (table_mask && cpumask_and(&common, mask_val, table_mask))
-> -               cpu = cpumask_test_cpu(from, &common) ? from : cpumask_first(&common);
-> -       else
-> +       if (table_mask && (common = cpumask_first_and(mask_val, table_mask)) < nr_cpu_ids) {
-> +               cpu = cpumask_test_cpu(from, mask_val) &&
-> +                     cpumask_test_cpu(from, table_mask) ?
-> +                     from : common;
-> +       } else {
->                 cpu = cpumask_first(mask_val);
-> +       }
-> 
-> > 
-> > I don't expect that to be horrible, but I also note that you don't
-> > even talk about the trade-offs you are choosing to make.
-> 
-> With change above, I assume that the tradeoff is minor and can be ignored?
+Currently hid-debug's hid_resolv_event prints questions marks for
+all entries without explicit mapping information. This makes
+debugging unnecessarily complicated as multiple different
+keys may simply result in the same uninformative output.
 
-Yup, this works. My preference would be something which I find
-slightly more readable though (avoiding assignment in the
-conditional):
+Some common event codes are deliberately not defined in
+input-event-codes.h. For example the 16th gamepad key.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index fca888b36680..299dafc7c0ea 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3826,9 +3826,9 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 				bool force)
+Instead, print the hexadecimal codes for all events without symbolic
+names.
+
+Signed-off-by: Thomas Kuehne <thomas.kuehne@gmx.li>
+=2D--
+ drivers/hid/hid-debug.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
+index add353a17853..0a0c435a1284 100644
+=2D-- a/drivers/hid/hid-debug.c
++++ b/drivers/hid/hid-debug.c
+@@ -3582,8 +3582,15 @@ static const char **names[EV_MAX + 1] =3D {
+
+ static void hid_resolv_event(__u8 type, __u16 code, struct seq_file *f)
  {
- 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
--	struct cpumask common, *table_mask;
-+	struct cpumask *table_mask;
- 	unsigned long flags;
--	int from, cpu;
-+	int from, cpu = nr_cpu_ids;
- 
- 	/*
- 	 * Changing affinity is mega expensive, so let's be as lazy as
-@@ -3850,10 +3850,15 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 	 * If we are offered another CPU in the same GICv4.1 ITS
- 	 * affinity, pick this one. Otherwise, any CPU will do.
- 	 */
--	if (table_mask && cpumask_and(&common, mask_val, table_mask))
--		cpu = cpumask_test_cpu(from, &common) ? from : cpumask_first(&common);
--	else
-+	if (table_mask)
-+		cpu = cpumask_any_and(mask_val, table_mask);
-+	if (cpu < nr_cpu_ids) {
-+		 if (cpumask_test_cpu(from, mask_val) &&
-+		     cpumask_test_cpu(from, table_mask))
-+			 cpu = from;
-+	} else {
- 		cpu = cpumask_first(mask_val);
-+	}
- 
- 	if (from == cpu)
- 		goto out;
+-	seq_printf(f, "%s.%s", events[type] ? events[type] : "?",
+-		names[type] ? (names[type][code] ? names[type][code] : "?") : "?");
++	if (events[type])
++		seq_printf(f, "%s.", events[type]);
++	else
++		seq_printf(f, "%02x.", type);
++
++	if (names[type] && names[type][code])
++		seq_printf(f, "%s", names[type][code]);
++	else
++		seq_printf(f, "%04x", code);
+ }
 
-Thanks,
+ static void hid_dump_input_mapping(struct hid_device *hid, struct seq_fil=
+e *f)
 
-	M.
+base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
+=2D-
+2.40.1
 
--- 
-Without deviation from the norm, progress is not possible.
