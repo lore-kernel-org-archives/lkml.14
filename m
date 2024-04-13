@@ -1,117 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A5818633;
-	Sat, 13 Apr 2024 03:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2FAEEA9;
+	Sat, 13 Apr 2024 03:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712978360; cv=none; b=OEPeWDBpEUAXDWccgdfRwtkDez658BnDPFvXyJvUlKNRhgvQC2x7eREGP3MkjIzosSQWHMYD3iA1SBCTEbC+06RVBUMyLJFBn+opzxbkOOD57qRw/VVx19LB8/4hGziX2OBCSO3iez0JeFsBPXu+aZK3spLee7x4hBeOyFtITlc=
+	t=1712978478; cv=none; b=ZT3xVCm+RkMKJpoc/NE1iowk/5k+p1EiYwPEC/XwACZEb9Qubiex2Kd4jnnfuiq/IZsAnWtaQKDE328zbDjrhID3Qp2efcy/f6ONIZDY5g+EwurTZMXkil64s0yrTdEbRDM6Our3ocWA25JC6MG0Ir0FKYAAJZr7iqKKyrgHvbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712978360; c=relaxed/simple;
-	bh=tlILtvfbKOnPFtHiyRvVuwQZc/uBd22Ge+UJkIuqyds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P9D/+3HezoQY/W5QF1FfEmR4sM12x8C2vAzHWGLzQ2tzvlxGp9vBDRu38Rv57kRvLhMvs9MytFMqR3pFCeDjXGVcJ8l8WospYOpak0Fduo5dkFjsF75Z8DtraEcs3/2NEa6k8PdFcsN7jsTzVuLq6cqCHMcgHh8r03nCR6NqJCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6Wi6bMn; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712978478; c=relaxed/simple;
+	bh=yXkbm8Fr67JsVDN8OfJjD71dztaeqMaCwwNSpoaG/Ow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c80pkopgEE+MioEek0lfWB4JvR6YF31xUDwsCPEbpep7eRHtZTe4lFod9lN4lonuJyCBqcKDOk9400dTw8VIuVpi/Hiwzy5l/W+93UO+s4/RyyRtbxGY5CmwN+SU5rGSbKD/93//tLuwMzbZOdbE+gpSWup0xFzM0djFKvIATek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqXA9OJu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6Wi6bMn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712978360; x=1744514360;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tlILtvfbKOnPFtHiyRvVuwQZc/uBd22Ge+UJkIuqyds=;
-  b=f6Wi6bMnpj94ljsDv+gv6hRVd8dg2M9/vhWz1nNF5A0PYKLabJIv/Lhp
-   er1UpkVnAdlXpuyn0mbsGJk6tJ5pYWVuiNmm3072KYqUm56tHSyTa+7w1
-   KrgjOSfo/ff6blwtDWkdhQfRZgzzthqqypz7iAGhqy7Bf6n565QWS9e47
-   LHcXjEp4wUs+j8lQevQMikk2VwaDkG10uzq/gObl93o2gmQ7+kuIVIaZu
-   6hk23v1VSc5GdI1844icIegMtGKcyKDBVOcUlYea8KJEJ0XpCr43dOn40
-   Qv48AYB/biyKuWK5VF40GuiKJzNb8k4Kg5eBdAod/q/e+A1V0QIMPgSOB
-   g==;
-X-CSE-ConnectionGUID: OGKvaGVPQmqwSXcUV6bEbA==
-X-CSE-MsgGUID: qbTxctRTQrGbmTLNi2QzeA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="25908367"
-X-IronPort-AV: E=Sophos;i="6.07,198,1708416000"; 
-   d="scan'208";a="25908367"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 20:19:19 -0700
-X-CSE-ConnectionGUID: MZvdWcstR9a2//TqUiwu2Q==
-X-CSE-MsgGUID: U28LofAETEu0YDXkt9VXzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,198,1708416000"; 
-   d="scan'208";a="44670199"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 20:19:14 -0700
-Message-ID: <724e77ee-b70f-4b9e-8aaa-1ea572b14186@linux.intel.com>
-Date: Sat, 13 Apr 2024 11:19:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqXA9OJu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F64C113CC;
+	Sat, 13 Apr 2024 03:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712978478;
+	bh=yXkbm8Fr67JsVDN8OfJjD71dztaeqMaCwwNSpoaG/Ow=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hqXA9OJuIlNUGKevdmwqHru6p8wP+JCDe6EWz0LD1ST6wo6HauvK8j7a8gJcCFU3f
+	 FQIAmk+9NHrTvsQuTSFQpLrVs2ujC6YZsLmcjBPwuQh2OesIN4Jh3MwDe+23rWfXVd
+	 CsfvNAPc+50DwOIkcxgooDep8apL00+6YrIZ5upppoJnlX3vKg0+I1gbaMmTV84Be0
+	 dWdpyObR/DwsfO2Xjs0VfxPtzagh/gFT8dMdZ3+476Tk2Tu9JCwx4JZAcNx+TumTDG
+	 fH6VJ2Z1d2lf7LAGVZWIufVVakR8xshCWdp0Pa/t+Fw9rt7kH86y1h6pOpaQy05Nfz
+	 3daTqvEqBDYrQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Chang S . Bae" <chang.seok.bae@intel.com>
+Subject: [PATCH 0/3] crypto: x86/aes-xts - additional tuning
+Date: Fri, 12 Apr 2024 20:17:25 -0700
+Message-ID: <20240413031728.159495-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Sean Christopherson <seanjc@google.com>, Jim Mattson <jmattson@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, mizhang@google.com, kan.liang@intel.com,
- zhenyuw@linux.intel.com, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com,
- samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com>
- <ZhhZush_VOEnimuw@google.com>
- <CALMp9eS4H-WZXRCrp+6aAgwAp+qP2BgJx5ik5kA7vdyQ9qzARg@mail.gmail.com>
- <ZhhyxT66RdpiCRA2@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZhhyxT66RdpiCRA2@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+This series does some more fine-tuning of the new AES-XTS code.
 
-On 4/12/2024 7:31 AM, Sean Christopherson wrote:
-> On Thu, Apr 11, 2024, Jim Mattson wrote:
->> On Thu, Apr 11, 2024 at 2:44 PM Sean Christopherson <seanjc@google.com> wrote:
->>>> +     /* Clear host global_ctrl and global_status MSR if non-zero. */
->>>> +     wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
->>> Why?  PERF_GLOBAL_CTRL will be auto-loaded at VM-Enter, why do it now?
->>>
->>>> +     rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
->>>> +     if (global_status)
->>>> +             wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status);
->>> This seems especially silly, isn't the full MSR being written below?  Or am I
->>> misunderstanding how these things work?
->> LOL! You expect CPU design to follow basic logic?!?
->>
->> Writing a 1 to a bit in IA32_PERF_GLOBAL_STATUS_SET sets the
->> corresponding bit in IA32_PERF_GLOBAL_STATUS to 1.
->>
->> Writing a 0 to a bit in to IA32_PERF_GLOBAL_STATUS_SET is a nop.
->>
->> To clear a bit in IA32_PERF_GLOBAL_STATUS, you need to write a 1 to
->> the corresponding bit in IA32_PERF_GLOBAL_STATUS_RESET (aka
->> IA32_PERF_GLOBAL_OVF_CTRL).
-> If only C had a way to annotate what the code is doing. :-)
->
->>>> +     wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
-> IIUC, that means this should be:
->
-> 	if (pmu->global_status)
-> 		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
->
-> or even better:
->
-> 	toggle = pmu->global_status ^ global_status;
-> 	if (global_status & toggle)
-> 		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
-> 	if (pmu->global_status & toggle)
-> 		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
-Thanks, it looks better. Since PMU v4+, the MSR 
-CORE_PERF_GLOBAL_OVF_CTRL is renamed to CORE_PERF_GLOBAL_STATUS_RESET 
-with supporting more bits. CORE_PERF_GLOBAL_STATUS_RESET looks more 
-easily understand just from name than CORE_PERF_GLOBAL_OVF_CTRL, I would 
-prefer use this name in next version.
+It applies to cryptodev commit 751fb2528c12 plus the two pending patches
+https://lore.kernel.org/linux-crypto/20240409000154.29799-1-ebiggers@kernel.org/
+and
+https://lore.kernel.org/linux-crypto/20240412154559.91807-1-ebiggers@kernel.org/
+
+Eric Biggers (3):
+  crypto: x86/aes-xts - handle AES-128 and AES-192 more efficiently
+  crypto: x86/aes-xts - eliminate a few more instructions
+  crypto: x86/aes-xts - optimize size of instructions operating on
+    lengths
+
+ arch/x86/crypto/aes-xts-avx-x86_64.S | 249 +++++++++++++--------------
+ arch/x86/crypto/aesni-intel_glue.c   |  18 +-
+ 2 files changed, 131 insertions(+), 136 deletions(-)
+
+
+base-commit: 751fb2528c12ef64d1e863efb196cdc968b384f6
+prerequisite-patch-id: 5c1ca8ffe87136eb7bfe74d996f5e6cac01e2768
+prerequisite-patch-id: a72a872736c8e0876c4b44a9e5792dcaa02d4e0e
+-- 
+2.44.0
+
