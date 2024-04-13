@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AC114290;
-	Sat, 13 Apr 2024 02:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBABE1865C;
+	Sat, 13 Apr 2024 02:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712974230; cv=none; b=JED/uMXbOqAZMsXpMLiMki9v1US0Fth44dprxUIYwjTzPKNfBf8++1P1ay5Ttl/DGb3VbsTbkgrt2e4geYWrUG6+ctEOERl6vmTRsL9621D06XObdyGOi8qSYgbdvXs3usmNWEiGZXn5K0r51XinqHVI/LoMVOpKIDxDYCTRmz4=
+	t=1712974231; cv=none; b=jR3GujpO6DZlGpBWXwp3Q1P8tQkfs8qyW8HZG6veBOgJ3rmfvQe/iZsZNjO/8eTTg0nAcbI4N2hHLNPnAskDFpXvQ3v+sc9Ik8xOl/5jUCNGVM+z82ICy6IUKtaY7Jj+wIz6V90rrQrSHxEYgK0HYWFwIGjiByXaMjv/ncYw0xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712974230; c=relaxed/simple;
-	bh=y7/r4Hl/aIaayI7vJmPKYoYuThmfjVt/AepmqMB1Axs=;
+	s=arc-20240116; t=1712974231; c=relaxed/simple;
+	bh=aTzNc/ys01SKda28a/V7y+hIHa06tWV7oiAN7DcmzbA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=alglGZsnA4ULIUm6NGhJEPjZS2N+48PeWedpIlMWymo0jpXXTzgLXO+r5nzAOV5+NIsZEmGUQC2AJ0vTkVLLC8CcVJ5ywjdusFGxNyy48QKVMeqDCaMialTPvXGviaZ+tW9OLgsjxFOgRDDKHOd/EPiJ9vSPb55TBe/BsEVFAdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opCfn/CR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bY0U+n6ZfBdYrZI4HJXhPpbN2XxMfhnCDsqEQ8CbYG+xeQdJTH2W2TCh0AJBsaiOWCx8wgI/I0nXRwBF87NAmns8ZWEYSLC9NTrfF1Ex4PmkEIbVAYIU/lidke1rSm2WS8gtOKhLj6KycXIiGHjnv3ogSh8IzR1v025W5SkM/MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RV/9BEkf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opCfn/CR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0126DC4AF07;
-	Sat, 13 Apr 2024 02:10:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RV/9BEkf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 97ED7C4AF0A;
+	Sat, 13 Apr 2024 02:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712974230;
-	bh=y7/r4Hl/aIaayI7vJmPKYoYuThmfjVt/AepmqMB1Axs=;
+	s=k20201202; t=1712974231;
+	bh=aTzNc/ys01SKda28a/V7y+hIHa06tWV7oiAN7DcmzbA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=opCfn/CRLiVUBRq+HKV/NW+4ZLhD/V58ifk6Jg6Td2qF2I1VdpvDceVmeZBf0RAEz
-	 IdpHOcpONgE/FLUns6IzskTIt+4PRGyU18y5gJB1mbq1KQsShwVYa1jFIIjGUVGOC0
-	 YbLaGsqdXFyY1bfrOqRLhGlzBZFn1zDLn9FqPTqES67hhFDd2ZLxzULZCivBxqa8+Z
-	 FxbAmqLVAAWHd6l3lMXHEYahtv98RJtsJXsDFfmUKcNHzcy1dzsExenniJppIDO2Iq
-	 LG3RaENF6IV1X6IReWnzaoIzEViCIaIyeDv1krfHAESzLxHwPbb/qjbB50t7w1Pg13
-	 jXcFV5R174ahQ==
+	b=RV/9BEkfuMIpO/UgLlVAQYBOpSqq1aw7yueapmq6BdFgMRxsDwx4NwdtFleGcutsk
+	 JQghqwzRTqvGIWENJsvRPnJtpJEPJ9LMlVccjm9seS4tKbWFdkga6pGOIDwZZGPc/a
+	 DKzWbhw5d+rSh/yAEKpfUz4QD2YJCRJhPdYxw2m3lE1bk2ggk1uEVUVxoT9aGEQ/2q
+	 eQAdLMYXow3JDBy33Xf3adJsdfazYdRsUB6SFtPXk7xJ928q3v+epDfRzT/ctOodf3
+	 MnYvpXuwmxkpXC1cLED8Wg8gbSTff0bS/mZp7bweaX0pTYFbKIxLIQwz7+Okw7ogqr
+	 pOqSn4iSh1Ang==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D26C2DF7859;
-	Sat, 13 Apr 2024 02:10:29 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8DC25DF7859;
+	Sat, 13 Apr 2024 02:10:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,41 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v3] net: sparx5: flower: fix fragment flags handling
+Subject: Re: [PATCH][next] tipc: remove redundant assignment to ret, simplify code
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171297422985.31124.14511949916816022464.git-patchwork-notify@kernel.org>
-Date: Sat, 13 Apr 2024 02:10:29 +0000
-References: <20240411111321.114095-1-ast@fiberby.net>
-In-Reply-To: <20240411111321.114095-1-ast@fiberby.net>
-To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@ci.codeaurora.org
-Cc: netdev@vger.kernel.org, Steen.Hegelund@microchip.com,
- lars.povlsen@microchip.com, daniel.machon@microchip.com,
- UNGLinuxDriver@microchip.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- jacob.e.keller@intel.com
+ <171297423157.31124.15059984816555021633.git-patchwork-notify@kernel.org>
+Date: Sat, 13 Apr 2024 02:10:31 +0000
+References: <20240411091704.306752-1-colin.i.king@gmail.com>
+In-Reply-To: <20240411091704.306752-1-colin.i.king@gmail.com>
+To: Colin King (gmail) <colin.i.king@gmail.com>
+Cc: jmaloy@redhat.com, ying.xue@windriver.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 11 Apr 2024 11:13:18 +0000 you wrote:
-> I noticed that only 3 out of the 4 input bits were used,
-> mt.key->flags & FLOW_DIS_IS_FRAGMENT was never checked.
+On Thu, 11 Apr 2024 10:17:04 +0100 you wrote:
+> Variable err is being assigned a zero value and it is never read
+> afterwards in either the break path or continue path, the assignment
+> is redundant and can be removed. With it removed, the if statement
+> can also be simplified.
 > 
-> In order to avoid a complicated maze, I converted it to
-> use a 16 byte mapping table.
-> 
-> As shown in the table below the old heuristics doesn't
-> always do the right thing, ie. when FLOW_DIS_IS_FRAGMENT=1/1
-> then it used to only match follow-up fragment packets.
+> Cleans up clang scan warning:
+> net/tipc/socket.c:3570:5: warning: Value stored to 'err' is never
+> read [deadcode.DeadStores]
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v3] net: sparx5: flower: fix fragment flags handling
-    https://git.kernel.org/netdev/net/c/68aba00483c7
+  - [next] tipc: remove redundant assignment to ret, simplify code
+    https://git.kernel.org/netdev/net-next/c/195b7fc53c6f
 
 You are awesome, thank you!
 -- 
