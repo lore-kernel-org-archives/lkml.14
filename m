@@ -1,108 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA6A7E9;
-	Sat, 13 Apr 2024 00:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE201361
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 00:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712968836; cv=none; b=EXU2YPOkDLp0slVc46d1Kgi/EJNbvc6qu219Z7PnafcZ54gmCqJY0jNQ0BYj3DfPvdWSqtL3WvZk8JA0Nlude8IrR0/TLUT3bP1RnN4lNCOgtsVQwPjo7ONMNP/UqQnnXFrMk/roWnyIE1VY9/kuSTlY9srBALwveH6+oU6oacw=
+	t=1712969421; cv=none; b=kqbsP9yl3h7zDvklQcZRCa47z1kcdmvI7SCB6QdSgx7jZYcuiIUbIOjqTr5XrF9DsAKUGLV2u77+qKqvmfz8Fentt7wDYAfXBPyGiabEQY5LUtu3kbrXpXcob/2hsi6Bi2wqAmMEH5gx3dmaay1YZcaPLBeay2kPoI9+U82d1Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712968836; c=relaxed/simple;
-	bh=Z10XwQjxuMwXDF/1cSayzrUktgk7iSm3++jlMAlIwJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLzbFkpT+C1/mL/XoC/A21Obxh+r5Qq51V4mDmytGJxjV34LP7KdLX6xzZ5oUsSfdhPHRILmnmi//NWG6t79aXgvpEpE+0HrOtmjSBPOxmddcfWWrlvisHoTGCMzVPBPIPZQf/6FfGQ5fcWWguv1tG7Pnhf1LNd5wuMsbFCv6G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVXzOag1; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVXzOag1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712968834; x=1744504834;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z10XwQjxuMwXDF/1cSayzrUktgk7iSm3++jlMAlIwJA=;
-  b=JVXzOag1IvWsZChBDprDDtuz4rXqMyJk42Lj57sRzuUClnQYsREkjmvl
-   zZyDJo9iwLNTmOX9yNLsn6Ihsm0vWk3wGmoP+bMxyAXbUMc55sL6g2ePO
-   kRXXOJk1yQknZPYSZssrLLNB5VuUbkEa0/x1lpbAI0XcWvD+GkrLTbF1J
-   JmwG7YEElQqoauUuva6ldfPDXve5QY8sv8BwIej6R02l3A7NVBz+Df2ui
-   +hEr/67Tlcz9z1EQn7Gpf1d3qhDiJbHs5X99mYUdKPpOTahvg7FlHVij5
-   +XETh+ptSPZEACp1l1UVhXYPRBJ/qXwLeaSDYrC8yeQ1SyswvbZ2H4ky1
-   w==;
-X-CSE-ConnectionGUID: Ihqbk3h5QdaWy7NA1RNHfw==
-X-CSE-MsgGUID: 0BRL+2QrQpOe4BYl9nXDsA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19044707"
-X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="19044707"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 17:40:33 -0700
-X-CSE-ConnectionGUID: TiJFT1IvTOWAT+qhIZD25g==
-X-CSE-MsgGUID: N0CR4kfuS56j9VXpeJQ8mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="21373992"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 17:40:32 -0700
-Date: Fri, 12 Apr 2024 17:40:31 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 087/130] KVM: TDX: handle vcpu migration over logical
- processor
-Message-ID: <20240413004031.GQ3039520@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <b9fe57ceeaabe650f0aecb21db56ef2b1456dcfe.1708933498.git.isaku.yamahata@intel.com>
- <0c3efffa-8dd5-4231-8e90-e0241f058a20@intel.com>
- <20240412214201.GO3039520@ls.amr.corp.intel.com>
- <Zhm5rYA8eSWIUi36@google.com>
+	s=arc-20240116; t=1712969421; c=relaxed/simple;
+	bh=2PudCH3sanltZoJWKNx8RcWc6GEEHV5v127wrS9KFuw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uI43+arjFltBMz36Ue/hFrQtx3qyfMVH4IxAqHjRvKNUQGPh0rT08mvrMObq/Ezwjd7EjqpPcAh9G1YXfVFDkUB9c8JfjGcDww2Kz9Oz00dCm4nK2nbKg/g1AXouAzon0IQHMvF13w3vurD9eAxFeko/D9jnXC5CHtHif12FGgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36a1ab65a52so15767785ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:50:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712969419; x=1713574219;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ty8vjrN8ixEIeO3nPvDfskedfuwplOtYXeMyscPrwNA=;
+        b=EURPXFXEO2+cThOexRYxBFe0i/QbCWOlvXCrONJFIaB63co/p2s+1QZ3WTiI3p6E6O
+         VoT0SV8CFFum40l5fB0QtDHw3UQQR/OALsJx5zmJpS1L2QRoXpYuw0uRt0/pAD8SAnU9
+         8NcsLHXXx1gMVvu4O2kav6x8pecoHbb25dc7f5G/qMEnyNwO5aLne6YrTWYZdvpxeSWH
+         5H8xurejcnAT0SgkWceJZtYYWuv4e8FpnP2j1bdJT0TY7MsA5MLCObtaf5iOYMVpJ82g
+         WZelz103FK15/BnJJUbagW2Ry4BCrZNTb85DzzNFPoLMEQ5+X0Cx+W+d/NuonV6Mn3I+
+         WNTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTdpuRdxQlLObNGMsiIh3sAz1TJYBQQXGPp7rQDQNbGLI7Q2c8CBB6l+F8cVPIRKiicqyCHSKtEZvZhzKhtRTq9R2Rx2QB8Gr/orhg
+X-Gm-Message-State: AOJu0YwRxVokrP47eIbEK9XRLTkLypx1olKHK8uxr968rFZd2lM0hbXW
+	BQ1Re8Ozvwq2dVhn/tppf6fdeBUBVQGZ4Pu+16QlPPjCKDQo/abGacaEG9hroZwoVYale2lx1Vb
+	iDrhdRoCsJQJ35xYFXRsetGnzeHQY6r5nsLiRJcdSv3Jy42Rn08nenEg=
+X-Google-Smtp-Source: AGHT+IH9qLKEt7z94jqgv0U9YhvpZZQaXbG55erGuK79lSTmq0zperO6eeigT5hGR9UCU2HqYvivcHSHOKo2dnIyacWGi5sW4xo0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zhm5rYA8eSWIUi36@google.com>
+X-Received: by 2002:a05:6e02:1e01:b0:36a:190f:1c93 with SMTP id
+ g1-20020a056e021e0100b0036a190f1c93mr292596ila.5.1712969419196; Fri, 12 Apr
+ 2024 17:50:19 -0700 (PDT)
+Date: Fri, 12 Apr 2024 17:50:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000be1f530615efc5ca@google.com>
+Subject: [syzbot] [bpf?] [net?] KMSAN: uninit-value in sock_hash_delete_elem
+From: syzbot <syzbot+c33bff5d5da1391df027@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
+	jakub@cloudflare.com, john.fastabend@gmail.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 12, 2024 at 03:46:05PM -0700,
-Sean Christopherson <seanjc@google.com> wrote:
+Hello,
 
-> On Fri, Apr 12, 2024, Isaku Yamahata wrote:
-> > On Fri, Apr 12, 2024 at 09:15:29AM -0700, Reinette Chatre <reinette.chatre@intel.com> wrote:
-> > > > +void tdx_mmu_release_hkid(struct kvm *kvm)
-> > > > +{
-> > > > +	while (__tdx_mmu_release_hkid(kvm) == -EBUSY)
-> > > > +		;
-> > > >  }
-> > > 
-> > > As I understand, __tdx_mmu_release_hkid() returns -EBUSY
-> > > after TDH.VP.FLUSH has been sent for every vCPU followed by
-> > > TDH.MNG.VPFLUSHDONE, which returns TDX_FLUSHVP_NOT_DONE.
-> > > 
-> > > Considering earlier comment that a retry of TDH.VP.FLUSH is not
-> > > needed, why is this while() loop here that sends the
-> > > TDH.VP.FLUSH again to all vCPUs instead of just a loop within
-> > > __tdx_mmu_release_hkid() to _just_ resend TDH.MNG.VPFLUSHDONE?
-> > > 
-> > > Could it be possible for a vCPU to appear during this time, thus
-> > > be missed in one TDH.VP.FLUSH cycle, to require a new cycle of
-> > > TDH.VP.FLUSH?
-> > 
-> > Yes. There is a race between closing KVM vCPU fd and MMU notifier release hook.
-> > When KVM vCPU fd is closed, vCPU context can be loaded again.
-> 
-> But why is _loading_ a vCPU context problematic?
+syzbot found the following issue on:
 
-It's nothing problematic.  It becomes a bit harder to understand why
-tdx_mmu_release_hkid() issues IPI on each loop.  I think it's reasonable
-to make the normal path easy and to complicate/penalize the destruction path.
-Probably I should've added comment on the function.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+HEAD commit:    fec50db7033e Linux 6.9-rc3
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1425a483180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=13e7da432565d94c
+dashboard link: https://syzkaller.appspot.com/bug?extid=c33bff5d5da1391df027
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17b653d3180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159a2cf3180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/901017b36ccc/disk-fec50db7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/16bfcf5618d3/vmlinux-fec50db7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/dc9c5a1e7d02/bzImage-fec50db7.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c33bff5d5da1391df027@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in spin_lock_bh include/linux/spinlock.h:356 [inline]
+BUG: KMSAN: uninit-value in sock_hash_delete_elem+0x239/0x710 net/core/sock_map.c:945
+ spin_lock_bh include/linux/spinlock.h:356 [inline]
+ sock_hash_delete_elem+0x239/0x710 net/core/sock_map.c:945
+ ____bpf_map_delete_elem kernel/bpf/helpers.c:77 [inline]
+ bpf_map_delete_elem+0x5c/0x80 kernel/bpf/helpers.c:73
+ ___bpf_prog_run+0x13fe/0xe0f0 kernel/bpf/core.c:1997
+ __bpf_prog_run32+0xb2/0xe0 kernel/bpf/core.c:2236
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+ bpf_trace_run3+0x132/0x320 kernel/trace/bpf_trace.c:2421
+ __bpf_trace_block_bio_remap+0x34/0x50 include/trace/events/block.h:507
+ __traceiter_block_bio_remap+0xa5/0x160 include/trace/events/block.h:507
+ trace_block_bio_remap include/trace/events/block.h:507 [inline]
+ blk_partition_remap block/blk-core.c:571 [inline]
+ submit_bio_noacct+0x2449/0x2800 block/blk-core.c:762
+ submit_bio+0x58a/0x5b0 block/blk-core.c:879
+ ext4_io_submit fs/ext4/page-io.c:378 [inline]
+ io_submit_add_bh fs/ext4/page-io.c:419 [inline]
+ ext4_bio_write_folio+0x1e76/0x2e40 fs/ext4/page-io.c:563
+ mpage_submit_folio+0x351/0x4a0 fs/ext4/inode.c:1869
+ mpage_map_and_submit_buffers fs/ext4/inode.c:2115 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2254 [inline]
+ ext4_do_writepages+0x3733/0x62e0 fs/ext4/inode.c:2679
+ ext4_writepages+0x312/0x830 fs/ext4/inode.c:2768
+ do_writepages+0x427/0xc30 mm/page-writeback.c:2612
+ __writeback_single_inode+0x10d/0x12c0 fs/fs-writeback.c:1650
+ writeback_sb_inodes+0xb48/0x1be0 fs/fs-writeback.c:1941
+ __writeback_inodes_wb+0x14c/0x440 fs/fs-writeback.c:2012
+ wb_writeback+0x4da/0xdf0 fs/fs-writeback.c:2119
+ wb_check_old_data_flush fs/fs-writeback.c:2223 [inline]
+ wb_do_writeback fs/fs-writeback.c:2276 [inline]
+ wb_workfn+0x110c/0x1940 fs/fs-writeback.c:2304
+ process_one_work kernel/workqueue.c:3254 [inline]
+ process_scheduled_works+0xa81/0x1bd0 kernel/workqueue.c:3335
+ worker_thread+0xea5/0x1560 kernel/workqueue.c:3416
+ kthread+0x3e2/0x540 kernel/kthread.c:388
+ ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+
+Local variable stack created at:
+ __bpf_prog_run32+0x43/0xe0 kernel/bpf/core.c:2236
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+ bpf_trace_run3+0x132/0x320 kernel/trace/bpf_trace.c:2421
+
+CPU: 1 PID: 76 Comm: kworker/u8:5 Not tainted 6.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Workqueue: writeback wb_workfn (flush-8:0)
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
