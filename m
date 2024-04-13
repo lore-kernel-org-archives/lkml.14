@@ -1,160 +1,297 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2069.outbound.protection.outlook.com [40.92.42.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD89A2F37;
-	Sat, 13 Apr 2024 00:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712969603; cv=fail; b=H8ccWSPzY+g9Ib+/J5YmWibPlYcUuksr7cTz8lcXBoBG1dQpbFk+nVtgyyQLOKOP6S74n9hOI5zLIJctWXZzgntLQvhx1tfMH5xXXXtnpcHiBCohemPP5pvBYIoK1YCEPgLcuYWv4btTKxx3Zhj9JxD8jc77Y6mT0kU8+LrBeXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712969603; c=relaxed/simple;
-	bh=1KiTboskeQQnHKXL4/Rrf8iEz99jEOgN550S8XePDN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=bNZeshO0TWAu4CuLnLOZ3I1xtr6YOg19LVUFZIAK3K6bt29OrT+fSOkD8rVAI7+N1vaZWOTRsS3n2BmMlp+j2GlKAW4U/N8Ko0xexlw/3ISIpRs3rdSlsKuVV1UJaO4AneleYIDEU+TCqqLCpwdGBFRYfhhSkZnEn3P4bc/ajSg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=GmaFj0Ov; arc=fail smtp.client-ip=40.92.42.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA4B4C7D;
+	Sat, 13 Apr 2024 00:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712969767; cv=none; b=EWK/UaZkQysOeRNpSrLc7aHiZaUwR6SrSiTTp3vqSK9VDtqdYFihT7w1AwVCOH1TCLKtWw6YLFaBiSIiGQERnk/VjPwxMbLXxPIzsiX0uQs+mmnlI2lXqQkjSRIb4XZxnwAdk1gvKhinTaFKFk/xKHXrbwQsKCdaC8/WSkcOoRY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712969767; c=relaxed/simple;
+	bh=R4sB2NRxqqmPn0LzToyw522VX/sFNkiYUmj3X8sxnSs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qQHSLY/Fk0KNlvdcanJhZYv0ZmUWGz0/2GI084Uwn9DUNuBPXyMbI92KfD60lnKswnrG5w9beNlvz0C/A5ghHjJxkZb14XID59jM/jUwC8z6cg05TDRjsBd8M3hpwZQ8KDyrr5JJYWs+2g7bwRdSxX9ylZDOkppXBheTk2ujT58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=p8iJDzwa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="GmaFj0Ov"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KCYYFkaxbx8Qi7lvWJ4X968FAj/s3j1PVLKRH3torST/A3GDBBj61Aa0FZSOwgpwyBDENNbnkSg8PhPyIpoDs0UxOkhOLjRhoSd3llNYAflXbaV1NXyTmdkAJ2TSHvrnr0FroCB4HFIl9NdwjYrlpSTpjlf56EMdNzqgrMHCL78C+NMFJGVJ9+6Hvynzm8lU1YMOQUiP/xcNUw3h1OSMUXSaWax5LMXEb/Th3Xgq+WCLkHuVXY2gVlXYv6RevcCs8Xkdtmv9VxIwFnBLwrXTV0Z83b5rB4MPgHGXzETGzXY8SqyqnHLFMRHyO/4A7Xnpq05qev+BSL2+8cmAOLIW9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k+QIa4z+QixFOXxymWv++tDBcIByVapjSO8dHHx7Uek=;
- b=Zk8W1pxfYBscX7+XCDsrDQD0MO56xNyWLDco/3u9Moog8nUH5cLJJJnH4rCiFf7qsNUZG6itJmmuv1FkicABg/hrV2EXD7R+hV39fPN0NUN8ep+xC/bidvSj18JjKPTZInO/VnwIB6JjCM+JEBDqLVTnvw/Soo7Y6d98CI9LyOkMV0p1nzzOE6x4wyU0PykLnyXBfOfaCNQwubPO9UjywZ0pxtM43CZ2E1oA3AMD1YZX7H3jetdiAScF+N0qtSWWrApAyJonUrSlnXw/fZSXjH5M3UwwvQBZVNRFg4PwbMyZrZKd0MaX2ca8nh5aIyuCac4c0boVpELLSpaFgrTW1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k+QIa4z+QixFOXxymWv++tDBcIByVapjSO8dHHx7Uek=;
- b=GmaFj0OvX72MYVjckoN95nwWzEKK8tKIv6RDx3Q4iaT+Riqbddp6cKhNenYOiPM5HLEz3vl8ZWaePjSnVGqYCbYFrRp9tyZewB+XWFiijerwtHafrDZbSymUwLNDtmfVgYyzCfNf9f/mzn3Y7LRT1urGBy7EZFacUZXcp14D9u4qP1km7D85ZPp651QC3SEaTb1ujHAwbSX+pNkVRyvtZc4cu+nR02659TlXDpfpb469Rco+RlyigjlJgMyatW3GTjd8VDQbCKYKHwonBaN4pPa8LJ8z1ajLwKR35MOZW0GjOPUipC9GuXPYq1OGJ9kjhRy5QJll7VAekSTUTrifbA==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by SJ2PR20MB6159.namprd20.prod.outlook.com (2603:10b6:a03:504::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sat, 13 Apr
- 2024 00:53:19 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.042; Sat, 13 Apr 2024
- 00:53:19 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>
-Cc: linux-clk@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="p8iJDzwa"
+Received: by linux.microsoft.com (Postfix, from userid 1052)
+	id 9FA6320F26A7; Fri, 12 Apr 2024 17:56:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FA6320F26A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712969765;
+	bh=NvRurcaFRXUYjPMNWZ1HLWsxsPj8712oUc6g78Rln9Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=p8iJDzwahCSnLprGuAUAM3EJNHaNgBkU7nBSVUyuCyAXPhhBkwqfqGrkqnNgCPLlY
+	 pSCsFXT/O0X8/19BuybQ6lhXeB+zl1aQD1ptsXqwv1b0lvgx7ikW5rVjb/aQE0zjLQ
+	 u8MsSQ2AGwahmxV1UQOOPuNt0Nu9OUzBcRLOcNzw=
+From: Fan Wu <wufan@linux.microsoft.com>
+To: corbet@lwn.net,
+	zohar@linux.ibm.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	tytso@mit.edu,
+	ebiggers@kernel.org,
+	axboe@kernel.dk,
+	agk@redhat.com,
+	snitzer@kernel.org,
+	eparis@redhat.com,
+	paul@paul-moore.com
+Cc: linux-doc@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	fsverity@lists.linux.dev,
+	linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] clk: sophgo: Use div64 for fpll rate calculation
-Date: Sat, 13 Apr 2024 08:53:33 +0800
-Message-ID:
- <IA1PR20MB4953CB4FCCDE82AB25F6880EBB0B2@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [oo3N9baJdD8PNfwAo2QnXXdhJXed/pA/10Bs76E1tZA=]
-X-ClientProxiedBy: TYCPR01CA0157.jpnprd01.prod.outlook.com
- (2603:1096:400:2b1::10) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <20240413005334.372444-1-inochiama@outlook.com>
+	Deven Bowers <deven.desai@linux.microsoft.com>,
+	Fan Wu <wufan@linux.microsoft.com>
+Subject: [PATCH v17 03/21] ipe: add evaluation loop
+Date: Fri, 12 Apr 2024 17:55:46 -0700
+Message-Id: <1712969764-31039-4-git-send-email-wufan@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1712969764-31039-1-git-send-email-wufan@linux.microsoft.com>
+References: <1712969764-31039-1-git-send-email-wufan@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|SJ2PR20MB6159:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc8c2648-43b6-4743-5e31-08dc5b541c51
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	E4FLxoyDAwHTAxLTXdCBHxmE8ItMfwqMgIcjjawm9p+O/DYzeaQMOc4MsBNczU81IBTUYDX+4x3K6QUF5HoYrbblPjSjVWm8Qig046bFWL0ObYnXaBGSiWYl3LdMA0PTNYqgK3I6p1Sm4MUakWin0s1LnBcaoSqwD/hR/YvLXS2EWWFb/aEf+vtVWgJ4z2FRYhJQTp1UN56bzCkxgmYbo5AxputjHqyzXbbekHo2k2fnVFHbwY3QxNZOvgPFSUodvQODNh+uVZMsAGGGVppNh4rWiESDrws5Jd3EilVap8tCFtkqtS7GLrLBG2XWnIjnZgxuWMG/SYZIUj2awZ4TLryMjd/rsu4uyd3Y6ETZxofiNZ9NoahE+nRubDUIgm5u0jWNSegKX6lWW/Jh2101qXj87XWryy4lcxjfPNHlqJRNwLX0+spqTLB6uSmx9H0fucBDUEFaCnxJ/VUFpuHjGCLar53UipefXbbRjfD7SSnNLGdTDNfO/nrCvY7xhp5heMPvBznoU2aNYAuSRayM8UJagZaNA17EjPwJPV++UYhrt3vIdFq0wmG5E5jzGUc6OPD0zhHYnqtRIA3BO9vvmOUtFHxG/ev08P3u+Kg7HgNzmNju+dtA9gUsQ2G8IT4op+T/Oa3TlS4jgOCNWPpe/tYk5nWsUDU5SNY5ks+1S5zbh2UBqY5LV6rSd2fjuLkNP5Kv9vCfETKfyE/Zm19PwQ63w0+2Zqecl0ayD6sFslNQZX6sxIgXori8iCW/jNuX
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qheEYyZutnUBz96xA4eKDCXd6Cl92E2zRCfIK8Btof0OE6mjWr3wfiHA3sNF?=
- =?us-ascii?Q?8+FgX2qM7sztnxVzNNSXSrtqHyqOvn7hpUsXRbfJ25Shhi7e3JMqqlRK6Xkj?=
- =?us-ascii?Q?ceTD8/055BBz3bTcZM3u9d5HHb3IeYD9jxgRym7TQ45xhvxtl0VltaUMURIz?=
- =?us-ascii?Q?gH0S6z4zSoURJwPtHx5IlYA8PZBYGAo9ddznhkpfC1xmHfcgtWbtIJelKfrj?=
- =?us-ascii?Q?Myp03DX9AQG6Od2HFPCb3AgwYWDwOpihcbHxCi/jT/Buh6sYP65JBo+QT2Sr?=
- =?us-ascii?Q?ifVQQLIb7iPycYr5jDKv4MYOhJaIbY2vTCIxBj66o7i2qV2dTBdg8VKl+Qgu?=
- =?us-ascii?Q?buHlZwa3568e0PUBfvKwOMykT9mv8Bwx9Ch0mbW4Ui3JEchvZbEy9TcUYl2m?=
- =?us-ascii?Q?6DYLC6ZowOBtvcO86I20EjBETqUJKouLr5BOkIft05ChFVk/gZa7l6rQtCkx?=
- =?us-ascii?Q?xYU31y2otp/mFCjx2WGcLQ8dHFdwGbDbh2DxlcmlDp82BKwiohVx8FQTwOuU?=
- =?us-ascii?Q?hCQrhDwEdnyRcIkaE8O1SKAX0tYc+kCBD1ecZlXQh49lWD5zEJ+mUxGhI4W0?=
- =?us-ascii?Q?P3w98ymr6vAfhRGyaxXeolsNWxXsp5As4vMJhSesMEMiIaYCnB3hC1exk+Wh?=
- =?us-ascii?Q?sP772VwFj6pxZ3XDaHySVX2U7SHpBN9fPVAjrBGzGoQHt+0YKZNUpTiyH5PU?=
- =?us-ascii?Q?0vp6ScuCQ25qylLbNSswljyXc9dahO5Haf65ey5YvPRG/9TxIb4avTRyvHcy?=
- =?us-ascii?Q?tyy/bGpsORomXPvmz3YdDx2D6g8RUWqlU/f2XVxGbOadZc8ZZujRZ4gJ2q9l?=
- =?us-ascii?Q?miOPitnGonhlHPBJ1hhVgRKl0ovlb8AdNSYSJG118zGEYWEvP+sWzqTJL3fr?=
- =?us-ascii?Q?MQDPpXb7aJOdbpdNyyJv41NYfcKz4JcbKnqH/Zhng3dTYqsBLEOrx6ON2rwd?=
- =?us-ascii?Q?aa9OhWmEyVGH8l9Je5gU3MWPyBTRrQ+kDiav6dCTFF57cLIDPR//hmS4MfE4?=
- =?us-ascii?Q?mHLTUeGMCNrPLNClPdRnJ0S7H+9A3Pcg13dB/GvaziH6Jb07mNVur+RajAaL?=
- =?us-ascii?Q?f1Cacb4uVP1qD/GhvNd9tsC+VWkP2qeW8Gf0tJrZavO0d3E6EdNL1h613atd?=
- =?us-ascii?Q?WGC5Vt7jet0CIpSX7EIqX/P+eBxzNvRt373PGvVOcL8sv+84vGlyRitc37ED?=
- =?us-ascii?Q?5ACDfwnQe0ViUXRCnlQV87SCndQrDjb9Vvf+nolW4FjTfKwfwa03Xj/FLfBT?=
- =?us-ascii?Q?yaO/PxYi946/IDmhOifu?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc8c2648-43b6-4743-5e31-08dc5b541c51
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2024 00:53:19.8144
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR20MB6159
 
-The CV1800 SoC needs to use 64-bit division for fpll rate
-calculation, which will cause problem on 32-bit system.
-Use div64 series function to avoid this problem.
+From: Deven Bowers <deven.desai@linux.microsoft.com>
 
-Fixes: 80fd61ec4612 ("clk: sophgo: Add clock support for CV1800 SoC")
-Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202404122344.d5pb2N1I-lkp@intel.com/
+Introduce a core evaluation function in IPE that will be triggered by
+various security hooks (e.g., mmap, bprm_check, kexec). This function
+systematically assesses actions against the defined IPE policy, by
+iterating over rules specific to the action being taken. This critical
+addition enables IPE to enforce its security policies effectively,
+ensuring that actions intercepted by these hooks are scrutinized for policy
+compliance before they are allowed to proceed.
+
+Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+
 ---
- drivers/clk/sophgo/clk-cv18xx-pll.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+v2:
++ Split evaluation loop, access control hooks, and evaluation loop from policy parser and userspace interface to pass mailing list character limit
 
-diff --git a/drivers/clk/sophgo/clk-cv18xx-pll.c b/drivers/clk/sophgo/clk-cv18xx-pll.c
-index c546dad1791c..65aba3b95cf7 100644
---- a/drivers/clk/sophgo/clk-cv18xx-pll.c
-+++ b/drivers/clk/sophgo/clk-cv18xx-pll.c
+v3:
++ Move ipe_load_properties to patch 04.
++ Remove useless 0-initializations Prefix extern variables with ipe_
++ Remove kernel module parameters, as these are exposed through sysctls.
++ Add more prose to the IPE base config option help text.
++ Use GFP_KERNEL for audit_log_start.
++ Remove unnecessary caching system.
++ Remove comments from headers
++ Use rcu_access_pointer for rcu-pointer null check
++ Remove usage of reqprot; use prot only.
++Move policy load and activation audit event to 03/12
+
+v4:
++ Remove sysctls in favor of securityfs nodes
++ Re-add kernel module parameters, as these are now exposed through securityfs.
++ Refactor property audit loop to a separate function.
+
+v5:
++ fix minor grammatical errors
++ do not group rule by curly-brace in audit record,
++ reconstruct the exact rule.
+
+v6:
++ No changes
+
+v7:
++ Further split lsm creation into a separate commit from the evaluation loop and audit system, for easier review.
++ Propagating changes to support the new ipe_context structure in the evaluation loop.
+
+v8:
++ Remove ipe_hook enumeration; hooks can be correlated via syscall record.
+
+v9:
++ Remove ipe_context related code and simplify the evaluation loop.
+
+v10:
++ Split eval part and boot_verified part
+
+v11:
++ Fix code style issues
+
+v12:
++ Correct an rcu_read_unlock usage
++ Add a WARN to unknown op during evaluation
+
+v13:
++ No changes
+
+v14:
++ No changes
+
+v15:
++ No changes
+
+v16:
++ No changes
+
+v17:
++ Add years to license header
++ Fix code and documentation style issues
+---
+ security/ipe/Makefile |   1 +
+ security/ipe/eval.c   | 102 ++++++++++++++++++++++++++++++++++++++++++
+ security/ipe/eval.h   |  24 ++++++++++
+ 3 files changed, 127 insertions(+)
+ create mode 100644 security/ipe/eval.c
+ create mode 100644 security/ipe/eval.h
+
+diff --git a/security/ipe/Makefile b/security/ipe/Makefile
+index 3093de1afd3e..4cc17eb92060 100644
+--- a/security/ipe/Makefile
++++ b/security/ipe/Makefile
 @@ -6,6 +6,7 @@
- #include <linux/clk-provider.h>
- #include <linux/io.h>
- #include <linux/limits.h>
-+#include <linux/math64.h>
- #include <linux/spinlock.h>
-
- #include "clk-cv18xx-pll.h"
-@@ -202,18 +203,18 @@ static unsigned long fpll_calc_rate(unsigned long parent_rate,
- {
- 	u64 dividend = parent_rate * div_sel;
- 	u64 factor = ssc_syn_set * pre_div_sel * post_div_sel;
-+	u64 remainder;
- 	unsigned long rate;
-
- 	dividend <<= PLL_SYN_FACTOR_DOT_POS - 1;
--	rate = dividend / factor;
--	dividend %= factor;
-+	rate = div64_u64_rem(dividend, factor, &remainder);
-
- 	if (is_full_parent) {
--		dividend <<= 1;
-+		remainder <<= 1;
- 		rate <<= 1;
- 	}
-
--	rate += DIV64_U64_ROUND_CLOSEST(dividend, factor);
-+	rate += DIV64_U64_ROUND_CLOSEST(remainder, factor);
-
- 	return rate;
- }
---
+ #
+ 
+ obj-$(CONFIG_SECURITY_IPE) += \
++	eval.o \
+ 	ipe.o \
+ 	policy.o \
+ 	policy_parser.o \
+diff --git a/security/ipe/eval.c b/security/ipe/eval.c
+new file mode 100644
+index 000000000000..41331afdef7c
+--- /dev/null
++++ b/security/ipe/eval.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2024 Microsoft Corporation. All rights reserved.
++ */
++
++#include <linux/fs.h>
++#include <linux/types.h>
++#include <linux/slab.h>
++#include <linux/file.h>
++#include <linux/sched.h>
++#include <linux/rcupdate.h>
++
++#include "ipe.h"
++#include "eval.h"
++#include "policy.h"
++
++struct ipe_policy __rcu *ipe_active_policy;
++
++/**
++ * evaluate_property() - Analyze @ctx against a rule property.
++ * @ctx: Supplies a pointer to the context to be evaluated.
++ * @p: Supplies a pointer to the property to be evaluated.
++ *
++ * This is a placeholder. The actual function will be introduced in the
++ * latter commits.
++ *
++ * Return:
++ * * %true	- The current @ctx match the @p
++ * * %false	- The current @ctx doesn't match the @p
++ */
++static bool evaluate_property(const struct ipe_eval_ctx *const ctx,
++			      struct ipe_prop *p)
++{
++	return false;
++}
++
++/**
++ * ipe_evaluate_event() - Analyze @ctx against the current active policy.
++ * @ctx: Supplies a pointer to the context to be evaluated.
++ *
++ * This is the loop where all policy evaluation happens against IPE policy.
++ *
++ * Return:
++ * * %0		- Success
++ * * %-EACCES	- @ctx did not pass evaluation
++ */
++int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx)
++{
++	const struct ipe_op_table *rules = NULL;
++	const struct ipe_rule *rule = NULL;
++	struct ipe_policy *pol = NULL;
++	struct ipe_prop *prop = NULL;
++	enum ipe_action_type action;
++	bool match = false;
++
++	rcu_read_lock();
++
++	pol = rcu_dereference(ipe_active_policy);
++	if (!pol) {
++		rcu_read_unlock();
++		return 0;
++	}
++
++	if (ctx->op == IPE_OP_INVALID) {
++		if (pol->parsed->global_default_action == IPE_ACTION_DENY) {
++			rcu_read_unlock();
++			return -EACCES;
++		}
++		if (pol->parsed->global_default_action == IPE_ACTION_INVALID)
++			WARN(1, "no default rule set for unknown op, ALLOW it");
++		rcu_read_unlock();
++		return 0;
++	}
++
++	rules = &pol->parsed->rules[ctx->op];
++
++	list_for_each_entry(rule, &rules->rules, next) {
++		match = true;
++
++		list_for_each_entry(prop, &rule->props, next) {
++			match = evaluate_property(ctx, prop);
++			if (!match)
++				break;
++		}
++
++		if (match)
++			break;
++	}
++
++	if (match)
++		action = rule->action;
++	else if (rules->default_action != IPE_ACTION_INVALID)
++		action = rules->default_action;
++	else
++		action = pol->parsed->global_default_action;
++
++	rcu_read_unlock();
++	if (action == IPE_ACTION_DENY)
++		return -EACCES;
++
++	return 0;
++}
+diff --git a/security/ipe/eval.h b/security/ipe/eval.h
+new file mode 100644
+index 000000000000..b137f2107852
+--- /dev/null
++++ b/security/ipe/eval.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2024 Microsoft Corporation. All rights reserved.
++ */
++
++#ifndef _IPE_EVAL_H
++#define _IPE_EVAL_H
++
++#include <linux/file.h>
++#include <linux/types.h>
++
++#include "policy.h"
++
++extern struct ipe_policy __rcu *ipe_active_policy;
++
++struct ipe_eval_ctx {
++	enum ipe_op_type op;
++
++	const struct file *file;
++};
++
++int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx);
++
++#endif /* _IPE_EVAL_H */
+-- 
 2.44.0
 
