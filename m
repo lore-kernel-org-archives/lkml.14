@@ -1,116 +1,167 @@
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECF91CD0C;
-	Sat, 13 Apr 2024 16:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52C74CB2E
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 16:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713025258; cv=none; b=nz0VVdnP6XHSshq61Tj7K7Iq9QcrnoXxWmpyd0l4SYkgIUg5+E5YgjzyHnX7uu+7lsQjUcf1z9HNiS7ped4YhpMdNmBujLlJwlBa4j1URtMVHXQ5SMC9X3uvxSlntSuQBP/+v9iXsZrDCpUPU3aKPBGHqaM1aKNG7BMEys/1UUk=
+	t=1713025331; cv=none; b=iV1CE3+5CG3eAD8wQ/HCBtXOVVp887LCFO2yhL5ovMPw4iNkO1GUZH4d8QCUg/VDT3lqV7qCE+0yqb29CDgyaNfYv3GX6IT9Gy6eeoNPi0f9TprsRe0y2jSH1/Ws+3/abhfG0neZod76BDYlwU2dyH47VsIpF40O/f0tWMAGStA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713025258; c=relaxed/simple;
-	bh=417b/9d43ngFcbNVrFBgM4rmbkWOa98VnzaLc1bwHFg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBcuHzgsoWV4jJYtx3pPX1e3HKymjWU67XbreaS62kxiewU17HFx5gC/ilaeWYN9qta8C5Ieeds38SaGlmcFX1lGlZZqil0VVkpHN4RqwcHcikU5xUpdZOHB2cccghYdLBXqtZzV7K7BOpH0qhxgeEWatn/asBO5E2AvEx8gcxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=JbdgBJqb; arc=none smtp.client-ip=80.12.242.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713025331; c=relaxed/simple;
+	bh=nbGy+ywMlYZDeVQzLzbUm56CmdghV/bErN6nIoXGelw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k+5l/CFRve1rT99KiR/8r6ZeSRzcGWYgZIPOttmlK/agbmnqB7LvUo2l6esNAm8vayTdM996VoXfCCRcg28Y9PqJSN4AHhtzJIe/dZLbGxgv2XXLH1M9WARBm/8NgwJ3eNZME5WvNI7BqjEAoqTLutA0OyBQlFUW9KtKvygSXyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0EI+W7EK; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="JbdgBJqb"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id vg6RrrzjkO6CFvg6RrPV6e; Sat, 13 Apr 2024 18:19:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713025184;
-	bh=rLizR9RhE9tMh50jc6ZMXVKjpOwIq/OMFzbiVdRM4Js=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JbdgBJqbvKLNmKlYXZ3QW99hVCWnpC6aB3SbBqhK3IQckB7U3u2pHv7Plng+RHEYD
-	 TRtdq5LVqNbjddwKgebQPb63sDFxjGFJ4bAxd0SzGtqwMo2SN/sJ45N0SSeUkLUpx2
-	 OP/msNKXsviqq9mKEkXCVShGFTa6Mg+JOzlhUBmPTiVaeAj/CVJi9yNj2UpHIxKUsj
-	 UIdeDqjYbP/kFu/R/6kQntdkg93fRdClcDkc9x9JdWUY5CT0Qtdf7d0d1YBLWnxv5e
-	 HM3YlFkWnTmyw5QFo6NGuOk+PI8NsL3sq3p4MVBXOXgnj4fEhMc9ho2tt41oTF5AVU
-	 PWcEY0eysMo6w==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 13 Apr 2024 18:19:44 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: [PATCH] clk: renesas: r8a7740: Remove an unused field in struct div4_clk
-Date: Sat, 13 Apr 2024 18:19:40 +0200
-Message-ID: <658e6b1b23d5b66646bb830361b8c55ccf797771.1713025170.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0EI+W7EK"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d094bc2244so19818111fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 09:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713025327; x=1713630127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YXOXrGDd5z9PLa2ziUwG/oevPNYw+NSWjiKaJx5XAcA=;
+        b=0EI+W7EK3HSbLArLFx3euvX/W2rYk9M2GFxAGUJpl64UniQwQSqXDcBkqM6e1K/Abn
+         4Wo32QENUO798GWP7rC0Mtv+u4zs9HTtMLwjWcZjLcqrBqDuaw29I0iBW6W+ckwWohiG
+         ayUwyDtzHUXmNOk4H1JWDrFpXoi0JBqSu9nKorNFjAvuJEJN4LRJX1mT7loCt8y2cUjj
+         NH9K75HBTJninLGH6yrdSwnXC2etEjwDo9D3I6AtfUmCV1uLVrkE4oULWcupVqsYMwyp
+         j44vVbTnUFbNX2e6d+IyKTsZZZhDegaH6Md0+3syHkC0wOzEX06suaTrl89mijO1cAlG
+         SZ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713025327; x=1713630127;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YXOXrGDd5z9PLa2ziUwG/oevPNYw+NSWjiKaJx5XAcA=;
+        b=v5AP86xIOgqOkDjERnsrnY/BuEoFJVrGQwbWdGAC0ipemp7Q6Aq7xVFUF9uS4H3wNb
+         RGYQqs8/flAs5HFKywSunRGf9wH1/udpe3dh/4TAE9Coo70uwJ7mAcuYWU54IhVZBbP6
+         FdRMCV7ghH2ddaXtbmi/eehkxmQ+JuAUOovYCNQ6v2jaTXa1zrnnfUab8JbvN9sA0GyT
+         +49UZTpXdQYTKnL35wyEuPMOUavNfEAfgNIccm+oKtUZwJta7pn/KhGyMOO/F5Xu8B06
+         aUmfIMCmRCWmbOLtaE3R9HiLHIWwyr3C0AeERQn2HZGltySj/Wa7J0JuAbiuKK5x4N3q
+         uB4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXClZIWbAF8MSIPlDHslmZ78v8/FGioyBy6Ft6RyNeCyFy/82cVkApYoHJw2iAKlIv+QGpeh3eksxrCygsEF9BTnULDYQYN1wUNfIuW
+X-Gm-Message-State: AOJu0Yzz8MxRXXBQMv+1lte0ambXTWMYvlzyOZghH/n8/Y/mRGsZ2cfz
+	aoRq3H6E8+IgA038PHA0dIqV/yOVVo+bBl+bliFqgJ7g8A3hLat8MQx8x1v729hntsHPZe4WQwF
+	x0hZQqL+i/MxucXc6XiMpKrsYRAZ0v0Quh4AosA==
+X-Google-Smtp-Source: AGHT+IHuEs+Ug89vXvWX/+tZddISAesIXOCVXXp90n+3hTrdL0we6y2BUxjT33u7JDX77EDLE6F0m4gCGiTTAmXCxnI=
+X-Received: by 2002:a2e:87ce:0:b0:2d9:ec13:3349 with SMTP id
+ v14-20020a2e87ce000000b002d9ec133349mr3520729ljj.2.1713025326643; Sat, 13 Apr
+ 2024 09:22:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240412032102.136071-1-kimseer.paller@analog.com>
+ <20240412032102.136071-2-kimseer.paller@analog.com> <CAMknhBHgKK_OEcPz-5ktxj+YEkB7jHpw5owdh9HVj_qfwuVXkQ@mail.gmail.com>
+ <20240413160610.4cec010b@jic23-huawei>
+In-Reply-To: <20240413160610.4cec010b@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Date: Sat, 13 Apr 2024 11:21:55 -0500
+Message-ID: <CAMknhBHMd2mK3yVoH_XjW7BapX5BTRZjUJpF=ZQrF8Mctf-NJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: dac: Add adi,ltc2664.yaml
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Kim Seer Paller <kimseer.paller@analog.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Michael Hennerich <michael.hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In "struct div4_clk", the 'flags' field is unused.
+On Sat, Apr 13, 2024 at 10:06=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Fri, 12 Apr 2024 16:23:00 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
+>
+> > On Thu, Apr 11, 2024 at 10:21=E2=80=AFPM Kim Seer Paller
+> > <kimseer.paller@analog.com> wrote:
+> > >
 
-Remove it and update the 'div4_clks' array accordingly.
+...
 
-Found with cppcheck, unusedStructMember.
+> >
+> > And there is V~ on both which can be between -5.5V/-15.75V and GND, so
+> > optional v-neg-supply seems appropriate.
+>
+> Only make it optional in the binding if the settings of the device change
+> depending on whether it is there or not.  Looks like there is an internal
+> reference, so maybe it really is optional.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
+I suggested optional with the thinking that if the pin is tied to GND,
+then the property would be omitted.
 
-Apparently, it has never been used. It is not a left-over from a
-refactoring. I don't if it is supposed to be used somewhere in the driver.
 
-Should it help the review, renesas/clk-r8a73a4.c has a very similar
-construction and also a struct div4_clk without this 'flags' field.
----
- drivers/clk/renesas/clk-r8a7740.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+...
 
-diff --git a/drivers/clk/renesas/clk-r8a7740.c b/drivers/clk/renesas/clk-r8a7740.c
-index 3ee3f57e4e9a..325394b6e55e 100644
---- a/drivers/clk/renesas/clk-r8a7740.c
-+++ b/drivers/clk/renesas/clk-r8a7740.c
-@@ -32,22 +32,21 @@ struct div4_clk {
- 	const char *name;
- 	unsigned int reg;
- 	unsigned int shift;
--	int flags;
- };
- 
- static struct div4_clk div4_clks[] = {
--	{ "i", CPG_FRQCRA, 20, CLK_ENABLE_ON_INIT },
--	{ "zg", CPG_FRQCRA, 16, CLK_ENABLE_ON_INIT },
--	{ "b", CPG_FRQCRA,  8, CLK_ENABLE_ON_INIT },
--	{ "m1", CPG_FRQCRA,  4, CLK_ENABLE_ON_INIT },
--	{ "hp", CPG_FRQCRB,  4, 0 },
--	{ "hpp", CPG_FRQCRC, 20, 0 },
--	{ "usbp", CPG_FRQCRC, 16, 0 },
--	{ "s", CPG_FRQCRC, 12, 0 },
--	{ "zb", CPG_FRQCRC,  8, 0 },
--	{ "m3", CPG_FRQCRC,  4, 0 },
--	{ "cp", CPG_FRQCRC,  0, 0 },
--	{ NULL, 0, 0, 0 },
-+	{ "i", CPG_FRQCRA, 20 },
-+	{ "zg", CPG_FRQCRA, 16 },
-+	{ "b", CPG_FRQCRA,  8 },
-+	{ "m1", CPG_FRQCRA,  4 },
-+	{ "hp", CPG_FRQCRB,  4 },
-+	{ "hpp", CPG_FRQCRC, 20 },
-+	{ "usbp", CPG_FRQCRC, 16 },
-+	{ "s", CPG_FRQCRC, 12 },
-+	{ "zb", CPG_FRQCRC,  8 },
-+	{ "m3", CPG_FRQCRC,  4 },
-+	{ "cp", CPG_FRQCRC,  0 },
-+	{ NULL, 0, 0 },
- };
- 
- static const struct clk_div_table div4_div_table[] = {
--- 
-2.44.0
 
+> >
+> > * (both) The MUX/MUXOUT pins look like we have an embedded pin mux, so
+> > it could mean we need #pinctrl-cells. ltc2664 would also need
+> > muxin-gpios for this.
+> Not convinced that's the right approach - looks more like a channel
+> selector than a conventional mux or pin control. Sure that's a mux, but
+> we want a clean userspace control to let us choose a signal to measure
+> at runtime
+>
+> If you wanted to support this I'd have the binding describe optional
+> stuff to act as a consumer of an ADC channel on another device.
+> The IIO driver would then provide a bunch of input channels to allow
+> measurement of each of the signals.
+>
+> Look at io-channels etc in existing bindings for how to do that.
+>
+
+Right. I was thinking that this pin might be connected to something
+else external rather than the signal coming back to the SoC (or
+whatever has the SPI controller). But it makes more sense that we
+would want it as extra channels being read back by the SoC for
+diagnostics.
+
+...
+
+> >
+> > > +
+> > > +      patternProperties:
+> > > +        "^channel@([0-3])$":
+> > > +          $ref: '#/$defs/toggle-operation'
+> > > +          unevaluatedProperties: false
+> > > +
+> > > +          description: Channel in toggle functionality.
+> > > +
+> > > +          properties:
+> > > +            adi,output-range-microvolt:
+> > > +              description: Specify the channel output full scale ran=
+ge.
+> >
+> > How would someone writing a .dts know what values to select for this
+> > property? Or is this something that should be configured at runtime
+> > instead of in the devicetree? Or should this info come from the
+> > missing voltage supplies I mentioned?
+>
+> Sometimes this one is a wiring related choice.  Sometimes to the extent
+> that picking the wrong one from any userspace control can cause damage
+> or is at least nonsense.
+>
+> You look to be right though that the possible values here aren' fine
+> if the internal reference is used, but not the external.
+>
+> However, it's keyed off MPS pins so you can't control it if they aren't
+> tied to all high.  So I'd imagine if the board can be damaged it will
+> be hard wired.  Hence these could be controlled form userspace.
+> It's a bit fiddly though as combines scale and offset controls and
+> you can end trying to set things to an invalid combination.
+> E.g. scale set to cover 20V range and offset set to 0V
+> To get around that you have to clamp one parameter to nearest
+> possible when the other is changed.
+>
+
+Thanks for the explanation. It sounds like I missed something in the
+datasheet that would be helpful to call out in the description for
+this property.
