@@ -1,97 +1,90 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E0F1848
-	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 14:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C2C224E8
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 14:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713018914; cv=none; b=T5KAluqFkeU72rGHn5m2htZ/3xxT9NIFNyJM9XihYMHbguer3+kwQyEm5NbrGDbSOAxqAop/CW4liVbp1PvBL7zQFM1ah6BekPlXP7xAEKUYUzAfzdrarof00geydclsGGecJcuyfG5127YvIO5BFfiUS3e4wueeB6bCtD26cBk=
+	t=1713019229; cv=none; b=PvAJtPCYZ1fAwAxDohzc4YQQdQpPRA7WgaQ6JoHk08YHq6OTDYOzsHJaHguWJjNBU3PgjNV0fOIfXQMgRlQ271HVBLgRwbO5uFrgWT8vVpPb7+NlyUHHRkDVuLTF53fpvistC+v+WBUvVI/S3QYYiATcX8gIwqWVsvb+q42lPiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713018914; c=relaxed/simple;
-	bh=dPk0cDacUvwbrHHuf9fZXLRbdY/HN7S5wX29Cy0IFyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oXRjZYrbbENkBYOi6VGmXgE6dk0k2DtlwhhNX4jTw02Xt+5d/2JhyqmrkEc0fK+/MgcaaoJpSEcXoSPFxnBt6lDwLFz5mqc+TU2SqrYnt1TaQNpZCYwtJS2+81zRW9jb4IwYy9fi3P8ib72ibx0nVdjDsslE5c442R6xw7XzBvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=f1xi1Yga; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="f1xi1Yga"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=dPk0
-	cDacUvwbrHHuf9fZXLRbdY/HN7S5wX29Cy0IFyk=; b=f1xi1YgacavXRDSt6xtN
-	LvS4ALlTEAcOlRfGb8vyAFs8ysega+SUXmBbQ2z1BSK5kgHOPfvVaW7Dk3hHKrsS
-	cxfUbpkwMFqx1QOXiq2GZXTLo3cHcIcYJGEmQLtK60c+ZkhksY07L22O94u0aNpu
-	FlyzDY++jCJSe8UdT257ReMr8csMORsb01IR5bOskz1PjykKHs8PfS7/V+yE3Qto
-	Q/mtH9gmDrtyxmX/uCF0PgvqtTk0bDn5sMJczCKdT6Z48TtziMasNrA6brcx+jn1
-	AIaMpQhA8LoAW2cWPqFnemid54eYIsrOUmTtQUXNZKRYP35ahggC/XGvyH/OqE60
-	Rw==
-Received: (qmail 1533133 invoked from network); 13 Apr 2024 16:35:07 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Apr 2024 16:35:07 +0200
-X-UD-Smtp-Session: l3s3148p1@9IltS/sVoppQk7GI
-Date: Sat, 13 Apr 2024 16:35:06 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>, linux-i2c@vger.kernel.org, 
-	Andi Shyti <andi.shyti@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/18] i2c: rk3x: remove printout on handled timeouts
-Message-ID: <dnh4yiajjqcxcq7xjvj35quda7yrf7tubp2l2ktsaf4zgzai4n@xdefxkk76yyg>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>, linux-i2c@vger.kernel.org, 
-	Andi Shyti <andi.shyti@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240410112418.6400-20-wsa+renesas@sang-engineering.com>
- <hgdhrf2jiovfxcppdtsq32sfbk4xuq7ewiwq4awwztj4mp3yez@kj6ixihkcxhe>
- <af8ac48f10a1636ab2486aef91e01c3f@manjaro.org>
- <8358604.T7Z3S40VBb@diego>
+	s=arc-20240116; t=1713019229; c=relaxed/simple;
+	bh=vbk4Rhnn3ao/4dMYfvwvco8I9PpmQbe9zJvUjEbea7E=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=S2GwQibIW7hmreh7Jguc89PehKbrRhYwWolanJk3Hp1dlPwHmYp8qftl2fW3nvg+HLPkmuGz3PfdenGf5DosTeXg6YAqulPape4RnL4eLic89jBj5N4vjOHdkBh+PzjVO84dcyHnVuzciQknr2JPReYxwibmQCXvjTVqnw/eMXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d5f08fdba8so218560239f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 07:40:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713019227; x=1713624027;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k35GJLyO+qF0Q6nfe6UOQLLAPZY5SGbHLJa33ufBKTk=;
+        b=sit6QRTDeQE7TEWXuJwH6j+4Q1XBAW313hxcAr6SaPOsXbE4iY998iO7UShNhTWSE+
+         ZdoV9cYfNw5xe9U/RJxEXjzTPNikOFjfAOMToHt6+piZiVtG/xkL81KB0YFSUd4o7yfa
+         rPmuRBV3c8BAwAwwrXGm9k28pXd7wCETn2Hd4FQuvVsztYCcLTXnLbTt6HTI22PemBeo
+         b4Ru2mryjE+sS/9AEh/i2t09pxiAWbV5sDWCfxP9me4Nc3lIucwpEpD5XLC37CkPa5Qb
+         duCg6kpPLGp6ip+qpROR8WjwAaIR+6ufyE78QbLCWH7adggkvaT8wU4l0MmyvmGTksY8
+         jmcg==
+X-Gm-Message-State: AOJu0Yw8hsvwA7kG2DgMGCR9BqZqWHKAXdFoEBi0nBxFbgaJFDtGNrJB
+	9Qx9UmpGfD610gPfoVgQcIW5JTfL/pSMDfGp5lLPz0Ui1frSOEJkeL0j3vTAWZQ6OIIdG9Wgk2s
+	n4tJVmVAfL1wdBHhot5mqEakjVjmE5Q6Y1QRg6rYAjVGor7DIUofHZOw=
+X-Google-Smtp-Source: AGHT+IGQt2aifAlrcC1TTvoHh/jgfQr8s0oQRybE8GJdnG0ldr+uX8w/gOAIaQA62bIBFrCCRyt6X1WrxmhSlBW/D5N6c2Ng34HB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3rm5ajlyb22bpc7l"
-Content-Disposition: inline
-In-Reply-To: <8358604.T7Z3S40VBb@diego>
+X-Received: by 2002:a05:6e02:52c:b0:36a:2130:33a8 with SMTP id
+ h12-20020a056e02052c00b0036a213033a8mr168304ils.3.1713019227753; Sat, 13 Apr
+ 2024 07:40:27 -0700 (PDT)
+Date: Sat, 13 Apr 2024 07:40:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009062560615fb5e31@google.com>
+Subject: [syzbot] Monthly media report (Apr 2024)
+From: syzbot <syzbot+list9b4228196b8993e50208@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello media maintainers/developers,
 
---3rm5ajlyb22bpc7l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a 31-day syzbot report for the media subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/media
 
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 19 issues are still open and 85 have been fixed so far.
 
-> Also we're talking about two lines of code, I wouldn't call that bloat ;-)
+Some of the still happening issues:
 
-With this patch, yes. But once you allow debug code, it is hard to draw
-a line which debug is still okay and which is too fine-grained. And then
-you end up with a lot. Over the years, I developed the tendency to try
-to have less but meaningful error printouts. But I don't enforce it
-strictly because it is too much bike-shedding discussion.
+Ref Crashes Repro Title
+<1> 4656    Yes   possible deadlock in v4l2_ctrl_handler_log_status
+                  https://syzkaller.appspot.com/bug?extid=9948f8e188482c5d1a3e
+<2> 867     Yes   general protection fault in ir_raw_event_store_with_filter
+                  https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
+<3> 206     Yes   inconsistent lock state in sync_timeline_debug_remove
+                  https://syzkaller.appspot.com/bug?extid=7dcd254b8987a29f6450
+<4> 57      Yes   KASAN: use-after-free Read in send_packet
+                  https://syzkaller.appspot.com/bug?extid=f1a69784f6efe748c3bf
+<5> 6       Yes   INFO: task hung in cec_claim_log_addrs
+                  https://syzkaller.appspot.com/bug?extid=116b65a23bc791ae49a6
+<6> 3       Yes   KASAN: use-after-free Read in em28xx_init_extension (2)
+                  https://syzkaller.appspot.com/bug?extid=99d6c66dbbc484f50e1c
+<7> 3       No    WARNING in call_s_stream
+                  https://syzkaller.appspot.com/bug?extid=5bcd7c809d365e14c4df
 
-In case of this error printout here, it is just wrong. But, see, it also
-came from this tendency I don't like to have printouts for every error.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
---3rm5ajlyb22bpc7l
-Content-Type: application/pgp-signature; name="signature.asc"
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYamBoACgkQFA3kzBSg
-KbZ5mQ//Sz4z/OJ/HyrUnuAtL6eJjBPkhIyxgjlxGgFSZ7sPECcUBR6Y0itNh20D
-LVMfF3XdU05v1wHMbmysTKBje3SdNsBMhLpM4hYXC65CLyO9mlPGeath+W0yMtGR
-DQIaItYs4WssxmRd9C9gbi9XDINsMq8JfSccPtVgFqWMXowYtnJHc+y9ykMH65R0
-YT9X05NYGdCd9aNEfyDDb6I4t4S3v3p20/va00L/jfaQubpoTomDfuhtOGy04cQn
-xzT1PAdTR6HPLN+2Nl0FUHMUhO1GaJzsn5MT5XSuuHzIgQ+d4zrVzfPXziP1fJP8
-jsR/FMHBc7uhFtinY5YW+8DURLwA6zwe8pGNvuf5StFfGQK8MIefDH6cIOz4c3y1
-xCbz9B7a/dOKB6Q8VkFLgvEC2Uxcj8J0klrG1vuxAtqTig30dm/zJO44gi9luivY
-mUdkrCF6JDQlBuWdyku1U26vGbUZq/y5x3xLU++BkuaDBRQNyBo9rZi5up+FhZTe
-rsRKO+Ey5ils8d1zyElAnaUylSoMrFlMpTb7IATzM4+v59+T9kCv1DL2cOrYJKb2
-NU+Mp6yjYXAmK8fP/OJzO/7FzMlS7nxGue1XKaTH2NNM9Dq/SEvQIU5JZKJs27MJ
-oYVVlVRo2cXhZIZ6Yfo9WvO91vYe9lWTxl2+MIJKhs9dhzNlTYo=
-=I1ij
------END PGP SIGNATURE-----
-
---3rm5ajlyb22bpc7l--
+You may send multiple commands in a single email message.
