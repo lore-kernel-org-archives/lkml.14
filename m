@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80540134432
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805C5134725
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713108765; cv=none; b=WSqrgE3vTPfM+GYdAruf5OMx/hgjkmpART31TE2bNONXBiBph4L7vHrg7Du9JIWxMj0Zu/OYr5/o4JK3AH1e5hmLDlyN/D0/any7VXck1ksRIci9LzfLPrhYyCDFyZpCMeGU7p5SwrtFSLgx2ebcTH2OAgThBv8O5MBr9xnJI0Y=
+	t=1713108765; cv=none; b=J3Du//CQwoPFcwbRvCDe24mqRe6ii1NSvzU951p6lo9HdjlpWWI/XjNGuv1xSOU7cNJZB3cVJ8kZF11ZFIrPqVGcBeYy/Sc8NVwVUYPT93yNCMYVFXLXRooqhGtoeUvg6ngt21FszcKeUKSzc9KUM/VGswxRqww3SonmQHdG4GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713108765; c=relaxed/simple;
-	bh=7UlnJ16rSnRhcFmtv0mafzMbnH+iolNByYGo2vrHRXw=;
+	bh=1+MvVzHCjdnOAPGRAAgFhpSlsBWkDBjSaeiuc9GYhWY=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FUpTkY3xtnuTbwi48fGd7A34kjnsjnNbUnQX7o2xmoXla2C6+jttP6CxzA19JmIEeQPF59jvwVOrhXFhvD3E7VOAE8OuxxKb6xg1WBjNqcZ9pZWqENNzpHQzBLXVbnDXGDh82fZGR8m76DqzQQaWTyI3i9nwXnpXKIx8kH4umYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUQlcjqd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FnMINo7fRfKVJ1AN1SvQLo+O781V3VqUbRW4Hb18yLoT6iDVB170Ht5/3v2cossM7vM1At2JQp5YJQJAcWLPpLzth30jJxYfNfhAGtq65S9PqLxNtWGSHe5B24zPJVRxoUwdFs+dODiccOAdVrWE5UfupbBZZ6yzjUkx06g6FrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyfkZo1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUQlcjqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3398BC32783;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyfkZo1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3616CC2BD11;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713108765;
-	bh=7UlnJ16rSnRhcFmtv0mafzMbnH+iolNByYGo2vrHRXw=;
+	bh=1+MvVzHCjdnOAPGRAAgFhpSlsBWkDBjSaeiuc9GYhWY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jUQlcjqdenEzfnEvH4B4O//d4jBvlWHG8nRNQe8B9QzGJ3YU4L0qCecmHQDXWfT7A
-	 0YI9zvKDjUMsZ7duJ3NsVyp1fJYJlOjdjrFeDmoYpW4PoctA3lovvRbhXtfT/XAdoJ
-	 67KZ8xxzK4QTY7iwmILezNMuIkgsmq1iFqu8q+KNF3mPpXje+g/RDUjcUXgpFeoFo7
-	 flWFxPuWdfMH2ZNZEom6DfYLBwYhxP9B2WlUuiepxwVxWDlPmEiqnepgH1wQbCRmRn
-	 TFu5Fe+2737oc/Pl6yA0koqkPfYqmDOZ+KuZO7t/3vbkbsBZGdxn8kmXO7JO/TpB8e
-	 Z2keFJ4jw5rcQ==
+	b=qyfkZo1lvO/Sw6BNSwNPPGo6RDIhkLY3sKZqEgvB8DLak/Vf4P0mK9BHYuh8xVTz7
+	 R5FS22TpIW+mwN72PC6o4VMch9MbC2AUwIuPIT+jXjrfrWvyg3jsQ9cgGhkoiB/hep
+	 pe8bjVtBBSzJYQJgAYsNwcIHVdEujFA3BXsIn0Sqs4w47+iV6/KKUnnOgJTxOl/qSz
+	 PCwADCAJRewhwMoSO+HzEHtyVzUrrrxuMmIEyWEQM0zqWaptydeohUCy2w9ip3G0oe
+	 OYVJ/kjvqt8rzvobbwGRtDD/rkI50T2uvSM6vvZrLepc4Cao6Hf22WxqMTCls7PnV+
+	 SzX00aNligYkA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 134D5DF7858;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 24C74DF7857;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,48 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to wait on page writeback in
- __clone_blkaddrs()
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: introduce map_is_mergeable() for
+ cleanup
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171310876507.3156.2662208686749241669.git-patchwork-notify@kernel.org>
+ <171310876514.3156.10934685583605806738.git-patchwork-notify@kernel.org>
 Date: Sun, 14 Apr 2024 15:32:45 +0000
-References: <20240326112845.1576111-1-chao@kernel.org>
-In-Reply-To: <20240326112845.1576111-1-chao@kernel.org>
+References: <20240325152726.797423-1-chao@kernel.org>
+In-Reply-To: <20240325152726.797423-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
 Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
-This patch was applied to jaegeuk/f2fs.git (dev)
+This series was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 26 Mar 2024 19:28:45 +0800 you wrote:
-> In below race condition, dst page may become writeback status
-> in __clone_blkaddrs(), it needs to wait writeback before update,
-> fix it.
+On Mon, 25 Mar 2024 23:27:25 +0800 you wrote:
+> No logic changes.
 > 
-> Thread A				GC Thread
-> - f2fs_move_file_range
->   - filemap_write_and_wait_range(dst)
-> 					- gc_data_segment
-> 					 - f2fs_down_write(dst)
-> 					 - move_data_page
-> 					  - set_page_writeback(dst_page)
-> 					  - f2fs_submit_page_write
-> 					 - f2fs_up_write(dst)
->   - f2fs_down_write(dst)
->   - __exchange_data_block
->    - __clone_blkaddrs
->     - f2fs_get_new_data_page
->     - memcpy_page
-> 
-> [...]
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/data.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to wait on page writeback in __clone_blkaddrs()
-    https://git.kernel.org/jaegeuk/f2fs/c/d3876e34e7e7
+  - [f2fs-dev,1/2] f2fs: introduce map_is_mergeable() for cleanup
+    (no matching commit)
+  - [f2fs-dev,2/2] f2fs: support to map continuous holes or preallocated address
+    https://git.kernel.org/jaegeuk/f2fs/c/9f0f6bf42714
 
 You are awesome, thank you!
 -- 
