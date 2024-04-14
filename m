@@ -1,136 +1,122 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF431C6B4;
-	Sun, 14 Apr 2024 22:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35E20B0E
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 23:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713134591; cv=none; b=W3HjHmPD2obmPXAZ+qL/x6xUv46sOk4p+XwrrDQ5LsET1dmG+j/Gwh5LGWQfEEmaoOb00NTWy36t7YpvgYTjirYbUoJ+nqarvmsdJg3t9XGN9K/m9j4Lkgn8l7RZblFy0iNs3xFk5GBeyDNVJQJ1PyYZ6xjZTWZjCzgiEb5JIBA=
+	t=1713136423; cv=none; b=ZBueHryDsV+QlQhPM3hHOZ/00Hb0/bdIN8wYhPoBci4uNGrh2UkZkLZHlkp5fpX6WVxhkDaMdxyJXrfvLEETGIxVymJhfkwzBNMPqDCc3Rs11aFW0us+BT3kYHfbaWSzc8t6YcFRpokZoDv6c/HNZP2rOlXeFk2vYhP14IZEJDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713134591; c=relaxed/simple;
-	bh=hgknNj1CMqAtlwoHGwSVuod75mSwIWNcQ2rwim3xtrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HglfIqEOEaJVX+wuUoqRqfa+FEqdHie9KLmKXwvZGtUzuh4a8LSylpNToM204dYI7Fp1jrIlabH6/Tnua/9yFTm/cYxY1s0mZjC8lRynKMz/cCFwceSDtQnG/Q8gogWrYCRs4fOEKjKYLt6qoS9d4qTepTuWdUSWRKn/ae2fTXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ooE7y/Qj; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1713136423; c=relaxed/simple;
+	bh=QMLfy/z4mNzK40DCutaIMBO2o0qIgTTudTT7w4FR7Lw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iMn6U1uvgFQmetJZxjYgjcz7T30hNhHftlr8jzsguQJwLmMbH/XyosS9xPeefHB7ACXeELBAVvh9y2MrUkRxqorFj/mnGBBMF5rj+/GAjw0Jlg7+1OouQuwfiKTepA+21XGobhM0xcO2M/0ICI64v5HAe/9bH6HnwSf1L97SW0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rNS0PpVs; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ooE7y/Qj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1713134583;
-	bh=4YxIT04d5iT4t/9CWLf2dJs39GSU2JGwBCGJMwje3e4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ooE7y/QjtRNgxNbD/iBXfW+vLDiRSXCPipXLjAPSVBegCGtlgGWZiackaWHNluCyN
-	 5pU/pPht+GdlCVH7KenaDnUCSi76PMEKI8aZZE8n/2H2ge/wdXDEyNqNW3qJw17axm
-	 InHjB1XcIctesdyRBXNz4dcMJOI38JH9v0niQ+CbHZ676+tnh2VVRE3/Xbp4NE2xAh
-	 J5oYOFjdK5ffaKKQUcRrKJp4V6mjuq+p2ok1cG35PquEzalCDnOREc+hlQxDdjRvho
-	 jEuuOnL8CEEPNcpWKqAyZa2z4QjCLcZqZqMGlzBxjZaPB9Y5/Ykw7eucwjdX0shbJ0
-	 MlMR8xtLzoDag==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VHlgb16rBz4wcR;
-	Mon, 15 Apr 2024 08:42:51 +1000 (AEST)
-Date: Mon, 15 Apr 2024 08:42:50 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>, Daniel Sneddon
- <daniel.sneddon@linux.intel.com>, linuxppc-dev@lists.ozlabs.org,
- linux-arch@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH 1/3] x86/cpu: Actually turn off mitigations by default
- for SPECULATION_MITIGATIONS=n
-Message-ID: <20240415084250.7b00ea63@canb.auug.org.au>
-In-Reply-To: <87bk6dd2l4.fsf@mail.lhotse>
-References: <20240409175108.1512861-1-seanjc@google.com>
-	<20240409175108.1512861-2-seanjc@google.com>
-	<20240413115324.53303a68@canb.auug.org.au>
-	<87edb9d33r.fsf@mail.lhotse>
-	<87bk6dd2l4.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rNS0PpVs"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so3353861276.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 16:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713136420; x=1713741220; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pc13QrE+mcMLNyC+/9mJ9l2G8Lqrng5Jebsz9BpHb4g=;
+        b=rNS0PpVs8WSj+IJV9gGvkhKbkLA0mdhUyeCP6vA1+g2EZkph1h7Y5R+UeVPKuM0IyD
+         0kd77m25UC4X38stNQAjV2kziMJ8r8GoMKU2JAuSX9Rtc3gzZBy7BS0yXaY80KDRdNjy
+         /Xpp/r3Qi//KBXrXwENl7VF7IB7X8AgOo4zjZuOrRC7LNCR+DzF3MW+YPXB7Q64mWyzH
+         2ri2Klkmlfq0YXV13m5f8fv/h6b8rNOVSQa3/Tc5iOXHHnkewASzCou+EqaA9bSgRDX4
+         OlpiZMn1970hWMxZEapM77Ai4hk92wR1LN5ZJR5F3lwsJnzN65KEsMgYsRhWIsu67E85
+         s5bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713136420; x=1713741220;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pc13QrE+mcMLNyC+/9mJ9l2G8Lqrng5Jebsz9BpHb4g=;
+        b=AIHjxduEHxreZq8O44ZokJMnSsYEwgeQOukiFdMRjCGOCacG7dEKpFfCAfVBgN2nCz
+         iXh/czrtDB+l/prbWwbu8XIDpBu54Q4wYZhCRr+ETOTSyZXUaA65XbEDH4KdTpWgU97I
+         aR5+UnGsEMMylD7aKQQ++w5P1gEIFkh2uXjk9iqEzyD8d51q/VltOV8XW3PWzZNS4bWW
+         OE049Fnp5nFsRE7u4Q2PwyI21YtOQXSljjTJ4nBoacZhC5p2IZ1QCy1K+QLFG0do8yna
+         bhWJURH4m2aZ/ueFAmoMgpXzNlWnevTrmWc6fZ/StnXC5PdDBI5JY8bnTUHbBzz0nXfg
+         /Dig==
+X-Forwarded-Encrypted: i=1; AJvYcCUHFC0t2dAiAnonRhcdLB+9UKAUxt2TH39GKXdkTojgqyrTJIrsxYUihBW1TNX8U3Uz7HWVLK/LoSzYZ0M/gkqtmxDKhpdBlBAEXewx
+X-Gm-Message-State: AOJu0YyPKLiLeKN9DkdNk2dzKx3m0an5bxqfzgVeTSSs7KumHlWe2M+O
+	nl2qCJZlMPJleRiVCb6QZc/vTsJ6uVJ/V9hLv67ZVmwIq7ILh5UnUaP1ndZXvnWDA6lfvIR5szK
+	QIwWPxH+Q9tPIMR8RvjIvEF3ZZI3PoJ2UrdOFDw==
+X-Google-Smtp-Source: AGHT+IHMfnCixFavyGFnOFgqpnrQIq3w30uiJ2YS1tM9ZRsbn/sGrT2sUyDk/RDov0yEDrEAI1leaOZQraIrNUN8HWM=
+X-Received: by 2002:a25:c83:0:b0:de1:5656:ba49 with SMTP id
+ 125-20020a250c83000000b00de15656ba49mr3740557ybm.16.1713136420215; Sun, 14
+ Apr 2024 16:13:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hV./THoU9xeCGcZYyAV1HiA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20240414-arm-psci-system_reset2-vendor-reboots-v2-0-da9a055a648f@quicinc.com>
+ <20240414-arm-psci-system_reset2-vendor-reboots-v2-4-da9a055a648f@quicinc.com>
+In-Reply-To: <20240414-arm-psci-system_reset2-vendor-reboots-v2-4-da9a055a648f@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 15 Apr 2024 02:13:29 +0300
+Message-ID: <CAA8EJpoXrbdD5xVmuo-2b4-WwpSachcJ-abDtu4BS_qa-2A+OA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: Add PSCI SYSTEM_RESET2 types for qcm6490-idp
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>, Melody Olvera <quic_molvera@quicinc.com>, 
+	Shivendra Pratap <quic_spratap@quicinc.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, linux-pm@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/hV./THoU9xeCGcZYyAV1HiA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Sat, 13 Apr 2024 19:38:47 +1000 Michael Ellerman <mpe@ellerman.id.au> wr=
-ote:
+On Sun, 14 Apr 2024 at 22:32, Elliot Berman <quic_eberman@quicinc.com> wrote:
 >
-> Michael Ellerman <mpe@ellerman.id.au> writes:
-> > Stephen Rothwell <sfr@canb.auug.org.au> writes: =20
-> ...
-> >> On Tue,  9 Apr 2024 10:51:05 -0700 Sean Christopherson <seanjc@google.=
-com> wrote: =20
-> ...
-> >>> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> >>> index 8f6affd051f7..07ad53b7f119 100644
-> >>> --- a/kernel/cpu.c
-> >>> +++ b/kernel/cpu.c
-> >>> @@ -3207,7 +3207,8 @@ enum cpu_mitigations {
-> >>>  };
-> >>> =20
-> >>>  static enum cpu_mitigations cpu_mitigations __ro_after_init =3D
-> >>> -	CPU_MITIGATIONS_AUTO;
-> >>> +	IS_ENABLED(CONFIG_SPECULATION_MITIGATIONS) ? CPU_MITIGATIONS_AUTO :
-> >>> +						     CPU_MITIGATIONS_OFF;
-> >>> =20
-> >>>  static int __init mitigations_parse_cmdline(char *arg)
-> >>>  { =20
->=20
-> I think a minimal workaround/fix would be:
->=20
-> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-> index 2b8fd6bb7da0..290be2f9e909 100644
-> --- a/drivers/base/Kconfig
-> +++ b/drivers/base/Kconfig
-> @@ -191,6 +191,10 @@ config GENERIC_CPU_AUTOPROBE
->  config GENERIC_CPU_VULNERABILITIES
->         bool
->=20
-> +config SPECULATION_MITIGATIONS
-> +       def_bool y
-> +       depends on !X86
+> Add nodes for the vendor-defined system resets. "bootloader" will cause
+> device to reboot and stop in the bootloader's fastboot mode. "edl" will
+> cause device to reboot into "emergency download mode", which permits
+> loading images via the Firehose protocol.
+>
+> Co-developed-by: Shivendra Pratap <quic_spratap@quicinc.com>
+> Signed-off-by: Shivendra Pratap <quic_spratap@quicinc.com>
+> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> index e4bfad50a669..a966f6c8dd7c 100644
+> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> @@ -126,6 +126,11 @@ debug_vm_mem: debug-vm@d0600000 {
+>                 };
+>         };
+>
+> +       psci {
+
+Please use a label instead. Otherwise it looks as if you are adding
+new device node.
+
+> +               mode-bootloader = <0x10001 0x2>;
+> +               mode-edl = <0 0x1>;
+> +       };
 > +
->  config SOC_BUS
->         bool
->         select GLOB
+>         vph_pwr: vph-pwr-regulator {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "vph_pwr";
+>
+> --
+> 2.34.1
+>
+>
 
-The original commit is now in Linus' tree.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hV./THoU9xeCGcZYyAV1HiA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYcW+oACgkQAVBC80lX
-0GzNlAf8CJkJCFVxONVRLci2DamLPZ4T4ZsMm4OWVge3NTf2ODxR5/6fodpWAuOx
-Z4FTB9mMAJeazuf6SM1+K6bxNw3KKkfD9iexpu/bGgFgwJdZnObQp3NzxxGodpLp
-sf9Fr8TjVXNjgXvmi0rCfLuBqZ3dfCxWSIWc1YgG1FgGdNu2XzEjYmllpmLqas2n
-HG31in38tgVrVuwKMsIKX5Ma/qGGXFSTRWE0NETTzgCXJJQnXfm9VEEVrRzEHnl0
-OGT6Y7IrdqT6XA9Lck1W6X97inzLj0GDGCdQjaqYsNwgjY39jQWNyU1mzi8BZQJk
-CY2veoa0e7AKDZ7ZR/xMAebrEE7ahg==
-=91NG
------END PGP SIGNATURE-----
-
---Sig_/hV./THoU9xeCGcZYyAV1HiA--
+-- 
+With best wishes
+Dmitry
