@@ -1,38 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8093BB32;
-	Sun, 14 Apr 2024 14:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774ED58AD5;
+	Sun, 14 Apr 2024 14:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713104567; cv=none; b=J28WsXCLuE9Ylluol37gT6tFUcD7xjsBw8A4W4R2Sg0K1jpTM213F9Nkjgsdmv8J5TUl9pQ9fR2yO+Hgjwr7TphZmM0pzE+ALPboonrc4TnpTvDJN6JPJkNdAxq86jnzycEK1wkesIwKRZE1jrlJV5V2U9qFTj0EB3pYsD47DPU=
+	t=1713104572; cv=none; b=UZwc53vcsUDwP7nxUsVi1LkNEd9RQnb416ne0ApMgBWOB4ZQSdaZJ7KDyF/XQAgX40DHQgoXykKGE2v5rQ6KXlmzGeyVdXKkr5s3D1mhTx4DHmSof2y391RWZObl1HNVIFL8AH1Ga/kKfJsZeJEG/M7Acne/3Pr08+lFoV62KfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713104567; c=relaxed/simple;
-	bh=OC0eQOlJYTa406rkSTZWSGY3VNcYO2xp+pqj8+PIEhU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ac3YsTZiKc/oJQNdgiKv2TZT30z9oxKwjPYSq4U5W9eyNp9OF6kPWv3GskjivPuiOVPTpTv7A2VWSKusFjajMUeWqwZIspiwV3wT2GIcPx4ORGIm5tT58CTlq6wdlcSp/76wYnwwUalfKJ2/kNEED2M99QAsZA1GCCDVMbfS0QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hkcxixCS; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1713104572; c=relaxed/simple;
+	bh=VbpVc3LMnXhaGIVI10p4WYWa60jDZe38DIuneNRhZ/c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XaC5CRTC2OyeYD5ejew7mnrHyQAX9+MaXCFelhIY0VWA8Nb5WbuDKHg4sCDD79DMKUPWp9G7xVfXmMDSkBmSemK+Fkk/eJur3TGQBfKKfgNp7bu0WRm1IrcODMNM5TRRW8g8RxK3NeOJyFmf7GZzr1gHNHVbNNoSfql47gcbpsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y21KCJeQ; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hkcxixCS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0B48DC0003;
-	Sun, 14 Apr 2024 14:22:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y21KCJeQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 05DA5C0004;
+	Sun, 14 Apr 2024 14:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713104556;
+	t=1713104568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=puG7qCewxYRP5/TfV1KNUxB4SH06tAZbDKaCaaaEgbc=;
-	b=hkcxixCSzdCvLknWwHkOK7u2xvFO1PPw85t1AiUE4zjUM7CyjbF7hTXs+ZsfRUbPJGsLTD
-	geRPXz9t3lNpDe4psMRpk1ygXctxmB4UOz1rrvdndkYW0FwrfSFsZSUkYndfAV0ILtF0A3
-	U0DPWZgvk6osf7S/OXfSaB0Ns0I0sCC9ggEmUVUSNQSJS6zrekiYde6JmnyNGZLXWHWBtc
-	ioWOo0ZfYEzi/WFEH9der/ZpPiPGlJqGaN2JFTvlyIP0QYbYmtxT6Wxms+5RWvi7YrOes2
-	wzjEdENLbetOOXAn/KxtVsZf03noi/0Z6cyiP1luToW/1skxx2/TFKzYOEULYg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N7hgOlwhh7AJ2Cb11Tjl197wNQhnRk7F9sf4WGqgQXk=;
+	b=Y21KCJeQ0ReWbbZBGZUgNvVGvMOARUvLPDVpaCD62R0ZH5DqWNyqB2dsBGEScTmh0APlrx
+	WX+gY0mu0RNngMpQt+EVi1cqDOSUp7SMf3pDjwjS5Ug2tKGCF1R9kswqGuFGfjgnp4q6/m
+	pAha0Ww8CxIKo1tRb785m7HvR1/4u/eusUPC8FjuaOHrkQdSN9w2UBihEvFNmh2io71isp
+	M1aJXtz0jSuR7+qDdbTPJB7x68xvswbs6QsZdt401bSIDPqRZ3fCkE7/Exofm5cle2Lt17
+	WybjnYn3HepXRBkSjBu9L3HqaPU6jMCtx2JHPojZuFSTfiq1oDQruqtdNJ8O/w==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net-next v8 00/17] net: Add support for Power over Ethernet
- (PoE)
-Date: Sun, 14 Apr 2024 16:21:49 +0200
-Message-Id: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+Date: Sun, 14 Apr 2024 16:21:51 +0200
+Subject: [PATCH net-next v8 02/17] of: property: Add fw_devlink support for
+ pse parent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,13 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAH3mG2YC/2XP20rEQAyA4VdZ5tpKkkmnU698DxGZQ+oOaLu0t
- awsfXfHgnTHXobw/SE3NcmYZFJPp5saZUlTGvo82IeTCmfXv0uVYp4VAWkE4qoTN3+N8nYZpEL
- dcgvSaAatsriM0qXrVntRvcxVL9dZvebNOU3zMH5vZxbc9lsR0RTFBSuovLAFZt8Rt89+GOaP1
- D+G4XMrLbRrAiw1ZV2baIMLBprOHbX+0wwEttT6V2uMZBpm08pR853GutScta6950CajAlHXd9
- pakpdZ022A+fYEpt41GbXuV9qk3VAQPRGHAZ/1M2uGdpSN1kjirbSRY7y7+91XX8AkIDP3SYCA
- AA=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240414-feature_poe-v8-2-e4bf1e860da5@bootlin.com>
+References: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+In-Reply-To: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -69,120 +67,40 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This patch series aims at adding support for PoE (Power over Ethernet),
-based on the already existing support for PoDL (Power over Data Line)
-implementation. In addition, it adds support for two specific PoE
-controller, the Microchip PD692x0 and the TI TPS23881.
+This allows fw_devlink to create device links between consumers of
+a PSE and the supplier of the PSE.
 
-In detail:
-- Patch 1 to 13 prepare net to support PoE devices.
-- Patch 14 and 15 add PD692x0 PoE PSE controller driver and its binding.
-- Patch 16 and 17 add TI TPS23881 PSE controller driver and its binding.
-
-Changes in v8:
-- Fix a build error due to an artifact from an ancient version of the
-  series.
-- Link to v7: https://lore.kernel.org/r/20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com
-
-Changes in v7:
-- Fix code, doc and kdoc nit.
-- Fix few pd692x0 dt binding issues.
-- Rename *flash_fw* functions to *flash_sram_fw* in tps23881 driver.
-- Link to v6: https://lore.kernel.org/r/20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com
-
-Changes in v6:
-- TPS23881 fix firmware management release missing.
-- Use pcdev device pointer as regulator consumer and provider.
-- Rename of_legacy to no_of_pse_pi.
-- Add kdoc, and separate functions for better readability.
-- Add vpwr-supply regulator parent.
-- Link to v5: https://lore.kernel.org/r/20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com
-
-Changes in v5:
-- Fix bindings nit.
-- Add supported-polarity parameter to bindings.
-- Fix yamllint binding errors.
-- Remove the nested lock brought by the use of regulator framework.
-- Link to v4: https://lore.kernel.org/r/20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com
-
-Changes in v4:
-- Replaced sponsored-by tag by a simple sentence.
-- Fix pse_pi node bindings.
-- Add pse pi documentation written by Oleksij.
-- Link to v3: https://lore.kernel.org/r/20240208-feature_poe-v3-0-531d2674469e@bootlin.com
-
-Changes in v3:
-- Add patches to add Oleksij and myself to PSE MAINTAINERS.
-- Add patches to add pse devlink.
-- Add TI TPS23881 PSE controller driver with its binding.
-- Replace pse_get_types helper by pse_has_podl and pse_has_c33
-- Changed the PSE core bindings.
-- Add a setup_pi_matrix callback.
-- Register regulator for each PSE PI (Power Interface).
-- Changed the PD692x0 bindings.
-- Updated PD692x0 drivers to new bindings and PSE PI description.
-- Updated PD692x0 drivers according to the reviews and made fixes.
-- Link to v2: https://lore.kernel.org/r/20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com
-
-Changes in v2:
-- Extract "firmware_loader: Expand Firmware upload error codes patches" to
-  send it alone and get it merge in an immutable branch.
-- Add "c33" prefix for PoE variables and enums.
-- Enhance few comments.
-- Add PSE Documentation.
-- Make several changes in pd692x0 driver, mainly for readibility.
-- Link to v1: https://lore.kernel.org/r/20231116-feature_poe-v1-0-be48044bf249@bootlin.com
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Kory Maincent (17):
-      MAINTAINERS: net: Add Oleksij to pse-pd maintainers
-      of: property: Add fw_devlink support for pse parent
-      net: pse-pd: Rectify and adapt the naming of admin_cotrol member of struct pse_control_config
-      ethtool: Expand Ethernet Power Equipment with c33 (PoE) alongside PoDL
-      net: pse-pd: Introduce PSE types enumeration
-      net: ethtool: pse-pd: Expand pse commands with the PSE PoE interface
-      netlink: specs: Modify pse attribute prefix
-      netlink: specs: Expand the pse netlink command with PoE interface
-      MAINTAINERS: Add myself to pse networking maintainer
-      net: pse-pd: Add support for PSE PIs
-      dt-bindings: net: pse-pd: Add another way of describing several PSE PIs
-      net: pse-pd: Add support for setup_pi_matrix callback
-      net: pse-pd: Use regulator framework within PSE framework
-      dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller
-      net: pse-pd: Add PD692x0 PSE controller driver
-      dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller
-      net: pse-pd: Add TI TPS23881 PSE controller driver
 
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  169 +++
- .../bindings/net/pse-pd/pse-controller.yaml        |  101 +-
- .../bindings/net/pse-pd/ti,tps23881.yaml           |   95 ++
- Documentation/netlink/specs/ethtool.yaml           |   33 +-
- Documentation/networking/ethtool-netlink.rst       |   20 +
- Documentation/networking/index.rst                 |    1 +
- Documentation/networking/pse-pd/index.rst          |   10 +
- Documentation/networking/pse-pd/introduction.rst   |   73 ++
- Documentation/networking/pse-pd/pse-pi.rst         |  302 +++++
- MAINTAINERS                                        |    8 +
- drivers/net/pse-pd/Kconfig                         |   20 +
- drivers/net/pse-pd/Makefile                        |    2 +
- drivers/net/pse-pd/pd692x0.c                       | 1223 ++++++++++++++++++++
- drivers/net/pse-pd/pse_core.c                      |  513 +++++++-
- drivers/net/pse-pd/pse_regulator.c                 |   49 +-
- drivers/net/pse-pd/tps23881.c                      |  820 +++++++++++++
- drivers/of/property.c                              |    2 +
- include/linux/pse-pd/pse.h                         |   83 +-
- include/uapi/linux/ethtool.h                       |   55 +
- include/uapi/linux/ethtool_netlink.h               |    3 +
- net/ethtool/pse-pd.c                               |   60 +-
- 21 files changed, 3541 insertions(+), 101 deletions(-)
+Changes in v3:
+- New patch
 ---
-base-commit: eae83f4ee41e2d65c136847bd8e93b837fb009a3
-change-id: 20231024-feature_poe-139490e73403
+ drivers/of/property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best regards,
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index a6358ee99b74..cc064151853e 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1252,6 +1252,7 @@ DEFINE_SIMPLE_PROP(backlight, "backlight", NULL)
+ DEFINE_SIMPLE_PROP(panel, "panel", NULL)
+ DEFINE_SIMPLE_PROP(msi_parent, "msi-parent", "#msi-cells")
+ DEFINE_SIMPLE_PROP(post_init_providers, "post-init-providers", NULL)
++DEFINE_SIMPLE_PROP(pses, "pses", "#pse-cells")
+ DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+ DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+ 
+@@ -1357,6 +1358,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_backlight, },
+ 	{ .parse_prop = parse_panel, },
+ 	{ .parse_prop = parse_msi_parent, },
++	{ .parse_prop = parse_pses, },
+ 	{ .parse_prop = parse_gpio_compat, },
+ 	{ .parse_prop = parse_interrupts, },
+ 	{ .parse_prop = parse_regulators, },
+
 -- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.34.1
 
