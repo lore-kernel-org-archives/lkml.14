@@ -1,257 +1,132 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D16815E9B
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 09:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A406C1AACB;
+	Sun, 14 Apr 2024 09:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713085987; cv=none; b=E6FqhoRCfg1dpiOtFXv8myD5BF3TwPQ9ukYdQ/pO/9DH+ZmhVQ1hnxXQp0x7U+GIxDubKaG9k2nl0q6+BaqTa/vclEd+GN0x9VFUEAOZQU3DhNKq/KRUkUwciTihmWchFiuAwK3jf9pkUj9Q4jde3XgyiGyKWesQPRcTbv/hXSg=
+	t=1713086377; cv=none; b=sbMrlRe4zvfRxGev/q/MegIUidwD8+l4Zv/bfjkXWpQYsM8FsZ5I6r9EuGoeiE15g+GncUvRtzzq5YoDBuR31WVlte/zxKL/LcP8VyfT9oD68FWd5TRlQZZp/I7W6Ll8EWF7HVV+8/cgnQ5GLzmFMpFqvhUuRS0oOQIUlAn5hDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713085987; c=relaxed/simple;
-	bh=DcqoUyogB0i48HUpQU27SrM73YndcyYilq/q5l/8p8w=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=I1R6cns5Vh94bNVCOMLhoVknkzfZ8OGlcKfFLyRem9cOstjK40VCky7Sqmwm1WAlQ8Rsa0F1LZudf9+Tms2Pl/4O7RlwX/VHpF+mkJskN8PxRO5hTVRKeO3hv7jk6TwzbTSE9BLuUZ0SwZJ84HTToP/lDendXPY8Obfjc60ekcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so267432239f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 02:13:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713085984; x=1713690784;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pbgjfn3dguO4zVDH1oEYyFD6nDfomXfL+xA5YXOQjOY=;
-        b=tjMyo7X84H+62MAZmYim+2dQ1VJSc/ioEdfLzmv4GL8t55EuMSZibnS2fI7+ngl01D
-         bPxmzW+vR9DpNc4Wb00t8KacVJr1o55CBeDXCsR5RuqoLsDKszokWh8LLYo/HVs3KzcX
-         oIrLmPB3SWd+N/SuvOpAsSvrCxt9Pp7ZpHyfCDO+Fp2KbEogox0FUhoOMMvI3k108jUr
-         7q/BA9UxDWxxlv2aro1sBBEedlTbGAXQlSeLSt+REdwdohYOGHotAfQyR5evQ3Iobi45
-         vCCg9D6KPi4aptdgkc/v4Hb2qYnIWddZ1fSVguNdRhylPosqgLCxDGXoS8XcRAwMftkF
-         Nxbw==
-X-Forwarded-Encrypted: i=1; AJvYcCULdYfSzEqHYhuXk987PhL0VZGqbaAcbrMnmpZE///XZVs6CTeCiyGzCSeP46skL75PrDPqEfIYDbLtb3AuBfZh3Oc+frXU0SuHJpuv
-X-Gm-Message-State: AOJu0YxTW1n0Y48XHFnTaGI2hN/qElunQiKGTtXJ0CcJ2PuesWpupl9H
-	VnrazBbVYTGhPdK57kY5XXRKR1PgYbZtdfnk88/xIiNVkBJYv5A4ifCCGzUl7RZJxaxP3oZ6zLN
-	HXHiclJ42JlNJhp85/8pCCbDFkhHKTFvcmDPS9WUsWMT4AvI8MH5f5xI=
-X-Google-Smtp-Source: AGHT+IEgM9CQLnjukLP8Cw2J9jmkH+bMFs2kvgz6LgN/xTWHq2E0Y0yEoW8DBaOfSUAZBYX8h8+4mRQ8eMTSNvGCI5VPrLsZT93R
+	s=arc-20240116; t=1713086377; c=relaxed/simple;
+	bh=lnii2kZ8IUvaZdbR0jQA4QKCoeVDNlBUw1Zj8Jm+CSI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ZWN/JsneHkCj1Sb5OJPIe3skNktr8T0x0f097Aqm++ucqeC+069bdbEuSdAOLv2/r9mrvQkmxa14RCqwuejPAXvsumB/FfRdpuzNWbOTTE27G/qb3RNZXaFiT9tV/tfRrCSjc8kHw/FKjQ3KDLPqVjijvgRFlTnmgIb1zlGPrFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v+zPO3NB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/R9VLDvu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v+zPO3NB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/R9VLDvu"
+Date: Sun, 14 Apr 2024 09:19:32 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713086373;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NZFwphc8SHYVbPnkWi5EsmyxN8HbgaWmtnfTFBlfG2c=;
+	b=v+zPO3NBl+tOpY3Gaa72M2N78iAfXLIyevqEEBWTNi9nQ4GyWdAa3inddo0OiaWI0uEynB
+	I2hpVDIKTJk4xJ7sbM0MdcfFEgPw5MuSd5pqmfp0Pe3STGPH5IV4oNcN7iyCLoMR7jRHkO
+	aVyZrUbXJtmtu26sXxssgfyAzQc3SpQK5nFfUwfqm9TuM9RfFVLHTOxRU3FTo0nWQ4VwFn
+	usbll9gf3oIuRQLIIZKRTD02EDSVesO/OkPj1pycqjC8MVlKknRfIxiSWBnzW7reuis9Rv
+	y/95iDuuGC+JNX0Qez3hk4ScGNQAw7Mo2EQzVmg69Lqxa3GvjF+sH+qTBRitVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713086373;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NZFwphc8SHYVbPnkWi5EsmyxN8HbgaWmtnfTFBlfG2c=;
+	b=/R9VLDvuW1MdHw2em5hXToeU3yOsOLRAWusGogzGe914o418BIQ236z4Hx6Dvh9OEYplKZ
+	T8EklU8FDWr2fJCQ==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/bugs: Fix BHI retpoline check
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Borislav Petkov <bp@alien8.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <ad3807424a3953f0323c011a643405619f2a4927.1712944776.git.jpoimboe@kernel.org>
+References:
+ <ad3807424a3953f0323c011a643405619f2a4927.1712944776.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:24d1:b0:482:c669:46eb with SMTP id
- y17-20020a05663824d100b00482c66946ebmr476471jat.1.1713085984813; Sun, 14 Apr
- 2024 02:13:04 -0700 (PDT)
-Date: Sun, 14 Apr 2024 02:13:04 -0700
-In-Reply-To: <tencent_3C86D1B360E370E96663A06449F774776B05@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009844c706160ae92f@google.com>
-Subject: Re: [syzbot] [gfs2?] KASAN: slab-use-after-free Read in gfs2_invalidate_folio
-From: syzbot <syzbot+3a36aeabd31497d63f6e@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <171308637277.10875.5583955178829069240.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the x86/urgent branch of tip:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: slab-use-after-free Read in gfs2_invalidate_folio
+Commit-ID:     69129794d94c544810e68b2b4eaa7e44063f9bf2
+Gitweb:        https://git.kernel.org/tip/69129794d94c544810e68b2b4eaa7e44063f9bf2
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Fri, 12 Apr 2024 11:10:33 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 14 Apr 2024 11:10:05 +02:00
 
- </TASK>
-bh: ffff88802f675110, bd: ffff88802f675150, trans_drain
-bh: ffff88803dd9dbc8, bd: ffff88802f675150, gfs2_discard
-==================================================================
-BUG: KASAN: slab-use-after-free in list_empty include/linux/list.h:373 [inline]
-BUG: KASAN: slab-use-after-free in gfs2_discard fs/gfs2/aops.c:618 [inline]
-BUG: KASAN: slab-use-after-free in gfs2_invalidate_folio+0x731/0x840 fs/gfs2/aops.c:656
-Read of size 8 at addr ffff88802f675168 by task syz-executor.0/5425
+x86/bugs: Fix BHI retpoline check
 
-CPU: 0 PID: 5425 Comm: syz-executor.0 Not tainted 6.9.0-rc3-syzkaller-00073-ge8c39d0f57f3-dirty #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0xc3/0x620 mm/kasan/report.c:488
- kasan_report+0xd9/0x110 mm/kasan/report.c:601
- list_empty include/linux/list.h:373 [inline]
- gfs2_discard fs/gfs2/aops.c:618 [inline]
- gfs2_invalidate_folio+0x731/0x840 fs/gfs2/aops.c:656
- folio_invalidate mm/truncate.c:158 [inline]
- truncate_cleanup_folio+0x2ac/0x3e0 mm/truncate.c:178
- truncate_inode_pages_range+0x271/0xe90 mm/truncate.c:358
- gfs2_evict_inode+0x75b/0x1460 fs/gfs2/super.c:1508
- evict+0x2ed/0x6c0 fs/inode.c:667
- iput_final fs/inode.c:1741 [inline]
- iput.part.0+0x5a8/0x7f0 fs/inode.c:1767
- iput+0x5c/0x80 fs/inode.c:1757
- gfs2_put_super+0x2bd/0x760 fs/gfs2/super.c:625
- generic_shutdown_super+0x159/0x3d0 fs/super.c:641
- kill_block_super+0x3b/0x90 fs/super.c:1675
- gfs2_kill_sb+0x360/0x410 fs/gfs2/ops_fstype.c:1804
- deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
- deactivate_super+0xde/0x100 fs/super.c:505
- cleanup_mnt+0x222/0x450 fs/namespace.c:1267
- task_work_run+0x14e/0x250 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xdc/0x260 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff35ce7f197
-Code: b0 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 b0 ff ff ff f7 d8 64 89 02 b8
-RSP: 002b:00007fffb7457c68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007ff35ce7f197
-RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007fffb7457d20
-RBP: 00007fffb7457d20 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007fffb7458de0
-R13: 00007ff35cec93b9 R14: 000000000001327f R15: 0000000000000001
- </TASK>
+Confusingly, X86_FEATURE_RETPOLINE doesn't mean retpolines are enabled,
+as it also includes the original "AMD retpoline" which isn't a retpoline
+at all.
 
-Allocated by task 5425:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:312 [inline]
- __kasan_slab_alloc+0x89/0x90 mm/kasan/common.c:338
- kasan_slab_alloc include/linux/kasan.h:201 [inline]
- slab_post_alloc_hook mm/slub.c:3798 [inline]
- slab_alloc_node mm/slub.c:3845 [inline]
- kmem_cache_alloc+0x136/0x320 mm/slub.c:3852
- kmem_cache_zalloc include/linux/slab.h:739 [inline]
- gfs2_alloc_bufdata fs/gfs2/trans.c:168 [inline]
- gfs2_trans_add_data+0x4d1/0x820 fs/gfs2/trans.c:209
- gfs2_unstuffer_folio fs/gfs2/bmap.c:82 [inline]
- __gfs2_unstuff_inode fs/gfs2/bmap.c:122 [inline]
- gfs2_unstuff_dinode+0xb30/0x1510 fs/gfs2/bmap.c:170
- gfs2_adjust_quota+0x124/0xb10 fs/gfs2/quota.c:879
- do_sync+0xa88/0xd40 fs/gfs2/quota.c:990
- gfs2_quota_sync+0x419/0x630 fs/gfs2/quota.c:1371
- gfs2_sync_fs+0x44/0xb0 fs/gfs2/super.c:669
- sync_filesystem+0x10d/0x290 fs/sync.c:56
- generic_shutdown_super+0x7e/0x3d0 fs/super.c:620
- kill_block_super+0x3b/0x90 fs/super.c:1675
- gfs2_kill_sb+0x360/0x410 fs/gfs2/ops_fstype.c:1804
- deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
- deactivate_super+0xde/0x100 fs/super.c:505
- cleanup_mnt+0x222/0x450 fs/namespace.c:1267
- task_work_run+0x14e/0x250 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xdc/0x260 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Also replace cpu_feature_enabled() with boot_cpu_has() because this is
+before alternatives are patched and cpu_feature_enabled()'s fallback
+path is slower than plain old boot_cpu_has().
 
-Freed by task 5425:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
- poison_slab_object mm/kasan/common.c:240 [inline]
- __kasan_slab_free+0x11d/0x1a0 mm/kasan/common.c:256
- kasan_slab_free include/linux/kasan.h:184 [inline]
- slab_free_hook mm/slub.c:2106 [inline]
- slab_free mm/slub.c:4280 [inline]
- kmem_cache_free+0x12e/0x380 mm/slub.c:4344
- trans_drain fs/gfs2/log.c:1031 [inline]
- gfs2_log_flush+0x149f/0x29c0 fs/gfs2/log.c:1170
- do_sync+0x565/0xd40 fs/gfs2/quota.c:1011
- gfs2_quota_sync+0x419/0x630 fs/gfs2/quota.c:1371
- gfs2_sync_fs+0x44/0xb0 fs/gfs2/super.c:669
- sync_filesystem+0x10d/0x290 fs/sync.c:56
- generic_shutdown_super+0x7e/0x3d0 fs/super.c:620
- kill_block_super+0x3b/0x90 fs/super.c:1675
- gfs2_kill_sb+0x360/0x410 fs/gfs2/ops_fstype.c:1804
- deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
- deactivate_super+0xde/0x100 fs/super.c:505
- cleanup_mnt+0x222/0x450 fs/namespace.c:1267
- task_work_run+0x14e/0x250 kernel/task_work.c:180
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xdc/0x260 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Fixes: ec9404e40e8f ("x86/bhi: Add BHI mitigation knob")
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/ad3807424a3953f0323c011a643405619f2a4927.1712944776.git.jpoimboe@kernel.org
+---
+ arch/x86/kernel/cpu/bugs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-The buggy address belongs to the object at ffff88802f675150
- which belongs to the cache gfs2_bufdata of size 80
-The buggy address is located 24 bytes inside of
- freed 80-byte region [ffff88802f675150, ffff88802f6751a0)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2f675
-flags: 0xfff80000000800(slab|node=0|zone=1|lastcpupid=0xfff)
-page_type: 0xffffffff()
-raw: 00fff80000000800 ffff888015fa28c0 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000080240024 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x112c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_HARDWALL), pid 5425, tgid 5425 (syz-executor.0), ts 79266814979, free_ts 79245423591
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x2d4/0x350 mm/page_alloc.c:1534
- prep_new_page mm/page_alloc.c:1541 [inline]
- get_page_from_freelist+0xa28/0x3780 mm/page_alloc.c:3317
- __alloc_pages+0x22b/0x2460 mm/page_alloc.c:4575
- __alloc_pages_node include/linux/gfp.h:238 [inline]
- alloc_pages_node include/linux/gfp.h:261 [inline]
- alloc_slab_page mm/slub.c:2175 [inline]
- allocate_slab mm/slub.c:2338 [inline]
- new_slab+0xcc/0x3a0 mm/slub.c:2391
- ___slab_alloc+0x66d/0x1790 mm/slub.c:3525
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3610
- __slab_alloc_node mm/slub.c:3663 [inline]
- slab_alloc_node mm/slub.c:3835 [inline]
- kmem_cache_alloc+0x2e9/0x320 mm/slub.c:3852
- kmem_cache_zalloc include/linux/slab.h:739 [inline]
- gfs2_alloc_bufdata fs/gfs2/trans.c:168 [inline]
- gfs2_trans_add_meta+0xae4/0xf60 fs/gfs2/trans.c:255
- gfs2_alloc_extent fs/gfs2/rgrp.c:2240 [inline]
- gfs2_alloc_blocks+0x4ea/0x1b30 fs/gfs2/rgrp.c:2451
- __gfs2_unstuff_inode fs/gfs2/bmap.c:109 [inline]
- gfs2_unstuff_dinode+0x49e/0x1510 fs/gfs2/bmap.c:170
- gfs2_adjust_quota+0x124/0xb10 fs/gfs2/quota.c:879
- do_sync+0xa88/0xd40 fs/gfs2/quota.c:990
- gfs2_quota_sync+0x419/0x630 fs/gfs2/quota.c:1371
- gfs2_sync_fs+0x44/0xb0 fs/gfs2/super.c:669
- sync_filesystem+0x10d/0x290 fs/sync.c:56
- generic_shutdown_super+0x7e/0x3d0 fs/super.c:620
-page last free pid 5425 tgid 5425 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1141 [inline]
- free_unref_page_prepare+0x527/0xb10 mm/page_alloc.c:2347
- free_unref_page+0x33/0x3c0 mm/page_alloc.c:2487
- __folio_put_small mm/swap.c:119 [inline]
- __folio_put+0x166/0x1f0 mm/swap.c:142
- folio_put include/linux/mm.h:1506 [inline]
- free_page_and_swap_cache+0x1eb/0x250 mm/swap_state.c:305
- __tlb_remove_table arch/x86/include/asm/tlb.h:34 [inline]
- __tlb_remove_table_free mm/mmu_gather.c:227 [inline]
- tlb_remove_table_rcu+0x89/0xe0 mm/mmu_gather.c:282
- rcu_do_batch kernel/rcu/tree.c:2196 [inline]
- rcu_core+0x828/0x16b0 kernel/rcu/tree.c:2471
- __do_softirq+0x218/0x922 kernel/softirq.c:554
-
-Memory state around the buggy address:
- ffff88802f675000: fa fb fb fb fb fb fb fb fb fb fc fc fc fc fa fb
- ffff88802f675080: fb fb fb fb fb fb fb fb fc fc fc fc fa fb fb fb
->ffff88802f675100: fb fb fb fb fb fb fc fc fc fc fa fb fb fb fb fb
-                                                          ^
- ffff88802f675180: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88802f675200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
-Tested on:
-
-commit:         e8c39d0f Merge tag 'probes-fixes-v6.9-rc3' of git://gi..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=150cd74d180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=285be8dd6baeb438
-dashboard link: https://syzkaller.appspot.com/bug?extid=3a36aeabd31497d63f6e
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11383c43180000
-
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ca295b0..ab18185 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1652,7 +1652,8 @@ static void __init bhi_select_mitigation(void)
+ 		return;
+ 
+ 	/* Retpoline mitigates against BHI unless the CPU has RRSBA behavior */
+-	if (cpu_feature_enabled(X86_FEATURE_RETPOLINE)) {
++	if (boot_cpu_has(X86_FEATURE_RETPOLINE) &&
++	    !boot_cpu_has(X86_FEATURE_RETPOLINE_LFENCE)) {
+ 		spec_ctrl_disable_kernel_rrsba();
+ 		if (rrsba_disabled)
+ 			return;
+@@ -2804,11 +2805,13 @@ static const char *spectre_bhi_state(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_BHI))
+ 		return "; BHI: Not affected";
+-	else if  (boot_cpu_has(X86_FEATURE_CLEAR_BHB_HW))
++	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_HW))
+ 		return "; BHI: BHI_DIS_S";
+-	else if  (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP))
++	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP))
+ 		return "; BHI: SW loop, KVM: SW loop";
+-	else if (boot_cpu_has(X86_FEATURE_RETPOLINE) && rrsba_disabled)
++	else if (boot_cpu_has(X86_FEATURE_RETPOLINE) &&
++		 !boot_cpu_has(X86_FEATURE_RETPOLINE_LFENCE) &&
++		 rrsba_disabled)
+ 		return "; BHI: Retpoline";
+ 	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT))
+ 		return "; BHI: Vulnerable, KVM: SW loop";
