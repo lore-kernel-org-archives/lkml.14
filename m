@@ -1,142 +1,94 @@
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mainlining.org [94.241.141.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE85134738;
-	Sun, 14 Apr 2024 15:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D7213473B;
+	Sun, 14 Apr 2024 15:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.241.141.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713107988; cv=none; b=DDoNpZVZ/NMu55xbUojGnYx32Nybt1kH0OKX6ZYs18ObRaPRhIl0tUXnZ8vt24Bi5FqBacJ7kZpgcHRUqFKQxyM6pMJOLoFjt2dE15ei4MFyi7EPQcf+T6MVQf8P1yRjSK6F9uZ3iZ3zzjqRvXtPF2J6RPuqKQMbG5GbsbQUtz4=
+	t=1713108694; cv=none; b=uoQBgJekNJxZIfrO0lIgYhxHH8wCNSK92bz2GgcqunTL75yjURU1Rf/ItV3fgG9oYRWVwYaiA/yjoDG5RkR2JsqdecJ4qQyCI95Mvc8NAx0hgcgo6wC5O0/0BdFre0goTQYIEHY2yImYHYM/jEOrIKVTcMMpIlIEccNBwB3O2s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713107988; c=relaxed/simple;
-	bh=0mnkyrFHoV4fX2BneLK5oI9FnLKxWrdQ7m57axoBjiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RqhUscOLvar2HYjqhPqvhcHBFe+LQIfSybGXwKZTs4+S8nRilfZaw9AR9/poAE5nYneVHk+aKuesLcb1PtYaeVCcucds6KtNchYoSRcWtABRrxoFv5mT3IaWaooCyg69teOTczgOvbGSgSfDdNVZH1D/kQKF9BMJU+3Lx0hPiG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gQbHnlW1; arc=none smtp.client-ip=80.12.242.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713108694; c=relaxed/simple;
+	bh=KCbN3AaRoKVj9vjtbieCSuk6IriODycJBXnS4VDwxFo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tc+sPAnh3B7121f0eF88Hw7etK7oQwDFFlGBWibxITeLGDUD8f2ikBhfsctk6mkVjdBYkZz465+fxx26h2qkj8sB8VTI0xmAwUkqR5xQwuAS5GghKyksJN12j8jHNjsfm+O46w1iVUb/POBOfBCgJc3FKaR5nZ1rvrFAsm7t5M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Dyti9lVC; arc=none smtp.client-ip=94.241.141.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gQbHnlW1"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id w1V9rhxJkdtohw1VArM9Qg; Sun, 14 Apr 2024 17:10:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713107441;
-	bh=Nm3qAcz/7tgumGMFtfqWwUqrYtPUagtaxDFSUXaCGTc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gQbHnlW1CGbB2GoEihKOSDKiiyGeu4dca9LmB49x4WuW66VUx8CA7IO7V3WR9vyNd
-	 Vuq99p/Y06LwKGaz8UKv46aDLFJSnNI7eM1+OnrjijPPY8AUypnpKOR6KLHrBT3GJw
-	 pPnzzPCQnJ/AqSPp8FXKFs0Rp3yb3zEskut3n2AZ/fdPLyMF0AlkjE/V/l6mQmt6n2
-	 XQaZxGZtHmxzZ1sqbGShO5RqP31Jzw379syL178HBuGwrtCMNVlKCfgCmT/UJgF78E
-	 XotzvGxyfza4cmOC1+c6eqYZjO+MJwEs6AL4SgvEeaXQiFqOaDT0yzJ5RgsuRf5irt
-	 SXOCLb3kiRoTA==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 17:10:41 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-usb@vger.kernel.org
-Subject: [PATCH v2] usb: gadget: function: Remove usage of the deprecated ida_simple_xx() API
-Date: Sun, 14 Apr 2024 17:10:32 +0200
-Message-ID: <7cd361e2b377a5373968fa7deee4169229992a1e.1713107386.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Dyti9lVC"
+Received: from david-ryuzu.localdomain (ipbcc3a836.dynamic.kabel-deutschland.de [188.195.168.54])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 931B5E21A1;
+	Sun, 14 Apr 2024 15:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1713108186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qT61WY3ccUFg/GjjL36acuqJpraSqI5TD4a9LEcwBYY=;
+	b=Dyti9lVC+bTG/7cWYHVrB72GeSYwNkx0ZK/wuyyReNyBbvgUO1GQ1qPyjHasZu6pA+toda
+	gkfJh0ANqFXzDcNWRjhReZVyy+uMzK3o0HjRSDbuOLNeITG6pGwYLnquz2OvpxpUDH/xBW
+	Ymu+nIzEFCADglUlaqj+m1Ciu8bFuNCeNNW77ut0vMpS/mcbkoR+dpuCIRbFGvEItiRGns
+	xkc3X0i/DOS6p/sYUDSqAuJi34OM3IfihekYb2xgyjCm4y1YSWjQbYy22TgSYlzN5mukpQ
+	Uxhv8rwRB9oMOMNqbmPk8h0fuRej5A1t05A2bPxQcRihpznhFE+BkHmzrFHlZg==
+From: David Wronek <david@mainlining.org>
+Subject: [PATCH 0/2] Add driver for Raydium RM69380-based DSI panels
+Date: Sun, 14 Apr 2024 17:22:29 +0200
+Message-Id: <20240414-raydium-rm69380-driver-v1-0-5e86ba2490b5@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALX0G2YC/x3MMQ6DMAxA0asgz1gKxkqhV0EdoHGKB6ByBCqKu
+ DtRxzf8nyGJqSR4VhlMDk26rQVNXcF7HtePoIZiIEfsuGG08Qy6L2iL79vOYTA9xJAfkWjykTg
+ KlPhrEvX3Hw+v67oBjbh+B2gAAAA=
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ David Wronek <david@mainlining.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713108185; l=1013;
+ i=david@mainlining.org; s=20240121; h=from:subject:message-id;
+ bh=KCbN3AaRoKVj9vjtbieCSuk6IriODycJBXnS4VDwxFo=;
+ b=SO3+/vE1qxF8sxuE4CShhuqNMdm5yxMqzGqrsaCQU11XkTm3wM/ZK2IUa76Oyy0XUaFJ/Fp0J
+ itQy7Mk2gstAxDZ6TlGbfRHx4RlYYVEQ2xoDhBYoS5F2CCeWE5B/EZv
+X-Developer-Key: i=david@mainlining.org; a=ed25519;
+ pk=PJIYyFK3VrK6x+9W6ih8IGSJ5dxRXHiYay+gG1qQzqs=
 
-ida_alloc() and ida_free() should be preferred to the deprecated
-ida_simple_get() and ida_simple_remove().
+This patch adds support the 2560x1600@90Hz dual DSI command mode panel by
+EDO in combination with a Raydium RM69380 driver IC.
 
-Note that the upper limit of ida_simple_get() is exclusive, but the one of
-ida_alloc_max() is inclusive. So a -1 has been added when needed.
+This driver IC can be found in the following devices:
+ * Lenovo Xiaoxin Pad Pro 2021 (TB-J716F) with EDO panel
+ * Lenovo Tab P11 Pro (TB-J706F) with EDO panel
+ * Robo & Kala 2-in-1 Laptop with Sharp panel
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David Wronek <david@mainlining.org>
 ---
-Changes in V2:
-   - rebased against -next-20240412
+David Wronek (2):
+      dt-bindings: display: panel: Add Raydium RM69380
+      drm/panel: Add driver for EDO RM69380 OLED panel
 
-V1: https://lore.kernel.org/all/fb14757b434ebbad82c8771f19b73dc7ef81a91b.1705232365.git.christophe.jaillet@wanadoo.fr/
+ .../bindings/display/panel/raydium,rm69380.yaml    |  94 +++++
+ drivers/gpu/drm/panel/Kconfig                      |  14 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm69380.c      | 378 +++++++++++++++++++++
+ 4 files changed, 487 insertions(+)
 ---
- drivers/usb/gadget/function/f_hid.c     | 6 +++---
- drivers/usb/gadget/function/f_printer.c | 6 +++---
- drivers/usb/gadget/function/rndis.c     | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
+base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
+change-id: 20240414-raydium-rm69380-driver-47f22b6f24fe
 
-diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index 3c8a9dd585c0..2db01e03bfbf 100644
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -1029,9 +1029,9 @@ static inline int hidg_get_minor(void)
- {
- 	int ret;
- 
--	ret = ida_simple_get(&hidg_ida, 0, 0, GFP_KERNEL);
-+	ret = ida_alloc(&hidg_ida, GFP_KERNEL);
- 	if (ret >= HIDG_MINORS) {
--		ida_simple_remove(&hidg_ida, ret);
-+		ida_free(&hidg_ida, ret);
- 		ret = -ENODEV;
- 	}
- 
-@@ -1176,7 +1176,7 @@ static const struct config_item_type hid_func_type = {
- 
- static inline void hidg_put_minor(int minor)
- {
--	ida_simple_remove(&hidg_ida, minor);
-+	ida_free(&hidg_ida, minor);
- }
- 
- static void hidg_free_inst(struct usb_function_instance *f)
-diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-index 076dd4c1be96..ba7d180cc9e6 100644
---- a/drivers/usb/gadget/function/f_printer.c
-+++ b/drivers/usb/gadget/function/f_printer.c
-@@ -1312,9 +1312,9 @@ static inline int gprinter_get_minor(void)
- {
- 	int ret;
- 
--	ret = ida_simple_get(&printer_ida, 0, 0, GFP_KERNEL);
-+	ret = ida_alloc(&printer_ida, GFP_KERNEL);
- 	if (ret >= PRINTER_MINORS) {
--		ida_simple_remove(&printer_ida, ret);
-+		ida_free(&printer_ida, ret);
- 		ret = -ENODEV;
- 	}
- 
-@@ -1323,7 +1323,7 @@ static inline int gprinter_get_minor(void)
- 
- static inline void gprinter_put_minor(int minor)
- {
--	ida_simple_remove(&printer_ida, minor);
-+	ida_free(&printer_ida, minor);
- }
- 
- static int gprinter_setup(int);
-diff --git a/drivers/usb/gadget/function/rndis.c b/drivers/usb/gadget/function/rndis.c
-index 29bf8664bf58..12c5d9cf450c 100644
---- a/drivers/usb/gadget/function/rndis.c
-+++ b/drivers/usb/gadget/function/rndis.c
-@@ -869,12 +869,12 @@ EXPORT_SYMBOL_GPL(rndis_msg_parser);
- 
- static inline int rndis_get_nr(void)
- {
--	return ida_simple_get(&rndis_ida, 0, 1000, GFP_KERNEL);
-+	return ida_alloc_max(&rndis_ida, 999, GFP_KERNEL);
- }
- 
- static inline void rndis_put_nr(int nr)
- {
--	ida_simple_remove(&rndis_ida, nr);
-+	ida_free(&rndis_ida, nr);
- }
- 
- struct rndis_params *rndis_register(void (*resp_avail)(void *v), void *v)
+Best regards,
 -- 
-2.44.0
+David Wronek <david@mainlining.org>
 
