@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA7F13475B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C345C134CCC
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713108765; cv=none; b=PxuilY7CUn3oP7Sjbwy3WEMVPBaMg0QKxTHCh+BFvWBkyCn/bPgso9bGbzTJkPk5kSc5nf01gH976XnwIBOSCMJq59s/9/gSIWuDKctKhHAoWNO6lle7VQrtmLyrbwrn1vAsrWVVjjIJ29pSobXAwUSWqjQA+Go6vKRvQHR5Dnc=
+	t=1713108765; cv=none; b=e5bMGrojRmI5/LyJG12lb23Xi8WiMdZTVEzJp1+983GH9X2W/RQK/fIB+9UoVlWZHqOGOi5ABsGsMzAr+gzebN996uK6/vPFD57mD+daudoMo07snDeM6x77WPVphGUTW7luZLIX+Y3Wc09/wWb7plNdtlQJLRlVFqw4GljDx54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713108765; c=relaxed/simple;
-	bh=aCUWzSW3nnOCWJY6Wih6C6rNM9RCw6Fje6P5C4uUrFU=;
+	bh=bxNO3fkRN2ASJqrntL4vOhcWHQKY0KbQtg8KAE0BNuQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=X3xASBXPrp5YJfhIlx2e87CbnU2m3EUCy0471ZF/sAOSJXSWZWtzq21ZyrflhtbtvHr3eoaJrph3g9GMR/geOAzRYphTPSoIPpb0zNsQXB9tyvoJiP93uMquAOMbaCjVEEOL2nt25uyYattClGnLpC5aYatZwr98LIr+rTd+vpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKhHZbrH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=BiJuvcY3WjxT9NGWM/ZjG0r2wLX3omXMJQn1f9JwT/zTAzK0U1lAcdpLZqbtDY6Cox8GRqenOWpx9Z44TcoLyhalMYdF497qW9GlfSyVzIaxQC8ylz3UuuSoZSXOxYq4S+0ZZD6EjCxBuNRsinrsuSJIzQKvj7RRG2eNZtEGB/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCzv8Lnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKhHZbrH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 776BDC4AF1A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCzv8Lnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 522ECC32786;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713108765;
-	bh=aCUWzSW3nnOCWJY6Wih6C6rNM9RCw6Fje6P5C4uUrFU=;
+	bh=bxNO3fkRN2ASJqrntL4vOhcWHQKY0KbQtg8KAE0BNuQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iKhHZbrH4yK4TpodU1SaUctxEHf4l2i9OPpl24g2y42r+srMG32IQb7O15I5WwA5O
-	 stfQvJK7KCywmrOcCPogx1ETwr+wuyAJJClGyyiidm/oip4xwXO1VKGCKbvrZUS7gb
-	 XhK1h0/Xw5Z098phPN6yoTFsUYoHq9ORfit6yziXZ0j7a16ECyaNYxI0YbJZzD39+m
-	 30OLMmoftHwUN2Y3Vs8FGbZ8TwZh5paVwpXobfut3a3QWUbbHi5d5209OKoe2Bvl9i
-	 4nCnV9j+IzXpRlx0aFXHpfem0YjJ7FI2rwQCXFPdFj3wDIGx/pU7cfBQF9fwAFOMes
-	 7Atl7NguR11Zw==
+	b=cCzv8Lnk/2BPKQQn3P2DLmjc/aDjSDHRyDxOGODvk55yta9kZOAusmHl3RJYW+jNN
+	 Qj9KQ//DAH7+ehRwCObwBMT4Cyo87fqfDEAgDajEY9I14Rr84k0l3B4qNsCQcO2NzT
+	 JxjO9WSqDzdKIUbrfaGahBKIDscy4wk1u0jCkUhZPzAtP7Evg9+I8QTMzMfdt3tXew
+	 G2hUATt5gWcSaZDno7IAe2bb5RnMCGVi1j7Csr7z7mADH7DLRoUNR8qgi+nOuT/EPN
+	 vGLgThOdmRbdzylbstJhKMOq6ZgMZ40MnjPtAEGFYsmUoS74OpFXINSuLpymt4uGJg
+	 R8mCAnIPPnA/Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 68FD9C43140;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 41C5FC43140;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,16 +37,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to detect inconsistent nat entry
- during truncation
+Subject: Re: [f2fs-dev] [PATCH] f2fs: support .shutdown in f2fs_sops
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171310876541.3156.7562582983890566171.git-patchwork-notify@kernel.org>
+ <171310876526.3156.6732886911990694550.git-patchwork-notify@kernel.org>
 Date: Sun, 14 Apr 2024 15:32:45 +0000
-References: <20240322145955.2959257-1-chao@kernel.org>
-In-Reply-To: <20240322145955.2959257-1-chao@kernel.org>
+References: <20240229143838.45149-1-chao@kernel.org>
+In-Reply-To: <20240229143838.45149-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, r.smirnov@omp.ru, linux-kernel@vger.kernel.org,
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
@@ -54,24 +53,20 @@ Hello:
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Fri, 22 Mar 2024 22:59:55 +0800 you wrote:
-> As Roman Smirnov reported as below:
+On Thu, 29 Feb 2024 22:38:38 +0800 you wrote:
+> Support .shutdown callback in f2fs_sops, then, it can be called to
+> shut down the file system when underlying block device is marked dead.
 > 
-> "
-> There is a possible bug in f2fs_truncate_inode_blocks():
-> 
->     if (err < 0 && err != -ENOENT)
->     			goto fail;
->         ...
->         offset[1] = 0;
->         offset[0]++;
->         nofs += err;
-> 
-> [...]
+> Signed-off-by: Chao Yu <chao@kernel.org>
+> ---
+>  fs/f2fs/f2fs.h  |  2 ++
+>  fs/f2fs/file.c  | 70 ++++++++++++++++++++++++++++++-------------------
+>  fs/f2fs/super.c |  6 +++++
+>  3 files changed, 51 insertions(+), 27 deletions(-)
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to detect inconsistent nat entry during truncation
-    https://git.kernel.org/jaegeuk/f2fs/c/92c556ed6318
+  - [f2fs-dev] f2fs: support .shutdown in f2fs_sops
+    https://git.kernel.org/jaegeuk/f2fs/c/ee745e4736fb
 
 You are awesome, thank you!
 -- 
