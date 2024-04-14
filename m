@@ -1,122 +1,115 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35B721A06;
-	Sun, 14 Apr 2024 08:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91064442F
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713083270; cv=none; b=XFmHpukFWCdUnCniOJaquzRnKfpeG0/RSvdkCiF8JYLhdKoUEsoVz3pZmm6307n7Bbs4SSH7rXP6yWGft42K9KYZKjfya7UjmUQ31O1tqpP78MDk8EwG3t2stFEadWKxCDKzLx6X+QQRHDTazkdObnp6w8u78mI7d06BXELuax0=
+	t=1713083465; cv=none; b=lBe01dhmzDdaB3janbBibkpKqSow7xc3nMEZiDZft9uj82EJOrRc9+pBdoXsfcYhkt0Dg/EInFPMKtDwcA67i0VCYEe7QwNwJ+EHkhaQY65L/GUIDIXWpYgccWyHb7xp9CjvbuCnWwAaPtguBto9cF6JmUQjZrOUeaiFV7dx1AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713083270; c=relaxed/simple;
-	bh=ZNy+Ta4MPqN2TVyPgKfrF+9R+orsPUZ7WfSOlxXIBR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YO9G5Ad5S824x9pWoxMPegDbQU2DdEl8UEyMoRunivL+L4aYWobFovZEIrSPirQk9lndZ0timw9jjlVzvX10fGPrE6qHy19yDG7w1mMrxpEmM++F5ssWGeyQwzlNOPJNu15ok94UQ1Nmn/rFe0iYHyK5MBZf4xP4tE8KALlBvnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tjhxku4a; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tjhxku4a"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id vvC8ry1nx2EKwvvC8r61FO; Sun, 14 Apr 2024 10:26:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713083199;
-	bh=N6kt4K4X39o6KWEFDhgyAlxfWwd6wjsL+csvpVS017g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=tjhxku4aCpQd8TAr+IdcjNdqD4iVTDQ/Q8lB+Jy8XNu/oMLoUMZk0TNWubY5O1ypz
-	 KRj9vhTckLtq2u/Ve7a1zHMaGoAD0dazRl/5oTk6k/Me04gStigPK+uN85ASj9mwjC
-	 PyYHr36ZAh+YuVGgVkD2j+rjhDNqJAmbuBWhRPQD79XykVrZCGM+aCZHEbjoye5DxY
-	 /LtRtP4ooYOiuZrnQ/rXqrlQc7v5xcGdJ+Oa4cxAN3lkzsH6YjXEqPrZYGb0HYjmGN
-	 Sd1oRdvBaUMPbb0XbDWWAb+6AyPk4EvN0nY5GSUZeWaD5hj7ofTI+ZNop9Qb6052bK
-	 nZ6yMFbai/DLg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 10:26:39 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <a788ee2e-ee51-476f-8aee-aa344f221f9c@wanadoo.fr>
-Date: Sun, 14 Apr 2024 10:26:35 +0200
+	s=arc-20240116; t=1713083465; c=relaxed/simple;
+	bh=NnwDiBQtYVV7ljXU6v7Fyo8ljCpiD5v5/ka0GfK5V+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CuBch7DLEDvlsZpE2V0s2UvMmGnHFETw5NCem+PaCu6xCVkbAQRSMYlVHI4GHvxbLTh4x1r91QO7S1TcJXh22boKHnWwimh+habXOq4BTby1m6fdw2pHmi1rZnOIgnrh6Y/krbXBHwRbnArWd1GjUXab5wzuRUj5bNKBnuSJDVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.67.190])
+	by sina.com (172.16.235.24) with ESMTP
+	id 661B943A00002B01; Sun, 14 Apr 2024 16:30:52 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 7145845089449
+X-SMAIL-UIID: A17B53C737FB4A6693E4633CBA172864-20240414-163052-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+d6282a21a27259b5f7e7@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] WARNING in hci_conn_set_handle
+Date: Sun, 14 Apr 2024 16:30:44 +0800
+Message-Id: <20240414083044.2191-1-hdanton@sina.com>
+In-Reply-To: <000000000000ec64cd0616084ae9@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/i915/guc: Remove usage of the deprecated
- ida_simple_xx() API
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- intel-gfx@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <7108c1871c6cb08d403c4fa6534bc7e6de4cb23d.1705245316.git.christophe.jaillet@wanadoo.fr>
- <ZbGlqD6zyyp4DsmH@DUT025-TGLU.fm.intel.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <ZbGlqD6zyyp4DsmH@DUT025-TGLU.fm.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 25/01/2024 à 01:04, Matthew Brost a écrit :
-> On Sun, Jan 14, 2024 at 04:15:34PM +0100, Christophe JAILLET wrote:
->> ida_alloc() and ida_free() should be preferred to the deprecated
->> ida_simple_get() and ida_simple_remove().
->>
->> Note that the upper limit of ida_simple_get() is exclusive, but the one of
->> ida_alloc_range() is inclusive. So a -1 has been added when needed.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Sat, 13 Apr 2024 23:05:32 -0700
+> syzbot found the following issue on:
 > 
-> Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162d4723180000
 
-Hi,
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  480e035fc4c7
 
-polite reminder ;-)
-
-CJ
-
-> 
->> ---
->>   drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c | 13 ++++++-------
->>   1 file changed, 6 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
->> index a259f1118c5a..73ce21ddf682 100644
->> --- a/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
->> +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
->> @@ -2156,11 +2156,10 @@ static int new_guc_id(struct intel_guc *guc, struct intel_context *ce)
->>   					      order_base_2(ce->parallel.number_children
->>   							   + 1));
->>   	else
->> -		ret = ida_simple_get(&guc->submission_state.guc_ids,
->> -				     NUMBER_MULTI_LRC_GUC_ID(guc),
->> -				     guc->submission_state.num_guc_ids,
->> -				     GFP_KERNEL | __GFP_RETRY_MAYFAIL |
->> -				     __GFP_NOWARN);
->> +		ret = ida_alloc_range(&guc->submission_state.guc_ids,
->> +				      NUMBER_MULTI_LRC_GUC_ID(guc),
->> +				      guc->submission_state.num_guc_ids - 1,
->> +				      GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_NOWARN);
->>   	if (unlikely(ret < 0))
->>   		return ret;
->>   
->> @@ -2183,8 +2182,8 @@ static void __release_guc_id(struct intel_guc *guc, struct intel_context *ce)
->>   							   + 1));
->>   		} else {
->>   			--guc->submission_state.guc_ids_in_use;
->> -			ida_simple_remove(&guc->submission_state.guc_ids,
->> -					  ce->guc_id.id);
->> +			ida_free(&guc->submission_state.guc_ids,
->> +				 ce->guc_id.id);
->>   		}
->>   		clr_ctx_id_mapping(guc, ce->guc_id.id);
->>   		set_context_guc_id_invalid(ce);
->> -- 
->> 2.43.0
->>
-> 
-> 
-
+--- x/net/bluetooth/hci_event.c
++++ y/net/bluetooth/hci_event.c
+@@ -6902,7 +6902,7 @@ static void hci_le_create_big_complete_e
+ 					   struct sk_buff *skb)
+ {
+ 	struct hci_evt_le_create_big_complete *ev = data;
+-	struct hci_conn *conn;
++	struct hci_conn *conn, *next;
+ 	__u8 i = 0;
+ 
+ 	BT_DBG("%s status 0x%2.2x", hdev->name, ev->status);
+@@ -6912,38 +6912,29 @@ static void hci_le_create_big_complete_e
+ 		return;
+ 
+ 	hci_dev_lock(hdev);
+-	rcu_read_lock();
+-
+ 	/* Connect all BISes that are bound to the BIG */
+-	list_for_each_entry_rcu(conn, &hdev->conn_hash.list, list) {
++	list_for_each_entry_safe(conn, next, &hdev->conn_hash.list, list) {
+ 		if (bacmp(&conn->dst, BDADDR_ANY) ||
+ 		    conn->type != ISO_LINK ||
+ 		    conn->iso_qos.bcast.big != ev->handle)
+ 			continue;
+ 
+-		if (hci_conn_set_handle(conn,
+-					__le16_to_cpu(ev->bis_handle[i++])))
++		if (hci_conn_set_handle(conn, __le16_to_cpu(ev->bis_handle[i++])))
+ 			continue;
+ 
+ 		if (!ev->status) {
+ 			conn->state = BT_CONNECTED;
+ 			set_bit(HCI_CONN_BIG_CREATED, &conn->flags);
+-			rcu_read_unlock();
+ 			hci_debugfs_create_conn(conn);
+ 			hci_conn_add_sysfs(conn);
+ 			hci_iso_setup_path(conn);
+-			rcu_read_lock();
+ 			continue;
+ 		}
+ 
+ 		hci_connect_cfm(conn, ev->status);
+-		rcu_read_unlock();
+ 		hci_conn_del(conn);
+-		rcu_read_lock();
+ 	}
+ 
+-	rcu_read_unlock();
+-
+ 	if (!ev->status && !i)
+ 		/* If no BISes have been connected for the BIG,
+ 		 * terminate. This is in case all bound connections
+@@ -6952,7 +6943,6 @@ static void hci_le_create_big_complete_e
+ 		 */
+ 		hci_cmd_sync_queue(hdev, hci_iso_term_big_sync,
+ 				   UINT_PTR(ev->handle), NULL);
+-
+ 	hci_dev_unlock(hdev);
+ }
+ 
+--
