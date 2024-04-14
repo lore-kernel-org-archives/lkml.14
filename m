@@ -1,47 +1,68 @@
-Received: from msa.smtpout.orange.fr (out-70.smtpout.orange.fr [193.252.22.70])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6C71CD06;
-	Sun, 14 Apr 2024 10:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9628E286BD
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 10:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713090143; cv=none; b=nh5GVhCJvGoPp71gLRLUjxGTRFx2X3S5LlmjMeumqK9B2DFFMvWK1yBeurLbm+R+v5OTnYJtobqVKcXq2OsDjlxNArN90LtvXdXLuGjmaD8Z8naRYxa7gKrBJrstpq+3QF6fKNCrT57CMmNNPC59pCI8i421qU0EWbxJU4ebeS8=
+	t=1713090302; cv=none; b=K32PwOgZ6pgFrrewA6h5Vs97Pa1Zaz9fYy6H0pxoTrtQd0haAoxYB9irUEn1P7o/hrx4zfs2HcTrIowRyFbPHV2AgNSgKsoKmpQ0ZQMqJSnCQU9DLX/INQEA515POh4KP48tJcQUKeVm5ShdbfMoREGr/8sen57fkxWBQr/ce4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713090143; c=relaxed/simple;
-	bh=3KjtX7RrGt+OMiORGrDzde69KGZb/8DuTUkR13Mu9uY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pL7Qwt/RMsKAT1LWhvl+Scg2PC6y+FkbMuUbijYJyqMAR2VgtvpOOjAo18DoBJu1RRH4pX8bKHQ2FGn17As56tNRH0POFXTzSpxbmrqqnwzXAq23d4R1p9mIw8QpNQgy3XLWqtKMH1PH1XDZUFwQkqEuLUyrnltGhfyt1biKlxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=szNgOXgL; arc=none smtp.client-ip=193.252.22.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713090302; c=relaxed/simple;
+	bh=JJZlIn2mvmHgMJDDfAZ1JdDcw/dwxd99aCw9whf/RG4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pmi7x+d2xu59HTHDh/tvfN6Sb0vVYyE75bJiOWY5cZwEtdQ7hCrHlqZBpMOITnauRTHhPClYnSipAQWwG0KaMiwulQtY5w+zjw+QNK7Z10JEe5BHBQCZiy4GtErdZS8SFfzBIUF4AKqZCN3KediLImkJJNfryNGkVDX0rdr5XCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7D708FK; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="szNgOXgL"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id vwr1rPDFEVYR4vwr1rSj5Z; Sun, 14 Apr 2024 12:12:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713089576;
-	bh=q4WeoEWKUV095yOrt9z2s5h7VxFHEIKdZezhJpgbprM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=szNgOXgL+vnUflzWkfBGajoO6THQTybLp1hgg7iQEv9MWMfzouYbcy76sJMe39Ssf
-	 eVRO64xLozsw1zGDD0B1wPLBsMTWjjG9sJoFtvo0jVm4tZdPVClevY44t/Dqmk9nMg
-	 2jySCi12BZ2/Mn3StvBfMI/mtnzKissla3pGfgYLUFJTbdsfYyo1XNix84PCjGYrRy
-	 DSfZCTQpgHbZzHMwT8nCJN5hoxWmRVCZxenKVChh58ZH7kWHIJbuke5/wtwTOor7Fu
-	 HbotJ7fM3WExjJNm90p3hHmCz/onC9Kh9DIY9U6Y3KJmwDcCi+9S2wcQF5H8/4wY21
-	 mCYx91zXAFk9w==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 12:12:56 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: akpm@linux-foundation.org,
-	Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH RESEND] mux: Remove usage of the deprecated ida_simple_xx() API
-Date: Sun, 14 Apr 2024 12:12:52 +0200
-Message-ID: <f82e013abe4c71f1c7d06819f96472f298acdcf3.1713089554.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7D708FK"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ee12766586so1474586b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 03:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713090299; x=1713695099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DADHOWnUNYP/9/v99Q0bIFc3ha7reMyzoz3vmz/f54w=;
+        b=c7D708FKLjINv5ZHjrsm/Oh3ovvic6LWDBIxRcwg/MRwH4PtpeMK0DiHpgE+DkqRn7
+         A0aAvQBxhDUmUJxhcsidt1J2J+RtNucdwjpy07Sb6iF/4UkIu3TgfRsTV0UN4bJ5Y5vA
+         IGorkrdSuFpij5OG6Yz+YSa0h83+3Dbl/Sl/CddW2KNUNYpEEsMWv3wOMgEZR+vvsY3J
+         O+YTGBGZ8RkSf/YhBaJA1djYAYPXNll/hYK/Q/FkjWphh8y1Ccen82aC7KO6++5oDvvc
+         /P6yNneh+0uYxZ3YkP67U7jDomgZJebI9xolURFTxMB1JBZyS99xRW5Ql8d/16RJA3Hd
+         KTaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713090299; x=1713695099;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DADHOWnUNYP/9/v99Q0bIFc3ha7reMyzoz3vmz/f54w=;
+        b=FHdDPPvKz6abF8ygxlu/hr9EevEqkgMhshZNgbJlRPsm101igPfZyiX02wlgWx51zE
+         eVBEyHCY3eWsR/8mZ/csPpYr7Hb2+b1b9eH52yVtKQjMUNU5+KhV7e81JMXIX/OQ710/
+         JVbWoOuz4yyy/zs8oPnucVB0Vvj3zi3i5TTezDsyDHGhWzNSLPaVJaDL4nh1DuZzVx9Y
+         ZXTfSZUpYbYrZXQ5qTS7UZjgTrDu9MzjkBamJ28X7b37xEJDkpIgHRuFBc0aoX1RX387
+         oOoy7kpIIQCCd3N6DXhFLnQrJBrBHD2uEk1YDO6PK/MPq3+naAXUkYjZQWdu4K5tbS0u
+         VHFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPqLeod0moOmsS1NW/goPxFym0yPXGBYXPY/Z0+n8T+hq22Oj3lyZ4aCQ+DCILIFVo0XokfPjU4TMMa3SC01A+OTcxoHMm/T/TNxSe
+X-Gm-Message-State: AOJu0YynJfXaCvUvIKgNsqBKYzulzgqKWzWRqliRS0cgt+vn5mHZ2YdV
+	WuwzhO5941+FhXjM56V0DRsZcXqR8MTyoLaEgpku2YUL3twT9TQi
+X-Google-Smtp-Source: AGHT+IFo+3A88+eErsb0hrFDYgsGA859sSv6X9J0eSGBHL9qSAzFushHa4YDibASL+DuNgxlqQFy3g==
+X-Received: by 2002:a05:6a20:3241:b0:1a9:9839:f209 with SMTP id hm1-20020a056a20324100b001a99839f209mr8824592pzc.0.1713090298867;
+        Sun, 14 Apr 2024 03:24:58 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:1cb8:5ab4:8eca:a8e7:b24c:7514])
+        by smtp.gmail.com with ESMTPSA id k187-20020a636fc4000000b005d6a0b2efb3sm5233452pgc.21.2024.04.14.03.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Apr 2024 03:24:58 -0700 (PDT)
+From: sumadhura kalyan <opensourcecond@gmail.com>
+To: florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	gregkh@linuxfoundation.org
+Cc: linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	sumadhura kalyan <opensourcecond@gmail.com>
+Subject: [PATCH] Replace function alignment of camel case by snake case.
+Date: Sun, 14 Apr 2024 15:54:42 +0530
+Message-Id: <20240414102443.98927-1-opensourcecond@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,71 +71,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ida_alloc() and ida_free() should be preferred to the deprecated
-ida_simple_get() and ida_simple_remove().
+Issue found by checkpatch
 
-This is less verbose.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: sumadhura kalyan <opensourcecond@gmail.com>
 ---
-This patch has been sent about 3 months ago [1].
-A gentle reminder has been sent 1 month later [2].
+ .../vc04_services/vchiq-mmal/mmal-vchiq.h     | 29 +++++++------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-Neither one got any reply.
-
-So, I'm adding Andrew Morton in To:, in order to help in the merge process.
-
-Context:
-=======
-All patches to remove the ida_simple API have been sent.
-Matthew Wilcox seems happy with the on going work. (see [3])
-
-Based on next-20240412
-$git grep ida_simple_get | wc -l
-25
-
-Based on next-20240220
-$git grep ida_simple_get | wc -l
-36
-
-https://elixir.bootlin.com/linux/v6.8-rc3/A/ident/ida_simple_get
-50
-
-https://elixir.bootlin.com/linux/v6.7.4/A/ident/ida_simple_get
-81
-
-Thanks
-CJ
-
-[1]: https://lore.kernel.org/all/727714bdfcd69d21e7f2a0c5c7426fcb70439b91.1702228605.git.christophe.jaillet@wanadoo.fr/
-[2]: https://lore.kernel.org/all/9edc26e9-4f31-496a-969d-0edc33ef6f01@wanadoo.fr/
-[3]: https://lore.kernel.org/all/ZaqruGVz734zjxrZ@casper.infradead.org/
----
- drivers/mux/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mux/core.c b/drivers/mux/core.c
-index 775816112932..78c0022697ec 100644
---- a/drivers/mux/core.c
-+++ b/drivers/mux/core.c
-@@ -64,7 +64,7 @@ static void mux_chip_release(struct device *dev)
- {
- 	struct mux_chip *mux_chip = to_mux_chip(dev);
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
+index 09f030919d4e..98909fde978e 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
+@@ -42,8 +42,7 @@ struct vchiq_mmal_port_buffer {
  
--	ida_simple_remove(&mux_ida, mux_chip->id);
-+	ida_free(&mux_ida, mux_chip->id);
- 	kfree(mux_chip);
- }
+ struct vchiq_mmal_port;
  
-@@ -111,7 +111,7 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
- 	mux_chip->dev.of_node = dev->of_node;
- 	dev_set_drvdata(&mux_chip->dev, mux_chip);
+-typedef void (*vchiq_mmal_buffer_cb)(
+-		struct vchiq_mmal_instance  *instance,
++typedef void (*vchiq_mmal_buffer_cb)(struct vchiq_mmal_instance  *instance,
+ 		struct vchiq_mmal_port *port,
+ 		int status, struct mmal_buffer *buffer);
  
--	mux_chip->id = ida_simple_get(&mux_ida, 0, 0, GFP_KERNEL);
-+	mux_chip->id = ida_alloc(&mux_ida, GFP_KERNEL);
- 	if (mux_chip->id < 0) {
- 		int err = mux_chip->id;
+@@ -101,31 +100,25 @@ int vchiq_mmal_finalise(struct vchiq_mmal_instance *instance);
+ /* Initialise a mmal component and its ports
+  *
+  */
+-int vchiq_mmal_component_init(
+-		struct vchiq_mmal_instance *instance,
+-		const char *name,
+-		struct vchiq_mmal_component **component_out);
++int vchiq_mmal_component_init(struct vchiq_mmal_instance *instance,
++			      const char *name, struct vchiq_mmal_component **component_out);
  
+-int vchiq_mmal_component_finalise(
+-		struct vchiq_mmal_instance *instance,
+-		struct vchiq_mmal_component *component);
++int vchiq_mmal_component_finalise(struct vchiq_mmal_instance *instance,
++				  struct vchiq_mmal_component *component);
+ 
+-int vchiq_mmal_component_enable(
+-		struct vchiq_mmal_instance *instance,
+-		struct vchiq_mmal_component *component);
++int vchiq_mmal_component_enable(struct vchiq_mmal_instance *instance,
++				struct vchiq_mmal_component *component);
+ 
+-int vchiq_mmal_component_disable(
+-		struct vchiq_mmal_instance *instance,
+-		struct vchiq_mmal_component *component);
++int vchiq_mmal_component_disable(struct vchiq_mmal_instance *instance,
++				 struct vchiq_mmal_component *component);
+ 
+ /* enable a mmal port
+  *
+  * enables a port and if a buffer callback provided enque buffer
+  * headers as appropriate for the port.
+  */
+-int vchiq_mmal_port_enable(
+-		struct vchiq_mmal_instance *instance,
+-		struct vchiq_mmal_port *port,
++int vchiq_mmal_port_enable(struct vchiq_mmal_instance *instance,
++			   struct vchiq_mmal_port *port,
+ 		vchiq_mmal_buffer_cb buffer_cb);
+ 
+ /* disable a port
 -- 
-2.44.0
+2.25.1
 
