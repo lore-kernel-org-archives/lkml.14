@@ -1,147 +1,188 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645B856771;
-	Sun, 14 Apr 2024 16:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1231DDD1;
+	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114002; cv=none; b=Nw9wPoDwtRFCsNfXWN493Z5tK8qzkhD45D5vvrOo/IgirEzipF9Dp5U0Rcp4RH7UQC/UvRaTLxOxVU+nicEz0azWwD9eouNc3jTZFNXaRzfIQhXjBIJLZ5PH0NufZs8YYh0Q9h7VFA3+fLHgPF3XN8IMZ8REdc7Y0SV8nOIytN8=
+	t=1713114091; cv=none; b=QiGo6LPsokTucibOY3BQRcpRgHwtsQFXzzmxxlke6eWUeIYk/hu7/Uvl0/phZlVS/Awt5LN0ttPfibQA1uRcqQAK0bfIfuuQ690XkPvP5AqKNVpYx4ldRCYQrgAFNOfewzlRXYsXc7jESrCM+xmCVa/taVPLr5HggiKISaxRaIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713114002; c=relaxed/simple;
-	bh=2vuBy3JddhPuK9fJ9dNH99j+JK+Ocuh5sJ+yj+qGuyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z5t96SqAWluwajBQRP2Y4x+UAuTeMmThOKxpYD5fns1Hq3ADjPqjHUhZRiR19OqbUUSf6oyhJbq7dtB5TxKWhtlXMRzXSdAqXMNlHC92IBk/38oI8ZdW+BnrhNutWhcHSRJGPymxrFvnksLimy1MuhaXx1XiZhYjRw2HaPw1Grw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=l2iWlvqw; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1713114091; c=relaxed/simple;
+	bh=mhFeLCrwatal82689J4BD2+lCXaeDYEtzPYrA+v7zR0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OxvnYIag3af72KAMJgsk02R57HDj3OU3iMooZFi9qYB3O9bGPRqlmr6u/LmxRY6aacqUsbL913u9vsIAMapiQMpejt1ugIkbVymH1+kxj7/5p+DxHWfX6/gHwAgJfp/Z1OHCKBaXheS7ZLaOjI7QZpIYwX0bC/JVghoUpic9Bw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BuYp7gPD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="l2iWlvqw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 45EB7C0002;
-	Sun, 14 Apr 2024 16:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1713113997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ipEBFetRHAp/1hDn1rxccOCzTGrkejfX5LP8iZREH/g=;
-	b=l2iWlvqw93ZguKYWf/EEd7zOtf7nArGTD28rVSvnJ1QExWcS6YD43CtrdnuA8dRuTOQyDK
-	caI9PHDFXWN7vndkxzfIjzd+qySS1bClcaPovKPT+LXMDjEH113OxG06x7PNPfw6uDelnC
-	5HhlOxXzeJe6O59mh+hUX4QfqpM/OZ34pAUi5cB2/vaWzGire0ACgTR6vqIZQvvqmwdXT0
-	vfKD/eEpilCNPtK85S5H1NibRGffTYGjs5tRauaLkEz4+WOHqqxQ92S3U8XX8v3WUSfGOS
-	n5vS0vZ8RMNRKb9Z3wNQwHENDLl1OsBdTz2dAbHpqRDMrJygu+OhbqgtMt3j8Q==
-Message-ID: <85261d11-d6cb-4718-88d9-95a7efe5c0ab@arinc9.com>
-Date: Sun, 14 Apr 2024 19:59:44 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BuYp7gPD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3495C3277B;
+	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713114091;
+	bh=mhFeLCrwatal82689J4BD2+lCXaeDYEtzPYrA+v7zR0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=BuYp7gPDWys0rWglDsXPBM4wdGQQDuwrUqpeG5Y7U96+R9DCoo4au+FyYvvPD8vae
+	 BtKJNqiEueTf3RwW2V+jrXJXDawtg67s5tNCdE80fVDg+hTdkpNKFqFgl31lLMmYKL
+	 P0h8eFAIepKtXffUYVkiZ7XExMJQvHq5QaZnv5lSUwrqc/JdqqNBkH03bqwYrfgNXd
+	 khSkXkO6QxukjA3IbEPvEcSlOgiAH7bNpf3Nb8/wN7csI0k8fMGeZqx8tYiT6zzGSu
+	 TEe0Cfl4qaTm5csguQM8ivaHcrO3udQezW2fEa07U54zc5yp10oRRPlFNkmLnVkc0F
+	 jzhMYZ1nYZRag==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935D2C001CC;
+	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
+From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Sun, 14 Apr 2024 20:01:21 +0300
+Subject: [PATCH 1/4] ARM: dts: BCM5301X: use color and function on ASUS
+ RT-AC3100 and RT-AC88U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
- Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
- <20240414-for-soc-asus-rt-ac3200-ac5300-v1-3-118c90bae6e5@arinc9.com>
- <a88385a4-afad-4bd8-afc1-37e185e781f4@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <a88385a4-afad-4bd8-afc1-37e185e781f4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Message-Id: <20240414-for-soc-asus-rt-ac3100-improvements-v1-1-0e40caf1a70a@arinc9.com>
+References: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
+In-Reply-To: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Hauke Mehrtens <hauke@hauke-m.de>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713114081; l=3138;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=j9b3dbJqMcoEoUpOpDrZC6RI+SBn+VmxLPPihPauC6w=;
+ b=dD1ZOzdlA2FdEjfj/blWyiR/jrYHXQVbhcbLmo9OJWnsXb+SgNxhUE+jqYxsbp75APsfsTFYD
+ 922V+xD+gSLDMv/SkPO1LNq+RY91bN9YmtFsRBl6O0+HNN4cHsNgjYn
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
+ with auth_id=115
+X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+Reply-To: arinc.unal@arinc9.com
 
-On 14.04.2024 17:13, Krzysztof Kozlowski wrote:
-> On 14/04/2024 13:46, Arınç ÜNAL via B4 Relay wrote:
->> From: Arınç ÜNAL <arinc.unal@arinc9.com>
->>
->> Add the device tree for ASUS RT-AC3200 which is an AC3200 router featuring
->> 5 Ethernet ports over the integrated Broadcom switch.
->>
->> Hardware info:
->> * Processor: Broadcom BCM4709A0 dual-core @ 1.0 GHz
->> * Switch: BCM53012 in BCM4709A0
->> * DDR3 RAM: 256 MB
->> * Flash: 128 MB
->> * 2.4GHz: BCM43602 3x3 single chip 802.11b/g/n SoC
->> * 5GHz: BCM43602 3x3 two chips 802.11a/n/ac SoC
->> * Ports: 4 LAN Ports, 1 WAN Port
->>
->> Co-developed-by: Tom Brautaset <tbrautaset@gmail.com>
->> Signed-off-by: Tom Brautaset <tbrautaset@gmail.com>
->> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->> ---
->>   arch/arm/boot/dts/broadcom/Makefile                |   1 +
->>   .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 164 +++++++++++++++++++++
->>   2 files changed, 165 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/broadcom/Makefile b/arch/arm/boot/dts/broadcom/Makefile
->> index 7099d9560033..c61fca514775 100644
->> --- a/arch/arm/boot/dts/broadcom/Makefile
->> +++ b/arch/arm/boot/dts/broadcom/Makefile
->> @@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
->>   	bcm47081-luxul-xap-1410.dtb \
->>   	bcm47081-luxul-xwr-1200.dtb \
->>   	bcm47081-tplink-archer-c5-v2.dtb \
->> +	bcm4709-asus-rt-ac3200.dtb \
->>   	bcm4709-asus-rt-ac87u.dtb \
->>   	bcm4709-buffalo-wxr-1900dhp.dtb \
->>   	bcm4709-linksys-ea9200.dtb \
->> diff --git a/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
->> new file mode 100644
->> index 000000000000..8640dda211ae
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
->> @@ -0,0 +1,164 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
->> +/*
->> + * Author: Tom Brautaset <tbrautaset@gmail.com>
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "bcm4709.dtsi"
->> +#include "bcm5301x-nand-cs0-bch8.dtsi"
->> +
->> +#include <dt-bindings/leds/common.h>
->> +
->> +/ {
->> +	compatible = "asus,rt-ac3200", "brcm,bcm4709", "brcm,bcm4708";
->> +	model = "ASUS RT-AC3200";
->> +
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200 earlycon";
-> 
-> 1. Use stdout.
-> 2. Drop earlycon, it is for debugging, not regular mainline usage.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-I see that bcm4708.dtsi which this device tree includes already describes
-stdout-path with the same value so I'll just get rid of the chosen node
-here.
+As the label property for LEDs is deprecated, use the color and function
+properties to describe the LEDs on the device tree file for ASUS RT-AC3100
+and ASUS RT-AC88U. Reorder the LED and button nodes in alphabetical order.
 
-> 
->> +	};
->> +
->> +	memory@0 {
->> +		device_type = "memory";
->> +		reg = <0x00000000 0x08000000>,
->> +		      <0x88000000 0x08000000>;
->> +	};
->> +
->> +	nvram@1c080000 {
->> +		compatible = "brcm,nvram";
->> +		reg = <0x1c080000 0x00180000>;
-> 
-> Why is this outside of soc? Both soc node and soc DTSI?
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ .../boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi | 54 +++++++++++++---------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
 
-I don't maintain the SoC device tree files so I don't know. The nvram node
-doesn't exist on any of the device tree files included by this device tree.
+diff --git a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
+index 09cefce27fb1..9271792a9e44 100644
+--- a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
+@@ -6,6 +6,8 @@
+ #include "bcm47094.dtsi"
+ #include "bcm5301x-nand-cs0-bch8.dtsi"
+ 
++#include <dt-bindings/leds/common.h>
++
+ / {
+ 	chosen {
+ 		bootargs = "earlycon";
+@@ -25,38 +27,46 @@ nvram@1c080000 {
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
++		led-lan {
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_LAN;
++			gpios = <&chipcommon 21 GPIO_ACTIVE_LOW>;
++		};
++
+ 		led-power {
+-			label = "white:power";
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_POWER;
+ 			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "default-on";
+ 		};
+ 
+-		led-wan-red {
+-			label = "red:wan";
+-			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
+-		};
+-
+-		led-lan {
+-			label = "white:lan";
+-			gpios = <&chipcommon 21 GPIO_ACTIVE_LOW>;
+-		};
+-
+ 		led-usb2 {
+-			label = "white:usb2";
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_USB;
++			function-enumerator = <1>;
+ 			gpios = <&chipcommon 16 GPIO_ACTIVE_LOW>;
+ 			trigger-sources = <&ehci_port2>;
+ 			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		led-usb3 {
+-			label = "white:usb3";
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_USB;
++			function-enumerator = <2>;
+ 			gpios = <&chipcommon 17 GPIO_ACTIVE_LOW>;
+ 			trigger-sources = <&ehci_port1>, <&xhci_port1>;
+ 			linux,default-trigger = "usbport";
+ 		};
+ 
++		led-wan-red {
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_WAN;
++			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
++		};
++
+ 		led-wps {
+-			label = "white:wps";
++			color = <LED_COLOR_ID_WHITE>;
++			function = LED_FUNCTION_WPS;
+ 			gpios = <&chipcommon 19 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+@@ -64,10 +74,10 @@ led-wps {
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
+-		button-wps {
+-			label = "WPS";
+-			linux,code = <KEY_WPS_BUTTON>;
+-			gpios = <&chipcommon 20 GPIO_ACTIVE_LOW>;
++		button-led {
++			label = "Backlight";
++			linux,code = <KEY_BRIGHTNESS_ZERO>;
++			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+ 		button-reset {
+@@ -82,10 +92,10 @@ button-wifi {
+ 			gpios = <&chipcommon 18 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		button-led {
+-			label = "Backlight";
+-			linux,code = <KEY_BRIGHTNESS_ZERO>;
+-			gpios = <&chipcommon 4 GPIO_ACTIVE_LOW>;
++		button-wps {
++			label = "WPS";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&chipcommon 20 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ };
 
-Arınç
+-- 
+2.40.1
+
+
