@@ -1,104 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB22713664B;
-	Sun, 14 Apr 2024 18:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F5A134CFC
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 18:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713120479; cv=none; b=RsmJoQMZfLyQ6l9rI7pi+wVVMHPgUcrNl5u44VBmM3a3t7BYPFOqxcGKJUv0g0nMItauSzgllfx1rv7xqrSJgE+fDl6CC/CnvrMfPLgM3xmNzKZ+oufEN8S9to6SP32odnhYbpQK/sy5M6wfyE25PUiLMizjwT1EMWoPXqHpIkc=
+	t=1713120483; cv=none; b=Bd258e71J1AnYeS0HZ3bfUNmTIJqHXKdMR0RKI1ajHyZoPjvS3tvLeR1MzbunoIcdRSN5W9nM2dgahd0iNItB8fp7tbUvqJ0PcsEkUL+BHRUldm35v6pF5hHpO+iB6JLCd4iQ+5o++M9dIbPJ4wYUR2+O6YkssK4ZspnzMdm+Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713120479; c=relaxed/simple;
-	bh=xmgaqXbLg3DeFTUiQoF4m+Ls2Yrq43+DOTaWCX8ZMKE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D2e/AQx6NR8wEfgDUe1b5BQpVRNJ3c/2jl/QTiX5IFogiwyWXA6g9GoPQ6hoAU7QncTZpWnQhzBjCYQJk/e7W4u4fhmwRHKlbNKNILjU4m+I6QmTtcRdh2SIyGd+SYKEN8RDzgAQSiS/i6o5pJHQHJQzLkQc9Sa0TbN2yzTOCDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzkDFTUQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713120483; c=relaxed/simple;
+	bh=SgX8S3ANv517QHnfSXKXjm6sp2flErw58nweeOrtOr4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=D0gMuVB/mem6bAOVoto4S2WpISlGOl8lH2XdeW7rpogzxu49fPMucpzoTZCuf0uVlTc0xE3Cs07LEE8TdmIjikj2rqQ1VHzofECZmM+F4K4YM+1SH+VpxKYV9d6FLJTLSHC7rgcua2l2Xtl09EIpurRjLPleac7V8enGu9SGoN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQUpbtkC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzkDFTUQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7878C4AF08;
-	Sun, 14 Apr 2024 18:47:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQUpbtkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 563F9C32781;
+	Sun, 14 Apr 2024 18:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713120479;
-	bh=xmgaqXbLg3DeFTUiQoF4m+Ls2Yrq43+DOTaWCX8ZMKE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=BzkDFTUQxsljZAUIKewfboJWkThlb4pNhukaWaW8XHW9qECHI7KDf/NpjOl6XgEHS
-	 R2nas4NuLLnzHlqVruMOh393wYkJDN4VP+qRisHZbkidRWNrTNEFTeGGvVc+u7rhOT
-	 mhZ59/OvTelp9tXrfyqzUrL+XxNmQNaL8LuWg3xmS9Jgn53lKFNUhChTJdBL4nPLUt
-	 1c83riQikffKxueMPKe1CLdhBwg9qKt0Ivm+yMZQGNPi7rWm1lugdqPzlG+PyYMo+A
-	 dXp4M6Y1iXmZr+Jx1a+PLdOI579kX4iSFcsOWs8SMJhak/tqYideWAaEtV1SBGH883
-	 fhv5RoD3lyoYQ==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Sun, 14 Apr 2024 20:47:26 +0200
-Subject: [PATCH 01/14] ASoC: SOF: debug: Constify local snd_sof_dsp_ops
+	s=k20201202; t=1713120483;
+	bh=SgX8S3ANv517QHnfSXKXjm6sp2flErw58nweeOrtOr4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=nQUpbtkCxIa1NFUO8PYpGBF9brp+NARf/mS3CUlBaUnl7bWlLZ6U4lGnMaKllgAh7
+	 eMCevNy0dNJNe4lh4xBvyZg85bAVYi58GAC4pWJQCLghLfBCN87ngYogG6nXilROb6
+	 ob+ELCAuFlBZnPIHBb5BRjwMN7pA3TmIGeQfZDC0z31r+9z5/EeCypvoXg3ueE5Qkd
+	 KoF4LPmvdm1Gwxkn8n1Dk9ZBNt4MZ4WHsCjPVEnSr0oYOeCt/JD2Fh1+GU6lmjjMdX
+	 257zG6r/Dh48FcCvaqxvRnSKTykERmPRzqhGDuuG/ADdkhJhikNKJpLJ53edrfFhML
+	 jcIRk1gkwk8Zg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4B52BDF7857;
+	Sun, 14 Apr 2024 18:48:03 +0000 (UTC)
+Subject: Re: [GIT PULL] IRQ fix
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZhuLsx9u+UYKpBZc@gmail.com>
+References: <ZhuLsx9u+UYKpBZc@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZhuLsx9u+UYKpBZc@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2024-04-14
+X-PR-Tracked-Commit-Id: 80e9963fb3b5509dfcabe9652d56bf4b35542055
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c28275e7434e8e7c3e7cd366ad03b9aac55f8b67
+Message-Id: <171312048330.2589.18115851770905246738.pr-tracker-bot@kernel.org>
+Date: Sun, 14 Apr 2024 18:48:03 +0000
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Marc Zyngier <maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240414-n-const-ops-var-v1-1-8f53ee5d981c@kernel.org>
-References: <20240414-n-const-ops-var-v1-0-8f53ee5d981c@kernel.org>
-In-Reply-To: <20240414-n-const-ops-var-v1-0-8f53ee5d981c@kernel.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=784; i=krzk@kernel.org;
- h=from:subject:message-id; bh=xmgaqXbLg3DeFTUiQoF4m+Ls2Yrq43+DOTaWCX8ZMKE=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmHCTFzPWZhyTxMEszRpvlQ0QKX4BQXB5xVIAH8
- AJH3EdVyb+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZhwkxQAKCRDBN2bmhouD
- 14IdEACC/ThhaKlGNaics6QTPylF1r78OR3KQ/2urDY9mXFDh3t3WXvHbHI/JdjJZaPqmUsb7JY
- Sce6AQHbAN8aU7B6F9M1CRjqqlvd+CUG9AZ86jhsBKQEW4pkWf9H9bSXFbayb9KSKX+PjTp1OYN
- YCyQRroralceoFlT9rLPlVz0OrwYbSRcTte5mkyWQbutork3I+4CWpQjgdzVq6Df2Y/U+BxEJ9C
- OF96VFwTufA+LOTFaOKBE5F5E8dPB422xybwe5K60hwGWhjHlTtCfHaO/QiGqAZyuQR4K+wkwHv
- ptXKlPczgDZBeHm4kN5NLeorGCE61GyEXHzNUp3XkA3seVyOyUR4pNvMmxhVvFuNYqs8215Y9HL
- 4xO0+VKbmLAXjuGRBk7zO/88SCDso1fKgUnb5Q/QauJKX0lXEur4HY2K2AXSOut8L+C9NGW/16N
- On/xCkLjB854sOoN0CwzYzYWC5xLmkhmQr7c7gOl2DuEqpSbeCIXH9b8Y5FVY2WUbLTnDCcaCHt
- eM8hcIKaJ0hQzbbixSVgetepb0djr8J7vb4R2i47VDDzrcBnJ/lGW3YJP5MwTeiLslssCeaxTpL
- heO8xAx2LC6b8pjtvj2tq9jc1dISHf97cDlaIIIHVyck7ZfSeuy18fpZhhw2lO3St0wgnt4OF6G
- 4IUMkc2nyhMrzAA==
-X-Developer-Key: i=krzk@kernel.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Constify the pointer to 'struct snd_sof_dsp_ops' to annotate that
-functioon does not modify pointed data.
+The pull request you sent on Sun, 14 Apr 2024 09:54:27 +0200:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- sound/soc/sof/debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2024-04-14
 
-diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
-index cf282c8b18af..884d85770426 100644
---- a/sound/soc/sof/debug.c
-+++ b/sound/soc/sof/debug.c
-@@ -311,8 +311,8 @@ EXPORT_SYMBOL_GPL(snd_sof_dbg_memory_info_init);
- 
- int snd_sof_dbg_init(struct snd_sof_dev *sdev)
- {
-+	const struct snd_sof_dsp_ops *ops = sof_ops(sdev);
- 	struct snd_sof_pdata *plat_data = sdev->pdata;
--	struct snd_sof_dsp_ops *ops = sof_ops(sdev);
- 	const struct snd_sof_debugfs_map *map;
- 	struct dentry *fw_profile;
- 	int i;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c28275e7434e8e7c3e7cd366ad03b9aac55f8b67
+
+Thank you!
 
 -- 
-2.34.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
