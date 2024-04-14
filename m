@@ -1,382 +1,250 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A6D17BBA;
-	Sun, 14 Apr 2024 04:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D8E1799D
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 04:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713067428; cv=none; b=XlGtPEAxD2oIA3GZELIAfdBa2eJjdXDLk1Iy2jXAqr6Fbb/yhPlY7ISbi8MF5+zVdKi2QYL5euAHj+//NRDYX/F50DiDOzBS4B9c29nMD6hIhEWTX+CmjfM8fAkb3WsI1p7Kql5K6jzn6FO+HGiqFqVwq4bpPkQxToXvqBygDq8=
+	t=1713067523; cv=none; b=H4+4Cziyoev24+Zh1Vo0PcKn9F8sLy97gEpD3l1S9w251AEq75eQxw/h2zHb3x0123gn8loEoJznKFnzGtxVuW/aggDNem4mXksvZkzuE/FgwMKraUpq+qExsn35wWc8OdaMTiKKiR2FW58soRV+M9MooXxwrKM7zaajCgIgi2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713067428; c=relaxed/simple;
-	bh=UvulKxToBJa2V9rLoni4ZsRrzy6iwvrW6I6kTAFYC60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mQZZj2Vxb0sOzkGgvXNrjTAbe6KY67d556OvGqlJmVeQUBzVcbRiXPgJDELalKJ6S06Q4MWY57RuIVONFii90LB+AQ9RzWqfBSeXojLKGOXSwOkBUYL0N9GYnWbqR+icEodXzeqcJhloXor5vRMkdw9wEvJuCfguFl6BkgENaFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcxGiSaZ; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcxGiSaZ"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso1682214a12.3;
-        Sat, 13 Apr 2024 21:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713067426; x=1713672226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Ok46bha88LZu6vC4j3blq4Xh4fTHbIZSTY67Ht00pM=;
-        b=kcxGiSaZ8l1I2M35DvGV3vRaOPfr4vKsG7tiWczt4z1cKo14cAyqBMSD517AJyK0hz
-         dB8yN9BqohJhN7AU61jF3hpaIIGJvuddtpminMs/khauKgXHVt3JJjceLaMNz1j1ZgjJ
-         7GJ6N/Q733UPvKVEj3lcZDIesG8DSisFsB0MIdWhKH55N5YF7juRvkFe0J3mOYvNeawL
-         cH9WhwJkYkZ3VE+xQMO2/2LGt/cihza0pDzQWbuEUBaOqtv+/590Rn8L14x5fhbODnFh
-         GetGc5ClPpsDy2//FEtA9sjBBAyS7ZZO7WBfnuOflAS+BRcXXgukF7GjAAn2OLGmBLKm
-         Bp9w==
+	s=arc-20240116; t=1713067523; c=relaxed/simple;
+	bh=PHnpQ9knWgdkL/CpEkqASiglkPLjzFNaWTFjn9IJnL8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=abNbNx8TLN8dMrE/T9EeI9SB5zRr++o0CkmR46QAQsdDeuPycUNmIuHWMwvTucyl2tya0w7Bf89bMnFbbSGMXSb6RHxKBis4otlbQl/ANRqKDfdiMj4QsE9cLazHkrCkoEPETbu9wIqs/S9rHJ3mswHk4RSJunAXy+yxEjJEEmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-369f9e8863dso17629785ab.3
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 21:05:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713067426; x=1713672226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Ok46bha88LZu6vC4j3blq4Xh4fTHbIZSTY67Ht00pM=;
-        b=DpqsaCX+otfvM0f2qPG+OyUhlaNCqTUxF8KAsDhtz+kM9ExDpesu2rr/RjOgy4qRAu
-         WyezCr4VVg5zaT3QzSQCx8c5j9pllPhZhYGNVo+yd1sNedAUydbI2tOA3rjtJh5PqVQU
-         rvO+nErEy3lul12+PNsRmbM5sTGdXHe+dKxqwO6Rrd59B4bliGgABFj6Bg6zZJpYo+Vn
-         J7cxFbhf1iC7NQgdTlTK4zZ0F5yOApT2DTwUWQqh7Sc0FnspzzxtcngwFlFJo2ParE3B
-         2C7kM3qUp+xE6HYLbqdchWVweiDNq3rqyxBJJhR4i/heYc5/y8lmnR/QEeobUAGgqke6
-         HsYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfzYukagZnr64zteqO9avO9rvIGtvsBUZ/0vh7/GBdqZ+gIdEWsFn6dm5uqPGtjUqGdrI2WdwcbSY+iS6oVVgJUF5z0m8g2coIJDitjRAhqs/OuhoC06N1b14lGKlR+Al/IUQmJFq6XkYbSJzPnV9V31u7WslZUuHJCkkYYVFv
-X-Gm-Message-State: AOJu0YzPHblvBOZZL39iMO8xFzv8ACZMANzPaGS4JBGEnLuiXVau9sLm
-	FSVsmch7beMrbaFQ6lfsikDaZX7xoxm9KKvRSkEpaPcK/oH0yOA8j371jmmfE2S5Lw12x9j/YGX
-	nYuDZsTHxVRGF4E8YCFB5c4xhqYs=
-X-Google-Smtp-Source: AGHT+IH55Q23XnVFIU8fCCTgNFdhxIb2sTv8GcSNR8PiT4QhIlVXSIFnlABTcyVir/hvhYJ8Tqm/4KPNAdafRa3qyyg=
-X-Received: by 2002:a05:6a20:9794:b0:1a7:a6f3:1827 with SMTP id
- hx20-20020a056a20979400b001a7a6f31827mr8038484pzc.46.1713067425778; Sat, 13
- Apr 2024 21:03:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713067520; x=1713672320;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lFbF74IzAUC3Ucgr2e173mfHWYrtMomivw/RCYbuEpM=;
+        b=vbovG0PI08WAbCJcxldpjgMJGJW1cyM31p6wUWxrzD4locmKbn3NWjNM9PqzWkHkFy
+         3SsB+tD/NMbwECFJkR4o79OwxbdSuUVzTfM2JpOgm/5vG2Ij2fNx9EDygtcb6XxEBbEg
+         1pSu5POdpm4zpZO6hXC7u6DAUdbCBkEyA91cDVURGpjDtMGCEJvTyOsasn2emlJGos1Q
+         OCd5m+2LSzmJRvY3bz+YVnxUJ9TRPUWRyfyn7JB5tgF1d6JwIQSBqR8c8bz9sjWvkp6+
+         iA1pXgU6jnxind6EzHIBE6nEeLuHaxRYOOkP7orJIMUTYekdCqRW/qBjj/IMbNrCEMlD
+         FS7A==
+X-Gm-Message-State: AOJu0YyspSSPnL4m+zd+D1XK8ptoSERlNWEK3tl9YC0V8Us5zcm5xypx
+	NIZqzpV07RzKQaccNUBt3nUGg/36TxQwyI9LNWwEAab+R1jQp4CgjQeZjZqJFlsg41PsF+A+dBW
+	51f/Pd6zag9QEOHoMap0J3JLPFkEehjcdIiz96MibYWtyIbqvb8aA85w=
+X-Google-Smtp-Source: AGHT+IGxMqYgXMlxoShhddIYijbqoNeftFpNBKTDr9MplfZ0fMrxuvrjYmEBnlFN+UgIEVbyvmeA6aQGeAdnh12Maw8zUzEkhU8Y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329133458.323041-2-valla.francesco@gmail.com>
- <20240329133458.323041-3-valla.francesco@gmail.com> <CAMZ6RqKLaYb+8EaeoFMHofcaBT5G2-qdqSb4do73xrgMvWMZaA@mail.gmail.com>
- <9f5ad308-f2a0-47be-85f3-d152bc98099a@hartkopp.net>
-In-Reply-To: <9f5ad308-f2a0-47be-85f3-d152bc98099a@hartkopp.net>
-From: Vincent Mailhol <vincent.mailhol@gmail.com>
-Date: Sun, 14 Apr 2024 13:03:33 +0900
-Message-ID: <CAMZ6RqKGKcYd4hAM8AVV72t78H-Kt92NXowx6Q+YCw=AuSxKuw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] Documentation: networking: document ISO 15765-2:2016
-To: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Francesco Valla <valla.francesco@gmail.com>, Marc Kleine-Budde <mkl@pengutronix.de>, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, fabio@redaril.me
+X-Received: by 2002:a05:6e02:1c0d:b0:36b:f8:e87e with SMTP id
+ l13-20020a056e021c0d00b0036b00f8e87emr508517ilh.1.1713067520622; Sat, 13 Apr
+ 2024 21:05:20 -0700 (PDT)
+Date: Sat, 13 Apr 2024 21:05:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000b0bf30616069d1e@google.com>
+Subject: [syzbot] [sound?] inconsistent lock state in snd_hrtimer_callback (2)
+From: syzbot <syzbot+8933e1c7c07fe8f2dcd3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, perex@perex.cz, 
+	syzkaller-bugs@googlegroups.com, tiwai@suse.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun. 14 Apr. 2024 at 02:29, Oliver Hartkopp <socketcan@hartkopp.net> wro=
-te:
-> Hi Vincent,
->
-> On 13.04.24 15:11, Vincent Mailhol wrote:
-> > Hi Francesco,
-> >
-> > Thank you for the ISO-TP documentation.
-> >
-> > I left a few comments, but overall, good work. Also, I did not double
-> > check each individual option one by one.
-> >
-> > On Sat. 30 Mar 2024 at 00:06, Francesco Valla <valla.francesco@gmail.co=
-m> wrote:
-> >> Document basic concepts, APIs and behaviour of the ISO 15675-2:2016
-> >> (ISO-TP) CAN stack.
-> >>
-> >> Signed-off-by: Francesco Valla <valla.francesco@gmail.com>
-> >> ---
-> >>   Documentation/networking/index.rst      |   1 +
-> >>   Documentation/networking/iso15765-2.rst | 356 ++++++++++++++++++++++=
-++
-> >>   MAINTAINERS                             |   1 +
-> >>   3 files changed, 358 insertions(+)
-> >>   create mode 100644 Documentation/networking/iso15765-2.rst
-> >>
-> >> diff --git a/Documentation/networking/index.rst b/Documentation/networ=
-king/index.rst
-> >> index 473d72c36d61..bbd9bf537793 100644
-> >> --- a/Documentation/networking/index.rst
-> >> +++ b/Documentation/networking/index.rst
-> >> @@ -19,6 +19,7 @@ Contents:
-> >>      caif/index
-> >>      ethtool-netlink
-> >>      ieee802154
-> >> +   iso15765-2
-> >>      j1939
-> >>      kapi
-> >>      msg_zerocopy
-> >> diff --git a/Documentation/networking/iso15765-2.rst b/Documentation/n=
-etworking/iso15765-2.rst
-> >> new file mode 100644
-> >> index 000000000000..bbed4d2ef1a8
-> >> --- /dev/null
-> >> +++ b/Documentation/networking/iso15765-2.rst
-> >> @@ -0,0 +1,356 @@
-> >> +.. SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> >> +
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> >> +ISO 15765-2:2016 (ISO-TP)
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> >> +
-> >> +Overview
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +
-> >> +ISO 15765-2:2016, also known as ISO-TP, is a transport protocol speci=
-fically
-> >> +defined for diagnostic communication on CAN. It is widely used in the=
- automotive
-> >> +industry, for example as the transport protocol for UDSonCAN (ISO 142=
-29-3) or
-> >> +emission-related diagnostic services (ISO 15031-5).
-> >> +
-> >> +ISO-TP can be used both on CAN CC (aka Classical CAN, CAN 2.0B) and C=
-AN FD (CAN
-> >
-> > CC is already the abbreviation of *C*lassical *C*AN. Saying CAN CC, is
-> > like saying CAN Classical CAN, c.f. the RAS syndrome:
-> >
-> >    https://en.wikipedia.org/wiki/RAS_syndrome
-> >
-> > Then, considering the CAN2.0B, as far as I know, ISO-TP can also be
-> > used on CAN2.0A (as long as you only use 11 bits CAN ids).
->
-> The suggestion "be used both on CAN CC (aka Classical CAN, CAN 2.0B) and
-> CAN FD" was from my side.
->
-> And this follows the new CAN in Automation (can-cia.org) naming scheme.
-> E.g. https://www.can-cia.org/can-knowledge/can/cybersecurity-for-can/
-> "=E2=80=9CSafety and security=E2=80=9D specifies generic security options=
- for CAN CC and
-> CAN FD protocols."
->
-> So your hint to the RAS syndrome is right but in this case the this is
-> intentional to be able to reference CAN CC/FD/XL content.
->
-> For that reason I wanted to introduce the new CAN CC naming scheme which
-> is pretty handy IMO.
+Hello,
 
-I double checked. ISO 11898-1:2015 and ISO 15765-2:2016 never use the
-"CC" abbreviation a single time, thus my confusion. *BUT* ISO
-15765-2:2024 actually uses that naming, in the exact same way that CAN
-in Automation does.
+syzbot found the following issue on:
 
-This doesn't remove the fact that I think that this naming convention
-is stupid because of the RAS syndrome, but I acknowledge that CAN CC
-is now the official denomination and thus, that we should adopt it in
-our documentation as well.
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=131723e3180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aef2a55903e5791c
+dashboard link: https://syzkaller.appspot.com/bug?extid=8933e1c7c07fe8f2dcd3
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124ffb75180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=160df5cb180000
 
-> > So, I would rather just say:
-> >
-> >    ISO-TP can be used both on Classical CAN and CAN FD...
-> >
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/089e25869df5/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/423b1787914f/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4c043e30c07d/bzImage-fe46a7dd.xz
 
-(...)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8933e1c7c07fe8f2dcd3@syzkaller.appspotmail.com
 
-> >> +    NOTE: this is not covered by the ISO15765-2:2016 standard.
-> >                                          ^^^^^^^^
-> > Add a space between ISO and the number. Also, update the year:
-> >
-> >    ISO 15765-2:2024
-> >
->
-> Interesting! Didn't know there's already a new version.
->
-> Will check this out whether we really support ISO 15765-2:2024 ...
->
-> Do you have the standard at hand right now or should we leave this as
-> ISO15765-2:2016 until we know?
+================================
+WARNING: inconsistent lock state
+6.8.0-syzkaller-08951-gfe46a7dd189e #0 Not tainted
+--------------------------------
+inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
+syz-executor390/5221 [HC1[1]:SC0[0]:HE0:SE1] takes:
+ffff8880294bb948 (&timer->lock){?.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ffff8880294bb948 (&timer->lock){?.+.}-{2:2}, at: class_spinlock_constructor include/linux/spinlock.h:561 [inline]
+ffff8880294bb948 (&timer->lock){?.+.}-{2:2}, at: snd_hrtimer_callback+0x4d/0x420 sound/core/hrtimer.c:38
+{HARDIRQ-ON-W} state was registered at:
+  lock_acquire kernel/locking/lockdep.c:5754 [inline]
+  lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
+  __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+  _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+  spin_lock include/linux/spinlock.h:351 [inline]
+  class_spinlock_constructor include/linux/spinlock.h:561 [inline]
+  snd_timer_close_locked+0x65/0xbd0 sound/core/timer.c:412
+  snd_timer_close+0x8b/0xf0 sound/core/timer.c:464
+  snd_seq_timer_close+0xa4/0x100 sound/core/seq/seq_timer.c:302
+  queue_delete+0x49/0xa0 sound/core/seq/seq_queue.c:126
+  snd_seq_queue_delete+0x45/0x60 sound/core/seq/seq_queue.c:188
+  snd_seq_kernel_client_ctl+0x107/0x1c0 sound/core/seq/seq_clientmgr.c:2526
+  delete_seq_queue.isra.0+0xc8/0x150 sound/core/seq/oss/seq_oss_init.c:371
+  odev_release+0x52/0x80 sound/core/seq/oss/seq_oss.c:144
+  __fput+0x270/0xb80 fs/file_table.c:422
+  task_work_run+0x14e/0x250 kernel/task_work.c:180
+  exit_task_work include/linux/task_work.h:38 [inline]
+  do_exit+0xa7d/0x2be0 kernel/exit.c:878
+  do_group_exit+0xd3/0x2a0 kernel/exit.c:1027
+  __do_sys_exit_group kernel/exit.c:1038 [inline]
+  __se_sys_exit_group kernel/exit.c:1036 [inline]
+  __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1036
+  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+  do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+irq event stamp: 1534
+hardirqs last  enabled at (1533): [<ffffffff8ad602f2>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
+hardirqs last  enabled at (1533): [<ffffffff8ad602f2>] _raw_spin_unlock_irqrestore+0x52/0x80 kernel/locking/spinlock.c:194
+hardirqs last disabled at (1534): [<ffffffff8ad239ae>] sysvec_apic_timer_interrupt+0xe/0xb0 arch/x86/kernel/apic/apic.c:1043
+softirqs last  enabled at (1258): [<ffffffff8ad63156>] softirq_handle_end kernel/softirq.c:400 [inline]
+softirqs last  enabled at (1258): [<ffffffff8ad63156>] __do_softirq+0x596/0x8de kernel/softirq.c:583
+softirqs last disabled at (1231): [<ffffffff8151a149>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last disabled at (1231): [<ffffffff8151a149>] __irq_exit_rcu kernel/softirq.c:633 [inline]
+softirqs last disabled at (1231): [<ffffffff8151a149>] irq_exit_rcu+0xb9/0x120 kernel/softirq.c:645
 
-I have access to the newer revisions. But I never really invested time
-into reading that standard (neither the 2016 nor the 2024 versions).
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-Regardless, here is a verbatim extract from the Foreworld section of
-ISO 15765-2:2024
+       CPU0
+       ----
+  lock(&timer->lock);
+  <Interrupt>
+    lock(&timer->lock);
 
-  This fourth edition cancels and replaces the third edition (ISO
-  15765-2:2016), which has been technically revised.
+ *** DEADLOCK ***
 
-  The main changes are as follows:
+2 locks held by syz-executor390/5221:
+ #0: ffffffff8f1daaa8 (register_mutex#4){+.+.}-{3:3}, at: odev_release+0x4a/0x80 sound/core/seq/oss/seq_oss.c:143
+ #1: ffff8880290321d0 (&client->ioctl_mutex){+.+.}-{3:3}, at: snd_seq_client_ioctl_lock+0x36/0x50 sound/core/seq/seq_clientmgr.c:182
 
-    - restructured the document to achieve compatibility with OSI
-      7-layers model;
-
-    - introduced T_Data abstract service primitive interface to
-      achieve compatibility with ISO 14229-2;
-
-    - moved all transport layer protocol-related information to Clause 9;
-
-    - clarification and editorial corrections
-
-> >> +  - ``CAN_ISOTP_DYN_FC_PARMS``: enable dynamic update of flow control
-> >> +    parameters.
-
-(...)
-
-> >
-> > Here, I would suggest the C99 designated field initialization:
-> >
-> >    struct sockaddr_can addr =3D {
-> >            .can_family =3D AF_CAN;
-> >            .can_ifindex =3D if_nametoindex("can0");
-> >            .tp.tx_id =3D 0x18DA42F1 | CAN_EFF_FLAG;
-> >            .tp.rx_id =3D 0x18DAF142 | CAN_EFF_FLAG;
-> >    };
-
-Typo in my previous message: the designated initializers are not
-separated by colon ";" but by comma ",". So it should have been:
-
-  struct sockaddr_can addr =3D {
-        .can_family =3D AF_CAN,
-        .can_ifindex =3D if_nametoindex("can0"),
-        .tp.tx_id =3D 0x18DA42F1 | CAN_EFF_FLAG,
-        .tp.rx_id =3D 0x18DAF142 | CAN_EFF_FLAG,
-  };
-
-> > Well, this is just a suggestion, feel free to reject it if you do not l=
-ike it.
->
-> At least I don't like it.
->
-> These values are usually interactively given on the command line:
->
->  >            .can_ifindex =3D if_nametoindex("can0");
->  >            .tp.tx_id =3D 0x18DA42F1 | CAN_EFF_FLAG;
->  >            .tp.rx_id =3D 0x18DAF142 | CAN_EFF_FLAG;
->
-> So have it in a static field initialization leads to a wrong path IMO.
-
-There is no such limitation that C99 designated initializers should
-only work with variables which have static storage duration. In my
-suggested example, nothing is static.
-
-I see this as the same thing as below example:
-
-  int foo(void);
-
-  int bar()
-  {
-          int i =3D foo();
-  }
-
-  int baz()
-  {
-          int i;
-
-          i =3D foo();
-  }
-
-In bar(), the fact that the variable i is initialized at declaration
-does not mean that it is static. In both examples, the variable i uses
-automatic storage duration.
-
-Here, my preference goes to bar(), but I recognize that baz() is also
-perfectly fine. Replace the int type by the struct sockaddr_can type
-and the scalar initialization by designated initializers and you
-should see the connection.
+stack backtrace:
+CPU: 0 PID: 5221 Comm: syz-executor390 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_usage_bug kernel/locking/lockdep.c:3971 [inline]
+ valid_state kernel/locking/lockdep.c:4013 [inline]
+ mark_lock_irq kernel/locking/lockdep.c:4216 [inline]
+ mark_lock+0x923/0xc60 kernel/locking/lockdep.c:4678
+ mark_usage kernel/locking/lockdep.c:4564 [inline]
+ __lock_acquire+0x1359/0x3b30 kernel/locking/lockdep.c:5091
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
+ __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+ spin_lock include/linux/spinlock.h:351 [inline]
+ class_spinlock_constructor include/linux/spinlock.h:561 [inline]
+ snd_hrtimer_callback+0x4d/0x420 sound/core/hrtimer.c:38
+ __run_hrtimer kernel/time/hrtimer.c:1692 [inline]
+ __hrtimer_run_queues+0x20c/0xc20 kernel/time/hrtimer.c:1756
+ hrtimer_interrupt+0x31b/0x800 kernel/time/hrtimer.c:1818
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1032 [inline]
+ __sysvec_apic_timer_interrupt+0x10f/0x410 arch/x86/kernel/apic/apic.c:1049
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0x90/0xb0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x31/0x80 kernel/locking/spinlock.c:194
+Code: f5 53 48 8b 74 24 10 48 89 fb 48 83 c7 18 e8 a6 3f 95 f6 48 89 df e8 0e bb 95 f6 f7 c5 00 02 00 00 75 23 9c 58 f6 c4 02 75 37 <bf> 01 00 00 00 e8 95 08 87 f6 65 8b 05 e6 d0 2d 75 85 c0 74 16 5b
+RSP: 0018:ffffc90004507ac8 EFLAGS: 00000246
+RAX: 0000000000000002 RBX: ffffffff8f1d9240 RCX: 1ffffffff27bef1a
+RDX: 0000000000000000 RSI: ffffffff8b0cb740 RDI: ffffffff8b6e88a0
+RBP: 0000000000000293 R08: 0000000000000001 R09: fffffbfff27b4e49
+R10: ffffffff93da724f R11: 0000000000000002 R12: 0000000000000293
+R13: dffffc0000000000 R14: 0000000000000000 R15: 000000000000000f
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ class_spinlock_irqsave_destructor include/linux/spinlock.h:574 [inline]
+ queueptr+0x9a/0xd0 sound/core/seq/seq_queue.c:201
+ snd_seq_queue_remove_cells+0x104/0x230 sound/core/seq/seq_queue.c:589
+ snd_seq_ioctl_remove_events+0xf3/0x1b0 sound/core/seq/seq_clientmgr.c:1939
+ snd_seq_kernel_client_ctl+0x107/0x1c0 sound/core/seq/seq_clientmgr.c:2526
+ snd_seq_oss_control sound/core/seq/oss/seq_oss_device.h:148 [inline]
+ snd_seq_oss_writeq_clear+0x11b/0x270 sound/core/seq/oss/seq_oss_writeq.c:73
+ snd_seq_oss_reset+0x1fc/0x290 sound/core/seq/oss/seq_oss_init.c:442
+ snd_seq_oss_release+0x7c/0x180 sound/core/seq/oss/seq_oss_init.c:407
+ odev_release+0x52/0x80 sound/core/seq/oss/seq_oss.c:144
+ __fput+0x270/0xb80 fs/file_table.c:422
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0xa7d/0x2be0 kernel/exit.c:878
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1027
+ __do_sys_exit_group kernel/exit.c:1038 [inline]
+ __se_sys_exit_group kernel/exit.c:1036 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1036
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f97adaa1b89
+Code: Unable to access opcode bytes at 0x7f97adaa1b5f.
+RSP: 002b:00007fff3831ad88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f97adaa1b89
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+RBP: 00007f97adb1c290 R08: ffffffffffffffb8 R09: 0000000000000006
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f97adb1c290
+R13: 0000000000000000 R14: 00007f97adb1cce0 R15: 00007f97ada72dd0
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	f5                   	cmc
+   1:	53                   	push   %rbx
+   2:	48 8b 74 24 10       	mov    0x10(%rsp),%rsi
+   7:	48 89 fb             	mov    %rdi,%rbx
+   a:	48 83 c7 18          	add    $0x18,%rdi
+   e:	e8 a6 3f 95 f6       	call   0xf6953fb9
+  13:	48 89 df             	mov    %rbx,%rdi
+  16:	e8 0e bb 95 f6       	call   0xf695bb29
+  1b:	f7 c5 00 02 00 00    	test   $0x200,%ebp
+  21:	75 23                	jne    0x46
+  23:	9c                   	pushf
+  24:	58                   	pop    %rax
+  25:	f6 c4 02             	test   $0x2,%ah
+  28:	75 37                	jne    0x61
+* 2a:	bf 01 00 00 00       	mov    $0x1,%edi <-- trapping instruction
+  2f:	e8 95 08 87 f6       	call   0xf68708c9
+  34:	65 8b 05 e6 d0 2d 75 	mov    %gs:0x752dd0e6(%rip),%eax        # 0x752dd121
+  3b:	85 c0                	test   %eax,%eax
+  3d:	74 16                	je     0x55
+  3f:	5b                   	pop    %rbx
 
 
-** Different topic **
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-While replying on this, I encountered something which made me worry a bit:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-The type of sockaddr_can.can_ifindex is a signed int:
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-  https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/can.h#L=
-243
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-But if_nametoindex() returns an unsigned int:
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-   https://man7.org/linux/man-pages/man3/if_nametoindex.3.html
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Shouldn't sockaddr_can.can_ifindex also be declared as an unsigned int?
-
-> >
-> >> +  int ret;
-> >> +
-> >> +  s =3D socket(PF_CAN, SOCK_DGRAM, CAN_ISOTP);
-> >> +  if (s < 0)
-> >> +      exit(1);
-> >> +
-> >> +  addr.can_family =3D AF_CAN;
-> >> +  addr.can_ifindex =3D if_nametoindex("can0");
-> >
-> > if_nametoindex() may fail. Because you are doing error handling in
-> > this example, do it also here:
-> >
-> >    if (!addr.can_ifindex)
-> >            err("if_nametoindex()");
-> >
->
-> This is not really needed for an example like this.
->
-> When we have a problem here the bind() syscall with fail with -ENODEV
-
-Ack.
-
-> >> +  addr.tp.tx_id =3D (0x18DA42F1 | CAN_EFF_FLAG);
-> >> +  addr.tp.rx_id =3D (0x18DAF142 | CAN_EFF_FLAG);
-> >
-> > Nitpick: the bracket are not needed here:
-> >
-> >    addr.tp.tx_id =3D 0x18DA42F1 | CAN_EFF_FLAG;
-> >    addr.tp.rx_id =3D 0x18DAF142 | CAN_EFF_FLAG;
-> >
-> >> +
-> >> +  ret =3D bind(s, (struct sockaddr *)&addr, sizeof(addr));
-> >> +  if (ret < 0)
-> >> +      exit(1);
-> >> +
-> >> +  // Data can now be received using read(s, ...) and sent using write=
-(s, ...)
-> >
-> > Kernel style prefers C style comments over C++. I think that should
-> > also apply to the documentation:
-> >
-> >    /* Data can now be received using read(s, ...) and sent using write(=
-s, ...) */
-> >
->
-> ACK
->
-> >> +
-> >> +Additional examples
-> >> +-------------------
-> >> +
-> >> +More complete (and complex) examples can be found inside the ``isotp*=
-`` userland
-> >> +tools, distributed as part of the ``can-utils`` utilities at:
-> >> +https://github.com/linux-can/can-utils
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 6a233e1a3cf2..e0190b90d1a8 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -4695,6 +4695,7 @@ W:        https://github.com/linux-can
-> >>   T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-c=
-an.git
-> >>   T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-c=
-an-next.git
-> >>   F:     Documentation/networking/can.rst
-> >> +F:     Documentation/networking/iso15765-2.rst
-> >>   F:     include/linux/can/can-ml.h
-> >>   F:     include/linux/can/core.h
-> >>   F:     include/linux/can/skb.h
-> >> --
-> >> 2.44.0
-> >>
-> >>
-> >
->
-> Thanks for the review, Vincent!
-
-You are welcome!
-
-Yours sincerely,
-Vincent Mailhol
+If you want to undo deduplication, reply with:
+#syz undup
