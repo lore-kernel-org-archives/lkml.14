@@ -1,177 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D872524BA;
-	Sun, 14 Apr 2024 14:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E081446AF
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 14:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713103696; cv=none; b=bIgCCgwk0kmCrjn2h4r2dmLHFJ5NlqGmC4IF3z/IfQWYOgc0mN5DDfQEtKuxP3MSp4NzCyAVWLjaZeiwOC6gMc9mVrfRSExf0igQntl5Je1DZ8wS4/iXHFJqpjeO2vEEursMp13St8I4u4BgjUwVYp0oL0ngcDrB6i/s8ZLSOvw=
+	t=1713103890; cv=none; b=Z8gJu18nYE+kk8YY6h0y2A+6nqzfbl1lidGJOGDKUVlnS/89sQrEFVVLhBQHXwjB33ArwmRAiWHQrEXr10VQd9gG7+kcygK6vvr7LwgVrVhxUrTJR1vV+N60gBcdsEKwzUWmC/dtIAd8PQJV+iWXYYAj7mW6FQwwoPCE/Cv8B+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713103696; c=relaxed/simple;
-	bh=P6C2uaZWdzkaxUS/4whafeWniP5J9sza+c4EUKItEQ4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NS1MSkt2uAhl6OGPsiRPKDIMATtm81xYIoC/qbyNR0gZEVQsR9BzQQPiUQimBsfncYz+1Q8g5CL1kp7kglybhM45a6FPwTA1g0SIERAe/fPYdNmR+INoVjAHjmp9UhHxbgVjLVIF9OxtAgxhP5lFFZr7rbU9d51eXVp6sgA5k2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kct0spDp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713103890; c=relaxed/simple;
+	bh=SJ0YxejBYj89m9OwFWAO38LZtF0S/Ba1ME5syo78nnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EEkOkSr0HjNtER2oy4V/6jE1gE9p/9KCdW5hfANRHtBJ1O8ZZt1DEJigGdTf57auvgTEn27HJqJL0Zg0DFcoc78kaOWQhM3Sk9TNb3+U6DTv/ZH6d5lKHVMBgvU9SX01m9MtGfSrAD7M31vFEvNrmlqlmkn0qfhIWSmYSlDqXwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DrOyZ5Ux; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kct0spDp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA64C072AA;
-	Sun, 14 Apr 2024 14:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713103695;
-	bh=P6C2uaZWdzkaxUS/4whafeWniP5J9sza+c4EUKItEQ4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kct0spDpdnU+Oef1efVYeGuX1xs7cslj0SveDcqa/6NQjCikhXkAI5Vpg/Wf5NvFR
-	 E3IY6hlSiEcE88JrPAH1K81YnpFWBYcuxb80gK1oymF8ME3pqnUX88g8DcRDmEaTX+
-	 wQ+Fx3q8jIBmFhM5/bUE/UYSnkWBWcraOTaezFBHZ1kfHddWa3M9mKHw16QQhmQ+jl
-	 Wl0o5XcYxt7W06fqiBp/GoKzyk/YvMIjIl3cRlvVCtbob2edABcDlO7qWZglqhRTP8
-	 SWcn/juxtG3VcXJRvbZcByeliZX+NR0knteaKUL1jd7YE69HV7Bgj2dMEfYlO5uBm9
-	 H+jpOmx3BdZ+w==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Sun, 14 Apr 2024 16:07:35 +0200
-Subject: [PATCH v2 5/5] mmc: sdhci-s3c: Choose sdhci_ops based on variant
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DrOyZ5Ux"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so3462209a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 07:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713103887; x=1713708687; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=1tMpo/zuSFQ2iQW3o8k6ZDetDDrHwQ8KrFnSgtE+JhE=;
+        b=DrOyZ5UxSE3oe5k2y8AXlyJrvGHfW9e7NSwkp04aDykiyEkGyww5HtI0/f8gFntedz
+         4OZ4GOU231eDD9aAeYaXdeZ92t/P4SPvYBUddyH8lJZ9EQRGPn5M4sgbeEbLxDJHKTDy
+         u+KZoqstN8iVwsjWxqruPXshvWbBbo19Z95oZMBjpBgjHLbDWgu1Ca7kCE1GOrH0q1Nr
+         qRMdKDJ+1+Z5uiXCBmQ7FNvzLNZu67WLA5z5DxvH4sT9ZZn4sPcG1gNVSUj6L2bWkxyE
+         rAL+q0VbLJiftavOy9cVi3f09eWdDUIq+ItNzytJCFfZUoW0NYz1QF/0v2gKN+Cjq1ge
+         8H8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713103887; x=1713708687;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1tMpo/zuSFQ2iQW3o8k6ZDetDDrHwQ8KrFnSgtE+JhE=;
+        b=vnrN4qa7F84uVEH0yn0N/O3dxc/TGH0ES091zJv9NxfFLBbfLBSqRWLJGOiHQGiQUB
+         EWZdICF9pfXOl9Edfmf8UcOj966Xj3GZ8HglD1nuKWfHV+QjQGU3mIm8K41vsNA1V27a
+         g6uF4JK6GCfu9ozZZC1sOi8KtUJ0dSL5reufL3uK3opASpVwGrfza7W7znyQdk5T9n93
+         lswJg+f2ByjDNsy5TghoZzKAxzYW85hyhLKYOXGEUp2ZEshzxTtlbNjRQO4Vnian13/M
+         d61fbMbhwBz5k1yqeOHQNsRk6Ep/IensIVhvqsKEgbK9MgZwB6P5mRDdlNkwl/B5qGav
+         9+mw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5yufOg+vUzie3WC7dtRbwXQoja1NvVy3MPTe+5UCBeX7pDIBOw39g7HaWkqg2PQYl9VE+2JRFGtnbBiXAjISv3BGg0juUrglKZaHn
+X-Gm-Message-State: AOJu0Yzmyf1jJ+kzmigQ4qu1Zfs7njQ4Ixkshx1YP2y9SpX18gVJv2Zx
+	Zyj0XZNJE/rIm3ruow93sBC2qeduPq3sH+zohCH/XfrBRXdYqAQoc/3/JCtsvtw=
+X-Google-Smtp-Source: AGHT+IGnJxsmae6YrIT6o794astGVI6Dy1GaKU3o0017CUwUPHiQmtFXrO4tt5YaMDXk2xRQOVhCFA==
+X-Received: by 2002:a50:cd1a:0:b0:56e:2332:cb4b with SMTP id z26-20020a50cd1a000000b0056e2332cb4bmr3855535edi.40.1713103886855;
+        Sun, 14 Apr 2024 07:11:26 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id s24-20020a056402037800b0056e44b681a6sm3707332edw.57.2024.04.14.07.11.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Apr 2024 07:11:26 -0700 (PDT)
+Message-ID: <cbcd0cf9-9e2a-43cd-afe8-844b513e3a7b@linaro.org>
+Date: Sun, 14 Apr 2024 16:11:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add Radxa ZERO 3W/3E
+To: Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240414131529.1730506-1-jonas@kwiboo.se>
+ <20240414131529.1730506-3-jonas@kwiboo.se>
+ <efd1eb32-afd6-4383-be45-89b0f71f118f@linaro.org>
+ <3abd2dfe-e4c9-42d0-89a4-4c340c08aea1@kwiboo.se>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <3abd2dfe-e4c9-42d0-89a4-4c340c08aea1@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240414-mmc-const-sdhci-ops-v2-5-262f81faadac@kernel.org>
-References: <20240414-mmc-const-sdhci-ops-v2-0-262f81faadac@kernel.org>
-In-Reply-To: <20240414-mmc-const-sdhci-ops-v2-0-262f81faadac@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>, 
- Angelo Dureghello <adureghello@baylibre.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, Ben Dooks <ben-linux@fluff.org>, 
- Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3968; i=krzk@kernel.org;
- h=from:subject:message-id; bh=P6C2uaZWdzkaxUS/4whafeWniP5J9sza+c4EUKItEQ4=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmG+M3tp0WY1HbY6u/BNP3jUZnARS+VLivgrLfQ
- xZoFJE26eaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZhvjNwAKCRDBN2bmhouD
- 1+K3D/9tSh2DQGQf+DmCy04xDvumNPYmDIpDPVyW4wfJgw7T9zk5EIXLCiUwH9ANA2lbc/6lyOr
- V935AQHhWr/vTg0YcxydmTIlMPvFbDPKVfDor5P5RBGgqfFVJkUkAUYzISrEs/XtJ4aWIQPltnq
- 8NhPi4xuuQhBds5/EPgJhmi3gms0Rn/eGLNDYveal+Khc+AEStzrRT+/GUhe/WqFhkVa6IwfUE5
- lUVPOb0a137J9ZkwdVj73AklRdpqoLd2HvpPq9WOhH/GPxdcdy8mjI8v9i6UtMuokzJiodl0q9I
- 0/uj+V7prdUhUirtynRhczYanYjkJpAjSpOPp0wXJ/xach5T9CvVtu8xFgdETC+R119di1ErMCR
- +6rgliO5WZIfSsJhs91HSsXAHX5CXx4JhGbKkschwKTse5RR1/t9d9dDfXNyWAgcijxGhL3GS4P
- ORDf4QUXEM40foi5F5L8YU2YXIQnUPmHDMXdlAeP/I03kbc2OXS0om+wC06SgkU70I9Fi3IXSKg
- QpOcYzaJ/29d4wTavSK9NoYGm7Yg5dDHpezgZa32mgqOeqONaKCxcYben8zrrGL68aw7Ez7jGq2
- UkYlJLcWz9wIMlvfD94A+D/X/r8E1m/i+DV6sw4JbzEXrJnT8fgo3vAfMYf2ytEuPSwXwDQIBr/
- FOP/AfYmPt+mF4Q==
-X-Developer-Key: i=krzk@kernel.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-The difference between old S3C64xx and newer Exynos4 SDHCI controller
-variants is in clock handling (the "no_divider" field in drvdata).
-Choose the proper sdhci_ops based on the variant instead of patching
-ops in probe, if Exynos4 is used.
+On 14/04/2024 15:56, Jonas Karlman wrote:
+> Hi Krzysztof,
+> 
+> On 2024-04-14 15:33, Krzysztof Kozlowski wrote:
+>> On 14/04/2024 15:15, Jonas Karlman wrote:
+>>> The Radxa ZERO 3W/3E is an ultra-small, high-performance single board
+>>> computer based on the Rockchip RK3566, with a compact form factor and
+>>> rich interfaces.
+>>>
+>>> The ZERO 3W and ZERO 3E are basically the same size and model, but
+>>> differ only in storage and network interfaces.
+>>>
+>>> - eMMC (3W)
+>>> - SD-card (both)
+>>> - Ethernet (3E)
+>>> - WiFi/BT (3W)
+>>>
+>>> This adds initial support for eMMC, SD-card, Ethernet, HDMI and USB.
+>>>
+>>> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+>>> ---
+>>>  .../dts/rockchip/rk3566-radxa-zero-3e.dts     |  41 ++
+>>>  .../dts/rockchip/rk3566-radxa-zero-3w.dts     |  26 +
+>>>  .../boot/dts/rockchip/rk3566-radxa-zero3.dtsi | 443 ++++++++++++++++++
+>>>  3 files changed, 510 insertions(+)
+>>
+>> How do you build your patches? That's rhetorical, because they cannot be
+>> built... Missing Makefile.
+> 
+> They where built using the generic .dtb-file make target, will include
+> in Makefile in v2, thanks.
+> 
+>>
+>> Are you sure therefore that your dts pass dtbs_check? If this is not in
+>> Makefile, how did you run the command?
+> 
+> I built and tested dts files using the following make commands:
+> 
+> make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 defconfig
+> make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CHECK_DTBS=y rockchip/rk3566-radxa-zero-3w.dtb
+> make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 CHECK_DTBS=y rockchip/rk3566-radxa-zero-3e.dtb
 
-This allows making struct sdhci_ops const for code safety and probably
-opens further options in the future, as the dynamic pointer ops table is
-not anymore that dynamic.
+OK, thanks, wasn't sure it works without makefile. Anyway you still need it.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mmc/host/sdhci-s3c.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index 6493b0edba34..a71d56c7031f 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -130,14 +130,16 @@ struct sdhci_s3c {
-  * struct sdhci_s3c_drv_data - S3C SDHCI platform specific driver data
-  * @sdhci_quirks: sdhci host specific quirks.
-  * @no_divider: no or non-standard internal clock divider.
-+ * @ops: sdhci_ops to use for this variant
-  *
-  * Specifies platform specific configuration of sdhci controller.
-  * Note: A structure for driver specific platform data is used for future
-  * expansion of its usage.
-  */
- struct sdhci_s3c_drv_data {
--	unsigned int	sdhci_quirks;
--	bool		no_divider;
-+	unsigned int		sdhci_quirks;
-+	bool			no_divider;
-+	const struct sdhci_ops	*ops;
- };
- 
- static inline struct sdhci_s3c *to_s3c(struct sdhci_host *host)
-@@ -412,7 +414,7 @@ static void sdhci_cmu_set_clock(struct sdhci_host *host, unsigned int clock)
- 	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
- }
- 
--static struct sdhci_ops sdhci_s3c_ops = {
-+static const struct sdhci_ops sdhci_s3c_ops_s3c6410 = {
- 	.get_max_clock		= sdhci_s3c_get_max_clk,
- 	.set_clock		= sdhci_s3c_set_clock,
- 	.get_min_clock		= sdhci_s3c_get_min_clock,
-@@ -421,6 +423,15 @@ static struct sdhci_ops sdhci_s3c_ops = {
- 	.set_uhs_signaling	= sdhci_set_uhs_signaling,
- };
- 
-+static const struct sdhci_ops sdhci_s3c_ops_exynos4 __maybe_unused = {
-+	.get_max_clock		= sdhci_cmu_get_max_clock,
-+	.set_clock		= sdhci_cmu_set_clock,
-+	.get_min_clock		= sdhci_cmu_get_min_clock,
-+	.set_bus_width		= sdhci_set_bus_width,
-+	.reset			= sdhci_reset,
-+	.set_uhs_signaling	= sdhci_set_uhs_signaling,
-+};
-+
- #ifdef CONFIG_OF
- static int sdhci_s3c_parse_dt(struct device *dev,
- 		struct sdhci_host *host, struct s3c_sdhci_platdata *pdata)
-@@ -560,7 +571,7 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
- 		pdata->cfg_gpio(pdev, pdata->max_width);
- 
- 	host->hw_name = "samsung-hsmmc";
--	host->ops = &sdhci_s3c_ops;
-+	host->ops = &sdhci_s3c_ops_s3c6410;
- 	host->quirks = 0;
- 	host->quirks2 = 0;
- 	host->irq = irq;
-@@ -570,6 +581,7 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
- 	host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
- 	if (drv_data) {
- 		host->quirks |= drv_data->sdhci_quirks;
-+		host->ops = drv_data->ops;
- 		sc->no_divider = drv_data->no_divider;
- 	}
- 
-@@ -617,16 +629,6 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
- 	/* HSMMC on Samsung SoCs uses SDCLK as timeout clock */
- 	host->quirks |= SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK;
- 
--	/*
--	 * If controller does not have internal clock divider,
--	 * we can use overriding functions instead of default.
--	 */
--	if (sc->no_divider) {
--		sdhci_s3c_ops.set_clock = sdhci_cmu_set_clock;
--		sdhci_s3c_ops.get_min_clock = sdhci_cmu_get_min_clock;
--		sdhci_s3c_ops.get_max_clock = sdhci_cmu_get_max_clock;
--	}
--
- 	/* It supports additional host capabilities if needed */
- 	if (pdata->host_caps)
- 		host->mmc->caps |= pdata->host_caps;
-@@ -758,6 +760,7 @@ MODULE_DEVICE_TABLE(platform, sdhci_s3c_driver_ids);
- #ifdef CONFIG_OF
- static const struct sdhci_s3c_drv_data exynos4_sdhci_drv_data = {
- 	.no_divider = true,
-+	.ops = &sdhci_s3c_ops_exynos4,
- };
- 
- static const struct of_device_id sdhci_s3c_dt_match[] = {
-
--- 
-2.34.1
+Best regards,
+Krzysztof
 
