@@ -1,150 +1,150 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-108-mta99.mxroute.com (mail-108-mta99.mxroute.com [136.175.108.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D410024B28;
-	Sun, 14 Apr 2024 20:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A56733987
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713126699; cv=none; b=WqM1r8pprEXG+c5FkmBxkCQpmyp2HqYC+2WQ/9Tw1tjMkGqjpyBMezb9IYxBPbe2vzJFiqggAzIf8VP177PqaopKOl35MbbHoJKlX5VOlpT/VGFY5s3KPaGFFzMK+fCV8q5ItbZ3sv5XgZV+hUxwXJ5k3mo8sf6gTG+Vgo2G/jA=
+	t=1713126956; cv=none; b=S5dPad1U8IeFvMORaR02X6UxAp27PqcQ+0eVUukBmXxw8ICoZnPR0o5U5h9O+wze6AZlKNqmwlCpOfO0yIFTvWdBXC2h6g9sOp2MbwS2qa3rzwXeEKR+IWQX48do/8cnUqqYWsmHVChP1VF9Sawty23OhAgV6vyN+3AW6g0sRv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713126699; c=relaxed/simple;
-	bh=KiZI1eDYSppAbrCtjM8QTFZgOeAOOCTkojlRKCffmoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gV8BaANlg/6QeNPkg97LDX+Y/RMwnC/VDvAfptov7TBVVH09kQOCfMIWolo6tVeZFo4z45OTN8Zw7cPsNFKkQkyT8OGg6tt2Ff9WkiU82SKiPbZ8LFMIflYoON9yGWEuCk5fbKIueeFyVf4iK/i7shhEb5oPBbozjnlmbgeBqsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmU8vl0K; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713126956; c=relaxed/simple;
+	bh=vmDWxnFYVlMeX8mv6XV77VsSX93jJDH21Yu7+jdTofM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SAwN99lMsEbQl+yjcNWcS/0dNZb+xggbXUPfh9ZYfFnUxHmOBSoqM6BOgboCiPXHUOaCahZLREbDsPxr2za8x2lo8GFcZud98/K7UCLsfisabMQ0X6VQ4ZSWVxJZeA0RxSPANygJJk+2z9a6UsxL7iZhTQRLel2WJDXG9WfPpMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=jIxBgqyZ; arc=none smtp.client-ip=136.175.108.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmU8vl0K"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a526698f228so51333966b.1;
-        Sun, 14 Apr 2024 13:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713126696; x=1713731496; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nREPFOOYGgHIZaRHKi35j5pPCOGBubEsYEeqw+j/IwU=;
-        b=gmU8vl0KF03Vsl9QosVWISPBdIo44QO+wh16tZaLJ+KoNwDpORH4zN8XTZJr9204zc
-         yTAQPlKfESBuXgMym0BCU6JbJLtQpT2LznjUKGxjbpUAUpmBse8G8ha+Pz+ANp7ZBZ2y
-         0U/J4hrxJS4SjOv1ZSLVpMsl4w85igKgoCWFGxfobzzyPabKVY9j7ZwH2k3mL4VVU03b
-         rSnii4iRyTQPuAjyZqmwaDYS+3RhRrK0WVZaUc4tpxgm5oWPmAQlWwu1q/yiy9Mr59Sm
-         gobm6TM6SPvC0bLwb9xFzrDsdgBbOIt79zn0QN2RXfJthq5mjALAeqItP7rwmOKcrX5F
-         xFtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713126696; x=1713731496;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nREPFOOYGgHIZaRHKi35j5pPCOGBubEsYEeqw+j/IwU=;
-        b=WUVr9aud2pVgqeIAqFNHK6L6GAV27CtrzhB2j4vh3JsRDQ+IeXzhIaoOpWQePoOcBs
-         2bXSD4xkI35MumpYUsylOM5ywdWe6/MSmEVxuJgGmxQSZZ1oEmszHhuXxDDbK9t4xV+5
-         MV/axexZvolaMGMmy0/edOVr+iHxUNIkVxf+H5vihv/RAnyKfoErqZTtqXWvTU/BO4Zz
-         8z6sweaY/slbaFLO+RRR9aG5qrzCWkswzxdQlwArXhlZyRg0ZBbRhfNSyd/fqGBGknKr
-         gp0UysCREeZgIDMu0j/xWpKwWCWjRI8q1hKHg/9o2W11Qwbb9hQZZV5s9FCtaND6e/Tg
-         KMTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwZ2Z6IxIAZYB12Yezlk5D30on+nFeYYwSLtGr2GkYpVJb2i4xQcHxclniyt7OOMhKIA5YAYO75iE/SAejeNJZ4UE0zHlBuc1CrOlhgB8tGtgR+SxoSB17ElYXTz1564FZjgUf9VM17T602tIvaG9AML6k4iASpwo2qvOQwdx5BuKymw==
-X-Gm-Message-State: AOJu0YwRhAmFPbV51z0jfs7EyqIwQJs3iL5NTNMa3kd0c0cSb7RvnqcH
-	y8WcXzzhZTQwAiFSD4JhNnzy8H5WezS2xW2gqFYP1vonKGIgEUtM
-X-Google-Smtp-Source: AGHT+IGUD/oYKuhmyY9fKyM8jgrVJ/LDpQDRupyPukzlQUDYrG8HXHzCHsXQITnhFuy1xolGzQAJ7w==
-X-Received: by 2002:a17:907:3f9e:b0:a52:1a7b:2ef8 with SMTP id hr30-20020a1709073f9e00b00a521a7b2ef8mr6243899ejc.27.1713126696004;
-        Sun, 14 Apr 2024 13:31:36 -0700 (PDT)
-Received: from [172.27.138.193] (c7.campus.utcluj.ro. [193.226.6.226])
-        by smtp.gmail.com with ESMTPSA id jg25-20020a170907971900b00a4e5ab88803sm4572628ejc.183.2024.04.14.13.31.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Apr 2024 13:31:35 -0700 (PDT)
-Message-ID: <1834b3fe-b345-4d93-97bb-82d0ffd75fa8@gmail.com>
-Date: Sun, 14 Apr 2024 23:31:33 +0300
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="jIxBgqyZ"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta99.mxroute.com (ZoneMTA) with ESMTPSA id 18ede525dea0003bea.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Sun, 14 Apr 2024 20:35:23 +0000
+X-Zone-Loop: 975088454a17f418a83d9cbc8fa14e7b148893afb1db
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Jxe1gPtYFCmEVv9eTkE7KcDWNvKsfj2RH86DpQggAUU=; b=jIxBgqyZIGPJC2ZFe2yVGuYMva
+	jPJRVyXZv52Sl2/ElAgdXIw8fIwwJHz8z4S9a/8SluDiQOMbk38b4SCZLZ460KIh6L4YUQAN9U9iG
+	/UuhpgUYEse34ldRaIzRLjSTeyIzZB4HCGrNm2BOFPsj30hNVin56oOsw6hXqN5nvRYzbuhWsftPM
+	Oborjr0OSIVLfx02EP92crCaoQdx3GvWhGrWHCPR/TOxGA3arLN2Ja9SIGHIAT4DSZpZQdFg8sqSG
+	UuujgcveUtcJMAqCm8//FmYFhm6klBS/VUnG+A+LToj40L7yUnkasr0Ukf3zcNKHtH6mW3pKxaTly
+	QHE5BHGw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v4 06/25] media: i2c: imx258: Make V4L2_CID_VBLANK configurable.
+Date: Sun, 14 Apr 2024 14:34:44 -0600
+Message-ID: <20240414203503.18402-7-git@luigi311.com>
+In-Reply-To: <20240414203503.18402-1-git@luigi311.com>
+References: <20240414203503.18402-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] dt-bindings: iio: adc: ad7192: Add AD7194 support
-Content-Language: en-US
-To: David Lechner <dlechner@baylibre.com>
-Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
- nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
- okan.sahin@analog.com, fr0st61te@gmail.com, alisa.roman@analog.com,
- marcus.folkesson@gmail.com, schnelle@linux.ibm.com, liambeguin@gmail.com
-References: <20240413151152.165682-1-alisa.roman@analog.com>
- <20240413151152.165682-5-alisa.roman@analog.com>
- <CAMknhBHJpOxRmJbiprVNfYB4JbLzjR2a9S8=5iVz_9O+013u1Q@mail.gmail.com>
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-In-Reply-To: <CAMknhBHJpOxRmJbiprVNfYB4JbLzjR2a9S8=5iVz_9O+013u1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-On 13.04.2024 22:29, David Lechner wrote:
-> On Sat, Apr 13, 2024 at 10:13 AM Alisa-Dariana Roman
-> <alisadariana@gmail.com> wrote:
->>
->> Unlike the other AD719Xs, AD7194 has configurable differential
->> channels. The user can dynamically configure them in the devicetree.
->>
->> Also add an example for AD7194 devicetree.
->>
->> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
->> ---
->>   .../bindings/iio/adc/adi,ad7192.yaml          | 74 +++++++++++++++++++
->>   1 file changed, 74 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> index ba506af3b73e..855f0a2d7d75 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
->> @@ -21,8 +21,15 @@ properties:
->>         - adi,ad7190
->>         - adi,ad7192
->>         - adi,ad7193
->> +      - adi,ad7194
->>         - adi,ad7195
->>
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->>     reg:
->>       maxItems: 1
->>
->> @@ -104,8 +111,43 @@ required:
->>     - spi-cpol
->>     - spi-cpha
->>
->> +patternProperties:
->> +  "^channel@[0-9]+$":
->> +    type: object
->> +    $ref: adc.yaml
->> +    unevaluatedProperties: false
->> +
->> +    properties:
->> +      reg:
->> +        description: The channel index.
->> +        minimum: 1
->> +        maximum: 256
->> +
->> +      diff-channels:
->> +        description: |
->> +          Both inputs can be connected to pins AIN1 to AIN16 by choosing the
->> +          appropriate value from 1 to 16.
->> +        items:
->> +          minimum: 1
->> +          maximum: 16
-> 
-> Don't we also need to allow 0 for AINCOM here? Or is this property
-> only for fully differential pairs and not pseudo-differential pairs?
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-I thought it would be a good idea to have the pseudo-differential pairs 
-set in the driver (all from AIN1 to AIN16 referenced to AINCOM). Only 
-differential ones are fully configurable in the devicetree.
+The values and ranges of V4L2_CID_VBLANK are all computed,
+so there is no reason for it to be a read only control.
+Remove the register values from the mode lists, add the
+handler, and remove the read only flag.
 
-Kind regards,
-Alisa-Dariana Roman
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/media/i2c/imx258.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index 495eaada2945..321b504c6a48 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -30,6 +30,8 @@
+ #define IMX258_VTS_30FPS_VGA		0x034c
+ #define IMX258_VTS_MAX			0xffff
+ 
++#define IMX258_REG_VTS			0x0340
++
+ /* HBLANK control - read only */
+ #define IMX258_PPL_DEFAULT		5352
+ 
+@@ -202,8 +204,6 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
+ 	{ 0x0114, 0x03 },
+ 	{ 0x0342, 0x14 },
+ 	{ 0x0343, 0xE8 },
+-	{ 0x0340, 0x0C },
+-	{ 0x0341, 0x50 },
+ 	{ 0x0344, 0x00 },
+ 	{ 0x0345, 0x00 },
+ 	{ 0x0346, 0x00 },
+@@ -319,8 +319,6 @@ static const struct imx258_reg mode_2104_1560_regs[] = {
+ 	{ 0x0114, 0x03 },
+ 	{ 0x0342, 0x14 },
+ 	{ 0x0343, 0xE8 },
+-	{ 0x0340, 0x06 },
+-	{ 0x0341, 0x38 },
+ 	{ 0x0344, 0x00 },
+ 	{ 0x0345, 0x00 },
+ 	{ 0x0346, 0x00 },
+@@ -436,8 +434,6 @@ static const struct imx258_reg mode_1048_780_regs[] = {
+ 	{ 0x0114, 0x03 },
+ 	{ 0x0342, 0x14 },
+ 	{ 0x0343, 0xE8 },
+-	{ 0x0340, 0x03 },
+-	{ 0x0341, 0x4C },
+ 	{ 0x0344, 0x00 },
+ 	{ 0x0345, 0x00 },
+ 	{ 0x0346, 0x00 },
+@@ -800,6 +796,11 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+ 					       BIT(IMX258_HDR_RATIO_MAX));
+ 		}
+ 		break;
++	case V4L2_CID_VBLANK:
++		ret = imx258_write_reg(imx258, IMX258_REG_VTS,
++				       IMX258_REG_VALUE_16BIT,
++				       imx258->cur_mode->height + ctrl->val);
++		break;
+ 	default:
+ 		dev_info(&client->dev,
+ 			 "ctrl(id:0x%x,val:0x%x) is not handled\n",
+@@ -1174,9 +1175,6 @@ static int imx258_init_controls(struct imx258 *imx258)
+ 				IMX258_VTS_MAX - imx258->cur_mode->height, 1,
+ 				vblank_def);
+ 
+-	if (imx258->vblank)
+-		imx258->vblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+-
+ 	imx258->hblank = v4l2_ctrl_new_std(
+ 				ctrl_hdlr, &imx258_ctrl_ops, V4L2_CID_HBLANK,
+ 				IMX258_PPL_DEFAULT - imx258->cur_mode->width,
+-- 
+2.44.0
 
