@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B576F134CC7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEFA134CE8
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713108765; cv=none; b=GdpFfcTdJi5gAxifgl7Feu3QiywLyCyR04omvXAqu0v8IyLdDN3loK02XSX8oxymbaulqGLg8MXrXB05HzCi/LUjcdUFpw3J5KCeWP19QW6xn4oGCNiWS0r6B/3o8whcr6s6SQtpKmDNmFtH3X4SZBBjdHIwZYwg+ZM8LQAijaA=
+	t=1713108765; cv=none; b=XVOBFHJasc3liQfQKEQtz2v8hp7pj18dytflLPOU3rVB2sAaO8lmNMi3r3mrPrCoBylS7KdUqow1YWcEqoahImg5tgHMbRKnCFPNnvHMKdj5As/1A93qsk4mFhRmQszgR2kuzpTv8WYxkSa7z9/GOVA67c8V8k8oZCpJw/9Ii5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713108765; c=relaxed/simple;
-	bh=Nq3NlHtxi8rvfgNbkSAh4DaAAJW8IF5KEUOEpD4s3qM=;
+	bh=eOD+pY6Oui9HSbYxTAiv8AlRymab8T1LAk021Ri9JVc=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QbqXRl/j30sD+GGlRFvKY+jlZvYlEM5Kvr9iWJJ9Z6RnhShcL9fQFccAOGQZrKOpAPLth3Yepc2jJzpQHUJaneer+Hx3YQLc/3RyVDD5yC4A1jx19h5D3SBe8wg2duBCe16Yl4piBAtcpqtPyrdfll8C4cbgh7zZQM+o7fTjslc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQfimu3o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fjOw0SHUa1Pzj4wI9FlkZ8T53GmC7Q93N4gKeNSv5I5MrJ7mCaBbjVVqOwysnlFptEdnB7smISicbY+KOAS8hdhN34Dm8CpLrXerGF+B6PmDfjYQdmZkMEsmKL6XC8eB5w7RT1bzxZeMfkDLC7yzmFGInP4/TP3Hs/OF7GcFpR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl4xc13I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQfimu3o"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 85571C4AF4D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl4xc13I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9046BC4AF52;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713108765;
-	bh=Nq3NlHtxi8rvfgNbkSAh4DaAAJW8IF5KEUOEpD4s3qM=;
+	bh=eOD+pY6Oui9HSbYxTAiv8AlRymab8T1LAk021Ri9JVc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pQfimu3oZuJOYZZZ4vviipCEbG7l8+Dq62nBa+BXxQ5b0RVm1HEBIu/tsiEPs0pSY
-	 OrrJZmqNMxpNWD0dG+vdzK7vVXv7xq7qmfblr7MxvRWmfPTW4wyxW7dZqMDpPvO3hQ
-	 gGwXyCYT8EwX3QuODm48po/PJJW6kO2FAqClPO+8JrHVysS6wVClj7HuTGfvvz41V1
-	 eqaZpf2Bfq1VrzBRCt3oF79gun+rSj7iMKP9jT81VNE3Ilq6JghTi8tRgCetEzhuJ5
-	 VQXQl05v7TU00Q2cMc776UgtgHUlMxwLTvDBKMDNdI286D4AtvTWQnzSnoL1W+sej6
-	 B07hckn2BHdfQ==
+	b=hl4xc13I1oNk1LM6SH1ng1DYnSoZu2/jOkoLxW/x2pw0NzzJHh4V0L+Q+O222gLaq
+	 5mReJl5UW4x4D2j78i9H6RiG+qjc8nOtijf27eEbt0xTB6nmRmlflhJJfhxn3bs9XA
+	 Sbv9YyQ4BE3xQiZcYWC6r+LQI7Xclic5o2aPeBpKzxI5I+YlT3PDTIChFlrjyaLSX4
+	 UObpiOj5RVkWSeHlkRVBMIH1RajfuG001ekledCroY8XUzf6ntt1vcwUNGAeR0X46d
+	 dXvogcOeW4IGCJpS/U+MupU2jtU6tGYgFROBkDx4jMzHy1fn/TVNjuqjucAX+w8tcn
+	 ccOP/JsupEdkg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7ACCFDF7857;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 83D9BC32751;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: allow direct io of pinned files for
- zoned storage
+Subject: Re: [f2fs-dev] [PATCH V3] f2fs: add REQ_TIME time update for some user
+ behaviors
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171310876549.3156.14230955021108259973.git-patchwork-notify@kernel.org>
+ <171310876553.3156.14471633770093926825.git-patchwork-notify@kernel.org>
 Date: Sun, 14 Apr 2024 15:32:45 +0000
-References: <20240411183753.2417792-1-daeho43@gmail.com>
-In-Reply-To: <20240411183753.2417792-1-daeho43@gmail.com>
-To: Daeho Jeong <daeho43@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- kernel-team@android.com, daehojeong@google.com
+References: <1710915736-31823-1-git-send-email-zhiguo.niu@unisoc.com>
+In-Reply-To: <1710915736-31823-1-git-send-email-zhiguo.niu@unisoc.com>
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ hongyu.jin@unisoc.com
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Thu, 11 Apr 2024 11:37:53 -0700 you wrote:
-> From: Daeho Jeong <daehojeong@google.com>
+On Wed, 20 Mar 2024 14:22:16 +0800 you wrote:
+> some user behaviors requested filesystem operations, which
+> will cause filesystem not idle.
+> Meanwhile adjust some f2fs_update_time(REQ_TIME) positions.
 > 
-> Since the allocation happens in conventional LU for zoned storage, we
-> can allow direct io for that.
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> ---
+> v3: modify some update conditions according to Chao's suggeestions
+> v2: update patch according to Chao's suggestions
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,2/2] f2fs: allow direct io of pinned files for zoned storage
-    https://git.kernel.org/jaegeuk/f2fs/c/b2cf5a1ff236
+  - [f2fs-dev,V3] f2fs: add REQ_TIME time update for some user behaviors
+    https://git.kernel.org/jaegeuk/f2fs/c/fa18d87cb20f
 
 You are awesome, thank you!
 -- 
