@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5C313473E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C58413473B
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713108765; cv=none; b=A6ST52/QBUzJmBouSpbY42mci0nM+hXeK7zQHgezvBDJDKLpxBvd+pQRbpfLamLYgynxidV9+0sRR/3gVXA2cyCwMBrZhl1NJ3BZOcsul0TMnpV7ZpnOCenboYiXf1MtqZNR5ekvpaqD43tXGtx2LbJDJN3kJRSMArd4zDLcb0E=
+	t=1713108765; cv=none; b=CYsLWuAP1OFllBY3Y2FELa8XDQCAbxdByEG8XdNVJnnCmNYhvunPt51S2ZKAfeyuwCCE2XG7Pcu05rKD+lyvURHB5wZ9kPxjWx6Ml7lWwH3k5bUaN5ybms7LawsukYXKXGRbNPAjuFTxDvB1mVUU8Kwo5MMmd4vMHhTqKrPQK0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713108765; c=relaxed/simple;
-	bh=i8hC/qYdO20bTDFXhf1UZr6iGIZ79ePp+iQi/dhLKic=;
+	bh=/b615jjEaFmNIs7LXPqjCCapz512Lm5RVdgG3VRbsAM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=InoLHftw4UBWvmiW08FED3CUUHLsQyb8y2vXO8oSlqvaZnOE+UoP6ZlMPHUplEte+BxnlZ+hhxm//UxbWr8nVsOY4hCU0tb18+QT3+w7Y0C0Kfd6cl6cs99/RDiAS0fF+oaEupYLuNVKmnXdpHqyitBPVeowMJ/PDBgO5VHIJUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diGEszRY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Jnp3Rk05KTQIEXM9IP6UrvRYSJIOD7ojnydl/TDkoNsFtTLx5XmdY1CRE3ukQdy8uzHTS/9uJooWMcVjr3kXoejkq5XYfD7E4cOB0SW4lmfvSUD5wp1p1wc9XdO541CRGNoqxQ3anNVMNbhRUnjYUxJb9vMUUIs2tr1VDL/JBcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbkqDmak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diGEszRY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46AB1C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbkqDmak"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4DD00C4AF08;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713108765;
-	bh=i8hC/qYdO20bTDFXhf1UZr6iGIZ79ePp+iQi/dhLKic=;
+	bh=/b615jjEaFmNIs7LXPqjCCapz512Lm5RVdgG3VRbsAM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=diGEszRY6aqfAL6yojlRjG5f1kWvpK0fp2xVwVHCr+/6ywC7miiqzHxLFRDn7Gb63
-	 mE7jCoA03+fFXEd4FSZZBPPpvdUwBE6tt4phpMSCz+mp5XHxPkhSPKFSCk3qAD5d7u
-	 F8amcKppqmg+AE/LMSqqqN6oVkYHa92AmSYEZ2Tl/I3tutLm4fk9vVQBwbOsLf9UTu
-	 Q71gsX7ugdXO6vcSvKrnxGnw2JLVmcKykdoMCKhnbCcHt1cXqNejCyGOqQxc1pgDoK
-	 4HTJxjLbD+jOSwNcwZmiWsAZvAX8u308kklNFd6bvWyEbIDtrucPfAzK9Tyb6sJg7X
-	 v3lntI2ycZ73g==
+	b=JbkqDmakr9djWwllgYEm3aWqcdqpxO9Ul/750YHDEFHzRN/ZW1ECNztQmFlHkrZdJ
+	 K4Zpf0dF6aOaltuLmEyeHyR+BjlXycGgtHHepzIfHv5U+ArikNC+kusNEcpemiB2KF
+	 ti4mhf6uP4mE3RKdynyqpDJO+ZnbXeW57GUpTf2fhLhwPAeC9TJ1uCk2mYyC792PZ6
+	 xNnG814oHE2r4/JRFHL7XfWRtZrB3mPbzOm77gM/xOS58DsQI5L7QreGRvb4A5HCot
+	 1yr4VCFR8BgSJsKLlvVv1rsdht1fg+lnTibovCE5VB/3xy80qMxCzy9DwBWQ0+p7Zw
+	 8JTA/2vfdWydA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2BA43C54BD2;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3A25FC54BD5;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: fix to relocate check condition in
- f2fs_fallocate()
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: prevent writing without fallocate()
+ for pinned files
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171310876517.3156.14366722531397621692.git-patchwork-notify@kernel.org>
+ <171310876523.3156.12747424719057521546.git-patchwork-notify@kernel.org>
 Date: Sun, 14 Apr 2024 15:32:45 +0000
-References: <20240403142420.2042498-1-chao@kernel.org>
-In-Reply-To: <20240403142420.2042498-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+References: <20240411175410.2406710-1-daeho43@gmail.com>
+In-Reply-To: <20240411175410.2406710-1-daeho43@gmail.com>
+To: Daeho Jeong <daeho43@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ kernel-team@android.com, daehojeong@google.com
 
 Hello:
 
-This series was applied to jaegeuk/f2fs.git (dev)
+This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Wed,  3 Apr 2024 22:24:19 +0800 you wrote:
-> compress and pinfile flag should be checked after inode lock held to
-> avoid race condition, fix it.
+On Thu, 11 Apr 2024 10:54:10 -0700 you wrote:
+> From: Daeho Jeong <daehojeong@google.com>
 > 
-> Fixes: 4c8ff7095bef ("f2fs: support data compression")
-> Fixes: 5fed0be8583f ("f2fs: do not allow partial truncation on pinned file")
-> Signed-off-by: Chao Yu <chao@kernel.org>
+> In a case writing without fallocate(), we can't guarantee it's allocated
+> in the conventional area for zoned stroage. To make it consistent across
+> storage devices, we disallow it regardless of storage device types.
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,1/2] f2fs: fix to relocate check condition in f2fs_fallocate()
-    https://git.kernel.org/jaegeuk/f2fs/c/278a6253a673
-  - [f2fs-dev,2/2] f2fs: fix to check pinfile flag in f2fs_move_file_range()
-    https://git.kernel.org/jaegeuk/f2fs/c/e07230da0500
+  - [f2fs-dev,1/2] f2fs: prevent writing without fallocate() for pinned files
+    https://git.kernel.org/jaegeuk/f2fs/c/3fdd89b452c2
 
 You are awesome, thank you!
 -- 
