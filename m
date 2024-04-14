@@ -1,67 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420A3135418;
-	Sun, 14 Apr 2024 16:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE13A1DDD1;
+	Sun, 14 Apr 2024 16:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713113843; cv=none; b=hxVFPZTDpV0jBsFaMK6CDDQ+5IlnmRteQ8HGc6oxG7OjnAGLZGRWQgUrNI2jPsfDP9ToILBVhrt/qWhwPYI1G1oSf9u3/BfUnzSStTzqWXoo5mVsizEe9fV/H427yOW+HNCsA0psTY4jzkkyhS5gk1+Vcm93cTZPNwVqJ9J4k+g=
+	t=1713114001; cv=none; b=JUQ75NjKmrjHmeqxJ1BO7xPHFzBmLom3MEXJ2xEjrmrHR3EkOfslouB5rFHpbN4eRaFra/JVQfrTDu4GjW+giaaSz8gOUnlAqTuYh2uzUJzCdBoz9hKohJiLpnBq6o3NThc/KBq3newJehdLBIDe9ZF0fAC0TEVreV99wKipork=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713113843; c=relaxed/simple;
-	bh=0hqHEfGYsuQ38NNJ/X3OjRVhOCpRvM4xvnQ1utdc0Rw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=skm+9zN0j2MYaeeyDSQ5rbwipgG+9cRp7RVZ4id6AjX1PJPhq9qA4yDQUsoYxxCo/bXzu48Ti0+ba74tvozG7W+3DA01L+b6ufnRj8gFFPHZ1TbJcO/Bx1BAv4CBjOsVoPAav+fYs1WGYmAfRplX+TBJ2dGFhuKqa7+3mRz1UNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLlScyLi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713114001; c=relaxed/simple;
+	bh=mbkka5ov0pjllyobnal4qlOmTS94vtLU8iRcxxEH3UQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQXrSqbdWFOwTxBmqkbO9m12xZnT0EAdjxIqpeuehEAy0kl/kUKQjasID3TEefQOQEjwU59EgJnuQmTLFv+bGR8zY1Vzt4+AXHftvDZDGK+O1+fBYtckDIWfmJWN+b6ehyTyFD/tDuK66XzSHAw4EpeQiCiTDqWghER0d8UPaXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=b23DnHf/; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLlScyLi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3F7C072AA;
-	Sun, 14 Apr 2024 16:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713113842;
-	bh=0hqHEfGYsuQ38NNJ/X3OjRVhOCpRvM4xvnQ1utdc0Rw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XLlScyLi2ugsvveQw/Ww2S7XA9IXUcXpm1oTlz12tmB2alf0NGcpGGgOAApEppQCW
-	 d/HXs8LCcHkBS66AGZVsbsC/YvzPDE6WpazWvn1O7hbt7KVCXtMLPG/VC3Bi6emK09
-	 Xu+S9W9UY54uAK35HbjF1nvHxB4543Y3iNbsIQH1NeOxe2VziN1VaNukYeufFf6661
-	 n2cD6GMyMME5Ce6VJ79uewX5rvionRIS5fprI0xHjJHLv3c7j7SSHkgYXDlWnbNfIp
-	 ny5LIYuDGoAtekCetqIuTCjCXO5rE+Xs+Aa1jKduRCGbaQuvpA9c+sC4IoYfoaDRyl
-	 G4zqc2wMZUsZg==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-of-dwcmshc: Remove useless "&" of th1520_execute_tuning
-Date: Mon, 15 Apr 2024 00:43:57 +0800
-Message-ID: <20240414164357.2841-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="b23DnHf/"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 0C1821C0081; Sun, 14 Apr 2024 18:59:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1713113990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=plvj2pu75zmJtwfWQwKO6E7gQ/zblJirjpZJ84tKWdc=;
+	b=b23DnHf/PlbnxjUd96V7Z1pSmri8eOHFbo7ZnAEiiCAQAKOnISp9CxhtATYpRO+Yk7f1H+
+	E5DfQMtRTVXwKikZMbxxSKTVtAbbTkf6rqJFdX8ERUWIykIDT5WLdZMGiyqhQru06qY0nD
+	I/7ZA8U0gJmTZbhXtVZcLQ3iY5dxpp8=
+Date: Sun, 14 Apr 2024 18:59:49 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: serdeliuk@yahoo.com
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] Samsung Galaxy Z Fold5 initial support
+Message-ID: <ZhwLheDmwFTYBU/C@duo.ucw.cz>
+References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="m4hfCxMWwdamns22"
+Content-Disposition: inline
+In-Reply-To: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
 
-The preceding "&" before th1520_execute_tuning is useless, remove it.
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/mmc/host/sdhci-of-dwcmshc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--m4hfCxMWwdamns22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-index 7b55acd9830c..6206ff7615e8 100644
---- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-+++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-@@ -822,7 +822,7 @@ static const struct sdhci_ops sdhci_dwcmshc_th1520_ops = {
- 	.reset			= th1520_sdhci_reset,
- 	.adma_write_desc	= dwcmshc_adma_write_desc,
- 	.voltage_switch		= dwcmshc_phy_1_8v_init,
--	.platform_execute_tuning = &th1520_execute_tuning,
-+	.platform_execute_tuning = th1520_execute_tuning,
- };
- 
- static const struct sdhci_ops sdhci_dwcmshc_cv18xx_ops = {
--- 
-2.43.0
+Hi!
 
+> - removed extraneous new line
+> - removed pcie_1_phy_aux_clk
+> - removed extranous pcie1
+>=20
+> This documents and add intial dts support for Samsung Galaxy Z Fold5 (sam=
+sung,q5q)
+> which is a foldable phone by Samsung based on the sm8550 SoC.
+>=20
+> Currently working features:
+> - Framebuffer
+> - UFS
+> - i2c
+> - Buttons
+
+Interesting, folding will be fun to play with.
+
+Please cc phone-devel@vger.kernel.org with phone patches.
+
+Best regards,
+							Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--m4hfCxMWwdamns22
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhwLhQAKCRAw5/Bqldv6
+8hMnAJ0SvZJcotQx/i0WTcWAHOs8ojpFYQCgkFU8uaiXJCBFTkgnf0I+bS7wCIc=
+=wOHG
+-----END PGP SIGNATURE-----
+
+--m4hfCxMWwdamns22--
