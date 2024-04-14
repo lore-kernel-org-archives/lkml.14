@@ -1,40 +1,40 @@
-Received: from mail-108-mta91.mxroute.com (mail-108-mta91.mxroute.com [136.175.108.91])
+Received: from mail-108-mta69.mxroute.com (mail-108-mta69.mxroute.com [136.175.108.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7793D1384BF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBA4137C47
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.91
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713127308; cv=none; b=DlNAsN6q4mGabobBb/rFtQ61Ne4/0ZtX0pj072iIqbwWvn8yFyQjtHwDbQv+0AzTLVV1XiZWgkCMT4wNEbo730q1eX9nxhDnhBvZkIlilyTvhkcqc6ilsRVLCxv94NYGhVGYyt9VoP0eOxXEpPKq13UwtyFOFRZxS7Nwr7Znsww=
+	t=1713127308; cv=none; b=RyEvsNSyUO5dkgQX0WBTanVfmggMozTxgF4xcK4dEoWPUiSpqQrvxyVXHSDmcUNrf7y5dnz5YI72tnvrhgMqurP9mczOXE7SiGDzfTSdapmaEc45V367uQvCJbZFbmSOm+DIQHsGgYK4u6Joxus3h+Z2lqKM6Zf5RIQKs3ryo3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713127308; c=relaxed/simple;
-	bh=DW93lC9rSeEtaobf7itjE64XnEYnqZ7qSOk+RzOJB00=;
+	bh=pQK2j/aOaMt8ywl27zkrasiDgTR0TE4do7sZJlOPRRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MgUox1hJPmHyIRdDRzBXrIPIxamqx9C6K/LP4nNe4VoCyOQaMy0M/qlkKCZesY1HQP4smPmQezGCJ/i4sI9HFXzAXU7xLvAOa6mrPHHm3OWOKmbmbTa/9HdeBlmKtmfh0LRGVOv2Ul8+WvoRyunD+A+ll1p9fqHdaUhX8iYFlXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=oTIabP6q; arc=none smtp.client-ip=136.175.108.91
+	 MIME-Version; b=LYnKszCe/2gRzGOsV7Ppk+wI0l5QDjXwEKzqtH036tVnMfSuzpJA7dDJUphQO/8HA847cSOVAzhwjE3YTUFOIuqL3McHv/CX3W7Tt1jxcOVgFP7ifwqc/op5s8UsZSUfj/f9YYsHDCZOnb5L5+CkGGR84aGx6aCuwTWEkJjuAaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=bn5giJhZ; arc=none smtp.client-ip=136.175.108.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="oTIabP6q"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="bn5giJhZ"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta91.mxroute.com (ZoneMTA) with ESMTPSA id 18ede528fc90003bea.010
+ by mail-108-mta69.mxroute.com (ZoneMTA) with ESMTPSA id 18ede52a8b80003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sun, 14 Apr 2024 20:35:36 +0000
-X-Zone-Loop: a96ddb51466d70be8df5f120cc3968df8c1d9dbd7e73
+ Sun, 14 Apr 2024 20:35:42 +0000
+X-Zone-Loop: 341926449d0aae9ed04d9bb7659922fc003a091fa6ea
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bZhiRPeL9jOMw1N4B5HoYuhr3z7xt+xH2s8wek/zi98=; b=oTIabP6qCAiNi1yrWNsKxv64Mk
-	74GdHmJa+OSzZRE8qC0eL4GvS+3ydx1TGts8Kr3QxeeEQaDXDofugAHSszLQF1rk/UOdl1yqDxaP2
-	euZoFEHdMczB1cR7j8kFhHHM74WxUloHcp1BvvFamuQZJZWV6/T9R8Z8EpMo39dLHg9Og8K15Bw6N
-	cTVMT0h2R7Kr2YvYNDoVfCaGE3hmZ67k10rqqZVoS8O9f9/dIpBBxsXa8rMtb95vcrDcJtiPsQYXd
-	+3L5L7rZfz6yrO07NXIZD20T2U56p4Wa1qXKQa/ACdhtZX69qi4gtaqcqi2fjBUmoa0UaEbGRmXLp
-	RR7EUyHQ==;
+	bh=xTu7TgWqZVAd6M9P/qgtMjmNVXvV33CqoO1c4TcfXKM=; b=bn5giJhZFoo64XQbH8E8KhyxKZ
+	AbKsB0owfqsCJeLUA/wovHLT5JjMCwzsVpF9DOysidBskPjMEWoOnwZ3gz8rH3VfzMgPrMlgkx7Lj
+	fKs00t8svS5GnFWrWUbDXwcRtzuGzQ373dN+Jn93maeYDYC+WcpWEvCz5lnJZ8lTs5M8KG+s/OY4D
+	inwM88ybnPNY3RvaOCPh833auLWkTfZfIzPvKQQyKXtzqn62ujITnXoiTv5Llhc6OqPxLwv9qunJC
+	gWX3PD1HTnOf105OLMdVWY87Ofmz67/cTb6T7qoq52rBlIEoEhkBXSHG+Dgo239+0AyHBcMG7mmtd
+	wQ+EnBbw==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v4 12/25] media: i2c: imx258: Allow configuration of clock lane behaviour
-Date: Sun, 14 Apr 2024 14:34:50 -0600
-Message-ID: <20240414203503.18402-13-git@luigi311.com>
+Subject: [PATCH v4 15/25] media: i2c: imx258: Set pixel_rate range to the same as the value
+Date: Sun, 14 Apr 2024 14:34:53 -0600
+Message-ID: <20240414203503.18402-16-git@luigi311.com>
 In-Reply-To: <20240414203503.18402-1-git@luigi311.com>
 References: <20240414203503.18402-1-git@luigi311.com>
 Precedence: bulk
@@ -71,63 +71,65 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-The sensor supports the clock lane either remaining in HS mode
-during frame blanking, or dropping to LP11.
-
-Add configuration of the mode via V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK.
+With a read only control there is limited point in advertising
+a minimum and maximum for the control, so change to set the
+value, min, and max all to the selected pixel rate.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/i2c/imx258.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/media/i2c/imx258.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 59a78a4cfe44..2429eb7b55c6 100644
+index 9c83ba1232fa..4eb5f2eba491 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -72,6 +72,8 @@
- /* Test Pattern Control */
- #define IMX258_REG_TEST_PATTERN		0x0600
+@@ -971,7 +971,8 @@ static int imx258_set_pad_format(struct v4l2_subdev *sd,
  
-+#define IMX258_CLK_BLANK_STOP		0x4040
-+
- /* Orientation */
- #define REG_MIRROR_FLIP_CONTROL		0x0101
- #define REG_CONFIG_MIRROR_FLIP		0x03
-@@ -632,6 +634,7 @@ struct imx258 {
- 	const struct imx258_link_freq_config *link_freq_configs;
- 	const s64 *link_freq_menu_items;
- 	unsigned int nlanes;
-+	unsigned int csi2_flags;
+ 		link_freq = imx258->link_freq_menu_items[mode->link_freq_index];
+ 		pixel_rate = link_freq_to_pixel_rate(link_freq, imx258->nlanes);
+-		__v4l2_ctrl_s_ctrl_int64(imx258->pixel_rate, pixel_rate);
++		__v4l2_ctrl_modify_range(imx258->pixel_rate, pixel_rate,
++					 pixel_rate, 1, pixel_rate);
+ 		/* Update limits and set FPS to default */
+ 		vblank_def = imx258->cur_mode->vts_def -
+ 			     imx258->cur_mode->height;
+@@ -1261,8 +1262,7 @@ static int imx258_init_controls(struct imx258 *imx258)
+ 	struct v4l2_ctrl *vflip, *hflip;
+ 	s64 vblank_def;
+ 	s64 vblank_min;
+-	s64 pixel_rate_min;
+-	s64 pixel_rate_max;
++	s64 pixel_rate;
+ 	int ret;
  
- 	/*
- 	 * Mutex for serialized access:
-@@ -1066,6 +1069,14 @@ static int imx258_start_streaming(struct imx258 *imx258)
- 		return ret;
- 	}
+ 	ctrl_hdlr = &imx258->ctrl_handler;
+@@ -1293,18 +1293,13 @@ static int imx258_init_controls(struct imx258 *imx258)
+ 	if (vflip)
+ 		vflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
  
-+	ret = imx258_write_reg(imx258, IMX258_CLK_BLANK_STOP,
-+			       IMX258_REG_VALUE_08BIT,
-+			       !!(imx258->csi2_flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK));
-+	if (ret) {
-+		dev_err(&client->dev, "%s failed to set clock lane mode\n", __func__);
-+		return ret;
-+	}
-+
- 	/* Apply default values of current mode */
- 	reg_list = &imx258->cur_mode->reg_list;
- 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
-@@ -1438,6 +1449,8 @@ static int imx258_probe(struct i2c_client *client)
- 		goto error_endpoint_free;
- 	}
+-	pixel_rate_max =
+-		link_freq_to_pixel_rate(imx258->link_freq_menu_items[0],
+-					imx258->nlanes);
+-	pixel_rate_min =
+-		link_freq_to_pixel_rate(imx258->link_freq_menu_items[1],
+-					imx258->nlanes);
++	pixel_rate = link_freq_to_pixel_rate(imx258->link_freq_menu_items[0],
++					     imx258->nlanes);
+ 	/* By default, PIXEL_RATE is read only */
+ 	imx258->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx258_ctrl_ops,
+ 				V4L2_CID_PIXEL_RATE,
+-				pixel_rate_min, pixel_rate_max,
+-				1, pixel_rate_max);
+-
++				pixel_rate, pixel_rate,
++				1, pixel_rate);
  
-+	imx258->csi2_flags = ep.bus.mipi_csi2.flags;
-+
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
- 
+ 	vblank_def = imx258->cur_mode->vts_def - imx258->cur_mode->height;
+ 	vblank_min = imx258->cur_mode->vts_min - imx258->cur_mode->height;
 -- 
 2.44.0
 
