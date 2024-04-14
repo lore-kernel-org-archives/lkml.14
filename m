@@ -1,384 +1,510 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4E12901;
-	Sat, 13 Apr 2024 23:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DF25822D
+	for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 23:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713051920; cv=none; b=SN1oAV+qgujOe3Q3LzncQqn08UyoCTFyhLjnXMYkiPKvLw96X7QwFFioqDGlAeAywe5tP9qjl4abs8ARh9bjQSrBGrRN/AMGv39Vm2Av6WPZzl/Wn6ChSeuWQ0f171Hla59cv6tLkxI36G/QGaCzfgNQhZMd0f2uk5+8rzeYB/Q=
+	t=1713052584; cv=none; b=HIew1IPYdFNvDbZQkRvtuYNWvMm2M5t/cU7NDYZE9/QLuP76wy0ltGew+hZBuD6h9uBuMwHEUyCyJyA2QAkz/YmoaIa0tP/1w3G/aUUJllGc+5/zyS9eDr5nqGrNC8EXaZujjgY4fQogD2CmOsfjwmB/Pwat7ywE9tK3DUPfx7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713051920; c=relaxed/simple;
-	bh=9hm8OrAg2N/WUuvSJDeD6ZbYkByijmv/zU3TAtzN+Tw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s9GCJzC6z64OX6bdC4i0lBB9Hgr6C6eRMC/qahAT3d8WJYShpFeeN+QSCrQA7Hfu4i4xkSFOPaYtCLP3D6TxMZkaOmUS6QQm7ogT+FkXavTRPfrVKM2PfPBuNyXEFIFdgYXcXzJe3fQkjZJkpBpgj/tBq5P43CKIpluYPGJORAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFyQpKOw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713052584; c=relaxed/simple;
+	bh=+rQKjsWKkF5WVIXm0tlmggLd86PgwjLOBVKIvi8IZY0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MJsGR8+CqAxtP/HQwnZ6Jj3Q+IvlTGorTvgdJIu5VO4cTx1blrfK0cikvN4YddDAt2H34Vp/QznjDlwFsQM+dAYaiGtfumhE7CAeT6r10Q8WNjdrX42BgZxBF0Ev3Htc5lalyRXgZFFN3eOFSYRiKJ2P88iStSMbbCLgoX5rnzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZV0yuJiR; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFyQpKOw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713051917; x=1744587917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9hm8OrAg2N/WUuvSJDeD6ZbYkByijmv/zU3TAtzN+Tw=;
-  b=BFyQpKOwy1tbvjIshOkqUgB7Iu4UyP+pohepX12wm5EPAQ8UNhlQCHCX
-   7WarOLsok24OFdG++BfRQ1oCgODrZKD3e0G5UjmWSsPeoe+ggU88Oh6j+
-   ZY/ghYfOSgvMN+m2ac0dcAXGwBQHJ+IfqTfJHwy8th+VZl6avdanu42TW
-   VOPjJ/JucKDvyGvAJtm1LJE0cni9/uFxlfRu4OxAiD9ECjbiXtzAYldLl
-   npmUQ0zMWCWl0zpmXz2Qe+6An/2o/3Y23HLvjCgLGj97FNUhKa9uB722Q
-   BgCBex4zBK1TA55rKfEv7gxcljCnTIRNAHi5C30/ERX8uYrNpCQrxN+yh
-   w==;
-X-CSE-ConnectionGUID: 8qEQHBqiQTOgXtxgtJisOw==
-X-CSE-MsgGUID: EUIC1ngkQV+vWnRwG/rQ9Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11043"; a="19191134"
-X-IronPort-AV: E=Sophos;i="6.07,200,1708416000"; 
-   d="scan'208";a="19191134"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2024 16:45:17 -0700
-X-CSE-ConnectionGUID: r8838oHTSYyRFb6qMs8paw==
-X-CSE-MsgGUID: NsndFaTgRmm+2Be0y8gB7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,200,1708416000"; 
-   d="scan'208";a="22134469"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 13 Apr 2024 16:45:12 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rvn3V-00036q-1w;
-	Sat, 13 Apr 2024 23:45:09 +0000
-Date: Sun, 14 Apr 2024 07:44:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH v2 33/43] arm64: rme: Enable PMU support with a realm
- guest
-Message-ID: <202404140723.GKwnJxeZ-lkp@intel.com>
-References: <20240412084309.1733783-34-steven.price@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZV0yuJiR"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5a4930d9c48so1033212eaf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 16:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713052581; x=1713657381; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qlo8iiW9XzNbwgCxhCI3oz9F/KupitoTXB2VwtVn9QI=;
+        b=ZV0yuJiRUHCIFMlwW/0cQZpdIIx3nNuf9+ExR59LjmQlYqPeUYBl6crHfwxnv4nU7D
+         uVaQ4tYPayNF8xw31joWjK5IzDlnxtNwIIIvTWa1p42N2gLdjgkXV6vrZtfMu84oZghS
+         z1cwPjO/yDELVoohC57zhha2F/0UAF+/fHRcY1llL5XZYfcA/CD8ykgmklOeq0Q1qPpK
+         EMWjTdGbk9jFNoIYkQ9hkDQD/i7VsBjxg3/XQsT0c/hh644jN2ZwY+ywtFGr50TWaX7h
+         LRgx4sGN83yzYE7aZRSksauTg6z7xMNXTaqWKDw5YzBfPmFBiEO7iDRe3gw7jsvUxJoK
+         9Oag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713052581; x=1713657381;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qlo8iiW9XzNbwgCxhCI3oz9F/KupitoTXB2VwtVn9QI=;
+        b=Co3yC9+xzP1pUaFycuebRt/RqUNTEcUNocVE8WE+H59WCZbxK6pSS5yUx/YrhIZdZC
+         Q/KsfJd1M2kaTKxfzu+SjmxKhY5sE+dNyO/WMigf0ornM25wBOWz5icf8VgvD25Q7eg9
+         bvfIGsrAJSmQPJfV1CijT9EqjnX7YCyGE75tgb5DD2XuxF8MbzNwjei7usq5gp49CAKF
+         g+Vl+4TZBaf1X6iuiVAV3el+erTecJTr0H+zsQHPH9zymEGFplRsv9sYRNa4Vs40zuMR
+         Gu33VdNREyoZX+cBoMARcLgCWa0vPC85RNE/dqRC7xW8fFtTm3XSFgJUm1LRsgtndyhM
+         plgg==
+X-Gm-Message-State: AOJu0YzZg/MeCwZWbfHvAgzRixopNpbo5yFJv+Dl4XJ5MH2XLROF1y6k
+	8ekbx3uWJcSqExeoTcwgEi1WAJMD33CQDKe7AzBF5rmBUTL8G09NZGqeUohV
+X-Google-Smtp-Source: AGHT+IHZLfmH4vSy+8/9v9lUfqHzU8MYj0rSF/HuiKH+LCO8N1xSWPVyVEi/YRDpE7ZqFqyuslnwGw==
+X-Received: by 2002:a05:6808:2204:b0:3c6:394:2334 with SMTP id bd4-20020a056808220400b003c603942334mr7431610oib.2.1713052580988;
+        Sat, 13 Apr 2024 16:56:20 -0700 (PDT)
+Received: from SDF-ThinkCentre-M93p.localdomain (c-76-17-255-148.hsd1.mn.comcast.net. [76.17.255.148])
+        by smtp.googlemail.com with ESMTPSA id x64-20020a25ce43000000b00dc74258241fsm1375829ybe.45.2024.04.13.16.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Apr 2024 16:56:20 -0700 (PDT)
+From: Shimrra Shai <shimmyshai00@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Max Schwarz <max.schwarz@online.de>,
+	Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>,
+	Niyas Sait <niyas.sait@huawei.com>,
+	Shimrra Shai <shimmyshai00@gmail.com>
+Subject: [PATCH 0/0] [v2] Add ACPI binding to Rockchip RK3xxx I2C bus
+Date: Sat, 13 Apr 2024 19:03:55 -0500
+Message-Id: <20240414000355.10984-1-shimmyshai00@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412084309.1733783-34-steven.price@arm.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+Hi,
 
-kernel test robot noticed the following build errors:
+This is a second version of the patch that I submitted a few weeks ago for
+adding an ACPI binding for I2C bringup on the Rockchip RK3xxx
+(specifically, RK3588) platforms for compatibility with the newfangled
+TianoCore EDK2 firmwares. This was previously discussed here:
 
-[auto build test ERROR on kvmarm/next]
-[also build test ERROR on kvm/queue arm64/for-next/core linus/master v6.9-rc3 next-20240412]
-[cannot apply to kvm/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+https://lore.kernel.org/linux-kernel/20240321173447.15660-1-shimmyshai00@gmail.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Price/KVM-Prepare-for-handling-only-shared-mappings-in-mmu_notifier-events/20240412-170311
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git next
-patch link:    https://lore.kernel.org/r/20240412084309.1733783-34-steven.price%40arm.com
-patch subject: [PATCH v2 33/43] arm64: rme: Enable PMU support with a realm guest
-config: arm64-randconfig-r064-20240414 (https://download.01.org/0day-ci/archive/20240414/202404140723.GKwnJxeZ-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8b3b4a92adee40483c27f26c478a384cd69c6f05)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240414/202404140723.GKwnJxeZ-lkp@intel.com/reproduce)
+After some convo with the maintainer of the firmware, it was suggested I
+should have a kernel patch ready and approvable here before he can amend
+the ACPI tables in it. The following patch accepts an ACPI table entry for
+the I2C busses that looks like this:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404140723.GKwnJxeZ-lkp@intel.com/
+  Device (I2Cx) {
+    Name (_HID, "RKCP3001")
+    Name (_CID, "PRP0001")
+    Name (_UID, x)
+    Name (_CCA, 0)
 
-All errors (new ones prefixed by >>):
+    Method (_CRS, 0x0, Serialized) {
+      Name (RBUF, ResourceTemplate() {
+        Memory32Fixed (ReadWrite, 0xfea90000, 0x1000)
+        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 350 }
+        ClockInput (198000000, 1, Hz, Fixed, "\\_SB_.CRU_", PCLK_I2Cx)
+        ClockInput (198000000, 1, Hz, Fixed, "\\_SB_.CRU_", BCLK_I2Cx)
+      })
+      Return (RBUF)
+    }
+    Name (_DSD, Package () {
+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+      Package () {
+        Package (2) { "compatible", Package (2) { "rockchip,rk3588-i2c", "rockchip,rk3399-i2c" } },
+        Package (2) { "i2c,clk-rate", 198000000 },
+        Package (2) { "rockchip,bclk", 198000000 },
+        Package (2) { "#address-cells", 1 },
+        Package (2) { "#size-cells", 0 },
+      }
+    })
+  }
 
-   In file included from arch/arm64/kvm/arm.c:9:
-   In file included from include/linux/entry-kvm.h:6:
-   In file included from include/linux/resume_user_mode.h:8:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> arch/arm64/kvm/arm.c:1115:13: error: no member named 'irq_level' in 'struct kvm_pmu'
-    1115 |                         if (pmu->irq_level) {
-         |                             ~~~  ^
->> arch/arm64/kvm/arm.c:1117:5: error: call to undeclared function 'arm_pmu_set_phys_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1117 |                                 arm_pmu_set_phys_irq(false);
-         |                                 ^
-   arch/arm64/kvm/arm.c:1224:4: error: call to undeclared function 'arm_pmu_set_phys_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1224 |                         arm_pmu_set_phys_irq(true);
-         |                         ^
-   5 warnings and 3 errors generated.
+where "x" above in the name, _UID, and bindings should be replaced with the
+bus number (0..8). There was some debate about how to specify the clock
+rates in the first proposed version of this patch - in particular,
+regarding the inclusion of the "i2c,clk-rate" and "rockchip,bclk" settings
+in the _DSD section above. It was determined through correspondence with
+the firmware team that the reason for the inclusion of these settings was
+for compatibility with Microsoft Windows, but the kernel team here
+suggested it would be better to use ClockInput bindings, introduced as of
+ACPI 6.5. Hence, this patch is based on the assumption such bindings are
+available and is designed to fetch the clock rates from them. Note how the
+above example maintains both methods of specifying rates in parallel; this
+is also documented in the patch and it is noted that the _DSD settings
+should NOT be used in the kernel. The code to use ClockInput bindings is
+based off a base patch suggested by Niyas Sait, as in the linked thread.
 
+Signed-off-by: Shimrra Shai <shimmyshai00@gmail.com>
+---
 
-vim +1115 arch/arm64/kvm/arm.c
-
-  1044	
-  1045	/**
-  1046	 * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
-  1047	 * @vcpu:	The VCPU pointer
-  1048	 *
-  1049	 * This function is called through the VCPU_RUN ioctl called from user space. It
-  1050	 * will execute VM code in a loop until the time slice for the process is used
-  1051	 * or some emulation is needed from user space in which case the function will
-  1052	 * return with return value 0 and with the kvm_run structure filled in with the
-  1053	 * required data for the requested emulation.
-  1054	 */
-  1055	int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-  1056	{
-  1057		struct kvm_run *run = vcpu->run;
-  1058		int ret;
-  1059	
-  1060		if (run->exit_reason == KVM_EXIT_MMIO) {
-  1061			ret = kvm_handle_mmio_return(vcpu);
-  1062			if (ret)
-  1063				return ret;
-  1064		}
-  1065	
-  1066		vcpu_load(vcpu);
-  1067	
-  1068		if (run->immediate_exit) {
-  1069			ret = -EINTR;
-  1070			goto out;
-  1071		}
-  1072	
-  1073		kvm_sigset_activate(vcpu);
-  1074	
-  1075		ret = 1;
-  1076		run->exit_reason = KVM_EXIT_UNKNOWN;
-  1077		run->flags = 0;
-  1078		while (ret > 0) {
-  1079			bool pmu_stopped = false;
-  1080	
-  1081			/*
-  1082			 * Check conditions before entering the guest
-  1083			 */
-  1084			ret = xfer_to_guest_mode_handle_work(vcpu);
-  1085			if (!ret)
-  1086				ret = 1;
-  1087	
-  1088			if (ret > 0)
-  1089				ret = check_vcpu_requests(vcpu);
-  1090	
-  1091			/*
-  1092			 * Preparing the interrupts to be injected also
-  1093			 * involves poking the GIC, which must be done in a
-  1094			 * non-preemptible context.
-  1095			 */
-  1096			preempt_disable();
-  1097	
-  1098			/*
-  1099			 * The VMID allocator only tracks active VMIDs per
-  1100			 * physical CPU, and therefore the VMID allocated may not be
-  1101			 * preserved on VMID roll-over if the task was preempted,
-  1102			 * making a thread's VMID inactive. So we need to call
-  1103			 * kvm_arm_vmid_update() in non-premptible context.
-  1104			 */
-  1105			if (kvm_arm_vmid_update(&vcpu->arch.hw_mmu->vmid) &&
-  1106			    has_vhe())
-  1107				__load_stage2(vcpu->arch.hw_mmu,
-  1108					      vcpu->arch.hw_mmu->arch);
-  1109	
-  1110			kvm_pmu_flush_hwstate(vcpu);
-  1111	
-  1112			if (vcpu_is_rec(vcpu)) {
-  1113				struct kvm_pmu *pmu = &vcpu->arch.pmu;
-  1114	
-> 1115				if (pmu->irq_level) {
-  1116					pmu_stopped = true;
-> 1117					arm_pmu_set_phys_irq(false);
-  1118				}
-  1119			}
-  1120	
-  1121			local_irq_disable();
-  1122	
-  1123			kvm_vgic_flush_hwstate(vcpu);
-  1124	
-  1125			kvm_pmu_update_vcpu_events(vcpu);
-  1126	
-  1127			/*
-  1128			 * Ensure we set mode to IN_GUEST_MODE after we disable
-  1129			 * interrupts and before the final VCPU requests check.
-  1130			 * See the comment in kvm_vcpu_exiting_guest_mode() and
-  1131			 * Documentation/virt/kvm/vcpu-requests.rst
-  1132			 */
-  1133			smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-  1134	
-  1135			if (ret <= 0 || kvm_vcpu_exit_request(vcpu, &ret)) {
-  1136				vcpu->mode = OUTSIDE_GUEST_MODE;
-  1137				isb(); /* Ensure work in x_flush_hwstate is committed */
-  1138				kvm_pmu_sync_hwstate(vcpu);
-  1139				if (static_branch_unlikely(&userspace_irqchip_in_use))
-  1140					kvm_timer_sync_user(vcpu);
-  1141				kvm_vgic_sync_hwstate(vcpu);
-  1142				local_irq_enable();
-  1143				preempt_enable();
-  1144				continue;
-  1145			}
-  1146	
-  1147			kvm_arm_setup_debug(vcpu);
-  1148			kvm_arch_vcpu_ctxflush_fp(vcpu);
-  1149	
-  1150			/**************************************************************
-  1151			 * Enter the guest
-  1152			 */
-  1153			trace_kvm_entry(*vcpu_pc(vcpu));
-  1154			guest_timing_enter_irqoff();
-  1155	
-  1156			if (vcpu_is_rec(vcpu))
-  1157				ret = kvm_rec_enter(vcpu);
-  1158			else
-  1159				ret = kvm_arm_vcpu_enter_exit(vcpu);
-  1160	
-  1161			vcpu->mode = OUTSIDE_GUEST_MODE;
-  1162			vcpu->stat.exits++;
-  1163			/*
-  1164			 * Back from guest
-  1165			 *************************************************************/
-  1166	
-  1167			kvm_arm_clear_debug(vcpu);
-  1168	
-  1169			/*
-  1170			 * We must sync the PMU state before the vgic state so
-  1171			 * that the vgic can properly sample the updated state of the
-  1172			 * interrupt line.
-  1173			 */
-  1174			kvm_pmu_sync_hwstate(vcpu);
-  1175	
-  1176			/*
-  1177			 * Sync the vgic state before syncing the timer state because
-  1178			 * the timer code needs to know if the virtual timer
-  1179			 * interrupts are active.
-  1180			 */
-  1181			kvm_vgic_sync_hwstate(vcpu);
-  1182	
-  1183			/*
-  1184			 * Sync the timer hardware state before enabling interrupts as
-  1185			 * we don't want vtimer interrupts to race with syncing the
-  1186			 * timer virtual interrupt state.
-  1187			 */
-  1188			if (static_branch_unlikely(&userspace_irqchip_in_use))
-  1189				kvm_timer_sync_user(vcpu);
-  1190	
-  1191			kvm_arch_vcpu_ctxsync_fp(vcpu);
-  1192	
-  1193			/*
-  1194			 * We must ensure that any pending interrupts are taken before
-  1195			 * we exit guest timing so that timer ticks are accounted as
-  1196			 * guest time. Transiently unmask interrupts so that any
-  1197			 * pending interrupts are taken.
-  1198			 *
-  1199			 * Per ARM DDI 0487G.b section D1.13.4, an ISB (or other
-  1200			 * context synchronization event) is necessary to ensure that
-  1201			 * pending interrupts are taken.
-  1202			 */
-  1203			if (ARM_EXCEPTION_CODE(ret) == ARM_EXCEPTION_IRQ) {
-  1204				local_irq_enable();
-  1205				isb();
-  1206				local_irq_disable();
-  1207			}
-  1208	
-  1209			guest_timing_exit_irqoff();
-  1210	
-  1211			local_irq_enable();
-  1212	
-  1213			/* Exit types that need handling before we can be preempted */
-  1214			if (!vcpu_is_rec(vcpu)) {
-  1215				trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu),
-  1216					       *vcpu_pc(vcpu));
-  1217	
-  1218				handle_exit_early(vcpu, ret);
-  1219			}
-  1220	
-  1221			preempt_enable();
-  1222	
-  1223			if (pmu_stopped)
-  1224				arm_pmu_set_phys_irq(true);
-  1225	
-  1226			/*
-  1227			 * The ARMv8 architecture doesn't give the hypervisor
-  1228			 * a mechanism to prevent a guest from dropping to AArch32 EL0
-  1229			 * if implemented by the CPU. If we spot the guest in such
-  1230			 * state and that we decided it wasn't supposed to do so (like
-  1231			 * with the asymmetric AArch32 case), return to userspace with
-  1232			 * a fatal error.
-  1233			 */
-  1234			if (vcpu_mode_is_bad_32bit(vcpu)) {
-  1235				/*
-  1236				 * As we have caught the guest red-handed, decide that
-  1237				 * it isn't fit for purpose anymore by making the vcpu
-  1238				 * invalid. The VMM can try and fix it by issuing  a
-  1239				 * KVM_ARM_VCPU_INIT if it really wants to.
-  1240				 */
-  1241				vcpu_clear_flag(vcpu, VCPU_INITIALIZED);
-  1242				ret = ARM_EXCEPTION_IL;
-  1243			}
-  1244	
-  1245			if (vcpu_is_rec(vcpu))
-  1246				ret = handle_rme_exit(vcpu, ret);
-  1247			else
-  1248				ret = handle_exit(vcpu, ret);
-  1249		}
-  1250	
-  1251		/* Tell userspace about in-kernel device output levels */
-  1252		if (unlikely(!irqchip_in_kernel(vcpu->kvm))) {
-  1253			kvm_timer_update_run(vcpu);
-  1254			kvm_pmu_update_run(vcpu);
-  1255		}
-  1256	
-  1257		kvm_sigset_deactivate(vcpu);
-  1258	
-  1259	out:
-  1260		/*
-  1261		 * In the unlikely event that we are returning to userspace
-  1262		 * with pending exceptions or PC adjustment, commit these
-  1263		 * adjustments in order to give userspace a consistent view of
-  1264		 * the vcpu state. Note that this relies on __kvm_adjust_pc()
-  1265		 * being preempt-safe on VHE.
-  1266		 */
-  1267		if (unlikely(vcpu_get_flag(vcpu, PENDING_EXCEPTION) ||
-  1268			     vcpu_get_flag(vcpu, INCREMENT_PC)))
-  1269			kvm_call_hyp(__kvm_adjust_pc, vcpu);
-  1270	
-  1271		vcpu_put(vcpu);
-  1272		return ret;
-  1273	}
-  1274	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ Documentation/firmware-guide/acpi/dsd/soc/general.rst | 32 +++++++++
+ Documentation/firmware-guide/acpi/dsd/soc/soc-i2c.rst | 59 +++++++++++++++++
+ drivers/acpi/Makefile                                 |  1 +
+ drivers/acpi/acpi_clk.c                               | 93 +++++++++++++++++++++++++++
+ drivers/i2c/busses/i2c-rk3x.c                         | 79 ++++++++++++++++++++---
+ include/linux/acpi.h                                  |  8 +++
+ 6 files changed, 262 insertions(+), 10 deletions(-)
+ 
+diff --git a/Documentation/firmware-guide/acpi/dsd/soc/general.rst b/Documentation/firmware-guide/acpi/dsd/soc/general.rst
+new file mode 100644
+index 000000000..9c287e838
+--- /dev/null
++++ b/Documentation/firmware-guide/acpi/dsd/soc/general.rst
+@@ -0,0 +1,32 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================================
++System-on-Chip (SoC) facility descriptions
++==========================================
++
++These documents describe how to create ACPI profiles for devices composed into
++system-on-chip (SoC) architectures. Currently, we only describe the options
++availed in the _DSD block for select platforms; other considerations are not
++yet applied. The inspiration for these documents are based around the advent
++(as of March 2024) of hefty, non-Apple ARM SoC systems such as the Rockchip
++RK3588 and newer chips that have desktop-like performance and thus are prime
++candidates for a UEFI-based desktop-like boot system with the goal being to
++deliver the same user-friendly ease of loading operating systems as on the
++Intel x86 sphere. Open-source UEFI-based firmware engines, such as TianoCore
++[1], mean it is possible on such platforms for the open-source developer to
++control both firmware and kernel simultaneously, which is not the case for
++the situation with Intel-based PC boards where boards are provided with pre-
++baked, vendor-selected and opaque firmwares.
++
++The description of ACPI usage here is not meant to suggest that ACPI replace
++Device Tree altogether for such SoCs; rather, we recognize that given they
++often will have a variety of applications that may include embedded usage where
++that more hard-wired boot loader setups such as U-Boot still shine, the
++maintenance of ACPI and DTB-based configuration options should be in parallel,
++and it may be possible for the same firmware to deploy both options.
++
++References
++==========
++
++[1] EDK2-RK3588 port of TianoCore EDK2 firmware.
++    https://github.com/edk2-porting/edk2-rk3588
+diff --git a/Documentation/firmware-guide/acpi/dsd/soc/soc-i2c.rst b/Documentation/firmware-guide/acpi/dsd/soc/soc-i2c.rst
+new file mode 100644
+index 000000000..0e6c5df65
+--- /dev/null
++++ b/Documentation/firmware-guide/acpi/dsd/soc/soc-i2c.rst
+@@ -0,0 +1,59 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=================
++I2C buses on SoCs
++=================
++
++This document describes the ACPI _DSD parameters currently being employed for
++Inter-Integrated Circuit (I2C) buses in the Linux kernel. It is based off the
++conventions used in the Rockchip RK3588 firmware project [1], which is also the
++first SoC documented here.
++
++General considerations
++======================
++
++For general use, we recommend indicating I2C busses in the ACPI firmware table
++in the following manner. First, they should be named I2Cx, where "x" is the bus
++index, and that index should also be used for the _UID component, e.g. on
++Rockchip RK3588 (see below), we use:
++
++  Device (I2Cx) {
++    Name (_HID, "RKCP3001")
++    Name (_CID, "PRP0001")
++    Name (_UID, x)
++    Name (_CCA, 0)
++
++    ...
++  }
++
++Interrupts should be specified in the usual ACPI manner. Likewise, as of ACPI
++6.5, clock rates should be given in ClockInput resources. Parameters specific to
++the Rockchip and I2C devices are indicated in the _DSD block as given below.
++The parameters are a curated selection from the Device Tree Blob (DTB)
++representation.
++
++_DSD parameters for different SoCs
++==================================
++
++Rockchip RK3588
++---------------
++
++The following parameters are indicated here for the I2C on Rockchip RK3588.
++
++- i2c,clk-rate 	Describe the pclk rate for the I2C bus, in Hz.
++- rockchip,bclk	Describe the bclk rate for the I2C bus, in Hz.
++
++These two parameters describe the peripheral (pclk) and bus (bclk) clock rates
++for the I2C bus. It is NOT recommended to use these clock rate parameters in the
++kernel, as they are intended for compatibility with Microsoft Windows. They are
++ONLY mentioned here for documentation's sake. Instead, the method mentioned
++earlier should be used to provide the clock rates; in the current revisions of
++the i2c-rk3x driver, the first clock resource appearing (resource 0) will be
++treated as giving the bclk rate, and the second clock resource (resource 1)
++appearing will be treated as giving the pclk rate.
++
++References
++==========
++
++[1] EDK2-RK3588 port of TianoCore EDK2 firmware.
++    https://github.com/edk2-porting/edk2-rk3588
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 8cc8c0d9c..26343ffce 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -48,6 +48,7 @@ acpi-$(CONFIG_PCI)		+= pci_root.o pci_link.o pci_irq.o
+ obj-$(CONFIG_ACPI_MCFG)		+= pci_mcfg.o
+ acpi-$(CONFIG_PCI)		+= acpi_lpss.o
+ acpi-y				+= acpi_apd.o
++acpi-y				+= acpi_clk.o
+ acpi-y				+= acpi_platform.o
+ acpi-y				+= acpi_pnp.o
+ acpi-y				+= power.o
+diff --git a/drivers/acpi/acpi_clk.c b/drivers/acpi/acpi_clk.c
+new file mode 100644
+index 000000000..fbb1c4a4a
+--- /dev/null
++++ b/drivers/acpi/acpi_clk.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * drivers/acpi/acpi_clk.c - ACPI device clock resources support.
++ *
++ * (C) 2023 Niyas Sait <niyas.sait@huawei.com>
++ * (C) 2024 Shimrra Shai <shimmyshai00@gmail.com>
++ *
++ */
++
++#include <linux/acpi.h>
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++
++struct acpi_clk_lookup {
++	u16 freq_div;
++	u32 freq_num;
++	u8 scale;
++	u8 mode;
++	int index;
++	bool found;
++	int n;
++};
++
++static uint64_t calc_clock_rate(u32 freq_num, u16 freq_denom, u8 scale)
++{
++	uint32_t scale_factor[3] = { 1, 1000, 1000000 };
++	uint64_t rate = 0;
++
++	if (scale < ARRAY_SIZE(scale_factor))
++		rate = DIV_ROUND_UP(freq_num * scale_factor[scale], freq_denom);
++
++	return rate;
++}
++
++static int acpi_populate_clk_lookup(struct acpi_resource *ares, void *data)
++{
++	struct acpi_clk_lookup *lookup = data;
++	struct acpi_resource_clock_input *resource = &ares->data.clock_input;
++
++	if (ares->type != ACPI_RESOURCE_TYPE_CLOCK_INPUT)
++		return 1;
++
++	if (lookup->n++ != lookup->index)
++		return 1;
++
++	lookup->mode = resource->mode;
++	lookup->freq_div = resource->frequency_divisor;
++	lookup->freq_num = resource->frequency_numerator;
++	lookup->scale = resource->scale;
++	lookup->found = true;
++
++	return 1;
++}
++
++struct clk *acpi_clk_register(struct acpi_device *adev, int index,
++			      const char *name)
++{
++	struct acpi_clk_lookup lookup;
++	struct list_head list;
++	struct clk *clk;
++	uint64_t rate;
++	int ret;
++
++	INIT_LIST_HEAD(&list);
++
++	memset(&lookup, 0, sizeof(lookup));
++	lookup.index = index;
++
++	ret = acpi_dev_get_resources(adev, &list, acpi_populate_clk_lookup,
++				     &lookup);
++	if (ret < 0)
++		return ERR_PTR(-ENODEV);
++
++	acpi_dev_free_resource_list(&list);
++
++	/* register fixed clocks only */
++	if (!lookup.found || lookup.mode != 0)
++		return ERR_PTR(-EINVAL);
++
++	rate = calc_clock_rate(lookup.freq_num, lookup.freq_div, lookup.scale);
++
++	const char *regname = name;
++
++	if (name == NULL)
++		regname = dev_name(&adev->dev);
++
++	clk = clk_register_fixed_rate(&adev->dev, regname, NULL, 0, rate);
++	clk_register_clkdev(clk, regname, NULL);
++
++	return clk;
++}
++EXPORT_SYMBOL_GPL(acpi_clk_register);
++
+diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+index 086fdf262..1aaf2daba 100644
+--- a/drivers/i2c/busses/i2c-rk3x.c
++++ b/drivers/i2c/busses/i2c-rk3x.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/acpi.h>
+ #include <linux/spinlock.h>
+ #include <linux/clk.h>
+ #include <linux/wait.h>
+@@ -1235,6 +1236,15 @@ static const struct of_device_id rk3x_i2c_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, rk3x_i2c_match);
+ 
++#ifdef CONFIG_ACPI
++/* for RK3588 and at least when loaded with EDK2-RK3588 Tianocore firmware */
++static const struct acpi_device_id rk3x_i2c_acpi_match[] = {
++	{ .id = "RKCP3001", .driver_data = (kernel_ulong_t)&rk3399_soc_data },
++	{ },
++};
++MODULE_DEVICE_TABLE(acpi, rk3x_i2c_acpi_match);
++#endif
++
+ static int rk3x_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -1243,6 +1253,8 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 	int bus_nr;
+ 	u32 value;
++	u64 value64;
++	char name[64];
+ 	int irq;
+ 	unsigned long clk_rate;
+ 
+@@ -1250,8 +1262,12 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
+-	match = of_match_node(rk3x_i2c_match, np);
+-	i2c->soc_data = match->data;
++	if (acpi_disabled) {
++		match = of_match_node(rk3x_i2c_match, np);
++		i2c->soc_data = match->data;
++	} else {
++		i2c->soc_data = device_get_match_data(&pdev->dev);
++	}
+ 
+ 	/* use common interface to get I2C timing properties */
+ 	i2c_parse_fw_timings(&pdev->dev, &i2c->t, true);
+@@ -1266,6 +1282,9 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 
+ 	i2c->dev = &pdev->dev;
+ 
++	if (!acpi_disabled)
++		ACPI_COMPANION_SET(&i2c->adap.dev, ACPI_COMPANION(&pdev->dev));
++
+ 	spin_lock_init(&i2c->lock);
+ 	init_waitqueue_head(&i2c->wait);
+ 
+@@ -1273,8 +1292,25 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 	if (IS_ERR(i2c->regs))
+ 		return PTR_ERR(i2c->regs);
+ 
+-	/* Try to set the I2C adapter number from dt */
+-	bus_nr = of_alias_get_id(np, "i2c");
++	if (acpi_disabled) {
++		/* Try to set the I2C adapter number from dt */
++		bus_nr = of_alias_get_id(np, "i2c");
++	} else {
++		ret = acpi_dev_uid_to_integer(ACPI_COMPANION(&pdev->dev),
++					      &value64);
++		if (ret) {
++			dev_err(&pdev->dev, "Cannot retrieve UID\n");
++			return ret;
++		}
++
++		if (value64 < INT_MAX) {
++			bus_nr = (int) value64;
++		} else {
++			/* shouldn't happen!!! */
++			dev_err(&pdev->dev, "Too big UID\n");
++			return -EINVAL;
++		}
++	}
+ 
+ 	/*
+ 	 * Switch to new interface if the SoC also offers the old one.
+@@ -1325,13 +1361,36 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2c);
+ 
+-	if (i2c->soc_data->calc_timings == rk3x_i2c_v0_calc_timings) {
+-		/* Only one clock to use for bus clock and peripheral clock */
+-		i2c->clk = devm_clk_get(&pdev->dev, NULL);
+-		i2c->pclk = i2c->clk;
++	if (acpi_disabled) {
++		if (i2c->soc_data->calc_timings == rk3x_i2c_v0_calc_timings) {
++			/* Only one clock to use for bus clock and peripheral
++			 * clock
++			 */
++			i2c->clk = devm_clk_get(&pdev->dev, NULL);
++			i2c->pclk = i2c->clk;
++		} else {
++			i2c->clk = devm_clk_get(&pdev->dev, "i2c");
++			i2c->pclk = devm_clk_get(&pdev->dev, "pclk");
++		}
+ 	} else {
+-		i2c->clk = devm_clk_get(&pdev->dev, "i2c");
+-		i2c->pclk = devm_clk_get(&pdev->dev, "pclk");
++		if (i2c->soc_data->calc_timings != rk3x_i2c_v0_calc_timings) {
++			snprintf(name, sizeof(name), "rk3x-i2c[%d].bclk",
++				 bus_nr);
++			i2c->clk = acpi_clk_register(ACPI_COMPANION(&pdev->dev),
++						     0, name);
++
++			snprintf(name, sizeof(name), "rk3x-i2c[%d].pclk",
++				 bus_nr);
++			i2c->pclk = acpi_clk_register(ACPI_COMPANION(&pdev->dev),
++						      1, name);
++		} else {
++			/* NB: currently not expected w/UEFI firmware given
++			 * these are not super performant RK3xxx
++			 */
++			dev_err(&pdev->dev,
++				"ACPI not supported for this RK3xxx\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	if (IS_ERR(i2c->clk))
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 34829f2c5..13ca67d2c 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -32,6 +32,7 @@ struct irq_domain_ops;
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/fw_table.h>
++#include <linux/clk-provider.h>
+ 
+ #include <acpi/acpi_bus.h>
+ #include <acpi/acpi_drivers.h>
+@@ -1569,4 +1570,11 @@ static inline bool acpi_node_backed_by_real_pxm(int nid)
+ }
+ #endif
+ 
++/* Clock support */
++
++#ifdef CONFIG_ACPI
++struct clk *acpi_clk_register(struct acpi_device *adev, int index,
++			      const char *name);
++#endif
++
+ #endif	/*_LINUX_ACPI_H*/
