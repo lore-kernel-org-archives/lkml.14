@@ -1,40 +1,40 @@
-Received: from mail-108-mta199.mxroute.com (mail-108-mta199.mxroute.com [136.175.108.199])
+Received: from mail-108-mta78.mxroute.com (mail-108-mta78.mxroute.com [136.175.108.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00779137740
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641F137C59
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713127247; cv=none; b=LYJQjxQ3Wn1AHRSPw5rxxbKAKbc6RUD/pRyrhi5BlM34kwJ2d+sIBnzGP6ex2i4FQmwprwvB4EwozbiOY3Ir7RqsXoDNu7KrIaq6qjILlYu5GLB8AK/8sW6K+h4+g/TnZvOdtE5UPA8hL5N2n+tRuxbzEM2Yrg2yioaq0O7BuNY=
+	t=1713127252; cv=none; b=dm3hgJ1IOeJOYdTSiy38TwvX9kIY89gODhe7khKDFaT6+2Lm9jgi9ied20eFyX/tTXFvXXcNoHGkO+PM4WELaJmXmVgfbBbgtDNoE0f6k8C0bXS5BgRctTLH6rUNl681rDQgwZemIW7P6JT/E+saHWrrucfUaSl5ffoenoRhhB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713127247; c=relaxed/simple;
-	bh=g6reCIRH0/JcMBOnGIeqjTP1oTROyutPaPbhmdHf1Dg=;
+	s=arc-20240116; t=1713127252; c=relaxed/simple;
+	bh=jrpDrwXWTfqruvVHzDUB/w0E8OgbIFxAqsRUJkK/6Tk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ObfK/6iaarZ0KPHnLpcJmHhWMIXc9mblhQdGyJ4h3oIPXjV+T//QncZfZPM6q2CInrKe5tAJerRPuhcPNDhqI9bUYzE+YudEdJgTatwZiT01y4SMbsQQS2/vip2JFbXJyOnycAXHGPpN380RNxAx8QIFLQsQA0d1w+3N38+2Qq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=jGzfHCb2; arc=none smtp.client-ip=136.175.108.199
+	 MIME-Version; b=gDcHhCe0JsXkuOei7NEoa246eh8jpGYYmHTTjKZ8+fKitd2GEPypyKXfZ78VAWJZEiaOEdoyoKFLU+f+hMtjCLzbDhhh04AbLZf/ruifiK6vNTzSoE/A9MygYXjoYpJodvJhicYtvTZ1XRj3b6okw8YvxXXjtmEXFAiSkurkOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=vbvrXe2K; arc=none smtp.client-ip=136.175.108.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="jGzfHCb2"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="vbvrXe2K"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta199.mxroute.com (ZoneMTA) with ESMTPSA id 18ede5245850003bea.010
+ by mail-108-mta78.mxroute.com (ZoneMTA) with ESMTPSA id 18ede5256640003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sun, 14 Apr 2024 20:35:17 +0000
-X-Zone-Loop: 8dd9ff4719298067131cfb30c14451ed6843a2f7a5ab
+ Sun, 14 Apr 2024 20:35:21 +0000
+X-Zone-Loop: e107292b3b95c2530376e113454929a8eeae7c705572
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DCgAgHlEMGBMjcN16C1bbheZthQRfCGTfl1ll6guAKc=; b=jGzfHCb2Gxx+SYTDmCcwvkYkwW
-	95xJLK3AyV6eWOafIpUxG8243dqBAoBJ7Ri+vFlveBn0Paq4DZcS78+cPwd0JTnbyhx46NsYrQ6ok
-	/9yYQX91caNjPuyszl27D+Ife5VsS25GkrIFZXWf2X7Rz8R5FoqaU0lHs6WGYk8hIKs6Cze6AJ2XJ
-	wkX2HAuhtARFR44+7Fqy1Jo4jnot6YTh/57hsIV5AYfEpcBZneEGzC+EM5D7cC+UnYTj9U5Q/ECkX
-	Hm3ABoLaJH6ljsCnJ317nVGKe6Vod8wbSPDS4be7iGw4Qq6xMlb8K6IxN+4+PTRDKr9R2cnphjOUY
-	6IP8+CWQ==;
+	bh=Rfud00GhiUoBsKNNr1PLv8b+cenFrKxczN1IEfbbCGA=; b=vbvrXe2Kxhp+3S9foOfHA1GkuY
+	D6jLb6dkqrh+FTRz/W8EzdMqxFac1SsHH+v0ZN0vtEYF8Bn2ZnfKAPjrqmhwYJrCcQR1GvdkAku3t
+	y1qyZGKYeW62+VQkdvCEWVQvMfpbt3cZBXj0VoHGVd88GLALePYCU39I4DzW5doBiKB8m/arybVp+
+	vchNnMj9HrNMmnFSVzzZtCm/8NNwAABJj8r8QbvR8zdmyvyiVQjz1K7NSaHMdiDaNF3d1T2lZVp8R
+	Qjzu58E8yZr8w6K9Kz0k3ZKXjQKeXOC02VraOqPPWZr8pN0AEY7WKZpG8/QoQmGmL6HfcqLLOSTiX
+	twOe2apg==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v4 03/25] media: i2c: imx258: Disable digital cropping on binned modes
-Date: Sun, 14 Apr 2024 14:34:41 -0600
-Message-ID: <20240414203503.18402-4-git@luigi311.com>
+Subject: [PATCH v4 05/25] media: i2c: imx258: Add regulator control
+Date: Sun, 14 Apr 2024 14:34:43 -0600
+Message-ID: <20240414203503.18402-6-git@luigi311.com>
 In-Reply-To: <20240414203503.18402-1-git@luigi311.com>
 References: <20240414203503.18402-1-git@luigi311.com>
 Precedence: bulk
@@ -71,51 +71,113 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-The binned modes set DIG_CROP_X_OFFSET and DIG_CROP_IMAGE_WIDTH
-to less than the full image, even though the image being captured
-is meant to be a scaled version of the full array size.
-
-Reduce X_OFFSET to 0, and increase IMAGE_WIDTH to the full array.
+The device tree bindings define the relevant regulators for the
+sensor, so update the driver to request the regulators and control
+them at the appropriate times.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/i2c/imx258.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/i2c/imx258.c | 42 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 4a7048d834c6..0ae4371940ca 100644
+index df7ed4716762..495eaada2945 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -340,11 +340,11 @@ static const struct imx258_reg mode_2104_1560_regs[] = {
- 	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x20 },
- 	{ 0x0408, 0x00 },
--	{ 0x0409, 0x02 },
-+	{ 0x0409, 0x00 },
- 	{ 0x040A, 0x00 },
- 	{ 0x040B, 0x00 },
- 	{ 0x040C, 0x10 },
--	{ 0x040D, 0x6A },
-+	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x06 },
- 	{ 0x040F, 0x18 },
- 	{ 0x3038, 0x00 },
-@@ -459,11 +459,11 @@ static const struct imx258_reg mode_1048_780_regs[] = {
- 	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x40 },
- 	{ 0x0408, 0x00 },
--	{ 0x0409, 0x06 },
-+	{ 0x0409, 0x00 },
- 	{ 0x040A, 0x00 },
- 	{ 0x040B, 0x00 },
- 	{ 0x040C, 0x10 },
--	{ 0x040D, 0x64 },
-+	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x03 },
- 	{ 0x040F, 0x0C },
- 	{ 0x3038, 0x00 },
+@@ -7,6 +7,7 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-fwnode.h>
+@@ -507,6 +508,16 @@ static const char * const imx258_test_pattern_menu[] = {
+ 	"Pseudorandom Sequence (PN9)",
+ };
+ 
++/* regulator supplies */
++static const char * const imx258_supply_name[] = {
++	/* Supplies can be enabled in any order */
++	"vana",  /* Analog (2.8V) supply */
++	"vdig",  /* Digital Core (1.2V) supply */
++	"vif",  /* IF (1.8V) supply */
++};
++
++#define IMX258_NUM_SUPPLIES ARRAY_SIZE(imx258_supply_name)
++
+ /* Configurations for supported link frequencies */
+ #define IMX258_LINK_FREQ_634MHZ	633600000ULL
+ #define IMX258_LINK_FREQ_320MHZ	320000000ULL
+@@ -611,6 +622,7 @@ struct imx258 {
+ 	struct mutex mutex;
+ 
+ 	struct clk *clk;
++	struct regulator_bulk_data supplies[IMX258_NUM_SUPPLIES];
+ };
+ 
+ static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
+@@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
+ 	struct imx258 *imx258 = to_imx258(sd);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
++				    imx258->supplies);
++	if (ret) {
++		dev_err(dev, "%s: failed to enable regulators\n",
++			__func__);
++		return ret;
++	}
++
+ 	ret = clk_prepare_enable(imx258->clk);
+-	if (ret)
++	if (ret) {
+ 		dev_err(dev, "failed to enable clock\n");
++		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
++	}
+ 
+ 	return ret;
+ }
+@@ -1008,6 +1030,7 @@ static int imx258_power_off(struct device *dev)
+ 	struct imx258 *imx258 = to_imx258(sd);
+ 
+ 	clk_disable_unprepare(imx258->clk);
++	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+ 
+ 	return 0;
+ }
+@@ -1220,6 +1243,18 @@ static void imx258_free_controls(struct imx258 *imx258)
+ 	mutex_destroy(&imx258->mutex);
+ }
+ 
++static int imx258_get_regulators(struct imx258 *imx258,
++				 struct i2c_client *client)
++{
++	unsigned int i;
++
++	for (i = 0; i < IMX258_NUM_SUPPLIES; i++)
++		imx258->supplies[i].supply = imx258_supply_name[i];
++
++	return devm_regulator_bulk_get(&client->dev,
++				    IMX258_NUM_SUPPLIES, imx258->supplies);
++}
++
+ static int imx258_probe(struct i2c_client *client)
+ {
+ 	struct imx258 *imx258;
+@@ -1230,6 +1265,11 @@ static int imx258_probe(struct i2c_client *client)
+ 	if (!imx258)
+ 		return -ENOMEM;
+ 
++	ret = imx258_get_regulators(imx258, client);
++	if (ret)
++		return dev_err_probe(&client->dev, ret,
++				     "failed to get regulators\n");
++
+ 	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
+ 	if (IS_ERR(imx258->clk))
+ 		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk),
 -- 
 2.44.0
 
