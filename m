@@ -1,57 +1,40 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7385621A06
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 09:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECB017565
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 09:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713085329; cv=none; b=c9NyLM2Vh6yONl9ao8icu001dnT0qdiqGf3bv1uIJeFVyuRf58DaCTOpIgQTVe+iC9udxzK9BGTX+wuWXVu15PdcRRneavKTrb8kL9VrDTeqrQLNEqQb4qc32TybI3g/rMsSadJIaf7Fijl0XM/nvIY6gEb16f0Kwvn53mFjJZA=
+	t=1713085390; cv=none; b=hy5kY313UVXPV+ZqM5tXYwAse9gHWdMkvpcAfueh9n4VN7P+CeA4kVBCLDGA6IhOfidIIn4iI0CVj3WE0cILiYffSQSsqSrjfucXENaooBs9XesbvI2PnpLlQhiFLuHqi19rBwVvTq7umYA0T6jk+xpgKJmQMt6vBaY87ZGwd1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713085329; c=relaxed/simple;
-	bh=GdeCl7lKpAyyip9hUe6EaLrBefz1GP2x8c4rjj9MlPk=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=d+P1SJsQttHaSYU3dCnazmSIBqnd1TYpTsNdfTgguB1QiFfgj6PBIXGIWIPWFRA2G6o2nClIiWfRP5yu1s9NcHn3M/7dxuGoDi0Y+/R/NlvW5H0CDuJl84bEy4OGzP8NYkRYqUKYTt9tDDQ7X6m39KNSFU1jg76EwtDhDehdKwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=vMOUkO8s; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="vMOUkO8s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1713085015; bh=60YJCoNW7ZRMSOrWG6OmlZL5ShYvKrJT+AUIpwBsk0g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=vMOUkO8sZHWfZBfcJfGu3bggjxA2j8fdiEJNO/M2pfVNRYh4tqyN7+yCS4f3pqlO9
-	 zNM+OgJWJtNLBx/FCmGiWw2eCOtNgzXD5HERA98mZcSDtglJ/nOxV8F4cajyqiiEYs
-	 ihzsETJKMFsZNRwDNROdNfzJzXRLBojwJaBQs4nE=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id E351729D; Sun, 14 Apr 2024 16:56:53 +0800
-X-QQ-mid: xmsmtpt1713085013tscbeo3ln
-Message-ID: <tencent_3C86D1B360E370E96663A06449F774776B05@qq.com>
-X-QQ-XMAILINFO: MtZ4zLDUQmWfHhVPAy5cf+nncrGR9sQ6J9UKFoM8tfIsz5TLTpcPWZ+nLMfVVP
-	 WyFVdgsrqKLqCtYEfVibwlnJBi+EQoqQltZdDE+BH1AuBrfDkg+tyGyQo7VNiixhcMxLH3/EHYfD
-	 y9uCiGy9YORGcwbvrJLPR8aKMamTusDWUsdGN56bvU1Te2uLHTeoV3r+e0N4yiAJRFtz22QCRJfd
-	 T4q9T7a1mdRCdz6um+UiZ0Ht/TiZG59Vr5vERPdmByhs8SR++xEwE+xFyYUZbdYTVHziA0EtDgNl
-	 LwSnxnVBPeshINd4k91jmpYf03nVFJuMfPtpXAiKguRJP8gbclCXOb7VZNG7mBnY5E7FXkBcGsMF
-	 FIEsBZ+J56+afbhJTMKXnX3BGBJqOFggrfCekMoF9r3xByzKFs6IwmUWksl1LR8iRCcyn27kPnBo
-	 QVoPZCUnRzfhvjqXcTWMZAJY9XmmHZFCzZQqQP/1yqSLpcejSI67B1Pe1KkuJNDP9PZrTNcqSQIc
-	 vrVWCvsczjspyfUPWKY28Oa0D3LVu8B/N9b5Cs+MYs4A/icRKpN8akyvRyTWabbnGjhM+kLi2Gh3
-	 SPxNAxpYWIvjJHyoOR5EMvN7Qx2CUgsv7rLpJLijUvPvKJARSFOsuu4FNaR0AW7THIsbkRJVJSXC
-	 +VdSSiG5zc2v1h+A5aGtkNOH7C9kjxDn3oVJXZr81FajhIsu/gnzWNJWC0kc+5am6KSnA+IdczyP
-	 hVKAbFYlGmaB+MbEsFMz2yGMV/ShXn446Ef+Fjwf7JsV3hxkNiIVURbn48N8h1sdPNWxQxn3Q6tH
-	 L8JeEPGgZWnHYZm+hoUzx39GzEI9ZtQIODmZ7ZR1hBV5Z09LeF8LLpFv9wfwyvITh8iuoe0NqtWF
-	 A/kx8PTJaq7z6V7LV2L487PD8abl77v3aivTTRntE7hjZWnjdUbfHn2uC6MhMVam8lDqYuM3sVD2
-	 r/dRI+ynA=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+3a36aeabd31497d63f6e@syzkaller.appspotmail.com
+	s=arc-20240116; t=1713085390; c=relaxed/simple;
+	bh=RSBB4Rc3N6JqLPK4yaV71FN7b7LX4nmoJudDO9PGz4w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dctXCQoS3xh/LTsDJFtKZ6Hl1PzY5vsaz/pHgT+1pAKjuy+BilmPlffviKHkOZt7ALjBl4VXwNa5qiY0vkUSDpc+uuFLsfg+xOxw7skl/kSW3seMM4/evLLsfu8Eayk6UmgJali2IrJ2Vnj9kz8ArxJPg6wATFQuq0D/k/FhkK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.67.190])
+	by sina.com (172.16.235.24) with ESMTP
+	id 661B9BC20000521A; Sun, 14 Apr 2024 17:03:00 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 52239845089245
+X-SMAIL-UIID: 70CDC4D05D104D6DBC8368B1C436A20F-20240414-170300-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+d0f14b2d5a3d1587fbe7@syzkaller.appspotmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [gfs2?] KASAN: slab-use-after-free Read in gfs2_invalidate_folio
-Date: Sun, 14 Apr 2024 16:56:54 +0800
-X-OQ-MSGID: <20240414085653.3441364-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000004f557c0615d47e6d@google.com>
-References: <0000000000004f557c0615d47e6d@google.com>
+Subject: Re: [syzbot] [pvrusb2?] [usb?] KASAN: slab-use-after-free Read in pvr2_context_set_notify (3)
+Date: Sun, 14 Apr 2024 17:02:53 +0800
+Message-Id: <20240414090253.2294-1-hdanton@sina.com>
+In-Reply-To: <000000000000bb465d061606e827@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,135 +43,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-please test uaf in gfs2_invalidate_folio
+On Sat, 13 Apr 2024 21:26:30 -0700
+> syzbot found the following issue on:
+> 
+> HEAD commit:    a788e53c05ae usb: usb-acpi: Fix oops due to freeing uninit..
+> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120ca915180000
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e8c39d0f57f3
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git  usb-testing
 
-diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-index 974aca9c8ea8..4ae5e73b6992 100644
---- a/fs/gfs2/aops.c
-+++ b/fs/gfs2/aops.c
-@@ -613,6 +613,7 @@ static void gfs2_discard(struct gfs2_sbd *sdp, struct buffer_head *bh)
- 	gfs2_log_lock(sdp);
- 	clear_buffer_dirty(bh);
- 	bd = bh->b_private;
-+	printk("bh: %p, bd: %p, %s\n", bh, bd, __func__);
- 	if (bd) {
- 		if (!list_empty(&bd->bd_list) && !buffer_pinned(bh))
- 			list_del_init(&bd->bd_list);
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index aa1626955b2c..d9092692c2fe 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -78,7 +78,9 @@ static int gfs2_unstuffer_folio(struct gfs2_inode *ip, struct buffer_head *dibh,
- 			map_bh(bh, inode->i_sb, block);
+--- x/drivers/media/usb/pvrusb2/pvrusb2-context.c
++++ y/drivers/media/usb/pvrusb2/pvrusb2-context.c
+@@ -26,6 +26,8 @@ static int pvr2_context_cleanup_flag;
+ static int pvr2_context_cleaned_flag;
+ static struct task_struct *pvr2_context_thread_ptr;
  
- 		set_buffer_uptodate(bh);
-+		printk("1.inode: %p, bh: %p, bd: %p, %s\n", ip, bh, bh->b_private, __func__);
- 		gfs2_trans_add_data(ip->i_gl, bh);
-+		printk("2.inode: %p, bh: %p, bd: %p, %s\n", ip, bh, bh->b_private, __func__);
- 	} else {
- 		folio_mark_dirty(folio);
- 		gfs2_ordered_add_inode(ip);
-@@ -105,6 +107,7 @@ static int __gfs2_unstuff_inode(struct gfs2_inode *ip, struct folio *folio)
++static DEFINE_MUTEX(pvr2_disconn_mutex);
++static int pvr2_context_cleaning;
  
- 		unsigned int n = 1;
- 		error = gfs2_alloc_blocks(ip, &block, &n, 0);
-+		printk("1,inode: %p, n: %d, err: %d, %s\n", ip, n, error, __func__);
- 		if (error)
- 			goto out_brelse;
- 		if (isdir) {
-@@ -117,6 +120,7 @@ static int __gfs2_unstuff_inode(struct gfs2_inode *ip, struct folio *folio)
- 			brelse(bh);
- 		} else {
- 			error = gfs2_unstuffer_folio(ip, dibh, block, folio);
-+			printk("2,inode: %p, n: %d, err: %d, %s\n", ip, n, error, __func__);
- 			if (error)
- 				goto out_brelse;
- 		}
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 8cddf955ebc0..6a65e7f5991a 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -1007,6 +1007,7 @@ static void trans_drain(struct gfs2_trans *tr)
+ static void pvr2_context_set_notify(struct pvr2_context *mp, int fl)
  {
- 	struct gfs2_bufdata *bd;
- 	struct list_head *head;
-+	struct buffer_head *bh;
+@@ -152,6 +154,9 @@ static int pvr2_context_thread_func(void
  
- 	if (!tr)
- 		return;
-@@ -1022,6 +1023,8 @@ static void trans_drain(struct gfs2_trans *tr)
- 	head = &tr->tr_databuf;
- 	while (!list_empty(head)) {
- 		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
-+		bh = container_of((void *)bd, struct buffer_head, b_private);
-+		printk("bh: %p, bd: %p, %s\n", bh, bd, __func__);
- 		list_del_init(&bd->bd_list);
- 		if (!list_empty(&bd->bd_ail_st_list))
- 			gfs2_remove_from_ail(bd);
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index aa9cf0102848..3f18b066cc0d 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -1007,6 +1007,7 @@ static int do_sync(unsigned int num_qd, struct gfs2_quota_data **qda)
- 		gfs2_glock_dq_uninit(&ghs[qx]);
- 	inode_unlock(&ip->i_inode);
- 	kfree(ghs);
-+	printk("err: %d, %s\n", error, __func__);
- 	gfs2_log_flush(ip->i_gl->gl_name.ln_sbd, ip->i_gl,
- 		       GFS2_LOG_HEAD_FLUSH_NORMAL | GFS2_LFC_DO_SYNC);
- 	if (!error) {
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index 26d6c1eea559..2b291270817c 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -2236,7 +2236,9 @@ static void gfs2_alloc_extent(const struct gfs2_rbm *rbm, bool dinode,
+ 	pvr2_trace(PVR2_TRACE_CTXT,"pvr2_context thread start");
  
- 	*n = 1;
- 	block = gfs2_rbm_to_block(rbm);
-+	printk("1. bh: %p, bd: %p, %s\n", rbm_bi(rbm)->bi_bh, rbm_bi(rbm)->bi_bh->b_private, __func__);
- 	gfs2_trans_add_meta(rbm->rgd->rd_gl, rbm_bi(rbm)->bi_bh);
-+	printk("2. bh: %p, bd: %p, %s\n", rbm_bi(rbm)->bi_bh, rbm_bi(rbm)->bi_bh->b_private, __func__);
- 	gfs2_setbit(rbm, true, dinode ? GFS2_BLKST_DINODE : GFS2_BLKST_USED);
- 	block++;
- 	while (*n < elen) {
-diff --git a/fs/gfs2/trans.c b/fs/gfs2/trans.c
-index 192213c7359a..d2353d052d34 100644
---- a/fs/gfs2/trans.c
-+++ b/fs/gfs2/trans.c
-@@ -205,10 +205,14 @@ void gfs2_trans_add_data(struct gfs2_glock *gl, struct buffer_head *bh)
- 	if (bd == NULL) {
- 		gfs2_log_unlock(sdp);
- 		unlock_buffer(bh);
--		if (bh->b_private == NULL)
-+		if (bh->b_private == NULL) {
- 			bd = gfs2_alloc_bufdata(gl, bh);
--		else
-+			printk("1bh: %p, bd: %p, %s\n", bh, bd, __func__);
-+		}
-+		else {
- 			bd = bh->b_private;
-+			printk("2bh: %p, bd: %p, %s\n", bh, bd, __func__);
-+		}
- 		lock_buffer(bh);
- 		gfs2_log_lock(sdp);
- 	}
-@@ -247,10 +251,14 @@ void gfs2_trans_add_meta(struct gfs2_glock *gl, struct buffer_head *bh)
- 		gfs2_log_unlock(sdp);
- 		unlock_buffer(bh);
- 		lock_page(bh->b_page);
--		if (bh->b_private == NULL)
-+		if (bh->b_private == NULL) {
- 			bd = gfs2_alloc_bufdata(gl, bh);
--		else
-+			printk("1bh: %p, bd: %p, %s\n", bh, bd, __func__);
-+		}
-+		else {
- 			bd = bh->b_private;
-+			printk("2bh: %p, bd: %p, %s\n", bh, bd, __func__);
-+		}
- 		unlock_page(bh->b_page);
- 		lock_buffer(bh);
- 		gfs2_log_lock(sdp);
-
++	mutex_lock(&pvr2_disconn_mutex);
++	pvr2_context_cleaning = 1;
++	mutex_unlock(&pvr2_disconn_mutex);
+ 	do {
+ 		while ((mp = pvr2_context_notify_first) != NULL) {
+ 			pvr2_context_set_notify(mp, 0);
+@@ -163,6 +168,9 @@ static int pvr2_context_thread_func(void
+ 			 pvr2_context_shutok()));
+ 	} while (!pvr2_context_shutok());
+ 
++	mutex_lock(&pvr2_disconn_mutex);
++	pvr2_context_cleaning = 0;
++	mutex_unlock(&pvr2_disconn_mutex);
+ 	pvr2_context_cleaned_flag = !0;
+ 	wake_up(&pvr2_context_cleanup_data);
+ 
+@@ -266,13 +274,17 @@ static void pvr2_context_exit(struct pvr
+ 
+ void pvr2_context_disconnect(struct pvr2_context *mp)
+ {
++	mutex_lock(&pvr2_disconn_mutex);
++	if (pvr2_context_cleaning)
++		goto out;
+ 	pvr2_hdw_disconnect(mp->hdw);
+ 	if (!pvr2_context_shutok())
+ 		pvr2_context_notify(mp);
+ 	mp->disconnect_flag = !0;
++out:
++	mutex_unlock(&pvr2_disconn_mutex);
+ }
+ 
+-
+ void pvr2_channel_init(struct pvr2_channel *cp,struct pvr2_context *mp)
+ {
+ 	pvr2_context_enter(mp);
+--
