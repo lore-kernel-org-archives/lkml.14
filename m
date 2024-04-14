@@ -1,96 +1,69 @@
-Received: from msa.smtpout.orange.fr (msa-215.smtpout.orange.fr [193.252.23.215])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1BD20DE8;
-	Sun, 14 Apr 2024 08:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8206C15E9B
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713081805; cv=none; b=ktvgK0SXPdPeVlrPA8bpBnet9t00/jDuesCmL2JTU2D388ycTRUk+rGFlExKzKvjWuZV82+gwEkN0wEbHWkriDXouVfghl3zO027670gRZvyFA63OEdIDrlpuyEAf8PpLgAwntuby8PQudG8gecLytH0nn7cWqLb7KwLMKy0O5k=
+	t=1713082417; cv=none; b=faU9ys0jUfIZZwBttIp/rXmQ23s+u12T/1IT1b1ZoiX9G4iXBKtqu3mbasgT9+zEKK0OZUajfKY7sGoi90Jh6s+vMAZPtSkxJhYB5czJc+4+tHCQtOLBdJWAcRCYBUg+xDP2GwqQi4S32JaqRvF/ZMItkp2lIdzzPvICV1legeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713081805; c=relaxed/simple;
-	bh=ZgdTR3mDDZBEx9fgnIcZGTrSMVKCA1raa3F6SrKzjqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tdiTE0iZg4C+oBze/o7MMjfSJFn7KuYURILGQ7lqFNxqn26GoqvH0sYp6M+O1WO0X6KYCYEpWZ7orBnw1+sAmC8+IoTwIcpL8pZD/0QosJbWP2+pNE6Lub16DAVUXtMXBE2hmE2S66AGA2HdR8NRK1GfUEQaERKuh+33kdX1+ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=TIReNNVB; arc=none smtp.client-ip=193.252.23.215
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TIReNNVB"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id vupUrbnUxReGpvupUrYOs3; Sun, 14 Apr 2024 10:03:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713081794;
-	bh=/EkCWI000WjErTLksVvS3KM3IgVVa6QzMO2SEgMZi3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=TIReNNVBjOjOl2krc105GJvTnNDykkW8fVUJ7UZhaNqn9h9VtBtKHn+bw6l1hbIXI
-	 9kH+odrq6fV0aC8H03Yra4RlTUPpeJ1sqwWXj3TpaJZdRMQicnSu3vibO1YJoKhCl8
-	 xg6GJApFPfpIpUf+vbg4f2pnhSW8B/x9u8GDuHxqVOMDrQFhR5MG83/FM0/L86HXYV
-	 QQ4g5iQ5oxRfTWl2Jocg8sU85D5742BvpAs1NtSafy7QYAvpa/yICs9klSnoI8mc3R
-	 OtAgXGsIeYqBMCy/4f12ZhOPDDddLpfXMljgbxOFHGrH0JrxYEU/xyTmVdYjbXKqDv
-	 y8Le9PMhci2Zw==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 10:03:14 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <79bef664-b191-4905-896c-afab341b982b@wanadoo.fr>
-Date: Sun, 14 Apr 2024 10:03:07 +0200
+	s=arc-20240116; t=1713082417; c=relaxed/simple;
+	bh=F3xf/pt6R7sYZi9bhyJuL7dyI8Pd/S5TgPXnODBOn2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=raNu8wHAC85f2zvKvbHDWJRr100+EsJikGQ5zT+8RgicNc6Hi0SpyVFsOE8HqCK8LJTBGO8gtKpk1Cry/YWQRYwaLIWTbs6oi4NIbYR0il+Uz6niBBtP/R3jeZuvCirmb4y4J/bs2mjeFDO3UTy3EgdMawMnH351O8djZU/60l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.67.190])
+	by sina.com (10.75.12.45) with ESMTP
+	id 661B902100007286; Sun, 14 Apr 2024 16:13:23 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 82475831457606
+X-SMAIL-UIID: B99C2C28A6B146038C15D9BC2B83E70C-20240414-161323-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+faf0acea764965b3e59e@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	tiwai@suse.com
+Subject: Re: [syzbot] [sound?] possible deadlock in _snd_pcm_stream_lock_irqsave (5)
+Date: Sun, 14 Apr 2024 16:13:17 +0800
+Message-Id: <20240414081317.2137-1-hdanton@sina.com>
+In-Reply-To: <0000000000000457ff0616069d07@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] hwmon: (max31790): Support config PWM output
- becomes TACH
-To: Chanh Nguyen <chanh@os.amperecomputing.com>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Justin Ledford
- <justinledford@google.com>, devicetree@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- OpenBMC Maillist <openbmc@lists.ozlabs.org>,
- Open Source Submission <patches@amperecomputing.com>
-Cc: Phong Vo <phong@os.amperecomputing.com>,
- Thang Nguyen <thang@os.amperecomputing.com>,
- Quan Nguyen <quan@os.amperecomputing.com>
-References: <20240414042246.8681-1-chanh@os.amperecomputing.com>
- <20240414042246.8681-3-chanh@os.amperecomputing.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240414042246.8681-3-chanh@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 14/04/2024 à 06:22, Chanh Nguyen a écrit :
-> PWMOUT pins on MAX31790 can be configured as a tachometer input pin by
-> setting bit[0] in the Configuration Register. When the bit[0] of a channel
-> is set, the PWMOUT pin becomes the tach input pin for the channel plus six.
+On Sat, 13 Apr 2024 21:05:20 -0700
+> syzbot found the following issue on:
 > 
-> This commit allows the kernel to set those pins when necessary if the
-> maxim,pwmout-pin-as-tach-input DT property exists.
-> 
-> Signed-off-by: Chanh Nguyen <chanh@os.amperecomputing.com>
-> ---
-> Changes in v2:
->   - Update the vendor property name to "maxim,pwmout-pin-as-tach-input"   [Rob]
+> HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10431e13180000
 
-...
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
 
-> @@ -528,6 +532,33 @@ static int max31790_probe(struct i2c_client *client)
->   	if (err)
->   		return err;
->   
-> +	if (device_property_present(dev, "maxim,pwmout-pin-as-tach-input")) {
-> +		err = device_property_read_u8_array(dev, "maxim,pwmout-pin-as-tach-input",
-> +						    pwmout_to_tach, NR_CHANNEL);
-> +		if (err) {
-> +			/* The maxim,pwmout-pin-as-tach-input is an array of six values */
-> +			dev_warn(dev, "The maxim,pwmout-pin-as-tach-input property exist but malform");
-
-Nit: exists
-Nit: malformed or "is malformed"
-
-CJ
+--- x/sound/core/timer.c
++++ y/sound/core/timer.c
+@@ -409,8 +409,9 @@ static void snd_timer_close_locked(struc
+ 	struct snd_timer *timer = timeri->timer;
+ 
+ 	if (timer) {
+-		guard(spinlock)(&timer->lock);
++		spin_lock_irq(&timer->lock);
+ 		timeri->flags |= SNDRV_TIMER_IFLG_DEAD;
++		spin_unlock_irq(&timer->lock);
+ 	}
+ 
+ 	if (!list_empty(&timeri->open_list)) {
+--
