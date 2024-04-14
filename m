@@ -1,94 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBA81350FA;
-	Sun, 14 Apr 2024 16:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FED6205E10
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 16:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713111864; cv=none; b=oenZY5jJ8YuA9ZcMa24q8RqY+9MCnSCOORAkjQqAREa7+7jtYjd9U72n3kXQuEHfy9w9UX3KbrSRbjGDQtJhIGzO+sWX5fbbu/pa8TN965CFwloNHtLFqpzTgiLKzO6iNh1i/YYBAb4Ljcpgrmp0gxvRUsACI6b6udRf7/Gle3k=
+	t=1713111909; cv=none; b=HsCBiYb82qKU+sTpQpnf7gTgCPxN9n9U8DWK68WRyyrXtBD1PMsVd+i1rzx7bRus85yO3UdkZSI4zQ4V2sHPojtSOQcSRLFryyXwxD2wqpqIsG6lzKfj4xtmVbNLdHvqA1Q8A64UcIJ+0W8qVi7OqtiyZUjHklFR1pghsHus1Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713111864; c=relaxed/simple;
-	bh=QeuvJ+PO6AYKR0nCyfG5EEKVnVTDcMMH6uM8m1EBOfw=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=kfqZRjkvrKghI5bsG/moP0yy3H+XLJ8S076Yh66lvYqOvdVzaMRxcBMF8r5tH85CnI0rU5/+MAkgVYsQw/wOhcbkc631g8u6WBRv8u70XAsa0kEmJ6aI+2VNBMFgsLoe1bOg9A607/jK424I84VfrJxoE48pvbWSPF6i9fjdoxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mM57ulN4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713111909; c=relaxed/simple;
+	bh=x9zY+X01BxCJYs60384+4AxqPsLSpqAW3M0zfApyxdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T11rTHhVNAbzXPbQWm7u34iSTE7mFx93uXqaEAQiVquWFUR6uY0Its671BmGiQEWe08kwdR7AURYtIACCceZOuKQZ2CVWzP4S7H0cc4EyK9UEfFFgpm3zgrOtPcL6ClO3AJONXvWzFWVTk7At91H+rKdpvEHjSMI5E6Jrsxm8Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J5AXTzk9; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mM57ulN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96930C072AA;
-	Sun, 14 Apr 2024 16:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713111863;
-	bh=QeuvJ+PO6AYKR0nCyfG5EEKVnVTDcMMH6uM8m1EBOfw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=mM57ulN4yzcL1i/NZgwZ45fXjHkAbnLyML+BgrzhXx+IT4kBGEWyDwfQAhA8Ic2uq
-	 7Rod5VeVh0tMMOwX3sWkv9iKPnLyoIWrUGnkueRLAY0HiHIVzjeGvgBjYWb4gSq6Aj
-	 7mVq3DQfr5fm+0F7k+RfDclBYgbT4SMO0ovRe1xty7yA8TjOdpAJVp0z45MiQPdmYX
-	 UmzDE/x2PRT2Yp1Sq8Y3D4lwkouIcEath11hWYBW2umFx57D8v0uWr9bxdX9SuFYXe
-	 UwLFvTyQ1aCZj/WdSH4KrOJT1KX7hXRjWLCbqvsgw4/ra1Tutk0LR5W4FoBNR111sH
-	 PCIdyQCDulWVA==
-Date: Sun, 14 Apr 2024 11:24:22 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5AXTzk9"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4715991c32so307737966b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 09:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713111906; x=1713716706; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OVsG3JCtQo4tlTQt5Af4gG7a1SS2UAv4W4YMU6rXC8Y=;
+        b=J5AXTzk9MNS79TK5+ViYN3eUc7aLCSi93UFaXSiXncuYG0TtLTkVYJz9uLC7ptLS+0
+         2/wrsS7hkp1vJzIYACLpZlFE2Vse1ypK6shJs90Nts5yUB+NOMZB26MQKpADDAsJpP6l
+         3fdmO1vP8+4mOWCB9wsbZURRnTn6Uy1kRZXfhtIKc6DPEVnH9Y33c84hxLl5wV8hgREm
+         rr4gYu0MytWodlmlqbsJyn4cnt+7L6Sy7I1MAYe7bLCX9xzAbv/VMpY0yGDb1CdTdt44
+         bgeAh5PHdAr/Lc3v3RRawRQ+SFPfkNcNAuBN0bEroXFVmo7JEUyCiKExYsVs85iRvNuW
+         9xmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713111906; x=1713716706;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OVsG3JCtQo4tlTQt5Af4gG7a1SS2UAv4W4YMU6rXC8Y=;
+        b=Rlmx7CewBmaTXin1mJ2kZc7M+5CqKsU9Pv+i8jKypwynw1hDXhYhO3s0lcfu9fRCPr
+         eO8DklHiU0uNTbFlOp1aA902U2/XesZwqWUv9X9j9CW6Ib5gWP/elky1R2W0sVkg2uOO
+         yLPQ+1i8fKQNIVIPvZ/WtJfgrTIsIsvDoB2Xf42R9Js+7AvMTAQ/FAZMXn3EXeg9xRJq
+         dpRSYIJNddxJNKR0J3EqcoBQpoVpsobh1uJV+ktfPUwtt//yA3DoN+gQexhnNNAKM68A
+         gHOWk6bwhwNkMlgMschlH1nQIhxmuln2RtOAHNCIkjtGXCyHJS0tuGje4K8qOkakVqPh
+         FIbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWq9Jra/TsRetx2MFxUmlIjvUg9q7Ufxh+IAo5VMjptM5VnLVb5JPez/iNdOExsendNqeTq0Odgk8OJyBDTyq+MHPfQWh460kaNuEZ2
+X-Gm-Message-State: AOJu0YzareQolv+49YhDmA0JjpJ8I5olFKM0opvAR2jursWZWeqL0oEu
+	QX6n/T4iWK2Xzte3DZWgFgyJmaZ0F+ga/TTbSCPux1d6zr7TivS7
+X-Google-Smtp-Source: AGHT+IH9g+mcCrogr0CIRidhtrDFP5KjqkCIgE/JGUqj2zc3wRYfBX9PYIONiFkO0uvOTfch9T1big==
+X-Received: by 2002:a17:906:2932:b0:a51:969e:ba0 with SMTP id v18-20020a170906293200b00a51969e0ba0mr4631415ejd.44.1713111905479;
+        Sun, 14 Apr 2024 09:25:05 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id b18-20020a1709063f9200b00a523cf3293fsm2920181ejj.59.2024.04.14.09.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Apr 2024 09:25:04 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] iommu/intel: Use try_cmpxchg64{,_local}() in iommu.c
+Date: Sun, 14 Apr 2024 18:23:11 +0200
+Message-ID: <20240414162454.49584-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: David Wronek <david@mainlining.org>
-Cc: dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Daniel Vetter <daniel@ffwll.ch>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Conor Dooley <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>
-In-Reply-To: <20240414-raydium-rm69380-driver-v1-1-5e86ba2490b5@mainlining.org>
-References: <20240414-raydium-rm69380-driver-v1-0-5e86ba2490b5@mainlining.org>
- <20240414-raydium-rm69380-driver-v1-1-5e86ba2490b5@mainlining.org>
-Message-Id: <171311185909.3846249.17342729762911919460.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add Raydium RM69380
+Content-Transfer-Encoding: 8bit
 
+Replace this pattern in iommu.c:
 
-On Sun, 14 Apr 2024 17:22:30 +0200, David Wronek wrote:
-> Raydium RM69380 is a display driver IC used to drive OLED DSI panels.
-> Add a dt-binding for it.
-> 
-> Signed-off-by: David Wronek <david@mainlining.org>
-> ---
->  .../bindings/display/panel/raydium,rm69380.yaml    | 94 ++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
-> 
+    cmpxchg64{,_local}(*ptr, 0, new) != 0
 
-My bot found errors running 'make dt_binding_check' on your patch:
+... with the simpler and faster:
 
-yamllint warnings/errors:
+    !try_cmpxchg64{,_local}(*ptr, &tmp, new)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml:
-Error in referenced schema matching $id: http://devicetree.org/schemas/display/panel/panel-common-dual.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/panel/raydium,rm69380.example.dtb: panel@0: False schema does not allow {'compatible': ['lenovo,j716f-edo-rm69380', 'raydium,rm69380'], 'reg': [[0]], 'avdd-supply': [[4294967295]], 'vddio-supply': [[4294967295]], 'reset-gpios': [[4294967295, 75, 1]], 'ports': {'#address-cells': [[1]], '#size-cells': [[0]], 'port@0': {'reg': [[0]], 'endpoint': {'remote-endpoint': [[4294967295]]}}, 'port@1': {'reg': [[1]], 'endpoint': {'remote-endpoint': [[4294967295]]}}}, '$nodename': ['panel@0']}
-	from schema $id: http://devicetree.org/schemas/display/panel/raydium,rm69380.yaml#
+The x86 CMPXCHG instruction returns success in the ZF flag, so this change
+saves a compare after the CMPXCHG.
 
-doc reference errors (make refcheckdocs):
+No functional change intended.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240414-raydium-rm69380-driver-v1-1-5e86ba2490b5@mainlining.org
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/intel/iommu.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 50eb9aed47cc..311073494f50 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -865,7 +865,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 			break;
+ 
+ 		if (!dma_pte_present(pte)) {
+-			uint64_t pteval;
++			uint64_t pteval, tmp;
+ 
+ 			tmp_page = alloc_pgtable_page(domain->nid, gfp);
+ 
+@@ -877,7 +877,8 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 			if (domain->use_first_level)
+ 				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US | DMA_FL_PTE_ACCESS;
+ 
+-			if (cmpxchg64(&pte->val, 0ULL, pteval))
++			tmp = 0ULL;
++			if (!try_cmpxchg64(&pte->val, &tmp, pteval))
+ 				/* Someone else set it while we were thinking; use theirs. */
+ 				free_pgtable_page(tmp_page);
+ 			else
+@@ -2128,8 +2129,8 @@ __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 		/* We don't need lock here, nobody else
+ 		 * touches the iova range
+ 		 */
+-		tmp = cmpxchg64_local(&pte->val, 0ULL, pteval);
+-		if (tmp) {
++		tmp = 0ULL;
++		if (!try_cmpxchg64_local(&pte->val, &tmp, pteval)) {
+ 			static int dumps = 5;
+ 			pr_crit("ERROR: DMA PTE for vPFN 0x%lx already set (to %llx not %llx)\n",
+ 				iov_pfn, tmp, (unsigned long long)pteval);
+-- 
+2.42.0
 
