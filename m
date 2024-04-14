@@ -1,114 +1,184 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8C3134CE8;
-	Sun, 14 Apr 2024 17:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A72E135A44;
+	Sun, 14 Apr 2024 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114674; cv=none; b=YjJqb5NIIjeYv5E4HrsXMb9W5pQQ/q3qMu7MYDTGNiBANaOZ6UO92PCmv85+U9oy+GeWR0EyxzMy0u7meRkPDqK3Z2ZjhzhRj3MoHofNJ5gG2YTMTOviVQ2ScQQLOWEmGusuccpbAHRpYw2mVKKK3OJeO7A+D/dB6CP+pkJSF3I=
+	t=1713114692; cv=none; b=JxK0Yat7ca899Ta7sInm3ze8G1xflrTdpdh83Nsm4ELv7GE6yisdEtLOvdCHrfPXQ3iFVmonKMOdsnA7//PhQxM5NZCneHh4oKeFsnxWYsYoYv7lAJmF06miHOekvOVfHPMd4NR1ZsK2vc+jg8vC4WeNtx4FgZqKaumLF4eY4H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713114674; c=relaxed/simple;
-	bh=wpe8KlwzaSSM+u2lvF16DyF5qHpDrPDvVSCVM3ngkNQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qqpCE7G9sxwBQup+0lZ6y3tCXvJ2helv3Ju61c4cJLFXwhXq4gIeKZWImGtNuSTvIZ5ofeewkT8SUjLmzyTVetd5WvnVBKUiHvSeUS64z+cD773Fiq5qjpa7S91XpAj95zfn32OK1vYe/RaRis0EEYlzoaOzWt9eBArvvWzBOQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from dslb-188-097-210-242.188.097.pools.vodafone-ip.de ([188.97.210.242] helo=martin-debian-3.kaiser.cx)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1rw3Dj-003uVz-0Q;
-	Sun, 14 Apr 2024 19:00:47 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Anna Schumaker <Anna.Schumaker@Netapp.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	David Howells <dhowells@redhat.com>
-Cc: NeilBrown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v3] nfs: keep server info for remounts
-Date: Sun, 14 Apr 2024 19:01:09 +0200
-Message-Id: <20240414170109.137696-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1713114692; c=relaxed/simple;
+	bh=582ZR/1WmW33NW2c7ENoKf9isC8AbHLnNxVhSWEVwHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qlUTGTVP5hb2AkhQs7+GTkYHHCZsM8N8u/CggYB0mRQnMZkIJvfr1jFax6oKfIki6DAHliPJDUvS42z6vPS5AWe4eAA6L+Qg2SGwzaFASP1KDZkWXnYwua3TFc8CK1VJstFgP006k5HkMjO1xM1kuuS9xrgFAq/WvgsUXNEoliM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b084hZLB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b084hZLB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485CEC072AA;
+	Sun, 14 Apr 2024 17:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713114691;
+	bh=582ZR/1WmW33NW2c7ENoKf9isC8AbHLnNxVhSWEVwHc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=b084hZLB5g/NFPHT6/JUfx/EQhWeq8IFSHyrUvCJiGipCVKrkmmFpwxPr2M7C026w
+	 D1eGXyFkbtboXwhHWPqjQ4so41yTW6SN36FxCmbudJSCZGsNVWA9AS2HVH0v0j3+th
+	 A6mIJ57qui4xQTwGY8T4U+HZlMb9+aGW540ROS1nt3Gk2hOAUvSrk5D2R2fj72udo1
+	 /AIPFCAPHh+YaTws2iQwhf3Sea8rol/hAg16+f6IO2QEc16F+fA8TdRvOxgzlID9NM
+	 Hn4brPqxNFGwXFI8631t5QuFubLIiZl3+Xrx5w3//5hgBF1V/OkkBr2U6LCuFerx4W
+	 swpw4ofb9mfOQ==
+Date: Sun, 14 Apr 2024 18:11:19 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] of: Use scope based of_node_put() cleanups
+Message-ID: <20240414181119.32246670@jic23-huawei>
+In-Reply-To: <20240409-dt-cleanup-free-v2-3-5b419a4af38d@kernel.org>
+References: <20240409-dt-cleanup-free-v2-0-5b419a4af38d@kernel.org>
+	<20240409-dt-cleanup-free-v2-3-5b419a4af38d@kernel.org>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-With newer kernels that use fs_context for nfs mounts, remounts fail with
--EINVAL.
+On Tue, 09 Apr 2024 13:59:41 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
-$ mount -t nfs -o remount /mnt/test/
-mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
+> Use the relatively new scope based of_node_put() cleanup to simplify
+> function exit handling. Doing so reduces the chances of forgetting an
+> of_node_put() and simplifies error paths by avoiding the need for goto
+> statements.
+> 
+> Reviewed-by: Saravana Kannan <saravanak@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi Rob,
 
-For remounts, the nfs server address and port are populated by
-nfs_init_fs_context and later overwritten with 0x00 bytes by
-nfs23_parse_monolithic. The remount then fails as the server address is
-invalid.
+A few follow up comments, but they are all in the 'you could' category.
+Either way.
 
-Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
-we're doing a remount.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- v3:
- - rebased against linux-next from 12th April 2024
+> ---
+> v2:
+>  - Also use cleanup for 'dev' in __of_translate_address()
+>  - Further simplify of_dma_is_coherent() and of_mmio_is_nonposted()
+> ---
+>  drivers/of/address.c  | 113 +++++++++++++++++---------------------------------
+>  drivers/of/property.c |  22 ++++------
+>  2 files changed, 46 insertions(+), 89 deletions(-)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index ae46a3605904..c350185ceaeb 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -486,34 +486,30 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+>   * device that had registered logical PIO mapping, and the return code is
+>   * relative to that node.
+>   */
+> -static u64 __of_translate_address(struct device_node *dev,
+> +static u64 __of_translate_address(struct device_node *node,
+>  				  struct device_node *(*get_parent)(const struct device_node *),
+>  				  const __be32 *in_addr, const char *rprop,
+>  				  struct device_node **host)
+>  {
+> -	struct device_node *parent = NULL;
+> +	struct device_node *dev __free(device_node) = of_node_get(node);
+> +	struct device_node *parent __free(device_node) = get_parent(dev);
+...
 
- v2:
- - rebased against linux-next from 26th February 2024
+> @@ -572,11 +567,8 @@ static u64 __of_translate_address(struct device_node *dev,
+>  
+>  		of_dump_addr("one level translation:", addr, na);
+>  	}
+> - bail:
+> -	of_node_put(parent);
+> -	of_node_put(dev);
+>  
+> -	return result;
+> +	return OF_BAD_ADDR;
 
-Dear all,
-I'm resending this patch again. The problem that I'm trying to fix is still
-present in linux-next. Thanks in advance for any reviews and comments.
+I think this is unreachable as there is no way to exist the loop without returning.
+If so (and the compiler complains if you remove this) you could mark it as such
+with unreachable();
 
-I guess that we're taking this path for remounts
 
-do_remount
-    fs_context_for_reconfigure
-        alloc_fs_context
-            init_fs_context == nfs_init_fs_context
-               fc->root is set for remounts
-               ctx->nfs_server is populated
-    parse_monolithic_mount_data
-        nfs_fs_context_parse_monolithic
-            nfs23_parse_monolithic
-               ctx->nfs_server is overwritten with data from mount request
+>  }
 
-An alternative to checking for !is_remount_fc(fc) would be to check
-if (ctx->nfs_server.addrlen == 0)
 
-fs/nfs/fs_context.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index d0a0956f8a13..cac1157be2c2 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- 		ctx->acdirmax	= data->acdirmax;
- 		ctx->need_mount	= false;
- 
--		memcpy(sap, &data->addr, sizeof(data->addr));
--		ctx->nfs_server.addrlen = sizeof(data->addr);
--		ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		if (!is_remount_fc(fc)) {
-+			memcpy(sap, &data->addr, sizeof(data->addr));
-+			ctx->nfs_server.addrlen = sizeof(data->addr);
-+			ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		}
-+
- 		if (sap->ss_family != AF_INET ||
- 		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
--- 
-2.39.2
+
+>  static int __of_address_to_resource(struct device_node *dev, int index, int bar_no,
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index a6358ee99b74..b73daf81c99d 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+
+
+
+> @@ -610,9 +607,9 @@ EXPORT_SYMBOL(of_graph_parse_endpoint);
+>   */
+>  struct device_node *of_graph_get_port_by_id(struct device_node *parent, u32 id)
+>  {
+> -	struct device_node *node, *port;
+> +	struct device_node *port;
+> +	struct device_node *node __free(device_node) = of_get_child_by_name(parent, "ports");
+>  
+> -	node = of_get_child_by_name(parent, "ports");
+>  	if (node)
+>  		parent = node;
+>  
+> @@ -626,8 +623,6 @@ struct device_node *of_graph_get_port_by_id(struct device_node *parent, u32 id)
+>  			break;
+>  	}
+>  
+> -	of_node_put(node);
+> -
+
+You 'could' (feel free to ignore) make this perhaps more obvious wiht.
+
+	for_each_child_of_node_scoped(parent, port) {
+		u32 port_id = 0;
+
+		if (!of_node_name_eq(port, "port"))
+			continue;
+		of_property_read_u32(port, "reg", &port_id);
+		if (id == port_id)
+			return_ptr(port);
+	}
+	
+	return NULL;
+
+Makes it explicit you are holding a reference on exit if you go vial
+the return_ptr() route and that if you don't then in all cases the return value
+will be NULL.
+
+>  	return port;
+>  }
+>  EXPORT_SYMBOL(of_graph_get_port_by_id);
+> @@ -655,14 +650,13 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>  	 * parent port node.
+>  	 */
+>  	if (!prev) {
+> -		struct device_node *node;
+> +		struct device_node *node __free(device_node) =
+> +			of_get_child_by_name(parent, "ports");
+>  
+> -		node = of_get_child_by_name(parent, "ports");
+>  		if (node)
+>  			parent = node;
+>  
+>  		port = of_get_child_by_name(parent, "port");
+> -		of_node_put(node);
+Very trivial but I'd drop the blank line here to more closely associate the check
+with retrieval of the port.
+>  
+>  		if (!port) {
+>  			pr_debug("graph: no port node found in %pOF\n", parent);
+
+> 
 
