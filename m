@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9719036121;
-	Sun, 14 Apr 2024 16:47:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5305B36121
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 16:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713113237; cv=none; b=LXJPhCq+om1f/XxWLJPvHkuBeBiqmfg4x2GlxOTgqn5Q/42yVkDBSN+bAIaZKdjMP8a4fHpPSmjqFoXK2PUz1xfmCUttxYXL41cIi2xCQGrykd3fzGzbYUQWouIiiVbs/7OG3mJLlNDe0KgZdQB4EEt8GhP22PhfKN4czZWDvKw=
+	t=1713113372; cv=none; b=IqkLxRAkiMY/g/T665ZY5Rahy0e8LkzSaqZCmKb8DL3c5vzjvb23km95LaiA901WCVpuerEHdAy9lP97FER/o9ScbNwhpOagrvlcwgVXJ/0DBdmEQKpwKfhxrwyz7B7anvYIe20O3bNQ/++rJXxG7sVFfSExcCujWFJyh1MICiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713113237; c=relaxed/simple;
-	bh=AolP9PgyV9zpndfsjC2nvy9UABqdvDFwC4+BmEHkEUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RMaFzraqc/0knVyzwax3CsBXzJikT+sn3FOKtrk/myXajTWTD25MjCzNT7bZwWpYVQsASyIFobJ21baRs9IMf6JE9NDJTDQgJm6sOBx9l9rciF0A4tpnL9CrwYd1mg84mMqIZn78DBhHvpODHfgf0PBd+fQRoXUzgFaKT9rx0cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/4k9JbT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713113372; c=relaxed/simple;
+	bh=Wss0WbtUOhjUWhYJ8vc04bb0suWYo6mOU9+OkAYhBcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t1zuF5STBlh2GkZEdJhy0yupGbj2Gyay2lufkQ0Yf6vHqGPnzrP9YtKGukjdYeulV9iDVqC5gHwOM3jTaLOlblT1SrWms4OJ1blW29hhPY+m4F1lMMHNKVqBqrssKR0+xe+2W9FnkSmdCYd6tlLP8az5NwOQ3toMd106M4RWsuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6Cwpm+f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/4k9JbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391CAC072AA;
-	Sun, 14 Apr 2024 16:47:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6Cwpm+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04281C072AA;
+	Sun, 14 Apr 2024 16:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713113237;
-	bh=AolP9PgyV9zpndfsjC2nvy9UABqdvDFwC4+BmEHkEUM=;
+	s=k20201202; t=1713113372;
+	bh=Wss0WbtUOhjUWhYJ8vc04bb0suWYo6mOU9+OkAYhBcw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=d/4k9JbTnLVkVTRpjTZb2INcZaOAXpFw/KFwA/VedWLe0UVj/gaKg70QYMld2vX3w
-	 b21hxKnFPonxK3UB5fvHAawx0a3Isogh/QWpfUffQiAb/Ei/Q3emBIsqyAw0QLTyg7
-	 ivAJxtx6OLhbPMKnM1KQ5TTkuON1ndUx7A0zBp8D3n0teiwgU2e8JL7L9ebK7Z/QhR
-	 K88PBZBA3SDIEC8e7LInNnous1m77nz/6TVkPA0SHOiJZqX7ZZs6p3h+3HEJ5wlPJS
-	 2faoAp+tFH/uhYSY7bRXFfw9wEoDvJU/WZR6Trx9Roi4u8yE1d61meVWrZVZyyAdBN
-	 62zIU3LodlSDg==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
+	b=d6Cwpm+fEoTII9Fi29J6au/DDKa2VJhKm96C02wk9z6fFDLf9pa+7rx//sI7lS9um
+	 z32FGHATSjYDmQ4lLT6b31eXyCMnsz2Bc2eVA1JHTHQg8Ao/QcKdMVWhZ81WKv9+j9
+	 uoVGS3cQcBXQqUwjz69L2KyX5egnTuyVUUJ4RZtejdeNxGbhtbF/m1c7A+80Q7xqBn
+	 wgljKMzVv5HOZ2qkKFd5ZJQmZzze8yxY+HVtdQALEzbDfiWy9URP6557EMHYMkPz/j
+	 gBSgfv8MuAa29XloP5ow/uBmZTemnlLEFyGRlHJJeLGpaOP63ATMfPv4Qqcz5JXohA
+	 50VXUb/IvUmwQ==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ASoC: amd: acp-da7219-max98357a: Constify regulator_ops
-Date: Sun, 14 Apr 2024 18:47:03 +0200
-Message-Id: <20240414164703.239851-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] riscv: boot: remove duplicated targets line
+Date: Mon, 15 Apr 2024 00:36:06 +0800
+Message-ID: <20240414163606.2598-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,27 +43,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Neither core nor the driver modifes 'struct regulator_ops', so it can be
-const for code safety.
+The "targets:" is duplicated in another line, remove the one with less
+targets.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- sound/soc/amd/acp-da7219-max98357a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/boot/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/amd/acp-da7219-max98357a.c b/sound/soc/amd/acp-da7219-max98357a.c
-index 84f3d65ba52e..77cf72082e73 100644
---- a/sound/soc/amd/acp-da7219-max98357a.c
-+++ b/sound/soc/amd/acp-da7219-max98357a.c
-@@ -733,7 +733,7 @@ static struct regulator_config acp_da7219_cfg = {
- 	.init_data = &acp_da7219_data,
- };
+diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+index 8e7fc0edf21d..e051c677f6c4 100644
+--- a/arch/riscv/boot/Makefile
++++ b/arch/riscv/boot/Makefile
+@@ -20,7 +20,6 @@ OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
+ OBJCOPYFLAGS_loader.bin :=-O binary
+ OBJCOPYFLAGS_xipImage :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
  
--static struct regulator_ops acp_da7219_ops = {
-+static const struct regulator_ops acp_da7219_ops = {
- };
+-targets := Image Image.* loader loader.o loader.lds loader.bin
+ targets := Image Image.* loader loader.o loader.lds loader.bin xipImage
  
- static const struct regulator_desc acp_da7219_desc = {
+ ifeq ($(CONFIG_XIP_KERNEL),y)
 -- 
-2.34.1
+2.43.0
 
