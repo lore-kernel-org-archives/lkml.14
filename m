@@ -1,95 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC0C135407;
-	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4071350C8
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 17:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114092; cv=none; b=FsV7d4fCR6VEH1vQDCfjntO4Ktwv92PNKGrpjM9/D1TFQHi+hMQtZa2OcC+LkQJ5TW3RZB1f9xVacY7kPWPNbMSWpMqXclw9aLZIl9NUx5CHZ9YVwFbJZUYYOAHuSw4iokeEVTSVvh4u6Izqvq80AlBDdCczF0indMz+UkcTQfk=
+	t=1713114212; cv=none; b=mxDIvXgvfdr457wvmFLYx41C2TS0+6FCbl/Q1Z0U13tVMReBYZe64ytlk9y8i/cIUxXLb6eH7fMy5EBTztI819enDZj17UKF3BC4K10+FZiipjC8iba5kmeNBB/cA3ioq6yqXkCZhwdgnr3X5CgktVeD3GPijK1IAq04Jr+m8XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713114092; c=relaxed/simple;
-	bh=68xt7Zl6oS75woZQFbbtcf5AEvnxXJ4zbEAjvFHKlSU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ELAbW9bcvqKManGtGjFX4kOiVEV0K8V1Pi1XeU4VgAvxnpXMlmdnpO8snkgjOrIcO96fgFapYo94IsrTf3l+FENKbj0eL8k9ptMHljD9pP5FGRrkjYQRHAV0fELhmv+1IY5Qtwm+iFPqle8K1PlY0i52ftllSXhAEMJalGB0Ho0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Na1NUYLe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713114212; c=relaxed/simple;
+	bh=Q2vi5tUa/JsZ1tExqUYwhUdTXyjbz/UnYNj61uLrxEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RY2L8b5L0Eirm1ZZDsUOcdoKjP6T1jddCYCcdq2f+sfozlf80QzqX/juDnr003zf11q3eydmP2t44C5+BxzrVvPlWpA6+8D5yVJ/KxIG960IuvckgId9ZtmTlh+LipRz9IM8XxEfzuCvpWiahQR3QFGnFNsawulNDIVahx5sePI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=zAe8Sb/c; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Na1NUYLe"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BD829C32781;
-	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713114091;
-	bh=68xt7Zl6oS75woZQFbbtcf5AEvnxXJ4zbEAjvFHKlSU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Na1NUYLexRksUs+vypvnWGeGqT6Ov2mGXyCS4zHuGd0qcpSrnydkxAJt+uk1sn9zJ
-	 f9Ws0eijnpaktEKJ0w3B1o+SXaWYCGSdsvDQ4kdqYHgWX9cyAeK1mq2ID4kybgj23u
-	 aJ7y5q8xielyXoGw+WJe5N1lnS5DFCXmqFC7N74aJlJeDVCk8XJkIi2L0U+ywDpoR+
-	 GGEAE0BXuARMmV+nKezllwXcAtoQ9/PhAfkXIpxWwxhV0R7qZHnbfl/adnJ2tV/0Xm
-	 61NwKk5xQn24Iba3NLbB8vscCPCluOVwy7F+ObM+IZbFQavhQAy69o5xTMa4YlrGzi
-	 rcZc7MqN2608Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DF6C05023;
-	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Sun, 14 Apr 2024 20:01:23 +0300
-Subject: [PATCH 3/4] ARM: dts: BCM5301X: remove duplicate compatible on
- ASUS RT-AC3100 & AC88U
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="zAe8Sb/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1713114200; bh=oQvPHwK37sX7tQP2xpq0TkEx87p6aD7ris711rg5za8=;
+ b=zAe8Sb/cDkbfdnjXOpk+XcEeRKeYQje6q94oweQD1QjU0/1DikVLzTw+drC8XoS/oinq91DRE
+ qg4l3WF2I9Ei94tO9OXlXQJZa89Y57Z52nk/HgAC1j/2Qb4dMP2Ui3y6WDpUy+CiwUKw1qfnI5f
+ ZSWZia1qeb4aiq7a3+HWmcsVycgQWOcXLWvXXJFCoy4z3zE+N3c3RgBVvosqUgew31JUZeVUUVR
+ yA0ZhHVEIuXK5R8TDFAgBwIC/YAdDeEkug4M4cwCsLZdfzQQwoR2eRQ+YGFHp2JJiQkw60PXLpq
+ a+Eo5qAK3YttZlOp2ewV69Me1Nl1K8PnYakX4Xz3wbXw==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
+ Karlman <jonas@kwiboo.se>, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: arm: rockchip: Add Radxa ZERO 3W/3E
+Date: Sun, 14 Apr 2024 15:11:27 +0000
+Message-ID: <20240414151135.1774981-2-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240414151135.1774981-1-jonas@kwiboo.se>
+References: <20240414151135.1774981-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240414-for-soc-asus-rt-ac3100-improvements-v1-3-0e40caf1a70a@arinc9.com>
-References: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
-In-Reply-To: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, 
- Hauke Mehrtens <hauke@hauke-m.de>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713114081; l=755;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=7GCgujVUrJeA8ePIinKhDBblwNfvpTAeDc0zJTmfQ78=;
- b=tTf9mICbwbUHVFCGoZzFsEdu5Hulm2dWxlh+OwxaTG1Mb5oVITpwaLareFHGK4SvScM8QkLht
- x8T4iVz96ETACCQSnIkTOWExpKyWKq9Rl0RkzNb8Lfsa7hlBhed6dZY
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
- with auth_id=115
-X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-Reply-To: arinc.unal@arinc9.com
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 661bf23299ce03c87699d729
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Add devicvetree binding documentation for Radxa ZERO 3W/3E boards.
 
-The compatible property on the node with the srab handle is already
-described with the same value on the included device tree. Remove it.
+The Radxa ZERO 3W/3E is an ultra-small, high-performance single board
+computer based on the Rockchip RK3566, with a compact form factor and
+rich interfaces.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+v2: Collect acked-by tag
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
-index 9271792a9e44..84d583168d81 100644
---- a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
-+++ b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
-@@ -101,7 +101,6 @@ button-wps {
- };
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 4bd033adeee4..2d43729bebab 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -804,6 +804,13 @@ properties:
+           - const: radxa,rock-5b
+           - const: rockchip,rk3588
  
- &srab {
--	compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
- 	status = "okay";
- 
- 	ports {
-
++      - description: Radxa ZERO 3W/3E
++        items:
++          - enum:
++              - radxa,zero-3e
++              - radxa,zero-3w
++          - const: rockchip,rk3566
++
+       - description: Rikomagic MK808 v1
+         items:
+           - const: rikomagic,mk808
 -- 
-2.40.1
-
+2.43.2
 
