@@ -1,40 +1,40 @@
-Received: from mail-108-mta124.mxroute.com (mail-108-mta124.mxroute.com [136.175.108.124])
+Received: from mail-108-mta22.mxroute.com (mail-108-mta22.mxroute.com [136.175.108.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB187135A59
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E733B136E3D
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713126972; cv=none; b=ioJDk4ozjv4/Nd/73497O5dD1jNxN4pOcEcidtkDS0uYvc5UFa6LeiD21tlsK+oqDEj5aRL60sS8jYdRoQQi5hgTIPlJuLB1WIHHR1FxcdGnFgyFRQpwqpxZ3ndjy77hlsd0XbsPQBVMelESMIJTBNdIvdx5AlYVChp64oregAY=
+	t=1713126976; cv=none; b=RPcue9BNFm54+PHL9OUo/XVuwrAP6gOxFcB9XxmFguHRelLlUMwCn6YKrotRalf02cA4uhqgJM/HJrvnMQ5cZm3wQlXju/ranBNrOC5lFlW/VYS1Q9Y6CPYZT3zAy0BwE/Pj8lwF91sfx1kqVIfoy9N3iSPcwdj6a2Hq7/37/VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713126972; c=relaxed/simple;
-	bh=1Al2X4/Z9BOhfBe2tjhwOtcJteP1g/8Kssi8PBv9Dtg=;
+	s=arc-20240116; t=1713126976; c=relaxed/simple;
+	bh=4KQV0NHOt7hQp4p/mm19QOVdO1e0l84pdOZTBhUWfug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E9G2hivAZzzF7PZOLCCBJPijMU12uRTABsRVSqyuwwLyW/EO4/xlLIBtwwpxegZsTRAjUKyi65iSGxG0Qs6oLKD+b/2S+omehMcZ+e5hxfNwjC07MIIzS7q/vMUIZqpgIMvQFRt+tfev4AYRChInW8ur9b8zxY6I9HMUon3NgHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=kQArnOD6; arc=none smtp.client-ip=136.175.108.124
+	 MIME-Version; b=HDp52W8Usr4OUVBxNPOUGZPzEkHh8Ru8pEmhiB4Hw5w0IvrTysrZzZ3+9baTB4XQjGCFVYJKOJB91jW6FZ6c3VVWIJ9XqPTzcZuk5Fcceh9voqzpEueOpy0E8Me47PaOBVIaIYEfDaPI2K7f4/uIhSxEKC0cp0npO9kkygf21kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=s7HZwJSs; arc=none smtp.client-ip=136.175.108.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="kQArnOD6"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="s7HZwJSs"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta124.mxroute.com (ZoneMTA) with ESMTPSA id 18ede5267560003bea.010
+ by mail-108-mta22.mxroute.com (ZoneMTA) with ESMTPSA id 18ede527fd90003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sun, 14 Apr 2024 20:35:26 +0000
-X-Zone-Loop: 1ee80a96c5aa6ec78b497d81807a546b97d76903245f
+ Sun, 14 Apr 2024 20:35:32 +0000
+X-Zone-Loop: 06d7fa1695a9e253ba9d1e6ed8f656399fda4e8a6d21
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JIvVqv/364uB2mrny4F+hSowPVF47wy89VevZ9gPo+A=; b=kQArnOD6wCpjhUXrDF2QzFsCZT
-	G5R/sn5W3ccAXG6UvKNVMdn9BndQ0j9Xuog1yUXTxLSokyqDO8VJ5yFxf0QL7/nHSmzRtarauhMcx
-	mwleDI7dglAGfFEvVFH+hh3879YdItyq69P0BLd3ul4ZDgGNeBe6Cmvg4Up9lAdknXTpqctZS/kpw
-	rmrVCyl/jv6/3z1YU/CNpAIk22V30P3a41gnJS1DpcMNTyyjjJYzA7y69hYKs0ilg90zJS2taDvCb
-	9+X9wKh4jQqG5SGKcRpfoCGFIlzFdyyE+OqFp7+QNeTXAxZpjCKJxEtRYwBgWbEKaDp0maODF2eJC
-	UFQAlf3g==;
+	bh=TqJSDNIcYAg5c5AK2hjAXrI8p2YMYTt9oVpXL5nQoOw=; b=s7HZwJSsIS0Iad2h5B8qEZkFEz
+	NKsC89b3a+eV0yfT5vmndI6FkINsnFCrWjnjbx4CayODdVP+0BGEAzs+qCrHw4WYqk7VlFQ91Pjcr
+	Y89WsOSgB7klnxNJfLiCqVQThw8a2LXPfpMxQmhKFCwcoA2CIsHxQkFzJBcLVuARoZd6yIRZffDo8
+	kuqI6XjYmAbTqHAsyx1J0aVp4rZuk4iN3c5JThMGlXfqPFX4ufGokjqlMFD/i+ofjPHhYWiu1MG3R
+	4AP+z7HBeEd/Z8Mh2n9jtYE4XymcfJfTeZifZG6wB5wfGiU21Pa/RliPbu48206GJD37XHwEUNZqr
+	YSQ7qiEg==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v4 07/25] media: i2c: imx258: Split out common registers from the mode based ones
-Date: Sun, 14 Apr 2024 14:34:45 -0600
-Message-ID: <20240414203503.18402-8-git@luigi311.com>
+Subject: [PATCH v4 10/25] media: i2c: imx258: Follow normal V4L2 behaviours for clipping exposure
+Date: Sun, 14 Apr 2024 14:34:48 -0600
+Message-ID: <20240414203503.18402-11-git@luigi311.com>
 In-Reply-To: <20240414203503.18402-1-git@luigi311.com>
 References: <20240414203503.18402-1-git@luigi311.com>
 Precedence: bulk
@@ -71,322 +71,81 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Out of all the registers that are defined for each mode, only around
-10 differ between the modes.
+V4L2 sensor drivers are expected to clip the supported exposure
+range based on the VBLANK configured.
+IMX258 wasn't doing that as register 0x350 (FRM_LENGTH_CTL)
+switches it to a mode where frame length tracks coarse exposure time.
 
-Split the table into common and mode specific ones.
+Disable this mode and clip the range for V4L2_CID_EXPOSURE appropriately
+based on V4L2_CID_VBLANK.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/i2c/imx258.c | 236 ++++---------------------------------
- 1 file changed, 21 insertions(+), 215 deletions(-)
+ drivers/media/i2c/imx258.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 321b504c6a48..351add1bc5d5 100644
+index 8f792f0e0738..ebc404b548b3 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -151,7 +151,7 @@ static const struct imx258_reg mipi_data_rate_640mbps[] = {
- 	{ 0x0823, 0x00 },
- };
+@@ -37,10 +37,11 @@
  
--static const struct imx258_reg mode_4208x3120_regs[] = {
-+static const struct imx258_reg mode_common_regs[] = {
- 	{ 0x0136, 0x13 },
- 	{ 0x0137, 0x33 },
- 	{ 0x3051, 0x00 },
-@@ -216,27 +216,17 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
- 	{ 0x0383, 0x01 },
- 	{ 0x0385, 0x01 },
- 	{ 0x0387, 0x01 },
--	{ 0x0900, 0x00 },
--	{ 0x0901, 0x11 },
--	{ 0x0401, 0x00 },
- 	{ 0x0404, 0x00 },
--	{ 0x0405, 0x10 },
- 	{ 0x0408, 0x00 },
- 	{ 0x0409, 0x00 },
- 	{ 0x040A, 0x00 },
- 	{ 0x040B, 0x00 },
- 	{ 0x040C, 0x10 },
- 	{ 0x040D, 0x70 },
--	{ 0x040E, 0x0C },
--	{ 0x040F, 0x30 },
- 	{ 0x3038, 0x00 },
+ /* Exposure control */
+ #define IMX258_REG_EXPOSURE		0x0202
++#define IMX258_EXPOSURE_OFFSET		10
+ #define IMX258_EXPOSURE_MIN		4
+ #define IMX258_EXPOSURE_STEP		1
+ #define IMX258_EXPOSURE_DEFAULT		0x640
+-#define IMX258_EXPOSURE_MAX		65535
++#define IMX258_EXPOSURE_MAX		(IMX258_VTS_MAX - IMX258_EXPOSURE_OFFSET)
+ 
+ /* Analog gain control */
+ #define IMX258_REG_ANALOG_GAIN		0x0204
+@@ -371,7 +372,7 @@ static const struct imx258_reg mode_common_regs[] = {
  	{ 0x303A, 0x00 },
  	{ 0x303B, 0x10 },
  	{ 0x300D, 0x00 },
--	{ 0x034C, 0x10 },
--	{ 0x034D, 0x70 },
--	{ 0x034E, 0x0C },
--	{ 0x034F, 0x30 },
- 	{ 0x0350, 0x01 },
+-	{ 0x0350, 0x01 },
++	{ 0x0350, 0x00 },
  	{ 0x0204, 0x00 },
  	{ 0x0205, 0x00 },
-@@ -266,234 +256,43 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
- 	{ 0x0220, 0x00 },
- };
+ 	{ 0x020E, 0x01 },
+@@ -734,6 +735,19 @@ static int imx258_update_digital_gain(struct imx258 *imx258, u32 len, u32 val)
+ 	return 0;
+ }
  
-+static const struct imx258_reg mode_4208x3120_regs[] = {
-+	{ 0x0900, 0x00 },
-+	{ 0x0901, 0x11 },
-+	{ 0x0401, 0x00 },
-+	{ 0x0405, 0x10 },
-+	{ 0x040E, 0x0C },
-+	{ 0x040F, 0x30 },
-+	{ 0x034C, 0x10 },
-+	{ 0x034D, 0x70 },
-+	{ 0x034E, 0x0C },
-+	{ 0x034F, 0x30 },
-+};
++static void imx258_adjust_exposure_range(struct imx258 *imx258)
++{
++	int exposure_max, exposure_def;
 +
- static const struct imx258_reg mode_2104_1560_regs[] = {
--	{ 0x0136, 0x13 },
--	{ 0x0137, 0x33 },
--	{ 0x3051, 0x00 },
--	{ 0x3052, 0x00 },
--	{ 0x4E21, 0x14 },
--	{ 0x6B11, 0xCF },
--	{ 0x7FF0, 0x08 },
--	{ 0x7FF1, 0x0F },
--	{ 0x7FF2, 0x08 },
--	{ 0x7FF3, 0x1B },
--	{ 0x7FF4, 0x23 },
--	{ 0x7FF5, 0x60 },
--	{ 0x7FF6, 0x00 },
--	{ 0x7FF7, 0x01 },
--	{ 0x7FF8, 0x00 },
--	{ 0x7FF9, 0x78 },
--	{ 0x7FFA, 0x00 },
--	{ 0x7FFB, 0x00 },
--	{ 0x7FFC, 0x00 },
--	{ 0x7FFD, 0x00 },
--	{ 0x7FFE, 0x00 },
--	{ 0x7FFF, 0x03 },
--	{ 0x7F76, 0x03 },
--	{ 0x7F77, 0xFE },
--	{ 0x7FA8, 0x03 },
--	{ 0x7FA9, 0xFE },
--	{ 0x7B24, 0x81 },
--	{ 0x7B25, 0x00 },
--	{ 0x6564, 0x07 },
--	{ 0x6B0D, 0x41 },
--	{ 0x653D, 0x04 },
--	{ 0x6B05, 0x8C },
--	{ 0x6B06, 0xF9 },
--	{ 0x6B08, 0x65 },
--	{ 0x6B09, 0xFC },
--	{ 0x6B0A, 0xCF },
--	{ 0x6B0B, 0xD2 },
--	{ 0x6700, 0x0E },
--	{ 0x6707, 0x0E },
--	{ 0x9104, 0x00 },
--	{ 0x4648, 0x7F },
--	{ 0x7420, 0x00 },
--	{ 0x7421, 0x1C },
--	{ 0x7422, 0x00 },
--	{ 0x7423, 0xD7 },
--	{ 0x5F04, 0x00 },
--	{ 0x5F05, 0xED },
--	{ 0x0112, 0x0A },
--	{ 0x0113, 0x0A },
--	{ 0x0114, 0x03 },
--	{ 0x0342, 0x14 },
--	{ 0x0343, 0xE8 },
--	{ 0x0344, 0x00 },
--	{ 0x0345, 0x00 },
--	{ 0x0346, 0x00 },
--	{ 0x0347, 0x00 },
--	{ 0x0348, 0x10 },
--	{ 0x0349, 0x6F },
--	{ 0x034A, 0x0C },
--	{ 0x034B, 0x2F },
--	{ 0x0381, 0x01 },
--	{ 0x0383, 0x01 },
--	{ 0x0385, 0x01 },
--	{ 0x0387, 0x01 },
- 	{ 0x0900, 0x01 },
- 	{ 0x0901, 0x12 },
- 	{ 0x0401, 0x01 },
--	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x20 },
--	{ 0x0408, 0x00 },
--	{ 0x0409, 0x00 },
--	{ 0x040A, 0x00 },
--	{ 0x040B, 0x00 },
--	{ 0x040C, 0x10 },
--	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x06 },
- 	{ 0x040F, 0x18 },
--	{ 0x3038, 0x00 },
--	{ 0x303A, 0x00 },
--	{ 0x303B, 0x10 },
--	{ 0x300D, 0x00 },
- 	{ 0x034C, 0x08 },
- 	{ 0x034D, 0x38 },
- 	{ 0x034E, 0x06 },
- 	{ 0x034F, 0x18 },
--	{ 0x0350, 0x01 },
--	{ 0x0204, 0x00 },
--	{ 0x0205, 0x00 },
--	{ 0x020E, 0x01 },
--	{ 0x020F, 0x00 },
--	{ 0x0210, 0x01 },
--	{ 0x0211, 0x00 },
--	{ 0x0212, 0x01 },
--	{ 0x0213, 0x00 },
--	{ 0x0214, 0x01 },
--	{ 0x0215, 0x00 },
--	{ 0x7BCD, 0x01 },
--	{ 0x94DC, 0x20 },
--	{ 0x94DD, 0x20 },
--	{ 0x94DE, 0x20 },
--	{ 0x95DC, 0x20 },
--	{ 0x95DD, 0x20 },
--	{ 0x95DE, 0x20 },
--	{ 0x7FB0, 0x00 },
--	{ 0x9010, 0x3E },
--	{ 0x9419, 0x50 },
--	{ 0x941B, 0x50 },
--	{ 0x9519, 0x50 },
--	{ 0x951B, 0x50 },
--	{ 0x3030, 0x00 },
--	{ 0x3032, 0x00 },
--	{ 0x0220, 0x00 },
- };
- 
- static const struct imx258_reg mode_1048_780_regs[] = {
--	{ 0x0136, 0x13 },
--	{ 0x0137, 0x33 },
--	{ 0x3051, 0x00 },
--	{ 0x3052, 0x00 },
--	{ 0x4E21, 0x14 },
--	{ 0x6B11, 0xCF },
--	{ 0x7FF0, 0x08 },
--	{ 0x7FF1, 0x0F },
--	{ 0x7FF2, 0x08 },
--	{ 0x7FF3, 0x1B },
--	{ 0x7FF4, 0x23 },
--	{ 0x7FF5, 0x60 },
--	{ 0x7FF6, 0x00 },
--	{ 0x7FF7, 0x01 },
--	{ 0x7FF8, 0x00 },
--	{ 0x7FF9, 0x78 },
--	{ 0x7FFA, 0x00 },
--	{ 0x7FFB, 0x00 },
--	{ 0x7FFC, 0x00 },
--	{ 0x7FFD, 0x00 },
--	{ 0x7FFE, 0x00 },
--	{ 0x7FFF, 0x03 },
--	{ 0x7F76, 0x03 },
--	{ 0x7F77, 0xFE },
--	{ 0x7FA8, 0x03 },
--	{ 0x7FA9, 0xFE },
--	{ 0x7B24, 0x81 },
--	{ 0x7B25, 0x00 },
--	{ 0x6564, 0x07 },
--	{ 0x6B0D, 0x41 },
--	{ 0x653D, 0x04 },
--	{ 0x6B05, 0x8C },
--	{ 0x6B06, 0xF9 },
--	{ 0x6B08, 0x65 },
--	{ 0x6B09, 0xFC },
--	{ 0x6B0A, 0xCF },
--	{ 0x6B0B, 0xD2 },
--	{ 0x6700, 0x0E },
--	{ 0x6707, 0x0E },
--	{ 0x9104, 0x00 },
--	{ 0x4648, 0x7F },
--	{ 0x7420, 0x00 },
--	{ 0x7421, 0x1C },
--	{ 0x7422, 0x00 },
--	{ 0x7423, 0xD7 },
--	{ 0x5F04, 0x00 },
--	{ 0x5F05, 0xED },
--	{ 0x0112, 0x0A },
--	{ 0x0113, 0x0A },
--	{ 0x0114, 0x03 },
--	{ 0x0342, 0x14 },
--	{ 0x0343, 0xE8 },
--	{ 0x0344, 0x00 },
--	{ 0x0345, 0x00 },
--	{ 0x0346, 0x00 },
--	{ 0x0347, 0x00 },
--	{ 0x0348, 0x10 },
--	{ 0x0349, 0x6F },
--	{ 0x034A, 0x0C },
--	{ 0x034B, 0x2F },
--	{ 0x0381, 0x01 },
--	{ 0x0383, 0x01 },
--	{ 0x0385, 0x01 },
--	{ 0x0387, 0x01 },
- 	{ 0x0900, 0x01 },
- 	{ 0x0901, 0x14 },
- 	{ 0x0401, 0x01 },
--	{ 0x0404, 0x00 },
- 	{ 0x0405, 0x40 },
--	{ 0x0408, 0x00 },
--	{ 0x0409, 0x00 },
--	{ 0x040A, 0x00 },
--	{ 0x040B, 0x00 },
--	{ 0x040C, 0x10 },
--	{ 0x040D, 0x70 },
- 	{ 0x040E, 0x03 },
- 	{ 0x040F, 0x0C },
--	{ 0x3038, 0x00 },
--	{ 0x303A, 0x00 },
--	{ 0x303B, 0x10 },
--	{ 0x300D, 0x00 },
- 	{ 0x034C, 0x04 },
- 	{ 0x034D, 0x18 },
- 	{ 0x034E, 0x03 },
- 	{ 0x034F, 0x0C },
--	{ 0x0350, 0x01 },
--	{ 0x0204, 0x00 },
--	{ 0x0205, 0x00 },
--	{ 0x020E, 0x01 },
--	{ 0x020F, 0x00 },
--	{ 0x0210, 0x01 },
--	{ 0x0211, 0x00 },
--	{ 0x0212, 0x01 },
--	{ 0x0213, 0x00 },
--	{ 0x0214, 0x01 },
--	{ 0x0215, 0x00 },
--	{ 0x7BCD, 0x00 },
--	{ 0x94DC, 0x20 },
--	{ 0x94DD, 0x20 },
--	{ 0x94DE, 0x20 },
--	{ 0x95DC, 0x20 },
--	{ 0x95DD, 0x20 },
--	{ 0x95DE, 0x20 },
--	{ 0x7FB0, 0x00 },
--	{ 0x9010, 0x3E },
--	{ 0x9419, 0x50 },
--	{ 0x941B, 0x50 },
--	{ 0x9519, 0x50 },
--	{ 0x951B, 0x50 },
--	{ 0x3030, 0x00 },
--	{ 0x3032, 0x00 },
--	{ 0x0220, 0x00 },
- };
- 
- static const char * const imx258_test_pattern_menu[] = {
-@@ -955,6 +754,13 @@ static int imx258_start_streaming(struct imx258 *imx258)
- 		return ret;
- 	}
- 
-+	ret = imx258_write_regs(imx258, mode_common_regs,
-+				ARRAY_SIZE(mode_common_regs));
-+	if (ret) {
-+		dev_err(&client->dev, "%s failed to set common regs\n", __func__);
-+		return ret;
-+	}
++	/* Honour the VBLANK limits when setting exposure. */
++	exposure_max = imx258->cur_mode->height + imx258->vblank->val -
++		       IMX258_EXPOSURE_OFFSET;
++	exposure_def = min(exposure_max, imx258->exposure->val);
++	__v4l2_ctrl_modify_range(imx258->exposure, imx258->exposure->minimum,
++				 exposure_max, imx258->exposure->step,
++				 exposure_def);
++}
 +
- 	/* Apply default values of current mode */
- 	reg_list = &imx258->cur_mode->reg_list;
- 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
+ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct imx258 *imx258 =
+@@ -741,6 +755,13 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+ 	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
+ 	int ret = 0;
+ 
++	/*
++	 * The VBLANK control may change the limits of usable exposure, so check
++	 * and adjust if necessary.
++	 */
++	if (ctrl->id == V4L2_CID_VBLANK)
++		imx258_adjust_exposure_range(imx258);
++
+ 	/*
+ 	 * Applying V4L2 control value only happens
+ 	 * when power is up for streaming
 -- 
 2.44.0
 
