@@ -1,115 +1,70 @@
-Received: from mail115-95.sinamail.sina.com.cn (mail115-95.sinamail.sina.com.cn [218.30.115.95])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91064442F
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA99C4689
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713083465; cv=none; b=lBe01dhmzDdaB3janbBibkpKqSow7xc3nMEZiDZft9uj82EJOrRc9+pBdoXsfcYhkt0Dg/EInFPMKtDwcA67i0VCYEe7QwNwJ+EHkhaQY65L/GUIDIXWpYgccWyHb7xp9CjvbuCnWwAaPtguBto9cF6JmUQjZrOUeaiFV7dx1AI=
+	t=1713083660; cv=none; b=rAJWk5/bzPIzGm7OItpOV83HPCu/jBeCiUCzu6Nm9aeLaDrifoUebYqHjbV0x36Jbp4rb2CPGWb4JiUPa6tYtjPJFjYcY4j9ZavYbP9ktYCJLiluyMhduv1s77BK0Ps8l2E+yw05Lh2H4HXKAYE3uhtrnhNArvD1B/7dnAGmLhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713083465; c=relaxed/simple;
-	bh=NnwDiBQtYVV7ljXU6v7Fyo8ljCpiD5v5/ka0GfK5V+I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CuBch7DLEDvlsZpE2V0s2UvMmGnHFETw5NCem+PaCu6xCVkbAQRSMYlVHI4GHvxbLTh4x1r91QO7S1TcJXh22boKHnWwimh+habXOq4BTby1m6fdw2pHmi1rZnOIgnrh6Y/krbXBHwRbnArWd1GjUXab5wzuRUj5bNKBnuSJDVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.67.190])
-	by sina.com (172.16.235.24) with ESMTP
-	id 661B943A00002B01; Sun, 14 Apr 2024 16:30:52 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 7145845089449
-X-SMAIL-UIID: A17B53C737FB4A6693E4633CBA172864-20240414-163052-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+d6282a21a27259b5f7e7@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] WARNING in hci_conn_set_handle
-Date: Sun, 14 Apr 2024 16:30:44 +0800
-Message-Id: <20240414083044.2191-1-hdanton@sina.com>
-In-Reply-To: <000000000000ec64cd0616084ae9@google.com>
-References: 
+	s=arc-20240116; t=1713083660; c=relaxed/simple;
+	bh=ZmAIjSzcFfDjoTquD/K8a25ft89stMkxMjIVNSqucwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kynAUr8TQlmEW94YUUCcNNnKre4QewLKUIXsbjKlQSoo+wEV7HEoKFXs2AzmSVGxgzWh7TcmoN02jX89EEZksCn3pfLbESxGHIXTb4Fckgnwc03pcEOcIFDVbpBwXaUpVeo54CTzbGG1C4PU6B4hbpBb9hXEFUFmOtGt/SjEK+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 280EE40E01FF;
+	Sun, 14 Apr 2024 08:34:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id sn3DNO4raZsw; Sun, 14 Apr 2024 08:34:03 +0000 (UTC)
+Received: from nazgul.tnic (unknown [212.23.229.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B340240E01C5;
+	Sun, 14 Apr 2024 08:33:51 +0000 (UTC)
+Date: Sun, 14 Apr 2024 10:36:26 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Erhard Furtner <erhard_f@mailbox.org>, x86@kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	jpoimboe@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [bisected] Kernel v6.9-rc3 fails to boot on a Thinkpad T60 with
+ MITIGATION_RETHUNK=y (regression from v6.8.5)
+Message-ID: <20240414083626.GAZhuViviWKudQ5Apm@fat_crate.local>
+References: <20240413024956.488d474e@yea>
+ <ZhpOIeVq1KQXzjBp@archie.me>
+ <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
 
-On Sat, 13 Apr 2024 23:05:32 -0700
-> syzbot found the following issue on:
+On Sat, Apr 13, 2024 at 11:46:09AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Boris there suggested: "perhaps we should make
+> CONFIG_MITIGATION_RETHUNK depend on !X86_32":
+> https://lore.kernel.org/all/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
 > 
-> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162d4723180000
+> But that did not happen afaics. Would it be wise to go down that path?
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  480e035fc4c7
+Am looking at the whole thing. Stay tuned...
 
---- x/net/bluetooth/hci_event.c
-+++ y/net/bluetooth/hci_event.c
-@@ -6902,7 +6902,7 @@ static void hci_le_create_big_complete_e
- 					   struct sk_buff *skb)
- {
- 	struct hci_evt_le_create_big_complete *ev = data;
--	struct hci_conn *conn;
-+	struct hci_conn *conn, *next;
- 	__u8 i = 0;
- 
- 	BT_DBG("%s status 0x%2.2x", hdev->name, ev->status);
-@@ -6912,38 +6912,29 @@ static void hci_le_create_big_complete_e
- 		return;
- 
- 	hci_dev_lock(hdev);
--	rcu_read_lock();
--
- 	/* Connect all BISes that are bound to the BIG */
--	list_for_each_entry_rcu(conn, &hdev->conn_hash.list, list) {
-+	list_for_each_entry_safe(conn, next, &hdev->conn_hash.list, list) {
- 		if (bacmp(&conn->dst, BDADDR_ANY) ||
- 		    conn->type != ISO_LINK ||
- 		    conn->iso_qos.bcast.big != ev->handle)
- 			continue;
- 
--		if (hci_conn_set_handle(conn,
--					__le16_to_cpu(ev->bis_handle[i++])))
-+		if (hci_conn_set_handle(conn, __le16_to_cpu(ev->bis_handle[i++])))
- 			continue;
- 
- 		if (!ev->status) {
- 			conn->state = BT_CONNECTED;
- 			set_bit(HCI_CONN_BIG_CREATED, &conn->flags);
--			rcu_read_unlock();
- 			hci_debugfs_create_conn(conn);
- 			hci_conn_add_sysfs(conn);
- 			hci_iso_setup_path(conn);
--			rcu_read_lock();
- 			continue;
- 		}
- 
- 		hci_connect_cfm(conn, ev->status);
--		rcu_read_unlock();
- 		hci_conn_del(conn);
--		rcu_read_lock();
- 	}
- 
--	rcu_read_unlock();
--
- 	if (!ev->status && !i)
- 		/* If no BISes have been connected for the BIG,
- 		 * terminate. This is in case all bound connections
-@@ -6952,7 +6943,6 @@ static void hci_le_create_big_complete_e
- 		 */
- 		hci_cmd_sync_queue(hdev, hci_iso_term_big_sync,
- 				   UINT_PTR(ev->handle), NULL);
--
- 	hci_dev_unlock(hdev);
- }
- 
---
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
