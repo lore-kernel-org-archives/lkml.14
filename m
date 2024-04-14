@@ -1,51 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-210.smtpout.orange.fr [193.252.23.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B20D1E53F;
-	Sun, 14 Apr 2024 10:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9DF2E633;
+	Sun, 14 Apr 2024 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713092236; cv=none; b=C2dQK3CVxc4E5Q+8cRXmgeF7BJBpaPSMATfVhlYBXLwKjPufwmg4J2PuDgtD8g9up6aRorHZnasTa4JSKIgPeY2PD3HZDdPZoH3l2PyIYDW6nGKL8jzr9BxU3FRe1beiZuABWI4Jee4DQI0lE1orUAQrpoFtMGevn/0tNaXP2r0=
+	t=1713092272; cv=none; b=NqeRugkpu6/5iRCU5jsqT7qQE7lS7HEAe+lmVwg9iNbn9FjBLkNu0Nlk/jKUoj2MkMw7ZZMCXZvhVQYm6PWtNr3ES6IwDQitn0HetiY2XzNpDAvplxfg6VnqrfKsBC1/7rkMKikLU3hu0Oqzl+98cvNv8+E09riBzWuHp0Lo+7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713092236; c=relaxed/simple;
-	bh=jDdtSOwj0MEVaChxqGUqHKbNJxVOuCR43DhquA3Tcpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t4GSs2vN9xOp089E+3Szl33SBMJP+ZWJqRvP48f1pHKjjxm1ya/m+20SobLJ1sDYqzF4jh2xk5nj5XMPJih5an8qBYh4u5YvAHsQtUeYON3EyqC/AzJ17uwrskn2wr6uid1fRB4ZfyxiqGO3QBK4I/QNEIoJlByE6KB24sta2es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OtDbD5PH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713092272; c=relaxed/simple;
+	bh=9a+P8s5l61kleZJLDGYRTvAA1Uvt+ypc9gUtrvX2hfA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L8dkE0EPNX7D6omgDtmH/n7pex7NKgEVYjkmYGMZucgATm9sy+N35UkOAi0g0sQgRUIaLjojV0WwopAA4Y34bd9x1zFdula8vB3jXEqrOS+uhtUL8ePCRDoMjevExu9oPWDNH7cUKECmnXucgqEC8CYL9eXrxfjA1MWrvkDGHUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=WZCWlAUo; arc=none smtp.client-ip=193.252.23.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OtDbD5PH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66201C072AA;
-	Sun, 14 Apr 2024 10:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713092235;
-	bh=jDdtSOwj0MEVaChxqGUqHKbNJxVOuCR43DhquA3Tcpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OtDbD5PHfEn1DXagyJX5JdaIIjeblstJ3kByjV7c9z7LBgGw2HZvOb1gkxxF5TIaS
-	 8RCe8nV4tohbyz7LTxFXhzu5Rcbk1fTPoQezXX97iBS46Y+Jz7RTv4YZEneGnnniTt
-	 Q3CR6GMiDsGB13SkqeguvQs0wh5f4DY7P8aZWIzo=
-Date: Sun, 14 Apr 2024 12:57:11 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: sumadhura kalyan <opensourcecond@gmail.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Replace function alignment of camel case by snake case.
-Message-ID: <2024041457-outshoot-voyage-3e5b@gregkh>
-References: <20240414102443.98927-1-opensourcecond@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="WZCWlAUo"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id vvikrl4O6JyTUvvilr9PzZ; Sun, 14 Apr 2024 11:00:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1713085223;
+	bh=iNPLWQIyLfvsOYmfzzP6klM4872RS0pQRSfJloAU0Bo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=WZCWlAUoAHWXdlxf1WopMVd8jtdvonKbAEhcslDW5nqpjv5b0/jyIpgs6GbNV9zW0
+	 O8JZXQmm2xmdSV0Jzw14OdjfeuUtDFP3zbsAskgbA8JlT6NJ7ERU25C+xlHWl8wath
+	 QX7F9A8X6eC9iFBoWqnvDDp4LfKPi4W6z5XCUpzlhAT2tu+GSykRg9WLVl2R7jxriP
+	 qH005UFj67g944fX1TxQ0FnataxYhMAzEreKG/WBnA/lGX4B4ZqMbVyHJBCtBAF2g8
+	 7eXnqfXBMD5p1z2sZjUyDgxgmx8DIfMTE5Q6tCqC/eGihksTgYRJMFvZtiat95BWqo
+	 7oQphDLSxSBHA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 14 Apr 2024 11:00:23 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <487dcede-4ad3-4987-aff4-937513d2fa14@wanadoo.fr>
+Date: Sun, 14 Apr 2024 11:00:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240414102443.98927-1-opensourcecond@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fsi: occ: Remove usage of the deprecated ida_simple_xx()
+ API
+To: Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>,
+ Alistar Popple <alistair@popple.id.au>, Eddie James <eajames@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-fsi@lists.ozlabs.org
+References: <6e17f2145ce2bbc12af6700c8bd56a8a7bdb103d.1705738045.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <6e17f2145ce2bbc12af6700c8bd56a8a7bdb103d.1705738045.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 03:54:42PM +0530, sumadhura kalyan wrote:
-> Issue found by checkpatch
+Le 20/01/2024 à 09:07, Christophe JAILLET a écrit :
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
 > 
-> Signed-off-by: sumadhura kalyan <opensourcecond@gmail.com>
+> Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> ida_alloc_range() is inclusive. So, this upper limit, INT_MAX, should have
+> been changed to INT_MAX-1.
+> 
+> But, it is likely that the INT_MAX 'idx' is valid that the max value passed
+> to ida_simple_get() should have been 0.
+> 
+> So, allow this INT_MAX 'idx' value now.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> The change related to the INT_MAX value is speculative.
+> Review with care. (or I can re-submit with INT_MAX-1, to be safe :))
+> ---
 
-Your subject line is wrong.
+Hi,
+
+polite reminder.
+
+CJ
+
+
+
+>   drivers/fsi/fsi-occ.c | 17 ++++++++---------
+>   1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
+> index da35ca9e84a6..f7157c1d77d8 100644
+> --- a/drivers/fsi/fsi-occ.c
+> +++ b/drivers/fsi/fsi-occ.c
+> @@ -656,17 +656,16 @@ static int occ_probe(struct platform_device *pdev)
+>   		rc = of_property_read_u32(dev->of_node, "reg", &reg);
+>   		if (!rc) {
+>   			/* make sure we don't have a duplicate from dts */
+> -			occ->idx = ida_simple_get(&occ_ida, reg, reg + 1,
+> -						  GFP_KERNEL);
+> +			occ->idx = ida_alloc_range(&occ_ida, reg, reg,
+> +						   GFP_KERNEL);
+>   			if (occ->idx < 0)
+> -				occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
+> -							  GFP_KERNEL);
+> +				occ->idx = ida_alloc_min(&occ_ida, 1,
+> +							 GFP_KERNEL);
+>   		} else {
+> -			occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
+> -						  GFP_KERNEL);
+> +			occ->idx = ida_alloc_min(&occ_ida, 1, GFP_KERNEL);
+>   		}
+>   	} else {
+> -		occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX, GFP_KERNEL);
+> +		occ->idx = ida_alloc_min(&occ_ida, 1, GFP_KERNEL);
+>   	}
+>   
+>   	platform_set_drvdata(pdev, occ);
+> @@ -680,7 +679,7 @@ static int occ_probe(struct platform_device *pdev)
+>   	rc = misc_register(&occ->mdev);
+>   	if (rc) {
+>   		dev_err(dev, "failed to register miscdevice: %d\n", rc);
+> -		ida_simple_remove(&occ_ida, occ->idx);
+> +		ida_free(&occ_ida, occ->idx);
+>   		kvfree(occ->buffer);
+>   		return rc;
+>   	}
+> @@ -719,7 +718,7 @@ static int occ_remove(struct platform_device *pdev)
+>   	else
+>   		device_for_each_child(&pdev->dev, NULL, occ_unregister_of_child);
+>   
+> -	ida_simple_remove(&occ_ida, occ->idx);
+> +	ida_free(&occ_ida, occ->idx);
+>   
+>   	return 0;
+>   }
+
