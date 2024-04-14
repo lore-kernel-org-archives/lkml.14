@@ -1,240 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3936F2E40F;
-	Sun, 14 Apr 2024 08:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE301CAA8
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713083736; cv=none; b=NDsp5Y09ht71KUb5Y+CwnJA1MXG0vzTeU9tehPnQUeJp13+n0ER0QJYKXC1vNO+l/lpA8oubVkmK7e8ETyII8VkPyusl20GGLDpB9/3Ha5ziowBQwxedPE9Ur82HtcLy9hnwl+YTN1Q2MUNgmAq4W7Ub6A7ELcKTfTKPVbfPpaI=
+	t=1713084066; cv=none; b=AS5PqWsQvdZT4841MyouNwITOUEEWXrqKK1wXZS5smGT/rGpk4k4HCxIi0PVQ0gB6NIUgE9QUOG58U3pBu6b1QzCa11qNrV2Mhc/kJGlY3VtMs0zTIGnoAPrOex4JVHCl4Gkd+XwledZGsCgAVI4QvZnTn2j7Nizg67nkxps6jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713083736; c=relaxed/simple;
-	bh=t5FTjmA/TeSz3RhEMdlCYL6EPeuFyfAAq7kMlFkdkuU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BbsWeo9W4Di6xsBuD5HolRU2VWQ1zBF8BKCLivXHfAka0r+35Asp7/yeE7eTYRkW6q9tAI3DRMgAzSyRo0EPtzCJkTnORwkDFTdhfuK0O3kSfQZkqOAeLAkPS/vSlRgAuZ1mYSZgZxQr5XE4XcqFya7+lXOYmFdoxVHFswkXZdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bn4g7Af4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bn4g7Af4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951B5C072AA;
-	Sun, 14 Apr 2024 08:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713083735;
-	bh=t5FTjmA/TeSz3RhEMdlCYL6EPeuFyfAAq7kMlFkdkuU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bn4g7Af4Wg28wvfnK45DF04fmgi6gN7Pw/3CUb7GqihO7qU9H9N6CQiewXRR7KcGy
-	 J6xTFwBPg/ZKiPTGMAQImwA/IBhTZmXwbKCB8etZrJFsMavislztLGepGlNOqcvnnO
-	 ldHeAf/nkADt5slLuuVz11P9xMgaOcB40btqgblUE3HKs9ijrW4QZP6b8ZpoAnawDJ
-	 1/4U6/ru0QthKLiPGFjTj9QEAno4a2nkFUnoXzqlK/9LMMzYG45OcbJ+YMucP5P7Jd
-	 v2Hz1KS683VZHLTYuakLUeaXqr2sAZMYjGRoe46FZxs31fngwtR6q++6F378RDWyZJ
-	 C2eE7MBR+pQuA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rvvKm-004JeI-VN;
-	Sun, 14 Apr 2024 09:35:33 +0100
-Date: Sun, 14 Apr 2024 09:35:33 +0100
-Message-ID: <875xwks5nu.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 3/4] KVM: arm64: add emulation for CTR_EL0 register
-In-Reply-To: <7cc16dc9-6eef-59f9-d019-8b5dea6a4254@redhat.com>
-References: <20240405120108.11844-1-sebott@redhat.com>
-	<20240405120108.11844-4-sebott@redhat.com>
-	<86edb9sgy0.wl-maz@kernel.org>
-	<7cc16dc9-6eef-59f9-d019-8b5dea6a4254@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1713084066; c=relaxed/simple;
+	bh=dZAnNFSFXpH82xQIjtfXvnRg328Zk2sD5+LoAz3HECw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=n9x8Owl9+razpuNZqN7TIntCtGASjoD1M5bcHoqi3ZdrWXGi5PK/WbwffTH3GcmETnH+QVEteui/XJEwXalwxleh3hnXVByMsUMt2g9HDsVsosLioHhUE7ib8HIzasIjsoNZeY1wBKeYX8aKYzDz3Vc4NlpYFCvedWW4fNuzrXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d5d7d6b971so258825739f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 01:41:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713084064; x=1713688864;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7rLBkUcPmuLzb3F8ivPr5HzBIa58niQNYwzeMWHMDr4=;
+        b=e8Pr5SgDoveDbOOJsuj9oyMBrw5jz097oFkZ8Taavf4HmZ+Pd2XpFSvDAD/M1apc2/
+         +Rmnz2ePWSZN/VdMsKixLy3SFpJqp5CrkrpIheASOTLbdGltwoJ27bN8Ly7DVLbF+Q17
+         RIbsXRimdZz85sjxd86gsubjAVzN4izsTqqJ7aQpBVmqr5OWn4RDDsnCmiKMCxTHRoxF
+         qUhj1unhBZMw2h6bQEJhy4vsWzdqTx2KcMW/eXzwie6eeTXeSogj+EJjsosQM9s3S//F
+         c3cO0qfQ2DtSvUPKu1LWU1s35xu4+K3XD0bi3gYLmvdLRYZr1yxcNLAVUPXH3XiqWp5V
+         PaTg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+j/XidVCBo80R87M+YDoGujfp4zoIpVhec1+/zYxscA99RCOE5bk4k3PeOEiwxCoX9WSPO/b1CFPxs2Yuo7g8smaKvHJCmdtlPLId
+X-Gm-Message-State: AOJu0YwGAFmAlpz+aLsAh7CLTCopaqYiP9FLdICMiGornZxut6fFW8nn
+	JFQnOAN2afxzwecpGifhaT+fO+QQn0V41ZgIh+uFpMh2vkJhCT6O/x4iqXgytcCgDWxzR+7pAJa
+	UbRhZbibMvVT3wu0xe1QBw+cYsDswQc23vx1w1zvdQFc9coRGiRtrkBo=
+X-Google-Smtp-Source: AGHT+IGY7ePPYppgtdO3jmP9A+EE39pQbXeoHylEBaXuVHNz7j0jnXeYz7Rdw489ll2vV7cDrFRmcDCoGjq9frsx5BdPhmNy8v5Y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sebott@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1985:b0:36a:3dda:d71c with SMTP id
+ g5-20020a056e02198500b0036a3ddad71cmr508822ilf.5.1713084063013; Sun, 14 Apr
+ 2024 01:41:03 -0700 (PDT)
+Date: Sun, 14 Apr 2024 01:41:02 -0700
+In-Reply-To: <0000000000000946cf05f34e12c2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000bef2806160a776f@google.com>
+Subject: Re: [syzbot] [btrfs?] INFO: task hung in lock_extent
+From: syzbot <syzbot+eaa05fbc7563874b7ad2@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, fdmanana@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 13 Apr 2024 14:50:42 +0100,
-Sebastian Ott <sebott@redhat.com> wrote:
-> 
-> On Sat, 13 Apr 2024, Marc Zyngier wrote:
-> 
-> > On Fri, 05 Apr 2024 13:01:07 +0100,
-> > Sebastian Ott <sebott@redhat.com> wrote:
-> >> 
-> >> CTR_EL0 is currently handled as an invariant register, thus
-> >> guests will be presented with the host value of that register.
-> >> Add emulation for CTR_EL0 based on a per VM value.
-> >> 
-> >> When CTR_EL0 is changed the reset function for CLIDR_EL1 is
-> >> called to make sure we present the guest with consistent
-> >> register values.
-> > 
-> > Isn't that a change in the userspace ABI? You are now creating an
-> > explicit ordering between the write to CTR_EL0 and the rest of the
-> > cache hierarchy registers. It has the obvious capacity to lead to the
-> > wrong result in a silent way...
-> 
-> Yea, that's why I've asked in the cover letter if userspace would be
-> ok with that. I thought that this is what you suggested in your reply
-> to the
-> RFC. (https://lore.kernel.org/linux-arm-kernel/20240318111636.10613-5-sebott@redhat.com/T/#m0aea5b744774f123bd9a4a4b7be6878f6c737f63)
-> 
-> But I guess I've got that wrong.
+syzbot suspects this issue was fixed by commit:
 
-Not wrong, just incomplete. I think it is fine to recompute the cache
-topology if there is no restored cache state at the point where
-CTL_EL0 is written. However, if a topology has been restored (and that
-it is incompatible with the write to CTR_EL0, the write must fail. The
-ugly part is that the CCSIDR array is per vcpu and not per VM.
+commit b0ad381fa7690244802aed119b478b4bdafc31dd
+Author: Josef Bacik <josef@toxicpanda.com>
+Date:   Mon Feb 12 16:56:02 2024 +0000
 
-> Do we have other means to handle the dependencies between registers?
-> Allow inconsistent values and do a sanity check before the first
-> vcpu_run()?
+    btrfs: fix deadlock with fiemap and extent locking
 
-Failing on vcpu_run() is the worse kind of failure, because you can't
-easily find the failure cause, other than by looking at each single
-register trying to spot the inconsistency.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=101316f5180000
+start commit:   7521f258ea30 Merge tag 'mm-hotfixes-stable-2024-02-10-11-1..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89a5d896b14c4565
+dashboard link: https://syzkaller.appspot.com/bug?extid=eaa05fbc7563874b7ad2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c0d1e0180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10aff5b8180000
 
-In the case at hand, I think validating CTL_EL0 against the currently
-visible topology is the right thing to do.
+If the result looks correct, please mark the issue as fixed by replying with:
 
-> 
-> >> 
-> >> Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> >> ---
-> >>  arch/arm64/kvm/sys_regs.c | 72 ++++++++++++++++++++++++++++++++++-----
-> >>  1 file changed, 64 insertions(+), 8 deletions(-)
-> >> 
-> >> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> >> index 4d29b1a0842d..b0ba292259f9 100644
-> >> --- a/arch/arm64/kvm/sys_regs.c
-> >> +++ b/arch/arm64/kvm/sys_regs.c
-> >> @@ -1874,6 +1874,55 @@ static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
-> >>  	return true;
-> >>  }
-> >> 
-> >> +static u64 reset_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd)
-> >> +{
-> >> +	vcpu->kvm->arch.ctr_el0 = 0;
-> >> +	return kvm_get_ctr_el0(vcpu->kvm);
-> > 
-> > I'd expect the cached value to be reset instead of being set to
-> > 0. What are you achieving by this?
-> 
-> The idea was that kvm->arch.ctr_el0 == 0 means we use the host value and
-> don't set up a trap.
+#syz fix: btrfs: fix deadlock with fiemap and extent locking
 
-I'd rather you keep the shadow register to a valid value at all times,
-and simply compare it to the HW-provided version to decide whether you
-need to trap. The main reason is that we don't know how the
-architecture will evolve, and CTR_EL0==0 may become a legal value in
-the future (unlikely, but that's outside of our control).
-
-> 
-> >> +}
-> >> +
-> >> +static int get_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-> >> +		   u64 *val)
-> >> +{
-> >> +	*val = kvm_get_ctr_el0(vcpu->kvm);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding);
-> >> +
-> >> +static int set_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-> >> +		   u64 val)
-> >> +{
-> >> +	u64 host_val = read_sanitised_ftr_reg(SYS_CTR_EL0);
-> >> +	u64 old_val = kvm_get_ctr_el0(vcpu->kvm);
-> >> +	const struct sys_reg_desc *clidr_el1;
-> >> +	int ret;
-> >> +
-> >> +	if (val == old_val)
-> >> +		return 0;
-> >> +
-> >> +	if (kvm_vm_has_ran_once(vcpu->kvm))
-> >> +		return -EBUSY;
-> >> +
-> >> +	mutex_lock(&vcpu->kvm->arch.config_lock);
-> >> +	ret = arm64_check_features(vcpu, rd, val);
-> >> +	if (ret) {
-> >> +		mutex_unlock(&vcpu->kvm->arch.config_lock);
-> >> +		return ret;
-> >> +	}
-> >> +	if (val != host_val)
-> >> +		vcpu->kvm->arch.ctr_el0 = val;
-> >> +	else
-> >> +		vcpu->kvm->arch.ctr_el0 = 0;
-> >> +
-> >> +	mutex_unlock(&vcpu->kvm->arch.config_lock);
-> >> +
-> >> +	clidr_el1 = get_sys_reg_desc(SYS_CLIDR_EL1);
-> >> +	if (clidr_el1)
-> >> +		clidr_el1->reset(vcpu, clidr_el1);
-> >> +
-> >> +	return 0;
-> > 
-> > No check against what can be changed, and in what direction? You seem
-> > to be allowing a guest to migrate from a host with IDC==1 to one where
-> > IDC==0 (same for DIC). How can that work? Same for the cache lines,
-> > which can be larger on the target... How will the guest survive that?
-> 
-> Shouldn't this all be handled by arm64_check_features() using the safe
-> value definitions from ftr_ctr? (I'll double check that..)
-
-I think I may have read the code the wrong way. IDC/DIC should be OK
-due to the feature check. I'm not sure about the line-size fields
-though, and we should make sure that only a *smaller* line size is
-allowed.
-
-Then, there is the case of all the other fields. TminLine should get
-the same treatment as the other cache line size fields, with the
-additional constraint that it should be RES0 if the guest isn't MTE
-aware. CWG and ERG are other interesting cases, and I don't think they
-should be writable (your patch looks correct in that respect).
-
-> 
-> >> @@ -4049,6 +4102,9 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
-> >>  			vcpu->arch.hcrx_el2 |= (HCRX_EL2_MSCEn | HCRX_EL2_MCE2);
-> >>  	}
-> >> 
-> >> +	if (vcpu->kvm->arch.ctr_el0)
-> >> +		vcpu->arch.hcr_el2 |= HCR_TID2;
-> > 
-> > Why trap CTR_EL0 if the values are the same as the host?
-> 
-> For values same as host vcpu->kvm->arch.ctr_el0 would be zero and
-> reg access would not be trapped.
-> 
-> > I really dislike the use of the value 0 as a such an indication.
-> 
-> OK.
-> 
-> > Why isn't this grouped with the traps in vcpu_reset_hcr()?
-> 
-> I was under the impression that vcpu_reset_hcr() is called too early
-> to decide if we need to set up a trap or not (but lemme double check
-> that).
-
-Could well be (it is probably decided at vpcu init time). but in that
-case, it could be worth moving all the TID2/TID4 trapping together.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
