@@ -1,105 +1,193 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wflow2-smtp.messagingengine.com (wflow2-smtp.messagingengine.com [64.147.123.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D290C23B1
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 12:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06A228E11;
+	Sun, 14 Apr 2024 12:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713096082; cv=none; b=W/ycVvDF+ptdIXpKNd8nrGx18F49Z0lsuzzEbq1Sv2w5EAWCl+aJgEo07FHhoOW1vkvjXSLgx5K+ikK1anGIPYmCHEPz7eCmPpHOUvR1cXONoKeUwPT4ClxN1QwOvIneLpBdifUqht/r1NN9/WrXQHrbQ204qZpqw2Z71v2d0no=
+	t=1713096535; cv=none; b=L+L+Y6pAaBeNsX3YfeJPTN4dipVvajVZn6K2sauUGcDNXdgSBa+y/XaE329LKbHaF0woREhTjMUVu8AWUaZYVFAR401PAHgj40KzJkZ7msmAL1IzWI92wTCdT08FOGVOPD7ttsm/KftRYi2X+HkPx3Dz2wOBEYBmFhTKScvVvLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713096082; c=relaxed/simple;
-	bh=F45wyCH/yvtLsraLaFA1Cm7IOhcG0+SPVbdow795DSA=;
+	s=arc-20240116; t=1713096535; c=relaxed/simple;
+	bh=5N4BnsKzj90u66yivCv897XiJyZSNF6/P0ikC49cmXw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ecGetnwvatVDlbjqPVlbIgvOGkuYlv8a+gsVMDeZ9ajzH0f9GODi9/NSSwazthacAtssMlSu2Y6WwOkU4LVyLLqw13jAMcHcUwbcIRungVfV7mFpIrmB4+1tLWF5239TOh1pTg6V97++KsLJnLkEmq2S+ylNkaWDSkvh8r6Bt7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rEaIVKRV; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RAJS6wN0HqmPkkT9nrxv0WaJ/ZSeia1NSBDHgZXMkPU94YJWuJJ4nDZcufo779mnvuzTAIxTsztJCtElOjrGs+ZMqTnbkhLHTVoJX7kWGFF9PVWe+afdJZMb3RsKgckt4eNEAq9uwM7oKLS7durvD9Ek0V0Yc43RmX71FhdRaQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=CeSQNMF4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=U9WHFLx+; arc=none smtp.client-ip=64.147.123.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEaIVKRV"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a524ecaf215so100777366b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 05:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713096078; x=1713700878; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3xLXUr9vcEfv0klzxRfEpsHKjTa9YKhPpRmE4GTk+M=;
-        b=rEaIVKRVe0I88uO3WNXYVC4+786cmiSwuCsuZ88Yf967e66tT5mId1k2p4rZOvKzpd
-         9sPDzl2yH39jdBQVSQjg6u1M61uCXDprRpYBF2E9Sf21LSdWtD0A7iPUJ/PEaYNv+DAB
-         nqvoO2eVadpQZGOxx2djCpb7Im9MioM3ik0L4PjsovBmKL8YRaHgiS1r0SU/XsEmTdd5
-         xK+qx92pMWufdyMKL7tyt2YxPuH14MIRpOVZJJARt+CvrsAFJp/s5F5hzWy27CosiSCI
-         NDGaiXeyszKVNyfj+3f7X+hIZH6EIKsYgftJVD4dI2EOP7Rid4jzhXfzExMS4ZkkHfoY
-         NcwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713096078; x=1713700878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o3xLXUr9vcEfv0klzxRfEpsHKjTa9YKhPpRmE4GTk+M=;
-        b=uCG4IQLeJeuB4PAZvwgzL2MMBCf4bg/ys5x55zol8CGbwuJO3rq2EjIwQpo/fOE3zD
-         P85V0OSdsB138B8G4aODQRisgYa220WsrIYxW9OPvBEwD3/2VAWezJDBLJuULJ4f+117
-         YvCgXmsqx3HUC51GhP/Picqh1ieys1ChI1q4c3Oz4Gedu9h44tnM1FuReLBvTsPS6X3d
-         dwucsURnrUqg7l7IWM6OWNCtOL2PSBfATYa8UU7yY6eRSGOQHgQ+AlgyxteJkBP1q6Oq
-         wrUbVj6s/BCKy6KZg+yWsy8xmVLYUPzyonZGL2AOKjzZ4hYcYi4lUIB1taCbW/uwGcdp
-         4MRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbYD8a9i5LdPloaChrluCFHMHRBssvlZd0MFS3SL41aZfUnexID4iaIAV2wzhHXxneDZocoW1AWGb6A+BU3auo0i2PYfMeRmntn3BN
-X-Gm-Message-State: AOJu0Ywk3665RYdNE7OHJUDz195kU6KCAiMQjNBWWvb3flpcTrSQpE8w
-	mxgzMeBg93mshQ7/cOfGGh8U/XF5/cFrumDp8pwz7FIrUcDv6BwLznrrWCiXEhVI+arnXYJLNVe
-	d
-X-Google-Smtp-Source: AGHT+IE4l8NuWRi3LGRbcaEm/pf7jfykdhFqopERDMjXIqAiTZanPEmTOGy0Y2lumPxAHYbI1bGh5g==
-X-Received: by 2002:a17:907:72d6:b0:a46:f9c2:f059 with SMTP id du22-20020a17090772d600b00a46f9c2f059mr6026141ejc.22.1713096078015;
-        Sun, 14 Apr 2024 05:01:18 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id gf15-20020a170906e20f00b00a46d2e9fd73sm4118761ejb.222.2024.04.14.05.01.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 05:01:17 -0700 (PDT)
-Date: Sun, 14 Apr 2024 15:01:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: sumadhura kalyan <opensourcecond@gmail.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	gregkh@linuxfoundation.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="CeSQNMF4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U9WHFLx+"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailflow.west.internal (Postfix) with ESMTP id AA5C62CC0354;
+	Sun, 14 Apr 2024 08:08:48 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sun, 14 Apr 2024 08:08:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1713096528;
+	 x=1713100128; bh=DnTYqtiqxkdL8TutLD+ycAMOScjACnt4jFDuyfyg2WA=; b=
+	CeSQNMF42XN27F44NSY+sfmr5C7BlL4cjSzPU5l6lDPgGXYgtCEqc+SkzTsipiX0
+	I4QcK6gwD/MX4KZWGyKzHyIE+/cKI/niEhfS0Jf3QVRup72Y7JZzDgh6I/Gfocdu
+	/8cafiAWC5HAuIb/T08tUehBPjcaUrvSRp7IqjTthzChrOAHqOAnlYnuREPL87Dk
+	+rHKYyt3qAbH62FIQSdIIlbPfem3vp9JyphxHD7GU1zIxyvJ5Bl2CMquY9m/Nfha
+	nIR8KrJ6rANkiP3XNijitosarm8ygHy5Rf9kAYTOV0KBnx6yc0EaNrC/DcavSBDI
+	mFsVLRjywPpSYTenKe4Asw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1713096528; x=
+	1713100128; bh=DnTYqtiqxkdL8TutLD+ycAMOScjACnt4jFDuyfyg2WA=; b=U
+	9WHFLx+BDuI0uQgIsI3FLyQJ2XXI0FnjRHORd94kEuOICiyYid/sHPuGPp4xSbRe
+	M39kEwgcf/8L+dbbjzvm5hAKkHuapn04GflmqNRW1nWJp/8CjEQmDsPEaO8GIkqz
+	dKce5gfkJkAAAq+/63sPd4tN5v9gZsU19Rr21K/3ExqciPQzmX9N6gcPWhjSpYl7
+	C1Uj36t6xsKkI3pHSRUgvixv2Eyjsem+QZvymASXn/hcynaB4nUBDb9JBsO4a+61
+	W5csU6yY6on3ovRD+A5aPYxMmrv3AizT7LVEFeAw9KUKd2Mu3eNE2Gmmejo0SmWE
+	BQXwpugDAFZashb+XwVuA==
+X-ME-Sender: <xms:TscbZjbCiokxQMq68b78guQmg3KjoKZyaN3_I0fko3211zcMVG8C2g>
+    <xme:TscbZiZRT2CPZtJ3P3S7xFTYDwhfr6ImD05ryODpKnP9drAc-wX_KHvOMZv4nwtM2
+    IX-mHlzvDotey_VRrk>
+X-ME-Received: <xmr:TscbZl8JFv9rQi6tkHnIlC2_-GV7a6x88ZnDk99Zzi1sO3FiBi-MucbQbcWUEwwjZCGXDXD9jJLKHN5-KmLz6wsVVvoj5rU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiledggeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhk
+    lhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnh
+    gvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeefhfellefh
+    ffejgfefudfggeejlefhveehieekhfeulefgtdefueehffdtvdelieenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggv
+    rhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgv
+X-ME-Proxy: <xmx:TscbZprDRLM3y8XedHYqPLqoIN4kCjt0D1uDpzVEa4m0A9d4WJSVHA>
+    <xmx:TscbZupoPzbF5DgeXxzB60uosWucsi6O391AVL7-kdh1UJf28DoT2w>
+    <xmx:TscbZvSD4DV1M1DK3QRJB2FduAtaXMjjl7V5xVIYLDGkqHj1LmEoYA>
+    <xmx:TscbZmr4sla6k0b6jCohP3N8x4COpPILDFrfRXm3pgCzhK_fesU43w>
+    <xmx:UMcbZuJwZwpITPaZnANjtHiaBganof7-7V6ceqzUxB5FsZorEWdGuKxj>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 14 Apr 2024 08:08:46 -0400 (EDT)
+Date: Sun, 14 Apr 2024 14:08:43 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: vc04_services: Reformatted code according to
- Kernel Documents.
-Message-ID: <a3c1d471-849b-4d4d-8657-4ad73493fca2@moroto.mountain>
-References: <20240414115106.105946-1-opensourcecond@gmail.com>
+Subject: Re: [PATCH net 1/4] net: ravb: Count packets instead of descriptors
+ in R-Car RX path
+Message-ID: <20240414120843.GA2860391@ragnatech.se>
+References: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
+ <20240411114434.26186-2-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240414115106.105946-1-opensourcecond@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240411114434.26186-2-paul.barker.ct@bp.renesas.com>
 
-The subject is too vague.
+Hi Paul,
 
-On Sun, Apr 14, 2024 at 05:21:06PM +0530, sumadhura kalyan wrote:
-> Issue found by checkpatch
-  ^^^^^^^^^^^^^^^^^^^^^^^^^
-What issue?
+Thanks for your patch.
 
-A better commit message would be:
-
-==================
-Subject: [PATCH v3] staging: vc04_services: re-align function parameters
-
-Checkpatch complains that:
-
-CHECK: Lines should not end with a '('
-#45: FILE: drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h:45:
-+typedef void (*vchiq_mmal_buffer_cb)(
-
-Re-align the function parameters to make checkpatch happy.
-================
-
+On 2024-04-11 12:44:30 +0100, Paul Barker wrote:
+> The units of "work done" in the RX path should be packets instead of
+> descriptors.
 > 
-> Signed-off-by: sumadhura kalyan <opensourcecond@gmail.com>
-                 ^         ^
-You should make these capital letters...  It's supposed to look formal
-like you're signing a legal document.
+> Descriptors which are used by the hardware to record error conditions or
+> are empty in the case of a DMA mapping error should not count towards
+> our RX work budget.
+> 
+> Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> ---
+>  drivers/net/ethernet/renesas/ravb_main.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index ba01c8cc3c90..70f2900648d4 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> @@ -892,29 +892,25 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+>  	struct ravb_private *priv = netdev_priv(ndev);
+>  	const struct ravb_hw_info *info = priv->info;
+>  	int entry = priv->cur_rx[q] % priv->num_rx_ring[q];
+> -	int boguscnt = (priv->dirty_rx[q] + priv->num_rx_ring[q]) -
+> -			priv->cur_rx[q];
+>  	struct net_device_stats *stats = &priv->stats[q];
+>  	struct ravb_ex_rx_desc *desc;
+>  	struct sk_buff *skb;
+>  	dma_addr_t dma_addr;
+>  	struct timespec64 ts;
+> +	int rx_packets = 0;
+>  	u8  desc_status;
+>  	u16 pkt_len;
+>  	int limit;
+> +	int i;
 
-regards,
-dan carpenter
+The loop variable can never be negative, use unsigned int.
 
+>  
+> -	boguscnt = min(boguscnt, *quota);
+> -	limit = boguscnt;
+> +	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
+>  	desc = &priv->rx_ring[q].ex_desc[entry];
+> -	while (desc->die_dt != DT_FEMPTY) {
+> +	for (i = 0; i < limit && rx_packets < *quota && desc->die_dt != DT_FEMPTY; i++) {
+>  		/* Descriptor type must be checked before all other reads */
+>  		dma_rmb();
+>  		desc_status = desc->msc;
+>  		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
+>  
+> -		if (--boguscnt < 0)
+> -			break;
+> -
+
+nit: It's a matter of taste, but I like this break condition in the code 
+instead of modifying the loop as it's much clearer what's going on. But 
+feel free to keep it as is as Sergey likes it.
+
+>  		/* We use 0-byte descriptors to mark the DMA mapping errors */
+>  		if (!pkt_len)
+>  			continue;
+> @@ -960,7 +956,7 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+>  			if (ndev->features & NETIF_F_RXCSUM)
+>  				ravb_rx_csum(skb);
+>  			napi_gro_receive(&priv->napi[q], skb);
+> -			stats->rx_packets++;
+> +			rx_packets++;
+
+Why do you add this intermediary variable? Is it not confusing to treat 
+rx_packets and rx_bytes differently? Why not instead decrement *quota 
+here?
+
+>  			stats->rx_bytes += pkt_len;
+>  		}
+>  
+> @@ -995,9 +991,9 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+>  		desc->die_dt = DT_FEMPTY;
+>  	}
+>  
+> -	*quota -= limit - (++boguscnt);
+> -
+> -	return boguscnt <= 0;
+> +	stats->rx_packets += rx_packets;
+> +	*quota -= rx_packets;
+> +	return *quota == 0;
+>  }
+>  
+>  /* Packet receive function for Ethernet AVB */
+> -- 
+> 2.39.2
+> 
+
+-- 
+Kind Regards,
+Niklas Söderlund
