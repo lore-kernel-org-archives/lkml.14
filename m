@@ -1,115 +1,185 @@
-Received: from mail-108-mta154.mxroute.com (mail-108-mta154.mxroute.com [136.175.108.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7C213792C
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 20:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998E638F83;
+	Sun, 14 Apr 2024 20:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713127348; cv=none; b=PkAomhz0DkcoinwSL4Tx9dUDXLFi/t1fKgEHvXh74gm/Lhe2+Lq43JoAfB41R192kkPjeINKD9aYRC9r+k5BqLOFCxjqvzClCvkMK/JcE86oXKQJEDUaV1gda/+BNZNqeP+DlhwgxkF9kcUpurhQ7SfIlen/O04Jq+tVn2emjvc=
+	t=1713127604; cv=none; b=eT+YdWZP8lL+Mi3mLiHVv/noizLCzogS0sWY0BdlPYpykJlFJgTgiODE36ORR1rmPX/6dsqgtNAWc1rUjhGAtBKeYSL8vJ0dH5uLHCyvYFOd7G/1KrJBGTMgDicQuxyTDu7R8CIJS1jvHDofuJsJWwM10oKUlpFQMLsnYe60ZBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713127348; c=relaxed/simple;
-	bh=UKMUJL4eC2no8yWMvMo8Q7bFRlBLJS/6Zj18ilqvC8I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sk3owoaE74vsHCwWFnLhIU301oKMayGPYRVeYqNVcKMNbwGsKp47slj4u//UJdGFcs+GieJXIVs3IRfVJQnCafPqzmf8iGGXQrFPslB8TSdOkc/56D690nLq2ZVimvNT+KBgVIanExi4blvwMfwhiNdGY1fv+85cokmjS4Buf3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=WwUaDCjD; arc=none smtp.client-ip=136.175.108.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1713127604; c=relaxed/simple;
+	bh=XDvQz8Cb3JriCvXnVGnz6ggpgm/OLowXPtVOYaRL0fw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Zahow7xV7Y2cHr3SB1Ro77S9UGWfbf0a1FibOAfFzzJhFxq4Lzt2IOTsvWB/lHJoHyotU0rmgbC5Yl4T/CYZ2X+1lhPwGmu6+fT7NW4jiMzHXRD/DdqVhBbQAwL0qch9CWzfEPMIf2ICe42DsuO0uaBhXvbLHVlhk6xAZqhjUeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TgU2dkTk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UP9jHp7j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="WwUaDCjD"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta154.mxroute.com (ZoneMTA) with ESMTPSA id 18ede52f62a0003bea.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sun, 14 Apr 2024 20:36:02 +0000
-X-Zone-Loop: 7a95b306827c67031daf1960fb547beae17073021945
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MwUpIIOD2xJwbBIpLMKnrgmMkUMqntOebL0FVSHsg4A=; b=WwUaDCjDkeIdul2uFxjGbEFvjj
-	spt8okC4U6nsGSo0dShDzWjJCU/pkQXoWe1QW34rDrnEGq8aZntY5ZEwpb0JalQzYa3NsrO8Hh61k
-	MP+Bz7XJ+elSa2eD4HkEaCE3+9k8O6ihNUr6mDAONbEiojljkDl2b4YpSNtYl75gjXM8XXvoyQipf
-	uYS1GzjPxWVe9tBaaF84+6+woMnRSPx9dYGx35KWjbs+2Q/t7FqFN0zenhVjX2QQfKRKyClsG2qJA
-	tZiazwQ40aMTQxxzaw6MX/5cQtYhv+VotVZ/4GLnxt2Ros3T5pN25dDWEIDKGPBFW5JYG6QoAi6au
-	4T92JOFg==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	pavel@ucw.cz,
-	phone-devel@vger.kernel.org,
-	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v4 24/25] media:i2c: imx258: Use v4l2_link_freq_to_bitmap helper
-Date: Sun, 14 Apr 2024 14:35:02 -0600
-Message-ID: <20240414203503.18402-25-git@luigi311.com>
-In-Reply-To: <20240414203503.18402-1-git@luigi311.com>
-References: <20240414203503.18402-1-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TgU2dkTk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UP9jHp7j"
+Date: Sun, 14 Apr 2024 20:46:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713127600;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Zq2qNCG7YYCKkCBpYl3nPheD8UbaNfedd0Pr1nDN0o=;
+	b=TgU2dkTkrj/04ljsW/tpyq67LfTvCle2gxEwrRj8ppTeQ3KlKEUK4ZYkIGlFHzEWFa8i9x
+	d86dQ+YPep9yZuukbMAzQpwKHepONmaal1W1AqGny0/cGBIv9z+/pIs4R8v2dTtkbkX8oN
+	Yc9vr/Ri1SAivF8dAeNFkbAdq/ErNfdklTju2Alyry1+dvotCnmE6CvZoQYzyXDNdF4Imx
+	RL+rs06NujDCowqgcvrYxFsksWE26827W7hVcFc63XpfzsZZREjdMVuGJbsFaMfX+oUXoi
+	1g8Ae+DzOyEEezyfAHeWuG8WEX9q9lPfP3tTNxKhXDbsVlxN5daZwGdt98oQmA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713127600;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Zq2qNCG7YYCKkCBpYl3nPheD8UbaNfedd0Pr1nDN0o=;
+	b=UP9jHp7jopD7I/XP2Ypu1bKs/RcIz2fQidjDlKy0OaWmxApEjiqRxb3KUo3CIs+0m6w+Oo
+	7XqC1Okf82rUF+CQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: locking/core] locking/atomic/x86: Introduce arch_try_cmpxchg64_local()
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Waiman Long <longman@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240414161257.49145-1-ubizjak@gmail.com>
+References: <20240414161257.49145-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
+Message-ID: <171312759954.10875.1385994404712358986.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Luis Garcia <git@luigi311.com>
+The following commit has been merged into the locking/core branch of tip:
 
-Use the v4l2_link_freq_to_bitmap() helper to figure out which
-driver-supported link freq can be used on a given system.
+Commit-ID:     d26e46f6bf329cfcc469878709baa41d3bfc7cc3
+Gitweb:        https://git.kernel.org/tip/d26e46f6bf329cfcc469878709baa41d3bfc7cc3
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Sun, 14 Apr 2024 18:12:43 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 14 Apr 2024 22:40:54 +02:00
 
-Signed-off-by: Luis Garcia <git@luigi311.com>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
+locking/atomic/x86: Introduce arch_try_cmpxchg64_local()
+
+Introduce arch_try_cmpxchg64_local() for 64-bit and 32-bit targets
+to improve code using cmpxchg64_local().  On 64-bit targets, the
+generated assembly improves from:
+
+    3e28:	31 c0                	xor    %eax,%eax
+    3e2a:	4d 0f b1 7d 00       	cmpxchg %r15,0x0(%r13)
+    3e2f:	48 85 c0             	test   %rax,%rax
+    3e32:	0f 85 9f 00 00 00    	jne    3ed7 <...>
+
+to:
+
+    3e28:	31 c0                	xor    %eax,%eax
+    3e2a:	4d 0f b1 7d 00       	cmpxchg %r15,0x0(%r13)
+    3e2f:	0f 85 9f 00 00 00    	jne    3ed4 <...>
+
+where a TEST instruction after CMPXCHG is saved.  The improvements
+for 32-bit targets are even more noticeable, because double-word
+compare after CMPXCHG8B gets eliminated.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: https://lore.kernel.org/r/20240414161257.49145-1-ubizjak@gmail.com
 ---
- drivers/media/i2c/imx258.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/include/asm/cmpxchg_32.h | 34 ++++++++++++++++++++++++++++++-
+ arch/x86/include/asm/cmpxchg_64.h |  6 +++++-
+ 2 files changed, 40 insertions(+)
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 5de71cb7c1ae..65846dff775e 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -693,6 +693,7 @@ struct imx258 {
- 	/* Current mode */
- 	const struct imx258_mode *cur_mode;
+diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
+index 9e0d330..9dedc13 100644
+--- a/arch/x86/include/asm/cmpxchg_32.h
++++ b/arch/x86/include/asm/cmpxchg_32.h
+@@ -64,6 +64,11 @@ static __always_inline bool __try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 ne
+ 	return __arch_try_cmpxchg64(ptr, oldp, new, LOCK_PREFIX);
+ }
  
-+	unsigned long link_freq_bitmap;
- 	const struct imx258_link_freq_config *link_freq_configs;
- 	const s64 *link_freq_menu_items;
- 	unsigned int lane_mode_idx;
-@@ -1552,6 +1553,17 @@ static int imx258_probe(struct i2c_client *client)
- 		return ret;
- 	}
- 
-+	ret = v4l2_link_freq_to_bitmap(&client->dev,
-+				       ep.link_frequencies,
-+				       ep.nr_of_link_frequencies,
-+				       imx258->link_freq_menu_items,
-+				       ARRAY_SIZE(link_freq_menu_items_19_2),
-+				       &imx258->link_freq_bitmap);
-+	if (ret) {
-+		dev_err(&client->dev, "Link frequency not supported\n");
-+		goto error_endpoint_free;
-+	}
++static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, u64 new)
++{
++	return __arch_try_cmpxchg64(ptr, oldp, new,);
++}
 +
- 	/* Get number of data lanes */
- 	switch (ep.bus.mipi_csi2.num_data_lanes) {
- 	case 2:
--- 
-2.44.0
-
+ #ifdef CONFIG_X86_CMPXCHG64
+ 
+ #define arch_cmpxchg64 __cmpxchg64
+@@ -72,6 +77,8 @@ static __always_inline bool __try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 ne
+ 
+ #define arch_try_cmpxchg64 __try_cmpxchg64
+ 
++#define arch_try_cmpxchg64_local __try_cmpxchg64_local
++
+ #else
+ 
+ /*
+@@ -150,6 +157,33 @@ static __always_inline bool arch_try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64
+ }
+ #define arch_try_cmpxchg64 arch_try_cmpxchg64
+ 
++#define __arch_try_cmpxchg64_emu_local(_ptr, _oldp, _new)		\
++({									\
++	union __u64_halves o = { .full = *(_oldp), },			\
++			   n = { .full = (_new), };			\
++	bool ret;							\
++									\
++	asm volatile(ALTERNATIVE("call cmpxchg8b_emu",			\
++				 "cmpxchg8b %[ptr]", X86_FEATURE_CX8)	\
++		     CC_SET(e)						\
++		     : CC_OUT(e) (ret),					\
++		       [ptr] "+m" (*(_ptr)),				\
++		       "+a" (o.low), "+d" (o.high)			\
++		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
++		     : "memory");					\
++									\
++	if (unlikely(!ret))						\
++		*(_oldp) = o.full;					\
++									\
++	likely(ret);							\
++})
++
++static __always_inline bool arch_try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, u64 new)
++{
++	return __arch_try_cmpxchg64_emu_local(ptr, oldp, new);
++}
++#define arch_try_cmpxchg64_local arch_try_cmpxchg64_local
++
+ #endif
+ 
+ #define system_has_cmpxchg64()		boot_cpu_has(X86_FEATURE_CX8)
+diff --git a/arch/x86/include/asm/cmpxchg_64.h b/arch/x86/include/asm/cmpxchg_64.h
+index c1d6cd5..5e24130 100644
+--- a/arch/x86/include/asm/cmpxchg_64.h
++++ b/arch/x86/include/asm/cmpxchg_64.h
+@@ -20,6 +20,12 @@
+ 	arch_try_cmpxchg((ptr), (po), (n));				\
+ })
+ 
++#define arch_try_cmpxchg64_local(ptr, po, n)				\
++({									\
++	BUILD_BUG_ON(sizeof(*(ptr)) != 8);				\
++	arch_try_cmpxchg_local((ptr), (po), (n));			\
++})
++
+ union __u128_halves {
+ 	u128 full;
+ 	struct {
