@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC736B1C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CEB31A8F;
 	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713095180; cv=none; b=qAcsC89GI6J0ItcsvdiejZRFRQzqmkSjqH3bpGPHg61xHzsk7P8hBudmCPqkNabhoD/kd9vKEuAoqWXFLXvqhDWLKZm0CcTOZXd41eokPpP15zDSK3P7W+Db1m9qAu5bOoa/YVw2kIUdAqQkUw6yLUxvnm24Vmg4y7qVUO5yvLg=
+	t=1713095180; cv=none; b=Cb+55cy4+pdRmLhvd8WNaVKi7ElmgPKNQIMvxmwU8bjIHJsDBExZo5gv4EGlXGBK6j4JkurhJvuMxkYsNQ5ReRZUy0pM9E4P62/WDnP4fkFK+kwAV6TsU5NorLsau0SwSLETLLCIKP08bp6y6bt3WK4+KxE7ArzDfRyKcC0SLV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713095180; c=relaxed/simple;
-	bh=VtSh8GgT91MvWTH7D+XogmTxktb7ZjbbxLqSixs0+g4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CIpFwTMqQWnpE6qYr8TTK5E4pTGjzPmPvXjM1o4hJN8vQozP07sfyq+PPU/oEB2Pcl3gS64aZSSVLgPHo/vyqaMvrYzpMtlrWnaV8k9wP9JVLFqZgqtKfrdbHCnrFH53b8JWRvUpouIyq5nAOxBdjoFwU8r5cjshZl6Gdmt0QCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1CYieYs; arc=none smtp.client-ip=10.30.226.201
+	bh=33wdznBHcrNrNHH/FVF4hi5/RJGXD7RBWwqYcSqj5MY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fbmX3jdL7dnAV9vkmCtheCqseBo+6MGPPl+Urew5wf7ZhcgufbvYhXePS2pPqhfC8nWRxjgnnCa/aSNaiD4kZc7332cqKMtgFo/qJZiXYtbwfiC8ipqvoJhO6u7m5o/s7CuxKjSYq/UNYjPU8kDp6VQ/uVYKNSC+wnHqachoH3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgLcLWWB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1CYieYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F5F1C32783;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgLcLWWB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 61BD4C072AA;
 	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713095180;
-	bh=VtSh8GgT91MvWTH7D+XogmTxktb7ZjbbxLqSixs0+g4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=p1CYieYsIyzac/czlQceN/EQWbEgZ2m19gUAeVQaV0VmPDOLue2nf6MeFt+ceRx8D
-	 lIkHvHwt0cBgQDBHRYWjZwoVVOWSON4Yrosbpns+npiyInuITf9oeVU2wRMA/WAWAh
-	 2sD1aCbH5WReJo0Z9VOxDToWVOQG8Fq37GluBGFS9BMfiy8RCe2BFK/I7l+JWVEKk7
-	 uMnG8iJUnxkrzYIelnS2xSEbgcpXaYKY4Up3TnizauHS5aJGGC4ls4g1aA2h+ZjRKQ
-	 b3Y7/6JIclVP4cBXWdAQZ1RZZR1qGu3XmlLFYP9s7a24u37iVVeZ4oj9DgmhYtS1P+
-	 ufnLuXf0as+xQ==
+	bh=33wdznBHcrNrNHH/FVF4hi5/RJGXD7RBWwqYcSqj5MY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=FgLcLWWBZ1CRpXx5aji/rmvcv9VzDLQAZUFr5J8VRKbJm4IoU9UJYMnjtUNEhEtQQ
+	 f+/XAfxH+15S2Hp0ZTadXWPKTbttrLe3tyABTcuX44Dbn7dKNrnJVrN92Hkqbrbhg0
+	 brgm4LDK43znlMrEL0coYdu35VL5afhDeHuHv+AWXSdZOmYE236bBVaQTpIZ4GheZC
+	 aeBfwTa0JoD4CIzVU649yDqeVKriKvr8kS8dgPn41sEq8JAFcFTQQnZfls7QgJyUZp
+	 QerX/kRVvq4l1UofwEHt0TgI88X8bepfX8DszxVddmOjdOxk2ZJjjA6opQyhuEISwk
+	 QzO4/l0aOohpw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E37C04FFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D22FC4345F;
 	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Sun, 14 Apr 2024 14:46:01 +0300
-Subject: [PATCH 2/4] dt-bindings: arm: bcm: add bindings for ASUS RT-AC5300
+Subject: [PATCH 0/4] Document ASUS RT-AC3200 and ASUS RT-AC5300 and add
+ device trees
+Date: Sun, 14 Apr 2024 14:45:59 +0300
+Message-Id: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-2-118c90bae6e5@arinc9.com>
-References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
-In-Reply-To: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+X-B4-Tracking: v=1; b=H4sIAPfBG2YC/x3MTQrCQAxA4auUrA3E6dS/q4iLaZrRbDqSVBFK7
+ 27o6vFt3goupuJw61Yw+aprmwPHQwf8KvNTUKcwJEqZMl2wNkNvjMU/jrZg4T4RRYY+MkwnqZw
+ 4X88jxONtUvW3/++PbfsD8bV2/m8AAAA=
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
  Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>, 
@@ -52,11 +53,11 @@ Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713095170; l=771;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713095170; l=956;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=fzGThLw8t/XG2JnsphMo88X0nVs2eVDvx1mTdRhk0vU=;
- b=UIMEGH8FpZhR92Z7th/HwS/UfrESpub4N7ji6oCgrjtXW9xHgEvrW3i1QtIFaENCB+pbLTeMp
- Ed9gfTdAfDEBGQ3BM/IH2wdBecR2YNSZ8h7KdI68LVr0GmqsUdLBZPL
+ bh=33wdznBHcrNrNHH/FVF4hi5/RJGXD7RBWwqYcSqj5MY=;
+ b=sIZCGgog3BeSnH4dfJhskcNWfY+9MZ+GaltlVyK4WmiTPZgTD5KZzwskCoUa3Axu/fzj0yKoh
+ bxQtN2AQbQeCd/1QX8/jRVtc0VExaoehdw6zmaPjZC4Ou2pKWpfVjaA
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
@@ -64,29 +65,30 @@ X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
 X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 Reply-To: arinc.unal@arinc9.com
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Hello.
 
-Add ASUS RT-AC5300 under BCM47094 based boards.
+This patch series documents the compatible strings for ASUS RT-AC3200 and
+ASUS RT-AC5300, and adds the device trees for them.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Arınç ÜNAL (4):
+      dt-bindings: arm: bcm: add bindings for ASUS RT-AC3200
+      dt-bindings: arm: bcm: add bindings for ASUS RT-AC5300
+      ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
+      ARM: dts: BCM5301X: Add DT for ASUS RT-AC5300
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-index 215bef740aca..d925e7a3b5ef 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
-@@ -68,6 +68,7 @@ properties:
-         items:
-           - enum:
-               - asus,rt-ac3100
-+              - asus,rt-ac5300
-               - asus,rt-ac88u
-               - dlink,dir-885l
-               - dlink,dir-890l
+ .../devicetree/bindings/arm/bcm/brcm,bcm4708.yaml  |   2 +
+ arch/arm/boot/dts/broadcom/Makefile                |   2 +
+ .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 164 ++++++++++++++++++++
+ .../boot/dts/broadcom/bcm47094-asus-rt-ac5300.dts  | 170 +++++++++++++++++++++
+ 4 files changed, 338 insertions(+)
+---
+base-commit: 011d79ef1cfad701c2d8e7e80d8c77523af9c771
+change-id: 20240408-for-soc-asus-rt-ac3200-ac5300-5d6efc2c497b
 
+Best regards,
 -- 
-2.40.1
+Arınç ÜNAL <arinc.unal@arinc9.com>
 
 
