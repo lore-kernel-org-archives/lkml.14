@@ -1,66 +1,39 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB01134CEF
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 17:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8C3134CE8;
+	Sun, 14 Apr 2024 17:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114537; cv=none; b=r9s0gYuIr/kbm2z8U0MJerxL+58sJjtWlcYKMFF8S05d2XadwK4LKUYCuyoOb7/IOcI4tVitDpVH653Rcn38SvNt7aqTZdrQcImhHgaXY/px9bcPW7aJJoJXaC/G0g2j7BzcVPHfPebvmhXs9gg/IfN+NxMliykwPeee4FXF5ug=
+	t=1713114674; cv=none; b=YjJqb5NIIjeYv5E4HrsXMb9W5pQQ/q3qMu7MYDTGNiBANaOZ6UO92PCmv85+U9oy+GeWR0EyxzMy0u7meRkPDqK3Z2ZjhzhRj3MoHofNJ5gG2YTMTOviVQ2ScQQLOWEmGusuccpbAHRpYw2mVKKK3OJeO7A+D/dB6CP+pkJSF3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713114537; c=relaxed/simple;
-	bh=el5cvTP8eDCmU/KMm+xr8NR8Gig6zBPOKSGU46PfnIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P12/cf1vGutjTUDIXeRE4VYoVAOZ6puBRZVZg4SRPUdOnJKaRPIm4EfR2NH+UeDfH3YqP9f4eucl4FtXaHDULsvXQgTS4XL2PoVRV6Xcw5m7FWbVcVp2yCmMopeIB5z1dsiZn9OPgQgMJah511iGQjDuvXfHJm0aVSTRO0+sGNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BV8RjClt; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BV8RjClt"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so2457233276.1
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 10:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713114534; x=1713719334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=op1/xW185UQlJ9aw6uunOwZwi5meHNWhptbMPX8ZwRs=;
-        b=BV8RjCltq8FnSRH6hXjg0lXfAIKtvJ+rGlg61ZE64RwLJwyd8r3DYlgXJ67nBpl2Wj
-         SE4mrhFWRVVBn7Bb8d2emJFZ+h5bkjrFqwzKDp3vL3QYLbG7Xv/1+XbfQMWfVfQwRUXx
-         WAtUl9zLiu3suwfM47Mqe+DffuNByA0USZu1bmubfveI2BXcEDGks8v/hRk3JC/Eul/u
-         T3gm1pUnJ1BnqR7Mk0V2G9dKUEYm7x5JRqLbTqpjZI8/SzkPRyE2Riu4OTPvPOZ2gsxT
-         Vxae3QPsN/DWTAtg9jtaU4N6SmCA+ftJyCg0qoGE+mFq9UVWKf3Pq1I+W/iaxCSB7Dvd
-         92Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713114534; x=1713719334;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=op1/xW185UQlJ9aw6uunOwZwi5meHNWhptbMPX8ZwRs=;
-        b=rj+dxUElrnefrjaRbQhYSI67VRPzYjPCO6Dqkd5dEZDNUs/R4HtDGzByew66Myyiqt
-         mgRjLodhAFLMFRTlMsyENKz5vNVR9sTJ6rMorZSJYAQcypa05+B5SQszc8P+MPwBAvLY
-         o2V5Y2t6kWPuZoobpzfZqorFey4IwTq2JV10+ibWJ9nA/gMYlVFSQsJCIn+YUsewz2xz
-         XGinBT6gXaq43fsYE/0asSbNdeDIvsp7TP0Y2OE4QYcAUdp1cj39jEynjFitUR60LG4A
-         0PTxB8qfgzdvDrnZxO63mjj+Hk34HSVXEqNftL0qvDOZndbohTvPlILKFth4wVykDqQ3
-         9img==
-X-Forwarded-Encrypted: i=1; AJvYcCVcsNz3kmkcd+6KW0bE4BPwGKLFbSmNnd9sbARnI5noeOj7yXSIP17lNCZcXFSLuN1OeBEqFtqj89QAHhAajzDC0iARoXMI6L11uB0i
-X-Gm-Message-State: AOJu0YzV7uiHGjjJV1J1Sq6cMmw/TN83guFLFAi+u40CHbTahPcYsKPW
-	ZsbzYAc3PdtVmA1QeSr8/5EG2olWD42gAp0WXrnlqOi1U/3+61ZRweL8zhaSopbqGDgDWa/XHh+
-	6
-X-Google-Smtp-Source: AGHT+IFFibw+0fLDTJVn2BkjdNGXJXEytO3+A3kO2zqeNjhVPCraFAF8U1V/HuyUEYXs1kJ+lRdbIQ==
-X-Received: by 2002:a5b:385:0:b0:dcc:933f:ea83 with SMTP id k5-20020a5b0385000000b00dcc933fea83mr6751948ybp.30.1713114534595;
-        Sun, 14 Apr 2024 10:08:54 -0700 (PDT)
-Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 4-20020a251104000000b00dc9c5991ecdsm1679082ybr.50.2024.04.14.10.08.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 10:08:53 -0700 (PDT)
-From: Alex Elder <elder@linaro.org>
-To: corbet@lwn.net
-Cc: gregkh@linuxfoundation.org,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: coding-style: don't encourage WARN*()
-Date: Sun, 14 Apr 2024 12:08:50 -0500
-Message-Id: <20240414170850.148122-1-elder@linaro.org>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1713114674; c=relaxed/simple;
+	bh=wpe8KlwzaSSM+u2lvF16DyF5qHpDrPDvVSCVM3ngkNQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qqpCE7G9sxwBQup+0lZ6y3tCXvJ2helv3Ju61c4cJLFXwhXq4gIeKZWImGtNuSTvIZ5ofeewkT8SUjLmzyTVetd5WvnVBKUiHvSeUS64z+cD773Fiq5qjpa7S91XpAj95zfn32OK1vYe/RaRis0EEYlzoaOzWt9eBArvvWzBOQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from dslb-188-097-210-242.188.097.pools.vodafone-ip.de ([188.97.210.242] helo=martin-debian-3.kaiser.cx)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <martin@kaiser.cx>)
+	id 1rw3Dj-003uVz-0Q;
+	Sun, 14 Apr 2024 19:00:47 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Anna Schumaker <Anna.Schumaker@Netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	David Howells <dhowells@redhat.com>
+Cc: NeilBrown <neilb@suse.de>,
+	Jeff Layton <jlayton@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v3] nfs: keep server info for remounts
+Date: Sun, 14 Apr 2024 19:01:09 +0200
+Message-Id: <20240414170109.137696-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,54 +42,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several times recently Greg KH has admonished that variants of WARN()
-should not be used, because when the panic_on_warn kernel option is set,
-their use can lead to a panic. His reasoning was that the majority of
-Linux instances (including Android and cloud systems) run with this option
-enabled. And therefore a condition leading to a warning will frequently
-cause an undesirable panic.
+With newer kernels that use fs_context for nfs mounts, remounts fail with
+-EINVAL.
 
-The "coding-style.rst" document says not to worry about this kernel
-option.  Update it to provide a more nuanced explanation.
+$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
+$ mount -t nfs -o remount /mnt/test/
+mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
 
-Signed-off-by: Alex Elder <elder@linaro.org>
+For remounts, the nfs server address and port are populated by
+nfs_init_fs_context and later overwritten with 0x00 bytes by
+nfs23_parse_monolithic. The remount then fails as the server address is
+invalid.
+
+Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
+we're doing a remount.
+
+Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
- Documentation/process/coding-style.rst | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ v3:
+ - rebased against linux-next from 12th April 2024
 
-diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index 9c7cf73473943..bce43b01721cb 100644
---- a/Documentation/process/coding-style.rst
-+++ b/Documentation/process/coding-style.rst
-@@ -1235,17 +1235,18 @@ example. Again: WARN*() must not be used for a condition that is expected
- to trigger easily, for example, by user space actions. pr_warn_once() is a
- possible alternative, if you need to notify the user of a problem.
+ v2:
+ - rebased against linux-next from 26th February 2024
+
+Dear all,
+I'm resending this patch again. The problem that I'm trying to fix is still
+present in linux-next. Thanks in advance for any reviews and comments.
+
+I guess that we're taking this path for remounts
+
+do_remount
+    fs_context_for_reconfigure
+        alloc_fs_context
+            init_fs_context == nfs_init_fs_context
+               fc->root is set for remounts
+               ctx->nfs_server is populated
+    parse_monolithic_mount_data
+        nfs_fs_context_parse_monolithic
+            nfs23_parse_monolithic
+               ctx->nfs_server is overwritten with data from mount request
+
+An alternative to checking for !is_remount_fc(fc) would be to check
+if (ctx->nfs_server.addrlen == 0)
+
+fs/nfs/fs_context.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index d0a0956f8a13..cac1157be2c2 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1112,9 +1112,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+ 		ctx->acdirmax	= data->acdirmax;
+ 		ctx->need_mount	= false;
  
--Do not worry about panic_on_warn users
--**************************************
-+The panic_on_warn kernel option
-+********************************
- 
--A few more words about panic_on_warn: Remember that ``panic_on_warn`` is an
--available kernel option, and that many users set this option. This is why
--there is a "Do not WARN lightly" writeup, above. However, the existence of
--panic_on_warn users is not a valid reason to avoid the judicious use
--WARN*(). That is because, whoever enables panic_on_warn has explicitly
--asked the kernel to crash if a WARN*() fires, and such users must be
--prepared to deal with the consequences of a system that is somewhat more
--likely to crash.
-+Note that ``panic_on_warn`` is an available kernel option. If it is enabled,
-+a WARN*() call whose condition holds leads to a kernel panic.  Many users
-+(including Android and many cloud providers) set this option, and this is
-+why there is a "Do not WARN lightly" writeup, above.
+-		memcpy(sap, &data->addr, sizeof(data->addr));
+-		ctx->nfs_server.addrlen = sizeof(data->addr);
+-		ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		if (!is_remount_fc(fc)) {
++			memcpy(sap, &data->addr, sizeof(data->addr));
++			ctx->nfs_server.addrlen = sizeof(data->addr);
++			ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		}
 +
-+The existence of this option is not a valid reason to avoid the judicious
-+use of warnings. There are other options: ``dev_warn*()`` and ``pr_warn*()``
-+issue warnings but do **not** cause the kernel to crash. Use these if you
-+want to prevent such panics.
- 
- Use BUILD_BUG_ON() for compile-time assertions
- **********************************************
+ 		if (sap->ss_family != AF_INET ||
+ 		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
 -- 
-2.40.1
+2.39.2
 
