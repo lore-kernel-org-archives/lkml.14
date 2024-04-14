@@ -1,70 +1,95 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA99C4689
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4C4219F3
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 08:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713083660; cv=none; b=rAJWk5/bzPIzGm7OItpOV83HPCu/jBeCiUCzu6Nm9aeLaDrifoUebYqHjbV0x36Jbp4rb2CPGWb4JiUPa6tYtjPJFjYcY4j9ZavYbP9ktYCJLiluyMhduv1s77BK0Ps8l2E+yw05Lh2H4HXKAYE3uhtrnhNArvD1B/7dnAGmLhQ=
+	t=1713083703; cv=none; b=ZogDvrz/Kwy8RDv1XuMvoNdsDIbZzxwxoL5lpOYUasRYfGKcMBg28/vtgvSlkScV2PE1n6GZPVD/Ms5Yn83l0tDBZzJDPLK6EuW7iPq72MTIpUlKY8ZOwnQz5P8imsVTqQVybBCNZYyNxkrEw7zVU3cbpYz4o6+HSoLkuA8+dHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713083660; c=relaxed/simple;
-	bh=ZmAIjSzcFfDjoTquD/K8a25ft89stMkxMjIVNSqucwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kynAUr8TQlmEW94YUUCcNNnKre4QewLKUIXsbjKlQSoo+wEV7HEoKFXs2AzmSVGxgzWh7TcmoN02jX89EEZksCn3pfLbESxGHIXTb4Fckgnwc03pcEOcIFDVbpBwXaUpVeo54CTzbGG1C4PU6B4hbpBb9hXEFUFmOtGt/SjEK+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 280EE40E01FF;
-	Sun, 14 Apr 2024 08:34:09 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sn3DNO4raZsw; Sun, 14 Apr 2024 08:34:03 +0000 (UTC)
-Received: from nazgul.tnic (unknown [212.23.229.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B340240E01C5;
-	Sun, 14 Apr 2024 08:33:51 +0000 (UTC)
-Date: Sun, 14 Apr 2024 10:36:26 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Erhard Furtner <erhard_f@mailbox.org>, x86@kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	jpoimboe@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [bisected] Kernel v6.9-rc3 fails to boot on a Thinkpad T60 with
- MITIGATION_RETHUNK=y (regression from v6.8.5)
-Message-ID: <20240414083626.GAZhuViviWKudQ5Apm@fat_crate.local>
-References: <20240413024956.488d474e@yea>
- <ZhpOIeVq1KQXzjBp@archie.me>
- <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
+	s=arc-20240116; t=1713083703; c=relaxed/simple;
+	bh=rODNJ0Ukhp6xqvTSkV55aTTmI0Z+BHUMDDSzoazWTg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g0Zk86DU/KNROPvCMO6nLJ8TAvQP9WX0V4NXBQWPR/7F4B3APrQwhMjW/7y5wknXTMyNkfxCw4YeDpBpMobw63M4wbmtWDnjacRGz62qcuTv7JV/DuBmPQlOdUS+sDEaXdZypVPtBThfA5mvoNitcDJK7+jPea3vn3Kvo2Svmrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516d8764656so831125e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 01:35:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713083700; x=1713688500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rODNJ0Ukhp6xqvTSkV55aTTmI0Z+BHUMDDSzoazWTg4=;
+        b=fzU3hQ1OHNDuXvkgZt6N5Gh2L79nQ2jfjGA54FFeAUAAIIOQ1IIJW19vpBFfHt7xPG
+         3HtE6HJrKbxCzE7KNeGpQDhkqOfNRYecRjcnrrJte51HogxLev+F4nhG518ecefDp/Uv
+         NB1ZJ/+cU5t8gcDy91YKgFIKvR5oGZ5e9M2HADFZ9R/7nSnH/QKeuP5G8RN0DUACnvrp
+         JdC9KQBnJ8MkQVYbBdeiHXDKpeQ0QmTml1KxOFjzoWQLI7vx86WmxzOFBwZ3m06l3NnQ
+         uvdBdINdFjeKG0fywO0a4IiIIbWDJRTtZ9Wd7CkfpD9h15eHstl10uclaY1zliDWMF45
+         9SBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmYbV+n/5/x2skgFrDu/CNQgJbQItIizxnoqd39QRVQ7X9MVh4LtGtXNy6Bs+7YvwHSHQseGCDyfJ4ynUSyi4euFPwDjZaqxUZ1q6E
+X-Gm-Message-State: AOJu0Yy62B68DG7YtcVKHPl2ltjS8n00O/dSldPfHBNnDhPY50KT6QoX
+	miZyYYvKYHEm6rLnDlVHR+AvkzbyteOxaEXIACoFbl5J9VIdm+MuVHRnwA==
+X-Google-Smtp-Source: AGHT+IHUerSoHWBsGEYAfYQTKd/vCWDjdmSOFzRHu8Rk87rKdywP2XPry+/l30vZZvfgcddZaKXuMA==
+X-Received: by 2002:a2e:3a18:0:b0:2d4:25c5:df1e with SMTP id h24-20020a2e3a18000000b002d425c5df1emr3891400lja.5.1713083699832;
+        Sun, 14 Apr 2024 01:34:59 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.192.64.dynamic.barak-online.net. [85.65.192.64])
+        by smtp.gmail.com with ESMTPSA id gw7-20020a05600c850700b004146e58cc35sm14861616wmb.46.2024.04.14.01.34.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Apr 2024 01:34:59 -0700 (PDT)
+Message-ID: <bd345f52-3435-4e40-975d-321f706857be@grimberg.me>
+Date: Sun, 14 Apr 2024 11:34:58 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/6] nvme-fabrics: short-circuit connect retries
+To: Keith Busch <kbusch@kernel.org>, Daniel Wagner <dwagner@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>, James Smart <james.smart@broadcom.com>,
+ Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240409093510.12321-1-dwagner@suse.de>
+ <ZhiBzXBvjTeDuHbS@kbusch-mbp.dhcp.thefacebook.com>
+ <vbptto5zefkdadnpyhcjelfrsgadb2stjh3sole6n6mdd4h7dq@lrdxk5p5qh6w>
+ <ZhlSJcTwGVrlk8OP@kbusch-mbp.dhcp.thefacebook.com>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <ZhlSJcTwGVrlk8OP@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 13, 2024 at 11:46:09AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Boris there suggested: "perhaps we should make
-> CONFIG_MITIGATION_RETHUNK depend on !X86_32":
-> https://lore.kernel.org/all/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
-> 
-> But that did not happen afaics. Would it be wise to go down that path?
 
-Am looking at the whole thing. Stay tuned...
 
--- 
-Regards/Gruss,
-    Boris.
+On 12/04/2024 18:24, Keith Busch wrote:
+> On Fri, Apr 12, 2024 at 09:24:04AM +0200, Daniel Wagner wrote:
+>> On Thu, Apr 11, 2024 at 06:35:25PM -0600, Keith Busch wrote:
+>>> On Tue, Apr 09, 2024 at 11:35:04AM +0200, Daniel Wagner wrote:
+>>>> The first patch returns only kernel error codes now and avoids overwriting error
+>>>> codes later. Thje newly introduced helper for deciding if a reconnect should be
+>>>> attempted is the only place where we have the logic (and documentation).
+>>>>
+>>>> On the target side I've separate the nvme status from the dhchap status handling
+>>>> which made it a bit clearer. I was tempted to refactor the code in
+>>>> nvmet_execute_auth_send to avoid hitting the 80 chars limit but didn't came up
+>>>> with something nice yet. So let's keep this change at a minimum before any
+>>>> refactoring attempts.
+>>>>
+>>>> I've tested with blktests and also an real hardware for nvme-fc.
+>>> Thanks, series applied to nvme-6.9.
+>> Thanks! I have an updated version here which addresses some of Sagi's
+>> feedback, e.g. using only one helper function. Sorry I didn't send out
+>> it earlier, I got a bit side tracked in testing because of the 'funky'
+>> results with RDMA.
+>>
+>> Do you want me to send a complete fresh series or patches on top of this
+>> series? I'm fine either way.
+> Oh sorry, I didn't notice the discussion carried on after the "review"
+> tag. Please send me the update, I'll force push.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I think that what we want is to have a special handling in the very specific
+connect failure when the host/ctrl credentials mismatch, because out of all
+the reasons to a connection failure, this _could_ be transient.
