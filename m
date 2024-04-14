@@ -1,274 +1,166 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B601AACA;
-	Sun, 14 Apr 2024 04:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D200917721
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 04:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713067722; cv=none; b=ngGuo4ZTdLlxrkKTMDX+SSc94HXi9JriOIultZ7RrXWaHTNiLO74aBZv2kdoa8Q9nXxN1i6KngAuDrtG4NdjGCavOSYoR09EHbkDFKd/NMVMsh/TIbfYhW2kURgo4cvdLeshTPkOjksVoaKlUjcxpR+3vHty7eWiKFRr9KnWDUQ=
+	t=1713068173; cv=none; b=ItbozQHiax16ZU5YQR6L6hPFrYtU28Aw8tcPPeQRzOsXXycazL6lE43+xcc9jGs0x5pPO/tf93CCJCc0TBCSiaTk7Mj7Xi6PtqkcguF3SrB83LqsQPS1IRoCMzp6O6m8fH2ZniKjFQ+keB6RWQLVsYMj74gbgddfQ6yhj1mjj5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713067722; c=relaxed/simple;
-	bh=n8cispQF9jAkRVlGe5jjj4ircXEKtDfFqkql60+3g9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q6YowIi+b3bSqtFP+zktA9M08ZHytQPoIvKLImFU90XkLAWVQB1XYqnc+5LgJSq2RZJ/2Yvh7o+RK7iUuzu+S/DjR0e10eI28oyNYbghWNXbqPy6Li+GhDFioyRyrha1shEHE1wzpP/PaZwiWp5RGtE4SEsn3nF4HD3e2WKVOBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RDQQhciH; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713068173; c=relaxed/simple;
+	bh=tbT2uwQbheewel6rLTeCmHfhAkQizC2YAsizILFY6EQ=;
+	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
+	 In-Reply-To:Cc:To:References; b=UVpdY3YIYyye4RYykGD9jcTWGaHd9fNSMHkUkYNZ2oft8/a8ZeyPRtreHGb36o577j9NV1Rvk4MEbhGB5ziXqhiIp2H+AaRa0iZedB70t7KxoLdsQ+jCLDAZUpQRBdmGvSQqs+G/mYQf3sBiq0Cq+1F0/U0ksWe0YT6hOldRIaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=azo+8vBK; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RDQQhciH"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713067717; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=7KpGb+RAlXCDiOp5RnsZ8bQcI+lr71YGBibltD4pfAU=;
-	b=RDQQhciHg6AuWJl7ZY3C+3Hc2ES0b4K39LCTDi0U628V0TuZfRVp6/1w1CVOeWgeWyhUHEs2SUO+t8yf/y1dkJmfFFcQQYAVb91RwTxMhvLDgg8Cy/GbkVXEJE0lAwqFobOkWkTLy/0tGQnzjmfCLxUxf27JdmSxj+9R7IIcSWw=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W4Rx-X4_1713067395;
-Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W4Rx-X4_1713067395)
-          by smtp.aliyun-inc.com;
-          Sun, 14 Apr 2024 12:03:16 +0800
-From: Wen Gu <guwen@linux.alibaba.com>
-To: wintera@linux.ibm.com,
-	twinkler@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	wenjia@linux.ibm.com,
-	jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	alibuda@linux.alibaba.com,
-	tonylu@linux.alibaba.com,
-	guwen@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v6 04/11] net/smc: implement DMB-related operations of loopback-ism
-Date: Sun, 14 Apr 2024 12:02:57 +0800
-Message-Id: <20240414040304.54255-5-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240414040304.54255-1-guwen@linux.alibaba.com>
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="azo+8vBK"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so15889825ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2024 21:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1713068171; x=1713672971; darn=vger.kernel.org;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xa9DN/TNLIPv3KV/MuIUgpNXPm0/AK0S91wCcTvt0UA=;
+        b=azo+8vBKcQ3sglYT8XakbUmzdq3lw23hX/W6VHOI0MRDweXpPhCFtC+p/U+LkPgXpq
+         NgjHgQUV3iDnSOujvzi0SPe6nMwqq7qJrabsLwoH78rG+bkO8AcdUm9og87r+j9lmO9/
+         VmSMYqhER/g34mAWt7xFuZN/HtLtA6zMgWxItbwJisdji7+lH0S6f3rSKFiuLzG2nGPv
+         b9QLO83gXnNEW1vLrUUwhPmDuY5c7hJcjzmKjiqfiaqdMMHBZz3/sU+dwfnMXvlsXjpW
+         BSzJR8RxPDbPcAaxd6ropXmboP8P92kmRoxov5bRgFz6wImes5Mrf8gEayP0zEusNbp0
+         kTEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713068171; x=1713672971;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xa9DN/TNLIPv3KV/MuIUgpNXPm0/AK0S91wCcTvt0UA=;
+        b=aO4+QZXX+CbivVBJN6/qXjUckH6wRqSB8qzxLd/VDwTfpq8S3+u8v2QaOAb99emrYF
+         g1mF6Yq1Y5MgokjRmAQdqyDdxpXtYG+6wJNkqWzpyMghpuoLtQRKRqpmJncm5pbk5veT
+         s4Bo2yDpyaGfw00L/4ga7E1SPCoI178G1BxvAQkU5SaNczvJZ1ydcd5wNN/ZYelkuy2/
+         5N5FV7ls8sMRY6A6zBt731ohSQxjj9JUZu9gWI5HghIJBv8BfTmZZ3kxm1w57SHsylsx
+         BVmMZUMYjYWenshlX5BdCY2B01sr0l3rCRK+asP+AnZy5o4FSmCrOxVKeD+q+/+uXuAK
+         a0GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQuAAs4aamzEgwW2Ih6KOSSQKAqx2nMDk33q9t+hXalLqc8xJN0/tkZbhOWmh+C9nvSQanbllsajFqdpM+0GnLXZL3AGRkRpyvgxDb
+X-Gm-Message-State: AOJu0YydXlmiXluSzeY12jLr4Mo8Y3UHN7/4397UQuyXEise4I8dzfwg
+	DCnErNf95QK5KO1JGqGRz+3bjyNgr0CA6cszFiOsICu9ILnyFN0KR5AC21BgXaM=
+X-Google-Smtp-Source: AGHT+IESpwxIKqGgQsFN0OkaHzqVmzmYT/UfrqvS9FukHYvTOuK5NnLjSpYm69kyVG8zhzuDe8GI8A==
+X-Received: by 2002:a17:902:dac8:b0:1e4:ad9b:f770 with SMTP id q8-20020a170902dac800b001e4ad9bf770mr8118244plx.23.1713068171024;
+        Sat, 13 Apr 2024 21:16:11 -0700 (PDT)
+Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
+        by smtp.gmail.com with ESMTPSA id s3-20020a170902c64300b001d8edfec673sm5342477pls.214.2024.04.13.21.16.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2024 21:16:10 -0700 (PDT)
+From: Andreas Dilger <adilger@dilger.ca>
+Message-Id: <887E261B-3C76-4CD9-867B-5D087051D004@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_3417505C-A477-4CF5-8245-C5D2C05FBA72";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: riscv32 EXT4 splat, 6.8 regression?
+Date: Sat, 13 Apr 2024 22:16:07 -0600
+In-Reply-To: <20240414021555.GQ2118490@ZenIV>
+Cc: Nam Cao <namcao@linutronix.de>,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-riscv@lists.infradead.org,
+ Theodore Ts'o <tytso@mit.edu>,
+ Ext4 Developers List <linux-ext4@vger.kernel.org>,
+ Conor Dooley <conor@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+References: <878r1ibpdn.fsf@all.your.base.are.belong.to.us>
+ <20240413164318.7260c5ef@namcao>
+ <22E65CA5-A2C0-44A3-AB01-7514916A18FC@dilger.ca>
+ <20240414021555.GQ2118490@ZenIV>
+X-Mailer: Apple Mail (2.3273)
 
-This implements DMB (un)registration and data move operations of
-loopback-ism device.
 
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- net/smc/smc_loopback.c | 129 ++++++++++++++++++++++++++++++++++++++++-
- net/smc/smc_loopback.h |  13 +++++
- 2 files changed, 139 insertions(+), 3 deletions(-)
+--Apple-Mail=_3417505C-A477-4CF5-8245-C5D2C05FBA72
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-diff --git a/net/smc/smc_loopback.c b/net/smc/smc_loopback.c
-index 0349632a76c4..d75852549b00 100644
---- a/net/smc/smc_loopback.c
-+++ b/net/smc/smc_loopback.c
-@@ -15,10 +15,12 @@
- #include <linux/types.h>
- #include <net/smc.h>
- 
-+#include "smc_cdc.h"
- #include "smc_ism.h"
- #include "smc_loopback.h"
- 
- #define SMC_LO_V2_CAPABLE	0x1 /* loopback-ism acts as ISMv2 */
-+#define SMC_DMA_ADDR_INVALID	(~(dma_addr_t)0)
- 
- static const char smc_lo_dev_name[] = "loopback-ism";
- static struct smc_lo_dev *lo_dev;
-@@ -48,6 +50,125 @@ static int smc_lo_query_rgid(struct smcd_dev *smcd, struct smcd_gid *rgid,
- 	return 0;
- }
- 
-+static int smc_lo_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
-+			       void *client_priv)
-+{
-+	struct smc_lo_dmb_node *dmb_node, *tmp_node;
-+	struct smc_lo_dev *ldev = smcd->priv;
-+	int sba_idx, rc;
-+
-+	/* check space for new dmb */
-+	for_each_clear_bit(sba_idx, ldev->sba_idx_mask, SMC_LO_MAX_DMBS) {
-+		if (!test_and_set_bit(sba_idx, ldev->sba_idx_mask))
-+			break;
-+	}
-+	if (sba_idx == SMC_LO_MAX_DMBS)
-+		return -ENOSPC;
-+
-+	dmb_node = kzalloc(sizeof(*dmb_node), GFP_KERNEL);
-+	if (!dmb_node) {
-+		rc = -ENOMEM;
-+		goto err_bit;
-+	}
-+
-+	dmb_node->sba_idx = sba_idx;
-+	dmb_node->len = dmb->dmb_len;
-+	dmb_node->cpu_addr = kzalloc(dmb_node->len, GFP_KERNEL |
-+				     __GFP_NOWARN | __GFP_NORETRY |
-+				     __GFP_NOMEMALLOC);
-+	if (!dmb_node->cpu_addr) {
-+		rc = -ENOMEM;
-+		goto err_node;
-+	}
-+	dmb_node->dma_addr = SMC_DMA_ADDR_INVALID;
-+
-+again:
-+	/* add new dmb into hash table */
-+	get_random_bytes(&dmb_node->token, sizeof(dmb_node->token));
-+	write_lock_bh(&ldev->dmb_ht_lock);
-+	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_node->token) {
-+		if (tmp_node->token == dmb_node->token) {
-+			write_unlock_bh(&ldev->dmb_ht_lock);
-+			goto again;
-+		}
-+	}
-+	hash_add(ldev->dmb_ht, &dmb_node->list, dmb_node->token);
-+	write_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	dmb->sba_idx = dmb_node->sba_idx;
-+	dmb->dmb_tok = dmb_node->token;
-+	dmb->cpu_addr = dmb_node->cpu_addr;
-+	dmb->dma_addr = dmb_node->dma_addr;
-+	dmb->dmb_len = dmb_node->len;
-+
-+	return 0;
-+
-+err_node:
-+	kfree(dmb_node);
-+err_bit:
-+	clear_bit(sba_idx, ldev->sba_idx_mask);
-+	return rc;
-+}
-+
-+static int smc_lo_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
-+{
-+	struct smc_lo_dmb_node *dmb_node = NULL, *tmp_node;
-+	struct smc_lo_dev *ldev = smcd->priv;
-+
-+	/* remove dmb from hash table */
-+	write_lock_bh(&ldev->dmb_ht_lock);
-+	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb->dmb_tok) {
-+		if (tmp_node->token == dmb->dmb_tok) {
-+			dmb_node = tmp_node;
-+			break;
-+		}
-+	}
-+	if (!dmb_node) {
-+		write_unlock_bh(&ldev->dmb_ht_lock);
-+		return -EINVAL;
-+	}
-+	hash_del(&dmb_node->list);
-+	write_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
-+	kfree(dmb_node->cpu_addr);
-+	kfree(dmb_node);
-+
-+	return 0;
-+}
-+
-+static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
-+			    unsigned int idx, bool sf, unsigned int offset,
-+			    void *data, unsigned int size)
-+{
-+	struct smc_lo_dmb_node *rmb_node = NULL, *tmp_node;
-+	struct smc_lo_dev *ldev = smcd->priv;
-+	struct smc_connection *conn;
-+
-+	read_lock_bh(&ldev->dmb_ht_lock);
-+	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_tok) {
-+		if (tmp_node->token == dmb_tok) {
-+			rmb_node = tmp_node;
-+			break;
-+		}
-+	}
-+	if (!rmb_node) {
-+		read_unlock_bh(&ldev->dmb_ht_lock);
-+		return -EINVAL;
-+	}
-+	memcpy((char *)rmb_node->cpu_addr + offset, data, size);
-+	read_unlock_bh(&ldev->dmb_ht_lock);
-+
-+	if (sf) {
-+		conn = smcd->conn[rmb_node->sba_idx];
-+		if (conn && !conn->killed)
-+			tasklet_schedule(&conn->rx_tsklet);
-+		else
-+			return -EPIPE;
-+	}
-+	return 0;
-+}
-+
- static int smc_lo_supports_v2(void)
- {
- 	return SMC_LO_V2_CAPABLE;
-@@ -74,14 +195,14 @@ static struct device *smc_lo_get_dev(struct smcd_dev *smcd)
- 
- static const struct smcd_ops lo_ops = {
- 	.query_remote_gid = smc_lo_query_rgid,
--	.register_dmb		= NULL,
--	.unregister_dmb		= NULL,
-+	.register_dmb = smc_lo_register_dmb,
-+	.unregister_dmb = smc_lo_unregister_dmb,
- 	.add_vlan_id		= NULL,
- 	.del_vlan_id		= NULL,
- 	.set_vlan_required	= NULL,
- 	.reset_vlan_required	= NULL,
- 	.signal_event		= NULL,
--	.move_data		= NULL,
-+	.move_data = smc_lo_move_data,
- 	.supports_v2 = smc_lo_supports_v2,
- 	.get_local_gid = smc_lo_get_local_gid,
- 	.get_chid = smc_lo_get_chid,
-@@ -146,6 +267,8 @@ static void smcd_lo_unregister_dev(struct smc_lo_dev *ldev)
- static int smc_lo_dev_init(struct smc_lo_dev *ldev)
- {
- 	smc_lo_generate_ids(ldev);
-+	rwlock_init(&ldev->dmb_ht_lock);
-+	hash_init(ldev->dmb_ht);
- 	return smcd_lo_register_dev(ldev);
- }
- 
-diff --git a/net/smc/smc_loopback.h b/net/smc/smc_loopback.h
-index c11529b15041..4b36acbc27da 100644
---- a/net/smc/smc_loopback.h
-+++ b/net/smc/smc_loopback.h
-@@ -20,13 +20,26 @@
- 
- #if IS_ENABLED(CONFIG_SMC_LO)
- #define SMC_LO_MAX_DMBS		5000
-+#define SMC_LO_DMBS_HASH_BITS	12
- #define SMC_LO_RESERVED_CHID	0xFFFF
- 
-+struct smc_lo_dmb_node {
-+	struct hlist_node list;
-+	u64 token;
-+	u32 len;
-+	u32 sba_idx;
-+	void *cpu_addr;
-+	dma_addr_t dma_addr;
-+};
-+
- struct smc_lo_dev {
- 	struct smcd_dev *smcd;
- 	struct device dev;
- 	u16 chid;
- 	struct smcd_gid local_gid;
-+	rwlock_t dmb_ht_lock;
-+	DECLARE_BITMAP(sba_idx_mask, SMC_LO_MAX_DMBS);
-+	DECLARE_HASHTABLE(dmb_ht, SMC_LO_DMBS_HASH_BITS);
- };
- 
- int smc_loopback_init(void);
--- 
-2.32.0.3.g01195cf9f
+On Apr 13, 2024, at 8:15 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>=20
+> On Sat, Apr 13, 2024 at 07:46:03PM -0600, Andreas Dilger wrote:
+>=20
+>> As to whether the 0xfffff000 address itself is valid for riscv32 is
+>> outside my realm, but given that RAM is cheap it doesn't seem =
+unlikely
+>> to have 4GB+ of RAM and want to use it all.  The riscv32 might =
+consider
+>> reserving this page address from allocation to avoid similar issues =
+in
+>> other parts of the code, as is done with the NULL/0 page address.
+>=20
+> Not a chance.  *Any* page mapped there is a serious bug on any 32bit
+> box.  Recall what ERR_PTR() is...
+>=20
+> On any architecture the virtual addresses in range (unsigned =
+long)-512..
+> (unsigned long)-1 must never resolve to valid kernel objects.
+> In other words, any kind of wraparound here is asking for an oops on
+> attempts to access the elements of buffer - kernel dereference of
+> (char *)0xfffff000 on a 32bit box is already a bug.
+>=20
+> It might be getting an invalid pointer, but arithmetical overflows
+> are irrelevant.
 
+The original bug report stated that search_buf =3D 0xfffff000 on entry,
+and I'd quoted that at the start of my email:
+
+On Apr 12, 2024, at 8:57 AM, Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> =
+wrote:
+> What I see in ext4_search_dir() is that search_buf is 0xfffff000, and =
+at
+> some point the address wraps to zero, and boom. I doubt that =
+0xfffff000
+> is a sane address.
+
+Now that you mention ERR_PTR() it definitely makes sense that this last
+page HAS to be excluded.
+
+So some other bug is passing the bad pointer to this code before this
+error, or the arch is not correctly excluding this page from allocation.
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_3417505C-A477-4CF5-8245-C5D2C05FBA72
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmYbWIcACgkQcqXauRfM
+H+BZJg//dKG4ukz8K7Y4yBljOWxkY67dgXd7uaHxDtenGyHe/wDSByka2SfF7t2e
+/JzZzOv8+cz+CzbgSu/Rtn9SetSmMlTTuOSf1CKvBGECQsDS5leR6fYJvuwou/Kq
+14MuYBJUuqyBJ66XEKshi8J1Xr+ABf5dD53iKU+jlMaIRQDyk7dEgZRH9nKgOjLd
+YwGGonfkTr2RrqGlvXzr+gSmMwF0RZZ3G+n/i4LAJ1hEGDlfJQczuHwV9lCKnw/S
+pzRrd6v3KuA3DnRXa024dQxog1S1tyQSzM+xRtJm3YvU94q+BOt7prfjR7wSxE0U
+6GzGSDnvRC5ou1c8BK/TJnzP6NMwCE5pQpXOKPpDmpvdfh7DF22dBCxqewWWCBoO
+g4qxPp8Rs1pTCpAnsRteQTJL0QFgBck0H+y4pRIrt+INS8M52InzAHmQuuckXjDF
+5pXQDQd8G4CRwDQIziB4H/IfaRNywB6LAZyzvtDAeOzMidUVFg6KQgmEVWxxgIa2
+70yZXJH2WCLLi+d9a1sO3Kcyuyl7FVxOYKFgdKDLBzDaMYLU3iaADFN25MG3DLxF
+83Y/WWYYQfRwAFAAVsqEVl67iCyGOiQUxiFgOQCDj/qz/l3S2RIPIdNSxQOdFem+
+5r+gP1MuGAfM4dsnOhBF844Oh8e9Ot5Bd/ngImDLMcrohjsXB2s=
+=rxuh
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_3417505C-A477-4CF5-8245-C5D2C05FBA72--
