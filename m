@@ -1,179 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8A02232B;
-	Sun, 14 Apr 2024 14:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2C7524D6;
+	Sun, 14 Apr 2024 14:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713104009; cv=none; b=sH7e/ZmvO81k4291BnEpFdhUDV5wbW54QotA0aNKHFjPBqZSjnX4g3nu5Q+BP+VlJyygmA2kkhAF3KVTsJbcV64CUpol9UlMArByXekEmgdxxVcyNoC5p9n8FarvH76myVwlioIGL2OFwM8QQ1L7HcfeRZlOPZC9Q0MzGwNp/Mk=
+	t=1713104567; cv=none; b=Drtat+PRhEpORmOUn9TQC0GhI1MNJ0HxGsvhxS08482U39dDArKehad+zn6T35f0YrWOJ0scVHghr2mf38tnw0lHSTMJwOoF9y/ghuQ2Zlczq4MwcRa1RLXjZWQuk334c1Fk/m+w7VylE3ydqzdh577PYYYkxmSwqlijZDrpxdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713104009; c=relaxed/simple;
-	bh=vVSKlyA+67Dp+p6DZueNAg9OF64+thIvRjbveFftyBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WYWkHwYXH/SsBUqWwfrffEIc8CwsBFPGKQFvvvifDLT18YsyUmUmNiV7bKY7FFptABOWsDnynzjPNgto0C440DEKVuPBDNACX+zIz7L2FnhhaI352SamnRCp7ULVTwEvAFQqYHX4BzEtUl+eKvEvuFJrLE1AP1v2OefNXueLnkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9DPKYlE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713104567; c=relaxed/simple;
+	bh=g6mY9e31JchWhJGlhg+KMtogrVyGcZphTVwZSHCPYXc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DZJ/M4/wtFtPLfosdMsJ7zmHk+yAaoTrV2WJtGKeMT79suo1U3fE8xX6e7sPbmg9CkMuFBAHPLlkkupuVs6PEwXqIsAvFXnKrS9QEk18Nk1sALH+M07iyT1bXEoQ/i0Jdr+R0AByE3Bc6ka3WKItOExy52hbBim/PHdMhtr+P3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ijSV6asD; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9DPKYlE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B36FC072AA;
-	Sun, 14 Apr 2024 14:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713104008;
-	bh=vVSKlyA+67Dp+p6DZueNAg9OF64+thIvRjbveFftyBQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o9DPKYlErsti9IGFIs8rqIrycL+KVcvJcS8gFZeiO6KFN5LQ4J1vPR9VcEsK5uLGS
-	 lorzHgxhbplhR3Cp/JB6SPwaqnKIdtpUX05zODg4bUhohT/rVk/PejQXztvu1M4h7w
-	 I6ZHzIRWCCEuCH/CvGkr5Yi/AlWdqbc5ccjpB5aIpq2io1iTmjTIFjWHgRQCY9MKTy
-	 OWdg82NLrqc8R9unYftuGHrZYcAsbNZeoGTNdF59xxpVqBBLXGeRHWeX31i4dXN11T
-	 vQ1dH0aydBTTiUwfWrLvI7v6eSabW5zKxeInz/epyCAWNQBcbjVn5Rh/fiqS+loa+2
-	 Lr0u0peduSgGQ==
-Message-ID: <a88385a4-afad-4bd8-afc1-37e185e781f4@kernel.org>
-Date: Sun, 14 Apr 2024 16:13:21 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ijSV6asD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D8B99C0002;
+	Sun, 14 Apr 2024 14:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713104562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5zadTVC7fSzYdjKYEROA/ritmlhQiFopRb13Zqi9YeM=;
+	b=ijSV6asDHUAtNow3ZNWeQUMlF0MAhl5qbjSwEXFM015flbPzn+4wBzNQJBPZ0n/CMGqxZD
+	xiUrgWlqn/TNmhJHa798//soKLOBsNpYYVF02AtPdZ2ru1CqiC8wWfdj+GcqNZCxls3CoG
+	aUhTTL7pqxQUPSg2HEjwjaaaZZYLrrqrnRQwI+DTSUyv4XizUXvsjGIgz28oO+7akBzymU
+	lfKdKtLykngV5Mn8uhrFH6BWkl/V0ne99x7H5q6zBXSUnt/UoMB1XgM0STDrqWJw6ppfJ9
+	5SQb9tjqn1scfoyYUqEmFax5gkjREbCHt7MEhNdOrBVALX5GjZ4vN0yEBirFSg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Sun, 14 Apr 2024 16:21:50 +0200
+Subject: [PATCH net-next v8 01/17] MAINTAINERS: net: Add Oleksij to pse-pd
+ maintainers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
-To: arinc.unal@arinc9.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
- Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
- <20240414-for-soc-asus-rt-ac3200-ac5300-v1-3-118c90bae6e5@arinc9.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-3-118c90bae6e5@arinc9.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240414-feature_poe-v8-1-e4bf1e860da5@bootlin.com>
+References: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+In-Reply-To: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 14/04/2024 13:46, Arınç ÜNAL via B4 Relay wrote:
-> From: Arınç ÜNAL <arinc.unal@arinc9.com>
-> 
-> Add the device tree for ASUS RT-AC3200 which is an AC3200 router featuring
-> 5 Ethernet ports over the integrated Broadcom switch.
-> 
-> Hardware info:
-> * Processor: Broadcom BCM4709A0 dual-core @ 1.0 GHz
-> * Switch: BCM53012 in BCM4709A0
-> * DDR3 RAM: 256 MB
-> * Flash: 128 MB
-> * 2.4GHz: BCM43602 3x3 single chip 802.11b/g/n SoC
-> * 5GHz: BCM43602 3x3 two chips 802.11a/n/ac SoC
-> * Ports: 4 LAN Ports, 1 WAN Port
-> 
-> Co-developed-by: Tom Brautaset <tbrautaset@gmail.com>
-> Signed-off-by: Tom Brautaset <tbrautaset@gmail.com>
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> ---
->  arch/arm/boot/dts/broadcom/Makefile                |   1 +
->  .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 164 +++++++++++++++++++++
->  2 files changed, 165 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/broadcom/Makefile b/arch/arm/boot/dts/broadcom/Makefile
-> index 7099d9560033..c61fca514775 100644
-> --- a/arch/arm/boot/dts/broadcom/Makefile
-> +++ b/arch/arm/boot/dts/broadcom/Makefile
-> @@ -64,6 +64,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
->  	bcm47081-luxul-xap-1410.dtb \
->  	bcm47081-luxul-xwr-1200.dtb \
->  	bcm47081-tplink-archer-c5-v2.dtb \
-> +	bcm4709-asus-rt-ac3200.dtb \
->  	bcm4709-asus-rt-ac87u.dtb \
->  	bcm4709-buffalo-wxr-1900dhp.dtb \
->  	bcm4709-linksys-ea9200.dtb \
-> diff --git a/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
-> new file mode 100644
-> index 000000000000..8640dda211ae
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts
-> @@ -0,0 +1,164 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-> +/*
-> + * Author: Tom Brautaset <tbrautaset@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm4709.dtsi"
-> +#include "bcm5301x-nand-cs0-bch8.dtsi"
-> +
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	compatible = "asus,rt-ac3200", "brcm,bcm4709", "brcm,bcm4708";
-> +	model = "ASUS RT-AC3200";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlycon";
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-1. Use stdout.
-2. Drop earlycon, it is for debugging, not regular mainline usage.
+Oleksij was the first to add support for pse-pd net subsystem.
+Add himself to the maintainers seems logical.
 
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x08000000>,
-> +		      <0x88000000 0x08000000>;
-> +	};
-> +
-> +	nvram@1c080000 {
-> +		compatible = "brcm,nvram";
-> +		reg = <0x1c080000 0x00180000>;
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
 
-Why is this outside of soc? Both soc node and soc DTSI?
+Changes in v3:
+- New patch
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5ba3fe6ac09c..f22698a7859f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17780,6 +17780,13 @@ F:	include/net/psample.h
+ F:	include/uapi/linux/psample.h
+ F:	net/psample
+ 
++PSE NETWORK DRIVER
++M:	Oleksij Rempel <o.rempel@pengutronix.de>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/pse-pd/
++F:	drivers/net/pse-pd/
++
+ PSTORE FILESYSTEM
+ M:	Kees Cook <keescook@chromium.org>
+ R:	Tony Luck <tony.luck@intel.com>
 
-
-Best regards,
-Krzysztof
+-- 
+2.34.1
 
