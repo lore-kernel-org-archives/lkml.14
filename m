@@ -1,72 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (out-70.smtpout.orange.fr [193.252.22.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62DC1172C;
-	Sun, 14 Apr 2024 10:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6C71CD06;
+	Sun, 14 Apr 2024 10:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713089880; cv=none; b=GqOWbhmm9ihuqc13h+GOa/uXtGVXbRGlnF+To+POTnA++2vHFuPEGtU0IIlQAtmhbCGU2d+qYsB6RveesaHVZAIKLvDEU6veLFG4Dp4yPKrG1FLHpj7+HdtlupNanuElRSzKJuap5w6+IZiZgrd6ZPxezDc1AxXNz+b6w9C+mEA=
+	t=1713090143; cv=none; b=nh5GVhCJvGoPp71gLRLUjxGTRFx2X3S5LlmjMeumqK9B2DFFMvWK1yBeurLbm+R+v5OTnYJtobqVKcXq2OsDjlxNArN90LtvXdXLuGjmaD8Z8naRYxa7gKrBJrstpq+3QF6fKNCrT57CMmNNPC59pCI8i421qU0EWbxJU4ebeS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713089880; c=relaxed/simple;
-	bh=gKVFAu7bX5Wtu28q+2CQOcF6pB1tKN/oXMHkZM9hdkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqMUl+//o2eg4IX2H8H5Vv7L3Wdp2wo8DQkskL9TnYkEw4BbYQdQz2Dxscp9Psyql9GZnTMO4CmsUD/9SWcUQ/8nzEMQa2yOwVDV2YKvjhY1PEYkiDk8z6JOwda/J2tj/OnKoqIJxs8SeaJrEVmsrgiRsRNajmUE8UcVc7VvG54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XcslpJkn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713090143; c=relaxed/simple;
+	bh=3KjtX7RrGt+OMiORGrDzde69KGZb/8DuTUkR13Mu9uY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pL7Qwt/RMsKAT1LWhvl+Scg2PC6y+FkbMuUbijYJyqMAR2VgtvpOOjAo18DoBJu1RRH4pX8bKHQ2FGn17As56tNRH0POFXTzSpxbmrqqnwzXAq23d4R1p9mIw8QpNQgy3XLWqtKMH1PH1XDZUFwQkqEuLUyrnltGhfyt1biKlxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=szNgOXgL; arc=none smtp.client-ip=193.252.22.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XcslpJkn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C40C072AA;
-	Sun, 14 Apr 2024 10:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713089879;
-	bh=gKVFAu7bX5Wtu28q+2CQOcF6pB1tKN/oXMHkZM9hdkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XcslpJknihp9zd2fAIpmnIsTQLQuSQAE4zI856SKRvl7K5YYa6NaKqWtzKSGeFzom
-	 XQVVibypLsRkJHaiS/VnFTWITap2y4tF4eX/M2ZDPmLOH4Pf+5uURZmnVF+Hlifi8d
-	 YsiyG+uA4e/b0D+fH2iJoplgxrB22tVZLJQZw1yg=
-Date: Sun, 14 Apr 2024 12:17:56 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: sumadhura kalyan <opensourcecond@gmail.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vc04_services: Code optimized to use linux BIT
- macro.
-Message-ID: <2024041419-rug-undrilled-6628@gregkh>
-References: <20240414101258.98358-1-opensourcecond@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="szNgOXgL"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id vwr1rPDFEVYR4vwr1rSj5Z; Sun, 14 Apr 2024 12:12:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1713089576;
+	bh=q4WeoEWKUV095yOrt9z2s5h7VxFHEIKdZezhJpgbprM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=szNgOXgL+vnUflzWkfBGajoO6THQTybLp1hgg7iQEv9MWMfzouYbcy76sJMe39Ssf
+	 eVRO64xLozsw1zGDD0B1wPLBsMTWjjG9sJoFtvo0jVm4tZdPVClevY44t/Dqmk9nMg
+	 2jySCi12BZ2/Mn3StvBfMI/mtnzKissla3pGfgYLUFJTbdsfYyo1XNix84PCjGYrRy
+	 DSfZCTQpgHbZzHMwT8nCJN5hoxWmRVCZxenKVChh58ZH7kWHIJbuke5/wtwTOor7Fu
+	 HbotJ7fM3WExjJNm90p3hHmCz/onC9Kh9DIY9U6Y3KJmwDcCi+9S2wcQF5H8/4wY21
+	 mCYx91zXAFk9w==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 14 Apr 2024 12:12:56 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: akpm@linux-foundation.org,
+	Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH RESEND] mux: Remove usage of the deprecated ida_simple_xx() API
+Date: Sun, 14 Apr 2024 12:12:52 +0200
+Message-ID: <f82e013abe4c71f1c7d06819f96472f298acdcf3.1713089554.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240414101258.98358-1-opensourcecond@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 03:42:58PM +0530, sumadhura kalyan wrote:
-> Issue found by checkpatch
-> 
-> Signed-off-by: sumadhura kalyan <opensourcecond@gmail.com>
-> ---
->  drivers/staging/vc04_services/vchiq-mmal/mmal-parameters.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-parameters.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-parameters.h
-> index a0cdd28101f2..d811bfd3bb84 100644
-> --- a/drivers/staging/vc04_services/vchiq-mmal/mmal-parameters.h
-> +++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-parameters.h
-> @@ -27,7 +27,7 @@
->  /** Common parameter ID group, used with many types of component. */
->  #define MMAL_PARAMETER_GROUP_COMMON		(0 << 16)
->  /** Camera-specific parameter ID group. */
-> -#define MMAL_PARAMETER_GROUP_CAMERA		(1 << 16)
-> +#define MMAL_PARAMETER_GROUP_CAMERA		BIT(16)
->  /** Video-specific parameter ID group. */
->  #define MMAL_PARAMETER_GROUP_VIDEO		(2 << 16)
->  /** Audio-specific parameter ID group. */
+ida_alloc() and ida_free() should be preferred to the deprecated
+ida_simple_get() and ida_simple_remove().
 
-When looking at the code now, does this change make sense?  Remember,
-checkpatch is a guide, not a hard rule.
+This is less verbose.
 
-greg k-h
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch has been sent about 3 months ago [1].
+A gentle reminder has been sent 1 month later [2].
+
+Neither one got any reply.
+
+So, I'm adding Andrew Morton in To:, in order to help in the merge process.
+
+Context:
+=======
+All patches to remove the ida_simple API have been sent.
+Matthew Wilcox seems happy with the on going work. (see [3])
+
+Based on next-20240412
+$git grep ida_simple_get | wc -l
+25
+
+Based on next-20240220
+$git grep ida_simple_get | wc -l
+36
+
+https://elixir.bootlin.com/linux/v6.8-rc3/A/ident/ida_simple_get
+50
+
+https://elixir.bootlin.com/linux/v6.7.4/A/ident/ida_simple_get
+81
+
+Thanks
+CJ
+
+[1]: https://lore.kernel.org/all/727714bdfcd69d21e7f2a0c5c7426fcb70439b91.1702228605.git.christophe.jaillet@wanadoo.fr/
+[2]: https://lore.kernel.org/all/9edc26e9-4f31-496a-969d-0edc33ef6f01@wanadoo.fr/
+[3]: https://lore.kernel.org/all/ZaqruGVz734zjxrZ@casper.infradead.org/
+---
+ drivers/mux/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+index 775816112932..78c0022697ec 100644
+--- a/drivers/mux/core.c
++++ b/drivers/mux/core.c
+@@ -64,7 +64,7 @@ static void mux_chip_release(struct device *dev)
+ {
+ 	struct mux_chip *mux_chip = to_mux_chip(dev);
+ 
+-	ida_simple_remove(&mux_ida, mux_chip->id);
++	ida_free(&mux_ida, mux_chip->id);
+ 	kfree(mux_chip);
+ }
+ 
+@@ -111,7 +111,7 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
+ 	mux_chip->dev.of_node = dev->of_node;
+ 	dev_set_drvdata(&mux_chip->dev, mux_chip);
+ 
+-	mux_chip->id = ida_simple_get(&mux_ida, 0, 0, GFP_KERNEL);
++	mux_chip->id = ida_alloc(&mux_ida, GFP_KERNEL);
+ 	if (mux_chip->id < 0) {
+ 		int err = mux_chip->id;
+ 
+-- 
+2.44.0
+
