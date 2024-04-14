@@ -1,103 +1,92 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0244741A85;
-	Sun, 14 Apr 2024 11:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DC736B1C;
+	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713095132; cv=none; b=QTIkVL4pVr5GJrQuIcKTN97bVT2VNgKpCAriNvwmn43TvKKgpgMIPpPOe3Fs4c2TmRMWHLEIV0+rRc3r0+uC7pXOEtgP476g4bvuROk4jCU5HvHCeoh8lHE0OpcZZtNY5EvOd1i0Xit+ceSVrp9ujdlbbDhaQAiI//naQmnVPrM=
+	t=1713095180; cv=none; b=qAcsC89GI6J0ItcsvdiejZRFRQzqmkSjqH3bpGPHg61xHzsk7P8hBudmCPqkNabhoD/kd9vKEuAoqWXFLXvqhDWLKZm0CcTOZXd41eokPpP15zDSK3P7W+Db1m9qAu5bOoa/YVw2kIUdAqQkUw6yLUxvnm24Vmg4y7qVUO5yvLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713095132; c=relaxed/simple;
-	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=MrKXYn+F/lcoIuhvk3pfyGWZJiYvq8wtIiXxGY+5rHl8u4WyS7E/fBZ1wLPa26lyH20eNDgUsZTWYITNhvXfsIzlj++XXhPQi0Fh6VZUjun8CdTX44DlYzuLnsRFKPoCIIMXJ7vr68xsC7noEcB2ZR5pWTurfQnolgPvhyF01wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QA0Q6OEN; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713095180; c=relaxed/simple;
+	bh=VtSh8GgT91MvWTH7D+XogmTxktb7ZjbbxLqSixs0+g4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CIpFwTMqQWnpE6qYr8TTK5E4pTGjzPmPvXjM1o4hJN8vQozP07sfyq+PPU/oEB2Pcl3gS64aZSSVLgPHo/vyqaMvrYzpMtlrWnaV8k9wP9JVLFqZgqtKfrdbHCnrFH53b8JWRvUpouIyq5nAOxBdjoFwU8r5cjshZl6Gdmt0QCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1CYieYs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QA0Q6OEN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713095030; x=1713699830; i=markus.elfring@web.de;
-	bh=U0tpeTPOyTpPTe351qE8OA5AoJGCat0VCds9PVfXYDQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:Cc:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=QA0Q6OENUATU/abBO9zX2wIvluDcY8NFt4xBXbtZugnY4jdbgCebbMel1audTVCX
-	 PQ9qKQY/HOgzZqSWHpcSvNV/yoKEd0dXQfGyN4vnAk4GqzUAa/iC1prBpCexNK9m9
-	 CrcnUY73IR6viruwjyDvtFPLwteyfZ8GuO0gjgG5CXzMda9v+UCbgTDwzysZq4ewD
-	 lnX6KiK9XjYuBUaDgAjX/Kk0AybuZWPVA3CcDhqPkRdA7/46/9C73SMHMloH2ukh+
-	 CEbAlyjAHVvSx2mu+H3gmHPoiKSdWe6QRDLvMvIGjJmGsjhmVE2wS3uD+duvg2a3z
-	 XTQm447GhtcL3C+uSQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.88.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MDdyH-1s55LF0CKV-00ATJ7; Sun, 14
- Apr 2024 13:43:50 +0200
-Message-ID: <af56a3c3-d144-4d90-9f1e-c13a4122f8a7@web.de>
-Date: Sun, 14 Apr 2024 13:43:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1CYieYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7F5F1C32783;
+	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713095180;
+	bh=VtSh8GgT91MvWTH7D+XogmTxktb7ZjbbxLqSixs0+g4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=p1CYieYsIyzac/czlQceN/EQWbEgZ2m19gUAeVQaV0VmPDOLue2nf6MeFt+ceRx8D
+	 lIkHvHwt0cBgQDBHRYWjZwoVVOWSON4Yrosbpns+npiyInuITf9oeVU2wRMA/WAWAh
+	 2sD1aCbH5WReJo0Z9VOxDToWVOQG8Fq37GluBGFS9BMfiy8RCe2BFK/I7l+JWVEKk7
+	 uMnG8iJUnxkrzYIelnS2xSEbgcpXaYKY4Up3TnizauHS5aJGGC4ls4g1aA2h+ZjRKQ
+	 b3Y7/6JIclVP4cBXWdAQZ1RZZR1qGu3XmlLFYP9s7a24u37iVVeZ4oj9DgmhYtS1P+
+	 ufnLuXf0as+xQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E37C04FFF;
+	Sun, 14 Apr 2024 11:46:20 +0000 (UTC)
+From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Sun, 14 Apr 2024 14:46:01 +0300
+Subject: [PATCH 2/4] dt-bindings: arm: bcm: add bindings for ASUS RT-AC5300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/12] perf dso: Reference counting related fixes
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Colin Ian King <colin.i.king@gmail.com>, Leo Yan <leo.yan@linux.dev>,
- Song Liu <song@kernel.org>, Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Ben Gainey <ben.gainey@arm.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Yanteng Si <siyanteng@loongson.cn>, Yicong Yang <yangyicong@hisilicon.com>,
- Sun Haiyong <sunhaiyong@loongson.cn>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Anne Macedo <retpolanne@posteo.net>, Changbin Du <changbin.du@huawei.com>,
- Andi Kleen <ak@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- zhaimingbing <zhaimingbing@cmss.chinamobile.com>, Li Dong <lidong@vivo.com>,
- Paran Lee <p4ranlee@gmail.com>, Yang Jihong <yangjihong1@huawei.com>,
- Chengen Du <chengen.du@canonical.com>, linux-perf-users@vger.kernel.org,
- bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20240410064214.2755936-1-irogers@google.com>
- <20240410064214.2755936-12-irogers@google.com>
-Content-Language: en-GB
-Cc: linux-kernel@vger.kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240410064214.2755936-12-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:mKDPIQbEDcmb5BrKUYjJr3Qfc9P8lnxxMTPWzBhrGyLcPxvCb4u
- dM8KAmhNo2HfYqk8DC+kHNx0slCaXqPBfha3rzlz82HUrwjIRdpI2KUvXM9N1TkyfBmDnZ3
- 7Pv5rYszyANAaMh1el0nH4fiOdX6ZF4Ve9D3SxShf07LS+6d3qlEWu9B1y67l+s8KRv6vGn
- 9p63EFqc0tr8lXDapVFFg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8YTKCMYD3Sk=;yyymS+m1aex9L1SSrYC77ZiqZYT
- eqn7cbY+q3rw2pwdWaOvOStqkH1TCq2wzjIkRmRluUdQC6/tdYpNsH9rA9IxharfsfAOjSF08
- d2BthLti8KnaPwZfCE71v8QBsLM2R4iIzIURMNkaFUAUwzJ9+Wu9ZhX6fTphjntmj4LATB0xA
- NTlm/60G+DHNHLNigj3q91XL4jCFjVgD+AITqU8PvWuJP1k5seUuokzT12ALS+XNodq2BWxvg
- pJKLukd66zp5cokTe5cCLRjQVcXdUNnsjkVhTzOAmRDOv5xTkMt0tSOI7SltYpMITOLaqmBhB
- ANt8BYht2rbRmRSCd4+G2Sx28u2f/RUnYK+gHOu0L+3IZT/hZoMkECgW1l+bQwlXmKY1oYcS8
- 6YjBbr2xJNNau+Yitb2ttCfhpdyYibtDxW2hkNXf5/buOjDEUkzRQOpcl9Thb/wniQ23yxuzv
- 9UOMWCIcTxICFpq9PgcmofqcJ6P4zTX8JgebxTqC4uBNlNP4gIWXRtHR1+ld5iVEVr0p9dEyY
- yKb7IMDMEUAhScIX34pYw5uwF2ZLzVhE/PbhlxvhwAlCdENd92u+Sfi7tT8OMV3LJbXXrROx5
- Liz+jtdw1978LlDhavIs7gJhl6QwhW6HHhLWVbbyz15nuYh/322JYJvfWv68Fjf+zx8vq6mlN
- hlVc33CuzyqXUx3DmTween7BxzJsLCNgOnmPRBmzyKoUveUlyximPIA98y5eu5mbcJTkYgrl8
- IRSjb5D8G1NBuvTmNb+QqQ9pfCTz3JHHOWBr7ZjagCw8ZTYu7dc42vBvKkUm52YspCPK1xvDC
- Jt2gKxZhc4x9oSnIIh+o823SzsXbzAB3H8phvSyb94p9E=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-2-118c90bae6e5@arinc9.com>
+References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+In-Reply-To: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
+ Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713095170; l=771;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=fzGThLw8t/XG2JnsphMo88X0nVs2eVDvx1mTdRhk0vU=;
+ b=UIMEGH8FpZhR92Z7th/HwS/UfrESpub4N7ji6oCgrjtXW9xHgEvrW3i1QtIFaENCB+pbLTeMp
+ Ed9gfTdAfDEBGQ3BM/IH2wdBecR2YNSZ8h7KdI68LVr0GmqsUdLBZPL
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
+ with auth_id=115
+X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+Reply-To: arinc.unal@arinc9.com
 
-> Ensure gets and puts are better aligned fixing reference couting
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-How do you think about to avoid a typo in the last word of this text line
-for the final commit?
+Add ASUS RT-AC5300 under BCM47094 based boards.
+
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
+index 215bef740aca..d925e7a3b5ef 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm4708.yaml
+@@ -68,6 +68,7 @@ properties:
+         items:
+           - enum:
+               - asus,rt-ac3100
++              - asus,rt-ac5300
+               - asus,rt-ac88u
+               - dlink,dir-885l
+               - dlink,dir-890l
+
+-- 
+2.40.1
 
 
-> checking problems.
-
-
-Regards,
-Markus
