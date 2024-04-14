@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE7123775;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C9018AF4;
 	Sun, 14 Apr 2024 10:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713089051; cv=none; b=OHQm2iLYvGF/O3/sVLnPgJdNVjW0hnjLKYZyBYi3b6y/tWTSQt7mwp4vXjGnWQhHQZK1ed5EuLEZ4IOOEQzK6f4Mel/ooy2xGaau+25zpN/i0Trsd8JLVhuS7C2ZAKGFtuB/UIl+gFBiEZ8vPaEJf9Ct8OyOphcDqaDSdzEnI8Q=
+	t=1713089051; cv=none; b=npeEHEhJmFR5rPCOQngNVXX5t3hig0wUzqmtmEVDOOiU13rLYerXZoRBzucfgLAbN1uDpYI8Y8RVqsuNH0nDLIRcd4+KOqJ8a1MfD5aFkMkihcn16d58VMVL3OYUE+QfkxCNJTSZGcMChk6xlWGiSscmqHDcdair6Q7Ga+EkuAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713089051; c=relaxed/simple;
-	bh=MaaPz/uVBSgOz0414tAOXag61hG+3FxUKeQJ2X/omo4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q2CPXnz1OPnXBALvx+riU5gsD45Bb77PIr84YfPVC9qbT+/mfkmC/QmwUlZCNGwyyhtdbjPVv7u5J+ySbjksdcdlIfjaDLzEk/wV9wA+6vros/sKWUVh7IufusaeOs7IiCwO+E5UUxpv+yZ+pGTkD4v32X4CEN8ptw7O39LYR+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMN2QLYj; arc=none smtp.client-ip=10.30.226.201
+	bh=84SLxTZp/DWUX/lhao6dmVikTW+EASr4F/Wo+VvHJ2Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qgP6EH3Yn+dRK4IIdKC2MZLUqJj8DSy2KuDliFqqiS/G/ylfHWpr8ApOYDyPEwUm8eE32MaguQuMoT+WGyt7diFsPKZq8RlaBCF2kKI8SZqM6LcZQKWPbroJbQvZV0DStIf95EYqif82mFfu8a48j79mHJ0Hvlyu0DY1Qce8vxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2Npsp7Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMN2QLYj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A35DC32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2Npsp7Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F070C072AA;
 	Sun, 14 Apr 2024 10:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713089050;
-	bh=MaaPz/uVBSgOz0414tAOXag61hG+3FxUKeQJ2X/omo4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KMN2QLYj9iNLVquunOIYL1kONzZGFuktTbVYfK0I25udYOYqsq8sUP1C9vTsfZm5x
-	 g1SEhF2cjm9o7EsW2nHBqke4JN54rRoBd1P35n5hIWMRBCiXIAOZg0kxVmV/yYELm8
-	 WS9rbq0ae6Lf4l+zXZeZXes4/0qrRIyD9Vug4I18K9EqzjhSrsCjVcAgMqTcG6Fd/U
-	 eaV3QNg0cUuJPYsmMTc81JNhXqoq276Kfz0xEYbqFcucvG5UduhKOyTFrcHreNe+9v
-	 hOM3bQlBDE6Fjg2tLJIVrWyX1vPwUOWYnj8rY/i8/300glRyFNViE0tkr6XxshVk8j
-	 P0mD2iL53d0bQ==
+	bh=84SLxTZp/DWUX/lhao6dmVikTW+EASr4F/Wo+VvHJ2Q=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=o2Npsp7Y/2kFx6aWgxDP3pyAmSaJlirscJnkHNSwFto1h3wewpxzUxLZFOh4vsg7o
+	 /OVOzCy6dndN0a9+9XCD796uTwrsaZoWiJxyTQpdgeiEFCc1tANwFbMLPLBVZ44X12
+	 Q7UB5kwfdyY9WfHy1IpHYthPIH15v8vl1Ux7k7+XIVhh03xVhyGsrFBA734dt4JShs
+	 4ofI649ZGqw8aM5YHrrTaj3gy+auhEYovYxG/S8+gAvck6qFvTPI7W7M7Ilhxfpiyu
+	 9RIK+fBOVv4Wgh7lANfeEPg90P0xQ/0lPkL6QwLYYt91JDmAJHeA5ku2CQWQlONCHN
+	 srxuAt5jEhKhg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85692C001CC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77223C4345F;
 	Sun, 14 Apr 2024 10:04:10 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Sun, 14 Apr 2024 13:03:48 +0300
-Subject: [PATCH v2 1/4] ARM: ep93xx: add regmap aux_dev
+Subject: [PATCH v2 0/4] DONOTMERGE: ep93xx-clk from ep93xx device tree
+ conversion
+Date: Sun, 14 Apr 2024 13:03:47 +0300
+Message-Id: <20240408-ep93xx-clk-v2-0-9c5629dec2dd@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-ep93xx-clk-v2-1-9c5629dec2dd@maquefel.me>
-References: <20240408-ep93xx-clk-v2-0-9c5629dec2dd@maquefel.me>
-In-Reply-To: <20240408-ep93xx-clk-v2-0-9c5629dec2dd@maquefel.me>
+X-B4-Tracking: v=1; b=H4sIAAOqG2YC/22Nyw6CMBREf4Xctde0pVB15X8YFqVcpJGXLTY1h
+ H+3sHZ5ZnJmVvDkLHm4ZSs4CtbbaUwgThmYTo9PQtskBsGEZJJdkOZrHiOa/oVloTTPC9VQqSA
+ JtfaEtdOj6XZl0H4htxezo9bG4+VRJe6sXyb3PU4D39O/+4EjQ96wVppcyFKq+6DfH2qpPw8E1
+ bZtPwK4zrS/AAAA
 To: Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -50,13 +52,14 @@ To: Michael Turquette <mturquette@baylibre.com>,
  Alexander Sverdlin <alexander.sverdlin@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org, Nikita Shubin <nikita.shubin@maquefel.me>, 
- Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
+ Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713089049; l=1982;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713089049; l=2238;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=WN2FKVS9xdOOC9UEV7iQOB/IuHcF3+VzCPA/Q1z8yUU=;
- b=jXC02TPN0LcH/R7S6PbAId7UeBQfc+StkYj5hC03Fux9swFIrp8ILYGU9GfG3qXfPNQcafrSP2LR
- UXbgJYX3Af4OaLeRmkkw/Y9j0dS9kHbO2+eKvUnO5nfoLEGcEzLq
+ bh=84SLxTZp/DWUX/lhao6dmVikTW+EASr4F/Wo+VvHJ2Q=;
+ b=z9XAN1DXXWE3QxCyuTkNMTNSk5hrGWnglICBc7KGTF+lnAe7G6ti2xpimedDy1Wf6oac/GtTG3kg
+ fiFfdHpjAaVBVJ7+W+hyMLvKrp8qGPxNIM3ksHHchbay3miQxYWO
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -64,74 +67,63 @@ X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
 X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
 Reply-To: nikita.shubin@maquefel.me
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+The goal is to recieve ACKs.
 
-The following driver's should be instantiated by ep93xx syscon driver:
+This is a fraction of v9 "ep93xx device tree conversion" series:
 
-- reboot
-- pinctrl
-- clock
+https://lore.kernel.org/all/20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me/
 
-They all require access to DEVCFG register with a shared lock held, to
-avoid conflict writing to swlocked parts of DEVCFG.
-
-Provide common resources such as base, regmap and spinlock via auxiliary
-bus framework.
+The clk driver for ep93xx was converted to AUX device, as suggested
+originally by Stephen Boyd.
 
 Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
- include/linux/soc/cirrus/ep93xx.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes in v2:
+- soc: Add SoC driver for Cirrus ep93xx:
+  - added __init for ep93xx_adev_alloc(), ep93xx_controller_register()
+  - added static, __initconst for pinctrl_names[]
+  - clk revision for SPI is now resolved here through differently named
+    clk device
+  - more verbose Kconfig description
 
-diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
-index 56fbe2dc59b1..a27447971302 100644
---- a/include/linux/soc/cirrus/ep93xx.h
-+++ b/include/linux/soc/cirrus/ep93xx.h
-@@ -3,6 +3,18 @@
- #define _SOC_EP93XX_H
- 
- struct platform_device;
-+struct regmap;
-+struct spinlock_t;
-+
-+enum ep93xx_soc_model {
-+	EP93XX_9301_SOC,
-+	EP93XX_9307_SOC,
-+	EP93XX_9312_SOC,
-+};
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/compiler_types.h>
-+#include <linux/container_of.h>
- 
- #define EP93XX_CHIP_REV_D0	3
- #define EP93XX_CHIP_REV_D1	4
-@@ -10,6 +22,20 @@ struct platform_device;
- #define EP93XX_CHIP_REV_E1	6
- #define EP93XX_CHIP_REV_E2	7
- 
-+struct ep93xx_regmap_adev {
-+	struct auxiliary_device adev;
-+	struct regmap *map;
-+	void __iomem *base;
-+	spinlock_t *lock;
-+	void (*write)(struct regmap *map, spinlock_t *lock, unsigned int reg,
-+		      unsigned int val);
-+	void (*update_bits)(struct regmap *map, spinlock_t *lock,
-+			    unsigned int reg, unsigned int mask, unsigned int val);
-+};
-+
-+#define to_ep93xx_regmap_adev(_adev) \
-+	container_of((_adev), struct ep93xx_regmap_adev, adev)
-+
- #ifdef CONFIG_ARCH_EP93XX
- int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
- void ep93xx_pwm_release_gpio(struct platform_device *pdev);
+  NOTE: "of" includes are required unfortunately.
 
+- clk: ep93xx: add DT support for Cirrus EP93xx:
+  - dropped includes
+  - dropped ep93xx_soc_table[]
+  - add different named clk and dropped involved includes
+  - moved pll's and fclk, hclk, pclk init to separate function
+  - fixed ep93xx_clk_ids[] explicit lines
+ 
+  NOTE: clk_hw_register_div() is clk-ep9xx internal function which uses
+  devm.
+
+---
+Nikita Shubin (4):
+      ARM: ep93xx: add regmap aux_dev
+      clk: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: soc: Add Cirrus EP93xx
+      soc: Add SoC driver for Cirrus ep93xx
+
+ .../bindings/arm/cirrus/cirrus,ep9301.yaml         |  38 +
+ .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |  94 +++
+ drivers/clk/Kconfig                                |   8 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-ep93xx.c                           | 834 +++++++++++++++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/cirrus/Kconfig                         |  17 +
+ drivers/soc/cirrus/Makefile                        |   2 +
+ drivers/soc/cirrus/soc-ep93xx.c                    | 252 +++++++
+ include/dt-bindings/clock/cirrus,ep9301-syscon.h   |  46 ++
+ include/linux/soc/cirrus/ep93xx.h                  |  26 +
+ 12 files changed, 1320 insertions(+)
+---
+base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+change-id: 20240408-ep93xx-clk-657a1357de67
+
+Best regards,
 -- 
-2.41.0
+Nikita Shubin <nikita.shubin@maquefel.me>
 
 
