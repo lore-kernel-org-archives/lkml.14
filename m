@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFA11353F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBCE135406;
 	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114092; cv=none; b=tBOigIMeOk5zLI3mQGO3uS65DsP1YAao+IgzaeLMI44Ymr5JAUALkMBUJj0ixU7RF5Oh4P9rhPAb4Qn6/JxUtyHmJsh+VUNk5DA5w1gJ4ktnaguHBGOMwW0qhtVumgcgg9FUvRW+v8Y9bN52QKqRm/4bz7J6okF6Jz7UR6+tMII=
+	t=1713114092; cv=none; b=sgGRTZ0R+oDKDICQC91Lgq3t5BHzYGLDpnJgQCLy9pdK7/6siE0zfcwn61cs9AlCeMasjJLbgEt2Oq80GbImGJQ6Op5fPpjaGpcu/MN+kovpYiZsxdbrM1QKCzsI20WihtjHBtbzlgZ6dwxyzEdodfK6t4e2/ADxkxpYOVz3Jrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713114092; c=relaxed/simple;
-	bh=ted2EB6/3rRPIS/bCEaZLR50/zdj+pHcSxe+25yLhvg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rUvrqf898OR7kvJl6tfVWmD9m7ILXxVr1CsVy6MVDSE2IZMq22vPXEk7BEZgOke8yuMsAgvL70UCLUzyXDiIcMJ8gA8Y887vlJQ6vSB83AUAcqoaakwTrZLaWEHqfTlwJiko5FWrat/ElNpDT9BTR6NckOa+p7XjTw3aGOp9EGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYnFnNw4; arc=none smtp.client-ip=10.30.226.201
+	bh=UDW1oNJk9sNSh+j3ebklBPggtO7h3BowNjPx6lX3k+Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tVQPXtz/HuS6SHa4pGJ5a0PsnH5VZF0k3LO8EmiH2NGtg79U0AgpnFflB9w1t9QcV4LoA/Mr1wZBvTARXvb3tPd6lKsNw/kOK4CkEA1mZO+f8ZcilyZiPUqiiIokqxC+If/rnfVCqK4u+YQLVPjd2OnX985FagNfyuATU4XNvvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmXeuRo2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYnFnNw4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F01CC072AA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmXeuRo2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C3AE1C32786;
 	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713114091;
-	bh=ted2EB6/3rRPIS/bCEaZLR50/zdj+pHcSxe+25yLhvg=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=rYnFnNw44M5VBOH4i3wTHmFGjpERNyFyCmOIUFwyDmxq6DgnpNK+N5oJBFt2l7zzF
-	 4YaRDuaIMqjvx8u4cGOfJ7V2MSt/JnPIcXWJFKBb9A82z2VVmf4zee9TjcCN/u0WYY
-	 XcORPwp0Ul0bq2oiXjLuRzlGbLVgXRWpU4wIddHaI1xIRs+5HQ8O+O5BC5z3bYA46e
-	 k2/mPEfYnpvBuj+xY9L9fV2j9ae5HK+aPHaVNr4b8sPTUsoTwa0nyl2dOCKuBt/LpQ
-	 tvhjj6lgyBYTlRlXm35K5TE+zWDw+JRGrC1gRiz9Tl41moA71eR4EY84p3v0lCFP/8
-	 m2cwemWj6dU5w==
+	bh=UDW1oNJk9sNSh+j3ebklBPggtO7h3BowNjPx6lX3k+Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=tmXeuRo2x1owbyvPCJxywUUlWTgs2DRrAb5X8Jf4No4P1bIsNJgHYo1rYa4Y99GAX
+	 PssphRjHa3cxQ+iZVlvx3Sxl3u+wxRdxt9vZ/RFTfjErn6sHhmBmx/ZwDazrGwLVcN
+	 oF45crWC6dzB+IfgeOwrssPIQht8rdzO5UGuYu3uVI6geiluPLUnkV0tAXc/psn5iA
+	 BCGRVU/GqMkPF3LqN56O81h4Nrn7rZYVV7hrtsMuL0l541PyCZv6v9afTrDoMrJMpT
+	 UmscnINikPu01h8dpFExHeRXncbcqLZu19IcLrHzMQ6scqikjvK9FvFXUTedgN494F
+	 TOObpk09ucSog==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8877EC4345F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E3AC04FFE;
 	Sun, 14 Apr 2024 17:01:31 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Subject: [PATCH 0/4] ASUS RT-AC3100 and ASUS RT-AC88U device tree
- improvements
-Date: Sun, 14 Apr 2024 20:01:20 +0300
-Message-Id: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
+Date: Sun, 14 Apr 2024 20:01:24 +0300
+Subject: [PATCH 4/4] ARM: dts: BCM5301X: remove earlycon on ASUS RT-AC3100
+ and ASUS RT-AC88U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAOALHGYC/x3NMQ6DMAxA0asgz7XkkLRDr1J1CK6hHkiQTRES4
- u6NGN/y/wEupuLw7A4w2dS1loZw64C/uUyC+mmGnvpEKUQcq6FXxuw/R1sxcwxEqPNidZNZyur
- INOSUHvc4cIRWWkxG3a/L632efx6rFFR1AAAA
+Message-Id: <20240414-for-soc-asus-rt-ac3100-improvements-v1-4-0e40caf1a70a@arinc9.com>
+References: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
+In-Reply-To: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
  Hauke Mehrtens <hauke@hauke-m.de>, 
  =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, 
@@ -54,11 +54,11 @@ Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713114081; l=974;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713114081; l=782;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=ted2EB6/3rRPIS/bCEaZLR50/zdj+pHcSxe+25yLhvg=;
- b=xmIWfBZS6gMIuWyH9ZufjaesZaWHkmSMkBS50irEp196eawGCZbnHq6O2mvwKIJCHQgjkD1O/
- jp4QXiYPBQlCBldgqjh4o1DhT/+Hlu90jOHeY2SvkzpQ2ACxmfiyEKJ
+ bh=bi+4TJMCgd5mWbrKWAfCvlVW6KiexBBfcJK3dSc81ko=;
+ b=GTKiQLdAfsoaTgGBusvq1BOGZYVRgaLQz3N7CUuH4ORpJJK5s1CxVllSQTlQP2ITzw95wiZwT
+ ZdXZ+FP8nnWD6wEUK4XPgCU+AWnIJ2h5k8fdFrMHIqX7InHLHKniYpX
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
@@ -66,29 +66,33 @@ X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt
 X-Original-From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 Reply-To: arinc.unal@arinc9.com
 
-Hello.
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-This patch series introduces small improvements to the device trees of ASUS
-RT-AC3100 and ASUS RT-AC88U.
+Remove the earlycon boot argument. As Krzysztof pointed out, earlycon is
+for debugging, not regular mainline usage.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
-Arınç ÜNAL (4):
-      ARM: dts: BCM5301X: use color and function on ASUS RT-AC3100 and RT-AC88U
-      ARM: dts: BCM5301X: provide address for SoC MACs on ASUS RT-AC3100 & AC88U
-      ARM: dts: BCM5301X: remove duplicate compatible on ASUS RT-AC3100 & AC88U
-      ARM: dts: BCM5301X: remove earlycon on ASUS RT-AC3100 and ASUS RT-AC88U
+ arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
- .../boot/dts/broadcom/bcm47094-asus-rt-ac3100.dts  | 13 ++++-
- .../boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi | 59 ++++++++++++----------
- .../boot/dts/broadcom/bcm47094-asus-rt-ac88u.dts   |  8 ++-
- 3 files changed, 51 insertions(+), 29 deletions(-)
----
-base-commit: 011d79ef1cfad701c2d8e7e80d8c77523af9c771
-change-id: 20240413-for-soc-asus-rt-ac3100-improvements-c0ba44653bc3
+diff --git a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
+index 84d583168d81..9c7efb1c44f1 100644
+--- a/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac3100.dtsi
+@@ -9,10 +9,6 @@
+ #include <dt-bindings/leds/common.h>
+ 
+ / {
+-	chosen {
+-		bootargs = "earlycon";
+-	};
+-
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x08000000>,
 
-Best regards,
 -- 
-Arınç ÜNAL <arinc.unal@arinc9.com>
+2.40.1
 
 
