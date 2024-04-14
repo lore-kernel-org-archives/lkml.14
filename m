@@ -1,134 +1,318 @@
-Received: from msa.smtpout.orange.fr (msa-210.smtpout.orange.fr [193.252.23.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9DF2E633;
-	Sun, 14 Apr 2024 10:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEF224CC;
+	Sun, 14 Apr 2024 10:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713092272; cv=none; b=NqeRugkpu6/5iRCU5jsqT7qQE7lS7HEAe+lmVwg9iNbn9FjBLkNu0Nlk/jKUoj2MkMw7ZZMCXZvhVQYm6PWtNr3ES6IwDQitn0HetiY2XzNpDAvplxfg6VnqrfKsBC1/7rkMKikLU3hu0Oqzl+98cvNv8+E09riBzWuHp0Lo+7s=
+	t=1713092346; cv=none; b=i+L78489C2WcF3c2xCQUFccWiHXqcjtg9st7QYhsB+jx8ldire+c8kXgZgZtXGcLWF6nec1veMiqt0t190p68bN6uJeYR0jMckJRJEOsWC3ZBBw5k7fqoxKTQY63BjQ4xFkP/cB8fZ6FomuBUsku7gYIa7IT8wa5dMcfQd5QDow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713092272; c=relaxed/simple;
-	bh=9a+P8s5l61kleZJLDGYRTvAA1Uvt+ypc9gUtrvX2hfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L8dkE0EPNX7D6omgDtmH/n7pex7NKgEVYjkmYGMZucgATm9sy+N35UkOAi0g0sQgRUIaLjojV0WwopAA4Y34bd9x1zFdula8vB3jXEqrOS+uhtUL8ePCRDoMjevExu9oPWDNH7cUKECmnXucgqEC8CYL9eXrxfjA1MWrvkDGHUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=WZCWlAUo; arc=none smtp.client-ip=193.252.23.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713092346; c=relaxed/simple;
+	bh=AqEKj8cemJAO4VLBzjmYB8dB2knOKRrFC9TFKmRruCE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cjH7m4Azb6KUuGG71KZcXA/Wzy/fRt2FxIkHQiz1OTngHDOQa4i27kLf99I6GEybW4fRiaTwCA2aogmFldUvJXVdB048/9DSTuXxHvqbO4d3Fgm9TSdJ6uc6d7vWdwhlRkg2OBBAaGiK4QB4e+VkkZYyZ0Df4M0CCzFCRnixH3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=I3nvVw3r; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="WZCWlAUo"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id vvikrl4O6JyTUvvilr9PzZ; Sun, 14 Apr 2024 11:00:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713085223;
-	bh=iNPLWQIyLfvsOYmfzzP6klM4872RS0pQRSfJloAU0Bo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=WZCWlAUoAHWXdlxf1WopMVd8jtdvonKbAEhcslDW5nqpjv5b0/jyIpgs6GbNV9zW0
-	 O8JZXQmm2xmdSV0Jzw14OdjfeuUtDFP3zbsAskgbA8JlT6NJ7ERU25C+xlHWl8wath
-	 QX7F9A8X6eC9iFBoWqnvDDp4LfKPi4W6z5XCUpzlhAT2tu+GSykRg9WLVl2R7jxriP
-	 qH005UFj67g944fX1TxQ0FnataxYhMAzEreKG/WBnA/lGX4B4ZqMbVyHJBCtBAF2g8
-	 7eXnqfXBMD5p1z2sZjUyDgxgmx8DIfMTE5Q6tCqC/eGihksTgYRJMFvZtiat95BWqo
-	 7oQphDLSxSBHA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 11:00:23 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <487dcede-4ad3-4987-aff4-937513d2fa14@wanadoo.fr>
-Date: Sun, 14 Apr 2024 11:00:18 +0200
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="I3nvVw3r"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43E9UFkq013207;
+	Sun, 14 Apr 2024 03:58:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=4CCF6s30
+	hNlzm9bBSTcbcv/IHf5CtDFM68cQ3CHdIY0=; b=I3nvVw3rSQv2LdIZs90HPHrI
+	OB/uDFS0BkHgDJHqph5Nx1lkvu9fcY85gGvAamqi5HiBZ2+I/9jM5pg5ipItl0RE
+	0Es/0XQvle7+Q2xrPZ2ntNtx7Xe5yyQCJmVzqIZZ6On8Kca+H79q0spg4FcJK/zg
+	Pkv/Gz70ygKinyTQ26fP5q/JpZmqE721AH1YgSKfDVkW+uvkCTE8SxEtSocmLgSk
+	bF2rfJQTxb38f+KQepVEz0J/Xvfv0eCOZmw1ew9grE1DQ6yT5jiv9r10m6gRhiiD
+	8Ly9ElUe8EzxUoZ2MelUzIcXKBUS6snAH3c22zQpWt2ezoA+12RSlnKxx5puLA==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xfqdkhyx3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 14 Apr 2024 03:58:46 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 14 Apr 2024 03:58:45 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sun, 14 Apr 2024 03:58:45 -0700
+Received: from hyd1425.marvell.com (unknown [10.29.37.83])
+	by maili.marvell.com (Postfix) with ESMTP id 87EFE3F7073;
+	Sun, 14 Apr 2024 03:58:41 -0700 (PDT)
+From: Sai Krishna <saikrishnag@marvell.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>,
+        <gakula@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>
+CC: Sai Krishna <saikrishnag@marvell.com>
+Subject: [net-next PATCH] octeontx2-pf: Add ucast filter count configurability via devlink.
+Date: Sun, 14 Apr 2024 16:28:30 +0530
+Message-ID: <20240414105830.678293-1-saikrishnag@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fsi: occ: Remove usage of the deprecated ida_simple_xx()
- API
-To: Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>,
- Alistar Popple <alistair@popple.id.au>, Eddie James <eajames@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-fsi@lists.ozlabs.org
-References: <6e17f2145ce2bbc12af6700c8bd56a8a7bdb103d.1705738045.git.christophe.jaillet@wanadoo.fr>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <6e17f2145ce2bbc12af6700c8bd56a8a7bdb103d.1705738045.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: kOhb-KUhW5Qtd3AWNsJekmTjzris8g5J
+X-Proofpoint-GUID: kOhb-KUhW5Qtd3AWNsJekmTjzris8g5J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-14_01,2024-04-09_01,2023-05-22_02
 
-Le 20/01/2024 à 09:07, Christophe JAILLET a écrit :
-> ida_alloc() and ida_free() should be preferred to the deprecated
-> ida_simple_get() and ida_simple_remove().
-> 
-> Note that the upper limit of ida_simple_get() is exclusive, but the one of
-> ida_alloc_range() is inclusive. So, this upper limit, INT_MAX, should have
-> been changed to INT_MAX-1.
-> 
-> But, it is likely that the INT_MAX 'idx' is valid that the max value passed
-> to ida_simple_get() should have been 0.
-> 
-> So, allow this INT_MAX 'idx' value now.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> The change related to the INT_MAX value is speculative.
-> Review with care. (or I can re-submit with INT_MAX-1, to be safe :))
-> ---
+Added a devlink param to set/modify unicast filter count. Currently
+it's hardcoded with a macro.
 
-Hi,
+Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
+---
+ .../marvell/octeontx2/nic/otx2_common.h       |  7 +-
+ .../marvell/octeontx2/nic/otx2_devlink.c      | 68 +++++++++++++++++++
+ .../marvell/octeontx2/nic/otx2_flows.c        | 20 +++---
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |  2 +-
+ 4 files changed, 83 insertions(+), 14 deletions(-)
 
-polite reminder.
-
-CJ
-
-
-
->   drivers/fsi/fsi-occ.c | 17 ++++++++---------
->   1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-> index da35ca9e84a6..f7157c1d77d8 100644
-> --- a/drivers/fsi/fsi-occ.c
-> +++ b/drivers/fsi/fsi-occ.c
-> @@ -656,17 +656,16 @@ static int occ_probe(struct platform_device *pdev)
->   		rc = of_property_read_u32(dev->of_node, "reg", &reg);
->   		if (!rc) {
->   			/* make sure we don't have a duplicate from dts */
-> -			occ->idx = ida_simple_get(&occ_ida, reg, reg + 1,
-> -						  GFP_KERNEL);
-> +			occ->idx = ida_alloc_range(&occ_ida, reg, reg,
-> +						   GFP_KERNEL);
->   			if (occ->idx < 0)
-> -				occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
-> -							  GFP_KERNEL);
-> +				occ->idx = ida_alloc_min(&occ_ida, 1,
-> +							 GFP_KERNEL);
->   		} else {
-> -			occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX,
-> -						  GFP_KERNEL);
-> +			occ->idx = ida_alloc_min(&occ_ida, 1, GFP_KERNEL);
->   		}
->   	} else {
-> -		occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX, GFP_KERNEL);
-> +		occ->idx = ida_alloc_min(&occ_ida, 1, GFP_KERNEL);
->   	}
->   
->   	platform_set_drvdata(pdev, occ);
-> @@ -680,7 +679,7 @@ static int occ_probe(struct platform_device *pdev)
->   	rc = misc_register(&occ->mdev);
->   	if (rc) {
->   		dev_err(dev, "failed to register miscdevice: %d\n", rc);
-> -		ida_simple_remove(&occ_ida, occ->idx);
-> +		ida_free(&occ_ida, occ->idx);
->   		kvfree(occ->buffer);
->   		return rc;
->   	}
-> @@ -719,7 +718,7 @@ static int occ_remove(struct platform_device *pdev)
->   	else
->   		device_for_each_child(&pdev->dev, NULL, occ_unregister_of_child);
->   
-> -	ida_simple_remove(&occ_ida, occ->idx);
-> +	ida_free(&occ_ida, occ->idx);
->   
->   	return 0;
->   }
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index c5de3ba33e2f..e20b898eae97 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -346,12 +346,9 @@ struct otx2_flow_config {
+ 	u16			*def_ent;
+ 	u16			nr_flows;
+ #define OTX2_DEFAULT_FLOWCOUNT		16
+-#define OTX2_MAX_UNICAST_FLOWS		8
++#define OTX2_DEFAULT_UNICAST_FLOWS	4
+ #define OTX2_MAX_VLAN_FLOWS		1
+ #define OTX2_MAX_TC_FLOWS	OTX2_DEFAULT_FLOWCOUNT
+-#define OTX2_MCAM_COUNT		(OTX2_DEFAULT_FLOWCOUNT + \
+-				 OTX2_MAX_UNICAST_FLOWS + \
+-				 OTX2_MAX_VLAN_FLOWS)
+ 	u16			unicast_offset;
+ 	u16			rx_vlan_offset;
+ 	u16			vf_vlan_offset;
+@@ -364,6 +361,7 @@ struct otx2_flow_config {
+ 	u32			dmacflt_max_flows;
+ 	u16                     max_flows;
+ 	struct list_head	flow_list_tc;
++	u8			ucast_flt_cnt;
+ 	bool			ntuple;
+ };
+ 
+@@ -1065,6 +1063,7 @@ int otx2_handle_ntuple_tc_features(struct net_device *netdev,
+ int otx2_smq_flush(struct otx2_nic *pfvf, int smq);
+ void otx2_free_bufs(struct otx2_nic *pfvf, struct otx2_pool *pool,
+ 		    u64 iova, int size);
++int otx2_mcam_entry_init(struct otx2_nic *pfvf);
+ 
+ /* tc support */
+ int otx2_init_tc(struct otx2_nic *nic);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+index 4e1130496573..ed9cd06aace9 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+@@ -63,9 +63,72 @@ static int otx2_dl_mcam_count_get(struct devlink *devlink, u32 id,
+ 	return 0;
+ }
+ 
++static int otx2_dl_ucast_flt_cnt_set(struct devlink *devlink, u32 id,
++				     struct devlink_param_gset_ctx *ctx)
++{
++	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
++	struct otx2_nic *pfvf = otx2_dl->pfvf;
++	int err;
++
++	pfvf->flow_cfg->ucast_flt_cnt = ctx->val.vu8;
++
++	otx2_mcam_flow_del(pfvf);
++	err = otx2_mcam_entry_init(pfvf);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static int otx2_dl_ucast_flt_cnt_get(struct devlink *devlink, u32 id,
++				     struct devlink_param_gset_ctx *ctx)
++{
++	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
++	struct otx2_nic *pfvf = otx2_dl->pfvf;
++
++	if (!pfvf->flow_cfg) {
++		ctx->val.vu8 = 0;
++		return 0;
++	}
++
++	ctx->val.vu8 = pfvf->flow_cfg->ucast_flt_cnt;
++
++	return 0;
++}
++
++static int otx2_dl_ucast_flt_cnt_validate(struct devlink *devlink, u32 id,
++					  union devlink_param_value val,
++					  struct netlink_ext_ack *extack)
++{
++	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
++	struct otx2_nic *pfvf = otx2_dl->pfvf;
++
++	/* Check for UNICAST filter support*/
++	if (!(pfvf->flags & OTX2_FLAG_UCAST_FLTR_SUPPORT)) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "Unicast filter not enabled");
++		return -EINVAL;
++	}
++
++	if (!pfvf->flow_cfg) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "pfvf->flow_cfg not initialized");
++		return -EINVAL;
++	}
++
++	if (pfvf->flow_cfg->nr_flows) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "Cannot modify count when there are active rules");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ enum otx2_dl_param_id {
+ 	OTX2_DEVLINK_PARAM_ID_BASE = DEVLINK_PARAM_GENERIC_ID_MAX,
+ 	OTX2_DEVLINK_PARAM_ID_MCAM_COUNT,
++	OTX2_DEVLINK_PARAM_ID_UCAST_FLT_CNT,
+ };
+ 
+ static const struct devlink_param otx2_dl_params[] = {
+@@ -74,6 +137,11 @@ static const struct devlink_param otx2_dl_params[] = {
+ 			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
+ 			     otx2_dl_mcam_count_get, otx2_dl_mcam_count_set,
+ 			     otx2_dl_mcam_count_validate),
++	DEVLINK_PARAM_DRIVER(OTX2_DEVLINK_PARAM_ID_UCAST_FLT_CNT,
++			     "unicast_filter_count", DEVLINK_PARAM_TYPE_U8,
++			     BIT(DEVLINK_PARAM_CMODE_RUNTIME),
++			     otx2_dl_ucast_flt_cnt_get, otx2_dl_ucast_flt_cnt_set,
++			     otx2_dl_ucast_flt_cnt_validate),
+ };
+ 
+ static const struct devlink_ops otx2_devlink_ops = {
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
+index 97a71e9b8563..78c2f31d153b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_flows.c
+@@ -12,8 +12,6 @@
+ 
+ #define OTX2_DEFAULT_ACTION	0x1
+ 
+-static int otx2_mcam_entry_init(struct otx2_nic *pfvf);
+-
+ struct otx2_flow {
+ 	struct ethtool_rx_flow_spec flow_spec;
+ 	struct list_head list;
+@@ -161,7 +159,7 @@ int otx2_alloc_mcam_entries(struct otx2_nic *pfvf, u16 count)
+ }
+ EXPORT_SYMBOL(otx2_alloc_mcam_entries);
+ 
+-static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
++int otx2_mcam_entry_init(struct otx2_nic *pfvf)
+ {
+ 	struct otx2_flow_config *flow_cfg = pfvf->flow_cfg;
+ 	struct npc_get_field_status_req *freq;
+@@ -172,7 +170,7 @@ static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
+ 	int ent, count;
+ 
+ 	vf_vlan_max_flows = pfvf->total_vfs * OTX2_PER_VF_VLAN_FLOWS;
+-	count = OTX2_MAX_UNICAST_FLOWS +
++	count = flow_cfg->ucast_flt_cnt +
+ 			OTX2_MAX_VLAN_FLOWS + vf_vlan_max_flows;
+ 
+ 	flow_cfg->def_ent = devm_kmalloc_array(pfvf->dev, count,
+@@ -214,7 +212,7 @@ static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
+ 	flow_cfg->vf_vlan_offset = 0;
+ 	flow_cfg->unicast_offset = vf_vlan_max_flows;
+ 	flow_cfg->rx_vlan_offset = flow_cfg->unicast_offset +
+-					OTX2_MAX_UNICAST_FLOWS;
++					flow_cfg->ucast_flt_cnt;
+ 	pfvf->flags |= OTX2_FLAG_UCAST_FLTR_SUPPORT;
+ 
+ 	/* Check if NPC_DMAC field is supported
+@@ -254,6 +252,7 @@ static int otx2_mcam_entry_init(struct otx2_nic *pfvf)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(otx2_mcam_entry_init);
+ 
+ /* TODO : revisit on size */
+ #define OTX2_DMAC_FLTR_BITMAP_SZ (4 * 2048 + 32)
+@@ -301,6 +300,8 @@ int otx2_mcam_flow_init(struct otx2_nic *pf)
+ 	INIT_LIST_HEAD(&pf->flow_cfg->flow_list);
+ 	INIT_LIST_HEAD(&pf->flow_cfg->flow_list_tc);
+ 
++	pf->flow_cfg->ucast_flt_cnt = OTX2_DEFAULT_UNICAST_FLOWS;
++
+ 	/* Allocate bare minimum number of MCAM entries needed for
+ 	 * unicast and ntuple filters.
+ 	 */
+@@ -313,7 +314,7 @@ int otx2_mcam_flow_init(struct otx2_nic *pf)
+ 		return 0;
+ 
+ 	pf->mac_table = devm_kzalloc(pf->dev, sizeof(struct otx2_mac_table)
+-					* OTX2_MAX_UNICAST_FLOWS, GFP_KERNEL);
++					* pf->flow_cfg->ucast_flt_cnt, GFP_KERNEL);
+ 	if (!pf->mac_table)
+ 		return -ENOMEM;
+ 
+@@ -355,7 +356,7 @@ static int otx2_do_add_macfilter(struct otx2_nic *pf, const u8 *mac)
+ 		return -ENOMEM;
+ 
+ 	/* dont have free mcam entries or uc list is greater than alloted */
+-	if (netdev_uc_count(pf->netdev) > OTX2_MAX_UNICAST_FLOWS)
++	if (netdev_uc_count(pf->netdev) > pf->flow_cfg->ucast_flt_cnt)
+ 		return -ENOMEM;
+ 
+ 	mutex_lock(&pf->mbox.lock);
+@@ -366,7 +367,7 @@ static int otx2_do_add_macfilter(struct otx2_nic *pf, const u8 *mac)
+ 	}
+ 
+ 	/* unicast offset starts with 32 0..31 for ntuple */
+-	for (i = 0; i <  OTX2_MAX_UNICAST_FLOWS; i++) {
++	for (i = 0; i <  pf->flow_cfg->ucast_flt_cnt; i++) {
+ 		if (pf->mac_table[i].inuse)
+ 			continue;
+ 		ether_addr_copy(pf->mac_table[i].addr, mac);
+@@ -409,7 +410,7 @@ static bool otx2_get_mcamentry_for_mac(struct otx2_nic *pf, const u8 *mac,
+ {
+ 	int i;
+ 
+-	for (i = 0; i < OTX2_MAX_UNICAST_FLOWS; i++) {
++	for (i = 0; i < pf->flow_cfg->ucast_flt_cnt; i++) {
+ 		if (!pf->mac_table[i].inuse)
+ 			continue;
+ 
+@@ -1393,6 +1394,7 @@ int otx2_destroy_mcam_flows(struct otx2_nic *pfvf)
+ 	}
+ 
+ 	pfvf->flags &= ~OTX2_FLAG_MCAM_ENTRIES_ALLOC;
++	flow_cfg->max_flows = 0;
+ 	mutex_unlock(&pfvf->mbox.lock);
+ 
+ 	return 0;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 6a44dacff508..78c4b3114a82 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -1714,7 +1714,7 @@ static void otx2_do_set_rx_mode(struct otx2_nic *pf)
+ 		return;
+ 
+ 	if ((netdev->flags & IFF_PROMISC) ||
+-	    (netdev_uc_count(netdev) > OTX2_MAX_UNICAST_FLOWS)) {
++	    (netdev_uc_count(netdev) > pf->flow_cfg->ucast_flt_cnt)) {
+ 		promisc = true;
+ 	}
+ 
+-- 
+2.25.1
 
