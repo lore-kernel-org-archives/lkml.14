@@ -1,219 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2132.outbound.protection.outlook.com [40.107.249.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F07328DB;
-	Sun, 14 Apr 2024 12:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713099522; cv=none; b=J03Qa2fOD0vVTBiC/EvhQ7UfJb3UJiW0Dob3gaiADmh4h0KADqqvTU47Z4BlAzOUe5gTt7+/Y58OZg6g/2EdPn6Rjtx52Y6oVYSQfTvScZ0kzNnexN1n+SS0EzNtIFPMq2yhvaW8xnNc2jqODDew7lXp/FkPUwgPx4Lr4BliIQA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713099522; c=relaxed/simple;
-	bh=Dglaxi1KNrwFgr/1nxOZSoJL+0HYaCytdvsFrqk3eqg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=swVX+qgX9nrXdpEwWuzTqVNnMYdgGKxtpe+cVBv5vEG//VOLygNc+CiyCUKkd8dL7sq96ckqAHElTTmdiojjuZ22d25pFNkrfq4zGP5ncZVpq4PJ3LVctS3udttWGIE2xNclbiPaw7A82Dye0Fbu3aQTImVSZKJFeclAkGbyh84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GT/+E+jn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GT/+E+jn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA03C2BD11;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAEC14292;
 	Sun, 14 Apr 2024 12:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713099521;
-	bh=Dglaxi1KNrwFgr/1nxOZSoJL+0HYaCytdvsFrqk3eqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GT/+E+jn5fMakzrkvyugKEgqFdhwWOUO6N8lTXjnMsK6cZslpQF8ReP8qPLHyCYa0
-	 PmEyak9/lQTRED8zqgV2urPd7kQoaeuScTttsTicBoDFa3I3v22hiumlvOJrPOqVY0
-	 xR0rooCqecH5oCg/L4Vr3Cg+zYP8iGFj8sWARaCwo/P4V875Up0oAlLjF9Irptsevo
-	 rYYjuESDJPGGrWj0LqmNLdWBywEBJSQ8N9VHpsRm79S1QT0PhAA+V0fcTxicGrJsRD
-	 EkRffNs2umwKFUXtDt+b6BDX09gXPhAJXJiAk7NJGDVdVAjFkWgNSxa6Q3w9mfUS36
-	 HJQrzzyG0vy1w==
-Date: Sun, 14 Apr 2024 21:58:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: qiang4.zhang@linux.intel.com
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Qiang Zhang <qiang4.zhang@intel.com>,
- Stable@vger.kernel.org
-Subject: Re: [PATCH v3] bootconfig: use memblock_free_late to free xbc
- memory to buddy
-Message-Id: <20240414215837.de2ce64370c2a2abaeafe46b@kernel.org>
-In-Reply-To: <20240414114944.1012359-1-qiang4.zhang@linux.intel.com>
-References: <20240414114944.1012359-1-qiang4.zhang@linux.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.132
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713099521; cv=fail; b=sPJj1SpJKYYrxGghzFdSdTeWt5zItQMLYB1J4+Mq+Rq/LJV1Uj0YeCGrL/Qm5+haXbddVHz6P/Lz313NFFOgjiDFQ1lAZiDFM0dtZATdZahBcy00SxNqfqYR5Qc4mu75QoCMgsZneZ/hvSOylqIzzUJeHOAXlRk0hLT2yzVuAWI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713099521; c=relaxed/simple;
+	bh=2DYXj7ZdRGTL8mbj+V03wB1Vt1uNMUaO2A6j2WsO/qc=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=rw+AcvwPRbpXafFUDFdEOQGX6gHQcP7N2b7zXd8J+tpQWLcLzt/iMjWYCdoVRnWwTmkD/TlJhKxc+IGn4Yv4bosJ7C/0ogY1uZOM0AUgv523w6EzSOYSr6Pm5d6dLC6/q12Utjxxqe6LgYb3Aw4xPB5icAgOuagtYza5q2Z3IoM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=jtJsGR9I; arc=fail smtp.client-ip=40.107.249.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="jtJsGR9I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H8w1u8Yjxo9qgo8FYS+0dZPyZUtLT/GxyauJREKqOG7mnJWvEvDwRMNSIJs8ts9YtbVXJquVzI3Wv67e3lZONBsk3jchdzNhmqaX3sO0qekWCyMjIUnhj2sH3bD5+d0BCH30eO5HgG0+HB8guH8jOOQyyrvKdYvAxfIlDz+Jc9YFFkwRWp2C8GgwqeNUFLIJ0CjARhkRtF8VFhKTsG8QYdckb4ZchGzsM7XvRoWYzR/GfYVVeWtZCCjaUmXTeDIOpB7CpcQNxKD+CxcPI5WjtC1u+9jCLC/iqrYq3vTruVvtL0xoXaweaew7WmNSOjN39/R/AlRJHRNqGNHkKI9+6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SXkBl6fMrm3NwinWqLu3p6fa5+Mt4AogSxh7FaUOouY=;
+ b=RlUymhikdxsIDBTMeW5K6w1TCgnflTu9UWEaqmL4vvbEnM6DtFYmnYJxwMeAujJNKq9LWFFsfwzY5uf3bNZmJXHCXDnBe9Yg9Y2ygOErgBallqNsdhxXhqc8zT17ylXoTRxbmJBLIAu6i8Pk/KGpjVRN4122/nMa8NDRj5YtKIVV6cuU3SJk67KFbDbePx0TWLglNgsKt03VvbqeNB8KqtH6Uh2R9iIl3nocjMm9N0ep0TnkSOebtgvblwC/gzHNyCIjvNDhS5jZsi8l+4Lv1H5iwH/2qBfGc5+9+70U5l1mhU+LLTD6uhjCnZL9ctht8M8aHlllB8c3IBnX5tz2jQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SXkBl6fMrm3NwinWqLu3p6fa5+Mt4AogSxh7FaUOouY=;
+ b=jtJsGR9I9kYC40T4N3gsw8ztDuIDymkKdw/HAMt3Pg7cvb/YQRAcl18N6z8wm6/kpnfkba4UK44wMmJN/10lnlbQGRuZh4MMTTP0Ig0ch8/oXhLVHShM8IgP4hsO3bg5U1Mx21wjleOIfffBVioN/3j4LxkJMxa/cStU/pqmX5M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by DU2PR04MB8645.eurprd04.prod.outlook.com (2603:10a6:10:2dc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Sun, 14 Apr
+ 2024 12:58:37 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529%7]) with mapi id 15.20.7452.046; Sun, 14 Apr 2024
+ 12:58:37 +0000
+From: Josua Mayer <josua@solid-run.com>
+Subject: [PATCH v3 0/4] arm64: dts: add description for solidrun cn9130 som
+ and clearfog boards
+Date: Sun, 14 Apr 2024 14:58:31 +0200
+Message-Id: <20240414-cn9130-som-v3-0-350a67d44e0a@solid-run.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPfSG2YC/12MywrCMBBFf6Vk7UhmUmzqyv8QFzFJbcAmJdGgl
+ P67aRF8cFfnwjkTSzY6m9i+mli02SUXfAGxqZjulb9YcKYwI041FyhB+xYFhxQGkLW0cqf0mSv
+ NijBG27nHGjueCvcu3UJ8ru2My/vOEH5nMgKHBhGpUTVvlT2kcHUG4t1vdRjYksr00ct+dCq6U
+ B0RtboxZP71eZ5fyZXm1OcAAAA=
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Yazan Shhady <yazan.shhady@solid-run.com>, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Josua Mayer <josua@solid-run.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: FR5P281CA0005.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f2::18) To AM9PR04MB7586.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|DU2PR04MB8645:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fa00b2f-8d1d-4813-0f5f-08dc5c829993
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7vDoV/auP+YA3qmMWy/on97ZZ8FUJ7VuLtlPcI/OwlkYDMuNbk24iaNzBlyQLQKd2oluo/RCW5d5+NLtW+mFrYxAyHY3S0DOPl3C7tJ6ZuigYPnODnvEssmFyQ7bJZNlpVFooUPBSm3O0GmUzfsR8s3ks4J70EbEKgHXY+qxF6hWFjDKKdZwO93NcEnamj8KPaFugRZf0nKG+pmf6s9lIYJLYbQZRXwoxDBx6hUTQ+wphD9mayyIZMVliD7oOBcz+6PmGe4BdsSInFixgzvMgEjjm59K/wz9q3oRYQ2d9GYwRG3dRv0KC8Vg2QmexTIZ/1a0S9Fb9QT+IXI5Jg1YrVdaCiv9dvYS03U+1H4cGinpsC6cHHOBvlYtBNLIW/jSzJNazYKG8Y9xBafi2iKvyO4V7eCqrnVrfcqq2i1iesIpexp98IRBhJ5a+RLJ2JbCM2XuAFgApU7JE15+XiwzX731Fc/fQFzuQUqBfltsLQJeafJNCaxM28wSU2gXgNMPYMsgsZ7MFJT5oXgF9zDNHGjHRpEm/5LqEAmqX/4YsbQXFQ6qsGW067WN8Xl0kp5L8Q8MrkN9ZQJ2VrHN/5G/UyWiu1Cq4WhWyuYCVYHD9sKK9dU/G1reWWck9XFsKbKzzytjvKxUXPmDR1hpGT4JX88UwGrTlM/9HoUeFbIKIZP4Sr66ogZiJzaI3izxJb6RLocqy+3Keha3WwtSBAVyWmVwHIfXzCQZxh8S+7cnQE8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(7416005)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TXZUM0ZmK1BPZ213TVhUWlVDbE9sWkJjd1F2dVprd1dRMmVIMjRCQUdTU2pZ?=
+ =?utf-8?B?alVxemV4djZvK0JWYVN2NXlrVmpwMktRMS9tZDZ5VkIvVHkvT1I0emh1OE55?=
+ =?utf-8?B?aVFhSllPa3lBOHN5L0tBWHIxRzRrajV4YVJHWHZIam9MSTl5TCtEV0NCeXIw?=
+ =?utf-8?B?Y2NuL3VXNFV6OFBzTlFHSXJkejVkWlc0aUtBdUV6cTl4TDRTZ1ozVlZEMGx2?=
+ =?utf-8?B?R0FoUW1zVXdzeHBoRThDMHJOc0Y0bXRHYlZJNHozRmNVRytERHA1VGpWbFlR?=
+ =?utf-8?B?eUx1Z210RTFrWGVpRWRTRmJIckRPRzQxRlo4MC9heDVCY1B5UXdtbDRURXRq?=
+ =?utf-8?B?RTViUXI2cS95YVFXUnBqa2dqNWgwdDZhRnc4QmdJdDExLzJnemdhUHRCODVK?=
+ =?utf-8?B?T0Z1NEFEYUpnTXBGRW8zMVIzTjdBSWN2MStaNkFXVFJhdUtVa0x5NHF5U2sy?=
+ =?utf-8?B?a0l6dzZWV2FpaWIzK0IweXJIMCtoNUR6WGxoZVA0Nm9kRmUrd0RRL1hhZnRF?=
+ =?utf-8?B?dzgxTzkyR2RzdEpVSlQySkY3M3pLMW85aXVvQUdnREc4aGN0RmJVYWdKaWU5?=
+ =?utf-8?B?SlBzNkhaRHRFNTI1ckc2TGViMmpUNm5QcWJibUlvL0d5TGloM2J6MGdZVWVW?=
+ =?utf-8?B?aGJROFJ2WERWbk0yRTZUTWxQUkJjWVZoaU0zemNyNEVXL0xPZnBQUEs4Tkxw?=
+ =?utf-8?B?N0g0RnJIYUxoVXNGbHVqVjNmQXBQZlErL3liYnFwQ3BTNXYrdS9DSTRTMzg2?=
+ =?utf-8?B?SjZqVWpzc3I0SHR5d3pqSGIva1RZcHpuWkEyNU5XbllEa0V0aFlhZTN1YjVt?=
+ =?utf-8?B?Zm1XRytPMHpCeVJ3VkxGbkpMekV4cmF3aXdJWFZIZUN1U2FMd1o5aVhWMkJH?=
+ =?utf-8?B?NkxCRUs1RnljenJ5UFNhbTc5T1hOZ1R3Rkc0TitlZXJKWk1MY1FqM3hucXVv?=
+ =?utf-8?B?UW1Pck9mZE52cmptaUFFcE4wMS8yVGY0UHdzSHpNQ1hDVkdKVWNjdFFHWDVo?=
+ =?utf-8?B?VzdsQW5tQ01iaWxEYlBXaEI5bGo1Ymx5VmlsYlBSOUtpeDNnREcybUt2bzBO?=
+ =?utf-8?B?L2dzc0ZvT3U3QUhJMUpEYWViZHMwNjBaTkhoUW9uTVlKQkZ4ZGl5QkNXNERX?=
+ =?utf-8?B?dWFQZnlYVXViOGtob2d6a2xNOHRoT29aTW4vSmxYeEJnSTdwTTRSVFhDNGgy?=
+ =?utf-8?B?M3hQRDV3ZjZVM2hyVFR1eGxxeFhzT2JlOSs0N29lQUdTdWZFKy9oZjlmVDI4?=
+ =?utf-8?B?MGl6bE9tcGNBQ2tCMG5EcVIya2lFV05aOWpISWhpbzNzZE9UbmdnQzNtMmNQ?=
+ =?utf-8?B?NjlGM2poaHZJRkFlY1lBQU0xcDJueDJaMWVLZ3ZlOW9nSEtNNDNPdDdrSi9C?=
+ =?utf-8?B?MXp5ZkFveUR6VzlTVGhGSGMwcExoYUZEZEM4RVVWOU85anMySnFUSkdSMldQ?=
+ =?utf-8?B?UGhONHZwcU9CK3djU1RVUjFVZXhiRWhYWWVtRGdERDc3NDhjcDI5OFBvMVdJ?=
+ =?utf-8?B?SC9ma2VDSjhjb0I0enQzTCtuK3Z6VnlmMG5EUlVFU2VrY3RsZFp5djZvdDFp?=
+ =?utf-8?B?ZHlMTm43ZGxJK2ljSHhaQk1zUmZuS1VOaW5lT3lZNHduTmdLd2ZuelhINTBC?=
+ =?utf-8?B?aWVFa21ncGlEQ29pVThLNy9vb3M4aXIzdm9HaEdIR0NYY091Z0ZUSGNnM1I4?=
+ =?utf-8?B?T0ZsVDd5UXdaQzRMZS9QMWZjSnN5YW9tTWF5TGs4Q3pFbVRvWkpHNFY5WEl4?=
+ =?utf-8?B?aUlRL01tYXdaSEwxYUFYRmxMb2xzcG9ZNU5jckZOSmlvbXBML3VjOVRWSTE2?=
+ =?utf-8?B?RXJOZjlLbG0waUt2eWg5S2ZrWWV1cjFhK1d2UEZ5eU82RVRWUUgzcmkwaU4y?=
+ =?utf-8?B?Qk1RZ2w3eklVeXdMK2FKTWp3NDdXVVVkVVZRcDNCVWZwcFpDL2pSK1BYcTBF?=
+ =?utf-8?B?SW1PcGR1YXhvbnFrbUdCaTMzd0RGUldqUjRHMERWWE15bVVVT1B3NkNNN01y?=
+ =?utf-8?B?RlRMWVlzWGJzN1ZsUEU4TjIrYzZxTDVGQWkwZ013NU9INjd5YncrcXMxVStV?=
+ =?utf-8?B?RXlacTg4L1VnbTdQQ1NYNzlmcU1UbGhmQ1ZCSWVVNjRPYkJCOW81OFVhY1E1?=
+ =?utf-8?Q?34iNSrExuO5BdkOSFLGPQMSP1?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fa00b2f-8d1d-4813-0f5f-08dc5c829993
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2024 12:58:37.3073
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zKgHKFXozJV7plJzPQaHKuHl8flk7s2nnH46OIlvglse9l7RAVWDBVaEV/EZMBu7jRZYEwva9c805UOqWNnc5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8645
 
-On Sun, 14 Apr 2024 19:49:45 +0800
-qiang4.zhang@linux.intel.com wrote:
+SolidRun CN9130 SoM is a mostly pin-comptible replacement for Armada 388
+SoM used in Clearfog and Clearfog Pro boards.
 
-> From: Qiang Zhang <qiang4.zhang@intel.com>
-> 
-> On the time to free xbc memory in xbc_exit(), memblock may has handed
-> over memory to buddy allocator. So it doesn't make sense to free memory
-> back to memblock. memblock_free() called by xbc_exit() even causes UAF bugs
-> on architectures with CONFIG_ARCH_KEEP_MEMBLOCK disabled like x86.
-> Following KASAN logs shows this case.
-> 
-> This patch fixes the xbc memory free problem by calling memblock_free()
-> in early xbc init error rewind path and calling memblock_free_late() in
-> xbc exit path to free memory to buddy allocator.
-> 
-> [    9.410890] ==================================================================
-> [    9.418962] BUG: KASAN: use-after-free in memblock_isolate_range+0x12d/0x260
-> [    9.426850] Read of size 8 at addr ffff88845dd30000 by task swapper/0/1
-> 
-> [    9.435901] CPU: 9 PID: 1 Comm: swapper/0 Tainted: G     U             6.9.0-rc3-00208-g586b5dfb51b9 #5
-> [    9.446403] Hardware name: Intel Corporation RPLP LP5 (CPU:RaptorLake)/RPLP LP5 (ID:13), BIOS IRPPN02.01.01.00.00.19.015.D-00000000 Dec 28 2023
-> [    9.460789] Call Trace:
-> [    9.463518]  <TASK>
-> [    9.465859]  dump_stack_lvl+0x53/0x70
-> [    9.469949]  print_report+0xce/0x610
-> [    9.473944]  ? __virt_addr_valid+0xf5/0x1b0
-> [    9.478619]  ? memblock_isolate_range+0x12d/0x260
-> [    9.483877]  kasan_report+0xc6/0x100
-> [    9.487870]  ? memblock_isolate_range+0x12d/0x260
-> [    9.493125]  memblock_isolate_range+0x12d/0x260
-> [    9.498187]  memblock_phys_free+0xb4/0x160
-> [    9.502762]  ? __pfx_memblock_phys_free+0x10/0x10
-> [    9.508021]  ? mutex_unlock+0x7e/0xd0
-> [    9.512111]  ? __pfx_mutex_unlock+0x10/0x10
-> [    9.516786]  ? kernel_init_freeable+0x2d4/0x430
-> [    9.521850]  ? __pfx_kernel_init+0x10/0x10
-> [    9.526426]  xbc_exit+0x17/0x70
-> [    9.529935]  kernel_init+0x38/0x1e0
-> [    9.533829]  ? _raw_spin_unlock_irq+0xd/0x30
-> [    9.538601]  ret_from_fork+0x2c/0x50
-> [    9.542596]  ? __pfx_kernel_init+0x10/0x10
-> [    9.547170]  ret_from_fork_asm+0x1a/0x30
-> [    9.551552]  </TASK>
-> 
-> [    9.555649] The buggy address belongs to the physical page:
-> [    9.561875] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x45dd30
-> [    9.570821] flags: 0x200000000000000(node=0|zone=2)
-> [    9.576271] page_type: 0xffffffff()
-> [    9.580167] raw: 0200000000000000 ffffea0011774c48 ffffea0012ba1848 0000000000000000
-> [    9.588823] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-> [    9.597476] page dumped because: kasan: bad access detected
-> 
-> [    9.605362] Memory state around the buggy address:
-> [    9.610714]  ffff88845dd2ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [    9.618786]  ffff88845dd2ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [    9.626857] >ffff88845dd30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.634930]                    ^
-> [    9.638534]  ffff88845dd30080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.646605]  ffff88845dd30100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.654675] ==================================================================
-> 
-> Cc: Stable@vger.kernel.org
-> Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
+1. Add new binding for compatible strings closely matching the original.
 
-Looks good to me.
+2. Add device-tree includes for SoM and carrier shared design.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3. Add device-tree for both Clearfog Base and Pro.
 
-Thanks!
+While dtbs_check is happy with LED descriptions behind dsa switch,
+functionally they require supporting code by Andrew Lunn:
+https://lore.kernel.org/r/20240401-v6-8-0-net-next-mv88e6xxx-leds-v4-v3-0-221b3fa55f78@lunn.ch
 
-> ---
-> v3:
-> - add NULL pointer check in memblock_free_late() path.
-> 
-> v2:
-> - add an early flag in xbc_free_mem() to free memory back to memblock in
->   xbc_init error path or put memory to buddy allocator in normal xbc_exit.
-> ---
->  include/linux/bootconfig.h |  7 ++++++-
->  lib/bootconfig.c           | 19 +++++++++++--------
->  2 files changed, 17 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-> index e5ee2c694401..3f4b4ac527ca 100644
-> --- a/include/linux/bootconfig.h
-> +++ b/include/linux/bootconfig.h
-> @@ -288,7 +288,12 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
->  int __init xbc_get_info(int *node_size, size_t *data_size);
->  
->  /* XBC cleanup data structures */
-> -void __init xbc_exit(void);
-> +void __init _xbc_exit(bool early);
-> +
-> +static inline void xbc_exit(void)
-> +{
-> +	_xbc_exit(false);
-> +}
->  
->  /* XBC embedded bootconfig data in kernel */
->  #ifdef CONFIG_BOOT_CONFIG_EMBED
-> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index c59d26068a64..8841554432d5 100644
-> --- a/lib/bootconfig.c
-> +++ b/lib/bootconfig.c
-> @@ -61,9 +61,12 @@ static inline void * __init xbc_alloc_mem(size_t size)
->  	return memblock_alloc(size, SMP_CACHE_BYTES);
->  }
->  
-> -static inline void __init xbc_free_mem(void *addr, size_t size)
-> +static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
->  {
-> -	memblock_free(addr, size);
-> +	if (early)
-> +		memblock_free(addr, size);
-> +	else if (addr)
-> +		memblock_free_late(__pa(addr), size);
->  }
->  
->  #else /* !__KERNEL__ */
-> @@ -73,7 +76,7 @@ static inline void *xbc_alloc_mem(size_t size)
->  	return malloc(size);
->  }
->  
-> -static inline void xbc_free_mem(void *addr, size_t size)
-> +static inline void xbc_free_mem(void *addr, size_t size, bool early)
->  {
->  	free(addr);
->  }
-> @@ -904,13 +907,13 @@ static int __init xbc_parse_tree(void)
->   * If you need to reuse xbc_init() with new boot config, you can
->   * use this.
->   */
-> -void __init xbc_exit(void)
-> +void __init _xbc_exit(bool early)
->  {
-> -	xbc_free_mem(xbc_data, xbc_data_size);
-> +	xbc_free_mem(xbc_data, xbc_data_size, early);
->  	xbc_data = NULL;
->  	xbc_data_size = 0;
->  	xbc_node_num = 0;
-> -	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX);
-> +	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX, early);
->  	xbc_nodes = NULL;
->  	brace_index = 0;
->  }
-> @@ -963,7 +966,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
->  	if (!xbc_nodes) {
->  		if (emsg)
->  			*emsg = "Failed to allocate bootconfig nodes";
-> -		xbc_exit();
-> +		_xbc_exit(true);
->  		return -ENOMEM;
->  	}
->  	memset(xbc_nodes, 0, sizeof(struct xbc_node) * XBC_NODE_MAX);
-> @@ -977,7 +980,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
->  			*epos = xbc_err_pos;
->  		if (emsg)
->  			*emsg = xbc_err_msg;
-> -		xbc_exit();
-> +		_xbc_exit(true);
->  	} else
->  		ret = xbc_node_num;
->  
-> -- 
-> 2.39.2
-> 
+NOTICE IN CASE ANYBODY WANTS TO SELF-UPGRADE:
+CN9130 SoM has a different footprint from Armada 388 SoM.
+Components on the carrier board below the SoM may collide causing
+damage, such as on Clearfog Base.
 
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+---
+Changes in v3:
+- picked up acked-by for dt-bindings
+- skipped acked-by for dts because additional changes were made:
+  - moved legacy netdev aliases to carrier dts
+  - fix status property style errors
+  - add pinctrl for secondary spi chip-select on mikrobus header (& som)
+  - specify spi bus frequency limits for som
+- Added CN9131 SolidWAN board
+- Link to v2: https://lore.kernel.org/r/20240404-cn9130-som-v2-0-3af2229c7d2d@solid-run.com
 
+Changes in v2:
+- rewrote dt bindings dropping unnecessary compatibles
+  (Reported-By: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>)
+- added bindings for two additional boards (cn9131/9132)
+  support planned for the coming weeks, mostly serves
+  illustrational purposes, to understand cn913x variants
+- cf-pro: add description for LEDs behind DSA switch
+- cf-base: add description for LEDs behind PHYs
+  (Reported-By: Andrew Lunn <andrew@lunn.ch>)
+- Link to v1: https://lore.kernel.org/r/20240321-cn9130-som-v1-0-711127a409ae@solid-run.com
+
+---
+Josua Mayer (4):
+      dt-bindings: arm64: marvell: add solidrun cn9130 som based boards
+      dt-bindings: arm64: marvell: add solidrun cn9132 CEX-7 evaluation board
+      arm64: dts: add description for solidrun cn9130 som and clearfog boards
+      arm64: dts: add description for solidrun cn9131 solidwan board
+
+ .../bindings/arm/marvell/armada-7k-8k.yaml         |  18 +
+ arch/arm64/boot/dts/marvell/Makefile               |   3 +
+ arch/arm64/boot/dts/marvell/cn9130-cf-base.dts     | 178 ++++++
+ arch/arm64/boot/dts/marvell/cn9130-cf-pro.dts      | 377 ++++++++++++
+ arch/arm64/boot/dts/marvell/cn9130-cf.dtsi         | 197 +++++++
+ arch/arm64/boot/dts/marvell/cn9130-sr-som.dtsi     | 160 +++++
+ arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dts | 653 +++++++++++++++++++++
+ 7 files changed, 1586 insertions(+)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240318-cn9130-som-848e86acb0ac
+
+Sincerely,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Josua Mayer <josua@solid-run.com>
+
