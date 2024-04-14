@@ -1,86 +1,61 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52F51353FB
-	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 17:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAD21DDD1
+	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 17:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713114213; cv=none; b=m7yimA4GW+/b3a3PJ2ukpVgGJ+9g9aJktGVe8ePMw6mD/aY6KRT2pZjJu6LdNmwQK+EMRmYH+BnabaWy2DXYOo2a0RL7pwnnsLEZFNwk4dCIfo6+hPiwiNM1M3ITXS9aFmooeRbuDerTmyP+9AM3lqMJqK6jN1mtdboE/v4/lDg=
+	t=1713114252; cv=none; b=uFMZpKZZ5yvc7LNo56nc+ARkxxYHk5QA3zfsz0fO6yWYAB+WQlBo7AQ4ooat4iIlfbi4KIoW2sEZfqAKss6ehOaEI9xvjqa3iVM12vUIPA+EM0H+fAYof1BqgVLR66rFK/GdP460SyzgNwwVJxnwQy9HFx13WBQO5JdteCL1bEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713114213; c=relaxed/simple;
-	bh=oAu0xcmhHlCV1+noU6f7q37wld1qEcXlQdUla+DYoZo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G9aHWHAtQhmmXHtpCCiFwpH7PIMPH0x4a7kLv8l318a3UjNbxSXz9KTcTsqraBUfAqOG1Ayv7V1M2xEtR1fjlklzMdGT9RtVobHj6Nn+fGanC0sxoUjy0tDrulvINkzZPbi8Idvc+2pjJNh3hiqKUxQHkgN+RGRjW/eL9xSd4M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Uly6kSE1; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Uly6kSE1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
- To: From; q=dns/txt; s=fe-e1b5cab7be; t=1713114200;
- bh=gMlj6yQsVpAUf4c5FKz3DvGcpLcTW6AorW4VMtzn7yQ=;
- b=Uly6kSE1BmGTuLLpIt3bEvgpCF8SNR9uC2XTTTlLew8fGARPpcCyHbefIRGiZPejxZx/kZtqp
- TXFvL9gaBHt9tVziQXm10IhF50dSZmARERsoVzzLevJRWhpdmYiJrrrGaDwvYYE65dDKXjdUKpb
- zjmPBSBJ/sh+moXqCcZV9DlBtGjNHPcq6LHyffN65c9prbtSfbQizQIvhqTG8okSGWHx1hoXEZw
- 6376ym+LrnQ+AjC1eItZGsiWXiuNBqvHVSHKLfRp8y2mxz5Iv4UItyEDHBnqIIrIF6ypvuziyMS
- fDOSuJKtySxF/8o93mAshYb+QCDdnCuf98j35URwDq3g==
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
- Karlman <jonas@kwiboo.se>
-Subject: [PATCH v2 0/3] arm64: dts: rockchip: Add Radxa ZERO 3W/3E
-Date: Sun, 14 Apr 2024 15:11:26 +0000
-Message-ID: <20240414151135.1774981-1-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.43.2
+	s=arc-20240116; t=1713114252; c=relaxed/simple;
+	bh=debj838TIjKGGV2pF9ZfKT/BaVHNgGu9cDOaPEhzIv4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=TMOOcWaRauhn8/gLXdlJR/lEZ9Nrgq9GKdamT5sfiK2JcGgy8zB1dS6CL8+gLh45cAGHwPalEUxXvYqYGSdAufu7zllUCXnq2RH+sFNH1xl6jm2AfpF1AY+ZizAFNcdRkoc2rDqayA/jsIMOtxNz9h5LVuuRNc/BgysPElWhsFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d5db4db530so241903739f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 10:04:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713114251; x=1713719051;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=debj838TIjKGGV2pF9ZfKT/BaVHNgGu9cDOaPEhzIv4=;
+        b=vYBDsRPKjB1kBR3HwdA6LNmwrxjG8yEjV0nariPvGOMyhEGMtxcd69dYhvAVDZna7H
+         doiHEPjNBjLrgZHYRr0Bb1kuNAzGXxToxXAvYxAqWYtRUdF4C729QOOYuTR+o4hMcRU+
+         E9SGgd4R7WB6aJdy224uMduulXoFuVQ5VEovMGup7WYAb+FtvbQB8grZeh0/m5OFw4zY
+         zveyw5wb1ohOEamNyGt0+kVbE7U6yGjNPLidGb+JLWW0GDtNQ5g2Hqw4850PBMmsODWR
+         nyfVgFxx81Mb+hiyVE8CvaXk1CLRventP77obKCTcZCAMlir/8sGsUZP1H9+9IKxZLoN
+         DYng==
+X-Gm-Message-State: AOJu0YzR0iOYx/kd9DWRJ8A5zo+vk4Pdg6YPTI/XIXBeNBlGCVcVdVnJ
+	PdYrV/oeKWMoLFJfKUoSA2kY5fOgYy9F0/D0y/RAMQsmhcC+aCZyzgbMkk7zRVh124IOFI7lEiL
+	BuqV8jWMQbbvZQIcKDuXNTYEKgk10mnqfdOyWnauImcj04+UJ7d0rUyo=
+X-Google-Smtp-Source: AGHT+IFTv2itsETysGy+hw8HXIs/0UEl01bacw6HadxW2mu/1dv4LtumGYLih9IHjT9Me9ytlqVa9nOs/u8qdH8kfvRBrxR/KQgX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 661bf22e99ce03c87699d717
+X-Received: by 2002:a05:6638:2110:b0:482:cfdd:daeb with SMTP id
+ n16-20020a056638211000b00482cfdddaebmr464871jaj.5.1713114250898; Sun, 14 Apr
+ 2024 10:04:10 -0700 (PDT)
+Date: Sun, 14 Apr 2024 10:04:10 -0700
+In-Reply-To: <0000000000005ad04005ee48897f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000062842d0616117ec0@google.com>
+Subject: Re: [syzbot] mm: page_alloc: Fix uninitialized variable in hfs_revalidate_dentry
+From: syzbot <syzbot+3ae6be33a50b5aae4dab@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This series adds initial support for the Radxa ZERO 3W/3E boards.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-The Radxa ZERO 3W/3E is an ultra-small, high-performance single board
-computer based on the Rockchip RK3566, with a compact form factor and
-rich interfaces.
+***
 
-Schematic for ZERO 3W and ZERO 3E can be found at:
-https://dl.radxa.com/zero3/docs/hw/3w/radxa_zero_3w_v1110_schematic.pdf
-https://dl.radxa.com/zero3/docs/hw/3e/radxa_zero_3e_v1200_schematic.pdf
+Subject: mm: page_alloc: Fix uninitialized variable in hfs_revalidate_dentry
+Author: shresthprasad7@gmail.com
 
-Changes in v2:
-- Collect acked-by tag
-- Add to Makefile
-- Add patch to fix #sound-dai-cells warning
-
-Jonas Karlman (3):
-  dt-bindings: arm: rockchip: Add Radxa ZERO 3W/3E
-  arm64: dts: rockchip: Add Radxa ZERO 3W/3E
-  dt-bindings: display: rockchip,dw-hdmi: Fix #sound-dai-cells warning
-
- .../devicetree/bindings/arm/rockchip.yaml     |   7 +
- .../display/rockchip/rockchip,dw-hdmi.yaml    |   4 +
- arch/arm64/boot/dts/rockchip/Makefile         |   2 +
- .../dts/rockchip/rk3566-radxa-zero-3e.dts     |  41 ++
- .../dts/rockchip/rk3566-radxa-zero-3w.dts     |  26 +
- .../boot/dts/rockchip/rk3566-radxa-zero3.dtsi | 443 ++++++++++++++++++
- 6 files changed, 523 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3e.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3w.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero3.dtsi
-
--- 
-2.43.2
-
+#syz test
