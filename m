@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805C5134725
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5C313473E
 	for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713108765; cv=none; b=J3Du//CQwoPFcwbRvCDe24mqRe6ii1NSvzU951p6lo9HdjlpWWI/XjNGuv1xSOU7cNJZB3cVJ8kZF11ZFIrPqVGcBeYy/Sc8NVwVUYPT93yNCMYVFXLXRooqhGtoeUvg6ngt21FszcKeUKSzc9KUM/VGswxRqww3SonmQHdG4GA=
+	t=1713108765; cv=none; b=A6ST52/QBUzJmBouSpbY42mci0nM+hXeK7zQHgezvBDJDKLpxBvd+pQRbpfLamLYgynxidV9+0sRR/3gVXA2cyCwMBrZhl1NJ3BZOcsul0TMnpV7ZpnOCenboYiXf1MtqZNR5ekvpaqD43tXGtx2LbJDJN3kJRSMArd4zDLcb0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713108765; c=relaxed/simple;
-	bh=1+MvVzHCjdnOAPGRAAgFhpSlsBWkDBjSaeiuc9GYhWY=;
+	bh=i8hC/qYdO20bTDFXhf1UZr6iGIZ79ePp+iQi/dhLKic=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FnMINo7fRfKVJ1AN1SvQLo+O781V3VqUbRW4Hb18yLoT6iDVB170Ht5/3v2cossM7vM1At2JQp5YJQJAcWLPpLzth30jJxYfNfhAGtq65S9PqLxNtWGSHe5B24zPJVRxoUwdFs+dODiccOAdVrWE5UfupbBZZ6yzjUkx06g6FrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyfkZo1l; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=InoLHftw4UBWvmiW08FED3CUUHLsQyb8y2vXO8oSlqvaZnOE+UoP6ZlMPHUplEte+BxnlZ+hhxm//UxbWr8nVsOY4hCU0tb18+QT3+w7Y0C0Kfd6cl6cs99/RDiAS0fF+oaEupYLuNVKmnXdpHqyitBPVeowMJ/PDBgO5VHIJUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diGEszRY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyfkZo1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3616CC2BD11;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diGEszRY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46AB1C4AF07;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713108765;
-	bh=1+MvVzHCjdnOAPGRAAgFhpSlsBWkDBjSaeiuc9GYhWY=;
+	bh=i8hC/qYdO20bTDFXhf1UZr6iGIZ79ePp+iQi/dhLKic=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qyfkZo1lvO/Sw6BNSwNPPGo6RDIhkLY3sKZqEgvB8DLak/Vf4P0mK9BHYuh8xVTz7
-	 R5FS22TpIW+mwN72PC6o4VMch9MbC2AUwIuPIT+jXjrfrWvyg3jsQ9cgGhkoiB/hep
-	 pe8bjVtBBSzJYQJgAYsNwcIHVdEujFA3BXsIn0Sqs4w47+iV6/KKUnnOgJTxOl/qSz
-	 PCwADCAJRewhwMoSO+HzEHtyVzUrrrxuMmIEyWEQM0zqWaptydeohUCy2w9ip3G0oe
-	 OYVJ/kjvqt8rzvobbwGRtDD/rkI50T2uvSM6vvZrLepc4Cao6Hf22WxqMTCls7PnV+
-	 SzX00aNligYkA==
+	b=diGEszRY6aqfAL6yojlRjG5f1kWvpK0fp2xVwVHCr+/6ywC7miiqzHxLFRDn7Gb63
+	 mE7jCoA03+fFXEd4FSZZBPPpvdUwBE6tt4phpMSCz+mp5XHxPkhSPKFSCk3qAD5d7u
+	 F8amcKppqmg+AE/LMSqqqN6oVkYHa92AmSYEZ2Tl/I3tutLm4fk9vVQBwbOsLf9UTu
+	 Q71gsX7ugdXO6vcSvKrnxGnw2JLVmcKykdoMCKhnbCcHt1cXqNejCyGOqQxc1pgDoK
+	 4HTJxjLbD+jOSwNcwZmiWsAZvAX8u308kklNFd6bvWyEbIDtrucPfAzK9Tyb6sJg7X
+	 v3lntI2ycZ73g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 24C74DF7857;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2BA43C54BD2;
 	Sun, 14 Apr 2024 15:32:45 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: introduce map_is_mergeable() for
- cleanup
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: fix to relocate check condition in
+ f2fs_fallocate()
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171310876514.3156.10934685583605806738.git-patchwork-notify@kernel.org>
+ <171310876517.3156.14366722531397621692.git-patchwork-notify@kernel.org>
 Date: Sun, 14 Apr 2024 15:32:45 +0000
-References: <20240325152726.797423-1-chao@kernel.org>
-In-Reply-To: <20240325152726.797423-1-chao@kernel.org>
+References: <20240403142420.2042498-1-chao@kernel.org>
+In-Reply-To: <20240403142420.2042498-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
 Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
@@ -54,19 +54,21 @@ Hello:
 This series was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Mon, 25 Mar 2024 23:27:25 +0800 you wrote:
-> No logic changes.
+On Wed,  3 Apr 2024 22:24:19 +0800 you wrote:
+> compress and pinfile flag should be checked after inode lock held to
+> avoid race condition, fix it.
 > 
+> Fixes: 4c8ff7095bef ("f2fs: support data compression")
+> Fixes: 5fed0be8583f ("f2fs: do not allow partial truncation on pinned file")
 > Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/data.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> [...]
 
 Here is the summary with links:
-  - [f2fs-dev,1/2] f2fs: introduce map_is_mergeable() for cleanup
-    (no matching commit)
-  - [f2fs-dev,2/2] f2fs: support to map continuous holes or preallocated address
-    https://git.kernel.org/jaegeuk/f2fs/c/9f0f6bf42714
+  - [f2fs-dev,1/2] f2fs: fix to relocate check condition in f2fs_fallocate()
+    https://git.kernel.org/jaegeuk/f2fs/c/278a6253a673
+  - [f2fs-dev,2/2] f2fs: fix to check pinfile flag in f2fs_move_file_range()
+    https://git.kernel.org/jaegeuk/f2fs/c/e07230da0500
 
 You are awesome, thank you!
 -- 
