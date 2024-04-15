@@ -1,226 +1,194 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFACF510;
-	Mon, 15 Apr 2024 06:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3F4C138
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713161903; cv=none; b=I16CW9h7wkRbFiCuqc0p4APWJSA9clqFvaumbULOfgwaNRCJ6+7Fr5jHP8UTTLbxPjscuHmokAC38rNGN+aWgEPWqs3iPA0cnc1KyUo4nF1oVwe0Vo3QyWa4uZykAmOoWyOp2SsB78MkijlIdh8O/664L7kgHaapWahtMus0rDU=
+	t=1713161980; cv=none; b=EjGJm+XzW9U2ZimBpivjjg2PcfEpqYooXZnFjjWEUdGfg+IgtjdrN4A/0JQkwnur4kM6RK1VAf2Qxa3T6WMUMLwOQ3KzT3xHcvfEws/rePgGr1RLDSxEVxAjMroq4CFYCa/mlnjzQAzg0M2BNdsGNncx/urMzFy8UB53l0CKX1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713161903; c=relaxed/simple;
-	bh=dIpMorwvcjEcFIs7BXGPzjLGTI/qN5cCdG54c8G6u6I=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=dXdyFC65xycVxNm4i1KBRhqq6LI7pF9MVTHkP/8xxrOO5y/qCo91yIwIOKHb1N5oyw0Co/gNGy5TLVZl8jYSM8fSuMqFWjGHxVce0sSn5q0aRoJ575MfAxh8AgNMQClfQqSwODA91hPrn83fK+EC2HFpcbHhSbd2fUrFCo4+UgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ERV9rHLV; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1713161980; c=relaxed/simple;
+	bh=lJQwJ8XaCikZrjdfNcnmhKxcehDi16qkdeUs/IIX7ic=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gauG9I/JYOFkvPEZwbPYyeCH58sUi9k5PJrAK7uWS+z4U2ITjFFzFU/Pig7uBiMeXAGAyioxvJcbFgzxyn90QZTIIXX8FX9PP4h7QqrIHIP404c/j8YviQMCNFSLDvwfcUCm9yanwILVmpzVKVDWBHc5ORGsYfxkJ3mf7Yg2v3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QWccoPHu; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ERV9rHLV"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240415061813euoutp02d4ab7dfe0773524854f6060b40e5a93d~GX6pDsjYh1490514905euoutp02V;
-	Mon, 15 Apr 2024 06:18:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240415061813euoutp02d4ab7dfe0773524854f6060b40e5a93d~GX6pDsjYh1490514905euoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1713161893;
-	bh=eNr2YGP1v+MnG9QRbYR4UIWo2Mx+qaBfAW2TIUf8pk0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ERV9rHLVBat+fo9IBDp/Hka1GmgTo99aqUCB3b7aSuMfh6S/it+2UV4yjvBgf4lpf
-	 sCSS7LNtj/zRpj4BcCJnY6/DDEOnS4upaH6HVM1jCYP5xuIOMZFxXzhY35xzKQQuPA
-	 O2ToMWZ4PXatstYZ1+Hh0nCb7mL3wREyYFmA84Zw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240415061812eucas1p1871a07d54e857a4d6203d9ae01643998~GX6osyF2F1247012470eucas1p1u;
-	Mon, 15 Apr 2024 06:18:12 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 21.D8.09620.4A6CC166; Mon, 15
-	Apr 2024 07:18:12 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240415061812eucas1p1ff6ae6b6eeb996525ffa4bb28090d076~GX6oE0yrW1022010220eucas1p19;
-	Mon, 15 Apr 2024 06:18:12 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240415061812eusmtrp10e4c6ec364e62bf73915fa567506d049~GX6oDR2uN2218222182eusmtrp1o;
-	Mon, 15 Apr 2024 06:18:12 +0000 (GMT)
-X-AuditID: cbfec7f5-d31ff70000002594-13-661cc6a4a5ba
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 26.72.09010.3A6CC166; Mon, 15
-	Apr 2024 07:18:11 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240415061811eusmtip119769eaa9d0d8bdf9c622f51ae1af21a~GX6ntJEyG0507205072eusmtip1Z;
-	Mon, 15 Apr 2024 06:18:11 +0000 (GMT)
-Received: from localhost (106.210.248.128) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Mon, 15 Apr 2024 07:18:11 +0100
-Date: Fri, 12 Apr 2024 16:50:00 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>,
-	<alibuda@linux.alibaba.com>, <allison.henderson@oracle.com>,
-	<anna@kernel.org>, <bridge@lists.linux.dev>, <chuck.lever@oracle.com>,
-	<coreteam@netfilter.org>, <courmisch@gmail.com>, <davem@davemloft.net>,
-	<dccp@vger.kernel.org>, <devnull+j.granados.samsung.com@kernel.org>,
-	<dhowells@redhat.com>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<fw@strlen.de>, <geliang@kernel.org>, <guwen@linux.alibaba.com>,
-	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
-	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
-	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
-	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
-	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
-	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
-	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
-	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
-	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
-	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
-	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
-	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
-	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
-	<ying.xue@windriver.com>
-Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240412145000.4nrf5sufnwjltdl4@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QWccoPHu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713161979; x=1744697979;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=lJQwJ8XaCikZrjdfNcnmhKxcehDi16qkdeUs/IIX7ic=;
+  b=QWccoPHuySj4HzzDgHOT1rWSKhQ09xHBkIx8UMogtHFYoJFPhnU5IcyV
+   FMddna+25pRN5XrbJD5sUDFn5vmkF+eIeT+I4GmKY/+oTmE+Y6Jh78E3C
+   bGUbSHSl4Uk4AWMFq9zWah+FhxBK/llMFho7KYZf+57gVDi7a50zjIrYV
+   vk5MULzBf4ntyz5Fb87xI5sIVOjwISkfdExWgj7SsoaqeIUwqCN4HgRBh
+   eIFmQJNs9QWOOn7hvYn42/WFV1Skr0o4wIhOdCtKFNr6DPCTvPRcyexdW
+   q0pLOolveEHYypcETUudzlkaCO7c+ZVocabiHgO8KayG1BR4hNnU7zokL
+   Q==;
+X-CSE-ConnectionGUID: glA7H2IRTQKHSG8lvOHlRw==
+X-CSE-MsgGUID: 9MliN/AMS1y30qqHOTHi0g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="8390532"
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="8390532"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:19:38 -0700
+X-CSE-ConnectionGUID: 0Kd1SlWJS4yLJTSJSdTkVw==
+X-CSE-MsgGUID: jMIJiqviSPGZpGr31tJ9ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="59251237"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:19:33 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,
+  baolin.wang@linux.alibaba.com,  chrisl@kernel.org,  david@redhat.com,
+  hanchuanhua@oppo.com,  hannes@cmpxchg.org,  hughd@google.com,
+  kasong@tencent.com,  ryan.roberts@arm.com,  surenb@google.com,
+  v-songbaohua@oppo.com,  willy@infradead.org,  xiang@kernel.org,
+  yosryahmed@google.com,  yuzhao@google.com,  ziy@nvidia.com,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched
+ swap_free()
+In-Reply-To: <20240409082631.187483-2-21cnbao@gmail.com> (Barry Song's message
+	of "Tue, 9 Apr 2024 20:26:27 +1200")
+References: <20240409082631.187483-1-21cnbao@gmail.com>
+	<20240409082631.187483-2-21cnbao@gmail.com>
+Date: Mon, 15 Apr 2024 14:17:40 +0800
+Message-ID: <87y19f2lq3.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="7o7lzmim7rza4zom"
-Content-Disposition: inline
-In-Reply-To: <20240405222658.3615-1-kuniyu@amazon.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTa0yTZxTH87y3FrTstRB85LYF1Divcy7bcZOp02Xvsi/L5rJFN7XKK6JS
-	TAuOTZdVCqJQHRcTZkGuppZWiwJWUBBWJ2gBwQsMCeBaijjAG8ilgHSUVzOTffud/zn/c3mS
-	R0xK08R+4gh5NK+Qy/YEM56UucbZuORUTcCOd4pvvQUW1Qdgq0iiQRV/iICEchcF5oJkAlwd
-	PQS8KE8kYdDWQ0NOfgkDWY3xFLz4K5mBOycdBDyOG6fAdCmBgO4auwjMR40IjHHtFFzsGWEg
-	uTcA1BeGEDh+s9NwV/eUAafOIIL7Q3YKnMdmwIkkNQH1yZFQ1uGgoMl8jAad5iwDKdbl0HKx
-	g4A7l7IYaKquo+GB5SgFKXlqErpz+2hoT9dRUF2Zg8Be9IQAdc4ACerBLhLG9LU03DzqIkFr
-	MpDQmtKN4GriFRrqi+JEMJx9nYTKHBUFNbm+kGKyUjBc148go7+ZhNsVc8H63EXAzZJBGgaz
-	FkC6vpSAy0dGRVDauAusY1YCukZ6GHC1rl7zCadvSqK5NvsQyT2+eQNx2Wf2c5mqWxQ35lzI
-	lRbeI7jkP3tJrlzbIeLM1fO43OIYbsJyXsQVG44w3LXCswRXblvJpeRXoy+DN3quCuP3ROzj
-	Fcs+3uq5c9jRTe8t9o1tadOSKnTQOwl5iDH7HtakOYkk5CmWsnqEGyqTKSF4jnDF42FGCAYR
-	Vp18Qb6yPCt2UW6WsqcRfvj7YoGnih71iwTDBYQt9YW0O0Gx83Bm9TjhZoZdjBv726cb+bBv
-	48MmDe02kGyJBGdkpCJ3wpvdgUc7u6dZwq7BqsSTIoFn4RsnHNOTSTYW379ydorFU+yPT0+K
-	3bIH+z4eqTW9XDQEx9lP0QL/gq2lbYTADTNx/tX9bitm1+Pb2dsE2Rv31paKBA7Adema6ZfA
-	bDrCVZNPRUJgRFh3cOhlo49w/F3HS8daXJU/goSmXrj10SxhTS+cZs4gBVmCDx+SCtXzsbGz
-	n0pBIdrXDtO+dpj2v8MEeTHOvTzA/E9ehHV5faTAodhkekLlIpEBzeZjlJHhvHKFnP9xqVIW
-	qYyRhy/dHhVZjKa+at1k7VAZ0vc+W2pBhBhZ0Nwps/2csQn5UfIoOR/sI2kJmrNDKgmT/fQz
-	r4jaoojZwystyF9MBc+WzAt7k5ey4bJofjfP7+UVr7KE2MNPRaxtu1ul9tBsKKAMQd6mtZvz
-	tF+v6/O6LLG6xgbOZdKZP1Rv6iOzmtvl34Z2XP+jbaLr3YlPmYLZK2rVSyoffthPhR9gNQud
-	m6IXbE/v/M62bE7tymvNw3idMrViK1Eylqr4xx6S0DX/9EBOB26f2eAbpaqTNSz6NXY8pCov
-	MKImQj+YWDS+O2Gybb7hG1PDrm2T1560Rtua4w6y9UGGLmPf3/vK7hhsx3U+1OflRs1QqaOI
-	+r5gy4PR0OceLOd0bnhj89aM6N0DZ+5tnDBViXGv7LNVLn9ZgyszQBt7oNd86bh0/YJb2V8E
-	rg618WR8mU/ajMLz+l1fVZT5BfpvkUTgq8GUcqds+UJSoZT9C4A/UzIlBQAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTeUyTdxjH93uvFhjbSwF9xxBIhcyhVloFHqYy55i+u5hxcYs4p52WY9CW
-	teBQ59JwCHK4LiQyCkK9Oo5Z5bAcgqmonIZzCCzUhQoShckEFEGhA8oyk/33+X2f5/vNN7/k
-	4eK8Eo4LN0IWI1HIxFF8ypZomWswrT1X7xrqc/2qP9Sp/GGgJpUEVeJxDJKqLAQYzqVhYDEN
-	YzBblYzDxMAwCflnyyjIbUskYLYnjYKu04MYPIp/ToC+OgmDoXozBwwZxQiK4/sJqBieoiDt
-	oSskXHmCYPAnMwm/6/6mYFpXxIE/n5gJmD5pB9mpCRjcTpNCpWmQgHbDSRJ06RcpUDcL4U6F
-	CYOu6lwK2o0tJNyvyyBAfSYBhyHtCAn9mToCjLX5CMyXxjBIyB/HIWHiHg4zBQ0ktGZYcNDo
-	i3DoVQ8huJF8jYTbl+I58DSvEYfafBUB9dploNY3E/C0ZRRB1mg3Dp01ntA8acGgtWyChInc
-	VZBZUI7B1RPPOFDe9i00zzRjcG9qmAJL77tbtrIF7akk+4f5Cc4+am1CbN5vR9kcVQfBzkx7
-	s+WFfRibdvMhzlZpTBzWYPRitaWx7Iu6Eg5bWnSCYm8VXsTYqoEAVn3WiHbwQwSbFPLYGIlH
-	uFwZs5m/RwgigTAABKINAQLhev+974h8+esCNx2UREUckijWBe4XhPecPxJ9eVlc4biZUiEL
-	LxXZcBl6A/O41EKkIlsuj76AmL8aenHrwJUpmewmrezIvLiTSlmXHiNm8tRxzPq4gpjaQePi
-	FkF7MTnG59gCU/Qapm20fzHJiX6bSdGnkwsGnC6xZ6aTLywaHOlQ5tndIbTA9vQWRpV8mmNN
-	NSJG11mwNHBgmrIHiQXG6UOM2pI134M7z28yv85xF2Qb2o+ZatAv1V7JxJvPL9U+xkzM3kdq
-	5Kh5KUnzUpLmvySr7M30zj3A/ievZnRnRnArb2b0+jFCizhFyEkSq5SGSZUigVIsVcbKwgQH
-	5NJSNH8vhvrp8kpU+PCxoA5hXFSHPOed5svF7ciFkMllEr6T/R23N0J59gfFh49IFPJ9itgo
-	ibIO+c5/48+4i/MB+fzxyWL2Cf18fIUb/AJ8fAP81vOX238YnSLm0WHiGEmkRBItUfzrw7g2
-	Lirs45XDTl8PiRrLtt5z/sarUiqNWNvbtWNUduO9xJvun3zWsTuoyzHsvG/1se/41UeDPiqm
-	edFuG/nb13jwqxODtyjiCO+mwMN2haYQt73Z6a9GNYbd9GzMq0mqMHK4ts6rE1o+p9BXP8Zn
-	RWz/JUM79gXZ9oHaIX1Nd8BGSqgxRHUHzYqqLt/19M9b8bpNZEX093H05Hhch92evmCHsR7h
-	KxlsSX90iuDWD9X6iEx6eFde5G53uahtU2VMT4hml4njHLlz/yopyV2eFLwiDv/USXnp0Fsj
-	7p2nRvpale9nBT3ICY39Mr28lKT9HQ33u44MpOy5vjPJq6E/UyvdluaS57Ht2mt8QhkuFnrj
-	CqX4H55nv5fEBAAA
-X-CMS-MailID: 20240415061812eucas1p1ff6ae6b6eeb996525ffa4bb28090d076
-X-Msg-Generator: CA
-X-RootMTR: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240405222730eucas1p16a0790be308342130a19a5b489ffae1e
-References: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
-	<CGME20240405222730eucas1p16a0790be308342130a19a5b489ffae1e@eucas1p1.samsung.com>
-	<20240405222658.3615-1-kuniyu@amazon.com>
+Content-Type: text/plain; charset=ascii
 
---7o7lzmim7rza4zom
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Barry Song <21cnbao@gmail.com> writes:
 
-On Fri, Apr 05, 2024 at 03:26:58PM -0700, Kuniyuki Iwashima wrote:
-> From: Joel Granados <j.granados@samsung.com>
-> Date: Fri, 5 Apr 2024 09:15:31 +0200
-> > On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
-> > > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kern=
-el.org>
-> > > Date: Thu, 28 Mar 2024 16:40:05 +0100
-> > > > This commit comes at the tail end of a greater effort to remove the
-> > > > empty elements at the end of the ctl_table arrays (sentinels) which=
- will
-> > > > reduce the overall build time size of the kernel and run time memory
-> > > > bloat by ~64 bytes per sentinel (further information Link :
-> > > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.o=
-rg/)
-> > > >=20
-> > > > When we remove the sentinel from ax25_param_table a buffer overflow
-> > > > shows its ugly head. The sentinel's data element used to be changed=
- when
-> > > > CONFIG_AX25_DAMA_SLAVE was not defined.
-> > >=20
-> > > I think it's better to define the relation explicitly between the
-> > > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
-> > >=20
-> > >   BUILD_BUG_ON(AX25_MAX_VALUES !=3D ARRAY_SIZE(ax25_param_table));
-> > >=20
-> > > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
-> > > as done for other enum.
-> >=20
-> > When I remove AX25_VALUES_DS_TIMEOUT from the un-guarded build it
-> > complains in net/ax25/ax25_ds_timer.c (ax25_ds_set_timer). Here is the
-> > report https://lore.kernel.org/oe-kbuild-all/202404040301.qzKmVQGB-lkp@=
-intel.com/.
-> >=20
-> > How best to address this? Should we just guard the whole function and do
-> > nothing when not set? like this:
->=20
-> It seems fine to me.
->=20
-> ax25_ds_timeout() checks !ax25_dev->dama.slave_timeout, but it's
-> initialised by kzalloc() during dev setup, so it will be a noop.
+> From: Chuanhua Han <hanchuanhua@oppo.com>
+>
+> While swapping in a large folio, we need to free swaps related to the whole
+> folio. To avoid frequently acquiring and releasing swap locks, it is better
+> to introduce an API for batched free.
+>
+> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  include/linux/swap.h |  5 +++++
+>  mm/swapfile.c        | 51 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 56 insertions(+)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 11c53692f65f..b7a107e983b8 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
+>  extern int swap_duplicate(swp_entry_t);
+>  extern int swapcache_prepare(swp_entry_t);
+>  extern void swap_free(swp_entry_t);
+> +extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+>  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+>  extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+>  int swap_type_of(dev_t device, sector_t offset);
+> @@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t swp)
+>  {
+>  }
+>  
+> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+> +{
+> +}
+> +
+>  static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
+>  {
+>  }
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 28642c188c93..f4c65aeb088d 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t entry)
+>  		__swap_entry_free(p, entry);
+>  }
+>  
+> +/*
+> + * Free up the maximum number of swap entries at once to limit the
+> + * maximum kernel stack usage.
+> + */
+> +#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_CLUSTER)
+> +
+> +/*
+> + * Called after swapping in a large folio,
 
-Just sent v3 with this change.
+IMHO, it's not good to document the caller in the function definition.
+Because this will discourage function reusing.
 
+> batched free swap entries
+> + * for this large folio, entry should be for the first subpage and
+> + * its offset is aligned with nr_pages
 
---=20
+Why do we need this?
 
-Joel Granados
+> + */
+> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+> +{
+> +	int i, j;
+> +	struct swap_cluster_info *ci;
+> +	struct swap_info_struct *p;
+> +	unsigned int type = swp_type(entry);
+> +	unsigned long offset = swp_offset(entry);
+> +	int batch_nr, remain_nr;
+> +	DECLARE_BITMAP(usage, SWAP_BATCH_NR) = { 0 };
+> +
+> +	/* all swap entries are within a cluster for mTHP */
+> +	VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUSTER);
+> +
+> +	if (nr_pages == 1) {
+> +		swap_free(entry);
+> +		return;
+> +	}
 
---7o7lzmim7rza4zom
-Content-Type: application/pgp-signature; name="signature.asc"
+Is it possible to unify swap_free() and swap_free_nr() into one function
+with acceptable performance?  IIUC, the general rule in mTHP effort is
+to avoid duplicate functions between mTHP and normal small folio.
+Right?
 
------BEGIN PGP SIGNATURE-----
+> +
+> +	remain_nr = nr_pages;
+> +	p = _swap_info_get(entry);
+> +	if (p) {
+> +		for (i = 0; i < nr_pages; i += batch_nr) {
+> +			batch_nr = min_t(int, SWAP_BATCH_NR, remain_nr);
+> +
+> +			ci = lock_cluster_or_swap_info(p, offset);
+> +			for (j = 0; j < batch_nr; j++) {
+> +				if (__swap_entry_free_locked(p, offset + i * SWAP_BATCH_NR + j, 1))
+> +					__bitmap_set(usage, j, 1);
+> +			}
+> +			unlock_cluster_or_swap_info(p, ci);
+> +
+> +			for_each_clear_bit(j, usage, batch_nr)
+> +				free_swap_slot(swp_entry(type, offset + i * SWAP_BATCH_NR + j));
+> +
+> +			bitmap_clear(usage, 0, SWAP_BATCH_NR);
+> +			remain_nr -= batch_nr;
+> +		}
+> +	}
+> +}
+> +
+>  /*
+>   * Called after dropping swapcache to decrease refcnt to swap entries.
+>   */
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYZShgACgkQupfNUreW
-QU+ckAv/ZCwg3conSwfw9FdBTIyF2Tr/m3ucbFQrfwVIpiZTkJxAeSTbI2tY6LyI
-C7kdP6J8fHU7V7HjjCfYKXahRksz5KiH4DQn0RuHOxJD22HRLHz0r6wS2Kh3E4i5
-MQGuMNR45oLJRShpLRXA8jGmtPTk8Y6xyUewumuNSArW9h69nfphXIhrbf2oEdXL
-xrZhKTUATlK1jQKrfU07h3iXfaaqClzMdyIPJ9T0nkD0L1njo2JtkIqA9YXTQOtb
-D9pYMA07IVXpjJfp8/Q49xxEam5P+LgGLN/0+wv9Wu9FZZcpHHF5fFtnAU40//YX
-/mfuYehx5eo3iStDmWqpwacOTVxOY2dKTEXmXlsNbaRNi+RmlExJ313YCjS/J1M/
-FW5v4W8JGMygK6IFZj1+sWUrryBc5V5KGErp9oldNUHsl6TY47ImmMN8gBU7okO/
-vKw2oVt3Zi5Pm9W373Qbrz05AnT/koa/h2w0tbvaHoWjkgqSqpuPXdLHCFxpqViz
-0PNrCcrH
-=YAL9
------END PGP SIGNATURE-----
+put_swap_folio() implements batching in another method.  Do you think
+that it's good to use the batching method in that function here?  It
+avoids to use bitmap operations and stack space.
 
---7o7lzmim7rza4zom--
+--
+Best Regards,
+Huang, Ying
