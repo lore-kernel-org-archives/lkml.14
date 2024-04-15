@@ -1,99 +1,117 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3FA85646;
-	Mon, 15 Apr 2024 13:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5EBE126F36;
+	Mon, 15 Apr 2024 13:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713187322; cv=none; b=mKhdaidtMIsWk2Hr6BJrw2cqxyNaOu1tsGZu9Fy7G0KQVDQB3jMZGf/41ZkIYAdE1idQBh3HbUxRTf4dPkUKKUDQeeIj4DjcJsV49woQBIeCylXwQP0hx2LD0X7yRj44nfOpbbv2XoT7L5bhy0sZvzKWynITI+/K2qGBkfBocVk=
+	t=1713187326; cv=none; b=B0ug4cmZiBlZMHo3wM69IDbxzSt9+S7+eCuCws/CCtCpUH4tu2wT4xiX6L6kPmAZlztWF3+FlFoyqbZGLFYrY22Eo1jX6wb3orxmRWDOIPQx7XdDa0EudqmpC1PkYimYjv+KXyD9pe7nSmDVRQd8d5ugcBUizgVofNAqvG9Fb/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713187322; c=relaxed/simple;
-	bh=GssJw1TUI/bAYQvlhi26CQaK8ANwL7n9Ypow+B41O0E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F6fSEHWE2JZ4s6lNNzYLbFRSNzirhgtU99MM9PCE89X803nz3eG1WbhyDLgX483XGsJamWqUC/yKs77c5F9v25RXTt5kN5slDQArDIq0zjQdLk05jdOKUQ/OunAMbVI3jJxd53e+yXHNQVZrr0QNiTWXRjMliL6yh0rmKlbb9B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VJ78v2Zczz1GHRC;
-	Mon, 15 Apr 2024 21:21:03 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07D2518002D;
-	Mon, 15 Apr 2024 21:21:55 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 15 Apr 2024 21:21:54 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Chris Zankel <chris@zankel.net>, Max Filippov
-	<jcmvbkbc@gmail.com>
-Subject: [PATCH net-next v2 02/15] xtensa: remove the get_order() implementation
-Date: Mon, 15 Apr 2024 21:19:27 +0800
-Message-ID: <20240415131941.51153-3-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240415131941.51153-1-linyunsheng@huawei.com>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1713187326; c=relaxed/simple;
+	bh=c9S4lDBsYHRr2v3kQQwGMcvUDoMDtV1vjj4QujV7SMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbB6RTPf3hshSUZc9Jm9dm0W5TTzkAiGL2a6eEQk0vsDuEk6Zuulnpg4e8A5Wp9pujD6S2bY9+Gt1+3ixevBJXuLuAylwbwaoHba19MnbAONHMfE3UOZz2lPpwuhVKcaufDQ3sREhRWa/VosmRZNKpb6H/w3Fox20merAwAfpg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E47FCDA7;
+	Mon, 15 Apr 2024 06:22:27 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D2AF3F7CE;
+	Mon, 15 Apr 2024 06:21:57 -0700 (PDT)
+Date: Mon, 15 Apr 2024 14:21:54 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org, bhelgaas@google.com,
+	james.morse@arm.com, jhugo@codeaurora.org, jeremy.linton@arm.com,
+	john.garry@huawei.com, Jonathan.Cameron@huawei.com,
+	pierre.gondois@arm.com, tiantao6@huawei.com
+Subject: Re: [External] Re: [PATCH v2 2/3] riscv: cacheinfo: initialize
+ cacheinfo's level and type from ACPI PPTT
+Message-ID: <Zh0p8iJe05d71yZK@bogus>
+References: <20240414025826.64025-1-cuiyunhui@bytedance.com>
+ <20240414025826.64025-2-cuiyunhui@bytedance.com>
+ <Zhzo_gWFiURs_geD@bogus>
+ <CAEEQ3wkzvOpahzPuoD7=aMG3srjdyCA21tnh-j9PvY3Qerk_hg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+In-Reply-To: <CAEEQ3wkzvOpahzPuoD7=aMG3srjdyCA21tnh-j9PvY3Qerk_hg@mail.gmail.com>
 
-As the get_order() implemented by xtensa supporting 'nsau'
-instruction seems be the same as the generic implementation
-in include/asm-generic/getorder.h when size is not a constant
-value as the generic implementation calling the fls*() is also
-utilizing the 'nsau' instruction for xtensa.
+On Mon, Apr 15, 2024 at 08:03:38PM +0800, yunhui cui wrote:
+> Hi Sudeep,
+> 
+> On Mon, Apr 15, 2024 at 4:45 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Sun, Apr 14, 2024 at 10:58:25AM +0800, Yunhui Cui wrote:
+> > > Before cacheinfo can be built correctly, we need to initialize level
+> > > and type. Since RSIC-V currently does not have a register group that
+> > > describes cache-related attributes like ARM64, we cannot obtain them
+> > > directly, so now we obtain cache leaves from the ACPI PPTT table
+> > > (acpi_get_cache_info()) and set the cache type through split_levels.
+> > >
+> > > Suggested-by: Jeremy Linton <jeremy.linton@arm.com>
+> > > Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> > > ---
+> > >  arch/riscv/kernel/cacheinfo.c | 23 +++++++++++++++++++++++
+> > >  1 file changed, 23 insertions(+)
+> > >
+> > > diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> > > index 30a6878287ad..ece92aa404e3 100644
+> > > --- a/arch/riscv/kernel/cacheinfo.c
+> > > +++ b/arch/riscv/kernel/cacheinfo.c
+> > > @@ -6,6 +6,7 @@
+> > >  #include <linux/cpu.h>
+> > >  #include <linux/of.h>
+> > >  #include <asm/cacheinfo.h>
+> > > +#include <linux/acpi.h>
+> > >
+> > >  static struct riscv_cacheinfo_ops *rv_cache_ops;
+> > >
+> > > @@ -78,6 +79,28 @@ int populate_cache_leaves(unsigned int cpu)
+> > >       struct device_node *prev = NULL;
+> > >       int levels = 1, level = 1;
+> > >
+> > > +     if (!acpi_disabled) {
+> > > +             int ret, idx, fw_levels, split_levels;
+> > > +
+> > > +             ret = acpi_get_cache_info(cpu, &fw_levels, &split_levels);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +
+> > > +             /* must be set, so we can drop num_leaves assignment below */
+> >
+> > I intentionally added this above comment to check and drop the below statement
+> > if it is already set. Please check if the value is already set when we call
+> > into this function(which I think is the case).
+> >
+> > > +             this_cpu_ci->num_leaves = fw_levels + split_levels;
+> 
+> Uh,got it. I understand that there is no need to add this line:
+> "this_cpu_ci->num_leaves = fw_levels + split_levels; " , because in
+> the Master core first it will:
+> smp_prepare_cpus
+>      ->init_cpu_topology
+>           ->for_each_possible_cpu(cpu) {
+>                  fetch_cache_info(cpu); //num_leaves and num_levels will be set
+> Then store_cpu_topology->update_siblings_masks->detect_cache_attributes->populate_cache_leaves().
+> 
+> Slave core will follow the logic of smp_callin->store_cpu_topology().
+> It's the same after I tested it, so I plan to remove that line and
+> update V3, what do you think?
+>
 
-So remove the get_order() implemented by xtensa, as using the
-generic implementation may enable the compiler to do the
-computing when size is a constant value instead of runtime
-computing and enable the using of get_order() in BUILD_BUG_ON()
-macro.
+Correct, just drop the statement updating "this_cpu_ci->num_leaves".
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
- arch/xtensa/include/asm/page.h | 18 ------------------
- 1 file changed, 18 deletions(-)
-
-diff --git a/arch/xtensa/include/asm/page.h b/arch/xtensa/include/asm/page.h
-index 4db56ef052d2..8665d57991dd 100644
---- a/arch/xtensa/include/asm/page.h
-+++ b/arch/xtensa/include/asm/page.h
-@@ -109,26 +109,8 @@ typedef struct page *pgtable_t;
- #define __pgd(x)	((pgd_t) { (x) } )
- #define __pgprot(x)	((pgprot_t) { (x) } )
- 
--/*
-- * Pure 2^n version of get_order
-- * Use 'nsau' instructions if supported by the processor or the generic version.
-- */
--
--#if XCHAL_HAVE_NSA
--
--static inline __attribute_const__ int get_order(unsigned long size)
--{
--	int lz;
--	asm ("nsau %0, %1" : "=r" (lz) : "r" ((size - 1) >> PAGE_SHIFT));
--	return 32 - lz;
--}
--
--#else
--
- # include <asm-generic/getorder.h>
- 
--#endif
--
- struct page;
- struct vm_area_struct;
- extern void clear_page(void *page);
 -- 
-2.33.0
-
+Regards,
+Sudeep
