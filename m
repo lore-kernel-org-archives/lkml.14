@@ -1,232 +1,205 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2050.outbound.protection.outlook.com [40.107.215.50])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8884159155;
-	Mon, 15 Apr 2024 10:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713177340; cv=fail; b=pr76PUBHIy3625+3+jxFVWcrB4YlM53zSXOlOdRNctGWDTNlaChdCplBCtY6JzFytrdwHfsexLOA5QmQBhZw+8ZmTfV6YF4Bnb0I8pCNqMwNJzxj5uZEItzIPMj67kcLKnoZ5IZSu9n4SbAqPyEOuwwMbfGXgtaMOBSklxhUIGM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713177340; c=relaxed/simple;
-	bh=YEi0++mNY/RT1Mi2TVdPv4pdL1SEV4s11qtxCYe/UNc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lqciqiysuKiQ5kOKpRUwLMalCZYNsi+w6XIPGtXPA3uqRti2FZS9s3d91Yk+0a4ymEJb7US9GC7UiFsrE8R9nI4oYylsLrKSVAV1LNDSY8z6e8XFWU+CBjs9/llzcdfH64q+3Dm19Rnj61SsVBTSeUeGrf+VESN+SOb0A68BxBk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=VEpl7yN9; arc=fail smtp.client-ip=40.107.215.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B585B666
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713177435; cv=none; b=P4VsEJG4VWR1NcAN9AQyWSviW55WdaJz9q+k1CTIbl9nLjlXRxGadgFPaZJU6x2bOzdmwxAdrC9V/TAfpkIHSNjDoh8zzCYf2ZR32nE/HO5Nd3O+wRSpKKdh1MsOcRhn+qMQ0Waf3ltMw8sQ5IN+wkl6744U34H/keuP/rkDjoE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713177435; c=relaxed/simple;
+	bh=GpuCppNdjgHd4PxtxjqQ7/SR447EOkzCMuzdv5ywiIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AIRwJtkH5tt5EE7DRKb37dJc+Un7CN7fK++vL6ZZu2RVH8JjJ1Va82PJw9vtFo9Hajjc4IBv+RgXfpANJcwCrA7kRpyBlleMcArsy0lxFM/Of6WhwxOczk5Gl/EeS2n1mMz1yfKMX3aAurTQIFEFZkvJAIYl1psnMNrLPoggm+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fikHU574; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="VEpl7yN9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MG5st2MexJ/jDO+M7G4qw5744PJUtwQJKCywCqgotJnrcKxIJZJ8J7/mdKcPecvBzrlB9Qk1Kjtdtgd+AFo/HZOVg0HccBt+D0O/wROwL9yIcmM9G3c3FKadAxhSJ06s0dEwSZUp8RpPCv308ed2gufQqOrfFHiQLQ1kTU/EMIZcuY/MVINmfmmnSQL+5f7VgTAycFW3ZtHX/ph5zWrsBIiXMphVQxD6YbnWB9Rw5GxO6GTb3g/PLj4eEQSSb6UyUMcO/OEqF2fTeovbg82415MpzTRWCxI6zZEK9+74WD0Vz6Edf3kFhIID3HypZnCok4WqrvyXowlEg/QMvqYS/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oREWkNcx/M39UtvzuHoQg5IwB2MM7TwGSXLrQ/ThrkY=;
- b=hlvX5onMik5KzcCmRbOK7eowRQQUpLHevxvcTeArIzUm81kn8UK/NPotTXkiC5rMaIwoil3OhEUnaVumVc/fPZaw916VJfQO4Qu6T9fbAJS1GTRsWAGMYpXZ26scgESAQcJbTZUG/JsyTBdvLBjzqSYHHU7HQAqaozZCakhYuJIpf3P/zziSvug+BCY5YWaY1BOYDuVx89xlEO13ICxUWD4OQRpcN7a26eb5nnEkfZ2uSQ5XxVyK8E4B14JyRmjmtWWkAgBXartnjtjhxcNkQaA+I/6gH7jXrxGtyoJUXYya2lTNLFxbnU8I0yZu+p1VlIwDb5jX515JCAUYdwhjLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oREWkNcx/M39UtvzuHoQg5IwB2MM7TwGSXLrQ/ThrkY=;
- b=VEpl7yN9LqEQp8leWNi7xVaZhEWPYcFgScpCPy9qiY0RsscC8QgEmTJ3Hdsvd//vDn33SdMismV7gblyHBYTZMWNy+/VsEbM/xHdNT2nguPf2gp3pOYnQxfpaL32PSmFprhuV/eS9//dZ6oWGo30Z4DEdF3+qGoDysLk0awJf7UUIf+PLQmJjQqESTC6wsiF7L5nxsEEBArF6czvXVLt69x7Bmuk8u2RGoLtHwktAdbEiAn4SP8M2qfgV5kZJlhw162d+c2eFfmFb9jfdR1GlAMr4qGuSzYi6mszCYYUCbkNLRfWYyfgxfe5M1lMtVXgp4LxKQBWNzs23b3rTJVF9g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
- by JH0PR06MB6629.apcprd06.prod.outlook.com (2603:1096:990:31::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
- 2024 10:35:34 +0000
-Received: from JH0PR06MB6849.apcprd06.prod.outlook.com
- ([fe80::ed24:a6cd:d489:c5ed]) by JH0PR06MB6849.apcprd06.prod.outlook.com
- ([fe80::ed24:a6cd:d489:c5ed%2]) with mapi id 15.20.7409.042; Mon, 15 Apr 2024
- 10:35:34 +0000
-Message-ID: <4fedd80c-d5b6-4478-bfd3-02d1ee1a26e5@vivo.com>
-Date: Mon, 15 Apr 2024 18:35:30 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "T.J. Mercier" <tjmercier@google.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-References: <20240327022903.776-1-justinjiang@vivo.com>
- <5cf29162-a29d-4af7-b68e-aac5c862d20e@amd.com>
- <cc7defae-60c1-4cc8-aee5-475d4460e574@vivo.com>
- <23375ba8-9558-4886-9c65-af9fe8e8e8b6@amd.com>
- <CABdmKX2Kf4ZmVzv3LGTz2GyP-9+rAtFY9hSAxdkrwK8mG0gDvQ@mail.gmail.com>
- <e55cad9b-a361-4d27-a351-f6a4f5b8b734@vivo.com>
- <40ac02bb-efe2-4f52-a4f2-7b56d9b93d2c@amd.com>
-From: zhiguojiang <justinjiang@vivo.com>
-In-Reply-To: <40ac02bb-efe2-4f52-a4f2-7b56d9b93d2c@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0016.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::17) To JH0PR06MB6849.apcprd06.prod.outlook.com
- (2603:1096:990:47::12)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fikHU574"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43FAPRoa018171;
+	Mon, 15 Apr 2024 10:36:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : reply-to : from :
+ in-reply-to : content-type : content-transfer-encoding; s=pp1;
+ bh=EfpN42utemMCNxxgWsct835ziKCBcRAU7y23Kj9YijA=;
+ b=fikHU574aI7/uJdBlHJiN3Ub83cbHl9gRFGwrzMG+XigoopwrJHMwNhVx6sY4Fz1qkD4
+ cvHJrnDG8dFd4oik4waP8UvULh8xPfGHuzY2RiVmp0n/XdaN+kCnGnR1NcpXfHlb3yGv
+ ypLs+Dse03731+5bPh7cVRGgeuW2I6XZbmXP8YAc6axp00yN/M4OMpiUjefC3TK5lFxi
+ ufkV/vPg8F7MQvOYz0KS6LlqFltBZ+YscmG9MBk1hQgbjhVnPIqICwZin9PuWXnCPWn9
+ AEqWWK6/1D6GmvYdT+10100Ou2YMUMdKYNUqDD8sOHeRQ1Rj9kNWljTMIRW/zuv8xfz8 nA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xgyg98cmw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Apr 2024 10:36:47 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43FAYeDi032733;
+	Mon, 15 Apr 2024 10:36:46 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xgyg98cmq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Apr 2024 10:36:46 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43F7bXvq011164;
+	Mon, 15 Apr 2024 10:36:45 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg7326v8b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Apr 2024 10:36:45 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43FAahZ146268876
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Apr 2024 10:36:45 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B772E5810A;
+	Mon, 15 Apr 2024 10:36:41 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 41F5758102;
+	Mon, 15 Apr 2024 10:36:37 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 15 Apr 2024 10:36:36 +0000 (GMT)
+Message-ID: <e8cafcdf-a1aa-4ff1-b614-7c6fd4fa9716@linux.ibm.com>
+Date: Mon, 15 Apr 2024 16:06:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: JH0PR06MB6849:EE_|JH0PR06MB6629:EE_
-X-MS-Office365-Filtering-Correlation-Id: a58e6b94-d9fe-45e9-148a-08dc5d37c7e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PPJUp84GUcjlpZbQE5J/oadsIP/e3OiEZ6wb1gwc7UKC5oRf4oAyFC7kjCUNwpId9lKdoe1lVbTJgKE3QuLJZ2Stp/wn4x3oTacq5a2Ox2JbjiLsDDtOcYwxpijxTM0e1WH4nLWsZ14DQJj62DE4AvA9scjxZGu0onDn3mh5cw4OaPiph3PfU0YPUBhlZ6rf5sQ7OIiHIXYTfLa5CqyGRMVpUAdXiVQciU5m3s+fy7/Cm1b1xSLD3+ZMAikLFIVR+1Wa9CRSUgIhhsNkXBikEuxkE973XJOhjI9dknL/3SQ3FCJnliHtM6dtZj7WfeK1qZF/FgDw4GHI+m59MXTeFxYMbHJFvNa6CkseSvgiO0wpdS4T/MWyvZ7yVRRXOHLeXqGFuzarFjVo/nAsYtG7X3bmdpBdymrtELW/w4GUXN0jJZqRnqTBFV3x2CPiN7oItwQhMfIyw1f+vfZiOL2ZHdCaITM8L9J1syxcEfUwuo0yv9FVpwZ3w2z5MyuSKBQHeINnc//4QkINboh/djdNKwlBMOL98eNSYCAyYNuITlnAE0ifcA1UFAf8tKIO1LLGId/bnw6gaZr6eKQpSTC0+5J40N+1VI+4bCYvjV99o5+da480OWrUjEPo87O6InFdo9XRIL2X64wxexvYQywDUSTLV+DAXP59tYtd7Mk0jlnkInEw27W+ANqbJjbMLgMpkxmuDx7NbiTywd+qj6QIdaEP/skSi+N8cIFhbShcSRZTXruwqIA9Vkd+5w+/Vryb
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR06MB6849.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(366007)(38350700005)(43062008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NnNER01GaFh4US9pNUZTeXBSMHFJLytKamYybkZUL3NJN0xzUWd0UDVlVFNG?=
- =?utf-8?B?YkhpTk9BL0dEYzVyZHZkME5zK2o4a1pqTzJCblZMaGcybHpYRVZSQjdBTFJD?=
- =?utf-8?B?V0txUkNhb1hqUW1XRVRQQVVQQmR1RldwRHQvSnhVM0d6YjJMS3JZNnFaK0Qy?=
- =?utf-8?B?bTJkV2tPZjJxZ3NDWDB3M2oxQzNnYjFzMHo4dkYzNTdVSVlDdWhkZkFsUFBp?=
- =?utf-8?B?Z3JvUTY0Z1B0N3JhUkc5VmRnZVZabzNPUTdoSnc5OHpmOWhCcXpSR1V4S1Fv?=
- =?utf-8?B?OU1POGwvM1dRaHVJWWpKQlc0dHNGeEhxaTFSRkFmVEZmV2VsSXM2WWJHRGRx?=
- =?utf-8?B?Vnh4TTVqQnBlejd3ajBpdEZ0VHJWaC9BaEJrRzVmZW9ZSXMzUG9icjNJcmkv?=
- =?utf-8?B?ZkNzM2tobWZ1ckdaN0Nndm9aNzFQNncrUHhxdzE1akNzQ3g3L2hYODRURTMx?=
- =?utf-8?B?SmM3OXkxcWc0Y0ZodzExQkUwd2hqdDBPcWp6UmxXZ2RSbEw3SkFvVEZxbm9F?=
- =?utf-8?B?MGFhWjd0R2VaOFJ3cUVCYS9raUc2U0lFa2VQazlkaDFaRDEwUmk3QW5VYXhO?=
- =?utf-8?B?RTAyOU40eFFhNUpOQ1kwOHVnQmZzQVJGSVphU1pKZUlhMkltQnhNa3J1NUNX?=
- =?utf-8?B?am02YUJNSkljY0ZXMHdyakprajd1VThDR09HOExoQnB6WDl4ekgxRUVrT1di?=
- =?utf-8?B?YkFkc3crUXNrelpsTVg1Tk5NMG12WWVtdStIdU5iTElYS0M3T2dybHl5NmJD?=
- =?utf-8?B?cWN3N2NLbVBpeTNVNFZOLzhQSUt1YlBhM2l2dEd4V1p6QStwakJHdVdyTEgz?=
- =?utf-8?B?cmZ5TVpMaFdGZW5JWllhODJDM3MwTHBON1NsS0lVYksvNHcySVpUdnYwY3RU?=
- =?utf-8?B?Z0lLM3BZUWRheEsreUF4THhkaER4VXJWTWlWc2FJK1pUdkNOekJUSTJ0M1V0?=
- =?utf-8?B?SGprU1FmU2J1OXBORmU2bXo0Wi9HejV5dGQ0M29PLzd6dzNsZEQwY2NlM1NN?=
- =?utf-8?B?L1JNem8zeGpVR2NXNW1Wck5tSTlTYUVsRFkyTDU5SlloRi9RSWNjNVFONThs?=
- =?utf-8?B?Qng3Q3NNdlhjeFVtYzBUSTd1MTlOdXRJR0RhSUpYb1JiRnhvUHFUbnhFdWlQ?=
- =?utf-8?B?TzZYVGJnajJXZ2xyS1pBbDJ2aklocncxRVBoK3dCWGVFOVB0ZTI5MDk4dHFk?=
- =?utf-8?B?c09BMkcybEhYWm9mTks0WnBkdjR0Y3pmTzdibllPSkorSUVFRjNTT1NUN3B0?=
- =?utf-8?B?VVp0Qm04RS9kMERlU1FWajcwY2QreVFOcmlKOWV4QWdseEJqMTBMd2VNV1pN?=
- =?utf-8?B?MUxPNjN2bWZkUFBJVHc3WHhRZlo3Z0xZVnE5UGpSeGJCYmpUTUJ6MGlzNkJE?=
- =?utf-8?B?SSs0eExCV1IxK0E0NC80ZGk1ZW5oUUcvQ2pLYXdZUGJ1Y3hiUExBdUdxUWcv?=
- =?utf-8?B?Sk1rdnRQeXF2eWxZTlhMdlVrdVVlRGV4YzZnb2U0SWFlWDdLTkhZc3cxRWtq?=
- =?utf-8?B?OXVOL3RUbGhOMmVLK1JCSjU0MFNWSExlUWtPZUUrZlFLdTFFeHAzclIreGVT?=
- =?utf-8?B?T2o2MGZkenZ0dlRNVEZ1QnFYZXdRZ1VoOWptUTZjaUJQbXhCc0tkVGxKalRw?=
- =?utf-8?B?bE5qTnNWb0MvQ09sN2RyMGo0c0VPV1BaQ1gxdnRnK1B4RGo4dU9mN2ZFSWxS?=
- =?utf-8?B?WEJlb2FwVllPMm1lVzFLaHFrSWVXV2hCRlVtYzhXRUhOTjRYMWhZaXdwY251?=
- =?utf-8?B?LzVIV21wTmZnb1poV0xUZjRMWFF1aVdRb1N3MytRamxtN3BRSXRqdDN3WWpN?=
- =?utf-8?B?c0dPVFdHNk1XemgxMHlZOFZNTkl3VzZRQU5meTRQU2YzWk4yUXJlb3VLVXUx?=
- =?utf-8?B?eENXay9WQmZKWFZUbUo3c3VUR2o3bnEyQzJtL0tYcEI2YUJDWlg5aHhlUjB5?=
- =?utf-8?B?cmxEMDdrdklvcEpoNXN3Q1hjcXlDa3U1TXVIREMxSFVQdVJaTHpOK2E5QU10?=
- =?utf-8?B?SWlySnFDOVFDMDVPMk5kcDBRV3FuWGNQZm1qVjkwT3hFaERmVVRkQkhjREVp?=
- =?utf-8?B?TFFub0JzOWgyeldUQ3E0c1FyRnVZS3hYK2ltK2h1VWJuS1BNYXN1S2k3TXFa?=
- =?utf-8?Q?XS6dJwW1X7Aj6+DS8/iQuHmFy?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a58e6b94-d9fe-45e9-148a-08dc5d37c7e1
-X-MS-Exchange-CrossTenant-AuthSource: JH0PR06MB6849.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 10:35:34.0680
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hBRtQ+xFfGqb5M3au0AVIjVurho5rR6aPR/GshfjeY9yGWMRTmH4iAPOI69QGDxEVMbmy5vsJKEXOaB4938xYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6629
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Improve rq selection for a blocked task when its
+ affinity changes
+Content-Language: en-US
+To: Ze Gao <zegao2021@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>,
+        Ben Segall <bsegall@google.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20240313085817.48892-1-zegao@tencent.com>
+ <65b1691d-8d90-4057-8ad0-da546a0ac8a1@linux.ibm.com>
+ <CAD8CoPDajt_EciU0x8G_BocajfaJrQ1FKLYkp_nLSfF9+9FJVw@mail.gmail.com>
+Reply-To: CAD8CoPDajt_EciU0x8G_BocajfaJrQ1FKLYkp_nLSfF9+9FJVw@mail.gmail.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <CAD8CoPDajt_EciU0x8G_BocajfaJrQ1FKLYkp_nLSfF9+9FJVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: gDILjrd7M6Dme5LExKbokBNLJvz94ECt
+X-Proofpoint-GUID: KCrjA7QRXu_6C3KaUVffYq2HZohQwMf9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-15_08,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
+ bulkscore=0 adultscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404150070
 
+On 15/04/24 11:10, Ze Gao wrote:
+> On Sat, Apr 13, 2024 at 12:59 AM Madadi Vineeth Reddy
+> <vineethr@linux.ibm.com> wrote:
+>>
+>> Hi Ze Gao,
+>>
+>> On 13/03/24 14:28, Ze Gao wrote:
+>>> We observered select_idle_sibling() is likely to return the *target* cpu
+>>> early which is likely to be the previous cpu this task is running on even
+>>> when it's actually not within the affinity list newly set, from where after
+>>> we can only rely on select_fallback_rq() to choose one for us at its will
+>>> (the first valid mostly for now).
+>>>
+>>> However, the one chosen by select_fallback_rq() is highly likely not a
+>>> good enough candidate, sometimes it has to rely on load balancer to kick
+>>> in to place itself to a better cpu, which adds one or more unnecessary
+>>> migrations in no doubt. For example, this is what I get when I move task
+>>> 3964 to cpu 23-24 where cpu 23 has a cpu bound work pinned already:
+>>>
+>>>         swapper       0 [013]   959.791829: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=13 dest_cpu=23
+>>> kworker/24:2-mm    1014 [024]   959.806148: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=23 dest_cpu=24
+>>>
+>>
+>> I am able to reproduce this scenario of having an extra migration through load balance
+>> swapper       0 [031] 398764.057232: sched:sched_migrate_task: comm=loop pid=178687 prio=120 orig_cpu=31 dest_cpu=33
+>> ksoftirqd/0  13 [000] 398764.356138: sched:sched_migrate_task: comm=loop pid=178687 prio=120 orig_cpu=33 dest_cpu=34
+>>
+>> I wrote a simple c program that blocks for few seconds, meanwhile I taskset it to CPUs 33,34 while I already have a
+>> busy task running on CPU 33.
+>>
+>>> The thing is we can actually do better if we do checks early and take more
+>>> advantages of the *target* in select_idle_sibling(). That is, we continue
+>>> the idle cpu selection if *target* fails the test of cpumask_test_cpu(
+>>> *target*, p->cpus_ptr). By doing so, we are likely to pick a good candidate,
+>>> especially when the newly allowed cpu set shares some cpu resources with
+>>> *target*.
+>>>
+>>> And with this change, we clearly see the improvement when I move task 3964
+>>> to cpu 25-26 where cpu 25 has a cpu bound work pinned already.
+>>>
+>>>         swapper       0 [027]  4249.204658: sched:sched_migrate_task: comm=stress-ng-cpu pid=3964 prio=120 orig_cpu=27 dest_cpu=26
+>>
+>> But after applying this patch, The extra migration is still happening as CPU 33 is still chosen by try_to_wake_up.
+>>
+>> On placing some perf probes and testing,
+>>     migration/57     304 [057] 12216.988491:       sched:sched_migrate_task: comm=loop pid=11172 prio=120 orig_cpu=57 dest_cpu=4
+>>          swapper       0 [004] 12226.989065: probe:select_idle_sibling_L124: (c0000000001bafc0) i=-1 recent_used_cpu=-1 prev_aff=-1
+>>          swapper       0 [004] 12226.989071:       probe:select_fallback_rq: (c0000000001a2e38) cpu=4
+>>          swapper       0 [004] 12226.989074:       sched:sched_migrate_task: comm=loop pid=11172 prio=120 orig_cpu=4 dest_cpu=33
+>>          swapper       0 [000] 12227.007768:       sched:sched_migrate_task: comm=loop pid=11172 prio=120 orig_cpu=33 dest_cpu=34
+>>
+>> It is observed that, select_fallback_rq is still taken in this scenario as default target is returned at the end of select_idle_sibling
+>> which was CPU 4.
+> 
+> After second thoughts, it indeed could happen if CPU 4 shares nothing
+> with CPU 33(34),
+> for example, in different numa nodes.
+> 
+> IOW, it cannot benefit from select_idle_siblings() and has to rely on
+> select_fallback_rq
+> as the last resort. Just like what I said in the changelog, this patch
+> aims to improve rq
+> selection for cases where the newly allowed cpu set shares some cpu
+> resources with
+> the old cpu set.
 
+Right. In power 10(where I tested), LLC is smaller being at SMT4 small core
+level. So, I think there are less chances of affined CPUs to share resources
+with the old CPU set.
 
-在 2024/4/12 14:39, Christian König 写道:
-> [Some people who received this message don't often get email from 
-> christian.koenig@amd.com. Learn why this is important at 
-> https://aka.ms/LearnAboutSenderIdentification ]
->
-> Am 12.04.24 um 08:19 schrieb zhiguojiang:
->> [SNIP]
->> -> Here task 2220 do epoll again where internally it will get/put then
->> start to free twice and lead to final crash.
->>
->> Here is the basic flow:
->>
->> 1. Thread A install the dma_buf_fd via dma_buf_export, the fd refcount
->> is 1
->>
->> 2. Thread A add the fd to epoll list via epoll_ctl(EPOLL_CTL_ADD)
->>
->> 3. After use the dma buf, Thread A close the fd, then here fd refcount
->> is 0,
->>   and it will run __fput finally to release the file
->
-> Stop, that isn't correct.
->
-> The fs layer which calls dma_buf_poll() should make sure that the file
-> can't go away until the function returns.
->
-> Then inside dma_buf_poll() we add another reference to the file while
-> installing the callback:
->
->                         /* Paired with fput in dma_buf_poll_cb */
->                         get_file(dmabuf->file);
-Hi,
+I also ran schbench and hackbench just to make sure that there is no regression
+in powerpc. Luckily there is no regression.
 
-The problem may just occurred here.
+Tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 
-Is it possible file reference count already decreased to 0 and fput 
-already being in progressing just before calling get_file(dmabuf->file) 
-in dma_buf_poll()?
+Thanks and Regards
+Madadi Vineeth Reddy
 
->
-> This reference is only dropped after the callback is completed in
-> dma_buf_poll_cb():
->
->         /* Paired with get_file in dma_buf_poll */
->         fput(dmabuf->file);
->
-> So your explanation for the issue just seems to be incorrect.
->
+> 
+> Sorry for not being able to recall all details immediately, since this
+> thread has been inactive
+> for a long while and receives no feedback from sched folks.
+> 
+> Best,
+> Ze
+> 
+>> In most of my testing, default target is returned at the end of the function due to the initial checks. It's possible that there would
+>> be cases where we can get optimal CPU before we reach end of the select_idle_sibling function but it would be interesting to know if the
+>> extra time spent in finding an optimal cpu have an impact instead of returning it earlier if in most of the times we are returning the
+>> default target at the end.
 >>
->> 4. Here Thread A not do epoll_ctl(EPOLL_CTL_DEL) manunally, so it
->> still resides in one epoll_list.
->>   Although __fput will call eventpoll_release to remove the file from
->> binded epoll list,
->>   but it has small time window where Thread B jumps in.
->
-> Well if that is really the case then that would then be a bug in
-> epoll_ctl().
->
+>> Thanks and Regards
+>> Madadi Vineeth Reddy
 >>
->> 5. During the small window, Thread B do the poll action for
->> dma_buf_fd, where it will fget/fput for the file,
->>   this means the fd refcount will be 0 -> 1 -> 0, and it will call
->> __fput again.
->>   This will lead to __fput twice for the same file.
+>>>
+>>> Note we do the same check for *prev* in select_idle_sibling() as well.
+>>>
+>>> Signed-off-by: Ze Gao <zegao@tencent.com>
+>>> ---
 >>
->> 6. So the potenial fix is use get_file_rcu which to check if file
->> refcount already zero which means under free.
->>   If so, we just return and no need to do the dma_buf_poll.
->
-> Well to say it bluntly as far as I can see this suggestion is completely
-> nonsense.
->
-> When the reference to the file goes away while dma_buf_poll() is
-> executed then that's a massive bug in the caller of that function.
->
-> Regards,
-> Christian.
->
->>
->> Here is the race condition:
->>
->> Thread A Thread B
->> dma_buf_export
->> fd_refcount is 1
->> epoll_ctl(EPOLL_ADD)
->> add dma_buf_fd to epoll list
->> close(dma_buf_fd)
->> fd_refcount is 0
->> __fput
->> dma_buf_poll
->> fget
->> fput
->> fd_refcount is zero again
->>
->> Thanks
->>
->
 
