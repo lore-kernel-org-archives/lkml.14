@@ -1,76 +1,59 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3611E52A;
-	Mon, 15 Apr 2024 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB853679E5;
+	Mon, 15 Apr 2024 14:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713192735; cv=none; b=teWM4QxOkdC57y3VMLjXrZi6TNpyfMTbnbdV0wf4oVrKVdNz0YtN3qLvGRLXY1J+tuZRXckXRbZc04YfwSCafGUDsQmUmZHwO+zQat+gZXIMtf789gDSSW0hAPaxS6M/qg9lgfR6BdEN22qJsW/lcEy3ZTKFaP3cl50g8jOaJFY=
+	t=1713192777; cv=none; b=nfQsGIXZk/KcRzhHspHbElF6AeBCMLJ78zbuvexALqpuJMnIjLKlE95NvxWkrgom2dNX+Q7RVemoMzcai04bXAHsO7BhIYl1neZSXCgJ5jhXNBQrpELlmYxTMYBWK/N+A8GZ0ctLurRNZ2Qza/GbHXw/gQmcXMjJbZj6Y8e7p6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713192735; c=relaxed/simple;
-	bh=JrjwZDSK1xsC8X65AoUHKJtl1BMmtd6zoPIlPcHRKQc=;
+	s=arc-20240116; t=1713192777; c=relaxed/simple;
+	bh=NhbAtc6tAGccokWSTjoKOMtgLuAbLGDa8a3OfLwV230=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahcjPBElUOtWS/uhZj6eKJsmRRdqvQZDdtsZC9qVyhnE+LJCGFfNVwG3NDcaQxMP5XkVy9oweVz+kaVokV3ll4srMwVSVinmbbbBU2TLY/jGhEqzaQNrk08Yw2vwY2eKXawszFLkQn1NlYiiA9zpCKTdMRwLTqnFEXm3W9PD+Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J/8KNIn1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLodLUgG5tV921jANIqjXwrZDqPDNMwnbtc448V9clnxuI5aV09SoRzAK/OxOvxDpzQLMJha6fGGYK89u9eWEbWCpydwXO/5Oqr23wiTNyRxvxKF3K/fFFBF8rDU8VOti+wLxyK2+syr3bfGEKnPervk9hUUQYUYli0HtEqL2wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWrs5fKI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J/8KNIn1"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43FETQDr007066;
-	Mon, 15 Apr 2024 14:52:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=O96ldazLk0ZQV95WUC8Xi+BiOKFMt4aoAGFLPkYn+VQ=;
- b=J/8KNIn1oIscZmC7O3HOGKiwpt6FFUuR04bNP5NFAAnTq7uhT6m4v1LHwcBR2m5paXpL
- TmTYZu9o3EgBCt0z/PqyPbfnqHEsjAZhY4ImLyp/hTnRDJQJ5ajdv4Ja9rFTAPvnxEU5
- tFCfsgg6NPWo6cVtYPwwM8hXCU7PNilfpGnAjCTxnr+uFgS1AjlzLXiaslJvY2SaqxEb
- nZxFwYDxb36sqRLrhGm8XTP7eDXu6b2ZP1YCcBmu3K4Q+E7NIq+1JGpeo/8OkIk0nM5T
- R25uEkxHYz0+0sHlyi15poFjS/AhhHkCQLrYvIHtdMtawmOLAoOScAX6tIE9fuxN6tFe FQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xh4r0r80v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 14:52:09 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43FEq9Nw010129;
-	Mon, 15 Apr 2024 14:52:09 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xh4r0r80t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 14:52:09 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43FCNOrr023681;
-	Mon, 15 Apr 2024 14:52:08 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cnre1a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 14:52:08 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43FEq2i211403734
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Apr 2024 14:52:04 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A5572004D;
-	Mon, 15 Apr 2024 14:52:02 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 64D7320043;
-	Mon, 15 Apr 2024 14:52:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Apr 2024 14:52:02 +0000 (GMT)
-Date: Mon, 15 Apr 2024 16:52:01 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v1] KVM: s390x: selftests: Add shared zeropage test
-Message-ID: <Zh0/EaRmNqGAo0Bo@tuxmaker.boeblingen.de.ibm.com>
-References: <20240412084329.30315-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWrs5fKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 267E2C113CC;
+	Mon, 15 Apr 2024 14:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713192776;
+	bh=NhbAtc6tAGccokWSTjoKOMtgLuAbLGDa8a3OfLwV230=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PWrs5fKIlnzoyDAUHDWP4Y/Pvl09ehPKzlzipssc5llEgsM4XodZX0woW/NTST5B0
+	 B03GQhlkgJcyHjeYjkF3SyUa20g6XEuS8KiTh2nzLYc3Gze0gL4BErAp+FmCxJDLqi
+	 bvUg4CwKXnhE2lYPOVePRzcbQQ8MsTc1venCKXnd1OzvhSY+Hnj1xlWlPSkFUF+Jvi
+	 bUpSa71+FXCgHH2/wOsYHf8ByDStbIrmopHRqOwEf0qZSD6UPlNaOMa+5qLAXv2G6P
+	 0KWdSBJRQ3odCtfC+CFjNz5OBy/p8Co9ZLQ0bETvoKnFjr2C56WASlvyOKZAExb91o
+	 UjHI3ixedmu6Q==
+Date: Mon, 15 Apr 2024 15:52:48 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yi-De Wu <yi-de.wu@mediatek.com>
+Cc: Yingshiuan Pan <yingshiuan.pan@mediatek.com>,
+	Ze-Yu Wang <ze-yu.wang@mediatek.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	David Bradil <dbrazdil@google.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	My Chuang <my.chuang@mediatek.com>,
+	Shawn Hsiao <shawn.hsiao@mediatek.com>,
+	PeiLun Suei <peilun.suei@mediatek.com>,
+	Liju Chen <liju-clr.chen@mediatek.com>,
+	Willix Yeh <chi-shen.yeh@mediatek.com>,
+	Kevenny Hsieh <kevenny.hsieh@mediatek.com>
+Subject: Re: [PATCH v10 15/21] virt: geniezone: Add demand paging support
+Message-ID: <20240415145248.GD2320920@kernel.org>
+References: <20240412065718.29105-1-yi-de.wu@mediatek.com>
+ <20240412065718.29105-16-yi-de.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,23 +62,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240412084329.30315-1-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RpJoQoTbB6ln9BBhjyX_vPpnUfie5PFK
-X-Proofpoint-ORIG-GUID: avAcKcN0NG5JppCJT0GGz0-e2SO3sBMk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_12,2024-04-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=788 mlxscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 adultscore=0 impostorscore=0 priorityscore=1501 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404150096
+In-Reply-To: <20240412065718.29105-16-yi-de.wu@mediatek.com>
 
-On Fri, Apr 12, 2024 at 10:43:29AM +0200, David Hildenbrand wrote:
->  tools/testing/selftests/kvm/Makefile          |   1 +
->  .../kvm/s390x/shared_zeropage_test.c          | 110 ++++++++++++++++++
->  2 files changed, 111 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
+On Fri, Apr 12, 2024 at 02:57:12PM +0800, Yi-De Wu wrote:
+> From: "Yingshiuan Pan" <yingshiuan.pan@mediatek.com>
+> 
+> This page fault handler helps GenieZone hypervisor to do demand paging.
+> On a lower level translation fault, GenieZone hypervisor will first
+> check the fault GPA (guest physical address or IPA in ARM) is valid
+> e.g. within the registered memory region, then it will setup the
+> vcpu_run->exit_reason with necessary information for returning to
+> gzvm driver.
+> 
+> With the fault information, the gzvm driver looks up the physical
+> address and call the MT_HVC_GZVM_MAP_GUEST to request the hypervisor
+> maps the found PA to the fault GPA (IPA).
+> 
+> There is one exception, for protected vm, we will populate full VM's
+> memory region in advance in order to improve performance.
+> 
+> Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
+> Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
+> Signed-off-by: kevenny hsieh <kevenny.hsieh@mediatek.com>
+> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
+> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
 
-Applied, thanks, David!
+...
+
+> diff --git a/drivers/virt/geniezone/gzvm_exception.c b/drivers/virt/geniezone/gzvm_exception.c
+> new file mode 100644
+> index 000000000000..475bc15b0689
+> --- /dev/null
+> +++ b/drivers/virt/geniezone/gzvm_exception.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2023 MediaTek Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/soc/mediatek/gzvm_drv.h>
+> +
+> +/**
+> + * gzvm_handle_guest_exception() - Handle guest exception
+> + * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
+> + * Return:
+> + * * true - This exception has been processed, no need to back to VMM.
+> + * * false - This exception has not been processed, require userspace.
+> + */
+> +bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu)
+
+Hi Yi-De Wu,
+
+The return type is bool, however the function actually
+returns either a bool or signed int.
+
+I think that either:
+
+1. The return type should be changed to int,
+   and returning true and false should be updated.
+
+2. The function should always return true or false.
+
+Flagged by Smatch.
+
+> +{
+> +	int ret;
+> +
+> +	for (int i = 0; i < ARRAY_SIZE(vcpu->run->exception.reserved); i++) {
+> +		if (vcpu->run->exception.reserved[i])
+> +			return -EINVAL;
+> +	}
+> +
+> +	switch (vcpu->run->exception.exception) {
+> +	case GZVM_EXCEPTION_PAGE_FAULT:
+> +		ret = gzvm_handle_page_fault(vcpu);
+> +		break;
+> +	case GZVM_EXCEPTION_UNKNOWN:
+> +		fallthrough;
+> +	default:
+> +		ret = -EFAULT;
+> +	}
+> +
+> +	if (!ret)
+> +		return true;
+> +	else
+> +		return false;
+> +}
+
+...
