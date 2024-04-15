@@ -1,136 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FD37FBB1;
-	Mon, 15 Apr 2024 12:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D303E73189
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185377; cv=none; b=Ujro41LOysGtLbO+gGE2pC2tMrwEFIW7PCfT14izYp1Vg5lHXKOxtrid1Y5VMTr7ICeliIvPEnDTV0g/FNm7X+MwShHvi41mhKS0xs6CQit+I4jq0d5fVEt2ctus+zSAzW4lquD/adMu95/7AwnNEWWKhFcX82gdrCt5RLOwMdY=
+	t=1713185377; cv=none; b=AeIdjN1bC2rvEZ5ervd9d1mgRE6xDl8pDq4w97VNX1FVYubAJYbI9aBiQC6ekves4CH5WCVMDrydHn4S/w/nU1mbKgD/X0UMLtG/WeL5LYx9wWRA8XvsN9+F+KkpfNvNNbIAgA+QiFZ0Yadg3sfjMAOdVPjrg6OkDNQ2QC+Z25c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185377; c=relaxed/simple;
-	bh=WRvMdukuWEZ4azfjyEAI2ItEKDT0/LHddLwGlrN5QPU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SyyVz7Vu/tDRh05vFG1/3h1JTcWYHYPQn3NrH67IV5+2ONMk2/qgxtaPRVvaZQ7YAEQBxZd942kFx9wIpCBQ/oVOC7UwIODTFPToIMyqe7Z5o0TXUxTcS7CpUHFEEYjGx43Nrr5vReWV5mGY8ZfWVxY+V9n1r022/qGwU8DPl78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzFcslSU; arc=none smtp.client-ip=10.30.226.201
+	bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXg7EJDu/t/VXtMFWOV7Bb+8xZJK3/8RwXIIxs4CDyYa/6G89Asf2zFbOt6S4Ro8u7Ky37qNLbTKXp35EYIqjsCRjQMjUBfNC+KdymMeVec8iThbaLLPEcquhNrsYZEG5+GoLTlbVNbZxe5OYsPpG8Tfvw5aMxu6fXtvJ/ELdZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h42Oc/7Z; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzFcslSU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3E2C32783;
-	Mon, 15 Apr 2024 12:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185376;
-	bh=WRvMdukuWEZ4azfjyEAI2ItEKDT0/LHddLwGlrN5QPU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PzFcslSUI880sZbMzz25afSX3nGvJbXPzr0i9sIFyS8NKTC5JG9hAoLlD2O0HjSyZ
-	 5lm0CIZiL3TpfhrPRtfEpf0gWxOiU+CJZcBrwC4P+qb4DuAKTfyo1tkFpgi1m7mS3Q
-	 UlP+vvSe5iS7jeiyogTYPg4NGz/EvXjrNgVH8Fas169l1OlPK/b+Iz/KcHPridaC5P
-	 ZcGAgl4Xe9oXzy/aos2TYVa3h0wKTMNmD4/cE/+WDgxJd2hg2GC/VUl/m/jq8JiP4Z
-	 eI/H4vriLKqmV5x6q9lVsumUcCP+RPyQAhe7Z2ZlTqOJ9rDpSZb2fo36xMK6Kt3Yen
-	 BFInhgf2CXZDA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Phil Elwell <phil@raspberrypi.com>,
-	Maarten Vanraes <maarten@rmail.be>,
-	"David S . Miller" <davem@davemloft.net>,
-	Sasha Levin <sashal@kernel.org>,
-	opendmb@gmail.com,
-	florian.fainelli@broadcom.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 12/15] net: bcmgenet: Reset RBUF on first open
-Date: Mon, 15 Apr 2024 06:02:52 -0400
-Message-ID: <20240415100311.3126785-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
-References: <20240415100311.3126785-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h42Oc/7Z"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3465921600dso2839748f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713185374; x=1713790174; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
+        b=h42Oc/7ZaIDppUj9LBgMtk36CPgay2mkB6FjNXTWYcpcJS1EKTHZhd4R9+wbPhLeeE
+         eD2LJR+pwSN2Pq+WKr+qvs7vl+wrkz8LglHmA/GzqpuHJYGw04yNLBSh01tyGL2NmhUU
+         CneZggItfMkbLqoAPtkpSmuxSNT+abgnRrzc1vDdwpH2mxUjjwu2FhyYEsr5MzJXmOQr
+         wAuAO3y6x2FKz+WUjzWFTejCqfHFlrneCAtGfAaVAODeKfE6dE7kQqrtxuC7YgHOEMvg
+         +/E1TYCT6bMulQep/bk33kTXywBOT3vueCWsfMJoq9KXZYF3tLacGVATaCWQvn6B/BVs
+         p1Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713185374; x=1713790174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
+        b=Ro9whPOr9lccIkx+zzrFxgCiokxVNofudoKdMzOKrp9gC5vp42GAhw7VprImbgN8GN
+         4wH2RgVvadp5vV+RKptGb0l4M8/UZKebmOSX9PvmEEyh1KvucpVz9NIcfg0mhDEWVI6h
+         O/S0FS065wkS6B1g8R0tj0qFo+gpuRmONwGrxO5av7dby/PghZxZDyH6+jNUpRonIRas
+         DdEpEbSw06CxyFf63MG1k3CwK5Ptlq8WtRInYU9qM3STU3uxtZsmSjzq5D7sAHleg3bs
+         fFSnWxgAOcy1xAN2gF6bOh1be8regzaJArxhzIcQp17goilfKyLQvHvq1DK1yH+F7dvJ
+         jU/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWfU5eMbgz77AdAI5j3DMjH3J3HzO67c6Hh+Y3OOArUaU+7XmwWF+Fdnz6bkJxbJuCHqL2/nXNY17BxnKjVNdq8o7oYhbhtCDuXqeqR
+X-Gm-Message-State: AOJu0Yywwj2RbEjYxmzs6dDSHt+B0ShD0+uOX+An8EAKBI1nxCI3lyhn
+	by2Qv2aC8jihU3+4aSGJux7BMhxxGz2A8IOQyRvcRwYov6/35kQ/lIefB0/VcHs=
+X-Google-Smtp-Source: AGHT+IERNVIb7kkkXkEPWlxI4SlxeSXGIdHfAlszM7dr954BuhwHUlim2WOUoHyibBjW2LFxYJ6i9g==
+X-Received: by 2002:a5d:4e0a:0:b0:33d:fb3:9021 with SMTP id p10-20020a5d4e0a000000b0033d0fb39021mr6183299wrt.54.1713185374316;
+        Mon, 15 Apr 2024 05:49:34 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id p5-20020a5d4e05000000b0033b48190e5esm12005471wrt.67.2024.04.15.05.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 05:49:33 -0700 (PDT)
+Date: Mon, 15 Apr 2024 13:49:31 +0100
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>,
+	Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Alexander Shiyan <shc_work@mail.ru>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-omap@vger.kernel.org
+Subject: Re: [PATCH 05/18] backlight: ili922x: Constify lcd_ops
+Message-ID: <20240415124931.GE222427@aspen.lan>
+References: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
+ <20240414-video-backlight-lcd-ops-v1-5-9b37fcbf546a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240414-video-backlight-lcd-ops-v1-5-9b37fcbf546a@kernel.org>
 
-From: Phil Elwell <phil@raspberrypi.com>
+On Sun, Apr 14, 2024 at 06:36:03PM +0200, Krzysztof Kozlowski wrote:
+> 'struct lcd_ops' is not modified by core backlight code, so it can be
+> made const for increased code safety.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 0a6380cb4c6b5c1d6dad226ba3130f9090f0ccea ]
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-If the RBUF logic is not reset when the kernel starts then there
-may be some data left over from any network boot loader. If the
-64-byte packet headers are enabled then this can be fatal.
 
-Extend bcmgenet_dma_disable to do perform the reset, but not when
-called from bcmgenet_resume in order to preserve a wake packet.
-
-N.B. This different handling of resume is just based on a hunch -
-why else wouldn't one reset the RBUF as well as the TBUF? If this
-isn't the case then it's easy to change the patch to make the RBUF
-reset unconditional.
-
-See: https://github.com/raspberrypi/linux/issues/3850
-See: https://github.com/raspberrypi/firmware/issues/1882
-
-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-Signed-off-by: Maarten Vanraes <maarten@rmail.be>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 2d7ae71287b14..855cbe349236b 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3282,7 +3282,7 @@ static void bcmgenet_get_hw_addr(struct bcmgenet_priv *priv,
- }
- 
- /* Returns a reusable dma control register value */
--static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
-+static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv, bool flush_rx)
- {
- 	unsigned int i;
- 	u32 reg;
-@@ -3307,6 +3307,14 @@ static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
- 	udelay(10);
- 	bcmgenet_umac_writel(priv, 0, UMAC_TX_FLUSH);
- 
-+	if (flush_rx) {
-+		reg = bcmgenet_rbuf_ctrl_get(priv);
-+		bcmgenet_rbuf_ctrl_set(priv, reg | BIT(0));
-+		udelay(10);
-+		bcmgenet_rbuf_ctrl_set(priv, reg);
-+		udelay(10);
-+	}
-+
- 	return dma_ctrl;
- }
- 
-@@ -3370,8 +3378,8 @@ static int bcmgenet_open(struct net_device *dev)
- 
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
- 
--	/* Disable RX/TX DMA and flush TX queues */
--	dma_ctrl = bcmgenet_dma_disable(priv);
-+	/* Disable RX/TX DMA and flush TX and RX queues */
-+	dma_ctrl = bcmgenet_dma_disable(priv, true);
- 
- 	/* Reinitialize TDMA and RDMA and SW housekeeping */
- 	ret = bcmgenet_init_dma(priv);
-@@ -4237,7 +4245,7 @@ static int bcmgenet_resume(struct device *d)
- 			bcmgenet_hfb_create_rxnfc_filter(priv, rule);
- 
- 	/* Disable RX/TX DMA and flush TX queues */
--	dma_ctrl = bcmgenet_dma_disable(priv);
-+	dma_ctrl = bcmgenet_dma_disable(priv, false);
- 
- 	/* Reinitialize TDMA and RDMA and SW housekeeping */
- 	ret = bcmgenet_init_dma(priv);
--- 
-2.43.0
-
+Daniel.
