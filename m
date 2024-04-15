@@ -1,93 +1,84 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D303E73189
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFA78062E;
+	Mon, 15 Apr 2024 12:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185377; cv=none; b=AeIdjN1bC2rvEZ5ervd9d1mgRE6xDl8pDq4w97VNX1FVYubAJYbI9aBiQC6ekves4CH5WCVMDrydHn4S/w/nU1mbKgD/X0UMLtG/WeL5LYx9wWRA8XvsN9+F+KkpfNvNNbIAgA+QiFZ0Yadg3sfjMAOdVPjrg6OkDNQ2QC+Z25c=
+	t=1713185378; cv=none; b=lIBMnpOEdxrdUYWeHCZQr1b8LTqHncBguy5ZM2pHD1Q/RTCJk6AshMhm7C6BaI2z/Ks0af1bjqfm+NAIR88sceUJcYtg8iJec6waOn+ra1587vKtStVzfT5LLFdjWhS4qgZy+U5D9uk8tRcN8LAYrn5kqra76crFdQGj9MlQraw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185377; c=relaxed/simple;
-	bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXg7EJDu/t/VXtMFWOV7Bb+8xZJK3/8RwXIIxs4CDyYa/6G89Asf2zFbOt6S4Ro8u7Ky37qNLbTKXp35EYIqjsCRjQMjUBfNC+KdymMeVec8iThbaLLPEcquhNrsYZEG5+GoLTlbVNbZxe5OYsPpG8Tfvw5aMxu6fXtvJ/ELdZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h42Oc/7Z; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713185378; c=relaxed/simple;
+	bh=ez+9pHNThV4Qwno6XjpGOuiqDEvbUby8kRZAvhEvGOI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VyTS6jM7hNRt6RJgWqSr49p4n3Ia/8DjwXxmYR/bF3g9+nr/bbj5OXZTzmN8Gkf1UA/uHmT4uan8HI+YMhHv41r/9sqaw3tQfmr/PzxwqNWZQRn5E+HIGIcETYOef89mOhvTxLIB19WGgt391zbclAorvNFcFrSNLLupTRSkIp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvsY+B9a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h42Oc/7Z"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3465921600dso2839748f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713185374; x=1713790174; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
-        b=h42Oc/7ZaIDppUj9LBgMtk36CPgay2mkB6FjNXTWYcpcJS1EKTHZhd4R9+wbPhLeeE
-         eD2LJR+pwSN2Pq+WKr+qvs7vl+wrkz8LglHmA/GzqpuHJYGw04yNLBSh01tyGL2NmhUU
-         CneZggItfMkbLqoAPtkpSmuxSNT+abgnRrzc1vDdwpH2mxUjjwu2FhyYEsr5MzJXmOQr
-         wAuAO3y6x2FKz+WUjzWFTejCqfHFlrneCAtGfAaVAODeKfE6dE7kQqrtxuC7YgHOEMvg
-         +/E1TYCT6bMulQep/bk33kTXywBOT3vueCWsfMJoq9KXZYF3tLacGVATaCWQvn6B/BVs
-         p1Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713185374; x=1713790174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7YIJFnYRyaWXrPlltVrIgYB7IVIKl7WksqYGlHILtZ0=;
-        b=Ro9whPOr9lccIkx+zzrFxgCiokxVNofudoKdMzOKrp9gC5vp42GAhw7VprImbgN8GN
-         4wH2RgVvadp5vV+RKptGb0l4M8/UZKebmOSX9PvmEEyh1KvucpVz9NIcfg0mhDEWVI6h
-         O/S0FS065wkS6B1g8R0tj0qFo+gpuRmONwGrxO5av7dby/PghZxZDyH6+jNUpRonIRas
-         DdEpEbSw06CxyFf63MG1k3CwK5Ptlq8WtRInYU9qM3STU3uxtZsmSjzq5D7sAHleg3bs
-         fFSnWxgAOcy1xAN2gF6bOh1be8regzaJArxhzIcQp17goilfKyLQvHvq1DK1yH+F7dvJ
-         jU/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWfU5eMbgz77AdAI5j3DMjH3J3HzO67c6Hh+Y3OOArUaU+7XmwWF+Fdnz6bkJxbJuCHqL2/nXNY17BxnKjVNdq8o7oYhbhtCDuXqeqR
-X-Gm-Message-State: AOJu0Yywwj2RbEjYxmzs6dDSHt+B0ShD0+uOX+An8EAKBI1nxCI3lyhn
-	by2Qv2aC8jihU3+4aSGJux7BMhxxGz2A8IOQyRvcRwYov6/35kQ/lIefB0/VcHs=
-X-Google-Smtp-Source: AGHT+IERNVIb7kkkXkEPWlxI4SlxeSXGIdHfAlszM7dr954BuhwHUlim2WOUoHyibBjW2LFxYJ6i9g==
-X-Received: by 2002:a5d:4e0a:0:b0:33d:fb3:9021 with SMTP id p10-20020a5d4e0a000000b0033d0fb39021mr6183299wrt.54.1713185374316;
-        Mon, 15 Apr 2024 05:49:34 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id p5-20020a5d4e05000000b0033b48190e5esm12005471wrt.67.2024.04.15.05.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 05:49:33 -0700 (PDT)
-Date: Mon, 15 Apr 2024 13:49:31 +0100
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>,
-	Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Alexander Shiyan <shc_work@mail.ru>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-omap@vger.kernel.org
-Subject: Re: [PATCH 05/18] backlight: ili922x: Constify lcd_ops
-Message-ID: <20240415124931.GE222427@aspen.lan>
-References: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
- <20240414-video-backlight-lcd-ops-v1-5-9b37fcbf546a@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvsY+B9a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43855C3277B;
+	Mon, 15 Apr 2024 12:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185378;
+	bh=ez+9pHNThV4Qwno6XjpGOuiqDEvbUby8kRZAvhEvGOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WvsY+B9aX95J/tCeYFcYnPI95mwpRzKkhruWPSXXZaUVGfj7SWAv33ZreJAxPp1PQ
+	 ekz9B4TzpqFoFWdcHcX7noF+DvHMCdePek64LdPk6knJ6S0wRdO8771zgKMvKikm+8
+	 gWR/gTgLv4EGQoe+hVpuR808Jv/rp7OMS8wG3+ay0sb8ehYUdwbJVtUcQqhoDLNRlJ
+	 tTwtQPC1lJczWE6ejuNZrqhzHUT8miPdRo0f+GF5lgWgS1CjrU3UlbXl61wF5RB/3B
+	 61pC90LsmG/hC36Xr1Dh97xsnQsJBrl4OWZmomZ7HP0MVgyHEyh6yhAqFLJOkJWQNZ
+	 XodCUaM+Mm7hg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 13/15] vboxsf: explicitly deny setlease attempts
+Date: Mon, 15 Apr 2024 06:02:53 -0400
+Message-ID: <20240415100311.3126785-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
+References: <20240415100311.3126785-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240414-video-backlight-lcd-ops-v1-5-9b37fcbf546a@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.6
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 06:36:03PM +0200, Krzysztof Kozlowski wrote:
-> 'struct lcd_ops' is not modified by core backlight code, so it can be
-> made const for increased code safety.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Jeff Layton <jlayton@kernel.org>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+[ Upstream commit 1ece2c43b88660ddbdf8ecb772e9c41ed9cda3dd ]
 
+vboxsf does not break leases on its own, so it can't properly handle the
+case where the hypervisor changes the data. Don't allow file leases on
+vboxsf.
 
-Daniel.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Link: https://lore.kernel.org/r/20240319-setlease-v1-1-5997d67e04b3@kernel.org
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/vboxsf/file.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/vboxsf/file.c b/fs/vboxsf/file.c
+index 2307f8037efc3..118dedef8ebe8 100644
+--- a/fs/vboxsf/file.c
++++ b/fs/vboxsf/file.c
+@@ -218,6 +218,7 @@ const struct file_operations vboxsf_reg_fops = {
+ 	.release = vboxsf_file_release,
+ 	.fsync = noop_fsync,
+ 	.splice_read = filemap_splice_read,
++	.setlease = simple_nosetlease,
+ };
+ 
+ const struct inode_operations vboxsf_reg_iops = {
+-- 
+2.43.0
+
