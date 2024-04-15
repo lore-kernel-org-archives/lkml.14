@@ -1,257 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F119D3A29A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D763A1DA
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713171050; cv=none; b=aILOmjD4BVM2WvMuGg52Cr2JYtFAN7tqG9Vk4+2lvcqdSS+6G1iS46gYp41N1++fAh5kusNN3X0TkbXmA32JfKsOUzddPe5cQjIYJOF1XCynG2IMp4voW5CH3NaowaI0w9njIYkKlKrhJfRKpAt5DvaWMTOlHRbEXisoWfNU/uc=
+	t=1713171189; cv=none; b=MXZl77SEP9sdh3k6FtxcilucDKCQ08BHQTKr+5nq0CSu4DpSGcvo53ynt5+SVv7oyMk7oseMXHbAWQCiqdS9p3ncPvl07acbeUOUDp6mg47gzV5beaN84OLW/6ES3IJ52+cX08WeAjEfEvB7+x0gDCf0kun9Fh9gifX6ve5nXHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713171050; c=relaxed/simple;
-	bh=gzkB+hrNJ9665+giOKirtWC5wznL3R32zzuND+SyTDA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gjzeiSsWWq+c8KK13wbvL8prVIlHkZPAUpFD0iG2JqZ4B8Lqye5i6wRDnktlB3+vRAU+h0TwFe4wBXv4dt5I1FPcpzljER3UsatttCXC/m6yMdtIxk3JMFbEn2jUm9gxAb4Sno0wD1fco9o/rgmiDVGsMXZcoV12bvncJqDMXwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=keB3wXmB; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713171189; c=relaxed/simple;
+	bh=bnWlog0y4bN4WZfNS47LmbCRbE8trcNL1TvxiAUYcAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R2hTutJuaPtR4C0BSx3+R5EAOONcX/yUAq+tETYh7S17is+I7iAa/I5Izk/5Nda9b0XPSN610ZnX5ukFuxN6a/Y+YXgvN8HPR9qwHaGK6XnxJHCmWisfgUd3egHtqt7l/lJ0kuQAcrKzAwv+Tpl5ikriVjilzYnsS7d+6+lymgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=SeFsdH17; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="keB3wXmB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713171049; x=1744707049;
-  h=date:from:to:cc:subject:message-id;
-  bh=gzkB+hrNJ9665+giOKirtWC5wznL3R32zzuND+SyTDA=;
-  b=keB3wXmBe5vHPgb5NBpFlpVeFy/tTTAIhKKN6MgLMa3QfX68G5pFse8d
-   EJvNF3OlwyZApX56YuGu73imJgCNsj0CkixdXpjM+rhuF4BU5yOtQRg26
-   5dJur00/kY+ok1JdBcV1pUsqlnlbQzztaTyjZf1ZP1ON3wM+OWmm0IuKY
-   TU1nrK2YlrR3TVtRr6rFzpFZRBOpc8MRxTi20u6LrXotufOUkpZr/GnEE
-   jLnsTqDDEDMrB45jEJBwTDI0xvfIORw8hQF2ZxCwvlYrNwa1jMiZo+6tv
-   pp0JxbQ/de6+nB4a670Cx10PYUTaUgKH8uGhSHkD0QJKViAOEcyW3/naR
-   A==;
-X-CSE-ConnectionGUID: OoKFziwCRpW2fV4wrJ9phQ==
-X-CSE-MsgGUID: M0Jc14s9SaKaJbMw6IIj8g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="8658991"
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="8658991"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 01:50:47 -0700
-X-CSE-ConnectionGUID: EgvLMA06SnmNnRhltOJFkQ==
-X-CSE-MsgGUID: +Jmq/4efQLiKiBmhOAiHMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="26405847"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 15 Apr 2024 01:50:45 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rwI30-00044y-30;
-	Mon, 15 Apr 2024 08:50:42 +0000
-Date: Mon, 15 Apr 2024 16:50:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- 854dd99b5ddc9d90e31e5f112462a5994dd31810
-Message-ID: <202404151604.91n8est8-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="SeFsdH17"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so2690213276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 01:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1713171185; x=1713775985; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZ1xbbcbi2PHmTU6OF8vjn6o1DKOJxbx1zIcDvksvVQ=;
+        b=SeFsdH17e1W9yTjRQTRTAiBgLmlZGxcMEUE3eZGSaWG212MDmRuYMxZAig42hmklPx
+         nfV7VcHB+oti6nSi/aEAsiZxKNBnrmIn46SayLGW2oOAQdr37k5NxigNWyEmqNCTbkML
+         zSTvFLpoXeUy2L0hsz/fqUGVrKzd2Mp7vXjI4IJAe+wcU5es4D1lq2ZJZ0Sx6m8PJ7Av
+         +oBPGy8zNiQizNStq9LRuCzg1t4ENNrw8BSxhMXqfunZo2Lc/7w12/KaLVMItOyDS0/Z
+         5vDLJM5YOTMI26fuua+LXC/YXiQXy3XbFtyNico3mm6idmJByjNmJzrrYwRLc7nvHSA/
+         gYZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713171185; x=1713775985;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZZ1xbbcbi2PHmTU6OF8vjn6o1DKOJxbx1zIcDvksvVQ=;
+        b=DbCe/+Ff4nuNxp9/Qu405fgwUrhCF+8cwPFRWdJOmln7wQbuumhfN63iUfsa+39co9
+         ksNYmsvSm1cNE/eyZziTE8MMi7wQYvuDgqviee10eDETGkXkRlN2rp30jUiFGebc4M2f
+         we85H4vb4vAQqvPjrwHNQsg50N3KkePYgF1uDln050/4kgK8G7zL5QHFb1IKLLipYXyY
+         XIJCm19wyS2kT66spxkI5s1NA221T8+GOd8Yobo6BJkpgdkPjRyEoSpWtnpd/5Sn9+2U
+         lV1fheDCw8lACKKlRcT0VYiXeNfwbz7pxPEmM86Q5Y18+3vc/ppnyNGpk4xA8sdH3b8e
+         UeBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwBtfPJq5snS8p3nF7aPoCHeTPBwnv6a3I4De9vtlyEk++Pgx+K94OOlutUmwVdP5WymXjgwW5KFF8p/nNN1ouCFYba5sbFdhY3ZPw
+X-Gm-Message-State: AOJu0Yya3VSdLazjAbkvc55fo27QOxvTr1v72LyHSTfCIzM63zXgjvF5
+	I+TwDVtOXcDCc5jW4zJN/m4lIaoMFMuqTGynATsSbKVZDFY+8Z22puaPJ/4tFp3eqlHc5xPTTE9
+	oc9qxoPdSlsOtwJCTSU2kM7oesr5p+jv6ebEXfg==
+X-Google-Smtp-Source: AGHT+IFJbL090k1ujMdhoHBuRAuqn8RndPzBOrxsylJHE/9nowfFnHodh0UXrHCjiHc2lZ6BeIyZaM4TTcpqN8OFnWc=
+X-Received: by 2002:a25:9e05:0:b0:dcc:99b6:830b with SMTP id
+ m5-20020a259e05000000b00dcc99b6830bmr8838308ybq.19.1713171185683; Mon, 15 Apr
+ 2024 01:53:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1713036964.git.andrea.porta@suse.com> <0ab5a768d686cb634f7144da266c9246e9e90cb4.1713036964.git.andrea.porta@suse.com>
+ <d7b884dd-9b70-41c3-ac2a-66b54c26d08a@gmx.net>
+In-Reply-To: <d7b884dd-9b70-41c3-ac2a-66b54c26d08a@gmx.net>
+From: Phil Elwell <phil@raspberrypi.com>
+Date: Mon, 15 Apr 2024 09:52:54 +0100
+Message-ID: <CAMEGJJ2R-WEqs+LgqMwDQJ_QHF840RYAqVGkbWxBs70anv6M4w@mail.gmail.com>
+Subject: Re: [PATCH 3/6] arm64: dts: broadcom: Add support for BCM2712
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Jonathan Bell <jonathan@raspberrypi.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org, 
+	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org, 
+	Kamal Dasu <kamal.dasu@broadcom.com>, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-branch HEAD: 854dd99b5ddc9d90e31e5f112462a5994dd31810  perf/bpf: Mark perf_event_set_bpf_handler() and perf_event_free_bpf_handler() as inline too
+Stefan,
 
-elapsed time: 724m
 
-configs tested: 180
-configs skipped: 3
+On Mon, 15 Apr 2024 at 09:20, Stefan Wahren <wahrenst@gmx.net> wrote:
+>
+> Hi Phil,
+>
+> Am 14.04.24 um 00:14 schrieb Andrea della Porta:
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >   arch/arm64/boot/dts/broadcom/Makefile         |   1 +
+> >   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     | 313 +++++++
+> >   arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi |  81 ++
+> >   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 841 ++++++++++++++++++
+> >   4 files changed, 1236 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> >   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi
+> >   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+> > index 8b4591ddd27c..92565e9781ad 100644
+> > --- a/arch/arm64/boot/dts/broadcom/Makefile
+> > +++ b/arch/arm64/boot/dts/broadcom/Makefile
+> > @@ -6,6 +6,7 @@ DTC_FLAGS := -@
+> >   dtb-$(CONFIG_ARCH_BCM2835) += bcm2711-rpi-400.dtb \
+> >                             bcm2711-rpi-4-b.dtb \
+> >                             bcm2711-rpi-cm4-io.dtb \
+> > +                           bcm2712-rpi-5-b.dtb \
+> >                             bcm2837-rpi-3-a-plus.dtb \
+> >                             bcm2837-rpi-3-b.dtb \
+> >                             bcm2837-rpi-3-b-plus.dtb \
+> > diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > new file mode 100644
+> > index 000000000000..2ce180a54e5b
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > @@ -0,0 +1,313 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> > +#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
+> > +
+> > +#define spi0 _spi0
+> > +#define uart0 _uart0
+> > +
+> > +#include "bcm2712.dtsi"
+> > +
+> > +#undef spi0
+> > +#undef uart0
+> > +
+> > +/ {
+> > +     compatible = "raspberrypi,5-model-b", "brcm,bcm2712";
+> > +     model = "Raspberry Pi 5";
+> > +
+> >
+> according to this downstream commit [1] it's just called "Raspberry Pi
+> 5" without Model B, but the filename and the compatible says something
+> different. Is there still a chance to get this consistent or is it too
+> late because the firmware expect the compatible?
+>
+> [1] -
+> https://github.com/raspberrypi/linux/commit/99e359d2f2da2c820fd2a30b1ad08b32c9549adb
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Nothing cares about the compatible string, but the product name was
+changed too late for the firmware, which expects the current DTB file
+name. I'm happy with the naming as it stands, since we use Pi 4 to
+refer to all the BCM2711-based devices, and Pi 5 can include CM5.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240415   gcc  
-arc                   randconfig-002-20240415   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                         assabet_defconfig   clang
-arm                                 defconfig   clang
-arm                   randconfig-001-20240415   gcc  
-arm                   randconfig-002-20240415   gcc  
-arm                   randconfig-003-20240415   clang
-arm                   randconfig-004-20240415   gcc  
-arm                           sama5_defconfig   gcc  
-arm                       versatile_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240415   clang
-arm64                 randconfig-002-20240415   clang
-arm64                 randconfig-003-20240415   clang
-arm64                 randconfig-004-20240415   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240415   gcc  
-csky                  randconfig-002-20240415   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240415   clang
-hexagon               randconfig-002-20240415   clang
-i386                             alldefconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240415   clang
-i386         buildonly-randconfig-002-20240415   gcc  
-i386         buildonly-randconfig-003-20240415   gcc  
-i386         buildonly-randconfig-004-20240415   gcc  
-i386         buildonly-randconfig-005-20240415   gcc  
-i386         buildonly-randconfig-006-20240415   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240415   gcc  
-i386                  randconfig-002-20240415   clang
-i386                  randconfig-003-20240415   gcc  
-i386                  randconfig-004-20240415   gcc  
-i386                  randconfig-005-20240415   gcc  
-i386                  randconfig-006-20240415   clang
-i386                  randconfig-011-20240415   gcc  
-i386                  randconfig-012-20240415   clang
-i386                  randconfig-013-20240415   gcc  
-i386                  randconfig-014-20240415   gcc  
-i386                  randconfig-015-20240415   gcc  
-i386                  randconfig-016-20240415   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240415   gcc  
-loongarch             randconfig-002-20240415   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         amcore_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          ath25_defconfig   clang
-mips                      bmips_stb_defconfig   clang
-mips                           ci20_defconfig   clang
-mips                           rs90_defconfig   gcc  
-mips                           xway_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240415   gcc  
-nios2                 randconfig-002-20240415   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240415   gcc  
-parisc                randconfig-002-20240415   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc               randconfig-001-20240415   gcc  
-powerpc               randconfig-002-20240415   gcc  
-powerpc               randconfig-003-20240415   clang
-powerpc                     tqm8541_defconfig   clang
-powerpc                         wii_defconfig   gcc  
-powerpc64             randconfig-001-20240415   clang
-powerpc64             randconfig-002-20240415   clang
-powerpc64             randconfig-003-20240415   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240415   clang
-riscv                 randconfig-002-20240415   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240415   gcc  
-s390                  randconfig-002-20240415   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240415   gcc  
-sh                    randconfig-002-20240415   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240415   gcc  
-sparc64               randconfig-002-20240415   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240415   clang
-um                    randconfig-002-20240415   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240415   clang
-x86_64       buildonly-randconfig-002-20240415   clang
-x86_64       buildonly-randconfig-003-20240415   clang
-x86_64       buildonly-randconfig-004-20240415   clang
-x86_64       buildonly-randconfig-005-20240415   gcc  
-x86_64       buildonly-randconfig-006-20240415   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240415   gcc  
-x86_64                randconfig-002-20240415   gcc  
-x86_64                randconfig-003-20240415   clang
-x86_64                randconfig-004-20240415   gcc  
-x86_64                randconfig-005-20240415   clang
-x86_64                randconfig-006-20240415   clang
-x86_64                randconfig-011-20240415   clang
-x86_64                randconfig-012-20240415   clang
-x86_64                randconfig-013-20240415   gcc  
-x86_64                randconfig-014-20240415   clang
-x86_64                randconfig-015-20240415   clang
-x86_64                randconfig-016-20240415   clang
-x86_64                randconfig-071-20240415   gcc  
-x86_64                randconfig-072-20240415   clang
-x86_64                randconfig-073-20240415   clang
-x86_64                randconfig-074-20240415   clang
-x86_64                randconfig-075-20240415   clang
-x86_64                randconfig-076-20240415   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240415   gcc  
-xtensa                randconfig-002-20240415   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Phil
