@@ -1,101 +1,103 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31F812DD99
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010887581B;
+	Mon, 15 Apr 2024 12:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185439; cv=none; b=rEKwZp6IgVpfYh1vARlI5v8DNdkEX/MzwH4yrIkeYjSqjUbjh84x3CqvnDWo1a7Rp2iBgWiU6pnARfCGC/MONR7rrz2nnKZ1+bIkwdvGglwCkaLMywFk0x99dWVAdc5UNBD9pu9QGuH9MteeksnjPmzNl/Y/j0SN3vPm9oBgWyo=
+	t=1713185445; cv=none; b=RL1gxotVsRd6oLB60TpGmT3WLTgYzqQeaEHl6IhaAC7XBpj+R9qq/+VzGN1fMTZi1Su/KG3LdaAthceh+FQJBsQrFZhEUFCj0B0DSLzdbSAD2ZFGJBKshTniVTrZJZvkRCvFte8DYHXwKtcfa32ukaMz86o/az10I3Zc/h5lC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185439; c=relaxed/simple;
-	bh=znhcYwJUYzGOpFXGP2YmPF3F/RJw3xsB03Ht+bpAY+8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VEbfhUyt4Y+dqLhEkQ2kcVMmRmewF+aUL04xXjVdHhwmv8qCZyphRDN1BxSBF4lxO0hvkgvGAmlrFLNbRO08NCGt5TDWfjDmPTjuEJj8AEAgT3P4Bu9rKO5w7TB3jslSE1RrCuM48EmNNDKsK4jYiBWnVfC3518IaggAWDXH5Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lmXE0cQY; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1713185445; c=relaxed/simple;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qc8SvhYc/nA4nOr8766llZnjrBnFvrDS/aTzauryy8TG1uwKeDxrGAVvJ+Ut4fK5gzOhyPxA07Ay+jPF3WLqiGO9aPMhrvIl8LM6VECZjvWJymOePddZnhykrdHmcw4/RVKSihY195/C9DivGUBjaiX+YqQJ7O6hHF38VBGHmu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocAQeneK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lmXE0cQY"
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D3C19411E0
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713185435;
-	bh=ReRzghlopjwKf7ZFoLym1/k3KhnDB0D5vdDpSWeIHhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=lmXE0cQYn8tcuqpIitJE84XI3rsx1bM+HIoK2PhLjB2384c0CbuETjv0x1o4rVjeq
-	 yB9h7C28QJZuD0ao3Wg+V1oXh4P+FXjhqDJj9OzH33T1y/XlyRHA1ocjyQc6Qyo3m5
-	 csDTliq5OeeMXU5Y22Hf0XAIJ0Wl3PdJprzUpVwFWDlga1KLVdViBb2MDpSJvDiFX8
-	 gty2KMyivq7teGcHuv79w2hodfZvApGXUwHf6cEQD+/Z6jzD5UYV5CBEc0BdJiV+eg
-	 Brl8OvHH9Fau0GAxcWrK5LCFyisscAdZaTonYslL5E01p7mqMzkGOy93iMy5Sw9Ufb
-	 5Ow+gBlVwvuug==
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a46938e24dbso53767666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:50:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713185435; x=1713790235;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ReRzghlopjwKf7ZFoLym1/k3KhnDB0D5vdDpSWeIHhM=;
-        b=sVWxcOPgVfA02dkg/0aGxAzE07R/oeZavCyXPVjF/Qcc2V/FW8tCJzfqZjFMY87exO
-         hwrI7ONjgfy/7lOu6A/r1+wh0SfAQrDiIbQ03XOX8LwfSDKXoZrv1c6IA0MjMfR58Ar8
-         n4s1Iu0FnbMiHiV3a0/9Yp5nq2P0lrrJXNWmDLIrTlyQY46UCzDM5V954dEcvDIAYh5j
-         LmZ45ymvqsspLwceBxqxmzmlg+TXzLrrUpJEthoTXTeGmI/GKI0Wdl0mJel9nh2QHiXV
-         Vy+LkpQpgTBJJzhmpVsAHIHF09QHIvZ52Co2eey5zs6WoR+jjrlm+6IUIBwvrxAPagzO
-         UTgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVq5PinJIbfCItyKklLLmCFRtQemqIn2WS9LnIHCfEePRqX70mfo5gN00w3KwsIBbKFd8QOBCHSH0PqKBRNn/TRj2zui4hZQg7Jqbhi
-X-Gm-Message-State: AOJu0YymJ+KCKaezMMf3BjMtxTMkgNwfrpq0D17yjF4MvEtPN9YGaiCn
-	LuMz7GO8KdEWEzrpsmpbF5vRdU7oFEOHFMUflyFpTBDtCGLeAwESP4fGgmP3A4JV1fJPZO0L7uK
-	eCtsTyQPnSNxRykyqkfE9DHDxpsdgJELCHBwmKkoPZwrwVjOqgCdgubig64HHNK9YlNnci8Qn6z
-	yLy9BbxEME4bR2
-X-Received: by 2002:a17:906:6a04:b0:a52:55b2:ac40 with SMTP id qw4-20020a1709066a0400b00a5255b2ac40mr3424824ejc.3.1713185435355;
-        Mon, 15 Apr 2024 05:50:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEl2HDhIy+WQcJGTsKSEGLwyKxvTqmVqEld+FSqkIKcpUnlu0ruSuJZgCJL0RGW8urzg1aMlQ==
-X-Received: by 2002:a17:906:6a04:b0:a52:55b2:ac40 with SMTP id qw4-20020a1709066a0400b00a5255b2ac40mr3424805ejc.3.1713185434966;
-        Mon, 15 Apr 2024 05:50:34 -0700 (PDT)
-Received: from bojack.fritz.box (197-53-142-46.pool.kielnet.net. [46.142.53.197])
-        by smtp.gmail.com with ESMTPSA id bz2-20020a1709070aa200b00a51a9eccf2asm5455573ejc.125.2024.04.15.05.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 05:50:34 -0700 (PDT)
-From: Hannah Peuckmann <hannah.peuckmann@canonical.com>
-To: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Walker Chen <walker.chen@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>
-Subject: [PATCH v1 0/2] riscv: dts: starfive: visionfive 2: Remove non-existing hardware
-Date: Mon, 15 Apr 2024 14:50:31 +0200
-Message-Id: <20240415125033.86909-1-hannah.peuckmann@canonical.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocAQeneK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF86BC113CC;
+	Mon, 15 Apr 2024 12:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185444;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ocAQeneKpzKhpF99Tt/dEaC7PxMcQsj/vF/dL/kHf8Z1Iws/J6ivQHe4iveyGR3UM
+	 2xBGkiIzASN0AbQsqXYxwFu303Ye0uxV0Mr1RU+68vCcA6HIlfZvbJJ9fpO15qGgrC
+	 IxQD57wiBWoICprZrQsyJ0aHSqysjbbENNRQQcv7eaDBDTzXdRhPZgK2PdTFcMXm74
+	 /TVjr7ec+PaQ7bP7lx701VJBnPtza3cXC/6TjlTNxujccwbMulw91OvWT0AgGds6sl
+	 BcWZh1BGrCsoND9+H4wnylUPFSQ3DHpY2Z4Td8M3b5HRUlmSx6r4JRMiRkJ2Qc8rdv
+	 HiipbGnBGutwg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>,
+	syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 1/4] ALSA: line6: Zero-initialize message buffers
+Date: Mon, 15 Apr 2024 06:04:43 -0400
+Message-ID: <20240415100449.3127574-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.155
 Content-Transfer-Encoding: 8bit
 
-This series fixes the device tree for the VisionFive 2 which has nodes for
-non-existing hardware which should have been left to overlays. It also results
-in error on boot when both both the TDM and I2S drivers tries to claim GPIO 44.
+From: Takashi Iwai <tiwai@suse.de>
 
-Hannah Peuckmann (2):
-  riscv: dts: starfive: visionfive 2: Remove non-existing TDM hardware
-  riscv: dts: starfive: visionfive 2: Remove non-existing I2S hardware
+[ Upstream commit c4e51e424e2c772ce1836912a8b0b87cd61bc9d5 ]
 
- .../jh7110-starfive-visionfive-2.dtsi         | 98 -------------------
- 1 file changed, 98 deletions(-)
+For shutting up spurious KMSAN uninit-value warnings, just replace
+kmalloc() calls with kzalloc() for the buffers used for
+communications.  There should be no real issue with the original code,
+but it's still better to cover.
 
+Reported-by: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/00000000000084b18706150bcca5@google.com
+Message-ID: <20240402063628.26609-1-tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/usb/line6/driver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index b67617b68e509..f4437015d43a7 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -202,7 +202,7 @@ int line6_send_raw_message_async(struct usb_line6 *line6, const char *buffer,
+ 	struct urb *urb;
+ 
+ 	/* create message: */
+-	msg = kmalloc(sizeof(struct message), GFP_ATOMIC);
++	msg = kzalloc(sizeof(struct message), GFP_ATOMIC);
+ 	if (msg == NULL)
+ 		return -ENOMEM;
+ 
+@@ -688,7 +688,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 	int ret;
+ 
+ 	/* initialize USB buffers: */
+-	line6->buffer_listen = kmalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
++	line6->buffer_listen = kzalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
+ 	if (!line6->buffer_listen)
+ 		return -ENOMEM;
+ 
+@@ -697,7 +697,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 		return -ENOMEM;
+ 
+ 	if (line6->properties->capabilities & LINE6_CAP_CONTROL_MIDI) {
+-		line6->buffer_message = kmalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
++		line6->buffer_message = kzalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
+ 		if (!line6->buffer_message)
+ 			return -ENOMEM;
+ 
 -- 
-2.40.1
+2.43.0
 
