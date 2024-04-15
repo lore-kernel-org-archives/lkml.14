@@ -1,129 +1,134 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54164F5F8;
-	Mon, 15 Apr 2024 09:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30211381B1
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713173842; cv=none; b=pbQqkCTcje0HWDFhbzBqrEPHQx2b6HeINO5CanXLwM1bWOq8S/AnvHg5BTywTq4oVZIuv+g0aAFyPgGm1ErLhRzdEm94U+Ul/rOa5tgZ6AN6nuIdm1RQ4edWwkTcKC3acHEGvQH6tctxRJuQeFS9aX2K8LCuDJ1qnv/+zJYjQHo=
+	t=1713174015; cv=none; b=FraiYiThmCRi/zto/CaECAHWJpZ4OZ6lxvYdgBrUUSRoEyj0x43bsQ/qihfg0s6wxu7BXTO7HA+G865rWca9bTHzgj4i1SVT7gg/U6o1PzlfeO41lQ43WeODXpM7Ck8pXwAHJGiOH3VshuIIoj/ybX08/AAoiK8IrIUWVxzLdKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713173842; c=relaxed/simple;
-	bh=iWSAcKBzCT/GfR3CUsNAvXWE2GqvA4i8aFyoJ/HJFOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2lNb9r/DxUP93+ofQORD7YKXJKeRsJoE/3dIqBgHS5rsnw59UpuUAiIXByBpnqgJJMx/UNjjt62ks4laRvVeCLv82IiHSQ4JB5dYZ8nLxD0+Up5pAjZ/soNov6lJiecpVMDpS8YICWGIy2cEgqWycZTJy7RywZeMzDIt2RR+4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WL3mGK96; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WL3mGK96"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gJURSN8ZhZs54MX6UPe8WS991KHmcU3CMSr/wsPBYas=; b=WL3mGK96b4dqocWg2WT6S+o3Lh
-	6R4hcBA6RfcHuQQK7isTyMyXCwDos8Q1HdHKBvnc80dazhTsMKZZh+HOA+2p3MytoMgm0z79fe1lO
-	6VNzmYAbfQ0K4rY/gTJDrpu5Cj+twK8P8H6r2xTaYF5wANkZ19gJAqZM8x7uwfcFkyoEWlipCNTWk
-	6fylSl1gmglon4eNg+zb/yC04zTO/2Lfq8d+LNZPMMi03er3jB/2uzdVHk4Db9ls69FN+sjSeErGv
-	ir1OIAWRPD8gvlVd9eQwbdsiTncbhidLvva928W/3FSV8BR+sXBV2NxpcV2Vc46i56RkcJA4zwnpr
-	gpLaCNRw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwIlk-0000000FOjV-0IDN;
-	Mon, 15 Apr 2024 09:36:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B1DC030040C; Mon, 15 Apr 2024 11:36:55 +0200 (CEST)
-Date: Mon, 15 Apr 2024 11:36:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	s=arc-20240116; t=1713174015; c=relaxed/simple;
+	bh=UWcSykms/3W1cLCsqlcxa3BR55AijHkwwsOVvXTBJ5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FSCfP49A6DTxmpXtf26UBUuk6Nq2CvZ0sKxco7kwN8dRvffu0hP1lrgxxe/j7nh7mcTa0drSMVvTzylubufX9/G4kJLo+48Y0wnF8oJ61sUW2hkplg/Xj1K+SKs1aJyArvlsnkKAYlhE7McI2qmjEiLpBTA1oHJx9DV8XaxPweA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C74332F4;
+	Mon, 15 Apr 2024 02:40:40 -0700 (PDT)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.41.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 312863F64C;
+	Mon, 15 Apr 2024 02:40:08 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 07/15] mm/execmem, arch: convert remaining overrides
- of module_alloc to execmem
-Message-ID: <20240415093655.GH40213@noisy.programming.kicks-ass.net>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-8-rppt@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH V2] arm64/hugetlb: Fix page table walk in huge_pte_alloc()
+Date: Mon, 15 Apr 2024 15:10:03 +0530
+Message-Id: <20240415094003.1812018-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160051.2093261-8-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 07:00:43PM +0300, Mike Rapoport wrote:
+Currently normal HugeTLB fault ends up crashing the kernel, as p4dp derived
+from p4d_offset() is an invalid address when PGTABLE_LEVEL = 5. A p4d level
+entry needs to be allocated when not available while walking the page table
+during HugeTLB faults. Let's call p4d_alloc() to allocate such entries when
+required instead of current p4d_offset().
 
-> +static struct execmem_info execmem_info __ro_after_init = {
-> +	.ranges = {
-> +		[EXECMEM_DEFAULT] = {
-> +			.flags = EXECMEM_KASAN_SHADOW,
-> +			.alignment = MODULE_ALIGN,
-> +		},
-> +	},
-> +};
->  
-> +struct execmem_info __init *execmem_arch_setup(void)
->  {
-> +	unsigned long start, offset = 0;
->  
-> +	if (kaslr_enabled())
-> +		offset = get_random_u32_inclusive(1, 1024) * PAGE_SIZE;
->  
-> +	start = MODULES_VADDR + offset;
-> +	execmem_info.ranges[EXECMEM_DEFAULT].start = start;
-> +	execmem_info.ranges[EXECMEM_DEFAULT].end = MODULES_END;
-> +	execmem_info.ranges[EXECMEM_DEFAULT].pgprot = PAGE_KERNEL;
->  
-> +	return &execmem_info;
->  }
+ Unable to handle kernel paging request at virtual address ffffffff80000000
+ Mem abort info:
+   ESR = 0x0000000096000005
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+   FSC = 0x05: level 1 translation fault
+ Data abort info:
+   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+ swapper pgtable: 4k pages, 52-bit VAs, pgdp=0000000081da9000
+ [ffffffff80000000] pgd=1000000082cec003, p4d=0000000082c32003, pud=0000000000000000
+ Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+ Modules linked in:
+ CPU: 1 PID: 108 Comm: high_addr_hugep Not tainted 6.9.0-rc4 #48
+ Hardware name: Foundation-v8A (DT)
+ pstate: 01402005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+ pc : huge_pte_alloc+0xd4/0x334
+ lr : hugetlb_fault+0x1b8/0xc68
+ sp : ffff8000833bbc20
+ x29: ffff8000833bbc20 x28: fff000080080cb58 x27: ffff800082a7cc58
+ x26: 0000000000000000 x25: fff0000800378e40 x24: fff00008008d6c60
+ x23: 00000000de9dbf07 x22: fff0000800378e40 x21: 0004000000000000
+ x20: 0004000000000000 x19: ffffffff80000000 x18: 1ffe00010011d7a1
+ x17: 0000000000000001 x16: ffffffffffffffff x15: 0000000000000001
+ x14: 0000000000000000 x13: ffff8000816120d0 x12: ffffffffffffffff
+ x11: 0000000000000000 x10: fff00008008ebd0c x9 : 0004000000000000
+ x8 : 0000000000001255 x7 : fff00008003e2000 x6 : 00000000061d54b0
+ x5 : 0000000000001000 x4 : ffffffff80000000 x3 : 0000000000200000
+ x2 : 0000000000000004 x1 : 0000000080000000 x0 : 0000000000000000
+ Call trace:
+ huge_pte_alloc+0xd4/0x334
+ hugetlb_fault+0x1b8/0xc68
+ handle_mm_fault+0x260/0x29c
+ do_page_fault+0xfc/0x47c
+ do_translation_fault+0x68/0x74
+ do_mem_abort+0x44/0x94
+ el0_da+0x2c/0x9c
+ el0t_64_sync_handler+0x70/0xc4
+ el0t_64_sync+0x190/0x194
+ Code: aa000084 cb010084 b24c2c84 8b130c93 (f9400260)
+ ---[ end trace 0000000000000000 ]---
 
-struct execmem_info __init *execmem_arch_setup(void)
-{
-	unsigned long offset = 0;
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Fixes: a6bbf5d4d9d1 ("arm64: mm: Add definitions to support 5 levels of paging")
+Reported-by: Dev Jain <dev.jain@arm.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This patch applies on v6.9-rc4
 
-	if (kaslr_enabled())
-		offset = get_random_u32_inclusive(1, 1024) * PAGE_SIZE;
+Changes in V2:
 
-	execmem_info = (struct execmem_info){
-		.ranges = {
-			[EXECMEM_DEFAULT] = {
-				.start     = MODULES_VADDR + offset,
-				.end       = MODULES_END,
-				.pgprot    = PAGE_KERNEL,
-				.flags     = EXECMEM_KASAN_SHADOW,
-				.alignment = 1,
-			},
-		},
-	};
+- Added NULL check for p4dp
 
-	return &execmem_info;
-}
+V1: https://lore.kernel.org/all/20240415063110.1795707-1-anshuman.khandual@arm.com/
+
+ arch/arm64/mm/hugetlbpage.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 0f0e10bb0a95..b872b003a55f 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -276,7 +276,10 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	pte_t *ptep = NULL;
+ 
+ 	pgdp = pgd_offset(mm, addr);
+-	p4dp = p4d_offset(pgdp, addr);
++	p4dp = p4d_alloc(mm, pgdp, addr);
++	if (!p4dp)
++		return NULL;
++
+ 	pudp = pud_alloc(mm, p4dp, addr);
+ 	if (!pudp)
+ 		return NULL;
+-- 
+2.25.1
+
