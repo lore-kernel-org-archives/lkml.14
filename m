@@ -1,260 +1,336 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A27664AB;
-	Mon, 15 Apr 2024 11:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADE262147
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713181969; cv=none; b=jYd+LheeuNwheZp/FZAGIh/gquUblaQCQdfrlZAmJziPE4d8asnN7aRN3GD2DXtGTJxnGfaxVV7x583zjKhVxtXK9w5J36rJhUpRWOd3R5ZEfVeLJHFokLUebkWjExs2VUsU5yFJelMqiooD9BgOtR7Ks+oZUW6Dt+3ki1ibIuo=
+	t=1713182163; cv=none; b=OV/Bpt3A0DlOpAEJbRGOEDUb/3GzL5ebv52ZSzmg5V36coCwpQ0HEoRCdSI8ovypEkrdBk8dUR/8zrUyprzR0lSXb4AwZvIOlMhu/l2EGs6xytud08xpHrL8P+xoQFXHmbG7CvyDq9e92MpEpeYHPPx8f9ePuUUoXJg201t2or4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713181969; c=relaxed/simple;
-	bh=KDOa3WMhDZdCJkFOdWTeMccO2m7M+we4CfSTwKFdtC8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ra1Fcbi+nlF1ttI1df1p8rauowE0yAkqMXh6EBuegRyZqtLknFEIquBzjFFEr1oKa43JHavxZRG3hC8db+joT+u8Hj31G+AAugjIAm+6J0FtejSMHDU9VVGL7g8rsXkG9y/otJIPbNDDktn/iEis0RuzXlgyjcbBdwaVjCkuFMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIBNFBEq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713182163; c=relaxed/simple;
+	bh=T1DJv+c0neOZuBA6B081p4CRYcjGoZ5ChQzr2Nlcfvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qF/7iqT4Om3eHaBHP4GAIf6YqhtnhdSSSSJEjl3IUpA36MLC/iniZ8Is23sYY4qL2zTX/ez9pfn9UXptrOIgV8CwbzgMEWzdqgUq9vn9VGXVoov2iOiIXCwyih53gfWGE98+tfdlfRIZIl0zITQtIgVReJP82U5OqJ9p3Y/eaIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=yiHirDFD; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIBNFBEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34221C4AF08;
-	Mon, 15 Apr 2024 11:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713181969;
-	bh=KDOa3WMhDZdCJkFOdWTeMccO2m7M+we4CfSTwKFdtC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oIBNFBEqx27wE7YnGIQL5va6oghRoZsIBk7dZ6Y5YkGZkdDFq4eDbeUPvBrLFcHn4
-	 g5NJ7sRS4UXG4ffu2FelF0itZGK5ioO5lI3bMll3lxU1khEN2T5lW3rgtIOrN4ZeXf
-	 TJwahAR67LD6xbc3xp9ohfJnvmGcu68Qva+e6KZQiiqao8LrBDnKwqX7kJtZzFdb0b
-	 /HMr7hn7XF/tO/Isb1UBK2KM8WEDXrc+UD0L8n+VDZ/QnuFX+f6s1RgaJGUSt4Kpzu
-	 Qoaucfj4WbGqk5fQy/mxpDk0TDnsX4JMuDMlNS5sSPFw04yeHQv2hVUpa6NJVWAMKe
-	 ut7WP5Mi6Hu4Q==
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c6febc1506so339349b6e.1;
-        Mon, 15 Apr 2024 04:52:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVVC97vZ/pAjRm847xsihsorRTnYhSn/LM47mIY3aLwMAlIsb7j/k1bP3OLBD6fO24xWlnDmISG1bCuSevirthGVvYqIpPg3J6sCP4L0md0Z3i0lgL4wZkL9amTVL76a7CtfSx/jsSPdMrz0kBgPY+HG/wrpUOIU9sxOBPDxNskWMFQBKRZGxvwK2QW1EYsbiKOy+ZegbSIDNH6wjcI8A==
-X-Gm-Message-State: AOJu0YzLCQAgka9iUqnh8IP35OZbh1kvyLhHne9gIFZ7PYRFvU3yc/Um
-	B6hhrWxoqGQW2lYAAeRYEiF4AafJ5muuSc+b6VtwRKWXDc19mbPhgxtmMuLtynAaCFsOClWMKmr
-	fYQH692beLNeazPWn/8zK7CK1cDI=
-X-Google-Smtp-Source: AGHT+IHAqEAgDmmyxpmlL7R5uR0Ay/up7sqUWFs77wqXP3g7U1JKzh9PgyufuKdVSAZm4f9VaPPIEoUIWvDgb5wmreo=
-X-Received: by 2002:a05:6871:460a:b0:22e:d06b:5d8f with SMTP id
- nf10-20020a056871460a00b0022ed06b5d8fmr11074172oab.3.1713181968497; Mon, 15
- Apr 2024 04:52:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="yiHirDFD"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 937051BE456;
+	Mon, 15 Apr 2024 13:46:29 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1713181589; bh=6j5xRYISiB35jRs4z/V94pxAMYRgG8FouSQ6Gey8Ras=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yiHirDFDDRGZbAivR7MRW8qcl9uOsM+BCXC9xom1IZLeJX26bj3IuO4T8TdrBoJbS
+	 BBkNtuvRs2DQujkKXz4fYGRMfgFvK2EElFoGLRO6hXvL5m11EJw7knCEG9iwKP/9nh
+	 Q9/kKZkmfEILfBCguLRnvViLvU6qhURbuuBUGOw8RpQF917InGamhrVhExSyqipPSE
+	 t+r6738rFTmAM22Eb+RfDdTl5yvoj3OxhRM966CefVgYq764URk0ZGjCOzgU0InWRk
+	 M8jPlC8NjwU/ccQkSjXqx5zVD3hsijJQD9VrspvAaNqstUG8fTgYUieY83LqoDYdph
+	 BFWwoAJXpgwmg==
+Date: Mon, 15 Apr 2024 13:46:24 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: mhkelley58@gmail.com
+Cc: mhklinux@outlook.com, robin.murphy@arm.com, joro@8bytes.org,
+ will@kernel.org, jgross@suse.com, sstabellini@kernel.org,
+ oleksandr_tyshchenko@epam.com, hch@lst.de, m.szyprowski@samsung.com,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org, roberto.sassu@huaweicloud.com
+Subject: Re: [PATCH 1/2] swiotlb: Remove alloc_size argument to
+ swiotlb_tbl_map_single()
+Message-ID: <20240415134624.22092bb0@meshulam.tesarici.cz>
+In-Reply-To: <20240408041142.665563-1-mhklinux@outlook.com>
+References: <20240408041142.665563-1-mhklinux@outlook.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
- <20240412143719.11398-4-Jonathan.Cameron@huawei.com> <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
- <20240415115203.0000011b@Huawei.com>
-In-Reply-To: <20240415115203.0000011b@Huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 15 Apr 2024 13:52:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ipGX8WL_YuB_x7=yxY1p_Q=U=9UmqwNdXcA9HgD=_1hQ@mail.gmail.com>
-Message-ID: <CAJZ5v0ipGX8WL_YuB_x7=yxY1p_Q=U=9UmqwNdXcA9HgD=_1hQ@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from acpi_processor_get_info()
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, x86@kernel.org, Russell King <linux@armlinux.org.uk>, 
-	Miguel Luis <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, 
-	Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linuxarm@huawei.com, 
-	justin.he@arm.com, jianyong.wu@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 15, 2024 at 12:52=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Fri, 12 Apr 2024 20:30:40 +0200
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->
-> > On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > From: James Morse <james.morse@arm.com>
-> > >
-> > > The arm64 specific arch_register_cpu() call may defer CPU registratio=
-n
-> > > until the ACPI interpreter is available and the _STA method can
-> > > be evaluated.
-> > >
-> > > If this occurs, then a second attempt is made in
-> > > acpi_processor_get_info(). Note that the arm64 specific call has
-> > > not yet been added so for now this will never be successfully
-> > > called.
-> > >
-> > > Systems can still be booted with 'acpi=3Doff', or not include an
-> > > ACPI description at all as in these cases arch_register_cpu()
-> > > will not have deferred registration when first called.
-> > >
-> > > This moves the CPU register logic back to a subsys_initcall(),
-> > > while the memory nodes will have been registered earlier.
-> > > Note this is where the call was prior to the cleanup series so
-> > > there should be no side effects of moving it back again for this
-> > > specific case.
-> > >
-> > > [PATCH 00/21] Initial cleanups for vCPU HP.
-> > > https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
-> > >
-> > > e.g. 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES"=
-)
-> > >
-> > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > Reviewed-by: Gavin Shan <gshan@redhat.com>
-> > > Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> > > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> > > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Signed-off-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
-> > > ---
-> > > v5: Update commit message to make it clear this is moving the
-> > >     init back to where it was until very recently.
-> > >
-> > >     No longer change the condition in the earlier registration point
-> > >     as that will be handled by the arm64 registration routine
-> > >     deferring until called again here.
-> > > ---
-> > >  drivers/acpi/acpi_processor.c | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_proces=
-sor.c
-> > > index 93e029403d05..c78398cdd060 100644
-> > > --- a/drivers/acpi/acpi_processor.c
-> > > +++ b/drivers/acpi/acpi_processor.c
-> > > @@ -317,6 +317,18 @@ static int acpi_processor_get_info(struct acpi_d=
-evice *device)
-> > >
-> > >         c =3D &per_cpu(cpu_devices, pr->id);
-> > >         ACPI_COMPANION_SET(&c->dev, device);
-> > > +       /*
-> > > +        * Register CPUs that are present. get_cpu_device() is used t=
-o skip
-> > > +        * duplicate CPU descriptions from firmware.
-> > > +        */
-> > > +       if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
-> > > +           !get_cpu_device(pr->id)) {
-> > > +               int ret =3D arch_register_cpu(pr->id);
-> > > +
-> > > +               if (ret)
-> > > +                       return ret;
-> > > +       }
-> > > +
-> > >         /*
-> > >          *  Extra Processor objects may be enumerated on MP systems w=
-ith
-> > >          *  less than the max # of CPUs. They should be ignored _iff
-> > > --
-> >
-> > I am still unsure why there need to be two paths calling
-> > arch_register_cpu() in acpi_processor_get_info().
->
-> I replied further down the thread, but the key point was to maintain
-> the strong distinction between 'what' was done in a real hotplug
-> path vs one where onlining was all.  We can relax that but it goes
-> contrary to the careful dance that was needed to get any agreement
-> to the ARM architecture aspects of this.
+On Sun,  7 Apr 2024 21:11:41 -0700
+mhkelley58@gmail.com wrote:
 
-This seems to go beyond technical territory.
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Currently swiotlb_tbl_map_single() takes alloc_align_mask and
+> alloc_size arguments to specify an swiotlb allocation that is
+> larger than mapping_size. This larger allocation is used solely
+> by iommu_dma_map_single() to handle untrusted devices that should
+> not have DMA visibility to memory pages that are partially used
+> for unrelated kernel data.
+> 
+> Having two arguments to specify the allocation is redundant. While
+> alloc_align_mask naturally specifies the alignment of the starting
+> address of the allocation, it can also implicitly specify the size
+> by rounding up the mapping_size to that alignment.
+> 
+> Additionally, the current approach has an edge case bug.
+> iommu_dma_map_page() already does the rounding up to compute the
+> alloc_size argument. But swiotlb_tbl_map_single() then calculates
+> the alignment offset based on the DMA min_align_mask, and adds
+> that offset to alloc_size. If the offset is non-zero, the addition
+> may result in a value that is larger than the max the swiotlb can
+> allocate. If the rounding up is done _after_ the alignment offset is
+> added to the mapping_size (and the original mapping_size conforms to
+> the value returned by swiotlb_max_mapping_size), then the max that the
+> swiotlb can allocate will not be exceeded.
+> 
+> In view of these issues, simplify the swiotlb_tbl_map_single() interface
+> by removing the alloc_size argument. Most call sites pass the same
+> value for mapping_size and alloc_size, and they pass alloc_align_mask
+> as zero. Just remove the redundant argument from these callers, as they
+> will see no functional change. For iommu_dma_map_page() also remove
+> the alloc_size argument, and have swiotlb_tbl_map_single() compute
+> the alloc_size by rounding up mapping_size after adding the offset
+> based on min_align_mask. This has the side effect of fixing the
+> edge case bug but with no other functional change.
+> 
+> Also add a sanity test on the alloc_align_mask. While IOMMU code
+> currently ensures the granule is not larger than PAGE_SIZE, if
+> that guarantee were to be removed in the future, the downstream
+> effect on the swiotlb might go unnoticed until strange allocation
+> failures occurred.
+> 
+> Tested on an ARM64 system with 16K page size and some kernel
+> test-only hackery to allow modifying the DMA min_align_mask and
+> the granule size that becomes the alloc_align_mask. Tested these
+> combinations with a variety of original memory addresses and
+> sizes, including those that reproduce the edge case bug:
+> 
+> * 4K granule and 0 min_align_mask
+> * 4K granule and 0xFFF min_align_mask (4K - 1)
+> * 16K granule and 0xFFF min_align_mask
+> * 64K granule and 0xFFF min_align_mask
+> * 64K granule and 0x3FFF min_align_mask (16K - 1)
+> 
+> With the changes, all combinations pass.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> I've haven't used any "Fixes:" tags. This patch really should be
+> backported only if all the other recent swiotlb fixes get backported,
+> and I'm unclear on whether that will happen.
+> 
+> I saw the brief discussion about removing the "dir" parameter from
+> swiotlb_tbl_map_single(). That removal could easily be done as part
+> of this patch, since it's already changing the swiotlb_tbl_map_single()
+> parameters. But I think the conclusion of the discussion was to leave
+> the "dir" parameter for symmetry with the swiotlb_sync_*() functions.
+> Please correct me if that's wrong, and I'll respin this patch to do
+> the removal.
 
-As a general rule, we tend to combine code paths that look similar
-instead of making them separate on purpose.  Especially with a little
-to no explanation of the technical reason.
+Hi Michael,
 
-> >
-> > Just below the comment partially pulled into the patch context above,
-> > there is this code:
-> >
-> > if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-> >          int ret =3D acpi_processor_hotadd_init(pr);
-> >
-> >         if (ret)
-> >                 return ret;
-> > }
-> >
-> > For the sake of the argument, fold acpi_processor_hotadd_init() into
-> > it and drop the redundant _STA check from it:
->
-> If we combine these, the _STA check is necessary because we will call thi=
-s
-> path for delayed onlining of ARM64 CPUs (if the earlier registration code
-> call or arch_register_cpu() returned -EPROBE defer). That's the only way
-> we know that a given CPU is online capable but firmware is saying we can'=
-t
-> bring it online yet (it may be be vHP later).
+sorry for taking so long to answer. Yes, there was no agreement on the
+removal of the "dir" parameter, but I'm not sure it's because of
+symmetry with swiotlb_sync_*(), because the topic was not really
+discussed.
 
-Ignoring the above as per the other message.
+The discussion was about the KUnit test suite and whether direction is
+a property of the bounce buffer or of each sync operation. Since DMA API
+defines associates each DMA buffer with a direction, the direction
+parameter passed to swiotlb_sync_*() should match what was passed to
+swiotlb_tbl_map_single(), because that's how it is used by the generic
+DMA code. In other words, if the parameter is kept, it should be kept
+to match dma_map_*().
 
-> >
-> > if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
-> >         if (invalid_phys_cpuid(pr->phys_id))
-> >                 return -ENODEV;
-> >
-> >         cpu_maps_update_begin();
-> >         cpus_write_lock();
-> >
-> >        ret =3D acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->=
-id);
->
-> I read that call as
->         acpi_map_cpu_for_physical_cpu_hotplug()
-> but we could make it equivalent of.
->         acpi_map_cpu_for_whatever_cpu_hotplug()
+However, there is also symmetry with swiotlb_tbl_unmap_single(). This
+function does use the parameter for the final sync. I believe there
+should be a matching initial sync in swiotlb_tbl_map_single(). In
+short, the buffer sync for DMA non-coherent devices should be moved from
+swiotlb_map() to swiotlb_tbl_map_single(). If this sync is not needed,
+then the caller can (and should) include DMA_ATTR_SKIP_CPU_SYNC in
+the flags parameter.
 
-Yes.
+To sum it up:
 
-> (I'm not proposing those names though ;)
+* Do *NOT* remove the "dir" parameter.
+* Let me send a patch which moves the initial buffer sync.
 
-Sure.
+Petr T
 
-> in which case it is fine to just stub it out on ARM64.
-> >        if (ret) {
-> >                 cpus_write_unlock();
-> >                 cpu_maps_update_done();
-> >                 return ret;
-> >        }
-> >        ret =3D arch_register_cpu(pr->id);
-> >        if (ret) {
-> >                 acpi_unmap_cpu(pr->id);
-> >
-> >                 cpus_write_unlock();
-> >                 cpu_maps_update_done();
-> >                 return ret;
-> >        }
-> >       pr_info("CPU%d has been hot-added\n", pr->id);
-> >       pr->flags.need_hotplug_init =3D 1;
-> This one needs more careful handling because we are calling this
-> for non hotplug cases on arm64 in which case we end up setting this
-> for initially online CPUs - thus if we offline and online them
-> again via sysfs /sys/bus/cpu/device/cpuX/online it goes through the
-> hotplug path and should not.
->
-> So I need a way to detect if we are hotplugging the cpu or not.
-> Is there a standard way to do this?
+>  drivers/iommu/dma-iommu.c |  2 +-
+>  drivers/xen/swiotlb-xen.c |  2 +-
+>  include/linux/swiotlb.h   |  2 +-
+>  kernel/dma/swiotlb.c      | 56
+> +++++++++++++++++++++++++++++---------- 4 files changed, 45
+> insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 07d087eecc17..c21ef1388499 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1165,7 +1165,7 @@ static dma_addr_t iommu_dma_map_page(struct
+> device *dev, struct page *page, trace_swiotlb_bounced(dev, phys,
+> size); 
+>  		aligned_size = iova_align(iovad, size);
+> -		phys = swiotlb_tbl_map_single(dev, phys, size,
+> aligned_size,
+> +		phys = swiotlb_tbl_map_single(dev, phys, size,
+>  					      iova_mask(iovad), dir,
+> attrs); 
+>  		if (phys == DMA_MAPPING_ERROR)
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index 1c4ef5111651..6579ae3f6dac 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -216,7 +216,7 @@ static dma_addr_t xen_swiotlb_map_page(struct
+> device *dev, struct page *page, */
+>  	trace_swiotlb_bounced(dev, dev_addr, size);
+>  
+> -	map = swiotlb_tbl_map_single(dev, phys, size, size, 0, dir,
+> attrs);
+> +	map = swiotlb_tbl_map_single(dev, phys, size, 0, dir, attrs);
+>  	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
+>  		return DMA_MAPPING_ERROR;
+>  
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index ea23097e351f..14bc10c1bb23 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -43,7 +43,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
+>  extern void __init swiotlb_update_mem_attributes(void);
+>  
+>  phys_addr_t swiotlb_tbl_map_single(struct device *hwdev, phys_addr_t
+> phys,
+> -		size_t mapping_size, size_t alloc_size,
+> +		size_t mapping_size,
+>  		unsigned int alloc_aligned_mask, enum
+> dma_data_direction dir, unsigned long attrs);
+>  
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index a5e0dfc44d24..046da973a7e2 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -1340,15 +1340,40 @@ static unsigned long mem_used(struct
+> io_tlb_mem *mem) 
+>  #endif /* CONFIG_DEBUG_FS */
+>  
+> +/**
+> + * swiotlb_tbl_map_single() - bounce buffer map a single contiguous
+> physical area
+> + * @dev:		Device which maps the buffer.
+> + * @orig_addr:		Original (non-bounced) physical IO
+> buffer address
+> + * @mapping_size:	Requested size of the actual bounce buffer,
+> excluding
+> + *			any pre- or post-padding for alignment
+> + * @alloc_align_mask:	Required start and end alignment of the
+> allocated buffer
+> + * @dir:		DMA direction
+> + * @attrs:		Optional DMA attributes for the map
+> operation
+> + *
+> + * Find and allocate a suitable sequence of IO TLB slots for the
+> request.
+> + * The allocated space starts at an alignment specified by
+> alloc_align_mask,
+> + * and the size of the allocated space is rounded up so that the
+> total amount
+> + * of allocated space is a multiple of (alloc_align_mask + 1). If
+> + * alloc_align_mask is zero, the allocated space may be at any
+> alignment and
+> + * the size is not rounded up.
+> + *
+> + * The returned address is within the allocated space and matches
+> the bits
+> + * of orig_addr that are specified in the DMA min_align_mask for the
+> device. As
+> + * such, this returned address may be offset from the beginning of
+> the allocated
+> + * space. The bounce buffer space starting at the returned address
+> for
+> + * mapping_size bytes is initialized to the contents of the original
+> IO buffer
+> + * area. Any pre-padding (due to an offset) and any post-padding
+> (due to
+> + * rounding-up the size) is not initialized.
+> + */
+>  phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t
+> orig_addr,
+> -		size_t mapping_size, size_t alloc_size,
+> -		unsigned int alloc_align_mask, enum
+> dma_data_direction dir,
+> -		unsigned long attrs)
+> +		size_t mapping_size, unsigned int alloc_align_mask,
+> +		enum dma_data_direction dir, unsigned long attrs)
+>  {
+>  	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
+>  	unsigned int offset;
+>  	struct io_tlb_pool *pool;
+>  	unsigned int i;
+> +	size_t size;
+>  	int index;
+>  	phys_addr_t tlb_addr;
+>  	unsigned short pad_slots;
+> @@ -1362,20 +1387,24 @@ phys_addr_t swiotlb_tbl_map_single(struct
+> device *dev, phys_addr_t orig_addr, if
+> (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) pr_warn_once("Memory
+> encryption is active and system is using DMA bounce buffers\n"); 
+> -	if (mapping_size > alloc_size) {
+> -		dev_warn_once(dev, "Invalid sizes (mapping: %zd
+> bytes, alloc: %zd bytes)",
+> -			      mapping_size, alloc_size);
+> -		return (phys_addr_t)DMA_MAPPING_ERROR;
+> -	}
+> +	/*
+> +	 * The default swiotlb memory pool is allocated with
+> PAGE_SIZE
+> +	 * alignment. If a mapping is requested with larger
+> alignment,
+> +	 * the mapping may be unable to use the initial slot(s) in
+> all
+> +	 * sets of IO_TLB_SEGSIZE slots. In such case, a mapping
+> request
+> +	 * of or near the maximum mapping size would always fail.
+> +	 */
+> +	dev_WARN_ONCE(dev, alloc_align_mask > ~PAGE_MASK,
+> +		"Alloc alignment may prevent fulfilling requests
+> with max mapping_size\n"); 
+>  	offset = swiotlb_align_offset(dev, alloc_align_mask,
+> orig_addr);
+> -	index = swiotlb_find_slots(dev, orig_addr,
+> -				   alloc_size + offset,
+> alloc_align_mask, &pool);
+> +	size = ALIGN(mapping_size + offset, alloc_align_mask + 1);
+> +	index = swiotlb_find_slots(dev, orig_addr, size,
+> alloc_align_mask, &pool); if (index == -1) {
+>  		if (!(attrs & DMA_ATTR_NO_WARN))
+>  			dev_warn_ratelimited(dev,
+>  	"swiotlb buffer is full (sz: %zd bytes), total %lu (slots),
+> used %lu (slots)\n",
+> -				 alloc_size, mem->nslabs,
+> mem_used(mem));
+> +				 size, mem->nslabs, mem_used(mem));
+>  		return (phys_addr_t)DMA_MAPPING_ERROR;
+>  	}
+>  
+> @@ -1388,7 +1417,7 @@ phys_addr_t swiotlb_tbl_map_single(struct
+> device *dev, phys_addr_t orig_addr, offset &= (IO_TLB_SIZE - 1);
+>  	index += pad_slots;
+>  	pool->slots[index].pad_slots = pad_slots;
+> -	for (i = 0; i < nr_slots(alloc_size + offset); i++)
+> +	for (i = 0; i < (nr_slots(size) - pad_slots); i++)
+>  		pool->slots[index + i].orig_addr =
+> slot_addr(orig_addr, i); tlb_addr = slot_addr(pool->start, index) +
+> offset; /*
+> @@ -1543,8 +1572,7 @@ dma_addr_t swiotlb_map(struct device *dev,
+> phys_addr_t paddr, size_t size, 
+>  	trace_swiotlb_bounced(dev, phys_to_dma(dev, paddr), size);
+>  
+> -	swiotlb_addr = swiotlb_tbl_map_single(dev, paddr, size,
+> size, 0, dir,
+> -			attrs);
+> +	swiotlb_addr = swiotlb_tbl_map_single(dev, paddr, size, 0,
+> dir, attrs); if (swiotlb_addr == (phys_addr_t)DMA_MAPPING_ERROR)
+>  		return DMA_MAPPING_ERROR;
+>  
 
-If you mean physical hot-add, I don't think so.
-
-What exactly do you need to do differently in the two cases?
-
->  I haven't figured out how to use flags in drivers to communicate this st=
-ate.
->
-> >
-> >       cpus_write_unlock();
-> >       cpu_maps_update_done();
-> > }
-> >
-> > so I'm not sure why this cannot be combined with the new code.
-> >
-> > Say acpi_map_cpu) / acpi_unmap_cpu() are turned into arch calls.
-> > What's the difference then?  The locking, which should be fine if I'm
-> > not mistaken and need_hotplug_init that needs to be set if this code
-> > runs after the processor driver has loaded AFAICS.
->
-> That's the bit that I'm currently finding a challenge. Is there a clean
-> way to detect that?
-
-If you mean the need_hotplug_init flag, I'm currently a bit struggling
-to convince myself that it is really needed.
