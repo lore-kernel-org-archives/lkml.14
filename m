@@ -1,96 +1,203 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8888059178;
-	Mon, 15 Apr 2024 09:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C10347A7F;
+	Mon, 15 Apr 2024 09:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713174539; cv=none; b=h1SDrksle7+Q+KCxG++z5V6ZLi54xjsbwkPpzAZvcNwcYPA5DW0yuBkD3iBQIhtI1li8Wgzez+S51fccJIoipZYDCgZ8afN+l+dkJIO8y/QPAtFPtN7Kt/gH7tSiU3Qsrai3hq+sJ/T6jD0SzON+2kNjhilh244I3AY/k+LW/No=
+	t=1713174592; cv=none; b=LZXxHBbzjeg1rHAwALvatUC69mJYY2GxxPYP+rdijfhiHcAT+WYqoXQJWZkYI1EIZlwfNz0AbshG80csgXrvTffVZ5FjFrRV1PKre54asIR7heEM8L7eZe8W8nvSdCbt5wU5ykhs2a7gBwrnAziabgL9Cupq4W3+wmpqo4L2mmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713174539; c=relaxed/simple;
-	bh=B1hg7pDwSLKfgIcaXOtyaNyjw7ZjJf4j7FTIwgWeOBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VmiaPAmpanpgNa8KbKv79lPUlYbHzspzKrxxtGQfVCyZGjxJlUzAy79A25A7B1Lt14HE23wiEyell+7XNNlNXLQwF7mIPm1u+Zc3WcErJr4Ow3Mly2aE7qDL95woC3FhN5GyHmebNxgyR3p5YAEruwP2gDEDQZOGG5DSjmjyeMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp91t1713174505tqb1fvlq
-X-QQ-Originating-IP: Mg2qhqrNmZ4DabM2cVzkXEFBLfsGGq0/bsCi8GmCGA8=
-Received: from localhost ( [112.0.147.129])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 15 Apr 2024 17:48:23 +0800 (CST)
-X-QQ-SSF: 01400000000000903000000A0000000
-X-QQ-FEAT: 5EQLibG9+Dhd65WhHLcwzoaQdGDyW3R0enkqqtQ1Ltc3ObGMGL+5hVXPVJCU/
-	YqkAQCvRovbfEeki8TEO1E84nUhnEEPW724dbC47yzz+rP9NhpeZVlcpFVx10rzybAT2No/
-	LIJY7OZxPUnEsS7ufuy1Kk2CA6RxuKQDFK+4lq45tvBvd00qAamsXDx6LPzLz5awqyPPcpK
-	YQbycxYKmcMzCMAJEYeQ1IEO7hjhqjdCBIR+vOb+mMV/Z8D3lklHLISOqGv3O1wgt74lkKr
-	A11CELi1hyoVzot4n5jQSeq5+vStcEmqHIY+23YcJpidqCn4jkLrz9X5NmbY0WSUN3dwrdv
-	MvSvVywWBAbNEjvsgeUOUiKkDWY5Fa5WbHydfPBZGRCnaA0PFLJEU3lkRVYc3e8O+oQhhNY
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 5948653929054549873
-From: Dawei Li <dawei.li@shingroup.cn>
-To: daniel.lezcano@kernel.org,
-	rafael@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH] powercap: Avoid explicit cpumask allocation on stack
-Date: Mon, 15 Apr 2024 17:48:21 +0800
-Message-Id: <20240415094821.3060892-1-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1713174592; c=relaxed/simple;
+	bh=HPqIfe8N0h1aRaKL1e6qWNji6hvbGbimqY4dEkNUOi4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=NFAcTYJOcd/XtkPFUKntyvXzTG0WTcbP4cNwdr2i1oiBRThs1B7VFzwrgbJ/AWPzz3AlG1HqcacY2Pp4cXMbooyac6VOB78Ivv1Nmt/mDOnuGCHV5+5rcOIqa5g6QpZDrzWVGduvkfEiMSqORrTVWQ0L6hj7NcvrgyncMD6M/CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HREzJFRF; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HREzJFRF"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 9AC8420FC60E; Mon, 15 Apr 2024 02:49:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9AC8420FC60E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1713174590;
+	bh=I0/lrKTOZRAEKlw4IxM0UxHLji3Bd4EZwvEMBRN/Fps=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HREzJFRFIojtvhKFj4dl+RnRoAPWmBOCXhHvKF0V3TI3hbC/3bErU8JTUi7F/hjMV
+	 9CvIYHwhL4pT6vwbC6627dcePGt8GB6kJGcIeu1tgnw1CSeGg8xMHf+0IpLU3Q69GT
+	 WcigWcty1iqnWg4s2SJYN+I9Eh3+bA57QQnEPdow=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH net-next] net: mana: Add new device attributes for mana
+Date: Mon, 15 Apr 2024 02:49:49 -0700
+Message-Id: <1713174589-29243-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-In general it's preferable to avoid placing cpumasks on the stack, as
-for large values of NR_CPUS these can consume significant amounts of
-stack space and make stack overflows more likely.
+Add new device attributes to view multiport, msix, and adapter MTU
+setting for MANA device.
 
-Use cpumask_weight_and() to avoid the need for a temporary cpumask on
-the stack.
-
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- drivers/powercap/dtpm_cpu.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 74 +++++++++++++++++++
+ include/net/mana/gdma.h                       |  9 +++
+ 2 files changed, 83 insertions(+)
 
-diff --git a/drivers/powercap/dtpm_cpu.c b/drivers/powercap/dtpm_cpu.c
-index bc90126f1b5f..6b6f51b21550 100644
---- a/drivers/powercap/dtpm_cpu.c
-+++ b/drivers/powercap/dtpm_cpu.c
-@@ -43,13 +43,11 @@ static u64 set_pd_power_limit(struct dtpm *dtpm, u64 power_limit)
- 	struct dtpm_cpu *dtpm_cpu = to_dtpm_cpu(dtpm);
- 	struct em_perf_domain *pd = em_cpu_get(dtpm_cpu->cpu);
- 	struct em_perf_state *table;
--	struct cpumask cpus;
- 	unsigned long freq;
- 	u64 power;
- 	int i, nr_cpus;
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 1332db9a08eb..6674a02cff06 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1471,6 +1471,65 @@ static bool mana_is_pf(unsigned short dev_id)
+ 	return dev_id == MANA_PF_DEVICE_ID;
+ }
  
--	cpumask_and(&cpus, cpu_online_mask, to_cpumask(pd->cpus));
--	nr_cpus = cpumask_weight(&cpus);
-+	nr_cpus = cpumask_weight_and(cpu_online_mask, to_cpumask(pd->cpus));
++static ssize_t mana_attr_show(struct device *dev,
++			      struct device_attribute *attr, char *buf)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct gdma_context *gc = pci_get_drvdata(pdev);
++	struct mana_context *ac = gc->mana.driver_data;
++
++	if (strcmp(attr->attr.name, "mport") == 0)
++		return snprintf(buf, PAGE_SIZE, "%d\n", ac->num_ports);
++	else if (strcmp(attr->attr.name, "adapter_mtu") == 0)
++		return snprintf(buf, PAGE_SIZE, "%d\n", gc->adapter_mtu);
++	else if (strcmp(attr->attr.name, "msix") == 0)
++		return snprintf(buf, PAGE_SIZE, "%d\n", gc->max_num_msix);
++	else
++		return -EINVAL;
++}
++
++static int mana_gd_setup_sysfs(struct pci_dev *pdev)
++{
++	struct gdma_context *gc = pci_get_drvdata(pdev);
++	int retval = 0;
++
++	gc->mana_attributes.mana_mport_attr.attr.name = "mport";
++	gc->mana_attributes.mana_mport_attr.attr.mode = 0444;
++	gc->mana_attributes.mana_mport_attr.show = mana_attr_show;
++	sysfs_attr_init(&gc->mana_attributes.mana_mport_attr);
++	retval = device_create_file(&pdev->dev,
++				    &gc->mana_attributes.mana_mport_attr);
++	if (retval < 0)
++		return retval;
++
++	gc->mana_attributes.mana_adapter_mtu_attr.attr.name = "adapter_mtu";
++	gc->mana_attributes.mana_adapter_mtu_attr.attr.mode = 0444;
++	gc->mana_attributes.mana_adapter_mtu_attr.show = mana_attr_show;
++	sysfs_attr_init(&gc->mana_attributes.mana_adapter_mtu_attr);
++	retval = device_create_file(&pdev->dev,
++				    &gc->mana_attributes.mana_adapter_mtu_attr);
++	if (retval < 0)
++		goto mtu_attr_error;
++
++	gc->mana_attributes.mana_msix_attr.attr.name = "msix";
++	gc->mana_attributes.mana_msix_attr.attr.mode = 0444;
++	gc->mana_attributes.mana_msix_attr.show = mana_attr_show;
++	sysfs_attr_init(&gc->mana_attributes.mana_msix_attr);
++	retval = device_create_file(&pdev->dev,
++				    &gc->mana_attributes.mana_msix_attr);
++	if (retval < 0)
++		goto msix_attr_error;
++
++	return retval;
++msix_attr_error:
++	device_remove_file(&pdev->dev,
++			   &gc->mana_attributes.mana_adapter_mtu_attr);
++mtu_attr_error:
++	device_remove_file(&pdev->dev,
++			   &gc->mana_attributes.mana_mport_attr);
++	return retval;
++}
++
+ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct gdma_context *gc;
+@@ -1519,6 +1578,10 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	gc->bar0_va = bar0_va;
+ 	gc->dev = &pdev->dev;
  
- 	rcu_read_lock();
- 	table = em_perf_state_from_pd(pd);
-@@ -123,11 +121,9 @@ static int update_pd_power_uw(struct dtpm *dtpm)
- 	struct dtpm_cpu *dtpm_cpu = to_dtpm_cpu(dtpm);
- 	struct em_perf_domain *em = em_cpu_get(dtpm_cpu->cpu);
- 	struct em_perf_state *table;
--	struct cpumask cpus;
- 	int nr_cpus;
++	err = mana_gd_setup_sysfs(pdev);
++	if (err < 0)
++		goto free_gc;
++
+ 	err = mana_gd_setup(pdev);
+ 	if (err)
+ 		goto unmap_bar;
+@@ -1544,6 +1607,15 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return err;
+ }
  
--	cpumask_and(&cpus, cpu_online_mask, to_cpumask(em->cpus));
--	nr_cpus = cpumask_weight(&cpus);
-+	nr_cpus = cpumask_weight_and(cpu_online_mask, to_cpumask(em->cpus));
++static void mana_cleanup_sysfs_files(struct pci_dev *pdev,
++				     struct gdma_context *gc)
++{
++	device_remove_file(&pdev->dev, &gc->mana_attributes.mana_msix_attr);
++	device_remove_file(&pdev->dev,
++			   &gc->mana_attributes.mana_adapter_mtu_attr);
++	device_remove_file(&pdev->dev, &gc->mana_attributes.mana_mport_attr);
++}
++
+ static void mana_gd_remove(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+@@ -1552,6 +1624,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
  
- 	rcu_read_lock();
- 	table = em_perf_state_from_pd(em);
+ 	mana_gd_cleanup(pdev);
+ 
++	mana_cleanup_sysfs_files(pdev, gc);
++
+ 	pci_iounmap(pdev, gc->bar0_va);
+ 
+ 	vfree(gc);
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 27684135bb4d..ea636959164c 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -354,6 +354,12 @@ struct gdma_irq_context {
+ 	char name[MANA_IRQ_NAME_SZ];
+ };
+ 
++struct mana_device_attributes {
++	struct device_attribute mana_mport_attr;
++	struct device_attribute mana_adapter_mtu_attr;
++	struct device_attribute mana_msix_attr;
++};
++
+ struct gdma_context {
+ 	struct device		*dev;
+ 
+@@ -395,6 +401,9 @@ struct gdma_context {
+ 
+ 	/* Azure RDMA adapter */
+ 	struct gdma_dev		mana_ib;
++
++	/* device attributes */
++	struct mana_device_attributes mana_attributes;
+ };
+ 
+ #define MAX_NUM_GDMA_DEVICES	4
 -- 
-2.27.0
+2.34.1
 
