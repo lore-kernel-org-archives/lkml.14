@@ -1,86 +1,106 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCE75789E
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F050F5810D;
+	Mon, 15 Apr 2024 09:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713174525; cv=none; b=YkoQuNXfyCbbeTCApifIicaUWs4Nwl7b2cuVsGToARslkdSK0Cr2qcHqyWeaqNeDsoQyUCgTP2AtRWtyqgzGr30p1iqs6hMLqusJwgxJnfzMhguNE3Z1JkYDKOUMlg8Itm0w8wBQJG5/ilJzBwWV0HeSVE1YUcq013FWt2mWTxw=
+	t=1713174526; cv=none; b=N2kD3pDxcmIr0/LJyuze1oAE78MUESSGA0jbLMbkPHXIkTCrV/Q2Ec2suMgXTJVjgNXlYgD75UaJbDDiLT74i5JgvNc605I7xon7pOM9aVc6Euybxea/zJjaaFhUwg3VeJQTCoqpvCmBxnZ0x2804w0HtNMa01A6ALe1HD63RBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713174525; c=relaxed/simple;
-	bh=FUu/1U3bMfwe1Wxlff4HfG4iKHHsFJST5Zn6hkOB0qw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QMqggtnQWd/1NiNowwkvCh51otDeIEVW0GwFGLvvwqS9R24VlDN62Y9vZp2kL4KAurF1O88jNcSbBTjPRiACRhKbya3rrNX0okNhI+FgI370EuCuaDNFwT84BE9Z9qo1IAu1F8S/0deoydybDIVLBBB9slV0QiiRx+esvtVSp9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VJ2Qf4G5czYdNB;
-	Mon, 15 Apr 2024 17:47:38 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 026B318005D;
-	Mon, 15 Apr 2024 17:48:39 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 15 Apr 2024 17:48:37 +0800
-Message-ID: <e3e305c6-e8cc-6b10-fd52-fcb20ee6d3cf@huawei.com>
-Date: Mon, 15 Apr 2024 17:48:37 +0800
+	s=arc-20240116; t=1713174526; c=relaxed/simple;
+	bh=X6lYavWy79tCYcp+pVwRpetbT7q8jO8kWdKXbffGxXA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OtyREGeMgnr7F2nHvRZeNjElVwMD7+InGowBzAHh/UL/yPQPpYZVpfJpi6fTIEm8IWH5wT3aW8EYvcEmdyufF51Oa9BzewJvAynHIKlrTWrJpwfZ0gFomCDxwUKIx2i4G/5sNDe3o5NgAncIdyf48UM+Bt8hc+giwJp0LWRfBsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,202,1708354800"; 
+   d="scan'208";a="201479155"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 15 Apr 2024 18:48:43 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.74])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0A3EC4006DE8;
+	Mon, 15 Apr 2024 18:48:39 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next RFC v3 6/7] net: ravb: Use NAPI threaded mode on 1-core CPUs with GbEth IP
+Date: Mon, 15 Apr 2024 10:48:03 +0100
+Message-Id: <20240415094804.8016-7-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
+References: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v2 4/9] arm64/cpufeature: Simplify detect PE support for
- FEAT_NMI
-To: Mark Brown <broonie@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
-	<ardb@kernel.org>, <anshuman.khandual@arm.com>, <miguel.luis@oracle.com>,
-	<joey.gouly@arm.com>, <ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
-	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>, <liwei391@huawei.com>,
-	<peterz@infradead.org>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
-	<kristina.martsenko@arm.com>, <robh@kernel.org>,
-	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
-	<shijie@os.amperecomputing.com>, <bhe@redhat.com>,
-	<akpm@linux-foundation.org>, <horms@kernel.org>,
-	<rmk+kernel@armlinux.org.uk>, <Jonathan.Cameron@huawei.com>,
-	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
-	<frederic@kernel.org>, <reijiw@google.com>, <ruanjinjie@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-References: <20240411064858.3232574-1-liaochang1@huawei.com>
- <20240411064858.3232574-5-liaochang1@huawei.com>
- <Zhx/FKeAtzResmtP@finisterre.sirena.org.uk>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <Zhx/FKeAtzResmtP@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-Mark,
+NAPI Threaded mode (along with the previously enabled SW IRQ Coalescing)
+is required to improve network stack performance for single core SoCs
+using the GbEth IP (currently the RZ/G2L SoC family and the RZ/G3S SoC).
 
-在 2024/4/15 9:12, Mark Brown 写道:
-> On Thu, Apr 11, 2024 at 06:48:53AM +0000, Liao Chang wrote:
->> From: Jinjie Ruan <ruanjinjie@huawei.com>
->>
->> Simplify the Non-maskable Interrupts feature implementation with
->> ARM64_CPUID_FIELDS macro.
-> 
-> Just squash this into the patch you're updating (I already have that
-> locally for my half rebased version of the series).
+This patch gives the following improvements during testing with iperf3.
 
-Acked, thanks for suggestion. I've squashed the 4th and 5th patches into
-the 2nd patch of the series in v2. Please review the updated series v3 and
-let me know if you have any futher comments.
+  * RZ/G2UL:
+    * TCP TX: +32% bandwidth (638Mbps -> 841Mbps)
+    * TXP RX: +8.8% bandwidth (667Mbps -> 726Mbps)
+    * UDP RX: +104% bandwidth (53Mbps -> 108Mbps)
 
-Thanks.
+  * RZ/G3S:
+    * TCP TX: 29% bandwidth (529Mbps -> 681Mbps)
+    * UDP RX: +1290% bandwidth (6.46Mbps -> 90Mbps)
 
+  * RZ/Five:
+    * UDP RX: Test no longer crashes (0 -> 20 Mbps)
+
+This patch gives the following reductions in performance in the same
+testing:
+
+  * RZ/G2UL:
+    * UDP TX: -7.5% bandwidth (594Mbps -> 549Mbps)
+
+  * RZ/G3S:
+    * UDP TX: -5% bandwidth (625Mbps -> 594Mbps)
+
+These losses are considered acceptable given the benefits shown above.
+If UDP TX bandwidth must be maximised for a particular use case, NAPI
+threaded mode can be disabled at runtime via sysfs writes.
+
+The improvement of UDP RX bandwidth for the single core SoCs (RZ/G2UL &
+RZ/G3S) is particularly critical.
+
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+ drivers/net/ethernet/renesas/ravb_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 26b70b996bd3..7434faf0820c 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -2938,8 +2938,11 @@ static int ravb_probe(struct platform_device *pdev)
+ 	if (info->nc_queues)
+ 		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll);
+ 
+-	if (info->needs_irq_coalesce)
++	if (info->needs_irq_coalesce) {
+ 		netdev_sw_irq_coalesce_default_on(ndev);
++		if (num_present_cpus() == 1)
++			dev_set_threaded(ndev, true);
++	}
+ 
+ 	/* Network device register */
+ 	error = register_netdev(ndev);
 -- 
-BR
-Liao, Chang
+2.39.2
+
