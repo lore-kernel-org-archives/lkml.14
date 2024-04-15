@@ -1,190 +1,125 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2096.outbound.protection.outlook.com [40.92.20.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E613FC11
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713147110; cv=none; b=Xt3yjyoB9jVfbQ7jd+S2w3r2K4kpa06epw5CMn8APpapr2N0ogzAoSUFlSuUcp5zGRl/EQNH7haSb9B05N4/GHXJNEUjTuZ4FDo0k2kcNJXkpx38Zr84Ua60iWR3NZlJLN1wNMgtwOtLwwq0tvvlW9sbAKVPZdFp3dWblWxg0o0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713147110; c=relaxed/simple;
-	bh=FNI2hbZQ6yRPcqMBiF73nsNUvU2wdZwTxHyMc7YirRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GMJD8i8JSoGKIQOfgfi9gTDgFxNFd7uHRPbKyFgFfePl9M82YRfsSEhGwrvxcSJoXmBeX1pYbKjObreSYlqd03knpvEjRA/6SR+qjZHgBajtWjxk5WOnKFdNMqhSWj2Rc8MfHOLrjmGtcHzDc02h5LwiXQaPsgdyBlGvDKeIoVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=LGAzhJCO; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830D41C02;
+	Mon, 15 Apr 2024 02:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713147409; cv=fail; b=R9/4XexEiweMlvQfmgn9VX01yjh0Gjo9Kp0wS29iN3ZhftINYe+LGzuty/q2vJiNfDFaSRcKncz8g5OLYeoKeg+FxjX35LBL1j+98VmEa/u4dj80nRs97ZnAY0rDeFyw2Nzy71YVAShCDVkyftK4e5ER3nawYf4KJjh/LmjcBHo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713147409; c=relaxed/simple;
+	bh=tXqo5g8/qyT9tAf/wuUJTPF1IzTPXxjNRulmJQwY38Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MS+qUEZvq6jUkdvEX7E/5YmV2/ZJix4NbCCwMGAvO5JCFwLrxkBIL193Rn9XOdD/VBdcP8eGxlSYoCVK3P7pUYgcEMNhyaPqdKOWKagWeMsWdmhvQ9UD/Juvgo1w2UeEf9OVYTQfdePGtEuJZkD7rAobVsAGa8e0cUtksRMLKyE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=NCxAY8NV; arc=fail smtp.client-ip=40.92.20.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="LGAzhJCO"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-614ec7ee902so26992797b3.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 19:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1713147107; x=1713751907; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FgP2Xak0QM5b9Kf4Rg1Xpla0bktktcV08KWV5hlHTuc=;
-        b=LGAzhJCORVvHIk11qcs5HmdzTnnNSnjkWR0tuWjN1YraXDuzQLSNlZdPAxH9Mv7bKV
-         DY5OBl3p/n9M23C7xrRbJS5YzugrSBNJyw+78m7BJOf5bwTho9f6+vY0PI6iT4wOt3Hh
-         x3r+FwUi90Vdkca+4ZOPk1oC2ZgidKXIgAK02uDyoNLom7f1Tw5ncS721byzS25BGgYM
-         9Ekl33kizVb7/ZagNEBMbJ7yY0cA77W+DWrRlFfNWTyPbY/k6lUBuZKHu+4nbMvy1i0J
-         i3pgF0jXTeHwhO8rDEZN2mrjT9/WqTumSUpZnTPSqJEl6F1FY/8O7x4x2KJYw5w61Ii9
-         3nNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713147107; x=1713751907;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FgP2Xak0QM5b9Kf4Rg1Xpla0bktktcV08KWV5hlHTuc=;
-        b=PKeAkEjKz6FI2tDRPGi7MeU/jKIEOxmyFvXk7vAe79ycRZKBVfATryGf/tAqU7gAA6
-         WKBWEdBQj2kVkr/3/Cnq4IKnZ//Vcl/JLq0K+V+67DzjD3dALjvo7B/I4eF+vteWL/6L
-         Dl2UnTs2/EqeUYXZwPckzwOBbWwvxIaV0+aenPreo5dnEBxh8N6MmLXN7rXdjln+Kqrg
-         XHr6AqmzlIPLzdic58VpNEUhHrD+nErRW2lq+TQrXO/uodHqBa+etPc7kulGPPN/dL5X
-         ZavdaGr/cp/kFGhRyjtHAIv/rExbZRp1Qu+t8ijhA2g6Dv7Ic3DXfciixM1rWCRqCyjg
-         2V2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUpJmd91Z/WvoiaUZ6SmcRWNIhM8HfPbMLFn275s5jogqI9nbG8EZWQPoe7EkvjOV9I6HV4gxg6rTy9pKWZ7GAK7l7ikMWjXsZ2bJ0h
-X-Gm-Message-State: AOJu0YwkP1WU+X8pNLMgFZUWx6Cw9BIAVaCcH8QNneFvLAbWebtbLyHB
-	4Jbuj1FCt4EbsUPZmi+fqvem4K7ziOcyQbF75BWGeNwX/F8zj/R7GMjsyzkN9fsk9Fh8eSYxG9p
-	uLZvaG5A+N3uAw25US+jGaWHDKm95EKjqFH15oQ==
-X-Google-Smtp-Source: AGHT+IHuZPGAYMGmK+xQck7BPRSsMQvuAbbxfYteFWh16Ru2myx792iHZagtWkO2ud0Lu46rEMVk1tapW6/J/6kT15A=
-X-Received: by 2002:a81:af06:0:b0:61a:bff8:2153 with SMTP id
- n6-20020a81af06000000b0061abff82153mr2337501ywh.7.1713147106378; Sun, 14 Apr
- 2024 19:11:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="NCxAY8NV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XHH9jrfR+gweBNIHsI3M6WBQCwOsNLHRzlNlC63DH/QNepMQGawqU2XbYaStAPJP5mZYPU4IxuMNI5Zqp2dPndeBhbKQVJVynaouKIgIV41p5lZkpugTyu5ceMwWyyK7J5aEFJ3jspFHlLS51XZ0CPasWFcjR8HFLtD8bG5LOMQof6VZTxpKKhkBjiHER7I1UB/gZQWN1tK/ZQ+1ztgR72nwKhuifG2aQnfRqibbmoUVhE2cuw/hgNl8sy8dROMvR+InyMK0MzH180rC6O439H/XNH9FvDeaIlEXV7baAWLUbD4/+pjqJeKa1X6p3lCha4ORAOIp676l3tosFmPfuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d9O+4O39afhCYPJQ/Do5fQX0e4O1n1aiB+g+lH+2Ung=;
+ b=PBAb/gdGl5uURgbwt3dplRAtpRuD6ebhGduCR4nVECirwepu6kfh2M6pAPQZzRvV1x5FROB6Esjw+8CT0SRyzyko0svfaPYrFrj5H0PfcAZPngyxA8WVmDtyUYEvC/pr4yhj5TsMi1QRYKZM2ihqvNP8W3H20zNOyP4OnhSie2mTEzSJA3+JEJEUKq7+49Mu8zTA3zkgn9wxPzvbMWqL14K2YLKiI29Fr7xJbyPwY1F8+L7o/sg1oiiWbCesbNh2iFMA2K/gSzBrMAX2jqqxpnyiw5rWrqEkeJDYga170gYTog69QvPo9tR5oOUKFdONAfK5nMb12tDenT5rwhEduQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d9O+4O39afhCYPJQ/Do5fQX0e4O1n1aiB+g+lH+2Ung=;
+ b=NCxAY8NVHzOEvctAfFS+FjpVBiAUy+f8CXE7Z8p5VvqnP0VaGbRQ4GA2qfvSaT4b0zRZsFE/7NQ/oE17kR0aGt5YV+faHphwECW9FZv1fBhrF1DvlOnAqYJX+MTC5P05JLV+GynxZBLieRV55Pso8UTieArlP6zI1Q0UcFg4ZFdAXKS8HFN5PalFgPGwVrs7LSwwy7xNw45QLGcWZsCnSkCu73VT92UUaLedaPke0mWsH5LQ1qPGEsACEsqnGiOiSpUAZuDqnuoyK20EUeVm91jRp4uPzdsWE3ZsG33Y72T0VeeJZd5t7wBLmdHzES6Lf82+D+fC/WVQSKSuqrA7zg==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by BL1PR20MB4635.namprd20.prod.outlook.com (2603:10b6:208:392::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
+ 2024 02:16:44 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7452.046; Mon, 15 Apr 2024
+ 02:16:43 +0000
+Date: Mon, 15 Apr 2024 10:17:03 +0800
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Jisheng Zhang <jszhang@kernel.org>, Liu Gui <kenneth.liu@sophgo.com>, 
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>, dlan@gentoo.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 0/2] riscv: sophgo: add USB phy support for CV18XX series
+Message-ID:
+ <IA1PR20MB4953BBD9F2D6DF4D4AC793D7BB092@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <IA1PR20MB4953780F4617823F7173B6D6BB042@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953780F4617823F7173B6D6BB042@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-TMN: [8S8otwRQE3pEji3qN07gvBd6dptOSydpeVFZW0aPTCM=]
+X-ClientProxiedBy: TYAPR01CA0158.jpnprd01.prod.outlook.com
+ (2603:1096:404:7e::26) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <qchtya3hmtircseu2cwnrn6rdjlvnai63ztyqhofhvso3e4imt@mjjdfb6kiqpg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240414081806.2173098-1-lei.chen@smartx.com> <661c03b8c6cae_3e7732294f8@willemb.c.googlers.com.notmuch>
-In-Reply-To: <661c03b8c6cae_3e7732294f8@willemb.c.googlers.com.notmuch>
-From: Lei Chen <lei.chen@smartx.com>
-Date: Mon, 15 Apr 2024 10:11:34 +0800
-Message-ID: <CAKcXpBwYjLi0xet0fCXkhFQmj5KesvdmgzdPH2dqhnb9oWF_qg@mail.gmail.com>
-Subject: Re: [PATCH net-next v4] tun: limit printing rate when illegal packet
- received by tun dev
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|BL1PR20MB4635:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ec6c4b1-5b9a-4b59-63e9-08dc5cf21800
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	NWK/bFyTLmWD+YOhVoTmf8O5FHuGjRyCcBf66XP4G1foH8ZSq/RyRzGFyRVFBPxGJNpRntxNc6TN4uJjebgPvWCUrPvy3N8g0bLO7nE/S/K9+Ru35Y3Jo5bGBnzqLZU8pW+ihkbukMqvCIflFW4pwU5G4JiyvWey/jhtr7uVeeG0c2faHQJcQOf7iYQBnd4jXizzEaLlWAsKVUauO/lvHmSlP7tm4PVex4hi48VtYq36boAbpOnqp7xaH7x8PogUvV0D6m1Zm29pKw8OaBBbX46Glwu49oBsY8NCiBbWmW6Gp+Q26g5RpsFKjHAaH+3kf/UW8IC5Ikqo1wp4CWzgTZm/RbbtQFKlVA0Jwre60wskMb4PTZGzW3hOG6DEwNCLGxm4aaxye0XMf2Akny8JPENimGv8cD6/+5hXqXwAioIKExnfDDeu4tQD+tT9shhHJAWAt9XiluRvM1vW6TphZzuiMRQn/E7FN1XMH3bEG8Z4tCWeKzP2alq6FdTPx3JDCQSyYFZelEahtXv/02qh6mp2dEDqvW6TyldNGfNyoRGTk+sYbXCZMbAPR0OZ3b3xkkyht6Si4JAo5lOkK/CEckKLAZWTCQL4vMaKpvuBsH5lllz4cQjPWuZFpFK0uuDu59qiM4wj2ItaC61X4N/AHiJFzyb/MMlz0hThuF4oU14OC4kxfbtVQu+2m7vI6L79k9QN3n0Z1M9rfU5uO/wh5RV4LJW4q6iX19FXdp4UH6z0VRzrnnBEZmHFLFdx8sQ6
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?84LNmvLQPdSSo69cFj1mHfedLb88drzy7OhxV4oAwa7dE/oe2pXNRVz+hQ4b?=
+ =?us-ascii?Q?+RRggVDfz5hW7b+6YLe0lUibuh4Beuj/qUYzsRQb8ILeVvVaIOieb+9ERFjs?=
+ =?us-ascii?Q?vLbHf5kw/JxR7lDChLwUEA5EucBb0pPsCJMyE43py6ByJMonAMceTtMlHq1J?=
+ =?us-ascii?Q?OE7htJNJyft+U1xGcpxS9ug31ZMnbDE0uhkhmWJysLflBzbvqNP22qloEzJG?=
+ =?us-ascii?Q?hy7609pmppW4XWZ4m5n1j7UTqsWReHA+DVRaTEnWTABUsfn6w+G+2uEJqX6M?=
+ =?us-ascii?Q?WPg8fFnPNfBu7uLSE8TjO+FGiD8Bp8Jvx2HP2oRUVznGkj1m9yRdmTwcZzdV?=
+ =?us-ascii?Q?wJsZv+j0Trloqa5oe8ir7kcEJx3IOKRMoPU0b5l3491UDI7fodm8z2VvSOIS?=
+ =?us-ascii?Q?q08E+JQu1grERcVy+jqF948AM1JhfIza8kaxru0j2ywNxjbPReLENwfRcvtn?=
+ =?us-ascii?Q?rKVzCT4pSR/4GpBfaT0K5sPAU1Uyrq9XPOjO6+Pdm4t3sFOHEB0maZnoI+lA?=
+ =?us-ascii?Q?QGoX0Z1nEvoumLbjTIkyYsHP1oBoIlkPcoZc9V1BD3nH5lLdRrBbdp56/0tT?=
+ =?us-ascii?Q?9iztkuAIl1nnDsMvVfHhcfNpLfkGg7vCX1DDfCbqLAx5kKsJWTbLVzwnSNdy?=
+ =?us-ascii?Q?yhJizC6clMRFNgztAtdCJRjSO/75UT9bydKOr11df+T6YhYFI4hLzQ3bOa66?=
+ =?us-ascii?Q?HN366ZYdRh9a3z1UNqcYhyXP/EfvQILzGg9mdAkUHKhvarKN6+8QUxSD2rHw?=
+ =?us-ascii?Q?QTwIPpMvu1Kmdve4RcyNC4TLlDYg2OXnNxOk8qCfeXqWJGFuRCJ5auLkmeYC?=
+ =?us-ascii?Q?LtyGeOwuawYD5CVhqAs2AM2OaD2PR3Sj8k0XgG5q8X6oWQX402orx2QaOS5z?=
+ =?us-ascii?Q?1GI7BKt+P5jd4OIOeAsiitfNf5opcRFD9Bk+4m6+cOWZHctlrDqqv83XaU/s?=
+ =?us-ascii?Q?kZhRNyXZUt3SdRT4qHskXom2EQElVeMufO2tTT9YBH1xnUV2hmuu9kp5cd7+?=
+ =?us-ascii?Q?sKvs4yJFSG9N4zIy7F5qh6vhEqvQ6VLymasQkBxlKgBmb8tPoUvKGAPrxPOi?=
+ =?us-ascii?Q?sffwo2IzHPT0mTiSNbyl+ANJfA979DkYEuYZIdBD94rX9AEfu/RZTQdhoWEt?=
+ =?us-ascii?Q?iNz5W0MS6+YebJaRjPW+tLmSLVUtHT+oGhlP6pE3QF0dKUz6FtYFATtSdVs7?=
+ =?us-ascii?Q?nvICsdUj/jJW+p/Me7QPXF7Qg3ZrRq/iPSCuO35M6x9tictlTxDkAj1KSR5I?=
+ =?us-ascii?Q?+x3eLjmM+E4V1v9pnnzj?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ec6c4b1-5b9a-4b59-63e9-08dc5cf21800
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 02:16:43.7317
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR20MB4635
 
-On Mon, Apr 15, 2024 at 12:26=E2=80=AFAM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> Lei Chen wrote:
-> > vhost_worker will call tun call backs to receive packets. If too many
-> > illegal packets arrives, tun_do_read will keep dumping packet contents.
-> > When console is enabled, it will costs much more cpu time to dump
-> > packet and soft lockup will be detected.
-> >
-> > net_ratelimit mechanism can be used to limit the dumping rate.
-> >
-> > PID: 33036    TASK: ffff949da6f20000  CPU: 23   COMMAND: "vhost-32980"
-> >  #0 [fffffe00003fce50] crash_nmi_callback at ffffffff89249253
-> >  #1 [fffffe00003fce58] nmi_handle at ffffffff89225fa3
-> >  #2 [fffffe00003fceb0] default_do_nmi at ffffffff8922642e
-> >  #3 [fffffe00003fced0] do_nmi at ffffffff8922660d
-> >  #4 [fffffe00003fcef0] end_repeat_nmi at ffffffff89c01663
-> >     [exception RIP: io_serial_in+20]
-> >     RIP: ffffffff89792594  RSP: ffffa655314979e8  RFLAGS: 00000002
-> >     RAX: ffffffff89792500  RBX: ffffffff8af428a0  RCX: 0000000000000000
-> >     RDX: 00000000000003fd  RSI: 0000000000000005  RDI: ffffffff8af428a0
-> >     RBP: 0000000000002710   R8: 0000000000000004   R9: 000000000000000f
-> >     R10: 0000000000000000  R11: ffffffff8acbf64f  R12: 0000000000000020
-> >     R13: ffffffff8acbf698  R14: 0000000000000058  R15: 0000000000000000
-> >     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> >  #5 [ffffa655314979e8] io_serial_in at ffffffff89792594
-> >  #6 [ffffa655314979e8] wait_for_xmitr at ffffffff89793470
-> >  #7 [ffffa65531497a08] serial8250_console_putchar at ffffffff897934f6
-> >  #8 [ffffa65531497a20] uart_console_write at ffffffff8978b605
-> >  #9 [ffffa65531497a48] serial8250_console_write at ffffffff89796558
-> >  #10 [ffffa65531497ac8] console_unlock at ffffffff89316124
-> >  #11 [ffffa65531497b10] vprintk_emit at ffffffff89317c07
-> >  #12 [ffffa65531497b68] printk at ffffffff89318306
-> >  #13 [ffffa65531497bc8] print_hex_dump at ffffffff89650765
-> >  #14 [ffffa65531497ca8] tun_do_read at ffffffffc0b06c27 [tun]
-> >  #15 [ffffa65531497d38] tun_recvmsg at ffffffffc0b06e34 [tun]
-> >  #16 [ffffa65531497d68] handle_rx at ffffffffc0c5d682 [vhost_net]
-> >  #17 [ffffa65531497ed0] vhost_worker at ffffffffc0c644dc [vhost]
-> >  #18 [ffffa65531497f10] kthread at ffffffff892d2e72
-> >  #19 [ffffa65531497f50] ret_from_fork at ffffffff89c0022f
-> >
-> > Fixes: ef3db4a59542 ("tun: avoid BUG, dump packet on GSO errors")
-> > Signed-off-by: Lei Chen <lei.chen@smartx.com>
-> > Reviewed-by: Willem de Bruijn <willemb@google.com>
-> > Acked-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> > Changes from v3:
-> > https://lore.kernel.org/all/20240412065841.2148691-1-lei.chen@smartx.co=
-m/
-> >  1. Change patch target from net tun to tun.
-> >  2. Move change log below the seperator "---".
-> >  3. Remove escaped parentheses in the Fixes string.
-> >
-> > Changes from v2:
-> > https://lore.kernel.org/netdev/20240410042245.2044516-1-lei.chen@smartx=
-.com/
-> >  1. Add net-dev to patch subject-prefix.
-> >  2. Add fix tag.
-> >
-> > Changes from v1:
-> > https://lore.kernel.org/all/20240409062407.1952728-1-lei.chen@smartx.co=
-m/
-> >  1. Use net_ratelimit instead of raw __ratelimit.
-> >  2. Use netdev_err instead of pr_err to print more info abort net dev.
-> >  3. Adjust git commit message to make git am happy.
-> >  drivers/net/tun.c | 18 ++++++++++--------
-> >  1 file changed, 10 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> > index 0b3f21cba552..ca9b4bc89de7 100644
-> > --- a/drivers/net/tun.c
-> > +++ b/drivers/net/tun.c
-> > @@ -2125,14 +2125,16 @@ static ssize_t tun_put_user(struct tun_struct *=
-tun,
-> >                                           tun_is_little_endian(tun), tr=
-ue,
-> >                                           vlan_hlen)) {
-> >                       struct skb_shared_info *sinfo =3D skb_shinfo(skb)=
-;
-> > -                     pr_err("unexpected GSO type: "
-> > -                            "0x%x, gso_size %d, hdr_len %d\n",
-> > -                            sinfo->gso_type, tun16_to_cpu(tun, gso.gso=
-_size),
-> > -                            tun16_to_cpu(tun, gso.hdr_len));
-> > -                     print_hex_dump(KERN_ERR, "tun: ",
-> > -                                    DUMP_PREFIX_NONE,
-> > -                                    16, 1, skb->head,
-> > -                                    min((int)tun16_to_cpu(tun, gso.hdr=
-_len), 64), true);
-> > +
-> > +                     if (net_ratelimit()) {
-> > +                             netdev_err(tun->dev, "unexpected GSO type=
-: 0x%x, gso_size %d, hdr_len %d\n",
-> > +                                    sinfo->gso_type, tun16_to_cpu(tun,=
- gso.gso_size),
-> > +                                    tun16_to_cpu(tun, gso.hdr_len));
->
-> Indentation. checkpatch or patchwork will also show this.
+On Fri, Apr 12, 2024 at 03:21:26PM +0800, Inochi Amaoto wrote:
+> Add USB PHY support for CV18XX/SG200X series
+> 
+> Inochi Amaoto (2):
+>   dt-bindings: phy: Add Sophgo CV1800 USB phy
+>   phy: sophgo: Add USB 2.0 PHY driver for Sophgo CV18XX/SG200X
+> 
 
-Thanks for your help, and sorry about that. A new patch has been sent.
-
-
->
-> > +                             print_hex_dump(KERN_ERR, "tun: ",
-> > +                                            DUMP_PREFIX_NONE,
-> > +                                            16, 1, skb->head,
-> > +                                            min((int)tun16_to_cpu(tun,=
- gso.hdr_len), 64), true);
-> > +                     }
-> >                       WARN_ON_ONCE(1);
-> >                       return -EINVAL;
-> >               }
-> > --
-> > 2.44.0
-> >
->
->
+I forgot to mention this patch 2 depends a header from
+the following patch:
+https://lore.kernel.org/all/IA1PR20MB4953BAA0F8E06CB202C5C2FBBB062@IA1PR20MB4953.namprd20.prod.outlook.com/
