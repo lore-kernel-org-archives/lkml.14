@@ -1,95 +1,156 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD424A990
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0262D4E1D0;
+	Mon, 15 Apr 2024 10:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713175669; cv=none; b=TA6EaCy9qqpC/4XA/4x79hals/dcL0pM7MrKEcpyNblnWZbbS/zzemvrmI3dR3Fh61KLQWjyFY+GZ1lfg9I/C1w7Zu1aPT3VS/5lvcxb2bUszBGuGpVMoMY0FcU9a2bLxUpFVz/JYLSJJa5LXhCXHh9IAPd/7VC3dzIq0OnLCyA=
+	t=1713175670; cv=none; b=VJv6TipqAZQE4MAs5QroQYiv26z5s4E3fVtfP6DvJiVqMuunp54l3+6HRxnOjvh+xjqbHIJ+Cl0U/BNssc3AJw4oSQK8c1z8LhMLSKPCfUFt7YHSJazDdXqt1E42SqkdRaQZoXyCLd5VSj+vbKBYe8kM+A7x8w4I5zO0tCHJRqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713175669; c=relaxed/simple;
-	bh=id75fa+tTn/RJ7CUFo2GkCpLq+g1xjJIztsBFlF4Vho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T3Ei60v9p+eH28f73sc0EvB4DxHGaPrUeL7b6Y0ja3aIXpMaoYbba6gBQw5IoicqYYMJYEWNo5KUFOWc7Sa3TG+0sY8hX/gmu9VzOHScKy1jjgmMUtN2uBviVistT0DbPoCc0XqLxpqUCrqucAAmqDNfXgdYwIrELgwMHE7ksRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TUefnbEi; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1713175670; c=relaxed/simple;
+	bh=OUDm6TSBsNjr+Cb6y3SsnnfA3Q/GV80ZgRBDX4QKbJM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q0trCF4oOC8nrRQiZDUR3xIxZ/rFg3dOcrzhIA1DMV2wRYP56j/gMY7Cj6xBJoubffmZSy8iDmfKsq06YRjEAhjn2fUiJV45Kipx0O29Uf+84oeWls7Woivi/0TxDEjQcOMQfNkQS3gOwPCp2hmf4jbfw3jtLwSRPj9ok1VRLp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aeq/Cioo; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TUefnbEi"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2da01cb187cso54268291fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 03:07:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeq/Cioo"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516d3776334so3820073e87.1;
+        Mon, 15 Apr 2024 03:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1713175665; x=1713780465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+3p5b6rT+mGLgou+/VagUR7xOBuj29Jc3WH/R/sXbro=;
-        b=TUefnbEinIJG07DakKNOlRJ8ImVJJqwkk/qAareUy8u+ynWunKawgFahzHtfu4+UBn
-         4lBbncYENVyiQAS+eF9O6aGjQIYFYW4dSmvNf0e7mpKjVsDYMVCC4jGOFjEhDk1VY8UH
-         D/5D52jhjO3oJG2WEwFliz3vDBZqf4wSt+K8REfJhWK1WVB0i7D8Km4NFR9BtoKi0SZQ
-         849BDPG4ky+RBAPj0vJaefR96RJnc+PE7x41zSSQ8Bocb7p+eEvAXLgI1BOcifUf1Pph
-         25PYuh8jsnYLne51qzDrKjw8KpJTIacRLiamqp5vT6L4WvVYwU14J5VPRT3MDhTsHaIH
-         CO7A==
+        d=gmail.com; s=20230601; t=1713175667; x=1713780467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7D2lBznLwyqilw5dfNMB9DZiuNs09gqrSFR58m/9kr0=;
+        b=aeq/Cioox+/8MPy81neYWYK9F3osOmjiLpAiwo/uzt/ag9GgTYF2zWc6ZoP1uLloY6
+         CSuHU3SBg3KeNI9eWcQnJY739EURzxglzxuZZL0SWh4eD/8OoAblf3uk3REjw9X6UA7d
+         nZGn7yU6XoylbZw9GKZNZ5tj8V/EKEwoTt7E2dZt0HlBwLYRQBKyUvVchg/uCkzs3waq
+         dJG9P6TrO0FrBWB8JIS4SCLEwPpkom/CsiIoVsMsyY8YHjpNUOA0PA0RhZFIeeqvyFgy
+         nNMwCKHcAk64s8DORMZIPqGLq1+q9T+n6c+qLNUAL1tHcGLYnGk+ctjk233YPKs221fg
+         Sx7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713175665; x=1713780465;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+3p5b6rT+mGLgou+/VagUR7xOBuj29Jc3WH/R/sXbro=;
-        b=gdSE/S7cpQprAPM7TWHA09hGGZJfW4jeXLgWShRL/YKcLrcwi/mQAIlQNrKlz7s9Gz
-         BMBrZLyzQWuOHMxyLLFlSQ29f3aJzlmAOU9t8B1W9ugs1pnlsRx74NBJ5eseJyGMuxRH
-         MiKKP6Ao9Z3k/g7JaHZ6gWsW21yiUHUtr3tNYiwE6rCgmzhSHyfSg5bkgf8Jc5CVBT1e
-         T02BeCORa1G69HV9CMoL5Ru4BqgHamNPq7Bse6s1Y75AD3OonaRFdDE1E0a15+Hcvaa0
-         GIhlmYXj/Vijy/SnfRWZy01EJ0cbv/SV+jlTb6Mh0ChSwSbwwQbHNsNfaBlSXK3Mvic8
-         Pw2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVu0YNkiQRbBi7PY9mh2j+SfqS8mUbNkP8EZ0MFCqlmVHkdPyL0a7NxiFk+9biTqzTqiY1QB+1AYhNfcHNAVYgtV3NBID2KuPMjV6ZP
-X-Gm-Message-State: AOJu0Yxo2+3+qxkCQdL1+zzJdrHt5V1Ay8SXpLEKyBleopybU1UXQSlO
-	ngISHKjoEVNaRyYIl1wo0Qskg3HomcfyyFB9XoaZjWOMzfEavKmsf8DmLNmjoEc=
-X-Google-Smtp-Source: AGHT+IHIwDEdFesD8NI1TbzY5+XQB0v/7ooFBQFQbz3Lv+vCUJ8oHsIM3AgRfyDUgf6ESvutnbVJkQ==
-X-Received: by 2002:a05:651c:14b:b0:2d8:3ccc:60e8 with SMTP id c11-20020a05651c014b00b002d83ccc60e8mr7330991ljd.48.1713175665487;
-        Mon, 15 Apr 2024 03:07:45 -0700 (PDT)
-Received: from ?IPV6:2001:a61:1366:6801:d8:8490:cf1a:3274? ([2001:a61:1366:6801:d8:8490:cf1a:3274])
-        by smtp.gmail.com with ESMTPSA id cr12-20020a05600004ec00b00341ce80ea66sm11704722wrb.82.2024.04.15.03.07.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 03:07:45 -0700 (PDT)
-Message-ID: <374782d3-ad38-4583-b598-0d6c3671151d@suse.com>
-Date: Mon, 15 Apr 2024 12:07:44 +0200
+        d=1e100.net; s=20230601; t=1713175667; x=1713780467;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7D2lBznLwyqilw5dfNMB9DZiuNs09gqrSFR58m/9kr0=;
+        b=gYgdG/H8ggcmPoa7KMAq9Q6MmZpAfa/mWxwspWnLJXBLu83efzlZsLglAuKtZwZkyB
+         QD2NyDHAyxDBdRkNwe8WG0Ag/2+uQjWBqFS3r5jzUcmpDkfZPrkdAVLpOImouxf7g33D
+         Xc7gRhGyFXAxSQIcmNLYJw79RHv7kjKhrZoTHEMp4tYUzNOCVHVfT/QLSOAZhfDqr+SV
+         CG49M1twj6CS8SP/XifAIlEiazHfwUKRJWEx8BAzPAzJxwHmH4JqK/ilSNnCCWLbf5k/
+         /u+GX7kiK6G2KxHSzs4zdgfSPnUgolrdKrpySEiW/Y44QF0Xa07oypJ6brvdUDiOHCek
+         XREw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3q5lcbyoWwEFWTPxXf3cn3SqqCbmbByJSvbefY4d78G8vEixhuw6vmNWUCB+gyUTLKWpIDu0ucvOjAG4hZ/xO0IVhh9iHFH3l/LDFlaaUX6XnKVpSQjDBq3bIWWSkd+FQDT12xSwe/cc=
+X-Gm-Message-State: AOJu0YyTTKakKGJwc+rhJ/PcKJcu0xjyXpcQEzDS0G02iOBO6HgS6JGK
+	u+k/PzNTnEo8uRJnC/+CaKfjnIZC8znvXn8jjRreKdVxRDnzQeRf
+X-Google-Smtp-Source: AGHT+IFo/wty98UTMMtG8GAS4WFnVQ24ZyfTc9ByO9/mu4xXiPZMmo65Bqm2j5F0X4kXN3HouoytBg==
+X-Received: by 2002:ac2:4567:0:b0:516:9f03:6a9b with SMTP id k7-20020ac24567000000b005169f036a9bmr6839145lfm.4.1713175667244;
+        Mon, 15 Apr 2024 03:07:47 -0700 (PDT)
+Received: from localhost.localdomain ([178.70.43.28])
+        by smtp.gmail.com with ESMTPSA id g11-20020a0565123b8b00b00518f53da2dfsm149571lfv.291.2024.04.15.03.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 03:07:46 -0700 (PDT)
+From: Ivan Bornyakov <brnkv.i1@gmail.com>
+To: Nas Chung <nas.chung@chipsnmedia.com>,
+	Jackson Lee <jackson.lee@chipsnmedia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>
+Cc: Ivan Bornyakov <brnkv.i1@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/5] media: chips-media: wave5: support reset lines
+Date: Mon, 15 Apr 2024 13:07:20 +0300
+Message-ID: <20240415100726.19911-3-brnkv.i1@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240415100726.19911-1-brnkv.i1@gmail.com>
+References: <20240415100726.19911-1-brnkv.i1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: cdc-wdm: close race between read and workqueue
-To: Greg KH <gregkh@linuxfoundation.org>, =?UTF-8?Q?Bj=C3=B8rn_Mork?=
- <bjorn@mork.no>
-Cc: Oliver Neukum <oneukum@suse.com>,
- Aleksander Morgado <aleksandermj@chromium.org>, linux-usb@vger.kernel.org,
- linux@roeck-us.net, linux-kernel@vger.kernel.org, ejcaruso@chromium.org
-References: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org>
- <87mspvi0lk.fsf@miraculix.mork.no>
- <a6ad34d3-9cce-4178-8271-0e09ced2b6f4@suse.com>
- <878r1fht93.fsf@miraculix.mork.no> <2024041536-simile-flatly-824a@gregkh>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <2024041536-simile-flatly-824a@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Add initial support for optional reset lines. For now, simply deassert
+resets on driver probe and assert them back on driver remove.
 
+Signed-off-by: Ivan Bornyakov <brnkv.i1@gmail.com>
+---
+ .../media/platform/chips-media/wave5/wave5-vpu.c | 16 +++++++++++++++-
+ .../platform/chips-media/wave5/wave5-vpuapi.h    |  1 +
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-On 15.04.24 11:52, Greg KH wrote:
-> On Mon, Apr 15, 2024 at 11:26:00AM +0200, Bjørn Mork wrote:
+diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu.c b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
+index 68a519ac412d..54d1d44ed35a 100644
+--- a/drivers/media/platform/chips-media/wave5/wave5-vpu.c
++++ b/drivers/media/platform/chips-media/wave5/wave5-vpu.c
+@@ -10,6 +10,7 @@
+ #include <linux/clk.h>
+ #include <linux/firmware.h>
+ #include <linux/interrupt.h>
++#include <linux/reset.h>
+ #include "wave5-vpu.h"
+ #include "wave5-regdefine.h"
+ #include "wave5-vpuconfig.h"
+@@ -179,6 +180,16 @@ static int wave5_vpu_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, dev);
+ 	dev->dev = &pdev->dev;
+ 
++	dev->resets = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
++	if (IS_ERR(dev->resets)) {
++		return dev_err_probe(&pdev->dev, PTR_ERR(dev->resets),
++				     "Failed to get reset control\n");
++	}
++
++	ret = reset_control_deassert(dev->resets);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Failed to deassert resets\n");
++
+ 	ret = devm_clk_bulk_get_all(&pdev->dev, &dev->clks);
+ 
+ 	/* continue without clock, assume externally managed */
+@@ -191,7 +202,7 @@ static int wave5_vpu_probe(struct platform_device *pdev)
+ 	ret = clk_bulk_prepare_enable(dev->num_clks, dev->clks);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Enabling clocks, fail: %d\n", ret);
+-		return ret;
++		goto err_reset_assert;
+ 	}
+ 
+ 	ret = of_property_read_u32(pdev->dev.of_node, "sram-size",
+@@ -282,6 +293,8 @@ static int wave5_vpu_probe(struct platform_device *pdev)
+ 	wave5_vdi_release(&pdev->dev);
+ err_clk_dis:
+ 	clk_bulk_disable_unprepare(dev->num_clks, dev->clks);
++err_reset_assert:
++	reset_control_assert(dev->resets);
+ 
+ 	return ret;
+ }
+@@ -297,6 +310,7 @@ static void wave5_vpu_remove(struct platform_device *pdev)
+ 
+ 	mutex_destroy(&dev->dev_lock);
+ 	mutex_destroy(&dev->hw_lock);
++	reset_control_assert(dev->resets);
+ 	clk_bulk_disable_unprepare(dev->num_clks, dev->clks);
+ 	wave5_vpu_enc_unregister_device(dev);
+ 	wave5_vpu_dec_unregister_device(dev);
+diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+index fa4dc53949e6..d5c9480242b6 100644
+--- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
++++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+@@ -762,6 +762,7 @@ struct vpu_device {
+ 	struct kthread_worker *worker;
+ 	int vpu_poll_interval;
+ 	int num_clks;
++	struct reset_control *resets;
+ };
+ 
+ struct vpu_instance;
+-- 
+2.44.0
 
->> Nothing more than the obvious;  Get one of those modems and do some
->> usbmon snooping.
-> 
-> So for now, should we just revert this problem commit?
-
-Yes. A regression is a regression. Please revert.
-
-	Regards
-		Oliver
-
-		
