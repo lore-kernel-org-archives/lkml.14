@@ -1,128 +1,211 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FD3156225
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9316A15664A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713211252; cv=none; b=Pws6Nu1K6quWBdVEixUsn8gVWXEwTuA/0KhTSx1ot4fHj+Wac14i+g8X4kRzSmpUy5t3y1yLTFerS29AEN+EUdRqqTwIsaVnWEOnYSVfblRTmhAH1+afaPRrR/GKFAfohVTvF61CUtLnhIybgZ/qmBW8WcRdac1e48SROyBpXr0=
+	t=1713211455; cv=none; b=sMpwWkRbiPP9OPXuJcm7nQDqtKysZtb8k3mGbyl0CWr9Oklaq6OFAjfx9LU/2MRAUc20z4RgdwjTcOTg0eMNaTMziGBLPpEtOD4Fr2oqH6HluZF4A+K0y3DFKTD3GMeELx+NXMv3vzikyqU6zykJeWhLOgbAFg4n8L7xQn2RT9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713211252; c=relaxed/simple;
-	bh=Wng/zjvzq6AH7/m1b0joVL/p8BnUv1nNNKBDl6nF7sY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JCUGTDIzZhdM+SFO3yCKCzUQq314gZEljEE7lInsYCuTUY/TGZ6caiq0yvJlOHi/RTn0GUuWj3wZ/SDtnXlnHdt62xYknCRy8DOWIGDoinK436oWMv0fBVaZae2sCIrTMpdLGYNgZ/7fsdTWbdXJIMqGH32udIRVhxvihnoq0iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pOd14QbR; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1713211455; c=relaxed/simple;
+	bh=pr/4/oQR+r5R/l6P0ikxCsCgBmbd6uWclml/OEa3wn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lD91ThPMtecUp60WrjXI9m6daeZE9VgqoB6D8Zq9Gj3svsIKJy7ukxTI6xawxiyu5UOhettSJ7NhvEWnXA3VI7xy+QTZjLvLAqMEOTio+CXNwsamf98fJbPXNg+bGgJKQVmXERhSgSFi+M0viHoHNAXIBSf/oK6VkW8exN+njIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RlfM4LcJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pOd14QbR"
-Message-ID: <617e2577-8de2-4fde-bbfe-2d6280c48c29@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713211248;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlfM4LcJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713211452;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0SJ/k5TZL9DMkDb6OS5NjYq8QZGa3dXX1/Ar8kH56co=;
-	b=pOd14QbRT99LhYEk7rHt2FDGGGkJZco+GAC6Y9PWAlKTh3I//gxLAAKKq0TjqfuN5xy+Hb
-	obfsgalSovughcoaw1ZPnVR0iRjO7IM1kAmqIptIIyuLtfpx14bKNG3T5jPEmwigXS5yfK
-	JUGW32P7QwW5J7wem8Tco4LTO2a9zDs=
-Date: Mon, 15 Apr 2024 13:00:42 -0700
+	bh=dfn+y1J1zY2Ja72aghi8awXYV9tGOwVsfBqRShbrfOE=;
+	b=RlfM4LcJWpRK3l2eWVJ8rZOy6AbRKLhvfE1M5jx+thmjwN7edcuC3QtwA4Hy1M8egi7tZ0
+	SXYgzSFOkRBME97PFUuOXN41Ke/CiJMJICh1k8LW4lTzGPGmNgcSSDcbbuBptFoh9ykMaY
+	1IkYsFMwb0sxgIqIIiIZpSbf+qYkxFw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-9efXX8AHOMmW2BIjYR2LjQ-1; Mon,
+ 15 Apr 2024 16:04:07 -0400
+X-MC-Unique: 9efXX8AHOMmW2BIjYR2LjQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 764111C0513D;
+	Mon, 15 Apr 2024 20:04:06 +0000 (UTC)
+Received: from tpad.localdomain (unknown [10.96.133.4])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C1312166B32;
+	Mon, 15 Apr 2024 20:04:05 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+	id BFE67401801CE; Mon, 15 Apr 2024 16:47:13 -0300 (-03)
+Date: Mon, 15 Apr 2024 16:47:13 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
+Message-ID: <Zh2EQVj5bC0z5R90@tpad>
+References: <20240328171949.743211-1-leobras@redhat.com>
+ <ZgsXRUTj40LmXVS4@google.com>
+ <ZhAAg8KNd8qHEGcO@tpad>
+ <ZhAN28BcMsfl4gm-@google.com>
+ <a7398da4-a72c-4933-bb8b-5bc8965d96d0@paulmck-laptop>
+ <ZhQmaEXPCqmx1rTW@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH bpf-next v3 2/2] net: Add additional bit to support
- userspace timestamp type
-To: Abhishek Chauhan <quic_abchauha@quicinc.com>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: kernel@quicinc.com, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
- Martin KaFai Lau <martin.lau@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-References: <20240412210125.1780574-1-quic_abchauha@quicinc.com>
- <20240412210125.1780574-3-quic_abchauha@quicinc.com>
- <661ad7d4c65da_3be9a7294e@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <661ad7d4c65da_3be9a7294e@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhQmaEXPCqmx1rTW@google.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On 4/13/24 12:07 PM, Willem de Bruijn wrote:
->> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
->> index a83a2120b57f..b6346c21c3d4 100644
->> --- a/include/linux/skbuff.h
->> +++ b/include/linux/skbuff.h
->> @@ -827,7 +827,8 @@ enum skb_tstamp_type {
->>    *	@tstamp_type: When set, skb->tstamp has the
->>    *		delivery_time in mono clock base (i.e. EDT).  Otherwise, the
->>    *		skb->tstamp has the (rcv) timestamp at ingress and
->> - *		delivery_time at egress.
->> + *		delivery_time at egress or skb->tstamp defined by skb->sk->sk_clockid
->> + *		coming from userspace
->>    *	@napi_id: id of the NAPI struct this skb came from
->>    *	@sender_cpu: (aka @napi_id) source CPU in XPS
->>    *	@alloc_cpu: CPU which did the skb allocation.
->> @@ -955,7 +956,7 @@ struct sk_buff {
->>   	/* private: */
->>   	__u8			__mono_tc_offset[0];
->>   	/* public: */
->> -	__u8			tstamp_type:1;	/* See SKB_MONO_DELIVERY_TIME_MASK */
->> +	__u8			tstamp_type:2;	/* See SKB_MONO_DELIVERY_TIME_MASK */
->>   #ifdef CONFIG_NET_XGRESS
->>   	__u8			tc_at_ingress:1;	/* See TC_AT_INGRESS_MASK */
->>   	__u8			tc_skip_classify:1;
+On Mon, Apr 08, 2024 at 10:16:24AM -0700, Sean Christopherson wrote:
+> On Fri, Apr 05, 2024, Paul E. McKenney wrote:
+> > On Fri, Apr 05, 2024 at 07:42:35AM -0700, Sean Christopherson wrote:
+> > > On Fri, Apr 05, 2024, Marcelo Tosatti wrote:
+> > > > rcuc wakes up (which might exceed the allowed latency threshold
+> > > > for certain realtime apps).
+> > > 
+> > > Isn't that a false negative? (RCU doesn't detect that a CPU is about to (re)enter
+> > > a guest)  I was trying to ask about the case where RCU thinks a CPU is about to
+> > > enter a guest, but the CPU never does (at least, not in the immediate future).
+> > > 
+> > > Or am I just not understanding how RCU's kthreads work?
+> > 
+> > It is quite possible that the current rcu_pending() code needs help,
+> > given the possibility of vCPU preemption.  I have heard of people doing
+> > nested KVM virtualization -- or is that no longer a thing?
 > 
-> A quick pahole for a fairly standard .config that I had laying around
-> shows a hole after this list of bits, so no huge concerns there from
-> adding a bit:
+> Nested virtualization is still very much a thing, but I don't see how it is at
+> all unique with respect to RCU grace periods and quiescent states.  More below.
 > 
->             __u8               slow_gro:1;           /*     3: 4  1 */
->             __u8               csum_not_inet:1;      /*     3: 5  1 */
+> > But the help might well involve RCU telling the hypervisor that a given
+> > vCPU needs to run.  Not sure how that would go over, though it has been
+> > prototyped a couple times in the context of RCU priority boosting.
+> >
+> > > > > > 3 - It checks if the guest exit happened over than 1 second ago. This 1
+> > > > > >     second value was copied from rcu_nohz_full_cpu() which checks if the
+> > > > > >     grace period started over than a second ago. If this value is bad,
+> > > > > >     I have no issue changing it.
+> > > > > 
+> > > > > IMO, checking if a CPU "recently" ran a KVM vCPU is a suboptimal heuristic regardless
+> > > > > of what magic time threshold is used.  
+> > > > 
+> > > > Why? It works for this particular purpose.
+> > > 
+> > > Because maintaining magic numbers is no fun, AFAICT the heurisitic doesn't guard
+> > > against edge cases, and I'm pretty sure we can do better with about the same amount
+> > > of effort/churn.
+> > 
+> > Beyond a certain point, we have no choice.  How long should RCU let
+> > a CPU run with preemption disabled before complaining?  We choose 21
+> > seconds in mainline and some distros choose 60 seconds.  Android chooses
+> > 20 milliseconds for synchronize_rcu_expedited() grace periods.
 > 
->             /* XXX 2 bits hole, try to pack */
+> Issuing a warning based on an arbitrary time limit is wildly different than using
+> an arbitrary time window to make functional decisions.  My objection to the "assume
+> the CPU will enter a quiescent state if it exited a KVM guest in the last second"
+> is that there are plenty of scenarios where that assumption falls apart, i.e. where
+> _that_ physical CPU will not re-enter the guest.
 > 
->             __u16              tc_index;             /*     4     2 */
+> Off the top of my head:
 > 
->> @@ -1090,10 +1091,10 @@ struct sk_buff {
->>    */
->>   #ifdef __BIG_ENDIAN_BITFIELD
->>   #define SKB_MONO_DELIVERY_TIME_MASK	(1 << 7)
->> -#define TC_AT_INGRESS_MASK		(1 << 6)
->> +#define TC_AT_INGRESS_MASK		(1 << 5)
+>  - If the vCPU is migrated to a different physical CPU (pCPU), the *old* pCPU
+>    will get false positives, and the *new* pCPU will get false negatives (though
+>    the false negatives aren't all that problematic since the pCPU will enter a
+>    quiescent state on the next VM-Enter.
 > 
-> Have to be careful when adding a new 2 bit tstamp_type with both bits
-> set, that this does not incorrectly get interpreted as MONO.
+>  - If the vCPU halts, in which case KVM will schedule out the vCPU/task, i.e.
+>    won't re-enter the guest.  And so the pCPU will get false positives until the
+>    vCPU gets a wake event or the 1 second window expires.
 > 
-> I haven't looked closely at the BPF API, but hopefully it can be
-> extensible to return the specific type. If it is hardcoded to return
-> either MONO or not, then only 0x1 should match, not 0x3.
+>  - If the VM terminates, the pCPU will get false positives until the 1 second
+>    window expires.
+> 
+> The false positives are solvable problems, by hooking vcpu_put() to reset
+> kvm_last_guest_exit.  And to help with the false negatives when a vCPU task is
+> scheduled in on a different pCPU, KVM would hook vcpu_load().
 
-Good point. I believe it is the best to have bpf to consider both bits in 
-tstamp_type:2 in filter.c to avoid the 0x3 surprise in the future. The BPF API 
-can be extended to support SKB_CLOCK_TAI.
+Hi Sean,
 
-Regardless, in bpf_convert_tstamp_write(), it still needs to clear both bits in 
-tstamp_type when it is at ingress. Right now it only clears the mono bit.
+So this should deal with it? (untested, don't apply...).
 
-Then it may as well consider both tstamp_type:2 bits in 
-bpf_convert_tstamp_read() and bpf_convert_tstamp_type_read(). e.g. 
-bpf_convert_tstamp_type_read(), it should be a pretty straight forward change 
-because the SKB_CLOCK_* enum value should be a 1:1 mapping to the BPF_SKB_TSTAMP_*.
-
-> 
->>   #else
->>   #define SKB_MONO_DELIVERY_TIME_MASK	(1 << 0)
->> -#define TC_AT_INGRESS_MASK		(1 << 1)
->> +#define TC_AT_INGRESS_MASK		(1 << 2)
->>   #endif
->>   #define SKB_BF_MONO_TC_OFFSET		offsetof(struct sk_buff, __mono_tc_offset)
->>   
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 48f31dcd318a..be90d83d631a 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -477,6 +477,16 @@ static __always_inline void guest_state_enter_irqoff(void)
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+ }
+ 
++DECLARE_PER_CPU(unsigned long, kvm_last_guest_exit);
++
++/*
++ * Returns time (jiffies) for the last guest exit in current cpu
++ */
++static inline unsigned long guest_exit_last_time(void)
++{
++	return this_cpu_read(kvm_last_guest_exit);
++}
++
+ /*
+  * Exit guest context and exit an RCU extended quiescent state.
+  *
+@@ -488,6 +498,9 @@ static __always_inline void guest_state_enter_irqoff(void)
+ static __always_inline void guest_context_exit_irqoff(void)
+ {
+ 	context_tracking_guest_exit();
++
++	/* Keeps track of last guest exit */
++	this_cpu_write(kvm_last_guest_exit, jiffies);
+ }
+ 
+ /*
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index fb49c2a60200..231d0e4d2cf1 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -110,6 +110,9 @@ static struct kmem_cache *kvm_vcpu_cache;
+ static __read_mostly struct preempt_ops kvm_preempt_ops;
+ static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
+ 
++DEFINE_PER_CPU(unsigned long, kvm_last_guest_exit);
++EXPORT_SYMBOL_GPL(kvm_last_guest_exit);
++
+ struct dentry *kvm_debugfs_dir;
+ EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
+ 
+@@ -210,6 +213,7 @@ void vcpu_load(struct kvm_vcpu *vcpu)
+ 	int cpu = get_cpu();
+ 
+ 	__this_cpu_write(kvm_running_vcpu, vcpu);
++	__this_cpu_write(kvm_last_guest_exit, 0);
+ 	preempt_notifier_register(&vcpu->preempt_notifier);
+ 	kvm_arch_vcpu_load(vcpu, cpu);
+ 	put_cpu();
+@@ -222,6 +226,7 @@ void vcpu_put(struct kvm_vcpu *vcpu)
+ 	kvm_arch_vcpu_put(vcpu);
+ 	preempt_notifier_unregister(&vcpu->preempt_notifier);
+ 	__this_cpu_write(kvm_running_vcpu, NULL);
++	__this_cpu_write(kvm_last_guest_exit, 0);
+ 	preempt_enable();
+ }
+ EXPORT_SYMBOL_GPL(vcpu_put);
 
