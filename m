@@ -1,97 +1,108 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D3082D93
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07A5A108;
+	Mon, 15 Apr 2024 13:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188167; cv=none; b=SF0Cu/20LsPg6tg3Sm/nblyRsMSxfLAlDg+JK5CLvbp/rz9LJuc+GIl1bKZ4tzPIZf6cd0pkfeIMqFf7CjOY01uvKHeLfUwM/0UHUe9xI2QAwx10xOt/20ywm+EN1KnW1Gn2k28ARlY4GGT35/1wH9OV/OZflAtYZfLTTd/fL2c=
+	t=1713188259; cv=none; b=LjDZbj7VllD7VzIAhuSfc6ECymuiTZV/TVHZawfWYt84hGpH6xoRc6KphRc5GNHLmU+eAoCcmZ/5PSlTGV5D1h2Vi8/ISOJeRS3XUWE5DNmXacYU47mwoGILJVy8VrAQtQ9EGdthafLEWvQrqX3GthozI5+un5xOr2nTA/LbLeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188167; c=relaxed/simple;
-	bh=ozqYEnii4rkQXzes4moBBaVstK2FV6J0b7MHvEFXy4A=;
+	s=arc-20240116; t=1713188259; c=relaxed/simple;
+	bh=oqsz7oTqnMzJEsE0FYNgIT8mwUtotzkcTfbnB4dWr8w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=beaqJacqHL/WTWnfnNoH20zq4vgryoSm9PBgzod7+vid+8Xec2/3ba2G0h6jV/g82Z+i02OKxHrhv3Pq3xOziN9g8uQAqsGS7b89ZLdjV4SrQtK4/r+Ji6ucbZEu4mFi11EndgSfUjUxGnaxRPRLR0ZSi77yW79Z8uq5J7/upYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=LqkYce8m; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XsAyIAk3cSXpf3aq0YpnExsaSzOtXRszqO0cUORaSWEu+6bp83v+UHzAtsmFGmD2/aAjloT8dJ9du9zFiyzyiEQMj5hhqWBvKyiJmq+Hs4znqFUqxBdXd4LUdbhrhsUnRDurpRHOtjxUmjuwY9e6FLxl8tCDS5F4ZPqc4cX0iUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+Ec+RO+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="LqkYce8m"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e477db7fbso5065823a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1713188164; x=1713792964; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ik1rd9kTZT4cDzsiZg8RCbbgRc5INy51wGM0TkC03wk=;
-        b=LqkYce8mkVBwP4qttJVmz1LpF02j5bdksmAHEJcWht17n3UK6vZulON/Wiy47fo7Gu
-         DQryIh7JnicjImh3GmcyTFb3ptn2tMO1bTlxwlzcSVdToFzw8cx8sCHOP1RNz1sgEV0Y
-         w++HJbRiLVFqHGkcGBZGV6F2IYGnUQ+zLdGWOUd/NQJpeadsRsoYlRW2XKdT+34hwsKb
-         v9W09SBW16lDE/GPV94UeS+0tyq34AcYnLxFtkYEglAxvmtaZO3CW3ze5nfaAzeIgYrg
-         KOhuozOh+gOVzTzj4GV3NFMPuow2x5kxyfcbLR7kaeWRc6QxokzVjrj+PQtCd0NpZUAb
-         Q7uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713188164; x=1713792964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ik1rd9kTZT4cDzsiZg8RCbbgRc5INy51wGM0TkC03wk=;
-        b=rnhMqsHvPNn9snIozRpZX6wPq/I61bha0Z/nL4p80GdcXiw7GQTSmHWd32lK6dKvuY
-         xHlgxFR+h1CQoAuxX6fbj7hL1Zqpt1X9mojzLaABgKu0/ZsJsTxu9PicYni8fzHu78Ab
-         TnwV6eQOEYjk749JvRnoP0/poCcJ4pteipusVotXESlCcfvFo4Q/VxZYHsdhTP7yHWkH
-         Sz+eXwXps9ZgRiiQy942wviMSXgc0doGrNOJcf/NC2T0ElnGkXPiNeXnpZ/f522N57Aj
-         Qyh9uy9YTZhEC19C/mcis5N0oCZ+5+BAmUFlavToq6yGfqprqp194dyh91iVX8XRWpKQ
-         dVwg==
-X-Gm-Message-State: AOJu0Yy1CXMXbbD4PHtzJakr7H+x0y034EyIrR/Bn9VT/wHf8VEaVhOt
-	rrErVxcx5Ohv8eM5LWAfemf0MnwxOP+86ukY+nWiKGMAtAnkTe9gy07E3WjbrvA=
-X-Google-Smtp-Source: AGHT+IEBkh8/VlmJkVNcbXTlR7xWxfl1Gb/HA9GDVYEQgXUvmj0tPoU+uxzOFA/Tf9vaZXoxYUtgyw==
-X-Received: by 2002:a50:8a92:0:b0:56c:3dfb:a1f5 with SMTP id j18-20020a508a92000000b0056c3dfba1f5mr7405106edj.22.1713188163639;
-        Mon, 15 Apr 2024 06:36:03 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id fd23-20020a056402389700b0057021b811eesm1735813edb.67.2024.04.15.06.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 06:36:03 -0700 (PDT)
-Date: Mon, 15 Apr 2024 15:36:02 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
-	Atish Patra <atishp@atishpatra.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, Will Deacon <will@kernel.org>, 
-	x86@kernel.org
-Subject: Re: [PATCH v6 23/24] KVM: riscv: selftests: Add a test for counter
- overflow
-Message-ID: <20240415-418eb2e18cfeb613d252fff0@orel>
-References: <20240411000752.955910-1-atishp@rivosinc.com>
- <20240411000752.955910-24-atishp@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+Ec+RO+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481EAC3277B;
+	Mon, 15 Apr 2024 13:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713188259;
+	bh=oqsz7oTqnMzJEsE0FYNgIT8mwUtotzkcTfbnB4dWr8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F+Ec+RO+oORajHbuTgqpouzHzAr/d57OOkvi3B1R11x5j1lL8X+uCR4pIIuSsKcNv
+	 2In1wwslzCaABBgELv2qfDN8xTmvwMzAkjmGSUusmh5/frgz2bl1MA31NDT0dg4wI1
+	 J3MaJzY2eSFebiR0VYMVcPDK/MWrqjbs4lAQcwhelzDl5EVwN+nRgCOhoMDPMBcsWB
+	 cuuQHReuEi4WQd4DqraBcQFcqE5+0sFrh3naazGWvyH+iCJ/tY3YqXXQAmOXDl8zlD
+	 c83EPLFc/ckeJORQLHOIy/7sMvzkk10EehsACOS+vLSGt5zLSKA+yVyoqmSSULSVNg
+	 2qBqaOEEyjh8w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rwMWf-000000005C7-0Rph;
+	Mon, 15 Apr 2024 15:37:37 +0200
+Date: Mon, 15 Apr 2024 15:37:37 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Radoslaw Biernacki <biernacki@google.com>
+Cc: =?utf-8?Q?=C5=81ukasz?= Majczak <lma@chromium.org>,
+	Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>
+Subject: Re: [PATCH v2] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+Message-ID: <Zh0toTnoGBkJwOq7@hovoldconsulting.com>
+References: <20240405102436.3479210-1-lma@chromium.org>
+ <ZhOccGFkTFkUkRUI@hovoldconsulting.com>
+ <CAE5UKNqufWZfKLAXLcpBYKQpJEVt6jPD4Xtr=Nesh34VkNOETg@mail.gmail.com>
+ <ZhVix-HJrqQbiPrB@hovoldconsulting.com>
+ <CAE5UKNp3uS9cqDbQjcP3SbfxVi3wPFG4LtP6z=WU_V+M9x6LtQ@mail.gmail.com>
+ <ZhzuoWgA88CeenMC@hovoldconsulting.com>
+ <CAM4=RnLQRPmYDt_c+dpsia4WFZVA1vukXa35a0Uupu7jMZxtVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240411000752.955910-24-atishp@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM4=RnLQRPmYDt_c+dpsia4WFZVA1vukXa35a0Uupu7jMZxtVQ@mail.gmail.com>
 
-On Wed, Apr 10, 2024 at 05:07:51PM -0700, Atish Patra wrote:
-> Add a test for verifying overflow interrupt. Currently, it relies on
-> overflow support on cycle/instret events. This test works for cycle/
-> instret events which support sampling via hpmcounters on the platform.
-> There are no ISA extensions to detect if a platform supports that. Thus,
-> this test will fail on platform with virtualization but doesn't
-> support overflow on these two events.
+On Mon, Apr 15, 2024 at 02:26:42PM +0200, Radoslaw Biernacki wrote:
+> On Mon, Apr 15, 2024 at 11:08 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Thu, Apr 11, 2024 at 04:23:27PM +0200, Łukasz Majczak wrote:
+> > > > Sure, but what about other transactions that are initiated by the host
+> > > > (e.g. SET_POWER)?
+> > > >
+> > > Somehow it is problematic only on reboot and works just fine on
+> > > suspend/resume and
+> > > set_power.
+> > > I will dig more and try to find out what the difference is.
+> >
+> > Sounds like it may be related to the i2c_hid_set_power() on shutdown()
+> > then as Kai-Heng pointed out.
+
+> > Yes, if this turns out to be needed then there should be a comment
+> > explaining why it is there (and currently also as the delays you used
+> > seem specific for your particular platform).
+> >
+> > But hopefully you can find a generic solution to this.
 > 
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  .../selftests/kvm/riscv/sbi_pmu_test.c        | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
->
+> Yes, we might need a more generic solution though it is not yet clear
+> for us which would be the cleanest one.
+> As I wrote in the reply to Kenny, the design back in the day was made
+> to use events rather than
+> level driven IO line, to drive the power state of the device.
+> Consequence is we need to request
+> a low power state before the kernel goes down as there is no guarantee
+> the kernel will wake up soon
+> (prevent battery power leak). This event/level logic problem (event
+> design for level type problem).
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Ok, and do I understand you correctly that it is indeed the SET_POWER
+command on shutdown() that makes the device enter the sleep state and
+which then needs an extra transaction on next boot to be woken up?
+
+And that the firmware will not enter that low power state on its own
+based on lack of activity as the current commit message suggests?
+
+If so, then it seems a variant of this patch would be ok as long as the
+commit message and a comment in the code explains the problem correctly.
+
+Johan
