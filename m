@@ -1,93 +1,104 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238DA74414
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C5076025;
+	Mon, 15 Apr 2024 12:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185356; cv=none; b=DOY1ObjbAQYnCPXE4TJla6JYP1u00h2tKvTG1w24l4gsJHqdAc2yym8aAqSFsTb21fEF4pBtO4mxMues9l9dZyLfWXoVagu45P/09l520uRgrJ6VXzbBOtsqHjIJOqiPs9PhNhD4jSUYHSsjLP4c6SuOWVVGSIeazGbDidWHSCc=
+	t=1713185358; cv=none; b=raa2QmELP6yAh0VH9cPCyYQ0cDA5HETcAI09iCLtKoRBo86r8sjOc9T/RpohYPZDmqIh+isOszG6kuRWVURyKSbsFuHaeGQYCcPfJct4B5aoe9885ROEu668k+8u2T8LpTmLmmP9m/yeCdHYKRGmlZcjCkqaljbj/MzQkPr9hk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185356; c=relaxed/simple;
-	bh=UimYHbIWNJzstbVfXQ3wDGyO5qJZelnD1Pr7R7RINlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+/JKeqfq8mHi35ktWV1lCOdWx/C1Cgc9qrCKei2ay2tZWc+0+jPR+FUhLpNF/2RGjmJ48z+v+2hDuvrT4H/rFjK1A2ur7XpZ+4pccbtZq5tFC0iyHR/Cj1Jm8zSA8PlvIiOYBucHsaSDNpX2Bt1bPRiZwHRjm5DgIE2cFY+yWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HX7DPTIZ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713185358; c=relaxed/simple;
+	bh=xeF/Zq3a01ro9m11LFhlH6sAGGaai4u4gzl+O3dH0T8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BNxLvBwfqvqOP1BgrVdu+4aVD8Fupl3JKPj7t7SqZDFAS4IMbE9JV16CQj4nprS6kvkx7713Lx1zCmjeOVPNhQNtWR3/JIZn9Hp3L1WEuyKjLD+C5Q782fg58z1osExqPfLmRtklZlfQveyiInDgPPUgdqcmXhnC+4tw1hcVs+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfWPQRr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HX7DPTIZ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41879819915so2703345e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713185353; x=1713790153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UimYHbIWNJzstbVfXQ3wDGyO5qJZelnD1Pr7R7RINlo=;
-        b=HX7DPTIZaxzoegN3sHKimHkG3nrx5yoTyOBKQKZo2Dcc9U17zD52ndDLR5kPE8PV2V
-         xbVd/UB0rgu+BHp4gkc59Z22M+hSsOv3DU6wIzlLkc6DWsolBvqpxwPLP6Gk8twxvzmG
-         TpkNuITDDhAb4MhZvmo2ogQobMEL4cJ2usPiY7iwgQfuN8oTdjzmWl9lSRg5qc6VIaO3
-         bAKArGlO7lcPD11osxYdiljVdPCRkMVaWLmmrpT88p5lMbIPOMS8MsUvQvDAL80sdpa7
-         w6KnIQo3+1XnNFVR4F4kvvddDpK3GTO80BZsk3AaiOmaXqP6OzuIEYWg/ROThGn9h35l
-         o1rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713185353; x=1713790153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UimYHbIWNJzstbVfXQ3wDGyO5qJZelnD1Pr7R7RINlo=;
-        b=InDjIRrt2YfduC5euc08E0V9XDGnIcmdERY79lD3Dku03IOKsNJ2dK+i+ceLo1qHBZ
-         bIniZhA0oYatlYouy9YLwq3DSICzQC7M/CMEerSc+StyVQvZ6tC1zOlhOW76o4EByxbH
-         NKdef1/r8VmEhWQiPMSQCaPPnGH7OzTGa0sTAM3CjPsFIh/TsqQ4hgtHGTALBUxSxfIJ
-         R1mmtoBHuL8Gto4z94ZLlnhLxUVQvpTS3ZikpD0AMjxgyiwcTAYfyDkeNagYufTHTfhz
-         D0jTj8BHDLB/jz8FlND2oHsogyyMCw0Xg/wBmHE3bIETvuiNsAkCkMukuMGfqeAxjFR4
-         5Jtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcbC2NmkqxZJzAk9DbQAy8WtIesp378z7ItqEPkbZHb823CjlVtPB2JEifPPt2h0P+kxUwE4KguIiT2dK9thH5ue6ODDqTtCeU9HR9
-X-Gm-Message-State: AOJu0Ywr9/9IJoI49l78uZ8plqQku/c+qLg24cHgIhXgiMMQSRJ9xa6N
-	dOnUlf+rfMM8x+wa8xHBKL1i9FTorz+IY8iUUCkYe0dJdJ2lHVy4A/BkC1+T1CA=
-X-Google-Smtp-Source: AGHT+IGio3O7mWx35mEvR609b07A+RZnNzN0tC57IoZigX+R2Bsw1mIXox4a962UuZkyigWVe02A1Q==
-X-Received: by 2002:a05:600c:358d:b0:417:4ff3:391a with SMTP id p13-20020a05600c358d00b004174ff3391amr7933682wmq.31.1713185353445;
-        Mon, 15 Apr 2024 05:49:13 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id d4-20020adfc084000000b00343c1cd5aedsm12044366wrf.52.2024.04.15.05.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 05:49:13 -0700 (PDT)
-Date: Mon, 15 Apr 2024 13:49:11 +0100
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>,
-	Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Alexander Shiyan <shc_work@mail.ru>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-omap@vger.kernel.org
-Subject: Re: [PATCH 04/18] backlight: hx8357: Constify lcd_ops
-Message-ID: <20240415124911.GD222427@aspen.lan>
-References: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
- <20240414-video-backlight-lcd-ops-v1-4-9b37fcbf546a@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfWPQRr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2351C4AF0F;
+	Mon, 15 Apr 2024 12:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185357;
+	bh=xeF/Zq3a01ro9m11LFhlH6sAGGaai4u4gzl+O3dH0T8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AfWPQRr2HFI4gDeBmLh7Hqo9jLfYzh8p/wsIMVa7v4qqQuHTePCuSh2fvlTmv6X8l
+	 1FYNoxWkbmrX+6SgYCRPOWGvC1VS7JLXLsIsqYBPl6xJsm5wtAnNYtW39IXo3w6h0j
+	 DxAuLrou3IrriFUOgajW+3CY5WP2MYHcV+8TAHxB2TKC21t22iNPEs3C+sko8TIFUW
+	 519FzRcWhbcaO/HPiW2nulLQHCbrIUBVaMl5GGC/JbsQxoGir8d+hSJa6njhlqJmtH
+	 i1WPNexqmIu+GUyFD4e2/bb2ZUmhgqU3h/JrzIE9YqgHw0Gm8Qd3mS5Z8QThQ7CDBY
+	 Rhka+qXd+D0rA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Peter Wang <peter.wang@mediatek.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jejb@linux.ibm.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	stanley.chu@mediatek.com,
+	avri.altman@wdc.com,
+	quic_cang@quicinc.com,
+	quic_nguyenb@quicinc.com,
+	manivannan.sadhasivam@linaro.org,
+	beanhuo@micron.com,
+	linux-scsi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.8 05/15] scsi: ufs: core: WLUN suspend dev/link state error recovery
+Date: Mon, 15 Apr 2024 06:02:45 -0400
+Message-ID: <20240415100311.3126785-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
+References: <20240415100311.3126785-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240414-video-backlight-lcd-ops-v1-4-9b37fcbf546a@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.6
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 06:36:02PM +0200, Krzysztof Kozlowski wrote:
-> 'struct lcd_ops' is not modified by core backlight code, so it can be
-> made const for increased code safety.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Peter Wang <peter.wang@mediatek.com>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+[ Upstream commit 6bc5e70b1c792b31b497e48b4668a9a2909aca0d ]
 
+When wl suspend error occurs, for example BKOP or SSU timeout, the host
+triggers an error handler and returns -EBUSY to break the wl suspend
+process.  However, it is possible for the runtime PM to enter wl suspend
+again before the error handler has finished, and return -EINVAL because the
+device is in an error state. To address this, ensure that the rumtime PM
+waits for the error handler to finish, or trigger the error handler in such
+cases, because returning -EINVAL can cause the I/O to hang.
 
-Daniel.
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://lore.kernel.org/r/20240329015036.15707-1-peter.wang@mediatek.com
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ufs/core/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 3b89c9d4aa404..14a6a100fcdb0 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -9745,7 +9745,10 @@ static int __ufshcd_wl_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 
+ 	/* UFS device & link must be active before we enter in this function */
+ 	if (!ufshcd_is_ufs_dev_active(hba) || !ufshcd_is_link_active(hba)) {
+-		ret = -EINVAL;
++		/*  Wait err handler finish or trigger err recovery */
++		if (!ufshcd_eh_in_progress(hba))
++			ufshcd_force_error_recovery(hba);
++		ret = -EBUSY;
+ 		goto enable_scaling;
+ 	}
+ 
+-- 
+2.43.0
+
