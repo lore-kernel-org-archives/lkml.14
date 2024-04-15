@@ -1,282 +1,121 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E065673510;
-	Mon, 15 Apr 2024 13:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8EC73189
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713189178; cv=none; b=eWXLf9gmN0hHbmeltuHMvc81qy+jxgmwFs7EkRrcZK/TiyxZ9j7H3/E9sZerX7hC526MacZi/ID3ZZtfsI9Xcjjf7DmMZIvIDaeWKf8xIxFyRoTz8oVZE41k1YZvDljm6IaTTNGxAiMBGzsS+fM3n/DAdkauZNaQDB40/n+aquw=
+	t=1713189324; cv=none; b=GJQ741sQSHBrDxLGEcrmLQ7K6TZsw9vpvMU/JwlO8yW+Z4vTG3+mChBRO123igR3gIoKo246Fw4FQzlGHqADGBZHkPslPY8s6EMSHZUj6pmbj82N1Op6dIah0mfzxb3R0z1KHupiM480xvATC8axg3Y0z5PXcxptMsa/JF4sXL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713189178; c=relaxed/simple;
-	bh=x2yJWv2mQjsgthNw/yzyjrCzabquq7XJW7nHTQIP4vc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r26Lp8qhVCrpmx0fsrYy5syI7JUHxqeGGuXQU4PPt+g1sOphb+OyXRoDH4gfuDVZyE1OZIKDDKpAlXTYIF1bi3XQ0IKDNfEyddytSs7cTeqGMxzCjXt1DscITIV+XcUx69r9sXWzg75VJ2ALUtTVD/iRwDVnMHByR63p8FwqGHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=4dPP61s8; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1713189324; c=relaxed/simple;
+	bh=/KqtpQiX1Bts9vzHpMoMbXJoUvqDULdQ15ObKyQGkQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N+85IMiLbfqTk+iWfeqptprI+m2bHqNwElV6oOohmV8ZrAq2/elnMdETc5RDWeNHL4Z0wE8fqJbiKh6NLD7Wt/Mrn5HrnLIDNk5fqaeAcRgBy0RW7UTVFOVFF7KAJSJiQzao/yE+Yf0opm0lPggwyn/FqKpfKW8F6Aqexl4CF3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Vq1M0w/G; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="4dPP61s8"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FC6d2L010871;
-	Mon, 15 Apr 2024 15:52:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=TpAagzTiObNTvJYrl3JMELELrVdEgi940QNq4JM9qzI=; b=4d
-	PP61s8Wk474nWsj8XeFANZt+6HjFEZerfXcklueD9HWkWdi+Di1KWogpLPy4Ue8Y
-	lVkoeBVeEcCyT0PjxDyPoHoK9BUTbctrvRdT/K+GaixLAfd+/nYYHXrsvb1RZhDg
-	tUoh+kdmter76q8QLLo/hpohuLct1FsIqPmtyJkuGpnFbppbeAOPZA2cjHCR1YIf
-	TYl+YyX8MlgECD5JnTq9qipgVUwlS8xjwnSrLYlu939p03MRbnHAGz7AKkfLbE9f
-	ivPtdGaxjAUJmvFZhOYI2Fka3hE4CC4EsEyMt3jMv5xaG7r/ESQb4YcxvtW8pcSa
-	AU1LVh57rsMvGX58Xc9A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xg50hngb4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 15:52:43 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B71414002D;
-	Mon, 15 Apr 2024 15:52:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1DBD9212316;
-	Mon, 15 Apr 2024 15:51:54 +0200 (CEST)
-Received: from localhost (10.48.86.102) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Apr
- 2024 15:51:53 +0200
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        Fabrice Gasnier
-	<fabrice.gasnier@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 10/11] arm64: dts: st: Add exti1 and exti2 nodes on stm32mp251
-Date: Mon, 15 Apr 2024 15:49:25 +0200
-Message-ID: <20240415134926.1254428-11-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216094758.916722-1-antonio.borneo@foss.st.com>
-References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Vq1M0w/G"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6eb55942409so2027319a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713189322; x=1713794122; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FDybaBLDv2wiDu+VluN3PgOq81UE8XZcMt1MU2BUL6M=;
+        b=Vq1M0w/GpnnE/tCK6gq04CvjneEpphicmA4ufDVVoOYQ0msR7w9nKFuXTlW6N9oyQB
+         uRmXz7zMPt/NIHro5UNULn4pxYoPRAM8WYl01ZEPEBzSUSr5/Cy22/pseUBQ88OPz2SZ
+         3/4EeOey5C7CANFfaeUe9HppRtQvRHMuXaYbTNrBfFp+IaRCVZvQNlQ3ZPeJQPXmgOi6
+         5RiPxdiPalmZINvbrHqpkF+sq+G91KyRdAormX2Vg6o4VbeJBduUnO6tmNVJ7dH50bu9
+         JkqUuNFqxusKVUc9lVf/v6AJRFPd3uU5ZNkIQWHUc9Md0x+sfy+ObSect1zCw0zZA7GI
+         Ybdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713189322; x=1713794122;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDybaBLDv2wiDu+VluN3PgOq81UE8XZcMt1MU2BUL6M=;
+        b=qOGE64Z4VB/0ItX6ce/+TM8Yb71eHhI07A5p0SgXUH+LDPp7lB840DRBFw/O4rBgya
+         2qTtrvbpANiXyZscp8RLjIuT8lyn9Dd/sgM4dLKT0mryQIx0cfVwvllc6P3as8s2aONE
+         O3qKRsLJv8sO8dxL2Z1yEYJPVFmy9PG/nE6i11zPqBsKfUf8HkJ71G+Gk9nyhuE7Trl9
+         semEAcPGtdPpb3vlH1A0mA7IHQbyqhDmeqM9Jz0QKlpR9r7nXPgFUjtDbXgvGUvW5eiE
+         AUnP3S1sfqUkFeOvOGvTobPNcohZ2URB+oxYmXoz16lc/ljlyaE0hmGJNGHvlEpUiuwg
+         Dn3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0/bdZlzx2EeYBKiaNbZ0Jh9MIOGvYp4haUsh4iHYza1FvVYE0vRJ8vhYiz1KL15ELUprdKOY1i6RN6iAsciINIu0iXgT5Rl2rI7ci
+X-Gm-Message-State: AOJu0YzhpCFXfMLpfdfvESQPNJ6rTUR1wrrpKMdA+rNxlOAK0gdib8OG
+	Q8X1HDykBUDYKTd1dYzn70yHQH5FBoyK3GFRe2pFi1R7ubG3kDXNpy19iu/Zz6M=
+X-Google-Smtp-Source: AGHT+IFASyl13hC9uptACMxhhHeBMOBOY+sePtjxfpf//vvHEOFGYAvbdA85itseafAEj76cF6dB4Q==
+X-Received: by 2002:a05:6830:1619:b0:6eb:7d34:e1d7 with SMTP id g25-20020a056830161900b006eb7d34e1d7mr3280527otr.15.1713189321521;
+        Mon, 15 Apr 2024 06:55:21 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id h13-20020a9d600d000000b006ea23d8fcaasm1836074otj.32.2024.04.15.06.55.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 06:55:20 -0700 (PDT)
+Message-ID: <c9c33784-d047-42d1-934e-d9e10cf47a65@baylibre.com>
+Date: Mon, 15 Apr 2024 08:55:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/5] dt-bindings: iio: adc: ad7192: Add AD7194 support
+To: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ michael.hennerich@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
+ nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
+ okan.sahin@analog.com, fr0st61te@gmail.com, alisa.roman@analog.com,
+ marcus.folkesson@gmail.com, schnelle@linux.ibm.com, liambeguin@gmail.com
+References: <20240413151152.165682-1-alisa.roman@analog.com>
+ <20240413151152.165682-5-alisa.roman@analog.com>
+ <2ad06ea8-220f-4d09-bbe7-c4dd12d0d8bd@linaro.org>
+ <105bd25b-e5ea-4649-b9b2-2547e94b103e@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <105bd25b-e5ea-4649-b9b2-2547e94b103e@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
 
-Update the device-tree stm32mp251.dtsi by adding the nodes for
-exti1 and exti2 interrupt controllers.
+On 4/15/24 8:08 AM, Alisa-Dariana Roman wrote:
+> On 14.04.2024 00:19, Krzysztof Kozlowski wrote:
+>> On 13/04/2024 17:11, Alisa-Dariana Roman wrote:
+>>> Unlike the other AD719Xs, AD7194 has configurable differential
+>>> channels. The user can dynamically configure them in the devicetree.
+>>>
+>>> Also add an example for AD7194 devicetree.
+>>>
+>>> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+>>> ---
+>>>   .../bindings/iio/adc/adi,ad7192.yaml          | 74 +++++++++++++++++++
+>>>   1 file changed, 74 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+>>> index ba506af3b73e..855f0a2d7d75 100644
+>>> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> 
+> ...
+> 
+>>
+>>> +  "^channel@[0-9]+$":
+>>
+>> Why restricting the pattern? If you have 256 channels, how are you going
+>> to encode it?
+> 
+> Hi Krzysztof,
+> 
+> Thank you for your feedback! I applied the rest, but as for this one isn't channel@1 -> channel@256 encoding sufficient?
+> 
+> Kind regards,
+> Alisa-Dariana Roman
+> 
+> 
 
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 172 +++++++++++++++++++++++++
- 1 file changed, 172 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 5dd4f3580a60f..1426446ca1b11 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -168,6 +168,99 @@ package_otp@1e8 {
- 			};
- 		};
- 
-+		exti1: interrupt-controller@44220000 {
-+			compatible = "st,stm32mp1-exti", "syscon";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			reg = <0x44220000 0x400>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_0 */
-+				<&intc GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 273 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_10 */
-+				<&intc GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 0   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 1   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,						/* EXTI_20 */
-+				<&intc GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_30 */
-+				<&intc GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_40 */
-+				<&intc GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_50 */
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,						/* EXTI_60 */
-+				<&intc GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 10  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_70 */
-+				<0>,
-+				<&intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,						/* EXTI_80 */
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		syscfg: syscon@44230000 {
- 			compatible = "st,stm32mp25-syscfg", "syscon";
- 			reg = <0x44230000 0x10000>;
-@@ -322,5 +415,84 @@ gpioz: gpio@46200000 {
- 			};
- 
- 		};
-+
-+		exti2: interrupt-controller@46230000 {
-+			compatible = "st,stm32mp1-exti", "syscon";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			reg = <0x46230000 0x400>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 17  IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_0 */
-+				<&intc GIC_SPI 18  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 19  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 20  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 21  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 22  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 23  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 24  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 25  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 26  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 27  IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_10 */
-+				<&intc GIC_SPI 28  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 29  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 30  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 31  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 32  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 12  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 13  IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<0>,						/* EXTI_20 */
-+				<&intc GIC_SPI 14  IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 15  IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_30 */
-+				<&intc GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_40 */
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 11  IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 5   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 4   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 6   IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_50 */
-+				<&intc GIC_SPI 7   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 2   IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 3   IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,
-+				<0>,						/* EXTI_60 */
-+				<&intc GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<&intc GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>,
-+				<&intc GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-+				<0>,
-+				<0>,
-+				<&intc GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;	/* EXTI_70 */
-+		};
- 	};
- };
--- 
-2.34.1
-
+The number after @ is hexidecimal (without leading 0x), so it should be
+[0-9a-f]. channel@0 to channel@ff.
