@@ -1,81 +1,214 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC7E76045
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D3084E1A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185890; cv=none; b=DW9cN5bKkFpS2JapwOCp348xTGzJMaYbRm0iqEObx3OwlZu6O1bWjEs/kgZar18k9iZLRwtOCrUOLyWQZOHAUKPHHNA86aFqlGsiA66Ex4p4bsweHr6KckpqZCryT5KJtDDdS66YCLpKZyLk6R7K6sl5VMGX9ubElQWR3777LVo=
+	t=1713185932; cv=none; b=dBbnGg7ukTB1TF5IgN/G1B4vDFIsmfC1BnpUZFbSYgvS8TCSopxplvbKx1uRf5OzHjSdYLffvnnIkoEvd1tOvBEEtK4qgH2a+ZxoTrk9KDJWHcwOkSvFCTJDmgpdgnXwTWtdfG2CqvS1QZ8T0QfIWV+/moQNCAmunFsPXyTXBmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185890; c=relaxed/simple;
-	bh=PtRDKTQTDzhoQ+/JuLQ9JmFXYTTE6omhjNyTnWio4Ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jm2GMy61lgRRlC0AMkCyY18qLKhb/MFxSyWh3jAevG83khf8SytjY94XyOdtrS52mpAjUrzRtTF61L33yI+WGRVNjKLppX/Famexl21E2dpmoHb0GGBP5FvoaPMMkMq7kyVcCRDmHa2sMhHttM/8zDG2p6eZfAzfiT0f5PVsH7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=hTkoK1AK; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1713185932; c=relaxed/simple;
+	bh=iziCxtBeQUgWvhE++plh/rlR2F6qXEUcQ5jrLIOpDfU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
+	 Content-Type:References; b=Nrnr7TstDWMvIr/VzmSvcn1dJ0FyC4XrBtvhl9Nr3Y7zYQJBk9kYMDA1NdKqX4NcvZ9yy8Ff5BmvCqAG6rxXkFNJltmyy8iKijt7MLebAMh/kbCbXv7zQJatqnrLZecyIACbo8sr4bh+TfL2S6iztt1jRKw/VYgC74tdjJ5ZgVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=U3DZfTt2; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="hTkoK1AK"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-518a3e0d2ecso3277011e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1713185887; x=1713790687; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PtRDKTQTDzhoQ+/JuLQ9JmFXYTTE6omhjNyTnWio4Ng=;
-        b=hTkoK1AKs8h/tfzw25yar9T/oUhRWWMZYagLeKSpRvP2wC4DmwzN19cZCdAC1OMQ3y
-         SU9XUoCsyxkAbikK+hTmmwvk3rmnxhnfyNKpOMP0WJJNdfb8rdEwhfhtiwAS9MwyLe4Q
-         2fOAE1rJ0lqGAG4mBgjIrsHwwpOoJEqeVBfe4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713185887; x=1713790687;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PtRDKTQTDzhoQ+/JuLQ9JmFXYTTE6omhjNyTnWio4Ng=;
-        b=P6r30FP/Ysh05g9ZF2mdGS9d4JJxaRJO8h+3HBDbwH9AOV4rgRYi7ayzSiMTiSKwuv
-         Dks0BBTOfxItWVMjSk+CfZuWJz45klGmutPoL1WCh5paOlcemkJG/GSBU5xy5lOca6OY
-         9ZNQoGF3Kaaov7TN1/RsqpkuGVJz5cltGTNyw6MJcmlKupqpUXdrIiV9Lmo+9dTnfhOP
-         oiDQwSfgAcIKeXgDu1gvsg9FYiryR3UUAX7eygoFwxN9zRzO8jVVlvTHCWtZdvnUxSTf
-         s2hY+pi5PiXrGWYGzlLHDWRK9cwf8Gx+mS01l20nKWAbpFecODsSViMTPy0N0rSV4+3t
-         drrA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7NBKYOxopvtSQ1olTFc+IID52JQpaFt+3dQ2KrqUDEc5vJqIMsImoec+yRu/7LQ4Zpd1kHEnMP6d1IV82vbe3/hbvIWxOpCqz4eDi
-X-Gm-Message-State: AOJu0YwiyacCTMo5xCtGaAVrkcUTW40RyhRlRVxDtgF0tgzpRbohgGeO
-	h/8L7qGrOFD6v5VYIcZy07Xm1TeqC/Wc7bVYSgMcD6zvyeE36P0jRL2I75udEg6hLjlYpiR9cLH
-	7JHUWGTST75lJkKII9EjTORfMYqb369g6aZR03/AJhwok8bBh
-X-Google-Smtp-Source: AGHT+IHOnuRHFKR2HVCzMc8TC81Qg4Ae2NPHkxHjQfyNtYIEy4o0Y2sPyHQsY5jkjxH1hi2Cm7TUt4zaFYsDNFeRRJc=
-X-Received: by 2002:a19:9112:0:b0:516:9f03:6a92 with SMTP id
- t18-20020a199112000000b005169f036a92mr6833604lfd.43.1713185886774; Mon, 15
- Apr 2024 05:58:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U3DZfTt2"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240415125848euoutp02406710cf51cf4a85ea3be87bd67c4f92~GdYZxAVra1053010530euoutp02a
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:58:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240415125848euoutp02406710cf51cf4a85ea3be87bd67c4f92~GdYZxAVra1053010530euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1713185928;
+	bh=K7kgIzAF8cwrWU7cZnQZrJq9/UxYfRIxipy6YJIOOnc=;
+	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
+	b=U3DZfTt2tz636C6PK/TOxc5kdPqHBA+WgNL+c9f7jbLpkfE7TazfaTNa1XDFdbp4K
+	 OoNcBD9ppaVqFVCdTDnNa+PocIQQNt/VohmdBru9TOuKws3EYQ6SPCtNybhXcx7/Ii
+	 uvixRC/CXtAC7SbwwI43vAloRWJGzUYSBTHr2z0Y=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240415125848eucas1p2693e3902c12ef8668751a407d9d9f211~GdYZi7waQ1350713507eucas1p20;
+	Mon, 15 Apr 2024 12:58:48 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 83.07.09875.8842D166; Mon, 15
+	Apr 2024 13:58:48 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae~GdYZAlLpo1350813508eucas1p25;
+	Mon, 15 Apr 2024 12:58:47 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240415125847eusmtrp2b598b357b551f9ce09ab776ff9f34d8a~GdYY-6IPH2471724717eusmtrp2U;
+	Mon, 15 Apr 2024 12:58:47 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-32-661d2488da1c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 89.6F.08810.7842D166; Mon, 15
+	Apr 2024 13:58:47 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240415125846eusmtip1044831a80b43d035463a2940376d5e6d~GdYYUHAow1109911099eusmtip1Q;
+	Mon, 15 Apr 2024 12:58:46 +0000 (GMT)
+Message-ID: <91ac609b-0fae-4856-a2a6-636908d7ad3c@samsung.com>
+Date: Mon, 15 Apr 2024 14:58:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412140122.2607743-1-stefanb@linux.ibm.com>
- <20240412140122.2607743-3-stefanb@linux.ibm.com> <CAOQ4uxjDQO91cjA0sgyPStkwc_7+NxAOhyve94qUvXSM3ytk1g@mail.gmail.com>
- <89b4fb29-5906-4b21-8b5b-6b340701ffe4@linux.ibm.com> <CAJfpeguctirEYECoigcAsJwpGPCX2NyfMZ8H8GHGW-0UyKfjgg@mail.gmail.com>
- <b74a9a3edc52d96a7a34d6ba327fdb2a5a79a80d.camel@linux.ibm.com>
-In-Reply-To: <b74a9a3edc52d96a7a34d6ba327fdb2a5a79a80d.camel@linux.ibm.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 15 Apr 2024 14:57:55 +0200
-Message-ID: <CAJfpegvPwpS5_S4qrrVbeC1RovP8jeNuDCYLbdcZ_XDFgfgftQ@mail.gmail.com>
-Subject: Re: [RFC 2/2] ima: Fix detection of read/write violations on stacked filesystems
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Stefan Berger <stefanb@linux.ibm.com>, Amir Goldstein <amir73il@gmail.com>, 
-	linux-integrity@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, roberto.sassu@huawei.com, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 12/15] tty: serial: switch from circ_buf to kfifo
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, gregkh@linuxfoundation.org,
+	linux-amlogic@lists.infradead.org, "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn
+	Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+	<khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
+	Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Language: en-US
+In-Reply-To: <20240405060826.2521-13-jirislaby@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djP87odKrJpBtu2clls67CxaF68ns3i
+	zaMjzBbv5spY/GzfwmTRMXk7i8WC2dwWE/efZbe4vGsOm8WZxb3sFscWnWSxeL/zFqMDj8f7
+	G63sHk8nTGb32LSqk83jzrU9bB77565h99i8pN7j8ya5APYoLpuU1JzMstQifbsErozl3xYz
+	FhxQqtiw6iNrA2OLbBcjB4eEgInEvgmSXYxcHEICKxglXm+9zAjhfGGU6Dv3Csr5zCjR3TGX
+	uYuRE6zjaMNfZojEckaJD8svsEM4Hxklll1tAKviFbCT2P/zGxOIzSKgKvFg8go2iLigxMmZ
+	T1hAbFEBeYn7t2awg9hsAoYSXW+7wGqEBVwlLr15ywYyVERgE6PEzYcvwDYwC5xkkrj7vBGs
+	g1lAXOLWk/lgGzgFrCS+t35jhYjLSzRvnQ11azunxMMeawjbReLm7SNsELawxKvjW9ghbBmJ
+	/ztB5nCB1DNKLPh9H8qZwCjR8PwWI0SVtcSdc7/YQGHGLKApsX6XPkTYUeLmz35WSFDySdx4
+	KwhxA5/EpG3TmSHCvBIdbUIQ1WoSs46vg1t78MIl5gmMSrOQwmUWks9mIflmFsLeBYwsqxjF
+	U0uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQKT2Ol/x7/sYFz+6qPeIUYmDsZDjBIczEoivC3C
+	smlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeVVT5FOFBNITS1KzU1MLUotgskwcnFINTIn/TW/5
+	/DDaavv4asTFHU1BRxweWISkse3w6PTanv4ztNg7duZy1ntlUg9khJIzzj3+Um+Yk5ld0Ci3
+	9whT8fWV3ou4j2jv+ijQrKWRq/ROmfHHj8f3XytIbZ/xuFftru7bXK3p71bxNnz0OpD6Yx3r
+	9NPepTO31f6J6VM/MXWWua3dqf7Jh+/aKisrHOzI/iX47Z2+pXqthkCSv9zKehPjFbVfXaOE
+	fbQcly642sK5WSg4IVEhzqRU/schx4Ifc5O0uROSV7z5ZhWw+mudaATvur/XSh5fM0p/vPvC
+	k+uKceIvlGafa1+kfHvbrnLVCL5/zDv35Jz++jHqzW6uTa5L2sq/ON09fnXXWmOGP0osxRmJ
+	hlrMRcWJADgPeZLRAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7rtKrJpBheWK1ts67CxaF68ns3i
+	zaMjzBbv5spY/GzfwmTRMXk7i8WC2dwWE/efZbe4vGsOm8WZxb3sFscWnWSxeL/zFqMDj8f7
+	G63sHk8nTGb32LSqk83jzrU9bB77565h99i8pN7j8ya5APYoPZui/NKSVIWM/OISW6VoQwsj
+	PUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYzl3xYzFhxQqtiw6iNrA2OLbBcjJ4eE
+	gInE0Ya/zF2MXBxCAksZJbZ9m8oMkZCRODmtgRXCFpb4c62LDaLoPaPE0pfbwIp4Bewk9v/8
+	xgRiswioSjyYvIINIi4ocXLmExYQW1RAXuL+rRnsIDabgKFE19susBphAVeJS2/egtkiApuA
+	Nn+JAFnALHCaSWL1xYdgm4UEMiQ2rH0CtoBZQFzi1pP5YDangJXE99ZvrBBxM4murV2MELa8
+	RPPW2cwTGIVmIbljFpL2WUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwarcd
+	+7l5B+O8Vx/1DjEycTAeYpTgYFYS4W0Rlk0T4k1JrKxKLcqPLyrNSS0+xGgKDIyJzFKiyfnA
+	tJFXEm9oZmBqaGJmaWBqaWasJM7rWdCRKCSQnliSmp2aWpBaBNPHxMEp1cB0hMGP+ZL/w18K
+	+zrbqtRvJdlZC3688KT3cF6w8nzJJjWBrGXretofr7quLegUNmMeU7fM7TvaZw1rd67i0O70
+	e8Uw+Y9l9QSP9+zPzfWNJ6+RYog8EcwhcMFblMeh2n21hpjpjDli4Ut15KpPnb//c64Ok17W
+	PvsXNY2Bu5SKbiqapHSvyJX3/5Uad0rrCntR9udk4f7pjH+j8jM2JuRdZ2x7xlcv5+C9dfak
+	KwJv2eykvji8VfPb5qY042mSatjmGu5bxceePpUWdphxylz6juqS03rz0necFf7s1X5/2tNc
+	S/1j2VLGSscY/jKUTUx3X3UuVb387Ju/HD63T+hsi1ylI6XG67D5robxCiWW4oxEQy3mouJE
+	AEHZq4VjAwAA
+X-CMS-MailID: 20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae
+References: <20240405060826.2521-1-jirislaby@kernel.org>
+	<20240405060826.2521-13-jirislaby@kernel.org>
+	<CGME20240415125847eucas1p2bc180c35f40f9c490c713679871af9ae@eucas1p2.samsung.com>
 
-On Mon, 15 Apr 2024 at 12:47, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> It's queued in
-> https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/ next-
-> integrity branch and should be linux-next.
+Dear All,
 
-Is there a document about ima/evm vs. overlayfs?
+On 05.04.2024 08:08, Jiri Slaby (SUSE) wrote:
+> Switch from struct circ_buf to proper kfifo. kfifo provides much better
+> API, esp. when wrap-around of the buffer needs to be taken into account.
+> Look at pl011_dma_tx_refill() or cpm_uart_tx_pump() changes for example.
+>
+> Kfifo API can also fill in scatter-gather DMA structures, so it easier
+> for that use case too. Look at lpuart_dma_tx() for example. Note that
+> not all drivers can be converted to that (like atmel_serial), they
+> handle DMA specially.
+>
+> Note that usb-serial uses kfifo for TX for ages.
+>
+> omap needed a bit more care as it needs to put a char into FIFO to start
+> the DMA transfer when OMAP_DMA_TX_KICK is set. In that case, we have to
+> do kfifo_dma_out_prepare twice: once to find out the tx_size (to find
+> out if it is worths to do DMA at all -- size >= 4), the second time for
+> the actual transfer.
+>
+> All traces of circ_buf are removed from serial_core.h (and its struct
+> uart_state).
+>
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> ...
 
-What exactly is it trying to achieve and how?
+This patch landed in linux-next as commit 1788cf6a91d9 ("tty: serial: 
+switch from circ_buf to kfifo"). Unfortunately it breaks UART operation 
+on thr Amlogic Meson based boards (drivers/tty/serial/meson_uart.c 
+driver) and Qualcomm RB5 board (drivers/tty/serial/qcom_geni_serial.c). 
+Once the init process is started, a complete garbage is printed to the 
+serial console. Here is an example how it looks:
 
-Thanks,
-Miklos
+[    8.763154] Run /sbin/init as init process
+NT [   12.429776] platform cpufreq-dt: deferred probe pending: (reason 
+unknown)
+[   12.434259] platform regulator-vddcpu: deferred probe pending: 
+pwm-regulator: Failed to get PWM
+[[6if;9]Uigmkfl-tl ocretbo nrnee .[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[2l[1[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+[.. yteiigteiiilhtlgeet dvcs..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+[.. yteiigteiiilhtlgeet dvcs..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+[.. yteiigteiiilhtlgeet dvcs..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+[.. yteiigteiiilhtlgeet dvcs..[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+[.. yteiigteiiilhtlgeet dvcs..[  105.613420] debugfs: Directory 
+'ff800280.cec' with parent 'regmap' already present!
+[[6if;9]Uigmkfl-tl ocretbo nrnee .
+[.. trightlgeet ipthr ytm-dv5c7[Gmo [94m8[2h[0.
+..]Snhszn h nta opu vns(usses..[2l[11[[2 k;9?5[  105.638809] mc: Linux 
+media interface: v0.10
+[.. atn o dvt eflyppltd.[  105.707390] meson-vrtc ff8000a8.rtc: 
+registered as rtc0
+
+
+I found this patch by bisecting today's linux-next. I've checked the 
+changes in the related UART drivers and I don't see any obvious issues 
+though. Let me know if I can help debugging this issue somehow.
+
+I've trimmed recipient list due to my smtp server limitation.
+
+
+Best regards
+
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
