@@ -1,98 +1,150 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8608063C;
-	Mon, 15 Apr 2024 13:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88208249B
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713187949; cv=none; b=l+lyvXBSyIa+x9FF0y1it1aXHQsaaixLeXHilVvZNZQ9Erz3jyOBeN7IbH1GRkylSu6nB3wc//B0IGWgbmahiSnS+7V9XEUoOoParNdrI0f4GFhnHGOTxcdWyBrqyxyq7U8fFCK1YQ67YdQ9W2srHzbwW9e71FtkLH2k1xwtf9Q=
+	t=1713187964; cv=none; b=JBdYPNEfz2HvRW4S+9FvR1hDs5IsBIiGVo15jwfjd3HvZ03BOgJmYIyyE3mepIM4x+l7fAZKrGE5MbhvUsby3rrAWSyUCFrpCbFANb/dD9jztXXyQDbEQCaVIlTo59o5uW909a+78hHQ0vaPHCb7jUXfY5Am/WHV7pYGCQr2PEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713187949; c=relaxed/simple;
-	bh=lY9dhM6iK8H+xRTcxtbZNqjoO3E0/X10GLrYjtfX2BM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rBeFUmiB5mUKBkF4Dak/rwabJhCcXBChif6rH9nWeKPNiPP6J5+GtDiRT/xyqV7i6zkaHv62lfrzsAXb92/vtCD4kJP/ybqo94bGfDd2+UjMEHMfNAEGOGk2silrC1EZtzAHVpOfz5RQvJtoYEzUP3TA6lPOWHibCmi88sUi4eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PY/xEU9Y; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713187964; c=relaxed/simple;
+	bh=47KwHEpTElLjbNjsJm1t+l/GmTOAMw2E7SYcceePcgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvhSWXv/1KK2VjxCq3GCuhuI9XOkfNcaQAvuwcD3ExAyXCS3a551KHZcCQAH7x2uipR9iU4qwAA9bzFo2uhTRqJIm/3GpzJjA1+Nd/TT1jlIvm+Jrv397Pd/w6Cb5ZhdJWzW8CFhai8UX3GYpJejdxKGQV5oX3QewHY3edEiSBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=nU9w49NQ; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PY/xEU9Y"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46a7208eedso457622666b.0;
-        Mon, 15 Apr 2024 06:32:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="nU9w49NQ"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-417e327773cso20384815e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713187943; x=1713792743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lY9dhM6iK8H+xRTcxtbZNqjoO3E0/X10GLrYjtfX2BM=;
-        b=PY/xEU9YdR31luxBgHMkxKtZtAEIaAIlw7e51YwKSf4rH30O3iZJQFMCEbQ9xT5/rc
-         SXl3oCVS41LsBRR7wpFXmQh6zznxfJ4lAgzQWbwe+nvv0piAQj7lbMrSVi7gQeyaV72B
-         mFU/u+iQKbg82Pa6PnvM6+dhJx58HAS2Eg8ccA/s0/LJr+tvjhHKXeRL4MAnyuQ969nZ
-         zM5DRfA5tETmqMnGQU7A7MY2EwksJnKt0A1pYNCZYYuorH20ryQBTxRFt6d/6jx8oZwh
-         CQmsxQp5C8rFXPBTWrMeUVWWZznhqslI6erqNSK2sIa2wkV1r8PJ6UwhjHOBfHLWYPk1
-         gZfQ==
+        d=ventanamicro.com; s=google; t=1713187958; x=1713792758; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YfFnCtrCdaYweGdW7b/X7wLS8PykVIhbaLaFH/3RBKs=;
+        b=nU9w49NQHErlj7en2YVewwMkkuyN5GNZRdA5Pjb5N3S6X+hU/jqGHRnr+wZIPJn920
+         /yLtevOK7anbMssCvpBcu7UBJK+p9eCiI/f7RD2EgxKCDyCmoESvGna963VWvLDfRaUE
+         16rSPIJtwxATBv+9dxcnGbvPFmdJTeIegpF/zrXHLCAH/LWJJPuw2k6SS9pJrMZAz92y
+         IjNjTTpr1v0HHmC6cxothAk3m7P6rWIyv9fsOEZ3CM4OvwZqO1Tf0ws9t/2RFiA4Wx6H
+         FgMA9abW2KOUTkpy3GfhdSLlOpk5GKF3SJmJwHA8WjfyFcuubsGjfmmCluWrdCPe5hJc
+         y7JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713187943; x=1713792743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lY9dhM6iK8H+xRTcxtbZNqjoO3E0/X10GLrYjtfX2BM=;
-        b=OP9c5KJzk4qClCY2GAJVNxjyxpTYCO6DFoK408X9+Bkaw7d4LmF+ikZ18uliMDUC8f
-         MZuOa8EKan/SuSihbyJUCMUfW60IJNJh0nZCIav3I268Rpbv8rfu0FbE8dVqZ9MzCaVw
-         udRzqKKC4jpj5e4yXEqLTQ64k/BiL7fQI6uA3TsnDxPDLeeMwvWzZrhiBhWchURjLdFV
-         DwK0q3UQkcPlK46Xwuwk/q9FIIjihGDI/1MdkBqwTUH3TqUdowILiUU9VSXzKm1dPfl0
-         DXtxdkUcBv5t8ilRKskaOJRXTJolLX+Pxbz0CSj9ClxH1xGgeBycDT9gZDdp33yOPDiD
-         s86w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/LgmKnlCjjwpRU55L63uijLtlTQi0xXyNw9HB98ykesNcxVeDmI+2tFuFHBMeua+BmbUTOOPuB99rf3j2LLTBJHlzuef8PBuZn7q03fp22eY8LLZTiHJaGZwxhay3RSuhXORzjM230nOgg/UPJZBY62agddac+yLi0hOnmP55VSnzxA==
-X-Gm-Message-State: AOJu0YxsaN2srAxH8SoGnkQvnP9l8E/bCi2GhaTAZH9ccP85Rbcfc4xj
-	WGGY6PetHWDX6JRZd2rX8ebXt9CIdLp0EThFatsGmNOe5FYUqBx0ck3W9HjsAXftj9r7Lm0mNEf
-	j0xD2JKfCMIQSxBLQwY3yqsAAPETuCXzAJ2g=
-X-Google-Smtp-Source: AGHT+IFZf9fDssR5nh9Eyau52SHgMzD+ltgsF4y4hSg/CkOl09E9yGPHol2zU8xld7bTfC7pSYrTliB5VDjZb064UEk=
-X-Received: by 2002:a17:907:208f:b0:a52:6b12:3078 with SMTP id
- pv15-20020a170907208f00b00a526b123078mr1637121ejb.55.1713187942584; Mon, 15
- Apr 2024 06:32:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713187958; x=1713792758;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YfFnCtrCdaYweGdW7b/X7wLS8PykVIhbaLaFH/3RBKs=;
+        b=kwsS/xFdQEQNvTFpxvVVyX5kaPrjlhXhgGb1SVXNM4eLjllP7aN4f26v+39UbGtNuR
+         /v01tf+uk723BozijCvM51FHI/WA2udxLROG9s1AyyHD0T50jN5AoyCNBeoAxDIWp0Lh
+         T7UwoJsmcVNPL65JqQ0493GnZlaokHr/UeHNKTi5af4FDVtwDIxvWy/bhG4Mtf1kyS1M
+         WO2U1Wb3Bv6285cNIVsq/NnYcZKfiX7tRG27O5dsBVY1dwSdUi4CXBkf9unyW5RCSPVp
+         Gq7oQHlPnBvERB4IAdTyUTjxJWrPpKRodGANIdMTr0syqBSEgajM7hku4umFc03U3gkr
+         j2cg==
+X-Gm-Message-State: AOJu0Ywf0cieReyuZM0ryDTkP8nPcLyakTqKUFWvw74q6T9m9p1lclLO
+	7fbsVCrrtqEnPbsgILHmrxLJXbh2JyDl98U9iAkCeBvk8t55wf2ixZYYUgBDqNw=
+X-Google-Smtp-Source: AGHT+IFoZFoMz1NB27raXr0+F36UbAh0bYI/huPwqdYpnuJ5dY1VU+ZBhab3Ez4blLLhX5Tys86QcQ==
+X-Received: by 2002:a05:600c:5115:b0:418:5e81:415f with SMTP id o21-20020a05600c511500b004185e81415fmr2552795wms.14.1713187958349;
+        Mon, 15 Apr 2024 06:32:38 -0700 (PDT)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id g15-20020a05600c4ecf00b00414659ba8c2sm16357094wmq.37.2024.04.15.06.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 06:32:37 -0700 (PDT)
+Date: Mon, 15 Apr 2024 15:32:37 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Atish Patra <atishp@atishpatra.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, Will Deacon <will@kernel.org>, 
+	x86@kernel.org
+Subject: Re: [PATCH v6 22/24] KVM: riscv: selftests: Add a test for PMU
+ snapshot functionality
+Message-ID: <20240415-f6d8638ff922ccd58d1abf41@orel>
+References: <20240411000752.955910-1-atishp@rivosinc.com>
+ <20240411000752.955910-23-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240413151152.165682-1-alisa.roman@analog.com>
- <20240413151152.165682-6-alisa.roman@analog.com> <CAMknhBFzUeW5+rs_GgCZCiit=eW04VHyCnt-__jXLnO3Z29ksA@mail.gmail.com>
-In-Reply-To: <CAMknhBFzUeW5+rs_GgCZCiit=eW04VHyCnt-__jXLnO3Z29ksA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 15 Apr 2024 16:31:45 +0300
-Message-ID: <CAHp75Vd3Fh7PgRXF6J2_-TJof3E5=Q5t6qJbDkutJ=5_f-0zPQ@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] iio: adc: ad7192: Add AD7194 support
-To: David Lechner <dlechner@baylibre.com>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>, michael.hennerich@analog.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alexandru.tachici@analog.com, lars@metafoo.de, 
-	jic23@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org, 
-	nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com, 
-	okan.sahin@analog.com, fr0st61te@gmail.com, alisa.roman@analog.com, 
-	marcus.folkesson@gmail.com, schnelle@linux.ibm.com, liambeguin@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411000752.955910-23-atishp@rivosinc.com>
 
-On Sat, Apr 13, 2024 at 11:05=E2=80=AFPM David Lechner <dlechner@baylibre.c=
-om> wrote:
-> On Sat, Apr 13, 2024 at 10:13=E2=80=AFAM Alisa-Dariana Roman
-> <alisadariana@gmail.com> wrote:
+On Wed, Apr 10, 2024 at 05:07:50PM -0700, Atish Patra wrote:
+> Verify PMU snapshot functionality by setting up the shared memory
+> correctly and reading the counter values from the shared memory
+> instead of the CSR.
+> 
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  .../testing/selftests/kvm/include/riscv/sbi.h |  25 +++
+>  .../selftests/kvm/lib/riscv/processor.c       |  12 ++
+>  .../selftests/kvm/riscv/sbi_pmu_test.c        | 144 ++++++++++++++++++
+>  3 files changed, 181 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/riscv/sbi.h b/tools/testing/selftests/kvm/include/riscv/sbi.h
+> index 6675ca673c77..1b995481a3fa 100644
+> --- a/tools/testing/selftests/kvm/include/riscv/sbi.h
+> +++ b/tools/testing/selftests/kvm/include/riscv/sbi.h
+> @@ -8,6 +8,12 @@
+>  #ifndef SELFTEST_KVM_SBI_H
+>  #define SELFTEST_KVM_SBI_H
+>  
+> +/* SBI spec version fields */
+> +#define SBI_SPEC_VERSION_DEFAULT	0x1
+> +#define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+> +#define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
+> +#define SBI_SPEC_VERSION_MINOR_MASK	0xffffff
+> +
+>  /* SBI return error codes */
+>  #define SBI_SUCCESS				 0
+>  #define SBI_ERR_FAILURE				-1
+> @@ -33,6 +39,9 @@ enum sbi_ext_id {
+>  };
+>  
+>  enum sbi_ext_base_fid {
+> +	SBI_EXT_BASE_GET_SPEC_VERSION = 0,
+> +	SBI_EXT_BASE_GET_IMP_ID,
+> +	SBI_EXT_BASE_GET_IMP_VERSION,
+>  	SBI_EXT_BASE_PROBE_EXT = 3,
+>  };
+>  enum sbi_ext_pmu_fid {
+> @@ -60,6 +69,12 @@ union sbi_pmu_ctr_info {
+>  	};
+>  };
+>  
+> +struct riscv_pmu_snapshot_data {
+> +	u64 ctr_overflow_mask;
+> +	u64 ctr_values[64];
+> +	u64 reserved[447];
+> +};
+> +
+>  struct sbiret {
+>  	long error;
+>  	long value;
+> @@ -113,4 +128,14 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+>  
+>  bool guest_sbi_probe_extension(int extid, long *out_val);
+>  
+> +/* Make SBI version */
+> +static inline unsigned long sbi_mk_version(unsigned long major,
+> +					    unsigned long minor)
+> +{
+> +	return ((major & SBI_SPEC_VERSION_MAJOR_MASK) << SBI_SPEC_VERSION_MAJOR_SHIFT
+> +		| (minor & SBI_SPEC_VERSION_MINOR_MASK));
 
-...
+Same parentheses comment as the other patch.
 
-> > +static int ad7192_parse_channels(struct iio_dev *indio_dev)
->
-> Better name might be ad7194_parse_channels() or
-> ad7192_parse_ad7194_channels() since this is specific to the ad7194
-> chip.
-
-Quite unlikely we have the same chip to be supported by somewhere
-else, so I would just name it simpler, i.e.
-
-ad7194_parse_channels()
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+drew
