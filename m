@@ -1,176 +1,451 @@
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01olkn2050.outbound.protection.outlook.com [40.92.98.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D80882481;
-	Mon, 15 Apr 2024 16:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.98.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199823; cv=fail; b=OJN0u1Amp5TGONJikYRRpct0SFOfJfFmoOAY/fX1FH2F0GfU6mHmANIZ3jq7z7qwJTIHDHMJZ2thWpTicOACm3kWjD6+AAKLEQf+k9BwXt/w/maNRGwBdZYV4XroTzaMZFCzv52CypBBw9YnzgIBf4+x5kAHvp1x0gzN2sTgzo0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199823; c=relaxed/simple;
-	bh=mMZOnY0K4Fc3QzGHB5j6ckXrw+Taw1W8YRIGT+9ev70=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oKFtS4seubsWxyatnhE9548b77YEk8TdP822pVgw0jkR9A6MRH5BSLtYeM0NroTxK/UkaUXpbnLWt0a6O154OKS6e7l/ZB2J75afYoVQgzSfRuyowTX7XSYrYSNwYZ/MWwTGmJYVdbUtUf0FFQWS3jT8aaj7CwnRyTiylHirs28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=erkeF3hM; arc=fail smtp.client-ip=40.92.98.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A6C82481
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713199855; cv=none; b=HteTe+XbbehFs2B8BS+OmBJg5iIyqUEiLwOd/NQt/yEqJ5B9G3IA1yxIAvbwZg4RGd29/2yr9xMXSLzT49UquH583tqCbgmu/MBDbgXNs4xLwtgc1pVbzgmpkVwO4YTChVOcwlyMBNbFnAgLeomkc7QfleD9SvqHp0W4UCRi0Ls=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713199855; c=relaxed/simple;
+	bh=uneBj15HcdtC02CZZBXyKX70iq4SoZi7QfZCmxoTLHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=epJIX37vmc+9cG+l5s0JXyU7YK3n5U56PmVdJR2RaI2PYG8jnUXoprnEsVKz4J1HeAF4hzjkEp0Y4k+0n3rYZ0txICzAc/T6KUuKlrDblaAB9T0OTACI6jj1EkAnwCSXdYqQEHZchdcmXCY88kxSxbZ///aGla7TcYqn4ribuJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rbgn2uGE; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="erkeF3hM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lu+ElTKf4s2UK4YzeEZtdY3bAjoODbCgD+059dYjKPS7ymDoBtEAkHTH7B64F/hcoJRd2SmldDxo3j6OUr7GzPaqPc+3bmnL+OlC95NB/+811uTlnzNkmhx6an8hcxLPAmkFBhUXv1oJlDV3AUj7x1ZlN88lJy/Z2ScSKMmK7k9OKdHlhCSUbj1KgKd8yeSnXEYnJCxah0WIn6vLqn2NwTyby0VxiTZPIzjaHvSSBUrGY68Y8TP5peyEATiA2dBcv1u0HAh/DsUDxiGaE80/LTULExEJS5x9jeJ3PYcFQrEoiF+u2FgVO/I2RYU44MTt647HIY44w0ucDKjeK2U9fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3xYj8C1JvpAs44JwAbQCPXmejjJKzZaQCp4yX0XBNyg=;
- b=hxtAR2SCdTAf1o0uOZZjvm5X4foQA8eUFY/6QSFj1lER9H6Jpwr6zCxS0/vriZmygmf2XxfRpGPHXD5OAUPyZI7ItvXsnVe8Gf5oLw0TgcFbbdYPOPUDIF+Zw7MwwLNVVwjO1WrEdis7KR5r2UT7DUXsMAUN7ihSOE6papC4UxuYNJ8rhQ1bRqcAITB0XK/ptBPDwIhSwnHjKVnMq92iBuF2vgUVrflyMCnq4NnoL90o5xt+jd4eqlWPEvU1o5lpkgWY2YFae+rv5vhX4wr3ES2uk5e4sfvStdCGUPqKnkFduJKkdykHX8VBUHz0CV1zp2mcEm1invToXvViDPACwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3xYj8C1JvpAs44JwAbQCPXmejjJKzZaQCp4yX0XBNyg=;
- b=erkeF3hMOUnOdgZO80px60OPD6byt271EVvXDlHYt1vDwtblIi8tdC/Iut1h9FfUqAxdbcrGDg9K0r/1yxBlFjs6HTju1B4gs/v6eItVOBQdlUFa/S49Z3/SNOTjTfWfCegqaGv65bb+O0jVbmI+PuCuOWNlenk4Atq3k14n1b0fpNntoDgIFX9Bh1577D2wK53qWxae2VxNO4o5ZS28OWDqOmTQwdXl0RElyu+EtYyVzcRrH0tQEv8huPitrRVLYSfLN4h/xng1PcjbqixBt1FcdlgY7XzJvfcQ0JXW988nT2nfZ+cNvQnw6sj0OqJ9pnJj0PkuHHmvBB050gJvzg==
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:209::11)
- by OSOP286MB3906.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2ed::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
- 2024 16:50:18 +0000
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8]) by TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8%4]) with mapi id 15.20.7452.049; Mon, 15 Apr 2024
- 16:50:18 +0000
-From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-To: sbinding@opensource.cirrus.com
-Cc: ArcticLampyrid@outlook.com,
-	david.rhodes@cirrus.com,
-	james.schulman@cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	stable@vger.kernel.org
-Subject: Re: Re: [PATCH] ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
-Date: Tue, 16 Apr 2024 00:49:41 +0800
-Message-ID:
- <TYCP286MB25356BFBD3D67D4E1FD09732C4092@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <335eb6d4-424e-43e5-8990-3d87ad579e7c@opensource.cirrus.com>
-References: <335eb6d4-424e-43e5-8990-3d87ad579e7c@opensource.cirrus.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [9y4zhtIbIlhqlJ8QCKEJLAi+q3WZ5GNnPnaZDr5I4fXnlbYqNVR74g==]
-X-ClientProxiedBy: TYXPR01CA0057.jpnprd01.prod.outlook.com
- (2603:1096:403:a::27) To TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:209::11)
-X-Microsoft-Original-Message-ID:
- <20240415164941.4495-1-ArcticLampyrid@outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rbgn2uGE"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516cdb21b34so4387525e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713199851; x=1713804651; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5XcThWMs6mWSUjgCvvr8NgRb/oJmLpUWiiTlWRZ6KY=;
+        b=Rbgn2uGEAx+foWRcMQNQzxpaUCQqA0a3TwRZ+3QtWigPTzqP0jW8kl5BklMrTENTAK
+         vi3ZmxJXQEzrVa2NRre4y+8FcB2pyCqCguKKFpVy0F1f4Er1tJRHMpoQpEtJYonwr1P4
+         Jzput5a0K0TuPVF8x6xOa20EAJU/KvRFDuFO4julNVAKcJM3c01M9qmd3aUanPvs6dQt
+         s5KaBVARr6LyssNKQ+zle3TR8zwXAS9pmWHKDHF+gzRp4QDYM0tDo6PJd5TZratZjY9u
+         8e/arOuMuG1g2ZIGrfeNqrdpdoe8kwGaXdu80aTG3zcsCzMpXhaZSVs7nv2DwGK2pXHb
+         nbkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713199851; x=1713804651;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m5XcThWMs6mWSUjgCvvr8NgRb/oJmLpUWiiTlWRZ6KY=;
+        b=dxQrvzM7ROz7RYHVxNV8u5OtkOdWsehe6yY+Pbdv0n/ifSIaKTWK7V9xeJLxD54UeI
+         ojHV5f79qOG+FKQiNBW2GcJ3/38JLJ0XihoYQq5GbvIdbjowleA8/41rQoBByppeEI4e
+         hZlrj7Xs4QWkmlbXWoEPSuB1aeAiC9fsOoRAnthFQB8/M2Ds+DbmzXE3oqY8g9yb6Vv6
+         2beUhko0LCTB9jMBdTNj7gwKFEeN35LTetzlRgrhQLFSfIrhg7RbMGrr6b5/QB/BSBjm
+         KOYnTQqPo0nVIdGGpY8UhZox/Kg3dujG1Ok83ytqDTpLGZL1GYCWhVjKuRk/H+7jxnc6
+         hbGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzuK2VMPWPtHKXys5U3nkn/tmdQNzt7sDlYaOt41lVLjyp3aNrpnwvOkBiB90GratTCnNTYaV83vkEVhthMyd4vecdAOa1bn3d3/1U
+X-Gm-Message-State: AOJu0YwlTrwMeh9KlaSTM8GmaSu4NwvTyP1A6AUEFiOZntT6KB013Doo
+	SafvYlL6jAUZ8Q8ubCqJ/gOQeVhZfA0bS+r3oYIq3HxTrpNACRm7P9roNVtVPuXCXC6T5+SH1gI
+	6
+X-Google-Smtp-Source: AGHT+IEdwA/pMzyAMLFTn/8nW8+Oydx4hunuvhfJcxp0i8eRBXOMemOurfFPArRKEQUSEO+ngoJ6zA==
+X-Received: by 2002:a05:6512:473:b0:516:9f1a:929d with SMTP id x19-20020a056512047300b005169f1a929dmr6353141lfd.1.1713199851184;
+        Mon, 15 Apr 2024 09:50:51 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id p18-20020a05651238d200b00516d200cba9sm632735lft.58.2024.04.15.09.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 09:50:50 -0700 (PDT)
+Date: Mon, 15 Apr 2024 19:50:49 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: David Wronek <david@mainlining.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drm/panel: Add driver for EDO RM69380 OLED panel
+Message-ID: <yccnqb63gp5svx76rudfnphecpatkpwgp2wlfenojebulrigma@xfztf3ox6q7d>
+References: <20240415-raydium-rm69380-driver-v2-0-524216461306@mainlining.org>
+ <20240415-raydium-rm69380-driver-v2-2-524216461306@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCP286MB2535:EE_|OSOP286MB3906:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfc8a9c9-86ed-4b81-41eb-08dc5d6c215c
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	cNE9zPy3aMjas//GQm7rgGr0WfEORC8dN/6FZJlwyVtBnkAI2W3xzwyz7lEGa/vWBBW82fxTLp6OZFLQ3gr8OikfryFsOkC+elM2uZmfM0IsH/AYfLDvdTc73mF4yPNC85J4Eo9fBSsvJEDQMfmknYVLc45+x6/U30RCNoip4RQtUNOJm5WrxFlLnIW2G6mtdKBXMZEn9vQIjrbh4Q1tM73dOBCb4x1a3cfBHep/76mvg3WVARR5aImu6YKBlK+pU08Jikd8IqBQLK6rA/nzmLPIlrxI+DN3eoMdItzzZRC0H51/7NFhG1x67V6IoLk5ESHKYJJBQjX0DwOIVeyMLDpGNKEHnFkO/86CfHdhHZ0pdqKaU967OzRUVwmgVT1iCyrUL/4lE2yZa+EFoJDPg5CT4flwT8w2JRSiMoBNvHGi+iR12IAAhDClh0N5zrMeSw8npUZ/fSSoL9LwKAxn6Gi5RpOf7kGisy+DxqJ1oPxeiYf3ws9DdN69uxeIfNWZDKfc7Q5s3OZ1mYT9qJgUTB47uWi2y5c7/eG8ez2BWvfntwRo2bneMNeNWCvR1ndFbPXvqO7rhT16VT5ZHzUgEOfNE0vAjlKj0/yuua+NZOLVcL645qn5tJ1anCdeJOCM
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cATY71u9wXt/znaETbL0UDKvWqQrxumO+a896XpjbP+1y0oJWcwKneymWLez?=
- =?us-ascii?Q?Rsn+4i5PkORrwevLH4+svDwkBBWshTqtDF4/X06enUGo/hgXLRbmgbuvv6es?=
- =?us-ascii?Q?pJegqNVwn146AADws1V17BkOJCBVamunQ+xVHZNMpckr4BaHclrutT11Kpbj?=
- =?us-ascii?Q?UKDgSJoVMyzttXUC717qVLCGxBqG43G/R4zSxJz7j8x6QjfFyNAuODMyQzzB?=
- =?us-ascii?Q?XcCP5DuOfcf8B51wBZqBS3oQsTpk9YES0vme5iyNSAQCdIvvi5KnyvaD0L0V?=
- =?us-ascii?Q?mQAHvpE54Rz7GPriw/KFHGu/6UoKx8WoELbAdMN411oMVKRbPh0K3MBe/irh?=
- =?us-ascii?Q?8UuK8T2ATjRysXtjYKCstD/tmS3FySItRXGCSs03hUau9PHaT1kDcKj4gTNe?=
- =?us-ascii?Q?bXISW/t2acmLfpdlJGsPM3rW8APHbVkx924jYFsfGL1f/PcCWOblVXu9Bk+z?=
- =?us-ascii?Q?9TV7BhGi967BrqdDF/uOewj+RymL+qU0r5kfeflocZY2FSJhCq9PLmObN1HU?=
- =?us-ascii?Q?kAjiiiUANp9DoK0lZXfgCz8UXtoUjpcbZrKaDdUSreNk3p5+XGdqlwW1kURe?=
- =?us-ascii?Q?wtcqVrcLqnvAQUjXAXdR+5p5dB0AyCweZ1tm9xWTSsfjS03as7PlkQ9oOFoP?=
- =?us-ascii?Q?jaoH/OSyM7mbSWYcYZbTBIrBuQkYhTN7O/OYd3+tB5Fax3ZOC+ysfF4try0+?=
- =?us-ascii?Q?V5NKjvuk/DFsRDp1/ybLtHXLMOEa/reZX8tm1QUVjlVRI0x/2geXA0A19pJp?=
- =?us-ascii?Q?rIB8I1yaSF49+u2uLc+dkushlCaq3GsR7piYSPYc67Minkz7zPPehFRxm6j3?=
- =?us-ascii?Q?1ZLpzLMzv/0JH5BS32UTvGYGGGoXKk+rD0Mjcn+R+Li6LVikIIPw4ECwlWLF?=
- =?us-ascii?Q?oAgMoZktOPCPeKVF0Aqz7U6CMl9qttlRE/MVdYC1VLyLRe7UJ4C2Uu5Q9ax5?=
- =?us-ascii?Q?J1UJTRfe/+Nd8mE4CTXwzmGNGK7GvS2INK5276ZndTzvSYY9dFspZiXRjZU9?=
- =?us-ascii?Q?ccykhlJEFQBt5kt6wHj+EW3caSYLcLyQsHBoc25bRyqDPTH0Lg3H75hfgbjo?=
- =?us-ascii?Q?ydUP+afiHIAVMbpHWnPDYA5Jswroz1QCiEXn2M2/RbgmPwC1jKmYmvHRRJxH?=
- =?us-ascii?Q?enVWnLh0GTaihgd/sFwoImmcf9K24j6FbGUmvYEWYfld0vmQtlNqC53LagHC?=
- =?us-ascii?Q?7BRXVf8gIMr9TTf/F+EvlM6IXyMyjgfbFURyMr5yE6gFz0k5W9Syh45YoxQK?=
- =?us-ascii?Q?/rj10bvW1uC7j1nUp+07j/+0VJ230B2x6tah0wyyi+orRBiVkKVGVWMA8Brj?=
- =?us-ascii?Q?HIM=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfc8a9c9-86ed-4b81-41eb-08dc5d6c215c
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 16:50:18.0710
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSOP286MB3906
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415-raydium-rm69380-driver-v2-2-524216461306@mainlining.org>
 
-> According to the ACPI that I have access to, this is not correct - the
-> Speaker ID is on index 2 not index 1.
-> Index 1 has a reference to the interrupt line. Therefore this should be:
->
-> 	{ "17AA386E", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
+On Mon, Apr 15, 2024 at 06:10:42PM +0200, David Wronek wrote:
+> Add support for the 2560x1600@90Hz OLED panel by EDO bundled with a
+> Raydium RM69380 controller, as found on the Lenovo Xiaoxin Pad Pro 2021.
+> 
+> Signed-off-by: David Wronek <david@mainlining.org>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |  14 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  drivers/gpu/drm/panel/panel-raydium-rm69380.c | 366 ++++++++++++++++++++++++++
+>  3 files changed, 381 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index 154f5bf82980..5b3eeb93b1a2 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -542,6 +542,20 @@ config DRM_PANEL_RAYDIUM_RM692E5
+>  	  Say Y here if you want to enable support for Raydium RM692E5-based
+>  	  display panels, such as the one found in the Fairphone 5 smartphone.
+>  
+> +config DRM_PANEL_RAYDIUM_RM69380
+> +	tristate "Raydium RM69380-based DSI panel"
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on DRM_DISPLAY_DP_HELPER
+> +	depends on DRM_DISPLAY_HELPER
+> +	depends on DRM_MIPI_DSI
+> +	depends on OF
+> +	help
+> +	  Say Y here if you want to enable support for Raydium RM69380-based
+> +	  display panels.
+> +
+> +	  This panel controller can be found in the Lenovo Xiaoxin Pad Pro 2021
+> +	  in combination with an EDO OLED panel.
+> +
+>  config DRM_PANEL_RONBO_RB070D30
+>  	tristate "Ronbo Electronics RB070D30 panel"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 24a02655d726..e2a2807d4ef0 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -55,6 +55,7 @@ obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen
+>  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
+>  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
+>  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM692E5) += panel-raydium-rm692e5.o
+> +obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM69380) += panel-raydium-rm69380.o
+>  obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_ATNA33XC20) += panel-samsung-atna33xc20.o
+>  obj-$(CONFIG_DRM_PANEL_SAMSUNG_DB7430) += panel-samsung-db7430.o
+> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm69380.c b/drivers/gpu/drm/panel/panel-raydium-rm69380.c
+> new file mode 100644
+> index 000000000000..253b9a1c2800
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-raydium-rm69380.c
+> @@ -0,0 +1,366 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree.
+> + * Copyright (c) 2024 David Wronek <david@mainlining.org>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +struct rm69380_panel {
+> +	struct drm_panel panel;
+> +	struct mipi_dsi_device *dsi[2];
+> +	struct regulator_bulk_data supplies[2];
+> +	struct gpio_desc *reset_gpio;
+> +	bool prepared;
+> +};
+> +
+> +static inline
+> +struct rm69380_panel *to_rm69380_panel(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct rm69380_panel, panel);
+> +}
+> +
+> +static void rm69380_reset(struct rm69380_panel *ctx)
+> +{
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	usleep_range(15000, 16000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	usleep_range(10000, 11000);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +	msleep(30);
+> +}
+> +
+> +static int rm69380_on(struct rm69380_panel *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = ctx->dsi[0];
+> +	struct device *dev = &dsi->dev;
+> +	int ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +	if (ctx->dsi[1])
+> +		ctx->dsi[1]->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd4);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x00, 0x80);
+> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd0);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x48, 0x00);
+> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x26);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x75, 0x3f);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x1d, 0x1a);
+> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x53, 0x28);
+> +	mipi_dsi_dcs_write_seq(dsi, 0xc2, 0x08);
+> +	mipi_dsi_dcs_write_seq(dsi, 0x35, 0x00);
 
-Sorry, but I'm unable to retrieve the speaker ID index from my BIOS.
-Please tell me how to check it, thanks.
+mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
 
-I've tried using `spkid_gpio_index = 2`, but haven't noticed any changes.
+> +	mipi_dsi_dcs_write_seq(dsi, 0x51, 0x07, 0xff);
 
-> The reason for any issue you see may be
-> because you have assigned the speaker id for the interrupt gpio in ACPI
-> as mentioned above.
+ret = mipi_dsi_dcs_set_display_brightness_large(dsi, 0x7ff);
 
-Despite changing `spkid_gpio_index` to 2, it hasn't worked with `generic_dsd_config`.
+> +
+> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+> +		return ret;
+> +	}
+> +	msleep(20);
+> +
+> +	ret = mipi_dsi_dcs_set_display_on(dsi);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set display on: %d\n", ret);
+> +		return ret;
+> +	}
+> +	msleep(36);
+> +
+> +	return 0;
+> +}
 
-The journal logs show:
-```log
-kernel: Serial bus multi instantiate pseudo device driver CSC3551:00: Instantiated 2 I2C devices.
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.0: Adding DSD properties for 17AA386E
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.0: Using extra _DSD properties, bypassing _DSD in ACPI
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.0: Cirrus Logic CS35L41 (35a40), Revision: B2
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.1: Adding DSD properties for 17AA386E
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.1: Using extra _DSD properties, bypassing _DSD in ACPI
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.1: Reset line busy, assuming shared reset
-kernel: genirq: Flags mismatch irq 58. 00002088 (cs35l41 IRQ1 Controller) vs. 00002088 (cs35l41 IRQ1 Controller)
-kernel:  cs35l41_hda_probe+0x94b/0x9d0 [snd_hda_scodec_cs35l41 5706d5af6d4d4abb9d294b49d5cd4cc8a51aad9d]
-kernel:  ? __pfx_cs35l41_i2c_driver_init+0x10/0x10 [snd_hda_scodec_cs35l41_i2c 8858b01ad506c8ac36ad9a656c7cb71d39d6ec09]
-kernel: cs35l41-hda i2c-CSC3551:00-cs35l41-hda.1: Failed to request IRQ 58 for cs35l41 IRQ1 Controller: -16
-kernel: cs35l41-hda: probe of i2c-CSC3551:00-cs35l41-hda.1 failed with error -16
-```
+[skipped]
 
-I believe this error might be caused by the configuration of the same IRQ multiple times.
+> +
+> +static const struct drm_display_mode rm69380_mode = {
+> +	.clock = (2560 + 32 + 12 + 38) * (1600 + 20 + 4 + 8) * 90 / 1000,
+> +	.hdisplay = 2560,
+> +	.hsync_start = 2560 + 32,
+> +	.hsync_end = 2560 + 32 + 12,
+> +	.htotal = 2560 + 32 + 12 + 38,
+> +	.vdisplay = 1600,
+> +	.vsync_start = 1600 + 20,
+> +	.vsync_end = 1600 + 20 + 4,
+> +	.vtotal = 1600 + 20 + 4 + 8,
+> +	.width_mm = 248,
+> +	.height_mm = 155,
+> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
 
-Additionally, I checked the Cirrus SmartAMP driver on Windows, which appears to use only one IRQ (ID 58) on my device.
-Therefore, I don't believe there is a need to configure two IRQs on my device.
+Nit: DRM_MODE_TYPE_PREFERRED will be set by
+drm_connector_helper_get_modes_fixed(), so it can be dropped here.
 
-The message `Flags mismatch 00002088 vs. 00002088` is confusing.
-Further investigation reveals that the following check in `__setup_irq` failed:
-```c
-if (irqd_trigger_type_was_set(&desc->irq_data)) {
-    oldtype = irqd_get_trigger_type(&desc->irq_data);
-} else {
-    oldtype = new->flags & IRQF_TRIGGER_MASK;
-    irqd_set_trigger_type(&desc->irq_data, oldtype);
-}
+> +};
+> +
+> +static int rm69380_get_modes(struct drm_panel *panel,
+> +					struct drm_connector *connector)
+> +{
+> +	return drm_connector_helper_get_modes_fixed(connector, &rm69380_mode);
+> +}
+> +
+> +static const struct drm_panel_funcs rm69380_panel_funcs = {
+> +	.prepare = rm69380_prepare,
+> +	.unprepare = rm69380_unprepare,
+> +	.get_modes = rm69380_get_modes,
+> +};
+> +
+> +static int rm69380_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct mipi_dsi_device *dsi = bl_get_data(bl);
+> +	u16 brightness = backlight_get_brightness(bl);
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rm69380_bl_get_brightness(struct backlight_device *bl)
+> +{
+> +	struct mipi_dsi_device *dsi = bl_get_data(bl);
+> +	u16 brightness;
+> +	int ret;
+> +
+> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+> +
+> +	ret = mipi_dsi_dcs_get_display_brightness_large(dsi, &brightness);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+> +
+> +	return brightness;
+> +}
+> +
+> +static const struct backlight_ops rm69380_bl_ops = {
+> +	.update_status = rm69380_bl_update_status,
+> +	.get_brightness = rm69380_bl_get_brightness,
+> +};
+> +
+> +static struct backlight_device *
+> +rm69380_create_backlight(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	const struct backlight_properties props = {
+> +		.type = BACKLIGHT_RAW,
+> +		.brightness = 2047,
+> +		.max_brightness = 2047,
+> +	};
+> +
+> +	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
+> +					      &rm69380_bl_ops, &props);
+> +}
+> +
+> +static int rm69380_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct mipi_dsi_host *dsi_sec_host;
+> +	struct rm69380_panel *ctx;
+> +	struct device *dev = &dsi->dev;
+> +	struct device_node *dsi_sec;
+> +	int ret, i;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->supplies[0].supply = "vddio";
+> +	ctx->supplies[1].supply = "avdd";
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +				      ctx->supplies);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
+> +				     "Failed to get reset-gpios\n");
+> +
+> +	dsi_sec = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
+> +
+> +	if (dsi_sec) {
+> +		dev_dbg(dev, "Using Dual-DSI\n");
+> +
+> +		const struct mipi_dsi_device_info info = { "RM69380", 0,
+> +							   dsi_sec };
+> +
+> +		dev_dbg(dev, "Found second DSI `%s`\n", dsi_sec->name);
+> +
+> +		dsi_sec_host = of_find_mipi_dsi_host_by_node(dsi_sec);
+> +		of_node_put(dsi_sec);
+> +		if (!dsi_sec_host) {
+> +			return dev_err_probe(dev, -EPROBE_DEFER,
+> +					     "Cannot get secondary DSI host\n");
+> +		}
+> +
+> +		ctx->dsi[1] =
+> +			mipi_dsi_device_register_full(dsi_sec_host, &info);
 
-if (!((old->flags & new->flags) & IRQF_SHARED) ||
-    (oldtype != (new->flags & IRQF_TRIGGER_MASK)))
-    goto mismatch;
-```
+Either you should be using devm_mipi_dsi_device_register_full() here or
+you should call mipi_dsi_device_unregister() in the error and remove
+paths. I'd suggest the former.
 
-While the previous request used flags `0x00002088 = IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_LOW`,
-the `oldtype` was actually `IRQF_TRIGGER_RISING` (0x1) rather than `IRQF_TRIGGER_LOW` (0x8), leading to the mismatch.
+> +		if (IS_ERR(ctx->dsi[1])) {
+> +			return dev_err_probe(dev, PTR_ERR(ctx->dsi[1]),
+> +					     "Cannot get secondary DSI node\n");
+> +		}
+> +
+> +		dev_dbg(dev, "Second DSI name `%s`\n", ctx->dsi[1]->name);
+> +		mipi_dsi_set_drvdata(ctx->dsi[1], ctx);
+> +	} else {
+> +		dev_dbg(dev, "Using Single-DSI\n");
+> +	}
+> +
+> +	ctx->dsi[0] = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	drm_panel_init(&ctx->panel, dev, &rm69380_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +	ctx->panel.prepare_prev_first = true;
+> +
+> +	ctx->panel.backlight = rm69380_create_backlight(dsi);
+> +	if (IS_ERR(ctx->panel.backlight))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
+> +				     "Failed to create backlight\n");
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
+> +		if (!ctx->dsi[i])
+> +			continue;
+> +
+> +		dev_dbg(&ctx->dsi[i]->dev, "Binding DSI %d\n", i);
+> +
+> +		ctx->dsi[i]->lanes = 4;
+> +		ctx->dsi[i]->format = MIPI_DSI_FMT_RGB888;
+> +		ctx->dsi[i]->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
+> +					  MIPI_DSI_CLOCK_NON_CONTINUOUS;
+> +
+> +		ret = mipi_dsi_attach(ctx->dsi[i]);
+> +		if (ret < 0) {
+> +			drm_panel_remove(&ctx->panel);
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to attach to DSI%d\n", i);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rm69380_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct rm69380_panel *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
+> +		if (!ctx->dsi[i])
+> +			continue;
+> +
+> +		ret = mipi_dsi_detach(ctx->dsi[i]);
+> +		if (ret < 0)
+> +			dev_err(&dsi->dev, "Failed to detach from DSI%d host: %d\n", i, ret);
+> +	}
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +}
+> +
+> +static const struct of_device_id rm69380_of_match[] = {
+> +	{ .compatible = "lenovo,j716f-edo-rm69380" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rm69380_of_match);
+> +
+> +static struct mipi_dsi_driver rm69380_panel_driver = {
+> +	.probe = rm69380_probe,
+> +	.remove = rm69380_remove,
+> +	.driver = {
+> +		.name = "panel-raydium-rm69380",
+> +		.of_match_table = rm69380_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(rm69380_panel_driver);
+> +
+> +MODULE_AUTHOR("David Wronek <david@mainlining.org");
+> +MODULE_DESCRIPTION("DRM driver for Raydium RM69380-equipped DSI panels");
+> +MODULE_LICENSE("GPL");
+> 
+> -- 
+> 2.44.0
+> 
 
-I am new to Linux Kernel, not sure if this is expected behavior or a bug for `IRQF_SHARED`.
-Ideally, a clearer message may be provided to facilitate understanding.
-
-Sorry to bother you if I make some foolish mistakes.
+-- 
+With best wishes
+Dmitry
