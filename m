@@ -1,131 +1,83 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DA83BBF8;
-	Mon, 15 Apr 2024 09:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E283C463
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713172696; cv=none; b=ft6gaznxI8a6Kbn2eDQb4yObHgB0tNj8S9CWojsyIEvb5w0gRDe9++Xf/IvVvPqUDAxsJVP7dyqLhOPHajav1Wr4rLdlHi4R3EEMOfb75okP5TRwMSylp4rMbPSnCxHZV8N/MJkS1d8YY1EhjPjBaay9223lfaFd1zpaDzLNxmM=
+	t=1713172999; cv=none; b=t1RJ7VhCJU+TEvx/jQp1xMIZC3W2sczFuSO2PETUQ5x2iI01m4KimLCfXI5NiXF6ZO5LGXii5wV9Mq+G9xw3SkXfG57AsLzVQyVxax/oJ7LDNkpXOew5zIS2Ecjvy+dmR+odQzYGCVM/0xFKgTHZm5coK3KEzjBnxBsv0myDauc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713172696; c=relaxed/simple;
-	bh=lDThYcOt7vma13MyZay//1zpRu7cNoGhY8q4H2Vz6kM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eR59hPkwhrPxl1hq8VSHN6Sqg6zVF45Q83SqU2JE7Kl9ZQADQ5nq2u55+NLuUyP6OIwdFNnZuIOFpR9TAfnFsAFcPHvXZ5UpUmW/1EYokfi2GFagMfxcYpji6quk+/P85l8pzhO1wPd/N5JpmntgnSquUh7uLEZGqDzhdhqOYJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OQ8hiKdq; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OQ8hiKdq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 46EBCC000D;
-	Mon, 15 Apr 2024 09:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713172687;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eCigKqN4ZXuHAYp92YPMCsXR7qfiMRuuveYHe/CK+2c=;
-	b=OQ8hiKdqSSbmmEj6NjpkJX7Vn0on02LMlhLvbW3F4WfEAQTJWElox9WK50sPGuWsIWTyWG
-	rqYg+aS5sy4EQgcRiOEPn/VI7rCl/fVImaCeF5MuMFIxHGBEjmYlqKq6Y9LAJHfSOdaEtA
-	KCkKEoJbs2nnij2JoGRgAyDIDUff4qkk1PfQi4sWjWqLXqKetM8dCFrDKj91RksZNc/he+
-	bj8akanG+yTuO/syaLY0DFlUGo60m++6H7IiaM6Z3E9YzsRX52DZjx0e3RmruVLn37d08A
-	F/6ySdW4/ubj1ypWs9yv5XqInqzANk0oUKQbpZBg8jMvXjm6QdZePGbkKMm3PA==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v3 0/5] net: stmmac: Add support for RZN1 GMAC
- devices
-Date: Mon, 15 Apr 2024 11:18:40 +0200
-Message-Id: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com>
+	s=arc-20240116; t=1713172999; c=relaxed/simple;
+	bh=Dtu2WwxG/82/wQT7AK8oq6ICr8XKHDmANozQb8jsroo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Rd2VoFDSSinCzWoM5cj1P3s7R15vAldRdGmNDFbstj1M+KynE/clhIMuK1MWiF+ZLUn1hmvW4j0a6hBYfcLi//Kp8ukSHz0MGP1BC/z6pyyl5npUSL+Zp/XqwpNiGgR3CCZKykrAGPRSqo7o5H7OMn0GzQQU5HS6mIcAuINl9HU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36b1c0cc29cso10067895ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:23:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713172997; x=1713777797;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mUJMCxqfhE36FvyCjh56U6tHOcz17K7U0ebNl+J8Q7A=;
+        b=gnAkIeTI6Lec9HtvLrHJy9P/BsvUlI8Zd4fjks0J5YxslAHDuCFjiGi0fkLXnPKwfI
+         o5jPuf1i5bqo6m0aGeg5pqYlUet2ml5VRlhaMejs91Wxr+gjZK214X8WCbbUj9P5AngV
+         Vvnfschp1JluyPV37gJXGbf6RVpw++o9VV9EQ5OzVxb42PP/DYLr32QxbwbZ4dOBr+hW
+         8ldLJyNSi+Cv7+yyGX49+ek/HBAPhF/v8JBTEW7m1TB8436GcdaE/KD52CJeVf0U9RKO
+         XUlrb6zVxOOJ7R3feSxPamopKnqCYtKRjspjdw0bxCFmVr9Ae7aUCxpdJucEl+6+JiWA
+         MsiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqShZhieAcWxrf1FawB2EeUHP9ANaAyKCCGkqwjTQeZVmr/cPb4uzMy6pskvBt+R4cuQVfDTIZ7zbJ8u1K+lto9EWfEixaDMNy6JX4
+X-Gm-Message-State: AOJu0Yx4saKPPXozH8mAsBbfAlHWKKOGXd5nrxuPN0Q6ppYHWkJgDrp/
+	fmIXh5NorUCl18Yl1mWYylAJw+szP0CjhvmAbarGeMCCzPpRiJxH+c6hb00ABYYwjkl29/ROFFN
+	nKdevVyr6zX8S/4Ly/iQ+Z/xKSg6lSqIEHql41MqIy8mI0KK6yveWQuw=
+X-Google-Smtp-Source: AGHT+IFi4hD53iFoBFrBLy8U0xxpWWqjcClXfDsSB5XiPFaWFrDCq8Ebp2J2aKYfmncJOA6xLQuF0aQCj5/6c+i5NBdpEN28Sebq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPHwHGYC/22NQQ6DIBQFr2L+ujSIWKGr3qPpQvGjJBUaIMTWe
- PcSVjXpcvIy8zYI6A0GuFYbeEwmGGczNKcK1NzbCYkZMwOjjFNOGfEfW5Np6VVNLqJVWnSyGSl
- CFl4etVlL7A4WI7G4RnjkZTYhOv8uL6ku+79gqgkl7YBsYELyUajb4Fx8GntWbimhxH5leZBZl
- jupet5qplUnj/K+71/j/dum7QAAAA==
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Jose Abreu <joabreu@synopsys.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, 
- Romain Gantois <romain.gantois@bootlin.com>, 
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: romain.gantois@bootlin.com
+X-Received: by 2002:a92:c567:0:b0:36a:686:bbb5 with SMTP id
+ b7-20020a92c567000000b0036a0686bbb5mr755410ilj.3.1713172997501; Mon, 15 Apr
+ 2024 02:23:17 -0700 (PDT)
+Date: Mon, 15 Apr 2024 02:23:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f4875e06161f2b0c@google.com>
+Subject: [syzbot] Monthly io-uring report (Apr 2024)
+From: syzbot <syzbot+listd5c9c3b310f9577a0430@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello everyone,
+Hello io-uring maintainers/developers,
 
-This is version three of my series that adds support for a Gigabit Ethernet
-controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
-GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
+This is a 31-day syzbot report for the io-uring subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/io-uring
 
-My former colleague Clément Léger originally sent a series for this driver,
-but an issue in bringing up the PCS clock had blocked the upstreaming
-process. This issue has since been resolved by the following series:
+During the period, 3 new issues were detected and 1 were fixed.
+In total, 5 issues are still open and 93 have been fixed so far.
 
-https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
+Some of the still happening issues:
 
-This series consists of a devicetree binding describing the RZN1 GMAC
-controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
-tree, and the GMAC driver itself which is a glue layer in stmmac.
-
-There are also two patches by Russell that improve pcs initialization handling
-in stmmac.
-
-Best Regards,
-
-Romain Gantois
+Ref Crashes Repro Title
+<1> 3525    Yes   general protection fault in try_to_wake_up (2)
+                  https://syzkaller.appspot.com/bug?extid=b4a81dc8727e513f364d
+<2> 2       No    WARNING in io_ring_exit_work (2)
+                  https://syzkaller.appspot.com/bug?extid=557a278955ff3a4d3938
+<3> 1       Yes   general protection fault in __ep_remove
+                  https://syzkaller.appspot.com/bug?extid=045b454ab35fd82a35fb
 
 ---
-Changes in v3:
-- Fixed a typo in the socfpga patch
-- Link to v2: https://lore.kernel.org/r/20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes in v2:
-- Add pcs_init/exit callbacks in stmmac to solve race condition
-- Use pcs_init/exit callbacks in dwmac_socfpga glue layer
-- Miscellaneous device tree binding corrections
-- Link to v1: https://lore.kernel.org/r/20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
----
-Clément Léger (3):
-      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
-      net: stmmac: add support for RZ/N1 GMAC
-      ARM: dts: r9a06g032: describe GMAC1
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-Russell King (Oracle) (2):
-      net: stmmac: introduce pcs_init/pcs_exit stmmac operations
-      net: stmmac: dwmac-socfpga: use pcs_init/pcs_exit
-
- .../devicetree/bindings/net/renesas,rzn1-gmac.yaml |  66 +++++++++++++
- MAINTAINERS                                        |   6 ++
- arch/arm/boot/dts/renesas/r9a06g032.dtsi           |  19 ++++
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 +++
- drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   |  88 +++++++++++++++++
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 109 +++++++++++----------
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  14 +++
- include/linux/stmmac.h                             |   2 +
- 9 files changed, 263 insertions(+), 54 deletions(-)
----
-base-commit: f1e197a665c2148ebc25fe09c53689e60afea195
-change-id: 20240402-rzn1-gmac1-685cf8793d0e
-
-Best regards,
--- 
-Romain Gantois <romain.gantois@bootlin.com>
-
+You may send multiple commands in a single email message.
