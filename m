@@ -1,115 +1,107 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A643C74416
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E1B74416
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205666; cv=none; b=Wdui9a8kMjEKQpGx0Rs7EQNpzIWgbLC9f5rOcA4L5jvOoLJecdjqulgGerooVZdVCRGFmvlyhnMGc32Y1qN9UnWJY6Md6dfTnSCV0izZ7wWubFUlOjQqY5xayNuNegkF0ukDG/XCCrYxjA7rpIfLcIrbHcUQ6j68pEcom541rBI=
+	t=1713205688; cv=none; b=CAg2pY61PATPdRkyfOhYMvvmKSvs7q/4gV7fAlea/y5H2FQf0gfVRvozmBWdaf2eBJmRfLOv+/kE3mAWyfdUW4CosGpfLXom0SnqZJE3k+QzHyi+VCku4j8Q997T93olBKfiWD+WojruNUmjw2j2NxyVkbhUgHdRGKFOCbrThqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205666; c=relaxed/simple;
-	bh=umxCZeWTQDH3zMqqM6T6ZP1c8rPGI3duZNpIriEi1gA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IYIibxER2nGBbr+dHcTiDvyZ53b0/2//7ax3nOIRrUNVZL/U+3UOq43oXiXQ7WUqbQ4CgCWVCWjr8uQPlHGInGME/xuidfrAEnBbNKZALQVDpMQkBeYjG2emtDBM3GvUocv/t84sldEjiC/lOnNhGz9SJSeK3UAMfBQN7Ft3uOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LDHfeHq5; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1713205688; c=relaxed/simple;
+	bh=yGckecM7nkvF3DdzkM8ETKHZuGBv7a5askO74zHWEvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sroWyGwaEExAb8SY0FtpBe7Zscl4yOnZVWhBGTu3oWlqKYibKXZTufT1iliPE9r1wj30/AIGkuB0ZzMVOw08KaetzliCQYkiYYnwyrWTm1YSvk5pUsoZoQHwF/+jOpTGqR+4RvAHcuiJ+7PujI4tUOIB3VGnuAlEPtJi7ldIqrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmgyfuC1; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LDHfeHq5"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5252e5aa01so293736266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmgyfuC1"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61ae4743d36so7091537b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1713205662; x=1713810462; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
-        b=LDHfeHq5B+JNxIGW77dbjcbbOzaeVdPCCP/koOz0bmGTP0sG/sFbgBGYjXptqRksls
-         aEaENnRD1y4yA7DRzNYqGxzxwDn0RuD4oPGGOm8xrMD7WbblJvbgHJ77o5lLIzloOQeE
-         1FisuNJfTq4cMJzlhw13mogodePyTbmMSU60Q=
+        d=gmail.com; s=20230601; t=1713205686; x=1713810486; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gzpn2mqeQXvBfqEE8KRrKxdSsji4vYUEQ7aPRX98tS0=;
+        b=NmgyfuC10DljioU+wrJT+em9vn+PSk7VspOUKXRLURLBkV7kED4Zpzsbbpsl/8vXcS
+         LtyS0X8kqt8emW68qYYL80CPa2CtSZIXDnOyH03JubWHU7bfpTq85cyU4wBuco2B6/JL
+         iCTCORCEa0ckANXTDssPgpxaEDFjY75uPk7EYzaXr0cMaIxS6o/l7N77mw0pNuh6yoD9
+         HzfjDeGMwLg04nvL/oCOmMTzr0wzg+r2nBqJvxLgV878JNavftDLQXdfEIgWZWLAtoak
+         IwACpc3DgrdCFu1kHm68GCrPVGJE7aS4iVFehOf4jxYTLTYMuvaHOkZEcykkTzIt5dOW
+         TxDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713205662; x=1713810462;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
-        b=em4px04nmzGwPC2R0Lu2C/yHod77ajdMlfYgDSTPe43iirAMDU2A0qIkwQ2y3vmvqm
-         FGcvucWzkBFUhMwALDYAWZuHFKH0AfTLF0ZOttG+DZ8VLD2afEmQ/wAXKKkKHVIr3AN/
-         qBCCjgaSPsizVIVY+9IL+ik1JV/AJ9spO/swQKaGSX8hk/xyjgoN8PozqVmD/HjTU4L+
-         BdrCLLwCdEtndVZDZuymFCFTITokBh4ByPD3rdfMz6gTb6aknU7H3ZEq36dOOWt2lExK
-         NRuTYz4dH/NwAZL5FzNjP9X0XEBck3Bkecm/VSKvFNfjSu6DaVc7xJ3amiYu9xPkr8KA
-         DUrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFgyi+TshydToh0z5K16alHlmK0qAUb6Fcw/rTFsp1HY9pycCJJ7btB8l4dcJ8mxkHZuK/sRq/vGIwss/GHT1VU706VcXbWOhvxUNS
-X-Gm-Message-State: AOJu0YxdVPJxKKAxmUpV85k3BXEWE/MAAKsTTOMV50GRUPP7u0mHtamF
-	Vn5W8kF2H3K7O/7inRBuGCmIPn1kF+v4p4jE//Nl8ECk1GFYMbh+fpbLareY2SIMYeZYTj3ra55
-	C7TTplg==
-X-Google-Smtp-Source: AGHT+IG5BtJtEHI8uUxUzZlCrq+h65BBoo2Vi6UrHtQat/WiQTWDKG4XOKDpiAu2dMwSwiNOrLeVsw==
-X-Received: by 2002:a17:907:9450:b0:a52:5df2:ab4c with SMTP id dl16-20020a170907945000b00a525df2ab4cmr3419477ejc.16.1713205662607;
-        Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a6-20020a1709064a4600b00a51f2b5b1fcsm5778886ejv.75.2024.04.15.11.27.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46a7208eedso504237666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUATSe8C8hyatStS+uSPeW0BBdp6qixXDcDaiXCj3rTlrQvjiiM2y5eUAWc+BXXtNBVr+kuBkEVz0q1oNZtB533iakXS15ugunt9igp
-X-Received: by 2002:a17:906:110e:b0:a52:320a:6320 with SMTP id
- h14-20020a170906110e00b00a52320a6320mr6421452eja.51.1713205289339; Mon, 15
- Apr 2024 11:21:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713205686; x=1713810486;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gzpn2mqeQXvBfqEE8KRrKxdSsji4vYUEQ7aPRX98tS0=;
+        b=gnjUtjIo/enS7HmOZeJxjYlBkI98Ap8Pet2oxEsovRhnMRrRbPhdUPjE9WXqpYeS/A
+         aJrGMvK4b6B5JoZMOtpxW4cTTMJ4fD689U92NVywGetrHRMKW7/r83S6gGoH3886zQ0g
+         eI0ITXV8DGM3B1PLJX55LEXAKryIUMAI6Cfu5QqLv2D2cRsH76uBfrVf+VZ3una8+wFA
+         uFb8NqKqr2B9yN2ESjvP+DxGJWANAE1dsk8JPxoLrBX5vHlJSs1cbv/wuYv2hesR/uTX
+         NtnPJtHW6lBsYy07GQpresDSKl9dEyJWcUdmi4pT943ov6VG1RXk2KCflUpJ+6v3Ivk4
+         Gn/w==
+X-Gm-Message-State: AOJu0YyzDK6FajRPRlAbkpu5uzOsufIQTWA8IV7xQq+W3Vx8y70FVKeZ
+	16TGOybZu124ArtuCUfgwyb93OWEvs1obfjG9D18X1UG3CSQSlxF
+X-Google-Smtp-Source: AGHT+IHCFw2fCgotXxAD9pFn9CQpn+mNHke37zPPOoQGGqkFVjBFZeisk/EqoUiYbmPkNLuTriL6UA==
+X-Received: by 2002:a0d:e6cd:0:b0:618:9470:bb2f with SMTP id p196-20020a0de6cd000000b006189470bb2fmr6114961ywe.30.1713205686294;
+        Mon, 15 Apr 2024 11:28:06 -0700 (PDT)
+Received: from fedora ([2600:1700:2f7d:1800::23])
+        by smtp.gmail.com with ESMTPSA id y15-20020a81ca4f000000b0061ada21ac4dsm324395ywk.25.2024.04.15.11.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 11:28:05 -0700 (PDT)
+Date: Mon, 15 Apr 2024 11:28:02 -0700
+From: Vishal Moola <vishal.moola@gmail.com>
+To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, willy@infradead.org,
+	linmiaohe@huawei.com, jane.chu@oracle.com, muchun.song@linux.dev,
+	nao.horiguchi@gmail.com, osalvador@suse.de
+Subject: Re: [PATCH v2 1/2] mm/hugetlb: convert dissolve_free_huge_pages() to
+ folios
+Message-ID: <Zh1xslaqduUr4MHF@fedora>
+References: <20240412182139.120871-1-sidhartha.kumar@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-2-jeffxu@chromium.org>
- <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
-In-Reply-To: <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 15 Apr 2024 11:21:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
-Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
-Subject: Re: [PATCH v10 1/5] mseal: Wire up mseal syscall
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, corbet@lwn.net, Liam.Howlett@oracle.com, 
-	surenb@google.com, merimus@google.com, rdunlap@infradead.org, 
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412182139.120871-1-sidhartha.kumar@oracle.com>
 
-On Mon, 15 Apr 2024 at 11:11, Muhammad Usama Anjum
-<usama.anjum@collabora.com> wrote:
+On Fri, Apr 12, 2024 at 11:21:38AM -0700, Sidhartha Kumar wrote:
+> Allows us to rename dissolve_free_huge_pages() to
+> dissolve_free_hugetlb_folio(). Convert one caller to pass in a folio
+> directly and use page_folio() to convert the caller in mm/memory-failure.
 >
-> It isn't logical to wire up something which isn't present
+> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> ---
+> 
+> v1 -> v2:
+> 	- Change additional comments which reference hugepages to
+> 	  hugetlb folios per Miaohe Lin. 
+> 	- introduce patch 2
+> 
+>  include/linux/hugetlb.h |  4 ++--
+>  mm/hugetlb.c            | 17 ++++++++---------
+>  mm/memory-failure.c     |  8 ++++----
+>  3 files changed, 14 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> index 3f3e628802792..f4191b10345d6 100644
+> --- a/include/linux/hugetlb.h
+> +++ b/include/linux/hugetlb.h
+> @@ -861,7 +861,7 @@ static inline int hstate_index(struct hstate *h)
+>  	return h - hstates;
+>  }
+>  
+> -extern int dissolve_free_huge_page(struct page *page);
+> +extern int dissolve_free_hugetlb_folio(struct folio *folio);
 
-Actually, with system calls, the rules end up being almost opposite.
+You could drop the extern here as we don't need it anymore. Aside from that
+LGTM.
 
-There's no point in adding the code if it's not reachable. So adding
-the system call code before adding the wiring makes no sense.
-
-So you have two cases: add the stubs first, or add the code first.
-Neither does anything without the other.
-
-So then you go "add both in the same commit" option, which ends up
-being horrible from a "review the code" standpoint. The two parts are
-entirely different and mixing them up makes the patch very unclear
-(and has very different target audiences for reviewing it - the MM
-people really shouldn't have to look at the architecture wiring
-parts).
-
-End result: there are no "this is the logical ordering" cases.
-
-But the "wire up system calls" part actually has some reasons to be first:
-
- - it reserves the system call number
-
- - it adds the "when system call isn't enabled, return -ENOSYS"
-conditional system call logic
-
-so I actually tend prefer this ordering when it comes to system calls.
-
-                Linus
+Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
