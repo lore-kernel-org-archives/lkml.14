@@ -1,110 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EAC8062B;
-	Mon, 15 Apr 2024 16:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F57823B5
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199764; cv=none; b=rhrAYHP83G0aRn3Z+m/ps7hNFt+bK4Z+Cmz/vGlc9UrWD82oKJSptntj8UZfgBh33VNfdtviefiMbdnK4TIGtiMC5tnf4d0ndcJdfiwYFYd/ho0cvrCxWkOIFZrVPCjET4jjcUuwnWVlIXAK4I7o1cVMTVRbhiYQL54TCV1APgg=
+	t=1713199817; cv=none; b=U1Nl6SJOx8DGS9NURgIMsQ4R7RuhneMq5gMaEnTyO5alf8dX1qOzusTzOdFuJgUPCquL+JLZQubjLtlkJv0q7GLTSutqWlssKjKFP4X/JfOIwRAE2NZUAPxzH7niYWvJfU/wYM+uRC+tglKn6A0GCJobsJw8NpW7e8gCQjP2Jms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199764; c=relaxed/simple;
-	bh=RYfH+7ZQ4l/9ir2s0AEiPjXAp7Fgy5zVdlnNIhbS92Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iiDoJbsDGEfszmeWGyc8qo1DV0TKjYlPDkFv4imCICplXS4KY2E3iwfgQBc9ohm+IxQrMvXvjgDs39iGrhnY/cr2m1q2JuQzpIsef+e0DURRi/PILJjC7lXkzDSpv73KrYGXS87ucsF2m/3+FpeoYJWVM1bl03nunMZ43aaKyJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkq37PVT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkq37PVT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178CCC113CC;
-	Mon, 15 Apr 2024 16:49:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713199763;
-	bh=RYfH+7ZQ4l/9ir2s0AEiPjXAp7Fgy5zVdlnNIhbS92Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gkq37PVTha1wyuQ8mceDo7VTFsmsrTSje0u2cTa2sRZDSuf33u8kaLFuyn1bx4Wpg
-	 pnuJ4f+mN3naVtbvRd/iiaaN6re72FK338JeFhBb9Ztn8uwSHmCNS/OQ3Q21g8s0o8
-	 pMtCfndf8GvB3LcEA6Qay9m2utxPbNnTNfd116BCDWjk0wBW7kieoLWsl9mQbOiVyt
-	 0jKGRs+5gsvAaIe0iQ6mE4BbovTIflhEQ31uAp+93ZOn1CatAPw3N7ytcMHUMpkDtE
-	 PHciRv4Qk7MQ0tx7EomBy0AvLcp8oQpFCO20h7L+GrAKWpxAkiQrZdaFQQ94T5TXRb
-	 bpaAv94r0yomA==
-Date: Mon, 15 Apr 2024 17:49:17 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
+	s=arc-20240116; t=1713199817; c=relaxed/simple;
+	bh=HLZhuGcBM5C+fwuEEhkhLoU2r5F1x5SzjVb5yqG/7cA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kak/8O5qkelC5nlQO339UA/eYxImkXHeEkSn2yjGR/TjTz6ccvCez3WJXVqE7uW5YUXMeuWiTyDYJgoMY4nD+vJge9h+p+pOpzsJBDMx6AWvtHqPkiJVfnuHdj3Pd59Cjygo703IVl//6Y5ovOGVTHR0KDB5hrBLbHU4lMz3TAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70D6C113CC;
+	Mon, 15 Apr 2024 16:50:14 +0000 (UTC)
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	linux-kernel@vger.kernel.org,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev
-Subject: Re: [PATCH v3 1/2] media: =?utf-8?Q?dt-bin?=
- =?utf-8?Q?ding=3A_media=3A_Document_rk3588=E2=80=99s?= VEPU121
-Message-ID: <20240415-spearhead-brunch-147840bf414d@spud>
-References: <20240412151515.837824-1-linkmauve@linkmauve.fr>
- <20240412151515.837824-2-linkmauve@linkmauve.fr>
- <d0839eec-7a92-4834-b47a-be0ba1908c1a@linaro.org>
+	Dev Jain <dev.jain@arm.com>
+Subject: Re: [PATCH V2] arm64/hugetlb: Fix page table walk in huge_pte_alloc()
+Date: Mon, 15 Apr 2024 17:50:12 +0100
+Message-Id: <171319980749.132738.11475383267559280969.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240415094003.1812018-1-anshuman.khandual@arm.com>
+References: <20240415094003.1812018-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x+2TvZJhub2l4MoK"
-Content-Disposition: inline
-In-Reply-To: <d0839eec-7a92-4834-b47a-be0ba1908c1a@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+On Mon, 15 Apr 2024 15:10:03 +0530, Anshuman Khandual wrote:
+> Currently normal HugeTLB fault ends up crashing the kernel, as p4dp derived
+> from p4d_offset() is an invalid address when PGTABLE_LEVEL = 5. A p4d level
+> entry needs to be allocated when not available while walking the page table
+> during HugeTLB faults. Let's call p4d_alloc() to allocate such entries when
+> required instead of current p4d_offset().
+> 
+>  Unable to handle kernel paging request at virtual address ffffffff80000000
+>  Mem abort info:
+>    ESR = 0x0000000096000005
+>    EC = 0x25: DABT (current EL), IL = 32 bits
+>    SET = 0, FnV = 0
+>    EA = 0, S1PTW = 0
+>    FSC = 0x05: level 1 translation fault
+>  Data abort info:
+>    ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+>    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>  swapper pgtable: 4k pages, 52-bit VAs, pgdp=0000000081da9000
+>  [ffffffff80000000] pgd=1000000082cec003, p4d=0000000082c32003, pud=0000000000000000
+>  Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+>  Modules linked in:
+>  CPU: 1 PID: 108 Comm: high_addr_hugep Not tainted 6.9.0-rc4 #48
+>  Hardware name: Foundation-v8A (DT)
+>  pstate: 01402005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+>  pc : huge_pte_alloc+0xd4/0x334
+>  lr : hugetlb_fault+0x1b8/0xc68
+>  sp : ffff8000833bbc20
+>  x29: ffff8000833bbc20 x28: fff000080080cb58 x27: ffff800082a7cc58
+>  x26: 0000000000000000 x25: fff0000800378e40 x24: fff00008008d6c60
+>  x23: 00000000de9dbf07 x22: fff0000800378e40 x21: 0004000000000000
+>  x20: 0004000000000000 x19: ffffffff80000000 x18: 1ffe00010011d7a1
+>  x17: 0000000000000001 x16: ffffffffffffffff x15: 0000000000000001
+>  x14: 0000000000000000 x13: ffff8000816120d0 x12: ffffffffffffffff
+>  x11: 0000000000000000 x10: fff00008008ebd0c x9 : 0004000000000000
+>  x8 : 0000000000001255 x7 : fff00008003e2000 x6 : 00000000061d54b0
+>  x5 : 0000000000001000 x4 : ffffffff80000000 x3 : 0000000000200000
+>  x2 : 0000000000000004 x1 : 0000000080000000 x0 : 0000000000000000
+>  Call trace:
+>  huge_pte_alloc+0xd4/0x334
+>  hugetlb_fault+0x1b8/0xc68
+>  handle_mm_fault+0x260/0x29c
+>  do_page_fault+0xfc/0x47c
+>  do_translation_fault+0x68/0x74
+>  do_mem_abort+0x44/0x94
+>  el0_da+0x2c/0x9c
+>  el0t_64_sync_handler+0x70/0xc4
+>  el0t_64_sync+0x190/0x194
+>  Code: aa000084 cb010084 b24c2c84 8b130c93 (f9400260)
+>  ---[ end trace 0000000000000000 ]---
+> 
+> [...]
 
---x+2TvZJhub2l4MoK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to arm64 (for-next/fixes), thanks!
 
-On Sat, Apr 13, 2024 at 11:22:51PM +0200, Krzysztof Kozlowski wrote:
-> On 12/04/2024 17:15, Emmanuel Gil Peyrot wrote:
-> > This encoder-only device is present four times on this SoC, and should
-> > support everything the rk3568 vepu supports (so JPEG, H.264 and VP8
-> > encoding).
-> >=20
-> > According to the TRM[1], there is also the VEPU580 encoder which
-> > supports H.264 and H.265, and various VDPU* decoders, of which only the
-> > VDPU981 is currently supported.  This patch describes only the VEPU121.
-> >=20
-> > [1] https://github.com/FanX-Tek/rk3588-TRM-and-Datasheet
-> >=20
-> > Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
->=20
-> So you ignored all the tags? No one will pick up your patch if you are
-> going to keep ignoring them...
+[1/1] arm64/hugetlb: Fix page table walk in huge_pte_alloc()
+      https://git.kernel.org/arm64/c/015a12a4a670
 
-If Nicolas's concern about breakage due to exposing multiple video
-devices was addressed:
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+-- 
+Catalin
 
-Thanks,
-Conor.
-
---x+2TvZJhub2l4MoK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh1ajAAKCRB4tDGHoIJi
-0uWHAP0V4L26Wkt/mEwBdE+9v4pr7VmPuKSeVQT0+VkpQKe5owEA8AAkkF/B2tbt
-HrAuTsrzjcijRfU5yoQ6z7q/P4Z5Qws=
-=3+LB
------END PGP SIGNATURE-----
-
---x+2TvZJhub2l4MoK--
