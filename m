@@ -1,117 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C383BBEF
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BE23D0C5
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713171789; cv=none; b=pV4ph81ZS7z2bay7jZFgekTHLem8W3jpCPBsTUiNmSbpfJu1sLXWCBGd3ysKS2OEXl5YhmXgH2d+2oBNfInoUgRHqW0DHOzyqRiEb8bVvtHEUOkH/tgX5zhkZtx5wTBw31X1iUgDzdwQBQ/Cqfp7du5vI3iGWmZqgM3oLhQAQg0=
+	t=1713171805; cv=none; b=ZETNvRaaiPIW3BqrqFR/Gd7FJwMtgHMLHHM8DAUrHYqx1lOoMM3zHqPYjQ17R8eM6kIcH3PqsjLU1C2yNvINEUv6a+YdbEEG1Iw6ljAZ+zjsQbSIVH+KBg9GnCyBFbjDjMse20h1iOsMwMPNuV+kH71wBJJfk13iyzEX46x7tJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713171789; c=relaxed/simple;
-	bh=5/T5x66pc6y2H6Pxh4qf/wYay3CQIuW3A34KOdHpBJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvUQ1lQ1PkizCZ6/8Lsi0RwMDtINSwjfAl3MRBBLFsfjoHhNLggksqN0R7vgNaB3ECmhu67a/JiRo7cFHG7eq3W4nwdXF7a7rdnUP92m+lm+tsprQPLZ3JgUXDgfkb0z/3MRo0HRZ5jrS6EErKVZ8w9ljOvmFXs9fkNi/5kQJEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68E092F4;
-	Mon, 15 Apr 2024 02:03:32 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.20.152])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1D283F64C;
-	Mon, 15 Apr 2024 02:03:02 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:02:59 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Kees Cook <keescook@chromium.org>
-Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
-Message-ID: <ZhztQ9CvDm3UPgE9@FVFF77S0Q05N>
-References: <0000000000004cf5c205faf1c7f3@google.com>
- <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
- <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
+	s=arc-20240116; t=1713171805; c=relaxed/simple;
+	bh=UDZVZVX1g5OMTsjjQX+LVyzw/0HNCSkUc1rv+qnyaWY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=is4z9lhoLvkpm2z3070+tTUfd+ebd6UoKPvs3tMj7eaquR9m4U24AUyH0zwRiIGvAeum4Wjxh7d2N+W/PPXydPY7nkh60RuBwJBrCnkZKHEru7Y4v1XyOMpOJpRCfYH5eTp0nv11L4kaYxQaw2sU/bE5UJrHCk1N+/BqlksIKz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=DcDtSfBy; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DcDtSfBy"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a53f130b0e6so38959166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1713171802; x=1713776602; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uiVrcy4V4FP2qGsVjSkGZEzHTf7mhE6QcNdUktSHBF4=;
+        b=DcDtSfByN4oHigYyzTQvOpg8XspiK0n6vQ08OdVh6w5ZITeYWLSxRPe+es3S8UjKEX
+         d91sbUCkISoXURiBSWIQpN5msbwrmqzp9mD2fOtkBGMnpNcr780KcnSYEPurS+Mt3+Lx
+         oIQNhrbm46tliPNQpTELQp8WxjExWKuf9IUNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713171802; x=1713776602;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uiVrcy4V4FP2qGsVjSkGZEzHTf7mhE6QcNdUktSHBF4=;
+        b=RBuXwpmoaCmpQ6JjSYXNkUQhJ26slgn/I+847p0pk0FvH1k1MTQIDYVLS53cRZZfor
+         Padeqv+CCm+jWfloDDoXK6uVu8dphBisz2KBJoPqg7iHfUSb4XKbSwrufSV3DnMEgk6W
+         GdjFagO0DUUL7zOz7+bMMKY5DPWDz3rkIxlo58DTfUr8Ouy3NBX3HJvBs7oD4b3Y76Hf
+         UqBY7XkZi7I0i3z35shQOVKF8ufHPJFpHgGBS4vx4XcNJmNJnQqWab9ptVryY1lotWxM
+         Unz7L3pINP3ZzIK6gAHHmiCNGQfM0p4CCgGzRGhFBIZZowh303sgEzKlX91IN6sx/Heo
+         WPuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUILtxNp1nT7KOFAXEO+2CwQjm4WngHVap3vq4A9lMJwIO2YEo7PB3AIbxmBTp6u7n9YqrAO9nbdK+skv6QZq2/YTVSJCFnY8LlEJJb
+X-Gm-Message-State: AOJu0YzgPw0bp1D1O9ald0R/tNKwQ7EdywdgaGPdjTgbYPsCcG7TerSM
+	Ec62ahULMJlIqvgr/N8UgNh/bYydwG/mJKdMt49CYkYdoJUS6ogxApCumagfmN2wAxjV9xeGnOt
+	BNo8PzyxgwYebYd+s4i6ooVyPmLGE0KoE3Pgmgw==
+X-Google-Smtp-Source: AGHT+IHZnYyw9utewHHngmLFU+axvZ0XsTuNGqFJGs6VqXeiZSFD1wEg4rl8R7VHVMANvVZv2j+OOB2ZJ9824J0/6JE=
+X-Received: by 2002:a17:906:f9d4:b0:a52:3645:22b6 with SMTP id
+ lj20-20020a170906f9d400b00a52364522b6mr5424742ejb.1.1713171802253; Mon, 15
+ Apr 2024 02:03:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
+References: <20240315080253.2066-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20240315080253.2066-1-yang.lee@linux.alibaba.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Mon, 15 Apr 2024 11:03:10 +0200
+Message-ID: <CAJfpegs_orEOsHs92kok7eUbsSWhSyCudrg3ffEQ-mkXOvghiw@mail.gmail.com>
+Subject: Re: [PATCH -next] fs: Add kernel-doc comments to cuse_process_init_reply()
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 03, 2024 at 05:12:07PM +0100, Russell King (Oracle) wrote:
-> On Tue, Mar 05, 2024 at 08:27:07PM +0900, Tetsuo Handa wrote:
-> > Hello.
-> > 
-> > syzbot is reporting kernel memory overwrite attempt at fpa_set().
-> > I guessed that the amount to copy from/to should be sizeof(union fp_state)
-> > than sizeof(struct user_fp), for arch_ptrace(PTRACE_[SG]ETFPREGS) for arm
-> > is using offset == 0 and size == sizeof(union fp_state). But my guess did not
-> > solve the issue ( https://syzkaller.appspot.com/x/patch.diff?x=11e46dbc180000 ).
-> 
-> This is silly.
-> 
-> sizeof(struct user_fp) is:
-> 
-> 	8 * (
-> 		1 bit for sign1, 15 bits unused => 2 bytes
-> 		1 bit for sign2, 14 bits unused, 1 bit for j => 2 bytes
-> 		31 bits for mantissa1 => 4 bytes
-> 		32 bits for mantissa0 => 4 bytes
-> 	) +
-> 	4 bytes for fpsr
-> 	4 bytes for fpcr
-> 	8 bytes for ftype
-> 	4 bytes for init_flag
-> 
-> This totals 8 * 12 + 4 + 4 + 8 + 4 = 116 bytes or 29 32-bit quantities,
-> or 29 "unsigned int"s.
-> 
-> This is copied into union fp_state. This union is made up of one of
-> several different formats depending on the FP being used. user_fp
-> doesn't reflect this. However, one of these, struct fp_soft_struct,
-> is specifically sized to ensure that user_fp is _smaller_.
-> 
-> struct fp_soft_struct is 35 unsigned int's. This is 140 bytes. This
-> is larger than sizeof(user_fp).
-> 
-> Therefore, there is _no way_ for fpa_set() to overwrite anything
-> outside of thread_info->fpstate, because sizeof(struct user_fp)
-> is smaller than sizeof(thread->fpstate).
-> 
-> Syzbot appears to be wrong in this instance.
+On Fri, 15 Mar 2024 at 09:02, Yang Li <yang.lee@linux.alibaba.com> wrote:
+>
+> This commit adds kernel-doc style comments with complete parameter
+> descriptions for the function  cuse_process_init_reply.
 
-I believe the problem here is that HARDENED_USERCOPY tries to prevent any
-usercopy to/from task_struct except for fields that are explicitly whitelisted
-(which all need to be in one contiguous range). That was added in commit:
+Applied, thanks.
 
-  5905429ad85657c2 ("fork: Provide usercopy whitelisting for task_struct")
-
-However, architectures only have the option to provide
-arch_thread_struct_whitelist() to whitelist some fields in thread_struct, not
-thread_info where the fp_state lives. On arm arch_thread_struct_whitelist()
-whitelists precisely nothing:
-
-  static inline void arch_thread_struct_whitelist(unsigned long *offset,
-                                                 unsigned long *size)
-  {
-         *offset = *size = 0;
-  }
-
-... which was added in commit:
-
-  08626a6056aad824 ("arm: Implement thread_struct whitelist for hardened usercopy")
-
-That commit says that all accesses are bounce-buffered and bypass the check,
-but AFAICT the fpa_set() code hasn't changed since then, so either that was
-wrong or the user_regset_copyin() code has changed.
-
-Kees, I believe you need to look at this.
-
-See the dashboard page at:
-
-  https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
-
-Mark.
+Miklos
