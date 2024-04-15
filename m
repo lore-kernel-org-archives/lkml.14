@@ -1,211 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9316A15664A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6A9156655
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713211455; cv=none; b=sMpwWkRbiPP9OPXuJcm7nQDqtKysZtb8k3mGbyl0CWr9Oklaq6OFAjfx9LU/2MRAUc20z4RgdwjTcOTg0eMNaTMziGBLPpEtOD4Fr2oqH6HluZF4A+K0y3DFKTD3GMeELx+NXMv3vzikyqU6zykJeWhLOgbAFg4n8L7xQn2RT9Q=
+	t=1713211470; cv=none; b=nIUh8tNeoGM+eWRIWi4m4F/kvJIRJeYGcf1ldicW8lJHRYN7HNXKkXT44w34lXqYcRZQOhQoV3AGkYrsaStZvx8T/kptune3X+UDdPbPvx9ko7trcEKJOYlZY55Qru2gNmlADIkX4KLqMkX4PubVa7dgc0ZWOTDUzd2ZWaepsgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713211455; c=relaxed/simple;
-	bh=pr/4/oQR+r5R/l6P0ikxCsCgBmbd6uWclml/OEa3wn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lD91ThPMtecUp60WrjXI9m6daeZE9VgqoB6D8Zq9Gj3svsIKJy7ukxTI6xawxiyu5UOhettSJ7NhvEWnXA3VI7xy+QTZjLvLAqMEOTio+CXNwsamf98fJbPXNg+bGgJKQVmXERhSgSFi+M0viHoHNAXIBSf/oK6VkW8exN+njIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RlfM4LcJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713211470; c=relaxed/simple;
+	bh=HKevHeXkZGuoEWykBFrnnyLmHY+4admTUN+lZ7NyEtc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DuGjlRUubpriigSxWYJQ/WJRzcU0AZbErvcDHaLrW/CYHt25NRLtwPWM2eP3Dhyzv2/nzZ775fNjE4rVTa04b5/8B4RanuJaCEJcv+CZRt4uq3JiBnWJhThzOgAwmZ5dT7pPFovGQu53Cw9lwfMy97sRpqAkDy5QGV3ps7m8XbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a2+kMCpI; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlfM4LcJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713211452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dfn+y1J1zY2Ja72aghi8awXYV9tGOwVsfBqRShbrfOE=;
-	b=RlfM4LcJWpRK3l2eWVJ8rZOy6AbRKLhvfE1M5jx+thmjwN7edcuC3QtwA4Hy1M8egi7tZ0
-	SXYgzSFOkRBME97PFUuOXN41Ke/CiJMJICh1k8LW4lTzGPGmNgcSSDcbbuBptFoh9ykMaY
-	1IkYsFMwb0sxgIqIIiIZpSbf+qYkxFw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-9efXX8AHOMmW2BIjYR2LjQ-1; Mon,
- 15 Apr 2024 16:04:07 -0400
-X-MC-Unique: 9efXX8AHOMmW2BIjYR2LjQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 764111C0513D;
-	Mon, 15 Apr 2024 20:04:06 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C1312166B32;
-	Mon, 15 Apr 2024 20:04:05 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id BFE67401801CE; Mon, 15 Apr 2024 16:47:13 -0300 (-03)
-Date: Mon, 15 Apr 2024 16:47:13 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Leonardo Bras <leobras@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
-Message-ID: <Zh2EQVj5bC0z5R90@tpad>
-References: <20240328171949.743211-1-leobras@redhat.com>
- <ZgsXRUTj40LmXVS4@google.com>
- <ZhAAg8KNd8qHEGcO@tpad>
- <ZhAN28BcMsfl4gm-@google.com>
- <a7398da4-a72c-4933-bb8b-5bc8965d96d0@paulmck-laptop>
- <ZhQmaEXPCqmx1rTW@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a2+kMCpI"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-ddaad2aeab1so3044339276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713211467; x=1713816267; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+n4yDNeHcrTCJc7XCA965ghIKCFi6oK1ygO6iYz34Q=;
+        b=a2+kMCpIIVUrD/mzkxfLOFdfjNSVCTHrvIByBROGwHnn8ZyCZCe4K/QxjDGPx9A3yx
+         mHX/UG2DygM/BznGHKBgqdN0M4wrOf830WA6PajdZa7lNamXACjNSpz6TdaYbOz3h6lR
+         RJ4/qpr70Jsi5boycQTlvJKEM/LmHY8Ry18EGIa6JWizEunDhBTuyaIvdUE9lArlXOhX
+         itvNy8l76aSpUqQaEKOTBZtAGOtxqP6/eNSq0rYoij6oayP/+gjP6yFgAcDEpv77QR9l
+         vQI4IswKAzFbwZ4Vh8QWlBVreTDMxOq9zWEUBekG56C1cnWEuWkOJPleqLWsyuDpCFzP
+         d9tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713211467; x=1713816267;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x+n4yDNeHcrTCJc7XCA965ghIKCFi6oK1ygO6iYz34Q=;
+        b=qAHMG0kzK98H+TarE5okFan/I18l96ES/WQ/BHSN/jjBTErudUcKZrvVAok8BjQvlc
+         mDoAKc6dto4Aiq7vH693O/SombV56+zP8YD0NM7bq2+P6iHIBJP4ja5zgyDPToMOvA/A
+         eJuP57K6wk7JTrcv93ZA/Wr8Bg/XTymw+9wwdjPbXnlqdvdIyFTLCFoVLZNdYvTngzuN
+         Z6Jvo0cwhZqa67E2I6WYkIeuNpgbP5ikmTZRKgqvq+02dlsp977j2TCBorSIx+G1MGPN
+         FnzCS/bNy6MhMYht7z5DOOCqG3fRvnMw2BZ0lxQyDa81dCufHjlVse5vkNgOKpDrmd+L
+         cf6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVf3NjYvqaI6Vl8IJTT5EPNVpkxjxXxu5OXyi9dYVe37QFYSfzSISHReBIVWLN0Eu0Y0ShM2C8giTFAm3/zlbp6ZapW3rRjnvnOVBJE
+X-Gm-Message-State: AOJu0Yyxndvudx3aa6JJFT5xe4PaK1vao0EPV8/NJBB7jUSaId4qoAY1
+	fAhNxSx9qYNk1I+jYu1bViXrY432zM8ktLqgiKfh4w0kAtKkW/KnHOaBDyHrkjgLiiHMqn3g+80
+	754NCHjRKKZBTBZOw0WYlikxj4UFSn1pWTMiB3w==
+X-Google-Smtp-Source: AGHT+IFgChYQoIbtXVFNn5dpONcRCuNNKjt9lSve7LdO+2SQ5EoJ4jqt3753eEsEcQ7mld6BIqWcJDJtBnxGz7Zk5/k=
+X-Received: by 2002:a25:2e0d:0:b0:dc6:dd80:430e with SMTP id
+ u13-20020a252e0d000000b00dc6dd80430emr9293179ybu.27.1713211467602; Mon, 15
+ Apr 2024 13:04:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhQmaEXPCqmx1rTW@google.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240415182052.374494-1-mr.nuke.me@gmail.com> <20240415182052.374494-3-mr.nuke.me@gmail.com>
+In-Reply-To: <20240415182052.374494-3-mr.nuke.me@gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 15 Apr 2024 23:04:16 +0300
+Message-ID: <CAA8EJpq-UOd4dcuLyEvJNW4zckSGq1LSdq4eDMWPHX_98U8F=A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
+To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 08, 2024 at 10:16:24AM -0700, Sean Christopherson wrote:
-> On Fri, Apr 05, 2024, Paul E. McKenney wrote:
-> > On Fri, Apr 05, 2024 at 07:42:35AM -0700, Sean Christopherson wrote:
-> > > On Fri, Apr 05, 2024, Marcelo Tosatti wrote:
-> > > > rcuc wakes up (which might exceed the allowed latency threshold
-> > > > for certain realtime apps).
-> > > 
-> > > Isn't that a false negative? (RCU doesn't detect that a CPU is about to (re)enter
-> > > a guest)  I was trying to ask about the case where RCU thinks a CPU is about to
-> > > enter a guest, but the CPU never does (at least, not in the immediate future).
-> > > 
-> > > Or am I just not understanding how RCU's kthreads work?
-> > 
-> > It is quite possible that the current rcu_pending() code needs help,
-> > given the possibility of vCPU preemption.  I have heard of people doing
-> > nested KVM virtualization -- or is that no longer a thing?
-> 
-> Nested virtualization is still very much a thing, but I don't see how it is at
-> all unique with respect to RCU grace periods and quiescent states.  More below.
-> 
-> > But the help might well involve RCU telling the hypervisor that a given
-> > vCPU needs to run.  Not sure how that would go over, though it has been
-> > prototyped a couple times in the context of RCU priority boosting.
-> >
-> > > > > > 3 - It checks if the guest exit happened over than 1 second ago. This 1
-> > > > > >     second value was copied from rcu_nohz_full_cpu() which checks if the
-> > > > > >     grace period started over than a second ago. If this value is bad,
-> > > > > >     I have no issue changing it.
-> > > > > 
-> > > > > IMO, checking if a CPU "recently" ran a KVM vCPU is a suboptimal heuristic regardless
-> > > > > of what magic time threshold is used.  
-> > > > 
-> > > > Why? It works for this particular purpose.
-> > > 
-> > > Because maintaining magic numbers is no fun, AFAICT the heurisitic doesn't guard
-> > > against edge cases, and I'm pretty sure we can do better with about the same amount
-> > > of effort/churn.
-> > 
-> > Beyond a certain point, we have no choice.  How long should RCU let
-> > a CPU run with preemption disabled before complaining?  We choose 21
-> > seconds in mainline and some distros choose 60 seconds.  Android chooses
-> > 20 milliseconds for synchronize_rcu_expedited() grace periods.
-> 
-> Issuing a warning based on an arbitrary time limit is wildly different than using
-> an arbitrary time window to make functional decisions.  My objection to the "assume
-> the CPU will enter a quiescent state if it exited a KVM guest in the last second"
-> is that there are plenty of scenarios where that assumption falls apart, i.e. where
-> _that_ physical CPU will not re-enter the guest.
-> 
-> Off the top of my head:
-> 
->  - If the vCPU is migrated to a different physical CPU (pCPU), the *old* pCPU
->    will get false positives, and the *new* pCPU will get false negatives (though
->    the false negatives aren't all that problematic since the pCPU will enter a
->    quiescent state on the next VM-Enter.
-> 
->  - If the vCPU halts, in which case KVM will schedule out the vCPU/task, i.e.
->    won't re-enter the guest.  And so the pCPU will get false positives until the
->    vCPU gets a wake event or the 1 second window expires.
-> 
->  - If the VM terminates, the pCPU will get false positives until the 1 second
->    window expires.
-> 
-> The false positives are solvable problems, by hooking vcpu_put() to reset
-> kvm_last_guest_exit.  And to help with the false negatives when a vCPU task is
-> scheduled in on a different pCPU, KVM would hook vcpu_load().
+On Mon, 15 Apr 2024 at 21:21, Alexandru Gagniuc <mr.nuke.me@gmail.com> wrote:
+>
+> The IPQ9574 has four PCIe "pipe" clocks. These clocks are required by
+> PCIe PHYs. Port the pipe clocks from the downstream 5.4 kernel.
+>
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> ---
+>  drivers/clk/qcom/gcc-ipq9574.c | 76 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 
-Hi Sean,
 
-So this should deal with it? (untested, don't apply...).
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 48f31dcd318a..be90d83d631a 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -477,6 +477,16 @@ static __always_inline void guest_state_enter_irqoff(void)
- 	lockdep_hardirqs_on(CALLER_ADDR0);
- }
- 
-+DECLARE_PER_CPU(unsigned long, kvm_last_guest_exit);
-+
-+/*
-+ * Returns time (jiffies) for the last guest exit in current cpu
-+ */
-+static inline unsigned long guest_exit_last_time(void)
-+{
-+	return this_cpu_read(kvm_last_guest_exit);
-+}
-+
- /*
-  * Exit guest context and exit an RCU extended quiescent state.
-  *
-@@ -488,6 +498,9 @@ static __always_inline void guest_state_enter_irqoff(void)
- static __always_inline void guest_context_exit_irqoff(void)
- {
- 	context_tracking_guest_exit();
-+
-+	/* Keeps track of last guest exit */
-+	this_cpu_write(kvm_last_guest_exit, jiffies);
- }
- 
- /*
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index fb49c2a60200..231d0e4d2cf1 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -110,6 +110,9 @@ static struct kmem_cache *kvm_vcpu_cache;
- static __read_mostly struct preempt_ops kvm_preempt_ops;
- static DEFINE_PER_CPU(struct kvm_vcpu *, kvm_running_vcpu);
- 
-+DEFINE_PER_CPU(unsigned long, kvm_last_guest_exit);
-+EXPORT_SYMBOL_GPL(kvm_last_guest_exit);
-+
- struct dentry *kvm_debugfs_dir;
- EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
- 
-@@ -210,6 +213,7 @@ void vcpu_load(struct kvm_vcpu *vcpu)
- 	int cpu = get_cpu();
- 
- 	__this_cpu_write(kvm_running_vcpu, vcpu);
-+	__this_cpu_write(kvm_last_guest_exit, 0);
- 	preempt_notifier_register(&vcpu->preempt_notifier);
- 	kvm_arch_vcpu_load(vcpu, cpu);
- 	put_cpu();
-@@ -222,6 +226,7 @@ void vcpu_put(struct kvm_vcpu *vcpu)
- 	kvm_arch_vcpu_put(vcpu);
- 	preempt_notifier_unregister(&vcpu->preempt_notifier);
- 	__this_cpu_write(kvm_running_vcpu, NULL);
-+	__this_cpu_write(kvm_last_guest_exit, 0);
- 	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(vcpu_put);
-
+-- 
+With best wishes
+Dmitry
