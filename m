@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5E4757F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F5075815;
 	Mon, 15 Apr 2024 13:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713189112; cv=none; b=bU4l3nOid4H3WRPqlVEKoae9ENiP7UJk/3AO1AXTd91uzsdfbo2f9wyeHXnLo6VXEoyfpNsjH6S7cK7RG2UKlap3KQnmKU/+rtBIT+XtGZDp35AQHOXNT1g6OkkmMHYGNzjezRJmXmvaQqivNyncIG3duCgbeHz/p0CwvMiKa1M=
+	t=1713189112; cv=none; b=BCetkuFyDIg1FqGd+Njfv4doV/GbsyZJCcH52F2RI4K9S0qu9Ifh3Wr+v0lJ9csUK93ZH0xX5dh1GM4tsMFmE2W84q5AEA+ifeoDmxV0wZMKAwFLRM9xemHcO9UK2tq4510CSqt3IFBFL2/r8QRnBD2JMmw9fuFKEZ498+UVcU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713189112; c=relaxed/simple;
-	bh=/MzS58Bdx0IFb51w+DsL1+jIu8+5Y9BR9QKXoZXp1EY=;
+	bh=mV8OFqp0HBA+4TFJQzgX++xwHvZ0vXXitaj4vQc7TYI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aezaS1ziKWQOdZiVhZy90uIR0uXXWFWSahhOVGk6nVJSNK0W1FcI3gv5GNCLnm/lOk8NuXjAPYNLAWjXZwpamMn2e3Ws8IZ6eGiZapXVAaJFiYPOONr5AsoPYXtDG0WgX+v3tiVP530am/euHfzszTUFEhJ/ZKGekQn8OflgTak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=G3iVbMOB; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=UEgVtSiFxV7+Dr7oghUkWVtkYOnNO+ZP8eN3hPRc0MyCZwxwkFV276YDOhvGhbxOwg5d9kfER8EMjfxdwxuYAXLccFRIO9ZsrzW1UOzpuSZfVpNvsj70isX/4SMm/cukVbAZ9Et61Jh02OrAfOFDDugULqaSrVWNrT1lycXT/JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6GIBxY29; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="G3iVbMOB"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FC3ST8003618;
-	Mon, 15 Apr 2024 15:51:37 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6GIBxY29"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FCEbqv013411;
+	Mon, 15 Apr 2024 15:51:40 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=w9gUvAo5C5cla/R3zAeNTWknO3h/W93JuYgOfKva52s=; b=G3
-	iVbMOBhftyMXIoS2HROrLGts5IsxCiY4n3nEjJSLGnYlt0AazSLm/S9jECY/y9g9
-	MswqCF03ZFsvaB+IGlzaebuVF1ySdQ8i44qfg5sPWGrUo5TOArBjjZqJam1R69ee
-	Qoj2yS/9BCPHfctjgGdG2TeVN8qTlWfOaE3Veq/EFjS8TSvFmtuoQCUrkxdMwDah
-	cxXlxDIcJ5h/XKWryL461RbCN/BujiJwBfinCOWeIx35/dxDUawEb8MIaFdgbRzZ
-	Q5AwQUA9EyCoK2x/M4Hp5D+udjoNg5QVFK1C0CTej/rhWhYG14T2Mi5fN+9Gibrn
-	FkRm6xXMaIs32Ijf9YJA==
+	selector1; bh=Qh+d821k3hfgEZijAk5AUEPE177e4SfDnVA2TKafL5Q=; b=6G
+	IBxY29LyremTr+C97DwebPQbPfkYQ2kmePUcXBUxVW3Of8fDOhsIT/zvvZcA8WTV
+	+WRVMzz+4AkFuOYM9Zq2yoJg6pVrsCm4RYUkWtKGZs81C3xcj254Q7ZFFQiqrhVR
+	pS0xooKWuOiJBo6RGNCtEc8gevB+Rk6FNeEBcz+5jgT2RzuWJatXNNaukgs2ynL4
+	B7ujWhHx+m5P/uOPHOvHooh+AjOTkiFPUfLHQcjzvo5m0AdfTjjft5N4uf8JHTIA
+	f6MuOaJNpYJF9+8fYWBxkTr/AVTFjNJX8S2J+p04Y3eeXVSY3ih4myhI3xgUyeZp
+	xd2CdM9mr6wC0nwuNFuA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xgecy4eus-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xg3m0dtac-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 15:51:37 +0200 (MEST)
+	Mon, 15 Apr 2024 15:51:40 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9240E4002D;
-	Mon, 15 Apr 2024 15:51:33 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 137E440046;
+	Mon, 15 Apr 2024 15:51:37 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EAF96215BEB;
-	Mon, 15 Apr 2024 15:50:48 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6B685216EE1;
+	Mon, 15 Apr 2024 15:50:51 +0200 (CEST)
 Received: from localhost (10.48.86.102) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Apr
- 2024 15:50:48 +0200
+ 2024 15:50:51 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -60,9 +60,9 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 05/11] irqchip/stm32-exti: Skip secure events
-Date: Mon, 15 Apr 2024 15:49:20 +0200
-Message-ID: <20240415134926.1254428-6-antonio.borneo@foss.st.com>
+Subject: [PATCH v2 09/11] ARM: dts: stm32: List exti parent interrupts on stm32mp131
+Date: Mon, 15 Apr 2024 15:49:24 +0200
+Message-ID: <20240415134926.1254428-10-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240216094758.916722-1-antonio.borneo@foss.st.com>
 References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
@@ -77,134 +77,117 @@ Content-Type: text/plain
 X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
  (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
 
-Secure OS can reserve some EXTI event, marking them as "secure" by
-setting the corresponding bit in register SECCFGR (aka TZENR).
-These events cannot be used by Linux.
+Stop using the table inside the EXTI driver and list in DT the
+mapping between EXTI events and its parent interrupts.
 
-Read the list of reserved events and check it during irq domain
-allocation.
+By switching away from using the internal table, there is no need
+anymore to use the specific compatible "st,stm32mp13-exti", which
+was introduced to select the proper internal table.
+
+Convert the driver's table for stm32mp131 to the DT property
+interrupts-extended.
+Switch the compatible string to the generic "st,stm32mp1-exti", in
+place of the specific "st,stm32mp13-exti".
+
+Older DT using compatible "st,stm32mp13-exti" will still work as
+the driver remains backward compatible.
 
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
- drivers/irqchip/irq-stm32-exti.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/st/stm32mp131.dtsi | 74 +++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index ded20d9bde73f..c0a020aab557a 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -36,6 +36,7 @@ struct stm32_exti_bank {
- 	u32 rpr_ofst;
- 	u32 fpr_ofst;
- 	u32 trg_ofst;
-+	u32 seccfgr_ofst;
- };
+diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+index 3900f32da797b..c432fe109cbec 100644
+--- a/arch/arm/boot/dts/st/stm32mp131.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+@@ -1093,10 +1093,82 @@ rcc: rcc@50000000 {
+ 		};
  
- #define UNDEF_REG ~0
-@@ -54,10 +55,12 @@ struct stm32_exti_chip_data {
- 	u32 mask_cache;
- 	u32 rtsr_cache;
- 	u32 ftsr_cache;
-+	u32 event_reserved;
- };
+ 		exti: interrupt-controller@5000d000 {
+-			compatible = "st,stm32mp13-exti", "syscon";
++			compatible = "st,stm32mp1-exti", "syscon";
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			reg = <0x5000d000 0x400>;
++			interrupts-extended =
++				<&intc GIC_SPI 6   IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_0 */
++				<&intc GIC_SPI 7   IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 8   IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 9   IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 10  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 24  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 65  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 66  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 67  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 68  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 41  IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_10 */
++				<&intc GIC_SPI 43  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 77  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 78  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 1   IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<0>,
++				<&intc GIC_SPI 3   IRQ_TYPE_LEVEL_HIGH>,
++				<0>,						/* EXTI_20 */
++				<&intc GIC_SPI 32  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 34  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 73  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 93  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 38  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 39  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 40  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 72  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 53  IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_30 */
++				<&intc GIC_SPI 54  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 83  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 84  IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,						/* EXTI_40 */
++				<0>,
++				<0>,
++				<0>,
++				<&intc GIC_SPI 96  IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<0>,
++				<&intc GIC_SPI 92  IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<&intc GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,	/* EXTI_50 */
++				<0>,
++				<&intc GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++				<&intc GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,						/* EXTI_60 */
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<0>,
++				<&intc GIC_SPI 63  IRQ_TYPE_LEVEL_HIGH>,
++				<0>,
++				<&intc GIC_SPI 98  IRQ_TYPE_LEVEL_HIGH>;	/* EXTI_70 */
+ 		};
  
- struct stm32_exti_host_data {
- 	void __iomem *base;
-+	struct device *dev;
- 	struct stm32_exti_chip_data *chips_data;
- 	const struct stm32_exti_drv_data *drv_data;
- 	struct hwspinlock *hwlock;
-@@ -73,6 +76,7 @@ static const struct stm32_exti_bank stm32f4xx_exti_b1 = {
- 	.rpr_ofst	= 0x14,
- 	.fpr_ofst	= UNDEF_REG,
- 	.trg_ofst	= UNDEF_REG,
-+	.seccfgr_ofst	= UNDEF_REG,
- };
- 
- static const struct stm32_exti_bank *stm32f4xx_exti_banks[] = {
-@@ -93,6 +97,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b1 = {
- 	.rpr_ofst	= 0x88,
- 	.fpr_ofst	= UNDEF_REG,
- 	.trg_ofst	= UNDEF_REG,
-+	.seccfgr_ofst	= UNDEF_REG,
- };
- 
- static const struct stm32_exti_bank stm32h7xx_exti_b2 = {
-@@ -104,6 +109,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b2 = {
- 	.rpr_ofst	= 0x98,
- 	.fpr_ofst	= UNDEF_REG,
- 	.trg_ofst	= UNDEF_REG,
-+	.seccfgr_ofst	= UNDEF_REG,
- };
- 
- static const struct stm32_exti_bank stm32h7xx_exti_b3 = {
-@@ -115,6 +121,7 @@ static const struct stm32_exti_bank stm32h7xx_exti_b3 = {
- 	.rpr_ofst	= 0xA8,
- 	.fpr_ofst	= UNDEF_REG,
- 	.trg_ofst	= UNDEF_REG,
-+	.seccfgr_ofst	= UNDEF_REG,
- };
- 
- static const struct stm32_exti_bank *stm32h7xx_exti_banks[] = {
-@@ -137,6 +144,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b1 = {
- 	.rpr_ofst	= 0x0C,
- 	.fpr_ofst	= 0x10,
- 	.trg_ofst	= 0x3EC,
-+	.seccfgr_ofst	= 0x14,
- };
- 
- static const struct stm32_exti_bank stm32mp1_exti_b2 = {
-@@ -148,6 +156,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b2 = {
- 	.rpr_ofst	= 0x2C,
- 	.fpr_ofst	= 0x30,
- 	.trg_ofst	= 0x3E8,
-+	.seccfgr_ofst	= 0x34,
- };
- 
- static const struct stm32_exti_bank stm32mp1_exti_b3 = {
-@@ -159,6 +168,7 @@ static const struct stm32_exti_bank stm32mp1_exti_b3 = {
- 	.rpr_ofst	= 0x4C,
- 	.fpr_ofst	= 0x50,
- 	.trg_ofst	= 0x3E4,
-+	.seccfgr_ofst	= 0x54,
- };
- 
- static const struct stm32_exti_bank *stm32mp1_exti_banks[] = {
-@@ -706,6 +716,12 @@ static int stm32_exti_h_domain_alloc(struct irq_domain *dm,
- 	bank  = hwirq / IRQS_PER_BANK;
- 	chip_data = &host_data->chips_data[bank];
- 
-+	/* Check if event is reserved (Secure) */
-+	if (chip_data->event_reserved & BIT(hwirq % IRQS_PER_BANK)) {
-+		dev_err(host_data->dev, "event %lu is reserved, secure\n", hwirq);
-+		return -EPERM;
-+	}
-+
- 	event_trg = readl_relaxed(host_data->base + chip_data->reg_bank->trg_ofst);
- 	chip = (event_trg & BIT(hwirq % IRQS_PER_BANK)) ?
- 	       &stm32_exti_h_chip : &stm32_exti_h_chip_direct;
-@@ -803,6 +819,10 @@ stm32_exti_chip_data *stm32_exti_chip_init(struct stm32_exti_host_data *h_data,
- 	if (stm32_bank->emr_ofst != UNDEF_REG)
- 		writel_relaxed(0, base + stm32_bank->emr_ofst);
- 
-+	/* reserve Secure events */
-+	if (stm32_bank->seccfgr_ofst != UNDEF_REG)
-+		chip_data->event_reserved = readl_relaxed(base + stm32_bank->seccfgr_ofst);
-+
- 	pr_info("%pOF: bank%d\n", node, bank_idx);
- 
- 	return chip_data;
-@@ -908,6 +928,7 @@ static int stm32_exti_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	dev_set_drvdata(dev, host_data);
-+	host_data->dev = dev;
- 
- 	/* check for optional hwspinlock which may be not available yet */
- 	ret = of_hwspin_lock_get_id(np, 0);
+ 		syscfg: syscon@50020000 {
 -- 
 2.34.1
 
