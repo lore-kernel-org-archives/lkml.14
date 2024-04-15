@@ -1,105 +1,163 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93144154BFB
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 19:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F95713AA22;
+	Mon, 15 Apr 2024 19:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713209512; cv=none; b=O5JQSyoNcpou80UTlIatPSzebwlHDPx/RjEkO1enzUm9+oyIHPJKesceFG218uhV7HwcUsSP+UxhZEDEy+uhs+FrWvwWQHgWNnMxWW87PL+vNKU85KQfPDQPxJC8t2uAlgDO1n+PfutJYOIezlChCNC8kPKh1yvgLryLtC6QAZg=
+	t=1713209550; cv=none; b=TnZJZiuqL8If/T3Tza4cYA2DipvxShjUmZo0DOYYXzv3eaeSxwGlDuBWyNBGyO9fKh5kl98TIbTM86z6wUSeoGQ+z2hKv7mB2Jz0ZZpiVKGiSJZ5JoXMN0NW9c+J1gTZv+4/FQOElo7I4H7zu4uBWBMhDoW3sqhlcbVU/N7SJOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713209512; c=relaxed/simple;
-	bh=yCsFlnUbGZWDCDqayNjxY166IYIvnKOr6fHx++JOY88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mg1TOwwhmh0uQc3Fb7Xh+rqP5yN2kY1KQVmp2NV0fpnBfFDjSyptzQxXCf5CLwFo4p5gH6fR7EyxfBfXA9PnWSIM+J//mi6OwPax0uASrY4n3K0RAi1VZIdugn3afPg5xp7FdldUQVTUzMA1hLprWz+6OHYt6L9zc0Eatx6qn5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ujYGYJYQ; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713209550; c=relaxed/simple;
+	bh=0VPKlFuoyuYr0HpXEhpfS2WZF705amdVfc3Dht5CDcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlA3XidD91l0ZEWY1N4tNeTSa2+dXb1z294FO5Wp7FSurdWZRsGccusXQW3mlKQFJ9c/DOOF+lqH0blyrYr9vw3lLxTiSMKVdyvjVcjnp/4Kn0rmP1MaFDlEGft3LafXRspWkfoiuxMquH3HyJCSmISC+Z/vY5hcdt/fuHPclmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CC8eOsYt; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ujYGYJYQ"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d895e2c6efso45997831fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:31:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CC8eOsYt"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so19466275ad.0;
+        Mon, 15 Apr 2024 12:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713209509; x=1713814309; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gx47+NS9TsvFbo8I/9W/8DEAWOonZGJHwk+Es5dW8Wg=;
-        b=ujYGYJYQT+vXultdAhZU2cljUudDUoMTd/90kjQn0HAt/UFplbc7vCwcPMiUSt5S+n
-         uJFXso1G7XxpEzzI/ZAujzJda4YcVeQd7P54Qw4Ux3+yuVog1HVJLfQdQOEyhLF8IpFH
-         a8mGp3Xv1Fsk4Sdtx060h886smJFlIyUu21iK2dGgO5ieP77AT/EgCQbK5+YGEs0eISd
-         3oBa4ahj0rl6rfspmVgLwVdxsWtV4vWHkKDWC56A1soiHRYSsMG3lXmWYimB90VH0ns+
-         jMYRmI88m06/J3uW+XK38E0OQqq2jwp2s+oATfHXr17tpwoyIG1wKK2/D2fTtVHUSoCk
-         Op4A==
+        d=gmail.com; s=20230601; t=1713209549; x=1713814349; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b0+MOt3vSWNQouVSTzHujQlq5+ecBPB0jEZqFyyUync=;
+        b=CC8eOsYta/gDJbCiy/VLbbB+vq/wcbWV0XQbF8qv1+XG+qSzc2T7QgJC35aai10mHe
+         QaW/pOEA4QjenwHs9qE8mQmxozwjFptSFt/skx+nL0JUvHTVLW1LI6V27Nzt262XoK6p
+         D3gGT1P78efbHhBcOlGQoVIJbJhWaYkRNeq+YcPJBtpFFaKUUCuPeO3duLDjDna75Uyw
+         yM6NBfATd+fYfAc6dCRbF4RL6teiudXf2Kl5iP3aZJ3BN4jVHQCXuG6V6E/TJ5Zlfy3z
+         YIe4oqZQdQsyBViiXltLD3SMtpcseRg5j12cVsFYBjAgliw9tcJnYRHSHXcO2z1MvBhE
+         o7fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713209509; x=1713814309;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gx47+NS9TsvFbo8I/9W/8DEAWOonZGJHwk+Es5dW8Wg=;
-        b=fR4ETFBW2NNuoRxgiXrvoMegg8102fdeH72LFgJLbThO5hFY3hs79VdD/TYU8oB1Ze
-         +URnaIHKydfw3t5WnTgKAPIHiQTY7FkB9bSIP6rsBA5EMlzS69Jvx6QEqr57QayirGh3
-         XzYdE85ZyjnMUaIQLi6zVLFXQPGto2OQ6cBiIfTKtxUUMxsaHgSoqabGLaWuy8302JlF
-         YYi5CLJSb0DWr0A4uHCF3otb+VS0HR3nW7fOP8HuRzUoBAQilxVXYRLWFK61VvnI31/m
-         pgY7pRqX7Cn0tgEe5JvU0lzAXJ0u1/zJhMZvY9Tm3Mi5aaZdTziBDr0yNklHTUOPthlS
-         SDsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP/5Nf48nyKw94qUN89kvv+IbQoxc8FbM0UU5cvu7MlQC+jWMayD0uPsNAUQZVtzM/wx97D5DsPiLw3LcmaAarf4pTv0mi4iT12G2g
-X-Gm-Message-State: AOJu0YwJZasH6h066X3vvDc1SyyX37peBZWdgdyWHXlsW54xMD9/UdF7
-	FAh8AUMgdUb5eupoZJKQDLJrEd3+ECjpfD7XP8JdRdFO1jKEAcl9aEI1oE8JmLs=
-X-Google-Smtp-Source: AGHT+IG8iFhS6jwBZfZytxVfBXzlshGGFS1RA4YXsHKJ+ntB17ZsXiMdIQ/RLrjWUdh4EMYOYWd1HQ==
-X-Received: by 2002:a2e:9b1a:0:b0:2d8:b2e:7bf3 with SMTP id u26-20020a2e9b1a000000b002d80b2e7bf3mr6448000lji.0.1713209508653;
-        Mon, 15 Apr 2024 12:31:48 -0700 (PDT)
-Received: from [172.30.205.18] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id p7-20020a2e9a87000000b002d9e3a525bfsm1291268lji.41.2024.04.15.12.31.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 12:31:48 -0700 (PDT)
-Message-ID: <1158f240-ea6b-4ac7-9697-a30d27311c50@linaro.org>
-Date: Mon, 15 Apr 2024 21:31:44 +0200
+        d=1e100.net; s=20230601; t=1713209549; x=1713814349;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b0+MOt3vSWNQouVSTzHujQlq5+ecBPB0jEZqFyyUync=;
+        b=XVc6dNDACuGuLWOmyH8Qu/hXxUPFNeisMhRiwgVQlb8EJeGmEHTd3meOUd4WLeNGuv
+         d5hTBmx1npgXWUuN3Bcys3J8SB9xuaUsTZM9AdXMUWMm4IfslaeuGltLL7pBFWloEAW2
+         dkKgEta/n5cw7iBgUDARcaDLSXa291mXBpyNmzrCUW4MFwWwA0AV/zL+WlY9Dm4XbA7X
+         KZ3J+9lFWk+Ulq2ch9F85Cx1CJZtsmtHmLMxx5VDlx9t6YkDczF8Kw4sKZm3bEpvqGw1
+         J/ctGxLIJDcqQ047hZM21VCWYgTTik81L49m69SgpVy9azR5dbEQMnXSp577K2jXe7fP
+         xDyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJjwHhn8iXpQb26UC+HxWJoddjiGRAYY+nrHAkgwN4akOZcnaEs7kIDVhqq7pl+/kuvNat23c0CFuyZCOTy3VOYGpQVozvt7xxMTc+IT2Fu1UD9HakqOYZbjutUEmVzTzl++uxDLjOAy6cjO37H+EW2paSZr2rAEfBbNPkYf2aOSM5mEHEGvadR6eunJTv
+X-Gm-Message-State: AOJu0Ywwk6jhXZeepXtrTtonkF/NFMMsprOnwaufdhGqeoIniRug9UhE
+	rrbvDoeR0005xs2UZHMPUU4Judh6g/bJUWZARzhl72cPaz2t1AbA
+X-Google-Smtp-Source: AGHT+IFFGBYX7GrgIkithXjMOEcbpKE8/IR7l+wZD008b+p7zqgJ8+k53Kd1ZAZbZR/LHaAS+oLqAw==
+X-Received: by 2002:a17:902:bd42:b0:1e4:6253:2f15 with SMTP id b2-20020a170902bd4200b001e462532f15mr2727plx.16.1713209548567;
+        Mon, 15 Apr 2024 12:32:28 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:fbbe:421b:9296:f28c])
+        by smtp.gmail.com with ESMTPSA id z13-20020a170903018d00b001e22860c32asm8227094plg.143.2024.04.15.12.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 12:32:28 -0700 (PDT)
+Date: Mon, 15 Apr 2024 12:32:25 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Peter Hutterer <peter.hutterer@redhat.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, hmh@hmh.eng.br,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, njoshi1@lenovo.com,
+	vsankar@lenovo.com
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug
+ info keycodes
+Message-ID: <Zh2AySQR93GNvoaL@google.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+ <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com>
+ <ZhXpZe1Gm5e4xP6r@google.com>
+ <5fe3b171-afc0-47de-802c-28470ce40674@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mfd: pm8xxx: add support for PM8901
-To: Herman van Hazendonk <github.com@herrie.org>, andersson@kernel.org
-Cc: benwolsieffer@gmail.com, chris.chapuis@gmail.com,
- Lee Jones <lee@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-References: <20240415123941.1527938-1-github.com@herrie.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240415123941.1527938-1-github.com@herrie.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5fe3b171-afc0-47de-802c-28470ce40674@redhat.com>
 
-
-
-On 4/15/24 14:39, Herman van Hazendonk wrote:
-> Add support for the pm8901 PMIC used by msm8660.
+On Wed, Apr 10, 2024 at 02:32:56PM +1000, Peter Hutterer wrote:
+> On 10/04/2024 11:20, Dmitry Torokhov wrote:
+> > On Tue, Apr 09, 2024 at 02:47:05PM -0700, Dmitry Torokhov wrote:
+> > > On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
+> > > > On 09/04/2024 09:31, Dmitry Torokhov wrote:
+> > > > > Hi Mark,
+> > > > > 
+> > > > > On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
+> > > > > > Add support for new input events on Lenovo laptops that need exporting to
+> > > > > > user space.
+> > > > > > 
+> > > > > > Lenovo trackpoints are adding the ability to generate a doubletap event.
+> > > > > > Add a new keycode to allow this to be used by userspace.
+> > > > > 
+> > > > > What is the intended meaning of this keycode? How does it differ from
+> > > > > the driver sending BTN_LEFT press/release twice?
+> > > > > > 
+> > > > > > Lenovo support is using FN+N with Windows to collect needed details for
+> > > > > > support cases. Add a keycode so that we'll be able to provide similar
+> > > > > > support on Linux.
+> > > > > 
+> > > > > Is there a userspace consumer for this?
+> > > > 
+> > > > Funnily enough XKB has had a keysym for this for decades but it's not
+> > > > hooked up anywhere due to the way it's pointer keys accessibility
+> > > > feature was implemented. Theory is that most of userspace just needs
+> > > > to patch the various pieces together for the new evdev code + keysym,
+> > > > it's not really any different to handling a volume key (except this
+> > > > one needs to be assignable).
+> > > 
+> > > What is the keysym? If we can make them relatable to each other that
+> > > would be good. Or maybe we could find a matching usage from HID usage
+> > > tables...
 > 
-> Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
-> ---
->   drivers/mfd/qcom-pm8xxx.c | 1 +
->   1 file changed, 1 insertion(+)
+> There's a set of  XK_Pointer_ keysyms defined in X11/keysym.h,
+> including XK_Pointer_DblClick1 and XK_Pointer_DblClickDefault.
+> Unfortunately they're not hooked up to anything atm, see this draft
+> MR:
+> https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/merge_requests/659
+> Because they're not hooked up anywhere they'll also need to be hooked
+> into the client space, same as the various XF86FooBar symbols we've
+> added over the years.
 > 
-> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> index 8b6285f687da..9cca14d54d8d 100644
-> --- a/drivers/mfd/qcom-pm8xxx.c
-> +++ b/drivers/mfd/qcom-pm8xxx.c
-> @@ -501,6 +501,7 @@ static const struct pm_irq_data pm8821_data = {
->   static const struct of_device_id pm8xxx_id_table[] = {
->   	{ .compatible = "qcom,pm8058", .data = &pm8xxx_data},
->   	{ .compatible = "qcom,pm8821", .data = &pm8821_data},
-> +	{ .compatible = "qcom,pm8901", .data = &pm8xxx_data},
->   	{ .compatible = "qcom,pm8921", .data = &pm8xxx_data},
+> If we were to add KEY_DOUBLECLICK we can patch xkeyboard-config to
+> bind that to the existing XK_Pointer_DblClickDefault symbol (it would
+> get XF86DoubleClick assigned by the current automated scripts), so in
+> theory that key would work like any other key with that symbol
+> assigned.
+> 
+> > I was looking through the existing codes and I see:
+> > 
+> > #define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
+> > 
+> > We also have KEY_VENDOR used in a few drivers/plafrom/x86, including
+> > thinkkpad_acpi.c and I wonder if it would be suitable for this vendor
+> > specific debug info collection application (which I honestly doubt will
+> > materialize).
+> 
+> fwiw, I suggested KEY_DOUBLECLICK because that is the action the user
+> takes. Whether that starts a particular application is mostly a
+> question of configuration, defaulting to something that emulates a
+> double-click seems prudent though. And if someone wants to remap that
+> to the compose key that'd be trivial too then.
 
-Please refrain from adding this new compatible, instead add a new,
-generic one and modify the dt-bindings such that we go like:
+I think whether to create and use KEY_DOUBLECLICK is very much depends
+if we associate this with the pointer somehow, or if we keep it as a
+completely separate action.
 
-compatible = "qcom,pm8901", "qcom,pm8xxx-ssbi-pmic"
+If we continue with KEY_DOUBLECLICK then we need to try and define what
+exactly it means to the applications. Actually same goes if we want
+another new keycode.
 
-(or similar, +CC Krzysztof, please chime in)
+As far as easy remapping, I think one can map this to KEY_RESERVED and
+then remap to whatever they want, you do not need to have a new keycode
+for that.
 
-Konrad
+Thanks.
+
+-- 
+Dmitry
