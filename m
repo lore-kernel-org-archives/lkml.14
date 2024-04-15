@@ -1,173 +1,242 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D2474BE4
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FD81D524
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713193523; cv=none; b=F19uoNhiq191ISvTvAFAZ/7ND8buWxnrS0L3m6ee5vbBcUNFKi5mTmAxDQbF5hZutnJLrttxslEPVQz0JLdSwzL0ZMfw8NEpHL/pUUbXA1srOuG2peY5a7qe+Mg6Gyb5nRuQpmyphtSxKusD+Xmw8U9LXmXgAJDfg1SlXvyzYC0=
+	t=1713193589; cv=none; b=MrDD8blqCDjrf7pE1HnJkdPF650RwNqEjC+LGlIDqHpRTphXnxhB4WiRkDgqPpNIiZjyqpqMnukbO7Q83xykGmcdUaxnyqbZSxA4aDs5Zt0cTwRn07wfRh3s0yk9rNuKhUuX8tj++j1D8CsvwPBGmUM8nyWVojquJJsqOW1CHvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713193523; c=relaxed/simple;
-	bh=cb5LU6UaG6mCWdz046rKlGo0stuTeCVzOZo2+XGijNA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VQfk/ERCFj6DCwWaMgv6/azEq8V3gHQcQXlJjQsUDSAPRgrC5304cgiwNrplRJS4xjzl1LG3ZFXazHCZTrbHZOd1480fTmXZ+uJBTe+Pl3Yt1vf4E27Pn7C1uQaxY+oMIVK7X7xythfM3x2XwjxoPvp3GwIkA50sBt4rc5zY4lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZBlNeQBz; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713193589; c=relaxed/simple;
+	bh=2lr3ebABi+mdEealoy0sxdcQeBaTFXrm5m0MkbKRz9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pRJGYWif/RfDFxyCAs2S/XsbfOBNEIM2NjD2SzoVwSf2OW6gMRWu13rNnqZNKLBnAaj8Z2S/nmSBbNAZKbl7LNlHH3ksYKzKHS985nDkF1YVJncj7G/o8GncLt2HNKEUYoWP8n3czrd0m8ON14aE+BcwH7cIVN51HoLwIg6Kbbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AVjO6klC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZBlNeQBz"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5f034b4db5bso1853079a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:05:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713193522; x=1713798322; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SuVb06F6Umo7w+6KN9zon9oyW6hYaksRHCECH15MmFs=;
-        b=ZBlNeQBzzD39USQV4lQSX6WrcoklFD9NW0c4qPmRBdW8NLfAD4/kS/lmRulYQDyH92
-         m5z8F4C+c9dZzluHbT2S3okES3oPdmKsu2ZaHHAiEfL6YqPxVzLQ130qIuNiACKppDpR
-         Uurle3zSkmDP6n66B4S9CuGCN4wfKHY+55c2UhAzSQ3HrZvGGMFeTp1iaM3FzgRyx8rj
-         l5gA4xgz7xJ7cbwHxrcLQlaGcuOATonP4UEyACnI98t5cNBmyS2gr8Z7yn5+jlaxmynX
-         a2sFZRJsZEEOBJFLsVkOj1iM/Ndt8sSw5rJga7lmkoLKpmwoW934Oe01ZbxWp0aUrERy
-         U0vQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AVjO6klC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713193584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SWMgTI6choihLIiQqxi4W/di2i0okUpqfQyANhD1YlM=;
+	b=AVjO6klC2zjo7eCSDfqEes513NydNr8qrYjT/SBggElkFefYWLRLNCfprWfKU9P47Xwnwl
+	5RQJkCqH8wHrNm7M4hrR5ipEGBuvenhA4Yy/5xyL4rFjOd+l8v/+lK11jI3IwZq8HRuc1j
+	/FlcFL45P4K26FpLGsm/lGx1ayNydzc=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-114-xfyiubyqPrSoEEW437y3zA-1; Mon, 15 Apr 2024 11:06:23 -0400
+X-MC-Unique: xfyiubyqPrSoEEW437y3zA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-346b8ef7e10so1762442f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:06:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713193522; x=1713798322;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SuVb06F6Umo7w+6KN9zon9oyW6hYaksRHCECH15MmFs=;
-        b=sxrUGEAnoiYhB49JuSE56CrX1fFdYB6BQvchl+V3WVChsQHAqG/RMO4fVN3isEZ8I3
-         mumBgOqd8QJXGq145Il84G907sJRqHVvFxWYwJ2KXRVC5vm1r45gx7lpoSOyS1sCE7mu
-         yctupWiZbCDcX3oYdDzMhmCDSbJ0rIUQYpYSeqwsz05fwnZGpFpgzeQpnwpbxtEFLHT5
-         +Xt0ZjmpiYGApGFISwM4TYaxmdLZbzDD4HQGpWRpHTMZdSjmRFiLaxj51oONiku2gSl/
-         mjRznt5WQGmq7XDqABtm61wKbJNCF4CMB17XJIvT4ufci4Yt1Sxhqzx7o4p070tzQMPM
-         s2mA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkaFi4nPPHkUIn9jYSawZ54t1hnAp41MUoa4SFsKO7AYJB/ls8dJINoo6hZO2eXjsehepMuazd+3L8Da2BGUQLPMhCBku8mZzMGMr1
-X-Gm-Message-State: AOJu0YzQn+m5K/47spHdeT8kZKaJLCcRao1cvsBV08YkYPWRzVTQXho4
-	nNB5AXCfmBPKnfer827RdfJiHLYVHbY5KCM/o8nRG/sgMkF+w9Pdn1TyBxa1f+dFPLX7wJDfAnE
-	Yuw==
-X-Google-Smtp-Source: AGHT+IFNVZQ/MDJQfcv6+VmiHpGKHgYit0QrR1jndoJek9xGhKOIiS0f9IOscBG23RSnBreqsUFbs1m2Wmg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:ff21:0:b0:5dc:aa2a:777c with SMTP id
- k33-20020a63ff21000000b005dcaa2a777cmr28179pgi.6.1713193521588; Mon, 15 Apr
- 2024 08:05:21 -0700 (PDT)
-Date: Mon, 15 Apr 2024 08:05:19 -0700
-In-Reply-To: <9469faf7-1659-4436-848f-53ec01d967f2@linux.intel.com>
+        d=1e100.net; s=20230601; t=1713193582; x=1713798382;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SWMgTI6choihLIiQqxi4W/di2i0okUpqfQyANhD1YlM=;
+        b=WCxQHKaZPpl/Y5Z3Gcm41YaEj2teS2hIcZ8HStsugqcl1Kj5gPa+lUyjNcrjczz5Qv
+         iveNu8YkXhdkUVVzpod1wQxSaQBw7M4U6KC2fOySoAdXRbz6UITB8R83L2oE9HlxRSJP
+         WfuSEMQYk60Uocf2h+8l0HGlvIf1ZI2TxCPD4mraqjV+SWqXOo+Ncpt6Oosm3mRNF5CO
+         hGDBqA78I6lGPqBqyiepxgCL5Umfm/Hrq5xUKqOM/l2B5ielh7sXaVReZ0od3P0+o+nh
+         PsDT7iQoPmiZFo2aO81Q1NnpMxq9X9n7yuaPtyGJ80d8UWg6bJbMeGk9jgLdxUT0oVr5
+         HQIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzi7E0OcPbsmXc+d8RIh4PnbX1s2fY+3nWa1tbcUMTcUKXm2YXkbxc1xcQpSLEQQvRj0GXxPfxM/gl/e0qnMAZnQOyUrZssSGg9dum
+X-Gm-Message-State: AOJu0YwJ6IKjL6WPBsjOk+CAwXJUriziSq2jZ+bqWzG+fmLe/9saqJ8m
+	5t+IJZHCJ4C/14vO9TabASHSawpYgJIu2pb7iZPgTocJCmh3DSfUw0ShVowQKR4EfUclXznHXDN
+	y9K9ca9mfmQ/fRy+djcnFqaIihQgppmOHte8MHG8bfR/kb6/0jFnjskdUQukpBAhBxYXH0w==
+X-Received: by 2002:adf:c086:0:b0:346:b79c:b1ee with SMTP id d6-20020adfc086000000b00346b79cb1eemr7359575wrf.44.1713193581824;
+        Mon, 15 Apr 2024 08:06:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3IpHGX4eBvaap7cR+1gBUBPyeuaceWkZ5RyrQBFH8pySWHVwiaycuCHDvCmsZ1kwulqhBhA==
+X-Received: by 2002:adf:c086:0:b0:346:b79c:b1ee with SMTP id d6-20020adfc086000000b00346b79cb1eemr7359553wrf.44.1713193581396;
+        Mon, 15 Apr 2024 08:06:21 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c706:d800:568a:6ea7:5272:797c? (p200300cbc706d800568a6ea75272797c.dip0.t-ipconnect.de. [2003:cb:c706:d800:568a:6ea7:5272:797c])
+        by smtp.gmail.com with ESMTPSA id q3-20020adfb183000000b00343cad2a4d3sm12481436wra.18.2024.04.15.08.06.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 08:06:21 -0700 (PDT)
+Message-ID: <e34fc532-a1a5-4012-b3e2-8baa93e27e86@redhat.com>
+Date: Mon, 15 Apr 2024 17:06:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <ZhgX6BStTh05OfEd@google.com> <f6f714ef-eb58-4aa9-9c4d-12bfe29c383b@linux.intel.com>
- <Zhl-JFk5hw-hlyGi@google.com> <9469faf7-1659-4436-848f-53ec01d967f2@linux.intel.com>
-Message-ID: <Zh1CL8Gf1YpBvvXd@google.com>
-Subject: Re: [RFC PATCH 00/41] KVM: x86/pmu: Introduce passthrough vPM
-From: Sean Christopherson <seanjc@google.com>
-To: Xiong Y Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 3/3] virtio_balloon: introduce memory scan/reclaim info
+To: zhenwei pi <pizhenwei@bytedance.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, virtualization@lists.linux.dev
+Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
+ akpm@linux-foundation.org
+References: <20240415084113.1203428-1-pizhenwei@bytedance.com>
+ <20240415084113.1203428-4-pizhenwei@bytedance.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240415084113.1203428-4-pizhenwei@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 15, 2024, Xiong Y Zhang wrote:
-> On 4/13/2024 2:32 AM, Sean Christopherson wrote:
-> > On Fri, Apr 12, 2024, Xiong Y Zhang wrote:
-> >>>> 2. NMI watchdog
-> >>>>    the perf event for NMI watchdog is a system wide cpu pinned event, it
-> >>>>    will be stopped also during vm running, but it doesn't have
-> >>>>    attr.exclude_guest=1, we add it in this RFC. But this still means NMI
-> >>>>    watchdog loses function during VM running.
-> >>>>
-> >>>>    Two candidates exist for replacing perf event of NMI watchdog:
-> >>>>    a. Buddy hardlock detector[3] may be not reliable to replace perf event.
-> >>>>    b. HPET-based hardlock detector [4] isn't in the upstream kernel.
-> >>>
-> >>> I think the simplest solution is to allow mediated PMU usage if and only if
-> >>> the NMI watchdog is disabled.  Then whether or not the host replaces the NMI
-> >>> watchdog with something else becomes an orthogonal discussion, i.e. not KVM's
-> >>> problem to solve.
-> >> Make sense. KVM should not affect host high priority work.
-> >> NMI watchdog is a client of perf and is a system wide perf event, perf can't
-> >> distinguish a system wide perf event is NMI watchdog or others, so how about
-> >> we extend this suggestion to all the system wide perf events ?  mediated PMU
-> >> is only allowed when all system wide perf events are disabled or non-exist at
-> >> vm creation.
-> > 
-> > What other kernel-driven system wide perf events are there?
-> does "kernel-driven" mean perf events created through
-> perf_event_create_kernel_counter() like nmi_watchdog and kvm perf events ?
+On 15.04.24 10:41, zhenwei pi wrote:
+> Expose memory scan/reclaim information to the host side via virtio
+> balloon device.
+> 
+> Now we have a metric to analyze the memory performance:
+> 
+> y: counter increases
+> n: counter does not changes
+> h: the rate of counter change is high
+> l: the rate of counter change is low
+> 
+> OOM: VIRTIO_BALLOON_S_OOM_KILL
+> STALL: VIRTIO_BALLOON_S_ALLOC_STALL
+> ASCAN: VIRTIO_BALLOON_S_SCAN_ASYNC
+> DSCAN: VIRTIO_BALLOON_S_SCAN_DIRECT
+> ARCLM: VIRTIO_BALLOON_S_RECLAIM_ASYNC
+> DRCLM: VIRTIO_BALLOON_S_RECLAIM_DIRECT
+> 
+> - OOM[y], STALL[*], ASCAN[*], DSCAN[*], ARCLM[*], DRCLM[*]:
+>    the guest runs under really critial memory pressure
+> 
+> - OOM[n], STALL[h], ASCAN[*], DSCAN[l], ARCLM[*], DRCLM[l]:
+>    the memory allocation stalls due to cgroup, not the global memory
+>    pressure.
+> 
+> - OOM[n], STALL[h], ASCAN[*], DSCAN[h], ARCLM[*], DRCLM[h]:
+>    the memory allocation stalls due to global memory pressure. The
+>    performance gets hurt a lot. A high ratio between DRCLM/DSCAN shows
+>    quite effective memory reclaiming.
+> 
+> - OOM[n], STALL[h], ASCAN[*], DSCAN[h], ARCLM[*], DRCLM[l]:
+>    the memory allocation stalls due to global memory pressure.
+>    the ratio between DRCLM/DSCAN gets low, the guest OS is thrashing
+>    heavily, the serious case leads poor performance and difficult
+>    trouble shooting. Ex, sshd may block on memory allocation when
+>    accepting new connections, a user can't login a VM by ssh command.
+> 
+> - OOM[n], STALL[n], ASCAN[h], DSCAN[n], ARCLM[l], DRCLM[n]:
+>    the low ratio between ARCLM/ASCAN shows that the guest tries to
+>    reclaim more memory, but it can't. Once more memory is required in
+>    future, it will struggle to reclaim memory.
+> 
+> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+> ---
+>   drivers/virtio/virtio_balloon.c     |  9 +++++++++
+>   include/uapi/linux/virtio_balloon.h | 12 ++++++++++--
+>   2 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 4b9c9569f6e5..7b86514e99d4 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -372,6 +372,15 @@ static unsigned int update_balloon_stats(struct virtio_balloon *vb)
+>   	stall += events[ALLOCSTALL_MOVABLE];
+>   	update_stat(vb, idx++, VIRTIO_BALLOON_S_ALLOC_STALL, stall);
+>   
+> +	update_stat(vb, idx++, VIRTIO_BALLOON_S_SCAN_ASYNC,
+> +				pages_to_bytes(events[PGSCAN_KSWAPD]));
+> +	update_stat(vb, idx++, VIRTIO_BALLOON_S_SCAN_DIRECT,
+> +				pages_to_bytes(events[PGSCAN_DIRECT]));
+> +	update_stat(vb, idx++, VIRTIO_BALLOON_S_RECLAIM_ASYNC,
+> +				pages_to_bytes(events[PGSTEAL_KSWAPD]));
+> +	update_stat(vb, idx++, VIRTIO_BALLOON_S_RECLAIM_DIRECT,
+> +				pages_to_bytes(events[PGSTEAL_DIRECT]));
+> +
+>   	return idx;
+>   }
+>   
+> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
+> index 13d0c32ba27c..0875a9cccb01 100644
+> --- a/include/uapi/linux/virtio_balloon.h
+> +++ b/include/uapi/linux/virtio_balloon.h
+> @@ -73,7 +73,11 @@ struct virtio_balloon_config {
+>   #define VIRTIO_BALLOON_S_HTLB_PGFAIL   9  /* Hugetlb page allocation failures */
+>   #define VIRTIO_BALLOON_S_OOM_KILL      10 /* OOM killer invocations */
+>   #define VIRTIO_BALLOON_S_ALLOC_STALL   11 /* Stall count of memory allocatoin */
+> -#define VIRTIO_BALLOON_S_NR       12
+> +#define VIRTIO_BALLOON_S_SCAN_ASYNC    12 /* Amount of memory scanned asynchronously */
+> +#define VIRTIO_BALLOON_S_SCAN_DIRECT   13 /* Amount of memory scanned directly */
+> +#define VIRTIO_BALLOON_S_RECLAIM_ASYNC 14 /* Amount of memory reclaimed asynchronously */
+> +#define VIRTIO_BALLOON_S_RECLAIM_DIRECT 15 /* Amount of memory reclaimed directly */
 
-By kernel-driven I meant events that aren't tied to a single userspace process
-or action.
+Should these be the other way around:
 
-E.g. KVM creates events, but those events are effectively user-driven because
-they will go away if the associated VM terminates.
+ASYN_SCAN
+...
+ASYNC_RECLAIM
 
-> User can create system wide perf event through "perf record -e {} -a" also, I
-> call it as user-driven system wide perf events.  Perf subsystem doesn't
-> distinguish "kernel-driven" and "user-driven" system wide perf events.
+so we can get ...
 
-Right, but us humans can build a list, even if it's only for documentation, e.g.
-to provide help for someone to run KVM guests with mediated PMUs, but can't
-because there are active !exclude_guest events.
+> +#define VIRTIO_BALLOON_S_NR       16
+>   
+>   #define VIRTIO_BALLOON_S_NAMES_WITH_PREFIX(VIRTIO_BALLOON_S_NAMES_prefix) { \
+>   	VIRTIO_BALLOON_S_NAMES_prefix "swap-in", \
+> @@ -87,7 +91,11 @@ struct virtio_balloon_config {
+>   	VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-allocations", \
+>   	VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-failures", \
+>   	VIRTIO_BALLOON_S_NAMES_prefix "oom-kill", \
+> -	VIRTIO_BALLOON_S_NAMES_prefix "alloc-stall" \
+> +	VIRTIO_BALLOON_S_NAMES_prefix "alloc-stall", \
+> +	VIRTIO_BALLOON_S_NAMES_prefix "scan-async", \
+> +	VIRTIO_BALLOON_S_NAMES_prefix "scan-direct", \
+> +	VIRTIO_BALLOON_S_NAMES_prefix "reclaim-async", \
+> +	VIRTIO_BALLOON_S_NAMES_prefix "reclaim-direct" \
 
-> >> but NMI watchdog is usually enabled, this will limit mediated PMU usage.
-> > 
-> > I don't think it is at all unreasonable to require users that want optimal PMU
-> > virtualization to adjust their environment.  And we can and should document the
-> > tradeoffs and alternatives, e.g. so that users that want better PMU results don't
-> > need to re-discover all the "gotchas" on their own.
-> > 
-> > This would even be one of the rare times where I would be ok with a dmesg log.
-> > E.g. if KVM is loaded with enable_mediated_pmu=true, but there are system wide
-> > perf events, pr_warn() to explain the conflict and direct the user at documentation
-> > explaining how to make their system compatible with mediate PMU usage.> 
-> >>>> 3. Dedicated kvm_pmi_vector
-> >>>>    In emulated vPMU, host PMI handler notify KVM to inject a virtual
-> >>>>    PMI into guest when physical PMI belongs to guest counter. If the
-> >>>>    same mechanism is used in passthrough vPMU and PMI skid exists
-> >>>>    which cause physical PMI belonging to guest happens after VM-exit,
-> >>>>    then the host PMI handler couldn't identify this PMI belongs to
-> >>>>    host or guest.
-> >>>>    So this RFC uses a dedicated kvm_pmi_vector, PMI belonging to guest
-> >>>>    has this vector only. The PMI belonging to host still has an NMI
-> >>>>    vector.
-> >>>>
-> >>>>    Without considering PMI skid especially for AMD, the host NMI vector
-> >>>>    could be used for guest PMI also, this method is simpler and doesn't
-> >>>
-> >>> I don't see how multiplexing NMIs between guest and host is simpler.  At best,
-> >>> the complexity is a wash, just in different locations, and I highly doubt it's
-> >>> a wash.  AFAIK, there is no way to precisely know that an NMI came in via the
-> >>> LVTPC.
-> >> when kvm_intel.pt_mode=PT_MODE_HOST_GUEST, guest PT's PMI is a multiplexing
-> >> NMI between guest and host, we could extend guest PT's PMI framework to
-> >> mediated PMU. so I think this is simpler.
-> > 
-> > Heh, what do you mean by "this"?  Using a dedicated IRQ vector, or extending the
-> > PT framework of multiplexing NMI?
-> here "this" means "extending the PT framework of multiplexing NMI".
+...
 
-The PT framework's multiplexing is just as crude as regular PMIs though.  Perf
-basically just asks KVM: is this yours?  And KVM simply checks that the callback
-occurred while KVM_HANDLING_NMI is set.
+"async-scans", "async-reclaims" ...
 
-E.g. prior to commit 11df586d774f ("KVM: VMX: Handle NMI VM-Exits in noinstr region"),
-nothing would prevent perf from miscontruing a host PMI as a guest PMI, because
-KVM re-enabled host PT prior to servicing guest NMIs, i.e. host PT would be active
-while KVM_HANDLING_NMI is set.
+-- 
+Cheers,
 
-And conversely, if a guest PMI skids past VM-Exit, as things currently stand, the
-NMI will always be treated as host PMI, because KVM will not be in KVM_HANDLING_NMI.
-KVM's emulated PMI can (and should) eliminate false positives for host PMIs by
-precisely checking exclude_guest, but that doesn't help with false negatives for
-guest PMIs, nor does it help with NMIs that aren't perf related, i.e. didn't come
-from the LVTPC.
+David / dhildenb
 
-Is a naive implementation simpler?  Maybe.  But IMO, multiplexing NMI and getting
-all the edge cases right is more complex than using a dedicated vector for guest
-PMIs, as the latter provides a "hard" boundary and allows the kernel to _know_ that
-an interrupt is for a guest PMI.
