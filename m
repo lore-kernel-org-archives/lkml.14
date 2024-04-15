@@ -1,97 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B0078C81;
-	Mon, 15 Apr 2024 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FD76FE0D;
+	Mon, 15 Apr 2024 13:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188441; cv=none; b=LWJbrjTZQLehb/0IUb1dfq5pGub7iHiJGEiXolIrdaPsb9zpkCqyv4b13cpzxWYqRFKSFRwBBaQbtxrptGtBAuNfulucKI10WYnViZf8cD1WVRxOFtQzya1niV90sV313Md52PJLvZIzIawGWJ2h0w5XWx701lYXyxLOuLTlduE=
+	t=1713188498; cv=none; b=LdRQnuDsizP16QwEobStigf0q0Jcy9r5jqLqT3VVh8VGwvMpDkdqqS7BrssVvCRJy87UpX+YjON25q8UcxPF2SYQiXNdeG/4wqh8e8+bNw+JgugThOWk+OfGtVmJq3HIf8ZcWPlvUIb+48Zy8FxfO0h68T8twXFVfU3y6dgRBw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188441; c=relaxed/simple;
-	bh=jswgADzYLisK/+q+Lljjrhqiq0M5wIMXmq+RZcfr7Do=;
+	s=arc-20240116; t=1713188498; c=relaxed/simple;
+	bh=Ze7Bw+QK8PxSu4QALmqRImY4KEW9tq6PtmBvMgUWpAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwyeENqknqB9K4QC+RBm64v1c011aPNNl50cTLzil7Jo38zedmBuNJBLgz89+g+0qX3vs0pxsoDDAMHFOojxYEye9vplWu5E8CZGvQcSWVJcHnLReHX9VHPY0GrkC7ezcw5blKRSmQCZPBpVZmDnGK8pLiUhfk1ONempxkOuJsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDFferfj; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ui4Z0LojJSJFNZZ81TU8lHJmmO78EjLMGmZN/gqOul0uBmHjiJ+KM9HDKYsvs+bWXQjDOU5aSYS7ySGC5ZT7ok4iCe/3Ag0fHouCtxeb1T9ait9lc0b15sz4RTzH2imxbbojuf7sHFBcyyOJJ/Uh2t74Nk8zphxHoQB/18JTIZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=e6xAOPHX; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDFferfj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713188440; x=1744724440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jswgADzYLisK/+q+Lljjrhqiq0M5wIMXmq+RZcfr7Do=;
-  b=GDFferfjflf1nlaRwkRdl4PBySItTEFdZA8N7iUkNwHaHvrn/DDq/Mlp
-   Mtx30FpmL7sqgX7LKORK1EGuxLFlRM4BzBOvoL0sEkgo3ijt4MvEvIEkv
-   W2glZN9IW8Suz1u6A98+jBmK0jNTxMZ9o+AmM7eI18X/xxlhVK+MYBfye
-   pArF4wLXgOrM8qWAPV+5dlgyYamQqKbXosz2FvKd+Clevk66lFBjZQZyw
-   0vpBMX84g6yzCY4w82Ogc2Vs7KK96Uh45fDjoehhf8dA2H+JmY0ugmclZ
-   qKkCyEeD9se0bIkr6UzG6T5UmNhONfwNhZyNf3kmMWBQ2QbIVkD6cmGwh
-   A==;
-X-CSE-ConnectionGUID: 1O4jSvwwT8yg7EasQyJslQ==
-X-CSE-MsgGUID: RlW+L7+CQ/yXmtKdiBVVVA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="20002197"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="20002197"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:40:39 -0700
-X-CSE-ConnectionGUID: tj2iD4lQQOK1BCH9L2p/Cg==
-X-CSE-MsgGUID: zHMc3HfyRjKLiRiEMjp6sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="26582753"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:40:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rwMZX-00000004QCO-0p5e;
-	Mon, 15 Apr 2024 16:40:35 +0300
-Date: Mon, 15 Apr 2024 16:40:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 2/2] mmc: sdhci-acpi: Use
- devm_platform_ioremap_resource()
-Message-ID: <Zh0uUjdHg1qV0RfT@smile.fi.intel.com>
-References: <20240412184706.366879-2-andriy.shevchenko@linux.intel.com>
- <20240412184706.366879-4-andriy.shevchenko@linux.intel.com>
- <b8751b8d-f42d-4121-836d-f21b91df1b7e@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="e6xAOPHX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=EHzIPIlvEMFa/Xeg/4PiXPGWOFI3w89WOsdke+JuLoI=; b=e6xAOPHX2IGsvTthzItSh79fgk
+	IJL48VLuZcrMVW7NCuwIzhnjHb2u6oUgRCJDknwJK62XHlZ6f+TYKF6Njrh7imY0UxeMTay8LKXYf
+	FsqUJkDdDRjIhzSW57wjyOs0+5FHNTCiwji0lNzMWNy+zDdblUMs14ymf9SnLF9xk9WI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rwMBH-00D2Vj-NX; Mon, 15 Apr 2024 15:15:31 +0200
+Date: Mon, 15 Apr 2024 15:15:31 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Parthiban.Veerasooran@microchip.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, corbet@lwn.net,
+	linux-doc@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, Horatiu.Vultur@microchip.com,
+	ruanjinjie@huawei.com, Steen.Hegelund@microchip.com,
+	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+	benjamin.bigler@bernformulastudent.ch
+Subject: Re: [PATCH net-next v3 06/12] net: ethernet: oa_tc6: implement
+ internal PHY initialization
+Message-ID: <3fc3b5c3-0750-4aff-ab26-240f4bc55236@lunn.ch>
+References: <20240306085017.21731-1-Parthiban.Veerasooran@microchip.com>
+ <20240306085017.21731-7-Parthiban.Veerasooran@microchip.com>
+ <8c2b95f4-75a7-4d6d-ab9c-9c3498c040d8@lunn.ch>
+ <eeb57938-e21e-406d-a835-93c6fb19b161@microchip.com>
+ <7ddbe599-187e-401f-b508-4dc62bca8374@lunn.ch>
+ <e9bc573e-61f0-484a-b1fb-b5100eb9ee0a@microchip.com>
+ <8de7a4bb-a127-4771-97dd-038f08fcce9d@lunn.ch>
+ <372a45c3-1372-4956-8d42-8e989f86d131@microchip.com>
+ <ee5dcd07-7c44-4317-9d62-0fc68565988a@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b8751b8d-f42d-4121-836d-f21b91df1b7e@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ee5dcd07-7c44-4317-9d62-0fc68565988a@microchip.com>
 
-On Mon, Apr 15, 2024 at 07:20:49AM +0200, Christophe JAILLET wrote:
-> Le 12/04/2024 à 20:46, Andy Shevchenko a écrit :
-
-...
-
-> > -	len = resource_size(iomem);
-> > -	if (len < 0x100)
-> > -		dev_err(dev, "Invalid iomem size!\n");
+On Fri, Apr 12, 2024 at 10:43:15AM +0000, Parthiban.Veerasooran@microchip.com wrote:
+> Hi Andrew,
 > 
-> Was this test useful?
+> After implementing the new APIs oa_tc6_mdiobus_read_c45() and 
+> oa_tc6_mdiobus_write_c45(), I tried testing. But, for some reason these 
+> APIs are never get called by phy_read_mmd() or phy_write_mmd() as those 
+> APIs are checking for phydev->is_c45 flag for calling this new c45 APIs 
+> which is not set in this case.
+> 
+> If the phydev is found via c22, phylib does not set phydev->is_c45, and 
+> everything ends up going indirect.
 
-I'm not sure. ioremap anyway works on page size granularity on many
-architectures, but even besides that, the check was from day 1 for unknown
-reasons. Perhaps can be safely removed.
+We don't have a clean separation between C22/C45 register space and
+C22/C45 MDIO bus protocols. As you said, if the PHY is discovered via
+C22 bus protocol it assumes it uses C22 protocol.
 
-> Should it be mentioned in the commit message?
+Those PHYs which do support C45, and in particular, features which
+need C45, all call genphy_c45_pma_read_abilities() in there
+.get_features function to add in C45 features. However, it will
+continue using C45 over C22 because genphy_c45_pma_read_abilities()
+only really says the device has C45 registers, not C45 protocol.
 
-Or in a separate patch. I'll think about it.
+I can see two different things you can try.
 
--- 
-With Best Regards,
-Andy Shevchenko
+1) set .read_mmd and .write_mmd in the PHY driver to phy_read_mmd()
+   and phy_write_mmd(). That is not great however, since each vendor
+   is likely to have their own PHY driver.
 
+2) Add a helper to set is_c45. This however has side effects you might
+   not want. e.g. auto-neg will be performed via C45, not C22. This
+   might not matter for a T1 PHY where is think auto-neg is not
+   actually used. But i don't see anything in TC6 which limits it to
+   T1, i could well imagine a T2 or T4 PHY being used with full
+   auto-neg.
+
+We really do need to separate C45 registers from C45 protocol in the
+phylib core to cleanly solve this.
+
+       Andrew
 
