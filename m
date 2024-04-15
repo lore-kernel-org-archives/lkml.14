@@ -1,104 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A07285293;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DBB85299;
 	Mon, 15 Apr 2024 12:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185402; cv=none; b=NCjNaD2hosqc19+P0cRdmdHA9Cum9wrFxxCvJvDvKfjhHytaLtBFcADRd5/YyQHtcEm+B3JkIYUOZWge1o8ktuMa4VK1INsUTM1tl6m040Ae/3fGd1HZsCusGIggAM8vfMPrgIzpSwqRoQa9QeDZdFGIDNEbs5R95m/e+muTuWc=
+	t=1713185402; cv=none; b=rX95gj9BJfdMhIXRU5/wognf5OhuRCxVkbpOnKPNWx7+1V+nEvL5NSq/cbEASjNmifSBSelG1TlLqEBLCfPs3E8glCJbAw1DIm3rbMLIUrmJewBoOqDQCadDWus5lBb2nbs0BjbdjFYPv9IwMRLLvMtgiim8cL+dDqgtHphVIkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185402; c=relaxed/simple;
-	bh=s47cdW7+juh03SCq6QFN4+wAqadPWwm5ERPpWRoCDow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uCyFLBu9odNQWbhmZYcnrrkJIMTGqbfaBExbjdYmS91rjYJnydxGCFXRlC6Jc5XtJrilnk/cr8omQChQTiikIggIfVYvsguHgpu0c31vnYHtWM2bUj2bTC2alUXhoDZSX5taSerlSjTfoS0nuiX9+uQMCeoOTnIYjk5aEr1lWss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDqXy1zH; arc=none smtp.client-ip=10.30.226.201
+	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aTDZQvubJ6O3igXywurnt12LZiqgqOtiIANsM1z0o+mX/4GDPNmh5EINspQvHLwZreYKp0lxU7DO92qsHPB41OgHf51O73XdC8Xf05z6eo+XqfZoViWosJxE0DQLiVS6IXc5gUIo5O//eZuDhMWEFQWpC64qc+I9Wyi4CfB4fJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSS8f0tm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDqXy1zH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 336E8C2BD10;
-	Mon, 15 Apr 2024 12:50:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSS8f0tm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7837C113CC;
+	Mon, 15 Apr 2024 12:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713185402;
-	bh=s47cdW7+juh03SCq6QFN4+wAqadPWwm5ERPpWRoCDow=;
+	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lDqXy1zH3ScAofun5w60bVZ1JEkvdqHtTvq1klFOiCR8oX5HfbfwUJ0fpMBbnqn6T
-	 6PHryPT3952Q/iZW6JEhuRSMDZvKHsa93gxvFddsgONlFyIkOjEG2DP3JelbhDyNhG
-	 eQ8P2OrAxrOZbJfaVsFNn0E6QtdK6VamD/eqvcC/66t8msJNM9jSRDqnGbim0fyh7z
-	 WyOfzROFCYVoZlJCWM0q4MRhpkbVygnMyFgw6uWfo2kbm6G9D+hWD8BqRV2DQRt/ok
-	 /S4kE0WztAN0R6Lm6LNkGT7FvN37MKKueBaYDziacs+6/MgQkMClwJOs6aNXrkagWe
-	 vzildnL2MToZw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Peter Wang <peter.wang@mediatek.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jejb@linux.ibm.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	stanley.chu@mediatek.com,
-	quic_cang@quicinc.com,
-	avri.altman@wdc.com,
-	quic_nguyenb@quicinc.com,
-	beanhuo@micron.com,
-	manivannan.sadhasivam@linaro.org,
-	linux-scsi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 04/12] scsi: ufs: core: WLUN suspend dev/link state error recovery
-Date: Mon, 15 Apr 2024 06:03:39 -0400
-Message-ID: <20240415100358.3127162-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100358.3127162-1-sashal@kernel.org>
-References: <20240415100358.3127162-1-sashal@kernel.org>
+	b=mSS8f0tmbEjB0HOjLht2e8wfg1cZRfKaMcSV9fYdVyQ+xIzbz0p454mUqlXhC4o8h
+	 bByVOLS+5HhVbnVNHIS5z5QClB05E7YXYmC6sia/AmRpCXpovgmWUZZb/PToWVdPS+
+	 QC4ssQXovpmYjEGFT4AisJWZPpPE2QVVH5k4jYN8MUtsmm4NG3ZMs7z6DzZ4Ve8Y9b
+	 o+FYUI5hlZeAGIjL8uR6AR5TZQRAJZUU42Sl9k+Mj0jatq3Gdy9d059nQzysRGR0ij
+	 A74jXL3wU5OPidiEqn2TjYWeCOwGV04GM1bcfHK7ofAhBl2Le23TYGcU8Manj1Szyt
+	 m9rc0VCZavMMw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 05/36] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+Date: Mon, 15 Apr 2024 21:49:55 +0900
+Message-Id: <171318539550.254850.4289354595322910591.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.27
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Peter Wang <peter.wang@mediatek.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 6bc5e70b1c792b31b497e48b4668a9a2909aca0d ]
+Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
+always be divisible by sizeof(long).
 
-When wl suspend error occurs, for example BKOP or SSU timeout, the host
-triggers an error handler and returns -EBUSY to break the wl suspend
-process.  However, it is possible for the runtime PM to enter wl suspend
-again before the error handler has finished, and return -EINVAL because the
-device is in an error state. To address this, ensure that the rumtime PM
-waits for the error handler to finish, or trigger the error handler in such
-cases, because returning -EINVAL can cause the I/O to hang.
+Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
 
-Signed-off-by: Peter Wang <peter.wang@mediatek.com>
-Link: https://lore.kernel.org/r/20240329015036.15707-1-peter.wang@mediatek.com
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- drivers/ufs/core/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ Changes in v7:
+  - Use DIV_ROUND_UP() to calculate FGRAPH_RET_INDEX
+---
+ kernel/trace/fgraph.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index ee9119b708f01..8005373e20bae 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -9547,7 +9547,10 @@ static int __ufshcd_wl_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 30edeb6d4aa9..6f8d36370994 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -26,10 +26,9 @@
+ #endif
  
- 	/* UFS device & link must be active before we enter in this function */
- 	if (!ufshcd_is_ufs_dev_active(hba) || !ufshcd_is_link_active(hba)) {
--		ret = -EINVAL;
-+		/*  Wait err handler finish or trigger err recovery */
-+		if (!ufshcd_eh_in_progress(hba))
-+			ufshcd_force_error_recovery(hba);
-+		ret = -EBUSY;
- 		goto enable_scaling;
- 	}
+ #define FGRAPH_RET_SIZE sizeof(struct ftrace_ret_stack)
+-#define FGRAPH_RET_INDEX (ALIGN(FGRAPH_RET_SIZE, sizeof(long)) / sizeof(long))
++#define FGRAPH_RET_INDEX DIV_ROUND_UP(FGRAPH_RET_SIZE, sizeof(long))
+ #define SHADOW_STACK_SIZE (PAGE_SIZE)
+-#define SHADOW_STACK_INDEX			\
+-	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
++#define SHADOW_STACK_INDEX (SHADOW_STACK_SIZE / sizeof(long))
+ /* Leave on a buffer at the end */
+ #define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
  
--- 
-2.43.0
+@@ -91,6 +90,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (!current->ret_stack)
+ 		return -EBUSY;
+ 
++	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
++
+ 	/*
+ 	 * We must make sure the ret_stack is tested before we read
+ 	 * anything else.
+@@ -325,6 +326,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ {
+ 	int index = task->curr_ret_stack;
+ 
++	BUILD_BUG_ON(FGRAPH_RET_SIZE % sizeof(long));
++
+ 	index -= FGRAPH_RET_INDEX * (idx + 1);
+ 	if (index < 0)
+ 		return NULL;
 
