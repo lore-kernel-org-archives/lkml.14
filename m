@@ -1,195 +1,83 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C7542072;
-	Mon, 15 Apr 2024 21:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBB8156C53;
+	Mon, 15 Apr 2024 21:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713215214; cv=none; b=SftOoscaBeDC4rSnTo3WWJKqaJn8ZT5eiVCWis6hbPHvKFOh1fXL+ZozqiliWx0m1CWZAdMmqluFVv7Xd24+1w0FvyV3JtKaSFyAbY8isVlhLqX8uWpb7DWdnVM3NxRLAfPxiL4M3NKogC54swgquo/TTR9SqLINubbijZ48+qo=
+	t=1713215218; cv=none; b=PfXHU36jjkHUx8fwNd1DsbbPknLMFXNgJf9Kh6sM5IS+tLFxsVYHzl+H8CXUUhgQc0rV3KSmq+aETHIhbpiv+rwSHvaTxbNPOwGa8aopDm/5KYuFYGpy9ZfN8ql+qaJxjVuH4s39MS8jG4zrRJ6lw89cTWwY8Jq7uS5RDHjkPQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713215214; c=relaxed/simple;
-	bh=GYBEw+cePmUxgK+VB8F6HIiR5cBsRNyIT1M/5ZSPIs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mKiBEs9pZVkOwoSJQsgNvWHCM+PpwWHxM1lEVotRjjWMqkP3d/fc4R/olNuqMs1sGYu9oGImOaGQtajFU/pA0NXTKNPXi3tJ4cz/4MlueWf7H6DkB/B1pmwKsfL8PNNrCjF8wd9b20zXPOsMNYQe3dSC3BS/X8/wK2HMsDXpX7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vb7BU7U2; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713215218; c=relaxed/simple;
+	bh=QK/YnNEsRDQzA+VI9ZfCIug3P5VhevsltSl+SmjeDe0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=hzNApZIFHBIzCRrVkeu1qlOh2GfZH1MGwgHOVmXbPfJxbTGYbfUry49ojrewFBsgfTXPRDf76xK7onjQrEAEePBYWoFQZAFzgr3uqDB5Z/xPElJIG+sO1lkwy9/toZ6f1tcDNhK1Tf9CH3BE0l77pJKDqQkGPrecjNZOe1O2qRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=fail (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rdukYCQh reason="signature verification failed"; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vb7BU7U2"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41884e96f9eso3377525e9.3;
-        Mon, 15 Apr 2024 14:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713215211; x=1713820011; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C9IZ4DBe3s3FrC7gIAF957ztxkp3Q6VPnQHGXouJLYE=;
-        b=Vb7BU7U2b0h48YTFP77mRq12/3goz0j1q1pVPbPQSSy2unTHSqquOd4gznpE4AvHwM
-         V7kq12aa45PWbYO6+WkSt4a4O8dKDXoKMxMeS0Z4YEVruJcmns8jS8KNp9Hd8DRvY453
-         sDgnBn5W3eAr2WLiKFEVzXLh7nEujUv3xuTQf/FOh2T2vO61pmXk563BJ16N9DZkgzxA
-         zdnR7IYYffREQAbgzhY1D+k9Krsek5jDGbNkjTVBxUr0DOavdZgdLX52Ko2QSUF28NCd
-         F4r+HY1Hp9/8SQPXOBUseFIKIk4F+YaK4QvY+EI7wr3X3RzXkF6CZPnvU/iqdba6a85j
-         Jgaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713215211; x=1713820011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C9IZ4DBe3s3FrC7gIAF957ztxkp3Q6VPnQHGXouJLYE=;
-        b=dr7ki+5TLba9/RgpTERNj3ak+dtwbazxUdUjNrnE0c6ITeiQDXkghEI5Dg/lkXoZ/F
-         wGZafFQNUAoD3n2nN8ACstf3ZKbQLE14EiICtihxy+VqJF0qYUPtFM+YXCJB5eO6D1IB
-         XDmdzp92V7m2lQ7zF3uIlZiqyb9usIeVjAGMn79Vw8P7w4OGHYVBlfEAL8m8He719VH7
-         KKN66ZKkXM9wCQtuXjfBnvP0vjpa4puPsmRiFnOSoiXXb8xdsiDJPa8RxEkAr6A2GoTt
-         BOTsX7SyE9fWTbQzHHLRxgcFHaeDD++DLUkQkWw5fsV6qLHmUcxR5cBmsemRf+uXuz3i
-         9ZEw==
-X-Forwarded-Encrypted: i=1; AJvYcCURNfgXPpQwNfbt3DDfjXgAP2rZy4l6xhRpilNOEPWK1VeiVsxiyKxPhDUUu2tVMjegfK58lq0X8kaNX3uyma0dWApFdukrhCPyPovCerai9rq0TMzOOQptrdyGEzu8BT1d
-X-Gm-Message-State: AOJu0Yyh3b6AqxkzNmfgfIBfTTuaktrjVzpA6EnKl3O99adeQdn8VKbD
-	WNm3K3C9h8I9m1BH0qb6kP0xZLzI7nKXd0FrEs5gZHIId1SEpTTMHFrL9fU8LRtrSXdk24PpFq1
-	suGTN/E8IU1l217v2GKF6KkWeNjZLUg==
-X-Google-Smtp-Source: AGHT+IHUFlV/MuZmtkAlf5WIGJLAv2yyqjRS46ZRi2z6Zgl482QnOD4zbX0h5Xj9t0kNTCqjHgk0jiV4w4l/9whWo10=
-X-Received: by 2002:adf:f2c4:0:b0:347:f7fe:135d with SMTP id
- d4-20020adff2c4000000b00347f7fe135dmr1960783wrp.18.1713215210479; Mon, 15 Apr
- 2024 14:06:50 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rdukYCQh"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1F57F497;
+	Mon, 15 Apr 2024 23:06:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713215167;
+	bh=QK/YnNEsRDQzA+VI9ZfCIug3P5VhevsltSl+SmjeDe0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=rdukYCQh9mMFKAPdTqd4jo4lB4a4B7xptpHd357YCY6nsrtHDE8p4O2e61Yb+mMxi
+	 yKJPDLBT5H6E9wcVtgSM3TW7Vas5B4YrUJkgnLXrP6kJ0tc0rBjudUOeDKylS3L9Le
+	 RHF8woqIolcFMRosZ1uhKhaSSd4+78XmA8SkQZdg=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000fe696d0615f120bb@google.com> <20240415131837.411c6e05eb7b0af077d6424a@linux-foundation.org>
-In-Reply-To: <20240415131837.411c6e05eb7b0af077d6424a@linux-foundation.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 15 Apr 2024 14:06:39 -0700
-Message-ID: <CAADnVQ+E=j1Z4MOuk2f-U33oqvUmmrRcvWvsDrmLXvD8FhUmsQ@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] KMSAN: kernel-infoleak in bpf_probe_write_user
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: syzbot <syzbot+79102ed905e5b2dc0fc3@syzkaller.appspotmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240415-fix-cocci-v1-4-477afb23728b@chromium.org>
+References: <20240415-fix-cocci-v1-0-477afb23728b@chromium.org> <20240415-fix-cocci-v1-4-477afb23728b@chromium.org>
+Subject: Re: [PATCH 04/35] media: uvcvideo: Use max() macro
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+To: Abylay Ospan <aospan@netup.ru>, Alain Volmat <alain.volmat@foss.st.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Bjorn Andersson <andersson@kernel.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Dmitry Osipenko <digetx@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Hans Verkuil <hverkuil@xs4all.nl>, Hugues Fruchet <hugues.fruchet@foss.st.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Martin Tuma <martin.tuma@digiteqautomotive.com>, Matthi
+ as Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Niklas =?utf-8?q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Pavel Machek <pavel@ucw.cz>, Ricardo Ribalda <ribalda@chromium.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Samuel Holland <samuel@sholland.org>, Sergey Kozlov <serjk@netup.ru>, Sowjanya Komatineni <skomatineni@nvidia.com>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Sylvain Petinot <sylvain.petinot@foss.st.com>, Thierry Reding <thierry.reding@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>
+Date: Mon, 15 Apr 2024 22:06:49 +0100
+Message-ID: <171321520986.2333277.5902882675169324919@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
 
-Hi,
+Quoting Ricardo Ribalda (2024-04-15 20:34:21)
+> It makes the code slightly more clear and makes cocci incredibly happy:
+>=20
+> drivers/media/usb/uvc/uvc_ctrl.c:839:22-23: WARNING opportunity for max()
+>=20
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc=
+_ctrl.c
+> index a4a987913430..4b685f883e4d 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -836,7 +836,7 @@ static s32 uvc_get_le_value(struct uvc_control_mappin=
+g *mapping,
+>         while (1) {
+>                 u8 byte =3D *data & mask;
+>                 value |=3D offset > 0 ? (byte >> offset) : (byte << (-off=
+set));
+> -               bits -=3D 8 - (offset > 0 ? offset : 0);
+> +               bits -=3D 8 - max(offset, 0);
 
-syzbot folks, please disable such "bug" reporting.
-The whole point of bpf is to pass such info to userspace.
-probe_write_user, various ring buffers, bpf_*_printk-s, bpf maps
-all serve this purpose of "infoleak".
+This looks semantically the same to me so:
 
-On Mon, Apr 15, 2024 at 1:18=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> (cc bpf@)
->
-> On Fri, 12 Apr 2024 19:27:25 -0700 syzbot <syzbot+79102ed905e5b2dc0fc3@sy=
-zkaller.appspotmail.com> wrote:
->
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    fec50db7033e Linux 6.9-rc3
-> > git tree:       upstream
-> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D16509ba1180=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D13e7da43256=
-5d94c
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D79102ed905e5b=
-2dc0fc3
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
-ebian) 2.40
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10a4af9d1=
-80000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D12980f9d180=
-000
-> >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/901017b36ccc/d=
-isk-fec50db7.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/16bfcf5618d3/vmli=
-nux-fec50db7.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/dc9c5a1e7d02=
-/bzImage-fec50db7.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+79102ed905e5b2dc0fc3@syzkaller.appspotmail.com
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> > BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/in=
-strumented.h:114 [inline]
-> > BUG: KMSAN: kernel-infoleak in __copy_to_user_inatomic include/linux/ua=
-ccess.h:125 [inline]
-> > BUG: KMSAN: kernel-infoleak in copy_to_user_nofault+0x129/0x1f0 mm/macc=
-ess.c:149
-> >  instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-> >  __copy_to_user_inatomic include/linux/uaccess.h:125 [inline]
-> >  copy_to_user_nofault+0x129/0x1f0 mm/maccess.c:149
-> >  ____bpf_probe_write_user kernel/trace/bpf_trace.c:349 [inline]
-> >  bpf_probe_write_user+0x104/0x180 kernel/trace/bpf_trace.c:327
-> >  ___bpf_prog_run+0x13fe/0xe0f0 kernel/bpf/core.c:1997
-> >  __bpf_prog_run64+0xb5/0xe0 kernel/bpf/core.c:2236
-> >  bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-> >  __bpf_prog_run include/linux/filter.h:657 [inline]
-> >  bpf_prog_run include/linux/filter.h:664 [inline]
-> >  __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-> >  bpf_trace_run2+0x116/0x300 kernel/trace/bpf_trace.c:2420
-> >  __bpf_trace_kfree+0x29/0x40 include/trace/events/kmem.h:94
-> >  trace_kfree include/trace/events/kmem.h:94 [inline]
-> >  kfree+0x6a5/0xa30 mm/slub.c:4377
-> >  vfs_writev+0x12bf/0x1450 fs/read_write.c:978
-> >  do_writev+0x251/0x5c0 fs/read_write.c:1018
-> >  __do_sys_writev fs/read_write.c:1091 [inline]
-> >  __se_sys_writev fs/read_write.c:1088 [inline]
-> >  __x64_sys_writev+0x98/0xe0 fs/read_write.c:1088
-> >  do_syscall_64+0xd5/0x1f0
-> >  entry_SYSCALL_64_after_hwframe+0x72/0x7a
-> >
-> > Local variable stack created at:
-> >  __bpf_prog_run64+0x45/0xe0 kernel/bpf/core.c:2236
-> >  bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-> >  __bpf_prog_run include/linux/filter.h:657 [inline]
-> >  bpf_prog_run include/linux/filter.h:664 [inline]
-> >  __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-> >  bpf_trace_run2+0x116/0x300 kernel/trace/bpf_trace.c:2420
-> >
-> > Bytes 0-7 of 8 are uninitialized
-> > Memory access of size 8 starts at ffff888121ec7ae8
-> > Data copied to user address 00000000ffffffff
-> >
-> > CPU: 1 PID: 4779 Comm: dhcpcd Not tainted 6.9.0-rc3-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS=
- Google 03/27/2024
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >
-> >
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > If the report is already addressed, let syzbot know by replying with:
-> > #syz fix: exact-commit-title
-> >
-> > If you want syzbot to run the reproducer, reply with:
-> > #syz test: git://repo/address.git branch-or-commit-hash
-> > If you attach or paste a git patch, syzbot will apply it before testing=
-.
-> >
-> > If you want to overwrite report's subsystems, reply with:
-> > #syz set subsystems: new-subsystem
-> > (See the list of subsystem names on the web dashboard)
-> >
-> > If the report is a duplicate of another one, reply with:
-> > #syz dup: exact-subject-of-another-report
-> >
-> > If you want to undo deduplication, reply with:
-> > #syz undup
+
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+
+>                 if (bits <=3D 0)
+>                         break;
+> =20
+>=20
+> --=20
+> 2.44.0.683.g7961c838ac-goog
 >
