@@ -1,250 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D3A84E01;
-	Mon, 15 Apr 2024 12:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D60745E1
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185765; cv=none; b=fLgWoZ7lQBq2eBYGrs+sHv7iJSAHDq536WqxBS0LaZKSFURNdXBjac5W5SGiVCCwm20bwXirUTP1AAWlirFPnO9aFKdggahOj1aK1G7e6owptrcU4UwMPNhAE1u2gwA9yXR+SvzlRusvu2piIBmxBsH/TnolP4CgbWvT7WSfRwU=
+	t=1713185886; cv=none; b=fyN4xA2Cg0bqrjGhcT9IWPsaqgDUL8GJnZhw0tED+43fObrB9pQxL5vxkhbBi+SJJgFc4m0VO/ihEtciYWkqR+h7j43tL3VaQ8UqUo63zJOJhdrWwl4rk+Jp7vXuHE1xCDWvnJNfrboAuK64BzVN0inGdZ9qxKUGMTCuxC6iXG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185765; c=relaxed/simple;
-	bh=VKd/+gaLhPLw3tEEcbp2qb7NtBlpK6nxCWOaeYAPuIc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MWD3V+crPX1Js31Evm8bt5fi8LuF03LynT14KqEK1CClqw+3JXKQJpsiLv+kVjZE9xHfXU2sQIwe2hO9zbO93EkqrQlYuXSKXNhbj3u5CyN/1XAEwOeTsM1/GdS0O7Hfk6mOWAGsyXi/+Dd211WW0uEj12hlnfF4yOosS7WuDmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dqf+26KC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185886; c=relaxed/simple;
+	bh=JuY8Z9SFKAjd485RmpEzDICfCQ5m1DLNGhij0gfh/6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGmb406IyZdON5a11rUL3keO8BGlPWOv/HMwPm97tcdAM45nYuYs+l+JDJdZx935RrK+tdb8H58ykXgzyGnYfsXubdNMxtWa3F8iOsCMZ0RRVOx3KbT1bCTbgaahUxvInbtFlEmJtrxwf4JpPXZom8NtlWgnUiIEIK1n5HscH8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AiokVn3p; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dqf+26KC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA417C2BD10;
-	Mon, 15 Apr 2024 12:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185765;
-	bh=VKd/+gaLhPLw3tEEcbp2qb7NtBlpK6nxCWOaeYAPuIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dqf+26KCOyAsB6XydMYp2YHS3cW3J24GfNZvPU6YpaT1see/P/yKSz8dhg6qb5XoZ
-	 /L6/bWdSY/+toCc2f5EUkkC9+QUHHpJoRTTWCHDjhGh15Rzp0cMdDf/G+211B9nEed
-	 lbG6vzIZViOx/l5DuRwoqZYTRUgfIUfllGIS2oGWVkOplqaYzL2Dbmbbg77XQG/02x
-	 uBVog52HPxMNwiu5XefM2NRDNaH7NeeG4tdtxvp0F3gG3RnBrYjBKy5C1OFQb+MlHh
-	 MZ4JM/zAoRUj/W3LarQk6Yjv/KTvdnWzdEn2X/V8oNT9VvdZ4M9s7RJ/9XsdMl7ylk
-	 lRIag62hxFR0Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v9 36/36] fgraph: Skip recording calltime/rettime if it is not nneeded
-Date: Mon, 15 Apr 2024 21:55:59 +0900
-Message-Id: <171318575984.254850.17464878774926779209.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AiokVn3p"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4167fce0a41so22649725e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713185883; x=1713790683; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tLf6fjTVo3wUpV33VREESp7KlEYlqmXsy5vGMydSZn8=;
+        b=AiokVn3p5J7rw6aHxKGQ4DO0ZtXqAG1EQ/RcKvpwk3/FaLLKAb5HVvqqxaAqie6oy7
+         AZlO1P6MdMUCEfya+KJEdzzVjP72OP17GzKVbNyVbgvea5G685QIT7f0NgKfn2QHYDH/
+         rZgaYT1LE0wcvSIJp7fgzD3d9RcCxocKDGaa8eFTwP9DJdRGiTyU7OAcs3kNIRKR99JZ
+         nXzqPcAFHxpRF94VNnGUnwKb9JgnzeFrs7TIKO/Sg4mt3vupA4sXxrjHVIF6ICMni3t7
+         95u5xfDfFY+jZdiv4njyD9hd3sTxdfQiKNSWNNJXm3BvGJl0Ru3Q0tq2ntg2822UzMrV
+         h1PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713185883; x=1713790683;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tLf6fjTVo3wUpV33VREESp7KlEYlqmXsy5vGMydSZn8=;
+        b=csHx4HLd5hNSyzVOvy7p4zUZUU4gDgBNyoE3HYUagN8huotrQ7qPx2M4d/3K9BH+56
+         iqBtahM2gpJPpIOcqI/OYMixZhF5KvAgIiKXsy8/K2iH2SBfHbdUoLlwcXvS6Cf1Uai/
+         Wj4MST762bdAHw6RmXEL06iWcpmJbB6aHa6ZjsWsh6VC87E1eZKgZmOlHh/9+qRsSLIH
+         syAKBov45SdHlEEF2HhEpO6p9bpbFs4Aor8+6rNeNVFpRvNvHqqyHLpS8SQJrlPWpalA
+         dJfbkeQM4VRl3wnT5FAQZ+Zt83fn7NOSbf/vbnw2yg+rt/4uFchtLOZ2+8hwBTloqFv7
+         YXeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQxZrtSLKXMd6Mn/Fh7iHtf4P47X9MqrUE9MPZFlRzOgc+UIa0TQuyETbNwa6jp4mY3wPkKUB3rG0sibSQXVH5J+9PhZ3Avt/dxayu
+X-Gm-Message-State: AOJu0Yxglcc8Tkz5gcDpfEGBlqJaHrJVHrAKFEUwRKBH5pRfQLIl9wE8
+	gt9W32K9r/T1bYYotGpj2tkVCnKRAlsfrSaUBMWJJa/f2MD8Esm4hxm7qpoSlmo=
+X-Google-Smtp-Source: AGHT+IEAm03/mAgN/wD9H5pLJe3fIVolEbWIhU988XB39qknEhlAzrxruGN5U/LF93zzxG0bYawaFQ==
+X-Received: by 2002:a5d:595b:0:b0:345:e750:6d6c with SMTP id e27-20020a5d595b000000b00345e7506d6cmr7277507wri.30.1713185882741;
+        Mon, 15 Apr 2024 05:58:02 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id f18-20020adfe912000000b00343d6c7240fsm12032238wrm.35.2024.04.15.05.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 05:58:02 -0700 (PDT)
+Date: Mon, 15 Apr 2024 13:58:00 +0100
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>,
+	Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Alexander Shiyan <shc_work@mail.ru>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-omap@vger.kernel.org
+Subject: Re: [PATCH 00/18] backlight: Constify lcd_ops
+Message-ID: <20240415125800.GO222427@aspen.lan>
+References: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sun, Apr 14, 2024 at 06:35:58PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
+>
+> Dependencies
+> ============
+> All further patches depend on the first patch.  Therefore everything
+> could go via backlight tree (please ack) or via cross-tree pulls. Or
+> whatever maintainer choose, just coordinate this with backlight.
 
-Skip recording calltime and rettime if the fgraph_ops does not need it.
-This is a kind of performance optimization for fprobe. Since the fprobe
-user does not use these entries, recording timestamp in fgraph is just
-a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
-and all fgraph_ops sets this flag, skip recording calltime and rettime.
+Thanks for the tidy up.
 
-Suggested-by: Jiri Olsa <olsajiri@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v9:
-  - Newly added.
----
- include/linux/ftrace.h |    2 ++
- kernel/trace/fgraph.c  |   46 +++++++++++++++++++++++++++++++++++++++-------
- kernel/trace/fprobe.c  |    1 +
- 3 files changed, 42 insertions(+), 7 deletions(-)
+I've added my Reviewed-by: to all the backlight patches (for Lee) and
+I'm happy with the other patches too... but I didn't want my R-b on the
+HID and fbdev patches to be confused for an ack.
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index d845a80a3d56..06fc7cbef897 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1156,6 +1156,8 @@ struct fgraph_ops {
- 	struct ftrace_ops		ops; /* for the hash lists */
- 	void				*private;
- 	int				idx;
-+	/* If skip_timestamp is true, this does not record timestamps. */
-+	bool				skip_timestamp;
- };
- 
- void *fgraph_reserve_data(int idx, int size_bytes);
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 7556fbbae323..a5722537bb79 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -131,6 +131,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
- 
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
-+static bool fgraph_skip_timestamp;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -475,7 +476,7 @@ void ftrace_graph_stop(void)
- static int
- ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 			 unsigned long frame_pointer, unsigned long *retp,
--			 int fgraph_idx)
-+			 int fgraph_idx, bool skip_ts)
- {
- 	struct ftrace_ret_stack *ret_stack;
- 	unsigned long long calltime;
-@@ -498,8 +499,12 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	ret_stack = get_ret_stack(current, current->curr_ret_stack, &index);
- 	if (ret_stack && ret_stack->func == func &&
- 	    get_fgraph_type(current, index + FGRAPH_RET_INDEX) == FGRAPH_TYPE_BITMAP &&
--	    !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx))
-+	    !is_fgraph_index_set(current, index + FGRAPH_RET_INDEX, fgraph_idx)) {
-+		/* If previous one skips calltime, update it. */
-+		if (!skip_ts && !ret_stack->calltime)
-+			ret_stack->calltime = trace_clock_local();
- 		return index + FGRAPH_RET_INDEX;
-+	}
- 
- 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_RET_INDEX;
- 
-@@ -517,7 +522,10 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 		return -EBUSY;
- 	}
- 
--	calltime = trace_clock_local();
-+	if (skip_ts)
-+		calltime = 0LL;
-+	else
-+		calltime = trace_clock_local();
- 
- 	index = READ_ONCE(current->curr_ret_stack);
- 	ret_stack = RET_STACK(current, index);
-@@ -601,7 +609,8 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
- 	trace.func = func;
- 	trace.depth = ++current->curr_ret_depth;
- 
--	index = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0);
-+	index = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0,
-+					 fgraph_skip_timestamp);
- 	if (index < 0)
- 		goto out;
- 
-@@ -654,7 +663,8 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
- 		return -ENODEV;
- 
- 	/* Use start for the distance to ret_stack (skipping over reserve) */
--	index = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx);
-+	index = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx,
-+					 gops->skip_timestamp);
- 	if (index < 0)
- 		return index;
- 	type = get_fgraph_type(current, index);
-@@ -732,6 +742,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	*ret = ret_stack->ret;
- 	trace->func = ret_stack->func;
- 	trace->calltime = ret_stack->calltime;
-+	trace->rettime = 0;
- 	trace->overrun = atomic_read(&current->trace_overrun);
- 	trace->depth = current->curr_ret_depth;
- 	/*
-@@ -792,7 +803,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-@@ -808,6 +818,8 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 			continue;
- 		if (gops == &fgraph_stub)
- 			continue;
-+		if (!trace.rettime && !gops->skip_timestamp)
-+			trace.rettime = trace_clock_local();
- 
- 		gops->retfunc(&trace, gops, fregs);
- 	}
-@@ -1185,6 +1197,24 @@ static void init_task_vars(int idx)
- 	read_unlock(&tasklist_lock);
- }
- 
-+static void update_fgraph_skip_timestamp(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+		struct fgraph_ops *gops = fgraph_array[i];
-+
-+		if (gops == &fgraph_stub)
-+			continue;
-+
-+		if (!gops->skip_timestamp) {
-+			fgraph_skip_timestamp = false;
-+			return;
-+		}
-+	}
-+	fgraph_skip_timestamp = true;
-+}
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
-@@ -1219,6 +1249,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	gops->idx = i;
- 
- 	ftrace_graph_active++;
-+	update_fgraph_skip_timestamp();
- 
- 	if (ftrace_graph_active == 1) {
- 		register_pm_notifier(&ftrace_suspend_notifier);
-@@ -1242,6 +1273,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		fgraph_array[i] = &fgraph_stub;
- 		ftrace_graph_active--;
- 		fgraph_lru_release_index(i);
-+		update_fgraph_skip_timestamp();
- 	}
- out:
- 	mutex_unlock(&ftrace_lock);
-@@ -1265,8 +1297,8 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
--
- 	ftrace_graph_active--;
-+	update_fgraph_skip_timestamp();
- 
- 	if (!ftrace_graph_active)
- 		command = FTRACE_STOP_FUNC_RET;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index afa52d9816cf..24bb8edec8a3 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -345,6 +345,7 @@ NOKPROBE_SYMBOL(fprobe_return);
- static struct fgraph_ops fprobe_graph_ops = {
- 	.entryfunc	= fprobe_entry,
- 	.retfunc	= fprobe_return,
-+	.skip_timestamp = true,
- };
- static int fprobe_graph_active;
- 
 
+Daniel.
+
+
+> ---
+> Krzysztof Kozlowski (18):
+>       backlight: Constify lcd_ops
+>       backlight: ams369fg06: Constify lcd_ops
+>       backlight: corgi_lcd: Constify lcd_ops
+>       backlight: hx8357: Constify lcd_ops
+>       backlight: ili922x: Constify lcd_ops
+>       backlight: ili9320: Constify lcd_ops
+>       backlight: jornada720_lcd: Constify lcd_ops
+>       backlight: l4f00242t03: Constify lcd_ops
+>       backlight: lms283gf05: Constify lcd_ops
+>       backlight: lms501kf03: Constify lcd_ops
+>       backlight: ltv350qv: Constify lcd_ops
+>       backlight: otm3225a: Constify lcd_ops
+>       backlight: platform_lcd: Constify lcd_ops
+>       backlight: tdo24m: Constify lcd_ops
+>       HID: picoLCD: Constify lcd_ops
+>       fbdev: clps711x: Constify lcd_ops
+>       fbdev: imx: Constify lcd_ops
+>       fbdev: omap: lcd_ams_delta: Constify lcd_ops
+>
+>  drivers/hid/hid-picolcd_lcd.c            | 2 +-
+>  drivers/video/backlight/ams369fg06.c     | 2 +-
+>  drivers/video/backlight/corgi_lcd.c      | 2 +-
+>  drivers/video/backlight/hx8357.c         | 2 +-
+>  drivers/video/backlight/ili922x.c        | 2 +-
+>  drivers/video/backlight/ili9320.c        | 2 +-
+>  drivers/video/backlight/jornada720_lcd.c | 2 +-
+>  drivers/video/backlight/l4f00242t03.c    | 2 +-
+>  drivers/video/backlight/lcd.c            | 4 ++--
+>  drivers/video/backlight/lms283gf05.c     | 2 +-
+>  drivers/video/backlight/lms501kf03.c     | 2 +-
+>  drivers/video/backlight/ltv350qv.c       | 2 +-
+>  drivers/video/backlight/otm3225a.c       | 2 +-
+>  drivers/video/backlight/platform_lcd.c   | 2 +-
+>  drivers/video/backlight/tdo24m.c         | 2 +-
+>  drivers/video/fbdev/clps711x-fb.c        | 2 +-
+>  drivers/video/fbdev/imxfb.c              | 2 +-
+>  drivers/video/fbdev/omap/lcd_ams_delta.c | 2 +-
+>  include/linux/lcd.h                      | 6 +++---
+>  19 files changed, 22 insertions(+), 22 deletions(-)
+> ---
+> base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
+> change-id: 20240414-video-backlight-lcd-ops-276d8439ffb8
+>
+> Best regards,
+> --
+> Krzysztof Kozlowski <krzk@kernel.org>
+>
