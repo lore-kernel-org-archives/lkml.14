@@ -1,66 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B9E45944
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB0A23774
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713171818; cv=none; b=ZEiuEL1o/fdlsSwiCSSGcrpSjMiu18uSzRxNcjia8hW21xpNNFO1z3RbObNpWlr8FDKKUVdPUDxijgh3GotuR/rMGtsqHmRydacwG5DZMVm7yVrJC2KFYN0Fsozwd3QtLQSPH857oo6UmVDobIP7Q872hVj0cPhZam7LYSraPc0=
+	t=1713171999; cv=none; b=dlTnpWaUxfR6HFWE4zSga2+r01MOIDZaIz+WCHZUuqHdGnEAkAnapIOWk1Y5pgudvT/3+zk6mTNwAqx6XE1sCsyNyd/lfDPTiMwzKm/IpCq0Ev1DZUW3ctnpWU1tuuuWGrJRPmi+G3bx9s+aJHb+70Xq371ETS7DFgrmfPfdkcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713171818; c=relaxed/simple;
-	bh=IdA7HDUJdk3wBbS7HCQh1S2W+nwF7tdQmhHF55XBlCs=;
+	s=arc-20240116; t=1713171999; c=relaxed/simple;
+	bh=SwgpO4YQWdvbI0vVe0TBO0b37BYnsUM314dFrnGo/S0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AtBThgwkmyE305QdaSMkvENQ5SP/OXO7SipIoWArVe+KVE5F9Up8kjohwKHdS8Pqf4o52NIgNM+yFmfaWAJu3M4Hkgg9+/zsvRGvtfL76DGCJT60Gwawqk5bPoHKjl9uQBoEa1ftrUXDZSVEmZkglAQ5w3MuWl0oWfct3JlzUUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W+Jwz14X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=tigrjzJpSacpnSmAqXMyGm4MdNoY2Q7fDyu2qKblBxEwF+5yz6T/zfiP1hF/wtWMVXjw2UjyCgCOxUTRNDYwZSAbgkiIR+R7HrfRjom7ukPdXU2fVjXHsvPLK6MZsk6wTf2t4XaMflnhKrKzTjja454BJzvPLgmkoPVXvxQTk5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K2y0UCaA; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W+Jwz14X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713171812;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYKa4KTPniO6R7CGdMFUdNW1Z1y9QZTKRFmp+ZRDLRU=;
-	b=W+Jwz14XJGDiLRbFeCnRK+eGC1OYW33R9FZF+03eay7wiFZZOQNpeRYkcHJ8HunR9maoG4
-	3O2m7A0CsYpN5vzMOj8qwQBKQDqdnASwnKIu3Io4xyxx2zbTRtmri3mO18A5ftkimqbMJs
-	FdbmY7ytDNwvQAu0NNZ4HIoq5o0z1PQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-491-MNvlK1_xNIK1EHHcyiEuJg-1; Mon, 15 Apr 2024 05:03:28 -0400
-X-MC-Unique: MNvlK1_xNIK1EHHcyiEuJg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-343e46df264so1642993f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:03:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K2y0UCaA"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a5200afe39eso363208566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1713171995; x=1713776795; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+WfufnjkFLuKt8mgR0uon21xMcAu2tPaD6DqiB7Iflk=;
+        b=K2y0UCaARaTxLmjZMHjA9cx+156xdMsZ/VeUgbEd0qoJtPdpUxMnW+3z8H9bnoqe3J
+         ukEfW5MVfHkL3HuUCxZBNvD4iP1Z9Gkdb5W1dRjXm05kgQkboGRtWU/qm5N7MYQPJlDl
+         ZxEvi+EyA7OBbwdvwIfZG4ct/Knv9iNjyFAa+AZX8hlid1UGLg4bN1QFJA3svmwsgVZ/
+         hxqK5Sb7eSj5tnKqhJm0i703RA2wREEQhhEZeVgf+yjeVM7k3PE8o5RmzBYqcYhtxj3f
+         cZQla6hkLkfWB03+oHcvATnRXcDNgikg6iaCyxrotzd4LfuEgyMBuD3Iqq+LJEiDVjnP
+         aJLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713171808; x=1713776608;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AYKa4KTPniO6R7CGdMFUdNW1Z1y9QZTKRFmp+ZRDLRU=;
-        b=e7/7LPrFBTd0Jfj00tXGqy5qFdCqf2DAnzDWLmDvPtM0900NkDsjIc9sUkUgrqFjur
-         WL00pcNNquP8OKEHChDCYhnIYSsYO1giYp4sxVmNr0LGch7Nd2wfd3UQIaKxwGtLL6DD
-         JlLrWq+cpMrXinb4R47a6LNA3z86m9aAjVzrzs4leHUOVt29lXMb2MBR1AFnuhCCjX/F
-         qiXMFkTWUKAUf8vStb5e3B5HA2ViTNSuhXqKPUhnlayc5nC9PjCsg1ARuShpby1HKJY2
-         as3T7usGKvS7x47naq26WBayKgeNBdCu9aHuOP+xy+zY5brGslMvdSPZbKkl3PJAGeUE
-         Z7jA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Ci9mS91iRd+RG+nRN1XuTWHHwYVN+9eXRU3nSB80C1pwkQQdA+tVGdGGOvis5OURkh5caLX+WiTkiaj+Fj6ePlbXELPWgH8iqxBD
-X-Gm-Message-State: AOJu0Yz+SXOs0WUZ0dUxQsQZBufKI9yVDpr6S1kSWx+N3rsZeVk6C1Jb
-	gkMscS7oOQ3ad4vZp3LBQiHgsgN/jzWKKPQ9KM1IW9/vTZL/Jd82CKDp4dEVO8Tpv/LB+vLtY72
-	qv6RlYWQAeeovvK5gMASnuKnFM1lNKoPNyh3D5ELn+VjKGDS3FpXM6Jgulb0EBg==
-X-Received: by 2002:adf:e591:0:b0:341:e358:7bee with SMTP id l17-20020adfe591000000b00341e3587beemr6359824wrm.39.1713171807858;
-        Mon, 15 Apr 2024 02:03:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHpwdZY2D2UwysYuZQw3OrScHwpqCJhWnmaPIklA/3flPX0PP7YVvECg4t0EjHiFSoANE2vtw==
-X-Received: by 2002:adf:e591:0:b0:341:e358:7bee with SMTP id l17-20020adfe591000000b00341e3587beemr6359799wrm.39.1713171807476;
-        Mon, 15 Apr 2024 02:03:27 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id u7-20020adfeb47000000b0033ec9ddc638sm11497808wrn.31.2024.04.15.02.03.25
+        d=1e100.net; s=20230601; t=1713171995; x=1713776795;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+WfufnjkFLuKt8mgR0uon21xMcAu2tPaD6DqiB7Iflk=;
+        b=ZqQokEs0UuZ8ganpR2On3omwJYgrZN/O5KHC8I9JFE4rpA95kv7BRMXZZz6QFag4WN
+         AEZq2wz9FXK2kTZPp8ccPxGdaVa7qLV8uIlgymnHrVSqakcwETnq7xps0v6qDaHb115U
+         qZErYtf1btxUYC0eIe3v9E2klLZjfVV2weFSBElDpQ4e5e20DiSB0BDu2dahFSlVrPBx
+         pnNvxiTWJ2WCMvtDE+r0i7iVHL62TytKIVhrFt9DFw0TwlmFSazmwrtKNKWYkTzyhwxs
+         izw91PsLRB3z1jgFtH+yDJd5P8ZK4p/E9ffAJ/WVE/PhCfeZPJCChOyH9WGmoGJt3zuu
+         qztQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQtvTkhC1rW9aNYeKYvPcbX++A0L4MpglRmHNCOuB1Y6f+fiHYTEeovIhm0twjXrIoShbKZH4Y1NL87av2jwYV3F/aslXegpyw7Z/O
+X-Gm-Message-State: AOJu0Yzn6uoFRF8tvig4DZnNu+v2OT3tXf+s6SFDmx7e1GaIT6hMMeG8
+	Vm9E8Y08A12UD+tnx5TGH9RPO4DGBghisMUeWFTOGgep/sb7OXxIgQyCouY2Wjk=
+X-Google-Smtp-Source: AGHT+IG9Os75CE2mZeTq4ynaVMOKZR0K1Da/JMGlDSPMt3uTOA+A8muKztNGs7OdjmfiZ183zyUO4w==
+X-Received: by 2002:a17:907:3605:b0:a52:54f7:bb01 with SMTP id bk5-20020a170907360500b00a5254f7bb01mr4672944ejc.53.1713171994933;
+        Mon, 15 Apr 2024 02:06:34 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1366:6801:d8:8490:cf1a:3274? ([2001:a61:1366:6801:d8:8490:cf1a:3274])
+        by smtp.gmail.com with ESMTPSA id zh17-20020a170906881100b00a5271ae4458sm623641ejb.16.2024.04.15.02.06.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 02:03:26 -0700 (PDT)
-Message-ID: <ad01f30e-4944-44f6-9efa-8e04726d1486@redhat.com>
-Date: Mon, 15 Apr 2024 11:03:24 +0200
+        Mon, 15 Apr 2024 02:06:34 -0700 (PDT)
+Message-ID: <a6ad34d3-9cce-4178-8271-0e09ced2b6f4@suse.com>
+Date: Mon, 15 Apr 2024 11:06:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,100 +61,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm: nv04: Fix out of bounds access
-To: Mikhail Kobuk <m.kobuk@ispras.ru>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Ben Skeggs <bskeggs@redhat.com>,
- Francisco Jerez <currojerez@riseup.net>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org, Fedor Pchelkin <pchelkin@ispras.ru>,
- Alexey Khoroshilov <khoroshilov@ispras.ru>, Karol Herbst <kherbst@redhat.com>
-References: <20240411110854.16701-1-m.kobuk@ispras.ru>
+Subject: Re: [PATCH] usb: cdc-wdm: close race between read and workqueue
+To: =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>,
+ Aleksander Morgado <aleksandermj@chromium.org>
+Cc: oneukum@suse.com, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+ linux@roeck-us.net, linux-kernel@vger.kernel.org, ejcaruso@chromium.org
+References: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org>
+ <87mspvi0lk.fsf@miraculix.mork.no>
 Content-Language: en-US
-From: Danilo Krummrich <dakr@redhat.com>
-Organization: RedHat
-In-Reply-To: <20240411110854.16701-1-m.kobuk@ispras.ru>
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <87mspvi0lk.fsf@miraculix.mork.no>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/11/24 13:08, Mikhail Kobuk wrote:
-> When Output Resource (dcb->or) value is assigned in
-> fabricate_dcb_output(), there may be out of bounds access to
-> dac_users array in case dcb->or is zero because ffs(dcb->or) is
-> used as index there.
-> The 'or' argument of fabricate_dcb_output() must be interpreted as a
-> number of bit to set, not value.
-> 
-> Utilize macros from 'enum nouveau_or' in calls instead of hardcoding.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 2e5702aff395 ("drm/nouveau: fabricate DCB encoder table for iMac G4")
-> Fixes: 670820c0e6a9 ("drm/nouveau: Workaround incorrect DCB entry on a GeForce3 Ti 200.")
-> Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
+On 15.04.24 08:47, Bjørn Mork wrote:
 
-Applied to drm-misc-fixes, thanks!
+> I'm not sure I understand what problem that patch is supposed to fix.
+> Which means that everything I write could be completely wrong...
 
-> ---
-> Changes in v2:
-> - Instead of checking ffs(dcb->or), adjust function calls to match
->    argument semantics
-> - Link to v1: https://lore.kernel.org/all/20240331064552.6112-1-m.kobuk@ispras.ru/
-> 
->   drivers/gpu/drm/nouveau/nouveau_bios.c | 13 +++++++------
->   1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> index 479effcf607e..79cfab53f80e 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_bios.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> @@ -23,6 +23,7 @@
->    */
->   
->   #include "nouveau_drv.h"
-> +#include "nouveau_bios.h"
->   #include "nouveau_reg.h"
->   #include "dispnv04/hw.h"
->   #include "nouveau_encoder.h"
-> @@ -1677,7 +1678,7 @@ apply_dcb_encoder_quirks(struct drm_device *dev, int idx, u32 *conn, u32 *conf)
->   	 */
->   	if (nv_match_device(dev, 0x0201, 0x1462, 0x8851)) {
->   		if (*conn == 0xf2005014 && *conf == 0xffffffff) {
-> -			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, 1);
-> +			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, DCB_OUTPUT_B);
->   			return false;
->   		}
->   	}
-> @@ -1763,26 +1764,26 @@ fabricate_dcb_encoder_table(struct drm_device *dev, struct nvbios *bios)
->   #ifdef __powerpc__
->   	/* Apple iMac G4 NV17 */
->   	if (of_machine_is_compatible("PowerMac4,5")) {
-> -		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, 1);
-> -		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, 2);
-> +		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, DCB_OUTPUT_B);
-> +		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, DCB_OUTPUT_C);
->   		return;
->   	}
->   #endif
->   
->   	/* Make up some sane defaults */
->   	fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG,
-> -			     bios->legacy.i2c_indices.crt, 1, 1);
-> +			     bios->legacy.i2c_indices.crt, 1, DCB_OUTPUT_B);
->   
->   	if (nv04_tv_identify(dev, bios->legacy.i2c_indices.tv) >= 0)
->   		fabricate_dcb_output(dcb, DCB_OUTPUT_TV,
->   				     bios->legacy.i2c_indices.tv,
-> -				     all_heads, 0);
-> +				     all_heads, DCB_OUTPUT_A);
->   
->   	else if (bios->tmds.output0_script_ptr ||
->   		 bios->tmds.output1_script_ptr)
->   		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS,
->   				     bios->legacy.i2c_indices.panel,
-> -				     all_heads, 1);
-> +				     all_heads, DCB_OUTPUT_B);
->   }
->   
->   static int
+wdm_in_callback() can schedule service_outs_intr(), which can call
+service_outstanding_interrupt(), which sets WDM_RESPONDING and submits
+desc->response.
+That is not problematic in itself, but wdm_read() also calls
+service_outstanding_interrupt(), which can lead to teh same URB
+being submitted twice (which caused me to write the patch)
+or, apparently, in this case, it leads to discarding a buffer
+by resubmitting and completing an URB.
+
+> But to me it looks like the described issue is exactly what you should
+> expect if that change ever triggers.  I believe we must resubmit the
+
+Yes, it does.
+
+> urb from service_outstanding_interrupt(). That's why it was added. See
+> the explanation Robert wrote when introducing it:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/usb/class/cdc-wdm.c?id=c1da59dad0ebd3f9bd238f3fff82b1f7ffda7829
+
+Well, the explanation is correct in that we must read
+data available. However, if the RESPONDING flag is set
+and the URB submitted, we are already doing so.
+
+> As for the XMM behaviour: it's been a long time since I tried any of
+> those, but AFAIR one the major differences compared to Qualcomm was the
+> strict queue handling in the firmware.  This caused a number of problems
+> where the cdc-wdm driver wanted to skip a message for some reason.  So
+> I'm not surprised that a bug like this is triggered by one of those
+> modems. That's probably the only thing they are good for :-)
+
+I am not sure where exactly the issue lies here. Suggestions for
+debugging?
+
+	Regards
+		Oliver
 
