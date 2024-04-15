@@ -1,276 +1,124 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219EC208CE;
-	Mon, 15 Apr 2024 06:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2182F18E1E;
+	Mon, 15 Apr 2024 06:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713162858; cv=none; b=bpgy2I6MUL0zY3P5mwq0+2Gx1esK3VXh1/8h1yA15v7kcoFUoilG+I0YxwXVM1svOwhSibVmrix6HKVp25KD0I9ZOWz1m1MjKvT6UlWFUNnna3uJ9EPGJdslnbGQ4l6fPIz3IxWLnoPRKx77IG3f5y0c2MPpidwy419+dFPnswk=
+	t=1713162911; cv=none; b=hK8JVoO4Ky47hA4r3kFLIlY3WDbqtmPGyWNLNTDm9dG4CtlPpouf3Utd+U0HxWh8zek/jQfXYQF6JJBVXFFy3n3M+1G43eGeP/Zma48aA1Ickg7C72zC1JgJt66ajDuM7EcV+0xoWPW0Q6YTgKRkgU6yHPMltHG5DW8UYeFHr88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713162858; c=relaxed/simple;
-	bh=eHhio57cAFSXqNMMzzj+Ywwvd1sJtj4D1p17YZffUQ0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=khFK7Ldy4i2hzfIuxmf8QHR0S79vhggNxPOAfAF785G+mpkrDY8mFdI/tonLwu+BS8fO2qjM2JpJ8BrZN2JG3tSL7GcMP8g6+1oL/QlE8GRhfsMeeUDPXct/pmXkey5054sK6mNEjfhIaXmCRsDXb0XtZZhoci6PuYsDZ74IZqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J2i6IY6D; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713162911; c=relaxed/simple;
+	bh=Q5TbGZ1jPTv4uMeeTm7Q5TrJJ+oKc4OwR2nN0yuvZHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s8SER6kfU9I3S8E4+a7vhUzL9fGRWGzmaSZVTg5oBxswyRG2Mop4lJ3mOawHtinxIEL9OhpwuszFuPCeGT3GJHBnigMVZRDYztHqC/FzfO5wfDB6rBoMfQ71gb/X+wyw9DL6/iiaI1aEUhey0T/5toU//H4qD7NRF0K+Cu5wSdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Geqt+IpH; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J2i6IY6D"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43F6Xwkp126565;
-	Mon, 15 Apr 2024 01:33:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713162838;
-	bh=oiwLY4zNrac1qa9B4AIdqA3PZD7EqIQr+bV0zRFnc8Q=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=J2i6IY6Dzuhbuv+cCuBQ0ET6TpMBLCiE7TxXUzAz2+PneptuEp71nrP+as9CEHt06
-	 +a0b7K3X0lBuRn/Z+oVrVM1CeEpVr0nPCVOh78sLCwi+fd5azy2CyaRw8clim/9TmM
-	 tsTSdX7YjIyixNQ4zcHUiU9CP/RjKLHAT6NyNUPs=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43F6Xwec049392
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 15 Apr 2024 01:33:58 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
- Apr 2024 01:33:57 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 15 Apr 2024 01:33:57 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43F6Xide065992;
-	Mon, 15 Apr 2024 01:33:54 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Udit Kumar
-	<u-kumar1@ti.com>
-Subject: [PATCH 3/4] arm64: dts: ti: k3-j7200: Arranging pin mux in order
-Date: Mon, 15 Apr 2024 12:03:28 +0530
-Message-ID: <20240415063329.3286600-4-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240415063329.3286600-1-u-kumar1@ti.com>
-References: <20240415063329.3286600-1-u-kumar1@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Geqt+IpH"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a44f2d894b7so286446866b.1;
+        Sun, 14 Apr 2024 23:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713162907; x=1713767707; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eO+zx6q8xRqWwJnnrLSN3wSPdu79Tj6Uc62vZSkTLvo=;
+        b=Geqt+IpH3EHL65dkbPMIdxJtBbWUeDjDyxVJMpvVQYprDlTpX1nSZLSjoXdyinz9oT
+         rVwn7lRt1wHzUMLSUBCW1upaamy4pMrekpmSb3wKjLgdkfLDAQ9+fuLhPEV8AByNl+RO
+         VR2TlT7wUadE8+UbzwSxsKx/0Ly3/2gcQasxQKXpvLBCNSX2laSRLgpWDe8B8DLOuHR9
+         8AhS/70/xLNdOtVcpGOHaj05nXw/uFHvDYKX14C0IKYDHCFxaBGpKK/nJGKpu6eS8QTs
+         B7Udtj+OBy56Op1kP34PsVlIzoD0onvnr06gdfaDO7sqUlV1yRuRqCtNefhcRcUuD1/N
+         +ohw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713162907; x=1713767707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eO+zx6q8xRqWwJnnrLSN3wSPdu79Tj6Uc62vZSkTLvo=;
+        b=rCT4sFKkie96B0Yp43UMSjIIL0Tq+/Q//8bT5Dle1BgG+ppa7yl4oHoe7d4MFHbYeE
+         KNT4WMyQlpGHxfZD4FzbwefLzaWKL11KzJxkd6FnyjmGupXWj+ZyVUg2RxTw/75JHuOC
+         CnkkE+pXdQa4kkNUfWuz04v/GAJu1uKMZpzoTuwhoDV29EGh6xXBx9hktESW874wGIUG
+         1+6HaQ9WiKqRCXSrfNySUNo10vkRySBLhTYRN1wIEruDgpIOTXWQ0jh3wVIVCKNqo+hq
+         Ocu2Xl0FDoqhVT43KuzEFIkwVGgR/d6eZ7paGBpc4CQSSrXsBP00em3v9CvOHHXQVkMK
+         FMdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQH/7wmgJo33rrwtbGmVf0XlTyAXvk9KIPwrLqEPim6wCHwM6sRnj9gcYKNUP+uQPRlHk6evCND6ddZ4Kj7NicNCECmjlGDV/OAtLL1PPiimf7/0yqrkCxi1hgvLsIIhALx8mRYVL1oQ==
+X-Gm-Message-State: AOJu0YyfNVYanic5P3KJDmmAYnWACS2UtzTRSkHcGnEOfIHscdBhMF/v
+	WHY1Q/9Qtdx/JHJc2TeCjTsis/sJUAEmnDY2SzSGFGWfu/Dfhjbz
+X-Google-Smtp-Source: AGHT+IFBOaepaDHEEJj8Porx550BDTPgEDltcVsWd0z0QitZDRqQ83vy5NmfqW3SvdZYQ/SrAz8Q5A==
+X-Received: by 2002:a17:906:b80c:b0:a54:3e6c:c9d7 with SMTP id dv12-20020a170906b80c00b00a543e6cc9d7mr271692ejb.65.1713162907275;
+        Sun, 14 Apr 2024 23:35:07 -0700 (PDT)
+Received: from [10.10.12.27] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id ae12-20020a17090725cc00b00a529aeb4eccsm412271ejc.140.2024.04.14.23.35.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Apr 2024 23:35:06 -0700 (PDT)
+Message-ID: <9b33192d-6245-45e1-bcba-c2339e18f77c@gmail.com>
+Date: Mon, 15 Apr 2024 08:35:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] dt-bindings: rtc: convert trivial devices into
+ dtschema
+To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Vladimir Zapolskiy <vz@mleia.com>, Joel Stanley <joel@jms.id.au>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-stm32@st-md-mailman.stormreply.com,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240413-rtc_dtschema-v3-0-eff368bcc471@gmail.com>
+ <20240413-rtc_dtschema-v3-2-eff368bcc471@gmail.com>
+ <82fcd7a4532df119f82ea55208f592460ba5358e.camel@codeconstruct.com.au>
+Content-Language: en-US, de-AT
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <82fcd7a4532df119f82ea55208f592460ba5358e.camel@codeconstruct.com.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Arranging pin mux in order of main_pmx0/1, wkup_pmx0/1/2/3.
+On 4/15/24 02:09, Andrew Jeffery wrote:
+> On Sat, 2024-04-13 at 22:22 +0200, Javier Carrasco wrote:
+>> These RTCs meet the requirements for a direct conversion into
+>> trivial-rtc:
+>>
+>> - google,goldfish-rtc
+>> - maxim,ds1742
+>> - lpc32xx-rtc
+>> - orion-rtc
+>> - rtc-aspeed
+>> - spear-rtc
+>> - via,vt8500-rtc
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> 
+> We have trailers above but then there's more commit message content
+> below. Looks like what's below should be trimmed out (bad squash)?
+> Maybe the trimming could be done as its applied?
+> 
+>>
+>> dt-bindings: rtc: lpc32xx-rtc: convert to dtschema
+>>
+>> Convert existing binding to dtschema to support validation.
+>>
+>> Add the undocumented 'clocks' property.
+>>
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> 
+> Andrew
 
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
----
- .../dts/ti/k3-j7200-common-proc-board.dts     | 132 +++++++++---------
- arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi   |  31 ++--
- 2 files changed, 82 insertions(+), 81 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index 6593c5da82c0..c53f31fff8d6 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -118,6 +118,72 @@ transceiver3: can-phy3 {
- 	};
- };
- 
-+&main_pmx0 {
-+	main_uart0_pins_default: main-uart0-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xb0, PIN_INPUT, 0) /* (T16) UART0_RXD */
-+			J721E_IOPAD(0xb4, PIN_OUTPUT, 0) /* (T17) UART0_TXD */
-+			J721E_IOPAD(0xc0, PIN_INPUT, 2) /* (W3) SPI0_CS0.UART0_CTSn */
-+			J721E_IOPAD(0xc4, PIN_OUTPUT, 2) /* (U5) SPI0_CS1.UART0_RTSn */
-+		>;
-+	};
-+
-+	main_uart1_pins_default: main-uart1-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xb8, PIN_INPUT, 0) /* (T18) UART1_RXD */
-+			J721E_IOPAD(0xbc, PIN_OUTPUT, 0) /* (T20) UART1_TXD */
-+		>;
-+	};
-+
-+	main_uart3_pins_default: main-uart3-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x60, PIN_INPUT, 11) /* (T15) MCAN8_TX.UART3_CTSn */
-+			J721E_IOPAD(0x30, PIN_OUTPUT, 11) /* (Y18) MCAN2_TX.UART3_RXD */
-+		>;
-+	};
-+
-+	main_i2c1_pins_default: main-i2c1-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xdc, PIN_INPUT_PULLUP, 3) /* (U3) ECAP0_IN_APWM_OUT.I2C1_SCL */
-+			J721E_IOPAD(0xe0, PIN_INPUT_PULLUP, 3) /* (T3) EXT_REFCLK1.I2C1_SDA */
-+		>;
-+	};
-+
-+	main_mmc1_pins_default: main-mmc1-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x104, PIN_INPUT, 0) /* (M20) MMC1_CMD */
-+			J721E_IOPAD(0x100, PIN_INPUT, 0) /* (P21) MMC1_CLK */
-+			J721E_IOPAD(0xfc, PIN_INPUT, 0) /* (P25) MMC1_CLKLB */
-+			J721E_IOPAD(0xf8, PIN_INPUT, 0) /* (M19) MMC1_DAT0 */
-+			J721E_IOPAD(0xf4, PIN_INPUT, 0) /* (N21) MMC1_DAT1 */
-+			J721E_IOPAD(0xf0, PIN_INPUT, 0) /* (N20) MMC1_DAT2 */
-+			J721E_IOPAD(0xec, PIN_INPUT, 0) /* (N19) MMC1_DAT3 */
-+			J721E_IOPAD(0xe4, PIN_INPUT, 8) /* (V1) TIMER_IO0.MMC1_SDCD */
-+		>;
-+	};
-+
-+	vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xd0, PIN_OUTPUT, 7) /* (T5) SPI0_D1.GPIO0_55 */
-+		>;
-+	};
-+
-+	main_mcan3_pins_default: main-mcan3-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x3c, PIN_INPUT, 0) /* (W16) MCAN3_RX */
-+			J721E_IOPAD(0x38, PIN_OUTPUT, 0) /* (Y21) MCAN3_TX */
-+		>;
-+	};
-+};
-+
-+&main_pmx1 {
-+	main_usbss0_pins_default: main-usbss0-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x04, PIN_OUTPUT, 0) /* (T4) USB0_DRVVBUS */
-+		>;
-+	};
-+};
-+
- &wkup_pmx0 {
- };
- 
-@@ -196,72 +262,6 @@ J721E_WKUP_IOPAD(0x60, PIN_INPUT, 7) /* (D14) WKUP_GPIO0_2 */
- 	};
- };
- 
--&main_pmx0 {
--	main_uart0_pins_default: main-uart0-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0xb0, PIN_INPUT, 0) /* (T16) UART0_RXD */
--			J721E_IOPAD(0xb4, PIN_OUTPUT, 0) /* (T17) UART0_TXD */
--			J721E_IOPAD(0xc0, PIN_INPUT, 2) /* (W3) SPI0_CS0.UART0_CTSn */
--			J721E_IOPAD(0xc4, PIN_OUTPUT, 2) /* (U5) SPI0_CS1.UART0_RTSn */
--		>;
--	};
--
--	main_uart1_pins_default: main-uart1-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0xb8, PIN_INPUT, 0) /* (T18) UART1_RXD */
--			J721E_IOPAD(0xbc, PIN_INPUT, 0) /* (T20) UART1_TXD */
--		>;
--	};
--
--	main_uart3_pins_default: main-uart3-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0x60, PIN_INPUT, 11) /* (T15) MCAN8_TX.UART3_CTSn */
--			J721E_IOPAD(0x30, PIN_INPUT, 11) /* (Y18) MCAN2_TX.UART3_RXD */
--		>;
--	};
--
--	main_i2c1_pins_default: main-i2c1-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0xdc, PIN_INPUT_PULLUP, 3) /* (U3) ECAP0_IN_APWM_OUT.I2C1_SCL */
--			J721E_IOPAD(0xe0, PIN_INPUT_PULLUP, 3) /* (T3) EXT_REFCLK1.I2C1_SDA */
--		>;
--	};
--
--	main_mmc1_pins_default: main-mmc1-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0x104, PIN_INPUT, 0) /* (M20) MMC1_CMD */
--			J721E_IOPAD(0x100, PIN_INPUT, 0) /* (P21) MMC1_CLK */
--			J721E_IOPAD(0xfc, PIN_INPUT, 0) /* (P25) MMC1_CLKLB */
--			J721E_IOPAD(0xf8, PIN_INPUT, 0) /* (M19) MMC1_DAT0 */
--			J721E_IOPAD(0xf4, PIN_INPUT, 0) /* (N21) MMC1_DAT1 */
--			J721E_IOPAD(0xf0, PIN_INPUT, 0) /* (N20) MMC1_DAT2 */
--			J721E_IOPAD(0xec, PIN_INPUT, 0) /* (N19) MMC1_DAT3 */
--			J721E_IOPAD(0xe4, PIN_INPUT, 8) /* (V1) TIMER_IO0.MMC1_SDCD */
--		>;
--	};
--
--	vdd_sd_dv_pins_default: vdd-sd-dv-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0xd0, PIN_OUTPUT, 7) /* (T5) SPI0_D1.GPIO0_55 */
--		>;
--	};
--
--	main_mcan3_pins_default: main-mcan3-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0x3c, PIN_INPUT, 0) /* (W16) MCAN3_RX */
--			J721E_IOPAD(0x38, PIN_OUTPUT, 0) /* (Y21) MCAN3_TX */
--		>;
--	};
--};
--
--&main_pmx1 {
--	main_usbss0_pins_default: main-usbss0-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0x04, PIN_OUTPUT, 0) /* (T4) USB0_DRVVBUS */
--		>;
--	};
--};
--
- &wkup_uart0 {
- 	/* Wakeup UART is used by System firmware */
- 	status = "reserved";
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-index 7e6a584ac6f0..d9eddc5191b1 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-@@ -103,6 +103,22 @@ transceiver0: can-phy0 {
- 	};
- };
- 
-+&main_pmx0 {
-+	main_i2c0_pins_default: main-i2c0-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xd4, PIN_INPUT_PULLUP, 0) /* (V3) I2C0_SCL */
-+			J721E_IOPAD(0xd8, PIN_INPUT_PULLUP, 0) /* (W2) I2C0_SDA */
-+		>;
-+	};
-+
-+	main_mcan0_pins_default: main-mcan0-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x24, PIN_INPUT, 0) /* (V20) MCAN0_RX */
-+			J721E_IOPAD(0x20, PIN_OUTPUT, 0) /* (V18) MCAN0_TX */
-+		>;
-+	};
-+};
-+
- &wkup_pmx0 {
- 	mcu_fss0_hpb0_pins_default: mcu-fss0-hpb0-default-pins {
- 		pinctrl-single,pins = <
-@@ -156,21 +172,6 @@ J721E_WKUP_IOPAD(0x01c, PIN_INPUT, 7) /* (E18) WKUP_GPIO0_84 */
- 	};
- };
- 
--&main_pmx0 {
--	main_i2c0_pins_default: main-i2c0-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0xd4, PIN_INPUT_PULLUP, 0) /* (V3) I2C0_SCL */
--			J721E_IOPAD(0xd8, PIN_INPUT_PULLUP, 0) /* (W2) I2C0_SDA */
--		>;
--	};
--
--	main_mcan0_pins_default: main-mcan0-default-pins {
--		pinctrl-single,pins = <
--			J721E_IOPAD(0x24, PIN_INPUT, 0) /* (V20) MCAN0_RX */
--			J721E_IOPAD(0x20, PIN_OUTPUT, 0) /* (V18) MCAN0_TX */
--		>;
--	};
--};
- 
- &hbmc {
- 	/* OSPI and HBMC are muxed inside FSS, Bootloader will enable
--- 
-2.34.1
+You are right, the commit message content below your comment should not
+be there. I can send a new version to trim it away if that is preferred.
 
+Best regards,
+Javier Carrasc
