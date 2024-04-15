@@ -1,109 +1,77 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D5E83CD1
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032882D75;
+	Mon, 15 Apr 2024 17:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200913; cv=none; b=DDSNE0G2lZ6z0ZX8/69NcUXkIwB3OVFYsXUNtps7rZ2egWx2ECI7p8s02zjuwTCD88qb/pTxHysqD3AfVFv7BzlHdbGGiMuBZVnNwQ2OePSqHnXWfaGiRwGQHaogJ71Nm48HbHSaZpmc8AQYwGmnoFQX1DajY06gCdAyrFjMMtI=
+	t=1713200935; cv=none; b=IJX+wLQ/uMjFsI34RYBlxw1UxYPnV8KXI2kwNBH5b/Wc2Es78eE7nJNj6F5iTpY+WqehyfibTd15pn6d6x1ICNogOPn8mosOQ0sfr71IPqxTekYFOpL4OU0/LkQ7bqGKmfXQ3J8GwZGs+EYFz92kbjtFIgqR8xyWXf/eq0Phy9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200913; c=relaxed/simple;
-	bh=RugWEcPj7mLc+ykQmVDXsINc+yUnD4Z6zG9Nxnjmzg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lE9E2nwPg4xmWIxJvY7WsoOcXJBtG/vTW1WyPtnrCo7ff4RNNMSx2jO2RwCbHgTqcm0sz1zDIU1geMz0T3V2BU6gQ592HSsvDThBg0GLRqAtJxvyk8wEontL0z3dhos5gvY2UzujgJ4OCO0bjNn67qzYkWuZFsSZFhE4mp71gFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SKn8gTAj; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713200935; c=relaxed/simple;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=LlfCtdoyZL8KEVeGtjZFjRil83YYZV3N43PS1yIB8GuTVagBoDiNGmm2AiZPkZGVrRq2D7jIVP3Q7BrARqHV6MKKThAnDUQmxKaZElRA19cd5fQzaUHmHiUgNsF8LHKKkcMil3Ta4yFZHxv4T4Xs1Xuocnxn4SR9wpCXwZQAvOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=g4zAKdQI; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SKn8gTAj"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ece8991654so3189007b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713200912; x=1713805712; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hcAaLIzTeGt6hWYjO1jT3BQBc4jW6jSrXxhMBGNGb14=;
-        b=SKn8gTAjJKMUvDZi51tQf5VIfrSZN+ezeWMCFyhWIQuVkBf3DI03hUSfmFLlpn1Sca
-         i8fXbZyQ9jey1yfwJzRDWlVII6iil+ugpBmqJy41XE5qkLEg25lotpxunJd20OZspQpw
-         DS+Nrj5isK6se5THFuGK7fI4fFGvYKJPmNQD0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713200912; x=1713805712;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hcAaLIzTeGt6hWYjO1jT3BQBc4jW6jSrXxhMBGNGb14=;
-        b=Mdbi+Q4n6nm8sP/1Im8XTOs2VCsgCmmcA4T55xr2JjNzz1acaubgNMbeR1wofFh7Rj
-         UEXex+5LjX6MCPAzuZtGzsloWt7djCmnhl2WHQX/mPoBPm2MsLdaUKkTmZXlvPPeRKWk
-         cIjiYmxNE47tDS5cO8aS2obrguc/0bRYGcST9eyNmX8ToD61JBUWyeoSBVk0YZz9hx2D
-         /tE0AYbWlQjt8ajtxHgzCr6AYqzDHDMsKahxf5oTYXhW9Ahjpcu3FeqhvsHKj47/ggxy
-         JhRAdabI7MDQ/3a0nqMozI/vogMYBPTdPq0triwdE1QVOJRhzM/gDbGAaf67BRy573xD
-         qQRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbtQAEAMtVIr3Vs0oamWMwj5x2LJOh1OhSMBbfMktf3fd6AhF8BxW48ZlvylRvrSqNSBpA2PydrQPIHoNL+14nXZbj/3bRxj6JSNs7
-X-Gm-Message-State: AOJu0Yz8hWCFyS1hyZsM+FRpxIyJ4DMEjV9Nq/82Exk9HTi0Vl+zwNGz
-	x/TUDAK82LhgcxWPmv8Uq+Hy14aBxtyLgMQbUd1GRoS9FKON7O+HyjAvuBpnWQ==
-X-Google-Smtp-Source: AGHT+IFS60V/7PQX7NA/39zXZhcKumbWVEL+/evOE3BhhEe5wnSkFy5tdvukgRaWDCkry3aMCaVenQ==
-X-Received: by 2002:a05:6a20:734e:b0:1a9:9d07:c431 with SMTP id v14-20020a056a20734e00b001a99d07c431mr15727248pzc.53.1713200911943;
-        Mon, 15 Apr 2024 10:08:31 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k28-20020a63ba1c000000b005f0793db2ebsm6302106pgf.74.2024.04.15.10.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:08:31 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:08:30 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Philipp Stanner <pstanner@redhat.com>, Kees Cook <kees@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>, bjorn3_gh@protonmail.com,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-Message-ID: <202404151005.EB7F67A@keescook>
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com>
- <CANiq72nSSAVkynVaAq7bQKoL6N8K2JUXp8AOVvu7vN+siAhk-Q@mail.gmail.com>
- <f08c06a4e8361f2cb55cd0dc1fa2bc2b0a046049.camel@redhat.com>
- <CANiq72kMZ6mpK+LaL9Xfsp032CZOfAEtr6Dp9A2R-m6dC3gkWQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="g4zAKdQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1713200930; x=1713805730; i=rwarsow@gmx.de;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:To:Cc:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g4zAKdQIxUtzsJc8HkUgKwP1ZFTgS12sya2+H50LhisgImBJ1AH6jWhRMPrupDHX
+	 UrvcqfW1wLTb+doEDvmjbkknUux4DYbqgIeTbsTTgOShd7FxDcpXNnhu25uV+9khO
+	 X7FT6slScGVoYBwp1CiiYCmow0nzrmTeXO9jeGIzZ/hNopyuS51FdElqpnpUQCFHd
+	 D23+mXcHIiWofPikM/5YdjWU7NzZTsFx9TZRog/tElbbPW/slfNkha98kYK1Y2tH9
+	 7eMs05V4wLlemZsRjmmS51jp3jsGf9Lx5ZN/AexsVakjuPEVSalnTCID6/ek0sf0R
+	 TSN9OIWxaMWUmK5rlg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.100.20] ([46.142.35.142]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNbkp-1s7an31Tzf-00P8CF; Mon, 15
+ Apr 2024 19:08:50 +0200
+Message-ID: <f37a5dee-3580-4db2-ab5b-488c20a5e16a@gmx.de>
+Date: Mon, 15 Apr 2024 19:08:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kMZ6mpK+LaL9Xfsp032CZOfAEtr6Dp9A2R-m6dC3gkWQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.8 000/172] 6.8.7-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:VVr0raUEtCN5wDhi5HcdABdQb1twQD+p2bRg7V0GYQ1bitH8Yo1
+ XrVspr6Xbx+2aY5nr5cvJSgEWlYKW32aX1RshXeeiO2sI5XEEGwU51/hGWNr+Cg7YSjqU5d
+ rLc5vGe6BbYot6SUYc8yo9LXOkoN5EyKo8rHF5kvEZuLnGv7beqdV5Dgi9K0NGIIU53OcmL
+ cimjAzPauKj0d81BCP0zw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JObNOgxnbn0=;4vOZuCGOwZz01HwE+6AaMt9uUOo
+ nkZ64t0qIIpHHW6DIhrwmu+1MwmpPLcbzC1VyR3Xn8gtpcFFPuh+hlp9mgJCuHOKojPj/gyvN
+ giramcqYNehfH2ciqMab5vr7a6LryVpPNG9016etLmQk1Km20CWQitXbKVKmr/PfAM3IsW+7E
+ ArGmNemEa8maV9+HZ84rik/mi/m3YFud+U0Q5+w1wlTiAMD7GttA92naEjd6TOdj1cn86H6yB
+ uax/eS5g2OnPaRW3L/fKMp4hq3jQVxxPAZXahkSym9OTwqzPfDIBjpRFr4kuqY2cxjTISWZGl
+ 2EQZgX5AEU1EaSeGkO7SBd5Sl7w5m1f/QbnaV69A8VUmvgNOoOtl4HaIudahq0jhrglD2jmI1
+ 8pJCEK14+ufgYdUHcbLa/M++/Sse3Nzaz9FS2/UieTsUsww+7PyOcGa5Hu7EJ/Y/HIHrycuBT
+ Dq5DfHydjMyE/BdXv7ZLg9sTTxUzVERzWhLSLSBDvAh7dRaQlT82f/TwNKeCEhk9nKI3B6kR7
+ PKiVnYgpUKQmlCZipT4uuqbPVx70pRYI5nEWDmXzO/RQB/FOhfKbEotk6JOz/FZaIkafbVLoI
+ msvz4bhafnY3TkQLKsi6OCsqaXC7au2vOAOmoyInGz/Yzm9WNFA8Bhap9hMVhmH1Wsy0WNKiN
+ FhgsvvE2odZoURCY3vaFiV8DC83Fkf5IgeWie26ZLIESW/NSs6GD4uSnnIInPdQNWNqD2P0+K
+ I+Qm0233aM8FU3hIPwN//7Mk9FQiRtaxpExQu7kmlgkHXlxbzmfiIRBNZQVSIaPNVQvO6W/uN
+ Llq3moQ7XW8rIo6kyZvt2QshJplKm8jVJLTZOa/+z4BLc=
 
-On Fri, Apr 12, 2024 at 09:58:57AM +0200, Miguel Ojeda wrote:
-> On Fri, Apr 12, 2024 at 9:43 AM Philipp Stanner <pstanner@redhat.com> wrote:
-> >
-> > Is that going to remain enabled by default or what was the plan here?
-> 
-> The plan is to ideally keep it enabled by default, but I defer to Kees
-> with whom we discussed this back then (Cc'd).
+Hi Greg
 
-Yeah, we want to keep "trap on overflow" the default for Rust. We're
-slowly making our way there[1] for C in Linux, so I don't want to
-regress the Rust code.
+*no* regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-> The goal is that Rust code, since the beginning, has all wrapping
-> operations marked explicitly as such.
+Thanks
 
-Exactly. We have to not perpetuate the ambiguity of arithmetic
-operations. It should be clear from the operator or the type what the
-expected bounds are for a calculation.
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
--Kees
-
-[1] https://lore.kernel.org/lkml/20240205093725.make.582-kees@kernel.org/
-
--- 
-Kees Cook
