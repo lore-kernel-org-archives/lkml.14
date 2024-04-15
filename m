@@ -1,73 +1,74 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573D31BF2A
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC346FE0D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188614; cv=none; b=hm/eN8D+Uc0W2keGM3/znqwjkMGq827/fOykYTi/cmgySOy1KfVOo0wB83LF7+SqK1+NFGTKg6nS1/rE21IWED4GgpUtuce7znWnltVFlJdsnwS56a118/lWRX/teQAHX5NNdkn45Qr6fnfwPHGhC2oejwgs3RmyMEzaBj3nS34=
+	t=1713188638; cv=none; b=dUQ9tSrZ566291iMRBzYrRRz19iPGZOcqOG+2OhhB/cDohqPj+RyqnIjaXTrpkoNvTEywJjRr48kcbXEKrXRiK5tYjO0x1i1edcAFyq414LPRvmc7Fjnkwd4z6zkmZ081T9Vb5cMq+Cvt/S9eu4cbZqHjsHGIT/qa+0BynUTdso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188614; c=relaxed/simple;
-	bh=sEDCxjxDH5mRXI/IrV6BojjRAEuqHVsh2sMpVg0j2k8=;
+	s=arc-20240116; t=1713188638; c=relaxed/simple;
+	bh=wiZZBUwFBfFJ8JX5HoSa5Tz8CCR776e4YmB5I1+UeZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d/94zvLGmKRs2IbsxxI96P0KLYQjZbrMf0bXFVwu0EIRK6OGcdBgJ68uk44rsjb6Qudd1XMmSoUgWZoktokoSSgPiML8XXd9guyORwaUrlN/SG8NgfvIT05ij+idFFsPB9zh92CCHL0kAeLE9KkRVV73JB2g+KwXkDO3GfqzWRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d2WMb8IX; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZv75D8S/+ymnDwU3k/8hJMHcgvdIHYZuavbPSVd8+/BKLEMHNh6IAxxpmgWGpIt9u03V7PkmoEtM06GRsluJi2skirYuO5S9dPTWmeex8TAIwwrp4qrl6lpG9I/MC+SrLlXdxssJmIPFTmKzFpG7M87vkN+WlUqZDzvSY4xuFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BlkE2F4m; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2WMb8IX"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a51969e780eso423317666b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:43:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BlkE2F4m"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4181f9b4270so9994105e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713188610; x=1713793410; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1713188634; x=1713793434; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
-        b=d2WMb8IXAbBtaupejMFNzqeUWMPhDyldln87zoytivNfJgKGvLSERofqnyfA8bzpbD
-         rHYDNyDt0WLfwe10986JjBixesl5nlfCy139oRc+ReyCE/j/xRKaJtlFcswPV7SdUJJJ
-         5hpML0s8KLhZXhiNa0T0vGbpNC84FI2zdSV0C4K6nInfaBsTV+pIEKopbjwVXHb3f61k
-         AzjPzo1rF2HBdSSOi384dayAX+NOweEw+gZtCJSlMUIEokg4rR+zUSRDV74yl7fhC8ET
-         iz1XujqxRjVZVB4sBaZ2pQeAmSzjWgct/i3wAbclJ+0eMYFjt6RXUMkuDBz2KBdZu0k2
-         s/Vw==
+        bh=oBlw086cFKfVgD6m6+KXW8B1bVXOlMOqtJCrOvRcQ7k=;
+        b=BlkE2F4mvYE9aCDGWQJCq1e+ryZ81EKAPTFDkAxYayjeRNzo75dUVLoH0VGTya9fuK
+         iYTvKvlALY5I2jkDOoR7CZteAt0IJuKa4T/vZ5WkRDC3+bKSuI7Rai7zQhXyqd8Lc7vx
+         M2EnmeznJCQgrbotEzfNICshcB1NqWJbp3y2skgEEa+TbgJi0PRzrP/nClihWctqa1iZ
+         tVzdg+9z61thb1+AMc2v1/lqOS8qu9XQe3RA+tiPFGoVsEl9wMQG/5cZeqEnFSDIGM4X
+         g1n/aaGI1zrQPqTvC0cFtkzOJ9j3XnOSY9CBHqtC3g3S0ulEVQGHMTh7TVOz9JfEERGP
+         ZHlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713188610; x=1713793410;
+        d=1e100.net; s=20230601; t=1713188634; x=1713793434;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
-        b=FOP3wB1MB+b3MUMVLP9X1zu3yUkQLBSdHZjOhRXEQjoJf++q+LyjDNOvv3aYoxUykB
-         Ss+VMhX9LxuYrySkHQFw+r9X46kM905/s8nJq6XYjJhUhLSmqQHaCcctuUy5DZWOnD2g
-         edRHa8oJ8FlRifEx/Ti0hzI+fuy9xYVwACzDjSn5jHxc27lHkqOIYMyVxk+8Iy3ilyxK
-         KKCXgeClzSpzVfEwnFJk6GwVOkTt/zOwENXs32hKWlKI0QgysmtgsEaBjuoUlQRj8aSJ
-         o8XlJFUPO2hkUcmDMeQokk0WUG+GXBsfTTTTkt/+7Z7HSrjlbEIQhOep2EGY4NqF4yhE
-         Z71w==
-X-Forwarded-Encrypted: i=1; AJvYcCWX7CN5Itnw9wWU7MJz45EU/gVcq98aKgC32rP1Krrpv5vInDQkr33JCOUMKsU89PtcRgESBxph/cs3TorJIjB//0hHTW691XLSfuYM
-X-Gm-Message-State: AOJu0YzZD/YIyG/eJw3QK93Y1UnMRYo+NnxpauVYeUSE97OECAZOmY39
-	RvXjtal6LFthouRGrpuBRkesveDS85AdzIWgTvPB6OIVmeKkSa/AjaYx/dW+mcc=
-X-Google-Smtp-Source: AGHT+IHFKdoXBJF4YQ8aEdmBoKEuHa7gbFkEhwvJQYaDbhuwQaH9FyeA7B8SJVfb2EwwfVADOQdo7w==
-X-Received: by 2002:a17:906:abd9:b0:a52:6c74:a29d with SMTP id kq25-20020a170906abd900b00a526c74a29dmr1657489ejb.76.1713188609502;
-        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id jy3-20020a170907762300b00a521603e14csm5514073ejc.138.2024.04.15.06.43.28
+        bh=oBlw086cFKfVgD6m6+KXW8B1bVXOlMOqtJCrOvRcQ7k=;
+        b=iU0lRXikQ9mrJZ8rSeEkK7zBEZFFZu9Ur5j3cJjTxW5a4dvXiSYRy7beIY8w3DYEH6
+         gRdnQmDtL7ckn6I8pnYfKpGUbFUYiOIMdpywy7OUkEcy71ONQds2hg4dydudg06sXC3f
+         sO6uF2PkjmEMThPtr3GAruDm1jdexBPYMJQ3bB5aLXHoBsT72biuY68qsEcaOCN0WRjb
+         ZCJ5agIA6h8maYYDXpMWmZMU2r4HI6ck8OFtAxdOD/WlIwwVdCJvl1R3KvGu653aice4
+         5U46fnx2axjS+450xhyfS9BKQmQXY8s0g5SVpt24Gws2vcqbseEa8rXzfCAqjPWg/UnL
+         03Og==
+X-Gm-Message-State: AOJu0YzQDkkgN14hCnff4gXYcP3U3BE3wDzJGEz5wCi9oHBdNEOmQwEj
+	skpuKCIYocSB6cg+gqRkxwO5QeprFpZ8OIVjklJE4SVBF3QsCjiQXAw2EhLbcWw=
+X-Google-Smtp-Source: AGHT+IFSJX/JAylOq7lyfTWV1n1rGtpOd6txYa80kvU3cra08zVigOgalF/jjTxDvlEfsaeWSmIeIQ==
+X-Received: by 2002:a05:600c:4ecb:b0:418:2d69:d978 with SMTP id g11-20020a05600c4ecb00b004182d69d978mr4057431wmq.10.1713188633673;
+        Mon, 15 Apr 2024 06:43:53 -0700 (PDT)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id l23-20020a05600c1d1700b004163ee3922csm19555595wms.38.2024.04.15.06.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
-Date: Mon, 15 Apr 2024 16:43:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Robert Marko <robimarko@gmail.com>
-Cc: Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
-	wsa@kernel.org, linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-	talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-	farbere@amazon.com, itamark@amazon.com
-Subject: Re: [PATCH v5 2/2] i2c: Set i2c pinctrl recovery info from it's
- device pinctrl
-Message-ID: <f7069e5b-0678-4f78-b06e-dba16c5e6088@moroto.mountain>
-References: <20221228164813.67964-1-hhhawa@amazon.com>
- <20221228164813.67964-3-hhhawa@amazon.com>
- <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
- <ac51854b-09a6-4b79-b409-b950929655cb@moroto.mountain>
- <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
+        Mon, 15 Apr 2024 06:43:53 -0700 (PDT)
+Date: Mon, 15 Apr 2024 15:43:52 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, Will Deacon <will@kernel.org>, 
+	x86@kernel.org
+Subject: Re: [PATCH v6 24/24] KVM: riscv: selftests: Add commandline option
+ for SBI PMU test
+Message-ID: <20240415-8b9ad5a7e968b1808e99e3da@orel>
+References: <20240411000752.955910-1-atishp@rivosinc.com>
+ <20240411000752.955910-25-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,72 +77,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
+In-Reply-To: <20240411000752.955910-25-atishp@rivosinc.com>
 
-On Sun, Apr 14, 2024 at 07:47:50PM +0200, Robert Marko wrote:
-> > > > @@ -282,7 +283,9 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
-> > > >   {
-> > > >     struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
-> > > >     struct device *dev = &adap->dev;
-> > > > -   struct pinctrl *p = bri->pinctrl;
-> > > > +   struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
-> > > > +
-> > > > +   bri->pinctrl = p;
-> > >
-> > > Hi Hanna,
-> > > I know this has already been merged, but setting bri->pinctrl breaks PXA
-> > > recovery.
-> >
-> > This is patch is a year and half old so it's a bit late to just revert
-> > it...
+On Wed, Apr 10, 2024 at 05:07:52PM -0700, Atish Patra wrote:
+> SBI PMU test comprises of multiple tests and user may want to run
+> only a subset depending on the platform. The most common case would
+> be to run all to validate all the tests. However, some platform may
+> not support all events or all ISA extensions.
 > 
-> Hi there,
-> I know it's old but I just tried it on 6.6 in OpenWrt.
+> The commandline option allows user to disable particular test if they
+> want to.
 > 
-> >
-> > What does "breaks" mean in this context?  Is there a NULL dereference?
-> > Do you have a stack trace?  It's really hard to get inspired to look at
-> > the code when the bug report is so vague...
+> Suggested-by: Andrew Jones <ajones@ventanamicro.com>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  .../selftests/kvm/riscv/sbi_pmu_test.c        | 77 ++++++++++++++++---
+>  1 file changed, 68 insertions(+), 9 deletions(-)
 > 
-> I admit that I did not explain this properly, but if bri->pinctrl is set then
-> PXA I2C is completely broken as in it doesn't work at all, there are no errors
-> other than trying to probe for I2C devices will time out.
-> We had the same symptoms when PXA was converted to generic I2C recovery and that
-> had to be reverted.
-> 
-> I think its probably some pinctrl issue but nobody has been able to
-> track it down.
+> diff --git a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+> index 0fd9b76ae838..57025b07a403 100644
+> --- a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+> +++ b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+> @@ -33,6 +33,16 @@ static unsigned long counter_mask_available;
+>  
+>  static bool illegal_handler_invoked;
+>  
+> +enum sbi_pmu_test_id {
+> +	SBI_PMU_TEST_BASIC = 0,
+> +	SBI_PMU_TEST_EVENTS,
+> +	SBI_PMU_TEST_SNAPSHOT,
+> +	SBI_PMU_TEST_OVERFLOW,
+> +	SBI_PMU_TEST_MAX,
+> +};
+> +
+> +static int disabled_test_id = SBI_PMU_TEST_MAX;
 
-If you wanted you could try the following patch with the change to
-i2c_gpio_init_pinctrl_recovery() and without it.  (It won't fix anything
-it only prints information to dmesg).
+I think we should allow specifying '-d' multiple times in case a user
+wants to disable more than one type of test. So we should set a bit
+in this variable instead of assigning it. We could also flip it
+around. If the user uses '-e' to enable test type then only type
+will be run, but then we'd probably want to allow multiple '-e'
+too so it doesn't gain anything.
 
-regards,
-dan carpenter
+> +
+>  unsigned long pmu_csr_read_num(int csr_num)
+>  {
+>  #define switchcase_csr_read(__csr_num, __val)		{\
+> @@ -608,19 +618,68 @@ static void test_vm_events_overflow(void *guest_code)
+>  	test_vm_destroy(vm);
+>  }
+>  
+> -int main(void)
+> +static void test_print_help(char *name)
+>  {
+> -	test_vm_basic_test(test_pmu_basic_sanity);
+> -	pr_info("SBI PMU basic test : PASS\n");
+> +	pr_info("Usage: %s [-h] [-d <test name>]\n", name);
+> +	pr_info("\t-d: Test to disable. Available tests are 'basic', 'events', 'snapshot', 'overflow'\n");
+> +	pr_info("\t-h: print this help screen\n");
+> +}
+>  
+> -	test_vm_events_test(test_pmu_events);
+> -	pr_info("SBI PMU event verification test : PASS\n");
+> +static bool parse_args(int argc, char *argv[])
+> +{
+> +	int opt;
+> +
+> +	while ((opt = getopt(argc, argv, "hd:")) != -1) {
+> +		switch (opt) {
+> +		case 'd':
+> +			if (!strncmp("basic", optarg, 5))
+> +				disabled_test_id = SBI_PMU_TEST_BASIC;
+> +			else if (!strncmp("events", optarg, 6))
+> +				disabled_test_id = SBI_PMU_TEST_EVENTS;
+> +			else if (!strncmp("snapshot", optarg, 8))
+> +				disabled_test_id = SBI_PMU_TEST_SNAPSHOT;
+> +			else if (!strncmp("overflow", optarg, 8))
+> +				disabled_test_id = SBI_PMU_TEST_OVERFLOW;
+> +			else
+> +				goto done;
+> +			break;
+> +		break;
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 888ca636f3f3..f9477089b980 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -34,6 +34,7 @@
- #include <linux/platform_data/i2c-pxa.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-+#include "../../pinctrl/core.h"
- 
- /* I2C register field definitions */
- #define IBMR_SDAS	(1 << 0)
-@@ -1345,6 +1346,12 @@ static int i2c_pxa_init_recovery(struct pxa_i2c *i2c)
- 		return 0;
- 
- 	i2c->pinctrl = devm_pinctrl_get(dev);
-+	if (IS_ERR(i2c->pinctrl))
-+		dev_info(dev, "i2c->pinctrl: %pe\n", i2c->pinctrl);
-+	else
-+		dev_info(dev, "i2c->pinctrl: %s %s\n",
-+			 dev_driver_string(i2c->pinctrl->dev),
-+			 dev_name(i2c->pinctrl->dev));
- 	if (PTR_ERR(i2c->pinctrl) == -ENODEV)
- 		i2c->pinctrl = NULL;
- 	if (IS_ERR(i2c->pinctrl))
+Extra 'break'
 
+> +		case 'h':
+> +		default:
+> +			goto done;
+> +		}
+> +	}
+>  
+> -	test_vm_events_snapshot_test(test_pmu_events_snaphost);
+> -	pr_info("SBI PMU event verification with snapshot test : PASS\n");
+> +	return true;
+> +done:
+> +	test_print_help(argv[0]);
+> +	return false;
+> +}
+>  
+> -	test_vm_events_overflow(test_pmu_events_overflow);
+> -	pr_info("SBI PMU event verification with overflow test : PASS\n");
+> +int main(int argc, char *argv[])
+> +{
+> +	if (!parse_args(argc, argv))
+> +		exit(KSFT_SKIP);
+> +
+> +	if (disabled_test_id != SBI_PMU_TEST_BASIC) {
+> +		test_vm_basic_test(test_pmu_basic_sanity);
+> +		pr_info("SBI PMU basic test : PASS\n");
+> +	}
+> +
+> +	if (disabled_test_id != SBI_PMU_TEST_EVENTS) {
+> +		test_vm_events_test(test_pmu_events);
+> +		pr_info("SBI PMU event verification test : PASS\n");
+> +	}
+> +
+> +	if (disabled_test_id != SBI_PMU_TEST_SNAPSHOT) {
+> +		test_vm_events_snapshot_test(test_pmu_events_snaphost);
+> +		pr_info("SBI PMU event verification with snapshot test : PASS\n");
+> +	}
+> +
+> +	if (disabled_test_id != SBI_PMU_TEST_OVERFLOW) {
+> +		test_vm_events_overflow(test_pmu_events_overflow);
+> +		pr_info("SBI PMU event verification with overflow test : PASS\n");
+> +	}
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+>
+
+Thanks,
+drew
