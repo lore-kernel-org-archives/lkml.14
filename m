@@ -1,132 +1,223 @@
-Received: from mail-108-mta33.mxroute.com (mail-108-mta33.mxroute.com [136.175.108.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260661CD23
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278AB811FF;
+	Mon, 15 Apr 2024 16:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713198767; cv=none; b=AnDflAW+pPyVu7pwaOHKA2Pk3sNZ8SHAMAUrGT+RWH4JNLeOWglBgAhllXRJhXY9Ni4Oj7jpPhLfgIEKCSeyxzYLjhkiXFs93czy31SGJ4SXrLcNVwFEn4h+4MtlFj4XWXTBYst6bkvP2KljMswUfJibnno2Gs9PpA+yDKCpoPk=
+	t=1713198933; cv=none; b=R6ryiYsbQyt2L5dw+sB25gnbOTfGBTys9k1nemXBiH8HfFUmW/xnp1MUi/YSpb532j94jsAI8SeNA8STk46YA8rds4zMEpltFTjXR0loHgrlYQjmPGlMeT82mkwqIP9OrZc8DYCHGjO64j/ytIVC9LUesckyyRXUJUhzOqKNZo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713198767; c=relaxed/simple;
-	bh=+exoGmCOK4B2TtxLi9b/ila3bGXOXu85jVJIdxsj6mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aROcCyyzZoJhdPIvyfVHJoXhgHKDvEo500IJSW44MCR/7a0ZMe5XbQ9qaSA/OQYeOpTOlbTMWjYjRYPTEJIZUBFmQ0B2gxbjwZZT8lrIzDqdx30rknQBhZD4SbzKpsKO1vegtPVZRJ6XT6JBMLwiXIky0UCLtK0hrrdod99Uyzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=aa8DdZTB; arc=none smtp.client-ip=136.175.108.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1713198933; c=relaxed/simple;
+	bh=zQ3mUcQ0V6TVm4bmNvVE8F5YpgKPg13IqXSQF1upC+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7t81xjJGRbJMVXEsMtxRNyCgQgJL+1cHC0+qUy3lBUcYTR+n4hfUpqrjVkNDE/94bM2ltmnt0TlIeT6VXqkr5xJ+a/8Tglq4uVPwIzMG/ybDRrBlEJuww/GVYsdDxJUtavGxziJS7E3sQSjHZF0SmjyZOjJP/U6pcDf6xHtZaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qMt0OftN; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="aa8DdZTB"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta33.mxroute.com (ZoneMTA) with ESMTPSA id 18ee295d2890003bea.011
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 15 Apr 2024 16:27:33 +0000
-X-Zone-Loop: c34f974572cfb78ac6c768e94899715187bea3e007ad
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=V2Nn7Jrr3tkjyvXhAtGFNC4qmjJ+nKbbMNdFT82JTT0=; b=aa8DdZTBpjNxd1bP/EKMfyI4Mx
-	tIOkjezMnyxWR4TLiN5ypsnhdPM8o8RLVeO6ccjvkoeBGt47xkRYnNm/6kUsUZfiQlnCf2OE8jiM1
-	qSh3nLgateh6NXvemhs0tKo0inFmmT2jghc3e7qVCId6N3SJauot80rEyAhkQJZDYvCbjp9AR1Uod
-	NKDy7tlTDeGT3k8NKdCxNiOapt2TCuLKPnhlSq+0s1gS8e+ZOEvyQxthDDRedP3NUjdA4E6qJ7h6A
-	k8zPSBuVoMfbKHG5i0uRNxY/v9UG6f5rSHgpJttbrZ8jEGyNjBxyNr6wkTPstyIjrVGKyKSELG353
-	FFRtmd4Q==;
-Message-ID: <656bf349-38bf-44b7-936c-58f424613a49@luigi311.com>
-Date: Mon, 15 Apr 2024 10:27:28 -0600
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qMt0OftN"
+Received: from pendragon.ideasonboard.com (117.145-247-81.adsl-dyn.isp.belgacom.be [81.247.145.117])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 773645B2;
+	Mon, 15 Apr 2024 18:34:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713198883;
+	bh=zQ3mUcQ0V6TVm4bmNvVE8F5YpgKPg13IqXSQF1upC+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qMt0OftNV/lrYtTYmBIaTowedeajRbC1r6L/70Ft/lYOh2o6DAz2ELDoSepJfngxJ
+	 Ely6YUfACt5adqQVUbhOz9mencaqicN3KLH36lC6U3d5Gfwu8CgCojoWr505RhqEND
+	 JCNgA83TsjBUjMMToEPPpfLIysEuZUMA8LaTlxg8=
+Date: Mon, 15 Apr 2024 19:35:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Christopher Obbard <chris.obbard@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Scally <dan.scally@ideasonboard.com>, kernel@collabora.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 1/1] arm64: dts: imx8mp-debix-model-a: Add HDMI output
+ support
+Message-ID: <20240415163520.GA22954@pendragon.ideasonboard.com>
+References: <20240415114135.25473-1-chris.obbard@collabora.com>
+ <20240415114135.25473-2-chris.obbard@collabora.com>
+ <171319369093.2333277.9109576229211275635@ping.linuxembedded.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 24/25] media:i2c: imx258: Use v4l2_link_freq_to_bitmap
- helper
-To: Tommaso Merciai <tomm.merciai@gmail.com>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, pavel@ucw.cz, phone-devel@vger.kernel.org
-References: <20240414203503.18402-1-git@luigi311.com>
- <20240414203503.18402-25-git@luigi311.com>
- <Zh1FUQOt9n/tO3er@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
-Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <Zh1FUQOt9n/tO3er@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <171319369093.2333277.9109576229211275635@ping.linuxembedded.co.uk>
 
-On 4/15/24 09:18, Tommaso Merciai wrote:
-> Hi Luis,
+On Mon, Apr 15, 2024 at 04:08:10PM +0100, Kieran Bingham wrote:
+> Hi Chris,
 > 
-> On Sun, Apr 14, 2024 at 02:35:02PM -0600, git@luigi311.com wrote:
->> From: Luis Garcia <git@luigi311.com>
->>
->> Use the v4l2_link_freq_to_bitmap() helper to figure out which
->> driver-supported link freq can be used on a given system.
->>
->> Signed-off-by: Luis Garcia <git@luigi311.com>
->> Reviewed-by: Pavel Machek <pavel@ucw.cz>
->> ---
->>  drivers/media/i2c/imx258.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
->> index 5de71cb7c1ae..65846dff775e 100644
->> --- a/drivers/media/i2c/imx258.c
->> +++ b/drivers/media/i2c/imx258.c
->> @@ -693,6 +693,7 @@ struct imx258 {
->>  	/* Current mode */
->>  	const struct imx258_mode *cur_mode;
->>  
->> +	unsigned long link_freq_bitmap;
->>  	const struct imx258_link_freq_config *link_freq_configs;
->>  	const s64 *link_freq_menu_items;
->>  	unsigned int lane_mode_idx;
->> @@ -1552,6 +1553,17 @@ static int imx258_probe(struct i2c_client *client)
->>  		return ret;
->>  	}
->>  
->> +	ret = v4l2_link_freq_to_bitmap(&client->dev,
->> +				       ep.link_frequencies,
->> +				       ep.nr_of_link_frequencies,
->> +				       imx258->link_freq_menu_items,
->> +				       ARRAY_SIZE(link_freq_menu_items_19_2),
->> +				       &imx258->link_freq_bitmap);
->> +	if (ret) {
->> +		dev_err(&client->dev, "Link frequency not supported\n");
->> +		goto error_endpoint_free;
->> +	}
->> +
->>  	/* Get number of data lanes */
->>  	switch (ep.bus.mipi_csi2.num_data_lanes) {
->>  	case 2:
 > 
-> Looks good to me.
+> Quoting Christopher Obbard (2024-04-15 12:41:27)
+> > Enable the HDMI output on the Debix Model A SBC, using the HDMI encoder
+> > present in the i.MX8MP SoC.
 > 
-> ps:
-> Maybe a good plan for the future would be to use: dev_err_probe
-> (instead of dev_err into probe function)
+> Aha, you beat me to it. I have a commit locally (Dated 2022-09-06) but
+> not sent because I didn't realise the HDMI support finally got upstream
+> \o/
 > 
-> But this I think is somenthing for next improvements. :)
+> > Signed-off-by: Christopher Obbard <chris.obbard@collabora.com>
+> > ---
+> > 
+> >  .../dts/freescale/imx8mp-debix-model-a.dts    | 47 +++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a.dts b/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a.dts
+> > index 2c19766ebf09..29529c2ecac9 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a.dts
+> > @@ -20,6 +20,18 @@ chosen {
+> >                 stdout-path = &uart2;
+> >         };
+> >  
+> > +       hdmi-connector {
+> > +               compatible = "hdmi-connector";
+> > +               label = "hdmi";
+> > +               type = "a";
+> > +
+> > +               port {
+> > +                       hdmi_connector_in: endpoint {
+> > +                               remote-endpoint = <&hdmi_tx_out>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
 > 
-> Thanks & Regards,
-> Tommaso
+> Interesting. My patch missed this. But it looks correct.
 > 
+> >         leds {
+> >                 compatible = "gpio-leds";
+> >                 pinctrl-names = "default";
+> > @@ -94,6 +106,28 @@ ethphy0: ethernet-phy@0 { /* RTL8211E */
+> >         };
+> >  };
+> >  
+> > +&hdmi_pvi {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&hdmi_tx {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&pinctrl_hdmi>;
+> > +       status = "okay";
+> > +
+> > +       ports {
+> > +               port@1 {
+> > +                       hdmi_tx_out: endpoint {
+> > +                               remote-endpoint = <&hdmi_connector_in>;
+> > +                       };
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&hdmi_tx_phy {
+> > +       status = "okay";
+> > +};
+> > +
+> >  &i2c1 {
+> >         clock-frequency = <400000>;
+> >         pinctrl-names = "default";
+> > @@ -241,6 +275,10 @@ &i2c6 {
+> >         status = "okay";
+> >  };
+> >  
+> > +&lcdif3 {
+> > +       status = "okay";
+> > +};
+> > +
+> 
+> Except for the addition of the connector, the above matches my patch to
+> here.
+> 
+> >  &snvs_pwrkey {
+> >         status = "okay";
+> >  };
+> 
+> But in my patch I have the following hunk here: (I haven't checked to
+> see if this still applies on mainline, so take with a pinch of salt if
+> it's not there!)
+> 
+> 
+>  &iomuxc {
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_hog>;
+> -
+> -	pinctrl_hog: hoggrp {
+> -		fsl,pins = <
+> -			MX8MP_IOMUXC_HDMI_DDC_SCL__HDMIMIX_HDMI_SCL					0x400001c3
+> -			MX8MP_IOMUXC_HDMI_DDC_SDA__HDMIMIX_HDMI_SDA					0x400001c3
+> -			MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD						0x40000019
+> -			MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_HDMI_CEC						0x40000019
+> -		>;
+> -	};
+> 
+>  	pinctrl_eqos: eqosgrp {
+>  		fsl,pins = <
+>  			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC							0x3
+>  			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO						0x3
+> 
+> 
+> > @@ -358,6 +396,15 @@ MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16                              0x19
+> >                 >;
+> >         };
+> >  
+> > +       pinctrl_hdmi: hdmigrp {
+> > +               fsl,pins = <
+> > +                       MX8MP_IOMUXC_HDMI_DDC_SCL__HDMIMIX_HDMI_SCL                     0x400001c3
+> > +                       MX8MP_IOMUXC_HDMI_DDC_SDA__HDMIMIX_HDMI_SDA                     0x400001c3
+> > +                       MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD                         0x40000019
+> > +                       MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_HDMI_CEC                         0x40000019
+> > +               >;
+> > +       };
+> > +
+> 
+> And my addition here is :
+> 
+> 
+> +	pinctrl_hdmi: hdmigrp {
+> +		fsl,pins = <
+> +			MX8MP_IOMUXC_HDMI_DDC_SCL__HDMIMIX_HDMI_SCL	0x1c3
+> +			MX8MP_IOMUXC_HDMI_DDC_SDA__HDMIMIX_HDMI_SDA	0x1c3
+> +			MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD		0x19
+> +			MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_HDMI_CEC		0x19
+> +		>;
+> +	};
+> +
+> 
+> 
+> I haven't looked into what the 0x40000000 does yet, but just
+> highlighting the difference from the version I've been using to make use
+> of HDMI so far.
+> 
+> Does anyone else know the impact here? Otherwise I'll try to find time
+> to check this later. (For some undefined term of later...)
 
-Perfect, can i go ahead and add in your reviewed by looks like
-you didnt add it here.
+In drivers/pinctrl/freescale/pinctrl-imx.c,
 
->> -- 
->> 2.44.0
->>
->>
+#define IMX_NO_PAD_CTL  0x80000000      /* no pin config need */
+#define IMX_PAD_SION 0x40000000         /* set SION */
 
+The SION (Software Input ON) bit forces the input path active for the
+pin. This can be used, for instance, to capture through GPIO the value
+of a pin driven by a module. I'm not sure that's needed here.
+
+> >         pinctrl_i2c1: i2c1grp {
+> >                 fsl,pins = <
+> >                         MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL                                 0x400001c2
+
+-- 
+Regards,
+
+Laurent Pinchart
