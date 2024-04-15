@@ -1,153 +1,223 @@
-Received: from mx0.infotecs.ru (mx0.infotecs.ru [91.244.183.115])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED9D6773D;
-	Mon, 15 Apr 2024 12:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.244.183.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ED26BFA8
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713182416; cv=none; b=O2yBaEpFeo+O+MhNTzsDtofygdgM+SYYvrX+kbDcZLfnosLQ1Wjy1l3NVGoXym5B/kXUDbSMdFywWj0q0Qfa+VpMKu68VCAaOqCmSCTb6fI62LmuciSnIJSUz8YDKOU/ERVEuRHVzVgjTHXbLhveV0ecuNufRMf5TyK4nbCE/Hw=
+	t=1713182430; cv=none; b=TjvudOI5J3KCqL2UUMRvyyUDsOdksuGSS8Dq9uYAYSvr2Zjm6YRndYDqAnfl0KEywvRJm/c74uibRK19F3X2LCa62AV2I3GrbR06DK0oOf5nZSo/0KAb4FzA9y5TV71LzC9Sn3osSm/11iWlrwhzsIDBab6LpIvxyHyFtZogGNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713182416; c=relaxed/simple;
-	bh=xdkXLTjX4qL3edwOuO8rfLWQ63xxlhDmf1ajv6sg25w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LRmnsHREWF6jtEd/B/XLfc+KYQ/hRPIoFA6PDKoqR0ckT09KuVMuS1nG0JSmBCU1ZpDhGMT873xFQ264Soob8BdxP0ZsWfY9emf+X//1CaGuQTG+F8/2L+iPkTH2AduELLDX30SngQ39A+UaAzH1GL5Ax8TxXBJKpeZy4SIVf4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru; spf=pass smtp.mailfrom=infotecs.ru; dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b=Efmw0K4K; arc=none smtp.client-ip=91.244.183.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=infotecs.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infotecs.ru
+	s=arc-20240116; t=1713182430; c=relaxed/simple;
+	bh=FtCbo2FIfg5VTMuCbMaZx+mizFTYLMvWC/gcY6zEBVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F8VlOAW/Nn5Cm7xkKoOy3EllqF5LCnoMKO+JpdoW1QVqBORSvvug999KKufmhBXASBuZCs7apWrDy6l708QCO1z+P5gASzG+tnFXNXPKK6wvfDkITBCcBl75MY03REK1QjCOHQ5l0TBdzoxyb257kMPvu9Ql6DfR7A7x3JJ2mu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PLJGMoKu; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infotecs.ru header.i=@infotecs.ru header.b="Efmw0K4K"
-Received: from mx0.infotecs-nt (localhost [127.0.0.1])
-	by mx0.infotecs.ru (Postfix) with ESMTP id 5DB7210762CC;
-	Mon, 15 Apr 2024 14:50:19 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx0.infotecs.ru 5DB7210762CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infotecs.ru; s=mx;
-	t=1713181819; bh=a33yPWb/C33fBYRJJep/1wpeJxiDK13njMNqRF39n+k=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=Efmw0K4K6yko4zvTC1vf2LccubAJAwlL0iIkFRRjNEJdkq59iGGIjzL3+ttep7KPB
-	 6lzXS1wk7ERr74Y3G78ISvXoythx9Ivy5PKhD09DTas9tcRDdIhfhl0BcqcLyEqRVE
-	 jrF8JyOhvxPO64YDKmtwEz3H7Rkm73BUBSsO5TFc=
-Received: from msk-exch-01.infotecs-nt (msk-exch-01.infotecs-nt [10.0.7.191])
-	by mx0.infotecs-nt (Postfix) with ESMTP id 5AD3A3006661;
-	Mon, 15 Apr 2024 14:50:19 +0300 (MSK)
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: Michal Ostrowski <mostrows@earthlink.net>, Guillaume Nault
-	<gnault@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
-	"syzbot+6bdfd184eac7709e5cc9@syzkaller.appspotmail.com"
-	<syzbot+6bdfd184eac7709e5cc9@syzkaller.appspotmail.com>
-Subject: [PATCH 5.15/5.10/5.4/4.19 1/1] pppoe: Fix memory leak in
- pppoe_sendmsg()
-Thread-Topic: [PATCH 5.15/5.10/5.4/4.19 1/1] pppoe: Fix memory leak in
- pppoe_sendmsg()
-Thread-Index: AQHajysWcvyWTlXZLk6c3r3cyxKdeQ==
-Date: Mon, 15 Apr 2024 11:50:18 +0000
-Message-ID: <20240415115015.3913760-2-Ilia.Gavrilov@infotecs.ru>
-References: <20240415115015.3913760-1-Ilia.Gavrilov@infotecs.ru>
-In-Reply-To: <20240415115015.3913760-1-Ilia.Gavrilov@infotecs.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: 208ac3cd-1ed4-4982-a353-bdefac89ac0a
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PLJGMoKu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713182424;
+	bh=FtCbo2FIfg5VTMuCbMaZx+mizFTYLMvWC/gcY6zEBVE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PLJGMoKuQ+3X9Iw1hvJe5e/NFJp64nSWk4vHsQfJL4XX7u9RYInm/R1bpjqMzQe2W
+	 E7S6BsRA1qkcLnocDGb0wFBAuzPVCsb33o+1DY9FLOnm+xdYXiM7vCufWnjS0b+12X
+	 ro4mWCyyf9cGfthdRTZfjOuDpibjSozKAfw+Jzu8zWfPxZQzWftehPKimYcm9RMe4X
+	 MkSDdzRNG4f0snM+OFQKES6W4VbnzjiznUTCbSyhnY6fHCNqqVYjiFR4XUWUa7SGqa
+	 XwZzSDSBO/tE33HmLrMfGYBkqjiNUCj8fw7qMHNDPYkjXylooAkhdtKU1nC0RGP8w+
+	 A3lwWyZ2KA77A==
+Received: from eldfell (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4F7E2378000E;
+	Mon, 15 Apr 2024 12:00:23 +0000 (UTC)
+Date: Mon, 15 Apr 2024 15:00:21 +0300
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
+ thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 3/3] drm/fourcc: Add documentation around
+ drm_format_info
+Message-ID: <20240415150021.13d9b637.pekka.paalanen@collabora.com>
+In-Reply-To: <20240409-google-drm-doc-v1-3-033d55cc8250@bootlin.com>
+References: <20240409-google-drm-doc-v1-0-033d55cc8250@bootlin.com>
+	<20240409-google-drm-doc-v1-3-033d55cc8250@bootlin.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KLMS-Rule-ID: 5
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2024/04/15 08:48:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/04/15 09:42:00 #24801259
-X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; boundary="Sig_//3ENGSCnsAF3Vk.9Cy9Ro/h";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+--Sig_//3ENGSCnsAF3Vk.9Cy9Ro/h
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-commit dc34ebd5c018b0edf47f39d11083ad8312733034 upstream.
+On Tue, 09 Apr 2024 12:04:07 +0200
+Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 
-syzbot reports a memory leak in pppoe_sendmsg [1].
-
-The problem is in the pppoe_recvmsg() function that handles errors
-in the wrong order. For the skb_recv_datagram() function, check
-the pointer to skb for NULL first, and then check the 'error' variable,
-because the skb_recv_datagram() function can set 'error'
-to -EAGAIN in a loop but return a correct pointer to socket buffer
-after a number of attempts, though 'error' remains set to -EAGAIN.
-
-skb_recv_datagram
-      __skb_recv_datagram          // Loop. if (err =3D=3D -EAGAIN) then
-                                   // go to the next loop iteration
-          __skb_try_recv_datagram  // if (skb !=3D NULL) then return 'skb'
-                                   // else if a signal is received then
-                                   // return -EAGAIN
-
-Found by InfoTeCS on behalf of Linux Verification Center
-(linuxtesting.org) with Syzkaller.
-
-Link: https://syzkaller.appspot.com/bug?extid=3D6bdfd184eac7709e5cc9 [1]
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+6bdfd184eac7709e5cc9@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=3D6bdfd184eac7709e5cc9
-Signed-off-by: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Link: https://lore.kernel.org/r/20240214085814.3894917-1-Ilia.Gavrilov@info=
-tecs.ru
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Let's provide more details about the drm_format_info structure because
+> its content may not be straightforward for someone not used to video
+> formats and drm internals.
+>=20
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>  include/drm/drm_fourcc.h | 45 ++++++++++++++++++++++++++++++++++++++----=
 ---
- drivers/net/ppp/pppoe.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+>  1 file changed, 38 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
+> index ccf91daa4307..66cc30e28f79 100644
+> --- a/include/drm/drm_fourcc.h
+> +++ b/include/drm/drm_fourcc.h
+> @@ -58,6 +58,44 @@ struct drm_mode_fb_cmd2;
+> =20
+>  /**
+>   * struct drm_format_info - information about a DRM format
+> + *
+> + * A drm_format_info describes how planes and pixels are stored in memor=
+y.
+> + *
+> + * Some format like YUV can have multiple planes, counted in @num_planes=
+. It
+> + * means that a full pixel can be stored in multiple non-continuous buff=
+ers.
+> + * For example, NV12 is a YUV format using two planes: one for the Y val=
+ues and
+> + * one for the UV values.
+> + *
+> + * On each plane, the "pixel" unit can be different in case of subsampli=
+ng. For
+> + * example with the NV12 format, a pixel in the UV plane is used for fou=
+r pixels
+> + * in the Y plane.
+> + * The fields @hsub and @vsub are the relation between the size of the m=
+ain
+> + * plane and the size of the subsampled planes in pixels:
+> + *	plane[0] width =3D hsub * plane[1] width
+> + *	plane[0] height =3D vsub * plane[1] height
 
-diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
-index d7f50b835050..70e29e1ac4c8 100644
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -983,27 +983,22 @@ static int pppoe_recvmsg(struct socket *sock, struct =
-msghdr *m,
- 	struct sk_buff *skb;
- 	int error =3D 0;
-=20
--	if (sk->sk_state & PPPOX_BOUND) {
--		error =3D -EIO;
--		goto end;
--	}
-+	if (sk->sk_state & PPPOX_BOUND)
-+		return -EIO;
-=20
- 	skb =3D skb_recv_datagram(sk, flags & ~MSG_DONTWAIT,
- 				flags & MSG_DONTWAIT, &error);
--	if (error < 0)
--		goto end;
-+	if (!skb)
-+		return error;
-=20
--	if (skb) {
--		total_len =3D min_t(size_t, total_len, skb->len);
--		error =3D skb_copy_datagram_msg(skb, 0, m, total_len);
--		if (error =3D=3D 0) {
--			consume_skb(skb);
--			return total_len;
--		}
-+	total_len =3D min_t(size_t, total_len, skb->len);
-+	error =3D skb_copy_datagram_msg(skb, 0, m, total_len);
-+	if (error =3D=3D 0) {
-+		consume_skb(skb);
-+		return total_len;
- 	}
-=20
- 	kfree_skb(skb);
--end:
- 	return error;
- }
-=20
---=20
-2.39.2
+This makes it sound like plane[1] would be the one determining the
+image size. It is plane[0] that determines the image size (I don't know
+of a format that would have it otherwise), and vsub and hsub are used
+as divisors. It's in their name, too: horizontal/vertical sub-sampling.
+
+This is important for images with odd dimensions. If plane[1]
+determined the image size, it would be impossible to have odd sized
+NV12 images, for instance.
+
+Odd dimensions also imply something about rounding the size of the
+sub-sampled planes. I guess the rounding is up, not down?
+
+> + *
+> + * In some formats, pixels are not independent in memory. It can be a pa=
+cked
+
+"Independent in memory" sounds to me like it describes sub-sampling:
+some pixel components are shared between multiple pixels. Here you seem
+to refer to just packing: one pixel's data may take a fractional number
+of bytes.
+
+> + * representation to store more pixels per byte (for example P030 uses 4=
+ bytes
+> + * for three 10 bit pixels). It can also be used to represent tiled form=
+ats,
+
+s/tiled/block/
+
+Tiling is given by format modifiers rather than formats.
+
+> + * where a continuous buffer in memory can represent a rectangle of pixe=
+ls (for
+> + * example, in DRM_FORMAT_Y0L0, a buffer of 8 bytes represents a 2x2 pix=
+el
+> + * region of the picture).
+> + *	The field @char_per_block is the size of a block on a specific plane,=
+ in
+> + *	bytes.
+> + *	The fields @block_w and @block_h are the size of a block in pixels.
+> + *
+> + * The older format representation (which only uses @cpp, kept for histo=
+rical
+
+Move the paren to: representation which only uses @cpp (kept
+
+so that the sentence is still understandable if one skips the
+parenthesised part.
+
+> + * reasons because there are a lot of places in drivers where it's used)=
+ is
+> + * assuming that a block is always 1x1 pixel.
+> + *
+> + * To keep the compatibility with older format representations and treat=
+ block
+> + * and non-block formats in the same way one should use:
+> + *	- @char_per_block to access the size of a block on a specific plane, =
+in
+> + *	bytes.
+> + *	- drm_format_info_block_width() to access the width of a block of a
+> + *	specific plane, in pixels.
+> + *	- drm_format_info_block_height() to access the height of a block of a
+> + *	specific plane, in pixels.
+>   */
+>  struct drm_format_info {
+>  	/** @format: 4CC format identifier (DRM_FORMAT_*) */
+> @@ -97,13 +135,6 @@ struct drm_format_info {
+>  		 * formats for which the memory needed for a single pixel is not
+>  		 * byte aligned.
+>  		 *
+> -		 * @cpp has been kept for historical reasons because there are
+> -		 * a lot of places in drivers where it's used. In drm core for
+> -		 * generic code paths the preferred way is to use
+> -		 * @char_per_block, drm_format_info_block_width() and
+> -		 * drm_format_info_block_height() which allows handling both
+> -		 * block and non-block formats in the same way.
+> -		 *
+>  		 * For formats that are intended to be used only with non-linear
+>  		 * modifiers both @cpp and @char_per_block must be 0 in the
+>  		 * generic format table. Drivers could supply accurate
+>=20
+
+Other than that, sounds fine to me.
+
+Perhaps one thing to clarify is that chroma sub-sampling and blocks are
+two different things. Chroma sub-sampling is about the resolution of
+the chroma (image). Blocks are about packing multiple pixels' components
+into a contiguous addressable block of memory. Blocks could appear
+inside a separate sub-sampled UV plane, for example.
+
+
+Thanks,
+pq
+
+--Sig_//3ENGSCnsAF3Vk.9Cy9Ro/h
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmYdFtUACgkQI1/ltBGq
+qqd1Dg/7BbEa30DJPOqyRDllOe5Ct0+mOio7v37ZwOF10plS1JNUyH+ELn+bIGcs
+NBAHqCC+vEHAgpKAKkwOmVFd8oBpXQ6C5Ze92T5msUCSjdexEQZs9Jh6sZkk8x4W
+p2avkgqETfiEapWQgmvRSGx3JNBN0REE3KtBqCf5tcKZtJejcXpjDcTMWelT1vf9
+gKtc2WveEvcz1Fo8DceojYkvSaNQIWhNx+6LMQuE08od9fCxBub3kVAArWG++Vxy
+2RmMipBfDW/Ere1e/ZqlLa6KMTMboavwYolgAOeTtoIhO0ayWyEBm5AORL+9LHiw
+E+Dh5rjGlGMXD7+iab0hy8DCuK2UMxAnaJHawCQicVgW0EUvNio9usUX/oNJvNwZ
+o2zHAxl70VZ/3H+yLeL88dj9GK4lgiS/olPc333V2zrjteCKRIP1RtXbUgyeztm/
+R02pEVJZu0YghHDJqCUtbVBkUHq/y/TqEzTh2DurmOAAWVaVaAcToxUA9SptM1e4
+tLuVN+CKI0UJwE1+S1x3uSGcHAIJV93lE0+BMONu8kRWOarAusrlBbQvPUoZNxSh
+ngwA0yZ0t5Fdt0EScRL2a9Jw8sTfQa3IQkoqs5QMZcoH+9fG8A4zwMFpaC/S1fai
+KlwZWYmj7IW1fI59iKDIvn7YZiIByQhn8dqzbvcTL3cC+JmyVRs=
+=/Wnb
+-----END PGP SIGNATURE-----
+
+--Sig_//3ENGSCnsAF3Vk.9Cy9Ro/h--
