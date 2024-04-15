@@ -1,105 +1,90 @@
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E2067A01;
-	Mon, 15 Apr 2024 11:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C877D5D49F;
+	Mon, 15 Apr 2024 11:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713180342; cv=none; b=LI+qMku9B91Dfv3mIr2mAhU6giI9pCqM2EL8A921E35+PcM/woNlNjaX2ETpzLnMq3V9aLlByKIB0Vgh0d19aC9eJjgSsz86dIqea8mE8io/stPGvdJBoGQs+geRNCvzhFFdrDb73vQneDVh/IMa9Z0V1/hYGmfhdKLe+VsSrDg=
+	t=1713180463; cv=none; b=QvU4v3OCKW3FKcRAhQgSMorWv9CfKqJbJmGhQ6/AFyCzH2rMKeDEJZOsqhn6G5h/NE9Vdf/1BAxx3LaLiKrOxNjO5dCpovxU/y2dVafDsvGmeyGDd/tEp+Z9x2fWRG12e8DvTrfzeawOUrdW9xu0+x/JVQLoIQxHpdVq6qgcorQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713180342; c=relaxed/simple;
-	bh=9QKS3M7DS/KsSM721mf5dJ+Ca/wHULMChlgtx9OyE4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CAF0h/By4jGLsKCBgzrTh0oKvsC+zDPtuRmma0Zwzfw9bHhxt1yMxXtPxn1K1bPayV6qIwl563buWcJfSxaIofN5FUKJxlTXRSpg5/kGlcP89qKT8gUHJbsGoFOcu9Lx034NtCVedKbFS+v80VkhNJWoVALxheg7xkpByg1YUP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kSRxP7JX; arc=none smtp.client-ip=80.12.242.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713180463; c=relaxed/simple;
+	bh=FE+i4A70L7DRRL+U0mi5Ziz97jbyagDFCw1I4beVKMw=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=uV+gGDeiM8TZ0TTQviuUEUalhziUSpZ8V/RuABVgnV21qnj6kKNUZvsLp5FsgwkMCzAYNQRfa3cXfOVu6mWSt29AblaGXnTXyJUGIqzrtHn/TCds/UZQyUSvOmWiDEf3kasTEzE6DRo/qkwfBwB/f3br2XOBARvFTLSZlw4jWC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BW1+ShCg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kSRxP7JX"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id wKRerx2nqPlGBwKReriKR4; Mon, 15 Apr 2024 13:24:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713180261;
-	bh=ub4eBCk8TBPNCwE8W3RDmCm3hBSXAehuhbWgGV6jTnI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=kSRxP7JX6jTcA8/uJSqnnk9ne7reFCXZZm1Mfa5+Xnymb251WK/qMJ6mCXM9NBsn4
-	 h8pZelhfJFAdPZwqeY+ljhvdmwxFyoBVtL09gzURZKmnIzfKrqvKydE+qI6ljA2DW1
-	 hkberrIoc28ydprnSygtlOyFW8Zk86A3eiWvOiya7U78rTsujl2rJAIRFnCNR9kaPF
-	 4BEe5wSLNgcZi2boq5I+tRauo96eqol87XDwHFJA/nAO1lN1L/k7lNPTpdDlAYMufm
-	 rH6evc+nXnSneuk+sHFlFzAG1DZMkIqPc+VA0E+JJr8vw/d+ATIiCQGJ9Ed8NZyPZZ
-	 tFRYenYaUgZ0g==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 15 Apr 2024 13:24:21 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Kalle Valo <kvalo@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Kang Yang <quic_kangyang@quicinc.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Kalle Valo <quic_kvalo@quicinc.com>,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org
-Subject: [PATCH] wifi: ath11k: Fix error handling in ath11k_wmi_p2p_noa_event()
-Date: Mon, 15 Apr 2024 13:23:46 +0200
-Message-ID: <6ee80f65f736db1646f6f201f60816cf35b6f3fe.1713180046.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BW1+ShCg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E5BC113CC;
+	Mon, 15 Apr 2024 11:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713180463;
+	bh=FE+i4A70L7DRRL+U0mi5Ziz97jbyagDFCw1I4beVKMw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=BW1+ShCg1VAfxs+Ck7wYiiXN6PpqtM4LfVjrdNe7ZlzBLK3/Lru9zS8Zmunvqy+nc
+	 ocmPHWfwSV8WfTfqDubrINXno/VHb1hHmEdU61UGVJi6TJIn7bW5sqT9yxUoIqaRAX
+	 Mx3mfu6KLLWgL03nRZ0vjY/rgb7+irhRvnrbmg79/LIGyqazxpt/huyctxeVWKhHKt
+	 nelcLknBE4GJZBjzS2IQGJEh5EydRwP/t3j7hb60yasMJeMWi9RiYkjYtHJjpTPGg1
+	 6a0sQv7d/+ip2nn+Ny1oUPEgXU7b+5m+OpdpVgaE299epp2eGgKmRE2trbOOgD4oYC
+	 yp0oRgveyVNRg==
+Date: Mon, 15 Apr 2024 06:27:42 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Mighty <bavishimithil@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ alsa-devel@alsa-project.org
+In-Reply-To: <20240415103523.139-1-bavishimithil@gmail.com>
+References: <20240415103523.139-1-bavishimithil@gmail.com>
+Message-Id: <171318046103.2331667.2375787628199943181.robh@kernel.org>
+Subject: Re: [PATCH v3] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
 
-if (noa_descriptors > WMI_P2P_MAX_NOA_DESCRIPTORS), there is a mix of
-return and goto. in such a case, 'ret' should be assigned an error code and
-the 'td' should be freed to avoid a memory leak.
 
-While at it, return 'ret' instead of 0 in case of error.
-This is actually harmless, because the only caller does not handle the
-return value.
+On Mon, 15 Apr 2024 16:05:23 +0530, Mighty wrote:
+> From: Mithil Bavishi <bavishimithil@gmail.com>
+> 
+> Convert the OMAP4+ McPDM bindings to DT schema.
+> 
+> Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
+> ---
+>  .../devicetree/bindings/sound/omap-mcpdm.txt  | 30 ----------
+>  .../bindings/sound/ti,omap4-mcpdm.yaml        | 58 +++++++++++++++++++
+>  2 files changed, 58 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+> 
 
-Fixes: 2408379f15a1 ("wifi: ath11k: implement handling of P2P NoA event")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/net/wireless/ath/ath11k/wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
-index c74aa3f95658..589a1b5ec517 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.c
-+++ b/drivers/net/wireless/ath/ath11k/wmi.c
-@@ -8657,7 +8657,7 @@ static int ath11k_wmi_p2p_noa_event(struct ath11k_base *ab,
- 	const struct wmi_p2p_noa_event *ev;
- 	const struct ath11k_wmi_p2p_noa_info *noa;
- 	struct ath11k *ar;
--	int ret, vdev_id;
-+	int ret = 0, vdev_id;
- 	u8 noa_descriptors;
- 
- 	tb = ath11k_wmi_tlv_parse_alloc(ab, skb, GFP_ATOMIC);
-@@ -8682,7 +8682,7 @@ static int ath11k_wmi_p2p_noa_event(struct ath11k_base *ab,
- 	if (noa_descriptors > WMI_P2P_MAX_NOA_DESCRIPTORS) {
- 		ath11k_warn(ab, "invalid descriptor num %d in P2P NoA event\n",
- 			    noa_descriptors);
--		return -EINVAL;
-+		ret = -EINVAL;
- 		goto out;
- 	}
- 
-@@ -8705,7 +8705,7 @@ static int ath11k_wmi_p2p_noa_event(struct ath11k_base *ab,
- 	rcu_read_unlock();
- out:
- 	kfree(tb);
--	return 0;
-+	return ret;
- }
- 
- static void ath11k_wmi_tlv_op_rx(struct ath11k_base *ab, struct sk_buff *skb)
--- 
-2.44.0
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
+ 	 $id: http://devicetree.org/schemas/sound/ti,omap-mcpdm.yaml
+ 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240415103523.139-1-bavishimithil@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
