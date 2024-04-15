@@ -1,57 +1,57 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB413C3D4;
-	Mon, 15 Apr 2024 18:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E9B13C68A;
+	Mon, 15 Apr 2024 18:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205284; cv=none; b=CBONvkaWX4PPKK2pbjBTbhustWGPCnkIXMQjGm2PjnzAGg1RIqBXv2OtrzjO0sIuTGl8Hu1iDRfIGvi0uw0A8L3QGRkY92fAexXOXLVMzKAFWDpJfEIr1Vdq+mcqx+NLWyZ09qY1krbyQ8Zejxa6x6KSyiHzLqOW4b069h4eYpA=
+	t=1713205288; cv=none; b=pG+knBSqWIJxJPCfjKCbxlw65OCcKpzpw+6GT/GIzj7ET226ZzzLOfsU++OoozTOdVaxn1WojLdZDCPMlGRXGFUJ5wpt1R/2TcnQMDLJSXKIjfykLWgiQeZyJu/LWR9dB/A8tgSMS5t6D7PSce0rQt0n73tHyf8S62I8nsR+mIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205284; c=relaxed/simple;
-	bh=Bi/K2DoHrhLP69oUmfE7G8EDr42IWdwAMdYVVLQinQ0=;
+	s=arc-20240116; t=1713205288; c=relaxed/simple;
+	bh=AQI/LvmjE4IEpy1RdNz2zpAKf1LZ2lytZtsviYqCPIQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cP11pKW0D1eaBqq2GV7DnS4UaqcxvkKMUB96/SWJyDVeZioQmCoXylIDlhkNyJlPbASsDCnk9/XIpS8a1VhICwiVQJnvlIJOCecvopp1YqeqZlgSwyos2/7PlxRqhPIS2MfwdU2EENc2TBkwKm3GxH9+i8nhsbcm6RvZ2meOlXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fE2uEqRI; arc=none smtp.client-ip=209.85.161.41
+	 MIME-Version; b=LBsH+ECrGKCn9TMeuH+B6UXWnrB0cPDend9qgPzfAMJ2yvChvU3j8gXRG9Kqi45XDfLJOLUYiIS+9ALLDvz7VkowtPKqAe8EAJYKAbUPhTuJrAjmIuCE8tDm3a1aG4izpOL3JKguw+FOOw4IpYZwu3Ew8OgpGQB+g62hrbHtzVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DasJJ/Su; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fE2uEqRI"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a9ec68784cso2100159eaf.2;
-        Mon, 15 Apr 2024 11:21:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DasJJ/Su"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5ac61cf3fffso2284216eaf.3;
+        Mon, 15 Apr 2024 11:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713205282; x=1713810082; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713205286; x=1713810086; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CTnP6eipSs1lQbgXBNYS3udbxY0JHas09pkOXVb4n1w=;
-        b=fE2uEqRIHdvYvWf2qg1OII8T2eQ5VaXiWmv//NPWUWSYr2hLlJCjmF83YG/PV/ZEVH
-         CTbdChqr10thcNnPPaj3q1ErMukXzaVX5P+Goua7dgeQtzSbYQ/37vYoF5mIBhtiTBxY
-         TQNdtaaL0xKOvWKGfoDDfT3VZ37/dejAIxVU75CwfK/QaZDJHb7KQdPGtIalHstGbNOs
-         sBjhf6OFYE/ghIiBtYahdrBDbSakU6xLbFi9vt5PRfGF7IfK0EuahfoSLYOLaxbm3cOH
-         E1UPcV2MLa+WLSBCKv2w3utgBwMpf8LAPDvey1Ttde8j8ag2c9e/FquYsiLI+xfQ+AIU
-         5BRA==
+        bh=FzgGDQmklEWFrISIR4IcwxoAKiKCzk4r1Ppmvkj7XiQ=;
+        b=DasJJ/SuEyk5U8eyV8CwJGBs+NiZSfuC6fyIHE+BiD3SIliH8KjNbLDA1z9e5WrEtQ
+         iIFw/IEdJsK7F3Erl8VBEaWjVSnCqrP5+YVU9VihFGczyUYPWHWt1ddVZjj6XDwuC389
+         rjYc/xk0HSFY1s0ALNft4HE42KPV4moZF7GjJEoo3QTm2C2npM78spyaY4dVjGyKFp24
+         BPYg4eYi5drWcsMgaJpBRU5SQKvZ/3mqiRen5Ljq15Qi1Ixv6d0vAOdEq8aWabobd/Go
+         QQOq1nmX+9CER7byveGH9YVW6V7zJAovCc/BR6tbNbIxh2rzRip3Q9FCAXcnv9MaoR+e
+         rJBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713205282; x=1713810082;
+        d=1e100.net; s=20230601; t=1713205286; x=1713810086;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CTnP6eipSs1lQbgXBNYS3udbxY0JHas09pkOXVb4n1w=;
-        b=pWMZfZ1upI2upk+DULXJGujdaja4Ux9bhoy0vksxiHqhHRHhiHPYox7ZmFNSrfzxrV
-         u6Ntr25D9hPsPvQX0GkH2tWN9xMFkbseoQuvdTyo3ygKeNfuW7PNImZ4m5hTDBfsQkoa
-         Upa7aoiPjk6FZPm0+l+f9KZJUXGN3O18ly0Ll20yyp/KUgZXkt/1OZbyyG4n86N4Id+h
-         +gakOcKvxVVA01oNA/e9K4YTzyqZNohLCjz+Jsl4720YxrdPtdYfHXue2GkIJmSgpKzA
-         yGOcCF45a10zJNgHuVfAfoXk5xHhm0kB6VLRc1qnMAVz50zKHwQIZSUK1SBOXh8Hr4e7
-         gABQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW15RxRrc7Nz2dmPsJOt2PkRTV92fONaUZ9GiitNs67w+Ev+Coj0lrN1+yPR/297BFGAkWQ7gxfcLvK3kQIeNqEd/ihYPFTqo5drkRLNIH8dupZ9kF/aBuuSj81C7Vwh19GdoJReacT3j57hQ46a/zYrnoRwRFBDkXCQA2OGdmDgmKrwLAXkdhPhO7Hi/MXroUuKkwOnUUQeozO0u5vlPK19oD23EMWyx0t79PfpyBvKqApECkt2k9XpyIVu4w=
-X-Gm-Message-State: AOJu0Yz8zktAFvxawW9kaOTMbfztdx1NJospZ5p1v1SDhjcZHRQBQ/d7
-	HxblcdreVRmRjM7qYwwqwpB+pxfd1Lgn4yvRRiYiK1iSRbC/BMYvgePOg3r1x4U=
-X-Google-Smtp-Source: AGHT+IHg5ugq1lohZEm0ehzMxEcdWVwoP8XQwZRTCLQ22SHdryJbt4bEX3o8wVWphYHKU7n0nCcShA==
-X-Received: by 2002:a4a:1482:0:b0:5ac:c39b:3a7a with SMTP id 124-20020a4a1482000000b005acc39b3a7amr1127677ood.1.1713205282432;
-        Mon, 15 Apr 2024 11:21:22 -0700 (PDT)
+        bh=FzgGDQmklEWFrISIR4IcwxoAKiKCzk4r1Ppmvkj7XiQ=;
+        b=ATuwCKp/oUWegcQzwl3roIh4iDuj9Ghr1lNkOkoMrt91VMl6piIzZyyBjBWGAbVn+R
+         Hz7nVyUYm4Wr0LkBvb/XcDTqaob7k+WlK1GUOumed2CQozTV5y+nQ8FyNi3ivToKYe3h
+         6qteAasedrvg8ovcMDQrI33eFXYiTCg2GMO273ek0+yfuX7MgkvgUJtqlhTSXtSXbZ/c
+         wvmHR5CkLHjqoMQfl1lB9tifx8K+jWSPdL9HJGmdchlvQbgssUK8O5jTDv9+YOAqvTIX
+         Vfjfqq18HHMbVQnnndajChnT84rbvG+F5SZSy84508XYx0nkJQqXPHrWEP0Qm3OCQoIB
+         j8YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4YiqlDfFAk2k8a9JVdJD6OaQ3MiNWJ5/U6pwfGfGuPxJz1vWTMmuEIv/YWJyTx7u8Tqan006a4B5vk5nkv0ACHWdbARpXzZ5yl1/YyBKfAPURhXhGloQj9bu45wnUwpR8gfis5DHEsjwWdYx+Fz+lpZNPv784JWvajZPD0BE6Idb4B+F270AMRw6RUV72UHn9mKxO84r4Vx8PRQAZrbswKb9ZIcPoqfBgV17vmbhnWotzR3DHaNI9SgtBzjM=
+X-Gm-Message-State: AOJu0YxwcGumhWy151CsnXPwcRP7jjNAmaz40kT2Z1zgHA+55Y7AkVLc
+	5Gr8crHTUVFNqBBXIeWDxlkK00cH70fWY/1hyY0dJDMtqCjxg8Iv
+X-Google-Smtp-Source: AGHT+IFzBspjAQ4rLg81eFZJL29bkc3W+mz4hD/gAWcReSsmqzSYHyKiD0HMSDTzbp14adcuHiezMg==
+X-Received: by 2002:a4a:1ac3:0:b0:5ac:9ff2:8ca4 with SMTP id 186-20020a4a1ac3000000b005ac9ff28ca4mr4669479oof.6.1713205285937;
+        Mon, 15 Apr 2024 11:21:25 -0700 (PDT)
 Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id x4-20020a056820104400b005a4dc7abc01sm2177494oot.11.2024.04.15.11.21.21
+        by smtp.gmail.com with ESMTPSA id x4-20020a056820104400b005a4dc7abc01sm2177494oot.11.2024.04.15.11.21.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:21:22 -0700 (PDT)
+        Mon, 15 Apr 2024 11:21:25 -0700 (PDT)
 From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -73,9 +73,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	linux-phy@lists.infradead.org,
 	linux-clk@vger.kernel.org
 Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: [PATCH v3 5/7] dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
-Date: Mon, 15 Apr 2024 13:20:50 -0500
-Message-Id: <20240415182052.374494-6-mr.nuke.me@gmail.com>
+Subject: [PATCH v3 7/7] arm64: dts: qcom: ipq9574: add PCIe2 nodes
+Date: Mon, 15 Apr 2024 13:20:52 -0500
+Message-Id: <20240415182052.374494-8-mr.nuke.me@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240415182052.374494-1-mr.nuke.me@gmail.com>
 References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
@@ -87,81 +87,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The IPQ9574 gen3x2 PHY is very similar to IPQ6018. It requires two
-extra clocks named "anoc" and "snoc". Document this, and add a
-new compatible string for this PHY.
+On ipq9574, there are 4 PCIe controllers. Describe the pcie2 node, and
+its PHY in devicetree.
+
+Only pcie2 is described, because only hardware using that controller
+was available for testing.
 
 Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 ---
- .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        | 36 ++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi | 93 ++++++++++++++++++++++++++-
+ 1 file changed, 92 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
-index 634cec5d57ea..89949f4e89db 100644
---- a/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
-@@ -19,19 +19,24 @@ properties:
-       - qcom,ipq6018-qmp-pcie-phy
-       - qcom,ipq8074-qmp-gen3-pcie-phy
-       - qcom,ipq8074-qmp-pcie-phy
-+      - qcom,ipq9574-qmp-gen3x2-pcie-phy
- 
-   reg:
-     items:
-       - description: serdes
- 
-   clocks:
--    maxItems: 3
-+    minItems: 3
-+    maxItems: 5
- 
-   clock-names:
-+    minItems: 3
-     items:
-       - const: aux
-       - const: cfg_ahb
-       - const: pipe
-+      - const: anoc
-+      - const: snoc
- 
-   resets:
-     maxItems: 2
-@@ -61,6 +66,35 @@ required:
-   - clock-output-names
-   - "#phy-cells"
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,ipq6018-qmp-pcie-phy
-+              - qcom,ipq8074-qmp-gen3-pcie-phy
-+              - qcom,ipq8074-qmp-pcie-phy
-+    then:
-+      properties:
-+        clocks:
-+          maxItems: 3
-+        clock-names:
-+          maxItems: 3
+diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+index 7f2e5cbf3bbb..f075e2715300 100644
+--- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+@@ -300,7 +300,7 @@ gcc: clock-controller@1800000 {
+ 				 <0>,
+ 				 <0>,
+ 				 <0>,
+-				 <0>,
++				 <&pcie2_phy>,
+ 				 <0>,
+ 				 <0>;
+ 			#clock-cells = <1>;
+@@ -745,6 +745,97 @@ frame@b128000 {
+ 				status = "disabled";
+ 			};
+ 		};
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,ipq9574-qmp-gen3x2-pcie-phy
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 5
-+        clock-names:
-+          minItems: 5
++		pcie2_phy: phy@8c000 {
++			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
++			reg = <0x0008c000 0x14f4>;
 +
- additionalProperties: false
++			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
++				 <&gcc GCC_PCIE2_AHB_CLK>,
++				 <&gcc GCC_PCIE2_PIPE_CLK>,
++				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
++				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>;
++			clock-names = "aux",
++				      "cfg_ahb",
++				      "pipe",
++				      "anoc",
++				      "snoc";
++
++			clock-output-names = "pcie_phy2_pipe_clk";
++			#clock-cells = <0>;
++			#phy-cells = <0>;
++
++			resets = <&gcc GCC_PCIE2_PHY_BCR>,
++				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
++			reset-names = "phy",
++				      "common";
++			status = "disabled";
++		};
++
++		pcie2: pcie@20000000 {
++			compatible = "qcom,pcie-ipq9574";
++			reg = <0x20000000 0xf1d>,
++			      <0x20000f20 0xa8>,
++			      <0x20001000 0x1000>,
++			      <0x00088000 0x4000>,
++			      <0x20100000 0x1000>;
++			reg-names = "dbi", "elbi", "atu", "parf", "config";
++
++			ranges = <0x81000000 0x0 0x20200000 0x20200000 0x0 0x00100000>,	/* I/O */
++				 <0x82000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>;	/* MEM */
++
++			device_type = "pci";
++			linux,pci-domain = <3>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <2>;
++			max-link-speed = <3>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			phys = <&pcie2_phy>;
++			phy-names = "pciephy";
++
++			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 0 164
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 0 165
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 0 186
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 0 187
++					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++
++			clocks = <&gcc GCC_PCIE2_AXI_M_CLK>,
++				 <&gcc GCC_PCIE2_AXI_S_CLK>,
++				 <&gcc GCC_PCIE2_AXI_S_BRIDGE_CLK>,
++				 <&gcc GCC_PCIE2_RCHNG_CLK>;
++			clock-names = "axi_m",
++				      "axi_s",
++				      "axi_bridge",
++				      "rchng";
++
++			resets = <&gcc GCC_PCIE2_PIPE_ARES>,
++				 <&gcc GCC_PCIE2_AUX_ARES>,
++				 <&gcc GCC_PCIE2_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE2_AXI_M_ARES>,
++				 <&gcc GCC_PCIE2_AXI_S_ARES>,
++				 <&gcc GCC_PCIE2_AXI_S_STICKY_ARES>,
++				 <&gcc GCC_PCIE2_AXI_M_STICKY_ARES>,
++				 <&gcc GCC_PCIE2_AHB_ARES>;
++			reset-names = "pipe",
++				      "aux",
++				      "sticky",
++				      "axi_m",
++				      "axi_s",
++				      "axi_s_sticky",
++				      "axi_m_sticky",
++				      "ahb";
++			status = "disabled";
++		};
+ 	};
  
- examples:
+ 	thermal-zones {
 -- 
 2.40.1
 
