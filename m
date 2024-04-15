@@ -1,38 +1,36 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C650412A16E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD1812A170;
 	Mon, 15 Apr 2024 13:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713187341; cv=none; b=dTEatlYG/TVwq8rhPsHsTwxVCmrKQ3P/LtkkCuvcdddz+Wt5TcoBx86Ka8IELnbBRkbLb12o66WVT5vSmDwbyDhy0hEQPhZXTis/qax8lpTKHTATi8LEbGJVVnAZyXJz6moPS/58768Dnlga60kjZr512Tz+J7XzRfF6Sp2Od0w=
+	t=1713187341; cv=none; b=a5LhcRVyoWaCSX27BGaId/9UWCaDSPKbeqUbiCCtl6xe0/l7UOhEafEQst/ClBZKUK/s2Q7Gg7+EbpQ0Lu3UmkrMX1S/TtLs4WVMEdMtPvRIWhbWIP72OO9DgNcDu11NtNST3ft9fs58n3yACIFs8myGaLLrCGb7En74TFPVhmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713187341; c=relaxed/simple;
-	bh=jMb+RBKehJctPcBa5upuyplr9XIV7Q0RuPuaTzq6AxY=;
+	bh=77TAy3kea4Va3Is1I0qN4USj8ONZ6KixwSmbOIBXyLo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qIx2LMUqS0NDNz9mamPvSUuTAKHGn4LLTDj2HGW1GqIkR6igLxY01qTuxifw8rfDe0N7xusaQHd6H/XKx2A5yAmp/JH2jzdXLgyM5fMc3qpvv4P6HVMZVdEOWrbgWlCOxy7qajWxsbsIgNR/lFcXfnoOfOLNiLjZnXz+6/gmjs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=tBv/NIOvQ9DEiH7aTyMT6EiCxcj6Eznay6IOLwVDHJAVuXbUyZ/Fbkpi1r5XFX5Vl94BXN94IL1zfsU4lF1HpIIzch0jt93Vf5YijYt7zznJqtEAbXvTxCOlREXrUoMLHnCu9EcaizsAaxOE6DZ41SkFgIOOND3L5gmXFzOenXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VJ76y3P1Zz1R5sP;
-	Mon, 15 Apr 2024 21:19:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VJ76Y514PzTmQ5;
+	Mon, 15 Apr 2024 21:19:01 +0800 (CST)
 Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 57EB718007D;
-	Mon, 15 Apr 2024 21:22:12 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id AD24918005D;
+	Mon, 15 Apr 2024 21:22:17 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 15 Apr 2024 21:22:12 +0800
+ 15.1.2507.35; Mon, 15 Apr 2024 21:22:17 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Andrew
- Morton <akpm@linux-foundation.org>, Eric Dumazet <edumazet@google.com>,
-	<linux-mm@kvack.org>
-Subject: [PATCH net-next v2 08/15] mm: page_frag: add two inline helper for page_frag API
-Date: Mon, 15 Apr 2024 21:19:33 +0800
-Message-ID: <20240415131941.51153-9-linyunsheng@huawei.com>
+	<linyunsheng@huawei.com>, Eric Dumazet <edumazet@google.com>
+Subject: [PATCH net-next v2 11/15] net: introduce the skb_copy_to_va_nocache() helper
+Date: Mon, 15 Apr 2024 21:19:36 +0800
+Message-ID: <20240415131941.51153-12-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240415131941.51153-1-linyunsheng@huawei.com>
 References: <20240415131941.51153-1-linyunsheng@huawei.com>
@@ -47,69 +45,40 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  dggpemm500005.china.huawei.com (7.185.36.74)
 
-Add two inline helpers for page_frag API to avoid calling
-accessing the field of 'struct page_frag_cache'.
+introduce the skb_copy_to_va_nocache() helper to avoid
+calling virt_to_page() and skb_copy_to_page_nocache().
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- include/linux/page_frag_cache.h | 10 ++++++++++
- mm/page_frag_test.c             |  2 +-
- net/core/skbuff.c               |  4 ++--
- 3 files changed, 13 insertions(+), 3 deletions(-)
+ include/net/sock.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 9d5d86b2d3ab..fe5faa80b6c3 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -23,6 +23,16 @@ struct page_frag_cache {
- 	bool pfmemalloc;
- };
+diff --git a/include/net/sock.h b/include/net/sock.h
+index a495330c5c49..d214aeca72ad 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2272,6 +2272,21 @@ static inline int skb_copy_to_page_nocache(struct sock *sk, struct iov_iter *fro
+ 	return 0;
+ }
  
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
++static inline int skb_copy_to_va_nocache(struct sock *sk, struct iov_iter *from,
++					 struct sk_buff *skb, char *va, int copy)
 +{
-+	nc->va = NULL;
++	int err;
++
++	err = skb_do_copy_data_nocache(sk, skb, from, va, copy, skb->len);
++	if (err)
++		return err;
++
++	skb_len_add(skb, copy);
++	sk_wmem_queued_add(sk, copy);
++	sk_mem_charge(sk, copy);
++	return 0;
 +}
 +
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-+{
-+	return !!nc->pfmemalloc;
-+}
-+
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
-diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
-index cab05b8a2e77..20756b28df4a 100644
---- a/mm/page_frag_test.c
-+++ b/mm/page_frag_test.c
-@@ -318,7 +318,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
- 
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
- 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 139a193853cc..cdbfdf651001 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -743,12 +743,12 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 		local_bh_enable();
- 	}
- 
+ /**
+  * sk_wmem_alloc_get - returns write allocations
+  * @sk: socket
 -- 
 2.33.0
 
