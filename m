@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F03A1553A7;
-	Mon, 15 Apr 2024 18:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83E91553A7;
+	Mon, 15 Apr 2024 18:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713206846; cv=none; b=ZXrNgiY/kqu8VZTpmbovZlzxkvSlCi75c0vEYU71cQfmYDT5oP6XUaSVzQhpUFVLjqxA41i0AEvN4IgtCeUs5qcnuwrtW3LdOy7LuMRqnEOKLsVvDRqXcTz+igZ3rQr9USN/fSqlwy0A+fYslslVdqI2pmshYSectx2WPfto7Jk=
+	t=1713206858; cv=none; b=PD2XWsCIxRdYxqSx3VhKhshp0ls0L8O3v0kjumXfwRbrZiiuNmAF13lBNAJrL0FumAQlvFipKqZSrWGaQVL0ULkvDBB9/TFTIrvybdx/IHRjzQXafZi7G1v73cuStxUf8ZIaktDCMYTP1DaUDvd94VLQGBM1OVDu2GMnmNbskW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713206846; c=relaxed/simple;
-	bh=1cDDTFqVO9nquehVWNTpewzhN63ezqll9brEgIANQ+o=;
+	s=arc-20240116; t=1713206858; c=relaxed/simple;
+	bh=2OGJ9ttvYvJtrtHTPN9UHZlm1FINmbiG6UwTRsEKCwY=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=PhxHaq6S3BtH8LMwt1t0YkK+qNftn3PZG2AtgwZioSpAikB7OgbNDkH6dpFFBjJSS6gIQ9QU671etxUWQpWeuBlkjhwcLejzwaLj8FHgCWKnpI5c7B22C3/4nBmDz/lpC2PJQo9NFW5KBYQK7GZepycJIxsvXbzP7LZ8yuBcJG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lj7JSlbq; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=h903Ug9tXns8gjQMCOzro51k2VSjQZ0hUBCRjYxrmdT6G40YQnWrz2Lp4s+uh/6LE5FLxlDbEpgpgLksbcYLr4ztq3M8f4VBwsXzPCWAAdJMpXu8zEQNEi351XVD9Tr2qNiQptYpGyE4eauBdPou3t1Pc85kuSrll1R7RvSyQX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVVe6C0T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lj7JSlbq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B021C2BD11;
-	Mon, 15 Apr 2024 18:47:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVVe6C0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACC0C113CC;
+	Mon, 15 Apr 2024 18:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713206845;
-	bh=1cDDTFqVO9nquehVWNTpewzhN63ezqll9brEgIANQ+o=;
+	s=k20201202; t=1713206858;
+	bh=2OGJ9ttvYvJtrtHTPN9UHZlm1FINmbiG6UwTRsEKCwY=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Lj7JSlbq8tQUEvCLNO5MvPN6OrymXUFXiFF6MNMBBs31Pu16ElNBQM/B9r/NUkYNQ
-	 XjvmzO1MlWBSrdT4JYHxqQWmdsmVbSz2ci/K29zM+RNZd0/6Ym4muO3eBBqmX3PVcK
-	 XKTY8xIclw2Ll7yx1YF++ET395PrQBGJTMA8aQcc6ES4EKNHD0tG8t7lgOOd0yzIqR
-	 AzbsCZLTFZG/scPQh8voF3DSCoLsPkbGttBJDRqP98mQylnvFzE+2WPFRlL9OYlpXK
-	 n86TwiTWle97HTlt7PYRswp8WM595u5W41+5GdDDQ85KWwUqsyepQTBUwlF+ZP18xh
-	 MeeVghXr+TuJg==
-Date: Mon, 15 Apr 2024 13:47:15 -0500
+	b=TVVe6C0TZfGjrqFc49A5vdHYU/TB9a3PMk2qLa/pdg6RHdkCNSEIPe7T3BWSBFJsZ
+	 3PUalLE6BXc9YrCjjSs6mXAl9NdLpSuXme1Xil5s14EpxBWTRdnRQhMsIXPD24J3oD
+	 RmCH7xlbZKRaKdIe4GTUkbnybbFuTjZbbFPPAEuXnOEO0BYStsasSAcUW6DgP6Ve5s
+	 RJhySHpfXnjObY/CBZ1wZNlOD79jeFQ0pCpNHS57DhNjpOljzSf/AHTPiJ3itTQ8id
+	 SvXnVh47+iEmslJ+a/t6LBKFcSHi1gInQF5+JPR51EtXWmqBhSAaYgtTwKfZkImDpI
+	 5JO45vJj4wBkg==
+Date: Mon, 15 Apr 2024 13:47:35 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,86 +36,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Rob Herring <robh@kernel.org>
-To: Josua Mayer <josua@solid-run.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, 
  Conor Dooley <conor+dt@kernel.org>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, 
- Yazan Shhady <yazan.shhady@solid-run.com>
-In-Reply-To: <20240414-cn9130-som-v3-0-350a67d44e0a@solid-run.com>
-References: <20240414-cn9130-som-v3-0-350a67d44e0a@solid-run.com>
-Message-Id: <171320634978.5004.9481512846141703607.robh@kernel.org>
-Subject: Re: [PATCH v3 0/4] arm64: dts: add description for solidrun cn9130
- som and clearfog boards
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
+ Phil Elwell <phil@raspberrypi.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Jonathan Bell <jonathan@raspberrypi.com>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ Kamal Dasu <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1713036964.git.andrea.porta@suse.com>
+References: <cover.1713036964.git.andrea.porta@suse.com>
+Message-Id: <171320635602.5208.10027482544965026256.robh@kernel.org>
+Subject: Re: [PATCH 0/6] Add support for BCM2712 SD card controller
 
 
-On Sun, 14 Apr 2024 14:58:31 +0200, Josua Mayer wrote:
-> SolidRun CN9130 SoM is a mostly pin-comptible replacement for Armada 388
-> SoM used in Clearfog and Clearfog Pro boards.
+On Sun, 14 Apr 2024 00:14:22 +0200, Andrea della Porta wrote:
+> Hi,
 > 
-> 1. Add new binding for compatible strings closely matching the original.
+> This patchset adds support for the SDHCI controller on Broadcom BCM2712
+> SoC in order to make it possible to boot (particularly) Raspberry Pi 5
+> from SD card. This work is heavily based on downstream contributions.
 > 
-> 2. Add device-tree includes for SoM and carrier shared design.
+> Patch #1 and 2: introduce the dt binding definitions for, respectively,
+> the new pin cfg/mux controller and the SD host controller as a preparatory
+> step for the upcoming dts.
 > 
-> 3. Add device-tree for both Clearfog Base and Pro.
+> Patch #3: add a somewhat reasonable (*almost* bare-minimum) dts to be used
+> to boot Rpi5 boards. Since till now there was no support at all for any
+> 2712 based chipset, both the SoC and board dts plus definitions for the
+> new Pin and SD host controller have been added.
 > 
-> While dtbs_check is happy with LED descriptions behind dsa switch,
-> functionally they require supporting code by Andrew Lunn:
-> https://lore.kernel.org/r/20240401-v6-8-0-net-next-mv88e6xxx-leds-v4-v3-0-221b3fa55f78@lunn.ch
+> Patch #4: the driver supporting the pin controller. Based on [1] and
+> successive fix commits.
 > 
-> NOTICE IN CASE ANYBODY WANTS TO SELF-UPGRADE:
-> CN9130 SoM has a different footprint from Armada 388 SoM.
-> Components on the carrier board below the SoM may collide causing
-> damage, such as on Clearfog Base.
+> Patch #5: add SDHCI support. Based on [2] and the next 2 fix commits.
+> Drop the SD Express implementation for now, that will be added by patch
+> #6.
 > 
-> Signed-off-by: Josua Mayer <josua@solid-run.com>
-> ---
-> Changes in v3:
-> - picked up acked-by for dt-bindings
-> - skipped acked-by for dts because additional changes were made:
->   - moved legacy netdev aliases to carrier dts
->   - fix status property style errors
->   - add pinctrl for secondary spi chip-select on mikrobus header (& som)
->   - specify spi bus frequency limits for som
-> - Added CN9131 SolidWAN board
-> - Link to v2: https://lore.kernel.org/r/20240404-cn9130-som-v2-0-3af2229c7d2d@solid-run.com
+> Patch #6: this patch offers SD Express support and can be considered totally
+> optional. The callback plumbing is slightly different w.r.t. the downstream
+> approach (see [3]), as explained in the patch comment. Not sure what is the best,
+> any comment is highly appreciated.
 > 
-> Changes in v2:
-> - rewrote dt bindings dropping unnecessary compatibles
->   (Reported-By: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>)
-> - added bindings for two additional boards (cn9131/9132)
->   support planned for the coming weeks, mostly serves
->   illustrational purposes, to understand cn913x variants
-> - cf-pro: add description for LEDs behind DSA switch
-> - cf-base: add description for LEDs behind PHYs
->   (Reported-By: Andrew Lunn <andrew@lunn.ch>)
-> - Link to v1: https://lore.kernel.org/r/20240321-cn9130-som-v1-0-711127a409ae@solid-run.com
+> Tested succesfully on Raspberry Pi 5 using an SDxC card as the boot device.
 > 
-> ---
-> Josua Mayer (4):
->       dt-bindings: arm64: marvell: add solidrun cn9130 som based boards
->       dt-bindings: arm64: marvell: add solidrun cn9132 CEX-7 evaluation board
->       arm64: dts: add description for solidrun cn9130 som and clearfog boards
->       arm64: dts: add description for solidrun cn9131 solidwan board
+> Still untested:
+> - SD Express due to the lack of an Express capable card.
+>   Also, it will need PCIe support first.
+> - card detection pin, since the sd was the booting and root fs device.
 > 
->  .../bindings/arm/marvell/armada-7k-8k.yaml         |  18 +
->  arch/arm64/boot/dts/marvell/Makefile               |   3 +
->  arch/arm64/boot/dts/marvell/cn9130-cf-base.dts     | 178 ++++++
->  arch/arm64/boot/dts/marvell/cn9130-cf-pro.dts      | 377 ++++++++++++
->  arch/arm64/boot/dts/marvell/cn9130-cf.dtsi         | 197 +++++++
->  arch/arm64/boot/dts/marvell/cn9130-sr-som.dtsi     | 160 +++++
->  arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dts | 653 +++++++++++++++++++++
->  7 files changed, 1586 insertions(+)
-> ---
-> base-commit: 4cece764965020c22cff7665b18a012006359095
-> change-id: 20240318-cn9130-som-848e86acb0ac
+> Many thanks,
+> Andrea
 > 
-> Sincerely,
+> Links:
+> [1] - https://github.com/raspberrypi/linux/commit/d9b655314a826724538867bf9b6c229d04c25d84
+> [2] - https://github.com/raspberrypi/linux/commit/e3aa070496e840e72a4dc384718690ea4125fa6a
+> [3] - https://github.com/raspberrypi/linux/commit/eb1df34db2a9a5b752eba40ee298c4ae87e26e87
+> 
+> Andrea della Porta (6):
+>   dt-bindings: pinctrl: Add support for BCM2712 pin controller
+>   dt-bindings: mmc: Add support for BCM2712 SD host controller
+>   arm64: dts: broadcom: Add support for BCM2712
+>   pinctrl: bcm: Add pinconf/pinmux controller driver for BCM2712
+>   mmc: sdhci-brcmstb: Add BCM2712 support
+>   mmc: sdhci-brcmstb: Add BCM2712 SD Express support
+> 
+>  .../bindings/mmc/brcm,sdhci-brcmstb.yaml      |   51 +-
+>  .../pinctrl/brcm,bcm2712-pinctrl.yaml         |   99 ++
+>  arch/arm64/boot/dts/broadcom/Makefile         |    1 +
+>  .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  313 +++++
+>  arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi |   81 ++
+>  arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |  841 +++++++++++
+>  drivers/mmc/host/Kconfig                      |    1 +
+>  drivers/mmc/host/sdhci-brcmstb.c              |  275 ++++
+>  drivers/pinctrl/bcm/Kconfig                   |    9 +
+>  drivers/pinctrl/bcm/Makefile                  |    1 +
+>  drivers/pinctrl/bcm/pinctrl-bcm2712.c         | 1247 +++++++++++++++++
+>  11 files changed, 2918 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
+>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi
+>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712.dtsi
+>  create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm2712.c
+> 
 > --
-> Josua Mayer <josua@solid-run.com>
+> 2.35.3
 > 
 > 
 > 
@@ -135,286 +144,80 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y marvell/cn9130-cf-base.dtb marvell/cn9130-cf-pro.dtb marvell/cn9131-cf-solidwan.dtb' for 20240414-cn9130-som-v3-0-350a67d44e0a@solid-run.com:
+New warnings running 'make CHECK_DTBS=y broadcom/bcm2712-rpi-5-b.dtb' for cover.1713036964.git.andrea.porta@suse.com:
 
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: ap807: $nodename:0: 'ap807' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+arch/arm64/boot/dts/broadcom/bcm2712.dtsi:554.26-565.5: Warning (interrupt_provider): /soc/gpio@7d517c00: '#interrupt-cells' found, but node is not an interrupt provider
+  also defined at arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts:201.10-206.3
+  also defined at arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts:259.10-288.3
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: Warning (interrupt_map): Failed prerequisite 'interrupt_provider'
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /: failed to match any schema with compatible: ['raspberrypi,5-model-b', 'brcm,bcm2712']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /: failed to match any schema with compatible: ['raspberrypi,5-model-b', 'brcm,bcm2712']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: thermal-zones: cpu-thermal:trips:phandle: [[43]] is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: soc: firmware: {'compatible': ['raspberrypi,bcm2835-firmware', 'simple-mfd'], '#address-cells': [[1]], '#size-cells': [[1]], 'mboxes': [[15]], 'dma-ranges': True, 'phandle': [[16]], 'clocks': {'compatible': ['raspberrypi,firmware-clocks'], '#clock-cells': [[1]], 'phandle': [[95]]}, 'reset': {'compatible': ['raspberrypi,firmware-reset'], '#reset-cells': [[1]], 'phandle': [[96]]}} should not be valid under {'type': 'object'}
 	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: config-space@f0000000: $nodename:0: 'config-space@f0000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: soc: power: {'compatible': ['raspberrypi,bcm2835-power'], 'firmware': [[16]], '#power-domain-cells': [[1]], 'phandle': [[97]]} should not be valid under {'type': 'object'}
 	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: config-space@f0000000: timer: {'compatible': ['arm,armv8-timer'], 'interrupts': [[1, 13, 3848], [1, 14, 3848], [1, 11, 3848], [1, 10, 3848]]} should not be valid under {'type': 'object'}
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: soc: fixedregulator_3v3: {'compatible': ['regulator-fixed'], 'regulator-always-on': True, 'regulator-max-microvolt': [[3300000]], 'regulator-min-microvolt': [[3300000]], 'regulator-name': ['3v3'], 'phandle': [[98]]} should not be valid under {'type': 'object'}
 	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: config-space@f0000000: pmu: {'compatible': ['arm,cortex-a72-pmu'], 'interrupt-parent': [[2]], 'interrupts': [[17]]} should not be valid under {'type': 'object'}
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: soc: fixedregulator_5v0: {'compatible': ['regulator-fixed'], 'regulator-always-on': True, 'regulator-max-microvolt': [[5000000]], 'regulator-min-microvolt': [[5000000]], 'regulator-name': ['5v0'], 'phandle': [[99]]} should not be valid under {'type': 'object'}
 	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/odmi@300000: failed to match any schema with compatible: ['marvell,odmi-controller']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/gicp@3f0040: failed to match any schema with compatible: ['marvell,ap806-gicp']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0100: failed to match any schema with compatible: ['marvell,armada-8k-pic']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0200: failed to match any schema with compatible: ['marvell,ap806-sei']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/spi@510600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: mmc@6e0000: clocks: [[4, 4]] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: mmc@6e0000: clock-names: ['core'] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: mmc@6e0000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: system-controller@6f4000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/system-controller@6f4000/pinctrl: failed to match any schema with compatible: ['marvell,ap806-pinctrl']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: gpio@1040: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/system-controller@6f4000/clock: failed to match any schema with compatible: ['marvell,ap807-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: system-controller@6f8000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: ap807: $nodename:0: 'ap807' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: config-space@f0000000: $nodename:0: 'config-space@f0000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: config-space@f0000000: timer: {'compatible': ['arm,armv8-timer'], 'interrupts': [[1, 13, 3848], [1, 14, 3848], [1, 11, 3848], [1, 10, 3848]]} should not be valid under {'type': 'object'}
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: config-space@f0000000: pmu: {'compatible': ['arm,cortex-a72-pmu'], 'interrupt-parent': [[2]], 'interrupts': [[17]]} should not be valid under {'type': 'object'}
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/system-controller@6f8000/thermal-sensor@80: failed to match any schema with compatible: ['marvell,armada-ap807-thermal']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /ap807/config-space@f0000000/system-controller@6f8000/clock-cpu: failed to match any schema with compatible: ['marvell,ap807-cpu-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/odmi@300000: failed to match any schema with compatible: ['marvell,odmi-controller']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/gicp@3f0040: failed to match any schema with compatible: ['marvell,ap806-gicp']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0100: failed to match any schema with compatible: ['marvell,armada-8k-pic']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0200: failed to match any schema with compatible: ['marvell,ap806-sei']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/spi@510600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: mmc@6e0000: clocks: [[4, 4]] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: mmc@6e0000: clock-names: ['core'] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: mmc@6e0000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: system-controller@6f4000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/system-controller@6f4000/pinctrl: failed to match any schema with compatible: ['marvell,ap806-pinctrl']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: gpio@1040: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/system-controller@6f4000/clock: failed to match any schema with compatible: ['marvell,ap807-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: system-controller@6f8000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/system-controller@6f8000/thermal-sensor@80: failed to match any schema with compatible: ['marvell,armada-ap807-thermal']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: cp0: $nodename:0: 'cp0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /ap807/config-space@f0000000/system-controller@6f8000/clock-cpu: failed to match any schema with compatible: ['marvell,ap807-cpu-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: config-space@f2000000: $nodename:0: 'config-space@f2000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/phy@120000: failed to match any schema with compatible: ['marvell,comphy-cp110']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: ap807: $nodename:0: 'ap807' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: config-space@f0000000: $nodename:0: 'config-space@f0000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: config-space@f0000000: timer: {'compatible': ['arm,armv8-timer'], 'interrupts': [[1, 13, 3848], [1, 14, 3848], [1, 11, 3848], [1, 10, 3848]]} should not be valid under {'type': 'object'}
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: config-space@f0000000: pmu: {'compatible': ['arm,cortex-a72-pmu'], 'interrupt-parent': [[2]], 'interrupts': [[17]]} should not be valid under {'type': 'object'}
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000: failed to match any schema with compatible: ['marvell,cp110-icu']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@10: failed to match any schema with compatible: ['marvell,cp110-icu-nsr']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: system-controller@440000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: gpio@100: Unevaluated properties are not allowed ('gpio-ranges', 'sim-select-hog' were unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: gpio@140: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: cp0: $nodename:0: 'cp0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: config-space@f2000000: $nodename:0: 'config-space@f2000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: system-controller@400000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/phy@120000: failed to match any schema with compatible: ['marvell,comphy-cp110']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: usb@500000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode', 'vbus-supply' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: usb@510000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: sata@540000: sata-port@1: 'anyOf' conditional failed, one must be fixed:
-	'phys' is a required property
-	'target-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/ata/ahci-platform.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/odmi@300000: failed to match any schema with compatible: ['marvell,odmi-controller']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/gicp@3f0040: failed to match any schema with compatible: ['marvell,ap806-gicp']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0100: failed to match any schema with compatible: ['marvell,armada-8k-pic']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/interrupt-controller@3f0200: failed to match any schema with compatible: ['marvell,ap806-sei']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@400000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@420000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/trng@760000: failed to match any schema with compatible: ['marvell,armada-8k-rng', 'inside-secure,safexcel-eip76']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: mmc@780000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: crypto@800000: 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000: failed to match any schema with compatible: ['marvell,cp110-icu']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@440000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@10: failed to match any schema with compatible: ['marvell,cp110-icu-nsr']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: system-controller@440000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/xor@460000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: gpio@100: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: gpio@140: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/spi@510600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: system-controller@400000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: mmc@6e0000: clocks: [[4, 4]] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: mmc@6e0000: clock-names: ['core'] is too short
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: mmc@6e0000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: usb@500000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode', 'vbus-supply' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: usb@510000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: sata@540000: sata-port@1: 'anyOf' conditional failed, one must be fixed:
-	'phys' is a required property
-	'target-supply' is a required property
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@6f4000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/system-controller@6f4000/pinctrl: failed to match any schema with compatible: ['marvell,ap806-pinctrl']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@1040: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/system-controller@6f4000/clock: failed to match any schema with compatible: ['marvell,ap807-clock']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@6f8000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/system-controller@6f8000/thermal-sensor@80: failed to match any schema with compatible: ['marvell,armada-ap807-thermal']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /ap807/config-space@f0000000/system-controller@6f8000/clock-cpu: failed to match any schema with compatible: ['marvell,ap807-cpu-clock']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/trng@760000: failed to match any schema with compatible: ['marvell,armada-8k-rng', 'inside-secure,safexcel-eip76']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: mmc@780000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: crypto@800000: 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: cp0: $nodename:0: 'cp0' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: config-space@f2000000: $nodename:0: 'config-space@f2000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/phy@120000: failed to match any schema with compatible: ['marvell,comphy-cp110']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000: failed to match any schema with compatible: ['marvell,cp110-icu']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@10: failed to match any schema with compatible: ['marvell,cp110-icu-nsr']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@440000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@100: Unevaluated properties are not allowed ('gpio-ranges', 'm2-full-card-power-off-hog', 'pcie0-0-w-disable-hog' were unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@140: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@400000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@500000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@510000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@41: 'gpio-controller' is a required property
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@41: '#gpio-cells' is a required property
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: rtc@68: Unevaluated properties are not allowed ('reset-gpios' was unexpected)
-	from schema $id: http://devicetree.org/schemas/rtc/st,m41t80.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/trng@760000: failed to match any schema with compatible: ['marvell,armada-8k-rng', 'inside-secure,safexcel-eip76']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: mmc@780000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mmc/marvell,xenon-sdhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: crypto@800000: 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: cp1: $nodename:0: 'cp1' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: config-space@f4000000: $nodename:0: 'config-space@f4000000' does not match '^([a-z][a-z0-9\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/phy@120000: failed to match any schema with compatible: ['marvell,comphy-cp110']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000: failed to match any schema with compatible: ['marvell,cp110-icu']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000/interrupt-controller@10: failed to match any schema with compatible: ['marvell,cp110-icu-nsr']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@440000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@100: Unevaluated properties are not allowed ('gpio-ranges', 'm2-full-card-power-off-hog-0', 'm2-full-card-power-off-hog-1' were unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@140: Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@400000: compatible: ['syscon', 'simple-mfd'] is too short
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@500000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@510000: Unevaluated properties are not allowed ('dma-coherent', 'dr_mode' were unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: sata@540000: sata-port@0: 'anyOf' conditional failed, one must be fixed:
-	'phys' is a required property
-	'target-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/ata/ahci-platform.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/xor@6a0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/xor@6c0000: failed to match any schema with compatible: ['marvell,armada-7k-xor', 'marvell,xor-v2']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/trng@760000: failed to match any schema with compatible: ['marvell,armada-8k-rng', 'inside-secure,safexcel-eip76']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: crypto@800000: 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: sfp-0: 'los-gpio', 'mod-def0-gpio', 'tx-disable-gpio', 'tx-fault-gpio' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/net/sff,sfp.yaml#
-arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: sfp-1: 'los-gpio', 'mod-def0-gpio', 'tx-disable-gpio', 'tx-fault-gpio' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/net/sff,sfp.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/timer@7c003000: failed to match any schema with compatible: ['brcm,bcm2835-system-timer']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/local_intc@7cd00000: failed to match any schema with compatible: ['brcm,bcm2836-l1-intc']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/i2s@7d003000: failed to match any schema with compatible: ['brcm,bcm2835-i2s']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004000: failed to match any schema with compatible: ['brcm,bcm2835-spi']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004000/spidev@0: failed to match any schema with compatible: ['spidev']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004600: failed to match any schema with compatible: ['brcm,bcm2835-spi']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004800: failed to match any schema with compatible: ['brcm,bcm2835-spi']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004a00: failed to match any schema with compatible: ['brcm,bcm2835-spi']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/spi@7d004c00: failed to match any schema with compatible: ['brcm,bcm2835-spi']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pwm@7d00c000: 'assigned-clocks' is a dependency of 'assigned-clock-rates'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pwm@7d00c800: 'assigned-clocks' is a dependency of 'assigned-clock-rates'
+	from schema $id: http://devicetree.org/schemas/clock/clock.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/cprman@7d202000: failed to match any schema with compatible: ['brcm,bcm2711-cprman']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d503000: $nodename:0: 'intc@7d503000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d508380: $nodename:0: 'intc@7d508380' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d508400: $nodename:0: 'intc@7d508400' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d508500: compatible:0: 'brcm,brcmstb-gpio' is not one of ['brcm,bcm7445-gpio']
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d508500: compatible: ['brcm,brcmstb-gpio'] is too short
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d508500: 'brcm,gpio-direct', 'gpio-line-names' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d517000: $nodename:0: 'intc@7d517000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pwm@7d517a80: #pwm-cells:0:0: 2 was expected
+	from schema $id: http://devicetree.org/schemas/pwm/brcm,bcm7038-pwm.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d517ac0: $nodename:0: 'intc@7d517ac0' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: intc@7d517b00: $nodename:0: 'intc@7d517b00' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/brcm,l2-intc.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d517c00: compatible:0: 'brcm,brcmstb-gpio' is not one of ['brcm,bcm7445-gpio']
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d517c00: compatible: ['brcm,brcmstb-gpio'] is too short
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: gpio@7d517c00: 'brcm,gpio-direct', 'gpio-line-names' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,brcmstb-gpio.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/avs-monitor@7d542000: failed to match any schema with compatible: ['brcm,bcm2711-avs-monitor', 'syscon', 'simple-mfd']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: firmware: '#address-cells', '#size-cells', 'dma-ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/arm/bcm/raspberrypi,bcm2835-firmware.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: /soc/power: failed to match any schema with compatible: ['raspberrypi,bcm2835-power']
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: l3-cache: 'cache-unified' is a dependency of 'cache-size'
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: l3-cache: 'cache-unified' is a dependency of 'cache-sets'
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: l3-cache: 'cache-unified' is a dependency of 'cache-line-size'
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: l3-cache: 'cache-unified' is a required property
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: l3-cache: Unevaluated properties are not allowed ('cache-level', 'cache-line-size', 'cache-sets', 'cache-size' were unexpected)
+	from schema $id: http://devicetree.org/schemas/cache.yaml#
+arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb: pwr_button: 'pwr' does not match any of the regexes: '^(button|event|key|switch|(button|event|key|switch)-[a-z0-9-]+|[a-z0-9-]+-(button|event|key|switch))$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/input/gpio-keys.yaml#
 
 
 
