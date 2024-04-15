@@ -1,144 +1,95 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp39.i.mail.ru (smtp39.i.mail.ru [95.163.41.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3582C7E;
-	Mon, 15 Apr 2024 17:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7889C83CA0;
+	Mon, 15 Apr 2024 17:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.163.41.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713202539; cv=none; b=m+PqZ8jjUVhVWP0UuAepGeMWHPZ4zGXYblRCHcZVdqyeHmoXYGDAz1P55CuUwmijNGd/K8KrU8o/n1T0zxuCAfm3af4If9tG/dBTnBDnTKkKcvvZ3ECq/7O8xfHZDIcdpiaXZm2H/8NSiCmKU3QCM8nVm+vpMKTcSPUf8kfwnsI=
+	t=1713202571; cv=none; b=F+vEJg5UOA2xpEEb8VSJYJwAFRz5ftpKLN42kOl64n4MDEO7rJ60Yf7pXWlkMaMlwdFgLNeeTbjv9DOWv9X0heXbsRzKoIrGsAM6fvVLwFaDnr32esrJb719UlF06wD5kRHXjJS667Uoz750K36y91LYfJbW8npUa6YOPCYmq/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713202539; c=relaxed/simple;
-	bh=+mDx52s9ABbP+qylPDjlEdQbUbUBCGmkdgYzyLRZEsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fqeNeb/Z19YIaPnZaa6lP5S/kM9ifYZxEJ6rAH7AL7A+V4BaleeEjAEFZKzfdTiO+0i3I74mmMQ+4GunAPFDYIaxEGo3kAqm0S1bT0bM3l2Wz9DL7Pv1nFOwvAt4iYkoDOZdKwPOpmo69ZnGw9d5nQIvhDPqe9rUoNGDUFs/MeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZRh5BP4; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713202571; c=relaxed/simple;
+	bh=d2zKm+/zdhfl5CA7Wg12p50NPX81IuLX9P5M5V07qnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=leQzlTF+N32bBR7WhOg5nCNkZQfPPWBlDmNC+kkan9thSxiK9kNqkaOclaUj9nK78kvcgbV+2hmrs4eJom9jhZjpqj6sanZP0CBdZskO1o2+A0A1m47+X5K8Q6U6o/p6m3RpTjRApD+Agq9NrGMAEsk+fmmjJfktW27SvFEC+js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru; spf=pass smtp.mailfrom=mail.ru; dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b=gO43wWdd; arc=none smtp.client-ip=95.163.41.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZRh5BP4"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ecff85b21cso494643b3a.1;
-        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713202537; x=1713807337; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
-        b=OZRh5BP45gs7u13Xk0gSprV0+Z7z6T13T2rmRTsg1AOar+YqX9mYPrruGPrLyvoq2P
-         /s7oPyW+pT588hzUNo83NAckQ+ubiE7df5Bk3bpFleAXuTLqVLtE6s2kMJRVFQh53t8i
-         9xFgzPQ3HsdLb7LQTQe+/qnsIrxlK0J/DeSqe6+0Sda7IIf/1oYwqUcc7HYX2tpJLMyI
-         xCAdwkxyRYaFoRexbp79lkoWNtjEwVy8AH3Rc03PgIpx7V/IuLoTYboG4DY0zLPJ2+iQ
-         qlI7gh3z2WKfbzCbRNA5rL5XgOP3ThjotzKdNe3PJBS4fezf1CB9FuPBhIyDJJyx+C2p
-         /7IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713202537; x=1713807337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yND2zUfUi+v4q+Fs4T63lVmVArBJWibOzfGLa99Xn9w=;
-        b=lA5IPzMBRucgtJTKCxuALZ/u3Rmhuxu/AimODy3e1heYLQnDtMtbAE62LcFn7WTjfh
-         f64eB5NMu/u5JkoTjZYZ4vcB0SYn90v5ld1l41TxX41bggnlt3WuusiBQjc9PtwDh8uJ
-         23GNwcGsEdAL3wfZhpGbpq2hb04xZPOnFW/XFqbWnVvonWDr3qonPJlvh4JFFvIaQhJ0
-         ywWv8b96QWWISmVn9uHktffLo2ftzxS/nbYC7sd80faQbCLbbjn3sg7Oj8fjVE2uzXl3
-         LRrDE7l02+QOShGB/MIzlZyRvCl9TZXPW2cEKpkwvHvFh/8NmBB4T1vKGwubBt9UJ93f
-         v11w==
-X-Forwarded-Encrypted: i=1; AJvYcCW+1ebhUs4LbpqqqEF5LvUXgaRis44eUC6Cpp0aIwP12Qh5KAPirmVVkQKq14fTrEj7Z00+rNI2f1tOz4nG8T9jGwGdo5BWg76vVUp+mpJ3ztlcD3DjfxdeflbFhNZ19bzMhImMZ+9KN58tcLD8u/rdGJRRMYPhWIye91VWGUur0v85xZrk4t+mIQuchsM52uawzsfu7KxU6o1B8z1CztMRCtEPCudWcZsLWmp1
-X-Gm-Message-State: AOJu0Yws6C4neanW3YH9iIygAcri4vSuqC2Y8bDEU/LxIsLnRAbCJhB3
-	iS2r77EznTPzeQTlMWueON1mCI6abT+iUqxfzAP3U/QNfRG1deKs
-X-Google-Smtp-Source: AGHT+IG6NKLoYgtNA0zwWTzkP8WTGQd4qLXhWBTEEVWaqnnI2QLPzr1rMVeOMKwzxaqVx/1yQ3sSow==
-X-Received: by 2002:a05:6a20:2590:b0:1a9:a31a:1b69 with SMTP id k16-20020a056a20259000b001a9a31a1b69mr13640576pzd.6.1713202537217;
-        Mon, 15 Apr 2024 10:35:37 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id t6-20020a056a00138600b006ecef9e9615sm7456833pfg.200.2024.04.15.10.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:35:36 -0700 (PDT)
-Date: Tue, 16 Apr 2024 01:35:31 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: colyli@suse.de, kent.overstreet@linux.dev, msakai@redhat.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	akpm@linux-foundation.org, bfoster@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 04/17] lib min_heap: Add type safe interface
-Message-ID: <Zh1lY8EFyE943+89@visitorckw-System-Product-Name>
-References: <20240406164727.577914-1-visitorckw@gmail.com>
- <20240406164727.577914-5-visitorckw@gmail.com>
- <20240412073017.GE30852@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b="gO43wWdd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru;
+	s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:
+	To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=noytnkEgHrMBgSkifNJIOoTvaSHXWj7qb/La0lbVSa8=; t=1713202568; x=1713292568; 
+	b=gO43wWddvbQ49dBXRkoJYsuuwRvZF5ZVq8W569ioAoz6byo8//PPxyARbYIUY0KHPsiemirTTmS
+	EKSWc/cfyJT0MGuseAXHuo93F7iQrcY+OStK6CpiI2HI4bjRYh2wl7gnwTn3638Sclq3yhfUBK33O
+	0t/ER1OlFrR/YK/7pS047GFlh1FJfXgkNnSxM8bOk8DKLJtf5S7HGBi/rai9TinUsgGQ0hDSnf+5T
+	t2FJba49KHNv6oZOxTaQ61zcElTGll84OEC2hdRgJLJoxgqWJVhB646b1P+LcgbivUhuJapQFkDW1
+	24wjRh5TIjSUmSlxDanWgNyIEchnToLqjXWQ==;
+Received: by smtp39.i.mail.ru with esmtpa (envelope-from <hitechshell@mail.ru>)
+	id 1rwQFK-00000001pHD-1q0v; Mon, 15 Apr 2024 20:35:59 +0300
+From: Denis Burkov <hitechshell@mail.ru>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Denis Burkov <hitechshell@mail.ru>,
+	Rob Herring <robh@kernel.org>
+Subject: [RESEND v3 1/2] dt-bindings: arm: sunxi: Add PocketBook 614 Plus
+Date: Mon, 15 Apr 2024 22:34:15 +0500
+Message-ID: <20240415173416.13838-1-hitechshell@mail.ru>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412073017.GE30852@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp39.i.mail.ru; auth=pass smtp.auth=hitechshell@mail.ru smtp.mailfrom=hitechshell@mail.ru
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9D327C87852EB66D3342A6001465C01AB48AF3E861E45F6F6182A05F538085040D0E3E7AA877CF64D9487ABAC94A94B54C442939BAB2AB9F7C58EB4712ED216F07F2EA087B10D9051
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7FEAC828D2BF6EC3CEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063703CC57BD203DAB7D8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D88A94233F0D66DF2BFAF0B375F22606B54695FD7A20AB108420879F7C8C5043D14489FFFB0AA5F4BF176DF2183F8FC7C07734D68A6916D8318941B15DA834481FA18204E546F3947C223C850C94764309F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F79006375A3B25A3A11CE7E4389733CBF5DBD5E9B5C8C57E37DE458BD9DD9810294C998ED8FC6C240DEA76428AA50765F79006374E7EFF2C31D5F488D81D268191BDAD3DBD4B6F7A4D31EC0BE2F48590F00D11D6D81D268191BDAD3D78DA827A17800CE7B65BC19D6BDA280BEC76A7562686271ED91E3A1F190DE8FD2E808ACE2090B5E14AD6D5ED66289B5259CC434672EE63711DD303D21008E298D5E8D9A59859A8B6D082881546D9349175ECD9A6C639B01B78DA827A17800CE76C35E03DDA13F6E3731C566533BA786AA5CC5B56E945C8DA
+X-C1DE0DAB: 0D63561A33F958A5919D774154250ACB5002B1117B3ED6967EBB93CEDE99A7A2CA7E60A991436CA2823CB91A9FED034534781492E4B8EEAD0BC323893F80E328C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFCE1BD7363616B89DF9511A6418CA89A188509E3ABCE938D1CBC1FC93DA4D7B9E614F3626C4CAF433C84F44966DD9651B9F408388B9B2079814A4B3107F7B67BAE103132901890B2EE4FDFA4A036B0C3902C26D483E81D6BEAB6E9BFA52983102758FA77D78A604EFC3981EEBE9DB10F943082AE146A756F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojwhzzK0WJvz03a5neju4wKA==
+X-Mailru-Sender: 7219FA8B682B638D379344632618B47A8B23B6DDDF636CFD578FE190226AD4C0824C1BFBD0166F67DD7143E30D734E3D46315093CA775BF3554C0F224C5326CDBE1FA5EEA7DC04A0851DE5097B8401C6C89D8AF824B716EB5DB38D7CCF7198FF1D0BEC28C16373053DDE9B364B0DF289AE208404248635DF
+X-Mras: Ok
 
-On Fri, Apr 12, 2024 at 09:30:17AM +0200, Peter Zijlstra wrote:
-> On Sun, Apr 07, 2024 at 12:47:14AM +0800, Kuan-Wei Chiu wrote:
-> 
-> > -struct min_heap {
-> > -	void *data;
-> > -	int nr;
-> > -	int size;
-> > -};
-> > +#define MIN_HEAP_PREALLOCATED(_type, _name, _nr)	\
-> > +struct _name {	\
-> > +	int nr;	\
-> > +	int size;	\
-> > +	_type *data;	\
-> > +	_type preallocated[_nr];	\
-> > +}
-> 
-> 
-> > @@ -3738,7 +3739,7 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  	struct perf_cpu_context *cpuctx = NULL;
-> >  	/* Space for per CPU and/or any CPU event iterators. */
-> >  	struct perf_event *itrs[2];
-> > -	struct min_heap event_heap;
-> > +	struct perf_event_min_heap event_heap;
-> >  	struct perf_event **evt;
-> >  	int ret;
-> >  
-> > @@ -3747,11 +3748,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  
-> >  	if (!ctx->task) {
-> >  		cpuctx = this_cpu_ptr(&perf_cpu_context);
-> > -		event_heap = (struct min_heap){
-> > -			.data = cpuctx->heap,
-> > -			.nr = 0,
-> > -			.size = cpuctx->heap_size,
-> > -		};
-> > +		event_heap.data = cpuctx->heap;
-> > +		event_heap.nr = 0;
-> > +		event_heap.size = cpuctx->heap_size;
-> >  
-> >  		lockdep_assert_held(&cpuctx->ctx.lock);
-> >  
-> > @@ -3760,11 +3759,9 @@ static noinline int visit_groups_merge(struct perf_event_context *ctx,
-> >  			css = &cpuctx->cgrp->css;
-> >  #endif
-> >  	} else {
-> > -		event_heap = (struct min_heap){
-> > -			.data = itrs,
-> > -			.nr = 0,
-> > -			.size = ARRAY_SIZE(itrs),
-> > -		};
-> > +		event_heap.data = itrs;
-> > +		event_heap.nr = 0;
-> > +		event_heap.size = ARRAY_SIZE(itrs);
-> >  		/* Events not within a CPU context may be on any CPU. */
-> >  		__heap_add(&event_heap, perf_event_groups_first(groups, -1, pmu, NULL));
-> >  	}
-> 
-> Not too happy about these. If you ever add more fields they will go
-> uninitialized. Why not keep the existing form and fix the struct name?
+Add a new board name.
 
-Sorry for the late reply. I'm traveling.
-I'll change that back in v4.
+Signed-off-by: Denis Burkov <hitechshell@mail.ru>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Regards,
-Kuan-Wei
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 09d835db6db5..43491e7f8a5e 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -774,6 +774,11 @@ properties:
+           - const: pocketbook,touch-lux-3
+           - const: allwinner,sun5i-a13
+ 
++      - description: PocketBook 614 Plus
++        items:
++          - const: pocketbook,614-plus
++          - const: allwinner,sun5i-a13
++
+       - description: Point of View Protab2-IPS9
+         items:
+           - const: pov,protab2-ips9
+-- 
+2.43.2
+
