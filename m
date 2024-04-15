@@ -1,91 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EBA71759
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DD876057;
+	Mon, 15 Apr 2024 13:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188295; cv=none; b=QDVNFob7jdExFC5f0EAO7qDtqMGRD0fG0/5kfeDt7iN+Ql8VIAxsgtvKGpzfDLAmB3GjFLntr6u3b+geCQd+i3yk8eZlIzY8JiD4hRc4p0lwK6TouIPCIjH3rMxT6/mwXz+Z9xoJusd0H8GNx9yZ8Dykzk2rJt5dYQ5MECFFig8=
+	t=1713188323; cv=none; b=diIMphybTXk419Mmx78+uqK7SpJSsh91lJGmwL1paKPE4GBrssPYqt4urKdq43p/muqj8aFiSBDe+u12YaZVZvlMSp6asIb2m/lN3Hfr1OixtRxavO6756FIXI4m7Ms1VGofrOWr8HngcQ/qmRqj6AlrcbS2RV6dzovqW8po3kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188295; c=relaxed/simple;
-	bh=D5lnOS4BaZn4Qhbk5HBYMUjuMcVsr7Tg9EDh+w5m3oQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=th6y++VyeUqJLpfSi4UQ1yz25eJfV0T9Ka+T5Dyb0Ji122oOWsHLfjYfBrN5HnXhC5oYLkeEqaARof9DfaJxmh0iMfiORV9hkabRP0y11YkFqgEk6NeN98INMXtokFj3XLDrUwD2+4iiyMuQMD0cNiUcCF+NeNwUgWTSqNS42Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1Gx9/7H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713188323; c=relaxed/simple;
+	bh=GOpywjy/f47DDDysRmWIO2J0xCC64iHGAOQIV8Qj7F8=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u5hSBDYNXOKp5vyBLbfgwx196YxR3+OobPNQuJG14aO+WAuXcAhWqY8oUHUFpz/bEiLBGPmPbBgCU9JaOuKgec2wkO5HfjJ7Lj7JlgiJSjv1S5jcTLTqrupFIs8msQpXtB9hrx0KxzqTVoa8PSwCZffxGAPRHO1h36JFLqZNJl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yOhZGQQc; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1Gx9/7H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643B1C2BD10;
-	Mon, 15 Apr 2024 13:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713188295;
-	bh=D5lnOS4BaZn4Qhbk5HBYMUjuMcVsr7Tg9EDh+w5m3oQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c1Gx9/7HrR7qcEPgR+1Gf7UVgaJwyZJ3Vt3Jt92x6Ap36pWHyJQPiko8+8rfYwOHB
-	 6lf//ROsKkm+Vv2WeATEHf0gQyzXcpvNZ5NAM5UMBNA3QuQFbByK+hIdRuJJhTJE/t
-	 QTur5cx7RJRyPOPcJEUNgKN+AMiG9x0kGkU9L8OkhAU4EdvrC+eqtCoRITVtbqYJW7
-	 K7dwUoT3Pf5zwYxG71dJOS8ejhMMoSuYkh0obmKVGXta/80keaAWvRI5CbXLl6kIor
-	 cA3ib1p9RDty4OhcjwV1yjVLmnh1ZMaipYA3PUCeLy7Xo6BNW0I0PNFsRngLao8MXH
-	 cBkT9G504KWdw==
-Date: Mon, 15 Apr 2024 15:38:07 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org, 
-	huyue2@coolpad.com, jefflexu@linux.alibaba.com, viro@zeniv.linux.org.uk, 
-	linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com
-Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
-Message-ID: <20240415-betagten-querlatte-feb727ed56c1@brauner>
-References: <20240415121746.1207242-1-libaokun1@huawei.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yOhZGQQc"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FAvxKD019795;
+	Mon, 15 Apr 2024 15:38:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=
+	selector1; bh=GOpywjy/f47DDDysRmWIO2J0xCC64iHGAOQIV8Qj7F8=; b=yO
+	hZGQQcs0JCrB9Vu3qov1OfOnIOmxqQBmKC4yfedzFpzTpelm8breBeJ15EEr2iWH
+	Bs0zBsY4RQTaUK8wIqdj3c9lQl4fPC5lhYUS552qxILUlYBsWQ8Znt1KocWqXxsd
+	xqLYXvCuKruecAE03mqVqE1JhdBz9W1WjqkVb8urC4Nb7rzcq7StJ1nUn35dWMe1
+	pl284g1xay3GC1J5aZw60MabS7mnvI5sMaqTudfHaY24GmdXDMQ3XlfupgQzTYEs
+	SxiExgcgJsxMsibv97iBKwPN29G2u11tB1wAlCYvAGZYYeMEHg24QvAcARvd7a1P
+	5X8+qL8NoOxGwk9Ifytg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xfhcwfup2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Apr 2024 15:38:04 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2AA584002D;
+	Mon, 15 Apr 2024 15:37:59 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 94C75211F1E;
+	Mon, 15 Apr 2024 15:37:13 +0200 (CEST)
+Received: from [192.168.8.15] (10.48.86.102) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Apr
+ 2024 15:37:12 +0200
+Message-ID: <d92eaa433cd2403c4f3c3b7e49aa8dbf0b3e256e.camel@foss.st.com>
+Subject: Re: [PATCH 02/12] dt-bindings: interrupt-controller: stm32-exti:
+ Add irq nexus child node
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Fabrice Gasnier
+	<fabrice.gasnier@foss.st.com>
+Date: Mon, 15 Apr 2024 15:37:10 +0200
+In-Reply-To: <87cyssa64a.ffs@tglx>
+References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+	 <20240216094758.916722-3-antonio.borneo@foss.st.com> <87cyssa64a.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240415121746.1207242-1-libaokun1@huawei.com>
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
 
-On Mon, Apr 15, 2024 at 08:17:46PM +0800, Baokun Li wrote:
-> When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
-> been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
-> be mistaken for fscache mode, and then attempt to free an anon_dev that has
-> never been allocated, triggering the following warning:
-> 
-> ============================================
-> ida_free called for id=0 which is not allocated.
-> WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
-> Modules linked in:
-> CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
-> RIP: 0010:ida_free+0x134/0x140
-> Call Trace:
->  <TASK>
->  erofs_kill_sb+0x81/0x90
->  deactivate_locked_super+0x35/0x80
->  get_tree_bdev+0x136/0x1e0
->  vfs_get_tree+0x2c/0xf0
->  do_new_mount+0x190/0x2f0
->  [...]
-> ============================================
-> 
-> To avoid this problem, add SB_NODEV to fc->sb_flags after successfully
-> parsing the fsid, and then the superblock inherits this flag when it is
-> allocated, so that the sb_flags can be used to distinguish whether it is
-> in block dev based mode when calling erofs_kill_sb().
-> 
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> ---
->  fs/erofs/super.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index b21bd8f78dc1..7539ce7d64bc 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -520,6 +520,7 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->  		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
->  		if (!ctx->fsid)
->  			return -ENOMEM;
-> +		fc->sb_flags |= SB_NODEV;
+On Mon, 2024-02-19 at 15:19 +0100, Thomas Gleixner wrote:
+> On Fri, Feb 16 2024 at 10:47, Antonio Borneo wrote:
+> > The mapping of EXTI interrupts to its parent interrupt controller
+> > is both SoC and instance dependent.
+> > The current implementation requires adding a new table to the
+> > driver's code and a new compatible for each new EXTI instance.
+> >=20
+> > Add to the binding an interrupt nexus child node that will be
+> > used on the new EXTI instances and can be optionally used on the
+> > existing instances.
+> > The property 'interrupt-map' in the nexus node maps each EXTI
+> > interrupt to the parent interrupt.
+> > Align #address-cells and #interrupt-cells between the EXTI node
+> > and its nexus node.
+> >=20
+> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>=20
+> This S-O-B chain is broken as it suggests that you wrote the patch and
+> Fabrice relayed it.
+>=20
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#si=
+gn-your-work-the-developer-s-certificate-of-origin
+>=20
+> But that's not the case. If you co-developed this with Fabrice then
+> please use Co-developed-by. See:
+>=20
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#wh=
+en-to-use-acked-by-cc-and-co-developed-by
+>=20
+> Thanks,
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
+>=20
 
-Hm, I wouldn't do it this way. That's an abuse of that flag imho.
-Record the information in the erofs_fs_context if you need to.
+Thanks for the review.
+I'm sending a V2 addressing all the remarks.
+
+Regards,
+Antonio
