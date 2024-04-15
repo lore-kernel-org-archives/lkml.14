@@ -1,137 +1,115 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD81E8289E
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FA682D69;
+	Mon, 15 Apr 2024 17:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713201777; cv=none; b=m/6VyFt2jU3UNgXM8wIrQzFKqOWOxGTn998RxflvkQL5qQxEb35wVAuzCI6DtR8lU1Z1c6Kwms6M2mVXdzw6B8T95rpo+kdvZ+TahiSSNjQQF+5xAROLv4x6L1AQ1UIzBBGUgNHV75qU8JuwJfyb8jqjWbeD4ygqhCt/mHRc6wY=
+	t=1713201829; cv=none; b=l7CGORh0IDbH6rXKQCX4y3QwfXxENjt2RkZi0ABdyy/Nc+c4WPgX873k1rY12Bh+S/N8dJevlLKKJtVPW1VefebtNB2i9cl8uLsBgqIoJ+5HXDPlra/dklKZDbMNsdjf5CdsFmMFTq+NogEgUuJV56E0SAboQXS69up/g/qkjoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713201777; c=relaxed/simple;
-	bh=cVYE2ehOGt9AZu4lK44Xq/DDtOiFLWELDzP2xoxBwKk=;
+	s=arc-20240116; t=1713201829; c=relaxed/simple;
+	bh=XghqsD/3pOgYP0EA5HsN9vwQrCMSAJUdZw3nglyGOAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=USS22RqUP7ZHpcT/VycsShzPIHhOOrCYjprYyKUpVXqshtaKlj/XUpDdxORin/bfMbNP1iD7hsr3eP76TYBbt0feI5v8AYJIpnhGMEPcfnEdOyxUhySuGT+ysGn8dRHX5vP6OL+KaINESnP/mSaDL6SQVjpzExH2V3zj4Hsl/58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n1/7fwws; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgAK3Xs4s2vwtEHYGXbaIb0ahxeCdXfl+6JL5QvGobZVFqpWc6auUM5B6hpii+XqbpZ6KfcumvT7mZ/+HKqEqdmX1CRBPApELjzcRyeqgcfFE8Yad9t8VBtt3Dc2prJmRri/22/HGL1RHL30OPnqoPntfmcPK/FxBicVEsOEnWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9p9lRAu; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n1/7fwws"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e2178b2cf2so32238535ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9p9lRAu"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34782776b19so1284095f8f.0;
+        Mon, 15 Apr 2024 10:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713201775; x=1713806575; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713201826; x=1713806626; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
-        b=n1/7fwwsz1foICewoRUWdT5xs8fB6NPWFGr0ktjY/VuOuhmhiUJFzqUk7Hh0CxPvax
-         E5YisngVBin3djrd6DDhs4QCGQ3QzkFrCWfEDkLyfrJo6Rw1syIkQ4vSTaxW32o1JVNp
-         BsyNyTkN7IyXA2SxPVivq380Pagf5FO7bMGXs=
+        bh=MAQHdV/dGa1CgJuqaWPz4Z25FYR5vxGuEea/Z0mz/6A=;
+        b=H9p9lRAuuffAQSsNpx77/LIpDXO9nt5o7twUxhf2ni852ifakBSAZVyAFV3DzBRaYU
+         BDz+UthLS1McNHqaocglKQVGLoVQrPO9bgxuWoxtVxOM6Uy49cOfrTtpcmaFmOeyhUZa
+         ZvaRX6YUUiYGILhp9LcaSENAWkI5X0MK68ERIoN8bzofBpQXN5u1N7uMpI/HDlZKDc41
+         M8H4B3mnd2JNNZ6Mu7DFYxbpkBrbZ7pV2QbrWVE63NeeOlOz3l/jJC5h7jywtQzc3MOL
+         Hpdmq9BMzf0vdKxE/FfRgyPi5uh6w9rh8Tds5T0jSh4uvsMiYoNofzwzlzSDy/ebDYPT
+         1K2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713201775; x=1713806575;
+        d=1e100.net; s=20230601; t=1713201826; x=1713806626;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
-        b=Obc2Tp9ttxnnuT6bge1Y4RAfUAqCv/1iXwAEst7gWE475Tz6d8e8GpS2QtJyWzC06i
-         HiEGCQvZ3F6QmLdfZrXtsJVOenVI4mtsXOXcl9k7jyFUIx+YXQR9IUVEyev4ADhWdmCd
-         omhLQjc43xcEjT+On4/CdfEvVTnjSijWloVSjPlYCN6fiteCaHiXeZf32vxMZVHDBtpE
-         W+PcWMrH725PoG++s654a2COlNkfGc4sDWV3XHPUMfF+euo/cJRZqgHLsIvyaTZaGOEk
-         +AFEVOmmsbsazKG/Ia5Nu2EOgydFKdMX1uHVngOi3eFw1XaTf9qwAOEObi9YyJzRxcom
-         2/GA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVscx8fyjPTdV01+UR+bOg7fOSAJ5YXKE7Krf4iSQt13jBIT5tdMhINiiLBTVfsxUi0A6Ex9UcC969UqWu9j3X9CRS7Wcrkjf+PZV7
-X-Gm-Message-State: AOJu0YwWeZFMpplAaziL622pwvp2x/orhYTDe9szgOQt+ZeEbNPVst3J
-	DOCKukKVXRY+t9HY6Cp9AkZv3N3CQ24tsKo6NnwJKFdlKkCFpMB/8OQ4+g91XA==
-X-Google-Smtp-Source: AGHT+IGecUmEOfE36Uzb8gHIAKlLpWNf+xF3BoTR88anSiFWvmiZTMlAPARou5mOFCGqDFBXXAVwXQ==
-X-Received: by 2002:a17:902:e807:b0:1e4:1eea:a3ae with SMTP id u7-20020a170902e80700b001e41eeaa3aemr13173797plg.5.1713201775022;
-        Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b9-20020a170902d50900b001dee4a22c2bsm8144525plg.34.2024.04.15.10.22.54
+        bh=MAQHdV/dGa1CgJuqaWPz4Z25FYR5vxGuEea/Z0mz/6A=;
+        b=UwclZ8hBa2Am9J4ynBIejRNViFZ2yaZALOTnFGKxQ/bAhRK4Z2MVFkOJMTAdN7tAXm
+         GUqAHa4bTdJUoOYMKsZIPGba80QJmCjngKoG8tgIi1GuyfeoAuqQvn66hwqzLsRkUaH3
+         I7NGX6q8FudRWbIE3yIr7M+mvULuJFJkjaEbt7Wb0bKyjHMcNEqYskwCLuGVZHy0CES9
+         +FXDNRXCVSNvi3Ej7BU9H9ZZSRHFaleSbf7I1gDVO4SgV9XHL4loR3lXcgaRawzW4Qsa
+         jh9hL2n3/nBUGIJDwjUzS6JaE8xnkfYVxRY950IwVnMhcxk0wAD3gL826nnua9vrTdDb
+         a1vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcuT2E96NLyec6dMaVmY8FyTbGik6KhxwoEr6JmlbCGKLKh/jjrKoqPq4dLd+haLxfqU9xux6ma2CX0QTQqfL+9onv6PL7HfByqfUK8jOshkyN3eiOwz2kY5lbmzZHnHLHBJp/jQ/2F2qve9vsDIY6oHMkZD767OicHiiFE2D/CClrTUojBrVS1Rg=
+X-Gm-Message-State: AOJu0Yy1yPoZjqc592LtESadQFyokxX+tJhdZIREYhvzVtyOrzRasJMv
+	dvSwaDADjmrzd6RZyWo7HDOGqq/LZcS2hqqfSc7RnPtUCmdGAq4=
+X-Google-Smtp-Source: AGHT+IHYzXt2V6x4P7IzY6gQUjvSJTk4x1goJEs+3JyHo+AAHgTv36lTgIH+czG21fKdtB8EV6Tvhw==
+X-Received: by 2002:a5d:6087:0:b0:346:6c9b:4f9f with SMTP id w7-20020a5d6087000000b003466c9b4f9fmr6871105wrt.9.1713201825986;
+        Mon, 15 Apr 2024 10:23:45 -0700 (PDT)
+Received: from p183 ([46.53.253.150])
+        by smtp.gmail.com with ESMTPSA id q10-20020adffeca000000b0033dd2a7167fsm12668899wrs.29.2024.04.15.10.23.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:22:54 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:22:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>, wklin@google.com,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
- memmap=nn*align:name
-Message-ID: <202404151017.FC002AA5@keescook>
-References: <20240409210254.660888920@goodmis.org>
- <20240409211351.075320273@goodmis.org>
- <202404091521.B63E85D@keescook>
- <20240409191156.5f92a15c@gandalf.local.home>
- <202404091638.2F98764A41@keescook>
- <Zhmgm86tzpanoweB@kernel.org>
- <20240412181940.3e1d99f7@gandalf.local.home>
+        Mon, 15 Apr 2024 10:23:45 -0700 (PDT)
+Date: Mon, 15 Apr 2024 20:23:43 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: akpm@linux-foundation.org, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Subject: Re: [PATCH] module: ban '.', '..' as module names, ban '/' in module
+ names
+Message-ID: <e770923a-6719-403c-a9f2-1f7ac4313474@p183>
+References: <ee371cf7-69fa-4f9c-99b9-59bab86f25e4@p183>
+ <ZhxDj3vQFLy62Yow@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240412181940.3e1d99f7@gandalf.local.home>
+In-Reply-To: <ZhxDj3vQFLy62Yow@bombadil.infradead.org>
 
-On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
-> On Fri, 12 Apr 2024 23:59:07 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
+On Sun, Apr 14, 2024 at 01:58:55PM -0700, Luis Chamberlain wrote:
+> On Sun, Apr 14, 2024 at 10:05:05PM +0300, Alexey Dobriyan wrote:
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -3616,4 +3616,12 @@ extern int vfs_fadvise(struct file *file, loff_t offset, loff_t len,
+> >  extern int generic_fadvise(struct file *file, loff_t offset, loff_t len,
+> >  			   int advice);
+> >  
+> > +/*
+> > + * Use this if data from userspace end up as directory/filename on
+> > + * some virtual filesystem.
+> > + */
+> > +static inline bool string_is_vfs_ready(const char *s)
+> > +{
+> > +	return strcmp(s, ".") != 0 && strcmp(s, "..") != 0 && !strchr(s, '/');
+> > +}
+> >  #endif /* _LINUX_FS_H */
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -2893,6 +2893,11 @@ static int load_module(struct load_info *info, const char __user *uargs,
+> >  
+> >  	audit_log_kern_module(mod->name);
+> >  
+> > +	if (!string_is_vfs_ready(mod->name)) {
+> > +		err = -EINVAL;
+> > +		goto free_module;
+> > +	}
+> > +
 > 
-> > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
-> > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:  
-> > > > On Tue, 9 Apr 2024 15:23:07 -0700
-> > > > Kees Cook <keescook@chromium.org> wrote:
-> > > >   
-> > > > > Do we need to involve e820 at all? I think it might be possible to just
-> > > > > have pstore call request_mem_region() very early? Or does KASLR make
-> > > > > that unstable?  
-> > > > 
-> > > > Yeah, would that give the same physical memory each boot, and can we
-> > > > guarantee that KASLR will not map the kernel over the previous location?  
-> > > 
-> > > Hm, no, for physical memory it needs to get excluded very early, which
-> > > means e820.  
-> > 
-> > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
-> > kaslr, so to begin with, a new memmap parameter should be also added to
-> > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
-> > physical address will be available after KASLR.
-> 
-> But doesn't KASLR only affect virtual memory not physical memory?
+> Sensible change however to put string_is_vfs_ready() in include/linux/fs.h 
+> is a stretch if there really are no other users.
 
-KASLR for x86 (and other archs, like arm64) do both physical and virtual
-base randomization.
+This is forward thinking patch :-)
 
-> This just makes sure the physical memory it finds will not be used by the
-> system. Then ramoops does the mapping via vmap() I believe, to get a
-> virtual address to access the physical address.
+Other subsystems may create files/directories in proc/sysfs, and should
+check for bad names as well:
 
-I was assuming, since you were in the e820 code, that it was
-manipulating that before KASLR chose a location. But if not, yeah, Mike
-is right -- you need to make sure this is getting done before
-decompress_kernel().
+	/proc/2821/net/dev_snmp6/eth0
 
--- 
-Kees Cook
+This looks exactly like something coming from userspace and making it
+into /proc, so the filter function doesn't belong to kernel/module/internal.h
