@@ -1,265 +1,117 @@
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780731E877;
-	Mon, 15 Apr 2024 17:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96651369B8;
+	Mon, 15 Apr 2024 17:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713203835; cv=none; b=reCVqmogFsswj81gm+bptWNVnE+u7qKli4yW0UuTwHTTyJPhJopcnGK1/hUUl2ZvnL7othyU5j4oNl6+zvgJTCbZJwn1OYzRGuUFQ3+gdDL2iU5H42WKbmlV/owhDaSNPMCXayvWPd9SaRtnT3/IOrOsce3ikNAGYnWXfsWTFZo=
+	t=1713203837; cv=none; b=DMM2AqC2MipIwKecgqYqZqRoiCgxG9jiVsXzKaYcySC6CrozDmnsM6Z0BhURYPEW3W9WwRBz92+Z9zGEiw6chOQW3XCuMKkcKx4HE6Vm8AcvdX59fZuJ97evFiY/HEwRMgRfAIXNxwVIpnjxQW/eq7hvjODv2yecYrJoXobTAGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713203835; c=relaxed/simple;
-	bh=h60ENWhTd0WQWG/ElpVhgeuLSSZCgBiTUfF88pSPlLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TgWq7Be+Qt1jFlmT8TwfAaDvHOo+DYAxN/1Ka5DGusQy/A7V5j41XsJBljwnBny8MsxUbBF2U++A9TnBBabZU8wZQ2XsyhcYSzPThPPaajOU336Sx6AA2JsfJZpC9qz5moqOmhj/fIE4XRbvqDA1P6qjIehNvh89skGBu2PrmFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=i7Xw5asM; arc=none smtp.client-ip=80.12.242.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713203837; c=relaxed/simple;
+	bh=HZXXTICwCNfNnAAPksAihITX/uhY4HG81OJG+2aD0Lg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z2zN7MvKSGEjOaU3ydJOGNCAZHa5Nh4jxc2gJ5LWGGzqa8ZkCD1hsNY7OtmEh1z9NfXzgRl3WMjPQgMrweb+gMo8lZcVeoSyHtwYwP5notr/msd9nqM4lRoIdvZ/Hxu7wHOZxc/6z2uz76MpDnQsoGQ1cWdd/K7VCJcdRDxGRII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=qraoAuVl; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="i7Xw5asM"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id wQYWrGoAULfMZwQYWrYCD1; Mon, 15 Apr 2024 19:55:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713203752;
-	bh=dW3oL+k/ZeNgRT3UGBFK7vTFs88VdDG5H8DfUFlIPC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=i7Xw5asM45SBeb0bSeXC8Fp4smRGc53cIohAynnLwvuUEaaSJNcszOriVjf9r8bE3
-	 qiDhxY5wjQbGahF3VxFjJuD5DS7jYDU6j8gfZoVkYpp637XhqZWmp2SXTs6qQb9TUG
-	 1EyrI4WDInrQMBN7KLyy6BxQ+GzDeeR5uQW+OLQKXLUu+PDD+DQnbTxmOn/5DxvqGw
-	 nUYfc+qiXrN0O3DQKcIUHggNWWm9QCd5ELDJzb2m3BIIQxbCUTkinUt8V1Kh1wQZV+
-	 e9xSjB04woj4hLr3lz5E3b1ozYIKVMFjGM7wsUFESWSOy2WMMcWGZsgbk5NhAJQn59
-	 eXkspoh3YeLlg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 15 Apr 2024 19:55:52 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <97189d64-0db1-4663-8a2e-c1a7c06a241c@wanadoo.fr>
-Date: Mon, 15 Apr 2024 19:55:48 +0200
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="qraoAuVl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=7WoF/OVhja5rh0oZfHmbZHpLS9885IhKeZTon+/iGxA=; b=qraoAuVl2vW4OX78
+	0mqZnQJQzqSfaofrXipcO+bzUmf69MX21EjsLpb51ayPP4EkFCxSqG5+7ZSlKXrtuUN7GTMgPVpgK
+	hLL6jmykX+jjjZZRq/8++IEyjyCZS2O2oDo+1/tP4TuuE2m/YuDmBumng0J9Q2Ed0/rKUsM9gqlNi
+	FauM6xkVIFCUYF/BEn9hNqQxGwd1g9Al9TFKti28M45fYuVUUuOtoEw6mkBvpMeWzEDiwIBBQdML/
+	05rpf7EMZqogpYlYkNNOHvbqnjggIIZi7c3Pi9cmnHMqFXpolHVqMn8H8LvBwNWcFcc/88CO6ySHB
+	eJ+bzeEJsoYoSc5YiQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1rwQJO-001G0D-1x;
+	Mon, 15 Apr 2024 17:40:10 +0000
+Date: Mon, 15 Apr 2024 17:40:10 +0000
+From: "Dr. David Alan Gilbert" <dave@treblig.org>
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, akpm@linux-foundation.org,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, jack@suse.cz
+Subject: Re: [PATCH] module: ban '.', '..' as module names, ban '/' in module
+ names
+Message-ID: <Zh1menJ5GYy2ayFx@gallifrey>
+References: <ee371cf7-69fa-4f9c-99b9-59bab86f25e4@p183>
+ <ZhxDj3vQFLy62Yow@bombadil.infradead.org>
+ <e770923a-6719-403c-a9f2-1f7ac4313474@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] drm/panel: Add driver for EDO RM69380 OLED panel
-To: david@mainlining.org
-Cc: airlied@gmail.com, conor+dt@kernel.org, daniel@ffwll.ch,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, marijn.suijten@somainline.org,
- mripard@kernel.org, neil.armstrong@linaro.org, phone-devel@vger.kernel.org,
- quic_jesszhan@quicinc.com, robh@kernel.org, sam@ravnborg.org,
- tzimmermann@suse.de, ~postmarketos/upstreaming@lists.sr.ht
-References: <20240415-raydium-rm69380-driver-v2-0-524216461306@mainlining.org>
- <20240415-raydium-rm69380-driver-v2-2-524216461306@mainlining.org>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240415-raydium-rm69380-driver-v2-2-524216461306@mainlining.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <e770923a-6719-403c-a9f2-1f7ac4313474@p183>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-17-amd64 (x86_64)
+X-Uptime: 17:39:50 up 103 days, 20:29,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-Le 15/04/2024 à 18:10, David Wronek a écrit :
-> Add support for the 2560x1600@90Hz OLED panel by EDO bundled with a
-> Raydium RM69380 controller, as found on the Lenovo Xiaoxin Pad Pro 2021.
+* Alexey Dobriyan (adobriyan@gmail.com) wrote:
+> On Sun, Apr 14, 2024 at 01:58:55PM -0700, Luis Chamberlain wrote:
+> > On Sun, Apr 14, 2024 at 10:05:05PM +0300, Alexey Dobriyan wrote:
+> > > --- a/include/linux/fs.h
+> > > +++ b/include/linux/fs.h
+> > > @@ -3616,4 +3616,12 @@ extern int vfs_fadvise(struct file *file, loff_t offset, loff_t len,
+> > >  extern int generic_fadvise(struct file *file, loff_t offset, loff_t len,
+> > >  			   int advice);
+> > >  
+> > > +/*
+> > > + * Use this if data from userspace end up as directory/filename on
+> > > + * some virtual filesystem.
+> > > + */
+> > > +static inline bool string_is_vfs_ready(const char *s)
+> > > +{
+> > > +	return strcmp(s, ".") != 0 && strcmp(s, "..") != 0 && !strchr(s, '/');
+> > > +}
+> > >  #endif /* _LINUX_FS_H */
+> > > --- a/kernel/module/main.c
+> > > +++ b/kernel/module/main.c
+> > > @@ -2893,6 +2893,11 @@ static int load_module(struct load_info *info, const char __user *uargs,
+> > >  
+> > >  	audit_log_kern_module(mod->name);
+> > >  
+> > > +	if (!string_is_vfs_ready(mod->name)) {
+> > > +		err = -EINVAL;
+> > > +		goto free_module;
+> > > +	}
+> > > +
+> > 
+> > Sensible change however to put string_is_vfs_ready() in include/linux/fs.h 
+> > is a stretch if there really are no other users.
 > 
-> Signed-off-by: David Wronek <david-vu3DzTD92ROXwddmVfQv5g@public.gmane.org>
-> ---
->   drivers/gpu/drm/panel/Kconfig                 |  14 +
->   drivers/gpu/drm/panel/Makefile                |   1 +
->   drivers/gpu/drm/panel/panel-raydium-rm69380.c | 366 ++++++++++++++++++++++++++
->   3 files changed, 381 insertions(+)
+> This is forward thinking patch :-)
 > 
+> Other subsystems may create files/directories in proc/sysfs, and should
+> check for bad names as well:
+> 
+> 	/proc/2821/net/dev_snmp6/eth0
+> 
+> This looks exactly like something coming from userspace and making it
+> into /proc, so the filter function doesn't belong to kernel/module/internal.h
 
-...
+You mean like:
 
-> +static int rm69380_on(struct rm69380_panel *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = ctx->dsi[0];
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-> +	if (ctx->dsi[1])
-> +		ctx->dsi[1]->mode_flags |= MIPI_DSI_MODE_LPM;
-> +
-> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd4);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x00, 0x80);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd0);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x48, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x26);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x75, 0x3f);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x1d, 0x1a);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x53, 0x28);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xc2, 0x08);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x35, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x51, 0x07, 0xff);
-> +
-> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(20);
-> +
-> +	ret = mipi_dsi_dcs_set_display_on(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set display on: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(36);
+[24180.292204] tuxthe____: renamed from tuxthe🐧
+root@dalek:/home/dg# ls /sys/class/net/
+enp5s0  lo  tuxthe____  tuxthe🐧  tuxthe🖊  virbr0  virbr1
 
-36 and 35 below are un-usual values for msleep.
+?
 
-Why 2 different values?
-Would using a #define for this(these) value(s) make sense here?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int rm69380_off(struct rm69380_panel *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = ctx->dsi[0];
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-> +	if (ctx->dsi[1])
-> +		ctx->dsi[1]->mode_flags &= ~MIPI_DSI_MODE_LPM;
-> +
-> +	ret = mipi_dsi_dcs_set_display_off(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set display off: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(35);
-
-(here)
-
-> +
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-> +		return ret;
-> +	}
-> +	msleep(20);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int rm69380_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct mipi_dsi_host *dsi_sec_host;
-> +	struct rm69380_panel *ctx;
-> +	struct device *dev = &dsi->dev;
-> +	struct device_node *dsi_sec;
-> +	int ret, i;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->supplies[0].supply = "vddio";
-> +	ctx->supplies[1].supply = "avdd";
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-> +				      ctx->supplies);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-> +
-> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ctx->reset_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-> +				     "Failed to get reset-gpios\n");
-> +
-> +	dsi_sec = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
-> +
-> +	if (dsi_sec) {
-> +		dev_dbg(dev, "Using Dual-DSI\n");
-
-This should be after de 'info' variable below, so...
-
-> +
-> +		const struct mipi_dsi_device_info info = { "RM69380", 0,
-> +							   dsi_sec };
-> +
-> +		dev_dbg(dev, "Found second DSI `%s`\n", dsi_sec->name);
-
-... maybe merge the 2 messages into something like:
-       dev_dbg(dev, "Using Dual-DSI: found `%s`\n", dsi_sec->name);
-
-> +
-> +		dsi_sec_host = of_find_mipi_dsi_host_by_node(dsi_sec);
-> +		of_node_put(dsi_sec);
-> +		if (!dsi_sec_host) {
-> +			return dev_err_probe(dev, -EPROBE_DEFER,
-> +					     "Cannot get secondary DSI host\n");
-> +		}
-> +
-
-Nit: unneeded { }
-
-> +		ctx->dsi[1] =
-> +			mipi_dsi_device_register_full(dsi_sec_host, &info);
-> +		if (IS_ERR(ctx->dsi[1])) {
-> +			return dev_err_probe(dev, PTR_ERR(ctx->dsi[1]),
-> +					     "Cannot get secondary DSI node\n");
-> +		}
-
-Nit: unneeded { }
-
-> +
-> +		dev_dbg(dev, "Second DSI name `%s`\n", ctx->dsi[1]->name);
-> +		mipi_dsi_set_drvdata(ctx->dsi[1], ctx);
-> +	} else {
-> +		dev_dbg(dev, "Using Single-DSI\n");
-> +	}
-> +
-> +	ctx->dsi[0] = dsi;
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +	drm_panel_init(&ctx->panel, dev, &rm69380_panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +	ctx->panel.prepare_prev_first = true;
-> +
-> +	ctx->panel.backlight = rm69380_create_backlight(dsi);
-> +	if (IS_ERR(ctx->panel.backlight))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-> +				     "Failed to create backlight\n");
-> +
-> +	drm_panel_add(&ctx->panel);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
-> +		if (!ctx->dsi[i])
-> +			continue;
-> +
-> +		dev_dbg(&ctx->dsi[i]->dev, "Binding DSI %d\n", i);
-> +
-> +		ctx->dsi[i]->lanes = 4;
-> +		ctx->dsi[i]->format = MIPI_DSI_FMT_RGB888;
-> +		ctx->dsi[i]->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-> +					  MIPI_DSI_CLOCK_NON_CONTINUOUS;
-> +
-> +		ret = mipi_dsi_attach(ctx->dsi[i]);
-> +		if (ret < 0) {
-> +			drm_panel_remove(&ctx->panel);
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to attach to DSI%d\n", i);
-
-The error handling looks incomplete.
-Previous mipi_dsi_attach() should be undone by a mipi_dsi_detach() as 
-done in the remove function.
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-CJ
-
+Dave
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
