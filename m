@@ -1,71 +1,57 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18B284D24;
-	Mon, 15 Apr 2024 18:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C2384D24;
+	Mon, 15 Apr 2024 18:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205219; cv=none; b=bW3RWevGncJimNXHhFdvUhwfhMjyUaAL1ILKIyd+776Q7gzDG9j+HRaieHobudYl0Tc8wpI71o7c47M/cdb2WFzj94B7EhqU3SPZ//QCiI9ET2CpBcYPgX25O4m+tF9UQ+Ckr+wNK1JCiXntkJIgsUph+0Zs5pQmp0Uh31ANdVk=
+	t=1713205257; cv=none; b=fxKti/lgnGbjw/zpF+N662qDkhy50jg/TZMl4sIu1N9WUPRM9YLYHTT4gzuzlIzhhMzw/3VIzv27UkZHbKB2PoE4axzdknh1TQLAX3CwKvoJ50c9WAttSZUB6qoNNhHV4T1toavvG75I/UpCf6TRKAgfnFaeYpK5MD72v2GUnCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205219; c=relaxed/simple;
-	bh=IxmxOLjq+t/EfrnlWvmdomJwg/g/pev1YIKJkP7Vx6I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qbbg+9xhN7NopET8NBul1IlpEbnSwD7YPR9Mbj0DWnXCZY6Jg39+xVyO3d1SrUSKzIC1NRbrP37ETCNChlYKf3BmjXmalmaBd0ZU3QOTaMPDnaLHy9OvdlhRCWvFNjDkPXZJ+CjOiFNKIPmiYBjj5Z988Lp02kR8KNfr2kYUsFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDdEU2cp; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713205257; c=relaxed/simple;
+	bh=yOL9RQkQZOwUCAqbLSj1a2WoEW56l25BTbDLITbtZjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ml1csk33sEE3UYPYfnTEgV3iW6f2e/UbqTCd27CGcxWQ86pldd8bxZ3d9rAHsLsAfZAiTFvjtC35VGGkvr3EsLbi10feZIyTkg15vYawLm8anu+mLjL/blV2j2gbQs6CwMuQwEkCf5Eutinz8DIuoo9tjkKxDczQ5LQRsJm0NCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfMr/xT1; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDdEU2cp"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so2752993a12.3;
-        Mon, 15 Apr 2024 11:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713205217; x=1713810017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/FI1TOwX6IbVOSxRjrbyHiEmOox04GkI62QwnqlP7Bk=;
-        b=CDdEU2cpIemPZGunL9YDwTEKGJVXprf0abSMvW9dLrHKu99MlpXLZkZuBNefebTqKb
-         06C2FBPCrWb6s2i95GFQ6i6Kt0zPRY5MXHXE7Jy/QZxiSpZlj4oMDsg0wg4kvYxgh3r1
-         ZHfqMzWn0PK04e6CQImMAr5ExgYZspZCZLad/e7MpxK/d3zsYPwcwIya3WRQk3sgYC2p
-         2G+oaj6pJ0pisc9fOw7URsgkd6LG5QvTM2K2BD7qXXoVtbrhXbjkTy32lacSzPsTrYhM
-         lIi1cA60aRPF9I4opEGiyr9EH9seHxlSZ13QcHDAWCLeI0q8bHyRI0bUEuoFACKgHytB
-         EdWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713205217; x=1713810017;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/FI1TOwX6IbVOSxRjrbyHiEmOox04GkI62QwnqlP7Bk=;
-        b=EtpbjxBagv6KzTqyyX8EMykDOm8lOlOXq6VCfGjqMm+7tKfAJrHTH5Pi3G0qtHHNEr
-         u/cjG4Hi6/TOTtAsA4b/p/KXJoUd8UzODL68VtPKZYx/06kHElJDV6vFg2TUUdn8BycU
-         11u/VXOJglbgSmKHgO4URwOPHdZiN8M/pJDm4TpbTOT0ibO68MkyU7NXch7E/YSXL4Vz
-         hQvwib6zU1t/Qv8F/yXdW7x+jv4o55SvBQauZHDnzc3Ph2d4FpgRkV3l42Q3Ke4Ty4lo
-         YZhVeuTNzn+iGE8/NSfJ81tQ7DGrWVe9iReAxNrpOhd54k7H5A36li/vnvk/TZdjPt6i
-         OKIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUV8jDubPe0hyN0EvNAb8L6gbM+5bm5w0GDU2E7OTZJRJK1XTeyI/0Jil3licstN+87cItBJkk6F/SI5UywCCaMAyn4mlprhnUG8IpGzZIU5vcM+BoO6i+95FB7tiFH697TnpzUS5pKOyTXgQ==
-X-Gm-Message-State: AOJu0YyRy/UbaiacuhYWCnTa3ANk7PsTKhQFWKwdBQajcX6hyD5HpxUL
-	JTWmdAg4NX/o+xbZjKAJ+XjPP2q2bdDPdvbCnwIQe/ZgwlD7kaaX
-X-Google-Smtp-Source: AGHT+IEGlEfn9JapJQf9Gkq2Odljvsi/yTxrSbQobAzjOevgF84o8rieFhXnvHE/rMYQUFKc2UrnuQ==
-X-Received: by 2002:a05:6a20:6a04:b0:1a7:5d1a:45f1 with SMTP id p4-20020a056a206a0400b001a75d1a45f1mr9561991pzk.16.1713205216855;
-        Mon, 15 Apr 2024 11:20:16 -0700 (PDT)
-Received: from carrot.. (i223-218-110-112.s42.a014.ap.plala.or.jp. [223.218.110.112])
-        by smtp.gmail.com with ESMTPSA id ld16-20020a056a004f9000b006ecf72e481esm7578524pfb.26.2024.04.15.11.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:20:16 -0700 (PDT)
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-nilfs@vger.kernel.org,
-	syzbot <syzbot+2e22057de05b9f3b30d8@syzkaller.appspotmail.com>,
-	syzkaller-bugs@googlegroups.com,
-	Jeongjun Park <aha310510@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH] nilfs2: Fix OOB in nilfs_set_de_type
-Date: Tue, 16 Apr 2024 03:20:48 +0900
-Message-Id: <20240415182048.7144-1-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <000000000000209c9506161fd1d4@google.com>
-References: <000000000000209c9506161fd1d4@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfMr/xT1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713205256; x=1744741256;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yOL9RQkQZOwUCAqbLSj1a2WoEW56l25BTbDLITbtZjA=;
+  b=BfMr/xT123XQiAzQpx06etatQs48Hq6F/pscwpHdes/z3gDtW6Hi0zpG
+   5tKfoQGwW5LCf3FGKvwlUDdHZmmQomVowZEIOzvtkuez8eu8E5XiE0IhH
+   Ug1Q9RxkrHlexaGvoWVRG97D60JlbbwVzdIndJ+TdnrSDQ/UQ7lOVJ9yA
+   Zmy+M7ao/zUJ//Pvykw59wa4KHxKeroeLualROvLUC7ZgZKptlBLUgzrD
+   XrZkQW/0OhoyNwr/T+Z5HymxnmRRaOQh+i6Q+JSnBee1DwVr3/p8inOAK
+   Z6D4r/TZsiuBBDxvoD80D7xTV5IWypa504T/FWG68weoCCnI9nQbkgh34
+   g==;
+X-CSE-ConnectionGUID: Re8O+gcaTvaonFzHEoE/Fg==
+X-CSE-MsgGUID: YGUhPVYbQ/m/E+Mq5XP+8g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="11557184"
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="11557184"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 11:20:54 -0700
+X-CSE-ConnectionGUID: UWJpL6J8Q2O6boHH81CKhA==
+X-CSE-MsgGUID: z85dXddtQFCPEvH9eh15TQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="26784016"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orviesa004.jf.intel.com with ESMTP; 15 Apr 2024 11:20:54 -0700
+From: Fenghua Yu <fenghua.yu@intel.com>
+To: "Vinod Koul" <vkoul@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] MAINTAINERS: Update role for IDXD driver
+Date: Mon, 15 Apr 2024 11:20:55 -0700
+Message-Id: <20240415182055.3465170-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,60 +60,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jeongjun Park <aha310510@gmail.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-The size of the nilfs_type_by_mode array in the fs/nilfs2/dir.c file is
-defined as "S_IFMT >> S_SHIFT", but the nilfs_set_de_type() function,
-which uses this array, specifies the index to read from the array in the
-same way as "(mode & S_IFMT) >> S_SHIFT".
+Move Dave Jiang to reviewer role since he has not been working on the
+driver.
 
-static void nilfs_set_de_type(struct nilfs_dir_entry *de, struct inode
- *inode)
-{
-	umode_t mode = inode->i_mode;
-
-	de->file_type = nilfs_type_by_mode[(mode & S_IFMT)>>S_SHIFT]; // oob
-}
-
-However, when the index is determined this way, an out-of-bounds (OOB)
-error occurs by referring to an index that is 1 larger than the array
-size when the condition "mode & S_IFMT == S_IFMT" is satisfied.
-Therefore, a patch to resize the nilfs_type_by_mode array should be
-applied to prevent OOB errors.
-
-Reported-by: syzbot+2e22057de05b9f3b30d8@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=2e22057de05b9f3b30d8
-Fixes: 2ba466d74ed7 ("nilfs2: directory entry operations")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
-Hi Andrew, please apply this as a bugfix.
-
-This patch from Jeongjun fixes an array out-of-bounds access reported
-by syzbot that can occur for filesystem images containing corrupted
-directory inodes.
-
-Thanks,
-Ryusuke Konishi
-
- fs/nilfs2/dir.c | 2 +-
+ MAINTAINERS | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nilfs2/dir.c b/fs/nilfs2/dir.c
-index bc846b904b68..aee40db7a036 100644
---- a/fs/nilfs2/dir.c
-+++ b/fs/nilfs2/dir.c
-@@ -240,7 +240,7 @@ nilfs_filetype_table[NILFS_FT_MAX] = {
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c23fda1aa1f0..6839b635d35a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10940,7 +10940,7 @@ F:	drivers/idle/intel_idle.c
  
- #define S_SHIFT 12
- static unsigned char
--nilfs_type_by_mode[S_IFMT >> S_SHIFT] = {
-+nilfs_type_by_mode[(S_IFMT >> S_SHIFT) + 1] = {
- 	[S_IFREG >> S_SHIFT]	= NILFS_FT_REG_FILE,
- 	[S_IFDIR >> S_SHIFT]	= NILFS_FT_DIR,
- 	[S_IFCHR >> S_SHIFT]	= NILFS_FT_CHRDEV,
+ INTEL IDXD DRIVER
+ M:	Fenghua Yu <fenghua.yu@intel.com>
+-M:	Dave Jiang <dave.jiang@intel.com>
++R:	Dave Jiang <dave.jiang@intel.com>
+ L:	dmaengine@vger.kernel.org
+ S:	Supported
+ F:	drivers/dma/idxd/*
 -- 
-2.34.1
+2.37.1
 
