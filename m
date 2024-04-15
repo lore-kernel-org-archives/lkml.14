@@ -1,187 +1,272 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AC6745FD;
-	Mon, 15 Apr 2024 12:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C8D127E2A;
+	Mon, 15 Apr 2024 12:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185415; cv=none; b=l3DDMLgZB+B8UlfTQEsGtJyAuPPrvbaUgPM0Bdxp/wXSTuRimRnY3uVSTuJemjDJtMLhfBJdAa2y39TkLjvsKmSFeB6zhmqw9wDTfMpUrizKqJkIEwgQk8E6/CzLF94LFa1qV5qMd0eMEpVdcVfcx3b7aGF1KxeIFbmZsaF+zL4=
+	t=1713185415; cv=none; b=m7FlEimfUb0MN49C8y3tSjzRFUgggaN1XTbUxEWUarU71bTmFsZcf/gCSV6BOO3WdQU+bDZsKTFf+ee/QeR12FsH+tjr/zqTzQyAPkLLj/WHVXc+xY/wUp79iNdTX5WxK5WYjuF2uW9djCpAnQR1xNRacqUXjC689DV6C+Zy/+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185415; c=relaxed/simple;
-	bh=Hdykt2B4i1lx8yLnP0uavaOKrQI+GIykrNOpYC+S9nU=;
+	bh=tA+xME0cqxvdm/SL6/3HnWW/4VMwGO83nJFglJrGK1Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fFKulF1FnfHFNgHrthXaHHePMkQ4qqwwsA8SntuthWBRs7gakaLgPNOcf3bU5GEz1IC9i5iqULqmYlUSHD/9cvsDKmE51GDMblv4fEIthsOHNr4kM7zWQ5I8dBNbd1Pltb8e/d8z3DSi2WH50HIRfo79d38WyGWQQ/es+LkEs8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=XxfPMjSi; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 MIME-Version:Content-Type; b=MWCUQpsoW0l4B3am3BTb/LtA8YphUNnB5aaE9sqrOkX+8eo3DVvL+UYS3f75GEYsI+dT+3IdJOuFT+2athXHlUilbXNjyvCp/IJkMUayxWsJ44Wn5SgtKTa09qFoDzTWLlXXODto6DovVVA2tZKXVgT0xfrn//Jxv8pEa8ggNYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEhmHbVl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="XxfPMjSi"
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 852A8881FB;
-	Mon, 15 Apr 2024 14:50:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713185406;
-	bh=0ZiAkni61pGt7UsZmTgp8Dq1oPO+rvrlLp0DKseZgaw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEhmHbVl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66251C4AF07;
+	Mon, 15 Apr 2024 12:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185414;
+	bh=tA+xME0cqxvdm/SL6/3HnWW/4VMwGO83nJFglJrGK1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XxfPMjSi3ybaxKd7cTcMRIHDg0ud7LbbJZGhVE7GlxFprQ85vzRX8QWWCJG/qsoz/
-	 SW8GFWdYaLCIMVZ7UIpSLEyYoXfkipEVOCEiFsSs4b8lIoZ1ddHwZgb3NoZsy9qQuG
-	 9/yybX3hqhTJB9VAcZZR3EW97rkvwdzBPpHvLsjyATwHjf7sQ80waxnEc5D8dWIno0
-	 tyXeMyMjLnSA6hdHF3UTjZDwZ4EZnIeYYOyPArXxClGfIk811LSfpIdhKm3wFh6Foj
-	 ujqpevYTCFM1C6wAzlpoZNAWvGBKuvjOnwWGN1rnaj4a65A7gkeguWR016zegBedgy
-	 uNKo0e32ygNEg==
-From: Lukasz Majewski <lukma@denx.de>
-To: netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Tristram.Ha@microchip.com,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ravi Gunasekaran <r-gunasekaran@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Murali Karicheri <m-karicheri2@ti.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ziyang Xuan <william.xuanziyang@huawei.com>,
-	Shigeru Yoshida <syoshida@redhat.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	linux-kernel@vger.kernel.org,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next PATCH v5 4/4] test: hsr: Add test for HSR RedBOX (HSR-SAN) mode of operation
-Date: Mon, 15 Apr 2024 14:49:28 +0200
-Message-Id: <20240415124928.1263240-5-lukma@denx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240415124928.1263240-1-lukma@denx.de>
-References: <20240415124928.1263240-1-lukma@denx.de>
+	b=OEhmHbVl/VeelBI0JU/cGis/Jq8/7cgwkj32PjNy4io4GLVn7WzkQwwp/LeNC/OiF
+	 +325EGSTGOFVKMkhCel6sEOa7ZXjbxMGI2FAnZVFa56ID9b2jqP3JVOaALjwtJ3jdt
+	 yoBtLxAN+/JBjxvjXinEOIbKJjUt4JejIAziFW4AtAASAmvqm1kSF/fbG94dwrIqgw
+	 0q+QDo6EddUwIRo11cPDIvBwyUZWYBdGnfjJZEAak+jCeTeVPsSN0xWZKJMU+iQllg
+	 NNI7M1n4s5BkHKJkliphwneH2t0Td5REHs/Fk7IjMq4SUiKavngZmwRkmexEk5aObD
+	 tfTdMA5Li7ZiQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 06/36] function_graph: Add an array structure that will allow multiple callbacks
+Date: Mon, 15 Apr 2024 21:50:07 +0900
+Message-Id: <171318540779.254850.4853494254759779030.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
 
-This patch adds hsr_redbox.sh script to test if HSR-SAN mode of operation
-works correctly.
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Add an array structure that will eventually allow the function graph tracer
+to have up to 16 simultaneous callbacks attached. It's an array of 16
+fgraph_ops pointers, that is assigned when one is registered. On entry of a
+function the entry of the first item in the array is called, and if it
+returns zero, then the callback returns non zero if it wants the return
+callback to be called on exit of the function.
+
+The array will simplify the process of having more than one callback
+attached to the same function, as its index into the array can be stored on
+the shadow stack. We need to only save the index, because this will allow
+the fgraph_ops to be freed before the function returns (which may happen if
+the function call schedule for a long time).
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- tools/testing/selftests/net/hsr/hsr_redbox.sh | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100755 tools/testing/selftests/net/hsr/hsr_redbox.sh
+ Changes in v2:
+  - Remove unneeded brace.
+---
+ kernel/trace/fgraph.c |  114 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 81 insertions(+), 33 deletions(-)
 
-diff --git a/tools/testing/selftests/net/hsr/hsr_redbox.sh b/tools/testing/selftests/net/hsr/hsr_redbox.sh
-new file mode 100755
-index 000000000000..6946a0c6eb17
---- /dev/null
-+++ b/tools/testing/selftests/net/hsr/hsr_redbox.sh
-@@ -0,0 +1,97 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 6f8d36370994..3f9dd213e7d8 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -39,6 +39,11 @@
+ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+ int ftrace_graph_active;
+ 
++static int fgraph_array_cnt;
++#define FGRAPH_ARRAY_SIZE	16
 +
-+ipv6=false
++static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
 +
-+source ./hsr_common.sh
-+
-+do_complete_ping_test()
+ /* Both enabled by default (can be cleared by function_graph tracer flags */
+ static bool fgraph_sleep_time = true;
+ 
+@@ -62,6 +67,20 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
+ }
+ #endif
+ 
++int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
 +{
-+	echo "INFO: Initial validation ping (HSR-SAN/RedBox)."
-+	# Each node has to be able each one.
-+	do_ping "${ns1}" 100.64.0.2
-+	do_ping "${ns2}" 100.64.0.1
-+	# Ping from SAN to hsr1 (via hsr2)
-+	do_ping "${ns3}" 100.64.0.1
-+	do_ping "${ns1}" 100.64.0.3
-+	stop_if_error "Initial validation failed."
-+
-+	# Wait for MGNT HSR frames being received and nodes being
-+	# merged.
-+	sleep 5
-+
-+	echo "INFO: Longer ping test (HSR-SAN/RedBox)."
-+	# Ping from SAN to hsr1 (via hsr2)
-+	do_ping_long "${ns3}" 100.64.0.1
-+	# Ping from hsr1 (via hsr2) to SAN
-+	do_ping_long "${ns1}" 100.64.0.3
-+	stop_if_error "Longer ping test failed."
-+
-+	echo "INFO: All good."
++	return 0;
 +}
 +
-+setup_hsr_interfaces()
++static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace)
 +{
-+	local HSRv="$1"
-+
-+	echo "INFO: preparing interfaces for HSRv${HSRv} (HSR-SAN/RedBox)."
-+
-+#       |NS1                     |
-+#       |                        |
-+#       |    /-- hsr1 --\        |
-+#       | ns1eth1     ns1eth2    |
-+#       |------------------------|
-+#            |            |
-+#            |            |
-+#            |            |
-+#       |------------------------|        |-----------|
-+#       | ns2eth1     ns2eth2    |        |           |
-+#       |    \-- hsr2 --/        |        |           |
-+#       |            \           |        |           |
-+#       |             ns2eth3    |--------| ns3eth1   |
-+#       |             (interlink)|        |           |
-+#       |NS2 (RedBOX)            |        |NS3 (SAN)  |
-+#
-+	# Check if iproute2 supports adding interlink port to hsrX device
-+	ip link help hsr | grep -q INTERLINK
-+	[ $? -ne 0 ] && { echo "iproute2: HSR interlink interface not supported!"; exit 0; }
-+
-+	# Create interfaces for name spaces
-+	ip link add ns1eth1 netns "${ns1}" type veth peer name ns2eth1 netns "${ns2}"
-+	ip link add ns1eth2 netns "${ns1}" type veth peer name ns2eth2 netns "${ns2}"
-+	ip link add ns3eth1 netns "${ns3}" type veth peer name ns2eth3 netns "${ns2}"
-+
-+	sleep 1
-+
-+	ip -n "${ns1}" link set ns1eth1 up
-+	ip -n "${ns1}" link set ns1eth2 up
-+
-+	ip -n "${ns2}" link set ns2eth1 up
-+	ip -n "${ns2}" link set ns2eth2 up
-+	ip -n "${ns2}" link set ns2eth3 up
-+
-+	ip -n "${ns3}" link set ns3eth1 up
-+
-+	ip -net "${ns1}" link add name hsr1 type hsr slave1 ns1eth1 slave2 ns1eth2 supervision 45 version ${HSRv} proto 0
-+	ip -net "${ns2}" link add name hsr2 type hsr slave1 ns2eth1 slave2 ns2eth2 interlink ns2eth3 supervision 45 version ${HSRv} proto 0
-+
-+	ip -n "${ns1}" addr add 100.64.0.1/24 dev hsr1
-+	ip -n "${ns2}" addr add 100.64.0.2/24 dev hsr2
-+	ip -n "${ns3}" addr add 100.64.0.3/24 dev ns3eth1
-+
-+	ip -n "${ns1}" link set hsr1 up
-+	ip -n "${ns2}" link set hsr2 up
 +}
 +
-+check_prerequisites
-+trap cleanup EXIT SIGKILL SIGTERM
++static struct fgraph_ops fgraph_stub = {
++	.entryfunc = ftrace_graph_entry_stub,
++	.retfunc = ftrace_graph_ret_stub,
++};
 +
-+for i in "$ns1" "$ns2" "$ns3" ;do
-+	ip netns add $i || exit $ksft_skip
-+	ip -net $i link set lo up
-+done
+ /**
+  * ftrace_graph_stop - set to permanently disable function graph tracing
+  *
+@@ -159,7 +178,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+ 		goto out;
+ 
+ 	/* Only trace if the calling function expects to */
+-	if (!ftrace_graph_entry(&trace))
++	if (!fgraph_array[0]->entryfunc(&trace))
+ 		goto out_ret;
+ 
+ 	return 0;
+@@ -274,7 +293,7 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 	trace.retval = fgraph_ret_regs_return_value(ret_regs);
+ #endif
+ 	trace.rettime = trace_clock_local();
+-	ftrace_graph_return(&trace);
++	fgraph_array[0]->retfunc(&trace);
+ 	/*
+ 	 * The ftrace_graph_return() may still access the current
+ 	 * ret_stack structure, we need to make sure the update of
+@@ -410,11 +429,6 @@ void ftrace_graph_sleep_time_control(bool enable)
+ 	fgraph_sleep_time = enable;
+ }
+ 
+-int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
+-{
+-	return 0;
+-}
+-
+ /*
+  * Simply points to ftrace_stub, but with the proper protocol.
+  * Defined by the linker script in linux/vmlinux.lds.h
+@@ -652,37 +666,54 @@ static int start_graph_tracing(void)
+ int register_ftrace_graph(struct fgraph_ops *gops)
+ {
+ 	int ret = 0;
++	int i;
+ 
+ 	mutex_lock(&ftrace_lock);
+ 
+-	/* we currently allow only one tracer registered at a time */
+-	if (ftrace_graph_active) {
++	if (!fgraph_array[0]) {
++		/* The array must always have real data on it */
++		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
++			fgraph_array[i] = &fgraph_stub;
++	}
 +
-+setup_hsr_interfaces 1
-+do_complete_ping_test
++	/* Look for an available spot */
++	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
++		if (fgraph_array[i] == &fgraph_stub)
++			break;
++	}
++	if (i >= FGRAPH_ARRAY_SIZE) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+ 
+-	register_pm_notifier(&ftrace_suspend_notifier);
++	fgraph_array[i] = gops;
++	if (i + 1 > fgraph_array_cnt)
++		fgraph_array_cnt = i + 1;
+ 
+ 	ftrace_graph_active++;
+-	ret = start_graph_tracing();
+-	if (ret) {
+-		ftrace_graph_active--;
+-		goto out;
+-	}
+ 
+-	ftrace_graph_return = gops->retfunc;
++	if (ftrace_graph_active == 1) {
++		register_pm_notifier(&ftrace_suspend_notifier);
++		ret = start_graph_tracing();
++		if (ret) {
++			ftrace_graph_active--;
++			goto out;
++		}
 +
-+exit $ret
--- 
-2.20.1
++		ftrace_graph_return = gops->retfunc;
+ 
+-	/*
+-	 * Update the indirect function to the entryfunc, and the
+-	 * function that gets called to the entry_test first. Then
+-	 * call the update fgraph entry function to determine if
+-	 * the entryfunc should be called directly or not.
+-	 */
+-	__ftrace_graph_entry = gops->entryfunc;
+-	ftrace_graph_entry = ftrace_graph_entry_test;
+-	update_function_graph_func();
++		/*
++		 * Update the indirect function to the entryfunc, and the
++		 * function that gets called to the entry_test first. Then
++		 * call the update fgraph entry function to determine if
++		 * the entryfunc should be called directly or not.
++		 */
++		__ftrace_graph_entry = gops->entryfunc;
++		ftrace_graph_entry = ftrace_graph_entry_test;
++		update_function_graph_func();
+ 
+-	ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
++		ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
++	}
+ out:
+ 	mutex_unlock(&ftrace_lock);
+ 	return ret;
+@@ -690,19 +721,36 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 
+ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ {
++	int i;
++
+ 	mutex_lock(&ftrace_lock);
+ 
+ 	if (unlikely(!ftrace_graph_active))
+ 		goto out;
+ 
+-	ftrace_graph_active--;
+-	ftrace_graph_return = ftrace_stub_graph;
+-	ftrace_graph_entry = ftrace_graph_entry_stub;
+-	__ftrace_graph_entry = ftrace_graph_entry_stub;
+-	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
+-	unregister_pm_notifier(&ftrace_suspend_notifier);
+-	unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
++	for (i = 0; i < fgraph_array_cnt; i++)
++		if (gops == fgraph_array[i])
++			break;
++	if (i >= fgraph_array_cnt)
++		goto out;
+ 
++	fgraph_array[i] = &fgraph_stub;
++	if (i + 1 == fgraph_array_cnt) {
++		for (; i >= 0; i--)
++			if (fgraph_array[i] != &fgraph_stub)
++				break;
++		fgraph_array_cnt = i + 1;
++	}
++
++	ftrace_graph_active--;
++	if (!ftrace_graph_active) {
++		ftrace_graph_return = ftrace_stub_graph;
++		ftrace_graph_entry = ftrace_graph_entry_stub;
++		__ftrace_graph_entry = ftrace_graph_entry_stub;
++		ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
++		unregister_pm_notifier(&ftrace_suspend_notifier);
++		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
++	}
+  out:
+ 	mutex_unlock(&ftrace_lock);
+ }
 
