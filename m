@@ -1,102 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE527745F0;
-	Mon, 15 Apr 2024 12:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BA6745E7;
+	Mon, 15 Apr 2024 12:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185410; cv=none; b=mghpIWIbC2QSBShLeIiBHumn89CNBVb5ydBTSbPK9ePT4nG5ubvyByFOaOY6JJwBVx4h7+qVlZzBYrfdc9AqcmFERco8bfDuDnYcRsVT2Wsmw2U/DKbzBIuDNsNBFGNmxIJUO3JhfLjVrC/GhyDzuQk6OI9Q/t9HYkUtY5i97yU=
+	t=1713185410; cv=none; b=RGtw/cyPhNjBe9k313d0wCe9r/q/V39AjA2HU8Tdk8KfizgwfxWHOid7ZM/E5ZSE4fcPAmRcfpXfdAFCKA9+VUn/vxK1U7vSYQ5QIl9YfHt76DGIOxvCiks+d/u5Ktwa+aJrpfeMBNmWsz/ohf7+9pDszyEWZU6Gm+kk2fQrzBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185410; c=relaxed/simple;
-	bh=ZJeH9mmRkzVeKciQNcI/iGRPUWnIOGpgJPuEVgETO3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JQm5jxi2FCdmIEPowLXh2e8uFZ9SwOY52b1YS0LbEBi7Wl+sd0lckXXnhu2lle14ogQt8zXkbklrudf/AjqCZZ3+OjyTlXZgx54jifOvf+EZvRWhdN5zC92UEWRqQWCNoDk7oYPqCDQxfbmwi5hRtDqTFkQ7theVLCh0Stcm9Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxSSIfss; arc=none smtp.client-ip=10.30.226.201
+	bh=RZViYOBc/68KZHjbxFjl/qF8BNCvvMPMaLqjwnNT1cQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ORgd+ENgck9aMYXi0anVyokS1rcB8TkB9CAB9qgfI4T+gSjuxO4K+bwESMqxlg/06g3Pe/ePp9heN15SsSlkdG9rLZpoImr2TVOxvvTeZ/QBf4uSMyhvPbB2ykoXczSy11X2JFLqp3p/7p+Lo89nb//opCZ8V0/6aHaJimx28Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=t7rbZXZn; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxSSIfss"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C81C3277B;
-	Mon, 15 Apr 2024 12:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185410;
-	bh=ZJeH9mmRkzVeKciQNcI/iGRPUWnIOGpgJPuEVgETO3E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YxSSIfssIn4IdHKRU5fl+rFn04fO49FP64K01XBnX192z1aK78P2TeOF+fmWx0gmr
-	 AlR7X7/KKxuM+ueGGYdu7SaCEpTyDLPlUoWcQcfV4Ry2GHNnhdXI1vN+lI1j3VjEjS
-	 YkhQd4n2WBrcpa/l94ySRkWeyaUqDY+THuDrCxZpRYcWZFQjy3/vwFKqo3dmRPteJJ
-	 ddwYevbxCR1BO1cuDTQHf/T0yHQVY24KuTqjK6PK1IGRy6PU7aCSmPMMU+GgAeAhis
-	 aVAkEZxR80kk8gVGcWkeZDdHcSmRjMmAsiuEUXPBkvpO3n1oCxi/oq/M80SSyOP7q2
-	 wu/75liXeGu+g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Peter Wang <peter.wang@mediatek.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jejb@linux.ibm.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	stanley.chu@mediatek.com,
-	quic_cang@quicinc.com,
-	avri.altman@wdc.com,
-	quic_nguyenb@quicinc.com,
-	beanhuo@micron.com,
-	manivannan.sadhasivam@linaro.org,
-	linux-scsi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 06/12] scsi: ufs: core: Fix MCQ mode dev command timeout
-Date: Mon, 15 Apr 2024 06:03:41 -0400
-Message-ID: <20240415100358.3127162-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100358.3127162-1-sashal@kernel.org>
-References: <20240415100358.3127162-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="t7rbZXZn"
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 012BD8801F;
+	Mon, 15 Apr 2024 14:50:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1713185402;
+	bh=zyHbMiyALYbzRNSRQ3bVjd+xXWkKyPH62uQ6mMp3z34=;
+	h=From:To:Cc:Subject:Date:From;
+	b=t7rbZXZnhhOiPAMBAd3KnAFH2Y/JIUtt2kInK9KgJfVnug9MAK1S/Jj1LvY+oxT3W
+	 xsIU8rzqkCkG88fq4MCy6ZUIYaJUZyf2QIOWjXjNCo52Yt0TndKFT4h3LjFvRjjMWz
+	 gjMmmc1QaKIzPpK0NDRq4jaVYL2+8EEUYIt6sdiPYLIuBIYIS/k1mffCPoXu+PStlA
+	 bjU7KLxDn55bT5wY/RHaYgOhOisEDtcZkLrKQk3q65G1t8nVdq9dicYzkb5vDp6pDa
+	 w7GvMW+Hzr9E3gZj3aDKU/2NqdTuEJjcZsEY2g9xRPGO48ImPGaIQ72Z8HuHelXjwC
+	 ujxFYu9WCLC4w==
+From: Lukasz Majewski <lukma@denx.de>
+To: netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Ravi Gunasekaran <r-gunasekaran@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Murali Karicheri <m-karicheri2@ti.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ziyang Xuan <william.xuanziyang@huawei.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	linux-kernel@vger.kernel.org,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next PATCH v5 0/4] net: hsr: Add support for HSR-SAN (RedBOX)
+Date: Mon, 15 Apr 2024 14:49:24 +0200
+Message-Id: <20240415124928.1263240-1-lukma@denx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.27
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-From: Peter Wang <peter.wang@mediatek.com>
+This patch set provides v5 of HSR-SAN (RedBOX) as well as hsr_redbox.sh
+test script.
 
-[ Upstream commit 2a26a11e9c258b14be6fd98f8a85f20ac1fff66e ]
+Applied on top of:
+Branch: net-next/main
+SHA1: 50aee97d1511
 
-When a dev command times out in MCQ mode, a successfully cleared command
-should cause a retry. However, because we currently return 0, the caller
-considers the command a success which causes the following error to be
-logged: "Invalid offset 0x0 in descriptor IDN 0x9, length 0x0".
+Runs inside: Buildroot (2024.02.1+):
+SHA1: b31443e09cb7bb67b97ae6fb7614fe3a22889d50
 
-Retry if clearing the command was successful.
+Lukasz Majewski (4):
+  net: hsr: Provide RedBox support (HSR-SAN)
+  test: hsr: Move common code to hsr_common.sh file
+  test: hsr: Extract version agnostic information from ping command
+    output
+  test: hsr: Add test for HSR RedBOX (HSR-SAN) mode of operation
 
-Signed-off-by: Peter Wang <peter.wang@mediatek.com>
-Link: https://lore.kernel.org/r/20240328111244.3599-1-peter.wang@mediatek.com
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ufs/core/ufshcd.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/uapi/linux/if_link.h                  |  1 +
+ net/hsr/hsr_device.c                          | 36 ++++++-
+ net/hsr/hsr_device.h                          |  4 +-
+ net/hsr/hsr_forward.c                         | 85 ++++++++++++++--
+ net/hsr/hsr_framereg.c                        | 52 ++++++++++
+ net/hsr/hsr_framereg.h                        |  6 ++
+ net/hsr/hsr_main.h                            |  7 ++
+ net/hsr/hsr_netlink.c                         | 30 +++++-
+ net/hsr/hsr_slave.c                           |  1 +
+ tools/testing/selftests/net/hsr/hsr_common.sh | 97 +++++++++++++++++++
+ tools/testing/selftests/net/hsr/hsr_ping.sh   | 93 +-----------------
+ tools/testing/selftests/net/hsr/hsr_redbox.sh | 97 +++++++++++++++++++
+ 12 files changed, 403 insertions(+), 106 deletions(-)
+ create mode 100644 tools/testing/selftests/net/hsr/hsr_common.sh
+ create mode 100755 tools/testing/selftests/net/hsr/hsr_redbox.sh
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 8005373e20bae..344806330be16 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -3064,7 +3064,9 @@ static int ufshcd_wait_for_dev_cmd(struct ufs_hba *hba,
- 
- 		/* MCQ mode */
- 		if (is_mcq_enabled(hba)) {
--			err = ufshcd_clear_cmd(hba, lrbp->task_tag);
-+			/* successfully cleared the command, retry if needed */
-+			if (ufshcd_clear_cmd(hba, lrbp->task_tag) == 0)
-+				err = -EAGAIN;
- 			hba->dev_cmd.complete = NULL;
- 			return err;
- 		}
 -- 
-2.43.0
+2.20.1
 
