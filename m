@@ -1,155 +1,119 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3A125601
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 22:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325CF25601;
+	Mon, 15 Apr 2024 22:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713218749; cv=none; b=VR95MEL5Qmbsrt3weZKfDJbtni2uQ7l9405eOfsON32SeqR9JV7IXVd8yF/w7J8EG3z+dvkCpp110bZsnFAMNPBcifKfrKAvU2XZlQaZi9LSVfk6KnMp9IOesCaOfYLCYRpbc0lW3W5PWTAIM7gjADrRCGHuP/pfhr5XTkC3adk=
+	t=1713218789; cv=none; b=dyrSPZYZ0idggUCwdQSaf0R3CisfSrie7uk0Tiu83/z00m1AcVvh7tiYVfN2yEgaDG9j2s8h/q2hJQ8XlfeN3cAWW+VEnlM4zADDEKVL3LWEym2AUcSQBbdvsiy9Xjp5Me6RoSXuE0TnlbreuQcl/YbtyA6mx8+xaxSfZdfliXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713218749; c=relaxed/simple;
-	bh=QTxgFSqq/Z7peU07MOT3I9Lu+2QSKKPQbBN++p6wqxQ=;
+	s=arc-20240116; t=1713218789; c=relaxed/simple;
+	bh=OicLi7OIUIM8R5E7YLSXlX9bsxcGZ0l3ZMvEOcBn8MM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gFtqcQh7p66bgOthKUiR0EsPqUfFVoXKO2hIib/x2i7KXfK5FCagioPCck/hriNnOKRR8+pKe3UcaICLoxciyP/9YzL/FqnNjqmi15kYMmg053ZSdB65wjpRB80W12dQt7mJxGiQ2skO96YybTPgkzvdzpGxzmKXMqdAznyzfPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U0iQ8X9U; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hG3QanZXoRe1BLyZ4ugSkUMjHF9RWoxMGWiFgv66WPFaLQCdWECUeBXD/02K0Q8WG71ZYicNrwu9DkJWq6mnvTK1SZvh/r4Ks6fUP5ja4jAW2oY6xoHxjYLxJlX3X/9h46saVTcIk8nFFIyERgOGUTN3enu61y6bTvdZOLJm9yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3Xdl/3B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0iQ8X9U"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6181d032bf9so37364667b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:05:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713218747; x=1713823547; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ssAZ3DyyJxSLg2CIY1KbdXyk9av2RuE+1b4L9bpyewM=;
-        b=U0iQ8X9UaKu/5Jl8ayu0YtJXrVblHJW5A+1nL/87o6vFCkr7InhSoKRiRmbhpHcbma
-         ZbOV1cieO5xcFbb92jkGyqOYxKiZ8jfNs8WAUBEHQflSaN6qFqUEYBVgUq1wlL3L4beZ
-         DY85RJ7SCX+pSyuh7+TalD5DrB/8u8wM6MGlCbCoc7KvIsdYXnlKWafkf3h1VgCGhQnM
-         LmxzkJmkUBCVOLljalIkap59+LfwBzik6cRY6yWB3N9WO0CifspE+soXh5DKgpQSuxDE
-         hEOgD7mysWQ9OIv9MjyxxZKtL+OVjrdmVofU77FrnPAD7qBpYwpZUFw3h1Bc8cq6rfPG
-         UcpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713218747; x=1713823547;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ssAZ3DyyJxSLg2CIY1KbdXyk9av2RuE+1b4L9bpyewM=;
-        b=D7JwHEJvdorTOwPioNhajoOTJq/g9gf1or0m3expEnbcNgHiGEBEgYgWolt65eiNRg
-         nW2xZ1CJntdPuC69sDGTi+FukpwCAYldmye872x7g7SIrMhay04I5fLmU+GOiJXMoWsc
-         2QLSEXMK8WW8gV4MYwxj3JjHgqo5bLPrNVITNYjitg07ajdWwLsrXLwgpJr2cEW+QWo8
-         fry/jthzYKvXuYiBYl5H2V/3rs0/UmBUtWxIsbPoNaCvdgfIeD9XBgng92/8wdxfqxie
-         +uPOdE83O/c8jkaIuaD0WozbBMXxQ9+WMJIhCWI5836iIm48sNjO0LuvkSI2STHvNz5k
-         zzrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYh4jI44ocKBk1Va3N6RIt6ZfPKGza/cuAM/DkNkff1ioVJorMaxODVtTSq+DA/hD3CLHY3uPuSxloHBMeqMdLFELxuu9J8/xFm2vs
-X-Gm-Message-State: AOJu0YwWJ7S5VRpqifcbEoErNNN3r5I5KRHBGAqmO1pDqoRB5w1gqv/f
-	sNzfJaJ4bmkm+8Rb1qshTnNf3APbnDyduM+fpN/IctB32yo+ROSS
-X-Google-Smtp-Source: AGHT+IHDcVWPGZHGgYYhD+XagVKlxDL0u1KvWGhu+T+SfQaSlOltJ6EPfD4ADqnUN/f/CUzxAWuGtQ==
-X-Received: by 2002:a81:b207:0:b0:61a:d39a:1aa6 with SMTP id q7-20020a81b207000000b0061ad39a1aa6mr3091255ywh.51.1713218747250;
-        Mon, 15 Apr 2024 15:05:47 -0700 (PDT)
-Received: from fedora ([2600:1700:2f7d:1800::23])
-        by smtp.gmail.com with ESMTPSA id p206-20020a0de6d7000000b0061ac20feee8sm806636ywe.111.2024.04.15.15.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 15:05:46 -0700 (PDT)
-Date: Mon, 15 Apr 2024 15:05:44 -0700
-From: Vishal Moola <vishal.moola@gmail.com>
-To: syzbot <syzbot+ad1b592fc4483655438b@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, muchun.song@linux.dev,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in
- __vma_reservation_common
-Message-ID: <Zh2kuFX9BWOGN1Mo@fedora>
-References: <000000000000daf1e10615e64dcb@google.com>
- <000000000000ae5d410615fea3bf@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3Xdl/3B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B09C113CC;
+	Mon, 15 Apr 2024 22:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713218788;
+	bh=OicLi7OIUIM8R5E7YLSXlX9bsxcGZ0l3ZMvEOcBn8MM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A3Xdl/3BDbRNH9AZ56dL3z76qMGj4skVu3V0hJBQzT7mdqtPHAbWr88C+aelbS1Jy
+	 YAiHhf2fltGwn/nXfe2xs9nDsd0UQ40/Q9HnHxzRDWhPxu3p59SxI86xJFHDZeW/T/
+	 IMGSdT0M5eJPrv7IzY7VCvuAF87yPUZMgbs+UlqZyLUFJY9rEa1cQSFSI5T3y/xlOX
+	 4eWzEd9URwma4zQkYVv1AwjXGF2+Qn+YFN6VPeO1Bakd4Rx18ZWrhLudWF3BGBUlBH
+	 97YHI9vTqA+kZNZHY+FRw3YfFtjAlFymBx894xqrKj0FvnuSVFaetF/HL4Nk1DMtNp
+	 ag/8BwcYDbaSg==
+Date: Mon, 15 Apr 2024 15:06:26 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Memet Zx <zxce3@gnuweeb.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	LLVM Mailing List <llvm@lists.linux.dev>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
+	Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: Compile Error in Linux 6.9-rc4 with Clang 17.0.6
+Message-ID: <20240415220626.GA77369@dev-arch.thelio-3990X>
+References: <20240415193152.61118-1-zxce3@gnuweeb.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="nyCCuuGrGXDMVrWo"
-Content-Disposition: inline
-In-Reply-To: <000000000000ae5d410615fea3bf@google.com>
-
-
---nyCCuuGrGXDMVrWo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240415193152.61118-1-zxce3@gnuweeb.org>
 
-On Sat, Apr 13, 2024 at 11:34:32AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
+On Tue, Apr 16, 2024 at 02:31:52AM +0700, Memet Zx wrote:
+> Hello,
 > 
-> HEAD commit:    9ed46da14b9b Add linux-next specific files for 20240412
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12bd4457180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7ea0abc478c49859
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ad1b592fc4483655438b
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1370ea67180000
+> I am writing to report a compile error that I encountered while
+> building the latest Linux kernel (6.9-rc4) with Clang version 17.0.6.
+> The error message is as follows:
+> 
+> ```
+>   LD      vmlinux.o
+> vmlinux.o: warning: objtool: __svm_vcpu_run+0x13c: BP used as a scratch register
+> vmlinux.o: warning: objtool: __svm_sev_es_vcpu_run+0x32: BP used as a scratch register
+> vmlinux.o: warning: objtool: ip_vs_protocol_init() falls through to next function __initstub__kmod_ip_vs_rr__969_123_ip_vs_rr_init6()
+> vmlinux.o: warning: objtool: .text.jffs2_erase_pending_blocks: unexpected end of section
+> vmlinux.o: warning: objtool: .text.ocfs2_validate_and_adjust_move_goal: unexpected end of section
+> vmlinux.o: warning: objtool: .text.__ocfs2_move_extents_range: unexpected end of section
+> vmlinux.o: warning: objtool: .text.csio_ln_fdmi_rhba_cbfn: unexpected end of section
+> vmlinux.o: warning: objtool: .text.jme_check_link: unexpected end of section
+> vmlinux.o: warning: objtool: .text.vhci_coredump_hdr: unexpected end of section
+>   OBJCOPY modules.builtin.modinfo
+> llvm-objcopy-17: error: SHT_STRTAB string table section [index 1173270] is non-null terminated
+> make[5]: *** [scripts/Makefile.vmlinux_o:73: modules.builtin.modinfo] Error 1
+> make[4]: *** [Makefile:1141: vmlinux_o] Error 2
+> make[3]: *** [debian/rules:74: build-arch] Error 2
+> dpkg-buildpackage: error: make -f debian/rules binary subprocess returned exit status 2
+> make[2]: *** [scripts/Makefile.package:121: bindeb-pkg] Error 2
+> make[1]: *** [/workspaces/greentea/linux/Makefile:1541: bindeb-pkg] Error 2
+> make: *** [Makefile:240: __sub-make] Error 2
+> ```
+> 
+> The build process was terminated with the above error message.
+> I have also noticed several warnings related to objtool,
+> which may be related to the issue.
+> 
+> The compiler version I used:
+> 
+> ```
+> Ubuntu clang version 17.0.6 (++20231208085846+6009708b4367-1~exp1~20231208085949.74)
+> Target: x86_64-pc-linux-gnu
+> Thread model: posix
+> InstalledDir: /usr/bin
+> ```
+> 
+> The commit I used is:
+> 
+> ```
+> commit 0bbac3facb5d6cc0171c45c9873a2dc96bea9680 (grafted, HEAD -> master, origin/master, origin/HEAD)
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sun Apr 14 13:38:39 2024 -0700
+> 
+>     Linux 6.9-rc4
+> ```
+> 
+> And the .config is attached at the end of this email.
+> 
+> I would appreciate it if you could look into this issue and provide
+> a fix or workaround.
+> 
+> Thank you for your attention to this matter.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 9ed46da14b9b
+Thanks for the report. Unfortunately, I cannot reproduce this with your
+configuration on 6.9-rc4 with either kernel.org LLVM 17.0.6 [1] or
+Debian LLVM 17.0.6 [2]. Is this completely reproducible on your side? Is
+this something that just started happening with the 6.9 cycle? What is
+your build command, as I might just be missing something?
 
---nyCCuuGrGXDMVrWo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-hugetlb-Check-for-anon_vma-prior-to-folio-allocation.patch"
+[1]: https://mirrors.edge.kernel.org/pub/tools/llvm/
+[2]: ++20231208085813+6009708b4367-1~exp1~20231208085906.81, should be
+     the same source version and configuration you are using.
 
-From fb3415a90a2b2a6fdbe4a5f32370f06141591011 Mon Sep 17 00:00:00 2001
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Date: Mon, 15 Apr 2024 14:17:47 -0700
-Subject: [PATCH] hugetlb: Check for anon_vma prior to folio allocation
-
-Commit 9acad7ba3e25 ("hugetlb: use vmf_anon_prepare() instead of
-anon_vma_prepare()") may bailout after allocating a folio if we do not
-hold the mmap lock. When this occurs, vmf_anon_prepare() will release the
-vma lock. Hugetlb then attempts to call restore_reserve_on_error(),
-which depends on the vma lock being held.
-
-We can move vmf_anon_prepare() prior to the folio allocation in order to
-avoid calling restore_reserve_on_error() without the vma lock.
-
-Fixes: 9acad7ba3e25 ("hugetlb: use vmf_anon_prepare() instead of anon_vma_prepare()")
-Reported-by: syzbot+ad1b592fc4483655438b@syzkaller.appspotmail.com
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
----
- mm/hugetlb.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index f826dc681081..fbd278a2e9f6 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6271,6 +6271,10 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
- 							VM_UFFD_MISSING);
- 		}
- 
-+		ret = vmf_anon_prepare(vmf);
-+		if (unlikely(ret))
-+			goto out;
-+
- 		folio = alloc_hugetlb_folio(vma, vmf->address, 0);
- 		if (IS_ERR(folio)) {
- 			/*
-@@ -6310,15 +6314,12 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
- 				restore_reserve_on_error(h, vma, vmf->address,
- 							folio);
- 				folio_put(folio);
-+				ret = VM_FAULT_SIGBUS;
- 				goto out;
- 			}
- 			new_pagecache_folio = true;
- 		} else {
- 			folio_lock(folio);
--
--			ret = vmf_anon_prepare(vmf);
--			if (unlikely(ret))
--				goto backout_unlocked;
- 			anon_rmap = 1;
- 		}
- 	} else {
--- 
-2.43.0
-
-
---nyCCuuGrGXDMVrWo--
+Cheers,
+Nathan
