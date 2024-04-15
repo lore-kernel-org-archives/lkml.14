@@ -1,103 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C745376046;
-	Mon, 15 Apr 2024 15:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619B160EF9
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713194882; cv=none; b=JscChGA/DHzCV4KqDqNw2LrXHxU6CeYf/zS3RyknFCkc/bgrimNEWde99y3w894/jXjjZJuDcp1P1B3oxNc47ol5cjB5K5Qbpgo1ke4Kl/gnBFGlkz6yVusTu/puoWmC9omeT+j0/ks+6PPWzxjCf9iMT7MZazmOO7hF/MzOJ4Y=
+	t=1713194898; cv=none; b=hvKw4FSKHLzwxbqpjEfbBDO437c2X7Uvr8xFDmpj9JUiAbHdacA5YuXMlS4NMfokjIytM6T9ToB9ABuF1uLaQo6qfQrzz8DLtpgEVagFD2OIvOGGy4cy0MpjDQgBIT/uJoHdAEqusX5pJ4JJ6jGjSYTlyDf2lIm37Tz0na9Tpds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713194882; c=relaxed/simple;
-	bh=nFuB/EilR2fRv26CVIwpUuMAO5By/98lEvVtc9MltxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GuJLsM5hKMdua+TTSQtM3I3OhGDNqX9fiDvaZsKE7pYN2IZQVyKCa3Eyx/XWVn/NIA8bg61PMLm2AYYMs1kBDN/nUrh3qWTVbJL3Cce3iGFgcaskf8wvUlIrZMgkOK6soIXz7+ULj5NnEawxKm5Mx4bLl/ib0vR5y8ibhn31ZTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ApDGQwSj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713194898; c=relaxed/simple;
+	bh=8F9ucDIw0mXDD0ZlZXTS1GEvdOSfw7kx0csGX6bWCNU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DcwCdC0VgDVzkxhfgSiSXQM8wEFei9RLrAcIGB6VNXToOyrlJ/V4DiyPhvrxD83/6UTWVmJwAUNsZQVLhEU3thJ1ffLCP+n5OxDsXPPgFkVivf6LugyYFbPNJHF05OCFTdCLmUWKW99On6p60ttqPE24xmKA4KcIemi3bfjcIvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EmqXj4nA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FQ/mEvSW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ApDGQwSj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 005C3C113CC;
-	Mon, 15 Apr 2024 15:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713194882;
-	bh=nFuB/EilR2fRv26CVIwpUuMAO5By/98lEvVtc9MltxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ApDGQwSjGww+QFx/JBUZURMz/Z1g46KopFEuqYSkG/6mW733e/JV5rw0ppa96w8k+
-	 5K3DEoHy5Nh8mzFflu3oHifBaPSZuhTJ3rOP+7phlyRQ42DT+b5GanLkYcylCh8R/M
-	 bgLlUeuXJUoDxotpr2xf+0v3ihJ22S8BmYO1IMP2mrQTrwQv6aO8OSmVjpKe/RPjZ9
-	 eHyBwZnTw/59ZxKY4SpdSrYdQRwoj18HWH5CO/vkgPqZNDWXR0vDhnIBzNszH7OxLh
-	 RYeAStgPx9oGW6OgJE1jjUHygivzNCoXPbiA8S5eDAZQaYZ25lB2BfEA6RmSuoEvLg
-	 rnWOwXS8JBDAw==
-Date: Mon, 15 Apr 2024 18:26:55 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: skseofh@gmail.com
-Cc: robh@kernel.org, saravanak@google.com, akpm@linux-foundation.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Daero Lee <daero_le.lee@samsung.com>
-Subject: Re: [PATCH] memblock: add no-map alloc functions
-Message-ID: <Zh1HP8IWWjexAUKN@kernel.org>
-References: <20240415142448.333271-1-skseofh@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EmqXj4nA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FQ/mEvSW"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713194895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8F9ucDIw0mXDD0ZlZXTS1GEvdOSfw7kx0csGX6bWCNU=;
+	b=EmqXj4nAPJDhXsEarHCiyRSkFRZXjKB27EtzZqqxoc6DJ6X5+WMtVcGTezw+41D3ZsOh3R
+	SZFit7eJtkR69J/mXmJFFuWHPSkXqWSDiDwJz4N+80runJlIrucQXdM4hkYNakaRN8Lrg7
+	hqxsEkJqZmMOq23qcq90T21a0sP/hTe2O3PO3QU0aTJelhCeinGqgZuIiLUAzNTVAmQL5v
+	b374Q7n8XBZ9NAlb3Y+o/NX7EzbXDwnJhToY8FWbgrrlx+UQL6MUzI8V7TRekjgAjZLkSE
+	g47nyxyrN4J5I0TzvOqEjK4rMDGImAoQ15hyFveSmJTwOPbosWtHnX4i2vDqmg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713194895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8F9ucDIw0mXDD0ZlZXTS1GEvdOSfw7kx0csGX6bWCNU=;
+	b=FQ/mEvSWEVJe22UIXtF8pX4dEjuI1FskVSsBFplYfOEjPYarAO8d3N/KNcz2MDsykqNHkQ
+	jikbsKZhfF1hjCBA==
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, John Stultz
+ <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Eric Biederman
+ <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 16/50] posix-cpu-timers: Simplify posix_cpu_timer_set()
+In-Reply-To: <20240410165551.943625183@linutronix.de>
+References: <20240410164558.316665885@linutronix.de>
+ <20240410165551.943625183@linutronix.de>
+Date: Mon, 15 Apr 2024 17:28:14 +0200
+Message-ID: <877cgyve5t.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415142448.333271-1-skseofh@gmail.com>
+Content-Type: text/plain
 
-On Mon, Apr 15, 2024 at 11:24:48PM +0900, skseofh@gmail.com wrote:
-> From: Daero Lee <daero_le.lee@samsung.com>
-> 
-> Like reserved-memory with the no-map property, there are memory regions
-> need to be allocated in memblock.memory marked with the
-> MEMBLOCK_NOMAP flag, but sholud not be allocated in memblock.reserved.
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Can you please explain your use case?
-Why do you need this functionality?
- 
-> So, functions were added that find the required memory area in
-> memblock.memory, but do not allocate it to memblock.reserved.
-> 
-> The early_init_dt_alloc_reserved_memory_arch function was modified
-> using the no-map alloc function.
-> 
-> Signed-off-by: Daero Lee <daero_le.lee@samsung.com>
-> ---
->  drivers/of/of_reserved_mem.c |  9 +++--
->  mm/memblock.c                | 78 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 84 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 8236ecae2953..504f2f60689c 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -40,15 +40,18 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->  
->  	end = !end ? MEMBLOCK_ALLOC_ANYWHERE : end;
->  	align = !align ? SMP_CACHE_BYTES : align;
-> -	base = memblock_phys_alloc_range(size, align, start, end);
-> +	if (nomap) {
-> +		base = memblock_phys_alloc_range_nomap(size, align, start, end);
-> +	} else {
-> +		base = memblock_phys_alloc_range(size, align, start, end);
-> +	}
-> +	
+> Avoid the late sighand lock/unlock dance when a timer is not armed to
+> enforce reevaluation of the timer base so that the process wide CPU timer
+> sampling can be disabled.
+>
+> Do it right at the point where the arming decision is made which already
+> has sighand locked.
+>
 
-This changes behaviour of internal function, what effect will it have on
-the users?
-
->  	if (!base)
->  		return -ENOMEM;
->  
->  	*res_base = base;
->  	if (nomap) {
->  		err = memblock_mark_nomap(base, size);
-> -		if (err)
-> -			memblock_phys_free(base, size);
->  	}
->  
->  	kmemleak_ignore_phys(base);
-
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
