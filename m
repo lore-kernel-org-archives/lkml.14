@@ -1,199 +1,152 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D51F2837D
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED3D2837D;
+	Mon, 15 Apr 2024 16:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713196724; cv=none; b=nKuRpQAQpbKojjIft399lTNfhVE4NhlY4Anas3AwjZ1Fm6/GiNECvABKfFlQWW+5/ygyFooMv8H4PAyOIJlUtBeKwS196aCOrkmqAaAfJfhEjRV42lO1qFXkDDMOiLyf5245V1rBdP3eM4iU5XM9IfY5l88sGu+xlfKU46cIsUA=
+	t=1713196834; cv=none; b=nZMyIL1cKxW9MM3r8RlneDiX0VZvQu/3OgcxgaPEuo3Ryw13JMUtRkhZJGfN6YWztk1X6bR3ibP81myuqwsoddUCdRxp+uw8Kk60S6XdXfxYHhao6Y0drUms3/Zv6EUG/+6VaeZPdxVOHslPKgUP4/5csZc64AD75o5olQYjYBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713196724; c=relaxed/simple;
-	bh=f8hTPpbMuE/W1bIMmiDJLYhkAj9bpOkgXFYOfTRZHjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q92slyMXQvWFHLpYIBuIeCROTXENiMrLI5J6CxelRPRtNd7xGb85XRpjnWedusKfOWKKkAuN3zov+19JCjzJcDUOs2bcnA5ixgTNlTDpkv+mngTqu3+zDTZKnpV6QxiHTWP3y6bqmYb/8qulwrX4Yz4/NL/EeGuvbF3Gb5ja0ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=StCRRAdM; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713196834; c=relaxed/simple;
+	bh=AIurx8M7UROIIHeLqraX05WDHOH/h7A8uObPQDPI2ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BP+wJzznuJihIcfA93AFlvinMyml+89RrE9SXZ87a5xHiC/JRXKDvXIKOpFgByJqGUWmyeNi0coiDVF+VhXSIkQaAFaY5s7/QZPlgYNAITNMpOirR23Is79qZ41SA/V7t0OVsmEqYJS6YCRIxc0qNu6Jz5KSFY4yFAEE3RrbzS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iR5RKTz/; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="StCRRAdM"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so3141421276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:58:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iR5RKTz/"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2da01cb187cso61665341fa.0;
+        Mon, 15 Apr 2024 09:00:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713196721; x=1713801521; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vQs4ugT2y6J/4IutYdKUBVbhJN3bb9YCkttNLEXXcuk=;
-        b=StCRRAdMeJL+zc+txTslEv3fzwsXEb9ABWrL9EWskGSoxVE2FJ4obe8m33XOHZY7OA
-         vKP2dYANxN9XBul6nDeZj1WL9l2BjmXM4oXAZ1CQMra/NCUDyF9JgZ5Y9ACW5C5Y0yVW
-         H0dKw8Upz2JpdVSDpCgJfGhEsoZQ+3sjajFhsFcM9MNk8tSbhB7RKIlXR5tk3cBLlHag
-         +r7nkCoPWv0g3SR3Tb5boFqDW+MCFQNfCQc0yexZ9TmNWuTJRZTbgXOOYJvhx8CH2dOi
-         Tr0c6jCXhnr/o9kaQD64y5zc5ngxuayzfMWEJ1WRJaJpwTOL44uRsgDbOY0Yzm9Qhg2e
-         0nIQ==
+        d=gmail.com; s=20230601; t=1713196830; x=1713801630; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WonYqSzvWT83jIX0IgNtkReYkS7CHkadpcuSarICRPQ=;
+        b=iR5RKTz/yrvZ9nCboAo1nWXktPhapgHwq0JWB5kPflUer7S2Z7FbX/d3BxqZPV6Cmt
+         Msyz1SIsXwgG4Y/0GMFxFX1OZXIrOgsCMZuG02PGvnGLQtML11+9yhopk7vaQEzyQuF+
+         iML4sO0SUkhgv/2S5mf191ce6u+gyS6E/2AqVoOUlns3jhqiOGKl7Y3FowQlUr5LDiGt
+         YKbTC9wvuBu+ibflf6cTlR0Xmr+DNkzEbzd9So0xC+xlcyZ1g39ovDk07OYmef5OImGr
+         MI6K2uXOBEoz8++cpEmZuTX9SUfbCtPZSEkn48K8Jnl6GgZ9gmi2tSwjaTXY1NRS3mvR
+         7S3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713196721; x=1713801521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vQs4ugT2y6J/4IutYdKUBVbhJN3bb9YCkttNLEXXcuk=;
-        b=cauPsJSlcOOdzfYDOywfrp2WTkQY25DUDihZ+Sois7jgXuvxEGj1S+Jvy0lZLICAR6
-         4J2lCOD03skOFsrl/Yf/DrN2wRUWiuhIlHOqW+tknfwvwceDtEVzhZMxMjgpoDWopxx7
-         28CSfDNHjm2w3EbJ/E423F5WHzI90hStDLNb+9lDiTadnpP3/mQS9SVJ2ApvQ0LTsHtV
-         Ovv2QsjJWCTTYhu3VKNgEkjgb9XY4BWiZx9waVnkBuKNhbhbGx5+nrtVf3FdZIibQ3MJ
-         zMnfgSL3K3ehHnG+wIqea9WS0TbTyuNMGGY5rHyYMHj11aNY+TtrNZogWukgAWzLsZtL
-         fyQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGh3rgcUaI9ujXPVCZri48vNO19IJWgYQ/SsSIOOlUweeI2AF8SbHV4EgtsbIFv++i8pQrsf1y4HcXKeTc5YhIEtyodaKlDRDwAZbB
-X-Gm-Message-State: AOJu0YyApXP1mbmbI3t8Q+/GKEeLp1jaS1XrPWmCcwQz+66uWcnQedSN
-	icxTjfZRiziytoBrFsq29F1b3RObKwsBeqG3Qa/Hmcn40i8FzZeYtdcH2G87rExy+01+UB3Sqpn
-	u/YrYsjr5wslPMSO83Hl3pY9OBRvF6EGTaHrf
-X-Google-Smtp-Source: AGHT+IHj+dUON+x7kGfY5lFgFmSTO1gbp1zS1dRy20XQvezBONy3gNljvQoqw/0z2FVCc4FIrrRpwWxfBSbd20Fg1Rc=
-X-Received: by 2002:a25:9e05:0:b0:dcc:99b6:830b with SMTP id
- m5-20020a259e05000000b00dcc99b6830bmr9897702ybq.19.1713196721063; Mon, 15 Apr
- 2024 08:58:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713196830; x=1713801630;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WonYqSzvWT83jIX0IgNtkReYkS7CHkadpcuSarICRPQ=;
+        b=Tk+e8xcTORGpYEffGGxiIv++pOGbQs2BPIdN1yDeMdGDO+0Gn2yPXLTJhPJ8P23vVc
+         7lYW7+NYWzqo5Tazm4WQ3nVMY35YHG8IvZSekeaCRYbvs7yXKPk04bP9Fcd50zENfxj8
+         CxL7njXzMNdmsd30WmbilXIOd3ec3fN7pGN+DFe+u/2wRcddDCoiofuwrV+RVnnMvlMh
+         Al6kKuCM7sMXZ1y+uAsfP7G0JZUJ5GovOkrXdTJt2t3N7W+aTUi5HJSLvf3k5ROfNwHQ
+         3LN6DjgqgjwQBI86vwYsN6ImfC1fI8x/cnwoaRJudOheO72N32um4eacFzE1/coBWl9P
+         k0RA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYWsDqROxSpRv//vZncK4w+sGCDLl7ShqwgU685pUFJq8M7gUPHt5MOixMaM6xPIoFa5vnWARtWZk2g+W+INBLEtU/6W9xBMVt+4d9BW4qI7rw0fq93bTYSXgZdCkjAMNY2t2HazRFBZfg9ARR9Z+5TR3gydRiP31X/+Aaq+3zlkLhgp1P
+X-Gm-Message-State: AOJu0YxlqHjGBBo1ha1PNAz7x9uGnTKQ5MO+PLCiYJVrvMNUfpAaGuQJ
+	p59W2HTKi58A/z9Bpt/bSQFQQPLNpTR7XauRcToizHDppIwtUWMD
+X-Google-Smtp-Source: AGHT+IFOUuLN0irhPLHYXZ6mYv7PuyHiv+G70JXmObZzyVsigzU8qLZr9NJrU7yz6GsEcOBavXFeVg==
+X-Received: by 2002:a05:651c:b0b:b0:2d4:7455:89f6 with SMTP id b11-20020a05651c0b0b00b002d4745589f6mr9666567ljr.40.1713196829400;
+        Mon, 15 Apr 2024 09:00:29 -0700 (PDT)
+Received: from tom-HP-ZBook-Fury-15-G7-Mobile-Workstation (net-188-217-57-233.cust.vodafonedsl.it. [188.217.57.233])
+        by smtp.gmail.com with ESMTPSA id n21-20020a170906701500b00a53d6b895ddsm783830ejj.200.2024.04.15.09.00.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 09:00:29 -0700 (PDT)
+Date: Mon, 15 Apr 2024 18:00:26 +0200
+From: Tommaso Merciai <tomm.merciai@gmail.com>
+To: git@luigi311.com
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	pavel@ucw.cz, phone-devel@vger.kernel.org,
+	Ondrej Jirman <megous@megous.com>
+Subject: Re: [PATCH v4 23/25] media: i2c: imx258: Add support for reset gpio
+Message-ID: <Zh1PGuTjFlttNnLX@tom-HP-ZBook-Fury-15-G7-Mobile-Workstation>
+References: <20240414203503.18402-1-git@luigi311.com>
+ <20240414203503.18402-24-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411171319.almhz23xulg4f7op@revolver> <ZhhSItiyLYBEdAX3@x1n>
- <ZhhV3PKgEX9d7_vA@casper.infradead.org> <ZhhaRXHKk7w_hKgi@x1n>
- <Zhhd-A7w1A8JUadM@casper.infradead.org> <ZhinCD-PoblxGFm0@casper.infradead.org>
- <ZhkrY5tkxgAsL1GF@x1n> <CAJuCfpG7YkQ2giKiv07TetTn=QHK9x723vnLaTjDCaQjUvAavw@mail.gmail.com>
- <ZhlCVOz7qaDtldfL@casper.infradead.org> <CAJuCfpGGUD6ev-KFhON2D2RqQRZSgjxFXvkNqeux-LrJw4L+iw@mail.gmail.com>
- <ZhlQ_4Ve0vYNbWbl@casper.infradead.org>
-In-Reply-To: <ZhlQ_4Ve0vYNbWbl@casper.infradead.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 15 Apr 2024 08:58:28 -0700
-Message-ID: <CAJuCfpH3sKvczqRix6Q6QX9L4FsHQbmnyFXetvY+TzVUk38soA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Peter Xu <peterx@redhat.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Lokesh Gidra <lokeshgidra@google.com>, 
-	Alistair Popple <apopple@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240414203503.18402-24-git@luigi311.com>
 
-On Fri, Apr 12, 2024 at 8:19=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Fri, Apr 12, 2024 at 09:53:29AM -0500, Suren Baghdasaryan wrote:
-> > Unless vmf_anon_prepare() already explains why vma->anon_vma poses a
-> > problem for per-vma locks, we should have an explanation there. This
-> > comment would serve that purpose IMO.
->
-> I'll do you one better; here's some nice kernel-doc for
-> vmd_anon_prepare():
+Hi Luis,
 
-I was looking at the find_tcp_vma(), which seems to be the only other
-place where lock_vma_under_rcu() is currently used. I think it's used
-there only for file-backed pages, so I don't think your change affects
-that usecase but this makes me think that we should have some kind of
-a warning for lock_vma_under_rcu() future users... Maybe your addition
-of mmap_assert_locked() inside __anon_vma_prepare() is enough. Please
-don't forget to include that assertion into your final patch.
+On Sun, Apr 14, 2024 at 02:35:01PM -0600, git@luigi311.com wrote:
+> From: Luis Garcia <git@luigi311.com>
+> 
+> It was documented in DT, but not implemented.
 
+Good catch :-)
 
->
-> commit f89a1cd17f13
-> Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Date:   Fri Apr 12 10:41:02 2024 -0400
->
->     mm: Delay the check for a NULL anon_vma
->
->     Instead of checking the anon_vma early in the fault path where all pa=
-ge
->     faults pay the cost, delay it until we know we're going to need the
->     anon_vma to be filled in.  This will have a slight negative effect on=
- the
->     first fault in an anonymous VMA, but it shortens every other page fau=
-lt.
->     It also makes the code slightly cleaner as the anon and file backed
->     fault handling look more similar.
->
->     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index d8d2ed80b0bf..718f91f74a48 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1057,11 +1057,13 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_f=
-ault *vmf)
->         gfp_t gfp;
->         struct folio *folio;
->         unsigned long haddr =3D vmf->address & HPAGE_PMD_MASK;
-> +       vm_fault_t ret;
->
->         if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
->                 return VM_FAULT_FALLBACK;
-> -       if (unlikely(anon_vma_prepare(vma)))
-> -               return VM_FAULT_OOM;
-> +       ret =3D vmf_anon_prepare(vmf);
-> +       if (ret)
-> +               return ret;
->         khugepaged_enter_vma(vma, vma->vm_flags);
->
->         if (!(vmf->flags & FAULT_FLAG_WRITE) &&
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 6e2fe960473d..46b509c3bbc1 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3213,6 +3213,21 @@ static inline vm_fault_t vmf_can_call_fault(const =
-struct vm_fault *vmf)
->         return VM_FAULT_RETRY;
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Luis Garcia <git@luigi311.com>
+> ---
+>  drivers/media/i2c/imx258.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+> index f0bd72f241e4..5de71cb7c1ae 100644
+> --- a/drivers/media/i2c/imx258.c
+> +++ b/drivers/media/i2c/imx258.c
+> @@ -699,6 +699,7 @@ struct imx258 {
+>  	unsigned int csi2_flags;
+>  
+>  	struct gpio_desc *powerdown_gpio;
+> +	struct gpio_desc *reset_gpio;
+>  
+>  	/*
+>  	 * Mutex for serialized access:
+> @@ -1250,7 +1251,11 @@ static int imx258_power_on(struct device *dev)
+>  		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+>  	}
+>  
+> -	return ret;
+> +	gpiod_set_value_cansleep(imx258->reset_gpio, 0);
+> +
+
+I think you can remove this new line here.
+
+> +	usleep_range(400, 500);
+> +
+> +	return 0;
 >  }
->
-> +/**
-> + * vmf_anon_prepare - Prepare to handle an anonymous fault.
-> + * @vmf: The vm_fault descriptor passed from the fault handler.
-> + *
-> + * When preparing to insert an anonymous page into a VMA from a
-> + * fault handler, call this function rather than anon_vma_prepare().
-> + * If this vma does not already have an associated anon_vma and we are
-> + * only protected by the per-VMA lock, the caller must retry with the
-> + * mmap_lock held.  __anon_vma_prepare() will look at adjacent VMAs to
-> + * determine if this VMA can share its anon_vma, and that's not safe to
-> + * do with only the per-VMA lock held for this VMA.
-> + *
-> + * Return: 0 if fault handling can proceed.  Any other value should be
-> + * returned to the caller.
-> + */
->  vm_fault_t vmf_anon_prepare(struct vm_fault *vmf)
->  {
->         struct vm_area_struct *vma =3D vmf->vma;
-> @@ -4437,8 +4452,9 @@ static vm_fault_t do_anonymous_page(struct vm_fault=
- *vmf)
->         }
->
->         /* Allocate our own private page. */
-> -       if (unlikely(anon_vma_prepare(vma)))
-> -               goto oom;
-> +       ret =3D vmf_anon_prepare(vmf);
-> +       if (ret)
-> +               return ret;
->         /* Returns NULL on OOM or ERR_PTR(-EAGAIN) if we must retry the f=
-ault */
->         folio =3D alloc_anon_folio(vmf);
->         if (IS_ERR(folio))
-> @@ -5821,15 +5837,6 @@ struct vm_area_struct *lock_vma_under_rcu(struct m=
-m_struct *mm,
->         if (!vma_start_read(vma))
->                 goto inval;
->
-> -       /*
-> -        * find_mergeable_anon_vma uses adjacent vmas which are not locke=
-d.
-> -        * This check must happen after vma_start_read(); otherwise, a
-> -        * concurrent mremap() with MREMAP_DONTUNMAP could dissociate the=
- VMA
-> -        * from its anon_vma.
-> -        */
-> -       if (unlikely(vma_is_anonymous(vma) && !vma->anon_vma))
-> -               goto inval_end_read;
-> -
->         /* Check since vm_start/vm_end might change before we lock the VM=
-A */
->         if (unlikely(address < vma->vm_start || address >=3D vma->vm_end)=
-)
->                 goto inval_end_read;
+>  
+>  static int imx258_power_off(struct device *dev)
+> @@ -1260,6 +1265,7 @@ static int imx258_power_off(struct device *dev)
+>  
+>  	clk_disable_unprepare(imx258->clk);
+>  
+> +	gpiod_set_value_cansleep(imx258->reset_gpio, 1);
+>  	gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
+>  
+>  	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+> @@ -1573,6 +1579,12 @@ static int imx258_probe(struct i2c_client *client)
+>  	if (IS_ERR(imx258->powerdown_gpio))
+>  		return PTR_ERR(imx258->powerdown_gpio);
+>  
+> +	/* request optional reset pin */
+> +	imx258->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +						     GPIOD_OUT_HIGH);
+> +	if (IS_ERR(imx258->reset_gpio))
+> +		return PTR_ERR(imx258->reset_gpio);
+> +
+>  	/* Initialize subdev */
+>  	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+>  
+
+Looks good to me.
+Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
+
+> -- 
+> 2.44.0
+> 
+> 
