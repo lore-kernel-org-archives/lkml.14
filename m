@@ -1,122 +1,133 @@
-Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE6F7F7FF;
-	Mon, 15 Apr 2024 20:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25B97F7FF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713214209; cv=none; b=R4Zfah8VbVaa2SJqecUSXp5bzBvfa8yCts4qCev7IUEAJssDjLN+uzBwAePNosVhR8U7XSBqb+bWf44TmGl3+2SoqsrVhGChGaBS0cZEUCcojapTHr0kEJJ5Waf6f/rXvr+F/oH9li68URpFCDeyecswkU7qQAPaGSRLlGp8yQo=
+	t=1713214284; cv=none; b=R77d7/ROKRvMHtstkmM+AjBkYIF+u8j0omKa2D/VCHLMa86sPcm0epJvVBCpYvoognExxToh1Ahy3rgJd6xPrqsc/Mz/VK53V3H2FVwzAm5VOcQM6hWCQkGdkv1NTOM6nOHj0jSF9Q1eQMU+a6P7+4Pton6Gie4pjQodkquT92k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713214209; c=relaxed/simple;
-	bh=gAWfBjMv/u1hM1ri7vb4WcKTVN9s+CRx5IVlFNsdewU=;
-	h=Message-ID:From:To:Cc:References:In-Reply-To:Subject:Date:
-	 MIME-Version:Content-Type; b=DnoTX85xAwo01nKZhzY5x775pnkjZIkG9bX9B5uJV2rYcNpJyOASWD3xt0abzhWGCiWUJbbKIb7+otGLw8y6STL36TWgCQc6LE7pFdMGjtzKIws8iaT74PxsN2e6oiynhixX1LWc7jbq9MJ3MKyJvM1s9oueYaFA0Cw1aljU+Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=Bsfv5Qfs; arc=none smtp.client-ip=145.253.228.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="Bsfv5Qfs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
-	s=vfde-mb-mr2-23sep; t=1713214198;
-	bh=sdWOScoNOqhnKs7wXEoboT4q95JQ4ewNRcGo/88he5M=;
-	h=Message-ID:From:To:References:In-Reply-To:Subject:Date:
-	 Content-Type:X-Mailer:From;
-	b=Bsfv5QfsBPQjeBsyl3aUbwapcSPbTKuD4IMziRyplvzfZKp4VflHnCEegQxmAouMF
-	 YReqiqSToV1MAqPEfmVGew4sJje9nW1D4W9b3+gziaOkU4F4ay01HG6EBC6LL9lxxd
-	 souZnilJjfzKPHSr1r4oU+btY/YaaxgroOnUUfig=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VJK6t6Ftwz1yVn;
-	Mon, 15 Apr 2024 20:49:58 +0000 (UTC)
-Received: from H270 (p54805648.dip0.t-ipconnect.de [84.128.86.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VJK6h4LtKz9thr;
-	Mon, 15 Apr 2024 20:49:45 +0000 (UTC)
-Message-ID: <2ECD48ACEA9540C083E6B797CFD18027@H270>
-From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
-To: "Eric Biggers" <ebiggers@kernel.org>,
-	<linux-crypto@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
-References: <20240411162359.39073-1-ebiggers@kernel.org> <20240411162359.39073-5-ebiggers@kernel.org>
-In-Reply-To: <20240411162359.39073-5-ebiggers@kernel.org>
-Subject: Re: [PATCH v2 4/4] crypto: x86/sha256-ni - simplify do_4rounds
-Date: Mon, 15 Apr 2024 22:41:07 +0200
-Organization: Me, myself & IT
+	s=arc-20240116; t=1713214284; c=relaxed/simple;
+	bh=h5yR2ToXNmI+hGEQoWbQjkFb3fZNqCClbanXCKw6KzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TQMoB0j7n1XpN53Tl5xCaot6/ntVmQkGK5cYOM4XCba8XbGNFxqM35YRNYzIuEXuT7yzkl0PJqoJl8fG/tjCvVCy11X8mw7gSWZeaqxKCntp6AMAPVMb+freMtuDWnTh/KXbX9Ksg+vfH85BkhvTQOn3EAaUdQP/a6DV4KW4gBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34801b1bc4aso234081f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:51:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713214281; x=1713819081;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mCI08UxRqRdgLWPnXTXShrMmNNIATJiipTj4VitlO2E=;
+        b=tjxAhvPcUQHoZYFqlKA7pG/Cb0KOY/m6liKCJZIT5F7umzz2YujxQLC6kc20N2Sd/s
+         ZHUUYNPG/zPbwef2oYetCtlH8BJQGHW3eNkGbfLqT+IB9aIr4UFgWTWFIlWMRoFrxhVi
+         frNQzPu1459YR0pTM3U9R25bdOlt+YgNadUmL8y2Jz8uYHTzJIsp3FjfhT9FkKiwAcj9
+         Fz+R0oa7s5ocqdsArEOY3nwrImAOKF5hcyIiZZf8PgwS1Ee/nrF7MSRE7P1YfSkyf6Ox
+         KAlaaHyH3sXNXGiqYYRo5nrgMfkuUDcjfuDs6My6l4M2G2QLVLH89CUO+fQutpYNpN/H
+         N2aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqYBRv+tO/lSqeSkSvMDROUefNZFkR4RDcN5y02sq6ToCpZQKKs1/lvJ2rTC4sbGpFdOm19YkijOFOduyyoU0YEIfk2Awh+aONUD3+
+X-Gm-Message-State: AOJu0YxJGKLn4addfWmKjGR96XdpiYe3Uq/mzA7uG76FeC2MuNfdqWVl
+	8Y2fPi5H42X8qNFR6HkFwf+JvL8oK1UlOFzk1PbFn4TpPfJysDW5
+X-Google-Smtp-Source: AGHT+IFp2XnntHk5/TpHOO8CICGNW8DAnwJCnDWmkKC+18C1Zh/Yf7xngo58Dk9V63seawpyjxLA9A==
+X-Received: by 2002:a5d:598c:0:b0:346:408d:4341 with SMTP id n12-20020a5d598c000000b00346408d4341mr8556311wri.1.1713214280910;
+        Mon, 15 Apr 2024 13:51:20 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.192.64.dynamic.barak-online.net. [85.65.192.64])
+        by smtp.gmail.com with ESMTPSA id g9-20020a5d5409000000b00343dc6a0019sm12943563wrv.68.2024.04.15.13.51.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 13:51:20 -0700 (PDT)
+Message-ID: <51fc1a3f-7166-49cf-9652-a95bdc5d2119@grimberg.me>
+Date: Mon, 15 Apr 2024 23:51:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="Windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Windows Mail 6.0.6002.18197
-X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.24158
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 2536
-X-purgate-ID: 155817::1713214194-6CFF7A4B-F57EC3D5/0/0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/5] nvme-fabrics: handle transient auth failures
+To: Daniel Wagner <dwagner@suse.de>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240415124220.5433-1-dwagner@suse.de>
+ <20240415124220.5433-6-dwagner@suse.de>
+Content-Language: he-IL, en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240415124220.5433-6-dwagner@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-"Eric Biggers" <ebiggers@kernel.org> wrote:
 
-> Instead of loading the message words into both MSG and \m0 and then
-> adding the round constants to MSG, load the message words into \m0 and
-> the round constants into MSG and then add \m0 to MSG.  This shortens the
-> source code slightly.  It changes the instructions slightly, but it
-> doesn't affect binary code size and doesn't seem to affect performance.
 
-At last the final change: write the macro straightforward and SIMPLE,
-closely matching NIST.FIPS.180-4.pdf and their order of operations.
+On 15/04/2024 15:42, Daniel Wagner wrote:
+> Retry authentication a couple of times to avoid error out on transient
+> errors. E.g. if a new key is deployed on the host and the target. At the
+> same time the connection drops. The host might use the wrong key to
+> reconnect.
+>
+> Suggested-by: Sagi Grimberg <sagi@grimberg.me>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   drivers/nvme/host/auth.c    |  4 ++--
+>   drivers/nvme/host/fabrics.c | 10 +++++++++-
+>   drivers/nvme/host/fc.c      |  2 ++
+>   drivers/nvme/host/nvme.h    |  1 +
+>   drivers/nvme/host/rdma.c    |  1 +
+>   drivers/nvme/host/tcp.c     |  1 +
+>   6 files changed, 16 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/nvme/host/auth.c b/drivers/nvme/host/auth.c
+> index a264b3ae078b..368dcc6ee11b 100644
+> --- a/drivers/nvme/host/auth.c
+> +++ b/drivers/nvme/host/auth.c
+> @@ -797,7 +797,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
+>   					 NVME_AUTH_DHCHAP_MESSAGE_SUCCESS1);
+>   	if (ret) {
+>   		chap->status = ret;
+> -		chap->error = -ECONNREFUSED;
+> +		chap->error = -EKEYREJECTED;
+>   		return;
+>   	}
+>   
+> @@ -818,7 +818,7 @@ static void nvme_queue_auth_work(struct work_struct *work)
+>   	ret = nvme_auth_process_dhchap_success1(ctrl, chap);
+>   	if (ret) {
+>   		/* Controller authentication failed */
+> -		chap->error = -ECONNREFUSED;
+> +		chap->error = -EKEYREJECTED;
+>   		goto fail2;
+>   	}
+>   
+> diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+> index d9a73b1b41c4..6dfa45dce232 100644
+> --- a/drivers/nvme/host/fabrics.c
+> +++ b/drivers/nvme/host/fabrics.c
+> @@ -573,8 +573,16 @@ EXPORT_SYMBOL_GPL(nvmf_connect_io_queue);
+>    */
+>   bool nvmf_should_reconnect(struct nvme_ctrl *ctrl, int status)
+>   {
+> -	if (status < 0)
+> +	if (status < 0) {
+> +		/*
+> +		 * authentication errors can be transient, thus retry a couple
+> +		 * of times before giving up.
+> +		 */
+> +		if (status == -EKEYREJECTED &&
+> +		    ++ctrl->nr_auth_retries < 3)
+> +			return true;
 
-@@ ...
-+.macro  sha256  m0 :req, m1 :req, m2 :req, m3 :req
-+.if \@ < 4
-+        movdqu  \@*16(DATA_PTR), \m0
-+        pshufb  SHUF_MASK, \m0          # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
-+.else
-+                                        # \m0 = {w(\@*16-16), w(\@*16-15), w(\@*16-14), w(\@*16-13)}
-+                                        # \m1 = {w(\@*16-12), w(\@*16-11), w(\@*16-10), w(\@*16-9)}
-+                                        # \m2 = {w(\@*16-8),  w(\@*16-7),  w(\@*16-6),  w(\@*16-5)}
-+                                        # \m3 = {w(\@*16-4),  w(\@*16-3),  w(\@*16-2),  w(\@*16-1)}
-+        sha256msg1 \m1, \m0
-+        movdqa     \m3, TMP
-+        palignr    $4, \m2, TMP
-+        paddd      TMP, \m0
-+        sha256msg2 \m3, \m0             # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
-+.endif
-+        movdqa      (\@-8)*16(SHA256CONSTANTS), MSG
-+        paddd       \m0, MSG
-+        sha256rnds2 STATE0, STATE1      # STATE1 = {f', e', b', a'}
-+        punpckhqdq  MSG, MSG
-+        sha256rnds2 STATE1, STATE0      # STATE0 = {f", e", b", a"},
-+                                        # STATE1 = {h", g", d", c"}
-+.endm
+I did not suggest nr_auth_retries. Where is the 3 coming from? The 
+controller already
+has a number of reconnects before it gives up, no reason to add another one.
 
-JFTR: you may simplify this further using .altmacro and generate \m0 to \m3
-      as MSG%(4-\@&3), MSG%(5-\@&3), MSG%(6-\@&3) and MSG%(7-\@&3) within
-      the macro, thus getting rid of its 4 arguments.
+Just don't return false based on the status if it is a transient 
+authentication error.
 
-@@ ...
-+.rept 4                                 # 4*4*4 rounds
-+        sha256  MSG0, MSG1, MSG2, MSG3
-+        sha256  MSG1, MSG2, MSG3, MSG0
-+        sha256  MSG2, MSG3, MSG0, MSG1
-+        sha256  MSG3, MSG0, MSG1, MSG2
-+.endr
-
-Now that all code written by Tim Chen and Sean Gulley is gone,
-remove their copyright notice and insert your and my name instead.
-
-regards
-Stefan
-
-PS: see <https://skanthak.homepage.t-online.de/fips-180.html>
-    (which I still polish) not just for this implementation.
-
-PPS: if MASM had a counter like \@, I'd used it there.
+The patch just needs to be modified from:
+     if (status < 0)
+to
+     if (status < 0 && status != -EKEYREJECTED Plus a comment that 
+explains it.
