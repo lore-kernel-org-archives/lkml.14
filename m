@@ -1,72 +1,104 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C8C2E40F;
-	Mon, 15 Apr 2024 16:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859777F7FF
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713198579; cv=none; b=iSRm1VXpzowxJQJN3GkOY031QnQ06IWRnw8Wo/Zq/ANzDErdo3rj6wdJhY8c8JxeuQ6RrNAiaEPxbWN8eXIj9vVDbOvoce6NXpO+F1YOFOvsug8uLsnGAx2towXDMtUQP+a16Dt7yl+d+81Z3Z1txx6up7gGy8pvsdWp0NaGomY=
+	t=1713198579; cv=none; b=JGFxmqUwGRHhUpoHKvFe03QFFvmTNWQCFdd80WTsq7nQum4UOvr6CNmd95bhsPzFFWmxuyL2xfFG0v0miY4YN9UAlQoj0Vlwfhm61IS18iyNuYy/o6hiPjcGw3Bi7gThEU8Uvt9J2uf8eXv5GRVXPbxEIwtsfObkxB37i4nZnAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713198579; c=relaxed/simple;
-	bh=0d4mUTktj6a/nMXxUroqj2dPrXs/QRAOPXoexv5bCYk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QtFC4FNogk1OgmkZWj7TyOTMHsuo7AzMrHCVlIKZwgo7wh6uKzHmZzunF1YICyNvbGT7Lxy60UfgBWEo2fDyZyw4Ip+dNKjoVEzZDk6CUS/918p0Nl/Qpk/I4Tgyx/kY8eQLZdz9e9OwDCtBu1TzpyW8nztHie3rl7/UrCv4bTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id ECEA4A060C;
-	Mon, 15 Apr 2024 16:20:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf12.hostedemail.com (Postfix) with ESMTPA id 25AC719;
-	Mon, 15 Apr 2024 16:20:00 +0000 (UTC)
-Message-ID: <03f357e6c16d13924b705513446e4eac37e38a99.camel@perches.com>
-Subject: Re: [PATCH] PCI/AER: Print error message as per the TODO
-From: Joe Perches <joe@perches.com>
-To: Abhinav Jain <jain.abhinav177@gmail.com>, mahesh@linux.ibm.com, 
-	oohall@gmail.com, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
-Date: Mon, 15 Apr 2024 09:19:59 -0700
-In-Reply-To: <20240415161055.8316-1-jain.abhinav177@gmail.com>
-References: <20240415161055.8316-1-jain.abhinav177@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	bh=FCDa/fftBhU5eLi18mr7YJBDUgoS72YVYx/S2TMPhD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E90/bznoxVP+0q5lLdUpjqWOiuXkF24QFQL/IFWjBABihdracr3JU6hijb4o8F6tXlx1+Brs5CVSvZ7RCa2ZOb4Zq8simKs1GcI2BI/4CETV9u2dcFtMPuz2qIfcjYxwCdoc3/5m5Wg+GEm29I7QJzbf4GntYXENK+T2AGyvXiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5fDZqy3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5fDZqy3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713198577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FCDa/fftBhU5eLi18mr7YJBDUgoS72YVYx/S2TMPhD4=;
+	b=b5fDZqy3alrsJUhuZfshlTPaDxLlIA4P2GyMEbuCwKwQB4aPlZ5cJrTSZDMVMB/CltVzrI
+	6bVxdOr1BitqPJyKikA783SmUI09tVY+OLG7QEmTvugIm6pPTLdBEVUY4wPQgSDfWvw+y2
+	UeAXZNf4vF6de1X4QtxR+TllLvLgc7A=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-AUOsd1H9Ore82GscJWM5Fw-1; Mon, 15 Apr 2024 12:29:32 -0400
+X-MC-Unique: AUOsd1H9Ore82GscJWM5Fw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8140E805B9D;
+	Mon, 15 Apr 2024 16:29:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.182])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 4C4B7480F02;
+	Mon, 15 Apr 2024 16:29:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 15 Apr 2024 18:28:05 +0200 (CEST)
+Date: Mon, 15 Apr 2024 18:27:58 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	John Stultz <jstultz@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH] posix-timers: Handle returned errors poperly in
+ [i]timer_delete()
+Message-ID: <20240415162758.GB27124@redhat.com>
+References: <20240415130023.GA27124@redhat.com>
+ <87a5luvhix.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 25AC719
-X-Stat-Signature: 77e1p4uka3bqt7e7ii1uor3ehdgef6hp
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+mInIM+0CNX9KiE6s0STSXDV9arJlA+oo=
-X-HE-Tag: 1713198000-709223
-X-HE-Meta: U2FsdGVkX18fRK6pvB4sqjrD+Hoi7VifTu0b/kmK1fLRq+6B3315wuHjJaVxwsG3ryHMye27wG92hwxaE84zKznFV1zdpaNmTJ2xB8DEbZshNqhjvOu22m9mjY8RFR1Hka4ZE9kfGrep6llNfaDZ9WmRCRfYMRWqkhV3SuYQsPxaG+BJVarT1Q4Du+CM6d08EhHIODww0VeyqdEAvD4KUqWuL47rgeAgHsM15SJy/OWPpDQS+3/c45vgN9oMm8wPJ87a9a82vl2KAfLVrGD/kgMIuNwILrYGNmJ6/e7U5TwlI43oa3xcOPtGoMKVLmhX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a5luvhix.fsf@somnus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Mon, 2024-04-15 at 16:10 +0000, Abhinav Jain wrote:
-> Add a pr_err() to print the add device error in find_device_iter()
-[]
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-[]
-> @@ -885,7 +885,8 @@ static int find_device_iter(struct pci_dev *dev, void=
- *data)
->  		/* List this device */
->  		if (add_error_device(e_info, dev)) {
->  			/* We cannot handle more... Stop iteration */
-> -			/* TODO: Should print error message here? */
-> +			pr_err("find_device_iter: Cannot handle more devices.
-> +					Stopping iteration");
+Anna-Maria, I can't really answer, I don't understand this code today ;)
+That said, let me try to explain my opinion,
 
-You are adding unnecessary whitespace after the period.
-String concatenation keeps _all_ the whitespace.
+On 04/15, Anna-Maria Behnsen wrote:
+>
+> Oleg Nesterov <oleg@redhat.com> writes:
+>
+> > On 04/15, Anna-Maria Behnsen wrote:
+> >>
+> >> timer_delete_hook() returns -EINVAL when the clock or the timer_del
+> >> callback of the clock does not exist. This return value is not handled by
+> >> the callsites timer_delete() and itimer_delete().
+> >
+> > IIUC this shouldn't happen? timer_delete_hook() WARN()s in this case,
+> > not sure we need to return this error to userspace...
+>
+> This shouldn't happen, right.
+>
+> Even if we do not return this error to userspace, is it valid to proceed
+> with the rest of the callsites?
 
-The format is fine on a single line too.
+Well, I'd say that nothing is safe after we hit the kernel problem.
 
-Something like:
+But lets suppose we return EINVAL and skip list_del(&timer->list)/etc.
+How can this help? What can userspace do to resolve this problem? Is it
+better to "leak" this timer? I dunno.
 
-		pr_notice("%s: Cannot handle more devices - iteration stopped\n",
-			  __func__);
+> When it is fine to just ignore the
+> -EINVAL return, then I would propose just to add a comment to the code.
+
+Agreed!
+
+Oleg.
 
