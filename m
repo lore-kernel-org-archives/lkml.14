@@ -1,73 +1,117 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23015623D
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 19:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB9C155A37
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 19:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713207983; cv=none; b=O/5YdjGW/QQDDh0leAuvSpfUm2nm9sOz5vYtRPfkB+1ls1uyU4vJBqi2iM8KeENgthXTuN5Z4ZbseCzT1BGPcZMP/gQZWiw342w0OdpaRFBzfPAadtoZyCajp6eGHxTd/fFkk0FgH4/K5PrD5y2ERChH7izY8FluDzI/2vnFH+U=
+	t=1713207997; cv=none; b=UxH4cXDp+dgLfBO1k/XwJ2CHY4YiIrJhxpl5i0TK4XZvwt2Ybnf7l3GHnp9U/BaRenJXQcNorxSweLw4G+k70t73W3iFKi5Vx4Lq9GP5MB/UZ6sGPTtJM0wQbE1eGIjVBppI6hYb48H9oziaDEwFLAg4joxbObNT1NpiOxFTsq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713207983; c=relaxed/simple;
-	bh=dSGiT+xLSTcfM01u7Gve7gCnW5bf9/lDEjU/9A1y5w4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ForSwByQL0VPJvuYhQM3CpjslSPpbu36DMo4NaNDwcX6Shx9EPZx/ENKg7ro49+fT0vyzzczxePYu0Yc/sc7mpmQ4xBAAOhWZ0dgWUsbEG6LNWeySc6KWxhZzNIxpg3jcwqQgZkseuC3RTepOMr9GR1y3/NtVs31vPehl1lCbj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PJwG5pFc; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713207997; c=relaxed/simple;
+	bh=m0cv+vQ4FxsfF8+H/JsI6f1Z4BEinsqnnKmlS1cGG5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RE2v6Z62jK2bf13uBS2O2GHPgKQ3rKgp2jeFQ0QbjN9h1NW3Aum5HLywAA2UcfKeTXW7dhBAs9TrUnVDNhQ7PCwLULtgJRVLROsuecYtWWs5yO7HbMsx/+oaRqwhCZML4pKzH8r1yvcY6jCCMffeR4bGYvyxfHH8hehwS7FbkoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f7WPDdUE; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJwG5pFc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MChLp9ws+slgrxOBUGCVsKZbu7NB1tpz2huFIgNyMUM=; b=PJwG5pFcev1RdMIj8qn6YK2j1U
-	/X35JGgQp8HxsqhqFD9HoIdEnnIkypZpyZmXoJdWAWP/HFqGwg/n10lvoExA+pax2HMJO4WNxW8be
-	gq/+xU3/ljtBvDcF5JKmNr9VimfwluKgVyBvqdVyDlnkT1WbkAgKky0UjJoVatMTpG5CRszweN9Jm
-	Q4LpMJXidMN1e19z2I4zAWI5zor7mbeWFwuywTlnEj5q9Hv9D2E0MoUNZzRjM5lqTGOpnBsGStv5G
-	GIpy4pq0CLYV6XkyOG0J0/nCLoc9wtpyz7GynB5/MJcwguZl6xDssMKJInwtYLJ4Fm50MTq1u2y9Q
-	sjqbCS5w==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwReY-0000000GJeR-0OS5;
-	Mon, 15 Apr 2024 19:06:06 +0000
-Date: Mon, 15 Apr 2024 20:06:05 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] lib/xarray: introduce a new helper xas_get_order
-Message-ID: <Zh16ndI5aN8r4yOR@casper.infradead.org>
-References: <20240415171857.19244-1-ryncsn@gmail.com>
- <20240415171857.19244-4-ryncsn@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f7WPDdUE"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5aa22ebd048so2695476eaf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713207995; x=1713812795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5+R/ybS65h0q9J8q+4GnE188fVdCairXnx6GTX1PC9g=;
+        b=f7WPDdUEMQ9/mrxAdxUVprhRElk7OuaHb0kE6X3Fs8T/bRw0Rn6tlLGxDeYlZSt/hs
+         5cU55log9yZMPbz+Cbaa6sMVjhO3xmYIjvsZd+5slrUk9sqZDxTvkh0e8T42E33Y7/SM
+         LgTrBQ48Zs1nHvc4sSPvD8Ay9/Bv7b66EvyyQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713207995; x=1713812795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5+R/ybS65h0q9J8q+4GnE188fVdCairXnx6GTX1PC9g=;
+        b=H3Ksh939KAb2NXKdyfg0Myyn5ce7HBANCDdYdn2toZ3wm9x9iufZ3txnZsUaA1W8gb
+         vx75Uv8lA9/A4+po+tP0FhREaGZ82hBWFqkqgIoPoSaHrc/T2fNdlWodzJRvCIHCgbvN
+         NWOv3SK5JX0l7RU6mE/iXAebGXec80Zrah1EX/p8QNZyL/tM7QAdJOLwYeyMuNueFgEG
+         aGYfVq0AIgPPnQcLyYr0b0SNPpoio3Ia/Tsdr17Ltcwq5tn0v0e7sh2BFvhoO825ivVG
+         +0yNSOvi6BlhtLefQiyZyxpGs9J+M5ahwSjTlMFm7iuYOYwoEHM5iQWPifH/W7xgYD69
+         B6dw==
+X-Forwarded-Encrypted: i=1; AJvYcCXg/chxX9ckKt0+zm93NOtbJWI1VKvgJxBCVglzv+QO4FpJFXZ637fyFaT4gxCIjTg+vZHdzocNpMKO5Pw7hE/n5+8CJ5ILrYE5ctPe
+X-Gm-Message-State: AOJu0YxL3euNZ/HrKhTqHJXq5sO23/oy9R3sHkOPwvSRxnvsazHDVGH7
+	7vvm4I2miHnhceyQqrILYBmuNCDMU6ABplwXI1a36R0BI3md9xxb0ocsA2gHCKaxt/IhjQ/pkcW
+	hE4EezHdJg0Remxag6e2Ya8hkgb33tC01E7N6
+X-Google-Smtp-Source: AGHT+IFeZVlFC3hebTTY0W9m7/2weeINMaNykhc3VQBObIAt9ccZjDkiZxllqsbIVZX9tMYAc1TB6JHY+I3uT3kYIW0=
+X-Received: by 2002:a05:6871:58aa:b0:222:8943:df2b with SMTP id
+ ok42-20020a05687158aa00b002228943df2bmr12366733oac.16.1713207995078; Mon, 15
+ Apr 2024 12:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415171857.19244-4-ryncsn@gmail.com>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-2-jeffxu@chromium.org>
+ <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com> <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 15 Apr 2024 12:06:24 -0700
+Message-ID: <CABi2SkW+X4+m2odCHKVDzYYWPgvebxX_mr97NsKCRfkx641sHA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] mseal: Wire up mseal syscall
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, sroettger@google.com, 
+	willy@infradead.org, gregkh@linuxfoundation.org, corbet@lwn.net, 
+	Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com, 
+	rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 01:18:55AM +0800, Kairui Song wrote:
->  /**
-> - * xa_get_order() - Get the order of an entry.
-> - * @xa: XArray.
-> - * @index: Index of the entry.
-> + * xas_get_order() - Get the order of an loaded entry after xas_load.
+On Mon, Apr 15, 2024 at 11:21=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, 15 Apr 2024 at 11:11, Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+> >
+> > It isn't logical to wire up something which isn't present
+>
+> Actually, with system calls, the rules end up being almost opposite.
+>
+> There's no point in adding the code if it's not reachable. So adding
+> the system call code before adding the wiring makes no sense.
+>
+> So you have two cases: add the stubs first, or add the code first.
+> Neither does anything without the other.
+>
+> So then you go "add both in the same commit" option, which ends up
+> being horrible from a "review the code" standpoint. The two parts are
+> entirely different and mixing them up makes the patch very unclear
+> (and has very different target audiences for reviewing it - the MM
+> people really shouldn't have to look at the architecture wiring
+> parts).
+>
+> End result: there are no "this is the logical ordering" cases.
+>
+> But the "wire up system calls" part actually has some reasons to be first=
+:
+>
+>  - it reserves the system call number
+>
+>  - it adds the "when system call isn't enabled, return -ENOSYS"
+> conditional system call logic
+>
+> so I actually tend prefer this ordering when it comes to system calls.
+>
+I confirm that the wire up change can be merged by its own, i.e. build
+will pass, and  -ENOSYS will be returned at runtime.
 
-I'd just leave that as "Get the order of an entry." as it doesn't have
-to be after calling xas_load(), it could be from any other operation
-that moves xas.  Also this is the short description!
+Thanks Linus for clarifying this.
+-Jeff
 
->  		if (slot >= XA_CHUNK_SIZE)
->  			break;
-> -		if (!xa_is_sibling(xas.xa_node->slots[slot]))
-> +		if (!xa_is_sibling(xas->xa_node->slots[slot]))
 
-Could you fold in this change I have locally?
-
--               if (!xa_is_sibling(xas->xa_node->slots[slot]))
-+               if (!xa_is_sibling(xa_entry(xas.xa, xas.xa_node, slot)))
-
-That fixes a sparse warning which existed before your modifications.
-
+>                 Linus
