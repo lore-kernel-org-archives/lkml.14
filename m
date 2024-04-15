@@ -1,120 +1,198 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A881171C;
-	Mon, 15 Apr 2024 02:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713147603; cv=none; b=aVDQN3/hwD7pfBZq74lZHm/FsunK+tHIkQyIypd8E4P2Fr5K97U5deHSDl0WjJRuUdawBjjs8Q732qFL2byBhL813Pm/Yn9MXTKf29kj58cU9brzr/caDKAykmMR86f5WVxHE3OVxcYeZq/svT/ewINb3JL+jfuAG4oKFbTIYBs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713147603; c=relaxed/simple;
-	bh=3oU2p1In4W0koqh6Uc5YWekxPtYLC4K4W2NNnFMhURg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zija+UX4+NovIuO79+qsNwT9xPRsaBdQ6eKC7wDaU4YK8H/MeMaO4yorlv2ubpmzhM0/CLg4OSoGHaev5OU2qX2xy1gQ7H0fHFkH67ajNnju0FoG8MFPOObzw6YH1D2ChbrumWU4IHt2lv/Jyqa7wCySEStQJZA8NtV4BfcONGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Wfh3cBf0; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B057B3224
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 02:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713147752; cv=fail; b=a1pxPNqCAaGAqJyLyecS1FoV9/BY0cBv7/wwFVfTaZJ+r56CZlg3U5JfdbrRUgVf6JCovrKK/gBEk7PIHP0901VSxkd8vE57jjwEOTXAE2ocjbPvOjjmaFl3RMwXQwDsDD2E11tzwPpBSrGQNmmIq4iVTjMSedfxv0DCFLzsrFo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713147752; c=relaxed/simple;
+	bh=00efHYQ62mCJz1vtlZt+Jh/HZ/boE0CFihnlcpabLtE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qZu4xkyZkTGhsHwOosJZyNb9vYA7BqUxFn94dn4PPwQb3zGIomWK2LaxoO5Fj3bTE5D2fxdL79XiBk/He6CpJjc56af21a6aof/1WimcuUbzeV6zibxVQMf6mdwQxEmIgFkeKm4AFatenhTs1ioICSl9LoHHdgg/4a6q81GQ7hs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jh9EeoQT; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Wfh3cBf0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1713147597;
-	bh=8o4K5dRyl8sIUjU0EgivmjJC3lGXyfUukYQCR3Ov8pA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Wfh3cBf0QS/1UiJCGd9wNTsg4Z3JgU/S53A7sXuE66QjWbiVD9T5UErj+qdU+566N
-	 hjbiVLnV+ds0WJ+Ev+xRCLWWsYkNs/ydYleOUGiOgEvXor3j+0XD5ZTGMx7r9XyYx5
-	 jn2svY0f1Sry8eWSJqE0BMCHAzNMPGqqW0t7XdRo/lDxhdZw7wJ9e8/OC/PSiEPyk7
-	 59A2AycixIle915lKXR/ZEVvbbDPyQIwTiMKuZDpZGbvMmBz2pFKC82F8PzOQcpTbi
-	 j7+dgyBZn3vKLSDfhQN2vQw0ZU/QKf2x+gGzusuyAGdNvKz8OxQs5aM4xz/lfB0l96
-	 UWGlHWQT/t0iQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VHrV23GDlz4wcr;
-	Mon, 15 Apr 2024 12:19:53 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Arnd Bergmann <arnd@arndb.de>, Adrian Hunter <adrian.hunter@intel.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Dave Hansen
- <dave.hansen@linux.intel.com>, John Stultz <jstultz@google.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, "x86@kernel.org" <x86@kernel.org>, "Aneesh
- Kumar K.V" <aneesh.kumar@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Heiko
- Carstens <hca@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>,
- Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Anna-Maria Gleixner <anna-maria@linutronix.de>, Stephen Boyd
- <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, "linuxppc-dev@lists.ozlabs.org"
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] bug: Fix no-return-statement warning with !CONFIG_BUG
-In-Reply-To: <dd6653b2-3a88-4b95-af13-c6fda5b27b39@app.fastmail.com>
-References: <20240410153212.127477-1-adrian.hunter@intel.com>
- <87be83da-6102-483d-b1dc-a77eecc9f780@app.fastmail.com>
- <c9f382b2-cd96-4ee3-ad68-95381d9e09c0@intel.com>
- <a434248a-1e9f-4f4f-8f90-d36d8e979f53@csgroup.eu>
- <ff9d7032-a3b6-4ecd-ac26-d7d4a06a5c7f@csgroup.eu>
- <4d429a10-eb45-4262-8e74-69af810ef1ac@intel.com>
- <dd6653b2-3a88-4b95-af13-c6fda5b27b39@app.fastmail.com>
-Date: Mon, 15 Apr 2024 12:19:50 +1000
-Message-ID: <875xwjcqpl.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jh9EeoQT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713147750; x=1744683750;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=00efHYQ62mCJz1vtlZt+Jh/HZ/boE0CFihnlcpabLtE=;
+  b=Jh9EeoQT1mgD3usW0ij6AeFhDV71HwWsd+LCWksDRpjVuWzqk16H89CN
+   y4c++YLrfS7oQuh98I2qDyt1RP9atms/yU5zMACH4+dNkV8e/6hsukYoS
+   nTC2koZOmO637MWnGR6iEGbqjzIAE/PBKVh6GvPI4Pysuf1d2TWim8Tke
+   v/BwOGpa2KsHjpHg5zIzy1TFh1FS5YiMNHh/P7v6fThmNeskH0UhLYzhy
+   9At664AxQYNrjvqWzPnAz3OC1Hl9v8BFuDCGbpAaaEL1VfaDsvH8PefAv
+   ddiB+fZDoY3RwCv31WpCsvWaF/syzS0bJv5fvkVikP2qNOn/cIDDPpAn3
+   w==;
+X-CSE-ConnectionGUID: llFTl7TMTq6X1IoaqeAV/g==
+X-CSE-MsgGUID: 0iiAlwkZR4qC74ODzEhyFw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="19233308"
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="19233308"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 19:22:29 -0700
+X-CSE-ConnectionGUID: /CR9DpH+QryjY90HGtzDIA==
+X-CSE-MsgGUID: YXxep5LhTwWSrTeZTA/dgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="26188472"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Apr 2024 19:22:29 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 14 Apr 2024 19:22:28 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 14 Apr 2024 19:22:28 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 14 Apr 2024 19:22:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oWLm7oF2TqVdIbMZ8pJekzAQagqC/uF14xKI3oqtxR01y+xUQV7upsmjUk++UrOf8JZeepG51icYHXZQw5bzzIcZfer4kuazIWFfYhkSfaHbZ5GlX0125iX4Pw+3gzFTGxS63HDZ1LC1JcabDYKj190li/WJvyIeLSwrvsN5JMR1x17AW0hj0LgBiKawihJw8SkZ+MrZE2Ts8fufF2smcEREKUnCwKHX/uKuuv7kJUCPXo3kAk90Sfbfwxz4cx1kH7hvLrIOodSTcX2x7RNoGGEa2JO9vDx6ouDsB/5Wn0sSCqm3aUx3npqlHGd1coznAuLR1/cBCzgxFlr6PY2CyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=00efHYQ62mCJz1vtlZt+Jh/HZ/boE0CFihnlcpabLtE=;
+ b=IBCc27iC9JeyPTsQkx1OWDUNcYDYPwqRZAwAuL6Kfg/4ulG5iMP+1mEbW6KJYj4Bh6FUvlEFZbAhEKOfjZCvrG3FtAk+mYfHmfMtqHEDVTbf7jEQcXi1ElOAamthuMBzUA73pAKKIkWsjXruabAPr5rw2Dfa0PpHnIJrVr9sP2z2v43c6mt9IUAWOeEYDYLlhjzftyuZ8yvOClLnW32mZy8x1q4Gd/eGOEiitWJJZDu3OGftDaSu6DrzvPbNbVd7nM78PNvbm00bXximiGG42V0JGERBMP2BBf4r5qaZzFlcmBrGeCgjeGLMbZ1yUavMM34Rzmu4s/4mZ8j3WbIPsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW5PR11MB5881.namprd11.prod.outlook.com (2603:10b6:303:19d::14)
+ by SA1PR11MB8426.namprd11.prod.outlook.com (2603:10b6:806:38d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.31; Mon, 15 Apr
+ 2024 02:22:26 +0000
+Received: from MW5PR11MB5881.namprd11.prod.outlook.com
+ ([fe80::5d0:a6da:a53e:e990]) by MW5PR11MB5881.namprd11.prod.outlook.com
+ ([fe80::5d0:a6da:a53e:e990%6]) with mapi id 15.20.7472.025; Mon, 15 Apr 2024
+ 02:22:26 +0000
+From: "Zhang, Tina" <tina.zhang@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>
+CC: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/1] iommu/vt-d: Remove caching mode check before
+ device TLB flush
+Thread-Topic: [PATCH v3 1/1] iommu/vt-d: Remove caching mode check before
+ device TLB flush
+Thread-Index: AQHajtXXl0hn1tuKek2BkzH8BIG/FbFoks/A
+Date: Mon, 15 Apr 2024 02:22:26 +0000
+Message-ID: <MW5PR11MB58818970CB8E9A37A6AF563889092@MW5PR11MB5881.namprd11.prod.outlook.com>
+References: <20240415013835.9527-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20240415013835.9527-1-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW5PR11MB5881:EE_|SA1PR11MB8426:EE_
+x-ms-office365-filtering-correlation-id: 11345726-e102-4de7-dc1d-08dc5cf2e463
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SiAQeFrgQWl0Nlrl6BdA16JCDVDjTMge4///L1bpxNNKwFkuA9WIrBmE+VXB4j1WOX2PJKtRaunm4oe9DpVGegOk1jFagH66L5o2ezHh3FKTrbBQlxvQwU703l/Od7QZiWdZBX+fBSwEdnt86CritPpSaVuHI50fXzhZCfsdjxfLLVXH1QAFb1zOWQT3XSaykS3QBP2ArR1SliGBchZs/+jhqL+pl+KPkIn09DwsfsZNpqOnoJUi5Hzy8MdPjwuRMyFSQrQlnw3HljicHuXU8gExVrCG+csvEwUBWGHKghT8XHpEHwwjV47wdpBLqcU9wj7NIN7RvNSUX8i4Ck5vvY3khA8xw7Gp5oLEaRMztE0F0trUA1p6wCD8+GWq/6x76Ge6GUH3jW0JWRHEGkK5p8AGYWRAiDqUVDNIu48BCUsxRsAYVUPM3rYB9xukmqX8fskO6Zb330xgZ/G3O1XZaaFKLzefQDe4OA7VcBtSPS74YQgmk5zrqrO8jqfPfxZShwJgeYOYf6HAaNND13Ew6MfvByxaUFlIoXXdcJq4LP48fMcaJLOkO3Qisdw69Do6x31OeQ1I2+NDxVNESr48w8FosaLebNeiP49QJloWItP2qp8ft8iD/IEzxAhMF9ZISz9f7YhgiwkGBr+NO9HD5oNis1Nux8+U7w+NyM44hrVmfkTHkyepfEoS6uFRtjJQNvRuGE1TaoSUFavPiGHz76AMZA9DnDJKfaAgNThEVSo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5881.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1KVF8DelcZ2mWV0XgjaASZ0Q7JEnCo4YJBKqFCvBkgRsMNx/i2qBR5gcNQJu?=
+ =?us-ascii?Q?z0KpUm3RMphd8UcEY8iDjd2M4FXlqU796kPBQM1dfVuMYv1EiqSp/pY4Iyyp?=
+ =?us-ascii?Q?II4BQ06WL+unVy9pODuOf2g1GUAYsKp6/syHMDpR3js4Vc/XPpX6+wazZmaP?=
+ =?us-ascii?Q?ULR+PYE+btCyaPBI+Kc1Xl1huZTQ+C17702ebiqz69E9WkjIydGBwd0mm176?=
+ =?us-ascii?Q?+HbnL1PV6m2vbxybr4VX4dYObyhG130F4ZB8SS9e9uZpJJC+HwSqIUAMSg3m?=
+ =?us-ascii?Q?Vq/fmnj2195892lh3cngAN6Od9aWkBhdj5F771uGUcATR/0BTjvE7uJAF2Yq?=
+ =?us-ascii?Q?ja3zCY3PKoo6GTAlUeLEIAt5/DesqSPZQAz8EOTCzZt2PO2h44DVr1HlN/iV?=
+ =?us-ascii?Q?hfIdD/Ez23TioGTGEoqJhF8DlMwrXsdjMso7kCjJkJFEC9nlDGiGP8dpbpAk?=
+ =?us-ascii?Q?4FfpgGpa75ASVxtIh4thLX1wqRflUOxUb3GU1vfY8LVO9MhLNDJiqeqH+Axt?=
+ =?us-ascii?Q?ogmPZ5K85UupT3a/KgtnH3HLl+CqgDdfETWFwqFWoKy+QCFRSBDb9aJqIgfg?=
+ =?us-ascii?Q?2KgZy95boTOYTZmDPAS1k8lJYo55OapB0LPX5nyYAN5Px0emIUWW9eW1zkkz?=
+ =?us-ascii?Q?OBzilEw17bGbHdZTslIpQFBjeCppXv3dkxfc/UuhoK7puX1ftn9chP0hxDVg?=
+ =?us-ascii?Q?S2EEFiXZmuu3RhV5bRI+37oGsCxKXfumL3bZSL4YcC1HbceDZATCkNe3REF9?=
+ =?us-ascii?Q?6+wzTksKuC66F/YsuSIb67Wy7VJB1W0E6McRPiTceRNO6oFSJmXDp5Bf3nFf?=
+ =?us-ascii?Q?awvCpOzzu80KUdEeq1HDzZJEpgVRnt2+i0ldmRYccre4WH1nxRcSet7zlEHS?=
+ =?us-ascii?Q?PmMvT5JqZlrUx2F4oQB/xziM1ZV5WX68Ct90tDwCDmiXvtwoYSe/e7KkWo1n?=
+ =?us-ascii?Q?Tu4OZ7inRhOpWLIHJZxyOqcK78JrLIdKgZP1T8UWkBZ23c0TtI6GaB5cHROM?=
+ =?us-ascii?Q?V8a6IlaYGNE7jEHWx1L2zzCoAOpc/IbANmMX/KF1ch3nIYQR7wcK4Vhunx7b?=
+ =?us-ascii?Q?ZnYKgIM7THNBvrXx/UvBq8YBcWLlUaZ2mqU5yby/1F6MdDxl+pVTM/c8lE5c?=
+ =?us-ascii?Q?jbH1YD4iTYYY/xNTVbAVZhHS5Hart4JtTqAtoRhwzORy2QPHXxAWdlvGtohb?=
+ =?us-ascii?Q?73ox+43dQ+8219ni8Imc6KD1p8Rmuxlu9ywTQBcLlFa/W4jEacQCUvquFwES?=
+ =?us-ascii?Q?3bSe6eiE6SlPxc0bvyIVq1QB9eNRMKzjBbi772Ay2sIrwYGS1RsozOA4zmiy?=
+ =?us-ascii?Q?RUmQ17CEB/ErQ/2G55rD+7Mooef/oCcVH8ZpsCwOIqUuWcP8mAsoEcona82j?=
+ =?us-ascii?Q?RJ7wlXTLuAElPba03vJZ9MMHP/QRKPyoztpCLnuH9cyXXbcRXj/yS8t/BDPR?=
+ =?us-ascii?Q?6OBr3QXXPEbhm8V1MpLzZxRrRss36/KO8BIAb65HnYuAtTBL/51tTzchK/Av?=
+ =?us-ascii?Q?0rkeqOjHvtaVXIjt7LfErrbTzpemrwM+NhsN1Xw+rPc2VZPjrMCA/TTz7PG8?=
+ =?us-ascii?Q?lagiBTUUV/iLoZebPCgUs3C5zgPWwfH4uQhcOUOk?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5881.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11345726-e102-4de7-dc1d-08dc5cf2e463
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2024 02:22:26.2930
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jqyn1xesNIzsSsgZ6k2DEUch0DC4rR9ogvN7pbOtDMIdOaaByR6ZelrJvLZ4oVERA9BGSkyKzF4jnKBHx16muw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8426
+X-OriginatorOrg: intel.com
 
-"Arnd Bergmann" <arnd@arndb.de> writes:
-> On Thu, Apr 11, 2024, at 11:27, Adrian Hunter wrote:
->> On 11/04/24 11:22, Christophe Leroy wrote:
->>> Le 11/04/2024 =C3=A0 10:12, Christophe Leroy a =C3=A9crit=C2=A0:
->>>>
->>>> Looking at the report, I think the correct fix should be to use=20
->>>> BUILD_BUG() instead of BUG()
->>>=20
->>> I confirm the error goes away with the following change to next-2024041=
-1=20
->>> on powerpc tinyconfig with gcc 13.2
->>>=20
->>> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
->>> index 4e18db1819f8..3d5ac0cdd721 100644
->>> --- a/kernel/time/timekeeping.c
->>> +++ b/kernel/time/timekeeping.c
->>> @@ -282,7 +282,7 @@ static inline void timekeeping_check_update(struct=
-=20
->>> timekeeper *tk, u64 offset)
->>>   }
->>>   static inline u64 timekeeping_debug_get_ns(const struct tk_read_base =
-*tkr)
->>>   {
->>> -	BUG();
->>> +	BUILD_BUG();
->>>   }
->>>   #endif
->>>=20
->>
->> That is fragile because it depends on defined(__OPTIMIZE__),
->> so it should still be:
->
-> If there is a function that is defined but that must never be
-> called, I think we are doing something wrong.
 
-It's a pretty inevitable result of using IS_ENABLED(), which the docs
-encourage people to use.
 
-In this case it could easily be turned into a build error by just making
-it an extern rather than a static inline.
+> -----Original Message-----
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Monday, April 15, 2024 9:39 AM
+> To: iommu@lists.linux.dev
+> Cc: Tian, Kevin <kevin.tian@intel.com>; Liu, Yi L <yi.l.liu@intel.com>; J=
+acob
+> Pan <jacob.jun.pan@linux.intel.com>; Joerg Roedel <joro@8bytes.org>; Will
+> Deacon <will@kernel.org>; Robin Murphy <robin.murphy@arm.com>; linux-
+> kernel@vger.kernel.org; Lu Baolu <baolu.lu@linux.intel.com>
+> Subject: [PATCH v3 1/1] iommu/vt-d: Remove caching mode check before
+> device TLB flush
+>=20
+> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+> implementation caches not-present or erroneous translation-structure entr=
+ies
+> except for the first-stage translation. The caching mode is irrelevant to=
+ the
+> device TLB, therefore there is no need to check it before a device TLB
+> invalidation operation.
+>=20
+> Remove two caching mode checks before device TLB invalidation in the driv=
+er.
+> The removal of these checks doesn't change the driver's behavior in criti=
+cal
+> map/unmap paths. Hence, there is no functionality or performance impact,
+> especially since commit <29b32839725f> ("iommu/vt-d:
+> Do not use flush-queue when caching-mode is on") has already disabled
+> flush-queue for caching mode. Therefore, caching mode will never call
+> intel_flush_iotlb_all().
+The current logic is if the caching mode is being used and a domain isn't u=
+sing first level I/O page table, then flush-queue won't be used. Otherwise,=
+ the flush-queue can be enabled.
+See https://github.com/torvalds/linux/commit/257ec29074
 
-But I think Christophe's solution is actually better, because it's more
-explicit, ie. this function should not be called and if it is that's a
-build time error.
+In other words, if the caching mode is being used and a domain is using fir=
+st level I/O page table, the flush-queue can be used for this domain to flu=
+sh iotlb. Could the code change in this patch bring any performance impact =
+to this case?
 
-cheers
+Regards,
+-Tina
+
