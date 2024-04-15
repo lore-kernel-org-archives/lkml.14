@@ -1,29 +1,29 @@
 Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308071EEE3
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356612C6B9
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713164068; cv=none; b=US0KuVWrr7p1Rrrm8fPG5URbELcXltXTt0VlILDuBVKZFPDhkMuIumrPSvPNhlfO68NUKWF5QAFjYdYz/vaiXWFWtIVV/C/9+CbMRXSCzC0I3oDko0KiO17EfMsmj5ZTy9AR+9Qvclx7IKZWfOXWFz1NKWHiuT/8lDJZ2ipu5p0=
+	t=1713164074; cv=none; b=QV33oVt5vfhihp5sprl5mtIZwD81j0Qp/yRC2i82WQJIYd9mVcMvKBj3Q7Ty6tyafX8TQzwaRcD0CwULcJAu3nKGMRrStG3wUo6vLeUz3FtLrpeRNI8JW9fsH+H3Lj47wtcEdmmldVXzLAbpnmyw343oThU7jOlcr+Ie71VE6Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713164068; c=relaxed/simple;
-	bh=+ZAsXcduXtDFuKJ1ZouQjGGY7R92ssHvZ/okn6q7MH0=;
+	s=arc-20240116; t=1713164074; c=relaxed/simple;
+	bh=MuHFOgP+VINNMeVH16+DixeNsqv/i9paZgGXoPbFS4c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CPAtfdt0ZUu79l+9EqZHjWIMjobozGrXmXMTEvT7tKaZbBztKhoC+IBVqkFFi51ys571JIIzrtxtzpUW2e5BDyjjrQeFoXerYgqmvUQFDZQTXeKBwPl1cfJUvLL5c0dDgnkNvoLaJ97nJEobHu8aCgUnXogqLmb8YYEwTjgHQj8=
+	 MIME-Version:Content-Type; b=nki7dm3OIjYJbKEYiE30375dTObMSV/+hv7lRqjsF+7KOtSadqXUUiMuIe1w9cSeYaAp4Y0rY0VNb7LLqtRdjB8oFtsW+HQqbrxdcGIFhqSkuPUohngIw4eABUpJn/VuYBN07HK8cLits6BYLqs+7KGisOVcAIno+ktlju14RZE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VHyYj6j39z1GHNc;
-	Mon, 15 Apr 2024 14:53:29 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VHyYs4Yy4z1GGdb;
+	Mon, 15 Apr 2024 14:53:37 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46E0614011B;
-	Mon, 15 Apr 2024 14:54:21 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F0E6D1A0172;
+	Mon, 15 Apr 2024 14:54:28 +0800 (CST)
 Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
  (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 15 Apr
- 2024 14:54:19 +0800
+ 2024 14:54:27 +0800
 From: Liao Chang <liaochang1@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
 	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
@@ -41,9 +41,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
 	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<kvmarm@lists.linux.dev>
-Subject: [PATCH v3 1/8] arm64/sysreg: Add definitions for immediate versions of MSR ALLINT
-Date: Mon, 15 Apr 2024 06:47:51 +0000
-Message-ID: <20240415064758.3250209-2-liaochang1@huawei.com>
+Subject: [PATCH v3 7/8] irqchip/gic-v3: Improve the maintainability of NMI masking in GIC driver
+Date: Mon, 15 Apr 2024 06:47:57 +0000
+Message-ID: <20240415064758.3250209-8-liaochang1@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240415064758.3250209-1-liaochang1@huawei.com>
 References: <20240415064758.3250209-1-liaochang1@huawei.com>
@@ -58,72 +58,62 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemd200013.china.huawei.com (7.221.188.133)
 
-From: Mark Brown <broonie@kernel.org>
+It has a better maintainability to use the local_nmi_enable() in GIC
+driver to unmask NMI and keep regular IRQ and FIQ maskable, instead of
+writing raw value into DAIF, PMR and ALLINT directly.
 
-Encodings are provided for ALLINT which allow setting of ALLINT.ALLINT
-using an immediate rather than requiring that a register be loaded with
-the value to write. Since these don't currently fit within the scheme we
-have for sysreg generation add manual encodings like we currently do for
-other similar registers such as SVCR.
-
-Since it is required that these immediate versions be encoded with xzr
-as the source register provide asm wrapper which ensure this is the
-case.
-
-Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Liao Chang <liaochang1@huawei.com>
 ---
- arch/arm64/include/asm/nmi.h    | 27 +++++++++++++++++++++++++++
- arch/arm64/include/asm/sysreg.h |  2 ++
- 2 files changed, 29 insertions(+)
- create mode 100644 arch/arm64/include/asm/nmi.h
+ arch/arm64/include/asm/daifflags.h | 13 +++++++++++++
+ drivers/irqchip/irq-gic-v3.c       |  6 ++----
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
-new file mode 100644
-index 000000000000..0c566c649485
---- /dev/null
-+++ b/arch/arm64/include/asm/nmi.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index b831def08bb3..1196eb85aa8d 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -330,4 +330,17 @@ static inline void local_errnmi_enable(void)
+ 	irqflags.fields.allint = 0;
+ 	local_allint_restore(irqflags);
+ }
++
 +/*
-+ * Copyright (C) 2022 ARM Ltd.
++ * local_nmi_enable - Enable NMI with or without superpriority.
 + */
-+#ifndef __ASM_NMI_H
-+#define __ASM_NMI_H
-+
-+#ifndef __ASSEMBLER__
-+
-+#include <linux/cpumask.h>
-+
-+extern bool arm64_supports_nmi(void);
-+
-+#endif /* !__ASSEMBLER__ */
-+
-+static __always_inline void _allint_clear(void)
++static inline void local_nmi_enable(void)
 +{
-+	asm volatile(__msr_s(SYS_ALLINT_CLR, "xzr"));
++	arch_irqflags_t irqflags;
++
++	irqflags.fields.daif = read_sysreg(daif);
++	irqflags.fields.pmr = GIC_PRIO_IRQOFF;
++	irqflags.fields.allint = 0;
++	local_allint_restore(irqflags);
 +}
-+
-+static __always_inline void _allint_set(void)
-+{
-+	asm volatile(__msr_s(SYS_ALLINT_SET, "xzr"));
-+}
-+
-+#endif
-+
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 9e8999592f3a..b105773c57ca 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -167,6 +167,8 @@
-  * System registers, organised loosely by encoding but grouped together
-  * where the architected name contains an index. e.g. ID_MMFR<n>_EL1.
-  */
-+#define SYS_ALLINT_CLR			sys_reg(0, 1, 4, 0, 0)
-+#define SYS_ALLINT_SET			sys_reg(0, 1, 4, 1, 0)
- #define SYS_SVCR_SMSTOP_SM_EL0		sys_reg(0, 3, 4, 2, 3)
- #define SYS_SVCR_SMSTART_SM_EL0		sys_reg(0, 3, 4, 3, 3)
- #define SYS_SVCR_SMSTOP_SMZA_EL0	sys_reg(0, 3, 4, 6, 3)
+ #endif
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 6fb276504bcc..ed7d8d87768f 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -33,6 +33,7 @@
+ #include <asm/exception.h>
+ #include <asm/smp_plat.h>
+ #include <asm/virt.h>
++#include <asm/daifflags.h>
+ 
+ #include "irq-gic-common.h"
+ 
+@@ -813,10 +814,7 @@ static void __gic_handle_irq_from_irqson(struct pt_regs *regs)
+ 		nmi_exit();
+ 	}
+ 
+-	if (gic_prio_masking_enabled()) {
+-		gic_pmr_mask_irqs();
+-		gic_arch_enable_irqs();
+-	}
++	local_nmi_enable();
+ 
+ 	if (!is_nmi)
+ 		__gic_handle_irq(irqnr, regs);
 -- 
 2.34.1
 
