@@ -1,74 +1,93 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2067.outbound.protection.outlook.com [40.107.20.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3916FE3D;
-	Mon, 15 Apr 2024 12:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713184947; cv=fail; b=tO4X0kE3/lMEF5Ogf/5frOChjtKMrwPQkatq2OGywTTnNDr9K34WzwOdnAxtk7noXe359OTwA1wgR0aXfrPIvW6vSGNrgm0B0lzjyPL/om8zyewrehck09U9qnjGzjTga1MWmr3iVwQuaX1+/AQIJVlNs4Zwjd/R+mzT2bocMNs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713184947; c=relaxed/simple;
-	bh=5HbvCcdOoi7dkFQrO3IwVvB+jnCiwfdjDKzf9jlte8Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IMH2t+My4zj6neu7fOjfSI3yau6kMZPWItFKRxhHgtOWkmdXj7Th4wPHB1d3jTxHPX0iVGyiIjSqNRsIO7dkw63tAvDWm1BnsbuJEO9ttSLcbW5+f45wCYjyXDoQD/n/3UqdI48Za51Y6W03YK+30J7ZXed7vZkVZyhyZANq/GE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=qPRl8Z6V; arc=fail smtp.client-ip=40.107.20.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B836466B5E
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713184948; cv=none; b=jksLONxglML21vmBa3y5Lijh1Aeu5vJiUEgtWD1v5BSUJf0skBxN48qUmMMob0wfqzsUA7gOdmwSr96TJ0+kLw312b3bYMDNYcvIjHCXKzDrqqF1ie9LN3ryUEcORiZB6RzGrNysWpNLWfIoWkj1/u9ZnoGHPykddikvhSn7PK8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713184948; c=relaxed/simple;
+	bh=Ifh6ApnL+yawazi13adk1In0Wqsy1DsDNCn55Kyl8vg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SXRk8+jn7twjbJOrDRHppJNAlw09Tp9VZKJvhwZvtRBZEwyEtWLuJ24yt+3WAOOBBnfVRPcqcxL4cjpIayJ+ZRg5BS1kx0qs6LVYC1wtwK8FcCaw/4DZxpM2xbc1gBnrZHA2HrlVNppM+qq72pkuBUxSVhUg9kIHIaBPAcmyf0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jnAvIARw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D0Y3NL3b; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xh5nqpx/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=blzOp7YU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="qPRl8Z6V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oY2S7ZATfVZJ5ZWuaD2QrhllucXyatFGogKxvXJdJx/RABr5ysoPkSUceWUMIEtGlCsvk0yzrHOKhFu4RXYDpG+Sw905Q+jyPxD1B6lTModB3KgMqFrJ8Be5Q8sjkU5nPx2zO0eRd9+EcMYUcJZXgklOB6fPy60bQbkx1G6tXsVfTlJ5YWMOpFfoZP0sDevuMt0USYJEunbOvpYq5QYVwdr2kIIkQEF8Iio9ghYY1rRcBCWENNmxnF0ZmxsP3LbnHP9PpZN6sN/oZiVjoxZ3EA5IwAHk0LngDKeBY4wq0z7pU/3qlE8SPcG22VIds8RMkzAsxrV1QLX4HTCBnbF13w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Rcz8Tzq1zwsiZ9BrrQ87txjFMqQCuGDh8bq15P4plg=;
- b=KcJpnpavnUycy/VnFyXYTNBSK+VWnZGG7EEBeGQN0iKno2u3smvPHwC21suKgRty8mhgj972N63BEJ9glv0H6re+fPglymIJs6MPRXRnHiLXqu40PzwZwZPVqF26/Dcjuhm3vouvvuNaJzN2JfmFXxvVSoWk8Ucd+GATG2R51yAjobYPFq2lGPaTTaG0N5nORH5OA1Z+RZ176ru5B3trX2bdIRlpg1RsTQ8bLaHm1FJlhsdwK99MjOnf9DBudtj+U3dE2iEKR9r1u8NZC9GvpYSUjghdmfavMRoCOJJb4mXsI6Qxheo1fBqKPPXi2Krr6cUEh6XaYt2OXqk6e6JfKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=leica-geosystems.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Rcz8Tzq1zwsiZ9BrrQ87txjFMqQCuGDh8bq15P4plg=;
- b=qPRl8Z6VcIijoAAPRIUuZElgtT2dNqjnLsIAN+07fI7cq49KHRNsSK9l5WDZNrS3lhlHOqnZXHX4xENOm7vqAM/JRlcMV8DTFVcOI5loq7XRkHyFzXvtGu6a5IloaTQf9E2Hy6fLMv94/izwtf08iLtiBlVXcWB+d+c+32VEi9I=
-Received: from DB7PR03CA0080.eurprd03.prod.outlook.com (2603:10a6:10:72::21)
- by VI1PR06MB9021.eurprd06.prod.outlook.com (2603:10a6:800:1e0::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Mon, 15 Apr
- 2024 12:42:22 +0000
-Received: from DB5PEPF00014B8F.eurprd02.prod.outlook.com
- (2603:10a6:10:72:cafe::20) by DB7PR03CA0080.outlook.office365.com
- (2603:10a6:10:72::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
- Transport; Mon, 15 Apr 2024 12:42:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
- smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
-Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
- designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.8.40.94; helo=hexagon.com; pr=C
-Received: from hexagon.com (193.8.40.94) by
- DB5PEPF00014B8F.mail.protection.outlook.com (10.167.8.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Mon, 15 Apr 2024 12:42:22 +0000
-Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
-	 Mon, 15 Apr 2024 14:42:21 +0200
-From: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-To: marex@denx.de,
-	sboyd@kernel.org,
-	mturquette@baylibre.com,
-	biju.das.jz@bp.renesas.com,
-	marek.vasut+renesas@mailbox.org
-Cc: linux-clk@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jnAvIARw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D0Y3NL3b";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xh5nqpx/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="blzOp7YU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E053221B3D;
+	Mon, 15 Apr 2024 12:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713184945; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iiviuq0yKAjKpIGK5/9DS+JPikG3jUsUkAzFD/WjfGI=;
+	b=jnAvIARw23H9T6/9vZYq9mfsuVQavh5Nh7/yD9XuomOrM8EQn1Mk8ZK7QxaKJYbiWK2R9K
+	jySZNVDKu8D16VkJf6cZ2sANMwnBwap2xNAmNScZDEhKTiwUiCuAzhC0B6/CsU4SPv2R6W
+	UgkJuMfHILXZfipzFb29Nb9rGrETH3I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713184945;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iiviuq0yKAjKpIGK5/9DS+JPikG3jUsUkAzFD/WjfGI=;
+	b=D0Y3NL3bzJF6MtYGnoShIEQH9djLLPF92fUV2nDeO6Mtx5FWFsLEKyEhpI53dSxB9vNLyt
+	9jEr2d55IpTbyECA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713184944; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iiviuq0yKAjKpIGK5/9DS+JPikG3jUsUkAzFD/WjfGI=;
+	b=xh5nqpx/PBEyTsOdy9JlKIUBBinwXZR/RUOAEKIv98LNLFQS8gauby0WmxiEkvTZWHwi8v
+	WHA5WYCHuiGF44q6q8xdUVwvrk+urBTUUpJPTa/5NeaKA7afABRSdNmv8yterQn6G6lTi8
+	X/a+6w/Z08PRdrYFh7l9gihjSOUfJnk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713184944;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iiviuq0yKAjKpIGK5/9DS+JPikG3jUsUkAzFD/WjfGI=;
+	b=blzOp7YUQVqR2R+t5eRAgh5l21xtlCzwwt9NXLVbrQsUQAcpa6eR5VDyt4QWw4lCCjSeK9
+	wYy3aarTTZIPAzDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB7D01386E;
+	Mon, 15 Apr 2024 12:42:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id U05aMLAgHWYxAwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 15 Apr 2024 12:42:24 +0000
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	James Smart <james.smart@broadcom.com>,
+	Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com,
-	m.felsch@pengutronix.de,
-	Catalin Popescu <catalin.popescu@leica-geosystems.com>
-Subject: [PATCH] clk: rs9: fix wrong default value for clock amplitude
-Date: Mon, 15 Apr 2024 14:42:19 +0200
-Message-Id: <20240415124219.604339-1-catalin.popescu@leica-geosystems.com>
-X-Mailer: git-send-email 2.34.1
+	Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v6 3/5] nvme: authentication error are always non-retryable
+Date: Mon, 15 Apr 2024 14:42:18 +0200
+Message-ID: <20240415124220.5433-4-dwagner@suse.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240415124220.5433-1-dwagner@suse.de>
+References: <20240415124220.5433-1-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,96 +95,155 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 15 Apr 2024 12:42:21.0758 (UTC) FILETIME=[5C1FDDE0:01DA8F32]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B8F:EE_|VI1PR06MB9021:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 79486b27-f8a3-4f06-cd08-08dc5d497ede
-X-SET-LOWER-SCL-SCANNER: YES
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	gmks7pHQfMvY2bnCR1L2zs8dith+3zN66b5kruqS/e0Te5bgT+Bp3NnUpmY2aXs9RWaBpfaLE0PLfOPH2gsweFjs1pdpC9k7OeExsUofrqrmHKtPQaf7D88UYdoQ0icY4VhrV6yv1g1mrWVMx/SrxqIAKSqX7V4D+kIchh4TRChtwm8mulTkg1lRmdffDntVOo3/uwiRMlLdGMrQZKbIstMAKTBriTbPlmS0WTk+L8/Ku5cZQKlfNm3lN8k4SwTIQbwQkmOcz43O3Ir3tEgacRD2NFwBYyKDLwVve6hnprxIJCwn7IQb4gGNhA5zlFhS0uroAAPk6QD9rBE/dqwyY3P7WtqtwFlw2r7ijdEhpjetZ8who2LNK0pO975/jNEOjx3o99Hf+85pP4Ntrisrk2DjhIWf1tF6Yw0MF7kgjx+SQ7KtHCcUYTI1T8Ey8jT6aXopB+hpGJ/yKNjM8nsKVUjoPHkVk81YaxDgNr7gvWhjhibnpvIyW5tJocN511SPsKFEFh3VAY9rcHvB6/O7cXRpQCwRKdn7JOoo7N9ljTAVWXtb6JC04R2TTXSjNstKDeeESh8r5r5VS4ULEgRsH5X91ajfO1wqsO3e/4NOE0NzpWdr3H+9UaTFpvGuhGtbRVU8RL9nMjH6riEqnJsYUot4ncinTKSuVu34dWKOy4xgAA/aDppiNOpgUn/pDXC4tOiV2bQKI6Ngeg3j+tpTm7aZYoFazqQctnbdTDXWk7qaq0rzqy2YwYWJWV++GdZ7
-X-Forefront-Antispam-Report:
-	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 12:42:22.0888
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79486b27-f8a3-4f06-cd08-08dc5d497ede
-X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B8F.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR06MB9021
+X-Spam-Flag: NO
+X-Spam-Score: -6.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
-According to 9FGV0241, 9FGV0441 & 9FGV0841 datasheets, the default
-value for the clock amplitude is 0.8V, while the driver assumes 0.7V.
+From: Hannes Reinecke <hare@suse.de>
 
-Additionally, define constants for default values for both clock
-amplitude and spread spectrum and use them.
+Any authentication errors are non-retryable, so use negative error codes
+to ensure they are not retried.
 
-Fixes: 892e0ddea1aa ("clk: rs9: Add Renesas 9-series PCIe clock generator driver")
-
-Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
-Changes in v2:
- - update commit message with "9FGV0841", document change about spread
-   spectrum and add Fixes tag.
----
- drivers/clk/clk-renesas-pcie.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/nvme/host/core.c    |  6 +++---
+ drivers/nvme/host/fabrics.c | 31 +++++++++++++------------------
+ drivers/nvme/host/nvme.h    |  2 +-
+ 3 files changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/clk/clk-renesas-pcie.c b/drivers/clk/clk-renesas-pcie.c
-index 53e21ac302e6..4c3a5e4eb77a 100644
---- a/drivers/clk/clk-renesas-pcie.c
-+++ b/drivers/clk/clk-renesas-pcie.c
-@@ -25,10 +25,12 @@
- #define RS9_REG_SS_AMP_0V7			0x1
- #define RS9_REG_SS_AMP_0V8			0x2
- #define RS9_REG_SS_AMP_0V9			0x3
-+#define RS9_REG_SS_AMP_DEFAULT			RS9_REG_SS_AMP_0V8
- #define RS9_REG_SS_AMP_MASK			0x3
- #define RS9_REG_SS_SSC_100			0
- #define RS9_REG_SS_SSC_M025			(1 << 3)
- #define RS9_REG_SS_SSC_M050			(3 << 3)
-+#define RS9_REG_SS_SSC_DEFAULT			RS9_REG_SS_SSC_100
- #define RS9_REG_SS_SSC_MASK			(3 << 3)
- #define RS9_REG_SS_SSC_LOCK			BIT(5)
- #define RS9_REG_SR				0x2
-@@ -205,8 +207,8 @@ static int rs9_get_common_config(struct rs9_driver_data *rs9)
- 	int ret;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 504dc352c458..66387bcca8ae 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -383,14 +383,14 @@ static inline enum nvme_disposition nvme_decide_disposition(struct request *req)
+ 	if (likely(nvme_req(req)->status == 0))
+ 		return COMPLETE;
  
- 	/* Set defaults */
--	rs9->pll_amplitude = RS9_REG_SS_AMP_0V7;
--	rs9->pll_ssc = RS9_REG_SS_SSC_100;
-+	rs9->pll_amplitude = RS9_REG_SS_AMP_DEFAULT;
-+	rs9->pll_ssc = RS9_REG_SS_SSC_DEFAULT;
+-	if ((nvme_req(req)->status & 0x7ff) == NVME_SC_AUTH_REQUIRED)
+-		return AUTHENTICATE;
+-
+ 	if (blk_noretry_request(req) ||
+ 	    (nvme_req(req)->status & NVME_SC_DNR) ||
+ 	    nvme_req(req)->retries >= nvme_max_retries)
+ 		return COMPLETE;
  
- 	/* Output clock amplitude */
- 	ret = of_property_read_u32(np, "renesas,out-amplitude-microvolt",
-@@ -247,13 +249,13 @@ static void rs9_update_config(struct rs9_driver_data *rs9)
- 	int i;
- 
- 	/* If amplitude is non-default, update it. */
--	if (rs9->pll_amplitude != RS9_REG_SS_AMP_0V7) {
-+	if (rs9->pll_amplitude != RS9_REG_SS_AMP_DEFAULT) {
- 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_AMP_MASK,
- 				   rs9->pll_amplitude);
++	if ((nvme_req(req)->status & 0x7ff) == NVME_SC_AUTH_REQUIRED)
++		return AUTHENTICATE;
++
+ 	if (req->cmd_flags & REQ_NVME_MPATH) {
+ 		if (nvme_is_path_error(nvme_req(req)->status) ||
+ 		    blk_queue_dying(req->q))
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 1f0ea1f32d22..f7eaf9580b4f 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -428,12 +428,6 @@ static void nvmf_connect_cmd_prep(struct nvme_ctrl *ctrl, u16 qid,
+  * fabrics-protocol connection of the NVMe Admin queue between the
+  * host system device and the allocated NVMe controller on the
+  * target system via a NVMe Fabrics "Connect" command.
+- *
+- * Return:
+- *	0: success
+- *	> 0: NVMe error status code
+- *	< 0: Linux errno error code
+- *
+  */
+ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+ {
+@@ -467,7 +461,7 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+ 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: secure concatenation is not supported\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
++			ret = -EOPNOTSUPP;
+ 			goto out_free_data;
+ 		}
+ 		/* Authentication required */
+@@ -475,14 +469,14 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+ 		if (ret) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: authentication setup failed\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
+ 			goto out_free_data;
+ 		}
+ 		ret = nvme_auth_wait(ctrl, 0);
+-		if (ret)
++		if (ret) {
+ 			dev_warn(ctrl->device,
+-				 "qid 0: authentication failed\n");
+-		else
++				 "qid 0: authentication failed, error %d\n",
++				 ret);
++		} else
+ 			dev_info(ctrl->device,
+ 				 "qid 0: authenticated\n");
  	}
- 
- 	/* If SSC is non-default, update it. */
--	if (rs9->pll_ssc != RS9_REG_SS_SSC_100) {
-+	if (rs9->pll_ssc != RS9_REG_SS_SSC_DEFAULT) {
- 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_SSC_MASK,
- 				   rs9->pll_ssc);
+@@ -542,7 +536,7 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
+ 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: secure concatenation is not supported\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
++			ret = -EOPNOTSUPP;
+ 			goto out_free_data;
+ 		}
+ 		/* Authentication required */
+@@ -550,12 +544,13 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
+ 		if (ret) {
+ 			dev_warn(ctrl->device,
+ 				 "qid %d: authentication setup failed\n", qid);
+-			ret = NVME_SC_AUTH_REQUIRED;
+-		} else {
+-			ret = nvme_auth_wait(ctrl, qid);
+-			if (ret)
+-				dev_warn(ctrl->device,
+-					 "qid %u: authentication failed\n", qid);
++			goto out_free_data;
++		}
++		ret = nvme_auth_wait(ctrl, qid);
++		if (ret) {
++			dev_warn(ctrl->device,
++				 "qid %u: authentication failed, error %d\n",
++				 qid, ret);
+ 		}
  	}
-
-base-commit: 6bd343537461b57f3efe5dfc5fc193a232dfef1e
-prerequisite-patch-id: 0000000000000000000000000000000000000000
+ out_free_data:
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index d0ed64dc7380..9b8904a476b8 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -1122,7 +1122,7 @@ static inline int nvme_auth_negotiate(struct nvme_ctrl *ctrl, int qid)
+ }
+ static inline int nvme_auth_wait(struct nvme_ctrl *ctrl, int qid)
+ {
+-	return NVME_SC_AUTH_REQUIRED;
++	return -EPROTONOSUPPORT;
+ }
+ static inline void nvme_auth_free(struct nvme_ctrl *ctrl) {};
+ #endif
 -- 
-2.34.1
+2.44.0
 
