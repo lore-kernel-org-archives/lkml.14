@@ -1,103 +1,98 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6D47F7F2
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5F31E535;
+	Mon, 15 Apr 2024 16:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713197346; cv=none; b=mV7ENgcbSt0rio8VvK8WrH5412MQK5Gn1J5sgTDE3fs+1xrpn62OfcLqjngFw515pH7A7M5mHCu4YrTe91MwZCzpQ4mJasRL2xXSG04r/dgZgLAdJFo6UV0ZMwVX8+2S3TP6xX3J+4ZZLuRt4OnH8jpMoXt9uTco3+hOu41XKcM=
+	t=1713197465; cv=none; b=DQW4IB8cc/vo0rhfTCCcsMdtPlT3ael7cLQT7vBu97Ijh3VlsJGrlDal6UkV9aPVHbskTD1+kzADQzX+NUbWd5sjLQhOZ+E+xjZ7CwCzME0A2cLyTq+u+8Cqq3vMzpIe4ZxcUHbs+FfJS6HYhthWW3atgGNCoFSkRp6IbcEiA2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713197346; c=relaxed/simple;
-	bh=E/HJYNCwsVkHpTWHtftb4kU3kk8lhl3wMS3rheRjiQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gfj5/K/7UXmQcYqZNXvAKEZrWJ+mQd8EqCWURaB458A2yY2u96IvqSDMei9rQ9MPNESSZ3gIsl5nO0V1+g8jIDuoNs8KOv4S3M+7NnYhw636fR07isS11PQkNLc1bktNQDitROWJx/hY1BjBAGYMzs0dyTnMG7TuB9g1/Q5JVeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=i/xSNXwK; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1713197465; c=relaxed/simple;
+	bh=Y9phrcuVghze5A3r/VgBvO2dKSPDGgDW7lzbSbW+qbA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ninF/TMSkgs7tSKljkOV66IGoV59cOktXCSZ4LS7aOEDtYsUiiQ0I+2baUobJHn2dvd3KIBcSuKAeBNvWn+h4E7Q642zsLUvFOWNxPnSuGPeDbUVRFpuYuplUyf2mtHpA9b+/mEgbzQpticVuBCkEEROA1bCMX0U7kJAtDnQSoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eD8xViws; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i/xSNXwK"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2330f85c2ebso2304132fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:09:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eD8xViws"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ecf3943040so2686983b3a.0;
+        Mon, 15 Apr 2024 09:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1713197343; x=1713802143; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTXFGU40TZUxrNmMPsS0SfAuCZx2k12qnJO4YGZoAlM=;
-        b=i/xSNXwKmgz8eeJqAA0Vy5lgSEoL5Yz3ZkqPn6KmTdTRPZRGrpI4aKHMgYRCDQUwpx
-         jKE20ag6ZO6dihmR+IlVZWwJnA/ccf6gEn3g7XlawGcfGtALPBjqeK1pw7xh+i7J9YTE
-         /09SdVf5B6pal4QYLEonXrzNe3I8zGsn9aon5IsozwE0/adjfPjAzLu+3s5W4csA7lts
-         KUvKNYUhKL5T3lfiQjYWaBoGtLnhkYGgzkxdRjuLH0nLJC0UKF/AlidtnyvIdumqhPqW
-         75OAKdDTBXG8J+Fl+CZl4rp3oWgNBc6k97O4Cvzwpdayhk1UxJyNtOYvRZBDMgmZ+FcR
-         H7Sw==
+        d=gmail.com; s=20230601; t=1713197463; x=1713802263; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=idKY/AXCx9ADdtSZX2SyJbtyHMfNUkXAqrrB1Te8B8I=;
+        b=eD8xViwsM/O1KZpH3z7mI1bYXpVRuqc41iNzH6vp26bCpAkTwgNkcaqV5kP3q1tWZ6
+         RZ/+ep5w/1saB+wT+IdRB3bWjY/RLXgz6K5T+Bj7+75V4eGV94x3Q1A9hMZU6wxi6wrQ
+         V1mXWedp9iZWym6xN5rencJqMQn1CnWR0w/dII9RygzEB4jFumXbuPz7ZmG+0QMhmcx9
+         AXJUoTxbChgWwdZL02m7kFpL8KeMvesi5plf87+ZT87QYHjnNeMpeBKU9+HT/buA22dN
+         kiLjfZtbTacXc7ur+Y+pPPtHSJna/gVcd2oEoTC+q5P2AL6Rq920c+kvf2iocRsPS6pm
+         Uyyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713197343; x=1713802143;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tTXFGU40TZUxrNmMPsS0SfAuCZx2k12qnJO4YGZoAlM=;
-        b=Csn83jYCHN2RnVZBcwAv/Wqx3cHLHfmd3vM4N+a98xQE317YayvJifHawi3dbDHYpM
-         65rp0gpLqwbZrncGrV6BDCuevDgE2DTwXkggg6F2pGEnUnCLZRhSAaLnjutmCab3E3AM
-         sLmHEaLO0B4wB0LehUKL9sh86Xf5LP6jCvJB0AkqgWxjqC13JWvl9N6vjbjnPGPXSwuT
-         UfHeAGJ1Y4kWmK/ONbwl0vg/IY7RfLelfGe1ctPiMnbp0DVyBAFwIaMXqMQWDyoAwOfB
-         F8vCEKIKndnpahpG4gmzM49QawHlZyddsyzAFLMx6y+F9XgFI7zWvkkCLJ4eEcrU6rAL
-         FNxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ6CKKCgMUc8KVh/9vX/4Ta0LNTGWhD5N/tQIlgeSGgN4BdCA5IVgFKQMY2SCcfqul292LaMEyD0DP5C/EWhikp+Tv3nnRU04kQiuY
-X-Gm-Message-State: AOJu0Yxb2X+HZqXwRbwEwGlhFiYkNUW/nZye4azPMRH1cLryQHQIBBcg
-	mZMN4Ie1B5kE4yaxwywJoqDLSpiAtX/MbsuRXpBkCvN4WimsoeQIkDQ4KEtPBNc=
-X-Google-Smtp-Source: AGHT+IGsiA6KZ3pe9BtRhO+pbVOY45AuLQMOs+w2wDePMtUYoW4o4u2JX5C7mqkiROcVBcvSR1rGJA==
-X-Received: by 2002:a05:6871:7505:b0:22e:15fd:e247 with SMTP id ny5-20020a056871750500b0022e15fde247mr12653184oac.5.1713197343311;
-        Mon, 15 Apr 2024 09:09:03 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id ej2-20020ad45a42000000b0069b7bc51271sm1526012qvb.123.2024.04.15.09.09.02
+        d=1e100.net; s=20230601; t=1713197463; x=1713802263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=idKY/AXCx9ADdtSZX2SyJbtyHMfNUkXAqrrB1Te8B8I=;
+        b=FHF6uBARPiJSh2ia/zGc5hTyewCjBfM+o/XfaLJGNkjyTeOZH9sHeDBA/Dy32GUoU2
+         7f/BGqDKeJdNhzF5kv3V2RZu4v1UwdsdvEoMMvu2mBB4GIGJn8NCG8Xi2EUaoKxUa00o
+         spbiTHatElBpiCojvy1QKgpkx44fTF158SxFdRN8J/pKDBwrBfdkAKILIOTI95CzYkJF
+         KTRfhAWMJ9KSAXeiUNSuzcXRsJ56ocHmlWKkoTU3ms8iaD9i362upUvtZasF0AS36mK9
+         cXAGt9oealfXE/h7lW2MCapjVwnMSRCLhoYwiPRuiTn99RTIBqaqqV9UuMLdb66DttX2
+         ogUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpyeyFsVX+5Q11mn4CEbTko/2c+H188d9+49Lqia9LL8XpzxBZq7XAqpGvyKL3LHEenCI4iNRPfiamtCQD8OZlkcACH22+FTjJw10NOCV+q97IaLsx/MZ43Ahu3kZ86+oztm6wD2HA
+X-Gm-Message-State: AOJu0Ywy8reK5oqhpael1RyCRpvZOkvmmhmJ2+L14EoRsjS2m+IkSNFF
+	MosdKzkuNJE+AzK8v0dsOmxqkjGcJV/+F2FuCrr20r8aX4dvrQsJoT/XEHiC
+X-Google-Smtp-Source: AGHT+IHCW5enMeqSxfKAKz6Q3Kx5ErcaMW7349ZcFBrKfz5bX7YYXC6EAqUVqihnGGZwN6vufHHUqw==
+X-Received: by 2002:a05:6a20:560d:b0:1a7:3095:b3b9 with SMTP id ir13-20020a056a20560d00b001a73095b3b9mr8753963pzc.22.1713197463496;
+        Mon, 15 Apr 2024 09:11:03 -0700 (PDT)
+Received: from dev0.. ([49.43.161.106])
+        by smtp.gmail.com with ESMTPSA id 6-20020a056a00070600b006eab6f3d8a9sm7414200pfl.207.2024.04.15.09.10.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 09:09:02 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rwOtB-006BJP-JQ;
-	Mon, 15 Apr 2024 13:09:01 -0300
-Date: Mon, 15 Apr 2024 13:09:01 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Kevin Tian <kevin.tian@intel.com>, Shuah Khan <shuah@kernel.org>,
-	kernel@collabora.com, iommu@lists.linux.dev,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
-Message-ID: <20240415160901.GN223006@ziepe.ca>
-References: <20240325090048.1423908-1-usama.anjum@collabora.com>
- <45b4d209-675a-4b42-b62c-6644bafa36c0@collabora.com>
- <20240405001020.GB5792@ziepe.ca>
- <b7c437f5-ac70-4611-908d-b665d8e02679@collabora.com>
+        Mon, 15 Apr 2024 09:11:03 -0700 (PDT)
+From: Abhinav Jain <jain.abhinav177@gmail.com>
+To: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	bhelgaas@google.com,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com,
+	Abhinav Jain <jain.abhinav177@gmail.com>
+Subject: [PATCH] PCI/AER: Print error message as per the TODO
+Date: Mon, 15 Apr 2024 16:10:55 +0000
+Message-Id: <20240415161055.8316-1-jain.abhinav177@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7c437f5-ac70-4611-908d-b665d8e02679@collabora.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 07:39:58PM +0500, Muhammad Usama Anjum wrote:
-> On 4/5/24 5:10 AM, Jason Gunthorpe wrote:
-> > On Mon, Mar 25, 2024 at 02:11:41PM +0500, Muhammad Usama Anjum wrote:
-> >> On 3/25/24 2:00 PM, Muhammad Usama Anjum wrote:
-> >>> Add FAULT_INJECTION_DEBUG_FS and FAILSLAB configurations which are
-> >>> needed by iommufd_fail_nth test.
-> >>>
-> >>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> >>> ---
-> >>> While building and running these tests on x86, defconfig had these
-> >>> configs enabled. But ARM64's defconfig doesn't enable these configs.
-> >>> Hence the config options are being added explicitly in this patch.
-> >> Please disregard this extra comment. Overall this patch is needed to enable
-> >> these config options of x86 and ARM both.
-> > 
-> > I picked this and the other patch up, thanks
-> Not sure why but I'm unable to find this patch in next and in your tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd.git/log/?h=for-next
-> 
-> Maybe this patch was missed?
+Add a pr_err() to print the add device error in find_device_iter()
 
-ah I made some mistakes, all sorted thanks
+Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
+---
+ drivers/pci/pcie/aer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Jason
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ac6293c24976..0e1ad2998116 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -885,7 +885,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+ 		/* List this device */
+ 		if (add_error_device(e_info, dev)) {
+ 			/* We cannot handle more... Stop iteration */
+-			/* TODO: Should print error message here? */
++			pr_err("find_device_iter: Cannot handle more devices.
++					Stopping iteration");
+ 			return 1;
+ 		}
+ 
+-- 
+2.34.1
+
