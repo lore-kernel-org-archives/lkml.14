@@ -1,134 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B28824AE;
-	Mon, 15 Apr 2024 12:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E4480BFE;
+	Mon, 15 Apr 2024 12:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185380; cv=none; b=RBTuR3NR4v+d1aerpIUnLjS+iwmomIKZLov8ql485NMzSXyY0KnH7BakQEhr19ot/o7PU+N2yggFRPkUVg6M0MoUxPa8lsTBh3MCWJDI9I/B8Ib+a4DbTfXBLHZsSPqyKc/0FVzJYTgg5FQDhmxhO8AMNzHIfinCEzGsKj3fL2g=
+	t=1713185383; cv=none; b=Yy2vvCrsywViW19JkdtAxt40POW0kEzrIO6jgM5P4sOpEyBAq5wnqZoXwZ5xKcSeFYkaazQTzcQk3E78/hVN4Lly5S3RohRRojgW/h6PFgvVXcjUCRBHbVzGu6ahHZdk/lbTKVU7B1CGVDPeXuDkYbJ/yW7Le3TU8lV2R/ux1Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185380; c=relaxed/simple;
-	bh=16ilztaQWZyELec5HlVb+8wyfZCsYtDlIGvpttbv8AI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yhsgh0u8/H8hMePxAB8gy1b+12dFGHwZtYwEy8o4ydlF+KcqRbbOJBso6a3wud/MxpTh7SXV3ArF+GTC8Ckr45tn+wvRQeC4VLeFU0xrOKBNH8PTCpt4U+5+oNEcFcFR0Y+tC7BiRA0puiQqBFPhle9uHvb7k0vazSLDKMKRJuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhA6bQI8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185383; c=relaxed/simple;
+	bh=LV17j8lVfsperCS+wGHMXoiZ0shCDUOI6KBK+CN55uU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uv0evNZGVKrE1mUmY/X2cB3+Ev4P1e0pZDXPb5ZLV0wdNCy8SBxv2GVcvTCTCnvEkuYTO6CZzqIj8Ff6SR15gtrRaUXePLR2AQgkcz0YvMr5HxrDgq4OyWGXfD+p1Fh5OKi/j3YIN4i6R2q5i7ZzhA1p/eycqRLZG8Yt6pJi+sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yxatIqoK; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhA6bQI8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BE6C113CC;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yxatIqoK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713185379;
+	bh=LV17j8lVfsperCS+wGHMXoiZ0shCDUOI6KBK+CN55uU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yxatIqoKZRdi1AUWhctz9vu5L3Y6vPDYY50NaG0uUrTo+f8BCuQQwHT+cRelofTDq
+	 onXsw2sIpVxm2OS5wbzIoUx0NMDYkUvZu99XSH3zcvIANjBpgmWhgMFfSB++eZVytH
+	 OH7BEd+bB7qeHqG37RQO4gjCYhy7ZydVovmApXI5KM91lRxDEvvTN7WGQnYSCPALXk
+	 U15AlAfk2nrwmWzG49dtvm8wHT+4V9TGza+7UdpjXJ3SkvG5MLQKPH5Wiedd3qy/os
+	 yA1KaSVJeU/SlqZoFCIWeLqqzHJLcPLSW2SCnbVTjiPzVE1csYMZFE+696kQqYUEI3
+	 WBM8S+rukjyqQ==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sebastianfricke)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 931A33781107;
 	Mon, 15 Apr 2024 12:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185380;
-	bh=16ilztaQWZyELec5HlVb+8wyfZCsYtDlIGvpttbv8AI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fhA6bQI8pvxth9ig5d9QcIlgefoCZ66R80clYAcYyYkY/3erleExgBh49uyLHZ+1K
-	 aBnn9n0PMmDNuSe3Po5ScU0Cc7QtQNJ9uaPSrr5kNCTaxkVgvl6LIZ60CEwmkpdtxa
-	 E1DcQ6nqv0DQf0e6vu8uuz49A5gD6miSOXAGV+TRq1FTe2wB4wWTXlq9Ludgb4WLJq
-	 05YLjZr5VdFPBfUWSyrK1BFqZ/Dw4vI4wB9GeBJBVSNXc7DlG8NOXXjH2iunRHa9Ej
-	 oNdqbq3EI4vJsDy+UNvXXIgB2Si+3Zncg1qh6tSpIvC9mUtXlSPstOqvhoeOJ5ILE+
-	 I8zNUd07lCPag==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Adam Goldman <adamg@pobox.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Sasha Levin <sashal@kernel.org>,
-	linux1394-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.8 15/15] firewire: ohci: mask bus reset interrupts between ISR and bottom half
-Date: Mon, 15 Apr 2024 06:02:55 -0400
-Message-ID: <20240415100311.3126785-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
-References: <20240415100311.3126785-1-sashal@kernel.org>
+Date: Mon, 15 Apr 2024 14:49:38 +0200
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: Ivan Bornyakov <brnkv.i1@gmail.com>
+Cc: Nas Chung <nas.chung@chipsnmedia.com>,
+	Jackson Lee <jackson.lee@chipsnmedia.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Wave515 decoder IP support
+Message-ID: <20240415124938.o5j5er7osnb5ohdm@basti-XPS-13-9310>
+References: <20240415100726.19911-1-brnkv.i1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240415100726.19911-1-brnkv.i1@gmail.com>
 
-From: Adam Goldman <adamg@pobox.com>
+Hey Ivan,
 
-[ Upstream commit 752e3c53de0fa3b7d817a83050b6699b8e9c6ec9 ]
+On 15.04.2024 13:07, Ivan Bornyakov wrote:
+>Initial support for Wave515 multi-decoder IP among other refinements.
+>This was tested on FPGA prototype, so wave5_dt_ids[] was not expanded.
+>
+>fluster score for JCT-VC-HEVC_V1 testsuite with
+>GStreamer-H.265-V4L2-Gst1.0 decoder is 132/147
+>
+>The issue with Main10 tests is that fluster expects decoded file to be
+>in yuv420p10le format while this driver decodes HEVC Main10 into 8-bit
+>yuv420p. Though result is looks alright to the naked eye, proper
+>decoding into yuv420p10le is to be added.
+>
+>The rest failed fluster tests are common with Wave521.
+>
+>ChangeLog:
+>  v1:
+>https://lore.kernel.org/linux-media/20240318144225.30835-1-brnkv.i1@gmail.com/
+>  v2:
+>https://lore.kernel.org/linux-media/20240325064102.9278-1-brnkv.i1@gmail.com/
+>    * drop patch "dt-bindings: media: cnm,wave521c: drop resets restriction"
+>      The only user of Wave5 in mainline is TI K3 boards, thus there is
+>      no real need to alter dt-bindings
+>    * in patch "media: chips-media: wave5: support decoding HEVC Main10 profile"
+>      add check for flag "support_hevc10bit_dec"
+>    * in patch "media: chips-media: wave5: support reset lines" move
+>      reset_control_deassert() out of else branch, add
+>      reset_control_assert() to probe error path.
+>    * rework patch "media: chips-media: wave5: drop "sram-size" DT prop"
+>       - don't move alloc/free form device open/close
+>       - intead of exact configuration of reserved SRAM memory in DT and
+>	 allocating all of it, allocate all available SRAM memory up to
+>	 WAVE5_MAX_SRAM_SIZE from whatever pool provided.
+>    * adjust patch "media: chips-media: wave5: support Wave515 decoder"
+>      according to changes in patches
+>      "media: chips-media: wave5: support decoding HEVC Main10 profile" and
+>      "media: chips-media: wave5: drop "sram-size" DT prop"
+>  v3:
+>https://lore.kernel.org/linux-media/20240405164112.24571-1-brnkv.i1@gmail.com/
+>    * reword patch "media: chips-media: wave5: separate irq setup routine"
+>      a bit.
+>    * in patch "media: chips-media: wave5: drop "sram-size" DT prop"
+>       - move MAX_SRAM_SIZE define into match_data->sram_size
+>       - add placeholders for validation that allocated SRAM memory is
+>	 enough to encode/decode bitstream of given resolution before
+>	 setting W5_USE_SEC_AXI and W5_CMD_ENC_PIC_USE_SEC_AXI registers
+>       - reword accordingly
+>    * in patch "media: chips-media: wave5: support Wave515 decoder"
+>       - add comments around SRAM memory allocation/freeing about
+>	 Wave515 specifics
+>       - add comments about BSOPTION_RD_PTR_VALID_FLAG bit in
+>	 W5_BS_OPTION register
+>       - add W[AVE]521_ prefix to defines, for wich there are W[AVE]515_
+>	 alternatieves
+>       - add semi-magic Wave515 specific formulas to estimate SRAM usage
+>  v4:
+>    * rebase onto next-20240415, no functional changes
 
-In the FireWire OHCI interrupt handler, if a bus reset interrupt has
-occurred, mask bus reset interrupts until bus_reset_work has serviced and
-cleared the interrupt.
+Sorry for not finding the time for review, I'll work on it asap.
+But please don't send a full new series just for a rebase, as that just
+causes noise, I can very well rebase the series myself before a PR
+and if any hard conflicts appear they can be communicated.
 
-Normally, we always leave bus reset interrupts masked. We infer the bus
-reset from the self-ID interrupt that happens shortly thereafter. A
-scenario where we unmask bus reset interrupts was introduced in 2008 in
-a007bb857e0b26f5d8b73c2ff90782d9c0972620: If
-OHCI_PARAM_DEBUG_BUSRESETS (8) is set in the debug parameter bitmask, we
-will unmask bus reset interrupts so we can log them.
+Greetings,
+Sebastian
 
-irq_handler logs the bus reset interrupt. However, we can't clear the bus
-reset event flag in irq_handler, because we won't service the event until
-later. irq_handler exits with the event flag still set. If the
-corresponding interrupt is still unmasked, the first bus reset will
-usually freeze the system due to irq_handler being called again each
-time it exits. This freeze can be reproduced by loading firewire_ohci
-with "modprobe firewire_ohci debug=-1" (to enable all debugging output).
-Apparently there are also some cases where bus_reset_work will get called
-soon enough to clear the event, and operation will continue normally.
-
-This freeze was first reported a few months after a007bb85 was committed,
-but until now it was never fixed. The debug level could safely be set
-to -1 through sysfs after the module was loaded, but this would be
-ineffectual in logging bus reset interrupts since they were only
-unmasked during initialization.
-
-irq_handler will now leave the event flag set but mask bus reset
-interrupts, so irq_handler won't be called again and there will be no
-freeze. If OHCI_PARAM_DEBUG_BUSRESETS is enabled, bus_reset_work will
-unmask the interrupt after servicing the event, so future interrupts
-will be caught as desired.
-
-As a side effect to this change, OHCI_PARAM_DEBUG_BUSRESETS can now be
-enabled through sysfs in addition to during initial module loading.
-However, when enabled through sysfs, logging of bus reset interrupts will
-be effective only starting with the second bus reset, after
-bus_reset_work has executed.
-
-Signed-off-by: Adam Goldman <adamg@pobox.com>
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firewire/ohci.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 7bc71f4be64a0..38d19410a2be6 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -2060,6 +2060,8 @@ static void bus_reset_work(struct work_struct *work)
- 
- 	ohci->generation = generation;
- 	reg_write(ohci, OHCI1394_IntEventClear, OHCI1394_busReset);
-+	if (param_debug & OHCI_PARAM_DEBUG_BUSRESETS)
-+		reg_write(ohci, OHCI1394_IntMaskSet, OHCI1394_busReset);
- 
- 	if (ohci->quirks & QUIRK_RESET_PACKET)
- 		ohci->request_generation = generation;
-@@ -2125,12 +2127,14 @@ static irqreturn_t irq_handler(int irq, void *data)
- 		return IRQ_NONE;
- 
- 	/*
--	 * busReset and postedWriteErr must not be cleared yet
-+	 * busReset and postedWriteErr events must not be cleared yet
- 	 * (OHCI 1.1 clauses 7.2.3.2 and 13.2.8.1)
- 	 */
- 	reg_write(ohci, OHCI1394_IntEventClear,
- 		  event & ~(OHCI1394_busReset | OHCI1394_postedWriteErr));
- 	log_irqs(ohci, event);
-+	if (event & OHCI1394_busReset)
-+		reg_write(ohci, OHCI1394_IntMaskClear, OHCI1394_busReset);
- 
- 	if (event & OHCI1394_selfIDComplete)
- 		queue_work(selfid_workqueue, &ohci->bus_reset_work);
--- 
-2.43.0
-
+>
+>Ivan Bornyakov (5):
+>  media: chips-media: wave5: support decoding HEVC Main10 profile
+>  media: chips-media: wave5: support reset lines
+>  media: chips-media: wave5: separate irq setup routine
+>  media: chips-media: wave5: drop "sram-size" DT prop
+>  media: chips-media: wave5: support Wave515 decoder
+>
+> .../platform/chips-media/wave5/wave5-helper.c |   8 +-
+> .../platform/chips-media/wave5/wave5-hw.c     | 395 +++++++++++++-----
+> .../chips-media/wave5/wave5-regdefine.h       |   5 +
+> .../platform/chips-media/wave5/wave5-vdi.c    |  27 +-
+> .../chips-media/wave5/wave5-vpu-dec.c         |  51 ++-
+> .../chips-media/wave5/wave5-vpu-enc.c         |   2 +-
+> .../platform/chips-media/wave5/wave5-vpu.c    |  35 +-
+> .../platform/chips-media/wave5/wave5-vpuapi.h |   3 +
+> .../chips-media/wave5/wave5-vpuconfig.h       |  16 +-
+> .../media/platform/chips-media/wave5/wave5.h  |   6 +
+> 10 files changed, 407 insertions(+), 141 deletions(-)
+>
+>-- 
+>2.44.0
+>
