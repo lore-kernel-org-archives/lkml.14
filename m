@@ -1,195 +1,242 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2083.outbound.protection.outlook.com [40.107.101.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E394B82862;
-	Mon, 15 Apr 2024 16:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713197613; cv=none; b=Fk33ZLvthvRUIsD5NeA3SjlEvXvMhg6uqOh0937PIHAmRaq9F0iaDXvt7mktnexI9gpgslLeQ1mx01VlkZHyjFXTRGInXwDGDPLFtOryDkZYOHbTD0jkg5mM4WqPhWT1fOTszCTDqmX2PLx3IqOX6HyyFwvgTGM04mZj/vBIhag=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713197613; c=relaxed/simple;
-	bh=OstlfuSyRFOTycwkFPIRoGHthbADv/RkObuMjJltxto=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qBD6yVTZtH4Bp19r7NML1qrP1XIuSS5MbFMSXCqIJ7oKDqd0XyTjUBKcPmRofpdjLb2Nv+H38RWvPa5C5+9nDGJRpY6mhJTRkrlfHq77K+vhbAbKpHf+TiwqRGQo9aPN+EaNjtSku8x1C/yKcuDIopet+jMCyu2t+OAdwwupYbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VJBcp5D7Cz9xHvk;
-	Mon, 15 Apr 2024 23:56:58 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 120C41408C5;
-	Tue, 16 Apr 2024 00:13:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwDn0iaZUR1m4n9HBg--.16529S11;
-	Mon, 15 Apr 2024 17:13:22 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: corbet@lwn.net,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	wufan@linux.microsoft.com,
-	pbrobinson@gmail.com,
-	zbyszek@in.waw.pl,
-	hch@lst.de,
-	mjg59@srcf.ucam.org,
-	pmatilai@redhat.com,
-	jannh@google.com,
-	dhowells@redhat.com,
-	jikos@kernel.org,
-	mkoutny@suse.com,
-	ppavlu@suse.com,
-	petr.vorel@gmail.com,
-	mzerqung@0pointer.de,
-	kgold@linux.ibm.com,
-	Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [RFC][PATCH v2 9/9] ima: Register to the digest_cache LSM notifier and process events
-Date: Mon, 15 Apr 2024 18:10:44 +0200
-Message-Id: <20240415161044.2572438-10-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240415161044.2572438-1-roberto.sassu@huaweicloud.com>
-References: <20240415161044.2572438-1-roberto.sassu@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10E680623
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713197614; cv=fail; b=bK0vn3zyAjQVxE8RX+4KoKnc4TlG1E8goadSDwh71ak5fg8qEmmiDZ3bL2sBqvD0fIISRHnVll56DaDETMOSJUSm6IP4SXApMcwUV2KQIUi5B5X+QuIv44SFerf4klcgxNRS2sSmj2Ma7GJudA8gbx/9ZpFCpyy9mZtdRFZCiig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713197614; c=relaxed/simple;
+	bh=lPMqZnSkXLyGXXlv5YWZbgStEfY+WWNDqyNK6aE+jPs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qv5mexTbRXVEKyKS10g8sBQcE+BBKbwib0DpJU5XMvT9qZckIIi7Gvb02DhxcAhUZ6YjHmJ9Gs96BKWVS4r5OG2p8x/7a61xYVT1gSwOIVJlL0PzxxOnEgABpFybk+6pFJgQ6UT/s+FWm8PsaD71cRLRZ6TuPVrg45zx9CA7/zI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uOYtQVf4; arc=fail smtp.client-ip=40.107.101.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uOYtQVf4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c8vTV0gQNgRih0AJSDxjztqw0BXj3ZYW4EpT9zyh/rzeoktSs6NZor4ERfWqJuhxKJQcV8IUrs6vwEVPrsODjC84r0TYY6h10ZTzpKHH8RbN463ayvhBXLAsJPpjieq1GYwg20N4prQuh2RMm0M2Jz40iOdGzWib0etpDg904AlZ2ek1WCNTRuW/Og8yyuR35B5+/U9QFUM6nIwgdx3UU7BMQUttz/J2xUU6iGz5Gp2TqqjGh99jW+DSstTLzqz/v9uws/AeXUHQUVJxb51Ft+D3/0Puiw1mDWe94fTBk2vreB6UxXwgYxARrIuIsADNJCn+RMvxrI/u9heS8b+hXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BEoVM24Md+GnoHGBd5Y80is/GDfuJaMzUALqiF0RXM4=;
+ b=jmrBMymZqnraEqhgE8JCcVuFTZP5ot06NHcJWJIu9mE1kQ60FJe1sxHvC19PklzOKvF4NeSOPS18T2q63yuQ68ssL3c0JgxDzKGSpIYnELmqtiHrTRAz/t8B2BnIzKQlV9CY5j/cdP5QF+zBUJ7HFlbPvteJW1u7UB6NwVCMTkk2PyiR/IbO01CjOlCqr2b9VXAa7FcU7PMm4Ig/rTZm3cpV0gSSQQajhSfJbFa3Fxsor1P0KWcwSTJZrQLzl9tYKhfBk7HW/xbzXVCf7KcyN9sNRyiWE7g72Kob8zu/TWK7hYFpE0syACr77dxsTNHH0DD6zriASTTjkOvaGEzUIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BEoVM24Md+GnoHGBd5Y80is/GDfuJaMzUALqiF0RXM4=;
+ b=uOYtQVf4qO6QKmjXCo+OnQAO9XprAePh1pGMAlpw1G7GbqOQi19hzbIiyTTACkSswl01dk7FVZ638nopE25Rskeeld2MNd3LtiioBgRKGcJW04Y80Jz4H3TR2EojOtVJaCslXZn6USA0wQkf8yrj1XpMyMBePilPCnwVd9zVzW4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
+ SA1PR12MB5670.namprd12.prod.outlook.com (2603:10b6:806:239::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.50; Mon, 15 Apr 2024 16:13:29 +0000
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::8af6:1232:41ce:24a3]) by DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::8af6:1232:41ce:24a3%7]) with mapi id 15.20.7409.053; Mon, 15 Apr 2024
+ 16:13:29 +0000
+Message-ID: <df3cd8a6-8e9e-2403-9995-267cd05b0fda@amd.com>
+Date: Mon, 15 Apr 2024 18:12:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 07/14] x86/sev: Provide SVSM discovery support
+Content-Language: en-US
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Michael Roth
+ <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+References: <cover.1711405593.git.thomas.lendacky@amd.com>
+ <6468ce125086997ffb043238d12a347f77c7a3fa.1711405593.git.thomas.lendacky@amd.com>
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <6468ce125086997ffb043238d12a347f77c7a3fa.1711405593.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR04CA0094.eurprd04.prod.outlook.com
+ (2603:10a6:803:64::29) To DM6PR12MB2810.namprd12.prod.outlook.com
+ (2603:10b6:5:41::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwDn0iaZUR1m4n9HBg--.16529S11
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr47Gr1xXw47ZFy8ArW7twb_yoWrXF1fpa
-	9rG3WrKrW8Zry7ur4fAFnFyayrK3yktayxW395X3sIyF4DXr1jy395Jr1UuFyrJr4Yqw4x
-	tw45Kry5uw1jyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4
-	kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZV
-	WrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuY
-	vjxUxrcTDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5x3HAAAsN
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|SA1PR12MB5670:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb4ae96c-be8f-4d9c-993a-08dc5d66fccf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Cw8QzSU+yE00hzBq6hsmHWqdfmqjYv4P81Uhj3/WzjCTLB9Tf+MFyVBFmvNNMBo5DQJGD2/r5QqZImVXyR1QeAyPfy7+pdsTC82DZvVZkkGLIVssTLPYI7ePTjWwyM/irhIFXWBYDnUfshXiX6gZi2MchwQ+0apu6DILbROD3p+o4zQa9QZkLf0uTM+lsUpxl0ShO7PTaCb21Okm2d+p0PZsv9k6YUj7cyjE3zTUTU8WvXTh7ODjc9TjFP/vXuKTKNaet3IS4SdpAUF7rPAHZGLaUQTjqMGwszfIpxM8+FHj/KemvQpcrnO8hRN5zWxc1bettEx0gshMJlBcWbu+SOxQiIk9V53yY2aXQp9WH4Sszb1LzMaE7/Z5Lg1vI/cfvMfQOvVoq5Gg0LQmJrlDMlBhSQiNQ/lldEq3GeK3sCssbw92gn2Roo+xb89KbQUNftf2XF+IqfZszU1CeuaSlX8grrcusSBFCLjzJyM5Bh3ulLGfv1CSsJuS8+9wTldFjrqWJ5eXvU+cQHkZOhh894ko1eGIL3XZB+bYUM8Mf0TslPmbLBVN6SuoU4+dB9bOP4wMShJAIS4K5p9u1WH6doPucQg1eVnwerq30B3XdZH0x64tY4FSgoTZwgs0+7KwPE2pmmuQkHSzvi2NzLjqg+Va5eqRcvCD/K8w4WWMeXc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Qi9jd1ZuMXlseDYvbU95YXRLU1BuOVVYN28xS1U2SGVVaGZibGU1OU1xcFdW?=
+ =?utf-8?B?bkFnV2VUMUUyR0Nuc21iUGt4dElscjJGczVlZUorQWtBNGVpMUo2dkh2Vktx?=
+ =?utf-8?B?MjgyVmVvSWFYVThnOG9aY0VkTHpiYlNtZHludnNpQndxSjB3SGEwZVNpNlFn?=
+ =?utf-8?B?UnlGemRHc2R4Z08vSElJVVd3NVdsMHFaS2g3NXVqOWpTNXpLRENWc0ZHWloz?=
+ =?utf-8?B?czBFZ0JsdmtEeXZPejR5a1VMQ3NOVVpQSUZ3SXdFdy90anhZTzU0RTMvOE0z?=
+ =?utf-8?B?dy9GT09vVCtzOFNNRjdsUUcvamtmQW9UOG05SWEwR20xaVd0RWE0WTJCeE1o?=
+ =?utf-8?B?NmFCQjRDMGI0RVpibXBPNHI4K0d2ZHRJWFdSWXQ2UTI3STZxZkhSenA0WU1G?=
+ =?utf-8?B?UGtIZDF0VUdlN3E2cDluWWI3UVlNK0NrLyt6OStSOUU0UW1Vcmg1Vm1seTRu?=
+ =?utf-8?B?RGlKS20ySklwMjF2aTJ4MHRNRm9nRUJKeUtYUnRnSGxMZmxnWS8rZjZYVkhu?=
+ =?utf-8?B?MmdNMWx6VFlKZEdUZmNUYzRsTTJaa2JERjVPNmlnTDhmK3FXUHJINVBxQVEx?=
+ =?utf-8?B?WHZTVDJadk14cFdTbmFZN1JPVEIzVlZDNVVGUmVqQnRXOEwvTVhqK2xic3Fk?=
+ =?utf-8?B?ODdtZmY5dEdMQzA1ZjdXaVVkcGEyenc5ejZnSHlpaEFUSFRZNjcrajRjb3Vn?=
+ =?utf-8?B?WGpubThoRER6dllMK283eUlKQk44a0hNT3g1dVgzdmNBanFNY0F6djU0MHg3?=
+ =?utf-8?B?eTZINjlvRUlEeTJtVWcxMnFSYWxjdS9JR0RUSnRRS1lkR29LbHh5MDNabVU2?=
+ =?utf-8?B?S211TU1MQkRhaE9Wd3pBQnIrdmFUa2xoYW41dGZsMTBhazNaTGFBWEdqWHVu?=
+ =?utf-8?B?bmdvRmhMVm1POWd4NjhNVmgwWFZmQ2NpQzZ3SmpaZGdGd1RVZTdlekpWR05M?=
+ =?utf-8?B?WkFFRG13cEZzalFvRWM3YTdNclBHNjdadjBPQjl1Y0tmTDArd0dUbm4vdlVy?=
+ =?utf-8?B?U0YyYSt6bjA4RzFpSXA0dlFHY1dMUVhWcGZJOWlmMG1OMTQ5eEFmcDRTUnh0?=
+ =?utf-8?B?akQ3clVGL2p0a21ON0sveCtvdHpGVzYyN211VDRQY3QzOE5xcjB2aVZlTlFs?=
+ =?utf-8?B?UHpQSEdxYm5ab3p6cXdFRC85M1JCWlcvaFdLRE94V3RBRU1RWlJJcnArcEQx?=
+ =?utf-8?B?eXp5dTV3NDRRL241QWExdUtNc2dNSFM2eVBiNTF1MXdXNW10bElOMzMyWmpu?=
+ =?utf-8?B?Zzcycm9Fd3NsRnhiS245cTN2QnBTMkZYUmtUblNZYmNlNHJCSW9GZ3ZJTUFN?=
+ =?utf-8?B?ZmNUamdTYTBaeU94aUlPVjRPdThoSHljYUxjQ3RiVFlQbzNTRVB3aUhDaktJ?=
+ =?utf-8?B?RTlMSncyMytDdVZ2MlNwM1ppMUo3Uzd2T2RyT0prZUNmMFlKYU5HUG5Ka1Yw?=
+ =?utf-8?B?bmgraXM1SlRiNUd5Rkpka2o3YTkzd1dOTW9oM0tJSmFwVjV4VC9kQVVlU3Z2?=
+ =?utf-8?B?bWtrR2MzTldSenlQTjZCUVAwWU9nVFdySUh2YTkwSVRTVlpKZ0EwNWs2bVVO?=
+ =?utf-8?B?UUliTkJvVDhxSm1Nb0J0bCtkd0gyWlEyTGRqSW5pR2MvUk5nZ0k5SXRLRUI4?=
+ =?utf-8?B?aHVXMlFwTTYxeXlJWWxhSXJ5U3ZSWGxyWnhXSC84VWdpbFYxZzl3aGkvVlZI?=
+ =?utf-8?B?c1U0d2JHbEt1TGlhTGszRmErQnhxQko3RDhpVmZYaDUxTFdEZ294MHZLUnp5?=
+ =?utf-8?B?S3daQXFhbFlRVE10RmwwVjdnRWdVU3NDZ09La3BnbHJ6UzREb2dLRlY1eG1F?=
+ =?utf-8?B?TmdidFpNRk0zandaQi9BTlJJNUtjTFFOd0xIMFIxQWhXMFdmYzVESDZiRG9v?=
+ =?utf-8?B?enRuTFVzQldnYjhXay85WUZFQlVISkJHZnBFaFhzdThmRUxvUWc0VEY5Umw5?=
+ =?utf-8?B?a3JDOWpaSDlFL0FuczlqQWIvcFNSa01NeVdNeXc2ajVYdzFRYmZVZ0dZT0xh?=
+ =?utf-8?B?eVRvMjdaSWMwNXRGQlRpa1NQdVp2cWZ3NG5oeG8yanU2SkM1SHhaZEZYSHor?=
+ =?utf-8?B?cFY3UzhoSzhiSURJbC9FTDR2ZkZ4cEI4b1VJbm1zbU5XQW94ZkVaeW5JVExl?=
+ =?utf-8?Q?cvyVHbtBai8dgiiNAowEGIxHH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb4ae96c-be8f-4d9c-993a-08dc5d66fccf
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 16:13:29.1970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1ZEyy5TmpsbenLA4rR3xqwDGuD4yWh9LUWENTtNYhWLPjBiTwSagAXnfmL7jRLYcSZ2vh7i1N907cdDrC27OxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5670
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On 3/25/2024 11:26 PM, Tom Lendacky wrote:
+> The SVSM specification documents an alternative method of discovery for
+> the SVSM using a reserved CPUID bit and a reserved MSR.
+> 
+> For the CPUID support, the SNP CPUID table is updated to set bit 28 of
+> the EAX register of the 0x8000001f leaf when an SVSM is present. This bit
+> has been reserved for use in this capacity.
+> 
+> For the MSR support, a new reserved MSR 0xc001f000 has been defined. A #VC
+> should be generated when accessing this MSR. The #VC handler is expected
+> to ignore writes to this MSR and return the physical calling area address
+> (CAA) on reads of this MSR.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-A digest cache used for measurement/appraisal might change over the time
-(due to file modification, directory changes). When that happens, IMA
-should invalidate the cached integrity result for affected inodes and
-evaluate those inodes again.
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-Implement ima_digest_cache_change(), to be invoked at every notification by
-the digest_cache LSM, and register it as a callback with
-digest_cache_register_notifier().
-
-For every notification, and if the type of event is DIGEST_CACHE_RESET,
-retrieve the inode integrity metadata (if any), and set the
-IMA_CHANGE_XATTR atomic flag, so that IMA fully reevaluates the inode in
-process_measurement().
-
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- security/integrity/ima/ima_digest_cache.c | 31 +++++++++++++++++++++++
- security/integrity/ima/ima_digest_cache.h |  6 +++++
- security/integrity/ima/ima_main.c         | 11 +++++++-
- 3 files changed, 47 insertions(+), 1 deletion(-)
-
-diff --git a/security/integrity/ima/ima_digest_cache.c b/security/integrity/ima/ima_digest_cache.c
-index 013c69f265d8..0ab35575ff7c 100644
---- a/security/integrity/ima/ima_digest_cache.c
-+++ b/security/integrity/ima/ima_digest_cache.c
-@@ -90,3 +90,34 @@ void ima_digest_cache_update_allowed_usage(struct file *file,
- out:
- 	digest_cache_put(digest_cache);
- }
-+
-+static int ima_digest_cache_change(struct notifier_block *nb,
-+				   unsigned long event, void *data)
-+{
-+	struct ima_iint_cache *iint;
-+	struct digest_cache_event_data *event_data = data;
-+
-+	if (event != DIGEST_CACHE_RESET)
-+		return NOTIFY_DONE;
-+
-+	iint = ima_iint_find(event_data->inode);
-+	if (!iint) {
-+		pr_debug("Integrity metadata not found for inode %lu\n",
-+			 event_data->inode->i_ino);
-+		return NOTIFY_OK;
-+	}
-+
-+	set_bit(IMA_CHANGE_XATTR, &iint->atomic_flags);
-+	pr_debug("Integrity metadata of inode %lu successfully reset\n",
-+		 event_data->inode->i_ino);
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block digest_cache_notifier = {
-+	.notifier_call = ima_digest_cache_change,
-+};
-+
-+int ima_digest_cache_register_notifier(void)
-+{
-+	return digest_cache_register_notifier(&digest_cache_notifier);
-+}
-diff --git a/security/integrity/ima/ima_digest_cache.h b/security/integrity/ima/ima_digest_cache.h
-index cb47c15e975d..44c188c2fb93 100644
---- a/security/integrity/ima/ima_digest_cache.h
-+++ b/security/integrity/ima/ima_digest_cache.h
-@@ -15,6 +15,7 @@ void ima_digest_cache_store_allowed_usage(struct file *file,
- void ima_digest_cache_update_allowed_usage(struct file *file,
- 					   struct ima_iint_cache *iint,
- 					   u64 *allowed_usage);
-+int ima_digest_cache_register_notifier(void);
- #else
- static inline void
- ima_digest_cache_store_allowed_usage(struct file *file,
-@@ -27,4 +28,9 @@ ima_digest_cache_update_allowed_usage(struct file *file,
- 				      u64 *allowed_usage)
- { }
- 
-+static inline int ima_digest_cache_register_notifier(void)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SECURITY_DIGEST_CACHE */
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 7ae2bd888d41..fe826755acd1 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -1159,8 +1159,17 @@ static int __init init_ima(void)
- 		return error;
- 
- 	error = register_blocking_lsm_notifier(&ima_lsm_policy_notifier);
--	if (error)
-+	if (error) {
- 		pr_warn("Couldn't register LSM notifier, error %d\n", error);
-+		return error;
-+	}
-+
-+	error = ima_digest_cache_register_notifier();
-+	if (error) {
-+		pr_warn("Couldn't register digest cache notifier, error %d\n",
-+			error);
-+		unregister_blocking_lsm_notifier(&ima_lsm_policy_notifier);
-+	}
- 
- 	if (!error)
- 		ima_update_policy_flags();
--- 
-2.34.1
+> ---
+>   arch/x86/include/asm/cpufeatures.h |  1 +
+>   arch/x86/include/asm/msr-index.h   |  2 ++
+>   arch/x86/kernel/sev-shared.c       | 11 +++++++++++
+>   arch/x86/kernel/sev.c              | 17 +++++++++++++++++
+>   4 files changed, 31 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index a38f8f9ba657..51e7c879f057 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -446,6 +446,7 @@
+>   #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+>   #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+>   #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* AMD SEV-ES full debug state swap support */
+> +#define X86_FEATURE_SVSM_PRESENT	(19*32+28) /* "" SNP SVSM is present */
+>   
+>   /* AMD-defined Extended Feature 2 EAX, CPUID level 0x80000021 (EAX), word 20 */
+>   #define X86_FEATURE_NO_NESTED_DATA_BP	(20*32+ 0) /* "" No Nested Data Breakpoints */
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 05956bd8bacf..cc4de3379265 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -654,6 +654,8 @@
+>   #define MSR_AMD64_RMP_BASE		0xc0010132
+>   #define MSR_AMD64_RMP_END		0xc0010133
+>   
+> +#define MSR_SVSM_CAA			0xc001f000
+> +
+>   /* AMD Collaborative Processor Performance Control MSRs */
+>   #define MSR_AMD_CPPC_CAP1		0xc00102b0
+>   #define MSR_AMD_CPPC_ENABLE		0xc00102b1
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index e63c0a6eccd6..17eb42c4ae71 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -1559,6 +1559,8 @@ static enum es_result vc_check_opcode_bytes(struct es_em_ctxt *ctxt,
+>   static void __head setup_svsm_ca(const struct cc_blob_sev_info *cc_info)
+>   {
+>   	struct snp_secrets_page_layout *secrets_page;
+> +	struct snp_cpuid_table *cpuid_table;
+> +	unsigned int i;
+>   	u64 caa;
+>   
+>   	BUILD_BUG_ON(sizeof(*secrets_page) != PAGE_SIZE);
+> @@ -1596,4 +1598,13 @@ static void __head setup_svsm_ca(const struct cc_blob_sev_info *cc_info)
+>   	 */
+>   	boot_svsm_caa = (struct svsm_ca *)caa;
+>   	boot_svsm_caa_pa = caa;
+> +
+> +	/* Advertise the SVSM presence via CPUID. */
+> +	cpuid_table = (struct snp_cpuid_table *)snp_cpuid_get_table();
+> +	for (i = 0; i < cpuid_table->count; i++) {
+> +		struct snp_cpuid_fn *fn = &cpuid_table->fn[i];
+> +
+> +		if (fn->eax_in == 0x8000001f)
+> +			fn->eax |= BIT(28);
+> +	}
+>   }
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index ea8b43a0f01b..7f399ea87a3c 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -1347,12 +1347,29 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+>   	return 0;
+>   }
+>   
+> +static enum es_result vc_handle_svsm_caa_msr(struct es_em_ctxt *ctxt)
+> +{
+> +	struct pt_regs *regs = ctxt->regs;
+> +
+> +	/* Writes to the SVSM CAA msr are ignored */
+> +	if (ctxt->insn.opcode.bytes[1] == 0x30)
+> +		return ES_OK;
+> +
+> +	regs->ax = lower_32_bits(this_cpu_read(svsm_caa_pa));
+> +	regs->dx = upper_32_bits(this_cpu_read(svsm_caa_pa));
+> +
+> +	return ES_OK;
+> +}
+> +
+>   static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+>   {
+>   	struct pt_regs *regs = ctxt->regs;
+>   	enum es_result ret;
+>   	u64 exit_info_1;
+>   
+> +	if (regs->cx == MSR_SVSM_CAA)
+> +		return vc_handle_svsm_caa_msr(ctxt);
+> +
+>   	/* Is it a WRMSR? */
+>   	exit_info_1 = (ctxt->insn.opcode.bytes[1] == 0x30) ? 1 : 0;
+>   
 
