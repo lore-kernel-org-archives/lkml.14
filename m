@@ -1,118 +1,101 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EC212C479
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EBB12C488;
+	Mon, 15 Apr 2024 12:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185429; cv=none; b=jFnvtPigGJURkHmylPCdTOhJbIp4y/x7XT6LKrauR3Uq0njW3Pn86vGFcVNNNwgBiQBO6ww+gucpgL6MWzv+PK5UIDi08596TZ3kKAz1giqlbRLkUHVQqauHKcxLHV5NWVzcoYJp/VeB2iCgM8EozyoBq++aVG9C1+33wHnutsg=
+	t=1713185430; cv=none; b=ArRpKhoJ42hyZtDXjUWBV9B6qNpAtKmfbb0PeqCIkAECTdfnHQyKpyl0VNTZ/STVl/Wz2GrWm4fXk5RbpcDc9AWkjpG4EgOaH300ra4u+mifScXUgDVKS4pfxgbEIvzrl1EYtc3KXENkYgY5vRxqBtXjl86XCPcJLSGhvmBX3u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185429; c=relaxed/simple;
-	bh=xHFLg5fqlc+HOQ0Z21oGzxf3qkjSRXcoOQn++v9/0TE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zes6RfvKzFZ0sSX3HXMy/q9AwNd2QmjbHN8IJQem/tOkBqHMCJr9TtZlIXG52UKxZ7dYjLVKu/uQf4ThlP608cNmgArnpKV1LDtNrnFnGbZLlKMyHM8RkJV9yJUResuyehPCr/8CmJ7SADSzkUHtdlz0rFQm6r9qhyqdZ0x4/zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=c8k06kIO; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1713185430; c=relaxed/simple;
+	bh=bICUhdhTI38MAzCw4mVv4RoCssKzD+vHemV7hYPVRqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j7QSIxLnqt1w87W/A3CzbN5VPbT7ula7fN8QRmfNDOe0lIRVH5V2ZHl77OObKQfkV4t4TfH4omqU8X6GKiljwQDBecFXTv2Ms6zchzloYGcU9WpwOwcLTJCD1bTV36Pxlp9vJ97YYn8NdrnnL4E7R4y/kb63SKCoH1FIKNFyYbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0SD7SWz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="c8k06kIO"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 9439E1BF928;
-	Mon, 15 Apr 2024 14:50:24 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1713185424; bh=M2HaBAuTKrviowlzyI5h8oMxT5Sg+xhz7eOEBl7jJB0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c8k06kIOXmMJv7e2ISjtiEV6tNW/S+yPRdzSor2v9Ruz3mcCQpiNe24AiI1zjWSko
-	 MqS/+pJZVWvHolsHemuBN7L2IifbIPIQlS1hAn3mEEoYHiMKEUQyG0UZq1O/FcUlEO
-	 45fdUvgFPHC9mwNNPMarBaLqlbtpAsgga/rVRGdXEWqBpIFLXuWCWI3zwCCKRPD3Vc
-	 XEopKqj+lIjr5amlK43aRwFu+zO95cwkxZaXrklAnO7RVMzUDaodKHArz0nxXer6h7
-	 YEVLNNwFVU99aeGT/khpEWzFh9IPgCptc4SEhlTqI6ISRsUsLBAItVnPmeN/bB3LFO
-	 lCIGSEtpA+baA==
-Date: Mon, 15 Apr 2024 14:50:23 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "mhkelley58@gmail.com" <mhkelley58@gmail.com>, "robin.murphy@arm.com"
- <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
- "will@kernel.org" <will@kernel.org>, "jgross@suse.com" <jgross@suse.com>,
- "sstabellini@kernel.org" <sstabellini@kernel.org>,
- "oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>,
- "hch@lst.de" <hch@lst.de>, "m.szyprowski@samsung.com"
- <m.szyprowski@samsung.com>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "xen-devel@lists.xenproject.org"
- <xen-devel@lists.xenproject.org>, "roberto.sassu@huaweicloud.com"
- <roberto.sassu@huaweicloud.com>
-Subject: Re: [PATCH 1/2] swiotlb: Remove alloc_size argument to
- swiotlb_tbl_map_single()
-Message-ID: <20240415145023.78e7ce97@meshulam.tesarici.cz>
-In-Reply-To: <SN6PR02MB4157C8206FE193B2C5B2A93FD4092@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240408041142.665563-1-mhklinux@outlook.com>
-	<20240415134624.22092bb0@meshulam.tesarici.cz>
-	<SN6PR02MB4157C8206FE193B2C5B2A93FD4092@SN6PR02MB4157.namprd02.prod.outlook.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0SD7SWz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 102D4C32783;
+	Mon, 15 Apr 2024 12:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185430;
+	bh=bICUhdhTI38MAzCw4mVv4RoCssKzD+vHemV7hYPVRqM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=W0SD7SWzocBNOOmI+ckB3Bhw59lSHtrPA+W96l+o1XUFrjIPOJ9K9G9llNOEDJ2Pc
+	 6R0jK8UD4fvXpkyBOHo9QLRPeLjanmixK8BzzdPJeTpA+8qDjJfZbXarQb03DPdLgL
+	 yYmPTQaV1FL/EhdCEUS8mxRWoY+3kjIYucLvX6pb7ENQlq++goxUKptPsoGGXZ/D5k
+	 UMp/rRjjquwhWvQdaBzrYoXiGqTFEsOptf6gfal2TbY2EBnd7zvczBMBO8qiZPMzao
+	 iLctHeBT+Tcrlw/c0ri/3k9BYAJehh3Gyt7ggvzHsIk8XoLeufjQMXAWmgi6eR8VV3
+	 LiTen96vItGCw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Peter Wang <peter.wang@mediatek.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jejb@linux.ibm.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	stanley.chu@mediatek.com,
+	quic_cang@quicinc.com,
+	avri.altman@wdc.com,
+	quic_nguyenb@quicinc.com,
+	manivannan.sadhasivam@linaro.org,
+	beanhuo@micron.com,
+	linux-scsi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.1 1/6] scsi: ufs: core: WLUN suspend dev/link state error recovery
+Date: Mon, 15 Apr 2024 06:04:22 -0400
+Message-ID: <20240415100433.3127434-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.86
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Apr 2024 12:23:22 +0000
-Michael Kelley <mhklinux@outlook.com> wrote:
+From: Peter Wang <peter.wang@mediatek.com>
 
-> From: Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> Sent: Monday, April 15, 2=
-024 4:46 AM
-> >=20
-> > Hi Michael,
-> >=20
-> > sorry for taking so long to answer. Yes, there was no agreement on the
-> > removal of the "dir" parameter, but I'm not sure it's because of
-> > symmetry with swiotlb_sync_*(), because the topic was not really
-> > discussed.
-> >=20
-> > The discussion was about the KUnit test suite and whether direction is
-> > a property of the bounce buffer or of each sync operation. Since DMA API
-> > defines associates each DMA buffer with a direction, the direction
-> > parameter passed to swiotlb_sync_*() should match what was passed to
-> > swiotlb_tbl_map_single(), because that's how it is used by the generic
-> > DMA code. In other words, if the parameter is kept, it should be kept
-> > to match dma_map_*().
-> >=20
-> > However, there is also symmetry with swiotlb_tbl_unmap_single(). This
-> > function does use the parameter for the final sync. I believe there
-> > should be a matching initial sync in swiotlb_tbl_map_single(). In
-> > short, the buffer sync for DMA non-coherent devices should be moved from
-> > swiotlb_map() to swiotlb_tbl_map_single(). If this sync is not needed,
-> > then the caller can (and should) include DMA_ATTR_SKIP_CPU_SYNC in
-> > the flags parameter.
-> >=20
-> > To sum it up:
-> >=20
-> > * Do *NOT* remove the "dir" parameter.
-> > * Let me send a patch which moves the initial buffer sync.
-> >  =20
->=20
-> I'm not seeing the need to move the initial buffer sync.  All
-> callers of swiotlb_tbl_map_single() already have a subsequent
-> check for a non-coherent device, and a call to=20
-> arch_sync_dma_for_device().  And the Xen code has some=20
-> special handling that probably shouldn't go in
-> swiotlb_tbl_map_single().  Or am I missing something?
+[ Upstream commit 6bc5e70b1c792b31b497e48b4668a9a2909aca0d ]
 
-Oh, sure, there's nothing broken ATM. It's merely a cleanup. The API is
-asymmetric and thus confusing. You get a final sync by default if you
-call swiotlb_tbl_unmap_single(), but you don't get an initial sync by
-default if you call swiotlb_tbl_map_single(). This is difficult to
-remember, so potential new users of the API may incorrectly assume that
-an initial sync is done, or that a final sync is not done.
+When wl suspend error occurs, for example BKOP or SSU timeout, the host
+triggers an error handler and returns -EBUSY to break the wl suspend
+process.  However, it is possible for the runtime PM to enter wl suspend
+again before the error handler has finished, and return -EINVAL because the
+device is in an error state. To address this, ensure that the rumtime PM
+waits for the error handler to finish, or trigger the error handler in such
+cases, because returning -EINVAL can cause the I/O to hang.
 
-And yes, when moving the code, all current users of
-swiotlb_tbl_map_single() should specify DMA_ATTR_SKIP_CPU_SYNC.
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://lore.kernel.org/r/20240329015036.15707-1-peter.wang@mediatek.com
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/ufs/core/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Petr T
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index f3c25467e571f..948449a13247c 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -9044,7 +9044,10 @@ static int __ufshcd_wl_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 
+ 	/* UFS device & link must be active before we enter in this function */
+ 	if (!ufshcd_is_ufs_dev_active(hba) || !ufshcd_is_link_active(hba)) {
+-		ret = -EINVAL;
++		/*  Wait err handler finish or trigger err recovery */
++		if (!ufshcd_eh_in_progress(hba))
++			ufshcd_force_error_recovery(hba);
++		ret = -EBUSY;
+ 		goto enable_scaling;
+ 	}
+ 
+-- 
+2.43.0
+
