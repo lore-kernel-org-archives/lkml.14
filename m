@@ -1,198 +1,111 @@
-Received: from mailrelay3-3.pub.mailoutpod3-cph3.one.com (mailrelay3-3.pub.mailoutpod3-cph3.one.com [46.30.212.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D791482485
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.2
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76D0182485;
+	Mon, 15 Apr 2024 16:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199078; cv=none; b=egWVQNUtyNNclPsX2kEO8KhaprDK6UA/K6fQPnP2fSjFzwIE97zpqo+fJ3lz47nKLZB3KWUfQmrdyc02rkz4V+np5FN89QLF9dtv69VbTMv8ZmgoDyJt99+MOwtjPgs96agaANsJZ4gcjd9XY1LsiSv+DYRqRcLW760s18qstwU=
+	t=1713199121; cv=none; b=J3bxOEvG5/v+oVB8S5upB+VxY0VsruVlVGfNNldSCcv85oE5sgKDtXqfCCzNswKuoJmRpSqTEj5s1uERvrjRtOBmG67rIwqcV+jEmkRwPs6BA/l2XFIWBcSM3Mkv7+7SOauzcv0og1OLHeCVhPN2C5ICocEr85UAiUIXH1fjseA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199078; c=relaxed/simple;
-	bh=5f82cXsX0Yc9vUiO80hi059Uy6riWDjU5KIdsMKZlB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U8Mr/mfRFt8jWX/mal7BXDt+95z+5QO58NCB5uXhfINYeIF8k5plRHsUzivKbX6LOLjspKN46EWP/FZe7F5fhdhoMEO74+2Bg1CaRgf0rEIzT/F2ZQUExOfLCL8YCl+eXjPtg+OZbNcAOOo6m9H8Ee+BGqmBBwneHSspJUjL6Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carewolf.com; spf=none smtp.mailfrom=carewolf.com; dkim=pass (2048-bit key) header.d=carewolf.com header.i=@carewolf.com header.b=UUTDQdNb; dkim=permerror (0-bit key) header.d=carewolf.com header.i=@carewolf.com header.b=+oDNW7Uc; arc=none smtp.client-ip=46.30.212.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=carewolf.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=carewolf.com
+	s=arc-20240116; t=1713199121; c=relaxed/simple;
+	bh=Iu3sKE+YRCqwKdiAB3om3hv5zVJb0LpbWJ23pVnz8Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrBHxxGrvGPl277AJG5SuJlgmm99YKP0yUAifKdIUJ8RmLE4z8yYARfzl1NjspbH+tr1PVgEXckSL1Pyty8Wh+8HyilUuq2SpIwMpejQBu3ofwghyfHNoMzcDWAl4921cgswsY4LOtDu4AB9bOkJa7CENYRDCGIZ3olUDLaxShk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IGdTDLf6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=carewolf.com header.i=@carewolf.com header.b="UUTDQdNb";
-	dkim=permerror (0-bit key) header.d=carewolf.com header.i=@carewolf.com header.b="+oDNW7Uc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=carewolf.com; s=rsa2;
-	h=content-type:content-transfer-encoding:mime-version:references:in-reply-to:
-	 message-id:date:subject:cc:to:from:from;
-	bh=vsC16hvCMFPYmCQkGrA9j3yxl922C60EqFZAOHN8RCE=;
-	b=UUTDQdNbY2uV2DPEiMAaZZWquxtUdgw3O4BDYkPweQQZ/vUwxryJxTHabVC1N1tJ3tl2oWYvdwfBU
-	 W3EUg/M+nRuxNpleYR1SScqNZEVjfiRnYE6DrZUndcXGxP2teBrMTaw4VsvNqMlA+cwkNyIT359mxu
-	 tKW58gM4oSwubzkEG/q9GkvLylXPTvu1b5QeWV/ceky1f+rEdZEvIWmeP6YmVNz/xkDHnZKD1ooa19
-	 vHkA5olsshfeHHOxLsxX1pWZ63WMlUMS79LYYJSQPApiiI0XVpwqttwTRx5uPiFzaBs7U7TPq2Z0Qp
-	 ncxFrdWmozPr8vbfcevwjeaQxDYqd1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=carewolf.com; s=ed2;
-	h=content-type:content-transfer-encoding:mime-version:references:in-reply-to:
-	 message-id:date:subject:cc:to:from:from;
-	bh=vsC16hvCMFPYmCQkGrA9j3yxl922C60EqFZAOHN8RCE=;
-	b=+oDNW7UcUcCVLMDDFqms95XoHW70Ads/2DaW76BziJIGum3zqNvw+GKul4X6GZENKkt+YVxGfOCx7
-	 SEc3ziSAA==
-X-HalOne-ID: 570aa5e4-fb46-11ee-b0da-5166eb5bc2d3
-Received: from twilight.localnet (dynamic-2a02-3103-004c-5300-b5a9-dc4e-89ff-7d46.310.pool.telefonica.de [2a02:3103:4c:5300:b5a9:dc4e:89ff:7d46])
-	by mailrelay3.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 570aa5e4-fb46-11ee-b0da-5166eb5bc2d3;
-	Mon, 15 Apr 2024 16:36:44 +0000 (UTC)
-From: Allan Sandfeld Jensen <kde@carewolf.com>
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: lains@riseup.net, hadess@hadess.net, jikos@kernel.org,
- benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] Logitech Anywhere 3SB support
-Date: Mon, 15 Apr 2024 18:36:43 +0200
-Message-ID: <2266147.iZASKD2KPV@twilight>
-In-Reply-To: <ntsifcsfo5i6xisxbgfjdpe4uenygqxrt3v5sceflgipznw6cb@gnhvkjmglrtg>
-References:
- <20240413095453.14816-1-kde@carewolf.com>
- <ntsifcsfo5i6xisxbgfjdpe4uenygqxrt3v5sceflgipznw6cb@gnhvkjmglrtg>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IGdTDLf6"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id CFF9E20FC5F5; Mon, 15 Apr 2024 09:38:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CFF9E20FC5F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1713199112;
+	bh=LhdsE6efodYH8GQvxcpPZhNnPBH3tY5kGI4QxFJUD7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IGdTDLf6NwimYdoARfgYLzKymBbs2nS+TCIfTqZBb1p/2QYvV1Jy2p9AcHrIVGbyx
+	 wWNZ/6STv4qrFKgJ8h9jsk3naDFVR9zZ+6BOndDZ0reksraiMZRhJMSdbWw5C5xs+i
+	 1qVsQkuqaNM6aI3DB4RwYnFb9zlWr/lKUQLRGxbg=
+Date: Mon, 15 Apr 2024 09:38:32 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ajay Sharma <sharmaajay@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: Re: [PATCH net-next] net: mana: Add new device attributes for mana
+Message-ID: <20240415163832.GA28558@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1713174589-29243-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1713174589-29243-1-git-send-email-shradhagupta@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Monday 15 April 2024 17:54:57 CEST Benjamin Tissoires wrote:
-> [You don't often get email from bentiss@kernel.org. Learn why this is
-> important at https://aka.ms/LearnAboutSenderIdentification ]
+On Mon, Apr 15, 2024 at 02:49:49AM -0700, Shradha Gupta wrote:
+> Add new device attributes to view multiport, msix, and adapter MTU
+> setting for MANA device.
 > 
-> [Ccing Hans as well for input]
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 74 +++++++++++++++++++
+>  include/net/mana/gdma.h                       |  9 +++
+>  2 files changed, 83 insertions(+)
 > 
-> On Apr 13 2024, kde@carewolf.com wrote:
-> > From: Allan Sandfeld Jensen <allan.jensen@qt.io>
-> 
-> FWIW, this patch neesd a commit description and signed-offs
-> 
-> > ---
-> > 
-> >  drivers/hid/hid-ids.h            |  1 +
-> >  drivers/hid/hid-logitech-dj.c    | 10 +++++++++-
-> >  drivers/hid/hid-logitech-hidpp.c |  2 ++
-> >  3 files changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> > index 2235d78784b1..4b79c4578d32 100644
-> > --- a/drivers/hid/hid-ids.h
-> > +++ b/drivers/hid/hid-ids.h
-> > @@ -849,6 +849,7 @@
-> > 
-> >  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1    0xc539
-> >  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1  0xc53f
-> >  #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_POWERPLAY       0xc53a
-> > 
-> > +#define USB_DEVICE_ID_LOGITECH_BOLT_RECEIVER         0xc548
-> > 
-> >  #define USB_DEVICE_ID_SPACETRAVELLER 0xc623
-> >  #define USB_DEVICE_ID_SPACENAVIGATOR 0xc626
-> >  #define USB_DEVICE_ID_DINOVO_DESKTOP 0xc704
-> > 
-> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-> > index c358778e070b..92b41ae5a47c 100644
-> > --- a/drivers/hid/hid-logitech-dj.c
-> > +++ b/drivers/hid/hid-logitech-dj.c
-> > @@ -120,6 +120,7 @@ enum recvr_type {
-> > 
-> >       recvr_type_27mhz,
-> >       recvr_type_bluetooth,
-> >       recvr_type_dinovo,
-> > 
-> > +     recvr_type_bolt,
-> 
-> I am *really* hesitant in integrating the bolt receiver into
-> logitech-dj.ko:
-> - the bolt receiver is not capable of making the distinction between the
->   source of the events (so only one mouse/keyboard can be used at the
->   time)
-> - we still have a couple of outstanding and impossible to debug issues
->   with some high resolution mice connected over the unifying receiver,
->   and adding one more receiver makes me nervous
-> - I have a strong feeling by reading the code that the keyboard part
->   will fail (there is a comment "For the keyboard, we can reuse the same
->   report by using the second byte which is constant in the USB HID
->   report descriptor." though I can't seem to find this constant report
->   on the bolt receiver)
-> - what are the benefits of adding it?
-> - will it break fwupd?
-> 
-I added it to get hires scroll wheel events working out of the box.
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 1332db9a08eb..6674a02cff06 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -1471,6 +1471,65 @@ static bool mana_is_pf(unsigned short dev_id)
+>  	return dev_id == MANA_PF_DEVICE_ID;
+>  }
+>  
+> +static ssize_t mana_attr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct gdma_context *gc = pci_get_drvdata(pdev);
+> +	struct mana_context *ac = gc->mana.driver_data;
+> +
+> +	if (strcmp(attr->attr.name, "mport") == 0)
+> +		return snprintf(buf, PAGE_SIZE, "%d\n", ac->num_ports);
+> +	else if (strcmp(attr->attr.name, "adapter_mtu") == 0)
+> +		return snprintf(buf, PAGE_SIZE, "%d\n", gc->adapter_mtu);
+> +	else if (strcmp(attr->attr.name, "msix") == 0)
+> +		return snprintf(buf, PAGE_SIZE, "%d\n", gc->max_num_msix);
+> +	else
+> +		return -EINVAL;
+> +}
+> +
+> +static int mana_gd_setup_sysfs(struct pci_dev *pdev)
+> +{
+> +	struct gdma_context *gc = pci_get_drvdata(pdev);
+> +	int retval = 0;
+> +
+> +	gc->mana_attributes.mana_mport_attr.attr.name = "mport";
+> +	gc->mana_attributes.mana_mport_attr.attr.mode = 0444;
+> +	gc->mana_attributes.mana_mport_attr.show = mana_attr_show;
+> +	sysfs_attr_init(&gc->mana_attributes.mana_mport_attr);
+> +	retval = device_create_file(&pdev->dev,
+> +				    &gc->mana_attributes.mana_mport_attr);
 
-The main differences for the bolt receiver as I briefly skimmed it, are 
-different peering commands, which I didn't want to touch that.
+if you can use .dev_groups, sysfs creation and removal will be lot more
+simplified for the driver.
 
-For my purpose I discovered the bolt receiver operated much like the gaming-
-hidpp receiver, except that I have four interfaces.
-
-> >  };
-> >  
-> >  struct dj_report {
-> > 
-> > @@ -1068,6 +1069,7 @@ static void logi_hidpp_recv_queue_notif(struct
-> > hid_device *hdev,> 
-> >               workitem.reports_supported |= STD_KEYBOARD;
-> >               break;
-> >       
-> >       case 0x0f:
-> > +     case 0x10:
-> >       case 0x11:
-> >               device_type = "eQUAD Lightspeed 1.2";
-> >               logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report,
-> >               &workitem);
-> > 
-> > @@ -1430,7 +1432,8 @@ static int logi_dj_ll_parse(struct hid_device *hid)
-> > 
-> >               dbg_hid("%s: sending a mouse descriptor, reports_supported:
-> >               %llx\n",
-> >               
-> >                       __func__, djdev->reports_supported);
-> >               
-> >               if (djdev->dj_receiver_dev->type == recvr_type_gaming_hidpp
-> >               ||
-> > 
-> > -                 djdev->dj_receiver_dev->type == recvr_type_mouse_only)
-> > +                 djdev->dj_receiver_dev->type == recvr_type_mouse_only ||
-> > +                 djdev->dj_receiver_dev->type == recvr_type_bolt)
-> > 
-> >                       rdcat(rdesc, &rsize, mse_high_res_descriptor,
-> >                       
-> >                             sizeof(mse_high_res_descriptor));
-> >               
-> >               else if (djdev->dj_receiver_dev->type == recvr_type_27mhz)
-> > 
-> > @@ -1773,6 +1776,7 @@ static int logi_dj_probe(struct hid_device *hdev,
-> > 
-> >       case recvr_type_dj:             no_dj_interfaces = 3; break;
-> >       case recvr_type_hidpp:          no_dj_interfaces = 2; break;
-> >       case recvr_type_gaming_hidpp:   no_dj_interfaces = 3; break;
-> > 
-> > +     case recvr_type_bolt:           no_dj_interfaces = 4; break;
-> 
-> 4? The device I have here only has 3 (unless I misremember how this is
-> supposed to be working).
-> 
-I am getting four. The fourth one is the one with 0x10 case I added above.
-[    5.706399] logitech-djreceiver 0003:046D:C548.0003: device of type eQUAD 
-Lightspeed 1.2 (0x10) connected on slot 2
-
-You can leave out the added 0x10 case, and just treat the bolt receiver as a 
-gaming_hidpp receiver I assume. I got an error there about unknown device, 
-when I originaly tried just using the gaming_hidpp type, but it is possible it 
-could still work (I hit another bug when I originally tried that) . I can go 
-back and check if you would prefer this minimalist solution?
-
-I dont have any additional bolt capable devices, so I can't test how it would 
-work if I peered more devices.
-
-Best regards
-Allan
-
-
-
-
+- Saurabh
