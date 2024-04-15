@@ -1,66 +1,127 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FAE5FB82
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62DA4EB42;
+	Mon, 15 Apr 2024 11:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713178754; cv=none; b=Ajak6BsESBtfKsT1xYVFkq+4CwfZqFkt/sVrJLeGVS0lnLg178jaegJeuFy+E4oVAZjMhoIoN6ZUKSsoTHBpbSVup2ccDWiv3npCKCxz4SmWLHy050IABcQODwU2dBexS1KhtQUM2nZ1n7+Zb8uOym1xON49jqKoa6I5Ec0FFiI=
+	t=1713178819; cv=none; b=HipbUGFyE6UfKBsm1BlmFQKLxGM8ZtuIXij9/hRk2YojuZB4RAtdu9xvx3iU/TdBFaxxWHoaWCHP7JtEv4RedGaxQf6xUrxidrsx/V0NIsALapKhVvpaWJnFCsLCCs75HXicjowORmSpg0KH7RNwXkfsBlijJIsJsnjhIUwVtk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713178754; c=relaxed/simple;
-	bh=MDxynuU4+UuWKScVgW9vlzNQ6RFxBEaz2sIhu42e/kE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gxBkSH0W6Mr/d+aB58f2o1zdC/EgcuaNIkew+Nv+ZOOwfP4mSr6qVLveFEaTHmK7mCRuYOXPXJnuLB84Kefi45vez3uoBiSjdnN4UYGhYl0Pfx0nbPNLoV+yoDjJBR2gs2lrxR0ZPneS25Isw1S1i+BT8+l4xgu+bo6RwQsSW6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PbSFr24D; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713178819; c=relaxed/simple;
+	bh=q/mYk8lU6ClHh16h8UHvuyzapBbcS2gBCHZS8xDauBE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E4u2s3OR9mraPmPqJM2xLSEoxKR0CkzXfmVHoWGrnNNavP87QY2QvrAb6EWqCM2mSyDKvh7M6WcgCjMvik6K0AbLF576D3k2JcGw2IUZgXufpu+tQ+Y8VxS1Cxn8OXs0NvMJCL6USBXvCoYMSpSYDjUPweN+LjLPbiKDEnHicQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GUXCDZ5C; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PbSFr24D"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JwGAP2rr9BBl+58DYDCoQZsQAutUxZJU5nYB8humZ48=; b=PbSFr24DDLlw6JL9iQcEyEZYU/
-	hTNI+WXjb/Bzna+bYoQTK6UDqp+gpHATnjJPhEShpT1QMOVB2bWeFJCUbQMOzoNVsdNoyTxAHblw9
-	sBuipW4OD5P6Uk+lv3A42oKuLPpsY/gOweyyuOnZODszWd6SQTXrHGF7tGmqrNNKf+a3F+A6ANZFJ
-	d/DLq8+wf4FTFVNX3ZuuYwcUv0P7R4KSw2HpoJjrVN13MSsIErmXhK0ZEoYZPMT1ZOad8Z1wJwFll
-	fJZFeOT4a5a+3jZch+TNDsl01Y7MdKjxOzRMaGj42Oh/aO3p/vRFWL89WfHfkXqOhz7p9Z9iYTDrN
-	bJhdBmmQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwK3I-0000000FXeY-0wK4;
-	Mon, 15 Apr 2024 10:59:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D81C430040C; Mon, 15 Apr 2024 12:59:07 +0200 (CEST)
-Date: Mon, 15 Apr 2024 12:59:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sergei Trofimovich <slyich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	yu.c.chen@intel.com, wuyun.abel@bytedance.com
-Subject: Re: 6.8 to 6.9.0-rc3: kernel NULL pointer dereference in
- pick_next_task_fair+0x89
-Message-ID: <20240415105907.GL40213@noisy.programming.kicks-ass.net>
-References: <ZhuYyrh3mweP_Kd8@nz.home>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GUXCDZ5C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713178815;
+	bh=q/mYk8lU6ClHh16h8UHvuyzapBbcS2gBCHZS8xDauBE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GUXCDZ5C3gFucvZ41xUJK2ewkecca9YSoSxXcYkhAqc5l5S0jgIJ5kVJbK3JvWgRM
+	 OquhVFJiTGIqCYUrmK1W4ITvcUN9bp9I5IgHG3+kh0AL01Lg5xlMfWiIHX1LuOMFwT
+	 jmUOm2t3Ce3JzKgqcgnWTV+wu8NB/MUOgGB9niCzmphM4FQNcx7aWENz2PkC6AiY4G
+	 4anPK3ezp9lFpz3W9uIyRwAnM78MnhdGukwsxnul/j8rT1eINpHl5gfnM6A79AkWm0
+	 CWGsVmDV+W3uAWWdeAiP2Xb3tCYKjzCD/HHJQO72DaEzj4aB4GmEaZ/6MSdM1U3cWz
+	 23mZMq9fNDRtA==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 97B243780022;
+	Mon, 15 Apr 2024 11:00:14 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: linux-scsi@vger.kernel.org
+Cc: alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	peter.wang@mediatek.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 0/8] MediaTek UFS fixes and cleanups - Part 1
+Date: Mon, 15 Apr 2024 13:00:04 +0200
+Message-ID: <20240415110012.148871-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhuYyrh3mweP_Kd8@nz.home>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 14, 2024 at 09:50:18AM +0100, Sergei Trofimovich wrote:
-> Hi kernel/sched/ maintainers!
-> 
-> Over past few days my machines started OOpsing when a nightly kernel
-> build starts. I don't have a reliable reproducer. The builder should use
-> `idle` CPU scheduling policy.
-> 
+Changes in v4:
+ - Replaced Stanley Chu with myself in maintainers as his email is gone
+ - Fixed commit [5/8]
 
-Thanks for the report, some of us have been chasing this ghost for a
-little while and so far it has proven elusive because it's very hard to
-reliably reproduce.
+Changes in v3:
+ - Disallowed mt8192 compatible in isolation
+ - Added maxItems to clocks
 
-I'll go try with your approach.
+Changes in v2:
+ - Rebased over next-20240409 (because of merge issue for patch 1)
+ - Added ufs: prefix to patch 1
+ - Added forgotten ufs-rx-symbol clock to the binding
+
+
+This series performs some fixes and cleanups for the MediaTek UFSHCI
+controller driver.
+
+In particular, while adding the MT8195 compatible to the mediatek,ufs
+binding, I noticed that it was allowing just one clock, completely
+ignoring the optional ones, including the crypt-xxx clocks, all of
+the optional regulators, and other properties.
+
+Between all the other properties, two are completely useless, as they
+are there just to activate features that, on SoCs that don't support
+these, won't anyway be activated because of missing clocks or missing
+regulators, or missing other properties;
+as for the other vendor-specific properties, like ufs-disable-ah8,
+ufs-broken-vcc, ufs-pmc-via-fastauto, since the current merge window
+is closing, I didn't do extensive research so I've left them in place
+but didn't add them to the devicetree binding yet.
+
+The plan is to check those later and eventually give them a removal
+treatment, or add them to the bindings in a part two series.
+
+For now, at least, this is already a big improvement.
+
+P.S.: The only SoC having UFSHCI upstream is MT8183, which only has
+just one clock, and *nothing else* uses properties, clocks, etc that
+were renamed in this cleanup.
+
+Cheers!
+
+AngeloGioacchino Del Regno (8):
+  scsi: ufs: ufs-mediatek: Remove useless mediatek,ufs-support-va09
+    property
+  scsi: ufs: ufs-mediatek: Fix property name for crypt boost voltage
+  scsi: ufs: ufs-mediatek: Remove useless mediatek,ufs-boost-crypt
+    property
+  scsi: ufs: ufs-mediatek: Avoid underscores in crypt clock names
+  dt-bindings: ufs: mediatek,ufs: Document MT8192 compatible with MT8183
+  dt-bindings: ufs: mediatek,ufs: Document MT8195 compatible
+  dt-bindings: ufs: mediatek,ufs: Document additional clocks
+  dt-bindings: ufs: mediatek,ufs: Document optional dvfsrc/va09
+    regulators
+
+ .../devicetree/bindings/ufs/mediatek,ufs.yaml | 29 +++++-
+ drivers/ufs/host/ufs-mediatek.c               | 91 +++++++++++--------
+ 2 files changed, 79 insertions(+), 41 deletions(-)
+
+-- 
+2.44.0
+
