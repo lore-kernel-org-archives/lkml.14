@@ -1,76 +1,163 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAB72C69D;
-	Mon, 15 Apr 2024 07:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E9928DA4;
+	Mon, 15 Apr 2024 07:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713166540; cv=none; b=O6IpQW8pVIwVFuWoDt2gYrJ38C8y2R+itjUmcblqV1RFqxGtn3SKD3/g11MIE/WvvZfSu31ov4rGc9pFUevvBl8bA+s7Ymcl68un7H1chJYgs62IpGkb9sisBYCkgr2R6wE6kSzeTDrBCiM914tGCwdlT586kQTVN1BLQok+xsQ=
+	t=1713166590; cv=none; b=eJN3Qt5iOgeDhPR0PUb49PI+BkaUw7seR+Mze4abKk7MMFponb1/qLc2kyopzU6DZnAeLkhw6WtsExSxlX+/Y36E4GrKh01YuNl11vdgpmjMCm2+lk9WrywlKpsPVXP9WEr1AVqGWswMcpMp/fuSlgxUbNSkPfkLXPgz1Z5YQC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713166540; c=relaxed/simple;
-	bh=tMhPX6/CEOlOG6cMkUOLb/uDvm16rguRgCsCYIerTXY=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=rnIhEZcaFvlRWglas2gQetbRoqgzRpTZf6WeTl5Dm8I3gg5prvScoW6OuyW1pYiM9vlhbUuMCgPxxvWMCXT4MJsqC2mxGF+UA9QRhgUEFMwELh4lqasb6A+PtfCItLDYR9KCyKob/03OdL3NH/mwQUI6g0ZQPCwMqxUs45BmFRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D3D5D1A0197;
-	Mon, 15 Apr 2024 09:35:31 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9CAB11A018D;
-	Mon, 15 Apr 2024 09:35:31 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B69C9183AD16;
-	Mon, 15 Apr 2024 15:35:29 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 2/2] ASoC: dt-bindings: fsl-asoc-card: Add compatbile string for wm8904 codec
-Date: Mon, 15 Apr 2024 15:17:36 +0800
-Message-Id: <1713165456-3494-3-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1713165456-3494-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1713165456-3494-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1713166590; c=relaxed/simple;
+	bh=QEw7la3k+1B4uCDc5JgoVTPpyYgSenrHp3AkQ1ZVoJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bSyCdcw0LAnGgSFuwhA5FBXrLBvQTRXIJYwAVi8hgpthfYuaeTyAkQuFzfsdSok8p48/taJVyPle90Eqjapww5cmyObmimlrasBBqOatlsZ1JtXhos0DnHuVZOaoZZWhZc0a36V+NuK1ZHBnR8VITt+V4zn53ujZxB4z+08woYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyRLmHiy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyRLmHiy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFF7C113CC;
+	Mon, 15 Apr 2024 07:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713166589;
+	bh=QEw7la3k+1B4uCDc5JgoVTPpyYgSenrHp3AkQ1ZVoJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YyRLmHiyug+86g4mlvEV92WKvQWj+LlNyCyjYn5muAT8/zLjDAb59Hv0bmqyWxrS4
+	 rV+0tP4dKrzcp6qN9fwibJ0+Ol/j+n8lSLPYtdKvjBvAoxm4gqX/5agtxIPm95FGhx
+	 QQXBXMCKyVsJy5GF1jz6fLxB4af0/yZ2DRukpSd1JvHd2RhC0pK4ZKfvyuZ17mbfdf
+	 XooX7dDXA7p/RONR4G6I1x/dQ6aDeUGFiNC6Ep3IZ9yuVRYjGpk7xzJ530pcsW3Yha
+	 ZhNOT1v5UnD5NZOLhQBySfy4NPVr7HJ/Q/nadoj+zG03v+C69+zLxrBB3KVQ+asp2j
+	 bRIvoNGTRXjrg==
+Message-ID: <01c82cfb-e215-4929-9540-484378275ec3@kernel.org>
+Date: Mon, 15 Apr 2024 09:36:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7] virtio_net: Support RX hash XDP hint
+To: Liang Chen <liangchen.linux@gmail.com>, mst@redhat.com,
+ jasowang@redhat.com, xuanzhuo@linux.alibaba.com, hengqi@linux.alibaba.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, john.fastabend@gmail.com,
+ daniel@iogearbox.net, ast@kernel.org
+References: <20240413041035.7344-1-liangchen.linux@gmail.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20240413041035.7344-1-liangchen.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The wm8904 codec is used on an i.MX95 Toradex board.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
-index 42ca39eebd49..16093b48823a 100644
---- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
-+++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
-@@ -76,6 +76,7 @@ properties:
-               - fsl,imx-audio-tlv320aic31xx
-               - fsl,imx-audio-tlv320aic32x4
-               - fsl,imx-audio-wm8524
-+              - fsl,imx-audio-wm8904
-               - fsl,imx-audio-wm8960
-               - fsl,imx-audio-wm8962
-               - fsl,imx-audio-wm8958
--- 
-2.34.1
+On 13/04/2024 06.10, Liang Chen wrote:
+> The RSS hash report is a feature that's part of the virtio specification.
+> Currently, virtio backends like qemu, vdpa (mlx5), and potentially vhost
+> (still a work in progress as per [1]) support this feature. While the
+> capability to obtain the RSS hash has been enabled in the normal path,
+> it's currently missing in the XDP path. Therefore, we are introducing
+> XDP hints through kfuncs to allow XDP programs to access the RSS hash.
+> 
+> 1.
+> https://lore.kernel.org/all/20231015141644.260646-1-akihiko.odaki@daynix.com/#r
+> 
+> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+> ---
+>    Changes from v6:
+> - fix a coding style issue
+>    Changes from v5:
+> - Preservation of the hash value has been dropped, following the conclusion
+>    from discussions in V3 reviews. The virtio_net driver doesn't
+>    accessing/using the virtio_net_hdr after the XDP program execution, so
+>    nothing tragic should happen. As to the xdp program, if it smashes the
+>    entry in virtio header, it is likely buggy anyways. Additionally, looking
+>    up the Intel IGC driver,  it also does not bother with this particular
+>    aspect.
+> ---
+>   drivers/net/virtio_net.c | 55 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index c22d1118a133..2a1892b7b8d3 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -4621,6 +4621,60 @@ static void virtnet_set_big_packets(struct virtnet_info *vi, const int mtu)
+>   	}
+>   }
+>   
+> +static int virtnet_xdp_rx_hash(const struct xdp_md *_ctx, u32 *hash,
+> +			       enum xdp_rss_hash_type *rss_type)
+> +{
+> +	const struct xdp_buff *xdp = (void *)_ctx;
+> +	struct virtio_net_hdr_v1_hash *hdr_hash;
+> +	struct virtnet_info *vi;
+> +
+> +	if (!(xdp->rxq->dev->features & NETIF_F_RXHASH))
+> +		return -ENODATA;
+> +
+> +	vi = netdev_priv(xdp->rxq->dev);
+> +	hdr_hash = (struct virtio_net_hdr_v1_hash *)(xdp->data - vi->hdr_len);
+> +
+> +	switch (__le16_to_cpu(hdr_hash->hash_report)) {
+> +	case VIRTIO_NET_HASH_REPORT_TCPv4:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV4_TCP;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_UDPv4:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV4_UDP;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_TCPv6:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_UDPv6:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_TCPv6_EX:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP_EX;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_UDPv6_EX:
+> +		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP_EX;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_IPv4:
+> +		*rss_type = XDP_RSS_TYPE_L3_IPV4;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_IPv6:
+> +		*rss_type = XDP_RSS_TYPE_L3_IPV6;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_IPv6_EX:
+> +		*rss_type = XDP_RSS_TYPE_L3_IPV6_EX;
+> +		break;
+> +	case VIRTIO_NET_HASH_REPORT_NONE:
+> +	default:
+> +		*rss_type = XDP_RSS_TYPE_NONE;
+> +	}
 
+Why is this not implemented as a table lookup?
+
+Like:
+ 
+https://elixir.bootlin.com/linux/v6.9-rc4/source/drivers/net/ethernet/intel/igc/igc_main.c#L6652
+  https://elixir.bootlin.com/linux/latest/A/ident/xdp_rss_hash_type
+
+--Jesper
+
+> +
+> +	*hash = __le32_to_cpu(hdr_hash->hash_value);
+> +	return 0;
+> +}
+> +
+> +static const struct xdp_metadata_ops virtnet_xdp_metadata_ops = {
+> +	.xmo_rx_hash			= virtnet_xdp_rx_hash,
+> +};
+> +
+>   static int virtnet_probe(struct virtio_device *vdev)
+>   {
+>   	int i, err = -ENOMEM;
+> @@ -4747,6 +4801,7 @@ static int virtnet_probe(struct virtio_device *vdev)
+>   				  VIRTIO_NET_RSS_HASH_TYPE_UDP_EX);
+>   
+>   		dev->hw_features |= NETIF_F_RXHASH;
+> +		dev->xdp_metadata_ops = &virtnet_xdp_metadata_ops;
+>   	}
+>   
+>   	if (vi->has_rss_hash_report)
