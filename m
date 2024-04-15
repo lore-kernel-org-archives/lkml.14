@@ -1,327 +1,137 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8342585268
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD81E8289E
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713201563; cv=none; b=BtbxKhWmXsvIcauTrHEXMMABsQrJl4YHJrz5hDZI89zfzEvJUltpBAxYu2hmK7q2u35ukZ3gljOoTkn8lP6w4NaI7G1uzHO/at5C3FNj107TRjd1IU75LcqQY81gXhB42pOeq7SqX6QkfUN6TNN/k2sqpj/gTdgiwhBZjSA2vbA=
+	t=1713201777; cv=none; b=m/6VyFt2jU3UNgXM8wIrQzFKqOWOxGTn998RxflvkQL5qQxEb35wVAuzCI6DtR8lU1Z1c6Kwms6M2mVXdzw6B8T95rpo+kdvZ+TahiSSNjQQF+5xAROLv4x6L1AQ1UIzBBGUgNHV75qU8JuwJfyb8jqjWbeD4ygqhCt/mHRc6wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713201563; c=relaxed/simple;
-	bh=pDqpPLj4qmpz6qIGdATZILDnKVbrqLD2jtZdMCM1byo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=InU3vBYTAt+f3KvyuN1lg1VTRL3LzUoxR3Lj9CF1y8XL7w2CiAGBD89aT/xTWRvSNwrLk93XsGrnJ9Ks6pcbnzRlLJkbBSMkwBxOgR8FghEtwYilZE6siJd49wCfPAJz6Y86+bFIfroS6kxZtJQWylxi55ZZX4qhnrEC1D7ccqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJLQUOs1; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713201777; c=relaxed/simple;
+	bh=cVYE2ehOGt9AZu4lK44Xq/DDtOiFLWELDzP2xoxBwKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=USS22RqUP7ZHpcT/VycsShzPIHhOOrCYjprYyKUpVXqshtaKlj/XUpDdxORin/bfMbNP1iD7hsr3eP76TYBbt0feI5v8AYJIpnhGMEPcfnEdOyxUhySuGT+ysGn8dRHX5vP6OL+KaINESnP/mSaDL6SQVjpzExH2V3zj4Hsl/58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=n1/7fwws; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJLQUOs1"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a87bd53dc3so997955a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:19:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n1/7fwws"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e2178b2cf2so32238535ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713201561; x=1713806361; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7ftt1wlC5vn+OAyWyZNr8D22lSmnA0oAAZ/IwpKgu3E=;
-        b=JJLQUOs1Pdh+vNoK2d8VxpuRCZwf7Jf62rQkmwsoUWmHOUTPU6lYzhtCWia1/8Bm+Q
-         6ZKedxKVz8mOKLbfCxK4Ev6Tyh/VPAIHoL3XpAClgzmHrd8kr3w9VeY9YR7RCox7FYtI
-         RPZ1SdUcDsQQA0diPoO5c+kNOPiUZ/QJro1cNI5IYNZvx3JH/j5CLa57DJxvzSXqbaId
-         r//nqibSlsVZ2tPY9F2Y3REy2AIOkg9QNUFSVn2emWxpyRmZ7cNr5ikJ2hxk5fXnUNkY
-         hrhOxuUIN6T/nRchcodQR8IRN786nb/88zRnDOznu8GMi2htkkuYJb8WRk3Eism8I2Pi
-         NwjQ==
+        d=chromium.org; s=google; t=1713201775; x=1713806575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
+        b=n1/7fwwsz1foICewoRUWdT5xs8fB6NPWFGr0ktjY/VuOuhmhiUJFzqUk7Hh0CxPvax
+         E5YisngVBin3djrd6DDhs4QCGQ3QzkFrCWfEDkLyfrJo6Rw1syIkQ4vSTaxW32o1JVNp
+         BsyNyTkN7IyXA2SxPVivq380Pagf5FO7bMGXs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713201561; x=1713806361;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7ftt1wlC5vn+OAyWyZNr8D22lSmnA0oAAZ/IwpKgu3E=;
-        b=PET+MXSvVF0F+8ajiKMZ0jWDqILlpqEebl844SScObWX6+OPS5VOMTPp6mpS2CArrg
-         qBVdLvIo3zbsJWHZl3ENj+7HnXpn3Vrj5unK7sGK+jd6xgJ/evJVxsfrwaXi3WYLBITd
-         w0bFA/DrXazOQwm8hMRKu9rXvTnPnXd7twigsfk1hln+oHfaIB5wZwsuplOG601JA3Zg
-         K/kGfUAYSVuPMngytrp7E8y7g3VrV6vNCCAlYtmWpRvPCGM74QkHyGLwltaQcRpLkZxk
-         bATlIBNMffm5AFt8xH52FWMaAf2m6UQi63SnIaPkoZf+NJjkGHA1plTlJw+CAvX3cgPI
-         KHPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFEAdmoQNa0PoJpQXPDvJgFm00uVHSGwz42fBMY/pJf0tQDjMPT5iC/PwQThm7Bfr6DH7J+hOXUvp7/4geFy5qhWjQTfAqCWsxHnhy
-X-Gm-Message-State: AOJu0YxdrVs4oCFSKoB9Jry++WFthl+qhAV0cuoHuHRyzzFPbGcEcAwR
-	MmfzzszzRzsgmHZY5QGa1bjWxEn7i9/ompCu5UUWJqlywp4b+9zL
-X-Google-Smtp-Source: AGHT+IF5I7CUmmaoFvwK3SVG9GhKVEy4AarbCQA8oQBcJAZLx+3bOZ1JGWosjLM5SoLJEKPUKgit5A==
-X-Received: by 2002:a17:90a:f2d7:b0:2a2:b9f8:e0b0 with SMTP id gt23-20020a17090af2d700b002a2b9f8e0b0mr6933990pjb.19.1713201560649;
-        Mon, 15 Apr 2024 10:19:20 -0700 (PDT)
-Received: from localhost.localdomain ([101.32.222.185])
-        by smtp.gmail.com with ESMTPSA id o19-20020a17090aac1300b002a537abb536sm8751648pjq.57.2024.04.15.10.19.18
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 15 Apr 2024 10:19:20 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Matthew Wilcox <willy@infradead.org>,
+        d=1e100.net; s=20230601; t=1713201775; x=1713806575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7LGAaJZA3Ieswr80lcknUKfoXzL8DxCdWx6U4KMKhO8=;
+        b=Obc2Tp9ttxnnuT6bge1Y4RAfUAqCv/1iXwAEst7gWE475Tz6d8e8GpS2QtJyWzC06i
+         HiEGCQvZ3F6QmLdfZrXtsJVOenVI4mtsXOXcl9k7jyFUIx+YXQR9IUVEyev4ADhWdmCd
+         omhLQjc43xcEjT+On4/CdfEvVTnjSijWloVSjPlYCN6fiteCaHiXeZf32vxMZVHDBtpE
+         W+PcWMrH725PoG++s654a2COlNkfGc4sDWV3XHPUMfF+euo/cJRZqgHLsIvyaTZaGOEk
+         +AFEVOmmsbsazKG/Ia5Nu2EOgydFKdMX1uHVngOi3eFw1XaTf9qwAOEObi9YyJzRxcom
+         2/GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVscx8fyjPTdV01+UR+bOg7fOSAJ5YXKE7Krf4iSQt13jBIT5tdMhINiiLBTVfsxUi0A6Ex9UcC969UqWu9j3X9CRS7Wcrkjf+PZV7
+X-Gm-Message-State: AOJu0YwWeZFMpplAaziL622pwvp2x/orhYTDe9szgOQt+ZeEbNPVst3J
+	DOCKukKVXRY+t9HY6Cp9AkZv3N3CQ24tsKo6NnwJKFdlKkCFpMB/8OQ4+g91XA==
+X-Google-Smtp-Source: AGHT+IGecUmEOfE36Uzb8gHIAKlLpWNf+xF3BoTR88anSiFWvmiZTMlAPARou5mOFCGqDFBXXAVwXQ==
+X-Received: by 2002:a17:902:e807:b0:1e4:1eea:a3ae with SMTP id u7-20020a170902e80700b001e41eeaa3aemr13173797plg.5.1713201775022;
+        Mon, 15 Apr 2024 10:22:55 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b9-20020a170902d50900b001dee4a22c2bsm8144525plg.34.2024.04.15.10.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 10:22:54 -0700 (PDT)
+Date: Mon, 15 Apr 2024 10:22:53 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v3 4/4] mm/filemap: optimize filemap folio adding
-Date: Tue, 16 Apr 2024 01:18:56 +0800
-Message-ID: <20240415171857.19244-5-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240415171857.19244-1-ryncsn@gmail.com>
-References: <20240415171857.19244-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+	Ross Zwisler <zwisler@google.com>, wklin@google.com,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <202404151017.FC002AA5@keescook>
+References: <20240409210254.660888920@goodmis.org>
+ <20240409211351.075320273@goodmis.org>
+ <202404091521.B63E85D@keescook>
+ <20240409191156.5f92a15c@gandalf.local.home>
+ <202404091638.2F98764A41@keescook>
+ <Zhmgm86tzpanoweB@kernel.org>
+ <20240412181940.3e1d99f7@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412181940.3e1d99f7@gandalf.local.home>
 
-From: Kairui Song <kasong@tencent.com>
+On Fri, Apr 12, 2024 at 06:19:40PM -0400, Steven Rostedt wrote:
+> On Fri, 12 Apr 2024 23:59:07 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > On Tue, Apr 09, 2024 at 04:41:24PM -0700, Kees Cook wrote:
+> > > On Tue, Apr 09, 2024 at 07:11:56PM -0400, Steven Rostedt wrote:  
+> > > > On Tue, 9 Apr 2024 15:23:07 -0700
+> > > > Kees Cook <keescook@chromium.org> wrote:
+> > > >   
+> > > > > Do we need to involve e820 at all? I think it might be possible to just
+> > > > > have pstore call request_mem_region() very early? Or does KASLR make
+> > > > > that unstable?  
+> > > > 
+> > > > Yeah, would that give the same physical memory each boot, and can we
+> > > > guarantee that KASLR will not map the kernel over the previous location?  
+> > > 
+> > > Hm, no, for physical memory it needs to get excluded very early, which
+> > > means e820.  
+> > 
+> > Whatever memory is reserved in arch/x86/kernel/e820.c, that happens after
+> > kaslr, so to begin with, a new memmap parameter should be also added to
+> > parse_memmap in arch/x86/boot/compressed/kaslr.c to ensure the same
+> > physical address will be available after KASLR.
+> 
+> But doesn't KASLR only affect virtual memory not physical memory?
 
-Instead of doing multiple tree walks, do one optimism range check with
-lock hold, and exit if raced with another insertion.  If a shadow exists,
-check it with a new xas_get_order helper before releasing the lock to
-avoid redundant tree walks for getting its order.
+KASLR for x86 (and other archs, like arm64) do both physical and virtual
+base randomization.
 
-Drop the lock and do the allocation only if a split is needed.
+> This just makes sure the physical memory it finds will not be used by the
+> system. Then ramoops does the mapping via vmap() I believe, to get a
+> virtual address to access the physical address.
 
-In the best case, it only need to walk the tree once.  If it needs to
-alloc and split, 3 walks are issued (One for first ranged conflict check
-and order retrieving, one for the second check after allocation, one for
-the insert after split).
+I was assuming, since you were in the e820 code, that it was
+manipulating that before KASLR chose a location. But if not, yeah, Mike
+is right -- you need to make sure this is getting done before
+decompress_kernel().
 
-Testing with 4K pages, in an 8G cgroup, with 16G brd as block device:
-
-  echo 3 > /proc/sys/vm/drop_caches
-
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-    --buffered=1 --ioengine=mmap --rw=randread --time_based \
-    --ramp_time=30s --runtime=5m --group_reporting
-
-Before:
-bw (  MiB/s): min= 1027, max= 3520, per=100.00%, avg=2445.02, stdev=18.90, samples=8691
-iops        : min=263001, max=901288, avg=625924.36, stdev=4837.28, samples=8691
-
-After (+7.3%):
-bw (  MiB/s): min=  493, max= 3947, per=100.00%, avg=2625.56, stdev=25.74, samples=8651
-iops        : min=126454, max=1010681, avg=672142.61, stdev=6590.48, samples=8651
-
-Test result with THP (do a THP randread then switch to 4K page in hope it
-issues a lot of splitting):
-
-  echo 3 > /proc/sys/vm/drop_caches
-
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-      --buffered=1 --ioengine=mmap -thp=1 --readonly \
-      --rw=randread --time_based --ramp_time=30s --runtime=10m \
-      --group_reporting
-
-  fio -name=cached --numjobs=16 --filename=/mnt/test.img \
-      --buffered=1 --ioengine=mmap \
-      --rw=randread --time_based --runtime=5s --group_reporting
-
-Before:
-bw (  KiB/s): min= 4141, max=14202, per=100.00%, avg=7935.51, stdev=96.85, samples=18976
-iops        : min= 1029, max= 3548, avg=1979.52, stdev=24.23, samples=18976·
-
-READ: bw=4545B/s (4545B/s), 4545B/s-4545B/s (4545B/s-4545B/s), io=64.0KiB (65.5kB), run=14419-14419msec
-
-After (+12.5%):
-bw (  KiB/s): min= 4611, max=15370, per=100.00%, avg=8928.74, stdev=105.17, samples=19146
-iops        : min= 1151, max= 3842, avg=2231.27, stdev=26.29, samples=19146
-
-READ: bw=4635B/s (4635B/s), 4635B/s-4635B/s (4635B/s-4635B/s), io=64.0KiB (65.5kB), run=14137-14137msec
-
-The performance is better for both 4K (+7.5%) and THP (+12.5%) cached read.
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
----
- lib/test_xarray.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/filemap.c      | 56 ++++++++++++++++++++++++++++++++------------
- 2 files changed, 100 insertions(+), 15 deletions(-)
-
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index 0efde8f93490..8732a311f613 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -2017,6 +2017,64 @@ static noinline void check_xas_get_order(struct xarray *xa)
- 	}
- }
- 
-+static noinline void check_xas_conflict_get_order(struct xarray *xa)
-+{
-+	XA_STATE(xas, xa, 0);
-+
-+	void *entry;
-+	int only_once;
-+	unsigned int max_order = IS_ENABLED(CONFIG_XARRAY_MULTI) ? 20 : 1;
-+	unsigned int order;
-+	unsigned long i, j, k;
-+
-+	for (order = 0; order < max_order; order++) {
-+		for (i = 0; i < 10; i++) {
-+			xas_set_order(&xas, i << order, order);
-+			do {
-+				xas_lock(&xas);
-+				xas_store(&xas, xa_mk_value(i));
-+				xas_unlock(&xas);
-+			} while (xas_nomem(&xas, GFP_KERNEL));
-+
-+			/*
-+			 * Ensure xas_get_order works with xas_for_each_conflict.
-+			 */
-+			j = i << order;
-+			for (k = 0; k < order; k++) {
-+				only_once = 0;
-+				xas_set_order(&xas, j + (1 << k), k);
-+				xas_lock(&xas);
-+				xas_for_each_conflict(&xas, entry) {
-+					XA_BUG_ON(xa, entry != xa_mk_value(i));
-+					XA_BUG_ON(xa, xas_get_order(&xas) != order);
-+					only_once++;
-+				}
-+				XA_BUG_ON(xa, only_once != 1);
-+				xas_unlock(&xas);
-+			}
-+
-+			if (order < max_order - 1) {
-+				only_once = 0;
-+				xas_set_order(&xas, (i & ~1UL) << order, order + 1);
-+				xas_lock(&xas);
-+				xas_for_each_conflict(&xas, entry) {
-+					XA_BUG_ON(xa, entry != xa_mk_value(i));
-+					XA_BUG_ON(xa, xas_get_order(&xas) != order);
-+					only_once++;
-+				}
-+				XA_BUG_ON(xa, only_once != 1);
-+				xas_unlock(&xas);
-+			}
-+
-+			xas_set_order(&xas, i << order, order);
-+			xas_lock(&xas);
-+			xas_store(&xas, NULL);
-+			xas_unlock(&xas);
-+		}
-+	}
-+}
-+
-+
- static noinline void check_destroy(struct xarray *xa)
- {
- 	unsigned long index;
-@@ -2069,6 +2127,7 @@ static int xarray_checks(void)
- 	check_multi_store_advanced(&array);
- 	check_get_order(&array);
- 	check_xas_get_order(&array);
-+	check_xas_conflict_get_order(&array);
- 	check_xa_alloc();
- 	check_find(&array);
- 	check_find_entry(&array);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 17a66ea544e7..7b0b2229d4ed 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -852,7 +852,9 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 		struct folio *folio, pgoff_t index, gfp_t gfp, void **shadowp)
- {
- 	XA_STATE(xas, &mapping->i_pages, index);
--	bool huge = folio_test_hugetlb(folio);
-+	void *alloced_shadow = NULL;
-+	int alloced_order = 0;
-+	bool huge;
- 	long nr;
- 
- 	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-@@ -861,6 +863,7 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 
- 	VM_BUG_ON_FOLIO(index & (folio_nr_pages(folio) - 1), folio);
- 	xas_set_order(&xas, index, folio_order(folio));
-+	huge = folio_test_hugetlb(folio);
- 	nr = folio_nr_pages(folio);
- 
- 	gfp &= GFP_RECLAIM_MASK;
-@@ -868,16 +871,10 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 	folio->mapping = mapping;
- 	folio->index = xas.xa_index;
- 
--	do {
--		unsigned int order = xa_get_order(xas.xa, xas.xa_index);
-+	for (;;) {
-+		int order = -1, split_order = 0;
- 		void *entry, *old = NULL;
- 
--		if (order > folio_order(folio)) {
--			xas_split_alloc(&xas, xa_load(xas.xa, xas.xa_index),
--					order, gfp);
--			if (xas_error(&xas))
--				goto error;
--		}
- 		xas_lock_irq(&xas);
- 		xas_for_each_conflict(&xas, entry) {
- 			old = entry;
-@@ -885,19 +882,33 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 				xas_set_err(&xas, -EEXIST);
- 				goto unlock;
- 			}
-+			/*
-+			 * If a larger entry exists,
-+			 * it will be the first and only entry iterated.
-+			 */
-+			if (order == -1)
-+				order = xas_get_order(&xas);
-+		}
-+
-+		/* entry may have changed before we re-acquire the lock */
-+		if (alloced_order && (old != alloced_shadow || order != alloced_order)) {
-+			xas_destroy(&xas);
-+			alloced_order = 0;
- 		}
- 
- 		if (old) {
--			if (shadowp)
--				*shadowp = old;
--			/* entry may have been split before we acquired lock */
--			order = xa_get_order(xas.xa, xas.xa_index);
--			if (order > folio_order(folio)) {
-+			if (order > 0 && order > folio_order(folio)) {
- 				/* How to handle large swap entries? */
- 				BUG_ON(shmem_mapping(mapping));
-+				if (!alloced_order) {
-+					split_order = order;
-+					goto unlock;
-+				}
- 				xas_split(&xas, old, order);
- 				xas_reset(&xas);
- 			}
-+			if (shadowp)
-+				*shadowp = old;
- 		}
- 
- 		xas_store(&xas, folio);
-@@ -913,9 +924,24 @@ noinline int __filemap_add_folio(struct address_space *mapping,
- 				__lruvec_stat_mod_folio(folio,
- 						NR_FILE_THPS, nr);
- 		}
-+
- unlock:
- 		xas_unlock_irq(&xas);
--	} while (xas_nomem(&xas, gfp));
-+
-+		/* split needed, alloc here and retry. */
-+		if (split_order) {
-+			xas_split_alloc(&xas, old, split_order, gfp);
-+			if (xas_error(&xas))
-+				goto error;
-+			alloced_shadow = old;
-+			alloced_order = split_order;
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
-+		if (!xas_nomem(&xas, gfp))
-+			break;
-+	}
- 
- 	if (xas_error(&xas))
- 		goto error;
 -- 
-2.44.0
-
+Kees Cook
