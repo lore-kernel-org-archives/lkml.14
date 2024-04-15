@@ -1,85 +1,152 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11762110F;
-	Mon, 15 Apr 2024 08:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DDF2CCA0
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713170187; cv=none; b=rGqH3XFlR/GfPffV9rcJrg0rqDnp/8Ya+RV2U4O4jXrbbEkVcT0ZqJeD2TJ6ukl4vXgkXXsA4xe3RHsIV+CB4wbrnuilmvjSu2HbLI+h1qBKv0eEuwg6Nz1xXCQFtumI4dYD11p2ZQHAw+ART6ovukDAKwMsCvhNTQYnFMrcEMQ=
+	t=1713170284; cv=none; b=Tbwuk4Ij5QMro68dZp0Tz3tzYrfISF5+CdnZMBe3rHun2WMtJiYTX/cPIYgPrw3/Zk/lHq3IIfPM9t5dWxYJaYzsP14uD5GglhH5L0vmplfkSDbCBXt239fzNCUTwfXO0GZvWc2Wt8cofytYrWuaaxeq17xHIcQf9c3PDr4tNWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713170187; c=relaxed/simple;
-	bh=dDiFdwFAfGbkDMVzPEsliCJATEf7dvVMGkGRmgu206s=;
+	s=arc-20240116; t=1713170284; c=relaxed/simple;
+	bh=OEMJOSvaLxBLKUtAscMEZKqapXHaM5BTNd042hSgfGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liOkrI/mzr+Qed/M892IaO125IzAG0NSzFrH3WEwUg0H6kWDPFjw9Ru4IBiJaWPwrsKu6tmwudon953l32Z+iA9wejVaRj2I1Hmv1Y2jKsEMz7sltTH+3kPgdQG5bcrQeWt+/9XsK9J3fWR2lzRoteapizoHl5U3PBAYb94cPMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rwHoa-0004hj-00; Mon, 15 Apr 2024 10:35:48 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id F2EC9C0248; Mon, 15 Apr 2024 10:32:46 +0200 (CEST)
-Date: Mon, 15 Apr 2024 10:32:46 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Justin Swartz <justin.swartz@risingedge.co.za>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 00/14] mips: dts: ralink: mt7621: improve DTS style
-Message-ID: <ZhzmLroS9sPGjeBb@alpha.franken.de>
-References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
- <6e8d08e4-5b26-4705-b636-0fc4412a7457@arinc9.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tvg9Sd4l4wgHRXcb9ihVQf5PN+qm+6SByK39sW5OoX2DnT1fecxJHpq3D65/JCN0XMPMU1E65sJfLL8RkgysUxQFPrsbITELKE1O+jI77v6vFpxhn0ArlsyAEdxDX0NBxd6uJfsop7Afm41TUEooo8jU6ikzwYXseMsVKUKf4IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F31E02F;
+	Mon, 15 Apr 2024 01:38:30 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.20.152])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24A683F64C;
+	Mon, 15 Apr 2024 01:38:01 -0700 (PDT)
+Date: Mon, 15 Apr 2024 09:37:58 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org, Dev Jain <dev.jain@arm.com>
+Subject: Re: [PATCH] arm64/hugetlb: Fix page table walk in huge_pte_alloc()
+Message-ID: <ZhznZiHTAljB8a6U@FVFF77S0Q05N>
+References: <20240415063110.1795707-1-anshuman.khandual@arm.com>
+ <CAMj1kXFS+9ErLn5VyEFLzqwPBgiZBPLjv2OgsAFQPSN=jPWm+A@mail.gmail.com>
+ <5a6cdb94-3849-44bb-81d1-40c9c66852ed@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6e8d08e4-5b26-4705-b636-0fc4412a7457@arinc9.com>
+In-Reply-To: <5a6cdb94-3849-44bb-81d1-40c9c66852ed@arm.com>
 
-On Mon, Apr 08, 2024 at 10:35:07AM +0300, Arınç ÜNAL wrote:
-> On 16.03.2024 07:54, Justin Swartz wrote:
-> > This set of patches was created with the intention of cleaning up
-> > arch/mips/boot/dts/ralink/mt7621.dtsi so that it is aligned with
-> > the Devicetree Sources (DTS) Coding Style [1] [2] guide.
-> > 
-> > [1] Documentation/devicetree/bindings/dts-coding-style.rst
-> > 
-> > [2] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
-> > 
-> > Justin Swartz (14):
-> >    mips: dts: ralink: mt7621: reorder cpu node attributes
-> >    mips: dts: ralink: mt7621: reorder cpuintc node attributes
-> >    mips: dts: ralink: mt7621: reorder mmc regulator attributes
-> >    mips: dts: ralink: mt7621: reorder sysc node attributes
-> >    mips: dts: ralink: mt7621: reorder gpio node attributes
-> >    mips: dts: ralink: mt7621: reorder i2c node attributes
-> >    mips: dts: ralink: mt7621: reorder spi0 node attributes
-> >    mips: dts: ralink: mt7621: move pinctrl and sort its children
-> >    mips: dts: ralink: mt7621: reorder mmc node attributes
-> >    mips: dts: ralink: mt7621: reorder gic node attributes
-> >    mips: dts: ralink: mt7621: reorder ethernet node attributes and kids
-> >    mips: dts: ralink: mt7621: reorder pcie node attributes and children
-> >    mips: dts: ralink: mt7621: reorder pci?_phy attributes
-> >    mips: dts: ralink: mt7621: reorder the attributes of the root node
-> > 
-> >   arch/mips/boot/dts/ralink/mt7621.dtsi | 430 ++++++++++++++------------
-> >   1 file changed, 239 insertions(+), 191 deletions(-)
+On Mon, Apr 15, 2024 at 12:22:40PM +0530, Anshuman Khandual wrote:
 > 
-> Thomas, will you apply this patch series as is or should we squash it to
-> one patch?
+> 
+> On 4/15/24 12:08, Ard Biesheuvel wrote:
+> > Hello Anshuman,
+> > 
+> > On Mon, 15 Apr 2024 at 08:31, Anshuman Khandual
+> > <anshuman.khandual@arm.com> wrote:
+> >>
+> >> Currently normal HugeTLB fault ends up crashing the kernel, as p4dp derived
+> >> from p4d_offset() is an invalid address when PGTABLE_LEVEL = 5. A p4d level
+> >> entry needs to be allocated when not available while walking the page table
+> >> during HugeTLB faults. Let's call p4d_alloc() to allocate such entries when
+> >> required instead of current p4d_offset().
+> >>
+> >>  Unable to handle kernel paging request at virtual address ffffffff80000000
+> >>  Mem abort info:
+> >>    ESR = 0x0000000096000005
+> >>    EC = 0x25: DABT (current EL), IL = 32 bits
+> >>    SET = 0, FnV = 0
+> >>    EA = 0, S1PTW = 0
+> >>    FSC = 0x05: level 1 translation fault
+> >>  Data abort info:
+> >>    ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+> >>    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> >>    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> >>  swapper pgtable: 4k pages, 52-bit VAs, pgdp=0000000081da9000
+> >>  [ffffffff80000000] pgd=1000000082cec003, p4d=0000000082c32003, pud=0000000000000000
+> >>  Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+> >>  Modules linked in:
+> >>  CPU: 1 PID: 108 Comm: high_addr_hugep Not tainted 6.9.0-rc4 #48
+> >>  Hardware name: Foundation-v8A (DT)
+> >>  pstate: 01402005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> >>  pc : huge_pte_alloc+0xd4/0x334
+> >>  lr : hugetlb_fault+0x1b8/0xc68
+> >>  sp : ffff8000833bbc20
+> >>  x29: ffff8000833bbc20 x28: fff000080080cb58 x27: ffff800082a7cc58
+> >>  x26: 0000000000000000 x25: fff0000800378e40 x24: fff00008008d6c60
+> >>  x23: 00000000de9dbf07 x22: fff0000800378e40 x21: 0004000000000000
+> >>  x20: 0004000000000000 x19: ffffffff80000000 x18: 1ffe00010011d7a1
+> >>  x17: 0000000000000001 x16: ffffffffffffffff x15: 0000000000000001
+> >>  x14: 0000000000000000 x13: ffff8000816120d0 x12: ffffffffffffffff
+> >>  x11: 0000000000000000 x10: fff00008008ebd0c x9 : 0004000000000000
+> >>  x8 : 0000000000001255 x7 : fff00008003e2000 x6 : 00000000061d54b0
+> >>  x5 : 0000000000001000 x4 : ffffffff80000000 x3 : 0000000000200000
+> >>  x2 : 0000000000000004 x1 : 0000000080000000 x0 : 0000000000000000
+> >>  Call trace:
+> >>  huge_pte_alloc+0xd4/0x334
+> >>  hugetlb_fault+0x1b8/0xc68
+> >>  handle_mm_fault+0x260/0x29c
+> >>  do_page_fault+0xfc/0x47c
+> >>  do_translation_fault+0x68/0x74
+> >>  do_mem_abort+0x44/0x94
+> >>  el0_da+0x2c/0x9c
+> >>  el0t_64_sync_handler+0x70/0xc4
+> >>  el0t_64_sync+0x190/0x194
+> >>  Code: aa000084 cb010084 b24c2c84 8b130c93 (f9400260)
+> >>  ---[ end trace 0000000000000000 ]---
+> >>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Fixes: a6bbf5d4d9d1 ("arm64: mm: Add definitions to support 5 levels of paging")
+> >> Reported-by: Dev Jain <dev.jain@arm.com>
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >> This patch applies on v6.9-rc4
+> >>
+> >>  arch/arm64/mm/hugetlbpage.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> > 
+> > Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> > 
+> > Thanks for fixing this. One question below.
+> > 
+> > 
+> >> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> >> index 0f0e10bb0a95..5c819459555a 100644
+> >> --- a/arch/arm64/mm/hugetlbpage.c
+> >> +++ b/arch/arm64/mm/hugetlbpage.c
+> >> @@ -276,7 +276,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+> >>         pte_t *ptep = NULL;
+> >>
+> >>         pgdp = pgd_offset(mm, addr);
+> >> -       p4dp = p4d_offset(pgdp, addr);
+> >> +       p4dp = p4d_alloc(mm, pgdp, addr);
+> > 
+> > Shouldn't we check p4dp for NULL here?
+> 
+> Sure, makes sense. I will add a check for p4dp, just like pudp below.
 
-I've applied them, no need to squash.
+With that:
 
-Thomas.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Mark.
+
+> 
+> > 
+> >>         pudp = pud_alloc(mm, p4dp, addr);
+> >>         if (!pudp)
+> >>                 return NULL;
+> >> --
+> >> 2.25.1
+> >>
