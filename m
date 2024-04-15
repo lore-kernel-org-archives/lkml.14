@@ -1,246 +1,89 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF74FA38
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 00:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223CF193;
+	Mon, 15 Apr 2024 00:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713139881; cv=none; b=DxnWjKMff8ZQ+qJxo6yVoHQUMEYvipoYKL/LCZE5+YwbshU3zJD3bMjIUr+uy9BqRp8P5dAr+8wFUbTsKPmJxYG7nbnVC3ujjdlOElavGC24Nh9/BFJkgJta3DCy4b87tM2B7lllxYhPljoU7Gomqvd/pB5BrzYCOcualTa1+gg=
+	t=1713140365; cv=none; b=I6LIDAiuEtRHUt+V8yE7q3Tjy5knPZedncNIS1oKge/T0x18NPLX+kj4L0nfCszuGR6jWtlHh+jzZvWmIpyRPMAUd+WeR+JmiABaE5222c6k68DzjXcKIFOqxhXLbAhclI6qx6iXMKf495EdMBXcMz01B18j2OzMD3tvKn+rBg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713139881; c=relaxed/simple;
-	bh=y7sLsvC+sIsLPpOLvDRjnaMGEI7DDoGcr6wiZLTi7D0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mjMCfG9Z6m7QG2nzMwy8f+JHVBFDIp5BOASMpOse1uEYfLMbc/BtWqlnMSwL8N3PbbydCOGjfJC6wpZtvAP/fEFq1Nb/Ag/P6RhXtoQnZHTvpEvIsxBFNfKMmT/wnuoFV3ycVUlzxkGjmkLnXVhgCFcdUgDR11MeFHbdDUJ9Obc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc764c885bso338915539f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 17:11:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713139879; x=1713744679;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9jiKT8kTE1128KEvfOtgwJoNA14ICV6Re1oSVw8v94A=;
-        b=n0HzSEJrV6HXqlzomjNwW8erJWgQC0a92gG2vPxpFyKkVc4oVrr107WtiyW7Wyfsks
-         tGLLr/BJlll6XTD2mX1VVkhcoIObpL332iYMV3WSFzhWSVwzvzLtxebMK5EJ/NmQNL9S
-         TPIzZoy9bAXJnimuiZRhHgCvOM9VDy0bBG0plODnOU/Cy79NC1rdc3U7b0oN4w7QPsns
-         lIVL7F/PvgtTY0bSqFouLnRX315999QD9QJDoL6mb1PCcHn6vJsmoRo3DB4agt08xykM
-         4otKCMzCRQnLNydGEU//pAfUIzbWByGMIMQD6CLgwUAHIzqt9QJPUZPP4buzJ73znX+G
-         tjZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIe1NO4jUonyK2ptBE+ellfF6vIkvnI67YN3Qb0tgcyvwErd/vj9knnve2q/cFGQ+o+G0umQS9wIFbEnOJTI5ac8yJLtS8fr+OkfRL
-X-Gm-Message-State: AOJu0Yy1HhoWf6ykLMN/FTzJ3HuZyLSnvNxfT/3+9n+X3pfZY9DLJ3+J
-	dA8SHjJH0CAUqTriR+q1FLve22CVThYjbiDFkT9KQ7BHoJEKEijrS+7mR8sCAKkEdgi9FJ4WRmt
-	CwGpcoxHTCECwpqn5UMcsS/mu3qR4zkLZMW5UklA/DXqveI4SiLf/uRU=
-X-Google-Smtp-Source: AGHT+IHnU2W5Tepq6j4kkQWoDzCwwPMiJCBd3BG8rHjbyQZcLrOSra26bYUeME/J2Sg0+54R4zH5NNn+KT3tYSETasXN3ZI1Becn
+	s=arc-20240116; t=1713140365; c=relaxed/simple;
+	bh=fn0cP6jHQy9x0E71RjlI6piVigamd0rjnbvWW/k3m8c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ru9kLuWLIiFrH5vVtSl4e0aNMJ+gXJQT6gMmlk0in4/GvKh55MOYodFvLJZNKQHnG0GBrj5kOCGePTkNyragTuPPW8L6vbnyWsVDgDKtCnP3f8EJiv2bXLLtix4fYuTG5vKJ4fvgMvrPvv4DJATBLMGqWnwW4SI5X7vHk2IgDmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=giUT0sXr; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="giUT0sXr"
+Received: from [192.168.68.112] (ppp14-2-127-66.adl-apt-pir-bras32.tpg.internode.on.net [14.2.127.66])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 0901020178;
+	Mon, 15 Apr 2024 08:09:23 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1713139768;
+	bh=fn0cP6jHQy9x0E71RjlI6piVigamd0rjnbvWW/k3m8c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=giUT0sXrneLxTzQYgCq5jqn57d27IX2/GFoKfYX+JCY8+ofHGvxXcFgdIfpxcmJTn
+	 jUmOlCOv3LHdaojgs/5Mzh0YddGrpC/RI8UKg9WasG4onjtXOCgZeJ0JmvkuX7kyBT
+	 qz8a8dKkJZTsgtx0O8IXrmztq4QkGmza6igXPyoAJXvC2xE+8+q0QINGwDdgm7rHbw
+	 7PxzbgURR818zIPA/v+KFKWEdMy5Lf2/1JBBHWdmvgiAszW21rCh/k5WAW0DihhNrC
+	 po1vlz/3HZjNlDp4ySUp8tF886a4EpMd+c9olDGwtPDCt3+Zehl2h+zvYTqRJR6pt7
+	 maoIywYca5U8A==
+Message-ID: <82fcd7a4532df119f82ea55208f592460ba5358e.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3 2/4] dt-bindings: rtc: convert trivial devices into
+ dtschema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Vladimir
+ Zapolskiy <vz@mleia.com>, Joel Stanley <joel@jms.id.au>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Mon, 15 Apr 2024 09:39:22 +0930
+In-Reply-To: <20240413-rtc_dtschema-v3-2-eff368bcc471@gmail.com>
+References: <20240413-rtc_dtschema-v3-0-eff368bcc471@gmail.com>
+	 <20240413-rtc_dtschema-v3-2-eff368bcc471@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:842a:b0:482:fc0f:e5a8 with SMTP id
- iq42-20020a056638842a00b00482fc0fe5a8mr198256jab.2.1713139879092; Sun, 14 Apr
- 2024 17:11:19 -0700 (PDT)
-Date: Sun, 14 Apr 2024 17:11:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1ae1a06161775de@google.com>
-Subject: [syzbot] [xfs?] possible deadlock in xfs_ilock (2)
-From: syzbot <syzbot+c6d7bff58a2218f14632@syzkaller.appspotmail.com>
-To: chandan.babu@oracle.com, djwong@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Sat, 2024-04-13 at 22:22 +0200, Javier Carrasco wrote:
+> These RTCs meet the requirements for a direct conversion into
+> trivial-rtc:
+>=20
+> - google,goldfish-rtc
+> - maxim,ds1742
+> - lpc32xx-rtc
+> - orion-rtc
+> - rtc-aspeed
+> - spear-rtc
+> - via,vt8500-rtc
+>=20
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-syzbot found the following issue on:
+We have trailers above but then there's more commit message content
+below. Looks like what's below should be trimmed out (bad squash)?
+Maybe the trimming could be done as its applied?
 
-HEAD commit:    72374d71c315 Merge tag 'pull-sysfs-annotation-fix' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10639da3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=43fc40c117780e9b
-dashboard link: https://syzkaller.appspot.com/bug?extid=c6d7bff58a2218f14632
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
+>=20
+> dt-bindings: rtc: lpc32xx-rtc: convert to dtschema
+>=20
+> Convert existing binding to dtschema to support validation.
+>=20
+> Add the undocumented 'clocks' property.
+>=20
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-72374d71.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0ea69c8c9aa6/vmlinux-72374d71.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fcfb8e2b6b87/bzImage-72374d71.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c6d7bff58a2218f14632@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc3-syzkaller-00399-g72374d71c315 #0 Not tainted
-------------------------------------------------------
-syz-executor.0/6233 is trying to acquire lock:
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: might_alloc include/linux/sched/mm.h:312 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: slab_pre_alloc_hook mm/slub.c:3746 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: slab_alloc_node mm/slub.c:3827 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: __do_kmalloc_node mm/slub.c:3965 [inline]
-ffffffff8d9373c0 (fs_reclaim){+.+.}-{0:0}, at: __kmalloc+0xb5/0x440 mm/slub.c:3979
-
-but task is already holding lock:
-ffff888028971858 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_ilock+0x16a/0x420 fs/xfs/xfs_inode.c:208
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&xfs_dir_ilock_class){++++}-{3:3}:
-       down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
-       xfs_ilock+0x2ef/0x420 fs/xfs/xfs_inode.c:206
-       xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
-       xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
-       xfs_icwalk_ag+0xca6/0x1780 fs/xfs/xfs_icache.c:1713
-       xfs_icwalk+0x57/0x100 fs/xfs/xfs_icache.c:1762
-       xfs_reclaim_inodes_nr+0x182/0x250 fs/xfs/xfs_icache.c:1011
-       super_cache_scan+0x409/0x550 fs/super.c:227
-       do_shrink_slab+0x44f/0x11c0 mm/shrinker.c:435
-       shrink_slab+0x18a/0x1310 mm/shrinker.c:662
-       shrink_one+0x493/0x7c0 mm/vmscan.c:4774
-       shrink_many mm/vmscan.c:4835 [inline]
-       lru_gen_shrink_node+0x89f/0x1750 mm/vmscan.c:4935
-       shrink_node mm/vmscan.c:5894 [inline]
-       kswapd_shrink_node mm/vmscan.c:6704 [inline]
-       balance_pgdat+0x10d1/0x1a10 mm/vmscan.c:6895
-       kswapd+0x5ea/0xbf0 mm/vmscan.c:7164
-       kthread+0x2c1/0x3a0 kernel/kthread.c:388
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #0 (fs_reclaim){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
-       __fs_reclaim_acquire mm/page_alloc.c:3698 [inline]
-       fs_reclaim_acquire+0x102/0x160 mm/page_alloc.c:3712
-       might_alloc include/linux/sched/mm.h:312 [inline]
-       slab_pre_alloc_hook mm/slub.c:3746 [inline]
-       slab_alloc_node mm/slub.c:3827 [inline]
-       __do_kmalloc_node mm/slub.c:3965 [inline]
-       __kmalloc+0xb5/0x440 mm/slub.c:3979
-       kmalloc include/linux/slab.h:632 [inline]
-       xfs_attr_shortform_list fs/xfs/xfs_attr_list.c:115 [inline]
-       xfs_attr_list_ilocked+0x8b7/0x1740 fs/xfs/xfs_attr_list.c:527
-       xfs_attr_list+0x1f9/0x2b0 fs/xfs/xfs_attr_list.c:547
-       xfs_vn_listxattr+0x11f/0x1c0 fs/xfs/xfs_xattr.c:314
-       vfs_listxattr+0xb7/0x140 fs/xattr.c:493
-       listxattr+0x69/0x190 fs/xattr.c:840
-       path_listxattr+0xc3/0x160 fs/xattr.c:864
-       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-       __do_fast_syscall_32+0x75/0x120 arch/x86/entry/common.c:321
-       do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:346
-       entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(&xfs_dir_ilock_class);
-                               lock(fs_reclaim);
-                               lock(&xfs_dir_ilock_class);
-  lock(fs_reclaim);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor.0/6233:
- #0: ffff888028971858 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_ilock+0x16a/0x420 fs/xfs/xfs_inode.c:208
-
-stack backtrace:
-CPU: 2 PID: 6233 Comm: syz-executor.0 Not tainted 6.9.0-rc3-syzkaller-00399-g72374d71c315 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
- __fs_reclaim_acquire mm/page_alloc.c:3698 [inline]
- fs_reclaim_acquire+0x102/0x160 mm/page_alloc.c:3712
- might_alloc include/linux/sched/mm.h:312 [inline]
- slab_pre_alloc_hook mm/slub.c:3746 [inline]
- slab_alloc_node mm/slub.c:3827 [inline]
- __do_kmalloc_node mm/slub.c:3965 [inline]
- __kmalloc+0xb5/0x440 mm/slub.c:3979
- kmalloc include/linux/slab.h:632 [inline]
- xfs_attr_shortform_list fs/xfs/xfs_attr_list.c:115 [inline]
- xfs_attr_list_ilocked+0x8b7/0x1740 fs/xfs/xfs_attr_list.c:527
- xfs_attr_list+0x1f9/0x2b0 fs/xfs/xfs_attr_list.c:547
- xfs_vn_listxattr+0x11f/0x1c0 fs/xfs/xfs_xattr.c:314
- vfs_listxattr+0xb7/0x140 fs/xattr.c:493
- listxattr+0x69/0x190 fs/xattr.c:840
- path_listxattr+0xc3/0x160 fs/xattr.c:864
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0x75/0x120 arch/x86/entry/common.c:321
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:346
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf728a579
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-RSP: 002b:00000000f5e7c5ac EFLAGS: 00000292 ORIG_RAX: 00000000000000e9
-RAX: ffffffffffffffda RBX: 00000000200000c0 RCX: 0000000000000000
-RDX: 0000000000000002 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-----------------
-Code disassembly (best guess), 2 bytes skipped:
-   0:	10 06                	adc    %al,(%rsi)
-   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
-   6:	10 07                	adc    %al,(%rdi)
-   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
-   c:	10 08                	adc    %cl,(%rax)
-   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
-  1e:	00 51 52             	add    %dl,0x52(%rcx)
-  21:	55                   	push   %rbp
-  22:	89 e5                	mov    %esp,%ebp
-  24:	0f 34                	sysenter
-  26:	cd 80                	int    $0x80
-* 28:	5d                   	pop    %rbp <-- trapping instruction
-  29:	5a                   	pop    %rdx
-  2a:	59                   	pop    %rcx
-  2b:	c3                   	ret
-  2c:	90                   	nop
-  2d:	90                   	nop
-  2e:	90                   	nop
-  2f:	90                   	nop
-  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Andrew
