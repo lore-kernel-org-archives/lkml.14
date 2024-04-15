@@ -1,123 +1,97 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DD876057;
-	Mon, 15 Apr 2024 13:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B0078C81;
+	Mon, 15 Apr 2024 13:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188323; cv=none; b=diIMphybTXk419Mmx78+uqK7SpJSsh91lJGmwL1paKPE4GBrssPYqt4urKdq43p/muqj8aFiSBDe+u12YaZVZvlMSp6asIb2m/lN3Hfr1OixtRxavO6756FIXI4m7Ms1VGofrOWr8HngcQ/qmRqj6AlrcbS2RV6dzovqW8po3kI=
+	t=1713188441; cv=none; b=LWJbrjTZQLehb/0IUb1dfq5pGub7iHiJGEiXolIrdaPsb9zpkCqyv4b13cpzxWYqRFKSFRwBBaQbtxrptGtBAuNfulucKI10WYnViZf8cD1WVRxOFtQzya1niV90sV313Md52PJLvZIzIawGWJ2h0w5XWx701lYXyxLOuLTlduE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188323; c=relaxed/simple;
-	bh=GOpywjy/f47DDDysRmWIO2J0xCC64iHGAOQIV8Qj7F8=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=u5hSBDYNXOKp5vyBLbfgwx196YxR3+OobPNQuJG14aO+WAuXcAhWqY8oUHUFpz/bEiLBGPmPbBgCU9JaOuKgec2wkO5HfjJ7Lj7JlgiJSjv1S5jcTLTqrupFIs8msQpXtB9hrx0KxzqTVoa8PSwCZffxGAPRHO1h36JFLqZNJl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yOhZGQQc; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1713188441; c=relaxed/simple;
+	bh=jswgADzYLisK/+q+Lljjrhqiq0M5wIMXmq+RZcfr7Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WwyeENqknqB9K4QC+RBm64v1c011aPNNl50cTLzil7Jo38zedmBuNJBLgz89+g+0qX3vs0pxsoDDAMHFOojxYEye9vplWu5E8CZGvQcSWVJcHnLReHX9VHPY0GrkC7ezcw5blKRSmQCZPBpVZmDnGK8pLiUhfk1ONempxkOuJsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GDFferfj; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yOhZGQQc"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FAvxKD019795;
-	Mon, 15 Apr 2024 15:38:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:subject:from:to:cc:date:in-reply-to:references
-	:content-type:content-transfer-encoding:mime-version; s=
-	selector1; bh=GOpywjy/f47DDDysRmWIO2J0xCC64iHGAOQIV8Qj7F8=; b=yO
-	hZGQQcs0JCrB9Vu3qov1OfOnIOmxqQBmKC4yfedzFpzTpelm8breBeJ15EEr2iWH
-	Bs0zBsY4RQTaUK8wIqdj3c9lQl4fPC5lhYUS552qxILUlYBsWQ8Znt1KocWqXxsd
-	xqLYXvCuKruecAE03mqVqE1JhdBz9W1WjqkVb8urC4Nb7rzcq7StJ1nUn35dWMe1
-	pl284g1xay3GC1J5aZw60MabS7mnvI5sMaqTudfHaY24GmdXDMQ3XlfupgQzTYEs
-	SxiExgcgJsxMsibv97iBKwPN29G2u11tB1wAlCYvAGZYYeMEHg24QvAcARvd7a1P
-	5X8+qL8NoOxGwk9Ifytg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xfhcwfup2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 15:38:04 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2AA584002D;
-	Mon, 15 Apr 2024 15:37:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 94C75211F1E;
-	Mon, 15 Apr 2024 15:37:13 +0200 (CEST)
-Received: from [192.168.8.15] (10.48.86.102) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Apr
- 2024 15:37:12 +0200
-Message-ID: <d92eaa433cd2403c4f3c3b7e49aa8dbf0b3e256e.camel@foss.st.com>
-Subject: Re: [PATCH 02/12] dt-bindings: interrupt-controller: stm32-exti:
- Add irq nexus child node
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Fabrice Gasnier
-	<fabrice.gasnier@foss.st.com>
-Date: Mon, 15 Apr 2024 15:37:10 +0200
-In-Reply-To: <87cyssa64a.ffs@tglx>
-References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
-	 <20240216094758.916722-3-antonio.borneo@foss.st.com> <87cyssa64a.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GDFferfj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713188440; x=1744724440;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=jswgADzYLisK/+q+Lljjrhqiq0M5wIMXmq+RZcfr7Do=;
+  b=GDFferfjflf1nlaRwkRdl4PBySItTEFdZA8N7iUkNwHaHvrn/DDq/Mlp
+   Mtx30FpmL7sqgX7LKORK1EGuxLFlRM4BzBOvoL0sEkgo3ijt4MvEvIEkv
+   W2glZN9IW8Suz1u6A98+jBmK0jNTxMZ9o+AmM7eI18X/xxlhVK+MYBfye
+   pArF4wLXgOrM8qWAPV+5dlgyYamQqKbXosz2FvKd+Clevk66lFBjZQZyw
+   0vpBMX84g6yzCY4w82Ogc2Vs7KK96Uh45fDjoehhf8dA2H+JmY0ugmclZ
+   qKkCyEeD9se0bIkr6UzG6T5UmNhONfwNhZyNf3kmMWBQ2QbIVkD6cmGwh
+   A==;
+X-CSE-ConnectionGUID: 1O4jSvwwT8yg7EasQyJslQ==
+X-CSE-MsgGUID: RlW+L7+CQ/yXmtKdiBVVVA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="20002197"
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="20002197"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:40:39 -0700
+X-CSE-ConnectionGUID: tj2iD4lQQOK1BCH9L2p/Cg==
+X-CSE-MsgGUID: zHMc3HfyRjKLiRiEMjp6sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="26582753"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:40:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rwMZX-00000004QCO-0p5e;
+	Mon, 15 Apr 2024 16:40:35 +0300
+Date: Mon, 15 Apr 2024 16:40:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v1 2/2] mmc: sdhci-acpi: Use
+ devm_platform_ioremap_resource()
+Message-ID: <Zh0uUjdHg1qV0RfT@smile.fi.intel.com>
+References: <20240412184706.366879-2-andriy.shevchenko@linux.intel.com>
+ <20240412184706.366879-4-andriy.shevchenko@linux.intel.com>
+ <b8751b8d-f42d-4121-836d-f21b91df1b7e@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8751b8d-f42d-4121-836d-f21b91df1b7e@wanadoo.fr>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, 2024-02-19 at 15:19 +0100, Thomas Gleixner wrote:
-> On Fri, Feb 16 2024 at 10:47, Antonio Borneo wrote:
-> > The mapping of EXTI interrupts to its parent interrupt controller
-> > is both SoC and instance dependent.
-> > The current implementation requires adding a new table to the
-> > driver's code and a new compatible for each new EXTI instance.
-> >=20
-> > Add to the binding an interrupt nexus child node that will be
-> > used on the new EXTI instances and can be optionally used on the
-> > existing instances.
-> > The property 'interrupt-map' in the nexus node maps each EXTI
-> > interrupt to the parent interrupt.
-> > Align #address-cells and #interrupt-cells between the EXTI node
-> > and its nexus node.
-> >=20
-> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->=20
-> This S-O-B chain is broken as it suggests that you wrote the patch and
-> Fabrice relayed it.
->=20
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#si=
-gn-your-work-the-developer-s-certificate-of-origin
->=20
-> But that's not the case. If you co-developed this with Fabrice then
-> please use Co-developed-by. See:
->=20
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#wh=
-en-to-use-acked-by-cc-and-co-developed-by
->=20
-> Thanks,
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
->=20
+On Mon, Apr 15, 2024 at 07:20:49AM +0200, Christophe JAILLET wrote:
+> Le 12/04/2024 à 20:46, Andy Shevchenko a écrit :
 
-Thanks for the review.
-I'm sending a V2 addressing all the remarks.
+...
 
-Regards,
-Antonio
+> > -	len = resource_size(iomem);
+> > -	if (len < 0x100)
+> > -		dev_err(dev, "Invalid iomem size!\n");
+> 
+> Was this test useful?
+
+I'm not sure. ioremap anyway works on page size granularity on many
+architectures, but even besides that, the check was from day 1 for unknown
+reasons. Perhaps can be safely removed.
+
+> Should it be mentioned in the commit message?
+
+Or in a separate patch. I'll think about it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
