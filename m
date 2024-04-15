@@ -1,106 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B8D2E40F;
-	Mon, 15 Apr 2024 16:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C8C2E40F;
+	Mon, 15 Apr 2024 16:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713198507; cv=none; b=uTif1e8Y2IhShHsV1tkLIdUgmUgPAfuHj/yuP9yTDL13yBTFnIYRpspmNxaSRpZqQGVf8y/THyIaHNfXRNsXzuLW5e7Q9qNEITJFEj4vChJTZfkil87nFAnELAh2/kljrieQThey120uNcSHAoA083bjysnxWrqbpbJORRGQxQw=
+	t=1713198579; cv=none; b=iSRm1VXpzowxJQJN3GkOY031QnQ06IWRnw8Wo/Zq/ANzDErdo3rj6wdJhY8c8JxeuQ6RrNAiaEPxbWN8eXIj9vVDbOvoce6NXpO+F1YOFOvsug8uLsnGAx2towXDMtUQP+a16Dt7yl+d+81Z3Z1txx6up7gGy8pvsdWp0NaGomY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713198507; c=relaxed/simple;
-	bh=xd4zvV2217rXjsgC1Jt7muitA/KOg/7nS/ZWUlJXcUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NY0/fN+/Sdwi02is4FB2gfcf+Vum46x25krBCFQk9AWbg5H2jz++8qo/CamAlizH45Rs4hbZipZQUdQGP/EguDsaBBgWLOf+YkGCQTh8YitqTqLunaZXEQdZOO3vmVtGjHpP9Ffpkc/zh12PWmNbxQRgs9dJIV+AjUe3iV92uPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB+FLZpG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB+FLZpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D936C113CC;
-	Mon, 15 Apr 2024 16:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713198506;
-	bh=xd4zvV2217rXjsgC1Jt7muitA/KOg/7nS/ZWUlJXcUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GB+FLZpGab57zGWMooAXQke1Jk9XKqTzMel6R8NzSDNHyB4cVZ60BmevVdH+1mjM+
-	 thtucU/I0aDwLd/SCPdqqaFgkhbLAFA+sEm573RPb9q/5kuQY0fV+Y9bhGEj3O+CGe
-	 qtKnzQ7SbP94Fw1zdHCmPG/58vVNzjrP84XOAV3Us2fTBf07NTCHx/jhiAMyDmJhYR
-	 mhYsCEoklIMnG2ufcwSD9NsMJxud+H8vzHOFunxkTFgRg2Y0ySVIfvYNLM1OTr9gcV
-	 Vi0H4m6bpgAzvM8bWqR3L4hXY/dXTaHX/QLnnHEoHxmvCKFsFxuGqQCqfvxGhg1UzL
-	 5YCwGfc3IPL5g==
-Date: Mon, 15 Apr 2024 17:28:22 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Herman van Hazendonk <github.com@herrie.org>
-Cc: sre@kernel.org, benwolsieffer@gmail.com, chris.chapuis@gmail.com,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: supply: max8903: specify
- flt-gpios as input
-Message-ID: <20240415-pretty-recite-127842ed9a10@spud>
-References: <20240415151645.1986014-1-github.com@herrie.org>
+	s=arc-20240116; t=1713198579; c=relaxed/simple;
+	bh=0d4mUTktj6a/nMXxUroqj2dPrXs/QRAOPXoexv5bCYk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QtFC4FNogk1OgmkZWj7TyOTMHsuo7AzMrHCVlIKZwgo7wh6uKzHmZzunF1YICyNvbGT7Lxy60UfgBWEo2fDyZyw4Ip+dNKjoVEzZDk6CUS/918p0Nl/Qpk/I4Tgyx/kY8eQLZdz9e9OwDCtBu1TzpyW8nztHie3rl7/UrCv4bTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id ECEA4A060C;
+	Mon, 15 Apr 2024 16:20:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf12.hostedemail.com (Postfix) with ESMTPA id 25AC719;
+	Mon, 15 Apr 2024 16:20:00 +0000 (UTC)
+Message-ID: <03f357e6c16d13924b705513446e4eac37e38a99.camel@perches.com>
+Subject: Re: [PATCH] PCI/AER: Print error message as per the TODO
+From: Joe Perches <joe@perches.com>
+To: Abhinav Jain <jain.abhinav177@gmail.com>, mahesh@linux.ibm.com, 
+	oohall@gmail.com, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
+Date: Mon, 15 Apr 2024 09:19:59 -0700
+In-Reply-To: <20240415161055.8316-1-jain.abhinav177@gmail.com>
+References: <20240415161055.8316-1-jain.abhinav177@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="JCzRbrKQeuOfJEof"
-Content-Disposition: inline
-In-Reply-To: <20240415151645.1986014-1-github.com@herrie.org>
+X-Rspamd-Queue-Id: 25AC719
+X-Stat-Signature: 77e1p4uka3bqt7e7ii1uor3ehdgef6hp
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+mInIM+0CNX9KiE6s0STSXDV9arJlA+oo=
+X-HE-Tag: 1713198000-709223
+X-HE-Meta: U2FsdGVkX18fRK6pvB4sqjrD+Hoi7VifTu0b/kmK1fLRq+6B3315wuHjJaVxwsG3ryHMye27wG92hwxaE84zKznFV1zdpaNmTJ2xB8DEbZshNqhjvOu22m9mjY8RFR1Hka4ZE9kfGrep6llNfaDZ9WmRCRfYMRWqkhV3SuYQsPxaG+BJVarT1Q4Du+CM6d08EhHIODww0VeyqdEAvD4KUqWuL47rgeAgHsM15SJy/OWPpDQS+3/c45vgN9oMm8wPJ87a9a82vl2KAfLVrGD/kgMIuNwILrYGNmJ6/e7U5TwlI43oa3xcOPtGoMKVLmhX
 
+On Mon, 2024-04-15 at 16:10 +0000, Abhinav Jain wrote:
+> Add a pr_err() to print the add device error in find_device_iter()
+[]
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+[]
+> @@ -885,7 +885,8 @@ static int find_device_iter(struct pci_dev *dev, void=
+ *data)
+>  		/* List this device */
+>  		if (add_error_device(e_info, dev)) {
+>  			/* We cannot handle more... Stop iteration */
+> -			/* TODO: Should print error message here? */
+> +			pr_err("find_device_iter: Cannot handle more devices.
+> +					Stopping iteration");
 
---JCzRbrKQeuOfJEof
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You are adding unnecessary whitespace after the period.
+String concatenation keeps _all_ the whitespace.
 
-On Mon, Apr 15, 2024 at 05:16:45PM +0200, Herman van Hazendonk wrote:
-> The FLT pin was incorrected documented as an output. The MAX8903 uses it =
-to
-> signal to the processor that a charging fault has occurred.
+The format is fine on a single line too.
 
-I guess this is just a matter of framing? Input to the hardware running
-the OS but an output from the max8903?
+Something like:
 
-I'm okay with whatever wording causing less confusion, which may mean
-something that specifics what this is relative to?
+		pr_notice("%s: Cannot handle more devices - iteration stopped\n",
+			  __func__);
 
->=20
-> Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
-
-The SoB email should match the from email fyi.
-Cheers,
-Conor.
-
-> ---
->  .../devicetree/bindings/power/supply/maxim,max8903.yaml         | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max8903=
-=2Eyaml b/Documentation/devicetree/bindings/power/supply/maxim,max8903.yaml
-> index a8d625f285f1..86af38378999 100644
-> --- a/Documentation/devicetree/bindings/power/supply/maxim,max8903.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/maxim,max8903.yaml
-> @@ -34,7 +34,7 @@ properties:
-> =20
->    flt-gpios:
->      maxItems: 1
-> -    description: Fault pin (active low, output)
-> +    description: Fault pin (active low, input)
-> =20
->    dcm-gpios:
->      maxItems: 1
-
---JCzRbrKQeuOfJEof
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh1VpgAKCRB4tDGHoIJi
-0jw/AQDaumli7edYvHrMoE4DDwEVzCH7wtuaBqIpvwcPYZM7xQEApHEIX3B9VcZx
-5Gw1n8eCthaQuGt/yznp5f+vfVxRUAg=
-=1mQ7
------END PGP SIGNATURE-----
-
---JCzRbrKQeuOfJEof--
