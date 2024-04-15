@@ -1,106 +1,230 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192923BBCE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D517200BF;
+	Mon, 15 Apr 2024 06:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713164084; cv=none; b=MJSzh/WoddbsJt7gAwgr7xTxcz9eOacwVtCtvEAz/IwvrnFOx/LGTmRjrqMi1DN4aj9WEAIU+zn32yGNzJRrgjjuqdBAqR9f21HXLUkNCTFYLRvHW4F2wo48TxcdYC+jSy5JwktG22nLX4iwZdG8Nb4rlAjGXAnwcbAWWbidOUg=
+	t=1713164203; cv=none; b=gY08r6WuRymqRxTG4n/m0tOEozsX/vEME8bM3w6foGGOeZBXTGedM+RgCLFNOR8TAALzQz7uE5DkJ3Pnxde8H/svjg7+b1Wib6CKMCC1lA3+jD1xHeue/3Ct5dt7/FKVDIWWPJeJ9Kauq9Wi12vIXUpsGmMH6ChOq1yyci/S/6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713164084; c=relaxed/simple;
-	bh=L8BIW94zJz6w7DHCRiCf2wXwkrC31h4lsroI1eHffbU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nO77gvxr4mgwXlDygOULOEFLA+SYvdiJERiFMpqnlqZCOJOaxA2MJExzOhoe1P5i6ScbqaqcODM1+4tGY+MumkfKtKTnzen6A+Pwaj659bODKWrh+tT+kjXS4MfbzMBTZl1efQjZ/0BjimgbS/8D4GoI9UPhGjGWaMU/HsvsFzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VHyYv5H45zYdgf;
-	Mon, 15 Apr 2024 14:53:39 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C60F1400CD;
-	Mon, 15 Apr 2024 14:54:40 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 15 Apr
- 2024 14:54:28 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
-	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
-	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
-	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>, <ericchancf@google.com>,
-	<kristina.martsenko@arm.com>, <robh@kernel.org>,
-	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
-	<shijie@os.amperecomputing.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <horms@kernel.org>, <mhiramat@kernel.org>,
-	<rmk+kernel@armlinux.org.uk>, <shahuang@redhat.com>,
-	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
-	<sumit.garg@linaro.org>, <frederic@kernel.org>, <reijiw@google.com>,
-	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-Subject: [PATCH v3 8/8] arm64: kprobe: Keep NMI maskabled while kprobe is stepping xol
-Date: Mon, 15 Apr 2024 06:47:58 +0000
-Message-ID: <20240415064758.3250209-9-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240415064758.3250209-1-liaochang1@huawei.com>
-References: <20240415064758.3250209-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1713164203; c=relaxed/simple;
+	bh=duW+8BbuFjm+gR6nar48iQgihNHtVUYE9gO/STS64Ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sJL8Qt0YTFoAwQjjZal4T9FH8narFXqDWN6x15YSsLb5uXYfn3m7C8yv9+0nJWfD97w6PKp2X3Px+hJm3FtFNLs9boXFyEn+nd5XKey49ZTBCTcbJmY1QEHIj+X3Pg2Z0+j6fk8rS1De8HiyNpNDThlFjOfuYeFzSG5gy6k5Xyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CwP7y0NJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MK+ewrVZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CwP7y0NJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=MK+ewrVZ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CwP7y0NJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MK+ewrVZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CwP7y0NJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="MK+ewrVZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D93334543;
+	Mon, 15 Apr 2024 06:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713164193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QVONDjkvCUBoX9Fi9jRqnNKspLMCrAX5ZdlsaW1EyQc=;
+	b=CwP7y0NJCGtTzmdGQMM48un+Pq214ylZ53B0EqUTPHxivOx8FonhItNaB5ahUmYnbPSgyi
+	w2fE+T0eNgZThdNAY5w47hndGzBvIUblazR8XmKF/Ys7RytDUa4aYO09X5Qh/uQjjSLoLR
+	WWPP6qTOw8FX69YLUhd2KJwWbwzxhao=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713164193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QVONDjkvCUBoX9Fi9jRqnNKspLMCrAX5ZdlsaW1EyQc=;
+	b=MK+ewrVZg4BTrrwIqw2DWIFZd6g3IZYnaCc/Z0Y696FZ5kFVc8yaRVLj+/ThGhLE6JiXzE
+	DieBfEzi0MJdOJBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713164193; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QVONDjkvCUBoX9Fi9jRqnNKspLMCrAX5ZdlsaW1EyQc=;
+	b=CwP7y0NJCGtTzmdGQMM48un+Pq214ylZ53B0EqUTPHxivOx8FonhItNaB5ahUmYnbPSgyi
+	w2fE+T0eNgZThdNAY5w47hndGzBvIUblazR8XmKF/Ys7RytDUa4aYO09X5Qh/uQjjSLoLR
+	WWPP6qTOw8FX69YLUhd2KJwWbwzxhao=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713164193;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=QVONDjkvCUBoX9Fi9jRqnNKspLMCrAX5ZdlsaW1EyQc=;
+	b=MK+ewrVZg4BTrrwIqw2DWIFZd6g3IZYnaCc/Z0Y696FZ5kFVc8yaRVLj+/ThGhLE6JiXzE
+	DieBfEzi0MJdOJBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A2C6C1368B;
+	Mon, 15 Apr 2024 06:56:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DrrkJaDPHGZKBwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 15 Apr 2024 06:56:32 +0000
+Message-ID: <b4cafdd1-c1b0-4abd-a849-8132c19d1525@suse.de>
+Date: Mon, 15 Apr 2024 08:56:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/18] backlight: Constify lcd_ops
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
+ Daniel Thompson <daniel.thompson@linaro.org>,
+ Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
+ =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Alexander Shiyan <shc_work@mail.ru>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-omap@vger.kernel.org
+References: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240414-video-backlight-lcd-ops-v1-0-9b37fcbf546a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[kernel.org,linaro.org,gmail.com,gmx.de,linux-vserver.org,mail.ru,pengutronix.de];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,mail.ru];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -4.29
+X-Spam-Flag: NO
 
-Keeping NMI maskable while executing instruction out of line, otherwise,
-add kprobe on the functions invoken while handling NMI will cause kprobe
-reenter bug and kernel panic.
+Hi
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/daifflags.h | 2 ++
- arch/arm64/kernel/probes/kprobes.c | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+for patches 16, 17 and 18:
 
-diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-index 1196eb85aa8d..60fd3b25fd73 100644
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -17,6 +17,8 @@
- #define DAIF_PROCCTX_NOIRQ	(PSR_I_BIT | PSR_F_BIT)
- #define DAIF_ERRCTX		(PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
- #define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
-+#define DAIF_ALLINT_MASK	\
-+	(system_uses_nmi() ? (ALLINT_ALLINT | DAIF_MASK) : (DAIF_MASK))
- 
- /*
-  * For Arm64 processor support Armv8.8 or later, kernel supports three types
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index 327855a11df2..e8c2b993bbb8 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -187,13 +187,13 @@ static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
- 						struct pt_regs *regs)
- {
- 	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
--	regs->pstate |= DAIF_MASK;
-+	regs->pstate |= DAIF_ALLINT_MASK;
- }
- 
- static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
- 						struct pt_regs *regs)
- {
--	regs->pstate &= ~DAIF_MASK;
-+	regs->pstate &= ~DAIF_ALLINT_MASK;
- 	regs->pstate |= kcb->saved_irqflag;
- }
- 
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Best regards
+Thomas
+
+Am 14.04.24 um 18:35 schrieb Krzysztof Kozlowski:
+> Hi,
+>
+> Dependencies
+> ============
+> All further patches depend on the first patch.  Therefore everything
+> could go via backlight tree (please ack) or via cross-tree pulls. Or
+> whatever maintainer choose, just coordinate this with backlight.
+>
+> Best regards,
+> Krzysztof
+>
+> ---
+> Krzysztof Kozlowski (18):
+>        backlight: Constify lcd_ops
+>        backlight: ams369fg06: Constify lcd_ops
+>        backlight: corgi_lcd: Constify lcd_ops
+>        backlight: hx8357: Constify lcd_ops
+>        backlight: ili922x: Constify lcd_ops
+>        backlight: ili9320: Constify lcd_ops
+>        backlight: jornada720_lcd: Constify lcd_ops
+>        backlight: l4f00242t03: Constify lcd_ops
+>        backlight: lms283gf05: Constify lcd_ops
+>        backlight: lms501kf03: Constify lcd_ops
+>        backlight: ltv350qv: Constify lcd_ops
+>        backlight: otm3225a: Constify lcd_ops
+>        backlight: platform_lcd: Constify lcd_ops
+>        backlight: tdo24m: Constify lcd_ops
+>        HID: picoLCD: Constify lcd_ops
+>        fbdev: clps711x: Constify lcd_ops
+>        fbdev: imx: Constify lcd_ops
+>        fbdev: omap: lcd_ams_delta: Constify lcd_ops
+>
+>   drivers/hid/hid-picolcd_lcd.c            | 2 +-
+>   drivers/video/backlight/ams369fg06.c     | 2 +-
+>   drivers/video/backlight/corgi_lcd.c      | 2 +-
+>   drivers/video/backlight/hx8357.c         | 2 +-
+>   drivers/video/backlight/ili922x.c        | 2 +-
+>   drivers/video/backlight/ili9320.c        | 2 +-
+>   drivers/video/backlight/jornada720_lcd.c | 2 +-
+>   drivers/video/backlight/l4f00242t03.c    | 2 +-
+>   drivers/video/backlight/lcd.c            | 4 ++--
+>   drivers/video/backlight/lms283gf05.c     | 2 +-
+>   drivers/video/backlight/lms501kf03.c     | 2 +-
+>   drivers/video/backlight/ltv350qv.c       | 2 +-
+>   drivers/video/backlight/otm3225a.c       | 2 +-
+>   drivers/video/backlight/platform_lcd.c   | 2 +-
+>   drivers/video/backlight/tdo24m.c         | 2 +-
+>   drivers/video/fbdev/clps711x-fb.c        | 2 +-
+>   drivers/video/fbdev/imxfb.c              | 2 +-
+>   drivers/video/fbdev/omap/lcd_ams_delta.c | 2 +-
+>   include/linux/lcd.h                      | 6 +++---
+>   19 files changed, 22 insertions(+), 22 deletions(-)
+> ---
+> base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
+> change-id: 20240414-video-backlight-lcd-ops-276d8439ffb8
+>
+> Best regards,
+
 -- 
-2.34.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
