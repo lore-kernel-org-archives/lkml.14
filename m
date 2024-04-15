@@ -1,112 +1,108 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8128E15AAAC
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628091EF1A;
+	Mon, 15 Apr 2024 21:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713217824; cv=none; b=MD9QsC4dKgY+R9HJrZJQbOCyXAR7Pa3xRKC3oCFUByyjDZvYt0ZSe39GxwVQdOy3IVZY0GRi0um74ciH7djA9NQT0jGouw2Y7ZCqlP4vCU9jvWdUavpLajoH5OnJLfxvA1HVowCvxLif/KoWhh3MocwelI5ZExVVcFdl+LVHyo4=
+	t=1713217943; cv=none; b=beL6lKDJdJZmVBMkQPPk718T43jkmmRt/iAXhV7p0LWnC1HmShdNlFzQ6Q64Wn1KQUO02TZXgOp1gnbn/M8CPLy8NrBEcEiaXLzR+sTIDaGDaJy7th8BXdL27Upt4MlsKlK5SFoGVHVeQZTbLR4+4h/SQQJU7L+J6XpRZDPKthU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713217824; c=relaxed/simple;
-	bh=Jrt7Z0J7fCt4+JVJZqqS5FDIaFBkB4pyTTZI0XtPT8s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F3yrjCXY4Bl0QiPSlVISOQM8kJ6GdMUwHvLY+sT/wocdQmmi2g/TaWYWTV3olpFCz68tBknsFzDRIwc1G1mWS3uuuEFATg9pBdG4bOr470P+4k/quwEHbnQbn4lJ5NpRG1PYj0MDOY/v0wQyg2+XBhZk9QfxldEkECVQuGQq7vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4vAkfOSk; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713217943; c=relaxed/simple;
+	bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMi9sfxOTCbMKcs44WCY9+WiXI+i/dtullqxutML3T/ZTRC3YedTQ3Zkh+nB1rpsWCK86t13G1M4VnaNQiLguJkHWJ/nG/09AYsHZugUAkz9UzZL/PnDf4oe7gyU15WqVZkBx01YzGNdYzU5unSXEcCqaT3poZxljXnfvTfyQ2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1UQX5Vl; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4vAkfOSk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713217821;
-	bh=Jrt7Z0J7fCt4+JVJZqqS5FDIaFBkB4pyTTZI0XtPT8s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=4vAkfOSkdyhBWA227C3yqkMkbVT2ZMxx6JcxKmlpgmPibs5ty7NSxL7/7PeldCPQb
-	 +qyZZLNRjrFx8oon6MZbFU0h2UmAShr9c7nAlazYRTU5sESnGFOypozpnaX3GFX1fg
-	 beNK7na4B0NsQNmsUdnoiNJRfJdES5iHbulhtqtvugfxDJF5mpsp66RIr0+PSVEL2j
-	 8cFvRo/TjSbT22ImYkgz5xKLNrbxGCa543cXC9L/85MfM9lPWgdstW7URUCaaTdIFc
-	 TUAll+jgNm3UgNlp4A3oQ3y8M6GM7fLMfnY5sodnlSpPIBGtNgXap6dli2hOfEfpEj
-	 FXEDYT1xZLWzw==
-Received: from [192.168.42.226] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EC12F37811CD;
-	Mon, 15 Apr 2024 21:50:17 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 15 Apr 2024 17:49:37 -0400
-Subject: [PATCH v3 9/9] drm/panel: truly-nt35597: Don't log an error when
- DSI host can't be found
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1UQX5Vl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713217942; x=1744753942;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
+  b=D1UQX5VlXRNaXGres5M51FohKdsvh3DR/FKz59xZVgFVCwgJIS6OCyL6
+   JZHaTRoUYkiyFpFsuyIxGbShG9ChLjXk5xHfahP6S2lnwOXcJ55y5TPS6
+   rIpUqSokF3OAI/6Casy+s8CIb8MUZSAgGEpU8Es+Qv+xLFBuSSEFLPE5n
+   MwQwzeuQfmlPskPPGeshdgvC0vXCGIoIcmkC/hrqSjhQx2dkbO4wgw8t8
+   p/A/12FD4vFc1e7hBPsm7x8+uMXXjo30n7HRPIGYCU/t1YOtW2TheUDL2
+   yiiTUyCnLx5/WbhGrsRwoWGmQTSL3oR1QgiIzrPHZKumW7WsJXYHqXJAq
+   w==;
+X-CSE-ConnectionGUID: U0IP5gVbTp2uQ/GXq8PtaA==
+X-CSE-MsgGUID: VWW6hZ1BQ2a8sCMeQd7Faw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12420708"
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="12420708"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 14:52:21 -0700
+X-CSE-ConnectionGUID: UWZ5JvWRQcuqI0TvjinHSQ==
+X-CSE-MsgGUID: 5GauRyGPRGCHQv12s/w8Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="26845113"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
+  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2024 14:52:21 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86/intel-uncore-freq: Don't present root domain on error
+Date: Mon, 15 Apr 2024 14:52:10 -0700
+Message-Id: <20240415215210.2824868-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240415-anx7625-defer-log-no-dsi-host-v3-9-619a28148e5c@collabora.com>
-References: <20240415-anx7625-defer-log-no-dsi-host-v3-0-619a28148e5c@collabora.com>
-In-Reply-To: <20240415-anx7625-defer-log-no-dsi-host-v3-0-619a28148e5c@collabora.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- owen <qwt9588@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Vasut <marex@denx.de>, Adrien Grassein <adrien.grassein@gmail.com>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Sam Ravnborg <sam@ravnborg.org>, Bjorn Andersson <andersson@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Vinay Simha BN <simhavcs@gmail.com>, 
- Christopher Vollo <chris@renewoutreach.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.13.0
 
-Given that failing to find a DSI host causes the driver to defer probe,
-make use of dev_err_probe() to log the reason. This makes the defer
-probe reason available and avoids alerting userspace about something
-that is not necessarily an error.
+If none of the clusters are added because of some error, fail to load
+driver without presenting root domain. In this case root domain will
+present invalid data.
 
-Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: 01c10f88c9b7 ("platform/x86/intel-uncore-freq: tpmi: Provide cluster level control")
+Cc: <stable@vger.kernel.org> # 6.5+
 ---
- drivers/gpu/drm/panel/panel-truly-nt35597.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+This error can be reproduced in the pre production hardware only.
+So can go through regular cycle and they apply to stable.
 
-diff --git a/drivers/gpu/drm/panel/panel-truly-nt35597.c b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-index b73448cf349d..d447db912a61 100644
---- a/drivers/gpu/drm/panel/panel-truly-nt35597.c
-+++ b/drivers/gpu/drm/panel/panel-truly-nt35597.c
-@@ -550,10 +550,8 @@ static int truly_nt35597_probe(struct mipi_dsi_device *dsi)
- 
- 	dsi1_host = of_find_mipi_dsi_host_by_node(dsi1);
- 	of_node_put(dsi1);
--	if (!dsi1_host) {
--		dev_err(dev, "failed to find dsi host\n");
--		return -EPROBE_DEFER;
--	}
-+	if (!dsi1_host)
-+		return dev_err_probe(dev, -EPROBE_DEFER, "failed to find dsi host\n");
- 
- 	/* register the second DSI device */
- 	dsi1_device = mipi_dsi_device_register_full(dsi1_host, &info);
+ .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index bd75d61ff8a6..587437211d72 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -240,6 +240,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 	bool read_blocked = 0, write_blocked = 0;
+ 	struct intel_tpmi_plat_info *plat_info;
+ 	struct tpmi_uncore_struct *tpmi_uncore;
++	bool uncore_sysfs_added = false;
+ 	int ret, i, pkg = 0;
+ 	int num_resources;
+ 
+@@ -384,9 +385,15 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 			}
+ 			/* Point to next cluster offset */
+ 			cluster_offset >>= UNCORE_MAX_CLUSTER_PER_DOMAIN;
++			uncore_sysfs_added = true;
+ 		}
+ 	}
+ 
++	if (!uncore_sysfs_added) {
++		ret = -ENODEV;
++		goto remove_clusters;
++	}
++
+ 	auxiliary_set_drvdata(auxdev, tpmi_uncore);
+ 
+ 	tpmi_uncore->root_cluster.root_domain = true;
 -- 
-2.44.0
+2.40.1
 
