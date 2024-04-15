@@ -1,98 +1,105 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668818526C
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CCE82481;
+	Mon, 15 Apr 2024 17:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200753; cv=none; b=odX0UV1QV1/2aLLMi4WHZDYkVyOXMRZFkYON/1SLHch7Un736krR4yhqo3NKetYc0hUtyWRkyeh6PYwHSZ6L6ODnk/FQuCCJ2SXyO23HyUAliwGjmU3eD0TybF3Brwffc2LoZ1ifWWL7wDQHFvl/S6h//NPOitWANsi4LS+qu78=
+	t=1713200764; cv=none; b=UzlZbEd748zgbVB6BcdtSUSioioVM3eu7Z9FiLiWk7gvcFdA+zUcNlAOSoa3XqMeDrSCeCkS69R0kEK8tSwbL2imV7B6idMo7xjIcUO6ME2AqPVguFRFfAgmi2SOM9f88rKy0ZpQXbUkyV2cf9E0ZotgpiReBbkdamJLZ+oWuGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200753; c=relaxed/simple;
-	bh=0mJpgs4aUQEhIiZHyXeNH/EklJ0LtNa/zt00pTK4jZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YLM42CG6eK0zQw4aFqX6kL5s8BSn1OgiZN7JGBgHF6z4ZJO7Cmy3uVeg1RD1/1200K9+bJpFzask9RytjoV0lR1+n46OqWKRUWLiNhtDLu97xb6S4/zZRefE7SjcXomi395fonxn/tqd5qHUHzdRtx2jO9jMZ3aO05eKnEuEZ0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=M54NEGVz; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
+	s=arc-20240116; t=1713200764; c=relaxed/simple;
+	bh=4a9TlTGikPdPtvIswhMDPVXsOAtTJIQPwslpOZDf9fY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WjX8LsYuPZ0KyCXAF4nlQgVgIWsnsisRY1Yv057p5j42ZuM7imrm8UcoMwU4xW8TAl96kMTLsHdtRZgsWzDof48+NfH49L6/kpCbD9263CyO7LIA7kDL8Ld1pjI5TLOQbsr9CvGyDvbg4RdjLvfQBSpvR2NuQ0xVzuQBVlBL23U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=envm3gPj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="M54NEGVz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
-	t=1713200750;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ptoV88Ij0/j9NhFFGW6zsh8KfISiHRwnC9zklzCEC5s=;
-	b=M54NEGVztU8esR0V50Z57mvarN+dZN/XS/51m37T9NlZ2lFFhUyXWSE9k53KPbRaqxUypZ
-	IA+FtEmMnA3YbalvGaBpMcEruXs1Qaj6GMsvDXL+IGwi0zlUWog0VxUreeYbBLPeEp2gJs
-	7lpqqc78KIF6/gdRfAcZIaC2F4AQ0y3CCUPUbkoSIEFBMxMCq5FY6wMXsoWRXl6yT/fIjv
-	6Y8rtCM0ZUcW9nJaPi6nqjgi4hQ1GQujWH0iLaWf8VR9aTpCMzCTHDTeVOSe4dsi+Hr59X
-	VE6SZ+XX3R9r9VfOusekSX2s3XBsERJrPtDsoVVUkckxE5MQXx/7TX5pJCEOfw==
-From: Kenny Levinsen <kl@kl.wtf>
-To: Jiri Kosina <jikos@kernel.org>,
-	Dmitry Torokhov <dtor@chromium.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Radoslaw Biernacki <rad@chromium.org>,
-	Lukasz Majczak <lma@chromium.org>
-Cc: Kenny Levinsen <kl@kl.wtf>
-Subject: [PATCH 3/3] HID: i2c-hid: Align i2c_hid_set_power() retry with HID descriptor read
-Date: Mon, 15 Apr 2024 19:04:13 +0200
-Message-ID: <20240415170517.18780-4-kl@kl.wtf>
-In-Reply-To: <20240415170517.18780-1-kl@kl.wtf>
-References: <20240415170517.18780-1-kl@kl.wtf>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="envm3gPj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0AEC2BD11;
+	Mon, 15 Apr 2024 17:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713200763;
+	bh=4a9TlTGikPdPtvIswhMDPVXsOAtTJIQPwslpOZDf9fY=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-Id:Cc:From;
+	b=envm3gPjZkPR25rFILSSoDGtvq58d0n5TS2Ogmxra3RmmqJOLqTClzNaQo60Rcy/8
+	 axCfm2/V7ALzK2j+/+nve1rMfBSKxfrc/66w1h9SakHpGtRH39qBxvnQIWELc/JNt1
+	 70y5d3MUtd06wenDYBRLLmN9O8hgIPdUs+/sO+G2y5beX4FDbqCiauXeAdrQXsfWnB
+	 PckYPDZC66KLbwdVo1CdwHkuaE+chrIGFCZZCCb53eAm56qC0RIamfBj/CR5RSCwYK
+	 oRbMjLRnnDWF2GpgqY32AMqlw6eI3R983vlkCtFSx5kVqwvNCfGp/PfehO9ZBJzbmk
+	 asMALYe/CuGnA==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-518c9ff3e29so1860444e87.0;
+        Mon, 15 Apr 2024 10:06:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVxg/QDIDT+2uFnvQSb2pIZUnrfgF3JX4CUPStTW+RnUMx6reBpkC5C/2rV0f6gLXzUzIo/7PDwKLyYQf9e0m9nNDRlnVHd+mKXS2I4MrFZeZxwP/Zc5EjyzDn25A7QbqxED3QJdoxF99ELngt/1h5HsfJMfmDRJdoB69Fz39rHlkCq4jnAqW5v+dUd1QmtesEA6QMXYvocKooomLhcDj39lUuH3ylPoEQkSn82SF35NmtxbKoAF2AdoFUlnzgV98cyP+HFNwMT
+X-Gm-Message-State: AOJu0YwK1k2oZMcCOfAtzlgBTO/t+HBEL8eHKauKZEOF7ZhQK7lNyrOE
+	lUMQLbwORDPorWOCdZejufmc4oJQ+VtlCjZaqoGXgRBuFANLmgu8Ve/c/xRNgeYqJPF1Jc6NYJe
+	fITp+oJfp+ZjYmMQot63cGLzq1g==
+X-Google-Smtp-Source: AGHT+IGj52gH0/Dg5INd/xZRyWwlGDPcfmpSpbX0KU82iJTE7+TtYLQcTn0dGxCxYIzg49fhJoCRFzAjpf+6SCkqXUk=
+X-Received: by 2002:a2e:b0ef:0:b0:2da:320a:68d9 with SMTP id
+ h15-20020a2eb0ef000000b002da320a68d9mr3627965ljl.13.1713200741392; Mon, 15
+ Apr 2024 10:05:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240412222857.3873079-1-robh@kernel.org> <Zh0vXinxy7woerJQ@hu-bjorande-lv.qualcomm.com>
+ <CAA8EJpqL2T4bJZqtZ9KF=V2NLnFxUjouA6_Hu_H07DofifZaoQ@mail.gmail.com>
+In-Reply-To: <CAA8EJpqL2T4bJZqtZ9KF=V2NLnFxUjouA6_Hu_H07DofifZaoQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 15 Apr 2024 12:05:26 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+q3OLEMT=d8=d9o1D9deKGQ5TAtZg_bgptDPQ1cWcctw@mail.gmail.com>
+Message-ID: <CAL_Jsq+q3OLEMT=d8=d9o1D9deKGQ5TAtZg_bgptDPQ1cWcctw@mail.gmail.com>
+Subject: Re: [PATCH] arm/arm64: dts: Drop "arm,armv8-pmuv3" compatible usage
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, soc@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
+	Khuong Dinh <khuong@os.amperecomputing.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Robert Richter <rric@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, "Paul J. Murphy" <paul.j.murphy@intel.com>, 
+	Daniele Alessandrelli <daniele.alessandrelli@intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-fsd@tesla.com, 
+	Michal Simek <michal.simek@amd.com>, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-realtek-soc@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Instead of retrying on any error, just retry on EREMOTEIO and simplify
-the retry handling a bit.
+On Mon, Apr 15, 2024 at 11:52=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Mon, 15 Apr 2024 at 16:46, Bjorn Andersson <quic_bjorande@quicinc.com>=
+ wrote:
+> >
+> > On Fri, Apr 12, 2024 at 05:28:51PM -0500, Rob Herring wrote:
+> > [..]
+> > >  arch/arm64/boot/dts/qcom/qcm2290.dtsi                | 2 +-
+> > >  arch/arm64/boot/dts/qcom/qdu1000.dtsi                | 2 +-
+> > >  arch/arm64/boot/dts/qcom/sdm630.dtsi                 | 2 +-
+> > >  arch/arm64/boot/dts/qcom/sdx75.dtsi                  | 2 +-
+> >
+> > Acked-by: Bjorn Andersson <andersson@kernel.org>
+>
+> Note, we'd need to override PMU compatibles in sdm636.dtsi and
+> sdm660.dtsi. Ideally it should come as the same patch.
 
-Signed-off-by: Kenny Levinsen <kl@kl.wtf>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+Uh, that's an A for reuse, but an F for readability... It's sdm632 as
+well. Will drop sdm630.
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index ac661199d2c8..998e7aa140d7 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -395,21 +395,14 @@ static int i2c_hid_set_power(struct i2c_hid *ihid, int power_state)
- 	 * The call will get a return value (EREMOTEIO) but device will be
- 	 * triggered and activated. After that, it goes like a normal device.
- 	 */
--	if (power_state == I2C_HID_PWR_ON) {
-+	ret = i2c_hid_set_power_command(ihid, power_state);
-+	if (ret == -EREMOTEIO && power_state == I2C_HID_PWR_ON)
- 		ret = i2c_hid_set_power_command(ihid, I2C_HID_PWR_ON);
- 
--		/* Device was already activated */
--		if (!ret)
--			goto set_pwr_exit;
--	}
--
--	ret = i2c_hid_set_power_command(ihid, power_state);
- 	if (ret)
- 		dev_err(&ihid->client->dev,
- 			"failed to change power setting.\n");
- 
--set_pwr_exit:
--
- 	/*
- 	 * The HID over I2C specification states that if a DEVICE needs time
- 	 * after the PWR_ON request, it should utilise CLOCK stretching.
--- 
-2.44.0
-
+Rob
