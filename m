@@ -1,53 +1,74 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2067.outbound.protection.outlook.com [40.107.20.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE73B70CA8
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713184947; cv=none; b=cdILu8i5RBxOEU5kVLYv2jyrNhZGBy5Vt6/AHxPdz1oP4Q1gXQbQB8Tu4J6Ms9lY+g6ePJy2/ifofu4g705N/zMP70zAnFzYa1tvK69qD9HLR5glbAQTFL0QZbK0zfBr3lcXmwT1MbG0xPooTeNViAFX4BPDU4l5oDSmfleYlIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3916FE3D;
+	Mon, 15 Apr 2024 12:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713184947; cv=fail; b=tO4X0kE3/lMEF5Ogf/5frOChjtKMrwPQkatq2OGywTTnNDr9K34WzwOdnAxtk7noXe359OTwA1wgR0aXfrPIvW6vSGNrgm0B0lzjyPL/om8zyewrehck09U9qnjGzjTga1MWmr3iVwQuaX1+/AQIJVlNs4Zwjd/R+mzT2bocMNs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713184947; c=relaxed/simple;
-	bh=nnJzm8T74bjJ2sBzbnniv95zAmpWRjbeC6PVsOH9sNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HL6zWQtD+V5BW8mjPC8YU6IQUnSCVgFoqvHEhaUlsIVKZ11BEZPb5nYuXTyOGByYIkMZa9tTX61497+CZl2WZsxHXpLRmmjk7c8xGY7TDvZ/Hq6pfMSgF1eITUU7qEtecT86mCwWCP37ueIgI7TARN3YWrdP5a9+ZV4kK4CN0iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3166021B0C;
-	Mon, 15 Apr 2024 12:42:24 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1F98E1386E;
-	Mon, 15 Apr 2024 12:42:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pLNGBrAgHWYvAwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Mon, 15 Apr 2024 12:42:24 +0000
-From: Daniel Wagner <dwagner@suse.de>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>,
-	linux-nvme@lists.infradead.org,
+	bh=5HbvCcdOoi7dkFQrO3IwVvB+jnCiwfdjDKzf9jlte8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IMH2t+My4zj6neu7fOjfSI3yau6kMZPWItFKRxhHgtOWkmdXj7Th4wPHB1d3jTxHPX0iVGyiIjSqNRsIO7dkw63tAvDWm1BnsbuJEO9ttSLcbW5+f45wCYjyXDoQD/n/3UqdI48Za51Y6W03YK+30J7ZXed7vZkVZyhyZANq/GE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=qPRl8Z6V; arc=fail smtp.client-ip=40.107.20.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="qPRl8Z6V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oY2S7ZATfVZJ5ZWuaD2QrhllucXyatFGogKxvXJdJx/RABr5ysoPkSUceWUMIEtGlCsvk0yzrHOKhFu4RXYDpG+Sw905Q+jyPxD1B6lTModB3KgMqFrJ8Be5Q8sjkU5nPx2zO0eRd9+EcMYUcJZXgklOB6fPy60bQbkx1G6tXsVfTlJ5YWMOpFfoZP0sDevuMt0USYJEunbOvpYq5QYVwdr2kIIkQEF8Iio9ghYY1rRcBCWENNmxnF0ZmxsP3LbnHP9PpZN6sN/oZiVjoxZ3EA5IwAHk0LngDKeBY4wq0z7pU/3qlE8SPcG22VIds8RMkzAsxrV1QLX4HTCBnbF13w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1Rcz8Tzq1zwsiZ9BrrQ87txjFMqQCuGDh8bq15P4plg=;
+ b=KcJpnpavnUycy/VnFyXYTNBSK+VWnZGG7EEBeGQN0iKno2u3smvPHwC21suKgRty8mhgj972N63BEJ9glv0H6re+fPglymIJs6MPRXRnHiLXqu40PzwZwZPVqF26/Dcjuhm3vouvvuNaJzN2JfmFXxvVSoWk8Ucd+GATG2R51yAjobYPFq2lGPaTTaG0N5nORH5OA1Z+RZ176ru5B3trX2bdIRlpg1RsTQ8bLaHm1FJlhsdwK99MjOnf9DBudtj+U3dE2iEKR9r1u8NZC9GvpYSUjghdmfavMRoCOJJb4mXsI6Qxheo1fBqKPPXi2Krr6cUEh6XaYt2OXqk6e6JfKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
+ action=none header.from=leica-geosystems.com; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1Rcz8Tzq1zwsiZ9BrrQ87txjFMqQCuGDh8bq15P4plg=;
+ b=qPRl8Z6VcIijoAAPRIUuZElgtT2dNqjnLsIAN+07fI7cq49KHRNsSK9l5WDZNrS3lhlHOqnZXHX4xENOm7vqAM/JRlcMV8DTFVcOI5loq7XRkHyFzXvtGu6a5IloaTQf9E2Hy6fLMv94/izwtf08iLtiBlVXcWB+d+c+32VEi9I=
+Received: from DB7PR03CA0080.eurprd03.prod.outlook.com (2603:10a6:10:72::21)
+ by VI1PR06MB9021.eurprd06.prod.outlook.com (2603:10a6:800:1e0::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Mon, 15 Apr
+ 2024 12:42:22 +0000
+Received: from DB5PEPF00014B8F.eurprd02.prod.outlook.com
+ (2603:10a6:10:72:cafe::20) by DB7PR03CA0080.outlook.office365.com
+ (2603:10a6:10:72::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
+ Transport; Mon, 15 Apr 2024 12:42:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
+ smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
+Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
+ designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.8.40.94; helo=hexagon.com; pr=C
+Received: from hexagon.com (193.8.40.94) by
+ DB5PEPF00014B8F.mail.protection.outlook.com (10.167.8.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Mon, 15 Apr 2024 12:42:22 +0000
+Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
+	 Mon, 15 Apr 2024 14:42:21 +0200
+From: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+To: marex@denx.de,
+	sboyd@kernel.org,
+	mturquette@baylibre.com,
+	biju.das.jz@bp.renesas.com,
+	marek.vasut+renesas@mailbox.org
+Cc: linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Hannes Reinecke <hare@kernel.org>,
-	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v6 2/5] nvmet: return DHCHAP status codes from nvmet_setup_auth()
-Date: Mon, 15 Apr 2024 14:42:17 +0200
-Message-ID: <20240415124220.5433-3-dwagner@suse.de>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240415124220.5433-1-dwagner@suse.de>
-References: <20240415124220.5433-1-dwagner@suse.de>
+	bsp-development.geo@leica-geosystems.com,
+	m.felsch@pengutronix.de,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Subject: [PATCH] clk: rs9: fix wrong default value for clock amplitude
+Date: Mon, 15 Apr 2024 14:42:19 +0200
+Message-Id: <20240415124219.604339-1-catalin.popescu@leica-geosystems.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,295 +76,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 3166021B0C
+X-OriginalArrivalTime: 15 Apr 2024 12:42:21.0758 (UTC) FILETIME=[5C1FDDE0:01DA8F32]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5PEPF00014B8F:EE_|VI1PR06MB9021:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 79486b27-f8a3-4f06-cd08-08dc5d497ede
+X-SET-LOWER-SCL-SCANNER: YES
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	gmks7pHQfMvY2bnCR1L2zs8dith+3zN66b5kruqS/e0Te5bgT+Bp3NnUpmY2aXs9RWaBpfaLE0PLfOPH2gsweFjs1pdpC9k7OeExsUofrqrmHKtPQaf7D88UYdoQ0icY4VhrV6yv1g1mrWVMx/SrxqIAKSqX7V4D+kIchh4TRChtwm8mulTkg1lRmdffDntVOo3/uwiRMlLdGMrQZKbIstMAKTBriTbPlmS0WTk+L8/Ku5cZQKlfNm3lN8k4SwTIQbwQkmOcz43O3Ir3tEgacRD2NFwBYyKDLwVve6hnprxIJCwn7IQb4gGNhA5zlFhS0uroAAPk6QD9rBE/dqwyY3P7WtqtwFlw2r7ijdEhpjetZ8who2LNK0pO975/jNEOjx3o99Hf+85pP4Ntrisrk2DjhIWf1tF6Yw0MF7kgjx+SQ7KtHCcUYTI1T8Ey8jT6aXopB+hpGJ/yKNjM8nsKVUjoPHkVk81YaxDgNr7gvWhjhibnpvIyW5tJocN511SPsKFEFh3VAY9rcHvB6/O7cXRpQCwRKdn7JOoo7N9ljTAVWXtb6JC04R2TTXSjNstKDeeESh8r5r5VS4ULEgRsH5X91ajfO1wqsO3e/4NOE0NzpWdr3H+9UaTFpvGuhGtbRVU8RL9nMjH6riEqnJsYUot4ncinTKSuVu34dWKOy4xgAA/aDppiNOpgUn/pDXC4tOiV2bQKI6Ngeg3j+tpTm7aZYoFazqQctnbdTDXWk7qaq0rzqy2YwYWJWV++GdZ7
+X-Forefront-Antispam-Report:
+	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 12:42:22.0888
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79486b27-f8a3-4f06-cd08-08dc5d497ede
+X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB5PEPF00014B8F.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR06MB9021
 
-From: Hannes Reinecke <hare@kernel.org>
+According to 9FGV0241, 9FGV0441 & 9FGV0841 datasheets, the default
+value for the clock amplitude is 0.8V, while the driver assumes 0.7V.
 
-A failure in nvmet_setup_auth() does not mean that the NVMe
-authentication command failed, so we should rather return a protocol
-error with a 'failure1' response than an NVMe status.
+Additionally, define constants for default values for both clock
+amplitude and spread spectrum and use them.
 
-Also update the type used for dhchap_step and dhchap_status to u8 to
-avoid confusions with nvme status. Furthermore, split dhchap_status and
-nvme status so we don't accidentally mix these return values.
+Fixes: 892e0ddea1aa ("clk: rs9: Add Renesas 9-series PCIe clock generator driver")
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-[dwagner: - use u8 as type for dhchap_{step|status}
-          - separate nvme status from dhcap_status]
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
 ---
- drivers/nvme/target/auth.c             | 20 +++++------
- drivers/nvme/target/fabrics-cmd-auth.c | 49 +++++++++++++-------------
- drivers/nvme/target/fabrics-cmd.c      | 11 +++---
- drivers/nvme/target/nvmet.h            |  8 ++---
- 4 files changed, 43 insertions(+), 45 deletions(-)
+Changes in v2:
+ - update commit message with "9FGV0841", document change about spread
+   spectrum and add Fixes tag.
+---
+ drivers/clk/clk-renesas-pcie.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/target/auth.c b/drivers/nvme/target/auth.c
-index 9afc28f1ffac..53bf1a084469 100644
---- a/drivers/nvme/target/auth.c
-+++ b/drivers/nvme/target/auth.c
-@@ -126,12 +126,11 @@ int nvmet_setup_dhgroup(struct nvmet_ctrl *ctrl, u8 dhgroup_id)
- 	return ret;
- }
+diff --git a/drivers/clk/clk-renesas-pcie.c b/drivers/clk/clk-renesas-pcie.c
+index 53e21ac302e6..4c3a5e4eb77a 100644
+--- a/drivers/clk/clk-renesas-pcie.c
++++ b/drivers/clk/clk-renesas-pcie.c
+@@ -25,10 +25,12 @@
+ #define RS9_REG_SS_AMP_0V7			0x1
+ #define RS9_REG_SS_AMP_0V8			0x2
+ #define RS9_REG_SS_AMP_0V9			0x3
++#define RS9_REG_SS_AMP_DEFAULT			RS9_REG_SS_AMP_0V8
+ #define RS9_REG_SS_AMP_MASK			0x3
+ #define RS9_REG_SS_SSC_100			0
+ #define RS9_REG_SS_SSC_M025			(1 << 3)
+ #define RS9_REG_SS_SSC_M050			(3 << 3)
++#define RS9_REG_SS_SSC_DEFAULT			RS9_REG_SS_SSC_100
+ #define RS9_REG_SS_SSC_MASK			(3 << 3)
+ #define RS9_REG_SS_SSC_LOCK			BIT(5)
+ #define RS9_REG_SR				0x2
+@@ -205,8 +207,8 @@ static int rs9_get_common_config(struct rs9_driver_data *rs9)
+ 	int ret;
  
--int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
-+u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- {
- 	int ret = 0;
- 	struct nvmet_host_link *p;
- 	struct nvmet_host *host = NULL;
--	const char *hash_name;
+ 	/* Set defaults */
+-	rs9->pll_amplitude = RS9_REG_SS_AMP_0V7;
+-	rs9->pll_ssc = RS9_REG_SS_SSC_100;
++	rs9->pll_amplitude = RS9_REG_SS_AMP_DEFAULT;
++	rs9->pll_ssc = RS9_REG_SS_SSC_DEFAULT;
  
- 	down_read(&nvmet_config_sem);
- 	if (nvmet_is_disc_subsys(ctrl->subsys))
-@@ -149,13 +148,16 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	}
- 	if (!host) {
- 		pr_debug("host %s not found\n", ctrl->hostnqn);
--		ret = -EPERM;
-+		ret = NVME_AUTH_DHCHAP_FAILURE_FAILED;
- 		goto out_unlock;
- 	}
+ 	/* Output clock amplitude */
+ 	ret = of_property_read_u32(np, "renesas,out-amplitude-microvolt",
+@@ -247,13 +249,13 @@ static void rs9_update_config(struct rs9_driver_data *rs9)
+ 	int i;
  
- 	ret = nvmet_setup_dhgroup(ctrl, host->dhchap_dhgroup_id);
--	if (ret < 0)
-+	if (ret < 0) {
- 		pr_warn("Failed to setup DH group");
-+		ret = NVME_AUTH_DHCHAP_FAILURE_DHGROUP_UNUSABLE;
-+		goto out_unlock;
-+	}
- 
- 	if (!host->dhchap_secret) {
- 		pr_debug("No authentication provided\n");
-@@ -166,12 +168,6 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 		pr_debug("Re-use existing hash ID %d\n",
- 			 ctrl->shash_id);
- 	} else {
--		hash_name = nvme_auth_hmac_name(host->dhchap_hash_id);
--		if (!hash_name) {
--			pr_warn("Hash ID %d invalid\n", host->dhchap_hash_id);
--			ret = -EINVAL;
--			goto out_unlock;
--		}
- 		ctrl->shash_id = host->dhchap_hash_id;
+ 	/* If amplitude is non-default, update it. */
+-	if (rs9->pll_amplitude != RS9_REG_SS_AMP_0V7) {
++	if (rs9->pll_amplitude != RS9_REG_SS_AMP_DEFAULT) {
+ 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_AMP_MASK,
+ 				   rs9->pll_amplitude);
  	}
  
-@@ -180,7 +176,7 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	ctrl->host_key = nvme_auth_extract_key(host->dhchap_secret + 10,
- 					       host->dhchap_key_hash);
- 	if (IS_ERR(ctrl->host_key)) {
--		ret = PTR_ERR(ctrl->host_key);
-+		ret = NVME_AUTH_DHCHAP_FAILURE_NOT_USABLE;
- 		ctrl->host_key = NULL;
- 		goto out_free_hash;
+ 	/* If SSC is non-default, update it. */
+-	if (rs9->pll_ssc != RS9_REG_SS_SSC_100) {
++	if (rs9->pll_ssc != RS9_REG_SS_SSC_DEFAULT) {
+ 		regmap_update_bits(rs9->regmap, RS9_REG_SS, RS9_REG_SS_SSC_MASK,
+ 				   rs9->pll_ssc);
  	}
-@@ -198,7 +194,7 @@ int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- 	ctrl->ctrl_key = nvme_auth_extract_key(host->dhchap_ctrl_secret + 10,
- 					       host->dhchap_ctrl_key_hash);
- 	if (IS_ERR(ctrl->ctrl_key)) {
--		ret = PTR_ERR(ctrl->ctrl_key);
-+		ret = NVME_AUTH_DHCHAP_FAILURE_NOT_USABLE;
- 		ctrl->ctrl_key = NULL;
- 		goto out_free_hash;
- 	}
-diff --git a/drivers/nvme/target/fabrics-cmd-auth.c b/drivers/nvme/target/fabrics-cmd-auth.c
-index ee76491e8b12..cb34d644ed08 100644
---- a/drivers/nvme/target/fabrics-cmd-auth.c
-+++ b/drivers/nvme/target/fabrics-cmd-auth.c
-@@ -31,7 +31,7 @@ void nvmet_auth_sq_init(struct nvmet_sq *sq)
- 	sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
- }
- 
--static u16 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
-+static u8 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
- {
- 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
- 	struct nvmf_auth_dhchap_negotiate_data *data = d;
-@@ -109,7 +109,7 @@ static u16 nvmet_auth_negotiate(struct nvmet_req *req, void *d)
- 	return 0;
- }
- 
--static u16 nvmet_auth_reply(struct nvmet_req *req, void *d)
-+static u8 nvmet_auth_reply(struct nvmet_req *req, void *d)
- {
- 	struct nvmet_ctrl *ctrl = req->sq->ctrl;
- 	struct nvmf_auth_dhchap_reply_data *data = d;
-@@ -172,7 +172,7 @@ static u16 nvmet_auth_reply(struct nvmet_req *req, void *d)
- 	return 0;
- }
- 
--static u16 nvmet_auth_failure2(void *d)
-+static u8 nvmet_auth_failure2(void *d)
- {
- 	struct nvmf_auth_dhchap_failure_data *data = d;
- 
-@@ -186,6 +186,7 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 	void *d;
- 	u32 tl;
- 	u16 status = 0;
-+	u8 dhchap_status;
- 
- 	if (req->cmd->auth_send.secp != NVME_AUTH_DHCHAP_PROTOCOL_IDENTIFIER) {
- 		status = NVME_SC_INVALID_FIELD | NVME_SC_DNR;
-@@ -237,30 +238,32 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 	if (data->auth_type == NVME_AUTH_COMMON_MESSAGES) {
- 		if (data->auth_id == NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE) {
- 			/* Restart negotiation */
--			pr_debug("%s: ctrl %d qid %d reset negotiation\n", __func__,
--				 ctrl->cntlid, req->sq->qid);
-+			pr_debug("%s: ctrl %d qid %d reset negotiation\n",
-+				 __func__, ctrl->cntlid, req->sq->qid);
- 			if (!req->sq->qid) {
--				if (nvmet_setup_auth(ctrl) < 0) {
--					status = NVME_SC_INTERNAL;
--					pr_err("ctrl %d qid 0 failed to setup"
--					       "re-authentication",
-+				dhchap_status = nvmet_setup_auth(ctrl);
-+				if (dhchap_status) {
-+					pr_err("ctrl %d qid 0 failed to setup re-authentication\n",
- 					       ctrl->cntlid);
--					goto done_failure1;
-+					req->sq->dhchap_status = dhchap_status;
-+					req->sq->dhchap_step =
-+						NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
-+					goto done_kfree;
- 				}
- 			}
--			req->sq->dhchap_step = NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
-+			req->sq->dhchap_step =
-+				NVME_AUTH_DHCHAP_MESSAGE_NEGOTIATE;
- 		} else if (data->auth_id != req->sq->dhchap_step)
- 			goto done_failure1;
- 		/* Validate negotiation parameters */
--		status = nvmet_auth_negotiate(req, d);
--		if (status == 0)
-+		dhchap_status = nvmet_auth_negotiate(req, d);
-+		if (dhchap_status == 0)
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_CHALLENGE;
- 		else {
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
--			req->sq->dhchap_status = status;
--			status = 0;
-+			req->sq->dhchap_status = dhchap_status;
- 		}
- 		goto done_kfree;
- 	}
-@@ -284,15 +287,14 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 
- 	switch (data->auth_id) {
- 	case NVME_AUTH_DHCHAP_MESSAGE_REPLY:
--		status = nvmet_auth_reply(req, d);
--		if (status == 0)
-+		dhchap_status = nvmet_auth_reply(req, d);
-+		if (dhchap_status == 0)
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_SUCCESS1;
- 		else {
- 			req->sq->dhchap_step =
- 				NVME_AUTH_DHCHAP_MESSAGE_FAILURE1;
--			req->sq->dhchap_status = status;
--			status = 0;
-+			req->sq->dhchap_status = dhchap_status;
- 		}
- 		goto done_kfree;
- 	case NVME_AUTH_DHCHAP_MESSAGE_SUCCESS2:
-@@ -301,13 +303,12 @@ void nvmet_execute_auth_send(struct nvmet_req *req)
- 			 __func__, ctrl->cntlid, req->sq->qid);
- 		goto done_kfree;
- 	case NVME_AUTH_DHCHAP_MESSAGE_FAILURE2:
--		status = nvmet_auth_failure2(d);
--		if (status) {
-+		dhchap_status = nvmet_auth_failure2(d);
-+		if (dhchap_status) {
- 			pr_warn("ctrl %d qid %d: authentication failed (%d)\n",
--				ctrl->cntlid, req->sq->qid, status);
--			req->sq->dhchap_status = status;
-+				ctrl->cntlid, req->sq->qid, dhchap_status);
-+			req->sq->dhchap_status = dhchap_status;
- 			req->sq->authenticated = false;
--			status = 0;
- 		}
- 		goto done_kfree;
- 	default:
-diff --git a/drivers/nvme/target/fabrics-cmd.c b/drivers/nvme/target/fabrics-cmd.c
-index f6714453b8bb..69d77d34bec1 100644
---- a/drivers/nvme/target/fabrics-cmd.c
-+++ b/drivers/nvme/target/fabrics-cmd.c
-@@ -211,7 +211,7 @@ static void nvmet_execute_admin_connect(struct nvmet_req *req)
- 	struct nvmf_connect_data *d;
- 	struct nvmet_ctrl *ctrl = NULL;
- 	u16 status;
--	int ret;
-+	u8 dhchap_status;
- 
- 	if (!nvmet_check_transfer_len(req, sizeof(struct nvmf_connect_data)))
- 		return;
-@@ -251,11 +251,12 @@ static void nvmet_execute_admin_connect(struct nvmet_req *req)
- 
- 	uuid_copy(&ctrl->hostid, &d->hostid);
- 
--	ret = nvmet_setup_auth(ctrl);
--	if (ret < 0) {
--		pr_err("Failed to setup authentication, error %d\n", ret);
-+	dhchap_status = nvmet_setup_auth(ctrl);
-+	if (dhchap_status) {
-+		pr_err("Failed to setup authentication, dhchap status %u\n",
-+		       dhchap_status);
- 		nvmet_ctrl_put(ctrl);
--		if (ret == -EPERM)
-+		if (dhchap_status == NVME_AUTH_DHCHAP_FAILURE_FAILED)
- 			status = (NVME_SC_CONNECT_INVALID_HOST | NVME_SC_DNR);
- 		else
- 			status = NVME_SC_INTERNAL;
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 257cace53924..5d6adb5c2fc0 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -113,8 +113,8 @@ struct nvmet_sq {
- 	bool			authenticated;
- 	struct delayed_work	auth_expired_work;
- 	u16			dhchap_tid;
--	u16			dhchap_status;
--	int			dhchap_step;
-+	u8			dhchap_status;
-+	u8			dhchap_step;
- 	u8			*dhchap_c1;
- 	u8			*dhchap_c2;
- 	u32			dhchap_s1;
-@@ -721,7 +721,7 @@ void nvmet_execute_auth_receive(struct nvmet_req *req);
- int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
- 		       bool set_ctrl);
- int nvmet_auth_set_host_hash(struct nvmet_host *host, const char *hash);
--int nvmet_setup_auth(struct nvmet_ctrl *ctrl);
-+u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl);
- void nvmet_auth_sq_init(struct nvmet_sq *sq);
- void nvmet_destroy_auth(struct nvmet_ctrl *ctrl);
- void nvmet_auth_sq_free(struct nvmet_sq *sq);
-@@ -740,7 +740,7 @@ int nvmet_auth_ctrl_exponential(struct nvmet_req *req,
- int nvmet_auth_ctrl_sesskey(struct nvmet_req *req,
- 			    u8 *buf, int buf_size);
- #else
--static inline int nvmet_setup_auth(struct nvmet_ctrl *ctrl)
-+static inline u8 nvmet_setup_auth(struct nvmet_ctrl *ctrl)
- {
- 	return 0;
- }
+
+base-commit: 6bd343537461b57f3efe5dfc5fc193a232dfef1e
+prerequisite-patch-id: 0000000000000000000000000000000000000000
 -- 
-2.44.0
+2.34.1
 
