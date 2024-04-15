@@ -1,187 +1,116 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E843F82891;
-	Mon, 15 Apr 2024 16:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AE78248D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199866; cv=none; b=Gk1yj/48DXN90nq30vrhba+fMhDq1/hBUxiZKfbc0sgKmD7yhA16cfc2PJNF1vJTD/jsB/ms5r/3a5ETJNZukelYft/y8zy+gSKrcsXXsdRe8bHl4mwazMLHhVdECnMOyGNrtENYvVNV5aRujvrXMN5jxm5B4Gheca9jY7yRFOI=
+	t=1713199927; cv=none; b=myJ+Yb1mUI1pF5nwiEDw6oPXzWyjBiNLfgSn1JbjuXjiGYr++02GA1ggtFRxC0u8Q0Mu9Zmj26gEeZ/ek9awIVt7JvMx1Z0bZ1LjCLRNHKL9fuJtz9NH3WMNv88QdZPm+vwfhAVfkXrAudyjGN0F2E+axchExdrHVV2nFHiCxU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199866; c=relaxed/simple;
-	bh=42gjuAfnn8UcdjXUdQUGdlYqrMyCJ01W93Gmzugo0zI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nzMjHsT7bRcTfJjoM/i50zmy98oXL7JZ3elrFGcu9vkCoTC+SD1hyHpcUj1UXKZNB5xNP8oDdsy0fbQ7X2nzsFjDgNxCnReVNsn3gfgZ0vBa7TDrQborKc8aiVBta13UpYnjI+8wVsgoBBxkXB+Xowg3BviwIibPV0AWi2euzO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VJCjS2DSVz6K7Fp;
-	Tue, 16 Apr 2024 00:46:04 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3B972140736;
-	Tue, 16 Apr 2024 00:50:59 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Apr
- 2024 17:50:58 +0100
-Date: Mon, 15 Apr 2024 17:50:57 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
-	<linux@armlinux.org.uk>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, "Jean-Philippe
- Brucker" <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: Re: [PATCH v5 02/18] ACPI: processor: Set the ACPI_COMPANION for
- the struct cpu instance
-Message-ID: <20240415175057.00002e11@Huawei.com>
-In-Reply-To: <CAJZ5v0j6gMaHamrCvrF8s+SgC0QVtG+naXhA4Dwg0t1YJvh4Uw@mail.gmail.com>
-References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
-	<20240412143719.11398-3-Jonathan.Cameron@huawei.com>
-	<CAJZ5v0izN5naWY7sTi16whds9ubXkLpgqV2gePQs869BoJTCDA@mail.gmail.com>
-	<20240415164854.0000264f@Huawei.com>
-	<CAJZ5v0hd+CNsnH9xY+UX0iy_AEaqUqJj4KdR=+yvtvy5FQEy5Q@mail.gmail.com>
-	<CAJZ5v0j6gMaHamrCvrF8s+SgC0QVtG+naXhA4Dwg0t1YJvh4Uw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1713199927; c=relaxed/simple;
+	bh=AEMyLc+1Z6/zZWJfleih74fSQmwSrodBP5//xLKr0kM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cwK+lg2lIxPf3ORss2PCvYXIXpGZarwPEJUUZpK4tT9De5zjjEEv4AkohNER2jn2E5hhWayZltavmdV9Ww36RUcqbj7QXcA7rDovw4KFaDR8hb8fjlRTEOHhHRI+jyVFjF4Ezt0QnoUemMFNXyk+/1iUg0KTOsIozph2JmCho3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dsa1F7ah; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dsa1F7ah"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso3057931276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713199925; x=1713804725; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=u5nj7t3vt2EbEPLlkWSc/ywApSrSPp8k4DfqheemWX4=;
+        b=dsa1F7ahys6SpIQjSCQWyDHHH01o++e8EJ4D2JdC37KriycNPiXylLD+fXPqxRhRBu
+         K483JJC24AvILtTUzcM9Zvy2QQUTXQsuw8zWRivJWRkIMXH3c+C518CVIp+Pvmjtgs1O
+         BMToVlax8JRwlaaU/E4Bxx/9DDnSKJ0jnMJUD7HZ/IZbu1hYys5LLV3xvRq59vbyAe43
+         cigXtlJ/N0AV64GSjO8/z4epLH3BNtUAKDRwA2Ei1mRrECt+IqecrZUDehymlN73MLP5
+         9DPZHyRGnauPV4aKB+UxJq6igdBBTsKPviPKmRw5DK0fdZfR2NfSpAhht+uRItQarCSW
+         cyBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713199925; x=1713804725;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u5nj7t3vt2EbEPLlkWSc/ywApSrSPp8k4DfqheemWX4=;
+        b=C4pxHP7MEhxJ1c/u9Z9ASThmv+ZXYasqvBxFYw3NijKMWjFDUcP9dBjA4jCOTVTyAf
+         JgHANNl1uNBr32P36FQmBnzt1lX4l/9pV3SaXgzJ2uA2M/EhcAE8Clc7vZAlOkINGK5w
+         Yxt7PV3tOHWGgXQgo2MjYoPyMcij4Cejfqfiirz+BXgVnYBPWzQV/83R2cO5Zb8R0ZTc
+         9qxk9WwRRUeFns44M/xi4VQH3u4LWb970x4R3q5whrZylUNIuiJ8JGZ/eZBEPHFcXz3a
+         WMoPtAGnLd1Hyu0D2hTceEzaLVNiX9pyJ5mai4kb+b7NiSz65JTamRjNmyDeRrFh7W2T
+         +WDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSdDD4ZleUwAalnHz6m6FOU2dTTz30b9NDpsgrU2637LniSCfMdjsvMmCMIkkyBNuR2aDoz8Fx7TkjKxtHPTJAAM5/xokH9KlaMLKc
+X-Gm-Message-State: AOJu0YweEofEFMcaf0f06EUA26WlG3M0P1ajIkMAN9sZz9We0OweC3CO
+	AAM3sVGv66LS9vQI/GDl6jt+lmQNhaX09ACDFhYkRN/9epWAGLHZEllH4OVDpC9cUdF8b1LVKcj
+	4Uofe9gg0RZ16XUHg90G8AM79ExwFW3+Rp70jtQ==
+X-Google-Smtp-Source: AGHT+IFUQH4ONlkcS0+01CEMOIrS9D3xuTmTIKe0INOXof2d+fsMqiJVzA1ER/VV0S5Vp3kzkSBLhneirq6dUQh4r9c=
+X-Received: by 2002:a25:9e0b:0:b0:de0:df15:b372 with SMTP id
+ m11-20020a259e0b000000b00de0df15b372mr9733585ybq.63.1713199925395; Mon, 15
+ Apr 2024 09:52:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240412222857.3873079-1-robh@kernel.org> <Zh0vXinxy7woerJQ@hu-bjorande-lv.qualcomm.com>
+In-Reply-To: <Zh0vXinxy7woerJQ@hu-bjorande-lv.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 15 Apr 2024 19:51:54 +0300
+Message-ID: <CAA8EJpqL2T4bJZqtZ9KF=V2NLnFxUjouA6_Hu_H07DofifZaoQ@mail.gmail.com>
+Subject: Re: [PATCH] arm/arm64: dts: Drop "arm,armv8-pmuv3" compatible usage
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>, soc@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
+	Khuong Dinh <khuong@os.amperecomputing.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Robert Richter <rric@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, "Paul J. Murphy" <paul.j.murphy@intel.com>, 
+	Daniele Alessandrelli <daniele.alessandrelli@intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-fsd@tesla.com, 
+	Michal Simek <michal.simek@amd.com>, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-realtek-soc@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, 15 Apr 2024 18:19:17 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+On Mon, 15 Apr 2024 at 16:46, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
+>
+> On Fri, Apr 12, 2024 at 05:28:51PM -0500, Rob Herring wrote:
+> [..]
+> >  arch/arm64/boot/dts/qcom/qcm2290.dtsi                | 2 +-
+> >  arch/arm64/boot/dts/qcom/qdu1000.dtsi                | 2 +-
+> >  arch/arm64/boot/dts/qcom/sdm630.dtsi                 | 2 +-
+> >  arch/arm64/boot/dts/qcom/sdx75.dtsi                  | 2 +-
+>
+> Acked-by: Bjorn Andersson <andersson@kernel.org>
 
-> On Mon, Apr 15, 2024 at 6:16=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
-org> wrote:
-> >
-> > On Mon, Apr 15, 2024 at 5:49=E2=80=AFPM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote: =20
-> > >
-> > > On Fri, 12 Apr 2024 20:10:54 +0200
-> > > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> > > =20
-> > > > On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote: =20
-> > > > >
-> > > > > The arm64 specific arch_register_cpu() needs to access the _STA
-> > > > > method of the DSDT object so make it available by assigning the
-> > > > > appropriate handle to the struct cpu instance.
-> > > > >
-> > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > ---
-> > > > >  drivers/acpi/acpi_processor.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_pr=
-ocessor.c
-> > > > > index 7a0dd35d62c9..93e029403d05 100644
-> > > > > --- a/drivers/acpi/acpi_processor.c
-> > > > > +++ b/drivers/acpi/acpi_processor.c
-> > > > > @@ -235,6 +235,7 @@ static int acpi_processor_get_info(struct acp=
-i_device *device)
-> > > > >         union acpi_object object =3D { 0 };
-> > > > >         struct acpi_buffer buffer =3D { sizeof(union acpi_object)=
-, &object };
-> > > > >         struct acpi_processor *pr =3D acpi_driver_data(device);
-> > > > > +       struct cpu *c;
-> > > > >         int device_declaration =3D 0;
-> > > > >         acpi_status status =3D AE_OK;
-> > > > >         static int cpu0_initialized;
-> > > > > @@ -314,6 +315,8 @@ static int acpi_processor_get_info(struct acp=
-i_device *device)
-> > > > >                         cpufreq_add_device("acpi-cpufreq");
-> > > > >         }
-> > > > >
-> > > > > +       c =3D &per_cpu(cpu_devices, pr->id);
-> > > > > +       ACPI_COMPANION_SET(&c->dev, device); =20
-> > > >
-> > > > This is also set for per_cpu(cpu_sys_devices, pr->id) in
-> > > > acpi_processor_add(), via acpi_bind_one(). =20
-> > >
-> > > Hi Rafael,
-> > >
-> > > cpu_sys_devices gets filled with a pointer to this same structure.
-> > > The contents gets set in register_cpu() so at this point
-> > > it doesn't point anywhere.  As a side note register_cpu()
-> > > memsets to zero the value I set it to in the code above which isn't
-> > > great, particularly as I want to use this in post_eject for
-> > > arm64.
-> > >
-> > > We could make a copy of the handle and put it back after
-> > > the memset in register_cpu() but that is also ugly.
-> > > It's the best I've come up with to make sure this is still set
-> > > come remove time but is rather odd. =20
-> > > >
-> > > > Moreover, there is some pr->id validation in acpi_processor_add(), =
-so
-> > > > it seems premature to use it here this way.
-> > > >
-> > > > I think that ACPI_COMPANION_SET() should be called from here on
-> > > > per_cpu(cpu_sys_devices, pr->id) after validating pr->id (so the
-> > > > pr->id validation should all be done here) and then NULL can be pas=
-sed
-> > > > as acpi_dev to acpi_bind_one() in acpi_processor_add().  Then, there
-> > > > will be one physical device corresponding to the processor ACPI dev=
-ice
-> > > > and no confusion. =20
-> > >
-> > > I'm fairly sure this is pointing to the same device but agreed this
-> > > is a tiny bit confusing. However we can't use cpu_sys_devices at this=
- point
-> > > so I'm not immediately seeing a cleaner solution :( =20
-> >
-> > Well, OK.
-> >
-> > Please at least consider doing the pr->id validation checks before
-> > setting the ACPI companion for &per_cpu(cpu_devices, pr->id).
-> >
-> > Also, acpi_bind_one() needs to be called on the "physical" devices
-> > passed to ACPI_COMPANION_SET() (with NULL as the second argument) for
-> > the reference counting and physical device lookup to work.
-> >
-> > Please also note that acpi_primary_dev_companion() should return
-> > per_cpu(cpu_sys_devices, pr->id) for the processor ACPI device, which
-> > depends on the order of acpi_bind_one() calls involving the same ACPI
-> > device. =20
->=20
-> Of course, if the value set by ACPI_COMPANION_SET() is cleared
-> subsequently, the above is not needed, but then using
-> ACPI_COMPANION_SET() is questionable overall.
+Note, we'd need to override PMU compatibles in sdm636.dtsi and
+sdm660.dtsi. Ideally it should come as the same patch.
 
-Agreed + smoothing over that by stashing and putting it back doesn't
-work because there is an additional call to acpi_bind_one() inbetween
-here and the one you reference.
-
-The arch_register_cpu() calls end up calling register_cpu() /
-device_register() / acpi_device_notify() / acpi_bind_one()
-
-With current code that fails (silently)
-If I make sure the handle is set before register_cpu() then it
-succeeds, but we end up with duplicate sysfs files etc because we
-bind twice.
-
-I think the only way around this is larger reorganization of the
-CPU hotplug code to pull the arch_register_cpu() call to where
-the acpi_bind_one() call is.  However that changes a lot more than I'd like
-(and I don't have it working yet).
-
-Alternatively find somewhere else to stash the handle, or just add it as
-a parameter to arch_register_cpu(). Right now this feels the easier
-path to me. arch_register_cpu(int cpu, acpi_handle handle)=20
-
-Would that be a path you'd consider?
-
-Jonathan
+>
+> Regards,
+> Bjorn
+>
 
 
+-- 
+With best wishes
+Dmitry
