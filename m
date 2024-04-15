@@ -1,190 +1,242 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow3-smtp.messagingengine.com (flow3-smtp.messagingengine.com [103.168.172.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFC31E896;
-	Mon, 15 Apr 2024 11:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D754D9FA;
+	Mon, 15 Apr 2024 11:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713180164; cv=none; b=K8YoW3jJYJSAfSN82R0soG/bSEkbLYFRvEHT98E9gsxnGZL1GcnwN0lcFsCmjxKiVlDD1EoiDNOq28GAR6IOCAaIhoLTlS4aFzEUrqs/C3ZibTuEHF0uhxD5lgjiFxjrsTuoBsYObzmffwfEMpqUG5XkCzaoZPebTZVQri+K9KU=
+	t=1713180190; cv=none; b=Oj0bbfwQDBEXwmJdkoWz9aDttyqKv+555VQiS8b2DY7+H5HPtBP8ENzDLUC4D1wUVJLUyhp4bMZFrtZpMitq22BA33MmZaagk7qQmNjCPMy7a885yVs3GeizIXelqgQ0gj41ivG4cjWjnUWCJqhKuEG3aHDWNA7xeyqTJYVECl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713180164; c=relaxed/simple;
-	bh=Ejm1aCCripul0+6BjYzjMjeA/lB7dWZX4qNm0cAvPz4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4GCqojaXil6yI0w+hgLNh2wW78NDNy3ujV9T7DAWy5tfXqcJ7xhOy1v5zNNR+YpQOevgFH8GcEXbUi0f/m7S73uCz2YDJ5bAAkGQBEpWz0WdqCXipXJ6qihamzxNsQWvoPh4U8dPBWfe6NKj+PBy7gosmB2C7BMhDJ+ivE4iEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1NHa8/P; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713180190; c=relaxed/simple;
+	bh=8xQH4bVJwjyOmsKPPc1k9MHQMfHspFpU6Z563Qi7xQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DAS1VG+zDPACnHoihWOf37lf7cM0IockzqBa7i/2Dmus8QwNjW9WHqyKIZaMfLWa2Oi58kDAovJIptSTa5e8iF0v4GENwRd/PXW1U82uVWGyaccIrdli1wCgSlMihiULQuM9pNCLqVh79j893Ylo8EexnENCq562BEH6VLt41os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=WyK5RMxR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=I/sEnOHj; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1NHa8/P"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516d3776334so3910140e87.1;
-        Mon, 15 Apr 2024 04:22:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713180161; x=1713784961; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIkONmgy9ZJbqCprg1mRBojeyA5GhfKbRxcMnCu9Nn8=;
-        b=H1NHa8/PLtCVKTu8wTVaq+H5tbuAaL0iJQh6RvapTH4H/8r9e4LcjtEg2kNvDzgllv
-         pVma8yvpKoYS6WzzS9tp8k+5Nmqp5E/AGqbjFeI42FKL46aCd/YcA4JUt2BC7aE5Sb++
-         D1wJysCgPF2Te+QIaztm9DuYwd0wkvqGSHNqJ7T/+CokNL5aM55Tj+1qLxqeLvlK7j9c
-         E+qZuuRk28osSV6USg8rEsM+kAUHv+1q6+ZcRyXiqZhXRf1JcHuWRmt+UxM17s+Mgq70
-         H2Jti4JSdgaAbrBK76Xq/QJ1g2ZUvCdgvofSo1aGGUeyloSEbsnJG0WxuZZQ3r9sgTG8
-         5j6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713180161; x=1713784961;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zIkONmgy9ZJbqCprg1mRBojeyA5GhfKbRxcMnCu9Nn8=;
-        b=Vc9T+hu7Z7ljj3+pExeDyr9lgbs42L9tL/jZ/HTgcP7CZzGC0sHuGvItcPYbKKql8i
-         vdQ7v/tdebhMblsKO5dw9uJuXXReTFt3Q3QPr5/L/KrayjMedRUm/Yn08m11u1gux6vA
-         u6vaO7yinBr5lr5TjJ2yhO4g0i0/GGWk5UhuAt1iI9cYTbQiThvql4E15GIZFZbndyVj
-         N+HUMPN0GMKROK47qmDc/Fu3nsyjfD6vIUj43dlQy/RJM6UqH+L+8F10Np1ROz5k8IyT
-         Ys9Ou7DX9/MmAOtftIwav77Z03n27GqldD7Le7pO+TUg6opm4mcWU/wCOA8oW9r+8RU9
-         wXXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIx5iGZvg/zFiZqhD2DF7b+WNguUz21OWAX39tdcWz6Fnxe+CvXihOIvqiWbC//L2TKDvdYGfDH/w7sDwkvqXtyM0L02zbf4eBilRi5NsvtyG1ZnWzr9Ih5teIY/yoiCVJzg2iEOx9Yytwf+NrPJsy59QR5FK89OAQr4u58Q==
-X-Gm-Message-State: AOJu0YzkBNgooD2g4fiTgn+hhiK3XqaWMWFTsk0Bj+fbRbDCLQz9nisl
-	Lz/DWk0RpLvGgrOatShTu1PZNaUYfwphT8bOLAVc2+hR4RsDGNL8
-X-Google-Smtp-Source: AGHT+IGsWH8hvkgWTnSmJZma8ocO18tq1tcLHnilXGa21I2AQO+Lmbt/Mi2Wcn2qRzx1DIlvjAyAyA==
-X-Received: by 2002:a19:915e:0:b0:516:d4c2:53eb with SMTP id y30-20020a19915e000000b00516d4c253ebmr6353557lfj.58.1713180160823;
-        Mon, 15 Apr 2024 04:22:40 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id k9-20020adff289000000b0033e45930f35sm11877262wro.6.2024.04.15.04.22.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 04:22:40 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 15 Apr 2024 13:22:38 +0200
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <olsajiri@gmail.com>
-Subject: Re: [PATCH v3 3/3] btf: Avoid weak external references
-Message-ID: <Zh0N_nJKgu43GvYY@krava>
-References: <20240415075837.2349766-5-ardb+git@google.com>
- <20240415075837.2349766-8-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="WyK5RMxR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I/sEnOHj"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailflow.nyi.internal (Postfix) with ESMTP id 0D459200217;
+	Mon, 15 Apr 2024 07:23:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 15 Apr 2024 07:23:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1713180184;
+	 x=1713183784; bh=6Dr+SIKKZT7PNCQdR2lrh0qUm7HIjWo0+FjXvOUmaCI=; b=
+	WyK5RMxRIJqlwD7LxUGlw1CilZiJJ1i4sbC5jgkj/1QNbGqdxRzFTZZlGifRxDCr
+	HC3KeYfZ1SffS55tL2Pd2Dgv2WShSF4V5TFqHfXKLiq5IsV59AWKXFOHAqs/8DdZ
+	rMLCl2sEmb0dA+7RA61JyObj+Hrx1MxJIta6flGcrY5aNyaN/yeA/0Iip3qo82pc
+	L3dp93CCnTPwx4WhXlo8pe2uYLJY5Awn/MgQ9c6sR2mpEG7qVMHau8cOmJFkzcpu
+	V518To9ZrAwSgDp/cGDwaUjeUkV0641+uPRLQ/BbS7SKfGQ5jP9Cwx0zGpydrfG5
+	YwOYPVJOdmFamG6NX+r3Bw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1713180184; x=
+	1713183784; bh=6Dr+SIKKZT7PNCQdR2lrh0qUm7HIjWo0+FjXvOUmaCI=; b=I
+	/sEnOHjesOSSMXzhqS0ce85cI56uFcs/U9o18DEJRK6kiXdobv2Xeby6KihMDqOD
+	VNm2hzgn/vDhZKG1ZrBX+1RRCvNo9fr0ez9eckyJAzq9DKEr5P8LN8p0mihb8pXZ
+	LLUKjFi7tz5pqdfBZDME3NEtKTbQw2rHD6b/f1FZ4pMb/aGlGhg6Vb61s2kVko5v
+	U414dCTOh6ahzkhcxCoQ8ytXstrCYyvByE05H61aPaqmtPtXENQeceNLDDvXOt3M
+	SSzpNzX1maWMLgOMpG238DOrzcFNKAwmNB9WO2CRSTWKzFS/t9CsR46pE/VmmBks
+	vsL2kQqKxPtdS8GSDepwQ==
+X-ME-Sender: <xms:Fg4dZpQHL-EBzMqUIHmSgxg61_3d_ugRRrNJvgQM3V08hbeBQsex7Q>
+    <xme:Fg4dZixOO752MfPDDxjuGdM6aSL9XAaPmL02sxQzPmSbkcBoMQyChn80nQbV7s5N_
+    AvnkkDHih24uPrPjjY>
+X-ME-Received: <xmr:Fg4dZu0obHf2MEzEhm4ihiOuTucNZTADMo1EYDYviIWAI60sakYreEe7UIbZxEFdHLU9W_RmFX01LjHncwvO6wmhYGLiOMM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejvddggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhk
+    lhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnh
+    gvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeefhfellefh
+    ffejgfefudfggeejlefhveehieekhfeulefgtdefueehffdtvdelieenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggv
+    rhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgv
+X-ME-Proxy: <xmx:Fg4dZhDHMYs_zmARhXOviBd7fXcD2PaTPjCt5mBN-Ch-yZbFoFDURw>
+    <xmx:Fg4dZijmDZyrUvQSuZyfVMZCwykx_Ck2axIGeYgcXQcYCWn-uCLKeA>
+    <xmx:Fg4dZlqLeUyGhXU01htwQAnNyWrp2CFc6fX2mEMlCVtIE9d8YM6twQ>
+    <xmx:Fg4dZtjCiLjGcVmQ1c62lyccZeL4fKE2YI-lMWddQG35DeQJHvfpaQ>
+    <xmx:Fw4dZmi7BKJGhkWhks2mWJZ3LNl_0d4mQye0w0ssI-5sTjT1Iz5CpNfT>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 15 Apr 2024 07:23:02 -0400 (EDT)
+Date: Mon, 15 Apr 2024 13:23:01 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC v3 1/7] net: ravb: Simplify poll & receive
+ functions
+Message-ID: <20240415112301.GF3156415@ragnatech.se>
+References: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
+ <20240415094804.8016-2-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240415075837.2349766-8-ardb+git@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240415094804.8016-2-paul.barker.ct@bp.renesas.com>
 
-On Mon, Apr 15, 2024 at 09:58:41AM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> If the BTF code is enabled in the build configuration, the start/stop
-> BTF markers are guaranteed to exist in the final link but not during the
-> first linker pass.
-> 
-> Avoid GOT based relocations to these markers in the final executable by
-> providing preliminary definitions that will be used by the first linker
-> pass, and superseded by the actual definitions in the subsequent ones.
-> 
-> Make the preliminary definitions dependent on CONFIG_DEBUG_INFO_BTF so
-> that inadvertent references to this section will trigger a link failure
-> if they occur in code that does not honour CONFIG_DEBUG_INFO_BTF.
-> 
-> Note that Clang will notice that taking the address of__start_BTF cannot
-> yield NULL any longer, so testing for that condition is no longer
-> needed.
-> 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Hi Paul,
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+I really like this patch!
 
-jirka
+One nit below.
 
-
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+On 2024-04-15 10:47:58 +0100, Paul Barker wrote:
+> We don't need to pass the work budget to ravb_rx() by reference, it's
+> cleaner to pass this by value and return the amount of work done. This
+> allows us to simplify the ravb_poll() function and use the common
+> `work_done` variable name seen in other network drivers for consistency
+> and ease of understanding.
+> 
+> This is a pure refactor and should not affect behaviour.
+> 
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 > ---
->  include/asm-generic/vmlinux.lds.h | 9 +++++++++
->  kernel/bpf/btf.c                  | 7 +++++--
->  kernel/bpf/sysfs_btf.c            | 6 +++---
->  3 files changed, 17 insertions(+), 5 deletions(-)
+>  drivers/net/ethernet/renesas/ravb.h      |  2 +-
+>  drivers/net/ethernet/renesas/ravb_main.c | 29 ++++++++++--------------
+>  2 files changed, 13 insertions(+), 18 deletions(-)
 > 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index e8449be62058..4cb3d88449e5 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -456,6 +456,7 @@
->   * independent code.
->   */
->  #define PRELIMINARY_SYMBOL_DEFINITIONS					\
-> +	PRELIMINARY_BTF_DEFINITIONS					\
->  	PROVIDE(kallsyms_addresses = .);				\
->  	PROVIDE(kallsyms_offsets = .);					\
->  	PROVIDE(kallsyms_names = .);					\
-> @@ -466,6 +467,14 @@
->  	PROVIDE(kallsyms_markers = .);					\
->  	PROVIDE(kallsyms_seqs_of_names = .);
+> diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+> index b48935ec7e28..71de2a7aa27c 100644
+> --- a/drivers/net/ethernet/renesas/ravb.h
+> +++ b/drivers/net/ethernet/renesas/ravb.h
+> @@ -1039,7 +1039,7 @@ struct ravb_ptp {
+>  };
 >  
-> +#ifdef CONFIG_DEBUG_INFO_BTF
-> +#define PRELIMINARY_BTF_DEFINITIONS					\
-> +	PROVIDE(__start_BTF = .);					\
-> +	PROVIDE(__stop_BTF = .);
-> +#else
-> +#define PRELIMINARY_BTF_DEFINITIONS
-> +#endif
-> +
->  /*
->   * Read only Data
->   */
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 90c4a32d89ff..6d46cee47ae3 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -5642,8 +5642,8 @@ static struct btf *btf_parse(const union bpf_attr *attr, bpfptr_t uattr, u32 uat
->  	return ERR_PTR(err);
+>  struct ravb_hw_info {
+> -	bool (*receive)(struct net_device *ndev, int *quota, int q);
+> +	int (*receive)(struct net_device *ndev, int budget, int q);
+>  	void (*set_rate)(struct net_device *ndev);
+>  	int (*set_feature)(struct net_device *ndev, netdev_features_t features);
+>  	int (*dmac_init)(struct net_device *ndev);
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index fd2679ce4e3d..33f8043143c1 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> @@ -759,7 +759,7 @@ static struct sk_buff *ravb_get_skb_gbeth(struct net_device *ndev, int entry,
 >  }
 >  
-> -extern char __weak __start_BTF[];
-> -extern char __weak __stop_BTF[];
-> +extern char __start_BTF[];
-> +extern char __stop_BTF[];
->  extern struct btf *btf_vmlinux;
->  
->  #define BPF_MAP_TYPE(_id, _ops)
-> @@ -5971,6 +5971,9 @@ struct btf *btf_parse_vmlinux(void)
->  	struct btf *btf = NULL;
->  	int err;
->  
-> +	if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-> +		return ERR_PTR(-ENOENT);
-> +
->  	env = kzalloc(sizeof(*env), GFP_KERNEL | __GFP_NOWARN);
->  	if (!env)
->  		return ERR_PTR(-ENOMEM);
-> diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
-> index ef6911aee3bb..fedb54c94cdb 100644
-> --- a/kernel/bpf/sysfs_btf.c
-> +++ b/kernel/bpf/sysfs_btf.c
-> @@ -9,8 +9,8 @@
->  #include <linux/sysfs.h>
->  
->  /* See scripts/link-vmlinux.sh, gen_btf() func for details */
-> -extern char __weak __start_BTF[];
-> -extern char __weak __stop_BTF[];
-> +extern char __start_BTF[];
-> +extern char __stop_BTF[];
->  
->  static ssize_t
->  btf_vmlinux_read(struct file *file, struct kobject *kobj,
-> @@ -32,7 +32,7 @@ static int __init btf_vmlinux_init(void)
+>  /* Packet receive function for Gigabit Ethernet */
+> -static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+> +static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
 >  {
->  	bin_attr_btf_vmlinux.size = __stop_BTF - __start_BTF;
+>  	struct ravb_private *priv = netdev_priv(ndev);
+>  	const struct ravb_hw_info *info = priv->info;
+> @@ -778,7 +778,7 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+>  	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
+>  	stats = &priv->stats[q];
 >  
-> -	if (!__start_BTF || bin_attr_btf_vmlinux.size == 0)
-> +	if (bin_attr_btf_vmlinux.size == 0)
->  		return 0;
+> -	for (i = 0; i < limit && rx_packets < *quota; i++, priv->cur_rx[q]++) {
+> +	for (i = 0; i < limit && rx_packets < budget; i++, priv->cur_rx[q]++) {
+>  		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
+>  		desc = &priv->rx_ring[q].desc[entry];
+>  		if (desc->die_dt == DT_FEMPTY)
+> @@ -881,13 +881,11 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+>  		desc->die_dt = DT_FEMPTY;
+>  	}
 >  
->  	btf_kobj = kobject_create_and_add("btf", kernel_kobj);
+> -	stats->rx_packets += rx_packets;
+> -	*quota -= rx_packets;
+> -	return *quota == 0;
+> +	return rx_packets;
+>  }
+>  
+>  /* Packet receive function for Ethernet AVB */
+> -static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+> +static int ravb_rx_rcar(struct net_device *ndev, int budget, int q)
+>  {
+>  	struct ravb_private *priv = netdev_priv(ndev);
+>  	const struct ravb_hw_info *info = priv->info;
+> @@ -904,7 +902,7 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+>  	int i;
+>  
+>  	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
+> -	for (i = 0; i < limit && rx_packets < *quota; i++, priv->cur_rx[q]++) {
+> +	for (i = 0; i < limit && rx_packets < budget; i++, priv->cur_rx[q]++) {
+>  		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
+>  		desc = &priv->rx_ring[q].ex_desc[entry];
+>  		if (desc->die_dt == DT_FEMPTY)
+> @@ -992,18 +990,16 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
+>  		desc->die_dt = DT_FEMPTY;
+>  	}
+>  
+> -	stats->rx_packets += rx_packets;
+
+Don't we still need to update the statistics? Same for ravb_rx_gbeth().
+
+> -	*quota -= rx_packets;
+> -	return *quota == 0;
+> +	return rx_packets;
+>  }
+>  
+>  /* Packet receive function for Ethernet AVB */
+> -static bool ravb_rx(struct net_device *ndev, int *quota, int q)
+> +static int ravb_rx(struct net_device *ndev, int budget, int q)
+>  {
+>  	struct ravb_private *priv = netdev_priv(ndev);
+>  	const struct ravb_hw_info *info = priv->info;
+>  
+> -	return info->receive(ndev, quota, q);
+> +	return info->receive(ndev, budget, q);
+>  }
+>  
+>  static void ravb_rcv_snd_disable(struct net_device *ndev)
+> @@ -1320,13 +1316,12 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+>  	unsigned long flags;
+>  	int q = napi - priv->napi;
+>  	int mask = BIT(q);
+> -	int quota = budget;
+> -	bool unmask;
+> +	int work_done;
+>  
+>  	/* Processing RX Descriptor Ring */
+>  	/* Clear RX interrupt */
+>  	ravb_write(ndev, ~(mask | RIS0_RESERVED), RIS0);
+> -	unmask = !ravb_rx(ndev, &quota, q);
+> +	work_done = ravb_rx(ndev, budget, q);
+>  
+>  	/* Processing TX Descriptor Ring */
+>  	spin_lock_irqsave(&priv->lock, flags);
+> @@ -1345,7 +1340,7 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+>  	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
+>  		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
+>  
+> -	if (!unmask)
+> +	if (work_done == budget)
+>  		goto out;
+>  
+>  	napi_complete(napi);
+> @@ -1362,7 +1357,7 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+>  	spin_unlock_irqrestore(&priv->lock, flags);
+>  
+>  out:
+> -	return budget - quota;
+> +	return work_done;
+>  }
+>  
+>  static void ravb_set_duplex_gbeth(struct net_device *ndev)
 > -- 
-> 2.44.0.683.g7961c838ac-goog
+> 2.39.2
 > 
+
+-- 
+Kind Regards,
+Niklas Söderlund
