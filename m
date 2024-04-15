@@ -1,148 +1,146 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FC23FE5D;
-	Mon, 15 Apr 2024 08:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A893BBCA;
+	Mon, 15 Apr 2024 08:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713170507; cv=none; b=hP1y2SnRI5FsI0PQaGy5AFqSroLMRXGhNZs5pCRG8t6idQa56KZ1QSoToYiqkKqBwHr38xpOrMdrNHikGrYNlnEIuSE8O/k/BZEAbIbG4gtuhx7mUM9UkB/2m3aIYm+HHoCNtm8E+Vsz1LcVCQdlBpJZOXU2ci9nVDn4R2FesV4=
+	t=1713170556; cv=none; b=Z47Ifpjn4O42C8dicDvgdey1ykQ58I7OBrxVY94S73+r8xAIzrS34Tv27ectGqDif/qawIKUIc/nDLF3GVMX6GNryc2OIuJxfzfNUEBw2zMHzgwRCWamzZrhYmztOq8z5Mo4Zg+Z6o/uvJEHlnvMWU7kolaHOPRQhgfFoemKkvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713170507; c=relaxed/simple;
-	bh=7SORiU4shsWpZ0cGSl/ZJwxVqtAvvRLpEiZ0sdTzGuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NiFaIkvaktuaYNXMzKqNnoTQvbYOHB1xU+/suM8w4Lzb1gjX4cl0TOh7Q1aEp+sv8x0jXsG8lKXOHdNZWecGX7n1xBgTHkKsl+TFDdBLX9q9p3QVlBGU1hUhAI7nWkoteNHr12IJtICq/hJV9RsLZ8HJyiSDJs5vt3zxRIO4iAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=L+D8zPfb; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713170556; c=relaxed/simple;
+	bh=R4RhSxKXlxRSRYlUtXmi2vUBrMvRbiLLEC4+h0KivfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1JVJshq4GvMeSDCD9gd4QGrGZl+71Mo/JsuDOz7yXtS3GUm39FH6Ok+Ao5D8+lTy8H8VoQDpxQJ30Zig6rh9eVorjQpBq0V50tuZhWsfNwGOfL1tslaYoaC/cf/pXfHGCXNjiZ4LErA59NUGc2m9pMh7uO2fB1iV+c/TY7kTWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YwurJmVr; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L+D8zPfb"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43F3PK4C023259;
-	Mon, 15 Apr 2024 08:41:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=egqo3iTg7vXMcfRfDBzI5al7YP7luBSca8DUzS4Mp8A=;
- b=L+D8zPfb6fU46rTtaTkxZ4nCRlftT+hXJZxP3BSbsbzb+4ZSxLuHkbAyQdXO+neP5ZZU
- nAvJBcuuRyxW49kAqJITqjdiMODmkpEVA6eGkI3mkdRROeyKPiDhUH//SH9k8kXMVCTZ
- iz+1a6kKNKfshw8iZg8+jTA2gwf8E4IfDn12EPeAucpwxRnIvJcAfgsFBQhKdRQ2Omwv
- BfOb8VHS9fOXVKjfDV5gVRzhIbSXr0Jrs1+/dtVbdbzbs7kNnV5/GBbk6A6bMeX4ZJva
- GeCCfkuib38WlvklNCcvviEIqXQujm9cs8vox8WANjIbIARyjofMrnvX6/DuMeMM5snv iQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xfhsd3ees-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 08:41:40 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43F8feVX029314;
-	Mon, 15 Apr 2024 08:41:40 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xfhsd3eem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 08:41:40 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43F7UxAT011111;
-	Mon, 15 Apr 2024 08:41:39 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg7326cfr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 08:41:38 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43F8fXQF47907286
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Apr 2024 08:41:35 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7376020043;
-	Mon, 15 Apr 2024 08:41:33 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 808C620040;
-	Mon, 15 Apr 2024 08:41:32 +0000 (GMT)
-Received: from [9.171.17.66] (unknown [9.171.17.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 15 Apr 2024 08:41:32 +0000 (GMT)
-Message-ID: <c7f6be91-6591-4b00-95c3-48417bf98ac1@linux.ibm.com>
-Date: Mon, 15 Apr 2024 10:41:32 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YwurJmVr"
+Received: from pendragon.ideasonboard.com (117.145-247-81.adsl-dyn.isp.belgacom.be [81.247.145.117])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B163F5B2;
+	Mon, 15 Apr 2024 10:41:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1713170506;
+	bh=R4RhSxKXlxRSRYlUtXmi2vUBrMvRbiLLEC4+h0KivfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YwurJmVrspapPm+kBHwP0RV3Q4ljefqSl+vnBSR0Yjn/liPfGDnARXb2YY0HLYAtl
+	 ROYFjB058LVmeTPkSM4s4IgfWgwfu5D/rxwVB742Lzc/jdcbO4WBeNGkAruaI9wvzC
+	 eiPZSWwr6eYEMjYEok1ouROhAD995bTKhLZrsqVU=
+Date: Mon, 15 Apr 2024 11:42:24 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alex Elder <elder@linaro.org>, corbet@lwn.net,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: coding-style: don't encourage WARN*()
+Message-ID: <20240415084224.GE25078@pendragon.ideasonboard.com>
+References: <20240414170850.148122-1-elder@linaro.org>
+ <20240414194835.GA12561@pendragon.ideasonboard.com>
+ <2024041503-affidavit-stopwatch-72d7@gregkh>
+ <20240415082529.GD25078@pendragon.ideasonboard.com>
+ <2024041511-goldmine-persevere-68f4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 01/11] net/smc: decouple ism_client from SMC-D
- DMB registration
-To: Wen Gu <guwen@linux.alibaba.com>, twinkler@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, wenjia@linux.ibm.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
- <20240414040304.54255-2-guwen@linux.alibaba.com>
-Content-Language: en-US
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20240414040304.54255-2-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: VyKdymiKN2yGTsfh4upxcjoyes97lM_-
-X-Proofpoint-ORIG-GUID: SoDffycIF7sHlVzV8EEaVAgQ31Cj4La0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_08,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2404010000 definitions=main-2404150057
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2024041511-goldmine-persevere-68f4@gregkh>
 
-
-
-On 14.04.24 06:02, Wen Gu wrote:
-> The struct 'ism_client' is specialized for s390 platform firmware ISM.
-> So replace it with 'void' to make SMCD DMB registration helper generic
-> for both Emulated-ISM and existing ISM.
+On Mon, Apr 15, 2024 at 10:33:42AM +0200, Greg KH wrote:
+> On Mon, Apr 15, 2024 at 11:25:29AM +0300, Laurent Pinchart wrote:
+> > On Mon, Apr 15, 2024 at 07:21:37AM +0200, Greg KH wrote:
+> > > On Sun, Apr 14, 2024 at 10:48:35PM +0300, Laurent Pinchart wrote:
+> > > > On Sun, Apr 14, 2024 at 12:08:50PM -0500, Alex Elder wrote:
+> > > > > Several times recently Greg KH has admonished that variants of WARN()
+> > > > > should not be used, because when the panic_on_warn kernel option is set,
+> > > > > their use can lead to a panic. His reasoning was that the majority of
+> > > > > Linux instances (including Android and cloud systems) run with this option
+> > > > > enabled. And therefore a condition leading to a warning will frequently
+> > > > > cause an undesirable panic.
+> > > > > 
+> > > > > The "coding-style.rst" document says not to worry about this kernel
+> > > > > option.  Update it to provide a more nuanced explanation.
+> > > > > 
+> > > > > Signed-off-by: Alex Elder <elder@linaro.org>
+> > > > > ---
+> > > > >  Documentation/process/coding-style.rst | 21 +++++++++++----------
+> > > > >  1 file changed, 11 insertions(+), 10 deletions(-)
+> > > > > 
+> > > > > diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> > > > > index 9c7cf73473943..bce43b01721cb 100644
+> > > > > --- a/Documentation/process/coding-style.rst
+> > > > > +++ b/Documentation/process/coding-style.rst
+> > > > > @@ -1235,17 +1235,18 @@ example. Again: WARN*() must not be used for a condition that is expected
+> > > > >  to trigger easily, for example, by user space actions. pr_warn_once() is a
+> > > > >  possible alternative, if you need to notify the user of a problem.
+> > > > >  
+> > > > > -Do not worry about panic_on_warn users
+> > > > > -**************************************
+> > > > > +The panic_on_warn kernel option
+> > > > > +********************************
+> > > > >  
+> > > > > -A few more words about panic_on_warn: Remember that ``panic_on_warn`` is an
+> > > > > -available kernel option, and that many users set this option. This is why
+> > > > > -there is a "Do not WARN lightly" writeup, above. However, the existence of
+> > > > > -panic_on_warn users is not a valid reason to avoid the judicious use
+> > > > > -WARN*(). That is because, whoever enables panic_on_warn has explicitly
+> > > > > -asked the kernel to crash if a WARN*() fires, and such users must be
+> > > > > -prepared to deal with the consequences of a system that is somewhat more
+> > > > > -likely to crash.
+> > > > > +Note that ``panic_on_warn`` is an available kernel option. If it is enabled,
+> > > > > +a WARN*() call whose condition holds leads to a kernel panic.  Many users
+> > > > > +(including Android and many cloud providers) set this option, and this is
+> > > > > +why there is a "Do not WARN lightly" writeup, above.
+> > > > > +
+> > > > > +The existence of this option is not a valid reason to avoid the judicious
+> > > > > +use of warnings. There are other options: ``dev_warn*()`` and ``pr_warn*()``
+> > > > > +issue warnings but do **not** cause the kernel to crash. Use these if you
+> > > > > +want to prevent such panics.
+> > > > 
+> > > > Those options are not equivalent, they print a single message, which is
+> > > > much easier to ignore. WARN() is similar to -Werror in some sense, it
+> > > > pushes vendors to fix the warnings. I have used WARN() in the past to
+> > > > indicate usage of long-deprecated APIs that we were getting close to
+> > > > removing for instance. dev_warn() wouldn't have had the same effect.
+> > > 
+> > > If you want to reboot a box because someone called an "improper" api,
+> > 
+> > I don't "want" to reboot. It came as a side effect when panic_on_warn
+> > was added, and worsened when its adoption increased. I won't argued for
+> > or against panic_on_warn, but WARN() serves some use cases today that I
+> > consider valid. If we want to discourage its usage, we need another API
+> > to cover those use cases.
+> > 
+> > > then sure, use WARN(), but that feels like a really bad idea.  Just
+> > > remove the api and fix up all in-kernel users instead.  Why wait?
+> > 
+> > There are multiple use cases. One of them is to make sure no new user of
+> > the old, deprecated behaviour is introduced. This is especially
+> > important when driver development spans multiple kernel releases, the
+> > development can start before the API behaviour changes, with the driver
+> > merged after the API change. This is something we've done multiple times
+> > in V4L2.
+> > 
+> > > If you want to show a traceback, then just print that out, but I've seen
+> > > that totally ignored as well, removing the api is usually the only way
+> > > to get people to actually notice, as then their builds break.
+> > 
+> > Does your experience tell that tracebacks are routinely ignored during
+> > development too, not just in production ?
 > 
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
-> ---
+> Yes, we have done this in the past in some driver core apis and nothing
+> ever changed until we actually deleted the apis.
 
-Just a thought:
-The client concept is really specific to s390 platform firmware ISM.
-So wouldn't it be nice to do something like:
+Let's keep WARN() + panic_on_warn then, it should help making people
+notice :-)
 
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 78cca4839a31..37dcdf2bc044 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -747,10 +747,9 @@ static int smcd_query_rgid(struct smcd_dev *smcd, struct smcd_gid *rgid,
-        return ism_query_rgid(smcd->priv, rgid->gid, vid_valid, vid);
- }
+Jokes aside, if we want to discourage new users of WARN() because of
+panic_on_warn, I'd like a WARN_NO_PANIC().
 
--static int smcd_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
--                            struct ism_client *client)
-+static int smcd_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
- {
--       return ism_register_dmb(smcd->priv, (struct ism_dmb *)dmb, client);
-+       return ism_register_dmb(smcd->priv, (struct ism_dmb *)dmb, &smc_ism_client);
- }
+-- 
+Regards,
 
- static int smcd_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
-
---------------
-
-This is not a real patch, just a sketch, but I hope you
-get the idea.
-
-
-This may be a step in the direction of moving the ism_client concept from 
-net/smc/smc_ism.c to drivers/s390/net/ism*
-
-
-I know that there are several dependencies to consider. 
-And I haven't looked at the other patches in this series yet in detail, to see how you solve
-things like smcd_register_dev. Seems like smcd_register_dmb() is the only one of the smcd_ops
-that you need for loopback and uses ism_client.
-
-
-
-Wenjia, Gerd, and others what do you think?
+Laurent Pinchart
