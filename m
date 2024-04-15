@@ -1,163 +1,147 @@
-Received: from mail-108-mta168.mxroute.com (mail-108-mta168.mxroute.com [136.175.108.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047B082481
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207EE1FDD;
+	Mon, 15 Apr 2024 16:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199437; cv=none; b=M1ha2PXlouTOz0qijc/E5r/ObedjZX8yGi2jLP+iSdgauLHvb3oY3Wloh6FQPTQwBIuE7CKvPvopUHLkJfg5UC3bG4SCt/byNbgR4eoVMiPae5bLz/+NUCnxTl0QtDONtLcEpYcqVrwxBTAU7WbYIa7rkXDynZyJL3jqzYb+h/Q=
+	t=1713199478; cv=none; b=m7wKyh4N6tJJ0qSV+uuOArA2AOxBuJmZ5Z3wyTinqjcYsVxaipidL6H67hivrZiUJeRrKLLqDHIjeh+jtPK8Fc99wb6UnSWNAbTQxp0e2HhWNAzRRVLdCJtoH8YguKnJ7BPb9PHtcUPo1C/Ceo+Uz3CUNrv67nrQD6KM2LJ34yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199437; c=relaxed/simple;
-	bh=EAgrrowhuxfvuA4IEIS00xQ8mSwdDWuzf1QzmetlHQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=txGbeo5joprXXRsM2/gLnnpheS2JgPOx1O43hMan65MCzPG94oDjhhP06KEidwPXSUDLvvzYOb6P0jPj40Zmgaumi1kZgQYL3VBwYtXLZ4KJDAAWbIH3533U9fe9bHBLYoMLqtiyNzREmLaFhYR+Ne0jEsFp0w23Zi6jCQ9Qg5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=MJM/iE2b; arc=none smtp.client-ip=136.175.108.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1713199478; c=relaxed/simple;
+	bh=/PeuD96WIZJSMjilmlalAw5Sh612uVNegKTxOfnIhCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHXQvW2MpWHh8jxTA0vndaUQVzDxMHk2lR1qGxg35GhBWSPElPUQflGOnj9XIzeFsvHWW2LTpXftkn5dDfVheYXvT4SGzBIEciHY/oxadzG2dEgQjTtqABrMAcYccGAfjyWt1hVNDgpBcamyjUWDpcekLss2+0afX9cJYuWZhvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiImsyMO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="MJM/iE2b"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta168.mxroute.com (ZoneMTA) with ESMTPSA id 18ee2a01b680003bea.011
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 15 Apr 2024 16:38:47 +0000
-X-Zone-Loop: a8b78ff32d7f98a19771cb4fe3488f7870545b8345f1
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UFJA6wHd6u5mXxnVb4m3GJPfiP5KjVZafLGU70HOark=; b=MJM/iE2blIwK8MorvyDIPebWQp
-	MXLRU6rrAKDgt19O4GS2lsOQPxCc+XvhhRAzSqZlhoU21/sRm2qKmAwNdi+LWsG/JnLt5bjCrK2XC
-	NCiSNpozQsjHtbnhwjhyOvmRr42A9G2ECEw8/sqWIB+oF6MgR/lWehNdK5I8mxpbHBdjmvGQJNBvl
-	d3jiFHZV6LXkAnOosmm+C+vdNOVMY85qRZC/CLP2jb28PFbdC9Q88OfbK8Sg3T02nGQYv4hANbQN4
-	cKCfBnRaBzjDOMQvLM43E3Qw5u/JT8/GenhrM8IxXYq71j9NPNg6nlOqbBxAYH7wuNzDwqRURMWBk
-	KLYFMTkg==;
-Message-ID: <59255bbe-8d26-4fe5-bd17-97dda92e1553@luigi311.com>
-Date: Mon, 15 Apr 2024 10:38:42 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiImsyMO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421BDC113CC;
+	Mon, 15 Apr 2024 16:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713199477;
+	bh=/PeuD96WIZJSMjilmlalAw5Sh612uVNegKTxOfnIhCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TiImsyMOvAhGFvPt+0Jnit7mkby93vTkBGiG2SQPOxSDq/k70rItcAceLzyahP2aU
+	 3Ym5JdHSA1n8l0qmqKaMQtRLw4QMjXmtIZ8kOdNEYy/BVy+qjoztuXOSYRm7gIUrtG
+	 dTo+UAlj4CXPF+Fn7I0C3v+ibIBax2NbysBOXbFObAqU6CAl38iC0k2amsjV8UDAf1
+	 AtjsttY8BUTr1wqpcgC7JWHZcHsHkIjBYhd7N3OS3vMBKvXPRV2J93X88ELOAfaITJ
+	 JNDe6d0CIwoeF0G6D1bDho5YGE3CkKXtvtEzz4m6pImy9C8WaAG8AESfT97Em4iCGD
+	 XVdZ+wUwEds6A==
+Date: Mon, 15 Apr 2024 17:44:32 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alexey Romanov <avromanov@salutedevices.com>
+Cc: neil.armstrong@linaro.org, clabbe@baylibre.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, vadim.fedorenko@linux.dev,
+	linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
+Subject: Re: [PATCH v7 19/23] dt-bindings: crypto: meson: support new SoC's
+Message-ID: <20240415-armrest-chokehold-e5027ecd4ef6@spud>
+References: <20240411133832.2896463-1-avromanov@salutedevices.com>
+ <20240411133832.2896463-20-avromanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/25] media: i2c: imx258: Make image geometry meet
- sensor requirements
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
- linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com, jacopo.mondi@ideasonboard.com,
- mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, sakari.ailus@linux.intel.com,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- pavel@ucw.cz, phone-devel@vger.kernel.org
-References: <20240414203503.18402-1-git@luigi311.com>
- <20240414203503.18402-3-git@luigi311.com> <6041186.lOV4Wx5bFT@steina-w>
-Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <6041186.lOV4Wx5bFT@steina-w>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: git@luigi311.com
-
-On 4/15/24 00:25, Alexander Stein wrote:
-> Hi,
-> 
-> Am Sonntag, 14. April 2024, 22:34:40 CEST schrieb git@luigi311.com:
->> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>
->> The output image is defined as being 4208x3118 pixels in size.
->> Y_ADD_STA register was set to 0, and Y_ADD_END to 3118, giving
->> 3119 lines total.
->>
->> The datasheet lists a requirement for Y_ADD_STA to be a multiple
->> of a power of 2 depending on binning/scaling mode (2 for full pixel,
->> 4 for x2-bin/scale, 8 for (x2-bin)+(x2-subsample) or x4-bin, or 16
->> for (x4-bin)+(x2-subsample)).
->> (Y_ADD_END – Y_ADD_STA + 1) also has to be a similar power of 2.
->>
->> The current configuration for the full res modes breaks that second
->> requirement, and we can't increase Y_ADD_STA to 1 to retain exactly
->> the same field of view as that then breaks the first requirement.
->> For the binned modes, they are worse off as 3118 is not a multiple of
->> 4.
->>
->> Increase the main mode to 4208x3120 so that it is the same FOV as the
->> binned modes, with Y_ADD_STA at 0.
->> Fix Y_ADD_STA and Y_ADD_END for the binned modes so that they meet the
->> sensor requirements.
->>
->> This does change the Bayer order as the default configuration is for
->> H&V flips to be enabled, so readout is from Y_STA_END to Y_ADD_STA,
->> and this patch has changed Y_STA_END.
->>
->> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->> Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
->> Signed-off-by: Luis Garcia <git@luigi311.com>
->> Reviewed-by: Pavel Machek <pavel@ucw.cz>
->> ---
->>  drivers/media/i2c/imx258.c | 26 +++++++++++++-------------
->>  1 file changed, 13 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
->> index 2dbafd21dd70..4a7048d834c6 100644
->> --- a/drivers/media/i2c/imx258.c
->> +++ b/drivers/media/i2c/imx258.c
->> [snip]
->> @@ -707,7 +707,7 @@ static int imx258_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
->>  	/* Initialize try_fmt */
->>  	try_fmt->width = supported_modes[0].width;
->>  	try_fmt->height = supported_modes[0].height;
->> -	try_fmt->code = MEDIA_BUS_FMT_SGRBG10_1X10;
->> +	try_fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
-> 
-> Does someone have access to the data sheet? I am wondering how the
-> arrangement of the pixel array is shown. I've the following (identical)
-> array for these sensors:
-> * imx290/imx327
-> * imx219
-> * imx415
-> 
-> G B G B
-> R G R G
-> G B G B
-> R G R G
->
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AauLJy3HD9QY9WGP"
+Content-Disposition: inline
+In-Reply-To: <20240411133832.2896463-20-avromanov@salutedevices.com>
 
 
-I assume this is what you are looking for
-https://photos.luigi311.com/share/Imk6odsR_44VYsRvfmRwBVoG1TMnXtI61PP4sjssbmKAcNEYuVPRa9W-vIU7rpa-Ask
+--AauLJy3HD9QY9WGP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- 
-> Yet each driver configures a different bus format:
-> 
-> * imx290.c: MEDIA_BUS_FMT_SRGGB10_1X10
-> * imx415.c: MEDIA_BUS_FMT_SGBRG10_1X10
-> * imx219.c: MEDIA_BUS_FMT_SRGGB10_1X10 (no flip)
-> 
-> imx219 actually defines all 4 10 Bit Bayer patterns and the comment
-> indicates this depends on how v or h flip is configured.
-> Reading the commit message apparently the same is true for this driver.
->> Still this is confusing as I would have expected flipping to be disabled by
-> default, expecting the same Bayer pattern order for all drivers. Can someone
-> shed some light?
-> 
-> Best regards,
-> Alexander
-> 
+On Thu, Apr 11, 2024 at 04:38:28PM +0300, Alexey Romanov wrote:
+> Now crypto module available at G12A/G12B/S4/A1/SM1/AXG.
+>=20
+> 1. Add new compatibles:
+>   - amlogic,g12a-crypto
+>   - amlogic,axg-crypto
+>   - amlogic,a1-crypto
+>   - amlogic,s4-crypto (uses a1-crypto as fallback)
 
-Flipping defaults are changed around looks like based on use cases. Patch 20
-is what actually brings in flipping and brings in the 4 definitions like you
-are expecting
+The commit message should mention why most of these devices are not
+compatible with eachother (be that different algorithms available etc)
 
-+	/* 10-bit modes. */
-+	MEDIA_BUS_FMT_SRGGB10_1X10,
-+	MEDIA_BUS_FMT_SGRBG10_1X10,
-+	MEDIA_BUS_FMT_SGBRG10_1X10,
-+	MEDIA_BUS_FMT_SBGGR10_1X10
+Thanks,
+Conor.
 
+>=20
+> 2. Add power-domains in schema, which is required only for A1.
+>=20
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> ---
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   | 24 +++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.=
+yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> index d3af7b4d5f39..23743701952a 100644
+> --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> @@ -11,8 +11,16 @@ maintainers:
+> =20
+>  properties:
+>    compatible:
+> -    items:
+> -      - const: amlogic,gxl-crypto
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - amlogic,s4-crypto
+> +          - const: amlogic,a1-crypto
+> +      - enum:
+> +          - amlogic,gxl-crypto
+> +          - amlogic,axg-crypto
+> +          - amlogic,g12a-crypto
+> +          - amlogic,a1-crypto
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -21,11 +29,23 @@ properties:
+>      items:
+>        - description: Interrupt for flow 0
+> =20
+> +  power-domains:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+>    - interrupts
+> =20
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: amlogic,a1-crypto
+> +    then:
+> +      required:
+> +        - power-domains
+> +
+>  additionalProperties: false
+> =20
+>  examples:
+> --=20
+> 2.34.1
+>=20
 
+--AauLJy3HD9QY9WGP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh1ZcAAKCRB4tDGHoIJi
+0tO6AP9x7P3GKoxerzltNOawstZRE73mkiQXZ84qfhSGloZOggEA38mkqZEFSXOe
+SDYdmAePKbFVRq3BsEG85zqyyN9JyAE=
+=TCep
+-----END PGP SIGNATURE-----
+
+--AauLJy3HD9QY9WGP--
