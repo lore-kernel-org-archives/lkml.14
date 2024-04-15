@@ -1,144 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920A522339;
-	Mon, 15 Apr 2024 06:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D8E1EB5E;
+	Mon, 15 Apr 2024 06:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.154.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713164267; cv=none; b=i43o8jlnNuPgxa1b52DrrtJ+9VA5HcGQZJL8OiPh883cXRGnHyjrEgMOgT85aEZNR0b1+mDlACExFswAIW6M2FZvSGQd1MBjUWlbA3TWsDbIFILHCSmaVGD/xNxXZpTCjZNrQdIjg3HRTNG1LtlVFhpXoxiicN3GZv6MSc63hgo=
+	t=1713164293; cv=none; b=K3dCU8LaIDgWHf6M9sIHWYi4EHMmFK/smduol/wDDyncY/G2KGWYTU3ebD3DxtDb/+Lp5TBODqDY4197t79djYxOgpmb9ce0Qg3rwE/F7zbeLXGoLVEFsyBSVLIcA1o8/cUNjb5ArWnsU7vJciPhT1P1M/toGzdsU4/TX4ZinyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713164267; c=relaxed/simple;
-	bh=l/5ikTUlCuGMYa+EP5RPrvI2YkQPp2fXN7lr6jPgAes=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVdy3o+V/OG3Et/Gv/biAjDBv/KeyUcJgmP0BWsu3h4wqxHq4FRu0Hs88fA3+Il7WoswxmUwgMpmnM5o36rkKN86jC+Rh1CU3RMqcWktWcVPIsrA5xSu3Ji1UOeEtXmTMCy+MdsNw17mfeKa9L6Hxj62+4xqNN3UKz3U1ErNAhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UhHWN/fS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713164293; c=relaxed/simple;
+	bh=5dQYE555WyWLOIGjnlUIwdBPsURAhH1u3CUIqS7Bd6I=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=rOneibs6YXWWZ4y354xHIn3It2FW49vtmnDk8wB/RnX2zgg0w4AWSaVpW6VHEKyxeLFx3S4niRnQ2eXX0/teYXFoEW1k64MCxbgQlzQ1vgP9VOMBqsVSoy8fKXfX5l8TLEsPbJKwTRpdh7OaOoAHGq8we2yNyWDyoLt03NRpqPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no; spf=pass smtp.mailfrom=miraculix.mork.no; dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b=JQknEPZT; arc=none smtp.client-ip=65.108.154.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraculix.mork.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UhHWN/fS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713164265; x=1744700265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l/5ikTUlCuGMYa+EP5RPrvI2YkQPp2fXN7lr6jPgAes=;
-  b=UhHWN/fS1Wph3+xF/dRu1LuXvYZTpmla2p+4YGsjIM9q10WWu/Vlb1MT
-   LlqtyLoQDO3fMt4CoMa2oe0g7b9oxbCnkfZfBT2kWT8Nz2htm+FvmWS8x
-   UGCmyHhoWrbZj13SEX7AYDMkwNumBjJ2rxD3y+qgy41gI7Vlg9TqUvL3i
-   8X05fsFe4ckPk04kQW/iZbNnrb0XJFzhnr8D0MXFAExOIps2MfJGbtPbb
-   MXQ4WQ2X12+dFkubcPBlH2QqqV/JiIcfQqkbyJkVpFGOyOiGShXMMkoUm
-   Ug+IYkRLNFcfwqPgti9JVF3N+WE9EiAU7QgS/46s8pnkAq5ybp6acFCEu
-   w==;
-X-CSE-ConnectionGUID: WkqBpKeSQb2kDd1salqHVw==
-X-CSE-MsgGUID: ae+opybOTBenKN77ZgUrAQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="12314998"
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="12314998"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:57:45 -0700
-X-CSE-ConnectionGUID: X+lfE9tNT46Ge5WTo6sBHw==
-X-CSE-MsgGUID: NUC9EHOjQ2GzK59pRUztmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="21910448"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmviesa007.fm.intel.com with SMTP; 14 Apr 2024 23:57:42 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Apr 2024 09:57:41 +0300
-Date: Mon, 15 Apr 2024 09:57:41 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] usb: typec: ucsi: add callback for connector
- status updates
-Message-ID: <ZhzP5bQe6zw1jmlu@kuha.fi.intel.com>
-References: <20240411-ucsi-orient-aware-v2-0-d4b1cb22a33f@linaro.org>
- <20240411-ucsi-orient-aware-v2-1-d4b1cb22a33f@linaro.org>
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="JQknEPZT"
+Received: from canardo.dyn.mork.no ([IPv6:2a01:799:10da:6900:0:0:0:1])
+	(authenticated bits=0)
+	by dilbert.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 43F6lJGr265481
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Mon, 15 Apr 2024 07:47:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+	t=1713163639; bh=ptLbaXHFz1SjMcJUxVZ1MKPDLiUChee6AAW1Ax7maBk=;
+	h=From:To:Cc:Subject:References:Date:Message-ID:From;
+	b=JQknEPZTeGKCD2KEeFUG9yDA2PEETWkDp9Ntu7+q6E1u0TzswuRdN3XgTIhipVnA6
+	 QW2Ld+vLwa/dFtImLTm4CN4QB8mucwg/Yt6d4Yc9vf5HVbwpxqHAEiNWrlLNVIdt6e
+	 a9quzffcyP60fDXlYkxUBpD/36Hfg0+7jTsjU6LA=
+Received: from miraculix.mork.no ([IPv6:2a01:799:10da:690a:d43d:737:5289:b66f])
+	(authenticated bits=0)
+	by canardo.dyn.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 43F6lJwZ367339
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Mon, 15 Apr 2024 08:47:19 +0200
+Received: (nullmailer pid 17569 invoked by uid 1000);
+	Mon, 15 Apr 2024 06:47:19 -0000
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To: Aleksander Morgado <aleksandermj@chromium.org>
+Cc: oneukum@suse.com, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux@roeck-us.net, linux-kernel@vger.kernel.org,
+        ejcaruso@chromium.org
+Subject: Re: [PATCH] usb: cdc-wdm: close race between read and workqueue
+Organization: m
+References: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org>
+Date: Mon, 15 Apr 2024 08:47:19 +0200
+In-Reply-To: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org> (Aleksander
+	Morgado's message of "Mon, 15 Apr 2024 05:42:06 +0000")
+Message-ID: <87mspvi0lk.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411-ucsi-orient-aware-v2-1-d4b1cb22a33f@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 1.0.3 at canardo
+X-Virus-Status: Clean
 
-On Thu, Apr 11, 2024 at 07:49:53AM +0300, Dmitry Baryshkov wrote:
-> Allow UCSI glue driver to perform addtional work to update connector
-> status. For example, it might check the cable orientation.  This call is
-> performed after reading new connector statatus, so the platform driver
-> can peek at new connection status bits.
-> 
-> The callback is called both when registering the port and when the
-> connector change event is being handled.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Aleksander Morgado <aleksandermj@chromium.org> writes:
+> On 3/14/24 11:50, Oliver Neukum wrote:
+>> wdm_read() cannot race with itself. However, in
+>> service_outstanding_interrupt() it can race with the
+>> workqueue, which can be triggered by error handling.
+>> Hence we need to make sure that the WDM_RESPONDING
+>> flag is not just only set but tested.
+>> Fixes: afba937e540c9 ("USB: CDC WDM driver")
+>> Signed-off-by: Oliver Neukum <oneukum@suse.com>
+>
+> We are not aware of all the details involved in this patch, but we had
+> to revert it in all the different ChromeOS kernel versions where we
+> had it cherry-picked, because it broke the MBIM communication with the
+> Intel XMM based Fibocomm L850 modem. Other modems shipped in
+> Chromebooks like the QC based Fibocomm FM101 don't seem to be
+> affected.
+>
+> Attached is an example output of mbimcli talking directly to the
+> cdc-wdm port (i.e. without ModemManager or the mbim-proxy). In the
+> example, we are receiving a bunch of different messages from previous
+> mbimcli runs. Looking at the timestamps, it looks as if we only
+> receive a message right after we have sent one, e.g. after each "open
+> request" we end up receiving responses for requests sent in earlier
+> runs; or something along those lines.
+>
+> Is this bad behavior of this specific modem chipset, and if so, how
+> can we workaround it? If you need any additional information or help
+> to test new patches, let us know.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+I'm not sure I understand what problem that patch is supposed to fix.
+Which means that everything I write could be completely wrong...
 
-> ---
->  drivers/usb/typec/ucsi/ucsi.c | 6 ++++++
->  drivers/usb/typec/ucsi/ucsi.h | 3 +++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index 3106e69050cd..7ad544c968e4 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1199,6 +1199,9 @@ static void ucsi_handle_connector_change(struct work_struct *work)
->  
->  	trace_ucsi_connector_change(con->num, &con->status);
->  
-> +	if (ucsi->ops->connector_status)
-> +		ucsi->ops->connector_status(con);
-> +
->  	role = !!(con->status.flags & UCSI_CONSTAT_PWR_DIR);
->  
->  	if (con->status.change & UCSI_CONSTAT_POWER_DIR_CHANGE) {
-> @@ -1588,6 +1591,9 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
->  	}
->  	ret = 0; /* ucsi_send_command() returns length on success */
->  
-> +	if (ucsi->ops->connector_status)
-> +		ucsi->ops->connector_status(con);
-> +
->  	switch (UCSI_CONSTAT_PARTNER_TYPE(con->status.flags)) {
->  	case UCSI_CONSTAT_PARTNER_TYPE_UFP:
->  	case UCSI_CONSTAT_PARTNER_TYPE_CABLE_AND_UFP:
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index 2caf2969668c..3e1241e38f3c 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -16,6 +16,7 @@
->  
->  struct ucsi;
->  struct ucsi_altmode;
-> +struct ucsi_connector;
->  struct dentry;
->  
->  /* UCSI offsets (Bytes) */
-> @@ -59,6 +60,7 @@ struct dentry;
->   * @sync_write: Blocking write operation
->   * @async_write: Non-blocking write operation
->   * @update_altmodes: Squashes duplicate DP altmodes
-> + * @connector_status: Updates connector status, called holding connector lock
->   *
->   * Read and write routines for UCSI interface. @sync_write must wait for the
->   * Command Completion Event from the PPM before returning, and @async_write must
-> @@ -73,6 +75,7 @@ struct ucsi_operations {
->  			   const void *val, size_t val_len);
->  	bool (*update_altmodes)(struct ucsi *ucsi, struct ucsi_altmode *orig,
->  				struct ucsi_altmode *updated);
-> +	void (*connector_status)(struct ucsi_connector *con);
->  };
->  
->  struct ucsi *ucsi_create(struct device *dev, const struct ucsi_operations *ops);
-> 
-> -- 
-> 2.39.2
+But to me it looks like the described issue is exactly what you should
+expect if that change ever triggers.  I believe we must resubmit the
+urb from service_outstanding_interrupt(). That's why it was added. See
+the explanation Robert wrote when introducing it:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d=
+rivers/usb/class/cdc-wdm.c?id=3Dc1da59dad0ebd3f9bd238f3fff82b1f7ffda7829
 
--- 
-heikki
+As for the XMM behaviour: it's been a long time since I tried any of
+those, but AFAIR one the major differences compared to Qualcomm was the
+strict queue handling in the firmware.  This caused a number of problems
+where the cdc-wdm driver wanted to skip a message for some reason.  So
+I'm not surprised that a bug like this is triggered by one of those
+modems. That's probably the only thing they are good for :-)
+
+
+
+Bj=C3=B8rn
