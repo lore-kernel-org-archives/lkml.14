@@ -1,139 +1,305 @@
-Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998E7EEE3;
-	Mon, 15 Apr 2024 20:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1BB156895
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713212850; cv=none; b=tEUpcojWQP5HeUkMaiQobXnm+liDkPL7G6KsyrwtTMRhScm/+BbcF+AGR+DL5cFXrPVThgUh6jeTeKMGQ0P+lFMgDTV8N2aKdfwlsbyzdZIBJk6JrRmqfgVqQEUy/SYU3fqHyL+Iok13DI36rY1PG2JFcPSK1PBqQvIUo8PShQU=
+	t=1713212868; cv=none; b=msQuVpg0NTRMWx84C6AkD+qOLSzyjV4pHy8gp5WG02Pion2qloxq1+opqNNkRAxcc0VCAt4a8iCcSctMyRuw29Vw/26V82whtDtB/q0BdVahA3CWs+557UoltCVrTngG5224lAcusELZ9qwrnB7th8Xhcc2mKB+g6mD4qLBDZEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713212850; c=relaxed/simple;
-	bh=mIsk5PxMpgJGxVIk8/AK0RH3ojqhs14Cpd+nHpxmtZA=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=rpBuJgfoQKhImpgnndHgG4EkAV4PVfNlKHV5Ab0J2IvAfx50dPRN5Ajwr1g2mIHys45oShUk4qvVrPQoywikfEQZ/VaBU8EWPZ4/ZWluUQ0QPZiQIgWgX0fBjfb4uD/RFYTiunsUjZNIQ247lj+WPqar/xLu0M8uVF3pmfyJHG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=kHByMwUC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IueU6UZA; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1713212868; c=relaxed/simple;
+	bh=YWWNLAuTWhqTxUfsMHMi21ZtDWl4VTUnXLF6UYpG08I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qUHZS8n8ZIBJZHu+l1Ysj/le8MHgoxvsb9hNMk8T5ElMiFcNZaAV/tFB6TGbzSItPGCDSaGOQ/KXuhFxiOuCI3CXbc+1QKYD8d+FxE0/hS9OmnakMuKJxDewXo9Shl6rkvCWcjnjcUGuksP7J/vfy/5rAoCYZCYV1IkyFinKDfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gibnX/Zv; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="kHByMwUC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IueU6UZA"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id C73CB1140156;
-	Mon, 15 Apr 2024 16:27:26 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Mon, 15 Apr 2024 16:27:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1713212846; x=1713299246; bh=xtZFpnMgm/
-	+Xn/twFBJ7lG1+0rbINzM3+6AgqkcVRW8=; b=kHByMwUCnvXsVc4H9aV+eZa1Ya
-	ZnkFc+5D9nWj/towPp62QKd8LURtw9QaamDTvbAG0SzFTXTfft2I9iw9jscCvYQ0
-	mDYB/RWe4UW03Y/ZjdsdVGw6pCw6d3KxNONnVp/cnWP2nwmSQZ+Ec5ErLzjYNrPw
-	FAwUqiABu6uYJ7LEHHJnZJfLuIKSUDWHGLyFxgHzoeIvwBvhTAouete00ZEGJUWS
-	kd0axSVUGoeFN74hKCQQI1+XqNsaCVXkZ199EiCK9ZSNcvMSoqD4WcMLCNrE7kJg
-	zSwPT8msXuFWdZza0lJTW7rE9rEZtVpwBycasFfcHCBPQzHshTNCxcV9Ocnw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1713212846; x=1713299246; bh=xtZFpnMgm/+Xn/twFBJ7lG1+0rbI
-	NzM3+6AgqkcVRW8=; b=IueU6UZASUdsTNtGwH+tg9mj1KLB5fZkZSsaWXS/ZpjQ
-	WC+wfN6frmzynTJH6njRVXy8sGIpywFeUr20kFcIZOkTCgdt+2x3mckP2mQlHh4A
-	kIizTWDqZAPXwfBoeeGgASRK04pr3tBT4W/W1EGMO54kI1KcJ4vwj4ExH23LkhBW
-	4ZFr11GUd48sBmx5zHKZOQj5HERXFwhl8TnRm61qKjGYLXsczgG3iV0KLnpH2jwP
-	VtxVmr3yH69wlevHfZKmhOwn/tYd2b4dJLUxr9A1NgScfH+z4hz4jcwa0Vv3D5Z7
-	MBK2eFEDYz5nBHU9NFcTNf/MXtmdmXd+2OJatn9nuw==
-X-ME-Sender: <xms:ro0dZoLMGkef_9U5jovO-jhSP5rD8Fx0MV-LXgqoI3PC-zRhQUte9g>
-    <xme:ro0dZoL78-Ubzj7B8QouBUdEqiEQ20sUUTJNM-O6_AiZ7GVyT_AN1C8fUnOrSWtNE
-    Nr0NPOba2HSYs9Bzac>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejvddgudehtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepieeufeejieevteduvdekteefledtveffvedu
-    hefffeejudefvdeijeegudegkefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
-    rg
-X-ME-Proxy: <xmx:ro0dZos6Eaz2z3-vzm9ZfZmz3Gtpx5hXWd4dqvSzJJOi2s5iXZf75Q>
-    <xmx:ro0dZlY79oTHJE--S-v2JJvciO8HZCC53GejgZ4mWL7swt4bPii_PQ>
-    <xmx:ro0dZvZLsllcnISD4rYL65NcHgfSJoA46v9Z4TLt1R48L9eYaJEKsQ>
-    <xmx:ro0dZhD41zxCFb-Z6lStzI3xnGS3o9mOiIJJAIH6Ie6kaPCtqi3kLg>
-    <xmx:ro0dZsTHu2ZNxKOKM-LKqwnhJUr35gkrRtv0bg_0SkyvTNB-QblqdRbG>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3D426C60097; Mon, 15 Apr 2024 16:27:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gibnX/Zv"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2220a389390so1622574fac.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713212864; x=1713817664; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4RJIY+n1THl4Og3bwdrrfCfeqvoZNA/rwl+yUf6pHzc=;
+        b=gibnX/ZvgkQlZs179K/3oJ2ywkWUo9Wys5cmJj/lEJoKeZWezki4ID4MJ70G9sPhyI
+         HIFl3kqOj6eKK/GAwjpUheT0lm96meXnEZXPdar8K1A5ftqGzobLeTVs5ST9fAucBVhO
+         2/1MtrOTCal+FL5mJwUbGu2UAWsAdnNqjUWw8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713212864; x=1713817664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4RJIY+n1THl4Og3bwdrrfCfeqvoZNA/rwl+yUf6pHzc=;
+        b=T2oggBGqIaY6MWMz1Jyf8Ih0JYY6pbgUTQ7GWlSaYF1ITpir+tQ34Z2g6QrqNiKQZV
+         8qyocqo4EiJql7RJ0sf6hubANQoxVEAJ3axv9AM8o/6BbiJy/4EzNF0I855Ws3kM/dgh
+         JNsDPIdRpIvVrNdJNYrq9jtA44qwAkuA9uMY3dOfVL2D7Zq1Od5hppeBfmn4ZpWoHPab
+         v/FDajMEnO+/Vr56lLkBQ5UE6xmQeM7VlM3TjDN6MxShTTX+kAURR/ncb8xS1eRWp3cb
+         1M3Jgbs1f6Ipjrm+OGs3wDW1MMiGvtaZZyuAfuLu4820fICjOYKQ1H2ZF4+elM3bRq9J
+         jwbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmIB3fyr05beob0ZpoMoqQh9e+dHn4ekAa8fNN8qz/muR+VCFXyKoOSKYGD4ClfGNhyCR+8uVf1s7sczFx/MzwlX6+S2aseq9BvKXU
+X-Gm-Message-State: AOJu0YxHmrqPEkLmyBEd/Rqk764SGNHfh2Q5X/aQYFWoHOSCyAsp1XK0
+	sM9VHdUIhEuotbyk2Ji/7HNmJPL4KJMg2+AWo5MBB0TRnPI1p5Z5CIsT8M0w/PMeh86qkLBI5TF
+	O66yhNBgRM7/LM8bVUKETjSscBEQqfnrdbnYi
+X-Google-Smtp-Source: AGHT+IGpgVPCV92d+R3UlsqTSLZBjek2VtqCidg00gg6yncTI8Fxx9kop3PSbTvCmdLmkjI54JVDIbqEx9QANbp9+sQ=
+X-Received: by 2002:a05:6870:249c:b0:235:b0b:87a6 with SMTP id
+ s28-20020a056870249c00b002350b0b87a6mr134718oaq.13.1713212863040; Mon, 15 Apr
+ 2024 13:27:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <539776c5-6243-464b-99ae-5b1b1fb40e4b@app.fastmail.com>
-In-Reply-To: <Zh2G85df29tPP6OK@google.com>
-References: <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
- <ZhR-WPx7dgKxziMb@google.com>
- <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
- <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
- <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
- <ZhcogDESvZmUPEEf@google.com>
- <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
- <Zh2CtKy1NfKfojzS@google.com>
- <484638e2-1565-454b-97f8-4fcc6514a69c@redhat.com>
- <Zh2G85df29tPP6OK@google.com>
-Date: Mon, 15 Apr 2024 16:28:19 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Hans de Goede" <hdegoede@redhat.com>
-Cc: "Peter Hutterer" <peter.hutterer@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>
-Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info keycodes
-Content-Type: text/plain
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-4-jeffxu@chromium.org>
+ <e1744539-a843-468a-9101-ce7a08669394@collabora.com>
+In-Reply-To: <e1744539-a843-468a-9101-ce7a08669394@collabora.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 15 Apr 2024 13:27:32 -0700
+Message-ID: <CABi2SkVnhcOpeA63XoKq97Uc_VyWdLUqYdOtUXxJ1fos5-Tq2g@mail.gmail.com>
+Subject: Re: [PATCH v10 3/5] selftest mm/mseal memory sealing
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	torvalds@linux-foundation.org, corbet@lwn.net, Liam.Howlett@oracle.com, 
+	surenb@google.com, merimus@google.com, rdunlap@infradead.org, 
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
-
-On Mon, Apr 15, 2024, at 3:58 PM, Dmitry Torokhov wrote:
-> On Mon, Apr 15, 2024 at 09:50:37PM +0200, Hans de Goede wrote:
->> Hi,
->> 
->> On 4/15/24 9:40 PM, Dmitry Torokhov wrote:
->> > On Wed, Apr 10, 2024 at 10:48:10PM -0400, Mark Pearson wrote:
->> >>
->> >> I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
->> > 
->> > Please see my response to Peter's letter. I think it very much depends
->> > on how it will be used (associated with the pointer or standalone as it
->> > is now).
->> > 
->> > For standalone application, recalling your statement that on Win you
->> > have this gesture invoke configuration utility I would argue for
->> > KEY_CONFIG for it.
->> 
->> KEY_CONFIG is already generated by Fn + F# on some ThinkPads to launch
->> the GNOME/KDE control center/panel and I believe that at least GNOME
->> comes with a default binding to map KEY_CONFIG to the control-center.
+On Mon, Apr 15, 2024 at 11:32=E2=80=AFAM Muhammad Usama Anjum
+<usama.anjum@collabora.com> wrote:
 >
-> Not KEY_CONTROLPANEL?
+> Please fix following for this and fifth patch as well:
 >
-> Are there devices that use both Fn+# and the doubleclick? Would it be an
-> acceptable behavior for the users to have them behave the same?
+> --> checkpatch.pl --codespell tools/testing/selftests/mm/mseal_test.c
 >
-Catching up with the thread, thanks for all the comments.
+> WARNING: Macros with flow control statements should be avoided
+> #42: FILE: tools/testing/selftests/mm/mseal_test.c:42:
+> +#define FAIL_TEST_IF_FALSE(c) do {\
+> +               if (!(c)) {\
+> +                       ksft_test_result_fail("%s, line:%d\n", __func__,
+> __LINE__);\
+> +                       goto test_end;\
+> +               } \
+> +       } \
+> +       while (0)
+>
+> WARNING: Macros with flow control statements should be avoided
+> #50: FILE: tools/testing/selftests/mm/mseal_test.c:50:
+> +#define SKIP_TEST_IF_FALSE(c) do {\
+> +               if (!(c)) {\
+> +                       ksft_test_result_skip("%s, line:%d\n", __func__,
+> __LINE__);\
+> +                       goto test_end;\
+> +               } \
+> +       } \
+> +       while (0)
+>
+> WARNING: Macros with flow control statements should be avoided
+> #59: FILE: tools/testing/selftests/mm/mseal_test.c:59:
+> +#define TEST_END_CHECK() {\
+> +               ksft_test_result_pass("%s\n", __func__);\
+> +               return;\
+> +test_end:\
+> +               return;\
+> +}
+>
+I tried to fix those warnings of checkpatch in the past, but no good
+solution. If I put the condition check in the test, the code will have
+too many "if" and decrease readability.  If there is a better
+solution, I'm happy to do that, suggestions are welcome.
 
-For FN+N (originally KEY_DEBUG_SYS_INFO) the proposal was to now use KEY_VENDOR there. My conclusion was that this is targeting vendor specific functionality, and that was the closest fit, if a new keycode was not preferred.
+>
+> On 4/15/24 9:35 PM, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > selftest for memory sealing change in mmap() and mseal().
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  tools/testing/selftests/mm/.gitignore   |    1 +
+> >  tools/testing/selftests/mm/Makefile     |    1 +
+> >  tools/testing/selftests/mm/mseal_test.c | 1836 +++++++++++++++++++++++
+> >  3 files changed, 1838 insertions(+)
+> >  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+> >
+> > diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/self=
+tests/mm/.gitignore
+> > index d26e962f2ac4..98eaa4590f11 100644
+> > --- a/tools/testing/selftests/mm/.gitignore
+> > +++ b/tools/testing/selftests/mm/.gitignore
+> > @@ -47,3 +47,4 @@ mkdirty
+> >  va_high_addr_switch
+> >  hugetlb_fault_after_madv
+> >  hugetlb_madv_vs_map
+> > +mseal_test
+> > diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selfte=
+sts/mm/Makefile
+> > index eb5f39a2668b..95d10fe1b3c1 100644
+> > --- a/tools/testing/selftests/mm/Makefile
+> > +++ b/tools/testing/selftests/mm/Makefile
+> > @@ -59,6 +59,7 @@ TEST_GEN_FILES +=3D mlock2-tests
+> >  TEST_GEN_FILES +=3D mrelease_test
+> >  TEST_GEN_FILES +=3D mremap_dontunmap
+> >  TEST_GEN_FILES +=3D mremap_test
+> > +TEST_GEN_FILES +=3D mseal_test
+> >  TEST_GEN_FILES +=3D on-fault-limit
+> >  TEST_GEN_FILES +=3D pagemap_ioctl
+> >  TEST_GEN_FILES +=3D thuge-gen
+> > diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/se=
+lftests/mm/mseal_test.c
+> > new file mode 100644
+> > index 000000000000..06c780d1d8e5
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/mm/mseal_test.
+> > +static void __write_pkey_reg(u64 pkey_reg)
+> > +{
+> > +#if defined(__i386__) || defined(__x86_64__) /* arch */
+> > +     unsigned int eax =3D pkey_reg;
+> > +     unsigned int ecx =3D 0;
+> > +     unsigned int edx =3D 0;
+> > +
+> > +     asm volatile(".byte 0x0f,0x01,0xef\n\t"
+> > +                     : : "a" (eax), "c" (ecx), "d" (edx));
+> > +     assert(pkey_reg =3D=3D __read_pkey_reg());
+> Use ksft_exit_fail_msg instead of assert to stay inside TAP format if
+> condition is false and error is generated.
+>
+I can remove the usage of assert() from the test.
 
-For the doubletap (which is a unique input event - not related to the pointer) I would like to keep it as a new unique event. 
+> > +int main(int argc, char **argv)
+> > +{
+> > +     bool test_seal =3D seal_support();
+> > +
+> > +     ksft_print_header();
+> > +
+> > +     if (!test_seal)
+> > +             ksft_exit_skip("sealing not supported, check CONFIG_64BIT=
+\n");
+> > +
+> > +     if (!pkey_supported())
+> > +             ksft_print_msg("PKEY not supported\n");
+> > +
+> > +     ksft_set_plan(80);
+> > +
+> > +     test_seal_addseal();
+> > +     test_seal_unmapped_start();
+> > +     test_seal_unmapped_middle();
+> > +     test_seal_unmapped_end();
+> > +     test_seal_multiple_vmas();
+> > +     test_seal_split_start();
+> > +     test_seal_split_end();
+> > +     test_seal_invalid_input();
+> > +     test_seal_zero_length();
+> > +     test_seal_twice();
+> > +
+> > +     test_seal_mprotect(false);
+> > +     test_seal_mprotect(true);
+> > +
+> > +     test_seal_start_mprotect(false);
+> > +     test_seal_start_mprotect(true);
+> > +
+> > +     test_seal_end_mprotect(false);
+> > +     test_seal_end_mprotect(true);
+> > +
+> > +     test_seal_mprotect_unalign_len(false);
+> > +     test_seal_mprotect_unalign_len(true);
+> > +
+> > +     test_seal_mprotect_unalign_len_variant_2(false);
+> > +     test_seal_mprotect_unalign_len_variant_2(true);
+> > +
+> > +     test_seal_mprotect_two_vma(false);
+> > +     test_seal_mprotect_two_vma(true);
+> > +
+> > +     test_seal_mprotect_two_vma_with_split(false);
+> > +     test_seal_mprotect_two_vma_with_split(true);
+> > +
+> > +     test_seal_mprotect_partial_mprotect(false);
+> > +     test_seal_mprotect_partial_mprotect(true);
+> > +
+> > +     test_seal_mprotect_two_vma_with_gap(false);
+> > +     test_seal_mprotect_two_vma_with_gap(true);
+> > +
+> > +     test_seal_mprotect_merge(false);
+> > +     test_seal_mprotect_merge(true);
+> > +
+> > +     test_seal_mprotect_split(false);
+> > +     test_seal_mprotect_split(true);
+> > +
+> > +     test_seal_munmap(false);
+> > +     test_seal_munmap(true);
+> > +     test_seal_munmap_two_vma(false);
+> > +     test_seal_munmap_two_vma(true);
+> > +     test_seal_munmap_vma_with_gap(false);
+> > +     test_seal_munmap_vma_with_gap(true);
+> > +
+> > +     test_munmap_start_freed(false);
+> > +     test_munmap_start_freed(true);
+> > +     test_munmap_middle_freed(false);
+> > +     test_munmap_middle_freed(true);
+> > +     test_munmap_end_freed(false);
+> > +     test_munmap_end_freed(true);
+> > +
+> > +     test_seal_mremap_shrink(false);
+> > +     test_seal_mremap_shrink(true);
+> > +     test_seal_mremap_expand(false);
+> > +     test_seal_mremap_expand(true);
+> > +     test_seal_mremap_move(false);
+> > +     test_seal_mremap_move(true);
+> > +
+> > +     test_seal_mremap_shrink_fixed(false);
+> > +     test_seal_mremap_shrink_fixed(true);
+> > +     test_seal_mremap_expand_fixed(false);
+> > +     test_seal_mremap_expand_fixed(true);
+> > +     test_seal_mremap_move_fixed(false);
+> > +     test_seal_mremap_move_fixed(true);
+> > +     test_seal_mremap_move_dontunmap(false);
+> > +     test_seal_mremap_move_dontunmap(true);
+> > +     test_seal_mremap_move_fixed_zero(false);
+> > +     test_seal_mremap_move_fixed_zero(true);
+> > +     test_seal_mremap_move_dontunmap_anyaddr(false);
+> > +     test_seal_mremap_move_dontunmap_anyaddr(true);
+> > +     test_seal_discard_ro_anon(false);
+> > +     test_seal_discard_ro_anon(true);
+> > +     test_seal_discard_ro_anon_on_rw(false);
+> > +     test_seal_discard_ro_anon_on_rw(true);
+> > +     test_seal_discard_ro_anon_on_shared(false);
+> > +     test_seal_discard_ro_anon_on_shared(true);
+> > +     test_seal_discard_ro_anon_on_filebacked(false);
+> > +     test_seal_discard_ro_anon_on_filebacked(true);
+> > +     test_seal_mmap_overwrite_prot(false);
+> > +     test_seal_mmap_overwrite_prot(true);
+> > +     test_seal_mmap_expand(false);
+> > +     test_seal_mmap_expand(true);
+> > +     test_seal_mmap_shrink(false);
+> > +     test_seal_mmap_shrink(true);
+> > +
+> > +     test_seal_merge_and_split();
+> > +     test_seal_zero_address();
+> > +
+> > +     test_seal_discard_ro_anon_on_pkey(false);
+> > +     test_seal_discard_ro_anon_on_pkey(true);
+> > +
+> > +     ksft_finished();
+> > +     return 0;
+> The return isn't needed as ksft_finished() calls exit() with right exit c=
+ode.
+>
+Sure. I can remove "return 0"
 
-I think it's most likely use would be for control panel, but I don't think it should be limited to that. I can see it being useful if users are able to reconfigure it to launch something different (browser or music player maybe?), hence it would be best if it did not conflict with an existing keycode function. I also can't confirm it doesn't clash on existing or future systems - it's possible.
+Thanks
+-Jeff
 
-FWIW - I wouldn't be surprised with some of the new gaming systems we're seeing (Steamdeck, Legion-Go, etc), that a doubletap event on a joystick might be useful to have, if the HW supports it?
+- Jeff
 
-Mark
+> > +}
+>
+> --
+> BR,
+> Muhammad Usama Anjum
