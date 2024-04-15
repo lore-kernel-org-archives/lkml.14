@@ -1,41 +1,53 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0809478C78;
-	Mon, 15 Apr 2024 15:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F97080BF5;
+	Mon, 15 Apr 2024 15:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713195163; cv=none; b=WEo9P1+yxoQneVVww4QkyaEuoMu3tQnCvIz1MAM5eYUzmsmo1CUdawmewKHQzacavey9E2VR5KG/e5XdJikKvW9UafXr7TaSlvIWVHsET7hdEOE3QpFt8P8nuqC4HkQsfI+cf5P6hZnfSXjHtnpEeUiXk0kTwzlMJ7pUs6sFrcY=
+	t=1713195165; cv=none; b=GpX9TsoZyriAkmQtDRvDL/Fhy+GGKqFU1KDzIWbJM4AQRpDcvZ3nsQ8meZwVnAeSA2G8puytZa3+821e/5jPMDmhvTRMuMgBowF+hFwH39PB4AzvKQt2w0NwNp8gIrlRq1opRK1gGdvQeIc5VqZfBzlofMejZDbTpn0HxNuUVBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713195163; c=relaxed/simple;
-	bh=0pFnxBdv2Aw+FFWBe7jdyVdRMZ4i1+0Pu9uZ+7wnjz8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pjrH24mKTVqO2PyA2gOjWAo9ugWxEKc+oXBC22FjR/QsP2muoBCrNVRSTgwh5p79KchRwfhLzT2nMcP0lBlVWdfZsmydbk//JLZv+vVtBRffqSS/bQlpuUHucQ/z6vyUNcqiQROoSR6wEC2WwVS1jDBQeCUyieM2UKF3YMW/pTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=c7p6I8OG; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713195165; c=relaxed/simple;
+	bh=xQYU0e7X39DSajVS8rhXQ8Da6tifi91BKqm4wTgtmCs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XSh4M5hfEkywgTc2CW8idDkQN/E4yCHDXHh2FU5W5ZFaF1AKb9l2EzJStcWIHgIQSC0Jdg2S5jYd1ZLT5vaCM5mvneI6JtAaTYqyt+R0wkxSn3Iuzm6m91aOW9oPNm++Xz1HRQVsgj97/bjwb+wvEX9l2fb+GEHycKRF9wc63GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9zao9fW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="c7p6I8OG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713195159;
-	bh=0pFnxBdv2Aw+FFWBe7jdyVdRMZ4i1+0Pu9uZ+7wnjz8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c7p6I8OGVtjkOFs/1NKsBL6gVO0NvGXc7gi16HBlL/v5UpI0gZQZMmPOuPPSWlc9N
-	 E7dn6PFZ0pkmgInPQkZcYOpmmyOxPC+yn1eWsBXvDwcmh9K+j2z3kdlSwRp+VdAAvE
-	 eI3Asuas45xxr1VP+TXHf73nqR/kE788IK6Spy40iumI72p7iWzDvcfZb5pcvSwA+y
-	 aIv38lb7FTuy42cZtmKFgOzOQBBk0jSPMzXFTOpRpO3P7oo9yV+AsMAUX+OZCR01rs
-	 lfiiH7tL8pAs9qnL6+uPLeaRg8Pig4fVeccwUV0YNnO739YW3oEwlEWTxf/0BmEjrf
-	 bl8kSmDK6WhXQ==
-Received: from [192.168.42.226] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2E822378201A;
-	Mon, 15 Apr 2024 15:32:38 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 15 Apr 2024 11:32:16 -0400
-Subject: [PATCH 2/2] selftests: power_supply: Make it POSIX-compliant
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9zao9fW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B1E3C4AF08;
+	Mon, 15 Apr 2024 15:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713195164;
+	bh=xQYU0e7X39DSajVS8rhXQ8Da6tifi91BKqm4wTgtmCs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=q9zao9fWypDb5owZQLC9RQqNQgusD6wLSs9G1KIccnC9I1OE92AdBFYfxrbwsfXtB
+	 7pY5Uox28KLcfro/G3puHy6GnGGUjzLaqhvNwDa7Rb4RjxUGXjmhrnyEnzSvErupr0
+	 ixX/7RMQBasUr1QaY9Wq4W2wUyOD3C0F4QTdwT62mpyTTkXVQwXBlmAPkC63w4i2h/
+	 MB7yX3UUrqT8y9rUxGV7NhHL/SIGNzwdE5gGCo/zp1MaUBZsmb6uilJht0uSD38rO1
+	 sZBOpIiRr/sJTbhjKzTNupj7fJ3IzJboan3tVNcjAJsEIdPn3JK7TObKnVjpxsDBCe
+	 gbDEO1O1DuXDQ==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hannah Peuckmann <hannah.peuckmann@canonical.com>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Walker Chen <walker.chen@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Xingyu Wu <xingyu.wu@starfivetech.com>
+Subject: Re: [PATCH v1 0/2] riscv: dts: starfive: visionfive 2: Remove non-existing hardware
+Date: Mon, 15 Apr 2024 16:31:19 +0100
+Message-ID: <20240415-tabasco-avalanche-5dc660e5701a@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415125033.86909-1-hannah.peuckmann@canonical.com>
+References: <20240415125033.86909-1-hannah.peuckmann@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,44 +55,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=807; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=m4UTRyLnDIb2TXMDA83B0GKpyfK7QjI3ZTJ599y3sUo=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGmyHu6KF62be57ZP1D6xSz6W2Jmp+9BWfWp1x2/H3fdn mirWXWqo5SFQYyDQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABPJK2D4K/Hj5Y5rdl6rq1qP mC6pEA5IOiHySJTZZ8v8O0/eb/31upjhr+Dq3ncGMyZuOur6TUzTL+v/BgHVrwZidSH8H29OFet w5QcA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240415-supply-selftest-posix-sh-v1-2-328f008d698d@collabora.com>
-References: <20240415-supply-selftest-posix-sh-v1-0-328f008d698d@collabora.com>
-In-Reply-To: <20240415-supply-selftest-posix-sh-v1-0-328f008d698d@collabora.com>
-To: Shuah Khan <shuah@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, 
- Mike Looijmans <mike.looijmans@topic.nl>, kernel@collabora.com, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.13.0
 
-There is one use of bash specific syntax in the script. Change it to the
-equivalent POSIX syntax. This doesn't change functionality and allows
-the test to be run on shells other than bash.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Reported-by: Mike Looijmans <mike.looijmans@topic.nl>
-Closes: https://lore.kernel.org/all/efae4037-c22a-40be-8ba9-7c1c12ece042@topic.nl/
-Fixes: 4a679c5afca0 ("selftests: Add test to verify power supply properties")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- tools/testing/selftests/power_supply/test_power_supply_properties.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, 15 Apr 2024 14:50:31 +0200, Hannah Peuckmann wrote:
+> This series fixes the device tree for the VisionFive 2 which has nodes for
+> non-existing hardware which should have been left to overlays. It also results
+> in error on boot when both both the TDM and I2S drivers tries to claim GPIO 44.
+> 
+> Hannah Peuckmann (2):
+>   riscv: dts: starfive: visionfive 2: Remove non-existing TDM hardware
+>   riscv: dts: starfive: visionfive 2: Remove non-existing I2S hardware
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/power_supply/test_power_supply_properties.sh b/tools/testing/selftests/power_supply/test_power_supply_properties.sh
-index df272dfe1d2a..a66b1313ed88 100755
---- a/tools/testing/selftests/power_supply/test_power_supply_properties.sh
-+++ b/tools/testing/selftests/power_supply/test_power_supply_properties.sh
-@@ -23,7 +23,7 @@ count_tests() {
- 	total_tests=0
- 
- 	for i in $SUPPLIES; do
--		total_tests=$(("$total_tests" + "$NUM_TESTS"))
-+		total_tests=$((total_tests + NUM_TESTS))
- 	done
- 
- 	echo "$total_tests"
+Applied to riscv-dt-fixes, thanks. I should've probably realised this
+when I merged them - thinking back I think I might even have had to do a
+conflict resolution. Sorry about this.
 
--- 
-2.44.0
+[1/2] riscv: dts: starfive: visionfive 2: Remove non-existing TDM hardware
+      https://git.kernel.org/conor/c/dcde4e97b122
+[2/2] riscv: dts: starfive: visionfive 2: Remove non-existing I2S hardware
+      https://git.kernel.org/conor/c/e0503d47e93d
 
+Thanks,
+Conor.
