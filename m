@@ -1,391 +1,408 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F43D82D93
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89701156993
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713215842; cv=none; b=JDXau7uJrHteuuAtEtW6WImTog7a/b4BiV99ZMxoht7B4ZAoIRt3MHq4Dn28BpQDXUw7BDXiUFgx1UOWFe9KzSERC1TIH0gUdyJAjYhbvxgsIvbxkWwFa4uY+nCrFhjnhJvxW0XEkSC4i9qxzSB8RCDZmLRsxF0lRhF8mNSRRp0=
+	t=1713215856; cv=none; b=IvZVFf2n+rBuekljJiAw2HMEk2IiRSjFGiIc4oE25yUz+J+Je92ruD6wET5Mar3kd7VQVy8+wmUvnFj/jkhDe15h8Gz4MoKID7Bt1jBOY8K4bI2BQB8VA+dnCNIuLQ0FrHIPiE4zFkM5Z+LD5Ng0Wle67s6YUiVkfu2gafQtREU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713215842; c=relaxed/simple;
-	bh=n/UV1lOaJcDiiDP6HZq55kzXr38qVpECvewbDp+jy30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=tLRYeOTwkMJn3maqWRQY0uV8aI92SFqRuLsqKp0gQWwzrkuG/OXNbyqiXJYo7YFxSw9w7hCpcM1A31mT/g5rq0OnBURaRi0w3/VfPqIZG/QPyuo96whG48Cy2iVzlnBI5eCDppqogsirr4kU5eiPcgueJ9YKoTK5Ku7MvbgKAZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=e9jbcUcA; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1713215856; c=relaxed/simple;
+	bh=Sy823FEfRHnC8HzR/D1+W7APBmqncD1Wzfp2tmH5PQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pks3r68Tdvvu/ISX5x6TTDzb9kRQaWYLbAPZlYuitW91g7THg6RNDd8ijVSZYaxy+zvfVQC+Z1n/BDxPGZQjtCtnd6mnWr3gp7XmuMnMQf4eTj3jU0z2ifwVDX6CFvP7yOyjgmm5qB/XFQ1bfFsQO0kP1LJyg2KiQI/KeyKe5EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KTHEzNp3; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e9jbcUcA"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240415211718euoutp0241af9613a2a311b5c6084ae8eca49aea~GkLpV0lpm0485804858euoutp02D
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:17:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240415211718euoutp0241af9613a2a311b5c6084ae8eca49aea~GkLpV0lpm0485804858euoutp02D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1713215838;
-	bh=ORkChA2wTbRw2dbB04fHWYzokvyhGGEPeG4l5SsOJ9U=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=e9jbcUcA/NX99MPXWcNRbKXH5lY9hU+Dd/4H37OQDzLVMYpbcltMwcMBWtrb7G3XO
-	 thkFhPsg6aUrOp5XlueOh/+hVNzLpDBCjZqtw0ZjeAafALwiA3Ziv/hAyL03JDzIPX
-	 tmHPN+bVHy6SOitRt0nIf9qdW71vPwZlUjB0FQlQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240415211717eucas1p265b567a26594b4f1321a13a123711c19~GkLoT-WDL2242922429eucas1p25;
-	Mon, 15 Apr 2024 21:17:17 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id B7.2F.09620.D599D166; Mon, 15
-	Apr 2024 22:17:17 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240415211716eucas1p10050cc8d4024707dd6f6331111cd3ce1~GkLnUJ-1S1437514375eucas1p19;
-	Mon, 15 Apr 2024 21:17:16 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240415211716eusmtrp2900e9ed80641738dd8a328873d9c318e~GkLnTkrr-0308803088eusmtrp2W;
-	Mon, 15 Apr 2024 21:17:16 +0000 (GMT)
-X-AuditID: cbfec7f5-d31ff70000002594-48-661d995dd8ab
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 5C.B3.09010.B599D166; Mon, 15
-	Apr 2024 22:17:15 +0100 (BST)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240415211715eusmtip238e929d6736a7cc9fcb3bafdccf1ef91~GkLm2iS-u0268802688eusmtip2x;
-	Mon, 15 Apr 2024 21:17:15 +0000 (GMT)
-Message-ID: <d3eb9f21-f3e1-43ec-bf41-984c6aa5cfc8@samsung.com>
-Date: Mon, 15 Apr 2024 23:17:15 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KTHEzNp3"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6eb7c4e9015so759407a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 14:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713215852; x=1713820652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DW6PQj3SaOTjmagCaKYOskmDQLmKW6e2Yir85LeE108=;
+        b=KTHEzNp3BeQcaveu99B8IPwjTV3kGNNC0Vveg1qzmXA34MKm88/E4JlzmKOh/D3UfL
+         +qHvsi0cEORrmQKPn/+iYT2iViWcku6+eaBoKN8NuCzboDL95G5k78N5Pgg12GIpWpjg
+         j9GuZ/hI4aD3dBe96TzEJFwaTasBjMqf1IVNI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713215852; x=1713820652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DW6PQj3SaOTjmagCaKYOskmDQLmKW6e2Yir85LeE108=;
+        b=D5puTMvQ/J9xP5gal59/FYuLg0281aEaRcWB4xD+IfRZzEDfZuhZr4bBRyFSjVZahM
+         mplVC/abGsd+J6pfSKFgOQBp5MUp9rlfK7dGYS0F1ZJcB7b5OLUfvWNk44XPszyn/5Np
+         TXjEiFzxj548bomBX511OZ1JBDYApRTK7erAOQDf8PMt62C8ZK1PbPjMi8EZAY5TNPO4
+         IdM88FgZ0J4kb+H2Tc5jPT2efb3ozSFd7nXuU7VPwmZgwAGjM6jwcSM4VINngzAWghBq
+         lUDgP0Kbg5nMzJ5utJfrPGHPCoIF3O10BohfPCklSH5YqEEaiC46HWh91mhYZ5kMlR6B
+         gwKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxSAryL7F06Dgp4NIVeik1UWej8wXHf1015kBCPPez2CQsb45xbXZDVvuq/1IEcYUiE1DSF4ZSRpJkcGnIXEBNAh19YklOILBDVKiI
+X-Gm-Message-State: AOJu0YwH4F80LjrcB/AfDQHJkV1aJfVo1HPn5uTgcWe6r174eo6yim86
+	ILceSTTwQsTAsYV1hIE50FVYoBfMgzNrRcpAiVzAF26sIN6+7qiQIc65rspjCtkmSF9IznNnaYN
+	4ww==
+X-Google-Smtp-Source: AGHT+IFB1wZJRpglWHqa8uD8C1WWkrLjDONtj8s/Vy5AQca8V1yY9M/UCpnpoCHksMa9CFOOHhtTDg==
+X-Received: by 2002:a05:6830:18db:b0:6eb:895c:4c4b with SMTP id v27-20020a05683018db00b006eb895c4c4bmr1976550ote.26.1713215852517;
+        Mon, 15 Apr 2024 14:17:32 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id i3-20020a9d68c3000000b006eb842c2c1fsm354655oto.9.2024.04.15.14.17.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 14:17:31 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c717b7b93aso296926b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 14:17:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1DGIJLkRJ4Vg6qWPSDFhN/UypfXo9viw/AzP3M39yAKLnEJTrKqkcxt7+t9pDYs0+nXsFVO3MN2moLXLR+SwWJn4NOsrNVabQI7MH
+X-Received: by 2002:a05:6122:882:b0:4c8:90e5:6792 with SMTP id
+ 2-20020a056122088200b004c890e56792mr10380741vkf.7.1713215829531; Mon, 15 Apr
+ 2024 14:17:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/15] tty: msm_serial: use dmaengine_prep_slave_sg()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn
-	Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-arm-msm@vger.kernel.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20240405060826.2521-12-jirislaby@kernel.org>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djP87qxM2XTDK51M1ts67CxaF68ns3i
-	3VwZi47J21ksJu4/y25xedccNoszi3vZHdg9Nq3qZPO4c20Pm8f+uWvYPT5vkgtgieKySUnN
-	ySxLLdK3S+DK+DZzG3tBt1fFj5/PGBsYN1l1MXJySAiYSFxseMnWxcjFISSwglHi3olzjBDO
-	F0aJGT/nsUI4nxkltj9dwAjTcvjGInaIxHJGiYk/p0K1fGSUWHf3HztIFa+AncTESZOYQGwW
-	AVWJ9z/+QMUFJU7OfMICYosKyEvcvzUDLC4s4CnxtOU2M4gtIuAlcWryE7ChzAKbGSUudkxi
-	BUkwC4hL3HoyH2wom4ChRNfbLjYQm1PASuL/lSXMEDXyEtvfzmEGaZYQuMIhsb/tGzPE3S4S
-	36+cZoKwhSVeHd/CDmHLSPzfCTIUpKGdUWLB7/tQzgRGiYbnt6C+tpa4c+4X0DoOoBWaEut3
-	6UOEHSXm7LjFChKWEOCTuPFWEOIIPolJ26YzQ4R5JTrahCCq1SRmHV8Ht/bghUvMExiVZiGF
-	yywkb85C8s4shL0LGFlWMYqnlhbnpqcWG+ellusVJ+YWl+al6yXn525iBKae0/+Of93BuOLV
-	R71DjEwcjIcYJTiYlUR4W4Rl04R4UxIrq1KL8uOLSnNSiw8xSnOwKInzqqbIpwoJpCeWpGan
-	phakFsFkmTg4pRqY9AR055et/F6/7rzjJC6LaTreSWdudyy6F6VfYN9ru1GpznRjype79+c6
-	zmBylT/PXPvr64M9X5LNF6W0Szz2PC16bVGx974ji++8fxPMKLfq+YHKFPe1khGB+/Unljxl
-	36/WNvnb0aIZUfy2ixszZAUvznyr9DF1sbzdnZcxLGm5FZ+2Mc4PCLh5UyfRqjRXSsvS93zr
-	0wTvVZe3i2zXiV77lrXLhGdnxrQ5/y44OjY0Z853c5m4Y//NR7kXznts28346Kv1VQsnX+ME
-	Eaa/QYZfDTgFby+fUezqePa6Q1PhYd23NQLr5n92Cp7SrSdfXXO9TSNLfMcR0x/nfcwcWn4H
-	LjGep1Q/ydgyPrxKiaU4I9FQi7moOBEA6RDABawDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsVy+t/xe7rRM2XTDM49srLY1mFj0bx4PZvF
-	u7kyFh2Tt7NYTNx/lt3i8q45bBZnFveyO7B7bFrVyeZx59oeNo/9c9ewe3zeJBfAEqVnU5Rf
-	WpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8W3mNvaCbq+K
-	Hz+fMTYwbrLqYuTkkBAwkTh8YxF7FyMXh5DAUkaJL/svs0EkZCROTmtghbCFJf5c62KDKHrP
-	KDF15TV2kASvgJ3ExEmTmEBsFgFVifc//kDFBSVOznzCAmKLCshL3L81AywuLOAp8bTlNjOI
-	LSLgJXFq8hNGkKHMApsZJTb8OQs2SEggQ2LSuwawZmYBcYlbT+aDxdkEDCW63naBXccpYCXx
-	/8oSZogaM4murV2MELa8xPa3c5gnMArNQnLHLCSjZiFpmYWkZQEjyypGkdTS4tz03GIjveLE
-	3OLSvHS95PzcTYzASNt27OeWHYwrX33UO8TIxMF4iFGCg1lJhLdFWDZNiDclsbIqtSg/vqg0
-	J7X4EKMpMDAmMkuJJucDYz2vJN7QzMDU0MTM0sDU0sxYSZzXs6AjUUggPbEkNTs1tSC1CKaP
-	iYNTqoFpzZkHvQEJfy9Oblumn8ZeZ+pfr+dxbVHEkh5ZjgdG657N1n6o4LLQ0et26mm9VVO9
-	z9Q9Zrr9OoTpw6k9D95uDLRrYlA2lz5x6PV/w5QZS+2u/jKQ1X09teoCS2e4iFD/RTfVov78
-	ZS2ZrQXZHGIMt9y5D2UY+Rh1rzT4os5jmXNl6kY+QQsrHY28gohJd5tMd2Z9ajqs0Lfwh6gX
-	o/eJtr4TDmd7FhSub2JdfkyQeanHBZHTrjMZzVZIX57PNeXJhNR0rbf2tg3meYo5rboHJ57S
-	5u8oKl62cH8rZ1fu4R0m5/d8lIzcx9G1gPXAweviq3fv/Zk0W/PB23Td2C0VX/f0+qy9m3Oq
-	qd4u10GJpTgj0VCLuag4EQBaxmvUPQMAAA==
-X-CMS-MailID: 20240415211716eucas1p10050cc8d4024707dd6f6331111cd3ce1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240415211716eucas1p10050cc8d4024707dd6f6331111cd3ce1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240415211716eucas1p10050cc8d4024707dd6f6331111cd3ce1
-References: <20240405060826.2521-1-jirislaby@kernel.org>
-	<20240405060826.2521-12-jirislaby@kernel.org>
-	<CGME20240415211716eucas1p10050cc8d4024707dd6f6331111cd3ce1@eucas1p1.samsung.com>
+References: <20240415-fix-cocci-v1-0-477afb23728b@chromium.org>
+ <20240415195348.GD22954@pendragon.ideasonboard.com> <CANiDSCteGngbSS6CCuUxM-PQiBz0W0WfoFr2E2oH2d8qt746_A@mail.gmail.com>
+ <20240415203304.GA3460978@ragnatech.se>
+In-Reply-To: <20240415203304.GA3460978@ragnatech.se>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 15 Apr 2024 23:16:55 +0200
+X-Gmail-Original-Message-ID: <CANiDSCuR6EeR2MoSH6xtJ0G07QfJsxCb116uL8ocJnwZJSh4Dg@mail.gmail.com>
+Message-ID: <CANiDSCuR6EeR2MoSH6xtJ0G07QfJsxCb116uL8ocJnwZJSh4Dg@mail.gmail.com>
+Subject: Re: [PATCH 00/35] media: Fix coccinelle warning/errors
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+	Julia Lawall <Julia.Lawall@inria.fr>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Martin Tuma <martin.tuma@digiteqautomotive.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Hugues Fruchet <hugues.fruchet@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>, 
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Osipenko <digetx@gmail.com>, 
+	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
+	Sylvain Petinot <sylvain.petinot@foss.st.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Pavel Machek <pavel@ucw.cz>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05.04.2024 08:08, Jiri Slaby (SUSE) wrote:
-> This is a preparatory for the serial-to-kfifo switch. kfifo understands
-> only scatter-gatter approach, so switch to that.
+Hi Niklas
+
+On Mon, 15 Apr 2024 at 22:33, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
 >
-> No functional change intended, it's just dmaengine_prep_slave_single()
-> inline expanded.
+> Hi Ricardo,
 >
-> And in this case, switch from dma_map_single() to dma_map_sg() too. This
-> needs struct msm_dma changes. I split the rx and tx parts into an union.
-> TX is now struct scatterlist, RX remains the old good phys-virt-count
-> triple.
+> Thanks for cleaning up.
 >
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-
-I've just found that this patch broke UART operation on DragonBoard 
-410c. I briefly checked and didn't notice anything obviously wrong here, 
-but the board stops transmitting any data from its serial port after the 
-first message. I will try to analyze this issue a bit more tomorrow.
-
-> ---
->   drivers/tty/serial/msm_serial.c | 86 +++++++++++++++++++--------------
->   1 file changed, 49 insertions(+), 37 deletions(-)
+> On 2024-04-15 21:58:58 +0200, Ricardo Ribalda wrote:
+> > Hi Laurent
+> >
+> > On Mon, 15 Apr 2024 at 21:54, Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com> wrote:
+> > >
+> > > Hi Ricardo,
+> > >
+> > > I'm afraid I won't have time to review any of this for the time being=
+.
+> > > Unless you would like me to put uvcvideo reviews on hold ;-)
+> > >
+> > > Jokes aside, my first reaction was that this feels like a bit of a wa=
+ste
+> > > of maintainer's time :-S
+> >
+> > This is part of the media-ci effort.
+> >
+> > It is definitely not the most fun patches to do or review, but someone
+> > has to do it :)
+> >
+> > The whole idea is that we want to get as little warnings as possible
+> > from the static analysers, after this patchset we almost achieve that.
 >
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index d27c4c8c84e1..7bf30e632313 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -161,11 +161,16 @@ enum {
->   struct msm_dma {
->   	struct dma_chan		*chan;
->   	enum dma_data_direction dir;
-> -	dma_addr_t		phys;
-> -	unsigned char		*virt;
-> +	union {
-> +		struct {
-> +			dma_addr_t		phys;
-> +			unsigned char		*virt;
-> +			unsigned int		count;
-> +		} rx;
-> +		struct scatterlist tx_sg;
-> +	};
->   	dma_cookie_t		cookie;
->   	u32			enable_bit;
-> -	unsigned int		count;
->   	struct dma_async_tx_descriptor	*desc;
->   };
->   
-> @@ -249,8 +254,12 @@ static void msm_stop_dma(struct uart_port *port, struct msm_dma *dma)
->   	unsigned int mapped;
->   	u32 val;
->   
-> -	mapped = dma->count;
-> -	dma->count = 0;
-> +	if (dma->dir == DMA_TO_DEVICE) {
-> +		mapped = sg_dma_len(&dma->tx_sg);
-> +	} else {
-> +		mapped = dma->rx.count;
-> +		dma->rx.count = 0;
-> +	}
->   
->   	dmaengine_terminate_all(dma->chan);
->   
-> @@ -265,8 +274,13 @@ static void msm_stop_dma(struct uart_port *port, struct msm_dma *dma)
->   	val &= ~dma->enable_bit;
->   	msm_write(port, val, UARTDM_DMEN);
->   
-> -	if (mapped)
-> -		dma_unmap_single(dev, dma->phys, mapped, dma->dir);
-> +	if (mapped) {
-> +		if (dma->dir == DMA_TO_DEVICE) {
-> +			dma_unmap_sg(dev, &dma->tx_sg, 1, dma->dir);
-> +			sg_init_table(&dma->tx_sg, 1);
-> +		} else
-> +			dma_unmap_single(dev, dma->rx.phys, mapped, dma->dir);
-> +	}
->   }
->   
->   static void msm_release_dma(struct msm_port *msm_port)
-> @@ -285,7 +299,7 @@ static void msm_release_dma(struct msm_port *msm_port)
->   	if (dma->chan) {
->   		msm_stop_dma(&msm_port->uart, dma);
->   		dma_release_channel(dma->chan);
-> -		kfree(dma->virt);
-> +		kfree(dma->rx.virt);
->   	}
->   
->   	memset(dma, 0, sizeof(*dma));
-> @@ -357,8 +371,8 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
->   
->   	of_property_read_u32(dev->of_node, "qcom,rx-crci", &crci);
->   
-> -	dma->virt = kzalloc(UARTDM_RX_SIZE, GFP_KERNEL);
-> -	if (!dma->virt)
-> +	dma->rx.virt = kzalloc(UARTDM_RX_SIZE, GFP_KERNEL);
-> +	if (!dma->rx.virt)
->   		goto rel_rx;
->   
->   	memset(&conf, 0, sizeof(conf));
-> @@ -385,7 +399,7 @@ static void msm_request_rx_dma(struct msm_port *msm_port, resource_size_t base)
->   
->   	return;
->   err:
-> -	kfree(dma->virt);
-> +	kfree(dma->rx.virt);
->   rel_rx:
->   	dma_release_channel(dma->chan);
->   no_rx:
-> @@ -420,7 +434,7 @@ static void msm_start_tx(struct uart_port *port)
->   	struct msm_dma *dma = &msm_port->tx_dma;
->   
->   	/* Already started in DMA mode */
-> -	if (dma->count)
-> +	if (sg_dma_len(&dma->tx_sg))
->   		return;
->   
->   	msm_port->imr |= MSM_UART_IMR_TXLEV;
-> @@ -448,12 +462,12 @@ static void msm_complete_tx_dma(void *args)
->   	uart_port_lock_irqsave(port, &flags);
->   
->   	/* Already stopped */
-> -	if (!dma->count)
-> +	if (!sg_dma_len(&dma->tx_sg))
->   		goto done;
->   
->   	dmaengine_tx_status(dma->chan, dma->cookie, &state);
->   
-> -	dma_unmap_single(port->dev, dma->phys, dma->count, dma->dir);
-> +	dma_unmap_sg(port->dev, &dma->tx_sg, 1, dma->dir);
->   
->   	val = msm_read(port, UARTDM_DMEN);
->   	val &= ~dma->enable_bit;
-> @@ -464,9 +478,9 @@ static void msm_complete_tx_dma(void *args)
->   		msm_write(port, MSM_UART_CR_TX_ENABLE, MSM_UART_CR);
->   	}
->   
-> -	count = dma->count - state.residue;
-> +	count = sg_dma_len(&dma->tx_sg) - state.residue;
->   	uart_xmit_advance(port, count);
-> -	dma->count = 0;
-> +	sg_init_table(&dma->tx_sg, 1);
->   
->   	/* Restore "Tx FIFO below watermark" interrupt */
->   	msm_port->imr |= MSM_UART_IMR_TXLEV;
-> @@ -485,19 +499,18 @@ static int msm_handle_tx_dma(struct msm_port *msm_port, unsigned int count)
->   	struct circ_buf *xmit = &msm_port->uart.state->xmit;
->   	struct uart_port *port = &msm_port->uart;
->   	struct msm_dma *dma = &msm_port->tx_dma;
-> -	void *cpu_addr;
->   	int ret;
->   	u32 val;
->   
-> -	cpu_addr = &xmit->buf[xmit->tail];
-> +	sg_init_table(&dma->tx_sg, 1);
-> +	sg_set_buf(&dma->tx_sg, &xmit->buf[xmit->tail], count);
->   
-> -	dma->phys = dma_map_single(port->dev, cpu_addr, count, dma->dir);
-> -	ret = dma_mapping_error(port->dev, dma->phys);
-> +	ret = dma_map_sg(port->dev, &dma->tx_sg, 1, dma->dir);
->   	if (ret)
->   		return ret;
->   
-> -	dma->desc = dmaengine_prep_slave_single(dma->chan, dma->phys,
-> -						count, DMA_MEM_TO_DEV,
-> +	dma->desc = dmaengine_prep_slave_sg(dma->chan, &dma->tx_sg, 1,
-> +						DMA_MEM_TO_DEV,
->   						DMA_PREP_INTERRUPT |
->   						DMA_PREP_FENCE);
->   	if (!dma->desc) {
-> @@ -520,8 +533,6 @@ static int msm_handle_tx_dma(struct msm_port *msm_port, unsigned int count)
->   	msm_port->imr &= ~MSM_UART_IMR_TXLEV;
->   	msm_write(port, msm_port->imr, MSM_UART_IMR);
->   
-> -	dma->count = count;
-> -
->   	val = msm_read(port, UARTDM_DMEN);
->   	val |= dma->enable_bit;
->   
-> @@ -536,7 +547,8 @@ static int msm_handle_tx_dma(struct msm_port *msm_port, unsigned int count)
->   	dma_async_issue_pending(dma->chan);
->   	return 0;
->   unmap:
-> -	dma_unmap_single(port->dev, dma->phys, count, dma->dir);
-> +	dma_unmap_sg(port->dev, &dma->tx_sg, 1, dma->dir);
-> +	sg_init_table(&dma->tx_sg, 1);
->   	return ret;
->   }
->   
-> @@ -553,7 +565,7 @@ static void msm_complete_rx_dma(void *args)
->   	uart_port_lock_irqsave(port, &flags);
->   
->   	/* Already stopped */
-> -	if (!dma->count)
-> +	if (!dma->rx.count)
->   		goto done;
->   
->   	val = msm_read(port, UARTDM_DMEN);
-> @@ -570,14 +582,14 @@ static void msm_complete_rx_dma(void *args)
->   
->   	port->icount.rx += count;
->   
-> -	dma->count = 0;
-> +	dma->rx.count = 0;
->   
-> -	dma_unmap_single(port->dev, dma->phys, UARTDM_RX_SIZE, dma->dir);
-> +	dma_unmap_single(port->dev, dma->rx.phys, UARTDM_RX_SIZE, dma->dir);
->   
->   	for (i = 0; i < count; i++) {
->   		char flag = TTY_NORMAL;
->   
-> -		if (msm_port->break_detected && dma->virt[i] == 0) {
-> +		if (msm_port->break_detected && dma->rx.virt[i] == 0) {
->   			port->icount.brk++;
->   			flag = TTY_BREAK;
->   			msm_port->break_detected = false;
-> @@ -588,9 +600,9 @@ static void msm_complete_rx_dma(void *args)
->   		if (!(port->read_status_mask & MSM_UART_SR_RX_BREAK))
->   			flag = TTY_NORMAL;
->   
-> -		sysrq = uart_prepare_sysrq_char(port, dma->virt[i]);
-> +		sysrq = uart_prepare_sysrq_char(port, dma->rx.virt[i]);
->   		if (!sysrq)
-> -			tty_insert_flip_char(tport, dma->virt[i], flag);
-> +			tty_insert_flip_char(tport, dma->rx.virt[i], flag);
->   	}
->   
->   	msm_start_rx_dma(msm_port);
-> @@ -614,13 +626,13 @@ static void msm_start_rx_dma(struct msm_port *msm_port)
->   	if (!dma->chan)
->   		return;
->   
-> -	dma->phys = dma_map_single(uart->dev, dma->virt,
-> +	dma->rx.phys = dma_map_single(uart->dev, dma->rx.virt,
->   				   UARTDM_RX_SIZE, dma->dir);
-> -	ret = dma_mapping_error(uart->dev, dma->phys);
-> +	ret = dma_mapping_error(uart->dev, dma->rx.phys);
->   	if (ret)
->   		goto sw_mode;
->   
-> -	dma->desc = dmaengine_prep_slave_single(dma->chan, dma->phys,
-> +	dma->desc = dmaengine_prep_slave_single(dma->chan, dma->rx.phys,
->   						UARTDM_RX_SIZE, DMA_DEV_TO_MEM,
->   						DMA_PREP_INTERRUPT);
->   	if (!dma->desc)
-> @@ -648,7 +660,7 @@ static void msm_start_rx_dma(struct msm_port *msm_port)
->   
->   	msm_write(uart, msm_port->imr, MSM_UART_IMR);
->   
-> -	dma->count = UARTDM_RX_SIZE;
-> +	dma->rx.count = UARTDM_RX_SIZE;
->   
->   	dma_async_issue_pending(dma->chan);
->   
-> @@ -668,7 +680,7 @@ static void msm_start_rx_dma(struct msm_port *msm_port)
->   
->   	return;
->   unmap:
-> -	dma_unmap_single(uart->dev, dma->phys, UARTDM_RX_SIZE, dma->dir);
-> +	dma_unmap_single(uart->dev, dma->rx.phys, UARTDM_RX_SIZE, dma->dir);
->   
->   sw_mode:
->   	/*
-> @@ -955,7 +967,7 @@ static irqreturn_t msm_uart_irq(int irq, void *dev_id)
->   	}
->   
->   	if (misr & (MSM_UART_IMR_RXLEV | MSM_UART_IMR_RXSTALE)) {
-> -		if (dma->count) {
-> +		if (dma->rx.count) {
->   			val = MSM_UART_CR_CMD_STALE_EVENT_DISABLE;
->   			msm_write(port, val, MSM_UART_CR);
->   			val = MSM_UART_CR_CMD_RESET_STALE_INT;
+> I understand and I think it's a good goal to aim for zero warnings. But
+> some of the fixes here are IMHO not helpful, for example I find this
+> type of change counter productive.
+>
+> -       return ret < 0 ? ret : 0;
+> +
+> +       if (ret < 0)
+> +               return ret;
+> +       return 0;
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I was on the edge on those ones as well...
 
+Maybe we can try to fix the .cocci file to ignore that pattern?
+https://lore.kernel.org/lkml/20240415-minimax-v1-1-5feb20d66a79@chromium.or=
+g/T/#u
+
+Regards!
+
+
+
+
+
+>
+> Maybe it's better to disable this type of checks in the linter?
+>
+> >
+> > It is only 2 trivial uvc patches, I can ask someone from my team to
+> > review it if you want and trust them ;)
+> >
+> > Regards!
+> >
+> > >
+> > > On Mon, Apr 15, 2024 at 07:34:17PM +0000, Ricardo Ribalda wrote:
+> > > > After this set is applied, these are the only warnings left:
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:223:4-10: preceding lock on l=
+ine 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:230:3-9: preceding lock on li=
+ne 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:236:4-10: preceding lock on l=
+ine 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:245:3-9: preceding lock on li=
+ne 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:251:3-9: preceding lock on li=
+ne 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:257:3-9: preceding lock on li=
+ne 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:272:3-9: preceding lock on li=
+ne 267
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:598:4-10: preceding lock on l=
+ine 627
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:598:4-10: preceding lock on l=
+ine 689
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:606:3-9: preceding lock on li=
+ne 627
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:606:3-9: preceding lock on li=
+ne 689
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:648:3-9: preceding lock on li=
+ne 627
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:648:3-9: preceding lock on li=
+ne 689
+> > > > drivers/media/pci/ivtv/ivtv-fileops.c:692:4-10: preceding lock on l=
+ine 689
+> > > > drivers/media/dvb-core/dvb_frontend.c:2897:1-7: preceding lock on l=
+ine 2776
+> > > > drivers/media/dvb-core/dvb_frontend.c:2897:1-7: preceding lock on l=
+ine 2786
+> > > > drivers/media/dvb-core/dvb_frontend.c:2897:1-7: preceding lock on l=
+ine 2809
+> > > > drivers/media/dvb-frontends/stv090x.c:799:1-7: preceding lock on li=
+ne 768
+> > > > drivers/media/usb/go7007/go7007-i2c.c:125:1-7: preceding lock on li=
+ne 61
+> > > > drivers/media/rc/imon.c:1167:1-7: preceding lock on line 1153
+> > > > drivers/media/pci/cx18/cx18-scb.h:261:22-29: WARNING use flexible-a=
+rray member instead (https://www.kernel.org/doc/html/latest/process/depreca=
+ted.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:77:5-9: WARNING use fl=
+exible-array member instead (https://www.kernel.org/doc/html/latest/process=
+/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:85:5-16: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:154:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:171:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:180:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:189:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:201:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:220:5-9: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_cmds.h:230:5-16: WARNING use =
+flexible-array member instead (https://www.kernel.org/doc/html/latest/proce=
+ss/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:764:5-15: WARNING us=
+e flexible-array member instead (https://www.kernel.org/doc/html/latest/pro=
+cess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1008:43-60: WARNING =
+use flexible-array member instead (https://www.kernel.org/doc/html/latest/p=
+rocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1014:36-46: WARNING =
+use flexible-array member instead (https://www.kernel.org/doc/html/latest/p=
+rocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1041:5-15: WARNING u=
+se flexible-array member instead (https://www.kernel.org/doc/html/latest/pr=
+ocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1088:39-51: WARNING =
+use flexible-array member instead (https://www.kernel.org/doc/html/latest/p=
+rocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1093:5-22: WARNING u=
+se flexible-array member instead (https://www.kernel.org/doc/html/latest/pr=
+ocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1144:4-8: WARNING us=
+e flexible-array member instead (https://www.kernel.org/doc/html/latest/pro=
+cess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1239:4-8: WARNING us=
+e flexible-array member instead (https://www.kernel.org/doc/html/latest/pro=
+cess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1267:5-9: WARNING us=
+e flexible-array member instead (https://www.kernel.org/doc/html/latest/pro=
+cess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/qcom/venus/hfi_helper.h:1272:4-13: WARNING u=
+se flexible-array member instead (https://www.kernel.org/doc/html/latest/pr=
+ocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/common/siano/smscoreapi.h:619:5-13: WARNING use flexi=
+ble-array member instead (https://www.kernel.org/doc/html/latest/process/de=
+precated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/common/siano/smscoreapi.h:669:6-13: WARNING use flexi=
+ble-array member instead (https://www.kernel.org/doc/html/latest/process/de=
+precated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/common/siano/smscoreapi.h:1049:4-8: WARNING use flexi=
+ble-array member instead (https://www.kernel.org/doc/html/latest/process/de=
+precated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/common/siano/smscoreapi.h:1055:4-8: WARNING use flexi=
+ble-array member instead (https://www.kernel.org/doc/html/latest/process/de=
+precated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/dvb-frontends/mxl5xx_defs.h:171:4-8: WARNING use flex=
+ible-array member instead (https://www.kernel.org/doc/html/latest/process/d=
+eprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/dvb-frontends/mxl5xx_defs.h:182:4-8: WARNING use flex=
+ible-array member instead (https://www.kernel.org/doc/html/latest/process/d=
+eprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/allegro-dvt/nal-hevc.h:102:14-22: WARNING us=
+e flexible-array member instead (https://www.kernel.org/doc/html/latest/pro=
+cess/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/media/platform/xilinx/xilinx-dma.h:100:19-22: WARNING use f=
+lexible-array member instead (https://www.kernel.org/doc/html/latest/proces=
+s/deprecated.html#zero-length-and-one-element-arrays)
+> > > > drivers/staging/media/atomisp/pci/atomisp_tpg.h:30:18-22: WARNING u=
+se flexible-array member instead (https://www.kernel.org/doc/html/latest/pr=
+ocess/deprecated.html#zero-length-and-one-element-arrays)
+> > > >
+> > > > CI tested:
+> > > > https://gitlab.freedesktop.org/linux-media/media-staging/-/commit/0=
+55b5211c68e721c3a7090be5373cf44859da1a7/pipelines?ref=3Dribalda%2Ftest-cocc=
+i
+> > > >
+> > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > > ---
+> > > > Ricardo Ribalda (35):
+> > > >       media: pci: mgb4: Refactor struct resources
+> > > >       media: stb0899: Remove unreacheable code
+> > > >       media: uvcvideo: Refactor iterators
+> > > >       media: uvcvideo: Use max() macro
+> > > >       media: go7007: Use min and max macros
+> > > >       media: stm32-dcmipp: Remove redundant printk
+> > > >       media: staging: sun6i-isp: Remove redundant printk
+> > > >       media: dvb-frontends: tda18271c2dd: Remove casting during div
+> > > >       media: v4l: async: refactor v4l2_async_create_ancillary_links
+> > > >       staging: media: tegra-video: Use swap macro
+> > > >       media: s2255: Use refcount_t instead of atomic_t for num_chan=
+nels
+> > > >       media: platform: mtk-mdp3: Use refcount_t for job_count
+> > > >       media: common: saa7146: Use min macro
+> > > >       media: dvb-frontends: drx39xyj: Use min macro
+> > > >       media: netup_unidvb: Use min macro
+> > > >       media: au0828: Use min macro
+> > > >       media: flexcop-usb: Use min macro
+> > > >       media: gspca: cpia1: Use min macro
+> > > >       media: stk1160: Use min macro
+> > > >       media: tegra-vde: Refactor timeout handling
+> > > >       media: venus: Use div64_u64
+> > > >       media: i2c: st-mipid02: Use the correct div function
+> > > >       media: dvb-frontends: tda10048: Use the right div
+> > > >       media: tc358746: Use the correct div_ function
+> > > >       media: venus: Use the correct div_ function
+> > > >       media: venus: Refator return path
+> > > >       media: dib0700: Refator return path
+> > > >       media: usb: cx231xx: Refator return path
+> > > >       media: i2c: rdacm20: Refator return path
+> > > >       media: i2c: et8ek8: Refator return path
+> > > >       media: cx231xx: Refator return path
+> > > >       media: si4713: Refator return path
+> > > >       media: ttpci: Refator return path
+> > > >       media: hdpvr: Refator return path
+> > > >       media: venus: Refator return path
+> > > >
+> > > >  drivers/media/common/saa7146/saa7146_hlp.c         |  8 +++----
+> > > >  drivers/media/dvb-frontends/drx39xyj/drxj.c        |  9 +++-----
+> > > >  drivers/media/dvb-frontends/stb0899_drv.c          |  5 -----
+> > > >  drivers/media/dvb-frontends/tda10048.c             |  3 +--
+> > > >  drivers/media/dvb-frontends/tda18271c2dd.c         |  4 ++--
+> > > >  drivers/media/i2c/et8ek8/et8ek8_driver.c           |  4 +++-
+> > > >  drivers/media/i2c/rdacm20.c                        |  5 ++++-
+> > > >  drivers/media/i2c/st-mipid02.c                     |  2 +-
+> > > >  drivers/media/i2c/tc358746.c                       |  3 +--
+> > > >  drivers/media/pci/mgb4/mgb4_core.c                 |  4 ++--
+> > > >  drivers/media/pci/mgb4/mgb4_regs.c                 |  2 +-
+> > > >  drivers/media/pci/netup_unidvb/netup_unidvb_i2c.c  |  2 +-
+> > > >  drivers/media/pci/ttpci/budget-core.c              |  5 ++++-
+> > > >  .../media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c   | 10 ++++-----
+> > > >  .../media/platform/mediatek/mdp3/mtk-mdp3-core.c   |  6 ++---
+> > > >  .../media/platform/mediatek/mdp3/mtk-mdp3-core.h   |  2 +-
+> > > >  .../media/platform/mediatek/mdp3/mtk-mdp3-m2m.c    |  6 ++---
+> > > >  drivers/media/platform/nvidia/tegra-vde/h264.c     |  6 ++---
+> > > >  drivers/media/platform/qcom/venus/vdec.c           | 15 +++++++---=
+---
+> > > >  drivers/media/platform/qcom/venus/venc.c           | 19 +++++++++-=
+------
+> > > >  .../platform/st/stm32/stm32-dcmipp/dcmipp-core.c   |  5 +----
+> > > >  drivers/media/radio/si4713/radio-usb-si4713.c      |  8 +++++--
+> > > >  drivers/media/usb/au0828/au0828-video.c            |  5 +----
+> > > >  drivers/media/usb/b2c2/flexcop-usb.c               |  5 +----
+> > > >  drivers/media/usb/cx231xx/cx231xx-i2c.c            | 16 +++++++++-=
+---
+> > > >  drivers/media/usb/cx231xx/cx231xx-video.c          | 10 +++++++--
+> > > >  drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +++-
+> > > >  drivers/media/usb/go7007/go7007-fw.c               |  4 ++--
+> > > >  drivers/media/usb/gspca/cpia1.c                    |  6 ++---
+> > > >  drivers/media/usb/hdpvr/hdpvr-control.c            |  4 +++-
+> > > >  drivers/media/usb/s2255/s2255drv.c                 | 20 ++++++++--=
+-------
+> > > >  drivers/media/usb/stk1160/stk1160-video.c          | 10 ++-------
+> > > >  drivers/media/usb/uvc/uvc_ctrl.c                   | 26 ++++++++++=
+++----------
+> > > >  drivers/media/v4l2-core/v4l2-async.c               |  8 +++----
+> > > >  drivers/staging/media/sunxi/sun6i-isp/sun6i_isp.c  |  1 -
+> > > >  drivers/staging/media/tegra-video/tegra20.c        |  9 ++------
+> > > >  36 files changed, 132 insertions(+), 129 deletions(-)
+> > > > ---
+> > > > base-commit: 71b3ed53b08d87212fbbe51bdc3bf44eb8c462f8
+> > > > change-id: 20240415-fix-cocci-2df3ef22a6f7
+> > > >
+> > > > Best regards,
+> > >
+> > > --
+> > > Regards,
+> > >
+> > > Laurent Pinchart
+> >
+> >
+> >
+> > --
+> > Ricardo Ribalda
+>
+> --
+> Kind Regards,
+> Niklas S=C3=B6derlund
+
+
+
+--
+Ricardo Ribalda
