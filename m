@@ -1,393 +1,230 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2067.outbound.protection.outlook.com [40.107.21.67])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7025C911;
-	Mon, 15 Apr 2024 10:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713178243; cv=fail; b=HVGp1QKFaQ1pRzxsKwgVKH95SjWl1gLhF7vcLp6KWL3eMIcU12sfx5UWEQnYG45PmKMboGt+2Gg06ZinvM2nKPO0P+ASiz/0eDycfun++oMNcrvcR/WbBrmQdxVBuHj4+0vbXDUmNSIfH6nvOKgF0A6j77VjbEzoprOmkqrm/Pk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713178243; c=relaxed/simple;
-	bh=52HJWjbDoWXK3goAO57q8lNu3XaRenR4xvmJht8KA9M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RNYvTQMkt63dDIQzFgxq8GxEjkgxUnfFHiI1szzOQUj+WMC+HrMaM8fbZ3s1DesmZ8kdTKwMS/T/g/mQ/CFdK9M4ocRxo/2kmUPSzLKt+yCTk9CRDEu59RVO0+1jCFJmecWKK/wNqZDLE+44oLRe39TDSun8uvDaJeYye/gohaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=LCLsb/X1; arc=fail smtp.client-ip=40.107.21.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="LCLsb/X1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TrzpOQ6/zzCdzzK+BOYarvrmyevyBxPwETv9rEqlAzG0e+aX30rynVIw8BHt8HGrjniNzDZ7cSMKgIKG9A8qO5hEsO4boGTXUqqde5FBRJNcvjGNvxW8N/thQEeS+l54Ab54/uUjBbIHlhE6nnGREGjyF6BPX9jM9LI7XdNue5aMTkcunU1ASJcvWKmFKW61ds38yTMzPgRVnuNpJYyImgVih8A4SYqcOQiU/V5C/LF4JYgw4tqAu7GwylGNnbHJUKWDRSVwdt8FvRwswTm9VEqi2852BmgM8LQBbeTyHk6vMJghOJhSjONdB1AeZ+uWaffydyUoz5KWvKwhyF9Asg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j4kU4QLT4SQSuRz5oZgBmVOSVOJMLovL9GhhS9+KzAM=;
- b=egcdKkNLSk7B4Ixl9z8WglOytaV+DWO3C2I7PGKbqso8Sm58XYiSqg9mvwFK0ioB+zz9QE890NAEbuZ2iLEozI2KBBJ+fmJjJB0yQH8Zo1JDcAlxqFxEuMftaf6ykwpAes/1UcPa+mfIyi8fQ7ecrY+ePmmqIn5AWUYSG3TjuybH2chnoho0Uxl2rcxEF/sCxl0qnRvMUmywijbnURvzSFLaobRvkLxv3fLn50CFOK0GLLy2qpAagvYgRVgcDgVsY+apU3NcTgKbpsqB0NVXlC+c8WwsRwPipNZ5ggw2g+4ld34me+81yu4QrZSwBuWeiUL3ZRFcJQAReHFdjyQE7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=leica-geosystems.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j4kU4QLT4SQSuRz5oZgBmVOSVOJMLovL9GhhS9+KzAM=;
- b=LCLsb/X1fS13EPafCEisEEomSrDLWfCWrqMQN1VzqUxVQwdffgrTptdOe6IX2W+2cM0VO8IB1z3+SSNWx3PFkAFhbstIfq/lZI2FUQ9DdiyN/99LMW8JFIoNJWlp6AGH35+xsQdlJVh1cCvXXB9LKkKDhqllUltHUXuD5vAr33Q=
-Received: from DUZPR01CA0275.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b9::6) by DU2PR06MB8365.eurprd06.prod.outlook.com
- (2603:10a6:10:2f0::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.31; Mon, 15 Apr
- 2024 10:50:37 +0000
-Received: from DB5PEPF00014B97.eurprd02.prod.outlook.com
- (2603:10a6:10:4b9:cafe::d9) by DUZPR01CA0275.outlook.office365.com
- (2603:10a6:10:4b9::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
- Transport; Mon, 15 Apr 2024 10:50:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
- smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
-Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
- designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.8.40.94; helo=hexagon.com; pr=C
-Received: from hexagon.com (193.8.40.94) by
- DB5PEPF00014B97.mail.protection.outlook.com (10.167.8.235) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Mon, 15 Apr 2024 10:50:37 +0000
-Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
-	 Mon, 15 Apr 2024 12:50:35 +0200
-From: Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>
-To: jic23@kernel.org
-Cc: bsp-development.geo@leica-geosystems.com,
-	Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>,
-	Eddie James <eajames@linux.ibm.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Joel Stanley <joel@jms.id.au>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] iio: pressure: dps310: introduce consistent error handling
-Date: Mon, 15 Apr 2024 12:50:28 +0200
-Message-Id: <20240415105030.1161770-3-thomas.haemmerle@leica-geosystems.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240415105030.1161770-1-thomas.haemmerle@leica-geosystems.com>
-References: <20240415105030.1161770-1-thomas.haemmerle@leica-geosystems.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425735D465;
+	Mon, 15 Apr 2024 10:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713178332; cv=none; b=hWXmGqKUPJg4P1v9eXnZCaXlH+LW1pKU3AuaaZkgiqmaWNooIPKfK+LD/5FwWVALhboFgLQuG7B6xSi9YegZBmk4yzpMYV0In+mfsqYeUPFhvOJBCweaqIFJxJv3TMxHK4tkajbGAJFvR01oLmIK9OvZEZxDAPrO2Lv/WQfxwcY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713178332; c=relaxed/simple;
+	bh=YjzZLPQbXgfdGlGbGlYWn308Tq/4T7rk/4RnIScxBMU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jGVkxz3RPwwHmqkvL0Q/eG0QovHsDcAozyYNfEJacMGdsQqfdoyr0yPlPbZLDisJOvd10k0JFo6WjwNKmayFeU1/xKx0rUD554kOfD/tUj7bkO6ZsVhXYFY6i9c+aon5l7Fkv1QvqD0aojmMD3DFLEQdI++r6FKIP6JfbdShxrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VJ3lL5dzRz6K919;
+	Mon, 15 Apr 2024 18:47:10 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5943D140A08;
+	Mon, 15 Apr 2024 18:52:05 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 15 Apr
+ 2024 11:52:04 +0100
+Date: Mon, 15 Apr 2024 11:52:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<kvmarm@lists.linux.dev>, <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, "Jean-Philippe
+ Brucker" <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	<linuxarm@huawei.com>, <justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: Re: [PATCH v5 03/18] ACPI: processor: Register deferred CPUs from
+ acpi_processor_get_info()
+Message-ID: <20240415115203.0000011b@Huawei.com>
+In-Reply-To: <CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+References: <20240412143719.11398-1-Jonathan.Cameron@huawei.com>
+	<20240412143719.11398-4-Jonathan.Cameron@huawei.com>
+	<CAJZ5v0gNvy2e=hOGQQ2kLpnrDr8=QGBax-E5odEJ=7BA8qW-9A@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 15 Apr 2024 10:50:35.0694 (UTC) FILETIME=[BEFFB4E0:01DA8F22]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B97:EE_|DU2PR06MB8365:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: ecb9ac94-45bb-48d4-bf0f-08dc5d39e281
-X-SET-LOWER-SCL-SCANNER: YES
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	M8QoToNsxyTGmi4dhAn0OzeY3oIhl/uPxuAALSuk1X0PavPQZxexYP0i/3+7b/TNo2OBF9DwfWNNj347ImYhnAQR3LLcTA+LRHL7I+S6rhoccpMvvovU4sEX8OucLaMcwthWzkFhkcRUS1fj/Wle+S4BYnk9x7KffnNcl9SknraxseePAAqcTejoZVqSIKnZIVtWG70svHnaQvBv2Bk5ZLpZK/YuMtGhgH/AVr9L8whSduX4vgrqgeI9H2VH/LckEbp/rhdDBcBuRJaFieWpgpka4WAEtWf0F8gVThxH/38+Naiinih8M6PUSesiNrQN4Fv7nCHF8dzjTIff56PFY5VHyZsTaiD2zlBd2zNTC/JEaXThcSsvaRzLm1NNUpkLvtcrZqfn+H50LegdWzXNfiIDckOBox4Dq46Mt3blL7Hs6VAwvD0h+m48G/M7RxqnBYVe7sd05cE7kGK9WzJ5sQCPIyPz6xfyQqpPWz/82JpyMJiw/Anf8VBKb9U86PW017bILHmr3Jkjwcxj2TWOKHFfoYF3g1m6By3lsoFfw2Q7EvU+XXW2WKj/TQL6ombCqFSUNb8aqLhloRZH68ZP3ZmJaZvwwNSUEwx5sFopuGeRLiA34+IlVdbFTh/CVFsXGmnxfU6kmnShsKyq7KpvgRjq5cfYZvHDfPDzENn+OpkDH10b5n9QK/w14AGvyMMSzRraotaJ4Q2G7pBtbowAFQ8EhhuZYrgR2EoDlv5xGoRSAX92oV0hcRMiMttBaKUq
-X-Forefront-Antispam-Report:
-	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 10:50:37.3034
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecb9ac94-45bb-48d4-bf0f-08dc5d39e281
-X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B97.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR06MB8365
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Align error handling with `dps310_calculate_temp`, where it's not
-possible to differentiate between errors and valid calculations by
-checking if the returned value is negative.
+On Fri, 12 Apr 2024 20:30:40 +0200
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-Signed-off-by: Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>
----
- drivers/iio/pressure/dps310.c | 129 +++++++++++++++++++---------------
- 1 file changed, 72 insertions(+), 57 deletions(-)
+> On Fri, Apr 12, 2024 at 4:38=E2=80=AFPM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > From: James Morse <james.morse@arm.com>
+> >
+> > The arm64 specific arch_register_cpu() call may defer CPU registration
+> > until the ACPI interpreter is available and the _STA method can
+> > be evaluated.
+> >
+> > If this occurs, then a second attempt is made in
+> > acpi_processor_get_info(). Note that the arm64 specific call has
+> > not yet been added so for now this will never be successfully
+> > called.
+> >
+> > Systems can still be booted with 'acpi=3Doff', or not include an
+> > ACPI description at all as in these cases arch_register_cpu()
+> > will not have deferred registration when first called.
+> >
+> > This moves the CPU register logic back to a subsys_initcall(),
+> > while the memory nodes will have been registered earlier.
+> > Note this is where the call was prior to the cleanup series so
+> > there should be no side effects of moving it back again for this
+> > specific case.
+> >
+> > [PATCH 00/21] Initial cleanups for vCPU HP.
+> > https://lore.kernel.org/all/ZVyz%2FVe5pPu8AWoA@shell.armlinux.org.uk/
+> >
+> > e.g. 5b95f94c3b9f ("x86/topology: Switch over to GENERIC_CPU_DEVICES")
+> >
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > Reviewed-by: Gavin Shan <gshan@redhat.com>
+> > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> > v5: Update commit message to make it clear this is moving the
+> >     init back to where it was until very recently.
+> >
+> >     No longer change the condition in the earlier registration point
+> >     as that will be handled by the arm64 registration routine
+> >     deferring until called again here.
+> > ---
+> >  drivers/acpi/acpi_processor.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processo=
+r.c
+> > index 93e029403d05..c78398cdd060 100644
+> > --- a/drivers/acpi/acpi_processor.c
+> > +++ b/drivers/acpi/acpi_processor.c
+> > @@ -317,6 +317,18 @@ static int acpi_processor_get_info(struct acpi_dev=
+ice *device)
+> >
+> >         c =3D &per_cpu(cpu_devices, pr->id);
+> >         ACPI_COMPANION_SET(&c->dev, device);
+> > +       /*
+> > +        * Register CPUs that are present. get_cpu_device() is used to =
+skip
+> > +        * duplicate CPU descriptions from firmware.
+> > +        */
+> > +       if (!invalid_logical_cpuid(pr->id) && cpu_present(pr->id) &&
+> > +           !get_cpu_device(pr->id)) {
+> > +               int ret =3D arch_register_cpu(pr->id);
+> > +
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> >         /*
+> >          *  Extra Processor objects may be enumerated on MP systems with
+> >          *  less than the max # of CPUs. They should be ignored _iff
+> > -- =20
+>=20
+> I am still unsure why there need to be two paths calling
+> arch_register_cpu() in acpi_processor_get_info().
 
-diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
-index d0a516d56da4..3fc436f36fa7 100644
---- a/drivers/iio/pressure/dps310.c
-+++ b/drivers/iio/pressure/dps310.c
-@@ -256,24 +256,24 @@ static int dps310_startup(struct dps310_data *data)
- 	return dps310_temp_workaround(data);
- }
- 
--static int dps310_get_pres_precision(struct dps310_data *data)
-+static int dps310_get_pres_precision(struct dps310_data *data, int *val)
- {
--	int rc;
--	int val;
-+	int reg_val, rc;
- 
--	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &val);
-+	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
- 	if (rc < 0)
- 		return rc;
- 
--	return BIT(val & GENMASK(2, 0));
-+	*val = BIT(reg_val & GENMASK(2, 0));
-+
-+	return 0;
- }
- 
--static int dps310_get_temp_precision(struct dps310_data *data)
-+static int dps310_get_temp_precision(struct dps310_data *data, int *val)
- {
--	int rc;
--	int val;
-+	int reg_val, rc;
- 
--	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &val);
-+	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -281,7 +281,9 @@ static int dps310_get_temp_precision(struct dps310_data *data)
- 	 * Scale factor is bottom 4 bits of the register, but 1111 is
- 	 * reserved so just grab bottom three
- 	 */
--	return BIT(val & GENMASK(2, 0));
-+	*val = BIT(reg_val & GENMASK(2, 0));
-+
-+	return 0;
- }
- 
- /* Called with lock held */
-@@ -350,48 +352,56 @@ static int dps310_set_temp_samp_freq(struct dps310_data *data, int freq)
- 				  DPS310_TMP_RATE_BITS, val);
- }
- 
--static int dps310_get_pres_samp_freq(struct dps310_data *data)
-+static int dps310_get_pres_samp_freq(struct dps310_data *data, int *val)
- {
--	int rc;
--	int val;
-+	int reg_val, rc;
- 
--	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &val);
-+	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
- 	if (rc < 0)
- 		return rc;
- 
--	return BIT((val & DPS310_PRS_RATE_BITS) >> 4);
-+	*val = BIT((reg_val & DPS310_PRS_RATE_BITS) >> 4);
-+
-+	return 0;
- }
- 
--static int dps310_get_temp_samp_freq(struct dps310_data *data)
-+static int dps310_get_temp_samp_freq(struct dps310_data *data, int *val)
- {
--	int rc;
--	int val;
-+	int reg_val, rc;
- 
--	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &val);
-+	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
- 	if (rc < 0)
- 		return rc;
- 
--	return BIT((val & DPS310_TMP_RATE_BITS) >> 4);
-+	*val = BIT((reg_val & DPS310_TMP_RATE_BITS) >> 4);
-+
-+	return 0;
- }
- 
--static int dps310_get_pres_k(struct dps310_data *data)
-+static int dps310_get_pres_k(struct dps310_data *data, int *val)
- {
--	int rc = dps310_get_pres_precision(data);
-+	int reg_val, rc;
- 
--	if (rc < 0)
-+	rc = dps310_get_pres_precision(data, &reg_val);
-+	if (rc)
- 		return rc;
- 
--	return scale_factors[ilog2(rc)];
-+	*val = scale_factors[ilog2(reg_val)];
-+
-+	return 0;
- }
- 
--static int dps310_get_temp_k(struct dps310_data *data)
-+static int dps310_get_temp_k(struct dps310_data *data, int *val)
- {
--	int rc = dps310_get_temp_precision(data);
-+	int reg_val, rc;
- 
--	if (rc < 0)
-+	rc = dps310_get_temp_precision(data, &reg_val);
-+	if (rc)
- 		return rc;
- 
--	return scale_factors[ilog2(rc)];
-+	*val = scale_factors[ilog2(reg_val)];
-+
-+	return 0;
- }
- 
- static int dps310_reset_wait(struct dps310_data *data)
-@@ -464,7 +474,10 @@ static int dps310_read_pres_raw(struct dps310_data *data)
- 	if (mutex_lock_interruptible(&data->lock))
- 		return -EINTR;
- 
--	rate = dps310_get_pres_samp_freq(data);
-+	rc = dps310_get_pres_samp_freq(data, &rate);
-+	if (rc)
-+		goto done;
-+
- 	timeout = DPS310_POLL_TIMEOUT_US(rate);
- 
- 	/* Poll for sensor readiness; base the timeout upon the sample rate. */
-@@ -510,7 +523,10 @@ static int dps310_read_temp_raw(struct dps310_data *data)
- 	if (mutex_lock_interruptible(&data->lock))
- 		return -EINTR;
- 
--	rate = dps310_get_temp_samp_freq(data);
-+	rc = dps310_get_temp_samp_freq(data, &rate);
-+	if (rc)
-+		goto done;
-+
- 	timeout = DPS310_POLL_TIMEOUT_US(rate);
- 
- 	/* Poll for sensor readiness; base the timeout upon the sample rate. */
-@@ -612,13 +628,13 @@ static int dps310_write_raw(struct iio_dev *iio,
- 	return rc;
- }
- 
--static int dps310_calculate_pressure(struct dps310_data *data)
-+static int dps310_calculate_pressure(struct dps310_data *data, int *val)
- {
- 	int i;
- 	int rc;
- 	int t_ready;
--	int kpi = dps310_get_pres_k(data);
--	int kti = dps310_get_temp_k(data);
-+	int kpi;
-+	int kti;
- 	s64 rem = 0ULL;
- 	s64 pressure = 0ULL;
- 	s64 p;
-@@ -629,11 +645,13 @@ static int dps310_calculate_pressure(struct dps310_data *data)
- 	s64 kp;
- 	s64 kt;
- 
--	if (kpi < 0)
--		return kpi;
-+	rc = dps310_get_pres_k(data, &kpi);
-+	if (rc)
-+		return rc;
- 
--	if (kti < 0)
--		return kti;
-+	rc = dps310_get_temp_k(data, &kti);
-+	if (rc)
-+		return rc;
- 
- 	kp = (s64)kpi;
- 	kt = (s64)kti;
-@@ -687,7 +705,9 @@ static int dps310_calculate_pressure(struct dps310_data *data)
- 	if (pressure < 0LL)
- 		return -ERANGE;
- 
--	return (int)min_t(s64, pressure, INT_MAX);
-+	*val = (int)min_t(s64, pressure, INT_MAX);
-+
-+	return 0;
- }
- 
- static int dps310_read_pressure(struct dps310_data *data, int *val, int *val2,
-@@ -697,11 +717,10 @@ static int dps310_read_pressure(struct dps310_data *data, int *val, int *val2,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		rc = dps310_get_pres_samp_freq(data);
--		if (rc < 0)
-+		rc = dps310_get_pres_samp_freq(data, val);
-+		if (rc)
- 			return rc;
- 
--		*val = rc;
- 		return IIO_VAL_INT;
- 
- 	case IIO_CHAN_INFO_PROCESSED:
-@@ -709,20 +728,17 @@ static int dps310_read_pressure(struct dps310_data *data, int *val, int *val2,
- 		if (rc)
- 			return rc;
- 
--		rc = dps310_calculate_pressure(data);
--		if (rc < 0)
-+		rc = dps310_calculate_pressure(data, val);
-+		if (rc)
- 			return rc;
- 
--		*val = rc;
- 		*val2 = 1000; /* Convert Pa to KPa per IIO ABI */
- 		return IIO_VAL_FRACTIONAL;
- 
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
--		rc = dps310_get_pres_precision(data);
--		if (rc < 0)
-+		rc = dps310_get_pres_precision(data, val);
-+		if (rc)
- 			return rc;
--
--		*val = rc;
- 		return IIO_VAL_INT;
- 
- 	default:
-@@ -734,10 +750,11 @@ static int dps310_calculate_temp(struct dps310_data *data, int *val)
- {
- 	s64 c0;
- 	s64 t;
--	int kt = dps310_get_temp_k(data);
-+	int kt, rc;
- 
--	if (kt < 0)
--		return kt;
-+	rc = dps310_get_temp_k(data, &kt);
-+	if (rc)
-+		return rc;
- 
- 	/* Obtain inverse-scaled offset */
- 	c0 = div_s64((s64)kt * (s64)data->c0, 2);
-@@ -758,11 +775,10 @@ static int dps310_read_temp(struct dps310_data *data, int *val, int *val2,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		rc = dps310_get_temp_samp_freq(data);
--		if (rc < 0)
-+		rc = dps310_get_temp_samp_freq(data, val);
-+		if (rc)
- 			return rc;
- 
--		*val = rc;
- 		return IIO_VAL_INT;
- 
- 	case IIO_CHAN_INFO_PROCESSED:
-@@ -777,11 +793,10 @@ static int dps310_read_temp(struct dps310_data *data, int *val, int *val2,
- 		return IIO_VAL_INT;
- 
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
--		rc = dps310_get_temp_precision(data);
--		if (rc < 0)
-+		rc = dps310_get_temp_precision(data, val);
-+		if (rc)
- 			return rc;
- 
--		*val = rc;
- 		return IIO_VAL_INT;
- 
- 	default:
--- 
-2.34.1
+I replied further down the thread, but the key point was to maintain
+the strong distinction between 'what' was done in a real hotplug
+path vs one where onlining was all.  We can relax that but it goes
+contrary to the careful dance that was needed to get any agreement
+to the ARM architecture aspects of this.
+
+>=20
+> Just below the comment partially pulled into the patch context above,
+> there is this code:
+>=20
+> if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+>          int ret =3D acpi_processor_hotadd_init(pr);
+>=20
+>         if (ret)
+>                 return ret;
+> }
+>=20
+> For the sake of the argument, fold acpi_processor_hotadd_init() into
+> it and drop the redundant _STA check from it:
+
+If we combine these, the _STA check is necessary because we will call this
+path for delayed onlining of ARM64 CPUs (if the earlier registration code
+call or arch_register_cpu() returned -EPROBE defer). That's the only way
+we know that a given CPU is online capable but firmware is saying we can't
+bring it online yet (it may be be vHP later).
+
+>=20
+> if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+>         if (invalid_phys_cpuid(pr->phys_id))
+>                 return -ENODEV;
+>=20
+>         cpu_maps_update_begin();
+>         cpus_write_lock();
+>=20
+>        ret =3D acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id=
+);
+
+I read that call as
+	acpi_map_cpu_for_physical_cpu_hotplug()
+but we could make it equivalent of.
+	acpi_map_cpu_for_whatever_cpu_hotplug()
+(I'm not proposing those names though ;)
+
+in which case it is fine to just stub it out on ARM64.
+>        if (ret) {
+>                 cpus_write_unlock();
+>                 cpu_maps_update_done();
+>                 return ret;
+>        }
+>        ret =3D arch_register_cpu(pr->id);
+>        if (ret) {
+>                 acpi_unmap_cpu(pr->id);
+>=20
+>                 cpus_write_unlock();
+>                 cpu_maps_update_done();
+>                 return ret;
+>        }
+>       pr_info("CPU%d has been hot-added\n", pr->id);
+>       pr->flags.need_hotplug_init =3D 1;
+This one needs more careful handling because we are calling this
+for non hotplug cases on arm64 in which case we end up setting this
+for initially online CPUs - thus if we offline and online them
+again via sysfs /sys/bus/cpu/device/cpuX/online it goes through the
+hotplug path and should not.
+
+So I need a way to detect if we are hotplugging the cpu or not.
+Is there a standard way to do this?  I haven't figured out how
+to use flags in drivers to communicate this state.
+
+>=20
+>       cpus_write_unlock();
+>       cpu_maps_update_done();
+> }
+>=20
+> so I'm not sure why this cannot be combined with the new code.
+>=20
+> Say acpi_map_cpu) / acpi_unmap_cpu() are turned into arch calls.
+> What's the difference then?  The locking, which should be fine if I'm
+> not mistaken and need_hotplug_init that needs to be set if this code
+> runs after the processor driver has loaded AFAICS.
+
+That's the bit that I'm currently finding a challenge. Is there a clean
+way to detect that?
+
+Jonathan
+
+
+
+
 
