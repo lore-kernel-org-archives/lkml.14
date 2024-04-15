@@ -1,243 +1,129 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAF4158DDD
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 23:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CC5158DDD;
+	Mon, 15 Apr 2024 23:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713223861; cv=none; b=nTEdv8bpFBO6TtXu6wOHxJ4f6nL8nzNVeNbN9sXIcA8MlI++vVeiFlDHjprGJkth6wvn84ddcSmjN+08+usX/K7OSoRaEVm5pmIROPgxXbW5kZWdx96B8rwMWY3YBSpmLvTcdkUa8VTKky5mqadfDPRrXugvgDZW3J+azlE7H1A=
+	t=1713223872; cv=none; b=lqM2cStsfA5Tqajuy43YjzKRHkXBsg3tBBMfVzpA8kWVms3sT7aKwhoQzKtTW1qHQI4DLqCufGihNwnn0uKTYgAy0sGbRZXHWGRVkxqpI1qjLG2FFfaIpdRlOc6sT+/9GdL0PE2aYYho0wynlS6DwQNeIp8oer6A5bWU7DSP/iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713223861; c=relaxed/simple;
-	bh=+b/kNZ4RcVokUqEMiWdeS9E1tYrTetsBur7rJILc1qo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jnUNztev0aJ+LTmEpL+Uw+pawDdGQy5HkwBv9evdw4py9mBL8HjVdVY9VJ/9aoQxofk0729ROBKIK4PO8QaaozPLGt92+5fKWZ31hzfHGsOg4loTx5lpTmAFSyLhbAZzTZQFigJ+R8LPLyCIAfAsFBBQ72VZ/z4OA0j97ozaHuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YyRC99q/; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713223872; c=relaxed/simple;
+	bh=2ako3/VsGj0B0JAvKI2djip7wX7ZZIyY6plsqbNFJ6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iWP44kAAU44iowKwcAAv5Ypy39kWDAdQAOh6kngOCUBEtyelNKxij7QK3yfOAoSHL6uw4BnOWwssRev+m07pq6nFaNTt/B/AJn0jmDmg6KfYgPybBmxjZctJVEkd3ynfokTJDJENayjSnzBFeyQxf1q5d7pGKe3pESpvIvqnla0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCWUd8az; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YyRC99q/"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41550858cabso23855175e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:30:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCWUd8az"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-343c7fae6e4so3138494f8f.1;
+        Mon, 15 Apr 2024 16:31:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713223856; x=1713828656; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sbgOogGrd7KneMj6zTYHK/GfLd8TwApJl8NSTb8SGlA=;
-        b=YyRC99q/bbnFHUilkatOkVNSaDlY7zYsVqOfSNLhik+gz28m7R2IOtIormtPWtFeS7
-         J32TEktrs/N9Xw8CI4dXGNYXGnnICHZBPs9PmMnSMXrx1NxorNqYUCTLxkg0VgL468+9
-         4Ttg9lVb2Nj6T5633hTFbjLJHAaiRVz+d2AjvbDSLI24raXZ9im33IMSHr5vTGlPVMHF
-         5XppQX1UoVjS00egvBRt5zfWv/4LZS6UUpYqSZ0qtYSQpcVDp8AQvdZza34XE0SgyRl0
-         MhjN5UyhMPMy61ts4cBfUkGEuNXB8zV+gsR14wyvX4J3ehW30EQPYpobFyGfT9LLEW8R
-         ZrIA==
+        d=gmail.com; s=20230601; t=1713223869; x=1713828669; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gIxRU79oSK//Uerme6kXym29Xbe+6F4+ro/QfQDfXsA=;
+        b=QCWUd8azqwPTyNpfphvzLPoo4gqSfgEGbxTW7hKDz9KHlkkLv1qp4IvEhuwWAZ0tZh
+         y6uerVvaZJwUGATUh2P70fOvJw6UxxXoisMfbtk0+4k655PBVI5z3Me0CPyFnEqIh9aa
+         0lvTnMe+S6ucxBlk34vZzbA2JKtq1P3EzSCXp8O9sT2gj/a5lEKbTh8rjQDHgRR9Z0gH
+         XxotTFEe6gQAvnkduWJHJOkZ+ENNVxGJ/pEY+Ctsdaiq9p/H+hu6FUXjU8l0dN9Aug7O
+         o5vZ56s1CywVajgwW0XfSPZQFeThLnKKaLTEviLtgWhEToHQh76PZOG3duumQu1iwMcr
+         GNIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713223856; x=1713828656;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sbgOogGrd7KneMj6zTYHK/GfLd8TwApJl8NSTb8SGlA=;
-        b=LpV0rHeLUrUc7tIdiqlKkEV9+9jfXJDwL3/bGvNaq1vUEId+XXxDnU0u5vsiywY6/m
-         KC3itKeaa/UWYYDHjyPC7+RkZUNiIwUQdIJ1IXVAKf7GRrpiK/B68uPlc/jWBKaNTf3T
-         9UOeCug74AD+eUNz0Ve+msVJq5eq3ott9NTsXOtFgMEb2Frt3k7HdyQmwTuPq1Ocvctl
-         ZaeEuO2fRXUPeBuKkZMnYZeZpsnGXVD3Pz7mjO42y0ps+cHyREZKF4Xw/0keV+quUAC7
-         J5jE7VxW4GMUc7xzzUHN+iMhM0rcDYUW7BVe/sICXF5DvoBmKY+yD8/zeo+op76C14hq
-         x0jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXSNgsPLRyVDITHif6Kh6bStFNdzoaslbG9gYix1NHuv97Pwb7s57t/DeUYxvA48VuPwpOQIv1J/udC3sN0862s5fmWOmYdKxltZOL
-X-Gm-Message-State: AOJu0Yy6nDzL6O4hud2mjSagMHhtlAWdnudQ+lO/Sc6rKrm5OCCzlxQT
-	n5M+z1GfVeFHchvTmm1k4h3chCZPtm84itryeGHEsl3pHuACdus3sdfcrUeGuPQ=
-X-Google-Smtp-Source: AGHT+IHg/fk42jw6rlYve+PtuNCjcIGhx+aS7sngMv/JYvGAT/GBkMZPb0po+xBYLkmZmcqsfyAR5Q==
-X-Received: by 2002:a05:600c:5128:b0:416:3de5:133d with SMTP id o40-20020a05600c512800b004163de5133dmr8063687wms.7.1713223855973;
-        Mon, 15 Apr 2024 16:30:55 -0700 (PDT)
-Received: from [172.20.10.2] ([37.169.26.183])
-        by smtp.gmail.com with ESMTPSA id s11-20020a5d69cb000000b00346bf37c97bsm12811551wrw.63.2024.04.15.16.30.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 16:30:55 -0700 (PDT)
-Message-ID: <64c765e4-698f-49d6-8d17-4b512c3dc8ec@linaro.org>
-Date: Tue, 16 Apr 2024 01:30:47 +0200
+        d=1e100.net; s=20230601; t=1713223869; x=1713828669;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gIxRU79oSK//Uerme6kXym29Xbe+6F4+ro/QfQDfXsA=;
+        b=qwA010qPwFlwsDW+Lst7sabQyKaiY8ZCQwsfAHCpUU4kas2P94k+iU05GA3t0gz/G2
+         6tqtKI0gSijKhxTikoILn2LRuutT9C3bEXxo4iP+bYJQadcdD8MjZmBCmqazAIyttvuP
+         zSrXZcRKJKBY4aTDevwnvlU6TgQ7E4paZEQsfVsO1wNbBmuwiA4LKhMuNqLlqmwMXnZ9
+         mqieSctomNtdoeMmDpl7l3oO39+0MLnsBWcfE3+sjOi8q7eOH1pE8twjMkuh3VZn4Zpt
+         NsPAQh5g1Z9Iv2QCIZQMmfPxGN2dUCqWK82QJ3EJbrCyKKsHCLP4BzKpDPY/kKvP+Qxd
+         aK4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVWj0A1IXtrPzBkgXZN7TncFySvKnExTnHH/B7jypD+Z18nIP+iGLwZ4JluZsbhzBZGhhWDgurF/JAgeDkN6ykffrQbtXxokNfxtzvffdZXZwTcZT1gP/eojgR1YqSj0QGuPoNVZ3LSN9nsimQ=
+X-Gm-Message-State: AOJu0YxknReNMTKJMWMNMn4JKj206So+uTlEFynqXbDBd4oI49zXTqPM
+	2asddiNkaaxLbFB/pmzXfZbFsAODeX6oUIx+bHpRceSSxNah5oh3
+X-Google-Smtp-Source: AGHT+IHtBAtR5aP/qBxhvoCn1aJ38IOOJvIXGK5uO3kqyaqbOl/8XVrUVWeApXqIl4fycQ7VP4mVvA==
+X-Received: by 2002:a5d:6484:0:b0:346:47d6:5d17 with SMTP id o4-20020a5d6484000000b0034647d65d17mr9194707wri.57.1713223868408;
+        Mon, 15 Apr 2024 16:31:08 -0700 (PDT)
+Received: from lewis-nuc.. (0.8.5.0.4.e.2.b.b.7.e.1.3.e.2.b.2.5.b.3.a.b.d.1.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:1dba:3b52:b2e3:1e7b:b2e4:580])
+        by smtp.googlemail.com with ESMTPSA id cg17-20020a5d5cd1000000b0033e7a102cfesm10402318wrb.64.2024.04.15.16.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 16:31:07 -0700 (PDT)
+From: Lewis Robbins <lewis.robbins2@gmail.com>
+To: kvalo@kernel.org
+Cc: lewis.robbins2@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	pkshih@realtek.com
+Subject: Re: [PATCH] wifi: rtw88: reduce failed to flush queue severity
+Date: Tue, 16 Apr 2024 00:28:38 +0100
+Message-ID: <20240415232837.388945-2-lewis.robbins2@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <87le5ey52e.fsf@kernel.org>
+References: <87le5ey52e.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 1/3] dt-bindings: reset: Add Amlogic T7 Reset Controller
-To: Kelvin Zhang <kelvin.zhang@amlogic.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- Zelong Dong <zelong.dong@amlogic.com>
-References: <20240329-t7-reset-v1-0-4c6e2e68359e@amlogic.com>
- <20240329-t7-reset-v1-1-4c6e2e68359e@amlogic.com>
- <927ad2cb-3b41-4eda-b930-856be64ae9ba@linaro.org>
- <10650c59-96f2-4234-b5fd-aa8efec90e5b@linaro.org>
- <579a1569-7bba-491f-ba5e-7cfcb34ccc1f@linaro.org>
- <c7e243e3-3f61-4d63-8727-3837838bdfcc@linaro.org>
- <48005005-54ad-473b-826d-23b0b3f3a52c@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <48005005-54ad-473b-826d-23b0b3f3a52c@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 15/04/2024 12:31, Kelvin Zhang wrote:
-> 
-> On 2024/4/13 02:03, Krzysztof Kozlowski wrote:
->> [ EXTERNAL EMAIL ]
->>
->> On 12/04/2024 19:57, Krzysztof Kozlowski wrote:
->>> On 12/04/2024 15:12, Neil Armstrong wrote:
->>>> Hi,
->>>>
->>>> On 29/03/2024 20:39, Krzysztof Kozlowski wrote:
->>>>> On 29/03/2024 10:17, Kelvin Zhang via B4 Relay wrote:
->>>>>> From: Zelong Dong <zelong.dong@amlogic.com>
->>>>>>
->>>>>> Add a new compatible and the related header file
->>>>>> for Amlogic T7 Reset Controller.
->>>>>>
->>>>>> Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
->>>>>> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
->>>>>> ---
->>>>>>    .../bindings/reset/amlogic,meson-reset.yaml        |   1 +
->>>>>>    include/dt-bindings/reset/amlogic,t7-reset.h       | 197 +++++++++++++++++++++
->>>>>>    2 files changed, 198 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
->>>>>> index f0c6c0df0ce3..fefe343e5afe 100644
->>>>>> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
->>>>>> @@ -19,6 +19,7 @@ properties:
->>>>>>          - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
->>>>>>          - amlogic,meson-s4-reset # Reset Controller on S4 and compatible SoCs
->>>>>>          - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
->>>>>> +      - amlogic,t7-reset # Reset Controller on T7 and compatible SoCs
->>>>>>
->>>>>
->>>>> If there is going to be any resend, please drop the comment. It's not
->>>>> really helpful and makes it trickier to read.
->>>>>
->>>>>>      reg:
->>>>>>        maxItems: 1
->>>>>> diff --git a/include/dt-bindings/reset/amlogic,t7-reset.h b/include/dt-bindings/reset/amlogic,t7-reset.h
->>>>>> new file mode 100644
->>>>>> index 000000000000..ca4a832eeeec
->>>>>> --- /dev/null
->>>>>> +++ b/include/dt-bindings/reset/amlogic,t7-reset.h
->>>>>> @@ -0,0 +1,197 @@
->>>>>> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
->>>>>> +/*
->>>>>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
->>>>>> + */
->>>>>> +
->>>>>> +#ifndef _DT_BINDINGS_AMLOGIC_T7_RESET_H
->>>>>> +#define _DT_BINDINGS_AMLOGIC_T7_RESET_H
->>>>>> +
->>>>>> +/* RESET0 */
->>>>>> +/*                                        0-3     */
->>>>>
->>>>> I assume this matches existing drivers which do not use IDs but map the
->>>>> binding to hardware value? I remember we talked about changing it, so if
->>>>> something happened about this and it could be changed: please change.
->>>>
->>>> I'm not aware of such discussion, and I don't really see the issue...
->>>> thoses are IDs, and yes they match the Hardware offsets, and ?
->>>
->>> Bindings are not for hardware offsets/values/addresses. It's just not a
->>> binding.
->>>
->>> I quickly looked at your driver patch and it confirms: not a binding.
->>> Binding constant is used by the driver and DTS consumer.
->>>
->>> I am really sure we had this talk in the past, but could be I think
->>> about different platform. Since this is not a binding, I do not think
->>> claiming there is any ABI here is reasonable. Feel free to store them
->>> with other hardware values, like in DTS headers etc. We already moved to
->>> DTS headers several such "non-binding" constants.
->>
->> Un-acked.
->>
->> I looked at my archives and we did talk about it and you were CCed:
->>
->> https://lore.kernel.org/linux-devicetree/c088e01c-0714-82be-8347-6140daf56640@linaro.org/
->> simple-reset is an exception.
->>
->> So to recap:
->> That's not a binding. Don't add some real values to binding headers
->> because it is not a binding then.
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-So what's exactly a binding then? random linear numbers that means nothing can be a binding
-but registers numbers can't be ? why ? I still don't understand, why this suddenly gets problematic ?
+> Lewis Robbins <lewis.robbins2@gmail.com> wrote:
+>> 
+>> Reduce the log message severity when we fail to flush device priority
+>> queue. If a system has a lot of traffic, we may fail to flush the queue
+>> in time. This generates a lot of messages in the kernel ring buffer. As
+>> this is a common occurrence, we should use dev_info instead of dev_warn.
+>> 
+>> Signed-off-by: Lewis Robbins <lewis.robbins2@gmail.com>
+>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+>
+> I'd like to know situations of " If a system has a lot of traffic...". 
+> Did you scan or do something during traffic?
 
->>
->> https://lore.kernel.org/linux-devicetree/CAK8P3a1APzs74YTcZ=m43G3zrmwJZKcYSTvV5eDDQX-37UY7Tw@mail.gmail.com/
->> https://lore.kernel.org/linux-devicetree/CAK8P3a0fDJQvGLEtG0fxLkG08Fh9V7LEMPsx4AaS+2Ldo_xWxw@mail.gmail.com/
->> https://lore.kernel.org/linux-devicetree/b60f5fd2-dc48-9375-da1c-ffcfe8292683@linaro.org/
->> https://lore.kernel.org/linux-devicetree/418c5f0c-5279-41f5-3705-345ec9a97ea2@linaro.org/
->> https://lore.kernel.org/all/201401111415.29395.arnd@arndb.de/
->>
-> Got it. Will delete amlogic,t7-reset.h and use the hardware numbers
-> directly in the DT. >
-> Hi Neil,
-> As you know, Amlogic reset controller is divided into several groups: reset0, reset1, ..., resetN. I'd like to discuss the rationality of splitting the one device node of reset controller into device nodes according to the groups. Then we can use the bit number within the 'resets' property.
-> reset0: reset-controller@2000 {
-> ...
-> };
-> 
-> reset1: reset-controller@2004 {
-> ...
-> };
-> ...
-> 
-> What do you think?
+So, after digging a bit more, it seems you're right this only happens during a
+scan. The log message itself is repeated about 5-10x.
 
-No since you'll basically add a node per register, you need to add a node for the while reset HW function, another
-solution would be to split the phandle arguments in 2, the first first would be the reset bank, and the second one
-the reset line for the bank.
+Kalle Valo <kvalo@kernel.org> writes:
 
-But still it's a regression in readability to drop the macros, until gpios or pins the reset number doesn't mean anything per se.
+> The driver shouldn't print any warnings in normal usage, even using info
+> level. If this is expected scenario then maybe change it to debug print?
+> Or if is this an actual bug then it's better try to investigate and fix
+> it.
 
-Neil
+I have the stack-trace:
 
+[23838.633664] rtw_8821ce 0000:02:00.0: timed out to flush queue 2
+[23838.633685] CPU: 1 PID: 363059 Comm: kworker/u8:1 Tainted G 6.8.5
+[23838.633698] Hardware name:  /, BIOS 5.26 09/26/2023
+[23838.633704] Workqueue: events_unbound cfg80211_wiphy_work [cfg80211]
+[23838.633881] Call Trace:
+[23838.633889]  <TASK>
+[23838.633898]  dump_stack_lvl+0x47/0x60
+[23838.633918]  rtw_mac_flush_queues+0x148/0x190 [rtw88_core 0d7ad2d9d6116c633c0aab4e7bc6016d572d75d4]
+[23838.633993]  rtw_ops_flush+0x5a/0x70 [rtw88_core 0d7ad2d9d6116c633c0aab4e7bc6016d572d75d4]
+[23838.634056]  __ieee80211_flush_queues+0x10b/0x2e0 [mac80211 5d0b446baffe1290bc56d55aa496e941688b7b40]
+[23838.634309]  ieee80211_scan_work+0x3e3/0x520 [mac80211 5d0b446baffe1290bc56d55aa496e941688b7b40]
+[23838.634494]  cfg80211_wiphy_work+0xa7/0xe0 [cfg80211 b36d5437ba649ace42ea92e8f83a3ec499e0d5b7]
+[23838.634646]  process_one_work+0x178/0x350
+[23838.634660]  worker_thread+0x30f/0x450
+[23838.634670]  ? __pfx_worker_thread+0x10/0x10
+[23838.634678]  kthread+0xe5/0x120
+[23838.634691]  ? __pfx_kthread+0x10/0x10
+[23838.634702]  ret_from_fork+0x31/0x50
+[23838.634714]  ? __pfx_kthread+0x10/0x10
+[23838.634724]  ret_from_fork_asm+0x1b/0x30
+[23838.634736]  </TASK>
 
-Neil
+I'm not sure as to the cause. If the flush operation takes a long time do we 
+need to release any mutexes etc? And if this is just a hardware issue, then we
+can do a debug print as you say.
 
-> Thanks!
->>
->> Best regards,
->> Krzysztof
->>
-
+BugZilla: https://bugzilla.kernel.org/show_bug.cgi?id=218697
