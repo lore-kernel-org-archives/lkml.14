@@ -1,161 +1,115 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCA78248E;
-	Mon, 15 Apr 2024 18:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A643C74416
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205480; cv=none; b=CGfnzDQFN3JW4zoFCmviKV5tqa/p5AVULnXYfnU/vrTfYQTfCekUR4WFQIWO4IgDTzrNLtoN16dVDzV0ykCAcxbZrETRJX+60yzNrmfSnUCSOhQ6FUx7WcYFuosradi3hUEQjeokQ8NLWAPiaYYn4lSWCwT5a1u5hEFJG2YPsWA=
+	t=1713205666; cv=none; b=Wdui9a8kMjEKQpGx0Rs7EQNpzIWgbLC9f5rOcA4L5jvOoLJecdjqulgGerooVZdVCRGFmvlyhnMGc32Y1qN9UnWJY6Md6dfTnSCV0izZ7wWubFUlOjQqY5xayNuNegkF0ukDG/XCCrYxjA7rpIfLcIrbHcUQ6j68pEcom541rBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205480; c=relaxed/simple;
-	bh=28tCFNWfOa62kT/fHhiqLn5DGFNs03W5X6G9MpqutxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSoaqLkk5iLAOifqEX2wQVdShl9Q48HsPLzPMGzNGRF1+qe+sYFf/5bVaXRWL9qX2vZheFvE4UnY7uEqvZ9J+I0EGApyACiY1N30/bB3R8ba8aL0f1F95bYD73PTz7MOhCR+JLIjmuRZf+8KgXWgVM+vimssJAHqxetyjACudZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NsSJgFjj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713205666; c=relaxed/simple;
+	bh=umxCZeWTQDH3zMqqM6T6ZP1c8rPGI3duZNpIriEi1gA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IYIibxER2nGBbr+dHcTiDvyZ53b0/2//7ax3nOIRrUNVZL/U+3UOq43oXiXQ7WUqbQ4CgCWVCWjr8uQPlHGInGME/xuidfrAEnBbNKZALQVDpMQkBeYjG2emtDBM3GvUocv/t84sldEjiC/lOnNhGz9SJSeK3UAMfBQN7Ft3uOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LDHfeHq5; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NsSJgFjj"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43FHUC6Z018202;
-	Mon, 15 Apr 2024 18:24:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=Pk5kgDBBdJctcWhbsFxfoDWJNZ5HUnRBxsr6FJgfWQk=;
- b=NsSJgFjj/nlfnSfiXcJP7G3M5TNmo/FZh5YGRbzTRPfnrMDGps/2+JjebWW1CkQQJr89
- YIvqR6hvRA0B3VUcJnfnIEOtLbaBGR4HllfMqe1JdkXLYVuSxh30qbdttzwSTxD9fN+P
- Ff0pkBckEwG3VGZkNrfR9h3FlgyrEXnG8CC/T9yqjP2RVbXL+0jHLMXT56p2d7toAuRv
- /Besgzq9MMkwbUp1i9axNJy07/btxtbCQCPntVqGiQwatFtXLxaM07z3Su5K2RClPIaZ
- XYp/aUh+I+W4tVZ9MKzc20ayNaWIcK/EFMvnQVQEzlebFlufYvQ4+THZ7o21p6QutCnX QQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xh8c88502-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 18:24:30 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43FIOUsx003261;
-	Mon, 15 Apr 2024 18:24:30 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xh8c88500-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 18:24:30 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43FHAtsJ021350;
-	Mon, 15 Apr 2024 18:24:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg6kk943u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 18:24:29 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43FIOO8h51773846
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Apr 2024 18:24:26 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E1E42004D;
-	Mon, 15 Apr 2024 18:24:24 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 027CD20040;
-	Mon, 15 Apr 2024 18:24:23 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.55.218])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Apr 2024 18:24:22 +0000 (GMT)
-Date: Mon, 15 Apr 2024 20:24:21 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] s390/mm: re-enable the shared zeropage for !PV
- and !skeys KVM guests
-Message-ID: <Zh1w1QTNSy+rrCH7@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240411161441.910170-1-david@redhat.com>
- <20240411161441.910170-3-david@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LDHfeHq5"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5252e5aa01so293736266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1713205662; x=1713810462; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
+        b=LDHfeHq5B+JNxIGW77dbjcbbOzaeVdPCCP/koOz0bmGTP0sG/sFbgBGYjXptqRksls
+         aEaENnRD1y4yA7DRzNYqGxzxwDn0RuD4oPGGOm8xrMD7WbblJvbgHJ77o5lLIzloOQeE
+         1FisuNJfTq4cMJzlhw13mogodePyTbmMSU60Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713205662; x=1713810462;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yXQXQf6BkxnxREYjP8+VxnnUlawTjdMp0f5jlbh5Zh4=;
+        b=em4px04nmzGwPC2R0Lu2C/yHod77ajdMlfYgDSTPe43iirAMDU2A0qIkwQ2y3vmvqm
+         FGcvucWzkBFUhMwALDYAWZuHFKH0AfTLF0ZOttG+DZ8VLD2afEmQ/wAXKKkKHVIr3AN/
+         qBCCjgaSPsizVIVY+9IL+ik1JV/AJ9spO/swQKaGSX8hk/xyjgoN8PozqVmD/HjTU4L+
+         BdrCLLwCdEtndVZDZuymFCFTITokBh4ByPD3rdfMz6gTb6aknU7H3ZEq36dOOWt2lExK
+         NRuTYz4dH/NwAZL5FzNjP9X0XEBck3Bkecm/VSKvFNfjSu6DaVc7xJ3amiYu9xPkr8KA
+         DUrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFgyi+TshydToh0z5K16alHlmK0qAUb6Fcw/rTFsp1HY9pycCJJ7btB8l4dcJ8mxkHZuK/sRq/vGIwss/GHT1VU706VcXbWOhvxUNS
+X-Gm-Message-State: AOJu0YxdVPJxKKAxmUpV85k3BXEWE/MAAKsTTOMV50GRUPP7u0mHtamF
+	Vn5W8kF2H3K7O/7inRBuGCmIPn1kF+v4p4jE//Nl8ECk1GFYMbh+fpbLareY2SIMYeZYTj3ra55
+	C7TTplg==
+X-Google-Smtp-Source: AGHT+IG5BtJtEHI8uUxUzZlCrq+h65BBoo2Vi6UrHtQat/WiQTWDKG4XOKDpiAu2dMwSwiNOrLeVsw==
+X-Received: by 2002:a17:907:9450:b0:a52:5df2:ab4c with SMTP id dl16-20020a170907945000b00a525df2ab4cmr3419477ejc.16.1713205662607;
+        Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a6-20020a1709064a4600b00a51f2b5b1fcsm5778886ejv.75.2024.04.15.11.27.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a46a7208eedso504237666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 11:27:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUATSe8C8hyatStS+uSPeW0BBdp6qixXDcDaiXCj3rTlrQvjiiM2y5eUAWc+BXXtNBVr+kuBkEVz0q1oNZtB533iakXS15ugunt9igp
+X-Received: by 2002:a17:906:110e:b0:a52:320a:6320 with SMTP id
+ h14-20020a170906110e00b00a52320a6320mr6421452eja.51.1713205289339; Mon, 15
+ Apr 2024 11:21:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411161441.910170-3-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6GtmAc9B6K8dT-flaQntzbzZokvwdNLl
-X-Proofpoint-GUID: TdFM_63pvcjBbl31JkZc0XttxYHE-oxj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_15,2024-04-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 spamscore=0 suspectscore=0 phishscore=0
- mlxlogscore=691 impostorscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404150121
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-2-jeffxu@chromium.org>
+ <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
+In-Reply-To: <d7ed2809-95d5-453a-9169-abf14a52b2e4@collabora.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 15 Apr 2024 11:21:13 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+Message-ID: <CAHk-=wiPPBab9FkjZhFogr7rwKgZyAqU1xx9xqK4Cqkq0LdeLg@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] mseal: Wire up mseal syscall
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, corbet@lwn.net, Liam.Howlett@oracle.com, 
+	surenb@google.com, merimus@google.com, rdunlap@infradead.org, 
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 11, 2024 at 06:14:41PM +0200, David Hildenbrand wrote:
+On Mon, 15 Apr 2024 at 11:11, Muhammad Usama Anjum
+<usama.anjum@collabora.com> wrote:
+>
+> It isn't logical to wire up something which isn't present
 
-David, could you please clarify the below questions?
+Actually, with system calls, the rules end up being almost opposite.
 
-> +static int __s390_unshare_zeropages(struct mm_struct *mm)
-> +{
-> +	struct vm_area_struct *vma;
-> +	VMA_ITERATOR(vmi, mm, 0);
-> +	unsigned long addr;
-> +	int rc;
-> +
-> +	for_each_vma(vmi, vma) {
-> +		/*
-> +		 * We could only look at COW mappings, but it's more future
-> +		 * proof to catch unexpected zeropages in other mappings and
-> +		 * fail.
-> +		 */
-> +		if ((vma->vm_flags & VM_PFNMAP) || is_vm_hugetlb_page(vma))
-> +			continue;
-> +		addr = vma->vm_start;
-> +
-> +retry:
-> +		rc = walk_page_range_vma(vma, addr, vma->vm_end,
-> +					 &find_zeropage_ops, &addr);
-> +		if (rc <= 0)
-> +			continue;
+There's no point in adding the code if it's not reachable. So adding
+the system call code before adding the wiring makes no sense.
 
-So in case an error is returned for the last vma, __s390_unshare_zeropage()
-finishes with that error. By contrast, the error for a non-last vma would
-be ignored?
+So you have two cases: add the stubs first, or add the code first.
+Neither does anything without the other.
 
-> +
-> +		/* addr was updated by find_zeropage_pte_entry() */
-> +		rc = handle_mm_fault(vma, addr,
-> +				     FAULT_FLAG_UNSHARE | FAULT_FLAG_REMOTE,
-> +				     NULL);
-> +		if (rc & VM_FAULT_OOM)
-> +			return -ENOMEM;
+So then you go "add both in the same commit" option, which ends up
+being horrible from a "review the code" standpoint. The two parts are
+entirely different and mixing them up makes the patch very unclear
+(and has very different target audiences for reviewing it - the MM
+people really shouldn't have to look at the architecture wiring
+parts).
 
-Heiko pointed out that rc type is inconsistent vs vm_fault_t returned by
-handle_mm_fault(). While fixing it up, I've got concerned whether is it
-fine to continue in case any other error is met (including possible future
-VM_FAULT_xxxx)?
+End result: there are no "this is the logical ordering" cases.
 
-> +		/*
-> +		 * See break_ksm(): even after handle_mm_fault() returned 0, we
-> +		 * must start the lookup from the current address, because
-> +		 * handle_mm_fault() may back out if there's any difficulty.
-> +		 *
-> +		 * VM_FAULT_SIGBUS and VM_FAULT_SIGSEGV are unexpected but
-> +		 * maybe they could trigger in the future on concurrent
-> +		 * truncation. In that case, the shared zeropage would be gone
-> +		 * and we can simply retry and make progress.
-> +		 */
-> +		cond_resched();
-> +		goto retry;
-> +	}
-> +
-> +	return rc;
-> +}
+But the "wire up system calls" part actually has some reasons to be first:
 
-Thanks!
+ - it reserves the system call number
+
+ - it adds the "when system call isn't enabled, return -ENOSYS"
+conditional system call logic
+
+so I actually tend prefer this ordering when it comes to system calls.
+
+                Linus
