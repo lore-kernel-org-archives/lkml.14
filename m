@@ -1,180 +1,376 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069B984FDD
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB7E8527D
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200570; cv=none; b=E71DGUics6vgpaO4XgmUaYFoNaMrp7FL20XNqMJZ9Su06mctK14IOvJPrQeY+ewBZfo0iNTssXANQm0wEBsL2LnOMz29S7nbl+anPTcJSFMPsUEmJ5oyNvx+A0xnhIeHPzjbrarW3du2Hw+A5eratkYk4lTfBfQfS7UUi5FwKTs=
+	t=1713200573; cv=none; b=M27etKnIhlfXVd3IvGzYOWTV752C4UwilKzGjUrS2V0YdYxCtG9tdmZYCbOwn8fcN32VTTo4rl2tHlTslDh6gfGg2xVSItOkJJinmwi2sQ8amd6HgQd/azSaL8vpqmGv2s0u/6qWi4i6eSNvQd8PkV1GUZMlGhc8CQJuVg47xNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200570; c=relaxed/simple;
-	bh=AJlbdwTuteDTe4BVvJtE1OezY51Uyz1iTxO1OAraBxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAtt1dJMFkJLLvQ5oUHZk2+Gl9u+UlYVP4rqjvte8Gb91NQ4/oAIuGAOLhXPb5+vvUQUgsDfVoHqFhAomh43pJV8NsFR/iplIWfUO3lqtPQTbRWuBmpFdW8A3ArLFBhIt2y9G3AS5gY0dFQbgQX/b0rPsXioXgKO+MJ7fPw+yOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XX9oUfhB; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713200573; c=relaxed/simple;
+	bh=W+FH+0WMCw7p8CDy8q3yUpAykRF8ezI4H2CH+9Zt25Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=L2QT0wZmTls3UHdP5qFza7y3RXLlz96cZgrHtuLhDBW6JXqCSKufbPvQHwDqR4mlSanyvMLoSWva8vJuy1C1FY7c66nMD7ISR0Qp9k84UEH6AUzwKm91XcVUbaGabwq1obuk0+SzM1FXcUNgMnnjuN6h/G9PV9fsaanSLyEzFQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=XHSVVDgR; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XX9oUfhB"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa28cde736so2030555eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:02:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="XHSVVDgR"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecf8ebff50so2273310b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713200565; x=1713805365; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TJWFLlk6ICNRWZIRD9WFPl1zIlLjuJU9kdqkQByqVPQ=;
-        b=XX9oUfhBESo2zB+WXlt8Jg+5awq0OVYPunOqQO9VbBtA7vh14otskbcieERHVhFVbL
-         D8262Kqv0Tc12KeVypPjx7oiIF7OWdIWeXS/RXe+7J7e/L2UpcBc3D/woD+PvHMRQQy0
-         XSV4zdoXG0lf/CEUbexMHqPzUvq0ybKmeB6ms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713200565; x=1713805365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1713200571; x=1713805371; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TJWFLlk6ICNRWZIRD9WFPl1zIlLjuJU9kdqkQByqVPQ=;
-        b=UuhnogiGaEPmlWH2PBAaPfmvYH5idTSYMGdcU6nSo9J61/edm+VjfQEkwrDTY3qD74
-         1vvorWOQn8V1Jkg8ffCjYZZSHYMhvWxYSgzUlrgRS3zjVMXQox7xXM3CvhiSYfcOZtC2
-         8JPlgmBz8kNR3Ko/eLsDYTOWXa3D5p29wOOj4ZxfxSoHJUhfsKooRNzMGmszmpHv/ScL
-         NGQHvsus/M7AysVr3CwppGAiqoMXELCIj9VL3Omk9TQIjcpxdsfR/4osJmMqFpwvuIRa
-         cx7A2CplGxLUhhdyscTPRp/IgaGefUqQIUGtEMNCxZACaNt4GBilWHr/bdvfx7O0sgvD
-         Y1Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCUDHialetFxD2Cl4tV4Lp8534hQcdo5+P6iZzcbfzCVpiD8KRTWyVoknTM+SxfIahn9lcogoFEb4jBU9CIMaHFyvYQlFYvXgddY5Ck9
-X-Gm-Message-State: AOJu0YwjI9cPRLxMPGLPfDdY0VA4AvPygqCQeCa55Rp1Su+wg6fTcmvx
-	qcloXAvTzyTsdngOy1MUCp4f5k25ke6cDOFyG0jiSd5uzasiVJTL5UXySyD3Zw==
-X-Google-Smtp-Source: AGHT+IEYOZbcVvtVCv2aHOV1jRW+BNuqsUZsbfmYxla8sMqqORfgbGkTG2HFnkY4yJ0uy+SrQBOPFw==
-X-Received: by 2002:a05:6358:688b:b0:17e:bfb8:dd86 with SMTP id z11-20020a056358688b00b0017ebfb8dd86mr11908320rwh.3.1713200564920;
-        Mon, 15 Apr 2024 10:02:44 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q4-20020a656244000000b005dc4fc80b21sm6296328pgv.70.2024.04.15.10.02.43
+        bh=nLDuZBMdOA5LsIhe/7seDXRfkc825n/BCOMnccmbKZw=;
+        b=XHSVVDgRdCTKFkMK9rK9YtFo/urVy1LsqXteMPyLGvJa8CwjUSYSnbPPgYNwxVyPdF
+         EJk/AYD8DQTo5xz1TwAErPzVVCwNu5/dXSICcMZJEco05sD0AQCNAnWjJ4OEK6qqjkhl
+         7UWjxhWLZbg/VpSw903NSXdevwRbT6LMPhTcaSWq8eVWsrwgMX0IR1qjoIA4IQb+eiud
+         YTVEHbyHycYW+XkXqHk2tvxfUPRjYyXNeGvbBUxBUOTfYJWy0QLdum000RfESWzQwXQo
+         Z8RV1DV9V3aZ0aRo8TEAQreaM5/Xqb0Ya8ONKudTLcYTmWQOlNznms2i3uUL9IodwQMd
+         z+DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713200571; x=1713805371;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nLDuZBMdOA5LsIhe/7seDXRfkc825n/BCOMnccmbKZw=;
+        b=p+yWCwdR3ReBbVpH/lxIKfdVaYK9h57QdkDO1P7ZRsH0b7enj8Hg7bsY51oyCSK3ZF
+         nTNN87BvpySGsIY+7XkhwnM46fbNX9qDUIOOC1SJX3XjxFSEdD2pfzqsvwS949dCgnwB
+         zxT8gfmD4gYt3Prg++ByjOdUG4cZGyn5Tw5ffEkC+wkJtUOH5vn0yea8KZM3nsvssFEH
+         JgsdENbms3FN8XRKE94GM25Zo7hf9whh63zF17S8ZP35DrSUz/GdnTTIkfD2E1g+QIZf
+         EdyYCNSTK1RvhZxMCIZH+06cg6QHhYxla7i02YD4vfluFtSJZ2VQxZ1zXbL4XL20o1zI
+         hUdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXILwFD7n9oCjqqMa6N7QdEyfZQOGPpsl1GuGVv8/BiY5ePVjEeJ6dF7uvyz0fJsPD2cmQW65JRRiH2YSyPEyTb6YsPk1PUGdgxP/oj
+X-Gm-Message-State: AOJu0Yww3FBGgKlnVhjsMG2ObtPokw0htH/YV/rAIPPsF03CpaIf9XdF
+	ZC/8AZbL6Nx2l8YmGref3QN/5UFUx07e4TGq3eSWpL+vFPB7pjPY8b6rKy1ufO0=
+X-Google-Smtp-Source: AGHT+IE0Br/sfLtBzDZxNra+WQQQj8UhdqDe5qbQkKbjYH9VavooVHUHBefLx4JOZPgJS4SQ5vD0ww==
+X-Received: by 2002:a05:6a00:190e:b0:6ec:fa34:34ab with SMTP id y14-20020a056a00190e00b006ecfa3434abmr279743pfi.9.1713200571057;
+        Mon, 15 Apr 2024 10:02:51 -0700 (PDT)
+Received: from sunil-pc.Dlink ([106.51.187.230])
+        by smtp.gmail.com with ESMTPSA id 1-20020a056a00072100b006ed045e3a70sm7433158pfm.25.2024.04.15.10.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:02:43 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:02:42 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
-Message-ID: <202404150945.0E96AB727@keescook>
-References: <0000000000004cf5c205faf1c7f3@google.com>
- <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
- <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
- <ZhztQ9CvDm3UPgE9@FVFF77S0Q05N>
- <c5a3598d-16dd-4aeb-904e-2084fafef9fe@I-love.SAKURA.ne.jp>
- <Zhz3EEsnGSOgnYWA@shell.armlinux.org.uk>
- <2ab55fd1-7eb0-488e-93ea-660fa05ee43a@I-love.SAKURA.ne.jp>
- <Zh0A9p/l8lmIrunk@shell.armlinux.org.uk>
- <Zh0S_7Pit6Zc04mS@FVFF77S0Q05N.cambridge.arm.com>
+        Mon, 15 Apr 2024 10:02:50 -0700 (PDT)
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Robert Moore <robert.moore@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v4 13/20] ACPI/PNP: Initialize PNP devices skipped due to _DEP
+Date: Mon, 15 Apr 2024 22:31:06 +0530
+Message-Id: <20240415170113.662318-14-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240415170113.662318-1-sunilvl@ventanamicro.com>
+References: <20240415170113.662318-1-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh0S_7Pit6Zc04mS@FVFF77S0Q05N.cambridge.arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 15, 2024 at 12:43:59PM +0100, Mark Rutland wrote:
-> On Mon, Apr 15, 2024 at 11:27:02AM +0100, Russell King (Oracle) wrote:
-> > On Mon, Apr 15, 2024 at 06:58:30PM +0900, Tetsuo Handa wrote:
-> > > On 2024/04/15 18:44, Russell King (Oracle) wrote:
-> > > > On Mon, Apr 15, 2024 at 06:38:33PM +0900, Tetsuo Handa wrote:
-> > > >> On 2024/04/15 18:02, Mark Rutland wrote:
-> > > >>>   08626a6056aad824 ("arm: Implement thread_struct whitelist for hardened usercopy")
-> > > >>>
-> > > >>> That commit says that all accesses are bounce-buffered and bypass the check,
-> > > >>> but AFAICT the fpa_set() code hasn't changed since then, so either that was
-> > > >>> wrong or the user_regset_copyin() code has changed.
-> > > >>
-> > > >> Then, can we go with https://lkml.kernel.org/r/0b49d91b-511f-449e-b7c3-93b2ccce6c49@I-love.SAKURA.ne.jp ?
-> > > > 
-> > > > Have you visited that URL? It doesn't point to an email containing a
-> > > > patch, so sorry, I don't know what patch you're referring to.
-> > > > 
-> > > 
-> > > Containing a link to a diff. ;-)
-> > > 
-> > > diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-> > > index c421a899fc84..347611ae762f 100644
-> > > --- a/arch/arm/kernel/ptrace.c
-> > > +++ b/arch/arm/kernel/ptrace.c
-> > > @@ -583,10 +583,15 @@ static int fpa_set(struct task_struct *target,
-> > >  		   const void *kbuf, const void __user *ubuf)
-> > >  {
-> > >  	struct thread_info *thread = task_thread_info(target);
-> > > +	const unsigned int pos0 = pos;
-> > > +	char buf[sizeof(struct user_fp)];
-> > > +	int ret;
-> > >  
-> > > -	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-> > > -		&thread->fpstate,
-> > > -		0, sizeof(struct user_fp));
-> > > +	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-> > > +				 buf, 0, sizeof(struct user_fp));
-> > > +	if (!ret)
-> > > +		memcpy(&thread->fpstate, buf, pos - pos0);
-> > > +	return ret;
-> > >  }
-> > >  
-> > >  #ifdef CONFIG_VFP
-> > 
-> > No, not unless there is really no other option. It's hacking around the
-> > issue, creating two copy operations of the data (one onto the stack)
-> > rather than solving it properly - and I will not put up with that kind
-> > of mentality - it's a completely broken approach to open source
-> > software. If there is a problem, always fix it using the correct fix,
-> > never try to sticky-plaster around a problem.
-> > 
-> > It seems there is a way for architectures to tell the code what is
-> > safe to write to, and it seems that a misunderstanding meant this
-> > wasn't implemented. So let's see whether it's possible to fix that
-> > first.
-> 
-> I completely agree.
+When PNP devices have _DEP, they will not be enumerated in
+pnpacpi_init() unless the dependency is met. Hence, when such PNP
+device's supplier device is probed, the PNP device need to be added to
+the PNP data structures. So, introduce pnpacpi_init_2() for doing this
+which gets called as part of clearing the dependency.
 
-FWIW, the bound buffer approach is used in other places as well
-(especially for places that are not fastpath, like this case), as it
-creates an explicit bounds check (i.e. the buffer on the stack). But
-yes, if there is a way to specifically allow this during the kmem setup,
-let's do that.
+This is currently required for RISC-V. Hence, restricted the code with a
+CONFIG option enabled for RISC-V.
 
-The timeline on this is interesting, it first showed up on syzbot about
-a year ago (2023/05/05 12:53)
-https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
+Since pnpacpi_add_device() can be called now even after boot,
+__init attribute is removed from pnpacpi_add_device() and its dependent
+functions.
 
-But hardened usercopy (and commit 08626a6056aad824) are from Jan 2018.
-No one noticed for 5 years? :P
+Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+---
+ drivers/acpi/scan.c            |  4 +++
+ drivers/pnp/pnpacpi/core.c     | 24 ++++++++++---
+ drivers/pnp/pnpacpi/rsparser.c | 63 +++++++++++++++++-----------------
+ include/linux/pnp.h            |  7 ++++
+ 4 files changed, 62 insertions(+), 36 deletions(-)
 
-> We'll have to wait for Kees to wake up, but IIUC one assumption here was that
-> thread_info was particularly sensitive, and hence any state to be copied
-> to/from userspace would live in thread_struct. Either we need to remove that
-> assumption, or we need to move things so that we can use
-> arch_thread_struct_whitelist().
-> 
-> Given that arm always selects THREAD_INFO_IN_TASK, I think it would be a fairly
-> mechanical change to move fp_state (and vfp_state!) into thread_struct. That
-> would mean that the TI_FPSTATE offset would grow, but assuming that still fits
-> into an ADD immediate, we'd be ok, and then arch_thread_struct_whitelist()
-> could be used to handle these structures.
-
-Sure, or use a bounce buffer, since no one noticed this for 5 years
-it probably isn't heavy used[1]? But sure, I'm open to whatever --
-the point is to not arbitrarily allow usercopy to touch the memory here.
-
--Kees
-
-[1] We probably can't remove PTRACE_SETFPREGS, but yeah, it's really
-uncommon:
-https://codesearch.debian.net/search?q=ptrace%28PTRACE_SETFPREGS%2C&literal=1&perpkg=1
-- systemtap test suite uses it
-- rr is x86 only
-- crui doesn't have a arm backend
-- python ptrace may use it
-- edb-debugger is x86 only
-- llvm mentions it in comments only
-
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 8e23b9508716..086ae040a5ad 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -19,6 +19,7 @@
+ #include <linux/dma-map-ops.h>
+ #include <linux/platform_data/x86/apple.h>
+ #include <linux/pgtable.h>
++#include <linux/pnp.h>
+ #include <linux/crc32.h>
+ #include <linux/dma-direct.h>
+ 
+@@ -2370,6 +2371,9 @@ static void acpi_scan_clear_dep_fn(struct work_struct *work)
+ 	acpi_bus_attach(cdw->adev, (void *)true);
+ 	acpi_scan_lock_release();
+ 
++	if (IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI) && IS_ENABLED(CONFIG_PNPACPI))
++		pnpacpi_init_2(cdw->adev);
++
+ 	acpi_dev_put(cdw->adev);
+ 	kfree(cdw);
+ }
+diff --git a/drivers/pnp/pnpacpi/core.c b/drivers/pnp/pnpacpi/core.c
+index a0927081a003..c81893fc1fb2 100644
+--- a/drivers/pnp/pnpacpi/core.c
++++ b/drivers/pnp/pnpacpi/core.c
+@@ -26,7 +26,7 @@ static int num;
+ #define TEST_ALPHA(c) \
+ 	if (!('A' <= (c) && (c) <= 'Z')) \
+ 		return 0
+-static int __init ispnpidacpi(const char *id)
++static int ispnpidacpi(const char *id)
+ {
+ 	TEST_ALPHA(id[0]);
+ 	TEST_ALPHA(id[1]);
+@@ -194,7 +194,7 @@ struct pnp_protocol pnpacpi_protocol = {
+ };
+ EXPORT_SYMBOL(pnpacpi_protocol);
+ 
+-static const char *__init pnpacpi_get_id(struct acpi_device *device)
++static const char *pnpacpi_get_id(struct acpi_device *device)
+ {
+ 	struct acpi_hardware_id *id;
+ 
+@@ -206,7 +206,7 @@ static const char *__init pnpacpi_get_id(struct acpi_device *device)
+ 	return NULL;
+ }
+ 
+-static int __init pnpacpi_add_device(struct acpi_device *device)
++static int pnpacpi_add_device(struct acpi_device *device)
+ {
+ 	struct pnp_dev *dev;
+ 	const char *pnpid;
+@@ -283,6 +283,23 @@ static int __init pnpacpi_add_device(struct acpi_device *device)
+ 	return 0;
+ }
+ 
++int pnpacpi_disabled;
++
++#ifdef CONFIG_ARCH_ACPI_DEFERRED_GSI
++void pnpacpi_init_2(struct acpi_device *adev)
++{
++	if (acpi_disabled || pnpacpi_disabled)
++		return;
++
++	if (!adev)
++		return;
++
++	if (acpi_is_pnp_device(adev) && acpi_dev_ready_for_enumeration(adev))
++		pnpacpi_add_device(adev);
++}
++
++#endif
++
+ static acpi_status __init pnpacpi_add_device_handler(acpi_handle handle,
+ 						     u32 lvl, void *context,
+ 						     void **rv)
+@@ -296,7 +313,6 @@ static acpi_status __init pnpacpi_add_device_handler(acpi_handle handle,
+ 	return AE_OK;
+ }
+ 
+-int pnpacpi_disabled __initdata;
+ static int __init pnpacpi_init(void)
+ {
+ 	if (acpi_disabled || pnpacpi_disabled) {
+diff --git a/drivers/pnp/pnpacpi/rsparser.c b/drivers/pnp/pnpacpi/rsparser.c
+index c02ce0834c2c..1008599901a2 100644
+--- a/drivers/pnp/pnpacpi/rsparser.c
++++ b/drivers/pnp/pnpacpi/rsparser.c
+@@ -289,9 +289,9 @@ int pnpacpi_parse_allocated_resource(struct pnp_dev *dev)
+ 	return 0;
+ }
+ 
+-static __init void pnpacpi_parse_dma_option(struct pnp_dev *dev,
+-					    unsigned int option_flags,
+-					    struct acpi_resource_dma *p)
++static void pnpacpi_parse_dma_option(struct pnp_dev *dev,
++				     unsigned int option_flags,
++				     struct acpi_resource_dma *p)
+ {
+ 	int i;
+ 	unsigned char map = 0, flags;
+@@ -303,9 +303,9 @@ static __init void pnpacpi_parse_dma_option(struct pnp_dev *dev,
+ 	pnp_register_dma_resource(dev, option_flags, map, flags);
+ }
+ 
+-static __init void pnpacpi_parse_irq_option(struct pnp_dev *dev,
+-					    unsigned int option_flags,
+-					    struct acpi_resource_irq *p)
++static void pnpacpi_parse_irq_option(struct pnp_dev *dev,
++				     unsigned int option_flags,
++				     struct acpi_resource_irq *p)
+ {
+ 	int i;
+ 	pnp_irq_mask_t map;
+@@ -320,9 +320,9 @@ static __init void pnpacpi_parse_irq_option(struct pnp_dev *dev,
+ 	pnp_register_irq_resource(dev, option_flags, &map, flags);
+ }
+ 
+-static __init void pnpacpi_parse_ext_irq_option(struct pnp_dev *dev,
+-					unsigned int option_flags,
+-					struct acpi_resource_extended_irq *p)
++static void pnpacpi_parse_ext_irq_option(struct pnp_dev *dev,
++					 unsigned int option_flags,
++					 struct acpi_resource_extended_irq *p)
+ {
+ 	int i;
+ 	pnp_irq_mask_t map;
+@@ -344,9 +344,9 @@ static __init void pnpacpi_parse_ext_irq_option(struct pnp_dev *dev,
+ 	pnp_register_irq_resource(dev, option_flags, &map, flags);
+ }
+ 
+-static __init void pnpacpi_parse_port_option(struct pnp_dev *dev,
+-					     unsigned int option_flags,
+-					     struct acpi_resource_io *io)
++static void pnpacpi_parse_port_option(struct pnp_dev *dev,
++				      unsigned int option_flags,
++				      struct acpi_resource_io *io)
+ {
+ 	unsigned char flags = 0;
+ 
+@@ -357,16 +357,16 @@ static __init void pnpacpi_parse_port_option(struct pnp_dev *dev,
+ }
+ 
+ static __init void pnpacpi_parse_fixed_port_option(struct pnp_dev *dev,
+-					unsigned int option_flags,
+-					struct acpi_resource_fixed_io *io)
++						   unsigned int option_flags,
++						   struct acpi_resource_fixed_io *io)
+ {
+ 	pnp_register_port_resource(dev, option_flags, io->address, io->address,
+ 				   0, io->address_length, IORESOURCE_IO_FIXED);
+ }
+ 
+-static __init void pnpacpi_parse_mem24_option(struct pnp_dev *dev,
+-					      unsigned int option_flags,
+-					      struct acpi_resource_memory24 *p)
++static void pnpacpi_parse_mem24_option(struct pnp_dev *dev,
++				       unsigned int option_flags,
++				       struct acpi_resource_memory24 *p)
+ {
+ 	unsigned char flags = 0;
+ 
+@@ -376,9 +376,9 @@ static __init void pnpacpi_parse_mem24_option(struct pnp_dev *dev,
+ 				  p->alignment, p->address_length, flags);
+ }
+ 
+-static __init void pnpacpi_parse_mem32_option(struct pnp_dev *dev,
+-					      unsigned int option_flags,
+-					      struct acpi_resource_memory32 *p)
++static void pnpacpi_parse_mem32_option(struct pnp_dev *dev,
++				       unsigned int option_flags,
++				       struct acpi_resource_memory32 *p)
+ {
+ 	unsigned char flags = 0;
+ 
+@@ -388,9 +388,9 @@ static __init void pnpacpi_parse_mem32_option(struct pnp_dev *dev,
+ 				  p->alignment, p->address_length, flags);
+ }
+ 
+-static __init void pnpacpi_parse_fixed_mem32_option(struct pnp_dev *dev,
+-					unsigned int option_flags,
+-					struct acpi_resource_fixed_memory32 *p)
++static void pnpacpi_parse_fixed_mem32_option(struct pnp_dev *dev,
++					     unsigned int option_flags,
++					     struct acpi_resource_fixed_memory32 *p)
+ {
+ 	unsigned char flags = 0;
+ 
+@@ -400,9 +400,9 @@ static __init void pnpacpi_parse_fixed_mem32_option(struct pnp_dev *dev,
+ 				  0, p->address_length, flags);
+ }
+ 
+-static __init void pnpacpi_parse_address_option(struct pnp_dev *dev,
+-						unsigned int option_flags,
+-						struct acpi_resource *r)
++static void pnpacpi_parse_address_option(struct pnp_dev *dev,
++					 unsigned int option_flags,
++					 struct acpi_resource *r)
+ {
+ 	struct acpi_resource_address64 addr, *p = &addr;
+ 	acpi_status status;
+@@ -427,9 +427,9 @@ static __init void pnpacpi_parse_address_option(struct pnp_dev *dev,
+ 					   IORESOURCE_IO_FIXED);
+ }
+ 
+-static __init void pnpacpi_parse_ext_address_option(struct pnp_dev *dev,
+-						    unsigned int option_flags,
+-						    struct acpi_resource *r)
++static void pnpacpi_parse_ext_address_option(struct pnp_dev *dev,
++					     unsigned int option_flags,
++					     struct acpi_resource *r)
+ {
+ 	struct acpi_resource_extended_address64 *p = &r->data.ext_address64;
+ 	unsigned char flags = 0;
+@@ -451,8 +451,7 @@ struct acpipnp_parse_option_s {
+ 	unsigned int option_flags;
+ };
+ 
+-static __init acpi_status pnpacpi_option_resource(struct acpi_resource *res,
+-						  void *data)
++static acpi_status pnpacpi_option_resource(struct acpi_resource *res, void *data)
+ {
+ 	int priority;
+ 	struct acpipnp_parse_option_s *parse_data = data;
+@@ -547,7 +546,7 @@ static __init acpi_status pnpacpi_option_resource(struct acpi_resource *res,
+ 	return AE_OK;
+ }
+ 
+-int __init pnpacpi_parse_resource_option_data(struct pnp_dev *dev)
++int pnpacpi_parse_resource_option_data(struct pnp_dev *dev)
+ {
+ 	struct acpi_device *acpi_dev = dev->data;
+ 	acpi_handle handle = acpi_dev->handle;
+diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+index ddbe7c3ca4ce..440f8c268a29 100644
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -347,6 +347,7 @@ static inline struct acpi_device *pnp_acpi_device(struct pnp_dev *dev)
+ 		return dev->data;
+ 	return NULL;
+ }
++
+ #else
+ #define pnp_acpi_device(dev) 0
+ #endif
+@@ -514,4 +515,10 @@ static inline void pnp_unregister_driver(struct pnp_driver *drv) { }
+ 	module_driver(__pnp_driver, pnp_register_driver, \
+ 				    pnp_unregister_driver)
+ 
++#ifdef CONFIG_ARCH_ACPI_DEFERRED_GSI
++void pnpacpi_init_2(struct acpi_device *adev);
++#else
++static inline void pnpacpi_init_2(struct acpi_device *adev) { }
++#endif
++
+ #endif /* _LINUX_PNP_H */
 -- 
-Kees Cook
+2.40.1
+
