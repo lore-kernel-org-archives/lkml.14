@@ -1,82 +1,98 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86D58063C
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800B780635;
+	Mon, 15 Apr 2024 16:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713198420; cv=none; b=BNvenlO9PEaXtdfSegTLaXqbvO9I/SsNcdRRTu31CLC84x+HTX6PBj9S8gxncRGgNYtq7WTaHKHZxqqOcB4uCt4fw8ABVxDcs3d6qmv+rp9P29c9yVGKKBCddP6TETGXW71TmRhYGZUaX55kZTosuQrjUnZqEPBkLOvVPYzfNJY=
+	t=1713198500; cv=none; b=GRnFyWV8Xf99h+2as2YBoigqu4516Et2SEcMOZVFV2hG2ySXWLl3yi3CsoDG0ShANzBBV6qePxbgtDf0VoL2YLX5oe8MoacBJK6g0DySJ11FdG4iXG5Lw26LNAw7tF+XXQTzPG56g0xpF6g55Ax9VoDA8roM2yIIYAac+geiJT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713198420; c=relaxed/simple;
-	bh=FsGXC95MuRbTCP5YYvZkGQEOjfnV4rG+8AuKvodSm1Q=;
+	s=arc-20240116; t=1713198500; c=relaxed/simple;
+	bh=U2/UnAEfxAjeQOls/oNn2mc+hH1lDCfv8DsHXxkohlI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvdHLeCshUpG/vZwBV5XBhbN0pLoi+MGv5vSLQdLMDZziXwo3afL41GcQqN0XIKEgHH740UL9oBvgoK4VuepPSBOXNBG+LuwwkE2tu9hYDwyNB6xcv0+k+7XgDU9bYCHyVsa0y273GMxxK1XltveFBrUfg3VbIJINOTF8zycaA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yt43Wfdr; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfnVl1z4IQiHJZB9lYlXmUbAeoiMHG5LRkfRR7ygZI9OaacBfW6rBiWLxyiUkZwyxAh/L+kEGVDnVbl/UfP0n6+hc85q/r4MinQvjy8hCdKd8QHPSxeZPurk0zt2c4cO1I1UfZpxcUaqWodFVcjabWD8SOyV56O9SYDGl+X8y8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jv5MCLyn; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yt43Wfdr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=aT/STpxKuekl2Fk6nZChHwEDDzTToAFhme+ALYu4XrI=; b=Yt43WfdrZ6/nZjiMfl6ZwLHc/Z
-	DOAORuym87Iw+/zOBrF5v5QSO41Gm29B11h18EiZq6jGLDiK1MWIzTvOxGk6j0r+TxKLe/f6Dxgp/
-	C2rXA8ENTXC1wOrzCMZiM1iozZSfbIht3rxz6OZf4YH+gjORzzx7DOwYaqPTbo0FQV7Qw8rLz4JE6
-	G7UvVni4t3vWECTLNLqL93/7RHTMrPo/8DdfPfEwS0zYiuQ7uE2mdN5u2ez6kJIjXdk0W7DuwGYKB
-	BunDjU0jjREVckAE0HseP4KB4I6H1sZLywiLbGjHWoW9wn5RWsoyvD2A/WKiF1UbGxP7L7yUh2jkH
-	tbCq6unw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwPAV-0000000G3pm-29OT;
-	Mon, 15 Apr 2024 16:26:55 +0000
-Date: Mon, 15 Apr 2024 17:26:55 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Peter Xu <peterx@redhat.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	Alistair Popple <apopple@nvidia.com>
-Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
-Message-ID: <Zh1VT-6wKfeE0VJS@casper.infradead.org>
-References: <Zhhd-A7w1A8JUadM@casper.infradead.org>
- <ZhinCD-PoblxGFm0@casper.infradead.org>
- <ZhkrY5tkxgAsL1GF@x1n>
- <CAJuCfpG7YkQ2giKiv07TetTn=QHK9x723vnLaTjDCaQjUvAavw@mail.gmail.com>
- <ZhlCVOz7qaDtldfL@casper.infradead.org>
- <CAJuCfpGGUD6ev-KFhON2D2RqQRZSgjxFXvkNqeux-LrJw4L+iw@mail.gmail.com>
- <ZhlQ_4Ve0vYNbWbl@casper.infradead.org>
- <CAJuCfpH3sKvczqRix6Q6QX9L4FsHQbmnyFXetvY+TzVUk38soA@mail.gmail.com>
- <Zh1SMHdN9xK9N2U_@casper.infradead.org>
- <CAJuCfpFjhfEYzG2zBNnE0Spv1=DbamKTc46ie0U3r7QniOnqRA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jv5MCLyn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713198498; x=1744734498;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U2/UnAEfxAjeQOls/oNn2mc+hH1lDCfv8DsHXxkohlI=;
+  b=Jv5MCLynFyOF5xicsvuqQJ/of6LD/6D5yXlN7BX1IZn/PrOSujK3q/Ei
+   1wT80bnaTHcVqipbiNf05dbO/DhjKcB2xn5LScNl0Raixb9j1tJQD6wPr
+   CGWEHgX4FAnA/UMR8RVWq8tAuBTs1fULf7ug3arsLhY/6q/4ghNmNuwOJ
+   aGVxqSj+O5DDkJg5ghC0aj4Z7UTsPrbLZdkglWv1NA68cnI6Z1FmxWy4X
+   fuWRaQqrV44m7WDxt31xnlOPBzkuZjRMBbsLTZRqQ4Xlho7XEfSMk/f2D
+   a4DDPyL7MNYH3N/OXfELDCnTZNnZtmtBuQwbR+P13eYBWgBywRqBTrU22
+   w==;
+X-CSE-ConnectionGUID: vxCWpPVhR5KFzYswhUXgDA==
+X-CSE-MsgGUID: L4rurhbnTTakJOO3nImuyA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8708464"
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="8708464"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:28:18 -0700
+X-CSE-ConnectionGUID: L67mHGv8TzCH4dF8pCaK4w==
+X-CSE-MsgGUID: GkjPkxbCQvartfrYdbKRIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="26613854"
+Received: from rabinapr-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.27.254])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:28:17 -0700
+Date: Mon, 15 Apr 2024 09:28:15 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] dax: remove redundant assignment to variable rc
+Message-ID: <Zh1Vn0iQk0AVTJHD@aschofie-mobl2>
+References: <20240415101928.484143-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFjhfEYzG2zBNnE0Spv1=DbamKTc46ie0U3r7QniOnqRA@mail.gmail.com>
+In-Reply-To: <20240415101928.484143-1-colin.i.king@gmail.com>
 
-On Mon, Apr 15, 2024 at 09:19:06AM -0700, Suren Baghdasaryan wrote:
-> On Mon, Apr 15, 2024 at 9:13 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > The tcp vma is not file backed, but I'm pretty sure that COW is not
-> > something they want, so there's never an anon_vma.  It's for pages
-> > that contain received TCP packets; ie it's mmaped TCP.
+On Mon, Apr 15, 2024 at 11:19:28AM +0100, Colin Ian King wrote:
+> The variable rc is being assigned an value and then is being re-assigned
+> a new value in the next statement. The assignment is redundant and can
+> be removed.
 > 
-> I was following
-> tcp_zerocopy_receive()->tcp_zerocopy_vm_insert_batch()->vm_insert_pages()->insert_page_in_batch_locked()->validate_page_before_insert()
-> which errors out for PageAnon(page). So, I assumed this path works on
-> file-backed pages but I'm not familiar with this code at all.
+> Cleans up clang scan build warning:
+> drivers/dax/bus.c:1207:2: warning: Value stored to 'rc' is never
+> read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-It turns out there are pages which are neither file nor anon ;-)
-I have a partial list here:
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-https://kernelnewbies.org/MatthewWilcox/Memdescs
-
-but I don't even have TCP on that list.  I haven't looked into what they
-need -- I don't think they need mapping, index, etc, but I need to
-figure that out.
+> ---
+>  drivers/dax/bus.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 797e1ebff299..f758afbf8f09 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -1204,7 +1204,6 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = -ENXIO;
+>  	rc = down_write_killable(&dax_region_rwsem);
+>  	if (rc)
+>  		return rc;
+> -- 
+> 2.39.2
+> 
+> 
