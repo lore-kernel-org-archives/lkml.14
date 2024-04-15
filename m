@@ -1,134 +1,230 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B8F12EBCB;
-	Mon, 15 Apr 2024 12:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D200912E1D9;
+	Mon, 15 Apr 2024 12:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185439; cv=none; b=aExFOtw7gn+nIVC9kdzqXTw5TG8eAcDpvk36qew0zWwhbD+DysAoLZloeJghNrT1o6Ce9D8Bcin8IpQlDhRMRPeTrAghbA68TNhgxyi5pCjdIFLZ1+SmdIDAYfgDMPPUX3pj55MjlhPB1sRHyh7H5/0bYzl86Jwg6PNDRP5QlXE=
+	t=1713185438; cv=none; b=orJDddiEJHA9zQ07UJ6p6w1/vOk0XhSfjDdn5MHx1ih2/NS8oGDXs214Q91T1jEjZVfEhY+Sn+CgzcNV7UJYJ27ExUgSEQrE3Q85jcPS/jhzd2731htqMdHO6QALmc/aMM8bR3j33qS+sqNOHczpFDBd6u7qUBE5RC7dCCfYA4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185439; c=relaxed/simple;
-	bh=nw55+VOpSKCFU5z9iBHcAaveAuSjI2mNzuzQYI+vTic=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vyq7UP+UD1XtoA3AaN6bdT+wqRBLO77QSwBfktB9WLtVf39Gzl5h7FAZYYl3sLRoZWCguffCnoPG70g3W0LcCM1aXCL1/MuxMakmNnDzM7fp0Taxx/6uWuFVEIIfEIWuFPuD3U/SQQutEDCHCpLk9vogdzGI2sO//uj80yzed34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IpS8V3E/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185438; c=relaxed/simple;
+	bh=OxU5Qdy/S03nyrb3IpkyfdM0xFyVAyEfc31WiC4iEWM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XRPt4or0um+hcxXhts5Kc6q1WW/fk4uya0CGRmFAm3OKS6wZgxMTEwaBHL5H+SMAKS2sDrBhdAyLR+4f55EpShIzLrT+2Y+2ByDZrnh795OJhkNySR/PI10MRiHin3FL97/HRhQrXEOletgfjv9GsKxk9su3Yk9jYz3dAE87xiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQqenmxx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IpS8V3E/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A090C2BD11;
-	Mon, 15 Apr 2024 12:50:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQqenmxx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779B2C32783;
+	Mon, 15 Apr 2024 12:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185439;
-	bh=nw55+VOpSKCFU5z9iBHcAaveAuSjI2mNzuzQYI+vTic=;
+	s=k20201202; t=1713185438;
+	bh=OxU5Qdy/S03nyrb3IpkyfdM0xFyVAyEfc31WiC4iEWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IpS8V3E/ksNs5LVkc3FELoZLfTt2hzqJyjrB5Q/qnGSAARxI3BJ/K0TE8ZVREP3QZ
-	 S+HJCuNFiUu5HuGMhCpUJmb8jhPyZyv2qLEuJbr8T5CgVyrDerzOnfd5r6r3EeJmQk
-	 xhUVkn8lZg86P0+19QpeGDslfFvmHlKljupo15gQG3So2N5p3gq9sT/D3S08IJMniS
-	 F4Pe2CfRzvVY3aeJfPMRNo7JfDeaD5KgbTbK4G5dDgv8UIAFP96Q3tGfL2K3PqyxNp
-	 hWj79sgMMdxIpXHvVXqDV3KrBhTK1xi+sJ//gS1qW6hBDqNrGimRcp1V6eMM0vlhci
-	 cpph7I1BzalHw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Adam Goldman <adamg@pobox.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Sasha Levin <sashal@kernel.org>,
-	linux1394-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.1 6/6] firewire: ohci: mask bus reset interrupts between ISR and bottom half
-Date: Mon, 15 Apr 2024 06:04:27 -0400
-Message-ID: <20240415100433.3127434-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100433.3127434-1-sashal@kernel.org>
-References: <20240415100433.3127434-1-sashal@kernel.org>
+	b=hQqenmxxG9cLKAMPWbG2hcvJ9hjThCprSmDU0Avm9cbqwR7clBKyFS744+hlVYyNY
+	 WLUGiMVk46URjDsrBJ0WEOFkkHIV8uup43yuBYt5i7VaHEb0KRW4URMGoz4kTT0T7C
+	 o4iYgHGJ4mYZ4tWop6ZJVh5+0+bYqtk4ImSHrAg/XETFV5uT8MZ3Cd8zcL/0MF6zWt
+	 KVkNaMeq98DZPwJ3YoCYz4yD8X8hoOkgqdqO0qLD1GA51PupfkTgWK6K4QQPPiKO6m
+	 kiBdR6SCFHSkhEuqhQQIxUsjeFtGc+dkSfEvNxpHa9EuH1tt/80elQYCIaDqSwj3ki
+	 4FF55HS80nMAg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 08/36] function_graph: Remove logic around ftrace_graph_entry and return
+Date: Mon, 15 Apr 2024 21:50:32 +0900
+Message-Id: <171318543205.254850.1420437462860854437.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.86
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Adam Goldman <adamg@pobox.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 752e3c53de0fa3b7d817a83050b6699b8e9c6ec9 ]
+The function pointers ftrace_graph_entry and ftrace_graph_return are no
+longer called via the function_graph tracer. Instead, an array structure is
+now used that will allow for multiple users of the function_graph
+infrastructure. The variables are still used by the architecture code for
+non dynamic ftrace configs, where a test is made against them to see if
+they point to the default stub function or not. This is how the static
+function tracing knows to call into the function graph tracer
+infrastructure or not.
 
-In the FireWire OHCI interrupt handler, if a bus reset interrupt has
-occurred, mask bus reset interrupts until bus_reset_work has serviced and
-cleared the interrupt.
+Two new stub functions are made. entry_run() and return_run(). The
+ftrace_graph_entry and ftrace_graph_return are set to them respectively
+when the function graph tracer is enabled, and this will trigger the
+architecture specific function graph code to be executed.
 
-Normally, we always leave bus reset interrupts masked. We infer the bus
-reset from the self-ID interrupt that happens shortly thereafter. A
-scenario where we unmask bus reset interrupts was introduced in 2008 in
-a007bb857e0b26f5d8b73c2ff90782d9c0972620: If
-OHCI_PARAM_DEBUG_BUSRESETS (8) is set in the debug parameter bitmask, we
-will unmask bus reset interrupts so we can log them.
+This also requires checking the global_ops hash for all calls into the
+function_graph tracer.
 
-irq_handler logs the bus reset interrupt. However, we can't clear the bus
-reset event flag in irq_handler, because we won't service the event until
-later. irq_handler exits with the event flag still set. If the
-corresponding interrupt is still unmasked, the first bus reset will
-usually freeze the system due to irq_handler being called again each
-time it exits. This freeze can be reproduced by loading firewire_ohci
-with "modprobe firewire_ohci debug=-1" (to enable all debugging output).
-Apparently there are also some cases where bus_reset_work will get called
-soon enough to clear the event, and operation will continue normally.
-
-This freeze was first reported a few months after a007bb85 was committed,
-but until now it was never fixed. The debug level could safely be set
-to -1 through sysfs after the module was loaded, but this would be
-ineffectual in logging bus reset interrupts since they were only
-unmasked during initialization.
-
-irq_handler will now leave the event flag set but mask bus reset
-interrupts, so irq_handler won't be called again and there will be no
-freeze. If OHCI_PARAM_DEBUG_BUSRESETS is enabled, bus_reset_work will
-unmask the interrupt after servicing the event, so future interrupts
-will be caught as desired.
-
-As a side effect to this change, OHCI_PARAM_DEBUG_BUSRESETS can now be
-enabled through sysfs in addition to during initial module loading.
-However, when enabled through sysfs, logging of bus reset interrupts will
-be effective only starting with the second bus reset, after
-bus_reset_work has executed.
-
-Signed-off-by: Adam Goldman <adamg@pobox.com>
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- drivers/firewire/ohci.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Changes in v2:
+  - Fix typo and make lines shorter than 76 chars in the description.
+  - Remove unneeded return from return_run() function.
+---
+ kernel/trace/fgraph.c          |   67 +++++++++-------------------------------
+ kernel/trace/ftrace.c          |    2 -
+ kernel/trace/ftrace_internal.h |    2 -
+ 3 files changed, 15 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 667ff40f39353..7d94e1cbc0ed3 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -2049,6 +2049,8 @@ static void bus_reset_work(struct work_struct *work)
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index b9a2399b75ee..6f3ba8e113c1 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -145,6 +145,17 @@ add_fgraph_index_bitmap(struct task_struct *t, int offset, unsigned long bitmap)
+ 	t->ret_stack[offset] |= (bitmap << FGRAPH_INDEX_SHIFT);
+ }
  
- 	ohci->generation = generation;
- 	reg_write(ohci, OHCI1394_IntEventClear, OHCI1394_busReset);
-+	if (param_debug & OHCI_PARAM_DEBUG_BUSRESETS)
-+		reg_write(ohci, OHCI1394_IntMaskSet, OHCI1394_busReset);
++/* ftrace_graph_entry set to this to tell some archs to run function graph */
++static int entry_run(struct ftrace_graph_ent *trace)
++{
++	return 0;
++}
++
++/* ftrace_graph_return set to this to tell some archs to run function graph */
++static void return_run(struct ftrace_graph_ret *trace)
++{
++}
++
+ /*
+  * @offset: The index into @t->ret_stack to find the ret_stack entry
+  * @index: Where to place the index into @t->ret_stack of that entry
+@@ -675,7 +686,6 @@ extern void ftrace_stub_graph(struct ftrace_graph_ret *);
+ /* The callbacks that hook a function */
+ trace_func_graph_ret_t ftrace_graph_return = ftrace_stub_graph;
+ trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
+-static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
  
- 	if (ohci->quirks & QUIRK_RESET_PACKET)
- 		ohci->request_generation = generation;
-@@ -2115,12 +2117,14 @@ static irqreturn_t irq_handler(int irq, void *data)
- 		return IRQ_NONE;
+ /* Try to assign a return stack array on FTRACE_RETSTACK_ALLOC_SIZE tasks. */
+ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+@@ -758,46 +768,6 @@ ftrace_graph_probe_sched_switch(void *ignore, bool preempt,
+ 	}
+ }
  
- 	/*
--	 * busReset and postedWriteErr must not be cleared yet
-+	 * busReset and postedWriteErr events must not be cleared yet
- 	 * (OHCI 1.1 clauses 7.2.3.2 and 13.2.8.1)
- 	 */
- 	reg_write(ohci, OHCI1394_IntEventClear,
- 		  event & ~(OHCI1394_busReset | OHCI1394_postedWriteErr));
- 	log_irqs(ohci, event);
-+	if (event & OHCI1394_busReset)
-+		reg_write(ohci, OHCI1394_IntMaskClear, OHCI1394_busReset);
+-static int ftrace_graph_entry_test(struct ftrace_graph_ent *trace)
+-{
+-	if (!ftrace_ops_test(&global_ops, trace->func, NULL))
+-		return 0;
+-	return __ftrace_graph_entry(trace);
+-}
+-
+-/*
+- * The function graph tracer should only trace the functions defined
+- * by set_ftrace_filter and set_ftrace_notrace. If another function
+- * tracer ops is registered, the graph tracer requires testing the
+- * function against the global ops, and not just trace any function
+- * that any ftrace_ops registered.
+- */
+-void update_function_graph_func(void)
+-{
+-	struct ftrace_ops *op;
+-	bool do_test = false;
+-
+-	/*
+-	 * The graph and global ops share the same set of functions
+-	 * to test. If any other ops is on the list, then
+-	 * the graph tracing needs to test if its the function
+-	 * it should call.
+-	 */
+-	do_for_each_ftrace_op(op, ftrace_ops_list) {
+-		if (op != &global_ops && op != &graph_ops &&
+-		    op != &ftrace_list_end) {
+-			do_test = true;
+-			/* in double loop, break out with goto */
+-			goto out;
+-		}
+-	} while_for_each_ftrace_op(op);
+- out:
+-	if (do_test)
+-		ftrace_graph_entry = ftrace_graph_entry_test;
+-	else
+-		ftrace_graph_entry = __ftrace_graph_entry;
+-}
+-
+ static DEFINE_PER_CPU(unsigned long *, idle_ret_stack);
  
- 	if (event & OHCI1394_selfIDComplete)
- 		queue_work(selfid_workqueue, &ohci->bus_reset_work);
--- 
-2.43.0
+ static void
+@@ -939,18 +909,12 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 			ftrace_graph_active--;
+ 			goto out;
+ 		}
+-
+-		ftrace_graph_return = gops->retfunc;
+-
+ 		/*
+-		 * Update the indirect function to the entryfunc, and the
+-		 * function that gets called to the entry_test first. Then
+-		 * call the update fgraph entry function to determine if
+-		 * the entryfunc should be called directly or not.
++		 * Some archs just test to see if these are not
++		 * the default function
+ 		 */
+-		__ftrace_graph_entry = gops->entryfunc;
+-		ftrace_graph_entry = ftrace_graph_entry_test;
+-		update_function_graph_func();
++		ftrace_graph_return = return_run;
++		ftrace_graph_entry = entry_run;
+ 
+ 		ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
+ 	}
+@@ -986,7 +950,6 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 	if (!ftrace_graph_active) {
+ 		ftrace_graph_return = ftrace_stub_graph;
+ 		ftrace_graph_entry = ftrace_graph_entry_stub;
+-		__ftrace_graph_entry = ftrace_graph_entry_stub;
+ 		ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
+ 		unregister_pm_notifier(&ftrace_suspend_notifier);
+ 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index da1710499698..fef833f63647 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -235,8 +235,6 @@ static void update_ftrace_function(void)
+ 		func = ftrace_ops_list_func;
+ 	}
+ 
+-	update_function_graph_func();
+-
+ 	/* If there's no change, then do nothing more here */
+ 	if (ftrace_trace_function == func)
+ 		return;
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 5012c04f92c0..19eddcb91584 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -42,10 +42,8 @@ ftrace_ops_test(struct ftrace_ops *ops, unsigned long ip, void *regs)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ extern int ftrace_graph_active;
+-void update_function_graph_func(void);
+ #else /* !CONFIG_FUNCTION_GRAPH_TRACER */
+ # define ftrace_graph_active 0
+-static inline void update_function_graph_func(void) { }
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
+ #else /* !CONFIG_FUNCTION_TRACER */
 
