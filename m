@@ -1,84 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFA78062E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EE280BFE;
 	Mon, 15 Apr 2024 12:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185378; cv=none; b=lIBMnpOEdxrdUYWeHCZQr1b8LTqHncBguy5ZM2pHD1Q/RTCJk6AshMhm7C6BaI2z/Ks0af1bjqfm+NAIR88sceUJcYtg8iJec6waOn+ra1587vKtStVzfT5LLFdjWhS4qgZy+U5D9uk8tRcN8LAYrn5kqra76crFdQGj9MlQraw=
+	t=1713185378; cv=none; b=l7GpKNZFhfAwYH7fXAbWIniMDGUqXG32CocWsAk9ma9a+Cr4ew3WH3R533Hjnt7ozEwhiP+G7FFd8g2NvX6aqU5EHi1mawVP7EC4dru0aghiCCX77GaWcjtonfOn+APLh7KqJgqBjhWprrJCe0h5fAcGo5JP9OwCHVOZW7V7knI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185378; c=relaxed/simple;
-	bh=ez+9pHNThV4Qwno6XjpGOuiqDEvbUby8kRZAvhEvGOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VyTS6jM7hNRt6RJgWqSr49p4n3Ia/8DjwXxmYR/bF3g9+nr/bbj5OXZTzmN8Gkf1UA/uHmT4uan8HI+YMhHv41r/9sqaw3tQfmr/PzxwqNWZQRn5E+HIGIcETYOef89mOhvTxLIB19WGgt391zbclAorvNFcFrSNLLupTRSkIp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvsY+B9a; arc=none smtp.client-ip=10.30.226.201
+	bh=Ky/M8O0rm7AMIWcFwVKGUXTVtEFqfb+EU9Ru8C9PH5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QVhD/R+9+rWP76G8irexRZFtfqiNYZI5/sScF8lYaUfZxjLgj4ogqND0FQLYE0zooNwFvdWB3sUbWHknrpyCBqJPGGAzHaxEou5g22kD5yyRTqh4BZh/iqwPqGXZ9DyLR0l2SFvBNdvMzICMs2OnzruTAmVivW4bGi8dx7RvSk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBVvizSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvsY+B9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43855C3277B;
-	Mon, 15 Apr 2024 12:49:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBVvizSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003A8C2BD10;
+	Mon, 15 Apr 2024 12:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713185378;
-	bh=ez+9pHNThV4Qwno6XjpGOuiqDEvbUby8kRZAvhEvGOI=;
+	bh=Ky/M8O0rm7AMIWcFwVKGUXTVtEFqfb+EU9Ru8C9PH5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WvsY+B9aX95J/tCeYFcYnPI95mwpRzKkhruWPSXXZaUVGfj7SWAv33ZreJAxPp1PQ
-	 ekz9B4TzpqFoFWdcHcX7noF+DvHMCdePek64LdPk6knJ6S0wRdO8771zgKMvKikm+8
-	 gWR/gTgLv4EGQoe+hVpuR808Jv/rp7OMS8wG3+ay0sb8ehYUdwbJVtUcQqhoDLNRlJ
-	 tTwtQPC1lJczWE6ejuNZrqhzHUT8miPdRo0f+GF5lgWgS1CjrU3UlbXl61wF5RB/3B
-	 61pC90LsmG/hC36Xr1Dh97xsnQsJBrl4OWZmomZ7HP0MVgyHEyh6yhAqFLJOkJWQNZ
-	 XodCUaM+Mm7hg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 13/15] vboxsf: explicitly deny setlease attempts
-Date: Mon, 15 Apr 2024 06:02:53 -0400
-Message-ID: <20240415100311.3126785-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
-References: <20240415100311.3126785-1-sashal@kernel.org>
+	b=oBVvizSBUMGrVT8rY3nQdZzju1MrHmb4eevqf16UecUF5/pf1RXMmrdwDkDSTYTUx
+	 1qRCVatyb3Hw8Njz1qJZlRQ06Ethvv56chp9wZJRS/YWiy36ozgfA7KSz2AN/ExAp8
+	 1TGFQzW5ZjUQ8Bhq5rnxnZkv2mQk86s9csI6XMavAwVYmjCVSDL2lMtHTROfG3uhVR
+	 mril2N+slpyyaP5QmPBuEsg0ktfYje3AZs2nC3WvNM/qRxb6VjdXgG+DEQXRidZR/+
+	 I/baYICOCSdBogfAvLhFoNx9jJQbd5HlKP6/JtBr3KsMl515cgEiuWgnRMt5+AKXzI
+	 2oNb8+i9y3EZg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 03/36] x86: tracing: Add ftrace_regs definition in the header
+Date: Mon, 15 Apr 2024 21:49:30 +0900
+Message-Id: <171318537073.254850.18255104445724151465.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.6
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-[ Upstream commit 1ece2c43b88660ddbdf8ecb772e9c41ed9cda3dd ]
+Add ftrace_regs definition for x86_64 in the ftrace header to
+clarify what register will be accessible from ftrace_regs.
 
-vboxsf does not break leases on its own, so it can't properly handle the
-case where the hypervisor changes the data. Don't allow file leases on
-vboxsf.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Link: https://lore.kernel.org/r/20240319-setlease-v1-1-5997d67e04b3@kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- fs/vboxsf/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ Changes in v3:
+  - Add rip to be saved.
+ Changes in v2:
+  - Newly added.
+---
+ arch/x86/include/asm/ftrace.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/vboxsf/file.c b/fs/vboxsf/file.c
-index 2307f8037efc3..118dedef8ebe8 100644
---- a/fs/vboxsf/file.c
-+++ b/fs/vboxsf/file.c
-@@ -218,6 +218,7 @@ const struct file_operations vboxsf_reg_fops = {
- 	.release = vboxsf_file_release,
- 	.fsync = noop_fsync,
- 	.splice_read = filemap_splice_read,
-+	.setlease = simple_nosetlease,
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index cf88cc8cc74d..c88bf47f46da 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -36,6 +36,12 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ 
+ #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+ struct ftrace_regs {
++	/*
++	 * On the x86_64, the ftrace_regs saves;
++	 * rax, rcx, rdx, rdi, rsi, r8, r9, rbp, rip and rsp.
++	 * Also orig_ax is used for passing direct trampoline address.
++	 * x86_32 doesn't support ftrace_regs.
++	 */
+ 	struct pt_regs		regs;
  };
  
- const struct inode_operations vboxsf_reg_iops = {
--- 
-2.43.0
 
