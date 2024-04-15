@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D4E3BBCE;
-	Mon, 15 Apr 2024 08:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421383D969;
+	Mon, 15 Apr 2024 08:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713168900; cv=none; b=jHRx2IGDzZgrARkj2UU037WpBy5pEFYNiJWJxEe/TidSdasz393SmZq9oMxB9SL1nb07xC7+t2VEE+XpzozqYujm3uPtfHBcTrQh1KoGjJlaQrVKOsdZ/6HLJQreUXKRtQdmgkOPG5IZLxx/ln7b6YC2qhaHnnd+iYyj7qGdpEg=
+	t=1713168903; cv=none; b=Ay8QL0ywEOt2f3k6Sr3cefVSMlNpOS9PPq8P6bdW8uxBuBCSmMAzdP3MoyjRCmI75/ilYlR+kZGjo8bU7Pz1jjzLOrYLqJJCWyiaO6erjCPntz7dPdvwQiK947/xBbiI4FbooKz4zfvkSgs9+nXKWg4vj72lj1FvKABy1CObDFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713168900; c=relaxed/simple;
-	bh=qm7FKE5QAvr5jXFr6CcyQo1qz15xe05sgY5/vUtEN9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bjKbtkCb6g4fEdHHLpDSmGMwZamwMwMFuuMbs5HJ9mbKngWqdWKK9AOkOfCX/R6eN0WsE2csWxYq34qWFhpyTAK/tmiOf30bVMcAjZwf3/YsoZ/2vaLdjvo+5Is4Qa49CGFk0B+Ddw9AzLGsHJ62FqNVz8yzVRbWxSqdGOmIIic=
+	s=arc-20240116; t=1713168903; c=relaxed/simple;
+	bh=wvmEMvCUzSgouK7RL1vaW0SFREP1d3S87z3s6JyC/4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ovkEvN7hlL7Gg3WO24UpVLDjTEt+VXPTAdZY8ceKf7Tgw8oANMyTKyHpVAxnpO85s5N0BmeskFoFCvP5DqALqgYVxdMKyDEhGsTjJLRSux1IqA5UmMVW7kAuI+y3AzT/qYP9ZYOOD6kTiyWSEgVGXhF7OFaVs5J+u/IrfokGPfY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B51DDA7;
-	Mon, 15 Apr 2024 01:15:26 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02C261515;
+	Mon, 15 Apr 2024 01:15:30 -0700 (PDT)
 Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 280973F64C;
-	Mon, 15 Apr 2024 01:14:56 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3F353F64C;
+	Mon, 15 Apr 2024 01:14:59 -0700 (PDT)
 From: Ben Gainey <ben.gainey@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -31,10 +32,12 @@ Cc: james.clark@arm.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH v5 0/4] perf: Support PERF_SAMPLE_READ with inherit
-Date: Mon, 15 Apr 2024 09:14:44 +0100
-Message-ID: <20240415081448.123789-1-ben.gainey@arm.com>
+Subject: [PATCH v5 2/4] tools/perf: Track where perf_sample_ids need per-thread periods
+Date: Mon, 15 Apr 2024 09:14:46 +0100
+Message-ID: <20240415081448.123789-3-ben.gainey@arm.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240415081448.123789-1-ben.gainey@arm.com>
+References: <20240415081448.123789-1-ben.gainey@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,94 +46,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This change allows events to use PERF_SAMPLE READ with inherit so long
-as PERF_SAMPLE_TID is also set.
+perf_sample_ids and related evlist/evsel code are modified to track
+which events combine inherit+PERF_SAMPLE_READ+PERF_SAMPLE_TID.
 
-Currently it is not possible to use PERF_SAMPLE_READ with inherit. This
-restriction assumes the user is interested in collecting aggregate
-statistics as per `perf stat`. It prevents a user from collecting
-per-thread samples using counter groups from a multi-threaded or
-multi-process application, as with `perf record -e '{....}:S'`. Instead
-users must use system-wide mode, or forgo the ability to sample counter
-groups. System-wide mode is often problematic as it requires specific
-permissions (no CAP_PERFMON / root access), or may lead to capture of
-significant amounts of extra data from other processes running on the
-system.
+Events with this combination of properties must be handled differently
+when calculating each sample period. They must use the combination
+of (ID + TID) to uniquely identify each distinct sequence of values.
 
-This patch changes `perf_event_alloc` relaxing the restriction against
-combining `inherit` with `PERF_SAMPLE_READ` so that the combination
-will be allowed so long as `PERF_SAMPLE_TID` is enabled. It modifies
-sampling so that only the count associated with the active thread is
-recorded into the buffer. It modifies the context switch handling so
-that perf contexts are always switched out if they have this kind of
-event so that the correct per-thread state is maintained. Finally, the 
-tools are updated to allow perf record to specify this combination and
-to correctly decode the sample data.
+Signed-off-by: Ben Gainey <ben.gainey@arm.com>
+---
+ tools/lib/perf/evlist.c                 | 1 +
+ tools/lib/perf/evsel.c                  | 7 +++++++
+ tools/lib/perf/include/internal/evsel.h | 9 +++++++++
+ 3 files changed, 17 insertions(+)
 
-In this configuration stream ids (such as may appear in the read_format
-field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather
-the pair of (stream id, tid) uniquely identify each event. Tools that
-rely on this, for example to calculate a delta between samples, would
-need updating to take this into account. Previously valid event
-configurations (system-wide, no-inherit and so on) where each stream id
-is the identifier are unaffected.
-
-
-Changes since v4:
- - Rebase on v6.9-rc1
- - Removed the dependency on inherit_stat that was previously assumed 
-   necessary as per feedback from Namhyung Kim.
- - Fixed an incorrect use of zfree instead of free in the tools leading
-   to an abort on tool shutdown.
- - Additional test coverage improvements added to perf test.
- - Cleaned up the remaining bit of irrelevant change missed between v3
-   and v4.
-
-Changes since v3:
- - Cleaned up perf test data changes incorrectly included into this
-   series from elsewhere.
-
-Changes since v2:
- - Rebase on v6.8
- - Respond to James Clarke's feedback; fixup some typos and move some
-   repeated checks into a helper macro.
- - Cleaned up checkpatch lints.
- - Updated perf test; fixed evsel handling so that existing tests pass
-   and added new tests to cover the new behaviour.
-
-Changes since v1:
- - Rebase on v6.8-rc1
- - Fixed value written into sample after child exists.
- - Modified handling of switch-out so that context with these events
-   take the slow path, so that the per-event/per-thread PMU state is
-   correctly switched.
- - Modified perf tools to support this mode of operation.
-
-Ben Gainey (4):
-  perf: Support PERF_SAMPLE_READ with inherit
-  tools/perf: Track where perf_sample_ids need per-thread periods
-  tools/perf: Correctly calculate sample period for inherited
-    SAMPLE_READ values
-  tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
-
- include/linux/perf_event.h                    |  1 +
- kernel/events/core.c                          | 82 ++++++++++++++-----
- tools/lib/perf/evlist.c                       |  1 +
- tools/lib/perf/evsel.c                        | 48 +++++++++++
- tools/lib/perf/include/internal/evsel.h       | 54 +++++++++++-
- tools/perf/tests/attr/README                  |  2 +
- .../tests/attr/test-record-group-sampling     | 39 ---------
- .../tests/attr/test-record-group-sampling1    | 50 +++++++++++
- .../tests/attr/test-record-group-sampling2    | 60 ++++++++++++++
- tools/perf/tests/attr/test-record-group2      |  9 +-
- tools/perf/util/evsel.c                       | 19 ++++-
- tools/perf/util/evsel.h                       |  1 +
- tools/perf/util/session.c                     | 11 ++-
- 13 files changed, 306 insertions(+), 71 deletions(-)
- delete mode 100644 tools/perf/tests/attr/test-record-group-sampling
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
- create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
-
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index c6d67fc9e57e..d17288eeaee4 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -255,6 +255,7 @@ static void perf_evlist__id_hash(struct perf_evlist *evlist,
+ 
+ 	sid->id = id;
+ 	sid->evsel = evsel;
++	sid->period_per_thread = perf_evsel__attr_has_per_thread_sample_period(evsel);
+ 	hash = hash_64(sid->id, PERF_EVLIST__HLIST_BITS);
+ 	hlist_add_head(&sid->node, &evlist->heads[hash]);
+ }
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index c07160953224..f7abb879f416 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -537,6 +537,13 @@ void perf_evsel__free_id(struct perf_evsel *evsel)
+ 	evsel->ids = 0;
+ }
+ 
++bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel)
++{
++	return (evsel->attr.sample_type & PERF_SAMPLE_READ)
++		&& (evsel->attr.sample_type & PERF_SAMPLE_TID)
++		&& evsel->attr.inherit;
++}
++
+ void perf_counts_values__scale(struct perf_counts_values *count,
+ 			       bool scale, __s8 *pscaled)
+ {
+diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
+index 5cd220a61962..f8de2bf89c76 100644
+--- a/tools/lib/perf/include/internal/evsel.h
++++ b/tools/lib/perf/include/internal/evsel.h
+@@ -36,6 +36,13 @@ struct perf_sample_id {
+ 
+ 	/* Holds total ID period value for PERF_SAMPLE_READ processing. */
+ 	u64			 period;
++
++	/*
++	 * When inherit is combined with PERF_SAMPLE_READ, the period value is
++	 * per (id, thread) tuple, rather than per id, so use the stream_id to
++	 * uniquely identify the period, rather than the id.
++	 */
++	bool			 period_per_thread;
+ };
+ 
+ struct perf_evsel {
+@@ -88,4 +95,6 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
+ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
+ void perf_evsel__free_id(struct perf_evsel *evsel);
+ 
++bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel);
++
+ #endif /* __LIBPERF_INTERNAL_EVSEL_H */
 -- 
 2.44.0
 
