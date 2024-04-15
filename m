@@ -1,64 +1,84 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 18.mo583.mail-out.ovh.net (18.mo583.mail-out.ovh.net [178.33.45.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1D15672
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C77180C
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.45.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713227848; cv=none; b=TgbmcvBKai3uXPAU+xVOyxJLadLCHxZ9QttL44JMUrd/gzZijqvs2NZ69hvFQfo+fpFpBoMeU6gVb7/OWq/S08qkyjpCNii8IZkupFJkVNKFvlDHLDL/iJhCQj9JbLWrmbWLmjDkoZloAbuvaqBWj0ESV078cHBs4+FI3tf0jNk=
+	t=1713227891; cv=none; b=hUeGzcizOd5a4q2yT2x303PTN6RuDUPDl2dCnf2sUdyufTwzrKBixIBKKWGPMQs37ZexTqVVr53C6qQVFx6Cw73qcpyYPWKQbnxvxv5X2ffIn6IVJfZ9/ULmlJbDDhVvWF4fvhLeW6brqmp71hfa4xpr1JMG7q24l97jFmyrSXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713227848; c=relaxed/simple;
-	bh=7J6ZGm5CDnAs5QG+bkk5fi6kYwsiJK9I+lK6nOQq50c=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=QDfg2cmzOWG3yk19CeMJSNRbPF9HnMueLH8c1xK6/FoKDVvox8fpLI3hheA6+fw7WWWy20AKXraUcAKyGggbC0i54bUWEE/qRkXcPZabAyD1rXuGvfySiF29XGN6a1uKsjozq1A4tsdST0RO7bTlif57RiXw4/O+gfsZ/P9st6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d622cae9e4so417895339f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:37:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713227846; x=1713832646;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4EGDd97yZC2zzxp33R1T3y2FHVivTeXkINHK9MRZer0=;
-        b=X5JKpRhPjruNzPn2t4IMdDoVQ5lrUz2ip2g4YF6UJc7Ys7+3z+Jx9N3OxusNZBaTuN
-         a+I/j1spP7EwsN/vTbQlcVHd8HaF7KDvLcvzjKMx9W5D0fGmcMmyuzu+kYT8OPRX3Jl1
-         kQvk7LVQhMLXkIeGcIh5uBaPMzy8jQwuoVc5xzAJ+zudx1yZAtOb/ly1yM4OFYHd5yPz
-         lASdmcc4RZXRBj1nENLyYLNqptrMfBsjtN8w/slxZLoXFQSjTO0HNV8WOO1yveUo5TuR
-         Ckh6TKuM/SxMhBbKCBVZ/FhzvrtrxfDcsMGhZ/6MOXRoS9T10Pdv43gkq3D/a7flD1uW
-         0eDA==
-X-Gm-Message-State: AOJu0Yxwe+AMzMkG2n5+fFvRqtAbpDRrhrRRkCJZzJn2O8GSn0tKdGtU
-	gsve+NFjAupqm7+YMQqqhZMigIZIPsoL7YtkNjloGfZa0clCMeJVyu7U3whP9g6rxiTRcn4tDit
-	3r85JFwEtnfSSOmIxcmGjHYZeKysRgG62PKgDBOOfpdAhmL7m67x1DUk=
-X-Google-Smtp-Source: AGHT+IHToNU0SPsX92zO/hwvR7EXBsOfrIAZhwqtBLo1uCDoOIUsrgK3WEO6znhVYPcXnaw2IzLBL0KTHzAoz1Gkx8cTNROKNRcM
+	s=arc-20240116; t=1713227891; c=relaxed/simple;
+	bh=XybDZ2MMTdcokpPlkBJhrClPjnxT/2fqLvH9KOzHy64=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sCwnVmFGxrkWSjFzR0hlXyeh+3zWwEo2McQN8g2T3+1a1N8/XH6yy4BNsmtLRZ7hcJU2EymLXemqDVG836bVTWyOPX3v8N9QBAPT7aqbnPcmJEA9T9ONNAE9X9C71TQCT8pt6ciKW1iL+6DdxZYAGaz85z/jfc+ROggDiasJLXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.45.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director3.ghost.mail-out.ovh.net (unknown [10.109.139.198])
+	by mo583.mail-out.ovh.net (Postfix) with ESMTP id 4VJKLX3GYQz1QF9
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:00:04 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-w7sh2 (unknown [10.110.178.131])
+	by director3.ghost.mail-out.ovh.net (Postfix) with ESMTPS id CBAA21FE93;
+	Mon, 15 Apr 2024 21:00:01 +0000 (UTC)
+Received: from etezian.org ([37.59.142.106])
+	by ghost-submission-6684bf9d7b-w7sh2 with ESMTPSA
+	id 3/PYLVGVHWaUHQMArYzXgA
+	(envelope-from <andi@etezian.org>); Mon, 15 Apr 2024 21:00:01 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-106R0069717fa12-e9f8-4f4c-974d-fc8acd2e533f,
+                    1C060BB0AFB71ED4B605930205BB25055C08B83D) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:89.217.109.169
+From: Andi Shyti <andi.shyti@kernel.org>
+To: wsa@kernel.org, Loic Poulain <loic.poulain@linaro.org>, 
+ Robert Foss <rfoss@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240412-linux-next-24-04-11-sc8280xp-cci-compat-string-fix-v1-1-7dbafff36932@linaro.org>
+References: <20240412-linux-next-24-04-11-sc8280xp-cci-compat-string-fix-v1-1-7dbafff36932@linaro.org>
+Subject: Re: [PATCH] dt-bindings: i2c: qcom-cci: Document sc8280xp
+ compatible
+Message-Id: <171321479967.1758400.4418500996463350127.b4-ty@kernel.org>
+Date: Mon, 15 Apr 2024 22:59:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2582:b0:482:ced6:e5f5 with SMTP id
- s2-20020a056638258200b00482ced6e5f5mr741508jat.1.1713227846277; Mon, 15 Apr
- 2024 17:37:26 -0700 (PDT)
-Date: Mon, 15 Apr 2024 17:37:26 -0700
-In-Reply-To: <000000000000208dc20608a2cbb4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000032680606162bf171@google.com>
-Subject: Re: [syzbot] test arm64, please
-From: syzbot <syzbot+84f695756ed0c4bb3aba@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 10760225412810082960
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudejvddgudehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekfedpmhhouggvpehsmhhtphhouhht
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+Hi
 
-***
+On Fri, 12 Apr 2024 14:53:25 +0100, Bryan O'Donoghue wrote:
+> Add sc8280xp compatible consistent with recent CAMSS CCI interfaces.
+> 
+> sc8280xp has the following clock list and so requires its own compat
+> string and sc8280xp specific clock definition in the yaml.
+> 
+> - const: camnoc_axi
+> - const: slow_ahb_src
+> - const: cpas_ahb
+> - const: cci
+> 
+> [...]
 
-Subject: test arm64, please
-Author: andrew.kanner@gmail.com
+Applied to i2c/i2c-host on
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
--- 
-Andrew Kanner
+Thank you,
+Andi
+
+Patches applied
+===============
+[1/1] dt-bindings: i2c: qcom-cci: Document sc8280xp compatible
+      commit: 32204e57f3fbe8863dc17ba59bdf3f5dd573896d
+
