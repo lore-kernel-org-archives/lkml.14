@@ -1,439 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC7BE556;
-	Mon, 15 Apr 2024 06:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA67E17BA4
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713161284; cv=none; b=Wk/ZwF/uK1bPjf+H6r7yA8S7hNHuGvMJRy54spUDJQXazeplcVykvbZjqkywMZlPlEkWmHlGXe+eDRKlfAnq8A3wDhdzmtTaYO3ZCjNFJrQ5+QknmfgnpeiTh4M5kp/i4MR+/w4n12aRXu2Q1qyqXKnx+3KXuasbhCQlW3A7cQg=
+	t=1713161302; cv=none; b=BUWjuB0ZlrcO4BkTJBDA0wozuSN2x4h5Y8ozhuNXrXIYVVb2Yn//qtI7UTnnkMjMFrUpMWiCUjW3zsWMQXBqeaZlPg1HNJOQomRCrkoCCMpMBL8PPk8/8Mwy2ZY9QykNmWcGVI1oJHZ1Ka+E7KVHNV/c7TM3hKCJhvaQRXj4HV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713161284; c=relaxed/simple;
-	bh=/8Sp54htChnPy06fVPjVsPWRm4W+KKKwZ8arDGVGZtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGewi0OVskzG1FJoVNIB8KnWIwty9jZ8+4yP9vEcgyvpOMHopkQJroCMUDyhu4mnc0N1nbFwE2H8eReswk9OUPSYbaT0vTk9b0F2VGVgZ8cxzI8HwRGFSIG7ZTVNKNGxHErN1SjU6olgqjbokAVdBVGZFyekrHj6Ri59VU1mAns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5K+jNMU; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5K+jNMU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713161282; x=1744697282;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/8Sp54htChnPy06fVPjVsPWRm4W+KKKwZ8arDGVGZtw=;
-  b=F5K+jNMUobGAqtREBZFgFzh9BnBPnCgqyjtO0/YgREmBMexJMNu9eMBF
-   I3kMIC27PNzE+X9JdWuq6zxw3DjzkEmxOyFK1ekB3NzphBAJWQKQmSefT
-   /5d+3vozJs82uDAQmQef1nmep0+CWPRETsRN9FDEZ89xI6m1IeVGcHnwX
-   Ee2xocJKzjvh1hPUNZT9g0o53TViEU3RkdwBHhR2wY6SdUSCu32+lfddv
-   eSzw9wR0b3p6CUncSgoY5z9Zini+sQN7bsRyP1GwSOGor0yB/NfsMo63u
-   Ko+4vUu77eClV+rag2PykfS/R1GPFfObwuQ1oWzuE4WPd1rIJJH2wxyfj
-   Q==;
-X-CSE-ConnectionGUID: ZzMfzEjQQaaPkjoeGRx2Zg==
-X-CSE-MsgGUID: oqpPB1PZRH2kT1S/xLtXsQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="11484388"
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="11484388"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:07:40 -0700
-X-CSE-ConnectionGUID: 8XO0Fp1KQ/iJf0ZXbV+HYQ==
-X-CSE-MsgGUID: 2GK137H7Q7evxocIi9be7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="21896223"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:07:38 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 54DF811F8AF;
-	Mon, 15 Apr 2024 09:07:35 +0300 (EEST)
-Date: Mon, 15 Apr 2024 06:07:35 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v4 20/20] media: i2c: ov4689: Implement 2x2 binning
-Message-ID: <ZhzEJ81BDT_AJp9X@kekkonen.localdomain>
-References: <20240402164552.19171-1-mike.rudenko@gmail.com>
- <20240402164552.19171-21-mike.rudenko@gmail.com>
+	s=arc-20240116; t=1713161302; c=relaxed/simple;
+	bh=bPj6QlcLi4XrRHYufTRYNiCGvg+NUZoj2xCvdt9IAsc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D0udB9ErHfltj0sLWjcbLDXSy8q9bg4XgiwHRLBZ9yYfyVLbuqtQ3LSiin9p9l2dAVDjUL1yDqxRqVjuG8HzOEyGQcXC75DpwRH75pE5DM7tnWyyFzlJHwoyDgK8LtIyKSBKSUUMsbda0ZohKKtKdrkC8ZxiBg4C0Y8QMJAQFL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 43F67PNl023199;
+	Mon, 15 Apr 2024 14:07:25 +0800 (+08)
+	(envelope-from Dongliang.Cui@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VHxTs55Y8z2K6J0J;
+	Mon, 15 Apr 2024 14:05:05 +0800 (CST)
+Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 15 Apr 2024 14:07:23 +0800
+From: Dongliang Cui <dongliang.cui@unisoc.com>
+To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mathieu.desnoyers@efficios.com>, <ebiggers@kernel.org>
+CC: <ke.wang@unisoc.com>, <hongyu.jin.cn@gmail.com>, <niuzhiguo84@gmail.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <cuidongliang390@gmail.com>, Dongliang Cui <dongliang.cui@unisoc.com>
+Subject: [PATCH RESEND] block: Add ioprio to block_rq tracepoint
+Date: Mon, 15 Apr 2024 14:07:10 +0800
+Message-ID: <20240415060710.1199009-1-dongliang.cui@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402164552.19171-21-mike.rudenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 43F67PNl023199
 
-Hi Nikhail,
+Sometimes we need to track the processing order of requests with
+ioprio set. So the ioprio of request can be useful information.
 
-On Tue, Apr 02, 2024 at 07:45:51PM +0300, Mikhail Rudenko wrote:
-> Implement 2x2 binning support. Compute best binning mode (none or 2x2)
-> from pad crop and pad format in ov4689_set_fmt. Use output frame size
-> instead of analogue crop to compute control ranges and BLC anchors.
-> 
-> Also move ov4689_hts_min and ov4689_update_ctrl_ranges, since they are
-> now also called from ov4689_set_fmt. Update frame timings to
-> accommodate the requirements of binning mode and avoid visual
-> artefacts. Additionally, report 2x2 binned mode in addition to
-> non-binned one in ov4689_enum_frame_sizes.
-> 
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-> ---
->  drivers/media/i2c/ov4689.c | 192 +++++++++++++++++++++++++------------
->  1 file changed, 130 insertions(+), 62 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index e652d626f32f..83c7d0bae7d1 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -114,7 +114,7 @@
->   * Minimum working vertical blanking value. Found experimentally at
->   * minimum HTS values.
->   */
-> -#define OV4689_VBLANK_MIN		31
-> +#define OV4689_VBLANK_MIN		35
->  
->  static const char *const ov4689_supply_names[] = {
->  	"avdd", /* Analog power */
-> @@ -256,6 +256,18 @@ static const struct cci_reg_sequence ov4689_common_regs[] = {
->  	{CCI_REG8(0x5503), 0x0f}, /* OTP_DPC_END_L otp_end_address[7:0] = 0x0f */
->  };
->  
-> +static const struct cci_reg_sequence ov4689_2x2_binning_regs[] = {
-> +	{CCI_REG8(0x3632), 0x05}, /* ADC */
-> +	{CCI_REG8(0x376b), 0x40}, /* Sensor control */
-> +	{CCI_REG8(0x3814), 0x03}, /* H_INC_ODD */
-> +	{CCI_REG8(0x3821), 0x07}, /* TIMING_FORMAT_2 hor_binning = 1*/
-> +	{CCI_REG8(0x382a), 0x03}, /* V_INC_ODD */
-> +	{CCI_REG8(0x3830), 0x08}, /* BLC_NUM_OPTION blc_use_num_2 = 1 */
-> +	{CCI_REG8(0x3836), 0x02}, /* TIMING_REG_36 r_zline_use_num_2 = 1 */
-> +	{CCI_REG8(0x4001), 0x50}, /* BLC DEBUG MODE */
-> +	{CCI_REG8(0x4502), 0x44}, /* ADC synch control*/
+Example：
 
-Spaces inside { }'s, please.
+block_rq_insert: 8,0 WS 4096 () 16573296 + 8 rt,4 [highpool[1]]
+block_rq_issue: 8,0 WS 4096 () 16573296 + 8 rt,4 [kworker/7:0H]
+block_rq_complete: 8,0 WS () 16573296 + 8 rt,4 [0]
 
-> +};
-> +
->  static const u64 link_freq_menu_items[] = { 504000000 };
->  
->  static const char *const ov4689_test_pattern_menu[] = {
-> @@ -305,18 +317,96 @@ static const struct ov4689_gain_range ov4689_gain_ranges[] = {
->  	},
->  };
->  
-> +/*
-> + * For now, only 2x2 binning implemented in this driver.
-> + */
-> +static int ov4689_best_binning(struct ov4689 *ov4689,
-> +			       const struct v4l2_mbus_framefmt *format,
-> +			       const struct v4l2_rect *crop,
-> +			       unsigned int *binning)
-> +{
-> +	const struct v4l2_area candidates[] = {
-> +		{ crop->width, crop->height },
-> +		{ crop->width / 2, crop->height / 2 },
-> +	};
-> +
-> +	const struct v4l2_area *best;
-> +	int index;
-> +
-> +	best = v4l2_find_nearest_size(candidates, ARRAY_SIZE(candidates), width,
-> +				      height, format->width, format->height);
+Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
+---
+ include/linux/blktrace_api.h |  2 ++
+ include/trace/events/block.h | 63 ++++++++++++++++++++++--------------
+ kernel/trace/blktrace.c      | 11 +++++++
+ 3 files changed, 51 insertions(+), 25 deletions(-)
 
-You can assume v4l2_find_nearest_size() returns a non-NULL value (see the
-other patch I cc'd you).
-
-> +	if (!best) {
-> +		dev_err(ov4689->dev,
-> +			"failed to find best binning for requested mode\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	index = best - candidates;
-> +	*binning = index + 1;
-> +
-> +	dev_dbg(ov4689->dev,
-> +		"best_binning: crop=%dx%d format=%dx%d binning=%d\n",
-> +		crop->width, crop->height, format->width, format->height,
-> +		*binning);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Minimum working HTS value for given output width (found
-> + * experimentally).
-> + */
-> +static unsigned int ov4689_hts_min(unsigned int width)
-> +{
-> +	return max_t(unsigned int, 3156, 224 + width * 19 / 16);
-> +}
-> +
-> +static void ov4689_update_ctrl_ranges(struct ov4689 *ov4689, unsigned int width,
-> +				      unsigned int height)
-> +{
-> +	struct v4l2_ctrl *exposure = ov4689->exposure;
-> +	struct v4l2_ctrl *vblank = ov4689->vblank;
-> +	struct v4l2_ctrl *hblank = ov4689->hblank;
-> +	s64 def_val, min_val, max_val;
-> +
-> +	min_val = ov4689_hts_min(width) - width;
-> +	max_val = OV4689_HTS_MAX - width;
-> +	def_val = clamp_t(s64, hblank->default_value, min_val, max_val);
-> +	__v4l2_ctrl_modify_range(hblank, min_val, max_val, hblank->step,
-> +				 def_val);
-
-Note that __v4l2_ctrl_modify_range() may fail. The problem isn't introduced
-by this patch but it'd be nice to fix it (but maybe in a separate patch).
-
-> +
-> +	min_val = OV4689_VBLANK_MIN;
-> +	max_val = OV4689_HTS_MAX - width;
-> +	def_val = clamp_t(s64, vblank->default_value, min_val, max_val);
-> +	__v4l2_ctrl_modify_range(vblank, min_val, max_val, vblank->step,
-> +				 def_val);
-> +
-> +	min_val = exposure->minimum;
-> +	max_val = height + vblank->val - 4;
-> +	def_val = clamp_t(s64, exposure->default_value, min_val, max_val);
-> +	__v4l2_ctrl_modify_range(exposure, min_val, max_val, exposure->step,
-> +				 def_val);
-> +}
-> +
->  static int ov4689_set_fmt(struct v4l2_subdev *sd,
->  			  struct v4l2_subdev_state *sd_state,
->  			  struct v4l2_subdev_format *fmt)
->  {
-> +	struct ov4689 *ov4689 = to_ov4689(sd);
->  	struct v4l2_mbus_framefmt *format;
->  	struct v4l2_rect *crop;
-> +	unsigned int binning;
-> +	int ret;
->  
->  	crop = v4l2_subdev_state_get_crop(sd_state, fmt->pad);
->  	format = v4l2_subdev_state_get_format(sd_state, fmt->pad);
->  
-> -	format->width = crop->width;
-> -	format->height = crop->height;
-> +	ret = ov4689_best_binning(ov4689, &fmt->format, crop, &binning);
-> +	if (ret)
-> +		return ret;
-> +
-> +	format->width = crop->width / binning;
-> +	format->height = crop->height / binning;
->  
->  	format->code = MEDIA_BUS_FMT_SBGGR10_1X10;
->  	format->field = V4L2_FIELD_NONE;
-> @@ -327,6 +417,9 @@ static int ov4689_set_fmt(struct v4l2_subdev *sd,
->  
->  	fmt->format = *format;
->  
-> +	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-> +		ov4689_update_ctrl_ranges(ov4689, format->width, format->height);
-> +
->  	return 0;
->  }
->  
-> @@ -346,8 +439,9 @@ static int ov4689_enum_frame_sizes(struct v4l2_subdev *sd,
->  				   struct v4l2_subdev_frame_size_enum *fse)
->  {
->  	const struct v4l2_rect *crop;
-> +	int binning;
->  
-> -	if (fse->index >= 1)
-> +	if (fse->index >= 2)
->  		return -EINVAL;
->  
->  	if (fse->code != MEDIA_BUS_FMT_SBGGR10_1X10)
-> @@ -355,10 +449,11 @@ static int ov4689_enum_frame_sizes(struct v4l2_subdev *sd,
->  
->  	crop = v4l2_subdev_state_get_crop(sd_state, 0);
->  
-> -	fse->min_width = crop->width;
-> -	fse->max_width = crop->width;
-> -	fse->max_height = crop->height;
-> -	fse->min_height = crop->height;
-> +	binning = fse->index + 1;
-> +	fse->min_width = crop->width / binning;
-> +	fse->max_width = crop->width / binning;
-> +	fse->max_height = crop->height / binning;
-> +	fse->min_height = crop->height / binning;
->  
->  	return 0;
->  }
-> @@ -398,42 +493,6 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
->  	return -EINVAL;
->  }
->  
-> -/*
-> - * Minimum working HTS value for given output width (found
-> - * experimentally).
-> - */
-> -static unsigned int ov4689_hts_min(unsigned int width)
-> -{
-> -	return max_t(unsigned int, 3156, 224 + width * 19 / 16);
-> -}
-> -
-> -static void ov4689_update_ctrl_ranges(struct ov4689 *ov4689,
-> -				      struct v4l2_rect *crop)
-> -{
-> -	struct v4l2_ctrl *exposure = ov4689->exposure;
-> -	struct v4l2_ctrl *vblank = ov4689->vblank;
-> -	struct v4l2_ctrl *hblank = ov4689->hblank;
-> -	s64 def_val, min_val, max_val;
-> -
-> -	min_val = ov4689_hts_min(crop->width) - crop->width;
-> -	max_val = OV4689_HTS_MAX - crop->width;
-> -	def_val = clamp_t(s64, hblank->default_value, min_val, max_val);
-> -	__v4l2_ctrl_modify_range(hblank, min_val, max_val, hblank->step,
-> -				 def_val);
-> -
-> -	min_val = OV4689_VBLANK_MIN;
-> -	max_val = OV4689_HTS_MAX - crop->width;
-> -	def_val = clamp_t(s64, vblank->default_value, min_val, max_val);
-> -	__v4l2_ctrl_modify_range(vblank, min_val, max_val, vblank->step,
-> -				 def_val);
-> -
-> -	min_val = exposure->minimum;
-> -	max_val = crop->height + vblank->val - 4;
-> -	def_val = clamp_t(s64, exposure->default_value, min_val, max_val);
-> -	__v4l2_ctrl_modify_range(exposure, min_val, max_val, exposure->step,
-> -				 def_val);
-> -}
-> -
->  static int ov4689_set_selection(struct v4l2_subdev *sd,
->  				struct v4l2_subdev_state *state,
->  				struct v4l2_subdev_selection *sel)
-> @@ -470,7 +529,8 @@ static int ov4689_set_selection(struct v4l2_subdev *sd,
->  		format->height = rect.height;
->  
->  		if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-> -			ov4689_update_ctrl_ranges(ov4689, &rect);
-> +			ov4689_update_ctrl_ranges(ov4689, rect.width,
-> +						  rect.height);
->  	}
->  
->  	*crop = rect;
-> @@ -485,21 +545,27 @@ static int ov4689_setup_timings(struct ov4689 *ov4689,
->  	const struct v4l2_mbus_framefmt *format;
->  	struct regmap *rm = ov4689->regmap;
->  	const struct v4l2_rect *crop;
-> +	const int v_offset = 2;
-> +	unsigned int binning;
->  	int ret = 0;
->  
->  	format = v4l2_subdev_state_get_format(state, 0);
->  	crop = v4l2_subdev_state_get_crop(state, 0);
->  
-> +	ret = ov4689_best_binning(ov4689, format, crop, &binning);
-> +	if (ret)
-> +		return ret;
-> +
->  	cci_write(rm, OV4689_REG_H_CROP_START, crop->left, &ret);
-> -	cci_write(rm, OV4689_REG_V_CROP_START, crop->top, &ret);
-> -	cci_write(rm, OV4689_REG_H_CROP_END, crop->left + crop->width + 1, &ret);
-> -	cci_write(rm, OV4689_REG_V_CROP_END, crop->top + crop->height + 1, &ret);
-> +	cci_write(rm, OV4689_REG_V_CROP_START, crop->top - v_offset, &ret);
-> +	cci_write(rm, OV4689_REG_H_CROP_END, crop->left + crop->width + 3, &ret);
-> +	cci_write(rm, OV4689_REG_V_CROP_END, crop->top + crop->height + 7, &ret);
->  
->  	cci_write(rm, OV4689_REG_H_OUTPUT_SIZE, format->width, &ret);
->  	cci_write(rm, OV4689_REG_V_OUTPUT_SIZE, format->height, &ret);
->  
->  	cci_write(rm, OV4689_REG_H_WIN_OFF, 0, &ret);
-> -	cci_write(rm, OV4689_REG_V_WIN_OFF, 0, &ret);
-> +	cci_write(rm, OV4689_REG_V_WIN_OFF, v_offset, &ret);
->  
->  	/*
->  	 * Maximum working value of vfifo_read_start for given output
-> @@ -507,6 +573,10 @@ static int ov4689_setup_timings(struct ov4689 *ov4689,
->  	 */
->  	cci_write(rm, OV4689_REG_VFIFO_CTRL_01, format->width / 16 - 1, &ret);
->  
-> +	if (binning == 2)
-> +		cci_multi_reg_write(ov4689->regmap, ov4689_2x2_binning_regs,
-> +				    ARRAY_SIZE(ov4689_2x2_binning_regs),
-> +				    &ret);
->  	return ret;
->  }
->  
-> @@ -519,20 +589,20 @@ static int ov4689_setup_blc_anchors(struct ov4689 *ov4689,
->  				    struct v4l2_subdev_state *state)
->  {
->  	unsigned int width_def = OV4689_H_OUTPUT_SIZE_DEFAULT;
-> +	const struct v4l2_mbus_framefmt *format;
->  	struct regmap *rm = ov4689->regmap;
-> -	const struct v4l2_rect *crop;
->  	int ret = 0;
->  
-> -	crop = v4l2_subdev_state_get_crop(state, 0);
-> +	format = v4l2_subdev_state_get_format(state, 0);
->  
->  	cci_write(rm, OV4689_REG_ANCHOR_LEFT_START,
-> -		  OV4689_ANCHOR_LEFT_START_DEF * crop->width / width_def, &ret);
-> +		  OV4689_ANCHOR_LEFT_START_DEF * format->width / width_def, &ret);
->  	cci_write(rm, OV4689_REG_ANCHOR_LEFT_END,
-> -		  OV4689_ANCHOR_LEFT_END_DEF * crop->width / width_def, &ret);
-> +		  OV4689_ANCHOR_LEFT_END_DEF * format->width / width_def, &ret);
->  	cci_write(rm, OV4689_REG_ANCHOR_RIGHT_START,
-> -		  OV4689_ANCHOR_RIGHT_START_DEF * crop->width / width_def, &ret);
-> +		  OV4689_ANCHOR_RIGHT_START_DEF * format->width / width_def, &ret);
->  	cci_write(rm, OV4689_REG_ANCHOR_RIGHT_END,
-> -		  OV4689_ANCHOR_RIGHT_END_DEF * crop->width / width_def, &ret);
-> +		  OV4689_ANCHOR_RIGHT_END_DEF * format->width / width_def, &ret);
->  
->  	return ret;
->  }
-> @@ -749,19 +819,19 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  	struct regmap *regmap = ov4689->regmap;
->  	struct v4l2_subdev_state *sd_state;
->  	struct device *dev = ov4689->dev;
-> -	struct v4l2_rect *crop;
-> +	struct v4l2_mbus_framefmt *fmt;
->  	s64 max_expo, def_expo;
->  	int sensor_gain;
->  	int ret = 0;
->  
->  	sd_state = v4l2_subdev_get_locked_active_state(&ov4689->subdev);
-> -	crop = v4l2_subdev_state_get_crop(sd_state, 0);
-> +	fmt = v4l2_subdev_state_get_format(sd_state, 0);
->  
->  	/* Propagate change of current control to all related controls */
->  	switch (ctrl->id) {
->  	case V4L2_CID_VBLANK:
->  		/* Update max exposure while meeting expected vblanking */
-> -		max_expo = crop->height + ctrl->val - 4;
-> +		max_expo = fmt->height + ctrl->val - 4;
->  		def_expo = clamp_t(s64, ov4689->exposure->default_value,
->  				   ov4689->exposure->minimum, max_expo);
->  
-> @@ -785,16 +855,14 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  		cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->  		break;
->  	case V4L2_CID_VBLANK:
-> -		cci_write(regmap, OV4689_REG_VTS,
-> -			  ctrl->val + crop->height, &ret);
-> +		cci_write(regmap, OV4689_REG_VTS, ctrl->val + fmt->height, &ret);
->  		break;
->  	case V4L2_CID_TEST_PATTERN:
->  		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
->  		break;
->  	case V4L2_CID_HBLANK:
->  		cci_write(regmap, OV4689_REG_HTS,
-> -			  (ctrl->val + crop->width) /
-> -			  OV4689_HTS_DIVIDER, &ret);
-> +			  (ctrl->val + fmt->width) / OV4689_HTS_DIVIDER, &ret);
->  		break;
->  	case V4L2_CID_VFLIP:
->  		cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT1,
-
+diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+index 122c62e561fc..adb0333efbdb 100644
+--- a/include/linux/blktrace_api.h
++++ b/include/linux/blktrace_api.h
+@@ -112,6 +112,8 @@ struct compat_blk_user_trace_setup {
+ 
+ void blk_fill_rwbs(char *rwbs, blk_opf_t opf);
+ 
++void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value);
++
+ static inline sector_t blk_rq_trace_sector(struct request *rq)
+ {
+ 	/*
+diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+index 0e128ad51460..1d41fade160a 100644
+--- a/include/trace/events/block.h
++++ b/include/trace/events/block.h
+@@ -10,7 +10,8 @@
+ #include <linux/buffer_head.h>
+ #include <linux/tracepoint.h>
+ 
+-#define RWBS_LEN	8
++#define RWBS_LEN		8
++#define IOPRIO_CLASS_LEN	8
+ 
+ #ifdef CONFIG_BUFFER_HEAD
+ DECLARE_EVENT_CLASS(block_buffer,
+@@ -79,11 +80,13 @@ TRACE_EVENT(block_rq_requeue,
+ 	TP_ARGS(rq),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int, ioprio_value			)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -92,14 +95,16 @@ TRACE_EVENT(block_rq_requeue,
+ 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, 0)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, 0)
+ );
+ 
+ DECLARE_EVENT_CLASS(block_rq_completion,
+@@ -109,12 +114,14 @@ DECLARE_EVENT_CLASS(block_rq_completion,
+ 	TP_ARGS(rq, error, nr_bytes),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__field(  int	,	error			)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__field(  int,		error				)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int,	ioprio_value			)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -124,14 +131,16 @@ DECLARE_EVENT_CLASS(block_rq_completion,
+ 		__entry->error     = blk_status_to_errno(error);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->error)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, __entry->error)
+ );
+ 
+ /**
+@@ -176,13 +185,15 @@ DECLARE_EVENT_CLASS(block_rq,
+ 	TP_ARGS(rq),
+ 
+ 	TP_STRUCT__entry(
+-		__field(  dev_t,	dev			)
+-		__field(  sector_t,	sector			)
+-		__field(  unsigned int,	nr_sector		)
+-		__field(  unsigned int,	bytes			)
+-		__array(  char,		rwbs,	RWBS_LEN	)
+-		__array(  char,         comm,   TASK_COMM_LEN   )
+-		__dynamic_array( char,	cmd,	1		)
++		__field(  dev_t,	dev				)
++		__field(  sector_t,	sector				)
++		__field(  unsigned int,	nr_sector			)
++		__field(  unsigned int,	bytes				)
++		__array(  char,		rwbs,	RWBS_LEN		)
++		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
++		__field(  unsigned int,	ioprio_value			)
++		__array(  char,		comm,   TASK_COMM_LEN		)
++		__dynamic_array( char,	cmd,	1			)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -192,15 +203,17 @@ DECLARE_EVENT_CLASS(block_rq,
+ 		__entry->bytes     = blk_rq_bytes(rq);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
++		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
+ 		__get_str(cmd)[0] = '\0';
+ 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+ 	),
+ 
+-	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
++	TP_printk("%d,%d %s %u (%s) %llu + %u %s,%u [%s]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->comm)
++		  __entry->nr_sector, __entry->ioprio_class,
++		  __entry->ioprio_value, __entry->comm)
+ );
+ 
+ /**
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d5d94510afd3..e55aa49f94db 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -19,6 +19,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/list.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/ioprio.h>
+ 
+ #include "../../block/blk.h"
+ 
+@@ -26,6 +27,9 @@
+ 
+ #include "trace_output.h"
+ 
++/* Type of ioprio */
++static char *classes[] = {"none", "rt", "be", "idle"};
++
+ #ifdef CONFIG_BLK_DEV_IO_TRACE
+ 
+ static unsigned int blktrace_seq __read_mostly = 1;
+@@ -1914,5 +1918,12 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
+ }
+ EXPORT_SYMBOL_GPL(blk_fill_rwbs);
+ 
++void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value)
++{
++	memcpy(ioprio_class, classes[(ioprio >> IOPRIO_CLASS_SHIFT) & 0x3], IOPRIO_CLASS_LEN);
++	*ioprio_value = ioprio & 0xff;
++}
++EXPORT_SYMBOL_GPL(blk_fill_ioprio);
++
+ #endif /* CONFIG_EVENT_TRACING */
+ 
 -- 
-Kind regards,
+2.25.1
 
-Sakari Ailus
