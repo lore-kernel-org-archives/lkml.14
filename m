@@ -1,160 +1,134 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9983CAF
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5DD126F1F
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713202734; cv=none; b=PF46se05SD5mfG1lMuBXGHyLQInPkKlg2Cr0GJ2qIXZkE+T+pRGMnpHHuhlFu09/H58ggfyXanW+qx66sDrwMP3BA7Cjv0VPhcgWcZLEAREq57v+SCuOpVufFx7B1LlmMpU3oRs03pNM8m4nAyh6mzfKy6lrksAKniXdGd6Zcd0=
+	t=1713202912; cv=none; b=mwJwyPyGgI84Ak893ceTDR0ZXythjqvLZuYj4XI2Jk+GP6sWqWCsPOwAEVmoXll7r4/vPWYQVDh97g3o6hA1vodz6ZOwzC4LYqiJ+bS9mCi4D46t6c28cSdTot3o+ohEyF5qHg9CYPhKI1EdqNbmDcE6AuPgd/Fahp/1sOhQhb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713202734; c=relaxed/simple;
-	bh=L22n2kCvTPK9XcI/4uS/HsKJEBXwSpUSzpEaXjfZhzc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WtSCkbY0F4CfNROCwt3HwtjDwHpw4ZXHjvluZLc9EFbOJx/iytkQeDcuaT+AISBw2KWOWXnP+en8De8xouWtYxNId+L9vgThi83L4UYTLwGgfh3XbuWF7hOlGQwFPKFsXwXMxcy28Ji9FHk0TCSbbf+kpLU+WDGANfrrdrcAAco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rdhugJFe; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713202912; c=relaxed/simple;
+	bh=xDzP8JtH++TeG6a490HKNdr4gYMBp0MXFefRWtUa87E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dF3sH//hwX3cRZHYaeFaZC+R/dbVB6gf25tI7nIfLPv5hHn+FxWp6BqILHSKyNBNiqX4U+s2kSFRxRxlvxzGK2La9IfEziBH1WffgPhCQqcTlk8MideP9ZYKb1NC2MPpaetSGvxVl56Gc9rIgVLdy/N99VZnT+ySt34NTR+Q23g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ATeo5rCl; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rdhugJFe"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso2463762a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:38:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ATeo5rCl"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso3399558276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713202733; x=1713807533; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uwFH+Sl4Dup9217t0rj3A5vCbDNAQn+qKOR55rnIiUg=;
-        b=rdhugJFevZpZvqqEI2o7hkRH8s11SqSNQDRaL2dCmtSe3DOB6CfNJPWC+8Y4fCqYXO
-         kZ/GZiRLaReJT5We0T5oP9RR9rBRrAEG9si5a8F06fZc0w/fGL+bZ4EST15mh5oH5QwB
-         KCJ0DKZr8zdohqjZoCVjiKlzxwWHRDH7qflSrUiym0dT22Y3UUs7NLE4aK+ws98AaKkz
-         aYmedL7OFJNOZ2wv5/rFz70U5aHRNDQRUPJB0Lr4y9cxYIPcQc+cEf5FEsnSDkO1t/Gl
-         hFhtLa0hZnL2+8MJiIUJdus7YlCyNJ76RyJ9pIFcN9t5n9iLliu630TiIJAXi9pfmEzo
-         0h9g==
+        d=linaro.org; s=google; t=1713202908; x=1713807708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aYgIyvMvRWICpRScbQV/k/jY5uYOgDdkXOWDfquSjCo=;
+        b=ATeo5rClKw3FS7E6DymOTXcte5a7C45OqKGWyd6e8dONwLEwCz/K3oXTy9ighRjuyb
+         /EWaU+ANG8N0FjAh4xSL4jE/b6DyKGuqc/JEKMwCMDhQ1m4TAN6nH+s4xhebIdWii+Tj
+         736xA+AGi4CD1jCjE60s2Ofv5H5NXix9XXYEqveOMvhH0k989iVqpPcTEyUEJb3bdYsF
+         msR29IKkmevBqlFDs/NljGFHvC/K0+9pPjiTC6modLhyeROG3PqBk+stEQCDlHz0rsnS
+         U4XbnQnU+FNt6q187ERxC2ZVMwKP4TeCDc2Chrpe1K0KCDctKCkTw6rXzn/cJ6x4N80E
+         agdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713202733; x=1713807533;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uwFH+Sl4Dup9217t0rj3A5vCbDNAQn+qKOR55rnIiUg=;
-        b=Z82VBOLp0iwBweLqlD8xYWWA9ZFYIb1aENNSbly2EAwe9oDiYUO6L8OUC5BryFq5ej
-         wjNKRqyqDCwHI+uEAbTVMR65SCJAIjc+lptxnbTnRkNoJadRxpbuDGJGeBXsxK3vxzDv
-         TA0CzVnPymN13CTOf2ClNPYwrDM7J/dea69yCYkx7zWEmJmxCRcqbOZSBlk4FdjDdmvo
-         yZxZqcN/3v523zRfSDKau5NGNug2n1R2/mFNLSZ3SXdczUcoc0/OYahM4268jG7gI50G
-         UZFdtcOd76LfZbQqdVgOmf5t9Iah8l2kA4pPd0VLuw/0DJVuuX8N0EdprNCCV5sp4LAb
-         n19g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbeL2buCnzVmBv+p083AzufN+tAXLaOj3w0PhU2E9zRMvH8KhYFK3NGKJhO8W12vKmVXtRq2WJLSOnsJIe5NGcMuFWgiOaK5Xr2S0D
-X-Gm-Message-State: AOJu0YwPqnzGErvK2MqAdzFZ9OswW6XnLryaGwfR3sWYlGytu7KJIm/Z
-	MCvzMgNEG38kjSz3JkxIzRQ6a+ugPBE5PjEPrlSiv71cZmRP88k03w3HvQIl7ssFhojHZBsqTnM
-	g0Q==
-X-Google-Smtp-Source: AGHT+IFAloId2SLtV6JoxGQKYTsCZiTDpJiD55pzS4mF16K+I7cTwNvT5DGemB+vk09A1vwo4FoBOBPhjLY=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:6fc3:0:b0:5dc:4a5f:a5ee with SMTP id
- k186-20020a636fc3000000b005dc4a5fa5eemr844pgc.1.1713202732233; Mon, 15 Apr
- 2024 10:38:52 -0700 (PDT)
-Date: Mon, 15 Apr 2024 10:38:50 -0700
-In-Reply-To: <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1713202908; x=1713807708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aYgIyvMvRWICpRScbQV/k/jY5uYOgDdkXOWDfquSjCo=;
+        b=ghQ8zdR4NQKH4ZbsfZD4qlP2VLCy4RxZd8xhnLHR17FpDwTaEf2NDqtcP3mYiKmFsd
+         nbXlXD/dggMZaMfsrbvkxx0yFvNS2LyQmXb9Ky09Jl1Gbyz0QD3L9DiV7LMLCLN73EHp
+         XmrIOSO4OO/hTUi4x6YSVOR2Oy8pFwOEv77MaYb2bQXejt1eVXgW9HmF8ZQE9wpQQb6s
+         lYuH1ArxLE0njalUL1p9R1E9vQc4ZZBmkPdNlSuJZMct+9CKXWL5lpHuWneiXc7OOMv1
+         EQW/sfcwIxrv3ZF+ITlUOwHkNskSFtGl8lG/iiPa4G24FuPHCgHJezwGC3/KsNYLrtS7
+         Ut0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVTud9/kdvNv2QgjAONS9gJ5ZxAurE07EUAHULFTnZCYESzatDzanXXZyjVyVD1HOx4dwsiSK6vdtE27ALkNDuYbLJ0VPC0kWzCfkby
+X-Gm-Message-State: AOJu0YzQApn+lIxa91mPFDygi/bM7gGshXTBpHwZlq5aebmbutsHpZnq
+	Z7+msWq0+a73mVJXPSJF0r103BqzMxW/0qORnv4ozdDNqBgw7pyhelOKHQ5/CP6+bvJ39hGEoz2
+	fcZfApL9kzbpHTMLdK6HInt45o/7fIgWUyROecQ==
+X-Google-Smtp-Source: AGHT+IHKpNfr2TaUgVv6Ugvchn9mUOD77xP6+GIEtmI5RLKRLLZLr1EmobTo6CX82MQ9pJIWGNHcl6abRXCvRtZsfeM=
+X-Received: by 2002:a25:80c6:0:b0:dcb:aa26:50fe with SMTP id
+ c6-20020a2580c6000000b00dcbaa2650femr10533953ybm.15.1713202908173; Mon, 15
+ Apr 2024 10:41:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
- <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com> <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com> <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
-Message-ID: <Zh1mKoHJcj22rKy8@google.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240412222857.3873079-1-robh@kernel.org> <Zh0vXinxy7woerJQ@hu-bjorande-lv.qualcomm.com>
+ <CAA8EJpqL2T4bJZqtZ9KF=V2NLnFxUjouA6_Hu_H07DofifZaoQ@mail.gmail.com>
+ <CAL_Jsq+q3OLEMT=d8=d9o1D9deKGQ5TAtZg_bgptDPQ1cWcctw@mail.gmail.com> <CAL_JsqKSz_WVTTi7+AgjgDzXAnAqaxXM3i2NUv93nZSpyuZK5g@mail.gmail.com>
+In-Reply-To: <CAL_JsqKSz_WVTTi7+AgjgDzXAnAqaxXM3i2NUv93nZSpyuZK5g@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 15 Apr 2024 20:41:36 +0300
+Message-ID: <CAA8EJporYZBfDoN6m0Wu2wGqq=Y+TskNCguMOHtDAz05eXS6LA@mail.gmail.com>
+Subject: Re: [PATCH] arm/arm64: dts: Drop "arm,armv8-pmuv3" compatible usage
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, soc@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <atenart@kernel.org>, 
+	Khuong Dinh <khuong@os.amperecomputing.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Robert Richter <rric@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, "Paul J. Murphy" <paul.j.murphy@intel.com>, 
+	Daniele Alessandrelli <daniele.alessandrelli@intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-fsd@tesla.com, 
+	Michal Simek <michal.simek@amd.com>, devicetree@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-realtek-soc@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2024, Mingwei Zhang wrote:
-> On Mon, Apr 15, 2024 at 3:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.inte=
-l.com> wrote:
-> > On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
-> > > On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.=
-intel.com> wrote:
-> > >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed c=
-ounters.
-> > >>>> Considering this case, Guest uses GP counter 2, but Host doesn't u=
-se it. So
-> > >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would b=
-e enabled
-> > >>>> unexpectedly on host later since Host perf always enable all valid=
-ate bits
-> > >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
-> > >>>>
-> > >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
-> > >>>>
-> > >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking cou=
-nter
-> > >>> values to the host? NO. Not in cloud usage.
-> > >> No, this place is clearing the guest counter value instead of host
-> > >> counter value. Host always has method to see guest value in a normal=
- VM
-> > >> if he want. I don't see its necessity, it's just a overkill and
-> > >> introduce extra overhead to write MSRs.
-> > >>
-> > > I am curious how the perf subsystem solves the problem? Does perf
-> > > subsystem in the host only scrubbing the selector but not the counter
-> > > value when doing the context switch?
+On Mon, 15 Apr 2024 at 20:15, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Apr 15, 2024 at 12:05=E2=80=AFPM Rob Herring <robh@kernel.org> wr=
+ote:
 > >
-> > When context switch happens, perf code would schedule out the old event=
-s
-> > and schedule in the new events. When scheduling out, the ENABLE bit of
-> > EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
-> > and PMCx MSRs would be overwritten with new event's attr.config and
-> > sample_period separately.  Of course, these is only for the case when
-> > there are new events to be programmed on the PMC. If no new events, the
-> > PMCx MSR would keep stall value and won't be cleared.
+> > On Mon, Apr 15, 2024 at 11:52=E2=80=AFAM Dmitry Baryshkov
+> > <dmitry.baryshkov@linaro.org> wrote:
+> > >
+> > > On Mon, 15 Apr 2024 at 16:46, Bjorn Andersson <quic_bjorande@quicinc.=
+com> wrote:
+> > > >
+> > > > On Fri, Apr 12, 2024 at 05:28:51PM -0500, Rob Herring wrote:
+> > > > [..]
+> > > > >  arch/arm64/boot/dts/qcom/qcm2290.dtsi                | 2 +-
+> > > > >  arch/arm64/boot/dts/qcom/qdu1000.dtsi                | 2 +-
+> > > > >  arch/arm64/boot/dts/qcom/sdm630.dtsi                 | 2 +-
+> > > > >  arch/arm64/boot/dts/qcom/sdx75.dtsi                  | 2 +-
+> > > >
+> > > > Acked-by: Bjorn Andersson <andersson@kernel.org>
+> > >
+> > > Note, we'd need to override PMU compatibles in sdm636.dtsi and
+> > > sdm660.dtsi. Ideally it should come as the same patch.
 > >
-> > Anyway, I don't see any reason that PMCx MSR must be cleared.
-> >
->=20
-> I don't have a strong opinion on the upstream version. But since both
-> the mediated vPMU and perf are clients of PMU HW, leaving PMC values
-> uncleared when transition out of the vPMU boundary is leaking info
-> technically.
+> > Uh, that's an A for reuse, but an F for readability... It's sdm632 as
+> > well. Will drop sdm630.
+>
+> Actually, aren't those Kryo cores just Cortex-A53 derivatives? So the
+> A53 PMU compatible is an improvement over the generic one still. We
+> can't just add kryo260-pmu compatibles because that breaks
+> compatibility. We could have a fallback, but then that introduces a
+> pattern we don't want.
 
-I'm not objecting to ensuring guest PMCs can't be read by any entity that's=
- not
-in the guest's TCB, which is what I would consider a true leak.  I'm object=
-ing
-to blindly clearing all PMCs, and more specifically objecting to *KVM* clea=
-ring
-PMCs when saving guest state without coordinating with perf in any way.
+I think it is believed that Gold cores are A73-derivatives.
 
-I am ok if we start with (or default to) a "safe" implementation that zeroe=
-s all
-PMCs when switching to host context, but I want KVM and perf to work togeth=
-er to
-do the context switches, e.g. so that we don't end up with code where KVM w=
-rites
-to all PMC MSRs and that perf also immediately writes to all PMC MSRs.
-
-One my biggest complaints with the current vPMU code is that the roles and
-responsibilities between KVM and perf are poorly defined, which leads to su=
-boptimal
-and hard to maintain code.
-
-Case in point, I'm pretty sure leaving guest values in PMCs _would_ leak gu=
-est
-state to userspace processes that have RDPMC permissions, as the PMCs might=
- not
-be dirty from perf's perspective (see perf_clear_dirty_counters()).
-
-Blindly clearing PMCs in KVM "solves" that problem, but in doing so makes t=
-he
-overall code brittle because it's not clear whether KVM _needs_ to clear PM=
-Cs,
-or if KVM is just being paranoid.
+--=20
+With best wishes
+Dmitry
