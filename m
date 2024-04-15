@@ -1,57 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C2384D24;
-	Mon, 15 Apr 2024 18:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C0513A89E;
+	Mon, 15 Apr 2024 18:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205257; cv=none; b=fxKti/lgnGbjw/zpF+N662qDkhy50jg/TZMl4sIu1N9WUPRM9YLYHTT4gzuzlIzhhMzw/3VIzv27UkZHbKB2PoE4axzdknh1TQLAX3CwKvoJ50c9WAttSZUB6qoNNhHV4T1toavvG75I/UpCf6TRKAgfnFaeYpK5MD72v2GUnCc=
+	t=1713205276; cv=none; b=S2qD6IT+4AajuEUlBv2zjTvSjFwXcVka8VR3UpUWOCIq0Cu03SNgvSy+rpU1sU8Ow6KmBsK9O0h0kHPCUuildLRnD1GVU/mVNC+PSwUdxgZtPbA9SDgrtRgFtXwdW/mHrYPNViuvKA0UM8U1y9FLdJ1WdrZz587V4rEJ+lrL8T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205257; c=relaxed/simple;
-	bh=yOL9RQkQZOwUCAqbLSj1a2WoEW56l25BTbDLITbtZjA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ml1csk33sEE3UYPYfnTEgV3iW6f2e/UbqTCd27CGcxWQ86pldd8bxZ3d9rAHsLsAfZAiTFvjtC35VGGkvr3EsLbi10feZIyTkg15vYawLm8anu+mLjL/blV2j2gbQs6CwMuQwEkCf5Eutinz8DIuoo9tjkKxDczQ5LQRsJm0NCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfMr/xT1; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713205276; c=relaxed/simple;
+	bh=Rc2DdJhNtXYERFfFXn8Tdq364UiaG6apBSUQyU5ObYg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NDLQy4r0EWRk6fKLrVHW8rKHr3gLeIQG3CV1/39mOJej5RQ+JftbqPJ9ZisBVpdaPx9mzNBerFAXbjIkNni3SD6l3RJsDpSSS36cssHbHR2OyXV+PunZkFpaQVyiZx+ke27UCtkhPNpdIl2GDNuIY/rP8lGIBcgpzBpX/Iu/m9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YbgowMOY; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfMr/xT1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713205256; x=1744741256;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yOL9RQkQZOwUCAqbLSj1a2WoEW56l25BTbDLITbtZjA=;
-  b=BfMr/xT123XQiAzQpx06etatQs48Hq6F/pscwpHdes/z3gDtW6Hi0zpG
-   5tKfoQGwW5LCf3FGKvwlUDdHZmmQomVowZEIOzvtkuez8eu8E5XiE0IhH
-   Ug1Q9RxkrHlexaGvoWVRG97D60JlbbwVzdIndJ+TdnrSDQ/UQ7lOVJ9yA
-   Zmy+M7ao/zUJ//Pvykw59wa4KHxKeroeLualROvLUC7ZgZKptlBLUgzrD
-   XrZkQW/0OhoyNwr/T+Z5HymxnmRRaOQh+i6Q+JSnBee1DwVr3/p8inOAK
-   Z6D4r/TZsiuBBDxvoD80D7xTV5IWypa504T/FWG68weoCCnI9nQbkgh34
-   g==;
-X-CSE-ConnectionGUID: Re8O+gcaTvaonFzHEoE/Fg==
-X-CSE-MsgGUID: YGUhPVYbQ/m/E+Mq5XP+8g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="11557184"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="11557184"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 11:20:54 -0700
-X-CSE-ConnectionGUID: UWJpL6J8Q2O6boHH81CKhA==
-X-CSE-MsgGUID: z85dXddtQFCPEvH9eh15TQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="26784016"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by orviesa004.jf.intel.com with ESMTP; 15 Apr 2024 11:20:54 -0700
-From: Fenghua Yu <fenghua.yu@intel.com>
-To: "Vinod Koul" <vkoul@kernel.org>,
-	"Dave Jiang" <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH] MAINTAINERS: Update role for IDXD driver
-Date: Mon, 15 Apr 2024 11:20:55 -0700
-Message-Id: <20240415182055.3465170-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.37.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbgowMOY"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa3f0fcd46so2264259eaf.1;
+        Mon, 15 Apr 2024 11:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713205274; x=1713810074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y+sACIufw/w8GpGeE4sEiBMvaX1bCTXDGNvgc5Qvf6E=;
+        b=YbgowMOYlH2+ByQv0nskCQJOTHDxqZQFSI7ie5lDkwpJsZ3wurWRYXkcdy6HjCA0PK
+         0+vCGfOPZ7N2c7C5ytJv+zoIu/fBaz0GqDXDDg8Ja/Aa1jAduhu+y529zSVghkPkTrX/
+         XxmxLcPG9lueEhkVpH7tOQtfO6rMohg18zpw5uIIDAfIql4TpOoFF9SKFnCUWPvfj5Gh
+         DElByl3WYNH+xJQL5ccUC2lOuJglYvNdu1Psmrrt/8IyLHWJYt7fbmas/3yfEk65JlJj
+         1PFrnvENxIuQ53AYUjnwu22HlK1Q3z3bvEedfohe/zsdTW9xpMCLknlFIgD9CyWbfENm
+         RKFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713205274; x=1713810074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y+sACIufw/w8GpGeE4sEiBMvaX1bCTXDGNvgc5Qvf6E=;
+        b=RIkc0GruDy4Hns5qDDdS2gSgpcJVQlYBIKya8lX7VVusAsu2tm6pYzu1oDSQlPldBw
+         459pMV9qAap2GyQQndHlQrqjg+HDyRGOqe9UI+vK7aKnrFNNv4ZVdkQNqhgyIisX+rz7
+         pycP8MNA62vwq6LlGtTnQy+ytgEBshd7ECBC7Gt8bCjHpbBxDqtnuER2SbTw1q0712gR
+         wdGhnsoU8rCGdgwDFiRQ2G343FEjI0doJAlV6S76RwIil8mQKWKsMMqwnhSUziABee6L
+         3YBk2DMUCpcq2ZWEA3+NfpDl+Svyq5LrUXyjB0mAkX62u5C0GSw5vppPJjuaBJyky1H4
+         Zpqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUY3xxwHZtl8eqLO+lrnCfnE4vuzOyEilCXlQ2k5AX5JiNgPqk4XR/if3JNy/btMZYHs70UQi0xb2W7x8a3wed1/Jbk6gIazQqAfBGAMwKRpjE83mcyU+1Oej/ybKOs0NyNeNJmI3mQvUGJojOH6gihEyoKih+a8KcyK2K6Kz7dS5o1Tm1Sk1mxxVHH44QeoIoq+8Y/g+5pxEQvnd4KBzIxLlfhPr3LUTcorOycZi7jZLi9+LrUy4px0nxYs8=
+X-Gm-Message-State: AOJu0YynaRoFabp5vxmBI3MbRJRhkwcROJL/scfYncGIzJEhjZ7kQtCN
+	VqJ0dx5EBk2HPeCvTSzI1GV6sJkI3tH2zV3oEEPw5VEcqCLIkXSZ
+X-Google-Smtp-Source: AGHT+IHWr/WeRMTapkOGUUH5erF0VV7fugiYX43aosyHD6DomWr2AEc2K79AjdmI5lspzTuJFUOGtQ==
+X-Received: by 2002:a05:6820:985:b0:5aa:67ac:856f with SMTP id cg5-20020a056820098500b005aa67ac856fmr10305071oob.4.1713205274176;
+        Mon, 15 Apr 2024 11:21:14 -0700 (PDT)
+Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id x4-20020a056820104400b005a4dc7abc01sm2177494oot.11.2024.04.15.11.21.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 11:21:13 -0700 (PDT)
+From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Subject: [PATCH v3 0/7] ipq9574: Enable PCI-Express support
+Date: Mon, 15 Apr 2024 13:20:45 -0500
+Message-Id: <20240415182052.374494-1-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +83,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Dave Jiang <dave.jiang@intel.com>
+There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
+addresses pcie2, which is a gen3x2 port. The board I have only uses
+pcie2, and that's the only one enabled in this series.
 
-Move Dave Jiang to reviewer role since he has not been working on the
-driver.
+I believe this makes sense as a monolithic series, as the individual
+pieces are not that useful by themselves.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In v2, I've had some issues regarding the dt schema checks. For
+transparency, I used the following test invocations to test v3:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c23fda1aa1f0..6839b635d35a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10940,7 +10940,7 @@ F:	drivers/idle/intel_idle.c
- 
- INTEL IDXD DRIVER
- M:	Fenghua Yu <fenghua.yu@intel.com>
--M:	Dave Jiang <dave.jiang@intel.com>
-+R:	Dave Jiang <dave.jiang@intel.com>
- L:	dmaengine@vger.kernel.org
- S:	Supported
- F:	drivers/dma/idxd/*
+      make dt_binding_check     DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+      make dtbs_check           DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+
+
+Changes since v2:
+ - reworked resets in qcom,pcie.yaml to resolve dt schema errors
+ - constrained "reg" in qcom,pcie.yaml
+ - reworked min/max intems in qcom,ipq8074-qmp-pcie-phy.yaml
+ - dropped msi-parent for pcie node, as it is handled by "msi" IRQ
+
+Changes since v1:
+ - updated new tables in phy-qcom-qmp-pcie.c to use lowercase hex numbers
+ - reorganized qcom,ipq8074-qmp-pcie-phy.yaml to use a single list of clocks
+ - reorganized qcom,pcie.yaml to include clocks+resets per compatible
+ - Renamed "pcie2_qmp_phy" label to "pcie2_phy"
+ - moved "ranges" property of pcie@20000000 higher up
+
+Alexandru Gagniuc (7):
+  dt-bindings: clock: Add PCIe pipe related clocks for IPQ9574
+  clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
+  dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
+  PCI: qcom: Add support for IPQ9574
+  dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
+  phy: qcom-qmp-pcie: add support for ipq9574 gen3x2 PHY
+  arm64: dts: qcom: ipq9574: add PCIe2 nodes
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  35 +++++
+ .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        |  36 ++++-
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  93 +++++++++++-
+ drivers/clk/qcom/gcc-ipq9574.c                |  76 ++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c        |  13 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
+ .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
+ include/dt-bindings/clock/qcom,ipq9574-gcc.h  |   4 +
+ 8 files changed, 400 insertions(+), 7 deletions(-)
+
 -- 
-2.37.1
+2.40.1
 
