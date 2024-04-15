@@ -1,143 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE371E896;
-	Mon, 15 Apr 2024 13:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08B471B5B
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188774; cv=none; b=o4zPzujenZUTE0RYMqCL2b7qX8p57TXCZAgSrKj5MGnZAsO5mrnQuzG31G/Fl2iNm6aoQX/aToRI2fEr2/BUtHZVP7AT3gi7FlWycunIAhby+gS6m2k6bEXdKiPgxfM8d9sb1+SosLVtrDZT5XofMGDWglyujqhC73rZlq/8HBw=
+	t=1713188979; cv=none; b=lrsjN6S5bym6cYZmSdmCCVb6SjuWQ1jQm0VJut2QL3Elr0KK8xDc5cmEh/WDitvfFqHoO7urtIme0qtq4B2YLOdrakBDYRAqo/Wu6bphvseBDcrGe3HMPpJEyDB8Fc7wR240RTEZaPs7HCejsctxeANHAr2WZxQWQJqcmSn3UGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188774; c=relaxed/simple;
-	bh=z32CIwWQD4JoiW1WeMXZvCwEz34iuVgxLb9gsZ5i56w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cb6Wo0LyW1Jsrs+mpHC+SCehdJcAWZV1u/EHdp6Uq+KmkBYzo+zAqIO6n2U0Oy/qURQQS5ZePtUYvK7SFRth9xWYzvpOs3L9pweZVzO+NJyLMxoT/IoMpjGxzGZQCz4vBr6Qur5POlDV/rMMVU9ybnOV7SEm7com3LIxKkjpL0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dy752Knc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713188979; c=relaxed/simple;
+	bh=TvUNx+79vaopmzaM3PSKeNfcMIwNczVLZHrejGQKVD0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XLdh0B2IE4rzrfQUJTR1Wmh6mAp6sEMelCeq5xiFO3SQaUgmJQt39XTSJzOi/k0VNLAMTKanr5UWpgdShz4L1TGQF3newwhNTWlJHyf+wAGUlwKduvvK4GQG7eYg/ke2Pt7dQcuiD5i8YfLoAiWEjWKKlWj77FiSyQV47Di1Qo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vhetVyjK; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dy752Knc"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FDi9sY023070;
-	Mon, 15 Apr 2024 13:45:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=yhE0N2GTjzloNk8jSE6bL
-	1E7cB8XApNZKK5EefZJ4P4=; b=Dy752KncX+0qPUtwl62xGFwJu/DOlByTMSyRV
-	RwDnVwOE2JbPaOKtAnnuZ4KDvEtt96WpkJdEuSqG3Z81yMGtE1tR/JZg0/65ba+L
-	uxKdfeWJY5EYSG7hct3G3MU/VXT0J5qwUObOKD72jcfdItNgQITAWAaQiyLD3wtU
-	qTZa0QlwsrBItBOEfCjUkZos6vP8ZSmi37nZEqU/sC5G1kLjpyRWmFF4oeoVU9+u
-	tZ6b38LS+iFCIGmf+tCxaaDJD/Hsiyzo7vaanv75QPxJjYuzAcmgMxIKlKlnH+e3
-	zVS2p75tmrlqh/enbvxgsTGVThcfHpx2me1Ug9jnaB1kKNFJA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xgwdph65s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 13:45:05 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43FDj3v4031752
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 13:45:03 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 15 Apr 2024 06:45:03 -0700
-Date: Mon, 15 Apr 2024 06:45:02 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Rob Herring <robh@kernel.org>
-CC: <soc@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        Antoine Tenart
-	<atenart@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Liviu
- Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Ray Jui <rjui@broadcom.com>, Scott Branden
-	<sbranden@broadcom.com>,
-        Robert Richter <rric@kernel.org>, Shawn Guo
-	<shawnguo@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, Sascha Hauer
-	<s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "Paul J. Murphy"
-	<paul.j.murphy@intel.com>,
-        Daniele Alessandrelli
-	<daniele.alessandrelli@intel.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory
- Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth
-	<sebastian.hesselbarth@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Thierry
- Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?=
-	<afaerber@suse.de>,
-        Heiko Stuebner <heiko@sntech.de>, Orson Zhai
-	<orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan
- Zhang <zhang.lyra@gmail.com>,
-        Jisheng Zhang <jszhang@kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>, <linux-fsd@tesla.com>,
-        Michal Simek
-	<michal.simek@amd.com>, <devicetree@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-mediatek@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-realtek-soc@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCH] arm/arm64: dts: Drop "arm,armv8-pmuv3" compatible usage
-Message-ID: <Zh0vXinxy7woerJQ@hu-bjorande-lv.qualcomm.com>
-References: <20240412222857.3873079-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhetVyjK"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1e417e43c13so38589035ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713188977; x=1713793777; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xyd56S0l2Vyx+AmnHkLVn8KVbV/FkDbyRlJsdS3u6MA=;
+        b=vhetVyjKbC+U/ym5VynQzCHTXf8oCDev7vs++We7Vz8rBWldoPz4iNAk2n5mv4K/z2
+         ykSgIEjVu2NwQAfgcg1gZI3I8oVuIWO2CJgDenDRx6PDZ1xQeCAqhqHd+VZ3YldrPYqi
+         Q0TAAwlUYA80lVfO0g/DUR3Rdkpkdo0gZZlioUt/YFDgrDyHv3LsPh5sgDKCq7IZXZWb
+         DzFDqrmbclmrkMD3Rwd1qHNrgQXKbNwsX3HXhc+TjyRBHU0axUl1J5BsjQzOcBFncyVO
+         LKETZ1BiLfwoxLadxnpP4wqn5ebiwaoctSU2GHtq8B+73jMAHKnFEBd7dqsc7XoZZIVj
+         O0pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713188977; x=1713793777;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xyd56S0l2Vyx+AmnHkLVn8KVbV/FkDbyRlJsdS3u6MA=;
+        b=PLJKkmfML9J7TPHwXFmup8B+b+r+X+2HM7tP1wgD0ThVxnvDfQiCnGj2xPJSDh00Th
+         0gGNfg6SU3I8X5DutT/yJ2pyFV2pfrUkbFCi8w0nBF+4EJdldSlcJPuDy2YEjN/K0F05
+         i+TUHt+dxCJ6Vy/HFZCfrQswXkO57uWESB3J/nRl7NZzqhCF0ZWLbOHudXs0LhwXggUz
+         Jj0hB/2sVdU7QjmV5OyEG03YXPmbNDIVNrAGHoj9tWZ7f+2yYNKQPI3OjuajXGiC4/50
+         RRLhmbWov4G7Am+YF7qMgkX4zaAloWnnxodZgk36WlX1m9GN9nxfZmMEX1ZF11hNGo2E
+         fGcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0Vnsz7yfccM6hS+FeHC6EICjo2eaYS7yLgUkFW0Ja03KAxedajixA7scDBgqMlITKUpkrNJaw2F+7sb4DsmCew++OTpMo9ZqqSJ3K
+X-Gm-Message-State: AOJu0Yw3pOM4nc1eRpm/SyfoaPlph/MDL2TaiEoUcy8UAev3qAko51QH
+	B/QeGVRG0HAqCU2riuPALGTqgXD3h44rcmANRxJIXLp1vHxy4ee5Z3B1YbqU3Q4rfaFi0X2nztd
+	8VA==
+X-Google-Smtp-Source: AGHT+IHSFYB5Ovi0b4K5jyx+4UuWpvG3spx7cgwCfDIbLmGdSagtoqec1hfiGwAc/ZwSddi8gX2/4CqCx5Y=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:da8c:b0:1e5:e651:6099 with SMTP id
+ j12-20020a170902da8c00b001e5e6516099mr727874plx.9.1713188977177; Mon, 15 Apr
+ 2024 06:49:37 -0700 (PDT)
+Date: Mon, 15 Apr 2024 06:49:35 -0700
+In-Reply-To: <20240413004031.GQ3039520@ls.amr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <b9fe57ceeaabe650f0aecb21db56ef2b1456dcfe.1708933498.git.isaku.yamahata@intel.com>
+ <0c3efffa-8dd5-4231-8e90-e0241f058a20@intel.com> <20240412214201.GO3039520@ls.amr.corp.intel.com>
+ <Zhm5rYA8eSWIUi36@google.com> <20240413004031.GQ3039520@ls.amr.corp.intel.com>
+Message-ID: <Zh0wGQ_FfPRENgb0@google.com>
+Subject: Re: [PATCH v19 087/130] KVM: TDX: handle vcpu migration over logical processor
+From: Sean Christopherson <seanjc@google.com>
+To: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, Sagi Shahar <sagis@google.com>, 
+	Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com, 
+	tina.zhang@intel.com, isaku.yamahata@linux.intel.com
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240412222857.3873079-1-robh@kernel.org>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: JnW3rpgElRZ7l7_IYzSAkLFTQ0q_Cpaq
-X-Proofpoint-GUID: JnW3rpgElRZ7l7_IYzSAkLFTQ0q_Cpaq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 clxscore=1011 mlxlogscore=803 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404150089
 
-On Fri, Apr 12, 2024 at 05:28:51PM -0500, Rob Herring wrote:
-[..]
->  arch/arm64/boot/dts/qcom/qcm2290.dtsi                | 2 +-
->  arch/arm64/boot/dts/qcom/qdu1000.dtsi                | 2 +-
->  arch/arm64/boot/dts/qcom/sdm630.dtsi                 | 2 +-
->  arch/arm64/boot/dts/qcom/sdx75.dtsi                  | 2 +-
+On Fri, Apr 12, 2024, Isaku Yamahata wrote:
+> On Fri, Apr 12, 2024 at 03:46:05PM -0700,
+> Sean Christopherson <seanjc@google.com> wrote:
+> 
+> > On Fri, Apr 12, 2024, Isaku Yamahata wrote:
+> > > On Fri, Apr 12, 2024 at 09:15:29AM -0700, Reinette Chatre <reinette.chatre@intel.com> wrote:
+> > > > > +void tdx_mmu_release_hkid(struct kvm *kvm)
+> > > > > +{
+> > > > > +	while (__tdx_mmu_release_hkid(kvm) == -EBUSY)
+> > > > > +		;
+> > > > >  }
+> > > > 
+> > > > As I understand, __tdx_mmu_release_hkid() returns -EBUSY
+> > > > after TDH.VP.FLUSH has been sent for every vCPU followed by
+> > > > TDH.MNG.VPFLUSHDONE, which returns TDX_FLUSHVP_NOT_DONE.
+> > > > 
+> > > > Considering earlier comment that a retry of TDH.VP.FLUSH is not
+> > > > needed, why is this while() loop here that sends the
+> > > > TDH.VP.FLUSH again to all vCPUs instead of just a loop within
+> > > > __tdx_mmu_release_hkid() to _just_ resend TDH.MNG.VPFLUSHDONE?
+> > > > 
+> > > > Could it be possible for a vCPU to appear during this time, thus
+> > > > be missed in one TDH.VP.FLUSH cycle, to require a new cycle of
+> > > > TDH.VP.FLUSH?
+> > > 
+> > > Yes. There is a race between closing KVM vCPU fd and MMU notifier release hook.
+> > > When KVM vCPU fd is closed, vCPU context can be loaded again.
+> > 
+> > But why is _loading_ a vCPU context problematic?
+> 
+> It's nothing problematic.  It becomes a bit harder to understand why
+> tdx_mmu_release_hkid() issues IPI on each loop.  I think it's reasonable
+> to make the normal path easy and to complicate/penalize the destruction path.
+> Probably I should've added comment on the function.
 
-Acked-by: Bjorn Andersson <andersson@kernel.org>
+By "problematic", I meant, why can that result in a "missed in one TDH.VP.FLUSH
+cycle"?  AFAICT, loading a vCPU shouldn't cause that vCPU to be associated from
+the TDX module's perspective, and thus shouldn't trigger TDX_FLUSHVP_NOT_DONE.
 
-Regards,
-Bjorn
+I.e. looping should be unnecessary, no?
