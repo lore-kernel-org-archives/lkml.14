@@ -1,96 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9DF1EB30;
-	Mon, 15 Apr 2024 06:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E61EB36
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713163996; cv=none; b=UKXrZZSbiMrzY6WdzlzO85VDdhpwszv6HjdF+Rem8A7W7+FLhPoQa9dMjIE+K16iex2fJLpCNWwYoDrtHBYxcNXPQYuclFTUmgmcnCK55AcWzoUmW51tOs6n/yPTw4O4fXRaK3jqG1XEsG41sOHBXCkbXJvMrhVzZIdd6N/uRdE=
+	t=1713164065; cv=none; b=uVWmOvaiMV7MYCS2OctcxrleveKQBsSOZ+CW4GTF59qSSl3k0ci+3JlV7mTi62sAC4hhZpyxQxnAKd44z50IglzuedLJYM2pGvCKa/esRBxgdKdwEh6bIWT4CF1NW4DYJXFCKfSq3H9E8rqOakoO7ZZdzFNqVAfLPMH00i+/KeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713163996; c=relaxed/simple;
-	bh=9Soc2Qo07sCZ8eMWp3+CQGUdGqKuLqNVP7Qq79vmnQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=alhRzQM6lLIOAQe5oiGpcctAOebSVF+l5yOFrseyguBvtSKx9/w7iHHK1EmDxsLNU4eXw21pjxjL/cqmHcg4Ts7LKGLmgKNkbTA1kgMd+HDPnM/5xt/Avrzbn3BzbZU4iJef7cXsU69cAGeQZ/MQDvFDCYWHUq2Rj3Mvoc/DMr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtJZCmX4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtJZCmX4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713163995; x=1744699995;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9Soc2Qo07sCZ8eMWp3+CQGUdGqKuLqNVP7Qq79vmnQc=;
-  b=YtJZCmX4C8CJQPQBheS28pbm/Y9dyKCKu2a+8QSchXozREGlLDolMoNi
-   8FBjhNRiYMv/b6TFH5Jq1Hv5hNnugHan2XyddeRVPM4m6ooLMmNKLmpZu
-   PabeFRz+7cc0ljcspQVU9jpoN9iw929f2ovVSOa138sgyIw8SLedLp/Xf
-   Q6g4dQ93M+5ldIN9A6wl2ZcMuzoApbK/nPXWOdY7Gs11rD3floPe3XDbn
-   eBUvGHGitmVDLmFmdlm13nppDcT2bMGQj2zS/hU2nC43pZLG6T4mmfRDp
-   VJ4cJJ+2fP7wFIoDD4zDXJDiYr2kCFysw/14H3e+oDsOriOC+czvt8n39
-   w==;
-X-CSE-ConnectionGUID: Nd36ad9VQXGT2c+VE8af1A==
-X-CSE-MsgGUID: h/iqeO82SjmlMH5ubC7T0Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="12381350"
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="12381350"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2024 23:53:15 -0700
-X-CSE-ConnectionGUID: fLzT8YWXS2e79o7jH8xqmQ==
-X-CSE-MsgGUID: pkQyKVBiSoKT56q5LbaPYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="21806539"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmviesa010.fm.intel.com with SMTP; 14 Apr 2024 23:53:12 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Apr 2024 09:53:10 +0300
-Date: Mon, 15 Apr 2024 09:53:10 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: gregkh@linuxfoundation.org, dmitry.baryshkov@linaro.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: [PATCH] usb: typec: mux: it5205: Fix ChipID value typo
-Message-ID: <ZhzOx2oQZMnyTgb/@kuha.fi.intel.com>
-References: <20240409113646.305105-1-angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1713164065; c=relaxed/simple;
+	bh=0RnzDr/VZ8xCydjZEczq565X/Ecb9JlD2VkomYimNoU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IlW/3h5lZWvKDouLYf9sribwNR/iTIuhrIschzQPavzYM3mmbW3yx5xD237CYITO4bDbq5Ip0sbmdIe0XAXvDNtBbIQtKa0gIhaFEpF3ZGpMnL8mbmG1E3Jrp3SYrqiQd2QdDrQJ7FwshZbvibk3USSqupalvJWVTZpBFzlHce8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VHyVw32NlzXlJt;
+	Mon, 15 Apr 2024 14:51:04 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id F33521400CD;
+	Mon, 15 Apr 2024 14:54:19 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 15 Apr
+ 2024 14:54:18 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
+	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
+	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
+	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>, <ericchancf@google.com>,
+	<kristina.martsenko@arm.com>, <robh@kernel.org>,
+	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
+	<shijie@os.amperecomputing.com>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <horms@kernel.org>, <mhiramat@kernel.org>,
+	<rmk+kernel@armlinux.org.uk>, <shahuang@redhat.com>,
+	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
+	<sumit.garg@linaro.org>, <frederic@kernel.org>, <reijiw@google.com>,
+	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+Subject: [PATCH v3 0/8] Rework the DAIF mask, unmask and track API
+Date: Mon, 15 Apr 2024 06:47:50 +0000
+Message-ID: <20240415064758.3250209-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409113646.305105-1-angelogioacchino.delregno@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Tue, Apr 09, 2024 at 01:36:46PM +0200, AngeloGioacchino Del Regno wrote:
-> The ChipID bytes are read in inverse order: invert the ChipID value
-> defined as IT5205FN_CHIP_ID and used for validating the same.
-> 
-> Fixes: 41fe9ea1696c ("usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+This patch series reworks the DAIF mask, unmask, and track API for the
+upcoming FEAT_NMI extension added in Armv8.8.
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+As platform and virtualization[1] supports for FEAT_NMI is emerging, and
+Mark Brown's FEAT_NMI patch series[2] highlighted the need for clean up
+the existing hacking style approach about DAIF management code before
+adding NMI functionality, furthermore, we discover some subtle bugs
+during 'perf' and 'ipi_backtrace' transition from PSEUDO_NMI to
+FEAT_NMI, in summary, all of these emphasize the importance of rework.
 
-> ---
->  drivers/usb/typec/mux/it5205.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/mux/it5205.c b/drivers/usb/typec/mux/it5205.c
-> index 5535932e42cd..4357cc67a867 100644
-> --- a/drivers/usb/typec/mux/it5205.c
-> +++ b/drivers/usb/typec/mux/it5205.c
-> @@ -22,7 +22,7 @@
->  #include <linux/usb/typec_mux.h>
->  
->  #define IT5205_REG_CHIP_ID(x)	(0x4 + (x))
-> -#define IT5205FN_CHIP_ID	0x35323035 /* "5205" */
-> +#define IT5205FN_CHIP_ID	0x35303235 /* "5025" -> "5205" */
->  
->  /* MUX power down register */
->  #define IT5205_REG_MUXPDR        0x10
-> -- 
-> 2.44.0
+This series of reworking patches follows the suggestion from Mark
+Rutland mentioned in Mark Brown's patchset. In summary, he think the
+better way for DAIF manangement look likes as following:
+
+(a) Adding entry-specific helpers to manipulate abstract exception masks
+    covering DAIF + PMR + ALLINT. Those need unmask-at-entry and
+    mask-at-exit behaviour, and today only need to manage DAIF + PMR.
+
+    It should be possible to do this ahead of ALLINT / NMI support.
+
+(b) Adding new "logical exception mask" helpers that treat DAIF + PMR +
+    ALLINT as separate elements. 
+
+This patches cherry-pick a part of Mark Brown' FEAT_NMI series, in order
+to pass compilation and basic testing, includes perf and ipi_backtrace.
+
+[1] https://lore.kernel.org/all/20240407081733.3231820-1-ruanjinjie@huawei.com/
+[2] https://lore.kernel.org/linux-arm-kernel/Y4sH5qX5bK9xfEBp@lpieralisi/
+
+v3->v2:
+1. Squash two commits that address two minor issues into Mark Brown's
+   origin patch for detecting FEAT_NMI.
+2. Add one patch resolves the kprobe reenter panic while testing
+   FEAT_NMI on QEMU.
+
+v2->v1:
+Add SoB tags following the origin author's SoBs.
+
+Liao Chang (5):
+  arm64: daifflags: Add logical exception masks covering DAIF + PMR +
+    ALLINT
+  arm64: Unify exception masking at entry and exit of exception
+  arm64: Deprecate old local_daif_{mask,save,restore}
+  irqchip/gic-v3: Improve the maintainability of NMI masking in GIC
+    driver
+  arm64: kprobe: Keep NMI maskabled while kprobe is stepping xol
+
+Mark Brown (3):
+  arm64/sysreg: Add definitions for immediate versions of MSR ALLINT
+  arm64/cpufeature: Detect PE support for FEAT_NMI
+  arm64/nmi: Add Kconfig for NMI
+
+ arch/arm64/Kconfig                   |  17 ++
+ arch/arm64/include/asm/cpufeature.h  |   6 +
+ arch/arm64/include/asm/daifflags.h   | 298 ++++++++++++++++++++++-----
+ arch/arm64/include/asm/nmi.h         |  27 +++
+ arch/arm64/include/asm/sysreg.h      |   2 +
+ arch/arm64/include/uapi/asm/ptrace.h |   1 +
+ arch/arm64/kernel/acpi.c             |  10 +-
+ arch/arm64/kernel/cpufeature.c       |  58 +++++-
+ arch/arm64/kernel/debug-monitors.c   |   7 +-
+ arch/arm64/kernel/entry-common.c     |  96 +++++----
+ arch/arm64/kernel/entry.S            |   2 -
+ arch/arm64/kernel/hibernate.c        |   6 +-
+ arch/arm64/kernel/irq.c              |   2 +-
+ arch/arm64/kernel/machine_kexec.c    |   2 +-
+ arch/arm64/kernel/probes/kprobes.c   |   4 +-
+ arch/arm64/kernel/setup.c            |   2 +-
+ arch/arm64/kernel/smp.c              |   6 +-
+ arch/arm64/kernel/suspend.c          |   6 +-
+ arch/arm64/kvm/hyp/vgic-v3-sr.c      |   6 +-
+ arch/arm64/kvm/hyp/vhe/switch.c      |   4 +-
+ arch/arm64/mm/mmu.c                  |   6 +-
+ arch/arm64/tools/cpucaps             |   2 +
+ drivers/irqchip/irq-gic-v3.c         |   6 +-
+ 23 files changed, 442 insertions(+), 134 deletions(-)
+ create mode 100644 arch/arm64/include/asm/nmi.h
 
 -- 
-heikki
+2.34.1
+
