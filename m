@@ -1,161 +1,124 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2090.outbound.protection.outlook.com [40.107.215.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619BCEEBB;
-	Mon, 15 Apr 2024 03:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713150968; cv=fail; b=V9jI6d1I7WvbkSGeXHcZD56haoMrQEg9LvVP01yWW3Sb4bjJ4U3kssNC1rbR7/Q/oFKJQ3zqN8r9eOm/mfMHXqHxjNa+8jnsLir47dy7UOgu/QnFwV44gc50z5WcsXiimlA8Tn+aPxemfepfv3hvqUkU0dJNhEwZAmsjVpNmxBw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713150968; c=relaxed/simple;
-	bh=dTNLWWqeIwIn7i2Vt/4EKKVx0ZBs/Ml2r0puhlkmrSY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=UXq6Q3V0tnVBsHMc/gWWGB0C08+VOBIfi1JSlAHSXQlKuvka113Jfjc18gO+2RhTS02rF4I4Pyw37g/YL3GKlWm+jYwZ4UqUsvM9u5nHJQxGjE8qOBwmoHnGkJiW4N0YSicC56ie+Kz3ofmOrpdItHMwJch+HcTAenjvlvZwLW4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.215.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MTZ/kAgtI8y+AmPwd7YKRseXWp6OIckvV+pIrPDyrSXLJbhhqpmTSLR1djA5Hh9m+POEa9guylLplLs18OwZKrPrLbdaEcHJFz7S30xWrb2hoy6a+khjsnRNyAgDEEKPkzV1ZG3s1oD6VIz7PGG2mVcyBfbxsS/Y5a0sbe8cLO8KkDnz9s1vR7j8jliSX56WuFyQhKfIJrx/VklFzt9q0Dg1Z0RLTKz6ugI/YCQz+WrMM3N3UTtwNZMxVuAJJAfTvmJDnf7BWr8rP6e3DcWltRpzJ4CqiPuPAk1Y8Vlvh61xpVaii3yb7bcTIWFponWKhci0vz8aFYaZVpKsA8hJpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eq9/Dgx21isESrbx0ZbihdPWfLhm5FjKlgqENbSSy2s=;
- b=JvEDzwxL8B0ZhJsqJ7w21ZiQBV1nmItUCZU/3DfUAuHNb9GwfEaH17YfJQWckh4yNLrp7s5ZyhZ8rhdrkGFnLGx4jk1xfCvewxafwvj25T4sijDBE916bPHijqvEaOVhHLN7duwZ/0K7dzNtY2/v+YjvngWnWMh+wogiypzDFQ+Hk5xKOp4nosjeWq9ERhmZhFeCTZRZdsALQmsRjfEuHqrzzBAErZ8fEGLAyXRHVWK3Bh9+pk+7tmMdDDYs2U7oDvH1qIMvtyDX7EuQqLUxNXE6PTOr+uOXXFrE3I18dyZPo7X7W/HnzZw/FWQFVCAodRW5W7jypYb2Od0F3oSOiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
- dkim=pass header.d=wesion.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wesion.com;
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
- by SEYPR03MB8128.apcprd03.prod.outlook.com (2603:1096:101:16d::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Mon, 15 Apr
- 2024 03:15:59 +0000
-Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::c4f9:d4f1:c115:f1ca]) by TYZPR03MB7001.apcprd03.prod.outlook.com
- ([fe80::c4f9:d4f1:c115:f1ca%6]) with mapi id 15.20.7452.049; Mon, 15 Apr 2024
- 03:15:59 +0000
-From: Jacobe Zang <jacobe.zang@wesion.com>
-To: neil.armstrong@linaro.org,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: nick@khadas.com,
-	linux-amlogic@lists.infradead.org,
-	quic_jesszhan@quicinc.com,
-	sam@ravnborg.org,
-	thierry.reding@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D27E01DA22;
+	Mon, 15 Apr 2024 03:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713150983; cv=none; b=JXWDtZaPXrUs0syrzl8UFUIcg5WXcpDitA3AFT1GYjv3+tG02Hxq42aUFjpOc3E2FKdCuDjz5+3AC5xMr8DgjCZzqwKQaxQfJ0pY86yu2AQChoQ+CxV5l/wmHf1+dmp0gl/Zjz2R+BfUKEOVNKb3e3fixpzDMjf+evoimFGsUmg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713150983; c=relaxed/simple;
+	bh=rfukLwDDV18e2IBcGCdhJgSFIi+4pEqXkQGWXDpgN6o=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Qx/A9Gqt8sV8PejSgCZZm/CL/9Vnqh+l7KETp9XpzokBbaQftNtfxyJeeuLtYMhGY3ARCYajYR4vQ2ELJ5dtAF/wKi8MbTJbR2LaS3xGGIdBMn4GF5y04DbmrE0bsY0tuEnmBNQgZmHCePD8QV3NgMU0kZ42eYwF8c74Cj3HSF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.231.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from localhost.localdomain (unknown [10.12.130.31])
+	by app1 (Coremail) with SMTP id TAJkCgCnSOV3mxxmR4gGAA--.51722S4;
+	Mon, 15 Apr 2024 11:14:00 +0800 (CST)
+From: Shenlin Liang <liangshenlin@eswincomputing.com>
+To: anup@brainfault.org,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Jacobe Zang <jacobe.zang@wesion.com>
-Subject: [PATCH v2 0/2] drm/panel: add Khadas TS050 V2 panel support
-Date: Mon, 15 Apr 2024 11:14:06 +0800
-Message-Id: <20240415031408.8150-1-jacobe.zang@wesion.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCP286CA0264.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:455::15) To TYZPR03MB7001.apcprd03.prod.outlook.com
- (2603:1096:400:26a::14)
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: Shenlin Liang <liangshenlin@eswincomputing.com>
+Subject: [PATCH v2 0/2] perf kvm: Add kvm stat support on riscv
+Date: Mon, 15 Apr 2024 03:11:29 +0000
+Message-Id: <20240415031131.23443-1-liangshenlin@eswincomputing.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:TAJkCgCnSOV3mxxmR4gGAA--.51722S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWUGrykZr47XF4UZFWxXrb_yoW8Kw48pF
+	W2krs8Kw4rtFy3KwsxC3WDWrWrCw4kur1Yqr12yryUC3yj9ryDJ3WkKr9FyrZ8JF1UtFWk
+	AF1Dur1rGrW5JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VU122NtUUUUU==
+X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB7001:EE_|SEYPR03MB8128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ee2896f-aaff-46d1-4f79-08dc5cfa5f72
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uxe3uhpm/7pJVHgMXmjvz3F5WuHgBJhB7dvDLz51GhQRkXmbnOMe24MnrVXP?=
- =?us-ascii?Q?4pZ6v0DaWk6nWwFhpXhQUeqfyecmrpzVtRkY2r3jThWyUsqP4JO1E3QnhOMy?=
- =?us-ascii?Q?iFz7ptoR6NanUZd1SEs3Ie6eSiwaeQ/xf9S9wIPDl40/eio22axIl8yPV4Cr?=
- =?us-ascii?Q?DkWJGFX/uv5jI9UZSIF7WJumqZpQX/G7SUgn4XOQqj7KmIDGp0evjVspDSu8?=
- =?us-ascii?Q?u1zDhaRX9qQGsB7FpNklcZ53hoE7YlpQMwLJT6O5uml82uXjhcBev3aHO91U?=
- =?us-ascii?Q?WxcjqVd5mfapqQZhGvqQXAy5vP1Nz+X6eSrolctiNsSScewbkvcOXP5HINix?=
- =?us-ascii?Q?wJYyuz0Ka3VAbbG2dWgKAMI2dkP6rXe1ds4Yg75IPp+xk5J13B5jiskmeFKj?=
- =?us-ascii?Q?RoHg/Q4ibRqPXELH17HAoXrWPzrnQ5FT26YPJc6abA+s//vk24+7GmudosXr?=
- =?us-ascii?Q?8hGIaHvN9Ay4+l5JUFbnhCnFpQnczRm5Aj9tJavD/qx1gctUJdSc7aAnDl92?=
- =?us-ascii?Q?+kacq27ChFkcykwjwaWya9x5YZ64XVSEBTmqn6zkut7yfE5P+ZzoMRIAnLU9?=
- =?us-ascii?Q?Rz329W8x6rDasBTyMjctxQVWZzHd05voB2cqrcsuJyOCXFfcbuDc38IuqL84?=
- =?us-ascii?Q?MMexjUH4eeBeE6c/kUUFcgw8qT2JIG0GLQz/LfCxZwzUyVh8uPPoaOcbQXT9?=
- =?us-ascii?Q?crENSE2ohCyZD//5i6sj1ifqnnyw/VVj9JEyM/Cmb2nNB0IeweaBw4nGDR52?=
- =?us-ascii?Q?brU1mbagQV2IPONRrIA10oYDVFXUyuDqU2QE5OT2MhtXQeuDUn0DDWpL1wXH?=
- =?us-ascii?Q?va+vx6ZZdyw4lHGJcG4Sv/8XuZLhQs+XDgWYr7W4ZB/Q3jz5b9lda3RBuCJE?=
- =?us-ascii?Q?FKxPoUlOeXGizC52aTX9IYUu9ar5ClnkEGvUQcITHxB/229owdNtuB8dEUkg?=
- =?us-ascii?Q?Be1SCoHspmCAwt5igpnWqXxvJ+SQT4RrAHTD8IN1rc/8ZhKnSqZJrL0CAjZd?=
- =?us-ascii?Q?87bBTTLx6YnJU0x9MbKCkeqveA4gI+rLJa7zOhewos8AiXH2VaymPDKhHxiK?=
- =?us-ascii?Q?6xasXdpdqM+yPz2+JCbjo9FS9WKJLbJDKRKrTeWbHruvghjluexyKanBsrMb?=
- =?us-ascii?Q?rZP44nZeWjEy0ORHJyDyUYRUmEg8gtHOhksr3cAw0kwagV2Rs3u+ZFPfBUI4?=
- =?us-ascii?Q?wt2z3K7WpGfSsH5+kouBDhNcWjfsY0v59NVcyvLunn+LSMrklbVLO+pKHxzf?=
- =?us-ascii?Q?eHlc5Z/3DeS0EEobIH5Y76XnVqQupxlwwSaOnZ1n5bYoQnt0J7wJCKbeO6b8?=
- =?us-ascii?Q?WIEw9kPVG58o/kmtytcCHapJABJpZvmUW+erD0FQEngBWA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(52116005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uAHo8ntUYHKUvtuOpAH8TTWhY8ZPiSwNrt4pPRPb/4ZLsJQY6K0B7H5EXG7k?=
- =?us-ascii?Q?CnMAiEHXD/zqDC25VtZld3yF9EjtJYxMYMOhTcn1K4rJ+KC1+j+j1OrA8JOd?=
- =?us-ascii?Q?ZTba5AWZ5h+4YF7rd5Kr3fCw28jYeZX+vd1tqyROfkMhHvVjcT8ASQY8ndJ3?=
- =?us-ascii?Q?FuYJQMe5uNuw9CR2Ih+LpgJZY6KfDwCcj+sKy46jduMH1hBSJIyexjNxRVMY?=
- =?us-ascii?Q?bMMK7vsJKrIcvbTaAQ4wkah3aHSByuLI1XgDqjpzk5P1RFIU2gMEtgvavj7O?=
- =?us-ascii?Q?j2zZXQshBBqCF53bbdNgQheikktqPhgRpO/Sw5OuTvrXc/U2EspnQoKMIL+i?=
- =?us-ascii?Q?yha9hNFA8q/HZiAeIvFmo7XHCJnHjnqwUNdEFZUcHXIjTVs2s0RHvsVTnfjL?=
- =?us-ascii?Q?UWck7+LkSuX+JWUB6z0iIx1+OE1ZZZc61kpxrBePNMT5OhZ2Z5Fd5b0vJicE?=
- =?us-ascii?Q?Dm7J1B3lIqV/zQR5U7pvf03SCg95YQtfqEOJ7y6GoV2vWFYZtUQtKVg1l5IM?=
- =?us-ascii?Q?3u/kMID4AxX79KYIBxEnrLSZPxUzOH5tM+IKu2tM6JZo0o4GodSxqPdL63Aw?=
- =?us-ascii?Q?BVaSZ8AoQCpOPwXl2ok07Th2Y5A0uRSc2FM/xM5schkG1gf3WQinmMax7z+M?=
- =?us-ascii?Q?AErFALB/9lHJADrPL2L4u100IDXCEkIGyogoCTXAViUTuqkZhC3hYDFObjOr?=
- =?us-ascii?Q?zi6vZpNX0bZH/sCPdiWwFZbHiZWvtkCsEL5noxrY5Iu6Op+i54TqFCyuTcUF?=
- =?us-ascii?Q?YnPZTcSozfe19YuAmfdnfPpgLOvOrBRKuaKKQ0l8BSuGTwHGXJw4x7zaZn75?=
- =?us-ascii?Q?DFkcbc6g+7DZuW9Oto82wNQI+BFetV+xlj8cZ4eBJ93OKzLUCwihcGo6aNho?=
- =?us-ascii?Q?CYwXHjKP+7y30oNI9+X2j5TBnHR+EZziZyJuEnPjZVXOkpd5IBhyGdRhVTbj?=
- =?us-ascii?Q?UFeTHp5gvYQO8vXEPln9vTruNSST1y5uY65UTHeNB8tvtyx0zQA+IvSSZdZb?=
- =?us-ascii?Q?uB3tQSAmRoJzNTvpAcYZmC8FKUWqSQA5AfGowR+i5qIhMkfhDKJMdzZsLPAG?=
- =?us-ascii?Q?muY5Ae2mXGqyxsj19u/g3KgSJcxYEohIypQGVJBBpHwBESni1eSxKOUOAz0k?=
- =?us-ascii?Q?tLxUvnKUgA71mAcdeU1Rz98RzC2LZ/QtZOHWpASrKKlF/1jp5n/af2ipO9i5?=
- =?us-ascii?Q?NXcHkSOLg3kqdDbyYRPDv/FbHs926JGEixD0wvwWM4zddJzUIl6xWG65SHxb?=
- =?us-ascii?Q?FJek4TqiG6qP8QEZEs1xOX7DkA5b6VOLjs/AJcskmfyV9MKCUlYT5nyIsePb?=
- =?us-ascii?Q?Ip7jaNazblAkv4Xtz/FOYfWnmuNJP8xYdtCNFl/s/8ToSKL9rdfTtkva0V2j?=
- =?us-ascii?Q?dWfZUzqiaxSzhppz33bK+uIYWZc3lypkZyniuKIvTgpZfwl67wGO2fCXqwFp?=
- =?us-ascii?Q?n8kQqaTYxJXFyzWz1KoIlBe9UNQ7bODHi+13E4+31ixhaXcIBG4kYaz0jfT+?=
- =?us-ascii?Q?SI7gmfoRSzBAkq+GL4Z8+CZEwZEeTsGOt2exQGRy9C6nCs1xRnO+oFRgmWBc?=
- =?us-ascii?Q?E8p3CxGYvuWkzFc/qxWpq1LEAxG5QuPZlwfrau+H3/iGwTacnViB3D8Dln9/?=
- =?us-ascii?Q?zA=3D=3D?=
-X-OriginatorOrg: wesion.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ee2896f-aaff-46d1-4f79-08dc5cfa5f72
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 03:15:59.5709
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ma04OcTN9TLxZiBpjwxho7LzDA39MTz62Dcv4cbPHXS04/d7EQ7B0Mz9JqR47zRdFhf0wl4LXyysciNefxFL+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB8128
 
-Changes from v1 at [1]:
-- Fix name from "newts050" to "ts050v2"
-- Add specific description about controller change 
+Changes from v1->v2:
+- Rebased on Linux 6.9-rc3.
 
-[1]https://patchwork.kernel.org/project/linux-amlogic/list/?series=842707
+'perf kvm stat report/record' generates a statistical analysis of KVM
+events and can be used to analyze guest exit reasons. This patch tries
+to add stat support on riscv.
 
-Jacobe Zang (2):
-  dt-bindings: panel-simple-dsi: add Khadas TS050 V2 panel bindings
-  drm/panel: add Khadas TS050 V2 panel support
+Map the return value of trace_kvm_exit() to the specific cause of the 
+exception, and export it to userspace.
 
- .../display/panel/panel-simple-dsi.yaml       |    2 +
- drivers/gpu/drm/panel/panel-khadas-ts050.c    | 1112 +++++++++--------
- 2 files changed, 592 insertions(+), 522 deletions(-)
+It records on two available KVM tracepoints for riscv: "kvm:kvm_entry"
+and "kvm:kvm_exit", and reports statistical data which includes events
+handles time, samples, and so on.
+
+Simple tests go below:
+
+# ./perf kvm record -e "kvm:kvm_entry" -e "kvm:kvm_exit"
+Lowering default frequency rate from 4000 to 2500.
+Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
+[ perf record: Woken up 18 times to write data ]
+[ perf record: Captured and wrote 5.433 MB perf.data.guest (62519 samples) 
+
+# ./perf kvm report
+31K kvm:kvm_entry
+31K kvm:kvm_exit
+
+# ./perf kvm stat record -a
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 8.502 MB perf.data.guest (99338 samples) ]
+
+# ./perf kvm stat report --event=vmexit
+Event name                Samples   Sample%    Time (ns)     Time%   Max Time (ns)   Min Time (ns)  Mean Time (ns)
+STORE_GUEST_PAGE_FAULT     26968     54.00%    2003031800    40.00%     3361400         27600          74274
+LOAD_GUEST_PAGE_FAULT      17645     35.00%    1153338100    23.00%     2513400         30800          65363
+VIRTUAL_INST_FAULT         1247      2.00%     340820800     6.00%      1190800         43300          273312
+INST_GUEST_PAGE_FAULT      1128      2.00%     340645800     6.00%      2123200         30200          301990
+SUPERVISOR_SYSCALL         1019      2.00%     245989900     4.00%      1851500         29300          241403
+LOAD_ACCESS                986       1.00%     671556200     13.00%     4180200         100700         681091
+INST_ACCESS                655       1.00%     170054800     3.00%      1808300         54600          259625
+HYPERVISOR_SYSCALL         21        0.00%     4276400       0.00%      716500          116000         203638 
+
+Shenlin Liang (2):
+  RISCV: KVM: add tracepoints for entry and exit events
+  perf kvm/riscv: Port perf kvm stat to RISC-V
+
+ arch/riscv/kvm/trace.h                        | 67 ++++++++++++++++
+ arch/riscv/kvm/vcpu.c                         |  7 ++
+ tools/perf/arch/riscv/Makefile                |  1 +
+ tools/perf/arch/riscv/util/Build              |  1 +
+ tools/perf/arch/riscv/util/kvm-stat.c         | 78 +++++++++++++++++++
+ .../arch/riscv/util/riscv_exception_types.h   | 41 ++++++++++
+ 6 files changed, 195 insertions(+)
+ create mode 100644 arch/riscv/kvm/trace.h
+ create mode 100644 tools/perf/arch/riscv/util/kvm-stat.c
+ create mode 100644 tools/perf/arch/riscv/util/riscv_exception_types.h
 
 -- 
-2.34.1
+2.37.2
 
