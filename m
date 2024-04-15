@@ -1,85 +1,178 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210D6823CE;
-	Mon, 15 Apr 2024 21:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BFB82D93;
+	Mon, 15 Apr 2024 21:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713215282; cv=none; b=U5Tw0PakOdzk5FYRso9Q83sh9T+TmgbJ6ukC6mSGI1a5pf/56HpmjSNLHplAlns5WEslIXqvXcCm6EirczlLAQZkpzNSLY6m0IIGidwyw433JjSKd00mgFCoX+TFWz5laf1y7+ru9b5PD9MKCypEVV5lSf/6+U526R5Fwb9bHEI=
+	t=1713215307; cv=none; b=ok8XugK9jxHNUCQZInjsFPjT66ymRkUsez5cEMZWVdy7YPR1LHfvgkXWz0B3T3NcTFarXr5j3Rnc1b2UUBgj4w+9iGCSK+SDJ9+NHRS3aU4EYF95YB6lrGiBEx0ihkTWluYs+qZ1cqObp9rn0/V5Z5/YiKX6v/hUgf+EmWB03AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713215282; c=relaxed/simple;
-	bh=TJCFkjZfjstSqTosq2ofApmwxwcsMnKCELg9tffipXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B82P15maPpSE57AzApg6QAC6Fbab0j2ozNqXxsE8D4OpysdbEynggBmo3Ny5vIfrgRRf5VIDyEOnMb/IryKCfJy6YIaYereH3ShBDC2XagYc1vjv4goLUy+L+vkxlRuAGf9Ruk+qVSPz9CpZDHJkf9jEBDNdxcRNo9ISmbb/fVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gIQ+xICP; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713215307; c=relaxed/simple;
+	bh=YBb7sPjCuZy7QTFidxmPtSaTUjMukfRrUWRNfl89xUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PrxQOUvBiKtIKXWqdF8OZD/aRWad/pehxYK2fDKANRQuDBsGpakEEsGXSB7jLU//UpPremEAcT70uCugp2AYokI2BVL1c9xBg1T4Qr8TwyRRbTKwf9Q709Dh0OfImN6hhyPDM8pjSDUj6e9Mb/BB1EqdLx9nF4o3eTF+io7xH/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mh392K/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gIQ+xICP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=7+q5a4BFZOQ0nlwK9E3zO3DsPMAmGY9bri/gwPhuncQ=; b=gIQ+xICPtGPVXjX3/kXMEd3bNj
-	/YeR1j2Gj3QOsMBAqM9PLeuQnZVGqdwqlpSlIpfGUnx68Cywwdd04syLRbWGXZlHLsfdIu1EeLU7H
-	9YDDhNW15+gcofUs2psqkJaJdUarmJuAtcKaYHn3fAWYOfK3YwVu6WGQW2xPJObiwaqZ718LKlh9v
-	N07yL1LzBZzTW9NwAdCNFDW/A/Ye1fSf/onmNDQR52y85OsOG/kRWuhVbajPUx8NnQGSoLEEdoXRC
-	jwooLpl7PRhgSFwfuE1JxjYd8ua8dy1v5OF28kcJWNvVDDO8GVi8lV8uHqCYj8W7+no8qJUujWD5C
-	B/cTLbOA==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwTYH-00000009v3H-3nHt;
-	Mon, 15 Apr 2024 21:07:47 +0000
-Message-ID: <805af99c-4c78-4f2c-a15b-de69a4b8da99@infradead.org>
-Date: Mon, 15 Apr 2024 14:07:42 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mh392K/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E8FDC113CC;
+	Mon, 15 Apr 2024 21:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713215305;
+	bh=YBb7sPjCuZy7QTFidxmPtSaTUjMukfRrUWRNfl89xUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mh392K/+eV4fnTxdDBL2hkZgVqtnZ+l5R6/Gy424hmIewmf56EAGgPSUnDww7XfrP
+	 h/EMGZlW+jRdJmL7bzI5SgyJO1/9KEeUdR6XjumPyAyEl5HX0ceRNNgU4jDGFB93HM
+	 nDWLDWEFtUG5bwvvexEm4emW2c7V3AwXnJjPb1TYSSLaxfpruUE26/0mzXuWyl+4ls
+	 rdkrG6isEK9o1Ttl20u8haKyBAQvTYBmZ+r/sxLQ4spO9P+fVYi4hFJkuvBARjttIK
+	 lBdfxrxLHkt2228D3f/jby+tFGjPNHCtJk3sEwVcPLpt/gUSFFIymS7nyE7NZtXuAh
+	 +owzyrxrKOWrw==
+Date: Mon, 15 Apr 2024 23:08:22 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: paulmck@kernel.org, rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: Re: [PATCH 2/2] context_tracking, rcu: Rename RCU_DYNTICKS_IDX to
+ CT_DYNTICKS_IDX
+Message-ID: <Zh2XRgIGDILD6u7Q@pavilion.home>
+References: <20240327112902.1184822-1-vschneid@redhat.com>
+ <20240327112902.1184822-3-vschneid@redhat.com>
+ <Zg6tYD-9AFPkOOsW@localhost.localdomain>
+ <1ef9d1f9-16a2-4ddc-abd5-6c3b7cde290f@paulmck-laptop>
+ <ZhZqX0YqlzPoOK2b@localhost.localdomain>
+ <af3eed7e-a889-4008-ba47-045483ab79fc@paulmck-laptop>
+ <xhsmhjzky8tww.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/14] lib: Add TLV parser
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Roberto Sassu <roberto.sassu@huaweicloud.com>, corbet@lwn.net,
- paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
- akpm@linux-foundation.org, shuah@kernel.org, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, mic@digikod.net
-Cc: linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
- linux-integrity@vger.kernel.org, wufan@linux.microsoft.com,
- pbrobinson@gmail.com, zbyszek@in.waw.pl, hch@lst.de, mjg59@srcf.ucam.org,
- pmatilai@redhat.com, jannh@google.com, dhowells@redhat.com,
- jikos@kernel.org, mkoutny@suse.com, ppavlu@suse.com, petr.vorel@gmail.com,
- mzerqung@0pointer.de, kgold@linux.ibm.com,
- Roberto Sassu <roberto.sassu@huawei.com>
-References: <20240415142436.2545003-1-roberto.sassu@huaweicloud.com>
- <20240415142436.2545003-2-roberto.sassu@huaweicloud.com>
- <D0KXTHHYLSX6.1IDLSEIVS9PA5@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <D0KXTHHYLSX6.1IDLSEIVS9PA5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmhjzky8tww.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-
-
-On 4/15/24 12:19 PM, Jarkko Sakkinen wrote:
-> On Mon Apr 15, 2024 at 5:24 PM EEST, Roberto Sassu wrote:
->> From: Roberto Sassu <roberto.sassu@huawei.com>
->>
->> Add a parser of a generic TLV format:
+Le Mon, Apr 15, 2024 at 06:36:31PM +0200, Valentin Schneider a écrit :
+> On 10/04/24 12:19, Paul E. McKenney wrote:
+> > On Wed, Apr 10, 2024 at 12:30:55PM +0200, Frederic Weisbecker wrote:
+> >> Le Tue, Apr 09, 2024 at 12:53:03PM -0700, Paul E. McKenney a écrit :
+> >> > I am having a hard time getting too excited about the name.  I could
+> >> > suggest CT_RCU_WATCHING_IDX, but that isn't exactly the shortest
+> >> > possible name.
+> >>
+> >> I really like CT_RCU_WATCHING. It says everything. The _IDX isn't even
+> >> needed after all. What do you think?
+> >
+> > Works for me!
+> >
 > 
-> What is TLV?
+> Sounds good to me too, thanks for the suggestion :)
+> 
+> Now, what about ct_dynticks() & friends? I was about to do:
+> 
+> -static __always_inline int ct_dynticks(void)
+> +static __always_inline int ct_rcu_watching(void)
+>  {
+> -	return atomic_read(this_cpu_ptr(&context_tracking.state)) & CT_DYNTICKS_MASK;
+> +	return atomic_read(this_cpu_ptr(&context_tracking.state)) & CT_RCU_WATCHING_MASK;
+>  }
 
-type-length-value
+Yup!
 
-i.e., a descriptor that contains a value.
+> 
+> ... but then realised that there's more siblings to the rcu_dynticks*()
+> family;
 
-IIUC.
+Ouch right, sorry I forgot there is so much of this namespace. But in case you're
+willing to clean that up:
 
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+> 
+> AFAICT dynticks_nesting could also get the rcu_watching prefix treatment,
+> `rcu_dynticks_task_exit() -> rcu_watching_task_exit` doesn't sound as
+
+rcu_tasks_exit() ?
+
+But Paul, is there a reason why check_holdout_task() doesn't check
+ct_dynticks_cpu(task_cpu(t)) instead of maintaining this separate counter?
+
+> obvious though. The rcu_dyntick event probably can't be renamed either.
+
+I think we can rename trace_rcu_dyntick() to trace_rcu_watching()
+
+> 
+> I'm not sure how far to take the renaming; seeing things like:
+> 
+>   notrace bool rcu_is_watching(void)
+>   {
+>           bool ret;
+> 
+>           preempt_disable_notrace();
+>           ret = !rcu_dynticks_curr_cpu_in_eqs();
+>           preempt_enable_notrace();
+>           return ret;
+>   }
+>   EXPORT_SYMBOL_GPL(rcu_is_watching);
+> 
+> makes me think most of the rcu_*dynticks / rcu_*eqs stuff could get an
+> rcu_watching facelift?
+
+The eqs part can stay as-is. But the *dynticks* needs an update.
+
+> 
+> Here are my current considerations for identifiers used in context_tracking
+> in decreasing order of confidence:
+> 
+> | Old                                   | New                                                           |
+> |---------------------------------------+---------------------------------------------------------------|
+> | RCU_DYNTICKS_IDX                      | CT_RCU_WATCHING                                               |
+> | RCU_DYNTICKS_MASK                     | CT_RCU_WATCHING_MASK                                          |
+> | context_tracking.dynticks_nesting     | context_tracking.rcu_watching_nesting                         |
+
+This can be context_tracking.nesting (and yes one day we might need to lock up
+context_tracking.nesting and context_tracking.recursion together in a room and see
+who wins after a day or two).
+
+> | context_tracking.dynticks_nmi_nesting | context_tracking.rcu_watching_nmi_nesting [bit of a mouthful] |
+
+context_tracking.nmi_nesting
+
+> | rcu_dynticks_curr_cpu_in_eqs()        | rcu_watching_curr_cpu() [with an added negation]              |
+
+Nice!
+
+> |---------------------------------------+---------------------------------------------------------------|
+> | TRACE_EVENT_RCU(rcu_dyntick,          | [Can't change?]                                               |
+
+It can change. Officially trace events aren't ABI. Unoficially I wouldn't dare
+changing the sched switch trace event but this one is fine.
+
+> |---------------------------------------+---------------------------------------------------------------|
+> | rcu_dynticks_task_enter()             | rcu_watching_task_enter()> | |
+
+rcu_tasks_enter() ?
+
+> | rcu_dynticks_task_exit()              | rcu_watching_task_exit()                                      |
+
+rcu_tasks_exit() ?
+
+> | rcu_dynticks_task_trace_enter()       | rcu_watching_task_trace_enter()                               |
+
+rcu_tasks_trace_enter()?
+
+> | rcu_dynticks_task_trace_exit()        | rcu_watching_task_trace_exit()                                |
+
+rcu_tasks_trace_exit() ?
+
+Thanks.
+
+> 
+> Thoughts?
+> 
