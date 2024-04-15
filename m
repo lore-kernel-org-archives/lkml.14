@@ -1,61 +1,44 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88FB25601;
-	Mon, 15 Apr 2024 21:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122AE157474;
+	Mon, 15 Apr 2024 21:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713215927; cv=none; b=ICTQH6RfwE2lrHU1YC78CNwH2tyXc6TcI5yoAZJ4al6LTbWtVc+c+phf2lpWiZMqK8H2EDHsdamrK8Hao3GDXPl8UKKPjFX3dsj4ke6z+gYlxN6hMoemVBK7W7n8Fo4WKd5Gov/ldS6CKXN0CAUDFVroLoAar/k/wfD2I+twvjI=
+	t=1713216027; cv=none; b=AG1P9jaBQYGYFhuJnFyeCouqRQfiQgMrGojqdQf0+fS/lwqO94JSgm93ipeMGmbEvAtMkis3xBes39K4QctMdfDJopMJrkObT4X0QeAwUx2PTdK6vhWKmLplWf/3jkM2Ex/FXyfMxSS0Kk55+g39LWvHx1dZhndsWSuIr8zPLz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713215927; c=relaxed/simple;
-	bh=EIMA/Lom4s4J3a8zeR2nuXbkOuAimmCY/e6T8tXxKbQ=;
+	s=arc-20240116; t=1713216027; c=relaxed/simple;
+	bh=+afJiuXG3cF9tk3eLeJnRhRaoDpNXZkN7pxBI2RmPBw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QAQZfdA0ESSUJFjI7K/EXmRtYcSbObQnArbvU+QX8aZ14ZxoE2f+/vX5boEtGipBI2AfrurQfNggeUsV6Rp+maAQ+OiSnJJXyDvN0VUYRTf98YUcRl4UNKrgSChZ/lVjzQ+xq/hv5Jcdp/7seK/kGTHtIq4cdsfEME5gp+lsSnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k1gFawta; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcmEZm9z7fXJkX7hHEcwuD4oYITDAOJf0mOXCt9us4+zMfatDBJlw9bKmgWugaAylW66hLcJBlTs/RFcLXcS6r3YWusZSsLGLTfECgqUIQLjFP18txAOFmASux0mLC5RMzhiHS2dwjliO7Yhy7Q5J/R1q67q2Spv+d7MaCDITO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qP7ITOKI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k1gFawta"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oq3OSv09Zcq3l/SCWQSioSa37PYcwwKSz6uiDlE9w/E=; b=k1gFawtalSNyx93OW2ft4AbbZm
-	mL+127agePKR7DWE1EgzM8K2Sdu0btd1XQeD8Wzl2tmTNdgWmn92sRrCehFh8u/+qHAagyvQyrV+I
-	wglcZ0HQmPiryp3ay1AfYi9TzgEYQTdT7rPBLPlWeJzkacLKZXrdbwV9HsWzpaSjGI3Si8Mpfr2S0
-	0hiTTpWQOGyNpghwLESRQBYRaWfsk2cg6KJWgLE1zDszdu8yt8sfPIvBeNWyhWxqIe1CYWPFC33pc
-	4OQTnxL2Sln3ZByHLOn89dz27uUzxYSHVKBEuo/ChmtRraFlSsjkqf650IGawzGSeX5oHG74Pa4Vl
-	djp37vKQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwTig-0000000GWYM-3AgF;
-	Mon, 15 Apr 2024 21:18:30 +0000
-Date: Mon, 15 Apr 2024 22:18:30 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>,
-	Pankaj Raghav <p.raghav@samsung.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
-	axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-	jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
-	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
-	io-uring@vger.kernel.org, nilay@linux.ibm.com,
-	ritesh.list@gmail.com
-Subject: Re: [PATCH v6 00/10] block atomic writes
-Message-ID: <Zh2ZptLxnwa_jtSk@casper.infradead.org>
-References: <20240326133813.3224593-1-john.g.garry@oracle.com>
- <ZgOXb_oZjsUU12YL@casper.infradead.org>
- <c4c0dad5-41a4-44b4-8f40-2a250571180b@oracle.com>
- <Zg7Z4aJtn3SxY5w1@casper.infradead.org>
- <f3c1d321-0dfc-466f-9f6a-fe2f0513d944@oracle.com>
- <ZhQud1NbO4aMt0MH@bombadil.infradead.org>
- <ZhYQANQATz82ytl1@casper.infradead.org>
- <ZhxBiLSHuW35aoLB@bombadil.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qP7ITOKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C59EC113CC;
+	Mon, 15 Apr 2024 21:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713216026;
+	bh=+afJiuXG3cF9tk3eLeJnRhRaoDpNXZkN7pxBI2RmPBw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=qP7ITOKI6F96cNfzf6FwHg7no4R9lLwhCMnlTazhM2wAoGeCm+tt9X6fNvcLIJQB+
+	 0hLXEf8mUFqxHLR544EVU0etsy0kIbj2WtwQyoGe8BmS6h/SnDRE2z5LowAUeGYZ14
+	 arizQaAV59LiNOVEFjzObNCh25ygrUGZSHJBOE/6w8PlQY7V3oEiVOcykF0cEIHehe
+	 MqQw0i2oq2jwfV8RwxyfxP3ujMvbspTFnyzLW70iVygvZt4N6/4fGAujJZHUvdQ1Kc
+	 3m8+HWZ0K6fFurfgQsfskVClStrPSZI9pC7vHEZ0uAK4rkh/X9W3GlPiwRYFkCJQ6+
+	 tjGiE0mLBh8nw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 2AD67CE0445; Mon, 15 Apr 2024 14:20:24 -0700 (PDT)
+Date: Mon, 15 Apr 2024 14:20:24 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Paul Walmsley <paul@pwsan.com>,
+	leobras@redhat.com, linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org, yujie.liu@intel.com
+Subject: Re: linux-next: manual merge of the rcu tree with the risc-v tree
+Message-ID: <605ad410-19cf-4e13-8594-fc7f5ecc2e39@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <b147ca95-c0e2-4729-b670-a1ee605369d2@paulmck-laptop>
+ <mhng-4dd659ce-865c-48c8-bf51-397804035d60@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,24 +47,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhxBiLSHuW35aoLB@bombadil.infradead.org>
+In-Reply-To: <mhng-4dd659ce-865c-48c8-bf51-397804035d60@palmer-ri-x1c9a>
 
-On Sun, Apr 14, 2024 at 01:50:16PM -0700, Luis Chamberlain wrote:
-> On Wed, Apr 10, 2024 at 05:05:20AM +0100, Matthew Wilcox wrote:
-> > Have you tried just using the buffer_head code?  I think you heard bad
-> > advice at last LSFMM.  Since then I've landed a bunch of patches which
-> > remove PAGE_SIZE assumptions throughout the buffer_head code, and while
-> > I haven't tried it, it might work.  And it might be easier to make work
-> > than adding more BH hacks to the iomap code.
+On Mon, Apr 15, 2024 at 11:20:00AM -0700, Palmer Dabbelt wrote:
+> On Sun, 14 Apr 2024 21:44:10 PDT (-0700), paulmck@kernel.org wrote:
+> > On Mon, Apr 15, 2024 at 12:32:47PM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Today's linux-next merge of the rcu tree got a conflict in:
+> > > 
+> > >   arch/riscv/include/asm/cmpxchg.h
+> > > 
+> > > between commits:
+> > > 
+> > >   07a0a41cb77d ("riscv/cmpxchg: Deduplicate cmpxchg() asm and macros")
+> > >   54280ca64626 ("riscv/cmpxchg: Implement cmpxchg for variables of size 1 and 2")
+> > > 
+> > > from the risc-v tree and commit:
+> > > 
+> > >   b5e49f1af563 ("riscv: Emulate one-byte cmpxchg")
+> > > 
+> > > from the rcu tree.
+> > > 
+> > > I fixed it up (I just used the former as the latter seems to no longer be
+> > > needed - I also undid the change to arch/riscv/Kconfig from the latter)
+> > > and can carry the fix as necessary. This is now fixed as far as linux-next
+> > > is concerned, but any non trivial conflicts should be mentioned to your
+> > > upstream maintainer when your tree is submitted for merging.  You may
+> > > also want to consider cooperating with the maintainer of the conflicting
+> > > tree to minimise any particularly complex conflicts.
+> > 
+> > Agreed, it looks to me like I should drop my RISC-V change in favor of
+> > the native support.  Please let me know if I am mistaken.
+> > 
+> > If I do not hear otherwise, I will pull my commit out of -next in favor
+> > of those two on my next rebase.
 > 
-> I have considered it but the issue is that *may work* isn't good enough and
-> without a test plan for buffer-heads on a real filesystem this may never
-> suffice. Addressing a buffere-head iomap compat for the block device cache
-> is less error prone here for now.
+> Sorry I forgot to send the shared tag.  We can pre-merge if you want, I'm
+> fine either way just let me know.
 
-Is it really your position that testing the code I already wrote is
-harder than writing and testing some entirely new code?  Surely the
-tests are the same for both.
+Not a problem!  I will just keep it in -rcu for my testing, but such
+that it does not go to -next.
 
-Besides, we aren't talking about a filesystem on top of the bdev here.
-We're talking about accessing the bdev's page cache directly.
+							Thanx, Paul
