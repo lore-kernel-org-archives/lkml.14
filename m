@@ -1,457 +1,139 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10371B50;
-	Mon, 15 Apr 2024 20:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998E7EEE3;
+	Mon, 15 Apr 2024 20:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713212438; cv=none; b=kmJIYqsUEbhQ2xDE98bFzZVoLuWiyrPzQA6mFQWliWyzh/rHU5BoPEypguWHKxw0tf31Sryb21VJCwzVJrawX7qvV+/WBn/vR0pdO+BQFIS2iTaW+6Iq4tqnEg1uej+IY0J+pma122Q3gXu3yW8cO+VnR7rePImpxKPIfhEo+6I=
+	t=1713212850; cv=none; b=tEUpcojWQP5HeUkMaiQobXnm+liDkPL7G6KsyrwtTMRhScm/+BbcF+AGR+DL5cFXrPVThgUh6jeTeKMGQ0P+lFMgDTV8N2aKdfwlsbyzdZIBJk6JrRmqfgVqQEUy/SYU3fqHyL+Iok13DI36rY1PG2JFcPSK1PBqQvIUo8PShQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713212438; c=relaxed/simple;
-	bh=NhzeK2mKKHvAmPeelTHGEg+UPHg67iKUqkIMgvllB+E=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=NWdbPjQkhZHk4xrK+7Wkrirm/FsY/xkDo7PL6anyiCvdXR6veYsLsDtmzXeTLVe3/xXXemBiUIdc0nkLTLvqUFmjdXXCMuRCx1ryewLoA4EYx2RRP744fhZxPhv6mMOwg3yW+EPln1IUS9GQ0kjZVUt8thGNxvspkV1CLPKEGkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHLgdnwp; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713212850; c=relaxed/simple;
+	bh=mIsk5PxMpgJGxVIk8/AK0RH3ojqhs14Cpd+nHpxmtZA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=rpBuJgfoQKhImpgnndHgG4EkAV4PVfNlKHV5Ab0J2IvAfx50dPRN5Ajwr1g2mIHys45oShUk4qvVrPQoywikfEQZ/VaBU8EWPZ4/ZWluUQ0QPZiQIgWgX0fBjfb4uD/RFYTiunsUjZNIQ247lj+WPqar/xLu0M8uVF3pmfyJHG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=kHByMwUC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IueU6UZA; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHLgdnwp"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516d2600569so4564005e87.0;
-        Mon, 15 Apr 2024 13:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713212434; x=1713817234; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=+hMO8/WXYJs4KZvn4zTnLdDZkMCg570qWjmbj7VC9ZM=;
-        b=LHLgdnwpmH2jCVKuzslaicz3W4Ux8RiCIXdo/emnLE0FRLVpjIHAU7J6rzdyTNh/kc
-         JqLVtUta9XbLi9dfDzyIIijVbNRHaTIJOWG9ywXYHTT9hAvkBq+n0+qMnbqjmEyXpBm6
-         SZmHXry+pw94J1SJPjBzVFKO7DYou8ds2fH6KjDp6Im6rsDBN9pDR/ErVnzY2dThbfo2
-         43jlGxS6CpqOAfc/QzBuSE++naknCwliRzsBGCaG6WRT6CeUu684aTnTjZNjm16uzqOA
-         lj92cpVUxONCfoYjOtH5lfvD5LKSGT+KS49wd2B/swDbGGGyY5wPJAUHaY6KOohC7O66
-         zPLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713212434; x=1713817234;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+hMO8/WXYJs4KZvn4zTnLdDZkMCg570qWjmbj7VC9ZM=;
-        b=S65GUGP6Mbh5/DWd/ScEhDzjCyNl7RI34Xuyvd2seC2T/ZvpyefTywj0365Ztxms9Y
-         i/FVjIKqIuXQvUnDc0hXiiK5LVcQs/SuESZb+LWb/D8gsHTrRzcE0DPn8Y5hNkVi5qxj
-         i3zparQQgB1c9rJIT/NTFeTt3dfndi5dthtcTZkHRnLsyFnbbtg6itMIageOsZkFRKV4
-         yMb3XkQCXv0gpm3BF7cRGbadFY/ngOMhB3tISLG1aLnwv653hnIoESu+k5K6kncTJU2v
-         hXNjfY3LyR/5OwZiQmVistNY6dSEefcoKiWDduSTPqN1EQH75iN+Auo3yzeps2Qn7BoO
-         JMIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMyxW5xm+CY1+Lj67oe9T2PqUU2lx02i3otCe7wOIFeDBtwqH4/k6PVvZdGD1FN58xmm7SZ21YJWSJjwxUTI8RGRewx+u8m4BMbJkT
-X-Gm-Message-State: AOJu0YwVwKGV3NGyDWKROuC5kdHSHMw28c5vU9FXWdjn43i//cwpB1iH
-	Sym6GHWfS2CkqCBVAWm5mBkGOjKsetWRa2jLeaELwyyCuihHxfKR
-X-Google-Smtp-Source: AGHT+IH+NHHUifyaWcx4i38FWBXRWT1ug8ts6enB6xvpsshk91MjoEip/3tX7N0OfvLuRWCle9xa+A==
-X-Received: by 2002:a19:2d55:0:b0:516:d22c:be2 with SMTP id t21-20020a192d55000000b00516d22c0be2mr7710698lft.61.1713212433668;
-        Mon, 15 Apr 2024 13:20:33 -0700 (PDT)
-Received: from razdolb ([62.176.29.172])
-        by smtp.gmail.com with ESMTPSA id d10-20020ac24c8a000000b00516d2489f16sm1337473lfl.260.2024.04.15.13.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 13:20:33 -0700 (PDT)
-References: <20240402164552.19171-1-mike.rudenko@gmail.com>
- <20240402164552.19171-21-mike.rudenko@gmail.com>
- <ZhzEJ81BDT_AJp9X@kekkonen.localdomain>
-User-agent: mu4e 1.10.8; emacs 29.2.50
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi
- <jacopo@jmondi.org>, Tommaso Merciai <tomm.merciai@gmail.com>, Christophe
- JAILLET <christophe.jaillet@wanadoo.fr>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH v4 20/20] media: i2c: ov4689: Implement 2x2 binning
-Date: Mon, 15 Apr 2024 23:05:47 +0300
-In-reply-to: <ZhzEJ81BDT_AJp9X@kekkonen.localdomain>
-Message-ID: <87y19e74z5.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="kHByMwUC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IueU6UZA"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id C73CB1140156;
+	Mon, 15 Apr 2024 16:27:26 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Mon, 15 Apr 2024 16:27:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1713212846; x=1713299246; bh=xtZFpnMgm/
+	+Xn/twFBJ7lG1+0rbINzM3+6AgqkcVRW8=; b=kHByMwUCnvXsVc4H9aV+eZa1Ya
+	ZnkFc+5D9nWj/towPp62QKd8LURtw9QaamDTvbAG0SzFTXTfft2I9iw9jscCvYQ0
+	mDYB/RWe4UW03Y/ZjdsdVGw6pCw6d3KxNONnVp/cnWP2nwmSQZ+Ec5ErLzjYNrPw
+	FAwUqiABu6uYJ7LEHHJnZJfLuIKSUDWHGLyFxgHzoeIvwBvhTAouete00ZEGJUWS
+	kd0axSVUGoeFN74hKCQQI1+XqNsaCVXkZ199EiCK9ZSNcvMSoqD4WcMLCNrE7kJg
+	zSwPT8msXuFWdZza0lJTW7rE9rEZtVpwBycasFfcHCBPQzHshTNCxcV9Ocnw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1713212846; x=1713299246; bh=xtZFpnMgm/+Xn/twFBJ7lG1+0rbI
+	NzM3+6AgqkcVRW8=; b=IueU6UZASUdsTNtGwH+tg9mj1KLB5fZkZSsaWXS/ZpjQ
+	WC+wfN6frmzynTJH6njRVXy8sGIpywFeUr20kFcIZOkTCgdt+2x3mckP2mQlHh4A
+	kIizTWDqZAPXwfBoeeGgASRK04pr3tBT4W/W1EGMO54kI1KcJ4vwj4ExH23LkhBW
+	4ZFr11GUd48sBmx5zHKZOQj5HERXFwhl8TnRm61qKjGYLXsczgG3iV0KLnpH2jwP
+	VtxVmr3yH69wlevHfZKmhOwn/tYd2b4dJLUxr9A1NgScfH+z4hz4jcwa0Vv3D5Z7
+	MBK2eFEDYz5nBHU9NFcTNf/MXtmdmXd+2OJatn9nuw==
+X-ME-Sender: <xms:ro0dZoLMGkef_9U5jovO-jhSP5rD8Fx0MV-LXgqoI3PC-zRhQUte9g>
+    <xme:ro0dZoL78-Ubzj7B8QouBUdEqiEQ20sUUTJNM-O6_AiZ7GVyT_AN1C8fUnOrSWtNE
+    Nr0NPOba2HSYs9Bzac>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejvddgudehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfo
+    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhepieeufeejieevteduvdekteefledtveffvedu
+    hefffeejudefvdeijeegudegkefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
+    rg
+X-ME-Proxy: <xmx:ro0dZos6Eaz2z3-vzm9ZfZmz3Gtpx5hXWd4dqvSzJJOi2s5iXZf75Q>
+    <xmx:ro0dZlY79oTHJE--S-v2JJvciO8HZCC53GejgZ4mWL7swt4bPii_PQ>
+    <xmx:ro0dZvZLsllcnISD4rYL65NcHgfSJoA46v9Z4TLt1R48L9eYaJEKsQ>
+    <xmx:ro0dZhD41zxCFb-Z6lStzI3xnGS3o9mOiIJJAIH6Ie6kaPCtqi3kLg>
+    <xmx:ro0dZsTHu2ZNxKOKM-LKqwnhJUr35gkrRtv0bg_0SkyvTNB-QblqdRbG>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 3D426C60097; Mon, 15 Apr 2024 16:27:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-Id: <539776c5-6243-464b-99ae-5b1b1fb40e4b@app.fastmail.com>
+In-Reply-To: <Zh2G85df29tPP6OK@google.com>
+References: <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+ <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
+ <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+ <ZhcogDESvZmUPEEf@google.com>
+ <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
+ <Zh2CtKy1NfKfojzS@google.com>
+ <484638e2-1565-454b-97f8-4fcc6514a69c@redhat.com>
+ <Zh2G85df29tPP6OK@google.com>
+Date: Mon, 15 Apr 2024 16:28:19 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Hans de Goede" <hdegoede@redhat.com>
+Cc: "Peter Hutterer" <peter.hutterer@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info keycodes
 Content-Type: text/plain
 
+Hi
 
-Hi Sakari,
-
-and thanks for your review!
-
-On 2024-04-15 at 06:07 GMT, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-
-> Hi Nikhail,
+On Mon, Apr 15, 2024, at 3:58 PM, Dmitry Torokhov wrote:
+> On Mon, Apr 15, 2024 at 09:50:37PM +0200, Hans de Goede wrote:
+>> Hi,
+>> 
+>> On 4/15/24 9:40 PM, Dmitry Torokhov wrote:
+>> > On Wed, Apr 10, 2024 at 10:48:10PM -0400, Mark Pearson wrote:
+>> >>
+>> >> I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
+>> > 
+>> > Please see my response to Peter's letter. I think it very much depends
+>> > on how it will be used (associated with the pointer or standalone as it
+>> > is now).
+>> > 
+>> > For standalone application, recalling your statement that on Win you
+>> > have this gesture invoke configuration utility I would argue for
+>> > KEY_CONFIG for it.
+>> 
+>> KEY_CONFIG is already generated by Fn + F# on some ThinkPads to launch
+>> the GNOME/KDE control center/panel and I believe that at least GNOME
+>> comes with a default binding to map KEY_CONFIG to the control-center.
 >
-> On Tue, Apr 02, 2024 at 07:45:51PM +0300, Mikhail Rudenko wrote:
->> Implement 2x2 binning support. Compute best binning mode (none or 2x2)
->> from pad crop and pad format in ov4689_set_fmt. Use output frame size
->> instead of analogue crop to compute control ranges and BLC anchors.
->>
->> Also move ov4689_hts_min and ov4689_update_ctrl_ranges, since they are
->> now also called from ov4689_set_fmt. Update frame timings to
->> accommodate the requirements of binning mode and avoid visual
->> artefacts. Additionally, report 2x2 binned mode in addition to
->> non-binned one in ov4689_enum_frame_sizes.
->>
->> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
->> ---
->>  drivers/media/i2c/ov4689.c | 192 +++++++++++++++++++++++++------------
->>  1 file changed, 130 insertions(+), 62 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
->> index e652d626f32f..83c7d0bae7d1 100644
->> --- a/drivers/media/i2c/ov4689.c
->> +++ b/drivers/media/i2c/ov4689.c
->> @@ -114,7 +114,7 @@
->>   * Minimum working vertical blanking value. Found experimentally at
->>   * minimum HTS values.
->>   */
->> -#define OV4689_VBLANK_MIN		31
->> +#define OV4689_VBLANK_MIN		35
->>
->>  static const char *const ov4689_supply_names[] = {
->>  	"avdd", /* Analog power */
->> @@ -256,6 +256,18 @@ static const struct cci_reg_sequence ov4689_common_regs[] = {
->>  	{CCI_REG8(0x5503), 0x0f}, /* OTP_DPC_END_L otp_end_address[7:0] = 0x0f */
->>  };
->>
->> +static const struct cci_reg_sequence ov4689_2x2_binning_regs[] = {
->> +	{CCI_REG8(0x3632), 0x05}, /* ADC */
->> +	{CCI_REG8(0x376b), 0x40}, /* Sensor control */
->> +	{CCI_REG8(0x3814), 0x03}, /* H_INC_ODD */
->> +	{CCI_REG8(0x3821), 0x07}, /* TIMING_FORMAT_2 hor_binning = 1*/
->> +	{CCI_REG8(0x382a), 0x03}, /* V_INC_ODD */
->> +	{CCI_REG8(0x3830), 0x08}, /* BLC_NUM_OPTION blc_use_num_2 = 1 */
->> +	{CCI_REG8(0x3836), 0x02}, /* TIMING_REG_36 r_zline_use_num_2 = 1 */
->> +	{CCI_REG8(0x4001), 0x50}, /* BLC DEBUG MODE */
->> +	{CCI_REG8(0x4502), 0x44}, /* ADC synch control*/
+> Not KEY_CONTROLPANEL?
 >
-> Spaces inside { }'s, please.
-
-Do you mean this array only, or ov4689_common_regs too?
-
->> +};
->> +
->>  static const u64 link_freq_menu_items[] = { 504000000 };
->>
->>  static const char *const ov4689_test_pattern_menu[] = {
->> @@ -305,18 +317,96 @@ static const struct ov4689_gain_range ov4689_gain_ranges[] = {
->>  	},
->>  };
->>
->> +/*
->> + * For now, only 2x2 binning implemented in this driver.
->> + */
->> +static int ov4689_best_binning(struct ov4689 *ov4689,
->> +			       const struct v4l2_mbus_framefmt *format,
->> +			       const struct v4l2_rect *crop,
->> +			       unsigned int *binning)
->> +{
->> +	const struct v4l2_area candidates[] = {
->> +		{ crop->width, crop->height },
->> +		{ crop->width / 2, crop->height / 2 },
->> +	};
->> +
->> +	const struct v4l2_area *best;
->> +	int index;
->> +
->> +	best = v4l2_find_nearest_size(candidates, ARRAY_SIZE(candidates), width,
->> +				      height, format->width, format->height);
+> Are there devices that use both Fn+# and the doubleclick? Would it be an
+> acceptable behavior for the users to have them behave the same?
 >
-> You can assume v4l2_find_nearest_size() returns a non-NULL value (see the
-> other patch I cc'd you).
+Catching up with the thread, thanks for all the comments.
 
-Ack, will remove the NULL check.
+For FN+N (originally KEY_DEBUG_SYS_INFO) the proposal was to now use KEY_VENDOR there. My conclusion was that this is targeting vendor specific functionality, and that was the closest fit, if a new keycode was not preferred.
 
->> +	if (!best) {
->> +		dev_err(ov4689->dev,
->> +			"failed to find best binning for requested mode\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	index = best - candidates;
->> +	*binning = index + 1;
->> +
->> +	dev_dbg(ov4689->dev,
->> +		"best_binning: crop=%dx%d format=%dx%d binning=%d\n",
->> +		crop->width, crop->height, format->width, format->height,
->> +		*binning);
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Minimum working HTS value for given output width (found
->> + * experimentally).
->> + */
->> +static unsigned int ov4689_hts_min(unsigned int width)
->> +{
->> +	return max_t(unsigned int, 3156, 224 + width * 19 / 16);
->> +}
->> +
->> +static void ov4689_update_ctrl_ranges(struct ov4689 *ov4689, unsigned int width,
->> +				      unsigned int height)
->> +{
->> +	struct v4l2_ctrl *exposure = ov4689->exposure;
->> +	struct v4l2_ctrl *vblank = ov4689->vblank;
->> +	struct v4l2_ctrl *hblank = ov4689->hblank;
->> +	s64 def_val, min_val, max_val;
->> +
->> +	min_val = ov4689_hts_min(width) - width;
->> +	max_val = OV4689_HTS_MAX - width;
->> +	def_val = clamp_t(s64, hblank->default_value, min_val, max_val);
->> +	__v4l2_ctrl_modify_range(hblank, min_val, max_val, hblank->step,
->> +				 def_val);
->
-> Note that __v4l2_ctrl_modify_range() may fail. The problem isn't introduced
-> by this patch but it'd be nice to fix it (but maybe in a separate patch).
+For the doubletap (which is a unique input event - not related to the pointer) I would like to keep it as a new unique event. 
 
-Okay, will do this in a follow-up patch.
+I think it's most likely use would be for control panel, but I don't think it should be limited to that. I can see it being useful if users are able to reconfigure it to launch something different (browser or music player maybe?), hence it would be best if it did not conflict with an existing keycode function. I also can't confirm it doesn't clash on existing or future systems - it's possible.
 
->> +
->> +	min_val = OV4689_VBLANK_MIN;
->> +	max_val = OV4689_HTS_MAX - width;
->> +	def_val = clamp_t(s64, vblank->default_value, min_val, max_val);
->> +	__v4l2_ctrl_modify_range(vblank, min_val, max_val, vblank->step,
->> +				 def_val);
->> +
->> +	min_val = exposure->minimum;
->> +	max_val = height + vblank->val - 4;
->> +	def_val = clamp_t(s64, exposure->default_value, min_val, max_val);
->> +	__v4l2_ctrl_modify_range(exposure, min_val, max_val, exposure->step,
->> +				 def_val);
->> +}
->> +
->>  static int ov4689_set_fmt(struct v4l2_subdev *sd,
->>  			  struct v4l2_subdev_state *sd_state,
->>  			  struct v4l2_subdev_format *fmt)
->>  {
->> +	struct ov4689 *ov4689 = to_ov4689(sd);
->>  	struct v4l2_mbus_framefmt *format;
->>  	struct v4l2_rect *crop;
->> +	unsigned int binning;
->> +	int ret;
->>
->>  	crop = v4l2_subdev_state_get_crop(sd_state, fmt->pad);
->>  	format = v4l2_subdev_state_get_format(sd_state, fmt->pad);
->>
->> -	format->width = crop->width;
->> -	format->height = crop->height;
->> +	ret = ov4689_best_binning(ov4689, &fmt->format, crop, &binning);
->> +	if (ret)
->> +		return ret;
->> +
->> +	format->width = crop->width / binning;
->> +	format->height = crop->height / binning;
->>
->>  	format->code = MEDIA_BUS_FMT_SBGGR10_1X10;
->>  	format->field = V4L2_FIELD_NONE;
->> @@ -327,6 +417,9 @@ static int ov4689_set_fmt(struct v4l2_subdev *sd,
->>
->>  	fmt->format = *format;
->>
->> +	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE)
->> +		ov4689_update_ctrl_ranges(ov4689, format->width, format->height);
->> +
->>  	return 0;
->>  }
->>
->> @@ -346,8 +439,9 @@ static int ov4689_enum_frame_sizes(struct v4l2_subdev *sd,
->>  				   struct v4l2_subdev_frame_size_enum *fse)
->>  {
->>  	const struct v4l2_rect *crop;
->> +	int binning;
->>
->> -	if (fse->index >= 1)
->> +	if (fse->index >= 2)
->>  		return -EINVAL;
->>
->>  	if (fse->code != MEDIA_BUS_FMT_SBGGR10_1X10)
->> @@ -355,10 +449,11 @@ static int ov4689_enum_frame_sizes(struct v4l2_subdev *sd,
->>
->>  	crop = v4l2_subdev_state_get_crop(sd_state, 0);
->>
->> -	fse->min_width = crop->width;
->> -	fse->max_width = crop->width;
->> -	fse->max_height = crop->height;
->> -	fse->min_height = crop->height;
->> +	binning = fse->index + 1;
->> +	fse->min_width = crop->width / binning;
->> +	fse->max_width = crop->width / binning;
->> +	fse->max_height = crop->height / binning;
->> +	fse->min_height = crop->height / binning;
->>
->>  	return 0;
->>  }
->> @@ -398,42 +493,6 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
->>  	return -EINVAL;
->>  }
->>
->> -/*
->> - * Minimum working HTS value for given output width (found
->> - * experimentally).
->> - */
->> -static unsigned int ov4689_hts_min(unsigned int width)
->> -{
->> -	return max_t(unsigned int, 3156, 224 + width * 19 / 16);
->> -}
->> -
->> -static void ov4689_update_ctrl_ranges(struct ov4689 *ov4689,
->> -				      struct v4l2_rect *crop)
->> -{
->> -	struct v4l2_ctrl *exposure = ov4689->exposure;
->> -	struct v4l2_ctrl *vblank = ov4689->vblank;
->> -	struct v4l2_ctrl *hblank = ov4689->hblank;
->> -	s64 def_val, min_val, max_val;
->> -
->> -	min_val = ov4689_hts_min(crop->width) - crop->width;
->> -	max_val = OV4689_HTS_MAX - crop->width;
->> -	def_val = clamp_t(s64, hblank->default_value, min_val, max_val);
->> -	__v4l2_ctrl_modify_range(hblank, min_val, max_val, hblank->step,
->> -				 def_val);
->> -
->> -	min_val = OV4689_VBLANK_MIN;
->> -	max_val = OV4689_HTS_MAX - crop->width;
->> -	def_val = clamp_t(s64, vblank->default_value, min_val, max_val);
->> -	__v4l2_ctrl_modify_range(vblank, min_val, max_val, vblank->step,
->> -				 def_val);
->> -
->> -	min_val = exposure->minimum;
->> -	max_val = crop->height + vblank->val - 4;
->> -	def_val = clamp_t(s64, exposure->default_value, min_val, max_val);
->> -	__v4l2_ctrl_modify_range(exposure, min_val, max_val, exposure->step,
->> -				 def_val);
->> -}
->> -
->>  static int ov4689_set_selection(struct v4l2_subdev *sd,
->>  				struct v4l2_subdev_state *state,
->>  				struct v4l2_subdev_selection *sel)
->> @@ -470,7 +529,8 @@ static int ov4689_set_selection(struct v4l2_subdev *sd,
->>  		format->height = rect.height;
->>
->>  		if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
->> -			ov4689_update_ctrl_ranges(ov4689, &rect);
->> +			ov4689_update_ctrl_ranges(ov4689, rect.width,
->> +						  rect.height);
->>  	}
->>
->>  	*crop = rect;
->> @@ -485,21 +545,27 @@ static int ov4689_setup_timings(struct ov4689 *ov4689,
->>  	const struct v4l2_mbus_framefmt *format;
->>  	struct regmap *rm = ov4689->regmap;
->>  	const struct v4l2_rect *crop;
->> +	const int v_offset = 2;
->> +	unsigned int binning;
->>  	int ret = 0;
->>
->>  	format = v4l2_subdev_state_get_format(state, 0);
->>  	crop = v4l2_subdev_state_get_crop(state, 0);
->>
->> +	ret = ov4689_best_binning(ov4689, format, crop, &binning);
->> +	if (ret)
->> +		return ret;
->> +
->>  	cci_write(rm, OV4689_REG_H_CROP_START, crop->left, &ret);
->> -	cci_write(rm, OV4689_REG_V_CROP_START, crop->top, &ret);
->> -	cci_write(rm, OV4689_REG_H_CROP_END, crop->left + crop->width + 1, &ret);
->> -	cci_write(rm, OV4689_REG_V_CROP_END, crop->top + crop->height + 1, &ret);
->> +	cci_write(rm, OV4689_REG_V_CROP_START, crop->top - v_offset, &ret);
->> +	cci_write(rm, OV4689_REG_H_CROP_END, crop->left + crop->width + 3, &ret);
->> +	cci_write(rm, OV4689_REG_V_CROP_END, crop->top + crop->height + 7, &ret);
->>
->>  	cci_write(rm, OV4689_REG_H_OUTPUT_SIZE, format->width, &ret);
->>  	cci_write(rm, OV4689_REG_V_OUTPUT_SIZE, format->height, &ret);
->>
->>  	cci_write(rm, OV4689_REG_H_WIN_OFF, 0, &ret);
->> -	cci_write(rm, OV4689_REG_V_WIN_OFF, 0, &ret);
->> +	cci_write(rm, OV4689_REG_V_WIN_OFF, v_offset, &ret);
->>
->>  	/*
->>  	 * Maximum working value of vfifo_read_start for given output
->> @@ -507,6 +573,10 @@ static int ov4689_setup_timings(struct ov4689 *ov4689,
->>  	 */
->>  	cci_write(rm, OV4689_REG_VFIFO_CTRL_01, format->width / 16 - 1, &ret);
->>
->> +	if (binning == 2)
->> +		cci_multi_reg_write(ov4689->regmap, ov4689_2x2_binning_regs,
->> +				    ARRAY_SIZE(ov4689_2x2_binning_regs),
->> +				    &ret);
->>  	return ret;
->>  }
->>
->> @@ -519,20 +589,20 @@ static int ov4689_setup_blc_anchors(struct ov4689 *ov4689,
->>  				    struct v4l2_subdev_state *state)
->>  {
->>  	unsigned int width_def = OV4689_H_OUTPUT_SIZE_DEFAULT;
->> +	const struct v4l2_mbus_framefmt *format;
->>  	struct regmap *rm = ov4689->regmap;
->> -	const struct v4l2_rect *crop;
->>  	int ret = 0;
->>
->> -	crop = v4l2_subdev_state_get_crop(state, 0);
->> +	format = v4l2_subdev_state_get_format(state, 0);
->>
->>  	cci_write(rm, OV4689_REG_ANCHOR_LEFT_START,
->> -		  OV4689_ANCHOR_LEFT_START_DEF * crop->width / width_def, &ret);
->> +		  OV4689_ANCHOR_LEFT_START_DEF * format->width / width_def, &ret);
->>  	cci_write(rm, OV4689_REG_ANCHOR_LEFT_END,
->> -		  OV4689_ANCHOR_LEFT_END_DEF * crop->width / width_def, &ret);
->> +		  OV4689_ANCHOR_LEFT_END_DEF * format->width / width_def, &ret);
->>  	cci_write(rm, OV4689_REG_ANCHOR_RIGHT_START,
->> -		  OV4689_ANCHOR_RIGHT_START_DEF * crop->width / width_def, &ret);
->> +		  OV4689_ANCHOR_RIGHT_START_DEF * format->width / width_def, &ret);
->>  	cci_write(rm, OV4689_REG_ANCHOR_RIGHT_END,
->> -		  OV4689_ANCHOR_RIGHT_END_DEF * crop->width / width_def, &ret);
->> +		  OV4689_ANCHOR_RIGHT_END_DEF * format->width / width_def, &ret);
->>
->>  	return ret;
->>  }
->> @@ -749,19 +819,19 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->>  	struct regmap *regmap = ov4689->regmap;
->>  	struct v4l2_subdev_state *sd_state;
->>  	struct device *dev = ov4689->dev;
->> -	struct v4l2_rect *crop;
->> +	struct v4l2_mbus_framefmt *fmt;
->>  	s64 max_expo, def_expo;
->>  	int sensor_gain;
->>  	int ret = 0;
->>
->>  	sd_state = v4l2_subdev_get_locked_active_state(&ov4689->subdev);
->> -	crop = v4l2_subdev_state_get_crop(sd_state, 0);
->> +	fmt = v4l2_subdev_state_get_format(sd_state, 0);
->>
->>  	/* Propagate change of current control to all related controls */
->>  	switch (ctrl->id) {
->>  	case V4L2_CID_VBLANK:
->>  		/* Update max exposure while meeting expected vblanking */
->> -		max_expo = crop->height + ctrl->val - 4;
->> +		max_expo = fmt->height + ctrl->val - 4;
->>  		def_expo = clamp_t(s64, ov4689->exposure->default_value,
->>  				   ov4689->exposure->minimum, max_expo);
->>
->> @@ -785,16 +855,14 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->>  		cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->>  		break;
->>  	case V4L2_CID_VBLANK:
->> -		cci_write(regmap, OV4689_REG_VTS,
->> -			  ctrl->val + crop->height, &ret);
->> +		cci_write(regmap, OV4689_REG_VTS, ctrl->val + fmt->height, &ret);
->>  		break;
->>  	case V4L2_CID_TEST_PATTERN:
->>  		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
->>  		break;
->>  	case V4L2_CID_HBLANK:
->>  		cci_write(regmap, OV4689_REG_HTS,
->> -			  (ctrl->val + crop->width) /
->> -			  OV4689_HTS_DIVIDER, &ret);
->> +			  (ctrl->val + fmt->width) / OV4689_HTS_DIVIDER, &ret);
->>  		break;
->>  	case V4L2_CID_VFLIP:
->>  		cci_update_bits(regmap, OV4689_REG_TIMING_FORMAT1,
+FWIW - I wouldn't be surprised with some of the new gaming systems we're seeing (Steamdeck, Legion-Go, etc), that a doubletap event on a joystick might be useful to have, if the HW supports it?
 
-
---
-Best regards,
-Mikhail Rudenko
+Mark
