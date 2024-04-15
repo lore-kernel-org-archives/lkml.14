@@ -1,29 +1,37 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41AEF3BBED;
-	Mon, 15 Apr 2024 08:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11B43770C;
+	Mon, 15 Apr 2024 08:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713170168; cv=none; b=hrrB3Dh06WrJ2k/u77kpBM7KiV/zADY5SeXdhAPWcd6XM+VpopBfcYQa5CC1gxKu1hUV9AdAPxfRQj0Qb2D8DLlejx/r2BS5KP8B9TNRA/BTZuKaXhkf/lT7Rvjy9HFJEIX11CADLa7w0APF5gE4fzrLl8LTq0YHd8ij5nSuqjA=
+	t=1713170187; cv=none; b=ZS7Ll7TEesDF155BP7tUYuMxNEzGYd2Z6z8bAbHKgLiAbxj62YRX277mDOVrslqLruyPR3MccB3sCY3sMDENguVmZJReodrZcXC1OCOn5VyqvTBfGlRP/UjIHy8bpJ2GNCKrCWR1A15D4cVwbwCP25wuuATQi/tUk1+Y1g9cS3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713170168; c=relaxed/simple;
-	bh=3pn1236NH8HERFeQ80zUKBBGeBNC3NuW3A04K3Vi/pY=;
+	s=arc-20240116; t=1713170187; c=relaxed/simple;
+	bh=XbFCU3/CfNQ0QTR2migCKHKWgs/cnHZIVxBe6DtTI6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h9eWsKF4Jhzrgd+SGA9TD1+x2htjUjQ66Ir46QumPOReA+8ZS0MWxOIM0tN0W7Oc+Fgyw5FMv7+RyHR14JMTRI4caPu5nsOs39e6w0gzQnN27rhLRSvkVOEbhJOtp0u+fagwr9GWORAFUvVz9OaO/+JsdAEm/Asw7Sxs8ydsJ4s=
+	 Content-Type:Content-Disposition:In-Reply-To; b=SzL7+mxz8qohgi7mlIbjakrx1j0Z6HJgoHQOfQAFyqpAlr2ZXqTAJye3JxsQd5c8AqDhf+PJMYxPRVMOdjIojAEBmnxxhx9NoGaOEEnHEJC2dLUd+4XJiYzC6KNy4ILYGOxyO8dbP7NPH/kLU9d2rVnhIdoczGmWsZ3ibAaKEOI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rwHob-0004hw-00; Mon, 15 Apr 2024 10:35:49 +0200
+	id 1rwHoa-0004hl-00; Mon, 15 Apr 2024 10:35:48 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 7D228C05B3; Mon, 15 Apr 2024 10:34:56 +0200 (CEST)
-Date: Mon, 15 Apr 2024 10:34:56 +0200
+	id ACD72C02CD; Mon, 15 Apr 2024 10:33:03 +0200 (CEST)
+Date: Mon, 15 Apr 2024 10:33:03 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] MIPS: Guard some macros with __ASSEMBLY__ in asm.h
-Message-ID: <ZhzmsE/jH3/sx0X6@alpha.franken.de>
-References: <20240326-asm-guard-v1-1-fe0c140a5aea@flygoat.com>
+To: Justin Swartz <justin.swartz@risingedge.co.za>
+Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 00/14] mips: dts: ralink: mt7621: improve DTS style
+Message-ID: <ZhzmPxVHjbbCJDJ7@alpha.franken.de>
+References: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,53 +40,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326-asm-guard-v1-1-fe0c140a5aea@flygoat.com>
+In-Reply-To: <20240316045442.31469-1-justin.swartz@risingedge.co.za>
 
-On Tue, Mar 26, 2024 at 11:41:45AM +0000, Jiaxun Yang wrote:
-> There are some assembly macros with very generic naming
-> being defined asm.h. They are clashing with other macros
-> from C code.
+On Sat, Mar 16, 2024 at 06:54:28AM +0200, Justin Swartz wrote:
+> This set of patches was created with the intention of cleaning up
+> arch/mips/boot/dts/ralink/mt7621.dtsi so that it is aligned with
+> the Devicetree Sources (DTS) Coding Style [1] [2] guide.
 > 
-> Guard them with __ASSEMBLY__ to prevent futher clashes.
+> [1] Documentation/devicetree/bindings/dts-coding-style.rst
 > 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Link: https://lore.kernel.org/linux-mips/8d78894-dd89-9f4d-52bb-1b873c50be9c@linux-m68k.org/
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/include/asm/asm.h | 3 +++
->  1 file changed, 3 insertions(+)
+> [2] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html 
 > 
-> diff --git a/arch/mips/include/asm/asm.h b/arch/mips/include/asm/asm.h
-> index 2e99450f4228..87ff609b53fe 100644
-> --- a/arch/mips/include/asm/asm.h
-> +++ b/arch/mips/include/asm/asm.h
-> @@ -37,6 +37,7 @@
->  #define CFI_SECTIONS
->  #endif
->  
-> +#ifdef __ASSEMBLY__
->  /*
->   * LEAF - declare leaf routine
->   */
-> @@ -122,6 +123,8 @@ symbol		=	value
->  #define ASM_PRINT(string)
->  #endif
->  
-> +#endif /* __ASSEMBLY__ */
-> +
->  /*
->   * Stack alignment
->   */
+> Justin Swartz (14):
+>   mips: dts: ralink: mt7621: reorder cpu node attributes
+>   mips: dts: ralink: mt7621: reorder cpuintc node attributes
+>   mips: dts: ralink: mt7621: reorder mmc regulator attributes
+>   mips: dts: ralink: mt7621: reorder sysc node attributes
+>   mips: dts: ralink: mt7621: reorder gpio node attributes
+>   mips: dts: ralink: mt7621: reorder i2c node attributes
+>   mips: dts: ralink: mt7621: reorder spi0 node attributes
+>   mips: dts: ralink: mt7621: move pinctrl and sort its children
+>   mips: dts: ralink: mt7621: reorder mmc node attributes
+>   mips: dts: ralink: mt7621: reorder gic node attributes
+>   mips: dts: ralink: mt7621: reorder ethernet node attributes and kids
+>   mips: dts: ralink: mt7621: reorder pcie node attributes and children
+>   mips: dts: ralink: mt7621: reorder pci?_phy attributes
+>   mips: dts: ralink: mt7621: reorder the attributes of the root node
 > 
-> ---
-> base-commit: 084c8e315db34b59d38d06e684b1a0dd07d30287
-> change-id: 20240326-asm-guard-dddeb2321d69
-> 
-> Best regards,
-> -- 
-> Jiaxun Yang <jiaxun.yang@flygoat.com>
+>  arch/mips/boot/dts/ralink/mt7621.dtsi | 430 ++++++++++++++------------
+>  1 file changed, 239 insertions(+), 191 deletions(-)
 
-applied to mips-next.
+series applied to mips-next.
 
 Thomas.
 
