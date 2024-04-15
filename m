@@ -1,170 +1,180 @@
-Received: from flow4-smtp.messagingengine.com (flow4-smtp.messagingengine.com [103.168.172.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2555FDA5;
-	Mon, 15 Apr 2024 11:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4891BF2A;
+	Mon, 15 Apr 2024 11:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713181466; cv=none; b=YQoX7AXj53on46Xft2nKo+ybssRvY2mJTnjyyH/LtVyacOrk1dXnNzLSX61BB+E2mEBUovq/KYSs6umASC8UeRlMSQOJDMuZruYTDozxn3pGAj1IDRzJUDxBAO4I9cKVnykKG2S6w7GhqKI0jGh65z2zs4dS++CA+SEuJz8+aG8=
+	t=1713181662; cv=none; b=iiVAj1p4SlWthGE+WnANFjQAbqw74zzNKJDG8Aol/upg2/UIkXfwgTsmM3DUJRy/B/3gemTHk5fa+1SDCkWBXCOx/zXFwlAORYdrIsyZjeeofMe/9Kbq/LW2865lwlOegq6q4MxQebP+PMjdiRvn8sqRXopkOPrPHhbyhYPzL9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713181466; c=relaxed/simple;
-	bh=3UZKRtlzaPmVzhvGF3cNLISFgu+v90pgIojd+MaLDGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OvOsRyhagrqvzVgAIEMoorguSwqCK3LjFLn3XRw8G9z9+f5haGolrceIGDR0p3finnxwb47Fm3bROgT57mUB6lTnDCcYkD/2wSZaE/jmy23s9p/NvZcH9mC0W66cLe39yN/6RU33HRBteeUsZDBWbWjshKOqgR+lXWk/RwcIj5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=lu85usNE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XWvlmxKX; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="lu85usNE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XWvlmxKX"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 223D52001CD;
-	Mon, 15 Apr 2024 07:44:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 15 Apr 2024 07:44:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1713181462;
-	 x=1713185062; bh=HbBxkVxjdBwvLWMiPXQ4M2ssgEVrCh8/UypiliPjU0A=; b=
-	lu85usNEYHwAtaU9GYauYp10bqMgxYr+VQVBmDOHJkTlsqaaS5M6qxkcwP8TiHu+
-	9nDZyq/vR8EgjCDhGuDKmgMgYoc2QJrGwCUr3edGr2IxYEndAno27SQpY/SufHBM
-	weWemNWMtvsfcCrD572KkekppJt/tQC7tXH6KTOPlo7F1tbMjML4EQzXOFww8PRt
-	z4NdzBcTqWXKZP52ftCZ1sG6E3YGeoNjdRi11CbyjjhFCnau0RjTZ1RVjg1rOVM8
-	MqHetdx27GLxZZ+1lsUVdKscAOYvtnm85vULgEFjNverPH4CgaCtS6V2EcBoNOot
-	PLHDQQa9s+Z1khuEEQTIYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1713181462; x=
-	1713185062; bh=HbBxkVxjdBwvLWMiPXQ4M2ssgEVrCh8/UypiliPjU0A=; b=X
-	WvlmxKXHtFJXmvzCjhiKAI4cg4z2JRsvPfNaPLqNM6N15qTJYRFFeTrIMIgW9dU/
-	98IFQfNOfuhT1zz0GDQfsNoJhPocbfJM95uPSOv9rNNJpHoifu1LMAji69mGU765
-	juPYFmbRk0Gmmjwi7n9siyEAiu1HIw8fJaUvq+sXJ22EhvhX6hZU45hjGeNey6hO
-	L++pAuNZ9Re+o3mYh7qVZXRYoyLFY93SdXI3PqXx1ctbkLfwPHLu9amm4XxyqAWT
-	ODm7xfRnuZPSX7fW/b1OiE+KW7B6l45eb+TtL5h+3ld+B9HTP8BZ/gLxlq49Tidz
-	IUDG+TMYwRrF9INwzqOsQ==
-X-ME-Sender: <xms:FRMdZk-49sy6lsVI-UTwkftki9XtrUrlfDwDUmts7FUMXEJ1R-Usgw>
-    <xme:FRMdZsuPbaEPMVt8quEyvKzkfMfYjrU8oehUtXEBbr_3T5VCVTVk0csdh4rjKZQoq
-    1RPR4nIvbwjMAEQftk>
-X-ME-Received: <xmr:FRMdZqDzWrs3oBS2Xf6KBIVaYwffEF6-PgRxVqqugNHRR496dilJZXCd2OjGwHXp1GaMgIHEArZzzlNLSkS0owR9kqsq8a0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejvddggeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefpihhk
-    lhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhouggvrhhluhhnugdorhgvnh
-    gvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeefhfellefh
-    ffejgfefudfggeejlefhveehieekhfeulefgtdefueehffdtvdelieenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggv
-    rhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgv
-X-ME-Proxy: <xmx:FRMdZkfn_hiSbb8MiZwuRL8dTHj3e-aEQr-5m07Av8SzLRc5Q9pogw>
-    <xmx:FRMdZpMHCqwijeW0qgnD_13X7hZsRF8z7hPDiuvzRQCU7ySoEb44eg>
-    <xmx:FRMdZunnfTkZ-_AS-ep5z-pJobBLvKaYrnqHzv98gw2-bDJrl5H9-A>
-    <xmx:FRMdZrulYOSdA6ZHpXTiVJwvL1j7ooOwrukcLdXjMqPpHXdk_aiJpg>
-    <xmx:FRMdZseiVhJPoeG76jjDjT0SLZmPUyFvb0pyN0vf2C9L_YrSWc5TbM4z>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 Apr 2024 07:44:20 -0400 (EDT)
-Date: Mon, 15 Apr 2024 13:44:19 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC v3 2/7] net: ravb: Align poll function with NAPI
- docs
-Message-ID: <20240415114419.GG3156415@ragnatech.se>
-References: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
- <20240415094804.8016-3-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1713181662; c=relaxed/simple;
+	bh=ovQ9TbzfTy8873xFwMJVny/8x2JuYH4RmNOL+5/Chi8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OiXx2rNgSFjYryoYCu8t4W7ixwFCzVmKaccUr8ZKxOKt85JeS+317xCSkea+xCVXnQknxBWwZ7wr+kctszibPQzM0cAFf9iIgNYcBZVezXmX052iWeVqSLh6WtsjLsjsydeIR9EIuwc4/OASKIaOmlv21SvX5kWZ+1KB21Mazjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14DFC113CC;
+	Mon, 15 Apr 2024 11:47:40 +0000 (UTC)
+Message-ID: <bd9b571c-9e0a-4fef-a80e-e2a73673d1f7@xs4all.nl>
+Date: Mon, 15 Apr 2024 13:47:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240415094804.8016-3-paul.barker.ct@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] media: usb: siano: Fix allocation of urbs
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>,
+ Jean-Christophe Trotin <jean-christophe.trotin@foss.st.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <20240410-smatch-v1-0-785d009a852b@chromium.org>
+ <20240410-smatch-v1-1-785d009a852b@chromium.org>
+ <38bc9cc4-107b-4915-a5ab-2f305264363a@xs4all.nl>
+In-Reply-To: <38bc9cc4-107b-4915-a5ab-2f305264363a@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Paul,
+On 15/04/2024 12:08, Hans Verkuil wrote:
+> On 10/04/2024 23:54, Ricardo Ribalda wrote:
+>> USB urbs must be allocated with usb_alloc_urb. Quoting the manual
+>>
+>> Only use this function (usb_init_urb) if you _really_ understand what you
+>> are doing.
+>>
+>> Fix the following smatch error:
+>>
+>> drivers/media/usb/siano/smsusb.c:53:38: warning: array of flexible structures
+>>
+>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>> ---
+>>  drivers/media/usb/siano/smsusb.c | 28 ++++++++++++++++++++--------
+>>  1 file changed, 20 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/media/usb/siano/smsusb.c b/drivers/media/usb/siano/smsusb.c
+>> index 723510520d092..d85308e0785db 100644
+>> --- a/drivers/media/usb/siano/smsusb.c
+>> +++ b/drivers/media/usb/siano/smsusb.c
+>> @@ -40,7 +40,7 @@ struct smsusb_urb_t {
+>>  	struct smscore_buffer_t *cb;
+>>  	struct smsusb_device_t *dev;
+>>  
+>> -	struct urb urb;
+>> +	struct urb *urb;
+>>  
+>>  	/* For the bottom half */
+>>  	struct work_struct wq;
+>> @@ -160,7 +160,7 @@ static int smsusb_submit_urb(struct smsusb_device_t *dev,
+>>  	}
+>>  
+>>  	usb_fill_bulk_urb(
+>> -		&surb->urb,
+>> +		surb->urb,
+>>  		dev->udev,
+>>  		usb_rcvbulkpipe(dev->udev, dev->in_ep),
+>>  		surb->cb->p,
+>> @@ -168,9 +168,9 @@ static int smsusb_submit_urb(struct smsusb_device_t *dev,
+>>  		smsusb_onresponse,
+>>  		surb
+>>  	);
+>> -	surb->urb.transfer_flags |= URB_FREE_BUFFER;
+>> +	surb->urb->transfer_flags |= URB_FREE_BUFFER;
+>>  
+>> -	return usb_submit_urb(&surb->urb, GFP_ATOMIC);
+>> +	return usb_submit_urb(surb->urb, GFP_ATOMIC);
+>>  }
+>>  
+>>  static void smsusb_stop_streaming(struct smsusb_device_t *dev)
+>> @@ -178,7 +178,7 @@ static void smsusb_stop_streaming(struct smsusb_device_t *dev)
+>>  	int i;
+>>  
+>>  	for (i = 0; i < MAX_URBS; i++) {
+>> -		usb_kill_urb(&dev->surbs[i].urb);
+>> +		usb_kill_urb(dev->surbs[i].urb);
+>>  		if (dev->surbs[i].wq.func)
+>>  			cancel_work_sync(&dev->surbs[i].wq);
+>>  
+>> @@ -338,6 +338,8 @@ static void smsusb_term_device(struct usb_interface *intf)
+>>  	struct smsusb_device_t *dev = usb_get_intfdata(intf);
+>>  
+>>  	if (dev) {
+>> +		int i;
+>> +
+>>  		dev->state = SMSUSB_DISCONNECTED;
+>>  
+>>  		smsusb_stop_streaming(dev);
+>> @@ -346,6 +348,9 @@ static void smsusb_term_device(struct usb_interface *intf)
+>>  		if (dev->coredev)
+>>  			smscore_unregister_device(dev->coredev);
+>>  
+>> +		for (i = 0; i < MAX_URBS; i++)
+>> +			usb_free_urb(dev->surbs[i].urb);
+>> +
+>>  		pr_debug("device 0x%p destroyed\n", dev);
+>>  		kfree(dev);
+>>  	}
+>> @@ -390,6 +395,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+>>  	void *mdev;
+>>  	int i, rc;
+>>  	int align = 0;
+>> +	int n_urb = 0;
+>>  
+>>  	/* create device object */
+>>  	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+>> @@ -461,9 +467,11 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+>>  	dev->coredev->is_usb_device = true;
+>>  
+>>  	/* initialize urbs */
+>> -	for (i = 0; i < MAX_URBS; i++) {
+>> -		dev->surbs[i].dev = dev;
+>> -		usb_init_urb(&dev->surbs[i].urb);
+>> +	for (n_urb = 0; n_urb < MAX_URBS; n_urb++) {
+>> +		dev->surbs[n_urb].dev = dev;
+>> +		dev->surbs[n_urb].urb = usb_alloc_urb(0, GFP_KERNEL);
+>> +		if (!dev->surbs[n_urb].urb)
+>> +			goto free_urbs;
+>>  	}
+> 
+> After allocating the URBs there are a few more error paths that do
+> 'goto err_unregister_device;' instead of 'goto free_urbs;'. From what
+> I can see, those need to go through 'free_urbs' as well.
+> 
+>>  
+>>  	pr_debug("smsusb_start_streaming(...).\n");
+>> @@ -485,6 +493,10 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
+>>  
+>>  	return rc;
+>>  
+>> +free_urbs:
+>> +	for (i = 0; i < n_urb; i++)
+>> +		usb_free_urb(dev->surbs[n_urb].urb);
+> 
+> Would it be better to also assign NULL to dev->surbs[n_urb].urb?
+> That way there are no invalid pointers that can mess up things.
 
-Thanks for your work.
+Ricardo, just post a v2 of this patch. I posted a PR for the other
+patches. Nice work, BTW!
 
-On 2024-04-15 10:47:59 +0100, Paul Barker wrote:
-> Call napi_complete_done() in accordance with the documentation in
-> `Documentation/networking/napi.rst`.
+Regards,
 
-The way I understand it napi_complete() is still OK to use, it's just a 
-wrapper for napi_complete_done(napi, 0). But of course using 
-napi_complete_done() is better if you want to use the busypolling status 
-returned. Maybe the commit message can be updated to reflect this 
-change, how about?
-
-    net: ravb: Consider busypolling status when re-enabling interrupts
-
-    Make use of the busypolling status returned from NAPI complete to decide 
-    if interrupts shall be re-enabled or not. This is useful to reduce the 
-    interrupt overhead.
-
-    While at it switch to using napi_complete_done() as it take into account 
-    the work done when providing the busypolling status.
+	Hans
 
 > 
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> ---
->  drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++--------------
->  1 file changed, 11 insertions(+), 15 deletions(-)
+> Regards,
 > 
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index 33f8043143c1..1ac599a044b2 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> @@ -1340,23 +1340,19 @@ static int ravb_poll(struct napi_struct *napi, int budget)
->  	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
->  		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
->  
-> -	if (work_done == budget)
-> -		goto out;
-> -
-> -	napi_complete(napi);
-> -
-> -	/* Re-enable RX/TX interrupts */
-> -	spin_lock_irqsave(&priv->lock, flags);
-> -	if (!info->irq_en_dis) {
-> -		ravb_modify(ndev, RIC0, mask, mask);
-> -		ravb_modify(ndev, TIC,  mask, mask);
-> -	} else {
-> -		ravb_write(ndev, mask, RIE0);
-> -		ravb_write(ndev, mask, TIE);
-> +	if (work_done < budget && napi_complete_done(napi, work_done)) {
-> +		/* Re-enable RX/TX interrupts */
-> +		spin_lock_irqsave(&priv->lock, flags);
-> +		if (!info->irq_en_dis) {
-> +			ravb_modify(ndev, RIC0, mask, mask);
-> +			ravb_modify(ndev, TIC,  mask, mask);
-> +		} else {
-> +			ravb_write(ndev, mask, RIE0);
-> +			ravb_write(ndev, mask, TIE);
-> +		}
-> +		spin_unlock_irqrestore(&priv->lock, flags);
->  	}
-> -	spin_unlock_irqrestore(&priv->lock, flags);
->  
-> -out:
->  	return work_done;
->  }
->  
-> -- 
-> 2.39.2
+> 	Hans
+> 
+>> +
+>>  err_unregister_device:
+>>  	smsusb_term_device(intf);
+>>  #ifdef CONFIG_MEDIA_CONTROLLER_DVB
+>>
+> 
 > 
 
--- 
-Kind Regards,
-Niklas Söderlund
