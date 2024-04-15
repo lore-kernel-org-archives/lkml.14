@@ -1,133 +1,103 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3538174C;
-	Mon, 15 Apr 2024 16:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6D47F7F2
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713197319; cv=none; b=lPlzrcNEWYX1QDFgzRHznvBADbEA6QtMe33KsqFuLLoIa4IaGIEJ/R2wg28TMB0D8VW6BQnYuXMjUoAPaXp+3YqfSjAurUVdZ3L23jvVcvCt7+EtGmmfI1y3+WKjpfixgOj5qt9ZE0z2a2EnjA5LhkKDUQZVKX34yCzXOxpE2Ak=
+	t=1713197346; cv=none; b=mV7ENgcbSt0rio8VvK8WrH5412MQK5Gn1J5sgTDE3fs+1xrpn62OfcLqjngFw515pH7A7M5mHCu4YrTe91MwZCzpQ4mJasRL2xXSG04r/dgZgLAdJFo6UV0ZMwVX8+2S3TP6xX3J+4ZZLuRt4OnH8jpMoXt9uTco3+hOu41XKcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713197319; c=relaxed/simple;
-	bh=3GVeSBq3i3WVVAKL5C7iNHeCdZfIQrOT9LZi5TxkvWo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MeqFIGEck0MYaD68G8YuRt4bOJQ7kcOus9zyBIKR71+iaAWyQlbmm14EPbrNK49A4/S+1HeQ0rl5UdVunx2dTwqYZVUvLsps4jwtxCQjqP7UnR0OddLDoMvLQjBEIC9hM/1jZT648JwSNK3ACt4NBsRrYyZsZ7rOyVZEQFjEIKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpP8HRy6; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713197346; c=relaxed/simple;
+	bh=E/HJYNCwsVkHpTWHtftb4kU3kk8lhl3wMS3rheRjiQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gfj5/K/7UXmQcYqZNXvAKEZrWJ+mQd8EqCWURaB458A2yY2u96IvqSDMei9rQ9MPNESSZ3gIsl5nO0V1+g8jIDuoNs8KOv4S3M+7NnYhw636fR07isS11PQkNLc1bktNQDitROWJx/hY1BjBAGYMzs0dyTnMG7TuB9g1/Q5JVeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=i/xSNXwK; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpP8HRy6"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e65a1370b7so12380525ad.3;
-        Mon, 15 Apr 2024 09:08:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i/xSNXwK"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2330f85c2ebso2304132fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713197318; x=1713802118; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3s3KWGVV93WKwKK9I5nZWoIVkkIpPiCOk0POxZeGeA=;
-        b=NpP8HRy6RklsBdO7gVx+q/nitNa4Z8kvbIdvIdTcoNMWXBoJtgB9hEeF6A33GARGVk
-         iVpQyr2CAUuvaBWC44y+BcPJGuImsbR8ddLKhGlFt7yp7wyuunOPIfwnznkpFnMBWYnT
-         ENCrlrzarmox/PhVkJNKdvFo5AXXM3sdt12I2GQAwa9rVuDinFVYfhBydNLveO5BveEb
-         knLY/1YPeVptT6qe0y1Zn/IY0GgwTW9vpytOq8IPNBF9NGQmTElMDfR1SBG+vB9vMdDI
-         QVNppUmUlBj0NqFkgOrBZiSu7M69+WkfWVIscCBY2gIRczmxRZCsVcejq79cNPWewx3I
-         lVug==
+        d=ziepe.ca; s=google; t=1713197343; x=1713802143; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tTXFGU40TZUxrNmMPsS0SfAuCZx2k12qnJO4YGZoAlM=;
+        b=i/xSNXwKmgz8eeJqAA0Vy5lgSEoL5Yz3ZkqPn6KmTdTRPZRGrpI4aKHMgYRCDQUwpx
+         jKE20ag6ZO6dihmR+IlVZWwJnA/ccf6gEn3g7XlawGcfGtALPBjqeK1pw7xh+i7J9YTE
+         /09SdVf5B6pal4QYLEonXrzNe3I8zGsn9aon5IsozwE0/adjfPjAzLu+3s5W4csA7lts
+         KUvKNYUhKL5T3lfiQjYWaBoGtLnhkYGgzkxdRjuLH0nLJC0UKF/AlidtnyvIdumqhPqW
+         75OAKdDTBXG8J+Fl+CZl4rp3oWgNBc6k97O4Cvzwpdayhk1UxJyNtOYvRZBDMgmZ+FcR
+         H7Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713197318; x=1713802118;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y3s3KWGVV93WKwKK9I5nZWoIVkkIpPiCOk0POxZeGeA=;
-        b=KDHDcq5OMgx7V4hAY3ccSxPhWKZr7RqDKl+uEAa57lJM4vQmupmFzLmICJGEgnnOQY
-         FfKalKIvOAmmD2FxMeSPDwlFlgG7EU7CwqBQt9ukrh0vnXlMpMw9eBiS2yTX18w7jrtT
-         tkBJPrZzwjBS5qYXnWvaK7nEIZGkk4E23KPDmaVleJSKH0g+Wt2U9nfiV8hLHngyGN7Y
-         wzqUR4Cx8GOL9To9XbTh7Oe1kW/TE+rm2n/DEdAAqb6DJvjhgF6YxnHOwxAboxqfI4go
-         +6jVn366RPTxprPG6tKDEk6PHD1WwD0gFQOm/5gy6r01aODI3yXiiDUAuf8Ja/75zfOJ
-         2UKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUi68PgvB+Ib3xP1532RPbxxF8TeVzKySdH4CzkcTeU/uu/xGDXihlp8m1CmkCT/LE1ONTWU0NHKSiGwRRinBVSwCT/DjPvXWZMDxvP7xcLSR63zj9kTnqHPF1qoYGLViTH4RrXmoo5ig==
-X-Gm-Message-State: AOJu0YyHNKAXPwpSZ0RsUjNuAot9yCRwHY+fJXVlAHspIF2Mjk/q21q7
-	eNfwWImA9hvaY7oM8vJ4hs17v9Sls2/vouOMsSfV/QOuQVTqIqSFaCEaYO3p
-X-Google-Smtp-Source: AGHT+IHu3Nuj6UAHVKUuC1+lQBGvYWGfBaC30CgRkK4LRiq7nj6kxmX2o/DutSHvuG+5i7Vc3yGuNQ==
-X-Received: by 2002:a17:902:ed4c:b0:1dd:e114:121c with SMTP id y12-20020a170902ed4c00b001dde114121cmr11596550plb.56.1713197317835;
-        Mon, 15 Apr 2024 09:08:37 -0700 (PDT)
-Received: from dev0.. ([49.43.161.106])
-        by smtp.gmail.com with ESMTPSA id n8-20020a170903110800b001e668c1060bsm2510562plh.122.2024.04.15.09.08.34
+        d=1e100.net; s=20230601; t=1713197343; x=1713802143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTXFGU40TZUxrNmMPsS0SfAuCZx2k12qnJO4YGZoAlM=;
+        b=Csn83jYCHN2RnVZBcwAv/Wqx3cHLHfmd3vM4N+a98xQE317YayvJifHawi3dbDHYpM
+         65rp0gpLqwbZrncGrV6BDCuevDgE2DTwXkggg6F2pGEnUnCLZRhSAaLnjutmCab3E3AM
+         sLmHEaLO0B4wB0LehUKL9sh86Xf5LP6jCvJB0AkqgWxjqC13JWvl9N6vjbjnPGPXSwuT
+         UfHeAGJ1Y4kWmK/ONbwl0vg/IY7RfLelfGe1ctPiMnbp0DVyBAFwIaMXqMQWDyoAwOfB
+         F8vCEKIKndnpahpG4gmzM49QawHlZyddsyzAFLMx6y+F9XgFI7zWvkkCLJ4eEcrU6rAL
+         FNxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ6CKKCgMUc8KVh/9vX/4Ta0LNTGWhD5N/tQIlgeSGgN4BdCA5IVgFKQMY2SCcfqul292LaMEyD0DP5C/EWhikp+Tv3nnRU04kQiuY
+X-Gm-Message-State: AOJu0Yxb2X+HZqXwRbwEwGlhFiYkNUW/nZye4azPMRH1cLryQHQIBBcg
+	mZMN4Ie1B5kE4yaxwywJoqDLSpiAtX/MbsuRXpBkCvN4WimsoeQIkDQ4KEtPBNc=
+X-Google-Smtp-Source: AGHT+IGsiA6KZ3pe9BtRhO+pbVOY45AuLQMOs+w2wDePMtUYoW4o4u2JX5C7mqkiROcVBcvSR1rGJA==
+X-Received: by 2002:a05:6871:7505:b0:22e:15fd:e247 with SMTP id ny5-20020a056871750500b0022e15fde247mr12653184oac.5.1713197343311;
+        Mon, 15 Apr 2024 09:09:03 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id ej2-20020ad45a42000000b0069b7bc51271sm1526012qvb.123.2024.04.15.09.09.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 09:08:37 -0700 (PDT)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: song@kernel.org,
-	yukuai3@huawei.com,
-	linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	Abhinav Jain <jain.abhinav177@gmail.com>
-Subject: [PATCH] md: Added journal count to md_u.h
-Date: Mon, 15 Apr 2024 16:08:18 +0000
-Message-Id: <20240415160818.8276-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 15 Apr 2024 09:09:02 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rwOtB-006BJP-JQ;
+	Mon, 15 Apr 2024 13:09:01 -0300
+Date: Mon, 15 Apr 2024 13:09:01 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Kevin Tian <kevin.tian@intel.com>, Shuah Khan <shuah@kernel.org>,
+	kernel@collabora.com, iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+Message-ID: <20240415160901.GN223006@ziepe.ca>
+References: <20240325090048.1423908-1-usama.anjum@collabora.com>
+ <45b4d209-675a-4b42-b62c-6644bafa36c0@collabora.com>
+ <20240405001020.GB5792@ziepe.ca>
+ <b7c437f5-ac70-4611-908d-b665d8e02679@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7c437f5-ac70-4611-908d-b665d8e02679@collabora.com>
 
-This patch addresses TODO in "./drivers/md/md.c:6752".
-Add journal struct member to mdu_array_info_t in "md_u.h".
-Add the journal field in get_array_info function in "md.c".
-Need feedback on if the update_array_info function needs to be updated.
+On Sun, Apr 14, 2024 at 07:39:58PM +0500, Muhammad Usama Anjum wrote:
+> On 4/5/24 5:10 AM, Jason Gunthorpe wrote:
+> > On Mon, Mar 25, 2024 at 02:11:41PM +0500, Muhammad Usama Anjum wrote:
+> >> On 3/25/24 2:00 PM, Muhammad Usama Anjum wrote:
+> >>> Add FAULT_INJECTION_DEBUG_FS and FAILSLAB configurations which are
+> >>> needed by iommufd_fail_nth test.
+> >>>
+> >>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> >>> ---
+> >>> While building and running these tests on x86, defconfig had these
+> >>> configs enabled. But ARM64's defconfig doesn't enable these configs.
+> >>> Hence the config options are being added explicitly in this patch.
+> >> Please disregard this extra comment. Overall this patch is needed to enable
+> >> these config options of x86 and ARM both.
+> > 
+> > I picked this and the other patch up, thanks
+> Not sure why but I'm unable to find this patch in next and in your tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/jgg/iommufd.git/log/?h=for-next
+> 
+> Maybe this patch was missed?
 
-Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
----
- drivers/md/md.c                | 8 ++++----
- include/uapi/linux/raid/md_u.h | 1 +
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ah I made some mistakes, all sorted thanks
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e575e74aabf5..4958d6e21923 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6735,10 +6735,10 @@ static int get_version(void __user *arg)
- static int get_array_info(struct mddev *mddev, void __user *arg)
- {
- 	mdu_array_info_t info;
--	int nr,working,insync,failed,spare;
-+	int nr, working, insync, failed, spare, journal;
- 	struct md_rdev *rdev;
- 
--	nr = working = insync = failed = spare = 0;
-+	nr = working = insync = failed = spare = journal = 0;
- 	rcu_read_lock();
- 	rdev_for_each_rcu(rdev, mddev) {
- 		nr++;
-@@ -6749,8 +6749,7 @@ static int get_array_info(struct mddev *mddev, void __user *arg)
- 			if (test_bit(In_sync, &rdev->flags))
- 				insync++;
- 			else if (test_bit(Journal, &rdev->flags))
--				/* TODO: add journal count to md_u.h */
--				;
-+				journal++;
- 			else
- 				spare++;
- 		}
-@@ -6769,6 +6768,7 @@ static int get_array_info(struct mddev *mddev, void __user *arg)
- 	info.raid_disks    = mddev->raid_disks;
- 	info.md_minor      = mddev->md_minor;
- 	info.not_persistent= !mddev->persistent;
-+	info.journal       = journal;
- 
- 	info.utime         = clamp_t(time64_t, mddev->utime, 0, U32_MAX);
- 	info.state         = 0;
-diff --git a/include/uapi/linux/raid/md_u.h b/include/uapi/linux/raid/md_u.h
-index 7be89a4906e7..485befa2205d 100644
---- a/include/uapi/linux/raid/md_u.h
-+++ b/include/uapi/linux/raid/md_u.h
-@@ -84,6 +84,7 @@ typedef struct mdu_array_info_s {
- 	int raid_disks;
- 	int md_minor;
- 	int not_persistent;
-+	int journal;
- 
- 	/*
- 	 * Generic state information
--- 
-2.34.1
-
+Jason
