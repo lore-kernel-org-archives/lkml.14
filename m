@@ -1,171 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF705823CE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5797582487;
+	Mon, 15 Apr 2024 16:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199001; cv=none; b=gbrmZ9u8ACLh/o3H8TuUo2bBYbktt4BwSFKHGvsJNmPkwMRe8lFHfQ3B0hIEDx4ygynCjU6gnCsQyu46rC3IFD/NVFjP2tr42JS/77aQx9urAhodvVvQX7hfV9ttucP9rWQ1BMfPxHmPosi/fPktl8lW9nN/1RHJ66bwcpLI2Hw=
+	t=1713199027; cv=none; b=A57F19D9fsAKPoA5Ndf94reR6ksLwj3ooXQW9bTqrMgtk3IIIrpBhfAz3nzJy33ePAXMSkQTSMLNqYG9DH3ECPM5SDsrvRambe83mBCbknYkIPGMap/Ai5NswVFRk5ITmTVbyXKlgAAOzf138ZDEh7g/xtZrOTxdSW/zNQ9/1aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199001; c=relaxed/simple;
-	bh=+QqbqSu1MMoSgiWlfiQTfvZcvD2ji/HRaDBIniV7kB0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T3hCK6WeZAiEZP4IKWkJi5Fc79zQrK5Mvu8tXxEPr8RVexqmCZOzdpviU4e2hgNWWPWuI+d2n0KioGb1y9bUqq2ej5U40bDMNXrM2nvkp/V6cv4tvApPE/2BIxloCdHokGK+S1nqXPpsp3ui5IB2Q5f00ZyxgBVge8J5sXrtxF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fw72T1BL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fw72T1BL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713198998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=atGkGHaiCSKARFp5t+MBXqAkwdjlgEs5Nciu/JvDSO4=;
-	b=fw72T1BLAX9DdwjxQqW+ZhVKoE78zNaHR4WEzMkWT6KbWSo1vB+VmCQSyVUSVzEg9z7uTI
-	Kxj9ul1uy9Kpy6ibmOyoskt5kiwpN10kuBBHhp+PMB5eaOfJ3t1q6tnFEsrjKW1iR3RFzV
-	y4yYWYrp+TI04cTGzX1ZMWmWYH3xBqA=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-487-uR_8D-gCNfWCasoWZODrDQ-1; Mon, 15 Apr 2024 12:36:35 -0400
-X-MC-Unique: uR_8D-gCNfWCasoWZODrDQ-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d9ebfd9170so30488481fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:36:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713198993; x=1713803793;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=atGkGHaiCSKARFp5t+MBXqAkwdjlgEs5Nciu/JvDSO4=;
-        b=L6JPapuvhVgy0EiZ+3GlNU6YFiuHcv81nWngbUM359xNOvZftv86hqT7INY35mNgXE
-         nTtqQqHw7szFBOyv0AQ40nHrOaqU1HAdF9jz7lAfH8QVcaDXUHJosPwChA5bScQoaddQ
-         lZiRnajYaj7dL/QlRjvMcrA3HTnCCUqAXqRO/QVfzvprKPMxvuAAAEc0n5GndRhwsf4l
-         mGDNmJjWB6A2XT2aPQKaLICzEhY1BQ0cQdaZG3s7YLh6JrVvHyGqCRe20mGfuFPnUUCy
-         nFVcNmwDO3DbxmgqghwV9R1N+2/Ci/0ZnDOgdfzAFahFPyY2YUsG9HhunqZqP5TjkDym
-         Y4fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8vDUacuAqeJPFjcb+AA5v1uskwNDYMig8x+f3plO+o9IFDVT3lGfvWVgZEIlGHGVHA1sHoUtFGLbNv1GR8NZs8nxSsiid5xdXoW5M
-X-Gm-Message-State: AOJu0YyTqtEro8gtQVYFrIPJYIU8PeIOIHPq/sTh0eCm4Ra0kN0mnDUH
-	9vILcN5tjEZYJ/7KyGL+W9v1fPQNycH6FEANmBA3rRZ8r4uXk1UZyv0PGv+LWtyognfDda5yLak
-	IpnSAbgYh2XaCdqhGV9ydpH3SUdrCuR7/Wu+xFPpKWmQsrNx9obfRoGbabTlGxA==
-X-Received: by 2002:a2e:9e96:0:b0:2d8:64c9:8d39 with SMTP id f22-20020a2e9e96000000b002d864c98d39mr8110591ljk.37.1713198993682;
-        Mon, 15 Apr 2024 09:36:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyogDqJzKINArWAzh/dqhb2mlcc0D4Erk9dK0QoHKBU5jHaWEgiddtk2hMVtWNwF1AF8LfNg==
-X-Received: by 2002:a2e:9e96:0:b0:2d8:64c9:8d39 with SMTP id f22-20020a2e9e96000000b002d864c98d39mr8110575ljk.37.1713198993322;
-        Mon, 15 Apr 2024 09:36:33 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id bm15-20020a170906c04f00b00a46d9966ff8sm5774503ejb.147.2024.04.15.09.36.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 09:36:32 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: paulmck@kernel.org, Frederic Weisbecker <frederic@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Neeraj Upadhyay <quic_neeraju@quicinc.com>, Joel
- Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>,
- Boqun Feng <boqun.feng@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH 2/2] context_tracking, rcu: Rename RCU_DYNTICKS_IDX to
- CT_DYNTICKS_IDX
-In-Reply-To: <af3eed7e-a889-4008-ba47-045483ab79fc@paulmck-laptop>
-References: <20240327112902.1184822-1-vschneid@redhat.com>
- <20240327112902.1184822-3-vschneid@redhat.com>
- <Zg6tYD-9AFPkOOsW@localhost.localdomain>
- <1ef9d1f9-16a2-4ddc-abd5-6c3b7cde290f@paulmck-laptop>
- <ZhZqX0YqlzPoOK2b@localhost.localdomain>
- <af3eed7e-a889-4008-ba47-045483ab79fc@paulmck-laptop>
-Date: Mon, 15 Apr 2024 18:36:31 +0200
-Message-ID: <xhsmhjzky8tww.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	s=arc-20240116; t=1713199027; c=relaxed/simple;
+	bh=laaffI+rGw07cNCZQZVakY5R0esIrFMlcl33TjYlg1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ROUyHGusjBq68XVJp/6WGvNh8fmZ4rhHAQNlXlEHCtckE6zsEtqZjusYlpCWLsOIbv42Q+YuK9FJuDA+b1AXysx9nYXViJ09SQuj4FV2u6os+625bVL0THQv7vICgwG+I3lTdozqFYSX05/giQVsfPCzw869tNRahDNwy8LL8tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D01642F4;
+	Mon, 15 Apr 2024 09:37:32 -0700 (PDT)
+Received: from pluto.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C9DB3F64C;
+	Mon, 15 Apr 2024 09:37:02 -0700 (PDT)
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Cc: sudeep.holla@arm.com,
+	james.quinlan@broadcom.com,
+	f.fainelli@gmail.com,
+	vincent.guittot@linaro.org,
+	peng.fan@oss.nxp.com,
+	michal.simek@amd.com,
+	quic_sibis@quicinc.com,
+	quic_nkela@quicinc.com,
+	souvik.chakravarty@arm.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	Cristian Marussi <cristian.marussi@arm.com>
+Subject: [PATCH v3 0/5] Rework SCMI Clock driver clk_ops setup procedure
+Date: Mon, 15 Apr 2024 17:36:44 +0100
+Message-ID: <20240415163649.895268-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 10/04/24 12:19, Paul E. McKenney wrote:
-> On Wed, Apr 10, 2024 at 12:30:55PM +0200, Frederic Weisbecker wrote:
->> Le Tue, Apr 09, 2024 at 12:53:03PM -0700, Paul E. McKenney a =C3=A9crit :
->> > I am having a hard time getting too excited about the name.  I could
->> > suggest CT_RCU_WATCHING_IDX, but that isn't exactly the shortest
->> > possible name.
->>
->> I really like CT_RCU_WATCHING. It says everything. The _IDX isn't even
->> needed after all. What do you think?
->
-> Works for me!
->
+Hi,
 
-Sounds good to me too, thanks for the suggestion :)
+a small series to review how the SCMI Clock driver chooses and sets up the
+CLK operations to associate to a clock when registering with CLK framework.
 
-Now, what about ct_dynticks() & friends? I was about to do:
+SCMI clocks exposed by the platform sports a growing number of clock
+properties since SCMI v3.2: discovered SCMI clocks could be restricted in
+terms of capability to set state/rate/parent/duty_cycle and the platform
+itself can have a varying support in terms of atomic support.
 
--static __always_inline int ct_dynticks(void)
-+static __always_inline int ct_rcu_watching(void)
- {
--	return atomic_read(this_cpu_ptr(&context_tracking.state)) & CT_DYNTICKS_M=
-ASK;
-+	return atomic_read(this_cpu_ptr(&context_tracking.state)) & CT_RCU_WATCHI=
-NG_MASK;
- }
+Knowing upfront which operations are NOT allowed on some clocks helps
+avoiding needless message exchanges.
 
-... but then realised that there's more siblings to the rcu_dynticks*()
-family;
+As a result, the SCMI Clock driver, when registering resources with the
+CLK framework, aims to provide only the specific clk_ops as known to be
+certainly supported by the specific SCMI clock resource.
 
-AFAICT dynticks_nesting could also get the rcu_watching prefix treatment,
-`rcu_dynticks_task_exit() -> rcu_watching_task_exit` doesn't sound as
-obvious though. The rcu_dyntick event probably can't be renamed either.
+Using static pre-compiled clk_ops structures to fulfill all the possible
+(and possibly growing) combinations of clock features is cumbersome and
+error-prone (there are 32 possible combinations as of now to account for
+the above mentioned clock features variation).
 
-I'm not sure how far to take the renaming; seeing things like:
+This rework introduces a dynamic allocation mechanism to be able to
+configure the required clk_ops at run-time when the SCMI clocks are
+enumerated.
 
-  notrace bool rcu_is_watching(void)
-  {
-          bool ret;
+Only one single clk_ops is generated (per driver instance) for each of the
+features combinations effectively found in the set of returned SCMI
+resources.
 
-          preempt_disable_notrace();
-          ret =3D !rcu_dynticks_curr_cpu_in_eqs();
-          preempt_enable_notrace();
-          return ret;
-  }
-  EXPORT_SYMBOL_GPL(rcu_is_watching);
+Once this preliminary rework is done in 1/5, the following patches use this
+new clk_ops schema to introduce a number of restricted clk_ops depending on
+the specific retrieved SCMI clocks characteristics.
 
-makes me think most of the rcu_*dynticks / rcu_*eqs stuff could get an
-rcu_watching facelift?
+Based on v6.9-rc1
 
-Here are my current considerations for identifiers used in context_tracking
-in decreasing order of confidence:
+Thanks,
+Cristian
 
-| Old                                   | New                              =
-                             |
-|---------------------------------------+----------------------------------=
------------------------------|
-| RCU_DYNTICKS_IDX                      | CT_RCU_WATCHING                  =
-                             |
-| RCU_DYNTICKS_MASK                     | CT_RCU_WATCHING_MASK             =
-                             |
-| context_tracking.dynticks_nesting     | context_tracking.rcu_watching_nes=
-ting                         |
-| context_tracking.dynticks_nmi_nesting | context_tracking.rcu_watching_nmi=
-_nesting [bit of a mouthful] |
-| rcu_dynticks_curr_cpu_in_eqs()        | rcu_watching_curr_cpu() [with an =
-added negation]              |
-|---------------------------------------+----------------------------------=
------------------------------|
-| TRACE_EVENT_RCU(rcu_dyntick,          | [Can't change?]                  =
-                             |
-|---------------------------------------+----------------------------------=
------------------------------|
-| rcu_dynticks_task_enter()             | rcu_watching_task_enter()        =
-                             |
-| rcu_dynticks_task_exit()              | rcu_watching_task_exit()         =
-                             |
-| rcu_dynticks_task_trace_enter()       | rcu_watching_task_trace_enter()  =
-                             |
-| rcu_dynticks_task_trace_exit()        | rcu_watching_task_trace_exit()   =
-                             |
+v2 -> v3
+- moving scmi_clk_ops_db from being global to a per-instance/per-probe
+  structure to avoid sharing devm_ allocated clk_ops between different
+  driver instances.
+- using bits.h macros
+- fixed a few dox comments
+- explicit unit in atomic_threshold_us
+- added a runtime size-check before accessing scmi_clk_ops_db using feats_key
+- reworked scmi_clk_ops_alloc call to reduce nesting
+- using transport_is_atomic instead of is_atomic to be clearer
+- using SCMI_<feats>_SUPPORTED instead of SCMI<feats>_FORBIDDEN
 
-Thoughts?
+v1 -> V2
+- rebased on v6.9-rc1
+
+Cristian Marussi (5):
+  clk: scmi: Allocate CLK operations dynamically
+  clk: scmi: Add support for state control restricted clocks
+  clk: scmi: Add support for rate change restricted clocks
+  clk: scmi: Add support for re-parenting restricted clocks
+  clk: scmi: Add support for get/set duty_cycle operations
+
+ drivers/clk/clk-scmi.c | 249 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 201 insertions(+), 48 deletions(-)
+
+-- 
+2.44.0
 
