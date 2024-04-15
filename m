@@ -1,101 +1,67 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6220EEC5;
-	Mon, 15 Apr 2024 01:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28869BE58;
+	Mon, 15 Apr 2024 01:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713144730; cv=none; b=Cw5dreMFvhfev5HhWqdXzEe393+lhBN1+iscvTYP0EYjcfUy0MUIUtIUQDN498ic++UeirmKQvpx9gyu6JhEaLyPeK4Ny3+4y0uGzCwzHoDw7pXDGd9C66wpF9Mh2kcQgGQuc64pfpzVHR7tq/QHADh5LEz7475fH5MKJbYOxAk=
+	t=1713144846; cv=none; b=an02j9S5pZyr3OkhFyrarjKWQtSQ5jWxuai2/Pp9CGH4HocXPOug/M3E6j67bFtpEVehz2PDECPi4b4+NJ6tJF+jiIq0Zha/00Ze2ziRnUaLdNeA0XYnd9skJaMfG61kHraUNusJCOs7QDUyuA7N4bTms4oFoQ14cTJl46QJHuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713144730; c=relaxed/simple;
-	bh=VFW33vDHGTXeQaLA3wRaK502MGTYFMQVW63K4ku22JE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bi+ASYi7LFECBGZXATfSMQjWaDMrBgJIdxV5fFlgj2azN6mfWtsmdIjxfgBiw4AYxt0s0IxhtPsUUlLkAy5b0kFzLrvSCPDTx4R7ESaiTJ4WPPCTG4wCs2CE6jvnNRBFyz6RFyaHIJKcViDt3PadEzLzWpxGfI0oxAmNBeLpE6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VHqQZ4RPqz4f3kpC;
-	Mon, 15 Apr 2024 09:31:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id AB72E1A01D4;
-	Mon, 15 Apr 2024 09:31:57 +0800 (CST)
-Received: from [10.174.179.247] (unknown [10.174.179.247])
-	by APP2 (Coremail) with SMTP id Syh0CgAnmAuKgxxmNlDvKA--.9408S3;
-	Mon, 15 Apr 2024 09:31:56 +0800 (CST)
-Message-ID: <b8dbcc3d-f0ec-ba59-4ebc-01476029aa80@huaweicloud.com>
-Date: Mon, 15 Apr 2024 09:31:54 +0800
+	s=arc-20240116; t=1713144846; c=relaxed/simple;
+	bh=WGAdQkTH9rCbCFpFlh1ykbW/XFvwiK0fk8p7CK6ZRBM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JiYziWzUUKy5SFVdP3YtiKr+CG/hAOIdbxszXa5HKRJGwiVw8wBHPB+5GmemvCMUAEL2nNK1+/BZSmi/qPQU+y7/JeNRPKDbMuhrkNUzreG5OmV3Pw3KJC+Ym+e189m1lWVf7wAvTvc+t80hN3C3KNpKC2wzNW8P7IqrUupn3aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=lDgqEDHA; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="lDgqEDHA"
+Received: from [192.168.68.112] (ppp14-2-127-66.adl-apt-pir-bras32.tpg.internode.on.net [14.2.127.66])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 7F48F20178;
+	Mon, 15 Apr 2024 09:33:59 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1713144841;
+	bh=WGAdQkTH9rCbCFpFlh1ykbW/XFvwiK0fk8p7CK6ZRBM=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=lDgqEDHAg1RXJVPjPJsL1Nipc2p5NibKJpJLBhuB7aGfoxPFDDAk3AwqR0iaipjik
+	 JjJEenbSECxVoK7JgRvf7DXiZDpPc/0RsEYJLaX2gLgHiAJs1aQGyCSSve+3sRW3Ab
+	 gaLxVLXU/DDPM1gUVnkg7W7CzeXWY60W3c6vCSMDRm7iCumOJigi9dED7PqDyX1JQC
+	 cZo+bPjKv5/Ge5tTW2foG7LmNMJ69Y/09FkhTAZfFmKwi2AkX1gOCTM02GKhu+cn5/
+	 wB8KySadAPnP2UoWH1PUI599p3/gKg/5d3cnzTo33CzTUnceGXhtmC0DXKtSbxHhIN
+	 ZO5z+wylMZ3UQ==
+Message-ID: <7af48dcfba938ea45a78e8a23088a09a8eeeabdd.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] ARM: dts: aspeed: Remove Facebook Cloudripper dts
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: rentao.bupt@gmail.com, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org,
+ taoren@meta.com
+Date: Mon, 15 Apr 2024 11:03:58 +0930
+In-Reply-To: <20240411045622.7915-1-rentao.bupt@gmail.com>
+References: <20240411045622.7915-1-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2] ubi: block: fix memleak in ubiblock_create()
-To: Markus Elfring <Markus.Elfring@web.de>, linux-mtd@lists.infradead.org,
- kernel-janitors@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Zhihao Cheng <chengzhihao1@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hou Tao <houtao1@huawei.com>,
- Yang Erkun <yangerkun@huawei.com>, Yu Kuai <yukuai3@huawei.com>,
- Zhang Yi <yi.zhang@huawei.com>
-References: <20231208074629.1656356-1-linan666@huaweicloud.com>
- <22f324ce-552a-4f6a-b4e5-2d84a00010aa@web.de>
-From: Li Nan <linan666@huaweicloud.com>
-In-Reply-To: <22f324ce-552a-4f6a-b4e5-2d84a00010aa@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgAnmAuKgxxmNlDvKA--.9408S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jw15WFW8Cw4Uuw18CFy5twb_yoWxKFgEk3
-	48JF97J34xtF10yanaga1fArnxWay3J3Wjva48JwnIg34fWFnxGFZxGr98Z3Z3Xas5ZFWD
-	Cr43t34Fvw1SqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67
-	AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3
-	Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7IU1VOJ7UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
+On Wed, 2024-04-10 at 21:56 -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+>=20
+> Remove Facebook Cloudripper dts because the switch platform is not
+> actively maintained (all the units are deprecated).
+>=20
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
+I've applied this to my tree to be picked up by Joel.
 
-在 2024/4/14 17:16, Markus Elfring 写道:
-> Can it be nicer to use the term “memory leak” instead of “memleak”
-> in the patch subject?
-> 
-> 
-> …
->> 'gd' will not be put anymore. Fix it by putting 'gd' directly.
-> 
-> Would the following wording variant be more desirable?
-> 
->     … anymore.
->     Thus pass the variable “gd” to a put_disk() call directly.
-> 
-> 
-> Would you like to add the tag “Fixes” accordingly?
-> 
+Andrew
 
-The patch has already been applied:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=adbf4c4954e33e623897058a617c583d65a177f6
-
-Thank you very much for your suggestion. I will pay attention to them in
-future patches.
-
-> Regards,
-> Markus
-> .
-
--- 
-Thanks,
-Nan
-
+PS: Sorry if you already have mail saying as much, I ran into issues
+with our mail server late last week.
