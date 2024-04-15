@@ -1,109 +1,95 @@
-Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D8E1EB5E;
-	Mon, 15 Apr 2024 06:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.154.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29AD224DC
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713164293; cv=none; b=K3dCU8LaIDgWHf6M9sIHWYi4EHMmFK/smduol/wDDyncY/G2KGWYTU3ebD3DxtDb/+Lp5TBODqDY4197t79djYxOgpmb9ce0Qg3rwE/F7zbeLXGoLVEFsyBSVLIcA1o8/cUNjb5ArWnsU7vJciPhT1P1M/toGzdsU4/TX4ZinyM=
+	t=1713164302; cv=none; b=nQzQQVuVgDK8B6O5CQ4CuhnQHoUu+o+Ma3gcAdCVWH1uJZFM5BjsQwG4XfRRJdfAa8W6KQAhKSm24wpPp7b8iojFHAUcmtdhQNq5jkMz5reChDVditLx0vxg7nOVkkc5g0GuaoyiVMrB2SaB7LHO7qNmWukxaMbDCHqN3rC6GG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713164293; c=relaxed/simple;
-	bh=5dQYE555WyWLOIGjnlUIwdBPsURAhH1u3CUIqS7Bd6I=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=rOneibs6YXWWZ4y354xHIn3It2FW49vtmnDk8wB/RnX2zgg0w4AWSaVpW6VHEKyxeLFx3S4niRnQ2eXX0/teYXFoEW1k64MCxbgQlzQ1vgP9VOMBqsVSoy8fKXfX5l8TLEsPbJKwTRpdh7OaOoAHGq8we2yNyWDyoLt03NRpqPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no; spf=pass smtp.mailfrom=miraculix.mork.no; dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b=JQknEPZT; arc=none smtp.client-ip=65.108.154.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mork.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraculix.mork.no
+	s=arc-20240116; t=1713164302; c=relaxed/simple;
+	bh=8zRocQO/rRgL1qKa5DTF7pfCxE7+mgM0HcYZDkfYtek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=En8LjEYsntTsd3q60/hcMlK5xmllnPfZ+gA6sed+7mhxOBXZPrnYLRSOgqWwywcRR4ACLrw2V607Jh2kpMIHkM6O4DRUYzZ7a64YKEgEDH90hMMifPMe94rlkb+vU+ZkngBoknEreG83kEShy4wF80pyOdM2mDdO4dYZe+uWCsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KTLWNF0d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="JQknEPZT"
-Received: from canardo.dyn.mork.no ([IPv6:2a01:799:10da:6900:0:0:0:1])
-	(authenticated bits=0)
-	by dilbert.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 43F6lJGr265481
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Mon, 15 Apr 2024 07:47:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-	t=1713163639; bh=ptLbaXHFz1SjMcJUxVZ1MKPDLiUChee6AAW1Ax7maBk=;
-	h=From:To:Cc:Subject:References:Date:Message-ID:From;
-	b=JQknEPZTeGKCD2KEeFUG9yDA2PEETWkDp9Ntu7+q6E1u0TzswuRdN3XgTIhipVnA6
-	 QW2Ld+vLwa/dFtImLTm4CN4QB8mucwg/Yt6d4Yc9vf5HVbwpxqHAEiNWrlLNVIdt6e
-	 a9quzffcyP60fDXlYkxUBpD/36Hfg0+7jTsjU6LA=
-Received: from miraculix.mork.no ([IPv6:2a01:799:10da:690a:d43d:737:5289:b66f])
-	(authenticated bits=0)
-	by canardo.dyn.mork.no (8.17.1.9/8.17.1.9) with ESMTPSA id 43F6lJwZ367339
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Mon, 15 Apr 2024 08:47:19 +0200
-Received: (nullmailer pid 17569 invoked by uid 1000);
-	Mon, 15 Apr 2024 06:47:19 -0000
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To: Aleksander Morgado <aleksandermj@chromium.org>
-Cc: oneukum@suse.com, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        ejcaruso@chromium.org
-Subject: Re: [PATCH] usb: cdc-wdm: close race between read and workqueue
-Organization: m
-References: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org>
-Date: Mon, 15 Apr 2024 08:47:19 +0200
-In-Reply-To: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org> (Aleksander
-	Morgado's message of "Mon, 15 Apr 2024 05:42:06 +0000")
-Message-ID: <87mspvi0lk.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KTLWNF0d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713164299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8zRocQO/rRgL1qKa5DTF7pfCxE7+mgM0HcYZDkfYtek=;
+	b=KTLWNF0dAahSHGxN+rWuXJcXreNmT2asKEMj4CThb2iNbYOLXROHrI9daAa0FveabApnqg
+	Hxjgw0O3xyb+hp/gn80Ol+UXwFJt9TsmbhI5Xqg2rrKLmokRCNlfIsGEFPe5+HtGZ7aRo5
+	oi0nh0pSU/8X30opbhn3si6lt6fTOL8=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-Q7iwMjKEPwCyHUzwvfdGlw-1; Mon, 15 Apr 2024 02:58:17 -0400
+X-MC-Unique: Q7iwMjKEPwCyHUzwvfdGlw-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5cfc2041cdfso1890929a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 23:58:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713164296; x=1713769096;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8zRocQO/rRgL1qKa5DTF7pfCxE7+mgM0HcYZDkfYtek=;
+        b=L8Or7okBanUIdOmEvGnxYtsrRLQiCikfwM6gzcM0veFzCzRT9h9b9ODPxF7RXdsCEQ
+         5EMZN/rHNGxxBIUJgVx7/uEmxIgzblIkd7WT59ozPWjeFlyravawMRKKwbtomriuee0T
+         uzX9SF3pQ9uOR7nxnzIrNiQ2eRZLd17rUUTA9LNnkVdRRYzMR4JNwTlIxn3vAFr8MvmK
+         9t01fr8xYRA9Hl6Le4BbOeV+1Jr1y6/HmnpTdDr2++FcfPFRJiu705Od1ywo7pngtd99
+         gKrt9equ4B7PgbKHqZ72k6x3FHZsrdkQSyEupshTn9laeozLg+8s4kzNu86eAy/Xw8cW
+         saOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXs1edKDWTEqKNJuJHeqKumu1RELxxaJjeRnXntL5zB2huQLbQt2fjQLOenFsdfu9AC2+mmXmVqwIHkqYqoAmm8XTGRt6YGag2iaTxy
+X-Gm-Message-State: AOJu0Yw+5nJXtBnpULMSxV5YR2Kb8zlLk5gKYhUpqXEBmwP8xC1cbPts
+	sgDbdE6w9mCWrv7DAGi0WLlaLr0FU1ktl/0cuyDTt2wOgxWtr8pERidU+CVO64mBxL65TZiNDOr
+	Ne00CSyA8YGHZWWG45WNExiZVPbzZ/Qrih0Gh2vKiRdVyOgd5odP2dY5QBb1DSoXsqS0hmgb3ee
+	N/NRikFIFdbRIyEdRdY9N1V8xAorXxPdrewa3k
+X-Received: by 2002:a05:6a21:191:b0:1a9:6d96:c700 with SMTP id le17-20020a056a21019100b001a96d96c700mr8932592pzb.48.1713164296266;
+        Sun, 14 Apr 2024 23:58:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfCe10Cxttrxe8F4OkPc7KjxC+SFTe/Z0SKvR0xbdRbE8/iQQiMdWF3kDr6DPf/3wtsnu4W5Rb/yh0o2uaUZk=
+X-Received: by 2002:a05:6a21:191:b0:1a9:6d96:c700 with SMTP id
+ le17-20020a056a21019100b001a96d96c700mr8932578pzb.48.1713164295965; Sun, 14
+ Apr 2024 23:58:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <67c2edf49788c27d5f7a49fc701520b9fcf739b5.1713088999.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <67c2edf49788c27d5f7a49fc701520b9fcf739b5.1713088999.git.christophe.jaillet@wanadoo.fr>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 15 Apr 2024 14:58:04 +0800
+Message-ID: <CACGkMEtufa6MqWkcsZqHW8eQzj4b2wCh8zFMSAuHkxpWowLmdQ@mail.gmail.com>
+Subject: Re: [PATCH v2] vhost-vdpa: Remove usage of the deprecated
+ ida_simple_xx() API
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, Simon Horman <horms@kernel.org>, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 1.0.3 at canardo
-X-Virus-Status: Clean
 
-Aleksander Morgado <aleksandermj@chromium.org> writes:
-> On 3/14/24 11:50, Oliver Neukum wrote:
->> wdm_read() cannot race with itself. However, in
->> service_outstanding_interrupt() it can race with the
->> workqueue, which can be triggered by error handling.
->> Hence we need to make sure that the WDM_RESPONDING
->> flag is not just only set but tested.
->> Fixes: afba937e540c9 ("USB: CDC WDM driver")
->> Signed-off-by: Oliver Neukum <oneukum@suse.com>
+On Sun, Apr 14, 2024 at 6:04=E2=80=AFPM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
 >
-> We are not aware of all the details involved in this patch, but we had
-> to revert it in all the different ChromeOS kernel versions where we
-> had it cherry-picked, because it broke the MBIM communication with the
-> Intel XMM based Fibocomm L850 modem. Other modems shipped in
-> Chromebooks like the QC based Fibocomm FM101 don't seem to be
-> affected.
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
 >
-> Attached is an example output of mbimcli talking directly to the
-> cdc-wdm port (i.e. without ModemManager or the mbim-proxy). In the
-> example, we are receiving a bunch of different messages from previous
-> mbimcli runs. Looking at the timestamps, it looks as if we only
-> receive a message right after we have sent one, e.g. after each "open
-> request" we end up receiving responses for requests sent in earlier
-> runs; or something along those lines.
+> Note that the upper limit of ida_simple_get() is exclusive, but the one o=
+f
+> ida_alloc_max() is inclusive. So a -1 has been added when needed.
 >
-> Is this bad behavior of this specific modem chipset, and if so, how
-> can we workaround it? If you need any additional information or help
-> to test new patches, let us know.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-I'm not sure I understand what problem that patch is supposed to fix.
-Which means that everything I write could be completely wrong...
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-But to me it looks like the described issue is exactly what you should
-expect if that change ever triggers.  I believe we must resubmit the
-urb from service_outstanding_interrupt(). That's why it was added. See
-the explanation Robert wrote when introducing it:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d=
-rivers/usb/class/cdc-wdm.c?id=3Dc1da59dad0ebd3f9bd238f3fff82b1f7ffda7829
+Thanks
 
-As for the XMM behaviour: it's been a long time since I tried any of
-those, but AFAIR one the major differences compared to Qualcomm was the
-strict queue handling in the firmware.  This caused a number of problems
-where the cdc-wdm driver wanted to skip a message for some reason.  So
-I'm not surprised that a bug like this is triggered by one of those
-modems. That's probably the only thing they are good for :-)
-
-
-
-Bj=C3=B8rn
