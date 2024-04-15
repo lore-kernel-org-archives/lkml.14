@@ -1,128 +1,119 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58278757FA
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADD5126F3A
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 13:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713186111; cv=none; b=o6iKfJ2SFbW1Vr3mchlQPjyEp9xc5XuDSsMsqdp3oVu/P8/GFbazwkj1EEGECtYYBOTS0yu6a/sGt5EWMcGcmyia8pxPqvA+2eETmc8gCwhv/w5Xtq7PzEnVDKZx7ig1a5GWMx5cxJ4scIJ6u7c4oYr5EZEQw2G0P3YC6czZqwE=
+	t=1713186125; cv=none; b=cyYVulrY1LoIOoR4YJbDXkxPRKEZeC44GphDYKHsswL7LF/VPZV9q8fa6jVRghOhasxzBpEbVdB4pI/kj+SEZK+G+alnAC+TK0PbJ0+lpK9wi7mlMnqe9TX6wB+n+DUmubSxztKbNSZOa50t/LgbEAqdJl/3mE/1Y3kP6Jo4bi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713186111; c=relaxed/simple;
-	bh=htFP120gjn5bGGk+lM2AXxOpa6zNGkVhobl+AAmgTfU=;
+	s=arc-20240116; t=1713186125; c=relaxed/simple;
+	bh=wangW2WSspV67FmNKT8bxZVzAh3dG2lDGsi65zTLlTU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X0+vbwxF2uHKkL0hiVSn/7lPtbhMSe41mk5BIHO//TG8NzPby5qRNImFX37vB0gytQ+kAcDKKKCfXXOH0La5/Xe4obmrOO3JpJJiQ23TMpzuet96+0X5VXmUsd4IXWa8Rpxi1lgmj9J1CqxKIv2M7k0aelX6HnxG3XHGf0DoLpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=jdyoAfd1; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oy4DUV7JO6tr2vj6VdxI4rSAtzJvwVQIGEmvsKbNrTpNYo9zELgJ7m3rmhaY5MmZA4RrWn4UIuTr4XH6xM/repd7RmNgEQ2bcP0EQ1vdGUVEEF8vvq5sCO6O99cii9sfsOjFrtkUmoWSLzD33i0Z1ltmlx3ebYKqwTrvtb1Zcu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VAAFwy6j; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="jdyoAfd1"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d094bc2244so36062691fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1713186103; x=1713790903; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JAzNe/Dr2zrsI9zQzFBtyYItApxCRsnWpljg+FQj6uo=;
-        b=jdyoAfd1MxoPLVCGlGc/r3BKMlWWnP8t9Gnw2/NMHZgBTIKPwhkVcYlnI0uNHWZZA7
-         QIlNenptnQNcuPxpPu9iAnGiTYdbvT8Di73Nlf4ZbfRKUV9pL/chlrHYPdYGnuJBARmA
-         Vmvx6W+P1ks2COOnJsqTf4/DuHbvxYp3EN1hy8wzcrigaWEwtivYnkGIDgDZN49KwiB4
-         A1mXUceZOyNFlS5/SVDtpb5+4WKBv2K5PzMxmXrCueV0MDHwNaYxpa8P1SRCNt7YB13Q
-         56uVANo3NioCR6bv5eY/ARsg0fMZ67p8lFUuQfSDXQ3q6gKY2HQocvxIblnirf8CI5zI
-         WzHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713186103; x=1713790903;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JAzNe/Dr2zrsI9zQzFBtyYItApxCRsnWpljg+FQj6uo=;
-        b=ZzozXaMhloUjADRKRwWKyDE9yGw8T1RDM1rIJteIy7KOmznl/kwlXU+bQZ7QoBjZvs
-         3a88bHp/CA4LtV3yh7Fi8AyzlPxwZM5F5BxvxqhHdumAE1O/glk2erauLO+kG/Ce96fX
-         m2mWEmIhxEkNM4Z9JEYMHayTZBONQqfd9wQSWyEO/0S7PL9ohoI2s88zhtHX0wvYivjZ
-         3MWNMUS40NLQVj3b467IY7rTl7t/N4d6LOf2SIxPDR+AS63880p4iXxKOeAB+gb/xWHc
-         UsSU4YIwFJVAOxHL8IMLW5Z3X2mXH1rCyF9g13R8nj5aTgiXE+zOaFqL985NLajDfDan
-         abnw==
-X-Gm-Message-State: AOJu0YzMtMQ+HGWvNcMsLAzh8mM6j4KDZjdwAIqEuZbbdu07UjeHJVgO
-	RrKEeyFbI+iYrlWeoezN2ET6PkV/QFctgEMo+bhnLAjveMK7M3WkaRbFrgvo0EY=
-X-Google-Smtp-Source: AGHT+IF1FG1SINFeCjGlp0eZOZIZwVeoNZP8XYe8YPY4t8v9NbI69LFZuWlNvlzfivwxMIckGeJs1Q==
-X-Received: by 2002:a2e:b4a8:0:b0:2d8:6b0c:d91c with SMTP id q8-20020a2eb4a8000000b002d86b0cd91cmr5501216ljm.47.1713186103351;
-        Mon, 15 Apr 2024 06:01:43 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id r9-20020adff109000000b00341de3abb0esm11994830wro.20.2024.04.15.06.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 06:01:42 -0700 (PDT)
-Date: Mon, 15 Apr 2024 15:01:42 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Anup Patel <anup@brainfault.org>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Atish Patra <atishp@atishpatra.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, Will Deacon <will@kernel.org>, 
-	x86@kernel.org
-Subject: Re: [PATCH v6 01/24] RISC-V: Fix the typo in Scountovf CSR name
-Message-ID: <20240415-b899e62329c901f59db9f146@orel>
-References: <20240411000752.955910-1-atishp@rivosinc.com>
- <20240411000752.955910-2-atishp@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VAAFwy6j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713186123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=elCvWszvv8dhzDRJndbHppgZOzQPbalPx1y/c7jKkW8=;
+	b=VAAFwy6jzUkG65t71jeCJiHHTeRMZY7CdnlIfNgIZysWcSNlzEM90G+MqFtfJxcNR0pU6e
+	wc32NNcWOfcWmlIJpCLCD/yq2sVPotUl43MM67kGqrqAw8aAtEuQdG6f94z4AEerBHTO7f
+	RxHZnZ9/x1DoV7kxuJLnrIMGG7ZvNc0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-Jnl2YFweMG62snuvcQt6lg-1; Mon,
+ 15 Apr 2024 09:01:57 -0400
+X-MC-Unique: Jnl2YFweMG62snuvcQt6lg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A08DB29AB426;
+	Mon, 15 Apr 2024 13:01:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.182])
+	by smtp.corp.redhat.com (Postfix) with SMTP id EE72C1C06701;
+	Mon, 15 Apr 2024 13:01:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 15 Apr 2024 15:00:31 +0200 (CEST)
+Date: Mon, 15 Apr 2024 15:00:24 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	John Stultz <jstultz@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH] posix-timers: Handle returned errors poperly in
+ [i]timer_delete()
+Message-ID: <20240415130023.GA27124@redhat.com>
+References: <20240410164558.316665885@linutronix.de>
+ <8734rm95ah.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240411000752.955910-2-atishp@rivosinc.com>
+In-Reply-To: <8734rm95ah.fsf@somnus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On Wed, Apr 10, 2024 at 05:07:29PM -0700, Atish Patra wrote:
-> The counter overflow CSR name is "scountovf" not "sscountovf".
-> 
-> Fix the csr name.
-> 
-> Fixes: 4905ec2fb7e6 ("RISC-V: Add sscofpmf extension support")
-> Reviewed-by: Clément Léger <cleger@rivosinc.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  arch/riscv/include/asm/csr.h | 2 +-
->  drivers/perf/riscv_pmu_sbi.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-> index 2468c55933cd..9d1b07932794 100644
-> --- a/arch/riscv/include/asm/csr.h
-> +++ b/arch/riscv/include/asm/csr.h
-> @@ -281,7 +281,7 @@
->  #define CSR_HPMCOUNTER30H	0xc9e
->  #define CSR_HPMCOUNTER31H	0xc9f
->  
-> -#define CSR_SSCOUNTOVF		0xda0
-> +#define CSR_SCOUNTOVF		0xda0
->  
->  #define CSR_SSTATUS		0x100
->  #define CSR_SIE			0x104
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 8cbe6e5f9c39..3e44d2fb8bf8 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-> @@ -27,7 +27,7 @@
->  
->  #define ALT_SBI_PMU_OVERFLOW(__ovl)					\
->  asm volatile(ALTERNATIVE_2(						\
-> -	"csrr %0, " __stringify(CSR_SSCOUNTOVF),			\
-> +	"csrr %0, " __stringify(CSR_SCOUNTOVF),				\
->  	"csrr %0, " __stringify(THEAD_C9XX_CSR_SCOUNTEROF),		\
->  		THEAD_VENDOR_ID, ERRATA_THEAD_PMU,			\
->  		CONFIG_ERRATA_THEAD_PMU,				\
-> -- 
-> 2.34.1
+On 04/15, Anna-Maria Behnsen wrote:
 >
+> timer_delete_hook() returns -EINVAL when the clock or the timer_del
+> callback of the clock does not exist. This return value is not handled by
+> the callsites timer_delete() and itimer_delete().
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+IIUC this shouldn't happen? timer_delete_hook() WARN()s in this case,
+not sure we need to return this error to userspace...
+
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -1009,6 +1009,7 @@ SYSCALL_DEFINE1(timer_delete, timer_t, t
+>  {
+>  	struct k_itimer *timer;
+>  	unsigned long flags;
+> +	int ret;
+>  
+>  	timer = lock_timer(timer_id, &flags);
+>  
+> @@ -1019,7 +1020,11 @@ SYSCALL_DEFINE1(timer_delete, timer_t, t
+>  	/* Prevent signal delivery and rearming. */
+>  	timer->it_signal_seq++;
+>  
+> -	if (unlikely(timer_delete_hook(timer) == TIMER_RETRY)) {
+> +	ret = timer_delete_hook(timer);
+> +	if (ret < 0)
+> +		return ret;
+
+unlock_timer() ?
+
+>  static void itimer_delete(struct k_itimer *timer)
+>  {
+>  	unsigned long flags;
+> +	int ret;
+>  
+>  	/*
+>  	 * irqsave is required to make timer_wait_running() work.
+> @@ -1054,13 +1060,17 @@ static void itimer_delete(struct k_itime
+>  	spin_lock_irqsave(&timer->it_lock, flags);
+>  
+>  retry_delete:
+> +	ret = timer_delete_hook(timer);
+> +	if (WARN_ON_ONCE(ret < 0))
+> +		return;
+
+the same.
+
+Oleg.
+
