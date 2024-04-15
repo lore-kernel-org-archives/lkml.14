@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E121553B9;
-	Mon, 15 Apr 2024 18:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6660615573A;
+	Mon, 15 Apr 2024 18:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713206834; cv=none; b=U1ZRb9jCWLly29h7LJ2NV1ONnp318GRf5ZiM/cwzEbEBlAnUSTTrBc/SNWKd75DuYVxeNIaOTV+UeuO43WVM7E9ZJswatLgyPFbplkmXvO3GBoPpReiwbfc58DVxUcEZT7a/8kjrNSfX+39ihF5V/4COZw2HCKyLU8N3Pwiuj04=
+	t=1713206851; cv=none; b=nyR7cBVjW3d/d1kCWhba+hzwhmeV0W1mm4fMjdhJD3JcqZHzZXG314EFyi74jRnr2tahsueb99p1UzDp9ZEHMfXGRniqggpLGYd5JfgLpbqjcsWVzYspxOK32UlYcqoqiGzJjSyKEhQd0VjIq3OH/zQM/oiysP2SO9GQMHge43c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713206834; c=relaxed/simple;
-	bh=C2qyiGADw+gC+Ft/ZZHJ29hdNBa1l7Td5WbuGlH9vpg=;
+	s=arc-20240116; t=1713206851; c=relaxed/simple;
+	bh=CmCRntxAOyJpEjWjmS3uvE0pVpaC6G3JeaC/Yurx21c=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=KD+/4vzG49HSG+y10WX/imaAAJvIciK3UtiL12RDfy+1fvW/d4qyQgrvxGAzIOYF0k13nPEHvyqVbKaDoHOKLSIynsUdRyemNH5Igvz0ucz/S6/U/I3LMuWBPDcg69Qykwdj7LQEDIcpaTN/e3LZt7L/zWJ33Wu+CMlZMsnG6so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9IfzMpC; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=R1DAm/ACz5uCbMc6JoltocNSdpaaLSx4xGDJpHm/9+ARaZnzGD4AtplTeB7gQjuP8aADRdrhFQEb971UKyVt6gWQMOPweOABAlPd9FQ0oy3kjsN4XBT8F5ELA78VCHqFjAXhKB9zV2fVStt+omnBAogV0++7pnUVmmik7RnDVI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtQusi48; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9IfzMpC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 933C2C2BD11;
-	Mon, 15 Apr 2024 18:47:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtQusi48"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E782C113CC;
+	Mon, 15 Apr 2024 18:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713206833;
-	bh=C2qyiGADw+gC+Ft/ZZHJ29hdNBa1l7Td5WbuGlH9vpg=;
+	s=k20201202; t=1713206850;
+	bh=CmCRntxAOyJpEjWjmS3uvE0pVpaC6G3JeaC/Yurx21c=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=A9IfzMpCmrBPoM0NqB4VTba0T3/IBkWc6VWPapKECLtZko/XloDRryQxIFfKq8O6Q
-	 WNRpa0O5w1+JRRXCTGDf+5Cr0lXPf76kDf2Ix5bo7TziOyYDJFLfHpsWMjcdgTxf4u
-	 5KLoM3bthozHti+qovaMGqaIP0he7HZQu1syN0uHNBe5lQhxZavAlqKjpJ1Q2GII5U
-	 VPqGqvs4TkdLt1pFJDRf1QzJcTmWnvbD7HpwboKee9/oOoKUb7gRWpkLytahqwZKaa
-	 7FEhzNKlrb2xKFdyGpv8NkF40Jdk3mMoF/JJYN0VcnwjcKbjRJA52V6rDPSs+VGdQB
-	 W8Y5jG5RnaV5Q==
-Date: Mon, 15 Apr 2024 13:47:10 -0500
+	b=EtQusi48nLmMhw2XbEmprdgTdKph9VD4wnAV7GHMIfzg/wH0ymzDIJaUrLKK0v+lI
+	 jhw/0XDCtG5Dnf7GnD4QMLOQ9hvcs+e1bnAEk/mzJkKHKyGcEU4hPy+yAorP7WgtFh
+	 KXR3Xhf27v+dtQVNLfnB5dx1hIgQBJZB5AnvfjZjaoVcKajvk4eOecJHg/DxMO73Zt
+	 cfxF6ucYn5S+Bm3gkA37vSF+YgEILlK6e72ZDjY6wzroe2rnyNDDiRN5kmWrr7f51w
+	 nXrjgUefws5ve61WI8SsiapXLSvjzLfJ7QFFQi/4TWjG8lC3wIo4yfRZjyeqhRDZeP
+	 fdqQugObSwnaA==
+Date: Mon, 15 Apr 2024 13:47:27 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,52 +36,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Rob Herring <robh@kernel.org>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20240414151135.1774981-1-jonas@kwiboo.se>
-References: <20240414151135.1774981-1-jonas@kwiboo.se>
-Message-Id: <171320634867.4962.13146446067412634937.robh@kernel.org>
-Subject: Re: [PATCH v2 0/3] arm64: dts: rockchip: Add Radxa ZERO 3W/3E
+To: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+Cc: Tom Brautaset <tbrautaset@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, 
+ Rafal Milecki <zajec5@gmail.com>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
+In-Reply-To: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+Message-Id: <171320635265.5077.18171651110950488504.robh@kernel.org>
+Subject: Re: [PATCH 0/4] Document ASUS RT-AC3200 and ASUS RT-AC5300 and add
+ device trees
 
 
-On Sun, 14 Apr 2024 15:11:26 +0000, Jonas Karlman wrote:
-> This series adds initial support for the Radxa ZERO 3W/3E boards.
+On Sun, 14 Apr 2024 14:45:59 +0300, Arınç ÜNAL wrote:
+> Hello.
 > 
-> The Radxa ZERO 3W/3E is an ultra-small, high-performance single board
-> computer based on the Rockchip RK3566, with a compact form factor and
-> rich interfaces.
+> This patch series documents the compatible strings for ASUS RT-AC3200 and
+> ASUS RT-AC5300, and adds the device trees for them.
 > 
-> Schematic for ZERO 3W and ZERO 3E can be found at:
-> https://dl.radxa.com/zero3/docs/hw/3w/radxa_zero_3w_v1110_schematic.pdf
-> https://dl.radxa.com/zero3/docs/hw/3e/radxa_zero_3e_v1200_schematic.pdf
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
+> Arınç ÜNAL (4):
+>       dt-bindings: arm: bcm: add bindings for ASUS RT-AC3200
+>       dt-bindings: arm: bcm: add bindings for ASUS RT-AC5300
+>       ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
+>       ARM: dts: BCM5301X: Add DT for ASUS RT-AC5300
 > 
-> Changes in v2:
-> - Collect acked-by tag
-> - Add to Makefile
-> - Add patch to fix #sound-dai-cells warning
+>  .../devicetree/bindings/arm/bcm/brcm,bcm4708.yaml  |   2 +
+>  arch/arm/boot/dts/broadcom/Makefile                |   2 +
+>  .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   | 164 ++++++++++++++++++++
+>  .../boot/dts/broadcom/bcm47094-asus-rt-ac5300.dts  | 170 +++++++++++++++++++++
+>  4 files changed, 338 insertions(+)
+> ---
+> base-commit: 011d79ef1cfad701c2d8e7e80d8c77523af9c771
+> change-id: 20240408-for-soc-asus-rt-ac3200-ac5300-5d6efc2c497b
 > 
-> Jonas Karlman (3):
->   dt-bindings: arm: rockchip: Add Radxa ZERO 3W/3E
->   arm64: dts: rockchip: Add Radxa ZERO 3W/3E
->   dt-bindings: display: rockchip,dw-hdmi: Fix #sound-dai-cells warning
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |   7 +
->  .../display/rockchip/rockchip,dw-hdmi.yaml    |   4 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   2 +
->  .../dts/rockchip/rk3566-radxa-zero-3e.dts     |  41 ++
->  .../dts/rockchip/rk3566-radxa-zero-3w.dts     |  26 +
->  .../boot/dts/rockchip/rk3566-radxa-zero3.dtsi | 443 ++++++++++++++++++
->  6 files changed, 523 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3e.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3w.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero3.dtsi
-> 
+> Best regards,
 > --
-> 2.43.2
-> 
+> Arınç ÜNAL <arinc.unal@arinc9.com>
 > 
 > 
 
@@ -100,12 +95,70 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y rockchip/rk3566-radxa-zero-3e.dtb rockchip/rk3566-radxa-zero-3w.dtb' for 20240414151135.1774981-1-jonas@kwiboo.se:
+New warnings running 'make CHECK_DTBS=y broadcom/bcm4709-asus-rt-ac3200.dtb broadcom/bcm47094-asus-rt-ac5300.dtb' for 20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com:
 
-arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3w.dtb: hdmi@fe0a0000: Unevaluated properties are not allowed ('#sound-dai-cells' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
-arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3e.dtb: hdmi@fe0a0000: Unevaluated properties are not allowed ('#sound-dai-cells' was unexpected)
-	from schema $id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: /axi@18000000: failed to match any schema with compatible: ['brcm,bus-axi']
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@12000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@12000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@13000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@13000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: /axi@18000000: failed to match any schema with compatible: ['brcm,bus-axi']
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@14000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: pcie@14000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@12000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@12000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@13000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@13000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@14000: 'device_type' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: pcie@14000: 'ranges' is a required property
+	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: ports:port@5: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: ports:port@5: 'oneOf' conditional failed, one must be fixed:
+	'fixed-link' is a required property
+	'phy-handle' is a required property
+	'managed' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: ports:port@7: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: ports:port@7: 'oneOf' conditional failed, one must be fixed:
+	'fixed-link' is a required property
+	'phy-handle' is a required property
+	'managed' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: ports:port@8: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm4709-asus-rt-ac3200.dtb: ethernet-switch@18007000: Unevaluated properties are not allowed ('ports' was unexpected)
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: ports:port@5: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: ports:port@5: 'oneOf' conditional failed, one must be fixed:
+	'fixed-link' is a required property
+	'phy-handle' is a required property
+	'managed' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: ports:port@7: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: ports:port@7: 'oneOf' conditional failed, one must be fixed:
+	'fixed-link' is a required property
+	'phy-handle' is a required property
+	'managed' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: ports:port@8: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
+arch/arm/boot/dts/broadcom/bcm47094-asus-rt-ac5300.dtb: ethernet-switch@18007000: Unevaluated properties are not allowed ('ports' was unexpected)
+	from schema $id: http://devicetree.org/schemas/net/dsa/brcm,b53.yaml#
 
 
 
