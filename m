@@ -1,169 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9A979DD5;
-	Mon, 15 Apr 2024 16:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C285478C88;
+	Mon, 15 Apr 2024 16:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713197034; cv=none; b=IFoVLQpFpHZ4WYFea8INjLrnp/eI++Cw2NYq+lpRSd/CyvvoswoVkZLxj0mZlO9mZJhfANQEjg2rrHbz9DJNHCM85RPwxoLZNM0Zn9w3oOSG1TxR8ijczCXUuq37qiFjTVT7Q29JSJVMnNNpvLuVt1S2bV9YXp0C0AuUC3MoxOQ=
+	t=1713197094; cv=none; b=jwYqpZxchoolH8PXD8ilCw9LXF2FCf/q/R+nh7RRFXfv3sC+/VWKDSlW8U4kjaxN77UiLyZpvCPE+19cdCs8aO5bJO9Pryb93KtXSBG7vTk31myW5YpKkIduuV8OFMnCBh41MvxXW/ON6Y5Sf5HEnNIoBLvYfw90UER3+lWMrpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713197034; c=relaxed/simple;
-	bh=eRNqsnu2gggpUPFWgp9U5SWpDCENJohEVqbf6eu8y30=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oBvEs7Kqtnl71qT7CdA7IWp3PtOuECgKMj4v9msHQsyPoGdsT0ztpb31ff3xoU0nLdhNeRxFPfkGwYGMJAIbh63mJKiE4mdhzk0cWgZOBXlska0x/OOJinzioqCTPBrQANd5J+u5EsRRJP2MRfrb9coxnNVga9t0oKocjNNTZiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BApmuDAt; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713197094; c=relaxed/simple;
+	bh=vFMJFGnJyanRDxAtVKIrLAB0ePFQhQ+GU0wvYeD6asg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=P+rmSpMm5uF0xf8M5YWnl5Koe5mP7zLYZoYPUeP3X+N7BjvYN1G9xQjIe6s8YRBQ/FftE1ecrDt6rubMDNBr8qKfzzfe7SE5HKdWSc0NjAegXca3f3iG91hp6x6fGCwf5nvON9rUfetIsdplNIuwgoSkL32hUxXREn8I9y8ORJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDD9FIlL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BApmuDAt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713197034; x=1744733034;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=eRNqsnu2gggpUPFWgp9U5SWpDCENJohEVqbf6eu8y30=;
-  b=BApmuDAtNAZ92w2IHlP1JVthdPcAWTHRuTV97fXabuO+GiSiq+o8lyuS
-   z/nQpMQLk8ffHqc3VWBvFNQco8iulXe+vJ4Dzqeu1/06ljoqkBFdOMrCH
-   njLjZv/GQrTfsRi4qRQIIxeSZIbY6ZCzQNuQMw1WxzDH12JroOrk1hZDu
-   Q9IlY2QNUoar9hmrbzh5yyVFPRh2+s6Yq8Fl3q6VD2yOgEsjjx7SRXIJP
-   nkP4YsL98AmaLg3MSQSjBigpVHfX/GaoyrEAfASeqqUc338SkR3Ihg8b7
-   vPKKpePQSgAPWJZmbpqyQtvo6rKBwA5E60WdgS4D7e7LUEoWnr37t6u4O
-   A==;
-X-CSE-ConnectionGUID: OO3W3y6OT82G3tK6N+7qbg==
-X-CSE-MsgGUID: 9rHW795JR26f0GnLN3l8HA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8703769"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="8703769"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:03:14 -0700
-X-CSE-ConnectionGUID: cV6mMS5KT5+Khu71lQelUQ==
-X-CSE-MsgGUID: pEs01NjfSe+wVT96RpHFcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="26624362"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 09:03:09 -0700
-Received: from [10.213.164.211] (kliang2-mobl1.ccr.corp.intel.com [10.213.164.211])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 07FDE206D892;
-	Mon, 15 Apr 2024 09:03:06 -0700 (PDT)
-Message-ID: <ab2953b7-18fd-4b4c-a83b-ab243e2a21e1@linux.intel.com>
-Date: Mon, 15 Apr 2024 12:03:05 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDD9FIlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDBE1C113CC;
+	Mon, 15 Apr 2024 16:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713197094;
+	bh=vFMJFGnJyanRDxAtVKIrLAB0ePFQhQ+GU0wvYeD6asg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=UDD9FIlLCszfXS3i6dFnz0lKTpcFcfRbhntScaXy5d8gUHRFxwjLQKQaZfNwW2Ryh
+	 7nRQd01d/K8fA8QLWuhYIw7RomrBeK7/cl3xRKTz859GMQynZORYQCqiO75PMqkdRf
+	 +BUTAh6yr/W/nmyKW9FwVXMQZdPmytnIP1dup0cjPAjff97Tbvon/QKh1vsF+nMtzB
+	 ObuR8kiYpMWR1zegA/rSJZN3pZbbndudpyNlwyYZ66r11OncXDF2bF2KoIjP2+aI73
+	 LIjIcUHWh+XmybbioeXlZgeGhS+U01be1Eu0rrhDk3YdVgzMEpKB2Wa6V2P4LD2Va8
+	 5N+mVpwTelLeg==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andreas Dilger <adilger@dilger.ca>, Al Viro <viro@zeniv.linux.org.uk>,
+ Nam Cao <namcao@linutronix.de>, linux-fsdevel
+ <linux-fsdevel@vger.kernel.org>, Jan Kara <jack@suse.cz>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>,
+ linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>, Ext4
+ Developers List <linux-ext4@vger.kernel.org>, Conor Dooley
+ <conor@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: riscv32 EXT4 splat, 6.8 regression?
+In-Reply-To: <20240415-festland-unattraktiv-2b5953a6dbc9@brauner>
+References: <878r1ibpdn.fsf@all.your.base.are.belong.to.us>
+ <20240413164318.7260c5ef@namcao>
+ <22E65CA5-A2C0-44A3-AB01-7514916A18FC@dilger.ca>
+ <20240414021555.GQ2118490@ZenIV>
+ <887E261B-3C76-4CD9-867B-5D087051D004@dilger.ca>
+ <87v84kujec.fsf@all.your.base.are.belong.to.us>
+ <20240415-festland-unattraktiv-2b5953a6dbc9@brauner>
+Date: Mon, 15 Apr 2024 18:04:50 +0200
+Message-ID: <87le5e393x.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, mizhang@google.com, kan.liang@intel.com,
- zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, jmattson@google.com,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
- <ZhgmrczGpccfU-cI@google.com>
- <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
- <ZhmIrQQVgblrhCZs@google.com>
- <2342a4e2-2834-48e2-8403-f0050481e59e@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <2342a4e2-2834-48e2-8403-f0050481e59e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Christian Brauner <brauner@kernel.org> writes:
 
+> On Sun, Apr 14, 2024 at 04:08:11PM +0200, Bj=C3=B6rn T=C3=B6pel wrote:
+>> Andreas Dilger <adilger@dilger.ca> writes:
+>>=20
+>> > On Apr 13, 2024, at 8:15 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>> >>=20
+>> >> On Sat, Apr 13, 2024 at 07:46:03PM -0600, Andreas Dilger wrote:
+>> >>=20
+>> >>> As to whether the 0xfffff000 address itself is valid for riscv32 is
+>> >>> outside my realm, but given that RAM is cheap it doesn't seem unlike=
+ly
+>> >>> to have 4GB+ of RAM and want to use it all.  The riscv32 might consi=
+der
+>> >>> reserving this page address from allocation to avoid similar issues =
+in
+>> >>> other parts of the code, as is done with the NULL/0 page address.
+>> >>=20
+>> >> Not a chance.  *Any* page mapped there is a serious bug on any 32bit
+>> >> box.  Recall what ERR_PTR() is...
+>> >>=20
+>> >> On any architecture the virtual addresses in range (unsigned long)-51=
+2..
+>> >> (unsigned long)-1 must never resolve to valid kernel objects.
+>> >> In other words, any kind of wraparound here is asking for an oops on
+>> >> attempts to access the elements of buffer - kernel dereference of
+>> >> (char *)0xfffff000 on a 32bit box is already a bug.
+>> >>=20
+>> >> It might be getting an invalid pointer, but arithmetical overflows
+>> >> are irrelevant.
+>> >
+>> > The original bug report stated that search_buf =3D 0xfffff000 on entry,
+>> > and I'd quoted that at the start of my email:
+>> >
+>> > On Apr 12, 2024, at 8:57 AM, Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> =
+wrote:
+>> >> What I see in ext4_search_dir() is that search_buf is 0xfffff000, and=
+ at
+>> >> some point the address wraps to zero, and boom. I doubt that 0xfffff0=
+00
+>> >> is a sane address.
+>> >
+>> > Now that you mention ERR_PTR() it definitely makes sense that this last
+>> > page HAS to be excluded.
+>> >
+>> > So some other bug is passing the bad pointer to this code before this
+>> > error, or the arch is not correctly excluding this page from allocatio=
+n.
+>>=20
+>> Yeah, something is off for sure.
+>>=20
+>> (FWIW, I manage to hit this for Linus' master as well.)
+>>=20
+>> I added a print (close to trace_mm_filemap_add_to_page_cache()), and for
+>> this BT:
+>>=20
+>>   [<c01e8b34>] __filemap_add_folio+0x322/0x508
+>>   [<c01e8d6e>] filemap_add_folio+0x54/0xce
+>>   [<c01ea076>] __filemap_get_folio+0x156/0x2aa
+>>   [<c02df346>] __getblk_slow+0xcc/0x302
+>>   [<c02df5f2>] bdev_getblk+0x76/0x7a
+>>   [<c03519da>] ext4_getblk+0xbc/0x2c4
+>>   [<c0351cc2>] ext4_bread_batch+0x56/0x186
+>>   [<c036bcaa>] __ext4_find_entry+0x156/0x578
+>>   [<c036c152>] ext4_lookup+0x86/0x1f4
+>>   [<c02a3252>] __lookup_slow+0x8e/0x142
+>>   [<c02a6d70>] walk_component+0x104/0x174
+>>   [<c02a793c>] path_lookupat+0x78/0x182
+>>   [<c02a8c7c>] filename_lookup+0x96/0x158
+>>   [<c02a8d76>] kern_path+0x38/0x56
+>>   [<c0c1cb7a>] init_mount+0x5c/0xac
+>>   [<c0c2ba4c>] devtmpfs_mount+0x44/0x7a
+>>   [<c0c01cce>] prepare_namespace+0x226/0x27c
+>>   [<c0c011c6>] kernel_init_freeable+0x286/0x2a8
+>>   [<c0b97ab8>] kernel_init+0x2a/0x156
+>>   [<c0ba22ca>] ret_from_fork+0xe/0x20
+>>=20
+>> I get a folio where folio_address(folio) =3D=3D 0xfffff000 (which is
+>> broken).
+>>=20
+>> Need to go into the weeds here...
+>
+> I don't see anything obvious that could explain this right away. Did you
+> manage to reproduce this on any other architecture and/or filesystem?
+>
+> Fwiw, iirc there were a bunch of fs/buffer.c changes that came in
+> through the mm/ layer between v6.7 and v6.8 that might also be
+> interesting. But really I'm poking in the dark currently.
 
-On 2024-04-12 4:56 p.m., Liang, Kan wrote:
->> What if perf had a global knob to enable/disable mediate PMU support?  Then when
->> KVM is loaded with enable_mediated_true, call into perf to (a) check that there
->> are no existing !exclude_guest events (this part could be optional), and (b) set
->> the global knob to reject all new !exclude_guest events (for the core PMU?).
->>
->> Hmm, or probably better, do it at VM creation.  That has the advantage of playing
->> nice with CONFIG_KVM=y (perf could reject the enabling without completely breaking
->> KVM), and not causing problems if KVM is auto-probed but the user doesn't actually
->> want to run VMs.
-> I think it should be doable, and may simplify the perf implementation.
-> (The check in the schedule stage should not be necessary anymore.)
-> 
-> With this, something like NMI watchdog should fail the VM creation. The
-> user should either disable the NMI watchdog or use a replacement.
-> 
-> Thanks,
-> Kan
->> E.g. (very roughly)
->>
->> int x86_perf_get_mediated_pmu(void)
->> {
->> 	if (refcount_inc_not_zero(...))
->> 		return 0;
->>
->> 	if (<system wide events>)
->> 		return -EBUSY;
->>
->> 	<slow path with locking>
->> }
->>
->> void x86_perf_put_mediated_pmu(void)
->> {
->> 	if (!refcount_dec_and_test(...))
->> 		return;
->>
->> 	<slow path with locking>
->> }
+Thanks for getting back! Spent some more time one it today.
 
+It seems that the buddy allocator *can* return a page with a VA that can
+wrap (0xfffff000 -- pointed out by Nam and myself).
 
-I think the locking should include the refcount check and system wide
-event check as well.
-It should be possible that two VMs are created very close.
-The second creation may mistakenly return 0 if there is no lock.
+Further, it seems like riscv32 indeed inserts a page like that to the
+buddy allocator, when the memblock is free'd:
 
-I plan to do something as below (not test yet).
+  | [<c024961c>] __free_one_page+0x2a4/0x3ea
+  | [<c024a448>] __free_pages_ok+0x158/0x3cc
+  | [<c024b1a4>] __free_pages_core+0xe8/0x12c
+  | [<c0c1435a>] memblock_free_pages+0x1a/0x22
+  | [<c0c17676>] memblock_free_all+0x1ee/0x278
+  | [<c0c050b0>] mem_init+0x10/0xa4
+  | [<c0c1447c>] mm_core_init+0x11a/0x2da
+  | [<c0c00bb6>] start_kernel+0x3c4/0x6de
 
-+/*
-+ * Currently invoked at VM creation to
-+ * - Check whether there are existing !exclude_guest system wide events
-+ *   of PMU with PERF_PMU_CAP_MEDIATED_VPMU
-+ * - Set nr_mediated_pmu to prevent !exclude_guest event creation on
-+ *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
-+ *
-+ * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
-+ * still owns all the PMU resources.
-+ */
-+int x86_perf_get_mediated_pmu(void)
-+{
-+	int ret = 0;
-+	mutex_lock(&perf_mediated_pmu_mutex);
-+	if (refcount_inc_not_zero(&nr_mediated_pmu_vms))
-+		goto end;
-+
-+	if (atomic_read(&nr_include_guest_events)) {
-+		ret = -EBUSY;
-+		goto end;
+Here, a page with VA 0xfffff000 is a added to the freelist. We were just
+lucky (unlucky?) that page was used for the page cache.
+
+A nasty patch like:
+--8<--
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 549e76af8f82..a6a6abbe71b0 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2566,6 +2566,9 @@ void __init set_dma_reserve(unsigned long new_dma_res=
+erve)
+ void __init memblock_free_pages(struct page *page, unsigned long pfn,
+ 							unsigned int order)
+ {
++	if ((long)page_address(page) =3D=3D 0xfffff000L) {
++		return; // leak it
 +	}
-+	refcount_inc(&nr_mediated_pmu_vms);
-+end:
-+	mutex_unlock(&perf_mediated_pmu_mutex);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(x86_perf_get_mediated_pmu);
-+
-+void x86_perf_put_mediated_pmu(void)
-+{
-+	mutex_lock(&perf_mediated_pmu_mutex);
-+	refcount_dec(&nr_mediated_pmu_vms);
-+	mutex_unlock(&perf_mediated_pmu_mutex);
-+}
-+EXPORT_SYMBOL_GPL(x86_perf_put_mediated_pmu);
+=20
+ 	if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT)) {
+ 		int nid =3D early_pfn_to_nid(pfn);
+--8<--
+
+...and it's gone.
+
+I need to think more about what a proper fix is. Regardless; Christian,
+Al, and Ted can all relax. ;-)
 
 
-Thanks,
-Kan
+Bj=C3=B6rn
