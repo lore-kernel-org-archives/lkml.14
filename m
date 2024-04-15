@@ -1,249 +1,90 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA67E17BA4
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A142A1F600
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 06:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713161302; cv=none; b=BUWjuB0ZlrcO4BkTJBDA0wozuSN2x4h5Y8ozhuNXrXIYVVb2Yn//qtI7UTnnkMjMFrUpMWiCUjW3zsWMQXBqeaZlPg1HNJOQomRCrkoCCMpMBL8PPk8/8Mwy2ZY9QykNmWcGVI1oJHZ1Ka+E7KVHNV/c7TM3hKCJhvaQRXj4HV8=
+	t=1713161312; cv=none; b=PfMbmxd/m+YvPMy4efApeQrhRON66ORGyB3x8dG/E/PP+d/Gm6hAtnqDs+C6+bAkC38KDxpqw7pdczsEISqhnZfuTtgWx7NjUGZthEk1Tmvb+TpA+vfbGnRj9kBAAIzEjNiqFR0n760Uqe/TUHN/r73GZDQML+/qA7NUQz/uffk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713161302; c=relaxed/simple;
-	bh=bPj6QlcLi4XrRHYufTRYNiCGvg+NUZoj2xCvdt9IAsc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D0udB9ErHfltj0sLWjcbLDXSy8q9bg4XgiwHRLBZ9yYfyVLbuqtQ3LSiin9p9l2dAVDjUL1yDqxRqVjuG8HzOEyGQcXC75DpwRH75pE5DM7tnWyyFzlJHwoyDgK8LtIyKSBKSUUMsbda0ZohKKtKdrkC8ZxiBg4C0Y8QMJAQFL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 43F67PNl023199;
-	Mon, 15 Apr 2024 14:07:25 +0800 (+08)
-	(envelope-from Dongliang.Cui@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VHxTs55Y8z2K6J0J;
-	Mon, 15 Apr 2024 14:05:05 +0800 (CST)
-Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 15 Apr 2024 14:07:23 +0800
-From: Dongliang Cui <dongliang.cui@unisoc.com>
-To: <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <ebiggers@kernel.org>
-CC: <ke.wang@unisoc.com>, <hongyu.jin.cn@gmail.com>, <niuzhiguo84@gmail.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cuidongliang390@gmail.com>, Dongliang Cui <dongliang.cui@unisoc.com>
-Subject: [PATCH RESEND] block: Add ioprio to block_rq tracepoint
-Date: Mon, 15 Apr 2024 14:07:10 +0800
-Message-ID: <20240415060710.1199009-1-dongliang.cui@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713161312; c=relaxed/simple;
+	bh=Dh0BEONubHSWkUhbrgjErptQ214kGH+jO5kDL2sMEio=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PH9YiAC8x2KmcuD0fOzjbQWyMQrfvyxpqMO3wuj3FO/R3A39f2TuYPO27wAE0i9F5NitwxY0iBsySbQaS1bL0aLYnWOyeWC2W5T6IJfUhSCmHpEnLXBAkFNxVwTy+9KOp3f9X9sWQ5CdprU3LF+67penKlE0C4K39IZQ9c0X5o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ty0ZYcFK; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ty0ZYcFK"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e2e851794so9306a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2024 23:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713161308; x=1713766108; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dh0BEONubHSWkUhbrgjErptQ214kGH+jO5kDL2sMEio=;
+        b=ty0ZYcFKVu229Bkm8lx8lPlYlAfWH7kbODam5GwXEu4auuFwz1aPJ2SKImhWqzlxba
+         Pb/9OXACJjNPJU5xqvfLsR4k23qAvOwzpTYCybq1fcSdIK58lBZs21yCKk0+JvsWQGF8
+         CYb6W2oJHZL0MjO1+B8zrsTV7LGeV1/3LCPVX1NOzjn9Nb6csp2sLzjdbNipwJI2SFzo
+         QjiW5MCmYNGofQLqD6gba+JrWa1Xj0ObSIa6ARB62cLwLF36+dxuU+f2RpI9eXOImzro
+         qYDSDbC+gyAIBTL1A4MhX/tBbo9UHgmWxsM7Qu2N3npXRKePIXUACG7wFyxJjSl/8dbC
+         OOtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713161308; x=1713766108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dh0BEONubHSWkUhbrgjErptQ214kGH+jO5kDL2sMEio=;
+        b=CIiRvr+4uLdu7Rk+0x1YLsSSkI5U+FNv3vUEj6TqT2TUm7Ok3IQUiLlHzLTYyDnfxC
+         2gDw1dK7jkkMeUR5cMSH3g8iI0+6N+nHLy10jDfNlJ98J5HpaE2gUBitn31iKjemBRhJ
+         yNcaGwdY48b8vp3ryuHjutQLynk9rz8x0kK3sgocNLHnUceH6CuVb6TRx/ReKZtBJ7Lw
+         oqhsFeUHnV1zGOUMaFwf4lxImTWQao0vA1Z1tfJlj0oOhiNgCIVO0j9HFdB5pu5v9Msc
+         MzKQaCOJtGrTAHZEQfcsfoGr8PE9t4+dYKXElnmsVySZLJqBQat13tm9Hi/FUiauLmlc
+         FTtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrYcysg7LBXryuWBGrhg7Yr83cnlujXh+OO7FQjel1qaDbjUkROOGC3MEQatk1RtTi70mTdxEikvuYRbjMhfXZyqPmYu+uUu1DmGfX
+X-Gm-Message-State: AOJu0Yxq+JMolfkWXisBkS0giTwNSsJJqEIJ/KY53bV9weUA3vngWrnW
+	0/TJp2Bx+9O+XrO1s7hTYHAvAZsD0V5YAu/sfiNC/jBo3nTTZ+R82PCwdrJgTsix5A+Ge14CG7R
+	VdDxEp5Jytjzak4nj2/Ae6K47YKdcrgO4mqfL
+X-Google-Smtp-Source: AGHT+IGkKQ4N0s3PGi6BIB8WtJWu2/RvtunZs1E8+AV4HgGQK/X0CNWjK8z99EceRmHAgAj1bJOUFAbAysAoWg64+Ns=
+X-Received: by 2002:a05:6402:34cd:b0:570:2bbc:77c6 with SMTP id
+ w13-20020a05640234cd00b005702bbc77c6mr54200edc.3.1713161307799; Sun, 14 Apr
+ 2024 23:08:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240415020247.2207781-1-lei.chen@smartx.com>
+In-Reply-To: <20240415020247.2207781-1-lei.chen@smartx.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 15 Apr 2024 08:08:16 +0200
+Message-ID: <CANn89i+PMxOks+ZvHendXovZ_CHFJcUyqT1GLpSk=2bwS4SjGw@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] tun: limit printing rate when illegal packet
+ received by tun dev
+To: Lei Chen <lei.chen@smartx.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Willem de Bruijn <willemb@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 43F67PNl023199
+Content-Transfer-Encoding: quoted-printable
 
-Sometimes we need to track the processing order of requests with
-ioprio set. So the ioprio of request can be useful information.
+On Mon, Apr 15, 2024 at 4:03=E2=80=AFAM Lei Chen <lei.chen@smartx.com> wrot=
+e:
+>
+> vhost_worker will call tun call backs to receive packets. If too many
+> illegal packets arrives, tun_do_read will keep dumping packet contents.
+> When console is enabled, it will costs much more cpu time to dump
+> packet and soft lockup will be detected.
+>
+> net_ratelimit mechanism can be used to limit the dumping rate.
+>
+> Fixes: ef3db4a59542 ("tun: avoid BUG, dump packet on GSO errors")
+> Signed-off-by: Lei Chen <lei.chen@smartx.com>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> ---
 
-Example：
-
-block_rq_insert: 8,0 WS 4096 () 16573296 + 8 rt,4 [highpool[1]]
-block_rq_issue: 8,0 WS 4096 () 16573296 + 8 rt,4 [kworker/7:0H]
-block_rq_complete: 8,0 WS () 16573296 + 8 rt,4 [0]
-
-Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
----
- include/linux/blktrace_api.h |  2 ++
- include/trace/events/block.h | 63 ++++++++++++++++++++++--------------
- kernel/trace/blktrace.c      | 11 +++++++
- 3 files changed, 51 insertions(+), 25 deletions(-)
-
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 122c62e561fc..adb0333efbdb 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -112,6 +112,8 @@ struct compat_blk_user_trace_setup {
- 
- void blk_fill_rwbs(char *rwbs, blk_opf_t opf);
- 
-+void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value);
-+
- static inline sector_t blk_rq_trace_sector(struct request *rq)
- {
- 	/*
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 0e128ad51460..1d41fade160a 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -10,7 +10,8 @@
- #include <linux/buffer_head.h>
- #include <linux/tracepoint.h>
- 
--#define RWBS_LEN	8
-+#define RWBS_LEN		8
-+#define IOPRIO_CLASS_LEN	8
- 
- #ifdef CONFIG_BUFFER_HEAD
- DECLARE_EVENT_CLASS(block_buffer,
-@@ -79,11 +80,13 @@ TRACE_EVENT(block_rq_requeue,
- 	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int, ioprio_value			)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -92,14 +95,16 @@ TRACE_EVENT(block_rq_requeue,
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, 0)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, 0)
- );
- 
- DECLARE_EVENT_CLASS(block_rq_completion,
-@@ -109,12 +114,14 @@ DECLARE_EVENT_CLASS(block_rq_completion,
- 	TP_ARGS(rq, error, nr_bytes),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__field(  int	,	error			)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__field(  int,		error				)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int,	ioprio_value			)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -124,14 +131,16 @@ DECLARE_EVENT_CLASS(block_rq_completion,
- 		__entry->error     = blk_status_to_errno(error);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u %s,%u [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->error)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, __entry->error)
- );
- 
- /**
-@@ -176,13 +185,15 @@ DECLARE_EVENT_CLASS(block_rq,
- 	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
--		__field(  dev_t,	dev			)
--		__field(  sector_t,	sector			)
--		__field(  unsigned int,	nr_sector		)
--		__field(  unsigned int,	bytes			)
--		__array(  char,		rwbs,	RWBS_LEN	)
--		__array(  char,         comm,   TASK_COMM_LEN   )
--		__dynamic_array( char,	cmd,	1		)
-+		__field(  dev_t,	dev				)
-+		__field(  sector_t,	sector				)
-+		__field(  unsigned int,	nr_sector			)
-+		__field(  unsigned int,	bytes				)
-+		__array(  char,		rwbs,	RWBS_LEN		)
-+		__array(  char,		ioprio_class, IOPRIO_CLASS_LEN	)
-+		__field(  unsigned int,	ioprio_value			)
-+		__array(  char,		comm,   TASK_COMM_LEN		)
-+		__dynamic_array( char,	cmd,	1			)
- 	),
- 
- 	TP_fast_assign(
-@@ -192,15 +203,17 @@ DECLARE_EVENT_CLASS(block_rq,
- 		__entry->bytes     = blk_rq_bytes(rq);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
-+		blk_fill_ioprio(rq->ioprio, __entry->ioprio_class, &__entry->ioprio_value);
- 		__get_str(cmd)[0] = '\0';
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
--	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
-+	TP_printk("%d,%d %s %u (%s) %llu + %u %s,%u [%s]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->comm)
-+		  __entry->nr_sector, __entry->ioprio_class,
-+		  __entry->ioprio_value, __entry->comm)
- );
- 
- /**
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..e55aa49f94db 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -19,6 +19,7 @@
- #include <linux/uaccess.h>
- #include <linux/list.h>
- #include <linux/blk-cgroup.h>
-+#include <linux/ioprio.h>
- 
- #include "../../block/blk.h"
- 
-@@ -26,6 +27,9 @@
- 
- #include "trace_output.h"
- 
-+/* Type of ioprio */
-+static char *classes[] = {"none", "rt", "be", "idle"};
-+
- #ifdef CONFIG_BLK_DEV_IO_TRACE
- 
- static unsigned int blktrace_seq __read_mostly = 1;
-@@ -1914,5 +1918,12 @@ void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
- }
- EXPORT_SYMBOL_GPL(blk_fill_rwbs);
- 
-+void blk_fill_ioprio(u32 ioprio, char *ioprio_class, u32 *ioprio_value)
-+{
-+	memcpy(ioprio_class, classes[(ioprio >> IOPRIO_CLASS_SHIFT) & 0x3], IOPRIO_CLASS_LEN);
-+	*ioprio_value = ioprio & 0xff;
-+}
-+EXPORT_SYMBOL_GPL(blk_fill_ioprio);
-+
- #endif /* CONFIG_EVENT_TRACING */
- 
--- 
-2.25.1
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
