@@ -1,326 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC59A74BF4;
-	Mon, 15 Apr 2024 12:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF6E1327E5;
+	Mon, 15 Apr 2024 12:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185451; cv=none; b=KL3XmkMTM46RzWGkzKJKN6e93EKFEJqLxQa+FMfuMm2H1SEZ8Ea0E7c1Md494697ciWnvZiNDDJEU0ivpc2WYM3cheboLV4+RZE+rLlVnobYnnsH/U2nB/JDJBMUTP3bKo5IZZaPHWkkO9JIlHpstuI9GYTaFsR6mVkR23TNMVc=
+	t=1713185456; cv=none; b=Do4KcE3zewSTPssH84jtvybzrC1jsvw1Wyogy7EI1bVGUpUvxRzVCXTYoHokJJkDT+2RRz/9upi92LeSZJIK8OPo/rdAV7pCG/PIW4pXQGIrxDljRQQy2ykU/O60nhXUOOmLiRSOS09noSJo54aVLOwFkIQ615x6GusCTos4qmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185451; c=relaxed/simple;
-	bh=c0l99pQmRL4ghWIaasELHdN2P/gEE0m6pZa2UBLGTbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n4pCNg35D6p3UMgzoFec1NpWp0P9kohfmC5i5/vlwtu2nQ2xF62mMZ3ilnbWoRsSDKMxIkvsquhXfLqN7OIZzC68Ous+R9n1yohHy9ObMJ6T0LMOPYm0yI4U7somge/MuOeywme0lBP0sxdGaaokQqfLH5kaMX7e2CUvIcow12Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKyjedFG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185456; c=relaxed/simple;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PnkZxZwAI2ReA/I21kYhZO68k8E2GwglyOUC1FxoKaO4NRFiBBOA3ZVyqJk1/vMOcFPDBPngQ/is/WXSESRHtRFb+bh+AuIYrJLLtvdXcROWNh+n6lwyPkbn0WVwZmA1UkJEwAACP4iKxrZ7Cc6WOlwv55BReOkEPdPiPK/bt3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1Rc9G1o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKyjedFG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FC1C2BD11;
-	Mon, 15 Apr 2024 12:50:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1Rc9G1o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE9ACC2BD10;
+	Mon, 15 Apr 2024 12:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185450;
-	bh=c0l99pQmRL4ghWIaasELHdN2P/gEE0m6pZa2UBLGTbg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GKyjedFGJ5CqyuuacIKrF39chpJpBxQBXja4Ox6Hn42D41Vxq+mFB7DJARrRjheUJ
-	 45x0hin7agEmYlJvLVgO6vplMEljylmKMbMwUnsgJSdkxSC6z13Tc+dI2weuDHXaJP
-	 rQfbyS1PA6ie8VTEc9H2wQMiQ+7fYDeF/4nJRoFml2R9I4Nk7aHUockmGGd8Jv3DMz
-	 bcktdZL9E3m99lDHGhRXHvzje8vt6jJjsKPGbzqfuf6QBcTjWJf9gXuPvAa5SprCqe
-	 nGJ7suwln3pJ2FOQqjJxRGI5pX0eJI8zXOFPRKsg/H04bzcvDIME8nEBtuYnsG878P
-	 zY1vROb61mDnw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v9 09/36] ftrace/function_graph: Pass fgraph_ops to function graph callbacks
-Date: Mon, 15 Apr 2024 21:50:44 +0900
-Message-Id: <171318544455.254850.3260609618082783963.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1713185455;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K1Rc9G1oooxQ8I5n5OLQ00pA7xBoU1/ACkGg1kdd1ZKdSHupQA7j0TfH/S8hSerSR
+	 6EnQmZ4THgDFnN4cQQl8kDOC99moeM28JipIqMqk49uIQei3yxn++kSajscHfIuhIf
+	 zl5DGe1JsqMSgeTu3fpTkKgKpAYTctlKSb6jQ57L9kU90Igb9ROeodWW2jOraPV7Dy
+	 77+5R+LqzDbAar8862gOkGmKaXaC0xG8SGWfnwflM5RiL6Inv8LeUzSw0CaQFGXUXG
+	 3w42RKpW9tCbGmYtwwrlasrLmbIZVTSCnNcX9YmKdufUaIwptgQfupSUjdcWWPp7bh
+	 MvSA9jQPizHrg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>,
+	syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 1/4] ALSA: line6: Zero-initialize message buffers
+Date: Mon, 15 Apr 2024 06:04:54 -0400
+Message-ID: <20240415100459.3127671-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.215
 Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-Pass the fgraph_ops structure to the function graph callbacks. This will
-allow callbacks to add a descriptor to a fgraph_ops private field that wil
-be added in the future and use it for the callbacks. This will be useful
-when more than one callback can be registered to the function graph tracer.
+[ Upstream commit c4e51e424e2c772ce1836912a8b0b87cd61bc9d5 ]
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+For shutting up spurious KMSAN uninit-value warnings, just replace
+kmalloc() calls with kzalloc() for the buffers used for
+communications.  There should be no real issue with the original code,
+but it's still better to cover.
+
+Reported-by: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/00000000000084b18706150bcca5@google.com
+Message-ID: <20240402063628.26609-1-tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Changes in v2:
-  - cleanup to set argument name on function prototype.
----
- include/linux/ftrace.h               |   10 +++++++---
- kernel/trace/fgraph.c                |   16 +++++++++-------
- kernel/trace/ftrace.c                |    6 ++++--
- kernel/trace/trace.h                 |    4 ++--
- kernel/trace/trace_functions_graph.c |   11 +++++++----
- kernel/trace/trace_irqsoff.c         |    6 ++++--
- kernel/trace/trace_sched_wakeup.c    |    6 ++++--
- kernel/trace/trace_selftest.c        |    5 +++--
- 8 files changed, 40 insertions(+), 24 deletions(-)
+ sound/usb/line6/driver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index bedc3c5fc36f..483876444d32 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1055,11 +1055,15 @@ struct ftrace_graph_ret {
- 	unsigned long long rettime;
- } __packed;
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index b67617b68e509..f4437015d43a7 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -202,7 +202,7 @@ int line6_send_raw_message_async(struct usb_line6 *line6, const char *buffer,
+ 	struct urb *urb;
  
-+struct fgraph_ops;
-+
- /* Type of the callback handlers for tracing function graph*/
--typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *); /* return */
--typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *); /* entry */
-+typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *,
-+				       struct fgraph_ops *); /* return */
-+typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *,
-+				      struct fgraph_ops *); /* entry */
+ 	/* create message: */
+-	msg = kmalloc(sizeof(struct message), GFP_ATOMIC);
++	msg = kzalloc(sizeof(struct message), GFP_ATOMIC);
+ 	if (msg == NULL)
+ 		return -ENOMEM;
  
--extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace);
-+extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
+@@ -688,7 +688,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 	int ret;
  
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	/* initialize USB buffers: */
+-	line6->buffer_listen = kmalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
++	line6->buffer_listen = kzalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
+ 	if (!line6->buffer_listen)
+ 		return -ENOMEM;
  
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 6f3ba8e113c1..47b461b1cf7e 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -146,13 +146,13 @@ add_fgraph_index_bitmap(struct task_struct *t, int offset, unsigned long bitmap)
- }
+@@ -697,7 +697,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 		return -ENOMEM;
  
- /* ftrace_graph_entry set to this to tell some archs to run function graph */
--static int entry_run(struct ftrace_graph_ent *trace)
-+static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops)
- {
- 	return 0;
- }
+ 	if (line6->properties->capabilities & LINE6_CAP_CONTROL_MIDI) {
+-		line6->buffer_message = kmalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
++		line6->buffer_message = kzalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
+ 		if (!line6->buffer_message)
+ 			return -ENOMEM;
  
- /* ftrace_graph_return set to this to tell some archs to run function graph */
--static void return_run(struct ftrace_graph_ret *trace)
-+static void return_run(struct ftrace_graph_ret *trace, struct fgraph_ops *ops)
- {
- }
- 
-@@ -213,12 +213,14 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
- }
- #endif
- 
--int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
-+int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
-+			    struct fgraph_ops *gops)
- {
- 	return 0;
- }
- 
--static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace)
-+static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace,
-+				  struct fgraph_ops *gops)
- {
- }
- 
-@@ -379,7 +381,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 		if (gops == &fgraph_stub)
- 			continue;
- 
--		if (gops->entryfunc(&trace))
-+		if (gops->entryfunc(&trace, gops))
- 			bitmap |= BIT(i);
- 	}
- 
-@@ -527,7 +529,7 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
- 		if (gops == &fgraph_stub)
- 			continue;
- 
--		gops->retfunc(&trace);
-+		gops->retfunc(&trace, gops);
- 	}
- 
- 	/*
-@@ -681,7 +683,7 @@ void ftrace_graph_sleep_time_control(bool enable)
-  * Simply points to ftrace_stub, but with the proper protocol.
-  * Defined by the linker script in linux/vmlinux.lds.h
-  */
--extern void ftrace_stub_graph(struct ftrace_graph_ret *);
-+void ftrace_stub_graph(struct ftrace_graph_ret *trace, struct fgraph_ops *gops);
- 
- /* The callbacks that hook a function */
- trace_func_graph_ret_t ftrace_graph_return = ftrace_stub_graph;
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index fef833f63647..4b0708106692 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -815,7 +815,8 @@ void ftrace_graph_graph_time_control(bool enable)
- 	fgraph_graph_time = enable;
- }
- 
--static int profile_graph_entry(struct ftrace_graph_ent *trace)
-+static int profile_graph_entry(struct ftrace_graph_ent *trace,
-+			       struct fgraph_ops *gops)
- {
- 	struct ftrace_ret_stack *ret_stack;
- 
-@@ -832,7 +833,8 @@ static int profile_graph_entry(struct ftrace_graph_ent *trace)
- 	return 1;
- }
- 
--static void profile_graph_return(struct ftrace_graph_ret *trace)
-+static void profile_graph_return(struct ftrace_graph_ret *trace,
-+				 struct fgraph_ops *gops)
- {
- 	struct ftrace_ret_stack *ret_stack;
- 	struct ftrace_profile_stat *stat;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 64450615ca0c..55bb9a3bf322 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -678,8 +678,8 @@ void trace_latency_header(struct seq_file *m);
- void trace_default_header(struct seq_file *m);
- void print_trace_header(struct seq_file *m, struct trace_iterator *iter);
- 
--void trace_graph_return(struct ftrace_graph_ret *trace);
--int trace_graph_entry(struct ftrace_graph_ent *trace);
-+void trace_graph_return(struct ftrace_graph_ret *trace, struct fgraph_ops *gops);
-+int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
- void set_graph_array(struct trace_array *tr);
- 
- void tracing_start_cmdline_record(void);
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index c35fbaab2a47..b7b142b65299 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -129,7 +129,8 @@ static inline int ftrace_graph_ignore_irqs(void)
- 	return in_hardirq();
- }
- 
--int trace_graph_entry(struct ftrace_graph_ent *trace)
-+int trace_graph_entry(struct ftrace_graph_ent *trace,
-+		      struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = graph_array;
- 	struct trace_array_cpu *data;
-@@ -238,7 +239,8 @@ void __trace_graph_return(struct trace_array *tr,
- 		trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
--void trace_graph_return(struct ftrace_graph_ret *trace)
-+void trace_graph_return(struct ftrace_graph_ret *trace,
-+			struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = graph_array;
- 	struct trace_array_cpu *data;
-@@ -275,7 +277,8 @@ void set_graph_array(struct trace_array *tr)
- 	smp_mb();
- }
- 
--static void trace_graph_thresh_return(struct ftrace_graph_ret *trace)
-+static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
-+				      struct fgraph_ops *gops)
- {
- 	ftrace_graph_addr_finish(trace);
- 
-@@ -288,7 +291,7 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace)
- 	    (trace->rettime - trace->calltime < tracing_thresh))
- 		return;
- 	else
--		trace_graph_return(trace);
-+		trace_graph_return(trace, gops);
- }
- 
- static struct fgraph_ops funcgraph_thresh_ops = {
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index ba37f768e2f2..5478f4c4f708 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -175,7 +175,8 @@ static int irqsoff_display_graph(struct trace_array *tr, int set)
- 	return start_irqsoff_tracer(irqsoff_trace, set);
- }
- 
--static int irqsoff_graph_entry(struct ftrace_graph_ent *trace)
-+static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
-+			       struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = irqsoff_trace;
- 	struct trace_array_cpu *data;
-@@ -205,7 +206,8 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace)
- 	return ret;
- }
- 
--static void irqsoff_graph_return(struct ftrace_graph_ret *trace)
-+static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
-+				 struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = irqsoff_trace;
- 	struct trace_array_cpu *data;
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 0469a04a355f..49bcc812652c 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -112,7 +112,8 @@ static int wakeup_display_graph(struct trace_array *tr, int set)
- 	return start_func_tracer(tr, set);
- }
- 
--static int wakeup_graph_entry(struct ftrace_graph_ent *trace)
-+static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
-+			      struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = wakeup_trace;
- 	struct trace_array_cpu *data;
-@@ -141,7 +142,8 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace)
- 	return ret;
- }
- 
--static void wakeup_graph_return(struct ftrace_graph_ret *trace)
-+static void wakeup_graph_return(struct ftrace_graph_ret *trace,
-+				struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = wakeup_trace;
- 	struct trace_array_cpu *data;
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index e9c5058a8efd..56f269c0560a 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -762,7 +762,8 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
- static unsigned int graph_hang_thresh;
- 
- /* Wrap the real function entry probe to avoid possible hanging */
--static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace)
-+static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
-+				      struct fgraph_ops *gops)
- {
- 	/* This is harmlessly racy, we want to approximately detect a hang */
- 	if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
-@@ -776,7 +777,7 @@ static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace)
- 		return 0;
- 	}
- 
--	return trace_graph_entry(trace);
-+	return trace_graph_entry(trace, gops);
- }
- 
- static struct fgraph_ops fgraph_ops __initdata  = {
+-- 
+2.43.0
 
