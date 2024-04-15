@@ -1,40 +1,59 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89A912C538;
-	Mon, 15 Apr 2024 13:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C974612CD8E;
+	Mon, 15 Apr 2024 13:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713186483; cv=none; b=FS0aS6dEpgyDlRcdFt0uar93plSaz+jPdGnI8YsK1ufUqg3Vb1iJF6MgzEU06gpI2hFZozvaS8Qfk/yGpiHyGPjJ/qY58lw4SEGzbfg7ebHw2uG9aFplzsp59apVegXcz5v/OoEPnkVkKN/MZ5ESpAGhckoasCDWyPlU4mDcunE=
+	t=1713186489; cv=none; b=DDkZ97QzISFRyiQzHFsHjdlQvNUibcuoINN5Hgyz5URMEofjFW7d1GxQti4LEFwbRJoFtHUPrK1Qsto2JeV2Ra8ymraDTvtrsJOEPma85y/RQYFQ8Fd6YDoHnaI6FvKidf8d1uJph38PjEtLcEM6byK2Ww3e5nYvqkijWrFjDNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713186483; c=relaxed/simple;
-	bh=m0/I5+S6CSiilQW69yS2LbTSrey8p/oYlcMWnlsQ1J0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Anp6u6vQoun88I2pysGUkEjfkLQ4oY36X52EkMNBguQl0WUu1mnz21oIeFdrNjvGEwxo2UJT2MO32W2yPZ8ncFDV7M0ViBjgS3rIvhDNq/0Y30Axhhjn6XkzIUR3A1QNV+h0qxV+UkWHT/FLs2SiIIAdF4D1oK6j8DuvvFaEzSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=V6hLvTiW; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713186489; c=relaxed/simple;
+	bh=87bTwsF4w8g4JFgeI7M+WPF4fLoAHZlVuKCfGMPRLeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kOjrKjddTsBte0HkocHcFfgFBNSFrJ8hqpk7Z98zP/bZuJ1g8JZnqk12OuPKygm7UuNFUj/SC72b+eWNtbfD9y6QN/tfpGFoEdeh4uzCttA/nzOLzcDPZ11dm3OuPghD7toB32PDZxDC6yZnLT9IwyBTOvgxn8q9/2mevU/Cxdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UJm1CCqc; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V6hLvTiW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713186419; x=1713791219; i=markus.elfring@web.de;
-	bh=4q1T+fveRZjMHTvoEUqhMQBqnsOLA8vdGMrLNev6YzI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=V6hLvTiWwBcQMJjgKssj/YRycNHHayc9GY/F/ZOJhV6qRMUb5S4a4ZlFaki16AIy
-	 0TQ3G9D//AyAV6nRCb2fqGz65SJaBC1+qkM5a7LHIksupkkbBNRQrt2DRsucDePoF
-	 xmut1bsz2bo3057UG4ShP+eZqmIywbu0Lym0cPQWdV2IPR29olwBN5oKMrvq5V3Id
-	 tmglOZQ/U11PL3fQoYhfeCpInOTznaBM3M0snzoKIV6GcxLFHyUx8xPlSfuSWMjGn
-	 d72KdnTb9v9RAKdh8lWoX7sSUAq0/25NX+kWfTXkixMKKiQPs6GuwAnDdaVMSy2lX
-	 BNv93auRRxUnjuDVCQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mq1CC-1sacXB10a2-00nOEZ; Mon, 15
- Apr 2024 15:06:59 +0200
-Message-ID: <f1a38236-82fb-40e3-a7eb-bac913ba8f0f@web.de>
-Date: Mon, 15 Apr 2024 15:06:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJm1CCqc"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so3004088a12.0;
+        Mon, 15 Apr 2024 06:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713186483; x=1713791283; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EOVcyUHEG9Bub93WbTofMHZOaWndJooQSg5/AUTll90=;
+        b=UJm1CCqcR8OL5nAP+WUaZM8LcUEHlUUXgMhxlC7aNsuRO6ba6uhJUUXLEG1AveB/Jg
+         Q5xFo2LPpOg+4PMTs/fhJdgISObaL8Ofeu2P6uJvU/8I59t8h9nvDz2vRtRjbJwbhxjE
+         SDGA74FHwJ0FbdP9M7+zODxcFviS/EvX+A5YCz1gQEVgr35syiAgTvA27wGcJTbK0Zry
+         q2MEm2vMiNW2CWJSV66v6hp3XPWvh0tag2s84p9MNiqR2GLO588L6MEx/dqZ2tL3ZYhs
+         GwpzdZL+xAajiJJExYzS423ylJ7zlkQ+D3Px3mntJCchyyFaWFeCKK5aDF5dngKblcaS
+         5uxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713186483; x=1713791283;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOVcyUHEG9Bub93WbTofMHZOaWndJooQSg5/AUTll90=;
+        b=YtnkVniik+lV0z6nuH13a7NgDIcFo9jCJb9CUReIs/u+3UcyBunHoUdg3+IQA+DmLL
+         aenHeTlTsXDMGRwCEUIXy1Avh9cFEZ29LcMU/1QMBT0rtyLHUn8x6DkG2fmxCGUEQ2cp
+         yg6FS8KjrSAwBl5FbsMCTEN2dRjVjcHGcPQHU43RcxCkxubtl7Hjhh3SuCgAwG12bbL+
+         AV43bX4dEhpT8Re/hLPvMVFHvSh7d/yqrk1DXrkrpkFPEbhb1frZliQ9P2+iimQjPBbe
+         SVeWVh3/9yzZ/joNflLlyAPeF9zyvqtYa94PPAZLAujk/R2u9NxudSK9dtiZPFLElWDr
+         Ey5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVX00zkc/gvMZE7+nM+5DlG5w6z+u8LbEfo8SxC2qxVYAVs/MiQPZEY/pzHUpxOVdN9t1lYANfMmiRySTPVazUqVpf6vy9merU8vxPDsHIoIMnli8Zon9+weHbS/L+dbsH9ehsUgENhxik7YaowIxn0U9fG8SyOLc3kkWIXhE+ta2QVg==
+X-Gm-Message-State: AOJu0YxCGlTSByd4ga4bo/8bui98ejLBkxQnzD3qh+zxqLyz6D8/ipD5
+	WJfFOFfsJBXzZ2Fdd4PRgwHjJv1rh++raoZUnis76PmR3L6mjEjY
+X-Google-Smtp-Source: AGHT+IEnoBtkeYeATaHIBYVqrye4LXM5oKiAeXD3POM03pgS2yfGk+ty1Vt9AFH/3QTv52BE7d7ueQ==
+X-Received: by 2002:a17:906:d1c5:b0:a52:5a74:13f4 with SMTP id bs5-20020a170906d1c500b00a525a7413f4mr2496136ejb.12.1713186482697;
+        Mon, 15 Apr 2024 06:08:02 -0700 (PDT)
+Received: from [172.27.138.193] (c7.campus.utcluj.ro. [193.226.6.226])
+        by smtp.gmail.com with ESMTPSA id lb10-20020a170906adca00b00a526fd6362asm922149ejb.117.2024.04.15.06.08.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 06:08:02 -0700 (PDT)
+Message-ID: <105bd25b-e5ea-4649-b9b2-2547e94b103e@gmail.com>
+Date: Mon, 15 Apr 2024 16:08:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,65 +61,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Guanrui Huang <guanrui.huang@linux.alibaba.com>,
- linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org,
- Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Shannon Zhao <shannon.zhao@linux.alibaba.com>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20240412021556.101792-1-guanrui.huang@linux.alibaba.com>
-Subject: Re: [PATCH v3] irqchip/gic-v3-its: Fix double free on error
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240412021556.101792-1-guanrui.huang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:je1w6x2K7IgLg/YyCsujg70skuT5+UwFo/5EsgvyV0OKa75ON14
- gLXr96eR4s/F1aoHi3GMFu9cpnRnrefuHQ4f5Gtoql6ONnBPdisIgpigWf5smwap4c2VUwX
- 9fTijWZyBo/MiS1bL3BDAGJUkhZUqjwx1tKJJTbtZhTcLPcZPTPg849RRO+nekfa6sPfXAh
- j4Dz5XiZVKnipOor0dWEA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rm1SAKFwmZ8=;fwAliXKSJZyg6ImW72zUAywwFPP
- ngNWHHnusHBQIVHgT+2fYTiGcLDsfgc7Jpn7QIidJLdANeBPzMvL/8ku0xm4iBB00kr2Yv7Xc
- IDML4Z6UKRXaNx6HlN9jOAOQRbv7gVlFbqn/OPjhTkJubMtY3JheowwdCA0CWosGeB7Nz0Za1
- ve26JZB3uuTkPF418kpZzW98NJ9DHlXhplm4hyY8Oyb8U0fjomdQCUJjFXzDu6lGkF9ma8IKy
- 6neuqOa/BIIoxxoqM0b6w3OhDBhfHs1e94Za5FZtxscROW0uDDndGZoZcceTkxY2s1O+xcOlR
- M1OSwLipi8gZtrGa3AX81vn762kIDj1ocNfPxcut9/XOueVhSX4oSo5Lg9HNdPswFWMhzuLew
- sVRhWeHLGPvfoSte7uKAUK+QbhzFJqBjnL6BzbAiHlILBGQWkENV14cnnq0ZYXfkM2AUbez2n
- 3EIEPC0Jw+LOlJRrQiJAUM2akKimJ1Qd+a3IJBOrzNoo/pfQdW8pvNoF3RdnpNnigZmnTOM20
- LsO+04tfYuLAnRmqe86XLgoqr3M3/dlSSfOSkY3YAWoMAhLccgvCu8costpi5bjXxaPPGL55n
- uBbDN3FTXRLOMY7i6pCfiXkR7VbP2uapW7NeBIqr+mkpoGqaaT1NfzXIuGbb9wPQw6y3wLmSI
- COc90LcDdj/4vM9SKXbFL1AZPafPZRKkKl+BaahFV0IzlGO7yTbQBirmH7GzbGBVQR5n7WpMp
- rEZMKUUjQcVbIhhqikZ6Vi350WkGD41xizgBbDFgeRvUT0HUDIBw8haLiE37y71rxR30wZcGj
- PW+yBx+e1AwtQQaPZyEEOz9Ffre/ALat/P/OTXQdKZFac=
+Subject: Re: [PATCH v5 4/5] dt-bindings: iio: adc: ad7192: Add AD7194 support
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ michael.hennerich@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
+ nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
+ dlechner@baylibre.com, okan.sahin@analog.com, fr0st61te@gmail.com,
+ alisa.roman@analog.com, marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
+ liambeguin@gmail.com
+References: <20240413151152.165682-1-alisa.roman@analog.com>
+ <20240413151152.165682-5-alisa.roman@analog.com>
+ <2ad06ea8-220f-4d09-bbe7-c4dd12d0d8bd@linaro.org>
+Content-Language: en-US
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+In-Reply-To: <2ad06ea8-220f-4d09-bbe7-c4dd12d0d8bd@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> In its_vpe_irq_domain_alloc, when its_vpe_init() returns an error
-> with i > 0, its_vpe_irq_domain_free may free bitmap and vprop_page,
-> and then there is a double free in its_vpe_irq_domain_alloc.
->
-> Fix it by calling its_vpe_irq_domain_free directly, bitmap and
-> vprop_page will be freed in this function.
+On 14.04.2024 00:19, Krzysztof Kozlowski wrote:
+> On 13/04/2024 17:11, Alisa-Dariana Roman wrote:
+>> Unlike the other AD719Xs, AD7194 has configurable differential
+>> channels. The user can dynamically configure them in the devicetree.
+>>
+>> Also add an example for AD7194 devicetree.
+>>
+>> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+>> ---
+>>   .../bindings/iio/adc/adi,ad7192.yaml          | 74 +++++++++++++++++++
+>>   1 file changed, 74 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+>> index ba506af3b73e..855f0a2d7d75 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
 
-I find this change description improvable.
+...
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
+> 
+>> +  "^channel@[0-9]+$":
+> 
+> Why restricting the pattern? If you have 256 channels, how are you going
+> to encode it?
+
+Hi Krzysztof,
+
+Thank you for your feedback! I applied the rest, but as for this one 
+isn't channel@1 -> channel@256 encoding sufficient?
+
+Kind regards,
+Alisa-Dariana Roman
 
 
-=E2=80=A6
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -4521,8 +4521,6 @@ static int its_vpe_irq_domain_alloc(struct irq_dom=
-ain *domain, unsigned int virq
->  	struct page *vprop_page;
->  	int base, nr_ids, i, err =3D 0;
->
-> -	BUG_ON(!vm);
-=E2=80=A6
-
-Please improve the patch granularity.
-
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc4#n81
-
-Regards,
-Markus
