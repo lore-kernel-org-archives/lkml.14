@@ -1,97 +1,94 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C7C40878;
-	Mon, 15 Apr 2024 07:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC541F16B;
+	Mon, 15 Apr 2024 07:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713167667; cv=none; b=SUJ2oQC73bpLA/U+dOqaufGWhNA1EazGgYEW7oot9+gQxDzea5631XylZVz6dRmiWCsm/ii/1GSKQi4s+EX/sni1l3vyfCQvnnNqyqL26eaJqSfqUpIRQB6tAgy8JWTPhwWT9U+ivcZQ1XfmTUl6t5U99B6UJJdG7093zEk2fxE=
+	t=1713167794; cv=none; b=mU54FDnP+J2Q6QzKA+wztiWOlPyR88ZcecG9OzQDnjPcKPQIrA4VV2qq6hkbYsZtveYvTYFEO9vQTytEzb8sX+Rpi14l9pUHD7hieH8ydZTZy1RS5SZiJIyQXAwo6ny81nTMmOpbd5+3IasJdZGE6BDmuh2C/CmyROkJAl+vR/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713167667; c=relaxed/simple;
-	bh=5eT0zUq3U+SGJ+MJi1xud1dyzwBZgkKn46DTagnuY4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IP/DCfQWArs1hu0TWSNcmvWGR+NtiAXb+m13dPgKHlEdPQfDIR35nkNTkepqX1HQ0h9/tkUHIdJWv95P3z75IFZ11GEiVX20iqn4yvj+A6j00u0vc5N2ThiiijW6CF+ZMuxX8c1rmLh1mPNIwa8TFw+NRimFbO4y9Z8yzT0oyEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iNll0TlQ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713167794; c=relaxed/simple;
+	bh=S324kEgCuhI/VRe9Fz0tirH7HrFyKJZFebNrYDHytn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gXUw1Xe3KXSQbUv0vGrFxKinliPM6dJRTNS1ckoSRYTLTzW5kBikxcxOUwu5hSfQJl9zd3shznMqjOOTxof7MnRxNe6Zp8pskrFMQU83Gs+SQdVYqi9oa9h4Z6bw1Oqhf7gNgNNlswB/UhgJAu1AoK9cA7MGn1iHuZhy+KZHahE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=KnZxMYqs; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iNll0TlQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713167665;
-	bh=5eT0zUq3U+SGJ+MJi1xud1dyzwBZgkKn46DTagnuY4k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iNll0TlQEai9STsdsIjH3jAfNSi/LWw/2Tb3JlH35RkK7xXcyQfJRYkVz0c2QhmNz
-	 BT9C9h9ubcNMdb8NWIFxmJOXMLkFAIPmUcx7CGDjIkmbhIWimCNRb4jPvCf+UV1nNT
-	 9Tyge49KrRF4D27JtDWex9ODovC1pe66QYJLnbvQTk4FyJweSqnEeU7/OYFxZsdGij
-	 vO76b+Nm0kGfuyalCzhdqagq4VtU5KT8MJXAS5SPiq0ewUp22qxD0JNDzeqrh0WrTM
-	 y+itOn2olBw8XYuJk2KNGzailryevuW/rUM69Uo96/AMEoqrjwMNG1DHFktusxZK7g
-	 LNwY87bv33O5A==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8A553378213F;
-	Mon, 15 Apr 2024 07:54:23 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-scsi@vger.kernel.org
-Cc: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	peter.wang@mediatek.com,
-	chu.stanley@gmail.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	stanley.chu@mediatek.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 8/8] dt-bindings: ufs: mediatek,ufs: Document optional dvfsrc/va09 regulators
-Date: Mon, 15 Apr 2024 09:54:06 +0200
-Message-ID: <20240415075406.47543-9-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240415075406.47543-1-angelogioacchino.delregno@collabora.com>
-References: <20240415075406.47543-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="KnZxMYqs"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id B648D1C007F; Mon, 15 Apr 2024 09:56:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1713167787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WjfMW+NA/CnSQotoTVzRdyimGwWSKCreZbaAXRI+G10=;
+	b=KnZxMYqsLqcB75iP5P6dBUnN189g6ARNATtxXQYnU0MC6S1l81LkMNYw73a3dAkv0SK0B+
+	SxdW537XZbJslbH2KvqCFxH0ItKMEA4EEeA8TofmcZioW+RDU+h7nM/LCDFrO7vstLSdXi
+	pBwR/U2uRCkc7cIxCTu/VGlFqIqrYZ0=
+Date: Mon, 15 Apr 2024 09:56:27 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	stable-rt <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>,
+	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
+	Jeff Brady <jeffreyjbrady@gmail.com>
+Subject: Re: [ANNOUNCE] 5.10.213-rt105
+Message-ID: <ZhzdqyqZrjhXs7ZJ@duo.ucw.cz>
+References: <ZgFy9au0Gvkzr6gZ@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ioEvBMbk+BU4Wpfr"
+Content-Disposition: inline
+In-Reply-To: <ZgFy9au0Gvkzr6gZ@uudg.org>
 
-Document the optional dvfsrc-vcore and va09 regulators used for,
-respectively, crypt boost and internal MPHY power management in
-when powering on/off the (external) MediaTek UFS PHY.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+--ioEvBMbk+BU4Wpfr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-index 4df2358d440e..4d42c44da061 100644
---- a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-+++ b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-@@ -46,6 +46,8 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  dvfsrc-vcore-supply: true
-+  va09-supply: true
-   vcc-supply: true
- 
- required:
--- 
-2.44.0
+Hi!
 
+> I'm pleased to announce the 5.10.213-rt105 stable release.
+>=20
+> This release is an update to the new stable 5.10.213 version and no extra
+> changes have been performed.
+
+Thanks for release.
+
+I see v5.10.214-rt106-rc1 is out there and now v5.10.215-rt107-rc1,
+but I don't see v5.10.214-rt106 (which would be useful to me).
+
+Is it a mistake or should I plan for v5.10.215-rt107?
+
+Thanks and best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--ioEvBMbk+BU4Wpfr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhzdqwAKCRAw5/Bqldv6
+8s16AKCCORSigOjFdUBW/JSDdMs6H2UTtgCfYavhz8dojqsBLVcXSYxU0kR4X+I=
+=MGB3
+-----END PGP SIGNATURE-----
+
+--ioEvBMbk+BU4Wpfr--
