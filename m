@@ -1,64 +1,190 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBCA59155
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 10:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F72C5B692;
+	Mon, 15 Apr 2024 10:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713177335; cv=none; b=DRnk0BFL65I+8h/VNIYJAhpxEkHc3oRmTLcvu+RpUGn2yhBJ9DUT4F6O1SNxxYMknC6+QTSLyfuOLV01lSl0zjOiixpJ90/f1PwJkLDzTqqY507sNwbBVp3zh3r0zgJjWCakfgl6RcDv4MBXVM3vhbmLttS71sid/3/PaR0RHsM=
+	t=1713177338; cv=none; b=PqHIGRDDt/fMcqzie4Fisi7GFdHA6EtBeKm/0f3KaDUE/w8uKNSI+fS4WosfeBzlN/mA83Offc1GDGSFKCXqWFr9prxBnhmeICcCOCkJFKMupudKYGGcL2Uxr/h7RaKHoLNx3YGRJRn+6HrHUGU0MDdomRejZEQ1+ulXb2WC/AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713177335; c=relaxed/simple;
-	bh=i7kl6gVzz/rcqz5Ofjqm0TusNLII/PSkB02AHrTvw4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bmd+ySWkeierNvUnxey6vBr1d4gUn6/E7aF+nE6KwzH++D2am4hxAI8tvF3aghXGh1UmgmEGKUootmtXJpwugqz6w8a3LBMPzUeFBYfC6gmCEaGVq1BfpGUUTzDXxicUsbemHK8j5BpGaLH2p4Dla3TibehO8u4o2scl4IK/9YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav120.sakura.ne.jp (fsav120.sakura.ne.jp [27.133.134.247])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 43F9cXf4009055;
-	Mon, 15 Apr 2024 18:38:33 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav120.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav120.sakura.ne.jp);
- Mon, 15 Apr 2024 18:38:33 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav120.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 43F9cXM1009052
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Apr 2024 18:38:33 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <c5a3598d-16dd-4aeb-904e-2084fafef9fe@I-love.SAKURA.ne.jp>
-Date: Mon, 15 Apr 2024 18:38:33 +0900
+	s=arc-20240116; t=1713177338; c=relaxed/simple;
+	bh=+sZ4VpMaNAH3Kyh1mrOtLGIavWRSCUxu2kcXWNcK9Ag=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I8+lxO/dGmxnNcD5VBguZcg/euap9sdaQlzoEJk+XlR3ofevEyZHcTX/0xMkO35nKReuiRqKUUvSWoflB6rKq4/kJkFQiOo6JhM/nlAQ4w2seOXzRQ5RBClrqZlcK6LQCtL9vkJZGfqoeEDJqfMYr4ZO1RHBp1aWdQVq0y/XFC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HL76c/o6; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL76c/o6"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36b191a746cso7424615ab.1;
+        Mon, 15 Apr 2024 03:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713177335; x=1713782135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+XyhthZLoESO9WHc+S1+kDbhL7mPzfup8TR5Ezu6fL8=;
+        b=HL76c/o6RvkTUhUZiZnCWy50DOK2rNWUIgMT7yd61XJwFEisG4p86QBuWiBOpBJvCj
+         cXpVSuOUSd0Hf7OhbUOuzE75wvCvBaq49jqSlIfGAWgSsCcPlL2aZPmKjHthg2vBzeAh
+         SOnvlqMmRGM8jlO1xbWP+rLzoVsg7r6m4LYvZIfczEwe81DsVSTltp35CWKdTd5MmcsN
+         9zkDtT+vGx9qme6cnmFL/cgfWTxRVErPbWk6gEp1KtVU5iKIYIEAT8yhlc0/oawdTkB9
+         NXaH+tzO1omKyeuyGLzVcj8tqcCTpQrCitSh8BM/v4BjfyQA8zpvZkTyG7OILkLAPkfy
+         IPGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713177335; x=1713782135;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+XyhthZLoESO9WHc+S1+kDbhL7mPzfup8TR5Ezu6fL8=;
+        b=P10JJPAF4u1pCWAY/dD4wlX8KMIdHrmeWGDJBlNg2y9l3MUPvNe74ZPByQQGxmZQ4G
+         gxJJ0Fm1mxlNsh+AASOoAWuHE4RkYmlpm6qAkgq+8d7p17sjFZ7qklTsNyBuERlOCcXb
+         KGOAZNPVBtUNI8BgnElYWaLc+FqPwQB01qw5r6HWZbqrNVyR/I3+AwAAlt/5ih+tGHbX
+         /eGJrbQsM9Hxu16N9dCTIharFDYLNbRZz1yXJemiWLR1/AAVztOvCNTC1M+ra8UMvdS4
+         aO9YMmot6lZW7xFA0k11flGbxJAW+s/qWC2aV+ulBaL8OJh25zxODXDyaNyFOtmk91fv
+         mp9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCURs9Hpz+d5qc81V/+5sbs5pLNvXwLcm3e+t/hdfhjwoluYLq7Kln220dyKL6jMB59OkW8SaNwhg1/vHEyKxceeupI2OnW9nJxROhs2leB8xY0j+ukfMs1zrlwJAXqsU5yduNW/DaJtVg==
+X-Gm-Message-State: AOJu0YwPrDV8+T5XhTdC3LU3Y+rndS/jjFIVWmyFya5O4PcUYqLepxvm
+	RzNTg+ZzT4hOZOzYzTUj3Ptb8cyKnjKSJOOIMu0TfGOAXvd6nbwx
+X-Google-Smtp-Source: AGHT+IGJY0q9uBdwrLu0JkPMZbqGy95JD3Xs0cjTSo3ts38OfBJnJAWmE+u6dEhicMygwm+jq5e5qw==
+X-Received: by 2002:a05:6e02:19cd:b0:36a:a6c4:b6da with SMTP id r13-20020a056e0219cd00b0036aa6c4b6damr12178592ill.4.1713177334703;
+        Mon, 15 Apr 2024 03:35:34 -0700 (PDT)
+Received: from localhost.localdomain ([103.242.120.171])
+        by smtp.gmail.com with ESMTPSA id u10-20020a63b54a000000b005dca5caed40sm6799430pgo.81.2024.04.15.03.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 03:35:34 -0700 (PDT)
+From: Mighty <bavishimithil@gmail.com>
+To: 
+Cc: Mithil Bavishi <bavishimithil@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	alsa-devel@alsa-project.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+Date: Mon, 15 Apr 2024 16:05:23 +0530
+Message-Id: <20240415103523.139-1-bavishimithil@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
-To: Mark Rutland <mark.rutland@arm.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <0000000000004cf5c205faf1c7f3@google.com>
- <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
- <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk> <ZhztQ9CvDm3UPgE9@FVFF77S0Q05N>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <ZhztQ9CvDm3UPgE9@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/04/15 18:02, Mark Rutland wrote:
->   08626a6056aad824 ("arm: Implement thread_struct whitelist for hardened usercopy")
-> 
-> That commit says that all accesses are bounce-buffered and bypass the check,
-> but AFAICT the fpa_set() code hasn't changed since then, so either that was
-> wrong or the user_regset_copyin() code has changed.
+From: Mithil Bavishi <bavishimithil@gmail.com>
 
-Then, can we go with https://lkml.kernel.org/r/0b49d91b-511f-449e-b7c3-93b2ccce6c49@I-love.SAKURA.ne.jp ?
+Convert the OMAP4+ McPDM bindings to DT schema.
+
+Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
+---
+ .../devicetree/bindings/sound/omap-mcpdm.txt  | 30 ----------
+ .../bindings/sound/ti,omap4-mcpdm.yaml        | 58 +++++++++++++++++++
+ 2 files changed, 58 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+deleted file mode 100644
+index ff98a0cb5..000000000
+--- a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-* Texas Instruments OMAP4+ McPDM
+-
+-Required properties:
+-- compatible: "ti,omap4-mcpdm"
+-- reg: Register location and size as an array:
+-       <MPU access base address, size>,
+-       <L3 interconnect address, size>;
+-- interrupts: Interrupt number for McPDM
+-- ti,hwmods: Name of the hwmod associated to the McPDM
+-- clocks:  phandle for the pdmclk provider, likely <&twl6040>
+-- clock-names: Must be "pdmclk"
+-
+-Example:
+-
+-mcpdm: mcpdm@40132000 {
+-	compatible = "ti,omap4-mcpdm";
+-	reg = <0x40132000 0x7f>, /* MPU private access */
+-	      <0x49032000 0x7f>; /* L3 Interconnect */
+-	interrupts = <0 112 0x4>;
+-	interrupt-parent = <&gic>;
+-	ti,hwmods = "mcpdm";
+-};
+-
+-In board DTS file the pdmclk needs to be added:
+-
+-&mcpdm {
+-	clocks = <&twl6040>;
+-	clock-names = "pdmclk";
+-	status = "okay";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+new file mode 100644
+index 000000000..73fcfaf6e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ti,omap4-mcpdm.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ti,omap-mcpdm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP McPDM
++
++maintainers:
++  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
++
++description:
++  OMAP ALSA SoC DAI driver using McPDM port used by TWL6040
++
++properties:
++  compatible:
++    const: ti,omap4-mcpdm
++
++  reg:
++    items:
++      - description: MPU access base address
++      - description: L3 interconnect address
++
++  interrupts:
++    maxItems: 1
++
++  ti,hwmods:
++    description: Name of the hwmod associated to the McPDM, likely "mcpdm"
++
++  clocks:
++    description: phandle for the pdmclk provider, likely <&twl6040>
++
++  clock-names:
++    description: Must be "pdmclk"
++
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - ti,hwmods
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    pdm@0 {
++      compatible = "ti,omap4-mcpdm";
++      reg = <0x40132000 0x7f>, /* MPU private access */
++            <0x49032000 0x7f>; /* L3 Interconnect */
++      interrupts = <0 112 0x4>;
++      interrupt-parent = <&gic>;
++      ti,hwmods = "mcpdm";
++      clocks = <&twl6040>;
++      clock-names = "pdmclk";
++    };
+-- 
+2.34.1
 
