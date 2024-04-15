@@ -1,109 +1,86 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B036F5733B;
-	Mon, 15 Apr 2024 09:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCE75789E
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713174521; cv=none; b=CnuFnJ/NevPbi4ZiNLMdjZ5s88Nh7/R4bgMUSz1ll5zkm3q9lrbzH3Ohx2P/pxUvGOilgG1tA1+MccxLSLm3eTdbT9riiNpIP78Nqzk2C2Qxlg2tscSyCH321vcDbVi5CJ/9ttHNhO5Gjup6L2yxdwC2z+g2SOT/dkGPQ6uPQis=
+	t=1713174525; cv=none; b=YkoQuNXfyCbbeTCApifIicaUWs4Nwl7b2cuVsGToARslkdSK0Cr2qcHqyWeaqNeDsoQyUCgTP2AtRWtyqgzGr30p1iqs6hMLqusJwgxJnfzMhguNE3Z1JkYDKOUMlg8Itm0w8wBQJG5/ilJzBwWV0HeSVE1YUcq013FWt2mWTxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713174521; c=relaxed/simple;
-	bh=0a8sFtUoHMxGNk6So9B9U41s6UQbV0WO1sQRMmFABA4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GKLl+cP1fo0rFd+r9Xf5ruEhzL7kjOkAK+K0QgIaxfPRLEuKGIZlITXRUE0T/6/0g6CNrX/EaB9Rhx+s1BH5dUmYsQFE3Wb+c7qvUIXPIHOpN3B64gNcdOnS4sS9JOwHTKsxYrRZgCpwxqujK02bHbQJ0tsB7ndueZz+2py9ps4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,202,1708354800"; 
-   d="scan'208";a="205432172"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 Apr 2024 18:48:39 +0900
-Received: from renesas-deb12.cephei.uk (unknown [10.226.93.74])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9386E4006DE8;
-	Mon, 15 Apr 2024 18:48:35 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [net-next RFC v3 5/7] net: ravb: Enable SW IRQ Coalescing for GbEth
-Date: Mon, 15 Apr 2024 10:48:02 +0100
-Message-Id: <20240415094804.8016-6-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
-References: <20240415094804.8016-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1713174525; c=relaxed/simple;
+	bh=FUu/1U3bMfwe1Wxlff4HfG4iKHHsFJST5Zn6hkOB0qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QMqggtnQWd/1NiNowwkvCh51otDeIEVW0GwFGLvvwqS9R24VlDN62Y9vZp2kL4KAurF1O88jNcSbBTjPRiACRhKbya3rrNX0okNhI+FgI370EuCuaDNFwT84BE9Z9qo1IAu1F8S/0deoydybDIVLBBB9slV0QiiRx+esvtVSp9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VJ2Qf4G5czYdNB;
+	Mon, 15 Apr 2024 17:47:38 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 026B318005D;
+	Mon, 15 Apr 2024 17:48:39 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 15 Apr 2024 17:48:37 +0800
+Message-ID: <e3e305c6-e8cc-6b10-fd52-fcb20ee6d3cf@huawei.com>
+Date: Mon, 15 Apr 2024 17:48:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v2 4/9] arm64/cpufeature: Simplify detect PE support for
+ FEAT_NMI
+To: Mark Brown <broonie@kernel.org>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
+	<ardb@kernel.org>, <anshuman.khandual@arm.com>, <miguel.luis@oracle.com>,
+	<joey.gouly@arm.com>, <ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
+	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>, <liwei391@huawei.com>,
+	<peterz@infradead.org>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
+	<kristina.martsenko@arm.com>, <robh@kernel.org>,
+	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
+	<shijie@os.amperecomputing.com>, <bhe@redhat.com>,
+	<akpm@linux-foundation.org>, <horms@kernel.org>,
+	<rmk+kernel@armlinux.org.uk>, <Jonathan.Cameron@huawei.com>,
+	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
+	<frederic@kernel.org>, <reijiw@google.com>, <ruanjinjie@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+References: <20240411064858.3232574-1-liaochang1@huawei.com>
+ <20240411064858.3232574-5-liaochang1@huawei.com>
+ <Zhx/FKeAtzResmtP@finisterre.sirena.org.uk>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <Zhx/FKeAtzResmtP@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Software IRQ Coalescing is required to improve network stack performance
-in the RZ/G2L SoC family and the RZ/G3S SoC, i.e. the SoCs which use the
-GbEth IP.
+Mark,
 
-This patch gives the following improvements during testing with iperf3:
+在 2024/4/15 9:12, Mark Brown 写道:
+> On Thu, Apr 11, 2024 at 06:48:53AM +0000, Liao Chang wrote:
+>> From: Jinjie Ruan <ruanjinjie@huawei.com>
+>>
+>> Simplify the Non-maskable Interrupts feature implementation with
+>> ARM64_CPUID_FIELDS macro.
+> 
+> Just squash this into the patch you're updating (I already have that
+> locally for my half rebased version of the series).
 
-  * RZ/G2L:
-    * TCP RX: same bandwidth with -6% CPU load (76% -> 71%)
-    * UDP RX: same bandwidth with -10% CPU load (99% -> 89%)
+Acked, thanks for suggestion. I've squashed the 4th and 5th patches into
+the 2nd patch of the series in v2. Please review the updated series v3 and
+let me know if you have any futher comments.
 
-  * RZ/G2UL:
-    * UDP RX: +4200% bandwidth (1.23Mbps -> 53Mbps)
+Thanks.
 
-  * RZ/G3S:
-    * UDP RX: +425% bandwidth (1.23Mbps -> 6.46Mbps)
-
-The improvement of UDP RX bandwidth for the single core SoCs (RZ/G2UL &
-RZ/G3S) is particularly critical.
-
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
----
- drivers/net/ethernet/renesas/ravb.h      | 1 +
- drivers/net/ethernet/renesas/ravb_main.c | 4 ++++
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-index 71de2a7aa27c..9c6392ade2f1 100644
---- a/drivers/net/ethernet/renesas/ravb.h
-+++ b/drivers/net/ethernet/renesas/ravb.h
-@@ -1054,6 +1054,7 @@ struct ravb_hw_info {
- 	u32 rx_max_desc_use;
- 	u32 rx_desc_size;
- 	unsigned aligned_tx: 1;
-+	unsigned needs_irq_coalesce:1;	/* Needs software IRQ coalescing */
- 
- 	/* hardware features */
- 	unsigned internal_delay:1;	/* AVB-DMAC has internal delays */
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 12618171f6d5..26b70b996bd3 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -2663,6 +2663,7 @@ static const struct ravb_hw_info gbeth_hw_info = {
- 	.tx_counters = 1,
- 	.carrier_counters = 1,
- 	.half_duplex = 1,
-+	.needs_irq_coalesce = 1,
- };
- 
- static const struct of_device_id ravb_match_table[] = {
-@@ -2937,6 +2938,9 @@ static int ravb_probe(struct platform_device *pdev)
- 	if (info->nc_queues)
- 		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll);
- 
-+	if (info->needs_irq_coalesce)
-+		netdev_sw_irq_coalesce_default_on(ndev);
-+
- 	/* Network device register */
- 	error = register_netdev(ndev);
- 	if (error)
 -- 
-2.39.2
-
+BR
+Liao, Chang
