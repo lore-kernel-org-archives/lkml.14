@@ -1,208 +1,121 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2065.outbound.protection.outlook.com [40.107.96.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BED78297;
-	Mon, 15 Apr 2024 15:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713193330; cv=fail; b=UdvcK86k6rZuUes/eJ5hZHUOZcjVjsBZW1uYiDjwKcABCubisvXjoJkZTt2bSscdyMbE/OXurqPkmuANcJwwbLyiW+G8uU0fxtR/vsH4laICXFAZDcuiOQDEe+HsJElRZXauQ/MV/KguOy07cp/4WRzzr31OW+kFjXo1j/DjgcM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713193330; c=relaxed/simple;
-	bh=Quak7+xrfhBCwXK4ypDW87esPqc11Bm4y0kFzXMmzv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=P//qs6IA96ytrtBmg/eOIqI29KllgUqFbfkb6R6HzWFMEqcUetuGMaphMRAqpR1KnEo0Y3Me/lcgtAxVC+jdtZkidqufhkz0Z9tALDrGLO2UOWM0OnU9oxShqQrxc9oy+wonbKVNqtNvI2kVJeaOsa9Ayb6z4qympsbeh/rgy2c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mswWHUGn; arc=fail smtp.client-ip=40.107.96.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mswWHUGn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XiharTUf2kEjQ7vVSZWsROz8XyrAc9iRKvuW1SukbhhDJepqAz7S/LRo9h28uaTN1iSuXiM1wVZuVeDqUhyFQmE/V0HAceitFn/JvjwYYo5t2sEnvclD3Ee+KtP2syuqE2FalYFVGRBW26X5jh9OerH+09FTg8igr3AtFn+dkcoLi4tPDp262CJhqvCh/MDKCtg6CohvDZXaXTBAn0BtVgnxqzk7Eln0gI+QFJ6w+/xzvl1N9xXsf/ySLRdXOLvKBwM273gp7IORatSNmzb1Q71wohD0i3efy0+RtlLsSye4KNHfTkp9bvY3Sy3mXjjP8qzyJT0NLQwXNapvI07OVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b6BlnOG8Q6IOKH/nzKw5ikmdfZ3Ln7R243PBduCvGdM=;
- b=RKUDPD4Kmlt2qvZXvlVXoLjYTEJor+Y8IMIgQGlcNtGW11NV1HOl2foWaQQ6RMVpT98d9UOF5iP/4UI6n6EFBVZN/+YDpl5+U8cEkiEuJcopbLCe8KiJuEjucbgbc7yKIsZExkYQnW26DdbMoCotq2xP7fjeOStt30LsqiuRBbLPVF0JyxMjlYeYth5USh/ZduSZWCxyz1A3yf5sUnL0sohCZ1TwYZlhgiHHM7E2h2lFzS44rPsejxJTJsuSgSd3abOPGAijL1lj2qVNip0KXkrH2YGbIgAVXU1wxmnzItwUpyGEsMZ8u4mf66sgi5L6jFqPiA/vTVMB/MSHkyBgJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b6BlnOG8Q6IOKH/nzKw5ikmdfZ3Ln7R243PBduCvGdM=;
- b=mswWHUGnsBM1t433F6tVZ2Ez8XQ2xrMgwHYgISCson9OMluzs9gxmOiaCLWxP+bFka/8hhohwnCWEOeoca6QXyl7s4/KjRCvRAKAovqxvXkNX0p5Fh4JT+qymCgtvJAGaOmj9KCu9yPNMub4i1jXoQ1rSBwgpmggi5diVK2U21E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ2PR12MB8690.namprd12.prod.outlook.com (2603:10b6:a03:540::10)
- by SA1PR12MB8597.namprd12.prod.outlook.com (2603:10b6:806:251::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 15 Apr
- 2024 15:02:02 +0000
-Received: from SJ2PR12MB8690.namprd12.prod.outlook.com
- ([fe80::e7a:5022:4b7d:ade1]) by SJ2PR12MB8690.namprd12.prod.outlook.com
- ([fe80::e7a:5022:4b7d:ade1%7]) with mapi id 15.20.7409.042; Mon, 15 Apr 2024
- 15:02:02 +0000
-Date: Mon, 15 Apr 2024 23:01:40 +0800
-From: Huang Rui <ray.huang@amd.com>
-To: "Yuan, Perry" <Perry.Yuan@amd.com>
-Cc: "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-	"Limonciello, Mario" <Mario.Limonciello@amd.com>,
-	"viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	"Petkov, Borislav" <Borislav.Petkov@amd.com>,
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
-	"Huang, Shimmer" <Shimmer.Huang@amd.com>,
-	"oleksandr@natalenko.name" <oleksandr@natalenko.name>,
-	"Du, Xiaojian" <Xiaojian.Du@amd.com>,
-	"Meng, Li (Jassmine)" <Li.Meng@amd.com>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 6/8] cpufreq: amd-pstate: get transition delay and
- latency value from ACPI tables
-Message-ID: <Zh1BVDUkSSeHOvmP@amd.com>
-References: <cover.1711335714.git.perry.yuan@amd.com>
- <ee3c290dcdce4a746fbd882d37e9a45504a5ae3d.1711335714.git.perry.yuan@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee3c290dcdce4a746fbd882d37e9a45504a5ae3d.1711335714.git.perry.yuan@amd.com>
-X-ClientProxiedBy: SG2PR04CA0201.apcprd04.prod.outlook.com
- (2603:1096:4:187::23) To SJ2PR12MB8690.namprd12.prod.outlook.com
- (2603:10b6:a03:540::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3682271B3B
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 15:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713193389; cv=none; b=M3F0bXsTOyU28FEpmeRjZx2ZQVEQt2RqVthFO0DCGo7VU6XOhQgWWi88KTAqXkr6dflzbq6u0GiF2kO6ang25C/yj9ue90OI7QnGPH7DSFEjUlItkGDlp+DFOhNOYXRLo6gb299s9KRl/4qEw2MyQJJf3xFyxTcm4mQ31DazGz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713193389; c=relaxed/simple;
+	bh=QAzFmffWsZYQzeY3yEKEC0gQlvmNo9ljGjRjjp/8IfU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rqsZOI5ChTIzMhQkrQ8cIyTVPqx6lpg6LOodRoLSmVJ8d+odFyzGAerPmvDQlAPrmXWqAfCgC1jh/F93vuUEOuGWixr/GCoXlTKkld9z4p86GKoRSGdW4a5i7urZEJDXoha49aJPBmvGMEfa5s/aDzIapgo8BsE4Eplz+bFmWrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d622cae9e4so356950539f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 08:03:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713193383; x=1713798183;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSq8qGn/JF5KdpapQccUGb3UzISwAxkFXjt7VDeXU64=;
+        b=Lv72CcUD8HcHH9xRviVPcVo6ZNhEnC9FHS35sQmla3FjY5GyPE4qqOI2bvueF5cpfd
+         CoJV6D/RUgf3Wx6Gh8I/UrVhf8AZlekcc7WQW4srRSan52MBoG6Rrx2ojeY833QuccIJ
+         FxUwWW311aAnvS0fPCCNPiJzssHX5KjcqzZf/kl9d1HST+k7/cBGZfBRZO9i9rYkGaHs
+         36uvjFZbwUGwc5eu6ZdYZ66fl65rHlLrPwtgF+QvLLObEbFebyUJYFFGpyzLwp9XV2Bi
+         bZpwJw1pXLNGX5bYV9EvxWrc7CFEQ/wCII0gkm0AicY8qCcOWE0a48dxemudYPKjAzyP
+         uXKw==
+X-Gm-Message-State: AOJu0YzO/gL16vWn+lCm92wt3VZBA0OTovPs2kGBv+9BQAasRQOSpQXJ
+	Oq7FJm6cHP7ZEaqV/z5gpQk3QcuHonB64GrezQUpOmqNNny95waQDE0cJy//GIOP0hzbVHX+WKm
+	8yxwPOMT41xJu9rmnHub6ikNny72Mbf9S00yGCgrwnCFYLfvtimkyFew=
+X-Google-Smtp-Source: AGHT+IH5fP1hNjHV5iZhkXGr2AeaV+3IJv9e9gh7OynLUxpJJ6hstBncRmesAd2VqtfV0x3WTwa3KDYZ7KQjyB1aH63Fry0WQIFq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8690:EE_|SA1PR12MB8597:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2c2e897-b42a-4146-2a51-08dc5d5d01ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+EJufukMZkreYCZ36dHRq84jnpqrUaJCnxMzIfJv2wdEIMQbPvGZxN7S8bBQCZ2hUNbN7jScn0u00nogl9l/RZoSHV6lUqfbWcdD76yFslFPNLe9AfEsda/E0ShfYcEnNllGIiHd1sigg4WlAyGRkcJ6RAEoHnIK+I3gDbfWEOydRAdNKmtpXCajHTRWdxvA23PHO+gdPTLv+2B7gesbvyDnFf6L0PDwFd5IYwd+jQhlU+Rek7i2iuaASgYYVtlAaTUWDEv7drb54ZmxX730cQK+HGtRm2Rp7OmdxTQyORLjjq+s1QeNU+v52y1Hx3VIqv7shbuiXUw1I806aZmI2xG+EoBiagBNzBJTYxhjGP7Xyyce+/QQY+5kHDwiY4ElubRf1qd0EeFaJBq8LC67mMAYEkwYCkrbYEI0yxX67774BOlxkwigP9rc+gayQa0R5TJl6504+fz+xybBov0ryEEEQK42yvIaiIPfqZBSWG1+EGFIrmFVI2I0TlRynBHEtKAqYNHerlopynvvzbNKTuejW4V7fD8CzlPCwaqDE5VnFrX2R5iEvNHp1hniaaQEdN96JeU6jo+bXZLETjkDMbV/9xaHKI3T7SvAnRWQ30DOB8oGSsVLnAHFVck8XNIG5Jjka8mO7Hp7lR8BL5AUMPz2g5/ELYO/cY4ojayW2M4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8690.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+U1DslTXGb4WAyXG1smSRk11h7KlLxqV/EmKcgtQkHkdwYd2+XzKYQgEnUAV?=
- =?us-ascii?Q?eOnI2KsPsmk1KoWhKmfmw57fLYRz5urYtz/I2a2tHRSD9Zzb943LlktXz9Je?=
- =?us-ascii?Q?Q3BQ+cC97t+bCnsxB4UyNkQ74Hk44ebATTyNvC2O5P978LrTTICuko2ze1nI?=
- =?us-ascii?Q?1pUSjW3MuuChkKHdZDqeMIUfOh4ZIkam8ldKzHgvsRGwDnmIiAYEK3YGSuAv?=
- =?us-ascii?Q?CbB4xUrfqxVTtFlqWa/e6rf5bTs+TRnZJKSKLq1/4KUmmVXsr3+CPXrAU8Yg?=
- =?us-ascii?Q?G7lPt2aZE4V1trBhlt4cQrxGCgoOzWA56/PAtJgEV/M6dNdzcEEGqElas0S0?=
- =?us-ascii?Q?uuPRabX98+u7yWB34Q9AujNuZX7Rwth0fd7NMNqYSpOPI4pKgcsTejXTc4/v?=
- =?us-ascii?Q?fhJPBLyXW+jmBLhxm7mlLsr/zhJ/DwrMBMoPc9jwH65FMxWuWhRH8+4yuvup?=
- =?us-ascii?Q?4l9m4EhSWfP44YVkYu9vVGXznZOOqiXEx1/gXyPQQ4fgcEfwMiTX1bB8Jl6c?=
- =?us-ascii?Q?XccIwOX1h7h9WvbUwQvC+69gW4gA3pYimDqWjTNzZ6cJ8RdCW9E+DxPndewV?=
- =?us-ascii?Q?fGYti/42L5cOWJB94VzY8TkdStMNSc0K+OQj6B7JI7OS92RtJJ8+OxVDj5OK?=
- =?us-ascii?Q?q/YN43qMT+Kk0N2oZ+N8WJxoBY7weWWyAS50jYX+TpLh8xrq8j6JTJfBtKTL?=
- =?us-ascii?Q?QDajD9GBIWFVzo/TUYBpaP4isvPmlWxHYsC7bVTUD/tleusd8ZQdZmwuIZyu?=
- =?us-ascii?Q?SnmZIJYQnNkf/Gs4RLAsWAFRtjS8TcnzZGosM+RkZ/slGLX8mtXXWmwnEr3k?=
- =?us-ascii?Q?UMGGWkigiZvXXd+bdTc9YxP0voQVg3GA9RuLpb8xfTwGqFrtxxxECBJk5ExR?=
- =?us-ascii?Q?FFdzTTd3nrwxgDmiRQY3wMohKdjDh4IZqQmYds5mamnITmv9d3pxqDhjDOXD?=
- =?us-ascii?Q?qzDa4yjmFPuK1QsNNAoXxGzOL1nz39S3P7mpkDq7eFmftCqcHYE2bO+igkVn?=
- =?us-ascii?Q?2vMf7PzOmI/UlmHgqRhgZ6JCNLMgKKVsNbmVeB2tWEC0DLbCTyTFCIjO/bOf?=
- =?us-ascii?Q?A+ZuZ0+QI2bcD4Be8Mvxp7xc3pxwx8pm2+nTnK/4dfPmyC+mX/Acj7ljyeQS?=
- =?us-ascii?Q?k+uZmeS9J3mfl7lVU/wA19i70tXYdNS2BGgVXUvHboZaXLgRgmyXj31QMRQi?=
- =?us-ascii?Q?/8hdtTwvbpXF9Vip5kLX9wO6cILRYd6OyNnL3YKIYxdqOkhEw81Gq1BGhUJt?=
- =?us-ascii?Q?eUHUUuHRwUuPdAvywmF6ljlMxr5R+F9O6rMoUW+GBGBdnc++ZM9Vqw6qWou5?=
- =?us-ascii?Q?KEKDJIKVj1KBtYxbrtYl5h3vkDzO7oI1jutNi1Frd1rDReaTE7oCVIT99TVi?=
- =?us-ascii?Q?Kn2FJTPYQofxXKTGLLP8PQ0u2GPVOQ+RA/0PqaJqeYRsVXWfGTeu7lgWl1vQ?=
- =?us-ascii?Q?Ay1LCdOjsoq0nb1TNpDPaNIZlHcng9l5rT5yS5TRJ+fsnc81exYxvwQc52Vy?=
- =?us-ascii?Q?6dv+XbvGsTTV3UHj6ZwKndDkXdYfgZDjneFYNcaZnyWJ+Mr2z8WdSom3e9oP?=
- =?us-ascii?Q?DbzMl76Wrji5RVzXTayCjg9lcNUr8TSKVS3qUMXG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2c2e897-b42a-4146-2a51-08dc5d5d01ef
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8690.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 15:02:02.7381
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gm8lbv3z1BTVM1RU9McfHX//yij/lW4AJR94mN1vkGawvGmres/wG5YA+TA+FeOYQxdvNG1OSU7gsX2joV0JIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8597
+X-Received: by 2002:a05:6638:204d:b0:482:fbfb:e72e with SMTP id
+ t13-20020a056638204d00b00482fbfbe72emr379402jaj.6.1713193383440; Mon, 15 Apr
+ 2024 08:03:03 -0700 (PDT)
+Date: Mon, 15 Apr 2024 08:03:03 -0700
+In-Reply-To: <20240415144101.44907-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000d41d2061623ebed@google.com>
+Subject: Re: [syzbot] [usb?] WARNING in usbnet_start_xmit/usb_submit_urb (2)
+From: syzbot <syzbot+d693c07c6f647e0388d3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 25, 2024 at 11:03:26AM +0800, Yuan, Perry wrote:
-> Make pstate driver initially retrieve the P-state transition delay and
-> latency values from the BIOS ACPI tables which has more reasonable
-> delay and latency values according to the platform design and
-> requirements.
-> 
-> Previously there values were hardcoded at specific value which may
-> have conflicted with platform and it might not reflect the most
-> accurate or optimized setting for the processor.
-> 
-> [054h 0084   8]                Preserve Mask : FFFFFFFF00000000
-> [05Ch 0092   8]                   Write Mask : 0000000000000001
-> [064h 0100   4]              Command Latency : 00000FA0
-> [068h 0104   4]          Maximum Access Rate : 0000EA60
-> [06Ch 0108   2]      Minimum Turnaround Time : 0000
-> 
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Tested-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+Hello,
 
-Acked-by: Huang Rui <ray.huang@amd.com>
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in usbnet_start_xmit/usb_submit_urb
 
-> ---
->  drivers/cpufreq/amd-pstate.c | 34 ++++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 6708c436e1a2..ec049b62b366 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -756,6 +756,36 @@ static void amd_pstate_update_limits(unsigned int cpu)
->  	mutex_unlock(&amd_pstate_driver_lock);
->  }
->  
-> +/**
-> + * Get pstate transition delay time from ACPI tables that firmware set
-> + * instead of using hardcode value directly.
-> + */
-> +static u32 amd_pstate_get_transition_delay_us(unsigned int cpu)
-> +{
-> +	u32 transition_delay_ns;
-> +
-> +	transition_delay_ns = cppc_get_transition_latency(cpu);
-> +	if (transition_delay_ns == CPUFREQ_ETERNAL)
-> +		return AMD_PSTATE_TRANSITION_DELAY;
-> +
-> +	return transition_delay_ns / NSEC_PER_USEC;
-> +}
-> +
-> +/**
-> + * Get pstate transition latency value from ACPI tables that firmware
-> + * set instead of using hardcode value directly.
-> + */
-> +static u32 amd_pstate_get_transition_latency(unsigned int cpu)
-> +{
-> +	u32 transition_latency;
-> +
-> +	transition_latency = cppc_get_transition_latency(cpu);
-> +	if (transition_latency  == CPUFREQ_ETERNAL)
-> +		return AMD_PSTATE_TRANSITION_LATENCY;
-> +
-> +	return transition_latency;
-> +}
-> +
->  /**
->   * amd_pstate_init_freq: Initialize the max_freq, min_freq,
->   *                       nominal_freq and lowest_nonlinear_freq for
-> @@ -848,8 +878,8 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->  		goto free_cpudata1;
->  	}
->  
-> -	policy->cpuinfo.transition_latency = AMD_PSTATE_TRANSITION_LATENCY;
-> -	policy->transition_delay_us = AMD_PSTATE_TRANSITION_DELAY;
-> +	policy->cpuinfo.transition_latency = amd_pstate_get_transition_latency(policy->cpu);
-> +	policy->transition_delay_us = amd_pstate_get_transition_delay_us(policy->cpu);
->  
->  	policy->min = min_freq;
->  	policy->max = max_freq;
-> -- 
-> 2.34.1
-> 
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 0 PID: 726 at drivers/usb/core/urb.c:503 usb_submit_urb+0xe4b/0x1730 drivers/usb/core/urb.c:503
+Modules linked in:
+CPU: 0 PID: 726 Comm: kworker/0:2 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Workqueue: mld mld_ifc_work
+RIP: 0010:usb_submit_urb+0xe4b/0x1730 drivers/usb/core/urb.c:503
+Code: 84 3c 02 00 00 e8 35 48 30 fd 4c 89 ef e8 1d 24 01 ff 45 89 e0 89 e9 4c 89 f2 48 89 c6 48 c7 c7 c0 49 30 87 e8 46 b1 f6 fc 90 <0f> 0b 90 90 e9 e9 f8 ff ff e8 07 48 30 fd 49 81 c4 b8 05 00 00 e9
+RSP: 0000:ffffc90001bef2e0 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: ffff8881026a1e00 RCX: ffffffff8118b029
+RDX: ffff88810b350000 RSI: ffffffff8118b036 RDI: 0000000000000001
+RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 000000000000000c R12: 0000000000000001
+R13: ffff888101f760a8 R14: ffff888105ee9040 R15: ffff8881026a1e7c
+FS:  0000000000000000(0000) GS:ffff8881f6400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f13260e9870 CR3: 000000010dbd0000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ usbnet_start_xmit+0x696/0x2440 drivers/net/usb/usbnet.c:1453
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x143/0x720 net/core/dev.c:3547
+ sch_direct_xmit+0x18e/0x840 net/sched/sch_generic.c:343
+ __dev_xmit_skb net/core/dev.c:3760 [inline]
+ __dev_queue_xmit+0x12c5/0x3ef0 net/core/dev.c:4301
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ neigh_resolve_output net/core/neighbour.c:1563 [inline]
+ neigh_resolve_output+0x5ba/0x950 net/core/neighbour.c:1543
+ neigh_output include/net/neighbour.h:542 [inline]
+ ip6_finish_output2+0xad9/0x2300 net/ipv6/ip6_output.c:137
+ __ip6_finish_output+0x3d8/0xf10 net/ipv6/ip6_output.c:211
+ ip6_finish_output net/ipv6/ip6_output.c:222 [inline]
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ ip6_output+0x23a/0x8c0 net/ipv6/ip6_output.c:243
+ dst_output include/net/dst.h:450 [inline]
+ NF_HOOK.constprop.0+0x118/0x8b0 include/linux/netfilter.h:314
+ mld_sendpack+0x6e6/0xd20 net/ipv6/mcast.c:1818
+ mld_send_cr net/ipv6/mcast.c:2119 [inline]
+ mld_ifc_work+0x756/0xce0 net/ipv6/mcast.c:2650
+ process_one_work+0x9a9/0x1a60 kernel/workqueue.c:3254
+ process_scheduled_works kernel/workqueue.c:3335 [inline]
+ worker_thread+0x6c8/0xf70 kernel/workqueue.c:3416
+ kthread+0x2c1/0x3a0 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+ </TASK>
+
+
+Tested on:
+
+commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b90f43180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=811ce8e010ac6afc
+dashboard link: https://syzkaller.appspot.com/bug?extid=d693c07c6f647e0388d3
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
