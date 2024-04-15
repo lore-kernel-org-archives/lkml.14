@@ -1,103 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF8737163;
-	Mon, 15 Apr 2024 23:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E60158D61;
+	Mon, 15 Apr 2024 23:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713222925; cv=none; b=UfX0OSeIjTcqEaNZOfgbd4sCCKL5StHA8L08ka7jQ8fvAA17s+O03B5bRPGmLY8XOQTZNi8vpKqnkt4lHCf1iv7zfvnyGF1hcnJcnbRQTdZLN/qmUAE/xMrvzslxEPT/XFi2dYT9UTHmEyCAwocsOURyqBdgjMsr4ELaRwyzgGk=
+	t=1713222976; cv=none; b=sxx1ZGEceozDM7QaOdegXJ1x/IXk1kLT0GtCOanUc3Y1qXaq9vV/3+VSGEMYqUtgO4E3GTOboIBMKJ+kVSaNX8etQL8FsuFjlIHHjPYjuMbF0c16liOmYnl0976/HdT/slFweOkmxZrLHohvw6Hmau+hc+x2ZSSWhHAEhcvmUsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713222925; c=relaxed/simple;
-	bh=g/+U37u84szEx/7PZiBV5MUYHjoIlyB1hUCoTjwWbPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bdhEaDAzUPlwtmYM7ffnJ5WN6nYxFdOPolWvFUIofhjsO7BNL3wVmHVDT0WWs0q0/iRRkknkXqIu2DKcCjHusVnaQkybMlX1Q2rdgaeA3EdpKm6w5KrB2qOE405NN8NP8u4ArJBRl5L+Jp5szAjxWG8/d63WJ58fyavjr7e2GOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6cKqEvB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713222976; c=relaxed/simple;
+	bh=7B0+vlNEjkd3v4+xOWiFJOgf2HlzQA09AZVPsetgOhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ezU6EMd3boOBtl5OGF1CxY9znKBhrT7JXHSq9EqfuXSimdAU4CcooXxnD1EtkD6Rp+HNRZ27g1w9dOzv9Q9Xj+DT3c2uHqpvl1lZIlMIiGlL31P4osOSUAxaTt0Ht3w2YaeFAF9T2/Rmk9N01/vPT3XFE2BKk6Uor802AkPb0c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2AKXiXY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6cKqEvB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A82CBC2BD11;
-	Mon, 15 Apr 2024 23:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713222925;
-	bh=g/+U37u84szEx/7PZiBV5MUYHjoIlyB1hUCoTjwWbPc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=p6cKqEvBtdkXDLHMpexoT3q0o5wpBwL9yufwCM7y/K2OWhX2p2yO3SS+pIOOvJ/0k
-	 EvKTPpKgOKs9JyFFQRwOISlc2zpXCHMASoRpHNE/emJQ8/VP1tnNa0LFcsYkIx2fgD
-	 6/E4Fn3eTDMJV0SUn6lH0nKjASXmhSRhzypyfYT4KWtG2sDrSSMPvtzsYgY1DZ0Cdd
-	 n3LYvKqv+KqegGjjdXIzmv+j2R1WQb7OaMnJsAqCw6b8ZB4A8MIiILf8SChFHHLshL
-	 lO9o/ffpYt21j+Joczzy/+1atdVBrrpFojYeTfDkFOJ4LPX/EyqA1dA8mI9PYnyl2g
-	 2wPeEU90TsBpw==
-Date: Mon, 15 Apr 2024 18:15:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Subject: Re: [RFC PATCH v4 03/20] PCI: Make pci_create_root_bus() declare its
- reliance on MSI domains
-Message-ID: <20240415231523.GA139682@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2AKXiXY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713222976; x=1744758976;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7B0+vlNEjkd3v4+xOWiFJOgf2HlzQA09AZVPsetgOhM=;
+  b=i2AKXiXYx9qF4XDQapP335mvoJx1a7SgU9uPs49KkIQ/QHlUzTo6P33W
+   g/zmzRypm87QEB2ul2QfmkALBd+05RB+oUbwKa4J/XXkpTa6Tti8clcv2
+   51PJZwZvOnUSjo+wQSZI5WbAzHbchfZSJnlxFWkKOYRc8P+IDodatx4F2
+   Tcdwz60biPPkQO4w5eC0HyzC/hAVwezrkUTCdlRPOiNNB5wcBXrE+ob2E
+   igQLAy4MfFS9DmNv662s5lzw1bALsy9Ak3CDdAo8dMBaUpat1ofKBu7SZ
+   jkkJfXy7efasSWUKWlj/F2Z7H9k4e9F5J4l7a29HlYxiJ9WFY1eUU6m79
+   A==;
+X-CSE-ConnectionGUID: 2KY2Dg9fS3ywDfHAiCGXdQ==
+X-CSE-MsgGUID: rsHupaCDQkKm/rUuhLsWjA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="31114734"
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="31114734"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 16:16:15 -0700
+X-CSE-ConnectionGUID: NpTcH9BFTF29RrltnUwZBQ==
+X-CSE-MsgGUID: tvdyeOlsQYe8ENzM5LFtLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="21963487"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 16:16:14 -0700
+Date: Mon, 15 Apr 2024 16:20:47 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
+ <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
+ J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
+ <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>, Robin Murphy
+ <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
+ "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
+ <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
+ "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 11/13] iommu/vt-d: Make posted MSI an opt-in cmdline
+ option
+Message-ID: <20240415162047.34f19b0f@jacob-builder>
+In-Reply-To: <BN9PR11MB527627DF2470FEC3144F59B08C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+	<20240405223110.1609888-12-jacob.jun.pan@linux.intel.com>
+	<BN9PR11MB527627DF2470FEC3144F59B08C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415170113.662318-4-sunilvl@ventanamicro.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 15, 2024 at 10:30:56PM +0530, Sunil V L wrote:
-> Similar to commit 9ec37efb8783 ("PCI/MSI: Make
-> pci_host_common_probe() declare its reliance on MSI domains"), declare
-> this dependency for PCI probe in ACPI based flow.
-> 
-> This is required especially for RISC-V platforms where MSI controller
-> can be absent. However, setting this for all architectures seem to cause
-> issues on non RISC-V architectures [1]. Hence, enabled this only for
-> RISC-V.
-> 
-> [1] - https://lore.kernel.org/oe-lkp/202403041047.791cb18e-oliver.sang@intel.com
-> 
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> ---
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 1325fbae2f28..e09915bee2ee 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3048,6 +3048,9 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
->  	bridge->sysdata = sysdata;
->  	bridge->busnr = bus;
->  	bridge->ops = ops;
-> +#ifdef CONFIG_RISCV
-> +	bridge->msi_domain = true;
-> +#endif
+Hi Kevin,
 
-Ugh.  I looked at [1], but that's not a very good justification for
-this #ifdef.  The fault mentioned in [1] would need to be fixed, but
-not this way.
+On Fri, 12 Apr 2024 09:31:32 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
->  	error = pci_register_host_bridge(bridge);
->  	if (error < 0)
-> -- 
-> 2.40.1
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, April 6, 2024 6:31 AM
+> > 
+> > +#ifdef CONFIG_X86_POSTED_MSI
+> > +		else if (!strncmp(str, "posted_msi", 10)) {
+> > +			if (disable_irq_post || disable_irq_remap)
+> > +				pr_warn("Posted MSI not enabled due to
+> > conflicting options!");
+> > +			else
+> > +				enable_posted_msi = 1;
+> > +		}
+> > +#endif  
 > 
+> the check of disable_irq_remap is unnecessary. It's unlikely to have
+> a configuration with disable_irq_post=0 while disable_irq_remap=1
+> given the latter has bigger scope.
+> 
+> but thinking more do we really need a check here? there is no order
+> guarantee that "posted_msi" is parsed after the parameters deciding
+> the value of two disable variables.
+> 
+> it probably makes more sense to just set enable_posted_msi here
+> and then do all required checks when picking up the irqchip in
+> intel_irq_remapping_alloc().
+
+Makes sense, I have a helper function posted_msi_supported() called in
+intel_irq_remapping_alloc() already.
+
+My intention was to alert negligent users, but is is not really necessary
+as you said.
+
+Thanks,
+
+Jacob
