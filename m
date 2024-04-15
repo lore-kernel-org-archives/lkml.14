@@ -1,193 +1,122 @@
-Received: from msa.smtpout.orange.fr (smtp-68.smtpout.orange.fr [80.12.242.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF84155734;
-	Mon, 15 Apr 2024 20:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE6F7F7FF;
+	Mon, 15 Apr 2024 20:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713214091; cv=none; b=mFUfkhi8SmEK3CobjmoDHPLWHducd80coVq+iotRWTBteGwf0jJ3VK10GjXw+bXfcMH2vaJ4NV1NmVEyOxk/py2Z+bg56S6lVHFtQoOc0ZRQ+Qgc3DX7tT5wzZmVTjyH3askQQzSoGXB+x5OlLxWz/TjNJdIDr+8R6Wo3yID7qI=
+	t=1713214209; cv=none; b=R4Zfah8VbVaa2SJqecUSXp5bzBvfa8yCts4qCev7IUEAJssDjLN+uzBwAePNosVhR8U7XSBqb+bWf44TmGl3+2SoqsrVhGChGaBS0cZEUCcojapTHr0kEJJ5Waf6f/rXvr+F/oH9li68URpFCDeyecswkU7qQAPaGSRLlGp8yQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713214091; c=relaxed/simple;
-	bh=OXUn3oOBfuYnTTy1mRu7lO/Z7jMxLafr2xQIIy2r0mI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FROabLKez9A3/ZiRZMsqYlQ9eN1tqQuKfvhW6S0qaFGABTcm+tLGREAAwytiEhvwJprX761VNvnfYH33Wqwphj8El+R7kryPQd+ydY1XcRLN/r5tnFnmy38ClldPvg9vnalvpMrifCKeJWwvi0tuFpgGC/9vB7dkg3CnuCFrqJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=K6eZcu0g; arc=none smtp.client-ip=80.12.242.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713214209; c=relaxed/simple;
+	bh=gAWfBjMv/u1hM1ri7vb4WcKTVN9s+CRx5IVlFNsdewU=;
+	h=Message-ID:From:To:Cc:References:In-Reply-To:Subject:Date:
+	 MIME-Version:Content-Type; b=DnoTX85xAwo01nKZhzY5x775pnkjZIkG9bX9B5uJV2rYcNpJyOASWD3xt0abzhWGCiWUJbbKIb7+otGLw8y6STL36TWgCQc6LE7pFdMGjtzKIws8iaT74PxsN2e6oiynhixX1LWc7jbq9MJ3MKyJvM1s9oueYaFA0Cw1aljU+Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=Bsfv5Qfs; arc=none smtp.client-ip=145.253.228.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="K6eZcu0g"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id wTF9rwTfAUEo7wTF9rKczA; Mon, 15 Apr 2024 22:48:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713214081;
-	bh=S7uRgOT3iqhsU0DFa0D2HmmuEAbosFRiIzoeYLAMrm8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=K6eZcu0gztGMQv7qYT7noG/tiTulzOJYXNLMMvyf4z1n5jh04K24Gxm12D/Hr0qh2
-	 oHRKVbot6M3PXazewZLyPvNuBcM7L6pLo0wv/HefPHx9OgqjY6TQzZN2qSW1+j5iJb
-	 C0TQDfggobQt3/DjsvQovsKQ4kG7a2N6/2yyMPBbddMJFOW9Bzno03XjjK+9W5436m
-	 C0bMXP6XrQ0PP7BYFN5Sd8JzMp3QeHiGq7ZPdhTuAusvVI1aOQL4By3DNuH0WsMU1h
-	 G4B/jAMVUs4WT+h+jai5YCsyDTxKD4XSxhQkbUJl2Rm9QPDFEKoDVC5N0sqaZwfHH/
-	 1BFeRPZEdgywQ==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 15 Apr 2024 22:48:01 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <4b1a4cc5-e057-4944-be69-d25f28645256@wanadoo.fr>
-Date: Mon, 15 Apr 2024 22:47:59 +0200
+	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="Bsfv5Qfs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
+	s=vfde-mb-mr2-23sep; t=1713214198;
+	bh=sdWOScoNOqhnKs7wXEoboT4q95JQ4ewNRcGo/88he5M=;
+	h=Message-ID:From:To:References:In-Reply-To:Subject:Date:
+	 Content-Type:X-Mailer:From;
+	b=Bsfv5QfsBPQjeBsyl3aUbwapcSPbTKuD4IMziRyplvzfZKp4VflHnCEegQxmAouMF
+	 YReqiqSToV1MAqPEfmVGew4sJje9nW1D4W9b3+gziaOkU4F4ay01HG6EBC6LL9lxxd
+	 souZnilJjfzKPHSr1r4oU+btY/YaaxgroOnUUfig=
+Received: from smtp.vodafone.de (unknown [10.0.0.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VJK6t6Ftwz1yVn;
+	Mon, 15 Apr 2024 20:49:58 +0000 (UTC)
+Received: from H270 (p54805648.dip0.t-ipconnect.de [84.128.86.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VJK6h4LtKz9thr;
+	Mon, 15 Apr 2024 20:49:45 +0000 (UTC)
+Message-ID: <2ECD48ACEA9540C083E6B797CFD18027@H270>
+From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
+To: "Eric Biggers" <ebiggers@kernel.org>,
+	<linux-crypto@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+References: <20240411162359.39073-1-ebiggers@kernel.org> <20240411162359.39073-5-ebiggers@kernel.org>
+In-Reply-To: <20240411162359.39073-5-ebiggers@kernel.org>
+Subject: Re: [PATCH v2 4/4] crypto: x86/sha256-ni - simplify do_4rounds
+Date: Mon, 15 Apr 2024 22:41:07 +0200
+Organization: Me, myself & IT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] seq_file: Optimize seq_puts()
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+	charset="Windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Windows Mail 6.0.6002.18197
+X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.24158
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 2536
+X-purgate-ID: 155817::1713214194-6CFF7A4B-F57EC3D5/0/0
 
-Le 04/01/2024 à 14:29, Christophe JAILLET a écrit :
-> Most of seq_puts() usages are done with a string literal. In such cases,
-> the length of the string car be computed at compile time in order to save
-> a strlen() call at run-time. seq_write() can then be used instead.
-> 
-> This saves a few cycles.
-> 
-> To have an estimation of how often this optimization triggers:
->     $ git grep seq_puts.*\" | wc -l
->     3391
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+"Eric Biggers" <ebiggers@kernel.org> wrote:
 
-Hi,
+> Instead of loading the message words into both MSG and \m0 and then
+> adding the round constants to MSG, load the message words into \m0 and
+> the round constants into MSG and then add \m0 to MSG.  This shortens the
+> source code slightly.  It changes the instructions slightly, but it
+> doesn't affect binary code size and doesn't seem to affect performance.
 
-any feed-back on this small optimisation of seq_puts()?
+At last the final change: write the macro straightforward and SIMPLE,
+closely matching NIST.FIPS.180-4.pdf and their order of operations.
 
-Most of its usage would be optimized and a strlen() would be saved in 
-all the corresponding cases.
+@@ ...
++.macro  sha256  m0 :req, m1 :req, m2 :req, m3 :req
++.if \@ < 4
++        movdqu  \@*16(DATA_PTR), \m0
++        pshufb  SHUF_MASK, \m0          # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
++.else
++                                        # \m0 = {w(\@*16-16), w(\@*16-15), w(\@*16-14), w(\@*16-13)}
++                                        # \m1 = {w(\@*16-12), w(\@*16-11), w(\@*16-10), w(\@*16-9)}
++                                        # \m2 = {w(\@*16-8),  w(\@*16-7),  w(\@*16-6),  w(\@*16-5)}
++                                        # \m3 = {w(\@*16-4),  w(\@*16-3),  w(\@*16-2),  w(\@*16-1)}
++        sha256msg1 \m1, \m0
++        movdqa     \m3, TMP
++        palignr    $4, \m2, TMP
++        paddd      TMP, \m0
++        sha256msg2 \m3, \m0             # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
++.endif
++        movdqa      (\@-8)*16(SHA256CONSTANTS), MSG
++        paddd       \m0, MSG
++        sha256rnds2 STATE0, STATE1      # STATE1 = {f', e', b', a'}
++        punpckhqdq  MSG, MSG
++        sha256rnds2 STATE1, STATE0      # STATE0 = {f", e", b", a"},
++                                        # STATE1 = {h", g", d", c"}
++.endm
 
+JFTR: you may simplify this further using .altmacro and generate \m0 to \m3
+      as MSG%(4-\@&3), MSG%(5-\@&3), MSG%(6-\@&3) and MSG%(7-\@&3) within
+      the macro, thus getting rid of its 4 arguments.
 
-$ git grep seq_puts.*\" | wc -l
-3436
+@@ ...
++.rept 4                                 # 4*4*4 rounds
++        sha256  MSG0, MSG1, MSG2, MSG3
++        sha256  MSG1, MSG2, MSG3, MSG0
++        sha256  MSG2, MSG3, MSG0, MSG1
++        sha256  MSG3, MSG0, MSG1, MSG2
++.endr
 
-$ git grep seq_puts | wc -l
-3644
+Now that all code written by Tim Chen and Sean Gulley is gone,
+remove their copyright notice and insert your and my name instead.
 
-CJ
+regards
+Stefan
 
-> ---
-> Checked by comparing the output of a few .s files.
-> Here is one of these outputs:
-> 
-> $ diff -u drivers/clk/clk.s.old drivers/clk/clk.s | grep -C6 seq_w
-> 
->   	call	clk_prepare_unlock	#
->   # drivers/clk/clk.c:3320: 	seq_puts(s, "}\n");
->   	movq	%r12, %rdi	# s,
-> +	movl	$2, %edx	#,
->   	movq	$.LC66, %rsi	#,
-> -	call	seq_puts	#
-> +	call	seq_write	#
->   	call	__tsan_func_exit	#
->   # drivers/clk/clk.c:3322: }
->   	xorl	%eax, %eax	#
-> @@ -34520,6 +34521,7 @@
->   	popq	%rbp	#
->   	popq	%r12	#
-> --
->   # drivers/clk/clk.c:3205: 		seq_puts(s, "-----");
->   	call	__sanitizer_cov_trace_pc	#
-> +	movl	$5, %edx	#,
->   	movq	$.LC72, %rsi	#,
->   	movq	%r13, %rdi	# s,
-> -	call	seq_puts	#
-> +	call	seq_write	#
->   	jmp	.L2134	#
->   .L2144:
->   # drivers/clk/clk.c:1793: 	return clk_core_get_accuracy_no_lock(core);
-> @@ -35225,20 +35228,23 @@
->   	leaq	240(%r12), %rdi	#, tmp95
->   	call	__tsan_read8	#
-> --
->   	movq	%r12, %rdi	# s,
-> +	movq	$.LC77, %rsi	#,
->   # drivers/clk/clk.c:3244: 	struct hlist_head **lists = s->private;
->   	movq	240(%r12), %rbp	# s_9(D)->private, lists
->   # drivers/clk/clk.c:3246: 	seq_puts(s, "                                 enable  prepare  protect                                duty  hardware                            connection\n");
-> -	call	seq_puts	#
-> +	call	seq_write	#
->   # drivers/clk/clk.c:3247: 	seq_puts(s, "   clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id\n");
-> +	movl	$142, %edx	#,
->   	movq	$.LC78, %rsi	#,
->   	movq	%r12, %rdi	# s,
-> -	call	seq_puts	#
-> +	call	seq_write	#
->   # drivers/clk/clk.c:3248: 	seq_puts(s, "---------------------------------------------------------------------------------------------------------------------------------------------\n");
-> +	movl	$142, %edx	#,
->   	movq	$.LC79, %rsi	#,
->   	movq	%r12, %rdi	# s,
-> -	call	seq_puts	#
-> +	call	seq_write	#
->   # drivers/clk/clk.c:3251: 	clk_prepare_lock();
->   	call	clk_prepare_lock	#
->   .L2207:
-> @@ -37511,7 +37517,7 @@
->   	subq	$16, %rsp	#,
->   # drivers/clk/clk.c:3082: {
-> ---
->   fs/seq_file.c            |  4 ++--
->   include/linux/seq_file.h | 10 +++++++++-
->   2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/seq_file.c b/fs/seq_file.c
-> index f5fdaf3b1572..8ef0a07033ca 100644
-> --- a/fs/seq_file.c
-> +++ b/fs/seq_file.c
-> @@ -669,7 +669,7 @@ void seq_putc(struct seq_file *m, char c)
->   }
->   EXPORT_SYMBOL(seq_putc);
->   
-> -void seq_puts(struct seq_file *m, const char *s)
-> +void __seq_puts(struct seq_file *m, const char *s)
->   {
->   	int len = strlen(s);
->   
-> @@ -680,7 +680,7 @@ void seq_puts(struct seq_file *m, const char *s)
->   	memcpy(m->buf + m->count, s, len);
->   	m->count += len;
->   }
-> -EXPORT_SYMBOL(seq_puts);
-> +EXPORT_SYMBOL(__seq_puts);
->   
->   /**
->    * seq_put_decimal_ull_width - A helper routine for putting decimal numbers
-> diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
-> index 234bcdb1fba4..15abf45d62c5 100644
-> --- a/include/linux/seq_file.h
-> +++ b/include/linux/seq_file.h
-> @@ -118,7 +118,15 @@ void seq_vprintf(struct seq_file *m, const char *fmt, va_list args);
->   __printf(2, 3)
->   void seq_printf(struct seq_file *m, const char *fmt, ...);
->   void seq_putc(struct seq_file *m, char c);
-> -void seq_puts(struct seq_file *m, const char *s);
-> +void __seq_puts(struct seq_file *m, const char *s);
-> +#define seq_puts(m, s)						\
-> +do {								\
-> +	if (__builtin_constant_p(s))				\
-> +		seq_write(m, s, __builtin_strlen(s));		\
-> +	else							\
-> +		__seq_puts(m, s);				\
-> +} while (0)
-> +
->   void seq_put_decimal_ull_width(struct seq_file *m, const char *delimiter,
->   			       unsigned long long num, unsigned int width);
->   void seq_put_decimal_ull(struct seq_file *m, const char *delimiter,
+PS: see <https://skanthak.homepage.t-online.de/fips-180.html>
+    (which I still polish) not just for this implementation.
 
+PPS: if MASM had a counter like \@, I'd used it there.
