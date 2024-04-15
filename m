@@ -1,148 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D7778B4E;
-	Mon, 15 Apr 2024 12:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B313078C92;
+	Mon, 15 Apr 2024 12:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185365; cv=none; b=hwPQOR/l08W97LTUB9cPVwd14/Wu5XSVsKlEpYQ/5YbFa3cwiWZ0D6KWZoTw0qCQWPgq9RLi8KV4UZcenbe0b8SlNhwyKPVnEiaKrHK4qofO9UdZxiwuVkZssl+s2Xc+XBojoV1/MzP64KnGdQ64LIOD4GNq/mdAHOw2I340eUk=
+	t=1713185367; cv=none; b=YbsI+/XVPzGQhJH3odEQG/FcHxtpFH+aENJ3zDjfbby69NtGmUw9ZTpeauEKQz2ovlcEhm2uqklkomw2osn+FhCDZHOnGUMU5ii0uUZvsY53YX5QaLk3865UB6gJ99gkL1n0lQYYO/lLeLhMWVjQoqpnRKvFzH6j7Skz6I6gT4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185365; c=relaxed/simple;
-	bh=mG/unaVRY8IXRkgGUTAad+KiTdZfMmvpwe0Cqb6mEvI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mcAiLZAO+yfYwPYd2DghxBm4tUWUb9VwwE3hao0116WFxG+hsKCp7l07h+r6RPCU0Wq/by76NugkhFkjyLxGQAkXnM7GOIXRlsh6D6HkKJDrLwfMw/S2glF3z04nxlaqgKOO1o7WQh7PJ6o2a+NpCft7DQMpEcN0ME9HYAeat5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6P43zqj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185367; c=relaxed/simple;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FMNTZTveLVi9xCMXs+siK2UPcrufgEvuoJLGvhjaV6NE662w/tMfGkDUlCOdQKV2YvKD1m3vfIzmoNWrkl3gO02uIUno66EgPKLptH0JiRFshP3eEXwz+G4vmeK2mIpaMNLTZCkPEwCj2sZeyuiMVtlT25+7Sb0G3KnK/sbBaM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujUxwP+a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6P43zqj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF4BC113CC;
-	Mon, 15 Apr 2024 12:49:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujUxwP+a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F17C3277B;
+	Mon, 15 Apr 2024 12:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185365;
-	bh=mG/unaVRY8IXRkgGUTAad+KiTdZfMmvpwe0Cqb6mEvI=;
+	s=k20201202; t=1713185367;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n6P43zqjhFEoS3k2zPcvcA4l42Rk5bKdp/dfjcQbWesWR0snDA/kYVDGABF5CnJMQ
-	 gg7QO8WuOwz3p5cFaZp3dLfbVne4upDxGWGyjNP66LUKU44Ap78LRdfTtTtMPCwnQ+
-	 m9KKu5trkn48P5DTn+Zcymz0ftLQZ7ec303cfmDSh8nrzkC+QsH2fALlNOC6C6ms73
-	 WKnqqqV0lklMOYjtYll5zBuJwa5sKshpHuDUjXSPNc6/bmPOCFh9LiezXgwX31gAev
-	 /vgqKrwTR6/Kqg5SOrKYpQXIGi+qeT0PJf7621TtrwZvl2jSRs1Le2ydbHXR81QvoC
-	 jwDehTfxUe0QA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v9 02/36] tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
-Date: Mon, 15 Apr 2024 21:49:20 +0900
-Message-Id: <171318536009.254850.3768213780834316975.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-User-Agent: StGit/0.19
+	b=ujUxwP+a+Zjx8ptfATC1pk3sC4sSbnTbK5IhAJpea9+wZbNd6uXPS0DXKu6u0Kz8+
+	 qYmqzIwLPyFVQP7kL9ntERfT/Guvnnu5e6naakEwJN9TCljjn00FMXLAve/n5Chs5p
+	 3dFZ9IjyN79DmyyXqppNkt86kIQTf5/Rsq7IRIv8x0vAoVMNBVDvVMK/gm/J010AKe
+	 +S/5y3TXsctKZXY+LRMb+leu+VL6jasrX50JeoEXNN1A5tM+5skFYtkmfKUXafFvsQ
+	 j1W4vQYgntNBhkbtVINhz6YNWvsN379c3Kq6hucYADlrbFnr3Y1Pdqf85LSUJdotH3
+	 iFBYomjJZ8Oxw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>,
+	syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 08/15] ALSA: line6: Zero-initialize message buffers
+Date: Mon, 15 Apr 2024 06:02:48 -0400
+Message-ID: <20240415100311.3126785-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
+References: <20240415100311.3126785-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.6
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-Rename ftrace_regs_return_value to ftrace_regs_get_return_value as same as
-other ftrace_regs_get/set_* APIs.
+[ Upstream commit c4e51e424e2c772ce1836912a8b0b87cd61bc9d5 ]
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+For shutting up spurious KMSAN uninit-value warnings, just replace
+kmalloc() calls with kzalloc() for the buffers used for
+communications.  There should be no real issue with the original code,
+but it's still better to cover.
+
+Reported-by: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/00000000000084b18706150bcca5@google.com
+Message-ID: <20240402063628.26609-1-tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Changes in v6:
-  - Moved to top of the series.
- Changes in v3:
-  - Newly added.
----
- arch/loongarch/include/asm/ftrace.h |    2 +-
- arch/powerpc/include/asm/ftrace.h   |    2 +-
- arch/s390/include/asm/ftrace.h      |    2 +-
- arch/x86/include/asm/ftrace.h       |    2 +-
- include/linux/ftrace.h              |    2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ sound/usb/line6/driver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index de891c2c83d4..b43acfc5776c 100644
---- a/arch/loongarch/include/asm/ftrace.h
-+++ b/arch/loongarch/include/asm/ftrace.h
-@@ -70,7 +70,7 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
- 	regs_get_kernel_argument(&(fregs)->regs, n)
- #define ftrace_regs_get_stack_pointer(fregs) \
- 	kernel_stack_pointer(&(fregs)->regs)
--#define ftrace_regs_return_value(fregs) \
-+#define ftrace_regs_get_return_value(fregs) \
- 	regs_return_value(&(fregs)->regs)
- #define ftrace_regs_set_return_value(fregs, ret) \
- 	regs_set_return_value(&(fregs)->regs, ret)
-diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-index 107fc5a48456..cfec6c5a47d0 100644
---- a/arch/powerpc/include/asm/ftrace.h
-+++ b/arch/powerpc/include/asm/ftrace.h
-@@ -61,7 +61,7 @@ ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
- 	regs_get_kernel_argument(&(fregs)->regs, n)
- #define ftrace_regs_get_stack_pointer(fregs) \
- 	kernel_stack_pointer(&(fregs)->regs)
--#define ftrace_regs_return_value(fregs) \
-+#define ftrace_regs_get_return_value(fregs) \
- 	regs_return_value(&(fregs)->regs)
- #define ftrace_regs_set_return_value(fregs, ret) \
- 	regs_set_return_value(&(fregs)->regs, ret)
-diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-index 621f23d5ae30..1912b598d1b8 100644
---- a/arch/s390/include/asm/ftrace.h
-+++ b/arch/s390/include/asm/ftrace.h
-@@ -88,7 +88,7 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
- 	regs_get_kernel_argument(&(fregs)->regs, n)
- #define ftrace_regs_get_stack_pointer(fregs) \
- 	kernel_stack_pointer(&(fregs)->regs)
--#define ftrace_regs_return_value(fregs) \
-+#define ftrace_regs_get_return_value(fregs) \
- 	regs_return_value(&(fregs)->regs)
- #define ftrace_regs_set_return_value(fregs, ret) \
- 	regs_set_return_value(&(fregs)->regs, ret)
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 897cf02c20b1..cf88cc8cc74d 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -58,7 +58,7 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
- 	regs_get_kernel_argument(&(fregs)->regs, n)
- #define ftrace_regs_get_stack_pointer(fregs) \
- 	kernel_stack_pointer(&(fregs)->regs)
--#define ftrace_regs_return_value(fregs) \
-+#define ftrace_regs_get_return_value(fregs) \
- 	regs_return_value(&(fregs)->regs)
- #define ftrace_regs_set_return_value(fregs, ret) \
- 	regs_set_return_value(&(fregs)->regs, ret)
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index b81f1afa82a1..d5df5f8fc35a 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -184,7 +184,7 @@ static __always_inline bool ftrace_regs_has_args(struct ftrace_regs *fregs)
- 	regs_get_kernel_argument(ftrace_get_regs(fregs), n)
- #define ftrace_regs_get_stack_pointer(fregs) \
- 	kernel_stack_pointer(ftrace_get_regs(fregs))
--#define ftrace_regs_return_value(fregs) \
-+#define ftrace_regs_get_return_value(fregs) \
- 	regs_return_value(ftrace_get_regs(fregs))
- #define ftrace_regs_set_return_value(fregs, ret) \
- 	regs_set_return_value(ftrace_get_regs(fregs), ret)
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index b67617b68e509..f4437015d43a7 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -202,7 +202,7 @@ int line6_send_raw_message_async(struct usb_line6 *line6, const char *buffer,
+ 	struct urb *urb;
+ 
+ 	/* create message: */
+-	msg = kmalloc(sizeof(struct message), GFP_ATOMIC);
++	msg = kzalloc(sizeof(struct message), GFP_ATOMIC);
+ 	if (msg == NULL)
+ 		return -ENOMEM;
+ 
+@@ -688,7 +688,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 	int ret;
+ 
+ 	/* initialize USB buffers: */
+-	line6->buffer_listen = kmalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
++	line6->buffer_listen = kzalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
+ 	if (!line6->buffer_listen)
+ 		return -ENOMEM;
+ 
+@@ -697,7 +697,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 		return -ENOMEM;
+ 
+ 	if (line6->properties->capabilities & LINE6_CAP_CONTROL_MIDI) {
+-		line6->buffer_message = kmalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
++		line6->buffer_message = kzalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
+ 		if (!line6->buffer_message)
+ 			return -ENOMEM;
+ 
+-- 
+2.43.0
 
