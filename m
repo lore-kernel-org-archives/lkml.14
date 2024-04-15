@@ -1,96 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE3325601;
-	Mon, 15 Apr 2024 22:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B934625601;
+	Mon, 15 Apr 2024 22:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713218799; cv=none; b=HFvvSI77XyLs6o0jaowG5KN7HWvP6wq2KhDh9K/SEUP0FOnk5LWWiSKaqFv2BkwXpYEmtZfpXIc3aSUM8tY4fMrNZOCvzi0YTswSVToDx5w2rkPIUmCeFJfRnCMZ8TxuANvEYUKPDR9jSJnBElkViPOeNsUjubfoRoD6+S3NDQ4=
+	t=1713218963; cv=none; b=lhgOP5KkAK+FHUWmrpOk/usac7/kZ4j0GwuCYT1uSVG7SUbu5Lsj6gUERs7p8w93CAAt+epQV2QRpYJrYfqy3OzMMj73KsSRgbRw0llriQZq7jT7UJQCr6QMBosvQPjqmhyCYS4CwSpolFQcj3k7yIAGzDginYHEExKAzTooY1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713218799; c=relaxed/simple;
-	bh=cfgrhk9pYDpOtV2H39ercNHeZSILx4+hGmgX0aJINjw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C44XzKCXJTb3u707sOvsrTNnVLRUYu2e5lg5LZCKaWkjAVPYoq32MrwS1+SmjQyKMTb9BYpRoHh/g9duCMqpm/inaXXnWcuwtQYSJJDXz2/y/BMlh0Yu+8f7/3fLUWd1qg+UBsaQlz6IOeC1SsL8LTavTvNVdKCmquIOsm3HIZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jocyVbEi; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713218963; c=relaxed/simple;
+	bh=0mTE8PnlCQ1wdA4wzRAi2+Rr4Bdb3Hxd7XqVlI6u7Rk=;
+	h=Message-ID:From:To:Cc:References:In-Reply-To:Subject:Date:
+	 MIME-Version:Content-Type; b=iXNOTOXBANmSSHJihKZXxIbp8qsyc2Fld5R/lcsPtNf4QlCKNCMCtR+yHQNeRWe51KT7W2MMwtxgtTgU1bzvNDkdNr3ZjDgg7Hq6zwiN6knrbwCDVg7TXYggyHpDP3BKsrmQCrD95lJeY9bwmVmxS4GrUtcOxHlOsMoLlasNkYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=BMZzzMtO; arc=none smtp.client-ip=145.253.228.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jocyVbEi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713218798; x=1744754798;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cfgrhk9pYDpOtV2H39ercNHeZSILx4+hGmgX0aJINjw=;
-  b=jocyVbEiuEv4+FfgN8a9ByetnnTI1rzkApUxCEvW8/ANdlsCw364Kv65
-   Ounmjpwo9QsrFZcnpk5vwStNuymplqQkH+zqfpCEDJRb3bPppCwtLpdE/
-   7u2mjhj7vInyO8ps9ArOkg1sJQEcWnDzu1AW9ph6Zs4/48SRUFpEWkV7M
-   yXoX8DQvinZT9XbnDLiLJpMEE3fCELxAjSIcBjr2jJBAduLsXjNqasB5X
-   /wZTrJo9dbBUAXbgR77xKDC358Pk2cYpfJ6RzmWIKGVh1byYu0wr7+oed
-   fHcmCz2za5vZ24U7JBX6sfjrBd0lO24Uh80z+57sY//fblHXDEWcMgqd4
-   Q==;
-X-CSE-ConnectionGUID: kscx6EoSTgOeijg5ke+IJw==
-X-CSE-MsgGUID: MtxVCn9TQReXDIT4Dl2cbQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="20021977"
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="20021977"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 15:06:37 -0700
-X-CSE-ConnectionGUID: ZdO8/rfUTyyrWSXRPlALMw==
-X-CSE-MsgGUID: JflKa/FqRW+xvBIwNzsRUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="26847205"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2024 15:06:36 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86/intel-uncore-freq: Increase minor number support
-Date: Mon, 15 Apr 2024 15:06:25 -0700
-Message-Id: <20240415220625.2828339-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="BMZzzMtO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
+	s=vfde-mb-mr2-23sep; t=1713218958;
+	bh=emoFhdkFz5RJ0/RyTC4V6sFSuslEbob2BZ/wjfJB4So=;
+	h=Message-ID:From:To:References:In-Reply-To:Subject:Date:
+	 Content-Type:X-Mailer:From;
+	b=BMZzzMtOtuz0aiD2q1FFtg7ASRoElNd/+BDp17Uzt8sZYDTt1IIKkWSyKORz+bT5G
+	 Xsm3nz6TIfASjfSWX1IHB0WYSKyX5y1XEbufWjlvUQiNsOej+itrUjAqoABNMeAvE5
+	 6LeeNUJIhjLmXYKyxFNFSTycKL1R8FkmUQ2IuDqk=
+Received: from smtp.vodafone.de (unknown [10.0.0.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VJLtQ25vsz1ybY;
+	Mon, 15 Apr 2024 22:09:18 +0000 (UTC)
+Received: from H270 (p54805648.dip0.t-ipconnect.de [84.128.86.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VJLtC63M9zKm4D;
+	Mon, 15 Apr 2024 22:09:04 +0000 (UTC)
+Message-ID: <65E53E4DD09F41CDA7EBCBD970E23C23@H270>
+From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
+To: "Eric Biggers" <ebiggers@kernel.org>
+Cc: <linux-crypto@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240411162359.39073-1-ebiggers@kernel.org> <20240411162359.39073-5-ebiggers@kernel.org> <2ECD48ACEA9540C083E6B797CFD18027@H270> <20240415212121.GA5206@sol.localdomain>
+In-Reply-To: <20240415212121.GA5206@sol.localdomain>
+Subject: Re: [PATCH v2 4/4] crypto: x86/sha256-ni - simplify do_4rounds
+Date: Tue, 16 Apr 2024 00:04:56 +0200
+Organization: Me, myself & IT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Windows Mail 6.0.6002.18197
+X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.24158
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 2866
+X-purgate-ID: 155817::1713218953-16BA2B22-EB43FB4D/0/0
 
-No new changes will be added for minor version 2. Change the minor
-version number to 2 and stop displaying log message for unsupported
-minor version 2.
+"Eric Biggers" <ebiggers@kernel.org> wrote:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c        | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Mon, Apr 15, 2024 at 10:41:07PM +0200, Stefan Kanthak wrote:
+[...]
+>> At last the final change: write the macro straightforward and SIMPLE,
+>> closely matching NIST.FIPS.180-4.pdf and their order of operations.
+>> 
+>> @@ ...
+>> +.macro  sha256  m0 :req, m1 :req, m2 :req, m3 :req
+>> +.if \@ < 4
+>> +        movdqu  \@*16(DATA_PTR), \m0
+>> +        pshufb  SHUF_MASK, \m0          # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
+>> +.else
+>> +                                        # \m0 = {w(\@*16-16), w(\@*16-15), w(\@*16-14), w(\@*16-13)}
+>> +                                        # \m1 = {w(\@*16-12), w(\@*16-11), w(\@*16-10), w(\@*16-9)}
+>> +                                        # \m2 = {w(\@*16-8),  w(\@*16-7),  w(\@*16-6),  w(\@*16-5)}
+>> +                                        # \m3 = {w(\@*16-4),  w(\@*16-3),  w(\@*16-2),  w(\@*16-1)}
+>> +        sha256msg1 \m1, \m0
+>> +        movdqa     \m3, TMP
+>> +        palignr    $4, \m2, TMP
+>> +        paddd      TMP, \m0
+>> +        sha256msg2 \m3, \m0             # \m0 = {w(\@*16), w(\@*16+1), w(\@*16+2), w(\@*16+3)}
+>> +.endif
+>> +        movdqa      (\@-8)*16(SHA256CONSTANTS), MSG
+>> +        paddd       \m0, MSG
+>> +        sha256rnds2 STATE0, STATE1      # STATE1 = {f', e', b', a'}
+>> +        punpckhqdq  MSG, MSG
+>> +        sha256rnds2 STATE1, STATE0      # STATE0 = {f", e", b", a"},
+>> +                                        # STATE1 = {h", g", d", c"}
+>> +.endm
+>> 
+>> JFTR: you may simplify this further using .altmacro and generate \m0 to \m3
+>>       as MSG%(4-\@&3), MSG%(5-\@&3), MSG%(6-\@&3) and MSG%(7-\@&3) within
+>>       the macro, thus getting rid of its 4 arguments.
+>> 
+>> @@ ...
+>> +.rept 4                                 # 4*4*4 rounds
+>> +        sha256  MSG0, MSG1, MSG2, MSG3
+>> +        sha256  MSG1, MSG2, MSG3, MSG0
+>> +        sha256  MSG2, MSG3, MSG0, MSG1
+>> +        sha256  MSG3, MSG0, MSG1, MSG2
+>> +.endr
+> 
+> Could you please send a real patch, following
+> Documentation/process/submitting-patches.rst?  It's hard to understand what
+> you're proposing here.
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 587437211d72..bb8e72deb354 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -29,7 +29,7 @@
- #include "uncore-frequency-common.h"
- 
- #define	UNCORE_MAJOR_VERSION		0
--#define	UNCORE_MINOR_VERSION		1
-+#define	UNCORE_MINOR_VERSION		2
- #define UNCORE_HEADER_INDEX		0
- #define UNCORE_FABRIC_CLUSTER_OFFSET	8
- 
-@@ -330,7 +330,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 			goto remove_clusters;
- 		}
- 
--		if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) != UNCORE_MINOR_VERSION)
-+		if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) > UNCORE_MINOR_VERSION)
- 			dev_info(&auxdev->dev, "Uncore: Ignore: Unsupported minor version:%lx\n",
- 				 TPMI_MINOR_VERSION(pd_info->ufs_header_ver));
- 
--- 
-2.40.1
+1) I replace your macro (which unfortunately follows Tim Chens twisted code)
+   COMPLETELY with a clean and simple implementation: message schedule first,
+   update of state variables last.
+   You don't need ".if \i >= 12 && \i < 60"/".if \i >= 4 && \i < 52" at all!
 
+2) I replace the .irp which invokes your macro with a .rept: my macro uses \@
+   instead of an argument for the round number.
+
+<https://sourceware.org/binutils/docs/as.html#Macro>
+
+| \@
+|    as maintains a counter of how many macros it has executed in this pseudo-
+|    variable; you can copy that number to your output with '\@', but only
+|    within a macro definition. 
+
+That's all.
+
+regards
+Stefan
