@@ -1,308 +1,246 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6632824B5
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40A4823CE
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 16:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199525; cv=none; b=jdRtxqAwL5HVZq8+DsI1rp4xiwNLuxvabTEH85oZyGia2pCgez30fWUuae0qh+oqxuMrtrKF78EzI/qYrBxmc2Sf5VUHf1X3CNMUhlVET06/wzbfEL76EO90ILs/k2+pbSOMqEAg+kG1baaB2weEtpLvpavENfe/bfZZL02EcbA=
+	t=1713199595; cv=none; b=dZzLm/jbdRKBoVmzm5l5qZMi+LRftSyQyHppPol07dE1AXEP7iNECLLSnqUcDHsl9KDOrl57w4pAk4hp5zBN5eUn9LJw6Fl5argOUh+1pQpAQL+ekX7k/Z8WqdeqhNgHs+obLsMDmL9mMMEEfltmP1ilrpKG4c5KW3ggHRqICc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199525; c=relaxed/simple;
-	bh=z7REmhzopffrfEb5EpBXG8pv1dB7QSKXzzdb+Bcd26Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ugws8EHojgKjk+hZQgavqCNx9afxf9cWwLCbNNT8vEhPAWgD74/1sfhUT/0fvce0Yo0uD2g41wq5F/PrUy3/CeDtnQdqXNvHToOJ4JJ0S8cM8XAbAUjUJfxxW8IeKGh+e3hQZrNSmsfnXfsqKUfkV0uyI4wPvGLnRcdgAE0hikI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZLoD7XH; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713199595; c=relaxed/simple;
+	bh=uKRmRXlYMg+vloX0JnC/WfLeUAtH7K+gl/wWRGmcVlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XjyrTLDgEAfS6sHCYfFl3yLVKlXKZFbDruxtjO3DDPf1GvyLJ+6H/f9nxA204/cdfQFBKTGBaBWWSaUbiAYgOhzpvaDiUjSxDPAclW77OtwRu5Ckor83Ryfp8gLnjjZo1b8q8mWs9N4cDjPfblW/uPWw1BaCZtUWN0HjLLBXqDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Gi2mbxkp; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZLoD7XH"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516dc51bb72so3704704e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:45:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Gi2mbxkp"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecec796323so3634593b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713199522; x=1713804322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f/KhD9KfHwX7IX6Wrg2MRL7/a7LRnOwbZXhvbxH+MaQ=;
-        b=EZLoD7XHemjf1D8iOb431mEcQaa4MRr0/1sf0MCyw30Vojwn7G+lCjKsnkcYNF4vU8
-         ipouaTZ6oz27yQDXEEsW2OYJqP0jIMzWJ328fzVKAMZ9vof9Tt9+iOOIq6rYfGfvA/kA
-         hU5dNy5WNjf8KjanbHu4aTkY9Xj+7tfzf2nW52OXfwJLqdShb3tAtPlQ8GuruCGAhheN
-         6YEwE5NAwtDlvIXh79aItETvp6ce3p4zZPdQqRMgEpoGbq0ofLtdclpe53H7kYT2GBdZ
-         Vj0GoM6vBu6YUudkSo8Gj2w+172WWdRxwPey4+Mna5yfKuHLBnV+7Is5FyG1tgwqJeWV
-         04fg==
+        d=broadcom.com; s=google; t=1713199593; x=1713804393; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mk7vHh2/rfuXj2gWCoznL17sDWuqGYmqqxWm+4Wleng=;
+        b=Gi2mbxkpZAwNoob2LnliXQGyP5Gc5XEhHV8I14N1CG2T/sEdo9bcMyh7FEOOLG+cGO
+         kiL6nd+vKeU945Om4epVE7HvPgOhKwredQ5dNUAHdfxdLm6xuICrT06IOirfVkoxv/tc
+         Y2d7gEGpaChdxGjsrEH1Fxk639DZ+zMTp+OZw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713199522; x=1713804322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f/KhD9KfHwX7IX6Wrg2MRL7/a7LRnOwbZXhvbxH+MaQ=;
-        b=b8dWb/nOCvLh868z7J0fDY0VxQNK70HoXMY8u3herpqDWrjv1wBk3Qh1BgrynLLy8U
-         xBvMekHedhxJYy0XxPpXMn7mefWZ/VZ/y3ynuN9VSfUuzLKPAkBdQPS2hmXKvPXiK095
-         Lno+/07XK2IudfxuINehrTwwxscIgdwczdBiNdDWwBRp2/k3Zvwz1//mIUyN85rLqAxU
-         ARm6QDpTp6WBjWmKPsG2E/Lm6/BbxX79Dc3U1ANYRduv/9MumkQJTQsxK30kC2d9CVti
-         521vpKUx1idIqaujjn3FnepFTb421T1lwvBcjfDH4+w0gA/33dzf9kvc/Qm1AQDh486Z
-         R4/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+16BbKtB+iLSL+3D/fQy6GqiBCorIXlW9vjbK3rpjGrF+vZtIicsFnTjUpaelt0EHboGST4Zp9VLN7tXFcOUV2iLvX+61lpQVLeA4
-X-Gm-Message-State: AOJu0Yw76HGiZGnh7bYlPnsvG8dTko+wwFJWrcGRIt8eubDSU9jU0VcA
-	yarAG3kgzizD1P4pbks2Qeb+Mdry68tXNPd3lX3l6Y7jPq6i4d7z0vvdey694apM570+cfGLeqQ
-	hYW9xIy0WyjPdH3O/sOXhtI/XGKQaAGpZz3Gt
-X-Google-Smtp-Source: AGHT+IEcBD8O1qMrT7A92+Ydq3Sto26jxXW+0RuDsdMTKnmJALnhCB284OCiAeunirCqxNaVBDcxQvXd+kj7ZYSGKsA=
-X-Received: by 2002:a19:3805:0:b0:516:a8f6:3863 with SMTP id
- f5-20020a193805000000b00516a8f63863mr6831908lfa.30.1713199521580; Mon, 15 Apr
- 2024 09:45:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713199593; x=1713804393;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mk7vHh2/rfuXj2gWCoznL17sDWuqGYmqqxWm+4Wleng=;
+        b=mw754C6L4JKDf9taGou/DzxkTCsaJwDY+wxzJ1YUsD3jZYVCnqI7w44TOYIg5Gkx8i
+         orZpAI0z7Xtf6+O91c233llgwrfD8Fjdxv4KPQqxtC8vVFBmH3EAzLdmQMKXI1D5oEmJ
+         h8lr0wskS9Wshcy+zFet+utqNA6m1pc2rwD3A3j4AUkUxlPJ5aCzmHiwPeNXaw4sJCa3
+         rX1r1sW7jRKCnFlrzD+grRnnYWI7/kRIuXbJCQmjjOTqtDK1lSo8WOzLvs0SA/5mRyIP
+         xBF4rsB15ngMKtGlry/I0V7Pzje09vUv+uxbDlTuFNwJR1+wthAPkjlPEiTkMhN/yw2H
+         oajw==
+X-Forwarded-Encrypted: i=1; AJvYcCXud33qZCzQjjfZA6qvqMedMr2+3jQg20hSSoO09Mew/nN1vYWcwlIWURoZBJovQ1l5wVBS7DVQ5Ajf+Xzr1mR3mU/irpjrNxhj/MV4
+X-Gm-Message-State: AOJu0YyN4c+35/p1mJRX6brYXYG/b7f+JZOUcyuLT+Q+oDS0BvSC+Wnq
+	WD5NkDwlTulipzT/NHM6CSc/l9+081jgpjPEc4InVXs4caDFUh4OfdgX+Ds6LA==
+X-Google-Smtp-Source: AGHT+IGlC8rpl7m5mHkv+NNvEHNt/WNXrjyYahwpknvncCDkNNNDWK4A+A1V+3Bf4pthM/IxFqn3+A==
+X-Received: by 2002:a05:6a21:3e14:b0:1a9:5c24:e710 with SMTP id bk20-20020a056a213e1400b001a95c24e710mr12497135pzc.20.1713199592885;
+        Mon, 15 Apr 2024 09:46:32 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id j24-20020a62b618000000b006ea9108ec12sm7404379pff.115.2024.04.15.09.46.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Apr 2024 09:46:32 -0700 (PDT)
+Message-ID: <48c1aaaa-574a-42a4-bb5b-28b76410cddc@broadcom.com>
+Date: Mon, 15 Apr 2024 09:46:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
- <18b19dd4-6d76-4ed8-b784-32436ab93d06@linux.intel.com> <Zhn9TGOiXxcV5Epx@google.com>
- <4c47b975-ad30-4be9-a0a9-f0989d1fa395@linux.intel.com> <CAL715WJXWQgfzgh8KqL+pAzeqL+dkF6imfRM37nQ6PkZd09mhQ@mail.gmail.com>
- <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
-In-Reply-To: <737f0c66-2237-4ed3-8999-19fe9cca9ecc@linux.intel.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 15 Apr 2024 09:44:45 -0700
-Message-ID: <CAL715W+RKCLsByfM3-0uKBWdbYgyk_hou9oC+mC9H61yR_9tyw@mail.gmail.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	pbonzini@redhat.com, peterz@infradead.org, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, jmattson@google.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm/arm64: dts: Drop "arm,armv8-pmuv3" compatible usage
+To: Rob Herring <robh@kernel.org>, soc@kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Dinh Nguyen <dinguyen@kernel.org>,
+ Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+ Antoine Tenart <atenart@kernel.org>,
+ Khuong Dinh <khuong@os.amperecomputing.com>,
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>, Robert Richter <rric@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, "Paul J. Murphy"
+ <paul.j.murphy@intel.com>,
+ Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Heiko Stuebner <heiko@sntech.de>,
+ Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Jisheng Zhang <jszhang@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ linux-fsd@tesla.com, Michal Simek <michal.simek@amd.com>
+Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-mediatek@lists.infradead.org,
+ linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-realtek-soc@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org
+References: <20240412222857.3873079-1-robh@kernel.org>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240412222857.3873079-1-robh@kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000002fe7820616255dab"
 
-On Mon, Apr 15, 2024 at 3:04=E2=80=AFAM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 4/15/2024 2:06 PM, Mingwei Zhang wrote:
-> > On Fri, Apr 12, 2024 at 9:25=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.in=
-tel.com> wrote:
-> >>
-> >> On 4/13/2024 11:34 AM, Mingwei Zhang wrote:
-> >>> On Sat, Apr 13, 2024, Mi, Dapeng wrote:
-> >>>> On 4/12/2024 5:44 AM, Sean Christopherson wrote:
-> >>>>> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> >>>>>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>>>>>
-> >>>>>> Implement the save/restore of PMU state for pasthrough PMU in Inte=
-l. In
-> >>>>>> passthrough mode, KVM owns exclusively the PMU HW when control flo=
-w goes to
-> >>>>>> the scope of passthrough PMU. Thus, KVM needs to save the host PMU=
- state
-> >>>>>> and gains the full HW PMU ownership. On the contrary, host regains=
- the
-> >>>>>> ownership of PMU HW from KVM when control flow leaves the scope of
-> >>>>>> passthrough PMU.
-> >>>>>>
-> >>>>>> Implement PMU context switches for Intel CPUs and opptunistically =
-use
-> >>>>>> rdpmcl() instead of rdmsrl() when reading counters since the forme=
-r has
-> >>>>>> lower latency in Intel CPUs.
-> >>>>>>
-> >>>>>> Co-developed-by: Mingwei Zhang <mizhang@google.com>
-> >>>>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >>>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>>>>> ---
-> >>>>>>     arch/x86/kvm/vmx/pmu_intel.c | 73 ++++++++++++++++++++++++++++=
-++++++++
-> >>>>>>     1 file changed, 73 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_i=
-ntel.c
-> >>>>>> index 0d58fe7d243e..f79bebe7093d 100644
-> >>>>>> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> >>>>>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> >>>>>> @@ -823,10 +823,83 @@ void intel_passthrough_pmu_msrs(struct kvm_v=
-cpu *vcpu)
-> >>>>>>     static void intel_save_pmu_context(struct kvm_vcpu *vcpu)
-> >>>>> I would prefer there be a "guest" in there somewhere, e.g. intel_sa=
-ve_guest_pmu_context().
-> >>>> Yeah. It looks clearer.
-> >>>>>>     {
-> >>>>>> +  struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
-> >>>>>> +  struct kvm_pmc *pmc;
-> >>>>>> +  u32 i;
-> >>>>>> +
-> >>>>>> +  if (pmu->version !=3D 2) {
-> >>>>>> +          pr_warn("only PerfMon v2 is supported for passthrough P=
-MU");
-> >>>>>> +          return;
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  /* Global ctrl register is already saved at VM-exit. */
-> >>>>>> +  rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
-> >>>>>> +  /* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero.=
- */
-> >>>>>> +  if (pmu->global_status)
-> >>>>>> +          wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_statu=
-s);
-> >>>>>> +
-> >>>>>> +  for (i =3D 0; i < pmu->nr_arch_gp_counters; i++) {
-> >>>>>> +          pmc =3D &pmu->gp_counters[i];
-> >>>>>> +          rdpmcl(i, pmc->counter);
-> >>>>>> +          rdmsrl(i + MSR_ARCH_PERFMON_EVENTSEL0, pmc->eventsel);
-> >>>>>> +          /*
-> >>>>>> +           * Clear hardware PERFMON_EVENTSELx and its counter to =
-avoid
-> >>>>>> +           * leakage and also avoid this guest GP counter get acc=
-identally
-> >>>>>> +           * enabled during host running when host enable global =
-ctrl.
-> >>>>>> +           */
-> >>>>>> +          if (pmc->eventsel)
-> >>>>>> +                  wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, 0);
-> >>>>>> +          if (pmc->counter)
-> >>>>>> +                  wrmsrl(MSR_IA32_PMC0 + i, 0);
-> >>>>> This doesn't make much sense.  The kernel already has full access t=
-o the guest,
-> >>>>> I don't see what is gained by zeroing out the MSRs just to hide the=
-m from perf.
-> >>>> It's necessary to clear the EVENTSELx MSRs for both GP and fixed cou=
-nters.
-> >>>> Considering this case, Guest uses GP counter 2, but Host doesn't use=
- it. So
-> >>>> if the EVENTSEL2 MSR is not cleared here, the GP counter 2 would be =
-enabled
-> >>>> unexpectedly on host later since Host perf always enable all validat=
-e bits
-> >>>> in PERF_GLOBAL_CTRL MSR. That would cause issues.
-> >>>>
-> >>>> Yeah,  the clearing for PMCx MSR should be unnecessary .
-> >>>>
-> >>> Why is clearing for PMCx MSR unnecessary? Do we want to leaking count=
-er
-> >>> values to the host? NO. Not in cloud usage.
-> >> No, this place is clearing the guest counter value instead of host
-> >> counter value. Host always has method to see guest value in a normal V=
-M
-> >> if he want. I don't see its necessity, it's just a overkill and
-> >> introduce extra overhead to write MSRs.
-> >>
-> > I am curious how the perf subsystem solves the problem? Does perf
-> > subsystem in the host only scrubbing the selector but not the counter
-> > value when doing the context switch?
->
-> When context switch happens, perf code would schedule out the old events
-> and schedule in the new events. When scheduling out, the ENABLE bit of
-> EVENTSELx MSR would be cleared, and when scheduling in, the EVENTSELx
-> and PMCx MSRs would be overwritten with new event's attr.config and
-> sample_period separately.  Of course, these is only for the case when
-> there are new events to be programmed on the PMC. If no new events, the
-> PMCx MSR would keep stall value and won't be cleared.
->
-> Anyway, I don't see any reason that PMCx MSR must be cleared.
->
+--0000000000002fe7820616255dab
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I don't have a strong opinion on the upstream version. But since both
-the mediated vPMU and perf are clients of PMU HW, leaving PMC values
-uncleared when transition out of the vPMU boundary is leaking info
-technically.
 
-Alternatively, doing the clearing at vcpu loop boundary should be
-sufficient if considering performance overhead.
 
-Thanks
--Mingwei
->
->
-> >
-> >>> Please make changes to this patch with **extreme** caution.
-> >>>
-> >>> According to our past experience, if there is a bug somewhere,
-> >>> there is a catch here (normally).
-> >>>
-> >>> Thanks.
-> >>> -Mingwei
-> >>>>> Similarly, if perf enables a counter if PERF_GLOBAL_CTRL without fi=
-rst restoring
-> >>>>> the event selector, we gots problems.
-> >>>>>
-> >>>>> Same thing for the fixed counters below.  Can't this just be?
-> >>>>>
-> >>>>>      for (i =3D 0; i < pmu->nr_arch_gp_counters; i++)
-> >>>>>              rdpmcl(i, pmu->gp_counters[i].counter);
-> >>>>>
-> >>>>>      for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++)
-> >>>>>              rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i,
-> >>>>>                     pmu->fixed_counters[i].counter);
-> >>>>>
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> >>>>>> +  /*
-> >>>>>> +   * Clear hardware FIXED_CTR_CTRL MSR to avoid information leaka=
-ge and
-> >>>>>> +   * also avoid these guest fixed counters get accidentially enab=
-led
-> >>>>>> +   * during host running when host enable global ctrl.
-> >>>>>> +   */
-> >>>>>> +  if (pmu->fixed_ctr_ctrl)
-> >>>>>> +          wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
-> >>>>>> +  for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++) {
-> >>>>>> +          pmc =3D &pmu->fixed_counters[i];
-> >>>>>> +          rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i, pmc->counter);
-> >>>>>> +          if (pmc->counter)
-> >>>>>> +                  wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, 0);
-> >>>>>> +  }
-> >>>>>>     }
-> >>>>>>     static void intel_restore_pmu_context(struct kvm_vcpu *vcpu)
-> >>>>>>     {
-> >>>>>> +  struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
-> >>>>>> +  struct kvm_pmc *pmc;
-> >>>>>> +  u64 global_status;
-> >>>>>> +  int i;
-> >>>>>> +
-> >>>>>> +  if (pmu->version !=3D 2) {
-> >>>>>> +          pr_warn("only PerfMon v2 is supported for passthrough P=
-MU");
-> >>>>>> +          return;
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  /* Clear host global_ctrl and global_status MSR if non-zero. */
-> >>>>>> +  wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> >>>>> Why?  PERF_GLOBAL_CTRL will be auto-loaded at VM-Enter, why do it n=
-ow?
-> >>>> As previous comments say, host perf always enable all counters in
-> >>>> PERF_GLOBAL_CTRL by default. The reason to clear PERF_GLOBAL_CTRL he=
-re is to
-> >>>> ensure all counters in disabled state and the later counter manipula=
-tion
-> >>>> (writing MSR) won't cause any race condition or unexpected behavior =
-on HW.
-> >>>>
-> >>>>
-> >>>>>> +  rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> >>>>>> +  if (global_status)
-> >>>>>> +          wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status);
-> >>>>> This seems especially silly, isn't the full MSR being written below=
-?  Or am I
-> >>>>> misunderstanding how these things work?
-> >>>> I think Jim's comment has already explain why we need to do this.
-> >>>>
-> >>>>>> +  wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
-> >>>>>> +
-> >>>>>> +  for (i =3D 0; i < pmu->nr_arch_gp_counters; i++) {
-> >>>>>> +          pmc =3D &pmu->gp_counters[i];
-> >>>>>> +          wrmsrl(MSR_IA32_PMC0 + i, pmc->counter);
-> >>>>>> +          wrmsrl(MSR_ARCH_PERFMON_EVENTSEL0 + i, pmc->eventsel);
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> >>>>>> +  for (i =3D 0; i < pmu->nr_arch_fixed_counters; i++) {
-> >>>>>> +          pmc =3D &pmu->fixed_counters[i];
-> >>>>>> +          wrmsrl(MSR_CORE_PERF_FIXED_CTR0 + i, pmc->counter);
-> >>>>>> +  }
-> >>>>>>     }
-> >>>>>>     struct kvm_pmu_ops intel_pmu_ops __initdata =3D {
-> >>>>>> --
-> >>>>>> 2.34.1
-> >>>>>>
+On 4/12/2024 3:28 PM, Rob Herring wrote:
+> The "arm,armv8-pmuv3" compatible is intended only for s/w models. Primarily,
+> it doesn't provide any detail on uarch specific events.
+> 
+> There's still remaining cases for CPUs without any corresponding PMU
+> definition and for big.LITTLE systems which only have a single PMU node
+> (there should be one per core type).
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> SoC Maintainers, Can you please apply this directly.
+> ---
+>   arch/arm/boot/dts/broadcom/bcm2711.dtsi              | 4 ++--
+>   arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi     | 2 +-
+>   arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi  | 2 +-
+
+For the above:
+
+Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
+--0000000000002fe7820616255dab
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIOmB/eVrLEzM4dey
+IW41PVjkuWsSm6GZgzgx3b3hQ15lMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQxNTE2NDYzM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAweS+pTTF/NeQ5XIQgn8hwhKB++j/C4T60
+uNIxCzC02Q3SfZVckKUcg7qbKB170DOLNijdeCjqiHh6z1gD3d2HULHMx6rChe98cFh5podGs6oZ
+eQg/+XkHz0vnN//p85BnBLr/M+e2tN+8uqTKvSga96iG8DuBz65Qwk+yim5hHfcdnVhKzgbfoa0D
+6aHmMM77Pi4bY7RwUxVPxfNhMf/XGlvB7FAs+Kdc7+liC7ErJiEK2quiUJXZEcmYiG4aoAb//Oep
+iO8+0tVwgFMyFh8+wesnTz/WYyhjThb6O56NXBNqs4CnulW509FnmTBXZP0V4CU8I+rt+1PR4ZQL
+EgY/
+--0000000000002fe7820616255dab--
