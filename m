@@ -1,105 +1,106 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BA6745E7;
-	Mon, 15 Apr 2024 12:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A30126F1A;
+	Mon, 15 Apr 2024 12:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185410; cv=none; b=RGtw/cyPhNjBe9k313d0wCe9r/q/V39AjA2HU8Tdk8KfizgwfxWHOid7ZM/E5ZSE4fcPAmRcfpXfdAFCKA9+VUn/vxK1U7vSYQ5QIl9YfHt76DGIOxvCiks+d/u5Ktwa+aJrpfeMBNmWsz/ohf7+9pDszyEWZU6Gm+kk2fQrzBY=
+	t=1713185413; cv=none; b=ZJZlTcx5pC28GzPIXjkFVnd9V28gzb01wKA/UWNfK1WXOvjTJyaHT8JWXdeGjt92tKwhYsWvB0/J/NQM1GT44u5HbieWV/RLxw72ZNPWNnCJL75PFZ4/U0jM8lqPb7K1diC4RZ1ywRZJw99FQCvqJ35xvjzMGzSFBre681r7xAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185410; c=relaxed/simple;
-	bh=RZViYOBc/68KZHjbxFjl/qF8BNCvvMPMaLqjwnNT1cQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ORgd+ENgck9aMYXi0anVyokS1rcB8TkB9CAB9qgfI4T+gSjuxO4K+bwESMqxlg/06g3Pe/ePp9heN15SsSlkdG9rLZpoImr2TVOxvvTeZ/QBf4uSMyhvPbB2ykoXczSy11X2JFLqp3p/7p+Lo89nb//opCZ8V0/6aHaJimx28Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=t7rbZXZn; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1713185413; c=relaxed/simple;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P0EHvmVgQBCyWqh3nDJpsLbzxqBb2XNOTkPgbpt8W6FM9GNmXhLpPjP7GVt5NDhYbSUpxfRXsatzrx1N6lY1abIFrtHUgPvjktysvl0dmw8RaJpSKJYCTVBPxpCMM+ggdL+VFr1dENxmp76gloe3mmyswZD2SZWsVfoXHC/KiSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3cSlHPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="t7rbZXZn"
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 012BD8801F;
-	Mon, 15 Apr 2024 14:50:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713185402;
-	bh=zyHbMiyALYbzRNSRQ3bVjd+xXWkKyPH62uQ6mMp3z34=;
-	h=From:To:Cc:Subject:Date:From;
-	b=t7rbZXZnhhOiPAMBAd3KnAFH2Y/JIUtt2kInK9KgJfVnug9MAK1S/Jj1LvY+oxT3W
-	 xsIU8rzqkCkG88fq4MCy6ZUIYaJUZyf2QIOWjXjNCo52Yt0TndKFT4h3LjFvRjjMWz
-	 gjMmmc1QaKIzPpK0NDRq4jaVYL2+8EEUYIt6sdiPYLIuBIYIS/k1mffCPoXu+PStlA
-	 bjU7KLxDn55bT5wY/RHaYgOhOisEDtcZkLrKQk3q65G1t8nVdq9dicYzkb5vDp6pDa
-	 w7GvMW+Hzr9E3gZj3aDKU/2NqdTuEJjcZsEY2g9xRPGO48ImPGaIQ72Z8HuHelXjwC
-	 ujxFYu9WCLC4w==
-From: Lukasz Majewski <lukma@denx.de>
-To: netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Tristram.Ha@microchip.com,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ravi Gunasekaran <r-gunasekaran@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Murali Karicheri <m-karicheri2@ti.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Ziyang Xuan <william.xuanziyang@huawei.com>,
-	Shigeru Yoshida <syoshida@redhat.com>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	linux-kernel@vger.kernel.org,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next PATCH v5 0/4] net: hsr: Add support for HSR-SAN (RedBOX)
-Date: Mon, 15 Apr 2024 14:49:24 +0200
-Message-Id: <20240415124928.1263240-1-lukma@denx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3cSlHPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B98C113CC;
+	Mon, 15 Apr 2024 12:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185412;
+	bh=9WgubhEyjIntDb8goamQgfEtmkM2n3g7m1ut+oETaNg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=n3cSlHPr0r2ryo/3YXON0nE/Z49kSc0dzGlU5gwVQnDQ93SmC3pB5+PyY6q1yHNqR
+	 emqASAAOIgFqkHs+eBel34yM7S+ghWClo3TO+wF40pmvjyiEXxtoOTRX039bPqIyeq
+	 4cj3MrJB3jJUJbBcl7x2kR09RgGuw7b/lRk5eNhEVvy5TYyx0Fkli4GlZpzYrcFOuf
+	 TiDt9NM1QUGPaQFFc/f34/V2UFN+1OTd21a6s4gNHG9TAjjqvcCX3V2KTOmhva0Gzw
+	 s2qAbXqjEK0iSLbY+KPBOqelBrptdY4iznqToHY5Ie6Mw5oSQQPnnTXR6UAn1Vdy2V
+	 3p9HiGulS8KWA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>,
+	syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 07/12] ALSA: line6: Zero-initialize message buffers
+Date: Mon, 15 Apr 2024 06:03:42 -0400
+Message-ID: <20240415100358.3127162-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100358.3127162-1-sashal@kernel.org>
+References: <20240415100358.3127162-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.27
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
 
-This patch set provides v5 of HSR-SAN (RedBOX) as well as hsr_redbox.sh
-test script.
+From: Takashi Iwai <tiwai@suse.de>
 
-Applied on top of:
-Branch: net-next/main
-SHA1: 50aee97d1511
+[ Upstream commit c4e51e424e2c772ce1836912a8b0b87cd61bc9d5 ]
 
-Runs inside: Buildroot (2024.02.1+):
-SHA1: b31443e09cb7bb67b97ae6fb7614fe3a22889d50
+For shutting up spurious KMSAN uninit-value warnings, just replace
+kmalloc() calls with kzalloc() for the buffers used for
+communications.  There should be no real issue with the original code,
+but it's still better to cover.
 
-Lukasz Majewski (4):
-  net: hsr: Provide RedBox support (HSR-SAN)
-  test: hsr: Move common code to hsr_common.sh file
-  test: hsr: Extract version agnostic information from ping command
-    output
-  test: hsr: Add test for HSR RedBOX (HSR-SAN) mode of operation
+Reported-by: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/00000000000084b18706150bcca5@google.com
+Message-ID: <20240402063628.26609-1-tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/usb/line6/driver.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- include/uapi/linux/if_link.h                  |  1 +
- net/hsr/hsr_device.c                          | 36 ++++++-
- net/hsr/hsr_device.h                          |  4 +-
- net/hsr/hsr_forward.c                         | 85 ++++++++++++++--
- net/hsr/hsr_framereg.c                        | 52 ++++++++++
- net/hsr/hsr_framereg.h                        |  6 ++
- net/hsr/hsr_main.h                            |  7 ++
- net/hsr/hsr_netlink.c                         | 30 +++++-
- net/hsr/hsr_slave.c                           |  1 +
- tools/testing/selftests/net/hsr/hsr_common.sh | 97 +++++++++++++++++++
- tools/testing/selftests/net/hsr/hsr_ping.sh   | 93 +-----------------
- tools/testing/selftests/net/hsr/hsr_redbox.sh | 97 +++++++++++++++++++
- 12 files changed, 403 insertions(+), 106 deletions(-)
- create mode 100644 tools/testing/selftests/net/hsr/hsr_common.sh
- create mode 100755 tools/testing/selftests/net/hsr/hsr_redbox.sh
-
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index b67617b68e509..f4437015d43a7 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -202,7 +202,7 @@ int line6_send_raw_message_async(struct usb_line6 *line6, const char *buffer,
+ 	struct urb *urb;
+ 
+ 	/* create message: */
+-	msg = kmalloc(sizeof(struct message), GFP_ATOMIC);
++	msg = kzalloc(sizeof(struct message), GFP_ATOMIC);
+ 	if (msg == NULL)
+ 		return -ENOMEM;
+ 
+@@ -688,7 +688,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 	int ret;
+ 
+ 	/* initialize USB buffers: */
+-	line6->buffer_listen = kmalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
++	line6->buffer_listen = kzalloc(LINE6_BUFSIZE_LISTEN, GFP_KERNEL);
+ 	if (!line6->buffer_listen)
+ 		return -ENOMEM;
+ 
+@@ -697,7 +697,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
+ 		return -ENOMEM;
+ 
+ 	if (line6->properties->capabilities & LINE6_CAP_CONTROL_MIDI) {
+-		line6->buffer_message = kmalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
++		line6->buffer_message = kzalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
+ 		if (!line6->buffer_message)
+ 			return -ENOMEM;
+ 
 -- 
-2.20.1
+2.43.0
 
