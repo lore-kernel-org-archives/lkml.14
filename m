@@ -1,81 +1,77 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023D61272B8;
-	Mon, 15 Apr 2024 23:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713223163; cv=none; b=vCJWpovfmVWEPVlrmCxeEBDx9aFIfJMJxfM1+beCfXqDVM1Fk9SV9Xz5/078bIwyy8T6U1m5D27mMc5l//EsJJqES2gdNiLDW5KtWgYQGCcYwy6NEx6c/yQUaThseWbrruzpsONtO5oVlGsNrgpQGpV/xyfEoXB15rJikm2Vd0g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713223163; c=relaxed/simple;
-	bh=O7IS3oPlp5+sm72VRPb5jKxSHrI+jlf1vy1OB12Yer0=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54BE158873
+	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 23:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713223382; cv=fail; b=YufONM9xD75e1M+lI3NT2t5ur6s+0dLj/bV9IBmkfuYd78qWOHYZrCu5JCMakf0/OLVezXfz1zVbmZ/eQqTicuRZcojMJ+u2D2D/BIs5cShUatgVimQAO2CBsJdr8boitkE0KxAEvyzDYNJYl2+vj5ISDXQbG81t1NBtyB+MF68=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713223382; c=relaxed/simple;
+	bh=3T7UJd/jhdGDg6QAcfu8gPejahaWlotuy2u7LtEFFuY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DFNeXMq9GuW2nb6151JrQgcEJpQkBt3lhr/KIQFTJfJ8pcTEW/kqp38+urWP7CJDU2PvNndow8YiAhtN8AW+39D8ecBXhUkbcp3mHtrp8qk0t6yqnnmgAvH20LzCyuX+NT484DQTaHNPIREWAfasfbsAIXrOZf5P3A1whdeKfB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Bp98jKkX; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	 MIME-Version:Content-Type; b=R2P/VCIEcB8P/nykv/g+mS3phBNrAuSfBExNiYOpOSlQ2mOdbUu/lm9XwSd/lsA7zkDdzxe9w5it/jfF+ixJ8IRbe0QrjhgGwV4IbF54GCP1KihsQatQEqayobE1VGa0yK9YZ/MSQilGsoK4QB7uNrivPVeV9QTly9LHvgxCw4A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gEpB6B4z; arc=fail smtp.client-ip=40.107.94.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Bp98jKkX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1713223161; x=1744759161;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nNllzdqzyM5Bz0YxRI8syNc99amIrBzYYq2sTSmZBPw=;
-  b=Bp98jKkXt+DWgJMJk/VnC2koZBCdXF3S9UfLHaXWlu2lOD/jHEkaJPiX
-   NqB29FKb+Zd+SEVzJ6uzAsCvZ/OEQA8szmWpggCFPh+qW6LgLBlyAc+Hl
-   PTSqDmJ6Sxwh9DzQzTiDVil4QvwPFl/KKS1zGzrkCyJ8MPHfLJoPeu923
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.07,204,1708387200"; 
-   d="scan'208";a="652012921"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 23:19:15 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:43163]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.42.38:2525] with esmtp (Farcaster)
- id b612ba95-1060-4583-9bf4-c255c8a740ec; Mon, 15 Apr 2024 23:19:15 +0000 (UTC)
-X-Farcaster-Flow-ID: b612ba95-1060-4583-9bf4-c255c8a740ec
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 15 Apr 2024 23:19:14 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.101.23) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 15 Apr 2024 23:19:03 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <devnull+j.granados.samsung.com@kernel.org>
-CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
-	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
-	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
-	<davem@davemloft.net>, <dccp@vger.kernel.org>, <dhowells@redhat.com>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
-	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
-	<herbert@gondor.apana.org.au>, <horms@verge.net.au>,
-	<j.granados@samsung.com>, <ja@ssi.bg>, <jaka@linux.ibm.com>,
-	<jlayton@kernel.org>, <jmaloy@redhat.com>, <jreuter@yaina.de>,
-	<kadlec@netfilter.org>, <keescook@chromium.org>, <kolga@netapp.com>,
-	<kuba@kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
-	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
-	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
-	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
-	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<pabeni@redhat.com>, <pablo@netfilter.org>, <ralf@linux-mips.org>,
-	<razor@blackwall.org>, <rds-devel@oss.oracle.com>, <roopa@nvidia.com>,
-	<stefan@datenfreihafen.org>, <steffen.klassert@secunet.com>,
-	<tipc-discussion@lists.sourceforge.net>, <tom@talpey.com>,
-	<tonylu@linux.alibaba.com>, <trond.myklebust@hammerspace.com>,
-	<wenjia@linux.ibm.com>, <ying.xue@windriver.com>, <kuniyu@amazon.com>
-Subject: Re: [PATCH v3 4/4] ax.25: Remove the now superfluous sentinel elements from ctl_table array
-Date: Mon, 15 Apr 2024 16:18:53 -0700
-Message-ID: <20240415231853.23060-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240412-jag-sysctl_remset_net-v3-4-11187d13c211@samsung.com>
-References: <20240412-jag-sysctl_remset_net-v3-4-11187d13c211@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gEpB6B4z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mewVpyIRQtR5v3jb5ky84nPvDhmbAWvJJSzr9UjGpggpGBJQgwpP/0vYS0j7HO4g2rqr018sKEtaiP4YsWoLklJLt5eELxvcadxh2r35p6QSc+f42qtTOtXB+RqcSYAggvU0ro+mtfvypKGwZPq8s7davDLHWkXBooeDbfPXFEnlBYyAxqV3B2vZgSwl0gEkfR7fa6FDLzYyxPBBpBicu74WWxRwMH1wyGM74OFyA4bIURQvhj5Vn4duvFP4CKICznnGBeF/EMTgBCyWErpWkC2zSqSvt8tUSyJYiw5h3qLR3v7gRYrP1qciy34utqFGgvLTuzLKmPk74DIfbhWPmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5L6huhVwFLq9ESJTyvDjJ3vB606cwa1M0dY0RLKwSnw=;
+ b=gMfeWjMOE3PoB89s0F1bwXGC/SLLVqa0hh6ySvA88SaF7cX6fExzLnG+5F0UbMI4N4bSJT2hA5C+T2lsv0F5TFlM7oPdnK2YFZpy8SssGptId1zamNyIqVau9eKMfaGFfPSNn0lYYTQj9EVHE3b46dndW/vrAxByxOpns1f4dWMvbflUtnGNjmIZvGquoeMv7kKVddpP85qEONNYeKZdKLzLNrvneQb0Fkp9lqynKNcmHWyF6BoGeprCDDP8wTxYPusr1fSbKUyPGcAuPCx1/odO3bEGk6gkHKOvhwQHfK8bXeLV1pcKIu/aWS6n+GHTR+uPKBOQwpAfrKGBHWh7CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5L6huhVwFLq9ESJTyvDjJ3vB606cwa1M0dY0RLKwSnw=;
+ b=gEpB6B4z7L+ebrGn6qzjYTUsEuB7Mf3VY0E87Xzh4nrGg8Eetrh1RkdTUniTh2c8tYDFo0KiFqZIkJCJggeb5Pkyh5JkvElc3CzHrm+Knm5lOaqwNQ2AsMOLOKmeeU1LyoMjPX+8MwsHUKPPpRGDZHQjwCxSJEvm0KgzzFnKI4Y=
+Received: from BL0PR03CA0002.namprd03.prod.outlook.com (2603:10b6:208:2d::15)
+ by PH7PR12MB7115.namprd12.prod.outlook.com (2603:10b6:510:1ee::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
+ 2024 23:22:56 +0000
+Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
+ (2603:10b6:208:2d:cafe::1e) by BL0PR03CA0002.outlook.office365.com
+ (2603:10b6:208:2d::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
+ Transport; Mon, 15 Apr 2024 23:22:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Mon, 15 Apr 2024 23:22:54 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 15 Apr
+ 2024 18:22:53 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>
+CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <jun.nakajima@intel.com>,
+	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>,
+	<michael.roth@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
+	<bhe@redhat.com>, <kirill.shutemov@linux.intel.com>, <bdas@redhat.com>,
+	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <anisinha@redhat.com>,
+	<jroedel@suse.de>, <ardb@kernel.org>, <kexec@lists.infradead.org>,
+	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 0/3] x86/snp: Add kexec support
+Date: Mon, 15 Apr 2024 23:22:44 +0000
+Message-ID: <cover.1713222642.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1712694667.git.ashish.kalra@amd.com>
+References: <cover.1712694667.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,114 +80,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|PH7PR12MB7115:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e8a1853-7f66-4566-e366-08dc5da2fa45
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	MxgOsBvp2fQwAJf1s59WblqEpUlRNFbF9VSwdn5UY61ARj/opJ+fvx5GsWtJHX0LfHaf2vucQJIS5o6Q2yidEOZAc+0YWVx1AfuaMA+bZcNtJCm7rtBwN8sTprDK2oXwhQ9QeBJ8PP3a6bPzbMUQwjXYZ4odAiA5kcPoOUrOJOYRS9vVs5D5LkqBlzrJjPt+pQXI/l12d6crOZw0XOfOEr6dQVUZtjBHYKGETxXGqFpMtX96/cCVkOJ7d1TnF/beVAbOzkYGTDlYklatsP5bVBDGrpbOe9TLFXtgJIV2YLvW6I1IV4+LzAY0y7Ne+GPlUD/tYXYb006tGvFgeNoRER1vBxYtKZqVQ8UXS+OY4omQ4IC1+T/gQ98xmKjjWZ/judPSLRmPnsqV0wCKQoLHMxvIR7b+G+zzYVZQTdtWICxxCRU8M9PWlRmGuOFG/4QTbeGBteTaT2eMitLnH5pvBUZDXlcvaX2tPq/e6JaAdyE/8rwViuCYFf6Ic78xI93z4AHIwPmdRZLtUlAcJjBTQu9c6Y20/nbfgBtaFT2uKu4smq193ZbFCvf0mpp0Yqs/DjEojk4wsSfYP7qoJY0pwV4KJPvdW2wX1unIU6dHDq8j0swCZzEt6UbmXSFPpTe7uCWPJwBBKIhAk+M8v4rfGzW9Yj+8C3KqSXgNA7sgc1/u+FNbDc8ULenf33H7CPREXQPXZ3ecgBiPj8Vmtxy7URRPCcmW/VJQqW9kTUnbP4pXsijZjr11FrDjFysm4kSx
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2024 23:22:54.4268
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e8a1853-7f66-4566-e366-08dc5da2fa45
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B071.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7115
 
-From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Fri, 12 Apr 2024 16:48:32 +0200
-> From: Joel Granados <j.granados@samsung.com>
-> 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which will
-> reduce the overall build time size of the kernel and run time memory
-> bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> Avoid a buffer overflow when traversing the ctl_table by ensuring that
-> AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
-> done with a BUILD_BUG_ON where ax25_param_table is defined and a
-> CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
-> in the ax25_dev_device_up and ax25_ds_set_timer functions.
-> 
-> The overflow happened when the sentinel was removed from
-> ax25_param_table. The sentinel's data element was changed when
-> CONFIG_AX25_DAMA_SLAVE was undefined. This had no adverse effects as it
-> still stopped on the sentinel's null procname but needed to be addressed
-> once the sentinel was removed.
-> 
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+The patchset adds bits and pieces to get kexec (and crashkernel) work on
+SNP guest.
+
+The series is based off of and tested against Kirill Shutemov's tree:
+  https://github.com/intel/tdx.git guest-kexec
+
+----
+
+v5:
+- Removed sev_es_enabled() function and using sev_status directly to
+  check for SEV-ES/SEV-SNP guest.
+- used --base option to generate patches to specify Kirill's TDX guest
+  kexec patches as prerequisite patches to fix kernel test robot
+  build errors.
+
+v4:
+- Rebased to current tip/master.
+- Reviewed-bys from Sathya.
+- Remove snp_kexec_unprep_rom_memory() as it is not needed any more as 
+  SEV-SNP code is not validating the ROM range in probe_roms() anymore.
+- Fix kernel test robot build error/warnings.
+
+v3:
+- Rebased;
+- moved Keep page tables that maps E820_TYPE_ACPI patch to Kirill's tdx
+  guest kexec patch series.
+- checking the md attribute instead of checking the efi_setup for
+  detecting if running under kexec kernel.
+- added new sev_es_enabled() function.
+- skip video memory access in decompressor for SEV-ES/SNP systems to 
+  prevent guest termination as boot stage2 #VC handler does not handle
+  MMIO.
+
+v2:
+- address zeroing of unaccepted memory table mappings at all page table levels
+  adding phys_pte_init(), phys_pud_init() and phys_p4d_init().
+- include skip efi_arch_mem_reserve() in case of kexec as part of this 
+  patch set.
+- rename last_address_shd_kexec to a more appropriate 
+  kexec_last_address_to_make_private.
+- remove duplicate code shared with TDX and use common interfaces
+  defined for SNP and TDX for kexec/kdump.
+- remove set_pte_enc() dependency on pg_level_to_pfn() and make the 
+  function simpler.
+- rename unshare_pte() to make_pte_private().
+- clarify and make the comment for using kexec_last_address_to_make_private  
+  more understandable.
+- general cleanup. 
 
 
-> ---
->  include/net/ax25.h         | 2 ++
->  net/ax25/ax25_dev.c        | 3 +++
->  net/ax25/ax25_ds_timer.c   | 4 ++++
->  net/ax25/sysctl_net_ax25.c | 3 +--
->  4 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/net/ax25.h b/include/net/ax25.h
-> index 0d939e5aee4e..eb9cee8252c8 100644
-> --- a/include/net/ax25.h
-> +++ b/include/net/ax25.h
-> @@ -139,7 +139,9 @@ enum {
->  	AX25_VALUES_N2,		/* Default N2 value */
->  	AX25_VALUES_PACLEN,	/* AX.25 MTU */
->  	AX25_VALUES_PROTOCOL,	/* Std AX.25, DAMA Slave, DAMA Master */
-> +#ifdef CONFIG_AX25_DAMA_SLAVE
->  	AX25_VALUES_DS_TIMEOUT,	/* DAMA Slave timeout */
-> +#endif
->  	AX25_MAX_VALUES		/* THIS MUST REMAIN THE LAST ENTRY OF THIS LIST */
->  };
->  
-> diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-> index c5462486dbca..af547e185a94 100644
-> --- a/net/ax25/ax25_dev.c
-> +++ b/net/ax25/ax25_dev.c
-> @@ -78,7 +78,10 @@ void ax25_dev_device_up(struct net_device *dev)
->  	ax25_dev->values[AX25_VALUES_N2]        = AX25_DEF_N2;
->  	ax25_dev->values[AX25_VALUES_PACLEN]	= AX25_DEF_PACLEN;
->  	ax25_dev->values[AX25_VALUES_PROTOCOL]  = AX25_DEF_PROTOCOL;
-> +
-> +#ifdef CONFIG_AX25_DAMA_SLAVE
->  	ax25_dev->values[AX25_VALUES_DS_TIMEOUT]= AX25_DEF_DS_TIMEOUT;
-> +#endif
->  
->  #if defined(CONFIG_AX25_DAMA_SLAVE) || defined(CONFIG_AX25_DAMA_MASTER)
->  	ax25_ds_setup_timer(ax25_dev);
-> diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-> index c4f8adbf8144..8f385d2a7628 100644
-> --- a/net/ax25/ax25_ds_timer.c
-> +++ b/net/ax25/ax25_ds_timer.c
-> @@ -49,12 +49,16 @@ void ax25_ds_del_timer(ax25_dev *ax25_dev)
->  
->  void ax25_ds_set_timer(ax25_dev *ax25_dev)
->  {
-> +#ifdef CONFIG_AX25_DAMA_SLAVE
->  	if (ax25_dev == NULL)		/* paranoia */
->  		return;
->  
->  	ax25_dev->dama.slave_timeout =
->  		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
->  	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-> +#else
-> +	return;
-> +#endif
->  }
->  
->  /*
-> diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-> index db66e11e7fe8..fb9966926e90 100644
-> --- a/net/ax25/sysctl_net_ax25.c
-> +++ b/net/ax25/sysctl_net_ax25.c
-> @@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] = {
->  		.extra2		= &max_ds_timeout
->  	},
->  #endif
-> -
-> -	{ }	/* that's all, folks! */
->  };
->  
->  int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-> @@ -155,6 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
->  	if (!table)
->  		return -ENOMEM;
->  
-> +	BUILD_BUG_ON(AX25_MAX_VALUES != ARRAY_SIZE(ax25_param_table));
->  	for (k = 0; k < AX25_MAX_VALUES; k++)
->  		table[k].data = &ax25_dev->values[k];
->  
-> 
-> -- 
-> 2.43.0
+Ashish Kalra (3):
+  efi/x86: skip efi_arch_mem_reserve() in case of kexec.
+  x86/boot/compressed: Skip Video Memory access in Decompressor for
+    SEV-ES/SNP.
+  x86/snp: Convert shared memory back to private on kexec
+
+ arch/x86/boot/compressed/misc.c |   6 +-
+ arch/x86/include/asm/sev.h      |   4 +
+ arch/x86/kernel/sev.c           | 161 ++++++++++++++++++++++++++++++++
+ arch/x86/mm/mem_encrypt_amd.c   |   3 +
+ arch/x86/platform/efi/quirks.c  |  20 +++-
+ 5 files changed, 190 insertions(+), 4 deletions(-)
+
+
+base-commit: a18b42d8997abfd77aa1637c0de6850b0c30b1fe
+prerequisite-patch-id: bd8e77f0f12223d21cb2f35b77bfcbdd9ad80b0f
+prerequisite-patch-id: bfe2fa046349978ac1825275eb205acecfbc22f3
+prerequisite-patch-id: 5e60d292457c7cd98fd3e45c23127e9463b56a69
+prerequisite-patch-id: 1f97d0a2edb7509dd58276f628d1a4bda62c154c
+prerequisite-patch-id: 8db559385c44e8b6670d74196e8d83d2dfad2f40
+prerequisite-patch-id: cbdfea1e50ecb3b4cee3a25a27df4d35bd95d532
+prerequisite-patch-id: 1cea0996e0dc3bb9f0059c927c405ca31003791e
+prerequisite-patch-id: 469a0a3c78b0eca82527cd85e2205fb8fb89d645
+prerequisite-patch-id: 2974ef211db5253d9782018e352d2a6ff0b0ef54
+prerequisite-patch-id: 2cfffd80947941892421dae99b7fa0f9f9715884
+prerequisite-patch-id: 466c2cb9f0a107bbd1dbd8526f4eff2bdb55f1ce
+prerequisite-patch-id: d4966ae63e86d24b0bf578da4dae871cd9002b12
+prerequisite-patch-id: fccde6f1fa385b5af0195f81fcb95acd71822428
+prerequisite-patch-id: 16048ee15e392b0b9217b8923939b0059311abd2
+prerequisite-patch-id: 5c9ae9aa294f72f63ae2c3551507dfbd92525803
+prerequisite-patch-id: 758bdb686290c018cbd5b7d005354019f9d15248
+prerequisite-patch-id: 4125b799fc9577b1a46427e45618fa0174f7a4b3
+prerequisite-patch-id: 60760e0c98ab7ccd2ca22ae3e9f20ff5a94c6e91
+-- 
+2.34.1
+
