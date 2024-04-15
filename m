@@ -1,105 +1,85 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692B14E1A0
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 09:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6C340875;
+	Mon, 15 Apr 2024 09:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713174753; cv=none; b=lQm7lDfBp31cC93I1PhQVok0ZFdAKIUruxmZohqFlswSrKopkrCJ1TD5uRShEKhmd88d6X40vhGAxo2KsHZv2caiSPMw4ovm9DPHHk/msISrg2fPWOzwcAZJJtxx2Rbmsqz3KpgS7yL6W3o+n8OeUnnzDqVprnQqJzNKcST6RvM=
+	t=1713174778; cv=none; b=b9eZOVwpjq7nASugHpkIg7e8UMY3g2iH6wy63ussQAgTUMHZ7xyQpkIFnq1fVKvWH9AvOxiJjy+LCMimYITUWUVJJy0LVDAJC4Mv9PHRU00fTrpO02nCMGrw/yCMZ0bQvsDFoIxkJiMJCkPnHbWpe4pZmVQEOmaGUjGXtKmqA70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713174753; c=relaxed/simple;
-	bh=wRVTJ0UbYbZDQRp6UEkosuQ5Xv/tRLFqmEIuhSEGVu4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j/GCWmwUfw++Xybri/j0LHXsYgK6K78xiRLfVT2ehvyBl3quqPoqqSHG1SZnuTMtRJUo20ebtjcGRtlIxfjJC4QRDiOdRB1IiuyPlQ6ifHxrgcKXZ2Dl1bbajuMS+JOQ3k1I31zB1w0dvk/lbx9wI4zqaTP9p1K+HXtKSDQp8/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=H4m/cOlC; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1713174778; c=relaxed/simple;
+	bh=V/X3vrE3jxSz3ehSDmcCXV4yyEQ3m8xL6Dlyz364sUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QU0ceNe0VvnbJQMPeBXunrWHRM+qvTGlGEMjKjxDTtiBWYYYkngJkh9oI4wj7jeMxVH07r1+9z3Vb9Fr0rM17jAcwIIQuduxi8hlgsTtMthOR+jxDIOOXLJdtQVUoyVAX0Q5nqEkrpMU71jFoleQuCz3BbGv/yMHScytp1rIFq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NItyMYn4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="H4m/cOlC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1713174736; x=1713433936;
-	bh=c6ckz4hhAbktVZkF1RuxUbUmw/jaVAkQ7dsloKnHX8M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=H4m/cOlCahXLO+0GLUL9cXxPqoObTqJqbMgZaX0TOJbG4YwQf5PO4XUDPkJ7/d85Y
-	 1z6MlUat8q+X7wyjRBLEpLI86mo77Iir0TCVWoiiyaVSK7GTVSITXAhnpFYJrx5G9L
-	 5VwJ7e2Vecmjew40OzAOwZ3W/RLVqQAbhRISYnsBhDpt+i91x37qze+C/S8arERy2v
-	 NARZhDhUhivIqHZ+LHnxFbfWJsXvzgWoNrEDFfHZF66n8uxgU1Um0Kg/G3c0ULZCQr
-	 dJds5xaHflmkLw+dKiWj2w/RIBKaJegRspfuavfuEWEshLTJNpskEsxbQAECMBfV3Y
-	 QNOmEt1kDxQRg==
-Date: Mon, 15 Apr 2024 09:51:47 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
-Message-ID: <36c22716-ba41-46e0-8e18-991f1a14b208@proton.me>
-In-Reply-To: <CAH5fLgjT3hAdtdNeb7FgX491UhvMGa-JHevz_EqC=N4zVViBjw@mail.gmail.com>
-References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com> <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com> <2cae6fd4-906c-44ad-88be-0dfed090d07c@proton.me> <CAH5fLgjT3hAdtdNeb7FgX491UhvMGa-JHevz_EqC=N4zVViBjw@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NItyMYn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF48FC113CC;
+	Mon, 15 Apr 2024 09:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713174778;
+	bh=V/X3vrE3jxSz3ehSDmcCXV4yyEQ3m8xL6Dlyz364sUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NItyMYn4nODvxzunXF0rBWDX4mjwxMOncgDRtCD0EU+Iy7Mn5U36CFUa2d1rO7fyp
+	 crqdmhItd6+IsgsmrkQKjAQhkxf/aGtid5kVvdcLRVnKmPRgqiqiO2okk4u1ekq+Oo
+	 7BYmR5aQNZJ+neZXCvvHc24nJuz89kx4Xks1FeIs=
+Date: Mon, 15 Apr 2024 11:52:49 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
+Cc: Oliver Neukum <oneukum@suse.com>,
+	Aleksander Morgado <aleksandermj@chromium.org>,
+	linux-usb@vger.kernel.org, linux@roeck-us.net,
+	linux-kernel@vger.kernel.org, ejcaruso@chromium.org
+Subject: Re: [PATCH] usb: cdc-wdm: close race between read and workqueue
+Message-ID: <2024041536-simile-flatly-824a@gregkh>
+References: <385a3519-b45d-48c5-a6fd-a3fdb6bec92f@chromium.org>
+ <87mspvi0lk.fsf@miraculix.mork.no>
+ <a6ad34d3-9cce-4178-8271-0e09ced2b6f4@suse.com>
+ <878r1fht93.fsf@miraculix.mork.no>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <878r1fht93.fsf@miraculix.mork.no>
 
-On 15.04.24 11:44, Alice Ryhl wrote:
-> On Mon, Apr 15, 2024 at 11:37=E2=80=AFAM Benno Lossin <benno.lossin@proto=
-n.me> wrote:
->>
->> On 15.04.24 09:13, Alice Ryhl wrote:
->>> +impl UserSlice {
->>> +    /// Constructs a user slice from a raw pointer and a length in byt=
-es.
->>> +    ///
->>> +    /// Constructing a [`UserSlice`] performs no checks on the provide=
-d address and length, it can
->>> +    /// safely be constructed inside a kernel thread with no current u=
-serspace process. Reads and
->>> +    /// writes wrap the kernel APIs `copy_from_user` and `copy_to_user=
-`, which check the memory map
->>> +    /// of the current process and enforce that the address range is w=
-ithin the user range (no
->>> +    /// additional calls to `access_ok` are needed).
->>> +    ///
->>> +    /// Callers must be careful to avoid time-of-check-time-of-use (TO=
-CTOU) issues. The simplest way
->>> +    /// is to create a single instance of [`UserSlice`] per user memor=
-y block as it reads each byte
->>> +    /// at most once.
->>> +    pub fn new(ptr: *mut c_void, length: usize) -> Self {
->>
->> What would happen if I call this with a kernel pointer and then
->> read/write to it? For example
->>
->>       let mut arr =3D [MaybeUninit::uninit(); 64];
->>       let ptr: *mut [MaybeUninit<u8>] =3D &mut arr;
->>       let ptr =3D ptr.cast::<c_void>();
->>
->>       let slice =3D UserSlice::new(ptr, 64);
->>       let (mut r, mut w) =3D slice.reader_writer();
->>
->>       r.read_raw(&mut arr)?;
->>       // SAFETY: `arr` was initialized above.
->>       w.write_slice(unsafe { MaybeUninit::slice_assume_init_ref(&arr) })=
-?;
->>
->> I think this would violate the exclusivity of `&mut` without any
->> `unsafe` code. (the `unsafe` block at the end cannot possibly be wrong)
->=20
-> This will fail with an EFAULT error. There is a check on the C side
-> that verifies that the address is in userspace. (The access_ok call.)
+On Mon, Apr 15, 2024 at 11:26:00AM +0200, Bjørn Mork wrote:
+> Oliver Neukum <oneukum@suse.com> writes:
+> > On 15.04.24 08:47, Bjørn Mork wrote:
+> >
+> >> urb from service_outstanding_interrupt(). That's why it was added. See
+> >> the explanation Robert wrote when introducing it:
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/usb/class/cdc-wdm.c?id=c1da59dad0ebd3f9bd238f3fff82b1f7ffda7829
+> >
+> > Well, the explanation is correct in that we must read
+> > data available. However, if the RESPONDING flag is set
+> > and the URB submitted, we are already doing so.
+> 
+> Sounds reasonable.  Except that the bug proves we didn't.
+> 
+> If you are right that service_outstanding_interrupt can race againts
+> itself (and I don't doubt that), then I guess this could also happen
+> between failure to submit the URB and clearing the flag?
+> 
+> >> As for the XMM behaviour: it's been a long time since I tried any of
+> >> those, but AFAIR one the major differences compared to Qualcomm was the
+> >> strict queue handling in the firmware.  This caused a number of problems
+> >> where the cdc-wdm driver wanted to skip a message for some reason.  So
+> >> I'm not surprised that a bug like this is triggered by one of those
+> >> modems. That's probably the only thing they are good for :-)
+> >
+> > I am not sure where exactly the issue lies here. Suggestions for
+> > debugging?
+> 
+> Nothing more than the obvious;  Get one of those modems and do some
+> usbmon snooping.
 
-I see, that makes a lot of sense.
+So for now, should we just revert this problem commit?
 
-Regardless of whether you fix the nit about the guarantees section:
+thanks,
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-
---=20
-Cheers,
-Benno
-
+greg k-h
