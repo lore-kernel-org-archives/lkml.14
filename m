@@ -1,115 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DBB85299;
-	Mon, 15 Apr 2024 12:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C360885299;
+	Mon, 15 Apr 2024 12:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185402; cv=none; b=rX95gj9BJfdMhIXRU5/wognf5OhuRCxVkbpOnKPNWx7+1V+nEvL5NSq/cbEASjNmifSBSelG1TlLqEBLCfPs3E8glCJbAw1DIm3rbMLIUrmJewBoOqDQCadDWus5lBb2nbs0BjbdjFYPv9IwMRLLvMtgiim8cL+dDqgtHphVIkE=
+	t=1713185405; cv=none; b=QQ4ZU1lAMchZB6M1yHdYmAe1lPPr0fN9WEoJfhU2+FhdH4i2FUyF11U9i7z9AwmpVlgX9KTRUtWaXiN93/bIC9Nsu8E2nntP202G2Mc1yb75GMyrvKLHUEkah1uVi3EVb/mHzpS8v2w8a99QUKKV96enG9ImXmguc/Izj+Y7yk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185402; c=relaxed/simple;
-	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aTDZQvubJ6O3igXywurnt12LZiqgqOtiIANsM1z0o+mX/4GDPNmh5EINspQvHLwZreYKp0lxU7DO92qsHPB41OgHf51O73XdC8Xf05z6eo+XqfZoViWosJxE0DQLiVS6IXc5gUIo5O//eZuDhMWEFQWpC64qc+I9Wyi4CfB4fJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSS8f0tm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185405; c=relaxed/simple;
+	bh=su8lAdbQyVsMoyVxYqoxXb5brRrfnJdJWAb+55IZgJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ck0J1IHYbXEdv02CN7XA7QC3z8fr3f3AhUm5xBWODw+Dw92sNs58YAvIQ+synZ+WBwWY/kPqP6zFLoggOmQqJdZpnZ6iDVvGu19f5NL5SH38FMhyBpgHBlX74OzNWb8XYOel7ikL3pj2+XoLDnJ92z4GmDNRPNBr3s8RiiRnokM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Anf1e6SF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSS8f0tm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7837C113CC;
-	Mon, 15 Apr 2024 12:49:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Anf1e6SF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB1BC2BD10;
+	Mon, 15 Apr 2024 12:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185402;
-	bh=v6a8A4n/NQNVvl6IUBlyb4ncY6wKsPnocwxI4QmL7G4=;
+	s=k20201202; t=1713185405;
+	bh=su8lAdbQyVsMoyVxYqoxXb5brRrfnJdJWAb+55IZgJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mSS8f0tmbEjB0HOjLht2e8wfg1cZRfKaMcSV9fYdVyQ+xIzbz0p454mUqlXhC4o8h
-	 bByVOLS+5HhVbnVNHIS5z5QClB05E7YXYmC6sia/AmRpCXpovgmWUZZb/PToWVdPS+
-	 QC4ssQXovpmYjEGFT4AisJWZPpPE2QVVH5k4jYN8MUtsmm4NG3ZMs7z6DzZ4Ve8Y9b
-	 o+FYUI5hlZeAGIjL8uR6AR5TZQRAJZUU42Sl9k+Mj0jatq3Gdy9d059nQzysRGR0ij
-	 A74jXL3wU5OPidiEqn2TjYWeCOwGV04GM1bcfHK7ofAhBl2Le23TYGcU8Manj1Szyt
-	 m9rc0VCZavMMw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v9 05/36] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
-Date: Mon, 15 Apr 2024 21:49:55 +0900
-Message-Id: <171318539550.254850.4289354595322910591.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
-References: <171318533841.254850.15841395205784342850.stgit@devnote2>
-User-Agent: StGit/0.19
+	b=Anf1e6SF6vUuhNdU1GO8akN0ICZc90BKW9PMQnStCE2Hm6BywZ+xCUamgmvn2AtF8
+	 gDAIvxJmtjtLjo5M1i55IEC726xybNb4dw0T82CaOgOoKtD50ZLS3KLMHXcCXQ8ES+
+	 aQQhSle41ic7014sFnU0hwu+rxTuhbjE4FkEUO1TlTi1aiyymYfLQCrQlyhUN4FcXu
+	 HtYyyNe0kM+jJrC7ZBRWgCx8Qm79HSlsKANFL/wVUOe6f+d6d7xLgPfqNmPincX842
+	 pXel2qS0Dnlb69jvtOAp/HM+Kqk3gy+GKeE9bdaOqc7g45sezOLlQtYbW+lZnkdvtb
+	 p2loF0RCQbRUA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yihang Li <liyihang9@huawei.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Jason Yan <yanaijie@huawei.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jejb@linux.ibm.com,
+	yangxingui@huawei.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 05/12] scsi: libsas: Align SMP request allocation to ARCH_DMA_MINALIGN
+Date: Mon, 15 Apr 2024 06:03:40 -0400
+Message-ID: <20240415100358.3127162-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100358.3127162-1-sashal@kernel.org>
+References: <20240415100358.3127162-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.27
 Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Yihang Li <liyihang9@huawei.com>
 
-Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
-always be divisible by sizeof(long).
+[ Upstream commit e675a4fd6d1f8990d3bed5dada3d20edfa000423 ]
 
-Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
+This series [1] reduced the kmalloc() minimum alignment on arm64 to 8 bytes
+(from 128). In libsas, this will cause SMP requests to be 8-byte aligned
+through kmalloc() allocation. However, for hisi_sas hardware, all command
+addresses must be 16-byte-aligned. Otherwise, the commands fail to be
+executed.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ARCH_DMA_MINALIGN represents the minimum (static) alignment for safe DMA
+operations, so use ARCH_DMA_MINALIGN as the alignment for SMP request.
+
+Link: https://lkml.kernel.org/r/20230612153201.554742-1-catalin.marinas@arm.com [1]
+Signed-off-by: Yihang Li <liyihang9@huawei.com>
+Link: https://lore.kernel.org/r/20240328090626.621147-1-liyihang9@huawei.com
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Changes in v7:
-  - Use DIV_ROUND_UP() to calculate FGRAPH_RET_INDEX
----
- kernel/trace/fgraph.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 30edeb6d4aa9..6f8d36370994 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -26,10 +26,9 @@
- #endif
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 5c261005b74e4..f6e6db8b8aba9 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -135,7 +135,7 @@ static int smp_execute_task(struct domain_device *dev, void *req, int req_size,
  
- #define FGRAPH_RET_SIZE sizeof(struct ftrace_ret_stack)
--#define FGRAPH_RET_INDEX (ALIGN(FGRAPH_RET_SIZE, sizeof(long)) / sizeof(long))
-+#define FGRAPH_RET_INDEX DIV_ROUND_UP(FGRAPH_RET_SIZE, sizeof(long))
- #define SHADOW_STACK_SIZE (PAGE_SIZE)
--#define SHADOW_STACK_INDEX			\
--	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
-+#define SHADOW_STACK_INDEX (SHADOW_STACK_SIZE / sizeof(long))
- /* Leave on a buffer at the end */
- #define SHADOW_STACK_MAX_INDEX (SHADOW_STACK_INDEX - FGRAPH_RET_INDEX)
- 
-@@ -91,6 +90,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	if (!current->ret_stack)
- 		return -EBUSY;
- 
-+	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
-+
- 	/*
- 	 * We must make sure the ret_stack is tested before we read
- 	 * anything else.
-@@ -325,6 +326,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ static inline void *alloc_smp_req(int size)
  {
- 	int index = task->curr_ret_stack;
- 
-+	BUILD_BUG_ON(FGRAPH_RET_SIZE % sizeof(long));
-+
- 	index -= FGRAPH_RET_INDEX * (idx + 1);
- 	if (index < 0)
- 		return NULL;
+-	u8 *p = kzalloc(size, GFP_KERNEL);
++	u8 *p = kzalloc(ALIGN(size, ARCH_DMA_MINALIGN), GFP_KERNEL);
+ 	if (p)
+ 		p[0] = SMP_REQUEST;
+ 	return p;
+-- 
+2.43.0
 
