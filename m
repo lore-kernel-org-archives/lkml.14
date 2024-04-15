@@ -1,112 +1,154 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80366CDC5;
-	Mon, 15 Apr 2024 12:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E976A005;
+	Mon, 15 Apr 2024 12:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713183114; cv=none; b=GMlyPbsjHGbfEjpaa3RDnIU7+7xdpLAmrusNvn1d6nxTQtPXn2bwc1njgOXvm0PuRGVlzuNTp546ibiXAxAhF21SGgsSLJtjHGTVTPVVm3CrQuZbjV5YwxghxT8agT6YvOc12Y5Mp+TmufjjFhj/JWjiO+A2fm5hQ0knR3UlBcg=
+	t=1713183127; cv=none; b=doy6lfsJypX9WET+MGbe6CjlhmOqD/hBxW4fcbFWiudexytjbTn7E9OYeK6pEjGQ4N9+uWLR4giPGsQyE1RPfab9E5NAaDaJw+6lqj90Zex42WN0CpqNprusmMP0311qSdkBFRTflsQ9Zo1oZObxUawOM1M5ZgjUE9Opo7gIbX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713183114; c=relaxed/simple;
-	bh=hkoBOjYxsty3snJuIsQbwRCfX65gI8d6GqwHifBS7r4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NnvNVYb219mc2Ra3bRHVxM9jwZ4O3oEIQz2g/hEb2GjhWyIqpa2ILDaVwv5eB3GV26YIw36sy2Xmw9V4VJ0AOve6a7fo1rzgyO91zX0jI9sboUyZskC1mkUFsVI06EM97fgU4aMRWMl7PbMKfFvHsOduazhnzyxMAQASzxcAAQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ezki+IS5; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713183127; c=relaxed/simple;
+	bh=49BXH0ae9TmsC+ZVdMQDanlSwY5xhkGJJZaqFTj7XJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQwzRYCk+p0XTiawHFaltf35Sq33sA0IMWK9eucdlq2dHVctFFaZH6Mw1WlxCoDPkbaFWMvervdozV9iLAupCfoZwJPjW49uaSgZciglh51fdEMhHjx0Ei9fd4upT47T8IycFg2E3lKoTkGseG3knAfkcMjuI45UMyU0uwIjRLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cg0KzrXc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ezki+IS5"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so43787351fa.0;
-        Mon, 15 Apr 2024 05:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713183111; x=1713787911; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CEm2g66tvPpsMTaAGcWu3atK5dyjzdV+vUjngnnwu44=;
-        b=Ezki+IS5tLJ5cGxExlGph0urU7uOjNiQLYkQbQKw2Yb6Lpt7NHFbPDunKSM8rTyTXl
-         uv1c7EIjegXH6pCo6s0agCWguOGqgg36/wgKdHoSqB5iAcw3M8vWuYdpsqTEy3tI/x/l
-         m5viNMpots4X/dJb2+lE60BhclvZKlUc7xUMTdZyxU31Aoq/j6V2AAahMj0t3f7tHlsT
-         s00VyJ+Zq6YzKW3kQZ0UlItPjXbnayj5kLSQ6MzHvAs7QcWzYlEUGjJI8DiOebvGYVYl
-         Si0x7nYwdwkMelexb3IRJi6iX698o8pYmW48wtTKrFT2Pwvnq4nDWDZmt833gBGquPtf
-         TD/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713183111; x=1713787911;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CEm2g66tvPpsMTaAGcWu3atK5dyjzdV+vUjngnnwu44=;
-        b=ZBm4oyiRWxO10An6tT4IoUZ/+pDn6f/x3h426vJMp5PdC7vzzo+fwWij09qP3iPziB
-         LFfyqrX8PwXI145U/8X1Y5DX88EpFGctiaj2+CmP1HPojfMOHcrUYBY2RCbjvNYHhgen
-         5JLf80S26CrZ/W6uArkDbN2QY0OO+HJbGoE0MVaAsY73fKkHbcQNMhlFOvOeUaygfRRY
-         ciRkrYCwkVdp9JTfmrlXgBG5tHNssCcpzDfE5gSLx8r7aM7BEG40MgECnSmTG4u6xxDm
-         oulBZx1FTs8LtV/rGBpM82VqBH/f2Ve2uDYfE1i3kn0VbbQdX3fkX7v9fJoCdP54hBiN
-         wusw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjZnnZWzi5COI8vh+O2YBv4zxK8VHJROWk2OL0drM9OADJ2B7WrXVlHm9xhTa/sWupW830j/VSl58hjaoCsMruryFp
-X-Gm-Message-State: AOJu0Yw/+26r72UMqvm1JXNyFGOmw6ZvFAZjF0OcgnCbO32H3OUH6YAe
-	vwBSJhuyoQ4xBOoQZt92d+DFCKcjQTx6MwNQghgE2kEO1NC2+sIq
-X-Google-Smtp-Source: AGHT+IHkmDqtWXpk95F4znB0K2E89QOtIqeumJQqmwTgdmM5QN/42EbKjqVSrgAAmqq7tyOHG1x91w==
-X-Received: by 2002:a05:651c:4c6:b0:2d8:1267:3202 with SMTP id e6-20020a05651c04c600b002d812673202mr7837133lji.10.1713183110739;
-        Mon, 15 Apr 2024 05:11:50 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id v9-20020a05600c444900b00416b163e52bsm19320082wmn.14.2024.04.15.05.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 05:11:50 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 15 Apr 2024 14:11:48 +0200
-To: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
-Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org, haoluo@google.com,
-	sdf@google.com, kpsingh@kernel.org, john.fastabend@gmail.com,
-	yonghong.song@linux.dev, song@kernel.org, eddyz87@gmail.com,
-	andrii@kernel.org, daniel@iogearbox.net, ast@kernel.org,
-	martin.lau@linux.dev, khazhy@chromium.org, vmalik@redhat.com,
-	ndesaulniers@google.com, ncopa@alpinelinux.org, dxu@dxuuu.xyz
-Subject: Re: [PATCH] bpf: btf: include linux/types.h for u32
-Message-ID: <Zh0ZhEU1xhndl2k8@krava>
-References: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cg0KzrXc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D662C3277B;
+	Mon, 15 Apr 2024 12:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713183127;
+	bh=49BXH0ae9TmsC+ZVdMQDanlSwY5xhkGJJZaqFTj7XJA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cg0KzrXcO4+o1oyoPNMzpuTpiKH1aOwgXCKdUveLdMW39FtPzn/bXuUxi2bkFFKMc
+	 BwgHBko0f+Z5gulFsfxZJHVj6QJ8DNRqt8NV+e/5sQRlXZROA7WOqmtPhC0NmAjKxp
+	 ky5xMm5I5lG5EaN6bPmVvD7hDtLyljNws0U3jvGclknWBfAQjrCcfbqa72LctqNrKN
+	 SVX58dv3AHaANUxzSMn/SX0cpeXGewgyK8ovqfd2aAaUlqzg+fFTPRcA0NSFGXP1x7
+	 ZdmtkwtxdYYZp/XMurJ1NdrM4di6+XDAxJPtXI5s+QG7k0ZO1lU8QHYgZzMhH1ZxwP
+	 JUeJf81lhCPXw==
+Date: Mon, 15 Apr 2024 17:42:00 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: quic_jhugo@quicinc.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_cang@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v3 3/3] bus: mhi: host: pci_generic: Add edl callback to
+ enter EDL
+Message-ID: <20240415121200.GH7537@thinkpad>
+References: <1713170945-44640-1-git-send-email-quic_qianyu@quicinc.com>
+ <1713170945-44640-4-git-send-email-quic_qianyu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1713170945-44640-4-git-send-email-quic_qianyu@quicinc.com>
 
-please use '[PATCH bpf-next]' in subject
+On Mon, Apr 15, 2024 at 04:49:05PM +0800, Qiang Yu wrote:
 
-On Sun, Apr 14, 2024 at 07:51:24AM +0300, Dmitrii Bundin wrote:
-> Inclusion of the header linux/btf_ids.h relies on indirect inclusion of
-> the header linux/types.h. Including it directly on the top level helps
-> to avoid potential problems if linux/types.h hasn't been included
-> before.
+bus: mhi: host: pci_generic: Add support for triggering EDL mode in modems
+
+> Add mhi_pci_generic_edl_trigger as edl_trigger for some devices (eg. SDX65)
+> to enter EDL mode by writing the 0xEDEDEDED cookie to the channel 91
+> doorbell register and forcing an SOC reset afterwards.
 > 
-> Signed-off-by: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+
+'Some of the MHI modems like SDX65 based ones are capable of entering the EDL
+mode as per the standard triggering mechanism defined in the MHI spec <enter
+spec version>. So let's add a common mhi_pci_generic_edl_trigger() function that
+triggers the EDL mode in the device when user writes to the <insert full sysfs
+entry here> file.'
+
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
 > ---
->  include/linux/btf_ids.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/bus/mhi/host/pci_generic.c | 47 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
 > 
-> diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
-> index e24aabfe8ecc..c0e3e1426a82 100644
-> --- a/include/linux/btf_ids.h
-> +++ b/include/linux/btf_ids.h
-> @@ -3,6 +3,8 @@
->  #ifndef _LINUX_BTF_IDS_H
->  #define _LINUX_BTF_IDS_H
+> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> index 51639bf..cbf8a58 100644
+> --- a/drivers/bus/mhi/host/pci_generic.c
+> +++ b/drivers/bus/mhi/host/pci_generic.c
+> @@ -27,12 +27,19 @@
+>  #define PCI_VENDOR_ID_THALES	0x1269
+>  #define PCI_VENDOR_ID_QUECTEL	0x1eac
 >  
-> +#include <linux/types.h> /* for u32 */
+> +#define MHI_EDL_DB			91
+> +#define MHI_EDL_COOKIE			0xEDEDEDED
+> +
+> +/* Device can enter EDL by first setting edl cookie then issuing inband reset*/
+> +#define MHI_PCI_GENERIC_EDL_TRIGGER	BIT(0)
 
-lgtm, did it actualy cause problem anywhere?
-
-there's also tools/include/linux/btf_ids.h
-
-jirka
+This is not needed as of now. Let the edl_trigger be bool for now. When vendors
+want to add their own methods of triggering EDL, we can extend it.
 
 > +
->  struct btf_id_set {
->  	u32 cnt;
->  	u32 ids[];
-> -- 
-> 2.34.1
-> 
+>  /**
+>   * struct mhi_pci_dev_info - MHI PCI device specific information
+>   * @config: MHI controller configuration
+>   * @name: name of the PCI module
+>   * @fw: firmware path (if any)
+>   * @edl: emergency download mode firmware path (if any)
+> + * @edl_trigger: each bit represents a different way to enter EDL
+
+'capable of triggering EDL mode in the device (if supported)'
+
+>   * @bar_num: PCI base address register to use for MHI MMIO register space
+>   * @dma_data_width: DMA transfer word size (32 or 64 bits)
+>   * @mru_default: default MRU size for MBIM network packets
+> @@ -44,6 +51,7 @@ struct mhi_pci_dev_info {
+>  	const char *name;
+>  	const char *fw;
+>  	const char *edl;
+> +	unsigned int edl_trigger;
+>  	unsigned int bar_num;
+>  	unsigned int dma_data_width;
+>  	unsigned int mru_default;
+> @@ -292,6 +300,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx75_info = {
+>  	.name = "qcom-sdx75m",
+>  	.fw = "qcom/sdx75m/xbl.elf",
+>  	.edl = "qcom/sdx75m/edl.mbn",
+> +	.edl_trigger = MHI_PCI_GENERIC_EDL_TRIGGER,
+>  	.config = &modem_qcom_v2_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -302,6 +311,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx65_info = {
+>  	.name = "qcom-sdx65m",
+>  	.fw = "qcom/sdx65m/xbl.elf",
+>  	.edl = "qcom/sdx65m/edl.mbn",
+> +	.edl_trigger = MHI_PCI_GENERIC_EDL_TRIGGER,
+>  	.config = &modem_qcom_v1_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -312,6 +322,7 @@ static const struct mhi_pci_dev_info mhi_qcom_sdx55_info = {
+>  	.name = "qcom-sdx55m",
+>  	.fw = "qcom/sdx55m/sbl1.mbn",
+>  	.edl = "qcom/sdx55m/edl.mbn",
+> +	.edl_trigger = MHI_PCI_GENERIC_EDL_TRIGGER,
+>  	.config = &modem_qcom_v1_mhiv_config,
+>  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>  	.dma_data_width = 32,
+> @@ -928,6 +939,39 @@ static void health_check(struct timer_list *t)
+>  	mod_timer(&mhi_pdev->health_check_timer, jiffies + HEALTH_CHECK_PERIOD);
+>  }
+>  
+> +static int mhi_pci_generic_edl_trigger(struct mhi_controller *mhi_cntrl)
+> +{
+> +	void __iomem *base = mhi_cntrl->regs;
+> +	void __iomem *edl_db;
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev);
+> +	if (ret) {
+> +		dev_err(mhi_cntrl->cntrl_dev, "Wake up device fail before trigger EDL\n");
+
+'Failed to wakeup the device'
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
