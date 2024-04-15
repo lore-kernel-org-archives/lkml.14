@@ -1,309 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F651E877;
-	Mon, 15 Apr 2024 18:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8491553A7;
+	Mon, 15 Apr 2024 18:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713206969; cv=none; b=p/YbcPxjRlNsmTHdfLB4cVcR/z7f6mACTEibYS1U8Ea8YZ7GTSx2DUkp26jIgFD9hoYn168lzEZeCEKXABdO8iXO+kfS4qtYc+IOLZRDGKxWfWgGg8rlL0ScZw40KGH8wIBeAt2CTCcd5Kl9S7ESR/PVxl/yKY7J6PRmS0XMxQM=
+	t=1713207094; cv=none; b=PymB3cKJvs3cBK+NaoYVJzSQV6e9UkU7CImVuaerIuU58NOh6pRjM7dje7g0ar2k+pHiRF91eYzts121703nJe4j46li465nK63phbTyW+hFxWCTCPtYiZo5dZDii+WaUqrd9VzROTZwLjzQyWmnZiYLmg4tt9gKeT2Sfeug0BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713206969; c=relaxed/simple;
-	bh=JcwoKU5gaOsesE8/cuz2DXwstgtBAJ9tf7LhVcS4Jpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XhoWwrQ34Mx3+U8+XcCyNkuYMQ20rZFanDoWyR7/fUvu5ZjFbTp15gs4fRs+yUl2sn3hQYZRGR3Z1tM7GXCh2S32xmCKUTOCe8ZtaeuR+5KIapcJcaMNI696A19EMhekui/axdQjxl3wfvNOru48u5+v4Vr/IcNfbZll5uyMlPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEVMKBUO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713207094; c=relaxed/simple;
+	bh=DfqDZSCy1bT7YhVav0SrkmE8gji+HQI8UQPnQWILtoE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tjK6rcdnH1bnoWCXrny3LZHO5ItV7lkFD02EtwAsjR3CU3Uh03zxTJIh518pvANse+YGOf+vJI1GtE4PnUKavdFbD4FadBGVMGMGBwqcWThB2Sa758OowDJp6WGJ0cKG6DJJlR9KS8KJWq1QAFhT/coQWM5A1jlN1NZkZIztQcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=gschafra@web.de header.b=GqGg1tPx; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEVMKBUO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713206967; x=1744742967;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JcwoKU5gaOsesE8/cuz2DXwstgtBAJ9tf7LhVcS4Jpc=;
-  b=kEVMKBUOZn21nfnDjG27T+RooiI3Wa57epOZAanOugOsDuz8814B19g/
-   8P8c6Z8j8NzncymTB79D/TlcSAVCFxjI88w7HgV35BLxEPzydmKRm9344
-   9yObUryqcOvy+fhE+IwFpkH/9kFKGHsmxtxD8M1/moOYomyKT5aKv4mTD
-   J8SNAI918wRzQu1xIWwGF7qHuho4KKUaszV9qoj+usKdcYQtTOGv1D79X
-   Eza/1xU/UsgkQdcUSUALc4aRFRs1e+0IYLnXAhIxf9lc36FiWEEuSYDx5
-   NstebUIrLW/DQtvqT1QwIZAYRP+Fkxlxkt1BqhW8sa72LpRAUKCB3PutE
-   Q==;
-X-CSE-ConnectionGUID: ghlukBW8T+Wd19myDqPl5Q==
-X-CSE-MsgGUID: IN18ip2VQHuO5bMgISIAlw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="26071469"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="26071469"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 11:49:27 -0700
-X-CSE-ConnectionGUID: IR/69hUUSYWJtEqmTvufUg==
-X-CSE-MsgGUID: hluXB3c5Sw6A5KEL5ew1jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="45295772"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 11:49:26 -0700
-Date: Mon, 15 Apr 2024 11:53:58 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Lu Baolu
- <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, Dave Hansen
- <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
- <mingo@redhat.com>, Paul Luse <paul.e.luse@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, Raj Ashok
- <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>,
- jim.harris@samsung.com, a.manzanares@samsung.com, Bjorn Helgaas
- <helgaas@kernel.org>, guang.zeng@intel.com, robert.hoo.linux@gmail.com,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 05/13] x86/irq: Reserve a per CPU IDT vector for
- posted MSIs
-Message-ID: <20240415115358.04e04204@jacob-builder>
-In-Reply-To: <87edbb267x.ffs@tglx>
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
-	<20240405223110.1609888-6-jacob.jun.pan@linux.intel.com>
-	<87edbb267x.ffs@tglx>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=web.de header.i=gschafra@web.de header.b="GqGg1tPx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713207085; x=1713811885; i=gschafra@web.de;
+	bh=/G+TvMeVvPYHHHKjlKDGzZ+uXBSjb0e1s3YVRMV7XBQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=GqGg1tPxo9aX6ntVK9oke/lh/dHH4VOMSWckBxUT4zvv+0VjgxS1O+u22ugcvJaV
+	 zmoQQCUTdV14YZSv79VYObx4AWBx9UqgiGLGdWCuyppgaBMhKvd/SaotMhZ3gcJWv
+	 1zRDl+iWWpT52CS8CWooYbZxjwAzvtDkRoWd+11eXmMLsRm9AzbMSErWCT7Rm+lgC
+	 nvTIRmdk1Ylq4GXrXd1m8VH/W5HmJGnOSJcvhWCCNhC5rvc5Vr3PMk8peO1Q7/pm9
+	 IgvXqOu/CZem3KxNgxGZiAhJrhzp6Hog3FAc7lRa5T9BcfTlLumCkJykoJPzlACek
+	 0GKq2hNSEHQwLUxFNg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from tazdevil.fritz.box ([213.152.127.16]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MODmV-1s75UL3rRJ-00OUz7; Mon, 15
+ Apr 2024 20:51:25 +0200
+From: Guenter Schafranek <gschafra@web.de>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Guenter Schafranek <gschafra@web.de>
+Subject: [PATCH] ACPI: resource: Do IRQ override on GMxBGxx (XMG APEX 17 M23)
+Date: Mon, 15 Apr 2024 20:51:18 +0200
+Message-ID: <20240415185120.57973-1-gschafra@web.de>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uKPrlSo69z6OcNVYMf+a7dHHP1IGatc+qsoMPIE2d6gPMjBHJTf
+ lFUptmJ900MTQUl6Sqf/rHNe0uKTgpPhq2y+DvAlI3VU8Uhfjo2OeuYnqH6mJCoQoinS5xa
+ OcR45WY4R/Vd905SVsZ1pdp0j4bXw5PapQyOnEMx+LDP+jwtfqd1rFQlk9d9W6zsNr1V1Bi
+ FwruoplEaPNP3CDmGcYHQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lXaItDdWRiA=;OLLhv9+CCWfpiDvGx/H5kfutapw
+ Gg+Gy2LvlEW2R7+Gxuk8EduOMzjtU8wxUyus9UcalC/qjLsB/5N4T6dfVAXDCk2iEbu3bexHo
+ clUhK2jbOf4C98xLpG4Mnn8Gq1SgpPAp8JvQelsyWFxZFNG6pReduvNJ4x3kptkRv+LR7D7SZ
+ 53bgN4pGLF1mMt3spXcGFzbhi78Kbu7QYAs3BnpSQx1lqYJ80Gl7rSgtO5t/mUNNEB1pysu5C
+ z7VDcVjXOy2kWFqz+paadYDcCrAUVKgg3A4cUIFsbX9pBD+N31/V1pOp5ueveaI7tJFXNbl0H
+ 6ysTAw/kXnnJnp+8ItdyX2csm4IvDW8veGIX8Tzl/q0QEI14K58oX3MsoFPsPyLIRTS8l/C0w
+ lNeVA9srRXdSFtxI81ePDDAGl4lYqnNtnNWo4QvggBHwAl1EXLyOavB/TsI0hWQNwcWv3T0Lo
+ WfSf/flDUroZuOM5e0/dQ6CjBdGMh6DF4UpE7DUPd0fzINonYE1A2PbMkDI02XxBRisvixZ5U
+ c4x+c2FnT52VFSaz/e/X5ojXKK77fTywX2CrcwwLH4eEvnsmOwnfZqzv43aQ+6GBuzflhcrXR
+ AOkMNvHXrlTupHq7hv8HuqL7g09SHO78E1wIrTN9G6u8Y9dmNh5+NK+r+YgUpJnLFFJwri3lS
+ R/YQyNdOxU4PSzmGEQKig2MfEQszddXwuBzWDbqQ83MWSe6+zHp625dEdqdrA1d4eYiwp55UI
+ CDj0/X9VHm/SP5ULe9OK5Ho66KSaHBWzcU0Ohpa+h4pxzkHriLxasIMhlW3wdIax29cSDAdF8
+ BxcoeDGGQfUqJcDrKdNsRQuEFvfa6pcLZz1vYFmSEPv/g=
 
-Hi Thomas,
+The XM APEX 17 M23 (TongFang?) GMxBGxx (got using `sudo dmidecode -s
+baseboard-product-name`) needs IRQ overriding for the keyboard to work.
+Adding an entry for this laptop to the override_table makes the internal
+keyboard functional.
+See https://www.reddit.com/r/XMG_gg/comments/15kd5pg/xmg_apex_17_m23_keybo=
+ard_not_working_on_linux/.
+Patch was successfully tested with Arch Linux Kernel v6.8 under
+Manjaro Linux v23.1.4.
 
-On Thu, 11 Apr 2024 18:51:14 +0200, Thomas Gleixner <tglx@linutronix.de>
-wrote:
+Signed-off-by: Guenter Schafranek <gschafra@web.de>
+=2D--
+ drivers/acpi/resource.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> On Fri, Apr 05 2024 at 15:31, Jacob Pan wrote:
-> > diff --git a/arch/x86/include/asm/irq_vectors.h
-> > b/arch/x86/include/asm/irq_vectors.h index d18bfb238f66..1ee00be8218d
-> > 100644 --- a/arch/x86/include/asm/irq_vectors.h
-> > +++ b/arch/x86/include/asm/irq_vectors.h
-> > @@ -97,9 +97,16 @@
-> >  
-> >  #define LOCAL_TIMER_VECTOR		0xec
-> >  
-> > +/*
-> > + * Posted interrupt notification vector for all device MSIs delivered
-> > to
-> > + * the host kernel.
-> > + */
-> > +#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
-> >  #define NR_VECTORS			 256
-> >  
-> > -#ifdef CONFIG_X86_LOCAL_APIC
-> > +#ifdef CONFIG_X86_POSTED_MSI
-> > +#define FIRST_SYSTEM_VECTOR
-> > POSTED_MSI_NOTIFICATION_VECTOR +#elif defined(CONFIG_X86_LOCAL_APIC)
-> >  #define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
-> >  #else
-> >  #define FIRST_SYSTEM_VECTOR		NR_VECTORS  
-> 
-> This is horrible and we had attempts before to make the system vector
-> space dense. They all did not work and making an exception for this is
-> not what we want.
-> 
-> If we really care then we do it proper for _all_ of them. Something like
-> the uncompiled below. There is certainly a smarter way to do the build
-> thing, but my kbuild foo is rusty.
-I too had the concern of the wasting system vectors, but did not know how to
-fix it. But now your code below works well. Tested without KVM in .config
-to show the gaps:
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index 59423fe9d..c9af5d2f4 100644
+=2D-- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -533,6 +533,12 @@ static const struct dmi_system_id irq1_level_low_skip=
+_override[] =3D {
+  * to have a working keyboard.
+  */
+ static const struct dmi_system_id irq1_edge_low_force_override[] =3D {
++	{
++		/* XMG APEX 17 (M23) */
++		.matches =3D {
++			DMI_MATCH(DMI_BOARD_NAME, "GMxBGxx"),
++		},
++	},
+ 	{
+ 		/* TongFang GMxRGxx/XMG CORE 15 (M22)/TUXEDO Stellaris 15 Gen4 AMD */
+ 		.matches =3D {
+=2D-
+2.44.0
 
-In VECTOR IRQ domain.
-
-BEFORE:
-System: 46: 0-31,50,235-236,244,246-255
-
-AFTER:
-System: 46: 0-31,50,241-242,245-255
-
-The only gap is MANAGED_IRQ_SHUTDOWN_VECTOR(243), which is expected on a
-running system.
-
-Verified in irqvectors.s: .ascii "->MANAGED_IRQ_SHUTDOWN_VECTOR $243
-
-POSTED MSI/first system vector moved up from 235 to 241 for this case.
-
-Will try to let tools/arch/x86/include/asm/irq_vectors.h also use it
-instead of manually copy over each time. Any suggestions greatly
-appreciated.
-
-> ---
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -245,6 +245,7 @@ archscripts: scripts_basic
->  
->  archheaders:
->  	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
-> +	$(Q)$(MAKE) $(build)=arch/x86/kernel/irqvectors all
->  
->  ###
->  # Kernel objects
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -43,59 +43,46 @@
->   */
->  #define ISA_IRQ_VECTOR(irq)		(((FIRST_EXTERNAL_VECTOR +
-> 16) & ~15) + irq) 
-> +#ifndef __ASSEMBLY__
->  /*
-> - * Special IRQ vectors used by the SMP architecture, 0xf0-0xff
-> - *
-> - *  some of the following vectors are 'rare', they are merged
-> - *  into a single vector (CALL_FUNCTION_VECTOR) to save vector space.
-> - *  TLB, reschedule and local APIC vectors are performance-critical.
-> + * Special IRQ vectors used by the SMP architecture, 0xff and downwards
->   */
-> +enum {
-> +	__SPURIOUS_APIC_VECTOR,
-> +	__ERROR_APIC_VECTOR,
-> +	__RESCHEDULE_VECTOR,
-> +	__CALL_FUNCTION_VECTOR,
-> +	__CALL_FUNCTION_SINGLE_VECTOR,
-> +	__THERMAL_APIC_VECTOR,
-> +	__THRESHOLD_APIC_VECTOR,
-> +	__REBOOT_VECTOR,
-> +	__X86_PLATFORM_IPI_VECTOR,
-> +	__IRQ_WORK_VECTOR,
-> +	__DEFERRED_ERROR_VECTOR,
->  
-> -#define SPURIOUS_APIC_VECTOR		0xff
-> -/*
-> - * Sanity check
-> - */
-> -#if ((SPURIOUS_APIC_VECTOR & 0x0F) != 0x0F)
-> -# error SPURIOUS_APIC_VECTOR definition error
-> +#if IS_ENABLED(CONFIG_HYPERVISOR_GUEST)
-> +	__HYPERVISOR_CALLBACK_VECTOR,
->  #endif
->  
-> -#define ERROR_APIC_VECTOR		0xfe
-> -#define RESCHEDULE_VECTOR		0xfd
-> -#define CALL_FUNCTION_VECTOR		0xfc
-> -#define CALL_FUNCTION_SINGLE_VECTOR	0xfb
-> -#define THERMAL_APIC_VECTOR		0xfa
-> -#define THRESHOLD_APIC_VECTOR		0xf9
-> -#define REBOOT_VECTOR			0xf8
-> -
-> -/*
-> - * Generic system vector for platform specific use
-> - */
-> -#define X86_PLATFORM_IPI_VECTOR		0xf7
-> -
-> -/*
-> - * IRQ work vector:
-> - */
-> -#define IRQ_WORK_VECTOR			0xf6
-> -
-> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
-> -#define DEFERRED_ERROR_VECTOR		0xf4
-> -
-> -/* Vector on which hypervisor callbacks will be delivered */
-> -#define HYPERVISOR_CALLBACK_VECTOR	0xf3
-> -
-> -/* Vector for KVM to deliver posted interrupt IPI */
-> -#define POSTED_INTR_VECTOR		0xf2
-> -#define POSTED_INTR_WAKEUP_VECTOR	0xf1
-> -#define POSTED_INTR_NESTED_VECTOR	0xf0
-> -
-> -#define MANAGED_IRQ_SHUTDOWN_VECTOR	0xef
-> +#if IS_ENABLED(CONFIG_KVM)
-> +	/* Vector for KVM to deliver posted interrupt IPI */
-> +	__POSTED_INTR_VECTOR,
-> +	__POSTED_INTR_WAKEUP_VECTOR,
-> +	__POSTED_INTR_NESTED_VECTOR,
-> +#endif
-> +	__MANAGED_IRQ_SHUTDOWN_VECTOR,
->  
->  #if IS_ENABLED(CONFIG_HYPERV)
-> -#define HYPERV_REENLIGHTENMENT_VECTOR	0xee
-> -#define HYPERV_STIMER0_VECTOR		0xed
-> +	__HYPERV_REENLIGHTENMENT_VECTOR,
-> +	__HYPERV_STIMER0_VECTOR,
->  #endif
-> +	__LOCAL_TIMER_VECTOR,
-> +};
-> +#endif /* !__ASSEMBLY__ */
->  
-> -#define LOCAL_TIMER_VECTOR		0xec
-> +#ifndef COMPILE_OFFSETS
-> +#include <asm/irqvectors.h>
-> +#endif
->  
->  #define NR_VECTORS			 256
->  
-> --- /dev/null
-> +++ b/arch/x86/kernel/irqvectors/Makefile
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +irqvectors-file	:=
-> arch/$(SRCARCH)/include/generated/asm/irqvectors.h +targets 	+=
-> arch/$(SRCARCH)/kernel/irqvectors/irqvectors.s +
-> +$(irqvectors-file): arch/$(SRCARCH)/kernel/irqvectors/irqvectors.s FORCE
-> +	$(call filechk,offsets,__ASM_IRQVECTORS_H__)
-> +
-> +PHONY += all
-> +all: $(irqvectors-file)
-> +	@:
-> --- /dev/null
-> +++ b/arch/x86/kernel/irqvectors/irqvectors.c
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#define COMPILE_OFFSETS
-> +
-> +#include <linux/kbuild.h>
-> +#include <asm/irq_vectors.h>
-> +
-> +#define VECNR(v)	(0xFF - __##v)
-> +#define VECTOR(v)	DEFINE(v, VECNR(v))
-> +
-> +static void __used common(void)
-> +{
-> +	VECTOR(SPURIOUS_APIC_VECTOR);
-> +	VECTOR(ERROR_APIC_VECTOR);
-> +	VECTOR(RESCHEDULE_VECTOR);
-> +	VECTOR(CALL_FUNCTION_VECTOR);
-> +	VECTOR(CALL_FUNCTION_SINGLE_VECTOR);
-> +	VECTOR(THERMAL_APIC_VECTOR);
-> +	VECTOR(THRESHOLD_APIC_VECTOR);
-> +	VECTOR(REBOOT_VECTOR);
-> +	VECTOR(X86_PLATFORM_IPI_VECTOR);
-> +	VECTOR(IRQ_WORK_VECTOR);
-> +	VECTOR(DEFERRED_ERROR_VECTOR);
-> +
-> +#if IS_ENABLED(CONFIG_HYPERVISOR_GUEST)
-> +	VECTOR(HYPERVISOR_CALLBACK_VECTOR);
-> +#endif
-> +
-> +#if IS_ENABLED(CONFIG_KVM)
-> +	/* Vector for KVM to deliver posted interrupt IPI */
-> +	VECTOR(POSTED_INTR_VECTOR);
-> +	VECTOR(POSTED_INTR_WAKEUP_VECTOR);
-> +	VECTOR(POSTED_INTR_NESTED_VECTOR);
-> +#endif
-> +	VECTOR(MANAGED_IRQ_SHUTDOWN_VECTOR);
-> +
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +	VECTOR(HYPERV_REENLIGHTENMENT_VECTOR);
-> +	VECTOR(HYPERV_STIMER0_VECTOR);
-> +#endif
-> +	VECTOR(LOCAL_TIMER_VECTOR);
-> +}
-> +
-> 
-> 
-> 
-
-
-Thanks,
-
-Jacob
