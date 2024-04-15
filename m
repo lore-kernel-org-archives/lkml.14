@@ -1,105 +1,124 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CC477A03;
-	Mon, 15 Apr 2024 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89ED778C7D;
+	Mon, 15 Apr 2024 13:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713189116; cv=none; b=udJzqhQCCrgW695pAQHkzwWGWUNRkEC/h8bqpppFkrRce6/5A0R3MCyS6Lyr5Xj0iNa1c3EnsMwE7YalAk3QiQShKeB2MsXyb4iA2+g+zRELUvTFVhs8vS4OfiUYl5/5Sdhkp7Vft2v0f2nFQiKSDCbtIcjF+8z4VX5m3xwhSwU=
+	t=1713189117; cv=none; b=ccB0Rq3VEv7mE1vT0F1rQAnd0kzV7JsNoHYLAJ8BC1/jpVaoWxmK1zZIhYXam0UBCtFWX7aRAU8N7swsz31lLTKrqu0Hxqq0JWDPnbjvyCPtJ30V0UKxHw9P8g7aYZsaro3R+ysZGINdwDrxHlNZuNROVio055vVoKba0LP7tvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713189116; c=relaxed/simple;
-	bh=KIYrUxY+b9z+lxbDqbvGLtVKWQfYAVPg7QIHFhflyJw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TohTi8hwmRW/3cFmoXl/HttxbCwgXq4W/UtJU5jgzxUeRft4z+tuCnl5Cqs6Ozp/QxxWokLSIx6jo8vZdBSmreyD0sT/03g4aE9YMU9gqMShZgU+Mmem9xpr2/k/3ePHUD+H15IPw726ofwd9NRJ4qP/PRzuSCUtulnZMZ/J5NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=x0oSHiJe; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1713189117; c=relaxed/simple;
+	bh=SzkzBFbe6c8gG4+ZL+WOY4sX6HVkU3+kdcdkXuXKNZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MbZEwh9EJgX4EAmbVsDfk8Mv9k17b3390WnJhfHL1s8H8DE3whu0A0HsyOHbUpnAZVouHrBuxzj6LePLQcK+e3Xg3PKpoACMcgVxj1zjpJQsVr6J20SZLKJK6VixmD7DVJGWOjMQVzLaLP5zd+77Wmbh+S675aygQrxjaYuVCPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sqe4p6Tf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="x0oSHiJe"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43FCaK9X024860;
-	Mon, 15 Apr 2024 15:51:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=QsaD5br63QiPS08LMVeUwl+S5bVO25sOLw/LZKdTl/A=; b=x0
-	oSHiJeqXIs3PRk1PrWgxXuE7GK5B2Oaxehn8+qOYrTP/Ky8/SzviaJsHFpZeo+zT
-	rKkY3NDbQpSaYoM0em8tPc5OzraNHjH36wnLa/QGaQi0bIY0byai48cTP+j8cIg4
-	ljE7MZANslFx9kZyBWlLqc1/z0gpWdSrtU/qeSsfXY2K42264g0EavBfz4h8vVc8
-	mh8lNglZez/JOzfq/yLCT/ml3T/+rFv7s/ADb7WNVb3Qadh7WM1UTIkA/sTMsuaW
-	zEUQhT/bVmXt5ZLzhzOHfq1+E7dTXUJcjDzwR1TsmDFVavzymHJd4mLK481nhZN+
-	2YV/wB/alkniXGhV5Rdg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xff647xnd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 15:51:37 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 52A4140044;
-	Mon, 15 Apr 2024 15:51:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2706421660B;
-	Mon, 15 Apr 2024 15:50:50 +0200 (CEST)
-Received: from localhost (10.48.86.102) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 15 Apr
- 2024 15:50:49 +0200
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        Fabrice Gasnier
-	<fabrice.gasnier@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 07/11] arm64: Kconfig.platforms: Enable STM32_EXTI for ARCH_STM32
-Date: Mon, 15 Apr 2024 15:49:22 +0200
-Message-ID: <20240415134926.1254428-8-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240216094758.916722-1-antonio.borneo@foss.st.com>
-References: <20240216094758.916722-1-antonio.borneo@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sqe4p6Tf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C13F7C2BD10;
+	Mon, 15 Apr 2024 13:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713189117;
+	bh=SzkzBFbe6c8gG4+ZL+WOY4sX6HVkU3+kdcdkXuXKNZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sqe4p6TfQMQKNjnLm3WtPvKmlyes/8Yacw5p/NJKXdXlob5yIi2V5cX3EfI2jFNOt
+	 a6Ks5+HKBGdrpT1/gTyWLWPd+ndyf55wCBck4PFTD2ZX02Htifn+R15Y2812Cg20TT
+	 sDzwqr7z5A+yuHtSKodu1bQWxiAw+Kx5Kb2IKrHT09szT5TtT0GMTi4zh7T7i2rKsQ
+	 RGX4C9Det3rZ/PJSVLj/3lsmwbW4i/lAzygGB6xht7PppPSRzPx294dGBcnnvXM5Lu
+	 czUXSiO4sbKkaC1XTGhaYPBk6mb5Z0XPvPX7DpLhFa44rg30DRXe4SlEJvs9TniJb5
+	 Ag26DSQPm1FKQ==
+Date: Mon, 15 Apr 2024 19:21:48 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
+	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kthota@nvidia.com,
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2] PCI: tegra194: Fix probe path for Endpoint mode
+Message-ID: <20240415135148.GI7537@thinkpad>
+References: <20240401150116.298069-1-vidyas@nvidia.com>
+ <20240408093053.3948634-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-15_11,2024-04-15_01,2023-05-22_02
+In-Reply-To: <20240408093053.3948634-1-vidyas@nvidia.com>
 
-ARCH_STM32 needs to use STM32 EXTI interrupt controller for GPIO
-and wakeup interrupts.
+On Mon, Apr 08, 2024 at 03:00:53PM +0530, Vidya Sagar wrote:
+> Tegra194 PCIe probe path is taking failure path in success case for
+> Endpoint mode. Return success from the switch case instead of going
+> into the failure path.
+> 
+> Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> v2:
+> * Added 'Fixes' and 'Reviewed-by' from Jon Hunter
+> 
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 4bba31502ce1..1a8178dc899a 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -2273,11 +2273,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  		ret = tegra_pcie_config_ep(pcie, pdev);
+>  		if (ret < 0)
+>  			goto fail;
+> +		else
+> +			return 0;
 
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+This pattern is prone to error just like how it was before this patch. You
+should just return 0 at the end of the function for success case and direct all
+failure cases to 'fail' label:
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 24335565bad56..19bf58a9d5e1b 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -302,6 +302,7 @@ config ARCH_STM32
- 	select GPIOLIB
- 	select PINCTRL
- 	select PINCTRL_STM32MP257
-+	select STM32_EXTI
- 	select ARM_SMC_MBOX
- 	select ARM_SCMI_PROTOCOL
- 	select COMMON_CLK_SCMI
+```
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 1f7b662cb8e1..f410aae0ee7f 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -2236,9 +2236,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+        pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
+        ret = PTR_ERR_OR_ZERO(pcie->icc_path);
+        if (ret) {
+-               tegra_bpmp_put(pcie->bpmp);
+                dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
+-               return ret;
++               goto fail;
+        }
+ 
+        switch (pcie->of_data->mode) {
+@@ -2254,8 +2253,6 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+                ret = tegra_pcie_config_rp(pcie);
+                if (ret && ret != -ENOMEDIUM)
+                        goto fail;
+-               else
+-                       return 0;
+                break;
+ 
+        case DW_PCIE_EP_TYPE:
+@@ -2278,8 +2275,11 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+        default:
+                dev_err(dev, "Invalid PCIe device type %d\n",
+                        pcie->of_data->mode);
++               goto fail;
+        }
+ 
++       return 0;
++
+ fail:
+        tegra_bpmp_put(pcie->bpmp);
+        return ret;
+```
+
+- Mani
+
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
