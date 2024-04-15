@@ -1,143 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4233642072;
-	Mon, 15 Apr 2024 16:53:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577EC811EB;
+	Mon, 15 Apr 2024 16:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713199990; cv=none; b=Pci6F4BLaJbSnJCtfw0RQXSH2KUYyJg/21lTO4yrsWcG4PdkgGnPEYvuP/+7j09E07wDZ84S9ar0J8YslP2ZbZQHybKPSQPPcUvPo/j63eT8EdmWnlPjt3bi/NI9ZzQg/Bhp67eBLEvWNwstM+aRtMBsUtj0mcQORNPx13B7OsU=
+	t=1713200037; cv=none; b=kdKHQFuX2k4l2gZTIlghNx3/P1cE4+WrLcmCUHdJHcK84rqVAHw0XG3Zs3P9SPeIFjFf9bzlVkUESpwXhoCniD8bCZxV7BlG4fV7t39pRPYM7Bp6GvhFdOM5FU9KBxBT7aPH6+XhQTvnBPFvoHx7a5Tx/wQ4bBeNJI1MWMZt1z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713199990; c=relaxed/simple;
-	bh=xJZBsBz/ovkewwHaqkWgEKUCLl3sCJ9igaEyaiYi248=;
+	s=arc-20240116; t=1713200037; c=relaxed/simple;
+	bh=bjV4DXgKFrW20X0211p/gXf/Oq51kNqeX2mqwtPMTrc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+zQfhfRZUb683zSkhUtYDFDYn/bvHU6nvLZL6TLONTpV6+GTMtmLFwd9AK3LXvJ/wftAN3INL5I7WnAwUHy3VrvCfdXfEevTnNX4gH3SB+26f0OIpvHNk+s8Lk0xxcKmRCR/73S+WrBh2Rw8+05OleT1cTD3y6Eju4ShGk44SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9583Q6y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rp3a2hxsqHQFSlhGmQlu9373fbh46Ohig0slNKaaEH0kD9Wuu9OZ2ourfS9AoDGMK0Su8Y4KGJfRcBt05l/G0FI/bA7zsmkFIJU86V2CEUHdLP2K08S+FtXB4gYOPS06tJXvk7pv8naiHxXqtITmvOxwvoPonDTPRyfiPfqcS4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fRfswVGC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9583Q6y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57527C113CC;
-	Mon, 15 Apr 2024 16:52:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fRfswVGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A1CC113CC;
+	Mon, 15 Apr 2024 16:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713199989;
-	bh=xJZBsBz/ovkewwHaqkWgEKUCLl3sCJ9igaEyaiYi248=;
+	s=k20201202; t=1713200036;
+	bh=bjV4DXgKFrW20X0211p/gXf/Oq51kNqeX2mqwtPMTrc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n9583Q6y/kVDUsC/Sk35DHsUlzQxomP4brOeJWEqMK5tTGdFfL5yXDBwNh/dc1R8t
-	 OnTvm1XERGxz1JxTUG2JWpufMQFhEpCf0upLztHBi97mz83HQzMB81Cj+bMHmQeLrO
-	 vdSyDt4foue7u5p0z1MAb6dHJ1a7FzO8x/EelybB33sZUvBK4gAoiim0DQVOThRBq2
-	 3ERPw7wOWw5Nw3DB6b+PtiKpkHgDPedzRaGZsUTWRIfT1yQsmJ+qNm4oAZ/M1rF747
-	 dHBdlhRGfIq7wIyTjPR6B4GdpTUD5V0JGj4lcLZS8oQu4cdKYlcTv5ldjuZ1AicK/r
-	 qCFC3y/AMEfuA==
-Date: Mon, 15 Apr 2024 19:51:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <Zh1bKAaD7nLyJ9ya@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net>
+	b=fRfswVGC27iBvN0WXoeaMs/TNz6tEKcLkXpGh33CopHaODHPESOjiZgxo0AKKVsi1
+	 tVg0dnyvjeSIjnuX05iJHxEWyTsZB/hO71zPo8VG9XCHaGfossagSHsS+3jH+GFuXN
+	 4AEV15tyr8AVWtbbNQFHqVcBZ3Tn3uejIe6MUHP4g3+B8ot87XE22j+PNRJ4wfzOgR
+	 i/JCeAQpuChlaDxbI21NRlNtrW1F2xh7fUFsOpAILO0/VctxDRzrWvg4i+RDYRVYTO
+	 wkZPV77VhVd7OSy1R3GS3/YUaDsgG+puMal2xoo2kfse3BNGkKsWn8CPYP1eBdbyFp
+	 oFMDafUA75QrA==
+Date: Mon, 15 Apr 2024 17:53:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jason-JH Lin =?utf-8?B?KOael+edv+elpSk=?= <Jason-JH.Lin@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	Houlong Wei =?utf-8?B?KOmtj+WOmum+mSk=?= <houlong.wei@mediatek.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	Shawn Sung =?utf-8?B?KOWui+WtneismSk=?= <Shawn.Sung@mediatek.com>,
+	CK Hu =?utf-8?B?KOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v5 02/10] dt-bindings: mailbox: Add mboxes property for
+ CMDQ secure driver
+Message-ID: <20240415-uncooked-gently-22743a504b30@spud>
+References: <20240403102602.32155-1-shawn.sung@mediatek.com>
+ <20240403102602.32155-3-shawn.sung@mediatek.com>
+ <20240403-conflict-detest-717b4175a00c@spud>
+ <9b9707a4a0e285a12741fe4140680ad2578d8d2b.camel@mediatek.com>
+ <20240404-lankiness-devouring-d4d012b22cb9@spud>
+ <e6a30feb1e4bb41c90df5e0272385d0f47a7dcab.camel@mediatek.com>
+ <20240405-remindful-galley-2dee9eec4f34@spud>
+ <f2476233528e18f78cdfa4eb7bc4c5ae91f70db8.camel@mediatek.com>
+ <20240409-scratch-rift-41f0967c2dc4@spud>
+ <f38f46c4d3c81f86bd33d3b78e15dd42bc0797c5.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PxLc+TUR+R0iF7Js"
 Content-Disposition: inline
-In-Reply-To: <20240415075241.GF40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <f38f46c4d3c81f86bd33d3b78e15dd42bc0797c5.camel@mediatek.com>
 
-On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
-> On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
-> > +/**
-> > + * enum execmem_type - types of executable memory ranges
-> > + *
-> > + * There are several subsystems that allocate executable memory.
-> > + * Architectures define different restrictions on placement,
-> > + * permissions, alignment and other parameters for memory that can be used
-> > + * by these subsystems.
-> > + * Types in this enum identify subsystems that allocate executable memory
-> > + * and let architectures define parameters for ranges suitable for
-> > + * allocations by each subsystem.
-> > + *
-> > + * @EXECMEM_DEFAULT: default parameters that would be used for types that
-> > + * are not explcitly defined.
-> > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> > + * @EXECMEM_KPROBES: parameters for kprobes
-> > + * @EXECMEM_FTRACE: parameters for ftrace
-> > + * @EXECMEM_BPF: parameters for BPF
-> > + * @EXECMEM_TYPE_MAX:
-> > + */
-> > +enum execmem_type {
-> > +	EXECMEM_DEFAULT,
-> > +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
-> > +	EXECMEM_KPROBES,
-> > +	EXECMEM_FTRACE,
-> > +	EXECMEM_BPF,
-> > +	EXECMEM_TYPE_MAX,
-> > +};
-> 
-> Can we please get a break-down of how all these types are actually
-> different from one another?
-> 
-> I'm thinking some platforms have a tiny immediate space (arm64 comes to
-> mind) and has less strict placement constraints for some of them?
 
-loongarch, mips, nios2 and sparc define modules address space different
-from vmalloc and use that for modules, kprobes and bpf (where supported).
+--PxLc+TUR+R0iF7Js
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-parisc uses vmalloc range for everything, but it sets permissions to
-PAGE_KERNEL_RWX because it's PAGE_KERNEL_EXEC is read only and it lacks
-set_memory_* APIs.
+On Fri, Apr 12, 2024 at 09:00:53AM +0000, Jason-JH Lin (=E6=9E=97=E7=9D=BF=
+=E7=A5=A5) wrote:
+> On Tue, 2024-04-09 at 18:52 +0100, Conor Dooley wrote:
+> > On Sat, Apr 06, 2024 at 04:15:51PM +0000, Jason-JH Lin (=E6=9E=97=E7=9D=
+=BF=E7=A5=A5) wrote:
+> > > On Fri, 2024-04-05 at 17:13 +0100, Conor Dooley wrote:
+> > > > On Fri, Apr 05, 2024 at 02:33:14PM +0000, Jason-JH Lin (=E6=9E=97=
+=E7=9D=BF=E7=A5=A5)
+> > > > wrote:
+> > > > > On Thu, 2024-04-04 at 15:52 +0100, Conor Dooley wrote:
+> > > > > > On Thu, Apr 04, 2024 at 04:31:06AM +0000, Jason-JH Lin (=E6=9E=
+=97=E7=9D=BF=E7=A5=A5)
+> > > > > > wrote:
+> > > > > > > Hi Conor,
+> > > > > > >=20
+> > > > > > > Thanks for the reviews.
+> > > > > > >=20
+> > > > > > > On Wed, 2024-04-03 at 16:46 +0100, Conor Dooley wrote:
+> > > > > > > > On Wed, Apr 03, 2024 at 06:25:54PM +0800, Shawn Sung
+> > > > > > > > wrote:
+> > > > > > > > > From: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
 
-arm has an address space for modules, but it fall back to the entire
-vmalloc with CONFIG_ARM_MODULE_PLTS=y.
+> > > > > > > > > +  mediatek,gce-events:
+> > > > > > > > > +    description:
+> > > > > > > > > +      The event id which is mapping to the specific
+> > > > > > > > > hardware
+> > > > > > > > > event
+> > > > > > > > > signal
+> > > > > > > > > +      to gce. The event id is defined in the gce
+> > > > > > > > > header
+> > > > > > > > > +      include/dt-bindings/gce/<chip>-gce.h of each
+> > > > > > > > > chips.
+> > > > > > > >=20
+> > > > > > > > Missing any info here about when this should be used,
+> > > > > > > > hint -
+> > > > > > > > you
+> > > > > > > > have
+> > > > > > > > it
+> > > > > > > > in the commit message.
+> > > > > > > >=20
+> > > > > > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-
+> > > > > > > > > arrayi
+> > > > > > > >=20
+> > > > > > > > Why is the ID used by the CMDQ service not fixed for each
+> > > > > > > > SoC?
+>=20
+> Did I misunderstand the ID here?
+> I thought we were talking about event IDs, but it looks like we are
+> talking about mbox IDs.
 
-arm64 uses different ranges for modules and bpf/kprobes. For kprobes it
-does vmalloc(PAGE_KERNEL_ROX) and for bpf just plain vmalloc().
-For modules arm64 first tries to allocated from 128M below kernel_end and
-if that fails it uses 2G below kernel_end as a fallback.
+We were talking about the event IDs FWIW.
 
-powerpc uses vmalloc space for everything for some configurations. For
-book3s-32 and 8xx it defines two ranges that are used for module text,
-kprobes and bpf and the module data can be allocated anywhere in vmalloc.
+Just send a new version with some actual explanations added (as we
+discussed earlier on this thread) and we should be good here I think.
 
-riscv has an address space for modules, a different address space for bpf
-and uses vmalloc space for kprobes.
+Cheers,
+Conor.
 
-s390 and x86 have modules address space and use that space for all
-executable allocations.
+--PxLc+TUR+R0iF7Js
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The EXECMEM_FTRACE type is only used on s390 and x86 and for now it's there
-more for completeness rather to denote special constraints or properties.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Sincerely yours,
-Mike.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh1bnwAKCRB4tDGHoIJi
+0jnuAQDSK26EjY38cq+JsvVM52aMoEOqDTJK9m7QIORTzNDSrQD/VrDnAVPIghjR
+raveZ2Z17XwKlJiIOqZXOYHPOzhz+w0=
+=GUlt
+-----END PGP SIGNATURE-----
+
+--PxLc+TUR+R0iF7Js--
