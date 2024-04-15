@@ -1,187 +1,134 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D113476033
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C42A131197;
+	Mon, 15 Apr 2024 12:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185449; cv=none; b=vE/fdxoRf/55Na90iYzWMZjoT5Qu0Teo+b1EvoJ5DWuq3XzPZP2yKWd2Zij06SC059SqWLoFBWwFkX47XS93Wc9yTJcJEx9p8WJGpFia++j9D5SDBXxAOqDLyOJiM8s1ng0GSX/KVVZ56oFbWJPleryK6+gsVf1OX7UlC1tzIjY=
+	t=1713185450; cv=none; b=PTaYnYRdQLKtY8n3vINWreLKz5/qlvLEKHrUyjPcfpLekAG1ywoPPs5ZXoMlwuYMsLM0zjQr2aaBNCBVm93WFb+ixTNJW5+KGlJugrlgh3W3tC5lO/GjaU5RzgaEKZJAU7lhqxgUVPawmPQizgVYPcMRP2LvpTq8sCx1XKlxG3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185449; c=relaxed/simple;
-	bh=jm3Ue9Nbd4Ke4ovJH14S8X19gT0B/9VD6SAIXhnTMl8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iArax42KPUGNvtMUX4tmz9IlzoxD3TTCntgDBvDwULy08O0vIT+v1ItvDPMIdcBVCzBawCUss+eqG0IWC23pDG/NgWNZo2rKl7k4U5i7Rj4V6ENmzI/RpQ5MbTHmod+RS2SOxbMZRQwpIKMFUuWKBFc0SlujTVcMpHP+PGkPb3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=tICqBGUd; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1713185450; c=relaxed/simple;
+	bh=nw55+VOpSKCFU5z9iBHcAaveAuSjI2mNzuzQYI+vTic=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CE9Be13q2Emjd9I8vuQBlHp4yubpkXoloyG0g4P6qpV1aUbyJBpehbmUYUZ8F+rbQdM0SHuX7y25eNIfaI9n6+lQWUfbX2SAO1ouDSwSdZ1fOi/8V/NtBZbzKLIVikWd+BEl95K62ZGmdETYVmO+uLrrUwOcqStXQ8XIubTPhdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iK/lUZOw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="tICqBGUd"
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D777341236
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 12:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713185443;
-	bh=/+lz4gvRbuYKUPO9p5AcEAQ4a8bxIR1nS1c0YAZAbpc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=tICqBGUdaWq3yAIJOaxwAFBsmwT0xs8lzrTJJIlID30W6QzitqwCqEVSHPmpD9Vna
-	 BIMEl3Dym3LGqCiIaPQ8E173zOtv2yxqY6OwJ1MmPTtpzxAjbnDyKc+a+HOTMbBDvC
-	 Ze4l1FJSnJHHizpAOw0JSf9Bw8nBdeiWr2UipSCa3YZWNGziQwuwbmrDJ9kYpaQhCk
-	 V8N4e4e4s0DVC85v4nsLyoJ7WfJeNpOEOSWwj1uO4CutTXFq8fMH+Vp3KEnlh7OdxO
-	 H0GXCp6YlOX4Oi2W6G9tT1JVFCSYLT9IzkSbxFTwtDALkZVPWoATBAeebJM4w/5w8f
-	 u3EJovuDVvoIA==
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a46938e24dbso53768366b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 05:50:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713185438; x=1713790238;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/+lz4gvRbuYKUPO9p5AcEAQ4a8bxIR1nS1c0YAZAbpc=;
-        b=FU8UZCNPo3PjsHLdv2E4r3NBJR66Rhuk6JKvtaezXHv3wtFvUPzujPbn2sSQr564I3
-         UgV5oAzgPiwaQFqg5T3CWv1aK0tevIVBCOqjUzM6BMM+V1yak2xxJHemvw+zMEaWa7zU
-         glwpN1xvhAF6ipYeODCapWO8JN2KHDnSFHTsRkfJpIR5RsTN8yZgkvPzyXeaxMqKk39O
-         /xpDKbYSRKBIt9JAOahPn8uhUCsQt4MVi2rVACHHcSNMUbDRHthyEXcL8omSuwLokI6x
-         HRWcuKoymqWHTNQ/C2QbFRblS3BAZmOmZsOSuxB8Ls/16QW9xUmlHaKlmZJ5L5vuZfJy
-         wIwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVtrE2Rm8WTfc2hAAjBbpPe5z0aj//826w4+1McnkUxCaBaORRx0aIlCNuhQ3Ep7WuuSCFW3jmI/VeqhNeiXeAR5wfGXHog7QQtFaE
-X-Gm-Message-State: AOJu0YzW56zTK1iF1MZxO4tEno4WkSeLEr35rQLAmKyxLgjHaE6rDMJB
-	K0Y5+Sbq4FPAnv4NXWkdiSpBbrVjiPjpcv0V8EScSbHJaBiUDh9GfaNeG6TJ0T2PGBVOEdYJmmd
-	msV2KjxdC/sxNQgVzciqGbtAVj9sqjyq3+IorZjb0bJammZ5QUAZbiN9ch9Gji6A6vQe0KU9O/B
-	9keQ==
-X-Received: by 2002:a17:906:6d0e:b0:a52:561c:ca87 with SMTP id m14-20020a1709066d0e00b00a52561cca87mr2392079ejr.1.1713185437898;
-        Mon, 15 Apr 2024 05:50:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZfcd/TjRul4GHXkO5qH5k2zYzb1Tgdzi4hxLh3ejZJdiWBUESLY7cEG1prI/RLPSXTbTpRg==
-X-Received: by 2002:a17:906:6d0e:b0:a52:561c:ca87 with SMTP id m14-20020a1709066d0e00b00a52561cca87mr2392062ejr.1.1713185437542;
-        Mon, 15 Apr 2024 05:50:37 -0700 (PDT)
-Received: from bojack.fritz.box (197-53-142-46.pool.kielnet.net. [46.142.53.197])
-        by smtp.gmail.com with ESMTPSA id bz2-20020a1709070aa200b00a51a9eccf2asm5455573ejc.125.2024.04.15.05.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 05:50:36 -0700 (PDT)
-From: Hannah Peuckmann <hannah.peuckmann@canonical.com>
-To: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Walker Chen <walker.chen@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>
-Subject: [PATCH v1 2/2] riscv: dts: starfive: visionfive 2: Remove non-existing I2S hardware
-Date: Mon, 15 Apr 2024 14:50:33 +0200
-Message-Id: <20240415125033.86909-3-hannah.peuckmann@canonical.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240415125033.86909-1-hannah.peuckmann@canonical.com>
-References: <20240415125033.86909-1-hannah.peuckmann@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iK/lUZOw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F389BC3277B;
+	Mon, 15 Apr 2024 12:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713185449;
+	bh=nw55+VOpSKCFU5z9iBHcAaveAuSjI2mNzuzQYI+vTic=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iK/lUZOw95G5d1CP46KqjoPv1FC+2khdHMnLPz7vRaOO/q9KCKPdCoGZOkfZen3ov
+	 B+3HiLJALiOqw26DhQIQ1SAWcbP/RtWwhrqtmYJPxhJeJjjjannEPjCjyxPx6Qa+9+
+	 R51XAoKHA24SFZgjnau43ljPfwmPbhXN7v+mRwD8G1+U17n0sjq1BuuQQTzag/zfN/
+	 S3WxwtSVKbAuUPy3LZ8atg2PXsRAfKsBqMMguWTsabXGVCH3N77Bx4bFjxyJcp5oq/
+	 mZFYQI3rgumPxPPhxG9l2Wao3wMCIodvxLdbVVbnQ+p01+hqnQtm6SCCKdRoLupSHt
+	 4944UXHrOur9Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Adam Goldman <adamg@pobox.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Sasha Levin <sashal@kernel.org>,
+	linux1394-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.15 4/4] firewire: ohci: mask bus reset interrupts between ISR and bottom half
+Date: Mon, 15 Apr 2024 06:04:46 -0400
+Message-ID: <20240415100449.3127574-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240415100449.3127574-1-sashal@kernel.org>
+References: <20240415100449.3127574-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.155
 Content-Transfer-Encoding: 8bit
 
-This partially reverts
-commit 92cfc35838b2 ("riscv: dts: starfive: Add the nodes and pins of I2Srx/I2Stx0/I2Stx1")
+From: Adam Goldman <adamg@pobox.com>
 
-This added device tree nodes for I2S hardware that is not actually on the
-VisionFive 2 board, but connected on the 40pin header. Many different extension
-boards could be added on those pins, so this should be handled by overlays
-instead.
-This also conflicts with the TDM node which also attempts to grab GPIO 44:
+[ Upstream commit 752e3c53de0fa3b7d817a83050b6699b8e9c6ec9 ]
 
-  starfive-jh7110-sys-pinctrl 13040000.pinctrl: pin GPIO44 already requested by 10090000.tdm; cannot claim for 120c0000.i2s
+In the FireWire OHCI interrupt handler, if a bus reset interrupt has
+occurred, mask bus reset interrupts until bus_reset_work has serviced and
+cleared the interrupt.
 
-Fixes: 92cfc35838b2 ("riscv: dts: starfive: Add the nodes and pins of I2Srx/I2Stx0/I2Stx1")
-Signed-off-by: Hannah Peuckmann <hannah.peuckmann@canonical.com>
+Normally, we always leave bus reset interrupts masked. We infer the bus
+reset from the self-ID interrupt that happens shortly thereafter. A
+scenario where we unmask bus reset interrupts was introduced in 2008 in
+a007bb857e0b26f5d8b73c2ff90782d9c0972620: If
+OHCI_PARAM_DEBUG_BUSRESETS (8) is set in the debug parameter bitmask, we
+will unmask bus reset interrupts so we can log them.
+
+irq_handler logs the bus reset interrupt. However, we can't clear the bus
+reset event flag in irq_handler, because we won't service the event until
+later. irq_handler exits with the event flag still set. If the
+corresponding interrupt is still unmasked, the first bus reset will
+usually freeze the system due to irq_handler being called again each
+time it exits. This freeze can be reproduced by loading firewire_ohci
+with "modprobe firewire_ohci debug=-1" (to enable all debugging output).
+Apparently there are also some cases where bus_reset_work will get called
+soon enough to clear the event, and operation will continue normally.
+
+This freeze was first reported a few months after a007bb85 was committed,
+but until now it was never fixed. The debug level could safely be set
+to -1 through sysfs after the module was loaded, but this would be
+ineffectual in logging bus reset interrupts since they were only
+unmasked during initialization.
+
+irq_handler will now leave the event flag set but mask bus reset
+interrupts, so irq_handler won't be called again and there will be no
+freeze. If OHCI_PARAM_DEBUG_BUSRESETS is enabled, bus_reset_work will
+unmask the interrupt after servicing the event, so future interrupts
+will be caught as desired.
+
+As a side effect to this change, OHCI_PARAM_DEBUG_BUSRESETS can now be
+enabled through sysfs in addition to during initial module loading.
+However, when enabled through sysfs, logging of bus reset interrupts will
+be effective only starting with the second bus reset, after
+bus_reset_work has executed.
+
+Signed-off-by: Adam Goldman <adamg@pobox.com>
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../jh7110-starfive-visionfive-2.dtsi         | 58 -------------------
- 1 file changed, 58 deletions(-)
+ drivers/firewire/ohci.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-index d89eef6e2633..2b3e952513e4 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-@@ -279,24 +279,6 @@ &i2c6 {
- 	status = "okay";
- };
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 667ff40f39353..7d94e1cbc0ed3 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -2049,6 +2049,8 @@ static void bus_reset_work(struct work_struct *work)
  
--&i2srx {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2srx_pins>;
--	status = "okay";
--};
--
--&i2stx0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mclk_ext_pins>;
--	status = "okay";
--};
--
--&i2stx1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2stx1_pins>;
--	status = "okay";
--};
--
- &mmc0 {
- 	max-frequency = <100000000>;
- 	assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO0_SDCARD>;
-@@ -447,46 +429,6 @@ GPOEN_SYS_I2C6_DATA,
- 		};
- 	};
+ 	ohci->generation = generation;
+ 	reg_write(ohci, OHCI1394_IntEventClear, OHCI1394_busReset);
++	if (param_debug & OHCI_PARAM_DEBUG_BUSRESETS)
++		reg_write(ohci, OHCI1394_IntMaskSet, OHCI1394_busReset);
  
--	i2srx_pins: i2srx-0 {
--		clk-sd-pins {
--			pinmux = <GPIOMUX(38, GPOUT_LOW,
--					      GPOEN_DISABLE,
--					      GPI_SYS_I2SRX_BCLK)>,
--				 <GPIOMUX(63, GPOUT_LOW,
--					      GPOEN_DISABLE,
--					      GPI_SYS_I2SRX_LRCK)>,
--				 <GPIOMUX(38, GPOUT_LOW,
--					      GPOEN_DISABLE,
--					      GPI_SYS_I2STX1_BCLK)>,
--				 <GPIOMUX(63, GPOUT_LOW,
--					      GPOEN_DISABLE,
--					      GPI_SYS_I2STX1_LRCK)>,
--				 <GPIOMUX(61, GPOUT_LOW,
--					      GPOEN_DISABLE,
--					      GPI_SYS_I2SRX_SDIN0)>;
--			input-enable;
--		};
--	};
--
--	i2stx1_pins: i2stx1-0 {
--		sd-pins {
--			pinmux = <GPIOMUX(44, GPOUT_SYS_I2STX1_SDO0,
--					      GPOEN_ENABLE,
--					      GPI_NONE)>;
--			bias-disable;
--			input-disable;
--		};
--	};
--
--	mclk_ext_pins: mclk-ext-0 {
--		mclk-ext-pins {
--			pinmux = <GPIOMUX(4, GPOUT_LOW,
--					     GPOEN_DISABLE,
--					     GPI_SYS_MCLK_EXT)>;
--			input-enable;
--		};
--	};
--
- 	mmc0_pins: mmc0-0 {
- 		 rst-pins {
- 			pinmux = <GPIOMUX(62, GPOUT_SYS_SDIO0_RST,
+ 	if (ohci->quirks & QUIRK_RESET_PACKET)
+ 		ohci->request_generation = generation;
+@@ -2115,12 +2117,14 @@ static irqreturn_t irq_handler(int irq, void *data)
+ 		return IRQ_NONE;
+ 
+ 	/*
+-	 * busReset and postedWriteErr must not be cleared yet
++	 * busReset and postedWriteErr events must not be cleared yet
+ 	 * (OHCI 1.1 clauses 7.2.3.2 and 13.2.8.1)
+ 	 */
+ 	reg_write(ohci, OHCI1394_IntEventClear,
+ 		  event & ~(OHCI1394_busReset | OHCI1394_postedWriteErr));
+ 	log_irqs(ohci, event);
++	if (event & OHCI1394_busReset)
++		reg_write(ohci, OHCI1394_IntMaskClear, OHCI1394_busReset);
+ 
+ 	if (event & OHCI1394_selfIDComplete)
+ 		queue_work(selfid_workqueue, &ohci->bus_reset_work);
 -- 
-2.40.1
+2.43.0
 
