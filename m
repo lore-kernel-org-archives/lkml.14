@@ -1,162 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF63E38FA5;
-	Mon, 15 Apr 2024 08:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A13219F3;
+	Mon, 15 Apr 2024 08:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713170879; cv=none; b=i90zXNlS7RHsZeBqPKonIUa0zvtXXfe2E7N709qcKna+Spg2JTh86LpqY7Q9B3k+MsYxDzZxb95wfwbj77TGHC6nOGwAK1ydWXBBtVOaqDCJqAGFvgpMJVIT1IXo1J+pnfZ9sNiCqXQgfnWjQyVCeW4jBS/tseIaLilQpupOWkg=
+	t=1713170955; cv=none; b=FRqYrJwepgkLe5Uk61+omgQc75pwHtsJzrdWqQbyV3iwiy+5xca9jdIiW8gqay+oe6qcHPku1NE0t/mUG9ldMM1OZf3kihB5NKbWsiJigNZLITet0lNuWowVY7w4udwls9TMqsXo4eHUr4c7CaQ8zryO+Cfq/0BGhX7Wz6cOLE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713170879; c=relaxed/simple;
-	bh=V4JD/K62Bn9Ujl7NQcNkcXzV/bT8ABt7vcbYkyDBR/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q5udkU9uOxXRUeAaNaN0sIZt4hhJsIsp+zdl/Yxhdkw6b7FEidejPzWuZ0zktGiqOnIEr4TtTZwraJcyUI9srbwKH0Oof96OdVaBiCYubi8nQPxmhJDaSmJzroKfjF4jq5tf3XXOq0Sbs7pR4FidQhdLYWj/B5NHBAOZQNmMx3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=B7Q+iTC8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713170955; c=relaxed/simple;
+	bh=MMSPrUmwgN2qLdpt3KXhCkN/0191aCKN8f40hpNb6sE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZWtp5hkg7ljpirtrdyNVSs4fbTBbipjy7PYG9SQy7C5hR0bxXihA6KC0NmC4luqn2SrmA/2Zfg/qD9Dl0PNycEFfW0DMfNcDe1GOL0B6+QTT6pBaawTHjPZ/95q0taYFfmGyyMUaaH7C8rkf3r9K8wvRBMqBmZnJccYecPNMwOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D/YpSzGg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="B7Q+iTC8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF99C113CC;
-	Mon, 15 Apr 2024 08:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713170879;
-	bh=V4JD/K62Bn9Ujl7NQcNkcXzV/bT8ABt7vcbYkyDBR/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B7Q+iTC88pZwHIypCPfw98m1VQRgmI7HbvnjK1W51yz/xvfbFWp4lZBwYjls8BdFx
-	 nq6wbzJwMF3tcBA3qxSzrq2kGn6DnUzth059UdG+6sx0jk7P+R267X5AOAoKc0DfJV
-	 HLoxC/fXTSZ20V0EJxiwHX3uaqZAe2SUQWB37+Lc=
-Date: Mon, 15 Apr 2024 10:47:56 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Johannes Berg <johannes.berg@intel.com>, linux-bcachefs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: debugfs revoke broken?
-Message-ID: <2024041557-stereo-wafer-1551@gregkh>
-References: <nxucitm2agdzdodrkm5rjyuwnnf6keivjiqlp5rn6poxkpkye6@yor2lprsxh7x>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D/YpSzGg"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43F82B6r010720;
+	Mon, 15 Apr 2024 08:49:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references; s=
+	qcppdkim1; bh=oMEWZzM1rS6b1hQAERLelSHkbFuDmEIXiKyjw35akB8=; b=D/
+	YpSzGgZd6c9hzIuXGo2CmDO4aEYUrvimLp6izzmur0Y3zL6Tb/CtqXJ2+kwfIfCS
+	ALBxtFibzjgZze1TSPRS+5mjk7bjl4EUXVLfcQdpwnk/Fc4zG6YjR7NoMdRfcCDq
+	/GHyWmOBzDOCkiBXA4WtYmGXxYMEJSu82mkJTfpYZj6By0ZYbWJw9zD89X+1gAfU
+	xo406//WPJhBQtCm0+gVrrsVJLtqMa3bL8wNYski7hz1zRQCA2aonF5/6HFGC9wr
+	WWxo9ss0yAsvzAUPu5pcA09KNamu7LvIfYYfELJRtU5CwlRCMlH93kB4AQmb/2/s
+	ptdlHpPAVIVFmP4+aQfQ==
+Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xgyq7r6tb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Apr 2024 08:49:10 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 43F8n8aD008759;
+	Mon, 15 Apr 2024 08:49:08 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTP id 3xfk4khayk-1;
+	Mon, 15 Apr 2024 08:49:08 +0000
+Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43F8n84g008754;
+	Mon, 15 Apr 2024 08:49:08 GMT
+Received: from cbsp-sh-gv.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTP id 43F8n7mm008753;
+	Mon, 15 Apr 2024 08:49:08 +0000
+Received: by cbsp-sh-gv.qualcomm.com (Postfix, from userid 4098150)
+	id 526235AFA; Mon, 15 Apr 2024 16:49:07 +0800 (CST)
+From: Qiang Yu <quic_qianyu@quicinc.com>
+To: mani@kernel.org, quic_jhugo@quicinc.com
+Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_cang@quicinc.com,
+        quic_mrana@quicinc.com, Qiang Yu <quic_qianyu@quicinc.com>
+Subject: [PATCH v3 1/3] bus: mhi: host: Add sysfs entry to force device to enter EDL
+Date: Mon, 15 Apr 2024 16:49:03 +0800
+Message-Id: <1713170945-44640-2-git-send-email-quic_qianyu@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1713170945-44640-1-git-send-email-quic_qianyu@quicinc.com>
+References: <1713170945-44640-1-git-send-email-quic_qianyu@quicinc.com>
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: fMB-RU7igfulCOXQLzpsP2EkOVYvQ0Tl
+X-Proofpoint-ORIG-GUID: fMB-RU7igfulCOXQLzpsP2EkOVYvQ0Tl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-15_08,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 adultscore=0 impostorscore=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404150057
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nxucitm2agdzdodrkm5rjyuwnnf6keivjiqlp5rn6poxkpkye6@yor2lprsxh7x>
 
-On Sun, Apr 14, 2024 at 06:32:07PM -0400, Kent Overstreet wrote:
-> I recently started seeing test failures like the following; from the
-> "shutdown complete" line we're well after the point where we called
-> debugfs_remove_recursive() - yet from the backtrace we were still able
-> to call into debugfs.
-> 
-> And I see from the history the remove path has been getting tweaked,
-> so...
-> 
-> 00091 ========= TEST   generic/001
-> 00091 
-> 00092 Setting up swapspace version 1, size = 2 GiB (2147479552 bytes)
-> 00092 no label, UUID=73a80295-2b03-4512-aae1-785187926ce3
-> 00092 Adding 2097148k swap on /dev/vde.  Priority:-2 extents:1 across:2097148k 
-> 00092 configuration error - unknown item 'NONEXISTENT' (notify administrator)
-> 00092 configuration error - unknown item 'PREVENT_NO_AUTH' (notify administrator)
-> 00094 configuration error - unknown item 'NONEXISTENT' (notify administrator)
-> 00094 configuration error - unknown item 'PREVENT_NO_AUTH' (notify administrator)
-> 00094 configuration error - unknown item 'NONEXISTENT' (notify administrator)
-> 00094 configuration error - unknown item 'PREVENT_NO_AUTH' (notify administrator)
-> 00101 building 001... done
-> 00101 bcachefs (vdb): mounting version 1.7: mi_btree_bitmap
-> 00101 bcachefs (vdb): initializing new filesystem
-> 00101 bcachefs (vdb): going read-write
-> 00101 bcachefs (vdb): marking superblocks
-> 00101 bcachefs (vdb): initializing freespace
-> 00101 bcachefs (vdb): done initializing freespace
-> 00101 bcachefs (vdb): reading snapshots table
-> 00101 bcachefs (vdb): reading snapshots done
-> 00101 bcachefs (vdb): done starting filesystem
-> 00102 FSTYP         -- bcachefs
-> 00102 PLATFORM      -- Linux/aarch64 Debian-1103-bullseye-arm64-base-kvm 6.9.0-rc2-ktest-g2719f811ae24 #18142 SMP Sun Apr 14 16:26:05 NZST 2024
-> 00102 MKFS_OPTIONS  -- --encrypted --no_passphrase /dev/vdc
-> 00102 MOUNT_OPTIONS -- /dev/vdc /mnt/scratch
-> 00102 
-> 00102 bcachefs (vdc): mounting version 1.7: mi_btree_bitmap
-> 00102 bcachefs (vdc): initializing new filesystem
-> 00102 bcachefs (vdc): going read-write
-> 00102 bcachefs (vdc): marking superblocks
-> 00102 bcachefs (vdc): initializing freespace
-> 00102 bcachefs (vdc): done initializing freespace
-> 00102 bcachefs (vdc): reading snapshots table
-> 00102 bcachefs (vdc): reading snapshots done
-> 00102 bcachefs (vdc): done starting filesystem
-> 00102 bcachefs (vdc): shutting down
-> 00102 bcachefs (vdc): going read-only
-> 00102 bcachefs (vdc): finished waiting for writes to stop
-> 00102 bcachefs (vdc): flushing journal and stopping allocators, journal seq 3
-> 00102 bcachefs (vdc): flushing journal and stopping allocators complete, journal seq 5
-> 00102 bcachefs (vdc): shutdown complete, journal seq 6
-> 00102 bcachefs (vdc): marking filesystem clean
-> 00102 bcachefs (vdc): shutdown complete
-> 00102 bcachefs (vdb): shutting down
-> 00102 bcachefs (vdb): going read-only
-> 00102 bcachefs (vdb): finished waiting for writes to stop
-> 00102 bcachefs (vdb): flushing journal and stopping allocators, journal seq 6
-> 00102 bcachefs (vdb): flushing journal and stopping allocators complete, journal seq 7
-> 00102 bcachefs (vdb): shutdown complete, journal seq 8
-> 00102 bcachefs (vdb): marking filesystem clean
-> 00102 bcachefs (vdb): shutdown complete
-> 00102 Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-> 00102 Mem abort info:
-> 00102   ESR = 0x0000000096000004
-> 00102   EC = 0x25: DABT (current EL), IL = 32 bits
-> 00102   SET = 0, FnV = 0
-> 00102   EA = 0, S1PTW = 0
-> 00102   FSC = 0x04: level 0 translation fault
-> 00102 Data abort info:
-> 00102   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> 00102   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> 00102   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> 00102 user pgtable: 4k pages, 48-bit VAs, pgdp=000000011585c000
-> 00102 [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
-> 00102 Internal error: Oops: 0000000096000004 [#1] SMP
-> 00102 Modules linked in:
-> 00102 CPU: 7 PID: 1805 Comm: cat Not tainted 6.9.0-rc2-ktest-g2719f811ae24 #18142
-> 00102 Hardware name: linux,dummy-virt (DT)
-> 00102 pstate: 00001005 (nzcv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-> 00102 pc : bch2_journal_seq_pins_to_text+0x100/0x208
-> 00102 lr : bch2_journal_seq_pins_to_text+0xf0/0x208
-> 00102 sp : ffff0000d6dd3c80
-> 00102 x29: ffff0000d6dd3c80 x28: ffff0000ca361f00 x27: 0000000000000000
-> 00102 x26: 0000000000000000 x25: ffff0000da0002c0 x24: ffff0000da0002f0
-> 00102 x23: ffff0000d50668c0 x22: ffff800080998950 x21: ffff0000da0002c0
-> 00102 x20: ffff0000c46165c0 x19: 0000000000000000 x18: 00000000fffffffe
-> 00102 x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> 00102 x14: ffffffffffffffff x13: ffff0000c0ada1df x12: ffff0000c0ada1d9
-> 00102 x11: 0000000000000000 x10: 0000000000000000 x9 : ffff800080400ec8
-> 00102 x8 : 0000000000000000 x7 : 20746e756f63203a x6 : 0000000000000000
-> 00102 x5 : 0000000000000020 x4 : 000000000000000d x3 : ffff0000c0ada1d0
-> 00102 x2 : 0000000000000010 x1 : ffff0000c0ada1d0 x0 : 0000000000000012
-> 00102 Call trace:
-> 00102  bch2_journal_seq_pins_to_text+0x100/0x208
-> 00102  bch2_journal_pins_read+0x48/0xd0
-> 00102  full_proxy_read+0x64/0xb8
-> 00102  vfs_read+0xd0/0x2d0
-> 00102  ksys_read+0x5c/0xe0
-> 00102  __arm64_sys_read+0x20/0x30
-> 00102  invoke_syscall.constprop.0+0x50/0xe0
-> 00102  do_el0_svc+0x44/0xc8
-> 00102  el0_svc+0x18/0x58
-> 00102  el0t_64_sync_handler+0xb8/0xc0
-> 00102  el0t_64_sync+0x14c/0x150
+Add sysfs entry to allow users of MHI bus force device to enter EDL.
+Considering that the way to enter EDL mode varies from device to device and
+some devices even do not support EDL. Hence, add a callback edl_trigger in
+mhi controller as part of the sysfs entry to be invoked and MHI core will
+only create EDL sysfs entry for mhi controller that provides edl_trigger
+callback. All of the process a specific device required to enter EDL mode
+can be placed in this callback.
 
-So this file was open when debugfs_remove() was called?
+Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+---
+ Documentation/ABI/stable/sysfs-bus-mhi | 11 +++++++++++
+ drivers/bus/mhi/host/init.c            | 35 ++++++++++++++++++++++++++++++++++
+ include/linux/mhi.h                    |  2 ++
+ 3 files changed, 48 insertions(+)
 
-Any chance you can bisect?  We just fixed some issues here in
-952c3fce297f ("debugfs: fix wait/cancellation handling during remove")
-that I thought should have handled this.  If you revert that commit,
-does things work again?  And/or what about commit 8c88a474357e
-("debugfs: add API to allow debugfs operations cancellation")?  Maybe we
-need to go back to not having completions at all in the debugfs remove
-path and just live with waiting for the files to be removed before
-continuing (which should at the least, resolve the issue you see here,
-while slowing things down a bit.)
+diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
+index 1a47f9e..d0bf9ae 100644
+--- a/Documentation/ABI/stable/sysfs-bus-mhi
++++ b/Documentation/ABI/stable/sysfs-bus-mhi
+@@ -29,3 +29,14 @@ Description:	Initiates a SoC reset on the MHI controller.  A SoC reset is
+                 This can be useful as a method of recovery if the device is
+                 non-responsive, or as a means of loading new firmware as a
+                 system administration task.
++
++What:           /sys/bus/mhi/devices/.../force_edl
++Date:           April 2024
++KernelVersion:  6.9
++Contact:        mhi@lists.linux.dev
++Description:    Force devices to enter EDL (emergency download) mode. Only MHI
++                controller that supports EDL mode and provides a mechanism for
++                manually triggering EDL contains this file. Once in EDL mode,
++                the flash programmer image can be downloaded to the device to
++                enter the flash programmer execution environment. This can be
++                useful if user wants to update firmware.
+diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+index 44f9349..333ac94 100644
+--- a/drivers/bus/mhi/host/init.c
++++ b/drivers/bus/mhi/host/init.c
+@@ -127,6 +127,32 @@ static ssize_t soc_reset_store(struct device *dev,
+ }
+ static DEVICE_ATTR_WO(soc_reset);
+ 
++static ssize_t force_edl_store(struct device *dev,
++			       struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	struct mhi_device *mhi_dev = to_mhi_device(dev);
++	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
++	unsigned long val;
++	int ret;
++
++	ret = kstrtoul(buf, 10, &val);
++	if (ret < 0) {
++		dev_err(dev, "Could not parse string: %d\n", ret);
++		return ret;
++	}
++
++	if (!val)
++		return count;
++
++	ret = mhi_cntrl->edl_trigger(mhi_cntrl);
++	if (ret)
++		return ret;
++
++	return count;
++}
++static DEVICE_ATTR_WO(force_edl);
++
+ static struct attribute *mhi_dev_attrs[] = {
+ 	&dev_attr_serial_number.attr,
+ 	&dev_attr_oem_pk_hash.attr,
+@@ -1018,6 +1044,12 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	if (ret)
+ 		goto err_release_dev;
+ 
++	if (mhi_cntrl->edl_trigger) {
++		ret = sysfs_create_file(&mhi_dev->dev.kobj, &dev_attr_force_edl.attr);
++		if (ret)
++			goto err_release_dev;
++	}
++
+ 	mhi_cntrl->mhi_dev = mhi_dev;
+ 
+ 	mhi_create_debugfs(mhi_cntrl);
+@@ -1051,6 +1083,9 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
+ 	mhi_deinit_free_irq(mhi_cntrl);
+ 	mhi_destroy_debugfs(mhi_cntrl);
+ 
++	if (mhi_cntrl->edl_trigger)
++		sysfs_remove_file(&mhi_dev->dev.kobj, &dev_attr_force_edl.attr);
++
+ 	destroy_workqueue(mhi_cntrl->hiprio_wq);
+ 	kfree(mhi_cntrl->mhi_cmd);
+ 	kfree(mhi_cntrl->mhi_event);
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index cde01e1..8280545 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -353,6 +353,7 @@ struct mhi_controller_config {
+  * @read_reg: Read a MHI register via the physical link (required)
+  * @write_reg: Write a MHI register via the physical link (required)
+  * @reset: Controller specific reset function (optional)
++ * @edl_trigger: CB function to enter EDL mode (optional)
+  * @buffer_len: Bounce buffer length
+  * @index: Index of the MHI controller instance
+  * @bounce_buf: Use of bounce buffer
+@@ -435,6 +436,7 @@ struct mhi_controller {
+ 	void (*write_reg)(struct mhi_controller *mhi_cntrl, void __iomem *addr,
+ 			  u32 val);
+ 	void (*reset)(struct mhi_controller *mhi_cntrl);
++	int (*edl_trigger)(struct mhi_controller *mhi_cntrl);
+ 
+ 	size_t buffer_len;
+ 	int index;
+-- 
+2.7.4
 
-thanks,
-
-greg k-h
