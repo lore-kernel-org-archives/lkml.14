@@ -1,97 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE259745C4;
-	Mon, 15 Apr 2024 12:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3418074BF4;
+	Mon, 15 Apr 2024 12:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185354; cv=none; b=n0Zo6HNeZEP9nTEKMSv6ESpQltOFYYL5ypFm+8F0tFYbPU0gIw3L+74s4ejILXxgR/XhYznffT/2Wuk2WOIiAM6hxW62GCzFytqpx5CaCbivQ6OHVI06KK+ywP/758rOw28pB51uJ2G7uaqbrXYtLgDRDLgSWLt3KCPVo0mQbYA=
+	t=1713185355; cv=none; b=jrfpn9UG1AI17rUQhNcGVOffFffx/DLsAKJUqtc5xRmCQ3D4qyTcRw2W5DCyUVJba7NhRiQI6cAngd/LkWOQCMR0jVng5uybm440zdXn3KvdwOXhZQnlbSMulJg5xhJSWiMI9fZgWga9joPc4IgV/1LMjPX5XTE+wJYTc7+b7wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185354; c=relaxed/simple;
-	bh=ght8BJNX6A/j7rHJE4Dh6XP/NEcplQcXuxyvyVAkquU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WltVdhuJFPxo0K9hqjKbTC/AGuL0bHGFNDPogsNE9pDceCyCqwwFwxqhEXXdn70Zj5XB4R27eG47+D8DvunVX3TsmegEH8hAhwWbRxc93C+v4CGOihgA/XhaSvOiAOLA6XfuutqpAJpqkpt77bspCBfFVCLpRWR4Gld8KmWRRyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYin6wo5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185355; c=relaxed/simple;
+	bh=fqD5QVAVsVbGxdWnTas/lt8WA9oyYAZWgwmYw1yMGyU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kRXfEK3QzoHQ3NTsdscQEWc8X/fWbgIU12xBqyceAHm+MHErlOpXnFBggFyEnLr4ARFeOSJ7umZjCdrdBoVdQEneZBR+xMHn46kVb+V5VHnxVUggzIAAQT0Uy7+NdtCH+eFepWA7bLSZ2qCvvFS/6Vc84Oe6PCT5VdJfw2di0V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzWpT/NQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYin6wo5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2492C4AF07;
-	Mon, 15 Apr 2024 12:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzWpT/NQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19885C4AF11;
+	Mon, 15 Apr 2024 12:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185353;
-	bh=ght8BJNX6A/j7rHJE4Dh6XP/NEcplQcXuxyvyVAkquU=;
+	s=k20201202; t=1713185354;
+	bh=fqD5QVAVsVbGxdWnTas/lt8WA9oyYAZWgwmYw1yMGyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tYin6wo5RwN3uC0kDLQsC73txuDy4EMT/wIhVhTOOR1oLFkp9sgAB85pl0+aC5ZHY
-	 MgZHHEF2HfFLcDcHqI+IZmK3R4VvPBl0aJQAcL0gYFqZ9UES4Z39oYDIwyOHjaNzwP
-	 n/x2euL9UobdyAzvO2iYr42+c8OG6fNd8Yjim/KylR2rleqSeYT0Fu90euhCphYhBN
-	 faBVHdGWBRvdbaOLZcPDxd1C+79M0Y38+MMEg7k3fxZE/RYSlBn61U3mo7AVVvLlI3
-	 WTbGZ6Z4DbTFDxib987Hg+GJpKMZW1NXhfHHQQxHREL2fIrnsIR9tE/Vraew3ATEeC
-	 GsKa7DRlPO39A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Takashi Iwai <tiwai@suse.de>,
-	Sasha Levin <sashal@kernel.org>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 04/15] OSS: dmasound/paula: Mark driver struct with __refdata to prevent section mismatch
-Date: Mon, 15 Apr 2024 06:02:44 -0400
-Message-ID: <20240415100311.3126785-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100311.3126785-1-sashal@kernel.org>
-References: <20240415100311.3126785-1-sashal@kernel.org>
+	b=CzWpT/NQj0HpXXH26LJs4Mac7tWLzS4dNRE/U2AT9AHsTKugIRa1L0Nkl8e8GfSQa
+	 hr2RyrBgUI2pCosnJCH7GO/mFnxK4aXv4LBQu5aUUX2GM3D+nWMBqD6sGmoL8/uflV
+	 nJKTux5jK9pXdPe1/V748UtIUUNNygcPK3uFVC49IsrSnZW2FJToOfMR2a2a6E+HA/
+	 UZavyDuQB0DJGJaFnKoZpsPUNaA2pH15AmXw5P7vtdc4HovZb83WCv8C/L7agrLzck
+	 gQQGvWiUHiHTRBVciqQrNCIJI9GK4o4JPayIl87IH4nSdDCK4fTra7xEvjlqIQodax
+	 R0AA/zkbANNAQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 01/36] tracing: Add a comment about ftrace_regs definition
+Date: Mon, 15 Apr 2024 21:49:10 +0900
+Message-Id: <171318535003.254850.2125783941049872788.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.6
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-[ Upstream commit 755795cd3da053b0565085d9950c44d7b6cba5c4 ]
+To clarify what will be expected on ftrace_regs, add a comment to the
+architecture independent definition of the ftrace_regs.
 
-As described in the added code comment, a reference to .exit.text is ok
-for drivers registered via module_platform_driver_probe(). Make this
-explicit to prevent the following section mismatch warning
-
-	WARNING: modpost: sound/oss/dmasound/dmasound_paula: section mismatch in reference: amiga_audio_driver+0x8 (section: .data) -> amiga_audio_remove (section: .exit.text)
-
-that triggers on an allmodconfig W=1 build.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Message-ID: <c216a129aa88f3af5c56fe6612a472f7a882f048.1711748999.git.u.kleine-koenig@pengutronix.de>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 ---
- sound/oss/dmasound/dmasound_paula.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ Changes in v8:
+  - Update that the saved registers depends on the context.
+ Changes in v3:
+  - Add instruction pointer
+ Changes in v2:
+  - newly added.
+---
+ include/linux/ftrace.h |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/sound/oss/dmasound/dmasound_paula.c b/sound/oss/dmasound/dmasound_paula.c
-index 0ba8f0c4cd99a..3a593da09280d 100644
---- a/sound/oss/dmasound/dmasound_paula.c
-+++ b/sound/oss/dmasound/dmasound_paula.c
-@@ -725,7 +725,13 @@ static void __exit amiga_audio_remove(struct platform_device *pdev)
- 	dmasound_deinit();
- }
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 54d53f345d14..b81f1afa82a1 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -118,6 +118,32 @@ extern int ftrace_enabled;
  
--static struct platform_driver amiga_audio_driver = {
-+/*
-+ * amiga_audio_remove() lives in .exit.text. For drivers registered via
-+ * module_platform_driver_probe() this is ok because they cannot get unbound at
-+ * runtime. So mark the driver struct with __refdata to prevent modpost
-+ * triggering a section mismatch warning.
+ #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+ 
++/**
++ * ftrace_regs - ftrace partial/optimal register set
++ *
++ * ftrace_regs represents a group of registers which is used at the
++ * function entry and exit. There are three types of registers.
++ *
++ * - Registers for passing the parameters to callee, including the stack
++ *   pointer. (e.g. rcx, rdx, rdi, rsi, r8, r9 and rsp on x86_64)
++ * - Registers for passing the return values to caller.
++ *   (e.g. rax and rdx on x86_64)
++ * - Registers for hooking the function call and return including the
++ *   frame pointer (the frame pointer is architecture/config dependent)
++ *   (e.g. rip, rbp and rsp for x86_64)
++ *
++ * Also, architecture dependent fields can be used for internal process.
++ * (e.g. orig_ax on x86_64)
++ *
++ * On the function entry, those registers will be restored except for
++ * the stack pointer, so that user can change the function parameters
++ * and instruction pointer (e.g. live patching.)
++ * On the function exit, only registers which is used for return values
++ * are restored.
++ *
++ * NOTE: user *must not* access regs directly, only do it via APIs, because
++ * the member can be changed according to the architecture.
 + */
-+static struct platform_driver amiga_audio_driver __refdata = {
- 	.remove_new = __exit_p(amiga_audio_remove),
- 	.driver = {
- 		.name	= "amiga-audio",
--- 
-2.43.0
+ struct ftrace_regs {
+ 	struct pt_regs		regs;
+ };
 
