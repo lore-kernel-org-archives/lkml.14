@@ -1,97 +1,308 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1216127E04;
-	Mon, 15 Apr 2024 12:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E79126F03;
+	Mon, 15 Apr 2024 12:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185414; cv=none; b=hnFZS3WwH2gTFqQHffp7C4KSbe8MoPnfhXrLHNluNZqCWbke1yx/t0OVQBbcxqZcAmqh4IEg9yOFl+RYqWDy1/gpsu42N7nKret5RVA7RpiVd0p/K0eONP+KTmIBIZcKG8z43fUqNh2LlOvZcbjsqd3tsl5R99veS3ygVAS7h64=
+	t=1713185414; cv=none; b=YDLDmbZgZLsVN2+2DSwIkGLqV60wTGh+pz38lc6MLk+CCH+xYEEdzwRh8G+LYS5MQqJx1Soevu+7BdFCMJo+6EMJmMZiLWgFikdKYChQEIYKog14wWdupbsstIk1PItvBnOuy2oa+gPdoQQdFNdgddfCeXVZFgTNSPToVyheU38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713185414; c=relaxed/simple;
-	bh=TmsmNj7bRkz5rFs75rWI7SSlKnqyyER7J97nLh86c7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BH0vBAEjdPCupU9rfeNU6t481+8oBZNr9cwrDHOeEfuuc7fHfKM515fYrBDXam1xhqGG0EFCtfadfs+lbCDPSOxorJUjztLonGqxitGd648uz52rKcNU+ObHW9Z6ZZtAgb+c+W6nMq9XNd6ZOWkFJPC/iCYTzVhUBqv8R011xGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoBAD1Nx; arc=none smtp.client-ip=10.30.226.201
+	bh=/2VHN6Fpx9YFbPIk82zaXoeshzNI9r9yb9C+nlQyp04=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=T7hpnpqtqlbYnDF/0C8KDg5HrNGcYSX3yj5lBdSmDjA3+0Xpjhy3BNK/hfMXZcfK25+PtzSgAgvz6YUOhHlcB9Ojh6a6R91OClejdNdpSbuUEPkO4KXY76TnyA9zkLqXxZckKwZhpHJM7FWJAxxa7jFKndxzVlqZ57o3Lf5CPXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=YQgc1XAE; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoBAD1Nx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60706C4AF08;
-	Mon, 15 Apr 2024 12:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185414;
-	bh=TmsmNj7bRkz5rFs75rWI7SSlKnqyyER7J97nLh86c7o=;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="YQgc1XAE"
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 32F3B88151;
+	Mon, 15 Apr 2024 14:50:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1713185404;
+	bh=VNBmv56aCUIZ6QJaObTK3qMpfGN3t8BH2BrLFEwBkhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EoBAD1NxA/0PJZvMaKYqkypifDbbfMqBuIO6/1x3UYMEEPWQoD3JOLzmpEr8DYnyA
-	 Rj/KcZelrtzLvyGDR4Z1AE3KTwUMbk1s+oL9SrCyZ4eUU33YMjVc64JXvTnwEiuaFm
-	 M2GMMS3ZSB0nWOX8Fup5WgPdrEmxWV3l0c1gy5NHZLmDPk3/aC3+/B6FfSxaQFTDTs
-	 gcSSbk3CIB6VYQNIJgRbGubzUB6diirVaXTYdvOGTQ5Xzt2iJ2ZS2z2/HkSzwDdmx0
-	 IGYl3ttKsZEsTRHFktwEeMsFjZAnFw+OkJUWCYtMY4Ke0OE4u5M21HL2c0Vs7E3YfW
-	 5NROqKJL8VLfA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Li Nan <linan122@huawei.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 08/12] block: fix overflow in blk_ioctl_discard()
-Date: Mon, 15 Apr 2024 06:03:43 -0400
-Message-ID: <20240415100358.3127162-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100358.3127162-1-sashal@kernel.org>
-References: <20240415100358.3127162-1-sashal@kernel.org>
+	b=YQgc1XAE11wORCxsRU2bINaUYyko2awiBZfaDJkWAvL5x2UvPpKUKYwRHiTauTvBV
+	 2FDTn59+ryL5vUgp4iUrMbLxviTu0qdj52JULASTUC3m1sr7UnRyonsobC7C5AbUIa
+	 ZyTiESAgoESoiEGFNobNYtOee75tya9J3BSa7ZzrL3hqrSudkwo2kXqPBHu2tPw4I4
+	 kyLJi6GWRRnwh+jbEZSJGwa76MmgrSvyE7BKFHNb0+jyhAtgs9vJxtp2+duKFB6YVC
+	 9OQaAjVycYlE4G/CXe7Ke02I8wB3F/6YV3yE5Diq5nrHm3zbLhcFuAchS5TOTPRb61
+	 SWDKuRHHTioKQ==
+From: Lukasz Majewski <lukma@denx.de>
+To: netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Ravi Gunasekaran <r-gunasekaran@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Murali Karicheri <m-karicheri2@ti.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Ziyang Xuan <william.xuanziyang@huawei.com>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	linux-kernel@vger.kernel.org,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next PATCH v5 2/4] test: hsr: Move common code to hsr_common.sh file
+Date: Mon, 15 Apr 2024 14:49:26 +0200
+Message-Id: <20240415124928.1263240-3-lukma@denx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240415124928.1263240-1-lukma@denx.de>
+References: <20240415124928.1263240-1-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.27
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-From: Li Nan <linan122@huawei.com>
+Some of the code already present in the hsr_ping.sh test program can be
+moved to a separate script file, so it can be reused by other HSR
+functionality (like HSR-SAN) tests.
 
-[ Upstream commit 22d24a544b0d49bbcbd61c8c0eaf77d3c9297155 ]
-
-There is no check for overflow of 'start + len' in blk_ioctl_discard().
-Hung task occurs if submit an discard ioctl with the following param:
-  start = 0x80000000000ff000, len = 0x8000000000fff000;
-Add the overflow validation now.
-
-Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20240329012319.2034550-1-linan666@huaweicloud.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- block/ioctl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/hsr/hsr_common.sh | 96 +++++++++++++++++++
+ tools/testing/selftests/net/hsr/hsr_ping.sh   | 93 +-----------------
+ 2 files changed, 99 insertions(+), 90 deletions(-)
+ create mode 100644 tools/testing/selftests/net/hsr/hsr_common.sh
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index d1d8e8391279a..68265f914c27b 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -89,7 +89,7 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
- 		unsigned long arg)
+diff --git a/tools/testing/selftests/net/hsr/hsr_common.sh b/tools/testing/selftests/net/hsr/hsr_common.sh
+new file mode 100644
+index 000000000000..822165391573
+--- /dev/null
++++ b/tools/testing/selftests/net/hsr/hsr_common.sh
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: GPL-2.0
++# Common code for HSR testing scripts
++
++ret=0
++ksft_skip=4
++
++sec=$(date +%s)
++rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
++ns1="ns1-$rndh"
++ns2="ns2-$rndh"
++ns3="ns3-$rndh"
++
++cleanup()
++{
++	local netns
++	for netns in "$ns1" "$ns2" "$ns3" ;do
++		ip netns del $netns
++	done
++}
++
++# $1: IP address
++is_v6()
++{
++	[ -z "${1##*:*}" ]
++}
++
++do_ping()
++{
++	local netns="$1"
++	local connect_addr="$2"
++	local ping_args="-q -c 2"
++
++	if is_v6 "${connect_addr}"; then
++		$ipv6 || return 0
++		ping_args="${ping_args} -6"
++	fi
++
++	ip netns exec ${netns} ping ${ping_args} $connect_addr >/dev/null
++	if [ $? -ne 0 ] ; then
++		echo "$netns -> $connect_addr connectivity [ FAIL ]" 1>&2
++		ret=1
++		return 1
++	fi
++
++	return 0
++}
++
++do_ping_long()
++{
++	local netns="$1"
++	local connect_addr="$2"
++	local ping_args="-q -c 10"
++
++	if is_v6 "${connect_addr}"; then
++		$ipv6 || return 0
++		ping_args="${ping_args} -6"
++	fi
++
++	OUT="$(LANG=C ip netns exec ${netns} ping ${ping_args} $connect_addr | grep received)"
++	if [ $? -ne 0 ] ; then
++		echo "$netns -> $connect_addr ping [ FAIL ]" 1>&2
++		ret=1
++		return 1
++	fi
++
++	VAL="$(echo $OUT | cut -d' ' -f1-8)"
++	if [ "$VAL" != "10 packets transmitted, 10 received, 0% packet loss," ]
++	then
++		echo "$netns -> $connect_addr ping TEST [ FAIL ]"
++		echo "Expect to send and receive 10 packets and no duplicates."
++		echo "Full message: ${OUT}."
++		ret=1
++		return 1
++	fi
++
++	return 0
++}
++
++stop_if_error()
++{
++	local msg="$1"
++
++	if [ ${ret} -ne 0 ]; then
++		echo "FAIL: ${msg}" 1>&2
++		exit ${ret}
++	fi
++}
++
++check_prerequisites()
++{
++	ip -Version > /dev/null 2>&1
++	if [ $? -ne 0 ];then
++		echo "SKIP: Could not run test without ip tool"
++		exit $ksft_skip
++	fi
++}
+diff --git a/tools/testing/selftests/net/hsr/hsr_ping.sh b/tools/testing/selftests/net/hsr/hsr_ping.sh
+index 1c6457e54625..6fab532793a0 100755
+--- a/tools/testing/selftests/net/hsr/hsr_ping.sh
++++ b/tools/testing/selftests/net/hsr/hsr_ping.sh
+@@ -1,10 +1,10 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-ret=0
+-ksft_skip=4
+ ipv6=true
+ 
++source ./hsr_common.sh
++
+ optstring="h4"
+ usage() {
+ 	echo "Usage: $0 [OPTION]"
+@@ -27,88 +27,6 @@ while getopts "$optstring" option;do
+ esac
+ done
+ 
+-sec=$(date +%s)
+-rndh=$(printf %x $sec)-$(mktemp -u XXXXXX)
+-ns1="ns1-$rndh"
+-ns2="ns2-$rndh"
+-ns3="ns3-$rndh"
+-
+-cleanup()
+-{
+-	local netns
+-	for netns in "$ns1" "$ns2" "$ns3" ;do
+-		ip netns del $netns
+-	done
+-}
+-
+-# $1: IP address
+-is_v6()
+-{
+-	[ -z "${1##*:*}" ]
+-}
+-
+-do_ping()
+-{
+-	local netns="$1"
+-	local connect_addr="$2"
+-	local ping_args="-q -c 2"
+-
+-	if is_v6 "${connect_addr}"; then
+-		$ipv6 || return 0
+-		ping_args="${ping_args} -6"
+-	fi
+-
+-	ip netns exec ${netns} ping ${ping_args} $connect_addr >/dev/null
+-	if [ $? -ne 0 ] ; then
+-		echo "$netns -> $connect_addr connectivity [ FAIL ]" 1>&2
+-		ret=1
+-		return 1
+-	fi
+-
+-	return 0
+-}
+-
+-do_ping_long()
+-{
+-	local netns="$1"
+-	local connect_addr="$2"
+-	local ping_args="-q -c 10"
+-
+-	if is_v6 "${connect_addr}"; then
+-		$ipv6 || return 0
+-		ping_args="${ping_args} -6"
+-	fi
+-
+-	OUT="$(LANG=C ip netns exec ${netns} ping ${ping_args} $connect_addr | grep received)"
+-	if [ $? -ne 0 ] ; then
+-		echo "$netns -> $connect_addr ping [ FAIL ]" 1>&2
+-		ret=1
+-		return 1
+-	fi
+-
+-	VAL="$(echo $OUT | cut -d' ' -f1-8)"
+-	if [ "$VAL" != "10 packets transmitted, 10 received, 0% packet loss," ]
+-	then
+-		echo "$netns -> $connect_addr ping TEST [ FAIL ]"
+-		echo "Expect to send and receive 10 packets and no duplicates."
+-		echo "Full message: ${OUT}."
+-		ret=1
+-		return 1
+-	fi
+-
+-	return 0
+-}
+-
+-stop_if_error()
+-{
+-	local msg="$1"
+-
+-	if [ ${ret} -ne 0 ]; then
+-		echo "FAIL: ${msg}" 1>&2
+-		exit ${ret}
+-	fi
+-}
+-
+ do_complete_ping_test()
  {
- 	uint64_t range[2];
--	uint64_t start, len;
-+	uint64_t start, len, end;
- 	struct inode *inode = bdev->bd_inode;
- 	int err;
+ 	echo "INFO: Initial validation ping."
+@@ -248,12 +166,7 @@ setup_hsr_interfaces()
+ 	ip -net "$ns3" link set hsr3 up
+ }
  
-@@ -110,7 +110,8 @@ static int blk_ioctl_discard(struct block_device *bdev, blk_mode_t mode,
- 	if (len & 511)
- 		return -EINVAL;
+-ip -Version > /dev/null 2>&1
+-if [ $? -ne 0 ];then
+-	echo "SKIP: Could not run test without ip tool"
+-	exit $ksft_skip
+-fi
+-
++check_prerequisites
+ trap cleanup EXIT
  
--	if (start + len > bdev_nr_bytes(bdev))
-+	if (check_add_overflow(start, len, &end) ||
-+	    end > bdev_nr_bytes(bdev))
- 		return -EINVAL;
- 
- 	filemap_invalidate_lock(inode->i_mapping);
+ for i in "$ns1" "$ns2" "$ns3" ;do
 -- 
-2.43.0
+2.20.1
 
