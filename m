@@ -1,134 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B00A13665B;
-	Mon, 15 Apr 2024 12:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CECC136E12;
+	Mon, 15 Apr 2024 12:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713185471; cv=none; b=Eiy8swnmPon1/gz8yZGnpI9z6zoGQJxei5xBuJ/bicpDsaHbQMyxZPud3XXmzrJvBGBDAr3yjTlOY9B67SDEX19YVJtOLPpNiz2w2RAWsgerngTD5uhFSE2MwN3du7mQMlDckarTeNPNVK6fSq9z/0u9mOTTrDR5R09wy8RmbOo=
+	t=1713185473; cv=none; b=RxtTeXDZ+xiQBmPam5VZO2tLfu3q/sa5nLBCsqBd2Msoi655sHOJvi2/5TOneEfO4DjO37XIRN/h1j5ETNusKcWKGvVZ8oB8vsZU4UHl2jD9NTLmRWPvgza/dX3ITe87NjMmtQMvNl0ojN62DLn/jZVrjNAPbTV9K50yFV0qC1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713185471; c=relaxed/simple;
-	bh=iKq2Ao9hmASbPg8B8A1NrGmxsg+iV2lxNQHpuCQg9aM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MfCP3iDiIqpj55rMf1Egi15jnWwg4QV2KVX5OF+/MddlGOhwF9IEhVA0oNjvSKaIWOXEaGnn7Lbjw4DeUX892ApJHkeMbmvH1GCUkk+m5muPqqnv7me48gT0bIfv5aNIiSAaF4nxQWlmoGWhnTkqFsQCoql0y7PyEu0FJI15aeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGsKi2ph; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713185473; c=relaxed/simple;
+	bh=ZtnY/SVVbc5FkLaqffICW0eL2EoTjYiqDw6hBcLoMzA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uvIt2Q2e04At9KdfGYvUkN0zj2SW1gkdbBuxP8k+k2psy/dNz/g8l6Zj7BifkHDkPJkaVmb6NLPCQe6BtAjJsec1A32phISGhlTA2p08G0j+ylcPwYUtW89OAtgunBDzPtOBlKeyEY1q289kpG6ty4xHvgxscE77Y68gNIStzhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJBcuig3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGsKi2ph"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BECC4AF07;
-	Mon, 15 Apr 2024 12:51:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJBcuig3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E794DC3277B;
+	Mon, 15 Apr 2024 12:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713185470;
-	bh=iKq2Ao9hmASbPg8B8A1NrGmxsg+iV2lxNQHpuCQg9aM=;
+	s=k20201202; t=1713185473;
+	bh=ZtnY/SVVbc5FkLaqffICW0eL2EoTjYiqDw6hBcLoMzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EGsKi2ph7CEOHSo2jXzTCoNTCbC1IStlUWd9uETMAZ0HNR4ps9l/a5Y3ADnPo0OiL
-	 ypOGc8D4D8CPEFECMeLiQOEp7CFZwkRGpsUU1h+l8j0Jmgg1487YAu7alQVHtkjTDf
-	 Cf6IAa4Nlx0WNaI/aOsLf0hMhL+Q8SqAAk/8y/WBuqbBEf4jIULaQOAIeQroT9rURd
-	 x4AHN+ntEyOubyXdkiCz3niCResHe/M95f8IRCUfM+GPuhK7ILGRJWdL23dWt8s/Zu
-	 dXbuyN3qeV2IapNx+Y4oPcRIKAPdklE1cKhufJY42lOerF17vX5chMcV5iusOVIpd7
-	 N+aRw4CZL7lcg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Adam Goldman <adamg@pobox.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Sasha Levin <sashal@kernel.org>,
-	linux1394-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 4/4] firewire: ohci: mask bus reset interrupts between ISR and bottom half
-Date: Mon, 15 Apr 2024 06:05:07 -0400
-Message-ID: <20240415100510.3127774-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240415100510.3127774-1-sashal@kernel.org>
-References: <20240415100510.3127774-1-sashal@kernel.org>
+	b=iJBcuig3Rj6Athn1MeFNWuetIhW4aOeYpm5f1cM92ZIvIIyDWUTR6aCfe4xeLiYLb
+	 aUKqoy58D9TS2AHQmuZuwWMHSja0yI2NBTQzuAPIjLW+h58vL65znsVbc8RSHRfUuI
+	 xub6YSWW/caTQ2pYhKNHgrIyF5T+msnP/BVEBzXJnxamH9QY16O0VzYrXvkRqUXIF2
+	 LYPrvMabZME2hjhuK+As1kmpPQpg6MXzFkEiyNVKnzz4C+e3BA8qz6XeBtbU+f7UOW
+	 jpEOYjq4bvOt+8EfUJUUBDS49TJxA8gKIcqhJXdB47uKKH0/r8M8PK4d3mv2MjROsj
+	 NujQJ58XG1HEA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v9 11/36] ftrace: Allow ftrace startup flags exist without dynamic ftrace
+Date: Mon, 15 Apr 2024 21:51:07 +0900
+Message-Id: <171318546760.254850.17894205840308276873.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171318533841.254850.15841395205784342850.stgit@devnote2>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.274
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Adam Goldman <adamg@pobox.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 752e3c53de0fa3b7d817a83050b6699b8e9c6ec9 ]
+Some of the flags for ftrace_startup() may be exposed even when
+CONFIG_DYNAMIC_FTRACE is not configured in. This is fine as the difference
+between dynamic ftrace and static ftrace is done within the internals of
+ftrace itself. No need to have use cases fail to compile because dynamic
+ftrace is disabled.
 
-In the FireWire OHCI interrupt handler, if a bus reset interrupt has
-occurred, mask bus reset interrupts until bus_reset_work has serviced and
-cleared the interrupt.
+This change is needed to move some of the logic of what is passed to
+ftrace_startup() out of the parameters of ftrace_startup().
 
-Normally, we always leave bus reset interrupts masked. We infer the bus
-reset from the self-ID interrupt that happens shortly thereafter. A
-scenario where we unmask bus reset interrupts was introduced in 2008 in
-a007bb857e0b26f5d8b73c2ff90782d9c0972620: If
-OHCI_PARAM_DEBUG_BUSRESETS (8) is set in the debug parameter bitmask, we
-will unmask bus reset interrupts so we can log them.
-
-irq_handler logs the bus reset interrupt. However, we can't clear the bus
-reset event flag in irq_handler, because we won't service the event until
-later. irq_handler exits with the event flag still set. If the
-corresponding interrupt is still unmasked, the first bus reset will
-usually freeze the system due to irq_handler being called again each
-time it exits. This freeze can be reproduced by loading firewire_ohci
-with "modprobe firewire_ohci debug=-1" (to enable all debugging output).
-Apparently there are also some cases where bus_reset_work will get called
-soon enough to clear the event, and operation will continue normally.
-
-This freeze was first reported a few months after a007bb85 was committed,
-but until now it was never fixed. The debug level could safely be set
-to -1 through sysfs after the module was loaded, but this would be
-ineffectual in logging bus reset interrupts since they were only
-unmasked during initialization.
-
-irq_handler will now leave the event flag set but mask bus reset
-interrupts, so irq_handler won't be called again and there will be no
-freeze. If OHCI_PARAM_DEBUG_BUSRESETS is enabled, bus_reset_work will
-unmask the interrupt after servicing the event, so future interrupts
-will be caught as desired.
-
-As a side effect to this change, OHCI_PARAM_DEBUG_BUSRESETS can now be
-enabled through sysfs in addition to during initial module loading.
-However, when enabled through sysfs, logging of bus reset interrupts will
-be effective only starting with the second bus reset, after
-bus_reset_work has executed.
-
-Signed-off-by: Adam Goldman <adamg@pobox.com>
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- drivers/firewire/ohci.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/ftrace.h |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 6603f13f5de9b..2db5448c4293a 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -2053,6 +2053,8 @@ static void bus_reset_work(struct work_struct *work)
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 2eb4981ec80b..d66ebc77e4e4 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -538,6 +538,15 @@ static inline void stack_tracer_disable(void) { }
+ static inline void stack_tracer_enable(void) { }
+ #endif
  
- 	ohci->generation = generation;
- 	reg_write(ohci, OHCI1394_IntEventClear, OHCI1394_busReset);
-+	if (param_debug & OHCI_PARAM_DEBUG_BUSRESETS)
-+		reg_write(ohci, OHCI1394_IntMaskSet, OHCI1394_busReset);
++enum {
++	FTRACE_UPDATE_CALLS		= (1 << 0),
++	FTRACE_DISABLE_CALLS		= (1 << 1),
++	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
++	FTRACE_START_FUNC_RET		= (1 << 3),
++	FTRACE_STOP_FUNC_RET		= (1 << 4),
++	FTRACE_MAY_SLEEP		= (1 << 5),
++};
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
- 	if (ohci->quirks & QUIRK_RESET_PACKET)
- 		ohci->request_generation = generation;
-@@ -2119,12 +2121,14 @@ static irqreturn_t irq_handler(int irq, void *data)
- 		return IRQ_NONE;
+ void ftrace_arch_code_modify_prepare(void);
+@@ -632,15 +641,6 @@ void ftrace_set_global_notrace(unsigned char *buf, int len, int reset);
+ void ftrace_free_filter(struct ftrace_ops *ops);
+ void ftrace_ops_set_global_filter(struct ftrace_ops *ops);
  
- 	/*
--	 * busReset and postedWriteErr must not be cleared yet
-+	 * busReset and postedWriteErr events must not be cleared yet
- 	 * (OHCI 1.1 clauses 7.2.3.2 and 13.2.8.1)
- 	 */
- 	reg_write(ohci, OHCI1394_IntEventClear,
- 		  event & ~(OHCI1394_busReset | OHCI1394_postedWriteErr));
- 	log_irqs(ohci, event);
-+	if (event & OHCI1394_busReset)
-+		reg_write(ohci, OHCI1394_IntMaskClear, OHCI1394_busReset);
- 
- 	if (event & OHCI1394_selfIDComplete)
- 		queue_work(selfid_workqueue, &ohci->bus_reset_work);
--- 
-2.43.0
+-enum {
+-	FTRACE_UPDATE_CALLS		= (1 << 0),
+-	FTRACE_DISABLE_CALLS		= (1 << 1),
+-	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
+-	FTRACE_START_FUNC_RET		= (1 << 3),
+-	FTRACE_STOP_FUNC_RET		= (1 << 4),
+-	FTRACE_MAY_SLEEP		= (1 << 5),
+-};
+-
+ /*
+  * The FTRACE_UPDATE_* enum is used to pass information back
+  * from the ftrace_update_record() and ftrace_test_record()
 
