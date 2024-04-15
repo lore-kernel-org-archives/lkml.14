@@ -1,42 +1,48 @@
-Received: from mail-108-mta97.mxroute.com (mail-108-mta97.mxroute.com [136.175.108.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819AD7D3FE
-	for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D9182D93;
+	Mon, 15 Apr 2024 17:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713201936; cv=none; b=PHu2OpAvZncHD6TiSdWLQeKx+T/z+dqic9lhrghRSYq04uh5YZyUeCqmazHTcE0aILxh1dX5toIDDdoetn9pfqmefHhomKjlvfccsBizPA0ApknSQk45w1lciNvWRZ4H1+nHICYDdk29z5qctXaylBRTK2aKqz46tqIUxyK+Cts=
+	t=1713201991; cv=none; b=YXoTpZTEcf85XOW/79ZMGQSfp9DXgg3CXzQURBLOEYyHBuwi+vzi9oba7c7GlGOwTdWg2bMAVxszaDHatkmKRA2wQvV2jPwUz3jFKlxnFMwwfJcy0J7DjmNcZ97KBOJOKL16AGAa0E8lCmtYpiPVbgsehIMUIBEPcfYfmzOmcwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713201936; c=relaxed/simple;
-	bh=jReH0gjQfi3jqUjUN7a8QPlR9o04IUhbNwjdpet1ZNs=;
+	s=arc-20240116; t=1713201991; c=relaxed/simple;
+	bh=gdtpSZeek4WxRDYyyqJtK/AcbBU0P9+7sC1xniRLlV4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gL3L3UtVpDbiCBD+UyqbM2TaSxxT4r5m9k5qZjYdK/oUa4gAENOgq4mhxAe2DCLgaHxMcSOEMvaTjJJnODmbxJqUdm+rduq+u89U7shLdUlGiT3KEqAP02czBlOhAtaaErKQ7Pb3Tq+p9aP/F9huavkN8rED+PkmzyDqYRJFMSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=x9ISdxzx; arc=none smtp.client-ip=136.175.108.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	 In-Reply-To:Content-Type; b=h63L0EMumDmI9o5Ik1+Jcw7ECysEFOkqV/w4+vGh542iAu6jEd7FAvEjuYXuOEGLfVQIc0KqnapAbyfxypn9g4otqYT3DK+EOYIYYHDK5RGC4xYT3FpsgFTueIAisycA/xnz8Jk0dkB98wnKa5DJmSOMSpRUldTBURe8joxMiXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=o+UJcLmz; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="x9ISdxzx"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta97.mxroute.com (ZoneMTA) with ESMTPSA id 18ee2c62c560003bea.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 15 Apr 2024 17:20:22 +0000
-X-Zone-Loop: 0dd72eb912b60f07a7508e33a709b944f26e11cc2377
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MrkMLSqeYoxQaLeqLd7FGAd8dfapbsuwWEhhKVbCiyA=; b=x9ISdxzxA+VX+pUaAb/YyVrN/I
-	PDRGE29wQIOTE4K0H9J0GqjrLk/wRi31jdEDUQsg+HwMd1lyJellzwJcF8/XwL8bLZPdC5/1i32qO
-	NlixLlqM//ltkxCajb0JKF7O7AXA93omkAY7xvFPsKwKLNbAeHMfEP9hrJw9aKNgZcLE7kgkpROnp
-	uXyZat782B9Rj6/G2O3iNfov6CVEuoba6rnvdF1lhWVLGM0/8bMX7wjhPsQtOalQTaXWvpF37+Pt2
-	qDwwVJR40Dy8V7TTpk+37fMwcFuSBHFaFHyxba61QpeJmSS1vKxe0NofMMnKRbaHt2bPOWGOj4JhU
-	5j7sZWBA==;
-Message-ID: <6c87d95a-817e-4ead-bff1-89e6639103e0@luigi311.com>
-Date: Mon, 15 Apr 2024 11:20:17 -0600
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="o+UJcLmz"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4VJDc5485CzlgTHp;
+	Mon, 15 Apr 2024 17:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1713201988; x=1715793989; bh=yEI0tBPFIPNtNRdhFblfE9OP
+	YM2lTomLnreEVEQMdKA=; b=o+UJcLmzCjA0xhxvZ7J+CEQqPpOzjv7ohgodgvep
+	gCW5SC/+QL4Ggcg84XY2YPtsc962fU+MA70o/o2oEnd4ja7bQRzB30w04K6uX0oR
+	OnHDkcm5B7l2OdHmunNvnNJjEigxdTNrJqDtOYNs1KLfJWeDFMEIiK5kU0/7KFAw
+	oINbLdpgbLR7dNlsxnxd/AobV61tw1qwU5j2mNU5xSGTjYq+2tw7uv0omxo9YJSv
+	0UwdONM4qfK4keZfJPM9YPwziewUAlRyxARH5nvEGHqR4AB7Cj07iMJb3WYnONFq
+	f91rdUXOTCV9E7Ooq4uTqPrWsYRQP4PDneAiA13F4WLF/Q==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id msOUn97a8RmL; Mon, 15 Apr 2024 17:26:28 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4VJDc31rlczlgTsK;
+	Mon, 15 Apr 2024 17:26:27 +0000 (UTC)
+Message-ID: <48043100-a817-4ca2-a141-60e3ab9cbfef@acm.org>
+Date: Mon, 15 Apr 2024 10:26:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,41 +50,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 22/25] dt-bindings: media: imx258: Add binding for
- powerdown-gpio
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
- Ondrej Jirman <megi@xff.cz>
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-23-git@luigi311.com> <Zg2kn5/5T9ukP4nd@duo.ucw.cz>
+Subject: Re: [PATCH] drivers: scsi: fix shift-out-of-bounds in
+ sg_build_indirect
+To: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
+ martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org, xrivendell7@gmail.com,
+ syzkaller-bugs@googlegroups.com
+References: <CAEkJfYNguDt47=KnEUX7tLwx_46ggBx3Oh3-3dAcZxqndL_OWQ@mail.gmail.com>
 Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <Zg2kn5/5T9ukP4nd@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CAEkJfYNguDt47=KnEUX7tLwx_46ggBx3Oh3-3dAcZxqndL_OWQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
 
-On 4/3/24 12:49, Pavel Machek wrote:
-> Hi!
-> 
->> From: Luis Garcia <git@luigi311.com>
->>
->> Add powerdown-gpio binding as it is required for some boards
-> 
-> "." at end of sentence.
-> 
->> Signed-off-by: Ondrej Jirman <megi@xff.cz>
->> Signed-off-by: Luis Garcia <git@luigi311.com>
-> 
-> If the patch is from Ondrej, he should be in From:, I believe.
-> 
-> Best regards,
-> 							Pavel
+On 4/14/24 20:14, Sam Sun wrote:
+> -    num = scatter_elem_sz;
+> +    num = max(scatter_elem_sz, PAGE_SIZE);
 
-Forgot to change the from in v4 but should be in v5
+Shouldn't the following statements be modified instead of the above
+statement? I think these are the only statements that can cause
+scatter_elem_sz to become smaller than PAGE_SIZE:
+
+	scatter_elem_sz = ret_sz;
+	scatter_elem_sz_prev = ret_sz;
+
+Thanks,
+
+Bart.
