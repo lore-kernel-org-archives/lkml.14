@@ -1,99 +1,91 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C586C130A45;
-	Tue, 16 Apr 2024 13:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBDA131195;
+	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713274227; cv=none; b=TjjidLwBl5zDvzD3NAPx0HhswgjZN6rwPcSl/qOAZHKMuUJE+v0YpgO+aiSU3mkjyJf+XSKTWAjEfrgAcCTvDRw2eY3AXWkb09UZjRb4GZpPG5xxHK74Hv3sG+EZ0z4DSlbnIbgxNLttqH8K6MIADuCVby4QLTHES7CyiAt2wVw=
+	t=1713274228; cv=none; b=uCk7+Msov10ntrrEzNLtK4drRk9bHr57VKvlARzx4D8OzAmdHuShdhxTPfDuZsVrebPQIDpZ7AbD3Q8oK/f8yBhdZ4qt1cPQ9MtC5eh7W+pJEEsffB4lcWoWKH/kO8Esh9yzSoh3Ju7W4d8MPoWRBWywMmEm2vAbIJUDWAVi+DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713274227; c=relaxed/simple;
-	bh=D/mIw5PQXaVybV8q1M5tT5irn19bOqE7/C1r84b60EQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LLaQ12XTMcdIuTH3OfPVlJgjLdDHu5R1vM+QaM0KxzU88TKpwOiFuPrk2r+HUerhdLJOlfARufNJjt4FoGiipTSwpEzoac5IihO0trybUWWJ7D1tOvefoo68bThorF3VHVPXiV08oPz+jZtdvyqX2RhwHvNEChmmbuxi2l7VETk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XZYn+kxc; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713274228; c=relaxed/simple;
+	bh=aA4uqCpBb9JBwERSpmyHDsEJPn5nBkFkNMN/fMAMKSc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bwGUSY5T+yP3lIDrmQTiFdoY5DRgTNHKf+GBB9mdrc6wIJ3QDRAPY5curPEIaQ6ozcDI+bsTw+u8v/YE+ZY0WkuXomWaD6I0K+UuZIBhpvn9imyzqSjLL1Oy6x+2bRiF1uqRIGSRuQ9J/W9AB0HkNa+w1ICoI2xOarIt+bYqcFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq6lFaCs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XZYn+kxc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D126E40012;
-	Tue, 16 Apr 2024 13:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713274224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pAhWJDZy3Qxtd03byX/QomLU+QUbXtxsEhEbMTufqk0=;
-	b=XZYn+kxcfuCWQYnCjZUR3LhfF3daR2uuyjreMPlmn52jRBk5PEAe/gEf4ViXV9q+piGWY2
-	xYmtQhD3oBTgc5cWSrLHq8rj+7VdDyRNFXAxkzYC55IdKuttJeqqrYToeqz1Ey7eUJ33BV
-	B7F6n2BqE9Y6xrBSwsPBJwa+NhvvVlybCa5OrUCz34Wq3N6iTdtkwSm1v+pqV289Uqn1NG
-	aoeTw2OMKRHuEKDDJbUvGXdDPUO0WrIh1aKFUn+pT/NMuslw1+fO2IkjokUwOFU6d6b7Cm
-	zi/cI4qDkrYCrIQsDunA6h+v+0wnj9m/tCFk7dRj/Jx9gfyJ1AM6dqeDAdLV0w==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 16 Apr 2024 15:29:57 +0200
-Subject: [PATCH v5 08/11] PCI: j721e: Add reset GPIO to struct j721e_pcie
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq6lFaCs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B2DE4C4AF09;
+	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713274227;
+	bh=aA4uqCpBb9JBwERSpmyHDsEJPn5nBkFkNMN/fMAMKSc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Aq6lFaCsdoy09SvzO0BEVTli2RWUVJv9xnmMPMmwT1BhfXe5tXfFoitvOkBM+gEAP
+	 pwCjJdM/6gMWzQAxWLS6kGx2sprkXwaTV2KbaQvw6pQH0Opa6iSnbfHBYG2ZQP1Lmr
+	 ba8gKFRacuNJFejnZz06+yCDKRrz+hKV4AlTkKrsE0qxxPEw1Ui8kJyAZgc9nl6YP4
+	 JvsMAmPMNiNXgr4cnVXA1a8DE0tsLhNHdWYB0772xoBY/wTVlfwh5Fzs3DtbWCMHio
+	 K0YIm9lYbdLNFlEXMyt+9T3rfygZs5NFFe1yywftFSkLU60ozktour23MM8XVZBGEa
+	 ABeYiQLpkLVKw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A18A8D4F15D;
+	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v5-8-4b8c46711ded@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
- thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+Subject: Re: [PATCH net 0/4] net: stmmac: Fix MAC-capabilities procedure
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171327422765.18122.15477722399634396283.git-patchwork-notify@kernel.org>
+Date: Tue, 16 Apr 2024 13:30:27 +0000
+References: <20240412180340.7965-1-fancer.lancer@gmail.com>
+In-Reply-To: <20240412180340.7965-1-fancer.lancer@gmail.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux@armlinux.org.uk, siyanteng@loongson.cn, mcoquelin.stm32@gmail.com,
+ horms@kernel.org, chenhuacai@kernel.org, wens@csie.org,
+ jernej.skrabec@gmail.com, samuel@sholland.org, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+Hello:
 
-Add reset GPIO to struct j721e_pcie, so it can be used at suspend and
-resume stages.
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Fri, 12 Apr 2024 21:03:13 +0300 you wrote:
+> The series got born as a result of the discussions around the recent
+> Yanteng' series adding the Loongson LS7A1000, LS2K1000, LS7A2000, LS2K2000
+> MACs support:
+> Link: https://lore.kernel.org/netdev/fu3f6uoakylnb6eijllakeu5i4okcyqq7sfafhp5efaocbsrwe@w74xe7gb6x7p
+> 
+> In particular the Yanteng' patchset needed to implement the Loongson
+> MAC-specific constraints applied to the link speed and link duplex mode.
+> As a result of the discussion with Russel the next preliminary patch was
+> born:
+> Link: https://lore.kernel.org/netdev/df31e8bcf74b3b4ddb7ddf5a1c371390f16a2ad5.1712917541.git.siyanteng@loongson.cn
+> 
+> [...]
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 98484f001562..9af4fd64c1f9 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -52,6 +52,7 @@ struct j721e_pcie {
- 	u32			mode;
- 	u32			num_lanes;
- 	u32			max_lanes;
-+	struct gpio_desc	*reset_gpio;
- 	void __iomem		*user_cfg_base;
- 	void __iomem		*intd_cfg_base;
- 	u32			linkdown_irq_regfield;
-@@ -508,6 +509,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			ret = dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get reset GPIO\n");
- 			goto err_get_sync;
- 		}
-+		pcie->reset_gpio = gpiod;
- 
- 		ret = cdns_pcie_init_phy(dev, cdns_pcie);
- 		if (ret) {
+Here is the summary with links:
+  - [net,1/4] net: stmmac: Apply half-duplex-less constraint for DW QoS Eth only
+    https://git.kernel.org/netdev/net/c/0ebd96f5da44
+  - [net,2/4] net: stmmac: Fix max-speed being ignored on queue re-init
+    https://git.kernel.org/netdev/net/c/59c3d6ca6cbd
+  - [net,3/4] net: stmmac: Fix IP-cores specific MAC capabilities
+    https://git.kernel.org/netdev/net/c/9cb54af214a7
+  - [net-next,4/4] net: stmmac: Move MAC caps init to phylink MAC caps getter
+    (no matching commit)
 
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
