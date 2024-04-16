@@ -1,160 +1,144 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4013F7318A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2D07EEFD;
+	Tue, 16 Apr 2024 07:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713251132; cv=none; b=ZejL0lYl8Y8maDjZlnJzw1Hf95dO3f7yp+BIf2u9+835oxuWV/E7DmOYn/NPqB1Tj554BR7v2+gt2UaaGrGdDoKomidURpVHOa+il1+8/yM8oIZaALd9j0kPRMFlfbVPzBwD6bORQSEt5kszfhk660b3wlZEK+YI3wPh19ZotVY=
+	t=1713251132; cv=none; b=Q8sEBSDiF6dCWwnkxz8z6t7SEq9F2oeYmA++DsD9TpbaVCp5qtfq3Cr46FLf9Gk5oj3Okf3rUiG1hIuJMl9SbuwrjwOmBXwcHlvMF4J7uf8awNAdBSuXvCdQHZx3uN6diTpd6QYS8ljuqJEK0qslwgpu/WGTB0fT+90mgua7r8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713251132; c=relaxed/simple;
-	bh=uJ5ZUnk7pfsb6UR46LKGzjdr6dLAEIqQ64wVK9gBB1M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tob3SWNlcsXe3j57gPPOqhYe9AJCMg5Y0vU1rm3nyyONBy8qEnXaYuzrwlo5yF8WbTlvfQlAIALe2R04VGZ9vmvLCs8r61a/RCUIXYuqra1jxztOc3TNbsc5X1yu9wg9BCyG8AGyyPIPIaqDwkkNuP970gieKZ8k1YClKGGeCM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36a293aaeb8so40520325ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:05:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713251126; x=1713855926;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5Ey7SxrivxDtrUFeSh/ovV2uYSaTIWLe8Gfag26aJM=;
-        b=X47oOCWglF47rxBBmF7ckW2aPHHd+30gBHkEKLxf1aRX9BuNSVOCdmsbXsGhISz8t8
-         04CGh9esSZGYy8Z0XmiU1svfHDlFYgky5WVyQZavyUZVd3CJ2z5H3Oq19hhP2I6aDbMl
-         pUTyAs8qthkOkQFich+5xSYnlm0p2dht48gu4U59JfDxA1sa2mwLpB/it6FvLZecJCuF
-         blYk6miDr4H6ZZ/fQdpeNEZNi0Q0ANfJXAkfXOaa9txzH/I8MPIn0md9uELu4ijiJAuP
-         qilWjOxQjNw0jQUCm2q7NUhTpKlkPbrHuPfd0ZPCN9HySrE64Xe+xD5kZN1bnZaKazcs
-         F8eQ==
-X-Gm-Message-State: AOJu0Yy1NFy+hHCVQ7NDAZTG/6CKRZxPC7WDycDSQ9NW01dJ9Xuso/cA
-	77NyY1q5iVS3i0s7l8jjzAPGy3z4qccTowSj0roGQZSQ+Pe/JcpCl2KTkEfZDAZ1NQlGdJl/BwG
-	PtyM6JPqpJTQJyY1ItbnkQNxh+dF4FjAy2DPPveHDMfHNC+dOVhJGY+U=
-X-Google-Smtp-Source: AGHT+IEaoQ+i4ET9he2l8MC4teCYVg+Uc0J5EsKJOBqmnmnkwkHZ48AcBdKh0Fvntmv5xpLbzVPG0fV8J4FRXGFCNYDOASZDXI1w
+	bh=fpIr7vk9ma0F1Ajyvw7T8mvDHmQiafMnVUv8cVES/Q8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=pbkEDZxhkZLvYoVyF910qvs5e34ZpDev5m6tO4WEyRpE99ImAQMo4mt3vfmbrn1oSv4t9QDWcKQApg2pxyn408c1PDGEqzR/zxC5SujK2CGlch7uwhFETBC7RddPugDRdvp3YYRON8Gs7RaYJ1u4SjQgDozAOjoqr02+2SU+p+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uYYpoJTm; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uYYpoJTm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713251047; x=1713855847; i=markus.elfring@web.de;
+	bh=11Y55v0AlzuRPO7ifOFiCZQ7lrJESQhpZwvX7xtpFpc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=uYYpoJTmRqgk2fHBG3KnNz2CLPavpRrEfJtq6/fkxsSHPHo9hr9qcnbetfR4rbAv
+	 WWYYcMCU5QC3KoHYZsERO/uCRV2oxChX6X+Rafq4yYRbQohsxFKvostPltnlOgZUZ
+	 uF9kX12zxQQdi44vnDxMP2KDpxbIBaLpo5hqzClbmR4INeL93ovd+wCPNkORolTKA
+	 RsWEq1pb7kj6jurgWDs/BjuRAGZTklJtZ686dqKAidxv8QQmS4EmEZg2pw3cisyw+
+	 IuhR26xDJ4uJ6w3UN1gJ6I/LtVomRg8m99Raf/c0Fc4QVAeD0lf4ST2m6UyLR9hF4
+	 nOhZqEsl8lmkPGi/9Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mvspv-1smFwO1js7-010uHt; Tue, 16
+ Apr 2024 09:04:07 +0200
+Message-ID: <e0377059-4073-4779-8385-506b9b39301e@web.de>
+Date: Tue, 16 Apr 2024 09:03:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a22:b0:36a:3c40:3e29 with SMTP id
- g2-20020a056e021a2200b0036a3c403e29mr103135ile.3.1713251126512; Tue, 16 Apr
- 2024 00:05:26 -0700 (PDT)
-Date: Tue, 16 Apr 2024 00:05:26 -0700
-In-Reply-To: <000000000000b24903061520f3e9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce9d000616315c11@google.com>
-Subject: Re: [syzbot] [kernel?] WARNING: suspicious RCU usage in __do_softirq
-From: syzbot <syzbot+dce04ed6d1438ad69656@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Ricardo Ribalda <ribalda@chromium.org>, linux-media@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Abylay Ospan <aospan@netup.ru>,
+ Alain Volmat <alain.volmat@foss.st.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
+ Dmitry Osipenko <digetx@gmail.com>,
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Hans Verkuil <hverkuil@xs4all.nl>,
+ Hugues Fruchet <hugues.fruchet@foss.st.com>,
+ Jacopo Mondi <jacopo+renesas@jmondi.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+ Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Samuel Holland <samuel@sholland.org>, Sergey Kozlov <serjk@netup.ru>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Sowjanya Komatineni <skomatineni@nvidia.com>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Sylvain Petinot <sylvain.petinot@foss.st.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20240415-fix-cocci-v1-3-477afb23728b@chromium.org>
+Subject: Re: [PATCH 03/35] media: uvcvideo: Refactor iterators
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240415-fix-cocci-v1-3-477afb23728b@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sHR+TeGSFgoxPZvFUHAPIEuDVzgT2GvvVwRx2R0bQhoUCLrY21q
+ 4aVwGDwLU20D7GafylHrOJidGYSPJoSoIzoqf+nPfG0K+ORf8VF8LHB5EhsUv86XaNhisus
+ 3kmBAPbDemt8Lc42bbQEjY39bQYWH3PtxU6pQC03uggivELLPehSfNoyDhXXBzC0UmXhKFx
+ xJrtOT5azfeT6A+OIpOdg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:03HI85af2Ns=;yQ8sKTONouBI76raH8Z58fLgdPG
+ cDRdjqAFM/3eXwECjUZI9h4p6mlw8k+SOXiyN6GfwXod9KAZJOxaNqbO06huy2pgBzYXWcxaK
+ 1yvcUyUm5nteIAvRh5GEJ6k2V8yU4C8rRXv94JjainnOHsSdDuPbk0aZXSWp65ziquDFaUUDN
+ YJZN7AsXSRRYZMDVispdvHubrvkMarfGAxoCn4+Sw/adTSJ9UOxI6QREc49RSDDGj50+NsVZA
+ I9/YrIlsRw4OeLnNC7dBSfeh2gas2lmTVPAdeZE5dk0sIs7aiTx7Cpr5FEHhCUFXrkReal3EO
+ gELP/4ATALLJIJbZL8oac+FZhSpqW5irTqlO//L3y6eUAaDcuOSIPWLoaYJ2J97IzS1c9eCBT
+ dPZVw6RcJR7I1g+6lDJwbla9AWsE0cHKjE7xI2z8RiMQz8Rg1JfobeDUi4lCAeun4aY23r5ct
+ YWwBdDrs6QXbNlkfk+vAwFpDgJQbH27hI7BnJLDoXByi4vvXAuZw1dpfEkQ80cUKCCCXCdn7X
+ PvxRBpoBI4VG9b+hFjsF5IAAMMrnv9iTADoQIOgnuUIHJ96lnDCSfdzxHRFAWt2M+05cdkCb1
+ Xd22EYiLsJxLnQ9xjjeW2wTuQRB2DVUy1LO2KuI3z2ZDeT+FU9j9vuFhJTTTlhlzwnv9ycOI2
+ FCqhmVe/n6PxH/5bS4hKkm4lYwNU/GheqGDyJrBHSbogo2OEAjGtEGI1SveFeBPQ/PKRQkiQ8
+ msmag1gLjDLzUZ3GnLIpmC2bTBr5sENz7Knm/uddln2TX5kDsFZDCPf9L9KYANSpzIuCxNgkh
+ +sdpCGJrmyr6dMFVvuLSI8fFEJx9x6/qw+iAMnV+HSLrk=
 
-syzbot has found a reproducer for the following issue on:
-
-HEAD commit:    6bd343537461 Add linux-next specific files for 20240415
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=132b923b180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c247afaa437e6409
-dashboard link: https://syzkaller.appspot.com/bug?extid=dce04ed6d1438ad69656
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11e7ff77180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=125e7767180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/aaf63ca280e5/disk-6bd34353.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/353fdc5b9ee6/vmlinux-6bd34353.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/25a7a362b023/bzImage-6bd34353.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dce04ed6d1438ad69656@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.9.0-rc4-next-20240415-syzkaller #0 Not tainted
------------------------------
-kernel/rcu/tree.c:276 Illegal rcu_softirq_qs() in RCU read-side critical section!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by ksoftirqd/0/16:
- #0: ffffffff8e334160
- (rcu_read_lock_sched){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- (rcu_read_lock_sched){....}-{1:2}, at: rcu_read_lock_sched include/linux/rcupdate.h:933 [inline]
- (rcu_read_lock_sched){....}-{1:2}, at: pfn_valid include/linux/mmzone.h:2019 [inline]
- (rcu_read_lock_sched){....}-{1:2}, at: __virt_addr_valid+0x183/0x520 arch/x86/mm/physaddr.c:65
-
-stack backtrace:
-CPU: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.9.0-rc4-next-20240415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- rcu_softirq_qs+0xd9/0x370 kernel/rcu/tree.c:273
- __do_softirq+0x5fd/0x980 kernel/softirq.c:568
- invoke_softirq kernel/softirq.c:428 [inline]
- __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:lock_acquire+0x264/0x550 kernel/locking/lockdep.c:5758
-Code: 2b 00 74 08 4c 89 f7 e8 8a fd 88 00 f6 44 24 61 02 0f 85 85 01 00 00 41 f7 c7 00 02 00 00 74 01 fb 48 c7 44 24 40 0e 36 e0 45 <4b> c7 44 25 00 00 00 00 00 43 c7 44 25 09 00 00 00 00 43 c7 44 25
-RSP: 0018:ffffc90000157820 EFLAGS: 00000206
-RAX: 0000000000000001 RBX: 1ffff9200002af10 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffffffff8bcac4e0 RDI: ffffffff8c1f8ee0
-RBP: ffffc90000157980 R08: ffffffff92f765a7 R09: 1ffffffff25eecb4
-R10: dffffc0000000000 R11: fffffbfff25eecb5 R12: 1ffff9200002af0c
-R13: dffffc0000000000 R14: ffffc90000157880 R15: 0000000000000246
- rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- rcu_read_lock_sched include/linux/rcupdate.h:933 [inline]
- pfn_valid include/linux/mmzone.h:2019 [inline]
- __virt_addr_valid+0x1a0/0x520 arch/x86/mm/physaddr.c:65
- kasan_addr_to_slab+0xd/0x80 mm/kasan/common.c:37
- __kasan_record_aux_stack+0x11/0xc0 mm/kasan/generic.c:526
- __call_rcu_common kernel/rcu/tree.c:3102 [inline]
- call_rcu+0x167/0xa70 kernel/rcu/tree.c:3206
- context_switch kernel/sched/core.c:5412 [inline]
- __schedule+0x17f0/0x4a50 kernel/sched/core.c:6746
- preempt_schedule_common+0x84/0xd0 kernel/sched/core.c:6925
- preempt_schedule+0xe1/0xf0 kernel/sched/core.c:6949
- preempt_schedule_thunk+0x1a/0x30 arch/x86/entry/thunk.S:12
- smpboot_thread_fn+0x65b/0xa30 kernel/smpboot.c:163
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	2b 00                	sub    (%rax),%eax
-   2:	74 08                	je     0xc
-   4:	4c 89 f7             	mov    %r14,%rdi
-   7:	e8 8a fd 88 00       	call   0x88fd96
-   c:	f6 44 24 61 02       	testb  $0x2,0x61(%rsp)
-  11:	0f 85 85 01 00 00    	jne    0x19c
-  17:	41 f7 c7 00 02 00 00 	test   $0x200,%r15d
-  1e:	74 01                	je     0x21
-  20:	fb                   	sti
-  21:	48 c7 44 24 40 0e 36 	movq   $0x45e0360e,0x40(%rsp)
-  28:	e0 45
-* 2a:	4b c7 44 25 00 00 00 	movq   $0x0,0x0(%r13,%r12,1) <-- trapping instruction
-  31:	00 00
-  33:	43 c7 44 25 09 00 00 	movl   $0x0,0x9(%r13,%r12,1)
-  3a:	00 00
-  3c:	43                   	rex.XB
-  3d:	c7                   	.byte 0xc7
-  3e:	44                   	rex.R
-  3f:	25                   	.byte 0x25
+I would find a hint for a variable change more appropriate in the patch su=
+bject
+instead of the word =E2=80=9Citerators=E2=80=9D.
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+=E2=80=A6
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+=E2=80=A6
+> @@ -2175,16 +2177,16 @@ int uvc_xu_ctrl_query(struct uvc_video_chain *ch=
+ain,
+>  	int ret;
+>
+>  	/* Find the extension unit. */
+=E2=80=A6
+> +	entity =3D NULL;
+> +	list_for_each_entry(iter, &chain->entities, chain) {
+=E2=80=A6
+
+I suggest to move this assignment into the definition for the affected loc=
+al variable.
+
+
+By the way:
+I see another source code adjustment opportunity in this function implemen=
+tation.
+https://elixir.bootlin.com/linux/v6.9-rc4/source/drivers/media/usb/uvc/uvc=
+_ctrl.c#L2165
+
+Can it be nicer to use labels =E2=80=9Cfree_data=E2=80=9D and =E2=80=9Cunl=
+ock=E2=80=9D (instead of =E2=80=9Cdone=E2=80=9D)?
+How do you think about to increase the application of scope-based resource=
+ management here?
+
+Regards,
+Markus
