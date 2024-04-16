@@ -1,333 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ACC1311B4;
-	Tue, 16 Apr 2024 15:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FC21311AF;
+	Tue, 16 Apr 2024 15:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713282653; cv=none; b=cIgrQQGoS3wk1a0liJ44Ny6zBYyuVDYHQ1Gg3pybyucdeJ94/8VG2ZdYMIb7G/SOpbTVnaYEoHhuDrLoGDARZVAfPpXQHKLzFhcsviXJQGfPk7xTG7NVhPGel38mbQGElxQkZsnHC5BA4eL641Jpva/KwAwuqr1Rfn+SEZBEqXE=
+	t=1713282671; cv=none; b=J+cRcDxXebBSWUekeEjuWaYjcfnkgHICXlVoUQvPIaeFNrUlOZHj2IbM2koLbH6W9EHpy6vhTnKvmlT3RBoo38GJi6Fpes+xIHdJtcGgHXun/IZSjR+KUZ7/DJe0C8dWZYaDNO4hhGjKp9EyVmKhcXf41pqyK2ffozTi7BQbhP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713282653; c=relaxed/simple;
-	bh=wE/1nQW03EOW2WjxRav5KhI1biPyJvYQafxlZ0n0QgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m5N6nYzwTmhib6mQcDVA9xWmt+wihdrLGUppQYvIweZ+JNmEA2HIM8VmcnOkXjg3wo2JGcYzeOdEnjZchYrX7Ia+qvtPRkr+ed79T8IweCqpRmzJJH6PMS/PL+IqFCyfmrcIzj1JHrmyzsuudIlUKuUWEgG7J+Fnczl4Y3nZsMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwzGbiMo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713282671; c=relaxed/simple;
+	bh=Rhyhr3Hr0ZiSfyFRReax8mCb67NeOz+VtKizLmS5yFc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OWXpYEvUGDLHlco79y5eWTAWtCJCHZIaWhwT/IwzQRoprLtx3ZQU7q0r4u2o8WS4saLkV5CxDGERxc3SMkjj90hI+bTBcuiXteJ+S+LX8ZyowMuALohzSkz0LTkxfpWJx6J+O1Ox1tZCSq+s9Y8SRbekd8JNUW3E5Ce+KANjhCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kl1XpZXU; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwzGbiMo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57ED3C113CE;
-	Tue, 16 Apr 2024 15:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713282652;
-	bh=wE/1nQW03EOW2WjxRav5KhI1biPyJvYQafxlZ0n0QgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bwzGbiMo8w/Nh/4Nrlp02t8ZIxpU1s16/LVWkVMivNOFKZt6GWHPxrTcVYMmu0Vh0
-	 pR0OYwF7Pedi8E5biwG6+xiq6b9MRmdEPItHRtphbobBcpO3L6Lp3e9J6XQ3IgIiBI
-	 LnSurHWuqKEsPtQpbLS4g917/g4T4/EMZ5QIyp/bybMTLQFqfmR+Gfo1dbin1Ls8B2
-	 w42jZEHEhO/a5IE0s3O4i5h4bPAxLjRC8B6FYwHiqXndS4PrnHxAOklM3Pnokz0GMN
-	 7dVKNBJWV3nPJgFVhejsZPF/QBt6se0aCkmstJ9+cGGOCKYC96CXwCEdcF42WHMMFO
-	 PgUI+iwjPTOiw==
-Date: Tue, 16 Apr 2024 23:37:23 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: adrian.hunter@intel.com, aou@eecs.berkeley.edu, conor+dt@kernel.org,
-	guoren@kernel.org, inochiama@outlook.com,
-	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, robh@kernel.org, ulf.hansson@linaro.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com, haijiao.liu@sophgo.com,
-	xiaoguang.xing@sophgo.com, tingzhu.wang@sophgo.com,
-	Chen Wang <unicorn_wang@outlook.com>
-Subject: Re: [PATCH 2/3] mmc: sdhci-of-dwcmshc: Add support for Sophgo SG2042
-Message-ID: <Zh6bM2EQnAFYFhiV@xhacker>
-References: <cover.1713258948.git.unicorn_wang@outlook.com>
- <e5aa1338d74504e141ba833b484d588cafb7ab38.1713258948.git.unicorn_wang@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kl1XpZXU"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dcc4076c13so3044503a12.0;
+        Tue, 16 Apr 2024 08:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713282669; x=1713887469; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ebpJMn/gZAY2DoBsMCYW/AsLUXHW/Jt0ZHuYBVYkNHo=;
+        b=Kl1XpZXUC8FfYw52yn3hzsFW4daYYpeMEqJAjXy+qIj7dSmcFO2Xr+IsbCbXkgfAQc
+         cO4rHpCOcGfGHv7OISBhFzmGcgVvAnSyFkbWVq4yHqkDuKIS/IsOxjk+Xq2PXkKsxF8N
+         ELi5AMsa18o2KfpIypmnPrsWRKqE2+H6nEgmzqa3A7eCli4SvE1vq8TKyOSlWKrFY8G7
+         6YclJeovcdqIsuYO+xRKLoF2EwH3XuWp9X6jiyktK9/raGoW75bZg0qVQgB9l9UWn/22
+         sUtzMsBtdWmP83kYNzsP3A73dRsY00OMo/Vcsh/+V2Ni0RFAnePj4lQX7n5+V3czczGJ
+         rKQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713282669; x=1713887469;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ebpJMn/gZAY2DoBsMCYW/AsLUXHW/Jt0ZHuYBVYkNHo=;
+        b=pgH6CNzjtxYlEMblxNMNXH/x6gqyvL59RDzcf8q4hqjfpVGFAoDRJKtaGkvoRBfTSQ
+         TKPf+xK1oDqqCFd2JHvagIZTLh2BrWX3mKABqEGmzC6x/hjiYnUe1nB43qdT53qtquI1
+         pxJYowuTcJyjr10QdTKfObfQsDbKAGoQMQQjMLwBELsgXYH+aBJXRpinZRixShTViORR
+         2p6T7UOMsqfVQCbSl4cSOcLrlzXYaQJkZfV1F0DK25mL/tf9TKcPLuRn+lnAvnzCwWBI
+         DyCbkX8rOFwnm4xzvsAOCBzRJwRLXwZOtFGEJSEKZHcW4PheiUHKbU4IWAA6HUEaY4b2
+         vC7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2udJTL6Llmu6Hu1r9APSw42slmtLZpF++b3T2xiXApewg/2ZWMacCgSee2e7CzKvmgKhjmI6cJAnPqneJnmWCf9hF/Iab9jT+RJsr
+X-Gm-Message-State: AOJu0YxtH0Uw5ak1dnSfQ7qMd1FcOr+WhzGB3pE4/fjhcxAOFY4MkKSn
+	/ZR6SyXXxhGIQU8FvRtyuKmSTdpATOvrb5B1Iq3y7wu4ej8Li9Rt
+X-Google-Smtp-Source: AGHT+IEotYvaCEGeYx4z8+15FTd9fFl61UtLdLb61HwB++g8hWZAYYPVmJxXAX7qXanWRr1VpPhjWg==
+X-Received: by 2002:a17:90a:db42:b0:2aa:c389:c9f0 with SMTP id u2-20020a17090adb4200b002aac389c9f0mr2284171pjx.12.1713282668936;
+        Tue, 16 Apr 2024 08:51:08 -0700 (PDT)
+Received: from ?IPv6:2605:59c8:43f:400:82ee:73ff:fe41:9a02? ([2605:59c8:43f:400:82ee:73ff:fe41:9a02])
+        by smtp.googlemail.com with ESMTPSA id g10-20020a63374a000000b005e4666261besm9034432pgn.50.2024.04.16.08.51.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 08:51:08 -0700 (PDT)
+Message-ID: <712b14031ca37a12c1871d1745794b1f0be0498f.camel@gmail.com>
+Subject: Re: [PATCH net-next v2 05/15] mm: page_frag: use initial zero
+ offset for page_frag_alloc_align()
+From: Alexander H Duyck <alexander.duyck@gmail.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
+ kuba@kernel.org,  pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton
+	 <akpm@linux-foundation.org>, linux-mm@kvack.org
+Date: Tue, 16 Apr 2024 08:51:07 -0700
+In-Reply-To: <6a78b9ad-0d20-a495-52ca-fac180408658@huawei.com>
+References: <20240415131941.51153-1-linyunsheng@huawei.com>
+	 <20240415131941.51153-6-linyunsheng@huawei.com>
+	 <b03bca93fba5a1c1a1bef3db89df11fbc755670b.camel@gmail.com>
+	 <6a78b9ad-0d20-a495-52ca-fac180408658@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e5aa1338d74504e141ba833b484d588cafb7ab38.1713258948.git.unicorn_wang@outlook.com>
 
-On Tue, Apr 16, 2024 at 05:50:57PM +0800, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
-> 
-> Add support for the mmc controller of Sophgo SG2042.
-> 
-> SG2042 uses Synopsys PHY the same as TH1520 so we reuse the tuning
-> logic from TH1520. Besides this, this patch implement some SG2042
-> specific work, such as clocks and reset ops.
-> 
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  drivers/mmc/host/sdhci-of-dwcmshc.c | 173 ++++++++++++++++++++++++++--
->  1 file changed, 166 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> index 1a0b7ded7f9f..432ce0398163 100644
-> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> @@ -106,12 +106,13 @@
->  #define DWC_MSHC_PTR_PHY_R	0x300
->  
->  /* PHY general configuration */
-> -#define PHY_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x00)
-> -#define PHY_CNFG_RSTN_DEASSERT	0x1  /* Deassert PHY reset */
-> -#define PHY_CNFG_PAD_SP_MASK	GENMASK(19, 16) /* bits [19:16] */
-> -#define PHY_CNFG_PAD_SP		0x0c /* PMOS TX drive strength */
-> -#define PHY_CNFG_PAD_SN_MASK	GENMASK(23, 20) /* bits [23:20] */
-> -#define PHY_CNFG_PAD_SN		0x0c /* NMOS TX drive strength */
-> +#define PHY_CNFG_R			(DWC_MSHC_PTR_PHY_R + 0x00)
-> +#define PHY_CNFG_RSTN_DEASSERT		0x1  /* Deassert PHY reset */
-> +#define PHY_CNFG_PHY_PWRGOOD_MASK	BIT_MASK(1) /* bit [1] */
-> +#define PHY_CNFG_PAD_SP_MASK		GENMASK(19, 16) /* bits [19:16] */
-> +#define PHY_CNFG_PAD_SP			0x0c /* PMOS TX drive strength */
-> +#define PHY_CNFG_PAD_SN_MASK		GENMASK(23, 20) /* bits [23:20] */
-> +#define PHY_CNFG_PAD_SN			0x0c /* NMOS TX drive strength */
->  
->  /* PHY command/response pad settings */
->  #define PHY_CMDPAD_CNFG_R	(DWC_MSHC_PTR_PHY_R + 0x04)
-> @@ -143,7 +144,8 @@
->  
->  /* PHY CLK delay line settings */
->  #define PHY_SDCLKDL_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x1d)
-> -#define PHY_SDCLKDL_CNFG_UPDATE	BIT(4) /* set before writing to SDCLKDL_DC */
-> +#define PHY_SDCLKDL_CNFG_EXTDLY_EN	BIT(0)
-> +#define PHY_SDCLKDL_CNFG_UPDATE		BIT(4) /* set before writing to SDCLKDL_DC */
->  
->  /* PHY CLK delay line delay code */
->  #define PHY_SDCLKDL_DC_R		(DWC_MSHC_PTR_PHY_R + 0x1e)
-> @@ -151,6 +153,9 @@
->  #define PHY_SDCLKDL_DC_DEFAULT		0x32 /* default delay code */
->  #define PHY_SDCLKDL_DC_HS400		0x18 /* delay code for HS400 mode */
->  
-> +#define PHY_SMPLDL_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x20)
-> +#define PHY_SMPLDL_CNFG_BYPASS_EN	BIT(1)
-> +
->  /* PHY drift_cclk_rx delay line configuration setting */
->  #define PHY_ATDL_CNFG_R			(DWC_MSHC_PTR_PHY_R + 0x21)
->  #define PHY_ATDL_CNFG_INPSEL_MASK	GENMASK(3, 2) /* bits [3:2] */
-> @@ -194,6 +199,11 @@ struct rk35xx_priv {
->  	u8 txclk_tapnum;
->  };
->  
-> +#define SG2042_MAX_CLKS 2
+On Tue, 2024-04-16 at 21:11 +0800, Yunsheng Lin wrote:
+> On 2024/4/16 7:55, Alexander H Duyck wrote:
+> > On Mon, 2024-04-15 at 21:19 +0800, Yunsheng Lin wrote:
+> > > We are above to use page_frag_alloc_*() API to not just
+> > > allocate memory for skb->data, but also use them to do
+> > > the memory allocation for skb frag too. Currently the
+> > > implementation of page_frag in mm subsystem is running
+> > > the offset as a countdown rather than count-up value,
+> > > there may have several advantages to that as mentioned
+> > > in [1], but it may have some disadvantages, for example,
+> > > it may disable skb frag coaleasing and more correct cache
+> > > prefetching
+> > >=20
+> > > We have a trade-off to make in order to have a unified
+> > > implementation and API for page_frag, so use a initial zero
+> > > offset in this patch, and the following patch will try to
+> > > make some optimization to aovid the disadvantages as much
+> > > as possible.
+> > >=20
+> > > 1. https://lore.kernel.org/all/f4abe71b3439b39d17a6fb2d410180f367cadf=
+5c.camel@gmail.com/
+> > >=20
+> > > CC: Alexander Duyck <alexander.duyck@gmail.com>
+> > > Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> > > ---
+> > >  mm/page_frag_cache.c | 31 ++++++++++++++-----------------
+> > >  1 file changed, 14 insertions(+), 17 deletions(-)
+> > >=20
+> > > diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+> > > index 64993b5d1243..dc864ee09536 100644
+> > > --- a/mm/page_frag_cache.c
+> > > +++ b/mm/page_frag_cache.c
+> > > @@ -65,9 +65,8 @@ void *__page_frag_alloc_align(struct page_frag_cach=
+e *nc,
+> > >  			      unsigned int fragsz, gfp_t gfp_mask,
+> > >  			      unsigned int align_mask)
+> > >  {
+> > > -	unsigned int size =3D PAGE_SIZE;
+> > > +	unsigned int size, offset;
+> > >  	struct page *page;
+> > > -	int offset;
+> > > =20
+> > >  	if (unlikely(!nc->va)) {
+> > >  refill:
+> > > @@ -75,10 +74,6 @@ void *__page_frag_alloc_align(struct page_frag_cac=
+he *nc,
+> > >  		if (!page)
+> > >  			return NULL;
+> > > =20
+> > > -#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+> > > -		/* if size can vary use size else just use PAGE_SIZE */
+> > > -		size =3D nc->size;
+> > > -#endif
+> > >  		/* Even if we own the page, we do not use atomic_set().
+> > >  		 * This would break get_page_unless_zero() users.
+> > >  		 */
+> > > @@ -87,11 +82,18 @@ void *__page_frag_alloc_align(struct page_frag_ca=
+che *nc,
+> > >  		/* reset page count bias and offset to start of new frag */
+> > >  		nc->pfmemalloc =3D page_is_pfmemalloc(page);
+> > >  		nc->pagecnt_bias =3D PAGE_FRAG_CACHE_MAX_SIZE + 1;
+> > > -		nc->offset =3D size;
+> > > +		nc->offset =3D 0;
+> > >  	}
+> > > =20
+> > > -	offset =3D nc->offset - fragsz;
+> > > -	if (unlikely(offset < 0)) {
+> > > +#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+> > > +	/* if size can vary use size else just use PAGE_SIZE */
+> > > +	size =3D nc->size;
+> > > +#else
+> > > +	size =3D PAGE_SIZE;
+> > > +#endif
+> > > +
+> > > +	offset =3D ALIGN(nc->offset, -align_mask);
+> >=20
+> > I am not sure if using -align_mask here with the ALIGN macro is really
+> > to your benefit. I would be curious what the compiler is generating.
+> >=20
+> > Again, I think you would be much better off with:
+> > 	offset =3D __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
+> >=20
+> > That will save you a number of conversions as the use of the ALIGN
+> > macro gives you:
+> > 	offset =3D (nc->offset + (-align_mask - 1)) & ~(-align_mask -
+> > 1);
+> >=20
+> > whereas what I am suggesting gives you:
+> > 	offset =3D (nc->offset + ~align_mask) & ~(~align_mask));
+> >=20
+> > My main concern is that I am not sure the compiler will optimize around
+> > the combination of bit operations and arithmetic operations. It seems
+> > much cleaner to me to stick to the bitwise operations for the alignment
+> > than to force this into the vhost approach which requires a power of 2
+> > aligned mask.
+>=20
+> My argument about the above is in [1]. But since you seems to not be work=
+ing
+> through the next patch yet, I might just do it as you suggested in the ne=
+xt
+> version so that I don't have to repeat my argument again:(
+>=20
+> 1. https://lore.kernel.org/all/df826acf-8867-7eb6-e7f0-962c106bc28b@huawe=
+i.com/
 
-I don't think "bulk" is suitable here for max 2 clks, no?
+Sorry, I didn't have time to go digging through the mailing list to
+review all the patches from the last set. I was only Cced on a few of
+them as I recall. As you know I have the fbnic patches I also have been
+trying to get pushed out so that was my primary focus the last couple
+weeks.
 
-> +struct sg2042_priv {
-> +	struct clk_bulk_data clks[SG2042_MAX_CLKS];
+That said, this just goes into my earlier complaints. You are now
+optimizing for the non-aligned paths. There are few callers that are
+asking for this to provide non-aligned segments. In most cases they are
+at least cache aligned. Specifically the __netdev_alloc_frag_align and
+__napi_alloc_frag_align are aligning things at a minimum to
+SMP_CACHE_BYTES by aligning the fragsz argument using SKB_DATA_ALIGN.
+Perhaps it would be better to actually incorporate that alignment
+guarantee into the calls themselves by doing an &=3D with the align_mask
+request for those two functions to make this more transparent.
 
-useless either
+> >=20
+> > Also the old code was aligning on the combination of offset AND fragsz.
+> > This new logic is aligning on offset only. Do we run the risk of
+> > overwriting blocks of neighbouring fragments if two users of
+> > napi_alloc_frag_align end up passing arguments that have different
+> > alignment values?
+>=20
+> I am not sure I understand the question here.
+> As my understanding, both the old code and new code is aligning on
+> the offset, and both might have space reserved before the offset
+> due to aligning. The memory returned to the caller is in the range
+> of [offset, offset + fragsz). Am I missing something obvious here?
 
-> +};
-> +
->  struct dwcmshc_priv {
->  	struct clk	*bus_clk;
->  	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA reg */
-> @@ -690,6 +700,76 @@ static void cv18xx_sdhci_reset(struct sdhci_host *host, u8 mask)
->  	sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
->  }
->  
-> +static inline void sg2042_sdhci_phy_init(struct sdhci_host *host)
-> +{
-> +	u32 val;
-> +
-> +	/* Asset phy reset & set tx drive strength */
-> +	val = sdhci_readl(host, PHY_CNFG_R);
-> +	val &= ~PHY_CNFG_RSTN_DEASSERT;
-> +	val |= FIELD_PREP(PHY_CNFG_PHY_PWRGOOD_MASK, 1);
-> +	val |= FIELD_PREP(PHY_CNFG_PAD_SP_MASK, 9);
-> +	val |= FIELD_PREP(PHY_CNFG_PAD_SN_MASK, 8);
-> +	sdhci_writel(host, val, PHY_CNFG_R);
-> +
-> +	/* Configure phy pads */
-> +	val = PHY_PAD_RXSEL_3V3;
-> +	val |= FIELD_PREP(PHY_PAD_WEAKPULL_MASK, PHY_PAD_WEAKPULL_PULLUP);
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
-> +	sdhci_writew(host, val, PHY_CMDPAD_CNFG_R);
-> +	sdhci_writew(host, val, PHY_DATAPAD_CNFG_R);
-> +	sdhci_writew(host, val, PHY_RSTNPAD_CNFG_R);
-> +
-> +	val = PHY_PAD_RXSEL_3V3;
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
-> +	sdhci_writew(host, val, PHY_CLKPAD_CNFG_R);
-> +
-> +	val = PHY_PAD_RXSEL_3V3;
-> +	val |= FIELD_PREP(PHY_PAD_WEAKPULL_MASK, PHY_PAD_WEAKPULL_PULLDOWN);
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
-> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
-> +	sdhci_writew(host, val, PHY_STBPAD_CNFG_R);
-> +
-> +	/* Configure delay line */
-> +	/* Enable fixed delay */
-> +	sdhci_writeb(host, PHY_SDCLKDL_CNFG_EXTDLY_EN, PHY_SDCLKDL_CNFG_R);
-> +	/*
-> +	 * Set delay line.
-> +	 * Its recommended that bit UPDATE_DC[4] is 1 when SDCLKDL_DC is being written.
-> +	 * Ensure UPDATE_DC[4] is '0' when not updating code.
-> +	 */
-> +	val = sdhci_readb(host, PHY_SDCLKDL_CNFG_R);
-> +	val |= PHY_SDCLKDL_CNFG_UPDATE;
-> +	sdhci_writeb(host, val, PHY_SDCLKDL_CNFG_R);
-> +	/* Add 10 * 70ps = 0.7ns for output delay */
-> +	sdhci_writeb(host, 10, PHY_SDCLKDL_DC_R);
-> +	val = sdhci_readb(host, PHY_SDCLKDL_CNFG_R);
-> +	val &= ~(PHY_SDCLKDL_CNFG_UPDATE);
-> +	sdhci_writeb(host, val, PHY_SDCLKDL_CNFG_R);
-> +
-> +	/* Set SMPLDL_CNFG, Bypass */
-> +	sdhci_writeb(host, PHY_SMPLDL_CNFG_BYPASS_EN, PHY_SMPLDL_CNFG_R);
-> +
-> +	/* Set ATDL_CNFG, tuning clk not use for init */
-> +	val = FIELD_PREP(PHY_ATDL_CNFG_INPSEL_MASK, 2);
+My main concern is that by aligning offset - fragsz by the alignment
+mask we were taking care of all our variables immediately ourselves. If
+we didn't provide a correct value it was all traceable to one call as
+the assumption was that fragsz would be a multiple of the alignment
+value.
 
-magic "2" needs a meaningful macro definition.
+With your change the alignment is done in the following call. So now it
+splits up the alignment of fragsz from the alignment of the offset. As
+such we will probably need to add additional overhead to guarantee
+fragsz is a multiple of the alignment.
 
-> +	sdhci_writeb(host, val, PHY_ATDL_CNFG_R);
-> +
-> +	/* Deasset phy reset */
-> +	val = sdhci_readl(host, PHY_CNFG_R);
-> +	val |= PHY_CNFG_RSTN_DEASSERT;
-> +	sdhci_writel(host, val, PHY_CNFG_R);
-> +}
-> +
-> +static void sg2042_sdhci_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	sdhci_reset(host, mask);
-> +
-> +	if (mask & SDHCI_RESET_ALL)
-> +		sg2042_sdhci_phy_init(host);
-> +}
-> +
->  static const struct sdhci_ops sdhci_dwcmshc_ops = {
->  	.set_clock		= sdhci_set_clock,
->  	.set_bus_width		= sdhci_set_bus_width,
-> @@ -728,6 +808,16 @@ static const struct sdhci_ops sdhci_dwcmshc_cv18xx_ops = {
->  	.adma_write_desc	= dwcmshc_adma_write_desc,
->  };
->  
-> +static const struct sdhci_ops sdhci_dwcmshc_sg2042_ops = {
-> +	.set_clock              = sdhci_set_clock,
-> +	.set_bus_width          = sdhci_set_bus_width,
-> +	.set_uhs_signaling      = dwcmshc_set_uhs_signaling,
-> +	.get_max_clock		= dwcmshc_get_max_clock,
-> +	.platform_execute_tuning = th1520_execute_tuning,
-> +	.reset                  = sg2042_sdhci_reset,
-> +	.adma_write_desc        = dwcmshc_adma_write_desc,
-> +};
-> +
->  static const struct sdhci_pltfm_data sdhci_dwcmshc_pdata = {
->  	.ops = &sdhci_dwcmshc_ops,
->  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
-> @@ -763,6 +853,13 @@ static const struct sdhci_pltfm_data sdhci_dwcmshc_cv18xx_pdata = {
->  	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
->  };
->  
-> +static const struct sdhci_pltfm_data sdhci_dwcmshc_sg2042_pdata = {
-> +	.ops = &sdhci_dwcmshc_sg2042_ops,
-> +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-> +		  SDHCI_QUIRK_INVERTED_WRITE_PROTECT,
+> >=20
+> > > +	if (unlikely(offset + fragsz > size)) {
+> > >  		page =3D virt_to_page(nc->va);
+> > > =20
+> > >  		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+> > > @@ -102,17 +104,13 @@ void *__page_frag_alloc_align(struct page_frag_=
+cache *nc,
+> > >  			goto refill;
+> > >  		}
+> > > =20
+> > > -#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+> > > -		/* if size can vary use size else just use PAGE_SIZE */
+> > > -		size =3D nc->size;
+> > > -#endif
+> > >  		/* OK, page count is 0, we can safely set it */
+> > >  		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+> > > =20
+> > >  		/* reset page count bias and offset to start of new frag */
+> > >  		nc->pagecnt_bias =3D PAGE_FRAG_CACHE_MAX_SIZE + 1;
+> > > -		offset =3D size - fragsz;
+> > > -		if (unlikely(offset < 0)) {
+> > > +		offset =3D 0;
+> > > +		if (unlikely(fragsz > size)) {
+> >=20
+> > This check can probably be moved now. It was placed here to optimize
+> > things as a check of offset < 0 was a single jump command based on the
+> > signed flag being set as a result of the offset calculation.
+> >=20
+> > It might make sense to pull this out of here and instead place it at
+> > the start of this block after the initial check with offset + fragsz >
+> > size since that would shorten the need to carry the size variable.
+>=20
+> Yes, that is better.
+>=20
+> But does it make more sense to just do the 'fragsz > PAGE_SIZE' checking
+> alongside with the aligning checking, as we have a better chance of
+> succeding in allocating order 0 page than order 3 page, so it seems the
+> caller is not allowed to pass a fragsz being bigger than PAGE_SIZE anyway=
+?
 
-is "wp-inverted" property better?
+Yeah, that should be fine.
 
-> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-> +};
-> +
->  static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
->  {
->  	/*
-> @@ -882,6 +979,58 @@ static int dwcmshc_th1520_init(struct device *dev,
->  	return 0;
->  }
->  
-> +static int dwcmshc_sg2042_clks_enable(struct dwcmshc_priv *dwc_priv)
-> +{
-> +	int ret = 0;
-> +	struct sg2042_priv *soc = dwc_priv->priv;
-> +
-> +	if (soc)
-> +		ret = clk_bulk_prepare_enable(SG2042_MAX_CLKS, soc->clks);
-> +	return ret;
-> +}
-> +
-> +static void dwcmshc_sg2042_clks_disable(struct dwcmshc_priv *dwc_priv)
-> +{
-> +	struct sg2042_priv *soc = dwc_priv->priv;
-> +
-> +	if (soc)
-> +		clk_bulk_disable_unprepare(SG2042_MAX_CLKS,
-> +					   soc->clks);
-> +}
-> +
-> +static int dwcmshc_sg2042_init(struct device *dev,
-> +			       struct sdhci_host *host,
-> +			       struct dwcmshc_priv *dwc_priv)
-> +{
-> +	int err;
-> +	struct sg2042_priv *soc = NULL;
-> +
-> +	soc = devm_kzalloc(dev, sizeof(struct sg2042_priv), GFP_KERNEL);
-> +	if (!soc)
-> +		return -ENOMEM;
-> +
-> +	soc->clks[0].id = "card";
-> +	soc->clks[1].id = "timer";
+> >=20
+> > >  			/*
+> > >  			 * The caller is trying to allocate a fragment
+> > >  			 * with fragsz > PAGE_SIZE but the cache isn't big
+> > > @@ -127,8 +125,7 @@ void *__page_frag_alloc_align(struct page_frag_ca=
+che *nc,
+> > >  	}
+> > > =20
+> > >  	nc->pagecnt_bias--;
+> > > -	offset &=3D align_mask;
+> > > -	nc->offset =3D offset;
+> > > +	nc->offset =3D offset + fragsz;
+> > > =20
+> > >  	return nc->va + offset;
+> > >  }
+> >=20
+> > .
+> >=20
 
-Interesting, only "card" and "timer", so which clk is for clk input of the ip?
-
-> +	err = devm_clk_bulk_get_optional(mmc_dev(host->mmc), SG2042_MAX_CLKS,
-> +					 soc->clks);
-> +	if (err) {
-> +		dev_err(mmc_dev(host->mmc), "failed to get clocks %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = clk_bulk_prepare_enable(SG2042_MAX_CLKS, soc->clks);
-> +	if (err) {
-> +		dev_err(mmc_dev(host->mmc), "failed to enable clocks %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	dwc_priv->priv = soc;
-> +	dwc_priv->soc_clks_enable = dwcmshc_sg2042_clks_enable;
-> +	dwc_priv->soc_clks_disable = dwcmshc_sg2042_clks_disable;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
->  	{
->  		.compatible = "rockchip,rk3588-dwcmshc",
-> @@ -907,6 +1056,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
->  		.compatible = "thead,th1520-dwcmshc",
->  		.data = &sdhci_dwcmshc_th1520_pdata,
->  	},
-> +	{
-> +		.compatible = "sophgo,sg2042-dwcmshc",
-> +		.data = &sdhci_dwcmshc_sg2042_pdata,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, sdhci_dwcmshc_dt_ids);
-> @@ -994,6 +1147,12 @@ static int dwcmshc_probe(struct platform_device *pdev)
->  			goto err_clk;
->  	}
->  
-> +	if (pltfm_data == &sdhci_dwcmshc_sg2042_pdata) {
-> +		err = dwcmshc_sg2042_init(dev, host, priv);
-> +		if (err)
-> +			goto err_clk;
-> +	}
-> +
->  #ifdef CONFIG_ACPI
->  	if (pltfm_data == &sdhci_dwcmshc_bf3_pdata)
->  		sdhci_enable_v4_mode(host);
-> -- 
-> 2.25.1
-> 
