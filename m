@@ -1,104 +1,78 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D28085291
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 09:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28B184E0A;
+	Tue, 16 Apr 2024 09:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713259986; cv=none; b=fxbf3R+aftgHgxewXykoBZbXn9KDVbCxzLquFhcm6J79VigqiS9nEZ05uCmvdvE5mL0r29RWOT3IT6z9iIhljWcX9vDugDWEduLzEt7RhNt7RP8Hx98/U9onqyjlyBQbSBKv2tYhkmWGEUd7iP8isfWzTxvUs+T5tEifu33oodw=
+	t=1713260130; cv=none; b=MGijnzhyLtbzMY6nRJyAb9cy2XM1Zirej+DRYIICQFZ2D2p5+3YWir6lGqBPprvIRCl52L+RY+HM4aIbWPVabkkZvOBi5UUAdlW0NLxgG3F+s8mLvFr/Vz68LZvdzs97xhHSIkHmfw0Iwhp7WUeRm3MGOg6AJzvPfB81ShFS45g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713259986; c=relaxed/simple;
-	bh=0Gl50EmCLVOMt6kqv6vYCIWrekR2zOz/+FuL5NWpOck=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=RBcFZ232fLyKIAOCPAGKZPBPznKEOIBLeCBAHDzV3UFcjUsK93gCul/yNXJ0pzM8yCUbFaTZUVclGG1yn60WRf3yUlf686emEtzxA7SgCMqa/OTej3JUFApfNIpKAx1881EUDNCgp/VUdvbP/DbZP1VQyJ/HT1fGK/LvYVh6N9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zi0gv0rF; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zi0gv0rF"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4daa8e14afbso1378460e0c.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 02:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713259984; x=1713864784; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ndrnd625fhH+o+1Q6bsYpoaFuC2gIYmA4glyfnWSIIc=;
-        b=zi0gv0rFcFHpeVzSvAnEkOZYSw3kWnzKjhntH1ZEt7gib2GxVunWldFFwt7dQBB84T
-         BCz72A8o4V2bk5Bu//f9nz0KPl4XxpTYd88CsodYsGwwBXqjnwgEcpf7qhPYsegD4mZY
-         PWA1OYMXoWGxJ/Xa1dh7Xq+ti/vhss3X2BB31vrPzKanr+HyIPGIUDJsJmoizhL+8Gtp
-         YcBUQsPZYNw91iD+2I6zVicIKd1xEZ9ki4U3yCiZMCNLP2wCivqHU6b3RcI3KoDQ2D2L
-         83qqHOUxN259pa3fhJulaN/zTU8q7XTGfpSumtkn49iiMeLk/4f4XQx7Cb991S8iLJe2
-         6w6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713259984; x=1713864784;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ndrnd625fhH+o+1Q6bsYpoaFuC2gIYmA4glyfnWSIIc=;
-        b=Lg8QsdvzpynXs0fvrAHxbqiTqiW8N/F9zE7yp0aMn5h7Z+WlOwZUS/iI8HHUXZOZdp
-         dYHlPlGzzHNt3HGAf3Sh9jRURLuEQErwbjEJhZfj1w2hTtj1Vcn/f5a53MEZVIh63F+s
-         ldhze1Wi1rgS+pgnfaJVMf9hmipVdYCP2NxwNuW4aAhUfqD8I2SIB/AZm0+sMmh0WC/z
-         wWFHNhaww+GZpc1/Niy3/71cS2xE21xlVXzj+Ko4tGQlS83XgrQj132/9XXMDipTsVu1
-         vgfjDneh17GeRvmPjRbbZoXnMpCwA6KDRRUQbOZ4tvokmEKzWT7h7IwJ1n/dpUb0TCXl
-         ugKw==
-X-Gm-Message-State: AOJu0Yyrphm7BtAIvVSJOM8Qp7kshGAJZEqHVeKd+aze+rQjLZ66zDIM
-	W3FpEbahFuNc22eEqP/sJxVPWj+7OQbpROu9czZaiuzbGJmBx6n1S64jfLR1Bk8+V4s9TsCU4gx
-	qqEpVTEiyHtSXd0zH+vZVyzG1GVG65rfMaYujWO2ono6U/UGcrVY=
-X-Google-Smtp-Source: AGHT+IG8D9vuAHmYC+KaM43JW5eMv7zVIbneQHVp8QBSV8dIrkMNPPOSsaQF76mhGJzEt5W5Jxc6s2f74IzVPZ0IMx8=
-X-Received: by 2002:a05:6122:31a9:b0:4da:aabe:6f6c with SMTP id
- ch41-20020a05612231a900b004daaabe6f6cmr10367344vkb.7.1713259983821; Tue, 16
- Apr 2024 02:33:03 -0700 (PDT)
+	s=arc-20240116; t=1713260130; c=relaxed/simple;
+	bh=TNm9wA9VCf4GRpizHagVxFmlH0uk3TxbxAtSjpVSKiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nGlQ5+0CmJTlqMXrtZhxJ/o5LY02aPo+EeTrJHK67e5kkrZJTtBcnA8+5NWlyFgvXPi0SG/h76D06cX874rPYVQ61AG+EXB0ZOEvjEqRf77OvA+cP1BkKvNeKRRWtqQCzzd+MjUcsjeUTR0qKeqaGAnJvu82IBqEzTZwURzuN5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28C53339;
+	Tue, 16 Apr 2024 02:35:56 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B0A83F792;
+	Tue, 16 Apr 2024 02:35:25 -0700 (PDT)
+Date: Tue, 16 Apr 2024 10:35:22 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Mark Rutland" <mark.rutland@arm.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+	Melody Olvera <quic_molvera@quicinc.com>,
+	Shivendra Pratap <quic_spratap@quicinc.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	<linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] Implement vendor resets for PSCI SYSTEM_RESET2
+Message-ID: <Zh5GWqt2oCNHdF_h@bogus>
+References: <20240414-arm-psci-system_reset2-vendor-reboots-v2-0-da9a055a648f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 16 Apr 2024 15:02:52 +0530
-Message-ID: <CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com>
-Subject: powerpc: io-defs.h:43:1: error: performing pointer arithmetic on a
- null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Jeff Xu <jeffxu@chromium.org>, Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240414-arm-psci-system_reset2-vendor-reboots-v2-0-da9a055a648f@quicinc.com>
 
-The Powerpc clang builds failed due to following warnings / errors on the
-Linux next-20240416 tag.
+On Sun, Apr 14, 2024 at 12:30:23PM -0700, Elliot Berman wrote:
+> The PSCI SYSTEM_RESET2 call allows vendor firmware to define additional
+> reset types which could be mapped to the reboot argument.
+>
+> Setting up reboot on Qualcomm devices can be inconsistent from chipset
+> to chipset.
 
-Powerpc:
- - tqm8xx_defconfig + clang-17 - Failed
- - allnoconfig + clang-17 - Failed
- - tinyconfig + clang-17 - Failed
+That doesn't sound good. Do you mean PSCI SYSTEM_RESET doesn't work as
+expected ? Does it mean it is not conformant to the specification ?
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Generally, there is a PMIC register that gets written to
+> decide the reboot type. There is also sometimes a cookie that can be
+> written to indicate that the bootloader should behave differently than a
+> regular boot. These knobs evolve over product generations and require
+> more drivers. Qualcomm firmwares are beginning to expose vendor
+> SYSTEM_RESET2 types to simplify driver requirements from Linux.
+>
 
-Build log:
---------
-In file included from arch/powerpc/kernel/ptrace/ptrace.c:19:
-In file included from include/linux/syscalls.h:93:
-In file included from include/trace/syscall.h:7:
-In file included from include/linux/trace_events.h:9:
-In file included from include/linux/hardirq.h:11:
-In file included from arch/powerpc/include/asm/hardirq.h:6:
-In file included from include/linux/irq.h:20:
-In file included from include/linux/io.h:14:
-In file included from arch/powerpc/include/asm/io.h:672:
-arch/powerpc/include/asm/io-defs.h:43:1: error: performing pointer
-arithmetic on a null pointer has undefined behavior
-[-Werror,-Wnull-pointer-arithmetic]
-   43 | DEF_PCI_AC_NORET(insb, (unsigned long p, void *b, unsigned long c),
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   44 |                  (p, b, c), pio, p)
-      |                  ~~~~~~~~~~~~~~~~~~
+Why can't this be fully userspace driven ? What is the need to keep the
+cookie in the DT ?
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240416/testrun/23495171/suite/build/test/clang-17-tqm8xx_defconfig/details/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2fAvI3mKJ0dTHcazPrLl2zNF9JO/
 
---
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Regards,
+Sudeep
