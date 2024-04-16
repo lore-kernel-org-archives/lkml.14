@@ -1,173 +1,371 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE5815B12A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25AA15B15B
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713254924; cv=none; b=noipMh23PryzCN7VsmVB3k8Ya9Bo4v6Lk5aez0M3vlnJrWD1t+eBKud7JaPS8khwWqWh/elGaInYdanE2YQZtC85hUkwegnH/45ZlYmrzqkmk/ovnzS7O33amMUCB01HN/7tWFhST3co0PYFLnEVL1i1sSwdrXtLDN4IhH72agA=
+	t=1713254925; cv=none; b=K6AOdlJD3WUTGeM1jFIe8AG7FaOW+YpyQsLV0PoQITUzIn6i195s+lkb7d5Gfe1B8f0UnjSUg8uq6bLvSbbiFr5iahMCon1RwYtRCyDBMqgDAFfCXiW8KXDRsNoYYt+BegNaPHo55Oy86Ko0tha81uT0GCoNMI5gxkZry2dC0ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713254924; c=relaxed/simple;
-	bh=wwOZ7bDEA+cDJm6hqSBe+LL8OiTxCriSAU4oNstUdcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P4RRB5iDLFDRDkRYD2yyukqTSW2JlNubIa8lUdvQPEEzpTaD/65fPARjqJZOrQ9BOO7ESVOET0ksvhguFv+T2/97gvi4BuMBAKJt1hvJAU+E0Q6KMR6by1z9HtlRaRlL+uPyFzpzE/OCgHihKfk2AHqsFiTygTqcAcaN2R9RvX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EYnMtTOX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713254925; c=relaxed/simple;
+	bh=uc4pGH6YnklU8OzPS1MEUmrznWwdCvXp/0iUx5orusg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WvOe+xqSz627Azz85BQvxamOosXZyI3fN35/P44rXEygJXK5AvYDBVTOzf3NOtmRT/3fw9PEU3tLTln0M1vxaTc9mtVES09w/6LSCzfAVnBo5OA/9PXB8lXP/p99e8oI7hH2tsXE8MsAMb3rOJMMhmsvc2hu5SepgmKvshB9/+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVsSS9Rb; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYnMtTOX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713254920;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kRMxAGGEN2RAcxRu7sfhDGVjuRPZCZT+ee13DyyY9Ls=;
-	b=EYnMtTOXr6kkWLXgvDL8Dwl8BV1a4vFa2/mCJPWmIinv5IDxkJtAovH10fbNobBgwjIYDj
-	QiOj4wW/pczJsmUwHgXBFGclIzZz9TmgM/aVXTLpXiy8NVMHQJ36CFMPEcRp1wSQ6wNcEf
-	VF7xx4PfN9l/qspnHE8Q5xUMOoH61b0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-zeOsc_aPMzeb8p3f_iMbnw-1; Tue, 16 Apr 2024 04:08:38 -0400
-X-MC-Unique: zeOsc_aPMzeb8p3f_iMbnw-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-343c6a990dbso1388928f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:08:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713254917; x=1713859717;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kRMxAGGEN2RAcxRu7sfhDGVjuRPZCZT+ee13DyyY9Ls=;
-        b=w7I/+buPBGgTXoKbLn/jzq3H6nUp0Fdoo1dm7GTkQefwDbk9XE2wI7tVCXx5Gs6Cjh
-         +8ZoErevg+9DF5LBTpvVCSlHCvTdwQ/2YaQUYhK6Y+jZ0aqcRiDkpTgI7b0WbwsXBJXL
-         pYhkpAaultvs248mYuE/NraOJGEL6nE3DZZ2G9dJKc83iCwo34Ic0F5QLJhbNsZZncDl
-         lb0mSVdcg2+O72B9e1xJsm4nD9Ts0r3o0o1DATOlr0/HrIl3SMr/+Z5CZwKZ8ARvPyms
-         OlD/9WfAq2FiOf9yCM0SlUzrG+nzTw2hxmC/fq0CUQq20ZyvWymmsq41kn1CPHQmr2Cn
-         151A==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Ue57EpnvSUzvoAd8iee401OL0Zo6hvG1IMk0NPDW+PHcQomj895iMSXidahNtENyG+fvNDxl3Uibnmi+c63n3gEGM31VY3FY2m+i
-X-Gm-Message-State: AOJu0YwpjHC1ju2hHmXSJkfSaR3tBRCEoLt/vL8PwT35veCI3Mw7F6rM
-	v1HilNIawSvyGtu+PPKOR0/ZijM2U7nc1S4c4cHnVr4B45GxclyFBtpYIBfE0B5S4PF6809L+7l
-	8A982g2WZ7N4T6Vlp5Su55bojXWPFjJotaiY8P0jwH+kBrCUTOGWVBbZf+R3CMg==
-X-Received: by 2002:adf:ce0c:0:b0:348:870:bbe4 with SMTP id p12-20020adfce0c000000b003480870bbe4mr1841213wrn.7.1713254917104;
-        Tue, 16 Apr 2024 01:08:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEe+v7feIVgCErAd2IBoOshgKG3VboOOWr9znYKfQJXsP9jRSjM5wgNQfe8h39+XLRTlt66eg==
-X-Received: by 2002:adf:ce0c:0:b0:348:870:bbe4 with SMTP id p12-20020adfce0c000000b003480870bbe4mr1841177wrn.7.1713254916619;
-        Tue, 16 Apr 2024 01:08:36 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c718:6400:7621:b88a:e99e:2fa8? (p200300cbc71864007621b88ae99e2fa8.dip0.t-ipconnect.de. [2003:cb:c718:6400:7621:b88a:e99e:2fa8])
-        by smtp.gmail.com with ESMTPSA id q10-20020adffeca000000b0033dd2a7167fsm14156995wrs.29.2024.04.16.01.08.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 01:08:36 -0700 (PDT)
-Message-ID: <43def405-a55c-4bea-9caf-220408ddac40@redhat.com>
-Date: Tue, 16 Apr 2024 10:08:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVsSS9Rb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713254923; x=1744790923;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uc4pGH6YnklU8OzPS1MEUmrznWwdCvXp/0iUx5orusg=;
+  b=QVsSS9RbFJLLhmY8NVht8RhQ9ZojbkJtdLmkbLdKrQ01yXhaXNPC2D/S
+   HfIBN6MckXmNisNQ6Ut/wLPUFGsvhz3JyjfN/SK1dwlsby/v0YEcptSt5
+   z2Xx0Cav6ObLv8sEE8HtMLPVa6DpRiLyxHFOGo1mwIln/T41aGQosorpI
+   nJiLvcjEXiPSd7RV7Cnnej7cveKMeIFKt+QvmiDKXV7JC9PPzaqWHFDPD
+   1BQnBL+yuSUdyP81LqUsswJqUUA9s+hqNlaCz1PMsk+BhI/sase2Kz7o8
+   L4doTADnvoXtJcAAgo5/tJ6Jd4LJFfZR9ZLhPtruFmxarVBui7XCrrLj/
+   w==;
+X-CSE-ConnectionGUID: rqWhk+zNTKuX9HJKxzggaQ==
+X-CSE-MsgGUID: XBNZs1leQzaXBhkmEbgs/w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12466517"
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="12466517"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 01:08:43 -0700
+X-CSE-ConnectionGUID: xdnrl/ebRbuqlU6qE3SxZw==
+X-CSE-MsgGUID: F+Twznn8RtqK1KhFsnGfag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="22077824"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by orviesa010.jf.intel.com with ESMTP; 16 Apr 2024 01:08:41 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Tina Zhang <tina.zhang@intel.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v3 10/12] iommu/vt-d: Remove intel_svm_dev
+Date: Tue, 16 Apr 2024 16:06:54 +0800
+Message-Id: <20240416080656.60968-11-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240416080656.60968-1-baolu.lu@linux.intel.com>
+References: <20240416080656.60968-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] mm: add per-order mTHP alloc and swpout counters
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- cerasuolodomenico@gmail.com, chrisl@kernel.org, kasong@tencent.com,
- linux-kernel@vger.kernel.org, peterx@redhat.com, ryan.roberts@arm.com,
- surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org,
- yosryahmed@google.com, yuzhao@google.com, corbet@lwn.net
-References: <20240412114858.407208-1-21cnbao@gmail.com>
- <20e36996-0c78-4b81-8e91-1035d5ce0652@redhat.com>
- <CAGsJ_4wk7RWiiNGVKdzMgD==tDmeWVBqpm-kRUFMHSz_rUVqXw@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4wk7RWiiNGVKdzMgD==tDmeWVBqpm-kRUFMHSz_rUVqXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 12.04.24 15:16, Barry Song wrote:
-> On Sat, Apr 13, 2024 at 12:54 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 12.04.24 13:48, Barry Song wrote:
->>> From: Barry Song <v-songbaohua@oppo.com>
->>>
->>> The patchset introduces a framework to facilitate mTHP counters, starting
->>> with the allocation and swap-out counters. Currently, only four new nodes
->>> are appended to the stats directory for each mTHP size.
->>>
->>> /sys/kernel/mm/transparent_hugepage/hugepages-<size>/stats
->>>        anon_fault_alloc
->>>        anon_fault_fallback
->>>        anon_fault_fallback_charge
->>>        anon_swpout
->>>        anon_swpout_fallback
->>>
->>> These nodes are crucial for us to monitor the fragmentation levels of
->>> both the buddy system and the swap partitions. In the future, we may
->>> consider adding additional nodes for further insights.
->>>
->>> -v6:
->>>     * collect reviewed-by tags for patch2/4, 3/4, 4/4, Ryan;
->>>     * move back to static array by using MAX_PTRS_PER_PTE, Ryan;
->>>     * move to for_each_possible_cpu to handle cpu hotplug, Ryan;
->>>     * other minor cleanups according to Ryan;
->>
->> Please *really* not multiple versions of the same patch set on one a
->> single day.
-> 
-> Ok. I will leave more time for you to review the older versions before moving
-> to a new version.
+The intel_svm_dev data structure used in the sva implementation for the
+Intel IOMMU driver stores information about a device attached to an SVA
+domain. It is a duplicate of dev_pasid_info that serves the same purpose.
 
-Yes please. There is not anything gained from sending out stuff to fast, 
-besides mixing discussions, same questions/comments ... and effectively 
-more work for reviewers.
+Replace intel_svm_dev with dev_pasid_info and clean up the use of
+intel_svm_dev.
 
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel/iommu.h |  15 +----
+ drivers/iommu/intel/iommu.c |   7 +-
+ drivers/iommu/intel/svm.c   | 130 ++++++++++--------------------------
+ 3 files changed, 42 insertions(+), 110 deletions(-)
+
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 31bbce8ffe7e..4f4f4f28d55d 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -650,6 +650,7 @@ struct dmar_domain {
+ 			struct list_head s2_link;
+ 		};
+ 	};
++	struct intel_svm *svm;
+ 
+ 	struct iommu_domain domain;	/* generic domain data structure for
+ 					   iommu core */
+@@ -1150,23 +1151,13 @@ int intel_svm_finish_prq(struct intel_iommu *iommu);
+ void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
+ 			     struct iommu_page_response *msg);
+ struct iommu_domain *intel_svm_domain_alloc(void);
+-void intel_svm_remove_dev_pasid(struct device *dev, ioasid_t pasid);
++void intel_svm_remove_dev_pasid(struct iommu_domain *domain);
+ void intel_drain_pasid_prq(struct device *dev, u32 pasid);
+ 
+-struct intel_svm_dev {
+-	struct list_head list;
+-	struct rcu_head rcu;
+-	struct device *dev;
+-	struct intel_iommu *iommu;
+-	u16 did;
+-	u16 sid, qdep;
+-};
+-
+ struct intel_svm {
+ 	struct mmu_notifier notifier;
+ 	struct mm_struct *mm;
+ 	u32 pasid;
+-	struct list_head devs;
+ 	struct dmar_domain *domain;
+ };
+ #else
+@@ -1177,7 +1168,7 @@ static inline struct iommu_domain *intel_svm_domain_alloc(void)
+ 	return NULL;
+ }
+ 
+-static inline void intel_svm_remove_dev_pasid(struct device *dev, ioasid_t pasid)
++static inline void intel_svm_remove_dev_pasid(struct iommu_domain *domain)
+ {
+ }
+ #endif
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index fc6303940322..0f609ba36382 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4386,11 +4386,8 @@ static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
+ 	 * notification. Before consolidating that code into iommu core, let
+ 	 * the intel sva code handle it.
+ 	 */
+-	if (domain->type == IOMMU_DOMAIN_SVA) {
+-		intel_svm_remove_dev_pasid(dev, pasid);
+-		cache_tag_unassign_domain(dmar_domain, dev, pasid);
+-		goto out_tear_down;
+-	}
++	if (domain->type == IOMMU_DOMAIN_SVA)
++		intel_svm_remove_dev_pasid(domain);
+ 
+ 	spin_lock_irqsave(&dmar_domain->lock, flags);
+ 	list_for_each_entry(curr, &dmar_domain->dev_pasids, link_domain) {
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index e6d25a0f25f6..01fa88f8b4a8 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -43,23 +43,6 @@ static void *pasid_private_find(ioasid_t pasid)
+ 	return xa_load(&pasid_private_array, pasid);
+ }
+ 
+-static struct intel_svm_dev *
+-svm_lookup_device_by_dev(struct intel_svm *svm, struct device *dev)
+-{
+-	struct intel_svm_dev *sdev = NULL, *t;
+-
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(t, &svm->devs, list) {
+-		if (t->dev == dev) {
+-			sdev = t;
+-			break;
+-		}
+-	}
+-	rcu_read_unlock();
+-
+-	return sdev;
+-}
+-
+ int intel_svm_enable_prq(struct intel_iommu *iommu)
+ {
+ 	struct iopf_queue *iopfq;
+@@ -192,7 +175,10 @@ static void intel_arch_invalidate_secondary_tlbs(struct mmu_notifier *mn,
+ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+ {
+ 	struct intel_svm *svm = container_of(mn, struct intel_svm, notifier);
+-	struct intel_svm_dev *sdev;
++	struct dmar_domain *domain = svm->domain;
++	struct dev_pasid_info *dev_pasid;
++	struct device_domain_info *info;
++	unsigned long flags;
+ 
+ 	/* This might end up being called from exit_mmap(), *before* the page
+ 	 * tables are cleared. And __mmu_notifier_release() will delete us from
+@@ -206,11 +192,13 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+ 	 * page) so that we end up taking a fault that the hardware really
+ 	 * *has* to handle gracefully without affecting other processes.
+ 	 */
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(sdev, &svm->devs, list)
+-		intel_pasid_tear_down_entry(sdev->iommu, sdev->dev,
+-					    svm->pasid, true);
+-	rcu_read_unlock();
++	spin_lock_irqsave(&domain->lock, flags);
++	list_for_each_entry(dev_pasid, &domain->dev_pasids, link_domain) {
++		info = dev_iommu_priv_get(dev_pasid->dev);
++		intel_pasid_tear_down_entry(info->iommu, dev_pasid->dev,
++					    dev_pasid->pasid, true);
++	}
++	spin_unlock_irqrestore(&domain->lock, flags);
+ 
+ }
+ 
+@@ -219,47 +207,17 @@ static const struct mmu_notifier_ops intel_mmuops = {
+ 	.arch_invalidate_secondary_tlbs = intel_arch_invalidate_secondary_tlbs,
+ };
+ 
+-static int pasid_to_svm_sdev(struct device *dev, unsigned int pasid,
+-			     struct intel_svm **rsvm,
+-			     struct intel_svm_dev **rsdev)
+-{
+-	struct intel_svm_dev *sdev = NULL;
+-	struct intel_svm *svm;
+-
+-	if (pasid == IOMMU_PASID_INVALID || pasid >= PASID_MAX)
+-		return -EINVAL;
+-
+-	svm = pasid_private_find(pasid);
+-	if (IS_ERR(svm))
+-		return PTR_ERR(svm);
+-
+-	if (!svm)
+-		goto out;
+-
+-	/*
+-	 * If we found svm for the PASID, there must be at least one device
+-	 * bond.
+-	 */
+-	if (WARN_ON(list_empty(&svm->devs)))
+-		return -EINVAL;
+-	sdev = svm_lookup_device_by_dev(svm, dev);
+-
+-out:
+-	*rsvm = svm;
+-	*rsdev = sdev;
+-
+-	return 0;
+-}
+-
+ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
+ 				   struct device *dev, ioasid_t pasid)
+ {
+ 	struct device_domain_info *info = dev_iommu_priv_get(dev);
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+ 	struct intel_iommu *iommu = info->iommu;
+ 	struct mm_struct *mm = domain->mm;
+-	struct intel_svm_dev *sdev;
++	struct dev_pasid_info *dev_pasid;
+ 	struct intel_svm *svm;
+ 	unsigned long sflags;
++	unsigned long flags;
+ 	int ret = 0;
+ 
+ 	svm = pasid_private_find(pasid);
+@@ -270,7 +228,6 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
+ 
+ 		svm->pasid = pasid;
+ 		svm->mm = mm;
+-		INIT_LIST_HEAD_RCU(&svm->devs);
+ 
+ 		svm->notifier.ops = &intel_mmuops;
+ 		svm->domain = to_dmar_domain(domain);
+@@ -288,25 +245,17 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
+ 		}
+ 	}
+ 
+-	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+-	if (!sdev) {
+-		ret = -ENOMEM;
++	dmar_domain->svm = svm;
++	dev_pasid = kzalloc(sizeof(*dev_pasid), GFP_KERNEL);
++	if (!dev_pasid)
+ 		goto free_svm;
+-	}
+ 
+-	sdev->dev = dev;
+-	sdev->iommu = iommu;
+-	sdev->did = FLPT_DEFAULT_DID;
+-	sdev->sid = PCI_DEVID(info->bus, info->devfn);
+-	if (info->ats_enabled) {
+-		sdev->qdep = info->ats_qdep;
+-		if (sdev->qdep >= QI_DEV_EIOTLB_MAX_INVS)
+-			sdev->qdep = 0;
+-	}
++	dev_pasid->dev = dev;
++	dev_pasid->pasid = pasid;
+ 
+ 	ret = cache_tag_assign_domain(to_dmar_domain(domain), dev, pasid);
+ 	if (ret)
+-		goto free_sdev;
++		goto free_dev_pasid;
+ 
+ 	/* Setup the pasid table: */
+ 	sflags = cpu_feature_enabled(X86_FEATURE_LA57) ? PASID_FLAG_FL5LP : 0;
+@@ -315,16 +264,18 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
+ 	if (ret)
+ 		goto unassign_tag;
+ 
+-	list_add_rcu(&sdev->list, &svm->devs);
++	spin_lock_irqsave(&dmar_domain->lock, flags);
++	list_add(&dev_pasid->link_domain, &dmar_domain->dev_pasids);
++	spin_unlock_irqrestore(&dmar_domain->lock, flags);
+ 
+ 	return 0;
+ 
+ unassign_tag:
+ 	cache_tag_unassign_domain(to_dmar_domain(domain), dev, pasid);
+-free_sdev:
+-	kfree(sdev);
++free_dev_pasid:
++	kfree(dev_pasid);
+ free_svm:
+-	if (list_empty(&svm->devs)) {
++	if (list_empty(&dmar_domain->dev_pasids)) {
+ 		mmu_notifier_unregister(&svm->notifier, mm);
+ 		pasid_private_remove(pasid);
+ 		kfree(svm);
+@@ -333,26 +284,17 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
+ 	return ret;
+ }
+ 
+-void intel_svm_remove_dev_pasid(struct device *dev, u32 pasid)
++void intel_svm_remove_dev_pasid(struct iommu_domain *domain)
+ {
+-	struct intel_svm_dev *sdev;
+-	struct intel_svm *svm;
+-	struct mm_struct *mm;
++	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
++	struct intel_svm *svm = dmar_domain->svm;
++	struct mm_struct *mm = domain->mm;
+ 
+-	if (pasid_to_svm_sdev(dev, pasid, &svm, &sdev))
+-		return;
+-	mm = svm->mm;
+-
+-	if (sdev) {
+-		list_del_rcu(&sdev->list);
+-		kfree_rcu(sdev, rcu);
+-
+-		if (list_empty(&svm->devs)) {
+-			if (svm->notifier.ops)
+-				mmu_notifier_unregister(&svm->notifier, mm);
+-			pasid_private_remove(svm->pasid);
+-			kfree(svm);
+-		}
++	if (list_empty(&dmar_domain->dev_pasids)) {
++		if (svm->notifier.ops)
++			mmu_notifier_unregister(&svm->notifier, mm);
++		pasid_private_remove(svm->pasid);
++		kfree(svm);
+ 	}
+ }
+ 
+@@ -740,8 +682,10 @@ struct iommu_domain *intel_svm_domain_alloc(void)
+ 		return NULL;
+ 	domain->domain.ops = &intel_svm_domain_ops;
+ 	domain->use_first_level = true;
++	INIT_LIST_HEAD(&domain->dev_pasids);
+ 	INIT_LIST_HEAD(&domain->cache_tags);
+ 	spin_lock_init(&domain->cache_lock);
++	spin_lock_init(&domain->lock);
+ 
+ 	return &domain->domain;
+ }
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
