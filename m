@@ -1,65 +1,151 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE15712FF64;
-	Tue, 16 Apr 2024 14:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E769A130ADF;
+	Tue, 16 Apr 2024 14:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276614; cv=none; b=k1e8dxVt9l1LlmmIWFy04uA+OuTCCVWEXEV8s5ddgwLdHh5mM4wpOg3UtfcQw2PBImid1vyl5suOGX5lkDhdFDYUQ9nQwQdsun6QcY4G9OcPAQV1+mDba+Km4bvHYwqda7iq105K/lUXL+YCTBOqSwSAk5NOZ6q6TOTsKuq0H2c=
+	t=1713276618; cv=none; b=sq6RGAEzYYldv77UUOUb2Ek92Hv2OeeVUaNCfBQSgQvLqPw/VBzu8eqrwHvtEEPIHaPQTb+G68yeTdo6mxgj+n7NHz+P375vMIBYCxRYWSEdXgQ+sv3DxoismD3ck7CTfnVeNdzE73SeBKvjoZYnb0J9BPTooCqjbbfRqSRFjwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276614; c=relaxed/simple;
-	bh=7JZc8UnPkyq1RzEo8SIHO6WK5tK7l6pzq2Uiq95LxoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h/45AOoRFEyHmrYMHTbPZ0LBdLUO1pWpbH96yd6NFHkj9jy7dEfQIxrD1019jvZVOzfMHt/3OqQWzsar/FeGjdFx6D+ye8ihSZIkicnZvpm87JVpxkHoGDiJgSbKu0CuLHZoe4mRw7XHVEUxonaHMnKafg2Brj1v+eVwCCPBPFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=n3PM0L7f; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1713276618; c=relaxed/simple;
+	bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DAZEnXDun6DMd2J2jHWEES0w/6IVc7MVQ+AT/qMWvZPLt+y2j3qkdKK4F8qpmmka4EW/9RkiUOEo3tqOPUNsTV426UamywlpYdPghUCAtzZGyKtaKRZdaQve+wTLH49uKkWFgxNlXzBj1LKtELIfYcqNt+9lue+f5DrtdG6pUuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMAyYWpk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="n3PM0L7f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=w6da/WRbFvg8QeAUygR52mX3V4b4pJ5TAZXxzhpIMts=; b=n3PM0L7fraZGETa4yFlMW03vnC
-	17VhNj5wsjiv8VOy0KA2V9q48v7L2Kvhfkvv4o7jxzbflPqHpiznjQZfZh6BWVV/Z15ebdjX+J+aX
-	L1VZ9tlqHqsmp4l16VGfYxSJdzANxp0nqQYDL2shJl2djDcE0ENFc/+x8bc6jGNDSk0E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rwjVf-00D8th-8s; Tue, 16 Apr 2024 16:10:07 +0200
-Date: Tue, 16 Apr 2024 16:10:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	hkallweit1@gmail.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: bcm54811: add support for BroadR-Reach mode
-Message-ID: <3aaf1b82-247e-447d-a39c-c209105c2d7c@lunn.ch>
-References: <20240416123811.1880177-1-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMAyYWpk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F9EC2BD11;
+	Tue, 16 Apr 2024 14:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713276617;
+	bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=vMAyYWpk8ShSXREPy2AdBgXJ/CTwY2yCNy+uVpmQ4BHym3d2CMcxGthU7S82YEflO
+	 KWrDVYtS//sPTp73D1QC8H2s3r1lCyvkWwW/kRaDqT4K+sKzEObZjWUZqHksxD1WCN
+	 Ry964+rM2FASYSB5L584tbZ8XTnRvekJwG1TeHwxDFKUwhlSJJ+uloiyZjL+HtRhqm
+	 ib9DTPd5jPqt9O7/Jtq9W9x7NSrvzpkpqAuA9iCrV3oBhQQu/6EtQAB8kk5r+Ka+mS
+	 sJD/hNMef7dxJNEwErlDgJZdnEuTyjfkhTy3aSnhCsY4NkaLonJlWP5nWJ9vXpgq60
+	 YJw3dOJRus6eQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Tue, 16 Apr 2024 16:08:18 +0200
+Subject: [PATCH bpf-next 05/18] bpf: replace bpf_timer_cancel_and_free with
+ a generic helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416123811.1880177-1-kamilh@axis.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-bpf_wq-v1-5-c9e66092f842@kernel.org>
+References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=3167;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
+ b=n1oxaBLfR9BhsnTXXtu7/YF0pj8V4GcNcAG5GfaEJB1uHwzkH+PZfg4tHgNARDKNW0v5JtxNr
+ e0wxxCiNIbICB7YhMaLwPEEFeGhKwo24/Y5vUI6TFCdznPRUQDLdPqs
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-> @@ -258,6 +257,9 @@ static const struct phy_setting settings[] = {
->  	PHY_SETTING(    100, HALF,    100baseT_Half		),
->  	PHY_SETTING(    100, HALF,    100baseFX_Half		),
->  	PHY_SETTING(    100, FULL,    100baseFX_Full		),
-> +	PHY_SETTING(    100, FULL,    4BR100			),
-> +	PHY_SETTING(    100, FULL,    2BR100			),
-> +	PHY_SETTING(    100, FULL,    1BR100			),
+Same reason than most bpf_timer* functions, we need almost the same for
+workqueues.
+So extract the generic part out of it so bpf_wq_cancel_and_free can reuse
+it.
 
-Please could you explain the name convention. IEEE puts the speed
-first, then some letters to indicate the media type, and then a number
-for the number of pairs. Why is this not followed here? 100BaseBR4?
-100BaseBR2? 100BaseBR1? Are these names part of the BroadR-Reach
-standard?
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+ kernel/bpf/helpers.c | 42 +++++++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
-Also, is there any compatibility? Are 100BaseT1 and 1BR100 compatible?
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index d0a645b09d3d..78847f444f79 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -1413,36 +1413,44 @@ static const struct bpf_func_proto bpf_timer_cancel_proto = {
+ 	.arg1_type	= ARG_PTR_TO_TIMER,
+ };
+ 
+-/* This function is called by map_delete/update_elem for individual element and
+- * by ops->map_release_uref when the user space reference to a map reaches zero.
+- */
+-void bpf_timer_cancel_and_free(void *val)
++static struct bpf_async_cb *__bpf_async_cancel_and_free(struct bpf_async_kern *async)
+ {
+-	struct bpf_async_kern *timer = val;
+-	struct bpf_hrtimer *t;
++	struct bpf_async_cb *cb;
+ 
+-	/* Performance optimization: read timer->timer without lock first. */
+-	if (!READ_ONCE(timer->timer))
+-		return;
++	/* Performance optimization: read async->cb without lock first. */
++	if (!READ_ONCE(async->cb))
++		return NULL;
+ 
+-	__bpf_spin_lock_irqsave(&timer->lock);
++	__bpf_spin_lock_irqsave(&async->lock);
+ 	/* re-read it under lock */
+-	t = timer->timer;
+-	if (!t)
++	cb = async->cb;
++	if (!cb)
+ 		goto out;
+-	drop_prog_refcnt(&t->cb);
++	drop_prog_refcnt(cb);
+ 	/* The subsequent bpf_timer_start/cancel() helpers won't be able to use
+ 	 * this timer, since it won't be initialized.
+ 	 */
+-	WRITE_ONCE(timer->timer, NULL);
++	WRITE_ONCE(async->cb, NULL);
+ out:
+-	__bpf_spin_unlock_irqrestore(&timer->lock);
++	__bpf_spin_unlock_irqrestore(&async->lock);
++	return cb;
++}
++
++/* This function is called by map_delete/update_elem for individual element and
++ * by ops->map_release_uref when the user space reference to a map reaches zero.
++ */
++void bpf_timer_cancel_and_free(void *val)
++{
++	struct bpf_hrtimer *t;
++
++	t = (struct bpf_hrtimer *)__bpf_async_cancel_and_free(val);
++
+ 	if (!t)
+ 		return;
+ 	/* Cancel the timer and wait for callback to complete if it was running.
+ 	 * If hrtimer_cancel() can be safely called it's safe to call kfree(t)
+ 	 * right after for both preallocated and non-preallocated maps.
+-	 * The timer->timer = NULL was already done and no code path can
++	 * The async->cb = NULL was already done and no code path can
+ 	 * see address 't' anymore.
+ 	 *
+ 	 * Check that bpf_map_delete/update_elem() wasn't called from timer
+@@ -1451,7 +1459,7 @@ void bpf_timer_cancel_and_free(void *val)
+ 	 * return -1). Though callback_fn is still running on this cpu it's
+ 	 * safe to do kfree(t) because bpf_timer_cb() read everything it needed
+ 	 * from 't'. The bpf subprog callback_fn won't be able to access 't',
+-	 * since timer->timer = NULL was already done. The timer will be
++	 * since async->cb = NULL was already done. The timer will be
+ 	 * effectively cancelled because bpf_timer_cb() will return
+ 	 * HRTIMER_NORESTART.
+ 	 */
 
-      Andrew
+-- 
+2.44.0
+
