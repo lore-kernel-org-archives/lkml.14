@@ -1,170 +1,148 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout42.security-mail.net (mxout.security-mail.net [85.31.212.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE55129E70
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 11:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713268770; cv=none; b=r15pFUKB8yuE+nw9IM8in6PLa5MYMhQxBwrjcmMBxHw/9iDfYoQf3xA5GBBRBgDD7hHEX/TBrpMf+x6dr63GG9OSkW+s7OMG8JE0q3njkPE81IeORQkHThUc+mTi79+5TUNKGdK+AjyDKkELNfkX8xnHhoRzLqHwLAJy/rP9Yi0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713268770; c=relaxed/simple;
-	bh=qbqi+XsX6wxH4QDDPdchG2lSzTVOiuCarFXtt6z8m5g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iodQNTMN5sHqVIqhtG5RcSjbNF8LTg+8F4ByE4yeiLXtKO5HQ/tgCsHzeAnwiVUu/abhT/2+g6Y1IhCpL+M9aULmbfUp5FOZ0lqg1nmVTe2eVJIe7p15q2iMopSRIB0cWWlDJxLImlrk2Jnq3IyRQkNh5eEc25wuRl89J8+l94M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sq7AS0AV; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9276B129E64
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=85.31.212.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713268806; cv=fail; b=rrTBOdnyG3hiJDrKmSc1DjQVDUDEiC897oUfFZNVVsBhWOupSzWrQ3PMVlJo70yuNnaBGPI+t6oTJPX1UR2U3dIwgIdwOO/b4H+OvZtHdCbOEUY8UMJ5zjF/6nMwQD2mQgAAO1QBrNFNa1bDCWM9Km2C1zE2x1/FvqJhJ0yb3+w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713268806; c=relaxed/simple;
+	bh=StrGid2dBfOixfPa9P2MRP26amZHDOUthHHCkeBF848=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RBAQykolmPgUZsxSeB2l6hwDvKNB4QSfREnFeYAmvKVidwu+e2WkwvIs/HvzMMZP6/lFs75o8shwWe469c1T8a9/M1GYX3cXYFU2PRHFzN7NBLGtjhxduI6MiORiQKlEX2asX8Td6j5E3LfUdngdiU0FbszIX31QNCfxNAGrqoo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com; spf=pass smtp.mailfrom=kalrayinc.com; dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=dDBlCKxT; dkim=fail (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b=QZzg9Wyn reason="signature verification failed"; arc=fail smtp.client-ip=85.31.212.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kalrayinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kalrayinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sq7AS0AV"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so34128905ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 04:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713268768; x=1713873568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hQ8Km8pUrRdj6HD7UNUZL3puRDpbGZKIzvHBUwGPNQw=;
-        b=Sq7AS0AVnoecKFWatpxGI2SSmdkhBbFCsgLii44duGuCJ4saM4AbnEXdoXDcXoY1t5
-         EiogZ5nylvlaTh8K8zviKfTr2C+ElWN/O7WS1r1BAHwnnjpkkxudDRj2b3eNpNhUPXIR
-         HXiHi0IFuOMXDZz2dudbSURVrymaF1fU2IQAp8CKH9NwqS5Z+OR2wdkxOlaHV76mN30f
-         Wx0zQC31+N/HW5qYyWOtKJFNKP0/7AUcjq7SsAhiIdy3W/qaKKjwrRohgAT/DkvdxqZS
-         HkIwepD3jH1ij0/y74nrAToWsg7ia+WUyKKhfBcs5LXtxbyOZNhtgjEBU6VpViqJU6Ro
-         ATuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713268768; x=1713873568;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hQ8Km8pUrRdj6HD7UNUZL3puRDpbGZKIzvHBUwGPNQw=;
-        b=NuFuOBhInaAibnuOZ1eGq17wL+JXbZ2ccFF0YVD9chN9AMBMl9YqYBB7v+j6sapA2k
-         hasT1p+zocY9q8g9WXfiXDDn7RXtoNfw0DxJYcJWlgj1duNI55TIf9rXv7DqwTu2Uob+
-         MJmIEHPJwnNoxgqKi/VOKiDi96nExkfjcYxd+lDyc0v9CKOGIHT/wBjhP4912Ntfk2Z5
-         /yAPSXADKLIOmCQdwbaDvoE4QzTd6VXU+W9gq6ETYEHjiDOGQirgGplNLJUyKq9N3gio
-         aDCE5IEHrc8q2jYWgyYcdmadEAQpiwyOVawK74L01SZuScvM+/QQryYOuNikCFJZvIWI
-         27JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKcFyCenRR6oaHP0o/HZ5aZvoH3E3YhvIx+9U2kHRa4eQ9K/zAxF6ARf/bvK3mUC2khZWWAyLMCeAxIwBT1d+CLUCjH/xRw05bLRKY
-X-Gm-Message-State: AOJu0Yw4athRS+YMhftXMCc2jy7rHeGZVszs3fwcGUmFgzTiJZdfte+6
-	5QcJyRo5U9xtwPFcbhMhOp33Gh+TasF//IdqUwq6jKeqVwFQJSnZ
-X-Google-Smtp-Source: AGHT+IG3114+5T4rKIudyGIHpqSw90eJAE+y4lnLAgiCoA96yKOqVpWxd3xunDkFep4E/G/a19QgEA==
-X-Received: by 2002:a17:902:f688:b0:1e2:6165:8086 with SMTP id l8-20020a170902f68800b001e261658086mr13188458plg.61.1713268768024;
-        Tue, 16 Apr 2024 04:59:28 -0700 (PDT)
-Received: from karan-IdeaPad-3-15ALC6-Ub.. ([2401:4900:1c96:c7dd:27d5:f53e:33a6:5717])
-        by smtp.gmail.com with ESMTPSA id k18-20020a170902c41200b001e3dff1e4d1sm9590941plk.268.2024.04.16.04.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 04:59:27 -0700 (PDT)
-From: Karan Sanghavi <karansanghvi98@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Karan Sanghavi <karansanghvi98@gmail.com>
-Subject: [PATCH] Staging : ks7010 ks_wlan_net : Fixed Unnecessary Paranthesis, Prefer Fallthrough and Line spacing issue.
-Date: Tue, 16 Apr 2024 17:29:03 +0530
-Message-Id: <20240416115903.92706-1-karansanghvi98@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="dDBlCKxT";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kalrayinc.com header.i=@kalrayinc.com header.b="QZzg9Wyn"
+Received: from localhost (localhost [127.0.0.1])
+	by fx302.security-mail.net (Postfix) with ESMTP id 183257C4738
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:55:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalrayinc.com;
+	s=sec-sig-email; t=1713268555;
+	bh=StrGid2dBfOixfPa9P2MRP26amZHDOUthHHCkeBF848=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dDBlCKxTdgPbKXREfaRG1d4FpITreAUPx7IfJPozghsnSU7r9dn7PPzJLjVFJko0k
+	 uUBq4FYr4aUAFwzNRCJxH7eXDpHWvJuqaGoWJyneD84hT+r6xP+cXImjtSA1pq4tZL
+	 IKp6Hvck1GKuwuRqzAaLMxnqzmlHYbFU/q+ampKk=
+Received: from fx302 (localhost [127.0.0.1]) by fx302.security-mail.net
+ (Postfix) with ESMTP id E67997C43EA; Tue, 16 Apr 2024 13:55:54 +0200 (CEST)
+Received: from MRZP264CU002.outbound.protection.outlook.com
+ (mail-francesouthazlp17010000.outbound.protection.outlook.com [40.93.69.0])
+ by fx302.security-mail.net (Postfix) with ESMTPS id 65D427C4375; Tue, 16 Apr
+ 2024 13:55:54 +0200 (CEST)
+Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:14b::6)
+ by PAZP264MB3245.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1f6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
+ 2024 11:55:51 +0000
+Received: from PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::d918:21af:904a:ce0a]) by PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::d918:21af:904a:ce0a%4]) with mapi id 15.20.7452.049; Tue, 16 Apr
+ 2024 11:55:51 +0000
+X-Virus-Scanned: E-securemail
+Secumail-id: <eb52.661e674a.6493b.0>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HW+bApLiskXP6XHLC5sRiTz85l+y9pxDh2ohMAYDEBvbBINIYY434o3tnOb7Wdl45iDDOe6x2WZLU5i+i6zyK+qeOw13ch46OAjqfaCNAbgPKeyoN3cRTZ37whh9QWmv4pW6eX9aD9tQi09+HgxZdN7tV2bDOOnBGpwQOHYq4uI4HU3sXBH/y6lTgtU9RGHcryk9PXs1BJ2TjWhFtnE0NceUtqVO5mDewtSGk/3bYu1l6prq3tj8w5J0PmezIxjOBqVN2gJIZS/qOoZWuIeu+8+EYXS/2Gb0OO1qL21/N5FuwZmI5iWJ7DE4k/F6/zfht8ehlueEQW5LCr0B+LgiBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microsoft.com; s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2j35nNn33eL4zpEznZM9BCAUc3eIC8SYVU6BFRGeIAU=;
+ b=LmPBR1bGWjoajgHgrjE6ShK7vNEqinVhtPNxJTS3Aii2tfo3mHOATB5Yh2IK+Y9/GeRtZRSfJTxlQ6hh7Y11v5ogBJZpE9eylZzkHl0IkX48HMezS18v+gc/S0vXLmVKRnS2yo/h6hrW4PNLNARh675QNvix5Nl8kpDPbnRiTpd9gWsT2EjNP453BaO0WjJxqB9Zx77EONSX3jU0prI14pqx6lJatkDMt+7kuJrt0O4f6KiEGNWqU81YNHtRLmWkSYp7Jt34dY6CAw+FjyZksSAL/5RFF+9BLgwqFFVjtFvz37h4Q3An6Bl+vdzAJCfVF2fdKcTpUuOCvmLvjeDupQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kalrayinc.com; dmarc=pass action=none
+ header.from=kalrayinc.com; dkim=pass header.d=kalrayinc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalrayinc.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2j35nNn33eL4zpEznZM9BCAUc3eIC8SYVU6BFRGeIAU=;
+ b=QZzg9WynEndJ8umZr6iWOvTrNp17XQ7q3i8Of5t1pBKVQJippXIvHFXFtjKbdszjAwaRYLElzBl8yr7I4zcHW0p1TRBnnSH+BXI9bubbRCmWY5kdPMUz7/ZjGhNDgCdpgOABSFC1HDcLMjj8x3BLP2rWYUN6k5ptDB/k7IevTLQAxTf/0i7rES5bB7XKgKZ5INOvWwV9TfvCAMijEVYISvjmzv6RFS2iqUf97XmzavaQ8dt+DGWgh54oTDrVNUe9ToU+r7eLtS12M+wldIYPOulrXGpVYkFpPfPu5d9hQnEWYDvXa3lEdKg86HRdFF2mC23X8MjXhveuurkLlu95vg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kalrayinc.com;
+Message-ID: <7ebb18ec-a7ac-4145-ab21-1d6d7f77234e@kalrayinc.com>
+Date: Tue, 16 Apr 2024 13:55:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 6.1 00/69] 6.1.87-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240415141946.165870434@linuxfoundation.org>
+Content-Language: en-us
+From: Yann Sionneau <ysionneau@kalrayinc.com>
+In-Reply-To: <20240415141946.165870434@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM4PR0302CA0012.eurprd03.prod.outlook.com
+ (2603:10a6:205:2::25) To PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:14b::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PR0P264MB3481:EE_|PAZP264MB3245:EE_
+X-MS-Office365-Filtering-Correlation-Id: faf4bdc8-fd2e-4b5e-b459-08dc5e0c2979
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: APa/BdBdGDGJpK+y0nytTD65YtqAkd0gS1xbdXP1N4KoRi1LTYP9RKc5HllRjxce/wn4ZT1xnJ2mD1fah5EE+cLH3cN5ldNOBOP3DAWkUNZ7HJrfW0+rBx4eTb9EoQYUOE/lGlcroG/br8uYMM16AoG+Z4SH99CYLHNaRi5acUjBFofjzL/pCHfkN5jUsdhmYSC3A4Z4gbMI+berS9s53qA8JRR0lQb9TsacU4OVbbLRbi0STsB4kkkViaWPKoUtWMR1UuLewJAlTLj2IkK+E/vHKsPmYBq3h+bqsr8SiDwlGOXD3rnh4aK7FTsiBlGMAHnzPlQVROH+kghO2Z8+B66E2ia9qfaBE+F5HXhdQ8BEiQuAEjYfINe0aGGW/HNgT+1gEl2YnfjUM90cVIC+RrjO9bAa1HvbrQ9jhCY59QTxzufGC3qZbLUg9Mq+P1sfG2VFaTImIaB00ge8HRHfvbzSovTYDYq0hZ2ZN9fs+AaRrw4uqEhwaWiFM3TvqM/36N6YleWJG41y3L7bk2f1fUtFZBr1RWfw30Ank3Ru+D7Vy3YKMZd6dMf+KxNh0a/HEP9UA3b6DWtzFlrl/PQuBTozdLMCWwWHyTdRLJ305iNsLuKOOqKiXqLG/oQOIVpxOZmaoX/yBYNff5ul10CknlcBjgPkVtUZpENxduCH4S4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: E1THdzdxoKb/U9uGh+6DBLrnx1x8dDiBsSnprSGROhkGWwBqQA67pY56fTdSxFuS/kp0UcfWfBNs+WdjmZ21rh8WwMJvNGGKIEtwkpFK8o6WK9mUI1HLsVf8vctgSQe+W7CMCSGjsvn1dEWGYUi0VdGQmoo1jtbzNFBNA1yiI/rtrbFfxrL5zMTpMUnqESh5PjJZThWgZ/KMd3ugD0GTcPxw6tRltJMR3OD5RLLYY0n//mY5PaTWonIM71lEwYW/667fK9swnv38WDjCLEV4wHx9BZ/rz2pmu7o2RGI+Jx01sBEHJ3d8IpiLWjP5+QJfkqtQDvWPraG4soQVl8zhG3D3oIlZW3exRaRWkk1eYQ/csMXuoF8nQTafHH+ehpQ/CdPS9EjQpZJFzzCi92qNnYzsfSAGaWadq3fMaesB4aEil8M52X5rm51Ps9PyRKB2smQaw+Oskdq8nHhqNw6Y6GKMvjYpaWBJYPn6UdEOUKQPEHMDsD4HzZkKDt9pPgClhfdobeVrxafA1W/Gw6VHtHrI1H6Gt37Z6DfMxDkDGmvR4l3Z9rCmpoS9LZLOeCQwQxc4kD3I+pbxlRpFvMXjHQqxaEAPz7bptOQNDD40bs8YnJuQSmEgV9jA+pCH7qZWxbEtUV9gZZwXEpKd0sXoa13dejSIh+8z9Vc8DX3XWVKuQ5de5/k2BYz1lc/u6r55vIZwI73/yViWH14z2zJVYZTf/MvLv3YaLz1DZQRNBHVnqp09uFRy0OfLO1NteIIr5ycVUuKamuk1w3ygMgOJzFmkCr+1liIYi+v/1zyqk2aYn2tS5AerUHQEFm2Udt4ln6W9C9IKw9n3nn9beH5zqCmDNipqjBWt+MeawWADBAy35eMWYf2GOW8NvJ8+0nERs+yGG5cUnKjYm1h3fXi7G1YYAUSpDf4xVgZ/RR4hJHutdN2s1+/06TK+jMpuyPUf
+ fPSRuj8gEV5qo71wWL84mEVwlyYRLFUOs3/nHrK26pYt+ihvwr5YMJXDSI3szBMGIxEUJ4lEoiJ3//eXy5RVEWINgBU7zG260f2og+U+vUf4uCEoVa52LJqxzWthGVnZ979MwiwjovvKGR1KZJhbXnF5rZRO/Zajqf64HseNVkN9t3mrTpwd/wkzBEW1tjKhAWeMUIWIOrByHCbndoevB4E9PLbzzD1h9hxhry92h2dVJHmznEJSzvermRxIxV3oRJi0VXxtx0YpWJCrS20wDvlrGh74mjZrbf3jtsd3C57Rclgje70GURENXWWlc3Xp35Geg03ojcU5aiUHJoQoMjN8DHcghF8A926pzXtz0x8UvI8rYYP28Iw9dWOXpuMSzwlSrFB7ufS6AZoqg80zBFndv9li/GNrkiEe2WNgFZarsSOznb+/Fj3NvxilYrcCml6KiPNLHD+lHXMRNIX7m4BpLnvRq3rPxrqiTRQf0g3AZ341u7k/l2oY2mQ/Pv30X50ERkGnhA2ikrcYdg9gAOJ4g1e9FEEA9jaJcNiF385PZo2N1UDO6XNWRmi22ilPugkUKiL/vBuZvaIMGgWQo/QtIRanZOLP7AcSZQZMsTU47cn58Bvw/BzYdubj+4Io/uGLaj4H8wo5BSDpQAJPfA==
+X-OriginatorOrg: kalrayinc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: faf4bdc8-fd2e-4b5e-b459-08dc5e0c2979
+X-MS-Exchange-CrossTenant-AuthSource: PR0P264MB3481.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 11:55:51.2331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8931925d-7620-4a64-b7fe-20afd86363d3
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K25ckVWwF9hNMBKZNkTcXSgEWx9ZqVAxa7asHu6/4BUJ3OXDbAqXwBDJg3iABvJpDG+n5G8SG+KLxHze+Z9pfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB3245
+X-ALTERMIMEV2_out: done
 
-Fixed a coding style issue.
+Hi Greg,
 
-Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
----
- drivers/staging/ks7010/ks_wlan_net.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+On 4/15/24 16:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.87 release.
+> There are 69 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 17 Apr 2024 14:19:30 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.87-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
 
-diff --git a/drivers/staging/ks7010/ks_wlan_net.c b/drivers/staging/ks7010/ks_wlan_net.c
-index 0fb97a79ad0b..4b1b5d9b883b 100644
---- a/drivers/staging/ks7010/ks_wlan_net.c
-+++ b/drivers/staging/ks7010/ks_wlan_net.c
-@@ -12,7 +12,6 @@
- #include <linux/netdevice.h>
- #include <linux/timer.h>
- #include <linux/uaccess.h>
--
- static int wep_on_off;
- #define	WEP_OFF		0
- #define	WEP_ON_64BIT	1
-@@ -181,26 +180,26 @@ static int ks_wlan_set_freq(struct net_device *dev,
- 
- 	/* for SLEEP MODE */
- 	/* If setting by frequency, convert to a channel */
--	if ((fwrq->freq.e == 1) &&
--	    (fwrq->freq.m >= 241200000) && (fwrq->freq.m <= 248700000)) {
-+	if (fwrq->freq.e == 1 &&
-+	    fwrq->freq.m >= 241200000 && fwrq->freq.m <= 248700000) {
- 		int f = fwrq->freq.m / 100000;
- 		int c = 0;
- 
- 		while ((c < 14) && (f != frequency_list[c]))
- 			c++;
--		/* Hack to fall through... */
-+		[[fallthough]];
- 		fwrq->freq.e = 0;
- 		fwrq->freq.m = c + 1;
- 	}
- 	/* Setting by channel number */
--	if ((fwrq->freq.m > 1000) || (fwrq->freq.e > 0))
-+	if (fwrq->freq.m > 1000 || fwrq->freq.e >)
- 		return -EOPNOTSUPP;
- 
- 	channel = fwrq->freq.m;
- 	/* We should do a better check than that,
- 	 * based on the card capability !!!
- 	 */
--	if ((channel < 1) || (channel > 14)) {
-+	if (channel < 1 || channel > 14) {
- 		netdev_dbg(dev, "%s: New channel value of %d is invalid!\n",
- 			   dev->name, fwrq->freq.m);
- 		return -EINVAL;
-@@ -663,7 +662,7 @@ static int ks_wlan_set_rts(struct net_device *dev, struct iw_request_info *info,
- 	/* for SLEEP MODE */
- 	if (vwrq->rts.disabled)
- 		rthr = 2347;
--	if ((rthr < 0) || (rthr > 2347))
-+	if (rthr < 0 || rthr > 2347)
- 		return -EINVAL;
- 
- 	priv->reg.rts = rthr;
-@@ -701,7 +700,7 @@ static int ks_wlan_set_frag(struct net_device *dev,
- 	/* for SLEEP MODE */
- 	if (vwrq->frag.disabled)
- 		fthr = 2346;
--	if ((fthr < 256) || (fthr > 2346))
-+	if (fthr < 256 || fthr > 2346)
- 		return -EINVAL;
- 
- 	fthr &= ~0x1;	/* Get an even value - is it really needed ??? */
-@@ -780,7 +779,7 @@ static int ks_wlan_set_encode(struct net_device *dev,
- 		return -EINVAL;
- 
- 	/* for SLEEP MODE */
--	if ((index < 0) || (index > 4))
-+	if (index < 0 || index > 4)
- 		return -EINVAL;
- 
- 	index = (index == 0) ? priv->reg.wep_index : (index - 1);
-@@ -881,7 +880,7 @@ static int ks_wlan_get_encode(struct net_device *dev,
- 	}
- 
- 	/* Which key do we want ? -1 -> tx index */
--	if ((index < 0) || (index >= 4))
-+	if (index < 0 || index >= 4)
- 		index = priv->reg.wep_index;
- 	if (priv->reg.privacy_invoked) {
- 		enc->flags &= ~IW_ENCODE_DISABLED;
-@@ -1863,8 +1862,8 @@ static int ks_wlan_set_power_mgmt(struct net_device *dev,
- 	    uwrq->mode != POWER_MGMT_SAVE2)
- 		return -EINVAL;
- 
--	if ((uwrq->mode == POWER_MGMT_SAVE1 || uwrq->mode == POWER_MGMT_SAVE2) &&
--	    (priv->reg.operation_mode != MODE_INFRASTRUCTURE))
-+	if (uwrq->mode == POWER_MGMT_SAVE1 || uwrq->mode == POWER_MGMT_SAVE2 &&
-+	    priv->reg.operation_mode != MODE_INFRASTRUCTURE)
- 		return -EINVAL;
- 
- 	priv->reg.power_mgmt = uwrq->mode;
+I tested 6.1.87-rc1 (6745a5f2c806) on Kalray kvx arch (not upstream yet) and everything looks good!
+
+It ran on real hw (k200, k200lp and k300 boards), on qemu as well as on our internal instruction set simulator (ISS).
+
+Tests were run on several interfaces/drivers (usb, qsfp ethernet, eMMC, PCIe endpoint+RC, SPI, remoteproc, uart, iommu). LTP and uClibc-ng testsuites are also run without any regression.
+
+Everything looks fine to us.
+
+Tested-by: Yann Sionneau<ysionneau@kalrayinc.com>
+
 -- 
-2.40.1
+Yann
+
+
+
+
 
