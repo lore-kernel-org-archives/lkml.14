@@ -1,275 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68127464;
-	Tue, 16 Apr 2024 01:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713231426; cv=none; b=ndRVrfbZRa/1yc92TKSLrb5HAT3bpvUMS4HpVsd9uoEJR43E3kU7UZ+S8+N/P96SHWN01fHCz93F+TU6Ls2+17d5sDcwjj5p6Emw/SNqFb1vVoVufaI1WsNchJcae69w2RfBH8DqlS8kQV84j+KS+fSPAFIDJ3aop7ZWFa1OJ8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713231426; c=relaxed/simple;
-	bh=MRnZAn/34/F3uJzAswtdGPYBP2MTvfc7DxyHqDFZPv0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=c/BhO+0VISJ99bTPACSluL9RoVkE7hpSJwV1nrI8JDO5DTj9kmH75AsWrOm6oV9naEKAAecuqnmKp7G8U9lW+Y54TvRvofSk6vAdZYWp4QbovcpEH2g0bq8yMO7gG8jatbCu2bDWYV5VXgolNg3651IH4Ny5J1nADg/MNAYy6iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9ZIUnbF; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B506AB9
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713231710; cv=fail; b=HfnQw22+ihDj2WVlGD10zOGUGOMFDg9JVKfdfJpnWa3omKtEoiPzsVFfIpGbGM2MJtly7KuU6QV/CKaKnsuuIZ4cDPmMaCCKiYvEQV2c1NsfANPfWAriEUvs70+uLUGHJ4CKrveE2VgpxccKMBzKU/ejLmbv0RPt+hdfK2xUHPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713231710; c=relaxed/simple;
+	bh=qJuAGQWDYMbsgRGz8Hrb/nBNVkJ80mnnCzaEx7DjtWM=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=DMKZJ6KMOeEBfUC2gKE/7Es8omB4t10waVUWFOzpZbt4rRJprrGhCrMOPjzG6PqobO0hULWu3qhjMr5Q8rYMg2gSjT/Y1BnwNzH+o1yRBLevCvcMdsjHnfjjUq26Eif2EicOC5AgTYq3QajSqihF2ND//i1i3AYA+8N5OBexMJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AXAtzzM7; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9ZIUnbF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B616C113CC;
-	Tue, 16 Apr 2024 01:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713231426;
-	bh=MRnZAn/34/F3uJzAswtdGPYBP2MTvfc7DxyHqDFZPv0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=C9ZIUnbF8xh0maYgafKeDukAR2aeT1Rt6m7K2ugQmk3IGeVfsihYYbtq1pFn670UR
-	 5xBf0WObLpZpdGoVO1Qkmsz8Hr3MunXRaLBz80pZIIHrVYzultJFe/2WhM6xNIpHDL
-	 QbpHf6nnl3TGyHyaT1LdkkezNGjH3H7V0LydiO5e4tQkw65he8/xiY+UcL7DyvqjmP
-	 +sXDpglVwlNx+11TFrJF94NT//QARhkZKh1OiKxnpjcL4zsXxzY8Vm9q5XBQrmSOPe
-	 gzh7L7EkwWSo007LFgLgUO5aUyLR/QVIvt0PJAUZOaeQ6EcDSLDEIMdTHEZkbM61zQ
-	 k+8T4xUnvaNqw==
-Date: Mon, 15 Apr 2024 18:37:05 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Yunsheng Lin <linyunsheng@huawei.com>, Paolo Abeni <pabeni@redhat.com>
-cc: davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>, 
-    Eric Dumazet <edumazet@google.com>, 
-    Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-    Jason Wang <jasowang@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-    Vincent Guittot <vincent.guittot@linaro.org>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-    Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-    Mel Gorman <mgorman@suse.de>, 
-    Daniel Bristot de Oliveira <bristot@redhat.com>, 
-    Valentin Schneider <vschneid@redhat.com>, 
-    John Fastabend <john.fastabend@gmail.com>, 
-    Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>, 
-    Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-    Boris Pismenny <borisp@nvidia.com>, bpf@vger.kernel.org, 
-    mptcp@lists.linux.dev
-Subject: Re: [PATCH net-next v2 13/15] net: replace page_frag with
- page_frag_cache
-In-Reply-To: <20240415131941.51153-14-linyunsheng@huawei.com>
-Message-ID: <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
-References: <20240415131941.51153-1-linyunsheng@huawei.com> <20240415131941.51153-14-linyunsheng@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AXAtzzM7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713231708; x=1744767708;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=qJuAGQWDYMbsgRGz8Hrb/nBNVkJ80mnnCzaEx7DjtWM=;
+  b=AXAtzzM7B49A8hJspN1D1NkCJWF629zc3zrcdmJcPejZfnVIreI2UJkd
+   VvFUIBfae3xdEFTmEkJfmkWKJr9ADPbcmo2N7m+WWDHyttzLYj6ldolcl
+   YkfkHDK1oNlbbzCybi5hB27rcGx+Dc84FcsjFrrzzAJgEQweWIEhSAvg+
+   rtJjJp5wU2CQ17mvj/yOCTyE8wsPs0Jxncvv5Cmq+YIKdh4+eKlYx2Ve/
+   TD0yddvv+T5Dcz8XuaYSMSKXOg9Izvl93wQoEoKrKaNEUrRMtodd3INcN
+   mz3tHd1b7lfl3xRvaoH+Npcv+Lrb/tOKrbmScVszL5Sbl72TRsuJ1CUCo
+   Q==;
+X-CSE-ConnectionGUID: J1TiLBawSr2KzYCsCM9B8w==
+X-CSE-MsgGUID: PvK9cFmhSSuGKiW2MS4zkA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="20070432"
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="20070432"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 18:41:48 -0700
+X-CSE-ConnectionGUID: pZe5Jk+CRx2fW6QznX3OBg==
+X-CSE-MsgGUID: 2DA0hRI1T9ao5GyUV/3q3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
+   d="scan'208";a="26522102"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Apr 2024 18:41:47 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 15 Apr 2024 18:41:47 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 15 Apr 2024 18:41:47 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 15 Apr 2024 18:41:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aymL2a3Hr00VUBOKP6UIMpLAJHG6YVnmSKirF357cV99cIWlecrkhrCuufsQyq5iyF+JorlJTktN6x9LBEIxSlRNmD/BqhqA/dBViuW2DJY4G9lr2Sjn4B/fTlc0y7FLFKxhCtomihK0EdqyfyJ888PUsyNSfCpx9uyKt+i4140d4WfNjZRPJxgAooTqyTohSZj2xnW/RHUt6pPjzXBZK3knFEWKXU/VEOrPi0yui8hZYRKyLG86S57EQ6JwH6gJDyk2ei2FKmrN1NoLHZFj8T6AiY36kwOrE15Z0eiUu9jLVEhy2m6W18wdUoPlgTeDHbB2IBgnDEXtRzkQAQKmWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ztEYG9mkdQq9p3t5D67vv8lkVZ5COac6OngBZNn1ANo=;
+ b=B7AstNeNs7nSANRBPmnXmfEN8Nu0tEnNEvAeiZ4YteQrDaLN39youY+7cDeVG0AcK6p5KBYtf9Hht58y0K8abo3IWuMyBSqH0fdZytOKJvjy8CbxRuWQWq7bUCELkAg5AscoD2jabsXHjt3hZtsltWm3qFXFy6t9wLRkBvjnZZuCQOos915WK0zMj/GYePds3dognwWlIgFibpfKa6e5bhtb0aCw2ub2oSxp5cqNGt5AqnAb3kqFrUhguGcXwrBc23T7us+vNUbNKTOe3ioMfEAz6yoMsmNKSRWNLmhpDdhvw0KgbzIokEBMxrOvTUqObJFniEX3kov6bbMxRICJiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by MW4PR11MB6886.namprd11.prod.outlook.com (2603:10b6:303:224::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.26; Tue, 16 Apr
+ 2024 01:41:44 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::58dd:99ca:74a6:2e3e]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::58dd:99ca:74a6:2e3e%3]) with mapi id 15.20.7472.025; Tue, 16 Apr 2024
+ 01:41:44 +0000
+Date: Tue, 16 Apr 2024 09:41:36 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	<aubrey.li@linux.intel.com>, <yu.c.chen@intel.com>, <oliver.sang@intel.com>
+Subject: [bristot:dl_server_v6_try11] [sched/fair] 1abba9e7f4:
+ RIP:__dl_server_attach_root
+Message-ID: <202404160945.7f0031c5-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SI2PR01CA0039.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::16) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|MW4PR11MB6886:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e4199bf-603f-4d7a-6db6-08dc5db65f35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Sd00qNiGB20H7fHK02bwcfNuQPDIdiR/2y9lunF6BMzhvxNxe9HZtzf9z3vJ5zdNdYtU0uuYNvzR8dl/wV4Le9Ds0irwGjMCnJwKO0rbFubhuQCyQ0ZLNH2V26PBe9MSgNkXSsVp09643RMo0+upXr2S6YItUHDtKyTg3QxAxGc3lzhmw8LtICrC+oU5LF3Q6MegkwXsNWwEkFHmcjzZQoHiGIiEyedUWTVwyqfwWsG5lWlG+NUIFzTPLN4MkWLR8tb4N7Gd/DN6bs0oeysfmyIRln510X9sT0+w7S31XjjyGDzdc+EhTz0JSGW9FEVBkFdQvHXSw235WFcYOlf8oWZGgUXJf/B+EgDDqAcfLKVrrgrcGvNLiobob2aqdLTzqRU26g6EljgPu44kav2mrhBFp4WGUfu8vxYKh9pRXBNT8jL4WLw4EuhJjC6vvcU9sXFdFEoigIeFga358PchmsaH7woWsIIJLz6A2xKUtDAY3eYZimNNA5SUCiRqMcFZ578r9nQ+jH7t4267PlOpisnl6Kl9y/jJn7o7Z19m0cfX0lUq3tIhGJ+GuRAZ6WhoaXMS8bl9lDwWNLZtApUOE6HkBJNYcnGGDzT7QLB5mLV7SVvfVCoVhXrLf7DqYQsG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tYiNqBs9D2L3KoW2vUyGFvsyaJkYU9bKqHOSIl1AOy6SQ10+UEuP8X4ESEvn?=
+ =?us-ascii?Q?SZq9/8UN5uuHDeVSTajvwRY4Ue3WdYlzyH5vK9iMgZ9ApXY19kDb4khUtfn6?=
+ =?us-ascii?Q?L2aHorbsh2Q0Ac82BiucAp+djlWKLjddOfZWXNYlpk/6fWUq/E9fqoFEKhs6?=
+ =?us-ascii?Q?vNsjQU9kTTvP/GTA+23n54xQOFupq7GCnuMnNyfGRZDaDu6iSl2yFwBSAEnm?=
+ =?us-ascii?Q?QBqY7z2lPOCBdEA9a58x7Ns2twUllqMJxn9F5ocB++9WLe4YsjGBJWh58QB8?=
+ =?us-ascii?Q?YIdRffMeghpYU9Dez02yHjVT6m1pIm2udelTgzwhtdjCnpXELVA+CBAMfn+9?=
+ =?us-ascii?Q?vsAvY3a4FwLhuQkDvKi4koW368EIyLd9Pgjyq/1Q3i3/dUmZlv4I5dd9qLiH?=
+ =?us-ascii?Q?7aeMAo1GF8I7JrW2Pw5Gp3H1URsg8OMdOU+jtGleqZjD0aYY0ZmlAMaRmg5r?=
+ =?us-ascii?Q?K4OGmbTweBpVtW1H8aSm1ZG5Nhltl4JYPPYVmX9YZfEMJwFPWWAcMsQJdURc?=
+ =?us-ascii?Q?aLTxdiTyLp5jOeFL7ucSxlA2kidRRCmEMcs2usC+yTVsrRBzEPB0TVRRUN10?=
+ =?us-ascii?Q?e+6A8lIhzotDrAkrGL1rzi7hDT2bgXsOgWgSm+swRcB+UzPWoe/4omMeS9o7?=
+ =?us-ascii?Q?l4CzP6ljT1si4k2ZrMEV9klr2zL1AwIV/53NzLflcRUBCM0fk7RBEP6gqIZY?=
+ =?us-ascii?Q?ziOKmTE1C3qhSNFvZ67Lyhds94bAXKbUuFEbCjbBJz/okfKuss8Du6AkvYwP?=
+ =?us-ascii?Q?I0B7mglihl9yNqnippLNbWQqzj/RVY71phxH87+fy8leNx4Iumsu9PxUE4vk?=
+ =?us-ascii?Q?C/Is97NolX0NYrh1Az/JqZRztLB4t5T+uLcXuXik6zbKj34De5y+PnDsxt0K?=
+ =?us-ascii?Q?JUlveSmh159PVYBUf8PflLRo6lpiLQQO5L2u0aV2/o67kS+o6+JGv3sW7wbO?=
+ =?us-ascii?Q?JwCfyimcFFlV/IQPQzLteEVITZC5MZoIaaNKi6zXQ8mHuusv93NmTHMOG/Le?=
+ =?us-ascii?Q?UFCmMY7Vr/dIBv6dOzWV1JxZo0oKUahDzF79uQ/ESjIbbKJMd7UUfVwv0Yy6?=
+ =?us-ascii?Q?cn2tDB2jRgVT87WXTYuDcxRNdnwbnQ8n+KGp1mnVIzO9C4jTjzX7PIRrrQON?=
+ =?us-ascii?Q?LtC1nBpUr3wW86DjWYQk31rSUi8COXyVRQvMijQwlbWq1wU1pVnHtCJ6rqOf?=
+ =?us-ascii?Q?QYJiW7oWuvmb+5hiOwBjUpqEB++JALCm8spb75I1DDjAW4g27JIRnpx92RoV?=
+ =?us-ascii?Q?fKKJBLD9yCZF2WT1yi0lVJUNOeUWmwQzzXGdp5wre7U2jPfPxn+gwyV1lf0/?=
+ =?us-ascii?Q?lT4TV9xV6LgAhC3nVLHtu9xa0mLcaxBhrLcYxSS7KH60KnlWW7lGXK2Vzp6s?=
+ =?us-ascii?Q?hBdrmIEpzVc3VzPUFMyKIOq7I/O40kdray+kOkNOJJhM+6SL/SAprwamXzIN?=
+ =?us-ascii?Q?fDwIxpNdgb2nUOB4aUcHWKvHDEO5wTuvnNnpQYCPWPdOXO64uqjgFhx3+/oB?=
+ =?us-ascii?Q?ELO+gWt1jm1eeMKWNZ8mW+BCa27LWHxuM+5Re3QUAYa0DkZ2xWLUjziQKlcN?=
+ =?us-ascii?Q?83JQDWIRWPLjhGB/Y6GYUl2RMg3ihA1jmssViHY3F9uoy0Om8BzjQ8G57nm6?=
+ =?us-ascii?Q?9A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e4199bf-603f-4d7a-6db6-08dc5db65f35
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 01:41:44.4015
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CIFPxtkmsgyffD4donD9emChEwZjbifZviD8yDfFF0woxEQlxgZpfAIumpc+L0HpWissukAhVQeF1Bs2WVAwag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6886
+X-OriginatorOrg: intel.com
 
-On Mon, 15 Apr 2024, Yunsheng Lin wrote:
 
-> Use the newly introduced prepare/commit API to replace
-> page_frag with page_frag_cache for sk_page_frag().
->
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
-> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
-> .../chelsio/inline_crypto/chtls/chtls_io.c    | 101 ++++---------
-> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
-> drivers/net/tun.c                             |  34 ++---
-> include/linux/sched.h                         |   4 +-
-> include/net/sock.h                            |  14 +-
-> kernel/exit.c                                 |   3 +-
-> kernel/fork.c                                 |   2 +-
-> net/core/skbuff.c                             |  32 ++--
-> net/core/skmsg.c                              |  22 +--
-> net/core/sock.c                               |  46 ++++--
-> net/ipv4/ip_output.c                          |  35 +++--
-> net/ipv4/tcp.c                                |  35 ++---
-> net/ipv4/tcp_output.c                         |  28 ++--
-> net/ipv6/ip6_output.c                         |  35 +++--
-> net/kcm/kcmsock.c                             |  30 ++--
-> net/mptcp/protocol.c                          |  74 ++++++----
-> net/tls/tls_device.c                          | 139 ++++++++++--------
-> 18 files changed, 342 insertions(+), 298 deletions(-)
 
-Hi Yunsheng,
+Hello,
 
-Just focusing on mptcp:
+kernel test robot noticed "RIP:__dl_server_attach_root" on:
 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index f8bc34f0d973..368dd480c4cd 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -959,17 +959,16 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
-> }
->
-> /* we can append data to the given data frag if:
-> - * - there is space available in the backing page_frag
-> - * - the data frag tail matches the current page_frag free offset
-> + * - the data frag tail matches the current page and offset
->  * - the data frag end sequence number matches the current write seq
->  */
-> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
-> -				       const struct page_frag *pfrag,
-> +				       const struct page *page,
-> +				       const unsigned int offset,
-> 				       const struct mptcp_data_frag *df)
-> {
-> -	return df && pfrag->page == df->page &&
-> -		pfrag->size - pfrag->offset > 0 &&
-> -		pfrag->offset == (df->offset + df->data_len) &&
-> +	return df && page == df->page &&
-> +		offset == (df->offset + df->data_len) &&
-> 		df->data_seq + df->data_len == msk->write_seq;
-> }
->
-> @@ -1084,30 +1083,36 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
-> /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
->  * data
->  */
-> -static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
-> +static struct page *mptcp_page_frag_alloc_prepare(struct sock *sk,
-> +						  struct page_frag_cache *pfrag,
-> +						  unsigned int *offset,
-> +						  unsigned int *size, void **va)
-> {
-> -	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
-> -					pfrag, sk->sk_allocation)))
-> -		return true;
-> +	struct page *page;
-> +
-> +	page = page_frag_alloc_prepare(pfrag, offset, size, va,
-> +				       sk->sk_allocation);
-> +	if (likely(page))
-> +		return page;
->
-> 	mptcp_enter_memory_pressure(sk);
-> -	return false;
-> +	return NULL;
-> }
->
-> static struct mptcp_data_frag *
-> -mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
-> -		      int orig_offset)
-> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page *page,
-> +		      unsigned int orig_offset)
-> {
-> 	int offset = ALIGN(orig_offset, sizeof(long));
-> 	struct mptcp_data_frag *dfrag;
->
-> -	dfrag = (struct mptcp_data_frag *)(page_to_virt(pfrag->page) + offset);
-> +	dfrag = (struct mptcp_data_frag *)(page_to_virt(page) + offset);
-> 	dfrag->data_len = 0;
-> 	dfrag->data_seq = msk->write_seq;
-> 	dfrag->overhead = offset - orig_offset + sizeof(struct mptcp_data_frag);
-> 	dfrag->offset = offset + sizeof(struct mptcp_data_frag);
-> 	dfrag->already_sent = 0;
-> -	dfrag->page = pfrag->page;
-> +	dfrag->page = page;
->
-> 	return dfrag;
-> }
-> @@ -1792,7 +1797,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
-> static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> {
-> 	struct mptcp_sock *msk = mptcp_sk(sk);
-> -	struct page_frag *pfrag;
-> +	struct page_frag_cache *pfrag;
-> 	size_t copied = 0;
-> 	int ret = 0;
-> 	long timeo;
-> @@ -1831,9 +1836,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 	while (msg_data_left(msg)) {
-> 		int total_ts, frag_truesize = 0;
-> 		struct mptcp_data_frag *dfrag;
-> -		bool dfrag_collapsed;
-> -		size_t psize, offset;
-> +		bool dfrag_collapsed = false;
-> +		unsigned int offset, size;
-> +		struct page *page;
-> +		size_t psize;
-> 		u32 copy_limit;
-> +		void *va;
->
-> 		/* ensure fitting the notsent_lowat() constraint */
-> 		copy_limit = mptcp_send_limit(sk);
-> @@ -1844,21 +1852,31 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 		 * page allocator
-> 		 */
-> 		dfrag = mptcp_pending_tail(sk);
-> -		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
-> +		size = 32U;
-> +		page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset, &size,
-> +						     &va);
-> +		if (!page)
-> +			goto wait_for_memory;
-> +
-> +		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, page, offset,
-> +							     dfrag);
-> 		if (!dfrag_collapsed) {
-> -			if (!mptcp_page_frag_refill(sk, pfrag))
-> +			size = 32U + sizeof(struct mptcp_data_frag);
-> +			page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset,
-> +							     &size, &va);
+commit: 1abba9e7f47ad4a5dfd8b2dfb59aa607983cdce4 ("sched/fair: Fair server interface")
+git://git.kernel.org/cgit/linux/kernel/git/bristot/linux dl_server_v6_try11
 
-Since 'size' was updated to contain the maximum available space on the 
-first call to mptcp_page_frag_alloc_prepare(), is it necessary to call it 
-again instead of checking to see if 'size' is large enough for the 
-mptcp_data_frag struct?
+in testcase: kernel-selftests
+version: kernel-selftests-x86_64-7a6d30c9-1_20240318
+with following parameters:
 
-> +			if (!page)
-> 				goto wait_for_memory;
->
-> -			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
-> +			dfrag = mptcp_carve_data_frag(msk, page, offset);
-> 			frag_truesize = dfrag->overhead;
-> +			va += dfrag->overhead;
-> 		}
->
-> 		/* we do not bound vs wspace, to allow a single packet.
-> 		 * memory accounting will prevent execessive memory usage
-> 		 * anyway
-> 		 */
-> -		offset = dfrag->offset + dfrag->data_len;
-> -		psize = pfrag->size - offset;
-> +		psize = size - frag_truesize;
-> 		psize = min_t(size_t, psize, msg_data_left(msg));
-> 		psize = min_t(size_t, psize, copy_limit);
-> 		total_ts = psize + frag_truesize;
-> @@ -1866,8 +1884,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 		if (!sk_wmem_schedule(sk, total_ts))
-> 			goto wait_for_memory;
->
-> -		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
-> -					   page_address(dfrag->page) + offset);
-> +		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
-> 		if (ret)
-> 			goto do_error;
->
-> @@ -1876,7 +1893,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 		copied += psize;
-> 		dfrag->data_len += psize;
-> 		frag_truesize += psize;
-> -		pfrag->offset += frag_truesize;
-> 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
->
-> 		/* charge data on mptcp pending queue to the msk socket
-> @@ -1884,11 +1900,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> 		 */
-> 		sk_wmem_queued_add(sk, frag_truesize);
-> 		if (!dfrag_collapsed) {
-> -			get_page(dfrag->page);
-> +			page_frag_alloc_commit(pfrag, offset, frag_truesize);
+	group: cgroup
 
-It would be more efficient (but more complicated) to defer the commit 
-until the loop is done or the maximum frag size is reached. This would 
-perform more like the older code, which only had to call refill when 
-mptcp_frag_can_collapse_to() returned false.
 
-- Mat
 
-> 			list_add_tail(&dfrag->list, &msk->rtx_queue);
-> 			if (!msk->first_pending)
-> 				WRITE_ONCE(msk->first_pending, dfrag);
-> +		} else {
-> +			page_frag_alloc_commit_noref(pfrag, offset,
-> +						     frag_truesize);
-> 		}
-> +
-> 		pr_debug("msk=%p dfrag at seq=%llu len=%u sent=%u new=%d", msk,
-> 			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
-> 			 !dfrag_collapsed);
+compiler: gcc-13
+test machine: 36 threads 1 sockets Intel(R) Core(TM) i9-10980XE CPU @ 3.00GHz (Cascade Lake) with 32G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202404160945.7f0031c5-lkp@intel.com
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240416/202404160945.7f0031c5-lkp@intel.com
+
+
+[  387.680270][  T212] divide error: 0000 [#1] PREEMPT SMP KASAN NOPTI
+[  387.680905][  T212] CPU: 0 PID: 212 Comm: kworker/2:1 Not tainted 6.9.0-rc2-00003-g1abba9e7f47a #1
+[  387.681752][  T212] Hardware name: Gigabyte Technology Co., Ltd. X299 UD4 Pro/X299 UD4 Pro-CF, BIOS F8a 04/27/2021
+[  387.682702][  T212] Workqueue: events cpuset_hotplug_workfn
+[  387.683256][  T212] RIP: 0010:__dl_server_attach_root+0x143/0x430
+[  387.683848][  T212] Code: ea 03 80 3c 02 00 0f 85 d9 02 00 00 4c 01 a5 88 00 00 00 44 89 e0 41 81 fc 00 00 00 80 75 0a 41 83 fd ff 0f 84 1c 0e a7 02 99 <41> f7 fd f7 d8 89 04 24 e8 90 cb aa 02 85 c0 0f 85 6e 01 00 00 49
+[  387.685550][  T212] RSP: 0018:ffffc9000110f988 EFLAGS: 00010887
+[  387.686124][  T212] RAX: 0000000000000000 RBX: 0000000000047100 RCX: dffffc0000000000
+[  387.686861][  T212] RDX: 0000000000000000 RSI: 1ffffffff0bc1724 RDI: ffffffff86ef2948
+[  387.687602][  T212] RBP: ffffffff86ef28c0 R08: ffff888100058638 R09: fffff52000221f23
+[  387.688345][  T212] R10: 0000000000000003 R11: 0000000000000001 R12: 0000000000000000
+[  387.689083][  T212] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888805d47100
+[  387.689824][  T212] FS:  0000000000000000(0000) GS:ffff888805c00000(0000) knlGS:0000000000000000
+[  387.690646][  T212] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  387.691264][  T212] CR2: 0000000000451c00 CR3: 000000089ba7a002 CR4: 00000000003706f0
+[  387.692005][  T212] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  387.692744][  T212] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  387.693490][  T212] Call Trace:
+[  387.693842][  T212]  <TASK>
+[  387.694161][  T212]  ? die+0x36/0x90
+[  387.694551][  T212]  ? do_trap+0x19e/0x240
+[  387.694977][  T212]  ? __dl_server_attach_root+0x143/0x430
+[  387.695522][  T212]  ? __dl_server_attach_root+0x143/0x430
+[  387.696065][  T212]  ? do_error_trap+0xa3/0x170
+[  387.696526][  T212]  ? __dl_server_attach_root+0x143/0x430
+[  387.697066][  T212]  ? exc_divide_error+0x38/0x50
+[  387.697542][  T212]  ? __dl_server_attach_root+0x143/0x430
+[  387.698081][  T212]  ? asm_exc_divide_error+0x1a/0x20
+[  387.698592][  T212]  ? __dl_server_attach_root+0x143/0x430
+[  387.699133][  T212]  ? __dl_server_attach_root+0x100/0x430
+[  387.699675][  T212]  ? sched_clock+0x10/0x30
+[  387.700119][  T212]  ? lock_pin_lock+0x162/0x240
+[  387.700590][  T212]  rq_attach_root+0x3c1/0x490
+[  387.701055][  T212]  cpu_attach_domain+0x4c5/0x7e0
+[  387.701536][  T212]  ? mark_held_locks+0x96/0xe0
+[  387.702009][  T212]  partition_sched_domains_locked+0x356/0xa70
+[  387.702588][  T212]  rebuild_sched_domains_locked+0x2e1/0x480
+[  387.703149][  T212]  ? __pfx_rebuild_sched_domains_locked+0x10/0x10
+[  387.703754][  T212]  ? trace_contention_end+0xf0/0x140
+[  387.704353][  T212]  cpuset_hotplug_workfn+0x49b/0xe40
+[  387.704865][  T212]  ? __pfx_lock_acquire+0x10/0x10
+[  387.705354][  T212]  ? __pfx_cpuset_hotplug_workfn+0x10/0x10
+[  387.705908][  T212]  ? lock_is_held_type+0x8f/0x100
+[  387.706404][  T212]  process_one_work+0x804/0x1720
+[  387.706891][  T212]  ? __pfx_lock_acquire+0x10/0x10
+[  387.707385][  T212]  ? __pfx_process_one_work+0x10/0x10
+[  387.707903][  T212]  ? assign_work+0x16c/0x240
+[  387.708364][  T212]  worker_thread+0x724/0x1300
+[  387.708830][  T212]  ? __pfx_worker_thread+0x10/0x10
+[  387.710258][  T212]  kthread+0x2de/0x3c0
+[  387.710670][  T212]  ? __pfx_kthread+0x10/0x10
+[  387.711122][  T212]  ret_from_fork+0x31/0x70
+[  387.711565][  T212]  ? __pfx_kthread+0x10/0x10
+[  387.712023][  T212]  ret_from_fork_asm+0x1a/0x30
+[  387.712501][  T212]  </TASK>
+[  387.712828][  T212] Modules linked in: netconsole openvswitch nf_conncount nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 intel_rapl_msr intel_rapl_common nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp btrfs coretemp blake2b_generic xor zstd_compress kvm_intel raid6_pq libcrc32c kvm crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel sha512_ssse3 nvme rapl nvme_core ahci intel_cstate t10_pi libahci ipmi_devintf mei_me ipmi_msghandler wmi_bmof mxm_wmi intel_wmi_thunderbolt intel_uncore crc64_rocksoft_generic wdat_wdt libata crc64_rocksoft i2c_i801 crc64 ioatdma mei i2c_smbus dca wmi binfmt_misc loop fuse drm dm_mod ip_tables
+[  387.717730][  T212] ---[ end trace 0000000000000000 ]---
+[  387.718259][  T212] RIP: 0010:__dl_server_attach_root+0x143/0x430
+[  387.718852][  T212] Code: ea 03 80 3c 02 00 0f 85 d9 02 00 00 4c 01 a5 88 00 00 00 44 89 e0 41 81 fc 00 00 00 80 75 0a 41 83 fd ff 0f 84 1c 0e a7 02 99 <41> f7 fd f7 d8 89 04 24 e8 90 cb aa 02 85 c0 0f 85 6e 01 00 00 49
+[  387.720553][  T212] RSP: 0018:ffffc9000110f988 EFLAGS: 00010887
+[  387.721130][  T212] RAX: 0000000000000000 RBX: 0000000000047100 RCX: dffffc0000000000
+[  387.721871][  T212] RDX: 0000000000000000 RSI: 1ffffffff0bc1724 RDI: ffffffff86ef2948
+[  387.722616][  T212] RBP: ffffffff86ef28c0 R08: ffff888100058638 R09: fffff52000221f23
+[  387.723359][  T212] R10: 0000000000000003 R11: 0000000000000001 R12: 0000000000000000
+[  387.724101][  T212] R13: 0000000000000000 R14: 0000000000000002 R15: ffff888805d47100
+[  387.724839][  T212] FS:  0000000000000000(0000) GS:ffff888805c00000(0000) knlGS:0000000000000000
+[  387.725661][  T212] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  387.726277][  T212] CR2: 0000000000451c00 CR3: 000000089ba7a002 CR4: 00000000003706f0
+[  387.727017][  T212] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  387.727755][  T212] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  387.728499][  T212] Kernel panic - not syncing: Fatal exception
+[  387.729153][  T212] Kernel Offset: disabled
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
