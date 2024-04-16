@@ -1,188 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D69712F5B7;
-	Tue, 16 Apr 2024 14:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E76012CDB0;
+	Tue, 16 Apr 2024 14:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276667; cv=none; b=b6CtMCfSoqxVc9hVkjkuYTP8tz7LwigzrI6UzN4Sh4CH2RBGXqpF7FRlnWzf1EJOWqBCYi0jlO60hWRxDuNnOY8m9YjyjaHefu5k257g35K+1vn6ryadOQgwVx33IonZ52PvEXrG0KTfi8MpLnXycS4dLFOu3hwZXH7IecVNqgc=
+	t=1713276726; cv=none; b=HKyaC29oEn/hSv5317/8jjxlf8/vu7i+Osnedub1KdrbWghrzcEhojX8zNW3jjAK2bAqVA+2a0kmIn3jj+PpTwMyLrZV+yBMnc85JfWwOPdhghVN4nWDXifYnmHPWsIIs0HcbtiempOpAKM/ryGzR9TZRjM8JhqwvSDPFR3B+yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276667; c=relaxed/simple;
-	bh=gnbd2RQ+3wctyheUyU6clAJleG99mpq90RdQg9GTbNQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NhcpVKHa3p76w8dc8cWL6v7UD1utHYb59uYVa0fzmTzlrVIOWaeWlX02y3YPvn5mdjP0K6RPqB8xx/L89du39EyLW8E/6G2eHVjzu4yJO2FUg2QCMqXG7r/bF6En18c6yts/aLD/YqBl5ksor9uSYl8ChaCgxkJdEseJxr77+Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEnSi6sE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713276726; c=relaxed/simple;
+	bh=9lb0vxA4WQBvo8bA+3SRiWJn3KQMYj0rb9tY1M90M2g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FnhV0+tbmEmdATFB8G4iwvh5Ez575AYVNg3mVByyBj8QJZelk5RY7BtBKJScQlDSO4NM0CgGQjCo7bRcdOXoPMP+mPNDSI7npK6xV5oh9S4GfxX7z81JSEsLiXCnSkrJKavgXMdexLVRNewwfTbMHzpSTljzk9GlDmJtECbn25U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=PidpUtUk; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEnSi6sE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BF52C4AF08;
-	Tue, 16 Apr 2024 14:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713276666;
-	bh=gnbd2RQ+3wctyheUyU6clAJleG99mpq90RdQg9GTbNQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=BEnSi6sEfEy4ETnuX2tyAlbFU3a2WhICTdSAAhJc6cCjoZRYho6M2iM4SyMD0JWx5
-	 QDIj9dD9GSmaPzfHCOcY64foFkxrK3fgSys79boI6ku3nDRxelSuBKDG5j7/Y2Tpdw
-	 Drg2xd/5jxoeOm/xQ40GkZQwZdd+0ExD0a4bJCIRkDCT0+Gt5DC9I7wtGTlBWeONfz
-	 epxg69KPorBQJBigXSF7VwNJdMFomIQpedr/fCtoIBPfLJ6JK3JOB/SaQIqOfViqRP
-	 cb7vjD9GI1pHp3NvkqECm3QQwY0b+kQAOC7mVFECeg9uazU268pcP9xa6/HI990T+S
-	 aYPM0Ae6Ip5EQ==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Tue, 16 Apr 2024 16:08:31 +0200
-Subject: [PATCH bpf-next 18/18] selftests/bpf: wq: add bpf_wq_start()
- checks
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="PidpUtUk"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id BE625600A2;
+	Tue, 16 Apr 2024 14:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1713276718;
+	bh=9lb0vxA4WQBvo8bA+3SRiWJn3KQMYj0rb9tY1M90M2g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PidpUtUkGQyHqrq4m2n5FU4Gl18JgJySU1rvtQcHbKWXUS+S7ajBps43ud2ma1jQi
+	 9/wwyNTFc8qRRZRKW+X+T5kFAsMxtD0TL6H4FunB1GkZX71ELOeixpWTAZH0ecanAF
+	 lyOhLxgWlqs9RaVPGu9A0QhzNFlDElRQoZ2r/eM84kMC2eSpHKJIno/OLC4BBGaYY9
+	 qP8rKwLZS4pe5eceQvIeAj2W6gKa/S/cq6j9yJDdTzPL8DnRZLYgDtqZb8fQWxOPR3
+	 7FLMcyuKaE60fEy5dsOWtU0Ek72MCvamFC0v4f9QOHKKqg5HJiGRopHBKN7jEVFpEW
+	 YUOfSNR4IE3AA==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id A657820025D;
+	Tue, 16 Apr 2024 14:11:52 +0000 (UTC)
+Message-ID: <ce0a08e2-a74a-4059-97c4-a38cae788a0a@fiberby.net>
+Date: Tue, 16 Apr 2024 14:11:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-bpf_wq-v1-18-c9e66092f842@kernel.org>
-References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=3923;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=gnbd2RQ+3wctyheUyU6clAJleG99mpq90RdQg9GTbNQ=;
- b=mzIPuuOm/lFkrF62NVNgi+3On2eJg7VFrdRf4n38fn++QOsGIWqJb9YU8tvgORWM3sVh/ni3y
- YhwFhuWpvFsCMCKYndxDhjdyGcYoMm0m90DEhYDSoSeKzREEXqbbpxO
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] sfc: use flow_rule_no_unsupp_control_flags()
+To: Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Martin Habets <habetsm.xilinx@gmail.com>,
+ linux-net-drivers@amd.com
+References: <20240416134432.9527-1-ast@fiberby.net>
+ <496dba36-1d40-e7d1-1250-a350bc590902@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+In-Reply-To: <496dba36-1d40-e7d1-1250-a350bc590902@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Allows to test if allocation/free works
+Hi Ed,
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
----
- tools/testing/selftests/bpf/bpf_experimental.h |  1 +
- tools/testing/selftests/bpf/prog_tests/wq.c    | 22 ++++++++++++++++++++++
- tools/testing/selftests/bpf/progs/wq.c         | 22 +++++++++++++++++++---
- 3 files changed, 42 insertions(+), 3 deletions(-)
+On 4/16/24 1:57 PM, Edward Cree wrote:
+> On 16/04/2024 14:44, Asbjørn Sloth Tønnesen wrote:
+>> Adopt nfp-style *_FLOWER_SUPPORTED_CTLFLAGS define.
+>>
+>> Change the check for unsupported control flags, to use the new helper
+>> flow_rule_is_supp_control_flags().
+>>
+>> Since the helper was based on sfc, then nothing really changes.
+>>
+>> Compile-tested, and compiled objects are identical.
+>>
+>> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+> 
+> Subject line doesn't match the patch (I guess because the helper
+>   got renamed).
 
-diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 272604f9c4a5..19dffa32fc08 100644
---- a/tools/testing/selftests/bpf/bpf_experimental.h
-+++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -471,6 +471,7 @@ extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __
- extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
- 
- extern int bpf_wq_init(struct bpf_wq *wq, void *map, unsigned int flags) __weak __ksym;
-+extern int bpf_wq_start(struct bpf_wq *wq, unsigned int flags) __weak __ksym;
- extern int bpf_wq_set_callback_impl(struct bpf_wq *wq,
- 		int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
- 		unsigned int flags__k, void *aux__ign) __ksym;
-diff --git a/tools/testing/selftests/bpf/prog_tests/wq.c b/tools/testing/selftests/bpf/prog_tests/wq.c
-index 26ab69796103..8a4a91d944cc 100644
---- a/tools/testing/selftests/bpf/prog_tests/wq.c
-+++ b/tools/testing/selftests/bpf/prog_tests/wq.c
-@@ -6,9 +6,31 @@
- 
- void serial_test_wq(void)
- {
-+	struct wq *wq_skel = NULL;
-+	int err, prog_fd;
-+
- 	LIBBPF_OPTS(bpf_test_run_opts, topts);
- 
- 	RUN_TESTS(wq);
-+
-+	/* re-run the success test to check if the timer was actually executed */
-+
-+	wq_skel = wq__open_and_load();
-+	if (!ASSERT_OK_PTR(wq_skel, "wq_skel_load"))
-+		return;
-+
-+	err = wq__attach(wq_skel);
-+	if (!ASSERT_OK(err, "wq_attach"))
-+		return;
-+
-+	prog_fd = bpf_program__fd(wq_skel->progs.test_syscall_array_sleepable);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	ASSERT_OK(err, "test_run");
-+	ASSERT_EQ(topts.retval, 0, "test_run");
-+
-+	usleep(50); /* 10 usecs should be enough, but give it extra */
-+
-+	ASSERT_EQ(wq_skel->bss->ok_sleepable, (1 << 1), "ok_sleepable");
- }
- 
- void serial_test_failures_wq(void)
-diff --git a/tools/testing/selftests/bpf/progs/wq.c b/tools/testing/selftests/bpf/progs/wq.c
-index c0a094c84834..0cdb9d273e60 100644
---- a/tools/testing/selftests/bpf/progs/wq.c
-+++ b/tools/testing/selftests/bpf/progs/wq.c
-@@ -49,6 +49,11 @@ struct {
- 	__type(value, struct elem);
- } lru SEC(".maps");
- 
-+#define CLOCK_MONOTONIC 1
-+
-+__u32 ok;
-+__u32 ok_sleepable;
-+
- static int test_elem_callback(void *map, int *key,
- 		int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
- 		u64 callback_flags)
-@@ -56,6 +61,10 @@ static int test_elem_callback(void *map, int *key,
- 	struct elem init = {}, *val;
- 	struct bpf_wq *wq;
- 
-+	if ((ok & (1 << *key) ||
-+	    (ok_sleepable & (1 << *key))))
-+		return -22;
-+
- 	if (map == &lru &&
- 	    bpf_map_update_elem(map, key, &init, 0))
- 		return -1;
-@@ -71,6 +80,9 @@ static int test_elem_callback(void *map, int *key,
- 	if (bpf_wq_set_callback(wq, callback_fn, callback_flags))
- 		return -4;
- 
-+	if (bpf_wq_start(wq, 0))
-+		return -5;
-+
- 	return 0;
- }
- 
-@@ -81,6 +93,10 @@ static int test_hmap_elem_callback(void *map, int *key,
- 	struct hmap_elem init = {}, *val;
- 	struct bpf_wq *wq;
- 
-+	if ((ok & (1 << *key) ||
-+	    (ok_sleepable & (1 << *key))))
-+		return -22;
-+
- 	if (bpf_map_update_elem(map, key, &init, 0))
- 		return -1;
- 
-@@ -95,12 +111,12 @@ static int test_hmap_elem_callback(void *map, int *key,
- 	if (bpf_wq_set_callback(wq, callback_fn, callback_flags))
- 		return -4;
- 
-+	if (bpf_wq_start(wq, 0))
-+		return -5;
-+
- 	return 0;
- }
- 
--__u32 ok;
--__u32 ok_sleepable;
--
- /* callback for non sleepable workqueue */
- static int wq_callback(void *map, int *key, struct bpf_wq *work)
- {
+Correct, through I had fixed it everywhere. Apparently I missed one.
+
+
+>> ---
+>>   drivers/net/ethernet/sfc/tc.c | 10 ++++++----
+>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/tc.c b/drivers/net/ethernet/sfc/tc.c
+>> index 82e8891a619a..5f73f1dea524 100644
+>> --- a/drivers/net/ethernet/sfc/tc.c
+>> +++ b/drivers/net/ethernet/sfc/tc.c
+>> @@ -21,6 +21,10 @@
+>>   #include "ef100_rep.h"
+>>   #include "efx.h"
+>>   
+>> +#define SFC_FLOWER_SUPPORTED_CTLFLAGS \
+>> +	(FLOW_DIS_IS_FRAGMENT | \
+>> +	 FLOW_DIS_FIRST_FRAG)
+> 
+> I'd rather keep the flags in-line, next to where they're actually
+>   used.  I.e. we have
+>      if (flags & FRAGMENT)
+>          blah;
+>      if (flags & FIRST_FRAG)
+>          foo;
+>      if (!blah_supported(FRAGMENT | FIRST_FRAG))
+>          return -EEK;
+>   and it's very clear that anyone changing one of those parts also
+>   needs to change the other.  Whereas with your #define it's not
+>   immediately obvious to someone reading the code where that set
+>   of supported flags comes from conceptually.
+
+Ok, I liked the NFP-style #define, but will drop trying to expand that.
+
+pw-bot: changes-requested
 
 -- 
-2.44.0
-
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
