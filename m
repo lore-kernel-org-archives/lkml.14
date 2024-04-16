@@ -1,290 +1,237 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5370312C462;
-	Tue, 16 Apr 2024 13:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F75B1292C9
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273095; cv=none; b=ox6sr3F4MGbeFgFsrhD9MAxaaHIUXXS/vlvJsNSSpD9az4dCLQNmv5QqPd0Q828zNQMQzjoBeH8wOGuz0UGEXFB+rMyIo7U9twdc5+YknKxtgF56YaLIYfFPf3mg8sErhJb/JUecqYFRkMU7+UPC8x2NP7oT3ZE5HGClSKr/Zyw=
+	t=1713273262; cv=none; b=g/veikIciJQTcx5RfvD4VpMRHUFeLbn7daVcZ2DNVG9VN8DQ9N+yV0AnJlx/TMvUTj0am/r4K+tdUnFvA9L5w0jU5bvbr/veE6+BWHt8l8IRi3iwohTNr89+Q38h1TOEW5G0UkJydefFhMlwdarSBhNnCgsTL9Oo0P072hYdQ24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273095; c=relaxed/simple;
-	bh=VtghAz6a6yMkKLtdSyh9PvKwZg9JMfOvq9+2URGMbVY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RmPYDqPXOfdzPwPi8QYWJv+o+PbIkwbooyQo17ki3nMwz4bIB2FhJmsz0EFAAvPGbf3/L28iJjApulF4UWWTJmygS6mCx+pgxNkkwKg8xAaeL5UDRdsdZCJ7bX2YC9ylI8tXq6qFy1YHXjkdeZmrGhL4UGcQOc4Ka8PpuAVO6kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VJkqs31Nmz2CcLY;
-	Tue, 16 Apr 2024 21:08:25 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id B099118002D;
-	Tue, 16 Apr 2024 21:11:22 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 16 Apr
- 2024 21:11:22 +0800
-Subject: Re: [PATCH net-next v2 13/15] net: replace page_frag with
- page_frag_cache
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
- Dumazet <edumazet@google.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	Boris Pismenny <borisp@nvidia.com>, <bpf@vger.kernel.org>,
-	<mptcp@lists.linux.dev>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
- <20240415131941.51153-14-linyunsheng@huawei.com>
- <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <cb541985-a06d-7a71-9e6d-38827ccdf875@huawei.com>
-Date: Tue, 16 Apr 2024 21:11:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1713273262; c=relaxed/simple;
+	bh=H2aDO5hRUHxVtBzoQM9q506rMIo3n75KR3eMoKFiDYc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XTqo6URdvlVmcWZ8bVwEkUBZYbb9HPoGtznx7oFmVrM2TuXdlvJTEDp/zQJXb5NzyUpdGsbeTFp9j+hUZSyvqA2BkkGRokwOx/ldKwh+U/5NgGff1tdul+RtpS+19MGQFxwl6klSvkN67sxUgBENWbT4ouk1na686W1nHGhpxgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d9913d3174so195840839f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 06:14:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713273260; x=1713878060;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H6OYGGa+wa2bluQBe1fsFpWf24/pbrMDuPRSn5WUZ0s=;
+        b=XIE7lC2PlFb5mnw0hxQKCfi0+KoY056OhNAMEGvTfook0AJSjYg46reJlF6+Ofrww4
+         +nihU+8dmsjiousOw1Utb8XmCs8ct6gsjlJIq3KdyjEp60UCVnBnpbS43r6hyHGBihHE
+         aKq4ooBQKGfsH0FJaV8na7FCtU8kXwYYIXl21uWfcvVqAKgf0+FGfXjzJdX9GNHTkVMD
+         A5r3L8+jbMtI5trxJy4srXEy7EHsj4es70HynWEi7Or5xZH2ma6VZCzuoHdKEzrRLfRk
+         311e6W7MwPs0wyQOo3Y8DaWG+VIJLDKMxV0ZkYr0smhmIDt9zlSsKhazTvMf8gAuoP27
+         OKSA==
+X-Forwarded-Encrypted: i=1; AJvYcCX13T/oND4/LN4ECMhZmSsSPqmC7gkaOqzg2UFHQaqEDOFQu3qfMieb3xmr+zfb6xyPBT0mEfsOgZJk88R+ozpikhm6m/55F6AKngWX
+X-Gm-Message-State: AOJu0YyaL8nx0F0I9YbtELLRg3+JYIok+ejhAHWWHB0TgOdmI0TL0JTD
+	FQRodRIHZSWyPGmR/d6JzU0pXOSMVo9S4uMNSrTjRCw/aMNAC3tygmJvkZ6pZ/5qYhuYmKHo2tO
+	sp728dtYxkDXOkw152qgJnW8pdfmgF4HcR1+vVz4D2VVKuuGK9qHUc6I=
+X-Google-Smtp-Source: AGHT+IHFcLT+SeKYEa1nZIMuGAxPYbpk88VWrLpxCjt8Qya/sIvTrCRjnTAnuQM08lS23mL0hGpTJ231t2DRdz+1Kckmt7Fs5b21
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-Received: by 2002:a05:6638:8917:b0:482:fa6f:78f1 with SMTP id
+ jc23-20020a056638891700b00482fa6f78f1mr571514jab.6.1713273260230; Tue, 16 Apr
+ 2024 06:14:20 -0700 (PDT)
+Date: Tue, 16 Apr 2024 06:14:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000145ce00616368490@google.com>
+Subject: [syzbot] [exfat?] possible deadlock in exfat_page_mkwrite
+From: syzbot <syzbot+d88216a7af9446d57d59@syzkaller.appspotmail.com>
+To: linkinjeon@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/4/16 9:37, Mat Martineau wrote:
-> On Mon, 15 Apr 2024, Yunsheng Lin wrote:
-> 
->> Use the newly introduced prepare/commit API to replace
->> page_frag with page_frag_cache for sk_page_frag().
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
->> .../chelsio/inline_crypto/chtls/chtls_io.c    | 101 ++++---------
->> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
->> drivers/net/tun.c                             |  34 ++---
->> include/linux/sched.h                         |   4 +-
->> include/net/sock.h                            |  14 +-
->> kernel/exit.c                                 |   3 +-
->> kernel/fork.c                                 |   2 +-
->> net/core/skbuff.c                             |  32 ++--
->> net/core/skmsg.c                              |  22 +--
->> net/core/sock.c                               |  46 ++++--
->> net/ipv4/ip_output.c                          |  35 +++--
->> net/ipv4/tcp.c                                |  35 ++---
->> net/ipv4/tcp_output.c                         |  28 ++--
->> net/ipv6/ip6_output.c                         |  35 +++--
->> net/kcm/kcmsock.c                             |  30 ++--
->> net/mptcp/protocol.c                          |  74 ++++++----
->> net/tls/tls_device.c                          | 139 ++++++++++--------
->> 18 files changed, 342 insertions(+), 298 deletions(-)
-> 
-> Hi Yunsheng,
-> 
-> Just focusing on mptcp:
+Hello,
 
-Thanks for reviewing.
+syzbot found the following issue on:
 
-> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index f8bc34f0d973..368dd480c4cd 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -959,17 +959,16 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
->> }
->>
->> /* we can append data to the given data frag if:
->> - * - there is space available in the backing page_frag
->> - * - the data frag tail matches the current page_frag free offset
->> + * - the data frag tail matches the current page and offset
->>  * - the data frag end sequence number matches the current write seq
->>  */
->> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
->> -                       const struct page_frag *pfrag,
->> +                       const struct page *page,
->> +                       const unsigned int offset,
->>                        const struct mptcp_data_frag *df)
->> {
->> -    return df && pfrag->page == df->page &&
->> -        pfrag->size - pfrag->offset > 0 &&
->> -        pfrag->offset == (df->offset + df->data_len) &&
->> +    return df && page == df->page &&
->> +        offset == (df->offset + df->data_len) &&
->>         df->data_seq + df->data_len == msk->write_seq;
->> }
->>
->> @@ -1084,30 +1083,36 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
->> /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
->>  * data
->>  */
->> -static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
->> +static struct page *mptcp_page_frag_alloc_prepare(struct sock *sk,
->> +                          struct page_frag_cache *pfrag,
->> +                          unsigned int *offset,
->> +                          unsigned int *size, void **va)
->> {
->> -    if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
->> -                    pfrag, sk->sk_allocation)))
->> -        return true;
->> +    struct page *page;
->> +
->> +    page = page_frag_alloc_prepare(pfrag, offset, size, va,
->> +                       sk->sk_allocation);
->> +    if (likely(page))
->> +        return page;
->>
->>     mptcp_enter_memory_pressure(sk);
->> -    return false;
->> +    return NULL;
->> }
->>
->> static struct mptcp_data_frag *
->> -mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
->> -              int orig_offset)
->> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page *page,
->> +              unsigned int orig_offset)
->> {
->>     int offset = ALIGN(orig_offset, sizeof(long));
->>     struct mptcp_data_frag *dfrag;
->>
->> -    dfrag = (struct mptcp_data_frag *)(page_to_virt(pfrag->page) + offset);
->> +    dfrag = (struct mptcp_data_frag *)(page_to_virt(page) + offset);
->>     dfrag->data_len = 0;
->>     dfrag->data_seq = msk->write_seq;
->>     dfrag->overhead = offset - orig_offset + sizeof(struct mptcp_data_frag);
->>     dfrag->offset = offset + sizeof(struct mptcp_data_frag);
->>     dfrag->already_sent = 0;
->> -    dfrag->page = pfrag->page;
->> +    dfrag->page = page;
->>
->>     return dfrag;
->> }
->> @@ -1792,7 +1797,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
->> static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->> {
->>     struct mptcp_sock *msk = mptcp_sk(sk);
->> -    struct page_frag *pfrag;
->> +    struct page_frag_cache *pfrag;
->>     size_t copied = 0;
->>     int ret = 0;
->>     long timeo;
->> @@ -1831,9 +1836,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>     while (msg_data_left(msg)) {
->>         int total_ts, frag_truesize = 0;
->>         struct mptcp_data_frag *dfrag;
->> -        bool dfrag_collapsed;
->> -        size_t psize, offset;
->> +        bool dfrag_collapsed = false;
->> +        unsigned int offset, size;
->> +        struct page *page;
->> +        size_t psize;
->>         u32 copy_limit;
->> +        void *va;
->>
->>         /* ensure fitting the notsent_lowat() constraint */
->>         copy_limit = mptcp_send_limit(sk);
->> @@ -1844,21 +1852,31 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>          * page allocator
->>          */
->>         dfrag = mptcp_pending_tail(sk);
->> -        dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
->> +        size = 32U;
->> +        page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset, &size,
->> +                             &va);
->> +        if (!page)
->> +            goto wait_for_memory;
->> +
->> +        dfrag_collapsed = mptcp_frag_can_collapse_to(msk, page, offset,
->> +                                 dfrag);
->>         if (!dfrag_collapsed) {
->> -            if (!mptcp_page_frag_refill(sk, pfrag))
->> +            size = 32U + sizeof(struct mptcp_data_frag);
->> +            page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset,
->> +                                 &size, &va);
-> 
-> Since 'size' was updated to contain the maximum available space on the first call to mptcp_page_frag_alloc_prepare(), is it necessary to call it again instead of checking to see if 'size' is large enough for the mptcp_data_frag struct?
+HEAD commit:    66e4190e92ce Add linux-next specific files for 20240416
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15817767180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c247afaa437e6409
+dashboard link: https://syzkaller.appspot.com/bug?extid=d88216a7af9446d57d59
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-As the first call to the mptcp_page_frag_alloc_prepare() with the size
-being 32U, the maximum available space might less than '32U +
-sizeof(struct mptcp_data_frag)', in that case we need to call the
-mptcp_page_frag_alloc_prepare() with the size being '32U +
-sizeof(struct mptcp_data_frag)' anyway, so I am not sure if checking
-the maximum available space on the first call to
-mptcp_page_frag_alloc_prepare() before making the second call will
-make the thing simpler.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> 
->> +            if (!page)
->>                 goto wait_for_memory;
->>
->> -            dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
->> +            dfrag = mptcp_carve_data_frag(msk, page, offset);
->>             frag_truesize = dfrag->overhead;
->> +            va += dfrag->overhead;
->>         }
->>
->>         /* we do not bound vs wspace, to allow a single packet.
->>          * memory accounting will prevent execessive memory usage
->>          * anyway
->>          */
->> -        offset = dfrag->offset + dfrag->data_len;
->> -        psize = pfrag->size - offset;
->> +        psize = size - frag_truesize;
->>         psize = min_t(size_t, psize, msg_data_left(msg));
->>         psize = min_t(size_t, psize, copy_limit);
->>         total_ts = psize + frag_truesize;
->> @@ -1866,8 +1884,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>         if (!sk_wmem_schedule(sk, total_ts))
->>             goto wait_for_memory;
->>
->> -        ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
->> -                       page_address(dfrag->page) + offset);
->> +        ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
->>         if (ret)
->>             goto do_error;
->>
->> @@ -1876,7 +1893,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>         copied += psize;
->>         dfrag->data_len += psize;
->>         frag_truesize += psize;
->> -        pfrag->offset += frag_truesize;
->>         WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
->>
->>         /* charge data on mptcp pending queue to the msk socket
->> @@ -1884,11 +1900,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>          */
->>         sk_wmem_queued_add(sk, frag_truesize);
->>         if (!dfrag_collapsed) {
->> -            get_page(dfrag->page);
->> +            page_frag_alloc_commit(pfrag, offset, frag_truesize);
-> 
-> It would be more efficient (but more complicated) to defer the commit until the loop is done or the maximum frag size is reached. This would perform more like the older code, which only had to call refill when mptcp_frag_can_collapse_to() returned false.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/86891dae5f9c/disk-66e4190e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1ca383660bf2/vmlinux-66e4190e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/bf6ff37d3fcc/bzImage-66e4190e.xz
 
-page_frag_alloc_commit() is a inlined helper, it does not seems
-to be an issue here as it is updating the reference counting
-and offset as the old code does with less overhead.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d88216a7af9446d57d59@syzkaller.appspotmail.com
 
-Maybe what we could do is to do the prepare in the inline
-helper instead of a function when cache is enough, so that
-we can avoid a function call as the old code does, as an
-inlined function requires less overhead and is generally
-faster than a function call.
+======================================================
+WARNING: possible circular locking dependency detected
+6.9.0-rc4-next-20240416-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.0/17125 is trying to acquire lock:
+ffff88805e616b38 (&sb->s_type->i_mutex_key#24){++++}-{3:3}, at: inode_lock include/linux/fs.h:791 [inline]
+ffff88805e616b38 (&sb->s_type->i_mutex_key#24){++++}-{3:3}, at: exfat_page_mkwrite+0x43a/0xea0 fs/exfat/file.c:629
 
-But that requires more refactoring, as this patchset is bigger
-enough now, I guess we try it later if it is possible.
+but task is already holding lock:
+ffff88802dc76518 (sb_pagefaults#4){.+.+}-{0:0}, at: do_page_mkwrite+0x19b/0x480 mm/memory.c:3097
+
+which lock already depends on the new lock.
 
 
-> 
-> - Mat
-> 
+the existing dependency chain (in reverse order) is:
+
+-> #2 (sb_pagefaults#4){.+.+}-{0:0}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
+       __sb_start_write include/linux/fs.h:1659 [inline]
+       sb_start_pagefault include/linux/fs.h:1824 [inline]
+       exfat_page_mkwrite+0x161/0xea0 fs/exfat/file.c:619
+       do_page_mkwrite+0x19b/0x480 mm/memory.c:3097
+       do_shared_fault mm/memory.c:4977 [inline]
+       do_fault mm/memory.c:5039 [inline]
+       do_pte_missing mm/memory.c:3881 [inline]
+       handle_pte_fault+0x1298/0x6dc0 mm/memory.c:5359
+       __handle_mm_fault mm/memory.c:5500 [inline]
+       handle_mm_fault+0x10e7/0x1bb0 mm/memory.c:5665
+       do_user_addr_fault arch/x86/mm/fault.c:1420 [inline]
+       handle_page_fault arch/x86/mm/fault.c:1512 [inline]
+       exc_page_fault+0x2b9/0x900 arch/x86/mm/fault.c:1570
+       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+       __put_user_4+0x11/0x20 arch/x86/lib/putuser.S:86
+       __sys_socketpair+0x186/0x720 net/socket.c:1756
+       __do_sys_socketpair net/socket.c:1822 [inline]
+       __se_sys_socketpair net/socket.c:1819 [inline]
+       __x64_sys_socketpair+0x9b/0xb0 net/socket.c:1819
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&mm->mmap_lock){++++}-{3:3}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       gup_fast_fallback+0x24c/0x2b40 mm/gup.c:3442
+       pin_user_pages_fast+0xcc/0x160 mm/gup.c:3566
+       iov_iter_extract_user_pages lib/iov_iter.c:1583 [inline]
+       iov_iter_extract_pages+0x3db/0x720 lib/iov_iter.c:1646
+       dio_refill_pages fs/direct-io.c:173 [inline]
+       dio_get_page fs/direct-io.c:214 [inline]
+       do_direct_IO fs/direct-io.c:916 [inline]
+       __blockdev_direct_IO+0x150a/0x49b0 fs/direct-io.c:1249
+       blockdev_direct_IO include/linux/fs.h:3182 [inline]
+       exfat_direct_IO+0x1b4/0x3d0 fs/exfat/inode.c:526
+       generic_file_read_iter+0x231/0x430 mm/filemap.c:2783
+       new_sync_read fs/read_write.c:395 [inline]
+       vfs_read+0x9c4/0xbd0 fs/read_write.c:476
+       ksys_read+0x1a0/0x2c0 fs/read_write.c:619
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&sb->s_type->i_mutex_key#24){++++}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       down_write+0x3a/0x50 kernel/locking/rwsem.c:1579
+       inode_lock include/linux/fs.h:791 [inline]
+       exfat_page_mkwrite+0x43a/0xea0 fs/exfat/file.c:629
+       do_page_mkwrite+0x19b/0x480 mm/memory.c:3097
+       do_shared_fault mm/memory.c:4977 [inline]
+       do_fault mm/memory.c:5039 [inline]
+       do_pte_missing mm/memory.c:3881 [inline]
+       handle_pte_fault+0x1298/0x6dc0 mm/memory.c:5359
+       __handle_mm_fault mm/memory.c:5500 [inline]
+       handle_mm_fault+0x10e7/0x1bb0 mm/memory.c:5665
+       do_user_addr_fault arch/x86/mm/fault.c:1420 [inline]
+       handle_page_fault arch/x86/mm/fault.c:1512 [inline]
+       exc_page_fault+0x2b9/0x900 arch/x86/mm/fault.c:1570
+       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+
+other info that might help us debug this:
+
+Chain exists of:
+  &sb->s_type->i_mutex_key#24 --> &mm->mmap_lock --> sb_pagefaults#4
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  rlock(sb_pagefaults#4);
+                               lock(&mm->mmap_lock);
+                               lock(sb_pagefaults#4);
+  lock(&sb->s_type->i_mutex_key#24);
+
+ *** DEADLOCK ***
+
+2 locks held by syz-executor.0/17125:
+ #0: ffff88804e4ce098 (&mm->mmap_lock){++++}-{3:3}, at: mmap_read_trylock include/linux/mmap_lock.h:163 [inline]
+ #0: ffff88804e4ce098 (&mm->mmap_lock){++++}-{3:3}, at: get_mmap_lock_carefully mm/memory.c:5692 [inline]
+ #0: ffff88804e4ce098 (&mm->mmap_lock){++++}-{3:3}, at: lock_mm_and_find_vma+0x32/0x2f0 mm/memory.c:5752
+ #1: ffff88802dc76518 (sb_pagefaults#4){.+.+}-{0:0}, at: do_page_mkwrite+0x19b/0x480 mm/memory.c:3097
+
+stack backtrace:
+CPU: 1 PID: 17125 Comm: syz-executor.0 Not tainted 6.9.0-rc4-next-20240416-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+ down_write+0x3a/0x50 kernel/locking/rwsem.c:1579
+ inode_lock include/linux/fs.h:791 [inline]
+ exfat_page_mkwrite+0x43a/0xea0 fs/exfat/file.c:629
+ do_page_mkwrite+0x19b/0x480 mm/memory.c:3097
+ do_shared_fault mm/memory.c:4977 [inline]
+ do_fault mm/memory.c:5039 [inline]
+ do_pte_missing mm/memory.c:3881 [inline]
+ handle_pte_fault+0x1298/0x6dc0 mm/memory.c:5359
+ __handle_mm_fault mm/memory.c:5500 [inline]
+ handle_mm_fault+0x10e7/0x1bb0 mm/memory.c:5665
+ do_user_addr_fault arch/x86/mm/fault.c:1420 [inline]
+ handle_page_fault arch/x86/mm/fault.c:1512 [inline]
+ exc_page_fault+0x2b9/0x900 arch/x86/mm/fault.c:1570
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+RIP: 0033:0x7f59f325f107
+Code: 7e 6f 44 16 e0 48 29 fe 48 83 e1 e0 48 01 ce 0f 1f 40 00 c5 fe 6f 4e 60 c5 fe 6f 56 40 c5 fe 6f 5e 20 c5 fe 6f 26 48 83 c6 80 <c5> fd 7f 49 60 c5 fd 7f 51 40 c5 fd 7f 59 20 c5 fd 7f 21 48 83 c1
+RSP: 002b:00007ffd52a03428 EFLAGS: 00010203
+RAX: 00000000200027c0 RBX: 0000000000000004 RCX: 0000000020003c20
+RDX: 0000000000001500 RSI: 00007f59f2e02adf RDI: 00000000200027c0
+RBP: 00007f59f33ac050 R08: 0000000000000000 R09: 0000000000000054
+R10: 0000000000000000 R11: 0000000000000001 R12: 00007ffd52a035e0
+R13: 0000000000000001 R14: ffffffffffffffff R15: 00007f59f3234cb0
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
