@@ -1,260 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9677E8485
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 02:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C08485;
+	Tue, 16 Apr 2024 02:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713235295; cv=none; b=XrOfrv8J+L2g6cZ+IqINe0bB6/Ny+WH14Heu8axVmz3aaWL9f3otsStvI5iVY64k4msbh720/cUR3+GpoqvmFXA/F2bGnG/dwX7yhuX1BNv3QCx5BNlu4w2NlUSVjToyV/L0kgmu5YLENrwt5XDt/Q6dBcJ3WOe0KQczUXkghTc=
+	t=1713235476; cv=none; b=NGAf7sQf4kTq8ItA0O6C6jXh+XyVE3baiLWUjjwIqyy7CkDAKVPPN+F0Fa465YwOrJ/LAivclr62I0RO1p+qP63d4CCc1VPbtfzFJh1Sdzhv03Ri+8lH6YacR6eHbjiJnj8xancTp91J9Gww7iTEzQXAYQJ4kZlDodcZ7GSNtFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713235295; c=relaxed/simple;
-	bh=AF47lIYi7jUHNQdyQADHspwYl4p62TwwbeI5R4cu2sY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=G0gk6FutZnBr4evNkKGad2tkIJgQZIr4kQmCPY1m3ivrbBJhQDkFfaWuJsXAnV0b2LwoA+To41q7lS50qw9Fe0FKO8RuSzjESBpjLiCGwcFYNpe+AjUBk2f/PHjTCcjb++933yfU9oSFGoof4D3tgzNx1d8sNCuAGD1aum1Expc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O6RvZjS+; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713235476; c=relaxed/simple;
+	bh=WOP6vQcoqzks8WSee7OrShtu3+FKMyr2tXm7Fba/t1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BPzPa/+xAjBFNA+55BU1qJCjzf+qyuvVZ8lJ+jagU0uYwMKynW1gupfTnw4MKPIuvLaZr4LPDfOYuxewNOYNyejRnWBSYamRDh3YCu3O6K5ZhbK3+6LrLcLQLPOp+KhH6DuRCHxeLtM17ktWpDXJhlPLpTe033qwdU1NkjtPz3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=F9JT0Pvj; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O6RvZjS+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713235294; x=1744771294;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=AF47lIYi7jUHNQdyQADHspwYl4p62TwwbeI5R4cu2sY=;
-  b=O6RvZjS+NDqzAYyeU93SrwDu7u0T9+ScRcuVU7RxGEq82Z//G5w0tWJR
-   D76BiTod0IiZJq//pVwws1lQTKnNSP+ADATYcx/yICXGgsHbN5lbEWvTw
-   n40y7gZtl8hq9H7yXInkjm2HIF+tToERVI8ftdN5PJ2KUZCzi72Mn3wmI
-   eYu3e/1nUE0tEFFMMC47eBBW4B5nVj859IzXpsAGbflWrgKFm25cClynP
-   Y+WJBeW2AkxnimSJkKD0o8cS8AlME4Cx8+6wmUOCYyQYk5v65m5CpdLIc
-   7Izm0mBwO92fNL4uA6OlnqUPF9CQ2MF9x4qIjRUOC70asjSL1/BqWHo/j
-   A==;
-X-CSE-ConnectionGUID: 3+EM1bE2Ru66xKJpLm1QqA==
-X-CSE-MsgGUID: S60cezNuSVumHAscCt9smg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="9205602"
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="9205602"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 19:41:33 -0700
-X-CSE-ConnectionGUID: we6sQxMVTBua8dKd6KhhLQ==
-X-CSE-MsgGUID: G5IGqF7NRJiZww5sVUapIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="59553320"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 19:41:28 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: Khalid Aziz <khalid.aziz@oracle.com>,  akpm@linux-foundation.org,
-  linux-mm@kvack.org,  baolin.wang@linux.alibaba.com,  chrisl@kernel.org,
-  david@redhat.com,  hanchuanhua@oppo.com,  hannes@cmpxchg.org,
-  hughd@google.com,  kasong@tencent.com,  ryan.roberts@arm.com,
-  surenb@google.com,  v-songbaohua@oppo.com,  willy@infradead.org,
-  xiang@kernel.org,  yosryahmed@google.com,  yuzhao@google.com,
-  ziy@nvidia.com,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] mm: swap: entirely map large folios found in
- swapcache
-In-Reply-To: <CAGsJ_4xHVN_QXu5Q8c_FcjsnffZYWsjOx4KR4G_2GNyaxfVWAw@mail.gmail.com>
-	(Barry Song's message of "Tue, 16 Apr 2024 14:36:08 +1200")
-References: <20240409082631.187483-1-21cnbao@gmail.com>
-	<20240409082631.187483-5-21cnbao@gmail.com>
-	<87frvn2f89.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4x_bOchG=bJjR8WE=vQxu3ke8fkxcDOFhqX5FS_a-0heA@mail.gmail.com>
-	<8734rm2gdj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4xHVN_QXu5Q8c_FcjsnffZYWsjOx4KR4G_2GNyaxfVWAw@mail.gmail.com>
-Date: Tue, 16 Apr 2024 10:39:34 +0800
-Message-ID: <87y19e115l.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F9JT0Pvj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1713235470;
+	bh=fxHKmx6FXKZbRduyay5x+5YXC7g5gOcmxuvTB4fmgXs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=F9JT0Pvj5V+l5thEcdKGemIPFQ9HOe253uXXjBukxsZNFQcCoeczklOltNUq5tteB
+	 ObkGzhf8w+xiiNA1MnJigWpKTLviFDdaMW170z2I6+W4h0z2y6OzwNQWZrn2JFYFQF
+	 UmIQoiVmjZQVtgt9VgshQdaF0I5UoUe30ZuyaiPgxTGXAn4OChiUr+0alI/IY/FcIC
+	 M2X/mUwsfleT3CTygdxNaBR7rC82ZUsbwCtWJd7f8Ezgf8YyANM8UysOI0r487mOS7
+	 nkP497ODLi9WjrcClqT7OH93Hv/m8GCK0nmBf4mwgDOW0ThAM+vTyePt1Ccilwoo9K
+	 vXp6OHkrYj2UA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VJSzy1vyhz4wcn;
+	Tue, 16 Apr 2024 12:44:29 +1000 (AEST)
+Date: Tue, 16 Apr 2024 12:44:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, Al
+ Viro <viro@ZenIV.linux.org.uk>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Miklos Szeredi
+ <mszeredi@redhat.com>
+Subject: linux-next: manual merge of the block tree with the vfs-brauner,
+ vfs trees
+Message-ID: <20240416124426.624cfaf9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; boundary="Sig_/m8f_evjuhWhg6A1r=yhb4Q6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/m8f_evjuhWhg6A1r=yhb4Q6
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Barry Song <21cnbao@gmail.com> writes:
+Hi all,
 
-> On Tue, Apr 16, 2024 at 2:27=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->>
->> Added Khalid for arch_do_swap_page().
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > On Mon, Apr 15, 2024 at 8:39=E2=80=AFPM Huang, Ying <ying.huang@intel.=
-com> wrote:
->> >>
->> >> Barry Song <21cnbao@gmail.com> writes:
->>
->> [snip]
->>
->> >>
->> >> > +     bool any_swap_shared =3D false;
->> >> >
->> >> >       if (!pte_unmap_same(vmf))
->> >> >               goto out;
->> >> > @@ -4137,6 +4141,35 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->> >> >        */
->> >> >       vmf->pte =3D pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->a=
-ddress,
->> >> >                       &vmf->ptl);
->> >>
->> >> We should move pte check here.  That is,
->> >>
->> >>         if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->=
-orig_pte)))
->> >>                 goto out_nomap;
->> >>
->> >> This will simplify the situation for large folio.
->> >
->> > the plan is moving the whole code block
->> >
->> > if (start_pte && folio_test_large(folio) && folio_test_swapcache(folio=
-))
->> >
->> > after
->> >         if (unlikely(!folio_test_uptodate(folio))) {
->> >                 ret =3D VM_FAULT_SIGBUS;
->> >                 goto out_nomap;
->> >         }
->> >
->> > though we couldn't be !folio_test_uptodate(folio)) for hitting
->> > swapcache but it seems
->> > logically better for future use.
->>
->> LGTM, Thanks!
->>
->> >>
->> >> > +
->> >> > +     /* We hit large folios in swapcache */
->> >>
->> >> The comments seems unnecessary because the code tells that already.
->> >>
->> >> > +     if (start_pte && folio_test_large(folio) && folio_test_swapca=
-che(folio)) {
->> >> > +             int nr =3D folio_nr_pages(folio);
->> >> > +             int idx =3D folio_page_idx(folio, page);
->> >> > +             unsigned long folio_start =3D vmf->address - idx * PA=
-GE_SIZE;
->> >> > +             unsigned long folio_end =3D folio_start + nr * PAGE_S=
-IZE;
->> >> > +             pte_t *folio_ptep;
->> >> > +             pte_t folio_pte;
->> >> > +
->> >> > +             if (unlikely(folio_start < max(vmf->address & PMD_MAS=
-K, vma->vm_start)))
->> >> > +                     goto check_pte;
->> >> > +             if (unlikely(folio_end > pmd_addr_end(vmf->address, v=
-ma->vm_end)))
->> >> > +                     goto check_pte;
->> >> > +
->> >> > +             folio_ptep =3D vmf->pte - idx;
->> >> > +             folio_pte =3D ptep_get(folio_ptep);
->> >>
->> >> It's better to construct pte based on fault PTE via generalizing
->> >> pte_next_swp_offset() (may be pte_move_swp_offset()).  Then we can fi=
-nd
->> >> inconsistent PTEs quicker.
->> >
->> > it seems your point is getting the pte of page0 by pte_next_swp_offset=
-()
->> > unfortunately pte_next_swp_offset can't go back. on the other hand,
->> > we have to check the real pte value of the 0nd entry right now because
->> > swap_pte_batch() only really reads pte from the 1st entry. it assumes
->> > pte argument is the real value for the 0nd pte entry.
->> >
->> > static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t =
-pte)
->> > {
->> >         pte_t expected_pte =3D pte_next_swp_offset(pte);
->> >         const pte_t *end_ptep =3D start_ptep + max_nr;
->> >         pte_t *ptep =3D start_ptep + 1;
->> >
->> >         VM_WARN_ON(max_nr < 1);
->> >         VM_WARN_ON(!is_swap_pte(pte));
->> >         VM_WARN_ON(non_swap_entry(pte_to_swp_entry(pte)));
->> >
->> >         while (ptep < end_ptep) {
->> >                 pte =3D ptep_get(ptep);
->> >
->> >                 if (!pte_same(pte, expected_pte))
->> >                         break;
->> >
->> >                 expected_pte =3D pte_next_swp_offset(expected_pte);
->> >                 ptep++;
->> >         }
->> >
->> >         return ptep - start_ptep;
->> > }
->>
->> Yes.  You are right.
->>
->> But we may check whether the pte of page0 is same as "vmf->orig_pte -
->> folio_page_idx()" (fake code).
->
-> right, that is why we are reading and checking PTE0 before calling
-> swap_pte_batch()
-> right now.
->
->   folio_ptep =3D vmf->pte - idx;
->   folio_pte =3D ptep_get(folio_ptep);
->   if (!is_swap_pte(folio_pte) || non_swap_entry(pte_to_swp_entry(folio_pt=
-e)) ||
->       swap_pte_batch(folio_ptep, nr, folio_pte, &any_swap_shared) !=3D nr)
->    goto check_pte;
->
-> So, if I understand correctly, you're proposing that we should directly c=
-heck
-> PTE0 in swap_pte_batch(). Personally, I don't have any objections to this=
- idea.
-> However, I'd also like to hear the feedback from Ryan and David :-)
+Today's linux-next merge of the block tree got a conflict in:
 
-I mean that we can replace=20
+  io_uring/rw.c
 
-        !is_swap_pte(folio_pte) || non_swap_entry(pte_to_swp_entry(folio_pt=
-e))
+between commits:
 
-in above code with pte_same() with constructed expected first pte.
+  210a03c9d51a ("fs: claw back a few FMODE_* bits")
+  7c98f7cb8fda ("remove call_{read,write}_iter() functions")
 
->>
->> You need to check the pte of page 0 anyway.
->>
->> >>
->> >> > +             if (!is_swap_pte(folio_pte) || non_swap_entry(pte_to_=
-swp_entry(folio_pte)) ||
->> >> > +                 swap_pte_batch(folio_ptep, nr, folio_pte, &any_sw=
-ap_shared) !=3D nr)
->> >> > +                     goto check_pte;
->> >> > +
->> >> > +             start_address =3D folio_start;
->> >> > +             start_pte =3D folio_ptep;
->> >> > +             nr_pages =3D nr;
->> >> > +             entry =3D folio->swap;
->> >> > +             page =3D &folio->page;
->> >> > +     }
->> >> > +
->> >> > +check_pte:
->> >> >       if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->=
-orig_pte)))
->> >> >               goto out_nomap;
->> >> >
->> >> > @@ -4190,6 +4223,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->> >> >                        */
->> >> >                       exclusive =3D false;
->> >> >               }
->> >> > +
->> >> > +             /* Reuse the whole large folio iff all entries are ex=
-clusive */
->> >> > +             if (nr_pages > 1 && any_swap_shared)
->> >> > +                     exclusive =3D false;
->> >> >       }
->> >> >
+from the vfs-brauner, vfs trees and commits:
 
-[snip]
+  a9165b83c193 ("io_uring/rw: always setup io_async_rw for read/write reque=
+sts")
+  0d10bd77a1be ("io_uring: get rid of struct io_rw_state")
 
---
-Best Regards,
-Huang, Ying
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc io_uring/rw.c
+index d517a1a29274,3134a6ece1be..000000000000
+--- a/io_uring/rw.c
++++ b/io_uring/rw.c
+@@@ -1028,13 -1003,13 +1004,13 @@@ int io_write(struct io_kiocb *req, unsi
+  	if (force_nonblock) {
+  		/* If the file doesn't support async, just async punt */
+  		if (unlikely(!io_file_supports_nowait(req)))
+- 			goto copy_iov;
++ 			goto ret_eagain;
+ =20
+ -		/* File path supports NOWAIT for non-direct_IO only for block devices. =
+*/
+ +		/* Check if we can support NOWAIT. */
+  		if (!(kiocb->ki_flags & IOCB_DIRECT) &&
+ -			!(kiocb->ki_filp->f_mode & FMODE_BUF_WASYNC) &&
+ -			(req->flags & REQ_F_ISREG))
+ +		    !(req->file->f_op->fop_flags & FOP_BUFFER_WASYNC) &&
+ +		    (req->flags & REQ_F_ISREG))
+- 			goto copy_iov;
++ 			goto ret_eagain;
+ =20
+  		kiocb->ki_flags |=3D IOCB_NOWAIT;
+  	} else {
+@@@ -1055,9 -1028,9 +1029,9 @@@
+  	kiocb->ki_flags |=3D IOCB_WRITE;
+ =20
+  	if (likely(req->file->f_op->write_iter))
+- 		ret2 =3D req->file->f_op->write_iter(kiocb, &s->iter);
+ -		ret2 =3D call_write_iter(req->file, kiocb, &io->iter);
+++		ret2 =3D req->file->f_op->write_iter(kiocb, &io->iter);
+  	else if (req->file->f_op->write)
+- 		ret2 =3D loop_rw_iter(WRITE, rw, &s->iter);
++ 		ret2 =3D loop_rw_iter(WRITE, rw, &io->iter);
+  	else
+  		ret2 =3D -EINVAL;
+ =20
+
+--Sig_/m8f_evjuhWhg6A1r=yhb4Q6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYd5goACgkQAVBC80lX
+0Gzdhgf7B/64lJSehzi2t9+TjMayIbnv5trux8hxlGjDICXLRDhuBAE9nCQwddTB
+z9osMIAVuYl4D/+4ocJYWPEX7nyhGL1gMP7Gam1fW7XZhdm27veSH2XGkt2NRhVh
+BkaGdK5QY+nQsWsyl4+U9ZpbFWFk9EiWaUkRGdakRmclBB7g3K+nWvyPg6BVlGSw
+/17/5hO8FGVk6cisBAvqzfvebUNBW+JCuBU1bTilxtC4efcYO/nYd2hBRuraK8ME
+lRVcncKv4IRXKcHg2miblzpUqFHxyivAzqguS3GkwjB8W3VMde2TrDSvnrjqn3zP
+GcExA4J4DWwz/Wl995OCQhrjudhGSg==
+=2tLZ
+-----END PGP SIGNATURE-----
+
+--Sig_/m8f_evjuhWhg6A1r=yhb4Q6--
