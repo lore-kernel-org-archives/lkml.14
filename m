@@ -1,57 +1,57 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A887130ACC
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D5613328A
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713287862; cv=none; b=gLVjIoMnDyXWptZijsqmW+az5FQHenAVuKjjKAaitD7b0wL4YBjomtTz3NkXNtIVOyFec+y11VJ4ZBR5FliV6JheN9CGVSyAXcGQv36efTSBUcrXWiCEW0wELCo9TwXiybwJ6SCI3n+xOAtaF1d4b44Hb3B233wI1iry+HyY9E0=
+	t=1713287865; cv=none; b=JgNAAFPBCQgHqjFVQK2dICaCZ3+fEMsnhBDcyk57XX5m/RT34bQT0mga2fBEOrisEIQCxf90EOATYJBBwFqiOYfXEZ9jWxPYtZRtYk7W8sLxQDWCLaLA0//B4JIMbxFyvnQQhChysE1gGLTKDMZwqpVTREMNRLnW/ZCTXEfDApE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713287862; c=relaxed/simple;
-	bh=EKXb7yQw/fe0FE8px0sxnaU+bNGR8VwStnqSeNJAK78=;
+	s=arc-20240116; t=1713287865; c=relaxed/simple;
+	bh=K+AcM58mzm3c+Yj4n6jUi7czYSLj2qZzGkTpu3p4bY4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EpNV2hQRYY18k2LgxsqGlqXxWr2gkWfuAY/Ywqj2eO6c7kZ/7wVgtg52LTkcT0nZMOdaufSPC2U9OugYJvdGWVkQyF1A4asLch1pzShOGcHdk+9+kxv6wn0xTqDMr6dsQrTJA4TjNOb5K4TMwri4Z1KX8dzPgprNx/atr5c9+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=c7Jb77B/; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version; b=o5vpea/q9Eo5J8mgiU/Uphwd1VLv/OcWvRFsn6I0ypGXmq7qrYLf9lRYkrEKzQVsOJ9SW0JzRmA/eTMda31rP5IX/6ixe/34IxWHRrwRYp1AyAHblEHxXU7xL0HX6wdJW58R46aK4wBUustVNnlxK7S6OuYWdQmv2OAouAl4VPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=beDKDeXb; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="c7Jb77B/"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4187981999fso12470305e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:17:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="beDKDeXb"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d8b194341eso42914031fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1713287859; x=1713892659; darn=vger.kernel.org;
+        d=9elements.com; s=google; t=1713287862; x=1713892662; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3OfhnCdRCj4VDt6eW9kP3dOI/qEqIsCJXQa6tBxYksk=;
-        b=c7Jb77B/BPEIHOx7JJlTtzAV0DJKPXAdmN2W/lq7AVN2h+5m+LJeoPv53c7Z4aXp5+
-         8bdC1d+3QftXvakUAYPw6uiIQLz7EpnNU4ofO6UJ3tYQk+VYwjoiNc0QFeTNo76llCz0
-         0SSwomDBu+XKxESkn61DlE5VvdgMS8Ea1sJkOtKABLAEisc+xjRhUB6lfpdhkpohZYqm
-         52JRgd012xA7poByPzcpP9TpR7T0vggHLEagxI1fAsWhSwQkHiROwkQJDyqKlTSRuftC
-         //mZRhBvCMfI7mUuPBPUb/UjfC5Hzg+NC0ln0+TeLQNfB3znNoY9Ni/A0P0OanVW4Fw4
-         EWYw==
+        bh=q9szDnQQbde3VV2IBcUFfpImhQV+pZQtTN+ukiHfUzk=;
+        b=beDKDeXbza7SovrS1cZv7uoN/TI1TQlvt6j2cXHrkeLlB31DCRR0pPzih2vbkytfNU
+         4seXUuekYrNEDcmSd8Dz2R5Vvr4J/OjVOxT6b4E0UpE4y/H/Z5/o6w8RJ4Li7Ig9pdr0
+         MdUDXcOyCibEudwUYSVl3rU0F2hDqGIGf7v9yBgDbj+haJrRVetEWHdooDuGkER7sGPn
+         2SimrAkel0Sk7uVJgdZgngcfoA6SU6t1XHIcck7x1Q0WfSjaxhD/aGDgmxYotBqcQzy8
+         BYby34OflAF9QNMyVdL5BgNljRf2tJgFjYuIvzKTq1nWLct+fF01VORMLZ63lBb8TjDk
+         9Vlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713287859; x=1713892659;
+        d=1e100.net; s=20230601; t=1713287862; x=1713892662;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3OfhnCdRCj4VDt6eW9kP3dOI/qEqIsCJXQa6tBxYksk=;
-        b=L7PkV7+P4YeOSTy03HkswDMrUnn4uaEwFAJB37rMisxBcz017t7OdU/mROEkoOD/zF
-         7aGt/kPkX4jZyqn88uJISqS79ddCQTOKARGGJoeRy8tESmYkMJhPkp2fvQ1dC80KRYG/
-         vcmGg5CYkBCADXk/efX+SecMc1zWbQdIJlX9tIsQ77c66vCMZj2iPhzKrK/LPrBLmP5y
-         LLsvRMjhgERSH9qSO7z7sAP3HSwnRhc8IgG5xPUjkqrhvxEQzdy1oxWSW3T8HUWbT51k
-         7kBs+fcy56Nz+SAgmQt/lRCHYdK8A3XBrjZash7ksq571gsF7LLj4iJ1No0iU1DMzbhG
-         bFRw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwFN3UIVRkMYC5B0qOrhHbGpD+7l5NkNm/BFBwgsZp5auBmKiTGCHBvj5Pt9mkuE7016xe83l2cfqJip1zaCmpB1w3zisraV26pED8
-X-Gm-Message-State: AOJu0YxscEZUS3IvYZiWrqaPiorFeo3Y0bKhakopotJ9JmF214X26X5l
-	ouW8mu4EhfbVh00UDR8oF3BxUpCKVH46gqbKR+z9RpkQ3W1j9g1TPNPMzLaIwJM=
-X-Google-Smtp-Source: AGHT+IEzjiaX1n6oQ+liuW4MzJZY5btpgRV0JOFHDzPw647K0dBRyKO/Tjhf3hGYY7dRl/P8Gl3KRQ==
-X-Received: by 2002:a05:600c:4506:b0:417:fbc2:caf8 with SMTP id t6-20020a05600c450600b00417fbc2caf8mr8135607wmo.23.1713287858595;
-        Tue, 16 Apr 2024 10:17:38 -0700 (PDT)
+        bh=q9szDnQQbde3VV2IBcUFfpImhQV+pZQtTN+ukiHfUzk=;
+        b=DyBhrZJS+TzgSTwA5bwLPelXP4t6LIfbnV6zlFObBYHD0j6w5FlD9Is2sgnWdvfX2N
+         0Wee6aJTEY6n1XT3c27XwTufY8lOTatqknaybNQvB5jT4bvxfcOfw9XqIK2jKDbCn5Ur
+         0wMU+BkelIB+2YLUrebn6G5v6XYS/nJPskhUStSBFzZsvx8yaNTh2cfqV+YIRbXAAtUi
+         HD/uWzE+99/mLijbbacahqsLhnJPACFPz7Y3OIF3CPHg0qC1mQd63I+FkFQeQ+EudThK
+         DEN1U0ju0R6LjonHlu/VujK3x3UsHboBjDF/oC8/No4YAIla88AIpGCWN3hAaKb+9+lF
+         L47g==
+X-Forwarded-Encrypted: i=1; AJvYcCXmytpQooxXriXosvL7Spel5h279Vd2D/7WhYp7mjnEkK4AFXzL9k/hBlJGJn9CsC5QA9qS4SO6/urb/lGXKOr/5d9La8umIBjn6zBb
+X-Gm-Message-State: AOJu0YxHzUp6K2/1ZJVIxdiazgv2bggixhjWLCRaHtOo5HTqFtoU/ru7
+	D6QWJotKFGamOs/qMt8C48NrpEKYj0gYGluwVz9k5QUjeNnDBl8ux0CuFBk4pE8=
+X-Google-Smtp-Source: AGHT+IGLRpchh8fCb3JwVTeDpOl5q4sI3WjzpV1Yd+fEmrWhWELlTVObROUZTQfbF04fOfPbA7xxEg==
+X-Received: by 2002:a2e:a308:0:b0:2d8:68ad:1e87 with SMTP id l8-20020a2ea308000000b002d868ad1e87mr7859413lje.18.1713287862022;
+        Tue, 16 Apr 2024 10:17:42 -0700 (PDT)
 Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id w7-20020a05600c474700b004182fab5098sm13016326wmo.20.2024.04.16.10.17.37
+        by smtp.gmail.com with ESMTPSA id w7-20020a05600c474700b004182fab5098sm13016326wmo.20.2024.04.16.10.17.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 10:17:38 -0700 (PDT)
+        Tue, 16 Apr 2024 10:17:41 -0700 (PDT)
 From: Naresh Solanki <naresh.solanki@9elements.com>
 To: Guenter Roeck <linux@roeck-us.net>,
 	krzysztof.kozlowski+dt@linaro.org,
@@ -59,11 +59,10 @@ To: Guenter Roeck <linux@roeck-us.net>,
 	Jean Delvare <jdelvare@suse.com>
 Cc: Naresh Solanki <naresh.solanki@9elements.com>,
 	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
-Date: Tue, 16 Apr 2024 22:47:15 +0530
-Message-ID: <20240416171720.2875916-2-naresh.solanki@9elements.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] hwmon (max6639): Remove hwmon init with group
+Date: Tue, 16 Apr 2024 22:47:17 +0530
+Message-ID: <20240416171720.2875916-4-naresh.solanki@9elements.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240416171720.2875916-1-naresh.solanki@9elements.com>
 References: <20240416171720.2875916-1-naresh.solanki@9elements.com>
@@ -75,308 +74,261 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Utilise pwm subsystem for fan pwm handling
-
 Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 ---
- drivers/hwmon/Kconfig   |   1 +
- drivers/hwmon/max6639.c | 200 ++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 191 insertions(+), 10 deletions(-)
+ drivers/hwmon/max6639.c | 232 ----------------------------------------
+ 1 file changed, 232 deletions(-)
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 257ec5360e35..c9cc74f8c807 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1224,6 +1224,7 @@ config SENSORS_MAX6639
- 	tristate "Maxim MAX6639 sensor chip"
- 	depends on I2C
- 	select REGMAP_I2C
-+	depends on PWM
- 	help
- 	  If you say yes here you get support for the MAX6639
- 	  sensor chips.
 diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
-index 1af93fc53cb5..f37fdd161154 100644
+index d9b23202d7a2..c39f32316fe2 100644
 --- a/drivers/hwmon/max6639.c
 +++ b/drivers/hwmon/max6639.c
-@@ -20,6 +20,7 @@
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/platform_data/max6639.h>
-+#include <linux/pwm.h>
- #include <linux/regmap.h>
- 
- /* Addresses to scan */
-@@ -55,6 +56,9 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
- #define MAX6639_GCONFIG_PWM_FREQ_HI		0x08
- 
- #define MAX6639_FAN_CONFIG1_PWM			0x80
-+#define MAX6639_REG_FAN_CONFIG2a_PWM_POL	0x02
-+#define MAX6639_FAN_CONFIG3_FREQ_MASK		0x03
-+#define MAX6639_REG_TARGTDUTY_SLOT		120
- 
- #define MAX6639_FAN_CONFIG3_THERM_FULL_SPEED	0x40
- 
-@@ -62,6 +66,10 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
- 
- static const int rpm_ranges[] = { 2000, 4000, 8000, 16000 };
- 
-+/* Supported PWM frequency */
-+static const unsigned int freq_table[] = { 20, 33, 50, 100, 5000, 8333, 12500,
-+					   25000 };
-+
- #define FAN_FROM_REG(val, rpm_range)	((val) == 0 || (val) == 255 ? \
- 				0 : (rpm_ranges[rpm_range] * 30) / (val))
- #define TEMP_LIMIT_TO_REG(val)	clamp_val((val) / 1000, 0, 255)
-@@ -93,6 +101,9 @@ struct max6639_data {
- 
- 	/* Optional regulator for FAN supply */
- 	struct regulator *reg;
-+	/* max6639 pwm chip */
-+	struct pwm_chip chip;
-+	struct pwm_device *pwmd[MAX6639_NDEV]; /* max6639 has two pwm device */
- };
- 
- static struct max6639_data *max6639_update_device(struct device *dev)
-@@ -271,8 +282,11 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *dev_attr,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(data->pwmd[attr->index], &state);
- 
--	return sprintf(buf, "%d\n", data->pwm[attr->index] * 255 / 120);
-+	return sprintf(buf, "%d\n", pwm_get_relative_duty_cycle(&state, 255));
+@@ -165,233 +165,6 @@ static struct max6639_data *max6639_update_device(struct device *dev)
+ 	return ret;
  }
  
- static ssize_t pwm_store(struct device *dev,
-@@ -281,6 +295,7 @@ static ssize_t pwm_store(struct device *dev,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
-+	struct pwm_state state;
- 	unsigned long val;
- 	int res;
- 
-@@ -290,10 +305,10 @@ static ssize_t pwm_store(struct device *dev,
- 
- 	val = clamp_val(val, 0, 255);
- 
+-static ssize_t temp_input_show(struct device *dev,
+-			       struct device_attribute *dev_attr, char *buf)
+-{
+-	long temp;
+-	struct max6639_data *data = max6639_update_device(dev);
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-
+-	if (IS_ERR(data))
+-		return PTR_ERR(data);
+-
+-	temp = data->temp[attr->index] * 125;
+-	return sprintf(buf, "%ld\n", temp);
+-}
+-
+-static ssize_t temp_fault_show(struct device *dev,
+-			       struct device_attribute *dev_attr, char *buf)
+-{
+-	struct max6639_data *data = max6639_update_device(dev);
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-
+-	if (IS_ERR(data))
+-		return PTR_ERR(data);
+-
+-	return sprintf(buf, "%d\n", data->temp_fault[attr->index]);
+-}
+-
+-static ssize_t temp_max_show(struct device *dev,
+-			     struct device_attribute *dev_attr, char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-
+-	return sprintf(buf, "%d\n", (data->temp_therm[attr->index] * 1000));
+-}
+-
+-static ssize_t temp_max_store(struct device *dev,
+-			      struct device_attribute *dev_attr,
+-			      const char *buf, size_t count)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-	unsigned long val;
+-	int res;
+-
+-	res = kstrtoul(buf, 10, &val);
+-	if (res)
+-		return res;
+-
 -	mutex_lock(&data->update_lock);
--	data->pwm[attr->index] = (u8)(val * 120 / 255);
--	regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(attr->index), data->pwm[attr->index]);
+-	data->temp_therm[attr->index] = TEMP_LIMIT_TO_REG(val);
+-	regmap_write(data->regmap, MAX6639_REG_THERM_LIMIT(attr->index),
+-		     data->temp_therm[attr->index]);
 -	mutex_unlock(&data->update_lock);
-+	pwm_get_state(data->pwmd[attr->index], &state);
-+	pwm_set_relative_duty_cycle(&state, val, 255);
-+	pwm_apply_state(data->pwmd[attr->index], &state);
-+
- 	return count;
- }
+-	return count;
+-}
+-
+-static ssize_t temp_crit_show(struct device *dev,
+-			      struct device_attribute *dev_attr, char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-
+-	return sprintf(buf, "%d\n", (data->temp_alert[attr->index] * 1000));
+-}
+-
+-static ssize_t temp_crit_store(struct device *dev,
+-			       struct device_attribute *dev_attr,
+-			       const char *buf, size_t count)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-	unsigned long val;
+-	int res;
+-
+-	res = kstrtoul(buf, 10, &val);
+-	if (res)
+-		return res;
+-
+-	mutex_lock(&data->update_lock);
+-	data->temp_alert[attr->index] = TEMP_LIMIT_TO_REG(val);
+-	regmap_write(data->regmap, MAX6639_REG_ALERT_LIMIT(attr->index),
+-		     data->temp_alert[attr->index]);
+-	mutex_unlock(&data->update_lock);
+-	return count;
+-}
+-
+-static ssize_t temp_emergency_show(struct device *dev,
+-				   struct device_attribute *dev_attr,
+-				   char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-
+-	return sprintf(buf, "%d\n", (data->temp_ot[attr->index] * 1000));
+-}
+-
+-static ssize_t temp_emergency_store(struct device *dev,
+-				    struct device_attribute *dev_attr,
+-				    const char *buf, size_t count)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-	unsigned long val;
+-	int res;
+-
+-	res = kstrtoul(buf, 10, &val);
+-	if (res)
+-		return res;
+-
+-	mutex_lock(&data->update_lock);
+-	data->temp_ot[attr->index] = TEMP_LIMIT_TO_REG(val);
+-	regmap_write(data->regmap, MAX6639_REG_OT_LIMIT(attr->index), data->temp_ot[attr->index]);
+-	mutex_unlock(&data->update_lock);
+-	return count;
+-}
+-
+-static ssize_t pwm_show(struct device *dev, struct device_attribute *dev_attr,
+-			char *buf)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-	struct pwm_state state;
+-
+-	pwm_get_state(data->pwmd[attr->index], &state);
+-
+-	return sprintf(buf, "%d\n", pwm_get_relative_duty_cycle(&state, 255));
+-}
+-
+-static ssize_t pwm_store(struct device *dev,
+-			 struct device_attribute *dev_attr, const char *buf,
+-			 size_t count)
+-{
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-	struct max6639_data *data = dev_get_drvdata(dev);
+-	struct pwm_state state;
+-	unsigned long val;
+-	int res;
+-
+-	res = kstrtoul(buf, 10, &val);
+-	if (res)
+-		return res;
+-
+-	val = clamp_val(val, 0, 255);
+-
+-	pwm_get_state(data->pwmd[attr->index], &state);
+-	pwm_set_relative_duty_cycle(&state, val, 255);
+-	pwm_apply_state(data->pwmd[attr->index], &state);
+-
+-	return count;
+-}
+-
+-static ssize_t fan_input_show(struct device *dev,
+-			      struct device_attribute *dev_attr, char *buf)
+-{
+-	struct max6639_data *data = max6639_update_device(dev);
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-
+-	if (IS_ERR(data))
+-		return PTR_ERR(data);
+-
+-	return sprintf(buf, "%d\n", FAN_FROM_REG(data->fan[attr->index],
+-		       data->rpm_range[attr->index]));
+-}
+-
+-static ssize_t alarm_show(struct device *dev,
+-			  struct device_attribute *dev_attr, char *buf)
+-{
+-	struct max6639_data *data = max6639_update_device(dev);
+-	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+-
+-	if (IS_ERR(data))
+-		return PTR_ERR(data);
+-
+-	return sprintf(buf, "%d\n", !!(data->status & (1 << attr->index)));
+-}
+-
+-static SENSOR_DEVICE_ATTR_RO(temp1_input, temp_input, 0);
+-static SENSOR_DEVICE_ATTR_RO(temp2_input, temp_input, 1);
+-static SENSOR_DEVICE_ATTR_RO(temp1_fault, temp_fault, 0);
+-static SENSOR_DEVICE_ATTR_RO(temp2_fault, temp_fault, 1);
+-static SENSOR_DEVICE_ATTR_RW(temp1_max, temp_max, 0);
+-static SENSOR_DEVICE_ATTR_RW(temp2_max, temp_max, 1);
+-static SENSOR_DEVICE_ATTR_RW(temp1_crit, temp_crit, 0);
+-static SENSOR_DEVICE_ATTR_RW(temp2_crit, temp_crit, 1);
+-static SENSOR_DEVICE_ATTR_RW(temp1_emergency, temp_emergency, 0);
+-static SENSOR_DEVICE_ATTR_RW(temp2_emergency, temp_emergency, 1);
+-static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
+-static SENSOR_DEVICE_ATTR_RW(pwm2, pwm, 1);
+-static SENSOR_DEVICE_ATTR_RO(fan1_input, fan_input, 0);
+-static SENSOR_DEVICE_ATTR_RO(fan2_input, fan_input, 1);
+-static SENSOR_DEVICE_ATTR_RO(fan1_fault, alarm, 1);
+-static SENSOR_DEVICE_ATTR_RO(fan2_fault, alarm, 0);
+-static SENSOR_DEVICE_ATTR_RO(temp1_max_alarm, alarm, 3);
+-static SENSOR_DEVICE_ATTR_RO(temp2_max_alarm, alarm, 2);
+-static SENSOR_DEVICE_ATTR_RO(temp1_crit_alarm, alarm, 7);
+-static SENSOR_DEVICE_ATTR_RO(temp2_crit_alarm, alarm, 6);
+-static SENSOR_DEVICE_ATTR_RO(temp1_emergency_alarm, alarm, 5);
+-static SENSOR_DEVICE_ATTR_RO(temp2_emergency_alarm, alarm, 4);
+-
+-
+-static struct attribute *max6639_attrs[] = {
+-	&sensor_dev_attr_temp1_input.dev_attr.attr,
+-	&sensor_dev_attr_temp2_input.dev_attr.attr,
+-	&sensor_dev_attr_temp1_fault.dev_attr.attr,
+-	&sensor_dev_attr_temp2_fault.dev_attr.attr,
+-	&sensor_dev_attr_temp1_max.dev_attr.attr,
+-	&sensor_dev_attr_temp2_max.dev_attr.attr,
+-	&sensor_dev_attr_temp1_crit.dev_attr.attr,
+-	&sensor_dev_attr_temp2_crit.dev_attr.attr,
+-	&sensor_dev_attr_temp1_emergency.dev_attr.attr,
+-	&sensor_dev_attr_temp2_emergency.dev_attr.attr,
+-	&sensor_dev_attr_pwm1.dev_attr.attr,
+-	&sensor_dev_attr_pwm2.dev_attr.attr,
+-	&sensor_dev_attr_fan1_input.dev_attr.attr,
+-	&sensor_dev_attr_fan2_input.dev_attr.attr,
+-	&sensor_dev_attr_fan1_fault.dev_attr.attr,
+-	&sensor_dev_attr_fan2_fault.dev_attr.attr,
+-	&sensor_dev_attr_temp1_max_alarm.dev_attr.attr,
+-	&sensor_dev_attr_temp2_max_alarm.dev_attr.attr,
+-	&sensor_dev_attr_temp1_crit_alarm.dev_attr.attr,
+-	&sensor_dev_attr_temp2_crit_alarm.dev_attr.attr,
+-	&sensor_dev_attr_temp1_emergency_alarm.dev_attr.attr,
+-	&sensor_dev_attr_temp2_emergency_alarm.dev_attr.attr,
+-	NULL
+-};
+-ATTRIBUTE_GROUPS(max6639);
+-
+ static int max6639_temp_set_max(struct max6639_data *data, int channel, unsigned long val)
+ {
+ 	int res;
+@@ -1091,11 +864,6 @@ static int max6639_probe(struct i2c_client *client)
+ 	if (err < 0)
+ 		return err;
  
-@@ -373,6 +388,158 @@ static struct attribute *max6639_attrs[] = {
- };
- ATTRIBUTE_GROUPS(max6639);
- 
-+static struct max6639_data *to_max6639_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct max6639_data, chip);
-+}
-+
-+static int max6639_pwm_get_state(struct pwm_chip *chip,
-+				 struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	int value, i = pwm->hwpwm, x, err;
-+	unsigned int freq;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG1(i), &value);
-+	if (err < 0)
-+		goto abort;
-+
-+	if (value & MAX6639_FAN_CONFIG1_PWM) {
-+		state->enabled = true;
-+
-+		/* Determine frequency from respective registers */
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		x = value & MAX6639_FAN_CONFIG3_FREQ_MASK;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &value);
-+		if (err < 0)
-+			goto abort;
-+		if (value & MAX6639_GCONFIG_PWM_FREQ_HI)
-+			x |= 0x4;
-+		x &= 0x7;
-+		freq = freq_table[x];
-+
-+		state->period = DIV_ROUND_UP(NSEC_PER_SEC, freq);
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_TARGTDUTY(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		/* max6639 supports 120 slots only */
-+		state->duty_cycle = mul_u64_u32_div(state->period, value, 120);
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		value &= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		state->polarity = (value != 0);
-+	} else {
-+		state->enabled = false;
-+	}
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+	return value;
-+}
-+
-+static int max6639_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	int value, i = pwm->hwpwm, x, err;
-+	unsigned int freq;
-+	struct pwm_state cstate;
-+
-+	cstate = pwm->state;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	if (state->period != cstate.period) {
-+		/* Configure frequency */
-+		freq = DIV_ROUND_UP_ULL(NSEC_PER_SEC, state->period);
-+
-+		/* Chip supports limited number of frequency */
-+		for (x = 0; x < sizeof(freq_table); x++)
-+			if (freq <= freq_table[x])
-+				break;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(i), &value);
-+		if (err < 0)
-+			goto abort;
-+
-+		value &= ~MAX6639_FAN_CONFIG3_FREQ_MASK;
-+		value |= (x & MAX6639_FAN_CONFIG3_FREQ_MASK);
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG3(i), value);
-+		if (err < 0)
-+			goto abort;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &value);
-+		if (err < 0)
-+			goto abort;
-+
-+		if (x >> 2)
-+			value &= ~MAX6639_GCONFIG_PWM_FREQ_HI;
-+		else
-+			value |= MAX6639_GCONFIG_PWM_FREQ_HI;
-+		err = regmap_write(data->regmap, MAX6639_REG_GCONFIG, value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure dutycycle */
-+	if (state->duty_cycle != cstate.duty_cycle ||
-+	    state->period != cstate.period) {
-+		value = DIV_ROUND_DOWN_ULL(state->duty_cycle * MAX6639_REG_TARGTDUTY_SLOT,
-+					   state->period);
-+		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure polarity */
-+	if (state->polarity != cstate.polarity) {
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			value |= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		else
-+			value &= ~MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	if (state->enabled != cstate.enabled) {
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG1(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		if (state->enabled)
-+			value |= MAX6639_FAN_CONFIG1_PWM;
-+		else
-+			value &= ~MAX6639_FAN_CONFIG1_PWM;
-+
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG1(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+	value = 0;
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+
-+	return err;
-+}
-+
-+static const struct pwm_ops max6639_pwm_ops = {
-+	.apply = max6639_pwm_apply,
-+	.get_state = max6639_pwm_get_state,
-+};
-+
- /*
-  *  returns respective index in rpm_ranges table
-  *  1 by default on invalid range
-@@ -396,6 +563,7 @@ static int max6639_init_client(struct i2c_client *client,
- 		dev_get_platdata(&client->dev);
- 	int i;
- 	int rpm_range = 1; /* default: 4000 RPM */
-+	struct pwm_state state;
- 	int err;
- 
- 	/* Reset chip to default values, see below for GCONFIG setup */
-@@ -459,11 +627,15 @@ static int max6639_init_client(struct i2c_client *client,
- 		if (err)
- 			goto exit;
- 
--		/* PWM 120/120 (i.e. 100%) */
--		data->pwm[i] = 120;
--		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), data->pwm[i]);
--		if (err)
--			goto exit;
-+		dev_dbg(&client->dev, "Using chip default PWM");
-+		data->pwmd[i] = pwm_request_from_chip(&data->chip, i, NULL);
-+		if (IS_ERR(data->pwmd[i]))
-+			return PTR_ERR(data->pwmd[i]);
-+		pwm_get_state(data->pwmd[i], &state);
-+		state.period = DIV_ROUND_UP(NSEC_PER_SEC, 25000);
-+		state.polarity = PWM_POLARITY_NORMAL;
-+		pwm_set_relative_duty_cycle(&state, 0, 255);
-+		pwm_apply_state(data->pwmd[i], &state);
- 	}
- 	/* Start monitoring */
- 	err = regmap_write(data->regmap, MAX6639_REG_GCONFIG,
-@@ -540,6 +712,14 @@ static int max6639_probe(struct i2c_client *client)
- 				     PTR_ERR(data->regmap),
- 				     "regmap initialization failed\n");
- 
-+	/* Add PWM controller of max6639 */
-+	data->chip.dev = dev;
-+	data->chip.ops = &max6639_pwm_ops;
-+	data->chip.npwm = MAX6639_NDEV;
-+	err = devm_pwmchip_add(dev, &data->chip);
-+	if (err < 0)
-+		return dev_err_probe(dev, err, "failed to add PWM chip\n");
-+
- 	data->reg = devm_regulator_get_optional(dev, "fan");
- 	if (IS_ERR(data->reg)) {
- 		if (PTR_ERR(data->reg) != -ENODEV)
+-	if (0)
+-		data->hwmon_dev = devm_hwmon_device_register_with_groups(dev, client->name,
+-									 data,
+-									 max6639_groups);
+-
+ 	data->hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name, data,
+ 							       &max6639_chip_info, NULL);
+ 	if (IS_ERR(data->hwmon_dev))
 -- 
 2.42.0
 
