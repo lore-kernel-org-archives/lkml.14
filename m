@@ -1,73 +1,103 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A335F128805;
-	Tue, 16 Apr 2024 14:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D93412CD91;
+	Tue, 16 Apr 2024 14:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277102; cv=none; b=FNN1V8w8XeKZQwKx8zy0qZq7WQwX25O6wG7MyyeTFt18+yiBWhmSIG4LPcbKekleSdlmezcgBua7o98GdxrZPMda1RSripbL4sP1tHCK+CWqTo7ZqPWjPUbrhFoOevwDaauBnRfMS82PPdWiNfrR9/ydz9+cYy1/2n6v9/Olsk0=
+	t=1713277152; cv=none; b=Dl6L+sFE6OU0uyIh5/y17oDEQtTBrv8MbKJwEkdspdv4Kt8WR3q9P4BjDbNp7IGtM5/k18jkruLRjtS3GN0H3y53wnyqvu3puTsfCInGRVobQtYzD8z7o6IK6vJKD1anroo93aeL+E8E8mz8T3g6bgTb3iQDlFHKQBylrbrjsDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277102; c=relaxed/simple;
-	bh=cD37T59aEkLC1V37YKhVxgH6MPLClBUqzyZJEc80Wso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V+g3ui6X6nXm4htNdE6BV7V55HSdmmbtP6dwwlTPGIBHW2ysqEMMXwloxZqZSJz+aFEOUa5xkQKKi4uk+EemraQpyW2yL/x6mG746P3K0Bo33HyJldmEljpLzfrMkJ9sCQ7kXaAeZHVo4eS4qizxLYaPv0oVOhOH3WHVV3cmuSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id 66AE3E803C0;
-	Tue, 16 Apr 2024 16:18:15 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id 1B2A81602F7; Tue, 16 Apr 2024 16:18:15 +0200 (CEST)
-Date: Tue, 16 Apr 2024 16:18:14 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <Zh6IpqnSfGHXMjVa@gardel-login>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login>
- <20240409141531.GB21514@lst.de>
- <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
+	s=arc-20240116; t=1713277152; c=relaxed/simple;
+	bh=vRb+ue/V9JDo67dbhPPpncMA8E3/2L+FmhinMOuC1+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oTJIwW2EkLoPkifrd0cioRbZU334SSStbmzEGml01GymlcLh54KhH7kvjqg6JB5Otuxc9XsG1Jm+V2Mv4EVTlbWbhyCUbC+Qk/2Gd1pHdgEBNhZ4YCLmzYlREouH6HJITkEEQkxNtUJk7wpDXv8UOLvbh011SE/pZtzpyoapA2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKfID6Sw; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKfID6Sw"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343b7c015a8so3602899f8f.1;
+        Tue, 16 Apr 2024 07:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713277149; x=1713881949; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b/ArCWcFafLJYyEXSyGqpam6u82hUHVqqiMQyagnXnQ=;
+        b=UKfID6SwkEHdAaEtxlZsf5hzAYR62WoyiXjBwLYQ28NX2gJWza5UGMbzFmhiD0sG9Z
+         q+Fu7UcsLAdMlNAe/dgeT/tlfmrWxvF5O/3IZ0fZp8ZwISe3lTTro203JSa7UUyMSTP1
+         lqb/6RcW91uWqqZR64RLzIjjM0jWUNMcJjGFXY3DhKK5s1oTVy4YTX58YpzPYBJVkZ3p
+         xpE4jzpl30VPDf+4W2j2Yf1UxIXUzegJ9lsMcrnbQJdJrDjoQoKxR1ZOeY46fuCxPNA6
+         xuQX9yApaqLeux9Xm5hEwcz+pPNMSNA4hikF6PIdnQHxXtmYz9GbBPkNhA77Y5N9CWIi
+         TdpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713277149; x=1713881949;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b/ArCWcFafLJYyEXSyGqpam6u82hUHVqqiMQyagnXnQ=;
+        b=twr+IiX9l7TTizo5CUBJAQTcn1JqmepC1Ort1q3Jmj1p30rlhoVVJwvFyQlfoN81P5
+         ZtFpVtAEPi/YkkDWyZJUPtWlZystoWdms7wzTZFJ4ir0UwJ0xV7EfKgZuUFGs/YBPpKc
+         WDWPZ7eCsTTp9AYTKogqm/2wdy0wgqmLy7lmb8BqlyTvD3O7ufmGWatt7VJzGZ1hVvQp
+         n/5/A5Eur0+Ttk+vMGzVrk1F7uE2T6DcvDMW5cI2r8/5wH00OEI+cnw41b14pq0nA4XN
+         pJFPslzVYH5ptODznaChvsy42cP8fmz/7nJK3621AkQVsF1S3q9OShEnudLXyGI3mT05
+         BPwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWgi6P0qsFmBzqbbWIwBojwIfntJEEZcxbgz08w0wJQ9tEnlJkSfEIgwQtdaxqZroW6AttMv6cjpKcXbnqkDBApl9KLFXOm+vOD+X4lG5vMZl1/nWsBuSdEbma++ZLYBxxQTQkZnch+I4=
+X-Gm-Message-State: AOJu0Yxt/jgWdlS8BhWQQ6e0viuhQJhUoJ96k8GTP8+DAosDDCBCwyu+
+	HYHhTYX6VQjTO7kKoatsxQphCjFuhuBnbUaWSoO9ZB9R5VPKLVXN
+X-Google-Smtp-Source: AGHT+IHJz5sxsuV1eimfS0+jaV5gGH6pl77Hu43z6tsxDHLD9U5Q6NH/A9ZEbetHtvSiqh/AsFNfZA==
+X-Received: by 2002:a05:6000:178d:b0:341:ab37:6a25 with SMTP id e13-20020a056000178d00b00341ab376a25mr11748105wrg.43.1713277148332;
+        Tue, 16 Apr 2024 07:19:08 -0700 (PDT)
+Received: from tom-HP-ZBook-Fury-15-G7-Mobile-Workstation.station (net-188-217-57-233.cust.vodafonedsl.it. [188.217.57.233])
+        by smtp.gmail.com with ESMTPSA id b11-20020adfe30b000000b0034625392416sm15055114wrj.104.2024.04.16.07.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 07:19:07 -0700 (PDT)
+From: Tommaso Merciai <tomm.merciai@gmail.com>
+To: 
+Cc: martin.hecht@avnet.eu,
+	michael.roeder@avnet.eu,
+	tomm.merciai@gmail.com,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Alvium improvements
+Date: Tue, 16 Apr 2024 16:19:00 +0200
+Message-Id: <20240416141905.454253-1-tomm.merciai@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
 
-On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
+Hello,
 
-> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
-> > On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
-> >> All I am looking for is a very simple test that returns me a boolean:
-> >> is there kernel-level partition scanning enabled on this device or
-> >> not.
-> >
-> > And we can add a trivial sysfs attribute for that.
->
-> And I think we should. I don't know what was being smoked adding a sysfs
-> interface that exposed internal flag values - and honestly what was
-> being smoked to rely on that, but I think it's fair to say that the
-> majority of the fuckup here is on the kernel side.
+This series containing improvements for the Alvium camera driver.
+Specifically:
 
-Yeah, it's a shitty interface, the kernel is rich in that. But it was
-excessively well documented, better in fact than almost all other
-kernel interfaces:
+Patches:
+ - 1 Fix fix alvium_get_fw_version()
+ - 2 Rename acquisition frame rate enable define into a short define
+ - 3 Alvium camera by default is in free running mode. Datasheet say that
+     acquisition frame rate reg can only be used if frame start trigger
+     mode is set to off. Enable r/w aquisition frame rate and turn off trigger mode.
+ - 4 Implement enum_frame_size
+ - 5 Use the right V4L2_CID for the analogue gain
 
-→ https://www.kernel.org/doc/html/v5.16/block/capability.html ←
+Thanks & Regards,
+Tommaso
 
-If you document something on so much detail in the API docs, how do
-you expect this *not* to be relied on by userspace.
+Tommaso Merciai (5):
+  media: i2c: alvium: fix alvium_get_fw_version()
+  media: i2c: alvium: rename acquisition frame rate enable reg
+  media: i2c: alvium: enable acquisition frame rate
+  media: i2c: alvium: implement enum_frame_size
+  media: i2c: alvium: Move V4L2_CID_GAIN to V4L2_CID_ANALOG_GAIN
 
-Lennart
+ drivers/media/i2c/alvium-csi2.c | 62 +++++++++++++++++++++++++--------
+ drivers/media/i2c/alvium-csi2.h | 17 ++++++---
+ 2 files changed, 59 insertions(+), 20 deletions(-)
+
+-- 
+2.34.1
+
