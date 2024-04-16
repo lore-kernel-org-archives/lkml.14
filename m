@@ -1,142 +1,215 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F7312BF2E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3342C12AAE7;
+	Tue, 16 Apr 2024 13:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273265; cv=none; b=f2SF5IL3DQJ2tb5OcbUwLd0Ez4ZOBcxW90wPWBnmzHwmzcV3VmzZcU+FZHS9Jo3uvFlUcnAfjgFEpA4Pu3EICNLvCnqIq2v5YkD4m6d7+dJ8AzqsQ0FtTKiq9lWV2QaAxGEZ7eHCJW//4NZTPFlRZsP1IdtNWZDQ1vFjLydggP0=
+	t=1713273287; cv=none; b=BpJK+Q5sriHAV23cZgYEyoFIIUDtDbPmiEMLr4pYGSv6cqB0iYkag47w/OeXILsYxC7EQJX/gYFtaAtMBzvzb214GOwWrwZB0Sef0qLGmjTvbzkc8EjR1m7yIbynj/02DsQGxn9sZfedb1iHtBowQ3bdgXTSGrCqYdtRd7QM0TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273265; c=relaxed/simple;
-	bh=0h0/p87CiwSlulYJ7Vq9HEXjOCO3hXlKliBnh07+Rj0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qzBKcrFH7WkMzP8QUQqCYkfb4xN01xKRvYHq0dlIlKF5dA6eFYpZPk2aNMmGfxIA/UxWCPCWvUKXtwj5zEOybCRc0YcrFYA0+IVf7ixNpfVo5nuz4huW0PA8LNG8v9xUbyZuZJZ2BATEQxx3OL7FDRiRxgjkEpwL0TaegUc3L+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5e2b1cfabso466841739f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 06:14:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713273260; x=1713878060;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aGftuxyuYCT1hAdzMTqOM9zYvkUin2a2cUCJ3awfpHY=;
-        b=KSdWwwyOIXb0rUBk/QKeVfq5phsmwzcRry8Jp1wdmfJxnq4IMBBa3tS5r+trYlLL1v
-         lYXhQZmJzgXYciVQD2vzTe9ew2E3flzpXilKT8ccSOqdPDUyrdIe5UjCFNXmhgjJbLHp
-         +HymjZFFraPjD5YgsihqfPEmJwnjHJOVQ8ZdD5forzm1MiMRZlNAtaqFL7ozjnAhwec4
-         kiWcbtHSPERILLpKaB1YkCyng06rhu1dP3fSSezk04hnEkuzbtZfJRlnxWPZwSaE/tG2
-         JKv/R6bz8fmqFrT3ju1Wh5Uv+BcFahb3GjkovHhidLD6dkifRAO7bac261IjOVRbnh4M
-         eguQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXM3OY4P3mdBKcIq0uHOAG5IauQR62u3DgFHzpjEu3fnzm7sEfbN7n/MfY1902pyU73w0StNvBTbQEShDZ52vbxN/s2uVerY3Co0NbI
-X-Gm-Message-State: AOJu0YzL08YhA2v1jA2PDYr3rTHooqQO9rBcIUDuUMnaS5D1MZ6HhD3K
-	sKjhZnM67fymcH3qZLxEeLCHy3iUY8XI2JKLKZjSXJkQ660RtgjDpAn9o4pbkUnyGww3EzL0weM
-	REN9Zk4U4YUb4vdcHlPPfwXsl5BSxkS1tHjkW7Rx3nwIklZiwNqLOV40=
-X-Google-Smtp-Source: AGHT+IGUbrGbiGRAhFv1LD6mc/kqP+MY7ym/nVA3dB34WCSzC+iOKcFFdWtqXb9a3XXiNaFYF/DpMP7esiJLZPT3SMO4xAW910UG
+	s=arc-20240116; t=1713273287; c=relaxed/simple;
+	bh=gu/7yEmTZO3eRUr56dElM2gFoo/BiAjK7fnL+Q6GZV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dR+YjrK1YGaNolBRRhAazwoqOkkfveJoJi8l0swPY7xYWFCuncf/7gI8dCgEvg2O4fyJwAUuLNJiWdYxClg2qbK/qbVcKkFjrEtT8Fbrtt7tuX5V1EVOsU0Tdtp+uG0ZUofDCK7v/N0FdY9v8Bqevvu6ofDDx7yKsEVydHK3m1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3C19DA7;
+	Tue, 16 Apr 2024 06:15:11 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458AF3F738;
+	Tue, 16 Apr 2024 06:14:41 -0700 (PDT)
+Message-ID: <b8019da1-d361-445b-a224-0761640aa616@arm.com>
+Date: Tue, 16 Apr 2024 14:14:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3786:b0:482:ffee:c6e6 with SMTP id
- w6-20020a056638378600b00482ffeec6e6mr659468jal.3.1713273260563; Tue, 16 Apr
- 2024 06:14:20 -0700 (PDT)
-Date: Tue, 16 Apr 2024 06:14:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000196a39061636840a@google.com>
-Subject: [syzbot] [btrfs?] KMSAN: kernel-infoleak in btrfs_ioctl_logical_to_ino
- (2)
-From: syzbot <syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/43] arm64: RME: Add wrappers for RMI calls
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
+ <20240412084309.1733783-7-steven.price@arm.com>
+Content-Language: en-US
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240412084309.1733783-7-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Steven
 
-syzbot found the following issue on:
+On 12/04/2024 09:42, Steven Price wrote:
+> The wrappers make the call sites easier to read and deal with the
+> boiler plate of handling the error codes from the RMM.
+> 
 
-HEAD commit:    cef27048e5c2 Merge tag 'bcachefs-2024-04-15' of https://ev..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a1fec7180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87a805e655619c64
-dashboard link: https://syzkaller.appspot.com/bug?extid=510a1abbb8116eeb341d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+I have compared the parameters and output values to that of the RMM spec
+and they match. There are some minor nits below.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/rmi_cmds.h | 509 ++++++++++++++++++++++++++++++
+>   1 file changed, 509 insertions(+)
+>   create mode 100644 arch/arm64/include/asm/rmi_cmds.h
+> 
+> diff --git a/arch/arm64/include/asm/rmi_cmds.h b/arch/arm64/include/asm/rmi_cmds.h
+> new file mode 100644
+> index 000000000000..c21414127e8e
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/rmi_cmds.h
+> @@ -0,0 +1,509 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +
+> +#ifndef __ASM_RMI_CMDS_H
+> +#define __ASM_RMI_CMDS_H
+> +
+> +#include <linux/arm-smccc.h>
+> +
+> +#include <asm/rmi_smc.h>
+> +
+> +struct rtt_entry {
+> +	unsigned long walk_level;
+> +	unsigned long desc;
+> +	int state;
+> +	int ripas;
+> +};
+> +
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fce0439cf562/disk-cef27048.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/99540e71cf72/vmlinux-cef27048.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/65fbfc2c486f/bzImage-cef27048.xz
+...
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com
+> +/**
+> + * rmi_data_destroy() - Destroy a Data Granule
+> + * @rd: PA of the RD
+> + * @ipa: IPA at which the granule is mapped in the guest
+> + * @data_out: PA of the granule which was destroyed
+> + * @top_out: Top IPA of non-live RTT entries
+> + *
+> + * Transitions the granule to DESTROYED state, the address cannot be used by
+> + * the guest for the lifetime of the Realm.
+> + *
+> + * Return: RMI return code
+> + */
+> +static inline int rmi_data_destroy(unsigned long rd, unsigned long ipa,
+> +				   unsigned long *data_out,
+> +				   unsigned long *top_out)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_1_1_invoke(SMC_RMI_DATA_DESTROY, rd, ipa, &res);
+> +
+> +	*data_out = res.a1;
+> +	*top_out = res.a2;
 
-BTRFS info (device loop1): first mount of filesystem c9fe44da-de57-406a-8241-57ec7d4412cf
-BTRFS info (device loop1): using crc32c (crc32c-generic) checksum algorithm
-BTRFS info (device loop1): using free-space-tree
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x110 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x110 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- btrfs_ioctl_logical_to_ino+0x440/0x750 fs/btrfs/ioctl.c:3499
- btrfs_ioctl+0x714/0x1260
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
- __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
- x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+minor nit: Do we need to be safer by checking the parameters before 
+filling them in ? i.e.,
 
-Uninit was created at:
- __kmalloc_large_node+0x231/0x370 mm/slub.c:3921
- __do_kmalloc_node mm/slub.c:3954 [inline]
- __kmalloc_node+0xb07/0x1060 mm/slub.c:3973
- kmalloc_node include/linux/slab.h:648 [inline]
- kvmalloc_node+0xc0/0x2d0 mm/util.c:634
- kvmalloc include/linux/slab.h:766 [inline]
- init_data_container+0x49/0x1e0 fs/btrfs/backref.c:2779
- btrfs_ioctl_logical_to_ino+0x17c/0x750 fs/btrfs/ioctl.c:3480
- btrfs_ioctl+0x714/0x1260
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
- __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
- x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+	if (ptr)
+		*ptr = result_out;
 
-Bytes 40-65535 of 65536 are uninitialized
-Memory access of size 65536 starts at ffff888045a40000
+This applies for others calls below.
 
-CPU: 0 PID: 5428 Comm: syz-executor.1 Not tainted 6.9.0-rc4-syzkaller-00028-gcef27048e5c2 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-=====================================================
+> +
+> +	return res.a0;
+> +}
+
+> +
+> +/**
+> + * rmi_realm_destroy() - Destroy a Realm
+> + * @rd: PA of the RD
+> + *
+> + * Destroys a Realm, all objects belonging to the Realm must be destroyed first.
+> + *
+> + * Return: RMI return code
+> + */
+> +static inline int rmi_realm_destroy(unsigned long rd)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_1_1_invoke(SMC_RMI_REALM_DESTROY, rd, &res);
+> +
+> +	return res.a0;
+> +}
+> +
+> +/**
+> + * rmi_rec_aux_count() - Get number of auxiliary Granules required
+> + * @rd: PA of the RD
+> + * @aux_count: Number of pages written to this pointer
+> + *
+> + * A REC may require extra auxiliary pages to be delegateed for the RMM to
+
+minor nit: "s/delegateed/delegated/"
+
+...
+
+> +/**
+> + * rmi_rtt_read_entry() - Read an RTTE
+> + * @rd: PA of the RD
+> + * @ipa: IPA for which to read the RTTE
+> + * @level: RTT level at which to read the RTTE
+> + * @rtt: Output structure describing the RTTE
+> + *
+> + * Reads a RTTE (Realm Translation Table Entry).
+> + *
+> + * Return: RMI return code
+> + */
+> +static inline int rmi_rtt_read_entry(unsigned long rd, unsigned long ipa,
+> +				     long level, struct rtt_entry *rtt)
+> +{
+> +	struct arm_smccc_1_2_regs regs = {
+> +		SMC_RMI_RTT_READ_ENTRY,
+> +		rd, ipa, level
+> +	};
+> +
+> +	arm_smccc_1_2_smc(&regs, &regs);
+> +
+> +	rtt->walk_level = regs.a1;
+> +	rtt->state = regs.a2 & 0xFF;
+
+minor nit: We mask the state, but not the "ripas". Both of them are u8. 
+For consistency, we should mask both or neither.
+
+> +	rtt->desc = regs.a3;
+> +	rtt->ripas = regs.a4;
+> +
+> +	return regs.a0;
+> +}
+> +
+
+...
+
+> +/**
+> + * rmi_rtt_get_phys() - Get the PA from a RTTE
+> + * @rtt: The RTTE
+> + *
+> + * Return: the physical address from a RTT entry.
+> + */
+> +static inline phys_addr_t rmi_rtt_get_phys(struct rtt_entry *rtt)
+> +{
+> +	return rtt->desc & GENMASK(47, 12);
+> +}
+
+I guess this may need to change with the LPA2 support in RMM and must be
+used in conjunction with the "realm" object to make the correct
+conversion.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Suzuki
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+> +
+> +#endif
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
