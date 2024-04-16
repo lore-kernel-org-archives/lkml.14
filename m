@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1BD17999;
-	Tue, 16 Apr 2024 03:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490B42E403;
+	Tue, 16 Apr 2024 03:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713237616; cv=none; b=UWk+PcyHuNggZsfyjrNhBFwdEiGohlbDL6uHUhcz9nHnZeRsfBFPO5PjgkzIvCAKzL4PDB4fkUY3ye/AbeEqTCpnmT3IV78HiCaiTu6h9mhFzTixN/4n1FJhH2yqn98bweLJc3nFRLRpXEag2MgAo81K07ZAegcxcDVd5n+TuHE=
+	t=1713237618; cv=none; b=ThnFVBGrz5Xs2IUG4FCnCn/icibeUQRb1Db43PLfqkZRlVZzAlIZBvjP3xdGxDs7FHQ4WH0YCT05qHqvUvUKMDdizeYezY1JFRJbqNU7vwZUCY7yfserfwqU0yzGuhDc38njd6Vz+Jiruh/YripFFFJzEPsh5h9pXgg25ZqcytQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713237616; c=relaxed/simple;
-	bh=FiuxKeDzaIT6o2ExoNnP4zdRxGfrm0SktFxj+ktBG5g=;
+	s=arc-20240116; t=1713237618; c=relaxed/simple;
+	bh=9du0qDfZTGbkbG0LY7QYxW2+6choZ6ZI3fp8nxI6tzk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P/J8tGj8clEQrYRcpJSczBdCbbcntj3Y8FM6SJrP19C3NgcR/FAM7fKnvw917WDnVa7dOGLyqYp9vdna9HrflkgwMudIrtQIRTWMj+OUjr18QIi6M4m+z4/15McgAsLIOB4g+iEhg68JiJqcgBuSuj3yLMopRo9GdxH/OzKIttw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PX1EYz2v; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=LyYh0+NtJ1RO6g2KJvgQ4WgGuZmhi80z/AiOHZiFzChx4kNyAqysB5tI5jj90RLxy1NpLuj+fz6xs1B5lsqvGqiqtPZoDmn252pEhJNgxIRPh2BM3iGvrR4ppFQ67MErGn9csitMbe/JYXKHuNzNdszImaBLes4xrHVjo6VjySA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fe9rsNBd; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PX1EYz2v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fe9rsNBd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713237615; x=1744773615;
+  t=1713237617; x=1744773617;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FiuxKeDzaIT6o2ExoNnP4zdRxGfrm0SktFxj+ktBG5g=;
-  b=PX1EYz2vJXEqJ3ZGnk3uWNYPpx6XLzURdQKYjx5QHoyzgsx3GE2SCuUN
-   ojCTBagr+wCnYD7HFY/Wp8431WZ/RfHtg4XbZDDTulSXd4cC/gDxfjcg2
-   KUxGEF3JzX2tLEITD5qj8yFXzJV5vtVYrQ3rqhIRexIyIjcDsms4Fjfmq
-   HsS8xm0qcf9hKOIYmm2+7qFkpUxe0lw3EQPLhE7lPEVt57yA1EVBA6ReM
-   vrUkAD4UchvZfUr0clja8wtqkRP+Sokcm1ZTxoJNdWAilDYxWRsowdFsD
-   H8gtR4HSiAXmW81jcLW912wbGYcq2Pc02alWG/lf14QPWRuans2ukGa5u
-   Q==;
-X-CSE-ConnectionGUID: Xp4n4ZFMTpevWhINIRP19A==
-X-CSE-MsgGUID: 4y8fTkrET8+2KPUYO9nGrw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="34043329"
+  bh=9du0qDfZTGbkbG0LY7QYxW2+6choZ6ZI3fp8nxI6tzk=;
+  b=Fe9rsNBdr0W3z+thjQsd7THn11VumygsZep7clMbEXJjg7Vtru1dcNLE
+   ZKuRBpcGvIumA3jzeYP+GU1OcW9lIHg03bzkagf8iiX8VAH2hZ4u9ugkn
+   wHW1C7RiziPuBo7Ewp4fmH0Bp2icRUuaKtXKEU3Wcx4BurHJBIxWvh2IL
+   +6zjjTusfb+mPOUCBjpYa0LI1YXB9oiZYIDZ3pePKNNHgGHPZYM2Sf47+
+   qJfPvUNuWNll3yAOmfz5sOsvD3JfcEZbxDh7veynf/YEsld1mKD88ElE5
+   DHR/nHnIziRUcdrAtyCrZmDveQM/sJya4hTXFqcEspMIHToQoo/28A5gO
+   g==;
+X-CSE-ConnectionGUID: RkujwFxUTG2zHyZPos2qKg==
+X-CSE-MsgGUID: bxJ7XOPQRiiWi0RehJZiZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="34043374"
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="34043329"
+   d="scan'208";a="34043374"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 20:20:14 -0700
-X-CSE-ConnectionGUID: LPLg6HYkRi64m0/i0E2KmQ==
-X-CSE-MsgGUID: +gIwR7H8RbSi87z3Fs3eCw==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 20:20:16 -0700
+X-CSE-ConnectionGUID: 30d2p9ZmSuuo0F12oEFc0g==
+X-CSE-MsgGUID: v9Fwcr7RSRWR0AeNst9EFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="22193555"
+   d="scan'208";a="22193614"
 Received: from b4969161e530.jf.intel.com ([10.165.56.46])
-  by fmviesa008.fm.intel.com with ESMTP; 15 Apr 2024 20:20:13 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 15 Apr 2024 20:20:16 -0700
 From: Haitao Huang <haitao.huang@linux.intel.com>
 To: jarkko@kernel.org,
 	dave.hansen@linux.intel.com,
@@ -67,9 +67,9 @@ Cc: zhiquan1.li@intel.com,
 	mikko.ylinen@linux.intel.com,
 	yangjie@microsoft.com,
 	chrisyan@microsoft.com
-Subject: [PATCH v12 02/14] cgroup/misc: Add per resource callbacks for CSS events
-Date: Mon, 15 Apr 2024 20:19:59 -0700
-Message-Id: <20240416032011.58578-3-haitao.huang@linux.intel.com>
+Subject: [PATCH v12 07/14] x86/sgx: Abstract tracking reclaimable pages in LRU
+Date: Mon, 15 Apr 2024 20:20:04 -0700
+Message-Id: <20240416032011.58578-8-haitao.huang@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240416032011.58578-1-haitao.huang@linux.intel.com>
 References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
@@ -83,217 +83,111 @@ Content-Transfer-Encoding: 8bit
 
 From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-The misc cgroup controller (subsystem) currently does not perform
-resource type specific action for Cgroups Subsystem State (CSS) events:
-the 'css_alloc' event when a cgroup is created and the 'css_free' event
-when a cgroup is destroyed.
+The functions, sgx_{mark,unmark}_page_reclaimable(), manage the tracking
+of reclaimable EPC pages: sgx_mark_page_reclaimable() adds a newly
+allocated page into the global LRU list while
+sgx_unmark_page_reclaimable() does the opposite. Abstract the hard coded
+global LRU references in these functions to make them reusable when
+pages are tracked in per-cgroup LRUs.
 
-Define callbacks for those events and allow resource providers to
-register the callbacks per resource type as needed. This will be
-utilized later by the EPC misc cgroup support implemented in the SGX
-driver.
+Create a helper, sgx_lru_list(), that returns the LRU that tracks a given
+EPC page. It simply returns the global LRU now, and will later return
+the LRU of the cgroup within which the EPC page was allocated. Replace
+the hard coded global LRU with a call to this helper.
 
-This design passes a struct misc_cg into the callbacks. An alternative
-to pass only a struct misc_res was considered for encapsulating how
-misc_cg stores its misc_res array. However, the SGX driver would still
-need to access the misc_res array in the statically defined misc root_cg
-during initialization to set resource specific fields. Therefore, some
-extra getter/setter APIs to abstract such access to the misc_res array
-within the misc_cg struct would be needed. That seems an overkill at the
-moment and is deferred to later improvement when there are more users of
-these callbacks.
+Next patches will first get the cgroup reclamation flow ready while
+keeping pages tracked in the global LRU and reclaimed by ksgxd before we
+make the switch in the end for sgx_lru_list() to return per-cgroup
+LRU.
 
-Link: https://lore.kernel.org/lkml/op.2kdw36otwjvjmi@hhuan26-mobl.amr.corp.intel.com/
-
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
 Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
 Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Reviewed-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
 Tested-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
-V12:
-- Add comments in commit to clarify reason to pass in misc_cg, not
-misc_res. (Kai)
-- Remove unlikely (Kai)
-
-V8:
-- Abstract out _misc_cg_res_free() and _misc_cg_res_alloc() (Jarkko)
-
 V7:
-- Make ops one per resource type and store them in array (Michal)
-- Rename the ops struct to misc_res_ops, and enforce the constraints of required callback
-functions (Jarkko)
-- Moved addition of priv field to patch 4 where it was used first. (Jarkko)
-
-V6:
-- Create ops struct for per resource callbacks (Jarkko)
-- Drop max_write callback (Dave, Michal)
-- Style fixes (Kai)
+- Split this out from the big patch, #10 in V6. (Dave, Kai)
 ---
- include/linux/misc_cgroup.h | 11 +++++
- kernel/cgroup/misc.c        | 82 +++++++++++++++++++++++++++++++++----
- 2 files changed, 86 insertions(+), 7 deletions(-)
+ arch/x86/kernel/cpu/sgx/main.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
-index e799b1f8d05b..0806d4436208 100644
---- a/include/linux/misc_cgroup.h
-+++ b/include/linux/misc_cgroup.h
-@@ -27,6 +27,16 @@ struct misc_cg;
- 
- #include <linux/cgroup.h>
- 
-+/**
-+ * struct misc_res_ops: per resource type callback ops.
-+ * @alloc: invoked for resource specific initialization when cgroup is allocated.
-+ * @free: invoked for resource specific cleanup when cgroup is deallocated.
-+ */
-+struct misc_res_ops {
-+	int (*alloc)(struct misc_cg *cg);
-+	void (*free)(struct misc_cg *cg);
-+};
-+
- /**
-  * struct misc_res: Per cgroup per misc type resource
-  * @max: Maximum limit on the resource.
-@@ -56,6 +66,7 @@ struct misc_cg {
- 
- u64 misc_cg_res_total_usage(enum misc_res_type type);
- int misc_cg_set_capacity(enum misc_res_type type, u64 capacity);
-+int misc_cg_set_ops(enum misc_res_type type, const struct misc_res_ops *ops);
- int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount);
- void misc_cg_uncharge(enum misc_res_type type, struct misc_cg *cg, u64 amount);
- 
-diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
-index 79a3717a5803..4a602d68cf7d 100644
---- a/kernel/cgroup/misc.c
-+++ b/kernel/cgroup/misc.c
-@@ -39,6 +39,9 @@ static struct misc_cg root_cg;
+diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+index b782207d41b6..552455365761 100644
+--- a/arch/x86/kernel/cpu/sgx/main.c
++++ b/arch/x86/kernel/cpu/sgx/main.c
+@@ -32,6 +32,11 @@ static DEFINE_XARRAY(sgx_epc_address_space);
   */
- static u64 misc_res_capacity[MISC_CG_RES_TYPES];
+ static struct sgx_epc_lru_list sgx_global_lru;
  
-+/* Resource type specific operations */
-+static const struct misc_res_ops *misc_res_ops[MISC_CG_RES_TYPES];
-+
- /**
-  * parent_misc() - Get the parent of the passed misc cgroup.
-  * @cgroup: cgroup whose parent needs to be fetched.
-@@ -105,6 +108,36 @@ int misc_cg_set_capacity(enum misc_res_type type, u64 capacity)
- }
- EXPORT_SYMBOL_GPL(misc_cg_set_capacity);
- 
-+/**
-+ * misc_cg_set_ops() - set resource specific operations.
-+ * @type: Type of the misc res.
-+ * @ops: Operations for the given type.
-+ *
-+ * Context: Any context.
-+ * Return:
-+ * * %0 - Successfully registered the operations.
-+ * * %-EINVAL - If @type is invalid, or the operations missing any required callbacks.
-+ */
-+int misc_cg_set_ops(enum misc_res_type type, const struct misc_res_ops *ops)
++static inline struct sgx_epc_lru_list *sgx_lru_list(struct sgx_epc_page *epc_page)
 +{
-+	if (!valid_type(type))
-+		return -EINVAL;
-+
-+	if (!ops->alloc) {
-+		pr_err("%s: alloc missing\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (!ops->free) {
-+		pr_err("%s: free missing\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	misc_res_ops[type] = ops;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(misc_cg_set_ops);
-+
- /**
-  * misc_cg_cancel_charge() - Cancel the charge from the misc cgroup.
-  * @type: Misc res type in misc cg to cancel the charge from.
-@@ -371,6 +404,33 @@ static struct cftype misc_cg_files[] = {
- 	{}
- };
- 
-+static inline int _misc_cg_res_alloc(struct misc_cg *cg)
-+{
-+	enum misc_res_type i;
-+	int ret;
-+
-+	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
-+		WRITE_ONCE(cg->res[i].max, MAX_NUM);
-+		atomic64_set(&cg->res[i].usage, 0);
-+		if (misc_res_ops[i]) {
-+			ret = misc_res_ops[i]->alloc(cg);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
++	return &sgx_global_lru;
 +}
 +
-+static inline void _misc_cg_res_free(struct misc_cg *cg)
-+{
-+	enum misc_res_type i;
-+
-+	for (i = 0; i < MISC_CG_RES_TYPES; i++)
-+		if (misc_res_ops[i])
-+			misc_res_ops[i]->free(cg);
-+}
-+
- /**
-  * misc_cg_alloc() - Allocate misc cgroup.
-  * @parent_css: Parent cgroup.
-@@ -383,20 +443,25 @@ static struct cftype misc_cg_files[] = {
- static struct cgroup_subsys_state *
- misc_cg_alloc(struct cgroup_subsys_state *parent_css)
- {
--	enum misc_res_type i;
--	struct misc_cg *cg;
-+	struct misc_cg *parent_cg, *cg;
-+	int ret;
+ static atomic_long_t sgx_nr_free_pages = ATOMIC_LONG_INIT(0);
  
- 	if (!parent_css) {
--		cg = &root_cg;
-+		parent_cg = cg = &root_cg;
- 	} else {
- 		cg = kzalloc(sizeof(*cg), GFP_KERNEL);
- 		if (!cg)
- 			return ERR_PTR(-ENOMEM);
-+		parent_cg = css_misc(parent_css);
- 	}
- 
--	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
--		WRITE_ONCE(cg->res[i].max, MAX_NUM);
--		atomic64_set(&cg->res[i].usage, 0);
-+	ret = _misc_cg_res_alloc(cg);
-+	if (ret) {
-+		_misc_cg_res_free(cg);
-+		if (likely(parent_css))
-+			kfree(cg);
-+
-+		return ERR_PTR(ret);
- 	}
- 
- 	return &cg->css;
-@@ -410,7 +475,10 @@ misc_cg_alloc(struct cgroup_subsys_state *parent_css)
-  */
- static void misc_cg_free(struct cgroup_subsys_state *css)
- {
--	kfree(css_misc(css));
-+	struct misc_cg *cg = css_misc(css);
-+
-+	_misc_cg_res_free(cg);
-+	kfree(cg);
+ /* Nodes with one or more EPC sections. */
+@@ -500,25 +505,24 @@ static struct sgx_epc_page *__sgx_alloc_epc_page(void)
  }
  
- /* Cgroup controller callbacks */
+ /**
+- * sgx_mark_page_reclaimable() - Mark a page as reclaimable
++ * sgx_mark_page_reclaimable() - Mark a page as reclaimable and track it in a LRU.
+  * @page:	EPC page
+- *
+- * Mark a page as reclaimable and add it to the active page list. Pages
+- * are automatically removed from the active list when freed.
+  */
+ void sgx_mark_page_reclaimable(struct sgx_epc_page *page)
+ {
+-	spin_lock(&sgx_global_lru.lock);
++	struct sgx_epc_lru_list *lru = sgx_lru_list(page);
++
++	spin_lock(&lru->lock);
+ 	page->flags |= SGX_EPC_PAGE_RECLAIMER_TRACKED;
+-	list_add_tail(&page->list, &sgx_global_lru.reclaimable);
+-	spin_unlock(&sgx_global_lru.lock);
++	list_add_tail(&page->list, &lru->reclaimable);
++	spin_unlock(&lru->lock);
+ }
+ 
+ /**
+- * sgx_unmark_page_reclaimable() - Remove a page from the reclaim list
++ * sgx_unmark_page_reclaimable() - Remove a page from its tracking LRU
+  * @page:	EPC page
+  *
+- * Clear the reclaimable flag and remove the page from the active page list.
++ * Clear the reclaimable flag if set and remove the page from its LRU.
+  *
+  * Return:
+  *   0 on success,
+@@ -526,18 +530,20 @@ void sgx_mark_page_reclaimable(struct sgx_epc_page *page)
+  */
+ int sgx_unmark_page_reclaimable(struct sgx_epc_page *page)
+ {
+-	spin_lock(&sgx_global_lru.lock);
++	struct sgx_epc_lru_list *lru = sgx_lru_list(page);
++
++	spin_lock(&lru->lock);
+ 	if (page->flags & SGX_EPC_PAGE_RECLAIMER_TRACKED) {
+ 		/* The page is being reclaimed. */
+ 		if (list_empty(&page->list)) {
+-			spin_unlock(&sgx_global_lru.lock);
++			spin_unlock(&lru->lock);
+ 			return -EBUSY;
+ 		}
+ 
+ 		list_del(&page->list);
+ 		page->flags &= ~SGX_EPC_PAGE_RECLAIMER_TRACKED;
+ 	}
+-	spin_unlock(&sgx_global_lru.lock);
++	spin_unlock(&lru->lock);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
