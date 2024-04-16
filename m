@@ -1,363 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D731515B99A
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D765F136E28
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713254932; cv=none; b=sjm5yb+Lx+8Svmh6EpAQqeeokwKbTXbXc2JJxYvkQ0oyPiGwrohr+J1MUQ48Hk2T3M6xVX+5uDpQV10uHVbcOBmUek68YyjfbB0AixgWO2vCmxV8mxT34MrH7AT4XCuBEIP0w0F1fJB0ubGjuTGH2R6NEpixZpbmgtrjtZdLVyY=
+	t=1713254979; cv=none; b=s7td5ZP4uJ5TMDaiF28Gmf83nDu4RDVJNn09QG5v4+ddyM6vMrFrFQz+ThWPcOjtuOcmmWDtgUUcX5b4oAa+GC4gB3nZnIctxvmTllzC5g36/6cv/5BvB3wbYImaHzlTm+yku4CI0NqAdhyRW4bSBkMQDI6lvdSUplQo6vv+xdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713254932; c=relaxed/simple;
-	bh=Q8rKm2OGcnNJjkSqgINML+aYz0OFkg9E8valz9G7+cU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uIou7+p0GVQ9tF7ZnPPtqQqm2ddtGyh4KyEnAXIlFzbzjASwMV2E9iKLVEk3lpJM17OnPXCAUlu7qqBobfztPtVj1qjcY+ARsunAlbPIdQoIx6z3+C+pTuShifpZZNJo6TgE/9SIC1Xoo/GEn3QCXdSlKNDvx4lEYWT3JKEsBKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ibtVMazl; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713254979; c=relaxed/simple;
+	bh=IyzfxVrDw1VKb/tX0dKeY4SEiZVyXJAc1EWfC+D6z9w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Mhre46OYWmZxFa/gVMquHRSYpnqjFGkwYwn9/Bl1HCv/YEnieDTjnes2RW1vMcdTCs4o09Nc8r3A3waOEjvomMc51peD5f09dfLt0RV6fDCcIYS4yeuP/8Ly6yXtPHxTOitfkBxcHmB3JELJ7MWEmfUMj7fiDC1HFA5vmU9nn4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PhtmUUqV; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ibtVMazl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713254930; x=1744790930;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Q8rKm2OGcnNJjkSqgINML+aYz0OFkg9E8valz9G7+cU=;
-  b=ibtVMazliGd4dDCGMl4gXSaoNZa1ZelxykYj4wbYXqAo3o4LPcsbUEjy
-   l5mQ+xBbFWVBkIEH6sqqv0bFPM9ZamwEDwYfT6t8hvuPum3UQ5CBZkDzt
-   LVLsuVTYrWU7NM6MpTnlJBVLs7aZY3/a2JlJaPrOlA6WVjSpudr3eNyQj
-   zPC+8jtdZPbe4DptyhQ4+VRsAB5x8iUEOTteQMcW10PexwC6CLhqNiBr7
-   Vo8UVaqAYBrG92vFIVQNC3/9tKhy41+3HYp+ZeAyVJz8YLJs5RbTMFFli
-   6imMklXMEM/xkkAqLUUVyWQ9oLTcZY4D1JRKWUtjPp1Hx1+u9qY5GQXBa
-   A==;
-X-CSE-ConnectionGUID: U4AqrRWsTvOnLJf6pghXfA==
-X-CSE-MsgGUID: BIGKpXIVQNSAkjVYRO0kgw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12466533"
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="12466533"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 01:08:49 -0700
-X-CSE-ConnectionGUID: 4BXOQ62eSWexOk/9JTwALQ==
-X-CSE-MsgGUID: KzNl1w5YSnWqCE4aWofPUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="22077840"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by orviesa010.jf.intel.com with ESMTP; 16 Apr 2024 01:08:47 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Tina Zhang <tina.zhang@intel.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 12/12] iommu/vt-d: Remove struct intel_svm
-Date: Tue, 16 Apr 2024 16:06:56 +0800
-Message-Id: <20240416080656.60968-13-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240416080656.60968-1-baolu.lu@linux.intel.com>
-References: <20240416080656.60968-1-baolu.lu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PhtmUUqV"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43G7jMA2038911;
+	Tue, 16 Apr 2024 02:45:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713253522;
+	bh=IyzfxVrDw1VKb/tX0dKeY4SEiZVyXJAc1EWfC+D6z9w=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=PhtmUUqVEa9jaLawwCx3GcGXr4r7QsKgcLAVyazhL7710VNVw48PFUGYpjF8/8idi
+	 +Eo9XAdtWu9iDLFeae3m2Bqjd0hY2ESjfHwTmW+/eYlYR6Gi95Q2/qdy3jgQ7Bp8gy
+	 FhfVF/GMwmKYVkGQ1UOJI75xy1ydmtM5X6cE6x8Q=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43G7jMSp063899
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 16 Apr 2024 02:45:22 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 16
+ Apr 2024 02:45:22 -0500
+Received: from DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d]) by
+ DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d%17]) with mapi id
+ 15.01.2507.023; Tue, 16 Apr 2024 02:45:22 -0500
+From: "Xu, Baojun" <baojun.xu@ti.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: "tiwai@suse.de" <tiwai@suse.de>,
+        "robh+dt@kernel.org"
+	<robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "pierre-louis.bossart@linux.intel.com"
+	<pierre-louis.bossart@linux.intel.com>,
+        "Lu, Kevin" <kevin-lu@ti.com>,
+        "Ding,
+ Shenghao" <shenghao-ding@ti.com>,
+        "Navada Kanyana, Mukund" <navada@ti.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+        "yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "soyer@irl.hu" <soyer@irl.hu>,
+        "13916275206@139.com" <13916275206@139.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v2 1/3] ALSA: hda/tas2781: Modification for
+ add tas2781 driver for SPI
+Thread-Topic: [EXTERNAL] Re: [PATCH v2 1/3] ALSA: hda/tas2781: Modification
+ for add tas2781 driver for SPI
+Thread-Index: AQHaiih39yNiM6f7+Uenyc3gmo9onLFgO/YAgApTDWA=
+Date: Tue, 16 Apr 2024 07:45:21 +0000
+Message-ID: <9287a3c1a2384cacad92652fdd1cac2e@ti.com>
+References: <20240409024816.1180-1-baojun.xu@ti.com>
+ <20240409024816.1180-2-baojun.xu@ti.com>,<ZhU8fCOLOlu4azGL@smile.fi.intel.com>
+In-Reply-To: <ZhU8fCOLOlu4azGL@smile.fi.intel.com>
+Accept-Language: en-GB, zh-CN, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The struct intel_svm was used for keeping attached devices info for sva
-domain. Since sva domain is a kind of iommu_domain, the struct
-dmar_domain should centralize all info of a sva domain, including the
-info of attached devices. Therefore, retire struct intel_svm and clean up
-the code.
-
-Besides, register mmu notifier callback  in domain_alloc_sva() callback
-which allows the memory management notifier lifetime to follow the lifetime
-of the iommu_domain. Call mmu_notifier_put() in the domain free and defer
-the real free to the mmu free_notifier callback.
-
-Co-developed-by: Tina Zhang <tina.zhang@intel.com>
-Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.h | 26 ++++------
- drivers/iommu/intel/iommu.c | 11 +----
- drivers/iommu/intel/svm.c   | 99 ++++++++++---------------------------
- 3 files changed, 37 insertions(+), 99 deletions(-)
-
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index 4f4f4f28d55d..e1fb94acf0be 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -649,8 +649,12 @@ struct dmar_domain {
- 			/* link to parent domain siblings */
- 			struct list_head s2_link;
- 		};
-+
-+		/* SVA domain */
-+		struct {
-+			struct mmu_notifier notifier;
-+		};
- 	};
--	struct intel_svm *svm;
- 
- 	struct iommu_domain domain;	/* generic domain data structure for
- 					   iommu core */
-@@ -1150,26 +1154,16 @@ int intel_svm_enable_prq(struct intel_iommu *iommu);
- int intel_svm_finish_prq(struct intel_iommu *iommu);
- void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
- 			     struct iommu_page_response *msg);
--struct iommu_domain *intel_svm_domain_alloc(void);
--void intel_svm_remove_dev_pasid(struct iommu_domain *domain);
-+struct iommu_domain *intel_svm_domain_alloc(struct device *dev,
-+					    struct mm_struct *mm);
- void intel_drain_pasid_prq(struct device *dev, u32 pasid);
--
--struct intel_svm {
--	struct mmu_notifier notifier;
--	struct mm_struct *mm;
--	u32 pasid;
--	struct dmar_domain *domain;
--};
- #else
- static inline void intel_svm_check(struct intel_iommu *iommu) {}
- static inline void intel_drain_pasid_prq(struct device *dev, u32 pasid) {}
--static inline struct iommu_domain *intel_svm_domain_alloc(void)
--{
--	return NULL;
--}
--
--static inline void intel_svm_remove_dev_pasid(struct iommu_domain *domain)
-+static inline struct iommu_domain *intel_svm_domain_alloc(struct device *dev,
-+							  struct mm_struct *mm)
- {
-+	return ERR_PTR(-ENODEV);
- }
- #endif
- 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 0f609ba36382..bbc47b3c603c 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -3682,8 +3682,6 @@ static struct iommu_domain *intel_iommu_domain_alloc(unsigned type)
- 		return domain;
- 	case IOMMU_DOMAIN_IDENTITY:
- 		return &si_domain->domain;
--	case IOMMU_DOMAIN_SVA:
--		return intel_svm_domain_alloc();
- 	default:
- 		return NULL;
- 	}
-@@ -4381,14 +4379,6 @@ static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
- 		goto out_tear_down;
- 	dmar_domain = to_dmar_domain(domain);
- 
--	/*
--	 * The SVA implementation needs to handle its own stuffs like the mm
--	 * notification. Before consolidating that code into iommu core, let
--	 * the intel sva code handle it.
--	 */
--	if (domain->type == IOMMU_DOMAIN_SVA)
--		intel_svm_remove_dev_pasid(domain);
--
- 	spin_lock_irqsave(&dmar_domain->lock, flags);
- 	list_for_each_entry(curr, &dmar_domain->dev_pasids, link_domain) {
- 		if (curr->dev == dev && curr->pasid == pasid) {
-@@ -4623,6 +4613,7 @@ const struct iommu_ops intel_iommu_ops = {
- 	.hw_info		= intel_iommu_hw_info,
- 	.domain_alloc		= intel_iommu_domain_alloc,
- 	.domain_alloc_user	= intel_iommu_domain_alloc_user,
-+	.domain_alloc_sva	= intel_svm_domain_alloc,
- 	.probe_device		= intel_iommu_probe_device,
- 	.probe_finalize		= intel_iommu_probe_finalize,
- 	.release_device		= intel_iommu_release_device,
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 01fa88f8b4a8..84d9bd543a6d 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -26,23 +26,6 @@
- 
- static irqreturn_t prq_event_thread(int irq, void *d);
- 
--static DEFINE_XARRAY_ALLOC(pasid_private_array);
--static int pasid_private_add(ioasid_t pasid, void *priv)
--{
--	return xa_alloc(&pasid_private_array, &pasid, priv,
--			XA_LIMIT(pasid, pasid), GFP_ATOMIC);
--}
--
--static void pasid_private_remove(ioasid_t pasid)
--{
--	xa_erase(&pasid_private_array, pasid);
--}
--
--static void *pasid_private_find(ioasid_t pasid)
--{
--	return xa_load(&pasid_private_array, pasid);
--}
--
- int intel_svm_enable_prq(struct intel_iommu *iommu)
- {
- 	struct iopf_queue *iopfq;
-@@ -156,10 +139,9 @@ static void intel_arch_invalidate_secondary_tlbs(struct mmu_notifier *mn,
- 					struct mm_struct *mm,
- 					unsigned long start, unsigned long end)
- {
--	struct intel_svm *svm = container_of(mn, struct intel_svm, notifier);
--	struct dmar_domain *domain = svm->domain;
-+	struct dmar_domain *domain = container_of(mn, struct dmar_domain, notifier);
- 
--	if (start == 0 && end == -1UL) {
-+	if (start == 0 && end == ULONG_MAX) {
- 		cache_tag_flush_all(domain);
- 		return;
- 	}
-@@ -174,8 +156,7 @@ static void intel_arch_invalidate_secondary_tlbs(struct mmu_notifier *mn,
- 
- static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- {
--	struct intel_svm *svm = container_of(mn, struct intel_svm, notifier);
--	struct dmar_domain *domain = svm->domain;
-+	struct dmar_domain *domain = container_of(mn, struct dmar_domain, notifier);
- 	struct dev_pasid_info *dev_pasid;
- 	struct device_domain_info *info;
- 	unsigned long flags;
-@@ -202,9 +183,15 @@ static void intel_mm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 
- }
- 
-+static void intel_mm_free_notifier(struct mmu_notifier *mn)
-+{
-+	kfree(container_of(mn, struct dmar_domain, notifier));
-+}
-+
- static const struct mmu_notifier_ops intel_mmuops = {
- 	.release = intel_mm_release,
- 	.arch_invalidate_secondary_tlbs = intel_arch_invalidate_secondary_tlbs,
-+	.free_notifier = intel_mm_free_notifier,
- };
- 
- static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
-@@ -215,40 +202,13 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
- 	struct intel_iommu *iommu = info->iommu;
- 	struct mm_struct *mm = domain->mm;
- 	struct dev_pasid_info *dev_pasid;
--	struct intel_svm *svm;
- 	unsigned long sflags;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	svm = pasid_private_find(pasid);
--	if (!svm) {
--		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
--		if (!svm)
--			return -ENOMEM;
--
--		svm->pasid = pasid;
--		svm->mm = mm;
--
--		svm->notifier.ops = &intel_mmuops;
--		svm->domain = to_dmar_domain(domain);
--		ret = mmu_notifier_register(&svm->notifier, mm);
--		if (ret) {
--			kfree(svm);
--			return ret;
--		}
--
--		ret = pasid_private_add(svm->pasid, svm);
--		if (ret) {
--			mmu_notifier_unregister(&svm->notifier, mm);
--			kfree(svm);
--			return ret;
--		}
--	}
--
--	dmar_domain->svm = svm;
- 	dev_pasid = kzalloc(sizeof(*dev_pasid), GFP_KERNEL);
- 	if (!dev_pasid)
--		goto free_svm;
-+		return -ENOMEM;
- 
- 	dev_pasid->dev = dev;
- 	dev_pasid->pasid = pasid;
-@@ -274,30 +234,10 @@ static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
- 	cache_tag_unassign_domain(to_dmar_domain(domain), dev, pasid);
- free_dev_pasid:
- 	kfree(dev_pasid);
--free_svm:
--	if (list_empty(&dmar_domain->dev_pasids)) {
--		mmu_notifier_unregister(&svm->notifier, mm);
--		pasid_private_remove(pasid);
--		kfree(svm);
--	}
- 
- 	return ret;
- }
- 
--void intel_svm_remove_dev_pasid(struct iommu_domain *domain)
--{
--	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
--	struct intel_svm *svm = dmar_domain->svm;
--	struct mm_struct *mm = domain->mm;
--
--	if (list_empty(&dmar_domain->dev_pasids)) {
--		if (svm->notifier.ops)
--			mmu_notifier_unregister(&svm->notifier, mm);
--		pasid_private_remove(svm->pasid);
--		kfree(svm);
--	}
--}
--
- /* Page request queue descriptor */
- struct page_req_dsc {
- 	union {
-@@ -665,7 +605,10 @@ void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
- 
- static void intel_svm_domain_free(struct iommu_domain *domain)
- {
--	kfree(to_dmar_domain(domain));
-+	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-+
-+	/* dmar_domain free is deferred to the mmu free_notifier callback. */
-+	mmu_notifier_put(&dmar_domain->notifier);
- }
- 
- static const struct iommu_domain_ops intel_svm_domain_ops = {
-@@ -673,13 +616,16 @@ static const struct iommu_domain_ops intel_svm_domain_ops = {
- 	.free			= intel_svm_domain_free
- };
- 
--struct iommu_domain *intel_svm_domain_alloc(void)
-+struct iommu_domain *intel_svm_domain_alloc(struct device *dev,
-+					    struct mm_struct *mm)
- {
- 	struct dmar_domain *domain;
-+	int ret;
- 
- 	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
- 	if (!domain)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
-+
- 	domain->domain.ops = &intel_svm_domain_ops;
- 	domain->use_first_level = true;
- 	INIT_LIST_HEAD(&domain->dev_pasids);
-@@ -687,5 +633,12 @@ struct iommu_domain *intel_svm_domain_alloc(void)
- 	spin_lock_init(&domain->cache_lock);
- 	spin_lock_init(&domain->lock);
- 
-+	domain->notifier.ops = &intel_mmuops;
-+	ret = mmu_notifier_register(&domain->notifier, mm);
-+	if (ret) {
-+		kfree(domain);
-+		return ERR_PTR(ret);
-+	}
-+
- 	return &domain->domain;
- }
--- 
-2.34.1
-
+SGkgQW5keSwNCg0KVGhhbnNrIGZvciB5b3VyIHN1Z2dlc3Rpb25zLCBhbnN3ZXIgaW4gbGluZS4N
+Cj4gRnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5j
+b20+DQo+IFNlbnQ6IDA5IEFwcmlsIDIwMjQgMjE6MDINCj4gVG86IFh1LCBCYW9qdW4NCj4gQ2M6
+IHRpd2FpQHN1c2UuZGU7IHJvYmgrZHRAa2VybmVsLm9yZzsgbGdpcmR3b29kQGdtYWlsLmNvbTsg
+cGVyZXhAcGVyZXguY3o7IHBpZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbTsgTHUs
+IEtldmluOyBEaW5nLCBTaGVuZ2hhbzsgTmF2YWRhIEthbnlhbmEsIE11a3VuZDsgYWxzYS1kZXZl
+bEBhbHNhLXByb2plY3Qub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaWFtLnIu
+Z2lyZHdvb2RAaW50ZWwuY29tOyB5dW5nLWNodWFuLmxpYW9AbGludXguaW50ZWwuY29tOyBicm9v
+bmllQGtlcm5lbC5vcmc7IHNveWVyQGlybC5odQ0KPiBTdWJqZWN0OiBbRVhURVJOQUxdIFJlOiBb
+UEFUQ0ggdjIgMS8zXSBBTFNBOiBoZGEvdGFzMjc4MTogTW9kaWZpY2F0aW9uIGZvciBhZGQgdGFz
+Mjc4MSBkcml2ZXIgZm9yIFNQSQ0KPiANCj4gT24gVHVlLCBBcHIgMDksIDIwMjQgYXQgMTA64oCK
+NDg64oCKMTNBTSArMDgwMCwgQmFvanVuIFh1IHdyb3RlOiA+IEludGVncmF0ZSB0YXMyNzgxIGNv
+bmZpZ3MgZm9yIEhQIExhcHRvcHMuIEV2ZXJ5IHRhczI3ODEgaW4gdGhlIGxhcHRvcCA+IHdpbGwg
+d29yayBhcyBhIHNpbmdsZSBzcGVha2VyIG9uIFNQSSBidXMuIFRoZSBjb2RlIHN1cHBvcnQgcmVh
+bHRlayBhcyBSZWFsdGVrID4gdGhlIHByaW1hcnkgY29kZWMu4oCKDQo+IFpqUWNtUVJZRnBmcHRC
+YW5uZXJTdGFydA0KPiBUaGlzIG1lc3NhZ2Ugd2FzIHNlbnQgZnJvbSBvdXRzaWRlIG9mIFRleGFz
+IEluc3RydW1lbnRzLg0KPiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1
+bmxlc3MgeW91IHJlY29nbml6ZSB0aGUgc291cmNlIG9mIHRoaXMgZW1haWwgYW5kIGtub3cgdGhl
+IGNvbnRlbnQgaXMgc2FmZS4gSWYgeW91IHdpc2ggdG8gcmVwb3J0IHRoaXMgbWVzc2FnZSB0byBJ
+VCBTZWN1cml0eSwgcGxlYXNlIGZvcndhcmQgdGhlIG1lc3NhZ2UgYXMgYW4gYXR0YWNobWVudCB0
+byBwaGlzaGluZ0BsaXN0LnRpLmNvbQ0KPiANCj4gWmpRY21RUllGcGZwdEJhbm5lckVuZA0KPiAN
+Cj4gT24gVHVlLCBBcHIgMDksIDIwMjQgYXQgMTA6NDg6MTNBTSArMDgwMCwgQmFvanVuIFh1IHdy
+b3RlOg0KPiA+IEludGVncmF0ZSB0YXMyNzgxIGNvbmZpZ3MgZm9yIEhQIExhcHRvcHMuIEV2ZXJ5
+IHRhczI3ODEgaW4gdGhlIGxhcHRvcA0KPiA+IHdpbGwgd29yayBhcyBhIHNpbmdsZSBzcGVha2Vy
+IG9uIFNQSSBidXMuIFRoZSBjb2RlIHN1cHBvcnQgcmVhbHRlayBhcw0KPiANCj4gUmVhbHRlaw0K
+PiANCj4gPiB0aGUgcHJpbWFyeSBjb2RlYy4NCj4gDQo+IC4uLg0KPiANCj4gPiAgICAgICAgICAg
+ICAgIHsiSU5UMzNGRSIsIH0sDQo+ID4gICAgICAgICAgICAgICB7IklOVDM1MTUiLCB9LA0KPiA+
+ICAgICAgICAgICAgICAgLyogTm9uLWNvbmZvcm1pbmcgX0hJRCBmb3IgQ2lycnVzIExvZ2ljIGFs
+cmVhZHkgcmVsZWFzZWQgKi8NCj4gPiArICAgICAgICAgICAgIHsiVFhOVzI3ODEiLCB9LA0KPiAN
+Cj4gVGhpcyBzZWVtcyB3cm9uZy4gVGhlIElEIGhlcmUgaXMgY29ycmVjdCBmcm9tIEFDUEkgc3Bl
+Y2lmaWNhdGlvbiBwZXJzcGVjdGl2ZS4NCj4gQ2FuIHlvdSBlbGFib3JhdGUgd2h5IHlvdSB0aGlu
+ayBpdCdzICJub24tY29uZm9ybWluZyBfSElEIj8NCg0KSnVzdCBwdXQgaW50byBtaWRkbGUgb2Yg
+YXJyYXksIHNob3VsZCBubyBlZmZlY3RpdmUgdG8gZnVuY3Rpb25zLg0KT2ssIEkgd2lsbCBjaGFu
+Z2UgaXQncyBwb3NpdGlvbiBpbiBuZXh0IHBhdGNoLg0KPiANCj4gPiAgICAgICAgICAgICAgIHsi
+Q0xTQTAxMDAiLCB9LA0KPiA+ICAgICAgICAgICAgICAgeyJDTFNBMDEwMSIsIH0sDQo+ID4gDQo+
+ID4gLi4uDQo+IA0KPiA+ICAgICAgIC8qIE5vbi1jb25mb3JtaW5nIF9ISUQgZm9yIENpcnJ1cyBM
+b2dpYyBhbHJlYWR5IHJlbGVhc2VkICovDQo+ID4gICAgICAgeyAiQ0xTQTAxMDAiLCAodW5zaWdu
+ZWQgbG9uZykmY3MzNWw0MV9oZGEgfSwNCj4gPiAgICAgICB7ICJDTFNBMDEwMSIsICh1bnNpZ25l
+ZCBsb25nKSZjczM1bDQxX2hkYSB9LA0KPiA+ICsgICAgIHsgIlRYTlcyNzgxIiwgKHVuc2lnbmVk
+IGxvbmcpJnRhczI3ODFfaGRhIH0sDQo+IA0KPiBEaXR0by4NCj4gDQo+ID4gICAgICAgeyB9DQo+
+IA0KPiAuLi4NCj4gDQo+ID4gQEAgLTM5LDYgKzM5LDcgQEAgc25kLWhkYS1zY29kZWMtY3MzNWw1
+Ni1zcGktb2JqcyA6PSAgY3MzNWw1Nl9oZGFfc3BpLm8NCj4gPiAgc25kLWhkYS1jcy1kc3AtY3Rs
+cy1vYmpzIDo9ICAgICAgICAgIGhkYV9jc19kc3BfY3RsLm8NCj4gPiAgc25kLWhkYS1zY29kZWMt
+Y29tcG9uZW50LW9ianMgOj0gICAgIGhkYV9jb21wb25lbnQubw0KPiA+ICBzbmQtaGRhLXNjb2Rl
+Yy10YXMyNzgxLWkyYy1vYmpzIDo9ICAgdGFzMjc4MV9oZGFfaTJjLm8NCj4gPiArc25kLWhkYS1z
+Y29kZWMtdGFzMjc4MS1zcGktb2JqcyA6PSAgIHRhczI3ODFfaGRhX3NwaS5vIHRhczI3ODFfc3Bp
+X2Z3bGliLm8NCj4gDQo+IEFjdHVhbGx5IHRoZXNlICdvYmpzJyBoYXMgdG8gYmUgJ3knLCBjYW4g
+eW91IGZpeCBpdCBpbiB0aGUgcHJlcmVxdWlzaXRlIHBhdGNoPw0KPiANCg0KRG8geW91IG1lYW4g
+c2V0IENPTkZJR19TTkRfSERBX1NDT0RFQ19UQVMyNzgxX1NQST15IGluIC5jb25maWc/DQpJdCdz
+IG0gbm93Lg0KDQo+IEFsc28gd29uZGVyaW5nIHdoeSBmd2xpYiBpcyBvbmx5IGEgcmVxdWlyZW1l
+bnQgZm9yIFNQSS4gSG93IGRvZXMgScKyQyB3b3JrPw0KDQpCZWNhdXNlIGluIEkyQyBtb2RlLCBv
+bmUgcHJvYmVkIGRldmljZSBkcml2ZXIgd2lsbCBzdXBwb3J0IGFsbCBkZXZpY2VzLA0KZmlybXdh
+cmUgYmluYXJ5IGlzIG9ubHkgb25lIGZpbGUsIGluY2x1ZGUgYWxsIG9mIGRldmljZXMuDQpCdXQg
+aW4gU1BJIG1vZGUsIG11bHRpIGRyaXZlciBwcm9iZWQsIHNvIHdlIHVzZSBzaW5nbGUgZmlybXdh
+cmUgYmluYXJ5IGZvcg0KZXZlcnkgc3BpIGRldmljZS4NCg0KPiANCj4gLS0NCj4gV2l0aCBCZXN0
+IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KPiANCj4gDQo+IA0KDQpCZXN0IFJlZ2FyZHMN
+CkppbQ0KDQoNCg0KDQo=
