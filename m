@@ -1,124 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6C912D1FA;
-	Tue, 16 Apr 2024 14:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884EE12D1FA;
+	Tue, 16 Apr 2024 14:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277473; cv=none; b=RGhasWxaoEKt0G5tWalUojbQB8GeK9pnoV5K29OGkczMwuF0K0/1cfyyX+SdyL1Eok/88SlWs0YEhe7r8BZh2qcR21tq/CdOKSlWlnnv8Zgy/C/eOCexLlW2WI339OM9Y+IUhxmVpKIcPPhBXGkwUyp7RYrhh2xCcpfk5OGEt98=
+	t=1713277531; cv=none; b=rJZ9dJ+MKGxQ+1My4GbxjYcyrLNP+3BgHi0ji/gHA5sgmbBaXZRplN49Vxi7qtcOTiWROB2yiXfuc6YLe4NENBHc5kKXbAX9H1FkF21tL4iiMmJklGs6MnbZrnnEMQ+EeSI18l3jzGDbSGfAEQwPSHkHvxKo3oWte8E6toei/Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277473; c=relaxed/simple;
-	bh=sgckCYCPNFE69WKP+u5aXdJX1LNHKHOzxtfV1/2KOJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRh4PqOzHVvB8aeGjfV2xACa7wwdG4L3DkvCQZQVo+IOmfw4hPnTBrJPl+6dmDvuj3PVFNClAWJYPFj8mbIarzFoy8Hh6NRYjAVe2+JegHIbvQHcp321AMlH9m0/62CEDROfoW6qqwX+hFE9TAhwLChgRbLA8VVRoqmRBALof3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hl1t/AhT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713277531; c=relaxed/simple;
+	bh=CaypNhkJZaXl4EwAShTiiTMB5+h2agIS3L7eMxxHrkw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=NuXgku9FNt4ssCwt1jsWIJgMPUOak/1d4nTp9LAZQG2Z0QpIqljYgXCFI1L1u5y/j66Trr7R8L7+kNcPk4KL7MC2w8XH4XDZUPpbTeDVf0yfqgiO1iW8Sse7jEzLjGkOtCSPc8TEfz+BXGhpQe+G61JJFKV3umnDizXii/z+aw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQoa0xO6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hl1t/AhT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D5AC113CE;
-	Tue, 16 Apr 2024 14:24:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQoa0xO6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD8CC113CE;
+	Tue, 16 Apr 2024 14:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713277472;
-	bh=sgckCYCPNFE69WKP+u5aXdJX1LNHKHOzxtfV1/2KOJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hl1t/AhT+KmP4IqkAjIKOPYIm8hsfGIMLfg51sYLhO8k8AguuBAW691BoR7KTecRa
-	 tlTwQxqwQD8XgGoaCcm3l2N7CdG98G7LIFI2of1hcPXPEm0uI/3s1IBg3Ea1cBD0gA
-	 DmYIWaZ2APG4/UdTgeDbEabRMXc7Jz9nhxPLhE2AGe58b/388YGmuythp5cJyR4cRd
-	 5CyUkrULDRFAR9dpMHFreuGNZfUQZE9vSq4nw9+KQ4bBJwwGHUolWT1Mte+Sm0Kewx
-	 6nTNtMpUsxkFkl0sMb5kFAJ1fzVhqxrFMtc2I1q4SDpQ23V3ZqpjSogFnnTgy5WPoy
-	 iCaefEbtZUmoA==
-Date: Tue, 16 Apr 2024 15:24:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	j.vosburgh@gmail.com, Hangbin Liu <liuhangbin@gmail.com>,
-	Eric Dumazet <edumazet@google.com>, pabeni@redhat.com,
-	kuba@kernel.org, andy@greyhouse.net, davem@davemloft.net
-Subject: Re: [PATCH net v3] drivers/net/bonding: Fix out-of-bounds read in
- bond_option_arp_ip_targets_set()
-Message-ID: <20240416142428.GO2320920@kernel.org>
-References: <CAEkJfYOnsLLiCrtgOpq2Upr+_W0dViYVHU8YdjJOi-mxD8H9oQ@mail.gmail.com>
+	s=k20201202; t=1713277531;
+	bh=CaypNhkJZaXl4EwAShTiiTMB5+h2agIS3L7eMxxHrkw=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=VQoa0xO6IIGeHWZvFltG7xSx86VeO+vLygmW5URMKw6QU36gU26/b2BITMJ4YKOFa
+	 TZe205H1I8aZbTsvDcmL7p4XV6dcSC7YnSIh6rFtnV1Kw2cCtaMbRehvT0++WsxP49
+	 6Zj300nDpyToMEub9c9NaWNOGjDliSVq3jpeZE3INgV5PuWOU3S39N1qHhSWVxVs41
+	 WxNgpHNt+F45AHeVYhLzU7XRxO3QPTcM5BMALWHk+IJyjl6Sjfz9wZNpOWpzh0rdoF
+	 Tq24N/ZE2iaiC4BD4o+2FMwYN+sQmS22VPWncwyece2AJ0c7KIni4zca51hbsBTjDh
+	 gHqI3VX4TI1/w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEkJfYOnsLLiCrtgOpq2Upr+_W0dViYVHU8YdjJOi-mxD8H9oQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Apr 2024 17:25:27 +0300
+Message-Id: <D0LM72MR4LDH.3QN2WEXU4QEEJ@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <ardb@kernel.org>,
+ <salvatore.benedetto@intel.com>
+Subject: Re: [PATCH 1/2] crypto: ecdh - Pass private key in proper byte
+ order to check valid key
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Stefan Berger" <stefanb@linux.ibm.com>, <linux-crypto@vger.kernel.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+X-Mailer: aerc 0.17.0
+References: <20240415003026.2661270-1-stefanb@linux.ibm.com>
+ <20240415003026.2661270-2-stefanb@linux.ibm.com>
+ <D0KX9NQPXKO1.2RXZU000DD1BB@kernel.org>
+ <6442f387-e45e-4019-8af0-6ca309e4ce4f@linux.ibm.com>
+In-Reply-To: <6442f387-e45e-4019-8af0-6ca309e4ce4f@linux.ibm.com>
 
-On Tue, Apr 16, 2024 at 08:09:44PM +0800, Sam Sun wrote:
-> In function bond_option_arp_ip_targets_set(), if newval->string is an
-> empty string, newval->string+1 will point to the byte after the
-> string, causing an out-of-bound read.
-> 
-> BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
-> Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
-> CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
->  print_address_description mm/kasan/report.c:364 [inline]
->  print_report+0xc1/0x5e0 mm/kasan/report.c:475
->  kasan_report+0xbe/0xf0 mm/kasan/report.c:588
->  strlen+0x7d/0xa0 lib/string.c:418
->  __fortify_strlen include/linux/fortify-string.h:210 [inline]
->  in4_pton+0xa3/0x3f0 net/core/utils.c:130
->  bond_option_arp_ip_targets_set+0xc2/0x910
-> drivers/net/bonding/bond_options.c:1201
->  __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
->  __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:792
->  bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
->  bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c:156
->  dev_attr_store+0x54/0x80 drivers/base/core.c:2366
->  sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
->  kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
->  call_write_iter include/linux/fs.h:2020 [inline]
->  new_sync_write fs/read_write.c:491 [inline]
->  vfs_write+0x96a/0xd80 fs/read_write.c:584
->  ksys_write+0x122/0x250 fs/read_write.c:637
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> ---[ end trace ]---
-> 
-> Fix it by adding a check of string length before using it.
-> 
-> v2
-> According to Jay and Hangbin's opinion, remove target address in
-> netdev_err message since target is not initialized in error path and
-> will not provide useful information.
-> 
-> v3
-> According to Hangbin's opinion, change Fixes tag from 4fb0ef585eb2
-> ("bonding: convert arp_ip_target to use the new option API") to
-> f9de11a16594 ("bonding: add ip checks when store ip target").
-> 
-> Fixes: f9de11a16594 ("bonding: add ip checks when store ip target")
-> Signed-off-by: Yue Sun <samsun1006219@gmail.com>
-> ---
+On Tue Apr 16, 2024 at 3:51 AM EEST, Stefan Berger wrote:
+>
+>
+> On 4/15/24 14:53, Jarkko Sakkinen wrote:
+> > On Mon Apr 15, 2024 at 3:30 AM EEST, Stefan Berger wrote:
+> >> ecc_is_key_valid expects a key with the most significant digit in the =
+last
+> >> entry of the digit array. Currently ecdh_set_secret passes a reversed =
+key
+> >> to ecc_is_key_valid that then passes the rather simple test checking
+> >> whether the private key is in range [2, n-3]. For all current ecdh-
+> >> supported curves (NIST P192/256/384) the 'n' parameter is a rather lar=
+ge
+> >> number, therefore easily passing this test.
+> >>
+> >> Throughout the ecdh and ecc codebase the variable 'priv' is used for a
+> >> private_key holding the bytes in proper byte order. Therefore, introdu=
+ce
+> >> priv in ecdh_set_secret and copy the bytes from ctx->private_key into
+> >> priv in proper byte order by using ecc_swap_digits. Pass priv to
+> >> ecc_is_valid_key.
+> >>
+> >> Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> Cc: Salvatore Benedetto <salvatore.benedetto@intel.com>
+> >> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> >> ---
+> >>   crypto/ecdh.c | 4 +++-
+> >>   1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/crypto/ecdh.c b/crypto/ecdh.c
+> >> index 3049f147e011..a73853bd44de 100644
+> >> --- a/crypto/ecdh.c
+> >> +++ b/crypto/ecdh.c
+> >> @@ -27,6 +27,7 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, c=
+onst void *buf,
+> >>   			   unsigned int len)
+> >>   {
+> >>   	struct ecdh_ctx *ctx =3D ecdh_get_ctx(tfm);
+> >> +	u64 priv[ECC_MAX_DIGITS];
+> >>   	struct ecdh params;
+> >>  =20
+> >>   	if (crypto_ecdh_decode_key(buf, len, &params) < 0 ||
+> >> @@ -40,9 +41,10 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, =
+const void *buf,
+> >>   				       ctx->private_key);
+> >>  =20
+> >>   	memcpy(ctx->private_key, params.key, params.key_size);
+> >> +	ecc_swap_digits(ctx->private_key, priv, ctx->ndigits);
+> >=20
+> > Does swapping speed up the test that follows are what effect does it
+> > have to the ecc_is_key_valid() call?
+> The goal of this particular patch is to fix an issue with the byte order=
+=20
+> (as description says) and, as you can see in the 2nd patch, private key=
+=20
+> is always copied into priv using ecc_swap_digits before priv is being=20
+> used instead of ctx->private_key (or whatever it is called in the=20
+> function it was passed to). This patch here has nothing to do with speed=
+=20
+> up but a) fixing an issue and b) using priv here as well, so fixing this=
+=20
+> 'outlier' here. The speed-up comes in the 2nd patch when the bytes in=20
+> ctx->private_key are put into proper order right away and we can get rid=
+=20
+> if priv, taking the swapped bytes of ctx->private_key, everywhere and we=
+=20
+> can use ctx->private_key directly.
+>
+> The test harness (testmgr.c) runs through part of this code here=20
+> providing the private key that is copied into ctx->private_key, so it's=
+=20
+> being used and when you make a mistake (making the changes I did) the=20
+> ecdh test cases will fail.
 
-Hi Sam Sun,
+OK, thanks for the explanation :-) No opposition on the change itself.
 
-Some comments about the formatting of this submission:
+Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-* The list of chances, (v2, v3, ...) should be below rather than
-  above the scissors ("---"), so it is not included when the patch
-  is applied.
-
-* Looking at git history, the patch prefix should probably be "bonding:"
-
-	Subject: [PATCH net v3] bonding: ...
-
-* The diff seems to be a bit mangled, f.e. tabs seem to
-  have been translated into spaces. So it does not apply.
-  Which breaks automated testing. And for this reason
-  I am asking you to repost this patch.
-
-  git send-email, and b4, are two tools that can typically be used
-  to send patches in a way that this doesn't occur.
-
---- 
-pw-bot: changes-requested
+BR, Jarkko
