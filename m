@@ -1,56 +1,55 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E53139D10
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CA313A248
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298783; cv=none; b=OQQXXIXQQdADUSfY7RYAMyfkoT+TsTEWY38mjDQtNh4qAD6BoILV5bjra56JKX9eYMoTWAAhGC2yWfvDujd8oU/ctz1RyHlxNNpL5AsmmyfiDwDNMty5VDoNgvgq6yVvM7itvasmaXspg0mObGDtYrf56BIUu4ro1fFl+XVuleM=
+	t=1713298784; cv=none; b=PT6XjMkPaMI95F14rVkiKlMxGtnLGy1gfuPrOg51zPJ7oosVdVr4UYWY86zMN4hPu61edA2+pP/WWZmK67uAONVKImDwK4LMu2ojPLpsdGTMGOW6RFBzcBaB98loVV7x3PeKshgFJrS8DM9U+Oa7Li+5s49Rdu/jxQZh3wNvPqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298783; c=relaxed/simple;
-	bh=zrMK1CJms/6SL5AG7A6aHU0z1D+fasw9+uRPwXvEGDk=;
+	s=arc-20240116; t=1713298784; c=relaxed/simple;
+	bh=4HXBDWMcQ63we0cEK0lxOWQf5yGqFZt0BPuAapREAcI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mqo1E7vOgtu86+o7jHQGNGO497zqwsse05M8n2LnQln29NDqHN0hbbzch/O52zQXyyvjotcC0yQfoHKXakfqVTCLf+v2NpaqilFUIHr+ZzEG4YCopxMywHs3YmnokMZPmB4A06GSt/UOoegnwT3RYGuV6j+d8VPJcjjujIJRz+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZHsZ+cjz; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=IEU2LiDPmzsBttMEhY7YUXiqpv99anPBjOxZyJ+TbTMdRkKhWnzRiZbmCHWi5b1DmcNsJ/+DU8E+qgBjw+fIZXpn4Ww4tg5FMn41xJPDzTnzkJ54od+Sf11A8hVHaLxVMXkcIiUuRXgI3w1WE9AY5iiofX6P03G9GCbTOw6++mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hPel3WWO; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHsZ+cjz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hPel3WWO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713298780;
+	s=mimecast20190719; t=1713298781;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2/otD1VSzsXz9/d/LXuHnyGMpoSGECP95q0JyJeR82U=;
-	b=ZHsZ+cjzEFbEyLpgMNYg2VT5bjeIoNgabypscgcfMY00wDucDutaQ/2OEcG27ToO9CYMu7
-	n9UChLQ3y3sNTKf6BrRQBY8hBEmBdV9aH6O7vrf5dgi1v+vFDxH8hXVFzjvAhOzzoOtlR9
-	NeAJ1N1WkZc1vU1P1KYMBJeDeKkPFI4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-o_uHjzYfNPCnc4WUWZ8qJw-1; Tue,
- 16 Apr 2024 16:19:37 -0400
-X-MC-Unique: o_uHjzYfNPCnc4WUWZ8qJw-1
+	bh=iRVZJpf95iM8a2spygqO8CfFJRsMsampTCJH+nL0n8M=;
+	b=hPel3WWOjkbTgavmivlURu6Ep49REFrFcWXobjNi569EByYGdLQgMyTZWZr4QXimwLP/Xb
+	ZDJr9fGqvJoQ2nKv41P1KRlQjEGzRDv/MWCku8Fw6BzxqcRvwjWPqHE/kpL/McQVIXxwM0
+	lH4pmicqVUoBA0bLODurLEPk0JHBIXA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-179-BEDDcJnVMe21fh3BL0OStQ-1; Tue, 16 Apr 2024 16:19:38 -0400
+X-MC-Unique: BEDDcJnVMe21fh3BL0OStQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 210811C05149;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9171D8F7E20;
 	Tue, 16 Apr 2024 20:19:37 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E51B54910B;
-	Tue, 16 Apr 2024 20:19:36 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 650CD18209F;
+	Tue, 16 Apr 2024 20:19:37 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: isaku.yamahata@intel.com,
 	xiaoyao.li@intel.com,
 	binbin.wu@linux.intel.com,
-	chao.gao@intel.com,
-	Sean Christopherson <seanjc@google.com>
-Subject: [PATCH v2 02/10] KVM: x86/mmu: Replace hardcoded value 0 for the initial value for SPTE
-Date: Tue, 16 Apr 2024 16:19:27 -0400
-Message-ID: <20240416201935.3525739-3-pbonzini@redhat.com>
+	chao.gao@intel.com
+Subject: [PATCH v2 04/10] KVM: x86/mmu: Add Suppress VE bit to EPT shadow_mmio_mask/shadow_present_mask
+Date: Tue, 16 Apr 2024 16:19:29 -0400
+Message-ID: <20240416201935.3525739-5-pbonzini@redhat.com>
 In-Reply-To: <20240416201935.3525739-1-pbonzini@redhat.com>
 References: <20240416201935.3525739-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -63,162 +62,62 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-From: Sean Christopherson <seanjc@google.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-The TDX support will need the "suppress #VE" bit (bit 63) set as the
-initial value for SPTE.  To reduce code change size, introduce a new macro
-SHADOW_NONPRESENT_VALUE for the initial value for the shadow page table
-entry (SPTE) and replace hard-coded value 0 for it.  Initialize shadow page
-tables with their value.
+To make use of the same value of shadow_mmio_mask and shadow_present_mask
+for TDX and VMX, add Suppress-VE bit to shadow_mmio_mask and
+shadow_present_mask so that they can be common for both VMX and TDX.
 
-The plan is to unconditionally set the "suppress #VE" bit for both AMD and
-Intel as: 1) AMD hardware uses the bit 63 as NX for present SPTE and
-ignored for non-present SPTE; 2) for conventional VMX guests, KVM never
-enables the "EPT-violation #VE" in VMCS control and "suppress #VE" bit is
-ignored by hardware.
+TDX will require shadow_mmio_mask and shadow_present_mask to include
+VMX_SUPPRESS_VE for shared GPA so that EPT violation is triggered for
+shared GPA.  For VMX, VMX_SUPPRESS_VE doesn't matter for MMIO because the
+spte value is defined so as to cause EPT misconfig.
 
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-Id: <acdf09bf60cad12c495005bf3495c54f6b3069c9.1705965635.git.isaku.yamahata@intel.com>
-[Remove unnecessary CONFIG_X86_64 check. - Paolo]
+Message-Id: <97cc616b3563cd8277be91aaeb3e14bce23c3649.1705965635.git.isaku.yamahata@intel.com>
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c         | 14 +++++++++-----
- arch/x86/kvm/mmu/paging_tmpl.h |  2 +-
- arch/x86/kvm/mmu/spte.h        |  4 +++-
- arch/x86/kvm/mmu/tdp_mmu.c     | 12 ++++++------
- 4 files changed, 19 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/vmx.h | 1 +
+ arch/x86/kvm/mmu/spte.c    | 6 ++++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 08900a0563f9..fbfdc606f1f1 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -567,9 +567,9 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
- 
- 	if (!is_shadow_present_pte(old_spte) ||
- 	    !spte_has_volatile_bits(old_spte))
--		__update_clear_spte_fast(sptep, 0ull);
-+		__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
- 	else
--		old_spte = __update_clear_spte_slow(sptep, 0ull);
-+		old_spte = __update_clear_spte_slow(sptep, SHADOW_NONPRESENT_VALUE);
- 
- 	if (!is_shadow_present_pte(old_spte))
- 		return old_spte;
-@@ -603,7 +603,7 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
-  */
- static void mmu_spte_clear_no_track(u64 *sptep)
- {
--	__update_clear_spte_fast(sptep, 0ull);
-+	__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
- }
- 
- static u64 mmu_spte_get_lockless(u64 *sptep)
-@@ -1897,7 +1897,8 @@ static bool kvm_sync_page_check(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
- 
- static int kvm_sync_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int i)
- {
--	if (!sp->spt[i])
-+	/* sp->spt[i] has initial value of shadow page table allocation */
-+	if (sp->spt[i] == SHADOW_NONPRESENT_VALUE)
- 		return 0;
- 
- 	return vcpu->arch.mmu->sync_spte(vcpu, sp, i);
-@@ -6120,7 +6121,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
- 	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
- 	vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
- 
--	vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
-+	vcpu->arch.mmu_shadow_page_cache.init_value =
-+		SHADOW_NONPRESENT_VALUE;
-+	if (!vcpu->arch.mmu_shadow_page_cache.init_value)
-+		vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
- 
- 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
- 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 4d4e98fe4f35..bebd73cd61bb 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -911,7 +911,7 @@ static int FNAME(sync_spte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int
- 	gpa_t pte_gpa;
- 	gfn_t gfn;
- 
--	if (WARN_ON_ONCE(!sp->spt[i]))
-+	if (WARN_ON_ONCE(sp->spt[i] == SHADOW_NONPRESENT_VALUE))
- 		return 0;
- 
- 	first_pte_gpa = FNAME(get_level1_sp_gpa)(sp);
-diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-index f5c600c52f83..0f4ec2859474 100644
---- a/arch/x86/kvm/mmu/spte.h
-+++ b/arch/x86/kvm/mmu/spte.h
-@@ -149,6 +149,8 @@ static_assert(MMIO_SPTE_GEN_LOW_BITS == 8 && MMIO_SPTE_GEN_HIGH_BITS == 11);
- 
- #define MMIO_SPTE_GEN_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_BITS + MMIO_SPTE_GEN_HIGH_BITS - 1, 0)
- 
-+#define SHADOW_NONPRESENT_VALUE	0ULL
-+
- extern u64 __read_mostly shadow_host_writable_mask;
- extern u64 __read_mostly shadow_mmu_writable_mask;
- extern u64 __read_mostly shadow_nx_mask;
-@@ -194,7 +196,7 @@ extern u64 __read_mostly shadow_nonpresent_or_rsvd_mask;
-  *
-  * Only used by the TDP MMU.
-  */
--#define REMOVED_SPTE	0x5a0ULL
-+#define REMOVED_SPTE	(SHADOW_NONPRESENT_VALUE | 0x5a0ULL)
- 
- /* Removed SPTEs must not be misconstrued as shadow present PTEs. */
- static_assert(!(REMOVED_SPTE & SPTE_MMU_PRESENT_MASK));
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index c6192a52bd31..f5401967897a 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -603,7 +603,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
- 	 * here since the SPTE is going from non-present to non-present.  Use
- 	 * the raw write helper to avoid an unnecessary check on volatile bits.
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 4dba17363008..ac6da0a5f5e6 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -514,6 +514,7 @@ enum vmcs_field {
+ #define VMX_EPT_IPAT_BIT    			(1ull << 6)
+ #define VMX_EPT_ACCESS_BIT			(1ull << 8)
+ #define VMX_EPT_DIRTY_BIT			(1ull << 9)
++#define VMX_EPT_SUPPRESS_VE_BIT			(1ull << 63)
+ #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
+ 						 VMX_EPT_WRITABLE_MASK |       \
+ 						 VMX_EPT_EXECUTABLE_MASK)
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index 768aaeddf5fa..0a0e83859c27 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -413,7 +413,9 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+ 	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
+ 	shadow_nx_mask		= 0ull;
+ 	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
+-	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
++	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
++	shadow_present_mask	=
++		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_BIT;
+ 	/*
+ 	 * EPT overrides the host MTRRs, and so KVM must program the desired
+ 	 * memtype directly into the SPTEs.  Note, this mask is just the mask
+@@ -430,7 +432,7 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
+ 	 * of an EPT paging-structure entry is 110b (write/execute).
  	 */
--	__kvm_tdp_mmu_write_spte(iter->sptep, 0);
-+	__kvm_tdp_mmu_write_spte(iter->sptep, SHADOW_NONPRESENT_VALUE);
- 
- 	return 0;
+ 	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE,
+-				   VMX_EPT_RWX_MASK, 0);
++				   VMX_EPT_RWX_MASK | VMX_EPT_SUPPRESS_VE_BIT, 0);
  }
-@@ -740,8 +740,8 @@ static void __tdp_mmu_zap_root(struct kvm *kvm, struct kvm_mmu_page *root,
- 			continue;
+ EXPORT_SYMBOL_GPL(kvm_mmu_set_ept_masks);
  
- 		if (!shared)
--			tdp_mmu_iter_set_spte(kvm, &iter, 0);
--		else if (tdp_mmu_set_spte_atomic(kvm, &iter, 0))
-+			tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
-+		else if (tdp_mmu_set_spte_atomic(kvm, &iter, SHADOW_NONPRESENT_VALUE))
- 			goto retry;
- 	}
- }
-@@ -808,8 +808,8 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	if (WARN_ON_ONCE(!is_shadow_present_pte(old_spte)))
- 		return false;
- 
--	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte, 0,
--			 sp->gfn, sp->role.level + 1);
-+	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte,
-+			 SHADOW_NONPRESENT_VALUE, sp->gfn, sp->role.level + 1);
- 
- 	return true;
- }
-@@ -843,7 +843,7 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
- 		    !is_last_spte(iter.old_spte, iter.level))
- 			continue;
- 
--		tdp_mmu_iter_set_spte(kvm, &iter, 0);
-+		tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
- 
- 		/*
- 		 * Zappings SPTEs in invalid roots doesn't require a TLB flush,
 -- 
 2.43.0
 
