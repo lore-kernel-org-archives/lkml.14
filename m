@@ -1,153 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70882134406;
-	Tue, 16 Apr 2024 14:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CCE1339A5;
+	Tue, 16 Apr 2024 14:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276652; cv=none; b=VVurmvnTemEmGbceNSgEp/OMQSF3lDN4V+IVoYvEgOyqIfqq8wRgdgemmADT5XyBVDKRS5hdAjsK0CmQ86kKTKVaG3sCKC2se1Z7rmb/esDPc7eNwjk5qduQiopjfTK9v0oktg5CgMBEQ6c7SWVpX/3k6CRkWV1DZYPY5X2uJIs=
+	t=1713276651; cv=none; b=HH3hnifyg4FysqcPZor2JDP+56c+ZHhXbo1qJfA8S19kmr00DSA9OyiamF0DL6KN2nlQnLtcVVTDdLvw4WYOi7zfIjPULWJbbntf1stYjwua7pnwHkQKEXRV6QDeJoy1J7jgzsTdFsz5DKas93WZGgtdQOzJ3efviPtQeGum4eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276652; c=relaxed/simple;
-	bh=KrWX/mg6sB3IEZrckEkLG2wQSu4eyNuu4r2kX+Ke2dM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Db3wHoY1pd3GKhChwlDAGwFg+xY98oukv4CKtjuk3Z67Ya2VFbtV5wXiWMqv9m/X/Dc27RrjMdWnSBhwe12IK8Qy2o2h3ovIPmAhwk+VmXh5RuPCGYjGdz7u57TlDDWilQGGHI6TeK6aiy7T++wJxpUaCeYapc6zkgvjU7O/zFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imdJkKDY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713276651; c=relaxed/simple;
+	bh=PseaAsRe0UQgLtMjT0SGl7UnaF8PrYknBxggC5vUVrU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CoEuf++WZJl0RYHxx4hfdjVdC4auFXmG0A4G+tzVLeM/uBvc0M5Oima8G78b+Qyc56ht8zdCvW8kha9E24bFekeogAlsetAVCjl7pmuiRx0URKxJixQCVD92BSxvyBdcG2N803whx4FWAYJJQA1sizmbOO+KpUtLkfEHnY2uguE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNT5AKZX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imdJkKDY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA9EAC4AF0B;
-	Tue, 16 Apr 2024 14:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNT5AKZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ADDAC113CE;
+	Tue, 16 Apr 2024 14:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713276652;
-	bh=KrWX/mg6sB3IEZrckEkLG2wQSu4eyNuu4r2kX+Ke2dM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=imdJkKDYt4IFdH2ZckctnvXhpZbwxdxcgmUWwCvsrSIY1BBC3Zve/1ZAOnUB2VU7r
-	 o4QWE3QJ+6HF2FSN6XVw50nGwR+64xUP/kb4KIAsCz1CUF/S04ZGbwS6f0cNjWe/6v
-	 Rhj+mq5FCttUy+RNqV+pPUOjSwdGaS4b88AK/rycT+U6phHhDzlgDZf0O84XN0yt+1
-	 e32QCFkUFHSakyxij42InYbVbscHOW6jZ387u0s5pPfaJqOT1VIUeRuM5INvBzmzCY
-	 AXM8KInzJKNcTTY+bsVy+F9LdvQ2sltQNRfvKI1Wg3WsbTvJHSVVGU9ob7lxzLUD1E
-	 RLYXnH8XFlEuA==
-Date: Tue, 16 Apr 2024 09:10:49 -0500
-From: Rob Herring <robh@kernel.org>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] of: property: Add fw_devlink support for
- interrupt-map property
-Message-ID: <20240416141049.GA2148267-robh@kernel.org>
-References: <20240413091942.316054-1-apatel@ventanamicro.com>
+	s=k20201202; t=1713276651;
+	bh=PseaAsRe0UQgLtMjT0SGl7UnaF8PrYknBxggC5vUVrU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=jNT5AKZXe9raa0hcklIyPMICum30AslIk4X57nihBFUwLghvPU7vA4DkQrP/whpwV
+	 N5tbq8p4D+em6zZ6mObXV1Zha+oWEnRZCrphNXZJMHRL7qkxn12WhI4o1NU0Ejagbx
+	 bquZbvg26nqsf7X+tbQAqbX9olZBjxQHdX/ElF4HParMFiNhlOjVW9UpK48gYyd8D2
+	 nOkzwrIc/mwmalCu9gIFPSZSIvpw8lvBgWfprZoG3Pr5Usni7RNPXgjieeVo9cCc6+
+	 57qgYUZTapOuByoNnDzQBv+mOxgXaE3UFkTHDsWMLSEUaSK91+lLMAUxGTh/Xe1ZR6
+	 1QL3P2vceTzaQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Tue, 16 Apr 2024 16:08:27 +0200
+Subject: [PATCH bpf-next 14/18] bpf/verifier: add is_sleepable argument to
+ push_callback_call
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240413091942.316054-1-apatel@ventanamicro.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-bpf_wq-v1-14-c9e66092f842@kernel.org>
+References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=5920;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=PseaAsRe0UQgLtMjT0SGl7UnaF8PrYknBxggC5vUVrU=;
+ b=SoWxMt1mk464DpWnaOlnqSg4DfOq8FtKLR75n5jkaMxB72wkkzSi+uM6qqeLgiXPxyr6yfu2h
+ jkVAzdCBgZTBoY+bCNT3sfrXCgzY6RAqyPGDiDTNozgRwOHtTj6yCzw
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-On Sat, Apr 13, 2024 at 02:49:42PM +0530, Anup Patel wrote:
-> Some of the PCI controllers (such as generic PCI host controller)
-> use "interrupt-map" DT property to describe the mapping between
-> PCI endpoints and PCI interrupt pins. This the only case where
-> the interrupts are not described in DT.
-> 
-> Currently, there is no fw_devlink created based on "interrupt-map"
-> DT property so interrupt controller is not guaranteed to be probed
-> before PCI host controller. This affects every platform where both
-> PCI host controller and interrupt controllers are probed as regular
-> platform devices.
-> 
-> This creates fw_devlink between consumers (PCI host controller) and
-> supplier (interrupt controller) based on "interrupt-map" DT property.
-> 
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
-> Changes since v1:
-> - Updated commit description based on Rob's suggestion
-> - Use of_irq_parse_raw() for parsing interrupt-map DT property
-> ---
->  drivers/of/property.c | 58 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index a6358ee99b74..67be66384dac 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1311,6 +1311,63 @@ static struct device_node *parse_interrupts(struct device_node *np,
->  	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
->  }
->  
-> +static struct device_node *parse_interrupt_map(struct device_node *np,
-> +					       const char *prop_name, int index)
-> +{
-> +	const __be32 *imap, *imap_end, *addr;
-> +	struct of_phandle_args sup_args;
-> +	struct device_node *tn, *ipar;
-> +	u32 addrcells, intcells;
-> +	int i, j, imaplen;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_IRQ))
-> +		return NULL;
-> +
-> +	if (strcmp(prop_name, "interrupt-map"))
-> +		return NULL;
-> +
-> +	ipar = of_node_get(np);
-> +	do {
-> +		if (!of_property_read_u32(ipar, "#interrupt-cells", &intcells))
-> +			break;
-> +		tn = ipar;
-> +		ipar = of_irq_find_parent(ipar);
-> +		of_node_put(tn);
-> +	} while (ipar);
+To support sleepable async callbacks, we need to tell push_callback_call()
+whether the cb is sleepable or not.
+Doing so while checking for the kfunc arguments (when we call
+push_callback_call()) is simpler than adding a check for a function
+while inside push_callback_call().
 
-No need for this loop. We've only gotten here if 'interrupt-map' is 
-present in the node and '#interrupt-cells' is required if 
-'interrupt-map' is present.
+When a callback is tagged as sleepable, the verifier now knows that it is
+the case and can allow a sleepable callback to happen.
 
-> +	if (!ipar)
-> +		return NULL;
-> +	addrcells = of_bus_n_addr_cells(ipar);
-> +	of_node_put(ipar);
-> +
-> +	imap = of_get_property(np, "interrupt-map", &imaplen);
-> +	if (!imap || imaplen <= (addrcells + intcells))
-> +		return NULL;
-> +	imap_end = imap + imaplen;
-> +
-> +	sup_args.np = NULL;
-> +	for (i = 0; i <= index && imap < imap_end; i++) {
-> +		if (sup_args.np) {
-> +			of_node_put(sup_args.np);
-> +			sup_args.np = NULL;
-> +		}
-> +
-> +		addr = imap;
-> +		imap += addrcells;
-> +
-> +		sup_args.np = np;
-> +		sup_args.args_count = intcells;
-> +		for (j = 0; j < intcells; j++)
-> +			sup_args.args[j] = be32_to_cpu(imap[j]);
-> +		imap += intcells;
-> +
-> +		if (of_irq_parse_raw(addr, &sup_args))
-> +			return NULL;
-> +		imap += sup_args.args_count + 1;
-> +	}
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+ include/linux/bpf_verifier.h |  1 +
+ kernel/bpf/verifier.c        | 26 ++++++++++++++++----------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-Doesn't this leak a ref on the last time the function is invoked? For 
-example, if we have 2 entries and index is 2. We'll get index=1, but 
-then exit because imap==imap_end. We need a put on index==1 node.
+diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
+index 36d19cd32eb5..9db35530c878 100644
+--- a/include/linux/bpf_verifier.h
++++ b/include/linux/bpf_verifier.h
+@@ -426,6 +426,7 @@ struct bpf_verifier_state {
+ 	 * while they are still in use.
+ 	 */
+ 	bool used_as_loop_entry;
++	bool in_sleepable;
+ 
+ 	/* first and last insn idx of this verifier state */
+ 	u32 first_insn_idx;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 5e8c1e65fe8c..6a45d88244c6 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -1429,6 +1429,7 @@ static int copy_verifier_state(struct bpf_verifier_state *dst_state,
+ 	}
+ 	dst_state->speculative = src->speculative;
+ 	dst_state->active_rcu_lock = src->active_rcu_lock;
++	dst_state->in_sleepable = src->in_sleepable;
+ 	dst_state->curframe = src->curframe;
+ 	dst_state->active_lock.ptr = src->active_lock.ptr;
+ 	dst_state->active_lock.id = src->active_lock.id;
+@@ -2404,7 +2405,7 @@ static void init_func_state(struct bpf_verifier_env *env,
+ /* Similar to push_stack(), but for async callbacks */
+ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
+ 						int insn_idx, int prev_insn_idx,
+-						int subprog)
++						int subprog, bool is_sleepable)
+ {
+ 	struct bpf_verifier_stack_elem *elem;
+ 	struct bpf_func_state *frame;
+@@ -2431,6 +2432,7 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
+ 	 * Initialize it similar to do_check_common().
+ 	 */
+ 	elem->st.branches = 1;
++	elem->st.in_sleepable = is_sleepable;
+ 	frame = kzalloc(sizeof(*frame), GFP_KERNEL);
+ 	if (!frame)
+ 		goto err;
+@@ -5278,7 +5280,8 @@ static int map_kptr_match_type(struct bpf_verifier_env *env,
+ 
+ static bool in_sleepable(struct bpf_verifier_env *env)
+ {
+-	return env->prog->sleepable;
++	return env->prog->sleepable ||
++	       (env->cur_state && env->cur_state->in_sleepable);
+ }
+ 
+ /* The non-sleepable programs and sleepable programs with explicit bpf_rcu_read_lock()
+@@ -9515,7 +9518,7 @@ static int btf_check_subprog_call(struct bpf_verifier_env *env, int subprog,
+ }
+ 
+ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
+-			      int insn_idx, int subprog,
++			      int insn_idx, int subprog, bool is_sleepable,
+ 			      set_callee_state_fn set_callee_state_cb)
+ {
+ 	struct bpf_verifier_state *state = env->cur_state, *callback_state;
+@@ -9550,7 +9553,7 @@ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *ins
+ 		/* there is no real recursion here. timer callbacks are async */
+ 		env->subprog_info[subprog].is_async_cb = true;
+ 		async_cb = push_async_cb(env, env->subprog_info[subprog].start,
+-					 insn_idx, subprog);
++					 insn_idx, subprog, is_sleepable);
+ 		if (!async_cb)
+ 			return -EFAULT;
+ 		callee = async_cb->frame[0];
+@@ -10389,15 +10392,15 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 		}
+ 		break;
+ 	case BPF_FUNC_for_each_map_elem:
+-		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++		err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 					 set_map_elem_callback_state);
+ 		break;
+ 	case BPF_FUNC_timer_set_callback:
+-		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++		err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 					 set_timer_callback_state);
+ 		break;
+ 	case BPF_FUNC_find_vma:
+-		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++		err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 					 set_find_vma_callback_state);
+ 		break;
+ 	case BPF_FUNC_snprintf:
+@@ -10412,7 +10415,7 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 		if (err)
+ 			return err;
+ 		if (cur_func(env)->callback_depth < regs[BPF_REG_1].umax_value) {
+-			err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++			err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 						 set_loop_callback_state);
+ 		} else {
+ 			cur_func(env)->callback_depth = 0;
+@@ -10515,7 +10518,7 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 		break;
+ 	}
+ 	case BPF_FUNC_user_ringbuf_drain:
+-		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++		err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 					 set_user_ringbuf_callback_state);
+ 		break;
+ 	}
+@@ -12232,7 +12235,7 @@ static int check_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
+ 		return err;
+ 
+ 	if (meta.func_id == special_kfunc_list[KF_bpf_rbtree_add_impl]) {
+-		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
++		err = push_callback_call(env, insn, insn_idx, meta.subprogno, false,
+ 					 set_rbtree_add_callback_state);
+ 		if (err) {
+ 			verbose(env, "kfunc %s#%d failed callback verification\n",
+@@ -17004,6 +17007,9 @@ static bool states_equal(struct bpf_verifier_env *env,
+ 	if (old->active_rcu_lock != cur->active_rcu_lock)
+ 		return false;
+ 
++	if (old->in_sleepable != cur->in_sleepable)
++		return false;
++
+ 	/* for states to be equal callsites have to be the same
+ 	 * and all frame states need to be equivalent
+ 	 */
 
-Look at my next branch where I've converted things to use __free() 
-cleanups. I don't see it helping here as-is, but maybe when it is 
-correct.
+-- 
+2.44.0
 
-Rob
