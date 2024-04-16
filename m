@@ -1,198 +1,209 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AB02EAF9;
-	Tue, 16 Apr 2024 17:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A6012E1E8;
+	Tue, 16 Apr 2024 17:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713287066; cv=none; b=cv7vwNCYNNWrhHryew0M3yqisn8p8UEYjZTFRquP7bBUg3oTeCaU0fNHSTKrsTRfr/pZpY67DYbEFEYcKJpn/pC6MpCS0uA1VwWMdFYO+s9KiOUv1qzDuhSi7dY3tx8RwP/wPEBGS7INad4Kf0oNlPCfmMrXavzBVunSg7Po+Vk=
+	t=1713287267; cv=none; b=NOmnJ7MMZfSwVXrtifAIWyOo6ky7ewrMDAtvCOi9k+6m9mGVIGJGBzQfPYt2eO/SkX1YsvhOq9/KHtxhwg/UnhYRlL58ceo/ejjgiqIZqd/7MRx6xcweBuL2LXeY5G2lxlCTWSrdNpiEDqa8GkfrMalfSpcc83qUXmSDnexqYW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713287066; c=relaxed/simple;
-	bh=smozM9jF1fgEa0jo5wcKDyao5GQFouQ/Furzv3/aqFM=;
+	s=arc-20240116; t=1713287267; c=relaxed/simple;
+	bh=f/fnrdxNCDGyBxu0Cw8TMeUPmrR90+CCa02nHl4h05Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZjgcLEiet2FOW6/99SP5RwnzOVhzx9QaupSMID/uS+bfiN+tj1LpNnIOT8Fiyjv4Wdfm+xBJWdgs5BPHAaXFsUn3LvJGuyYewH8ONI0B0TP+M0vEgm4c/R2zVziyFSmab2zUhB3tJ/qazItrkOc7+smTrbX9wYaqV96qUt2o5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MDYr91ST; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2joM5M0e; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ae0gGnxd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=amWRgvx/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=f7zWmGL+stjEsph69KqxOK/zx+Deh7xHX5A+GzdrqxyMswnSAScBSoYcm+JnkXKU48E7cbNPQRQEunkHHhsoNtsr26UAYPPXF3wkxU3D9APdN5ydCE6wJk+Rb4gDPukJibij/7udRZ5qs2pVxb33aY6yX+l+bdLYrzaktFcmLqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPTXOQq9; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MDYr91ST";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2joM5M0e";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ae0gGnxd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="amWRgvx/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6CAA81F7C4;
-	Tue, 16 Apr 2024 17:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713287059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
-	b=MDYr91STVJoNWxZhqSg2uy5Kw/MIdL6pC2WieISYnxY9HMaDRBMHgCBUd2f9BFVZRRJYyJ
-	fCO6/k6uH+2fpTspFFMk6tmRRanOmAvap1oKKgGfmqkRZBfJNeWazjC6V+nSqqcfDp5pMe
-	ILLp977WnrTzxjuEpUO27tmXdkA3u7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713287059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
-	b=2joM5M0egcib8sTxUUqc6TrDI43rBAkVjVtCEg1SYgWpB8zoD/efYFIY50vMJbHCIGisMC
-	gdRZGy2264fm6aBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1713287058;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
-	b=ae0gGnxd/wTLaP35Hhq8QbqNn1rtWeL1tBCL1XkgKi+bbABrBWF7NlJvbbhlmCkluKteGl
-	h5PcfVfBOyw2dOttqIjaOLZsCwCSKhRn2OG93UqISqwUS0WbuOiQ1rUeJ7nMwYSMRj9RMd
-	PsuU4WQRIAHTSkluuoViKVoqfoNjcJU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1713287058;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
-	b=amWRgvx/OUa0dd0i2x47/zLltJnD+n/BDPibTKM2vgWgECWLwE5xskJZhvpQrhdoL1KzAm
-	QswOoa635H1i4OAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 428DF13432;
-	Tue, 16 Apr 2024 17:04:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lXwdEJKvHmYbKQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 16 Apr 2024 17:04:18 +0000
-Date: Tue, 16 Apr 2024 18:56:49 +0200
-From: David Sterba <dsterba@suse.cz>
-To: syzbot <syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] KMSAN: kernel-infoleak in
- btrfs_ioctl_logical_to_ino (2)
-Message-ID: <20240416165648.GS3492@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <000000000000196a39061636840a@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPTXOQq9"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-434d12e9662so21108881cf.2;
+        Tue, 16 Apr 2024 10:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713287265; x=1713892065; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORGQ4FpFUr8CNMJ8nGMv1TvXQGc9fladS7kaSrCMW9A=;
+        b=dPTXOQq9kXN8Ntvs4v9lI4U1T2+EFtP6Q1/mgZNYooHD975V/e8AqZkGexMMf5dB20
+         zjVY0HLXDMUpCqDnwVm1etmuZnvxP3nrnFJtFcTodHrIPLZHzkRNcVIxAcJBKN/mDfni
+         AsX785qwK9/6e8k1SyEOlxkEDciZJ9PFsoHl3VoE0qaZYntPA4un+Ua9nBZzuW7LGYKH
+         Z2BYGLSJMKqhsP7eXCl2iFUxiDCKfEsO1z2DuqGRJBtmiOgv8Ry2ka1ZLHoSRng/roTJ
+         7xYFHsHo1OeJdMAk+ol/mEvGfg00uBlOKGHE52kII7OccI+XF/dx/uESwGxXFwcW67dQ
+         SlPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713287265; x=1713892065;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ORGQ4FpFUr8CNMJ8nGMv1TvXQGc9fladS7kaSrCMW9A=;
+        b=ma6JSDxOJ9PoPvpZzaSymz7Q5TgFaproGLymfmviSzvyuwD+scEQ2KgVPUHqnE5Yum
+         RKdDa5r/k2QK/ohZ4QdWzx5N3SGiqT7kssNSbM0HFbybXFDArucx9SBhL9cBACedwKnu
+         ktiC0vlmBDJiVIPrpXHNPAGpIXC+I5eVIQtHA0A7gmzzHbaPTu+5QSwM7qHDUn4eYKdK
+         rS6HSand7+azxyE2LXEgbZVURZkpupuDxZNrlV57BpQhW2jEdKeZZUXXAP5ciG22bkGd
+         Me3SVBZGeRoqPI3hHUCRFmj+dmXWkmlmgPDiw2P76HI+5ZAmkPzAZ7cKqx8CRrI8sb/V
+         LT2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrrrwwuMKRRSyXpvhKR/ec2CHPcWp3C0y/RiyD0+0DYdiirUSFSewdsFW+Xlff566eYw0yRyA57d5CAGlMLvggekfHk68sjWzlqULFZFShfJPSJAB3c+YrpPj5z7g/b85vNCBjwMITmsEIC0h6tdH6D7H0KbYhuGpRX/YZ7VvhBxWgcUs=
+X-Gm-Message-State: AOJu0Yzq1oh4VfH9HbBU2rjG3fi/gJASRvPIiwS4ShVkxBcxYNEuYZ4X
+	53NHvZWcZJZuc8xJWRGUWHc0grhOoYsV+ETZ2E6rIO0+UIHNq1J5
+X-Google-Smtp-Source: AGHT+IH4K1C8oUNKr5v3XEp6bWsc4NZ9GBMoBMOkM/9G+fGLZvPAXtNsSr4sY5xa7gudhKIFSR3AKQ==
+X-Received: by 2002:ac8:58d0:0:b0:436:73ac:8129 with SMTP id u16-20020ac858d0000000b0043673ac8129mr19448010qta.61.1713287265180;
+        Tue, 16 Apr 2024 10:07:45 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id i9-20020ac860c9000000b004343d542598sm7328319qtm.62.2024.04.16.10.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 10:07:44 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 3D4501200066;
+	Tue, 16 Apr 2024 13:07:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 16 Apr 2024 13:07:43 -0400
+X-ME-Sender: <xms:X7AeZmCDxp6AsgYautBwC_DXlCFkgQ6Laxu_AgglfwplvhVCWyFq_g>
+    <xme:X7AeZghMBJm5BuId6WpUW6HbhBYegfnFfSkdWcc4bn0NUbxrTGUmp-ola0a5mtepr
+    mRIrdod-NhGu6iMww>
+X-ME-Received: <xmr:X7AeZpnn4wG--Ad9jQMfXtylQ6mYGnNyoJLKYHT8Ow3EVzJEAfDbQG3WgQDOUQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejiedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepffdvudegieehffdvtdeivefhgfehgedtffdugfekffeuheevheffieek
+    tedujeejnecuffhomhgrihhnpehgihhthhhusgdrtghomhdpiihulhhiphgthhgrthdrtg
+    homhdpihguvghnthhifhhivghrshdrshgrfhgvthihnecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhph
+    gvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdr
+    fhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:X7AeZkx-DATjGs_MOBhrBCqZdjQ26sAwl-rTbPKI9W65iPbVL3cdrA>
+    <xmx:X7AeZrTSHYW5YWZX_8VfqPJfQd86OPJAueRQ7ejTGTLamq8AhHJxNg>
+    <xmx:X7AeZvYK1096IPo8NfsO6GWVkXFJuUbsOuBwlRUnjc-fjHtxUcvy6A>
+    <xmx:X7AeZkRAzhO8GWG4vo-h7Sjy9pqnw5fzr1vM49LuuPuE2-HgqJlyYg>
+    <xmx:X7AeZtBB7_viBL6XxlqnEdeO_9_XamuixjGZLymcXKVetYwNELi2Z79p>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 16 Apr 2024 13:07:42 -0400 (EDT)
+Date: Tue, 16 Apr 2024 10:07:24 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+	Asahi Lina <lina@asahilina.net>,
+	Sumera Priyadarsini <sylphrenadin@gmail.com>,
+	Neal Gompa <neal@gompa.dev>,
+	Thomas Bertschinger <tahbertschinger@gmail.com>,
+	Andrea Righi <andrea.righi@canonical.com>,
+	Matthew Bakhtiari <dev@mtbk.me>,
+	Adam Bratschi-Kaye <ark.email@gmail.com>, stable@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@google.com>,
+	Finn Behrens <me@kloenk.dev>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rust: macros: fix soundness issue in `module!` macro
+Message-ID: <Zh6wTDoMgvjJZ7T9@boqun-archlinux>
+References: <20240401185222.12015-1-benno.lossin@proton.me>
+ <CANiq72=M0L+RG6v701ThedXgYj4SUgotx-BcVoWbMxOcKY5--w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <000000000000196a39061636840a@google.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -1.50
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=87a805e655619c64];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[510a1abbb8116eeb341d];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,appspotmail.com:email,syzkaller.appspot.com:url,storage.googleapis.com:url];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=M0L+RG6v701ThedXgYj4SUgotx-BcVoWbMxOcKY5--w@mail.gmail.com>
 
-On Tue, Apr 16, 2024 at 06:14:20AM -0700, syzbot wrote:
-> Hello,
+On Sun, Apr 07, 2024 at 10:02:35PM +0200, Miguel Ojeda wrote:
+> On Mon, Apr 1, 2024 at 8:53 PM Benno Lossin <benno.lossin@proton.me> wrote:
+> >
+> > The `module!` macro creates glue code that are called by C to initialize
+> > the Rust modules using the `Module::init` function. Part of this glue
+> > code are the local functions `__init` and `__exit` that are used to
+> > initialize/destroy the Rust module.
+> > These functions are safe and also visible to the Rust mod in which the
+> > `module!` macro is invoked. This means that they can be called by other
+> > safe Rust code. But since they contain `unsafe` blocks that rely on only
+> > being called at the right time, this is a soundness issue.
+> >
+> > Wrap these generated functions inside of two private modules, this
+> > guarantees that the public functions cannot be called from the outside.
+> > Make the safe functions `unsafe` and add SAFETY comments.
+> >
+> > Cc: stable@vger.kernel.org
+> > Closes: https://github.com/Rust-for-Linux/linux/issues/629
+> > Fixes: 1fbde52bde73 ("rust: add `macros` crate")
+> > Signed-off-by: Benno Lossin <benno.lossin@proton.me>
 > 
-> syzbot found the following issue on:
+> [ Capitalized comments, avoided newline in non-list SAFETY comments
+>   and reworded to add Reported-by and newline. ]
 > 
-> HEAD commit:    cef27048e5c2 Merge tag 'bcachefs-2024-04-15' of https://ev..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11a1fec7180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=87a805e655619c64
-> dashboard link: https://syzkaller.appspot.com/bug?extid=510a1abbb8116eeb341d
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> Applied to `rust-fixes` -- thanks everyone!
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/fce0439cf562/disk-cef27048.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/99540e71cf72/vmlinux-cef27048.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/65fbfc2c486f/bzImage-cef27048.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com
-> 
-> BTRFS info (device loop1): first mount of filesystem c9fe44da-de57-406a-8241-57ec7d4412cf
-> BTRFS info (device loop1): using crc32c (crc32c-generic) checksum algorithm
-> BTRFS info (device loop1): using free-space-tree
-> =====================================================
-> BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-> BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x110 lib/usercopy.c:40
->  instrument_copy_to_user include/linux/instrumented.h:114 [inline]
->  _copy_to_user+0xbc/0x110 lib/usercopy.c:40
->  copy_to_user include/linux/uaccess.h:191 [inline]
->  btrfs_ioctl_logical_to_ino+0x440/0x750 fs/btrfs/ioctl.c:3499
->  btrfs_ioctl+0x714/0x1260
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:904 [inline]
->  __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
->  __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
->  x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Uninit was created at:
->  __kmalloc_large_node+0x231/0x370 mm/slub.c:3921
->  __do_kmalloc_node mm/slub.c:3954 [inline]
->  __kmalloc_node+0xb07/0x1060 mm/slub.c:3973
->  kmalloc_node include/linux/slab.h:648 [inline]
->  kvmalloc_node+0xc0/0x2d0 mm/util.c:634
->  kvmalloc include/linux/slab.h:766 [inline]
->  init_data_container+0x49/0x1e0 fs/btrfs/backref.c:2779
 
-2767 struct btrfs_data_container *init_data_container(u32 total_bytes)
-2768 {
-2769         struct btrfs_data_container *data;
-2770         size_t alloc_bytes;
-2771
-2772         alloc_bytes = max_t(size_t, total_bytes, sizeof(*data));
-2773         data = kvmalloc(alloc_bytes, GFP_KERNEL);
+As reported by Dirk Behme:
 
-and then data is passed around in the ioctl.
+	https://rust-for-linux.zulipchat.com/#narrow/stream/291565-Help/topic/How.20to.20use.20THIS_MODULE.20with.20.22.20rust.3A.20macros.3A.20fix.20soundness.20.2E.22/near/433512583
 
->  btrfs_ioctl_logical_to_ino+0x17c/0x750 fs/btrfs/ioctl.c:3480
->  btrfs_ioctl+0x714/0x1260
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:904 [inline]
->  __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
->  __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
->  x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Bytes 40-65535 of 65536 are uninitialized
+The following is needed to allow modules using `THIS_MODULE` as a static
+variable. That being said, maybe we can merge this patch as it is, since
+it doesn't break mainline, and the following change can be done in a
+separate patch.
 
-It is possible to let the ioctl allocate a big buffer but return it
-filled only partially. So it should be kvcalloc.
+Regards,
+Boqun
+
+----------------------------->8
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index 293beca0a583..0664b957a70a 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -199,6 +199,17 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
+             /// Used by the printing macros, e.g. [`info!`].
+             const __LOG_PREFIX: &[u8] = b\"{name}\\0\";
+ 
++            // SAFETY: `__this_module` is constructed by the kernel at load time and will not be
++            // freed until the module is unloaded.
++            #[cfg(MODULE)]
++            static THIS_MODULE: kernel::ThisModule = unsafe {{
++                kernel::ThisModule::from_ptr(&kernel::bindings::__this_module as *const _ as *mut _)
++            }};
++            #[cfg(not(MODULE))]
++            static THIS_MODULE: kernel::ThisModule = unsafe {{
++                kernel::ThisModule::from_ptr(core::ptr::null_mut())
++            }};
++
+             // Double nested modules, since then nobody can access the public items inside.
+             mod __module_init {{
+                 mod __module_init {{
+@@ -215,17 +226,6 @@ mod __module_init {{
+ 
+                     static mut __MOD: Option<{type_}> = None;
+ 
+-                    // SAFETY: `__this_module` is constructed by the kernel at load time and will not be
+-                    // freed until the module is unloaded.
+-                    #[cfg(MODULE)]
+-                    static THIS_MODULE: kernel::ThisModule = unsafe {{
+-                        kernel::ThisModule::from_ptr(&kernel::bindings::__this_module as *const _ as *mut _)
+-                    }};
+-                    #[cfg(not(MODULE))]
+-                    static THIS_MODULE: kernel::ThisModule = unsafe {{
+-                        kernel::ThisModule::from_ptr(core::ptr::null_mut())
+-                    }};
+-
+                     // Loadable modules need to export the `{{init,cleanup}}_module` identifiers.
+                     /// # Safety
+                     ///
+@@ -301,7 +301,7 @@ mod __module_init {{
+                     ///
+                     /// This function must only be called once.
+                     unsafe fn __init() -> core::ffi::c_int {{
+-                        match <{type_} as kernel::Module>::init(&THIS_MODULE) {{
++                        match <{type_} as kernel::Module>::init(&super::super::THIS_MODULE) {{
+                             Ok(m) => {{
+                                 // SAFETY:
+                                 // no data race, since `__MOD` can only be accessed by this module and
