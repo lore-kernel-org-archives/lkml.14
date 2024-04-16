@@ -1,189 +1,143 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428C410A14
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C53134425;
+	Tue, 16 Apr 2024 18:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713291621; cv=none; b=ryZ9jQWHtL/ZbsVS3mYGneAQsfTXr6EANCwT4jFrwEAqwX5gl89m9aGrU8m4tyL10KIf0U+C987Z67Zh7by+lGr5QgobfIdPU9lTsxeR62B/3hyBkfQ3qnlJQiREtncZAENWcNTO19SqVyYuxCXMVtricTKl+mvGrtUBS/7Bv+g=
+	t=1713291667; cv=none; b=JnNaXO5v3HCaCXKMk0xDK5H9zm8zWhUMv5rr0BUW4X3XBsJGXDpROuVP6NyBIqPe3wHu6WM8dzC0uexxyUs/+/GUTMw1Slccg47W9672YGkoZX8VfSEfhW3DgngrIJCo8YSS9IsY0BuP2kKrSRQLeHcOxSb7WEOv0lDTfJTLRlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713291621; c=relaxed/simple;
-	bh=J7nUs4Rfj55fuHNvurg0yldD2Cii+ZfFJaDPt10pkV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rHy3KXqMd/epryjOfcbn1i5ntdlBIxfcaa60aL8HPVzxYnS8os9wgSCp//2b2xlY0bXOIH53CDZaSP7zNtUITXHsyKTxu1C9qE2sMCyQDG9EGcWPimu5+p4bnpToApGbokvUg13OJuWeSZFYIe4dKsWzaXBeu8a1hWQDHjZjmVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fyg4MVEb; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713291667; c=relaxed/simple;
+	bh=hODAtBoW28GRpf6eK1tEK/y5Fg0Q2GNj9a9v3pFmpPE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Asdm0wIVCjnRIZsDsTFrjBsbtHq7u/g8i43Lu5v+desQW4crL+QRFl6t1G0x+8vvovIf7jvu5GXF4BO78YAgnrQHcAJgZxqa0hXTvW461fm80xtT/72bE8af/99IgHBo3vkVt6ND4ipVjsk9fuh1OqhskdIoeruFAVuG4MAVGdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lQ0L3SgI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fyg4MVEb"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso6231452a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 11:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713291616; x=1713896416; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LiZoFre+EEvabWrIaMGE+RnIgnE08Xi8rFbTEN0hiU4=;
-        b=fyg4MVEbD9pejP2uIVotcF6eLNGpHlaUVMEwbzVt8yoaOK9OUUum4tkV52nQheXgUn
-         hBCRCpg605Xyl5U6KKXycFlIyeUt5EOgepR+IhRtl+dtUFGvQAw1pKFAMT0HRcz6G4nY
-         YapLp2Gh9GzmKJ2LZcvv4dPoDxoKIN/SZ8lJjsSQWgiM6Tx8cyKrxB6QC65m66+1sgPH
-         OzurHeCanvw8KdT6W7OLWDO9UG0yCGvuMueGRdWcfCt65ICgnJxx5cearncle3W+N2K9
-         ntkXFsmDp/hF/302XH1919KAsdYnkl5rEnMr0MpQebeavfz8QyO2WRmSHbxonAC7+Vrb
-         8fmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713291616; x=1713896416;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LiZoFre+EEvabWrIaMGE+RnIgnE08Xi8rFbTEN0hiU4=;
-        b=nfKzUPxjiVTlhAaiTj/UVocmu2g9xRpZF7nNTr+r++T/GEpmKKhg7+aT62H2pXY7eB
-         CYfjfqle8ekBbeTM+clmmQHrPjsDGte2tlh+AwmD5Z5NQRY/nqt/By2dP+NsjnzvPH1z
-         KvTU1j6OoKXd7JYRoxJvgG6OJv+5kpIVzAYO/UAsLgnVGuUgHyswKyk3EtEkoPawFFgO
-         Xp4AA8K84BY0/+cMFGz1mZZtSGNnKhNxfVy8/kkCx29cJj9O9bgOgO4/Tt3nnRnFo9R5
-         B+ZvR+xilvE4/YScMuEfknqpBxJ6i3Du3ZYqiawFZOvTpYBVa4nud1IBlCdJ9zKP2IUE
-         V3WA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmaRfeN0iIbVU6HnuY76xBQ11WEJmEZUy6zMFp/xs6s30FQBa812T59N4WT4Bvn0d7nFDkelVEM69cPRfGF9mTZn5ROCw56iOljTjd
-X-Gm-Message-State: AOJu0YxUlpIqlw0a1B7W2XgkqKWON3m168m/J9uS2ups3UH9sl2zsXNl
-	BJYOjk/dH+ry1K+0RQqpJVX3lD6wBmpy8wzkCHuayApxzG87kkm4PhlLJpy6au0=
-X-Google-Smtp-Source: AGHT+IFZwq6l2AcJ1KK82U+CiB1zqh+Plqpd5qrQkIit5NN7rI1eBA5ieSH+2EC/GhdndnlKEBkgKQ==
-X-Received: by 2002:a17:907:360d:b0:a52:5a04:faff with SMTP id bk13-20020a170907360d00b00a525a04faffmr6845924ejc.8.1713291616151;
-        Tue, 16 Apr 2024 11:20:16 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id o7-20020a17090611c700b00a4672fb2a03sm7229104eja.10.2024.04.16.11.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 11:20:15 -0700 (PDT)
-Date: Tue, 16 Apr 2024 21:20:11 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Dhruva Gole <d-gole@ti.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: Re: [PATCH v10 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <6c652af8-151e-4d8b-9587-8eae1254a4fe@moroto.mountain>
-References: <20240415-pinctrl-scmi-v10-0-59c6e7a586ee@nxp.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lQ0L3SgI"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GHoal3032568;
+	Tue, 16 Apr 2024 18:21:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=JM6GINH
+	US8Wl6DtWq1flatD5230ncoCZTko17XSCQR4=; b=lQ0L3SgI/Dpemq8Yp+odilZ
+	N/MHGvsUWKWewcJQBR1kU5sJ5bLvNWnM5ljDEU9nu/1BWghqwz7krSwLLnOJ4lap
+	EJsaBXS9DaWZ3YvsNzVWxGj/v79eziU8QMDmE67E/Ks7vExAjRvOnqZqmSDEVj/E
+	QBbMRc9q2nSzVnLNbR78hpuplkcY498LlMSaoa/Ah/rHh6A6ioJHOBSI/jwfJQKg
+	Jhjxa5ZH6Z1cVLj+IFzSPFGCNTsNz87A8f6HjZ/2f6Jt1d5iOqDKNlrc1CRs+gCb
+	Uo57vH83qxnOESqnJG0KquRYunoJYXU3QUUAcafSnnrP2KtPh76cT0GSLax/UIg=
+	=
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xhx32054r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 18:21:02 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43GIL1wS032561
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 18:21:01 GMT
+Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 16 Apr 2024 11:20:55 -0700
+From: Ajit Pandey <quic_ajipan@quicinc.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>
+Subject: [PATCH V2 0/8] clk: qcom: Add support for DISPCC, CAMCC and GPUCC on SM4450
+Date: Tue, 16 Apr 2024 23:49:57 +0530
+Message-ID: <20240416182005.75422-1-quic_ajipan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415-pinctrl-scmi-v10-0-59c6e7a586ee@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QGfNgU7Spqn1RG8d5DTYBml_E4YlaDtM
+X-Proofpoint-ORIG-GUID: QGfNgU7Spqn1RG8d5DTYBml_E4YlaDtM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-16_16,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404160115
 
-I'm trying to re-base AKASHI Takahiro's gpio driver on top of your scmi
-pinctrl driver.
-https://lore.kernel.org/all/20231005025843.508689-1-takahiro.akashi@linaro.org/
-I need to do something like this below to save the gpio information.
+This patch series add dt-bindings, driver and device tree support for DISPCC,
+CAMCC and GPUCC on QCOM SM4450 platform and also includes a fix related to
+LUCID EVO PLL config issue in clk-alpha-pll driver which is required for correct
+scaling of few supported frequencies in graphics clock controllers on SM4450.
 
-So now, great, I have the information but I'm not sure how to export it
-from the scmi pinctrl driver to the gpio driver...  (This is a probably
-a stupid question but I am real newbie with regards to gpio).
+Changes in V2:
+- [PATCH 1/8]: Updated commit text adding stable kernel signoff for Fixes patch
+- [PATCH 2/8]: Updated commit msg and added Reviewed-by: Krzysztof Kozlowski tag
+- [PATCH 4/8]: Updated commit text as per review comments in v1
+- [PATCH 5/8]: Added Reviewed-by: Dmitry Baryshkov tags received in v1
+- [PATCH 7/8]: Fixed duplicate reset entries warnings
+- [PATCH 8/8]: New patch for adding dispcc, camcc and gpucc device-tree nodes
+- Link to V1: https://lore.kernel.org/all/20240330182817.3272224-1-quic_ajipan@quicinc.com/
+ 
 
-The other thing is that the SCMI spec says:
+Ajit Pandey (8):
+  clk: qcom: clk-alpha-pll: Fix CAL_L_VAL override for LUCID EVO PLL
+  dt-bindings: clock: qcom: add bindings for dispcc on SM4450
+  clk: qcom: Add DISPCC driver support for SM4450
+  dt-bindings: clock: qcom: add bindings for camcc on SM4450
+  clk: qcom: Add CAMCC driver support for SM4450
+  dt-bindings: clock: qcom: add bindings for gpucc on SM4450
+  clk: qcom: Add GPUCC driver support for SM4450
+  arm64: dts: qcom: sm4450: add camera, display and gpu clock controller
 
-    4.11.2.7
-    PINCTRL_SETTINGS_GET
+ .../bindings/clock/qcom,sm4450-camcc.yaml     |   63 +
+ .../bindings/clock/qcom,sm4450-dispcc.yaml    |   71 +
+ .../bindings/clock/qcom,sm8450-gpucc.yaml     |    2 +
+ arch/arm64/boot/dts/qcom/sm4450.dtsi          |   35 +
+ drivers/clk/qcom/Kconfig                      |   27 +
+ drivers/clk/qcom/Makefile                     |    3 +
+ drivers/clk/qcom/camcc-sm4450.c               | 1688 +++++++++++++++++
+ drivers/clk/qcom/clk-alpha-pll.c              |    2 +-
+ drivers/clk/qcom/dispcc-sm4450.c              |  781 ++++++++
+ drivers/clk/qcom/gpucc-sm4450.c               |  805 ++++++++
+ include/dt-bindings/clock/qcom,sm4450-camcc.h |  106 ++
+ .../dt-bindings/clock/qcom,sm4450-dispcc.h    |   51 +
+ include/dt-bindings/clock/qcom,sm4450-gpucc.h |   62 +
+ 13 files changed, 3695 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-camcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm4450-dispcc.yaml
+ create mode 100644 drivers/clk/qcom/camcc-sm4450.c
+ create mode 100644 drivers/clk/qcom/dispcc-sm4450.c
+ create mode 100644 drivers/clk/qcom/gpucc-sm4450.c
+ create mode 100644 include/dt-bindings/clock/qcom,sm4450-camcc.h
+ create mode 100644 include/dt-bindings/clock/qcom,sm4450-dispcc.h
+ create mode 100644 include/dt-bindings/clock/qcom,sm4450-gpucc.h
 
-    This command can be used by an agent to get the pin or group
-    configuration, and the function selected to be enabled. It can also
-    be used to read the value of a pin when it is set to GPIO mode.
+-- 
+2.25.1
 
-What does that mean?  Is that right, or is it something left over from a
-previous revision of the spec.
-
-regards,
-dan carpenter
-
-diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
-index a2a7f880d6a3..f803be8a223f 100644
---- a/drivers/firmware/arm_scmi/pinctrl.c
-+++ b/drivers/firmware/arm_scmi/pinctrl.c
-@@ -26,6 +26,7 @@
- #define GET_PINS_NR(x)		le32_get_bits((x), GENMASK(15, 0))
- #define GET_FUNCTIONS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
- 
-+#define IS_GPIO_FUNC(x)		le32_get_bits((x), BIT(17))
- #define EXT_NAME_FLAG(x)	le32_get_bits((x), BIT(31))
- #define NUM_ELEMS(x)		le32_get_bits((x), GENMASK(15, 0))
- 
-@@ -107,6 +108,7 @@ struct scmi_group_info {
- struct scmi_function_info {
- 	char name[SCMI_MAX_STR_SIZE];
- 	bool present;
-+	bool gpio;
- 	u32 *groups;
- 	u32 nr_groups;
- };
-@@ -189,7 +191,7 @@ static int scmi_pinctrl_validate_id(const struct scmi_protocol_handle *ph,
- 
- static int scmi_pinctrl_attributes(const struct scmi_protocol_handle *ph,
- 				   enum scmi_pinctrl_selector_type type,
--				   u32 selector, char *name,
-+				   u32 selector, char *name, bool *gpio,
- 				   u32 *n_elems)
- {
- 	int ret;
-@@ -216,17 +218,20 @@ static int scmi_pinctrl_attributes(const struct scmi_protocol_handle *ph,
- 	tx->flags = cpu_to_le32(type);
- 
- 	ret = ph->xops->do_xfer(ph, t);
--	if (!ret) {
--		if (n_elems)
--			*n_elems = NUM_ELEMS(rx->attributes);
-+	if (ret)
-+		goto xfer_put;
- 
--		strscpy(name, rx->name, SCMI_SHORT_NAME_MAX_SIZE);
-+	if (n_elems)
-+		*n_elems = NUM_ELEMS(rx->attributes);
- 
--		ext_name_flag = !!EXT_NAME_FLAG(rx->attributes);
--	}
-+	if (type == FUNCTION_TYPE && gpio)
-+		*gpio = !!IS_GPIO_FUNC(rx->attributes);
- 
--	ph->xops->xfer_put(ph, t);
-+	strscpy(name, rx->name, SCMI_SHORT_NAME_MAX_SIZE);
-+	ext_name_flag = !!EXT_NAME_FLAG(rx->attributes);
- 
-+xfer_put:
-+	ph->xops->xfer_put(ph, t);
- 	if (ret)
- 		return ret;
- 	/*
-@@ -602,7 +607,7 @@ static int scmi_pinctrl_get_group_info(const struct scmi_protocol_handle *ph,
- 	int ret;
- 
- 	ret = scmi_pinctrl_attributes(ph, GROUP_TYPE, selector, group->name,
--				      &group->nr_pins);
-+				      NULL, &group->nr_pins);
- 	if (ret)
- 		return ret;
- 
-@@ -687,7 +692,7 @@ static int scmi_pinctrl_get_function_info(const struct scmi_protocol_handle *ph,
- 	int ret;
- 
- 	ret = scmi_pinctrl_attributes(ph, FUNCTION_TYPE, selector, func->name,
--				      &func->nr_groups);
-+				      &func->gpio, &func->nr_groups);
- 	if (ret)
- 		return ret;
- 
-@@ -778,7 +783,8 @@ static int scmi_pinctrl_get_pin_info(const struct scmi_protocol_handle *ph,
- 	if (!pin)
- 		return -EINVAL;
- 
--	ret = scmi_pinctrl_attributes(ph, PIN_TYPE, selector, pin->name, NULL);
-+	ret = scmi_pinctrl_attributes(ph, PIN_TYPE, selector, pin->name, NULL,
-+				      NULL);
- 	if (ret)
- 		return ret;
- 
