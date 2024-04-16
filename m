@@ -1,88 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ADD129A66;
-	Tue, 16 Apr 2024 11:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2AB129A73;
+	Tue, 16 Apr 2024 11:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713267629; cv=none; b=hF4EXSh+ecuxhjqM3Wvw3PGeA/TtkDRX8uRrdZqZz8qesKf8BXmh7URQGVpPZ6e77ATt0XymmH8FytogAgxCdqqXwh/qO24WLXowfVIby8JqXnL+iKpid2zKEz6UQGg7I/t7wxSApN75Rx2l+HvqmnxDo4dVpm1nezXE/S2/9p4=
+	t=1713267665; cv=none; b=DnmurTIRLFaZXwzvOfEAPox9GZnZLaFPZ5eXyda9YqfhgkkBeZPs7UBboh1H1qYOpmazTTVmqOkitka/m/HTtWRSr/NdcxWspngv+T28sXnxiZ/+1nf/QAxRvtbS+U7eIp8QUqyPC8uL/OsCEA67cj75bRBX1cvhSgH+zWOj1RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713267629; c=relaxed/simple;
-	bh=UdRR0mB2QT3+hsLGPtI/LkIMzDYr8tdeCDqvAmojMSM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TsOOo8XSyXuV0YVu4ZfNuNtFEUA3K2XT6Blj9iCYv/ZR6KuTCZZkHe5oGjxWCB2Bjr3pUsZ2dnH/bAlP+i5FHlkgtrlHv9JqfrNPsShHR+ikii5TOdkTh7qR7Td5gFIvubeCdcVe0R+NxasHVYEVa///AJmo5EIKh2t2WQ8G7W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Px1vSt9E; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Px1vSt9E"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B2A7C4AF08;
-	Tue, 16 Apr 2024 11:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713267629;
-	bh=UdRR0mB2QT3+hsLGPtI/LkIMzDYr8tdeCDqvAmojMSM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Px1vSt9EH4OKZzZJpf5JPCvJotPZfQD6zcRdJO+XYSOAxe9pvCK3qFpVYJIwjZHCt
-	 61siUijVIFojzZlHupM37D5cfhQklquMrCahdf8DMNUk4jsqvpt5otmsxdlARCaPRW
-	 5V60LYgbD5sWJy4V+9lEkPaanxQTZjR7dl/1ejwHnouxBE8U20OgjnY9oYf8EL04RN
-	 BXnaE50Y/NW77MC3YCUWDXGJnebOjOqPUjLL0vnS7uf84gL6nJ6WcpM69ax13Gy6CI
-	 r3QBY//at+gIyTJubCS/KEYdX3XQLIeiZWrkXCQ15fmgACl1/EA4DFlGvt7l9zPnXr
-	 ufBfGU/vkIi3A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F3E5DD4F145;
-	Tue, 16 Apr 2024 11:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1713267665; c=relaxed/simple;
+	bh=kNJU8Ltay0OqFj6q8sYh4jLmXUE3xZPHeMman0C8bLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cGwAhZhM6k4OkMiU2U6KspbcIi90FVxthTWFGP2to8cGVvDt3rHlYSibcUHY06QkOSeRplBOisDLuzOLmC/nuaT166IsJknk3xi9aCM+goh6HrvJ4pSXCO3VhHQg/x2NpcVRvD4LxXEz8MM/WNEBj+yDmeK9O1nV7CK7V1JQXLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 43GAcL6I005112;
+	Tue, 16 Apr 2024 05:38:21 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 43GAcJln005111;
+	Tue, 16 Apr 2024 05:38:19 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 16 Apr 2024 05:38:19 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>, Jeff Xu <jeffxu@chromium.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: powerpc: io-defs.h:43:1: error: performing pointer arithmetic on a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
+Message-ID: <20240416103819.GQ19790@gate.crashing.org>
+References: <CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/4] selftests/net/tcp_ao: A bunch of fixes for TCP-AO
- selftests
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171326762899.16449.16473756279480443179.git-patchwork-notify@kernel.org>
-Date: Tue, 16 Apr 2024 11:40:28 +0000
-References: <20240413-tcp-ao-selftests-fixes-v1-0-f9c41c96949d@gmail.com>
-In-Reply-To: <20240413-tcp-ao-selftests-fixes-v1-0-f9c41c96949d@gmail.com>
-To: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- 0x7f454c46@gmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 
-Hello:
+On Tue, Apr 16, 2024 at 03:02:52PM +0530, Naresh Kamboju wrote:
+> In file included from arch/powerpc/include/asm/io.h:672:
+> arch/powerpc/include/asm/io-defs.h:43:1: error: performing pointer
+> arithmetic on a null pointer has undefined behavior
+> [-Werror,-Wnull-pointer-arithmetic]
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+It is not UB, but just undefined: the program is meaningless.
 
-On Sat, 13 Apr 2024 02:42:51 +0100 you wrote:
-> Started as addressing the flakiness issues in rst_ipv*, that affect
-> netdev dashboard.
-> 
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
-> ---
-> Dmitry Safonov (4):
->       selftests/tcp_ao: Make RST tests less flaky
->       selftests/tcp_ao: Zero-init tcp_ao_info_opt
->       selftests/tcp_ao: Fix fscanf() call for format-security
->       selftests/tcp_ao: Printing fixes to confirm with format-security
-> 
-> [...]
+It is not a null pointer but even a null pointer constant here.  It
+matters in places, including here.
 
-Here is the summary with links:
-  - [net,1/4] selftests/tcp_ao: Make RST tests less flaky
-    https://git.kernel.org/netdev/net/c/4225dfa4535f
-  - [net,2/4] selftests/tcp_ao: Zero-init tcp_ao_info_opt
-    https://git.kernel.org/netdev/net/c/b089b3bead53
-  - [net,3/4] selftests/tcp_ao: Fix fscanf() call for format-security
-    https://git.kernel.org/netdev/net/c/beb78cd1329d
-  - [net,4/4] selftests/tcp_ao: Printing fixes to confirm with format-security
-    https://git.kernel.org/netdev/net/c/b476c93654d7
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+It would help if the warnings were more correct :-(
 
 
+Segher
