@@ -1,114 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187E43BB30;
-	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BE912C466;
+	Tue, 16 Apr 2024 13:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273583; cv=none; b=C3BYylojKRcZjH2bE8YnxipoNydDLhaC4Sl61tsMSn+nBsYmy/Jw0Uv6XMFj2CDJAG2QRPy0M7PrIgrBt0MHNrqCMH9A3W+SFwKhB1HDZcb7dMBzTAV97K2Oxga6dueIsXGdZrBFICBwZg6b66EtAB8hlOGIj6u7dHV7k5Tz6QA=
+	t=1713273672; cv=none; b=fJpjmMBbtfMLnJfwQPq9SesjKsP7cITAzTavnkCHRZ7kFrCNptjHXBfkrL36eRUSo74fDr1Ytn5Yw3PfxcqxWfhhwGR2povoFRodoWz0UcwhbKL34lWwrnn3gOMqjUPmRwWbm8qrAKbAt0KUZlS5k80x3AmYEGE1TIpN/7VCOhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273583; c=relaxed/simple;
-	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDNYOJmyV8ZJ49PuL2sM/Tj64KOOuswOck246x2/BfCthIsUX+/VtOj8yP2PVHM/Q+5Tz6N4smsznBqhkPf5+hNjgE1DBtVJfRK5EmfO/6QeqoLikF23yXadpViq1cH/af10Lr7s3Cr+ISosV39i1s5JScA6yAx5BJZ0V6Ng0Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFbmB18r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713273672; c=relaxed/simple;
+	bh=H9XJnECG+rehggPZBwMJ2UcoWV6pit0iZcc8APFEx6U=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Gs2NZyAShD60MZjb3M9o5UIaKuyT6bwpaDegDMYHXpeGlGijaNWyX5oVLTvH/xSkR+i+uGAmgxv+V6i9LiThD/BBEJVBnyXV2rhNDTW/atbWbZAIjx881OojUl0rN/qYxq00xhXTAF/tBISIlJrJ6X9g01PtdYRdXIOTO1K82VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jprFcJrV; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFbmB18r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64FF6C113CE;
-	Tue, 16 Apr 2024 13:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713273582;
-	bh=BPjpllDPHaBuORONW/QmDln6MN91/EoL0La9ZnXvYe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hFbmB18rIKIhsAmwQxX+oKqS+gZprFcE5OUMuuPiGpAT0tN6iKa8Lvu+cRbHJllcu
-	 mICK1UJzwOYVjG15lcogv6jNc2U1HQd6s91OgZ4qoTkgA4HBGULDkjYN33Z87QmF2E
-	 WFMcCzVyr1vgDqkwyAYVcTwcd4+qMOc+VPuuI34wcl0QS/2GE5qMx1GYpApCSsmIUg
-	 lVBzPLx1P25KVOMc0K1p4ZYI+23fWh3H8W8/X1m+prDM/MNSVsQ56952geE7eCBOHL
-	 /Dm3mZzP2t2mDXZf3i2hOHtpjeBYCJ6bRX/XKjNNO9kQKNqtqGzHK/BNZB7mV1lTwy
-	 2FF/YQsPzF04A==
-Date: Tue, 16 Apr 2024 08:19:40 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: krzk@kernel.org, 20240409185416.2224609-1-Frank.Li@nxp.com,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, imx@lists.linux.dev,
-	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
-	pankaj.gupta@nxp.com, peng.fan@nxp.com, shengjiu.wang@nxp.com,
-	shenwei.wang@nxp.com, vkoul@kernel.org, xu.yang_2@nxp.com
-Subject: Re: [PATCH v4 2/2] dt-bindings: dma: fsl-edma: allow 'power-domains'
- property
-Message-ID: <20240416131940.GA2138646-robh@kernel.org>
-References: <20240412154208.881836-1-Frank.Li@nxp.com>
- <20240412154208.881836-2-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jprFcJrV"
+Received: from relay4-d.mail.gandi.net (unknown [217.70.183.196])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 979BEC699F;
+	Tue, 16 Apr 2024 13:21:03 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1F9ABE0003;
+	Tue, 16 Apr 2024 13:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713273656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WCnKnoSsQoEAYv75BNn3l7B7yy2mGKGbl/sOd184mU0=;
+	b=jprFcJrVd9rSnrTiyxix2blgTrCU/Qlp+tzngtuXlZLiieDwzkoOldUgEDp5yVLsbulKIZ
+	CzSEXc5zzaQHSVsTI5W6AOCIkga+IsG1oFTjYI+JU7a3nor22PG5eIgHIbgpmXTpUzBalM
+	mCn64ex2Hn2WUlBRAFWl2qzVao7CKHpEBs+ucgOXjh4GH4LmArUBjbOWczTwHYK7ShMHNl
+	KmqTxXL6PM1QSO34cOPfhY+Nfw1c63wJjVcxyoZ6Vh/+Qj5UH4M+GBNyfiDllwmnsAfBBo
+	Il45EZNbkMeX3HOTXI5P3oxAe/GyR4f2LJuUEWuXGSighZKeZw4vOiEL7rntOA==
+Date: Tue, 16 Apr 2024 15:21:30 +0200 (CEST)
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+cc: Romain Gantois <romain.gantois@bootlin.com>, 
+    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
+    Yanteng Si <siyanteng@loongson.cn>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+    Simon Horman <horms@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+    Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+    Samuel Holland <samuel@sholland.org>, netdev@vger.kernel.org, 
+    linux-stm32@st-md-mailman.stormreply.com, 
+    linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 4/4] net: stmmac: Move MAC caps init to phylink
+ MAC caps getter
+In-Reply-To: <btgxb3ugs4apjvxj5hmpec3rtoxwdal7ms2z4s7pecdfefphiw@gd7ctqsh7wg2>
+Message-ID: <8ffb6634-6d57-8df8-90c3-aecc585395e5@bootlin.com>
+References: <20240412180340.7965-1-fancer.lancer@gmail.com> <20240412180340.7965-5-fancer.lancer@gmail.com> <714199e5-edf2-dcbb-216b-563431d70488@bootlin.com> <btgxb3ugs4apjvxj5hmpec3rtoxwdal7ms2z4s7pecdfefphiw@gd7ctqsh7wg2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412154208.881836-2-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Fri, Apr 12, 2024 at 11:42:08AM -0400, Frank Li wrote:
-> Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP need
-> it. EDMA supports each power-domain for each dma channel. So minItems and
-> maxItems align 'dma-channels'.
-> 
-> Change fsl,imx93-edma3 example to fsl,imx8qm-edma to reflect this variants.
-> 
-> Fixed below DTB_CHECK warning:
->   dma-controller@599f0000: Unevaluated properties are not allowed ('power-domains' was unexpected)
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v3 to v4
->     - Remove 'contains' change should be belong to first patch when rebase.
->     
->     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,edma.yaml
->       LINT    Documentation/devicetree/bindings
->       DTEX    Documentation/devicetree/bindings/dma/fsl,edma.example.dts
->       CHKDT   Documentation/devicetree/bindings/processed-schema.json
->       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->       DTC_CHK Documentation/devicetree/bindings/dma/fsl,edma.example.dtb
->     
->     After this patch no warning for imx8dxl-evk.dtb.
->     
->     touch arch/arm64/boot/dts/freescale/imx8dxl.dtsi
->     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  CHECK_DTBS=y freescale/imx8dxl-evk.dtb
->       DTC_CHK arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
->     
->     Change from v2 to v3
->     - set 'power-domains' false for other compatitble string
->     - change imx93 example to 8qm example to affect this change according to
->     Krzysztof Kozlowski's suggestion, choose least channel number edma
->     instance to reduce code copy. max channel number is 64.
->     
->     - Rebase to latest dmaengine/next, fixes conflicts.
->     
->     Change from v1 to v2
->     - using maxitem: 64. Each channel have one power domain. Max 64 dmachannel.
->     - add power-domains to 'required' when compatible string is fsl,imx8qm-adma
->         or fsl,imx8qm-edma
-> 
->  .../devicetree/bindings/dma/fsl,edma.yaml     | 77 ++++++++++---------
->  1 file changed, 39 insertions(+), 38 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> index fb5fbe4b9f9d4..012522612dc96 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> @@ -71,6 +71,10 @@ properties:
->      minItems: 1
->      maxItems: 33
->  
-> +  power-domains:
-> +    minItems: 1
-> +    maxItems: 64
+On Tue, 16 Apr 2024, Serge Semin wrote:
 
-Please state here that number of power-domains are equal to number of 
-channels and in ascending order.
+> So I don't think that changing it to something different would be a
+> good alternative. What could be a better option is to rename the
+> stmmac_ops::phylink_get_caps() callback and
+> stmmac_mac_phylink_get_caps() macro-function to something like:
+> 
+> stmmac_ops::link_update_caps()
+> stmmac_mac_link_update_caps()
+> 
+> especially seeing the callback no longer sets the phylink MAC
+> capabilities directly. What do you think?
 
-Rob
+This seems like a good solution to me.
+
+Thanks,
+
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
