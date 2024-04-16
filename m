@@ -1,614 +1,141 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5959C84E15
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 22:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C628984DED;
+	Tue, 16 Apr 2024 22:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713305414; cv=none; b=u8zcQoeb4NpKWOxqg41LEOp4hTOQ9mUz/xR42XDud4QSPrEYCo/YFQrAd3NUy0MDXiISonFkSoq5rE2mBPXZ3CFxihno8u42TNaXXsaFgnZ7pz/GRkWCjkVce3s1LWR55EogDkphxnsvyvvXULgmiX+bQliNKo/5SmoE1/QbOwI=
+	t=1713305475; cv=none; b=FtaEc6DJm+JllDxbLR6fb8Htyjb3GNkdXd8IxlKWWXiNLNOuTMtTwsu6CqrqTasHMQyjb/lknj/3/0S13a4cN8/DO1mrYqedQaW1ibbq8WX9YWAW7VLKRI16gmQkG29E1lmnfeC2v3/qcxavajFfjDxWl9KiUXpxeHn5Tjzg6S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713305414; c=relaxed/simple;
-	bh=8NXDtHH8ESFrFF212SeskdsTuZM6saoB/YlA1jmZHxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9lyPx0XXoqS8uX5eqiEDcMzIBwbJ2TLJ0M8DQNEq4edyj2hd69PCsgt5ZDsfSdA43bT8FQxMR2StEaHGlAore54dE1fOh3aeAgtBfsM26q/MXPZtpwkSLGrQdSBdCvJSKaooTV2Sk8nyJUD602BNyaubdIjf0SnvUyCbQhE+sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xl1LWWpw; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713305475; c=relaxed/simple;
+	bh=rdpsXIWGDG4PvT893grQx+rL878rDudcA5OJ2YWiugA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jq6evJSgj8w6LZcP8HPv5fwjvCi5J7IP/wS20xN6t/nF8oSH7tz9qKLT9C5CQgsohagpZinJPRUfLGWB3cmx4+XET/LIIIBce+eMuyho4kcYl7v37enrSqonUcAkSXoa/jNm8X4HR9onJTHcz77svKkfBSB+6gPvXYHkAKHhfM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DnbmLz0s; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xl1LWWpw"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e51398cc4eso46143205ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713305411; x=1713910211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wxVHDOvUhVBVzAOb5wpvBaQ8ZT8i2HrkTBsI4fhOGcg=;
-        b=Xl1LWWpwbChGOjg6qjjBXMLkrtJGRy/8TqIVfY1EsQ6Svw/VgwM0TZTTKjnTHWLw4v
-         U0kbRdc9MqWhsBUdtl81peMlb18W8ct0lTqJJHfGGaf8l4SenzJhpA/FkI7HxAFlnsSX
-         Zh/jjf28EtH4XtS1E3Gnp8PLHZ+1MouVoXhow=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713305411; x=1713910211;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wxVHDOvUhVBVzAOb5wpvBaQ8ZT8i2HrkTBsI4fhOGcg=;
-        b=tMvXt+7BXjHRZSSd+BltLxgYYCEBafa2mmIuUObkkP8WgmWX+Ox54Rj4mnESQEmKF0
-         YdTG3l5ynE55bdMMw0jC0mo06JaL+VoIXWHy25AoL1cBijnvOlEgQkwvhEuyXijn4uAX
-         S0hZ81mXBtisQrmJNslK6HtVMFSFZX34fDbFVPQXbYl2LVmquJ+IxiSyHIlHS4PbG/bJ
-         6rvj8TDasJpCmiDTjSUdVMS6Y6Yb48KzCvE4ltKzrr29VC/wTeGD2AJU0zX9y42Ikado
-         SMG80Jvamw/uA2tyVWteJ/HrW9VYHqx/k0+v7WaSd70bhHiKAZWN8zCmqhHyGXhL8Q7L
-         hwlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcDt7izC3XUez9mffzRF+dN9oxRBRaAxyAWrGl4C3ED5fexLWe/k8wB26znjFuhwSi8DRF+q+0eXunGnYdZ6vtr5Do980+rlFLQxKg
-X-Gm-Message-State: AOJu0YylKu0lX5YEbM7x0a6fXD2ZSBKzs5oazNNTwBffjFfnXT3uJCQQ
-	YsHSoSiGsR2e0Cf3BFWltgkv6tDkKkyF299nOpBOB3lp3+ctdG8CoOmVb7kTIQ==
-X-Google-Smtp-Source: AGHT+IFOSdcgQyk6biwC2aPuWcLWnlux4DGUDewTmrRbyQvQfiiI+29eaaKEia9vvpDMeLIYZhwYKQ==
-X-Received: by 2002:a17:903:1245:b0:1e7:8686:c37b with SMTP id u5-20020a170903124500b001e78686c37bmr7826165plh.22.1713305411466;
-        Tue, 16 Apr 2024 15:10:11 -0700 (PDT)
-Received: from localhost (15.4.198.104.bc.googleusercontent.com. [104.198.4.15])
-        by smtp.gmail.com with UTF8SMTPSA id d10-20020a170902ceca00b001e41e968a61sm10246065plg.223.2024.04.16.15.10.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 15:10:11 -0700 (PDT)
-From: jeffxu@chromium.org
-To: akpm@linux-foundation.org,
-	keescook@chromium.org,
-	usama.anjum@collabora.com
-Cc: jeffxu@google.com,
-	jorgelo@chromium.org,
-	groeck@chromium.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	jannh@google.com,
-	sroettger@google.com,
-	pedro.falcato@gmail.com,
-	dave.hansen@intel.com,
-	linux-hardening@vger.kernel.org,
-	willy@infradead.org,
-	gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org,
-	deraadt@openbsd.org,
-	corbet@lwn.net,
-	Liam.Howlett@oracle.com,
-	surenb@google.com,
-	merimus@google.com,
-	rdunlap@infradead.org,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH 1/1] selftest mm/mseal: style change
-Date: Tue, 16 Apr 2024 22:09:44 +0000
-Message-ID: <20240416220944.2481203-2-jeffxu@chromium.org>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-In-Reply-To: <20240416220944.2481203-1-jeffxu@chromium.org>
-References: <20240416220944.2481203-1-jeffxu@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DnbmLz0s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713305474; x=1744841474;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rdpsXIWGDG4PvT893grQx+rL878rDudcA5OJ2YWiugA=;
+  b=DnbmLz0sIaJCmIiAdcoqj0SC/n7hhg6kVSTlRmSbyVlrsAzdulVbcNpf
+   3tr6LcrNAxHS9Xdzt4N4nwV2PbmDDQVJBAcp9p5ZTCgzvpumOlP2M7UFf
+   PMLJp80ywz7IQyWPUiMWH3mTjVKDItPYpZakPM9nT9Rwmwyj5XVbIjwyG
+   V1ob1OnZf3lzLYzPZ7WWZs6F69Vm/zbzPoN1wyMHeNzWlMcmZDFA6J5DW
+   LfLh96sFunUmGBe5/t+7htlpSYqrnHCMOgXU9NyQGnpnWZu1Q++fM73DF
+   ca++N3RNVYEamiGx9+Ew5uIClf4pjI2lBn0mnekcrJ+gjiNQFf6Lb2lbk
+   w==;
+X-CSE-ConnectionGUID: Xx1lQBwvS2CNAy/JbWq3OA==
+X-CSE-MsgGUID: hmCokJaCSqaQgxSKhVCXxA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19379750"
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="19379750"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 15:11:13 -0700
+X-CSE-ConnectionGUID: aOB0hx/ZTfejf2l/oBjZZA==
+X-CSE-MsgGUID: pDbsOPGDQQKNgY3FIPHMFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="22884358"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 15:11:12 -0700
+Date: Tue, 16 Apr 2024 15:15:46 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
+ <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
+ J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
+ <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>, Robin Murphy
+ <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
+ "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
+ <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
+ "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 12/13] iommu/vt-d: Add an irq_chip for posted MSIs
+Message-ID: <20240416151546.31a539e8@jacob-builder>
+In-Reply-To: <BN9PR11MB5276051CAD86374C666ACFD48C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+	<20240405223110.1609888-13-jacob.jun.pan@linux.intel.com>
+	<BN9PR11MB5276051CAD86374C666ACFD48C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Jeff Xu <jeffxu@chromium.org>
+Hi Kevin,
 
-remove "assert" from testcase.
-remove "return 0"
+On Fri, 12 Apr 2024 09:36:10 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-Suggested-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- tools/testing/selftests/mm/mseal_test.c | 124 +++++++++++++++++-------
- tools/testing/selftests/mm/seal_elf.c   |   3 -
- 2 files changed, 91 insertions(+), 36 deletions(-)
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, April 6, 2024 6:31 AM
+> >=20
+> > + *
+> > + * For the example below, 3 MSIs are coalesced into one CPU
+> > notification. Only
+> > + * one apic_eoi() is needed.
+> > + *
+> > + * __sysvec_posted_msi_notification()
+> > + *	irq_enter();
+> > + *		handle_edge_irq()
+> > + *			irq_chip_ack_parent()
+> > + *				dummy(); // No EOI
+> > + *			handle_irq_event()
+> > + *				driver_handler()
+> > + *	irq_enter();
+> > + *		handle_edge_irq()
+> > + *			irq_chip_ack_parent()
+> > + *				dummy(); // No EOI
+> > + *			handle_irq_event()
+> > + *				driver_handler()
+> > + *	irq_enter();
+> > + *		handle_edge_irq()
+> > + *			irq_chip_ack_parent()
+> > + *				dummy(); // No EOI
+> > + *			handle_irq_event()
+> > + *				driver_handler() =20
+>=20
+> typo: you added three irq_enter()'s here
+right, will remove the middle two.
 
-diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/selftests/mm/mseal_test.c
-index 06c780d1d8e5..4a326334726d 100644
---- a/tools/testing/selftests/mm/mseal_test.c
-+++ b/tools/testing/selftests/mm/mseal_test.c
-@@ -12,9 +12,7 @@
- #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include <assert.h>
- #include <fcntl.h>
--#include <assert.h>
- #include <sys/ioctl.h>
- #include <sys/vfs.h>
- #include <sys/stat.h>
-@@ -189,7 +187,6 @@ static void __write_pkey_reg(u64 pkey_reg)
- 
- 	asm volatile(".byte 0x0f,0x01,0xef\n\t"
- 			: : "a" (eax), "c" (ecx), "d" (edx));
--	assert(pkey_reg == __read_pkey_reg());
- #endif
- }
- 
-@@ -214,7 +211,6 @@ static void set_pkey(int pkey, unsigned long pkey_value)
- 	unsigned long mask = (PKEY_DISABLE_ACCESS | PKEY_DISABLE_WRITE);
- 	u64 new_pkey_reg;
- 
--	assert(!(pkey_value & ~mask));
- 	new_pkey_reg = set_pkey_bits(__read_pkey_reg(), pkey, pkey_value);
- 	__write_pkey_reg(new_pkey_reg);
- }
-@@ -224,7 +220,6 @@ static void setup_single_address(int size, void **ptrOut)
- 	void *ptr;
- 
- 	ptr = sys_mmap(NULL, size, PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
--	assert(ptr != (void *)-1);
- 	*ptrOut = ptr;
- }
- 
-@@ -234,24 +229,21 @@ static void setup_single_address_rw(int size, void **ptrOut)
- 	unsigned long mapflags = MAP_ANONYMOUS | MAP_PRIVATE;
- 
- 	ptr = sys_mmap(NULL, size, PROT_READ | PROT_WRITE, mapflags, -1, 0);
--	assert(ptr != (void *)-1);
- 	*ptrOut = ptr;
- }
- 
--static void clean_single_address(void *ptr, int size)
-+static int clean_single_address(void *ptr, int size)
- {
- 	int ret;
--
- 	ret = munmap(ptr, size);
--	assert(!ret);
-+	return ret;
- }
- 
--static void seal_single_address(void *ptr, int size)
-+static int seal_single_address(void *ptr, int size)
- {
- 	int ret;
--
- 	ret = sys_mseal(ptr, size);
--	assert(!ret);
-+	return ret;
- }
- 
- bool seal_support(void)
-@@ -290,6 +282,7 @@ static void test_seal_addseal(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	ret = sys_mseal(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -305,6 +298,7 @@ static void test_seal_unmapped_start(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* munmap 2 pages from ptr. */
- 	ret = sys_munmap(ptr, 2 * page_size);
-@@ -332,6 +326,7 @@ static void test_seal_unmapped_middle(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* munmap 2 pages from ptr + page. */
- 	ret = sys_munmap(ptr + page_size, 2 * page_size);
-@@ -363,6 +358,7 @@ static void test_seal_unmapped_end(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* unmap last 2 pages. */
- 	ret = sys_munmap(ptr + 2 * page_size, 2 * page_size);
-@@ -391,6 +387,7 @@ static void test_seal_multiple_vmas(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split the vma into 3. */
- 	ret = sys_mprotect(ptr + page_size, 2 * page_size,
-@@ -421,6 +418,7 @@ static void test_seal_split_start(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split at middle */
- 	ret = sys_mprotect(ptr, 2 * page_size, PROT_READ | PROT_WRITE);
-@@ -445,6 +443,7 @@ static void test_seal_split_end(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split at middle */
- 	ret = sys_mprotect(ptr, 2 * page_size, PROT_READ | PROT_WRITE);
-@@ -469,7 +468,9 @@ static void test_seal_invalid_input(void)
- 	int ret;
- 
- 	setup_single_address(8 * page_size, &ptr);
--	clean_single_address(ptr + 4 * page_size, 4 * page_size);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+	ret = clean_single_address(ptr + 4 * page_size, 4 * page_size);
-+	FAIL_TEST_IF_FALSE(!ret);
- 
- 	/* invalid flag */
- 	ret = syscall(__NR_mseal, ptr, size, 0x20);
-@@ -502,6 +503,7 @@ static void test_seal_zero_length(void)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	ret = sys_mprotect(ptr, 0, PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -551,6 +553,7 @@ static void test_seal_twice(void)
- 	unsigned long size = 4 * page_size;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	ret = sys_mseal(ptr, size);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -570,9 +573,12 @@ static void test_seal_mprotect(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
--	if (seal)
--		seal_single_address(ptr, size);
-+	if (seal) {
-+		ret = seal_single_address(ptr, size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	ret = sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
- 	if (seal)
-@@ -591,9 +597,12 @@ static void test_seal_start_mprotect(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
--	if (seal)
--		seal_single_address(ptr, page_size);
-+	if (seal) {
-+		ret = seal_single_address(ptr, page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* the first page is sealed. */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -618,9 +627,12 @@ static void test_seal_end_mprotect(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
--	if (seal)
--		seal_single_address(ptr + page_size, 3 * page_size);
-+	if (seal) {
-+		ret = seal_single_address(ptr + page_size, 3 * page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* first page is not sealed */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -645,9 +657,12 @@ static void test_seal_mprotect_unalign_len(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
--	if (seal)
--		seal_single_address(ptr, page_size * 2 - 1);
-+	if (seal) {
-+		ret = seal_single_address(ptr, page_size * 2 - 1);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* 2 pages are sealed. */
- 	ret = sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
-@@ -671,8 +686,11 @@ static void test_seal_mprotect_unalign_len_variant_2(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
--	if (seal)
--		seal_single_address(ptr, page_size * 2 + 1);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+	if (seal) {
-+		ret =  seal_single_address(ptr, page_size * 2 + 1);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* 3 pages are sealed. */
- 	ret = sys_mprotect(ptr, page_size * 3, PROT_READ | PROT_WRITE);
-@@ -696,13 +714,16 @@ static void test_seal_mprotect_two_vma(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split */
- 	ret = sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
--	if (seal)
--		seal_single_address(ptr, page_size * 4);
-+	if (seal) {
-+		ret = seal_single_address(ptr, page_size * 4);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	ret = sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
- 	if (seal)
-@@ -728,14 +749,17 @@ static void test_seal_mprotect_two_vma_with_split(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split as two vma. */
- 	ret = sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
- 	FAIL_TEST_IF_FALSE(!ret);
- 
- 	/* mseal can apply across 2 vma, also split them. */
--	if (seal)
--		seal_single_address(ptr + page_size, page_size * 2);
-+	if (seal) {
-+		ret = seal_single_address(ptr + page_size, page_size * 2);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* the first page is not sealed. */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -772,10 +796,13 @@ static void test_seal_mprotect_partial_mprotect(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* seal one page. */
--	if (seal)
--		seal_single_address(ptr, page_size);
-+	if (seal) {
-+		ret = seal_single_address(ptr, page_size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	/* mprotect first 2 page will fail, since the first page are sealed. */
- 	ret = sys_mprotect(ptr, 2 * page_size, PROT_READ | PROT_WRITE);
-@@ -795,6 +822,7 @@ static void test_seal_mprotect_two_vma_with_gap(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split. */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -837,6 +865,7 @@ static void test_seal_mprotect_split(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split. */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -873,6 +902,7 @@ static void test_seal_mprotect_merge(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split one page. */
- 	ret = sys_mprotect(ptr, page_size, PROT_READ | PROT_WRITE);
-@@ -906,6 +936,7 @@ static void test_seal_munmap(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -936,6 +967,7 @@ static void test_seal_munmap_two_vma(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect to split */
- 	ret = sys_mprotect(ptr, page_size * 2, PROT_READ | PROT_WRITE);
-@@ -976,6 +1008,7 @@ static void test_seal_munmap_vma_with_gap(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	ret = sys_munmap(ptr + page_size, page_size * 2);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -1007,6 +1040,7 @@ static void test_munmap_start_freed(bool seal)
- 	int prot;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* unmap the first page. */
- 	ret = sys_munmap(ptr, page_size);
-@@ -1045,6 +1079,8 @@ static void test_munmap_end_freed(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
- 	/* unmap last page. */
- 	ret = sys_munmap(ptr + page_size * 3, page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -1074,6 +1110,8 @@ static void test_munmap_middle_freed(bool seal)
- 	int prot;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
-+
- 	/* unmap 2 pages in the middle. */
- 	ret = sys_munmap(ptr + page_size, page_size * 2);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -1116,6 +1154,7 @@ static void test_seal_mremap_shrink(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1144,6 +1183,7 @@ static void test_seal_mremap_expand(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	/* ummap last 2 pages. */
- 	ret = sys_munmap(ptr + 2 * page_size, 2 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -1175,8 +1215,11 @@ static void test_seal_mremap_move(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	setup_single_address(size, &newPtr);
--	clean_single_address(newPtr, size);
-+	FAIL_TEST_IF_FALSE(newPtr != (void *)-1);
-+	ret = clean_single_address(newPtr, size);
-+	FAIL_TEST_IF_FALSE(!ret);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1205,6 +1248,7 @@ static void test_seal_mmap_overwrite_prot(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1232,6 +1276,7 @@ static void test_seal_mmap_expand(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	/* ummap last 4 pages. */
- 	ret = sys_munmap(ptr + 8 * page_size, 4 * page_size);
- 	FAIL_TEST_IF_FALSE(!ret);
-@@ -1262,6 +1307,7 @@ static void test_seal_mmap_shrink(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1290,7 +1336,9 @@ static void test_seal_mremap_shrink_fixed(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	setup_single_address(size, &newAddr);
-+	FAIL_TEST_IF_FALSE(newAddr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1319,7 +1367,9 @@ static void test_seal_mremap_expand_fixed(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(page_size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	setup_single_address(size, &newAddr);
-+	FAIL_TEST_IF_FALSE(newAddr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(newAddr, size);
-@@ -1348,7 +1398,9 @@ static void test_seal_mremap_move_fixed(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 	setup_single_address(size, &newAddr);
-+	FAIL_TEST_IF_FALSE(newAddr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(newAddr, size);
-@@ -1375,6 +1427,7 @@ static void test_seal_mremap_move_fixed_zero(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1406,6 +1459,7 @@ static void test_seal_mremap_move_dontunmap(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1434,6 +1488,7 @@ static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
- 	void *ret2;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	if (seal) {
- 		ret = sys_mseal(ptr, size);
-@@ -1469,6 +1524,7 @@ static void test_seal_merge_and_split(void)
- 
- 	/* (24 RO) */
- 	setup_single_address(24 * page_size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
- 	/* use mprotect(NONE) to set out boundary */
- 	/* (1 NONE) (22 RO) (1 NONE) */
-@@ -1700,9 +1756,12 @@ static void test_seal_discard_ro_anon(bool seal)
- 	int ret;
- 
- 	setup_single_address(size, &ptr);
-+	FAIL_TEST_IF_FALSE(ptr != (void *)-1);
- 
--	if (seal)
--		seal_single_address(ptr, size);
-+	if (seal) {
-+		ret = seal_single_address(ptr, size);
-+		FAIL_TEST_IF_FALSE(!ret);
-+	}
- 
- 	ret = sys_madvise(ptr, size, MADV_DONTNEED);
- 	if (seal)
-@@ -1832,5 +1891,4 @@ int main(int argc, char **argv)
- 	test_seal_discard_ro_anon_on_pkey(true);
- 
- 	ksft_finished();
--	return 0;
- }
-diff --git a/tools/testing/selftests/mm/seal_elf.c b/tools/testing/selftests/mm/seal_elf.c
-index 61a2f1c94e02..7143dc4f1b10 100644
---- a/tools/testing/selftests/mm/seal_elf.c
-+++ b/tools/testing/selftests/mm/seal_elf.c
-@@ -12,9 +12,7 @@
- #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include <assert.h>
- #include <fcntl.h>
--#include <assert.h>
- #include <sys/ioctl.h>
- #include <sys/vfs.h>
- #include <sys/stat.h>
-@@ -179,5 +177,4 @@ int main(int argc, char **argv)
- 	test_seal_elf();
- 
- 	ksft_finished();
--	return 0;
- }
--- 
-2.44.0.683.g7961c838ac-goog
+>=20
+> > + *	apic_eoi()
+> > + * irq_exit()
+> > + */
+> > +static struct irq_chip intel_ir_chip_post_msi =3D {
+> > +	.name			=3D "INTEL-IR-POST",
+> > +	.irq_ack		=3D dummy,
+> > +	.irq_set_affinity	=3D intel_ir_set_affinity,
+> > +	.irq_compose_msi_msg	=3D intel_ir_compose_msi_msg,
+> > +	.irq_set_vcpu_affinity	=3D intel_ir_set_vcpu_affinity,
+> > +}; =20
+>=20
+> What about putting this patch at end of the series (combining the
+> change in intel_irq_remapping_alloc()) to finally enable this
+> feature?
+>=20
+> It reads slightly better to me to first get those callbacks extended
+> to deal with the new mechanism (i.e. most changes in patch13)
+> before using them in the new irqchip. =F0=9F=98=8A
 
+makes sense, will do.
+
+Thanks,
+
+Jacob
