@@ -1,259 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A5913C917
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BBE139D16
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298791; cv=none; b=uLZ7zKImy/r+MA7vEyyJYtZF3Dk2/dmgzC75ijqi8/dq2nJlpkALvTl5A13/P/fdGOVGY94/2XuhHM65whqZkZ+SiIwrYXpbRBkT8A2hoN35oOwafz3CHAb14Bvi/HR0m5VsxZY3bnWILp7emYRBtVyScCrikgio3etX3TN4CRc=
+	t=1713298860; cv=none; b=ZmJwkI3047DJLvXPess6wRLImrKIYiIe1fyyApo5/P13SZaakuomN1/t+pgDCODGSTmPOw+w9+miNDoxcuH615wky43lnk/m4JQyRUi9/we3aJT3A+04JlvTltFeMnwQ67dN7SyvtJZvsG1Yixz8dm4wYHQ+4tj+DS/expCoznE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298791; c=relaxed/simple;
-	bh=T5Y/zitqGWMkmEfO2sRKWihqgnAhgOGxfh3uzUuEmts=;
+	s=arc-20240116; t=1713298860; c=relaxed/simple;
+	bh=A3TDYDRTO+FDIf/6e818pBZ/XwAhsKSgsT50AzDWnng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dm19KUiPJoEzdf1vW7wW5MIRjHXS7TJA4+0vNlvHustnHuM85ZTSWHDbTfjOgHNKWPNSoIOa8SnWOPuZASOnR6yBP2cgJPfkizArCNjRxVXvc+Z5bQpHNOBjnjUKa11ewZ7SB2Yxa7nI7GHzfps0AqLNpbwRBN4QKu1GbGa3YC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2dNOxNK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=SBHo1vwhDLNSVi030hx0QqXvIActvgD5IdcibjsxF0BLeNXdVF3w0+KSx/vdQLDZmQJRLQqzpip0CVBJW84HyOtR1jUYhFPeXKNk6jzeZnzgqM1OHkZeMS2JDf3KspMX2rUIFTS7vodmd1gkW3mrEdtf3B1gzqy335UcNhM8/4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l0ifN/NG; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2dNOxNK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713298788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wAAEQuKqnnJ13i1nT7rJA4j+2p1Y+0l70dA7qqH5w5U=;
-	b=Z2dNOxNKw+2jvVQc+JWBEud5eVtzB/1zv1YtxToR1ZjiTNNk8LuCXxU27luKFyc7hPYfPV
-	UHHOQxRP3FfmsbHmtQR9t4IqZcw8gl+oYyFFR5aerEQ/2lGOQxITA6MH5bBuG2JylKTsT0
-	Ogftqw26l/SDG2q6hUAx0+XTa1r89xM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-mAGQiEVUP3yAY6f7zp_bxQ-1; Tue, 16 Apr 2024 16:19:38 -0400
-X-MC-Unique: mAGQiEVUP3yAY6f7zp_bxQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 40D2E806602;
-	Tue, 16 Apr 2024 20:19:38 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1560B49109;
-	Tue, 16 Apr 2024 20:19:38 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	chao.gao@intel.com
-Subject: [PATCH v2 07/10] KVM: VMX: Introduce test mode related to EPT violation VE
-Date: Tue, 16 Apr 2024 16:19:32 -0400
-Message-ID: <20240416201935.3525739-8-pbonzini@redhat.com>
-In-Reply-To: <20240416201935.3525739-1-pbonzini@redhat.com>
-References: <20240416201935.3525739-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0ifN/NG"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516d0162fa1so6196171e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713298857; x=1713903657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qywwJq5nbSjHA1aLQQKg5o6c3/lkaJluN4xzLrwZMAw=;
+        b=l0ifN/NGJs5sWKs0zF3hlJI2/VDy8PVEKjWl0HLMRbFp3CE41wMKnoK9bUxcCXwwBw
+         +YXpI8M3JH06DBgrbD5doiXDl1kToi35/VQhxbTrKNN8zbWbskxOnHvtssQTBY7otnSt
+         xDRgyXMS8M3uaTIkEqohOF/co6m5N6+Ri1x1eq6NW8vQLIa34yKhycChlN51gHpqmdK6
+         aJE4DAtqptpT9MUXe3Gmmh4xfZ4IW0/U17gzj5TpsKwHMZOqTFpeqkGRSP5Z5fvi4UdK
+         6Ur0YgroXIB4pooiO4smiZQGsNNXpyI571bEJokqP/74aan3rDMIyeA2BPEiPnrQ4EQF
+         DL/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713298857; x=1713903657;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qywwJq5nbSjHA1aLQQKg5o6c3/lkaJluN4xzLrwZMAw=;
+        b=d+pGWnyeRBFg8Ck+iqvvhVeXpzNgdD0xK12VexybIQ2bI3JxhIKWppfiPil+pSg1HJ
+         b0EuKQTJzX1ZB/fATALnJ/KplWxHGz7QxgqH5zTrKhJ+Oh+pqCW0mkJyctpf33ZiapVj
+         n89khNiqSQf3BASg7W1aHS//Wy3MrO0Cyut857/Xt/mGg9osUGdY2BDxmmlE6zHLmeMm
+         I6sFShD8b5w/TO8dMTql8k0Ilv8LpGsJwCfx3BczoyKa2gWrfmqNpCUaAdblR4Ws5jk/
+         weTGJIJe4TF2PqrIbmhX8PFLTvLAItSQlLqMHmErBccermbJx6Nr0s7dqYWnM+M26TeI
+         HaXg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2v85dY+kWDr1vxUsqdc8Jd1UVwwVo59lB7cRklzgx9YFoGkSdvXEMdrxxlIYwpITdvmgaerr6FfxOcvfXbyLBhYdWmuCe8mS5ayFf
+X-Gm-Message-State: AOJu0Yw/qvcoIn5EVB0nHFrPVEmZbyhNaZfjUBaFoCjMs8Rv5Z+Tmb9l
+	z7CNSXkfpGNi/kPFUwJbE/7hNF3BbMTPyj7Gs3Jboc5anE6kU2/JzNjon0zaG8w=
+X-Google-Smtp-Source: AGHT+IGvXeB5YIW/C8iZDJh9O5u8lqiFkQF8Sa94t87snOvbhlCLdYH6yE/raC6L6AjmGsPjbyDCtw==
+X-Received: by 2002:ac2:410a:0:b0:518:c69b:3a04 with SMTP id b10-20020ac2410a000000b00518c69b3a04mr6070306lfi.0.1713298856688;
+        Tue, 16 Apr 2024 13:20:56 -0700 (PDT)
+Received: from eriador.lan (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id g10-20020a19e04a000000b00515b5cd2361sm1719519lfj.164.2024.04.16.13.20.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 13:20:56 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Harigovindan P <harigovi@codeaurora.org>,
+	Ritesh Kumar <quic_riteshk@quicinc.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/6] drm/panel: small fixes for visionox and novatek panel drivers
+Date: Tue, 16 Apr 2024 23:20:54 +0300
+Message-ID: <171329879926.1936150.2583859281547375422.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
+References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+On Thu, 04 Apr 2024 13:07:58 +0300, Dmitry Baryshkov wrote:
+> While taking a glance at the novatek-nt36672e driver I stumbled upon a
+> call to unregister the DSI device for the panel, although it was not the
+> panel driver that registered the device.
+> 
+> Remove this call and a similar call from the visionox-rm69299 driver.
+> While we are at it, also optimize regulator API calls in these two
+> drivers and in the novatek-nt36672a driver.
+> 
+> [...]
 
-To support TDX, KVM is enhanced to operate with #VE.  For TDX, KVM uses the
-suppress #VE bit in EPT entries selectively, in order to be able to trap
-non-present conditions.  However, #VE isn't used for VMX and it's a bug
-if it happens.  To be defensive and test that VMX case isn't broken
-introduce an option ept_violation_ve_test and when it's set, BUG the vm.
+Applied to drm-misc-fixes, thanks!
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-Id: <d6db6ba836605c0412e166359ba5c46a63c22f86.1705965635.git.isaku.yamahata@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/Kconfig    | 13 ++++++++++++
- arch/x86/kvm/vmx/vmcs.h |  5 +++++
- arch/x86/kvm/vmx/vmx.c  | 47 ++++++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.h  |  6 +++++-
- 4 files changed, 69 insertions(+), 2 deletions(-)
+[1/6] drm/panel: visionox-rm69299: don't unregister DSI device
+      commit: 9e4d3f4f34455abbaa9930bf6b7575a5cd081496
+[2/6] drm/panel: novatek-nt36682e: don't unregister DSI device
+      commit: 941c0bdbc176df825adf77052263b2d63db6fef7
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 3aaf7e86a859..7632fe6e4db9 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -95,6 +95,19 @@ config KVM_INTEL
- 	  To compile this as a module, choose M here: the module
- 	  will be called kvm-intel.
- 
-+config KVM_INTEL_PROVE_VE
-+        bool "Check that guests do not receive #VE exceptions"
-+        default KVM_PROVE_MMU || DEBUG_KERNEL
-+        depends on KVM_INTEL
-+        help
-+
-+          Checks that KVM's page table management code will not incorrectly
-+          let guests receive a virtualization exception.  Virtualization
-+          exceptions will be trapped by the hypervisor rather than injected
-+          in the guest.
-+
-+          If unsure, say N.
-+
- config X86_SGX_KVM
- 	bool "Software Guard eXtensions (SGX) Virtualization"
- 	depends on X86_SGX && KVM_INTEL
-diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-index 7c1996b433e2..b25625314658 100644
---- a/arch/x86/kvm/vmx/vmcs.h
-+++ b/arch/x86/kvm/vmx/vmcs.h
-@@ -140,6 +140,11 @@ static inline bool is_nm_fault(u32 intr_info)
- 	return is_exception_n(intr_info, NM_VECTOR);
- }
- 
-+static inline bool is_ve_fault(u32 intr_info)
-+{
-+	return is_exception_n(intr_info, VE_VECTOR);
-+}
-+
- /* Undocumented: icebp/int1 */
- static inline bool is_icebp(u32 intr_info)
- {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2c746318c6c3..3c2fb1310aaa 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -869,6 +869,12 @@ void vmx_update_exception_bitmap(struct kvm_vcpu *vcpu)
- 
- 	eb = (1u << PF_VECTOR) | (1u << UD_VECTOR) | (1u << MC_VECTOR) |
- 	     (1u << DB_VECTOR) | (1u << AC_VECTOR);
-+	/*
-+	 * #VE isn't used for VMX.  To test against unexpected changes
-+	 * related to #VE for VMX, intercept unexpected #VE and warn on it.
-+	 */
-+	if (IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		eb |= 1u << VE_VECTOR;
- 	/*
- 	 * Guest access to VMware backdoor ports could legitimately
- 	 * trigger #GP because of TSS I/O permission bitmap.
-@@ -2602,6 +2608,9 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 					&_cpu_based_2nd_exec_control))
- 			return -EIO;
- 	}
-+	if (!IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
-+
- #ifndef CONFIG_X86_64
- 	if (!(_cpu_based_2nd_exec_control &
- 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES))
-@@ -2626,6 +2635,7 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 			return -EIO;
- 
- 		vmx_cap->ept = 0;
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 	}
- 	if (!(_cpu_based_2nd_exec_control & SECONDARY_EXEC_ENABLE_VPID) &&
- 	    vmx_cap->vpid) {
-@@ -4588,6 +4598,7 @@ static u32 vmx_secondary_exec_control(struct vcpu_vmx *vmx)
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_VPID;
- 	if (!enable_ept) {
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_EPT;
-+		exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 		enable_unrestricted_guest = 0;
- 	}
- 	if (!enable_unrestricted_guest)
-@@ -4711,8 +4722,21 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 
- 	exec_controls_set(vmx, vmx_exec_control(vmx));
- 
--	if (cpu_has_secondary_exec_ctrls())
-+	if (cpu_has_secondary_exec_ctrls()) {
- 		secondary_exec_controls_set(vmx, vmx_secondary_exec_control(vmx));
-+		if (vmx->ve_info) {
-+			vmcs_write64(VE_INFORMATION_ADDRESS,
-+				     __pa(vmx->ve_info));
-+		} else {
-+			/*
-+			 * Because SECONDARY_EXEC_EPT_VIOLATION_VE is
-+			 * used only for debugging, it's okay to leave
-+			 * it disabled.
-+			 */
-+			secondary_exec_controls_clearbit(vmx,
-+							 SECONDARY_EXEC_EPT_VIOLATION_VE);
-+		}
-+	}
- 
- 	if (cpu_has_tertiary_exec_ctrls())
- 		tertiary_exec_controls_set(vmx, vmx_tertiary_exec_control(vmx));
-@@ -5200,6 +5224,12 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	if (is_invalid_opcode(intr_info))
- 		return handle_ud(vcpu);
- 
-+	/*
-+	 * #VE isn't supposed to happen.  Block the VM if it does.
-+	 */
-+	if (KVM_BUG_ON(is_ve_fault(intr_info), vcpu->kvm))
-+		return -EIO;
-+
- 	error_code = 0;
- 	if (intr_info & INTR_INFO_DELIVER_CODE_MASK)
- 		error_code = vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
-@@ -7474,6 +7504,8 @@ void vmx_vcpu_free(struct kvm_vcpu *vcpu)
- 	free_vpid(vmx->vpid);
- 	nested_vmx_free_vcpu(vcpu);
- 	free_loaded_vmcs(vmx->loaded_vmcs);
-+	if (vmx->ve_info)
-+		free_page((unsigned long)vmx->ve_info);
- }
- 
- int vmx_vcpu_create(struct kvm_vcpu *vcpu)
-@@ -7567,6 +7599,19 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 			goto free_vmcs;
- 	}
- 
-+	if (vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_EPT_VIOLATION_VE) {
-+		struct page *page;
-+
-+		BUILD_BUG_ON(sizeof(*vmx->ve_info) > PAGE_SIZE);
-+
-+		/* ve_info must be page aligned. */
-+		page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-+		if (page)
-+			vmx->ve_info = page_to_virt(page);
-+		else
-+			pr_err("Failed to allocate ve_info. disabling EPT_VIOLATION_VE.\n");
-+	}
-+
- 	if (vmx_can_use_ipiv(vcpu))
- 		WRITE_ONCE(to_kvm_vmx(vcpu->kvm)->pid_table[vcpu->vcpu_id],
- 			   __pa(&vmx->pi_desc) | PID_TABLE_ENTRY_VALID);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 65786dbe7d60..0da79a386825 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -362,6 +362,9 @@ struct vcpu_vmx {
- 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 	} shadow_msr_intercept;
-+
-+	/* ve_info must be page aligned. */
-+	struct vmx_ve_information *ve_info;
- };
- 
- struct kvm_vmx {
-@@ -574,7 +577,8 @@ static inline u8 vmx_get_rvi(void)
- 	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
- 	 SECONDARY_EXEC_BUS_LOCK_DETECTION |				\
- 	 SECONDARY_EXEC_NOTIFY_VM_EXITING |				\
--	 SECONDARY_EXEC_ENCLS_EXITING)
-+	 SECONDARY_EXEC_ENCLS_EXITING |					\
-+	 SECONDARY_EXEC_EPT_VIOLATION_VE)
- 
- #define KVM_REQUIRED_VMX_TERTIARY_VM_EXEC_CONTROL 0
- #define KVM_OPTIONAL_VMX_TERTIARY_VM_EXEC_CONTROL			\
+Other four patches were not reviewed and they are not fixes, so they are still
+pending.
+
+Best regards,
 -- 
-2.43.0
-
+With best wishes
+Dmitry
 
