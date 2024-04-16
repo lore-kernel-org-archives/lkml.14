@@ -1,99 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343C5137753;
-	Tue, 16 Apr 2024 18:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD6D137777;
+	Tue, 16 Apr 2024 18:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713293918; cv=none; b=b8GQpaoy2UJVUj0Xf4Bn4FURTn4BHFzbxz/hLpFjP7xoJDL2jeEpLbQBfPdASOuUxkPEY3usOMWsVRKo7TFg9n8zpRSwcKtl6NjJh7Hi5dfIuOOH1ow2VLQ+9dvlerr/MqEfBmmggKbU9Kk/uVa3DEFvsPJXeg9bs2vqKNedH6c=
+	t=1713293945; cv=none; b=q0kP1jbjCHJc6VqeU/4OBjTZBZ9VZ0C3Rx+vyMjx94kigeh4q0uuOtILskj8LTUTq4sQgyDu9R5AV3pGGosOiZl6k1KNF0zCBrzBzbFTpvkWQ3ggZyEPQ61M6nAto3M2UR88DUCJppUb6yDTTrPo5nam+kpxWLvDdGoLHA2Kg8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713293918; c=relaxed/simple;
-	bh=8aks7pZpPQU+hw07GeHFVRYiu3MNvPTJQWMNAUMXbWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTew1/cqTMBcawcHT+pV9diVafqZtFJmczMavnOn8r2JSE/64nEQD47W36+kK6cIirxnVpAIZASsuuwas41ykgtuDxUs9X8w06CA7PUY9E47eBXMY2GLE9QhOasaduH+hQ2kXwrOEMvHM7bFYklpR9hF8WO53QDc92vJemAmxkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfliuoNi; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfliuoNi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713293917; x=1744829917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8aks7pZpPQU+hw07GeHFVRYiu3MNvPTJQWMNAUMXbWE=;
-  b=XfliuoNiifXTrleuFedToZDaz1acf360sw05lk6KXn5Bwk5jEaYcl0nO
-   fP8YBwJEXdxgjCAOEXykDu1y637f9GxoyRTy7pxGO7fxPck0ChVp5Tz2N
-   GFGIZxW8YMovDTDYDfLUaElISio7G8ijrNtoEoLPQaeqtv5Wq8cwEFARK
-   DPI3DfwxBcKucpkrPHiDWBjjwA13JWMHpdQnkVRBpo1GJKBowZBr1H29s
-   bTeg7fvmeYImuRVckNdw5P5vjM88G8AsJ1vZ1BloGMseGkTemGIvtM9dL
-   dt5bqt9wH5W8ctaLakdbY2/a1RG19wmtDfuJHt2U4n4fXPP/zxMgs1ZTt
-   Q==;
-X-CSE-ConnectionGUID: 8+fnvlcFQjygcm+PK2AdGw==
-X-CSE-MsgGUID: 0pDG+gG0Q1u6dRbKOuXDbQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="26265808"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="26265808"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:58:36 -0700
-X-CSE-ConnectionGUID: rwYZ0Pp0RtGW7VKPEHxu1g==
-X-CSE-MsgGUID: /AIjiDVRRQmHBFs3K2R75A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="27153913"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:58:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rwo0l-00000004nVD-2B6C;
-	Tue, 16 Apr 2024 21:58:31 +0300
-Date: Tue, 16 Apr 2024 21:58:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Michael Pratt <mcpratt@pm.me>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vamshi Gajjela <vamshigajjela@google.com>
-Subject: Re: [PATCH v2 1/3] serial: core: Store fifo timeout again
-Message-ID: <Zh7KV0FuM2B56J7w@smile.fi.intel.com>
-References: <20240416182741.22514-1-mcpratt@pm.me>
- <20240416182741.22514-2-mcpratt@pm.me>
+	s=arc-20240116; t=1713293945; c=relaxed/simple;
+	bh=1Ld+ycEs17szCKQzP68kYUns5w+E28E1p3B6H+yY1vE=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fhLsW2LiWvM62W3RzhVLebOaJkyLlZPwxJDbhyJdMi/QJWks2AZNXnkUWFunFIfiJk1jFzZvN3DDg2tBx+fXC35jjYs1cTaom3RrF6Q/pTGu8xofYF3fULV36qNFBXabk+jNRGvy2JoGtfAhuFJasJF88rVuAm0INg9BXhxzodo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (31.173.81.200) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 16 Apr
+ 2024 21:58:52 +0300
+Subject: Re: [PATCH 2/3] media: tuners: xc5000: fix error code handling in
+ xc5000_attach()
+To: Roman Smirnov <r.smirnov@omp.ru>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Luis
+ Chamberlain <mcgrof@kernel.org>, Jia-Ju Bai <baijiaju1990@gmail.com>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+References: <20240416114509.198069-1-r.smirnov@omp.ru>
+ <20240416114509.198069-2-r.smirnov@omp.ru>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <b0fbdb43-8473-6e66-a3cd-a1e7f11ae4b2@omp.ru>
+Date: Tue, 16 Apr 2024 21:58:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416182741.22514-2-mcpratt@pm.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240416114509.198069-2-r.smirnov@omp.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 04/16/2024 18:34:01
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 184744 [Apr 16 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 17 0.3.17
+ f2153f38d75b12894d9cf445f96cd15c9ef63a9d
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.81.200 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.81.200
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 04/16/2024 18:38:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 4/16/2024 4:06:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Tue, Apr 16, 2024 at 06:29:28PM +0000, Michael Pratt wrote:
-> This is a partial revert of Commit f9008285bb69
-> ("serial: Drop timeout from uart_port").
+On 4/16/24 2:45 PM, Roman Smirnov wrote:
+
+> xc5000_attach() uses the hybrid_tuner_request_state() macro.
+> It may return the error code -ENOMEM, but the function handle
+
+   Handles (just noticed that grammar issue in all 3 patches).
+
+> the value 0 instead.
 > 
-> In order to prevent having to calculate a timeout
-> for the fifo device during a write operation, if enabled,
-> calculate it ahead of time and store the value of the timeout
-> in a struct member of uart_port.
+> Found by Linux Verification Center (linuxtesting.org) with Svace.
+> 
+> Fixes: b9302fa7ed97 ("media: tuners: fix error return code of hybrid_tuner_request_state()")
+> Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
 
-...
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
-> +	if (port->fifosize > 1)
-> +		port->timeout = uart_fifo_timeout(port);
+[...]
 
-	else
-		port->timeout = port->frame_time;
-
-?
-
->  }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+MBR, Sergey
 
