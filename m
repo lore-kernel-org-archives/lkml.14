@@ -1,187 +1,263 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2048.outbound.protection.outlook.com [40.107.114.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F9C127B72
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713255535; cv=none; b=ewGGYjTl56tkuu9jHX5DKzrZ9T1wJcXgbxomN6iNN12rOWaIlAA+/ZLhcMuJOMYqtJ+Nsa80sR85fozKWBCFrn/xjNX9j/J0dGN509NhKXpXvtw2UJe5EycHCzh9eJCzwev03VX56CEo+zi9QFRcyftB52ZyBLk830cKz7jEd9g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713255535; c=relaxed/simple;
-	bh=WSUcYTGfMiJPS6dBoWIy1OiuZHDqhA72PAGbwoqjEHc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MosKPvKGw43MI31ZZgq4/F27fqP3dluMujf3obWwd1Qqd8TdH9dbID/TWM5QiGTKCdTb4DPlmeSuylNtrmxP/m75iPoH/GYLVgBZwCwEYKirJay+WGVkeqLbf2f93pjb7TZsFUisbGlHGf3vW6j6H0zKTsjyt/CbcqWykjiT0sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NQsOo7dV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DE0629;
+	Tue, 16 Apr 2024 08:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713255733; cv=fail; b=nJsKFOG259k/g0jM5wXEmgzO5beBySeprcizLEShpDDv2FmktnuIFLmAfnX/o1BQoo8FOxtRX9OKidaBwdQ4NmKptXzd+W4WsKOQphlFMt5Lj6/QQznWwgbOk2pd3VWnyfIhAf55LcRQND6/JpjdKWhEY39Z9UtiUVKNd1xqDws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713255733; c=relaxed/simple;
+	bh=XkLUJsZGNJHV1FNJgXf6JW/yD/SixrPhinzHympwee4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Qsg7NBDFjJ1YwdKX94xz3JdUFilP6/K+XrNCPhmXs78i5NSA6H7lEtjNnWafULvrCwQ8cURIVoT/hHaOqQeQxRQ0faPZBbmFvnBkaSdtmkfjoQW2Epbo54PxMNpjscGwYZ8hMn3lNpq4WVNuEbMsg/l2UVR/E+BjEmdmY1yWhl8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com; spf=pass smtp.mailfrom=alpsalpine.com; dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b=ob5iQ5oj; arc=fail smtp.client-ip=40.107.114.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alpsalpine.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpsalpine.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQsOo7dV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713255531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=sx9FIAo9TZjFdKuhika+AQetmZMIT9vu9nUh+3JKCOQ=;
-	b=NQsOo7dVJBKYRs84RHi8xvWhBBBeVy9OAhsvw07XHQOjsjFSqKacbi4hFs9n5QrVHEXlny
-	7XQzxnIAQgjgU1Xnx6sMZVFQV0Rn4TMIPQf5ZSQpU3bn82KDDCxGkbn7Uw0wyWKxS9ZHuQ
-	civSIxAxue70fdjZDlL3qytCw2RWQNg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-77-q3p16VJ0NsOr6geM0MyUnQ-1; Tue, 16 Apr 2024 04:18:48 -0400
-X-MC-Unique: q3p16VJ0NsOr6geM0MyUnQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a5198262239so99031266b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:18:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713255527; x=1713860327;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sx9FIAo9TZjFdKuhika+AQetmZMIT9vu9nUh+3JKCOQ=;
-        b=r6viCcaw46v28LfPullNuCzjIvI/GQna00Cog5oUHcm4Iajni+LZLA8E0AX0gQ4mvJ
-         TcnXL5y1nR3jNOsuzdPPvgScUZkG5XpnS09iet6SWVJmLVVObEgJCCkORfi+f8h9kmWm
-         yLlT4dKTHabSeUEAH8N0LBFHTejDyRllHHgrkxUfR7RADxL24tlBCFDarGFNP35PvZIX
-         A6eUXpVMQLmcK2m9NZw6nkluTFnjKUI46RX/RpcNFyTRHGDD72autla4QSxWKTsnyEiQ
-         8MFnvud64+dW62yA+AbH7L4lS1ynDPyNg19A/lHRc0XGJOJ8C43YDjfm2QkdxePIIOW+
-         TSvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIs77zSwpu6c/RXrVTSZeOe9YUO+Y2L3MV/ChlWyOGdjyJYaU+94WVSCtXiq/dixMhajWugm5AJMj9kH87PE1cJJ8gMyskeCmo7ZOi
-X-Gm-Message-State: AOJu0Yyu4bdXGaKfQ6m3ZCoYQ7PoWfk9hV5IdD2Cbq23ZsHATIuAhNv2
-	wYVK/7OfIeJe/dVZII6i6IStd+Pf90UdV3tobYNbfaVb0N1zQUvT5ow1JAz/jRN3XLT/uhtgQ88
-	fvmX3+CYOcOzEe0cdFwWuTS+YS/MbTxLfkUXjQKMHBjj1AJS5KtVv7vwA8Hlrrg==
-X-Received: by 2002:a17:906:4ecf:b0:a52:6535:d078 with SMTP id i15-20020a1709064ecf00b00a526535d078mr3213800ejv.7.1713255526699;
-        Tue, 16 Apr 2024 01:18:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeWubKk9sfU5n4Eg4r0fgR17oDosoRykSHGnpq+PCrNmzGMeRZ2HKjVJzu/+KOc5EhcE24Ng==
-X-Received: by 2002:a17:906:4ecf:b0:a52:6535:d078 with SMTP id i15-20020a1709064ecf00b00a526535d078mr3213728ejv.7.1713255526227;
-        Tue, 16 Apr 2024 01:18:46 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-231-31.dyn.eolo.it. [146.241.231.31])
-        by smtp.gmail.com with ESMTPSA id gf14-20020a170906e20e00b00a51e6222200sm6539922ejb.156.2024.04.16.01.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 01:18:45 -0700 (PDT)
-Message-ID: <be056435353af60a564f457c79dacc16c6ea920e.camel@redhat.com>
-Subject: Re: [PATCH v3 1/4] networking: Remove the now superfluous sentinel
- elements from ctl_table array
-From: Paolo Abeni <pabeni@redhat.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	devnull+j.granados.samsung.com@kernel.org
-Cc: Dai.Ngo@oracle.com, alex.aring@gmail.com, alibuda@linux.alibaba.com, 
- allison.henderson@oracle.com, anna@kernel.org, bridge@lists.linux.dev, 
- chuck.lever@oracle.com, coreteam@netfilter.org, courmisch@gmail.com, 
- davem@davemloft.net, dccp@vger.kernel.org, dhowells@redhat.com,
- dsahern@kernel.org,  edumazet@google.com, fw@strlen.de, geliang@kernel.org,
- guwen@linux.alibaba.com,  herbert@gondor.apana.org.au, horms@verge.net.au,
- j.granados@samsung.com, ja@ssi.bg,  jaka@linux.ibm.com, jlayton@kernel.org,
- jmaloy@redhat.com, jreuter@yaina.de,  kadlec@netfilter.org,
- keescook@chromium.org, kolga@netapp.com, kuba@kernel.org, 
- linux-afs@lists.infradead.org, linux-hams@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
- linux-sctp@vger.kernel.org, linux-wpan@vger.kernel.org, 
- linux-x25@vger.kernel.org, lucien.xin@gmail.com, lvs-devel@vger.kernel.org,
-  marc.dionne@auristor.com, marcelo.leitner@gmail.com, martineau@kernel.org,
-  matttbe@kernel.org, mcgrof@kernel.org, miquel.raynal@bootlin.com, 
- mptcp@lists.linux.dev, ms@dev.tdt.de, neilb@suse.de,
- netdev@vger.kernel.org,  netfilter-devel@vger.kernel.org,
- pablo@netfilter.org, ralf@linux-mips.org,  razor@blackwall.org,
- rds-devel@oss.oracle.com, roopa@nvidia.com,  stefan@datenfreihafen.org,
- steffen.klassert@secunet.com,  tipc-discussion@lists.sourceforge.net,
- tom@talpey.com, tonylu@linux.alibaba.com,  trond.myklebust@hammerspace.com,
- wenjia@linux.ibm.com, ying.xue@windriver.com
-Date: Tue, 16 Apr 2024 10:18:42 +0200
-In-Reply-To: <20240415231210.22785-1-kuniyu@amazon.com>
-References: <20240412-jag-sysctl_remset_net-v3-1-11187d13c211@samsung.com>
-	 <20240415231210.22785-1-kuniyu@amazon.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=alpsalpine.com header.i=@alpsalpine.com header.b="ob5iQ5oj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jiQPni9ZG5AZtw38IHHWaXzFp9riSMjHA3LGO7syxSfQDmzmGmWTGClb4M06yUTI4Pzrerk37mBguqSKvUQf94bKdPWTpr85PP2sMbNB9zKBAk9hRzk7o6UzAUMKAjMvOccBobUln80rvAB4qp1PPtERLdX0A7K9eAXjc8UyvHHaudNpgxz1A/GO37K/e8+CB1MDtVRlcO6zATYHBLMX13q0NEyN0yC00OjTX2EsNt0VtndrDYJypkL+h6eamE6V8/DtGIW9TNkT0ZXCdAtVF5rosEaGr79Jg/ehb8876AxuMCqHSZq0f2Y9NEm3VLksg93nDgfQapgLcg36aI7DSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Lml8/NXqgiK2lC6l2iyDMy43Q8sS3AlfU2NEIsBIqVI=;
+ b=bnPXaWH5jcKFH6JQK6PyAMc8B80kUfVz6QT0JCgc6ENlGoEaoqBYA3NWPgJpK2zufG/1Yjg+r/CK8qr6dXQ2+3wHDR6mWgITJNVOpxo3tnZrj3P4s9byDWlLq5SIdLe+/0nHtfli5N1taxZ8MvZX4QbjilwPcB+7mzaZSb6AhzBKYI0f2S1mVXIIqybzCThuY9cMFQxuoVJB+hMaUOG+oFJKc8Cp4A781+MXlTb83Ux8eH17rLIgJsqWHfgSSlSMUsoqywJOyAnD1u6bF4JdD00dWQ7tjwWFM7B78onJl5zTU7Hu07kU87H9rtykXZ7FeJq1ZnHGfHNnuY1afa5oPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=alpsalpine.com; dmarc=pass action=none
+ header.from=alpsalpine.com; dkim=pass header.d=alpsalpine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpsalpine.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lml8/NXqgiK2lC6l2iyDMy43Q8sS3AlfU2NEIsBIqVI=;
+ b=ob5iQ5ojYcEBjSR+3CfFU1T4sAxcrqz/SeerZfoFayNr7WI+UFeKwk/JCKMPNce5owu6mBhhMyKAlgfno4rY2d2KXseQyHra/sX2+ua3sQtg6ERZWFM61ItYayVN0FwL87GylihVyKqzb2TtuAr1YNI2Q0vso1smM5pKya0+rwLEJv2o/0dYFMJaciwcXFy7pVjZ8riOLfOLMca9jvXfNqBtlcibvdhqItVtQf0GHIvEo42k87LaWW+Zw1lDhvDeV3ojhTHmHhz2BJPAwabBtRYpkh2Unpo2N558vqrFNXOMVnWqRBPuxet3hI+MMHPj8FHTP5hWIxwnMv5wkqn3Xw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=alpsalpine.com;
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14) by TYCPR01MB6753.jpnprd01.prod.outlook.com
+ (2603:1096:400:b0::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.48; Tue, 16 Apr
+ 2024 08:22:03 +0000
+Received: from TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b]) by TYVPR01MB10781.jpnprd01.prod.outlook.com
+ ([fe80::b541:f53c:6306:6e2b%4]) with mapi id 15.20.7452.049; Tue, 16 Apr 2024
+ 08:22:03 +0000
+From: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+To: stern@rowland.harvard.edu,
+	mdharm-usb@one-eyed-alien.net,
+	gregkh@linuxfoundation.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net
+Cc: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+Subject: [PATCH v3] usb-storage: Optimize scan delay more precisely
+Date: Tue, 16 Apr 2024 17:28:21 +0900
+Message-Id: <20240416082821.10164-1-Norihiko.Hama@alpsalpine.com>
+X-Mailer: git-send-email 2.17.1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: OS7PR01CA0065.jpnprd01.prod.outlook.com
+ (2603:1096:604:253::13) To TYVPR01MB10781.jpnprd01.prod.outlook.com
+ (2603:1096:400:2ae::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYVPR01MB10781:EE_|TYCPR01MB6753:EE_
+X-MS-Office365-Filtering-Correlation-Id: b701d5b9-0bb1-4b49-bef2-08dc5dee4b9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	yKYEs556tCdLooJ0pPiiyJEDO+rD/22pNo4fXnR3gI1fq/A4Q6fzBBOZkrb1eTsFdzEClGwukSUb9AUeIo/7xFM4CxOLHmVGXlJhYsqpqsd/Iqd89q74SBIDCZG8he0nZhQE7VjHa5ca89Y1jG6QxyjGT+B5SW8ZByeJtm7LJ5/M9NfYsq6NNwB+HicJdbgxleH0BZvYeaSNn48HBa6o0VGpyS0fLnfQxncgqzaQvjRPmat3ksPm+u75hcpwhe6DT6gU4giqGXVg8Lg5cZkTBgIsx8Harif7fOAmTxDbF83fzk7hhO6WBy+0NWFwTlFgl1AYl/ghdTT8MyJ64Ic5cdxNA4iAYYlNhrRxo5ouvrD8JEBQP0xJSy9bcLc9dNCWwIid43DBT6HOvEZM5r6U3pHMmh2Ofx8AF5OVbkJ1gJFbJKblCkghSI8CwA2KEhYdv1EedMCbSEjoxBi7guNv+/HZBc8VdtZiEt01V02EZGgGaS8zHGfw8/UyTn8Sm25F62OALOo2BUHlJ8Z9j7J0yO/l8l1r50P05XtiKoO/HxXsCCqryzyG8fRnMXis0IB+fLivWtJWZNz1C5Tg9DLVO9cDQ9F1J4xmvZScYr+82TJwQyezjfgx7HoCsjNyysE2k6Mws1q6iNRzvG1o8JyAW+8/8641+xXyf2Dla0tv6L1iFM33M+kkjIyO3c7vXsNO20poBKs+BlM8/AzhJP9h2nbM2gMXQZbGmVk6FEA5cW8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB10781.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?u1doW0Tr7H8gCttOqhJTgTWDYNTuOkisMWESJoTDHnZLUPdB1JR+Hf0wg/Xs?=
+ =?us-ascii?Q?3Xn6e2eyW143lxeQCGqpnY3nlL5WGMRog0dYugdWmXPZOuqJf2Wz5lLf0ya2?=
+ =?us-ascii?Q?FkBrGFbZxhRD3x0v13qOuR+XfS+IbQBO2aA1WFeeQeTX3n+duQpVrsXH7ze/?=
+ =?us-ascii?Q?hUrB0fouWdsehGmXaim9RmXCC9OSCmPNxvjBoplK92nmfkylbxTGG2jOHw4z?=
+ =?us-ascii?Q?T9sbXqvsyv3R2Op9AB58G4plZffMViaABVrxTI4XfMyKcixnQSYwdEqSqk9/?=
+ =?us-ascii?Q?h3ZYBrjPrqd7z8/46nnXMoazreUrVDEXjqtWew3rh9i/ENDr1ML7BEcsTk7o?=
+ =?us-ascii?Q?N6h1ndKbh+XZRM7o+IPHtm25kLksRldvsNKI38NRXKdQF0kJ3VFIStvwzir7?=
+ =?us-ascii?Q?DMhsuWDg62IW4ymTyOLeNWoLAE4tqnwGLSPKj4Qch6ELfzAELksyv3mkz1W7?=
+ =?us-ascii?Q?TcjU7WvB4uFSiTu/H0L7gjLYywYfEI0LD20VSvaa/UdiVfgRzbQFCpial5/B?=
+ =?us-ascii?Q?3K+w48PH+nfWfMwCHM6UaWb3HpdkjWVom/JeHunYHFDxQE3FCyhfyDvATo5y?=
+ =?us-ascii?Q?Rcd6OZnhFCrCi0ctTDwM5Z8fUEmHZ7reQBZQajyppV6YBijdF1GKPA8Hq7jk?=
+ =?us-ascii?Q?NFEvxQC8fjDDRhVctnSVS4iY6k+M9B0G6kYnqolTpf/XX2cmR338wgcuaAnb?=
+ =?us-ascii?Q?X2hjhLMRrhuclMTDc8LQ5x1c6kcRRK534Gq8XHnarPh7s+vxLbMDUDQmYkCK?=
+ =?us-ascii?Q?5vvhGKbfUKwNjejaQqIZvMlzLfsqrWGuwmX4Ig/L9DgXD4oArYuGYMf4q21s?=
+ =?us-ascii?Q?VqIeNTIFv3V45Ri3xVm0JTqSV+xAuTLy4oqwaDlL1daxcmGFxD26JQadWfFY?=
+ =?us-ascii?Q?KKG87a5nfOReK+JZJSUkU8MM0J4ltZfN8a5YeM3htVIGS4Txmwj7/M2eEMFN?=
+ =?us-ascii?Q?wUxUBPMZvHBTJRhD1U61SeYEfIY9CxoOlRLTkTcQ5agPfptVIhKGvVqNCL+s?=
+ =?us-ascii?Q?wxZoricp78NvIHjcrlCsHCIK9FimJmYn3Ieui9dFJInvnPY/2JAQXvSKfATo?=
+ =?us-ascii?Q?UFinsPsg+i7EfPDbxLKS6YjN9rc0TNKtGcEVcP9U+lEICZx5c+dHBh762usn?=
+ =?us-ascii?Q?cfV989lLs8QwR/cyI6S+uJ08UoYi4uxQZ4oHsvtpCmNABfejFSsD4SeuzSrT?=
+ =?us-ascii?Q?P7p1c99RUfRsHvApNAVj6D1i78Vps4YreaOnGXQkMoTdteKPQJMgOSKMbHPB?=
+ =?us-ascii?Q?XQOX0CDhwB6Eu1UMql+tHn9cNNnfOgQm3RfW3OtxnE0MkgP6Hukd3VZttW++?=
+ =?us-ascii?Q?rVaCEIUiIdvDT8ehMPAwvSoSSmklqZ3OGngPz3J/WWZBl9YGdyfMBI010B9S?=
+ =?us-ascii?Q?MBmwh4PbMr5F5YCQ8lMrvgaqqUuNdyj/MvGQ81TRJCBbI195R/ko34olEl4w?=
+ =?us-ascii?Q?CaOWWd2gbq38144f7laB5paIQMHHOy5DG0gONtoeztZduFTzSMm3gLz6eWgq?=
+ =?us-ascii?Q?XX/SJWJbS+OQKlSrk1R5Qyi6U23u0vXJntNximl/jiH+XrCKaCtboHvlhi36?=
+ =?us-ascii?Q?LEDG5DWguqvzQevVVXiCWbtYKbXtEW3tOdc0lrzW?=
+X-OriginatorOrg: alpsalpine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b701d5b9-0bb1-4b49-bef2-08dc5dee4b9b
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB10781.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 08:22:03.3454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 57e76998-77bd-4b82-a424-198f46eb2254
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mitbWUcGLO7JMGVEfCU2Xf86MUyPQ3nC9kULGvpkV/WVsbAe2+fT11Fmkob5FeOri38y2TLhP+bmwOEkRKM2FQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB6753
 
-On Mon, 2024-04-15 at 16:12 -0700, Kuniyuki Iwashima wrote:
-> From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.o=
-rg>
-> Date: Fri, 12 Apr 2024 16:48:29 +0200
-> > From: Joel Granados <j.granados@samsung.com>
-> >=20
-> > This commit comes at the tail end of a greater effort to remove the
-> > empty elements at the end of the ctl_table arrays (sentinels) which
-> > will reduce the overall build time size of the kernel and run time
-> > memory bloat by ~64 bytes per sentinel (further information Link :
-> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> >=20
-> > * Remove sentinel element from ctl_table structs.
-> > * Remove extra element in ctl_table arrays declarations
-> > * Remove instances where an array element is zeroed out to make it look
-> >   like a sentinel. This is not longer needed and is safe after commit
-> >   c899710fe7f9 ("networking: Update to register_net_sysctl_sz") added
-> >   the array size to the ctl_table registration
-> > * Replace the for loop stop condition that tests for procname =3D=3D NU=
-LL with
-> >   one that depends on array size
-> > * Removed the "-1" that adjusted for having an extra empty element when
-> >   looping over ctl_table arrays
-> > * Removing the unprivileged user check in ipv6_route_sysctl_init is
-> >   safe as it is replaced by calling ipv6_route_sysctl_table_size;
-> >   introduced in commit c899710fe7f9 ("networking: Update to
-> >   register_net_sysctl_sz")
-> > * Replace empty array registration with the register_net_sysctl_sz call=
-.
-> >=20
-> > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > ---
-> >  net/core/neighbour.c                | 5 +----
-> >  net/core/sysctl_net_core.c          | 9 ++++-----
-> >  net/dccp/sysctl.c                   | 2 --
-> >  net/ieee802154/6lowpan/reassembly.c | 6 +-----
-> >  net/ipv4/devinet.c                  | 5 ++---
-> >  net/ipv4/ip_fragment.c              | 2 --
-> >  net/ipv4/route.c                    | 8 ++------
-> >  net/ipv4/sysctl_net_ipv4.c          | 7 +++----
-> >  net/ipv4/xfrm4_policy.c             | 1 -
-> >  net/ipv6/addrconf.c                 | 5 +----
-> >  net/ipv6/icmp.c                     | 1 -
-> >  net/ipv6/reassembly.c               | 2 --
-> >  net/ipv6/route.c                    | 5 -----
-> >  net/ipv6/sysctl_net_ipv6.c          | 4 +---
-> >  net/ipv6/xfrm6_policy.c             | 1 -
-> >  net/llc/sysctl_net_llc.c            | 8 ++------
-> >  net/mpls/af_mpls.c                  | 3 +--
-> >  net/mptcp/ctrl.c                    | 1 -
-> >  net/netrom/sysctl_net_netrom.c      | 1 -
-> >  net/phonet/sysctl.c                 | 1 -
-> >  net/rds/ib_sysctl.c                 | 1 -
-> >  net/rds/sysctl.c                    | 1 -
-> >  net/rds/tcp.c                       | 1 -
-> >  net/rose/sysctl_net_rose.c          | 1 -
-> >  net/rxrpc/sysctl.c                  | 1 -
-> >  net/sctp/sysctl.c                   | 6 +-----
-> >  net/smc/smc_sysctl.c                | 1 -
-> >  net/sunrpc/sysctl.c                 | 1 -
-> >  net/sunrpc/xprtrdma/svc_rdma.c      | 1 -
-> >  net/sunrpc/xprtrdma/transport.c     | 1 -
-> >  net/sunrpc/xprtsock.c               | 1 -
-> >  net/tipc/sysctl.c                   | 1 -
-> >  net/unix/sysctl_net_unix.c          | 1 -
-> >  net/x25/sysctl_net_x25.c            | 1 -
-> >  net/xfrm/xfrm_sysctl.c              | 5 +----
-> >  35 files changed, 20 insertions(+), 81 deletions(-)
->=20
-> You may want to split patch based on subsystem or the type of changes
-> to make review easier.
+Current storage scan delay is reduced by the following old commit.
 
-I agree with Kuniyuki. I think the x25 chunks can me moved in the last
-patch, and at least sunrpc and rds could go in separate patches,
-possibly even xfrm and smc.
+a4a47bc03fe5 ("Lower USB storage settling delay to something more reasonable")
 
-Thanks,
+It means that delay is at least 'one second', or zero with delay_use=0.
+'one second' is still long delay especially for embedded system but
+when delay_use is set to 0 (no delay), still error observed on some USB drives.
 
-Paolo
+So delay_use should not be set to 0 but 'one second' is quite long.
+Especially for embedded system, it's important for end user
+how quickly access to USB drive when it's connected.
+That's why we have a chance to minimize such a constant long delay.
+
+This patch optimizes scan delay more precisely
+to minimize delay time but not to have any problems on USB drives
+by extending module parameter 'delay_use' in milliseconds internally.
+The parameter 'delay_use' is changed to be parsed as 3 decimal point value
+if it has digit values with '.'.
+It makes the range of value to 1 / 1000 in internal 32-bit value
+but it's still enough to set the delay time.
+By default, delay time is 'one second' for backward compatibility.
+
+For example, it seems to be good by changing delay_use=0.1,
+that is 100 millisecond delay without issues for most USB pen drives.
+
+Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+---
+ .../admin-guide/kernel-parameters.txt         | 10 +++
+ drivers/usb/storage/usb.c                     | 72 +++++++++++++++++--
+ 2 files changed, 78 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 561d0dd776c7..ae1eb5988706 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6190,6 +6190,16 @@
+ 	usb-storage.delay_use=
+ 			[UMS] The delay in seconds before a new device is
+ 			scanned for Logical Units (default 1).
++			To specify more precise delay, supports 3 decimal point.
++			The range of decimal point is in milliseconds,
++			hence the minimum value is "0.001".
++			Example:
++				delay_use=1
++					1 second delay
++				delay_use=0.1
++					0.1 second delay
++				delay_use=2.55
++					2.55 second elay
+ 
+ 	usb-storage.quirks=
+ 			[UMS] A list of quirks entries to supplement or
+diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+index 90aa9c12ffac..d5eb7dd8f3b1 100644
+--- a/drivers/usb/storage/usb.c
++++ b/drivers/usb/storage/usb.c
+@@ -67,9 +67,73 @@ MODULE_AUTHOR("Matthew Dharm <mdharm-usb@one-eyed-alien.net>");
+ MODULE_DESCRIPTION("USB Mass Storage driver for Linux");
+ MODULE_LICENSE("GPL");
+ 
+-static unsigned int delay_use = 1;
+-module_param(delay_use, uint, S_IRUGO | S_IWUSR);
+-MODULE_PARM_DESC(delay_use, "seconds to delay before using a new device");
++static unsigned int delay_use = 1 * MSEC_PER_SEC;
++
++static int delay_use_set(const char *s, const struct kernel_param *kp)
++{
++	unsigned int delay_ms = 0;
++	int frac = 3, ret;
++	char *p = skip_spaces(s);
++	char buf[16];
++
++	if (strlen(p) >= sizeof(buf) - frac)
++		return -EINVAL;
++
++	strscpy_pad(buf, p, sizeof(buf));
++
++	p = strchr(buf, '.');
++	if (p) {
++		int i = 0;
++		char *tmp = p + 1;
++
++		while (tmp[i] && tmp[i] != '\n')
++			*p++ = tmp[i++];
++
++		if (i == 0 || i > frac)
++			return -EINVAL;
++		frac -= i;
++	} else {
++		p = buf + strlen(buf) - 1;
++		if (*p != '\n')
++			p++;
++	}
++	while (frac-- > 0)
++		*p++ = '0';
++	*p = '\0';
++
++	ret = kstrtouint(buf, 10, &delay_ms);
++	if (ret < 0)
++		return ret;
++
++	*((unsigned int *)kp->arg) = delay_ms;
++	return 0;
++}
++
++static int delay_use_get(char *s, const struct kernel_param *kp)
++{
++	unsigned int delay_ms = *((unsigned int *)kp->arg);
++	unsigned int rem = do_div(delay_ms, MSEC_PER_SEC);
++	int len;
++	char buf[16];
++
++	len = scnprintf(buf, sizeof(buf), "%d", delay_ms);
++	if (rem) {
++		len += scnprintf(buf + len, sizeof(buf) - len, ".%03d", rem);
++		while (buf[len - 1] == '0') {
++			buf[len - 1] = '\0';
++			if (--len <= 1)
++				break;
++		}
++	}
++	return scnprintf(s, PAGE_SIZE, "%s\n", buf);
++}
++
++static const struct kernel_param_ops delay_use_ops = {
++	.set = delay_use_set,
++	.get = delay_use_get,
++};
++module_param_cb(delay_use, &delay_use_ops, &delay_use, 0644);
++MODULE_PARM_DESC(delay_use, "time to delay before using a new device");
+ 
+ static char quirks[128];
+ module_param_string(quirks, quirks, sizeof(quirks), S_IRUGO | S_IWUSR);
+@@ -1066,7 +1130,7 @@ int usb_stor_probe2(struct us_data *us)
+ 	if (delay_use > 0)
+ 		dev_dbg(dev, "waiting for device to settle before scanning\n");
+ 	queue_delayed_work(system_freezable_wq, &us->scan_dwork,
+-			delay_use * HZ);
++			msecs_to_jiffies(delay_use));
+ 	return 0;
+ 
+ 	/* We come here if there are any problems */
+-- 
+2.17.1
 
