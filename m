@@ -1,111 +1,109 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12C8F4E7;
-	Tue, 16 Apr 2024 17:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2186FF4E7;
+	Tue, 16 Apr 2024 17:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713288758; cv=none; b=PwU0E6fGOxeRh3kD8YVEuqa//uJ6jmWYZvz6W2vog/jQUjcb0gC/2CMNNFlyeqlcvlXMdrVaxaYzv05QLPkUYcV5HqzjFec+MNZMhDy0E/fWkh5Vg1e1TU0mBS/urXRtgtkRAApqqqh9PXxGjeoyN61I5HZhKZzJoY3xkOQeNT4=
+	t=1713288823; cv=none; b=DAztOFBc7nKg2rKccNWDeUojtRM8Iz3ZRVfMxpdBsZ2ZpgexktzXwiB1nS2f3vaV5hgh9op7W6Ca6r7aByn3q+4qrmgYdNex8OQCksUdK8/MI09rLdVYBZZjq1K4ptBJVLJ2tH0K/1dgxjMSBP7Acd9TWvzJA/N8EweJacl50tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713288758; c=relaxed/simple;
-	bh=7VKV1EUsD87ldi+cT0aXudqS/r014jvpTOraAVsjgJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M+/UVpZcjBYRqKcy/Nd6ToRg0m3NOUC34DUWaP3t7AcfKbcq8Z6owp3G9/5kbmnIUCLE5fATIopRnmNh/YkFs4KDcXoDYUIdjCVXXjmyn3WDtxGFcI14HdgVUy5Y0PXE3+DFjGCLCfCOc1yzvZlMmgWfUE3sF7qekgWOJ6fFyQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G4C1FZxI; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1713288823; c=relaxed/simple;
+	bh=oyuMKSYGoMfRz+tvPVJ/jIgvFe45ZdlNrFcZrO/Oozo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cARZ+MBZ0F/ha0SSCEde9f29OgY9hg1MjDsmGJegmxMHcl2w14yCyE3QL7+PgHmiRLg4PEOqPW5b5kroc5VxqjFaAskpW87myvHgzEoKyojrrANRnz8yWQ/NqHQmNll9IBaEMU+10EhBGN1ptvMYVnorLYoZKdvNSp3QXoqtx1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4C1FZxI"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so3984818f8f.0;
-        Tue, 16 Apr 2024 10:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713288755; x=1713893555; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0IO+hOuqEkrsrUsRHeAcDDvHavwu6kyd/enzsNdg3aQ=;
-        b=G4C1FZxIulua8SaYrMChOcR2wM+amxqPUDes+dg1H56JlKo1qSw8yvU9nuTQ2DCQeS
-         ni0AbsCkXFxy0zZXeaqI6Wr9/5YeXYewj04yEtBGPx6a0Zb9ORrUwz9quwbu+OqYl7IP
-         OrqmAEgYjHrV8KovgFXVKDraIQOA+yDb97p6twFhcZza78Iq6qS4NJ2Qhxc7sYlAeidF
-         5XykUx5cl26OBdbAYDOtmDxIrpNUsfgkwue7ON6kvrd/MBSuuKH7osvvIoDT7gA2FIH+
-         RzTxTMQ/waRke455Xbq2ALQwCprqUc2PYI0Bpoxy/tJkii8+nwknOGqt+kea4tZW5pS+
-         jZVg==
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6e9e1a52b74so781276a34.0;
+        Tue, 16 Apr 2024 10:33:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713288755; x=1713893555;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0IO+hOuqEkrsrUsRHeAcDDvHavwu6kyd/enzsNdg3aQ=;
-        b=Wm1SlByESCfr10/QdhjqQpr9btdde4WDB4GDLlsCvZc6KpzebPiJMXHhl20NDKU6wu
-         epHs87vQlfyj+VDDJczaBVOE/Gq+3ajy+vb9XHbe8v/V5YwBPwxwHegr+rORAvlOyLJU
-         rjsPXRKTVfWwxk6D/hU2VOW20pnF1xF8djR+cN8zjkBqXV3uHfL1NIRKALUputVs93c8
-         pmh/mhLF9ueHgtXrR2647JbAgdfZlzqejZ2kubC3aaLi+DEjztvbagZIzSG7PAwt3Irn
-         vH+Yk4Wbav/KHYNunujCSBJboqe3hk24mLF8CqUUT+iicPr/v1rpA7t/55jLcG4g4S20
-         Pplw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsMFXKWyYrkj7th37bi0+Wy1muaix5anZgsGuOio9yBEVb+ItmRI3jjoFCEpfDzG+mgnqbDFkh1I4v1Fsi86r2oBalYWtvdqYVJzbqMMBz6JwGH55cyjrRZDEKH9jHhbRmhSen1AEtuk3tovD1NTtnpKjE+o//99E8O6gkdSKojSwg4eXsziMHZLaMz1270Wu0o8WZO13b1cSjiYHLXmQXOz/+/rvGKQ==
-X-Gm-Message-State: AOJu0YyDJc1anWzLs/KBOfqbH2Y3kaiQc2nedE9QtJ+9vWR3r9lC4Mqr
-	6b/HGWFjuCkgETM+gkVtOVnKiCko92zdz2P71jBlC74JfGyniM8TKbYoG6Kwxuu29/c1X5JxdTV
-	64AiXRZxIYuWyTHjfy4noiFCOxE8=
-X-Google-Smtp-Source: AGHT+IHhkCf/2ZnzY6pNeLJbq60C0fBWHz8dbjiDAKTwhyZmVWd1gblADeMUbMwbc7myH0QHmC/VGj3aVOrkIOZb5sY=
-X-Received: by 2002:a05:6000:d47:b0:343:734e:73d1 with SMTP id
- du7-20020a0560000d4700b00343734e73d1mr10848248wrb.37.1713288754926; Tue, 16
- Apr 2024 10:32:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713288820; x=1713893620;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F8Fq3HZ/CaefZ5llRGtNvq0zZoQTpNhHnR6rkcG9Onc=;
+        b=oTXCCSbaUNGxS0kZdKo1Db0xteqmsWV3znkAYDRdPeePHZyqqDH8ja/lmWEVG4J5WP
+         VReN8U7bNa8PGY6jAFV2hjfM1VVnV4uNLbfHi82i5pAMbcW/hpZLOT7uO0q6STcRgp/d
+         TZJTSooCGMvlabelEwxGXkh2ICjbX01dfeL8E7bexonxEAqGKP3NZZaVKEEM5HJKJZU/
+         cOLNlGAqaj2hWBZF43e6SLppKKF7XG7iZ8KI5MxCKFpZeHrk4L5aPPwU1TW4eTtKHYsH
+         nmcjvsSNibRaD6ZSO8q/dY8Ep+MXLeKlgYzquzoXZusGQFmBNauxXFbV8YS4kSArhfn8
+         igLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWN5k4hxdy9GzMY325wEYooMI60dH6ppqbIRIvVmJheOSZ8ZL7KoLkVQ/X5Yj3ZdyldyMbemV9LQX4EKXiImqpT70364kPM
+X-Gm-Message-State: AOJu0Yz5hWKH54xjTxSQCUiAaY/V94NlMirMmD1GwBbL0pOlf2T6c6X8
+	2bzwdUmtRWGR1sqUQNVVMtRK4kTFEDgCM59VGKUA4J57/MYwVQnYTpIvOuBQ
+X-Google-Smtp-Source: AGHT+IHlUJXf+egTIlLcd42IFhCtKBOGMyeucgOobbmxD7Sy4JCYOTx59oxRQCIT8vAf0H1CE0Fkhg==
+X-Received: by 2002:a9d:4d89:0:b0:6eb:7cc9:93c3 with SMTP id u9-20020a9d4d89000000b006eb7cc993c3mr8004133otk.0.1713288820102;
+        Tue, 16 Apr 2024 10:33:40 -0700 (PDT)
+Received: from hemlock.fiveisland.rocks (hlfxns014qw-156-57-186-228.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.57.186.228])
+        by smtp.gmail.com with ESMTPSA id d6-20020a05620a136600b0078ed1f9f101sm5667027qkl.88.2024.04.16.10.33.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 10:33:39 -0700 (PDT)
+From: Marc Dionne <marc.dionne@auristor.com>
+To: David Howells <dhowells@redhat.com>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jeffrey Altman <jaltman@auristor.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-afs@lists.infradead.org
+Subject: [PATCH] rxrpc: Clients must accept conn from any address
+Date: Tue, 16 Apr 2024 14:31:38 -0300
+Message-ID: <20240416173138.126853-1-marc.dionne@auristor.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416053909.256319-1-hpa@redhat.com> <20240416053909.256319-4-hpa@redhat.com>
-In-Reply-To: <20240416053909.256319-4-hpa@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 16 Apr 2024 20:31:59 +0300
-Message-ID: <CAHp75VdRgBqaX4NNvABS-90O34OtRf5t85JOjpG=tOw2SHr_tw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] leds: rgb: leds-ktd202x: I2C ID tables for KTD2026
- and 2027
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 16, 2024 at 8:40=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote:
->
-> This table shows the maximum support LED channel for KTD2026 and KTD-2027=
-.
-> The 3-channel LED controller KTD2026 controls R/G/B three LEDs. The
-> 4-channel LED controller KTD2027 controls R/G/B and a flashing LEDs.
+From: Jeffrey Altman <jaltman@auristor.com>
 
-and flashing
+The find connection logic of Transarc's Rx was modified in the mid-1990s
+to support multi-homed servers which might send a response packet from
+an address other than the destination address in the received packet.
+The rules for accepting a packet by an Rx initiator (RX_CLIENT_CONNECTION)
+were altered to permit acceptance of a packet from any address provided
+that the port number was unchanged and all of the connection identifiers
+matched (Epoch, CID, SecurityClass, ...).
 
-...
+This change applies the same rules to the Linux implementation which makes
+it consistent with IBM AFS 3.6, Arla, OpenAFS and AuriStorFS.
 
-> Link: https://www.kinet-ic.com/uploads/KTD2026-7-04h.pdf
+Signed-off-by: Jeffrey E Altman <jaltman@auristor.com>
+Acked-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+---
+ net/rxrpc/conn_object.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Make it Datasheet: tag
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 0af4642aeec4..1539d315afe7 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -119,18 +119,13 @@ struct rxrpc_connection *rxrpc_find_client_connection_rcu(struct rxrpc_local *lo
+ 	switch (srx->transport.family) {
+ 	case AF_INET:
+ 		if (peer->srx.transport.sin.sin_port !=
+-		    srx->transport.sin.sin_port ||
+-		    peer->srx.transport.sin.sin_addr.s_addr !=
+-		    srx->transport.sin.sin_addr.s_addr)
++		    srx->transport.sin.sin_port)
+ 			goto not_found;
+ 		break;
+ #ifdef CONFIG_AF_RXRPC_IPV6
+ 	case AF_INET6:
+ 		if (peer->srx.transport.sin6.sin6_port !=
+-		    srx->transport.sin6.sin6_port ||
+-		    memcmp(&peer->srx.transport.sin6.sin6_addr,
+-			   &srx->transport.sin6.sin6_addr,
+-			   sizeof(struct in6_addr)) != 0)
++		    srx->transport.sin6.sin6_port)
+ 			goto not_found;
+ 		break;
+ #endif
+-- 
+2.44.0
 
->
-
-and drop this blank line (to ensure the Datasheet will be recognised as a t=
-ag).
-
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-
-...
-
-> -       .shutdown =3D ktd202x_shutdown
-> +       .shutdown =3D ktd202x_shutdown,
-> +       .id_table =3D ktd202x_id
-
-Exactly good example to show what the difference is between
-"terminator entry" and "last field in the initialiser" and why in the
-latter it's better to keep a trailing comma. And hence why the stray
-change in the previous patch. So, id_table also should keep a trailing
-comma.
-
---=20
-With Best Regards,
-Andy Shevchenko
