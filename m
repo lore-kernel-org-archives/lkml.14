@@ -1,64 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E2612EBCE;
-	Tue, 16 Apr 2024 18:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73F912EBCE
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713290458; cv=none; b=PS5P/0ZkUnmz1xJ9FkLP+2MG3+Dk5jedEvkCp4Qxr8wEioWNXPNIoSCw3ag8dpBpfyZie2sq1WVhyaKtjJsFpHejAOEU7yhzEZSmpHUNhROH3mqUZLOqvA6oTsZotrhf8CfJInGTio/z+HoFLGdRzuUbPBcoo+pGuCOo3KayVdU=
+	t=1713290511; cv=none; b=hDvpMSYq/dlOOlexQno+00C7VC9KaQeYcxV2fS58F1k7dUnum7g9/QNckU8AtNy4A5FZGIvCYEPbi18eQKfLOfUqxhzW7Zf/K6J/R0SICU6CCrUpameHhkLLSJMtQz325kvp5FS/eCcCZhI68sSkRux4nWWI6BwMw+fqwqx3LtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713290458; c=relaxed/simple;
-	bh=SLEcQwrdeAyJMhsUpPs/WnfkDUuxw6+ip8W3cRvk0co=;
+	s=arc-20240116; t=1713290511; c=relaxed/simple;
+	bh=znLI4zxgUUfVwkoWj6V0iecQ92LLVJ6EoK5+qpGTLwY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sQwCjj0GhfrGUI/DLIWvT4FXQ67F0TCh/LSLYndcvUBUkg5wh+hIDWwS3x8XZYwSMyG9NTAHmu3OoGLVQ0YGE/0A9q1g5rAFC7K7ySixDkII4vulHUTBqlKNNm1uuCminw0nspFE6HmZgXn28/O7w7m/1IMYZYBxu4RwEWNeKZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bEUfc3NF; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQzrRD+7fx8nYRiRqNGMgYTPucu84Jv21D0boA3z3QfHVH1IuPzS9lN6jcA05FEpa/nPou9lxFpWJ8LYMFGxSM7V5L8ZOufTUTAI2Ggd/7MVgPFuNXZUPDF7Sy6GHqP4PkQqKn13IRy3jnKMKYPK9tj3k+llgY8BSpcCsg7Wkzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KUbsnRSo; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bEUfc3NF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713290457; x=1744826457;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SLEcQwrdeAyJMhsUpPs/WnfkDUuxw6+ip8W3cRvk0co=;
-  b=bEUfc3NFS0M4y7Pky1k5ipynrK64UAqKGt6PSU5JpcauGMDRZdbxwMug
-   YSC6y9QptD9NYt1Osrvk4Jz6Ow0/3Voh+OBVNORjevddzYaZCv+9HJKw/
-   CCfDhljpj4KS2C03xX+WN5ueephWSyWMDqv2hfvqAlizC6tfok18Ne2BA
-   emohluekBv3tgR8SqSmze630exkxABetFxVaJDirsoUUcMKL3vmJbeqTy
-   5gEZaP5gKS8U6kAt67HOrX69GzwCCKluZlZnA+SoTeDIQ9QpYWJdpcpU7
-   VJirddfwgQOGJrpZK5OzxYst9ovCvDAnhuAPTC2JjsWF69HYuLl1h0bLm
-   Q==;
-X-CSE-ConnectionGUID: teptYAYDQIWJfRYu5MGpQQ==
-X-CSE-MsgGUID: c+XwvYTzRjq5a46ksPCwUA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8629024"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8629024"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:00:56 -0700
-X-CSE-ConnectionGUID: HhquDLfRQROq+SUyssmTNA==
-X-CSE-MsgGUID: 8Pbg0ZewSZqGG9bjbWRyiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="27026244"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:00:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rwn6w-00000004mUp-3DzS;
-	Tue, 16 Apr 2024 21:00:50 +0300
-Date: Tue, 16 Apr 2024 21:00:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dmaengine: dw: Add peripheral bus width verification
-Message-ID: <Zh680h4h6hURIb82@smile.fi.intel.com>
-References: <20240416162908.24180-1-fancer.lancer@gmail.com>
- <20240416162908.24180-2-fancer.lancer@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUbsnRSo"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-61ac183ee82so28617b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 11:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713290509; x=1713895309; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUkBLA7UpkIvZvH5R1i37nHgSYLBeEs/jD+f4KMnAhc=;
+        b=KUbsnRSouBrIyb/qgoTuevfRRiREhkEAmGyfbYRhXNuvqE+6HPnSycJAnLkSNtc24g
+         4LscSJ1GYNi26pMNWeOveI5n4aG9WK5LLsIdzO4d40SNAkI25kNVdkyeAuCRSYbw4sG+
+         L3uC/CYEKA591qjbX3GjB62Bb2XjM0J7REI2dfl6XGFoByAINLVN1IG8x9GnA+r9ibuB
+         ed1LWXclGnzK0tYyusyeicgW2SiEjNXn85JJbziKYaOj9j8VwndmlUnCNBplAEBl7XS8
+         05LDFLXC6rHD/7OYWvh+ty/tyAeRYJDe3YIrlF7WUbFUkFe8D+0wABsho3HI1uP/qycg
+         TmMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713290509; x=1713895309;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vUkBLA7UpkIvZvH5R1i37nHgSYLBeEs/jD+f4KMnAhc=;
+        b=rxz9con1Vv+z31queHrD47wtFJ79Eb23+a/EmMeUC9dCF1MQdIfg0CRnhXkUi4mxyw
+         eJCVmwMx4pOiWN8FlavQ3FYccW3SBoa+Z+OnuLazr5ZgnOvTqjl87IA3vCijNdBS4zf1
+         J2TLQ14JmSMSiozEq+72QPqCUXyzUmf9GrkcZq3j2k/5Nhi0K/0d+QRsyetvJJSoeZDK
+         URBuWHIvFotdQ6UB21Dn8dnifJxzQ8PLOpPiWZJT8tle2aXTRp+U8ihOzRvy8lZtANGn
+         W+mGBINO+qFMfbC+sPAYIk14uWGAF1dleCM53iDSoZqY7wUATScsRqLDXshADv9BL5tL
+         QcJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZVjFlKWXEaXnSGUa7YoJ2u5VVblMsE4sLzVDIl9leFqUmH+RIGVyMFsERraMBYOgpJfWHI3R2GeCjZ2rl1ALEr13H0ciOXPAWLrVs
+X-Gm-Message-State: AOJu0Yxq7zloUBB6HbqEn7RgFTHgoPRM13Ly2/JjKMeupIdMPfle7LmF
+	3fScqBcVUaeDJbDgS0ffG1w2Ckuv5jgNwBY8gbP48L7kW7DY4Ol6
+X-Google-Smtp-Source: AGHT+IEXTjg1F7THHEFrWAT56rXYTuwXr2/dkiThVy/LqXzGwzrbeaa6ce/doZWifWma5daBH80UGg==
+X-Received: by 2002:a81:a102:0:b0:61a:e4d1:50b3 with SMTP id y2-20020a81a102000000b0061ae4d150b3mr2255358ywg.18.1713290508656;
+        Tue, 16 Apr 2024 11:01:48 -0700 (PDT)
+Received: from localhost ([2601:344:8301:57f0:2767:ac3e:3052:cd0])
+        by smtp.gmail.com with ESMTPSA id ft11-20020a05690c360b00b0061af7439278sm237788ywb.77.2024.04.16.11.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 11:01:48 -0700 (PDT)
+Date: Tue, 16 Apr 2024 11:01:47 -0700
+From: Yury Norov <yury.norov@gmail.com>
+To: Dawei Li <dawei.li@shingroup.cn>
+Cc: tglx@linutronix.de, rafael@kernel.org, akpm@linux-foundation.org,
+	maz@kernel.org, florian.fainelli@broadcom.com,
+	chenhuacai@kernel.org, jiaxun.yang@flygoat.com, anup@brainfault.org,
+	palmer@dabbelt.com, samuel.holland@sifive.com,
+	linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] irqchip/loongson-eiointc: Avoid explicit cpumask
+ allocation on stack
+Message-ID: <Zh69CzD26Z4hw6R9@yury-ThinkPad>
+References: <20240416085454.3547175-1-dawei.li@shingroup.cn>
+ <20240416085454.3547175-5-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,88 +73,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240416162908.24180-2-fancer.lancer@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240416085454.3547175-5-dawei.li@shingroup.cn>
 
-On Tue, Apr 16, 2024 at 07:28:55PM +0300, Serge Semin wrote:
-> Currently the src_addr_width and dst_addr_width fields of the
-> dma_slave_config structure are mapped to the CTLx.SRC_TR_WIDTH and
-> CTLx.DST_TR_WIDTH fields of the peripheral bus side in order to have the
-> properly aligned data passed to the target device. It's done just by
-> converting the passed peripheral bus width to the encoded value using the
-> __ffs() function. This implementation has several problematic sides:
+On Tue, Apr 16, 2024 at 04:54:51PM +0800, Dawei Li wrote:
+> In general it's preferable to avoid placing cpumasks on the stack, as
+> for large values of NR_CPUS these can consume significant amounts of
+> stack space and make stack overflows more likely.
 > 
-> 1. __ffs() is undefined if no bit exist in the passed value. Thus if the
-> specified addr-width is DMA_SLAVE_BUSWIDTH_UNDEFINED, __ffs() may return
-> unexpected value depending on the platform-specific implementation.
+> Use cpumask_first_and_and() to avoid the need for a temporary cpumask on
+> the stack.
 > 
-> 2. DW AHB DMA-engine permits having the power-of-2 transfer width limited
-> by the DMAH_Mk_HDATA_WIDTH IP-core synthesize parameter. Specifying
-> bus-width out of that constraints scope will definitely cause unexpected
-> result since the destination reg will be only partly touched than the
-> client driver implied.
+> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+> ---
+>  drivers/irqchip/irq-loongson-eiointc.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> Let's fix all of that by adding the peripheral bus width verification
-> method which would make sure that the passed source or destination address
-> width is valid and if undefined then the driver will just fallback to the
-> 1-byte width transfer.
+> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+> index 4f5e6d21d77d..c7ddebf312ad 100644
+> --- a/drivers/irqchip/irq-loongson-eiointc.c
+> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+> @@ -93,19 +93,15 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+>  	unsigned int cpu;
+>  	unsigned long flags;
+>  	uint32_t vector, regaddr;
+> -	struct cpumask intersect_affinity;
+>  	struct eiointc_priv *priv = d->domain->host_data;
+>  
+>  	raw_spin_lock_irqsave(&affinity_lock, flags);
+>  
+> -	cpumask_and(&intersect_affinity, affinity, cpu_online_mask);
+> -	cpumask_and(&intersect_affinity, &intersect_affinity, &priv->cpuspan_map);
+> -
+> -	if (cpumask_empty(&intersect_affinity)) {
 
-Please, add a word that you apply the check in the dwc_config() which is
-supposed to be called before preparing any transfer?
+This was unneeded because cpumask_and() returns true if there are set
+bits.
 
-...
+For the series:
 
-> +static int dwc_verify_p_buswidth(struct dma_chan *chan)
-> +{
-> +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-> +	struct dw_dma *dw = to_dw_dma(chan->device);
-> +	u32 reg_width, max_width;
-> +
-> +	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV)
-> +		reg_width = dwc->dma_sconfig.dst_addr_width;
-> +	else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM)
-> +		reg_width = dwc->dma_sconfig.src_addr_width;
+Reviewed-by: Yury Norov <yury.norov@gmail.com>
 
-> +	else /* DMA_MEM_TO_MEM */
-
-Actually not only this direction, but TBH I do not see value in these comments.
-
-> +		return 0;
-> +
-> +	max_width = dw->pdata->data_width[dwc->dws.p_master];
-> +
-> +	/* Fall-back to 1byte transfer width if undefined */
-
-1-byte
-(as you even used in the commit message correctly)
-
-> +	if (reg_width == DMA_SLAVE_BUSWIDTH_UNDEFINED)
-> +		reg_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +	else if (!is_power_of_2(reg_width) || reg_width > max_width)
-> +		return -EINVAL;
-> +	else /* bus width is valid */
-> +		return 0;
-> +
-> +	/* Update undefined addr width value */
-> +	if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV)
-> +		dwc->dma_sconfig.dst_addr_width = reg_width;
-> +	else /* DMA_DEV_TO_MEM */
-> +		dwc->dma_sconfig.src_addr_width = reg_width;
-
-So, can't you simply call clamp() for both fields in dwc_config()?
-
-> +	return 0;
-> +}
-
-...
-
-> +	int err;
-
-Hmm... we have two functions one of which is using different name for this.
-Can we have a patch to convert to err the other one?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +	cpu = cpumask_first_and_and(&priv->cpuspan_map, affinity, cpu_online_mask);
+> +	if (cpu >= nr_cpu_ids) {
+>  		raw_spin_unlock_irqrestore(&affinity_lock, flags);
+>  		return -EINVAL;
+>  	}
+> -	cpu = cpumask_first(&intersect_affinity);
+>  
+>  	vector = d->hwirq;
+>  	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
+> -- 
+> 2.27.0
