@@ -1,134 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8102712C52E;
-	Tue, 16 Apr 2024 14:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039CC12DD9F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277985; cv=none; b=YWBm6morQ7Iqy/AYcPmXK3OXKCpw8zC3j/yjpyVncx9HaKtys7V+DpdvkqRmAFP8kNvWjoMrqM44zfzrKsCdKBepfXRFHII+YGzkgDnqzmJCzQNaJEzAQ6ZxSkEc4ZquQNA5QbSqHXmBwmlNAcjMHX5gS5YKzin055kpU7odBn4=
+	t=1713277992; cv=none; b=DS72Mbpym53Mtk7MJaRToh0Nz5oRBxeLAZ6WvAlV6yuhrYyhaIm/g2/U++/qYrHx7tWuetPRJdoK2Am2SE3mYQYEqyc7HrpTD1LoZrE2HIsy2ettru+jJolXHRcuqsTrGvzq0vS1fM9loaR9FRp9LXyGlPNWqqmuxOrr4Ne5WZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277985; c=relaxed/simple;
-	bh=SbzdP1AH6OgPsATD5J3vkA9ntkgZ4zZS5HmxfvGTu5I=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O+W+OePXHkBMpQefvoi6809GzuESTFHAv7Ahy/1Wxia0Esb6q4nu7+ukKNxXes9DZM7FreXcCLm2kntvz56aIH7rf/QefA71wwXTKo+H6DNzYaFVyahkX1Vj/4hTqh7ILY3hjwYcJn4QfVxPZdIiGgPbaTqsdAKKEnGKqeuIEAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FTyNhICr; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713277992; c=relaxed/simple;
+	bh=tQt0h4/JJzNUSt7YJAw13nbwhiLd1bvHD0j7b+rfdIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZkOwoOQagwnUu+89DwmCr6Pq+ObdAZOUv1pJQ2ZbcXgFmq+wFhGUOlNE9qYINHLBDQbW4xWPRw61YXdZi7hIKTCNRr3UhRQ+FcN3IGm6gEfJfch8yyA5WKCkvrNjDZP7HlsKef6NIE3JoipLbqwNef6H3QgLo7he+4vfH2EifDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Y0jDybLz; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FTyNhICr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713277984; x=1744813984;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SbzdP1AH6OgPsATD5J3vkA9ntkgZ4zZS5HmxfvGTu5I=;
-  b=FTyNhICrQy6qtfnNaVw/ePRrJNpZpj6bd6ab3ZI9BvCmy2b9od17Bn7l
-   duTFGYjsYSoDmhBeW6J++6MTMvxjQGCGGoX1V6Us53XMc1tarp+2t5yQ7
-   cG4Hw2ikHV8UC4qbakPaprWA15XYpMUXkgKxG3FChTMcifHL9+mQRDNB0
-   t9zdR7CAB6gG2ef5AmNXP17g70b5q32hBobgFKEr23A5/mtkdyHIe3M19
-   S1wbuXOL1YFtR7ZptnYNAfcbFQoT8MBlkW+SJMpxPgN9GueBSEeF6U63y
-   UTvQFDp0Q0Mdr4mWBOwUgblqERrWAIrNBwACPvpSTjVtgOO0KCZPYmchN
-   Q==;
-X-CSE-ConnectionGUID: RMEKeY7vTr26/Ki+akK3Jw==
-X-CSE-MsgGUID: njNXOqjWTLCdBA5Le9+kSA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8884823"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8884823"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:33:03 -0700
-X-CSE-ConnectionGUID: 6tgnHvJKSWS5fRMPbFupLA==
-X-CSE-MsgGUID: e/XnE5zKQYaC8e/6ZqIVtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22748577"
-Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:33:02 -0700
-Date: Tue, 16 Apr 2024 07:32:52 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: PCI: altera: Convert to YAML
-In-Reply-To: <c21f6d49-bd70-465e-a446-fb70838bab48@linaro.org>
-Message-ID: <alpine.DEB.2.22.394.2404160720360.424541@sj-4150-psse-sw-opae-dev2>
-References: <20240413172641.436341-1-matthew.gerlach@linux.intel.com> <c21f6d49-bd70-465e-a446-fb70838bab48@linaro.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Y0jDybLz"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7d9c78d108eso5171439f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1713277990; x=1713882790; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4USUkCePqO/DUZZKKDjSqTMfiwj3FB1TFFvhdvW85WE=;
+        b=Y0jDybLznBKfu4Gr4cWBmYDvU2Kf/t+w+kavoCMkvtciH9Rzz914YhuGxPpUicDGaN
+         F5oVYS3H7yxGO86YBpdbU1cCt7ImshCUAy8oa+SJJwDoxvIeXysU4ywq881QulFxAgPA
+         ioTlmJ9dqoF/d1tLeGfEJbbkbetW/+OooUEjGcLRthiY19ZZYzMzrs738idvIhRb25GX
+         7HkhJy9lrZEVdIuWELzihj8aBr/nuwecaeSjjmUGj/wpqu+1AIBoC8cLblGoRqfDo0MF
+         Y0N7vnOoPdL635dp+xt2ZNHtSfPaUW9p61i0PIMWM0BS07Q3NCIxwLfCOcsiBFYRqrEY
+         2ccg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713277990; x=1713882790;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4USUkCePqO/DUZZKKDjSqTMfiwj3FB1TFFvhdvW85WE=;
+        b=cGte5KfBO4uYsDmx+ypCv3SpEYfH4heruqTuQoO7UI4ibvqaxSnJT3pbYFQ0aeKqZe
+         hVMnDFzLuZJfABG9GBdWiY4ti6zzecsCCq+QsXX5ANRDSy1a0pJms/xpwp3kGUBTCc2C
+         I4PFdQsiP5lE5hPNtMmSJBGE9G8BnPWdN+lo8H0NPhRMNzYafpw+qX0AY1+99imigPwF
+         2fYql4EOl/asDXUiIIjrMuVPj463m6uCP/dTvoZXpGp3h0SmCasdXYWTQQAPnQFvc1LH
+         VZygitxu7MZ+8K9GWorHpAHbTl1ugcPMIQSHOjrL8nmj7f1BHVqJia4hVcn3pa01pB/x
+         fmRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWu/Thdo705gHSUD7tGbCQ4LabLUqnjbP18fXzBqLZyuqiAbV/mWl+Zt16wkR4SpSGTt3amy6xLgCEXtlk0IddWBoRUy2D7xhj01Vs
+X-Gm-Message-State: AOJu0YyOCO3EGKBAFZE83yQaqtJSLsQ9BNyd7xqVxS+DE9Li6y5RkKLe
+	I+vK+ndlHz4EtxCqWDOA3QS6UvM7NVsOaI1+VyR0fDBhv4YwUOrS7mDpzP39zBM=
+X-Google-Smtp-Source: AGHT+IEFdSzzJPNEuBYNeCsLyyZ+pPblusmvyciDSgRZZSqKohbfOFFV+4drEx+cUWKBoEDWOFDJFg==
+X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr13722190iov.2.1713277990087;
+        Tue, 16 Apr 2024 07:33:10 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id v7-20020a056638250700b0047f1ac1bfd2sm3909914jat.163.2024.04.16.07.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 07:33:09 -0700 (PDT)
+Message-ID: <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
+Date: Tue, 16 Apr 2024 08:33:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: API break, sysfs "capability" file
+Content-Language: en-US
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+ <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
+ <Zh6IpqnSfGHXMjVa@gardel-login>
+ <b74f99e8-5a50-4e93-987f-0bcfc0c27959@kernel.dk>
+ <Zh6KZ7ynHuOd0mgQ@gardel-login>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Zh6KZ7ynHuOd0mgQ@gardel-login>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On Sun, 14 Apr 2024, Krzysztof Kozlowski wrote:
-
-> On 13/04/2024 19:26, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On 4/16/24 8:25 AM, Lennart Poettering wrote:
+> On Di, 16.04.24 08:22, Jens Axboe (axboe@kernel.dk) wrote:
+> 
+>> On 4/16/24 8:18 AM, Lennart Poettering wrote:
+>>> On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
+>>>
+>>>> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
+>>>>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+>>>>>> All I am looking for is a very simple test that returns me a boolean:
+>>>>>> is there kernel-level partition scanning enabled on this device or
+>>>>>> not.
+>>>>>
+>>>>> And we can add a trivial sysfs attribute for that.
+>>>>
+>>>> And I think we should. I don't know what was being smoked adding a sysfs
+>>>> interface that exposed internal flag values - and honestly what was
+>>>> being smoked to rely on that, but I think it's fair to say that the
+>>>> majority of the fuckup here is on the kernel side.
+>>>
+>>> Yeah, it's a shitty interface, the kernel is rich in that. But it was
+>>> excessively well documented, better in fact than almost all other
+>>> kernel interfaces:
+>>>
+>>> ? https://www.kernel.org/doc/html/v5.16/block/capability.html ?
+>>>
+>>> If you document something on so much detail in the API docs, how do
+>>> you expect this *not* to be relied on by userspace.
 >>
->> Convert the device tree bindings for the Altera Root Port PCIe controller
->> from text to YAML.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->
-> ...
->
->> +allOf:
->> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - altr,pcie-root-port-1.0
->> +    then:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: TX slave port region
->> +            - description: Control register access region
->> +
->> +        reg-names:
->> +          items:
->> +            - const: Txs
->> +            - const: Cra
->> +
->> +    else:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: Hard IP region
->
-> Why Hip is the first? Old binding suggested it to be the last entry. It
-> would also make binding easier, as you describe reg and reg-names in
-> top-level and just limit them with min/maxItems.
->
-> Does anything depend on different order (Hip as first)?
+>> This is _internal_ documentation, not user ABI documentation. The fact
+>> that it's talking about internal flag values should make that clear,
+>> though I can definitely see how that's just badly exposed along with
+>> other things that document things that users/admins could care about.
+> 
+> The text begins with:
+> 
+>     "This file documents the sysfs file block/<disk>/capability."
+> 
+> So it makes very clear this is about the sysfs interface.
+> 
+> Are you saying that sysfs of the block layer should be considered an
+> *internal* kernel API? That's a wild definition, if I may say so.
 
-I don't think the order really matters. So Hip could go last, and it makes 
-sense to only mention the reg/reg-names once in the top and then add 
-limits with min/maxItems in the allOf section.
+No I missed that - to me it's clearly internal documentation as it's
+talking about the flags, but yeah you are right it's being presented as
+sysfs documentation for the 'capability' file. That should never have
+gone into the tree as ABI documentation.
 
-Thanks for the feedback,
-Matthew Gerlach
+Doesn't really change my conclusion from earlier. As mentioned, this is
+clearly a kernel fuckup, and honestly since it's being presented as ABI,
+we definitely need to rectify this and provide an alternative. Even
+though I'm not a huge fan of it, might just be best to re-introduce
+'capability' and just have conversions of the flags so we retain the
+user side of it the same. That can then also go into stable, so we'll
+end up with something that at least looks cohesive on the user side.
 
->
->> +            - description: TX slave port region
->> +            - description: Control register access region
->> +
->> +        reg-names:
->> +          items:
->> +            - const: Hip
->> +            - const: Txs
->> +            - const: Cra
->> +
->
->
-> Best regards,
-> Krzysztof
->
->
+-- 
+Jens Axboe
+
