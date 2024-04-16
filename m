@@ -1,118 +1,103 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03836130AC7
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E91130498;
+	Tue, 16 Apr 2024 15:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713280824; cv=none; b=ZqQmFDest8Dc1E3Pp9dBS1MRWwwvzWxDAP58GFEkoO4HzDqizzLhpiR1+XO/2MkKhWuHJgA2vUDSUm3dzf43OmmzLvAqIlROrHocIsQ+DxhsefQMkxF6XR7TZSjcjRdc86FR+ynknzmQ/M+CYEgYl2J4DlG+hmcUok2FPw6WZ+0=
+	t=1713280999; cv=none; b=nKkSIlvQ92+sx/KHM2az7E9YmRDamf+SdRsYlhN5BCsfiiA3YpKSQnFuHMiAv25KAmnly2X4FJEDAJEEtvOhxXqBAlg90fA0SwFuaST0RnonoQLTTrDOOKD5uNh4vSw+ZrjVKKy2vrJxKeELPLzyTU0LocKyLBv6O920X92qdPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713280824; c=relaxed/simple;
-	bh=ogk92evleqkPuUaIzhiJjs+SO3WbwlZaxhfQYNosFdo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNt0Q9KV7VFtnKtZAkJnK0c7rNQA1RgIWSo4Ulth7z75jc9w5tPKFdAYkwgDfOUMLcRkbveaBzr7O1qowHa4fRG3L2YGpYKbHxGJQ/OMscOtRqDrNZnLb3uPZy6eZIk4eA0SepViG7a9iEzLKSYwH60+BejWT+oRQGlY61oNZUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dCxYMOWZ; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713280999; c=relaxed/simple;
+	bh=bLU73jHksihFb5Kkaq6O4l8bW9c2Gyah+VFZw8edoJs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eDa2Imw90zqM0xP8+Q6h6Ev26Z3W7+FNj6qstV163L21lbmNsTeeM8I+llyAui1k1KxqIMsRsSD4XYHOMxFRnYGLeuIVFO0f/hd/U1e9uy6qd9dnCoYgamaZhV2mFxCYHAgtdkkylSsoWjMHi8YvD/BNpq//y3Foq+KCM7R2twg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BTfJMlxr; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dCxYMOWZ"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso4814980276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713280822; x=1713885622; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mMO3J/koq2VtvnAEkr+zbw/DfMlDxsEOqsgIHHsF7Fg=;
-        b=dCxYMOWZLpi9SzxL82oYeoszXPlVu2T7t8nrGA8nYJLxiZHGfcZeqUGW2N2Nc0bm3a
-         bk2ap5DaEJrk81YgtZYVM9Ac+yo0XyNNW5Q86MnbkgwgklZYx32jhLM2rCKZ9n5isACl
-         TAjmyPrGUqhxvR5T1EhysxYFqE4nMnUpQkbL1dDgicmAq/BS2UuVSCjtUePDkT+vEkhy
-         zun6F2bxPh6b08BHa/HixWddN7DXmNt6A+4HxKn5B5OwY2pFsr6c2b63JpirD1A209YS
-         gz5RmufOo6AOOalk3LE0+AQVGLcgU+0SR7eeGb+j5cwGwpLWbKbx/jI8bOXaLefjRJIF
-         NMLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713280822; x=1713885622;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mMO3J/koq2VtvnAEkr+zbw/DfMlDxsEOqsgIHHsF7Fg=;
-        b=X85MhEAGhVoeFzTl0Lnen5nGPrS/haYfxqqF9Ge55mmsHHZ7kbfqRyGjWb8knr7vZj
-         5DEfvQ2XJk4SuCkXnU29LKkck6m7P96BV2TV14QUyX32VFqM2l6G2YG6Bxww5WtUgSMV
-         WQ4BHwwAI2xXwDR8Wm1X6U93zEkGnvOzJqncRg59OYhaimzO6qy45scZYbjKI5SU4bBR
-         MFS+qsxcsFmFD5pw5MIMNBUIM1gwVri+i7vT9mDVc28DsY32ePOpWpmkTXvKApwRaXdi
-         tUePirKxBH3F6bdVQ92bRR5hsssbpfiEtqk/nNbcNWqkKhgd5B9AN0MIXgQRFSuHCT2b
-         Qf+A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5jCJPoNHgWg8XKmYYC3l7J1bjaFYtzv+qholG338BK+zYlA6KLZf3XDCO4YHGYCUiBibej6uqdm12E1gXNTkpaiU1Jls2FX8Wgh86
-X-Gm-Message-State: AOJu0YzuQ8h84L91tH7/vKR1hpD7hWjKNI1Pu6OiitGg/k81+4lElPjT
-	4uvVGaWxvDIVhxIT65YA6Tm2i7IJz0KzoDiDmLdop4f/7N9/2mTWkhBBgBmcL3+zGNb5R8vmbvq
-	LkKYdxtOZJwwGymNAWJpa7sG8cLdssVdwjtgll2rYDWrAgAz+VmE=
-X-Google-Smtp-Source: AGHT+IEtsDJfZJ76KZn5Td8LpcHSFPRQ3TKmnwcVPVblLvXhJ7AGte9txzMCMRd181hjAL5xfz3A+oms+boqL8Xkn4s=
-X-Received: by 2002:a25:8449:0:b0:dcf:b5b7:c72 with SMTP id
- r9-20020a258449000000b00dcfb5b70c72mr11140317ybm.0.1713280822073; Tue, 16 Apr
- 2024 08:20:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BTfJMlxr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713280996;
+	bh=bLU73jHksihFb5Kkaq6O4l8bW9c2Gyah+VFZw8edoJs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BTfJMlxrRUDfa89Wuw0pdzkeWXI73KDxPeb0+H0wN5gDq9ooJz7F6f3QNHmFQuZai
+	 2n1++yqBqRg95Xpi2EZcdFrPnWpKNLmSYBQ/62l3V7fgXZ6uILFDXJt8pG9A3vO7yX
+	 NXd3iasStbJAfwIn0vlx3uNQQ7u8EGDEEbdmN9rOPuYVVs22KSVUEkw9K2gUAhaumr
+	 SGULr/XhBI2hFFaedtgljvNBEKBQ3kc5dbMLfgCkb3MSxE04EoykkQKsOQzNGaUnPh
+	 DqQNnRVau+C72nJcOViHK4pXv+LgdJa+Qk+ifgG5wN2D7t+OqTwlMnhsfqZYeEAupK
+	 0+hs2EjeWWGlg==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6248F37804B2;
+	Tue, 16 Apr 2024 15:23:12 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel@collabora.com,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] selftests: exec: make binaries position independent
+Date: Tue, 16 Apr 2024 20:23:39 +0500
+Message-Id: <20240416152341.3186853-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416-ucsi-glink-altmode-v1-0-890db00877ac@linaro.org>
- <20240416-ucsi-glink-altmode-v1-2-890db00877ac@linaro.org>
- <c129b349-dfaa-4b10-9b8c-6098d04b9373@linaro.org> <CAA8EJpqH2_ENE6am=m9dtwk_+_Vbc4pZG9=Y_4-b-p0fKQ4sBg@mail.gmail.com>
- <66cd0d96-7576-4f70-b4da-b8d518253763@linaro.org>
-In-Reply-To: <66cd0d96-7576-4f70-b4da-b8d518253763@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 16 Apr 2024 18:20:11 +0300
-Message-ID: <CAA8EJppf9z+q4_xjQE62Vi-2BiHJpUi7mS0EMSRV_XxbGH==qg@mail.gmail.com>
-Subject: Re: [PATCH 2/8] usb: typec: altmode: add low level altmode
- configuration helper
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 16 Apr 2024 at 17:57, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->
->
->
-> On 4/16/24 16:48, Dmitry Baryshkov wrote:
-> > On Tue, 16 Apr 2024 at 17:32, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> >>
-> >>
-> >>
-> >> On 4/16/24 04:20, Dmitry Baryshkov wrote:
-> >>> In some obscure cases (Qualcomm PMIC Glink) altmode is completely
-> >>> handled by the firmware. Linux does not get proper partner altmode info.
-> >>> Instead we get the notification once the altmode is negotiated and
-> >>> entered (or left). However even in such a case the driver has to switch
-> >>> board components (muxes, switches and retimers) according to the altmode
-> >>> selected by the hardware.
-> >>>
-> >>> We can not use existing typec_altmode_enter() / typec_altmode_exit() /
-> >>> typec_altmode_notify() functions in such a case, since there is no
-> >>> corresponding partner's altmode instance.
-> >>>
-> >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>> ---
-> >>
-> >> Should this now be called from e.g. typec_almode_notify to limit
-> >> duplication?
-> >
-> > typec_altmode_notify works only if there is an altmode->partner (which
-> > we don't have with pmic-glink).
->
-> Yes and this seems to be an excerpt from these functions, should they
-> now drop that code and call this function instead, so as not to have
-> it in the tree twice?
+The -static overrides the -pie and binaries aren't position independent
+anymore. Use -static-pie instead which would produce a static and
+position independent binary. This has been caught by clang's warnings:
 
-I thought about it, but then I abandoned this idea. The
-typec_altmode_notify() has its own use case, normal altmode drivers.
-It is an error to call it if there is no partner registered, etc. So I
-wanted to preserve error checks in that function instead of dropping
-them. The significant part of the code is shared anyway thanks to
-typec_altmode_set_switches().
+  clang: warning: argument unused during compilation: '-pie'
+  [-Wunused-command-line-argument]
 
+Tested with both gcc and clang after this change.
+
+Fixes: 4d1cd3b2c5c1 ("tools/testing/selftests/exec: fix link error")
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ tools/testing/selftests/exec/Makefile | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
+index fb4472ddffd81..01940d9165d67 100644
+--- a/tools/testing/selftests/exec/Makefile
++++ b/tools/testing/selftests/exec/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-CFLAGS = -Wall
++CFLAGS = -Wall #-Wunused-command-line-argument
+ CFLAGS += -Wno-nonnull
+ CFLAGS += -D_GNU_SOURCE
+ 
+@@ -29,8 +29,8 @@ $(OUTPUT)/execveat.denatured: $(OUTPUT)/execveat
+ 	cp $< $@
+ 	chmod -x $@
+ $(OUTPUT)/load_address_4096: load_address.c
+-	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000 -pie -static $< -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000 -static-pie $< -o $@
+ $(OUTPUT)/load_address_2097152: load_address.c
+-	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x200000 -pie -static $< -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x200000 -static-pie $< -o $@
+ $(OUTPUT)/load_address_16777216: load_address.c
+-	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000000 -pie -static $< -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000000 -static-pie $< -o $@
 -- 
-With best wishes
-Dmitry
+2.39.2
+
