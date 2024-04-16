@@ -1,48 +1,56 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C50131740;
-	Tue, 16 Apr 2024 16:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A2912BE89;
+	Tue, 16 Apr 2024 16:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283352; cv=none; b=V9AqQcayQeCZdOsYsJQq3kY6VBsVH3S4Xz0E7obRQpzcgTbwzFwe2ebbWdOUgr2sJ7XG5M34/2Bv3Q/qgw1Sy3Uk5YTFBNLTXbinxO1Rqela0/6DrARgH+UKMl3U7CD1uDKzXE+ehUrCyktu5DDV6Qj8iJjEoWBLFdHAFOYQaqQ=
+	t=1713283564; cv=none; b=m8RtjIECYZbUqeBungmbfaaHfq7AHGTWVrfj09HQM0cNeXZQ80A/dE8V9f8G/nSwlBPT66IXUfh3SkhZf2O4LlmeNA7uKUJO3aI682QI5n9ALGAKuuE0al+XTyWH75kfJznHA3xmtyhiOpC1jAIhuIMfN3UyUbzpPWFQd9LtxWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283352; c=relaxed/simple;
-	bh=hCYaejWoX+jAPlE8/5kHoJpYp4YWRYoLhn+cUlzPdYw=;
+	s=arc-20240116; t=1713283564; c=relaxed/simple;
+	bh=cZE7572WdaMnw0VhxC7qCiWzqmrsC8CaXvTFf6wdSLQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sDmD3qU9GEWQbeScbNvbw8gK9B9q3+yJJoENSfb9SMkElnpGRCqH+LmMLm/AFtTOjrVgAr4BP0Y7T8uJWptXA2xTVFvAN7RNGHcjYHR9ehes2OL2nzl7ADrKFJoZQtR6o9i922ICljDPb46bpLKX+YJUA8toogReFbWbF3GnTJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GM4WQbf/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=DYjZpRGDuUqqSrEycwKL/OYB6IPX1dZmwiDav0OTw3l40uq9jL4zZZvKQiaAR3Jneyb6gX0+pgfV+ScbKGTUQCNj23YwPrKC5QJyPj/b/1UdsPVUN+YIN2Q+WE8w0bhyyGgU6arvudmVZhVp3tnssgvfmzBBj2ZEJ1uwRXzSYm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EPXDvwcD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GM4WQbf/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=G5o05jTqo01zQ53H9jaSu+jx2p3uSn458GF7UnQPPOA=; b=GM4WQbf/ReowHtLEIc4K2fKQIF
-	r4EzLuiLXad2eARmWlc0B8HxLrO2BmRWWgN5QBt2sS/xex/kFRGQb22LASn6JRZ5O++n1LV++1QU5
-	MNMLNre4KKjl3h8h+alavWMYrAAm88OOQnobd99yRpFLB4XcKSwXwEFMQ88BqnoOHMko=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rwlG4-00D9gp-W4; Tue, 16 Apr 2024 18:02:08 +0200
-Date: Tue, 16 Apr 2024 18:02:08 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Stefan Eichenberger <eichest@gmail.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	lxu@maxlinear.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-	michael@walle.cc, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] net: phy: mxl-gpy: add new device tree property
- to disable SGMII autoneg
-Message-ID: <5ed39628-4ac0-4c4e-9a16-fd4bf9a6db29@lunn.ch>
-References: <20240416121032.52108-1-eichest@gmail.com>
- <20240416121032.52108-3-eichest@gmail.com>
- <3f7f278f-e490-47f1-971c-ecf44a70cee4@lunn.ch>
- <Zh6clAtI3NO+nMEi@eichest-laptop>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EPXDvwcD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=cZE7572WdaMnw0VhxC7qCiWzqmrsC8CaXvTFf6wdSLQ=; b=EPXDvwcDV25K1tkyw7t04oEjJR
+	HeTR0KCVpO2bp9NYq7GsNtppql3IYgNPLLdSx8a34OJtQZw2jJ956uNvekw0yLIareJw/53gC4Eco
+	im/P33QtjQci4VEex9d4xAWCgA1+kN3t3sR0V98Au52DHnikQg4fjYBbdVczJKN/n0SYiB5Q+RgYc
+	fNJyFl9Lz2ni35575OdHPM0XvZ4hRqpZ9ddptkJSY9yJm1sbHTInSnfIj0mnVl/AS3aosZGsjDbFe
+	iWWNUIUQYqrcy3/gwS2s0ytCFC/OaSEaso6fhLrxeWGr98pCu5SyFQXE33iRLc3bdKqgHEYJjEfHG
+	7z1+y+tQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rwlJh-00000000suB-2YgI;
+	Tue, 16 Apr 2024 16:05:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 45FB830040C; Tue, 16 Apr 2024 18:05:53 +0200 (CEST)
+Date: Tue, 16 Apr 2024 18:05:53 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Elizabeth Figura <zfigura@codeweavers.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	wine-devel@winehq.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Arkadiusz Hiler <ahiler@codeweavers.com>,
+	Andy Lutomirski <luto@kernel.org>, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH v4 00/30] NT synchronization primitive driver
+Message-ID: <20240416160553.GA30707@noisy.programming.kicks-ass.net>
+References: <20240416010837.333694-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,47 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zh6clAtI3NO+nMEi@eichest-laptop>
+In-Reply-To: <20240416010837.333694-1-zfigura@codeweavers.com>
 
-On Tue, Apr 16, 2024 at 05:43:16PM +0200, Stefan Eichenberger wrote:
-> Hi Andrew,
-> 
-> Thanks a lot for the feedback.
-> 
-> On Tue, Apr 16, 2024 at 03:46:19PM +0200, Andrew Lunn wrote:
-> > On Tue, Apr 16, 2024 at 02:10:32PM +0200, Stefan Eichenberger wrote:
-> > > Add a new device tree property to disable SGMII autonegotiation and
-> > > instead use the option to match the SGMII speed to what was negotiated
-> > > on the twisted pair interface (tpi).
-> > 
-> > Could you explain this is more detail.
-> > 
-> > SGMII always runs its clocks at 1000Mbps. The MAC needs to duplicate
-> > the symbols 100 times when running at 10Mbs, and 10 times when running
-> > at 100Mbps.
-> 
-> Currently, the mxl-gpy driver uses SGMII autonegotiation for 10 Mbps,
-> 100 Mbps, and 1000 Mbps. For our Ethernet controller, which is on an
-> Octeon TX2 SoC, this means that we have to enable "in-band-status" on
-> the controller. This will work for all three speed settings. However, if
-> we have a link partner that can do 2.5 Gbps, the mxl-gpy driver will
-> disable SGMII autonegotiation in gpy_update_interface. This is not
-> supported by this Ethernet controller because in-band-status is still
-> enabled. Therefore, we will not be able to transfer data at 2.5 Gbps,
-> the SGMII link will not go into a working state.
+On Mon, Apr 15, 2024 at 08:08:10PM -0500, Elizabeth Figura wrote:
 
-This is where i expect Russel to point out that SGMII does not support
-2.5G. What you actually mean is that the PHY swaps to 2500BaseX. And
-2500BaseX does not perform speed negotiation, since it only supports
-2500. So you also need the MAC to swap to 2500BaseX.
+> The intended semantics of the patches are broadly intended to match those of the
+> corresponding Windows functions. For those not already familiar with the Windows
+> functions (or their undocumented behaviour), patch 27/27 provides a detailed
+> specification, and individual patches also include a brief description of the
+> API they are implementing.
 
-I don't think any DT property is required here. This is fundamental to
-SGMII only be 10/100/1G, and when you go above that, you swap to
-something else.
-
-Lets see what Russell patches do.
-
-    Andrew
-
----
-pw-bot: cr
+You happen to have a readable copy of patch 27 around? RST is utter
+garbage to read :/
