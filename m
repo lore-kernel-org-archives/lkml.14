@@ -1,24 +1,24 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B9412B145;
-	Tue, 16 Apr 2024 12:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B314212BEB9;
+	Tue, 16 Apr 2024 12:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713269030; cv=none; b=X1exkNOig+dlkJCBu4I0zl9gdbPVamyedmqQVcGGKefugxBzZIXs+DK86V8/o43Tjv4pAu6ZXkAPf6tVEKCbLgkHqh7DQCIwFhPXLIKHEnoIjmW+F9XU33Xsn/Dp6+x1JsUEWA8g98uDbWhP0H5R6RZpIYPftdNZicLLY57r+QI=
+	t=1713269035; cv=none; b=J0HyQnBVyjcCKQK2X8oqZAWUR4b1Z2L4TYyFs1HzmKefN0+D+CNDwItgVDoEE9LAaI/0xDC3VbRfEWNtCLrM7pVbqUb9a5vnwS8qkA56OkX+3fFneBngg5THOJTULKkPXq9sSk8Pw0bDQigQe/ilDLWrxOg2LM8/l03upQmarBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713269030; c=relaxed/simple;
-	bh=CASeUJf1k7le4H22BeIUR9Go94eNU9yShJnelWUCkUc=;
+	s=arc-20240116; t=1713269035; c=relaxed/simple;
+	bh=0W+YxBeo2ZdI0rfDSCbtlsAsOpuvBe9NutgEFbJen9k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=P4mU4Y8qjGOV0YCCrgIjujSSxDPmRnBZy6+VG6SFbXfGgK0K7J5o2Rr91U6zwOwFZxiNymTTRr9SduvI/KMrUEW8hEinViukhddo0cbeOyNVB8CL2fmwKYqtwyzt76c5L3PvMNgyDl1qyfeAnFBmYktlhVCg4bqb7ZlhZlyjoAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+	 MIME-Version; b=Fy7d2twyXJQcuf2s/r9vE/4O+4KMJWPEx9BCFuMh+Dpfc8wGw/J1OOOHlAUPix5Yv7qq/4tV8YWxahDuV2fuplqCNFvEfB431WitR1IAbZDoOA1mtPeBkgCNBmHWb91CLvQdLslxKerabh3ZEjZYhoQgexzSMHuxmN+/WaXxSsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.07,205,1708354800"; 
-   d="scan'208";a="205570153"
+   d="scan'208";a="201616942"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 16 Apr 2024 21:03:39 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 16 Apr 2024 21:03:49 +0900
 Received: from renesas-deb12.cephei.uk (unknown [10.226.93.86])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 4918A40078C7;
-	Tue, 16 Apr 2024 21:03:34 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1801740078C7;
+	Tue, 16 Apr 2024 21:03:44 +0900 (JST)
 From: Paul Barker <paul.barker.ct@bp.renesas.com>
 To: Sergey Shtylyov <s.shtylyov@omp.ru>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -34,9 +34,9 @@ Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
 	netdev@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net PATCH v3 2/4] net: ravb: Allow RX loop to move past DMA mapping errors
-Date: Tue, 16 Apr 2024 13:02:52 +0100
-Message-Id: <20240416120254.2620-3-paul.barker.ct@bp.renesas.com>
+Subject: [net PATCH v3 4/4] net: ravb: Fix RX byte accounting for jumbo packets
+Date: Tue, 16 Apr 2024 13:02:54 +0100
+Message-Id: <20240416120254.2620-5-paul.barker.ct@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240416120254.2620-1-paul.barker.ct@bp.renesas.com>
 References: <20240416120254.2620-1-paul.barker.ct@bp.renesas.com>
@@ -48,104 +48,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RX loops in ravb_rx_gbeth() and ravb_rx_rcar() skip to the next loop
-iteration if a zero-length descriptor is seen (indicating a DMA mapping
-error). However, the current RX descriptor index `priv->cur_rx[q]` was
-incremented at the end of the loop and so would not be incremented when
-we skip to the next loop iteration. This would cause the loop to keep
-seeing the same zero-length descriptor instead of moving on to the next
-descriptor.
+The RX byte accounting for jumbo packets was changed to fix a potential
+use-after-free bug. However, that fix used the wrong variable and so
+only accounted for the number of bytes in the final descriptor, not the
+number of bytes in the whole packet.
 
-As the loop counter `i` still increments, the loop would eventually
-terminate so there is no risk of being stuck here forever - but we
-should still fix this to avoid wasting cycles.
+To fix this, we can simply update our stats with the correct number of
+bytes before calling napi_gro_receive().
 
-To fix this, the RX descriptor index is incremented at the top of the
-loop, in the for statement itself. The assignments of `entry` and `desc`
-are brought into the loop to avoid the need for duplication.
+Also rename pkt_len to desc_len in ravb_rx_gbeth() to avoid any future
+confusion. The variable name pkt_len is correct in ravb_rx_rcar() as
+that function does not handle packets spanning multiple descriptors.
 
-Fixes: d8b48911fd24 ("ravb: fix ring memory allocation")
+Fixes: 5a5a3e564de6 ("ravb: Fix potential use-after-free in ravb_rx_gbeth()")
 Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 ---
-Changes v2->v3:
-  * Move comparison of `rx_packets` against `*quota` inside the loop.
+No changes v2->v3
 Changes v1->v2:
-  * Fix typos in commit message.
-  * Add Sergey's Reviewed-by tag.
+  * Added Sergey's Reviewed-by tag.
 
- drivers/net/ethernet/renesas/ravb_main.c | 25 ++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 7d231d011bff..3b870926af14 100644
+index 6969cdeeb67a..fcb756d77681 100644
 --- a/drivers/net/ethernet/renesas/ravb_main.c
 +++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -775,12 +775,15 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+@@ -769,7 +769,7 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+ 	dma_addr_t dma_addr;
+ 	int rx_packets = 0;
+ 	u8  desc_status;
+-	u16 pkt_len;
++	u16 desc_len;
+ 	u8  die_dt;
+ 	int entry;
  	int limit;
- 	int i;
- 
--	entry = priv->cur_rx[q] % priv->num_rx_ring[q];
- 	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
- 	stats = &priv->stats[q];
- 
--	desc = &priv->rx_ring[q].desc[entry];
--	for (i = 0; i < limit && rx_packets < *quota && desc->die_dt != DT_FEMPTY; i++) {
-+	for (i = 0; i < limit; i++, priv->cur_rx[q]++) {
-+		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
-+		desc = &priv->rx_ring[q].desc[entry];
-+		if (rx_packets == *quota || desc->die_dt == DT_FEMPTY)
-+			break;
-+
+@@ -787,10 +787,10 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
  		/* Descriptor type must be checked before all other reads */
  		dma_rmb();
  		desc_status = desc->msc;
-@@ -848,9 +851,6 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+-		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
++		desc_len = le16_to_cpu(desc->ds_cc) & RX_DS;
+ 
+ 		/* We use 0-byte descriptors to mark the DMA mapping errors */
+-		if (!pkt_len)
++		if (!desc_len)
+ 			continue;
+ 
+ 		if (desc_status & MSC_MC)
+@@ -811,25 +811,25 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+ 			switch (die_dt) {
+ 			case DT_FSINGLE:
+ 				skb = ravb_get_skb_gbeth(ndev, entry, desc);
+-				skb_put(skb, pkt_len);
++				skb_put(skb, desc_len);
+ 				skb->protocol = eth_type_trans(skb, ndev);
+ 				if (ndev->features & NETIF_F_RXCSUM)
+ 					ravb_rx_csum_gbeth(skb);
+ 				napi_gro_receive(&priv->napi[q], skb);
+ 				rx_packets++;
+-				stats->rx_bytes += pkt_len;
++				stats->rx_bytes += desc_len;
+ 				break;
+ 			case DT_FSTART:
+ 				priv->rx_1st_skb = ravb_get_skb_gbeth(ndev, entry, desc);
+-				skb_put(priv->rx_1st_skb, pkt_len);
++				skb_put(priv->rx_1st_skb, desc_len);
+ 				break;
+ 			case DT_FMID:
+ 				skb = ravb_get_skb_gbeth(ndev, entry, desc);
+ 				skb_copy_to_linear_data_offset(priv->rx_1st_skb,
+ 							       priv->rx_1st_skb->len,
+ 							       skb->data,
+-							       pkt_len);
+-				skb_put(priv->rx_1st_skb, pkt_len);
++							       desc_len);
++				skb_put(priv->rx_1st_skb, desc_len);
+ 				dev_kfree_skb(skb);
+ 				break;
+ 			case DT_FEND:
+@@ -837,17 +837,17 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+ 				skb_copy_to_linear_data_offset(priv->rx_1st_skb,
+ 							       priv->rx_1st_skb->len,
+ 							       skb->data,
+-							       pkt_len);
+-				skb_put(priv->rx_1st_skb, pkt_len);
++							       desc_len);
++				skb_put(priv->rx_1st_skb, desc_len);
+ 				dev_kfree_skb(skb);
+ 				priv->rx_1st_skb->protocol =
+ 					eth_type_trans(priv->rx_1st_skb, ndev);
+ 				if (ndev->features & NETIF_F_RXCSUM)
+ 					ravb_rx_csum_gbeth(priv->rx_1st_skb);
++				stats->rx_bytes += priv->rx_1st_skb->len;
+ 				napi_gro_receive(&priv->napi[q],
+ 						 priv->rx_1st_skb);
+ 				rx_packets++;
+-				stats->rx_bytes += pkt_len;
  				break;
  			}
  		}
--
--		entry = (++priv->cur_rx[q]) % priv->num_rx_ring[q];
--		desc = &priv->rx_ring[q].desc[entry];
- 	}
- 
- 	/* Refill the RX ring buffers. */
-@@ -891,7 +891,6 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
--	int entry = priv->cur_rx[q] % priv->num_rx_ring[q];
- 	struct net_device_stats *stats = &priv->stats[q];
- 	struct ravb_ex_rx_desc *desc;
- 	unsigned int limit, i;
-@@ -901,10 +900,15 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 	int rx_packets = 0;
- 	u8  desc_status;
- 	u16 pkt_len;
-+	int entry;
- 
- 	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
--	desc = &priv->rx_ring[q].ex_desc[entry];
--	for (i = 0; i < limit && rx_packets < *quota && desc->die_dt != DT_FEMPTY; i++) {
-+	for (i = 0; i < limit; i++, priv->cur_rx[q]++) {
-+		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
-+		desc = &priv->rx_ring[q].ex_desc[entry];
-+		if (rx_packets == *quota || desc->die_dt == DT_FEMPTY)
-+			break;
-+
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
-@@ -958,9 +962,6 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 			rx_packets++;
- 			stats->rx_bytes += pkt_len;
- 		}
--
--		entry = (++priv->cur_rx[q]) % priv->num_rx_ring[q];
--		desc = &priv->rx_ring[q].ex_desc[entry];
- 	}
- 
- 	/* Refill the RX ring buffers. */
 -- 
 2.39.2
 
