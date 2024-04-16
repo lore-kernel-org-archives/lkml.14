@@ -1,131 +1,105 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE433B78B;
-	Tue, 16 Apr 2024 07:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8AC8120A;
+	Tue, 16 Apr 2024 07:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713252497; cv=none; b=V2lLqdpFB3RL9vTyxhJ+XczvoXXabAtUlTA8oFR0ChfrjzXfaHAtlXKGgbfD6MLtlvCqV4FrcnvZtWShLE/LPyxnROGgHL1quwGriyhkc5PQuLZ+9BIU0x3QTTlnr+PWq6vM8f9JEdrFfiMjvDV3HLdLeW88UipVNWBscKieQcI=
+	t=1713252500; cv=none; b=MV9BPskicz7ExV/Ab0bSTJFBVx1i+u/ehlPtYrPekq4b1vNr1rUv6Roc6xoNeiA9Q+cgm2/4KYeVXt1y28i8+mhIO2wknZxn9jnwcwR+pNoyev7u2OPARDmdXDjywFsUhYudgdwMrPAreEGsoW6FVnRYY1wTS+zElCsgd/hQJYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713252497; c=relaxed/simple;
-	bh=F1ZY/I6/nCY7bzIXAtOKE5cqSyOxKiOJFgMz5yMepl4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=RcMES2l5fuhVp8XTubU9KgOl099Sr3xOOg5HjXA78I5WPXAPo2iAvY7rC100dPJUPZFjahU5YJA2pedYV8dSb4tdMu8IWcjsTyzvEVn8j65x6njX8EYX3U6avLqxsRaI9I4SQsMEsseCEmQM/7axTxF+nOo0hXZ6gHhOS0G5c/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6oV3cls; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1713252500; c=relaxed/simple;
+	bh=fUz2ULHO4vQM0iAFiGLWeq+An9hACICk4W7WdzUWjr8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7w7fgd5fpMbwIGo9PQvPIrm8EUG761r4vsBAcqcSY/wBzZBnnBSxa/njlzW+NNyki2RV7lDgEI6ObvbB75sT73ye11ljzebEpTn+Qh5WKfzvPLFDLe2M4W0R0fHlj3wQM/1tuPd3fBIr9wa6Nml3cbLduPLn/zVszPHFX4lw5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=REhlQGam; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6oV3cls"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a44f2d894b7so442182266b.1;
-        Tue, 16 Apr 2024 00:28:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REhlQGam"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d8b4778f5fso28537771fa.3;
+        Tue, 16 Apr 2024 00:28:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713252494; x=1713857294; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yxVv0LhJm5HT/6Ae8eAzf3XoGU2gXg4O6Y8MwCsSeJw=;
-        b=R6oV3clsZc1IFIBnI9ZJt1hyQXVjD9GfsjjK9P4tKlabK9lknsz6o4NlqxZYSWnNrR
-         GKrkod1yPKYKbg62CHIBilBMKreFzXqAcL4BBq34h2yQueRsGFwFBhNEcGQpS2QFXqdh
-         7rPeu5lFJ8/nfHXZCWNxYx84lbs2+BiWGiwhLH4VYFD6meGUcdIdyYYKFxmkP9ZAajSH
-         4VW30dHp1oNlpD2ek/jsPObXEx+LSBPOjD13V+OxTdAP9Zyfhfz7i/01wxRwsdo+O+wh
-         yzL3jWDSC1fyJb8eSL0Vjft9vzfAr/379eR0lQHZuKvTW/0MXzrgcLUiAgINemTZNBgA
-         vDXA==
+        d=gmail.com; s=20230601; t=1713252497; x=1713857297; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZVbg0XEuYD0ISZnmCPk7SJEed6iK2Cd+clJNUGNCXzw=;
+        b=REhlQGamumpJ6h85O6hrUv2gsuHtySxA/AMo1br5wbi5D6whMAT3W/fTUtDMP+nZV9
+         w2w4zZEwepe6W5TlKza5fSuN6PwvNFxlnGWA2jw8SL+gK154eEfqTt75XE+mEN9CYRmZ
+         0pFH4ZykL31LgOwWPhiraTXRj/89oZYxKZwvnZb0GefaJi/+JG9ggonK57fJ4NvpQuea
+         kwwzsdAUhOhKzDb8Pk2cBxzj8ImpHCVfRaOTtqDBI/s6exc5pjLxLHWBAvfJHcDmPigu
+         tLo6vyKFxvapzvKUyA9nlAQk++MQVnYeGHrkXiSB3T3OgzZUcmJsvr93LUnZFAzC+0rg
+         Y7MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713252494; x=1713857294;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yxVv0LhJm5HT/6Ae8eAzf3XoGU2gXg4O6Y8MwCsSeJw=;
-        b=R1Ceo9zOyyVFH5IixRg0f6XNhYKw9PpTCOuhAieQaWMfYeQOvqdTwzb7Wv+PvjEzV7
-         aV2NwW12eW397mZJen7VEA+d9Cvl5G+jG4JZW23WamcKqE7CjG4AxTnA9momNiDY2bZ7
-         UYpQPJjAbyj8qsDbNbl8Ixtunp3NO8uJrrNk8IjoPJK6rv7QB100V9UEIeboZZJTZakO
-         neOGaMYXhceV2I9x74OrhFR1DBNQSBFsGxDDFPRULqsAKHi2fy9WmGHwjSA3NpgXXPxa
-         PWDWht2VRwauVQEHG9fJO/V8jxO7roakJRSfG+jFNh/9UqpIzY5pLnDU7bZ8QCEz+2Qf
-         SNqQ==
-X-Gm-Message-State: AOJu0YyniLXIyPQVD/mvOioycCajhspmVDMeGxwZtPhzMXjZrcqaGg53
-	MQ1iRl98fenNtSm4ntn5I/9cx0N7Lfqd910+U7+jmD76+hokO+yjWB0hLIqEN26IXElTU6SMQEU
-	BgNDCTaTDM0UE4OeQeVkT/WCamxGnbmIH7gIHHg==
-X-Google-Smtp-Source: AGHT+IF+XT79nJii8BhDLY6zr3LkvmkUDI3E8OtlpbQLfk/XlGWZpP6kF/DOSxok1XxT5Nq+n2ltK570QbQMOTQVqD8=
-X-Received: by 2002:a17:906:d936:b0:a52:5916:da16 with SMTP id
- rn22-20020a170906d93600b00a525916da16mr5047765ejb.37.1713252494118; Tue, 16
- Apr 2024 00:28:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713252497; x=1713857297;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZVbg0XEuYD0ISZnmCPk7SJEed6iK2Cd+clJNUGNCXzw=;
+        b=af2YKwkJiGIqxWb5k/sGGg28pxhapmvMwpQyGn6qqIfqGazrn8cvcZykooffj6K900
+         QAVK0anha50XOCpre5WenNQZSGTM3moK+17nosx8Dg9NZ8NN5dj14uNJQ6VK9dQytHxe
+         e/ygTLpsVa///XCwJVFfg8MAP8iDE32prnlu6MVU2T/5+HXLuICJ9DukPwQJC4P39+Zj
+         s2J5zOKVtSsSFQzhrQ9mei79YVQXPcV3KZ6jTB34X8xDqihP+ShD8YQ13OwTtMHTFCLF
+         vaff+Dazu2LAdDUjV9gHzr1hgpsCBKIaXwmUs6u0E+Jb9opKXluo0RGP8UjhBKnkpT+/
+         N0Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqHAUiytJS614o7RtcU3OW2Csc1aOPh2YHm2TsRxTldaYfmZ4ogB7fjN38bktppP7qF3Ny1AuFsoPsLzyPTWalOgyY/292v7JR4CNXrcuyI1ZL8B8ajmb37V7H+svLIPe0
+X-Gm-Message-State: AOJu0Yw3vUGqTXNGybjj0zdEwZPU1HQNR1NtPOWYnJvATs3Wvw6kb127
+	N3tVWZXe6EUWQkXoDqh3d3lYty7PF+RXN6xKpT03CNsS4B1Sflql
+X-Google-Smtp-Source: AGHT+IG2gqMBH6kLPwUn6KCJfMr7TISak+pyID3GCPxN0bPio8S5npb+dB3UDx0/hupJ9snCuIvavA==
+X-Received: by 2002:a2e:a696:0:b0:2da:c37f:655e with SMTP id q22-20020a2ea696000000b002dac37f655emr991334lje.16.1713252496774;
+        Tue, 16 Apr 2024 00:28:16 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id g15-20020a05600c4ecf00b00414659ba8c2sm19059251wmq.37.2024.04.16.00.28.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 00:28:16 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 16 Apr 2024 09:28:14 +0200
+To: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, haoluo@google.com, sdf@google.com,
+	kpsingh@kernel.org, john.fastabend@gmail.com,
+	yonghong.song@linux.dev, song@kernel.org, eddyz87@gmail.com,
+	andrii@kernel.org, daniel@iogearbox.net, ast@kernel.org,
+	martin.lau@linux.dev, khazhy@chromium.org, vmalik@redhat.com,
+	ndesaulniers@google.com, ncopa@alpinelinux.org, dxu@dxuuu.xyz
+Subject: Re: [PATCH] bpf: btf: include linux/types.h for u32
+Message-ID: <Zh4ojsD-aV2vHROI@krava>
+References: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com>
+ <Zh0ZhEU1xhndl2k8@krava>
+ <CANXV_Xwmf-VH5EfNdv=wcv8J=2W5L5RtOs8n-Uh5jm5a1yiMKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Sam Sun <samsun1006219@gmail.com>
-Date: Tue, 16 Apr 2024 15:28:02 +0800
-Message-ID: <CAEkJfYMdDQKY1C-wBZLiaJ=dCqfM9r=rykwwf+J-XHsFp7D9Ag@mail.gmail.com>
-Subject: [PATCH net v2] drivers/net/bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
-To: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org, j.vosburgh@gmail.com, andy@greyhouse.net, 
-	davem@davemloft.net, Eric Dumazet <edumazet@google.com>, kuba@kernel.org, 
-	pabeni@redhat.com, Hangbin Liu <liuhangbin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANXV_Xwmf-VH5EfNdv=wcv8J=2W5L5RtOs8n-Uh5jm5a1yiMKw@mail.gmail.com>
 
-In function bond_option_arp_ip_targets_set(), if newval->string is an
-empty string, newval->string+1 will point to the byte after the
-string, causing an out-of-bound read.
+On Tue, Apr 16, 2024 at 08:27:21AM +0300, Dmitrii Bundin wrote:
+> On Mon, Apr 15, 2024 at 3:11 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > lgtm, did it actualy cause problem anywhere?
+> >
+> > there's also tools/include/linux/btf_ids.h
+> 
+> It caused the problems exactly in the file
+> tools/include/linux/btf_ids.h and was reported in
+> https://bugzilla.kernel.org/show_bug.cgi?id=218647
+> The patch including linux/types.h in tools/include/linux/btf_ids.h is
+> already there https://lore.kernel.org/all/20240328110103.28734-1-ncopa@alpinelinux.org/
+> I also faced the same compile-error of the form
+> 
+>     error: unknown type name 'u32'
+>                               u32 cnt;
+>                               ^~~
+> when compiling the bpf tool with glibc 2.28.
+> 
+> I think it might be reasonable to add the inclusion in
+> include/linux/btf_ids.h as well to prevent build problems like this.
 
-BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
-Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
-CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:364 [inline]
- print_report+0xc1/0x5e0 mm/kasan/report.c:475
- kasan_report+0xbe/0xf0 mm/kasan/report.c:588
- strlen+0x7d/0xa0 lib/string.c:418
- __fortify_strlen include/linux/fortify-string.h:210 [inline]
- in4_pton+0xa3/0x3f0 net/core/utils.c:130
- bond_option_arp_ip_targets_set+0xc2/0x910
-drivers/net/bonding/bond_options.c:1201
- __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
- __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:792
- bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
- bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c:156
- dev_attr_store+0x54/0x80 drivers/base/core.c:2366
- sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
- kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
- call_write_iter include/linux/fs.h:2020 [inline]
- new_sync_write fs/read_write.c:491 [inline]
- vfs_write+0x96a/0xd80 fs/read_write.c:584
- ksys_write+0x122/0x250 fs/read_write.c:637
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
----[ end trace ]---
+ok, it's in the bpf/master already
 
-Fix it by adding a check of string length before using it. Remove
-target address in netdev_err message since target is not initialized
-in error path and will not provide useful information.
-
-Fixes: 4fb0ef585eb2 ("bonding: convert arp_ip_target to use the new option API")
-Signed-off-by: Yue Sun <samsun1006219@gmail.com>
----
- drivers/net/bonding/bond_options.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/bonding/bond_options.c
-b/drivers/net/bonding/bond_options.c
-index 4cdbc7e084f4..8f3fb91897b3 100644
---- a/drivers/net/bonding/bond_options.c
-+++ b/drivers/net/bonding/bond_options.c
-@@ -1214,9 +1214,9 @@ static int bond_option_arp_ip_targets_set(struct
-bonding *bond,
-     __be32 target;
-
-     if (newval->string) {
--        if (!in4_pton(newval->string+1, -1, (u8 *)&target, -1, NULL)) {
--            netdev_err(bond->dev, "invalid ARP target %pI4 specified\n",
--                   &target);
-+        if (!(strlen(newval->string)) ||
-+            !in4_pton(newval->string + 1, -1, (u8 *)&target, -1, NULL)) {
-+            netdev_err(bond->dev, "invalid ARP target I4 specified\n");
-             return ret;
-         }
-         if (newval->string[0] == '+')
--- 
-2.34.1
+jirka
