@@ -1,204 +1,202 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4502539C
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713246816; cv=none; b=ZqPbpZz/r2QHLjo/4RP9o3pMpDz4j+bKvgChssO7MTAv8rCuw3GbowEmsLS/SlYZ0851VnEtbFVisnzmk9SK9gJn7g+G41hAEB/4oGtilA8Ge/6Y0FZzPgbZTrliEOqZPWOZmvGi3T520Me/OeNR5MRwsEdwDt4Ky3c4XHJlqd8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713246816; c=relaxed/simple;
-	bh=YHXTxo+dMZMqRkcn1P10yAEdeONTVjYOCpBdu90ZcBo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oY1oP6z/gmRmI2r3G2KwrQwbjffYnkofS4R1bl+D7gwodr3/Hg4Ti3SmeKaHNp/ZfPiemzosBXwuEviXZNLxX3LkQGZAeuEadl4O0QIO38oWHKaEAli0JYZdXZ9gV26nFCbZkyKm4AOoCYhZt26i0/iY6/gSLo5ER5YglzCVhLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=IQiSqnAT; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3387A539C
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713246847; cv=fail; b=blJCya3Rar+NO00qxSVFbXIF5/XFvVQBdMSfdJCIk7FTPGj0tMzaeL3XgS636SnZ2NZpQEJqdpAcs9mrWLj0DtERSd/g5EVfvfp08xzccccpET6it6dz1Kf0tfthsgU2WeYVca53i+Uois27CnC3tv7KdZEWiAiAaRwO+GSj0XQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713246847; c=relaxed/simple;
+	bh=51/JU+p2UdGgf2+O5XTg5SBRQX7AqY9xk1/tNdrxjW0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hYZlAnr8KcTCR5isfy45Gr3DZ63PC1UvX0kUN9HgonO1tc3EkBzjTN/7ovTwrgpsIP1/XYwGOSf1/LX8e82qcRJw0TNm2eRtNmGDwPeWMOp7Cm87W6Jp+eTsT9B8lbVIv4uu6Mx+4smWaNBM4uxH9evXeEmJohv8qQgrGPYHuXw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hj7q09e0; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="IQiSqnAT"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so4657717276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 22:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1713246813; x=1713851613; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fOqlvnKucywUEZPZVlRG+mSpGLeAjqCUUNbMfAp62nk=;
-        b=IQiSqnATipRUDpTjkbms8g6PFOyCeg4j7QSq4Eer6O59AsqcTxOVyHzN66yo4+sb1d
-         /P4njxSPo8oFD/Szwh07keyJzjk5eCUaPStRK2QhL+FkL5GAQIKbKeQb6ogU6PnPJB48
-         6aQshPfvRgp9w7W9xqT822hoIeI/V8ErcoRSchdPiYaqzkgaAPNFPmmGo+zmScmR57p9
-         rfnuTd5j9OHZy+Ln2r05qAfNZ+NdBcEMg7T4KAU26UV1Kv70nRSs8VXORxa2kdWBJEuH
-         X/KymTWhgCaw0dOODuhUfiIgPb7ASimr8kIuB34jOmXVG8yPlErCq7JC9y8wpjzJLXD3
-         wULw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713246813; x=1713851613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fOqlvnKucywUEZPZVlRG+mSpGLeAjqCUUNbMfAp62nk=;
-        b=uJtPRjBCOS/rbYSfi+0ca1An7Qc0c3ZRdepRuu9f569554kwWzc8BPxZ4gt0l+hGhX
-         wsIn9pBLtuXC0RvbA+BBwGcTzx7GssxhEwXnX/aeyylJz9Ta5U899vTHLpJbPqCKrzqp
-         1QfBK8Cq9zf851VZi9GCPxvfl+VhHQiuySP16/q1Xo2VGu2y6wsvzMjCw5ZbOIyAlzt7
-         2EsmYgAUHw/riEZFPBcF9IKQ1fhjCJefIAONCmiija2WYDlYm4TgNc0ZRctTeWfts4Jm
-         NN/z7mDqr5YadO7ynk+NBr1OU57KGlgZNmbwYMuuc2zXsoIlmjL9bSyyyTaA5aqSZcr4
-         X9XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmKWvwsLSa0KF0vrr0YVHm5GTRqBvEAnjWVC7uYtBNW0GU/3fatbJy+rQT05Ok7zAJDzMFiBETcvillixAbqs5FMtZ2L8M+GCch2sN
-X-Gm-Message-State: AOJu0YyStjKEaDcJSVq5XfJEEsxKp/NMlBrKqs64ytdiG9YX7HOhka9q
-	S3UNPZG4/JnZgFNgNgjkfGcdFD1RZpKc6epG41JKm7bUVxoW2aPEMjVnK6mvzXZsVDRkPu8B052
-	wQKwHBCKJRm2BvL2MU3UGZ80rV7VAw2dh5Hr1JQ==
-X-Google-Smtp-Source: AGHT+IEk4cS/dQD+EYvxY5dx55Tkwtvot6iZduodfKV8e4eY/Ded+reARURG0wd/8TQWyTEpiJDKGNwvHHvzNoyWrEc=
-X-Received: by 2002:a25:1fd6:0:b0:dc6:de93:7929 with SMTP id
- f205-20020a251fd6000000b00dc6de937929mr1415768ybf.26.1713246812640; Mon, 15
- Apr 2024 22:53:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hj7q09e0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713246846; x=1744782846;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=51/JU+p2UdGgf2+O5XTg5SBRQX7AqY9xk1/tNdrxjW0=;
+  b=hj7q09e06G9jdbB03rYmxur7TuYWrFX+aEWw6mH6QWeyFEzEUyXsckuX
+   SRCvkaWfuUOS8hC2Ql+BTv9Yx3h9Q8HHr7yIOr6MeT6cAKJu568cKVpYp
+   tVCix9HPvC+br7EOVaaIbhnoDo1cpOmbVE7I4yehSw7QjWBbIF4T6+TfZ
+   MTCuCUXBIEIPQ2ie1Ye5WqpvTgHjNZwSCTkK8KK2192okIDgn3Rk3yRQA
+   Z73zmdE9MDXtJ9JkvO7H8f4NrePlaQ2b0e0/H6Xh01iitz0FZwCZEpz+3
+   t0Zpp/rjmFphMSlhcRjA2XA3aZ9ZHjVio6B/is8VuPLgwwFdcozPyZK0g
+   A==;
+X-CSE-ConnectionGUID: 4CpCWxc7RvS+SbBNKGzgAg==
+X-CSE-MsgGUID: L6kod1dATLC4DcB4YQFbaQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12454496"
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="12454496"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:54:05 -0700
+X-CSE-ConnectionGUID: /2RqJz9bR0WkEHCaq8tqcw==
+X-CSE-MsgGUID: BaREqeTdRfeIUqFTlJ/BdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="26808560"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Apr 2024 22:54:05 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 15 Apr 2024 22:54:04 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 15 Apr 2024 22:54:04 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 15 Apr 2024 22:54:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JSnkgYabqqjW2KEzMB0FbDS6yQI+SPblvRTzPh9/vVhOjsoVQVvkAAYyTz2fk/chcbm9DcAGjmz8K1mfBHWaxaSt1fyrZ89xBcBhLa0IhhGF/o3LtcX41zzB9ORSqlMIJFqgMLAH3gVoQzVjryGPA4opBI0evyYbue2D5po+et6iq8mm/rD7T9DXRlQuxtmv+C/8OZmyvCccQ5ZVgejD1b3MKxMmmsUN9XRhe8tWKdFMJuXW/md4Wp3wzf5ITUaWVLQ4np8vlmKfCAlkuYT/49ZUr5rSucfmqisht1UH8T0I4B6cAP1Xj1u6THoNHdmpyF1wSD6PXa0jqiiPBXNB0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0DZe2567+oncFfpQYgCrUL0+806tJZ1R6ZlJaVOGfzg=;
+ b=nDpw3YFWuPMrOu9CwGD8AtXKxvCUE8wH55mDKV5UWKwfPU+mYIlqDV/c+iXUdOnDuZ6nMKdFFntHwQ2j3OMxROcdcPbCnNvRMKLUu7Y721NhSlGHI6zzFw0lfNG+HiQdD6F7LRFeUG/fDQ7lysEmyEtdyl0S/DB3XAqzCX92SAGfsGVT6K3Z+kIWWjStU2HT99NeOtwdovoQ7DWICkQWlFDcsttB/yL0hw7GLTOYA/wm99UQZVwctOqbUKAoxW76/Bq0GOkDYLeZEqL5yNfSTSnQ1tBdVzcLi3u2GjDo80kLDVA/vKybrdp3+iFuWtRTWQi8YGxLXj3el7R9roPORA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8393.namprd11.prod.outlook.com (2603:10b6:806:373::21)
+ by BL1PR11MB5956.namprd11.prod.outlook.com (2603:10b6:208:387::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.27; Tue, 16 Apr
+ 2024 05:54:02 +0000
+Received: from SA1PR11MB8393.namprd11.prod.outlook.com
+ ([fe80::c0cf:689c:129c:4bcd]) by SA1PR11MB8393.namprd11.prod.outlook.com
+ ([fe80::c0cf:689c:129c:4bcd%6]) with mapi id 15.20.7452.041; Tue, 16 Apr 2024
+ 05:54:02 +0000
+Date: Tue, 16 Apr 2024 13:47:27 +0800
+From: Yujie Liu <yujie.liu@intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: arch/alpha/include/asm/page.h:9:25: error: 'CONFIG_PAGE_SHIFT'
+ undeclared; did you mean 'CONFIG_HAVE_PCI'?
+Message-ID: <Zh4Q7+IV6Py3LzQn@yujie-X299>
+References: <202404142258.3CWV3f05-lkp@intel.com>
+ <ae1e6ebe-be09-46fb-a2aa-4db0eb53f160@app.fastmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ae1e6ebe-be09-46fb-a2aa-4db0eb53f160@app.fastmail.com>
+X-ClientProxiedBy: SI1PR02CA0020.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::9) To SA1PR11MB8393.namprd11.prod.outlook.com
+ (2603:10b6:806:373::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com> <20240415-alice-mm-v5-3-6f55e4d8ef51@google.com>
-In-Reply-To: <20240415-alice-mm-v5-3-6f55e4d8ef51@google.com>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Tue, 16 Apr 2024 01:53:21 -0400
-Message-ID: <CALNs47vkeAeU5jGk2AV_w0oRfPCiXzcWTGO_bauCnSsqQTX-iA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] rust: uaccess: add typed accessors for userspace pointers
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8393:EE_|BL1PR11MB5956:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f808bd3-ac87-4fc0-a4c2-08dc5dd99dfe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: khh1CgJJ3R/8ZtKWZI1zLg5afawU6A7tLREkVuLcFozyKdvSQSAkc5KCTvi4SGfTXCooNbR4Fx+Xyqpai0OwIxrAciMX3U8+fiKK+tWJRyDBGFghTt/3MyAGQUDl0dPXwNoQUc2YGcIjqx0MEE272zYAt9qxpD2OF3NXrVuIBIY2S/jjc9iO2oD+EKROOft29/UwYCJ3LHxiXRnBUce1OtDiRRfDd+XEA4IXUAGfHIVMuuvjXVmmOE3Lh5W4FlTJ4xXp6WPWjIGmQzd+5RK6K/NG97Sm45eiI6h0yG8i2dVJA+xpZ3efwLTZk6UhqaNHwSxaSinntH616Fhx9ttUHm56MCRBM781NO/uxWNKXdPoAywR4SZRaYRgWWuHukQ7qu9gFlAEhjhYh8G1eCm8fbXNBa/slntGxQQFU5HC8Ot5bz06ZmotWX7dWG5szKJdvRQ1hJdDMceCyd4PlwxBTGlN5bWLAxgEEk5edp3Ken06paV3ZUDb6g2aNobjcTBefGqGZ4TI0v3eB9IxBNxLELXonJQjgJedrT3jF6ydifn5ZcNBejGjAoxsu9aSoPk08R2/Y6H/WfZi7iGI6GSUNfcOG0B3RvsFoG7qkyXLdUtSuOD1EVRVauFlbPjZGn1h
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8393.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VzGWud5wX97VcSALDux1FCaFPn5z9z1qBpalblQBjruhccAYlVh2XjqVre5m?=
+ =?us-ascii?Q?skwbeGD6/RRyrvVf8W70kg5OndiLzT9p/a7xQzhVzcgtMY3Nbemlw4BMANV0?=
+ =?us-ascii?Q?qKN72R6UO0N1f96YWXmAND2wPb5m0m62ygDsEquy/6IWgEJEoE7llYsTTz8J?=
+ =?us-ascii?Q?DTUtmgRLmlTOMdpMyBsFUMid+/q7qJNUony5qBOFezEzJJLaj8pZuL076dvc?=
+ =?us-ascii?Q?ebKDi1LLrimqUU5aldINsjxpTgI5N2cIlyeNjeyxAKLsB7vl8y1U2ByWTNK6?=
+ =?us-ascii?Q?WWCnx4zeHPfJoRS6sGQNH48Gh5RDey73IDB4bvIyYpcYk6qhKunCCuzOtZdg?=
+ =?us-ascii?Q?nxv/EEU7gm54vFedPTZ6IUCMHtCUGb1EjyubEANZ4qNqJPLxmcktb66pPbMy?=
+ =?us-ascii?Q?LYQa4LxlPHEvj3ivuFR7Ty/svDMz3L1ZsIu4wkDnNxSCeLhHIfnbGlTmFEp8?=
+ =?us-ascii?Q?rFDV8Wc4X36K5LBWKoaYWR44unBKieD5boAquDbIDBN2frd+IvlmkCfRiO7c?=
+ =?us-ascii?Q?SQfEBvdmbQoEcmsQ9dQNM0jtxb+grhLyksZNuRaYDXubupYt6QKn2Nfea0fo?=
+ =?us-ascii?Q?YAOx9aFgDu9isRezmKstu473POB/PMlrmlJneqhYPvxQJFA1EwSHjuNDIdvN?=
+ =?us-ascii?Q?+mfD99x/QgN/+2O+yIEUSrHTA1FYoIY72pD2XXOD+S+ICV8oL+nG5sax/gbp?=
+ =?us-ascii?Q?ICT4UuSyQMaULB7FCBnFiq7yueJofMZfC6cPRPbaIeCNbrDMMOyajOSSDoRP?=
+ =?us-ascii?Q?LA8fJZZAjcjK84ABeprRH9ztaABD3j1Noh0tvRH0mp838cAnXtDnLRxAu88o?=
+ =?us-ascii?Q?CWg9o6gXZIvHJ2bPbRWvJb3Bq6zgnDpe/AM+vKmMgLeWrNZE7O3uhMxXHbDq?=
+ =?us-ascii?Q?5GYDymjP7YluiV4Qpr3+Yq5F+w3jKe9UwofxD4lxVOErfeKhihL2brpvTWFX?=
+ =?us-ascii?Q?UtYrh5uAzIUPng5K70s1gMdcLhpF0uyFyuOeX/nL+zYPuVqECUpauooep/F9?=
+ =?us-ascii?Q?V3qHv93k5G3HewOhQNJGNnZ74d5EH+QCJVJk+RTVZmd03qa3i2JWiRH8eGgr?=
+ =?us-ascii?Q?rtxYuj+WNBrcYTTDwS55CRulC3shgV+/gSHROCzmn4AnuRtzCJUZS6vJMLF4?=
+ =?us-ascii?Q?HZ2vnRRuEk8vQ8zvwKyAuohAH55XhbWB3BBt3QllHj3iYoB0q+nnJkV9B+2K?=
+ =?us-ascii?Q?JIGKNKEvPcy1IPBLMugoGQlbmnYoEc1s5purECcJP/amwFJ31PSUpKUiT7lD?=
+ =?us-ascii?Q?HA3mjzwuPVXNH453mf+r7vUAhhgg2wZIOz465Szjgo7ko6ayK/rJXrY+jjHK?=
+ =?us-ascii?Q?b7t+DFrhdkY4PfAsA0QcpBfUm8UwnzwG/xVh5bOnIJbK4Cnmd6QDMdQXhjPa?=
+ =?us-ascii?Q?RW0F+Jc2Z+R/DPrl2cSqbRrNM3vxK51axWUlUKwArqxnIkwQ3q2MhAHUV3Pn?=
+ =?us-ascii?Q?1MPXN/XoUQ5HqVUiDYLPqt1ge75W+ZZA8f8TLzZXqr9pIdQXOQqSvdphgFiW?=
+ =?us-ascii?Q?bOmBXtua031ilr7X0NVIkxUWafMNeE/DXjavz7pU80XEiYjbEWL5FP3aq7QR?=
+ =?us-ascii?Q?YYD32Y7D7l55mt17/RCMEo/bzNmw/4urP3HnvOMW?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f808bd3-ac87-4fc0-a4c2-08dc5dd99dfe
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8393.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 05:54:02.0474
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i73opmUzCc/qjh8gmav9COkeKPd/NPvqMgbmY2KuQKeKdTfUumktfVsR+7xNdbpOIenl5pRq3TXnj72eS/4uqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5956
+X-OriginatorOrg: intel.com
 
-On Mon, Apr 15, 2024 at 3:15=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> Add safe methods for reading and writing Rust values to and from
-> userspace pointers.
->
-> The C methods for copying to/from userspace use a function called
-> `check_object_size` to verify that the kernel pointer is not dangling.
-> However, this check is skipped when the length is a compile-time
-> constant, with the assumption that such cases trivially have a correct
-> kernel pointer.
->
-> In this patch, we apply the same optimization to the typed accessors.
-> For both methods, the size of the operation is known at compile time to
-> be size_of of the type being read or written. Since the C side doesn't
-> provide a variant that skips only this check, we create custom helpers
-> for this purpose.
->
-> The majority of reads and writes to userspace pointers in the Rust
-> Binder driver uses these accessor methods. Benchmarking has found that
-> skipping the `check_object_size` check makes a big difference for the
-> cases being skipped here. (And that the check doesn't make a difference
-> for the cases that use the raw read/write methods.)
->
-> This code is based on something that was originally written by Wedson on
-> the old rust branch. It was modified by Alice to skip the
-> `check_object_size` check, and to update various comments, including the
-> notes about kernel pointers in `WritableToBytes`.
->
-> Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Sun, Apr 14, 2024 at 05:46:54PM +0200, Arnd Bergmann wrote:
+> On Sun, Apr 14, 2024, at 16:52, kernel test robot wrote:
+> > tree:   
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 
+> > master
+> > head:   7efd0a74039fb6b584be2cb91c1d0ef0bd796ee1
+> > commit: 5394f1e9b687bcf26595cabf83483e568676128d arch: define 
+> > CONFIG_PAGE_SIZE_*KB on all architectures
+> > date:   6 weeks ago
+> > config: alpha-randconfig-r016-20220816 
+> > (https://download.01.org/0day-ci/archive/20240414/202404142258.3CWV3f05-lkp@intel.com/config)
+> > compiler: alpha-linux-gcc (GCC) 13.2.0
+> > reproduce (this is a W=1 build): 
+> > (https://download.01.org/0day-ci/archive/20240414/202404142258.3CWV3f05-lkp@intel.com/reproduce)
+> >
+> > If you fix the issue in a separate patch/commit (i.e. not just a new 
+> > version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: 
+> > https://lore.kernel.org/oe-kbuild-all/202404142258.3CWV3f05-lkp@intel.com/
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    In file included from include/linux/thread_info.h:60,
+> >                     from include/asm-generic/current.h:6,
+> >                     from ./arch/alpha/include/generated/asm/current.h:1,
+> >                     from include/linux/sched.h:12,
+> >                     from arch/alpha/kernel/asm-offsets.c:10:
+> >    arch/alpha/include/asm/thread_info.h:43: warning: 
+> > "current_thread_info" redefined
+> >       43 | #define current_thread_info()  __current_thread_info
+> >          | 
+> >    include/linux/thread_info.h:24: note: this is the location of the 
+> > previous definition
+> >       24 | #define current_thread_info() ((struct thread_info *)current)
+> >          | 
+> >    In file included from include/linux/shm.h:6,
+> >                     from include/linux/sched.h:23:
+> >    include/asm-generic/getorder.h: In function 'get_order':
+> >>> arch/alpha/include/asm/page.h:9:25: error: 'CONFIG_PAGE_SHIFT' undeclared (first use in this function); did you mean 'CONFIG_HAVE_PCI'?
+> >        9 | #define PAGE_SHIFT      CONFIG_PAGE_SHIFT
+> >          |                         ^~~~~~~~~~~~~~~~~
+> 
+> I tried reproducing this, but it always works for me here,
+> using my own gcc-13.2 build. I tried both the latest linux-next
+> and the 5394f1e9b commit.
 
-Couple of docs nits but this looks good to me.
+Sorry for this false alarm. We re-examined this case and found that we
+could not reproduce this issue either. It seems to be caused by a
+malfunction of the bot. Please kindly ignore this report.
 
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
-
-> +/// Types for which any bit pattern is valid.
-> +///
-> +/// Not all types are valid for all values. For example, a `bool` must b=
-e either zero or one, so
-> +/// reading arbitrary bytes into something that contains a `bool` is not=
- okay.
-> +///
-> +/// It's okay for the type to have padding, as initializing those bytes =
-has no effect.
-> +///
-> +/// # Safety
-> +///
-> +/// All bit-patterns must be valid for this type.
-> +pub unsafe trait FromBytes {}
-
-No `UnsafeCell` is also a requirement in zerocopy/bytemuck
-
-> +/// Types that can be viewed as an immutable slice of initialized bytes.
-> +///
-> +/// If a struct implements this trait, then it is okay to copy it byte-f=
-or-byte to userspace. This
-> +/// means that it should not have any padding, as padding bytes are unin=
-itialized. Reading
-> +/// uninitialized memory is not just undefined behavior, it may even lea=
-d to leaking sensitive
-> +/// information on the stack to userspace.
-> +///
-> +/// The struct should also not hold kernel pointers, as kernel pointer a=
-ddresses are also considered
-> +/// sensitive. However, leaking kernel pointers is not considered undefi=
-ned behavior by Rust, so
-> +/// this is a correctness requirement, but not a safety requirement.
-
-I don't think mentions of userspace are relevant here since the trait
-is more general. Maybe a `# Interfacing with userspace` section if
-there is enough relevant information.
-
-> +/// # Safety
-> +///
-> +/// Values of this type may not contain any uninitialized bytes.
-
-No UnsafeCell
-
-> +pub unsafe trait AsBytes {}
-
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index c97029cdeba1..e3953eec61a3 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -4,10 +4,15 @@
->  //!
->  //! C header: [`include/linux/uaccess.h`](srctree/include/linux/uaccess.=
-h)
->
-> -use crate::{bindings, error::code::*, error::Result};
-> +use crate::{
-> +    bindings,
-> +    error::code::*,
-> +    error::Result,
-> +    types::{AsBytes, FromBytes},
-> +};
->  use alloc::vec::Vec;
->  use core::ffi::{c_ulong, c_void};
-> -use core::mem::MaybeUninit;
-> +use core::mem::{size_of, MaybeUninit};
->
->  /// A pointer to an area in userspace memory, which can be either read-o=
-nly or read-write.
->  ///
-> @@ -238,6 +243,38 @@ pub fn read_slice(&mut self, out: &mut [u8]) -> Resu=
-lt {
->          self.read_raw(out)
->      }
->
-> +    /// Reads a value of the specified type.
-> +    ///
-> +    /// Fails with `EFAULT` if the read encounters a page fault.
-> +    pub fn read<T: FromBytes>(&mut self) -> Result<T> {
-> [...]
-> +    /// Writes the provided Rust value to this userspace pointer.
-> +    ///
-> +    /// Fails with `EFAULT` if the write encounters a page fault.
-> +    pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-
-Read & write could use an example if you are up for it
+Thanks,
+Yujie
