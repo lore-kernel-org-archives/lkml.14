@@ -1,209 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA8C1292C9;
-	Tue, 16 Apr 2024 12:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713271552; cv=fail; b=riGOxild9Z5rodQY54ZF4yVx4HB6hm6H36il1kLXkT4Q9qGXw8G8PHGANNPoKPAt4X57QsQ4hzuXECnMWwC1ccl4RcaeXdn4D7ajgAjMuPByYIDp8Cgzo5de3zd0xZBoFYh9ykF1DOoqIogCqhhgRosQLLphzQGejAC2ZjryejM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713271552; c=relaxed/simple;
-	bh=d0/RlB9de/Xqv88i7bHaYrBW/oDZw+TIUxrXc9TtFTU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ewObJM++CC/1OAxyN2K0wrxqgTZRw8lgxZk8H3VvjHJQxwpGWWV09KhLXx3X+IY45EIfP/tYBc8VfXUDKhIru2Bpmh449m4wDwDNQ6KFRooTKtK4m7fYfH4ngneUolho4ZqFvfbARrXYznZylP2B51C1V4MxeOGTrU9LVFrmtYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JuvlYzxZ; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9BF6BFDD;
+	Tue, 16 Apr 2024 12:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713271660; cv=none; b=XHdbUR0geq1fqdPgkGDvQRjxc+8fjPd7HE2XiH/FQsq3KYoZ/1Wv7CblVG7RoaN9vbfopp8U+lkrakQkoK0n8qUptaJ0LZTBlx3rqZVXXd/7n2R3biKaM0x7M+SdNuwaqmCCsVBAlnBx2IMJxFlUDiVDFzqSqFlCCl4o6qqFUG4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713271660; c=relaxed/simple;
+	bh=y+/Ebc9cDomP+Us9Son9nxZv+MjrLNi2Me6BEVjA3Xg=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=brfZu1+5j76ZgTOIruLAtU74PyalROgyyNj4e4TOPgygH+5fpE5e459/nIbeN3Rp35zAhZUxYP+LX2JI0NXHaouEvMONnSdr5hEBmeC4gtK3FuN7F8RwwzjReI8ZpZ4foTdGCYi5rOz3KBcp/nL0PC1D5ZgEtk/01G3982C7kS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Q3XWA1+O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q63jmz7S; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JuvlYzxZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713271551; x=1744807551;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=d0/RlB9de/Xqv88i7bHaYrBW/oDZw+TIUxrXc9TtFTU=;
-  b=JuvlYzxZLaL7KR+2Bl0iVl4D6ivraJXOYqNV8rPFsULfyS2KoLysxHqH
-   MPXXBjcDMgtLdi7KsGallcHZco5EioQvqOP2WKAZDF2enPXd3hKHQAmvX
-   kDQONaUJuCcjLVEsaEswJyPIKXBUhI9LQv247qVJNxSGdFQnYn8hDQiGF
-   yYCtfWpV6LvV7GyTrc+FcjsrpwpEmiaPN2HKkdoLGje+3l9bWIYrfhooQ
-   h3Em8GDxl+VhBCUdyCPkC9xfwtUDdHemM6dbaxXXsg7p5Elgmw9lmmKo7
-   QUID0L+93JxbAF3G1/mirfExWjlwxQLRdFkH6EV6J8lwyFYPGzVxzwmWt
-   Q==;
-X-CSE-ConnectionGUID: tTClEF09TJ+8zdbf3JaA4w==
-X-CSE-MsgGUID: TOEYXCXFRPWOYecyDEHF7Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8628096"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8628096"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 05:45:50 -0700
-X-CSE-ConnectionGUID: hSLpL0jbTnCX4f5xg36sGg==
-X-CSE-MsgGUID: UZF3VsWuSjCgy5pU+vFZ5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22145573"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Apr 2024 05:45:50 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 05:45:49 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 05:45:49 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 05:45:49 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Apr 2024 05:45:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q0QtsJ5cfRWS7zBibBi6nx8zvP3WVbXpm9bIBLaYFue2SSlNJ3XTnfcwAUdx2m/D/+ib9Vhwkdy4o9bYz/AOR8aELN1/h++KVqQk6tB4gGNierPUsrrp/1vDtmfh/hoL8NQPoaJQwg+gyHJQ7bhfYiYeQqsnuTkvjbNai/ishoof3gqMC3+YB4bE3Hg2T4OuwqPip6vQquVjhEMYVac1cxKGxUJ86coGpIUNAuHE6JQyC0cnzSk4BtPeZPAIG7vTHFAW1tvpKj48rTv+VrMn22tHa/PZTQnX//IQH+QSrNVC2qRBtf1RysakgzgwNwqJlvhfzp3L3/fDHKH0ekIk3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LXKer6+EVxhP6aMApu8PamUDGhsD/HaGQNn9v7VadSw=;
- b=OgPGuCZpln5ONAwWwIRWibqWptJevLMi+Hbb6hR9TlekzH4nKpLzVerHXDLeRixsylNGhOAT1SAH7RRqZouq/KDw1kkcR4zGFcSuSx1vc3OnjAQdWbKz+2IOtrrkMVbAZDPLQb7qqVu+IUzYWhnDhOsaVE7v06eS+cAQ7wvPdzO6J+j6hHMMAG+3jkGQceRt5Em63DuCzZbxSMQ3Q6Lo01y99p+xo/IE4188ZZed5jZqXPN8kvGPTPT4O8PRhPqAmnFS9JeS7LB7yMtq6tw9rxPO/b8dESROqGyouCpzDo/WVo5/xp4YFvSlNnqt33SYjWyIPccKT3oHRbM/rcxQXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by SA3PR11MB8022.namprd11.prod.outlook.com (2603:10b6:806:2fe::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.49; Tue, 16 Apr
- 2024 12:45:47 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9%6]) with mapi id 15.20.7472.027; Tue, 16 Apr 2024
- 12:45:47 +0000
-Message-ID: <5fe95845-9cc6-4873-8748-b125cb310036@intel.com>
-Date: Tue, 16 Apr 2024 14:45:42 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next 7/7] netdev_features: convert
- NETIF_F_FCOE_MTU to IFF_FCOE_MTU
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, David Ahern
-	<dsahern@kernel.org>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Andrew Lunn
-	<andrew@lunn.ch>, <nex.sw.ncis.osdt.itp.upstreaming@intel.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240405133731.1010128-1-aleksander.lobakin@intel.com>
- <20240405133731.1010128-8-aleksander.lobakin@intel.com>
- <20240408193806.18e227c8@kernel.org>
- <1f14cb75-ee6b-4a7d-9041-23a8cfcd8476@intel.com>
- <20240411074709.249b3482@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20240411074709.249b3482@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0117.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:20::14) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Q3XWA1+O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q63jmz7S"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id C7FAA13806EC;
+	Tue, 16 Apr 2024 08:47:36 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Tue, 16 Apr 2024 08:47:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1713271656; x=1713358056; bh=o+A6VQF+YA
+	bnPd55BY98j5+Z/sNjOCmfHE3OGnEzh2o=; b=Q3XWA1+OY/HWHYR1BQtn2qUTwQ
+	xtT9OgbDT3BR8cSHAJUORD8mBmJAWIpxV/eOneMCCwOXn5kotlZygOEQz0LibU/Y
+	R+Yl0wL4GYNr0nW1Hn3GMMeRABQ49Cv8nOVBo9A+lr+PhRbih2Cj+39PyIXTqnaT
+	Q/U/432UW6u3q6DiRQewWPZZZumLUZebYwr62fSp7z88gh+jSFcrU0wG6ZFLbvn2
+	YLfbfHD51luXvnYmuzT6JV5dO5VtaEglxLqBQ3dEbPFXRxISFx65ep0+44HD6OqB
+	ScY+BGxq+xOP08kbMQlWF9ea7B71cnJKgPJbdNTZEr1vb22CFMskwkOn/m2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1713271656; x=1713358056; bh=o+A6VQF+YAbnPd55BY98j5+Z/sNj
+	OCmfHE3OGnEzh2o=; b=Q63jmz7SYl461WydOQDvdyrROqIe9K0Yg+Nrt/NTUuja
+	hdBx7uD200mJLSYpZG4cTXV42RGVBkp8pARiI7wL3xlXmJopSQHuXbMVB90Z5PZC
+	kVrbiQhIN+quX9Dimdt1c+28yiQrAH/dJ4wi0vxBXq2XZsD8ugA+IwdgWvpLSk28
+	gn0djxsUqbheeyQDXm1Co1ARyjRFbSM4dY9438KowKRaOtSAa0W+LoA7LoFlpPrh
+	n5duoMnRwZTOOTCuolasLzuyw7y4SddeIYUC4wOT3hebWp8CDSwNWB49aPZx3+ny
+	XHuKhRejLFDaLQAVDb3EX/mOwSBf+/CObCj91KElbQ==
+X-ME-Sender: <xms:aHMeZqF1sOEwKPqWJpeUjM-x1U2rKEJ_yV1BMqVAvg8nGaSnUTcb7w>
+    <xme:aHMeZrXXMvjVF65I5hiVzMM7lenB0PqiIqZ6BaIY4Fw-8CgtajkmAtKBPH4jIlr6f
+    s3epPX5osjTgP5YiBI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudejhedgfeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:aHMeZkLOriO-2CYFs6tTuUljhQdacfE5M2i0vqXaU1_M1hNAZtlHWA>
+    <xmx:aHMeZkGKeORbizedMF6EXhgi36cqroD3bEG3KB2iQiYRk7Jk2dT_vQ>
+    <xmx:aHMeZgUIuaFOhSyhzXoT_BkfKp_g6dDwqIfy4AQ6FtrLDTD2bJrONg>
+    <xmx:aHMeZnOEf1RfUo9sY48d2oVYz7NSvGTD6bmOGhsmrJe7aGfLuyuZdg>
+    <xmx:aHMeZpOltZRUoc4rsA22y8D5RBk3BRsQnJbTor5wW83YXo1HAh5jtJjv>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 190A4C60097; Tue, 16 Apr 2024 08:47:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|SA3PR11MB8022:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3843d3c-9956-4c33-90af-08dc5e132368
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +GKiTzxqw9iUeLOuFAMsdYpB4XOKyUp13CcS9cHhSt5OJj4UeBXs/qPL1CmX4nIS3/rj6aS95EkVDiDumajzZypnjV+nbqji8jpPGfdB20ccFnguzTpxTrGtDupINPqc8w8lHrbbeBBZ6d53HqwWMKlWEwhQrKt/DF8epVid2D0geKVAWMy3qvUV+63qo50JEfGBMp6dwdL40SGVGcwYM0L+h87RzAVpiAfy2557gtrSwcICkas4NdoSiQ4A9ujGtJXCUjfrWuy2cF1p0nzQdsF6b0dXuiWYq6OIOgjHO63YGA9gmp43W9vgc+hBpYsSmiZ4FZxMdlQfL0rIckYrTvO0opxFRRXJlTGaoNhwb6D2gCrB3q3U7yaFcE1v55avxrPAwGMbK+MFJt68HKdex3Da60o8CFdh/qPT5bmW3ywP6JPlJ3KjJVomAssnKwNPzzT5oLznVKI0CAYbfgWaa5D7Gjnh3FMP/b1+6cEFwEyXvsTqv8aBXdE62BFEhBOxkabhbToXiYuQEjDIuVpbPKJ+r2PN4Ocqvo19Y4VB5HcR+OQGuJ6bn3eTHBVGdeGEe2oxQRMz7P+anBPvmMaXo9raAN9+spDstaepuOKT0Buh8gykNFYXsnHZS+eqK1P9kXI5ktZ1gFdBulwv/HCAQlkd/lsHme2o83L+gmhZcjc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RkJDVnFhZ0FiY3EwVUNUMFZ0dGtHcDNTK2ZzVkVjbm1yU0hVa0ZaeERQaWk1?=
- =?utf-8?B?eU9KZ0l5ZkplanhnMXRHQzZPUENsMFlHTzdBV2gxREwyN3pvQm9ZUitjK0NJ?=
- =?utf-8?B?anJtcFB5aTUvempsOVhtV1NWOGZrZXdpcS9sRTdPT3JlcHlzcE9BcGl2d2ZL?=
- =?utf-8?B?SENXeDROV21DUEFYK3JINjJNUmk2U0dyNHp3UFBuZ3N1Q1hORi9BMFduUkNx?=
- =?utf-8?B?WDhjdHpTU24xZGVseFJWbWRGdXM5SVpjcmh6MjRFZ3kxVmhVSVo5M1F3aDZu?=
- =?utf-8?B?RjBBaWhQK0FjVE85VmtmbVhEQk9jdm5Zc3dyV0YyN0FHWTRKVkZrUiswYVMy?=
- =?utf-8?B?QnhrTHhNazBxWFV5SjN1Y091Z0h1YVd5TTdnVVlPWmhvQUI2WWZVanpYRi84?=
- =?utf-8?B?MWxleHkzVDQ5bm1LeXR5V3pFUE1CWTV6Yi84MHdYb0RQbGhkQWVHbUg4WGtY?=
- =?utf-8?B?VnVrcVQwaE1taFhFeHVpakl3K0thdC9jaWcwcEZ3VHJiTUs1VFJ2b0cvLzg3?=
- =?utf-8?B?cUN1L0ZKNjRkNU1TaFgvZ0JJR1lvdHpDZUJ1Qnd0b3FvaFpLeXRaYjVYcVht?=
- =?utf-8?B?QVpLeUI5cjhTUUlBRDVnVU92Y3BqUG95elNuMll6amdvaDYwSWl0dVVKL0Qr?=
- =?utf-8?B?Mi8wSVlrN0ZBbkVBQjBRK1ZGdHR3ajlQM1c4bzFMU2lnUFhRdGNUZmFFYnlS?=
- =?utf-8?B?dkJVaWpYdUIwRkR1OE04L3hUcmdBQXVpaFpUS1FoRUNJT3VJYjg0emJRQWZv?=
- =?utf-8?B?djM1Qk9La1N4M0p4YUluN3VXUVYydytDUnk1ZWNCSkwvQnBkM0FUYnZNdkth?=
- =?utf-8?B?QTlrTVNaZHZQUEI5L0V1WXMwNk9YVklxZTk4eUQ4ZHpmMlhKTnBQQzhIMEY1?=
- =?utf-8?B?YmdpWUhqakxLTFVudlVuOGo0NXpEc3YwemRDeFVHMDFZVi9aaVVtMkRWejhR?=
- =?utf-8?B?UGdNRWFnK01IcG5rSUJPbnlsaDhpcXNIVFp1dXcrdXp0dUJEVnNxczNaVEF4?=
- =?utf-8?B?SzZoSDNManI3VElJYmp2QVhKVE5qaUN2YjhUY2Vtc2tNSzIvM1JYaC9LSlhG?=
- =?utf-8?B?cWU3bVFmWHZpNytTdkxpdG1HRVNOQmtXcGFoTk5vOW8rV2E2VkRSTzVpQWZp?=
- =?utf-8?B?NHR3R05QSnoxZUljamk1NmhDenpXaDJVcXVBKzIzWFA4bXVaQlBBaURoUlFv?=
- =?utf-8?B?c0dYRXVhQ2VXdWVyYis0Tms2MTQ2TlNoT0hwV0xCeisya2s0dHBEU1ZEdVFn?=
- =?utf-8?B?VXB4R0RjSU4za1dRU3lKcGkyWUYzRWVSRmNaYUhzTnlNblVFbXFFYUY1ZjFq?=
- =?utf-8?B?ZHN1KzlRVXVrSzNUTjdBWVJsQXBXQmNYaTNCU3hmUjVUV1c5dEIwbFRuWjV4?=
- =?utf-8?B?aVVHNEpsOENTL24xRVkzcnZ6c3dUVkl4Tk95SzdSQXpnekhHa2FpR2FjU05X?=
- =?utf-8?B?R01GVFZtOXh4N2xJUllKVE00dVFzV3dDdG4veDVlM3UyWGxWWkhpblQ2blg0?=
- =?utf-8?B?TmtZaTFsT20wbHFDY0lZNGxENzhIODl0NVFDUDVYblFiVFFLd1VDcFVCMkY5?=
- =?utf-8?B?NzR0UFhPM1dDSzZKUG8xR0NIdFpiWHRQbFRzclVpYm9sNjhFNHQzaVZ5WHNR?=
- =?utf-8?B?VGhOODJ6MEg5SGdOd2pHQWExdVdjYlFMN0VkSzdjWktZSDZ6ZzlNTmdONlBm?=
- =?utf-8?B?R0xvMkQ4SWUyNnJXTEJwdTdpN0tneDBPZHpnZDAwK0QvZld3RXpPeURFTGJu?=
- =?utf-8?B?NnJzZG82ajlhZ2VTR25iZFlXcWhmMVdwZVo4TDlHVWw5andETmRGTzAyT29F?=
- =?utf-8?B?aXJTUFovWVY4amV0c3RQc2JMT0UxZXZEYWZYblUwQnhKV0I2SVVqeWQvQ0xG?=
- =?utf-8?B?NG1SWkhWdW0zZHByN2xJb3hsd01DS29aTmx0REFqSlJnMmY5UkV6SDdTNllT?=
- =?utf-8?B?SnRsanQzcXRwWkI0RkM2dUpjN1pBam0wU2loczNJdkNZZ3BZN3BneEpwYndS?=
- =?utf-8?B?em5WRWU1KzFBcFRmV1RlNU1XMjZYNnp5NFl3aURHdTQreThNMU81MkI3YmJV?=
- =?utf-8?B?V1BZYmM5MGVmQnEvQWVTa3VPYmp6VkNocHl2SzhFaUlkeUtlM05EemV4ZXVk?=
- =?utf-8?B?OStzU0h4aCtDU3hYRkszTUpxR01jamQwenlCcGZ1WTZLK2VKS2V2U1VLZisv?=
- =?utf-8?B?Q2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3843d3c-9956-4c33-90af-08dc5e132368
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 12:45:47.3506
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NGdxCWOXb9qEm+izpMHV2PzmG7uSXh4fPLk1fE5GVLLQkhsVumNvGWsKGO3DyTZiHCe3DPTI9q8hhCMsSwDBspOyzwA52e1lIiKH/7Q74zk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8022
-X-OriginatorOrg: intel.com
+Message-Id: <ce28b0e5-a867-458e-bcb4-cc327be5f19e@app.fastmail.com>
+In-Reply-To: <27b1b6cf-759c-4778-a53c-5d01442120b7@redhat.com>
+References: <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
+ <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+ <ZhcogDESvZmUPEEf@google.com>
+ <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
+ <Zh2CtKy1NfKfojzS@google.com>
+ <484638e2-1565-454b-97f8-4fcc6514a69c@redhat.com>
+ <Zh2G85df29tPP6OK@google.com>
+ <539776c5-6243-464b-99ae-5b1b1fb40e4b@app.fastmail.com>
+ <Zh2wO0Bnyr8vFSpc@google.com>
+ <7de52ec3-86f3-4a1d-ac87-a106ae1acb5d@app.fastmail.com>
+ <27b1b6cf-759c-4778-a53c-5d01442120b7@redhat.com>
+Date: Tue, 16 Apr 2024 08:48:31 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Cc: "Peter Hutterer" <peter.hutterer@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info keycodes
+Content-Type: text/plain
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Thu, 11 Apr 2024 07:47:09 -0700
+Hi Hans
 
-> On Thu, 11 Apr 2024 12:28:08 +0200 Alexander Lobakin wrote:
->>> Any reason not to make it a bitfield? I haven't looked at the longer
->>> patches but this one seems to be used like a basic bool.  
->>
->> This whole enum could be made as bitfields, should we convert it? Would
->> be a big patch tho ._.
-> 
-> As always, I haven't investigated closely :) But my thinking was -
-> we are at 34 bits in priv. We just need to convert 2 of them to
-> a bitfield, pick two with fewest uses. Then we can downgrade 
-> the field to u32 from ulonglong, and we can carry on adding bitfields?
+On Tue, Apr 16, 2024, at 4:33 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 4/16/24 1:57 AM, Mark Pearson wrote:
+>> Hi Dmitry,
+>> 
+>> On Mon, Apr 15, 2024, at 6:54 PM, Dmitry Torokhov wrote:
+>>> On Mon, Apr 15, 2024 at 04:28:19PM -0400, Mark Pearson wrote:
+>>>> Hi
+>>>>
+>>>> On Mon, Apr 15, 2024, at 3:58 PM, Dmitry Torokhov wrote:
+>>>>> On Mon, Apr 15, 2024 at 09:50:37PM +0200, Hans de Goede wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 4/15/24 9:40 PM, Dmitry Torokhov wrote:
+>>>>>>> On Wed, Apr 10, 2024 at 10:48:10PM -0400, Mark Pearson wrote:
+>>>>>>>>
+>>>>>>>> I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
+>>>>>>>
+>>>>>>> Please see my response to Peter's letter. I think it very much depends
+>>>>>>> on how it will be used (associated with the pointer or standalone as it
+>>>>>>> is now).
+>>>>>>>
+>>>>>>> For standalone application, recalling your statement that on Win you
+>>>>>>> have this gesture invoke configuration utility I would argue for
+>>>>>>> KEY_CONFIG for it.
+>>>>>>
+>>>>>> KEY_CONFIG is already generated by Fn + F# on some ThinkPads to launch
+>>>>>> the GNOME/KDE control center/panel and I believe that at least GNOME
+>>>>>> comes with a default binding to map KEY_CONFIG to the control-center.
+>>>>>
+>>>>> Not KEY_CONTROLPANEL?
+>>>>>
+>>>>> Are there devices that use both Fn+# and the doubleclick? Would it be an
+>>>>> acceptable behavior for the users to have them behave the same?
+>>>>>
+>>>> Catching up with the thread, thanks for all the comments.
+>>>>
+>>>> For FN+N (originally KEY_DEBUG_SYS_INFO) the proposal was to now use
+>>>> KEY_VENDOR there. My conclusion was that this is targeting vendor
+>>>> specific functionality, and that was the closest fit, if a new keycode
+>>>> was not preferred.
+>>>
+>>> Fn+N -> KEY_VENDOR mapping sounds good to me.
+>>>
+>>>>
+>>>> For the doubletap (which is a unique input event - not related to the
+>>>> pointer) I would like to keep it as a new unique event. 
+>>>>
+>>>> I think it's most likely use would be for control panel, but I don't
+>>>> think it should be limited to that. I can see it being useful if users
+>>>> are able to reconfigure it to launch something different (browser or
+>>>> music player maybe?), hence it would be best if it did not conflict
+>>>> with an existing keycode function. I also can't confirm it doesn't
+>>>> clash on existing or future systems - it's possible.
+>>>
+>>> So here is the problem. Keycodes in linux input are not mere
+>>> placeholders for something that will be decided later how it is to be
+>>> used, they are supposed to communicate intent and userspace ideally does
+>>> not need to have any additional knowledge about where the event is
+>>> coming from. A keyboard either internal or external sends KEY_SCREENLOCK
+>>> and the system should lock the screen. It should not be aware that one
+>>> device was a generic USB external keyboard while another had an internal
+>>> sensor that recognized hovering palm making swiping motion to the right
+>>> because a vendor decided to make it. Otherwise you have millions of
+>>> input devices all generating unique codes and you need userspace to
+>>> decide how to interpret data coming from each device individually.
+>>>
+>>> If you truly do not have a defined use case for it you have a couple
+>>> options:
+>>>
+>>> - assign it KEY_RESERVED, ensure your driver allows remapping to an
+>>>   arbitrary keycode, let user or distro assign desired keycode to it
+>>>
+>>> - assign KEY_PROG1 .. KEY_PROG4 - pretty much the same - leave it in the
+>>>   hand of the user to define a shortcut in their DE to make it useful
+>>>
+>>>>
+>>>> FWIW - I wouldn't be surprised with some of the new gaming systems
+>>>> we're seeing (Steamdeck, Legion-Go, etc), that a doubletap event on a
+>>>> joystick might be useful to have, if the HW supports it?
+>>>
+>>> What would it do exactly? Once we have this answer we can define key or
+>>> button code (although I do agree that game controller buttons are
+>>> different from "normal" keys because they map to the geometry of the
+>>> controller which in turn defines their commonly understood function).
+>>>
+>>> But in any case you would not reuse the same keycode for something that
+>>> is supposed to invoke a configuration utility and also to let's say
+>>> drop a flash grenade in a game.
+>>>
+>> 
+>> Understood.
+>> 
+>> I don't see a path forward within your stated parameters. I did not realise that there were such limitations, so my apologies for wasting everybody's time, and thank you for your patience and guidance.
+>> 
+>> I will drop this patch from the series and proceed using existing defined codes only.
+>> 
+>> Hans, I'll need to rejig things a bits but I have some ideas and I think I can make it work and stay within the pdx86 tree, which will make it simpler.
+>
+> Ok this sounds good to me. For Fn + N using KEY_VENDOR sounds good for
+> me and for the doubletap any one of 
+> KEY_CONFIG/KEY_CONTROLPANEL/KEY_INFO/KEY_PROG1
+> or some other suitable KEY_foo define works for me.
+>
+I think this should be a configurable input, by design. So my preference (if not allowed a new keycode, which I personally think is the better option) is for PROG1.
 
-Hmm, sounds good. You mean convert the existing bits which don't fit
-into u32 to bitfields and then add new priv flags as bitfields?
+I discussed with Peter last night and it looks likely OK on their side. I do plan on doing some testing first, so it might take a few days to get the next set of patches out.
 
-> 
->>> But this definitely _is_ a uAPI change, right?  
->>
->> Why?
-> 
-> It will be user visible, ethtool -k is losing a field.
-> Whether that's actually going to break anything depends on how silly
-> user space is.
-
-ethtool -{k,K} output would definitely change, but it's not an ABI.
-Rather some corpo scripts may break, OTOH those "features" never were
-available for toggling.
-
-> 
-> As Andrew pointed out, definitely something that should be called out
-> in the commit message.
-
-Sure, good point.
-
-Thanks,
-Olek
+Mark
