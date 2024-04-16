@@ -1,196 +1,132 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728FE6BB30
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C58127E28;
+	Tue, 16 Apr 2024 10:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713264015; cv=none; b=pp1SN/02NtI7YmBUemmWlCNc5nfTU2gJm/QJ/8XPCdMP5HyNvrSwsYHD8bqfqIPFOj09q/bdoEhczlY+Id0zrB/a6UCRoB4BUznoPArrshyyPyTmBK+/+A8Dvvk8gtaN9NSS36JqFAYTY2Ro3Ye1scnNTTjip75B6NAzS/nwawY=
+	t=1713264034; cv=none; b=QjFagpmOMMFqyI6V5P1ectfGq6gyXbVOkg9srC2zhOsk1EdUKw5g4Ym2+dDvX6qfEU6S8vynjsjU4sVDhYjHMhi03n24SyFMF/sacTjhp/y09FIGgfUVMgK5WM5pyWb46HXNoIGXTkZbWWyUgFHYl28wpObLVB98SbfWhk4Rhrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713264015; c=relaxed/simple;
-	bh=JeEpQglRVkCPotl8Biax9CF54rtqlydCuXYo3Z4B5/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qFz/1Zd60TEZ+HSBvVMrMjvyqcwTrwRPE8jmh9xqNGcyDSpAaD5lK8U8lyzU4aYZVV46MIWkjtmEe/Fv89vXIMsJ4y2x2NCaokJJaaoYYSoC9TKKwmpDgzykrFg+L1qMFK8HrHeu+1zxe8+qwifjTNXzNPi3dxrziatkhw/4C7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bszwTc6D; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713264034; c=relaxed/simple;
+	bh=yf9ORU5VqJIrPlSmwr54fZQAo/+CCskqhWV5tfkQ+NQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=R5flRRQ/zkvG6inWLZq4U27HWPZHF+y+CtTbmpHPxaQo+/+iZtBdtiXCVOTgQDCT4uIheCiTS1DwxNZHI7va5qgJ6WFZDcmSnHdWtGhpIq1EBI/nKK2BB43cmcKARHbey++YsdlqkBT7BhjGgGNALNONBcUMCd/BwziwijC+k+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAAJR2Tv; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bszwTc6D"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a523524e5baso503353566b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 03:40:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAAJR2Tv"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e4f341330fso34767955ad.0;
+        Tue, 16 Apr 2024 03:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713264012; x=1713868812; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eHTLqtmJofb3OW9dwP60b9IkbybIqw6tzFbVJdsjmeU=;
-        b=bszwTc6Dwkmhu5N8+Y+bSR9RqV79yolSHX4piEBvFNNs53Q/4KX7vlgKJswWqomNh7
-         h0dGFClxwmkbVE2CoFcgW5YaW8XpNKhELMYvQPOMxiSI6JWs5TZ9dUWx5VqdEnT52day
-         /kEce4nsL8s7pCN/7VoZSl3CsCg1qYRZR1pWE=
+        d=gmail.com; s=20230601; t=1713264033; x=1713868833; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w1z8VdCeJne2MyXf+8c+fA7mb2A/BjtvAD0nnKEdogs=;
+        b=JAAJR2TvWa/3opGUBZlZKjryTMfddqRLI3k8m72zfeVdWOetSLRPDpO3iWu85CTkp9
+         FXjlxWx0ahblezk4FHStiTXyHS+2+Sc4B3arIZguOaZLq8wV317DQ2KEdTVtgMsMoGaN
+         4DA/pEd28VqqRjHkBvQ/jeWJihEXq+08Cy6ZzQvzX3jD1EDPy2ifSZp6LcZ0O5as14MG
+         WuGoa/MUYLBKgiECCg5jYHLXH1B9+xMsxja9Jm+B3bA2olQ5t24XHV02uTl5hx/9yTNG
+         DBC/uZTKHZIusOI64HxYivCuo2U1QWRni9Zxty0qwOLsxaSdcHmI4VAtLOBf52ug3bdc
+         ogYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713264012; x=1713868812;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eHTLqtmJofb3OW9dwP60b9IkbybIqw6tzFbVJdsjmeU=;
-        b=gcRkuNdiApgfxXdlWoNZvquzeCiEF7qoaX6LJDGIGx+P3V7upEe/2/HLN089NkAVoy
-         jOlVbGIx4VrgHWqhChhn0gVs0fZ4iGssUU1+q79tHg6ssxtSHMKPH4Uk+oMXLgdOIgCp
-         uSoLp2sB8rGaQt+tcB8fIM1BacHrjK7Y8zK5P/9T+XyM55Mf12lNyaRPiTfIMAqljb1v
-         iipjOX44OWbYZeQGWHpn8LdXEHYrIwnRZ7ibn0s98Ywv866in/0zpBEi0dyYW7zCJBYC
-         tCNJ8MebIAL0Nto9yjsN6wHXqd8ztMyVYNDSbixLoYpWMOsytzF1ewY9zpHF9v6Ym85Q
-         BPjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmeyXS7qEwIUn6UikGfWYdD336XdfXA4T6edZU/+p3/QY6JlADvD4Eu1pJ6dmHIPN1w+738/eIcl3caAKXCLeFm0nUbPvLReVtQkO8
-X-Gm-Message-State: AOJu0YyqewKFFB+rByJT67ixM1N/vgWywcleszCf2qOIltUe0bBZbtu2
-	U/nMH1gjfEh5+Lr4XJ5wlim3qVmmftCGNceTKHwUFEZouEieT2IBJg3bPAZi9OLPGxm3UzVJyk7
-	nLtyT
-X-Google-Smtp-Source: AGHT+IEr1nYlx7oGjMj7K01JN6JOzbx7dfTfxUoWJaXy49jMi7A3cTpC/zWZcqdnLzLGleQKiB4O5Q==
-X-Received: by 2002:a17:906:abce:b0:a53:ed1b:f3ba with SMTP id kq14-20020a170906abce00b00a53ed1bf3bamr3293506ejb.28.1713264011649;
-        Tue, 16 Apr 2024 03:40:11 -0700 (PDT)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
-        by smtp.gmail.com with ESMTPSA id q5-20020a170906360500b00a51da296f66sm6623065ejb.41.2024.04.16.03.40.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 03:40:11 -0700 (PDT)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41551639550so26220375e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 03:40:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUT0MO3BezcxxQtsS1+RfJPT6mKCqARRGPaUOhjlSke4fGK26iJZSwF7ptkj2sMz2XW7t3bVIuN7g/mdyAAnMkaFNxZe5N/Xs4nEkP4
-X-Received: by 2002:a05:6512:114b:b0:518:d5c4:b47f with SMTP id
- m11-20020a056512114b00b00518d5c4b47fmr7177225lfg.13.1713263990804; Tue, 16
- Apr 2024 03:39:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713264033; x=1713868833;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w1z8VdCeJne2MyXf+8c+fA7mb2A/BjtvAD0nnKEdogs=;
+        b=bAsrbranPg7YoEMy5Wh4NwHdOLicgCy0tg/JDolaI1547Mjs32rYJh0EpAUNFd/PsG
+         tjtB2GFOLaoDF5HEDckDhIGH+aqBoSAckZJNH7DhBZy2PX8VDz8pBdYJjGjNCqpzSsdO
+         Vk8ucn6wSiuzXjLPtDhpxG7Ds+/xbIEGSpDxiEpX9NktBXDNqGN3M9/HUoMDes09Myq+
+         VJcVHW13HoPGJSEmXK9NiQD6Wuwf1vClSL+xZiriispSkfHfRHzpD6jaYOSta8oXw+IM
+         Fe/6WQRm5UB/wwMRfQUbD8SeFXa8NMgwqgs9PWN+Gav2l+L281r9mrpxlESkkSEJZlRt
+         E7Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKiE9kecZBcKfjP2Gx0d9bhAzhUTVG+Y8yTT4B3ahM/6Qk0vyitSwKvfVgQxQghWEsNL4ffX7iIYKH1fF5ByD3XgwXu0zJLtfdWW0R/WnJBkoRAtFTlaJQJkrFXQdVC72tCkiYmsrH+QKE+JCiKp4tHYdhyXvXudf9k3ykALxDX2VzJGv/wBuXzYp71Bf7l6g4ENSw+KEYTjOij4JPbm4Q4Or5BTCiVBojdz/SH6T8/fPXrTZGq67ZdaL2GTsl/RY8dXHmLvDDbE72eIrLKY+S2GSdnUcE1bJ9OfpjfQ==
+X-Gm-Message-State: AOJu0YxKZSvSrpGlscb8hByQmuGlsoym7WfVmVj/o3NoY3SuCZrEpmEr
+	X4sbULmCDiokFB3WS6Jut/GN5N9EkW6Wzg99C8yUVU5ob3Kn5/8P
+X-Google-Smtp-Source: AGHT+IEVE6JlEBgyeNQ8vkUPkRaSgWDWUYr0hp6JGZgymhUxvXFOsOst8mFB35mbNtNEl3G7ds+cRQ==
+X-Received: by 2002:a17:902:ed15:b0:1e4:9616:d967 with SMTP id b21-20020a170902ed1500b001e49616d967mr9788274pld.15.1713264032862;
+        Tue, 16 Apr 2024 03:40:32 -0700 (PDT)
+Received: from LancedeMBP.lan ([112.10.225.217])
+        by smtp.gmail.com with ESMTPSA id b2-20020a170903228200b001e53bb92093sm9410890plh.228.2024.04.16.03.40.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 03:40:32 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	cgroups@vger.kernel.org,
+	chris@zankel.net,
+	corbet@lwn.net,
+	dalias@libc.org,
+	fengwei.yin@intel.com,
+	glaubitz@physik.fu-berlin.de,
+	hughd@google.com,
+	jcmvbkbc@gmail.com,
+	linmiaohe@huawei.com,
+	linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-sh@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	muchun.song@linux.dev,
+	naoya.horiguchi@nec.com,
+	peterx@redhat.com,
+	richardycc@google.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	willy@infradead.org,
+	ysato@users.sourceforge.jp,
+	ziy@nvidia.com,
+	Lance Yang <ioworker0@gmail.com>
+Subject: Re: [PATCH v1 05/18] mm: improve folio_likely_mapped_shared() using the mapcount of large folios
+Date: Tue, 16 Apr 2024 18:40:08 +0800
+Message-Id: <20240416104008.41979-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20240409192301.907377-6-david@redhat.com>
+References: <20240409192301.907377-6-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415-fix-cocci-v1-0-477afb23728b@chromium.org>
- <20240415-fix-cocci-v1-23-477afb23728b@chromium.org> <97f51ae8-6672-4bd4-b55b-f02114e3d8d0@moroto.mountain>
-In-Reply-To: <97f51ae8-6672-4bd4-b55b-f02114e3d8d0@moroto.mountain>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 16 Apr 2024 12:39:33 +0200
-X-Gmail-Original-Message-ID: <CANiDSCvp9gBo6Oh31GghvcHmgBY1cYqq4uM_njFTTvQOcS1mbw@mail.gmail.com>
-Message-ID: <CANiDSCvp9gBo6Oh31GghvcHmgBY1cYqq4uM_njFTTvQOcS1mbw@mail.gmail.com>
-Subject: Re: [PATCH 23/35] media: dvb-frontends: tda10048: Use the right div
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Martin Tuma <martin.tuma@digiteqautomotive.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, Hugues Fruchet <hugues.fruchet@foss.st.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Sowjanya Komatineni <skomatineni@nvidia.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>, 
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry Osipenko <digetx@gmail.com>, 
-	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Benjamin Mugnier <benjamin.mugnier@foss.st.com>, 
-	Sylvain Petinot <sylvain.petinot@foss.st.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, 
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
-	Pavel Machek <pavel@ucw.cz>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev, 
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Dan
+Hey David,
 
-What about going the safe way?
+Maybe I spotted a bug below.
 
---- a/drivers/media/dvb-frontends/tda10048.c
-+++ b/drivers/media/dvb-frontends/tda10048.c
-@@ -341,7 +341,7 @@ static int tda10048_set_wref(struct dvb_frontend
-*fe, u32 sample_freq_hz,
-        /* t *= 2147483648 on 32bit platforms */
-        t *= (2048 * 1024);
-        t *= 1024;
--       z = 7 * sample_freq_hz;
-+       z = (u64)7 * sample_freq_hz;
-        t = div64_u64(t, z) + 5;
-        do_div(t, 10);
+[...]
+ static inline bool folio_likely_mapped_shared(struct folio *folio)
+ {
+-	return page_mapcount(folio_page(folio, 0)) > 1;
++	int mapcount = folio_mapcount(folio);
++
++	/* Only partially-mappable folios require more care. */
++	if (!folio_test_large(folio) || unlikely(folio_test_hugetlb(folio)))
++		return mapcount > 1;
++
++	/* A single mapping implies "mapped exclusively". */
++	if (mapcount <= 1)
++		return false;
++
++	/* If any page is mapped more than once we treat it "mapped shared". */
++	if (folio_entire_mapcount(folio) || mapcount > folio_nr_pages(folio))
++		return true;
 
-@@ -409,6 +409,7 @@ static int tda10048_set_if(struct dvb_frontend *fe, u32 bw)
-        struct tda10048_config *config = &state->config;
-        int i;
-        u32 if_freq_khz;
-+       u64 sample_freq;
+bug: if a PMD-mapped THP is exclusively mapped, the folio_entire_mapcount()
+function will return 1 (atomic_read(&folio->_entire_mapcount) + 1).
 
-        dprintk(1, "%s(bw = %d)\n", __func__, bw);
+IIUC, when mapping a PMD entry for the entire THP, folio->_entire_mapcount
+increments from -1 to 0.
 
-@@ -450,9 +451,10 @@ static int tda10048_set_if(struct dvb_frontend *fe, u32 bw)
-        dprintk(1, "- pll_pfactor = %d\n", state->pll_pfactor);
+Thanks,
+Lance
 
-        /* Calculate the sample frequency */
--       state->sample_freq = state->xtal_hz * (state->pll_mfactor + 45);
--       state->sample_freq /= (state->pll_nfactor + 1);
--       state->sample_freq /= (state->pll_pfactor + 4);
-+       sample_freq = (u64)state->xtal_hz * (state->pll_mfactor + 45);
-+       do_div(sample_freq, state->pll_nfactor + 1);
-+       do_div(sample_freq, state->pll_pfactor + 4);
-+       state->sample_freq = sample_freq;
-        dprintk(1, "- sample_freq = %d\n", state->sample_freq);
-
-        /* Update the I/F */
-
-I will add a extra patch to fix tda10048_set_if
-
-Thanks
-
-PS: Thanks a lot for your reviews, really appreciate! I have a v2 with
-your changes, I am giving it a couple of days before re-submitting
-
-On Tue, 16 Apr 2024 at 12:10, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> On Mon, Apr 15, 2024 at 07:34:40PM +0000, Ricardo Ribalda wrote:
-> > z does not fit in 32 bits.
-> >
->
-> z has to fit in 32 bits otherwise there is a different bug.
->
-> > Found by cocci:
-> > drivers/media/dvb-frontends/tda10048.c:345:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_u64 instead.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/dvb-frontends/tda10048.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/dvb-frontends/tda10048.c b/drivers/media/dvb-frontends/tda10048.c
-> > index 5d5e4e9e4422..b176e7803e5b 100644
-> > --- a/drivers/media/dvb-frontends/tda10048.c
-> > +++ b/drivers/media/dvb-frontends/tda10048.c
-> > @@ -342,8 +342,7 @@ static int tda10048_set_wref(struct dvb_frontend *fe, u32 sample_freq_hz,
-> >       t *= (2048 * 1024);
-> >       t *= 1024;
-> >       z = 7 * sample_freq_hz;
->
-> sample_freq_hz is a u32 so z can't be more than U32_MAX.  Perhaps there
-> is an integer overflow bug on this line.
->
-> The sample frequency is set in tda10048_set_if().
->
->         state->sample_freq = state->xtal_hz * (state->pll_mfactor + 45);
->
-> ->xtal_hz is set earlier in tda10048_set_if() and it goes up to
-> 16,000,000.  So if ->pll_mfactor is non-zero this line will have an
-> integer overflow.  16million * 46 > U32_MAX.  Maybe when .clk_freq_khz
-> is TDA10048_CLK_16000 then ->pll_mfactor is zero?  Ugh...
->
-> > -     do_div(t, z);
-> > -     t += 5;
-> > +     t = div64_u64(t, z) + 5;
-> >       do_div(t, 10);
->
-> regards,
-> dan carpenter
->
-
-
--- 
-Ricardo Ribalda
++
++	/* Let's guess based on the first subpage. */
++	return atomic_read(&folio->_mapcount) > 0;
+ }
+[...]
