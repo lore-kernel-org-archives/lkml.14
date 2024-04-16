@@ -1,118 +1,81 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A577812AACE;
-	Tue, 16 Apr 2024 13:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63BE12BF25
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273768; cv=none; b=G+70bwdEw4gaC9PYZD4IGjYYij8A5geZB0X/zL8FHcPBPe03TaunOvuwZs6or1BSK2MxEvLrO2P1RAR+iKWcgwznEgBXrh7gHTFdUSEuptjRCX03PwBPS/LQ8HU8pwrVILs/vcrb6rh1fplb/qD0R/F+xKR8B6T0zyJRnNmOTbs=
+	t=1713273886; cv=none; b=dmZLHsF94d0JLTPSsC//oopiZcVV/oN6r1+PGc6zBvFBEHj/5i/cmuODbXBmkjIBIUy7moXx7k6Ooao9RFmPDqQke/BRYfpj6ZcLpsnABEPLhHqJFdNT1yMpZE407Ex+BXuaAdIMTWYoAof/jtBfXqw+H0TtQPDxRcLIM4kpfpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273768; c=relaxed/simple;
-	bh=1BjZEULlCLvJqv4DjncS8MZEajXmIYaXA1X0dAnpp98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdiyNKT6uNYJ5vzyQNSp+znKAHJDEaYELi+785XLY367fMXTQn3l2FrQ6d6NDfV/83+QpMpYPEtKfPNs7w7tec50vA7MUj8IU+51pOZmgg1/yNkyFc0hyVatGrJ8j5MTzsawfa6OFTuBtfTI38WMX+uxicv941Tfb84CnFSIYXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gptTwyKa; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gptTwyKa"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5dcc4076c13so2909144a12.0;
-        Tue, 16 Apr 2024 06:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713273767; x=1713878567; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NUyFM9i0rtryeQoNW8AUTADCgYG36OPoQZzM4bvcyrg=;
-        b=gptTwyKaPIGx7CbGGFezkEYsD86lxBYlmJnbbfu8ili3c+37vBkjBgOoPQhKFdJKui
-         5QBEg0bnUccKdgICEERjj3Y/jOXLL1aU9fw3LrJIdNZglaneYK8XG8P8cu/Ld27lBmr5
-         uK0xujJhza5a6LX3RagqqfgrZq4Deovj+IqxXoVLA5wwphP7oAhoaQI6BqkzdNT6L6xf
-         hWJmaMJWz0VeFZACYjb7x6QFcxo5syVRIJur/Kd+YiH2w2otxtrVSTXRC6aMvwKu4GAf
-         Ejwq1EzxwiMOpx1yzdiREjtyl9SwrlHSGEFdXoLNAiYe9bIPjdIEMk1FbAStxs1J/Dcz
-         vHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713273767; x=1713878567;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NUyFM9i0rtryeQoNW8AUTADCgYG36OPoQZzM4bvcyrg=;
-        b=Wpl/7g5QSErpX9GdHB6A++ODVFvDOFKEtQhEfhDOG0NEGxuSdv9SoiwdbLgVK9FzOX
-         e+m/uL3jo8SQJ/zlGTC0+2Ue2bPh4MWB7czn2WyrVKZdm2gBaSNcbo1BgfOf+M1jitzC
-         QbIqffKCjlo96a4TCM9XWC4YE17532tEdihCpIVDJhuWg8auNAtR5YPMMpkgXoCs9GTA
-         WW4HP4x70OdtUTieLRZOQJDc29ioWJr929vAi1ZsfxjFyLtZNPqi7r7oVnVhpuqX7HCb
-         U8B3/YKVT+qFFQTNWhixDmplZpB/IXUsrq0xI/iFwn47uB3NnxodFwWop3eP/pPXX8D1
-         NT1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWfQ4EodvKQXhzeAY9m3r+BgErU9d8NAxygoGuWMsuxwlkLUGUYm5d581SJsn5t2713dUB/mjauj407r644ew13Ct2IZogdxbwNH/gP49eJefbQ//maF/84DqfB8CqAAg+Sr75wdXS/mLxOzM2cwAVMjhbMsCk0aYvftjBTyWZ8smEc4oOUqC72O6E7AFNKaH/N+oP0eDcW2GkXehFkQCvc
-X-Gm-Message-State: AOJu0YwqtAeGxrmRscc2UB4w/Z6rXSxG9o6/DArROqdOto1HqVPSUq2Z
-	6fhOfvwfe5WMOcgEWAVcLyvHeFXh4AFyT1JdMn4fmgTR/A7nfnkCqz1z7qVh/yCW2QiW7z+6/Ms
-	RdRaubMPIL9mkyOUl/xpsM5zKKYk=
-X-Google-Smtp-Source: AGHT+IFP6210waMqO1NN+/uEDyO7Znkn9Ms/B1bjT8WrCAkXIpVxBUQKxtXXNBOYwcbWaGoZpe/UQlzDo69EIq+/22M=
-X-Received: by 2002:a17:90a:ad7:b0:2a2:dcfe:bd69 with SMTP id
- r23-20020a17090a0ad700b002a2dcfebd69mr3827029pje.13.1713273766756; Tue, 16
- Apr 2024 06:22:46 -0700 (PDT)
+	s=arc-20240116; t=1713273886; c=relaxed/simple;
+	bh=cT3ohBAsCHwAas+oiEvZw/9G87J4V3yjv8xhQMMqeXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMVsLF3uhjZM4wCzyg98qcKFjeLeOus8f3QnnQqIbdXuXy2Cct5YI4ftAm6wygLSZYkIT0ZwQq0qU1pTLtifpxisj2Fy+H3xx3hae7Xnh+u8j9ADtSshlfpxyg3qD3Kz5vVGOipxiwBTW5SeuNyxzqOdHFvfEDnZ+eCCV/NGV4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31580339;
+	Tue, 16 Apr 2024 06:25:12 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13FBE3F738;
+	Tue, 16 Apr 2024 06:24:42 -0700 (PDT)
+Date: Tue, 16 Apr 2024 14:24:39 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] firmware: arm_scmi: power_control: support suspend
+ command
+Message-ID: <Zh58F_TuQMO-swOU@pluto>
+References: <20240415101141.1591112-1-peng.fan@oss.nxp.com>
+ <Zh2R4FZPmVOigfT9@pluto>
+ <DU0PR04MB9417AC020C28AD5847CAB24088082@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <Zh5P2EtruMmTrgXM@pluto>
+ <DU0PR04MB9417FFF8A9FB5018125C524688082@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412162510.29483-1-robimarko@gmail.com> <20240416132124.GA2143558-robh@kernel.org>
-In-Reply-To: <20240416132124.GA2143558-robh@kernel.org>
-From: Robert Marko <robimarko@gmail.com>
-Date: Tue, 16 Apr 2024 15:22:34 +0200
-Message-ID: <CAOX2RU5tWt-dEA4it1G+LeNawwPqkwdG=vBBgnmdD6CNc4iywA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: net: wireless: ath11k: add
- ieee80211-freq-limit property
-To: Rob Herring <robh@kernel.org>
-Cc: kvalo@kernel.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, jjohnson@kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DU0PR04MB9417FFF8A9FB5018125C524688082@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-On Tue, 16 Apr 2024 at 15:21, Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Apr 12, 2024 at 06:24:08PM +0200, Robert Marko wrote:
-> > This is an existing optional property that ieee80211.yaml/cfg80211
-> > provides. It's useful to further restrict supported frequencies
-> > for a specified device through device-tree.
-> >
-> > Signed-off-by: Robert Marko <robimarko@gmail.com>
-> > ---
-> >  .../devicetree/bindings/net/wireless/qcom,ath11k.yaml          | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> > index 672282cdfc2f..907bbb646614 100644
-> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> > @@ -55,6 +55,8 @@ properties:
-> >        phandle to a node describing reserved memory (System RAM memory)
-> >        used by ath11k firmware (see bindings/reserved-memory/reserved-memory.txt)
-> >
-> > +  ieee80211-freq-limit: true
-> > +
->
-> Drop this and change additionalProperties to unevaluatedProperties.
+On Tue, Apr 16, 2024 at 12:34:14PM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH] firmware: arm_scmi: power_control: support suspend
+> > command
+> > 
+> > On Tue, Apr 16, 2024 at 07:01:42AM +0000, Peng Fan wrote:
+> > > Hi Cristian,
+> > >
+> > 
+> > Hi,
 
-Hi Rob,
-This patch series has been dropped as Christian already proposed the
-same before and it was reviewed.
+Hi,
 
-Regards,
-Robert
->
-> >    iommus:
-> >      minItems: 1
-> >      maxItems: 2
-> > @@ -88,6 +90,7 @@ required:
-> >  additionalProperties: false
-> >
-> >  allOf:
-> > +  - $ref: ieee80211.yaml#
-> >    - if:
-> >        properties:
-> >          compatible:
-> > --
-> > 2.44.0
-> >
+> > 
+> > > > Subject: Re: [PATCH] firmware: arm_scmi: power_control: support
+> > > > suspend command
+> > > >
+> > > > On Mon, Apr 15, 2024 at 06:11:41PM +0800, Peng Fan (OSS) wrote:
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > Support System suspend notification. Using a work struct to call
+> > > > > pm_suspend. There is no way to pass suspend level to pm_suspend,
+> > > > > so use MEM as of now.
+
+[snip]
+
+> > But, as said, I dont think there is a way to trigger a userspace suspennd from
+> > jernel like we do for shutdown/reboot...I'll try to investigate a bit more.
+> 
+> Thanks for helping.
+
+.. also
+
+scmi_power_control.c:95: warning: Function parameter or struct member 'suspend_work' not described in 'scmi_syspower_conf'
+
+Thanks,
+Cristian
