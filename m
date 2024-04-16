@@ -1,117 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC486FB0;
-	Thu, 18 Apr 2024 14:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CFB41C71;
+	Thu, 18 Apr 2024 14:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713450909; cv=none; b=UncDFQnzT9OYz3iVNQ+CSp0tz3+xqrSEmgIKpvBRa5gg4HGmBChp7xu2G5JZ8wApVy5phqa/13RsDV7ALyrpFm2m95WxJhg2xFc1LPx6YD3ILiaqLJM6Wlf1SCU6ExjDtWpZwZc/czBoZaOnV2l2gwqOtMZLlhp6sdkyq4QhmoE=
+	t=1713450984; cv=none; b=W269kNOReE9uboqVU+qxATh5Be1MptY4uyImo+RNdPXi53FcA7kAjup2G6K4bA9VBTr6/HA7UMtb/G02SL6FO1fvfllDGviPgCADOMp7yLK2I8R5LE79psNTF1FAvAeuSsVBiBSfcpr7FVAgX8UE5JELnQnFxdY3l7iV55yC3qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713450909; c=relaxed/simple;
-	bh=OEXF5v2Z/Fz6GXadkZnudB6JdYfvV5Jh7Dv77dnNqH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BxhEyfhD5jq93iSLZDGNGW/rnAjTe3e4YafN0gt4PuJCtN+yA8Wf3E6qrl5Cn/bOfZkwpo8AOogHfwJacqs/F9IPj9U4yk3HGAdVGjBfQl76kHCjFWqldsdASxojiHT/a5QwdnnZgI4HZ2opxnNdI9Bz8tkGn1zUWTr+5S+tRb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLFS+Kvf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713450984; c=relaxed/simple;
+	bh=M6U0rjdf8U6RK8i0cs3YEunM23bUqM+mF3NUJ2kNZtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nAHYaf8Hnqhzr0nD8uiZ8sHo5rH4Sa45QMwTbh/UV0ARisvsKAXgUxegqPnvqAq3ttc9it3mqPLYJKWPe9KbsqSjmDn1H3BO4W2K/1cd2dBU0Xa8vJ2rh1QyCzknMdnCj5liHzG/Mo/96cKBVg9sI7jkVinVHmHo+o0bvVi9Bu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dFJnipS+; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLFS+Kvf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DEC113CC;
-	Thu, 18 Apr 2024 14:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713450908;
-	bh=OEXF5v2Z/Fz6GXadkZnudB6JdYfvV5Jh7Dv77dnNqH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CLFS+KvfC4yz42/ZvPtVa1JR+3VpF1SnyRmcsg79sL9c9Mh1+7odVb3yanDzLBIaZ
-	 lG/qW1+t8HN49kq0flP7g/KJw5jsU16ZYt5m+j2jKYdYcbi+99J8xzq1/9YEGwW1cb
-	 o6pYCHkpsFH9DPn6J3ZrELrEfCn5566dKM1dEPct22EkP1RoVe2t1LUDJ7sAlMU1rp
-	 +huprQEG8wwFf7hKW0z0zQbnmomN9MFf0rsHUem0Q+c8Ouaiti+I3edb0IRHWaD59Y
-	 QkfmXS+E9P2PrfhtZ2G5nTMVBz5Z67458aT5o7kItN1sAgZqvPh/PiW/BrgyIaUyjk
-	 3UEI5NvykCdHw==
-Date: Thu, 18 Apr 2024 11:35:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf trace beauty: Fix statx flags printing
-Message-ID: <ZiEvmabmIxTjDLeb@x1>
-References: <20240418131304.3188385-1-changbin.du@huawei.com>
- <20240418131304.3188385-2-changbin.du@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFJnipS+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713450983; x=1744986983;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=M6U0rjdf8U6RK8i0cs3YEunM23bUqM+mF3NUJ2kNZtQ=;
+  b=dFJnipS+iTv7i7PtgepoE7RhM91UUfCSEmrq9Igpo8z0R/IrSMqr8cJR
+   /4UHOQ9zSHlN+btDFtucTDarqIbY/+W6OMM2L4bJvUGz9Ey7jApewtSal
+   aUMlzsWaJSEKoE2W9x9DybS6mNmuDL/TVaXR9z1U6ECccZ+lmn6kFWhGU
+   RPjH0W1mATIZq1ILPA8cwZTq1FE/WgcjLMROk2vMVD+w7rwehNgQte2oJ
+   WtQy/h5rfcRWfB01pneDVfvkzn+Z/dUnet2twJHRJCJTHHmqjTN+vQbOJ
+   DPaDu/Q7AbYpFPra2PMWZPykgrgoplPOp1Z5sTCFqX2t39TtiWyNSbwPB
+   A==;
+X-CSE-ConnectionGUID: exYZh36JTeOefB1gSSEwMQ==
+X-CSE-MsgGUID: uGO4pqPPQ8esrnzAHoMGpA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="20146262"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="20146262"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 07:36:22 -0700
+X-CSE-ConnectionGUID: PN2pXaY/Sa6p1CR1/ciTqQ==
+X-CSE-MsgGUID: YvrH9gx3QhmodywluCaaqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="23085579"
+Received: from mchatter-mobl.amr.corp.intel.com (HELO peluse-desk5) ([10.213.188.90])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 07:36:21 -0700
+Date: Tue, 16 Apr 2024 07:38:06 -0700
+From: Paul E Luse <paul.e.luse@linux.intel.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: tada keisuke <keisuke1.tada@kioxia.com>, "song@kernel.org"
+ <song@kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
+ "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Luse, Paul
+ E" <paul.e.luse@intel.com>
+Subject: Re: [PATCH v2 08/11] md: add atomic mode switching in RAID 1/10
+Message-ID: <20240416073806.50e3ff5d@peluse-desk5>
+In-Reply-To: <8d21354c-9e67-b19c-1986-b4c027dff125@huaweicloud.com>
+References: <47c035c3e741418b80eb6b73d96e7e92@kioxia.com>
+	<8d21354c-9e67-b19c-1986-b4c027dff125@huaweicloud.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; aarch64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240418131304.3188385-2-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 09:13:01PM +0800, Changbin Du wrote:
-> Missed a string specifier '%s' in format string.
+On Thu, 18 Apr 2024 14:39:53 +0800
+Yu Kuai <yukuai1@huaweicloud.com> wrote:
 
-Humm, what branch should this be applied to? I ask because:
+> Hi,
+>=20
+> =E5=9C=A8 2024/04/18 13:44, tada keisuke =E5=86=99=E9=81=93:
+> > This patch depends on patch 07.
+> >=20
+> > All rdevs running in RAID 1/10 switch nr_pending to atomic mode.
+> > The value of nr_pending is read in a normal operation
+> > (choose_best_rdev()). Therefore, nr_pending must always be
+> > consistent.
+> >=20
+> > Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
+> > Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
+> > ---
+> >   drivers/md/md.h     | 14 ++++++++++++++
+> >   drivers/md/raid1.c  |  7 +++++++
+> >   drivers/md/raid10.c |  4 ++++
+> >   3 files changed, 25 insertions(+)
+> >=20
+> > diff --git a/drivers/md/md.h b/drivers/md/md.h
+> > index ab09e312c9bb..57b09b567ffa 100644
+> > --- a/drivers/md/md.h
+> > +++ b/drivers/md/md.h
+> > @@ -236,6 +236,20 @@ static inline unsigned long
+> > nr_pending_read(struct md_rdev *rdev) return
+> > atomic_long_read(&rdev->nr_pending.data->count); }
+> >  =20
+> > +static inline bool nr_pending_is_percpu_mode(struct md_rdev *rdev)
+> > +{
+> > +	unsigned long __percpu *percpu_count;
+> > +
+> > +	return __ref_is_percpu(&rdev->nr_pending, &percpu_count);
+> > +}
+> > +
+> > +static inline bool nr_pending_is_atomic_mode(struct md_rdev *rdev)
+> > +{
+> > +	unsigned long __percpu *percpu_count;
+> > +
+> > +	return !__ref_is_percpu(&rdev->nr_pending, &percpu_count);
+> > +}
+> > +
+> >   static inline int is_badblock(struct md_rdev *rdev, sector_t s,
+> > int sectors, sector_t *first_bad, int *bad_sectors)
+> >   {
+> > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> > index 12318fb15a88..c38ae13aadab 100644
+> > --- a/drivers/md/raid1.c
+> > +++ b/drivers/md/raid1.c
+> > @@ -784,6 +784,7 @@ static int choose_best_rdev(struct r1conf
+> > *conf, struct r1bio *r1_bio) if (ctl.readable_disks++ =3D=3D 1)
+> >   			set_bit(R1BIO_FailFast, &r1_bio->state);
+> >  =20
+> > +		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
+> >   		pending =3D nr_pending_read(rdev);
+> >   		dist =3D abs(r1_bio->sector -
+> > conf->mirrors[disk].head_position);=20
+> > @@ -1930,6 +1931,7 @@ static int raid1_add_disk(struct mddev
+> > *mddev, struct md_rdev *rdev) if (err)
+> >   				return err;
+> >  =20
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+> > raid1_add_conf(conf, rdev, mirror, false); /* As all devices are
+> > equivalent, we don't need a full recovery
+> >   			 * if this was recently any drive of the
+> > array @@ -1949,6 +1951,7 @@ static int raid1_add_disk(struct mddev
+> > *mddev, struct md_rdev *rdev) set_bit(Replacement, &rdev->flags);
+> >   		raid1_add_conf(conf, rdev, repl_slot, true);
+> >   		err =3D 0;
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending); =20
+>=20
+> I don't understand what's the point here, 'nr_pending' will be used
+> when the rdev issuing IO, and it's always used as atomic mode, there
+> is no difference.
+>=20
+> Consider that 'nr_pending' must be read from IO fast path, use it as
+> atomic is something we must accept. Unless someone comes up with a
+> plan to avoid reading 'inflight' counter from fast path like generic
+> block layer, it's not ok to me to switch to percpu_ref for now.
+>=20
+> +CC Paul
+>=20
+> HI, Paul, perhaps you RR mode doesn't need such 'inflight' counter
+> anymore?
+>=20
 
-⬢[acme@toolbox perf-tools-next]$ git log --oneline tools/perf/trace/beauty/statx.c
-f122b3d6d179455e perf beauty: Introduce scrape script for the 'statx' syscall 'mask' argument
-3d6cfbaf279ddec9 perf beauty: Introduce scrape script for various fs syscalls 'flags' arguments
-a672af9139a843eb tools headers: Remove almost unused copy of uapi/stat.h, add few conditional defines
-6652830c87be8446 perf beauty: Use the system linux/fcntl.h instead of a copy from the kernel
-690811f0128eb603 tools headers uapi: Sync linux/stat.h with the kernel sources to pick STATX_MNT_ID_UNIQUE
-49c75d30b0078d30 tools headers uapi: Sync linux/stat.h with the kernel sources
-5d33cbfedb51f732 perf beauty: Add support to STATX_MNT_ID in the 'statx' syscall 'mask' argument
-c65c83ffe9045901 perf trace: Allow asking for not suppressing common string prefixes
-794f594e0c3be619 perf beauty: Switch from GPL v2.0 to LGPL v2.1
-fd5cead23f546973 (tag: perf-core-for-mingo-4.12-20170331) perf trace: Beautify statx syscall 'flag' and 'mask' arguments
-⬢[acme@toolbox perf-tools-next]$
+I too am struggling to see the benefit but am curious enough that I
+will run some tests on my own as I have fresh baseline RAID1 large sweep
+performance data ready right now.
 
-⬢[acme@toolbox perf-tools-next]$ tools/perf/trace/beauty/statx_mask.sh 
-static const char *statx_mask[] = {
-	[ilog2(0x00000001) + 1] = "TYPE",
-	[ilog2(0x00000002) + 1] = "MODE",
-	[ilog2(0x00000004) + 1] = "NLINK",
-	[ilog2(0x00000008) + 1] = "UID",
-	[ilog2(0x00000010) + 1] = "GID",
-	[ilog2(0x00000020) + 1] = "ATIME",
-	[ilog2(0x00000040) + 1] = "MTIME",
-	[ilog2(0x00000080) + 1] = "CTIME",
-	[ilog2(0x00000100) + 1] = "INO",
-	[ilog2(0x00000200) + 1] = "SIZE",
-	[ilog2(0x00000400) + 1] = "BLOCKS",
-	[ilog2(0x00000800) + 1] = "BTIME",
-	[ilog2(0x00001000) + 1] = "MNT_ID",
-	[ilog2(0x00002000) + 1] = "DIOALIGN",
-	[ilog2(0x00004000) + 1] = "MNT_ID_UNIQUE",
-};
-⬢[acme@toolbox perf-tools-next]$
+So my WIP round robin patch won't need nr_pedning for SSDs but I think
+it will for HDD plus I need a new atomic counter for round robin for
+SSDs anyway but I see no perfomrnace impact so far from adding it.
 
-Can you please try with what is in
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git,
-branch perf-tools-next?
+-Paul
 
-- Arnaldo
- 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  tools/perf/trace/beauty/statx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/trace/beauty/statx.c b/tools/perf/trace/beauty/statx.c
-> index dc5943a6352d..c61f2be53bda 100644
-> --- a/tools/perf/trace/beauty/statx.c
-> +++ b/tools/perf/trace/beauty/statx.c
-> @@ -21,7 +21,7 @@ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_
->  		return scnprintf(bf, size, "%s%s", show_prefix ? "AT_STATX_" : "", "SYNC_AS_STAT");
->  #define	P_FLAG(n) \
->  	if (flags & AT_##n) { \
-> -		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
-> +		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
->  		flags &= ~AT_##n; \
->  	}
->  
-> -- 
-> 2.34.1
+> Thanks,
+> Kuai
+>=20
+> >   		conf->fullsync =3D 1;
+> >   	}
+> >  =20
+> > @@ -3208,6 +3211,7 @@ static void raid1_free(struct mddev *mddev,
+> > void *priv); static int raid1_run(struct mddev *mddev)
+> >   {
+> >   	struct r1conf *conf;
+> > +	struct md_rdev *rdev;
+> >   	int i;
+> >   	int ret;
+> >  =20
+> > @@ -3269,6 +3273,9 @@ static int raid1_run(struct mddev *mddev)
+> >   	/*
+> >   	 * Ok, everything is just fine now
+> >   	 */
+> > +	rdev_for_each(rdev, mddev) {
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
+> > +	}
+> >   	rcu_assign_pointer(mddev->thread, conf->thread);
+> >   	rcu_assign_pointer(conf->thread, NULL);
+> >   	mddev->private =3D conf;
+> > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> > index b91dd6c0be5a..66896a1076e1 100644
+> > --- a/drivers/md/raid10.c
+> > +++ b/drivers/md/raid10.c
+> > @@ -808,6 +808,7 @@ static struct md_rdev *read_balance(struct
+> > r10conf *conf,=20
+> >   		nonrot =3D bdev_nonrot(rdev->bdev);
+> >   		has_nonrot_disk |=3D nonrot;
+> > +		WARN_ON_ONCE(nr_pending_is_percpu_mode(rdev));
+> >   		pending =3D nr_pending_read(rdev);
+> >   		if (min_pending > pending && nonrot) {
+> >   			min_pending =3D pending;
+> > @@ -2113,6 +2114,7 @@ static int raid10_add_disk(struct mddev
+> > *mddev, struct md_rdev *rdev) p->recovery_disabled =3D
+> > mddev->recovery_disabled - 1; rdev->raid_disk =3D mirror;
+> >   		err =3D 0;
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending); if
+> > (rdev->saved_raid_disk !=3D mirror) conf->fullsync =3D 1;
+> >   		WRITE_ONCE(p->rdev, rdev);
+> > @@ -2127,6 +2129,7 @@ static int raid10_add_disk(struct mddev
+> > *mddev, struct md_rdev *rdev) err =3D mddev_stack_new_rdev(mddev,
+> > rdev); if (err)
+> >   			return err;
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending); conf->fullsync
+> > =3D 1; WRITE_ONCE(p->replacement, rdev);
+> >   	}
+> > @@ -4028,6 +4031,7 @@ static int raid10_run(struct mddev *mddev)
+> >   	rdev_for_each(rdev, mddev) {
+> >   		long long diff;
+> >  =20
+> > +
+> > percpu_ref_switch_to_atomic_sync(&rdev->nr_pending); disk_idx =3D
+> > rdev->raid_disk; if (disk_idx < 0)
+> >   			continue;
+> >  =20
+>=20
+>=20
+
