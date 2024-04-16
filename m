@@ -1,104 +1,132 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD028529B
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEB31F19A
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713257806; cv=none; b=HoiacL7B5Que3W1m6/vs1yQX+0j0UsohIi3ofq+mTzCv8F6AqnYgrCesUioSENNOiqRYIjJnKWxzT3RMlqAjwLOZlfFVGWETdg7y5REyiZjVyGobJ+x+5foEgTr5QAo9LO3ogc+wDVZA2iFi9IQ86kXEBfhyv0kN0DOTkBP/69A=
+	t=1713257992; cv=none; b=mziQ44e7i0FYah/1uZv5YV4nADvhzpOx+VzxFZF/pSHaqNDTnKvuC+TTpF83bpOeMHGKlcaArygOQEBznIV4OeQZhQtitpWjRSgKy6u2vn61IkZWExEBguIcBZMqGA3c85EWntunvs/1mvyJ42sGrz5vMb0h1ko2SK5iBC8heAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713257806; c=relaxed/simple;
-	bh=aNS2CCSzwy6ql/BY4RSh2zfr6aw6EJPA7jfE3nYT5Ko=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PIaViq0A84cu9Sj+1fk9LDA3rmC2rnTqeM4bcNrOwvRUBPBWf2W1nH3LeLGFIh4fTh73nR6uiq8kHuAp9cYAiFr4R9wAj0m27irAwhnwsE/IOX0hIj57N7LoTkO8pmqqM57ThbCQAxumysssa75oMNrMpyvsJaGqu1nX94JrsWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.65.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp87t1713257741thn5yuho
-X-QQ-Originating-IP: b3mBBxw99vad6QHkIMchUCO3f6t5t/SWDS++WDSk0GY=
-Received: from localhost ( [112.0.147.129])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 16 Apr 2024 16:55:39 +0800 (CST)
-X-QQ-SSF: 01400000000000903000000A0000000
-X-QQ-FEAT: oxALfFWpRnAGgHKq5PYOCdKNobJCSzITHPy+s17xVkuOuS8ISpwiXbZ0go368
-	3DYT2PnvxGELUqHxh975F+zBNMwkoI7n3JZ0zDQPunAZfrrd96hWcEf7CsBhOY1uMX6uxaa
-	vUKVvn5dWomgr5fTnB194u047Rg2hhQSwj9d6sqOdR9Q5inA1MBBidHwAGIxo8MN0D33SCb
-	tWRLEqOxvgOjqlfT5ZvF0gCGZeK8QRefPqfYADeuDTtlUWf1zx/vgivLV1GgTaPqFx3DQjL
-	vuUqUJiW6v6U8YcWlsorr8jhxuMDHwoU/l57qd4BtK9Hqxm+i2uUhqC2VthiQXrUEE4OrRN
-	LQT/Iav8YcXmYY2npfr8+FLyHgHeAaxl4FUAfBVBF7xEa78hSJWcg+G2KpxV92ds6frST21
-	HZoiVykqT/sD8R3paRKdrA==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 9847811538725789897
-From: Dawei Li <dawei.li@shingroup.cn>
-To: tglx@linutronix.de,
-	yury.norov@gmail.com,
-	rafael@kernel.org
-Cc: akpm@linux-foundation.org,
-	maz@kernel.org,
-	florian.fainelli@broadcom.com,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	anup@brainfault.org,
-	palmer@dabbelt.com,
-	samuel.holland@sifive.com,
-	linux@rasmusvillemoes.dk,
-	daniel.lezcano@linaro.org,
-	linux-kernel@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v2 4/7] irqchip/loongson-eiointc: Avoid explicit cpumask allocation on stack
-Date: Tue, 16 Apr 2024 16:54:51 +0800
-Message-Id: <20240416085454.3547175-5-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240416085454.3547175-1-dawei.li@shingroup.cn>
-References: <20240416085454.3547175-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1713257992; c=relaxed/simple;
+	bh=PKx1DWM9HBQ2TquNxdM03KajoVGyjXDkA/Jg6/nj/6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+Wc8irwBcsVi+Mzddl8pIlD5uvDQE6zhMN9AqtKAHjhJoqyxf8nIEcnMOQk087A06Ls7YL3/ffPuZNNvYV/anZjHxumbfX0luST4ZhNFKAzdXZPvUVOuoxS87DdD0OmXQgrVrTz/4DAVQfPAovImIWl+ZlTOwdREYYiq6H1tEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tIYvxdUE; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIYvxdUE"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a51a7d4466bso469801766b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713257989; x=1713862789; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TNMdc9j3H3MgThdxW8z4dMJyAU9QqhokoKvc+V7z6ho=;
+        b=tIYvxdUEFGNrYDf4HL0RGOL0nL6+VMN7ZHqIjp1J81Hbi65UYvfme+k+COhWxQkLG9
+         v8ZW0lHv1QaEHTEQeP9bFWy56f6Hj2XNZy4AgiF7ueyDncIeJlaofpW7sRKqey80Beo/
+         f1W/LIHC7R8shkeE1eP6rvJLxf0C4y2XIHkm6s5f7+DjJU/5iaxrWYdLWWGZbZ92+qO7
+         ctZ+stzTxqgUbN8kCFkyHDWCAtTV6KTW8zDdgyRzQh3xoyXmgdJ+j3KiuafuG6PpTSRy
+         1gXfvqXhG4pIMaIRb9FAQbPyocn1TK49xOFIfAegdBpwW8JqUonpjJzBt4qm1AIAeLhY
+         LyNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713257989; x=1713862789;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TNMdc9j3H3MgThdxW8z4dMJyAU9QqhokoKvc+V7z6ho=;
+        b=vjBeLbI6jc5+iVuYiWSX3eStvnz7zogF10eUDZygAbIb4/zzDxVcuV3mKcrpb8Dbml
+         +A5qtvT3YpIws6RBFpBT1wUUKKPgwYf/f5GPQJ8SiCCLgSRrP1ZmTRP3mdu1zgGdlAlP
+         4dQoGhIQpAd06B3RHCnBuySKf0FIyykVHYNIH1dVbA2ind57hYhbkkMsWFG7mqQIEq7k
+         Z5mbWnjJVLHvyZS5bQxVeATZndOGgMvIXgJjRLBCp5gNdq8xQIUHV6jAk3mwunPwv0Vb
+         c349zin2eI15d5+/ZlzzMYeFdkRWwvpErwTOmZJI4dQ0GjmzsFCrOH6/v1TilUGFOJFl
+         OwOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXi5QLAYgzgKFJHokbjDSCPAnRhXaCMc+EuNtvBQmY+ZmvTCp11ug56FTOp8qwmHdtAll/essM7bJjFV0UTgjTWih2asv9mxSmcKjLa
+X-Gm-Message-State: AOJu0YwN2khhE7OShLVLEJ5OnVokrAI3+j437/zMUvGCWDJtSIylVxn+
+	GnFXacfAPd9IQSgPRNcngSPJLdgBUqElvtmJL788jJfYdnWrvPcmeQTfjCfDMDk=
+X-Google-Smtp-Source: AGHT+IE5hrTESVqMWnWzqk4RK1lMAqDSLSeII7ES9isRsHuP19AaLAFRxOcYI7GPCs5uQxoyE2W7eQ==
+X-Received: by 2002:a17:906:6a09:b0:a52:2c4f:7831 with SMTP id qw9-20020a1709066a0900b00a522c4f7831mr10436193ejc.4.1713257988846;
+        Tue, 16 Apr 2024 01:59:48 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id g8-20020a17090670c800b00a52244ab819sm6352929ejk.170.2024.04.16.01.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 01:59:48 -0700 (PDT)
+Date: Tue, 16 Apr 2024 11:59:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Prasad Pandit <pj.pandit@yahoo.in>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Andy Whitcroft <apw@canonical.com>
+Subject: Re: [PATCH] checkpatch: error if file terminates without a new-line
+Message-ID: <edf23b1b-303a-46eb-b455-8c766c84ddf1@moroto.mountain>
+References: <20240330033858.3272184-1-ppandit@redhat.com>
+ <1568855168.5949322.1713251087824@mail.yahoo.com>
+ <2024041627-overgrown-ripping-2348@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+In-Reply-To: <2024041627-overgrown-ripping-2348@gregkh>
 
-In general it's preferable to avoid placing cpumasks on the stack, as
-for large values of NR_CPUS these can consume significant amounts of
-stack space and make stack overflows more likely.
+On Tue, Apr 16, 2024 at 10:48:27AM +0200, Greg KH wrote:
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 9c4c4a61bc83..df34c0709410 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -2795,6 +2795,13 @@ sub process {
+> >             $is_patch = 1;
+> >         }
+> > 
+> > +# check if patch terminates file without a new line (\n)
+> > +        if ($line =~ /^\\ No newline at end of file$/
+> > +            and $rawlines[$linenr - 2] =~ /^\+.*$/) {
+> > +            ERROR("NOEOL_FILE",
+> > +                  "patch terminates file without a new line (\\n).");
+> > +        }
+> 
+> Why is this a problem?  files without a new line should not cause
+> problems with a compiler, right?  You don't have a justification for why
+> this change needs to be checked for anywhere.
+> 
 
-Use cpumask_first_and_and() to avoid the need for a temporary cpumask on
-the stack.
+I gave him such a good reason too...  It breaks `cat file.c`.  Plus, it
+looks weird in `git log -p` because it has a "No newline at the end of
+file" comment.
 
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/irqchip/irq-loongson-eiointc.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+regards,
+dan carpenter
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 4f5e6d21d77d..c7ddebf312ad 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -93,19 +93,15 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
- 	unsigned int cpu;
- 	unsigned long flags;
- 	uint32_t vector, regaddr;
--	struct cpumask intersect_affinity;
- 	struct eiointc_priv *priv = d->domain->host_data;
- 
- 	raw_spin_lock_irqsave(&affinity_lock, flags);
- 
--	cpumask_and(&intersect_affinity, affinity, cpu_online_mask);
--	cpumask_and(&intersect_affinity, &intersect_affinity, &priv->cpuspan_map);
--
--	if (cpumask_empty(&intersect_affinity)) {
-+	cpu = cpumask_first_and_and(&priv->cpuspan_map, affinity, cpu_online_mask);
-+	if (cpu >= nr_cpu_ids) {
- 		raw_spin_unlock_irqrestore(&affinity_lock, flags);
- 		return -EINVAL;
- 	}
--	cpu = cpumask_first(&intersect_affinity);
- 
- 	vector = d->hwirq;
- 	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
--- 
-2.27.0
+diff --git a/test.c b/test.c
+new file mode 100644
+index 000000000000..d808cac2d962
+--- /dev/null
++++ b/test.c
+@@ -0,0 +1,12 @@
++#include <stdio.h>
++#include <stdbool.h>
++#include "check_debug.h"
++
++void kfree(int *p);
++
++int *p;
++int main(void)
++{
++       kfree(p);
++       *p = 1;
++}
+\ No newline at end of file
+
+commit f4a997924122d0094675c897a220371f0a129d90
+
+
+
 
