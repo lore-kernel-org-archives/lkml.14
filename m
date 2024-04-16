@@ -1,219 +1,265 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E50132470;
-	Tue, 16 Apr 2024 13:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1777312C801;
+	Tue, 16 Apr 2024 13:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713274237; cv=none; b=txzF4TN4mPVYWqtQSBfD2ilpSkTy6ho2QPrvnB+xGB7lG1WpSMGR7vHoeoIzsp9btV5QZKjTInNnOwBSRHKdz+FRX2XJutQza5iFUWP4R0RSkiP0Nc+mwZVG/yJaHgmDdN4/4JX0gtpYsf0csqEBSqd1Lejh5gBni3zOl2EuBOs=
+	t=1713274266; cv=none; b=M6vy9MbacpAg5gfAHluGOlR3eK0mtcmeh/4GqKck5EedXZQ/Hd4roibBADGX55vtwC6RLMQ+Ez8pWNyNUHqRazxeQ8P9rwW0wVbiLCKXH+ddoOS4yYVUw0rj+EJySi9j5Att2zisE/5AqRWmiogcZEmrHFPMJH841ZjEUEDw5Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713274237; c=relaxed/simple;
-	bh=lpcRI6pbJ32meL/VjTzpGOcoWSJTYnk21moIdV1Kpxk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sX74VLvrXQgZHsa3UZzRrzx8za03yzPOqtUx/fQh2BJPLvpMWj60a4tlDTga5Be2kPzfW/MVu+2dPLJ0XOo0+n/viCrnWWN9Nu3qIlqrNrpoz/E27Ui6s4FZ+OPkS5JbufBMeuiGlzzSLsgZbjM7RcT3gZIoOC2LFGxEyIKDZDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ly3tUPHV; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713274266; c=relaxed/simple;
+	bh=/eoRald5RQA5tlSO2Q1GOUyfGVlyA/xfmspKPYiGf6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0/GguWnPf//6ygB9n4Zw37g7Liqmg3azn6Nv34UfJ6R8qarJf8tp+CXlDIYDIiBZIYEwSS25HCGlYf6rc3BzCu/o9+IcJ/kox4iu2LPNy48lPjIPNnFvGaMRwyGs6jaZrf2/BYXvNrofwvPvDNurELR4+SKa2Qpu4essb9p1XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hoyExHp+; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ly3tUPHV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 37A8840003;
-	Tue, 16 Apr 2024 13:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713274229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M72jZYyV65DqxQX89BNQFEE+r0wyDWzohfJY2wWVXuo=;
-	b=Ly3tUPHVPHxGu2QGf1SReurnXyVT6yZJ2fK77RoLnNLB4XnongqrymoRROo2eNs32VwIjH
-	+kgILqGY2ooadU4CkFnaTAV1+r2G2DkEkFvsCCIm4oy/QhaXoum08Xx7YhTHSHNkFPv/Yb
-	W/0ql6ngJTtsiaPSjw09Gec9DUYqcWAfwuGEooptvqlQBQw2OVZekcGbDLyIGJmFhj4op/
-	bmOecvZaw56s/5WJg5aNLren0s3uanD+/Vn8mZMLNmtlTlWzVZ43UwX6ZIHDOpIHcPcG+m
-	5AYr47/tmI4N25ASXbJG9ncJNe1tkj82DN/+JJWexW0f8Xv3sUqANYfpeLqCPw==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 16 Apr 2024 15:30:00 +0200
-Subject: [PATCH v5 11/11] PCI: j721e: Add suspend and resume support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoyExHp+"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso3030768a12.1;
+        Tue, 16 Apr 2024 06:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713274261; x=1713879061; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jJewvZ8b6e5v5IGKG7h4PM7qbBAo1UXL6Icq9IfphZs=;
+        b=hoyExHp+YXVsTQWM+cGHhM0aNrZ0Y74/4WaExasIap2/YOsgoAZGmFuCYLdZa0UgeA
+         RCBwtekbDZC0TqGDbdoUYlxVICtv+LRgbcVqwbihRn1LctlPFD83M4UUQxsPzyK6PrYG
+         sf09464BfWtT67nNsIrjnmiWu5CHgyosOuYaAdjw2uQmTHymcHtsen5dsG8xkGsb9iv7
+         Gp+1NVDR4rkOv2mfw9THfD+Ahhovc+ENvotgo52BZgBNK7bZi1AS1On4EYMTnTip/938
+         fL8ObUSsylFxZSPsGgEU1VK7T2FBqZNNYtD3wrOMgoMdGz0X+RxR7Sd8t0qdhvVct2f9
+         prXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713274261; x=1713879061;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jJewvZ8b6e5v5IGKG7h4PM7qbBAo1UXL6Icq9IfphZs=;
+        b=qEfcchivL2FMIyUtUHBgJI5g2AFn4LQ/2LEo25Nrdg0J2MI2VWDDEjvur4bNbDNZVy
+         D3bE5uqkSrzHr0qglsoO/AI8MFOOxLiPr0rcMSDzQwHE5KZ6mpq+Z23xzQteN8ibyoSp
+         WTl13+CJ2tnRwJYQeCvMl2BVnvlETdPC7OHYQ8WMO/qvvdNgkDTvUjd6vyGvWEtEFZ+2
+         QkYNnPEM8mTCbPHxXVOy1yfSXyF5mtUh1sMseavEpZ20ZEokvkcfDAo6xwsmYyvxanL4
+         0WttLhHjpvKWQmkwuLvzrSSBB6m0+Gi2auQS3SdVHy1BL5/tYwk9F8K7q8YtjQsAY9v1
+         Cpyg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8kwxY4xcKN/jNBz9KCE08SSuZAfxTYAvg5eN7ZfoRlwmlqd02BkZKFpXrgGnw5g3CN5kHKOh9Ht4x6GuvWaiVmhK7ymqwcD0i2eq2Bq8asnLKNxpLKmvlqfnCP8W0IjY7aY5R+8mOjbhsrSTKJm021GgCGNHRQjn9NnXlCahksHb/Jfkscrt1WcquGa7K
+X-Gm-Message-State: AOJu0YyLyhOMkwz3UA2J3qxjcBC+uALnrto7rG2se8kQurj2tA0SIDk5
+	61oNLFmrGO+Gl8SytSzsdRgicGsKi8TDBxms3k1RGYPM6+b0oET75XFAOg==
+X-Google-Smtp-Source: AGHT+IEbwazAFR0wRkcKMFLBCnJrUE2p2zGUNubAcMoJVt/6w4BroKVdX4UglbroDqWaFd20Z0khjA==
+X-Received: by 2002:a17:90a:5ac4:b0:2a2:dd53:828b with SMTP id n62-20020a17090a5ac400b002a2dd53828bmr10638846pji.43.1713274261155;
+        Tue, 16 Apr 2024 06:31:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c9-20020a17090abf0900b002a610ef880bsm9168377pjs.6.2024.04.16.06.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 06:31:00 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 16 Apr 2024 06:30:59 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ivor Wanders <ivor@iwanders.net>, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 2/3] hwmon: surface_temp: Add support for sensor names
+Message-ID: <43908511-198f-42ee-af21-dad79bdf799a@roeck-us.net>
+References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+ <20240330112409.3402943-3-luzmaximilian@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v5-11-4b8c46711ded@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
- thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240330112409.3402943-3-luzmaximilian@gmail.com>
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Sat, Mar 30, 2024 at 12:24:01PM +0100, Maximilian Luz wrote:
+> From: Ivor Wanders <ivor@iwanders.net>
+> 
+> The thermal subsystem of the Surface Aggregator Module allows us to
+> query the names of the respective thermal sensors. Forward those to
+> userspace.
+> 
+> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+> Co-developed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/hwmon/surface_temp.c | 112 +++++++++++++++++++++++++++++------
+>  1 file changed, 95 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/hwmon/surface_temp.c b/drivers/hwmon/surface_temp.c
+> index 48c3e826713f6..7a2e1f638336c 100644
+> --- a/drivers/hwmon/surface_temp.c
+> +++ b/drivers/hwmon/surface_temp.c
+> @@ -17,6 +17,27 @@
+>  
+>  /* -- SAM interface. -------------------------------------------------------- */
+>  
+> +/*
+> + * Available sensors are indicated by a 16-bit bitfield, where a 1 marks the
+> + * presence of a sensor. So we have at most 16 possible sensors/channels.
+> + */
+> +#define SSAM_TMP_SENSOR_MAX_COUNT 16
 
-Add suspend and resume support. Only the rc mode is supported.
+#define<space>DEFINITION<tab>value
 
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
+> +
+> +/*
+> + * All names observed so far are 6 characters long, but there's only
+> + * zeros after the name, so perhaps they can be longer. This number reflects
+> + * the maximum zero-padded space observed in the returned buffer.
+> + */
+> +#define SSAM_TMP_SENSOR_NAME_LENGTH 18
+> +
+> +struct ssam_tmp_get_name_rsp {
+> +	__le16 unknown1;
+> +	char unknown2;
+> +	char name[SSAM_TMP_SENSOR_NAME_LENGTH];
+> +} __packed;
+> +
+> +static_assert(sizeof(struct ssam_tmp_get_name_rsp) == 21);
+> +
+>  SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_tmp_get_available_sensors, __le16, {
+>  	.target_category = SSAM_SSH_TC_TMP,
+>  	.command_id      = 0x04,
+> @@ -27,6 +48,11 @@ SSAM_DEFINE_SYNC_REQUEST_MD_R(__ssam_tmp_get_temperature, __le16, {
+>  	.command_id      = 0x01,
+>  });
+>  
+> +SSAM_DEFINE_SYNC_REQUEST_MD_R(__ssam_tmp_get_name, struct ssam_tmp_get_name_rsp, {
+> +	.target_category = SSAM_SSH_TC_TMP,
+> +	.command_id      = 0x0e,
+> +});
+> +
+>  static int ssam_tmp_get_available_sensors(struct ssam_device *sdev, s16 *sensors)
+>  {
+>  	__le16 sensors_le;
+> @@ -54,12 +80,37 @@ static int ssam_tmp_get_temperature(struct ssam_device *sdev, u8 iid, long *temp
+>  	return 0;
+>  }
+>  
+> +static int ssam_tmp_get_name(struct ssam_device *sdev, u8 iid, char *buf, size_t buf_len)
+> +{
+> +	struct ssam_tmp_get_name_rsp name_rsp;
+> +	int status;
+> +
+> +	status =  __ssam_tmp_get_name(sdev->ctrl, sdev->uid.target, iid, &name_rsp);
+> +	if (status)
+> +		return status;
+> +
+> +	/*
+> +	 * This should not fail unless the name in the returned struct is not
+> +	 * null-terminated or someone changed something in the struct
+> +	 * definitions above, since our buffer and struct have the same
+> +	 * capacity by design. So if this fails blow this up with a warning.
+> +	 * Since the more likely cause is that the returned string isn't
+> +	 * null-terminated, we might have received garbage (as opposed to just
+> +	 * an incomplete string), so also fail the function.
+> +	 */
+> +	status = strscpy(buf, name_rsp.name, buf_len);
+> +	WARN_ON(status < 0);
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 98 ++++++++++++++++++++++++++++--
- 1 file changed, 92 insertions(+), 6 deletions(-)
+Not acceptable. From include/asm-generic/bug.h:
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 967a5bf38e26..96316a79ab8a 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -22,6 +24,8 @@
- #include "../../pci.h"
- #include "pcie-cadence.h"
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -531,12 +535,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		pcie->refclk = clk;
- 
- 		/*
--		 * "Power Sequencing and Reset Signal Timings" table in
--		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
- 		 */
- 		if (gpiod) {
- 			fsleep(PCIE_T_PERST_CLK_US);
-@@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy().
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			fsleep(PCIE_T_PERST_CLK_US);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
+ * Do not use these macros when checking for invalid external inputs
+ * (e.g. invalid system call arguments, or invalid data coming from
+ * network/devices), and on transient conditions like ENOMEM or EAGAIN.
+ * These macros should be used for recoverable kernel issues only.
 
--- 
-2.39.2
+> +
+> +	return status < 0 ? status : 0;
+> +}
+> +
+>  
+>  /* -- Driver.---------------------------------------------------------------- */
+>  
+>  struct ssam_temp {
+>  	struct ssam_device *sdev;
+>  	s16 sensors;
+> +	char names[SSAM_TMP_SENSOR_MAX_COUNT][SSAM_TMP_SENSOR_NAME_LENGTH];
+>  };
+>  
+>  static umode_t ssam_temp_hwmon_is_visible(const void *data,
+> @@ -83,33 +134,47 @@ static int ssam_temp_hwmon_read(struct device *dev,
+>  	return ssam_tmp_get_temperature(ssam_temp->sdev, channel + 1, value);
+>  }
+>  
+> +static int ssam_temp_hwmon_read_string(struct device *dev,
+> +				       enum hwmon_sensor_types type,
+> +				       u32 attr, int channel, const char **str)
+> +{
+> +	const struct ssam_temp *ssam_temp = dev_get_drvdata(dev);
+> +
+> +	*str = ssam_temp->names[channel];
+> +	return 0;
+> +}
+> +
+>  static const struct hwmon_channel_info * const ssam_temp_hwmon_info[] = {
+>  	HWMON_CHANNEL_INFO(chip,
+>  			   HWMON_C_REGISTER_TZ),
+> -	/* We have at most 16 thermal sensor channels. */
+> +	/*
+> +	 * We have at most SSAM_TMP_SENSOR_MAX_COUNT = 16 thermal sensor
+> +	 * channels.
+> +	 */
 
+Pointless comment. Already explained above, and perfect example showing
+why it has no value separating this and the previous patch.
+
+>  	HWMON_CHANNEL_INFO(temp,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT,
+> -			   HWMON_T_INPUT),
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL),
+
+Another example. Why have me review the previous patch
+just to change the code here ?
+
+[ ... ]
+
+> +	/* Retrieve the name for each available sensor. */
+> +	for (channel = 0; channel < SSAM_TMP_SENSOR_MAX_COUNT; channel++) {
+> +		if (!(sensors & BIT(channel)))
+> +			continue;
+> +
+> +		status = ssam_tmp_get_name(sdev, channel + 1,
+> +					   ssam_temp->names[channel],
+> +					   SSAM_TMP_SENSOR_NAME_LENGTH);
+> +		if (status)
+> +			return status;
+
+Your call to fail probe in this case just because it can not find
+a sensor name. I personally find that quite aggressive.
+
+Guenter
