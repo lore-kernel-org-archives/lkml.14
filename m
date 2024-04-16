@@ -1,45 +1,44 @@
 Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCC584D3B;
-	Tue, 16 Apr 2024 22:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616DA84E0B;
+	Tue, 16 Apr 2024 22:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713305829; cv=none; b=GaER0WwQ9tLSPDyEkh6ycs8Mgpi9clxsUiZXu414IoC0hqu7GYT9R9ZWOYZAhkzdKunw35+hZ7bGOkdz37b5yRu7A1vZQ/eRnJPul+Vjv3JFkwbajydwuLLAY5wSmg87atg8G4smhor4TnGLxKh3ragIdMpw9v/6YMkRIGTPKdk=
+	t=1713305829; cv=none; b=KwVphEzBVnGCx5RdzhKRL8CpEa7Qq+0igVXJdECy3NzSlRJgveL1NdLhv6qC9RzLKdUb7sP9cyasHnghGb+95i52qcs56gJsiRLsblH+yAxS1rs7x8pqO+Zf1lHIXuQb2Wx5k+sCWBPEbvFs9WZOTMX33MfE73edZSVNEC1h7ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713305829; c=relaxed/simple;
-	bh=/r2A3U86DrQWK58HmyUtSBfncTMbSG8hZpg5gw3B6c8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rMgmoO12mmNJ0WnVSOkPTjiBjkSMccp9Ayg5ksaz+XjrOYiUPZaPvcKcQOWZn6GJsKVcpb4e6/qWCip+6Y3/TNWM/frttD/LQqMxk5Q3ydJ7bmuHSrRAfqAeD9lRLXeINu7HKpOGPYtprsWntljYM0A2y4rc3M9I8jBQTlGHjds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=x++c0dsK; arc=none smtp.client-ip=198.47.23.248
+	bh=XcK0kn5qTb5pQCNKexVlFOXMEVII95wpZPigI3nC2fo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L9wUGT5nk4XNs8C1eqls8aM6gYqtw3CZ9gtMPUHvEZM694fHKPHFEhzzXaRUnLDKxtwh6YYceCz5nVxMKWoLAD3TFq3urG/JrC0QHdnpb7qSg9FaQF6dahebDLnX+AKEgOF2uUx1i4Bj4wDp605/NpAHaoUYzeuN8rYEic3v/k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NlywMpkv; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x++c0dsK"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43GMGnFN065475;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NlywMpkv"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43GMGnVJ065467;
 	Tue, 16 Apr 2024 17:16:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1713305809;
-	bh=hC7S8iATRYbpfYUlqNN78DDTwCwaRv8ntPclDXxhb1A=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=x++c0dsKiwMKcr2g0urHtzuvZ5XmTvzDj5Gn3khp+TNEnpjLaGvJHY+QPz2dWKSod
-	 mU2zJ0sANoB2JMOIcqUwl44RUUUWE9KKi1f8eogFgMAqGlkT9WrMfeATz9cyFivhHN
-	 m+YnePQOnUHHvTBzTzRudYGW6cqa1hudMiiWwvOg=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43GMGnpv080068
+	bh=cmvcOdjVa3LxB8N0mIhJb5ibHBnSoyYJbNXgqK4oqWU=;
+	h=From:To:CC:Subject:Date;
+	b=NlywMpkvyoezYAYo2KUmB9dumhCmWhHegMKap93smB2Ku2x1vUQ9cKBVMxHe7eo+j
+	 LNs/0LjPbMZOGhqURwvjNjla5nS78eZfRxT6bSh6O1+cWKkSrslFOvvmb654Tk1tKe
+	 1H7h359FXZz5Wepgm+k3hJ81deAS1bWjQ1/QUpKg=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43GMGmrq051567
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 16 Apr 2024 17:16:49 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 16 Apr 2024 17:16:48 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 16
  Apr 2024 17:16:48 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 16 Apr 2024 17:16:49 -0500
+ Frontend Transport; Tue, 16 Apr 2024 17:16:48 -0500
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43GMGmSp102285;
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43GMGmSk102285;
 	Tue, 16 Apr 2024 17:16:48 -0500
 From: Judith Mendez <jm@ti.com>
 To: Rob Herring <robh@kernel.org>,
@@ -53,12 +52,10 @@ CC: Vignesh Raghavendra <vigneshr@ti.com>, Conor Dooley <conor+dt@kernel.org>,
         <linux-kernel@vger.kernel.org>, Bhavya Kapoor <b-kapoor@ti.com>,
         Dasnavis
  Sabiya <sabiya.d@ti.com>
-Subject: [PATCH v2 5/6] arm64: dts: ti: k3-j784s4-main: Enable support for UHS mode
-Date: Tue, 16 Apr 2024 17:16:47 -0500
-Message-ID: <20240416221648.3522201-6-jm@ti.com>
+Subject: [PATCH v2 0/6] MMC updates for TI K3 platforms
+Date: Tue, 16 Apr 2024 17:16:42 -0500
+Message-ID: <20240416221648.3522201-1-jm@ti.com>
 X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240416221648.3522201-1-jm@ti.com>
-References: <20240416221648.3522201-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,38 +66,49 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Dasnavis Sabiya <sabiya.d@ti.com>
+This patch series includes MMC updates for various TI K3 platforms.
 
-Remove sdhci-caps-mask to enable support for SDR104 speed mode for
-SD card and remove no-1-8-v property so that SD card can work in
-any UHS-1 high speed mode it can support.
+It includes support for enabling UHS/SDR104 bus modes.
 
-Fixes: 4664ebd8346a ("arm64: dts: ti: Add initial support for J784S4 SoC")
-Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
-Signed-off-by: Dasnavis Sabiya <sabiya.d@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[Judith: Add fixes tag]
-Signed-off-by: Judith Mendez <jm@ti.com>
----
+For AM62ax, add missing UHS support.
+
+For AM65x, fix ITAP delay and OTAP delay and clkbuf-sel properties
+in SDHCI nodes.
+
+Lastly, change TPS6593x PMIC driver to built-in since booting SD
+with UHS modes have a dependency on the driver.
+
 Changes since v1:
-- no change
----
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+- Drop patches that remove HS400 mode support
+- Add patch 6/6
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index d42f25cacf23d..6a4554c6c9c13 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -904,8 +904,6 @@ main_sdhci1: mmc@4fb0000 {
- 		ti,clkbuf-sel = <0x7>;
- 		ti,trm-icp = <0x8>;
- 		dma-coherent;
--		sdhci-caps-mask = <0x00000003 0x00000000>;
--		no-1-8-v;
- 		status = "disabled";
- 	};
- 
+Link to v1:
+https://lore.kernel.org/linux-devicetree/20240411225257.383889-1-jm@ti.com/
+
+Bhavya Kapoor (1):
+  arm64: dts: ti: k3-j721s2-main: Enable support for SDR104 speed mode
+
+Dasnavis Sabiya (1):
+  arm64: dts: ti: k3-j784s4-main: Enable support for UHS mode
+
+Judith Mendez (3):
+  arm64: dts: ti: k3-am65-main: Update sdhci properties
+  arm64: dts: ti: k3-am65-main: Remove unused properties in sdhci nodes
+  arm64: defconfig: Set CONFIG_MFD_TPS6594_I2C=y
+
+Vignesh Raghavendra (1):
+  arm64: dts: ti: k3-am62a: Enable UHS mode support for SD cards
+
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi  |  2 --
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts    | 21 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi   | 26 +++++++++-------------
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi |  2 --
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi |  2 --
+ arch/arm64/configs/defconfig               |  2 +-
+ 6 files changed, 33 insertions(+), 22 deletions(-)
+
+
+base-commit: 534ad093bb80f19c20b251a89f09ce1a0e3d4f2d
 -- 
 2.43.2
 
