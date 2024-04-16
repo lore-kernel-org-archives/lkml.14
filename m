@@ -1,145 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E14130A64
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E76131196
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713282395; cv=none; b=SX5tJ69jXT3ExGtJMTTNCkMWuNHaadscSC77Yx6YDb1lZGfs3FzN/GyhcCSMAvCqTtGSTsUoi41UvqjwthLw+OWwSbNcit9RfKAaFaoDE6zNk0snymDAY/AgWUd0IlIBHle7A/PZ/HwpWgzYbSqAB1HFIfCvwnhzAJiO5f6lh+w=
+	t=1713282454; cv=none; b=LOWiaYy7UtfpN6o8oCUDCM7qRR+9lBGaBaulEZhIR1rLzM2OI325SvvdEyxhtqLw/HB/8OD1ZpdEh3+UynLobOZ4NW2RS1si5d2SmXzD67b2vajBJNSogM497uwFAM9TOgC+zIdIXPMxvHrvmXWvIaGxtFGF1y5sa33U9tbQsoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713282395; c=relaxed/simple;
-	bh=iFdpaJG4DgnhwsWS87W+fOS8SLh2rcQT564pR7xl4vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiyapeeSpyuaqFz2kr3FWdCFaQgneuT2poti+Uc8XbkU7PHJ++4R4nDdnRlDf1u6LfuUaouUcpXODz98cHB93+FrU0kFdlTOhtOibPtSNdpJWjpTk0nCGEYsZG0VIKMSDecH1jw2gJ522kjQLaRkTjWMSkHFwSaOWLcwuCVBhVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD564339;
-	Tue, 16 Apr 2024 08:46:58 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEF0D3F792;
-	Tue, 16 Apr 2024 08:46:27 -0700 (PDT)
-Date: Tue, 16 Apr 2024 17:46:18 +0200
-From: Beata Michalska <beata.michalska@arm.com>
-To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, sudeep.holla@arm.com, will@kernel.org,
-	catalin.marinas@arm.com, vincent.guittot@linaro.org,
-	sumitg@nvidia.com, yang@os.amperecomputing.com,
-	lihuisong@huawei.com, viresh.kumar@linaro.org
-Subject: Re: [PATCH v4 4/4] cpufreq: Use arch specific feedback for
- cpuinfo_cur_freq
-Message-ID: <Zh6dSrUnckoa-thV@arm.com>
-References: <20240405133319.859813-1-beata.michalska@arm.com>
- <20240405133319.859813-5-beata.michalska@arm.com>
- <76zutrz47zs6i2cquvjo2qn7myxpq7e3c6alhper7n3wrkhf5h@22l5t5pio2cd>
+	s=arc-20240116; t=1713282454; c=relaxed/simple;
+	bh=/acYgz3kJaLA/vBHE8yKL25SRSKCtv2KUbyuhCBZmo8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cEcga/fkjqINJrEjJSqlSdEQzir3O1QR4EyVOf+62EMFJzhjAsqK3P69zXo/QqkUQhv3YX8wJSZ1YmB8kqVFmupFergkoT08gISOgSG0+OD1TEul5ZU5wUIYt7dOZ3WQA4Rw18az6KX/7RP6jng0/GKAWMuHzvrbGef+/wO73A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by michel.telenet-ops.be with bizsmtp
+	id BrnV2C00L0SSLxL06rnVye; Tue, 16 Apr 2024 17:47:30 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rwl1K-008J5u-9p;
+	Tue, 16 Apr 2024 17:47:29 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rwl1t-00Ebkf-Mw;
+	Tue, 16 Apr 2024 17:47:29 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Cong Dang <cong.dang.xn@renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] pinctrl: renesas: r8a779h0: Fix IRQ suffixes
+Date: Tue, 16 Apr 2024 17:47:22 +0200
+Message-Id: <7d3c7498d9e8eda5583b15f9163eb25bb797ed24.1713282028.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1713282028.git.geert+renesas@glider.be>
+References: <cover.1713282028.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76zutrz47zs6i2cquvjo2qn7myxpq7e3c6alhper7n3wrkhf5h@22l5t5pio2cd>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 15, 2024 at 09:23:10PM -0700, Vanshidhar Konda wrote:
-> On Fri, Apr 05, 2024 at 02:33:19PM +0100, Beata Michalska wrote:
-> > Some architectures provide a way to determine an average frequency over
-> > a certain period of time based on available performance monitors (AMU on
-> > ARM or APERF/MPERf on x86). With those at hand, enroll arch_freq_get_on_cpu
-> > into cpuinfo_cur_freq policy sysfs attribute handler, which is expected to
-> > represent the current frequency of a given CPU, as obtained by the hardware.
-> > This is the type of feedback that counters do provide.
-> > 
-> 
-> --- snip ---
-> 
-> While testing this patch series on AmpereOne system, I simulated CPU
-> frequency throttling when the system is under power or thermal
-> constraints.
-> 
-> In this scenario, based on the user guilde, I expect scaling_cur_freq
-> is the frequency the kernel requests from the hardware; cpuinfo_cur_freq
-> is the actual frequency that the hardware is able to run at during the
-> power or thermal constraints.
-There has been a discussion on scaling_cur_freq vs cpuinfo_cur_freq [1].
-The guidelines you are referring here (assuming you mean [2]) are kinda
-out-of-sync already as scaling_cur_freq has been wired earlier to use arch
-specific feedback. As there was no Arm dedicated implementation of
-arch_freq_get_on_cpu, this went kinda unnoticed.
-The conclusion of the above mentioned discussion (though rather unstated
-explicitly) was to keep the current behaviour of scaling_cur_freq and align
-both across different archs: so with the patches, both attributes will provide
-hw feedback on current frequency, when available.
-Note that if we are to adhere to the docs cpuinfo_cur_freq is the place to use
-the counters really.
+The suffixes of the IRQ identifiers, as used for pins related to the
+Interrupt Controller for External Devices (INTC-EX), are inconsistent.
+Correct them to match the Pin Multiplex attachment in Rev.0.51 of the
+R-Car V4M Series Hardware User's Manual.
 
-That change was also requested through [3]
-
-Adding @Viresh in case there was any shift in the tides ....
-> 
-> The AmpereOne system I'm testing on has the following configuration:
-> - Max frequency is 3000000
-> - Support for AMU registers
-> - ACPI CPPC feedback counters use PCC register space
-> - Fedora 39 with 6.7.5 kernel
-> - Fedora 39 with 6.9.0-rc3 + this patch series
-> 
-> With 6.7.5 kernel:
-> Core        scaling_cur_freq        cpuinfo_cur_freq
-> ----        ----------------        ----------------
-> 0             3000000                 2593000
-> 1             3000000                 2613000
-> 2             3000000                 2625000
-> 3             3000000                 2632000
-> 
-So if I got it right from the info you have provided the numbers above are
-obtained without applying the patches. In that case, scaling_cur_freq will
-use policy->cur (in your case) showing last frequency set, not necessarily
-the actual freq, whereas cpuinfo_cur_freq uses __cpufreq_get and AMU counters.
-
-
-> With 6.9.0-rc3 + this patch series:
-> Core        scaling_cur_freq        cpuinfo_cur_freq
-> ----        ----------------        ----------------
-> 0             2671875                 2671875
-> 1             2589632                 2589632
-> 2             2648437                 2648437
-> 3             2698242                 2698242
->
-With the patches applied both scaling_cur_freq and cpuinfo_cur_freq will use AMU
-counters, or fie scale factor obtained based on AMU counters to be more precise:
-both should now show similar/same frequency (as discussed in [1])
-I'd say due to existing implementation for scaling_cur_freq (which we cannot
-change at this point) this is unavoidable.
-
-> In the second case we can't identify that the CPU frequency is
-> being throttled by the hardware. I noticed this behavior with
-> or without this patch.
->
-I am not entirely sure comparing the two should be a way to go about throttling
-(whether w/ or w/o the changes).
-It would probably be best to refer to thermal sysfs and get a hold of cur_state
-which should indicate current throttle state:
-
- /sys/class/thermal/thermal_zone[0-*]/cdev[0-*]/cur_state
-
-with values above '0' implying ongoing throttling.
-
-The appropriate thermal_zone can be identified through 'type' attribute.
-
-
-Thank you for giving those patches a spin.
-
+Fixes: 291f7856fc451cbe ("pinctrl: renesas: Initial R8A779H0 (R-Car V4M) PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-BR
-Beata
----
-[1] https://lore.kernel.org/all/20230609043922.eyyqutbwlofqaddz@vireshk-i7/
-[2] https://elixir.bootlin.com/linux/latest/source/Documentation/admin-guide/pm/cpufreq.rst#L197
-[3] https://lore.kernel.org/lkml/2cfbc633-1e94-d741-2337-e1b0cf48b81b@nvidia.com/
----
+ drivers/pinctrl/renesas/pfc-r8a779h0.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/pinctrl/renesas/pfc-r8a779h0.c b/drivers/pinctrl/renesas/pfc-r8a779h0.c
+index afa8f06c85cf5bd6..0cbfe7637fc97743 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a779h0.c
++++ b/drivers/pinctrl/renesas/pfc-r8a779h0.c
+@@ -75,10 +75,10 @@
+ #define GPSR0_9		F_(MSIOF5_SYNC,		IP1SR0_7_4)
+ #define GPSR0_8		F_(MSIOF5_SS1,		IP1SR0_3_0)
+ #define GPSR0_7		F_(MSIOF5_SS2,		IP0SR0_31_28)
+-#define GPSR0_6		F_(IRQ0,		IP0SR0_27_24)
+-#define GPSR0_5		F_(IRQ1,		IP0SR0_23_20)
+-#define GPSR0_4		F_(IRQ2,		IP0SR0_19_16)
+-#define GPSR0_3		F_(IRQ3,		IP0SR0_15_12)
++#define GPSR0_6		F_(IRQ0_A,		IP0SR0_27_24)
++#define GPSR0_5		F_(IRQ1_A,		IP0SR0_23_20)
++#define GPSR0_4		F_(IRQ2_A,		IP0SR0_19_16)
++#define GPSR0_3		F_(IRQ3_A,		IP0SR0_15_12)
+ #define GPSR0_2		F_(GP0_02,		IP0SR0_11_8)
+ #define GPSR0_1		F_(GP0_01,		IP0SR0_7_4)
+ #define GPSR0_0		F_(GP0_00,		IP0SR0_3_0)
+@@ -265,10 +265,10 @@
+ #define IP0SR0_3_0	F_(0, 0)		FM(ERROROUTC_N_B)	FM(TCLK2_B)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP0SR0_7_4	F_(0, 0)		FM(MSIOF3_SS1)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP0SR0_11_8	F_(0, 0)		FM(MSIOF3_SS2)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP0SR0_15_12	FM(IRQ3)		FM(MSIOF3_SCK)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP0SR0_19_16	FM(IRQ2)		FM(MSIOF3_TXD)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP0SR0_23_20	FM(IRQ1)		FM(MSIOF3_RXD)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+-#define IP0SR0_27_24	FM(IRQ0)		FM(MSIOF3_SYNC)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
++#define IP0SR0_15_12	FM(IRQ3_A)		FM(MSIOF3_SCK)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
++#define IP0SR0_19_16	FM(IRQ2_A)		FM(MSIOF3_TXD)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
++#define IP0SR0_23_20	FM(IRQ1_A)		FM(MSIOF3_RXD)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
++#define IP0SR0_27_24	FM(IRQ0_A)		FM(MSIOF3_SYNC)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ #define IP0SR0_31_28	FM(MSIOF5_SS2)		F_(0, 0)		F_(0, 0)	F_(0, 0)	F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0) F_(0, 0)
+ 
+ /* IP1SR0 */		/* 0 */			/* 1 */			/* 2 */		/* 3		4	 5	  6	   7	    8	     9	      A	       B	C	 D	  E	   F */
+@@ -672,16 +672,16 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_IPSR_GPSR(IP0SR0_11_8,	MSIOF3_SS2),
+ 
+-	PINMUX_IPSR_GPSR(IP0SR0_15_12,	IRQ3),
++	PINMUX_IPSR_GPSR(IP0SR0_15_12,	IRQ3_A),
+ 	PINMUX_IPSR_GPSR(IP0SR0_15_12,	MSIOF3_SCK),
+ 
+-	PINMUX_IPSR_GPSR(IP0SR0_19_16,	IRQ2),
++	PINMUX_IPSR_GPSR(IP0SR0_19_16,	IRQ2_A),
+ 	PINMUX_IPSR_GPSR(IP0SR0_19_16,	MSIOF3_TXD),
+ 
+-	PINMUX_IPSR_GPSR(IP0SR0_23_20,	IRQ1),
++	PINMUX_IPSR_GPSR(IP0SR0_23_20,	IRQ1_A),
+ 	PINMUX_IPSR_GPSR(IP0SR0_23_20,	MSIOF3_RXD),
+ 
+-	PINMUX_IPSR_GPSR(IP0SR0_27_24,	IRQ0),
++	PINMUX_IPSR_GPSR(IP0SR0_27_24,	IRQ0_A),
+ 	PINMUX_IPSR_GPSR(IP0SR0_27_24,	MSIOF3_SYNC),
+ 
+ 	PINMUX_IPSR_GPSR(IP0SR0_31_28,	MSIOF5_SS2),
+-- 
+2.34.1
 
-> Thanks,
-> Vanshi
