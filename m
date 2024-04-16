@@ -1,35 +1,35 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AD212E1DE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B1512E1E4;
 	Tue, 16 Apr 2024 14:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278654; cv=none; b=rDqQp0+1/Pw7zlKa/7x8yKtlmaH01nkcJzuZIuIg35Qw/PqM8bWWAaKRTj4nhZqMfMM72kv4oh5zF1YNjNoH5ZSSbztCBi8OkDAuZGnNlWqnBbTvpOuecVZdgHb4cW0ZAM4yzKIotvyupwSNkVekgpYi66qyT/YK+PaxkKPxQuo=
+	t=1713278654; cv=none; b=gPS0ErDN+lc6IyCzQTOXvGwkXE7bHddZIoNPoNQHjtGvO6FY7AKp/HGicGh8f13cdk3hu+u+DdNQa4zkLYLSgdYvTnFw/Qc7pjVytFdbC7jGDwgxskeCELDWHrjji324WQWc7/iOiPS8EEIXdIKRRbnLDfYfY2VC/hVgSBFhlJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713278654; c=relaxed/simple;
-	bh=o4ZOIcqpBZ2ScPAygv+rbNYIAA7PYEWjMlaH8XOvMJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cgyVMNjBYbFNlAIqpQDaM2yjdcBHfApMaO0AA9lB3remHZGbUhngZmVW2G8uVs80I2bvtuZWHeA8hlBOVq3TU4T2jG1wwEffEjt9i3mJXrTi/HIBvqo8uVf0KusKI7kwOe+yNvR6GOMuiFP+M9TCB/K1KTI/okM935fsUPBGsa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Ktc/mFMg; arc=none smtp.client-ip=193.104.135.124
+	bh=5BwHBYqxMFeIngfy155cTEhlu7ALrPnplvMVvaMfee0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c6MTUoQXmlcc9WD6Mxx6XMEMzOFrxpa4R98ihslnbDlTqLOqBe9NndWlbPAJoz+tBTluoTjIh9obJlsPJt1qaINNKrjZoTX86fnwsWxv7u1fkav4eOQWRw70YlczUQHmiVXWYE+rKHHfKbcWH/LbtpZh1pcLkvOnc3FlsPtaNXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Xgb85BgK; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Ktc/mFMg"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Xgb85BgK"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 74A76600A5;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id C7327600AF;
 	Tue, 16 Apr 2024 14:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1713278649;
-	bh=o4ZOIcqpBZ2ScPAygv+rbNYIAA7PYEWjMlaH8XOvMJM=;
+	bh=5BwHBYqxMFeIngfy155cTEhlu7ALrPnplvMVvaMfee0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Ktc/mFMgo9hWpkLij6VpxVjtIpbb8Uz3yFZYMrAoUnaEMbxj6GSqFFT5zhwsjO5i8
-	 hZmsrUY1cb/rgAtajaLi0nRSWfJgmx+S4Bo4lyE+7Ayk6fqoxFmFuBFHEGgGMrkwcB
-	 5R/4uShxm7EcZLAzfedAF35xvctIBXUDILxejDOx2qRYKCw9YD4kJDI/KihKVyx5L7
-	 935YtTvCoD3pNs5FmKlsBbzV6iI5iwd+dAEvphsXCzDLWbBSLAY9A2JJDVVDQYQoa5
-	 a2fOloVEhEUvNE5ldQNofWfWxH+DphjGebSkiwCTbgwI5jjRfW93BUQIcGCojKCyD3
-	 TJ5Xc20wJu/ng==
+	b=Xgb85BgKLWsdRhM36K3eRzcf4c9sMeZX5xgUX0gQUPqGHoy2FUs/6nFwcqiQwx/0e
+	 izTYlD7ipM+2kp9dWZfiJfbhUlIc1N8Ec26EjadQUwcNQVp3uAG+Hg97/Qm/Wg1+xb
+	 BLURF7GjjF7V2qn7U/8HD93L3sVmancpYp1/AtXCWpPj4w/4GF+1RIIjYs//9yRtFS
+	 TlqqtjUwS5HcmYgKCzetYA5plB3rj4D7lMMRQeS1wi3JMtnsTkh1KORyiR2DIAHnY0
+	 oJ8evaBerEj6DPiis11bO/+rIYju6KBSWG9XEX4i9Di83kGkUEpEM9o9y6RXkT/5ri
+	 7JsOZ3Nnt/hUA==
 Received: by x201s (Postfix, from userid 1000)
-	id 8CFE32061E5; Tue, 16 Apr 2024 14:43:35 +0000 (UTC)
+	id 3185F203455; Tue, 16 Apr 2024 14:43:27 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: intel-wired-lan@lists.osuosl.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -41,9 +41,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Jesse Brandeburg <jesse.brandeburg@intel.com>,
 	Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: [PATCH iwl-next] igb: flower: validate control flags
-Date: Tue, 16 Apr 2024 14:43:35 +0000
-Message-ID: <20240416144335.15353-1-ast@fiberby.net>
+Subject: [PATCH iwl-next] iavf: flower: validate control flags
+Date: Tue, 16 Apr 2024 14:43:25 +0000
+Message-ID: <20240416144325.15319-1-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,33 +56,34 @@ Content-Transfer-Encoding: 8bit
 
 This driver currently doesn't support any control flags.
 
-Use flow_rule_match_has_control_flags() to check for control flags,
+Use flow_rule_has_control_flags() to check for control flags,
 such as can be set through `tc flower ... ip_flags frag`.
 
-In case any control flags are masked, flow_rule_match_has_control_flags()
+In case any control flags are masked, flow_rule_has_control_flags()
 sets a NL extended error message, and we return -EOPNOTSUPP.
 
 Only compile-tested.
 
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/intel/iavf/iavf_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 74a998fcaa6f..e4c65d3819d7 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -2597,6 +2597,9 @@ static int igb_parse_cls_flower(struct igb_adapter *adapter,
- 		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+index 13361a780ece..f14355d52f47 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_main.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+@@ -3757,6 +3757,10 @@ static int iavf_parse_cls_flower(struct iavf_adapter *adapter,
+ 
+ 		flow_rule_match_control(rule, &match);
+ 		addr_type = match.key->addr_type;
++
++		if (flow_rule_has_control_flags(match.mask->flags,
++						f->common.extack))
++			return -EOPNOTSUPP;
  	}
  
-+	if (flow_rule_match_has_control_flags(rule, extack))
-+		return -EOPNOTSUPP;
-+
- 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
- 		struct flow_match_eth_addrs match;
- 
+ 	if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
 -- 
 2.43.0
 
