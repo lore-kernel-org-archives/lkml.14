@@ -1,231 +1,153 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD433BB30;
-	Tue, 16 Apr 2024 13:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518E112BF15
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713272653; cv=none; b=dBqs+7PryHtI/XdcYQz4c5Jp7aXoRSEyNRedCq/q/L7hZgkBIJGxrY5q1fS0ubpYv2HrPXnaUKZw14JnrszXfPJ9NPIQVt1YpyOe2/ps0Ecg0IDfPpsD8a0x5Tvt2aOgOqH7DI+VzeDTAibOZCiJcQvQAFrYgkXtwB/Nhou3+1Y=
+	t=1713272705; cv=none; b=o36FM4kQwgQIEfy3S/jhF2ndZ5K8hUGeb4OMZ1Sy5cXCgtfNptkBn2eaYyaGnkcV5eVg9+aFF6AmJJRJBXizFrJE+Zfyy/CGBga2ATgSMYIlmfgSYcE0CWp/lDDzA4vtBg7gX+qN6/o1ftWPgpNViCpJ61jKi0BxA1q09hmPldE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713272653; c=relaxed/simple;
-	bh=jyl2cZDoiVvnuF7lXdamfX/f0T/b00HRDO03z0SlXSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IVgE6XrRdCFNmaEYN07kXnJLHcaKw+G+iWJEx6u6dtCUwylLyPBlRPBq49eWlWODi8jRm5x8SixAU59FXnYfxXtjxblVSZWULP/Pz++dg+AKowenRXT4CyGLQVOKPVcTYBgiy3LmhMRIjrzOAqMP0KrBtjKeqD3Y//azwRXb71U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=LL11ftvI; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1713272705; c=relaxed/simple;
+	bh=UEzTGUe3r7acXf8Yb95hdOs5Y9KDHJwibjjQOPb+gas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kJ6Myv/x5CFUyw4nsRiIrkcNMHfdcZod+KXGkElDksL8UJe43qxfpZJK7cBTT7jdVsMBmqYzxgp5yARvcqB9fyeuCwoY85hF5knpiHWvGP0SExF8HnqvEr0zP8u6GjJm3epBbtq/ZX3CdCK5BjooDVf8GzmFokbcexhxn5bth0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ss/kIJQt; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="LL11ftvI"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 717688840B;
-	Tue, 16 Apr 2024 15:04:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713272647;
-	bh=SblT9Hg6Us3aYenhyXkE7xfTTuCdWBuQ0gQ35LqzdW8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LL11ftvI7PahbwlHIJlaTXrry/T+V2II4XKnF05LaycYiqjf4FdSIV/zfESBrhxAn
-	 XdFxMfLjX/5ub7EHxMVeP1bA32b8gvmme1fFScg3hiRAh/Q+Z4lh9scpNNzKzXu+8n
-	 GtGYF2a+Dnug6L1YJHcTsJOdcWBAqgq3D3MAvwePRa5lMQZA/MPTUO+OjQaEen6wRX
-	 yvAys1ZtfwLTYyKgsdTspLnQZfcEp1tUCXTCl0tmRFojKJ7d9Rv6OU8X2sT1YAGmuM
-	 BlPgBzrk/Kgm9FnmL84tzpkoKcenr4pKQgl2RsIrtwj2pYhewbl1i3POXeiFDRb+JF
-	 2l8MoWKdE4CQA==
-Date: Tue, 16 Apr 2024 15:03:59 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Casper Andersson <casper.casan@gmail.com>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Vladimir Oltean
- <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Tristram.Ha@microchip.com, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Ravi Gunasekaran <r-gunasekaran@ti.com>, Simon
- Horman <horms@kernel.org>, Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
- Murali Karicheri <m-karicheri2@ti.com>, Jiri Pirko <jiri@resnulli.us>, Dan
- Carpenter <dan.carpenter@linaro.org>, Ziyang Xuan
- <william.xuanziyang@huawei.com>, Shigeru Yoshida <syoshida@redhat.com>,
- "Ricardo B. Marliere" <ricardo@marliere.net>, linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH v5 1/4] net: hsr: Provide RedBox support
- (HSR-SAN)
-Message-ID: <20240416150359.7362c762@wsk>
-In-Reply-To: <86mspt7glf.fsf@gmail.com>
-References: <20240415124928.1263240-1-lukma@denx.de>
-	<20240415124928.1263240-2-lukma@denx.de>
-	<86mspt7glf.fsf@gmail.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ss/kIJQt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713272700; x=1744808700;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UEzTGUe3r7acXf8Yb95hdOs5Y9KDHJwibjjQOPb+gas=;
+  b=Ss/kIJQt0zdXtxEjiSitKwj7zdB5qFc5n3xjBi1ZGBBafSqJ7h6TrYDJ
+   3YXhT6bUedorDPCFBZXFfCPZIaPeIo8sjZiv9UHyZPt3DSdjGZ7GEKZsw
+   OGEd/+jF3rSGT6SefuYmXieE2BkmGDM9VpDQW0Y+Z0tcWIdAeZT0oeGKE
+   v8YogGoMKIRA0l90ziYopg22AwajqeKw6fhpd9m0jXyoP22+TtXM/N3cS
+   mLe2isZCuErAhXmsj9/m9i5FdfFBka0cIPfNR6cIdXuLSOChrYR7AiWPl
+   O0+nsDJFlFUp3sIXlpCpk65J14i8SiSPtaGBV+nqO9P4aEWW/9fW1/TJK
+   g==;
+X-CSE-ConnectionGUID: C09H0YPgQVO8g29tx/zPrQ==
+X-CSE-MsgGUID: ODC00vwjQ+SX1JYJ1SMIng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8569445"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="8569445"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 06:04:59 -0700
+X-CSE-ConnectionGUID: fDp3iuRyQJiH1ahnVv75ZQ==
+X-CSE-MsgGUID: KKXIiKUHRK6bNxue6PaYcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22321830"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2024 06:04:55 -0700
+Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id DDBE332EA4;
+	Tue, 16 Apr 2024 14:04:50 +0100 (IST)
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	linux-kernel@vger.kernel.org
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	alan.brady@intel.com,
+	maciej.fijalkowski@intel.com,
+	jesse.brandeburg@intel.com,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Lukasz Czapnik <lukasz.czapnik@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Subject: [PATCH iwl-net] ice: Interpret .set_channels() input differently
+Date: Tue, 16 Apr 2024 14:58:54 +0200
+Message-ID: <20240416125856.1263314-1-larysa.zaremba@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/A+WHqGBLm_6dHzdxwFnq_a3";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
---Sig_/A+WHqGBLm_6dHzdxwFnq_a3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+A bug occurs because a safety check guarding AF_XDP-related queues in
+ethnl_set_channels(), does not trigger. This happens, because kernel and
+ice driver interpret the ethtool command differently.
 
-Hi Casper,
+How the bug occurs:
+1. ethtool -l <IFNAME> -> combined: 40
+2. Attach AF_XDP to queue 30
+3. ethtool -L <IFNAME> rx 15 tx 15
+   combined number is not specified, so command becomes {rx_count = 15,
+   tx_count = 15, combined_count = 40}.
+4. ethnl_set_channels checks, if there are any AF_XDP of queues from the
+   new (combined_count + rx_count) to the old one, so from 55 to 40, check
+   does not trigger.
+5. ice interprets `rx 15 tx 15` as 15 combined channels and deletes the
+   queue that AF_XDP is attached to.
 
-I've pasted the reply here, so we can discuss the newest patch set (v5).
+Interpret the command in a way that is more consistent with ethtool
+manual [0] (--show-channels and --set-channels).
 
-> Hi,
->=20
-> On 2024-04-15 14:49 +0200, Lukasz Majewski wrote:
-> > - Modify frame passed Port C (Interlink) to have RedBox's source
-> > address (SA) This fixes issue with connecting L2 switch to
-> > Interlink Port as switches drop frames with SA other than one
-> > registered in their (internal) routing tables. =20
->=20
-> You never responded to my comment regarding this on v4. The same SA
-> should be able to go through a whole HSR and/or PRP network without
-> being replaced.
-> https://lore.kernel.org/netdev/20240404125159.721fbc19@wsk/T/#m9f18ec6a8d=
-e3f2608908bd181a786ea2c4fbc5e7
->=20
-> BR,
-> Casper
+Considering that in the ice driver only the difference between RX and TX
+queues forms dedicated channels, change the correct way to set number of
+channels to:
 
-> Out of curiosity, are you planning to implement the remaining RedBox
-> modes too (PRP-SAN, HSR-HSR, HSR-PRP)?
->=20
+ethtool -L <IFNAME> combined 10 /* For symmetric queues */
+ethtool -L <IFNAME> combined 8 tx 2 rx 0 /* For asymmetric queues */
 
-Currently I'm assigned to implement HSR-SAN.
+[0] https://man7.org/linux/man-pages/man8/ethtool.8.html
 
-> On 2024-04-02 10:58 +0200, Lukasz Majewski wrote:
-> > Changes for v3:
-> >
-> > - Modify frame passed Port C (Interlink) to have RedBox's source
-> > address (SA) This fixes issue with connecting L2 switch to
-> > Interlink Port as switches drop frames with SA other than one
-> > registered in their (internal) routing tables. =20
->=20
-> > +	/* When HSR node is used as RedBox - the frame received
-> > from HSR ring
-> > +	 * requires source MAC address (SA) replacement to one
-> > which can be
-> > +	 * recognized by SAN devices (otherwise, frames are
-> > dropped by switch)
-> > +	 */
-> > +	if (port->type =3D=3D HSR_PT_INTERLINK)
-> > +		ether_addr_copy(eth_hdr(skb)->h_source,
-> > +				port->hsr->macaddress_redbox); =20
->=20
-> I'm not really understanding the reason for this change. Can you
-> explain it in more detail?
+Fixes: 87324e747fde ("ice: Implement ethtool ops for channels")
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+---
+ drivers/net/ethernet/intel/ice/ice_ethtool.c | 22 ++++++--------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-According to the HSR standard [1] the RedBox device shall work as a
-"proxy" [*] between HSR network and SAN (i.e. "normal" ethernet)
-devices.
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 78b833b3e1d7..d91f41f61bce 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -3593,7 +3593,6 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
+ 	struct ice_pf *pf = vsi->back;
+ 	int new_rx = 0, new_tx = 0;
+ 	bool locked = false;
+-	u32 curr_combined;
+ 	int ret = 0;
+ 
+ 	/* do not support changing channels in Safe Mode */
+@@ -3615,22 +3614,13 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	curr_combined = ice_get_combined_cnt(vsi);
++	if (!ch->combined_count) {
++		netdev_err(dev, "Please specify at least 1 combined channel\n");
++		return -EINVAL;
++	}
+ 
+-	/* these checks are for cases where user didn't specify a particular
+-	 * value on cmd line but we get non-zero value anyway via
+-	 * get_channels(); look at ethtool.c in ethtool repository (the user
+-	 * space part), particularly, do_schannels() routine
+-	 */
+-	if (ch->rx_count == vsi->num_rxq - curr_combined)
+-		ch->rx_count = 0;
+-	if (ch->tx_count == vsi->num_txq - curr_combined)
+-		ch->tx_count = 0;
+-	if (ch->combined_count == curr_combined)
+-		ch->combined_count = 0;
+-
+-	if (!(ch->combined_count || (ch->rx_count && ch->tx_count))) {
+-		netdev_err(dev, "Please specify at least 1 Rx and 1 Tx channel\n");
++	if (ch->rx_count && ch->tx_count) {
++		netdev_err(dev, "Dedicated RX or TX channels cannot be used simultaneously\n");
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.43.0
 
-This particular snippet handles the situation when frame from HSR node
-is supposed to be sent to SAN network. In that case the SA of HSR
-(SA_A) is replaced with SA of RedBox (SA_RB) as the MAC address of
-RedBox is known and used by SAN devices.
-
-
-Node A  hsr1  |=3D=3D=3D=3D=3D=3D| hsr1 Node Redbox |   |
-(SA_A) [**]   |	     |           eth3   |---| ethX SAN
-	      |      |        	 (SA_RB)|   |  (e.g switch)
-
-
-(the =3D=3D=3D=3D=3D=3D represents duplicate link - like lan1,lan2)
-
-If the SA_A would be passed to SAN (e.g. switch) the switch could get
-confused as also RedBox MAC address would be used. Hence, all the
-frames going out from "Node Redbox" have SA set to SA_RB.
-
-According to [1] - RedBox shall have the MAC address.
-This is similar to problem from [2].
-
-> The standard does not say to modify the
-> SA. However, it also does not say to *not* modify it in HSR-SAN mode
-> like it does in other places. In HSR-HSR and HSR-PRP mode modifying
-> SA breaks the duplicate discard.
-
-IMHO, the HSR-SAN shall be regarded as a "proxy" [*] between two types
-(and not fully compatible) networks.
-
-> So keeping the same behavior for all
-> modes would be ideal.
->=20
-> I imagine any HW offloaded solutions will not modify the SA, so if
-> possible the SW should also behave as such.
-
-The HW offloading in most cases works with HSR-HSR setup (i.e. it
-duplicates frames automatically or discards them when recived - like
-ksz9477 [3]).
-
-I think that RedBox HW offloading would be difficult to achieve to
-comply with standard. One "rough" idea would be to configure
-aforementioned ksz9477 to pass all frames in its HW between SAN and HSR
-network (but then it wouldn't filter them).
-
->=20
-> BR,
-> Casper
-
-Notes:
-
-[*] - However there is no specific "guidelines" on how the "proxy"
-shall be implemented.
-
-[**] - With current approach - the SAN MAC addresses are added to
-"node table" of Node A. For Node RedBox those are stored in a separate
-ProxyNodeTable. I'm not sure if this is the best possible approach
-[***], as ideally only MAC addresses of HSR "network" nodes shall be
-visible.
-
-[***] - I think that this "improvement" could be addressed when HSR
-support is added to Linux as it is the pre-requisite to add support for
-it to iproute2. Afterwards, the code can be further refined (as it
-would be added to net-next anyway).
-
-[****] - As I'm now "on the topic" - I can share full setup for busybox
-to run tests included to v5 of this patch set.
-
-
-Links:
-
-[1] - IEC 62439-3:2021
-
-[2] -
-https://elixir.bootlin.com/linux/latest/source/net/hsr/hsr_framereg.c#L397
-
-[3] -
-https://elixir.bootlin.com/linux/latest/source/drivers/net/dsa/microchip/ks=
-z9477.c#L1341
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/A+WHqGBLm_6dHzdxwFnq_a3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmYedz8ACgkQAR8vZIA0
-zr35uAgAwCtfMgEKKQfSUIvYDmNPdJcAri6fGbohes+LlnSPb36GLnMXOUmtYEMX
-ljUgmP+20s3PM3+t79HmXL8QvU0rAPGQIcPVgZw9yHyMvO5XVf9e0hN/3+LTycTR
-c0jPdgjBiWWQExpMTB3UeyKEO4sxmaWunayKZqdkTTvd6nAyS2TJyqvdDD4bUxc0
-+lHSLmcq/FDl8km7JSoiovaH5T+ROhLpVSX0REnkiOlMWuZg4DwRGWwKAEZa6kgY
-3zk7nY9MpTcXe9J4A+Uld6mtUZfdC3Dp9ueeARRh4oUq/RAy2TJvdkju1D5ooq69
-Cm6dO8TlP3c4YkH1Hq5oiWX7ZE/q4A==
-=Jbmo
------END PGP SIGNATURE-----
-
---Sig_/A+WHqGBLm_6dHzdxwFnq_a3--
