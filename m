@@ -1,94 +1,112 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E8B1304B9
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFA2130A48;
+	Tue, 16 Apr 2024 15:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713280558; cv=none; b=JivEOVu3wKDiwmMm7ocDUrO1/kPaPOCo7mqcDlwgmTq/undGs7Pap45t/N54MvkHwRPGWs4BYYUQZN9+o3Qs4kcmy+qwH9ZohOXbb8e2ieoJvYpEVcjAusKZPqKb44kGU6wEZZcDwWEINnYaUC47qSCzyhnv+o974OJenLZNnWQ=
+	t=1713280571; cv=none; b=RSB+PWIHYQbj/TKYrCaeWXZ9Uxk3wUGnegi2rZfoyRXsG9/tzeZOrS8Yj0JcmZZ7RmSQoIS4AqB0e/jSVRWCm/Havj/BeOCF32Jd0POBXFPG13nKEus4YbdGlD1cyY+tL/L16pziL3YCgAGtuggyFvhJtTQHUwPJoWxQSeTIdU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713280558; c=relaxed/simple;
-	bh=zaoja2SjlH3NFx4QONthXCor2x9mlk5CiLQ+K1scUz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBXoYdi4u2fuH3uEH/lyXfpWm98fWfBBfI9E9nlt4AePO29qnhfoSsjpZ9hoSqRHGnLpK20Fi+utiGEFL79dBXJ5VxHwQrm4QRvK/JpX5yhfY+WKGr6Oqo7Be9U6Q14N27wsZb8EhpolXsuZKqqkn94dzVfFl99yp2N9rH/gPL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sqG7xAiB; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713280571; c=relaxed/simple;
+	bh=pB3eL6Og55inUv0jxBTwVZj2HYy/Y6g0TVL2kPiLImE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UPI/1/NftdgzohndEp1byhABGiwrLkXi8/ly+yDu4/ZJygDyyhDwXI1IH+wtOFD1Eus6IpSfD4JKLD7E3uSbk7WaNtrK9/ZRaUIJ8qZx+3noj3Zyr6xfiiB950itBcBH0WEkSMN2d8tcP9LfT18BtfPX/5VMRNPdOTGO55klxFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh0V2L1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqG7xAiB"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6157c30fbc9so44684247b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713280555; x=1713885355; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CACAUQHiKa/5rbKG2xHcEHJiwEEsgJJj1Ty5DFU18AY=;
-        b=sqG7xAiBufKO9MSy4CNtb4R/dnuQBj/WQQd1ZDhHW5RFNsf270Y8LvKmVQSV2j181E
-         5jlMU9yAKn4phbf8PJMcCQIqCXlW9iE7fzwQ+A/SF7WhydIMAKNrXOwkApaj+IMMVz5R
-         ukOxWZ3e+6dFhWd+sfLafrqgbPgm1vSuS8O3Y9iG+AS1b8TX3YMsU1vEtsfAeJnt3zsY
-         tXZ1ZVYg+s6Wr//6lswKwwm+k0cDr13Xxr+9Rz5v+xNuY/LJ/lmYOvDzOTF68kpuf4qw
-         jfFVahHqvATudVf4QnmvhZPnF4J/PCbFh1RvgpzCdtgSeI3TSVI3ZaEvLVtxvXzzPy5Q
-         dO6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713280555; x=1713885355;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CACAUQHiKa/5rbKG2xHcEHJiwEEsgJJj1Ty5DFU18AY=;
-        b=bri+zJn4rcZZQHNbUrJdRNQJmtBwbadahl49nXiL4vjPjEFS9+jZSapJP8LtLWuA4G
-         vs9cOb8yPTX1Lgp6nYV+/cxGAIxHxRL7JSnZWxB7JL+nFzM9ymaVeFhYkpVA329vo1lq
-         uUR4DD4YZ/iqjvaGIbQfCDWBcrRLYSTwrSgxH0k3De74htoqe3s8XdGOQ22P5MUSGFhv
-         Of6r2azDvItEgWGkXxCVqEgpe8k/MUGzSG1FLqF7HXcKqHJWlu6ogUM4sq2wjoBvd17I
-         REws7ni+QXYxggrxXKp3tX2X757nv2pv+6R1oWFYvyvfK3y9xCQNz2AKTMDaEOzl5Ojz
-         WFnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUE7vF+gTgfd6wegACuOkzGlC+COXuMZqF0hgwejtOUxH9cAItAkc7IocgJA7h9OhGlzVtLXdBHZflJye5yiCn9YYJR7WTL+TEcguSF
-X-Gm-Message-State: AOJu0Yx/t2gFkQzXj/nOEGGQHgP9yOv67WAy+nfvj/A6PgCgB7fkna62
-	xaxJ6cpw2tAZJBzDdXluH9I0kP9RWS33ksNEQDPexD4ZRLTc/dDgNSg/HgH74d42BK8YJw4CCGf
-	Yq4Cl7GdA4vgB4SrpyjCL1/OSj+a9qbban52rcsTv8U5TwqAOtvs=
-X-Google-Smtp-Source: AGHT+IEn11qmsJXHPQo91cfYzFclr0ETZWeU2a6Li6Yzx9L65+/Jp5/Hvk01iKl8IIf8RphLlcqzTm9/ENY56Uymys8=
-X-Received: by 2002:a5b:40d:0:b0:dc6:bcb3:5d8e with SMTP id
- m13-20020a5b040d000000b00dc6bcb35d8emr12080662ybp.20.1713280555495; Tue, 16
- Apr 2024 08:15:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh0V2L1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65600C113CE;
+	Tue, 16 Apr 2024 15:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713280569;
+	bh=pB3eL6Og55inUv0jxBTwVZj2HYy/Y6g0TVL2kPiLImE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=oh0V2L1VJlq9rAC0hvKHIvKvgT3WuS7WraRiLXN9uX7tqjvCqurRBHV4LDANh9b5k
+	 Tt1YEHnRaJA6OSXr5DCHSP3MvjOhTVarAi5qf6QbhpZuV/edtAkSPahpPuMkKLuNAk
+	 BuvMiDlf3iaPqY229jpoyqzZ+QtCmqr6w7LS2MyLOAsXBZaqpOilcLFBHBqc3ALGR1
+	 THmKU1uYh0IvQsIqJzGg7eh0UhzOfIJK1koy/3PLO6ieQMP10tpcYdJT0NwMLVFwfc
+	 TT/7nUh/ZT2a2/FMDVeyBYb5BjUKnJkWkQxvsNk3fSUOkiN++PzNb8bdgw3AJocZ0j
+	 8gUT9yqvh7NnQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 16 Apr 2024 08:16:02 -0700
+Subject: [PATCH] bcachefs: Fix format specifier in validate_bset_keys()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416-ucsi-glink-altmode-v1-0-890db00877ac@linaro.org>
- <20240416-ucsi-glink-altmode-v1-5-890db00877ac@linaro.org> <80a8b7d4-2dd6-42a9-8305-81a93ba5e6bc@linaro.org>
-In-Reply-To: <80a8b7d4-2dd6-42a9-8305-81a93ba5e6bc@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 16 Apr 2024 18:15:44 +0300
-Message-ID: <CAA8EJpqVWEWkc+MtJWCtiz0CVnpgPT4RRjab50AwO-NZWi2vYQ@mail.gmail.com>
-Subject: Re: [PATCH 5/8] usb: typec: ucsi: glink: simplify notification handling
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-bcachefs-fix-format-specifier-validate_bset_keys-v1-1-3ea2cdf28b12@kernel.org>
+X-B4-Tracking: v=1; b=H4sIADKWHmYC/x2N0QqDMAwAf0XyvIB1InS/MobENNXgptIUcYj/v
+ rLHe7i7E0ySisGjOiHJrqbrUsDdKuCJllFQQ2Fo6qatW9fhwMSTRMOoB8Y1fSijbcIaVRLu9NZ
+ AWfrBJPezfA07f2cXiIJnDyW7JSnqf/l8XdcP7vg9a4IAAAA=
+To: kent.overstreet@linux.dev
+Cc: bfoster@redhat.com, linux-bcachefs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2827; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=pB3eL6Og55inUv0jxBTwVZj2HYy/Y6g0TVL2kPiLImE=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDGly0yw/qRnkMy1z3cdYukl07nKLk3/v2Z9gvOddsni6W
+ utG/ltzO0pZGMS4GGTFFFmqH6seNzScc5bxxqlJMHNYmUCGMHBxCsBEylUZGW7q/f1bovwgTzUq
+ /8Y3ztPnGJymxfZx7hR7d/apuN7cmjuMDH8vCXrvZW+3+ZtjUjlLPny+WOJJi/rZaw99vlxnK3d
+ 1IRsA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, 16 Apr 2024 at 17:36, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->
->
->
-> On 4/16/24 04:20, Dmitry Baryshkov wrote:
-> > All platforms except Qualcomm SC8180X pass CCI in the notification
-> > message. Use it instead of going back and forth over RPMSG
-> > interface to read CCI.
-> >
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
->
-> Are we sure it's reeeeallly just 8180?
+When building for 32-bit platforms, for which size_t is 'unsigned int',
+there is a warning from a format string in validate_bset_keys():
 
-More or less so. Previous platforms used either qcom-pmic-typec
-(sm8150, sm8250) or laptop-specific EC (sdm850 / c630, sc7180 /
-aspire1, CrOS). Next platforms (sc8280xp and sm8350, qcm6490) used
-pmic-glink and the new way of sending events. I think sc8180x was
-really the unfortunate one to use mixed events.
+  fs/bcachefs/btree_io.c: In function 'validate_bset_keys':
+  fs/bcachefs/btree_io.c:891:34: error: format '%lu' expects argument of type 'long unsigned int', but argument 12 has type 'unsigned int' [-Werror=format=]
+    891 |                                  "bad k->u64s %u (min %u max %lu)", k->u64s,
+        |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  fs/bcachefs/btree_io.c:603:32: note: in definition of macro 'btree_err'
+    603 |                                msg, ##__VA_ARGS__);                     \
+        |                                ^~~
+  fs/bcachefs/btree_io.c:887:21: note: in expansion of macro 'btree_err_on'
+    887 |                 if (btree_err_on(!bkeyp_u64s_valid(&b->format, k),
+        |                     ^~~~~~~~~~~~
+  fs/bcachefs/btree_io.c:891:64: note: format string is defined here
+    891 |                                  "bad k->u64s %u (min %u max %lu)", k->u64s,
+        |                                                              ~~^
+        |                                                                |
+        |                                                                long unsigned int
+        |                                                              %u
+  cc1: all warnings being treated as errors
 
+BKEY_U64s is size_t so the entire expression is promoted to size_t. Use
+the '%zu' specifier so that there is no warning regardless of the width
+of size_t.
+
+Fixes: 031ad9e7dbd1 ("bcachefs: Check for packed bkeys that are too big")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202404130747.wH6Dd23p-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202404131536.HdAMBOVc-lkp@intel.com/
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ fs/bcachefs/btree_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/bcachefs/btree_io.c b/fs/bcachefs/btree_io.c
+index 9678b2375bed..debb0edc3455 100644
+--- a/fs/bcachefs/btree_io.c
++++ b/fs/bcachefs/btree_io.c
+@@ -888,7 +888,7 @@ static int validate_bset_keys(struct bch_fs *c, struct btree *b,
+ 				 -BCH_ERR_btree_node_read_err_fixable,
+ 				 c, NULL, b, i,
+ 				 btree_node_bkey_bad_u64s,
+-				 "bad k->u64s %u (min %u max %lu)", k->u64s,
++				 "bad k->u64s %u (min %u max %zu)", k->u64s,
+ 				 bkeyp_key_u64s(&b->format, k),
+ 				 U8_MAX - BKEY_U64s + bkeyp_key_u64s(&b->format, k)))
+ 			goto drop_this_key;
+
+---
+base-commit: 96fca68c4fbf77a8185eb10f7557e23352732ea2
+change-id: 20240416-bcachefs-fix-format-specifier-validate_bset_keys-693c1daad9c9
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+Nathan Chancellor <nathan@kernel.org>
+
