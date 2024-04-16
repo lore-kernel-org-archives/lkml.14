@@ -1,77 +1,131 @@
-Received: from mail-m12823.netease.com (mail-m12823.netease.com [103.209.128.23])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D9612A16E;
-	Tue, 16 Apr 2024 13:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.209.128.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A006E12BF1D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273448; cv=none; b=tNi2KqnMpP/8wS3X9M78WK7AAh9lkDobBmRuhbkZVdVwEd+3hO+25hS7H4qgOcQkhTEXyq4nIQLAYQXBohlNV2KPZ90VARuWeUZxadDXYTEv1bbi+mUQ8Bg+eTHqYvkQf+S7Y7TKcXveW+/Po/9g0qWAVNjlGNJGninqrqY5zEk=
+	t=1713273519; cv=none; b=UbJVgSmeOc1xb3hsDbyCU3BnXp4dJDQgTQAIArPoUOEmnIDxYCsvvKtlWVHnfjSrQY9a/43qDDFpOAXosIfjq5WZQuCm4xti0PGb+nTgZhQ+RlW/UpcXxDWtjhYhYx3WyoRwhGqL7rm5daVAAPIr72mEwjIs3MxdF9tPUXQ3wJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273448; c=relaxed/simple;
-	bh=hyiEPB8L5mFUohZUkwNFrVzE6hLdGgK864C/chAB2H4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m63K5eFumOArxMSoWE/yhoVdNj+QnQrD9JD6/WtYTku0EdT8rbFYdqXrfF6rLfWS8Hj8hTNOXDjzWHNzY9c2PKzUK1OrTpeU1URfZL/HUl9w3hn4sXE/HZl+Q5X1mTkzRGLOeBTFkMVxI/JzLgTu4Cp6+8G9Ua43vtV1fo58QK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=103.209.128.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:5e10:948:ebda:821b:6681])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 437647E0101;
-	Tue, 16 Apr 2024 21:00:16 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/2] dt-bindings: arm: rockchip: add Radxa ROCK3 Model C
-Date: Tue, 16 Apr 2024 21:00:09 +0800
-Message-Id: <20240416130010.379705-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1713273519; c=relaxed/simple;
+	bh=u3r3BNHWn0VNuX0IDcCiM+gYMJzoSCvGaQ+eZeZOnUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HdLort/uM6+h7UAfC2c2Zq3cs1Yk+QoJmca93KF2cRpLWL9c3MqbkZKyEK+CGEGcIXhPf6lngNhBeEU9jzamfh3Evu7yONhQxVFjS43lyigq+1JtA5B3n0yMy0krbbOc1BuyuVBwiSdWwQ8r0TymldvfJAosG0KEQxH6K9lqz1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihY-0005sO-EE; Tue, 16 Apr 2024 15:18:20 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihX-00CcPG-Ut; Tue, 16 Apr 2024 15:18:19 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihX-002BWp-2p;
+	Tue, 16 Apr 2024 15:18:19 +0200
+Date: Tue, 16 Apr 2024 15:18:19 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend
+ if pwm-leds exist
+Message-ID: <dqibafuvizvltkblfizxvgrl3744lpxbwgdjid5ekxsju7gmxm@fys22ievmgz5>
+References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
+ <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+ <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
+ <20240416121519.GS2399047@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ0hLVhpKGR0YHh1DSB9CHlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSBlIQUkYS0tBTh5KS0FCT0NBHhkfGkFDSUoZQU1NQ0pZV1kWGg8SFR0UWU
-	FZT0tIVUpKS0hKQ1VKS0tVS1kG
-X-HM-Tid: 0a8ee6fe68e303a2kunm437647e0101
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Oj46PTo5VjMUAQ0vLBkBPR0a
-	TixPCj1VSlVKTEpISUxJT0pNQ05NVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0tBTh5KS0FCT0NBHhkfGkFDSUoZQU1NQ0pZV1kIAVlBSUtOTzcG
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mgrsmbcc7mtyc46w"
+Content-Disposition: inline
+In-Reply-To: <20240416121519.GS2399047@google.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The Radxa ROCK3 Model C is a similar board to
-the Radxa ROCK3 Model A with the RK3566 SoC.
-Add devicetree binding documentation for it.
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+--mgrsmbcc7mtyc46w
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 99bd5e2c76a0..dc3847bd67fe 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -777,6 +777,11 @@ properties:
-           - const: radxa,rock3a
-           - const: rockchip,rk3568
- 
-+      - description: Radxa ROCK3 Model C
-+        items:
-+          - const: radxa,rock3c
-+          - const: rockchip,rk3566
-+
-       - description: Radxa ROCK 5 Model A
-         items:
-           - const: radxa,rock-5a
--- 
-2.25.1
+Hey Lee,
 
+On Tue, Apr 16, 2024 at 01:15:19PM +0100, Lee Jones wrote:
+> On Tue, 16 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+>=20
+> > On 06.03.24 09:18, Uwe Kleine-K=F6nig wrote:
+> > > On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (=
+Thorsten Leemhuis) wrote:
+> > > > [...]
+> >=20
+> > Jakob confirmed it helped in the bugzilla ticket. But the patch since
+> > then didn't make any progress afaics -- or did it and I just missed it
+> > in my search?
+>=20
+> [...]=20
+>=20
+> > > ---->8----
+> > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
+> > >=20
+> > > On stm32mp1xx based machines (and others) a PWM consumer has to disab=
+le
+> > > the PWM because an enabled PWM refuses to suspend. So check the
+> > > LED_SUSPENDED flag and depending on that set the .enabled property.
+> > >=20
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218559
+> > > Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED s=
+hould be off")
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > [...]
+> > > ---->8----
+>=20
+> Did you submit this?  I don't see it in LORE or in my inbox.
+
+Yeah sure, apply it using:
+
+	curl -s https://lore.kernel.org/all/2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg=
+6bxobtdlekt4@mazicwtgf4qb/raw | git am --scissors -s
+
+:-)
+
+If you don't consider that suitable, I can create a patch that is easier
+to pick up.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mgrsmbcc7mtyc46w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYeepoACgkQj4D7WH0S
+/k5gugf/bpVGAeUjhxmd3eLjzH0HtU2qSxWQG4LFIRegk08Ex4wJNhpopT1kQOhN
+SMdNDgjcgSxvo9tqfH9cBTltJF0Baedv3dWGb4G/pJEfJRmUrk0+mkC/ZIoL/fTE
+VT0zY6pg3+zAXij2/W73VzFMGIf04A1CWrbOdxaODWlNVX/hb/MlS7TbbATp2PSZ
+DDDZhQe8kYQ9FPVvqM3HJRlZH5BJA/uLLHz+EK2H8QiMzqL6V/tCaY/ewjv+ZoO1
+20RPRH45JQA5LEALCkdAJ8+0OCHjxuQd14SHagxVW85U+vwA8CmTdDOwZFFnUTfw
+82MlSpgXg2z+D+tOpuqNd/HVKvO7sA==
+=NwBy
+-----END PGP SIGNATURE-----
+
+--mgrsmbcc7mtyc46w--
