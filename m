@@ -1,180 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9336EB75;
-	Tue, 16 Apr 2024 07:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3247FBA4
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713252206; cv=none; b=VHkeyzIbKbKGyGXLYc8WCAkzSIf45pmkXFPO39XulTqCp8JJt/VEmI/5zqg1Jqo6Wmy/ZVyh5thfkGWRbDRnp74yq47yDxrd7F053nt8oEP+d4VPJgUEmNNM5xh9f+yPPiB28qE+352P3m7l/fO/+G+uFsyTPbXrNkjMhaV64ZI=
+	t=1713252211; cv=none; b=JdI0gz3Bgt3CQBKqB39jkRZHSNwui0olagor6nUuayjmUGIyuyAwi7k1nRnAVroePXD3fJHT/o/wlphMcTFy9Dd3MHgtiQdKFDHQvr5HrwOk9vIaNZpm3hbbYW9I0CWSCSi/AEDEaSTS7iEUr0ufTRpmYITZbeV3J1xaVwyeJ18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713252206; c=relaxed/simple;
-	bh=ULqJjlTCraVJ0ruf913jYz2dlG1gS6UCOgmOiRdXRlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UjCvUPLzf0P3JLPBqJW2/Sn+xfkNer8nzPpJ1PQZr0VieC5pN2cPRDtF86WlRWoIMN163+SoQ1iEKRXtCwXwxWKOfl+DcQCsuFTcPeEUDF3NH+HFL84kVCy3ArKqnHlZf/m0tWDuZLJTDnBDJy2NWegGodnzs2laWUFeMHkhecM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekk8HCBF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713252211; c=relaxed/simple;
+	bh=i3fSC2Sh/bh/pxYyReh8mIapiLEcvyOrjS7DPGLwxGg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NeiFV80VvepFGSJYqtv9doFLsnBXAkBpxDLTYcIarrbI2fnEvKiokb4bE/0r+k7MEL+KpUH8Xy6FczLlkVon2jGWTMnAnyrqyfnY37CyuqaHZuSfrLnPyCUgx0nZPyuwNdbrCxmq1RTQadlkJYU5mhcItDn9LrpLLw3zQaSYoeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmzRrNAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekk8HCBF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBECC113CE;
-	Tue, 16 Apr 2024 07:23:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmzRrNAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFFBCC113CE;
+	Tue, 16 Apr 2024 07:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713252205;
-	bh=ULqJjlTCraVJ0ruf913jYz2dlG1gS6UCOgmOiRdXRlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekk8HCBFjthC7O7PxrFN7j/GM7z/nWOuO8k9QOUSLiGyz09GAO2cg64dmGZlUlds7
-	 00Ewxyx3C6wcPZBoIkKGD6lbL3qbO2ksVpnRUlonLdQr9BhpV1yf7+bx9loZNn41At
-	 rywVk+bWOXuipnXUZImOPnzXQlyIpQamAXCi97V5XEUtgpABiSiT97flmkQAEFDr7A
-	 YcuRY0rwjZPTJIRXEph9PF+jUZc4mOVTGomsCx8EugJ6WC8EEbdEckfhASAJlczMAM
-	 pEgjXqHCw7T7cVdoBUzlejwen9ZBJYRh+vjYrzCI4CZ6xsCi82SwkYS2yHPnvfOsma
-	 Wo31Nl9r7Gz/Q==
-Date: Tue, 16 Apr 2024 10:22:14 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Bj\"orn T\"opel" <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-Message-ID: <Zh4nJp8rv1qRBs8m@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net>
- <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+	s=k20201202; t=1713252211;
+	bh=i3fSC2Sh/bh/pxYyReh8mIapiLEcvyOrjS7DPGLwxGg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pmzRrNAn/c99ECm+p/63BcBUXJBAOvsCcC0qPDo6usf22bxfystbdB+0IXl5k6KKr
+	 CMgYFlwRYQ0oyci0aN29K4ii7j6Jn80azXZapmjhevKloLQ0/SLH5+SuTnAyYwHdcj
+	 MNaHVb9ak8i3ZnYWY96+CMb+yFWMSgcqn8XN+BETuOo+KdjAVRLtZaoSNGqLXYndY+
+	 kjjZ3ZjfsFFgvK0QoKV1JnvILvgRQut30UcqNgc5B5XE4qVxXSSd6ggg7kvX3O6DU2
+	 u+ybA9Vn3/zO64Bl8ln8HR/3A3pmNOtpysmQvEQ+SlYLJAOCU90aM3wuxReBspWLEw
+	 vWS+cgEPombzw==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH 1/4] f2fs: convert f2fs_mpage_readpages() to use folio
+Date: Tue, 16 Apr 2024 15:23:15 +0800
+Message-Id: <20240416072318.6486-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 15, 2024 at 06:36:39PM +0100, Mark Rutland wrote:
-> On Mon, Apr 15, 2024 at 09:52:41AM +0200, Peter Zijlstra wrote:
-> > On Thu, Apr 11, 2024 at 07:00:41PM +0300, Mike Rapoport wrote:
-> > > +/**
-> > > + * enum execmem_type - types of executable memory ranges
-> > > + *
-> > > + * There are several subsystems that allocate executable memory.
-> > > + * Architectures define different restrictions on placement,
-> > > + * permissions, alignment and other parameters for memory that can be used
-> > > + * by these subsystems.
-> > > + * Types in this enum identify subsystems that allocate executable memory
-> > > + * and let architectures define parameters for ranges suitable for
-> > > + * allocations by each subsystem.
-> > > + *
-> > > + * @EXECMEM_DEFAULT: default parameters that would be used for types that
-> > > + * are not explcitly defined.
-> > > + * @EXECMEM_MODULE_TEXT: parameters for module text sections
-> > > + * @EXECMEM_KPROBES: parameters for kprobes
-> > > + * @EXECMEM_FTRACE: parameters for ftrace
-> > > + * @EXECMEM_BPF: parameters for BPF
-> > > + * @EXECMEM_TYPE_MAX:
-> > > + */
-> > > +enum execmem_type {
-> > > +	EXECMEM_DEFAULT,
-> > > +	EXECMEM_MODULE_TEXT = EXECMEM_DEFAULT,
-> > > +	EXECMEM_KPROBES,
-> > > +	EXECMEM_FTRACE,
-> > > +	EXECMEM_BPF,
-> > > +	EXECMEM_TYPE_MAX,
-> > > +};
-> > 
-> > Can we please get a break-down of how all these types are actually
-> > different from one another?
-> > 
-> > I'm thinking some platforms have a tiny immediate space (arm64 comes to
-> > mind) and has less strict placement constraints for some of them?
-> 
-> Yeah, and really I'd *much* rather deal with that in arch code, as I have said
-> several times.
-> 
-> For arm64 we have two bsaic restrictions: 
-> 
-> 1) Direct branches can go +/-128M
->    We can expand this range by having direct branches go to PLTs, at a
->    performance cost.
-> 
-> 2) PREL32 relocations can go +/-2G
->    We cannot expand this further.
-> 
-> * We don't need to allocate memory for ftrace. We do not use trampolines.
-> 
-> * Kprobes XOL areas don't care about either of those; we don't place any
->   PC-relative instructions in those. Maybe we want to in future.
-> 
-> * Modules care about both; we'd *prefer* to place them within +/-128M of all
->   other kernel/module code, but if there's no space we can use PLTs and expand
->   that to +/-2G. Since modules can refreence other modules, that ends up
->   actually being halved, and modules have to fit within some 2G window that
->   also covers the kernel.
-> 
-> * I'm not sure about BPF's requirements; it seems happy doing the same as
->   modules.
+Convert f2fs_mpage_readpages() to use folio and related
+functionality.
 
-BPF are happy with vmalloc().
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/data.c | 80 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 40 insertions(+), 40 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 9c5512be1a1b..14dcd621acaa 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2374,7 +2374,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+  * Major change was from block_size == page_size in f2fs by default.
+  */
+ static int f2fs_mpage_readpages(struct inode *inode,
+-		struct readahead_control *rac, struct page *page)
++		struct readahead_control *rac, struct folio *folio)
+ {
+ 	struct bio *bio = NULL;
+ 	sector_t last_block_in_bio = 0;
+@@ -2394,6 +2394,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ #endif
+ 	unsigned nr_pages = rac ? readahead_count(rac) : 1;
+ 	unsigned max_nr_pages = nr_pages;
++	pgoff_t index;
+ 	int ret = 0;
  
-> So if we *must* use a common execmem allocator, what we'd reall want is our own
-> types, e.g.
-> 
-> 	EXECMEM_ANYWHERE
-> 	EXECMEM_NOPLT
-> 	EXECMEM_PREL32
-> 
-> ... and then we use those in arch code to implement module_alloc() and friends.
-
-I'm looking at execmem_types more as definition of the consumers, maybe I
-should have named the enum execmem_consumer at the first place.
-
-And the arch constrains defined in struct execmem_range describe how memory
-should be allocated for each consumer.
-
-These constraints are defined early at boot and remain static, so
-initializing them once and letting a common allocator use them makes
-perfect sense to me.
-
-I agree that fallback_{start,end} are not ideal, but we have 3
-architectures that have preferred and secondary range for modules. And arm
-and powerpc use the same logic for kprobes as well, and I don't see why this
-code should be duplicated.
-
-And, for instance, if you decide to place PC-relative instructions if
-kprobes XOL areas, you'd only need to update execmem_range for kprobes to
-be more like the range for modules.
-
-With central allocator it's easier to deal with the things like
-VM_FLUSH_RESET_PERMS and caching of ROX memory and I think it will be more
-maintainable that module_alloc(), alloc_insn_page() and
-bpf_jit_alloc_exec() spread all over the place.
+ 	map.m_pblk = 0;
+@@ -2407,64 +2408,63 @@ static int f2fs_mpage_readpages(struct inode *inode,
  
-> Mark.
-
+ 	for (; nr_pages; nr_pages--) {
+ 		if (rac) {
+-			page = readahead_page(rac);
+-			prefetchw(&page->flags);
++			folio = readahead_folio(rac);
++			prefetchw(&folio->flags);
+ 		}
+ 
+-#ifdef CONFIG_F2FS_FS_COMPRESSION
+-		if (f2fs_compressed_file(inode)) {
+-			/* there are remained compressed pages, submit them */
+-			if (!f2fs_cluster_can_merge_page(&cc, page->index)) {
+-				ret = f2fs_read_multi_pages(&cc, &bio,
+-							max_nr_pages,
+-							&last_block_in_bio,
+-							rac != NULL, false);
+-				f2fs_destroy_compress_ctx(&cc, false);
+-				if (ret)
+-					goto set_error_page;
+-			}
+-			if (cc.cluster_idx == NULL_CLUSTER) {
+-				if (nc_cluster_idx ==
+-					page->index >> cc.log_cluster_size) {
+-					goto read_single_page;
+-				}
+-
+-				ret = f2fs_is_compressed_cluster(inode, page->index);
+-				if (ret < 0)
+-					goto set_error_page;
+-				else if (!ret) {
+-					nc_cluster_idx =
+-						page->index >> cc.log_cluster_size;
+-					goto read_single_page;
+-				}
++		index = folio_index(folio);
+ 
+-				nc_cluster_idx = NULL_CLUSTER;
+-			}
+-			ret = f2fs_init_compress_ctx(&cc);
++#ifdef CONFIG_F2FS_FS_COMPRESSION
++		if (!f2fs_compressed_file(inode))
++			goto read_single_page;
++
++		/* there are remained compressed pages, submit them */
++		if (!f2fs_cluster_can_merge_page(&cc, index)) {
++			ret = f2fs_read_multi_pages(&cc, &bio,
++						max_nr_pages,
++						&last_block_in_bio,
++						rac != NULL, false);
++			f2fs_destroy_compress_ctx(&cc, false);
+ 			if (ret)
+ 				goto set_error_page;
++		}
++		if (cc.cluster_idx == NULL_CLUSTER) {
++			if (nc_cluster_idx == index >> cc.log_cluster_size)
++				goto read_single_page;
+ 
+-			f2fs_compress_ctx_add_page(&cc, page);
++			ret = f2fs_is_compressed_cluster(inode, index);
++			if (ret < 0)
++				goto set_error_page;
++			else if (!ret) {
++				nc_cluster_idx =
++					index >> cc.log_cluster_size;
++				goto read_single_page;
++			}
+ 
+-			goto next_page;
++			nc_cluster_idx = NULL_CLUSTER;
+ 		}
++		ret = f2fs_init_compress_ctx(&cc);
++		if (ret)
++			goto set_error_page;
++
++		f2fs_compress_ctx_add_page(&cc, &folio->page);
++
++		goto next_page;
+ read_single_page:
+ #endif
+ 
+-		ret = f2fs_read_single_page(inode, page, max_nr_pages, &map,
++		ret = f2fs_read_single_page(inode, &folio->page, max_nr_pages, &map,
+ 					&bio, &last_block_in_bio, rac);
+ 		if (ret) {
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ set_error_page:
+ #endif
+-			zero_user_segment(page, 0, PAGE_SIZE);
+-			unlock_page(page);
++			folio_zero_segment(folio, 0, folio_size(folio));
++			folio_unlock(folio);
+ 		}
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ next_page:
+ #endif
+-		if (rac)
+-			put_page(page);
+ 
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ 		if (f2fs_compressed_file(inode)) {
+@@ -2501,7 +2501,7 @@ static int f2fs_read_data_folio(struct file *file, struct folio *folio)
+ 	if (f2fs_has_inline_data(inode))
+ 		ret = f2fs_read_inline_data(inode, page);
+ 	if (ret == -EAGAIN)
+-		ret = f2fs_mpage_readpages(inode, NULL, page);
++		ret = f2fs_mpage_readpages(inode, NULL, folio);
+ 	return ret;
+ }
+ 
 -- 
-Sincerely yours,
-Mike.
+2.40.1
+
