@@ -1,176 +1,222 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A79913048E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713281019; cv=fail; b=gb2/z6FJN37cze+WQ+gVvu3Xc944oFEyXkPs/gn8XKIZzZ208R8kUQYCdYWC3CSqWGi4ZpAfZ9JDKYkQtnd6GzOTjRBG7He5PLUVbxYbw+5Ny4EG7zPh4wW5ZBTqSZ7SxlVcXFik13bHs6mXN+6p7aB/nkhnB3m5wF2ckpLp4Vk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713281019; c=relaxed/simple;
-	bh=mZ8fzMumNUfuPXzPZ9Rdr+xo7oC1euIn3b8LZHda/bw=;
-	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
-	 Content-Type:MIME-Version; b=SQ3LH6sCiH4izHqoZzDtm9pJ69oQnPg2pIt/lcpmdxL+h6d/gwTZ2Iq63zdMBEQ8AurN97XpI62FLukNjQwE9xOfwQP4+CQu+JsaOqj1YinmqKWc235dd6LcJdBintyBbeALQJkVuWTKdVCozBE9dD6KBpA+S2Hii/vEgN9Ry3s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RN5a9UIs; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD531304A9
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713281035; cv=none; b=iPPgYD3UbvSQy2KUBWr4uw+bxYLpbquZpZQmZ++sNGcSNuMi27gsO5PBWTzvVb/AUW23SU4WzfCJtG1UWeuTt5JvdkY3S6e07gQVb5mPdWx9m4Y+hFIBvUA+vh1GJFJ6EK/k1k/vhMwcilvhmP50Exr+pFt7qAiqYvlfYV7qN04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713281035; c=relaxed/simple;
+	bh=Pr5+GjYuYOFAl78wT/LGhzYKkJLFb3gm/JoyNBitLqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M8WS1MWmMCZ/pXwMiQBLdVwvO67rh7yqrWsMcBcUlKFU99OEntweANgaj5i9hQqDyfbTgdiIx3gOt0sXjD57wcxqP6PxoZ1h2kPU7zFdV1HkeLpQVs8lRLcD/RKQHF8elgOf0f3CA7ZSSQ6GeRQMfIIVZOg9q32C5G5gM+krzlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RD8mcjcc; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RN5a9UIs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a5Bcqe2Ex9DwsGo6BrGubhhbvJKK0MRVQ646E5RB5eVHthDTz3lE+pP193wH/z2eCZwPI5pAr2K2UK19CJn2NEFFH6GSnN2QA8+g8rgdVGq8CSf1UnYXu/Qg/ac5VTRsAogdDEmnF0zHCCQu9eZ+lRCvshZ/TYbfIfJU+6gTAPVDDmTEnYgJQ9nDxDy+KU1XcQMT51tWvl1tqAz8GludKEqxeKs9FamXWMsQD3DNFEHoSMVSnuhACZjcHAy/I0Z2KGClbGljEfKW+cvmZBQVkuVaVfYr+07cypkpsryUf/rJjckjOJSKDaULELIKLiAJv/clUJkKQbDICX1PbzRGPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3ebCs0dz4LIz1cxpSdWY0HjZ+v/60SibESFOEJiuTuQ=;
- b=HbUqiIUwjlyHw0i9kfmzpWepyiYIFze8IUTipyNTTaw+8v97SAVadI4SYW2AeB11M444fJvEHkQ+8mx7WzYyuGBCxVkkCrjux3XoqJdT8rBJxlDzDgIdrSb+WC1REYvK1GbghPrnjvUAJ25kNiIOhcz1Hm0hbDhydnSa4zumwbpdWpPTqkMpe/VJwel8QZysdraRSaxlZG8Y20+x7gWhHB0HO3zAlv+710YlTdszLRVuCTJjL+zBmZTCFWHhpPrpmOfiKo+LrrFqDXPQT0uY2lUvJUtX7Jspm2mmqDLFKJWiAbanBgQTpzWoQriVuo5unz0c6NbrNIZS7YedFSSj0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ebCs0dz4LIz1cxpSdWY0HjZ+v/60SibESFOEJiuTuQ=;
- b=RN5a9UIsQDBUjYPqfdfqV0sd8Xz7e8KUENHgKYkxAezYvQookIINtRH80OUsjQyd/RhAdgdFdA3C5uIXqir+cgMia3pEWAqra+VG3vvKmiLtKrXPOlMBTBj3KutOGQNFURahSMmT0ySiTLVdI+JDnwocWvQH+8MM+4oTLjRagsU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
- by BL1PR12MB5898.namprd12.prod.outlook.com (2603:10b6:208:396::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
- 2024 15:23:25 +0000
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::bf0:d462:345b:dc52]) by BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::bf0:d462:345b:dc52%6]) with mapi id 15.20.7452.049; Tue, 16 Apr 2024
- 15:23:25 +0000
-Message-ID: <061802e1-7c95-f1f0-b462-3aca27583d76@amd.com>
-Date: Tue, 16 Apr 2024 10:23:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Michael Roth <michael.roth@amd.com>,
- Ashish Kalra <ashish.kalra@amd.com>
-References: <cover.1711405593.git.thomas.lendacky@amd.com>
- <bb088b1409283cd323515138feda224759a247ec.1711405593.git.thomas.lendacky@amd.com>
- <661e04cd345af_4d56129468@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 10/14] configfs-tsm: Allow the privlevel_floor
- attribute to be updated
-In-Reply-To: <661e04cd345af_4d56129468@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0146.namprd13.prod.outlook.com
- (2603:10b6:806:27::31) To BL1PR12MB5732.namprd12.prod.outlook.com
- (2603:10b6:208:387::17)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RD8mcjcc"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-346407b8c9aso1839108f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713281032; x=1713885832; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ftHdCf+Oy0iSSs5fiaJVa2OnViNL7pkEe11MNtYDb00=;
+        b=RD8mcjcckUMX5UWLrH0e/WAvJBHqELiRBzd8YzpXIOJr6mTYYv4TKU9LxBww27WaNY
+         zNqWDvNHfVZpFbuoL7W/g2GQAhXYol65uvud2TpR3+reX91ik5nCxuDWMb011DI43rGY
+         2lwO+XTc8iQrls8h8uhIl2wpswNB5MkXVciXqBTq8ccf9UeQlTkyBXdQmagssJME+cAW
+         5Kgvjav5KxevrEdSiJvTeXWfhvtGx8flMTdZY7dBni6rHRe5lu132o2oZEdr2wTqCRhX
+         woKJg/7v83DPSfEGN7ehjXsbXbh8p9YulEEsh7fHOSHZ+oHyzFiiQt3hKqj2dsUzpOq/
+         DgWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713281032; x=1713885832;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ftHdCf+Oy0iSSs5fiaJVa2OnViNL7pkEe11MNtYDb00=;
+        b=SwGcurI5xSSTytBxdr6Dhj2aRoZpVtS2QVGY6qQn+jS0DVrB5rch8IC3FDKM8YZtKP
+         mTM/ePJbACvGjU2RiGCcheoZTae3rH40xrJzNpSFRMS1GFMgI3xIG6wLdkqouzsJKpqy
+         cOuF/rjJx3as4f9aw9fhxkC7K8FBiFqmu/i3HDKBQqa7Q8tiYrdy2iFrjNCsqvk+EHC1
+         u2TY3HXA6g/HaUjvCPd1g4u1pq/qxzGfgJWZNM2EEdJSoyCxpFNuz6+Ra7CSI/cAzpBw
+         5hbSXumwSMgCHqLzWYKxWgW/dK2P00d+TQyjfN8iwEdSDGekEsBMjCZfxtXK+zkyS85I
+         caTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+QIXQrRScXek1/7tGSLDauJbhSQKfTfQHYeiN1FXqll7KJ8ywHGcI4PzbCdaoVc05ZpvOdhpMgDuC4IicuKbr00Wtq99HjG+gyX/7
+X-Gm-Message-State: AOJu0YyxwPdwn7SIc6Ydw6HY2BmWSpEfGqhphUuBfV4nO7hMELj/ewBH
+	AvPo5LNacCETnAEBq5rLWroJ02TnuCSrQR5lelrZvstbG3LoBDMDUtWmcr6XJRI=
+X-Google-Smtp-Source: AGHT+IFao7Xx/Iig7k1Su+KI3NkDAc6z/M7OBmPS/atvQDSy7dIv8/22UyweiFrQmQy3+uJBLdIOwQ==
+X-Received: by 2002:adf:f308:0:b0:346:65dd:55e6 with SMTP id i8-20020adff308000000b0034665dd55e6mr8879060wro.1.1713281032278;
+        Tue, 16 Apr 2024 08:23:52 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:8df:1203:de22:f515? ([2a01:e0a:999:a3a0:8df:1203:de22:f515])
+        by smtp.gmail.com with ESMTPSA id gb32-20020a05600045a000b003462b54bc8asm15162474wrb.109.2024.04.16.08.23.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 08:23:51 -0700 (PDT)
+Message-ID: <1eab3b4f-0d46-4df5-b574-6a5f796d3bcf@rivosinc.com>
+Date: Tue, 16 Apr 2024 17:23:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|BL1PR12MB5898:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f6352bb-66f1-4507-d28b-08dc5e292908
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ShOfy4OVIY6toO1lCF8wKTht5pJ6mNnC1z3MDphkrgZidoPeE+VZOIP932zJkyhp4o/RrtQSxs4kXHzvFc61kSGk+iW80MPbSIwvoPGgK5yBZEy0D6pc2HnEU6zV7IL4+Wfqs6mKtqHG93OlY7P+S6yf8Oz+/H9IFsgJVCqr80zKpgriEMCiyFnioXG4+/tJCYCj7DFJRYswWFCT8uBAsBI2ifEJ1HJBt0MHBUMFLz1mN3kmxU2ppppExWcjGrXgHYtAkFdiPjbMhU/SdnHQWEvgKmej+4YFKm8QGOAGEZ2H/3eARPGt3R3F+yG1auWKiIwzxPpkNvf0H8Ol0y1AkJOgrxYEhkkQERF49fcqPQtHY1gGlZIBCzoVqf1JSeQhWtNFUANWOKF4D3nWSCPTFsbSSsj2sFP921AL02GGo7oo13sHNFKtlzAa0tiWBakiQpPD6gLwZ/KIK7r9t4JQLIyRqtdRH2b/QsiYUyFFlnlpEBWNylhsGa+dbmQFuM18xLfZIM+ozpbfVpq/J3Tr60xkjSo/Xi+f5OT0iYcm3f64k/NOpxNvzQuTVllNM69DLjuc8DuMcMB9NSXaA5FYvnAgdG02aVFB74JHNm7Z09sEZxIEFM5YQ/jzpdDXxRPf5dhn1aqdSc06qnwDEv30Z24mEER3jhd1Ycz++0E3/2w=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L3g2QXQraldsRnRoY2tzd01UNEZMMGJWRFM5MmZZRWh4VU0xdkJCM2UwZHZa?=
- =?utf-8?B?WmxxV1VVbXloTWlnZlpORDVzMDQzYlRLaTZKYkE3VzNMcnRrc1JpVC9FRzJ3?=
- =?utf-8?B?RW1Xck41RjhnWTFOYTUvZHNiMEFQcUh6Ui9sckpIQWE2eFMzS2xDVStNdzRF?=
- =?utf-8?B?eFBxS20xdm1TRExzQit3dDc4aEhxdXRUU25lUFBDTEVCdzQyUDRHYVFpOTM1?=
- =?utf-8?B?eE5qOG9PT2dPZktpSzRqOGd4N09BM09UcFVlVDZJdGpXUkphdGQ3NFlCUXda?=
- =?utf-8?B?YkM3MWpueWN5SytiUmFNaWNUOTJpc1RUaWdCSHJTOEZVaTNaZ2NtMlVaZzlX?=
- =?utf-8?B?dUFySnN5VnFFWnRiSE1jTEQ0Y1ZaK2d4WE43dGR0Tm5kZ0JVMVVRbVN1L0Nu?=
- =?utf-8?B?c28walBxSitBUGI4amxxY29DalhmM1N4OGRIcUVkOUltOThTOG45MjNXUCtM?=
- =?utf-8?B?Mkx0VjZJQUFjZ2xFVldOZEppQkNkSHc1RTJ3N0txZTNiY0hXMWNubVErVlNp?=
- =?utf-8?B?UlVRUFQ0Mk1JWGYrWDVXOFVLRDN4dlYyU2FEbWFBZXQ1aExEQkhBY2ZzekFj?=
- =?utf-8?B?SVJ2Y0dRQVhjd1ZtdFIySDMxbXhCN1hKcHhzL3dYWlV3akdHNVYyZmZ1dFRV?=
- =?utf-8?B?S05CeXFoTHVzWDZHMnk2enduUFRNUnMrVnJMaU1FVU03ZzBJdk4wanMxeHRp?=
- =?utf-8?B?aURoRzRiamlqdDllZjdKMjUycndFNWkyc3RXNWo1Si9NWjVUUnlYN2Z5ZFRq?=
- =?utf-8?B?N2s3U0dZL0hkeHFnODF2Qy9DRWRaQzdIT3VCZDJQRzJLUGtyYUN1OUozc05y?=
- =?utf-8?B?SXdwazJIdGdWRTl1MkYzRFVFOTZqM1NkcW0yeWJ5R2p5ZVRLQyt3WHlYUm8v?=
- =?utf-8?B?Rng5Y0NuQTQrRjVwN0YrcTlacEZCalQybWRYb0wwa3ZNdUR3eGw2dGVBZ2Zq?=
- =?utf-8?B?eWl0a3Y4MmVvV3FZMkJNcGY3KzMwUEh0cGxrTkhPdnNVKzNBTXlaY3YvY2dQ?=
- =?utf-8?B?eU1JemNoYktGSU1Ba2dUTjU3aDNWWURKS0Q2QXYwb0ErL0pKNzZNaUFwT0pR?=
- =?utf-8?B?NGcrQlBPMlRQUUNmT2ZIMVJnSXROa3F5N1Q1ZUNydVVrWUhHQTNIUnpwcDlI?=
- =?utf-8?B?OG01NmYxaDNadkxMUzNjZUJNSmpqVGlKNGVTN0lKQkpIMm9GVWtpQWNrUW5N?=
- =?utf-8?B?QlhmYVJld2V0WE1Hb3Z3WWxhNnp5QTVpMW5oR0FyK3IzWGRla2RGYkRGa2Fi?=
- =?utf-8?B?cnZkU1B6WHR5SjdCYkIzY2VqaElBWGVpMUZvQXNLL3FhSGd2MnJuUjRNcjdR?=
- =?utf-8?B?dEF5bG5vOHY0dElYaG84NjZmMTVNWGwyN1UrTnJMT3pVUWk1Ny84RjdnMU5W?=
- =?utf-8?B?SDJmc3BNUnN2Y09mY2w4QlBLd3V2S1haYWNnT3c4OXJURnRqbCtHbUxqcGZh?=
- =?utf-8?B?YTlHRmNaeDhrUmFkQnl4ZnNIajM2TWErR0I3aWVlMWc2bmRFQWhaTitBbTlr?=
- =?utf-8?B?R0Q4ZkdjcTJzWkxvMzNlVHc3Q1J3T2lORnRFaGdKZjVSdVh2Q2hEQjgrYlpE?=
- =?utf-8?B?M004STdjV0dBYTFiMG5tZFFlTWJQQURsVTVBcVVwQ1Z2RUFxQk8zTWlRWk8y?=
- =?utf-8?B?Z1RmWFdvaWQ3RU1LNkFydUdnb0dMRzZmaWc3T2R6RXhiRlJkUWJRdkU0cVd2?=
- =?utf-8?B?d3l3bVNlUFNCbUdpMzdzcnlIQmZWeDJPZkZpWnlBY3ZwKys2TG95RVBlU01x?=
- =?utf-8?B?UlJUZjBKMFFDcWVBNjZNSXEyZmUyWnNuNWI4TjBlQnRZbzhVNmZqcnlzYnlN?=
- =?utf-8?B?SHllZkxTL2JtbGFjcThqUGo4SWQ0akNuTlFiNVZHMlZIdjh2V3o4cENFMFho?=
- =?utf-8?B?U2lMbEFWZUpiVWx5d045YThvQ1NCVjVUbmRkcnJxMnVvOW0vZGtscmRGNTkz?=
- =?utf-8?B?ZmVuMW5nTTVrOFA3MzVEa1JOb2p3ZFozWXEzdnh1eXhPWEFXVzVmanFjeFNj?=
- =?utf-8?B?M29iU2FEWDVNbFF5b1IrZUQzNjNzNFZwMW9JVDVSS1hsU3dEeTJjTXFTRVFQ?=
- =?utf-8?B?OEtnR21MYU0rbTFiYVJnWlcweEZwejQxdzRvKzkrMnJGVy9oUndaUnJJS1JV?=
- =?utf-8?Q?7pT+QpPsq2kOWB9NtmRnzkp9g?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f6352bb-66f1-4507-d28b-08dc5e292908
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 15:23:25.6626
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DODHUVfSEXZg2kRKUthCdDrw6hfgHuFxOoPj8XSJQ8db8MRAmNPjMbVAy68uj2oo0G3GWdpXQT/Ir2uW1xQ5jQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5898
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+ Deepak Gupta <debug@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+ Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+References: <20240410091106.749233-8-cleger@rivosinc.com>
+ <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
+ <20240410-jawless-cavalry-a3eaf9c562a4@spud>
+ <20240410-judgingly-appease-5df493852b70@spud>
+ <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
+ <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
+ <20240411-superglue-errant-b32e5118695f@wendy>
+ <c86f9fa8-e273-4509-83fa-f21d3265d5c9@rivosinc.com>
+ <20240411-backwater-opal-00c9aed2231e@wendy>
+ <5eda3278-24bc-4c17-a741-523ad5ff79f7@rivosinc.com>
+ <20240416-gave-apron-3234098ce416@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20240416-gave-apron-3234098ce416@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/15/24 23:55, Dan Williams wrote:
-> Tom Lendacky wrote:
->> With the introduction of an SVSM, Linux will be running at a non-zero
->> VMPL. Any request for an attestation report at a higher priviledge VMPL
->> than what Linux is currently running will result in an error. Allow for
->> the privlevel_floor attribute to be updated dynamically so that the
->> attribute may be set dynamically.
+
+
+On 16/04/2024 16:54, Conor Dooley wrote:
+> On Mon, Apr 15, 2024 at 11:10:24AM +0200, Clément Léger wrote:
 >>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>   drivers/virt/coco/sev-guest/sev-guest.c | 5 ++++-
->>   include/linux/tsm.h                     | 2 +-
->>   2 files changed, 5 insertions(+), 2 deletions(-)
 >>
->> diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
->> index 1ff897913bf4..bba6531cb606 100644
->> --- a/drivers/virt/coco/sev-guest/sev-guest.c
->> +++ b/drivers/virt/coco/sev-guest/sev-guest.c
->> @@ -885,7 +885,7 @@ static int sev_report_new(struct tsm_report *report, void *data)
->>   	return 0;
->>   }
->>   
->> -static const struct tsm_ops sev_tsm_ops = {
->> +static struct tsm_ops sev_tsm_ops = {
->>   	.name = KBUILD_MODNAME,
->>   	.report_new = sev_report_new,
->>   };
->> @@ -972,6 +972,9 @@ static int __init sev_guest_probe(struct platform_device *pdev)
->>   	snp_dev->input.resp_gpa = __pa(snp_dev->response);
->>   	snp_dev->input.data_gpa = __pa(snp_dev->certs_data);
->>   
->> +	/* Set the privlevel_floor attribute based on the current VMPL */
->> +	sev_tsm_ops.privlevel_floor = snp_get_vmpl();
+>> On 11/04/2024 13:53, Conor Dooley wrote:
+>>> On Thu, Apr 11, 2024 at 11:08:21AM +0200, Clément Léger wrote:
+>>>>>> If we consider to have potentially broken isa string (ie extensions
+>>>>>> dependencies not correctly handled), then we'll need some way to
+>>>>>> validate this within the kernel.
+>>>>>
+>>>>> No, the DT passed to the kernel should be correct and we by and large we
+>>>>> should not have to do validation of it. What I meant above was writing
+>>>>> the binding so that something invalid will not pass dtbs_check.
+>>>>
+>>>> Acked, I was mainly answering Deepak question about dependencies wrt to
+>>>> using __RISCV_ISA_EXT_SUPERSET() which does not seems to be relevant
+>>>> since we expect a correct isa string to be passed.
+>>>
+>>> Ahh, okay.
+>>>
+>>>> But as you stated, DT
+>>>> validation clearly make sense. I think a lot of extensions strings would
+>>>> benefit such support (All the Zv* depends on V, etc).
+>>>
+>>> I think it is actually as simple something like this, which makes it
+>>> invalid to have "d" without "f":
+>>>
+>>> | diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> | index 468c646247aa..594828700cbe 100644
+>>> | --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> | +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>>> | @@ -484,5 +484,20 @@ properties:
+>>> |              Registers in the AX45MP datasheet.
+>>> |              https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
+>>> |  
+>>> | +allOf:
+>>> | +  - if:
+>>> | +      properties:
+>>> | +        riscv,isa-extensions:
+>>> | +          contains:
+>>> | +            const: "d"
+>>> | +          not:
+>>> | +            contains:
+>>> | +              const: "f"
+>>> | +    then:
+>>> | +      properties:
+>>> | +        riscv,isa-extensions:
+>>> | +          false
+>>> | +
+>>> | +
+>>> |  additionalProperties: true
+>>> |  ...
+>>>
+>>> If you do have d without f, the checker will say:
+>>> cpu@2: riscv,isa-extensions: False schema does not allow ['i', 'm', 'a', 'd', 'c']
+>>>
+>>> At least that's readable, even though not clear about what to do. I wish
+>>
+>> That looks really readable indeed but the messages that result from
+>> errors are not so informative.
+>>
+>> It tried playing with various constructs and found this one to yield a
+>> comprehensive message:
+>>
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        riscv,isa-extensions:
+>> +          contains:
+>> +            const: zcf
+>> +          not:
+>> +            contains:
+>> +              const: zca
+>> +    then:
+>> +      properties:
+>> +        riscv,isa-extensions:
+>> +          items:
+>> +            anyOf:
+>> +              - const: zca
+>>
+>> arch/riscv/boot/dts/allwinner/sun20i-d1-dongshan-nezha-stu.dtb: cpu@0:
+>> riscv,isa-extensions:10: 'anyOf' conditional failed, one must be fixed:
+>>         'zca' was expected
+>>         from schema $id: http://devicetree.org/schemas/riscv/extensions.yaml
+>>
+>> Even though dt-bindings-check passed, not sure if this is totally a
+>> valid construct though...
 > 
-> Why is this not vmpck_id?
+> I asked Rob about this yesterday, he suggested adding:
+> riscv,isa-extensions:
+>   if:
+>     contains:
+>       const: zcf
+>   then:
+>     contains:
+>       const: zca
 
-Good catch, this probably should be pulled out separately and submitted 
-as a Fixes: against the current support. If you think it's important 
-enough, I can do that and put this at the beginning of the series. Or I 
-can just modify this to use the vmpck_id value. Any preference?
+That is way more readable and concise !
+
+> to the existing property, not in an allOf. I think that is by far the
+> most readable version in terms of what goes into the binding. The output
+> would look like:
+> cpu@0: riscv,isa-extensions: ['i', 'm', 'a', 'd', 'c'] does not contain items matching the given schema
+> (for d requiring f cos I am lazy)
+
+Than fine by me. The error is at least a bit more understandable than
+the one with the false schema ;)
+
+> 
+> Also, his comment about your one that gives the nice message was that it
+> would wrong as the anyOf was pointless and it says all items must be
+> "zca".
+
+That's what I understood also.
+
+> I didn't try it, but I have a feeling your nice output will be
+> rather less nice if several different deps are unmet - but hey, probably
+> will still be better than having an undocumented extension!
+> 
+
+If you are ok with that, let's go with Rob suggestion. I'll resubmit a
+V2 with validation for these extensions and probably a followup for the
+other ones lacking dependency checking.
 
 Thanks,
-Tom
+
+Clément
