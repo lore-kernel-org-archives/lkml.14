@@ -1,35 +1,35 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2691D12D1F4;
-	Tue, 16 Apr 2024 13:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0973812E1E8;
+	Tue, 16 Apr 2024 13:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713275731; cv=none; b=pE07URz5Mmqy9Xi85pGVPVT0v1CRC7YB+YTGzASD4A5OAn9pJ9KBS4FKxlW832HqFMyoUXTnpJvnS9AnkclihkYGa0cp7n5OT20P94bdeywdiIK79Rj2gCyz4lNaN3s1DmClxp/TAi8dXEYbg69usSrYe93J+ve8UdTYVLBdOrc=
+	t=1713275734; cv=none; b=WXPBBw9lBohW5Ve7F2FtprzgtSQn1a0QM2yTzoaRfPfe5OQjTOpCfP65hjGKMvw6/K7OTmP+p1yqKdjlYH5b6dRiNyKgn6azz464Dx/1ydb1zAcTY++NnINgq/nkEhE4KePGSHNQ0NBBrf8OKAL/DgsRuk6RuoOkvW6KBb8KX+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713275731; c=relaxed/simple;
-	bh=upwohULj/Oms0C2fpFjxKliuZKRIVz3n+cZk2HiI8Fw=;
+	s=arc-20240116; t=1713275734; c=relaxed/simple;
+	bh=NLCsfA0/1jawAaRZjCj1kEooc2FTLF/KVL46Xk47Xt8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hoM3/BZnAsh67SguEMvjPXqVu8BWZR0znx1EGywzhCxjbAEQLt4VjspcyjNsT1pFEuuwOwNz//WLCB6YduM0fHMXpOqC1YOk1Ym5UV7CNkzb0jy+JQ10wjyqHPmrhhyD7wYLlGduSdgs7JHNz2CoCvJQ4wJE5mlt/DR0Xdbn6M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Sm9JEdJA; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=tFIQCDqsbWuXNTXhshyS+GKN4aneCPF4itANO5kjzsSL8pYxjK3mbi53JnFPIrLEk60m+3i52pJXv8wSZuRBV7yp5c/rl8r/L1uG5cvF/ZCRxzKMZ7aUpSQSI7vgvggEC4U27SqqXzHT8Oga1zpwj/9fJTPRfLiaYLtL7a7KiO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NIliTIPH; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Sm9JEdJA"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NIliTIPH"
 Received: from [127.0.1.1] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A3A58161B;
-	Tue, 16 Apr 2024 15:54:39 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B94B816F9;
+	Tue, 16 Apr 2024 15:54:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1713275680;
-	bh=upwohULj/Oms0C2fpFjxKliuZKRIVz3n+cZk2HiI8Fw=;
+	s=mail; t=1713275681;
+	bh=NLCsfA0/1jawAaRZjCj1kEooc2FTLF/KVL46Xk47Xt8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Sm9JEdJAnUcpKa/S0/SJbUkvr/ofPHJm38EfFABmw0eMaqwyeRm/J7htX5wC+ngUY
-	 NXXW9/I1gv25pcSXXbBakfiwwanzqFtaRcjioy+HPxozA48Cb+Dj+Qg2Amc+/+Tqss
-	 OUJyeDBqa2nVXau5uOU0kC3kwUwd2BhrNlQyaMNY=
+	b=NIliTIPHes8MtlEHA7MhxC/kbzLqeotcrlS/UpASA92zhUy5AEflrwkfbhez47njI
+	 JkXAdm9QuMbtKgC1jZRs8UVichTyM0QaLBgEbhJEaUDf6Zx/d7q859hpB4G9YfTZE4
+	 6dKirAwGOB35qfoowZJ1hjko66c7QumoWU5ZF7co=
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Tue, 16 Apr 2024 16:55:05 +0300
-Subject: [PATCH v5 02/10] media: subdev: Use v4l2_subdev_has_op() in
- v4l2_subdev_enable/disable_streams()
+Date: Tue, 16 Apr 2024 16:55:07 +0300
+Subject: [PATCH v5 04/10] media: subdev: Fix use of sd->enabled_streams in
+ call_s_stream()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-enable-streams-impro-v5-2-bd5fcea49388@ideasonboard.com>
+Message-Id: <20240416-enable-streams-impro-v5-4-bd5fcea49388@ideasonboard.com>
 References: <20240416-enable-streams-impro-v5-0-bd5fcea49388@ideasonboard.com>
 In-Reply-To: <20240416-enable-streams-impro-v5-0-bd5fcea49388@ideasonboard.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -49,55 +49,94 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1377;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2934;
  i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=upwohULj/Oms0C2fpFjxKliuZKRIVz3n+cZk2HiI8Fw=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBmHoNJR06bdREDrMnRdSGsw8YD2ijhAjZk3Yxls
- svGIbgOq/2JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZh6DSQAKCRD6PaqMvJYe
- 9Ur/D/4/6mjhKSHmgdwiMAA1sGprHBWPdYOfMcq+xPrKLGYegOWArat2B7o6OJ3spWVaoqKUIdG
- CPN6FrMzLwMyCQOgPP/q8MnaoGWcCR+jw68CSzc7IIrr9eSyYEJ05QlqdG/lCicmL6giVQKBBAn
- NaJzjzYjBrgyWgpxD88wrtmkUi7KtCcsYt8KV4UoUkzxdgyh/1SuM+cTu5Hy9qVEFmR5LL/ANca
- 8zOz++/eXkflXIRQDmsg3sDbMVyQxcThVgcon/h9ZQc6dDgxzvw18BTw8fMWnUiR+hiIjUC+nFf
- w/fE+bHsnKwT+rBfQG41Z0yjEIUNpTmel25iT8OnyWbTvMbWhs9SnkS4S4feTHa8u9IId5rg+DN
- vI1dggVvHbO+/HkjuZqDKVBXINHHeZextV4XpbWeg6RH5bZsfM57QEP4ySX8uX+vu0knu9Jkl39
- Wra02tc6BW1FuDV0aoedykvZkp5A/Azf4OXAB3CFhk8Cv+aPzM6fabWdSwViobNycseoUmZm0Me
- 1KVnUlX2NJacbFyjh6yvnSjmeuOFDC3hf2YA3oxodrL4e0YfmSE0K9gf9SU7pun+iqxh6qg8RYl
- zPdMiyGlp9ykbqIvd5zzszr918+Xd2Y4U0N9cr1SQhaf3U6FN2/7aWb0ir1NN/oFyOvf3TGEtQQ
- EkvV0PjHmjvbY8w==
+ bh=NLCsfA0/1jawAaRZjCj1kEooc2FTLF/KVL46Xk47Xt8=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBmHoNJNCTMlYddG5HW+h+gJCRYhx/YapiwhSX+f
+ 2LzF5knjCqJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZh6DSQAKCRD6PaqMvJYe
+ 9c4AEACa/1vIyHsGoKDXKTgNCbqDiOuIZ3qlHOHdCDyncQR7A8pmIci5VkATKGr4shdoaY6ASnj
+ 4mjubq5RoQJlEAEJ1ZdtT3dcq1pFety2bHA5Yn2AO+5VnDhA+YXpPy2xbcwlQ+yeyN3QES7qFhg
+ 328srCay8+GbqjYLKXJ+sFA720dyU/9MWJM0EBtoKNLYpJ/ouXdNz3HjHMcdKIhKW+HY18+edbK
+ oVapeyrtSzGwh5AFAm+Ed5WPfKu7/TY7up0ognDjBIi87nHyb8fPyCch50GOMoxMVN3oECRCESX
+ yEpPzWNLJQpUSnSDjpjdJ70suVrsjcjCB3f0iaTOEi/KZx8ejDqQTEA/3E5rdHPimXgWJM6u4xK
+ 1xm+Sv/Dz4beLTkCBA5XHpSgRQYdkSWtr+XQUG/fCJ1Jqv5PGETXkFkZ2/H6D14dUA3DqJ+FZed
+ JlPRlfPXBhMJsqpsZlweDCF0hcxNYCWP1z+rU6Unjm4Mx/vhYPv7uh+flPsgE191YqLyMNqd1C1
+ 17QQ423ETYZ1hWK2nHGYMouNXpvkyrgtmhhNkCNZkj4wr+EVhmpWv2wCppHtTSuH2IBxeIQ9B+7
+ 09KOZiv9ylMcA45LP0qhZF8UfXgY53FnEYHxmT82zOBoc4xmBVFWyGh0OfxcDZqnD5WWup2ADsF
+ SELiu9xCnrrfcRA==
 X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Use v4l2_subdev_has_op() in v4l2_subdev_enable/disable_streams() instead
-of open coding the same.
+call_s_stream() uses sd->enabled_streams to track whether streaming has
+already been enabled. However,
+v4l2_subdev_enable/disable_streams_fallback(), which was the original
+user of this field, already uses it, and
+v4l2_subdev_enable/disable_streams_fallback() will call call_s_stream().
+
+This leads to a conflict as both functions set the field. Afaics, both
+functions set the field to the same value, so it won't cause a runtime
+bug, but it's still wrong and if we, e.g., change how
+v4l2_subdev_enable/disable_streams_fallback() operates we might easily
+cause bugs.
+
+Fix this by adding a new field, 's_stream_enabled', for
+call_s_stream().
 
 Reviewed-by: Umang Jain <umang.jain@ideasonboard.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-subdev.c | 8 ++------
+ include/media/v4l2-subdev.h           | 3 +++
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 13957543d153..4a531c2b16c4 100644
+index 606a909cd778..941cf7be22c3 100644
 --- a/drivers/media/v4l2-core/v4l2-subdev.c
 +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -2133,7 +2133,7 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+@@ -421,12 +421,8 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+ 	 * The .s_stream() operation must never be called to start or stop an
+ 	 * already started or stopped subdev. Catch offenders but don't return
+ 	 * an error yet to avoid regressions.
+-	 *
+-	 * As .s_stream() is mutually exclusive with the .enable_streams() and
+-	 * .disable_streams() operation, we can use the enabled_streams field
+-	 * to store the subdev streaming state.
+ 	 */
+-	if (WARN_ON(!!sd->enabled_streams == !!enable))
++	if (WARN_ON(sd->s_stream_enabled == !!enable))
  		return 0;
  
- 	/* Fallback on .s_stream() if .enable_streams() isn't available. */
--	if (!sd->ops->pad || !sd->ops->pad->enable_streams)
-+	if (!v4l2_subdev_has_op(sd, pad, enable_streams))
- 		return v4l2_subdev_enable_streams_fallback(sd, pad,
- 							   streams_mask);
+ 	ret = sd->ops->video->s_stream(sd, enable);
+@@ -437,7 +433,7 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+ 	}
  
-@@ -2250,7 +2250,7 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
- 		return 0;
+ 	if (!ret) {
+-		sd->enabled_streams = enable ? BIT(0) : 0;
++		sd->s_stream_enabled = enable;
  
- 	/* Fallback on .s_stream() if .disable_streams() isn't available. */
--	if (!sd->ops->pad || !sd->ops->pad->disable_streams)
-+	if (!v4l2_subdev_has_op(sd, pad, disable_streams))
- 		return v4l2_subdev_disable_streams_fallback(sd, pad,
- 							    streams_mask);
+ 		if (enable)
+ 			v4l2_subdev_enable_privacy_led(sd);
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index a9e6b8146279..b3c3777db464 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -1043,6 +1043,8 @@ struct v4l2_subdev_platform_data {
+  *		     v4l2_subdev_enable_streams() and
+  *		     v4l2_subdev_disable_streams() helper functions for fallback
+  *		     cases.
++ * @s_stream_enabled: Tracks whether streaming has been enabled with s_stream.
++ *                    This is only for call_s_stream() internal use.
+  *
+  * Each instance of a subdev driver should create this struct, either
+  * stand-alone or embedded in a larger struct.
+@@ -1091,6 +1093,7 @@ struct v4l2_subdev {
+ 	 */
+ 	struct v4l2_subdev_state *active_state;
+ 	u64 enabled_streams;
++	bool s_stream_enabled;
+ };
+ 
  
 
 -- 
