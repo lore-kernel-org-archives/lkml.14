@@ -1,66 +1,66 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5626127B7A;
-	Tue, 16 Apr 2024 10:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFC0126F1E;
+	Tue, 16 Apr 2024 10:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713261909; cv=none; b=szfzoY/8D3Vv84MbCCF1e9L3Pxa/W9AC38Jt7yD+fR7ZRZ+XSCac4SApdIO9JYe+Jz0sVa9uBSkW5wQzX9VX6MScdHiaOJTuHegp7ulLeqnu2jQ+NkoqPU+Z7Oupc0Lk3iZ90d/75ScjppG/dqdSzJ9ApDjsmWRdMK3JXtCKUak=
+	t=1713261916; cv=none; b=WeO5fQ4PYMCKlaoVw5SamLQ/nyZFDmk2/OsPloahSvJJC3Y3rfDIF8tprgvyNoGxbzysHcXLZScEKXDzqAAz64xE4mYwaN9E1BY0ziya0KMsqxjGwB+oghatcoHTKN1HiaLMjK3olDbcsSrjuCCpboNyKQrbP8iZ9YDV1k8AYXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713261909; c=relaxed/simple;
-	bh=O6604vi/bj5igXZdGKPwpCmuP/mf360WhfeWzANdq9k=;
+	s=arc-20240116; t=1713261916; c=relaxed/simple;
+	bh=m8UmET64JFRSVNpBc2wrAPbmY40xINLq85Nvqqp+9Sw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ipQkJlhiXPu9urrTDu/fka9t3Q1vGEkDc3E5Ypja/RVoRYEUcCwxcOledZkFD+mjFfl1jv3yDcIyGyMH/Cig8k9mNAAAk6WZZQ7mugjn/rksE2u5sbap93I1ZwevE4lduCVXY4yUE6ZVoQaONDQRQhD53r5A1Hn6NSRIfO+9i50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FymRNc5c; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=K89jrMFUY5UqtBHTijULqX2ALgOZVl98eDXJ6XeIy1xaqxeWj9in/zGS1tIr1hUwoOILG/eJivVi/YXPVMleihxgkFvVKGaDDlSZkpHTL6RQtwDxbMT6nFpzpRkSx/XFij4jJsmMmabhXNnXdfBqj4f6ZuaQ+5W1X33i7cBGGdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwJwRTdI; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FymRNc5c"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e455b630acso17991185ad.1;
-        Tue, 16 Apr 2024 03:05:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwJwRTdI"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e3ff14f249so32321915ad.1;
+        Tue, 16 Apr 2024 03:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713261907; x=1713866707; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713261915; x=1713866715; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YBKLoEacHSWOE25HfyrDdRRp12aAe56L7a96hJM6/NY=;
-        b=FymRNc5c2hKIVSNey5cOb+smZGk9JHreIn6rhQbTrurN5kQkw1zCEIyBQHqlPOGeP9
-         NItEvZP2zguBT0oWRqEpxytRJQZEwzRuGef9cTGpPs/nbYlU53kKaGKBNecVMaO4FzU9
-         KgYiNRWHjzLYJn026R1G/wHTFhkQNG3REqSXBkMxSxEg+QXPwg+0vyBB54qqkfCPWSRV
-         uB3sJrDS+P4KEWq1jrV3teXKy+U/38Fe+jl6L2FClbuHi2GheD2znqRJJMLH/GIQ6+7D
-         tpyTir1i1+XMV/789zD5OFNGsY4swUO/nGvlwk6JxCSwJksTni03C7KQokmYTZ20Co2l
-         3wiA==
+        bh=n7qId9+jfJUCqQ/SkIwlhCGmFKyY/JbOZZwyRJiXokA=;
+        b=NwJwRTdI5IUAvMK7k8A1XB0aatc+PrnKCP55x5fsERDXrdAEWU2epA2Ja94OtsUjXA
+         WHdKNKq6DpeYrL1zjOgDvJz8BLf03tiNPEGcNbTDEUvEFIMlv0J9YWnyr0BDWkVCQg8Z
+         QVthRgsR4V5GQ9DrlLMWVZghWt629oJiWzB8herKzry5HnzZsdnVAVScgK7O2Sd7rko7
+         1voVlVILcKPwyfwkqQcwuMtpjtZ03f4Qs0tIb4rtRlKZ1PD5uqP5QZJv3ea3iz9eGwND
+         DBXawmMduyBM1y1VDXc1dMJiKu7uTdyf18DBMEkM6k2AuQ+CQ4AxhUSqfl+WTD0yrPr6
+         F1eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713261907; x=1713866707;
+        d=1e100.net; s=20230601; t=1713261915; x=1713866715;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YBKLoEacHSWOE25HfyrDdRRp12aAe56L7a96hJM6/NY=;
-        b=mEEdSXudUI0EyjiNye33eGQ8nCshxxx/ykgmdzI3SHfqDdWA68uX3XqFIrvwkZrWwK
-         JZhDJc+edLwqCIpan6dwWQmvx/xjnvTMVgMdtZf2oY1B58JM+9bGwqcd2x8+xF6lwy/b
-         s3HTiAleD7kDJHre1uPlUGNYHrRHnDW0KxhGnS4VqxgiDs4S8AfRPAST3uekL87oQoSe
-         VgABOKv3FXy3dcm4crPAhpOiMChr4bid6kJ2koE8em++JvPIDdV54DbDVz0B6ixWs15s
-         dXx4lCskHZT5voVe9saSQxtZyu/kQMNs4EoXtFNjw0Uz33PzrE9rW1rh7nHk6fvIrDGM
-         8KZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ6OWcsvAkp9pccExch3jkICwzuwRbV4iboSTE3RPSe+vf58j1iuM87jaQhpe9WScTugjR/cIKMAD+NCpWXC4bdAx7Wlrski4A6b/I
-X-Gm-Message-State: AOJu0YydVdtI/UwdY7/9etBsi2upDT1hz37FalJBQpZFePpfYmjpEypX
-	98HCPiNFr5T5K9nAXluqtYWPfYrijuoyygU+o0EHf5aJ6Q4/eWAt7Da9NkSM
-X-Google-Smtp-Source: AGHT+IHIX1f7NSdLTD1FFpTzQI+nNaV+l7uaCGrc1EU7Dtf4qOzgfOvKFRr5IVgo0mJE1e5B0Y7KmQ==
-X-Received: by 2002:a17:903:249:b0:1dd:de1a:bd02 with SMTP id j9-20020a170903024900b001ddde1abd02mr12064445plh.41.1713261906891;
-        Tue, 16 Apr 2024 03:05:06 -0700 (PDT)
+        bh=n7qId9+jfJUCqQ/SkIwlhCGmFKyY/JbOZZwyRJiXokA=;
+        b=dJ7lm4mQt6eBTCjnpOgELvGHXVUoGZ7xAMocB8FZuSPEU2XuP7oRXwD+SG8zcb3Kr/
+         k6y4XoENkDZpca+OeEueoJcDLresNIBgQx5+PvIDwJSk6i0ZIzLjI40bctrRseFFtu1C
+         23KQ3DlyUUtStOE+ItIPfNhoUwNqN/zhq5yxPIlGivrgcKsBC0KeuODayfXpPASOZl1a
+         EjsHCjuyCunmZwe+5nNbrKDWTwtqdZwIg6xN8lPCLtPqnr2gBdkvkpaZwH43ooiJKK+k
+         3tuFTSnsghUhU/hzEEJm/B6TbKqnYBRDhrjn6uXcbGVOackYwhVs2W0x/33gLqB5x5RY
+         ydLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnd2wQs+JjuQjHbbSW93JazzxI/i4Nk/JGnbA/ygj1ph+WwDDWGvhGL3phsWHDlmEntiAl8NrY1Od4PX8f2AsKK3/4ARzeIhNmxq3
+X-Gm-Message-State: AOJu0YwljU7vf0SjF88kYuJoKcUzupiXhU/UD1KejSYOl/QNzhnwdJPk
+	5QxhLwBfrYKniB/g02RSZ9nFCP1ssbIGnV1EurSO0WGbzGK/M5Pcj0RfOTDK
+X-Google-Smtp-Source: AGHT+IFdcRNRsYKbIqCW78U070nwAVjO+s2mowaBGdKsFKwMaaXGereSSlJ8eoTKmjG1ZSI1yavjcw==
+X-Received: by 2002:a17:903:40c7:b0:1e4:52c2:d05c with SMTP id t7-20020a17090340c700b001e452c2d05cmr2512373pld.29.1713261914760;
+        Tue, 16 Apr 2024 03:05:14 -0700 (PDT)
 Received: from d.home.yangfl.dn42 ([104.28.245.199])
-        by smtp.gmail.com with ESMTPSA id y4-20020a17090322c400b001e0b287c1d2sm9353651plg.215.2024.04.16.03.05.03
+        by smtp.gmail.com with ESMTPSA id y4-20020a17090322c400b001e0b287c1d2sm9353651plg.215.2024.04.16.03.05.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 03:05:06 -0700 (PDT)
+        Tue, 16 Apr 2024 03:05:14 -0700 (PDT)
 From: David Yang <mmyangfl@gmail.com>
 To: linux-clk@vger.kernel.org
 Cc: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	David Yang <mmyangfl@gmail.com>
-Subject: [PATCH v10 04/13] clk: hisilicon: hi3519: Use helper functions
-Date: Tue, 16 Apr 2024 18:03:38 +0800
-Message-ID: <20240416100347.395295-5-mmyangfl@gmail.com>
+Subject: [PATCH v10 06/13] clk: hisilicon: Remove hisi_crg_funcs
+Date: Tue, 16 Apr 2024 18:03:40 +0800
+Message-ID: <20240416100347.395295-7-mmyangfl@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240416100347.395295-1-mmyangfl@gmail.com>
 References: <20240416100347.395295-1-mmyangfl@gmail.com>
@@ -72,172 +72,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use common helper functions and register clks with a single of_device_id
-data.
+After refactor, no one use hisi_crg_funcs.
 
 Signed-off-by: David Yang <mmyangfl@gmail.com>
 ---
- drivers/clk/hisilicon/clk-hi3519.c | 127 ++++-------------------------
- 1 file changed, 15 insertions(+), 112 deletions(-)
+ drivers/clk/hisilicon/crg.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
-index 141b727ff60d..cb541de752da 100644
---- a/drivers/clk/hisilicon/clk-hi3519.c
-+++ b/drivers/clk/hisilicon/clk-hi3519.c
-@@ -10,7 +10,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include "clk.h"
--#include "reset.h"
-+#include "crg.h"
+diff --git a/drivers/clk/hisilicon/crg.h b/drivers/clk/hisilicon/crg.h
+index bd8e76b1f6d7..db2324309d41 100644
+--- a/drivers/clk/hisilicon/crg.h
++++ b/drivers/clk/hisilicon/crg.h
+@@ -11,15 +11,9 @@
+ struct hisi_clock_data;
+ struct hisi_reset_controller;
  
- #define HI3519_INNER_CLK_OFFSET	64
- #define HI3519_FIXED_24M	65
-@@ -73,130 +73,33 @@ static const struct hisi_gate_clock hi3519_gate_clks[] = {
- 		CLK_SET_RATE_PARENT, 0xe4, 18, 0, },
+-struct hisi_crg_funcs {
+-	struct hisi_clock_data*	(*register_clks)(struct platform_device *pdev);
+-	void (*unregister_clks)(struct platform_device *pdev);
+-};
+-
+ struct hisi_crg_dev {
+ 	struct hisi_clock_data *clk_data;
+ 	struct hisi_reset_controller *rstc;
+-	const struct hisi_crg_funcs *funcs;
  };
  
--static struct hisi_clock_data *hi3519_clk_register(struct platform_device *pdev)
--{
--	struct hisi_clock_data *clk_data;
--	int ret;
--
--	clk_data = hisi_clk_alloc(pdev, HI3519_NR_CLKS);
--	if (!clk_data)
--		return ERR_PTR(-ENOMEM);
--
--	ret = hisi_clk_register_fixed_rate(hi3519_fixed_rate_clks,
--				     ARRAY_SIZE(hi3519_fixed_rate_clks),
--				     clk_data);
--	if (ret)
--		return ERR_PTR(ret);
--
--	ret = hisi_clk_register_mux(hi3519_mux_clks,
--				ARRAY_SIZE(hi3519_mux_clks),
--				clk_data);
--	if (ret)
--		goto unregister_fixed_rate;
--
--	ret = hisi_clk_register_gate(hi3519_gate_clks,
--				ARRAY_SIZE(hi3519_gate_clks),
--				clk_data);
--	if (ret)
--		goto unregister_mux;
--
--	ret = of_clk_add_provider(pdev->dev.of_node,
--			of_clk_src_onecell_get, &clk_data->clk_data);
--	if (ret)
--		goto unregister_gate;
--
--	return clk_data;
--
--unregister_fixed_rate:
--	hisi_clk_unregister_fixed_rate(hi3519_fixed_rate_clks,
--				ARRAY_SIZE(hi3519_fixed_rate_clks),
--				clk_data);
--
--unregister_mux:
--	hisi_clk_unregister_mux(hi3519_mux_clks,
--				ARRAY_SIZE(hi3519_mux_clks),
--				clk_data);
--unregister_gate:
--	hisi_clk_unregister_gate(hi3519_gate_clks,
--				ARRAY_SIZE(hi3519_gate_clks),
--				clk_data);
--	return ERR_PTR(ret);
--}
--
--static void hi3519_clk_unregister(struct platform_device *pdev)
--{
--	struct hi3519_crg_data *crg = platform_get_drvdata(pdev);
--
--	of_clk_del_provider(pdev->dev.of_node);
--
--	hisi_clk_unregister_gate(hi3519_gate_clks,
--				ARRAY_SIZE(hi3519_gate_clks),
--				crg->clk_data);
--	hisi_clk_unregister_mux(hi3519_mux_clks,
--				ARRAY_SIZE(hi3519_mux_clks),
--				crg->clk_data);
--	hisi_clk_unregister_fixed_rate(hi3519_fixed_rate_clks,
--				ARRAY_SIZE(hi3519_fixed_rate_clks),
--				crg->clk_data);
--}
--
--static int hi3519_clk_probe(struct platform_device *pdev)
--{
--	struct hi3519_crg_data *crg;
--
--	crg = devm_kmalloc(&pdev->dev, sizeof(*crg), GFP_KERNEL);
--	if (!crg)
--		return -ENOMEM;
--
--	crg->rstc = hisi_reset_init(pdev);
--	if (!crg->rstc)
--		return -ENOMEM;
--
--	crg->clk_data = hi3519_clk_register(pdev);
--	if (IS_ERR(crg->clk_data)) {
--		hisi_reset_exit(crg->rstc);
--		return PTR_ERR(crg->clk_data);
--	}
--
--	platform_set_drvdata(pdev, crg);
--	return 0;
--}
--
--static void hi3519_clk_remove(struct platform_device *pdev)
--{
--	struct hi3519_crg_data *crg = platform_get_drvdata(pdev);
--
--	hisi_reset_exit(crg->rstc);
--	hi3519_clk_unregister(pdev);
--}
--
-+static const struct hisi_clocks hi3519_crg_clks = {
-+	.nr = HI3519_NR_CLKS,
-+	.fixed_rate_clks = hi3519_fixed_rate_clks,
-+	.fixed_rate_clks_num = ARRAY_SIZE(hi3519_fixed_rate_clks),
-+	.mux_clks = hi3519_mux_clks,
-+	.mux_clks_num = ARRAY_SIZE(hi3519_mux_clks),
-+	.gate_clks = hi3519_gate_clks,
-+	.gate_clks_num = ARRAY_SIZE(hi3519_gate_clks),
-+};
- 
- static const struct of_device_id hi3519_clk_match_table[] = {
--	{ .compatible = "hisilicon,hi3519-crg" },
-+	{ .compatible = "hisilicon,hi3519-crg",
-+	  .data = &hi3519_crg_clks },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, hi3519_clk_match_table);
- 
- static struct platform_driver hi3519_clk_driver = {
--	.probe          = hi3519_clk_probe,
--	.remove_new	= hi3519_clk_remove,
-+	.probe = hisi_crg_probe,
-+	.remove_new = hisi_crg_remove,
- 	.driver         = {
- 		.name   = "hi3519-clk",
- 		.of_match_table = hi3519_clk_match_table,
- 	},
- };
- 
--static int __init hi3519_clk_init(void)
--{
--	return platform_driver_register(&hi3519_clk_driver);
--}
--core_initcall(hi3519_clk_init);
--
--static void __exit hi3519_clk_exit(void)
--{
--	platform_driver_unregister(&hi3519_clk_driver);
--}
--module_exit(hi3519_clk_exit);
-+module_platform_driver(hi3519_clk_driver);
- 
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("HiSilicon Hi3519 Clock Driver");
+ /* helper functions for platform driver */
 -- 
 2.43.0
 
