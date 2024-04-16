@@ -1,434 +1,140 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6BB11181;
-	Tue, 16 Apr 2024 20:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F53139D0B
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298751; cv=none; b=LjgAUwNvpj4sVPr+69R/pF8BMLrPCX9JrwqaPTb5QeHxqrpZ5uRFFmsfkrKZBTqcQ42vkFmpIg2A3yyhAAODS1+0zto3xVPJ/Lxylga1l/NmPw0nj0sQhGOOo7QTnvCslqsQfDbl/s3LUdQ0yTG1bWdVps0a23SqP8kWvE4+gVs=
+	t=1713298782; cv=none; b=Vv/p8cd29UuVtznf6faVvMgCavuY09IpU+Ju9YhRGssOyxbsNAPxfkayyNKgvkW2X6TDxfkuCSK42BaRrE9XtOyjrwlsxlTX+iBKygQQqdWp2pHKp/zwce7HHCVd1HMslsRyxqxhfPbEOCGl1RbGuGkkYXJQxPbNxT8ednXEy0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298751; c=relaxed/simple;
-	bh=cNvivALIidlyfECLsQcIW+1kvtPs6SNsHT1bcaTUOKk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DjKIU0dlzSa1mReHGD4/swCWC054CKFI6oqRZFwUkTdsSYKQ9IOeK7COlDWVPZN0ODAadAB9Z6PQ7OTuqiTpY+DvcdieSflC/hJyVPzRWqWx/2PgfTHFio5WyFMPlycaKjOjO9GX0aCcTb7yGb4iaXEcqZ8s3To2X2Vst9lx8Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=fwuRdMJL; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1713298782; c=relaxed/simple;
+	bh=dt5lCI9BKhgSVWERuQVtqfoHcvj8FsffJiAncsN/ffs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jHs65UX+Te+sYPiTuUSXyzOrwRFSzUXuCsKRFLl5OW9c15pP7LrIv/buISbEgw9FLfuMSpsKVpntnGEoqCglTmk7xyfmWgMnejD29fZhfHfsjNSDJjINLTb+v/D+gDMpsr9CXXMSU5PdD/RRrXhkZgzsg+YVzwtZEUuDRpktvq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixucG8my; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="fwuRdMJL"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 546F912000A;
-	Tue, 16 Apr 2024 23:19:03 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 546F912000A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713298743;
-	bh=L9jXqS8fSzJ/1fhIJoEE9a+C/MWNnEorEAG3WBoMF9g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=fwuRdMJLIX4czjhX8zYYXSubkh3eTeX3o7Mpoxng9MaX79e0Cdtck8iZUoBAcoE5R
-	 pn5kum8QLTvSOqNXf6dAvZULY3j3aBAlGrDczgOAq0k06dDQjkmKO5hqhUuEuLcoAi
-	 5LxLKCis5oBAngf/WUSl/DT/J0HJmDdttp1BQusQtbglbpvrkY4V9/0dRnxM3GIwSP
-	 ixnb9N2Sp8eB0by/v2NFMRWDl1Tm2luS40tpkyBaRH6zvUzhDKlh/SRzrMr6hOuv4x
-	 YJ3vh71KggwVZSN54uSy8obpb7VIeOTomtCI7wmIEXAShQDk/Od6y+DTnxWOMVExIL
-	 xsZa3yGoCVDmg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixucG8my"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713298779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+W1eHdUpPKTTAI4bHqjai+AwCzOOKEeOgSH970S6/XU=;
+	b=ixucG8my6itFN8QiuHfEoRFJQr9GtnouRFGLX4ebSPTI3pcFgg8T7Za0FvdGci2B1TNWO/
+	JI0LuCBh1Ds/W2QtwUvGhw6cCRbLsULmjPUEMsUeKoFpjNiaNnhjhAdPpERulsovk0pXTx
+	IGWheCFxTdwdAyHiuCl3uDOT4VvnmUs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-149-9SlV3xklP9i2HnjXZGQOHQ-1; Tue, 16 Apr 2024 16:19:37 -0400
+X-MC-Unique: 9SlV3xklP9i2HnjXZGQOHQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 16 Apr 2024 23:19:03 +0300 (MSK)
-Received: from CAB-WSD-0004828.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 16 Apr 2024 23:19:02 +0300
-From: Martin Kurbanov <mmkurbanov@salutedevices.com>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-	<kernel@salutedevices.com>, Martin Kurbanov <mmkurbanov@salutedevices.com>
-Subject: [PATCH v2 RESEND] leds: trigger: pattern: add support for hrtimer
-Date: Tue, 16 Apr 2024 23:18:05 +0300
-Message-ID: <20240416201847.357099-1-mmkurbanov@salutedevices.com>
-X-Mailer: git-send-email 2.43.2
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DAA5F80A1B9;
+	Tue, 16 Apr 2024 20:19:36 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A56884910B;
+	Tue, 16 Apr 2024 20:19:36 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: isaku.yamahata@intel.com,
+	xiaoyao.li@intel.com,
+	binbin.wu@linux.intel.com,
+	chao.gao@intel.com,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH v2 01/10] KVM: Allow page-sized MMU caches to be initialized with custom 64-bit values
+Date: Tue, 16 Apr 2024 16:19:26 -0400
+Message-ID: <20240416201935.3525739-2-pbonzini@redhat.com>
+In-Reply-To: <20240416201935.3525739-1-pbonzini@redhat.com>
+References: <20240416201935.3525739-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184745 [Apr 16 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: mmkurbanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 17 0.3.17 f2153f38d75b12894d9cf445f96cd15c9ef63a9d, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;lore.kernel.org:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/16 19:14:00
-X-KSMG-LinksScanning: Clean, bases: 2024/04/16 20:10:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/16 18:45:00 #24828684
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Currently, led pattern trigger uses timer_list to schedule brightness
-changing. As we know from timer_list API [1], it's not accurate to
-milliseconds and depends on HZ granularity.
+From: Sean Christopherson <seanjc@google.com>
 
-Example:
-"0 10 0 0 50 10 50 0 100 10 100 0 150 10 150 0 200 10 200 0 250 10 250 0",
-we expect it to be 60ms long, but it can actually be up to ~120ms
-(add ~10ms for each pattern when HZ == 100).
+Add support to MMU caches for initializing a page with a custom 64-bit
+value, e.g. to pre-fill an entire page table with non-zero PTE values.
+The functionality will be used by x86 to support Intel's TDX, which needs
+to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
+faults from getting reflected into the guest (Intel's EPT Violation #VE
+architecture made the less than brilliant decision of having the per-PTE
+behavior be opt-out instead of opt-in).
 
-But sometimes, userspace needs time accurate led patterns to make sure
-that pattern will be executed during expected time slot.
-To achieve this goal the patch introduces optional hrtimer usage for
-led trigger pattern, because hrtimer is microseconds accurate timer.
-
-[1]: kernel/time/timer.c#L104
-
-Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Message-Id: <5919f685f109a1b0ebc6bd8fc4536ee94bcc172d.1705965635.git.isaku.yamahata@intel.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
-Changes v2 since v1 at [1]:
-  - Fix build warning reported by kernel test robot [2]
+ include/linux/kvm_types.h |  1 +
+ virt/kvm/kvm_main.c       | 16 ++++++++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-Links:
-  [1] https://lore.kernel.org/all/20230522190412.374474-1-mmkurbanov@sberdevices.ru/
-  [2] https://lore.kernel.org/oe-kbuild-all/202305230549.ekneaQ89-lkp@intel.com/
-
- .../testing/sysfs-class-led-trigger-pattern   |  10 ++
- drivers/leds/trigger/ledtrig-pattern.c        | 126 ++++++++++++++----
- 2 files changed, 113 insertions(+), 23 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
-index 8c57d2780554e..22f28f2e9ac49 100644
---- a/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
-+++ b/Documentation/ABI/testing/sysfs-class-led-trigger-pattern
-@@ -12,6 +12,16 @@ Description:
- 		The exact format is described in:
- 		Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
- 
-+What:		/sys/class/leds/<led>/hr_pattern
-+Date:		April 2024
-+Description:
-+		Specify a software pattern for the LED, that supports altering
-+		the brightness for the specified duration with one software
-+		timer. It can do gradual dimming and step change of brightness.
+diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+index d93f6522b2c3..827ecc0b7e10 100644
+--- a/include/linux/kvm_types.h
++++ b/include/linux/kvm_types.h
+@@ -86,6 +86,7 @@ struct gfn_to_pfn_cache {
+ struct kvm_mmu_memory_cache {
+ 	gfp_t gfp_zero;
+ 	gfp_t gfp_custom;
++	u64 init_value;
+ 	struct kmem_cache *kmem_cache;
+ 	int capacity;
+ 	int nobjs;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 658581d4ad68..38b498669ef9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
+ static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+ 					       gfp_t gfp_flags)
+ {
++	void *page;
 +
-+		Unlike the /sys/class/leds/<led>/pattern, this attribute runs
-+		a pattern on high-resolution timer (hrtimer).
+ 	gfp_flags |= mc->gfp_zero;
+ 
+ 	if (mc->kmem_cache)
+ 		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+-	else
+-		return (void *)__get_free_page(gfp_flags);
 +
- What:		/sys/class/leds/<led>/hw_pattern
- Date:		September 2018
- KernelVersion:	4.20
-diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigger/ledtrig-pattern.c
-index fadd87dbe9930..aad48c2540fc8 100644
---- a/drivers/leds/trigger/ledtrig-pattern.c
-+++ b/drivers/leds/trigger/ledtrig-pattern.c
-@@ -13,6 +13,7 @@
- #include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/timer.h>
-+#include <linux/hrtimer.h>
- 
- #define MAX_PATTERNS		1024
- /*
-@@ -21,6 +22,12 @@
-  */
- #define UPDATE_INTERVAL		50
- 
-+enum pattern_type {
-+	PATTERN_TYPE_SW, /* Use standard timer for software pattern */
-+	PATTERN_TYPE_HR, /* Use hrtimer for software pattern */
-+	PATTERN_TYPE_HW, /* Hardware pattern */
-+};
-+
- struct pattern_trig_data {
- 	struct led_classdev *led_cdev;
- 	struct led_pattern patterns[MAX_PATTERNS];
-@@ -32,8 +39,9 @@ struct pattern_trig_data {
- 	int last_repeat;
- 	int delta_t;
- 	bool is_indefinite;
--	bool is_hw_pattern;
-+	enum pattern_type type;
- 	struct timer_list timer;
-+	struct hrtimer hrtimer;
- };
- 
- static void pattern_trig_update_patterns(struct pattern_trig_data *data)
-@@ -71,10 +79,35 @@ static int pattern_trig_compute_brightness(struct pattern_trig_data *data)
- 		return data->curr->brightness - step_brightness;
++	page = (void *)__get_free_page(gfp_flags);
++	if (page && mc->init_value)
++		memset64(page, mc->init_value, PAGE_SIZE / sizeof(u64));
++	return page;
  }
  
--static void pattern_trig_timer_function(struct timer_list *t)
-+static void pattern_trig_timer_start(struct pattern_trig_data *data)
- {
--	struct pattern_trig_data *data = from_timer(data, t, timer);
-+	if (data->type == PATTERN_TYPE_HR) {
-+		hrtimer_start(&data->hrtimer, ns_to_ktime(0), HRTIMER_MODE_REL);
-+	} else {
-+		data->timer.expires = jiffies;
-+		add_timer(&data->timer);
-+	}
-+}
+ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity, int min)
+@@ -421,6 +426,13 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+ 		if (WARN_ON_ONCE(!capacity))
+ 			return -EIO;
  
-+static void pattern_trig_timer_cancel(struct pattern_trig_data *data)
-+{
-+	if (data->type == PATTERN_TYPE_HR)
-+		hrtimer_cancel(&data->hrtimer);
-+	else
-+		del_timer_sync(&data->timer);
-+}
++		/*
++		 * Custom init values can be used only for page allocations,
++		 * and obviously conflict with __GFP_ZERO.
++		 */
++		if (WARN_ON_ONCE(mc->init_value && (mc->kmem_cache || mc->gfp_zero)))
++			return -EIO;
 +
-+static void pattern_trig_timer_restart(struct pattern_trig_data *data,
-+				       unsigned long interval)
-+{
-+	if (data->type == PATTERN_TYPE_HR)
-+		hrtimer_forward_now(&data->hrtimer, ms_to_ktime(interval));
-+	else
-+		mod_timer(&data->timer, jiffies + msecs_to_jiffies(interval));
-+}
-+
-+static void pattern_trig_timer_common_function(struct pattern_trig_data *data)
-+{
- 	for (;;) {
- 		if (!data->is_indefinite && !data->repeat)
- 			break;
-@@ -83,8 +116,7 @@ static void pattern_trig_timer_function(struct timer_list *t)
- 			/* Step change of brightness */
- 			led_set_brightness(data->led_cdev,
- 					   data->curr->brightness);
--			mod_timer(&data->timer,
--				  jiffies + msecs_to_jiffies(data->curr->delta_t));
-+			pattern_trig_timer_restart(data, data->curr->delta_t);
- 			if (!data->next->delta_t) {
- 				/* Skip the tuple with zero duration */
- 				pattern_trig_update_patterns(data);
-@@ -106,8 +138,7 @@ static void pattern_trig_timer_function(struct timer_list *t)
- 
- 			led_set_brightness(data->led_cdev,
- 					   pattern_trig_compute_brightness(data));
--			mod_timer(&data->timer,
--				  jiffies + msecs_to_jiffies(UPDATE_INTERVAL));
-+			pattern_trig_timer_restart(data, UPDATE_INTERVAL);
- 
- 			/* Accumulate the gradual dimming time */
- 			data->delta_t += UPDATE_INTERVAL;
-@@ -117,6 +148,25 @@ static void pattern_trig_timer_function(struct timer_list *t)
- 	}
- }
- 
-+static void pattern_trig_timer_function(struct timer_list *t)
-+{
-+	struct pattern_trig_data *data = from_timer(data, t, timer);
-+
-+	return pattern_trig_timer_common_function(data);
-+}
-+
-+static enum hrtimer_restart pattern_trig_hrtimer_function(struct hrtimer *t)
-+{
-+	struct pattern_trig_data *data =
-+		container_of(t, struct pattern_trig_data, hrtimer);
-+
-+	pattern_trig_timer_common_function(data);
-+	if (!data->is_indefinite && !data->repeat)
-+		return HRTIMER_NORESTART;
-+
-+	return HRTIMER_RESTART;
-+}
-+
- static int pattern_trig_start_pattern(struct led_classdev *led_cdev)
- {
- 	struct pattern_trig_data *data = led_cdev->trigger_data;
-@@ -124,7 +174,7 @@ static int pattern_trig_start_pattern(struct led_classdev *led_cdev)
- 	if (!data->npatterns)
- 		return 0;
- 
--	if (data->is_hw_pattern) {
-+	if (data->type == PATTERN_TYPE_HW) {
- 		return led_cdev->pattern_set(led_cdev, data->patterns,
- 					     data->npatterns, data->repeat);
- 	}
-@@ -136,8 +186,7 @@ static int pattern_trig_start_pattern(struct led_classdev *led_cdev)
- 	data->delta_t = 0;
- 	data->curr = data->patterns;
- 	data->next = data->patterns + 1;
--	data->timer.expires = jiffies;
--	add_timer(&data->timer);
-+	pattern_trig_timer_start(data);
- 
- 	return 0;
- }
-@@ -175,9 +224,9 @@ static ssize_t repeat_store(struct device *dev, struct device_attribute *attr,
- 
- 	mutex_lock(&data->lock);
- 
--	del_timer_sync(&data->timer);
-+	pattern_trig_timer_cancel(data);
- 
--	if (data->is_hw_pattern)
-+	if (data->type == PATTERN_TYPE_HW)
- 		led_cdev->pattern_clear(led_cdev);
- 
- 	data->last_repeat = data->repeat = res;
-@@ -196,14 +245,14 @@ static ssize_t repeat_store(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_RW(repeat);
- 
- static ssize_t pattern_trig_show_patterns(struct pattern_trig_data *data,
--					  char *buf, bool hw_pattern)
-+					  char *buf, enum pattern_type type)
- {
- 	ssize_t count = 0;
- 	int i;
- 
- 	mutex_lock(&data->lock);
- 
--	if (!data->npatterns || (data->is_hw_pattern ^ hw_pattern))
-+	if (!data->npatterns || data->type != type)
- 		goto out;
- 
- 	for (i = 0; i < data->npatterns; i++) {
-@@ -260,19 +309,19 @@ static int pattern_trig_store_patterns_int(struct pattern_trig_data *data,
- 
- static ssize_t pattern_trig_store_patterns(struct led_classdev *led_cdev,
- 					   const char *buf, const u32 *buf_int,
--					   size_t count, bool hw_pattern)
-+					   size_t count, enum pattern_type type)
- {
- 	struct pattern_trig_data *data = led_cdev->trigger_data;
- 	int err = 0;
- 
- 	mutex_lock(&data->lock);
- 
--	del_timer_sync(&data->timer);
-+	pattern_trig_timer_cancel(data);
- 
--	if (data->is_hw_pattern)
-+	if (data->type == PATTERN_TYPE_HW)
- 		led_cdev->pattern_clear(led_cdev);
- 
--	data->is_hw_pattern = hw_pattern;
-+	data->type = type;
- 	data->npatterns = 0;
- 
- 	if (buf)
-@@ -297,7 +346,7 @@ static ssize_t pattern_show(struct device *dev, struct device_attribute *attr,
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 	struct pattern_trig_data *data = led_cdev->trigger_data;
- 
--	return pattern_trig_show_patterns(data, buf, false);
-+	return pattern_trig_show_patterns(data, buf, PATTERN_TYPE_SW);
- }
- 
- static ssize_t pattern_store(struct device *dev, struct device_attribute *attr,
-@@ -305,7 +354,8 @@ static ssize_t pattern_store(struct device *dev, struct device_attribute *attr,
- {
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 
--	return pattern_trig_store_patterns(led_cdev, buf, NULL, count, false);
-+	return pattern_trig_store_patterns(led_cdev, buf, NULL, count,
-+					   PATTERN_TYPE_SW);
- }
- 
- static DEVICE_ATTR_RW(pattern);
-@@ -316,7 +366,7 @@ static ssize_t hw_pattern_show(struct device *dev,
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 	struct pattern_trig_data *data = led_cdev->trigger_data;
- 
--	return pattern_trig_show_patterns(data, buf, true);
-+	return pattern_trig_show_patterns(data, buf, PATTERN_TYPE_HW);
- }
- 
- static ssize_t hw_pattern_store(struct device *dev,
-@@ -325,11 +375,33 @@ static ssize_t hw_pattern_store(struct device *dev,
- {
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 
--	return pattern_trig_store_patterns(led_cdev, buf, NULL, count, true);
-+	return pattern_trig_store_patterns(led_cdev, buf, NULL, count,
-+					   PATTERN_TYPE_HW);
- }
- 
- static DEVICE_ATTR_RW(hw_pattern);
- 
-+static ssize_t hr_pattern_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct pattern_trig_data *data = led_cdev->trigger_data;
-+
-+	return pattern_trig_show_patterns(data, buf, PATTERN_TYPE_HR);
-+}
-+
-+static ssize_t hr_pattern_store(struct device *dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+
-+	return pattern_trig_store_patterns(led_cdev, buf, NULL, count,
-+					   PATTERN_TYPE_HR);
-+}
-+
-+static DEVICE_ATTR_RW(hr_pattern);
-+
- static umode_t pattern_trig_attrs_mode(struct kobject *kobj,
- 				       struct attribute *attr, int index)
- {
-@@ -338,6 +410,8 @@ static umode_t pattern_trig_attrs_mode(struct kobject *kobj,
- 
- 	if (attr == &dev_attr_repeat.attr || attr == &dev_attr_pattern.attr)
- 		return attr->mode;
-+	else if (attr == &dev_attr_hr_pattern.attr)
-+		return attr->mode;
- 	else if (attr == &dev_attr_hw_pattern.attr && led_cdev->pattern_set)
- 		return attr->mode;
- 
-@@ -347,6 +421,7 @@ static umode_t pattern_trig_attrs_mode(struct kobject *kobj,
- static struct attribute *pattern_trig_attrs[] = {
- 	&dev_attr_pattern.attr,
- 	&dev_attr_hw_pattern.attr,
-+	&dev_attr_hr_pattern.attr,
- 	&dev_attr_repeat.attr,
- 	NULL
- };
-@@ -376,7 +451,8 @@ static void pattern_init(struct led_classdev *led_cdev)
- 		goto out;
- 	}
- 
--	err = pattern_trig_store_patterns(led_cdev, NULL, pattern, size, false);
-+	err = pattern_trig_store_patterns(led_cdev, NULL, pattern, size,
-+					  PATTERN_TYPE_SW);
- 	if (err < 0)
- 		dev_warn(led_cdev->dev,
- 			 "Pattern initialization failed with error %d\n", err);
-@@ -400,12 +476,15 @@ static int pattern_trig_activate(struct led_classdev *led_cdev)
- 		led_cdev->pattern_clear = NULL;
- 	}
- 
-+	data->type = PATTERN_TYPE_SW;
- 	data->is_indefinite = true;
- 	data->last_repeat = -1;
- 	mutex_init(&data->lock);
- 	data->led_cdev = led_cdev;
- 	led_set_trigger_data(led_cdev, data);
- 	timer_setup(&data->timer, pattern_trig_timer_function, 0);
-+	hrtimer_init(&data->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	data->hrtimer.function = pattern_trig_hrtimer_function;
- 	led_cdev->activated = true;
- 
- 	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
-@@ -431,6 +510,7 @@ static void pattern_trig_deactivate(struct led_classdev *led_cdev)
- 		led_cdev->pattern_clear(led_cdev);
- 
- 	timer_shutdown_sync(&data->timer);
-+	hrtimer_cancel(&data->hrtimer);
- 
- 	led_set_brightness(led_cdev, LED_OFF);
- 	kfree(data);
+ 		mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
+ 		if (!mc->objects)
+ 			return -ENOMEM;
 -- 
-2.43.2
+2.43.0
+
 
