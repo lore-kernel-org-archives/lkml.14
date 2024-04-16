@@ -1,239 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF393B78D;
-	Tue, 16 Apr 2024 08:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0EB3B78D;
+	Tue, 16 Apr 2024 08:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713255966; cv=none; b=AgkhBHO6IKtr5SP7nKddLXqBI3HX7TDv7wElh8eVYzYrMo5gfZlGwiVOELih2ZHxBjax2wXWJgLAGvG7I+6+87Z8C22lALA6kYEdC1QRP4c0BzR1VWWNEqvrcqDCEEvXtYQqWr17+e83cwejmEwz3JsFJdoU1/nWY/7kyqfsXlQ=
+	t=1713256121; cv=none; b=ro+WRFmsTCPzJPjXCzIpxEW1vLjlcd82GYNAn8bcnKMk5WyOvwOAOfaXTF+MT3NpeGAdKX4IqYImTUdBsAouP1kQTQ0sMAqlRAd72psvi0uC6EhM5/86syIilvPoSA69T0pcZcszIkrwu483v8xgRds7VFadOMhbjrms9NzgfcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713255966; c=relaxed/simple;
-	bh=dU7PkEFRm93LBS1Z28p9N1XSH6G5tnTgOH3s9Y4nZt4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uXzfKjBalvINkwB0RIsdxA/Exytxc5/UPmmPYtpIiaxLJvvaO6yM6vZUUxv17t+hgE9i8nymoR2eWMOuKVrznKB0Zt6SkJYoKK2m3DywRbY5xpFQ9UFklm7SLCfX2SuY3XtjeZGGqJSRcCd9XmXa3f3heYQMhbQjbnsAQdMhVf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKHWYhR5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713256121; c=relaxed/simple;
+	bh=4fVG0hgGeE2MEJ2IjJFjK+zjyRc2WZJcMXDmHG2OPTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nqdaJkHbpigRffR6dgDxvTkhmLhI1+o5Q/RN28VxzfvZpj5Z1Mj4JGRACEmLQki8yctxm/3qULIizqgllrzBqJEy0V0u+h07+QhYpf9KLseSq1uQUPeHvUOsMR3evjyMAa0XhBbcfE0ca6uyGbd5uYAzfnfasGsM4672KgFjezQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LGd4MOuT; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKHWYhR5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3887C113CE;
-	Tue, 16 Apr 2024 08:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713255965;
-	bh=dU7PkEFRm93LBS1Z28p9N1XSH6G5tnTgOH3s9Y4nZt4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WKHWYhR5mbbNVzGbhCPf7kl3oB3jDL3oHMn4Q3PKGa5PZXdSv3F82AMPzTnllqrB4
-	 eZBDrqWP3HqjL+d8FxqNuISmb9y7y4WCaIE1AKWLLrnaaF0NASBwhgLGvWRYLecpTO
-	 ttEfbAtfQ8AJvE0g7ukarqYG4cu6ptpkcv9VPL9XAGDJtrUvUjgz3YtAF7LDMUgrDa
-	 s/zksYEOphxkiemLTBFR2/kTS9c5z3U4A2SCiAAxhWpDiRw6Bwmz98kZLETHOr9Bg7
-	 eyAiL1mqWCvwl0QT9oRiiwzTJzltC9q8nqukrrPuz9rMas7Qhl8FYpTAxdzmV9SdoI
-	 9XFSIr6NmMG1Q==
-Date: Tue, 16 Apr 2024 10:25:58 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Nam Cao <namcao@linutronix.de>, Mike Rapoport <rppt@kernel.org>
-Cc: Andreas Dilger <adilger@dilger.ca>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, Jan Kara <jack@suse.cz>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>, 
-	Ext4 Developers List <linux-ext4@vger.kernel.org>, Conor Dooley <conor@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: riscv32 EXT4 splat, 6.8 regression?
-Message-ID: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LGd4MOuT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=vzFrt8UEjfFC2LhFGHg/hPX6/YCtSpcnbyd4WgxC8mQ=;
+	t=1713256119; x=1713688119; b=LGd4MOuTk4ddDXKzQ8sqmAmUIxZGaYJYz93V8ans7Q/fgUY
+	n2F86+GwCih63j7mZ6rOdsBUN2zvbAF0jlxDGytapbLtemmgb6vPhi3m7a186p/rcfjScIWXX8BMX
+	9rcelsdV6I/G0wrj5Y3vsD7hm626rEVL58JqGzRwYhH2DUoGrV9jAwqbeeGC3+jQEI34fd6o2NuUb
+	CoTvVkH6Sx0vUOfCSv6drGjYwUiPZpn/+X2bI2QnA26QUrI6wyJqFkbyh8KPraP0G7GrdynvJBkPt
+	RmBdbELUsmF3R+bsQx3fxXCfiWDJHa5TEQGyVEjyhTRHL/ORlBs0l0epS1cCXp6g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rweBB-0002LJ-72; Tue, 16 Apr 2024 10:28:37 +0200
+Message-ID: <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
+Date: Tue, 16 Apr 2024 10:28:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend if
+ pwm-leds exist
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+ linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
+ <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87le5e393x.fsf@all.your.base.are.belong.to.us>
- <20240416084417.569356d3@namcao>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713256119;bcf7860a;
+X-HE-SMSGID: 1rweBB-0002LJ-72
 
-[Adding Mike who's knowledgeable in this area]
+On 06.03.24 09:18, Uwe Kleine-König wrote:
+> On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> Uwe, I noticed a report about a regression in bugzilla.kernel.org that
+>> apparently is caused by a change of yours. As many (most?) kernel
+>> developers don't keep an eye on it, I decided to forward it by mail.
+>>
+>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+>> not CCed them in mails like this.
+>>
+>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218559 :
+>>
+>>> Commit 76fe464c8e64e71b2e4af11edeef0e5d85eeb6aa ("leds: pwm: Don't
+>>> disable the PWM when the LED should be off") prevents stm32mp1xx based
+>>> targets from entering suspend if pwm-leds exist, as the stm32 PWM driver
+>>> refuses to enter suspend if any PWM channels are still active ("PWM 0
+>>> still in use by consumer" see stm32_pwm_suspend in drivers/pwm/stm32-pwm.c).
+>>>
+>>> Reverting the mentioned commit fixes this behaviour but I'm not
+>>> certain if this is a problem with stm32-pwm or pwm-leds (what is the
+>>> usual behaviour for suspend with active PWM channels?).
+> 
+> I'd assume the following patch fixes this report. I didn't test it
+> though.
 
-On Mon, Apr 15, 2024 at 06:04:50PM +0200, Björn Töpel wrote:
-> Christian Brauner <brauner@kernel.org> writes:
-> 
-> > On Sun, Apr 14, 2024 at 04:08:11PM +0200, Björn Töpel wrote:
-> >> Andreas Dilger <adilger@dilger.ca> writes:
-> >> 
-> >> > On Apr 13, 2024, at 8:15 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >> >> 
-> >> >> On Sat, Apr 13, 2024 at 07:46:03PM -0600, Andreas Dilger wrote:
-> >> >> 
-> >> >>> As to whether the 0xfffff000 address itself is valid for riscv32 is
-> >> >>> outside my realm, but given that RAM is cheap it doesn't seem unlikely
-> >> >>> to have 4GB+ of RAM and want to use it all.  The riscv32 might consider
-> >> >>> reserving this page address from allocation to avoid similar issues in
-> >> >>> other parts of the code, as is done with the NULL/0 page address.
-> >> >> 
-> >> >> Not a chance.  *Any* page mapped there is a serious bug on any 32bit
-> >> >> box.  Recall what ERR_PTR() is...
-> >> >> 
-> >> >> On any architecture the virtual addresses in range (unsigned long)-512..
-> >> >> (unsigned long)-1 must never resolve to valid kernel objects.
-> >> >> In other words, any kind of wraparound here is asking for an oops on
-> >> >> attempts to access the elements of buffer - kernel dereference of
-> >> >> (char *)0xfffff000 on a 32bit box is already a bug.
-> >> >> 
-> >> >> It might be getting an invalid pointer, but arithmetical overflows
-> >> >> are irrelevant.
-> >> >
-> >> > The original bug report stated that search_buf = 0xfffff000 on entry,
-> >> > and I'd quoted that at the start of my email:
-> >> >
-> >> > On Apr 12, 2024, at 8:57 AM, Björn Töpel <bjorn@kernel.org> wrote:
-> >> >> What I see in ext4_search_dir() is that search_buf is 0xfffff000, and at
-> >> >> some point the address wraps to zero, and boom. I doubt that 0xfffff000
-> >> >> is a sane address.
-> >> >
-> >> > Now that you mention ERR_PTR() it definitely makes sense that this last
-> >> > page HAS to be excluded.
-> >> >
-> >> > So some other bug is passing the bad pointer to this code before this
-> >> > error, or the arch is not correctly excluding this page from allocation.
-> >> 
-> >> Yeah, something is off for sure.
-> >> 
-> >> (FWIW, I manage to hit this for Linus' master as well.)
-> >> 
-> >> I added a print (close to trace_mm_filemap_add_to_page_cache()), and for
-> >> this BT:
-> >> 
-> >>   [<c01e8b34>] __filemap_add_folio+0x322/0x508
-> >>   [<c01e8d6e>] filemap_add_folio+0x54/0xce
-> >>   [<c01ea076>] __filemap_get_folio+0x156/0x2aa
-> >>   [<c02df346>] __getblk_slow+0xcc/0x302
-> >>   [<c02df5f2>] bdev_getblk+0x76/0x7a
-> >>   [<c03519da>] ext4_getblk+0xbc/0x2c4
-> >>   [<c0351cc2>] ext4_bread_batch+0x56/0x186
-> >>   [<c036bcaa>] __ext4_find_entry+0x156/0x578
-> >>   [<c036c152>] ext4_lookup+0x86/0x1f4
-> >>   [<c02a3252>] __lookup_slow+0x8e/0x142
-> >>   [<c02a6d70>] walk_component+0x104/0x174
-> >>   [<c02a793c>] path_lookupat+0x78/0x182
-> >>   [<c02a8c7c>] filename_lookup+0x96/0x158
-> >>   [<c02a8d76>] kern_path+0x38/0x56
-> >>   [<c0c1cb7a>] init_mount+0x5c/0xac
-> >>   [<c0c2ba4c>] devtmpfs_mount+0x44/0x7a
-> >>   [<c0c01cce>] prepare_namespace+0x226/0x27c
-> >>   [<c0c011c6>] kernel_init_freeable+0x286/0x2a8
-> >>   [<c0b97ab8>] kernel_init+0x2a/0x156
-> >>   [<c0ba22ca>] ret_from_fork+0xe/0x20
-> >> 
-> >> I get a folio where folio_address(folio) == 0xfffff000 (which is
-> >> broken).
-> >> 
-> >> Need to go into the weeds here...
-> >
-> > I don't see anything obvious that could explain this right away. Did you
-> > manage to reproduce this on any other architecture and/or filesystem?
-> >
-> > Fwiw, iirc there were a bunch of fs/buffer.c changes that came in
-> > through the mm/ layer between v6.7 and v6.8 that might also be
-> > interesting. But really I'm poking in the dark currently.
-> 
-> Thanks for getting back! Spent some more time one it today.
-> 
-> It seems that the buddy allocator *can* return a page with a VA that can
-> wrap (0xfffff000 -- pointed out by Nam and myself).
-> 
-> Further, it seems like riscv32 indeed inserts a page like that to the
-> buddy allocator, when the memblock is free'd:
-> 
->   | [<c024961c>] __free_one_page+0x2a4/0x3ea
->   | [<c024a448>] __free_pages_ok+0x158/0x3cc
->   | [<c024b1a4>] __free_pages_core+0xe8/0x12c
->   | [<c0c1435a>] memblock_free_pages+0x1a/0x22
->   | [<c0c17676>] memblock_free_all+0x1ee/0x278
->   | [<c0c050b0>] mem_init+0x10/0xa4
->   | [<c0c1447c>] mm_core_init+0x11a/0x2da
->   | [<c0c00bb6>] start_kernel+0x3c4/0x6de
-> 
-> Here, a page with VA 0xfffff000 is a added to the freelist. We were just
-> lucky (unlucky?) that page was used for the page cache.
-> 
-> A nasty patch like:
-> --8<--
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 549e76af8f82..a6a6abbe71b0 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -2566,6 +2566,9 @@ void __init set_dma_reserve(unsigned long new_dma_reserve)
->  void __init memblock_free_pages(struct page *page, unsigned long pfn,
->  							unsigned int order)
->  {
-> +	if ((long)page_address(page) == 0xfffff000L) {
-> +		return; // leak it
-> +	}
->  
->  	if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT)) {
->  		int nid = early_pfn_to_nid(pfn);
-> --8<--
-> 
-> ...and it's gone.
-> 
-> I need to think more about what a proper fix is. Regardless; Christian,
-> Al, and Ted can all relax. ;-)
-> 
-> 
-> Björn
+Jakob confirmed it helped in the bugzilla ticket. But the patch since
+then didn't make any progress afaics -- or did it and I just missed it
+in my search?
 
-On Tue, Apr 16, 2024 at 08:44:17AM +0200, Nam Cao wrote:
-> On 2024-04-15 Björn Töpel wrote:
-> > Thanks for getting back! Spent some more time one it today.
-> > 
-> > It seems that the buddy allocator *can* return a page with a VA that can
-> > wrap (0xfffff000 -- pointed out by Nam and myself).
-> > 
-> > Further, it seems like riscv32 indeed inserts a page like that to the
-> > buddy allocator, when the memblock is free'd:
-> > 
-> >   | [<c024961c>] __free_one_page+0x2a4/0x3ea
-> >   | [<c024a448>] __free_pages_ok+0x158/0x3cc
-> >   | [<c024b1a4>] __free_pages_core+0xe8/0x12c
-> >   | [<c0c1435a>] memblock_free_pages+0x1a/0x22
-> >   | [<c0c17676>] memblock_free_all+0x1ee/0x278
-> >   | [<c0c050b0>] mem_init+0x10/0xa4
-> >   | [<c0c1447c>] mm_core_init+0x11a/0x2da
-> >   | [<c0c00bb6>] start_kernel+0x3c4/0x6de
-> > 
-> > Here, a page with VA 0xfffff000 is a added to the freelist. We were just
-> > lucky (unlucky?) that page was used for the page cache.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+> ---->8----
+> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
 > 
-> I just educated myself about memory mapping last night, so the below
-> may be complete nonsense. Take it with a grain of salt.
+> On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> the PWM because an enabled PWM refuses to suspend. So check the
+> LED_SUSPENDED flag and depending on that set the .enabled property.
 > 
-> In riscv's setup_bootmem(), we have this line:
-> 	max_low_pfn = max_pfn = PFN_DOWN(phys_ram_end);
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
+> Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/leds/leds-pwm.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> I think this is the root cause: max_low_pfn indicates the last page
-> to be mapped. Problem is: nothing prevents PFN_DOWN(phys_ram_end) from
-> getting mapped to the last page (0xfffff000). If max_low_pfn is mapped
-> to the last page, we get the reported problem.
-> 
-> There seems to be some code to make sure the last page is not used
-> (the call to memblock_set_current_limit() right above this line). It is
-> unclear to me why this still lets the problem slip through.
-> 
-> The fix is simple: never let max_low_pfn gets mapped to the last page.
-> The below patch fixes the problem for me. But I am not entirely sure if
-> this is the correct fix, further investigation needed.
-> 
-> Best regards,
-> Nam
-> 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index fa34cf55037b..17cab0a52726 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -251,7 +251,8 @@ static void __init setup_bootmem(void)
->  	}
+> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> index 4e3936a39d0e..e1b414b40353 100644
+> --- a/drivers/leds/leds-pwm.c
+> +++ b/drivers/leds/leds-pwm.c
+> @@ -53,7 +53,13 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+>  		duty = led_dat->pwmstate.period - duty;
 >  
->  	min_low_pfn = PFN_UP(phys_ram_base);
-> -	max_low_pfn = max_pfn = PFN_DOWN(phys_ram_end);
-> +	max_low_pfn = PFN_DOWN(memblock_get_current_limit());
-> +	max_pfn = PFN_DOWN(phys_ram_end);
->  	high_memory = (void *)(__va(PFN_PHYS(max_low_pfn)));
->  
->  	dma32_phys_limit = min(4UL * SZ_1G, (unsigned long)PFN_PHYS(max_low_pfn));
+>  	led_dat->pwmstate.duty_cycle = duty;
+> -	led_dat->pwmstate.enabled = true;
+> +	/*
+> +	 * Disabling a PWM doesn't guarantee that it emits the inactive level.
+> +	 * So keep it on. Only for suspending the PWM should be disabled because
+> +	 * otherwise it refuses to suspend. The possible downside is that the
+> +	 * LED might stay (or even go) on.
+> +	 */
+> +	led_dat->pwmstate.enabled = !(led_cdev->flags & LED_SUSPENDED);
+>  	return pwm_apply_might_sleep(led_dat->pwm, &led_dat->pwmstate);
+>  }
+> 
+> base-commit: 15facbd7bd3dbfa04721cb71e69954eb4686cb9e
+> ---->8----
+> 
