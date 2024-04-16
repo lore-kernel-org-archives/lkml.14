@@ -1,68 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEC56E5FD;
-	Tue, 16 Apr 2024 06:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199BD6BFCF;
+	Tue, 16 Apr 2024 06:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713250046; cv=none; b=cbTd2BEU2NiQedwViuY2J9Mht4AUHZZaQF4RJu10Em4y+H/T+lys70KOn3cZkzp6oTkScJKV4nbZWG5kcGksiPiKt+WAfQZts2V2PHcJ3Y/eaIKawey8i/NHGYHT7lakoF669lD/bIuMME/u2d8I+FACH5citWx3upnA01rUbOc=
+	t=1713250200; cv=none; b=o4IKgaCRu9yj8wH8CUNdNLyFccRYtngbd9a6uvX5jZIy57Tcf0ATAdBrmMj/ovch3PG+Kh8ExKv8cYRK/ZPV4V56+MBgHj8/AIQpUCv4ISjXNSGS1LMocTuxC6pkZUxHFNzv1qLkjmSORphrnMRoz8wKDvupJMjJ/PY9iJQ8HYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713250046; c=relaxed/simple;
-	bh=qm9HuIqIHiV0TwCjlaPOkidq7z2qTqokgjceTJw5hJI=;
+	s=arc-20240116; t=1713250200; c=relaxed/simple;
+	bh=yfX5SuJiKsjZz5T4krQC0RPDEuHfvs/zvmFjAxx/zlY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAAYBiVk3NYX+NTuPodStEIZrkr/r4lehETHZffmNSQqa4dnu2nstIjJydQSuIEg1NK4H5Bq3z7GuGBZJeWhTMBqkkAwLEeVKwmzLI1YZQN67/18dgSHTTCYmSPX+8BbG9e4qVllh1ilCbFtFspSnsgG9gQUFENk2tmEYDdQiUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=foDHY4IF; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IYD3iL1tB45ghxcYjZL5hZtApXqQsKcYvC/pOsP0wQTTRPs9OqUcsbC8S1u4U6Jqfqllyq6H8S9BC7UTKoAH+QHfSxc4DUPVDEbF/Nz07ncB1+Sd2UGYUnSUqdl5v5Ja/yclm5GxEyfBcM46CFftIMQgT8M429RY0ieWK509JIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzS40nkM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="foDHY4IF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713250044; x=1744786044;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qm9HuIqIHiV0TwCjlaPOkidq7z2qTqokgjceTJw5hJI=;
-  b=foDHY4IFXTrALYFPiDDSemGUTvs7Ldtv96gZeIRFwYQ4u4I1OzgVaEPP
-   4ApkpGuhrXpmO2447PMtpF8I1JbsNrH+HhWAEGUhbo052R3FD1YtYLm3W
-   u1NwugnSZMKgHFZOX3MJ59G+pBbaBllqJCEyVgk/AOqs0ijww1e8gGkB6
-   OE9sKdMDY6Ueqir9xpNG5+UDXH/Tp6wub5JoacUG4+xwgCtdXOqFzO3mo
-   oFNXyPSJZfeV/13PlgO2bPorX7Woo6bp+4tcijBE4fGbkLuaoDkUs65ai
-   rbM8df8cOdL7rZU4dp8MDtqIerXIQ2YkxxPwo0y94XK37L/ceCHUn0X2k
-   w==;
-X-CSE-ConnectionGUID: 5G7Sa+wdTxmKIz1fqFbu4A==
-X-CSE-MsgGUID: OsEHOtp2TqaRvmQdTli1HQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8779795"
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="8779795"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 23:47:24 -0700
-X-CSE-ConnectionGUID: vpnYdRu+TgO5tYhKGtu/qQ==
-X-CSE-MsgGUID: HUe4Q++7TnmFR2np7DFglg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
-   d="scan'208";a="26939988"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 23:47:21 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 55C0111FAB0;
-	Tue, 16 Apr 2024 09:47:18 +0300 (EEST)
-Date: Tue, 16 Apr 2024 06:47:18 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v4 17/20] media: i2c: ov4689: Configurable analogue crop
-Message-ID: <Zh4e9q_RFIe-JIzz@kekkonen.localdomain>
-References: <20240402164552.19171-1-mike.rudenko@gmail.com>
- <20240402164552.19171-18-mike.rudenko@gmail.com>
- <ZhzEdXz-R2I6nZXf@kekkonen.localdomain>
- <87ttk274e6.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzS40nkM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD27C113CE;
+	Tue, 16 Apr 2024 06:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713250199;
+	bh=yfX5SuJiKsjZz5T4krQC0RPDEuHfvs/zvmFjAxx/zlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LzS40nkMJsIBoNMyiBYU1dZiU1GtglSAeoOK9Wcywa3dOY58e3mqlh5jo9Uo3Wg2F
+	 bgDK0tl59DTrBOygg0MimxmV2SmnnMK3sWaXBhFO/CJhjGPCxtnk5Ia76in1UYvUBK
+	 vckfRAEjG0RHpNWyty6mmMfUa+d70IPhKPL2FQaHhubHznn8lySE+KogwTaJ59l1It
+	 NTQM+YyatNBircIy0BD3jOigDDKO2b0E8+exBqLDcMGDsa4gWo9HVGWxSrZL8T2Vfr
+	 2sQ0oHzwEEpUKvd/TIIKAKi7z/0bxlEuMynqeleZ7TqaBos8awEksUEIqjQ87iO0QI
+	 DAkcQpckpO54w==
+Date: Tue, 16 Apr 2024 08:49:53 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Brian Norris <briannorris@chromium.org>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, stable@vger.kernel.org,
+	Slark Xiao <slark_xiao@163.com>
+Subject: Re: [PATCH] PCI: rockchip: Use GPIOD_OUT_LOW flag while requesting
+ ep_gpio
+Message-ID: <Zh4fkbQTh0Z1GNGK@ryzen>
+References: <20240416-pci-rockchip-perst-fix-v1-1-4800b1d4d954@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,49 +51,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ttk274e6.fsf@gmail.com>
+In-Reply-To: <20240416-pci-rockchip-perst-fix-v1-1-4800b1d4d954@linaro.org>
 
-On Mon, Apr 15, 2024 at 11:22:09PM +0300, Mikhail Rudenko wrote:
+On Tue, Apr 16, 2024 at 11:12:35AM +0530, Manivannan Sadhasivam wrote:
+> Rockchip platforms use 'GPIO_ACTIVE_HIGH' flag in the devicetree definition
+> for ep_gpio. This means, whatever the logical value set by the driver for
+> the ep_gpio, physical line will output the same logic level.
 > 
-> Hi Sakari,
+> For instance,
 > 
-> On 2024-04-15 at 06:08 GMT, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> 	gpiod_set_value_cansleep(rockchip->ep_gpio, 0); --> Level low
+> 	gpiod_set_value_cansleep(rockchip->ep_gpio, 1); --> Level high
 > 
-> > Hi Mikhail,
-> >
-> > On Tue, Apr 02, 2024 at 07:45:48PM +0300, Mikhail Rudenko wrote:
-> >> Implement configurable analogue crop via .set_selection call.
-> >> ov4689_init_cfg is modified to initialize default subdev selection.
-> >> Offsets are aligned to 2 to preserve Bayer order, selection width is
-> >> aligned to 4 and height to 2 to meet hardware requirements.
-> >>
-> >> Experimentally discovered values of the cropping-related registers and
-> >> vfifo_read_start for various output sizes are used. Default BLC anchor
-> >> positions are used for the default analogue crop, scaling down
-> >> proportionally for the smaller crop sizes.
-> >>
-> >> When analogue crop is adjusted, several consequential actions take
-> >> place: the output format is reset, exposure/vblank/hblank control
-> >> ranges and default values are adjusted accordingly. Additionally,
-> >> ov4689_set_ctrl utilizes pad crop instead of cur_mode width and
-> >> height for HTS and VTS calculation. Also, ov4689_enum_frame_sizes is
-> >> modified to report crop size as available frame size.
-> >
-> > We're amidst of a change to the APIs touching sensors with the the
-> > introduction of the internal pads.
-> > <URL:https://lore.kernel.org/linux-media/20240313072516.241106-1-sakari.ailus@linux.intel.com/T/#t>.
-> >
-> > I'd therefore postpone this bit so it would align with the new practices
-> > (also subject to change in the metadata set).
-> >
-> > The rest of the patches would seem more or less ready for merging to me.
+> But while requesting the ep_gpio, GPIOD_OUT_HIGH flag is currently used.
+> Now, this also causes the physical line to output 'high' creating trouble
+> for endpoint devices during host reboot.
 > 
-> Okay, so I'll post a v5 of patches 1-16 with whitespace fixes (as you
-> suggested in patch 20) soon, and the remaining patches affected by the
-> metadata-related API changes as a separate series as soon those changes
-> land in media_stage. Do I get you right?
+> When host reboot happens, the ep_gpio will initially output 'low' due to
+> the GPIO getting reset to its POR value. Then during host controller probe,
+> it will output 'high' due to GPIOD_OUT_HIGH flag. Then during
+> rockchip_pcie_host_init_port(), it will first output 'low' and then 'high'
+> indicating the completion of controller initialization.
+> 
+> On the endpoint side, each output 'low' of ep_gpio is accounted for PERST#
+> assert and 'high' for PERST# deassert. With the above mentioned flow during
+> host reboot, endpoint will witness below state changes for PERST#:
+> 
+> 	(1) PERST# assert - GPIO POR state
+> 	(2) PERST# deassert - GPIOD_OUT_HIGH while requesting GPIO
+> 	(3) PERST# assert - rockchip_pcie_host_init_port()
+> 	(4) PERST# deassert - rockchip_pcie_host_init_port()
+> 
+> Now the time interval between (2) and (3) is very short as both happen
+> during the driver probe(), and this results in a race in the endpoint.
+> Because, before completing the PERST# deassertion in (2), endpoint got
+> another PERST# assert in (3).
+> 
+> A proper way to fix this issue is to change the GPIOD_OUT_HIGH flag in (2)
+> to GPIOD_OUT_LOW. Because the usual convention is to request the GPIO with
+> a state corresponding to its 'initial/default' value and let the driver
+> change the state of the GPIO when required.
+> 
+> As per that, the ep_gpio should be requested with GPIOD_OUT_LOW as it
+> corresponds to the POR value of '0' (PERST# assert in the endpoint). Then
+> the driver can change the state of the ep_gpio later in
+> rockchip_pcie_host_init_port() as per the initialization sequence.
+> 
+> This fixes the firmware crash issue in Qcom based modems connected to
+> Rockpro64 based board.
+> 
+> Cc:  <stable@vger.kernel.org> # 4.9
+> Reported-by: Slark Xiao <slark_xiao@163.com>
+> Closes: https://lore.kernel.org/mhi/20240402045647.GG2933@thinkpad/
+> Fixes: e77f847df54c ("PCI: rockchip: Add Rockchip PCIe controller support")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
-Yes, please.
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
--- 
-Sakari Ailus
+
+I sent a similar fix for the DWC-based rockchip driver a few weeks ago:
+https://lore.kernel.org/linux-pci/20240327152531.814392-1-cassel@kernel.org/
+
+If your fix is picked up, it would be nice if mine got picked up as well,
+such that both drivers get fixed.
+
+
+Kind regards,
+Niklas
