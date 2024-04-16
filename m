@@ -1,150 +1,146 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1062283CBD;
-	Tue, 16 Apr 2024 10:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFEB83CBD;
+	Tue, 16 Apr 2024 10:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713261831; cv=none; b=CCTbutw7sOoqETZSePZD7NHexKt2y4w5USUwcjrnvIl2H7+PwR5jQzwpFPKZxvkymuomsHaVwAFou77Rl3znKGbF0m3y+dFGhTwIogADdgUNbLwi1BU+KzVMberjkBjCj4hmiJUymNSdroIgUkKX4rPGd/YO1+3W5x+uPq3CHHc=
+	t=1713261893; cv=none; b=AO2hVvkh62owz5wLWVoAHfgBcDnS5+gro5tDK9OhKwBbuZBY+mngAbITRSZLIwvc5I+CmTh2rorSNJd7nYuUyOfKczuln0ieaAfsF5MKf37jEZIXbOq3oWoYDhSowp0snwfvsl8hedst7BwdRQPb16jFORL7UIpiP2ydoAHkjGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713261831; c=relaxed/simple;
-	bh=Bb1D3KrKedP6JVJJvJg6ZDfHxFVvZygGKN9CvvTV7co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrFJMdNTq+m7GEmEt5FQVVGOACdJNhtZuRzqYnDZb6bWY3BkREFc8ni/wDodUZmvedrz4Q3FMWZ8ewIYnsn+7QX9T0KRrAr9Rx7WarUP+71/Jeq7NJ5mlubecmXKA2JAaSBziAGihZ5CWJ2XRTIgg13R0uXXqy+dYt+u81iSa3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLSwLxUI; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1713261893; c=relaxed/simple;
+	bh=zxmZjlSjC50ctGKMd9KirXGcH0meV7fsbeLJHJDWq5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oCVRRuf8a5HRgCROT96Gqq+DajU+LMEvAbsKGPZCqi6BC/jemAoGLs18e9hpkPOdyRFJ42EJVVZIMO9tGbR35UgHqXCSTx6bO8woI/TVgamFjFEmSGF7hWF24URxjOXNbMu5NpIsp31g5dXPRp5M88Laz+fh1k6wSKreHs8OdQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jjwrFcHA; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLSwLxUI"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2a526803fccso2397173a91.1;
-        Tue, 16 Apr 2024 03:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjwrFcHA"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e3ca4fe4cfso26522965ad.2;
+        Tue, 16 Apr 2024 03:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713261829; x=1713866629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XDnwsDO84mVc+05BpNmMsEUqsfPZm5hg+4IFgnGZSy4=;
-        b=SLSwLxUIXbPXcwJla0a+DJsPbHpqNIPEjMnkUB4Ao7Kly8rQCMo97tNrV96orh0vGs
-         KIxvyx3XxoR1keQURbGVVZTqtNT7kCh/33V0NOYiqKnHqHUNyxudJA3uud6pjbQeTh0t
-         Mnh2g2lNc089L0Zo8abJ/wgZ9q269c/Jxw/Akl8gjo29FWBX1yL0t1KgCEk4KhxpNxEW
-         D5nSlCOXWJdhr1SSQpBjC4noN2YoxXDjzD02WyWMmJWe2wzmw9u+BhVE8F8WwVfHG460
-         vNY51ECaShDRyUcM5JY3tRsx2o5kfyzFCx7thUQKsoEvxJaUuUOtyjYXKn3HWZyhBlo8
-         zwEQ==
+        d=gmail.com; s=20230601; t=1713261891; x=1713866691; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NB+9rCl0w0mkCoHtP/OT/21+12AJuJupEYMotjqnv8U=;
+        b=jjwrFcHAhJa8vMd96Exk4EEX24duQqCipZDrEb4t7O7EFGKD9WEW69n8ArmHxRfz5d
+         Sh8MXnFHt7ZKAS5KeBZFxOhacja7Q7OZEAeBq65FG8Vf68H8lYXyehkUWdjYR6AVUACc
+         BBx1WM+nq6t+cJAIFe+Nj81qyTmIM6ybZeJbb/3T306EF2TTvaxcHzqfj6mv1KihxfdZ
+         Cr5NXPr3cMj5RPdUIYhcHcAgGnZim/Yuvj0zN39ye5SixZQK6LDHPpIIclMnytsALdZu
+         mPEVccw2pmqXe7NKrkCsuvqsZpjSp4nQCVLgSYxvQSwx8bRDH8J6Hp7X0vxrM3wIEG64
+         DaYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713261829; x=1713866629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XDnwsDO84mVc+05BpNmMsEUqsfPZm5hg+4IFgnGZSy4=;
-        b=heJjQrltLHGNMFVnSTa91si3cVJdCBxCSyBNJJD1Dai02IW3Ui8nQre+S266crflBx
-         /Hs+xVW1PF8ZPykfvpR1Fp1XiK6Wm5EAXo9jDs9n/MumSXOYvBNguX5ZtCYRml3F2EvG
-         3AFD1FcSOxo2B0h+JtHpsiKj7r1Vh+aYeuNPkZ7KzEoMVP+3jP0YylJ/aK68HTiuk8ux
-         GgbWYHsZjp675uHTv9ZhR3/HajWkKF3UyjVbxGA5wnW1tTkw+ZItyGXTyMotBDgMYJ5h
-         n/kEMsbsrFscUIFyM2d8dWvbgmu056Cxfkqg4zeghMYBEBibzdXY9Im32WUCMOYuZ2ig
-         selQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH0AZo26UDyUbGX/FRh7ocgjy5DnuPQdcRowB108mbZOLhGAy++mNpOw4zvJFpv8g0ZRCHYRwVlhuXCrCWh0OQkgwYgf+Q
-X-Gm-Message-State: AOJu0Yw1TKK5c2xGA9cR3aoDLpK5ZOz/zC1pRkfgG0aUSfPBIkWfSfRf
-	XroMcsJVZ/mpTvaOHy5xn8r6Tz0JH6c9n0OYcI6vKR2LzGzHzG6h
-X-Google-Smtp-Source: AGHT+IHHqBLvFvHLCTH0SiKYfmmW5OcnrBkFzfxkUpPRn/7IyGJGSmwwgeBwqOXW7VvBFu73J4Oq1w==
-X-Received: by 2002:a17:90a:fb82:b0:2a5:2db0:cc9a with SMTP id cp2-20020a17090afb8200b002a52db0cc9amr12022268pjb.15.1713261829338;
-        Tue, 16 Apr 2024 03:03:49 -0700 (PDT)
-Received: from Laptop-X1 ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id f22-20020a17090ace1600b002a25bf61931sm10410194pju.29.2024.04.16.03.03.46
+        d=1e100.net; s=20230601; t=1713261891; x=1713866691;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NB+9rCl0w0mkCoHtP/OT/21+12AJuJupEYMotjqnv8U=;
+        b=mcpVuZm+yuvQvq4Ovspfilj2RISC8D21bZ9+yJsBtHs66BgC0CUZxiDaZllmvzuY7B
+         QOvFG79bReXnEjb/Kg8Pf1Dfv0kvq//BBlkIpKqGW1FnFzP67bJC239vP0w6UaBlY3tD
+         JCRCRYsvPNIEZ2HqhUZe1FAc3nm/i99fvM4VPzQYJkesIx+33BDFPKmuPb6j18K6kaOA
+         vZ4w+qRt2ySF7f/RFxp46b6HC+FQEPfjRhgo5T1P7TZPgfDBD/j+w6Etg93rbb6xS+y5
+         MmGS/LWWs3PKbBmYxQOZOTqeEPZzVE99OI0bQIyeRoYz2zSLbpz2vfm9TaZfQIkI1mS3
+         wEgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdIvyISVhxuRxUQS2dVK/6OhyQwHtd6CW1SSME2jHpTDYHWHgJmu98wDIXMgEBDKqbtcROuinkbrKEcWIW1v6KhIkyuypSZ512JJXq
+X-Gm-Message-State: AOJu0Yzu8J+tXyTYqPeQiOJ1tkMV94yHwwvQdJlDt7aE6219m3VuRGxG
+	ai7o+4tXg5tDu8wIiwvHATQFKfU6A381RmGk8hqExCz0nWRfuspHI9oQflux
+X-Google-Smtp-Source: AGHT+IGHIAevlju9o2P9nCxD6tgKtz9wAJ5dx0YTi6TYeWKdj9XVqAmXyRYQj1prEqYd/rToBGqISw==
+X-Received: by 2002:a17:903:4291:b0:1e4:24cc:e020 with SMTP id ju17-20020a170903429100b001e424cce020mr12342424plb.67.1713261890921;
+        Tue, 16 Apr 2024 03:04:50 -0700 (PDT)
+Received: from d.home.yangfl.dn42 ([104.28.245.199])
+        by smtp.gmail.com with ESMTPSA id y4-20020a17090322c400b001e0b287c1d2sm9353651plg.215.2024.04.16.03.04.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 03:03:48 -0700 (PDT)
-Date: Tue, 16 Apr 2024 18:03:43 +0800
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	j.vosburgh@gmail.com, andy@greyhouse.net, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>, kuba@kernel.org,
-	pabeni@redhat.com
-Subject: Re: [PATCH net v2] drivers/net/bonding: Fix out-of-bounds read in
- bond_option_arp_ip_targets_set()
-Message-ID: <Zh5M_9K3g6-9U2VA@Laptop-X1>
-References: <CAEkJfYMdDQKY1C-wBZLiaJ=dCqfM9r=rykwwf+J-XHsFp7D9Ag@mail.gmail.com>
+        Tue, 16 Apr 2024 03:04:50 -0700 (PDT)
+From: David Yang <mmyangfl@gmail.com>
+To: linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	David Yang <mmyangfl@gmail.com>
+Subject: [PATCH v10 00/13] clk: hisilicon: Migrate devm APIs
+Date: Tue, 16 Apr 2024 18:03:34 +0800
+Message-ID: <20240416100347.395295-1-mmyangfl@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEkJfYMdDQKY1C-wBZLiaJ=dCqfM9r=rykwwf+J-XHsFp7D9Ag@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 16, 2024 at 03:28:02PM +0800, Sam Sun wrote:
-> In function bond_option_arp_ip_targets_set(), if newval->string is an
-> empty string, newval->string+1 will point to the byte after the
-> string, causing an out-of-bound read.
-> 
-> BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
-> Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
-> CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
->  print_address_description mm/kasan/report.c:364 [inline]
->  print_report+0xc1/0x5e0 mm/kasan/report.c:475
->  kasan_report+0xbe/0xf0 mm/kasan/report.c:588
->  strlen+0x7d/0xa0 lib/string.c:418
->  __fortify_strlen include/linux/fortify-string.h:210 [inline]
->  in4_pton+0xa3/0x3f0 net/core/utils.c:130
->  bond_option_arp_ip_targets_set+0xc2/0x910
-> drivers/net/bonding/bond_options.c:1201
->  __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
->  __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:792
->  bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
->  bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c:156
->  dev_attr_store+0x54/0x80 drivers/base/core.c:2366
->  sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
->  kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
->  call_write_iter include/linux/fs.h:2020 [inline]
->  new_sync_write fs/read_write.c:491 [inline]
->  vfs_write+0x96a/0xd80 fs/read_write.c:584
->  ksys_write+0x122/0x250 fs/read_write.c:637
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> ---[ end trace ]---
-> 
-> Fix it by adding a check of string length before using it. Remove
-> target address in netdev_err message since target is not initialized
-> in error path and will not provide useful information.
-> 
-> Fixes: 4fb0ef585eb2 ("bonding: convert arp_ip_target to use the new option API")
-> Signed-off-by: Yue Sun <samsun1006219@gmail.com>
+Migrate devm APIs for HiSilicon clock drivers and remove redundant codes.
 
-I think the fixes tag should be
+This series is a partial improvement of [1]
 
-f9de11a16594 ("bonding: add ip checks when store ip target").
+v2: fix test robot error
+v3:
+  * size_t for all these num types
+  * hisi_clk_unregister() change into separate patch
+  * keep relevant header inclusions
+  * split driver files changes into separate patches
+  * explain hisi_clk_register_fn() checkpatch warnings
+  * not fixed: MODULE_LICENSE("GPL v2"), as stated in SPDX-License-Identifier
+  * not fixed: "hisilicon,hip04-clock" un-documented, as none of dts files in
+    arch/ use it, better to ask hisi people why they pushed this driver
+v4:
+  * typo: hisi_clocks_get_nr() should check clks->nr first
+  * unexport hisi_clk_unregister_fn() as no one use them outside
+v5: catch up with remove_new refactoring
+v6: fix compilation error and expand macros
+v7: rebase and use mod_devicetable.h instead
+v8: rebase again
+v9: add linux/platform_device.h include in patch 09 according to reviews
+v10: fix compile errors across the series
 
-Thanks
-Hangbin
+Links:
+[1]: https://lore.kernel.org/r/20230322164201.2454771-1-mmyangfl@gmail.com
+v1: https://lore.kernel.org/r/20230326052757.297551-1-mmyangfl@gmail.com
+v2: https://lore.kernel.org/r/20230329075104.165176-1-mmyangfl@gmail.com
+v3: https://lore.kernel.org/r/20230410110733.192151-1-mmyangfl@gmail.com
+v4: https://lore.kernel.org/r/20230411174329.424763-1-mmyangfl@gmail.com
+v5: https://lore.kernel.org/r/20230723162245.35033-1-mmyangfl@gmail.com
+v6: https://lore.kernel.org/r/20230731121821.22242-1-mmyangfl@gmail.com
+v7: https://lore.kernel.org/r/20240225065234.413687-1-mmyangfl@gmail.com
+v8: https://lore.kernel.org/r/20240411070503.38093-2-mmyangfl@gmail.com
+v9: https://lore.kernel.org/r/20240412051041.90376-2-mmyangfl@gmail.com
 
-> ---
->  drivers/net/bonding/bond_options.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/bonding/bond_options.c
-> b/drivers/net/bonding/bond_options.c
-> index 4cdbc7e084f4..8f3fb91897b3 100644
-> --- a/drivers/net/bonding/bond_options.c
-> +++ b/drivers/net/bonding/bond_options.c
-> @@ -1214,9 +1214,9 @@ static int bond_option_arp_ip_targets_set(struct
-> bonding *bond,
->      __be32 target;
-> 
->      if (newval->string) {
-> -        if (!in4_pton(newval->string+1, -1, (u8 *)&target, -1, NULL)) {
-> -            netdev_err(bond->dev, "invalid ARP target %pI4 specified\n",
-> -                   &target);
-> +        if (!(strlen(newval->string)) ||
-> +            !in4_pton(newval->string + 1, -1, (u8 *)&target, -1, NULL)) {
-> +            netdev_err(bond->dev, "invalid ARP target I4 specified\n");
->              return ret;
->          }
->          if (newval->string[0] == '+')
-> -- 
-> 2.34.1
+David Yang (13):
+  clk: hisilicon: Add helper functions for platform driver
+  clk: hisilicon: hi3516cv300: Use helper functions
+  clk: hisilicon: hi3798cv200: Use helper functions
+  clk: hisilicon: hi3519: Use helper functions
+  clk: hisilicon: hi3559a: Use helper functions
+  clk: hisilicon: Remove hisi_crg_funcs
+  clk: hisilicon: hi3660: Convert into module
+  clk: hisilicon: hi3670: Convert into module
+  clk: hisilicon: hi3620: Convert into platform driver module
+  clk: hisilicon: hi6220: Convert into platform driver module
+  clk: hisilicon: hip04: Convert into platform driver module
+  clk: hisilicon: hix5hd2: Convert into platform driver module
+  clk: hisilicon: Migrate devm APIs
+
+ drivers/clk/hisilicon/clk-hi3519.c        | 127 +-----
+ drivers/clk/hisilicon/clk-hi3559a.c       | 250 +++---------
+ drivers/clk/hisilicon/clk-hi3620.c        | 216 +++++-----
+ drivers/clk/hisilicon/clk-hi3660.c        | 194 +++------
+ drivers/clk/hisilicon/clk-hi3670.c        | 250 ++++--------
+ drivers/clk/hisilicon/clk-hi6220-stub.c   |   9 +-
+ drivers/clk/hisilicon/clk-hi6220.c        | 228 ++++++-----
+ drivers/clk/hisilicon/clk-hip04.c         |  39 +-
+ drivers/clk/hisilicon/clk-hisi-phase.c    |  13 +-
+ drivers/clk/hisilicon/clk-hix5hd2.c       |  99 +++--
+ drivers/clk/hisilicon/clk.c               | 457 +++++++++++-----------
+ drivers/clk/hisilicon/clk.h               | 141 ++++---
+ drivers/clk/hisilicon/clkdivider-hi6220.c |  24 +-
+ drivers/clk/hisilicon/clkgate-separated.c |  26 +-
+ drivers/clk/hisilicon/crg-hi3516cv300.c   | 171 +-------
+ drivers/clk/hisilicon/crg-hi3798cv200.c   | 200 ++--------
+ drivers/clk/hisilicon/crg.h               |  11 +-
+ drivers/clk/hisilicon/reset.c             |  42 ++
+ 18 files changed, 947 insertions(+), 1550 deletions(-)
+
+
+base-commit: 96fca68c4fbf77a8185eb10f7557e23352732ea2
+-- 
+2.43.0
+
