@@ -1,38 +1,38 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573B03BBE6;
-	Tue, 16 Apr 2024 05:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C3043AC5;
+	Tue, 16 Apr 2024 05:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713246988; cv=none; b=HDakRmmUAFsEXIAKgJBT+VpgyeMkoDnqdGRrLez1VKbZKIrReyWQVt0eq9sMCytM3uy7coVTZ8qeq70xHmMC4wBmCxGfnER8aKbDh3bBYazA/GcmrV8DqCZN3A86R1MsfGZ7Bumdm3evNrCNsIxD2036nzAj4LPfNNAQK0QYJG8=
+	t=1713246992; cv=none; b=Go2zn7Hf2NkdaM+kqI6YCmC6dedYDZksMi+Bt8wkq5V0k3R6I/j6Dn/XBeecX8GrVN8FNqB0LgvuNpElpSH/CFnyfA053OkGrHvd0DXC5VG/l8Z5HXpLfx+rRWCqGW1pF7+o2NQL4vsfErsskVTZZSCetqjYxzClDHH6pTd/dac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713246988; c=relaxed/simple;
-	bh=+vFkaCXux8xbUp0bJJl+WstJMViKzoR2BQBfL9gJnDk=;
+	s=arc-20240116; t=1713246992; c=relaxed/simple;
+	bh=o1+BbMEAnndRJzN+2AGSS8a1mhi8hNTsayce2MzKW0M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mXYwUB6z32dloi4Oid4cwV0scGxia9oJi8uPXLZcY91RM5aZs7+DKRcW+RS6m5QFitaiErNdS9PcjfbyZG4wsui5uqdAWmsUlvi3CpnYfY1j0HgkNsvEy5tcX0b9qNUSQYsQjSPhXOpUGCMaOaGBG4N7z6Jd19fe0SBTTXOso1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nDl7OTtD; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=lwjVOc9O+w8RQgb/wF5SlPgRbpu7tFap2t+Zw+5g08Ke8lSxxviNkOXgDSBfR8SbHEzdME7JFxCd0+6fdOGTi+5a1QYnuP/wKREvN7EFasOiQgayOaKT9ZD7uS0668qTt4yxyfano7HgZ+kfpXW/aXoexdeaoiaRFCkPG8X7PeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RAB5hRuU; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nDl7OTtD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4FB30240002;
-	Tue, 16 Apr 2024 05:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RAB5hRuU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6CFB1240005;
+	Tue, 16 Apr 2024 05:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713246979;
+	t=1713246988;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KozsKZqPxFJ6j8vO37CaaASxd2O7CRf2GFzV36+uNwM=;
-	b=nDl7OTtD7SScN0Kdi+kj+8JL7ReAshegQeVDEA1xDqdJywV0PNzzThKT67Q0dX8x+PQeYk
-	Q5FOCxPNPiOcefn430KMfRr5UDibAUXB0zsd4ZXuHoVkop8kucJKybPwmcI73YJxHsOSZl
-	zAh3Rl+MdmGH91dqltNC1mLwpeALAer9dJ3zUV/H2C3S8Nh42SjR9wsrNuP619ySHuVkSa
-	qcxXmD4gmQtbUBVQrlqTHCbPW8Hvp3gAf5/TVplSXPPEBh6NtvPE784aq1DmSpDlCt3dEi
-	/HmYy9LgKXP0BgBN9TcMSSW6PBfRDbkb9OhmSvZKke0eEV5um65bof2WaSmlBA==
+	bh=xM8NmtQy3wO27koXzOqV907oXOLGnVKvQRVLtX2MIUk=;
+	b=RAB5hRuUIhnf4B1Kg6AkW3Qb79F/NtYviknZrYUHCSJoELxAUCnsZ2OvAFn9j5r9d/xilp
+	CgpoCPXJM7TOBbrlJNuFIhMJvH7hBXHL15Uk/ooxanIH4qI4sEaOyErQ6zjnyu+hCYiUvU
+	PXAgUXxGV1DYfTGYsPwQkWJeIJqDHxD7u+ov8Ak8PROHjvbAGt4c590w/xHuOpK7jWFnhv
+	bWz53xHN9xFYlXY6afwfD3Fy3vpZY/mNcycxV237TXuItZuPgJlOhxXAfWZy7foTbc5FxE
+	+ENl6vhT3lsCGN8FHW79V9DurC+hEhVfrQKrAH1IquMA3k2z5LHuXU/JbN8X/g==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Tue, 16 Apr 2024 07:56:07 +0200
-Subject: [PATCH 01/12] ASoC: doc: dapm: fix typos
+Date: Tue, 16 Apr 2024 07:56:09 +0200
+Subject: [PATCH 03/12] ASoC: doc: dapm: minor rewording
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-dapm-docs-v1-1-a818d2819bf6@bootlin.com>
+Message-Id: <20240416-dapm-docs-v1-3-a818d2819bf6@bootlin.com>
 References: <20240416-dapm-docs-v1-0-a818d2819bf6@bootlin.com>
 In-Reply-To: <20240416-dapm-docs-v1-0-a818d2819bf6@bootlin.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -54,44 +54,33 @@ Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Fix various typos.
+Slightly reword for better readability: replace "PM" -> "power management
+frameworks", add missing comma.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- Documentation/sound/soc/dapm.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/sound/soc/dapm.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/sound/soc/dapm.rst b/Documentation/sound/soc/dapm.rst
-index c3154ce6e1b2..59f65b181828 100644
+index 68ef79f539f2..4dfa60519a76 100644
 --- a/Documentation/sound/soc/dapm.rst
 +++ b/Documentation/sound/soc/dapm.rst
-@@ -50,7 +50,7 @@ Stream domain
- All DAPM power switching decisions are made automatically by consulting an audio
- routing map of the whole machine. This map is specific to each machine and
- consists of the interconnections between every audio component (including
--internal codec components). All audio components that effect power are called
-+internal codec components). All audio components that affect power are called
- widgets hereafter.
+@@ -5,10 +5,10 @@ Dynamic Audio Power Management for Portable Devices
+ Description
+ ===========
  
+-Dynamic Audio Power Management (DAPM) is designed to allow portable
+-Linux devices to use the minimum amount of power within the audio
+-subsystem at all times. It is independent of other kernel PM and as
+-such, can easily co-exist with the other PM systems.
++Dynamic Audio Power Management (DAPM) is designed to allow portable Linux
++devices to use the minimum amount of power within the audio subsystem at
++all times. It is independent of other kernel power management frameworks
++and, as such, can easily co-exist with them.
  
-@@ -221,7 +221,7 @@ when the Mic is inserted:-::
- Codec (BIAS) Domain
- -------------------
- 
--The codec bias power domain has no widgets and is handled by the codecs DAPM
-+The codec bias power domain has no widgets and is handled by the codec DAPM
- event handler. This handler is called when the codec powerstate is changed wrt
- to any stream event or by kernel PM events.
- 
-@@ -236,7 +236,7 @@ a virtual widget - a widget with no control bits e.g.
- 
-   SND_SOC_DAPM_MIXER("AC97 Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
- 
--This can be used to merge to signal paths together in software.
-+This can be used to merge two signal paths together in software.
- 
- After all the widgets have been defined, they can then be added to the DAPM
- subsystem individually with a call to snd_soc_dapm_new_control().
+ DAPM is also completely transparent to all user space applications as
+ all power switching is done within the ASoC core. No code changes or
 
 -- 
 2.34.1
