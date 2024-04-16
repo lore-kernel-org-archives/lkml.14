@@ -1,94 +1,171 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36F5129A7B;
-	Tue, 16 Apr 2024 12:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D212BF15;
+	Tue, 16 Apr 2024 12:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713272217; cv=none; b=IUr/EV1Mts8iBWhobb8b+Yt1Jb4U1fzJXiA0r5WkoOR8My8HOIgtGH1OZfqUD2dikevHkjM/e9TZ/i/PSSsoWK1+Djw5UK2lqSzcv4vWhFUP3INSFYV/l82YdZp11c5jnjeyHxKP7QJ6IUAL6x1xX+fHmQgZJFhFczks4lGSsh8=
+	t=1713272217; cv=none; b=PvCEHE55no3KhZo1CaZOBoID4/36D9g5SxY3ktU3/3tK5cDgqLZFcTuSQzvxdvVD5o+wqSJFjJoCF3OSYjKnw8C39W3SbBA4CwPDfodEItS2fDAa/anvJSA+ni8cLQu4EMHK7TTAJncGpLwbZOzZBK/weVSHb01NHD8w4KmdIfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713272217; c=relaxed/simple;
-	bh=SE7iXRSRUv3LNcIGi2TykYUAc4S8x29BhFlqFfsK0/Y=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iUNnjmzs9V0VwJE9+5vGrEuMUjd0gqMmWtp8v6yC1tUuBUlUvjG8x34TlU3TBfyuETVMYpr8+h49/EG84aotaZF+gnsxfVuj23bE7g2lgCTAOr6IwBpPsPQZPsAg4PygURariEKB6SutWnP8wPQIBideMQwhfgy+elu2ETtuVmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=aNM5L+Vc; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	bh=L0bwfC7QPhgn8nVwSuegcUdEIriV44jAxrlwA2aq5c0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HYKwgar4jXvlR7ghaWaQid5R+6pFIwb2l7b9zV+LfH6kncQQhGSBGANhdAtu6GWV44UsmpFI4Ge0H7Z/qwWo3DDQ39i3wrJBEd3XavbcsVg1kqk0ucCnsfeod1a4Z2Y3qpwuVb8b5s/GBKSTZdjUsW2Woi5r+Wx8gZcfyE3/RFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=ieObK0E0; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="aNM5L+Vc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=H21fvQtQ7WtagqXZixGpBpqK/Mf2KBTn3BMn7sI6Xwo=;
-  b=aNM5L+VcxO66+rnB0hrRLAaQ7ltle4u+tjVsgiIcGM/6+KSsIiVloa8h
-   6T5/bjbuUhkdmon2C/f4fRUxnH/0MxnwhPqEEHqJrqp5Pz9sASMNsGN47
-   eaViXdS0DYtY1iFSc2drIjE5rWOAbjxAEf3P5NybCbo0e6bzoSQz4uMLB
-   c=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.07,206,1708383600"; 
-   d="scan'208";a="84954712"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:56:51 +0200
-Date: Tue, 16 Apr 2024 14:56:50 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-cc: Markus Elfring <Markus.Elfring@web.de>, 
-    Michael Ellerman <mpe@ellerman.id.au>, 
-    "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, 
-    "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, 
-    "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-    "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-    Nicholas Piggin <npiggin@gmail.com>, LKML <linux-kernel@vger.kernel.org>, 
-    "cocci@inria.fr" <cocci@inria.fr>
-Subject: Re: [0/2] powerpc/powernv/vas: Adjustments for two function
- implementations
-In-Reply-To: <3711cad3-a627-4a6e-8769-ce916c1919ee@csgroup.eu>
-Message-ID: <3f22920-9543-efd1-a32a-477ae18a2b2a@inria.fr>
-References: <7be66990-de9e-488b-ad6d-fafd1c7bb34c@web.de> <ee6022b8-3aeb-4e6e-99f5-2668dd344e0a@web.de> <87plupbm0c.fsf@mail.lhotse> <795ca003-4231-45c0-8bb6-178597950fa5@csgroup.eu> <33a38d7e-26da-46e0-90d4-7137f9ec0c90@web.de>
- <3711cad3-a627-4a6e-8769-ce916c1919ee@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="ieObK0E0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1713272197; x=1713876997; i=parker@finest.io;
+	bh=mTpO0cGiHBKqJRh0o/22NMtUp4Gs856K6CxolXkEPh8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ieObK0E0v6lboH7g9dZor/h29uZfJqxU/0wuV78NzDvtJdYCauN9mBkF0XEOkLmh
+	 yL6uNVrod1j2xx+ZRWzRhawLCJ4Wnfo3PERzokjla7LFdp4+SgUoeq7HeUcdHOGR+
+	 SwKgfCqAxDqdtVlA7p0z7r8oB/xvdF4RsfW3tyYJznhue9rNre+BMWTtheN6mGZQj
+	 1nKx9oAt9v+ME/39GHVxD7hCYU4bUXp69wBsS2INhwT5b2dovbJut5qjRZsLYvT3D
+	 IlTByh/+1shVDVyss6+kdUotk1G8/FEpQSRjlGS9dapOW3e4h093+7BuG6tfs93da
+	 5jTkw1AazMIv/5x1rA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0LkNen-1sTaH81BE3-00m0QQ; Tue, 16 Apr
+ 2024 14:56:37 +0200
+From: Parker Newman <parker@finest.io>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>
+Subject: [PATCH v3 5/8] serial: exar: moved generic_rs485 further up in 8250_exar.c
+Date: Tue, 16 Apr 2024 08:55:32 -0400
+Message-ID: <dc518985c106c010e5091ad8250937d68f748ecb.1713270624.git.pnewman@connecttech.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1713270624.git.pnewman@connecttech.com>
+References: <cover.1713270624.git.pnewman@connecttech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-563611295-1713272210=:3643"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GqCZO7Z93IKq1C/aerb2hYCsxQYB1t8YENfP/S8qxEtpnUdsE0H
+ Tn0jVn6erNub9waiGGs7+IUub0CryZOSn0+zwk1BRe1WZU1P+LNXfbwn51wSFkl6Zk6lVwG
+ 0A8N36FJdhlGVWHaOc61gNnAyI3pYbZhi+j9gi7+32+ICow6yDoDVHY5rxpfctCY2hnkHlh
+ 0fpx6hlDLjznNBPiZ2WCw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:J5uH9/3EKuQ=;U9TNMJS12lgnpmTEANSvnUuQjMY
+ cJGgBTZV8u4iHkjBxWEpVLdD27Udc2q1Cgjc+UcAfz1fVg5ZRH0JZNqUpTb2EtIF25O/vYXEp
+ 1i6MKG3jM9UaxeZhamV4s9ojgibrdaG52g/138SdmDLeKNkjkGDbVy0O1Ea2lHWhVg5z1NiLS
+ 0lgBNJWpkt79gozRMsq7aYiQ8cqmMm6XUBo2w7fjNuKoMuAjcCIfNP7wa/+Mk8edz5YmL5lWF
+ yHHU19DNCMYvKNNj9ONaZGupFfh82LOwVunEpb2ubOHKmVFtkAyv7dCi3nFj9OF2wVDtOxTS9
+ PTCiPMAJtnJt1ikuPcTSRNpsRuqNYRRt4RzRYVeKBVk/R981kkXVxsSxItOIhEKVVj92iINSH
+ UOnYiHlXk8ZT1wENtpDO96yDvwGLvUpJCha+gBx13v+W/W3cjKPjJZwNpNTGpm1me+geBD61J
+ IjnAvokY32/CoNsvy1l2WeAb05s7yqIDvYlMCNsAwkS7vOE7y1PIU84dtnw8fYOPlDMx5BaMo
+ 1vaGT+V/KKprbi34RKn9qVbNUH89PPWWSSCiO0spakfy5SM4UFR9pi3N0JAksOSptsogCbzD2
+ qN25iIIbwIakp1DC6TpCZM2UNltqSE9R36EJ8FPL1jn1ad0wtZcWlFI3MayjJdtOvXIAQOcs5
+ zFkbva+meSjOdCkhaNRtCpNDGm4Z+XXpH7Goou9XYo0hc8qFBQsseZ4tMGdRD6mIK7dURfeBC
+ A0Cp3UsNai7tBzTJE72KnvmOx50oc17/f2uLPEC6dOyYNSiwWPsyX8=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Parker Newman <pnewman@connecttech.com>
 
---8323329-563611295-1713272210=:3643
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Preparatory patch moving generic_rs485_config and
+generic_rs485_supported higher in the file to allow for CTI setup
+functions to use it.
 
+Changes in v3:
+- split into separate preparatory patch
 
+Signed-off-by: Parker Newman <pnewman@connecttech.com>
+=2D--
+ drivers/tty/serial/8250/8250_exar.c | 50 ++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-On Tue, 16 Apr 2024, Christophe Leroy wrote:
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
+/8250_exar.c
+index cf7900bd2974..7e47a4145c7b 100644
+=2D-- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -197,6 +197,31 @@ struct exar8250 {
+ 	int			line[];
+ };
 
->
->
-> Le 16/04/2024 à 14:14, Markus Elfring a écrit :
-> >> This is explicit in Kernel documentation:
-> >>
-> >> /**
-> >>    * kfree - free previously allocated memory
-> >>    * @object: pointer returned by kmalloc() or kmem_cache_alloc()
-> >>    *
-> >>    * If @object is NULL, no operation is performed.
-> >>    */
-> >>
-> >> That's exactly the same behaviour as free() in libc.
-> >>
-> >> So Coccinelle should be fixed if it reports an error for that.
-> >
-> > Redundant function calls can occasionally be avoided accordingly,
-> > can't they?
->
-> Sure they can, but is that worth it here ?
++static int generic_rs485_config(struct uart_port *port, struct ktermios *=
+termios,
++				struct serial_rs485 *rs485)
++{
++	bool is_rs485 =3D !!(rs485->flags & SER_RS485_ENABLED);
++	u8 __iomem *p =3D port->membase;
++	u8 value;
++
++	value =3D readb(p + UART_EXAR_FCTR);
++	if (is_rs485)
++		value |=3D UART_FCTR_EXAR_485;
++	else
++		value &=3D ~UART_FCTR_EXAR_485;
++
++	writeb(value, p + UART_EXAR_FCTR);
++
++	if (is_rs485)
++		writeb(UART_EXAR_RS485_DLY(4), p + UART_MSR);
++
++	return 0;
++}
++
++static const struct serial_rs485 generic_rs485_supported =3D {
++	.flags =3D SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND,
++};
++
+ static void exar_pm(struct uart_port *port, unsigned int state, unsigned =
+int old)
+ {
+ 	/*
+@@ -458,27 +483,6 @@ static void xr17v35x_unregister_gpio(struct uart_8250=
+_port *port)
+ 	port->port.private_data =3D NULL;
+ }
 
-Coccinelle does what the developer of the semantic patch tells it to do.
-It doesn't spontaneously report errors for anything.
+-static int generic_rs485_config(struct uart_port *port, struct ktermios *=
+termios,
+-				struct serial_rs485 *rs485)
+-{
+-	bool is_rs485 =3D !!(rs485->flags & SER_RS485_ENABLED);
+-	u8 __iomem *p =3D port->membase;
+-	u8 value;
+-
+-	value =3D readb(p + UART_EXAR_FCTR);
+-	if (is_rs485)
+-		value |=3D UART_FCTR_EXAR_485;
+-	else
+-		value &=3D ~UART_FCTR_EXAR_485;
+-
+-	writeb(value, p + UART_EXAR_FCTR);
+-
+-	if (is_rs485)
+-		writeb(UART_EXAR_RS485_DLY(4), p + UART_MSR);
+-
+-	return 0;
+-}
+-
+ static int sealevel_rs485_config(struct uart_port *port, struct ktermios =
+*termios,
+ 				  struct serial_rs485 *rs485)
+ {
+@@ -517,10 +521,6 @@ static int sealevel_rs485_config(struct uart_port *po=
+rt, struct ktermios *termio
+ 	return 0;
+ }
 
-julia
---8323329-563611295-1713272210=:3643--
+-static const struct serial_rs485 generic_rs485_supported =3D {
+-	.flags =3D SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND,
+-};
+-
+ static const struct exar8250_platform exar8250_default_platform =3D {
+ 	.register_gpio =3D xr17v35x_register_gpio,
+ 	.unregister_gpio =3D xr17v35x_unregister_gpio,
+=2D-
+2.43.2
+
