@@ -1,94 +1,128 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FA384A32;
-	Tue, 16 Apr 2024 09:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7E205E10;
+	Tue, 16 Apr 2024 09:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713258016; cv=none; b=hkVVyTfWBmRHYCBEHwZ2Xg6AzvVSIekBj1Z7K4hq+fCVfwVFGSBmuTLfnHRscPKKd7ewnooYgf1jUKB5aQyakReMMVJvArDwkmMrwg9KfF5D01Aq6QMEiYPR6J0q2+eCFSjg+3ijycW64615WvlJ9jsyMlDksMp53fpCwKG6iEA=
+	t=1713258133; cv=none; b=D1baSabD8GAf+T5jOUf1Tc3yHgTslxSiOOzyZV7zrRznhiL5fCEYM9WhApogdQoxPzAHbLv6HLGNGGm8WAcJonLvObg+iZMQNH3SC3CNQ++VrlalgoAx01/JkmAvNWT0glGD4znn2UTYG+rPoo14yoZht44RODPNme4iI7XdO1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713258016; c=relaxed/simple;
-	bh=RgaBbswYd2rWACpPuI/2WL3QuUoVBkhz2aonoKtotR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qRxs4wQ296MDS9pEOnfwFs9ox5HxEUEVtsY6T0EOERVVZmfWYjBkbq0AUgugEoyFRstiCKfiLEpNAqq2pnZMcdU5BLy5yncxFNEuaUQya6SHDyvwjRWeSaJQPMKXD6vX71i/etkaOfcpqcmZ/6YmDTtW+wayAQ4ASIMVV4pM9UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KfT1Tzoo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713258133; c=relaxed/simple;
+	bh=CeDlWPaQUklTPhkRQRU7v3aoErZV/RvO0hmIAHh1jao=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L0MKXDfmjA5TJVo7XW25AvBxa6Ip5mntxKPk+1+XhrlfDpr5H/tGx+uSLOKjoG6kne1Wbpt5xxIA7LCPtPtLLN2bH9gQcU4Evns1tUtvoHaxoL0VUlQ2sg6b1oB4rMSS48KMFgLm32zEFo+rKPNqTOi1gMtDoLAxpByU/ZLrnZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=J+HeJeDY; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KfT1Tzoo"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43G8YcRa005302;
-	Tue, 16 Apr 2024 09:00:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=MrRL22TlcMpsSJ+r4JgU2PhHkQILKTZXjPvwSvpNHdA=;
- b=KfT1TzooHdNQoyv3EonBHQwozRg0cXokjdHscm+Fer6W0QyqcyNSHj8z4fptbTGp/WzH
- eGep1hY1EwhgpBL/v+IaM1AmLT+pRVkEKxSNRxXMkosWILVeMyk9BcJiZ79uL/K1VlUY
- D2P3Py4HVG4+Wy+ntl3hsRbLLBWd/Ry49k62rM5A4D2EERZcPRQoQYXLY2j0Gxg7j3LD
- PxC2TDDErkSJoOWh/angPaEGDchWmKR89lNOIQpZSz81Li/+Mcu8hui6NBoeal5IPtkj
- OSqC/ws93AV+THQZsJBIUPpG/ktGOzV8PXjUPidIoEC5YZGbV58jZVe2Y9qFu7DvR5pA uQ== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xhjrngef0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 09:00:13 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43G66JYu023575;
-	Tue, 16 Apr 2024 09:00:12 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cnw4gd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 09:00:12 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43G906wG27656756
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Apr 2024 09:00:08 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A9062004D;
-	Tue, 16 Apr 2024 09:00:06 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BDA620043;
-	Tue, 16 Apr 2024 09:00:05 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.55.218])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 16 Apr 2024 09:00:05 +0000 (GMT)
-Date: Tue, 16 Apr 2024 11:00:03 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: "Jason J. Herne" <jjherne@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pasic@linux.ibm.com, akrowiak@linux.ibm.com, borntraeger@de.ibm.com,
-        gor@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH v5 0/5] s390/vfio-ap: ap_config sysfs attribute for
- mdevctl automation
-Message-ID: <Zh4+E9DkeQnPP52J@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20240415152555.13152-1-jjherne@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="J+HeJeDY"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id B7BB9120004;
+	Tue, 16 Apr 2024 12:02:00 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B7BB9120004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1713258120;
+	bh=tCk6YfiA2NBicys5PRme4xna6OEXLbDGKKZqI74wPjs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=J+HeJeDYLymkzpXwSpXY34R6o29NxLpoQAGZ/cx9Xwe7K0NWG1sdWO1bdfNvgRMkS
+	 bB+U5NkThhh0VU0wqD56ye8OfXqQv4wBzVAY0DKgWmnqdfl+VxNAvJFb71GGdGLQEN
+	 F0oDHq/+lzLVONdKt2kywisoQdXyEJsAFKQ137EzsCtZKiFBafGQapBCOwzq0wBELr
+	 STkzvFTIEMJ53g/AzGEHvJ9AqI7RIPzm8IhAlFmlU/sp+SIEZZddkc9qLlubfqUOgN
+	 OKr+GT/gHDg7C9f9qRqk8Gf12D+chhQ7xbKtqTc0l43gyGKwGimHQic6y9yYvjESp/
+	 3sWh2MEbbBHbg==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 16 Apr 2024 12:02:00 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 16 Apr 2024 12:01:59 +0300
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>
+CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <oxffffaa@gmail.com>,
+	<kernel@sberdevices.ru>, Arseniy Krasnov <avkrasnov@salutedevices.com>
+Subject: [PATCH v5 0/2] Meson: R/W support for pages used by boot ROM
+Date: Tue, 16 Apr 2024 11:50:59 +0300
+Message-ID: <20240416085101.740458-1-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.35.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240415152555.13152-1-jjherne@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fniL-xancy0_D8sjW4ZFKrcWbZrr7DUs
-X-Proofpoint-ORIG-GUID: fniL-xancy0_D8sjW4ZFKrcWbZrr7DUs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-16_06,2024-04-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0 clxscore=1015
- spamscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=664 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2404010000 definitions=main-2404160054
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184729 [Apr 16 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 17 0.3.17 f2153f38d75b12894d9cf445f96cd15c9ef63a9d, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/16 06:39:00 #24817376
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Mon, Apr 15, 2024 at 11:25:50AM -0400, Jason J. Herne wrote:
-Hi Jason,
->  Documentation/arch/s390/vfio-ap.rst   |  30 ++++
->  drivers/s390/crypto/ap_bus.c          |  13 +-
->  drivers/s390/crypto/ap_bus.h          |  22 +++
->  drivers/s390/crypto/vfio_ap_ops.c     | 224 ++++++++++++++++++++++++--
->  drivers/s390/crypto/vfio_ap_private.h |   6 +-
->  5 files changed, 266 insertions(+), 29 deletions(-)
+Amlogic's boot ROM code needs that some pages on NAND must be written
+in special "short" ECC mode with scrambling enabled. Such pages:
+1) Contain some metadata about hardware.
+2) Located with some interval starting from 0 offset, until some
+   specified offset. Interval and second offset are set in the
+   device tree.
 
-Applied, thanks!
+This patchset adds R/W support for such pages. To enable it we can setup
+it in dts:
+
+    nand-is-boot-medium;
+    amlogic,boot-pages = <1024>;
+    amlogic,boot-page-step = <128>;
+
+It means that each 128th page in range 0 to 1024 pages will be accessed
+in special mode ("short" ECC + scrambling). In practice this feature is
+needed when we want to update first block of NAND - driver will enable
+required mode by itself using value from device tree.
+
+Changelog:
+ v1 -> v2:
+  * Rename 'meson,boot-page-XXX' -> 'amlogic,boot-page-XXX'.
+  * Add words that 'amlogic,boot-page-step' is measured in pages.
+  * Remove words that 'amlogic,boot-page-XXX' depends on 'nand-is-boot-medium'.
+  * Make both 'amlogic,boot-page-XXX' depend on each other also, in
+    addition to 'nand-is-boot-medium' dependency.
+ v2 -> v3:
+  * Add quotes to 0001 in dependencies. This fixes 'make dt_binding_check'
+    warning.
+ v3 -> v4:
+  * Rename 'amlogic,boot-page-last' to 'amlogic,boot-pages'.
+ v4 -> v5:
+  * Update 'description' fields in bindings.
+
+Arseniy Krasnov (2):
+  dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
+  mtd: rawnand: meson: support R/W mode for boot ROM
+
+ .../bindings/mtd/amlogic,meson-nand.yaml      | 14 +++
+ drivers/mtd/nand/raw/meson_nand.c             | 88 +++++++++++++------
+ 2 files changed, 73 insertions(+), 29 deletions(-)
+
+-- 
+2.35.0
+
