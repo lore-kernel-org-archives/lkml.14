@@ -1,102 +1,74 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE061946F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 03:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34130D512
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 03:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713239511; cv=none; b=YMZlyiTLDCj3OFnvRUvhTGeYD5I1eqYI5oVf3dXH77IhZr9gBgqiqBABkJJam7xK0BxKQaHhfxMzY+a77xl7yrvM+d1fL+4p7/Dj4yvbxuQRI7f4jcDFuPbJMKEMbLthJuIf+bFOb1laQfvLhwZSC3f13KnecoN1REJfZg3pojA=
+	t=1713239667; cv=none; b=YadPm9HYI5I06sBVbsm67Zkr7fZpmhfBj3Y1CRAA5DkbKLwSzjUQaI1b0G561HNj51rkSi1nlK4cdc+5EaoiSHrgPz5yDPilXUpH+l01F0M5/BEfnVcXR2fK8bDnLaW9BpgBFZwWk8EIshiT2fs42zmuyg9P0OPY53l9LCgdtZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713239511; c=relaxed/simple;
-	bh=FjeTOxQ0f/by6BCRieitR4Bb2ooz4HV9AMJxGMaIZkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qb+hXc9RjNjGM5M8aRRtGKQCxR9TycMHHZYfAnsVoa1tQ9OmYoZK7hKy93y5MoFLiwQLM6sg5RS+s2UodtMzYUS81ENytmvKgqwSrTcg05Zo6azIwlHAC/URJS/+7StRuzQ8uxcN0BYzHx5l37T9hXc2iXPqJiXdB4YFh/CGjig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8o6CZNf; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8o6CZNf"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2da888330b2so33476981fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 20:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713239508; x=1713844308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sm7ZcmqODEDdlMVCkcEwyHPG5PSzL84rGETrzop4fyA=;
-        b=L8o6CZNfGMMhNqJS/YtNVdYxFKY7viYNbyYR/E7uDAsRchWS+Mi4CDrbZtayyoI+pR
-         KzdnyAaNJd78iyAkxURPZWTReFJAc+pr8stTgaI8YBoE5O5E6iRVBK5oC1kzW9lueNHT
-         96snknPvv9iURVLths/xEubNJDmmaA12/cJgkI0zJp1l65AdHeOImkFRC7Y6eWo54qIN
-         SZPxXfILOsOT/pbDAdeyJiNvAIirlME/9O5/15vP33doMqr8XUxdUP89SPyZgmX+uMaR
-         liC1FtQW4jK3UqwWXrWi5LwaQVb/iiPB+eE6iQurb2p12T5HOaiWkFORcQKyXa/YQ6Vp
-         fAuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713239508; x=1713844308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sm7ZcmqODEDdlMVCkcEwyHPG5PSzL84rGETrzop4fyA=;
-        b=wOMYwUDLpAEt7JjUSMPcfOzct/mZeiR9SSXaMib2Ma+VLdan0CUKDA1oaoajf9Ba7K
-         f9dZtW/LgG9RaIUjqixTKuG48lBm7mRcaXfyG1ocbM5uMVBed2HYtxvy+8A5X38nTI1f
-         9TF1B1H0VOIF0oUx3Fk1kZ7z2G679QjkQWcPX55ilLIduut8m65L+FUDZRLNwC5SiE9M
-         O63dXiOlikitMg1IMOJZW53JMdbzFBJKoGAhoJoxofmTlMi8bdnr7Kii847CExp3oIgz
-         0obO9qes+2g3/UvuUnmJDNluf5Yu5C2U8GPvtOe68ZpbuUE+1ptme92Ubj4Jw97+E77Y
-         OO+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWl6+FjvaomKx24yQ2nuBmUFV+rRTybBE0FeAMOiR/QYmuFAho5QFNwJQhEVT/ma2SFCpSOY42W3WK/CQ1ZgOE8FUAfHS5OvPKLoGuX
-X-Gm-Message-State: AOJu0Yxnb+Z3C1XqlUy8vtP3FvpzQHXtbhrrWvN8C/hJ03YEbb8AaYZb
-	o415czIjgJLglT8fMEeOeCgABu3Om7hMGMbzg1QfyPW992QknjSf+n/7s9MzZGiiQgLH/GS2+yC
-	jZhW50+O/xDNtvcSavuePK3E8sNJUbmUQ
-X-Google-Smtp-Source: AGHT+IGrxY0SZpf+F3z5NMZMRCHcrZyRK9yVeUmI1wjwLiaa3T1CHXHwm8tCk5xg6bHIUZbpUltsqPjqiqLA2RgMf/8=
-X-Received: by 2002:a2e:98d8:0:b0:2d7:121f:6b7 with SMTP id
- s24-20020a2e98d8000000b002d7121f06b7mr10287446ljj.38.1713239508017; Mon, 15
- Apr 2024 20:51:48 -0700 (PDT)
+	s=arc-20240116; t=1713239667; c=relaxed/simple;
+	bh=wo0tpVuElMq45g8m7XIJHWZiP2YhlXaLXq6AtakN6lM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SnOxxGh9GVMDiqvySuH7B7LaPqwmywaSAgPHB3QgiBSq9cQNbaxb2GYl48+crusAUrsFhee4ccjOwHZWTCVNZ5Z/P39TRWjOQBEkKbxvaF9i6j5GtzXeSwATq09NCFavkccKh1gztx6vpuxvVbiHm2oTDZ4uUgtKheaewgm7cTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C679E2F4;
+	Mon, 15 Apr 2024 20:54:53 -0700 (PDT)
+Received: from [10.163.59.235] (unknown [10.163.59.235])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AF333F64C;
+	Mon, 15 Apr 2024 20:54:20 -0700 (PDT)
+Message-ID: <fec0df6a-c35c-41fe-8b03-de1b15893ff8@arm.com>
+Date: Tue, 16 Apr 2024 09:24:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415171857.19244-1-ryncsn@gmail.com> <20240415171857.19244-4-ryncsn@gmail.com>
- <Zh16ndI5aN8r4yOR@casper.infradead.org>
-In-Reply-To: <Zh16ndI5aN8r4yOR@casper.infradead.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 16 Apr 2024 11:51:31 +0800
-Message-ID: <CAMgjq7Bg_p8ztuOy=25CR5u_=ZXRx64L5DxQm9mWEp-BJAq4sA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] lib/xarray: introduce a new helper xas_get_order
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/8] arm64/hw_breakpoint: Enable FEAT_Debugv8p9
+Content-Language: en-US
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240405080008.1225223-1-anshuman.khandual@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240405080008.1225223-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 3:06=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Tue, Apr 16, 2024 at 01:18:55AM +0800, Kairui Song wrote:
-> >  /**
-> > - * xa_get_order() - Get the order of an entry.
-> > - * @xa: XArray.
-> > - * @index: Index of the entry.
-> > + * xas_get_order() - Get the order of an loaded entry after xas_load.
->
-> I'd just leave that as "Get the order of an entry." as it doesn't have
-> to be after calling xas_load(), it could be from any other operation
-> that moves xas.  Also this is the short description!
+On 4/5/24 13:30, Anshuman Khandual wrote:
+> This series enables FEAT_Debugv8p9 thus extending breakpoint and watchpoint
+> support upto 64. This has been lightly tested and still work is in progress
+> but would like to get some early feedback on the approach.
+> 
+> Possible impact of context switches while tracing kernel addresses needs to
+> be evaluated regarding MDSELR_EL1 access. This series is based on v6.9-rc2.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Anshuman Khandual (8):
+>   arm64/sysreg: Add register fields for MDSELR_EL1
+>   arm64/sysreg: Add register fields for HDFGRTR2_EL2
+>   arm64/sysreg: Add register fields for HDFGWTR2_EL2
+>   arm64/sysreg: Update ID_AA64MMFR0_EL1 register
 
-Good suggestion!
-
->
-> >               if (slot >=3D XA_CHUNK_SIZE)
-> >                       break;
-> > -             if (!xa_is_sibling(xas.xa_node->slots[slot]))
-> > +             if (!xa_is_sibling(xas->xa_node->slots[slot]))
->
-> Could you fold in this change I have locally?
->
-> -               if (!xa_is_sibling(xas->xa_node->slots[slot]))
-> +               if (!xa_is_sibling(xa_entry(xas.xa, xas.xa_node, slot)))
->
-> That fixes a sparse warning which existed before your modifications.
->
-
-OK.
+Since the above patches add and update register definitions related to
+HW breakpoints, and have already been reviewed by Mark, will send them
+independently.
