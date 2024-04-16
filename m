@@ -1,34 +1,33 @@
 Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABE56AC0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C274B7489;
 	Tue, 16 Apr 2024 01:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713229832; cv=none; b=XmTz3rtE9OH1ajxquh1wdAVFOU6vMGTPOBalZfQ028IITV7qzNRZs7m1cZHtSRtsR5tYwQhKuzBzSddDp05TFBCOBM9oY+wGCfoZO18k+XELSPxaoYRSsrRPvbGOydIlQlImrrtwx3ewLhbO6L2NzQtjMbJmy1xfqlC3uc6Mh80=
+	t=1713229833; cv=none; b=lkddO63/r+NWHMskuxO/76KLeJywUcEBubhSmxEzIo+hdfVDBag1/MhYcB3dBc5WSLfW//7zWAe74azVXIYAni3SxNenej3467wcq+KcXVCSEqZ+8m6uTkAiad5sm8o757j//Oaeu30+wmDNB1ThQGgRDcyE22ifFDZoFVphqvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713229832; c=relaxed/simple;
-	bh=poOra/2Qkqdag150oh3iqrmCMiCBaPkNWJ4tde3K4Bc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ScH3sMU0HTevpcgrxjIUWAeZ6PHVfcSOqDby0T6/syENEyF/RpBNGvH02k52OTNa/x2b55+vBdHKWvjRwu83yT7JxdeuOD0LNt+QGg8RVdphBpStMBTQ3MX0c0nkhAVdgLnFX0Kn2yMClf5ThuS3T77gRRvoGIo/JflYgDRAbI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=hznlcWeH; arc=none smtp.client-ip=4.36.192.163
+	s=arc-20240116; t=1713229833; c=relaxed/simple;
+	bh=CfGfgdOAAKKMC5wFm2zy4hEYCNA54sn4dKMYMos0ND8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z2/mSoo/gNnoh3SSI/wTTMZTIB/z0a93qSGliALLmWO8V1Hb4LoH/4RyqmQmEk8pIGwvurbruL6Wr8rX3fPOkflwIivQZZyCgO8dCy2+aKbRLrxTFQ6SY5aIvQiatGTAMK1pBAne+RxEqL8zHkxy5HOLy+6MiM/JAL6hf8DiTgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=Y3Uki57o; arc=none smtp.client-ip=4.36.192.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="hznlcWeH"
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="Y3Uki57o"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=bxkohZxp9HKqr+kDp8a9ynSwjLEQVXaVHNPGDSUDBdg=; b=hznlcWeHbUzn9ez4yYqiPVEf/h
-	n1NPGL9G+1a2X243GPUR/wY6YKRobUJds0YwwhyzQN2Fg224s/zh8TH98BSaKTdI38F019kijDxea
-	gpcjVRDFh8ZjLkHYbPGOz6kghPxcm0g+uFIcMPRLJ8747DLYpArVwaNqnlfU9qDwoSi2p223Yign1
-	fuyANmMT5WumJP6RegPzHjnplLxEEM5wnyEWWIP5y13yTtBiiqiaJ6GASWLjOupfYBrHYQ3+T8zp5
-	eY5vTur8pD/ZwhUtdETLLBzam+kL7vWQ5C1/nBalVBUmCPkJie8SsU0CdOVZTCh2l3NJ3Nkhidbcd
-	zhGg52zw==;
+	bh=k/J/xiqsIy5k1U4w1kZGUWaht5CJpXBMInaaIcC0oiY=; b=Y3Uki57orxWhxbiyUq9z3KxXuT
+	dibRcItgLRG9rebmojAQ857nUCBwnvGMet1tTm7Opv/M+5XJLSlqpg++1CbcoNRtmEtSX0z/yztdW
+	DS9RSvijD4I4/SbZNrzgxLV0x41jmESeh0grMHXpQPxSX7+aBF1tPySIvMqkx8UwPCHhWKZRuZGhO
+	XTaVv+sCNclYioj0J9r6NoELBXzmy8c51bJtSBXvU02udDSPkqRziBUUM293H8WsBn/N36N/uwDoZ
+	yREBT+4J7yjSKqUUbAPuU45la3olin1e5A6H04osWXKSleJxI2MkJ/uwy19TJ2T08v009ncFleMl+
+	YFEAIVWw==;
 Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
 	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <zfigura@codeweavers.com>)
-	id 1rwXKy-00FbQv-1o;
+	id 1rwXKy-00FbQv-0Y;
 	Mon, 15 Apr 2024 20:10:16 -0500
 From: Elizabeth Figura <zfigura@codeweavers.com>
 To: Arnd Bergmann <arnd@arndb.de>,
@@ -51,12 +50,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [PATCH v4 02/27] ntsync: Introduce NTSYNC_IOC_WAIT_ALL.
-Date: Mon, 15 Apr 2024 20:08:12 -0500
-Message-ID: <20240416010837.333694-3-zfigura@codeweavers.com>
+Subject: [PATCH v4 00/30] NT synchronization primitive driver
+Date: Mon, 15 Apr 2024 20:08:10 -0500
+Message-ID: <20240416010837.333694-1-zfigura@codeweavers.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240416010837.333694-1-zfigura@codeweavers.com>
-References: <20240416010837.333694-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,370 +62,181 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is similar to NTSYNC_IOC_WAIT_ANY, but waits until all of the objects are
-simultaneously signaled, and then acquires all of them as a single atomic
-operation.
+This patch series implements a new char misc driver, /dev/ntsync, which is used
+to implement Windows NT synchronization primitives.
 
-Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
----
- drivers/misc/ntsync.c       | 243 ++++++++++++++++++++++++++++++++++--
- include/uapi/linux/ntsync.h |   1 +
- 2 files changed, 236 insertions(+), 8 deletions(-)
+NT synchronization primitives are unique in that the wait functions both are
+vectored, operate on multiple types of object with different behaviour (mutex,
+semaphore, event), and affect the state of the objects they wait on. This model
+is not compatible with existing kernel synchronization objects or interfaces,
+and therefore the ntsync driver implements its own wait queues and locking.
 
-diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
-index c6f84a5fc8c0..e914d626465a 100644
---- a/drivers/misc/ntsync.c
-+++ b/drivers/misc/ntsync.c
-@@ -55,7 +55,34 @@ struct ntsync_obj {
- 		} sem;
- 	} u;
- 
-+	/*
-+	 * any_waiters is protected by the object lock, but all_waiters is
-+	 * protected by the device wait_all_lock.
-+	 */
- 	struct list_head any_waiters;
-+	struct list_head all_waiters;
-+
-+	/*
-+	 * Hint describing how many tasks are queued on this object in a
-+	 * wait-all operation.
-+	 *
-+	 * Any time we do a wake, we may need to wake "all" waiters as well as
-+	 * "any" waiters. In order to atomically wake "all" waiters, we must
-+	 * lock all of the objects, and that means grabbing the wait_all_lock
-+	 * below (and, due to lock ordering rules, before locking this object).
-+	 * However, wait-all is a rare operation, and grabbing the wait-all
-+	 * lock for every wake would create unnecessary contention.
-+	 * Therefore we first check whether all_hint is zero, and, if it is,
-+	 * we skip trying to wake "all" waiters.
-+	 *
-+	 * This hint isn't protected by any lock. It might change during the
-+	 * course of a wake, but there's no meaningful race there; it's only a
-+	 * hint.
-+	 *
-+	 * Since wait requests must originate from user-space threads, we're
-+	 * limited here by PID_MAX_LIMIT, so there's no risk of overflow.
-+	 */
-+	atomic_t all_hint;
- };
- 
- struct ntsync_q_entry {
-@@ -76,14 +103,100 @@ struct ntsync_q {
- 	 */
- 	atomic_t signaled;
- 
-+	bool all;
- 	__u32 count;
- 	struct ntsync_q_entry entries[];
- };
- 
- struct ntsync_device {
-+	/*
-+	 * Wait-all operations must atomically grab all objects, and be totally
-+	 * ordered with respect to each other and wait-any operations.
-+	 * If one thread is trying to acquire several objects, another thread
-+	 * cannot touch the object at the same time.
-+	 *
-+	 * We achieve this by grabbing multiple object locks at the same time.
-+	 * However, this creates a lock ordering problem. To solve that problem,
-+	 * wait_all_lock is taken first whenever multiple objects must be locked
-+	 * at the same time.
-+	 */
-+	spinlock_t wait_all_lock;
-+
- 	struct file *file;
- };
- 
-+static bool is_signaled(struct ntsync_obj *obj, __u32 owner)
-+{
-+	lockdep_assert_held(&obj->lock);
-+
-+	switch (obj->type) {
-+	case NTSYNC_TYPE_SEM:
-+		return !!obj->u.sem.count;
-+	}
-+
-+	WARN(1, "bad object type %#x\n", obj->type);
-+	return false;
-+}
-+
-+/*
-+ * "locked_obj" is an optional pointer to an object which is already locked and
-+ * should not be locked again. This is necessary so that changing an object's
-+ * state and waking it can be a single atomic operation.
-+ */
-+static void try_wake_all(struct ntsync_device *dev, struct ntsync_q *q,
-+			 struct ntsync_obj *locked_obj)
-+{
-+	__u32 count = q->count;
-+	bool can_wake = true;
-+	int signaled = -1;
-+	__u32 i;
-+
-+	lockdep_assert_held(&dev->wait_all_lock);
-+	if (locked_obj)
-+		lockdep_assert_held(&locked_obj->lock);
-+
-+	for (i = 0; i < count; i++) {
-+		if (q->entries[i].obj != locked_obj)
-+			spin_lock_nest_lock(&q->entries[i].obj->lock, &dev->wait_all_lock);
-+	}
-+
-+	for (i = 0; i < count; i++) {
-+		if (!is_signaled(q->entries[i].obj, q->owner)) {
-+			can_wake = false;
-+			break;
-+		}
-+	}
-+
-+	if (can_wake && atomic_try_cmpxchg(&q->signaled, &signaled, 0)) {
-+		for (i = 0; i < count; i++) {
-+			struct ntsync_obj *obj = q->entries[i].obj;
-+
-+			switch (obj->type) {
-+			case NTSYNC_TYPE_SEM:
-+				obj->u.sem.count--;
-+				break;
-+			}
-+		}
-+		wake_up_process(q->task);
-+	}
-+
-+	for (i = 0; i < count; i++) {
-+		if (q->entries[i].obj != locked_obj)
-+			spin_unlock(&q->entries[i].obj->lock);
-+	}
-+}
-+
-+static void try_wake_all_obj(struct ntsync_device *dev, struct ntsync_obj *obj)
-+{
-+	struct ntsync_q_entry *entry;
-+
-+	lockdep_assert_held(&dev->wait_all_lock);
-+	lockdep_assert_held(&obj->lock);
-+
-+	list_for_each_entry(entry, &obj->all_waiters, node)
-+		try_wake_all(dev, entry->q, obj);
-+}
-+
- static void try_wake_any_sem(struct ntsync_obj *sem)
- {
- 	struct ntsync_q_entry *entry;
-@@ -124,6 +237,7 @@ static int post_sem_state(struct ntsync_obj *sem, __u32 count)
- 
- static int ntsync_sem_post(struct ntsync_obj *sem, void __user *argp)
- {
-+	struct ntsync_device *dev = sem->dev;
- 	__u32 __user *user_args = argp;
- 	__u32 prev_count;
- 	__u32 args;
-@@ -135,14 +249,29 @@ static int ntsync_sem_post(struct ntsync_obj *sem, void __user *argp)
- 	if (sem->type != NTSYNC_TYPE_SEM)
- 		return -EINVAL;
- 
--	spin_lock(&sem->lock);
-+	if (atomic_read(&sem->all_hint) > 0) {
-+		spin_lock(&dev->wait_all_lock);
-+		spin_lock_nest_lock(&sem->lock, &dev->wait_all_lock);
- 
--	prev_count = sem->u.sem.count;
--	ret = post_sem_state(sem, args);
--	if (!ret)
--		try_wake_any_sem(sem);
-+		prev_count = sem->u.sem.count;
-+		ret = post_sem_state(sem, args);
-+		if (!ret) {
-+			try_wake_all_obj(dev, sem);
-+			try_wake_any_sem(sem);
-+		}
- 
--	spin_unlock(&sem->lock);
-+		spin_unlock(&sem->lock);
-+		spin_unlock(&dev->wait_all_lock);
-+	} else {
-+		spin_lock(&sem->lock);
-+
-+		prev_count = sem->u.sem.count;
-+		ret = post_sem_state(sem, args);
-+		if (!ret)
-+			try_wake_any_sem(sem);
-+
-+		spin_unlock(&sem->lock);
-+	}
- 
- 	if (!ret && put_user(prev_count, user_args))
- 		ret = -EFAULT;
-@@ -195,6 +324,8 @@ static struct ntsync_obj *ntsync_alloc_obj(struct ntsync_device *dev,
- 	get_file(dev->file);
- 	spin_lock_init(&obj->lock);
- 	INIT_LIST_HEAD(&obj->any_waiters);
-+	INIT_LIST_HEAD(&obj->all_waiters);
-+	atomic_set(&obj->all_hint, 0);
- 
- 	return obj;
- }
-@@ -306,7 +437,7 @@ static int ntsync_schedule(const struct ntsync_q *q, const struct ntsync_wait_ar
-  * Allocate and initialize the ntsync_q structure, but do not queue us yet.
-  */
- static int setup_wait(struct ntsync_device *dev,
--		      const struct ntsync_wait_args *args,
-+		      const struct ntsync_wait_args *args, bool all,
- 		      struct ntsync_q **ret_q)
- {
- 	const __u32 count = args->count;
-@@ -333,6 +464,7 @@ static int setup_wait(struct ntsync_device *dev,
- 	q->task = current;
- 	q->owner = args->owner;
- 	atomic_set(&q->signaled, -1);
-+	q->all = all;
- 	q->count = count;
- 
- 	for (i = 0; i < count; i++) {
-@@ -342,6 +474,16 @@ static int setup_wait(struct ntsync_device *dev,
- 		if (!obj)
- 			goto err;
- 
-+		if (all) {
-+			/* Check that the objects are all distinct. */
-+			for (j = 0; j < i; j++) {
-+				if (obj == q->entries[j].obj) {
-+					put_obj(obj);
-+					goto err;
-+				}
-+			}
-+		}
-+
- 		entry->obj = obj;
- 		entry->q = q;
- 		entry->index = i;
-@@ -377,7 +519,7 @@ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
- 	if (copy_from_user(&args, argp, sizeof(args)))
- 		return -EFAULT;
- 
--	ret = setup_wait(dev, &args, &q);
-+	ret = setup_wait(dev, &args, false, &q);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -439,6 +581,87 @@ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
- 	return ret;
- }
- 
-+static int ntsync_wait_all(struct ntsync_device *dev, void __user *argp)
-+{
-+	struct ntsync_wait_args args;
-+	struct ntsync_q *q;
-+	int signaled;
-+	__u32 i;
-+	int ret;
-+
-+	if (copy_from_user(&args, argp, sizeof(args)))
-+		return -EFAULT;
-+
-+	ret = setup_wait(dev, &args, true, &q);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* queue ourselves */
-+
-+	spin_lock(&dev->wait_all_lock);
-+
-+	for (i = 0; i < args.count; i++) {
-+		struct ntsync_q_entry *entry = &q->entries[i];
-+		struct ntsync_obj *obj = entry->obj;
-+
-+		atomic_inc(&obj->all_hint);
-+
-+		/*
-+		 * obj->all_waiters is protected by dev->wait_all_lock rather
-+		 * than obj->lock, so there is no need to acquire obj->lock
-+		 * here.
-+		 */
-+		list_add_tail(&entry->node, &obj->all_waiters);
-+	}
-+
-+	/* check if we are already signaled */
-+
-+	try_wake_all(dev, q, NULL);
-+
-+	spin_unlock(&dev->wait_all_lock);
-+
-+	/* sleep */
-+
-+	ret = ntsync_schedule(q, &args);
-+
-+	/* and finally, unqueue */
-+
-+	spin_lock(&dev->wait_all_lock);
-+
-+	for (i = 0; i < args.count; i++) {
-+		struct ntsync_q_entry *entry = &q->entries[i];
-+		struct ntsync_obj *obj = entry->obj;
-+
-+		/*
-+		 * obj->all_waiters is protected by dev->wait_all_lock rather
-+		 * than obj->lock, so there is no need to acquire it here.
-+		 */
-+		list_del(&entry->node);
-+
-+		atomic_dec(&obj->all_hint);
-+
-+		put_obj(obj);
-+	}
-+
-+	spin_unlock(&dev->wait_all_lock);
-+
-+	signaled = atomic_read(&q->signaled);
-+	if (signaled != -1) {
-+		struct ntsync_wait_args __user *user_args = argp;
-+
-+		/* even if we caught a signal, we need to communicate success */
-+		ret = 0;
-+
-+		if (put_user(signaled, &user_args->index))
-+			ret = -EFAULT;
-+	} else if (!ret) {
-+		ret = -ETIMEDOUT;
-+	}
-+
-+	kfree(q);
-+	return ret;
-+}
-+
- static int ntsync_char_open(struct inode *inode, struct file *file)
- {
- 	struct ntsync_device *dev;
-@@ -447,6 +670,8 @@ static int ntsync_char_open(struct inode *inode, struct file *file)
- 	if (!dev)
- 		return -ENOMEM;
- 
-+	spin_lock_init(&dev->wait_all_lock);
-+
- 	file->private_data = dev;
- 	dev->file = file;
- 	return nonseekable_open(inode, file);
-@@ -470,6 +695,8 @@ static long ntsync_char_ioctl(struct file *file, unsigned int cmd,
- 	switch (cmd) {
- 	case NTSYNC_IOC_CREATE_SEM:
- 		return ntsync_create_sem(dev, argp);
-+	case NTSYNC_IOC_WAIT_ALL:
-+		return ntsync_wait_all(dev, argp);
- 	case NTSYNC_IOC_WAIT_ANY:
- 		return ntsync_wait_any(dev, argp);
- 	default:
-diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
-index 60ad414b5552..83784d4438a1 100644
---- a/include/uapi/linux/ntsync.h
-+++ b/include/uapi/linux/ntsync.h
-@@ -33,6 +33,7 @@ struct ntsync_wait_args {
- 
- #define NTSYNC_IOC_CREATE_SEM		_IOWR('N', 0x80, struct ntsync_sem_args)
- #define NTSYNC_IOC_WAIT_ANY		_IOWR('N', 0x82, struct ntsync_wait_args)
-+#define NTSYNC_IOC_WAIT_ALL		_IOWR('N', 0x83, struct ntsync_wait_args)
- 
- #define NTSYNC_IOC_SEM_POST		_IOWR('N', 0x81, __u32)
- 
+Hence I would like to request review from someone familiar with locking to make
+sure that the usage of low-level kernel primitives is correct and that the wait
+queues work as intended, and to that end I've CC'd the locking maintainers.
+
+== Background ==
+
+The Wine project emulates the Windows API in user space. One particular part of
+that API, namely the NT synchronization primitives, have historically been
+implemented via RPC to a dedicated "kernel" process. However, more recent
+applications use these APIs more strenuously, and the overhead of RPC has become
+a bottleneck.
+
+The NT synchronization APIs are too complex to implement on top of existing
+primitives without sacrificing correctness. Certain operations, such as
+NtPulseEvent() or the "wait-for-all" mode of NtWaitForMultipleObjects(), require
+direct control over the underlying wait queue, and implementing a wait queue
+sufficiently robust for Wine in user space is not possible. This proposed
+driver, therefore, implements the problematic interfaces directly in the Linux
+kernel.
+
+This driver was presented at Linux Plumbers Conference 2023. For those further
+interested in the history of synchronization in Wine and past attempts to solve
+this problem in user space, a recording of the presentation can be viewed here:
+
+    https://www.youtube.com/watch?v=NjU4nyWyhU8
+
+
+== Performance ==
+
+The gain in performance varies wildly depending on the application in question
+and the user's hardware. For some games NT synchronization is not a bottleneck
+and no change can be observed, but for others frame rate improvements of 50 to
+150 percent are not atypical. The following table lists frame rate measurements
+from a variety of games on a variety of hardware, taken by users Dmitry
+Skvortsov, FuzzyQuils, OnMars, and myself:
+
+Game                            Upstream        ntsync          improvement
+===========================================================================
+Anger Foot                       69              99              43%
+Call of Juarez                   99.8           224.1           125%
+Dirt 3                          110.6           860.7           678%
+Forza Horizon 5                 108             160              48%
+Lara Croft: Temple of Osiris    141             326             131%
+Metro 2033                      164.4           199.2            21%
+Resident Evil 2                  26              77             196%
+The Crew                         26              51              96%
+Tiny Tina's Wonderlands         130             360             177%
+Total War Saga: Troy            109             146              34%
+===========================================================================
+
+
+== Patches ==
+
+The intended semantics of the patches are broadly intended to match those of the
+corresponding Windows functions. For those not already familiar with the Windows
+functions (or their undocumented behaviour), patch 27/27 provides a detailed
+specification, and individual patches also include a brief description of the
+API they are implementing.
+
+The patches making use of this driver in Wine can be retrieved or browsed here:
+
+    https://repo.or.cz/wine/zf.git/shortlog/refs/heads/ntsync5
+
+
+== Implementation ==
+
+Some aspects of the implementation may deserve particular comment:
+
+* In the interest of performance, each object is governed only by a single
+  spinlock. However, NTSYNC_IOC_WAIT_ALL requires that the state of multiple
+  objects be changed as a single atomic operation. In order to achieve this, we
+  first take a device-wide lock ("wait_all_lock") any time we are going to lock
+  more than one object at a time.
+
+  The maximum number of objects that can be used in a vectored wait, and
+  therefore the maximum that can be locked simultaneously, is 64. This number is
+  NT's own limit.
+
+  The acquisition of multiple spinlocks will degrade performance. This is a
+  conscious choice, however. Wait-for-all is known to be a very rare operation
+  in practice, especially with counts that approach the maximum, and it is the
+  intent of the ntsync driver to optimize wait-for-any at the expense of
+  wait-for-all as much as possible.
+
+* NT mutexes are tied to their threads on an OS level, and the kernel includes
+  builtin support for "robust" mutexes. In order to keep the ntsync driver
+  self-contained and avoid touching more code than necessary, it does not hook
+  into task exit nor use pids.
+
+  Instead, the user space emulator is expected to manage thread IDs and pass
+  them as an argument to any relevant functions; this is the "owner" field of
+  ntsync_wait_args and ntsync_mutex_args.
+
+  When the emulator detects that a thread dies, it should therefore call
+  NTSYNC_IOC_MUTEX_KILL on any open mutexes.
+
+* ntsync is module-capable mostly because there was nothing preventing it, and
+  because it aided development. It is not a hard requirement, though.
+
+
+== Previous versions ==
+
+Changes from v3:
+
+* Add .gitignore and use KHDR_INCLUDES in selftest build files, per Muhammad
+  Usama Anjum.
+
+* Try to explain why we are rolling our own primitives a little better, per Greg
+  Kroah-Hartman.
+
+* Link to v3: https://lore.kernel.org/lkml/20240329000621.148791-1-zfigura@codeweavers.com/
+* Link to v2: https://lore.kernel.org/lkml/20240219223833.95710-1-zfigura@codeweavers.com/
+* Link to v1: https://lore.kernel.org/lkml/20240214233645.9273-1-zfigura@codeweavers.com/
+* Link to RFC v2: https://lore.kernel.org/lkml/20240131021356.10322-1-zfigura@codeweavers.com/
+* Link to RFC v1: https://lore.kernel.org/lkml/20240124004028.16826-1-zfigura@codeweavers.com/
+
+Elizabeth Figura (27):
+  ntsync: Introduce NTSYNC_IOC_WAIT_ANY.
+  ntsync: Introduce NTSYNC_IOC_WAIT_ALL.
+  ntsync: Introduce NTSYNC_IOC_CREATE_MUTEX.
+  ntsync: Introduce NTSYNC_IOC_MUTEX_UNLOCK.
+  ntsync: Introduce NTSYNC_IOC_MUTEX_KILL.
+  ntsync: Introduce NTSYNC_IOC_CREATE_EVENT.
+  ntsync: Introduce NTSYNC_IOC_EVENT_SET.
+  ntsync: Introduce NTSYNC_IOC_EVENT_RESET.
+  ntsync: Introduce NTSYNC_IOC_EVENT_PULSE.
+  ntsync: Introduce NTSYNC_IOC_SEM_READ.
+  ntsync: Introduce NTSYNC_IOC_MUTEX_READ.
+  ntsync: Introduce NTSYNC_IOC_EVENT_READ.
+  ntsync: Introduce alertable waits.
+  selftests: ntsync: Add some tests for semaphore state.
+  selftests: ntsync: Add some tests for mutex state.
+  selftests: ntsync: Add some tests for NTSYNC_IOC_WAIT_ANY.
+  selftests: ntsync: Add some tests for NTSYNC_IOC_WAIT_ALL.
+  selftests: ntsync: Add some tests for wakeup signaling with
+    WINESYNC_IOC_WAIT_ANY.
+  selftests: ntsync: Add some tests for wakeup signaling with
+    WINESYNC_IOC_WAIT_ALL.
+  selftests: ntsync: Add some tests for manual-reset event state.
+  selftests: ntsync: Add some tests for auto-reset event state.
+  selftests: ntsync: Add some tests for wakeup signaling with events.
+  selftests: ntsync: Add tests for alertable waits.
+  selftests: ntsync: Add some tests for wakeup signaling via alerts.
+  selftests: ntsync: Add a stress test for contended waits.
+  maintainers: Add an entry for ntsync.
+  docs: ntsync: Add documentation for the ntsync uAPI.
+
+ Documentation/userspace-api/index.rst         |    1 +
+ Documentation/userspace-api/ntsync.rst        |  399 +++++
+ MAINTAINERS                                   |    9 +
+ drivers/misc/ntsync.c                         |  925 ++++++++++-
+ include/uapi/linux/ntsync.h                   |   39 +
+ tools/testing/selftests/Makefile              |    1 +
+ .../selftests/drivers/ntsync/.gitignore       |    1 +
+ .../testing/selftests/drivers/ntsync/Makefile |    7 +
+ tools/testing/selftests/drivers/ntsync/config |    1 +
+ .../testing/selftests/drivers/ntsync/ntsync.c | 1407 +++++++++++++++++
+ 10 files changed, 2786 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/userspace-api/ntsync.rst
+ create mode 100644 tools/testing/selftests/drivers/ntsync/.gitignore
+ create mode 100644 tools/testing/selftests/drivers/ntsync/Makefile
+ create mode 100644 tools/testing/selftests/drivers/ntsync/config
+ create mode 100644 tools/testing/selftests/drivers/ntsync/ntsync.c
+
+
+base-commit: ebbc1a4789c666846b9854ef845a37a64879e5f9
 -- 
 2.43.0
 
