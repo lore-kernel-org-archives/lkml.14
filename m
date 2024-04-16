@@ -1,117 +1,121 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBC586250
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8860126F0F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713262425; cv=none; b=IdAqazWVJDp1xzLZP88jUr0f25Su1Sj7YbkoscxXVMSBfC9OnNvwADriieSMoxuCZm8utQQcmgeb5M0bvyF6OlsvbvsRI7lxxRw7OqMmxbHgfvhC4hpTB2k7X4O/FuQxFjn7rinsJoM2lGYg0dGYjdUXyyqQahthlvOU4NuojQU=
+	t=1713262484; cv=none; b=Q7MH8gq3iFbwCSbHqFG/lb6Q79zlpznPoPySSwO1D/L3P6Yxrca4IrMYlh4dPqm2a9heLDPjLkEp42KVmqf90BoyIJzDoQX0ZA11wcdTzwFMnLH/3T8m0jDUR0s0Ydh64NnuF8Cu415IZrI49QBa6/9EYRKTuEOwUDxJwbd2SFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713262425; c=relaxed/simple;
-	bh=PLfHS/pr861fPjFBeMBoEopPIt381ou0qj9dA0o7sxM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uNNI63hSCRSXKOlKglhHQY/ahgoryFI0FewZc5ytd3TiwexGqGfeklET2DOwB0pXD5i6Q4RYLClDvIhXBP8X93XcNr63wZn1xq+Fh0N3btPPPycxQAcl4i5aIPQ6b95JvotZTrN37YaBqxxDn58TIHX/25ge0NNudWC6oqsJRwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b=Ou/+1mni; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b="Ou/+1mni"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a2d0ca3c92so2732875a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 03:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl-com.20230601.gappssmtp.com; s=20230601; t=1713262422; x=1713867222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZfb01z1cElSdFgczCPztvVWoygfwcGgF7HnVAPTuEs=;
-        b=Ou/+1mnibDBFuGPcQ0dWFkRgXX9GC0Nywe2x4pGJI0/QodftMdTwehlyON8vOOciQa
-         BeEn4O4ss2KnJQII1/G83f3p4FPr2znkx7MfwCmsLz4tEjrxeKKYnr0HrzZAlTPync7d
-         xBrRsG21s+E2Z3YyG6vO+6rqOoZSFFxiYAsy6eCkXNodDsPsvKA1V7vh07Qp/S4JK4lr
-         hq/cePmHYYJqfMWHlQH18BqKdrjXsGlaq+ybfpYFBLuHHDSxHRfw30z+hfcXA7xNJIu8
-         HXOkF/sBRBU6/97i24RMvIIWwUsiEbDzykoIxTo+nUV0/5dl+7EQICdKAN1paTWYXpLJ
-         V4jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713262422; x=1713867222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YZfb01z1cElSdFgczCPztvVWoygfwcGgF7HnVAPTuEs=;
-        b=RW2wlG0GWms2XfqA3FohV1XDYlFMGSaSrtggq1NoW7cxzrZ8J2eSErIKrA4Y7eQvXL
-         uo6v5pQc1pJJvQTlKDANx1SnULFEMpQnQhmVR4VdlEEBsnkoz2e9mcgR/pfNZHsfDTAd
-         qMtCL41WVr49n0BWhWJwvWf7cbM02BDqt8tZf6lnit6h2UKuEoEcSgV+vglOGgwh2/YR
-         7y48Wv/A0AyO8cyDWu9K7UMF15AdaRuQPCqJxoDKd6RzjynRpSWZxysfFtkBMVkHt20J
-         0A2TvbdRLFQHAM/KA1MSxnBTFKP8iQKRjZfClzHaNkFRhLw15PoYoh//O7K7sTyKjP4W
-         0Z9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWMFFF6hSJynmF1csvv+YDACPSXW6XeVltWGJg+H3EURJWEVfQ0iyutNRX3nx5Eg/es1RbulyentLFX7nYlMgwK3kXzVIT7b2xlBDAk
-X-Gm-Message-State: AOJu0Yw+D7h1xOK37Y0z7BiA2Kax0j7NuIwn/mKMsV5lyyijZGX6odzE
-	YYNi/gbQKOptfxnoA+ozhJM47QPzt/4XV9SDyfAgQrUBRZQbaTY/xpKK6j7kBXfnKVt37DQfcc6
-	aQj0bdmriRNzeh+cyFxNRcoV5tCULW+neWnyHkQ==
-X-Google-Smtp-Source: AGHT+IEAmCX3pj6Nd8BE8HVb4J6COM8iyob7Dnrh8XVaPFzBOespQeJDXW+F7FT5eUBAa5B9DPn9VuXJil6nMAitpYE=
-X-Received: by 2002:a17:90a:f105:b0:2a7:8674:a0c8 with SMTP id
- cc5-20020a17090af10500b002a78674a0c8mr2945956pjb.1.1713262421827; Tue, 16 Apr
- 2024 03:13:41 -0700 (PDT)
+	s=arc-20240116; t=1713262484; c=relaxed/simple;
+	bh=I+0+BTbsmwoTIEEVNzepNEL2Vxzt2tzpP8xjp+mA12A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=r3uOzx69dqlN8O3kMn/b2mIEhizJ0lNyAhDap4mhUjeP6KbbNF+NI+sht9fIdW5mB3r5zV8UrLbQ6pWhvWAvAC3iAmq5PNLdIc6SQElP9cYLpSJF84YIbF6q7ahArRVH1ggrkL07ipp6jClAXp33C2EGWIJVcJU8a6TEneW28CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 08CE7C098E;
+	Tue, 16 Apr 2024 09:55:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id A4C191A;
+	Tue, 16 Apr 2024 09:55:12 +0000 (UTC)
+Message-ID: <a582c379f1bc2bc0d16b46ece9211bac40b4b7cf.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: error if file terminates without a new-line
+From: Joe Perches <joe@perches.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, Greg KH
+	 <gregkh@linuxfoundation.org>
+Cc: Prasad Pandit <pj.pandit@yahoo.in>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, Dwaipayan Ray <dwaipayanray1@gmail.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Andy Whitcroft <apw@canonical.com>
+Date: Tue, 16 Apr 2024 02:55:11 -0700
+In-Reply-To: <edf23b1b-303a-46eb-b455-8c766c84ddf1@moroto.mountain>
+References: <20240330033858.3272184-1-ppandit@redhat.com>
+	 <1568855168.5949322.1713251087824@mail.yahoo.com>
+	 <2024041627-overgrown-ripping-2348@gregkh>
+	 <edf23b1b-303a-46eb-b455-8c766c84ddf1@moroto.mountain>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415141953.365222063@linuxfoundation.org>
-In-Reply-To: <20240415141953.365222063@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Tue, 16 Apr 2024 19:13:30 +0900
-Message-ID: <CAKL4bV6gTOUt=LomZjGceMm6SjqWeOXXeTE8EQ7H-ovQvnfzZA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/122] 6.6.28-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: A4C191A
+X-Stat-Signature: bw3duwewrot44jmugjm99o7jnzywb1xn
+X-Rspamd-Server: rspamout04
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/vYlRzHUsKRvWlK7CBLxcaHWmex+J4wIo=
+X-HE-Tag: 1713261312-25940
+X-HE-Meta: U2FsdGVkX1+Ajd9m6OJpXDsmwkHfDTckIPUDxgOwxTvB9mmWT0H1YjV6KUfAmV7JKPzeiNsQ3nW+/p5Ur9DWBpSkCuWa4IMjOs8J9QWsrFZUenXSz6PdoPOi7yBV9qNlz4RBmDIOO4nJjXmz2wMmgwxd9OHWIogcyJhydy4S1vWHM8fqlIl0Y9vbUthHqFcy8988+qsHEEWsfrI44tQbmZR4QlT0Cwu9MS+J7oOfCdX4KPiUY77oRRpkyCT5mhvYThFKa4sQStqyOS7pv71Pm99zJ5E70tMfLf877PZfNIDdtVTyfI9hrMQGNw+JCfMd
 
-Hi Greg
+On Tue, 2024-04-16 at 11:59 +0300, Dan Carpenter wrote:
+> On Tue, Apr 16, 2024 at 10:48:27AM +0200, Greg KH wrote:
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index 9c4c4a61bc83..df34c0709410 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -2795,6 +2795,13 @@ sub process {
+> > > =A0=A0=A0 =A0=A0=A0 =A0=A0=A0 $is_patch =3D 1;
+> > > =A0=A0=A0 =A0=A0=A0 }
+> > >=20
+> > > +# check if patch terminates file without a new line (\n)
+> > > +=A0 =A0 =A0 =A0 if ($line =3D~ /^\\ No newline at end of file$/
+> > > +=A0 =A0 =A0 =A0 =A0 =A0 and $rawlines[$linenr - 2] =3D~ /^\+.*$/) {
+> > > +=A0 =A0 =A0 =A0 =A0 =A0 ERROR("NOEOL_FILE",
+> > > +=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "patch terminates file without a=
+ new line (\\n).");
+> > > +=A0 =A0 =A0 =A0 }
+> >=20
+> > Why is this a problem?  files without a new line should not cause
+> > problems with a compiler, right?  You don't have a justification for wh=
+y
+> > this change needs to be checked for anywhere.
+> >=20
+>=20
+> I gave him such a good reason too...  It breaks `cat file.c`.  Plus, it
+> looks weird in `git log -p` because it has a "No newline at the end of
+> file" comment.
+>=20
+> regards,
+> dan carpenter
+>=20
+> diff --git a/test.c b/test.c
+> new file mode 100644
+> index 000000000000..d808cac2d962
+> --- /dev/null
+> +++ b/test.c
+> @@ -0,0 +1,12 @@
+> +#include <stdio.h>
+> +#include <stdbool.h>
+> +#include "check_debug.h"
+> +
+> +void kfree(int *p);
+> +
+> +int *p;
+> +int main(void)
+> +{
+> +       kfree(p);
+> +       *p =3D 1;
+> +}
+> \ No newline at end of file
+>=20
+> commit f4a997924122d0094675c897a220371f0a129d90
+>=20
 
-On Mon, Apr 15, 2024 at 11:35=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.28 release.
-> There are 122 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 17 Apr 2024 14:19:30 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.28-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+There's an existing check for this.
+I believe it at least used to work.
+Fix that instead.
 
-6.6.28-rc1 tested.
+# check for adding lines without a newline.
+		if ($line =3D~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =3D~ /=
+^\\ No newline at end of file/) {
+			if (WARN("MISSING_EOF_NEWLINE",
+			         "adding a line without newline at end of file\n" . $herecurr) &=
+&
+			    $fix) {
+				fix_delete_line($fixlinenr+1, "No newline at end of file");
+			}
+		}
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.6.28-rc1rv
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 13.2.1 20230801, GNU ld (GNU
-Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Tue Apr 16 18:32:52 JST 2024
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
