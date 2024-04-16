@@ -1,35 +1,35 @@
 Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05AF79C4;
-	Tue, 16 Apr 2024 01:10:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C8D5240;
+	Tue, 16 Apr 2024 01:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713229834; cv=none; b=oKapiQxFFWDf38Ml1Xtr1b/svuOp1UvbPYvzh+Z+3/lx8gCaFBwGcsEiZivjKTFPqLgxmAeuw2Or0LgtJPYB6hSfv/Qte6VsU0lCFUwGMMC/X6QCNAoPnfkkW+raJJqA/70HWDivXmTcu7ho338khanC1tgK15jrov49mU4IIx8=
+	t=1713229833; cv=none; b=O7rzHeBVwq1GsyNjd9O6yzE9N/jN9Y0g6cYdVNHI+YXb0OwvFEVeAJX7A8ewchFuuHnsgJylEBnvv1YvpjztSZQswkGxNPJtN3vektfxWNoQHBfnftIVFuG3GB+uIeCVd3Iz9dDpn01CiwO+jfOvBI4weZvCanHGvgKdplLqg5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713229834; c=relaxed/simple;
-	bh=L8d9LKUtIlHbbP7cxUNXa7f8ALBrZ7EKpjsLi7r052M=;
+	s=arc-20240116; t=1713229833; c=relaxed/simple;
+	bh=AE6NXINBH8omVPz1fHj5ljdzuytgTwzlTVzo/ubdiPg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ljWxszf+5s7gDY5rzRMi4wgoYVBKcOUea6qns37TKSsO+zsR3seCSjxVvNdKYBdlsjvUkyIrOVIvG0t7a7GHuwDYsi7SuL1esvLdbo7O/ZyMYGg69WeOkHn6hP8d3yC9rH3XeobHOgxp66XKwqK/k101tasw8fLCkfvbxTydF6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=h1dEF1wQ; arc=none smtp.client-ip=4.36.192.163
+	 MIME-Version; b=QEWyDteTk9/WHLPCkSxhMkc97O9XYqsaFhE9+SwF+53ZvKpe0RWVZPEfRET6F9xEto40o3est5EIKgVevl49zbDAIPmFds6oPsYGGizUO+/PTK17p9TkbhP8qPNu2QVgOl/HJT5xRXzQMXYYtA28+iI9ZnVqOltPEVb2XZXxyF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=WVc5sih5; arc=none smtp.client-ip=4.36.192.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="h1dEF1wQ"
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="WVc5sih5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=Y95uioGAPMdZZ0cAwPbXEkD4hHbWG+8pblZmeRY+GjA=; b=h1dEF1wQHR5ebkl5dYXsHZBsE9
-	9XgPpXMmJP+ZHSSGCImPZfQsHvHPxXHZyXhRP0qt2dA2vkOWEXi/R0Qbj1mKTa3nCXGXW4aFFJTRR
-	UsdGJrLS2b3dBUaBjYK26lZFYXP1zNmBJQZFu9DXAe/l+oXifa7Fp3gIzLk+ty+ck/J7RYiQGoeMS
-	VuPUhVwbcKf6n5jqsM7b3gZLYLoVybPKzmTdKM166+mY9gc9l3lWKwKf/QIIdJ4ZJURFK7SHBotLF
-	N/kwIy0CB3CoX80fTVmtIW7aTtR+LFqMgVyUdRsyqcaMA9JYqfn0uujE5vwTTHB2Zzj+v1wpOHUsq
-	J5N6w0sQ==;
+	bh=4IcsQqwJDSOpJrs7K0nnQqbkT6O6ZHWNLrwUIQFYjxY=; b=WVc5sih5YsyXdVZifO7ExDWCM8
+	uzs9T8fVGwfMh9ei7cqN8Nl52HpXCbNnVbCFC0wISr1UJczvt8Bhb48Q5xm56aRL7uwgEPIk9UyqU
+	Ed9004DU+jvmc6n/+vi8/GGhNhZrBmTxAStfjjaieopEfsbrYjNgTNWnx6RMjhNPogB0CEUHX08iF
+	an8NbaBDyx3JtndPnFTTb68v5RGkcAfcCGNkzNdg3RpL+BUzSTohQWdzrwdWg/TL+//i+9v9JtkPA
+	AfZnopCL/aPsHQ2Oc/q+7rNbK9LuUhPZp6tdeL+n9AnNhcsQOhYWqOzVtvBp4j+yzg48b0PSrBtmW
+	Y/6C+hQQ==;
 Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.mn.codeweavers.com)
 	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <zfigura@codeweavers.com>)
-	id 1rwXL2-00FbQv-2i;
-	Mon, 15 Apr 2024 20:10:21 -0500
+	id 1rwXL1-00FbQv-06;
+	Mon, 15 Apr 2024 20:10:19 -0500
 From: Elizabeth Figura <zfigura@codeweavers.com>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +51,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Elizabeth Figura <zfigura@codeweavers.com>
-Subject: [PATCH v4 20/27] selftests: ntsync: Add some tests for manual-reset event state.
-Date: Mon, 15 Apr 2024 20:08:30 -0500
-Message-ID: <20240416010837.333694-21-zfigura@codeweavers.com>
+Subject: [PATCH v4 13/27] ntsync: Introduce alertable waits.
+Date: Mon, 15 Apr 2024 20:08:23 -0500
+Message-ID: <20240416010837.333694-14-zfigura@codeweavers.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240416010837.333694-1-zfigura@codeweavers.com>
 References: <20240416010837.333694-1-zfigura@codeweavers.com>
@@ -65,122 +65,192 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Test event-specific ioctls NTSYNC_IOC_EVENT_SET, NTSYNC_IOC_EVENT_RESET,
-NTSYNC_IOC_EVENT_PULSE, NTSYNC_IOC_EVENT_READ for manual-reset events, and
-waiting on manual-reset events.
+NT waits can optionally be made "alertable". This is a special channel for
+thread wakeup that is mildly similar to SIGIO. A thread has an internal single
+bit of "alerted" state, and if a thread is alerted while an alertable wait, the
+wait will return a special value, consume the "alerted" state, and will not
+consume any of its objects.
+
+Alerts are implemented using events; the user-space NT emulator is expected to
+create an internal ntsync event for each thread and pass that event to wait
+functions.
 
 Signed-off-by: Elizabeth Figura <zfigura@codeweavers.com>
 ---
- .../testing/selftests/drivers/ntsync/ntsync.c | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
+ drivers/misc/ntsync.c       | 68 ++++++++++++++++++++++++++++++++-----
+ include/uapi/linux/ntsync.h |  2 +-
+ 2 files changed, 60 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/drivers/ntsync/ntsync.c b/tools/testing/selftests/drivers/ntsync/ntsync.c
-index b77fb0b2c4b1..b6481c2b85cc 100644
---- a/tools/testing/selftests/drivers/ntsync/ntsync.c
-+++ b/tools/testing/selftests/drivers/ntsync/ntsync.c
-@@ -73,6 +73,27 @@ static int unlock_mutex(int mutex, __u32 owner, __u32 *count)
- 	return ret;
- }
- 
-+static int read_event_state(int event, __u32 *signaled, __u32 *manual)
-+{
-+	struct ntsync_event_args args;
-+	int ret;
-+
-+	memset(&args, 0xcc, sizeof(args));
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_READ, &args);
-+	*signaled = args.signaled;
-+	*manual = args.manual;
-+	return ret;
-+}
-+
-+#define check_event_state(event, signaled, manual) \
-+	({ \
-+		__u32 __signaled, __manual; \
-+		int ret = read_event_state((event), &__signaled, &__manual); \
-+		EXPECT_EQ(0, ret); \
-+		EXPECT_EQ((signaled), __signaled); \
-+		EXPECT_EQ((manual), __manual); \
-+	})
-+
- static int wait_objs(int fd, unsigned long request, __u32 count,
- 		     const int *objs, __u32 owner, __u32 *index)
+diff --git a/drivers/misc/ntsync.c b/drivers/misc/ntsync.c
+index a03c6fceb518..19fd70ac3f50 100644
+--- a/drivers/misc/ntsync.c
++++ b/drivers/misc/ntsync.c
+@@ -819,25 +819,32 @@ static int setup_wait(struct ntsync_device *dev,
+ 		      const struct ntsync_wait_args *args, bool all,
+ 		      struct ntsync_q **ret_q)
  {
-@@ -353,6 +374,74 @@ TEST(mutex_state)
- 	close(fd);
- }
++	int fds[NTSYNC_MAX_WAIT_COUNT + 1];
+ 	const __u32 count = args->count;
+-	int fds[NTSYNC_MAX_WAIT_COUNT];
+ 	struct ntsync_q *q;
++	__u32 total_count;
+ 	__u32 i, j;
  
-+TEST(manual_event_state)
-+{
-+	struct ntsync_event_args event_args;
-+	__u32 index, signaled;
-+	int fd, event, ret;
+ 	if (!args->owner)
+ 		return -EINVAL;
+ 
+-	if (args->pad || args->pad2 || (args->flags & ~NTSYNC_WAIT_REALTIME))
++	if (args->pad || (args->flags & ~NTSYNC_WAIT_REALTIME))
+ 		return -EINVAL;
+ 
+ 	if (args->count > NTSYNC_MAX_WAIT_COUNT)
+ 		return -EINVAL;
+ 
++	total_count = count;
++	if (args->alert)
++		total_count++;
 +
-+	fd = open("/dev/ntsync", O_CLOEXEC | O_RDONLY);
-+	ASSERT_LE(0, fd);
-+
-+	event_args.manual = 1;
-+	event_args.signaled = 0;
-+	event_args.event = 0xdeadbeef;
-+	ret = ioctl(fd, NTSYNC_IOC_CREATE_EVENT, &event_args);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_NE(0xdeadbeef, event_args.event);
-+	event = event_args.event;
-+	check_event_state(event, 0, 1);
-+
-+	signaled = 0xdeadbeef;
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_SET, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, signaled);
-+	check_event_state(event, 1, 1);
-+
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_SET, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(1, signaled);
-+	check_event_state(event, 1, 1);
-+
-+	ret = wait_any(fd, 1, &event, 123, &index);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, index);
-+	check_event_state(event, 1, 1);
-+
-+	signaled = 0xdeadbeef;
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_RESET, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(1, signaled);
-+	check_event_state(event, 0, 1);
-+
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_RESET, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, signaled);
-+	check_event_state(event, 0, 1);
-+
-+	ret = wait_any(fd, 1, &event, 123, &index);
-+	EXPECT_EQ(-1, ret);
-+	EXPECT_EQ(ETIMEDOUT, errno);
-+
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_SET, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, signaled);
-+
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_PULSE, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(1, signaled);
-+	check_event_state(event, 0, 1);
-+
-+	ret = ioctl(event, NTSYNC_IOC_EVENT_PULSE, &signaled);
-+	EXPECT_EQ(0, ret);
-+	EXPECT_EQ(0, signaled);
-+	check_event_state(event, 0, 1);
-+
-+	close(event);
-+
-+	close(fd);
-+}
-+
- TEST(test_wait_any)
+ 	if (copy_from_user(fds, u64_to_user_ptr(args->objs),
+ 			   array_size(count, sizeof(*fds))))
+ 		return -EFAULT;
++	if (args->alert)
++		fds[count] = args->alert;
+ 
+-	q = kmalloc(struct_size(q, entries, count), GFP_KERNEL);
++	q = kmalloc(struct_size(q, entries, total_count), GFP_KERNEL);
+ 	if (!q)
+ 		return -ENOMEM;
+ 	q->task = current;
+@@ -847,7 +854,7 @@ static int setup_wait(struct ntsync_device *dev,
+ 	q->ownerdead = false;
+ 	q->count = count;
+ 
+-	for (i = 0; i < count; i++) {
++	for (i = 0; i < total_count; i++) {
+ 		struct ntsync_q_entry *entry = &q->entries[i];
+ 		struct ntsync_obj *obj = get_obj(dev, fds[i]);
+ 
+@@ -897,9 +904,9 @@ static void try_wake_any_obj(struct ntsync_obj *obj)
+ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
  {
- 	int objs[NTSYNC_MAX_WAIT_COUNT + 1], fd, ret;
+ 	struct ntsync_wait_args args;
++	__u32 i, total_count;
+ 	struct ntsync_q *q;
+ 	int signaled;
+-	__u32 i;
+ 	int ret;
+ 
+ 	if (copy_from_user(&args, argp, sizeof(args)))
+@@ -909,9 +916,13 @@ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	total_count = args.count;
++	if (args.alert)
++		total_count++;
++
+ 	/* queue ourselves */
+ 
+-	for (i = 0; i < args.count; i++) {
++	for (i = 0; i < total_count; i++) {
+ 		struct ntsync_q_entry *entry = &q->entries[i];
+ 		struct ntsync_obj *obj = entry->obj;
+ 
+@@ -920,9 +931,15 @@ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
+ 		spin_unlock(&obj->lock);
+ 	}
+ 
+-	/* check if we are already signaled */
++	/*
++	 * Check if we are already signaled.
++	 *
++	 * Note that the API requires that normal objects are checked before
++	 * the alert event. Hence we queue the alert event last, and check
++	 * objects in order.
++	 */
+ 
+-	for (i = 0; i < args.count; i++) {
++	for (i = 0; i < total_count; i++) {
+ 		struct ntsync_obj *obj = q->entries[i].obj;
+ 
+ 		if (atomic_read(&q->signaled) != -1)
+@@ -939,7 +956,7 @@ static int ntsync_wait_any(struct ntsync_device *dev, void __user *argp)
+ 
+ 	/* and finally, unqueue */
+ 
+-	for (i = 0; i < args.count; i++) {
++	for (i = 0; i < total_count; i++) {
+ 		struct ntsync_q_entry *entry = &q->entries[i];
+ 		struct ntsync_obj *obj = entry->obj;
+ 
+@@ -999,6 +1016,14 @@ static int ntsync_wait_all(struct ntsync_device *dev, void __user *argp)
+ 		 */
+ 		list_add_tail(&entry->node, &obj->all_waiters);
+ 	}
++	if (args.alert) {
++		struct ntsync_q_entry *entry = &q->entries[args.count];
++		struct ntsync_obj *obj = entry->obj;
++
++		spin_lock_nest_lock(&obj->lock, &dev->wait_all_lock);
++		list_add_tail(&entry->node, &obj->any_waiters);
++		spin_unlock(&obj->lock);
++	}
+ 
+ 	/* check if we are already signaled */
+ 
+@@ -1006,6 +1031,21 @@ static int ntsync_wait_all(struct ntsync_device *dev, void __user *argp)
+ 
+ 	spin_unlock(&dev->wait_all_lock);
+ 
++	/*
++	 * Check if the alert event is signaled, making sure to do so only
++	 * after checking if the other objects are signaled.
++	 */
++
++	if (args.alert) {
++		struct ntsync_obj *obj = q->entries[args.count].obj;
++
++		if (atomic_read(&q->signaled) == -1) {
++			spin_lock(&obj->lock);
++			try_wake_any_obj(obj);
++			spin_unlock(&obj->lock);
++		}
++	}
++
+ 	/* sleep */
+ 
+ 	ret = ntsync_schedule(q, &args);
+@@ -1028,6 +1068,16 @@ static int ntsync_wait_all(struct ntsync_device *dev, void __user *argp)
+ 
+ 		put_obj(obj);
+ 	}
++	if (args.alert) {
++		struct ntsync_q_entry *entry = &q->entries[args.count];
++		struct ntsync_obj *obj = entry->obj;
++
++		spin_lock_nest_lock(&obj->lock, &dev->wait_all_lock);
++		list_del(&entry->node);
++		spin_unlock(&obj->lock);
++
++		put_obj(obj);
++	}
+ 
+ 	spin_unlock(&dev->wait_all_lock);
+ 
+diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
+index 80f36de46a75..f21dbac42164 100644
+--- a/include/uapi/linux/ntsync.h
++++ b/include/uapi/linux/ntsync.h
+@@ -37,8 +37,8 @@ struct ntsync_wait_args {
+ 	__u32 owner;
+ 	__u32 index;
+ 	__u32 flags;
++	__u32 alert;
+ 	__u32 pad;
+-	__u32 pad2;
+ };
+ 
+ #define NTSYNC_MAX_WAIT_COUNT 64
 -- 
 2.43.0
 
