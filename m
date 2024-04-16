@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B9E1642B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4480171D2;
 	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713235481; cv=none; b=JJJTee6Oij7yXOklQYBRogEMML76rQF5JEhg0YTfmlWwKFV9b4zf5zlxekEgeB+X3UHhKoj7Uy2UDSsMSaYHPFDZajP4hOyFDVQc/aJWmaEM9VQDCuGouqrsF4ZNZaKFA2KSBTaLtHgTPCaQI6zwb3Troh98+fNYQLvUip2dM1U=
+	t=1713235481; cv=none; b=YnkuggRMlpAbvY+1PggAMlmF5E2i5GbtYrbb20wG2/WQ7yaloxVvQRBScCF1rKD5o2YpAnr2BWvb/QD1X0lpf9pb1g1EJUY1m1RTDypilcSDhan7eP7SXyDcBe8/4o214Cimii/qSlIXj5JeoUTcC9Sg3t1KpOOVyRsWJEXpSvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713235481; c=relaxed/simple;
-	bh=RQPT2yHDkY4Bh+F74lLjos1yV4PoydHJZ7SkgV2nvyM=;
+	bh=3ygo566KgNes/y1LnnasDIozu4wqPQgtkAmJdJFtQ0U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oDsiCUExGeyBiE2h/B80/N7EeAIMPfeptYh5K/2fav7qwocHcWHcsfA6oD/jLTGOJKeFwtSGoosYSrqxWjaRqAB9c0vOEvbC2agGFrGQ++1LQf7fwaWwu0Es5QrIi9mrAbkJ+cbBdfgHOWVnFKyMYUhgkMiOsTfe/uWkerxNgy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcU2nMsr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DxCiqFfEdNO7EHDCJRaPnKXKS2RV0IZt580Y8HSt6dxIH9Qae/Z0lfLI/6eqg6gBRQ8mXF+ssR4l6XKQLIhmu5EZpI3MatvvlfIRhyHuni2wwHv5n7iAPKqEdwPgGyxjGJI177bZoawGCBvBAtvxGvQiAJq8vVzZxMOJMXtuFp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZ40ErWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcU2nMsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 53098C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZ40ErWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F17DC4AF0C;
 	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713235481;
-	bh=RQPT2yHDkY4Bh+F74lLjos1yV4PoydHJZ7SkgV2nvyM=;
+	bh=3ygo566KgNes/y1LnnasDIozu4wqPQgtkAmJdJFtQ0U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CcU2nMsrXotmOr3X7SXf5f4fyNaFZ4balIVJvFm/S6YhhBIuWULZZ2eEVLs5rqlcZ
-	 edxhwt88Wr7CTIBI2kvM9ozMAJ0raadsXtyWufFtOcki0R6lV8Aroo9yo9y4L62B3/
-	 L3OFjTLx2/bq6NPWykyKc+zWbrKD6iRvc28xIi6scmdd/g+lgfYZNkCpOvZzYAqt2C
-	 5CzYMFZ6At3oXwLpFtFcU4WuZrjVEhC4OD/98uwEU5KB959dAI+nya+AB6lQAltdSY
-	 HUgtK5G6RO+N2KFjB2lxwLeofBYkvcihKZtxXR44uoaJrkUPk6yXM3ntPlh9zcK4WE
-	 8Trxdcy4VMqIw==
+	b=QZ40ErWrn5XtEtonMojY5vHzFnnHAwMKEGafsomu8FfPecoagy8UIaz6TJ5C9VvE2
+	 TpFJRy6PH+PayzGui8+OMBqhMFXrq3w9zaQ/KrE+VbRfMDnHRFNyvk//+cx/PA3KgV
+	 Mmmb40/5HnY0pMiiHTxszGpWPfwmFSo9vKw+ps2hXA7BUVaw/AhrcymyQzLRuFRnYe
+	 kIzzzgzFcygnb4SKwXDxipu9aol7b/m7qxELm6o0Cl8KTA3vTwfp1iVCzhleKBAB6M
+	 0znEDxieW3OG1GzqyJ9URbPiGi9THpBTtX9zkhOJ+Xuxw1CveYr9/S07EEiHcGBhBd
+	 1K3g3SuO7zvtQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D2BC04FFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59803C04FFE;
 	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
 From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
-Date: Tue, 16 Apr 2024 10:44:32 +0800
-Subject: [PATCH v11 1/3] input: pm8xxx-vibrator: refactor to support new
- SPMI vibrator
+Date: Tue, 16 Apr 2024 10:44:34 +0800
+Subject: [PATCH v11 3/3] input: pm8xxx-vibrator: add new SPMI vibrator
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-pm8xxx-vibrator-new-design-v11-1-7b1c951e1515@quicinc.com>
+Message-Id: <20240416-pm8xxx-vibrator-new-design-v11-3-7b1c951e1515@quicinc.com>
 References: <20240416-pm8xxx-vibrator-new-design-v11-0-7b1c951e1515@quicinc.com>
 In-Reply-To: <20240416-pm8xxx-vibrator-new-design-v11-0-7b1c951e1515@quicinc.com>
 To: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
@@ -55,11 +55,11 @@ Cc: linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Fenglin Wu <quic_fenglinw@quicinc.com>
 X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713235479; l=4348;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713235479; l=5248;
  i=quic_fenglinw@quicinc.com; s=20240327; h=from:subject:message-id;
- bh=E2aBMQmVymx8Fv7BU5kutAgy8VZ4B8jp2W+Ab5rizqk=;
- b=rVI+3VcH5JY7i5YOiKUsw/R/fogkybTGfSLRTaJfn2NA50fUI1bU7ULSHqjsj7e7XR1Tw6H0+
- JFGv/hqAGJACMkssvRN0DUwgFNliMMBlArPt7j8St+q/3AtLnr/b1s3
+ bh=O6jY1vE2jMlOuUDvAlQRyMO4JqLMmvGnt6KvdZSWoX4=;
+ b=DoVE674AWh7yt0zyoiZS7k+TyNiecyJD6qsCJWj6VcIDOmE8qE0HfBZR8zD/tDtfLs4P4Die3
+ wPTFMEcosIoC5u84zbHjJVsJI1xojlhrLWDyobziNQDybr+cg6EEK1H
 X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
  pk=BF8SA4IVDk8/EBCwlBehKtn2hp6kipuuAuDAHh9s+K4=
 X-Endpoint-Received: by B4 Relay for quic_fenglinw@quicinc.com/20240327
@@ -69,140 +69,157 @@ Reply-To: quic_fenglinw@quicinc.com
 
 From: Fenglin Wu <quic_fenglinw@quicinc.com>
 
-Currently, vibrator control register addresses are hard coded,
-including the base address and offsets, it's not flexible to
-support new SPMI vibrator module which is usually included in
-different PMICs with different base address. Refactor it by using
-the base address defined in devicetree.
+Add support for a new SPMI vibrator module which is very similar
+to the vibrator module inside PM8916 but has a finer drive voltage
+step and different output voltage range, its drive level control
+is expanded across 2 registers. The vibrator module can be found
+in following Qualcomm PMICs: PMI632, PM7250B, PM7325B, PM7550BA.
 
 Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
 ---
- drivers/input/misc/pm8xxx-vibrator.c | 41 ++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 16 deletions(-)
+ drivers/input/misc/pm8xxx-vibrator.c | 52 +++++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
-index 79f478d3a9b3..2bcfa7ed3d6b 100644
+index 2bcfa7ed3d6b..381b06473279 100644
 --- a/drivers/input/misc/pm8xxx-vibrator.c
 +++ b/drivers/input/misc/pm8xxx-vibrator.c
-@@ -19,27 +19,27 @@
+@@ -11,10 +11,11 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ 
+-#define VIB_MAX_LEVEL_mV	(3100)
+-#define VIB_MIN_LEVEL_mV	(1200)
+-#define VIB_PER_STEP_mV		(100)
+-#define VIB_MAX_LEVELS		(VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV + VIB_PER_STEP_mV)
++#define VIB_MAX_LEVEL_mV(vib)	(vib->drv2_addr ? 3544 : 3100)
++#define VIB_MIN_LEVEL_mV(vib)	(vib->drv2_addr ? 1504 : 1200)
++#define VIB_PER_STEP_mV(vib)	(vib->drv2_addr ? 8 : 100)
++#define VIB_MAX_LEVELS(vib) \
++	(VIB_MAX_LEVEL_mV(vib) - VIB_MIN_LEVEL_mV(vib) + VIB_PER_STEP_mV(vib))
+ 
  #define MAX_FF_SPEED		0xff
  
- struct pm8xxx_regs {
--	unsigned int enable_addr;
-+	unsigned int enable_offset;
- 	unsigned int enable_mask;
- 
--	unsigned int drv_addr;
-+	unsigned int drv_offset;
+@@ -25,7 +26,11 @@ struct pm8xxx_regs {
+ 	unsigned int drv_offset;
  	unsigned int drv_mask;
  	unsigned int drv_shift;
++	unsigned int drv2_offset;
++	unsigned int drv2_mask;
++	unsigned int drv2_shift;
  	unsigned int drv_en_manual_mask;
++	bool	     drv_in_step;
  };
  
  static const struct pm8xxx_regs pm8058_regs = {
--	.drv_addr = 0x4A,
--	.drv_mask = 0xf8,
-+	.drv_offset = 0,
-+	.drv_mask = GENMASK(7, 3),
+@@ -33,6 +38,7 @@ static const struct pm8xxx_regs pm8058_regs = {
+ 	.drv_mask = GENMASK(7, 3),
  	.drv_shift = 3,
  	.drv_en_manual_mask = 0xfc,
++	.drv_in_step = true,
  };
  
  static struct pm8xxx_regs pm8916_regs = {
--	.enable_addr = 0xc046,
-+	.enable_offset = 0x46,
- 	.enable_mask = BIT(7),
--	.drv_addr = 0xc041,
--	.drv_mask = 0x1F,
-+	.drv_offset = 0x41,
-+	.drv_mask = GENMASK(4, 0),
+@@ -42,6 +48,20 @@ static struct pm8xxx_regs pm8916_regs = {
+ 	.drv_mask = GENMASK(4, 0),
  	.drv_shift = 0,
  	.drv_en_manual_mask = 0,
++	.drv_in_step = true,
++};
++
++static struct pm8xxx_regs pmi632_regs = {
++	.enable_offset = 0x46,
++	.enable_mask = BIT(7),
++	.drv_offset = 0x40,
++	.drv_mask = GENMASK(7, 0),
++	.drv_shift = 0,
++	.drv2_offset = 0x41,
++	.drv2_mask = GENMASK(3, 0),
++	.drv2_shift = 8,
++	.drv_en_manual_mask = 0,
++	.drv_in_step = false,
  };
-@@ -50,6 +50,8 @@ static struct pm8xxx_regs pm8916_regs = {
-  * @work: work structure to set the vibration parameters
-  * @regmap: regmap for register read/write
+ 
+ /**
+@@ -52,6 +72,7 @@ static struct pm8xxx_regs pm8916_regs = {
   * @regs: registers' info
-+ * @enable_addr: vibrator enable register
-+ * @drv_addr: vibrator drive strength register
+  * @enable_addr: vibrator enable register
+  * @drv_addr: vibrator drive strength register
++ * @drv2_addr: vibrator drive strength upper byte register
   * @speed: speed of vibration set from userland
   * @active: state of vibrator
   * @level: level of vibration to set in the chip
-@@ -60,6 +62,8 @@ struct pm8xxx_vib {
- 	struct work_struct work;
- 	struct regmap *regmap;
+@@ -64,6 +85,7 @@ struct pm8xxx_vib {
  	const struct pm8xxx_regs *regs;
-+	unsigned int enable_addr;
-+	unsigned int drv_addr;
+ 	unsigned int enable_addr;
+ 	unsigned int drv_addr;
++	unsigned int drv2_addr;
  	int speed;
  	int level;
  	bool active;
-@@ -82,15 +86,15 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
- 	else
- 		val &= ~regs->drv_mask;
+@@ -81,6 +103,9 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
+ 	unsigned int val = vib->reg_vib_drv;
+ 	const struct pm8xxx_regs *regs = vib->regs;
  
--	rc = regmap_write(vib->regmap, regs->drv_addr, val);
-+	rc = regmap_write(vib->regmap, vib->drv_addr, val);
- 	if (rc < 0)
- 		return rc;
++	if (regs->drv_in_step)
++		vib->level /= VIB_PER_STEP_mV(vib);
++
+ 	if (on)
+ 		val |= (vib->level << regs->drv_shift) & regs->drv_mask;
+ 	else
+@@ -92,6 +117,14 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
  
  	vib->reg_vib_drv = val;
  
++	if (regs->drv2_mask) {
++		val = vib->level << regs->drv2_shift;
++		rc = regmap_write_bits(vib->regmap, vib->drv2_addr,
++				regs->drv2_mask, on ? val : 0);
++		if (rc < 0)
++			return rc;
++	}
++
  	if (regs->enable_mask)
--		rc = regmap_update_bits(vib->regmap, regs->enable_addr,
--					regs->enable_mask, on ? ~0 : 0);
-+		rc = regmap_update_bits(vib->regmap, vib->enable_addr,
-+					regs->enable_mask, on ? regs->enable_mask : 0);
- 
- 	return rc;
- }
-@@ -102,11 +106,10 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
- static void pm8xxx_work_handler(struct work_struct *work)
- {
- 	struct pm8xxx_vib *vib = container_of(work, struct pm8xxx_vib, work);
--	const struct pm8xxx_regs *regs = vib->regs;
--	int rc;
- 	unsigned int val;
-+	int rc;
- 
--	rc = regmap_read(vib->regmap, regs->drv_addr, &val);
-+	rc = regmap_read(vib->regmap, vib->drv_addr, &val);
- 	if (rc < 0)
+ 		rc = regmap_update_bits(vib->regmap, vib->enable_addr,
+ 					regs->enable_mask, on ? regs->enable_mask : 0);
+@@ -114,17 +147,16 @@ static void pm8xxx_work_handler(struct work_struct *work)
  		return;
  
-@@ -169,7 +172,7 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
- 	struct pm8xxx_vib *vib;
- 	struct input_dev *input_dev;
- 	int error;
--	unsigned int val;
-+	unsigned int val, reg_base = 0;
- 	const struct pm8xxx_regs *regs;
+ 	/*
+-	 * pmic vibrator supports voltage ranges from 1.2 to 3.1V, so
++	 * pmic vibrator supports voltage ranges from MIN_LEVEL to MAX_LEVEL, so
+ 	 * scale the level to fit into these ranges.
+ 	 */
+ 	if (vib->speed) {
+ 		vib->active = true;
+-		vib->level = ((VIB_MAX_LEVELS * vib->speed) / MAX_FF_SPEED) +
+-						VIB_MIN_LEVEL_mV;
+-		vib->level /= VIB_PER_STEP_mV;
++		vib->level = VIB_MIN_LEVEL_mV(vib);
++		vib->level += mult_frac(VIB_MAX_LEVELS(vib), vib->speed, MAX_FF_SPEED);
+ 	} else {
+ 		vib->active = false;
+-		vib->level = VIB_MIN_LEVEL_mV / VIB_PER_STEP_mV;
++		vib->level = VIB_MIN_LEVEL_mV(vib);
+ 	}
  
- 	vib = devm_kzalloc(&pdev->dev, sizeof(*vib), GFP_KERNEL);
-@@ -187,15 +190,21 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
- 	INIT_WORK(&vib->work, pm8xxx_work_handler);
- 	vib->vib_input_dev = input_dev;
- 
-+	error = fwnode_property_read_u32(pdev->dev.fwnode, "reg", &reg_base);
-+	if (error < 0)
-+		return dev_err_probe(&pdev->dev, error, "Failed to read reg address\n");
-+
+ 	pm8xxx_vib_set(vib, vib->active);
+@@ -197,6 +229,7 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
  	regs = of_device_get_match_data(&pdev->dev);
-+	vib->enable_addr = reg_base + regs->enable_offset;
-+	vib->drv_addr = reg_base + regs->drv_offset;
+ 	vib->enable_addr = reg_base + regs->enable_offset;
+ 	vib->drv_addr = reg_base + regs->drv_offset;
++	vib->drv2_addr = reg_base + regs->drv2_offset;
  
  	/* operate in manual mode */
--	error = regmap_read(vib->regmap, regs->drv_addr, &val);
-+	error = regmap_read(vib->regmap, vib->drv_addr, &val);
- 	if (error < 0)
- 		return error;
- 
- 	val &= regs->drv_en_manual_mask;
--	error = regmap_write(vib->regmap, regs->drv_addr, val);
-+	error = regmap_write(vib->regmap, vib->drv_addr, val);
- 	if (error < 0)
- 		return error;
- 
+ 	error = regmap_read(vib->regmap, vib->drv_addr, &val);
+@@ -251,6 +284,7 @@ static const struct of_device_id pm8xxx_vib_id_table[] = {
+ 	{ .compatible = "qcom,pm8058-vib", .data = &pm8058_regs },
+ 	{ .compatible = "qcom,pm8921-vib", .data = &pm8058_regs },
+ 	{ .compatible = "qcom,pm8916-vib", .data = &pm8916_regs },
++	{ .compatible = "qcom,pmi632-vib", .data = &pmi632_regs },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pm8xxx_vib_id_table);
 
 -- 
 2.25.1
