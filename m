@@ -1,68 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD73B6CDC8;
-	Tue, 16 Apr 2024 17:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AB02EAF9;
+	Tue, 16 Apr 2024 17:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713287012; cv=none; b=U2kH9QoXRDbkGjdL4nRGka0tqefkgQ+VJZbi4+hO1AykKPbPQYX1h9IJWJ2mIhRw8OhZDnYfiqurfQfn/dTDuMoca9QdfzjPY5/ntayr+TKMtC+y93WvWGo/u+J2HQFnQSwJQSywB9aMk3742nYhdD9WBrCOorUouQ5oczdp7Wk=
+	t=1713287066; cv=none; b=cv7vwNCYNNWrhHryew0M3yqisn8p8UEYjZTFRquP7bBUg3oTeCaU0fNHSTKrsTRfr/pZpY67DYbEFEYcKJpn/pC6MpCS0uA1VwWMdFYO+s9KiOUv1qzDuhSi7dY3tx8RwP/wPEBGS7INad4Kf0oNlPCfmMrXavzBVunSg7Po+Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713287012; c=relaxed/simple;
-	bh=Un2VWB9hTUioCrHHhwGGPMwy0QcEr+HIPdn95f2YV34=;
+	s=arc-20240116; t=1713287066; c=relaxed/simple;
+	bh=smozM9jF1fgEa0jo5wcKDyao5GQFouQ/Furzv3/aqFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjuDthjU/FMlvrYHCys42ySKPPaw50LFrpikbbps9+cbYmgQ5ecx3ZfP3TP2jr8eeTZTixSmFSi4YmRLupdMvif1SnMs27eEMkcilWhnFLs7L7jLnUI3BNTRGpBLHBnjkdrR6YWIsin7WIYqJQh55JkEvnGImITK/YSu/3GuK4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LHfqTx0T; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZjgcLEiet2FOW6/99SP5RwnzOVhzx9QaupSMID/uS+bfiN+tj1LpNnIOT8Fiyjv4Wdfm+xBJWdgs5BPHAaXFsUn3LvJGuyYewH8ONI0B0TP+M0vEgm4c/R2zVziyFSmab2zUhB3tJ/qazItrkOc7+smTrbX9wYaqV96qUt2o5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MDYr91ST; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2joM5M0e; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ae0gGnxd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=amWRgvx/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LHfqTx0T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713287008; x=1744823008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Un2VWB9hTUioCrHHhwGGPMwy0QcEr+HIPdn95f2YV34=;
-  b=LHfqTx0TZirpNG+DWFwUTiRa+/sMvO9rfKYEwBtefhJ1Qc0MCe5Md0St
-   vVfkG529/auTAvXrndVL9xXzCs1QMI4/6EVkGHN3VLBWCBaJJVDCxuvmd
-   H2vAR9hX8I03PSKEzzEYFloa8Qpzh/KuWP/IxGYRwP1fEhMm/wJyRkoMI
-   1Ge6cKV+t3ODxDhwDy3thoKKGtcfDxr8A24yGK09qKuJkCfIk6Bv81QeR
-   XMRnZQ7JXPKQsBsqoboPQUr6fNkiXyQEWqvEDCsWQS2oybXotNwMf5KF6
-   IYwd11TcVNDIR7HLLg5Xeri4omTLLofFpyOZPFIvL/YNrbrxdo1kcxkLC
-   w==;
-X-CSE-ConnectionGUID: EaoaVZ78TgyahtouOLhlwA==
-X-CSE-MsgGUID: eWDjk97gSBaIW3VZsOFz/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8605567"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8605567"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 10:03:27 -0700
-X-CSE-ConnectionGUID: 77d0qG4rT22sClB14gS1Gw==
-X-CSE-MsgGUID: bxNqqc0xS0Ola9R2Pq5ehA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22729400"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 16 Apr 2024 10:03:23 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rwmDJ-0005b0-0h;
-	Tue, 16 Apr 2024 17:03:21 +0000
-Date: Wed, 17 Apr 2024 01:03:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Kate Hsuan <hpa@redhat.com>
-Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
- charging_orange_full_green trigger for RGB LED
-Message-ID: <202404170023.1zEGO9ja-lkp@intel.com>
-References: <20240416053909.256319-5-hpa@redhat.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MDYr91ST";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2joM5M0e";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ae0gGnxd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="amWRgvx/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6CAA81F7C4;
+	Tue, 16 Apr 2024 17:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713287059;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
+	b=MDYr91STVJoNWxZhqSg2uy5Kw/MIdL6pC2WieISYnxY9HMaDRBMHgCBUd2f9BFVZRRJYyJ
+	fCO6/k6uH+2fpTspFFMk6tmRRanOmAvap1oKKgGfmqkRZBfJNeWazjC6V+nSqqcfDp5pMe
+	ILLp977WnrTzxjuEpUO27tmXdkA3u7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713287059;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
+	b=2joM5M0egcib8sTxUUqc6TrDI43rBAkVjVtCEg1SYgWpB8zoD/efYFIY50vMJbHCIGisMC
+	gdRZGy2264fm6aBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713287058;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
+	b=ae0gGnxd/wTLaP35Hhq8QbqNn1rtWeL1tBCL1XkgKi+bbABrBWF7NlJvbbhlmCkluKteGl
+	h5PcfVfBOyw2dOttqIjaOLZsCwCSKhRn2OG93UqISqwUS0WbuOiQ1rUeJ7nMwYSMRj9RMd
+	PsuU4WQRIAHTSkluuoViKVoqfoNjcJU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713287058;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HmF+X66qXKP4uAwVMy4ZKy9VoRjMIrIQQD+AMJy3/rM=;
+	b=amWRgvx/OUa0dd0i2x47/zLltJnD+n/BDPibTKM2vgWgECWLwE5xskJZhvpQrhdoL1KzAm
+	QswOoa635H1i4OAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 428DF13432;
+	Tue, 16 Apr 2024 17:04:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lXwdEJKvHmYbKQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 16 Apr 2024 17:04:18 +0000
+Date: Tue, 16 Apr 2024 18:56:49 +0200
+From: David Sterba <dsterba@suse.cz>
+To: syzbot <syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com>
+Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [btrfs?] KMSAN: kernel-infoleak in
+ btrfs_ioctl_logical_to_ino (2)
+Message-ID: <20240416165648.GS3492@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <000000000000196a39061636840a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,95 +90,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240416053909.256319-5-hpa@redhat.com>
+In-Reply-To: <000000000000196a39061636840a@google.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: -1.50
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=87a805e655619c64];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[510a1abbb8116eeb341d];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,appspotmail.com:email,syzkaller.appspot.com:url,storage.googleapis.com:url];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	SUBJECT_HAS_QUESTION(0.00)[]
 
-Hi Kate,
+On Tue, Apr 16, 2024 at 06:14:20AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    cef27048e5c2 Merge tag 'bcachefs-2024-04-15' of https://ev..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11a1fec7180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=87a805e655619c64
+> dashboard link: https://syzkaller.appspot.com/bug?extid=510a1abbb8116eeb341d
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/fce0439cf562/disk-cef27048.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/99540e71cf72/vmlinux-cef27048.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/65fbfc2c486f/bzImage-cef27048.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+510a1abbb8116eeb341d@syzkaller.appspotmail.com
+> 
+> BTRFS info (device loop1): first mount of filesystem c9fe44da-de57-406a-8241-57ec7d4412cf
+> BTRFS info (device loop1): using crc32c (crc32c-generic) checksum algorithm
+> BTRFS info (device loop1): using free-space-tree
+> =====================================================
+> BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+> BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x110 lib/usercopy.c:40
+>  instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+>  _copy_to_user+0xbc/0x110 lib/usercopy.c:40
+>  copy_to_user include/linux/uaccess.h:191 [inline]
+>  btrfs_ioctl_logical_to_ino+0x440/0x750 fs/btrfs/ioctl.c:3499
+>  btrfs_ioctl+0x714/0x1260
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:904 [inline]
+>  __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
+>  __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
+>  x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Uninit was created at:
+>  __kmalloc_large_node+0x231/0x370 mm/slub.c:3921
+>  __do_kmalloc_node mm/slub.c:3954 [inline]
+>  __kmalloc_node+0xb07/0x1060 mm/slub.c:3973
+>  kmalloc_node include/linux/slab.h:648 [inline]
+>  kvmalloc_node+0xc0/0x2d0 mm/util.c:634
+>  kvmalloc include/linux/slab.h:766 [inline]
+>  init_data_container+0x49/0x1e0 fs/btrfs/backref.c:2779
 
-kernel test robot noticed the following build errors:
+2767 struct btrfs_data_container *init_data_container(u32 total_bytes)
+2768 {
+2769         struct btrfs_data_container *data;
+2770         size_t alloc_bytes;
+2771
+2772         alloc_bytes = max_t(size_t, total_bytes, sizeof(*data));
+2773         data = kvmalloc(alloc_bytes, GFP_KERNEL);
 
-[auto build test ERROR on sre-power-supply/for-next]
-[also build test ERROR on lee-leds/for-leds-next linus/master v6.9-rc4]
-[cannot apply to pavel-leds/for-next next-20240416]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+and then data is passed around in the ioctl.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kate-Hsuan/platform-x86-android-tablets-other-Add-swnode-for-Xiaomi-pad2-indicator-LED/20240416-134240
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
-patch link:    https://lore.kernel.org/r/20240416053909.256319-5-hpa%40redhat.com
-patch subject: [PATCH v6 4/5] power: supply: power-supply-leds: Add charging_orange_full_green trigger for RGB LED
-config: parisc64-defconfig (https://download.01.org/0day-ci/archive/20240417/202404170023.1zEGO9ja-lkp@intel.com/config)
-compiler: hppa64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240417/202404170023.1zEGO9ja-lkp@intel.com/reproduce)
+>  btrfs_ioctl_logical_to_ino+0x17c/0x750 fs/btrfs/ioctl.c:3480
+>  btrfs_ioctl+0x714/0x1260
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:904 [inline]
+>  __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
+>  __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
+>  x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Bytes 40-65535 of 65536 are uninitialized
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404170023.1zEGO9ja-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/power/supply/power_supply_leds.c: In function 'power_supply_update_bat_leds':
->> drivers/power/supply/power_supply_leds.c:42:17: error: implicit declaration of function 'led_mc_trigger_event'; did you mean 'led_trigger_event'? [-Werror=implicit-function-declaration]
-      42 |                 led_mc_trigger_event(psy->charging_orange_full_green_trig,
-         |                 ^~~~~~~~~~~~~~~~~~~~
-         |                 led_trigger_event
-   cc1: some warnings being treated as errors
-
-
-vim +42 drivers/power/supply/power_supply_leds.c
-
-    21	
-    22	static void power_supply_update_bat_leds(struct power_supply *psy)
-    23	{
-    24		union power_supply_propval status;
-    25		unsigned int intensity_green[3] = {255, 0, 0};
-    26		unsigned int intensity_orange[3] = {128, 0, 255};
-    27		unsigned int intensity_red[3] = {0, 0, 255};
-    28	
-    29		if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
-    30			return;
-    31	
-    32		dev_dbg(&psy->dev, "%s %d\n", __func__, status.intval);
-    33	
-    34		switch (status.intval) {
-    35		case POWER_SUPPLY_STATUS_FULL:
-    36			led_trigger_event(psy->charging_full_trig, LED_FULL);
-    37			led_trigger_event(psy->charging_trig, LED_OFF);
-    38			led_trigger_event(psy->full_trig, LED_FULL);
-    39			/* Going from blink to LED on requires a LED_OFF event to stop blink */
-    40			led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
-    41			led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
-  > 42			led_mc_trigger_event(psy->charging_orange_full_green_trig,
-    43					     intensity_green,
-    44					     ARRAY_SIZE(intensity_green),
-    45					     LED_FULL);
-    46			break;
-    47		case POWER_SUPPLY_STATUS_CHARGING:
-    48			led_trigger_event(psy->charging_full_trig, LED_FULL);
-    49			led_trigger_event(psy->charging_trig, LED_FULL);
-    50			led_trigger_event(psy->full_trig, LED_OFF);
-    51			led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
-    52			led_mc_trigger_event(psy->charging_orange_full_green_trig,
-    53					     intensity_orange,
-    54					     ARRAY_SIZE(intensity_orange),
-    55					     LED_FULL);
-    56			break;
-    57		default:
-    58			led_trigger_event(psy->charging_full_trig, LED_OFF);
-    59			led_trigger_event(psy->charging_trig, LED_OFF);
-    60			led_trigger_event(psy->full_trig, LED_OFF);
-    61			led_trigger_event(psy->charging_blink_full_solid_trig,
-    62				LED_OFF);
-    63			led_mc_trigger_event(psy->charging_orange_full_green_trig,
-    64					     intensity_red,
-    65					     ARRAY_SIZE(intensity_red),
-    66					     LED_OFF);
-    67			break;
-    68		}
-    69	}
-    70	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+It is possible to let the ioctl allocate a big buffer but return it
+filled only partially. So it should be kvcalloc.
