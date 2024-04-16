@@ -1,144 +1,113 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B7F33998;
-	Tue, 16 Apr 2024 06:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1829F339A0
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 06:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713248021; cv=none; b=EVLkE8NIpK414Y/UEpiYV8iHSL4lVoLBlScSBB8wm/+8MY0KE0DK6CUMfg1bVbp8X6z6vxGpZ7gQxLaWmObLF7QyHi9/fg20jJkBEAGigDaoXviM2KISP4xvlrSWazfYOqqXnkPhEk1XMXyT7skIb/y+p7HMSclMINqzZ8t4yXU=
+	t=1713248147; cv=none; b=CsFetj9uRBVWe3H2TW5p25TFg+5WN4dFa0ode/O/CdkglrtjPiA6w14dKdAsNz+kXv4Po/UHW5b8gS1jjD19Gi3oTgV2CrbNq1b4ULyNTutUlmkP3USGOfij+QMFdKcehaNg5pfbBVRnKuDJd5aEgjO/Lcalg2pPWJbNULolD5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713248021; c=relaxed/simple;
-	bh=bJKfCh4TOpH4ZqKQgc6vvRE6Ro7oRSWDp+zAGLT1a74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wf2Z26xt7kgGh6NTzoVDGlS9uH44BefoGbjYDNvdw2uRzZHzBXpZ1zeylLI31v3nc46UYCYONGGVJNmw+XAr8Y05hBFvZ8Ai2V/issew6yP5Xw7WZRaRBcX2B8jNEK+EYJn1opem7wR5fH9d/2yNGjHmFCHPjByQnPN5omYzNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fdsM2K5q; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713248147; c=relaxed/simple;
+	bh=4jPYXab6p6VLgWMH/RuxotfZX+DXM3OFg+TT8Arejkc=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=l1XeVubV0XH6Sx066ghu1HwlSGe0vVAuwPu9E/Ak2oupnN5GcFEjLojw5SPYgKUHbUEUO8nPq8K4HPUNHwZu4RlYH/p/lPp75L6kjItqDFuJSG7a8opIW5mBocTxkMAqsGagJHhU7odouTpphwtVVzJD3pRPNZeCCKAkRJOHYD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QU8zkirR; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdsM2K5q"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e2b137d666so33056155ad.2;
-        Mon, 15 Apr 2024 23:13:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QU8zkirR"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61892d91207so52177397b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 23:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713248020; x=1713852820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CZ6ecSrVtYcanZSvOFQ1ox/50yBmtYgCGB61sRcLhXo=;
-        b=fdsM2K5q1d5NqmKfVSr5Zu++NnUS7igDswII5gacwpVP/19zrFeC8+/uC3ja++3smF
-         W8awc2ZgzFtzFDLI6hoLBmi2+mlJPKIzSaqGcKNnMkeFDJPnUgCRJu/vVAjJV4MLJ4X8
-         KA0ivhikQzyRbLgyY6vzWH47HLzHstNKWsM9bS8oVXjj7AdS32O1IQjnHZneywrLYPmP
-         AmCcVYw5FfxxZ0dQLQAKxQKlfEIdJOTeIQ+e0MNDg2AMQi5zFdbt+QBwQdXLOB7cK4oO
-         IV8DERD4+aZNRusi0VllyePy6A3em+tMnafq9XvV8IbNF5L4yrnZxE8+ua8Y58wsu6o6
-         xFrQ==
+        d=google.com; s=20230601; t=1713248144; x=1713852944; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1L5nQxmaIBseTv3eUkvLYgl4v+fhf+bdZ7bLGNPrKqs=;
+        b=QU8zkirRLFa/J+XFgK13oEFZ9QTZcG8t9yzs/QfYgDX/9SxvIUPyuGMs2shh1hWZV+
+         FPNcFgp33pl6sYaLd4GiQSmLugE9vNK4+/zpZycJm4R/qL6C9XGaQL48zCTBbsYu4/tZ
+         rSCrkmpkQy4CikqLIvFXX3BpOWTyYwG/LM6ZxfRz1afbVouUgIxzv+gVCnPdxVFlDE51
+         pPOEhLratWiTWncNs7e6ItAZnnmcD7CT4KC85dx6dR2nWPp78eOt9vzVrJN59VHTHfir
+         1eCPh3xw0/+W0LtFVrFSKwRLr6L13JZ9C7Dmi5cYTamRXx/0rg1rDZOC4Jvxme1l40+U
+         uXpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713248020; x=1713852820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CZ6ecSrVtYcanZSvOFQ1ox/50yBmtYgCGB61sRcLhXo=;
-        b=gmwfgjQq8ZM4x6F/g5cBPbGafoTZrt7Cum4LGgNdI3l/7ziG9RmY//VNTEA5d6I0Ip
-         W2HAWoZl9y65neEuMd32SGYQWJVx5UnF9b7R8ir9VaTp3KCpVsRDMBYyc3vhyU0N7sAu
-         3F92Ip7nU2/L/O3xis1ur4kdobl0k5ygO00bvBVBPrJ6Y7xQN4vamKrUHqKGcullYU+h
-         igm17SkDDQo2pxq3BovsdQ4+/3TUlBsCpPES60dAW7fWKvTUz3wmBgO5jb6+bsFYnf8K
-         2HtcRYIVMQAdm+M2nQbSrbL/u4eU+WXo84UymSmJPhSvjCSNro3EjA+7DerXXHHMNSm/
-         YTuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXux9UtvriFOgaFRp0wvOQqDWOEC18TEmhtsVZJjAUAUMIvoc/+lsY/bxCrPbd9FJAPe4pGGcPILQmMZgzOzxzCweJv+3E3afCSuHEsjtduafLsUlM5QNSmd+f4BD3zvhnzTnhjZjD/
-X-Gm-Message-State: AOJu0YxxT6aEhRIdkhWCxqTJla5Vvf3TPs6si8mjbUbSJEcFmPdljSgJ
-	dHn3DFfgruLURQFtXTzHMKTNX65ix9G71Wv2fI0k35/KpaGDMOq1
-X-Google-Smtp-Source: AGHT+IHo1g0xIh9Zq4tQT6ZgqBpNNX8qlCCYceyGks9TWejitkCg/+/KVWFWO9PgevyWpGP9p2ZULg==
-X-Received: by 2002:a17:903:24e:b0:1e2:7aba:6d0f with SMTP id j14-20020a170903024e00b001e27aba6d0fmr15871189plh.36.1713248019757;
-        Mon, 15 Apr 2024 23:13:39 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id n9-20020a170902d2c900b001e1071cf0bbsm8940249plc.302.2024.04.15.23.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 23:13:39 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id A125A180F6DB9; Tue, 16 Apr 2024 13:13:36 +0700 (WIB)
-Date: Tue, 16 Apr 2024 13:13:35 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alexander Duyck <alexander.duyck@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v2 14/15] mm: page_frag: update documentation
- for page_frag
-Message-ID: <Zh4XD6jP4dLoZN4Q@archie.me>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
- <20240415131941.51153-15-linyunsheng@huawei.com>
+        d=1e100.net; s=20230601; t=1713248144; x=1713852944;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1L5nQxmaIBseTv3eUkvLYgl4v+fhf+bdZ7bLGNPrKqs=;
+        b=jBW2sxid+A4t/CXUdiWI+AP0QlS9hCfHx4ODVMQG26x0Y4FBKLaAEolc253uTiNHs1
+         LfiEtpJmq30iAOcuh88S6fxLqlvoH/QVYg9Kx7SbdzG4I6QulgRrX2eotERWQQU1sh4Z
+         tAhnvImnahDAILZ3WhwBBJObptsNsxui+HoO3xxOx7NN2keA60z0hzSHOKrCulnC6ThP
+         DdwKdbe1Ew/YFfcjPvb8Xlw5I7F31FtWGRdKzA6cJOMuweReT+2iv2oUtZstj1yBKU4b
+         NrvHgX6jO5sla3rVzS3c27LTKz9tVubijYrGBxwgIa5vKpvAl3oyMWIsKYk8Vl4LJVt+
+         MroQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYX+D/f9OvL8Uc5k67CmwPnvvWCkZPBgW8oAKEoUlgTnwHJD1D7k+dUWpOws0qEA22yJ/5VcTL3pmvmnT/90TFaglAZe6Xhq0Gohsm
+X-Gm-Message-State: AOJu0YzsdVdBp8riR4T09iw0UgyYWBYl7ip//lLFdhz+63zFzKvQER2p
+	mV4VXF0kiTd3HF/XZ/WiTpCYcS8bm4Xu1pnOjXXagMHEWxXkcdak5b8RiBZObPZ7LtfQ1tQsas4
+	QEa8L1g==
+X-Google-Smtp-Source: AGHT+IEA3B55PHeFnorQTRTaPmQGXFGj867ryFo0kz7N/R3DDO6sXqkF9UwTo2cE7HmZ5sd27AE/abgmLPXz
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:30c8:f541:acad:b4f7])
+ (user=irogers job=sendgmr) by 2002:a0d:d74e:0:b0:611:747a:daac with SMTP id
+ z75-20020a0dd74e000000b00611747adaacmr3417811ywd.0.1713248144106; Mon, 15 Apr
+ 2024 23:15:44 -0700 (PDT)
+Date: Mon, 15 Apr 2024 23:15:16 -0700
+Message-Id: <20240416061533.921723-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0I6/Ma35WnVqMhhN"
-Content-Disposition: inline
-In-Reply-To: <20240415131941.51153-15-linyunsheng@huawei.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Subject: [PATCH v2 00/16] Consistently prefer sysfs/json events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, linux-riscv@lists.infradead.org, 
+	Beeman Strong <beeman@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
+As discussed in:
+https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.com/
+preferring sysfs/json events consistently (with or without a given
+PMU) will enable RISC-V's hope to customize legacy events in the perf
+tool.
 
---0I6/Ma35WnVqMhhN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some minor clean-up is performed on the way.
 
-On Mon, Apr 15, 2024 at 09:19:39PM +0800, Yunsheng Lin wrote:
-> +API interface
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +As the design and implementation of page_frag API, the allocation side d=
-oes not
-                                        "... implies, the allocation side .=
-=2E."
-> +allow concurrent calling, it is assumed that the caller must ensure ther=
-e is not
-                      "... . Instead, it is assumed that ...:
-> +concurrent alloc calling to the same page_frag_cache instance by using i=
-t's own
-                                                            "... by using i=
-ts own ..."
-> +lock or rely on some lockless guarantee like NAPI softirq.
-> +
-> +Depending on different use cases, callers expecting to deal with va, pag=
-e or
-> +both va and page for them may call page_frag_alloc_va*, page_frag_alloc_=
-pg*,
-> +or page_frag_alloc* API accordingly.
-> +
-> +There is also a use case that need minimum memory in order for forward
-> +progressing, but can do better if there is more memory available. Introd=
-uce
-Did you mean "... but more performant if more memory is available"?
-> +page_frag_alloc_prepare() and page_frag_alloc_commit() related API, the =
-caller
-s/Introduce/Using/
-> +requests the minimum memory it need and the prepare API will return the =
-maximum
-> +size of the fragment returned, caller need to report back to the page_fr=
-ag core
-                                  "The caller needs to either call the comm=
-it API ..."
-> +how much memory it actually use by calling commit API, or not calling th=
-e commit
-"... to report how much memory it actually uses ..."
-> +API if deciding to not use any memory.
-"... or not do so if deciding to not use any memory."
+v2. Additional cleanup particularly adding better error messages. Fix
+    some line length issues on the earlier patches.
 
-Thanks.
+Ian Rogers (16):
+  perf parse-events: Factor out '<event_or_pmu>/.../' parsing
+  perf parse-events: Directly pass PMU to parse_events_add_pmu
+  perf parse-events: Avoid copying an empty list
+  perf pmu: Refactor perf_pmu__match
+  perf tests parse-events: Use branches rather than cache-references
+  perf parse-events: Legacy cache names on all PMUs and lower priority
+  perf parse-events: Handle PE_TERM_HW in name_or_raw
+  perf parse-events: Constify parse_events_add_numeric
+  perf parse-events: Prefer sysfs/json hardware events over legacy
+  perf parse-events: Inline parse_events_update_lists
+  perf parse-events: Improve error message for bad numbers
+  perf parse-events: Inline parse_events_evlist_error
+  perf parse-events: Improvements to modifier parsing
+  perf parse-event: Constify event_symbol arrays
+  perf parse-events: Minor grouping tidy up
+  perf parse-events: Tidy the setting of the default event name
 
---=20
-An old man doll... just what I always wanted! - Clara
+ tools/perf/tests/parse-events.c |   6 +-
+ tools/perf/util/parse-events.c  | 482 ++++++++++++++++----------------
+ tools/perf/util/parse-events.h  |  49 ++--
+ tools/perf/util/parse-events.l  | 196 +++++++++----
+ tools/perf/util/parse-events.y  | 261 +++++++----------
+ tools/perf/util/pmu.c           |  27 +-
+ tools/perf/util/pmu.h           |   2 +-
+ 7 files changed, 540 insertions(+), 483 deletions(-)
 
---0I6/Ma35WnVqMhhN
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.44.0.683.g7961c838ac-goog
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZh4XCwAKCRD2uYlJVVFO
-o85iAP0UEZ96bTaKdZC0FmSard5z0dMjRBPD69wzKG6rmE9CagD+LpsBRsgW1frt
-81TmfyhS9gzn/HY0KhWP63uiPguKkQY=
-=zrUk
------END PGP SIGNATURE-----
-
---0I6/Ma35WnVqMhhN--
