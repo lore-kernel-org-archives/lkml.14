@@ -1,81 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27E0130492;
-	Tue, 16 Apr 2024 15:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37461130492;
+	Tue, 16 Apr 2024 15:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713280234; cv=none; b=jVyz4qlA3mFOJRd6uzpzKqPiiLXdqDybdyIuJ4+xlcTebBmZsMxM8t39D064ALLLyVW8BDKetApvUlsJmzW27ywhwOrAQpeiVXoKRLjfTZksyHc1jw1GmC3SJuYwBwNqvubjRW5sZsoB9zGOnsBncsW4wrNS02WRoMNOlKJJA60=
+	t=1713280250; cv=none; b=Sy2ZoYns32+5rYJz+yLXIb85D/G2uCqTKNOruhZocGsKBQqKBnb/isWajPvd1NS3utaM48sZ2Ak+wrh7t8TP+pkdDkPKqcNs1SNJpKo7xhkjtDonq1HKoi0mktANN4afXMMaQlIzJHqgXPYtm/7q6oHtqQQF4kUikOMGw5vLoKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713280234; c=relaxed/simple;
-	bh=nxyADXIj7ToWnQ3DESNbTFi4qaMN9HcWjTWckTpOI+8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=j03fz8iy0U1ZS34Xwavrr2YafrA/XB/O9Vr4NrHEtii8wVfeQ7/Emp8YNMnlfFITl9AnZOPAbY4Qovn0m3JN1kFdbO9CpFwDsWw4gzk5MheyRCTyJDXXRPV9FjrH4Q/R/PVQML9IUiti1aiLCPFRl2CLiwt+r4Y2oaVUTpLEZfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5XETTx+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713280250; c=relaxed/simple;
+	bh=oWmtNqx34co9G/ruHlt/dfHkDFvWiSKVm75+2tdvFfI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Ru0LZ9wMy9COYMYlpyCZCsyexxSxf93kAA/jYcWZ+jOcDZ+cyD6xLD/MdH8bPeaYuvLBmf72Vaxzc0Z+RJ1Oh+K3E5h9d/SSmxFZCICWXSOxHyamMXlxIZfzI/nPFw2xoLNxF6L8SpBB3Q3mXaaUY2867dZr8vSOj1jVaXSwc5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=T1xpcWHn; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5XETTx+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3678DC32783;
-	Tue, 16 Apr 2024 15:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713280234;
-	bh=nxyADXIj7ToWnQ3DESNbTFi4qaMN9HcWjTWckTpOI+8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=B5XETTx+jZEk3gkreJ7pC22WS1SK698FAtRVMvhgxTEZyuXJjbbwv3CQ3jGTeblWC
-	 2EX364Mqt8xlzTw9Nt4QAj0Y8U1uA8HGVGmXYYk65xTZS7pDfSSIq5b69y528blmGw
-	 LKXyA0SL0QsjJrgWBTbaSPs9HlyRcwED63rwxmtNgxASVJBQHp2VegDJECUKJfmS3S
-	 7GGXBsBfGqyjJod3s3mklhQbyGjEV3ZolqBGsOY2D6Y4tl+LZNxxc37pH8E2ktyLSK
-	 dzV/KtQjFtbba3PlwOka1t41W0UEmQwZa7uNZE8nrnDJip8sOJeGuTc5tiqhePo8MA
-	 BIk62PIjJ5T+g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 22ED5D4F15D;
-	Tue, 16 Apr 2024 15:10:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="T1xpcWHn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=1dXsDJwOcsf1iP+JSaO0Xl2y5kp0qQjyv56XNwnMJfY=; b=T1xpcWHnfBxN9wyUld0D7uM6rc
+	2whbwCS9IP2z1zzo25aWi1qJ6hXvLcCEcHKemYGGPof+UGxZ7GVOIZVgYMxa4+p1KNs/7enneMEo7
+	Y2XwL4mYYtLHfnpiCzTfEIuy6gp7KSKW1ZFtiQiRr+4PYjrUgFEtP3LLpLq3vNoKsTaIatmNO9vo8
+	hG9ttWnHj6LFHo+PYags+uDSmlxDH1C4ynlRPzytIsvebtYs7upn2OnPJnw/eGVwf70YXFVyRTisH
+	eaeOtaY3OG9FE1JbRb6e1N0Y0yRPxptO/irkPOPHn9+ml9brPfpKuoo5pUq8ci2PwQtjwclN8aDok
+	rpmaNQ3g==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rwk60-000DNl-8N; Tue, 16 Apr 2024 16:47:40 +0200
+Received: from [178.197.249.50] (helo=linux.home)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1rwk5z-000E7n-02; Tue, 16 Apr 2024 16:47:39 +0200
+Subject: Re: [PATCH] bpf: btf: include linux/types.h for u32
+To: Jiri Olsa <olsajiri@gmail.com>,
+ Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org, haoluo@google.com,
+ sdf@google.com, kpsingh@kernel.org, john.fastabend@gmail.com,
+ yonghong.song@linux.dev, song@kernel.org, eddyz87@gmail.com,
+ andrii@kernel.org, ast@kernel.org, martin.lau@linux.dev,
+ khazhy@chromium.org, vmalik@redhat.com, ndesaulniers@google.com,
+ ncopa@alpinelinux.org, dxu@dxuuu.xyz
+References: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com>
+ <Zh0ZhEU1xhndl2k8@krava>
+ <CANXV_Xwmf-VH5EfNdv=wcv8J=2W5L5RtOs8n-Uh5jm5a1yiMKw@mail.gmail.com>
+ <Zh4ojsD-aV2vHROI@krava>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <ddc0ac5b-9bd4-f31a-a7ec-83f7a10e6ab1@iogearbox.net>
+Date: Tue, 16 Apr 2024 16:47:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <Zh4ojsD-aV2vHROI@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Bluetooth: btusb: Fix the patch for MT7920 the affected to
- MT7921
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171328023414.16225.12939333659144302573.git-patchwork-notify@kernel.org>
-Date: Tue, 16 Apr 2024 15:10:34 +0000
-References: <20240415141922.25055-1-peter.tsao@mediatek.com>
-In-Reply-To: <20240415141922.25055-1-peter.tsao@mediatek.com>
-To: Peter Tsao <peter.tsao@mediatek.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- sean.wang@mediatek.com, deren.Wu@mediatek.com, chris.lu@mediatek.com,
- aaron.hou@mediatek.com, steve.lee@mediatek.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27247/Tue Apr 16 10:25:32 2024)
 
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Mon, 15 Apr 2024 22:19:22 +0800 you wrote:
-> Because both MT7920 and MT7921 use the same chip ID.
-> We use the 8th bit of fw_flavor to distingush MT7920.
-> The original patch made a mistake to check whole fw_flavor,
-> that makes the condition both true (dev_id == 0x7961 && fw_flavor),
-> and makes MT7921 flow wrong.
+On 4/16/24 9:28 AM, Jiri Olsa wrote:
+> On Tue, Apr 16, 2024 at 08:27:21AM +0300, Dmitrii Bundin wrote:
+>> On Mon, Apr 15, 2024 at 3:11 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+>>> lgtm, did it actualy cause problem anywhere?
+>>>
+>>> there's also tools/include/linux/btf_ids.h
+>>
+>> It caused the problems exactly in the file
+>> tools/include/linux/btf_ids.h and was reported in
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218647
+>> The patch including linux/types.h in tools/include/linux/btf_ids.h is
+>> already there https://lore.kernel.org/all/20240328110103.28734-1-ncopa@alpinelinux.org/
+>> I also faced the same compile-error of the form
+>>
+>>      error: unknown type name 'u32'
+>>                                u32 cnt;
+>>                                ^~~
+>> when compiling the bpf tool with glibc 2.28.
+>>
+>> I think it might be reasonable to add the inclusion in
+>> include/linux/btf_ids.h as well to prevent build problems like this.
 > 
-> In this patch, we correct the flow to get the 8th bit value for MT7920.
-> And the patch is verified pass with both MT7920 and MT7921.
-> 
-> [...]
+> ok, it's in the bpf/master already
+Please add the error description as motivation aka "why" into the commit
+description, otherwise it's not really obvious looking at it at a later
+point in time why the include was needed.
 
-Here is the summary with links:
-  - Bluetooth: btusb: Fix the patch for MT7920 the affected to MT7921
-    https://git.kernel.org/bluetooth/bluetooth-next/c/263296438807
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Daniel
