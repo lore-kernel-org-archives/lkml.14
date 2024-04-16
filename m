@@ -1,425 +1,215 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650E314A8F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 04:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869B222309
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 04:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713240454; cv=none; b=KmeJZXnxcpWQxAvxvJrAHPbPm+qIKQqyifcq86YnPeK9v5Rl12nbJAQMZsUNRWuTzLFFwEcVqlOFLkaCQPA2aVjnzvTUoeBhA72gfMmXdKvYlx1sdOOEcAj621kHroTvFfmNcrK/FBTJQQKikdYz16g17PL7wwTExpqZMxi1pek=
+	t=1713240725; cv=none; b=FGypBa94Mg0Ib1bmd1f5uMTqwq2/PZXIQr24km/kIhiJ64s5+WIIkVgyFcvD3hbF+teOXbFabVa7fZOd4wunX9v4ziSlu2lR3AQ7ZyK/fRtP9ztCaJlPGJxDjKpEWNe+K1AK6G4J2EepDJ4vBhC4gxJBDFR6sDCdl02WPv4u2jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713240454; c=relaxed/simple;
-	bh=7/7G0SneFincR317RboAeX7LwyJoaP+YC+itBzI3+cQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AlJsVofAfwpWzA3661zGvH8ZstARSkRR/d1mtlWpz8dcl1Gc8NQAtsCwCAAiaX7TBvEH9qSipqQtyoCWnTCy1YrT7xWUI9EFlMZE2FSabYzyL8Nrj36hfx2pPhar9l6BzzrY37a3KCu3zj2Udlv+kfxQQfNeX6t+A7+9a9tlo2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=V6rHyZ3Y; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1713240725; c=relaxed/simple;
+	bh=dkmMwSQhSZqqA7hvCp11OQAJEfKHO37CqENn3GjjXso=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M6JGa/6Y/ZwRUequWNzEe+iLaZeXHa2gXqNCjS9IFFSCaE37oGKCfNiZ2oNnRVVrdhLG8kp8oH7GQdMZ/lpSC1551/xVBuXVc5dpgsM7FC60dVKEhn8N5NYVD1sbaC3whIsOTWg6jtHy8K6sYXrY1++Y/ZF6b94AvHNgcPD2O0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pRgGQUHu; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="V6rHyZ3Y"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36a3af91497so18260895ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:07:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pRgGQUHu"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ecf8ebff50so2612117b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 21:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1713240450; x=1713845250; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f8upnhEhLFp1tbjfp7BYUAOZCTyEUYU/ovG6J7BQLZY=;
-        b=V6rHyZ3YRBu0mh+ILNRWF0dUtuOsbYCoHLI4hYbWy8N9ra3GO8Os1kotVYruIFzZZz
-         v1djjKK7yP9dRxbAXzUF60Xzs6jMchI9U1mBCIKpdWgsMr7UW0QiaKkTzfbJYh3RZ6XR
-         ttNV6P45bwVzuUXE2lL+wl3DKNWy2074PAqQHqkkyoazjh2K2R9a/YSuI7JV6+6oyNSW
-         ZzuDtz6VpB5AVsk2qyReUMKqPINirBzwX3eQJZ/qREbGkjCVox8UON7FlYr69Lojr5Al
-         2tP39B0NDzsnxrGlPYM80KW1Qe4+HmF7RRcKD1oPr/boFbIX9a8j6ZbUGftTroZ6mUrf
-         G54g==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713240723; x=1713845523; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=++xZy+ObBNE3KB89/8huI8TuSwtQKmJYk1fAnGCjGI8=;
+        b=pRgGQUHu/xwOo8sWYbpY0O/5eYzb7hprPq53GeZ9TOOInzGSYB+XrsCpWGXNFLVp+b
+         dPKc/PG9cHbqgi9d9Tx6g0CUpoDtbgVVcSZ7gUeYA4nwr3ycze0oGHVLZfr+15rQMNp5
+         A5jdr2BNgc3+B4wBF/MXeMlxJ+i/T62TtaAYfFCi0TDC6QFbL3ynZTBxiCVynrfkL6bu
+         0vyR05Ofk3tpOZC59LOadjE/gVIXQzBQftIWEzC6/RXrMUamdR71rfMlfHOggiRe7Tr6
+         Rx0CKlwaSvk60G73xMu3t5tVGcn2XScQNs9EgFh+FHNmAGrWDI0oC4d7oDzg2/JAU8GZ
+         V4fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713240450; x=1713845250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713240723; x=1713845523;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f8upnhEhLFp1tbjfp7BYUAOZCTyEUYU/ovG6J7BQLZY=;
-        b=ne1gf50bbuzVRVjJ6W8YZG2va8eC6PeSvqhK9X28fgS3z151A9U/0V0cqowJjW/ZRQ
-         07KMz3fX4/7NMLXHB0Dp5Q2dbsJoizb5j7sMs0xN5bTrfc3EEgzdLxX0NEDRoiOcP+4q
-         SPaglriqF02KFEKSBLNeW4N2yHP2lvl1muuD9tL+m8/DnqG4xv8dQtIkFZanupQXsvID
-         RZ4w4WewIw18B0xMAzh1vz3HA5B/Rrpgu/6G2VsxkVkTAKM6fyf6dE9PdZ3pWd4x2ib6
-         w0JmHmEUcXC5PZkURoeweEmHa+JvMP0VsJtHEBjpUOeaehbveDY9MiOQKgbZWhkvOYFE
-         WTBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvOPVt0adPHiS5zafKpTOTXve7WbTRrn1tp+Y78Z5dnZ8Lsj0kbjn3+YAKPXFcnenrb0yOgtO+jKyQTspZHl/fD2FzN0k4LvBLTibk
-X-Gm-Message-State: AOJu0YxiX9AE97xBIOAiuC8KjCVTCNETKIgCADxEnc7Zy+rZ3zen8G8O
-	ZjScELWBsYDD4MnKcAmVQHrFLBuRW/JM+6EvDabstxx4bvJ0h0+PmFuLzcctSlEm0YPDA6yvKfs
-	wBSRB8olHDpIyIwLGlgv/BfibMFEpyKf1PfpC4f8wXdAjDpUb
-X-Google-Smtp-Source: AGHT+IGcMRDGb45nvPaWSiKnkGdmNsG3NdTP+tCw5UNhUIOvJSGkE8XS1QyDDx6JKj2pkQvImgzj3QIghiJ0sOvAmTE=
-X-Received: by 2002:a05:6e02:1789:b0:36a:1290:4368 with SMTP id
- y9-20020a056e02178900b0036a12904368mr17084209ilu.22.1713240450232; Mon, 15
- Apr 2024 21:07:30 -0700 (PDT)
+        bh=++xZy+ObBNE3KB89/8huI8TuSwtQKmJYk1fAnGCjGI8=;
+        b=PHdrxetqlS3eg8a8yKjJRZ4hrpNhp5BQLOHqSTp1hHnnAdoTJgBEVFwQdOam9y9feX
+         kzo/3Hgd3vzB91kykXqBXmN+vFomzlTKXkn7pOEAR/1nKignFofiaFTl6Qn9+DAFq8ZB
+         Sd5ek76RfhHJGEgxfA3bJEpErTUgnaWqaX1yiv8jwSlMnranfpykLt9VPKWBaZQrocoZ
+         WKRsWxf+yzowwxoBFcUM5usQhbF5E1B7cJAdUYg9kRM5nzrie7rJN0/OGzYsBXowfr5l
+         DzjPFT+wbNeg0koNfDImSUYC/xjQPrcN7aiy6D9qbEYnLqcZpM3T1oy5lJEBA6oMV1TI
+         cZtA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwCvrUQA0ZUEBGl8HRte85sxoZkCOVwBlpC5WwJnnd+1Mz+hwD3RfJE3CjpFCHHAiASFDDPSdGjeWnYMFmFfG7Eispydvu3wPWl0Hl
+X-Gm-Message-State: AOJu0Yw6cN9kFcaeCH5gzqYY+sRqRKq4GdPOKtkskC6IHTwA5izRWu8w
+	MJgcFFvruGV4sVmmDZt1Yo/Uv2rvtUdmAxXybt21JsFYvL5xMZKnFk97yo5VhfA=
+X-Google-Smtp-Source: AGHT+IE2UM7qn9JHRra5nKKHDFw99Yc3X79Ggnd1bXAn1KOp+/ILKMs3FsaPY9rCdou0XHBhmNW78w==
+X-Received: by 2002:a05:6a00:2382:b0:6ed:ca65:68b with SMTP id f2-20020a056a00238200b006edca65068bmr2125216pfc.4.1713240722785;
+        Mon, 15 Apr 2024 21:12:02 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id z184-20020a6265c1000000b006ed4c430acesm8383149pfb.40.2024.04.15.21.12.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 21:12:02 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Mon, 15 Apr 2024 21:11:58 -0700
+Subject: [PATCH v2 01/17] riscv: cpufeature: Fix thead vector hwcap removal
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103165438.633054-1-samuel.holland@sifive.com>
- <CAOnJCUJ4rC+Rrs6GV4t+=NWA=LtTZix5Nk1VzgP9CK-3+5-jAg@mail.gmail.com>
- <06e71142-e113-40ac-b2c2-b20893aa714f@sifive.com> <a4c4c9f2-9fe1-4c22-a99c-1667481ddd6b@rivosinc.com>
-In-Reply-To: <a4c4c9f2-9fe1-4c22-a99c-1667481ddd6b@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Tue, 16 Apr 2024 09:37:18 +0530
-Message-ID: <CAAhSdy1yoCMtR52X7tS6dB2x_ysgA8K4hSSXH044bbq2uFY7jQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: RISC-V: Check standard event availability
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Samuel Holland <samuel.holland@sifive.com>, Atish Patra <atishp@atishpatra.org>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Mark Rutland <mark.rutland@arm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240415-dev-charlie-support_thead_vector_6_9-v2-1-c7d68c603268@rivosinc.com>
+References: <20240415-dev-charlie-support_thead_vector_6_9-v2-0-c7d68c603268@rivosinc.com>
+In-Reply-To: <20240415-dev-charlie-support_thead_vector_6_9-v2-0-c7d68c603268@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Guo Ren <guoren@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713240719; l=4708;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=dkmMwSQhSZqqA7hvCp11OQAJEfKHO37CqENn3GjjXso=;
+ b=RyAuMqKhMsNmgEPKgOmQFKT3iEAhF8iXw8f0UHK9Bdd0JU5h75VVCNI96WA048tjLZiiqaCDT
+ Uw/yH0Jd01nCawauWBIhP1sdCDA+K4rGlevzJ9wvQyEf7//qeTPo3ZQ
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Tue, Apr 16, 2024 at 5:31=E2=80=AFAM Atish Patra <atishp@rivosinc.com> w=
-rote:
->
-> On 4/10/24 18:40, Samuel Holland wrote:
-> > Hi Atish,
-> >
-> > On 2024-03-18 2:44 PM, Atish Patra wrote:
-> >> On Wed, Jan 3, 2024 at 8:54=E2=80=AFAM Samuel Holland <samuel.holland@=
-sifive.com> wrote:
-> >>>
-> >>> The RISC-V SBI PMU specification defines several standard hardware an=
-d
-> >>> cache events. Currently, all of these events appear in the `perf list=
-`
-> >>> output, even if they are not actually implemented. Add logic to check
-> >>> which events are supported by the hardware (i.e. can be mapped to som=
-e
-> >>> counter), so only usable events are reported to userspace.
-> >>>
-> >>
-> >> Thanks for the patch.
-> >> This adds tons of SBI calls at every boot for a use case which is at
-> >> best confusing for a subset of users who actually wants to run perf.
-> >
-> > I should have been clearer in the patch description. This is not just a=
- cosmetic
-> > change; because perf sees these as valid events, it tries to use them i=
-n
-> > commands like `perf stat`. When the error from SBI_EXT_PMU_COUNTER_CFG_=
-MATCH
-> > causes the ->add() callback to fail, this prevents any other events fro=
-m being
-> > scheduled on that same CPU (search can_add_hw in kernel/events/core.c).=
- That is
-> > why the dTLB/iTLB miss counts are missing in the "before" example below=
-.
-> >
->
-> Thanks for explaining the problem. I can reproduce it in qemu as well if
-> enough number of invalid events given on the command line and the
-> workload is short enough.
->
-> >> This probing can be done at runtime by invoking the
-> >> pmu_sbi_check_event from pmu_sbi_event_map.
-> >> We can update the event map after that so that it doesn't need to
-> >> invoke pmu_sbi_check_event next time.
-> >
-> > I tried to implement this suggestion, but it did not work. The SBI inte=
-rface
-> > does not distinguish between "none of the counters can monitor the spec=
-ified
-> > event [because the event is unsupported]" and "none of the counters can=
- monitor
-> > the specified event [because the counters are busy]". It is not suffici=
-ent for
-> > the kernel to verify that at least one counter is available before perf=
-orming
-> > the check, because certain events may only be usable on a subset of cou=
-nters
-> > (per riscv,event-to-mhpmcounters), and the kernel does not know that ma=
-pping.
-> >
->
-> Yeah. My suggestion was to fix the perf list issue which is different
-> than the issue reported now.
->
-> > As a result, checking for event support is only reliable when none of t=
-he
-> > counters are in use. So the check can be asynchronous/deferred to later=
- in the
-> > boot process, but I believe it still needs to be performed for all even=
-ts before
-> > userspace starts using the counters.
-> >
->
-> We should defer it a work queue for sure. We can also look at improving
-> SBI PMU extension to support bulk matching behavior as well.
->
-> However, I think a better solution would be to just rely on the json
-> file mappings instead of making SBI calls. We are going to have the
-> event encoding and mappings in the json in the future.
+The riscv_cpuinfo struct that contains mvendorid and marchid is not
+populated until all harts are booted which happens after the DT parsing.
+Use the vendorid/archid values from the DT if available or assume all
+harts have the same values as the boot hart as a fallback.
 
-The problem with JSON based event encoding is how to deal in-case
-we are running inside Guest/VM because Host could be anything.
+Fixes: d82f32202e0d ("RISC-V: Ignore V from the riscv,isa DT property on older T-Head CPUs")
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ arch/riscv/include/asm/sbi.h   |  2 ++
+ arch/riscv/kernel/cpu.c        | 36 ++++++++++++++++++++++++++++++++----
+ arch/riscv/kernel/cpufeature.c | 12 ++++++++++--
+ 3 files changed, 44 insertions(+), 6 deletions(-)
 
-IMO, the JSON based approach is not suitable for SBI PMU. For now,
-we either defer the work using the work queue or keep the approach
-of this patch as-is.
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 6e68f8dff76b..0fab508a65b3 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -370,6 +370,8 @@ static inline int sbi_remote_fence_i(const struct cpumask *cpu_mask) { return -1
+ static inline void sbi_init(void) {}
+ #endif /* CONFIG_RISCV_SBI */
+ 
++unsigned long riscv_get_mvendorid(void);
++unsigned long riscv_get_marchid(void);
+ unsigned long riscv_cached_mvendorid(unsigned int cpu_id);
+ unsigned long riscv_cached_marchid(unsigned int cpu_id);
+ unsigned long riscv_cached_mimpid(unsigned int cpu_id);
+diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+index d11d6320fb0d..8c8250b98752 100644
+--- a/arch/riscv/kernel/cpu.c
++++ b/arch/riscv/kernel/cpu.c
+@@ -139,6 +139,34 @@ int riscv_of_parent_hartid(struct device_node *node, unsigned long *hartid)
+ 	return -1;
+ }
+ 
++unsigned long __init riscv_get_marchid(void)
++{
++	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
++
++#if IS_ENABLED(CONFIG_RISCV_SBI)
++	ci->marchid = sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
++#elif IS_ENABLED(CONFIG_RISCV_M_MODE)
++	ci->marchid = csr_read(CSR_MARCHID);
++#else
++	ci->marchid = 0;
++#endif
++	return ci->marchid;
++}
++
++unsigned long __init riscv_get_mvendorid(void)
++{
++	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
++
++#if IS_ENABLED(CONFIG_RISCV_SBI)
++	ci->mvendorid = sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
++#elif IS_ENABLED(CONFIG_RISCV_M_MODE)
++	ci->mvendorid = csr_read(CSR_MVENDORID);
++#else
++	ci->mvendorid = 0;
++#endif
++	return ci->mvendorid;
++}
++
+ DEFINE_PER_CPU(struct riscv_cpuinfo, riscv_cpuinfo);
+ 
+ unsigned long riscv_cached_mvendorid(unsigned int cpu_id)
+@@ -170,12 +198,12 @@ static int riscv_cpuinfo_starting(unsigned int cpu)
+ 	struct riscv_cpuinfo *ci = this_cpu_ptr(&riscv_cpuinfo);
+ 
+ #if IS_ENABLED(CONFIG_RISCV_SBI)
+-	ci->mvendorid = sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
+-	ci->marchid = sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
++	ci->mvendorid = ci->mvendorid ? ci->mvendorid : sbi_spec_is_0_1() ? 0 : sbi_get_mvendorid();
++	ci->marchid = ci->marchid ? ci->marchid : sbi_spec_is_0_1() ? 0 : sbi_get_marchid();
+ 	ci->mimpid = sbi_spec_is_0_1() ? 0 : sbi_get_mimpid();
+ #elif IS_ENABLED(CONFIG_RISCV_M_MODE)
+-	ci->mvendorid = csr_read(CSR_MVENDORID);
+-	ci->marchid = csr_read(CSR_MARCHID);
++	ci->mvendorid = ci->mvendorid ? ci->mvendorid : csr_read(CSR_MVENDORID);
++	ci->marchid = ci->marchid ? ci->marchid : csr_read(CSR_MARCHID);
+ 	ci->mimpid = csr_read(CSR_MIMPID);
+ #else
+ 	ci->mvendorid = 0;
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 3ed2359eae35..c6e27b45e192 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -490,6 +490,8 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+ 	struct acpi_table_header *rhct;
+ 	acpi_status status;
+ 	unsigned int cpu;
++	u64 boot_vendorid;
++	u64 boot_archid;
+ 
+ 	if (!acpi_disabled) {
+ 		status = acpi_get_table(ACPI_SIG_RHCT, 0, &rhct);
+@@ -497,6 +499,13 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+ 			return;
+ 	}
+ 
++	/*
++	 * Naively assume that all harts have the same mvendorid/marchid as the
++	 * boot hart.
++	 */
++	boot_vendorid = riscv_get_mvendorid();
++	boot_archid = riscv_get_marchid();
++
+ 	for_each_possible_cpu(cpu) {
+ 		struct riscv_isainfo *isainfo = &hart_isa[cpu];
+ 		unsigned long this_hwcap = 0;
+@@ -544,8 +553,7 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+ 		 * CPU cores with the ratified spec will contain non-zero
+ 		 * marchid.
+ 		 */
+-		if (acpi_disabled && riscv_cached_mvendorid(cpu) == THEAD_VENDOR_ID &&
+-		    riscv_cached_marchid(cpu) == 0x0) {
++		if (acpi_disabled && boot_vendorid == THEAD_VENDOR_ID && boot_archid == 0x0) {
+ 			this_hwcap &= ~isa2hwcap[RISCV_ISA_EXT_v];
+ 			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
+ 		}
 
-The good part about SBI PMU extension is that we do have a standard
-set of events and we only need a way to discover supported standard
-events with a minimum number of SBI calls. It is better to add a new
-SBI PMU call to assist supported event discovery which will also
-help us virtualize it.
+-- 
+2.44.0
 
-Regards,
-Anup
-
->
-> I had added it only for platforms with counter delegation[1] but I think
-> this can be generalized for platforms with SBI PMU as well.
->
-> I had some hacks to specify the legacy event encodings but Ian rogers
-> improved with a generic support by preferring sysfs/json event encodings
-> over fixed ones. I am yet to rebase and try Ian's series on top of the
-> counter delegation though. Thoughts ?
->
-> [1]
-> https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.com=
-/
-> [2]
-> https://lore.kernel.org/bpf/20240415063626.453987-2-irogers@google.com/T/
->
->
-> > Regards,
-> > Samuel
-> >
-> >>> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> >>> ---
-> >>> Before this patch:
-> >>> $ perf list hw
-> >>>
-> >>> List of pre-defined events (to be used in -e or -M):
-> >>>
-> >>>    branch-instructions OR branches                    [Hardware event=
-]
-> >>>    branch-misses                                      [Hardware event=
-]
-> >>>    bus-cycles                                         [Hardware event=
-]
-> >>>    cache-misses                                       [Hardware event=
-]
-> >>>    cache-references                                   [Hardware event=
-]
-> >>>    cpu-cycles OR cycles                               [Hardware event=
-]
-> >>>    instructions                                       [Hardware event=
-]
-> >>>    ref-cycles                                         [Hardware event=
-]
-> >>>    stalled-cycles-backend OR idle-cycles-backend      [Hardware event=
-]
-> >>>    stalled-cycles-frontend OR idle-cycles-frontend    [Hardware event=
-]
-> >>>
-> >>> $ perf stat -ddd true
-> >>>
-> >>>   Performance counter stats for 'true':
-> >>>
-> >>>                4.36 msec task-clock                       #    0.744 =
-CPUs utilized
-> >>>                   1      context-switches                 #  229.325 =
-/sec
-> >>>                   0      cpu-migrations                   #    0.000 =
-/sec
-> >>>                  38      page-faults                      #    8.714 =
-K/sec
-> >>>           4,375,694      cycles                           #    1.003 =
-GHz                         (60.64%)
-> >>>             728,945      instructions                     #    0.17  =
-insn per cycle
-> >>>              79,199      branches                         #   18.162 =
-M/sec
-> >>>              17,709      branch-misses                    #   22.36% =
-of all branches
-> >>>             181,734      L1-dcache-loads                  #   41.676 =
-M/sec
-> >>>               5,547      L1-dcache-load-misses            #    3.05% =
-of all L1-dcache accesses
-> >>>       <not counted>      LLC-loads                                   =
-                            (0.00%)
-> >>>       <not counted>      LLC-load-misses                             =
-                            (0.00%)
-> >>>       <not counted>      L1-icache-loads                             =
-                            (0.00%)
-> >>>       <not counted>      L1-icache-load-misses                       =
-                            (0.00%)
-> >>>       <not counted>      dTLB-loads                                  =
-                            (0.00%)
-> >>>       <not counted>      dTLB-load-misses                            =
-                            (0.00%)
-> >>>       <not counted>      iTLB-loads                                  =
-                            (0.00%)
-> >>>       <not counted>      iTLB-load-misses                            =
-                            (0.00%)
-> >>>       <not counted>      L1-dcache-prefetches                        =
-                            (0.00%)
-> >>>       <not counted>      L1-dcache-prefetch-misses                   =
-                            (0.00%)
-> >>>
-> >>>         0.005860375 seconds time elapsed
-> >>>
-> >>>         0.000000000 seconds user
-> >>>         0.010383000 seconds sys
-> >>>
-> >>> After this patch:
-> >>> $ perf list hw
-> >>>
-> >>> List of pre-defined events (to be used in -e or -M):
-> >>>
-> >>>    branch-instructions OR branches                    [Hardware event=
-]
-> >>>    branch-misses                                      [Hardware event=
-]
-> >>>    cache-misses                                       [Hardware event=
-]
-> >>>    cache-references                                   [Hardware event=
-]
-> >>>    cpu-cycles OR cycles                               [Hardware event=
-]
-> >>>    instructions                                       [Hardware event=
-]
-> >>>
-> >>> $ perf stat -ddd true
-> >>>
-> >>>   Performance counter stats for 'true':
-> >>>
-> >>>                5.16 msec task-clock                       #    0.848 =
-CPUs utilized
-> >>>                   1      context-switches                 #  193.817 =
-/sec
-> >>>                   0      cpu-migrations                   #    0.000 =
-/sec
-> >>>                  37      page-faults                      #    7.171 =
-K/sec
-> >>>           5,183,625      cycles                           #    1.005 =
-GHz
-> >>>             961,696      instructions                     #    0.19  =
-insn per cycle
-> >>>              85,853      branches                         #   16.640 =
-M/sec
-> >>>              20,462      branch-misses                    #   23.83% =
-of all branches
-> >>>             243,545      L1-dcache-loads                  #   47.203 =
-M/sec
-> >>>               5,974      L1-dcache-load-misses            #    2.45% =
-of all L1-dcache accesses
-> >>>     <not supported>      LLC-loads
-> >>>     <not supported>      LLC-load-misses
-> >>>     <not supported>      L1-icache-loads
-> >>>     <not supported>      L1-icache-load-misses
-> >>>     <not supported>      dTLB-loads
-> >>>              19,619      dTLB-load-misses
-> >>>     <not supported>      iTLB-loads
-> >>>               6,831      iTLB-load-misses
-> >>>     <not supported>      L1-dcache-prefetches
-> >>>     <not supported>      L1-dcache-prefetch-misses
-> >>>
-> >>>         0.006085625 seconds time elapsed
-> >>>
-> >>>         0.000000000 seconds user
-> >>>         0.013022000 seconds sys
-> >>>
-> >>>
-> >>>   drivers/perf/riscv_pmu_sbi.c | 37 +++++++++++++++++++++++++++++++++=
-+--
-> >>>   1 file changed, 35 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sb=
-i.c
-> >>> index 16acd4dcdb96..b58a70ee8317 100644
-> >>> --- a/drivers/perf/riscv_pmu_sbi.c
-> >>> +++ b/drivers/perf/riscv_pmu_sbi.c
-> >>> @@ -86,7 +86,7 @@ struct sbi_pmu_event_data {
-> >>>          };
-> >>>   };
-> >>>
-> >>> -static const struct sbi_pmu_event_data pmu_hw_event_map[] =3D {
-> >>> +static struct sbi_pmu_event_data pmu_hw_event_map[] =3D {
-> >>>          [PERF_COUNT_HW_CPU_CYCLES]              =3D {.hw_gen_event =
-=3D {
-> >>>                                                          SBI_PMU_HW_C=
-PU_CYCLES,
-> >>>                                                          SBI_PMU_EVEN=
-T_TYPE_HW, 0}},
-> >>> @@ -120,7 +120,7 @@ static const struct sbi_pmu_event_data pmu_hw_eve=
-nt_map[] =3D {
-> >>>   };
-> >>>
-> >>>   #define C(x) PERF_COUNT_HW_CACHE_##x
-> >>> -static const struct sbi_pmu_event_data pmu_cache_event_map[PERF_COUN=
-T_HW_CACHE_MAX]
-> >>> +static struct sbi_pmu_event_data pmu_cache_event_map[PERF_COUNT_HW_C=
-ACHE_MAX]
-> >>>   [PERF_COUNT_HW_CACHE_OP_MAX]
-> >>>   [PERF_COUNT_HW_CACHE_RESULT_MAX] =3D {
-> >>>          [C(L1D)] =3D {
-> >>> @@ -265,6 +265,36 @@ static const struct sbi_pmu_event_data pmu_cache=
-_event_map[PERF_COUNT_HW_CACHE_M
-> >>>          },
-> >>>   };
-> >>>
-> >>> +static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
-> >>> +{
-> >>> +       struct sbiret ret;
-> >>> +
-> >>> +       ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
-> >>> +                       0, cmask, 0, edata->event_idx, 0, 0);
-> >>> +       if (!ret.error) {
-> >>> +               sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-> >>> +                         ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0,=
- 0, 0);
-> >>> +       } else if (ret.error =3D=3D SBI_ERR_NOT_SUPPORTED) {
-> >>> +               /* This event cannot be monitored by any counter */
-> >>> +               edata->event_idx =3D -EINVAL;
-> >>> +       }
-> >>> +}
-> >>> +
-> >>> +static void pmu_sbi_update_events(void)
-> >>> +{
-> >>> +       /* Ensure events are not already mapped to a counter */
-> >>> +       sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-> >>> +                 0, cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-> >>> +
-> >>> +       for (int i =3D 0; i < ARRAY_SIZE(pmu_hw_event_map); i++)
-> >>> +               pmu_sbi_check_event(&pmu_hw_event_map[i]);
-> >>> +
-> >>> +       for (int i =3D 0; i < ARRAY_SIZE(pmu_cache_event_map); i++)
-> >>> +               for (int j =3D 0; j < ARRAY_SIZE(pmu_cache_event_map[=
-i]); j++)
-> >>> +                       for (int k =3D 0; k < ARRAY_SIZE(pmu_cache_ev=
-ent_map[i][j]); k++)
-> >>> +                               pmu_sbi_check_event(&pmu_cache_event_=
-map[i][j][k]);
-> >>> +}
-> >>> +
-> >>>   static int pmu_sbi_ctr_get_width(int idx)
-> >>>   {
-> >>>          return pmu_ctr_list[idx].width;
-> >>> @@ -1046,6 +1076,9 @@ static int pmu_sbi_device_probe(struct platform=
-_device *pdev)
-> >>>          if (pmu_sbi_get_ctrinfo(num_counters, &cmask))
-> >>>                  goto out_free;
-> >>>
-> >>> +       /* Check which standard events are available */
-> >>> +       pmu_sbi_update_events();
-> >>> +
-> >>>          ret =3D pmu_sbi_setup_irqs(pmu, pdev);
-> >>>          if (ret < 0) {
-> >>>                  pr_info("Perf sampling/filtering is not supported as=
- sscof extension is not available\n");
-> >>> --
-> >>> 2.42.0
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
->
