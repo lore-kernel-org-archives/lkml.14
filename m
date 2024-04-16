@@ -1,210 +1,167 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA72A71B50;
-	Tue, 16 Apr 2024 07:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5708E82864;
+	Tue, 16 Apr 2024 07:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713253097; cv=none; b=pZl+zZ4AQugq6FEXohn4b7fICuKCHk9vPL9YOyQhpA3B9AOQHybefA6u99amlk3GCuqK4iZGYqyiAGrTtFdFwTM5hWQlFfMnZmcOVCe8xXGB8SYzYTOrMF6U8rV05JJoZZJokLjwPGBh0BouPdrw7DGI40APvmyghit8YqOI9ao=
+	t=1713253127; cv=none; b=R5xMZGbTuRqlkhAoQq5GbkWf80XG8eBX+2yglWpXEG9zODz3eLyi1uqi8I/3B0MhzWtALCy4lQCNopoqm/t9DTlD6qUIaHcvIlG4t/sZIBSd7/khco3ySmvPrMQjqGjxs3AckeJVOcZaKrZ4REKoQtb/gplpHg60Xk5RDaQ+TXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713253097; c=relaxed/simple;
-	bh=x5lugkkuTzZRflrDEuf9ADF8MPGbuJ8c7gc3ccW/M98=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lrqWVHaOiGPO7fqcVZAeItq5wHWRaNmHwD5BMctGozvtjHPxJNj7QrzprPONpvoQ3iedQoKK1SHariu8e/RfxEKNxfXrQ1rWk88ufwlGXiVBX8M8HqM23yEyfYSln0GYraCQnAA63vmi4eo0unM1CCdpOdo3Zsqg8GDOg+kGicA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ffkhviKU; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713253127; c=relaxed/simple;
+	bh=lUqDKVsxEUBpfagEiDshnVlzzuckkMYbiID+GPOBjcc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EDYA3czDsc9w5iehudo+lmHtm1i0+pjbN37B7ysqsXh250ASBCdKkDb1SP3fT++oFLms1wh26hdeFd+CoZnvSpatKgZO37+P2QnUZ3UrxmnPZTVeEVXvOiqiblMwNFY8ULaaBsbwnqYW9MX1AhD+v+RSDnkcRRJQVyRyOQfAHhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C4ZMXEEo; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ffkhviKU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713253095; x=1744789095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x5lugkkuTzZRflrDEuf9ADF8MPGbuJ8c7gc3ccW/M98=;
-  b=ffkhviKUAXUiuThSZ/tx29uQArlrjZFAD6ATYNjVEoxvac3g+66r9l7T
-   oUrR5m3pyB58wq5a+tUEXqrdtvxw2ntFN7B1lx7owY9qXwd2YvZzQKYub
-   M7TVs1DPW9EBFDoeO8ns02UiPHUocA+nRschigTr9ReBRIzRQ51A2N182
-   2iMNF+KAe0Cb3yIKVILn5yKBBlnH7OtHE8oWxgfYfe0znRuhLflaQkzHa
-   6yOBXWvCl1U6OmGJkcRXGZ3TPK0NseMZkhe5HQvOOsyv2SwvRMrH7yZQE
-   N6Nn2NLhCTtJJAfLWNVvI17PtTD1/TxNopz9zaTnt2VnYwJvA1A4iAB/v
-   g==;
-X-CSE-ConnectionGUID: 61Rrqh/nSVOeoxSPEgjDLA==
-X-CSE-MsgGUID: Y9MCszL3RR+vu36uIQGM/A==
-X-IronPort-AV: E=Sophos;i="6.07,205,1708412400"; 
-   d="asc'?scan'208";a="21182016"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Apr 2024 00:38:08 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 00:37:29 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 16 Apr 2024 00:37:25 -0700
-Date: Tue, 16 Apr 2024 08:36:33 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Evan Green
-	<evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<shuah@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Palmer Dabbelt
-	<palmer@rivosinc.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 02/19] riscv: cpufeature: Fix thead vector hwcap removal
-Message-ID: <20240416-husband-flavored-96c1dad58b6e@wendy>
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
- <20240411-dev-charlie-support_thead_vector_6_9-v1-2-4af9815ec746@rivosinc.com>
- <20240412-tuesday-resident-d9d07e75463c@wendy>
- <ZhlrdGXfSushUNTp@ghost>
- <20240412-eastcoast-disparity-9c9e7d178df5@spud>
- <ZhmeLoPS+tsfqv1T@ghost>
- <20240412-chemist-haunt-0a30a8f280ca@spud>
- <ZhmoPuoR00aS6qZp@ghost>
- <20240413-sharper-unlivable-5a65660b19e2@spud>
- <Zh3xrTfjjk3b4GHb@ghost>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C4ZMXEEo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B75D2000C;
+	Tue, 16 Apr 2024 07:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713253123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1FXHS0Dan/Zrf+0lP3wL/voTzdU1rNvLhXyoXYOBuWU=;
+	b=C4ZMXEEo5ujJch9Vo0Aa5lUyCcnncL86YDaBD3U2XWGIVmm4TSzygL9U3K7eTVi4NRjLbt
+	wUC4pnKg2eM/TWwC1zboCj6aciX3Utv7bJ1KtAHQIIg/NVvf/u4kwoSfKuRUwzsbzWBOeA
+	FDJalRVH040WA8Ph101j50vGqFIzQfw5Ma+sCk2i3vQVBN/+gQ7khdcSZonK/Rz0MSciWs
+	daJ1pUXeE7GW6uDbIv+m/Q3H8NTG3hZ4DrqFi6e0ZJg2KfZR9wCG2hGEuyOkju0MVkr4O3
+	G8pi+6ZbFjPZBagjZx+DFmz90T8frlVxnpDTZRMAFNYV9XYmhDjuaSRuHb+e/Q==
+Date: Tue, 16 Apr 2024 09:39:20 +0200 (CEST)
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
+    Yanteng Si <siyanteng@loongson.cn>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+    Bhadram Varka <vbhadram@nvidia.com>, Simon Horman <horms@kernel.org>, 
+    Huacai Chen <chenhuacai@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+    Jernej Skrabec <jernej.skrabec@gmail.com>, 
+    Samuel Holland <samuel@sholland.org>, netdev@vger.kernel.org, 
+    linux-stm32@st-md-mailman.stormreply.com, 
+    linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/4] net: stmmac: Apply half-duplex-less constraint
+ for DW QoS Eth only
+In-Reply-To: <20240412180340.7965-2-fancer.lancer@gmail.com>
+Message-ID: <7db899b0-4547-2c4c-60a5-8321d698cce4@bootlin.com>
+References: <20240412180340.7965-1-fancer.lancer@gmail.com> <20240412180340.7965-2-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S0aAJ0pL4KXiXwbM"
-Content-Disposition: inline
-In-Reply-To: <Zh3xrTfjjk3b4GHb@ghost>
+Content-Type: text/plain; charset=US-ASCII
+X-GND-Sasl: romain.gantois@bootlin.com
 
---S0aAJ0pL4KXiXwbM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 12 Apr 2024, Serge Semin wrote:
 
-On Mon, Apr 15, 2024 at 08:34:05PM -0700, Charlie Jenkins wrote:
-> On Sat, Apr 13, 2024 at 12:40:26AM +0100, Conor Dooley wrote:
-> > On Fri, Apr 12, 2024 at 02:31:42PM -0700, Charlie Jenkins wrote:
-> > > On Fri, Apr 12, 2024 at 10:27:47PM +0100, Conor Dooley wrote:
-> > > > On Fri, Apr 12, 2024 at 01:48:46PM -0700, Charlie Jenkins wrote:
-> > > > > On Fri, Apr 12, 2024 at 07:47:48PM +0100, Conor Dooley wrote:
-> > > > > > On Fri, Apr 12, 2024 at 10:12:20AM -0700, Charlie Jenkins wrote:
-> >=20
-> > > > > > > This is already falling back on the boot CPU, but that is not=
- a solution
-> > > > > > > that scales. Even though all systems currently have homogenous
-> > > > > > > marchid/mvendorid I am hesitant to assert that all systems are
-> > > > > > > homogenous without providing an option to override this.
-> > > > > >=20
-> > > > > > There are already is an option. Use the non-deprecated property=
- in your
-> > > > > > new system for describing what extesions you support. We don't =
-need to
-> > > > > > add any more properties (for now at least).
-> > > > >=20
-> > > > > The issue is that it is not possible to know which vendor extensi=
-ons are
-> > > > > associated with a vendor. That requires a global namespace where =
-each
-> > > > > extension can be looked up in a table. I have opted to have a
-> > > > > vendor-specific namespace so that vendors don't have to worry abo=
-ut
-> > > > > stepping on other vendor's toes (or the other way around). In ord=
-er to
-> > > > > support that, the vendorid of the hart needs to be known prior.
-> > > >=20
-> > > > Nah, I think you're mixing up something like hwprobe and having
-> > > > namespaces there with needing namespacing on the devicetree probing=
- side
-> > > > too. You don't need any vendor namespacing, it's perfectly fine (IM=
-O)
-> > > > for a vendor to implement someone else's extension and I think we s=
-hould
-> > > > allow probing any vendors extension on any CPU.
-> > >=20
-> > > I am not mixing it up. Sure a vendor can implement somebody else's
-> > > extension, they just need to add it to their namespace too.
-> >=20
-> > I didn't mean that you were mixing up how your implementation worked, my
-> > point was that you're mixing up the hwprobe stuff which may need
-> > namespacing for $a{b,p}i_reason and probing from DT which does not.
-> > I don't think that the kernel should need to be changed at all if
-> > someone shows up and implements another vendor's extension - we already
-> > have far too many kernel changes required to display support for
-> > extensions and I don't welcome potential for more.
->=20
-> Yes I understand where you are coming from. We do not want it to require
-> very many changes to add an extension. With this framework, there are
-> the same number of changes to add a vendor extension as there is to add
-> a standard extension.=20
+> There are three DW MAC IP-cores which can have the multiple Tx/Rx queues
+> enabled:
+> DW GMAC v3.7+ with AV feature,
+> DW QoS Eth v4.x/v5.x,
+> DW XGMAC/XLGMAC
+> Based on the respective HW databooks, only the DW QoS Eth IP-core doesn't
+> support the half-duplex link mode in case if more than one queues enabled:
+> 
+> "In multiple queue/channel configurations, for half-duplex operation,
+> enable only the Q0/CH0 on Tx and Rx. For single queue/channel in
+> full-duplex operation, any queue/channel can be enabled."
+> 
+> The rest of the IP-cores don't have such constraint. Thus in order to have
+> the constraint applied for the DW QoS Eth MACs only, let's move the it'
+> implementation to the respective MAC-capabilities getter and make sure the
+> getter is called in the queues re-init procedure.
+> 
+> Fixes: b6cfffa7ad92 ("stmmac: fix DMA channel hang in half-duplex mode")
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  .../net/ethernet/stmicro/stmmac/dwmac4_core.c |  7 +++++++
+>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 19 +++----------------
+>  2 files changed, 10 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> index cef25efbdff9..ec6a13e644b3 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+> @@ -71,6 +71,13 @@ static void dwmac4_core_init(struct mac_device_info *hw,
+>  static void dwmac4_phylink_get_caps(struct stmmac_priv *priv)
+>  {
+>  	priv->phylink_config.mac_capabilities |= MAC_2500FD;
+> +
+> +	if (priv->plat->tx_queues_to_use > 1)
+> +		priv->phylink_config.mac_capabilities &=
+> +			~(MAC_10HD | MAC_100HD | MAC_1000HD);
+> +	else
+> +		priv->phylink_config.mac_capabilities |=
+> +			(MAC_10HD | MAC_100HD | MAC_1000HD);
+>  }
+>  
+>  static void dwmac4_rx_queue_enable(struct mac_device_info *hw,
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 24cd80490d19..dd58c21b53ee 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -1198,17 +1198,6 @@ static int stmmac_init_phy(struct net_device *dev)
+>  	return ret;
+>  }
+>  
+> -static void stmmac_set_half_duplex(struct stmmac_priv *priv)
+> -{
+> -	/* Half-Duplex can only work with single tx queue */
+> -	if (priv->plat->tx_queues_to_use > 1)
+> -		priv->phylink_config.mac_capabilities &=
+> -			~(MAC_10HD | MAC_100HD | MAC_1000HD);
+> -	else
+> -		priv->phylink_config.mac_capabilities |=
+> -			(MAC_10HD | MAC_100HD | MAC_1000HD);
+> -}
+> -
+>  static int stmmac_phy_setup(struct stmmac_priv *priv)
+>  {
+>  	struct stmmac_mdio_bus_data *mdio_bus_data;
+> @@ -1237,10 +1226,7 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
+>  				    priv->phylink_config.supported_interfaces);
+>  
+>  	priv->phylink_config.mac_capabilities = MAC_ASYM_PAUSE | MAC_SYM_PAUSE |
+> -						MAC_10FD | MAC_100FD |
+> -						MAC_1000FD;
+> -
+> -	stmmac_set_half_duplex(priv);
+> +						MAC_10 | MAC_100 | MAC_1000;
+>  
+>  	/* Get the MAC specific capabilities */
+>  	stmmac_mac_phylink_get_caps(priv);
+> @@ -7355,7 +7341,8 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
+>  			priv->rss.table[i] = ethtool_rxfh_indir_default(i,
+>  									rx_cnt);
+>  
+> -	stmmac_set_half_duplex(priv);
+> +	stmmac_mac_phylink_get_caps(priv);
+> +
+>  	stmmac_napi_add(dev);
+>  
+>  	if (netif_running(dev))
+> -- 
+> 2.43.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-No, it is actually subtly different. Even if the kernel already supports
-the extension, it needs to be patched for each vendor
-
-> There is the upfront cost of creating the struct
-> for the first vendor extension from a vendor, but after that the
-> extension only needs to be added to the associated vendor's file (I am
-> extracting this out to a vendor file in the next version). This is also
-> a very easy task since the fields from a different vendor can be copied
-> and adapted.
->=20
-> > Another thing I just thought of was systems where the SoC vendor
-> > implements some extension that gets communicated in the ISA string but
-> > is not the vendor in mvendorid in their various CPUs. I wouldn't want to
-> > see several different entries in structs (or several different hwprobe
-> > keys, but that's another story) for this situation because you're only
-> > allowing probing what's in the struct matching the vendorid.
->=20
-> Since the isa string is a per-hart field, the vendor associated with the
-> hart will be used.
-
-I don't know if you just didn't really read what I said or didn't
-understand it, but this response doesn't address my comment.
-Consider SoC vendor S buys CPUs from vendors A & B and asks both of them
-to implement Xsjam. The CPUs are have the vendorid of either A or B,
-depending on who made it. This scenario should not result in two
-different hwprobe keys nor two different in-kernel riscv_has_vendor_ext()
-checks to see if the extension is supported. *If* the extension is vendor
-namespaced, it should be to the SoC vendor whose extension it is, not
-the individual CPU vendors that implemented it.
-
-Additionally, consider that CPUs from both vendors are in the same SoC
-and all CPUs support Xsjam. Linux only supports homogeneous extensions
-so we should be able to detect that all CPUs support the extension and
-use it in a driver etc, but that's either not going to work (or be
-difficult to orchestrate) with different mappings per CPU vendor. I saw
-your v2 cover letter, in which you said:
-  Only patch vendor extension if all harts are associated with the same
-  vendor. This is the best chance the kernel has for working properly if
-  there are multiple vendors.
-I don't think that level of paranoia is required: if firmware tells us
-that an extension is supported, then we can trust that those extensions
-have been implemented correctly. If the fear of implementation bugs is
-what is driving the namespacing that you've gone for, I don't think that
-it is required and we can simplify things, with the per-vendor structs
-being the vendor of the extension (so SoC vendor S in my example), not
-A and B who are the vendors of the CPU IP.
+Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
 
 Thanks,
-Conor.
 
-
---S0aAJ0pL4KXiXwbM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh4qgQAKCRB4tDGHoIJi
-0jJZAQDQmcK4nj841UhHcb8WvWbPC7o7TCt9g7AQS757vS0CSwD/XR1svOyQ4sAV
-a2VdMwg8xaojsbGnITddWN30iDLuywA=
-=fr0c
------END PGP SIGNATURE-----
-
---S0aAJ0pL4KXiXwbM--
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
