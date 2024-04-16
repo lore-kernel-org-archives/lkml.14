@@ -1,125 +1,203 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CC612C52E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC88412D219;
+	Tue, 16 Apr 2024 14:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276565; cv=none; b=c/FPoWMEu8Rp88EcHkIy59zodppZelYCtB/aYm+ARu91quP36ZQmOl1rn4eQHHFG8OEYi0eXTCXwQ19WK3w7/UKJwPzzlLUWFeaRGeXGPhSgMBo9FM5xuX6zOEoj9dZ3fVSuVcRzs/n+YgHabThXfyfGRAJeIi4U565FMdhjPnw=
+	t=1713276568; cv=none; b=YcbfuKCSd8NeKWg+WTR1TdUvp1xy74bSfmVtiz+lDTOrbuQu02/MNfvnVkYJJNKoJrKtnWktGgj0GKP5dUxi6sKY3nF0n8Y/qEEX8tQ1tTMgfuiRfbdzV3sTOa+cieKqlBxZ/jzK7UnnKJ5hBdeuJnhhmVaEHsavsJPGb7cWYS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276565; c=relaxed/simple;
-	bh=gc2+h75Enyy26DK2PxKy8NrJ/zAd9qAwocb2ISpTevc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HwzSqH32xutm58t0zPkr5Lm46WSEdPNDxakI7fhcLD1aO8FnNhcbg8jXMZBMmnyeZbWwZDHHj7M3uHVrtrDNhBqVtU0TawvLYBDvMY6aDLSy3nmdVrOOksxnT6x1tKlzYeWDO+/Z4OqTEvwmpHSI/9BfLrOfF2x4J25HUTyPn5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=bBebSiys; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1713276568; c=relaxed/simple;
+	bh=xl5IPlI4/tfZkMhTro5AZJ5MrQh47xHxKI0qjQASmg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QjVx5jSXSA4hs6q3ZB2iK3BrhpXt6zImeKZ3mr6j+D+Rig5GAOVIpOTCPg3ALufUEO1WV8aA5l0pdy3FSPtsDO/TUJNYWZ1ijqbk+fTrkv9EAnohtqLkaJhI6VedSc/AstI0PASTQODToNP8Ikwth6lI/JOAeZh3OVLhHTxkRi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jj2pxoSk; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="bBebSiys"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78d620408f8so345001385a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1713276560; x=1713881360; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NyD7CJia6dqQdPW0B5XtV/th76QRRg/WSyHypuuA1Ic=;
-        b=bBebSiys+Dd/Mgbc8vUunoMMozVpR4k/ZlrxKNgojViLPDo6ZPUibKm3FJQBTm1zih
-         bgCzWbMafFp7nPszPgtXEjN3Q5EZ546TR8WKm3n7ZIwxX3UC9tQn3qm0dijMrO6oRJRv
-         f4UEKHH2ftVEP6Kxk7ouja814Um/UDgmgCCxx/ogODveX2PAO0xzd3jnJZ6+QGqFz/UR
-         BRDrb0bzgqUcjC4EfteuOpOp2oLVg+9/ercrAA3bLAv+1KnwJE5nUXV8Au38G5CFDFYP
-         rUQTB0+fN2+0pVg1gIuyuF6wxOrR9xJBrBHLiQFulY6q0XGCuUYOjSXAGXjnsucD7NIp
-         kjRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713276560; x=1713881360;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NyD7CJia6dqQdPW0B5XtV/th76QRRg/WSyHypuuA1Ic=;
-        b=cgbmMvoxnEReZtsOPPTGlat0d0wu1A90DPZImsF3SfzjxgIfCBkCPMC4ZfxDT4hHii
-         4Bp6dRlTgGP0g9xZpsRgDZW7DspxDVgx6YCXGgdhRBshJ2pCDuW0e04VkNKaFGT3V8bU
-         srmx7wmgcEFl6qFyJs+F5CLa6DXIdNwtUK2yoEcYwreQ8OxWsat1nrW0OfUsNX4yRe5F
-         14X7DqKmtMne6pduEBulslHlcz85gzuL0nB5/ZdXNQD6gPOy6spHg3DFn5OQBNXnftPL
-         J/KC6zjqiwiLm99w3cIT/ZStCLH5lrswImZKWOFJJ3V+NVmvmky4twD2wi3JCRkrkRFQ
-         lwlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnADECZanwoMNVskvnFFPwtdsgLlBBxkMlWXZG7bHJdR2LryJTWXeg8jSmjKAuZUh7PqSd0usAh067Ne4dPavVj1JRwO/M1yWUfIrC
-X-Gm-Message-State: AOJu0Yx6Q2z9WoP+LMMKJXVVMfkdW03NhTUEBIN2P5J6V8lIijrhyaTz
-	0e1pJyOw+lvXF8WUBeW9S3f07/Q3sfxEcNR58AmnROUYOcCUndCnvJv1rJ2WpEk=
-X-Google-Smtp-Source: AGHT+IHTZXOlhLzrZJKOCo7oGobPLBHBqfpA1Y9jlLfjJ81O6tnjovWTxBF2SvorngJtfMN3Z4Hm+g==
-X-Received: by 2002:ad4:44a7:0:b0:69f:f2ae:cad6 with SMTP id n7-20020ad444a7000000b0069ff2aecad6mr1244518qvt.11.1713276560547;
-        Tue, 16 Apr 2024 07:09:20 -0700 (PDT)
-Received: from nicolas-tpx395.localdomain ([2606:6d00:17:6448::7a9])
-        by smtp.gmail.com with ESMTPSA id dd10-20020ad4580a000000b0069b563d5d8fsm6128137qvb.20.2024.04.16.07.09.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 07:09:20 -0700 (PDT)
-Message-ID: <70733fe5c919527796bd3d9735ced522bcdd7a25.camel@ndufresne.ca>
-Subject: Re: [PATCH v5 1/9] drm/mediatek/uapi: Add
- DRM_MTK_GEM_CREATE_ENCRYPTED flag
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Shawn Sung <shawn.sung@mediatek.com>, Chun-Kuang Hu
-	 <chunkuang.hu@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie
- <airlied@gmail.com>,  Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal
- <sumit.semwal@linaro.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org, 
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
- linaro-mm-sig@lists.linaro.org, "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
-Date: Tue, 16 Apr 2024 10:09:19 -0400
-In-Reply-To: <20240403102701.369-2-shawn.sung@mediatek.com>
-References: <20240403102701.369-1-shawn.sung@mediatek.com>
-	 <20240403102701.369-2-shawn.sung@mediatek.com>
-Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvkoOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+gozpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhmtHYWTDxBOP5peztyc2PqeKsLsLWzAr7RDTmljb2xhcyBEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCgzYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udWs+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWA
- gMBAh4BAheAAAoJEHFTAi2sBqgcQX8An2By6LDEeMxi4B9hUbpvRnzaaeNqA J9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypwCfWKc9DorA9f5pyYlD5pQo6SgSoiC0J05pY29sYXMgRHVmcmVzbmUgPG5pY29sYXNAbmR1ZnJlc25lLmNhPohiBBMRAgAiBQJVwNwgAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHCZ4AJ0QwU6/G4c7h9CkMBT9ZxGLX4KSnQCgq0P7CX7hv/M7HeyfMFZe8t3vAEW0RE5pY29sYXMgRHVmcmVzbmUgKEIuIFNjLiBJbmZvcm1hdGlxdWUpIDxuaWNvbGFzZEBibHVlc3RyZWFrdGVjaC5jb20+iGAEExECACAFAkZjGzoCGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHBl7AJ0d2lrzshMmJaik/EaDEakzEwqgxQCg0JVZMZm9gRfEou1FvinuZxwf/mu0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr+E7ItOqZEHAs+xabBgknYZIFPW5Ag0ERRA3UhAIAJ0rxl2HsVg/nSOAUt7U/T/W+RKzVAlD9orCB0pRVvyWNxSr8MHcH
- mWCxykLuB34ouM4GuDVRKfGnqLzJRBfjs7Ax9K2FI3Odund9xpviLCt1jFC0K XL04RebrFT7xjDfocDaSLFvgxMVs/Jr2/ckKPId1oKvgYgt/o+MzUabKyFB8wIvq4GMtj3LoBKLCie2nCaSt7uVUt6q2t5bNWrd3lO6/mWn7YMc5Hsn33H9pS0+9szw6m3dG08eMKNueDlt72QxiYl2rhjzkT4ltKEkFgYBdyrtIj1UO6eX+YXb4E1rCMJrdjBSgqDPK1sWHC7gliy+izr+XTHuFwlfy8gBpsAAwUIAJJNus64gri4HAL632eqVpza83EphX1IuHzLi1LlMnQ9Tm7XKag46NhmJbOByMG33LwBsBdLjjHQSVkYZFWUifq+NWSFC/kqlb72vW8rBAv64+i3QdfxK9FWbweiRsPpvuHjJQuecbPDJpubLaxKbu2aqLCN5LuHXvdQr6KiXwabT+OJ9AJAqHG7q4IEzg4RNUVn9AS6L8bxqMSocjqpWNBCY2efCVd/c6k4Acv6jXu+wDAZEbWXK+71uaUHExhigBYBpiHGrobe32YlTVE/XEIzKKywhm/Hkn5YKWzumLte6xiD9JhKabmD7uqIvLt2twUpz4BdPzj0dvGlSmvFcaaISQQYEQIACQUCRRA3UgIbDAAKCRBxUwItrAaoHJLyAKDeS3AFowM3f1Y3OFU6XRCTKK2ZhwCfT/7P9WDjkkmiq5AfeOiwVlpuHtM=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jj2pxoSk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713276567; x=1744812567;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xl5IPlI4/tfZkMhTro5AZJ5MrQh47xHxKI0qjQASmg4=;
+  b=jj2pxoSkSaJGYmjYF1jgqvS/9iIQ8MwvmLKZ4+/A+78E8ILqaLvoLXp+
+   u46iXDSk6OIwUBeXid3HCsiE0xnzdPRzG2b0OOBOLw9v2QDMnKsUZfu88
+   G0RVhFi2wFsjEUtkJW5r4DVioEMiWv0ic0/40Wc29IG0ItMYZ7b1AGnfD
+   E6Q2bdu7Yx/5MCu6znJuRnSohex+JFi68+CJfQxvhWzO9d6B/Z57Vb67r
+   8q2JZ+2HVrmj1sgScckAg9ez3QyPyD0T4BGj/i8tZjmUAYJnlLmTuBp/O
+   YUj96O961DVgoOMMJBqNIV2mZNciAUy8ya7njK6I6rtVfJxrBeuvuke90
+   Q==;
+X-CSE-ConnectionGUID: G9/ymOaUT6WzS2/IZGABvg==
+X-CSE-MsgGUID: c+jtJor0R4GzhmRSsXQrJA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9268335"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="9268335"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:09:26 -0700
+X-CSE-ConnectionGUID: D37ivQksQBauF6ebrBBz0w==
+X-CSE-MsgGUID: 8CvRz0DHSZOhm7rXWB9uyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22333136"
+Received: from sekosto-mobl.amr.corp.intel.com (HELO [10.213.183.148]) ([10.213.183.148])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:09:25 -0700
+Message-ID: <35d9f59e-3cc1-41a7-bb1d-f482c004d323@linux.intel.com>
+Date: Tue, 16 Apr 2024 08:51:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIHYyIDIvMl0gQVNvQzogY2RuczogQWRk?=
+ =?UTF-8?Q?_drivers_of_Cadence_Multi-Channel_I2S_Controller?=
+To: Xingyu Wu <xingyu.wu@starfivetech.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Claudiu Beznea <Claudiu.Beznea@microchip.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor.dooley@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
+References: <20240320090239.168743-1-xingyu.wu@starfivetech.com>
+ <20240320090239.168743-3-xingyu.wu@starfivetech.com>
+ <1d0399d2-684f-490e-8711-f636e987a0b8@linux.intel.com>
+ <NTZPR01MB0956BFADB4B3DA507D938F669F35A@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+ <ef510647-c409-4da6-9cd4-ff4e54cbee74@linux.intel.com>
+ <NTZPR01MB09567BE742A91B8C9E02EF4F9F08A@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <NTZPR01MB09567BE742A91B8C9E02EF4F9F08A@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-Le mercredi 03 avril 2024 =C3=A0 18:26 +0800, Shawn Sung a =C3=A9crit=C2=A0=
-:
-> From: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
->=20
-> Add DRM_MTK_GEM_CREATE_ENCRYPTED flag to allow user to allocate
 
-Is "ENCRYPTED" a proper naming ? My expectation is that this would hold dat=
-a in
-a PROTECTED memory region but that no cryptographic algorithm will be invol=
-ved.
+On 4/16/24 02:23, Xingyu Wu wrote:
+> On 02/04/2024 21:57, Pierre-Louis Bossart wrote:
+>>
+>>
+>>>>
+>>>>> +#define PERIODS_MIN		2
+>>>>> +
+>>>>> +static unsigned int cdns_i2s_pcm_tx(struct cdns_i2s_dev *dev,
+>>>>> +				    struct snd_pcm_runtime *runtime,
+>>>>> +				    unsigned int tx_ptr, bool *period_elapsed,
+>>>>> +				    snd_pcm_format_t format)
+>>>>> +{
+>>>>> +	unsigned int period_pos = tx_ptr % runtime->period_size;
+>>>>
+>>>> not following what the modulo is for, usually it's modulo the buffer size?
+>>>
+>>> This is to see if the new data is divisible by period_size and to
+>>> determine whether it is enough for a period_size in the later loop.
+>>
+>> That didn't answer to my question, the position is usually between
+>> 0..buffer_size.1.
+> 
+> Yes, this position will be used later in the cdns_i2s_pcm_pointer().
+> But this cdns_i2s_pcm_tx() is called by I2S hardware interrupt which
+> would be frequently called several times each period. The period_pos
+> is used to determine whether there is enough a period_size to call
+> snd_pcm_period_elapsed().
+> 
+>>
+>> Doing increments on a modulo value then comparisons as done below seems
+>> rather questionable.
+>>
+>>>>> +
+>>>>> +		iowrite32(data[0], dev->base + CDNS_FIFO_MEM);
+>>>>> +		iowrite32(data[1], dev->base + CDNS_FIFO_MEM);
+>>>>> +		period_pos++;
+>>>>> +		if (++tx_ptr >= runtime->buffer_size)
+>>>>> +			tx_ptr = 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	*period_elapsed = period_pos >= runtime->period_size;
+>>>>> +	return tx_ptr;
+>>>>> +}
+>>
+>>>>> +	pm_runtime_enable(&pdev->dev);
+>>>>> +	if (pm_runtime_enabled(&pdev->dev))
+>>>>> +		cdns_i2s_runtime_suspend(&pdev->dev);
+>>>>
+>>>> that sequence looks suspicious.... Why would you suspend immediately
+>>>> during the probe? You're probably missing all the autosuspend stuff?
+>>>
+>>> Since I have enabled clocks before, and the device is in the suspend
+>>> state after pm_runtime_enable(), I need to disable clocks in
+>>> cdns_i2s_runtime_suspend() to match the suspend state.
+>>
+>> That is very odd on two counts
+>> a) if you haven't enabled the clocks, why do you need to disbale them?
+>> b) if you do a pm_runtime_enable(), then the branch if
+>> (pm_runtime_enabled) is always true.
+>>
+> 
+> a) It must enable clocks first to read and write registers when I2S probe.
+> Then it is done to probe, the clocks are still enabled and the state of pm
+> is suspend. So it need to be disabled to match the state and will resume
+> and be enabled by ALSA.
 
-Nicolas
+I think you are missing a pm_runtime_set_active() to reconcile the pm
+state with the hardware state. The premise of pm_runtime is that on
+probe your device is active and later on it will suspend. Having
+pm_runtime_enabled with a suspended device without the framework
+involved to trigger the transition to suspend is asking for trouble.
 
-> a secure buffer to support secure video path feature.
->=20
-> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> ---
->  include/uapi/drm/mediatek_drm.h | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/include/uapi/drm/mediatek_drm.h b/include/uapi/drm/mediatek_=
-drm.h
-> index b0dea00bacbc4..e9125de3a24ad 100644
-> --- a/include/uapi/drm/mediatek_drm.h
-> +++ b/include/uapi/drm/mediatek_drm.h
-> @@ -54,6 +54,7 @@ struct drm_mtk_gem_map_off {
-> =20
->  #define DRM_MTK_GEM_CREATE		0x00
->  #define DRM_MTK_GEM_MAP_OFFSET		0x01
-> +#define DRM_MTK_GEM_CREATE_ENCRYPTED	0x02
-> =20
->  #define DRM_IOCTL_MTK_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
->  		DRM_MTK_GEM_CREATE, struct drm_mtk_gem_create)
+> b) Because CONFIG_PM would be disabled and pm_runtime_enabled()
+> return false , then it is no need to disable clock and I2S still can work.
+
+Again you are trying to make things more complicated than they need to
+be. Don't try to actively manage and query states, let the framework do
+it for you.
+
+Try to probe and bring the device to an active state. Then use
+pm_runtime_mark_last_busy(), use pm_runtime_enable and let autosuspend
+do the work for you. If pm_runtime is not enabled the suspend will not
+happen.
+
+Also keep in mind that pm_runtime_enabled() will return false if the
+user mucks with the power state in sysfs, it's not only a case of
+CONFIG_PM being selected or not.
+> 
+>>
+>>>
+>>>>
+>>>>> +
+>>>>> +	dev_dbg(&pdev->dev, "I2S supports %d stereo channels with %s.\n",
+>>>>> +		i2s->max_channels, ((i2s->irq < 0) ? "dma" : "interrupt"));
+>>>>> +
+>>>>> +	return 0;
+>>>>> +
+>>>>> +err:
+>>>>> +	return ret;
+>>>>> +}
+>>>>> +
+>>>>> +static int cdns_i2s_remove(struct platform_device *pdev) {
+>>>>> +	pm_runtime_disable(&pdev->dev);
+>>>>> +	if (!pm_runtime_status_suspended(&pdev->dev))
+>>>>> +		cdns_i2s_runtime_suspend(&pdev->dev);
+>>>>
+>>>> ... and this one too. Once you've disabled pm_runtime, checking the
+>>>> status is irrelevant...
+>>>
+>>> I think the clocks need to be always enabled after probe if disable
+>>> pm_runtime, and should be disabled when remove. This will do that.
+>>
+>> if you are disabling pm_runtime, then the pm_runtime state becames invalid.
+>> When pm_runtime_disable() is added in remove operations, it's mainly to
+>> prevent the device from suspending.
+> 
+> Should I use the pm_runtime_enabled() before the pm_runtime_disable()?
+
+It doesn't matter, the problem is the second part where you try to check
+the status of pm_runtime *after* disabling it.
+
 
