@@ -1,92 +1,108 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957441C10
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2205223
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713230279; cv=none; b=T6pb+6R4b7zwoCYPEbIQOuxifoKbZC0L9UZuj0/UX3WYU09dQtt40ISTWNhSAHNiybqv08u9IQSa2PbNlrvUwuPZrarxd4oESzUX9rf9omMT/y4ewfheV4+6W33p2WLt6PpG5rOE/PRQulRoRw5LqdO4ErZBCCVoCed/eJS2ors=
+	t=1713230303; cv=none; b=b9TV8MCa0xeYBtz32Rf4/wSl8f0h6/Ds9L2fDm6wedLFam0WSNgPIo2OgJfrTm6lZ1Vaj7wfiqMSrW+XypJB3IBWEs9RZ2DprydP347vQ6WZH/BD3BYHMszqMpgcCSx535b76G7ELBbn+fdN7we5EoImLSBYGf6N61el9uA4UoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713230279; c=relaxed/simple;
-	bh=d8UHCKtQgMSEk0JPxU2mx4yp++pMeFU9iqcmCil4S4c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Yt7M/zGEMWEefgP7C2/aezx3ySwlX0FB83YgeM8werFtdniCBV0uoeXldIqg+NCw36JloSPEpfsRqd8WrRA75deOfDOrFE2R4dQJpwkqPCNC17QJw+iVeUZQjZuGT9K9EzQ6z/gQ0n1Krec2vRILbW+rFuDsCjBnJvnTgxboY9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VJR0W45XHzwSNd;
-	Tue, 16 Apr 2024 09:14:51 +0800 (CST)
-Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2983D140123;
-	Tue, 16 Apr 2024 09:17:53 +0800 (CST)
-Received: from [10.67.121.59] (10.67.121.59) by kwepemm600004.china.huawei.com
- (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 16 Apr
- 2024 09:17:52 +0800
-Message-ID: <09e235e4-bea5-27d7-6101-15b0a5105a2a@huawei.com>
-Date: Tue, 16 Apr 2024 09:17:51 +0800
+	s=arc-20240116; t=1713230303; c=relaxed/simple;
+	bh=1qvjpJt3jRPZP3O/80pfTwah1p1Vwls/OOUs64VkZhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKAQwMXemLcUn1GZ+IGN9eQ7/3OzFrh6xupHYKrsSv+gwTRMQP0MxtjpCxUCS+NT4lpMbgUivVguiFUpIMlb4ohXPWBv+tzpnWzo4UYZV8cLIK0O9ioECGnFcvzXI6S6mb130Ewdd9u6Jrh8cfCT0NYlRddUo/wr5VZ5niCVHLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BskwGHFi; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BskwGHFi"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5176f217b7bso6626059e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713230299; x=1713835099; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VYYp2/ymyynKr4E4UaWvwoSlif1IqUuPBOarTvfMGUY=;
+        b=BskwGHFidS7xY63QBj3xu3xb56FBpdJiiIiimDqetKr2Az8Ukir9aLYPPCfqyGwO+O
+         2z4HvxwTwtoRoZSCCpJNi3KImLnUudfZqiJ1WrL6X875JspBMz+t9s5ztObBqpSSASoZ
+         8CiUV5Maa98YzEjGf5lVvnmjHqmD3TvYS8IgpeSl51lDMLqd+0lteerOxBNtAON8FsWm
+         fOzdIQVOF0t7U2Tw4131h7jwH7HGbaweFlgcFE4PETzJFyL3/u/rFdwM09eZ3wn7y1Ks
+         WixtZsxB8ncAxYU2Tue6I68bDNOjQlTXvaLDIdJzROdphkKTp7aybv1K5M/VppceIIXs
+         onOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713230299; x=1713835099;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VYYp2/ymyynKr4E4UaWvwoSlif1IqUuPBOarTvfMGUY=;
+        b=a++rMVzLsSUl65frS3uw9W9LfmmdeTKYFS3Bc2DXgj/mj2JcHQuN7IK5vmGGJrs3wO
+         bJzD4DJqaukkvvX8XKaW5Dg2nGYEyju9RKXgUjdys4t4olg4il9JWk0RpMBONi3+xCwr
+         CI73KSMJYKF3TFpc0OoJ+hl6oeMjzWQPccD0QQyEjQmPVIsip6lICi8LNt7jzPuP5pJw
+         5jf81anW0wQWQ6l72/ouRQXay2bpXGyiFCLUk2SCIfPMUjzJMY/EhBDVzh3FxogFhKeM
+         IUlrfq1tEs/cGHmbiBoPi+Rn2IbWbmRFRIQxUvEQrh/ArGeMKvzNFJucV+15/xQbBcJ4
+         kU0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXOUjdYxmmAmczgItMLDI0NFNxo0JGUmQpv9xRUPckcMj97sOohtUl27mFnkpVeJmpMMNHHY3Ck3W06tQH1pTkAQyHlDcFyMKeY/g3u
+X-Gm-Message-State: AOJu0Yyum9ju30BpmzoEHOwCwQVR0zgk5DVhpLPYwA5a4mU+cR2Z03o0
+	oCZ15Gdbm/+xlFtbLtAvjN1vm7jAz4crUNBizTg34ZF+2eMIEX/7mV4A2bxgpk4=
+X-Google-Smtp-Source: AGHT+IGtZaxlgwAHmZ/z2k0KkTHsoUAQLBPMNvduRQSASeruObRUVt30aWE4VNZTKGFu/1BexV9HMg==
+X-Received: by 2002:ac2:538c:0:b0:515:9c73:e29a with SMTP id g12-20020ac2538c000000b005159c73e29amr8603965lfh.66.1713230299475;
+        Mon, 15 Apr 2024 18:18:19 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id b15-20020a056512304f00b00518e1e77eb2sm493616lfb.179.2024.04.15.18.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 18:18:19 -0700 (PDT)
+Date: Tue, 16 Apr 2024 04:18:17 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, owen <qwt9588@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Vasut <marex@denx.de>, 
+	Adrien Grassein <adrien.grassein@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Sam Ravnborg <sam@ravnborg.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Vinay Simha BN <simhavcs@gmail.com>, 
+	Christopher Vollo <chris@renewoutreach.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: Re: [PATCH v3 4/9] drm/bridge: lt9611: Don't log an error when DSI
+ host can't be found
+Message-ID: <gcq33bcaindlrllyhjdcmfvn4irmr5onisekajdxji43rsrpt5@g5cbavz5xfcs>
+References: <20240415-anx7625-defer-log-no-dsi-host-v3-0-619a28148e5c@collabora.com>
+ <20240415-anx7625-defer-log-no-dsi-host-v3-4-619a28148e5c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH 1/2] soc: hisilicon: kunpeng_hccs: Add the check for
- obtaining complete port attribute
-To: Wei Xu <xuwei5@hisilicon.com>
-CC: <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <Jonathan.Cameron@Huawei.com>,
-	<liuyonglong@huawei.com>
-References: <20240403081935.24308-1-lihuisong@huawei.com>
- <20240403081935.24308-2-lihuisong@huawei.com>
- <661C8017.1070203@hisilicon.com>
-From: "lihuisong (C)" <lihuisong@huawei.com>
-In-Reply-To: <661C8017.1070203@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600004.china.huawei.com (7.193.23.242)
+In-Reply-To: <20240415-anx7625-defer-log-no-dsi-host-v3-4-619a28148e5c@collabora.com>
 
+On Mon, Apr 15, 2024 at 05:49:32PM -0400, Nícolas F. R. A. Prado wrote:
+> Given that failing to find a DSI host causes the driver to defer probe,
+> make use of dev_err_probe() to log the reason. This makes the defer
+> probe reason available and avoids alerting userspace about something
+> that is not necessarily an error.
+> 
+> Fixes: 23278bf54afe ("drm/bridge: Introduce LT9611 DSI to HDMI bridge")
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>  drivers/gpu/drm/bridge/lontium-lt9611.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-åœ¨ 2024/4/15 9:17, Wei Xu å†™é“:
-> Hi Huisong,
->
-> On 2024/4/3 16:19, Huisong Li wrote:
->> The hccs_get_all_port_attr() is used to obtained the attribute of all
->> ports on a specified DIE from firmware. However, this interface doesn't
->> ensure whether firmware reports the complete attribute of all ports or not.
->> So this patch adds the check for this.
->>
->> Signed-off-by: Huisong Li <lihuisong@huawei.com>
->> ---
->>   drivers/soc/hisilicon/kunpeng_hccs.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
->> index 9ff70b38e5e9..bb69a95b5f2d 100644
->> --- a/drivers/soc/hisilicon/kunpeng_hccs.c
->> +++ b/drivers/soc/hisilicon/kunpeng_hccs.c
->> @@ -556,6 +556,12 @@ static int hccs_get_all_port_attr(struct hccs_dev *hdev,
->>   		start_id = rsp_head.next_id;
->>   	}
->>   
->> +	if (left_buf_len != 0) {
->> +		dev_err(hdev->dev, "do not get the expected port number(%u) attribute.\n",
-> How about changing to "failed to get the expected port number(%u) attribute.\n"?
-ok, I will fix it in next version.
->
-> Best Regards,
-> Wei
->
->> +			size);
->> +		return -EINVAL;
->> +	}
->> +
->>   	return 0;
->>   }
->>   
->>
-> .
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+-- 
+With best wishes
+Dmitry
