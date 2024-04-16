@@ -1,95 +1,83 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965AF5B682
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A24128398
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713271070; cv=none; b=RlO3vZk03V6FmadnAx65j8lcmk4nvknt9UaqiK55B062JemaslaDe9/CrTvtchNkeRyg7INft0WdJT+5SJPo29QBRs72e4sVbJZphaZW6o3Kcngs92HlAC9AIe4gkxl0wGZA1NacEmfEyicSajrmCC6FZSohCFskMSFkRPHLx+k=
+	t=1713271137; cv=none; b=MdyIuHDJH1kjheKN2pNlI+gzQNdLb6l/M8WE6e8QPNsVzbqw2F2U99FeGuRdptng5IlCN5kCYSKDolvjgYXBYKLHueRNsEcjeXGvhZziyLrWdoKGu8zHdw6oWq2pqegTMhTvlG/ep+/ig/kgwU2HILNh69abrcWBcaDD6t80R1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713271070; c=relaxed/simple;
-	bh=4LJ6HXrr7/zGMxHWwNvwLQ04Lnb+7C3+Akuq4JYINEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YIfZCDJV8VTzbZdCAiKHyVeRtwMI6Y9BrmkQ9z/LLINUwKrC8Zm6+z4bmdiWibL4K/ltHL6rQRpRvDpN+GOiLwjRys28X7J8MZfjcaIhkxInTGMpmMeFaENUw/9f9uOL6NHhk/08Ahm+gf5oDkZrZKAD9C7msqcAlXeAAYIDDFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cKMYswuQ; arc=none smtp.client-ip=209.85.128.178
+	s=arc-20240116; t=1713271137; c=relaxed/simple;
+	bh=RmzZf7KFhcOYGC2I6q3cNiiYlOfQWLYJ71vx42JQWRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iP3FD+iCsCUqdOQlj5w/rZJ/oh5X297ZcAVUxFNnFFKzEVFkp53oQzKXLltdYJQKGDLLsIl0uMJPKG61pbA94oaNazWgmqwjO65QNrbbUbNC2ReJsEDIL+F+2Zxb/wlOwtS5JTzyig7DS66rPGz/VZeikH2DTXLAEbpasndUvRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R+dQy6WK; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cKMYswuQ"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-617ddc988f5so49930777b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:37:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R+dQy6WK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a44f2d894b7so482749266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:38:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713271066; x=1713875866; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=STIdOPhZdYvo112wyFBuLZo9s9LDl2Qu/p6eL5RFdqw=;
-        b=cKMYswuQgZEgwzR1koQDAyGsBxb4EB1KCyuqReRXmBwa8wYQ6+2R5KXqrddpRIAQ4c
-         F4X0bJV1fZpuJk6pC1cO94UZthvSZX57xXRumPWhbfNILLAuMqVHmydrcrFYd5TZDqoL
-         cqi1vNDCzJCFGaSOkJvtlkZG9AYDKA9FMWCrGnLWhP3HTS5L4yCp3IjNeHaQQDL3+Jt0
-         nDdH3WWMAArezeNHY+lgIXXvTJB+1/GHBfzKZVtDUI8MPQDrx3CfRiMOmu6Qd8uK2XCu
-         WbTYHmEAHRaVtJzh63a+QycwcfwHIappfO08eFJN5RelCIG6ndgcGuDgc3HzLj5EGgoq
-         L3Fg==
+        d=linaro.org; s=google; t=1713271134; x=1713875934; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmaZPsA5/bY9fp2hcNvKXfbEk2+XWrkUqrlml8f+fjg=;
+        b=R+dQy6WKwUESmMnwaQ3RaKdMz1AG7eVronYUMC0b+WL9pEyXjlai4dcAVwi8N+7mnD
+         AWcXq5HVUIqneMJCrI/UT+pLUPelqBoJP2bLd4WyASFDqYOHxICr0TopYwHP0qyCF8on
+         BYzxIge7T4txf+ZIcN+LWqCHPNJ1IjjEgD5Vf8fu97ME6Tf+62m1enTmOn5tNTTB3oXk
+         Rg7i5m6mQnJQp8iamE64/Teg9GI+YeE7FZ5/5Nd492DP84qwB0N2HzkgzO2ey53Dtcwe
+         nBLsAe0sADf+AMjOOwCCuCjHDCA+NLhgoVTzu6pWvJ1zvi7zJxwSU+lJ5QlZJXeMiLAy
+         fPTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713271066; x=1713875866;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=STIdOPhZdYvo112wyFBuLZo9s9LDl2Qu/p6eL5RFdqw=;
-        b=eshNa60HEg73nRP25yb55b70ZNckpgK1UvSu6vqMHAdmKq+3NvPFENh8do+Ahf9ARY
-         B8uWzDSijwPka0Ud5r5aEWWIqVMmwQeklPqrABveDoIDIL6Ff1bp5gE9UQwNOZ9bL2b0
-         t9XUBQMjX9AWND/Aqn0gSMVGKOwDXr1q12B28/X56xr77AR2ppNFQEaCZpzZG+tx5AJj
-         jbWwA3OWGjTaDXG7OT7oOzqEvGZSeXXDFwy2aCJlinlYoVPcR4Lny+ue1WXnyPrdh4m8
-         rxGk5JGZFUrvF+dSmB/hhexNSeY7/xxepARZ6zpARCxFRO6gBQS/wBQBInsAsDh8E0rC
-         TXQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbCtNW8p2HkGr+fyT0n6YhQw7ns8gRIwB4Dh2DQManyd9ytP00J6Gi8FU6XmHpcj4UsqS7JGZTJz++ta0hgWiKmT5Ok6Yn4ZZdbTmy
-X-Gm-Message-State: AOJu0YwuRackW4Cjs8+3MOBwRt3MrTFc6QkSK+koMmbx2Om+kMdDhCx2
-	y/ZZXkC+jruimf/rLfbGx0myLyXGrjCJDLRIPEsDPOAo3pc7ZJTIbgzNDIk4DgZWTY7OnstyeK4
-	Yf6m+OHwVlGmXbdbEUMmEUU8GF8NfT8wjpT0LkQ==
-X-Google-Smtp-Source: AGHT+IFeOA4awc8p/M3BUkgYhbJYeLw7xEDVGKxA6dOrgdfoPaGNeyp56yT+LyP9EbyhGTUoUXAgTBz2Xy3BL/MSook=
-X-Received: by 2002:a5b:186:0:b0:dcd:4d:d342 with SMTP id r6-20020a5b0186000000b00dcd004dd342mr10998368ybl.50.1713271065794;
- Tue, 16 Apr 2024 05:37:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713271134; x=1713875934;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nmaZPsA5/bY9fp2hcNvKXfbEk2+XWrkUqrlml8f+fjg=;
+        b=YewidJbfPygt1hLb5D8vmEIFir6ZpJBm2P74g/kFt7b+3e0xLCbuvc5bzYqYPWIZsJ
+         vqaJDJ68Ihrvec4755YpnEcQoYq8aoyt/46g3GSCT+i8UZ9fxeb0a5DuXK6J7bQCe3kM
+         n9TCVkRvP0Unt1Dln66Sofm3u2GRLiRdjnQxiJIbV0xC5gpPhTWna2/52MgkCm1sGn5V
+         YKf8ART+5vTbl7pdE7cxBXWjHfBy+lXnUH31dbtFGoNRxmdeTK7RWCGJ23omhKGf9xIh
+         882acN2OKvwOppQT68M613qfkuJUuuuRQLrH1qyokLxRckUrjmPddjpmxT3bGjP07zGt
+         4O2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVlLTaLfyJ0ig2MJCD5t3sjvJNDOjjb+SKXaQq9rnvjSRnEXcUqhzrWEN84y8xWH35Z06ltJNHFW7cc+3s4HUBn3OeU98ZLqPD2LJcD
+X-Gm-Message-State: AOJu0Yx3cOq+mljNNKpsAJQuLvCSIg7BPSKvt0ZR201ylWXjcPg4yl5X
+	K2fXPfpSg6snA8rPI3RESkGmkWBIuvbtVVbW84LWKcsMUTaR5YyNKfXD4hTL4LY=
+X-Google-Smtp-Source: AGHT+IGz3VKYK2E3xDM7FfRYh+Y9LTHdgWe5Ey7fM49QWy+hpmVdcxxwvu7Ke0VgRiRjbYE8DUnyXg==
+X-Received: by 2002:a17:907:9496:b0:a52:30d3:41dd with SMTP id dm22-20020a170907949600b00a5230d341ddmr11072034ejc.41.1713271134447;
+        Tue, 16 Apr 2024 05:38:54 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id dm18-20020a170907949200b00a51983e6190sm6766884ejc.205.2024.04.16.05.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 05:38:53 -0700 (PDT)
+Date: Tue, 16 Apr 2024 15:38:49 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Karan Sanghavi <karansanghvi98@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging : ks7010 ks_wlan_net : Fixed Unnecessary
+ Paranthesis, Prefer Fallthrough and Line spacing issue.
+Message-ID: <c45387e6-1af7-40d9-a2f5-5cc174154485@moroto.mountain>
+References: <20240416115903.92706-1-karansanghvi98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416-pm8xxx-vibrator-new-design-v11-0-7b1c951e1515@quicinc.com>
- <20240416-pm8xxx-vibrator-new-design-v11-1-7b1c951e1515@quicinc.com>
-In-Reply-To: <20240416-pm8xxx-vibrator-new-design-v11-1-7b1c951e1515@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 16 Apr 2024 15:37:35 +0300
-Message-ID: <CAA8EJpr0wV-Fgyyf7tQ-HheYPNmDvCkj4vWL-9rd=gmXrAXOMw@mail.gmail.com>
-Subject: Re: [PATCH v11 1/3] input: pm8xxx-vibrator: refactor to support new
- SPMI vibrator
-To: quic_fenglinw@quicinc.com
-Cc: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416115903.92706-1-karansanghvi98@gmail.com>
 
-On Tue, 16 Apr 2024 at 05:44, Fenglin Wu via B4 Relay
-<devnull+quic_fenglinw.quicinc.com@kernel.org> wrote:
->
-> From: Fenglin Wu <quic_fenglinw@quicinc.com>
->
-> Currently, vibrator control register addresses are hard coded,
-> including the base address and offsets, it's not flexible to
-> support new SPMI vibrator module which is usually included in
-> different PMICs with different base address. Refactor it by using
-> the base address defined in devicetree.
->
-> Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
-> ---
->  drivers/input/misc/pm8xxx-vibrator.c | 41 ++++++++++++++++++++++--------------
->  1 file changed, 25 insertions(+), 16 deletions(-)
->
+On Tue, Apr 16, 2024 at 05:29:03PM +0530, Karan Sanghavi wrote:
+> Fixed a coding style issue.
+> 
+> Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Greg likes parentheses so leave those alone.  The other changes are
+wrong and also break the build.
 
--- 
-With best wishes
-Dmitry
+regards,
+dan carpenter
+
