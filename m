@@ -1,119 +1,106 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A86358203;
-	Tue, 16 Apr 2024 21:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EFB5CDD0
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 21:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713302333; cv=none; b=WDHqd/6/RXCmYdOnG7rS9zlv88ypBQza+pl2914L8swwj87AfBjZnbzc383LBoGQnPTt+PbFWzV9uSQKtJFyQSsHIAz30K48CbLGWF7Z1BlbZk3OGof8LixH7pHkdhXM0+bU+MMPXalfvY6RUxSV2BEm5aQP9pTnBsJnYv/LUvk=
+	t=1713302399; cv=none; b=u9gBfeFBJXGlJB/wXn6ONeh83cjVrM1KAWWuZ0KUt5tIORNL531saSuxK/WER78bHmZvBHXROFpGH6VahBcHzpqvX6KJTzcVpSWJ0qrIyaNk24Dv3h0bU/1JpDPNWwMGL4iCCt6rvL2r/9cN4y781YO41h0p0ZXI+pZuvYCzWpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713302333; c=relaxed/simple;
-	bh=rHxBWPbUv6UV42+sEgbA1iJcX867tFp5OytmZQZ3UGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=afbRBju0EdysIdbh/hBKz4Uze/zHTsD7H4A5QS5SLHxfIygdWZ77rqDvuCLaqFcK0Zs2ofRZCHJq5T31G85LnZJwn9pWrb9va0CvvKnY2hwbAjdablxL5+KdkHawLpFkLU8Z9/a7trLAD8cxJiuHSyKlUDXIcyBa6c/tQV1MUro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKkfCZ7n; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713302399; c=relaxed/simple;
+	bh=K7SiRP0YhghECeWcqNKJo0SVn6WHmqaUqbMmCwF7pPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fHpNjA1YKqSMVxSNlgJpOurwlog6q3kXW6a6PZoKiMbgaUbCue7ZzejXb0uaI8s4xTN3Y1pDbUhxPBLrkBZr5U5e7b0PUSj6GE1UO9KR0tAfAtstDWSH6uFGlfCsao8849mIamEd803WiBJUxgOQxaXqAS7YJL55vhXRxXs89W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVe+n8Hm; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKkfCZ7n"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2aa67da7a1dso1468853a91.3;
-        Tue, 16 Apr 2024 14:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713302331; x=1713907131; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tBEr7AmEEZkKSiw3BsMpmaMNJ9Caj0ON73VIII8SWsI=;
-        b=iKkfCZ7nBgrWRgs8tRnni+CY+zd1ab1GbRxrFerN8YH5NYScv23E3vKlnO5mrMiiub
-         V75QOjMyzdNtdOIHuEQFrIa7Iogmt3y4s/iISfjZxZUKsF5sCMTZy8lYqEIbrSDqxlaH
-         0Jw+9LYAiLNbhR9NMOtM+A/p4RlcagDykwWX2PmSRMjqu2IkeBD22pCLOz+MjI+kRCsT
-         wEx2z1CrTD8nrhhHMz1fPljL7RZdM6Z4ccAcAEAImzni2ZhF0Gn5ILU6qrHzxVWZYyf/
-         Ex/V/mJNGPrH99/C9w/AxziQCoZc8I67SLzraAn7Rlyt5X6uGsTnHweXgaQ1XOy/wCSV
-         U9rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713302331; x=1713907131;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tBEr7AmEEZkKSiw3BsMpmaMNJ9Caj0ON73VIII8SWsI=;
-        b=V5hA/f4Mds2yYfnlZzuJg2M1QlbpXVR0k00UbK5w2Pn18xFZaWAN7nWimYVM/9iSR4
-         U1FbZYzXyhFlPYAE780JzZbxh0+VBntWRAlUQHRof2j/l606PXAEd5wbtL6VxIs2X6IN
-         4btO8dSX5WBtdLewQsWwMg5Kj7qAk68TND6vhEf4Nji7yIFQKVog0avtkNhDyxaOPYW7
-         lsKDfI38jxqqehXV+zhv8BHzokfdsn5wcwC4HctFVhqH3VS4SjWbcxCx2emjRD58fn/S
-         xiwzeEpCSKfENWd6YC5RAqS6NQSqk9CsGnbLkgFZvrhINEmcruFqXt7L4hadhb8XxUfB
-         j8IA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfw36PPHVnyxefr+0hAsn7DFxFtKjmwX02wh0WrlgkJYxv63RWGXWHr0RnlqAezIWi2rUQ7KsWbtNlSxLiQKussFgwhXeAFQd7jdAFd3WG6Z1nBGpwABTI3aMa1kVz5g86x+s0OMXDsA==
-X-Gm-Message-State: AOJu0YxVgvAw34aS/FSYjOjfUcNufiKBAMsVISKXvh4HuaSkH9NZmHou
-	+SpHwYVpPg4loFSZQrg7CwgS//5X+mML6E7LYJ3jBx9ICIrAxO3fjkLlrPsS8hTJLImQFRg3igD
-	ZWUKBG42R959i8j/V2aQNNZgDpac=
-X-Google-Smtp-Source: AGHT+IFhlEFxkQR+ieC/Pa0fKkP87ACk2PMEqPN62geu1ZxkPfEDzM2tLQRrA2jUzsAT+yFWyAIlwAZgs2PhJ+8rSX4=
-X-Received: by 2002:a17:90b:180d:b0:29f:7fad:ba50 with SMTP id
- lw13-20020a17090b180d00b0029f7fadba50mr13315078pjb.8.1713302330612; Tue, 16
- Apr 2024 14:18:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVe+n8Hm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713302398; x=1744838398;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=K7SiRP0YhghECeWcqNKJo0SVn6WHmqaUqbMmCwF7pPs=;
+  b=HVe+n8HmEqiJ9EVOMi+cQ5YPV2Ht8FjwUlbRfcDw2LbkKvKpHQ3Rq8//
+   hP4wgVBtPnGgLqMjJCnu/1WfiVglWTRFSto1iv0wfmAnXOeJ887ovf2Dv
+   u18yb/AnCw08qVO48LpwOMNyPYuubX+tc5kmisnW3mUfY7IuXOovQKClW
+   q2QoA4eVJEaxoOb7wpMbOW1BtbMzVtG1NTeZ31ucAaOkCrqkKILz+kVCl
+   4pVXDMvwjYhPZILs8tmrITSki/Af7lFsTLcjcCVT3UebRyJ7TBRBGz4go
+   6VrgrRnJTKEYsMt0ZglDlkWHLrSfQYUzHVP/zEZX1Vzhtz34pYlQP9KRq
+   A==;
+X-CSE-ConnectionGUID: Crpl4DjUR1ekCkd2ABUpLw==
+X-CSE-MsgGUID: yQscM3mkRLm2bTU7A4ugNQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19914666"
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="19914666"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:19:57 -0700
+X-CSE-ConnectionGUID: JZXsTa2cSbaCm2oPmlnayQ==
+X-CSE-MsgGUID: MMNrelh+SjmDjX57T/9htw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="22871872"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:19:56 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v3 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to struct cpuinfo_x86
+Date: Tue, 16 Apr 2024 14:19:03 -0700
+Message-ID: <20240416211941.9369-2-tony.luck@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240416211941.9369-1-tony.luck@intel.com>
+References: <20240416211941.9369-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305004859.201085-1-aford173@gmail.com> <20240305004859.201085-2-aford173@gmail.com>
-In-Reply-To: <20240305004859.201085-2-aford173@gmail.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Tue, 16 Apr 2024 16:18:38 -0500
-Message-ID: <CAHCN7xLsEvP0A3mQJRzX=nXGr30WD4RU9vQVw9ynqzSi6cDNRg@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] arm64: dts: imx8mp-beacon-kit: Enable HDMI bridge HPD
-To: dri-devel@lists.freedesktop.org
-Cc: aford@beaconembedded.com, laurent.pinchart@ideasonboard.com, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 4, 2024 at 6:49=E2=80=AFPM Adam Ford <aford173@gmail.com> wrote=
-:
->
-> The DSI to HDMI bridge supports hot-plut-detect, but the
-> driver didn't previously support a shared IRQ GPIO.  With
-> the driver updated, the interrupt can be added to the bridge.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Refactor struct cpuinfo_x86 so that the vendor, family, and model
+fields are overlaid in a union with a 32-bit field that combines
+all three (together with a one byte reserved field in the upper
+byte).
 
-Shawn,
+This will make it easy, cheap, and reliable to check all three
+values at once.
 
-Patch 1/2 has been applied and sits in linux-next.  Are you OK to
-apply this to the IMX branch so the hot-plug detection can work?
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/processor.h | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Thank you,
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 89ed5237e79f..d13338860710 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -108,9 +108,15 @@ struct cpuinfo_topology {
+ };
+ 
+ struct cpuinfo_x86 {
+-	__u8			x86;		/* CPU family */
+-	__u8			x86_vendor;	/* CPU vendor */
+-	__u8			x86_model;
++	union {
++		struct {
++			__u8	x86_model;
++			__u8	x86;		/* CPU family */
++			__u8	x86_vendor;	/* CPU vendor */
++			__u8	x86_reserved;
++		};
++		__u32		x86_vfm;	/* combined vendor, family, model */
++	};
+ 	__u8			x86_stepping;
+ #ifdef CONFIG_X86_64
+ 	/* Number of 4K pages in DTLB/ITLB combined(in pages): */
+-- 
+2.44.0
 
-adam
-
-adam
-> ---
-> V2:  No Change
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts b/arch/a=
-rm64/boot/dts/freescale/imx8mp-beacon-kit.dts
-> index a08057410bde..fba8fd04398d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts
-> @@ -304,6 +304,8 @@ adv_bridge: hdmi@3d {
->                 compatible =3D "adi,adv7535";
->                 reg =3D <0x3d>, <0x3c>, <0x3e>, <0x3f>;
->                 reg-names =3D "main", "cec", "edid", "packet";
-> +               interrupt-parent =3D <&gpio4>;
-> +               interrupts =3D <27 IRQ_TYPE_EDGE_FALLING>;
->                 adi,dsi-lanes =3D <4>;
->                 #sound-dai-cells =3D <0>;
->
-> --
-> 2.43.0
->
