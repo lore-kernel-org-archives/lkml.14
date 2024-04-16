@@ -1,263 +1,369 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61DF612CDAF
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E302136679;
+	Tue, 16 Apr 2024 14:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276659; cv=none; b=P8HZYrjs7kGlDplu+LSWOrwxHnVlY8D3VldSjMHe7+tWQBifdhB18HnV7je0a/M5mFXaHG4vPr97/fRXzk4TfTSxC0PRrP6qyWZo238A93ZjtOJMgsSsCV+RlPxWwxQSPrrWq04mcCaRE/uqqrurWOi07RhoSIPcyES83MPhOW0=
+	t=1713276659; cv=none; b=O0cZHtp4a5KEQrAD7M87eyLrlPHsETqSr3Z7eZfXaXKPOGl17eM48ICr0Tb/lymRv5LKhDvVBD+3HejClYc9lK5QnJMPYSfu441otzgTNFezoZ0kIpjSxCy8J860rV2HVxgJJPXBm3FWKtsm4oToyFQ6p7+XV6PgeESiIgu9XIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713276659; c=relaxed/simple;
-	bh=aukE2VXAcMUvjs7ARrPKGU7Le/giScUEE4GV4g707EQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GOz+GaJYNAM/gdQRnB7LVr8kXkylaF+sMmsKXMBkPUlgY/eXmHBh19HnU6N8LjTR2aHLqNwX1cHtEorEhXdgXOylRDaiCNDzvm6UPAHkwmZFIqcC89YkXRMtw4AiAvSq4ahediDue+EOx8VKdF9ifvzYUPnTBAIaN51MLTjz0P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92065339;
-	Tue, 16 Apr 2024 07:11:18 -0700 (PDT)
-Received: from [10.1.26.17] (e133047.arm.com [10.1.26.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F37A3F738;
-	Tue, 16 Apr 2024 07:10:49 -0700 (PDT)
-Message-ID: <f1685b30-9d0d-419e-b004-590edf21315a@arm.com>
-Date: Tue, 16 Apr 2024 15:10:47 +0100
+	bh=lm2FY30vt1roT/QaHJVcBSUumMbZDrssuz719s9NomA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=FNlBFVIeJwpKs8TALBDRaE1k8hqTq1fCldb3kBogBl1gvBRuWieLKERGYobfcJejOoeIXWw03ax94Ny+BHbxllKVepCpV70rtkW793l66ocLze/EZE7oE3ECW9ti4EAOl80y2XFySIpP5/hWtXAakbCDK/zxTONzVhroxJ7Bj2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhqJ333w; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhqJ333w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE162C4AF12;
+	Tue, 16 Apr 2024 14:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713276659;
+	bh=lm2FY30vt1roT/QaHJVcBSUumMbZDrssuz719s9NomA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YhqJ333wGn6nuZFHU/tBSelQsDeTtLfq3RQC1eyOeo3BMOR0QGAC3Yx3RuTfUF7MG
+	 EMeIO5M1+NVfUmSsgJxkntwgv4HyYXRZDCNipM484DuYubMTjuHr0qtG6HBJt+3o4T
+	 zKDo+7WeoZe0pb386rRvmfotzB1GskiiFHWYitVxn/Tv3ShmXRtJxHCxpdwMuNOrUg
+	 raGglP+EF0kolAO/lFpfpjE3hZCYh4gIrZkYxWXWfj6a0zo0m+DcGoWEqLGiK22Z7+
+	 dj0hYaaV4idWzlWUXqutU9GWyQutbJNW8t9KT9pzkG/nfOPP37JoxTlhGshiSw6zJo
+	 gmpJbtApgWkhw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Tue, 16 Apr 2024 16:08:29 +0200
+Subject: [PATCH bpf-next 16/18] selftests/bpf: add checks for
+ bpf_wq_set_callback()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] sched/core: split iowait state into two states
-To: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org, tglx@linutronix.de
-References: <20240416121526.67022-1-axboe@kernel.dk>
- <20240416121526.67022-5-axboe@kernel.dk>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20240416121526.67022-5-axboe@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-bpf_wq-v1-16-c9e66092f842@kernel.org>
+References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=9344;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=lm2FY30vt1roT/QaHJVcBSUumMbZDrssuz719s9NomA=;
+ b=/XoRuGyVUIfvPUGrvgIEt3q9x4Yth7kpYX8XtHKjbLPbv3uYuPrLvbiMLfBQYTsnyO56dmjDo
+ eqdo3l7tOW8AFjqXyx7B7SPcz5H9M97IEkbrmWcDXXay0SQWqo3kyU4
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-On 16/04/2024 13:11, Jens Axboe wrote:
-> iowait is a bogus metric, but it's helpful in the sense that it allows
-> short waits to not enter sleep states that have a higher exit latency
-> than would've otherwise have been picked for iowait'ing tasks. However,
-> it's harmless in that lots of applications and monitoring assumes that
-s/harmless/harmful ?
-> iowait is busy time, or otherwise use it as a health metric.
-> Particularly for async IO it's entirely nonsensical.
-> 
-> Split the iowait part into two parts - one that tracks whether the task
-> needs boosting for short waits, and one that marks whether the task
-> needs to be accounted as such. ->in_iowait_acct nests inside of
-> ->in_iowait, both for efficiency reasons, but also so that the
-> relationship between the two is clear. A waiter may set ->in_wait alone
-s/in_wait/in_iowait/
-> and not care about the accounting.
-> 
-> Existing users of nr_iowait() for accounting purposes are switched to
-> use nr_iowait_acct(), which leaves the governor using nr_iowait() as it
-> only cares about iowaiters, not the accounting side.
-> 
-> Utilize that there's enough space in rq->nr_iowait to store both values
-> in there, shifting the accounting side by half the size of the type.
-> Thank you to Thomas Gleixner for that [1] suggestion.
-> 
-> [1] https://lore.kernel.org/lkml/87sf1b6o9w.ffs@tglx/
-> 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+We assign the callback and set everything up.
+The actual tests of these callbacks will be done when bpf_wq_start() is
+available.
 
-Again this is just a tiny symptom of iowait being bogus, but I understand
-your problem and have nothing simple to offer you as of now.
-Daniel's comment mentioned below is still spot on.
-Any behavior piggybacked ontop of iowait is also non-sensical without
-any definition of what "iowait" is actually supposed to mean.
-Are we returning to the same rq real soon? Maybe, maybe not.
-Are we on the critical path to higher IO throughput and should be run
-with a high frequency after wakeup? Maybe, maybe not (Probably not?).
-Apart from that obligatory nagging and my comments below this looks okay.
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+ tools/testing/selftests/bpf/bpf_experimental.h     |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c        |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h  |   1 +
+ tools/testing/selftests/bpf/progs/wq.c             |  47 +++++++--
+ tools/testing/selftests/bpf/progs/wq_failures.c    | 115 +++++++++++++++++++++
+ 5 files changed, 165 insertions(+), 8 deletions(-)
 
-> ---
->  arch/s390/appldata/appldata_base.c |  2 +-
->  arch/s390/appldata/appldata_os.c   |  2 +-
->  fs/proc/stat.c                     |  2 +-
->  include/linux/sched.h              |  6 +++
->  include/linux/sched/stat.h         |  5 ++-
->  kernel/sched/core.c                | 62 +++++++++++++++++++++++-------
->  kernel/sched/sched.h               |  1 +
->  kernel/time/tick-sched.c           |  6 +--
->  8 files changed, 65 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
-> index c2978cb03b36..6844b5294a8b 100644
-> --- a/arch/s390/appldata/appldata_base.c
-> +++ b/arch/s390/appldata/appldata_base.c
-> @@ -423,4 +423,4 @@ EXPORT_SYMBOL_GPL(si_swapinfo);
->  #endif
->  EXPORT_SYMBOL_GPL(nr_threads);
->  EXPORT_SYMBOL_GPL(nr_running);
-> -EXPORT_SYMBOL_GPL(nr_iowait);
-> +EXPORT_SYMBOL_GPL(nr_iowait_acct);
-> diff --git a/arch/s390/appldata/appldata_os.c b/arch/s390/appldata/appldata_os.c
-> index a363d30ce739..fa4b278aca6c 100644
-> --- a/arch/s390/appldata/appldata_os.c
-> +++ b/arch/s390/appldata/appldata_os.c
-> @@ -100,7 +100,7 @@ static void appldata_get_os_data(void *data)
->  
->  	os_data->nr_threads = nr_threads;
->  	os_data->nr_running = nr_running();
-> -	os_data->nr_iowait  = nr_iowait();
-> +	os_data->nr_iowait  = nr_iowait_acct();
->  	os_data->avenrun[0] = avenrun[0] + (FIXED_1/200);
->  	os_data->avenrun[1] = avenrun[1] + (FIXED_1/200);
->  	os_data->avenrun[2] = avenrun[2] + (FIXED_1/200);
-> diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-> index da60956b2915..149be7a884fb 100644
-> --- a/fs/proc/stat.c
-> +++ b/fs/proc/stat.c
-> @@ -180,7 +180,7 @@ static int show_stat(struct seq_file *p, void *v)
->  		(unsigned long long)boottime.tv_sec,
->  		total_forks,
->  		nr_running(),
-> -		nr_iowait());
-> +		nr_iowait_acct());
->  
->  	seq_put_decimal_ull(p, "softirq ", (unsigned long long)sum_softirq);
->  
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index dcfc2830ed8e..26c69db5484b 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -924,7 +924,13 @@ struct task_struct {
->  
->  	/* Bit to tell TOMOYO we're in execve(): */
->  	unsigned			in_execve:1;
-> +	/* task is in iowait */
->  	unsigned			in_iowait:1;
-> +	/*
-> +	 * task is in iowait and should be accounted as such. can only be set
-> +	 * if ->in_iowait is also set.
-> +	 */
-> +	unsigned			in_iowait_acct:1;
->  #ifndef TIF_RESTORE_SIGMASK
->  	unsigned			restore_sigmask:1;
->  #endif
-> diff --git a/include/linux/sched/stat.h b/include/linux/sched/stat.h
-> index 0108a38bb64d..31e8a44b3d71 100644
-> --- a/include/linux/sched/stat.h
-> +++ b/include/linux/sched/stat.h
-> @@ -19,8 +19,9 @@ DECLARE_PER_CPU(unsigned long, process_counts);
->  extern int nr_processes(void);
->  extern unsigned int nr_running(void);
->  extern bool single_task_running(void);
-> -extern unsigned int nr_iowait(void);
-> -extern unsigned int nr_iowait_cpu(int cpu);
-> +unsigned int nr_iowait_acct(void);
-> +unsigned int nr_iowait_acct_cpu(int cpu);
-> +unsigned int nr_iowait_cpu(int cpu);
->  
->  static inline int sched_info_on(void)
->  {
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 63f6d44f460c..d52d3118dd73 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3721,30 +3721,47 @@ static inline cpumask_t *alloc_user_cpus_ptr(int node)
->  
->  #endif /* !CONFIG_SMP */
->  
-> +/*
-> + * Store iowait and iowait_acct state in the same variable. The lower bits
-> + * hold the iowait state, and the upper bits hold the iowait_acct state.
-> + */
->  static void task_iowait_inc(struct task_struct *p)
->  {
->  #ifdef CONFIG_64BIT
-> -	atomic_long_inc(&task_rq(p)->nr_iowait);
-> +	long val = 1 + ((long) p->in_iowait_acct << 32);
-Are we not doing declarations at the beginning of the block anymore?
+diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
+index 6af6f2a43e6d..272604f9c4a5 100644
+--- a/tools/testing/selftests/bpf/bpf_experimental.h
++++ b/tools/testing/selftests/bpf/bpf_experimental.h
+@@ -471,4 +471,9 @@ extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __
+ extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
+ 
+ extern int bpf_wq_init(struct bpf_wq *wq, void *map, unsigned int flags) __weak __ksym;
++extern int bpf_wq_set_callback_impl(struct bpf_wq *wq,
++		int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
++		unsigned int flags__k, void *aux__ign) __ksym;
++#define bpf_wq_set_callback(timer, cb, flags) \
++	bpf_wq_set_callback_impl(timer, cb, flags, NULL)
+ #endif
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+index 39ad96a18123..eb2b78552ca2 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -494,6 +494,10 @@ __bpf_kfunc static u32 bpf_kfunc_call_test_static_unused_arg(u32 arg, u32 unused
+ 	return arg;
+ }
+ 
++__bpf_kfunc void bpf_kfunc_call_test_sleepable(void)
++{
++}
++
+ BTF_KFUNCS_START(bpf_testmod_check_kfunc_ids)
+ BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
+@@ -520,6 +524,7 @@ BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS | KF_RCU)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_static_unused_arg)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_offset)
++BTF_ID_FLAGS(func, bpf_kfunc_call_test_sleepable, KF_SLEEPABLE)
+ BTF_KFUNCS_END(bpf_testmod_check_kfunc_ids)
+ 
+ static int bpf_testmod_ops_init(struct btf *btf)
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
+index 7c664dd61059..ce5cd763561c 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
+@@ -96,6 +96,7 @@ void bpf_kfunc_call_test_pass2(struct prog_test_pass2 *p) __ksym;
+ void bpf_kfunc_call_test_mem_len_fail2(__u64 *mem, int len) __ksym;
+ 
+ void bpf_kfunc_call_test_destructive(void) __ksym;
++void bpf_kfunc_call_test_sleepable(void) __ksym;
+ 
+ void bpf_kfunc_call_test_offset(struct prog_test_ref_kfunc *p);
+ struct prog_test_member *bpf_kfunc_call_memb_acquire(void);
+diff --git a/tools/testing/selftests/bpf/progs/wq.c b/tools/testing/selftests/bpf/progs/wq.c
+index f92466eb8fb1..c0a094c84834 100644
+--- a/tools/testing/selftests/bpf/progs/wq.c
++++ b/tools/testing/selftests/bpf/progs/wq.c
+@@ -49,7 +49,9 @@ struct {
+ 	__type(value, struct elem);
+ } lru SEC(".maps");
+ 
+-static int test_elem_callback(void *map, int *key)
++static int test_elem_callback(void *map, int *key,
++		int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
++		u64 callback_flags)
+ {
+ 	struct elem init = {}, *val;
+ 	struct bpf_wq *wq;
+@@ -63,13 +65,18 @@ static int test_elem_callback(void *map, int *key)
+ 		return -2;
+ 
+ 	wq = &val->w;
+-	if (bpf_wq_init(wq, map, 0) != 0)
++	if (bpf_wq_init(wq, map, callback_flags) != 0)
+ 		return -3;
+ 
++	if (bpf_wq_set_callback(wq, callback_fn, callback_flags))
++		return -4;
++
+ 	return 0;
+ }
+ 
+-static int test_hmap_elem_callback(void *map, int *key)
++static int test_hmap_elem_callback(void *map, int *key,
++		int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
++		u64 callback_flags)
+ {
+ 	struct hmap_elem init = {}, *val;
+ 	struct bpf_wq *wq;
+@@ -85,6 +92,28 @@ static int test_hmap_elem_callback(void *map, int *key)
+ 	if (bpf_wq_init(wq, map, 0) != 0)
+ 		return -3;
+ 
++	if (bpf_wq_set_callback(wq, callback_fn, callback_flags))
++		return -4;
++
++	return 0;
++}
++
++__u32 ok;
++__u32 ok_sleepable;
++
++/* callback for non sleepable workqueue */
++static int wq_callback(void *map, int *key, struct bpf_wq *work)
++{
++	bpf_kfunc_common_test();
++	ok |= (1 << *key);
++	return 0;
++}
++
++/* callback for sleepable workqueue */
++static int wq_cb_sleepable(void *map, int *key, struct bpf_wq *work)
++{
++	bpf_kfunc_call_test_sleepable();
++	ok_sleepable |= (1 << *key);
+ 	return 0;
+ }
+ 
+@@ -96,7 +125,8 @@ long test_call_array_sleepable(void *ctx)
+ {
+ 	int key = 0;
+ 
+-	return test_elem_callback(&array, &key);
++	return test_elem_callback(&array, &key, wq_cb_sleepable,
++				  BPF_F_WQ_SLEEPABLE);
+ }
+ 
+ SEC("syscall")
+@@ -107,7 +137,8 @@ long test_syscall_array_sleepable(void *ctx)
+ {
+ 	int key = 1;
+ 
+-	return test_elem_callback(&array, &key);
++	return test_elem_callback(&array, &key, wq_cb_sleepable,
++				  BPF_F_WQ_SLEEPABLE);
+ }
+ 
+ SEC("tc")
+@@ -118,7 +149,7 @@ long test_call_hash_sleepable(void *ctx)
+ {
+ 	int key = 2;
+ 
+-	return test_hmap_elem_callback(&hmap, &key);
++	return test_hmap_elem_callback(&hmap, &key, wq_callback, 0);
+ }
+ 
+ SEC("tc")
+@@ -130,7 +161,7 @@ long test_call_hash_malloc_sleepable(void *ctx)
+ {
+ 	int key = 3;
+ 
+-	return test_hmap_elem_callback(&hmap_malloc, &key);
++	return test_hmap_elem_callback(&hmap_malloc, &key, wq_callback, 0);
+ }
+ 
+ SEC("tc")
+@@ -141,5 +172,5 @@ long test_call_lru_sleepable(void *ctx)
+ {
+ 	int key = 4;
+ 
+-	return test_elem_callback(&lru, &key);
++	return test_elem_callback(&lru, &key, wq_callback, 0);
+ }
+diff --git a/tools/testing/selftests/bpf/progs/wq_failures.c b/tools/testing/selftests/bpf/progs/wq_failures.c
+index a08b6c93a195..efde14516358 100644
+--- a/tools/testing/selftests/bpf/progs/wq_failures.c
++++ b/tools/testing/selftests/bpf/progs/wq_failures.c
+@@ -27,6 +27,20 @@ struct {
+ 	__type(value, struct elem);
+ } lru SEC(".maps");
+ 
++/* callback for non sleepable workqueue */
++static int wq_callback(void *map, int *key, struct bpf_wq *work)
++{
++	bpf_kfunc_common_test();
++	return 0;
++}
++
++/* callback for sleepable workqueue */
++static int wq_cb_sleepable(void *map, int *key, struct bpf_wq *work)
++{
++	bpf_kfunc_call_test_sleepable();
++	return 0;
++}
++
+ SEC("tc")
+ /* test that bpf_wq_init takes a map as a second argument
+  */
+@@ -80,3 +94,104 @@ long test_wq_init_wrong_map(void *ctx)
+ 
+ 	return 0;
+ }
++
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that bpf_wq_set_callback() can not be called with a
++ * sleepable callback without BPF_F_WQ_SLEEPABLE
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_kfunc_call_test_sleepable#") /* anchor message */
++__msg("program must be sleepable to call sleepable kfunc bpf_kfunc_call_test_sleepable")
++long test_call_sleepable_callback_missing_flag(void *ctx)
++{
++	int key = 0;
++	struct bpf_wq *wq;
++
++	wq = bpf_map_lookup_elem(&array, &key);
++	if (wq) {
++		bpf_wq_init(wq, &array, 0);
++		bpf_wq_set_callback(wq, wq_cb_sleepable, 0);
++	}
++
++	return 0;
++}
++
++SEC("tc")
++/* check that calling a non sleepable callback with
++ * bpf_wq_set_callback() while providing BPF_F_WQ_SLEEPABLE
++ * fails.
++ */
++__retval(3)
++long test_call_non_sleepable_callback_wrong_flag(void *ctx)
++{
++	int key = 1;
++	struct bpf_wq *wq;
++
++	wq = bpf_map_lookup_elem(&array, &key);
++	if (!wq)
++		return 1;
++
++	if (bpf_wq_init(wq, &array, 0))
++		return 2;
++
++	if (bpf_wq_set_callback(wq, wq_callback, BPF_F_WQ_SLEEPABLE))
++		return 3;
++
++	return -22;
++}
++
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that the first argument of bpf_wq_set_callback()
++ * is a correct bpf_wq pointer.
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_wq_set_callback_impl#") /* anchor message */
++__msg("arg#0 doesn't point to a map value")
++long test_wrong_wq_pointer(void *ctx)
++{
++	int key = 0;
++	struct bpf_wq *wq;
++
++	wq = bpf_map_lookup_elem(&array, &key);
++	if (!wq)
++		return 1;
++
++	if (bpf_wq_init(wq, &array, 0))
++		return 2;
++
++	if (bpf_wq_set_callback((void *)&wq, wq_callback, 0))
++		return 3;
++
++	return -22;
++}
++
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that the first argument of bpf_wq_set_callback()
++ * is a correct bpf_wq pointer.
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_wq_set_callback_impl#") /* anchor message */
++__msg("off 1 doesn't point to 'struct bpf_wq' that is at 0")
++long test_wrong_wq_pointer_offset(void *ctx)
++{
++	int key = 0;
++	struct bpf_wq *wq;
++
++	wq = bpf_map_lookup_elem(&array, &key);
++	if (!wq)
++		return 1;
++
++	if (bpf_wq_init(wq, &array, 0))
++		return 2;
++
++	if (bpf_wq_set_callback((void *)wq + 1, wq_cb_sleepable, 0))
++		return 3;
++
++	return -22;
++}
 
-> +	atomic_long_add(val, &task_rq(p)->nr_iowait);
->  #else
-> -	atomic_inc(&task_rq(p)->nr_iowait);
-> +	int val = 1 + ((int) p->in_iowait_acct << 16);
-> +	atomic_add(val, &task_rq(p)->nr_iowait);
->  #endif
->  }
->  
->  static void task_iowait_dec(struct task_struct *p)
->  {
->  #ifdef CONFIG_64BIT
-> -	atomic_long_dec(&task_rq(p)->nr_iowait);
-> +	long val = 1 + ((long) p->in_iowait_acct << 32);
-> +	atomic_long_sub(val, &task_rq(p)->nr_iowait);
->  #else
-> -	atomic_dec(&task_rq(p)->nr_iowait);
-> +	int val = 1 + ((int) p->in_iowait_acct << 16);
-> +	atomic_sub(val, &task_rq(p)->nr_iowait);
->  #endif
->  }
->  
->  int rq_iowait(struct rq *rq)
->  {
->  #ifdef CONFIG_64BIT
-> -	return atomic_long_read(&rq->nr_iowait);
-> +	return atomic_long_read(&rq->nr_iowait) & ((1UL << 32) - 1);
-> +#else
-> +	return atomic_read(&rq->nr_iowait) & ((1U << 16) - 1);
-> +#endif
-> +}
-> +
-> +int rq_iowait_acct(struct rq *rq)
-> +{
-> +#ifdef CONFIG_64BIT
-> +	return atomic_long_read(&rq->nr_iowait) >> 32;
->  #else
-> -	return atomic_read(&rq->nr_iowait);
-> +	return atomic_read(&rq->nr_iowait) >> 16;
->  #endif
->  }
->  
-> @@ -5497,7 +5514,12 @@ unsigned long long nr_context_switches(void)
->   * it does become runnable.
->   */
->  
-> -unsigned int nr_iowait_cpu(int cpu)
-> +unsigned int nr_iowait_acct_cpu(int cpu)
+-- 
+2.44.0
 
-There is a comment above here by Daniel referring to "these two
-interfaces [...]", originally referring to nr_iowait_cpu() and
-get_iowait_load().
-get_iowait_load() was removed in commit a7fe5190c03f ("cpuidle: menu: Remove get_loadavg() from the performance multiplier")
-but nr_iowait_cpu() remains, so the comment should remain above it.
-Rewording is also way overdue, although that's hardly on your
-patch ;)
-
-> +{
-> +	return rq_iowait_acct(cpu_rq(cpu));
-> +}
-> +
-> +unsigned nr_iowait_cpu(int cpu)
-unsigned int
->  {
->  	return rq_iowait(cpu_rq(cpu));
->  }
-> @@ -5532,12 +5554,12 @@ unsigned int nr_iowait_cpu(int cpu)
->   * Task CPU affinities can make all that even more 'interesting'.
->   */
->  
-> -unsigned int nr_iowait(void)
-> +unsigned int nr_iowait_acct(void)
->  {
->  	unsigned int i, sum = 0;
->  
->  	for_each_possible_cpu(i)
-> -		sum += nr_iowait_cpu(i);
-> +		sum += nr_iowait_acct_cpu(i);
->  
->  	return sum;
->  }
-> @@ -9032,18 +9054,32 @@ int __sched yield_to(struct task_struct *p, bool preempt)
->  }
->  EXPORT_SYMBOL_GPL(yield_to);
->  [snip]
