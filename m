@@ -1,57 +1,57 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C8B84E0D;
-	Tue, 16 Apr 2024 22:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B8D13AD2A;
+	Tue, 16 Apr 2024 22:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713307535; cv=none; b=dTgJ23Xgk/2njxd4VkXec0/WMdFOylbl4CHOIvi70oN+Xr8TD+GsUvkzWyCDpjb7rXAZiC4mn9ofmkpFE3UlESMcrLKZ6sihO2RvJzjma7XP52ZR5Wxcbqy5DlC0ALpJlGEypD5z4YUbDQpp3NehBE1G1tyz8djNlcfXtEN4uCY=
+	t=1713307540; cv=none; b=nLNwyAgMzr/nJtBPD/CWlcV2LLvViVxIx/mYwi0mOi99FFkBNMioPZHFwpvacSjgfxlD+j/R6gZKoo8vZDOBr9UGu6CK+wY6K8qgd1MpQQBH1O/p+zDzF4JJJplnfptgyAwbt7s3H6uIUhC0YIhRz/7Lm9V78uNWAoaFkf2uqdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713307535; c=relaxed/simple;
-	bh=OvWapGcT6t4PFAv9+2O2wLSpw37LChZYxPCfgsgzZ3o=;
+	s=arc-20240116; t=1713307540; c=relaxed/simple;
+	bh=Az1qPONXhvU7zLA+l9wbEw7Pq7A1FrFAxWKB/xjwA4A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bhy9uON1grTt4bRRvznrGijuz4XOlpRgIgxT+Bx9J4trBFzDf2/UW0HDCM41FBKut50Sarn38O3KuCQru1EJ1aJAZrv7R4AXcOd9BiP2pl3uHljsA6canWHTzXHSSluEScOgM6EIM9sZEF7Akrd6HsKlIzGuq06rEBVHMP14FvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fdO+3V2i; arc=none smtp.client-ip=209.85.167.44
+	 MIME-Version; b=R7rRkM7UAFRctpv9Rrulfa0GdzH9+iLPdEVnvY7fG0Kwtps5VA79SePyc1RFboq6/XqTwwHgv92S9frOiW4RHSM/X7xB33tXUBNOwwNr807I+fuoynh1QrDcR6PgHTuKA6NyRe+HZZqljHvI5UZyKikELWtXXKtJyEgFgmUj990=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FA5ivX/7; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdO+3V2i"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516ef30b16eso5908711e87.3;
-        Tue, 16 Apr 2024 15:45:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FA5ivX/7"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516d2600569so6339396e87.0;
+        Tue, 16 Apr 2024 15:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713307531; x=1713912331; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713307536; x=1713912336; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fl+09NveEZ7JrOZQLpZJo0GxD4IEZYvfFa4c5KwVM9I=;
-        b=fdO+3V2iYJzSovvGc0QtskuKatBGrz2VwUfa+zSEa9OxtgO2L87zJV1ETun21Jb6uX
-         fb1oMhcZR2RJtvcTaxrkRIWCyloj/GfEwU+yEjFqJ9vAosv5EP1M9zjy5V08v0vjC2wJ
-         TnpsJMGJf/DBVvg+R1AG2k+wmUsL5l3hl0kU2Az4n77/HMCcIqi+Vr7Fsb5+gFzCRwd/
-         wA9QCMw5QYzfxAxGgZ4iUKlZBOerzQfI1D8YCw3uxvLGOFHcNa+Zjob/8igoqpjImN0h
-         nQUwMn1xI1vnyiGyXHi8rem4GvJYLrv6zvdQk5xrS5XxixaA1Tbnk80HtlLyB5wsQMYW
-         2IHQ==
+        bh=tjf5sKRPFKmqZtF9xerWNP7YPIPFDcYHmMoKl8ei6RA=;
+        b=FA5ivX/7jagiPlAlz4pA6dueDknXHsfw8SAxWfchESY5RbO3hR381G7feVYMPUwHed
+         Gazc/5fRk/6CFD3YQRTo5fmNkKvyqF+2KnXKBKquVuuS0fwfCMpLArRN1wSfGLzs5nVW
+         s2dWZggzN7C7Km2AhetyCKa7nT8ikq9L091+YXcol5khG0FMmRplaVEdMwdNImYW2ego
+         4v/2UnAHzFJ/ReOBzb1+jF10s6/gizJHNJ1XykCs73IAIjVv/Mlp4gBNzi+sols7jCUc
+         Hy+AGgOuU3F1WWx3Y7OLN1ptErXJLs/NpuSmqas6srTLiiShukOZ5WFVDTbYx0KXC/im
+         0IzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713307531; x=1713912331;
+        d=1e100.net; s=20230601; t=1713307536; x=1713912336;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fl+09NveEZ7JrOZQLpZJo0GxD4IEZYvfFa4c5KwVM9I=;
-        b=WMDySlzaF4SurcZGDicvfDESvlLSeIXSwthfXCN3WlPTkN6i3rqOTLg1dyQQDWVkpp
-         ZS3Fa8flkQ19tWlE+9Hh1l6UByKRGEr/f3wnH+9lJPMlB0JNjnkAV5BszkEpuUvXMouj
-         vadSb5nvz0ZG4qGuWrR+3xGWR5ylMiD7clUCOZ73Pm9yMPAriDy6kmHQ/xFIhRJxk545
-         yR5SWKs6+ZQe/MRVVN8DZkRRI9pPWgDviNByLc7lOmvr9fBitPqmLWwGJPcw9q49bk5G
-         jlL/OXpufOT8ZeSDFgAOphWcnFxR2/nZ6c51tT6w0f3Y2cfTA4+Qf1S28mXsbZdB7JrZ
-         VE/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXnXMyi7Lg9dqu8xlU4/ux6z9fnIAouchLs0BwV16YRsjiPWay83Er/UZBcRnHQ0v9GSu2NKPyoJdpHZ62+6q+Ln1Bruaxo5FoHVPTZ
-X-Gm-Message-State: AOJu0YxTwGqc3fEje0MBEdQ1N3roKbLSZ/N7iJULT4H+MrNlJ3PIpuzt
-	6oJcqkWW5e+oBDOcl2kvFBvbuuLJ9FKufUbmibabyuMj3PIjh57ZFSTcJDjyYeM=
-X-Google-Smtp-Source: AGHT+IE6ZdHzRi1VVjigAZ2YOFt2mlRMbLsSa1Cd+g7FYHmjByvPZ34EzYuhRXAY1tM+iR1u/Tg9mA==
-X-Received: by 2002:ac2:5a03:0:b0:515:a733:2e21 with SMTP id q3-20020ac25a03000000b00515a7332e21mr7995112lfn.44.1713307530848;
-        Tue, 16 Apr 2024 15:45:30 -0700 (PDT)
+        bh=tjf5sKRPFKmqZtF9xerWNP7YPIPFDcYHmMoKl8ei6RA=;
+        b=ieXcIGe1XAwXWyqfKorHFuHUbdqsEKLOz7393MWgpnVCn3z0st+oWSEgTmY+X+J6os
+         xl0ZV1kNcE0pMUnkIZnlKp+BwCnB0f//Pf7Kp04H4CRKXfYyiLAm1eRV+/XwNENzt3Gc
+         V5a6F3Hslg7xfvo9c+nirD8tcYENim/Q6VOxoG03MHnH56+cbKtIq3bv6tRGPRXIamWZ
+         Abr4ludBcAl8qC7Mxjf00TxF8LBEchPoctH3Qy/CzPlj/CGYZdVfaum+OFCVe2g7xT6A
+         twsarTzbIXaB9IQ7KQ9paIUN9xs9xEaUAssV5DvutTQypJC1OaGW7x5wU1urQgiWgn8I
+         ozZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvUeQ0ioBa6MSa8+ynIxGsw3k/1U/LHZMF823qLSbwayYhxinh5OaLYTyn2Ob5KYT9ks1pzwB9ti6xg2zQ+B9hmaBpvSE9Kmlu+e8J
+X-Gm-Message-State: AOJu0Yz1g2KIG0q2XHcdqcZYYzWwQhOMLwMZFev7p2fyICap21+iKLXZ
+	XiDbjmu+dKCBaKJK2O7JYzQo635yZYbER5VCviGQxQM12p+5si+4+KplPvtpyAI=
+X-Google-Smtp-Source: AGHT+IGdCCbPYmi32d5FO1fSAsqP6VWKrzXnj0yw6bAy07Ja4NdpC0ERwjRUVuH/7HWulrLwj+lRrg==
+X-Received: by 2002:a19:6441:0:b0:516:582:2348 with SMTP id b1-20020a196441000000b0051605822348mr9532300lfj.54.1713307535911;
+        Tue, 16 Apr 2024 15:45:35 -0700 (PDT)
 Received: from localhost (95-24-153-47.broadband.corbina.ru. [95.24.153.47])
-        by smtp.gmail.com with ESMTPSA id t11-20020a192d4b000000b00515acfbe448sm1770829lft.163.2024.04.16.15.45.30
+        by smtp.gmail.com with ESMTPSA id g22-20020a19ee16000000b00518e9495a30sm748394lfb.97.2024.04.16.15.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 15:45:30 -0700 (PDT)
+        Tue, 16 Apr 2024 15:45:35 -0700 (PDT)
 From: Mikhail Rudenko <mike.rudenko@gmail.com>
 To: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -63,9 +63,9 @@ Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Mikhail Rudenko <mike.rudenko@gmail.com>
-Subject: [PATCH v5 01/16] media: i2c: ov4689: Clean up and annotate the register table
-Date: Wed, 17 Apr 2024 01:45:09 +0300
-Message-ID: <20240416224524.1511357-2-mike.rudenko@gmail.com>
+Subject: [PATCH v5 05/16] media: i2c: ov4689: Remove i2c_client from ov4689 struct
+Date: Wed, 17 Apr 2024 01:45:13 +0300
+Message-ID: <20240416224524.1511357-6-mike.rudenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240416224524.1511357-1-mike.rudenko@gmail.com>
 References: <20240416224524.1511357-1-mike.rudenko@gmail.com>
@@ -77,240 +77,166 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Many values in the register table are actually power-on
-defaults. Remove those and also unused HDR exposures and gains.
-Annotate the remaining values using the publicly available datasheet
-to facilitate further development. No functional change intended.
+The 'client' field within the 'ov4689' structure is solely used to
+access its 'dev' member. This commit removes the 'client' field and
+directly stores a pointer to the 'struct device'.
 
 Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/media/i2c/ov4689.c | 205 +++++++++++++++++++++----------------
- 1 file changed, 119 insertions(+), 86 deletions(-)
+ drivers/media/i2c/ov4689.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-index 403091651885..9890189bcbd5 100644
+index 06a3e02b5c80..a3fb6498753f 100644
 --- a/drivers/media/i2c/ov4689.c
 +++ b/drivers/media/i2c/ov4689.c
-@@ -3,7 +3,7 @@
-  * ov4689 driver
-  *
-  * Copyright (C) 2017 Fuzhou Rockchip Electronics Co., Ltd.
-- * Copyright (C) 2022 Mikhail Rudenko
-+ * Copyright (C) 2022, 2024 Mikhail Rudenko
-  */
- 
- #include <linux/clk.h>
-@@ -123,91 +123,124 @@ struct ov4689_gain_range {
-  * mipi_datarate per lane 1008Mbps
-  */
- static const struct regval ov4689_2688x1520_regs[] = {
--	{0x0103, 0x01}, {0x3638, 0x00}, {0x0300, 0x00},
--	{0x0302, 0x2a}, {0x0303, 0x00}, {0x0304, 0x03},
--	{0x030b, 0x00}, {0x030d, 0x1e}, {0x030e, 0x04},
--	{0x030f, 0x01}, {0x0312, 0x01}, {0x031e, 0x00},
--	{0x3000, 0x20}, {0x3002, 0x00}, {0x3018, 0x72},
--	{0x3020, 0x93}, {0x3021, 0x03}, {0x3022, 0x01},
--	{0x3031, 0x0a}, {0x303f, 0x0c}, {0x3305, 0xf1},
--	{0x3307, 0x04}, {0x3309, 0x29}, {0x3500, 0x00},
--	{0x3501, 0x60}, {0x3502, 0x00}, {0x3503, 0x04},
--	{0x3504, 0x00}, {0x3505, 0x00}, {0x3506, 0x00},
--	{0x3507, 0x00}, {0x3508, 0x00}, {0x3509, 0x80},
--	{0x350a, 0x00}, {0x350b, 0x00}, {0x350c, 0x00},
--	{0x350d, 0x00}, {0x350e, 0x00}, {0x350f, 0x80},
--	{0x3510, 0x00}, {0x3511, 0x00}, {0x3512, 0x00},
--	{0x3513, 0x00}, {0x3514, 0x00}, {0x3515, 0x80},
--	{0x3516, 0x00}, {0x3517, 0x00}, {0x3518, 0x00},
--	{0x3519, 0x00}, {0x351a, 0x00}, {0x351b, 0x80},
--	{0x351c, 0x00}, {0x351d, 0x00}, {0x351e, 0x00},
--	{0x351f, 0x00}, {0x3520, 0x00}, {0x3521, 0x80},
--	{0x3522, 0x08}, {0x3524, 0x08}, {0x3526, 0x08},
--	{0x3528, 0x08}, {0x352a, 0x08}, {0x3602, 0x00},
--	{0x3603, 0x40}, {0x3604, 0x02}, {0x3605, 0x00},
--	{0x3606, 0x00}, {0x3607, 0x00}, {0x3609, 0x12},
--	{0x360a, 0x40}, {0x360c, 0x08}, {0x360f, 0xe5},
--	{0x3608, 0x8f}, {0x3611, 0x00}, {0x3613, 0xf7},
--	{0x3616, 0x58}, {0x3619, 0x99}, {0x361b, 0x60},
--	{0x361c, 0x7a}, {0x361e, 0x79}, {0x361f, 0x02},
--	{0x3632, 0x00}, {0x3633, 0x10}, {0x3634, 0x10},
--	{0x3635, 0x10}, {0x3636, 0x15}, {0x3646, 0x86},
--	{0x364a, 0x0b}, {0x3700, 0x17}, {0x3701, 0x22},
--	{0x3703, 0x10}, {0x370a, 0x37}, {0x3705, 0x00},
--	{0x3706, 0x63}, {0x3709, 0x3c}, {0x370b, 0x01},
--	{0x370c, 0x30}, {0x3710, 0x24}, {0x3711, 0x0c},
--	{0x3716, 0x00}, {0x3720, 0x28}, {0x3729, 0x7b},
--	{0x372a, 0x84}, {0x372b, 0xbd}, {0x372c, 0xbc},
--	{0x372e, 0x52}, {0x373c, 0x0e}, {0x373e, 0x33},
--	{0x3743, 0x10}, {0x3744, 0x88}, {0x3745, 0xc0},
--	{0x374a, 0x43}, {0x374c, 0x00}, {0x374e, 0x23},
--	{0x3751, 0x7b}, {0x3752, 0x84}, {0x3753, 0xbd},
--	{0x3754, 0xbc}, {0x3756, 0x52}, {0x375c, 0x00},
--	{0x3760, 0x00}, {0x3761, 0x00}, {0x3762, 0x00},
--	{0x3763, 0x00}, {0x3764, 0x00}, {0x3767, 0x04},
--	{0x3768, 0x04}, {0x3769, 0x08}, {0x376a, 0x08},
--	{0x376b, 0x20}, {0x376c, 0x00}, {0x376d, 0x00},
--	{0x376e, 0x00}, {0x3773, 0x00}, {0x3774, 0x51},
--	{0x3776, 0xbd}, {0x3777, 0xbd}, {0x3781, 0x18},
--	{0x3783, 0x25}, {0x3798, 0x1b}, {0x3800, 0x00},
--	{0x3801, 0x08}, {0x3802, 0x00}, {0x3803, 0x04},
--	{0x3804, 0x0a}, {0x3805, 0x97}, {0x3806, 0x05},
--	{0x3807, 0xfb}, {0x3808, 0x0a}, {0x3809, 0x80},
--	{0x380a, 0x05}, {0x380b, 0xf0}, {0x380c, 0x0a},
--	{0x380d, 0x0e}, {0x380e, 0x06}, {0x380f, 0x12},
--	{0x3810, 0x00}, {0x3811, 0x08}, {0x3812, 0x00},
--	{0x3813, 0x04}, {0x3814, 0x01}, {0x3815, 0x01},
--	{0x3819, 0x01}, {0x3820, 0x00}, {0x3821, 0x06},
--	{0x3829, 0x00}, {0x382a, 0x01}, {0x382b, 0x01},
--	{0x382d, 0x7f}, {0x3830, 0x04}, {0x3836, 0x01},
--	{0x3837, 0x00}, {0x3841, 0x02}, {0x3846, 0x08},
--	{0x3847, 0x07}, {0x3d85, 0x36}, {0x3d8c, 0x71},
--	{0x3d8d, 0xcb}, {0x3f0a, 0x00}, {0x4000, 0xf1},
--	{0x4001, 0x40}, {0x4002, 0x04}, {0x4003, 0x14},
--	{0x400e, 0x00}, {0x4011, 0x00}, {0x401a, 0x00},
--	{0x401b, 0x00}, {0x401c, 0x00}, {0x401d, 0x00},
--	{0x401f, 0x00}, {0x4020, 0x00}, {0x4021, 0x10},
--	{0x4022, 0x07}, {0x4023, 0xcf}, {0x4024, 0x09},
--	{0x4025, 0x60}, {0x4026, 0x09}, {0x4027, 0x6f},
--	{0x4028, 0x00}, {0x4029, 0x02}, {0x402a, 0x06},
--	{0x402b, 0x04}, {0x402c, 0x02}, {0x402d, 0x02},
--	{0x402e, 0x0e}, {0x402f, 0x04}, {0x4302, 0xff},
--	{0x4303, 0xff}, {0x4304, 0x00}, {0x4305, 0x00},
--	{0x4306, 0x00}, {0x4308, 0x02}, {0x4500, 0x6c},
--	{0x4501, 0xc4}, {0x4502, 0x40}, {0x4503, 0x01},
--	{0x4601, 0xa7}, {0x4800, 0x04}, {0x4813, 0x08},
--	{0x481f, 0x40}, {0x4829, 0x78}, {0x4837, 0x10},
--	{0x4b00, 0x2a}, {0x4b0d, 0x00}, {0x4d00, 0x04},
--	{0x4d01, 0x42}, {0x4d02, 0xd1}, {0x4d03, 0x93},
--	{0x4d04, 0xf5}, {0x4d05, 0xc1}, {0x5000, 0xf3},
--	{0x5001, 0x11}, {0x5004, 0x00}, {0x500a, 0x00},
--	{0x500b, 0x00}, {0x5032, 0x00}, {0x5040, 0x00},
--	{0x5050, 0x0c}, {0x5500, 0x00}, {0x5501, 0x10},
--	{0x5502, 0x01}, {0x5503, 0x0f}, {0x8000, 0x00},
--	{0x8001, 0x00}, {0x8002, 0x00}, {0x8003, 0x00},
--	{0x8004, 0x00}, {0x8005, 0x00}, {0x8006, 0x00},
--	{0x8007, 0x00}, {0x8008, 0x00}, {0x3638, 0x00},
--	{REG_NULL, 0x00},
-+	/* System control*/
-+	{ 0x0103, 0x01 }, /* SC_CTRL0103 software_reset = 1 */
-+	{ 0x3000, 0x20 }, /* SC_CMMN_PAD_OEN0 FSIN_output_enable = 1 */
-+	{ 0x3021, 0x03 }, /*
-+			   * SC_CMMN_MISC_CTRL fst_stby_ctr = 0,
-+			   * sleep_no_latch_enable = 0
-+			   */
-+
-+	/* AEC PK */
-+	{ 0x3503, 0x04 }, /* AEC_MANUAL gain_input_as_sensor_gain_format = 1 */
-+	{ 0x352a, 0x08 }, /* DIG_GAIN_FRAC_LONG dig_gain_long[14:8] = 0x08 (2x) */
-+
-+	/* ADC and analog control*/
-+	{ 0x3603, 0x40 },
-+	{ 0x3604, 0x02 },
-+	{ 0x3609, 0x12 },
-+	{ 0x360c, 0x08 },
-+	{ 0x360f, 0xe5 },
-+	{ 0x3608, 0x8f },
-+	{ 0x3611, 0x00 },
-+	{ 0x3613, 0xf7 },
-+	{ 0x3616, 0x58 },
-+	{ 0x3619, 0x99 },
-+	{ 0x361b, 0x60 },
-+	{ 0x361e, 0x79 },
-+	{ 0x3634, 0x10 },
-+	{ 0x3635, 0x10 },
-+	{ 0x3636, 0x15 },
-+	{ 0x3646, 0x86 },
-+	{ 0x364a, 0x0b },
-+
-+	/* Sensor control */
-+	{ 0x3700, 0x17 },
-+	{ 0x3701, 0x22 },
-+	{ 0x3703, 0x10 },
-+	{ 0x370a, 0x37 },
-+	{ 0x3706, 0x63 },
-+	{ 0x3709, 0x3c },
-+	{ 0x370c, 0x30 },
-+	{ 0x3710, 0x24 },
-+	{ 0x3720, 0x28 },
-+	{ 0x3729, 0x7b },
-+	{ 0x372b, 0xbd },
-+	{ 0x372c, 0xbc },
-+	{ 0x372e, 0x52 },
-+	{ 0x373c, 0x0e },
-+	{ 0x373e, 0x33 },
-+	{ 0x3743, 0x10 },
-+	{ 0x3744, 0x88 },
-+	{ 0x3745, 0xc0 },
-+	{ 0x374c, 0x00 },
-+	{ 0x374e, 0x23 },
-+	{ 0x3751, 0x7b },
-+	{ 0x3753, 0xbd },
-+	{ 0x3754, 0xbc },
-+	{ 0x3756, 0x52 },
-+	{ 0x376b, 0x20 },
-+	{ 0x3774, 0x51 },
-+	{ 0x3776, 0xbd },
-+	{ 0x3777, 0xbd },
-+	{ 0x3781, 0x18 },
-+	{ 0x3783, 0x25 },
-+	{ 0x3798, 0x1b },
-+
-+	/* Timing control */
-+	{ 0x3801, 0x08 }, /* H_CROP_START_L h_crop_start[7:0] = 0x08 */
-+	{ 0x3805, 0x97 }, /* H_CROP_END_L h_crop_end[7:0] = 0x97 */
-+	{ 0x380c, 0x0a }, /* TIMING_HTS_H hts[14:8] = 0x0a */
-+	{ 0x380d, 0x0e }, /* TIMING_HTS_L hts[7:0] = 0x0e */
-+	{ 0x3811, 0x08 }, /* H_WIN_OFF_L h_win_off[7:0] = 0x08*/
-+	{ 0x3813, 0x04 }, /* V_WIN_OFF_L v_win_off[7:0] = 0x04 */
-+	{ 0x3819, 0x01 }, /* VSYNC_END_L vsync_end_point[7:0] = 0x01 */
-+	{ 0x3821, 0x06 }, /* TIMING_FORMAT2 array_h_mirror = 1, digital_h_mirror = 1 */
-+
-+	/* OTP control */
-+	{ 0x3d85, 0x36 }, /* OTP_REG85 OTP_power_up_load_setting_enable = 1,
-+			   * OTP_power_up_load_data_enable = 1,
-+			   * OTP_bist_select = 1 (compare with zero)
-+			   */
-+	{ 0x3d8c, 0x71 }, /* OTP_SETTING_STT_ADDRESS_H */
-+	{ 0x3d8d, 0xcb }, /* OTP_SETTING_STT_ADDRESS_L */
-+
-+	/* BLC registers*/
-+	{ 0x4001, 0x40 }, /* DEBUG_MODE */
-+	{ 0x401b, 0x00 }, /* DEBUG_MODE */
-+	{ 0x401d, 0x00 }, /* DEBUG_MODE */
-+	{ 0x401f, 0x00 }, /* DEBUG_MODE */
-+	{ 0x4020, 0x00 }, /* ANCHOR_LEFT_START_H anchor_left_start[11:8] = 0 */
-+	{ 0x4021, 0x10 }, /* ANCHOR_LEFT_START_L anchor_left_start[7:0] = 0x10 */
-+	{ 0x4022, 0x07 }, /* ANCHOR_LEFT_END_H anchor_left_end[11:8] = 0x07 */
-+	{ 0x4023, 0xcf }, /* ANCHOR_LEFT_END_L anchor_left_end[7:0] = 0xcf */
-+	{ 0x4024, 0x09 }, /* ANCHOR_RIGHT_START_H anchor_right_start[11:8] = 0x09 */
-+	{ 0x4025, 0x60 }, /* ANCHOR_RIGHT_START_L anchor_right_start[7:0] = 0x60 */
-+	{ 0x4026, 0x09 }, /* ANCHOR_RIGHT_END_H anchor_right_end[11:8] = 0x09 */
-+	{ 0x4027, 0x6f }, /* ANCHOR_RIGHT_END_L anchor_right_end[7:0] = 0x6f */
-+
-+	/* ADC sync control */
-+	{ 0x4500, 0x6c }, /* ADC_SYNC_CTRL */
-+	{ 0x4503, 0x01 }, /* ADC_SYNC_CTRL */
-+
-+	/* VFIFO */
-+	{ 0x4601, 0xa7 }, /* VFIFO_CTRL_01 r_vfifo_read_start[7:0] = 0xa7 */
-+
-+	/* Temperature monitor */
-+	{ 0x4d00, 0x04 }, /* TPM_CTRL_00 tmp_slope[15:8] = 0x04 */
-+	{ 0x4d01, 0x42 }, /* TPM_CTRL_01 tmp_slope[7:0] = 0x42 */
-+	{ 0x4d02, 0xd1 }, /* TPM_CTRL_02 tpm_offset[31:24] = 0xd1 */
-+	{ 0x4d03, 0x93 }, /* TPM_CTRL_03 tpm_offset[23:16] = 0x93 */
-+	{ 0x4d04, 0xf5 }, /* TPM_CTRL_04 tpm_offset[15:8]  = 0xf5 */
-+	{ 0x4d05, 0xc1 }, /* TPM_CTRL_05 tpm_offset[7:0]   = 0xc1 */
-+
-+	/* pre-ISP control */
-+	{ 0x5050, 0x0c }, /* DEBUG_MODE */
-+
-+	/* OTP-DPC control */
-+	{ 0x5501, 0x10 }, /* OTP_DPC_START_L otp_start_address[7:0] = 0x10 */
-+	{ 0x5503, 0x0f }, /* OTP_DPC_END_L otp_end_address[7:0] = 0x0f */
-+	{ REG_NULL, 0x00 },
+@@ -74,7 +74,7 @@ struct ov4689_mode {
  };
  
- static const struct ov4689_mode supported_modes[] = {
+ struct ov4689 {
+-	struct i2c_client *client;
++	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct clk *xvclk;
+ 	struct gpio_desc *reset_gpio;
+@@ -405,13 +405,13 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+ static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
+ {
+ 	struct ov4689 *ov4689 = to_ov4689(sd);
+-	struct i2c_client *client = ov4689->client;
++	struct device *dev = ov4689->dev;
+ 	int ret = 0;
+ 
+ 	mutex_lock(&ov4689->mutex);
+ 
+ 	if (on) {
+-		ret = pm_runtime_resume_and_get(&client->dev);
++		ret = pm_runtime_resume_and_get(dev);
+ 		if (ret < 0)
+ 			goto unlock_and_return;
+ 
+@@ -420,26 +420,26 @@ static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
+ 					  ov4689->cur_mode->num_regs,
+ 					  NULL);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 
+ 		ret = __v4l2_ctrl_handler_setup(&ov4689->ctrl_handler);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 
+ 		ret = cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
+ 				OV4689_MODE_STREAMING, NULL);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 	} else {
+ 		cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
+ 			  OV4689_MODE_SW_STANDBY, NULL);
+-		pm_runtime_put(&client->dev);
++		pm_runtime_put(dev);
+ 	}
+ 
+ unlock_and_return:
+@@ -553,7 +553,6 @@ static const struct v4l2_subdev_ops ov4689_subdev_ops = {
+  */
+ static int ov4689_map_gain(struct ov4689 *ov4689, int logical_gain, int *result)
+ {
+-	const struct device *dev = &ov4689->client->dev;
+ 	const struct ov4689_gain_range *range;
+ 	unsigned int n;
+ 
+@@ -564,7 +563,8 @@ static int ov4689_map_gain(struct ov4689 *ov4689, int logical_gain, int *result)
+ 	}
+ 
+ 	if (n == ARRAY_SIZE(ov4689_gain_ranges)) {
+-		dev_warn_ratelimited(dev, "no mapping found for gain %d\n",
++		dev_warn_ratelimited(ov4689->dev,
++				     "no mapping found for gain %d\n",
+ 				     logical_gain);
+ 		return -EINVAL;
+ 	}
+@@ -580,7 +580,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct ov4689 *ov4689 =
+ 		container_of(ctrl->handler, struct ov4689, ctrl_handler);
+-	struct i2c_client *client = ov4689->client;
++	struct device *dev = ov4689->dev;
+ 	int sensor_gain;
+ 	s64 max_expo;
+ 	int ret;
+@@ -597,7 +597,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		break;
+ 	}
+ 
+-	if (!pm_runtime_get_if_in_use(&client->dev))
++	if (!pm_runtime_get_if_in_use(dev))
+ 		return 0;
+ 
+ 	switch (ctrl->id) {
+@@ -618,13 +618,13 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
+ 		break;
+ 	default:
+-		dev_warn(&client->dev, "%s Unhandled id:0x%x, val:0x%x\n",
++		dev_warn(dev, "%s Unhandled id:0x%x, val:0x%x\n",
+ 			 __func__, ctrl->id, ctrl->val);
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+-	pm_runtime_put(&client->dev);
++	pm_runtime_put(dev);
+ 
+ 	return ret;
+ }
+@@ -689,8 +689,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+ 
+ 	if (handler->error) {
+ 		ret = handler->error;
+-		dev_err(&ov4689->client->dev, "Failed to init controls(%d)\n",
+-			ret);
++		dev_err(ov4689->dev, "Failed to init controls(%d)\n", ret);
+ 		goto err_free_handler;
+ 	}
+ 
+@@ -716,7 +715,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+ static int ov4689_check_sensor_id(struct ov4689 *ov4689,
+ 				  struct i2c_client *client)
+ {
+-	struct device *dev = &ov4689->client->dev;
++	struct device *dev = ov4689->dev;
+ 	u64 id = 0;
+ 	int ret;
+ 
+@@ -744,7 +743,7 @@ static int ov4689_configure_regulators(struct ov4689 *ov4689)
+ 	for (i = 0; i < ARRAY_SIZE(ov4689_supply_names); i++)
+ 		ov4689->supplies[i].supply = ov4689_supply_names[i];
+ 
+-	return devm_regulator_bulk_get(&ov4689->client->dev,
++	return devm_regulator_bulk_get(ov4689->dev,
+ 				       ARRAY_SIZE(ov4689_supply_names),
+ 				       ov4689->supplies);
+ }
+@@ -813,7 +812,8 @@ static int ov4689_probe(struct i2c_client *client)
+ 	if (!ov4689)
+ 		return -ENOMEM;
+ 
+-	ov4689->client = client;
++	ov4689->dev = dev;
++
+ 	ov4689->cur_mode = &supported_modes[OV4689_MODE_2688_1520];
+ 
+ 	ov4689->xvclk = devm_clk_get_optional(dev, NULL);
 -- 
 2.44.0
 
