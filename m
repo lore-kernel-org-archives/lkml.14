@@ -1,121 +1,98 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932994C7E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E2F5227
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713230428; cv=none; b=Wq2FNu5oZ98KZugEKJe7qmcZKjXBLG6UimSpQ+b9no+EZttWEeXnhqVRSxpAaPJk5ecjduRpDxzYzJq2QVfbv9fW00Hw0quIykkuXlih1xpEjyV2K52bD5lXeDU3y9KD0C8puF0dMOsGQuQK/CUYoWv7QoqqIL1QoMo6ezGy2wM=
+	t=1713231106; cv=none; b=RSF8lnsxGzw51p6X3VkXhtSvjc+iOQFQil0Nrm0OcPNnF5CDYoSmtXsbqs9nMKyCZoSbuVhu7osX68UTavx6DfujpyYZiWZ3+/XS2pEAQLw3nI6kAgQgJKEZs/yjQQnUWFWXBCD8NvCpuFvZ8iqXdL1XmZid8ArBj9v066XvN80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713230428; c=relaxed/simple;
-	bh=iTXC1HastUkjArtDpmP+czeqPs0RdtUw86qhG4JAjrc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ffn5hji2P/F/sDYbeL03/JKxuIvVa4ao9j81ikQSvOc7HwDmtuM/ZYXw41aOZb3bK1ZrTABFqaTdFZaRboBIB493GuesZtPwcDmXrSBMHVJQZWC8BFNUp9pnXocrPI4sIc960ocWDJn0lGIdeF7jnMFZLXfHtwIEAjxzFOcDE1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VGvM8oGg; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713231106; c=relaxed/simple;
+	bh=Lt5qa2tKJaXTFBi0w3EsYO6+uA+O9X5f7mwgjyL9enY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=GmmumJfKTjdr68yUk98IQ1aLBlE5+f19QcjuyJmO/fMNZAnkWeIt/zJ4pCege9iJCHKHMUqMMFc4vfQntZH6Q2FDaDHN7A3w6q2VVnl26tnUquezCvdw2WFVcHHTQvvbYJl+6iapOo6X6iFaa9fi1zwGEJL34c9Asd7L6S8OmOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=HEVVAzMy; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGvM8oGg"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ee13f19e7eso2794838b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:20:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HEVVAzMy"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2331bef249eso1704474fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 18:31:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713230424; x=1713835224; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xcz+73pSqE9SfopeTAgajRWWiV1WsHA33Nl/GYOpK3o=;
-        b=VGvM8oGgJMneFc/sRop+Sz87oJDotGvmwXHuj/qQUdjX93Nl7IdZvG20rnsd2b0cF4
-         CHi2zBVDHd+GpQuxw0pYOaSuA2CZxniN8s2XRm2LrSauDX13DWtLESkJL+N9ky3vefBx
-         Ld0Wk3eDRA6CP3Fd9PzUnHndF8QBOoPItjIWcw/iAg1zjlUx95mK350n27ASFvEbRGN2
-         z/gbgbV9tHX24UE91Z1o7JbWKkBKV9WBaQphbNEJahHwE7lgIEkaRw/z22/wJbXSkOzo
-         /GnegE8efLSKZlZUnZQdRkNuS1MncdK7sXBJJsQZPFizzl8dMli9rxoxUImgedEETy4g
-         lRvw==
+        d=sifive.com; s=google; t=1713231104; x=1713835904; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AQ1Fmu4Vn/bJTdN2f3Tpcx/PWLxgEkHvwqs2u4LlG6Q=;
+        b=HEVVAzMyF1muehurD+wPHdccrFYjznQhek7Pj9Zo/xqr+DP3k0LlMxUawUtmMRIaP3
+         J1dAOQdq4rAYIMuYeQWeXQdE3d/3peI9jBhuEkhy+/YFFG8ecl2N/u4BLjvedK6jIj5b
+         A63gJpx12RAcwVEViQROHb4N3N92JBWQ9stjyv26upTh2sr23mqVbu4g1tVVuqIWycWQ
+         epLc6hjOuoT6rYDpRNOuc/YPqzCqEFQMq6GS5C/+O2sCX01uZGZnPC2xpijEDrUI5sx5
+         +dFDLglTqLuOiwScIH2dLPeUVha4tGy56l0rKdYt10zR+S2CHMSZi+grcKCB2nQfq1uz
+         qvjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713230424; x=1713835224;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xcz+73pSqE9SfopeTAgajRWWiV1WsHA33Nl/GYOpK3o=;
-        b=Y3MWUdYr8FC7li/Csfc8y+h7nmd+5s+kkcW++t4BSuGo4DPdw+h5uOd1lubPkmwM+r
-         O+I5qKiPo1pLjbHafAYkmHkRi+wOJGp301MbUxsrnFRgL3bs9Z5LQJ0oq9uLoWcn2Lo2
-         FmOD8UzxodKRAki9k44pmgPfRhCHYJX0ky1r3rNvEG/irDwPcO8Jz0++1VbycF3LXRjN
-         duYBYroF2Ov6aqQyMBy9hkASVjMLyAuMacDfvvpwKfqyw2h/OPuXLMLYRhR0s+oEkPJS
-         sBVCTvqtjy2X1VXjWzRDaQp/tsO/O1kggkMyH6p8LBbYAgzne7MwW2rmWIjVgIJ0VDEm
-         RoxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUB2YI1gO+duxIKm5Eqt3MJkzN2AAdNAHISMixGH8oyVgRj2UX//ppiFZzP20fZCPq1FUloIUslyajH9F73Lc1/9G/w9E5HFaaVYmKg
-X-Gm-Message-State: AOJu0YysH2S5nhfAmPgBhA90LhJRD4G0KRqojvLYfWH7ZuaO3jYSFVxk
-	Uwiln3UQnZINKf0Lp5smZfsvZYp4M3GQ9PBfEDAVyczahhqDUAYQ
-X-Google-Smtp-Source: AGHT+IGKSm5nin6p9UNwnL1BsNEX4TIhlHRZpogTl4rQv960sLOS5qdNTVHqAH3CSeYwafOn5VBL6g==
-X-Received: by 2002:a05:6a00:b96:b0:6ec:ea4b:f07a with SMTP id g22-20020a056a000b9600b006ecea4bf07amr11785479pfj.34.1713230423713;
-        Mon, 15 Apr 2024 18:20:23 -0700 (PDT)
-Received: from mari.. ([2804:431:cfd3:2714:2d55:751b:9f5f:563e])
-        by smtp.gmail.com with ESMTPSA id y30-20020a056a00181e00b006e6854d45afsm8061866pfa.97.2024.04.15.18.20.19
+        d=1e100.net; s=20230601; t=1713231104; x=1713835904;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AQ1Fmu4Vn/bJTdN2f3Tpcx/PWLxgEkHvwqs2u4LlG6Q=;
+        b=wZyOEijj/+zQ40+D3TbGmqbM0dYHPSw1o2gNd4gqGSm4gNtfpL7tCJ8osYlbJLcAI5
+         AqOLn1rTW5cspcXsu1dXMIt7DFS2fVG03CdXawaL1+IeIDtaejIWgCE25xHaC60n/Sfi
+         2gWB0xg+iVnPiZQtD6mHi2YJqrsg4h3vHqDFMqYQUja68ta3HqzxyLn9imL4pkVd+pzq
+         IQyh0gvfhnhtcZuD0C7qUhzvwI8vfVkEqpPvg6JBsQdS1D5En3O0iY1AbdtSozWzPv96
+         NqupDCIpavTUxQmI6e1+PbXY6SWEKNcVafejI/0tjXLB6861Q9PA/+hFxLdPhCRJUc2g
+         tFCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4kUUF3IZshjGc7tygQENhTkri5YzsIfCpiCVdvt7GvqJos2j2EzeMx/LQ9g9X56WoxVz9XKYW3BIKbSkR9Hdqcu2n4FMCF9slJdCV
+X-Gm-Message-State: AOJu0Yw4+zOkNZLiiDTW3ZwBgb+2z6X1aBUi5JDIRJptTd0RnJZU7A8+
+	xg+Yh3FXB6yGZFnaL7nkC5qps/VUYll0VmuCmQ3qz7MFl85gs39IiW+fHBgpiyE=
+X-Google-Smtp-Source: AGHT+IGV28aTXnJZCsv5QTO9arJ7Mejc0+P37jlL8ec2Sy1TLly7UFcUuc2+Lugf+lCiR8bqSzVsfg==
+X-Received: by 2002:a05:6870:f61d:b0:22e:8a2a:2497 with SMTP id ek29-20020a056870f61d00b0022e8a2a2497mr13497999oab.45.1713231103843;
+        Mon, 15 Apr 2024 18:31:43 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id b13-20020a630c0d000000b005dc4da2121fsm7642525pgl.6.2024.04.15.18.31.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 18:20:23 -0700 (PDT)
-From: MarileneGarcia <marilene.agarcia@gmail.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Cc: MarileneGarcia <marilene.agarcia@gmail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
+        Mon, 15 Apr 2024 18:31:43 -0700 (PDT)
+From: Zong Li <zong.li@sifive.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	schwab@suse.de,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: meson-efuse: Replacing the use of of_node_put to __free
-Date: Mon, 15 Apr 2024 22:17:51 -0300
-Message-Id: <20240416011751.93016-1-marilene.agarcia@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Zong Li <zong.li@sifive.com>
+Subject: [PATCH] Revert "riscv: disable generation of unwind tables"
+Date: Tue, 16 Apr 2024 09:31:38 +0800
+Message-Id: <20240416013138.28760-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Use __free for device_node values, and thus drop calls to
-of_node_put.
+This reverts commit 2f394c0e7d1129a35156e492bc8f445fb20f43ac.
 
-The goal is to reduce memory management issues by using this
-scope-based of_node_put() cleanup to simplify function exit
-handling. When using __free a resource is allocated within a
-block, it is automatically freed at the end of the block.
+RISC-V has supported the complete relocation types in module loader by
+'8fd6c5142395 ("riscv: Add remaining module relocations")'.
+Now RISC-V port can enable unwind tables in case eh_frame parsing is
+needed.
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: MarileneGarcia <marilene.agarcia@gmail.com>
+Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- drivers/nvmem/meson-efuse.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/riscv/Makefile | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-index 33678d0af2c2..400a9a075e53 100644
---- a/drivers/nvmem/meson-efuse.c
-+++ b/drivers/nvmem/meson-efuse.c
-@@ -42,20 +42,19 @@ static int meson_efuse_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct meson_sm_firmware *fw;
--	struct device_node *sm_np;
- 	struct nvmem_device *nvmem;
- 	struct nvmem_config *econfig;
- 	struct clk *clk;
- 	unsigned int size;
-+	struct device_node *sm_np __free(device_node) =
-+		of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 5b3115a19852..9216bf8a2691 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -94,9 +94,6 @@ ifeq ($(CONFIG_CMODEL_MEDANY),y)
+ 	KBUILD_CFLAGS += -mcmodel=medany
+ endif
  
--	sm_np = of_parse_phandle(pdev->dev.of_node, "secure-monitor", 0);
- 	if (!sm_np) {
- 		dev_err(&pdev->dev, "no secure-monitor node\n");
- 		return -ENODEV;
- 	}
- 
- 	fw = meson_sm_get(sm_np);
--	of_node_put(sm_np);
- 	if (!fw)
- 		return -EPROBE_DEFER;
- 
+-# Avoid generating .eh_frame sections.
+-KBUILD_CFLAGS += -fno-asynchronous-unwind-tables -fno-unwind-tables
+-
+ # The RISC-V attributes frequently cause compatibility issues and provide no
+ # information, so just turn them off.
+ KBUILD_CFLAGS += $(call cc-option,-mno-riscv-attribute)
 -- 
-2.34.1
+2.17.1
 
