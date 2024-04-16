@@ -1,274 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DCB1353F9;
-	Tue, 16 Apr 2024 14:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61DF612CDAF
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276655; cv=none; b=L1m/bW+fzSvMfOhBkmIQx//BkCaea80LPWZBmv5Lz5s6SDYkqOiW+36M/oE6aOK/xfuwGwKKnwf39Vx0c29gZpB7Uk05Sf649ISAmARYHwK99umcBwq2wTNMlOFtJT9mDeGyknZWdAKo7nhLbbhxnydC8g2dUwY2ogpx1XyN9eI=
+	t=1713276659; cv=none; b=P8HZYrjs7kGlDplu+LSWOrwxHnVlY8D3VldSjMHe7+tWQBifdhB18HnV7je0a/M5mFXaHG4vPr97/fRXzk4TfTSxC0PRrP6qyWZo238A93ZjtOJMgsSsCV+RlPxWwxQSPrrWq04mcCaRE/uqqrurWOi07RhoSIPcyES83MPhOW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276655; c=relaxed/simple;
-	bh=PPXK46VhuHV4LHvO9/F2U+mh0gqt3BI4LddQFjAfCcI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OGPpgsDibmWyKBnu6Cf90dMsqcG8ebdoUhyctaHUfm8eyZ33vOeScYGmb/NlHpjEPwohZE3boVdacoGtcCedhJCpmqREkbeEbnJGJ9fUu4EQ4xksdo6C1BMsV3WRMcSkrGQuHvU04ig9oXoh1FJ2sain8Yfs2ZGy/y04PJ3J5HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYfPuUOi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYfPuUOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0F2C4AF4D;
-	Tue, 16 Apr 2024 14:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713276655;
-	bh=PPXK46VhuHV4LHvO9/F2U+mh0gqt3BI4LddQFjAfCcI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PYfPuUOiPYH+zBB1jAahr4hRLjQ2z792X+k9Z1/8kfEwqoooWDCW/2Gs0EVJQH2K+
-	 O5bFY9lBhiSQKwbdCkBOh7SePT4sKACP/gJKifr6/YlU3rGe8V00LFnw+s79Uanyxg
-	 +5QpAHkHzs5kVpLKyI5E2tMDwjpbeT+qssPW4KH6d7L23888I9jZR7OHZSqqUaXHNZ
-	 cUlPmqroYZJwdR54vSQzgaXUyF4er4/rdbuZzop+m+h/TAQCpyJsGdOxEb5j8gbJFa
-	 OdEm8kR9v5pWG2IGlMi97QDPjw/NAEpVV0BtMyZvlxOntRCLSq4uzixikaHy8tV5VC
-	 OAW3YC5bnsdnA==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Tue, 16 Apr 2024 16:08:28 +0200
-Subject: [PATCH bpf-next 15/18] bpf: wq: add bpf_wq_set_callback_impl
+	s=arc-20240116; t=1713276659; c=relaxed/simple;
+	bh=aukE2VXAcMUvjs7ARrPKGU7Le/giScUEE4GV4g707EQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOz+GaJYNAM/gdQRnB7LVr8kXkylaF+sMmsKXMBkPUlgY/eXmHBh19HnU6N8LjTR2aHLqNwX1cHtEorEhXdgXOylRDaiCNDzvm6UPAHkwmZFIqcC89YkXRMtw4AiAvSq4ahediDue+EOx8VKdF9ifvzYUPnTBAIaN51MLTjz0P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92065339;
+	Tue, 16 Apr 2024 07:11:18 -0700 (PDT)
+Received: from [10.1.26.17] (e133047.arm.com [10.1.26.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F37A3F738;
+	Tue, 16 Apr 2024 07:10:49 -0700 (PDT)
+Message-ID: <f1685b30-9d0d-419e-b004-590edf21315a@arm.com>
+Date: Tue, 16 Apr 2024 15:10:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] sched/core: split iowait state into two states
+To: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, tglx@linutronix.de
+References: <20240416121526.67022-1-axboe@kernel.dk>
+ <20240416121526.67022-5-axboe@kernel.dk>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20240416121526.67022-5-axboe@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-bpf_wq-v1-15-c9e66092f842@kernel.org>
-References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=7703;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=PPXK46VhuHV4LHvO9/F2U+mh0gqt3BI4LddQFjAfCcI=;
- b=RSyFLk/zlbBQyIZ8BLnNNTu7HjvoidQ1Ic4eaTp/8ry4ZigR7hwKkRmYcGeNKAO4wZSx0mO4m
- yvpMFsvDgWmCDxCQ7HjFjP6ksfusw6wwj219GTvDpgQl9wCLJBGqWx4
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-In the verifier, we need to teach it that the mentioned callback is
-is an async call.
-We look at the provided flags and set the callback to be sleepable if
-BPF_F_WQ_SLEEPABLE is set.
+On 16/04/2024 13:11, Jens Axboe wrote:
+> iowait is a bogus metric, but it's helpful in the sense that it allows
+> short waits to not enter sleep states that have a higher exit latency
+> than would've otherwise have been picked for iowait'ing tasks. However,
+> it's harmless in that lots of applications and monitoring assumes that
+s/harmless/harmful ?
+> iowait is busy time, or otherwise use it as a health metric.
+> Particularly for async IO it's entirely nonsensical.
+> 
+> Split the iowait part into two parts - one that tracks whether the task
+> needs boosting for short waits, and one that marks whether the task
+> needs to be accounted as such. ->in_iowait_acct nests inside of
+> ->in_iowait, both for efficiency reasons, but also so that the
+> relationship between the two is clear. A waiter may set ->in_wait alone
+s/in_wait/in_iowait/
+> and not care about the accounting.
+> 
+> Existing users of nr_iowait() for accounting purposes are switched to
+> use nr_iowait_acct(), which leaves the governor using nr_iowait() as it
+> only cares about iowaiters, not the accounting side.
+> 
+> Utilize that there's enough space in rq->nr_iowait to store both values
+> in there, shifting the accounting side by half the size of the type.
+> Thank you to Thomas Gleixner for that [1] suggestion.
+> 
+> [1] https://lore.kernel.org/lkml/87sf1b6o9w.ffs@tglx/
+> 
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
----
- kernel/bpf/helpers.c  | 22 +++++++++++++++++
- kernel/bpf/verifier.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 87 insertions(+), 3 deletions(-)
+Again this is just a tiny symptom of iowait being bogus, but I understand
+your problem and have nothing simple to offer you as of now.
+Daniel's comment mentioned below is still spot on.
+Any behavior piggybacked ontop of iowait is also non-sensical without
+any definition of what "iowait" is actually supposed to mean.
+Are we returning to the same rq real soon? Maybe, maybe not.
+Are we on the critical path to higher IO throughput and should be run
+with a high frequency after wakeup? Maybe, maybe not (Probably not?).
+Apart from that obligatory nagging and my comments below this looks okay.
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index 9ac1b8bb3a01..e5c8adc44619 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -1362,6 +1362,13 @@ static int __bpf_async_set_callback(struct bpf_async_kern *async, void *callback
- 		ret = -EINVAL;
- 		goto out;
- 	}
-+	if (type == BPF_ASYNC_TYPE_WQ) {
-+		/* check that flags_k is consistent with work->flags */
-+		if ((flags ^ cb->flags) & BPF_F_WQ_SLEEPABLE) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
- 	if (!atomic64_read(&cb->map->usercnt)) {
- 		/* maps with timers must be either held by user space
- 		 * or pinned in bpffs. Otherwise timer might still be
-@@ -2721,6 +2728,20 @@ __bpf_kfunc int bpf_wq_init(struct bpf_wq *wq, void *map, unsigned int flags)
- 	return __bpf_async_init(async, map, flags, BPF_ASYNC_TYPE_WQ);
- }
- 
-+__bpf_kfunc int bpf_wq_set_callback_impl(struct bpf_wq *wq,
-+					 int (callback_fn)(void *map, int *key, struct bpf_wq *wq),
-+					 unsigned int flags__k,
-+					 void *aux__ign)
-+{
-+	struct bpf_prog_aux *aux = (struct bpf_prog_aux *)aux__ign;
-+	struct bpf_async_kern *async = (struct bpf_async_kern *)wq;
-+
-+	if (flags__k & ~BPF_F_WQ_SLEEPABLE)
-+		return -EINVAL;
-+
-+	return __bpf_async_set_callback(async, callback_fn, aux, flags__k, BPF_ASYNC_TYPE_WQ);
-+}
-+
- __bpf_kfunc_end_defs();
- 
- BTF_KFUNCS_START(generic_btf_ids)
-@@ -2799,6 +2820,7 @@ BTF_ID_FLAGS(func, bpf_dynptr_size)
- BTF_ID_FLAGS(func, bpf_dynptr_clone)
- BTF_ID_FLAGS(func, bpf_modify_return_test_tp)
- BTF_ID_FLAGS(func, bpf_wq_init)
-+BTF_ID_FLAGS(func, bpf_wq_set_callback_impl)
- BTF_KFUNCS_END(common_btf_ids)
- 
- static const struct btf_kfunc_id_set common_kfunc_set = {
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 6a45d88244c6..947cd544ffab 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -501,8 +501,12 @@ static bool is_dynptr_ref_function(enum bpf_func_id func_id)
- }
- 
- static bool is_sync_callback_calling_kfunc(u32 btf_id);
-+static bool is_async_callback_calling_kfunc(u32 btf_id);
-+static bool is_callback_calling_kfunc(u32 btf_id);
- static bool is_bpf_throw_kfunc(struct bpf_insn *insn);
- 
-+static bool is_bpf_wq_set_callback_impl_kfunc(u32 btf_id);
-+
- static bool is_sync_callback_calling_function(enum bpf_func_id func_id)
- {
- 	return func_id == BPF_FUNC_for_each_map_elem ||
-@@ -530,7 +534,8 @@ static bool is_sync_callback_calling_insn(struct bpf_insn *insn)
- 
- static bool is_async_callback_calling_insn(struct bpf_insn *insn)
- {
--	return bpf_helper_call(insn) && is_async_callback_calling_function(insn->imm);
-+	return (bpf_helper_call(insn) && is_async_callback_calling_function(insn->imm)) ||
-+	       (bpf_pseudo_kfunc_call(insn) && is_async_callback_calling_kfunc(insn->imm));
- }
- 
- static bool is_may_goto_insn(struct bpf_insn *insn)
-@@ -9536,7 +9541,7 @@ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *ins
- 	 */
- 	env->subprog_info[subprog].is_cb = true;
- 	if (bpf_pseudo_kfunc_call(insn) &&
--	    !is_sync_callback_calling_kfunc(insn->imm)) {
-+	    !is_callback_calling_kfunc(insn->imm)) {
- 		verbose(env, "verifier bug: kfunc %s#%d not marked as callback-calling\n",
- 			func_id_name(insn->imm), insn->imm);
- 		return -EFAULT;
-@@ -9550,7 +9555,7 @@ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *ins
- 	if (is_async_callback_calling_insn(insn)) {
- 		struct bpf_verifier_state *async_cb;
- 
--		/* there is no real recursion here. timer callbacks are async */
-+		/* there is no real recursion here. timer and workqueue callbacks are async */
- 		env->subprog_info[subprog].is_async_cb = true;
- 		async_cb = push_async_cb(env, env->subprog_info[subprog].start,
- 					 insn_idx, subprog, is_sleepable);
-@@ -11042,6 +11047,7 @@ enum special_kfunc_type {
- 	KF_bpf_throw,
- 	KF_bpf_iter_css_task_new,
- 	KF_bpf_wq_init,
-+	KF_bpf_wq_set_callback_impl,
- };
- 
- BTF_SET_START(special_kfunc_set)
-@@ -11069,6 +11075,7 @@ BTF_ID(func, bpf_throw)
- BTF_ID(func, bpf_iter_css_task_new)
- #endif
- BTF_ID(func, bpf_wq_init)
-+BTF_ID(func, bpf_wq_set_callback_impl)
- BTF_SET_END(special_kfunc_set)
- 
- BTF_ID_LIST(special_kfunc_list)
-@@ -11100,6 +11107,7 @@ BTF_ID(func, bpf_iter_css_task_new)
- BTF_ID_UNUSED
- #endif
- BTF_ID(func, bpf_wq_init)
-+BTF_ID(func, bpf_wq_set_callback_impl)
- 
- static bool is_kfunc_ret_null(struct bpf_kfunc_call_arg_meta *meta)
- {
-@@ -11431,12 +11439,28 @@ static bool is_sync_callback_calling_kfunc(u32 btf_id)
- 	return btf_id == special_kfunc_list[KF_bpf_rbtree_add_impl];
- }
- 
-+static bool is_async_callback_calling_kfunc(u32 btf_id)
-+{
-+	return btf_id == special_kfunc_list[KF_bpf_wq_set_callback_impl];
-+}
-+
- static bool is_bpf_throw_kfunc(struct bpf_insn *insn)
- {
- 	return bpf_pseudo_kfunc_call(insn) && insn->off == 0 &&
- 	       insn->imm == special_kfunc_list[KF_bpf_throw];
- }
- 
-+static bool is_bpf_wq_set_callback_impl_kfunc(u32 btf_id)
-+{
-+	return btf_id == special_kfunc_list[KF_bpf_wq_set_callback_impl];
-+}
-+
-+static bool is_callback_calling_kfunc(u32 btf_id)
-+{
-+	return is_sync_callback_calling_kfunc(btf_id) ||
-+	       is_async_callback_calling_kfunc(btf_id);
-+}
-+
- static bool is_rbtree_lock_required_kfunc(u32 btf_id)
- {
- 	return is_bpf_rbtree_api_kfunc(btf_id);
-@@ -12244,6 +12268,22 @@ static int check_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 		}
- 	}
- 
-+	if (is_bpf_wq_set_callback_impl_kfunc(meta.func_id)) {
-+		if (!meta.arg_constant.found) {
-+			verbose(env, "kfunc %s#%d failed flags verification\n",
-+				func_name, meta.func_id);
-+			return -EINVAL;
-+		}
-+		err = push_callback_call(env, insn, insn_idx, meta.subprogno,
-+					 !!(meta.arg_constant.value & BPF_F_WQ_SLEEPABLE),
-+					 set_timer_callback_state);
-+		if (err) {
-+			verbose(env, "kfunc %s#%d failed callback verification\n",
-+				func_name, meta.func_id);
-+			return err;
-+		}
-+	}
-+
- 	rcu_lock = is_kfunc_bpf_rcu_read_lock(&meta);
- 	rcu_unlock = is_kfunc_bpf_rcu_read_unlock(&meta);
- 
-@@ -19681,6 +19721,28 @@ static int fixup_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 		   desc->func_id == special_kfunc_list[KF_bpf_rdonly_cast]) {
- 		insn_buf[0] = BPF_MOV64_REG(BPF_REG_0, BPF_REG_1);
- 		*cnt = 1;
-+	} else if (is_bpf_wq_set_callback_impl_kfunc(desc->func_id)) {
-+		/* The verifier will process callback_fn as many times as necessary
-+		 * with different maps and the register states prepared by
-+		 * set_timer_callback_state will be accurate.
-+		 *
-+		 * The following use case is valid:
-+		 *   map1 is shared by prog1, prog2, prog3.
-+		 *   prog1 calls bpf_timer_init for some map1 elements
-+		 *   prog2 calls bpf_timer_set_callback for some map1 elements.
-+		 *     Those that were not bpf_timer_init-ed will return -EINVAL.
-+		 *   prog3 calls bpf_timer_start for some map1 elements.
-+		 *     Those that were not both bpf_timer_init-ed and
-+		 *     bpf_timer_set_callback-ed will return -EINVAL.
-+		 */
-+		struct bpf_insn ld_addrs[2] = {
-+			BPF_LD_IMM64(BPF_REG_4, (long)env->prog->aux),
-+		};
-+
-+		insn_buf[0] = ld_addrs[0];
-+		insn_buf[1] = ld_addrs[1];
-+		insn_buf[2] = *insn;
-+		*cnt = 3;
- 	}
- 	return 0;
- }
+> ---
+>  arch/s390/appldata/appldata_base.c |  2 +-
+>  arch/s390/appldata/appldata_os.c   |  2 +-
+>  fs/proc/stat.c                     |  2 +-
+>  include/linux/sched.h              |  6 +++
+>  include/linux/sched/stat.h         |  5 ++-
+>  kernel/sched/core.c                | 62 +++++++++++++++++++++++-------
+>  kernel/sched/sched.h               |  1 +
+>  kernel/time/tick-sched.c           |  6 +--
+>  8 files changed, 65 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
+> index c2978cb03b36..6844b5294a8b 100644
+> --- a/arch/s390/appldata/appldata_base.c
+> +++ b/arch/s390/appldata/appldata_base.c
+> @@ -423,4 +423,4 @@ EXPORT_SYMBOL_GPL(si_swapinfo);
+>  #endif
+>  EXPORT_SYMBOL_GPL(nr_threads);
+>  EXPORT_SYMBOL_GPL(nr_running);
+> -EXPORT_SYMBOL_GPL(nr_iowait);
+> +EXPORT_SYMBOL_GPL(nr_iowait_acct);
+> diff --git a/arch/s390/appldata/appldata_os.c b/arch/s390/appldata/appldata_os.c
+> index a363d30ce739..fa4b278aca6c 100644
+> --- a/arch/s390/appldata/appldata_os.c
+> +++ b/arch/s390/appldata/appldata_os.c
+> @@ -100,7 +100,7 @@ static void appldata_get_os_data(void *data)
+>  
+>  	os_data->nr_threads = nr_threads;
+>  	os_data->nr_running = nr_running();
+> -	os_data->nr_iowait  = nr_iowait();
+> +	os_data->nr_iowait  = nr_iowait_acct();
+>  	os_data->avenrun[0] = avenrun[0] + (FIXED_1/200);
+>  	os_data->avenrun[1] = avenrun[1] + (FIXED_1/200);
+>  	os_data->avenrun[2] = avenrun[2] + (FIXED_1/200);
+> diff --git a/fs/proc/stat.c b/fs/proc/stat.c
+> index da60956b2915..149be7a884fb 100644
+> --- a/fs/proc/stat.c
+> +++ b/fs/proc/stat.c
+> @@ -180,7 +180,7 @@ static int show_stat(struct seq_file *p, void *v)
+>  		(unsigned long long)boottime.tv_sec,
+>  		total_forks,
+>  		nr_running(),
+> -		nr_iowait());
+> +		nr_iowait_acct());
+>  
+>  	seq_put_decimal_ull(p, "softirq ", (unsigned long long)sum_softirq);
+>  
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index dcfc2830ed8e..26c69db5484b 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -924,7 +924,13 @@ struct task_struct {
+>  
+>  	/* Bit to tell TOMOYO we're in execve(): */
+>  	unsigned			in_execve:1;
+> +	/* task is in iowait */
+>  	unsigned			in_iowait:1;
+> +	/*
+> +	 * task is in iowait and should be accounted as such. can only be set
+> +	 * if ->in_iowait is also set.
+> +	 */
+> +	unsigned			in_iowait_acct:1;
+>  #ifndef TIF_RESTORE_SIGMASK
+>  	unsigned			restore_sigmask:1;
+>  #endif
+> diff --git a/include/linux/sched/stat.h b/include/linux/sched/stat.h
+> index 0108a38bb64d..31e8a44b3d71 100644
+> --- a/include/linux/sched/stat.h
+> +++ b/include/linux/sched/stat.h
+> @@ -19,8 +19,9 @@ DECLARE_PER_CPU(unsigned long, process_counts);
+>  extern int nr_processes(void);
+>  extern unsigned int nr_running(void);
+>  extern bool single_task_running(void);
+> -extern unsigned int nr_iowait(void);
+> -extern unsigned int nr_iowait_cpu(int cpu);
+> +unsigned int nr_iowait_acct(void);
+> +unsigned int nr_iowait_acct_cpu(int cpu);
+> +unsigned int nr_iowait_cpu(int cpu);
+>  
+>  static inline int sched_info_on(void)
+>  {
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 63f6d44f460c..d52d3118dd73 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3721,30 +3721,47 @@ static inline cpumask_t *alloc_user_cpus_ptr(int node)
+>  
+>  #endif /* !CONFIG_SMP */
+>  
+> +/*
+> + * Store iowait and iowait_acct state in the same variable. The lower bits
+> + * hold the iowait state, and the upper bits hold the iowait_acct state.
+> + */
+>  static void task_iowait_inc(struct task_struct *p)
+>  {
+>  #ifdef CONFIG_64BIT
+> -	atomic_long_inc(&task_rq(p)->nr_iowait);
+> +	long val = 1 + ((long) p->in_iowait_acct << 32);
+Are we not doing declarations at the beginning of the block anymore?
 
--- 
-2.44.0
+> +	atomic_long_add(val, &task_rq(p)->nr_iowait);
+>  #else
+> -	atomic_inc(&task_rq(p)->nr_iowait);
+> +	int val = 1 + ((int) p->in_iowait_acct << 16);
+> +	atomic_add(val, &task_rq(p)->nr_iowait);
+>  #endif
+>  }
+>  
+>  static void task_iowait_dec(struct task_struct *p)
+>  {
+>  #ifdef CONFIG_64BIT
+> -	atomic_long_dec(&task_rq(p)->nr_iowait);
+> +	long val = 1 + ((long) p->in_iowait_acct << 32);
+> +	atomic_long_sub(val, &task_rq(p)->nr_iowait);
+>  #else
+> -	atomic_dec(&task_rq(p)->nr_iowait);
+> +	int val = 1 + ((int) p->in_iowait_acct << 16);
+> +	atomic_sub(val, &task_rq(p)->nr_iowait);
+>  #endif
+>  }
+>  
+>  int rq_iowait(struct rq *rq)
+>  {
+>  #ifdef CONFIG_64BIT
+> -	return atomic_long_read(&rq->nr_iowait);
+> +	return atomic_long_read(&rq->nr_iowait) & ((1UL << 32) - 1);
+> +#else
+> +	return atomic_read(&rq->nr_iowait) & ((1U << 16) - 1);
+> +#endif
+> +}
+> +
+> +int rq_iowait_acct(struct rq *rq)
+> +{
+> +#ifdef CONFIG_64BIT
+> +	return atomic_long_read(&rq->nr_iowait) >> 32;
+>  #else
+> -	return atomic_read(&rq->nr_iowait);
+> +	return atomic_read(&rq->nr_iowait) >> 16;
+>  #endif
+>  }
+>  
+> @@ -5497,7 +5514,12 @@ unsigned long long nr_context_switches(void)
+>   * it does become runnable.
+>   */
+>  
+> -unsigned int nr_iowait_cpu(int cpu)
+> +unsigned int nr_iowait_acct_cpu(int cpu)
 
+There is a comment above here by Daniel referring to "these two
+interfaces [...]", originally referring to nr_iowait_cpu() and
+get_iowait_load().
+get_iowait_load() was removed in commit a7fe5190c03f ("cpuidle: menu: Remove get_loadavg() from the performance multiplier")
+but nr_iowait_cpu() remains, so the comment should remain above it.
+Rewording is also way overdue, although that's hardly on your
+patch ;)
+
+> +{
+> +	return rq_iowait_acct(cpu_rq(cpu));
+> +}
+> +
+> +unsigned nr_iowait_cpu(int cpu)
+unsigned int
+>  {
+>  	return rq_iowait(cpu_rq(cpu));
+>  }
+> @@ -5532,12 +5554,12 @@ unsigned int nr_iowait_cpu(int cpu)
+>   * Task CPU affinities can make all that even more 'interesting'.
+>   */
+>  
+> -unsigned int nr_iowait(void)
+> +unsigned int nr_iowait_acct(void)
+>  {
+>  	unsigned int i, sum = 0;
+>  
+>  	for_each_possible_cpu(i)
+> -		sum += nr_iowait_cpu(i);
+> +		sum += nr_iowait_acct_cpu(i);
+>  
+>  	return sum;
+>  }
+> @@ -9032,18 +9054,32 @@ int __sched yield_to(struct task_struct *p, bool preempt)
+>  }
+>  EXPORT_SYMBOL_GPL(yield_to);
+>  [snip]
