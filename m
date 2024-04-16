@@ -1,25 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B7112F387
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBAD12F5A6
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713279331; cv=none; b=aiLiB/PeQg956ghMycWMvjc6zxQmruy3EK7mUiOd4wV+fzJRnSnoLAkw1e6fHokcJBCaIPwQPzh+FQIBGVcX/DSvrJOdA+DDh21qNLLHNBKnzH5nm6T6WrDgM1PeEqRy2PbiWg8H19iODbyr2UyZstwmmK4xRVkc6Bp9ThWQYSs=
+	t=1713279441; cv=none; b=k8k7vn74tltH8oWIfb962urD/wSmzexjms+q6Zf7F4ivQX1PCV0UZakGyRwfo8qWD/qWyTxbAJ0VX3CFU6Tnh9QILRattf52GRpiD38cq8oLV5vu3Rv429BOuFACRGfhiMBRxgK3lBPVQnbD8fNxZa+RZEYMMBKRIzXP7xI7Lhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713279331; c=relaxed/simple;
-	bh=Uz7Nl2h8Q5NpEAnmsy2/2F2O6MebLTqV7M29DdRZjC4=;
+	s=arc-20240116; t=1713279441; c=relaxed/simple;
+	bh=FrbIB/Z1SqzQ5A58Zqk4S74k2lIPrqfaXr5V7n8jcz8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JxI54b/tAnXkc3GLI9X9Ct9v79RjxjfaS3ckcLFgFWyJ1meC/lhQ4a3ul2UeJHo+Ish2n1lzM8LNF0wdQXw2q04CE/4EL13mwfp0JfLv0Np4jjJ8R8z6FXvYtkdW1rdTk1+8rul7uT+il665RsZeHKJOdxMz25M/QiX5hEu2dYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 315B1339;
-	Tue, 16 Apr 2024 07:55:56 -0700 (PDT)
-Received: from [10.1.39.189] (XHFQ2J9959.cambridge.arm.com [10.1.39.189])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2444D3F792;
-	Tue, 16 Apr 2024 07:55:27 -0700 (PDT)
-Message-ID: <50ff8268-7c9f-4493-a733-f24801e19da9@arm.com>
-Date: Tue, 16 Apr 2024 15:55:25 +0100
+	 In-Reply-To:Content-Type; b=FxtxuvN0jzOKOO8ACKcKF1g5Yj6pvsJcvzVqRH+RBsyfu8L0nAj+Knpk3s3YHwPKIyG5b+TqaPPm8vOmw8vj8baKG4LwnLlUAgP3QsdTLoUHleMeXC+6IdusnI1gTjbcBnzMqwZkmfm1mAeZF+7Tr12y6axhReokyul0eZ0Vhyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nJnfgvXY; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nJnfgvXY"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2da88833109so32606461fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713279438; x=1713884238; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Or5aD0vHhofq4hU9WI0SfKr5R6BUi9ScTzvy6tmm1s4=;
+        b=nJnfgvXYS2KiiYDk3B4MOcAJV6Vr6/Ewz6Q1ng1pT1foFIkEd2WO69nl5dENFiWmr2
+         JjGAmnjvYK/HEyzPEn+iBFU8PZMIW5kJvjnXRuah/SwCFhRCcP0qDF2uQAaPDsYujQda
+         lPV1yGhoUChQB9oMDtyvwS9ouWnzrHK4fNyJgcdYmyjIMmMyoKI00NYtP24N7gqmqeYM
+         H3YmLQr4V/UFy/zVGzdcqEVwsWXrKdApyjG7FAkbp2rgHSWBxgA1ZsLLzGzSxrgTmFQT
+         uLkQAYE1WDqqz4uPOHyULhyh5cHn8rSaLNtHznIoDYYIHqf11ymUt5H5vsa3PWJ/vNgR
+         6AjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713279438; x=1713884238;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Or5aD0vHhofq4hU9WI0SfKr5R6BUi9ScTzvy6tmm1s4=;
+        b=SLwhsH6uE90uJh6je0k2dhtI3M0AkU9daIS2ZueTnOSVzt2hSxsLce/hYm+t5Qlaoi
+         gt8821RSJGg4a+3Dr6buJ5fVrNGYwwprzdCVTtcOp951xRwQz1beagupqLkbvhSdVbXr
+         A/WiFhwjjsCbi1OdzHQBdRObeEPJNhiFWX0D7CVVumRrV6BgDjsiAYyQWueyoK43dp6d
+         JHfi/8hxqZMD5a84PYRt75TdfPMxflHSi7tCjoVTw4+U7lP9+eQ7rNMqPlHGViIoWMy8
+         R6nSpe4bOXlzqO6aQQsS8Ro8OiYkub0R5WrHUOj+2r3j1pOzn4S/3oq24Y5C2vUDokcJ
+         3OHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5lI0JxgLQnWisUPXoimwE9gN52XC1O+RMXpxqEVr/oQz07cJOn2MJVk8+Qt4I/AbIwiUcbGCbFa7FB7FZvnkJgz9TIuV4JtZ9FzKA
+X-Gm-Message-State: AOJu0YzAik5N1ut0+a03xTpgogRrsgFRiFupHhFUA0E3p/0MpdQk3pYX
+	hSPJPXMtnaLvWDgRFjDD/H1Ps+C26Cv6gpRaCVvJPEKLi7W6b0XMrYLIYwiIH2k=
+X-Google-Smtp-Source: AGHT+IGhqmzkNdrX2UMlDS36AtNuOAiCapJDE/OBBjeoP4TRH2M/KqKJkejU4T3zaLkL6u2UP2FCAg==
+X-Received: by 2002:a2e:700e:0:b0:2d8:9fd7:859a with SMTP id l14-20020a2e700e000000b002d89fd7859amr8397471ljc.34.1713279438013;
+        Tue, 16 Apr 2024 07:57:18 -0700 (PDT)
+Received: from [172.30.205.49] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id o21-20020a2e90d5000000b002d86641176esm1571846ljg.32.2024.04.16.07.57.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 07:57:17 -0700 (PDT)
+Message-ID: <66cd0d96-7576-4f70-b4da-b8d518253763@linaro.org>
+Date: Tue, 16 Apr 2024 16:57:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,92 +61,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: clang: error: unknown argument '-static-libasan'; did you mean
- '-static-libsan'?
-Content-Language: en-GB
-To: Arnd Bergmann <arnd@arndb.de>, kernel test robot <yujie.liu@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
- Linux Memory Management List <linux-mm@kvack.org>
-References: <202404141807.LgsqXPY5-lkp@intel.com>
- <31b4e05d-62c6-44cd-8038-7ac8d21320c3@arm.com>
- <a5516289-96b6-41f4-8cbb-6c34c7bf7996@app.fastmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a5516289-96b6-41f4-8cbb-6c34c7bf7996@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 2/8] usb: typec: altmode: add low level altmode
+ configuration helper
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20240416-ucsi-glink-altmode-v1-0-890db00877ac@linaro.org>
+ <20240416-ucsi-glink-altmode-v1-2-890db00877ac@linaro.org>
+ <c129b349-dfaa-4b10-9b8c-6098d04b9373@linaro.org>
+ <CAA8EJpqH2_ENE6am=m9dtwk_+_Vbc4pZG9=Y_4-b-p0fKQ4sBg@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpqH2_ENE6am=m9dtwk_+_Vbc4pZG9=Y_4-b-p0fKQ4sBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 16/04/2024 15:42, Arnd Bergmann wrote:
-> On Tue, Apr 16, 2024, at 16:33, Ryan Roberts wrote:
->> On 16/04/2024 08:42, kernel test robot wrote:
->>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>> head:   7efd0a74039fb6b584be2cb91c1d0ef0bd796ee1
->>> commit: c652df8a4a9d7853fa1100b244024fd6f1a9c18a selftests: link libasan statically for tests with -fsanitize=address
->>> compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <yujie.liu@intel.com>
->>> | Closes: https://lore.kernel.org/r/202404141807.LgsqXPY5-lkp@intel.com/
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>> # tools/testing/selftests/fchmodat2$ make CC=clang
->>> clang -Wall -O2 -g -fsanitize=address -fsanitize=undefined -static-libasan -isystem usr/include     fchmodat2_test.c  -o tools/testing/selftests/fchmodat2/fchmodat2_test
->>> clang: error: unknown argument '-static-libasan'; did you mean '-static-libsan'?
->>> make: *** [../lib.mk:181: tools/testing/selftests/fchmodat2/fchmodat2_test] Error 1
->>>
->>> # tools/testing/selftests/openat2$ make CC=clang
->>> clang -Wall -O2 -g -fsanitize=address -fsanitize=undefined -static-libasan     openat2_test.c helpers.c helpers.h  -o tools/testing/selftests/openat2/openat2_test
->>> clang: error: unknown argument '-static-libasan'; did you mean '-static-libsan'?
->>> clang: error: cannot specify -o when generating multiple output files
->>> make: *** [../lib.mk:181: tools/testing/selftests/openat2/openat2_test] Error 1
->>>
->>
->> Hi Arnd,
->>
->> This change went in quite a while ago and is on;y just blowing up. I saw your
->> comment in another thread [1] that Andrew merged your change to set -Wextra.
->> Perhaps that's what has caused this to show up only now? *although I don't
->> actually see -Wextra in the command line).
->>
->> I guess the problem is that `-static-libasan` is only supported by gcc. But I'm
->> Makefile-illiterate. Can anyone advise on what's the best way to make this
->> argument gcc-only?
-> 
-> Thanks for letting me know about the problem, I had indeed missed
-> build-testing any of tools/testing, so this might not be
-> the only problem there.
-> 
-> I'm not entirely sure how much of the Kbuild infrastructure we
-> can rely on here. If the .config file gets included, this should
-> work:
-> 
-> --- a/tools/testing/selftests/fchmodat2/Makefile
-> +++ b/tools/testing/selftests/fchmodat2/Makefile
-> @@ -1,6 +1,12 @@
->  # SPDX-License-Identifier: GPL-2.0-or-later
->  
-> -CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined -static-libasan $(KHDR_INCLUDES)
-> +CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined $(KHDR_INCLUDES)
-> +ifdef CONFIG_CC_IS_GCC
-> +CFLAGS += -static-libasan
-> +else
-> +CFLAGS += -static-libsan
-> +endif
-> +
->  TEST_GEN_PROGS := fchmodat2_test
->  
->  include ../lib.mk
-> 
-> Alternatively, if the cc-option macro is available, you could
-> try this one
-> 
-> CFLAGS += $(call cc-option, -static-libasan) $(call cc-option, -static-libsan) 
-> 
->      Arnd
 
-Thanks! I'll give this a try. Although I can't actually find any mention of
--static-libsan in the clang manual. I believe I read somewhere that static
-linking is default for clang, so worst case, I guess we just leave it out
-(presumably that's effectively been the case so far anyway).
+
+On 4/16/24 16:48, Dmitry Baryshkov wrote:
+> On Tue, 16 Apr 2024 at 17:32, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>>
+>> On 4/16/24 04:20, Dmitry Baryshkov wrote:
+>>> In some obscure cases (Qualcomm PMIC Glink) altmode is completely
+>>> handled by the firmware. Linux does not get proper partner altmode info.
+>>> Instead we get the notification once the altmode is negotiated and
+>>> entered (or left). However even in such a case the driver has to switch
+>>> board components (muxes, switches and retimers) according to the altmode
+>>> selected by the hardware.
+>>>
+>>> We can not use existing typec_altmode_enter() / typec_altmode_exit() /
+>>> typec_altmode_notify() functions in such a case, since there is no
+>>> corresponding partner's altmode instance.
+>>>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> ---
+>>
+>> Should this now be called from e.g. typec_almode_notify to limit
+>> duplication?
+> 
+> typec_altmode_notify works only if there is an altmode->partner (which
+> we don't have with pmic-glink).
+
+Yes and this seems to be an excerpt from these functions, should they
+now drop that code and call this function instead, so as not to have
+it in the tree twice?
+
+Konrad
