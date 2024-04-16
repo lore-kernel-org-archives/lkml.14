@@ -1,118 +1,100 @@
-Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [5.144.164.167])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BEE13957B
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277DA139CF1;
+	Tue, 16 Apr 2024 20:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298115; cv=none; b=QvionxeW4KJvBS4rssQx/njoLa3BiFAJ9rcgtKr0ZASkpYtpjKbElUYzw4bOR/i+/uwr3iZiyycq3E5mIhWasr1ey6/4bJ1X5XAfLX6/PnswUhQZkuguc+xDXB5LB6Zwmkj1jBiCMCa9EpgvVleXgaVCuYT1zTWiBcUf38d1n7c=
+	t=1713298282; cv=none; b=DCoYbKtAZVqBzIDP7Y9L2xxicnZa6HGwTkeL3XE5KN/WGG8QruygtiW8/v3jGke/Tx5vvCJ+B0a9xPawdvRKAqJXSoK1V8xgiX0ez9hjSQiuffrTFCyszTwlOVFSCR6pdhKB2B4u3eD8DcZGrzBnYULeECCIRR6hntMPvd5cJSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298115; c=relaxed/simple;
-	bh=qRh7xRHbySZ3iKo5O1/YWoUY0sugFkQPKKtUC5ZjmcQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IbIPuLfNhU+s3cT6T1AR7BJmTP4+iYLrPoYx6GqtcqQu72Q7icPfitaIfpUskzfSHXvRGNDTqDtPtfRd1bkMzPjF8t5PiOGOjUvECQ3S6kWLTxBwQm6aP5UhIMl8b4SCD39rx8xTBcKLERT7ALMTtqPvaloPfoMvFf0SlRGElOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 88D633F434;
-	Tue, 16 Apr 2024 21:29:45 +0200 (CEST)
-From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Tue, 16 Apr 2024 21:29:39 +0200
-Subject: [PATCH] drm: Fix no_vblank field references in documentation
+	s=arc-20240116; t=1713298282; c=relaxed/simple;
+	bh=vH93qz9QypmdrxTbfPnlMTMImwmxiAcyrlntd9a+0o0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kHZC+5zvB06zsEs82cwQvPNlI8+jYOHSzFYdHuofK0mt/yeHjN4J/VytGx6HW6N1S5UB1/c4pOptt+7RMFsAbEEoT5iObyUUhNzBfsOcMipkWngs+5EIACuRriV47WZCvRKoFYEOP0AdHo0xHVQ9yu9hiks2i1egSntkYj96u1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cjZZt45z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cjZZt45z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947A5C3277B;
+	Tue, 16 Apr 2024 20:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1713298281;
+	bh=vH93qz9QypmdrxTbfPnlMTMImwmxiAcyrlntd9a+0o0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cjZZt45zzFNVvRVLLkIaQ69+5t4zoCNBaDZANtTYyKIzGiPWX0wB/I6nLAB1CxgDP
+	 LyDiexeqmuMVOpNvYwYTEYfDw/QqbKIpHEnEylNsfU0Nr6S5UXmnG60k+iAegOG4s6
+	 wUvuXfyB5LNQoRUHmF5B7VHXvfaARZL14SvNsgdE=
+Date: Tue, 16 Apr 2024 13:11:20 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Maxwell Bland <mbland@motorola.com>
+Cc: linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+ Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Yu Chien Peter Lin
+ <peterlin@andestech.com>, Song Shuai <suagrfillet@gmail.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+Subject: Re: [PATCH 5/5] ptdump: add state parameter for non-leaf callback
+Message-Id: <20240416131120.a801ff03a6d0bbec0e9151c8@linux-foundation.org>
+In-Reply-To: <20240416122254.868007168-6-mbland@motorola.com>
+References: <20240416122254.868007168-1-mbland@motorola.com>
+	<20240416122254.868007168-6-mbland@motorola.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-drm-no_vblank-kdoc-link-v1-1-a1d8d1e9ff34@somainline.org>
-X-B4-Tracking: v=1; b=H4sIAKLRHmYC/x2MQQqAIBAAvxJ7bkHLIvpKRJhutVQaChJEf0+6z
- RxmHogUmCL0xQOBEkf2LossCzCbdish2+xQiUoJJVu04UTnpzQf2u24W2/w4EwLaTk3tRCdriH
- XV6CF7/88jO/7AQakzM5pAAAA
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>
-X-Mailer: b4 0.13.0
 
-Browsing the DRM documentation shows that drm_crtc_state.no_vblank
-is not turned into a reference to the no_vblank field, but rather a
-reference to `struct drm_crtc_state`.  The only difference with other
-field references is that the struct name is prefixed by the literal
-`struct` tag, despite also already having a `&` reference prefix in two
-of the three cases.  Remove the `struct` prefix to turn these references
-into proper links to the designated field.
+On Mon, 15 Apr 2024 14:51:32 -0500 Maxwell Bland <mbland@motorola.com> wrote:
 
-Fixes: 7beb691f1e6f ("drm: Initialize struct drm_crtc_state.no_vblank from device settings")
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
----
-Note that a simple regex like "&struct \w+\.\w+" shows that there are
-only a handful of violators, most of them inside DRM files.  Let me know
-if you'd like a v2 that addresses all of them in one go (in separate
-patches or one combined change)?
+> ptdump can now note non-leaf descriptor entries, a useful addition for
+> debugging table descriptor permissions when working on related code
+> 
+> Signed-off-by: Maxwell Bland <mbland@motorola.com>
+> ---
+>  arch/arm64/mm/ptdump.c          |  6 ++++--
+>  arch/powerpc/mm/ptdump/ptdump.c |  2 ++
+>  arch/riscv/mm/ptdump.c          |  6 ++++--
+>  arch/s390/mm/dump_pagetables.c  |  6 ++++--
+>  arch/x86/mm/dump_pagetables.c   |  3 ++-
+>  include/linux/ptdump.h          |  1 +
+>  mm/ptdump.c                     | 13 +++++++++++++
+>  7 files changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+> index 796231a4fd63..1a6f4a3513e5 100644
+> --- a/arch/arm64/mm/ptdump.c
+> +++ b/arch/arm64/mm/ptdump.c
+> @@ -299,7 +299,8 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+>  			.range = (struct ptdump_range[]){
+>  				{info->base_addr, end},
+>  				{0, 0}
+> -			}
+> +			},
+> +			.note_non_leaf = false
+>  		}
 
-Kind regards,
-Marijn
----
- drivers/gpu/drm/drm_vblank.c        | 2 +-
- include/drm/drm_crtc.h              | 2 +-
- include/drm/drm_simple_kms_helper.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+It would be acceptable to omit all of these and rely upon the runtime
+zeroing which the compiler will emit.
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 702a12bc93bd..45504732f98e 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -140,7 +140,7 @@
-  * must not call drm_vblank_init(). For such drivers, atomic helpers will
-  * automatically generate fake vblank events as part of the display update.
-  * This functionality also can be controlled by the driver by enabling and
-- * disabling struct drm_crtc_state.no_vblank.
-+ * disabling &drm_crtc_state.no_vblank.
-  */
- 
- /* Retry timestamp calculation up to 3 times to satisfy
-diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-index 8b48a1974da3..eb75d0aec170 100644
---- a/include/drm/drm_crtc.h
-+++ b/include/drm/drm_crtc.h
-@@ -342,7 +342,7 @@ struct drm_crtc_state {
- 	 *    that case.
- 	 *
- 	 * For very simple hardware without VBLANK interrupt, enabling
--	 * &struct drm_crtc_state.no_vblank makes DRM's atomic commit helpers
-+	 * &drm_crtc_state.no_vblank makes DRM's atomic commit helpers
- 	 * send a fake VBLANK event at the end of the display update after all
- 	 * hardware changes have been applied. See
- 	 * drm_atomic_helper_fake_vblank().
-diff --git a/include/drm/drm_simple_kms_helper.h b/include/drm/drm_simple_kms_helper.h
-index b2486d073763..6e64d91819e7 100644
---- a/include/drm/drm_simple_kms_helper.h
-+++ b/include/drm/drm_simple_kms_helper.h
-@@ -102,7 +102,7 @@ struct drm_simple_display_pipe_funcs {
- 	 * drm_crtc_arm_vblank_event(), when the driver supports vblank
- 	 * interrupt handling, or drm_crtc_send_vblank_event() for more
- 	 * complex case. In case the hardware lacks vblank support entirely,
--	 * drivers can set &struct drm_crtc_state.no_vblank in
-+	 * drivers can set &drm_crtc_state.no_vblank in
- 	 * &struct drm_simple_display_pipe_funcs.check and let DRM's
- 	 * atomic helper fake a vblank event.
- 	 */
+Documentation/arch/arm64/ptdump.rst might need updating.
 
----
-base-commit: 6bd343537461b57f3efe5dfc5fc193a232dfef1e
-change-id: 20240416-drm-no_vblank-kdoc-link-fea1b53008a3
-
-Best regards,
--- 
-Marijn Suijten <marijn.suijten@somainline.org>
+Please include sample output in the changelog so we can better
+understand the user's view of this change.
 
