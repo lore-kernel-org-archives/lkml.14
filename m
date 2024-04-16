@@ -1,129 +1,156 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26712DD95;
-	Tue, 16 Apr 2024 14:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFF512DD95
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278946; cv=none; b=lBGeUQhrNL9jrr135Z70zcOL1fXjlZ+iF2x9uQQsjBsoHrk8DDEeLT4BmX+3FVSgUX7yAw+3ht3THsh95zQjJ0hDL68O0ppuTMQf0ka+kN8HDTHoa8fFHTo9YtoD1TZZy2XMEcUsClSdBtmDteAUzYRYQAG/+8RCO66FsLGzTEk=
+	t=1713278957; cv=none; b=bMuBhPdgsA0E1jTBLh6Mk+goKlUmpTZyCF6DMyEY7E2qO32tcjMy1wGrPBiQuA9vDwP2HU+8SbMf+JkZShxhg6QTvh3ytBaFPjDd+KUFqlkOW34bS60ObqI9F0jKqPcOdTEczNCx5CXj71AuL2e56zpGYXRtDX0wjkYNXhoI7g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278946; c=relaxed/simple;
-	bh=N7wBR+UpwtOV9tGvVgMsV+bnRTrkTRC+bkXsjuPHIuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TdszABVUP8uCGvukqb+GKNp/wI7phVHWovWj+J0QIqp+wT6J4rMQoF/mJZmd1qFdDgLotUYNPpdLIVK9y9tRH7UrK9zSkEMveubHBUQCnXb/RZT3DiuydMbwqZ48omK2Jj0RtaKk6diJeI8hAgXMQ+h9/VVaihbphdDIjJ0foTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cp9aWPme; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713278957; c=relaxed/simple;
+	bh=7lyToubjndBkFS/xjTwm6ZMyDvw4t6Soiztt3CZy43I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kX0S6B/Q+daYvpLWgObSiXC9kLqI4Taq8DYCl1CZaQ/6AkMHKK0poFVcZxT3gT4ATRnWTpOuZPPuAazXXe2teH5g/ciQMlgMLTFSGWTY6QFac2qs4iYatEFWw8I8guRLvuZtIoMo5t7CpyCdO0JtDd/0Fcf3yP7v6y004WlXidI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=bTNnjpIa; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cp9aWPme"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed01c63657so4012379b3a.2;
-        Tue, 16 Apr 2024 07:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713278944; x=1713883744; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BX6A1PLIPUHloNbC1YwAKF3yvucqzC+IykrkDL2EP9k=;
-        b=Cp9aWPmeMH+dt/AMVWJSWZu8t/9uQxw8G/UwKTRTZwxUj9JadJkKxBHFl++VxFoiwE
-         AgLIp1xWmESaiSA5/UbYipL+s+H64p2AfNFhzJpzILY0IfZrrVBHmqqKxkkI/nxgw+7h
-         6kB+okac3WlQTYydfqpoHnmFvn4pwxCy0WgtGsrUov56z37148y/6Ipd9avj+Bld/i+u
-         k312TBwFccBR94oD1Mqw1hz1rKvJlODxVat36Gd9+cGw1Ky1szuuJIDP4tEPSF5w98Ix
-         ieFzGmi5PGiPZ0CwokfeIJFQv2NV9yuFCh7hHzKp9Sv3jR31nXxuj1S+DBPnwGiCGQzN
-         M+Pg==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="bTNnjpIa"
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4A8B93FE3D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1713278952;
+	bh=SQh3gD+ToMzBSqvlRyRoPbaP+xTFtE8pqccMPR/X80o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	b=bTNnjpIaXCd5s6ImaVwHNR7OSVdldJr9ZXp9rizlLvN0oab5b/ipYE1rYNTdWZcki
+	 sZiYr2Lria1r4Y3P94FTAa6fggkFwnfmoN2+KShG2m4/2STcSOG9IHkidpZ2O4Iug3
+	 kZArQ6TkTQkayjwKRqUoNi3Be6Aip/zaV/5es6pil2Y+fW2rJVAJOEXUWZFbGIjFFD
+	 ss2W4hgwqToocZT+FvWrvBkcKhYaAiN9S4dDRjGBw3n5gH65e4/4Gx67ThzOrQQTzA
+	 Ew+p07TB13snTlofinejF86g628ukNRtOZL4zmzXpAuPav7cFQ31/HxJ2tgLFg/9pV
+	 5oT28nwGfqUmg==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a4e9ac44d37so271631466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713278944; x=1713883744;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1713278952; x=1713883752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BX6A1PLIPUHloNbC1YwAKF3yvucqzC+IykrkDL2EP9k=;
-        b=TJBznwNQNwYKj022PeFNvURJ3+Ixc6bGrVQPrx2e+2+2Z8+7m8f9+CWqtjB6L72KY9
-         D/Ry/MFNSiljHfavSSj4Gk8XFm/ZLyhKUmp83LmkYOnJ2VONv4jyF6NyKOOcMsml1X71
-         GTn1bdRSK+3V1jG30+VS5htwDEZwYpvpn07GJ3EZvlnXddp3Xe4qrxsTNKP9zEh3zy5b
-         VSeCCA5f8BZsf898SGMrmbHSK1xvUsp1q3UCA/ASkBrG1AFr1zWKSzVB8n9oxXxDtAek
-         /DROd/DDDqgNmRdJ85md3UppbRW0SskzUTcqkO2ftaaOCSU24OxNFsKiV3vvYTOng/YG
-         2QpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJQkQTvTuMLMUjNoh2v+mrMhx1RHnGnK+EeKCefutz8gnnyIy93jXJhUQ1rH5Cl0sI3/0NRvjDsN5IDi+mchXp8SdMkBiKZNM+wQE7dARzuPjMPkxJW2AXff5RgcdrIe5FIF97uusdDH6euD4Qt00y/o9n8AtpkNji5kjSiQG4Mg==
-X-Gm-Message-State: AOJu0YyfRdaf1tAvlnYUg6ENAs3thHAunlbsisQogRi/YvDVG2AOHUMU
-	Ajwqd4HaHvxyq7C+cyfkvvAsIliZuNvn7n0LftYyN3M/+lHFIz++o1lv4n6huM3hJZFmjgleE4L
-	IAO1SFMGW7lTIXxHgnBKiLXdqbqrYGjFxL4I=
-X-Google-Smtp-Source: AGHT+IHwXhNE3qhkiOVa1dv2tNZZoMwwK96HbsfDvdiRkntrb7ZgeBlDRihGUMHsqNe5ZhvEp1uCE2io4H+6TCFJAD0=
-X-Received: by 2002:a05:6a20:3255:b0:1a7:9fd2:8bbb with SMTP id
- hm21-20020a056a20325500b001a79fd28bbbmr11344740pzc.24.1713278944220; Tue, 16
- Apr 2024 07:49:04 -0700 (PDT)
+        bh=SQh3gD+ToMzBSqvlRyRoPbaP+xTFtE8pqccMPR/X80o=;
+        b=JsxgKYl0Ta435NBZPcrgIKwneL/8/yKuJ7oVa6AzkMDAR1J0+F3DyhX/zhsmN6EK9g
+         jan7ywXVlg8bBDKBoXeHE+1d1tzv4+Mc32TioU8hvWwSvHXZmDEMHUNTGQzytw12xfNd
+         lvVbeermOtlhUbnXIXf5RkFvTC7FZNejSMVWEqceQ50oXzQu7UsCnT8XXZw9TNaa3Fav
+         dR2tpWiRHNIFEK1Ep7kzecX5DzTuXBekrfFNePee5XY6iaWnG/Kip6olaXc/JGKr9S1X
+         3p8uTaR3iBxhUjLb/OUTvVC9/MxuJjnAN6HTX+bDss870zgll//9he0ibx12Jk5g72PJ
+         82cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7F0cLXHc36mLTgRSbm7pIztI1vI84i9AASpqj9tGGFKpcXMGBMS7BDiBDRrDejjxDEtXPJbXS87h49VnsEafgoPYvCuri5bp1DTsO
+X-Gm-Message-State: AOJu0YxyB80yBvulDfVjoDKV+21I2zyz2SuAnksveXtSjVL82gqWxkSw
+	dP8P7DlA83cK0sxDvS1LbrIpv5rRNQ3HXx3yrjPzCFACzwiiSzDJ6XoeeuVvGlakI9wX1Dyyu0D
+	vuLyQi0SNDnG6fkvneKYxemWE2DBpNYCv9fKH3zAr4T+g4tAUeGxcpT0UILW9e7SQOPWjgKpTOH
+	dkUQ==
+X-Received: by 2002:a17:906:4956:b0:a52:6a4b:c810 with SMTP id f22-20020a170906495600b00a526a4bc810mr3400662ejt.35.1713278951889;
+        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEyz7nSFg/BkyuaXVLZ2ohQQZlKhJDri29PE7VWvk9uGXGz9gTCezlFmTExiTaW78zWQV6OQA==
+X-Received: by 2002:a17:906:4956:b0:a52:6a4b:c810 with SMTP id f22-20020a170906495600b00a526a4bc810mr3400639ejt.35.1713278951519;
+        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
+Received: from amikhalitsyn.lan ([2001:470:6d:781:ef8b:47ab:e73a:9349])
+        by smtp.gmail.com with ESMTPSA id gv15-20020a170906f10f00b00a517995c070sm6916856ejb.33.2024.04.16.07.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: horms@verge.net.au
+Cc: netdev@vger.kernel.org,
+	lvs-devel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	=?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@stgraber.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Julian Anastasov <ja@ssi.bg>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH net-next] ipvs: allow some sysctls in non-init user namespaces
+Date: Tue, 16 Apr 2024 16:48:14 +0200
+Message-Id: <20240416144814.173185-1-aleksandr.mikhalitsyn@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240414065305.9796-1-marco@sirabella.org>
-In-Reply-To: <20240414065305.9796-1-marco@sirabella.org>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Tue, 16 Apr 2024 16:48:52 +0200
-Message-ID: <CAOiHx==-V-SeyiH3+BbPD2r13vwsWE2MzRDjtHRBWX7CtFLsDg@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: spi: Update gpio+bitbang instruction
-To: Marco Sirabella <marco@sirabella.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	linux-spi@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Let's make all IPVS sysctls visible and RO even when
+network namespace is owned by non-initial user namespace.
 
-On Sun, 14 Apr 2024 at 08:54, Marco Sirabella <marco@sirabella.org> wrote:
->
-> The way to do this was changed in
-> 9b00bc7b901f (spi-gpio: Rewrite to use GPIO descriptors)
-> and there's no real docs outlining this,
-> update defunct #include "spi-gpio.c" instructions
->
-> Signed-off-by: Marco Sirabella <marco@sirabella.org>
-> ---
->  drivers/spi/spi-gpio.c | 17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-> index 909cce109bba..8c5f88f01db2 100644
-> --- a/drivers/spi/spi-gpio.c
-> +++ b/drivers/spi/spi-gpio.c
-> @@ -44,22 +44,13 @@ struct spi_gpio {
->   * per transferred bit can make performance a problem, this code
->   * is set up so that you can use it in either of two ways:
->   *
-> - *   - The slow generic way:  set up platform_data to hold the GPIO
-> + *   - The generic way:  set up platform_data to hold the GPIO
->   *     numbers used for MISO/MOSI/SCK, and issue procedure calls for
->   *     each of them.  This driver can handle several such busses.
+Let's make a few sysctls to be writable:
+- conntrack
+- conn_reuse_mode
+- expire_nodest_conn
+- expire_quiescent_template
 
-9b00bc7b901f (spi-gpio: Rewrite to use GPIO descriptors) removed the
-fields for the GPIO numbers, so this is definitely not the way
-anymore.
+I'm trying to be conservative with this to prevent
+introducing any security issues in there. Maybe,
+we can allow more sysctls to be writable, but let's
+do this on-demand and when we see real use-case.
 
-Since the code now always uses descriptors, the performance comment in
-the first paragraph does not apply anymore as well and should be
-dropped as well.
+This list of sysctls was chosen because I can't
+see any security risks allowing them and also
+Kubernetes uses [2] these specific sysctls.
 
->   *
-> - *   - The quicker inlined way:  only helps with platform GPIO code
-> - *     that inlines operations for constant GPIOs.  This can give
-> - *     you tight (fast!) inner loops, but each such bus needs a
-> - *     new driver.  You'll define a new C file, with Makefile and
-> - *     Kconfig support; the C code can be a total of six lines:
-> - *
-> - *             #define DRIVER_NAME     "myboard_spi2"
-> - *             #define SPI_MISO_GPIO   119
-> - *             #define SPI_MOSI_GPIO   120
-> - *             #define SPI_SCK_GPIO    121
-> - *             #define SPI_N_CHIPSEL   4
-> - *             #include "spi-gpio.c"
-> + *   - The inlined way:  manually set up and register a gpiod_lookup_table with
-> + *     the appropriately labelled gpio pins "sck", "mosi", "miso" & an array
-> + *     named "cs" before calling devm_spi_register_controller (XXX).
+This patch is motivated by user request in the LXC
+project [1].
 
-I think you need to use platform_device_register(), at least both
-remaining users do so. And this is AFAICT now the only option for
-registering it via C code (which also means that DRIVER_NAME will
-never be defined from outside, and GENERIC_BITBANG will always be true
-... ).
+[1] https://github.com/lxc/lxc/issues/4278
+[2] https://github.com/kubernetes/kubernetes/blob/b722d017a34b300a2284b890448e5a605f21d01e/pkg/proxy/ipvs/proxier.go#L103
 
-Best Regards,
-Jonas
+Cc: Stéphane Graber <stgraber@stgraber.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Julian Anastasov <ja@ssi.bg>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc: Florian Westphal <fw@strlen.de>
+Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+---
+ net/netfilter/ipvs/ip_vs_ctl.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 143a341bbc0a..92a818c2f783 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -4285,10 +4285,22 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
+ 		if (tbl == NULL)
+ 			return -ENOMEM;
+ 
+-		/* Don't export sysctls to unprivileged users */
++		/* Let's show all sysctls in non-init user namespace-owned
++		 * net namespaces, but make them read-only.
++		 *
++		 * Allow only a few specific sysctls to be writable.
++		 */
+ 		if (net->user_ns != &init_user_ns) {
+-			tbl[0].procname = NULL;
+-			ctl_table_size = 0;
++			for (idx = 0; idx < ARRAY_SIZE(vs_vars); idx++) {
++				if (!tbl[idx].procname)
++					continue;
++
++				if (!((strcmp(tbl[idx].procname, "conntrack") == 0) ||
++				      (strcmp(tbl[idx].procname, "conn_reuse_mode") == 0) ||
++				      (strcmp(tbl[idx].procname, "expire_nodest_conn") == 0) ||
++				      (strcmp(tbl[idx].procname, "expire_quiescent_template") == 0)))
++					tbl[idx].mode = 0444;
++			}
+ 		}
+ 	} else
+ 		tbl = vs_vars;
+-- 
+2.34.1
+
