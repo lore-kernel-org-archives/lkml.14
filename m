@@ -1,94 +1,125 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322E12AADC
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FFC12A172;
+	Tue, 16 Apr 2024 12:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713270153; cv=none; b=PYH+tWWOGitzYwkRGdKlqGfq+PJG7HGVAFCI18CVFxXo2apfyRQRcUnFdZjYQNO+Wxr3dycsWH6oHU26sO/HA4VoBP5exQs+y9akGxrpZ064vAcVB6K19PeykjWTsURwP+/lnKH1TlVxONI1SNsQSEKWLY87lUqBmKoPNt+2qSc=
+	t=1713270312; cv=none; b=Qe5J1eNSOSqBwscL+8IEhnl9NCKmewC+awJiclVuDx+xUa7UK4Pf/20YC0bxlccLdECXO9NmAhbCu0zsDORi/aZu7/GwDKImMx5UWz0m0FE9mfRmJZYyP0ghzgTHp32a3SsGbYQXRNfpNOLNR5wkDasidj+Vz8Vpr4QxkO4EaiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713270153; c=relaxed/simple;
-	bh=K7xhnvZpmdN2MuOixIDWglSN3H8jS49clJFrbDjMbxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W+sAggEGSuCBrRoVJoriFJt09fLlSys7bcu9RnsCKrrwr9UhKO1JgMMyblsU3KgiBuTEv9oXjJ91JeS9jds9Vh5+p8fyrZgIvUl5v/ynJl6cRB0cTPUPv1Nszmoj/zP2/TEbq4wMGGvuYA6n5W9KzZbwNfHcksC0xwwRmuq5nW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=L+65zD8I; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1713270312; c=relaxed/simple;
+	bh=SCges8dT7+vStvKdwldW6puBln6FxrIx8NsJAHgA4dU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNYm8ufJuJN+AH3w4DrNDr89FfVakeI3R/dvZRa07QZNzhAWpf4gquWKLi/ir7xdscGggddLZjxtqCWo8z9vyl8Y4VOqSrAovEjbHyeI2/pkzi0O6kFa9s5yiWKLFonfPRpS11iPwTpQjFwnWCVnEEgPzxGF2TbpjBbhB8lR0Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLELNjgk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="L+65zD8I"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a5269c3f9c7so273576366b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1713270151; x=1713874951; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DvoNQ5luSTO7Ksur3Peu5AAvJo33qeP0AozWIJMD134=;
-        b=L+65zD8IdKzuZfy+u8xzlxIY74/ItY3Gj6bkDLWExcPvEvl2JAYYG7IHs/HyZfeG1n
-         i20sifi0iPznH5mhIpzC4Qy0/nTEnr0FgqzHFNzOw90MWTinrISYzmS0VwdETWJOmimW
-         M07fA+79E1/D1PJ5dc41WrEm38Hm4Hf388vd63iNK9uNzeNgDE3PB1vLFwQn9JU6u9c8
-         g++qAN0s+Ekh/ABsb4eHQfI/oT7YOwQoNYCx/JvIWqeHx5TkhCEGO9whRs5T41YoUCYZ
-         rLbGykMh2GDxDoUovrP0VUKkmaxKyoW2eLXd1ezNy1tfEAA9tBEJwtyyMjcm57sA5UbJ
-         pTPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713270151; x=1713874951;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DvoNQ5luSTO7Ksur3Peu5AAvJo33qeP0AozWIJMD134=;
-        b=mQAx7Mu2AoWdserV5O5/TQCnY2TVLpGLzi57LK56utKsqXd+OofOun4dU2me6mHFHM
-         9qg4H/DrCjnHOIwoXgFVouKHmCFai3W7cpvB433j/SqZwzPlNyy54DnKwwMImKaElMdv
-         4b90e5WHu0Hen6Mj41fz1x0dFl17aVa0mBJ+m1QBMPEP4TlqApY8AqNTMPLkGHN12BG3
-         pOTKKo8fCRbZaMVrWQ7Cw6gxJQ4jwCx/4SAsj0LFiLAgGPVaJvvN0NWyuVQ1yBb/6Oer
-         xaPHcv5PY2Sl4V5eoloHSqgwUcV4FlFCvypCbvb8PyqD+soPxsQVNZk35t7mdOIprK0Q
-         T6aA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvwA3SJOvxQNg04A9OgS0xOR88/du+U7Hs2i96zeUhPm2kAZegFoCC2CFB820KfjkRtvc0BT2G9/WfuB+nz07ooUUMrClXM5/oPoqH
-X-Gm-Message-State: AOJu0YzAE/ItJ/FZQP1XOmQQYledCj2X/pQn6YpX3YPJUfhyIa5SjZ+r
-	TvSIJl/0IHdIGzzUjU5xCn9ZLjnyvTzfvajxnG5NhihzpBL6t3K6fkfvwdbJs/4=
-X-Google-Smtp-Source: AGHT+IFXMK2JgeE2MzQKKtGuebiKjEBxheRz9qFC8MlOFHALwKnDL20B8xRND/c8fnSFs9gVkB4DNQ==
-X-Received: by 2002:a17:907:5c1:b0:a52:2d83:1483 with SMTP id wg1-20020a17090705c100b00a522d831483mr9724208ejb.53.1713270150620;
-        Tue, 16 Apr 2024 05:22:30 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id bm23-20020a170906c05700b00a52331dc082sm5844162ejb.11.2024.04.16.05.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 05:22:30 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] m68k: bitops: Fix typo in comment
-Date: Tue, 16 Apr 2024 14:21:56 +0200
-Message-ID: <20240416122155.313400-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLELNjgk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94C9BC113CE;
+	Tue, 16 Apr 2024 12:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713270311;
+	bh=SCges8dT7+vStvKdwldW6puBln6FxrIx8NsJAHgA4dU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dLELNjgkJ8uBxjq5d2HVAG08umXZz/asximy7u3HShHBTFfgOWEGJQWA622y7ObRc
+	 zwYF9hPOT7NdQVDUdTZwnZ1xUGEDJTt9WeKDhPBm2C+kJz7+p+7x2pc/bVZZfhh39w
+	 sodPEU/xXGMH/4wjk2TIC360/+5OSZjMVgcQSDXQoftnCch459y7MjvWxHg6SXTi7c
+	 YLTbZdm75kYJJ0x8sCY+evcTzIqg3sx6JX6+3Mbm/ESrqflBuZ1zzQcoJFy9bIW9IL
+	 312F2PowTrdWU8sOy1ILgv0n0T23QKhxjaiL3QhoxHsk6qBYb2iiw5lq+CCjmxRENe
+	 W//ndQe/2SA0A==
+Date: Tue, 16 Apr 2024 13:25:04 +0100
+From: Lee Jones <lee@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: arnd@arndb.de, broonie@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, eblanc@baylibre.com,
+	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, lgirdwood@gmail.com,
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org,
+	vigneshr@ti.com, khilman@kernel.org
+Subject: Re: [RESEND PATCH v1 05/13] mfd: tps6594-spi: Add TI TPS65224 PMIC
+ SPI
+Message-ID: <20240416122504.GV2399047@google.com>
+References: <20240411170344.GK2399047@google.com>
+ <0109018ee1e1d91a-d3a0a73a-548d-4b9c-a6a5-a4f375c3adf3-000000@ap-south-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0109018ee1e1d91a-d3a0a73a-548d-4b9c-a6a5-a4f375c3adf3-000000@ap-south-1.amazonses.com>
 
-s/Coldfire/ColdFire/
+On Mon, 15 Apr 2024, Bhargav Raviprakash wrote:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/m68k/include/asm/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hello,
+> 
+> On Wed, 14 Feb 2024 10:10:17 -0800, Lee Jones wrote:
+> > On Mon, 08 Apr 2024, Bhargav Raviprakash wrote:
+> > 
+> > > Introduces a new struct tps6594_match_data. This struct holds fields for
+> > > chip id and regmap config. Using this struct in of_device_id data field.
+> > > This helps in adding support for TPS65224 PMIC.
+> > > 
+> > > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > > Acked-by: Julien Panis <jpanis@baylibre.com>
+> > > ---
+> > >  drivers/mfd/tps6594-i2c.c   | 24 ++++++++++++++++--------
+> > >  drivers/mfd/tps6594-spi.c   | 24 ++++++++++++++++--------
+> > >  include/linux/mfd/tps6594.h | 11 +++++++++++
+> > >  3 files changed, 43 insertions(+), 16 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
+> > > index c125b474b..9e2ed48b7 100644
+> > > --- a/drivers/mfd/tps6594-i2c.c
+> > > +++ b/drivers/mfd/tps6594-i2c.c
+> > > @@ -192,10 +192,16 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+> > >  	.write = tps6594_i2c_write,
+> > >  };
+> > >  
+> > > +static const struct tps6594_match_data match_data[] = {
+> > > +	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
+> > > +	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
+> > > +	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
+> > 
+> > Nit: There should be spaces after the '{' and before the '}'.
+> > 
+> 
+> Sure! will fix it in the next version.
+> 
+> > > +};
+> > > +
+> > >  static const struct of_device_id tps6594_i2c_of_match_table[] = {
+> > > -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+> > > -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> > > -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> > > +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
+> > > +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
+> > > +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
+> > 
+> > Not keen on this.  Why do you pass the regmap data through here and
+> > leave everything else to be matched on device ID?  It would be better to
+> > keep passing the device ID through and match everything off of that.
+> > 
+> > 
+> > -- 
+> > Lee Jones [李琼斯]
+> 
+> Thanks for the feedback!
+> 
+> These changes were made because of the following message:
+> https://lore.kernel.org/all/7hcysy6ho6.fsf@baylibre.com/
+> 
+> Please let us know which one to follow.
 
-diff --git a/arch/m68k/include/asm/bitops.h b/arch/m68k/include/asm/bitops.h
-index 14c64a6f1217..621533b3858e 100644
---- a/arch/m68k/include/asm/bitops.h
-+++ b/arch/m68k/include/asm/bitops.h
-@@ -482,7 +482,7 @@ static inline unsigned long ffz(unsigned long word)
- 
- /*
-  *	The newer ColdFire family members support a "bitrev" instruction
-- *	and we can use that to implement a fast ffs. Older Coldfire parts,
-+ *	and we can use that to implement a fast ffs. Older ColdFire parts,
-  *	and normal 68000 parts don't have anything special, so we use the
-  *	generic functions for those.
-  */
+Right, except this doesn't eliminate "any \"if (chip_id)\" checking".
+Instead you have a hodge-podge of passing a little bit of (Regmap) data
+via match and the rest via "if (chip_id)".  So either pass all platform
+type data via .data or just the chip ID.  My suggestion 99% of the time
+is the latter.
+
 -- 
-2.44.0
-
+Lee Jones [李琼斯]
