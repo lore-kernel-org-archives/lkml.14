@@ -1,105 +1,333 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFD41311B5;
-	Tue, 16 Apr 2024 15:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ACC1311B4;
+	Tue, 16 Apr 2024 15:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713282626; cv=none; b=EgeH8Ephu6vQHfSVuknxjSnu10FSSuZvMO0cBsRbqD5irNbMbM/RMI05hXAE/OOz+ysoViVSJIDMWayRLXC+5HjoowX9f2lYNdLRBpr7m/VogTXS7P/QNkchsgzbzpH6lsMujKSBbOueMEE3zzL/QziWNCenX6pNmPTeC8Cz4sg=
+	t=1713282653; cv=none; b=cIgrQQGoS3wk1a0liJ44Ny6zBYyuVDYHQ1Gg3pybyucdeJ94/8VG2ZdYMIb7G/SOpbTVnaYEoHhuDrLoGDARZVAfPpXQHKLzFhcsviXJQGfPk7xTG7NVhPGel38mbQGElxQkZsnHC5BA4eL641Jpva/KwAwuqr1Rfn+SEZBEqXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713282626; c=relaxed/simple;
-	bh=3Y9O0MlxyrAJ2pHeJl4SB/ssSLif36xZUfaHCTP0w1s=;
+	s=arc-20240116; t=1713282653; c=relaxed/simple;
+	bh=wE/1nQW03EOW2WjxRav5KhI1biPyJvYQafxlZ0n0QgY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QAQstXZ12wgZ6kktvHBjSUKEr9nj2EuBOczxYM8nmp5B8ctNEze7/ulQMl8Otwp/ygrwvWi69pRj5T+Be1EW/M+vZWiMHbsbuLf5QipsVA8CITZfWsMfPAV+zgEPBI1i3socTNncO1LcoU4oEjt514btB1yjCodKPk1yLmNkM7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hiIgWI9h; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5N6nYzwTmhib6mQcDVA9xWmt+wihdrLGUppQYvIweZ+JNmEA2HIM8VmcnOkXjg3wo2JGcYzeOdEnjZchYrX7Ia+qvtPRkr+ed79T8IweCqpRmzJJH6PMS/PL+IqFCyfmrcIzj1JHrmyzsuudIlUKuUWEgG7J+Fnczl4Y3nZsMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwzGbiMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hiIgWI9h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wVWhOXvGG+yObUBTl7o/q7ZThNzkFqz22v3LgF9rG04=; b=hiIgWI9hsxFGLq9jXQ9mjcpQd2
-	UF1ybZKNzoUandzUz0yQWqJF0SjY+Wfs5LZ0z7dHeTt6ymH2hhcHROmAanmEC2gC3PxMvh75VWdtl
-	yo63GebQ3mzj3xr35c8S+qzrbaSj0pVQ3ifm6BGkwriazxon0AJWY4bldKRhkRDpgsCE3BWweL016
-	JTsHWwEwEV83R8ulEYAdETg5EMr6ZQXg4HaAKqlGElSpCw7mO2mG9HlzqX2uMuad4l2d0P85H+jpG
-	peIeh102/pwL/zAZRjIefAw25/4hZd+QhYOrVGN2F4gHWbtiF5m6xoLC6yXTYHlAxLMJy98N1ijo8
-	3tOXdM4Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwl4Y-0000000B8Vt-416A;
-	Tue, 16 Apr 2024 15:50:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 812F530040C; Tue, 16 Apr 2024 17:50:14 +0200 (CEST)
-Date: Tue, 16 Apr 2024 17:50:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Elizabeth Figura <zfigura@codeweavers.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	wine-devel@winehq.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Arkadiusz Hiler <ahiler@codeweavers.com>,
-	Andy Lutomirski <luto@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v4 00/30] NT synchronization primitive driver
-Message-ID: <20240416155014.GB12673@noisy.programming.kicks-ass.net>
-References: <20240416010837.333694-1-zfigura@codeweavers.com>
- <20240416081421.GB31647@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwzGbiMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57ED3C113CE;
+	Tue, 16 Apr 2024 15:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713282652;
+	bh=wE/1nQW03EOW2WjxRav5KhI1biPyJvYQafxlZ0n0QgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bwzGbiMo8w/Nh/4Nrlp02t8ZIxpU1s16/LVWkVMivNOFKZt6GWHPxrTcVYMmu0Vh0
+	 pR0OYwF7Pedi8E5biwG6+xiq6b9MRmdEPItHRtphbobBcpO3L6Lp3e9J6XQ3IgIiBI
+	 LnSurHWuqKEsPtQpbLS4g917/g4T4/EMZ5QIyp/bybMTLQFqfmR+Gfo1dbin1Ls8B2
+	 w42jZEHEhO/a5IE0s3O4i5h4bPAxLjRC8B6FYwHiqXndS4PrnHxAOklM3Pnokz0GMN
+	 7dVKNBJWV3nPJgFVhejsZPF/QBt6se0aCkmstJ9+cGGOCKYC96CXwCEdcF42WHMMFO
+	 PgUI+iwjPTOiw==
+Date: Tue, 16 Apr 2024 23:37:23 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: adrian.hunter@intel.com, aou@eecs.berkeley.edu, conor+dt@kernel.org,
+	guoren@kernel.org, inochiama@outlook.com,
+	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, robh@kernel.org, ulf.hansson@linaro.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, haijiao.liu@sophgo.com,
+	xiaoguang.xing@sophgo.com, tingzhu.wang@sophgo.com,
+	Chen Wang <unicorn_wang@outlook.com>
+Subject: Re: [PATCH 2/3] mmc: sdhci-of-dwcmshc: Add support for Sophgo SG2042
+Message-ID: <Zh6bM2EQnAFYFhiV@xhacker>
+References: <cover.1713258948.git.unicorn_wang@outlook.com>
+ <e5aa1338d74504e141ba833b484d588cafb7ab38.1713258948.git.unicorn_wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240416081421.GB31647@noisy.programming.kicks-ass.net>
+In-Reply-To: <e5aa1338d74504e141ba833b484d588cafb7ab38.1713258948.git.unicorn_wang@outlook.com>
 
-On Tue, Apr 16, 2024 at 10:14:21AM +0200, Peter Zijlstra wrote:
+On Tue, Apr 16, 2024 at 05:50:57PM +0800, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Add support for the mmc controller of Sophgo SG2042.
+> 
+> SG2042 uses Synopsys PHY the same as TH1520 so we reuse the tuning
+> logic from TH1520. Besides this, this patch implement some SG2042
+> specific work, such as clocks and reset ops.
+> 
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  drivers/mmc/host/sdhci-of-dwcmshc.c | 173 ++++++++++++++++++++++++++--
+>  1 file changed, 166 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index 1a0b7ded7f9f..432ce0398163 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -106,12 +106,13 @@
+>  #define DWC_MSHC_PTR_PHY_R	0x300
+>  
+>  /* PHY general configuration */
+> -#define PHY_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x00)
+> -#define PHY_CNFG_RSTN_DEASSERT	0x1  /* Deassert PHY reset */
+> -#define PHY_CNFG_PAD_SP_MASK	GENMASK(19, 16) /* bits [19:16] */
+> -#define PHY_CNFG_PAD_SP		0x0c /* PMOS TX drive strength */
+> -#define PHY_CNFG_PAD_SN_MASK	GENMASK(23, 20) /* bits [23:20] */
+> -#define PHY_CNFG_PAD_SN		0x0c /* NMOS TX drive strength */
+> +#define PHY_CNFG_R			(DWC_MSHC_PTR_PHY_R + 0x00)
+> +#define PHY_CNFG_RSTN_DEASSERT		0x1  /* Deassert PHY reset */
+> +#define PHY_CNFG_PHY_PWRGOOD_MASK	BIT_MASK(1) /* bit [1] */
+> +#define PHY_CNFG_PAD_SP_MASK		GENMASK(19, 16) /* bits [19:16] */
+> +#define PHY_CNFG_PAD_SP			0x0c /* PMOS TX drive strength */
+> +#define PHY_CNFG_PAD_SN_MASK		GENMASK(23, 20) /* bits [23:20] */
+> +#define PHY_CNFG_PAD_SN			0x0c /* NMOS TX drive strength */
+>  
+>  /* PHY command/response pad settings */
+>  #define PHY_CMDPAD_CNFG_R	(DWC_MSHC_PTR_PHY_R + 0x04)
+> @@ -143,7 +144,8 @@
+>  
+>  /* PHY CLK delay line settings */
+>  #define PHY_SDCLKDL_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x1d)
+> -#define PHY_SDCLKDL_CNFG_UPDATE	BIT(4) /* set before writing to SDCLKDL_DC */
+> +#define PHY_SDCLKDL_CNFG_EXTDLY_EN	BIT(0)
+> +#define PHY_SDCLKDL_CNFG_UPDATE		BIT(4) /* set before writing to SDCLKDL_DC */
+>  
+>  /* PHY CLK delay line delay code */
+>  #define PHY_SDCLKDL_DC_R		(DWC_MSHC_PTR_PHY_R + 0x1e)
+> @@ -151,6 +153,9 @@
+>  #define PHY_SDCLKDL_DC_DEFAULT		0x32 /* default delay code */
+>  #define PHY_SDCLKDL_DC_HS400		0x18 /* delay code for HS400 mode */
+>  
+> +#define PHY_SMPLDL_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x20)
+> +#define PHY_SMPLDL_CNFG_BYPASS_EN	BIT(1)
+> +
+>  /* PHY drift_cclk_rx delay line configuration setting */
+>  #define PHY_ATDL_CNFG_R			(DWC_MSHC_PTR_PHY_R + 0x21)
+>  #define PHY_ATDL_CNFG_INPSEL_MASK	GENMASK(3, 2) /* bits [3:2] */
+> @@ -194,6 +199,11 @@ struct rk35xx_priv {
+>  	u8 txclk_tapnum;
+>  };
+>  
+> +#define SG2042_MAX_CLKS 2
 
-> > Some aspects of the implementation may deserve particular comment:
-> > 
-> > * In the interest of performance, each object is governed only by a single
-> >   spinlock. However, NTSYNC_IOC_WAIT_ALL requires that the state of multiple
-> >   objects be changed as a single atomic operation. In order to achieve this, we
-> >   first take a device-wide lock ("wait_all_lock") any time we are going to lock
-> >   more than one object at a time.
-> > 
-> >   The maximum number of objects that can be used in a vectored wait, and
-> >   therefore the maximum that can be locked simultaneously, is 64. This number is
-> >   NT's own limit.
+I don't think "bulk" is suitable here for max 2 clks, no?
 
-AFAICT:
+> +struct sg2042_priv {
+> +	struct clk_bulk_data clks[SG2042_MAX_CLKS];
 
-	spin_lock(&dev->wait_all_lock);
-	  list_for_each_entry(entry, &obj->all_waiters, node)
-	    for (i=0; i<count; i++)
-	      spin_lock_nest_lock(q->entries[i].obj->lock, &dev->wait_all_lock);
+useless either
 
-Where @count <= NTSYNC_MAX_WAIT_COUNT.
+> +};
+> +
+>  struct dwcmshc_priv {
+>  	struct clk	*bus_clk;
+>  	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA reg */
+> @@ -690,6 +700,76 @@ static void cv18xx_sdhci_reset(struct sdhci_host *host, u8 mask)
+>  	sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
+>  }
+>  
+> +static inline void sg2042_sdhci_phy_init(struct sdhci_host *host)
+> +{
+> +	u32 val;
+> +
+> +	/* Asset phy reset & set tx drive strength */
+> +	val = sdhci_readl(host, PHY_CNFG_R);
+> +	val &= ~PHY_CNFG_RSTN_DEASSERT;
+> +	val |= FIELD_PREP(PHY_CNFG_PHY_PWRGOOD_MASK, 1);
+> +	val |= FIELD_PREP(PHY_CNFG_PAD_SP_MASK, 9);
+> +	val |= FIELD_PREP(PHY_CNFG_PAD_SN_MASK, 8);
+> +	sdhci_writel(host, val, PHY_CNFG_R);
+> +
+> +	/* Configure phy pads */
+> +	val = PHY_PAD_RXSEL_3V3;
+> +	val |= FIELD_PREP(PHY_PAD_WEAKPULL_MASK, PHY_PAD_WEAKPULL_PULLUP);
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
+> +	sdhci_writew(host, val, PHY_CMDPAD_CNFG_R);
+> +	sdhci_writew(host, val, PHY_DATAPAD_CNFG_R);
+> +	sdhci_writew(host, val, PHY_RSTNPAD_CNFG_R);
+> +
+> +	val = PHY_PAD_RXSEL_3V3;
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
+> +	sdhci_writew(host, val, PHY_CLKPAD_CNFG_R);
+> +
+> +	val = PHY_PAD_RXSEL_3V3;
+> +	val |= FIELD_PREP(PHY_PAD_WEAKPULL_MASK, PHY_PAD_WEAKPULL_PULLDOWN);
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, 3);
+> +	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, 2);
+> +	sdhci_writew(host, val, PHY_STBPAD_CNFG_R);
+> +
+> +	/* Configure delay line */
+> +	/* Enable fixed delay */
+> +	sdhci_writeb(host, PHY_SDCLKDL_CNFG_EXTDLY_EN, PHY_SDCLKDL_CNFG_R);
+> +	/*
+> +	 * Set delay line.
+> +	 * Its recommended that bit UPDATE_DC[4] is 1 when SDCLKDL_DC is being written.
+> +	 * Ensure UPDATE_DC[4] is '0' when not updating code.
+> +	 */
+> +	val = sdhci_readb(host, PHY_SDCLKDL_CNFG_R);
+> +	val |= PHY_SDCLKDL_CNFG_UPDATE;
+> +	sdhci_writeb(host, val, PHY_SDCLKDL_CNFG_R);
+> +	/* Add 10 * 70ps = 0.7ns for output delay */
+> +	sdhci_writeb(host, 10, PHY_SDCLKDL_DC_R);
+> +	val = sdhci_readb(host, PHY_SDCLKDL_CNFG_R);
+> +	val &= ~(PHY_SDCLKDL_CNFG_UPDATE);
+> +	sdhci_writeb(host, val, PHY_SDCLKDL_CNFG_R);
+> +
+> +	/* Set SMPLDL_CNFG, Bypass */
+> +	sdhci_writeb(host, PHY_SMPLDL_CNFG_BYPASS_EN, PHY_SMPLDL_CNFG_R);
+> +
+> +	/* Set ATDL_CNFG, tuning clk not use for init */
+> +	val = FIELD_PREP(PHY_ATDL_CNFG_INPSEL_MASK, 2);
 
-So while this nests at most 65 spinlocks, there is no actual bound on
-the amount of nested lock sections in total. That is, all_waiters list
-can be grown without limits.
+magic "2" needs a meaningful macro definition.
 
-Can we pretty please make wait_all_lock a mutex ?
+> +	sdhci_writeb(host, val, PHY_ATDL_CNFG_R);
+> +
+> +	/* Deasset phy reset */
+> +	val = sdhci_readl(host, PHY_CNFG_R);
+> +	val |= PHY_CNFG_RSTN_DEASSERT;
+> +	sdhci_writel(host, val, PHY_CNFG_R);
+> +}
+> +
+> +static void sg2042_sdhci_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	sdhci_reset(host, mask);
+> +
+> +	if (mask & SDHCI_RESET_ALL)
+> +		sg2042_sdhci_phy_init(host);
+> +}
+> +
+>  static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>  	.set_clock		= sdhci_set_clock,
+>  	.set_bus_width		= sdhci_set_bus_width,
+> @@ -728,6 +808,16 @@ static const struct sdhci_ops sdhci_dwcmshc_cv18xx_ops = {
+>  	.adma_write_desc	= dwcmshc_adma_write_desc,
+>  };
+>  
+> +static const struct sdhci_ops sdhci_dwcmshc_sg2042_ops = {
+> +	.set_clock              = sdhci_set_clock,
+> +	.set_bus_width          = sdhci_set_bus_width,
+> +	.set_uhs_signaling      = dwcmshc_set_uhs_signaling,
+> +	.get_max_clock		= dwcmshc_get_max_clock,
+> +	.platform_execute_tuning = th1520_execute_tuning,
+> +	.reset                  = sg2042_sdhci_reset,
+> +	.adma_write_desc        = dwcmshc_adma_write_desc,
+> +};
+> +
+>  static const struct sdhci_pltfm_data sdhci_dwcmshc_pdata = {
+>  	.ops = &sdhci_dwcmshc_ops,
+>  	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+> @@ -763,6 +853,13 @@ static const struct sdhci_pltfm_data sdhci_dwcmshc_cv18xx_pdata = {
+>  	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+>  };
+>  
+> +static const struct sdhci_pltfm_data sdhci_dwcmshc_sg2042_pdata = {
+> +	.ops = &sdhci_dwcmshc_sg2042_ops,
+> +	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +		  SDHCI_QUIRK_INVERTED_WRITE_PROTECT,
 
-> >   The acquisition of multiple spinlocks will degrade performance. This is a
-> >   conscious choice, however. Wait-for-all is known to be a very rare operation
-> >   in practice, especially with counts that approach the maximum, and it is the
-> >   intent of the ntsync driver to optimize wait-for-any at the expense of
-> >   wait-for-all as much as possible.
+is "wp-inverted" property better?
 
-Typical sane usage is a good guide for performance, but you must not
-forget about malicious userspace and what they can do on purpose to mess
-you up.
+> +	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+> +};
+> +
+>  static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+>  {
+>  	/*
+> @@ -882,6 +979,58 @@ static int dwcmshc_th1520_init(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static int dwcmshc_sg2042_clks_enable(struct dwcmshc_priv *dwc_priv)
+> +{
+> +	int ret = 0;
+> +	struct sg2042_priv *soc = dwc_priv->priv;
+> +
+> +	if (soc)
+> +		ret = clk_bulk_prepare_enable(SG2042_MAX_CLKS, soc->clks);
+> +	return ret;
+> +}
+> +
+> +static void dwcmshc_sg2042_clks_disable(struct dwcmshc_priv *dwc_priv)
+> +{
+> +	struct sg2042_priv *soc = dwc_priv->priv;
+> +
+> +	if (soc)
+> +		clk_bulk_disable_unprepare(SG2042_MAX_CLKS,
+> +					   soc->clks);
+> +}
+> +
+> +static int dwcmshc_sg2042_init(struct device *dev,
+> +			       struct sdhci_host *host,
+> +			       struct dwcmshc_priv *dwc_priv)
+> +{
+> +	int err;
+> +	struct sg2042_priv *soc = NULL;
+> +
+> +	soc = devm_kzalloc(dev, sizeof(struct sg2042_priv), GFP_KERNEL);
+> +	if (!soc)
+> +		return -ENOMEM;
+> +
+> +	soc->clks[0].id = "card";
+> +	soc->clks[1].id = "timer";
 
+Interesting, only "card" and "timer", so which clk is for clk input of the ip?
 
-Anyway, let me stare more at all this....
+> +	err = devm_clk_bulk_get_optional(mmc_dev(host->mmc), SG2042_MAX_CLKS,
+> +					 soc->clks);
+> +	if (err) {
+> +		dev_err(mmc_dev(host->mmc), "failed to get clocks %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	err = clk_bulk_prepare_enable(SG2042_MAX_CLKS, soc->clks);
+> +	if (err) {
+> +		dev_err(mmc_dev(host->mmc), "failed to enable clocks %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	dwc_priv->priv = soc;
+> +	dwc_priv->soc_clks_enable = dwcmshc_sg2042_clks_enable;
+> +	dwc_priv->soc_clks_disable = dwcmshc_sg2042_clks_disable;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+>  	{
+>  		.compatible = "rockchip,rk3588-dwcmshc",
+> @@ -907,6 +1056,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+>  		.compatible = "thead,th1520-dwcmshc",
+>  		.data = &sdhci_dwcmshc_th1520_pdata,
+>  	},
+> +	{
+> +		.compatible = "sophgo,sg2042-dwcmshc",
+> +		.data = &sdhci_dwcmshc_sg2042_pdata,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, sdhci_dwcmshc_dt_ids);
+> @@ -994,6 +1147,12 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>  			goto err_clk;
+>  	}
+>  
+> +	if (pltfm_data == &sdhci_dwcmshc_sg2042_pdata) {
+> +		err = dwcmshc_sg2042_init(dev, host, priv);
+> +		if (err)
+> +			goto err_clk;
+> +	}
+> +
+>  #ifdef CONFIG_ACPI
+>  	if (pltfm_data == &sdhci_dwcmshc_bf3_pdata)
+>  		sdhci_enable_v4_mode(host);
+> -- 
+> 2.25.1
+> 
