@@ -1,116 +1,106 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC361386A8;
-	Tue, 16 Apr 2024 19:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD2F113792D;
+	Tue, 16 Apr 2024 19:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713296961; cv=none; b=nBnEy6Dxvp3/+U2XNMvCGnHcaxZwvKIIZ2/+968yYXTGzpt5RxLpJc/vzqK8/KxVXtNtUnBPm6QoRrXmZruA06aDyNWIBuYXxVKPmnfhJ8A4jCyjLBtbON1+6tzq6iB4IStQw+L9SDvaXY/S+hLM42oQLDpcSMyB8ZlF4n1bF3I=
+	t=1713296978; cv=none; b=d6BrqrLsPYF5q1kt/Su7/WVtscjPcp93oBDzKIYXVbLN+i3InX/zwk0YwKXGCZjgOzHdQ+5d8yLmmDkGkE13iEm3jA4aGGXmhtXyScywj7GX9HUgBXK7OX6Ok4PB0ZMtukpatsSkWWDZVdnFYYCmoEOEtKVFFv8uFXVrPoUu1x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713296961; c=relaxed/simple;
-	bh=9lZXQQb2otPcrvmQIRJEDc1staJ0Dw4ScCLzO4hLTAw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qmgBEb+bMMfOi19DFRMDBqYgHnVnVu0TOws27cdv7ZOxjwsgBdB3t+ZmlONWU/SajXYPc33lL54yqA7H5P0nrNoqXiVnph+YmpXltHau8p//40RwCL4ZhUCRBBYYkfbj4tPo4GaIx54n5Sr51P/nUHO4opUNwW1wWa8CViEFcOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MIPC4Cde; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MIPC4Cde"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id BC5CBC0000F3;
-	Tue, 16 Apr 2024 12:43:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com BC5CBC0000F3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1713296631;
-	bh=9lZXQQb2otPcrvmQIRJEDc1staJ0Dw4ScCLzO4hLTAw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MIPC4Cdeho+xCKH8H/m1aVuXOX5OIg0PcZVQq44xwUMWCbiGRcMmKroyi49tdAbDN
-	 m1gUsoa7pAta2ZyE5vG7CfFcwxhb3nH52YMexj5PtCrYGOZgFZUsZut9zg2p3qFcZG
-	 ptnpw1FK/Zskg7wKq6teGEj3CsM0UuoSy9qCQjnc=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id DD7A318041CAC4;
-	Tue, 16 Apr 2024 12:43:49 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-kernel@vger.kernel.org
-Cc: opendmb@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Tim Ross <tim.ross@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE)
-Subject: [PATCH] irqchip/irq-brcmstb-l2: Avoid saving mask on shutdown
-Date: Tue, 16 Apr 2024 12:43:42 -0700
-Message-Id: <20240416194343.469318-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713296978; c=relaxed/simple;
+	bh=ax3Hkz8by9sa3C0PHz6V5APRvHG6ooQ+PnH0zYUfSDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QG+u2WYLOhTjQb/eoyM9gcCh0bkqxwCUdAxuYVBIeR3F1v6j9lxqXHrN+7WAx2RS6HLh54J9xjGLEZv8GBGkvDd/8lqkkUIDiwNDpjlDT4NxYCUvb23AAlcKYqHVowpAFTxYa3LaN4X132J7Air9GtyuWQX+2EI9GHQkaslb+Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0143F339;
+	Tue, 16 Apr 2024 12:50:03 -0700 (PDT)
+Received: from [192.168.20.58] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93F4F3F738;
+	Tue, 16 Apr 2024 12:49:30 -0700 (PDT)
+Message-ID: <f18251ff-979f-42bb-9db4-8f7256c4ca4a@arm.com>
+Date: Tue, 16 Apr 2024 14:49:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] riscv: cacheinfo: remove the useless parameter
+ (node) of ci_leaf_init()
+Content-Language: en-US
+To: Yunhui Cui <cuiyunhui@bytedance.com>, rafael@kernel.org, lenb@kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com,
+ jhugo@codeaurora.org, john.garry@huawei.com, Jonathan.Cameron@huawei.com,
+ pierre.gondois@arm.com, sudeep.holla@arm.com, tiantao6@huawei.com
+References: <20240416031438.7637-1-cuiyunhui@bytedance.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20240416031438.7637-1-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The interrupt controller shutdown path does not need to save the mask of
-enabled interrupts because the next state the system is going to be in
-is akin to a cold boot, or a kexec'd kernel.
+Hi,
 
-Reported-by: Tim Ross <tim.ross@broadcom.com>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/irqchip/irq-brcmstb-l2.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+Other than a comment in 2/3 this all (patches 1-3) looks sane to me. So:
 
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-index 2b0b3175cea0..c988886917f7 100644
---- a/drivers/irqchip/irq-brcmstb-l2.c
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -118,7 +118,7 @@ static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
--static void brcmstb_l2_intc_suspend(struct irq_data *d)
-+static void __brcmstb_l2_intc_suspend(struct irq_data *d, bool save)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-@@ -127,7 +127,8 @@ static void brcmstb_l2_intc_suspend(struct irq_data *d)
- 
- 	irq_gc_lock_irqsave(gc, flags);
- 	/* Save the current mask */
--	b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
-+	if (save)
-+		b->saved_mask = irq_reg_readl(gc, ct->regs.mask);
- 
- 	if (b->can_wake) {
- 		/* Program the wakeup mask */
-@@ -137,6 +138,16 @@ static void brcmstb_l2_intc_suspend(struct irq_data *d)
- 	irq_gc_unlock_irqrestore(gc, flags);
- }
- 
-+static void brcmstb_l2_intc_shutdown(struct irq_data *d)
-+{
-+	__brcmstb_l2_intc_suspend(d, false);
-+}
-+
-+static void brcmstb_l2_intc_suspend(struct irq_data *d)
-+{
-+	__brcmstb_l2_intc_suspend(d, true);
-+}
-+
- static void brcmstb_l2_intc_resume(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-@@ -252,7 +263,7 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
- 
- 	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
- 	ct->chip.irq_resume = brcmstb_l2_intc_resume;
--	ct->chip.irq_pm_shutdown = brcmstb_l2_intc_suspend;
-+	ct->chip.irq_pm_shutdown = brcmstb_l2_intc_shutdown;
- 
- 	if (data->can_wake) {
- 		/* This IRQ chip can wake the system, set all child interrupts
--- 
-2.34.1
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+
+Thanks,
+
+
+On 4/15/24 22:14, Yunhui Cui wrote:
+> The implementation of the ci_leaf_init() function body and the caller
+> do not use the input parameter (struct device_node *node), so remove it.
+> 
+> Fixes: 6a24915145c9 ("Revert "riscv: Set more data to cacheinfo"")
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   arch/riscv/kernel/cacheinfo.c | 13 ++++++-------
+>   1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 09e9b88110d1..30a6878287ad 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -64,7 +64,6 @@ uintptr_t get_cache_geometry(u32 level, enum cache_type type)
+>   }
+>   
+>   static void ci_leaf_init(struct cacheinfo *this_leaf,
+> -			 struct device_node *node,
+>   			 enum cache_type type, unsigned int level)
+>   {
+>   	this_leaf->level = level;
+> @@ -80,11 +79,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   	int levels = 1, level = 1;
+>   
+>   	if (of_property_read_bool(np, "cache-size"))
+> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
+> +		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+>   	if (of_property_read_bool(np, "i-cache-size"))
+> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
+> +		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+>   	if (of_property_read_bool(np, "d-cache-size"))
+> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
+> +		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   
+>   	prev = np;
+>   	while ((np = of_find_next_cache_node(np))) {
+> @@ -97,11 +96,11 @@ int populate_cache_leaves(unsigned int cpu)
+>   		if (level <= levels)
+>   			break;
+>   		if (of_property_read_bool(np, "cache-size"))
+> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
+> +			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+>   		if (of_property_read_bool(np, "i-cache-size"))
+> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
+> +			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+>   		if (of_property_read_bool(np, "d-cache-size"))
+> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
+> +			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+>   		levels = level;
+>   	}
+>   	of_node_put(np);
 
