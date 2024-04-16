@@ -1,107 +1,187 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3760A133422
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55E6132C1F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713290788; cv=none; b=gX2ERxjLBwIE98FF15IWr1xOU32yyqIsq/+zZ3R8G98SPzNKgCUmsvWX8Q3NnnFYPqwa7YmyE4TQQwiFZggx2vqlG+oPRR9iyYHuG+P5pZc8JJrvA60xqBnspcWmqDar5kFyOjSUncyCRPL7tru+x64S+WVWcDazEKwNCxA4e54=
+	t=1713290879; cv=none; b=Ph707qcaKLpLKImGVgrFA7B2dG77+mhom2i5eIua3nD/8jQA8sstNF4qI9obAy2TyCfIQQlkxCG7EYDKTM+SoBKfo0bv+NWA/lWZ8ypMwiPXHn2o2TLlRUTYxqJOtaUravqNI3yhPlW3/hfC61njVTX2/r6GJeumw+GAcdI2/TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713290788; c=relaxed/simple;
-	bh=VdqVOpZIL0fa9mVOgGIk+Lor9GrP68BM7xHeuG4nZQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNomBQZpsH0ZLoLPVWYCGnkt7fxoAND6gLhO6qh9FLkqnoHI/r3rPWaGUD/zEUrTgEPiY++VNJ5Znr4mhLSc0Qz7gwwNAevVp78gujCSEhmQjsdgzoV9XQlBFINcxsTxdUdvLG+zx2SGUr67RDbCeIfUoj0VuFFZWUJqQDwWV74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3WiSbUOg; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713290879; c=relaxed/simple;
+	bh=wGM6lCQzoCYZYY3/O+5+3ZEB+AdgKhtNzLowYu3zD3s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QVJBja5AGLqKtl1AwJMKcf73+d/iA6yRwv0/CFUmkC6kr6b0nYE9E7abXzP7E+hjlajNQNku+a2nOzhvIRmcbe1NT0j8EyDsqKM6ea2OYZRbP6izxhmAUh/HlFQmSyXF9oHASTzNh84noiQoVx1zFVH6wXRK3FomFWAqjbQvvgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DY8WdXZf; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3WiSbUOg"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ed20fb620fso3919673b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 11:06:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DY8WdXZf"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5d8df7c5500so3471971a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 11:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713290785; x=1713895585; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SmNr0h+4BuFUgpk/HTyKfOa7gEFZOVHeubFTNh0tBVI=;
-        b=3WiSbUOgIAU2ltjs/JbKrrhsLecPRq0SFb9jf6G8LFY3NJC0UabU9QjXC6ueHXYvwZ
-         hM5SGaOBqLx4Nor/Pw6fMr60HiHMEo70kjey5MA8/4IxxRSbt8LRJOhHQveswBsT1fxM
-         S0ZHTciEHUSXCGCrYHXS+ShOQ3kAFA2Dt9/k1xPLlzYm/29u03AKki6NAF88rmPxmSMQ
-         wcFCfCceqJOUgVNnr+IEUqbbNAFrqYc7o57pmVC379KrfMYd+E8ctoX1xtaswbad/UZD
-         J4geTNGw4qtBwu8+rlWATaGBppMke4q/HhsvB+9K4FzROWS9vNsU2t5NDfX+G4vgefN4
-         GX2Q==
+        d=google.com; s=20230601; t=1713290877; x=1713895677; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EZRlfAMdcL/8llTBrUkN/mqlh/eAPDTBgijgp2y5a74=;
+        b=DY8WdXZfXElaN9c5ZJG+dKBT0W1et0MBmzN/BCxrEtiD7yQ4WDh+EEGrmYjEd283zr
+         BuzcqDI/am7Lm1DgNQIQwYH6XIBlukPsuplgIhuuZdTGyelP5Tn42xesCgCputGGuuZw
+         mjmepecZuwX5BOz1mIuD+yYqfRk5GMDJsupEEKPhGhTyPWwtL8lRWiV1noDU6+OUYdLN
+         wA0AX9/CtC9wPsxQEOAkazh/WQTZjio+0tAExlfrVB4TK8OwNnmjUuQWRC6fHYGCwfvD
+         eK9oCYY1DyXSNTcouwPpH5Ga5BH0zsplFq0e1IrtPm9IgOWly8aRZDSTYTrM6HBiNKqz
+         LX7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713290785; x=1713895585;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SmNr0h+4BuFUgpk/HTyKfOa7gEFZOVHeubFTNh0tBVI=;
-        b=O0GPrwvvd0ExWy3qxBMGm+DGBe0xYGEXvcQw01GtaNsOSqMC4SGMRO8Zbz0xi1ShpB
-         XgrdMq4FOUKRZ+R33iQRznKtc/SnnusReDQ+v5W7lD9NS93/R+y0719e5quc17qP+fW/
-         YlOyzfWqC5LK5oqCeikv2tNHO+9kvG7C4D15vw33E6ccso6gkgwgYIUY8rcX0FQ8MY+O
-         FMprMYBLdupQRcaQvBV3Ke0f7SyE4hQSpUbeUb6kluFlsY6C//OzqR0d3trAuQRMNaGq
-         xm8bivfDaJX90j7xcZMrAs7ml3Ib0jgRtmp6z98O4WEB2Mh8S+jXYnRj3ePJI38TTCP2
-         wAZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKx6x+dPDqIewfBIcZXqk/YyUB0/PRlSGA7IVElYzOcutDWSBEend6MS4buWGN96Y6LhDRtGlpcxNQKEWR5gDooGMfpXSHY2CR4FEL
-X-Gm-Message-State: AOJu0YxgrwJ6Biln/o9sH1FW/Fx1AfXlKMSwGXACQaY5A1QoQXm/+w+1
-	oyciPFOM2c0udSiX6obzcaaj6VgWhhHzsXwHyJYeQONYQr8oi/vC/xyafyqJmDc=
-X-Google-Smtp-Source: AGHT+IHrpAn2SwOIF/uXmMPZ5Ood25h2i+Ow5WsbzJxkS/YGJA0jpJQwONosrjVsQ+4tatk4S4Af+Q==
-X-Received: by 2002:a05:6a20:d49b:b0:1a9:a3ed:1786 with SMTP id im27-20020a056a20d49b00b001a9a3ed1786mr13368970pzb.38.1713290785329;
-        Tue, 16 Apr 2024 11:06:25 -0700 (PDT)
-Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
-        by smtp.gmail.com with ESMTPSA id bg8-20020a1709028e8800b001e4344a7601sm9969996plb.42.2024.04.16.11.06.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 11:06:24 -0700 (PDT)
-Date: Tue, 16 Apr 2024 11:06:21 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Zhao Ke <ke.zhao@shingroup.cn>
-Cc: paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	dawei.li@shingroup.cn, shenghui.qu@shingroup.cn
-Subject: Re: [PATCH] Use bool value in set_cpu_online()
-Message-ID: <Zh6+HZnsgh9ncvPj@ghost>
-References: <20240318065404.123668-1-ke.zhao@shingroup.cn>
+        d=1e100.net; s=20230601; t=1713290877; x=1713895677;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EZRlfAMdcL/8llTBrUkN/mqlh/eAPDTBgijgp2y5a74=;
+        b=vhJ263ehJOfiX64SSGZ1RksxfoznCZDBmiq39MSl/hzdtj5LDcYq8vzs8fYYoLihWm
+         XmScHDIHgZEF0IY+T2/QlZYR+zMUC/30GpeaoVRwCiYLPZi/8gDUUTKQUrZHKQ4Bnw13
+         xgrdgxJIOyaDa4vvcUXATr9KISYey6ebnP0eM5VSb7Z5uFwRBV/jqXD9H3eE0Dl01XTu
+         v7CNBdb0hBy9knmumNhDlxh6fAdyu9dfJV2m7Rxasm+nsd4q2iVe5de/Q4kmUQAyypza
+         FIEGGeAag6XqtvbWw8kUuF1IIxayl2CoG5Of0MlhKOq0E920j831BqbYFn+gkkLWyS3N
+         noVw==
+X-Gm-Message-State: AOJu0YwcDerKGJP8Id+lu5M6aQ1AIy1e2NyV5ZzdYoPEdTUgiKDKSAA9
+	pfv/OdMssloQrrKG0W2exolZGO8wmnwTRFT3QLd43EsgkorBxJ2QmWwqvtkmBLi9AimXOYWpTFC
+	Hyg==
+X-Google-Smtp-Source: AGHT+IHspMH6UcamKUetOGwUjxZE46EOL80IDIP3kgY2zAIH6BaR2jBx+NGr0u8CL+PNqFSKn7LkRros7Ek=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:e00f:b0:2a2:8f19:f484 with SMTP id
+ u15-20020a17090ae00f00b002a28f19f484mr42733pjy.3.1713290877079; Tue, 16 Apr
+ 2024 11:07:57 -0700 (PDT)
+Date: Tue, 16 Apr 2024 11:07:55 -0700
+In-Reply-To: <c2ca06e2d8d7ef66800f012953b8ea4be0147c92.camel@cyberus-technology.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240318065404.123668-1-ke.zhao@shingroup.cn>
+Mime-Version: 1.0
+References: <20240416123558.212040-1-julian.stecklina@cyberus-technology.de>
+ <Zh6MmgOqvFPuWzD9@google.com> <ecb314c53c76bc6d2233a8b4d783a15297198ef8.camel@cyberus-technology.de>
+ <Zh6WlOB8CS-By3DQ@google.com> <c2ca06e2d8d7ef66800f012953b8ea4be0147c92.camel@cyberus-technology.de>
+Message-ID: <Zh6-e9hy7U6DD2QM@google.com>
+Subject: Re: [PATCH 1/2] KVM: nVMX: fix CR4_READ_SHADOW when L0 updates CR4
+ during a signal
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	Julian Stecklina <julian.stecklina@cyberus-technology.de>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 18, 2024 at 02:54:04PM +0800, Zhao Ke wrote:
-> The declaration of set_cpu_online() takes a bool value. So replace
-> int here to make it consistent with the declaration.
-> 
-> Signed-off-by: Zhao Ke <ke.zhao@shingroup.cn>
-> ---
->  arch/riscv/kernel/smpboot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 519b6bd946e5..3f7c274653ab 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -229,7 +229,7 @@ asmlinkage __visible void smp_callin(void)
->  	riscv_ipi_enable();
->  
->  	numa_add_cpu(curr_cpuid);
-> -	set_cpu_online(curr_cpuid, 1);
-> +	set_cpu_online(curr_cpuid, true);
->  
->  	if (has_vector()) {
->  		if (riscv_v_setup_vsize())
-> -- 
-> 2.34.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+On Tue, Apr 16, 2024, Thomas Prescher wrote:
+> On Tue, 2024-04-16 at 08:17 -0700, Sean Christopherson wrote:
+> > On Tue, Apr 16, 2024, Thomas Prescher wrote:
+> > > Hi Sean,
+> > >=20
+> > > On Tue, 2024-04-16 at 07:35 -0700, Sean Christopherson wrote:
+> > > > On Tue, Apr 16, 2024, Julian Stecklina wrote:
+> > > > > From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+> > > > >=20
+> > > > > This issue occurs when the kernel is interrupted by a signal whil=
+e
+> > > > > running a L2 guest. If the signal is meant to be delivered to the=
+ L0
+> > > > > VMM, and L0 updates CR4 for L1, i.e. when the VMM sets
+> > > > > KVM_SYNC_X86_SREGS in kvm_run->kvm_dirty_regs, the kernel program=
+s an
+> > > > > incorrect read shadow value for L2's CR4.
+> > > > >=20
+> > > > > The result is that the guest can read a value for CR4 where bits =
+from
+> > > > > L1 have leaked into L2.
+> > > >=20
+> > > > No, this is a userspace bug.=C2=A0 If L2 is active when userspace s=
+tuffs
+> > > > register state, then from KVM's perspective the incoming value is L=
+2's
+> > > > value.=C2=A0 E.g.=C2=A0 if userspace *wants* to update L2 CR4 for w=
+hatever
+> > > > reason, this patch would result in L2 getting a stale value, i.e. t=
+he
+> > > > value of CR4 at the time of VM-Enter.
+> > > >=20
+> > > > And even if userspace wants to change L1, this patch is wrong, as K=
+VM
+> > > > is writing vmcs02.GUEST_CR4, i.e. is clobbering the L2 CR4 that was
+> > > > programmed by L1, *and* is dropping the CR4 value that userspace wa=
+nted
+> > > > to stuff for L1.
+> > > >=20
+> > > > To fix this, your userspace needs to either wait until L2 isn't act=
+ive,
+> > > > or force the vCPU out of L2 (which isn't easy, but it's doable if
+> > > > absolutely necessary).
+> > >=20
+> > > What you say makes sense. Is there any way for
+> > > userspace to detect whether L2 is currently active after
+> > > returning from KVM_RUN? I couldn't find anything in the official
+> > > documentation https://docs.kernel.org/virt/kvm/api.html
+> > >=20
+> > > Can you point me into the right direction?
+> >=20
+> > Hmm, the only way to query that information is via KVM_GET_NESTED_STATE=
+,
+> > which is a bit unfortunate as that is a fairly "heavy" ioctl().
 
-Thank you!
+Hur dur, I forgot that KVM provides a "guest_mode" stat.  Userspace can do
+KVM_GET_STATS_FD on the vCPU FD to get a file handle to the binary stats, a=
+nd
+then you wouldn't need to call back into KVM just to query guest_mode.
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Ah, and I also forgot that we have kvm_run.flags, so adding KVM_RUN_X86_GUE=
+ST_MODE
+would also be trivial (I almost suggested it earlier, but didn't want to ad=
+d a
+new field to kvm_run without a very good reason).
 
+> Indeed. What still does not make sense to me is that userspace should be =
+able
+> to modify the L2 state. From what I can see, even in this scenario, L0 ex=
+its
+> with the L1 state.
+
+No, KVM exits with L2.  Or at least, KVM is supposed to exit with L2 state.=
+  Exiting
+with L1 state would actually be quite difficult, as KVM would need to manua=
+lly
+switch to vmcs01, pull out state, and then switch back to vmcs02.  And for =
+GPRs,
+KVM doesn't have L1 state because most GPRs are "volatile", i.e. are clobbe=
+red by
+VM-Enter and thus need to be manually managed by the hypervisor.
+
+I assume you're using kvm_run.kvm_valid_regs to instruct KVM to save vCPU s=
+tate
+when exiting to userspace?  That path grabs state straight from the vCPU, w=
+ithout
+regard to is_guest_mode().  If you're seeing L1 state, then there's likely =
+a bug
+somewhere, likely in userspace again.   While valid_regs kvm_run.kvm_valid_=
+regs
+might not be heavily used, the underlying code is very heavily used for doi=
+ng
+save/restore while L2 is active, e.g. for live migration.
+
+> So what you are saying is that userspace should be allowed to change L2 e=
+ven
+> if it receives the architectural state from L1?
+
+No, see above.
+
+> What would be the use-case for this scenario?
+>=20
+> If the above is true, I think we should document this explicitly
+> because it's not obvious, at least not for me ;)
+>=20
+> How would you feel if we extend struct kvm_run with a
+> nested_guest_active flag? This should be fairly cheap and would make
+> the integration into VirtualBox/KVM much easier. We could also only
+> sync this flag explicitly, e.g. with a KVM_SYNC_X86_NESTED_GUEST?
+
+Heh, see above regarding KVM_RUN_X86_GUEST_MODE.
