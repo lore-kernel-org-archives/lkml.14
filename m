@@ -1,153 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518E112BF15
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EAA1292D7;
+	Tue, 16 Apr 2024 13:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713272705; cv=none; b=o36FM4kQwgQIEfy3S/jhF2ndZ5K8hUGeb4OMZ1Sy5cXCgtfNptkBn2eaYyaGnkcV5eVg9+aFF6AmJJRJBXizFrJE+Zfyy/CGBga2ATgSMYIlmfgSYcE0CWp/lDDzA4vtBg7gX+qN6/o1ftWPgpNViCpJ61jKi0BxA1q09hmPldE=
+	t=1713272758; cv=none; b=rjKuc1Z0s21OB6K+9SxrBXL4pFe3KEZgUfPOYm5dsjCiztQwJkXG6XOmx3bbF3f6DbQPwk3n6gzoRTvbLqb25cVpc9DOH/+OXZ/b5mqqYHdkLJfQldZjhrRVKK7WjsmPPKCMEqtBo4WTiwL4IkSnfgwcImO08svqiGB/5nZQjDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713272705; c=relaxed/simple;
-	bh=UEzTGUe3r7acXf8Yb95hdOs5Y9KDHJwibjjQOPb+gas=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kJ6Myv/x5CFUyw4nsRiIrkcNMHfdcZod+KXGkElDksL8UJe43qxfpZJK7cBTT7jdVsMBmqYzxgp5yARvcqB9fyeuCwoY85hF5knpiHWvGP0SExF8HnqvEr0zP8u6GjJm3epBbtq/ZX3CdCK5BjooDVf8GzmFokbcexhxn5bth0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ss/kIJQt; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713272758; c=relaxed/simple;
+	bh=ca8Cl3XLzplEVm904ERihnCNiIuaG/Q+OtrmyAAJcCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gg3tb+JZKk5F697Oha9pQCT2H2auyOxLtZLwXYV7Xg9GjOWa8bRlvkkdwIaLF83BzrJiPOAUU2ukngTmm/Ogus6psEbHAM/qz5pYOId+jhYS7vSR9hXzjvX/U9pKE8U/Wq2tJp9JvmDOhq30nSO9F199pH/CDb0HtU6egW8GE0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PVsbVpvb; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ss/kIJQt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713272700; x=1744808700;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UEzTGUe3r7acXf8Yb95hdOs5Y9KDHJwibjjQOPb+gas=;
-  b=Ss/kIJQt0zdXtxEjiSitKwj7zdB5qFc5n3xjBi1ZGBBafSqJ7h6TrYDJ
-   3YXhT6bUedorDPCFBZXFfCPZIaPeIo8sjZiv9UHyZPt3DSdjGZ7GEKZsw
-   OGEd/+jF3rSGT6SefuYmXieE2BkmGDM9VpDQW0Y+Z0tcWIdAeZT0oeGKE
-   v8YogGoMKIRA0l90ziYopg22AwajqeKw6fhpd9m0jXyoP22+TtXM/N3cS
-   mLe2isZCuErAhXmsj9/m9i5FdfFBka0cIPfNR6cIdXuLSOChrYR7AiWPl
-   O0+nsDJFlFUp3sIXlpCpk65J14i8SiSPtaGBV+nqO9P4aEWW/9fW1/TJK
-   g==;
-X-CSE-ConnectionGUID: C09H0YPgQVO8g29tx/zPrQ==
-X-CSE-MsgGUID: ODC00vwjQ+SX1JYJ1SMIng==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8569445"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8569445"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 06:04:59 -0700
-X-CSE-ConnectionGUID: fDp3iuRyQJiH1ahnVv75ZQ==
-X-CSE-MsgGUID: KKXIiKUHRK6bNxue6PaYcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22321830"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2024 06:04:55 -0700
-Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id DDBE332EA4;
-	Tue, 16 Apr 2024 14:04:50 +0100 (IST)
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	linux-kernel@vger.kernel.org
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	alan.brady@intel.com,
-	maciej.fijalkowski@intel.com,
-	jesse.brandeburg@intel.com,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lukasz Czapnik <lukasz.czapnik@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Subject: [PATCH iwl-net] ice: Interpret .set_channels() input differently
-Date: Tue, 16 Apr 2024 14:58:54 +0200
-Message-ID: <20240416125856.1263314-1-larysa.zaremba@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PVsbVpvb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713272738; x=1713877538; i=markus.elfring@web.de;
+	bh=ca8Cl3XLzplEVm904ERihnCNiIuaG/Q+OtrmyAAJcCI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=PVsbVpvbn3NmKytdDeRSUzNTv99lozcqE2+J6VBtKbbqUuI466dhg6SxG4YCpojt
+	 EcbYegfhuxm+kFJXgyC3dw7XaykV5nVLCkUGEkKCt8ToqnwAmIKlmZx8TV5nHugff
+	 SKFKjFy25uYu4pSF3BsP1CfWWMXGuwguqfKdMpEGSMXjCT7V6zFMhNkViNGtA7wYI
+	 ki4Nu6KiyU/7JRzAgi7uuyktzTwQY3lyXj7gCuJiVWNhzwLr30q5dsg1fTH7DOXeD
+	 qqQGRyoZ+cZHTxTf2pol5Ilxqno4JKDdAzxPvnzlvUL+wFsgsK4btyc96jyGMeFaI
+	 dYV6Xtla9wDjJOShRA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M7Nmo-1rp0LG0iQW-0081qf; Tue, 16
+ Apr 2024 15:05:38 +0200
+Message-ID: <77288a25-6114-45e3-b849-4c48116af78e@web.de>
+Date: Tue, 16 Apr 2024 15:05:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [0/2] powerpc/powernv/vas: Adjustments for two function
+ implementations
+To: Julia Lawall <julia.lawall@inria.fr>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+ kernel-janitors@vger.kernel.org, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+References: <7be66990-de9e-488b-ad6d-fafd1c7bb34c@web.de>
+ <ee6022b8-3aeb-4e6e-99f5-2668dd344e0a@web.de> <87plupbm0c.fsf@mail.lhotse>
+ <795ca003-4231-45c0-8bb6-178597950fa5@csgroup.eu>
+ <33a38d7e-26da-46e0-90d4-7137f9ec0c90@web.de>
+ <3711cad3-a627-4a6e-8769-ce916c1919ee@csgroup.eu>
+ <3f22920-9543-efd1-a32a-477ae18a2b2a@inria.fr>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <3f22920-9543-efd1-a32a-477ae18a2b2a@inria.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QZe/Xfpby5Yzh4ML5dL/xWw0rfgIaR+vLFPEZOY+KKaRjk3XJ8q
+ JQ8iyJRZTIH9iwJR0LdwrgqQaKNhDtH6oyxbyP52cDntgHTbyCmjy+8kqySd6cgr0jrgpQC
+ hvKCDyUP2g8uh2oANsmrMHLU4oZ9c/P14wVLNn06QHfSxixH05aMaTEYTj8op34uLrRkpr1
+ xpRkH6J4FRKQBrucHiehA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1M1alroXzts=;cqW/3yAUMIIAinMsv1rymEBg+14
+ LeCtlnZRH6mesVjMV1Cah0nudr15ldWC9pnjdv2KA49quwI7KQqSCvjfxFQOF6QuclWQs5LQN
+ 4feSeRqtTZxYXpKhbqjKVs99SY7Msprt4QbjPZfup2ogjk5ci0kSTJKq7fFaiGtXlBmUZW4DX
+ fHRRJk//Nc8+SpHtM22puc2R992esQ29XEnD4PYhmeIRdmOf2sVtwEno3JniXTLQ+MSKX/BHT
+ nk3HvEpavLKWVM06lsug3Nu2PsfAwJtfW0epszCeOhqNrlyMN0o2BcFfH1EZQxEfytNaMTJNS
+ LvMLN/HfIclphTAujelvwVFb7Nx2iLr3vGSWovjplNXaV/L11WVhpkaBQzCmNUg8o+OtyaZhH
+ WNbdD+wF+kGerEqyJkZMbKLE/MNysgkk6zwhbeNw9nhCkNESnkZAbGQhL89mfSphGvHrnNzVT
+ FMRXaxEeozL6kbXLoHXdQyMP2rSiMsQgmksEpTdzVJe8EaW16QK7xSBAFJsEFfqeusjQwes9s
+ zfxR33i34pTmtgQAFH5iiXosrDBVyhwe/hvFvywrsKFQz9S9ktqiT7dUfrhOgTnDzYLV6SE/t
+ Su7T3f/ZSvijnx9ezLJEKCOdT1ocutynBNBdANPDspCdUJXx0V3cAm2UkQUx56YIybQ2ZZwoc
+ If5RMUwjS8u13FTH/fwOCsW704Pfa7Ju0ICKffMhJF8vz4OBDYkQlT5oOJfmmwh+B7nN49qpM
+ KsKdJRktrGtX3qzyymArFnlNmzwnB9wMM0yjGlxd1r4isyERlifi00Y6+XazHF8jaif2Gs2U5
+ hhswF+8+j1lPI50UFpMdsIL/DkMvp105vjONzZMl0c4RI=
 
-A bug occurs because a safety check guarding AF_XDP-related queues in
-ethnl_set_channels(), does not trigger. This happens, because kernel and
-ice driver interpret the ethtool command differently.
+>>>> So Coccinelle should be fixed if it reports an error for that.
+>>>
+>>> Redundant function calls can occasionally be avoided accordingly,
+>>> can't they?
+>>
+>> Sure they can, but is that worth it here ?
+>
+> Coccinelle does what the developer of the semantic patch tells it to do.
+> It doesn't spontaneously report errors for anything.
 
-How the bug occurs:
-1. ethtool -l <IFNAME> -> combined: 40
-2. Attach AF_XDP to queue 30
-3. ethtool -L <IFNAME> rx 15 tx 15
-   combined number is not specified, so command becomes {rx_count = 15,
-   tx_count = 15, combined_count = 40}.
-4. ethnl_set_channels checks, if there are any AF_XDP of queues from the
-   new (combined_count + rx_count) to the old one, so from 55 to 40, check
-   does not trigger.
-5. ice interprets `rx 15 tx 15` as 15 combined channels and deletes the
-   queue that AF_XDP is attached to.
+Some special source code search and transformation patterns are occasional=
+ly applied.
+The corresponding change acceptance can often be challenging.
 
-Interpret the command in a way that is more consistent with ethtool
-manual [0] (--show-channels and --set-channels).
-
-Considering that in the ice driver only the difference between RX and TX
-queues forms dedicated channels, change the correct way to set number of
-channels to:
-
-ethtool -L <IFNAME> combined 10 /* For symmetric queues */
-ethtool -L <IFNAME> combined 8 tx 2 rx 0 /* For asymmetric queues */
-
-[0] https://man7.org/linux/man-pages/man8/ethtool.8.html
-
-Fixes: 87324e747fde ("ice: Implement ethtool ops for channels")
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
----
- drivers/net/ethernet/intel/ice/ice_ethtool.c | 22 ++++++--------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index 78b833b3e1d7..d91f41f61bce 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -3593,7 +3593,6 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
- 	struct ice_pf *pf = vsi->back;
- 	int new_rx = 0, new_tx = 0;
- 	bool locked = false;
--	u32 curr_combined;
- 	int ret = 0;
- 
- 	/* do not support changing channels in Safe Mode */
-@@ -3615,22 +3614,13 @@ static int ice_set_channels(struct net_device *dev, struct ethtool_channels *ch)
- 		return -EOPNOTSUPP;
- 	}
- 
--	curr_combined = ice_get_combined_cnt(vsi);
-+	if (!ch->combined_count) {
-+		netdev_err(dev, "Please specify at least 1 combined channel\n");
-+		return -EINVAL;
-+	}
- 
--	/* these checks are for cases where user didn't specify a particular
--	 * value on cmd line but we get non-zero value anyway via
--	 * get_channels(); look at ethtool.c in ethtool repository (the user
--	 * space part), particularly, do_schannels() routine
--	 */
--	if (ch->rx_count == vsi->num_rxq - curr_combined)
--		ch->rx_count = 0;
--	if (ch->tx_count == vsi->num_txq - curr_combined)
--		ch->tx_count = 0;
--	if (ch->combined_count == curr_combined)
--		ch->combined_count = 0;
--
--	if (!(ch->combined_count || (ch->rx_count && ch->tx_count))) {
--		netdev_err(dev, "Please specify at least 1 Rx and 1 Tx channel\n");
-+	if (ch->rx_count && ch->tx_count) {
-+		netdev_err(dev, "Dedicated RX or TX channels cannot be used simultaneously\n");
- 		return -EINVAL;
- 	}
- 
--- 
-2.43.0
-
+Regards,
+Markus
