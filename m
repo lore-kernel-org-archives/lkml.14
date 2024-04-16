@@ -1,187 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3247FBA4
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642326EB75;
+	Tue, 16 Apr 2024 07:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713252211; cv=none; b=JdI0gz3Bgt3CQBKqB39jkRZHSNwui0olagor6nUuayjmUGIyuyAwi7k1nRnAVroePXD3fJHT/o/wlphMcTFy9Dd3MHgtiQdKFDHQvr5HrwOk9vIaNZpm3hbbYW9I0CWSCSi/AEDEaSTS7iEUr0ufTRpmYITZbeV3J1xaVwyeJ18=
+	t=1713252213; cv=none; b=JhFjWBMiPA4k4yE6ZlDRDUUJq1+hGxtS/VhcuOA1swuRmjjFZZxclnvsrEC7+uexIW+aZ5vx/7+YlPx8a/fhi78+6k6HXiOOwHZpoiNcWf+C7ttHWxKYXOICQcJ+MxyGgKu7AR4820bYWFZ8Yna2pqdyEYjERkntjXaD6WjCe1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713252211; c=relaxed/simple;
-	bh=i3fSC2Sh/bh/pxYyReh8mIapiLEcvyOrjS7DPGLwxGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NeiFV80VvepFGSJYqtv9doFLsnBXAkBpxDLTYcIarrbI2fnEvKiokb4bE/0r+k7MEL+KpUH8Xy6FczLlkVon2jGWTMnAnyrqyfnY37CyuqaHZuSfrLnPyCUgx0nZPyuwNdbrCxmq1RTQadlkJYU5mhcItDn9LrpLLw3zQaSYoeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmzRrNAn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713252213; c=relaxed/simple;
+	bh=9Cw6OWP2u9Aes3pseofoNzXPv/fz2bmg6PUjArK3J9Y=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5FZaHubs+S9GvyfRTBpO+VKhJJ5elVGI8Qsq2/aCQRpJgaW3tsX2vmHj3TAN7Wei8ZpSVQa1XxWwJotxgX8UjkdcIW0lfsELLVOMkRGDANH7sF/2KwyvWu/XHw+r/VO57eAAR33eVUjSoZE7cfC2uvlou+XkEvKK0E/wvpTT7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4I51/Cs; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmzRrNAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFFBCC113CE;
-	Tue, 16 Apr 2024 07:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713252211;
-	bh=i3fSC2Sh/bh/pxYyReh8mIapiLEcvyOrjS7DPGLwxGg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pmzRrNAn/c99ECm+p/63BcBUXJBAOvsCcC0qPDo6usf22bxfystbdB+0IXl5k6KKr
-	 CMgYFlwRYQ0oyci0aN29K4ii7j6Jn80azXZapmjhevKloLQ0/SLH5+SuTnAyYwHdcj
-	 MNaHVb9ak8i3ZnYWY96+CMb+yFWMSgcqn8XN+BETuOo+KdjAVRLtZaoSNGqLXYndY+
-	 kjjZ3ZjfsFFgvK0QoKV1JnvILvgRQut30UcqNgc5B5XE4qVxXSSd6ggg7kvX3O6DU2
-	 u+ybA9Vn3/zO64Bl8ln8HR/3A3pmNOtpysmQvEQ+SlYLJAOCU90aM3wuxReBspWLEw
-	 vWS+cgEPombzw==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 1/4] f2fs: convert f2fs_mpage_readpages() to use folio
-Date: Tue, 16 Apr 2024 15:23:15 +0800
-Message-Id: <20240416072318.6486-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4I51/Cs"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2da888330b2so35731731fa.2;
+        Tue, 16 Apr 2024 00:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713252209; x=1713857009; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HwPoHiyB6a6BiMxMqmc7hqhHWyqah1NK8r1aIJ0ba5s=;
+        b=S4I51/CsFzVhu+N+qiQyLSN01aHZba4oUcXjcLbG1+nnj6o0c2GV59fK9HmTwZ8YwF
+         rJGi/m7D3BJOTKHeUyh/5PzvVZvA+LJG7hz+V90PE417Fs2VwfW87zivfEV3eFA6CbUm
+         MGVlJ15H8vQhN9gPn0ryh419GXLLCn57hqBpIYexIKzkv4wDwssyTfFD6hvniGASKpB2
+         /G8tf1ff/JhL6+HavCnVvX6eBMUSjNlhQS48GrRQeguLEVXJgWnIA1TlXoVsnpD/L5wq
+         iaEBRXQ8/FaDrPXNBl4GPi+5FWpPn1DY+wnrh0NNPfaobcG3mL7OQS6sqL/J/3tjPJd5
+         oUFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713252209; x=1713857009;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HwPoHiyB6a6BiMxMqmc7hqhHWyqah1NK8r1aIJ0ba5s=;
+        b=DsjmnOOQ1Zr6Lg4zXMXJF53RiQEKyPWbAeq5QV3CY96ZtsPpB0atxJJHw2bdJx5Je0
+         n8iADHnDd6NQXcfCjfOZDsS/MvQXjvsj6v7y0s3gNt9dtgW3B/6mKsPM0nPRs5Xoeja7
+         XJIQqSlbqASxicGVchJmp9Y3OHmKGaB6yTyKkc8t98JKgBr2l8tm7U8Cxc8X9ifyaQqT
+         FaUbK9VGL5lQ3ofulmtqfNQuqilV1kdSLYKNRguieCPfidFSJWL6eV6l7JY1uz2gYv3e
+         iCaqoN+bEHhRpo21x07DS1ywDxyiVO9Ik8q6WRSggHGawkeAaxloYgVbRy0GV7/sBtmR
+         przw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzgU7zIt4IPsO6lsSKO/w3j24HiBnjT+qRyJnQJbVHmr+M1jvFvJPDH9ScXmg58BeYLhn/IjeON7mChFrN1ACEFg0oS10ej5oRdrGrklGs4pA3UYHjzCoEaZDCiJwWCy1/
+X-Gm-Message-State: AOJu0YwS3bj2NvLCSXWHHl5lnfzcwTrRjE9n0RIj/cLcfXMD7ldoslOP
+	4NqM3i2t0398Dh2QitJzmXvvbwMrAOW7kjzsjtDXyAbdg5ExaszQ
+X-Google-Smtp-Source: AGHT+IH5Ye6SPlxy35avdKYsBR2Hv9ZPOjQHKm4uKt9nII/+USCnYiYvMkvevpeOqYTruYF+4XVduw==
+X-Received: by 2002:a19:381c:0:b0:518:ed96:6b12 with SMTP id f28-20020a19381c000000b00518ed966b12mr3381349lfa.61.1713252209223;
+        Tue, 16 Apr 2024 00:23:29 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id bf14-20020a170907098e00b00a52225b44e4sm6323741ejc.115.2024.04.16.00.23.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 00:23:28 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 16 Apr 2024 09:23:26 +0200
+To: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+Cc: olsajiri@gmail.com, andrii@kernel.org, ast@kernel.org,
+	bpf@vger.kernel.org, daniel@iogearbox.net, dxu@dxuuu.xyz,
+	eddyz87@gmail.com, haoluo@google.com, john.fastabend@gmail.com,
+	khazhy@chromium.org, kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev,
+	ncopa@alpinelinux.org, ndesaulniers@google.com, sdf@google.com,
+	song@kernel.org, vmalik@redhat.com, yonghong.song@linux.dev
+Subject: Re: [PATCH bpf-next v2] bpf: btf: include linux/types.h for u32
+Message-ID: <Zh4nbvndaho6kCRP@krava>
+References: <Zh0ZhEU1xhndl2k8@krava>
+ <20240416051527.3109380-1-dmitrii.bundin.a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416051527.3109380-1-dmitrii.bundin.a@gmail.com>
 
-Convert f2fs_mpage_readpages() to use folio and related
-functionality.
+On Tue, Apr 16, 2024 at 08:15:27AM +0300, Dmitrii Bundin wrote:
+> Inclusion of the header linux/btf_ids.h relies on indirect inclusion of
+> the header linux/types.h. Including it directly on the top level helps
+> to avoid potential problems if linux/types.h hasn't been included
+> before.
+> 
+> Signed-off-by: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
 
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/data.c | 80 +++++++++++++++++++++++++-------------------------
- 1 file changed, 40 insertions(+), 40 deletions(-)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9c5512be1a1b..14dcd621acaa 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2374,7 +2374,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
-  * Major change was from block_size == page_size in f2fs by default.
-  */
- static int f2fs_mpage_readpages(struct inode *inode,
--		struct readahead_control *rac, struct page *page)
-+		struct readahead_control *rac, struct folio *folio)
- {
- 	struct bio *bio = NULL;
- 	sector_t last_block_in_bio = 0;
-@@ -2394,6 +2394,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
- #endif
- 	unsigned nr_pages = rac ? readahead_count(rac) : 1;
- 	unsigned max_nr_pages = nr_pages;
-+	pgoff_t index;
- 	int ret = 0;
- 
- 	map.m_pblk = 0;
-@@ -2407,64 +2408,63 @@ static int f2fs_mpage_readpages(struct inode *inode,
- 
- 	for (; nr_pages; nr_pages--) {
- 		if (rac) {
--			page = readahead_page(rac);
--			prefetchw(&page->flags);
-+			folio = readahead_folio(rac);
-+			prefetchw(&folio->flags);
- 		}
- 
--#ifdef CONFIG_F2FS_FS_COMPRESSION
--		if (f2fs_compressed_file(inode)) {
--			/* there are remained compressed pages, submit them */
--			if (!f2fs_cluster_can_merge_page(&cc, page->index)) {
--				ret = f2fs_read_multi_pages(&cc, &bio,
--							max_nr_pages,
--							&last_block_in_bio,
--							rac != NULL, false);
--				f2fs_destroy_compress_ctx(&cc, false);
--				if (ret)
--					goto set_error_page;
--			}
--			if (cc.cluster_idx == NULL_CLUSTER) {
--				if (nc_cluster_idx ==
--					page->index >> cc.log_cluster_size) {
--					goto read_single_page;
--				}
--
--				ret = f2fs_is_compressed_cluster(inode, page->index);
--				if (ret < 0)
--					goto set_error_page;
--				else if (!ret) {
--					nc_cluster_idx =
--						page->index >> cc.log_cluster_size;
--					goto read_single_page;
--				}
-+		index = folio_index(folio);
- 
--				nc_cluster_idx = NULL_CLUSTER;
--			}
--			ret = f2fs_init_compress_ctx(&cc);
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+		if (!f2fs_compressed_file(inode))
-+			goto read_single_page;
-+
-+		/* there are remained compressed pages, submit them */
-+		if (!f2fs_cluster_can_merge_page(&cc, index)) {
-+			ret = f2fs_read_multi_pages(&cc, &bio,
-+						max_nr_pages,
-+						&last_block_in_bio,
-+						rac != NULL, false);
-+			f2fs_destroy_compress_ctx(&cc, false);
- 			if (ret)
- 				goto set_error_page;
-+		}
-+		if (cc.cluster_idx == NULL_CLUSTER) {
-+			if (nc_cluster_idx == index >> cc.log_cluster_size)
-+				goto read_single_page;
- 
--			f2fs_compress_ctx_add_page(&cc, page);
-+			ret = f2fs_is_compressed_cluster(inode, index);
-+			if (ret < 0)
-+				goto set_error_page;
-+			else if (!ret) {
-+				nc_cluster_idx =
-+					index >> cc.log_cluster_size;
-+				goto read_single_page;
-+			}
- 
--			goto next_page;
-+			nc_cluster_idx = NULL_CLUSTER;
- 		}
-+		ret = f2fs_init_compress_ctx(&cc);
-+		if (ret)
-+			goto set_error_page;
-+
-+		f2fs_compress_ctx_add_page(&cc, &folio->page);
-+
-+		goto next_page;
- read_single_page:
- #endif
- 
--		ret = f2fs_read_single_page(inode, page, max_nr_pages, &map,
-+		ret = f2fs_read_single_page(inode, &folio->page, max_nr_pages, &map,
- 					&bio, &last_block_in_bio, rac);
- 		if (ret) {
- #ifdef CONFIG_F2FS_FS_COMPRESSION
- set_error_page:
- #endif
--			zero_user_segment(page, 0, PAGE_SIZE);
--			unlock_page(page);
-+			folio_zero_segment(folio, 0, folio_size(folio));
-+			folio_unlock(folio);
- 		}
- #ifdef CONFIG_F2FS_FS_COMPRESSION
- next_page:
- #endif
--		if (rac)
--			put_page(page);
- 
- #ifdef CONFIG_F2FS_FS_COMPRESSION
- 		if (f2fs_compressed_file(inode)) {
-@@ -2501,7 +2501,7 @@ static int f2fs_read_data_folio(struct file *file, struct folio *folio)
- 	if (f2fs_has_inline_data(inode))
- 		ret = f2fs_read_inline_data(inode, page);
- 	if (ret == -EAGAIN)
--		ret = f2fs_mpage_readpages(inode, NULL, page);
-+		ret = f2fs_mpage_readpages(inode, NULL, folio);
- 	return ret;
- }
- 
--- 
-2.40.1
+jirka
 
+> ---
+> 
+> Changes in v2: Add bpf-next to the subject
+> 
+>  include/linux/btf_ids.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
+> index e24aabfe8ecc..c0e3e1426a82 100644
+> --- a/include/linux/btf_ids.h
+> +++ b/include/linux/btf_ids.h
+> @@ -3,6 +3,8 @@
+>  #ifndef _LINUX_BTF_IDS_H
+>  #define _LINUX_BTF_IDS_H
+>  
+> +#include <linux/types.h> /* for u32 */
+> +
+>  struct btf_id_set {
+>  	u32 cnt;
+>  	u32 ids[];
+> -- 
+> 2.34.1
+> 
