@@ -1,293 +1,106 @@
-Received: from sonic310-24.consmr.mail.ne1.yahoo.com (sonic310-24.consmr.mail.ne1.yahoo.com [66.163.186.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18EA139D01
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.186.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171BF13A268
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298505; cv=none; b=p+0M7es6haeeg9niWSZKT2o0dvd4UDxKhssOT2kBZDLT6UP8hSmgNkR+8l2H0qiPk6fAZMY6s/Nwjt/ofj7VC5dBjzqnfI7N9ueiRB4ckdQLmx8a0IQIZzY1JGLW5h/F8YCy+jzL+4TNxEjrIL+pC0+oiEpH4vKzB6v+i+n+/wY=
+	t=1713298511; cv=none; b=m2Ta6kGZ3tWOAWKzOAzuvsWeoMBd4xng6j7SvuNa0JMVW1OcoGVwAylFVDDdQSh1g7t5DmPBILeIwwIw514cK86Q42tmZKca+awC52ES40S4J9M1mJP+ENf9EXryXzTvAgDmjUGchFDsdrQwBEA5hBPqm9ZYP7Ji9AM6zW94FzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298505; c=relaxed/simple;
-	bh=QOAxSxqPb8aM2I8dIMb9zaaMs0lLOwqGvQ0uU6Di4W8=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version:
-	 References; b=JnbnCvI/Qtp1n68WVqK2HZjixsn7E4uhpG62qrt3SyMtj6fFI0lJZ1BZ1w0VxWz+ZCINLlzkXN+JxGb48zqbXgYD6bAeLAwP16flOxVQjfsv4a4GUm2NFEQa2Ka/NagbutCLwDuCRnvcscWD0hYqc0QQ10NLZPNVRoyoMbecq2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=B4EKl7sK; arc=none smtp.client-ip=66.163.186.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="B4EKl7sK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1713298495; bh=iZgtGGZ+o2qQOMTF6tCLpgz1PmbtD2vBGZSP/gGVln0=; h=Subject:From:To:Date:References:From:Subject:Reply-To; b=B4EKl7sKCyiEi7IfleyQbwq/fvyU7ZcHZ9WO/LLg4B3Hxlx1Zsl4GxAcZwbOW8YTiUWWLRZ3uMrZQxSiFVkhW2N8YdNVcxNV5eNx77/3I3OrQE6Bzn9ZNZz7iTab1sxwD9VpD6B8BmVXJIm7Ye0obhXL562MU+GL0HsJkrUb9TGHzuMue/mjZARgjsjSL+YhRQBKHX4CyCAsQkQmgTQzZcPeoEO+Efw1FQ6EV5O7PXaffl00+l1nO7Y2QsjDhYPN8zNonBIurrTViPhblXvZnrRq0fxEb9UneDQ9GYw/CncdjOTALXBudRDTNjNzNgkk2JmNurW7+ggMfwIpbJiWOw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1713298495; bh=PW1mmMDFh3DNKfOKZFou1Dz2YeRrclHmgXlImryPW7v=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=MQD9A6H/llQn2sxcvGLKqiuBN+a6wyeW8TdbwAQDCHUZIn3rb23u88tqVMa0zAEt1LkN+N4kiricxrvCfDzl64NiK7EcdmZqGDvINyaW0Xo30PEmk57tSEQ4Mmrqf4tKyTzbZe1RNEnepZSWZ6BTm6CnCn/fBhuoL4MV9dqbxmifIcs9Djo2CQ37/Jl4wvc4ZMHR9Z8688qhzymzFCVTvZhaFg0CNxkX4Q5naXIB7TBtI8mZgtNyH9e/WUyu4gzIAJr1rr/6Agcjjew0xRrF/i7QHF9BaB+HENRpRwuDMdUdC7QGe2xsjNzDOSfhIL0v81J7268NhuWiB1KigJ6uOg==
-X-YMail-OSG: 3uyJAa4VM1mFnDbn1AszT5Z1T1FdAIgJd.uGwonq0dv90Dg8qZefmyMR4a5crzo
- zcDOcXPMX.p7eotL0mX7GLOokG9NbbF3B28QJujXy9dN3C_Dkl6nkdA6QL_iE9eY5FpqtwuPFZDI
- fhGiER0shB_H7wHWBfDSJ6w77BEqjUFK9o.1ykVOZNhZx2Pfr4Ww9Azq363FI6lDZHqWwFDtkhkM
- yPhvwP1IKon5OCMJqoP2hYe8nJ9NJPwRNIKTP.fRUbbAKYZm_zjorQ7yA_9jwe5xtEWyBgOCtYJT
- i_aaL90r.va8vMBmVx0WIYvu_YB1HGg98zVgJiv6mDpLEu8MQiGRPWB4q8gppxmJXcwgf.hTNLTL
- xzw__3MLrAQHUvrV.zmftIzyMiipYvqowzrUouAxDE1vZt7T.OIui3vhB_wS24RW32PxLGYeMrVr
- xO0Y1QRqTTWBK13BdCeQlcCAx6vXG6d1Zm5OnQEDw1mkhsPQiEo5uioCeK.kajMz39OZuZn3daUU
- k8b.CDb8z3WUH7XHHb3Qs07V.AXNObu4ZbFo7sNJadF1Po4TzoH9W8Swbr_7zp0TyAV3u_e79BPH
- _e.allV.wohi6C5lhtlN8V.G3BUDpd01UZE9GxxQFu9iKRKijmzAdG6f6YC51pDXJbw9vuMIA.4t
- HGZONj0wYtFyYCaVGLFCokrqdOICEyBVcHoxFUIlZ9nLgX.q91dGr2I81gzEf0YEH1Dd.7cVzo.9
- 34MkwDyZW8tKD8qozG1S30uNx1Hh1GH1uzRgLiUDRmjs8cjhZxAlDMja2BqrBEeXuzuPPucujw7i
- w.tgSiBrvrI67h40UcjaXxqwHTTHAigSMZiXGrgbU8tF61EdEhCbzJaF0YwKbk2in5KLLt0d185D
- dkRMI0FmKTlreXMsc.0Y3bDK.j.LFrNonJmlKzmk.DQyxH75b8GzYL7O_01xzaourOkdB8YDeUDC
- r9vV9ZOdudx27osU7fQ.HOVgQFvaLmaBovHN3NqhFzya5TYW_R4fpjUwfwYLVqP2vmxycsfFaiu1
- BAYAxYBHtnj3pXOytGzKuS9lpa.s9NnOBnLTj0xJcorXXhr.pW1mzDpY.q9pcEfiWdiKP3TifdZj
- IS2Dpxcuq07f_WE9WDsoLFyR7GJ3vk0mcquYOb.wbnxT1y.gmJnEyprfRVCetXXtemeAg7B7v2vF
- Ifxi41YX.5lg1d0vmXEsjIVvTiEq2aqZjlIt5dQiM44SXfQ6RL1A0vFs2EXLcvsRc0EeO8gASWCL
- uwPbPQXbkZY5ZTQt0_ihB3FaHqBq.6C0pINcWN25VIWzbYy.ufGhL6gzrIW4c2sN3uarPiLTwGfl
- Dq1Au9gy9VLqd_L_cwnjQWlaNnhTlengvsbvFoES21LPvAoN7zqC0PZggZ52s.jd1ZeqdKGItZbf
- G5L3LrVEhDd8PECPtVw2CSvEjKXjI8PbbKL2dpptERsq3TVXxke_ua5dh6ErB5m5xQ2PkoE6YJXX
- Gfjw.94560LxkNW8ldvRJCE4x4yiDGHYJviI5XfGKEnojtxfkqm0e.XKjiIobAhvRGl2XtDO66BW
- Mx9lB1hpfD_fBiiwJLWtyoWWlSBCFNLrJva_0SLJlsLNYRmxzKYqmSa7Bt2CvOkfyc0iMkemJjNa
- 1lkAP8lUQ1fQqr3.PhnoUZUbjVUC4npjZfs15fs28XlSLCisv6FXttsN_HaIcq8sUIyHJu5dF2Z8
- bLmyWS6Vyebf04YcrKch4Y.oIU2BuwRkkBkTAYxqk9RQGXy_YxDLYWX_H846XemuJN.n_o4OUms2
- 7FGiJXyHVElXLCK0LunJkd7ceB3V6BrbqfPGDkSgRiHmKgWhmEqUQeJNcu1khve3wSyYHDL.67a5
- 7VfJYBC2.xRxtkytCLklkot6CVG_wF4J.1dpvIvXc25qqgB4imuM8oZ_lj954BnASTQ9yuFeZoCe
- Ff6llHlg3HbRYZZuPl82XfHLvzsxeAyqnlMmlS9JF1y6jBM_nlIEKkbZhGIeGbrJA57l785YmX3F
- uydyli9mhcSxDFmWC0vPxLwEm.nZHaNhWxAMCBwZXUQWxVqF2KG_RhNFSkK2qrPcjmLW0KmU.mf5
- ZgVj_UwpZLsMPWYrpFaXw0OtMH733LsTEjwJ5YnmXM6wMM1BYcshi5he_b1jaNYSk8FERob4DyYk
- Id1f3BbcpEAKvn2HWQIR7fsXclAsGS7BTn8OXNJd9UznMlOj1UyndHhEFZ_igewkxBp37VLV0Kxt
- sKfH0dTYNIDsTprxqbNFp8JQsXZKsgp4.F09Aml7az1OzJSrvbECuojGf5oBPsadvgmST.Lgd_gz
- GARoauBtmLG7Nas_mzVIYWZRweWo43xFkeXRtTKAknig-
-X-Sonic-MF: <ashokemailat@yahoo.com>
-X-Sonic-ID: e776ce5b-2ecd-4172-a11d-16b719dd513e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Tue, 16 Apr 2024 20:14:55 +0000
-Received: by hermes--production-bf1-5cc9fc94c8-tmzjr (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID f7cd3a3627d699b4c5bb0c83112631a2;
-          Tue, 16 Apr 2024 20:14:54 +0000 (UTC)
-Message-ID: <cc9b9357d30c4abac7301767ff01fe7947f811c4.camel@yahoo.com>
-Subject: [PATCH] staging: fbtft Removed redundant parentheses
-From: A <ashokemailat@yahoo.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	outreachy@lists.linux.dev
-Date: Tue, 16 Apr 2024 13:14:52 -0700
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1713298511; c=relaxed/simple;
+	bh=QHDQvpmFVQmHfJ2aNgRHZis+P6sH6L/hgIndKA5ZuZc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=eSdBiVX8XWk8tiYUlESWmIDYsOuJZtUgIYFNf1uLWcVGPYe2qQw+Wh4wzwMF19Ku/ADQxe0ixrx9w59IrUocUPhlMzz7I4BrcOOPULdJ12pb/Z8+7FI1RBWGOXP/nY3tS1UxJSwI6xROvomSOZnqTdWnszBTJccjX5/7UnCV3s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-75-YNCqmdABMIS6_gAQ64gZww-1; Tue, 16 Apr 2024 21:15:06 +0100
+X-MC-Unique: YNCqmdABMIS6_gAQ64gZww-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 16 Apr
+ 2024 21:14:37 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Tue, 16 Apr 2024 21:14:37 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Al Viro' <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 002/437] fs: add generic read/write iterator helpers
+Thread-Topic: [PATCH 002/437] fs: add generic read/write iterator helpers
+Thread-Index: AQHaj28btiR/XG2LCk2zcJQBF8Y/qLFrUuuQ
+Date: Tue, 16 Apr 2024 20:14:37 +0000
+Message-ID: <72c1e82b9f274b4f8f217bdd624a1c88@AcuMS.aculab.com>
+References: <20240411153126.16201-1-axboe@kernel.dk>
+ <20240411153126.16201-3-axboe@kernel.dk> <20240415195504.GU2118490@ZenIV>
+In-Reply-To: <20240415195504.GU2118490@ZenIV>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cc9b9357d30c4abac7301767ff01fe7947f811c4.camel.ref@yahoo.com>
-X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From 6dbcb120581fc7cb45812193227b0a197abd8ba4 Mon Sep 17 00:00:00 2001
-From: Ashok Kumar <ashokemailat@yahoo.com>
-Date: Tue, 16 Apr 2024 09:19:32 -0700
-Subject: [PATCH] [PATCH] staging: fbtft Removed redundant parentheses on
- logical expr
-
-Adhere to Linux Kernel coding style removed redundant parentheses,
-multiple blank lines and indentation alignment.
-
-Reported by checkpatch.pl
-
-------
-fb_ili9320.c
-
-+       if ((devcode !=3D 0x0000) && (devcode !=3D 0x9320))
-
-------
-fb_ra8875.c
-
-CHECK: Unnecessary parentheses around 'par->info->var.xres =3D=3D 320'
-+      if ((par->info->var.xres =3D=3D 320) && (par->info->var.yres =3D=3D
-240)) {
-
-------
-fb_ssd1325.c
-
-CHECK: Please don't use multiple blank lines
-------
-
-fb_tinylcd.c    - indentation adjustment
-
------
-fbtft-bus.c
-
-CHECK: Unnecessary parentheses around 'par->spi->bits_per_word =3D=3D 8'
-
-------
-fbtft-core.c
-
-CHECK: Please don't use multiple blank lines
-
-CHECK: Unnecessary parentheses around '!txbuflen'
-
-CHECK: Please don't use multiple blank lines
-------
-
-Signed-off-by: Ashok Kumar <ashokemailat@yahoo.com>
----
- drivers/staging/fbtft/fb_ili9320.c | 2 +-
- drivers/staging/fbtft/fb_ra8875.c  | 8 ++++----
- drivers/staging/fbtft/fb_ssd1325.c | 2 --
- drivers/staging/fbtft/fb_tinylcd.c | 2 +-
- drivers/staging/fbtft/fbtft-bus.c  | 6 +++---
- drivers/staging/fbtft/fbtft-core.c | 7 +------
- 6 files changed, 10 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/staging/fbtft/fb_ili9320.c
-b/drivers/staging/fbtft/fb_ili9320.c
-index 0be7c2d51548..409b54cc562e 100644
---- a/drivers/staging/fbtft/fb_ili9320.c
-+++ b/drivers/staging/fbtft/fb_ili9320.c
-@@ -37,7 +37,7 @@ static int init_display(struct fbtft_par *par)
- 	devcode =3D read_devicecode(par);
- 	fbtft_par_dbg(DEBUG_INIT_DISPLAY, par, "Device code:
-0x%04X\n",
- 		      devcode);
--	if ((devcode !=3D 0x0000) && (devcode !=3D 0x9320))
-+	if (devcode !=3D 0x0000 && devcode !=3D 0x9320)
- 		dev_warn(par->info->device,
- 			 "Unrecognized Device code: 0x%04X (expected
-0x9320)\n",
- 			devcode);
-diff --git a/drivers/staging/fbtft/fb_ra8875.c
-b/drivers/staging/fbtft/fb_ra8875.c
-index 398bdbf53c9a..4b79fb48c5f0 100644
---- a/drivers/staging/fbtft/fb_ra8875.c
-+++ b/drivers/staging/fbtft/fb_ra8875.c
-@@ -50,7 +50,7 @@ static int init_display(struct fbtft_par *par)
-=20
- 	par->fbtftops.reset(par);
-=20
--	if ((par->info->var.xres =3D=3D 320) && (par->info->var.yres =3D=3D
-240)) {
-+	if (par->info->var.xres =3D=3D 320 && par->info->var.yres =3D=3D 240)
-{
- 		/* PLL clock frequency */
- 		write_reg(par, 0x88, 0x0A);
- 		write_reg(par, 0x89, 0x02);
-@@ -74,8 +74,8 @@ static int init_display(struct fbtft_par *par)
- 		write_reg(par, 0x1D, 0x0E);
- 		write_reg(par, 0x1E, 0x00);
- 		write_reg(par, 0x1F, 0x02);
--	} else if ((par->info->var.xres =3D=3D 480) &&
--		   (par->info->var.yres =3D=3D 272)) {
-+	} else if (par->info->var.xres =3D=3D 480 &&
-+		   par->info->var.yres =3D=3D 272) {
- 		/* PLL clock frequency  */
- 		write_reg(par, 0x88, 0x0A);
- 		write_reg(par, 0x89, 0x02);
-@@ -111,7 +111,7 @@ static int init_display(struct fbtft_par *par)
- 		write_reg(par, 0x04, 0x01);
- 		mdelay(1);
- 		/* horizontal settings */
--		write_reg(par, 0x14, 0x4F);
-+write_reg(par, 0x14, 0x4F);
- 		write_reg(par, 0x15, 0x05);
- 		write_reg(par, 0x16, 0x0F);
- 		write_reg(par, 0x17, 0x01);
-diff --git a/drivers/staging/fbtft/fb_ssd1325.c
-b/drivers/staging/fbtft/fb_ssd1325.c
-index 796a2ac3e194..69aa808c7e23 100644
---- a/drivers/staging/fbtft/fb_ssd1325.c
-+++ b/drivers/staging/fbtft/fb_ssd1325.c
-@@ -109,8 +109,6 @@ static int set_gamma(struct fbtft_par *par, u32
-*curves)
- {
- 	int i;
-=20
--	fbtft_par_dbg(DEBUG_INIT_DISPLAY, par, "%s()\n", __func__);
--
- 	for (i =3D 0; i < GAMMA_LEN; i++) {
- 		if (i > 0 && curves[i] < 1) {
- 			dev_err(par->info->device,
-diff --git a/drivers/staging/fbtft/fb_tinylcd.c
-b/drivers/staging/fbtft/fb_tinylcd.c
-index 9469248f2c50..60cda57bcb33 100644
---- a/drivers/staging/fbtft/fb_tinylcd.c
-+++ b/drivers/staging/fbtft/fb_tinylcd.c
-@@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
- 	write_reg(par, 0xE5, 0x00);
- 	write_reg(par, 0xF0, 0x36, 0xA5, 0x53);
- 	write_reg(par, 0xE0, 0x00, 0x35, 0x33, 0x00, 0x00, 0x00,
--		       0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
-+		  0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
- 	write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x55);
- 	write_reg(par, MIPI_DCS_EXIT_SLEEP_MODE);
- 	udelay(250);
-diff --git a/drivers/staging/fbtft/fbtft-bus.c
-b/drivers/staging/fbtft/fbtft-bus.c
-index 3d422bc11641..02d7dbd38678 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -62,9 +62,9 @@
-out:									      \
- }                                                                   =20
-\
- EXPORT_SYMBOL(func);
-=20
--define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
-+define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8,)
- define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16,
-cpu_to_be16)
--define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
-+define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16,)
-=20
- void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
- {
-@@ -85,7 +85,7 @@ void fbtft_write_reg8_bus9(struct fbtft_par *par, int
-len, ...)
- 	if (len <=3D 0)
- 		return;
-=20
--	if (par->spi && (par->spi->bits_per_word =3D=3D 8)) {
-+	if (par->spi && par->spi->bits_per_word =3D=3D 8) {
- 		/* we're emulating 9-bit, pad start of buffer with no-
-ops
- 		 * (assuming here that zero is a no-op)
- 		 */
-diff --git a/drivers/staging/fbtft/fbtft-core.c
-b/drivers/staging/fbtft/fbtft-core.c
-index 38845f23023f..98ffca49df81 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -216,8 +216,6 @@ static void fbtft_reset(struct fbtft_par *par)
- 	if (!par->gpio.reset)
- 		return;
-=20
--	fbtft_par_dbg(DEBUG_RESET, par, "%s()\n", __func__);
--
- 	gpiod_set_value_cansleep(par->gpio.reset, 1);
- 	usleep_range(20, 40);
- 	gpiod_set_value_cansleep(par->gpio.reset, 0);
-@@ -667,7 +665,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct
-fbtft_display *display,
- 		txbuflen =3D 0;
-=20
- #ifdef __LITTLE_ENDIAN
--	if ((!txbuflen) && (bpp > 8))
-+	if (!txbuflen && bpp > 8)
- 		txbuflen =3D PAGE_SIZE; /* need buffer for byteswapping
+From: Al Viro
+> Sent: 15 April 2024 20:55
+>=20
+> On Thu, Apr 11, 2024 at 09:12:22AM -0600, Jens Axboe wrote:
+>=20
+> > +/* generic read side helper for drivers converting to ->read_iter() */
+> > +ssize_t vfs_read_iter(struct kiocb *iocb, struct iov_iter *to,
+> > +=09=09      ssize_t (*read)(struct file *, char __user *,
+> > +=09=09=09=09     size_t, loff_t *))
+> > +{
+> > +=09return do_loop_readv(iocb->ki_filp, to, &iocb->ki_pos, 0, read);
+> > +}
+> > +EXPORT_SYMBOL(vfs_read_iter);
+> > +
+> > +/* generic write side helper for drivers converting to ->write_iter() =
 */
- #endif
-=20
-@@ -1053,8 +1051,6 @@ static int fbtft_verify_gpios(struct fbtft_par
-*par)
- 	struct fbtft_platform_data *pdata =3D par->pdata;
- 	int i;
-=20
--	fbtft_par_dbg(DEBUG_VERIFY_GPIOS, par, "%s()\n", __func__);
--
- 	if (pdata->display.buswidth !=3D 9 &&  par->startbyte =3D=3D 0 &&
- 	    !par->gpio.dc) {
- 		dev_err(par->info->device,
-@@ -1159,7 +1155,6 @@ int fbtft_probe_common(struct fbtft_display
-*display,
- 		dev =3D &pdev->dev;
-=20
- 	if (unlikely(display->debug & DEBUG_DRIVER_INIT_FUNCTIONS))
--		dev_info(dev, "%s()\n", __func__);
-=20
- 	pdata =3D dev->platform_data;
- 	if (!pdata) {
---=20
-2.34.1
+> > +ssize_t vfs_write_iter(struct kiocb *iocb, struct iov_iter *from,
+> > +=09=09       ssize_t (*write)(struct file *, const char __user *,
+> > +=09=09=09=09       size_t, loff_t *))
+> > +{
+> > +=09return do_loop_writev(iocb->ki_filp, from, &iocb->ki_pos, 0, write)=
+;
+> > +}
+> > +EXPORT_SYMBOL(vfs_write_iter);
+>=20
+> Wait a minute; just what do you expect to happen if that ever gets called
+> for ITER_BVEC or ITER_XARRAY?
 
+The extra indirect call is also going to be noticeable.
+You need a code loop with a direct call.
+That probably requires the loop to be a #define.
+
+I was also thinking about drivers that only handle 'user' buffers and
+where there really isn't a requirement to do anything else.
+
+I've a driver that basically does:
+=09if (!access_ok(....))
+=09=09return -EFAULT;
+=09for (off =3D 0; off < len; off +=3D 8) {
+=09=09if (__put_user(readq(io_addr + off), uaddr + off))
+=09=09=09return -EFAULT;
+=09}
+
+Any non-trivial change requires a function that return the first/only
+user buffer address/length and an error for a non-user address.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
