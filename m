@@ -1,35 +1,35 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AD912E1D9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AD212E1DE;
 	Tue, 16 Apr 2024 14:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278653; cv=none; b=ZRHxFWlWRgd5g0wB2n/swX4mbFSlx75xMB94vCk2y1agwt64kaCtdYkswHvyeghaq0R15LHmWaD4nXbhC4jXPvr3eAn568HADnwjgXybHh1TowWAetXpNSq+DN4ZbsEorcqahvqaI4PfTqcs/DKjAlNQ9W21SN8MM8wiWSzsdO4=
+	t=1713278654; cv=none; b=rDqQp0+1/Pw7zlKa/7x8yKtlmaH01nkcJzuZIuIg35Qw/PqM8bWWAaKRTj4nhZqMfMM72kv4oh5zF1YNjNoH5ZSSbztCBi8OkDAuZGnNlWqnBbTvpOuecVZdgHb4cW0ZAM4yzKIotvyupwSNkVekgpYi66qyT/YK+PaxkKPxQuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278653; c=relaxed/simple;
-	bh=1ISri2bYvVsZAxWaG9HkNxGsuBog0gqAtEuAMx45XWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H0yl6PMEVcP/diUjOrJCORz9iYAjg+kQnXZjd7+X0ihMaunskFAHmrJayAV+SqbkxjsQaJHHpeFj41mC8HDyYaoVgJBngjnNUus6E4OuPgQsXeJD28h8oeMXMTZ6VLkeETpUOyjqc9avY3xUMPV14ziDCULSq3bZMibrQISzxFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=cJ77AM88; arc=none smtp.client-ip=193.104.135.124
+	s=arc-20240116; t=1713278654; c=relaxed/simple;
+	bh=o4ZOIcqpBZ2ScPAygv+rbNYIAA7PYEWjMlaH8XOvMJM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cgyVMNjBYbFNlAIqpQDaM2yjdcBHfApMaO0AA9lB3remHZGbUhngZmVW2G8uVs80I2bvtuZWHeA8hlBOVq3TU4T2jG1wwEffEjt9i3mJXrTi/HIBvqo8uVf0KusKI7kwOe+yNvR6GOMuiFP+M9TCB/K1KTI/okM935fsUPBGsa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Ktc/mFMg; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="cJ77AM88"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Ktc/mFMg"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 71B41600A2;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 74A76600A5;
 	Tue, 16 Apr 2024 14:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1713278649;
-	bh=1ISri2bYvVsZAxWaG9HkNxGsuBog0gqAtEuAMx45XWs=;
+	bh=o4ZOIcqpBZ2ScPAygv+rbNYIAA7PYEWjMlaH8XOvMJM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=cJ77AM88UOdtiL1hxDlCM/LDyadeS5Fy4mTUBJZ0bVwdC0BAa5qi/0Tepp86grPka
-	 VTRhnsMsOkx71RdasvKCZM4gyoNMJVcquFGND2lIX1sECz9YsgAxq91W+LNFDN7jpV
-	 T8PrgAtr0OEqOhdfxLDOVS5hd4dMAcvazMFESrpKpxN9JOU55v1weh310C/1bB1fGh
-	 dLhaIXut+mYSpUmSMiZsEoJOFkDKuBDItY4UR/dLgNZXa6SvS7G/2bXSAK/Kw/bQIx
-	 kCg5VHbl7GxQmUjkw0Vnq/EtO/5bV+eYWh8ubbCNjv5hIkJekGPac9stRnzO6F9wnu
-	 p5u0BFCA7Ztpg==
+	b=Ktc/mFMgo9hWpkLij6VpxVjtIpbb8Uz3yFZYMrAoUnaEMbxj6GSqFFT5zhwsjO5i8
+	 hZmsrUY1cb/rgAtajaLi0nRSWfJgmx+S4Bo4lyE+7Ayk6fqoxFmFuBFHEGgGMrkwcB
+	 5R/4uShxm7EcZLAzfedAF35xvctIBXUDILxejDOx2qRYKCw9YD4kJDI/KihKVyx5L7
+	 935YtTvCoD3pNs5FmKlsBbzV6iI5iwd+dAEvphsXCzDLWbBSLAY9A2JJDVVDQYQoa5
+	 a2fOloVEhEUvNE5ldQNofWfWxH+DphjGebSkiwCTbgwI5jjRfW93BUQIcGCojKCyD3
+	 TJ5Xc20wJu/ng==
 Received: by x201s (Postfix, from userid 1000)
-	id B5812202498; Tue, 16 Apr 2024 14:43:20 +0000 (UTC)
+	id 8CFE32061E5; Tue, 16 Apr 2024 14:43:35 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: intel-wired-lan@lists.osuosl.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -41,9 +41,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Jesse Brandeburg <jesse.brandeburg@intel.com>,
 	Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: [PATCH iwl-next] i40e: flower: validate control flags
-Date: Tue, 16 Apr 2024 14:43:19 +0000
-Message-ID: <20240416144320.15300-1-ast@fiberby.net>
+Subject: [PATCH iwl-next] igb: flower: validate control flags
+Date: Tue, 16 Apr 2024 14:43:35 +0000
+Message-ID: <20240416144335.15353-1-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,34 +56,33 @@ Content-Transfer-Encoding: 8bit
 
 This driver currently doesn't support any control flags.
 
-Use flow_rule_has_control_flags() to check for control flags,
+Use flow_rule_match_has_control_flags() to check for control flags,
 such as can be set through `tc flower ... ip_flags frag`.
 
-In case any control flags are masked, flow_rule_has_control_flags()
+In case any control flags are masked, flow_rule_match_has_control_flags()
 sets a NL extended error message, and we return -EOPNOTSUPP.
 
 Only compile-tested.
 
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/igb/igb_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 0bdcdea0be3e..e219f757820d 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -8643,6 +8643,10 @@ static int i40e_parse_cls_flower(struct i40e_vsi *vsi,
- 
- 		flow_rule_match_control(rule, &match);
- 		addr_type = match.key->addr_type;
-+
-+		if (flow_rule_has_control_flags(match.mask->flags,
-+						f->common.extack))
-+			return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 74a998fcaa6f..e4c65d3819d7 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -2597,6 +2597,9 @@ static int igb_parse_cls_flower(struct igb_adapter *adapter,
+ 		return -EOPNOTSUPP;
  	}
  
- 	if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
++	if (flow_rule_match_has_control_flags(rule, extack))
++		return -EOPNOTSUPP;
++
+ 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
+ 		struct flow_match_eth_addrs match;
+ 
 -- 
 2.43.0
 
