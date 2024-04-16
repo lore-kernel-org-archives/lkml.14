@@ -1,96 +1,199 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9B585959
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE4D811F1
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713270862; cv=none; b=ps0rDYaWkTdLCN1uaFXeU2a+4uJjRyxblvZtf5llqw6yhEgiEKX0AS8D2QGgz4umKgWuErTiyaKwRpHbQjL/BrO3bzBlyovtcQxKuiM5Xq/GZrO4BP1+QP3Ty5wivZx4Nsf1OJ4pulbRPpqp2DriL8EBfeUBJWA6iuBTLYiGQys=
+	t=1713270915; cv=none; b=ImYsVjrjMhe+KxYRCBFoaf71HxKWFaENhoA+lGsNmouIxrUl2Vrz/r6ASxyA4/A29s9H/Q/nDJGMr+wQ+w5vp/8BZ8RnYwMK4CzU2ZyIrl97SHfz19YZUhHca15iCMSIP1rOkoJUfne/GSKvtXi66DxESUY0MvcziF9jLQ1tHsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713270862; c=relaxed/simple;
-	bh=SIpJZv7wDmO6PJvpxTbMmJd4YFOrv5/ZLEYq9V+CZRk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nqwCixE7SDK6dGHu6+qdwBJFBlpYXjlQaTJwz4JgjColwz3VqH+nsE+V5XiobVFzKLr0zcCw/A3rE/a+CE3bgy5aokxoTbjjPvMtXrhpJ5M6+D8K7OyV7At450Kp9ql5EhD1ZDTFq4QnmOGY0iHncukV4gDiyAd/6QZLZuCAo6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X0yYeRTo; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713270915; c=relaxed/simple;
+	bh=W4gLhMYBW/ZraqK7XK4tE2RzWIlDbdedkPsX1xzYe0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cFnwmhds7d9MUDajMswwbgm1FLuXKy/qiDTqYbkbbGJxm/T/T2v3FVAdIWx604mrN88DhuUItagGyLrKscp2M/atX8AA/6gjP2ksmgohcK/kZYhjBcQppxkDoJWp+pGZd9zAFrXLsR9zwno7jBA0VW41sx2Xplgn3ImjEJiyQAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUiOn/P4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0yYeRTo"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so4097246276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713270860; x=1713875660; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3zwgoQX0Z9a6MDLjvENqiQyvKVaKgnucR/j0TmrXRI=;
-        b=X0yYeRToZBa1OHX93ci0omq7hFoxzRuudyCIshesT/qeJvs91GJmwCiSAK2xryzxlJ
-         nJbD7L5XSd4LCWz4ESrDWVFVlAWq7Ihl7z+z/KSKcbc3B7LR2YehyeN2x7dR4FYJ8o2x
-         DiNAZUuPKyC4Y/gvylTJXzMZpHsuo0cxqZfLU+A7zmQ0smRXGmi3Snd8yj0q+DalMHIP
-         TfuuKRY3zQwOUdb4Ut9bb2GJiK9l76+1F5FyZ39E5h7Rprpt831MhqFmH1An4ORquxxC
-         G2C4jnwCNoByQv7qISUttxchfSK3uzbwjeUoIY9vl6YJcJu8Ed3Tt/h5efNwKUIAgqUd
-         6oNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713270860; x=1713875660;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z3zwgoQX0Z9a6MDLjvENqiQyvKVaKgnucR/j0TmrXRI=;
-        b=RrSMGSaZfzkbfXj5LYxj9fE3WiXKSIKOI8c3fLgHq8k7lVFV8oVlpwRjmFhx+CCA71
-         Nt8CWcAXEDvn0eka7KZLzOmZYSlv6ktZ+IDZy5HuJG98XwgWvc6YwMoUVayeGPz3Vgj1
-         0kbbvacqt/SSptZF3YyhhLrHAPwfWJR1AxnE3gAYkBqE8gzYeCMp6evlr0GfyXWl1pd4
-         kBmbe4Q58Hvpm4xTu7xCJZVKvRG+jFH4htdrfQ+sFskxnMzlflKKmpyqf0Wb8JAqPV1c
-         POx3BohvWKgmfDTWqDdWBgSlgGBnuDB3MavRaVjK/VV6PmBbya21LMVSMu4qBFoPqpQf
-         Sfcw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6zV3ku642kxDvfXXuXEDJxv4sqevjQdYq41bk35ErF5wbkguUO8EigPMiqBSZTSajzEYGM/afdCDzkBBu6sCDzIaJskKONSd84EW9
-X-Gm-Message-State: AOJu0YzRHoXFp4GEUovi/jBqiRqtZZoLgFCCcsY9TofL346IF1j9F8jk
-	Z4+jsnqZUuZI7hprx6Pgvv29H1ApW4qyrAQ/0NDNHIyoNtvJvUTp+7tTnHvpSAZFdUeq5zc/xeH
-	4Euf0+TLYRSpTqxSzgZRJdYzG0ybPuhqxJprzOg==
-X-Google-Smtp-Source: AGHT+IEpxf4rbzlE027P2IcXAeu6If/EETmf2GpXASFLnsjOgY7eMXVxG0DJLlGFGtlWUJmR7N0m2U2uKbzDDFB2J5M=
-X-Received: by 2002:a25:bc4c:0:b0:dcb:fe58:a08b with SMTP id
- d12-20020a25bc4c000000b00dcbfe58a08bmr11892925ybk.15.1713270860092; Tue, 16
- Apr 2024 05:34:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUiOn/P4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91289C2BD10;
+	Tue, 16 Apr 2024 12:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713270915;
+	bh=W4gLhMYBW/ZraqK7XK4tE2RzWIlDbdedkPsX1xzYe0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HUiOn/P45P7AqQvb9DGoA46RI6Y3Bl/s7pkU1WdZnMWPoj6yI5YTN9NOXZp7/epLP
+	 hqMAnRkkSlC5UxSJNVAmoSvMNiPnnB3Z2qUM8mZY47HQdEUNN3dmODIODlT3vEEqxd
+	 VDH223ob+kLNrtfjxCsD4BmrNld36LU7UL74VHXWwih/kkKwLRUvxtxJlk9kW1KaoT
+	 0xF4R3Q/RJoX7dk8OSCfGH3AKQIL6F0xuh/y6nkm1f9tXpIjCyv4rqxUYzQM/u/dLn
+	 yMJ/Me88KP87/6Ka+l4PVnVZPW5uezNyzTtNuw6LHlqSHjjIDdc6pwqt/IACzX8Pr6
+	 f8kGJoAt4o4KA==
+Date: Tue, 16 Apr 2024 14:35:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: xiang@kernel.org, linux-erofs@lists.ozlabs.org, chao@kernel.org, 
+	huyue2@coolpad.com, jefflexu@linux.alibaba.com, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com, houtao1@huawei.com
+Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
+Message-ID: <20240416-blumig-dachgeschoss-bc683f4ef1bf@brauner>
+References: <20240415121746.1207242-1-libaokun1@huawei.com>
+ <20240415-betagten-querlatte-feb727ed56c1@brauner>
+ <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com>
+ <Zh3NAgWvNASTZSea@debian>
+ <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416105059.1167-1-quic_vdadhani@quicinc.com> <CAA8EJprzdhDvmZdVXdHEJHpNA_Pj3=77v=y41EajFVe8LmAOnQ@mail.gmail.com>
-In-Reply-To: <CAA8EJprzdhDvmZdVXdHEJHpNA_Pj3=77v=y41EajFVe8LmAOnQ@mail.gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 16 Apr 2024 15:34:08 +0300
-Message-ID: <CAA8EJpob60Kog7ppTO=LZuJgn5Z91dwqyZ845gX8UXwrOqvZjQ@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64: dts: qcom: qcm6490-rb3: Enable gpi-dma and qup node
-To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
-	krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org, conor+dt@kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="egxumnqaekjz7vjs"
+Content-Disposition: inline
+In-Reply-To: <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
 
-On Tue, 16 Apr 2024 at 15:32, Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Tue, 16 Apr 2024 at 13:51, Viken Dadhaniya <quic_vdadhani@quicinc.com> wrote:
-> >
-> > Enable gpi-dma0, gpi-dma1 and qupv3_id_1 nodes for
-> > busses usecase on RB3 platform.
-> >
-> > Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
->
->
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Well, actually:
+--egxumnqaekjz7vjs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Unreviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > I'm not sure how to resolve it in EROFS itself, anyway...
 
-Please place the gpi_dmaN nodes where they belong rather than sticking
-them right before the qup nodes. The file should be sorted.
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and then you can ensure that you always have the
+info you need available during erofs_kill_sb(). See the appended
+(untested) patch.
 
+--egxumnqaekjz7vjs
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment;
+	filename="0001-erofs-reliably-distinguish-block-based-and-fscache-m.patch"
+
+From e4f586a41748b6edc05aca36d49b7b39e55def81 Mon Sep 17 00:00:00 2001
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 15 Apr 2024 20:17:46 +0800
+Subject: [PATCH] erofs: reliably distinguish block based and fscache mode
+
+When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+be mistaken for fscache mode, and then attempt to free an anon_dev that has
+never been allocated, triggering the following warning:
+
+============================================
+ida_free called for id=0 which is not allocated.
+WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+Modules linked in:
+CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+RIP: 0010:ida_free+0x134/0x140
+Call Trace:
+ <TASK>
+ erofs_kill_sb+0x81/0x90
+ deactivate_locked_super+0x35/0x80
+ get_tree_bdev+0x136/0x1e0
+ vfs_get_tree+0x2c/0xf0
+ do_new_mount+0x190/0x2f0
+ [...]
+============================================
+
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and ensure that erofs can always have the info
+available during erofs_kill_sb().
+
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/erofs/super.c | 29 ++++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c0eb139adb07..4ed80154edf8 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -581,7 +581,7 @@ static const struct export_operations erofs_export_ops = {
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	struct erofs_fs_context *ctx = fc->fs_private;
+ 	int err;
+ 
+@@ -590,15 +590,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
+ 	sb->s_op = &erofs_sops;
+ 
+-	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	if (!sbi)
+-		return -ENOMEM;
+-
+ 	sb->s_fs_info = sbi;
+ 	sbi->opt = ctx->opt;
+ 	sbi->devs = ctx->devs;
+ 	ctx->devs = NULL;
+-	sbi->fsid = ctx->fsid;
+ 	ctx->fsid = NULL;
+ 	sbi->domain_id = ctx->domain_id;
+ 	ctx->domain_id = NULL;
+@@ -707,8 +702,15 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ static int erofs_fc_get_tree(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi;
++
++	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	if (!sbi)
++		return -ENOMEM;
+ 
+-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
++	fc->s_fs_info = sbi;
++	sbi->fsid = ctx->fsid;
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		return get_tree_nodev(fc, erofs_fc_fill_super);
+ 
+ 	return get_tree_bdev(fc, erofs_fc_fill_super);
+@@ -762,11 +764,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ static void erofs_fc_free(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 
+ 	erofs_free_dev_context(ctx->devs);
+ 	kfree(ctx->fsid);
+ 	kfree(ctx->domain_id);
+ 	kfree(ctx);
++
++	if (sbi)
++		kfree(sbi);
+ }
+ 
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -783,6 +789,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++
+ 	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+ 	if (!ctx->devs) {
+ 		kfree(ctx);
+@@ -799,17 +806,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
+-	if (erofs_is_fscache_mode(sb))
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+ 
+-	sbi = EROFS_SB(sb);
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
 -- 
-With best wishes
-Dmitry
+2.43.0
+
+
+--egxumnqaekjz7vjs--
