@@ -1,91 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DDE134CD0;
-	Tue, 16 Apr 2024 18:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C17910A14
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713291552; cv=none; b=IDof4kg6bRLphZVGTa90U5oL3yYJQYIXhtnDmfY8qmIhIOvHv2c4e8BIpm9vO/W4SsMudFZx7F02uNJpwcGfn76hfHv49ufSBhZtJeiVHrucb1yo+lMnqQCyNZfQkRSKQ3Da95iLy/FunRYLcjqZBQ7vwK/eIk1BJcutYCiOf3Y=
+	t=1713291581; cv=none; b=m7PIm9upfcvglrQ5r1DVZB8kBkzrDXG8dVjiKg2ARgXLX8fyS8gvS5uBid/90V+luBPtO6qVRKoC4R6XyPembTntYqviGj9TDRHvcD+1IinEdoJ0vOYJPh1HKpoyhfZJn9HwNgkjgO8xke+ccDOXMw7e8M/2ye+4FyitXKPMlMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713291552; c=relaxed/simple;
-	bh=OSFyHt08QH9EQT0OH6l2mjM6TDXgg4K1qPiqN9EnzTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktixbaK0mtmPhVBhY7SP8XepjcNYspSFTkHw+r+/R6nmHSy6B7QFl/+ZqGDvRr6tjj51VOeuWxk0Rbc3zoi9o1LrzrnQWcK1sEVzi/cMiJX3Ib68krsfhwHycXTC85KC/SIksYCUz0RVKXxexpexeiHqEfDr91dMkakuHnfF/4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJFISS3f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713291581; c=relaxed/simple;
+	bh=pdMYA1qgMqeg2Z30/WKPlgmKP3HdGpBWUAWiuurb0jQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jah4C/GNwuTQzErvRISQkD728GUFiAU6uw44vkfE4OSNOdlWWM66B+iLImjTST5rnHvhnM0hrXxsCJQa9rivhJoQSZgaSkkqtTwC2PTqdrKbl6i5tk170XVeLz27J3UwJwG3J4vsb2NReEVfV+EnhKH3MBQy7tYsrYAd3ql0yfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Y0DnyJjw; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJFISS3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E1C2C113CE;
-	Tue, 16 Apr 2024 18:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713291552;
-	bh=OSFyHt08QH9EQT0OH6l2mjM6TDXgg4K1qPiqN9EnzTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TJFISS3fPUcd6DEOOP0W+iLg/MehqWAKn84NatA9HD2x9ox4VLLzoRForSafJLD5Z
-	 7bknIRzjCT4DAd3BU/lMIEJKmiIGlav6YBMZMbz/DN4vug1w5ufeLyipa8GyG6ee/E
-	 2VBwwcud1ujgQzDiV0AkCdaD7egYm3HrIcJ+CWH2QlbK/4r+shqzCLAI8Y66FlC6Qm
-	 Df/4O359q3sLIf8HsChGbNGebitD1yY8qQTqMgKU2HRSnIW4bSh5OtY1xFENmbcjcw
-	 CvvFesh2ElTtCjgpJuW7rKi4ipanh0qwGxR5nqaPQG5AFADuX/VcD+oLP/Ps2rpJT6
-	 4j5kRjU+IlUHw==
-Date: Tue, 16 Apr 2024 21:18:02 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Andreas Dilger <adilger@dilger.ca>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>,
-	Ext4 Developers List <linux-ext4@vger.kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: riscv32 EXT4 splat, 6.8 regression?
-Message-ID: <Zh7A2o59dOIwaRjA@kernel.org>
-References: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
- <8734rlo9j7.fsf@all.your.base.are.belong.to.us>
- <Zh6KNglOu8mpTPHE@kernel.org>
- <20240416171713.7d76fe7d@namcao>
- <Zh6lD8d7cUZdkZJb@kernel.org>
- <Zh6n952Y7qKRMnMj@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y0DnyJjw"
+Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43GIJFtJ3341088
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 16 Apr 2024 11:19:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43GIJFtJ3341088
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024041401; t=1713291556;
+	bh=VUhXyDSmrVQnu2Omvf8ZUtwCfdQo/hg/0UaaoVCYfig=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y0DnyJjw2G6xRVTnkpZRLtb/zcajHg63c43CmRX0fiqZswz8Gc2p4HAb2igCrBI++
+	 sYkCBCor1OyGTobzUqW+klgBikSXyL071fvsbYsV8uAc7ZsvkWhIMSt3y23FFJ8MvW
+	 v0NBV2CakiHh0GL+8inJWTcE56RrKv67UiYYAS9Whmvbk56Du1YO77eF7Ebr3T6USv
+	 4j87c26mS+UFNhUG+cpvKFbKdxJwkHS0b393bdBzKcjQ8/4hKp6cEs3XaSQl+/pbvm
+	 m3oTppqecqMZK5TogHpwcRulCnGfTUZLLwxOh02OrYfa8IrxQg7WMp9iYijIaa53Hg
+	 NKJYUFlVWtz5A==
+Message-ID: <deeeb592-fc64-4a82-bcee-15f293c078bf@zytor.com>
+Date: Tue, 16 Apr 2024 11:19:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh6n952Y7qKRMnMj@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] x86/fred: Fix int80 emulation for FRED
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org
+References: <20240412234058.1106744-1-xin@zytor.com>
+ <20240416101147.GDZh5O473e4X_ZG1lZ@fat_crate.local>
+ <1AE9FA53-A130-4F95-8408-C1990DD031AA@zytor.com>
+ <20240416180746.GFZh6-cmZqCF6KX5tt@fat_crate.local>
+ <e3fbd500-f6b8-49ea-addb-bbc4803709ce@zytor.com>
+ <20240416181807.GGZh7A30Gtnixbs3M5@fat_crate.local>
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20240416181807.GGZh7A30Gtnixbs3M5@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 05:31:51PM +0100, Matthew Wilcox wrote:
-> On Tue, Apr 16, 2024 at 07:19:27PM +0300, Mike Rapoport wrote:
-> > > "last page of the first gigabyte" - why first gigabyte? Do you mean
-> > > last page of *last* gigabyte?
-> >  
-> > With 3G-1G split linear map can map only 1G from 0xc0000000 to 0xffffffff
-> > (or 0x00000000 with 32-bit overflow):
-> > 
-> > [    0.000000]       lowmem : 0xc0000000 - 0x00000000   (1024 MB)
+On 4/16/24 11:18, Borislav Petkov wrote:
+> On Tue, Apr 16, 2024 at 11:11:44AM -0700, H. Peter Anvin wrote:
+>> Yes. My fault, I gave Xin incorrect information w.r.t. Fixes: tags.
 > 
-> ... but you can't map that much.  You need to reserve space for (may not
-> be exhaustive):
-> 
->  - PCI BARs (or other MMIO)
->  - vmap
->  - kmap
->  - percpu
->  - ioremap
->  - modules
->  - fixmap
->  - Maybe EFI runtime services?
-> 
-> You'll be lucky to get 800MB of ZONE_NORMAL.
+> No worries, I'll fix that up before applying.
 
-But that does not mean that the last page won't get to the buddy
+Let me submit my comments (about comments) first :)
 
--- 
-Sincerely yours,
-Mike.
+	-hpa
+
