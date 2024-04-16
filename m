@@ -1,221 +1,133 @@
 Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B2A137C42
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 19:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05A0137C23
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 19:19:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713295182; cv=none; b=erW/v/y/PVsGZQkbbqtxgnxWeoJMIVlefqvpDYn26kf89OAv/DCPdYdxrTv6FTQRlz8pJUBJuvLu8VSGzLwZJvwmwRJcZAocLwWWHu88FxwMKGj/kKm8EZ6PZXOs2NR3QLoXEpTJ8uXRPXRAeGkRt4CcvYuF0MzxzDF/ciLzpnI=
+	t=1713295190; cv=none; b=KiJ1q9wmAoDzyGXx3mVaRvWQ8ziHon0cXPoKRogz+jzds8yk1S+3VVMABsu9M6zYP6vUkSjqdvIQVHRwPUDt9ew8OGA8u0lLlu6BPy643qLbKmuJmC/z/S1ZcLm9VQNeI7jBReIPyiEWuF5wUcM+toSef9cOX4+vpxPmqeD8FQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713295182; c=relaxed/simple;
-	bh=GxcofnKNVNbbBFF4cyNRNVeMqKEmmntSNw15YNzkPZI=;
-	h=Message-Id:In-Reply-To:References:To:Cc:From:Subject:Date; b=nf+WdyOM9ERNnw3f5JXDcIQ3bC80n7efUcNTvU1pryzCo93sn2WTJMapCz509kwLBMDaET92KgAZXcRHEj/ScdREL3p0vEZQ1XFIInrIFDa5cAPGgpHffA0hVNWvL5mXEQq/ueOennKLh+eFRjlaV/3yVbjkbEcKKgbE65Jcz4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=tIvRH91c; arc=none smtp.client-ip=148.163.152.46
+	s=arc-20240116; t=1713295190; c=relaxed/simple;
+	bh=1/QhQq/SNBvhM5Qukg8qId++gk6cla4fzJPkLM7SWYI=;
+	h=Message-Id:In-Reply-To:References:To:Cc:From:Subject:Date; b=opFDhlfEk5kYNkKncZcZmS6PxmImN9GsJvFV8kMH9kxTcXWaKdzst2YHpX7iMrhM0NMaII1KjgfxSbhbrdzsqGNAYgVn36dZHF2nRlWvFAEG/sq+UBjGxGCAln0/NNaZHvkJhyhIrTfNF+FRwRk66agiOjAKyReOru81saJ2xrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=RP/rT0lu; arc=none smtp.client-ip=148.163.152.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="tIvRH91c"
-Received: from pps.filterd (m0355092.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GJI4gT002353;
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="RP/rT0lu"
+Received: from pps.filterd (m0355089.ppops.net [127.0.0.1])
+	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GGKltB014625;
 	Tue, 16 Apr 2024 19:19:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
 	message-id:in-reply-to:references:to:cc:from:subject:date; s=
-	DKIM202306; bh=Ktj2knpZkxEzepUnXbFCAHnzLfkAa26Odp8kjW5qVXw=; b=t
-	IvRH91cKGfnfqx35lOWohhZ8d7xbjQ803QvX1t1pf3wFaQw5yoIlX9PbNHe0Z56R
-	eTT7pWo/NaTzmdpM8+4hPV7EjKn8kYDs3XsP+11id2YuLgBZVrSwhB6FDvunP4iC
-	8q9ZUzFmq0OYFZNGlZVPjc5pzmj4rmghPQDRDXl+tzX1VKjMpqqe22Icedg2EplE
-	PyieGPN8XCb8iQv6PUYpTJVnMMCacNx5qnjXhB+wQ3fe4Rx9Nwur73z/k1xnuBYU
-	6aVcebndAoaDBvneC/9R7WPSx8qiGJYMMwAFNDWNNhwA6oHlkl6TIh+5uhK5oRIR
-	qybI2G7ivrYFNn9r989vw==
+	DKIM202306; bh=bxlhcCLLu2nVwVVshKc9HTXBGPT+xoKrYdwmFjIADko=; b=R
+	P/rT0luOjR5Tc+kJKMZ7XmGq7XLTVOYOty15m6179Fn2yM62v4KuHW3xu80sOZH6
+	0uxTedg/kHgnCirjUr67K3jDCBayRawwd5ZrFIKtcgcC1y2Y+eWgN+OSEHJ63HHU
+	OQ0wix/aQOy/wBP/4X9C/9cLB5QbdgcgcbOg5EUO79WIkINVPFg+Fk3Hmi8DS33o
+	WD2ntpRpoZGV0f4tjklC8QLJT6E5eFwHq8qjSjSGtSY1cvRem+UNKbFOYFR1zv1r
+	JChKCLYb1VT7WyBbPCAkhVpy6enF21Sas6lIDBW6FhcjcbCLmXTRNhNDYoObSz+r
+	S5xQvNsAkQK0dLy5oDIjw==
 Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xhyc7r01x-1
+	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xhctp42v1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 16 Apr 2024 19:19:22 +0000 (GMT)
 Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
 	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4VJv3t08HKz53xyX;
+	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4VJv3t0jpxz53xyZ;
 	Tue, 16 Apr 2024 19:19:22 +0000 (UTC)
 Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: mbland)
-	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VJv3s75L2z2SlV8;
-	Tue, 16 Apr 2024 19:19:21 +0000 (UTC)
-Message-ID: <20240416122254.868007168-2-mbland@motorola.com>
+	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VJv3t0W4Hz2SlV8;
+	Tue, 16 Apr 2024 19:19:22 +0000 (UTC)
+Message-Id: <20240416122254.868007168-5-mbland@motorola.com>
 In-Reply-To: <20240416122254.868007168-1-mbland@motorola.com>
 References: <20240416122254.868007168-1-mbland@motorola.com>
-To: linux-mm@kvack.org
-Cc: Maxwell Bland <mbland@motorola.com>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
+To: linux-arm-kernel@lists.infradead.org
+Cc: Maxwell Bland <mbland@motorola.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Maxwell Bland <mbland@motorola.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christoph Hellwig <hch@infradead.org>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         David Hildenbrand <david@redhat.com>,
         Conor Dooley <conor.dooley@microchip.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>
+        linux-kernel@vger.kernel.org
 From: Maxwell Bland <mbland@motorola.com>
-Subject: [PATCH 1/5 RESEND] mm: allow arch refinement/skip for vmap alloc
-Date: Tue, 16 Apr 2024 14:18:15 -0500
-X-Proofpoint-GUID: H86CUAODmaPSKsWi32l4bYEE5cNkOhPT
-X-Proofpoint-ORIG-GUID: H86CUAODmaPSKsWi32l4bYEE5cNkOhPT
+Subject: [PATCH 4/5 RESEND] arm64: dynamic enforcement of PXNTable
+Date: Tue, 16 Apr 2024 14:18:18 -0500
+X-Proofpoint-GUID: DROmJMmX7G07KTG0qxdXMD6DZ-9Y4P3A
+X-Proofpoint-ORIG-GUID: DROmJMmX7G07KTG0qxdXMD6DZ-9Y4P3A
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-16_17,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 suspectscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404160122
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=738
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404160122
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Message-ID: <20240416191815.v6VenyHuprasWDsYfV9tmOFTvAFQnpwXPLayz_rTTxM@z>
 
-Makes red black tree allocation more flexible on a per-architecture
-basis by introducing an optional hooks to refine the red-black tree
-structuring and exposing vmalloc functions for clipping vmap areas,
-finding vmap areas, and inserting vmap areas.
-
-With this patch, the red-black vmap tree can be refined to account for
-architecture-specific memory management operations, most notably address
-space layout randomization, as these features conflict with generic
-management of a single vmalloc_start to vmalloc_end range as given by
-mm/vmalloc.c.
-
-For example, x86 is forced to restrict aslr to 1024 possible locations,
-which is a very, very small number, and arm64 breaks standard code/data
-partitioning altogether, which prevents the enforcement of performant
-immmutability on kernel page tables.
+PXNTable is enforced during the init process to ensure that regions of
+user memory and kernel data cannot be executed from, preventing attacks
+which write to writable kernel pages and then modify the kernel's page
+tables to make this code executable. This patch ensures this protection
+is also preserved for dynamically allocated pages/pagetables, making it
+so that all PMDs populated outside of the module code region are
+PXNTable by default.
 
 Signed-off-by: Maxwell Bland <mbland@motorola.com>
 ---
- include/linux/vmalloc.h | 24 ++++++++++++++++++++++++
- mm/vmalloc.c            | 16 ++++++++++------
- 2 files changed, 34 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 98ea90e90439..3c5ce7ee0bea 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
+diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+index 5785272144e8..2376b4e7915c 100644
+--- a/arch/arm64/include/asm/pgalloc.h
++++ b/arch/arm64/include/asm/pgalloc.h
 @@ -12,6 +12,7 @@
+ #include <asm/processor.h>
+ #include <asm/cacheflush.h>
+ #include <asm/tlbflush.h>
++#include <asm/module.h>
  
- #include <asm/vmalloc.h>
- 
-+struct kmem_cache;
- struct vm_area_struct;		/* vma defining user mapping in mm_types.h */
- struct notifier_block;		/* in notifier.h */
- struct iov_iter;		/* in uio.h */
-@@ -125,6 +126,21 @@ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
+ #define __HAVE_ARCH_PGD_FREE
+ #define __HAVE_ARCH_PUD_FREE
+@@ -119,6 +120,12 @@ static inline void __pmd_populate(pmd_t *pmdp, phys_addr_t ptep,
+ 	set_pmd(pmdp, __pmd(__phys_to_pmd_val(ptep) | prot));
  }
- #endif
  
-+#ifndef arch_skip_va
-+static inline bool arch_skip_va(struct vmap_area *va, unsigned long vstart)
++static inline bool vaddr_is_data(unsigned long vaddr)
 +{
-+	return false;
++	return ((vaddr + PMD_SIZE < MODULES_ASLR_START || vaddr >= MODULES_ASLR_END) &&
++		(vaddr + PMD_SIZE < (unsigned long) _text || vaddr >= (unsigned long) _etext));
 +}
-+#endif
-+
-+#ifndef arch_refine_vmap_space
-+static inline void arch_refine_vmap_space(struct rb_root *root,
-+					  struct list_head *head,
-+					  struct kmem_cache *cachep)
-+{
-+}
-+#endif
 +
  /*
-  *	Highlevel APIs for driver use
-  */
-@@ -214,6 +230,14 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
- void free_vm_area(struct vm_struct *area);
- extern struct vm_struct *remove_vm_area(const void *addr);
- extern struct vm_struct *find_vm_area(const void *addr);
-+extern void insert_vmap_area_augment(struct vmap_area *va, struct rb_node *from,
-+				     struct rb_root *root,
-+				     struct list_head *head);
-+extern int va_clip(struct rb_root *root, struct list_head *head,
-+		   struct vmap_area *va, unsigned long nva_start_addr,
-+		   unsigned long size);
-+extern struct vmap_area *__find_vmap_area(unsigned long addr,
-+					  struct rb_root *root);
- struct vmap_area *find_vmap_area(unsigned long addr);
- 
- static inline bool is_vm_area_hugepages(const void *addr)
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 68fa001648cc..de4577a3708e 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -989,7 +989,7 @@ unsigned long vmalloc_nr_pages(void)
- 	return atomic_long_read(&nr_vmalloc_pages);
- }
- 
--static struct vmap_area *__find_vmap_area(unsigned long addr, struct rb_root *root)
-+struct vmap_area *__find_vmap_area(unsigned long addr, struct rb_root *root)
+  * Populate the pmdp entry with a pointer to the pte.  This pmd is part
+  * of the mm address space.
+@@ -127,8 +134,11 @@ static inline void
+ pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep,
+ 		    unsigned long vaddr)
  {
- 	struct rb_node *n = root->rb_node;
- 
-@@ -1322,7 +1322,7 @@ insert_vmap_area(struct vmap_area *va,
- 		link_va(va, root, parent, link, head);
++	pmdval_t pmd = PMD_TYPE_TABLE | PMD_TABLE_UXN;
+ 	VM_BUG_ON(mm && mm != &init_mm);
+-	__pmd_populate(pmdp, __pa(ptep), PMD_TYPE_TABLE | PMD_TABLE_UXN);
++	if (vaddr_is_data(vaddr))
++		pmd |= PMD_TABLE_PXN;
++	__pmd_populate(pmdp, __pa(ptep), pmd);
  }
  
--static void
-+void
- insert_vmap_area_augment(struct vmap_area *va,
- 	struct rb_node *from, struct rb_root *root,
- 	struct list_head *head)
-@@ -1501,7 +1501,7 @@ find_vmap_lowest_match(struct rb_root *root, unsigned long size,
- 				vstart < va->va_start) {
- 			node = node->rb_left;
- 		} else {
--			if (is_within_this_va(va, size, align, vstart))
-+			if (!arch_skip_va(va, vstart) && is_within_this_va(va, size, align, vstart))
- 				return va;
- 
- 			/*
-@@ -1522,7 +1522,8 @@ find_vmap_lowest_match(struct rb_root *root, unsigned long size,
- 			 */
- 			while ((node = rb_parent(node))) {
- 				va = rb_entry(node, struct vmap_area, rb_node);
--				if (is_within_this_va(va, size, align, vstart))
-+				if (!arch_skip_va(va, vstart) &&
-+				    is_within_this_va(va, size, align, vstart))
- 					return va;
- 
- 				if (get_subtree_max_size(node->rb_right) >= length &&
-@@ -1554,7 +1555,7 @@ find_vmap_lowest_linear_match(struct list_head *head, unsigned long size,
- 	struct vmap_area *va;
- 
- 	list_for_each_entry(va, head, list) {
--		if (!is_within_this_va(va, size, align, vstart))
-+		if (arch_skip_va(va, vstart) || !is_within_this_va(va, size, align, vstart))
- 			continue;
- 
- 		return va;
-@@ -1617,7 +1618,7 @@ classify_va_fit_type(struct vmap_area *va,
- 	return type;
- }
- 
--static __always_inline int
-+__always_inline int
- va_clip(struct rb_root *root, struct list_head *head,
- 		struct vmap_area *va, unsigned long nva_start_addr,
- 		unsigned long size)
-@@ -5129,4 +5130,7 @@ void __init vmalloc_init(void)
- 	vmap_node_shrinker->count_objects = vmap_node_shrink_count;
- 	vmap_node_shrinker->scan_objects = vmap_node_shrink_scan;
- 	shrinker_register(vmap_node_shrinker);
-+
-+	arch_refine_vmap_space(&free_vmap_area_root, &free_vmap_area_list,
-+			       vmap_area_cachep);
- }
+ static inline void
 -- 
 2.39.2
 
