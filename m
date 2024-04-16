@@ -1,176 +1,246 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD3A38385;
-	Tue, 16 Apr 2024 05:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713243862; cv=fail; b=iNnFn2PmLVd/cm2+YRAv9QsfNsWbe5nWMwITg/7ed2mVIGCgpPGDT+JYo6ML/bgZMeT2hzN73jvIfpVhSQdoLx/LoRDlw+xImR0fkNkTyQ05KVZ+bSFhuGUUxARzZlO2xc+xg+v+zr2jBNa/YPeC/+Tpb2haO2SHzy6bwrghwMs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713243862; c=relaxed/simple;
-	bh=mAjrCSiY046xHMc/kf5mFd1kvCrHY/fwwSS6SHHiqg0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b2KSmtvM8a+iPbZo7kx2ciioQk4L2e9bJ1dOFDooBBI1PSBl5e542GvO2LppjtFiZ3T4aqbRxoeT75Mkdv76SlESXMYbZYPXldnhjsUe1I3hFaAPwnfPbaSpmoxVZsL9dwmr75KXmobrXh6Yb/BXdOaDIVC/uiXzPDuoRthWgQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=t9/m+Ljz; arc=fail smtp.client-ip=40.107.94.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E12C381DE
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713243935; cv=none; b=TDRNFyfFYWmixFePXHIkqbKfMBFq3XzsPZ1huqHWpBDJayFSjARgCpshYTta9YNoSebHpub+D2dNkMZ9Cj5MGgampbu8QUg93daUNHFeX+wGFrMdlvUbwpI0NmPvZ2SABIor2088rax/RT70rY+1sjJuTlFeY5PWqp4pD3Ky8lM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713243935; c=relaxed/simple;
+	bh=hfrS2yAKVWrmnlB0XBYaEg3EmwdL7jtCR9WpkagwQzY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r+4XrNY1cZ8JyGpa/Mif0IQahlUYXmbxWTSqYZGU6iwlgCZdFwDl3ZHLcuGupjPJVkLBWii12Wg4QM+5jcNRgZ0aiRN8fEWGpC5EVWHRVS1TEa6arR8ixpT1GrVScO/imNwjOlxcHJsftxnQ2f+s3xpde5dUstROUMOhEcTkIYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=YAjzm/qZ; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="t9/m+Ljz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SOK/p6MXEoYH/x4BuShW/Am1v2tx2DNr6iEWNlr52c55VlZKM6BCtWO0+h7BzHyA/66hoACzeysCdQCV7shntXp0GDqiAhr2LUS5OANhn4GoK+OYtSQ/TzDLVRZ1lm2Ro2mx99u49PgPfx2H+mberGRGGfltSzU4YDI9GidT9EqG1rCl4qjnDtmolNjH8dYriXJskrQGapz9S2Cr8y6pwNtJKSMm2q9FAxeKbYzwOy8nL4jbr/IFsAx6gBHrWiN3YWNx1uoMI4HIlCAIwmOvqvEU1yglB65DidFUByu5F/GroFYsg605XTtLM2UiwljIehPXa0gC9LOj1QJeEJK7Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZE9OG4vP0tkg6JhP6AIkaAD6PN8QpWYdYx7g4Z/dpdQ=;
- b=R4T0zwGRdXExrQ07SM6FQpnXMEAGwstbZ/U1LZIq30kgdDVYaTmIFSh84C1Hx/S2yjvkA07SDhNmdHIRVkbrRZKqEHxUL45ZxdBpSqZ1X3JG2OmlaFqb38wsfRzRujkdRz71IlHgV6NQHmxn/HZCJCFcWQdau106U1z4dXXqHdb8pFZLLl48V4WIUy1VnXAQdTulkX27RhEBvBwUYmH+firyBe43yN0tqAqBNfuvUZEj5+ll3R8krT0LOR89C6hyfDemiK34CQrOQiLA8Lbdlou1+8N6DzrXWr4p6u15mxY+0MFtF2IuHMVDKdgpxTPGMr6aZN1LuNINLCnLFLn0ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZE9OG4vP0tkg6JhP6AIkaAD6PN8QpWYdYx7g4Z/dpdQ=;
- b=t9/m+LjzRSSDHXJ3YVPfvNL1bCNd8PdgpcP6rELosUowQDu78A43IL8BIk1Y9SFHkliJQeojWNKjejx95sDeA0tm6EoMQ1GOZf9VIYKc8aCuNlTrbdfklgqFYMX215AWAeUtJwgyIXA9A6G3mxWnKbp3zLC37NnO6dJRGCYe+8c=
-Received: from CH0PR03CA0083.namprd03.prod.outlook.com (2603:10b6:610:cc::28)
- by SJ2PR12MB9085.namprd12.prod.outlook.com (2603:10b6:a03:564::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
- 2024 05:04:18 +0000
-Received: from CH1PEPF0000A346.namprd04.prod.outlook.com
- (2603:10b6:610:cc:cafe::3f) by CH0PR03CA0083.outlook.office365.com
- (2603:10b6:610:cc::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
- Transport; Tue, 16 Apr 2024 05:04:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000A346.mail.protection.outlook.com (10.167.244.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Tue, 16 Apr 2024 05:04:18 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 16 Apr
- 2024 00:04:08 -0500
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <thomas.lendacky@amd.com>
-CC: <ravi.bangoria@amd.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <michael.roth@amd.com>, <nikunj.dadhania@amd.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<santosh.shukla@amd.com>
-Subject: [PATCH v2] KVM: SEV-ES: Don't intercept MSR_IA32_DEBUGCTLMSR for SEV-ES guests
-Date: Tue, 16 Apr 2024 10:33:38 +0530
-Message-ID: <20240416050338.517-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="YAjzm/qZ"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcc84ae94c1so3792420276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 22:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1713243931; x=1713848731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qJmDU0qCtC6xbk/2Z6msCh6alcZpNMwqU1+ATj0oOrg=;
+        b=YAjzm/qZ/R1hse1bDtoP/wgCKaOM3uDAUbsMnNNtF7WxSfyHIuV5G5Aa3UUCBqWsHz
+         7DcNQvy7OOllrvR287oJQoTI3nZYJUn8iCDedGBMQ3CC/sHtE4A4Q+kN9jlL07C9HZan
+         wZL7tEjAHiJK8yD+p8XeO4FADRGtCU0nxbFeH7E1SV1fx4+XZ+G1tiTanrBRYZKHSPW8
+         Z4OeyErCEAud3YmpCTwEovJuKRepniZJriKlHYR3GFp9qqSDjcjFlVEmhGTXlI+ZQ1iW
+         m0f7FUK+dxVg6CkkLsF6TPpInumaOigtKdOGQ2FAOFPVJofTj5zT/2K2GkYAkbmDAusI
+         62qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713243931; x=1713848731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qJmDU0qCtC6xbk/2Z6msCh6alcZpNMwqU1+ATj0oOrg=;
+        b=m6JiMWlr6AEIepJPOqkPF0mBIG/44DW7EEURQybuEYIIbbYHyzR2LaZhiy8q9qjxd0
+         1+QCd/0BGem4qfun4tVwrvJV7RxNBWEtfkcCBymooUO588nTJ2T27PpYWQErL/tPhS4P
+         N7lHNxI24F6u3BBHLA0FJ/c4BqK2CPvfGTSnNjYOMGj/l6R22cvmczV2R7jWvNZP9yCk
+         V5KwXF+cSPQA+MHNlrli2DMLDhWOOkCaU5sq90GEDU262hkim6x4X81A6HXaLjSjOavr
+         /hxTbHUho8X8wB3psD7Zqbe4Lqn5U2RwNhyT9CQJ59gEItbn3gYQsqCiAAfh6Vv6BJBU
+         UFAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTqaoO53ICI45KTRzCnwSKu9hPRGZ2Y3WbEPk3Y/Hg1UhVe1vpA/kOtQEoNln5Ruwyg5Tbda+JcG8RVyp8D2w9wpl5R/gDAIuXx1UQ
+X-Gm-Message-State: AOJu0Yx0Qti3+u/c/X88hwYCYFQshqlY6myvJ1Kw8doIiBLpNKzHuPGm
+	UAmJYTMllBDwNChwirt5rr4AdYjSEBBwLKaPDAQITk2w84qRqWVaEfdOSeHWrtG0I+wpRy8XUhD
+	KQzIp8u6lZNBDywr62u/KaYKbawvNoy3oK7XzYg==
+X-Google-Smtp-Source: AGHT+IGA2IjVKw8IkJCjL9FhLOVDIrOwEj1lKKmglsv29PQSjP7wQuUdMHMf3ycCLE4DIaLikqvNM7nDkFaVD2tnzjE=
+X-Received: by 2002:a25:ea05:0:b0:de1:27f4:38a5 with SMTP id
+ p5-20020a25ea05000000b00de127f438a5mr10411763ybd.14.1713243931364; Mon, 15
+ Apr 2024 22:05:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A346:EE_|SJ2PR12MB9085:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e186ff6-13d3-4519-ed83-08dc5dd2aba6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	P/jGnDag38mCq/YqpsTQBn7ktrgwVdWTDW1VU//K6a8DeS/Jm6l97jE733W9Vruedodidt2gKtrHd3d33+gZM6Eb8Qr78KuKq2NLF/RPeO6IANio2QkVeBTT2/ZIArXGvOUCQrOhMGHiL3TCiZr7uJ6uTocCTZHjDEniQemayeHUmoKY3EliyLXaEEODQzHq6Fy3Vxt5fIy7KJkG7ldq+HFNY4x4nebkublmzkHuVAmoAaGVnesXmFJUJmX3P/dXSN+2rsXR4yp0pCDrkXoea/ITM0c4sf0LBdkPK7NVL9GqXGSxhbt9BqJTYzz0LcLIgJq5dA5PcJ06Yn8g1kTvOtIG5AF3OiybNMkAhu1ykpcj14ZuXPVusM4QmjhmqEJSE38lbQtxOXwbkqAqrSFZ3nn9ZbFh0cmU+pSg21EFgdJv7KERl4xwXCgggYN5Z6D4HkU3Cp6Non159eZVVOLd5nQ+Sa2qbnOg2YNf6IAM27YxlC8jiK4u1U3CUA+9qgGZJXzlAKRSpIlkoHMKLKr6oxnV9FapRAZiU5/Jv1JKbeEJdMX+nqxlMLqYDCIqlBl9w9xkhy9j7XcIl1an+ZugtpynkmvDr9BTrctOVUAclVyO1BUpH9+9cQ+ySk59X8c2pNUxIqqhmoPOmB+RDdAIDcLHM2oO0wR6ni9S9MBjl0i4DRCCE5iF73cXucGwHNFr8QSAuz0nmBwYwJBtrSWFNCs0yVklOJzwRSj+pCqB9rIDvedDAeN/g7KvEleSF92K
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(7416005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 05:04:18.3501
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e186ff6-13d3-4519-ed83-08dc5dd2aba6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A346.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9085
+References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com> <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com>
+In-Reply-To: <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com>
+From: Trevor Gross <tmgross@umich.edu>
+Date: Tue, 16 Apr 2024 01:05:20 -0400
+Message-ID: <CALNs47vRk0cKKDkpkhy2XUkxcjtPW-CABUexAZfGZ6PHT=wKng@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, LBR Virtualization is dynamically enabled and disabled for
-a vcpu by intercepting writes to MSR_IA32_DEBUGCTLMSR. This helps by
-avoiding unnecessary save/restore of LBR MSRs when nobody is using it
-in the guest. However, SEV-ES guest mandates LBR Virtualization to be
-_always_ ON[1] and thus this dynamic toggling doesn't work for SEV-ES
-guest, in fact it results into fatal error:
+On Mon, Apr 15, 2024 at 3:14=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> From: Wedson Almeida Filho <wedsonaf@gmail.com>
+>
+> A pointer to an area in userspace memory, which can be either read-only
+> or read-write.
+>
+> All methods on this struct are safe: attempting to read or write on bad
+> addresses (either out of the bound of the slice or unmapped addresses)
+> will return `EFAULT`. Concurrent access, *including data races to/from
+> userspace memory*, is permitted, because fundamentally another userspace
+> thread/process could always be modifying memory at the same time (in the
+> same way that userspace Rust's `std::io` permits data races with the
+> contents of files on disk). In the presence of a race, the exact byte
+> values read/written are unspecified but the operation is well-defined.
+> Kernelspace code should validate its copy of data after completing a
+> read, and not expect that multiple reads of the same address will return
+> the same value.
+>
+> These APIs are designed to make it difficult to accidentally write
+> TOCTOU bugs. Every time you read from a memory location, the pointer is
+> advanced by the length so that you cannot use that reader to read the
+> same memory location twice. Preventing double-fetches avoids TOCTOU
+> bugs. This is accomplished by taking `self` by value to prevent
+> obtaining multiple readers on a given `UserSlicePtr`, and the readers
+> only permitting forward reads. If double-fetching a memory location is
+> necessary for some reason, then that is done by creating multiple
+> readers to the same memory location.
+>
+> Constructing a `UserSlicePtr` performs no checks on the provided
+> address and length, it can safely be constructed inside a kernel thread
+> with no current userspace process. Reads and writes wrap the kernel APIs
+> `copy_from_user` and `copy_to_user`, which check the memory map of the
+> current process and enforce that the address range is within the user
+> range (no additional calls to `access_ok` are needed).
+>
+> This code is based on something that was originally written by Wedson on
+> the old rust branch. It was modified by Alice by removing the
+> `IoBufferReader` and `IoBufferWriter` traits, and various other changes.
+>
+> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-SEV-ES guest on Zen3, kvm-amd.ko loaded with lbrv=1
+Reviewed-by: Trevor Gross <tmgross@umich.edu>
 
-  [guest ~]# wrmsr 0x1d9 0x4
-  KVM: entry failed, hardware error 0xffffffff
-  EAX=00000004 EBX=00000000 ECX=000001d9 EDX=00000000
-  ...
+I left some suggestions for documentation improvements and one
+question, but mostly LGTM.
 
-Fix this by never intercepting MSR_IA32_DEBUGCTLMSR for SEV-ES guests.
-No additional save/restore logic is required since MSR_IA32_DEBUGCTLMSR
-is of swap type A.
+> ---
+>  rust/helpers.c         |  14 +++
+>  rust/kernel/lib.rs     |   1 +
+>  rust/kernel/uaccess.rs | 304 +++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 319 insertions(+)
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index be68d5e567b1..37f84223b83f 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -49,6 +49,7 @@
+>  pub mod task;
+>  pub mod time;
+>  pub mod types;
+> +pub mod uaccess;
+>  pub mod workqueue;
+>
+>  #[doc(hidden)]
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> new file mode 100644
+> index 000000000000..c97029cdeba1
+> --- /dev/null
+> +++ b/rust/kernel/uaccess.rs
+> @@ -0,0 +1,304 @@
+> [...]
+> +impl UserSlice {
+> +    /// Constructs a user slice from a raw pointer and a length in bytes=
+.
+> +    ///
+> +    /// Constructing a [`UserSlice`] performs no checks on the provided =
+address and length, it can
+> +    /// safely be constructed inside a kernel thread with no current use=
+rspace process. Reads and
+> +    /// writes wrap the kernel APIs `copy_from_user` and `copy_to_user`,=
+ which check the memory map
+> +    /// of the current process and enforce that the address range is wit=
+hin the user range (no
+> +    /// additional calls to `access_ok` are needed).
 
-[1]: AMD64 Architecture Programmer's Manual Pub. 40332, Rev. 4.07 - June
-     2023, Vol 2, 15.35.2 Enabling SEV-ES.
-     https://bugzilla.kernel.org/attachment.cgi?id=304653
+I would just add a note that pointer should be a valid userspace
+pointer, but that gets checked at read/write time
 
-Fixes: 376c6d285017 ("KVM: SVM: Provide support for SEV-ES vCPU creation/loading")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
----
-v1: https://lore.kernel.org/r/20240326081143.715-1-ravi.bangoria@amd.com
-v1->v2:
-  - Add MSR swap type detail in the patch description. No code changes.
+> +    /// Callers must be careful to avoid time-of-check-time-of-use (TOCT=
+OU) issues. The simplest way
+> +    /// is to create a single instance of [`UserSlice`] per user memory =
+block as it reads each byte
+> +    /// at most once.
+> +    pub fn new(ptr: *mut c_void, length: usize) -> Self {
+> +        UserSlice { ptr, length }
+> +    }
 
- arch/x86/kvm/svm/sev.c | 1 +
- arch/x86/kvm/svm/svm.c | 1 +
- arch/x86/kvm/svm/svm.h | 2 +-
- 3 files changed, 3 insertions(+), 1 deletion(-)
+> +impl UserSliceReader {
+> [...]
+> +    /// Reads raw data from the user slice into a kernel buffer.
+> +    ///
+> +    /// After a successful call to this method, all bytes in `out` are i=
+nitialized.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index a8ce5226b3b5..ef932a7ff9bd 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3073,6 +3073,7 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
- 	/* Clear intercepts on selected MSRs */
- 	set_msr_interception(vcpu, svm->msrpm, MSR_EFER, 1, 1);
- 	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_CR_PAT, 1, 1);
-+	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_DEBUGCTLMSR, 1, 1);
- 	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_LASTBRANCHFROMIP, 1, 1);
- 	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_LASTBRANCHTOIP, 1, 1);
- 	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_LASTINTFROMIP, 1, 1);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index e90b429c84f1..5a82135ae84e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -99,6 +99,7 @@ static const struct svm_direct_access_msrs {
- 	{ .index = MSR_IA32_SPEC_CTRL,			.always = false },
- 	{ .index = MSR_IA32_PRED_CMD,			.always = false },
- 	{ .index = MSR_IA32_FLUSH_CMD,			.always = false },
-+	{ .index = MSR_IA32_DEBUGCTLMSR,		.always = false },
- 	{ .index = MSR_IA32_LASTBRANCHFROMIP,		.always = false },
- 	{ .index = MSR_IA32_LASTBRANCHTOIP,		.always = false },
- 	{ .index = MSR_IA32_LASTINTFROMIP,		.always = false },
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8ef95139cd24..7a1b60bcebff 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -30,7 +30,7 @@
- #define	IOPM_SIZE PAGE_SIZE * 3
- #define	MSRPM_SIZE PAGE_SIZE * 2
- 
--#define MAX_DIRECT_ACCESS_MSRS	47
-+#define MAX_DIRECT_ACCESS_MSRS	48
- #define MSRPM_OFFSETS	32
- extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
- extern bool npt_enabled;
--- 
-2.44.0
+If this is guaranteed, could it return `Result<&mut [u8]>`? So the
+caller doesn't need to unsafely `assume_init` anything.
 
+> +    /// Fails with `EFAULT` if the read happens on a bad address.
+
+This should also mention that the slice cannot be bigger than the
+reader's length.
+
+> +    pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
+> +        let len =3D out.len();
+> +        let out_ptr =3D out.as_mut_ptr().cast::<c_void>();
+> +        if len > self.length {
+> +            return Err(EFAULT);
+> +        }
+> +        let Ok(len_ulong) =3D c_ulong::try_from(len) else {
+> +            return Err(EFAULT);
+> +        };
+> +        // SAFETY: `out_ptr` points into a mutable slice of length `len_=
+ulong`, so we may write
+> +        // that many bytes to it.
+> +        let res =3D unsafe { bindings::copy_from_user(out_ptr, self.ptr,=
+ len_ulong) };
+> +        if res !=3D 0 {
+> +            return Err(EFAULT);
+> +        }
+> +        // Userspace pointers are not directly dereferencable by the ker=
+nel, so we cannot use `add`,
+> +        // which has C-style rules for defined behavior.
+> +        self.ptr =3D self.ptr.wrapping_byte_add(len);
+> +        self.length -=3D len;
+> +        Ok(())
+> +    }
+> +
+> +    /// Reads raw data from the user slice into a kernel buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the read happens on a bad address.
+> +    pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
+> +        // SAFETY: The types are compatible and `read_raw` doesn't write=
+ uninitialized bytes to
+> +        // `out`.
+> +        let out =3D unsafe { &mut *(out as *mut [u8] as *mut [MaybeUnini=
+t<u8>]) };
+> +        self.read_raw(out)
+> +    }
+
+If this is just a safe version of read_raw, could you crosslink the docs?
+
+> +impl UserSliceWriter {
+> +
+> +    /// Writes raw data to this user pointer from a kernel buffer.
+> +    ///
+> +    /// Fails with `EFAULT` if the write happens on a bad address.
+> +    pub fn write_slice(&mut self, data: &[u8]) -> Result {
+>   [...]
+> +    }
+
+Could use a note about length like `read_raw`.
