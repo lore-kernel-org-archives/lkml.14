@@ -1,142 +1,127 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039CC12DD9F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B4912FF9E;
+	Tue, 16 Apr 2024 14:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277992; cv=none; b=DS72Mbpym53Mtk7MJaRToh0Nz5oRBxeLAZ6WvAlV6yuhrYyhaIm/g2/U++/qYrHx7tWuetPRJdoK2Am2SE3mYQYEqyc7HrpTD1LoZrE2HIsy2ettru+jJolXHRcuqsTrGvzq0vS1fM9loaR9FRp9LXyGlPNWqqmuxOrr4Ne5WZU=
+	t=1713278014; cv=none; b=Zr9bbXLeotnbOZfwsMUvPJtrfa0HWjlNrYsA8DD81FMMbKVbfCKLqCtB5xdlALCt1RUN3LGv/fiacbhxPJ/Jpm7MdmsIyLPhrGMziOh5IjhEZj7NwdXP44qcj9NxCC5q+Ie8WftD2DalCSBn1WppzEhV36uzAWa9pfNeBB0Ivmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277992; c=relaxed/simple;
-	bh=tQt0h4/JJzNUSt7YJAw13nbwhiLd1bvHD0j7b+rfdIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZkOwoOQagwnUu+89DwmCr6Pq+ObdAZOUv1pJQ2ZbcXgFmq+wFhGUOlNE9qYINHLBDQbW4xWPRw61YXdZi7hIKTCNRr3UhRQ+FcN3IGm6gEfJfch8yyA5WKCkvrNjDZP7HlsKef6NIE3JoipLbqwNef6H3QgLo7he+4vfH2EifDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Y0jDybLz; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1713278014; c=relaxed/simple;
+	bh=S3+lG+Q4zz1vpzcDH9owuemE4fYStoaS86UMxk5U1J4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ny1QRV7hEUp66NA5ZGl9rLzwEnAz6GDsiZ5UjDc55nL63gv8TDhqY/o9pESgX1nzCJnM2f93MofwTlJ/DsTlcM7eR7XRu5XQP1jOunXOQ2lp62leAkaMeQSnH87JEe6To1gaiBR9vFGPrhcMvTKkXJzI5LJBMYt5cwDCFixWPSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0+DyPwlG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Y0jDybLz"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7d9c78d108eso5171439f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1713277990; x=1713882790; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4USUkCePqO/DUZZKKDjSqTMfiwj3FB1TFFvhdvW85WE=;
-        b=Y0jDybLznBKfu4Gr4cWBmYDvU2Kf/t+w+kavoCMkvtciH9Rzz914YhuGxPpUicDGaN
-         F5oVYS3H7yxGO86YBpdbU1cCt7ImshCUAy8oa+SJJwDoxvIeXysU4ywq881QulFxAgPA
-         ioTlmJ9dqoF/d1tLeGfEJbbkbetW/+OooUEjGcLRthiY19ZZYzMzrs738idvIhRb25GX
-         7HkhJy9lrZEVdIuWELzihj8aBr/nuwecaeSjjmUGj/wpqu+1AIBoC8cLblGoRqfDo0MF
-         Y0N7vnOoPdL635dp+xt2ZNHtSfPaUW9p61i0PIMWM0BS07Q3NCIxwLfCOcsiBFYRqrEY
-         2ccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713277990; x=1713882790;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4USUkCePqO/DUZZKKDjSqTMfiwj3FB1TFFvhdvW85WE=;
-        b=cGte5KfBO4uYsDmx+ypCv3SpEYfH4heruqTuQoO7UI4ibvqaxSnJT3pbYFQ0aeKqZe
-         hVMnDFzLuZJfABG9GBdWiY4ti6zzecsCCq+QsXX5ANRDSy1a0pJms/xpwp3kGUBTCc2C
-         I4PFdQsiP5lE5hPNtMmSJBGE9G8BnPWdN+lo8H0NPhRMNzYafpw+qX0AY1+99imigPwF
-         2fYql4EOl/asDXUiIIjrMuVPj463m6uCP/dTvoZXpGp3h0SmCasdXYWTQQAPnQFvc1LH
-         VZygitxu7MZ+8K9GWorHpAHbTl1ugcPMIQSHOjrL8nmj7f1BHVqJia4hVcn3pa01pB/x
-         fmRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWu/Thdo705gHSUD7tGbCQ4LabLUqnjbP18fXzBqLZyuqiAbV/mWl+Zt16wkR4SpSGTt3amy6xLgCEXtlk0IddWBoRUy2D7xhj01Vs
-X-Gm-Message-State: AOJu0YyOCO3EGKBAFZE83yQaqtJSLsQ9BNyd7xqVxS+DE9Li6y5RkKLe
-	I+vK+ndlHz4EtxCqWDOA3QS6UvM7NVsOaI1+VyR0fDBhv4YwUOrS7mDpzP39zBM=
-X-Google-Smtp-Source: AGHT+IEFdSzzJPNEuBYNeCsLyyZ+pPblusmvyciDSgRZZSqKohbfOFFV+4drEx+cUWKBoEDWOFDJFg==
-X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr13722190iov.2.1713277990087;
-        Tue, 16 Apr 2024 07:33:10 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id v7-20020a056638250700b0047f1ac1bfd2sm3909914jat.163.2024.04.16.07.33.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 07:33:09 -0700 (PDT)
-Message-ID: <c3a6a639-bf15-4f8b-abbd-978d9836d93c@kernel.dk>
-Date: Tue, 16 Apr 2024 08:33:07 -0600
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0+DyPwlG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BAFC32783;
+	Tue, 16 Apr 2024 14:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713278013;
+	bh=S3+lG+Q4zz1vpzcDH9owuemE4fYStoaS86UMxk5U1J4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0+DyPwlGsaCyAcl74aQcZEoKNlafqD253vXe+at408/lTtSZFqY732I6veMUNTJiD
+	 kAw1rB3SW31dZCwayjZu08nsfjNu+yXxE400hAYlx+zyCxkrjHcdVRP11C3A4k+021
+	 S9nMv/SR9Flg66ICCPZTkKKhhNi+j2aukCNTEIlk=
+Date: Tue, 16 Apr 2024 16:33:30 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
+	suravee.suthikulpanit@amd.com, vashegde@amd.com, jgg@ziepe.ca,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+Message-ID: <2024041620-brick-stack-6736@gregkh>
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: API break, sysfs "capability" file
-Content-Language: en-US
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
- <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
- <Zh6IpqnSfGHXMjVa@gardel-login>
- <b74f99e8-5a50-4e93-987f-0bcfc0c27959@kernel.dk>
- <Zh6KZ7ynHuOd0mgQ@gardel-login>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Zh6KZ7ynHuOd0mgQ@gardel-login>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
 
-On 4/16/24 8:25 AM, Lennart Poettering wrote:
-> On Di, 16.04.24 08:22, Jens Axboe (axboe@kernel.dk) wrote:
+On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
+> Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
+> precedence over whatever a driver's def_domain_type may have wanted to
+> say. This was intentionally handled in core code since 3 years prior,
+> to avoid drivers poking at the details of what is essentially a policy
+> between the PCI core and the IOMMU core. Now, though, we go to the
+> length of evaluating both constraints to check for any conflict, and if
+> so throw our toys out of the pram and refuse to handle the device at
+> all. Regardless of any intent, in practice this leaves the device, and
+> potentially the rest of its group or even the whole IOMMU, in a largely
+> undetermined state, which at worst may render the whole system unusable.
+> Unfortunately it turns out that this is a realistic situation to run
+> into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
+> laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
+> an identity default domain for PASIDs to be usable, and thus sets a
+> def_domain_type override based on PASID capability.
 > 
->> On 4/16/24 8:18 AM, Lennart Poettering wrote:
->>> On Di, 09.04.24 09:17, Jens Axboe (axboe@kernel.dk) wrote:
->>>
->>>> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
->>>>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
->>>>>> All I am looking for is a very simple test that returns me a boolean:
->>>>>> is there kernel-level partition scanning enabled on this device or
->>>>>> not.
->>>>>
->>>>> And we can add a trivial sysfs attribute for that.
->>>>
->>>> And I think we should. I don't know what was being smoked adding a sysfs
->>>> interface that exposed internal flag values - and honestly what was
->>>> being smoked to rely on that, but I think it's fair to say that the
->>>> majority of the fuckup here is on the kernel side.
->>>
->>> Yeah, it's a shitty interface, the kernel is rich in that. But it was
->>> excessively well documented, better in fact than almost all other
->>> kernel interfaces:
->>>
->>> ? https://www.kernel.org/doc/html/v5.16/block/capability.html ?
->>>
->>> If you document something on so much detail in the API docs, how do
->>> you expect this *not* to be relied on by userspace.
->>
->> This is _internal_ documentation, not user ABI documentation. The fact
->> that it's talking about internal flag values should make that clear,
->> though I can definitely see how that's just badly exposed along with
->> other things that document things that users/admins could care about.
+> In general, restoring the old behaviour of forcing translation will not
+> make that device's operation any more broken than leaving it potentially
+> blocked or subject to the rest of a group's translations would, nor will
+> it be any less safe than leaving it potentially bypassed or subject to
+> the rest of a group's translations would, so do that, and let eGPUs work
+> again.
 > 
-> The text begins with:
+> Reported-by: Eric Wagner <ewagner12@gmail.com>
+> Link: https://lore.kernel.org/linux-iommu/CAHudX3zLH6CsRmLE-yb+gRjhh-v4bU5_1jW_xCcxOo_oUUZKYg@mail.gmail.com
+> Fixes: 59ddce4418da ("iommu: Reorganize iommu_get_default_domain_type() to respect def_domain_type()")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/iommu/iommu.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
->     "This file documents the sysfs file block/<disk>/capability."
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 996e79dc582d..90dbea14d4d6 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1772,9 +1772,8 @@ static int iommu_get_default_domain_type(struct iommu_group *group,
+>  		if (driver_type && driver_type != IOMMU_DOMAIN_DMA) {
+>  			dev_err_ratelimited(
+>  				untrusted,
+> -				"Device is not trusted, but driver is overriding group %u to %s, refusing to probe.\n",
+> +				"IOMMU_DOMAIN_DMA for untrusted device overrides driver request of %s for group %u, expect issues...\n",
+>  				group->id, iommu_domain_type_str(driver_type));
+> -			return -1;
+>  		}
+>  		driver_type = IOMMU_DOMAIN_DMA;
+>  	}
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
 > 
-> So it makes very clear this is about the sysfs interface.
 > 
-> Are you saying that sysfs of the block layer should be considered an
-> *internal* kernel API? That's a wild definition, if I may say so.
 
-No I missed that - to me it's clearly internal documentation as it's
-talking about the flags, but yeah you are right it's being presented as
-sysfs documentation for the 'capability' file. That should never have
-gone into the tree as ABI documentation.
+Hi,
 
-Doesn't really change my conclusion from earlier. As mentioned, this is
-clearly a kernel fuckup, and honestly since it's being presented as ABI,
-we definitely need to rectify this and provide an alternative. Even
-though I'm not a huge fan of it, might just be best to re-introduce
-'capability' and just have conversions of the flags so we retain the
-user side of it the same. That can then also go into stable, so we'll
-end up with something that at least looks cohesive on the user side.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
--- 
-Jens Axboe
+You are receiving this message because of the following common error(s)
+as indicated below:
 
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
