@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBDA131195;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79BF130E46;
 	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713274228; cv=none; b=uCk7+Msov10ntrrEzNLtK4drRk9bHr57VKvlARzx4D8OzAmdHuShdhxTPfDuZsVrebPQIDpZ7AbD3Q8oK/f8yBhdZ4qt1cPQ9MtC5eh7W+pJEEsffB4lcWoWKH/kO8Esh9yzSoh3Ju7W4d8MPoWRBWywMmEm2vAbIJUDWAVi+DY=
+	t=1713274230; cv=none; b=AbPOu+ghU2mGrWe8xNQMbDnn7f15bCpzlRv9I3UvXnDgL6+SmksoKzl2H/ScNHH6eIl24dYH65HA88G3hhc33jo4tAWaYjypN+sZDgc9TxBrwGdz7V4dtRSAR/bcHcpLsjXVxunxaZUJvA50CsFilCDQqpLAx1fHGyZ+l4+2HmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713274228; c=relaxed/simple;
-	bh=aA4uqCpBb9JBwERSpmyHDsEJPn5nBkFkNMN/fMAMKSc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=bwGUSY5T+yP3lIDrmQTiFdoY5DRgTNHKf+GBB9mdrc6wIJ3QDRAPY5curPEIaQ6ozcDI+bsTw+u8v/YE+ZY0WkuXomWaD6I0K+UuZIBhpvn9imyzqSjLL1Oy6x+2bRiF1uqRIGSRuQ9J/W9AB0HkNa+w1ICoI2xOarIt+bYqcFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq6lFaCs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713274230; c=relaxed/simple;
+	bh=aNY1BCk37hgomQWTjUsQ5l9jnB52GHjycJLv3+RRDtA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QRZejzaymNJ6FHxdQX3u8Ce8zm6vTKCe1SMClT2SbkcIg8N5zQKTguniYTRgUKQjKG4AmqHJqr53orpPhwLfjNiLR2bQar47qWMV/XkOolZyNXhbmZFnlAl2IHreF/RZLs8fptaUD7PfiereXz1RLyk6C7/ahW/VFZHvedH3LLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UVoXazS6; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq6lFaCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B2DE4C4AF09;
-	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713274227;
-	bh=aA4uqCpBb9JBwERSpmyHDsEJPn5nBkFkNMN/fMAMKSc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Aq6lFaCsdoy09SvzO0BEVTli2RWUVJv9xnmMPMmwT1BhfXe5tXfFoitvOkBM+gEAP
-	 pwCjJdM/6gMWzQAxWLS6kGx2sprkXwaTV2KbaQvw6pQH0Opa6iSnbfHBYG2ZQP1Lmr
-	 ba8gKFRacuNJFejnZz06+yCDKRrz+hKV4AlTkKrsE0qxxPEw1Ui8kJyAZgc9nl6YP4
-	 JvsMAmPMNiNXgr4cnVXA1a8DE0tsLhNHdWYB0772xoBY/wTVlfwh5Fzs3DtbWCMHio
-	 K0YIm9lYbdLNFlEXMyt+9T3rfygZs5NFFe1yywftFSkLU60ozktour23MM8XVZBGEa
-	 ABeYiQLpkLVKw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A18A8D4F15D;
-	Tue, 16 Apr 2024 13:30:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UVoXazS6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 89DAA40007;
+	Tue, 16 Apr 2024 13:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713274226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SOtYByFbOq/kD+SHjuSXQZVzJTtVnLBLPoL8nOih1ao=;
+	b=UVoXazS64pUJ2dqd9Efwu8fZrPjLcY9GpSxAvev1gs9Hgos2iof1LFsA+ZhzfJE+UXyn0/
+	+1Jvy5CC2vbg9ToO/ekDRTZVWDnrxnGFoWvtvLmfvnSkhJKkK8THhbvPswiWmF3XMfOag/
+	MiMp9dhJb4gw0HVPYxA5f3b1Lu2rv2a39PVKsBcURzPKiOZp9MtAv+z5jZGOBZVJoH+vu0
+	KoQxtte/MO2O/yqxhATTXLX3lVzuO4JBePHkrzgK9Ve7GQvB+8NXW/J5nL8cg3Pr/wgBiP
+	tv8c+DseqNoXJmmMgeL06ksnSoRz0uK2zrpb+ecLqstSeZUurC0zxbOW4/nRhg==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Tue, 16 Apr 2024 15:29:58 +0200
+Subject: [PATCH v5 09/11] PCI: Add T_PERST_CLK_US macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/4] net: stmmac: Fix MAC-capabilities procedure
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171327422765.18122.15477722399634396283.git-patchwork-notify@kernel.org>
-Date: Tue, 16 Apr 2024 13:30:27 +0000
-References: <20240412180340.7965-1-fancer.lancer@gmail.com>
-In-Reply-To: <20240412180340.7965-1-fancer.lancer@gmail.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux@armlinux.org.uk, siyanteng@loongson.cn, mcoquelin.stm32@gmail.com,
- horms@kernel.org, chenhuacai@kernel.org, wens@csie.org,
- jernej.skrabec@gmail.com, samuel@sholland.org, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240102-j7200-pcie-s2r-v5-9-4b8c46711ded@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hello:
+"Power Sequencing and Reset Signal Timings" table (section 2.9.2) in PCI
+EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 5.1 indicates PERST#
+should be deasserted after minimum of 100us once REFCLK is stable (symbol
+T_PERST-CLK).
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Add a macro so that PCIe controller drivers can use it.
 
-On Fri, 12 Apr 2024 21:03:13 +0300 you wrote:
-> The series got born as a result of the discussions around the recent
-> Yanteng' series adding the Loongson LS7A1000, LS2K1000, LS7A2000, LS2K2000
-> MACs support:
-> Link: https://lore.kernel.org/netdev/fu3f6uoakylnb6eijllakeu5i4okcyqq7sfafhp5efaocbsrwe@w74xe7gb6x7p
-> 
-> In particular the Yanteng' patchset needed to implement the Loongson
-> MAC-specific constraints applied to the link speed and link duplex mode.
-> As a result of the discussion with Russel the next preliminary patch was
-> born:
-> Link: https://lore.kernel.org/netdev/df31e8bcf74b3b4ddb7ddf5a1c371390f16a2ad5.1712917541.git.siyanteng@loongson.cn
-> 
-> [...]
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+ drivers/pci/pci.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Here is the summary with links:
-  - [net,1/4] net: stmmac: Apply half-duplex-less constraint for DW QoS Eth only
-    https://git.kernel.org/netdev/net/c/0ebd96f5da44
-  - [net,2/4] net: stmmac: Fix max-speed being ignored on queue re-init
-    https://git.kernel.org/netdev/net/c/59c3d6ca6cbd
-  - [net,3/4] net: stmmac: Fix IP-cores specific MAC capabilities
-    https://git.kernel.org/netdev/net/c/9cb54af214a7
-  - [net-next,4/4] net: stmmac: Move MAC caps init to phylink MAC caps getter
-    (no matching commit)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 17fed1846847..c47b1d3b5887 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -16,6 +16,9 @@
+ /* Power stable to PERST# inactive from PCIe card Electromechanical Spec */
+ #define PCIE_T_PVPERL_MS		100
+ 
++/* REFCLK stable before PERST# inactive from PCIe card Electromechanical Spec */
++#define PCIE_T_PERST_CLK_US		100
++
+ /*
+  * PCIe r6.0, sec 5.3.3.2.1 <PME Synchronization>
+  * Recommends 1ms to 10ms timeout to check L2 ready.
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.2
 
