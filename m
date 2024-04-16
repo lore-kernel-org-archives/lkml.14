@@ -1,43 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42947137916;
-	Tue, 16 Apr 2024 19:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E81D132C37;
+	Tue, 16 Apr 2024 19:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713294179; cv=none; b=qOxX8WPxhcwIt09HD/gLt/2xyQBuZeNtrFgd4mZxv8Qvv9RvYAnJWwRvDGLmZHe19t+EDQ4OaD/uKcJvxZcyXKFpToIzD6L+rXF1YpHeGT97rhEK5F8Nmw7FQkOJuls90y55nOhBmOyBk6HcGLYOkfmfkP1+c6OGSHxnDtXD/gc=
+	t=1713294289; cv=none; b=i5ihKY1n1e4AEFImh+c7SUA68fsZ4R2Hu+zh7lHrtjxfhuTa8C77njB5Nc735IH1IEYsjVaRTdZ2dMsKa+9UvVJwlbc2IDfx5ySXzmtLTSj9YEUdldyC5zUFLPmspBLLgQPog5AEOsDnI8PqIQQav1GrND9fEvaP9NGP8tcbpVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713294179; c=relaxed/simple;
-	bh=ymLn4ViqJi6azNlarzfVSe+0BD6thD1UTD9JMNYrPbA=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoQIBKOGBdXznYRPa3gzFlQ/2f1ubUeKCnHpd/ZRrDckjGZoOMcvvG88hXE8bdOOmEWzz4Un8F5o1i6k+Pg3pLXk+/4DGvfpTfmDlGxQiwX2DyJ5WOrg57DbMCoRkdDG2UY8s7axLED8eSGxpePpIet8VwiWKvTz5NuNok2AFw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5l/mDaJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713294289; c=relaxed/simple;
+	bh=TMgqpUZdUJ/5xkRqaF/IXDu8yPiNOalFJmukz9JW/U4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bgi3vd58WznM7vHYHSHz6+W8Y0A5dO59brLS2NHOMLzsnkrzXzrnTPCp2Zc5vkCM9sOvaZs9VcAvhvNiR33PEnPA5dz/RyI16WEg/sGLt3tMd/uPOjvKaAMpBE65z3xizZZrEmutHVyptTFqiYnLr+V9s4Oj3jVyZqyBOgL27ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LH8EjPjQ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5l/mDaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4D6C32781;
-	Tue, 16 Apr 2024 19:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713294178;
-	bh=ymLn4ViqJi6azNlarzfVSe+0BD6thD1UTD9JMNYrPbA=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=b5l/mDaJZMTRccDQU4oHPPsiNUGhNVjwt5i3LJfiFvJ1YIe4JWS7ccHxJbPQhP+rD
-	 J/79Uqz96QG3JYUoyAjJZvKdAIF0seIEzlK3r6+96vq5miomFqbEdksH/nd1/CpvOJ
-	 bDgSRndgM/MYoFTFba31wgTREhjmD7o4jIGezKSjI0jy+vBIz2dyDnTeQfqEnV5L78
-	 Emztim/IwxeIc6VF0RCvge7DcLl83r7wC32fogZHYf1kQ3ut6pFZXEDTgbDFLdiOR8
-	 JtjXsJAPJFlP67O/F7i0R2IofsZmbOuiCRiJRfybCPCu4TZE5MVxrCrZshifvqXqiP
-	 ePxtnDOoJQDdA==
-Date: Tue, 16 Apr 2024 21:02:54 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>, linux-i2c@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/18] i2c: rk3x: remove printout on handled timeouts
-Message-ID: <kxlb62ejtnaacgvlkdnyxtap23oesagq7p52z7kqhhydqdjhbt@gpvwnr4rb67a>
-References: <20240410112418.6400-20-wsa+renesas@sang-engineering.com>
- <hgdhrf2jiovfxcppdtsq32sfbk4xuq7ewiwq4awwztj4mp3yez@kj6ixihkcxhe>
- <af8ac48f10a1636ab2486aef91e01c3f@manjaro.org>
- <8358604.T7Z3S40VBb@diego>
- <dnh4yiajjqcxcq7xjvj35quda7yrf7tubp2l2ktsaf4zgzai4n@xdefxkk76yyg>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LH8EjPjQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713294288; x=1744830288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TMgqpUZdUJ/5xkRqaF/IXDu8yPiNOalFJmukz9JW/U4=;
+  b=LH8EjPjQ9kMnqcHC/0Thf2BNYoOLRSNnlstHO+TyGEiQ5S/7UQTxfdMz
+   ATWegAk0Ob7kOFS0gONdiBZqixpDripkDNdGPm+Dcf9yeJz32y5LPL4OM
+   BVGaE4Kf04frlHOw+P/dTXGqrCV9iFff2Um1p98mzUKixLvLFVDy6D6fm
+   yIHAPZzJJejhIKBrHCPgJ81NKWPWwxZqPZjI90PQ9CeI321RdA80evK1j
+   JrWg2XjocGI3okwLgm2MXWxhetIXUMwVVjmvzC5Y5zoF6KENAjDC3FJli
+   xy3FFUeVagrF3bCQosYD1C0v0ZI2mHD/4I6V/UxHP+0OHa9Hrt7irvUO+
+   A==;
+X-CSE-ConnectionGUID: Q8klQHeTREiOBR5QPDL28w==
+X-CSE-MsgGUID: BvxwkojESieeRMBf3LdJwA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="31239003"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="31239003"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 12:04:48 -0700
+X-CSE-ConnectionGUID: 9g7G1PcwQDi+S9kVsWu9VQ==
+X-CSE-MsgGUID: v4QV+caiSqyWtOBvrTsaCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22833773"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 12:04:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rwo6k-00000004nZa-2j6x;
+	Tue, 16 Apr 2024 22:04:42 +0300
+Date: Tue, 16 Apr 2024 22:04:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dmaengine: dw: Simplify prepare CTL_LO methods
+Message-ID: <Zh7LyszPd2sNfWRm@smile.fi.intel.com>
+References: <20240416162908.24180-1-fancer.lancer@gmail.com>
+ <20240416162908.24180-4-fancer.lancer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,39 +67,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dnh4yiajjqcxcq7xjvj35quda7yrf7tubp2l2ktsaf4zgzai4n@xdefxkk76yyg>
+In-Reply-To: <20240416162908.24180-4-fancer.lancer@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
-
-On Sat, Apr 13, 2024 at 04:35:06PM +0200, Wolfram Sang wrote:
-> > Also we're talking about two lines of code, I wouldn't call that bloat ;-)
+On Tue, Apr 16, 2024 at 07:28:57PM +0300, Serge Semin wrote:
+> Currently the CTL LO fields are calculated on the platform-specific basis.
+> It's implemented by means of the prepare_ctllo() callbacks using the
+> ternary operator within the local variables init block at the beginning of
+> the block scope. The functions code currently is relatively hard to
+> comprehend and isn't that optimal since implies four conditional
+> statements executed and two additional local variables defined. Let's
+> simplify the DW AHB DMA prepare_ctllo() method by unrolling the ternary
+> operators into the normal if-else statement, dropping redundant
+> master-interface ID variables and initializing the local variables based
+> on the singly evaluated DMA-transfer direction check. Thus the method will
+> look much more readable since now the fields content can be easily
+> inferred right from the if-else branch. Provide the same update in the
+> Intel DMA32 core driver for sake of the driver code unification.
 > 
-> With this patch, yes. But once you allow debug code, it is hard to draw
-> a line which debug is still okay and which is too fine-grained. And then
-> you end up with a lot. Over the years, I developed the tendency to try
-> to have less but meaningful error printouts. But I don't enforce it
-> strictly because it is too much bike-shedding discussion.
-> 
-> In case of this error printout here, it is just wrong. But, see, it also
-> came from this tendency I don't like to have printouts for every error.
+> Note besides of the effects described above this update is basically a
+> preparation before dropping the max burst encoding callback. It will
+> require calling the burst fields calculation methods right in the
+> prepare_ctllo() callbacks, which would have made the later function code
+> even more complex.
 
-I agree with Wolfram here. Debug messages are OK if they are
-providing real useful information to a final product.
+Yeah, this is inherited from the original driver where it used to be a macro.
 
-Besides, as I explained earlier, the patter:
+...
 
-	dev_dbg("timed out")
-	return -ETIMEDOUT;
+> +	if (dwc->direction == DMA_MEM_TO_DEV) {
+> +		sms = dwc->dws.m_master;
+> +		smsize = 0;
+> +		dms = dwc->dws.p_master;
+> +		dmsize = sconfig->dst_maxburst;
 
-(print a debug but return error) doesn't make much sense.
+I would group it differently, i.e.
 
-But, I this is all personal preference. So that I can also leave
-it to the specific maintainer.
+		sms = dwc->dws.m_master;
+		dms = dwc->dws.p_master;
+		smsize = 0;
+		dmsize = sconfig->dst_maxburst;
 
-From my side all patches in this series are r-b'ed, except for
-patch 6 where there are 3 dev_dbg in a row stating the same
-thing.
+> +	} else if (dwc->direction == DMA_DEV_TO_MEM) {
+> +		sms = dwc->dws.p_master;
+> +		smsize = sconfig->src_maxburst;
+> +		dms = dwc->dws.m_master;
+> +		dmsize = 0;
+> +	} else /* DMA_MEM_TO_MEM */ {
+> +		sms = dwc->dws.m_master;
+> +		smsize = 0;
+> +		dms = dwc->dws.m_master;
+> +		dmsize = 0;
+> +	}
 
-Thanks Dragan and Heiko for your feedback.
+Ditto for two above cases.
 
-Andi
+>  static u32 idma32_prepare_ctllo(struct dw_dma_chan *dwc)
+>  {
+>  	struct dma_slave_config	*sconfig = &dwc->dma_sconfig;
+> -	u8 smsize = (dwc->direction == DMA_DEV_TO_MEM) ? sconfig->src_maxburst : 0;
+> -	u8 dmsize = (dwc->direction == DMA_MEM_TO_DEV) ? sconfig->dst_maxburst : 0;
+> +	u8 smsize, dmsize;
+> +
+> +	if (dwc->direction == DMA_MEM_TO_DEV) {
+> +		smsize = 0;
+> +		dmsize = sconfig->dst_maxburst;
+> +	} else if (dwc->direction == DMA_DEV_TO_MEM) {
+> +		smsize = sconfig->src_maxburst;
+> +		dmsize = 0;
+> +	} else /* DMA_MEM_TO_MEM */ {
+> +		smsize = 0;
+> +		dmsize = 0;
+> +	}
+
+	u8 smsize = 0, dmsize = 0;
+
+	if (dwc->direction == DMA_MEM_TO_DEV)
+		dmsize = sconfig->dst_maxburst;
+	else if (dwc->direction == DMA_DEV_TO_MEM)
+		smsize = sconfig->src_maxburst;
+
+?
+
+Something similar also can be done in the Synopsys case above, no?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
