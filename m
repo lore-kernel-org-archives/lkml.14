@@ -1,34 +1,40 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF50613792D
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786D82C6A3;
+	Tue, 16 Apr 2024 20:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713299108; cv=none; b=n2QSEIWTSm+ZcH/nQnDeuuTFYvaEo/vFb2SG0OXZoJNuhBL+B6HXterHvDWEdBqb5BJKJq7Sav6/kpdjfHIX8+Huz6+l3LhtcaKhqcgaYv5s8ZHDjw30mrVKEv/kjPv/eBAwnbuLqh6L0B0JqdA/Ey5VSQlM7wsEryA1kFQcUzw=
+	t=1713299297; cv=none; b=KaUv4Ob5grHN3jsoWsAnII5019Z8DhVKOBLaUM8YnDdNAJl4aDLWahnVENZNGWp3kZQZZgLTbGdtqkC8zmiUD5hXRiqxmzmvsgCfmeXsZUtVnT/60G6fGgQWni35atDW2yRplO0BmRISRWiQ0/635utEjVbNpjtOWDL9HObJjxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713299108; c=relaxed/simple;
-	bh=nzFHgVPzykLSptwKDuARKkb3HpbWw3boByhWSDoAatc=;
+	s=arc-20240116; t=1713299297; c=relaxed/simple;
+	bh=uQYhJ7WhClFGzmNQMCJz75uJhcA7evQYHbGVmP+wBi8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YnPmGRI/PMgej2LL9FeSfHmk7MipPG39st2pYL0qAe0aJ9pp3V0eFYPNQO46i7Vhj89KLqkJWl0FpOKfN/XKwLL0G1rYYQHwiyVkXrpPHwCsPNE5Fg/PJyaVcA5Xm49YctngQNLlkscDN/0TeTzkk9ST69BzmTE/9b/ZS2Lx77A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=SgS0ZQSD; arc=none smtp.client-ip=193.222.135.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	 In-Reply-To:Content-Type; b=aNqROhXw+NJ01wLmONxTDDvJQRZcepEllR5AMRt9bJOTiyKb2EdPmY/sE0jakrqAGEODLboRupzUq1ieExzTFpUMC4BE3WDWXW9A8K/6/V2ExMHsho496RRagwyFjaM0Wv9D3wkg3/Mh9ROug6HfA06CSGScP8ij1PyWoMYLl0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tyXNSo8B; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="SgS0ZQSD"
-Received: (wp-smtpd smtp.tlen.pl 43115 invoked from network); 16 Apr 2024 22:18:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1713298702; bh=wSj9XLr8+Kmpdue7DrSdLjBZBA4QhsSx4rePaPURYqM=;
-          h=Subject:To:Cc:From;
-          b=SgS0ZQSDUFL14GG3H2PqAqBMRH4pigHrat4EE0MPnXoJmkeSq/I3EHVIz+VZQwflJ
-           bfrE3Gc1b0CJaV5gbxkTNpw+xRHBoaRsAK9Rbw6SiSt34CNrdygLt619wqzNo8Ngqm
-           5WVyGwhDATVaBAo1Z09GELUygSh84nhHkz5AFg1w=
-Received: from aaez16.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.129.16])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <gregkh@linuxfoundation.org>; 16 Apr 2024 22:18:22 +0200
-Message-ID: <119fab3d-c623-4734-b7f2-ae483c12dd6d@o2.pl>
-Date: Tue, 16 Apr 2024 22:18:17 +0200
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tyXNSo8B"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id wpPIr4rKwJyTUwpPIrI9PX; Tue, 16 Apr 2024 22:28:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1713299283;
+	bh=6NAIXi4V2CyDIBGCO7IWkHyMEgnTzqCwkzfq/h/mMuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=tyXNSo8B7EnAUKS1e+KW+mkiLn1/6R8tzRJ+fpQg0WsbOpEndvwU4n181hvn30gsE
+	 zg/UcWYOGd1CX2OgsUTbDn0DL3tlsj7MDwzWJ1v9l6YCNLldcoSvIaCGEP5QXnG9y5
+	 GzqPA8/PUEjZUPb/5ZWAbSqLw2o00rXCXUFsPBL/IofzMo4pfWPcXBXF+q7q+pBhzH
+	 q3eiduhBMxD1FBI+P8HCjlB85APKc22jSD7yf96Fj0Cd34/kxy2iE1ULtCrgWV/Uro
+	 wkelgnH/oOmNEUqoOPyD9DIqGjQzOf1cNzabljZr+JgK/QOnsFLRUxSKhbHAvF4BTT
+	 qlDwuzv6tDDlg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 16 Apr 2024 22:28:03 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <a92ea6be-d518-4e8a-86a3-1985ff54a24a@wanadoo.fr>
+Date: Tue, 16 Apr 2024 22:27:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,120 +42,162 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/69] 6.1.87-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240415141946.165870434@linuxfoundation.org>
-Content-Language: en-GB
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-In-Reply-To: <20240415141946.165870434@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 2/2] drm/panel: Add driver for EDO RM69380 OLED panel
+To: david@mainlining.org
+Cc: conor+dt@kernel.org, daniel@ffwll.ch, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+ linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+ marijn.suijten@somainline.org, mripard@kernel.org,
+ neil.armstrong@linaro.org, phone-devel@vger.kernel.org,
+ quic_jesszhan@quicinc.com, robh@kernel.org, sam@ravnborg.org,
+ tzimmermann@suse.de, ~postmarketos/upstreaming@lists.sr.ht
+References: <20240416-raydium-rm69380-driver-v3-0-21600ac4ce5f@mainlining.org>
+ <20240416-raydium-rm69380-driver-v3-2-21600ac4ce5f@mainlining.org>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240416-raydium-rm69380-driver-v3-2-21600ac4ce5f@mainlining.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-WP-MailID: 807899802595dfc1da9a39eda7c4f712
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [cQOk]                               
 
-W dniu 15.04.2024 o 16:20, Greg Kroah-Hartman pisze:
-> This is the start of the stable review cycle for the 6.1.87 release.
-> There are 69 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 17 Apr 2024 14:19:30 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.87-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Le 16/04/2024 à 20:30, David Wronek a écrit :
+> Add support for the 2560x1600@90Hz OLED panel by EDO bundled with a
+> Raydium RM69380 controller, as found on the Lenovo Xiaoxin Pad Pro 2021.
+> 
+> Signed-off-by: David Wronek <david-vu3DzTD92ROXwddmVfQv5g@public.gmane.org>
+> ---
+>   drivers/gpu/drm/panel/Kconfig                 |  14 +
+>   drivers/gpu/drm/panel/Makefile                |   1 +
+>   drivers/gpu/drm/panel/panel-raydium-rm69380.c | 367 ++++++++++++++++++++++++++
+>   3 files changed, 382 insertions(+)
+> 
 
-Hello,
+...
 
-Tested-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+> +static int rm69380_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct mipi_dsi_host *dsi_sec_host;
+> +	struct rm69380_panel *ctx;
+> +	struct device *dev = &dsi->dev;
+> +	struct device_node *dsi_sec;
+> +	int ret, i;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->supplies[0].supply = "vddio";
+> +	ctx->supplies[1].supply = "avdd";
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+> +				      ctx->supplies);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ctx->reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
+> +				     "Failed to get reset-gpios\n");
+> +
+> +	dsi_sec = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
+> +
+> +	if (dsi_sec) {
+> +		const struct mipi_dsi_device_info info = { "RM69380", 0,
+> +							   dsi_sec };
+> +
+> +		dev_dbg(dev, "Using Dual-DSI: found `%s`\n", dsi_sec->name);
+> +
+> +		dsi_sec_host = of_find_mipi_dsi_host_by_node(dsi_sec);
+> +		of_node_put(dsi_sec);
+> +		if (!dsi_sec_host)
+> +			return dev_err_probe(dev, -EPROBE_DEFER,
+> +					     "Cannot get secondary DSI host\n");
+> +
+> +		ctx->dsi[1] =
+> +			devm_mipi_dsi_device_register_full(dev, dsi_sec_host, &info);
+> +		if (IS_ERR(ctx->dsi[1]))
+> +			return dev_err_probe(dev, PTR_ERR(ctx->dsi[1]),
+> +					     "Cannot get secondary DSI node\n");
+> +
+> +		dev_dbg(dev, "Second DSI name `%s`\n", ctx->dsi[1]->name);
+> +		mipi_dsi_set_drvdata(ctx->dsi[1], ctx);
+> +	} else {
+> +		dev_dbg(dev, "Using Single-DSI\n");
+> +	}
+> +
+> +	ctx->dsi[0] = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	drm_panel_init(&ctx->panel, dev, &rm69380_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +	ctx->panel.prepare_prev_first = true;
+> +
+> +	ctx->panel.backlight = rm69380_create_backlight(dsi);
+> +	if (IS_ERR(ctx->panel.backlight))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
+> +				     "Failed to create backlight\n");
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
+> +		if (!ctx->dsi[i])
+> +			continue;
+> +
+> +		dev_dbg(&ctx->dsi[i]->dev, "Binding DSI %d\n", i);
+> +
+> +		ctx->dsi[i]->lanes = 4;
+> +		ctx->dsi[i]->format = MIPI_DSI_FMT_RGB888;
+> +		ctx->dsi[i]->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
+> +					  MIPI_DSI_CLOCK_NON_CONTINUOUS;
+> +
+> +		ret = mipi_dsi_attach(ctx->dsi[i]);
+> +		if (ret < 0) {
+> +			mipi_dsi_detach(ctx->dsi[i]);
 
-Tested on a HP 17-by0001nw laptop with an Intel Kaby Lake CPU and Ubuntu 20.04.
+I don't think this works.
+if 'i' fails, you have to detach 0...i-1
 
-Stack:
-- amd64,
-- ext4 on top of LVM on top of LUKS on top of mdraid on top of
-  NVMe and SATA drives (the SATA drive in the write-mostly mode).
+maybe something like below (complety untested).
 
-Tested (lightly):
-- suspend to RAM,
-- suspend to disk,
-- virtual machines in QEMU (both i386 and amd64 guests),
+> +			drm_panel_remove(&ctx->panel);
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to attach to DSI%d\n", i);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
 
-- GPU (Intel HD Graphics 620, with 2 Unigine benchmarks)
-- WiFi (Realtek RTL8822BE),
-- Bluetooth (Realtek RTL8822BE),
 
-- PCI soundcard (Intel HD Audio),
-- webcam.
+	drm_panel_add(&ctx->panel);
 
-Filesystems tested very lightly (mounting, listing and opening files):
-- NFS,
-- exFAT
-- NTFS via FUSE
+	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
+		if (!ctx->dsi[i])
+			continue;
 
-Nitpicks:
-    - sound output does not automatically switch from HDMI to speakers (also present on other kernels),
-    - sound issues in the Unigine tropics benchmark (no sound after switching of the sound output, program restart was necessary).
-    - problems with sending Bluetooth files from mobile phone, likely caused by previous BT experiments.
+		dev_dbg(&ctx->dsi[i]->dev, "Binding DSI %d\n", i);
 
-Greetings,
+		ctx->dsi[i]->lanes = 4;
+		ctx->dsi[i]->format = MIPI_DSI_FMT_RGB888;
+		ctx->dsi[i]->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
+					  MIPI_DSI_CLOCK_NON_CONTINUOUS;
 
-Mateusz
+		ret = mipi_dsi_attach(ctx->dsi[i]);
+		if (ret < 0) {
+			dev_err_probe(dev, ret,
+				      "Failed to attach to DSI%d\n", i);
+			goto err_detach_dsi;
+		}
+	}
+
+	return 0;
+
+err_detach_dsi:
+	while (--i >= 0)
+		if (ctx->dsi[i])
+			mipi_dsi_detach(ctx->dsi[i]);
+
+	drm_panel_remove(&ctx->panel);
+
+	return ret;
+}
+
 
