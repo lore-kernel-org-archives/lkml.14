@@ -1,341 +1,142 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00747381C4
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9865E381C4;
+	Tue, 16 Apr 2024 05:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713243724; cv=none; b=tMOMrNp06WsIpYhth5qdeXDED4YsM9FZxqHFBeXn0P3gM2PJOWJ0kUF+CmDcp/wEujlsMA8PTvxuA7cfuxdpVbchlsPHMcYA2aB+2JJDGhqoVbpCoqTh94ZS+sKkMz3rjf2SdOgEvog0vG1ULZavKz54PrSglXm/pN4FTTO7wro=
+	t=1713243839; cv=none; b=tzsKNCfbnaehl+Ke8tN0C4jiqCLIl+WG8BUXG9YwZfHCm+XdwEPhuYgmxrXckuNCDcTrI1Z2OpHEqLK0ojo7RJ8N+lSYRZp1ArMoON7WhbVxvAGIQ+shQr67Hr8HGTbVmRsBVRh3K9aizO5+T86OLOTjtCREoC803+XYoY3Dvbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713243724; c=relaxed/simple;
-	bh=6nXu3aOrzW2uYbvEpaskErs1E0cE+an6SfFwfj+x66A=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=HY4csSy1CNf/TdRAwUnU5JcF8vtWsJsgmhgC6Ozs4IstFqkTwqPiBHr6ThSP1PaIzJTDSc4x4oG46tjVGMSaX0EmmM7F54YxbK9rShXIERK94bT2cn9MkwqJyvTDQjiGFeTNiD0dC1v2hQVX03L5y9QTkBthqhwe6u71UKCTUwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7d5e487d194so293093839f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 22:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713243722; x=1713848522;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9y30aEvxJE0diCeWdI/3oXWsV75oRNkMfQ8L8q0NDzM=;
-        b=PP0Kch0HzXvO/CugYoVvzrJ2MqgT6nDjJJhIX4OkMNC73GOFLd0xz+hBWdDAbonzQt
-         eStGfPNvp83ctoZ8J9TJ3K4SpGJ0/aY0ugmjMmM/yRc0zu4rLYWzvkkp8wOvwgSmS0yq
-         HhOtQWRRirVibR8UMr50zKkarhwv1NEdylnAQMxEcT8p9OOGsc1fM4Ru955GyLEtXKIO
-         7Y0ihhC571ftHRcL+xNwNMVKfkRaXkq4yZLlc0h5zxXQR7Oa5umnPb11TKstvjLL1sev
-         BdJaVqa7720BsQ0eJvNTS7IR+R8j9rGq33SFDgiRuHqbhQbBVFmIgnm9lyyqYVDPReYY
-         9PzQ==
-X-Gm-Message-State: AOJu0YxTyY3ptk+ZYoD81Qf5PeKphzNMf7RPzLuv54EJ9Zl+j/ZwKW9P
-	qemXtkMSxATwKxxyYndS7fFY23na7FxRu+kvrVY9lMDDZvhcYTbwM4yZwkGlF+TjN5mCQPtfYfm
-	PcX9pxa7iqBGx9YYJ8EN15eh5WQd2FcV6jeMuZnzc/4prfWtBBfvb6NQ=
-X-Google-Smtp-Source: AGHT+IGp7U/5H4DmtqMWQQwot6cb3Dzjsd+Z+auUmmmwifgb5yyZqQXFJV+jv8P01f4QdbB4wkR0ArYYcqEheX+x390z84ZFjXIq
+	s=arc-20240116; t=1713243839; c=relaxed/simple;
+	bh=BmAO5cfNjGRgDXrBQ5fdgxvu5LWToVi7vPs5S0LNEhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3iRgzLIAbJExCrHf7mOy9lHAOXuiEciNfK+T3w4YAL9AwKoga/Pj/FSfdiKSDtav1El9eBEvKcm9Zlsm95VnZRARuc7Huhq71Fj+huJXS+B8X8O2s8SJEQiPx7goW2ECr6NPZJOG2oO0+FjFpIopFuUG7OqQgo937NykNGBhC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nk/jTxL2; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nk/jTxL2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713243838; x=1744779838;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BmAO5cfNjGRgDXrBQ5fdgxvu5LWToVi7vPs5S0LNEhs=;
+  b=nk/jTxL20dJoxoTLm+ti3tVNADo0s5kdSmxxnKPMM/mGrzrnrgLbBNer
+   rvo1tEJXyyPq527u4MJNWcImERvR33UvGihghDIAflAOhoCqYjw6bRKD5
+   6xy3Q0JcsKTignhz2By9YGSc7nO2a+Va+oIk2LtpRuio6/NMkUHVcRbdv
+   PAvWx7FpOHR2i0NZ5HKvukRZnPZb4kqNr2s1JQcHwPhgsYXK2NMnQjyLD
+   Wp/cmuCxGKsMnpePmMnbe+pz72btxSF87rZBCdSvLskIgj6duwAaoC4ni
+   lwjEPwDEXcghJ8iGSNHw9vfC7N8F6JJ+pcao95D19aNzqAo1JF+n7O7rJ
+   g==;
+X-CSE-ConnectionGUID: +98Uazk+Tzq3K1YUQCWEjw==
+X-CSE-MsgGUID: WcGLKVplT8masosNATRfyQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8522672"
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="8522672"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:03:57 -0700
+X-CSE-ConnectionGUID: 0pv7ImchTRa3QmIWDC+K6w==
+X-CSE-MsgGUID: kBzoafTDS/i/5W0wywmRFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="53094970"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 15 Apr 2024 22:03:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 2D40FE1; Tue, 16 Apr 2024 08:03:53 +0300 (EEST)
+Date: Tue, 16 Apr 2024 08:03:53 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240416050353.GI112498@black.fi.intel.com>
+References: <20240118060002.GV2543524@black.fi.intel.com>
+ <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
+ <ZalOCPrVA52wyFfv@google.com>
+ <20240119053756.GC2543524@black.fi.intel.com>
+ <20240119074829.GD2543524@black.fi.intel.com>
+ <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com>
+ <20240123061820.GL2543524@black.fi.intel.com>
+ <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+ <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:891e:b0:482:ead5:4f5d with SMTP id
- jc30-20020a056638891e00b00482ead54f5dmr130959jab.1.1713243722138; Mon, 15 Apr
- 2024 22:02:02 -0700 (PDT)
-Date: Mon, 15 Apr 2024 22:02:02 -0700
-In-Reply-To: <CA+LQOUdW5Sp0i1ez3LKYVyUVTaM13rmPkGd0LiWDbey+9L7NAg@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000078d84e06162fa3fb@google.com>
-Subject: Re: [syzbot] [input?] WARNING in bcm5974_start_traffic/usb_submit_urb (2)
-From: syzbot <syzbot+b064b5599f18f7ebb1e1@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, mukattreyee@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
 
-Hello,
+Hi,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in bcm5974_start_traffic/usb_submit_urb
+On Mon, Apr 15, 2024 at 06:34:00PM -0400, Esther Shimanovich wrote:
+> Hey!
+> Asking for some help on implementation.
+> So I implemented most of this, and successfully tested the quirk on 6
+> different devices with various types of discrete fixed JHL Thunderbolt
+> chips.
+> 
+> However I want to add an additional check. A device wouldn't need this
+> quirk if it already has Thunderbolt functionality built in within its
+> Root Port.
 
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 1 PID: 6593 at drivers/usb/core/urb.c:504 usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-Modules linked in:
-CPU: 1 PID: 6593 Comm: udevd Not tainted 6.9.0-rc4-syzkaller-g96fca68c4fbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60401005 (nZCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-lr : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-sp : ffff8000a0a473b0
-x29: ffff8000a0a473f0 x28: ffff0000c247f000 x27: 0000000000000001
-x26: ffff80008c6a23a8 x25: ffff0000c522f0a0 x24: ffff0000cbee4f50
-x23: ffff80008c6a8ec0 x22: dfff800000000000 x21: 0000000000000002
-x20: 0000000000000cc0 x19: ffff0000cbee4f00 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff80008ae75488 x15: 0000000000000001
-x14: 1fffe000367bda02 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 399e84fd1d74f400
-x8 : 399e84fd1d74f400 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a0a46b18 x4 : ffff80008ef75060 x3 : ffff8000805e616c
-x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
- bcm5974_start_traffic+0xe0/0x154 drivers/input/mouse/bcm5974.c:799
- bcm5974_open+0x98/0x134 drivers/input/mouse/bcm5974.c:839
- input_open_device+0x170/0x29c drivers/input/input.c:654
- evdev_open_device drivers/input/evdev.c:400 [inline]
- evdev_open+0x308/0x4b4 drivers/input/evdev.c:487
- chrdev_open+0x3c8/0x4dc fs/char_dev.c:414
- do_dentry_open+0x778/0x12b4 fs/open.c:955
- vfs_open+0x7c/0x90 fs/open.c:1089
- do_open fs/namei.c:3642 [inline]
- path_openat+0x1f6c/0x2830 fs/namei.c:3799
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 6980
-hardirqs last  enabled at (6979): [<ffff8000803749b4>] __up_console_sem kernel/printk/printk.c:341 [inline]
-hardirqs last  enabled at (6979): [<ffff8000803749b4>] __console_unlock kernel/printk/printk.c:2731 [inline]
-hardirqs last  enabled at (6979): [<ffff8000803749b4>] console_unlock+0x17c/0x3d4 kernel/printk/printk.c:3050
-hardirqs last disabled at (6980): [<ffff80008ae708d4>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:470
-softirqs last  enabled at (6580): [<ffff800080031848>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (6578): [<ffff800080031814>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-bcm5974 1-1:1.0: could not read from device
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 6593 at drivers/usb/core/urb.c:504 usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-Modules linked in:
-CPU: 0 PID: 6593 Comm: udevd Tainted: G        W          6.9.0-rc4-syzkaller-g96fca68c4fbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60401005 (nZCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-lr : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-sp : ffff8000a0a473b0
-x29: ffff8000a0a473f0 x28: ffff0000d006f000 x27: 0000000000000001
-x26: ffff80008c6a23a8 x25: ffff0000d3d5ac80 x24: ffff0000cfbc1350
-x23: ffff80008c6a8ec0 x22: dfff800000000000 x21: 0000000000000002
-x20: 0000000000000cc0 x19: ffff0000cfbc1300 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff80008ae75488 x15: 0000000000000001
-x14: 1fffe000367b9202 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 399e84fd1d74f400
-x8 : 399e84fd1d74f400 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a0a46b18 x4 : ffff80008ef75060 x3 : ffff8000805e616c
-x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
- bcm5974_start_traffic+0xe0/0x154 drivers/input/mouse/bcm5974.c:799
- bcm5974_open+0x98/0x134 drivers/input/mouse/bcm5974.c:839
- input_open_device+0x170/0x29c drivers/input/input.c:654
- evdev_open_device drivers/input/evdev.c:400 [inline]
- evdev_open+0x308/0x4b4 drivers/input/evdev.c:487
- chrdev_open+0x3c8/0x4dc fs/char_dev.c:414
- do_dentry_open+0x778/0x12b4 fs/open.c:955
- vfs_open+0x7c/0x90 fs/open.c:1089
- do_open fs/namei.c:3642 [inline]
- path_openat+0x1f6c/0x2830 fs/namei.c:3799
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 13636
-hardirqs last  enabled at (13635): [<ffff8000803749b4>] __up_console_sem kernel/printk/printk.c:341 [inline]
-hardirqs last  enabled at (13635): [<ffff8000803749b4>] __console_unlock kernel/printk/printk.c:2731 [inline]
-hardirqs last  enabled at (13635): [<ffff8000803749b4>] console_unlock+0x17c/0x3d4 kernel/printk/printk.c:3050
-hardirqs last disabled at (13636): [<ffff80008ae708d4>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:470
-softirqs last  enabled at (13242): [<ffff800080031848>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (13240): [<ffff800080031814>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-bcm5974 1-1:1.0: could not read from device
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 6593 at drivers/usb/core/urb.c:504 usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-Modules linked in:
-CPU: 0 PID: 6593 Comm: udevd Tainted: G        W          6.9.0-rc4-syzkaller-g96fca68c4fbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60401005 (nZCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-lr : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-sp : ffff8000a0a473b0
-x29: ffff8000a0a473f0 x28: ffff0000d791f000 x27: 0000000000000001
-x26: ffff80008c6a23a8 x25: ffff0000c2527c60 x24: ffff0000c9c89550
-x23: ffff80008c6a8ec0 x22: dfff800000000000 x21: 0000000000000002
-x20: 0000000000000cc0 x19: ffff0000c9c89500 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff80008ae75488 x15: 0000000000000001
-x14: 1fffe000367b9202 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 399e84fd1d74f400
-x8 : 399e84fd1d74f400 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a0a46b18 x4 : ffff80008ef75060 x3 : ffff8000805e616c
-x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
- bcm5974_start_traffic+0xe0/0x154 drivers/input/mouse/bcm5974.c:799
- bcm5974_open+0x98/0x134 drivers/input/mouse/bcm5974.c:839
- input_open_device+0x170/0x29c drivers/input/input.c:654
- evdev_open_device drivers/input/evdev.c:400 [inline]
- evdev_open+0x308/0x4b4 drivers/input/evdev.c:487
- chrdev_open+0x3c8/0x4dc fs/char_dev.c:414
- do_dentry_open+0x778/0x12b4 fs/open.c:955
- vfs_open+0x7c/0x90 fs/open.c:1089
- do_open fs/namei.c:3642 [inline]
- path_openat+0x1f6c/0x2830 fs/namei.c:3799
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 19686
-hardirqs last  enabled at (19685): [<ffff8000803749b4>] __up_console_sem kernel/printk/printk.c:341 [inline]
-hardirqs last  enabled at (19685): [<ffff8000803749b4>] __console_unlock kernel/printk/printk.c:2731 [inline]
-hardirqs last  enabled at (19685): [<ffff8000803749b4>] console_unlock+0x17c/0x3d4 kernel/printk/printk.c:3050
-hardirqs last disabled at (19686): [<ffff80008ae708d4>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:470
-softirqs last  enabled at (19436): [<ffff800080031848>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (19434): [<ffff800080031814>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-bcm5974 1-1:1.0: could not read from device
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 6593 at drivers/usb/core/urb.c:504 usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-Modules linked in:
-CPU: 0 PID: 6593 Comm: udevd Tainted: G        W          6.9.0-rc4-syzkaller-g96fca68c4fbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60401005 (nZCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-lr : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-sp : ffff8000a0a473b0
-x29: ffff8000a0a473f0 x28: ffff0000d791e000 x27: 0000000000000001
-x26: ffff80008c6a23a8 x25: ffff0000d4041580 x24: ffff0000cfdc4050
-x23: ffff80008c6a8ec0 x22: dfff800000000000 x21: 0000000000000002
-x20: 0000000000000cc0 x19: ffff0000cfdc4000 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff80008ae75488 x15: 0000000000000001
-x14: 1fffe000367b9202 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 399e84fd1d74f400
-x8 : 399e84fd1d74f400 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a0a46b18 x4 : ffff80008ef75060 x3 : ffff8000805e616c
-x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
- bcm5974_start_traffic+0xe0/0x154 drivers/input/mouse/bcm5974.c:799
- bcm5974_open+0x98/0x134 drivers/input/mouse/bcm5974.c:839
- input_open_device+0x170/0x29c drivers/input/input.c:654
- evdev_open_device drivers/input/evdev.c:400 [inline]
- evdev_open+0x308/0x4b4 drivers/input/evdev.c:487
- chrdev_open+0x3c8/0x4dc fs/char_dev.c:414
- do_dentry_open+0x778/0x12b4 fs/open.c:955
- vfs_open+0x7c/0x90 fs/open.c:1089
- do_open fs/namei.c:3642 [inline]
- path_openat+0x1f6c/0x2830 fs/namei.c:3799
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 25512
-hardirqs last  enabled at (25511): [<ffff8000803749b4>] __up_console_sem kernel/printk/printk.c:341 [inline]
-hardirqs last  enabled at (25511): [<ffff8000803749b4>] __console_unlock kernel/printk/printk.c:2731 [inline]
-hardirqs last  enabled at (25511): [<ffff8000803749b4>] console_unlock+0x17c/0x3d4 kernel/printk/printk.c:3050
-hardirqs last disabled at (25512): [<ffff80008ae708d4>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:470
-softirqs last  enabled at (23142): [<ffff800080031848>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (23140): [<ffff800080031814>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-bcm5974 1-1:1.0: could not read from device
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 6593 at drivers/usb/core/urb.c:504 usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-Modules linked in:
-CPU: 0 PID: 6593 Comm: udevd Tainted: G        W          6.9.0-rc4-syzkaller-g96fca68c4fbf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60401005 (nZCv daif +PAN -UAO -TCO -DIT +SSBS BTYPE=--)
-pc : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-lr : usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
-sp : ffff8000a0a473b0
-x29: ffff8000a0a473f0 x28: ffff0000e4099000 x27: 0000000000000001
-x26: ffff80008c6a23a8 x25: ffff0000c23b2de0 x24: ffff0000d1773650
-x23: ffff80008c6a8ec0 x22: dfff800000000000 x21: 0000000000000002
-x20: 0000000000000cc0 x19: ffff0000d1773600 x18: 0000000000000008
-x17: 0000000000000000 x16: ffff80008ae75488 x15: 0000000000000001
-x14: 1fffe000367b9202 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 399e84fd1d74f400
-x8 : 399e84fd1d74f400 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a0a46b18 x4 : ffff80008ef75060 x3 : ffff8000805e616c
-x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
-Call trace:
- usb_submit_urb+0xa00/0x1434 drivers/usb/core/urb.c:503
- bcm5974_start_traffic+0xe0/0x154 drivers/input/mouse/bcm5974.c:799
- bcm5974_open+0x98/0x134 drivers/input/mouse/bcm5974.c:839
- input_open_device+0x170/0x29c drivers/input/input.c:654
- evdev_open_device drivers/input/evdev.c:400 [inline]
- evdev_open+0x308/0x4b4 drivers/input/evdev.c:487
- chrdev_open+0x3c8/0x4dc fs/char_dev.c:414
- do_dentry_open+0x778/0x12b4 fs/open.c:955
- vfs_open+0x7c/0x90 fs/open.c:1089
- do_open fs/namei.c:3642 [inline]
- path_openat+0x1f6c/0x2830 fs/namei.c:3799
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-irq event stamp: 31378
-hardirqs last  enabled at (31377): [<ffff8000803749b4>] __up_console_sem kernel/printk/printk.c:341 [inline]
-hardirqs last  enabled at (31377): [<ffff8000803749b4>] __console_unlock kernel/printk/printk.c:2731 [inline]
-hardirqs last  enabled at (31377): [<ffff8000803749b4>] console_unlock+0x17c/0x3d4 kernel/printk/printk.c:3050
-hardirqs last disabled at (31378): [<ffff80008ae708d4>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:470
-softirqs last  enabled at (28966): [<ffff800080031848>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (28964): [<ffff800080031814>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-bcm5974 1-1:1.0: could not read from device
+There is really no "Thunderbolt functionality built in within its Root
+Port".
 
+More accurate is that the Thunderbolt/USB4 controller is integrated into
+the CPU and the PCIe tunnels go out through the CPU PCIe Root Ports.
 
-Tested on:
+> I tried to use "is_thunderbolt" as an identifier for that type of
+> device--- but when I tested on a device with a thunderbolt root port,
+> "is_thunderbolt" was false for all the Thunderbolt PCI components
+> listed below.
 
-commit:         96fca68c Merge tag 'nfsd-6.9-3' of git://git.kernel.or..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=152b3957180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fca646cf17cc616b
-dashboard link: https://syzkaller.appspot.com/bug?extid=b064b5599f18f7ebb1e1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+You should not use is_thunderbolt for anything else than with the legacy
+Apple systems.
 
-Note: no patches were applied.
+> ~ # lspci -nn | grep Thunderbolt
+> 00:07.0 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt
+> 4 PCI Express Root Port #1 [8086:9a25] (rev 01)
+> 00:07.2 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt
+> 4 PCI Express Root Port #2 [8086:9a27] (rev 01)
+> 00:0d.0 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+> Thunderbolt 4 USB Controller [8086:9a13] (rev 01)
+> 00:0d.2 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+> Thunderbolt 4 NHI #0 [8086:9a1b] (rev 01)
+> 00:0d.3 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+> Thunderbolt 4 NHI #1 [8086:9a1d] (rev 01)
+
+Okay this is integrated Thunderbolt/USB4 controller.
+
+> The device I tested was the Lenovo carbon X1 Gen 9. When
+> set_pcie_thunderbolt is run, the devices listed above return false on
+> the pci_find_next_ext_capability check.
+> 
+> I have spent some time trying to see if there are any ACPI values or
+> any alternative indicators to reliably know if a root port has
+> thunderbolt capabilities. I do see that ADBG is often set to TBT but
+> that looks like a debugging tool in ACPI.
+> 
+> I also looked through lspci -vvv and compared the output with a device
+> that has no Thunderbolt built into its CPU, which gave me nothing.
+
+For integrated and most recent systems (that's with the software
+connection manager) the tunneled PCIe ports (Root or Downstream) can be
+identified by looking at "usb4-host-interface" ACPI _DSD property. In
+addition to this there is the "External Facing Port" ACPI _DSD property
+attached to them too. Maybe these help?
+
+With the firmware connection manager there is only the "External Facing
+Port" _DSD though.
+
+The Microsoft documentation for this that we also use in Linux is here:
+
+https://learn.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
