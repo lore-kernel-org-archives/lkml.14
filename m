@@ -1,85 +1,82 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4D313698D;
-	Tue, 16 Apr 2024 15:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93184130A69;
+	Tue, 16 Apr 2024 16:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283099; cv=none; b=DhH2NdzD+y/Uryn0bwb8REObzmx+03pTe/fX3cPJKIlq3ALpC/52EFfhrNcf4whR1rHkb7JrOMQ98jsk5JHugCftX23mo8zQzleZZ1ipDF+6hwM+zyFvsJkrbgNE2uLaEfWNYmVa4V/huaEDCAtlIconPatADvelX2YPdghnwUg=
+	t=1713283228; cv=none; b=NS5SUimiaSNH+gGVUpdLQtCSmhQsNeipQRQ6u/lj3bHvZry9Pe4wdqF4PjEMxP6kg7uBw173H+MRfUBAT1IVYjzwD84YYCkh0UGqMNJ9yypenrk+CVYBoK9SnOyIvqGiPmUEeUsx+lqLrXs0w0V5r6qH8gzaXmUhUvYmvmgz7u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283099; c=relaxed/simple;
-	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=dvHtkXYKRwMpdob7SfRgd0Bzdg2qPP7Pe+XGeGX7t4f1pPDPqGWsXgaGnMLppBwoV4WfKYRJo0A3hXcbwdlPn2QyxY4O0fb+n1zW5BouAVmY2gqxWc9UP+y+8xF6yolxEIs/Jh268DC976iwTeO4PecoBG7U2H6fuQxiLRsbaHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PqsFQpc8; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713283228; c=relaxed/simple;
+	bh=Ttl5C7Gy4GPp5mcr9rDBw4CJPf8zyRH93bSjYUM6PUw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CYC6PKP1Zlfgad8KWsWTPWfO/NLyn4y0vycqoHvai9YDM6+gGQ86FMptD/lwn+echEPdgdSv/r0HFbjnGklb7LfZX1uMVLXRaFHdYerJcfO31oaMBmO2ZC72nLHasFJ8JiNyVuqXALuCqiW6P0cGZ6FqgdnHlLk/xqnzvbPP6ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHTtqi5q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PqsFQpc8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713283065; x=1713887865; i=markus.elfring@web.de;
-	bh=nllEtvvs6NqH5k5GLLTv3RLRUZlAuaXj2VxYKEvp3tQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PqsFQpc86gZnr20gXM0/CJH7lVBimxXIBRX8EskPX++2UUrD8+/3lDvtgYLPahLk
-	 FIF6KdHEOTrUTt9+UR0SUWv883QxV3d2STeApsWdWfG2mS0IwP+NxEUWKAzs9B+IE
-	 9IX3JTP+5+NEYn6VTfiwX4u1uRl+0845Rixknl+wNbnfA4CTq7sC0QQWOf40q3cdt
-	 ti0qNhF9FiEiJp9r8PrmDziND6XYHrQtIf6YC1399lFHisgsAVeuejkSZvFbnk1RR
-	 gbCApXWzzotEOwg/v5c/JQiuUcTV4IOhrv6+6fw/w9aPOItUbe8Qb8gAAU49BIbCJ
-	 IaIT61ZxYTQ5g/hEmg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MJnvf-1sCUca0uxV-00K5DT; Tue, 16
- Apr 2024 17:57:45 +0200
-Message-ID: <bf870914-3845-4d2a-b7cf-d7f9ef28e0b9@web.de>
-Date: Tue, 16 Apr 2024 17:57:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHTtqi5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 66B57C32783;
+	Tue, 16 Apr 2024 16:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713283228;
+	bh=Ttl5C7Gy4GPp5mcr9rDBw4CJPf8zyRH93bSjYUM6PUw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=UHTtqi5qBOrFeQv1bGFIzJSFC5ku7yPEZYNlGPSitOOHVinxUNIIPKO12DltSJ+KC
+	 1eSym2/Y67mQCIB0l9iCuflC2P/N+nU9eM/jFM0eswAR/wYoSwxxWzF1RLEcn5hhdY
+	 yeFDQF/Lyw5sXhZMgmldG5l2s5CwZN6D6mr0yoveEPFc2H8ZeDlgTP4iIv5T//T40L
+	 W8gXNHqLIkmXkkhT18rtgWMxIZD8E6XbKwnGLrhkseYvsqyfly62AoDnFoUCxMdqbo
+	 TPWM8YSbVJgLvnCagj7dGbj21cudqk1tlZVUlc8LWGHB0B9++yf7tYKeMroe5Wae4Z
+	 oPtXZ78aRSWYQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 54465C395C5;
+	Tue, 16 Apr 2024 16:00:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zheng Yejian <zhengyejian1@huawei.com>,
- linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240416112459.1444612-1-zhengyejian1@huawei.com>
-Subject: Re: [PATCH v2] ftrace: Fix possible use-after-free issue in
- ftrace_location()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240416112459.1444612-1-zhengyejian1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FFYeLD5kLXfbghX3LoP20kT5Jkoa52aNgyc4iVwSdKGw/0O7uyU
- qwv41NCR+Leot8428I/N1AGO/pXqoDpGaGutf3arxyq2WNvT//+LZxsdqEHovX0tzgxaM4t
- JGUclvFoGfsardn6fRzjqkh1Vj55sv0iYc1pXSEbWgqvFVd8ePKsMxbMomBQEx1ArU9vk0B
- Wluy8K0lUz00e6SMe4rJA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1fbYECY+dng=;+1DYhBjlCdbR2Vf5//lqiN4Yw3R
- gNcEV/8sH0uXm44607oje8/jq9JLdXYw4Xe95o1zObM+k+7+0qaztqAGjgIychDdbU3x22SVo
- irESF06Lp4g/5+5RNK79CExkXtcXgZcUezK/62FDoRmI6d2W0J9QQRXKYta7wYbiqWZ3oSlYl
- FAzozpHm5bOnkhUGgZ1Un2yBujACqHbvhXSqY5UOLyF3oszp8PGdxj+F6+bx1Vr7jPzcdeNyi
- npHhH2KIHpfwCujIDx+uLJdAvPWLleA35IhjlydlWNBzl4UtY39BBT63gTUfV49Ir+9AgY9j9
- 9UgG+hI3AjoBGjc3keSsS7a8xhmxT2ZJ3yut5gI6Rr1TzeSqm/n1Sk4/weli/ujGgMokrd1kc
- XscO/DNqhvXHSKRyQdcwjdA0Ww/DYPZE4k9hba/0H6uPf+1VMF41XZugCHLMFq1Q4moxoDcAl
- HGGY+KAdh73GUDeadhB9smvRhMBpg8S5yXCEXnzu+QFMh+BJEcWQL+TFpWVL3Moz2b9pFYP+n
- KaMBJYrRmHcOcBW6+GT1slz0ze0vr6ThTvykO6y/welS9yT2kM2T2H3tQKGhC3qW3r28xweYl
- 2VQAJi/deb+TRNcURXJJ7vVbywo/tDW53wI4wN+3C90/eV9mr3GhceMNU4NY/FsnnX+ucXlqk
- ADGb+GVVmq5KAvcSfMzAcTgMsT6KHoBxQmlPwxYc6l3tJH6D6AXuI0Yc0EH927vWLIqFO/ubb
- B2ug/kiuhb3HjPxAYMyVs9WMjHk+fJ0rs9qxo0UNdeUx1/5h2WHuwLN5toOGr2GmJLuygsTr9
- G0f+3yWUUE0x99PN+ETGwDaTfYddLkaVplER19FeRlQQs=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 bpf-next] bpf: Harden and/or/xor value tracking
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171328322834.16684.6567796200399765338.git-patchwork-notify@kernel.org>
+Date: Tue, 16 Apr 2024 16:00:28 +0000
+References: <20240416115303.331688-1-harishankar.vishwanathan@gmail.com>
+In-Reply-To: <20240416115303.331688-1-harishankar.vishwanathan@gmail.com>
+To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
+Cc: ast@kernel.org, harishankar.vishwanathan@rutgers.edu,
+ sn624@cs.rutgers.edu, sn349@cs.rutgers.edu, m.shachnai@rutgers.edu,
+ paul@isovalent.com, srinivas.narayana@rutgers.edu,
+ santosh.nagarakatte@rutgers.edu, daniel@iogearbox.net,
+ john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> To fix it, we hold rcu lock as lookuping ftrace record, and call
-> synchronize_rcu() before freeing any ftrace pages.
+Hello:
 
-I suggest to convert this description into an imperative wording.
+This patch was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-Regards,
-Markus
+On Tue, 16 Apr 2024 07:53:02 -0400 you wrote:
+> This patch addresses a latent unsoundness issue in the
+> scalar(32)_min_max_and/or/xor functions. While it is not a bugfix, it
+> ensures that the functions produce sound outputs for all inputs.
+> 
+> The issue occurs in these functions when setting signed bounds. The
+> following example illustrates the issue for scalar_min_max_and(), but it
+> applies to the other functions.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3,bpf-next] bpf: Harden and/or/xor value tracking
+    https://git.kernel.org/bpf/bpf-next/c/1f586614f3ff
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
