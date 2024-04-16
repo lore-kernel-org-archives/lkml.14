@@ -1,100 +1,199 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B274ABA42;
-	Tue, 16 Apr 2024 02:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A8A8F5A;
+	Tue, 16 Apr 2024 02:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713233037; cv=none; b=Qmkpyd7WXjChlCoQza5ctY7dSZvWnzbDNKVF4xWILHV2ddxFc8CCgpWffsMJp5ESw9yFwG/vLBjgzuE33aO5gRvQELznd8xvZbxTsPmz5rTECO68KcXyunfu0PA2miE7DLBDtGoSzVwg5vAiozRUP15wljmqtDZ7h9RQdt79L6A=
+	t=1713233306; cv=none; b=qRPszWGZc2NzdUomLtBpgC7V5uzBPW5sEs4Btk9mBd1y1NI3zn7ilnzfJoWA2WGuY6wYhDm9OcNdTndVksNZ4jzYK8BtO3R3ItrAdog3l501O37X5KiZalEHrtYO2K+v784hkbkr4oflcfcsz+OgHujErztGi0U7KDxnqPlNjqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713233037; c=relaxed/simple;
-	bh=x2n7YztkZD11QLiH+N5XoPcJPoWlyoWKd+CrQ56g3vI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P/lGssdfXF9Y/GUTT3Xn7JZpnSL2ZLteuAMdjtA9RVbGpM8nSrQso3jezzVItdAi/1TwcsYRLRDT37ousHRz0+gubNIIzi1sKhKIHEZ/5u/6sVhZruEIg2T3wOiYFngmG6uPPNlQphfM2pUMB9rfEMLDniZSs6S6HVQNL3JqI14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IFNxCzpK; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713233306; c=relaxed/simple;
+	bh=VhAfUesBXIj5iQJjWVdk62eijlIt6xnT4JPcmMlBOCg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eWhXwpxhiUpUbvac2AC7zGa7je0tLARyUrREMVDAyQPGvj4uLlGnnmqmRqS3Y5gO2N0DtsjCrfOJALxrF0b8BveDdnF5kS2rTPfue+6sQUKSH6F4XpzDt7GkjoKzFmBDwdOARewQPxD8nSyoSXm2VfFG8mhqO8lnLmaGuzPjFhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ox0pdq59; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IFNxCzpK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 029581C0003;
-	Tue, 16 Apr 2024 02:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713233025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jdhfOsUByq8rUAvMMWe9XMEbUc95e1ogkd9aQZm1obo=;
-	b=IFNxCzpKpOnKB5fD2zdxHmr4+x/odprRgDb1rV44iTZF88RaqG4RxMU+ttqzXq8OrutgfO
-	VAmz+TbMrq/IY69cjJIP0da5VNZ7cKiBkq1UnoOmzgOrxs2gTErWowdwuCzROabUtkwOsS
-	ZxDJnk31eyhyeF9s34aBwWGX+UOQfnnLyXXCMrTuD6A+J7WvE/gdZYnmhqZ4H+io4spEuz
-	SsxErIMnd13MRzCr1PCtxoET2JUPs7qWnI/3IxPjFHvh5XrCHLCjwwvZlUVdA+6IazbD8v
-	/mgR8byu4c7wptGosm3glSCwJcJHIDkiErIHWN8fCCWJHdd59bPXayxzBYieug==
-Date: Tue, 16 Apr 2024 04:03:29 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Martin Tuma <martin.tuma@digiteqautomotive.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>, Hugues Fruchet
- <hugues.fruchet@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Sakari
- Ailus <sakari.ailus@linux.intel.com>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
- Sowjanya Komatineni <skomatineni@nvidia.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Hans Verkuil
- <hverkuil@xs4all.nl>, Sergey Kozlov <serjk@netup.ru>, Abylay Ospan
- <aospan@netup.ru>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Dmitry
- Osipenko <digetx@gmail.com>, Stanimir Varbanov
- <stanimir.k.varbanov@gmail.com>, Vikash Garodia
- <quic_vgarodia@quicinc.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, Benjamin Mugnier
- <benjamin.mugnier@foss.st.com>, Sylvain Petinot
- <sylvain.petinot@foss.st.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>, Niklas =?UTF-8?Q?S=C3=B6derl?=
- =?UTF-8?Q?und?= <niklas.soderlund+renesas@ragnatech.se>, Pavel Machek
- <pavel@ucw.cz>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
- linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 10/35] staging: media: tegra-video: Use swap macro
-Message-ID: <20240416040329.31547d8f@booty>
-In-Reply-To: <20240415-fix-cocci-v1-10-477afb23728b@chromium.org>
-References: <20240415-fix-cocci-v1-0-477afb23728b@chromium.org>
-	<20240415-fix-cocci-v1-10-477afb23728b@chromium.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ox0pdq59"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E5ACC4AF08;
+	Tue, 16 Apr 2024 02:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713233306;
+	bh=VhAfUesBXIj5iQJjWVdk62eijlIt6xnT4JPcmMlBOCg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ox0pdq591S2K5TAaKiWyCXXIFihPzLZvfqLORNG2uZZHOYzxjQWBl3hMwQr0YdEZ0
+	 xUhcaGrKSJ75ODL2KKBR1kjjmE3WaoMrj7xhV07QpqJ7gbo+cQTPSr+rOQKQV9q4WC
+	 p9gaJK/aIBU55qGUDGXvFn6CHTH43sNQT5Vf5T6Lu/egzWTJE2BeWqM3SzlZe8pLVu
+	 uRKkoowOqxpSo9PLAIA5SR5gdAyYAB35i3qZ7jXZJhTKFjWO9nTtOGZ9uD3nDPk1u2
+	 r/1nL8cwpjwAoT0/QhvQaQ9Zzm7aGIv3nMgAR4nQgmYvnnU6BPAXyWLdaEY19byUYA
+	 ARxmKPBOPg9Ww==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2da63269e75so21475311fa.1;
+        Mon, 15 Apr 2024 19:08:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgfNDolAhFodh7BJE9GImn9dl5NzQuOkZYQyj8VoPNCa0kfy/x/VQ//0T83hyQZwj7iw6NxFClUm7IvOoU9QECS/xahAK+rhT/68x3
+X-Gm-Message-State: AOJu0YwsMZxxCLOepcgkvcznVbycGezXy1Ven5IVv4iORsd3eoppkl9l
+	wlp0dIK98GwlPT3JtecxnHxxhXr7M6jmtvJSHCeHP8QgATFAwvKHIacZO4uymOuZCFcTVT7xUtp
+	/2gNw4WvcDKDrlLvUdlAgiGD86FI=
+X-Google-Smtp-Source: AGHT+IEZzcEKCAwWWXXGi4mPBa5xOKOPXU4ktX69gk3Gxxt7LGojYmlRbPFqE8Ukhi/e3snCae5UAHyrWBfHIgQ9OO4=
+X-Received: by 2002:a2e:8758:0:b0:2d8:3bef:129 with SMTP id
+ q24-20020a2e8758000000b002d83bef0129mr8357927ljj.10.1713233304895; Mon, 15
+ Apr 2024 19:08:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <20240414174139.3001175-1-masahiroy@kernel.org>
+In-Reply-To: <20240414174139.3001175-1-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 16 Apr 2024 11:07:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATqLwewFaMNEy6yDguv5mNoGZJus9p4kbyMOGV9T+yopQ@mail.gmail.com>
+Message-ID: <CAK7LNATqLwewFaMNEy6yDguv5mNoGZJus9p4kbyMOGV9T+yopQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: buildtar: add comments about inconsistent package generation
+To: linux-kbuild@vger.kernel.org
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Ricardo,
+On Mon, Apr 15, 2024 at 2:42=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> scripts/package/buildtar checks some kernel packages, and copies the
+> first image found. This may potentially produce an inconsistent (and
+> possibly wrong) package.
+>
+> For instance, the for-loop for arm64 checks Image.{bz2,gz,lz4,lzma,lzo},
+> and vmlinuz.efi, then copies the first image found, which might be a
+> stale image.
+>
+> When CONFIG_EFI_ZBOOT is enabled in the pristine source tree,
+> 'make ARCH=3Darm64 tar-pkg' will build and copy vmlinuz.efi. This is the
+> expected behavior.
+>
+> If you build the kernel with CONFIG_EFI_ZBOOT, Image.gz will be created,
 
-On Mon, 15 Apr 2024 19:34:27 +0000
-Ricardo Ribalda <ribalda@chromium.org> wrote:
 
-> Makes the code simpler and cocci happier:
-> 
-> drivers/staging/media/tegra-video/tegra20.c:324:44-45: WARNING opportunity for swap()
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+The correct sentence is
 
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+If you build the kernel with CONFIG_EFI_ZBOOT disabled, ...
 
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+
+
+
+
+
+> which will remain in the build directory unless you clean it. Even if
+> CONFIG_EFI_ZBOOT is turned on later, 'make ARCH=3Darm64 tar-pkg' will cop=
+y
+> stale Image.gz instead of the latest vmlinuz.efi, as Image.gz takes
+> precedence over vmlinuz.efi.
+>
+> In summary, the code "[ -f ... ] && cp" does not consistently produce
+> the desired outcome.
+>
+> The other package scripts are deterministic; scripts/package/mkdebian,
+> for example, chooses a copied kernel image based on CONFIG options.
+>
+> I removed [ -f ... ] checks from x86, alpha, parisc, and the default
+> because they have a single kernel image to copy. If it is missing, it
+> should be an error.
+>
+> I did not modify the code for mips, arm64, riscv. Instead, I left some
+> comments. Eventually, someone may fix the code, or at the very least,
+> it may discourage the copy-pasting of incorrect code.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  scripts/package/buildtar | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/package/buildtar b/scripts/package/buildtar
+> index 72c91a1b832f..ed8d9b496305 100755
+> --- a/scripts/package/buildtar
+> +++ b/scripts/package/buildtar
+> @@ -53,18 +53,24 @@ cp -v -- "${objtree}/vmlinux" "${tmpdir}/boot/vmlinux=
+-${KERNELRELEASE}"
+>  #
+>  # Install arch-specific kernel image(s)
+>  #
+> +# Note:
+> +#   mips, arm64, and riscv copy the first image found. This may not prod=
+uce
+> +#   the desired outcome because it may pick up a stale file remaining in=
+ the
+> +#   build tree.
+> +#
+>  case "${ARCH}" in
+>         x86|i386|x86_64)
+> -               [ -f "${objtree}/arch/x86/boot/bzImage" ] && cp -v -- "${=
+objtree}/arch/x86/boot/bzImage" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
+> +               cp -v -- "${objtree}/arch/x86/boot/bzImage" "${tmpdir}/bo=
+ot/vmlinuz-${KERNELRELEASE}"
+>                 ;;
+>         alpha)
+> -               [ -f "${objtree}/arch/alpha/boot/vmlinux.gz" ] && cp -v -=
+- "${objtree}/arch/alpha/boot/vmlinux.gz" "${tmpdir}/boot/vmlinuz-${KERNELR=
+ELEASE}"
+> +               cp -v -- "${objtree}/arch/alpha/boot/vmlinux.gz" "${tmpdi=
+r}/boot/vmlinuz-${KERNELRELEASE}"
+>                 ;;
+>         parisc*)
+> -               [ -f "${KBUILD_IMAGE}" ] && cp -v -- "${KBUILD_IMAGE}" "$=
+{tmpdir}/boot/vmlinux-${KERNELRELEASE}"
+> +               cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinux-${KERN=
+ELRELEASE}"
+>                 [ -f "${objtree}/lifimage" ] && cp -v -- "${objtree}/lifi=
+mage" "${tmpdir}/boot/lifimage-${KERNELRELEASE}"
+>                 ;;
+>         mips)
+> +               # Please note the following code may copy a stale file.
+>                 if [ -f "${objtree}/arch/mips/boot/compressed/vmlinux.bin=
+" ]; then
+>                         cp -v -- "${objtree}/arch/mips/boot/compressed/vm=
+linux.bin" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
+>                 elif [ -f "${objtree}/arch/mips/boot/compressed/vmlinux.e=
+coff" ]; then
+> @@ -86,6 +92,7 @@ case "${ARCH}" in
+>                 fi
+>                 ;;
+>         arm64)
+> +               # Please note the following code may copy a stale file.
+>                 for i in Image.bz2 Image.gz Image.lz4 Image.lzma Image.lz=
+o vmlinuz.efi ; do
+>                         if [ -f "${objtree}/arch/arm64/boot/${i}" ] ; the=
+n
+>                                 cp -v -- "${objtree}/arch/arm64/boot/${i}=
+" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
+> @@ -94,6 +101,7 @@ case "${ARCH}" in
+>                 done
+>                 ;;
+>         riscv)
+> +               # Please note the following code may copy a stale file.
+>                 for i in Image.bz2 Image.gz Image; do
+>                         if [ -f "${objtree}/arch/riscv/boot/${i}" ] ; the=
+n
+>                                 cp -v -- "${objtree}/arch/riscv/boot/${i}=
+" "${tmpdir}/boot/vmlinux-${KERNELRELEASE}"
+> @@ -102,7 +110,7 @@ case "${ARCH}" in
+>                 done
+>                 ;;
+>         *)
+> -               [ -f "${KBUILD_IMAGE}" ] && cp -v -- "${KBUILD_IMAGE}" "$=
+{tmpdir}/boot/vmlinux-kbuild-${KERNELRELEASE}"
+> +               cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinux-kbuild=
+-${KERNELRELEASE}"
+>                 echo "" >&2
+>                 echo '** ** **  WARNING  ** ** **' >&2
+>                 echo "" >&2
+> --
+> 2.40.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
