@@ -1,100 +1,125 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6427112A163;
-	Tue, 16 Apr 2024 12:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D1C12AACA;
+	Tue, 16 Apr 2024 12:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713269684; cv=none; b=bnvr7kTsmzhFPYHDyJaTicyxcXliQLtzVBUmCNT9ysZKSAY2W5YW+/hIgFO+GMI2HQFWGFytq9vhl8LbQU+6pIcZcEQ8bEJdLgHVJaDMDOb3mVPHr3cXIG99hArPTGdfSlNLcjGuWAZ+T1O//XIxjD1CybFM6y8PhVtC54/MeTE=
+	t=1713269723; cv=none; b=UrFm/NOTVNse0HQL22Ft0JHkaa+dj69J6kiPDO9UCGpQPY/urYTUFeJIA094UjB4cWsNLWbLomzrHis3ffIbQawqHRA1JE6KGcH3hIT4rGzTuS70F2Lq3+LjGpmKWGVc321yL2EyYrLN4ZnjTS9UoEcSCrjdH2CMQCIZptFOP3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713269684; c=relaxed/simple;
-	bh=F3vyWR29X0lXAaTUtv3IWAlN8f9D6N5W3tJOFc7fnmo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bp5ileCkouCkVYdBy6WSf92Ptz0VXbf0IQ+lhYVx/OuXusu7KYA+ms0OUrN2cG8C7wJLCuGjx+LrSwpyAkO5cqLHtTNLiZ13d4sJ/uIPCSNCiXJt/0+8Zop2f+y9rN6wJ4pkjTYypuLxM27D3qNEjvwMaNgYvEswdXSdALvOXVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=DzzFlkEU; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713269723; c=relaxed/simple;
+	bh=Pn2alMweH9AQ/4nJwvXEDdpqKLi+Ur2nCRL4Qlf1KC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2Msh5JmTfhLuK53D8m1CrYD8L4XE0YV0boINHhi2ZygMTaNhTRdEKYMDGp/o+/PKpWGjJAYKe2G/nfUxnpRk+3LDjCW/emnBEBf9aBuQUMNckp7DqqZVyhqBZ3p1tuVBVz1gHjnYgZnihsHL+BLiZSGLEa8cx++ZA3Rr/R5D18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAL+717C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="DzzFlkEU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713269670; x=1713874470; i=markus.elfring@web.de;
-	bh=Lv4Wq6qu9p1ZBlPnYwsPtJ9DrW7B8a2DGJ+zDiVy+Vo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DzzFlkEUke+DhEGxPHdIS8e4/ngQIMUtZ8HEZd1HZgFq6/3lNsQorRZX1khJ9Xwt
-	 0SGBJYOr+f/Dd3q8G4gJWCI+OR+6jFNWWoWBY1ra4Nv/dN6urer/7z/Tl7epWgF2B
-	 uydQzFiYsdAg+egdNjjkO8pYx6Dp55rvzfdB7q91aevhS8/NZnjWfzqjTeBb/I3ba
-	 hYVB6vNVLFlruAKhELns3sYA/a4DeEH/JolGvjt4w70i5L2ZvvrA+lqOmxcr/ib3v
-	 ii4b9cFFFqJs7GTx1jJ/4eevBEsJUqyL5AVkAxXOaDgakG1uSPihBBHFZSEhQSZYC
-	 zC62WaDdQp7G0L76IA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M28WJ-1rullX0mPx-002YIA; Tue, 16
- Apr 2024 14:14:30 +0200
-Message-ID: <33a38d7e-26da-46e0-90d4-7137f9ec0c90@web.de>
-Date: Tue, 16 Apr 2024 14:14:27 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAL+717C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8351C113CE;
+	Tue, 16 Apr 2024 12:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713269723;
+	bh=Pn2alMweH9AQ/4nJwvXEDdpqKLi+Ur2nCRL4Qlf1KC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fAL+717Cp96qKDTmVR1p8gTgJLTXDR+pZ7qM9UmfwPrP9qjDZhfocycKBAc0HzXbv
+	 ZJrGRocKM5Gk2VdTrhCjKTS9TqVbRwEwCnXLMMWXQ4nE6bR/D5FeadFUb7wOHplYAW
+	 ed/QFXjaArF/gjiZ/iWNYhfmXkEj9OQeHkOql7tntP/TXeUNn4c1kVtx/2PQA50yfX
+	 sTk4jNZ2cKhK0EJQnEji/o7w3ww8hgzOu3o3O4KjfYadow93fD4EziL/EOVMK1Eajs
+	 +6KiWWNkX0qqjSn5gLifarM/nazrJ/zovC3l5BEBkFa1f47ShMyHoi0CtQXTtbBbre
+	 gJ+K9bfV5NLMw==
+Date: Tue, 16 Apr 2024 13:15:19 +0100
+From: Lee Jones <lee@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend
+ if pwm-leds exist
+Message-ID: <20240416121519.GS2399047@google.com>
+References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
+ <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+ <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [0/2] powerpc/powernv/vas: Adjustments for two function
- implementations
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <7be66990-de9e-488b-ad6d-fafd1c7bb34c@web.de>
- <ee6022b8-3aeb-4e6e-99f5-2668dd344e0a@web.de> <87plupbm0c.fsf@mail.lhotse>
- <795ca003-4231-45c0-8bb6-178597950fa5@csgroup.eu>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <795ca003-4231-45c0-8bb6-178597950fa5@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hsxChQyFzhPEKKvYCyvy7NgsHW1pjrvs8WruIhj+JKDV7dHWRe0
- I4b/QJ8s8AXfyqEPsqrF3pGy3hn/sZ+YDLWr95BvPAPEz1iabte7Xs9qjteD3zPuY3bU47F
- XW9ujYjwb5Ccas8EWQ2MHwVzl/UnDEYgne3L/Wx1VhSNyLAeOQUpOI803P39hx1YTXPc2OO
- IuN9VbCGqj8aIop4FE3tg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cgnuqKGvJbs=;A9nNALScgBDWwff956u51qJ3ddr
- IwHS8JlxBuV4T5W7RhoUOEBY/k5hzh1H36Nvz681MqMc/Bt7X4y7ROd7hwnkWwz1GlenSxin8
- rETv+oYf/jAVXATFkGSiM92DXMC5jKaPJDdnc0QAL2QhOyJ4YyiWehUfXE5guZ/cgkGjgX62U
- k2ythW+58+lwecDDVYYL5+PxUsPJiLU8Zs5Zh2aJQB+jzsF8gFdbRgVrCh1hWfuEtEbQTTTXe
- JdDTK7oPYgUHPa6WhdQRG8Mjdqft1ZSR+gQRdIU7wBLI7uSaS/R1fXVPh27xpU5B6PwusfQlL
- GPjqUv0xkIuEfnYb3RJJTOqrc8WMxp4DuEAICG+MWlz5U5EwjDl2B050SoMaa0BOZkPybV62K
- VUW1aGirQj9Bh7Tak4lhDw4vZwwG6swjpetwTsa29/9P0vBZTjJ7EWQPtS8GYg06RjMX6SJIi
- 3H1arPp0IZvpSMBLt47D6xzFpq6/aJoa3ZZ2vk2BYTkrdnaFJOvU5tN7WUhAJiBbEh0RF7lou
- V4ABevcKcEDkD60OQyW2eLpJL/TuyJ9SFhi4vI7Ftw0gFCjuEmysuw2F/Mfol0zQFpxj4MhOV
- Sbo17qHtgKSZLewLIVsCDPO6VoWmmiLmtQBBKYNZ9/D0RnhX1FKcow29VoZYkecg592P92F3K
- Z6JJ6m/oZ7MGneIspDw8jSKSET8DNH2aJ1fwn/wHTewvizMNI/t3QfTLaIzZgJkds+wyBERZp
- 0AuiMSAbgoWWuxOhLSIzt0mvHFE5rX4rCBoBA/rrFgZH6pk+/OJBcSySbwGc3zk4nSkmL1IbS
- vEVhAV0RbpMZDjzbF3ZDBuM5HgpXM1v0IzO0IG189sfSc=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
 
-> This is explicit in Kernel documentation:
->
-> /**
->   * kfree - free previously allocated memory
->   * @object: pointer returned by kmalloc() or kmem_cache_alloc()
->   *
->   * If @object is NULL, no operation is performed.
->   */
->
-> That's exactly the same behaviour as free() in libc.
->
-> So Coccinelle should be fixed if it reports an error for that.
+On Tue, 16 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
 
-Redundant function calls can occasionally be avoided accordingly,
-can't they?
+> On 06.03.24 09:18, Uwe Kleine-König wrote:
+> > On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>
+> >> Uwe, I noticed a report about a regression in bugzilla.kernel.org that
+> >> apparently is caused by a change of yours. As many (most?) kernel
+> >> developers don't keep an eye on it, I decided to forward it by mail.
+> >>
+> >> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> >> not CCed them in mails like this.
+> >>
+> >> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218559 :
+> >>
+> >>> Commit 76fe464c8e64e71b2e4af11edeef0e5d85eeb6aa ("leds: pwm: Don't
+> >>> disable the PWM when the LED should be off") prevents stm32mp1xx based
+> >>> targets from entering suspend if pwm-leds exist, as the stm32 PWM driver
+> >>> refuses to enter suspend if any PWM channels are still active ("PWM 0
+> >>> still in use by consumer" see stm32_pwm_suspend in drivers/pwm/stm32-pwm.c).
+> >>>
+> >>> Reverting the mentioned commit fixes this behaviour but I'm not
+> >>> certain if this is a problem with stm32-pwm or pwm-leds (what is the
+> >>> usual behaviour for suspend with active PWM channels?).
+> > 
+> > I'd assume the following patch fixes this report. I didn't test it
+> > though.
+> 
+> Jakob confirmed it helped in the bugzilla ticket. But the patch since
+> then didn't make any progress afaics -- or did it and I just missed it
+> in my search?
 
-Regards,
-Markus
+[...] 
+
+> > ---->8----
+> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
+> > 
+> > On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> > the PWM because an enabled PWM refuses to suspend. So check the
+> > LED_SUSPENDED flag and depending on that set the .enabled property.
+> > 
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
+> > Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/leds/leds-pwm.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> > index 4e3936a39d0e..e1b414b40353 100644
+> > --- a/drivers/leds/leds-pwm.c
+> > +++ b/drivers/leds/leds-pwm.c
+> > @@ -53,7 +53,13 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+> >  		duty = led_dat->pwmstate.period - duty;
+> >  
+> >  	led_dat->pwmstate.duty_cycle = duty;
+> > -	led_dat->pwmstate.enabled = true;
+> > +	/*
+> > +	 * Disabling a PWM doesn't guarantee that it emits the inactive level.
+> > +	 * So keep it on. Only for suspending the PWM should be disabled because
+> > +	 * otherwise it refuses to suspend. The possible downside is that the
+> > +	 * LED might stay (or even go) on.
+> > +	 */
+> > +	led_dat->pwmstate.enabled = !(led_cdev->flags & LED_SUSPENDED);
+> >  	return pwm_apply_might_sleep(led_dat->pwm, &led_dat->pwmstate);
+> >  }
+> > 
+> > base-commit: 15facbd7bd3dbfa04721cb71e69954eb4686cb9e
+> > ---->8----
+
+Did you submit this?  I don't see it in LORE or in my inbox.
+
+-- 
+Lee Jones [李琼斯]
