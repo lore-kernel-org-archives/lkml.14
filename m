@@ -1,137 +1,130 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E007C3BBD5
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAFC6EB75
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713252102; cv=none; b=npbEfzoea1UDWvMV3VlAthJGa/3sYnF92ZYuV5MDH4wRYDq/LdF1mBGCFj4lok1BtsK/1tbaNwo7W3cSgc+ehqP46+qRJMhfEyHQ0MQAWw4J5QZfhH8djUz57DZC/vYBsR88O2G7lCxQmGy/aLNECuWVmcivdNi074H6j/ci444=
+	t=1713252157; cv=none; b=tudMYcEZn+uRBnQXPL963iecIzvp3FEa01sXshqHjYGpTkEvmR0Sjgo36Yc3a1jEyOAghbFC71G31s0Md1tULqGJsD3DVyBTinwoPKl0IYHkivICYt4oPbRPiZUoLZAuI7FXL1hBIMNxmObJdvBUtflw4Fxn85OxfnLpBlGg4IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713252102; c=relaxed/simple;
-	bh=SLCPj/7F2BL7ZTrop3RmKKifmAw4+m++fdAnYSbkqjY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iQMLfa6GvTaSjwu3CtYhscpol4A2dm3fQMQjz+HX4qvx+QpbniQFiJGwY7JXDPDTjfp0GW2BgXck5EJYyPJuxoAzXtel2hogCAL7yW/e0DlX+bPzk8YAMQzaPQUj+Tl3pDFGYnBh7uucFBAhIsYItt9p8HFpWxcXa59/l0vlkmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=S4ACNGQG; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713252157; c=relaxed/simple;
+	bh=ldhPdHnQri1NIU1BzeydenqBXGRsyMGWIV6zIFrekog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UhKhj3pQKtGdg3GLWhMvoBgF9zM2EWiknKED6YcPU6mU1kjgPIJy3aWCZHFCFw8r1gKL9Bq+tp7evTM0ujEN/vw+BVrsshe7q+NGIlP8T+cbXUZbmayvce02SlVsexucBMPnQAhRAS8OOhAAcFK6Pt3imMea4qTLy6ki+EN4z10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GJeTp0sU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S4ACNGQG"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed01c63657so3633741b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713252100; x=1713856900; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KfZXB2BpFfIoHxhagie2lEibr4RlvT9R7XTtuJHOq8g=;
-        b=S4ACNGQGdxcSbMvny3VTIvmT2XWmaGCM52OqjpcAfPNtihycQOUV7Cn31t3opODFhS
-         7TegWWnP2NVy26tYouY+a36uerSkYCy0UJHXqubGmlHzEO2feuIXY0m6m5Os4VtLjWHB
-         GwZZrojpoIU4PPv+/ORpae4xdDlVNHABz49Og=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GJeTp0sU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713252154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nmk7fIoAJf7GEF8X9MBAgB1EYb3WS+UQejNBC99ARNc=;
+	b=GJeTp0sUYxrLnmQGnjA0OtGZUH6//BbABH870pNrshsfMdkTk/UYzMN7v/HZ4jcPSu+DZE
+	neqxKmpo298R61JFCmDKjcU8xy3yW/P/NFlI+3ne/ibFPsPnpvwQ0r7puqHr4dZVV2Pij4
+	hVmG6k5UR2eX4ZOQA5oRAlqFcZyU408=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-30-DTBF9ALBOEyXzcm-xrvFNw-1; Tue, 16 Apr 2024 03:22:33 -0400
+X-MC-Unique: DTBF9ALBOEyXzcm-xrvFNw-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2a482a2360aso3704278a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:22:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713252100; x=1713856900;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KfZXB2BpFfIoHxhagie2lEibr4RlvT9R7XTtuJHOq8g=;
-        b=HF7T4BLWzxFNemkowzPCvWSurlnJLoBqQ/V3MhjcvY+fxCK/ccs9YyRMbeY2MX2G4D
-         R9q5OR4ZQ1C0HfpVE23ntaGDtVGM2z5YTSdukzTkdmmbymemvVeRrRIgcmbJwxghfW3M
-         2klo3UvII0ZkqyzZccmSBvSSzGih0Rg6qkxmktO/AOO5H+HrBV/H49fnYwCUKioLfaqA
-         ANiYsGBo/Zulx0bhbloB4pMjshYDA7FKnq9HlTGINAs3YMqKT2hdaZzOCtsDhGtK/fWb
-         iyxc7H38bJ02/OFYLWChGl98hml/x3yGMBXGvz3bQQYxSuht4RCeX2Jt8pbZVxJKeokM
-         FbPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxReDtfoPHFNVlqv5Ba2BQt6hJ6k2J3jDIOXph47TKc7EosJxvNGs9pqkqNpY99qL9Aptn1VIBgLf1pJd9kVJqMPuUi6sUK6vOQGOD
-X-Gm-Message-State: AOJu0YzMF4wp1UF34KV2pEOMU4D9KGbh0zmHfbEcsYeKbSMd8mttNTSK
-	k8MZABDv08iejdEjqtuuiVjO+1LXTDYc/uKylZ/WJH3y+CSqCfde4WNepiJDcQ==
-X-Google-Smtp-Source: AGHT+IE7afWFhGfCo8YNIeMgjqQi06GV4Qk3C+gWZbRMgAZZl4K/rVD0mwLMuSGHZpf8I9hBZPpmJg==
-X-Received: by 2002:a05:6a20:2d08:b0:1a9:ab88:f938 with SMTP id g8-20020a056a202d0800b001a9ab88f938mr10966169pzl.19.1713252100098;
-        Tue, 16 Apr 2024 00:21:40 -0700 (PDT)
-Received: from yuanhsinte1.c.googlers.com (88.216.124.34.bc.googleusercontent.com. [34.124.216.88])
-        by smtp.gmail.com with ESMTPSA id j4-20020a056a00234400b006ead47a65d1sm8323679pfj.109.2024.04.16.00.21.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 00:21:39 -0700 (PDT)
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Tue, 16 Apr 2024 07:21:35 +0000
-Subject: [PATCH RESEND v3] drm/bridge: anx7625: Update audio status while
- detecting
+        d=1e100.net; s=20230601; t=1713252152; x=1713856952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nmk7fIoAJf7GEF8X9MBAgB1EYb3WS+UQejNBC99ARNc=;
+        b=TNFZokzQcGT6pe81wCkKZXbJeaJja9Szgwuvy6idKr8J7SEXG1OkeOySsizfY1ktYO
+         kbbJzxkqc4E0Ns4e2rkSjN/tP+Kho2FULnuVmzECENIjwOblLlxm7tzne+sb7jtpCYJO
+         FcIMRHMaUbbm1X1z7GWheSR+mbH/pO7B0jvAEyvx9PdYKLInpyQXaNRt8n1x1YeEvSxG
+         EoLD6UfmznUfWRPHu7lsDSdNhWvUpVmstPzy5X9QnKzW//onM/Tfg0TUEDoHxVO0+PuB
+         bXW3MkcJgnjnIcDXB6R5qCb7p2+yuelGxvUMpiu8WKsKnVwFiaZ7ZEqHbA2/hPA8frLI
+         tZrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWH4m1FbgCA455L3V3Ott9nRrMEJ0kQvQ/pmjHIljunTFD91FAyvHgfMPq6+HJUs8UPiEe/6db7G303OBDHYihPvWlN6aQvV2K42bE8
+X-Gm-Message-State: AOJu0YzmU9Oe9M4T23McOng4CUZ7sNFGp2xwqnnHLogCOOAhSQWHWaab
+	hyV7imC0K+m+N1VKvcQk1UKzin3LRoWg0YUxVWYEv4xBD5AUoO80erx8l+ApQgO4ihdgndWNosM
+	Rynzul0q6um+Bpb99Wv0es5Yau+fcpFe6s2YJivUHIfrv+NVEL68k28pb7KHR1UYqj5flsOM+o3
+	jsmcUbrUXlYjUpZEtD5j9f+sovWipG873QGEhV
+X-Received: by 2002:a17:90a:67ce:b0:2a2:d9f5:a335 with SMTP id g14-20020a17090a67ce00b002a2d9f5a335mr1738936pjm.21.1713252151760;
+        Tue, 16 Apr 2024 00:22:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE0nSUCySSraeo+VZj4qa38zef4B/ipzaDETOkrOV1DftcrQdIN+IeLBQxhGycZQajrqDuCtB4wEjmiaZLxDQU=
+X-Received: by 2002:a17:90a:67ce:b0:2a2:d9f5:a335 with SMTP id
+ g14-20020a17090a67ce00b002a2d9f5a335mr1738923pjm.21.1713252151443; Tue, 16
+ Apr 2024 00:22:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-anx7625-v3-1-f916ae31bdd7@chromium.org>
-X-B4-Tracking: v=1; b=H4sIAP4mHmYC/3XNPQ+CMBAG4L9COlvT9qCgk4OsDjoah9IP6ACYV
- hsM4b/bdNH4Mb5397w3I6+d1R5tsxk5Hay34xADrDIkOzG0GlsVM2KE5QRIgcUwlZwV2GjKFYi
- NglKheH112tgpNZ3RsT7Vhz26xHln/W10j/Qg0LT96goUU1yBViClETyXO9m5sbf3fj26NtUE9
- k75i7JISwqVJqRhRWN+UPhDIdINgZxxaEwB5IMuy/IE9nwxMh8BAAA=
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Xin Ji <xji@analogixsemi.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Hsin-Te Yuan <yuanhsinte@chromium.org>
-X-Mailer: b4 0.12.4
+References: <20240415163707.517820-1-kovalev@altlinux.org> <CACGkMEuvLmomcK7L7wQ-mGxAxof52xBAu8G4sB83gw4MkqeFHg@mail.gmail.com>
+In-Reply-To: <CACGkMEuvLmomcK7L7wQ-mGxAxof52xBAu8G4sB83gw4MkqeFHg@mail.gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 16 Apr 2024 15:22:20 +0800
+Message-ID: <CACGkMEth+QErT8dh_Oh+fz+wO6scLbRDUTkx86XDK7kX1uNCGg@mail.gmail.com>
+Subject: Re: [PATCH] vDPA: fix incorrect VDPA_ATTR_MAX value
+To: kovalev@altlinux.org
+Cc: mst@redhat.com, parav@nvidia.com, edumazet@google.com, elic@nvidia.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Previously, the audio status was not updated during detection, leading
-to a persistent audio despite hot plugging events. To resolve this
-issue, update the audio status during detection.
+On Tue, Apr 16, 2024 at 3:18=E2=80=AFPM Jason Wang <jasowang@redhat.com> wr=
+ote:
+>
+> On Tue, Apr 16, 2024 at 12:39=E2=80=AFAM <kovalev@altlinux.org> wrote:
+> >
+> > From: Vasiliy Kovalev <kovalev@altlinux.org>
+> >
+> > The VDPA_ATTR_MAX value should correspond to the index of the last
+> > available member of the structure, not their total number.
+>
+> I think it's too late to change. More below.
+>
+> >
+> > Otherwise, it can lead to interpretation errors in other functions
+> > when the structure (.maxattr =3D VDPA_ATTR_MAX) member is actually
+> > incremented by one and refers to invalid data.
+> >
+> > Fixes: 33b347503f01 ("vdpa: Define vdpa mgmt device, ops and a netlink =
+interface")
+> > Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+> > ---
+> >  include/uapi/linux/vdpa.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/vdpa.h b/include/uapi/linux/vdpa.h
+> > index 43c51698195ceb..ab132a09565232 100644
+> > --- a/include/uapi/linux/vdpa.h
+> > +++ b/include/uapi/linux/vdpa.h
+> > @@ -74,7 +74,8 @@ enum vdpa_attr {
+> >         VDPA_ATTR_DEV_BLK_CFG_FLUSH,            /* u8 */
+> >
+> >         /* new attributes must be added above here */
+> > -       VDPA_ATTR_MAX,
+> > +       __VDPA_ATTR_MAX,
+> > +       VDPA_ATTR_MAX   =3D __VDPA_ATTR_MAX - 1,
+>
+> Having a MAX in uapi is problematic as it may confuse the userspace. I
+> think the correct way is to drop it from uAPI.
 
-Fixes: 566fef1226c1 ("drm/bridge: anx7625: add HDMI audio function")
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
----
+Too late to drop as well probably ...
 
+Thanks
 
-Change-Id: I0b36c27d426b2988886db98452700cb7227d868c
----
-Changes in v3:
-- Add Fixes tag.
-- Link to v2: https://lore.kernel.org/r/20240306-anx7625-v2-1-7138e00b25bf@chromium.org
-
-Changes in v2:
-- Add a space after the colons in the subject line.
-- Link to v1: https://lore.kernel.org/r/20240305-anx7625-v1-1-83ed3ccfa64c@chromium.org
----
- drivers/gpu/drm/bridge/analogix/anx7625.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 29d91493b101a..9f0d0c5b8ebf5 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -2481,15 +2481,22 @@ static void anx7625_bridge_atomic_disable(struct drm_bridge *bridge,
- 	mutex_unlock(&ctx->aux_lock);
- }
- 
-+static void
-+anx7625_audio_update_connector_status(struct anx7625_data *ctx,
-+				      enum drm_connector_status status);
-+
- static enum drm_connector_status
- anx7625_bridge_detect(struct drm_bridge *bridge)
- {
- 	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
- 	struct device *dev = ctx->dev;
-+	enum drm_connector_status status;
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "drm bridge detect\n");
- 
--	return anx7625_sink_detect(ctx);
-+	status = anx7625_sink_detect(ctx);
-+	anx7625_audio_update_connector_status(ctx, status);
-+	return status;
- }
- 
- static struct edid *anx7625_bridge_get_edid(struct drm_bridge *bridge,
-
----
-base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-change-id: 20240305-anx7625-fe16d3a9d37d
-
-Best regards,
--- 
-Hsin-Te Yuan <yuanhsinte@chromium.org>
+>
+> Thanks
+>
+> >  };
+> >
+> >  #endif
+> > --
+> > 2.33.8
+> >
+> >
 
