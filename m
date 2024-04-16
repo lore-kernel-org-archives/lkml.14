@@ -1,221 +1,278 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D043C130E44;
-	Tue, 16 Apr 2024 14:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DA6130ADF;
+	Tue, 16 Apr 2024 14:10:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276619; cv=none; b=XpA4B93/FedZYIwGrs99MD0AQDoKT/Fwh7ExthZVkJhl+QSp/t+n56FyhezoiWkfPNX33pjbeIethpYwzfAnOs3S9i+h5PSDIz4JtraU1R2sQaF8QshDN7TAzBJqlm9fVMm/dfJ5PAaAnaYgrVPcsoHdDc+EFHJcaaX8QptDlsw=
+	t=1713276621; cv=none; b=bLeJFVp+yZUxYqV4/3Cmb1/uC4/TobcQrBqv6mUVWljt06PFpBVyxmA+yFq3OHPXPWzPebCaBbA2hAIR5/j+Imj08esFhBi3elz/noOJgPt+DGMzbQu7fERH6pkt0fkIdEKLidotTjOQF9vwjA6oMnk1MfBJAihBJksokFYdzA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276619; c=relaxed/simple;
-	bh=CnqFUzo8UL/kd/hyzPQiXIi6sHVHjTGA/XehLo3EEAk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=OR2dc6CWtiBKgEN4U4UYHh0Gd/NbuRnbXc/lpYP2/YQB+zzzgeokNbnyxc9O+YLNn9xaUj+H3NdTWaVAhgcR+l/yF7K5mNj4TmEf4jWKdFPZxDz6/Q96EAYaSigLW/kgxh3pRQU3WTQ4YkUd6iFX2wFXJ9ohAHhBUs77EZ+Jksc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rc9wnS+M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713276621; c=relaxed/simple;
+	bh=3JuPv2OIH1rRFqsbCBxaC8MeE5RF3ZyHZxYsRjhBBG4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qMgTf40gjfokgTncPgt9V+wEJj+UbSbqPh/5ejq3uU9BTRpnlX983xUQxeXAszDp0tnQhNH3tyvNvMfOgw9IhcikzkcgoIQiyVN2a5Jp3OgmVzqv2coWYPq7lBh9s9SnNRba8ZwHVVQOJfFKJYMzFu1Kv16pmusOxb5Y3xuEDFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqH+wJyh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rc9wnS+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75FFC32786;
-	Tue, 16 Apr 2024 14:10:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqH+wJyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32E8C2BD10;
+	Tue, 16 Apr 2024 14:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713276619;
-	bh=CnqFUzo8UL/kd/hyzPQiXIi6sHVHjTGA/XehLo3EEAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rc9wnS+M/4NNuIAcdlGbCdArukIVQa7MRbKshkWBfu0bAlSGsTZnjaM5GpWNA+pn7
-	 OImx3KIosCJC0nj+BdMGAGeFKeJoS60S+UmZbwPHfsEdL1D2hRwJLYzrzzxhiIvEU0
-	 TPoM9i7iIG24HKYrMFK7P2K5jlpdZgUjpBDBFi9rh99R/uqVtNpVZmdQFfndlYutMP
-	 r9NIF7AJDEiOws0Al7PmhSMpwGZYc6od/dRzMHHq2lKvltw7EJRKUqs1ZcWfZ/EhL0
-	 oQ3XBb9xaeF5huxlUFSXK0+BlTRqBF4IpiVSz9N/JixSoVFCcr2LVfUI4noJSNGyt/
-	 ptMF0i9e9F+Fw==
+	s=k20201202; t=1713276621;
+	bh=3JuPv2OIH1rRFqsbCBxaC8MeE5RF3ZyHZxYsRjhBBG4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=EqH+wJyhnMAlNWI4bs8b+0rRYTvyihbc+a/ong8zfmY6J4lEbMJOvtyct8hjjwm7B
+	 Ly3AILlMDs84wQPGnfQur9LcsXieTPLD7mzA1OUO24iY1oEvbSJyVstC83XRq9Xtt/
+	 jLCU4AOhwCNb76JgO2l01KhPz9GCTAWpk4NYC8TJ3IIkOUFRV8hqjYLI1PtZ282ZEY
+	 8jJbbWnVkOJo6x54IXB1tvzcVESrb7NvtMzQ1M/FVXHygbcVhARkCw6EuisCwHdTo1
+	 6IlI+voqNoZezqD+LQ72GTmtxp7y3e1lgta0Da/fW+3vRnebsWMueewCFdP13kHSRX
+	 +/dAMfckmUAMg==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Tue, 16 Apr 2024 16:08:19 +0200
+Subject: [PATCH bpf-next 06/18] bpf: add support for bpf_wq user type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 16 Apr 2024 17:10:12 +0300
-Message-Id: <D0LLVE07V8O0.S8XF3CY2DQ9A@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Haitao Huang"
- <haitao.huang@linux.intel.com>, <dave.hansen@linux.intel.com>,
- <kai.huang@intel.com>, <tj@kernel.org>, <mkoutny@suse.com>,
- <linux-kernel@vger.kernel.org>, <linux-sgx@vger.kernel.org>,
- <x86@kernel.org>, <cgroups@vger.kernel.org>, <tglx@linutronix.de>,
- <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
- <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
-Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
- <zhanb@microsoft.com>, <anakrish@microsoft.com>,
- <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
- <chrisyan@microsoft.com>
-Subject: Re: [PATCH v12 14/14] selftests/sgx: Add scripts for EPC cgroup
- testing
-X-Mailer: aerc 0.17.0
-References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
- <20240416032011.58578-15-haitao.huang@linux.intel.com>
- <D0LLS28WEXYA.G15BAG7WOJGR@kernel.org>
-In-Reply-To: <D0LLS28WEXYA.G15BAG7WOJGR@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-bpf_wq-v1-6-c9e66092f842@kernel.org>
+References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=7229;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=3JuPv2OIH1rRFqsbCBxaC8MeE5RF3ZyHZxYsRjhBBG4=;
+ b=Jczd5KIOTyu9KQsIpAXvyMm6LS0MddQCmwnYXweJmU+g10zjRy6E2ICKBet6N8A+e/coUZ4Nd
+ V0akg4CR6S9AMe6TN7aoos7jP/qlooXtpIYzBsTmKsc0cZTUontMQnZ
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-On Tue Apr 16, 2024 at 5:05 PM EEST, Jarkko Sakkinen wrote:
-> On Tue Apr 16, 2024 at 6:20 AM EEST, Haitao Huang wrote:
-> > With different cgroups, the script starts one or multiple concurrent SG=
-X
-> > selftests (test_sgx), each to run the unclobbered_vdso_oversubscribed
-> > test case, which loads an enclave of EPC size equal to the EPC capacity
-> > available on the platform. The script checks results against the
-> > expectation set for each cgroup and reports success or failure.
-> >
-> > The script creates 3 different cgroups at the beginning with following
-> > expectations:
-> >
-> > 1) SMALL - intentionally small enough to fail the test loading an
-> > enclave of size equal to the capacity.
-> > 2) LARGE - large enough to run up to 4 concurrent tests but fail some i=
-f
-> > more than 4 concurrent tests are run. The script starts 4 expecting at
-> > least one test to pass, and then starts 5 expecting at least one test
-> > to fail.
-> > 3) LARGER - limit is the same as the capacity, large enough to run lots=
- of
-> > concurrent tests. The script starts 8 of them and expects all pass.
-> > Then it reruns the same test with one process randomly killed and
-> > usage checked to be zero after all processes exit.
-> >
-> > The script also includes a test with low mem_cg limit and LARGE sgx_epc
-> > limit to verify that the RAM used for per-cgroup reclamation is charged
-> > to a proper mem_cg. For this test, it turns off swapping before start,
-> > and turns swapping back on afterwards.
-> >
-> > Add README to document how to run the tests.
-> >
-> > Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
->
-> jarkko@mustatorvisieni:~/linux-tpmdd> sudo make -C tools/testing/selftest=
-s/sgx run_tests
-> make: Entering directory '/home/jarkko/linux-tpmdd/tools/testing/selftest=
-s/sgx'
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -c main.c -o /home/jarkko/linux-tpmdd/tools/tes=
-ting/selftests/sgx/main.o
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -c load.c -o /home/jarkko/linux-tpmdd/tools/tes=
-ting/selftests/sgx/load.o
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -c sigstruct.c -o /home/jarkko/linux-tpmdd/tool=
-s/testing/selftests/sgx/sigstruct.o
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -c call.S -o /home/jarkko/linux-tpmdd/tools/tes=
-ting/selftests/sgx/call.o
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -c sign_key.S -o /home/jarkko/linux-tpmdd/tools=
-/testing/selftests/sgx/sign_key.o
-> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
-./../../tools/include -fPIC -o /home/jarkko/linux-tpmdd/tools/testing/selft=
-ests/sgx/test_sgx /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/main=
-.o /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/load.o /home/jarkko=
-/linux-tpmdd/tools/testing/selftests/sgx/sigstruct.o /home/jarkko/linux-tpm=
-dd/tools/testing/selftests/sgx/call.o /home/jarkko/linux-tpmdd/tools/testin=
-g/selftests/sgx/sign_key.o -z noexecstack -lcrypto
-> gcc -Wall -Werror -static-pie -nostdlib -ffreestanding -fPIE -fno-stack-p=
-rotector -mrdrnd -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../../.=
-./tools/include test_encl.c test_encl_bootstrap.S -o /home/jarkko/linux-tpm=
-dd/tools/testing/selftests/sgx/test_encl.elf -Wl,-T,test_encl.lds,--build-i=
-d=3Dnone
-> /usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld:=
- warning: /tmp/ccqvDJVg.o: missing .note.GNU-stack section implies executab=
-le stack
-> /usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld:=
- NOTE: This behaviour is deprecated and will be removed in a future version=
- of the linker
-> TAP version 13
-> 1..2
-> # timeout set to 45
-> # selftests: sgx: test_sgx
-> # TAP version 13
-> # 1..16
-> # # Starting 16 tests from 1 test cases.
-> # #  RUN           enclave.unclobbered_vdso ...
-> # #            OK  enclave.unclobbered_vdso
-> # ok 1 enclave.unclobbered_vdso
-> # #  RUN           enclave.unclobbered_vdso_oversubscribed ...
-> # #            OK  enclave.unclobbered_vdso_oversubscribed
-> # ok 2 enclave.unclobbered_vdso_oversubscribed
-> # #  RUN           enclave.unclobbered_vdso_oversubscribed_remove ...
-> # # main.c:402:unclobbered_vdso_oversubscribed_remove:Creating an enclave=
- with 98566144 bytes heap may take a while ...
-> # # main.c:457:unclobbered_vdso_oversubscribed_remove:Changing type of 98=
-566144 bytes to trimmed may take a while ...
-> # # main.c:473:unclobbered_vdso_oversubscribed_remove:Entering enclave to=
- run EACCEPT for each page of 98566144 bytes may take a while ...
-> # # main.c:494:unclobbered_vdso_oversubscribed_remove:Removing 98566144 b=
-ytes from enclave may take a while ...
-> # #            OK  enclave.unclobbered_vdso_oversubscribed_remove
-> # ok 3 enclave.unclobbered_vdso_oversubscribed_remove
-> # #  RUN           enclave.clobbered_vdso ...
-> # #            OK  enclave.clobbered_vdso
-> # ok 4 enclave.clobbered_vdso
-> # #  RUN           enclave.clobbered_vdso_and_user_function ...
-> # #            OK  enclave.clobbered_vdso_and_user_function
-> # ok 5 enclave.clobbered_vdso_and_user_function
-> # #  RUN           enclave.tcs_entry ...
-> # #            OK  enclave.tcs_entry
-> # ok 6 enclave.tcs_entry
-> # #  RUN           enclave.pte_permissions ...
-> # #            OK  enclave.pte_permissions
-> # ok 7 enclave.pte_permissions
-> # #  RUN           enclave.tcs_permissions ...
-> # #            OK  enclave.tcs_permissions
-> # ok 8 enclave.tcs_permissions
-> # #  RUN           enclave.epcm_permissions ...
-> # #            OK  enclave.epcm_permissions
-> # ok 9 enclave.epcm_permissions
-> # #  RUN           enclave.augment ...
-> # #            OK  enclave.augment
-> # ok 10 enclave.augment
-> # #  RUN           enclave.augment_via_eaccept ...
-> # #            OK  enclave.augment_via_eaccept
-> # ok 11 enclave.augment_via_eaccept
-> # #  RUN           enclave.tcs_create ...
-> # #            OK  enclave.tcs_create
-> # ok 12 enclave.tcs_create
-> # #  RUN           enclave.remove_added_page_no_eaccept ...
-> # #            OK  enclave.remove_added_page_no_eaccept
-> # ok 13 enclave.remove_added_page_no_eaccept
-> # #  RUN           enclave.remove_added_page_invalid_access ...
-> # #            OK  enclave.remove_added_page_invalid_access
-> # ok 14 enclave.remove_added_page_invalid_access
-> # #  RUN           enclave.remove_added_page_invalid_access_after_eaccept=
- ...
-> # #            OK  enclave.remove_added_page_invalid_access_after_eaccept
-> # ok 15 enclave.remove_added_page_invalid_access_after_eaccept
-> # #  RUN           enclave.remove_untouched_page ...
-> # #            OK  enclave.remove_untouched_page
-> # ok 16 enclave.remove_untouched_page
-> # # PASSED: 16 / 16 tests passed.
-> # # Totals: pass:16 fail:0 xfail:0 xpass:0 skip:0 error:0
-> ok 1 selftests: sgx: test_sgx
-> # timeout set to 45
-> # selftests: sgx: run_epc_cg_selftests.sh
-> # # Setting up limits.
-> # ./run_epc_cg_selftests.sh: line 50: echo: write error: Invalid argument
-> # # Failed setting up misc limits.
-> not ok 2 selftests: sgx: run_epc_cg_selftests.sh # exit=3D1
-> make: Leaving directory '/home/jarkko/linux-tpmdd/tools/testing/selftests=
-/sgx'
->
-> This is what happens now.
->
-> BTW, I noticed a file that should not exist, i.e. README. Only thing
-> that should exist is the tests for kselftest and anything else should
-> not exist at all, so this file by definiton should not exist.
+Mostly a copy/paste from the bpf_timer API, without the initialization
+and free, as they will be done in a separate patch.
 
-I'd suggest to sanity-check the kselftest with a person from Intel who
-has worked with kselftest before the next version so that it will be
-nailed next time. Or better internal review this single patch with a=20
-person with expertise on kernel QA.
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+---
+ include/linux/bpf.h      | 11 ++++++++++-
+ include/uapi/linux/bpf.h |  4 ++++
+ kernel/bpf/btf.c         | 17 +++++++++++++++++
+ kernel/bpf/syscall.c     |  6 +++++-
+ kernel/bpf/verifier.c    |  9 +++++++++
+ 5 files changed, 45 insertions(+), 2 deletions(-)
 
-I did not check this but I have also suspicion that it might have some
-checks whetehr it is run as root or not. If there are any, those should
-be removed too. Let people set their environment however want...
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 551445c47779..45cb13dfd15e 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -185,7 +185,7 @@ struct bpf_map_ops {
+ 
+ enum {
+ 	/* Support at most 10 fields in a BTF type */
+-	BTF_FIELDS_MAX	   = 10,
++	BTF_FIELDS_MAX	   = 11,
+ };
+ 
+ enum btf_field_type {
+@@ -202,6 +202,7 @@ enum btf_field_type {
+ 	BPF_GRAPH_NODE = BPF_RB_NODE | BPF_LIST_NODE,
+ 	BPF_GRAPH_ROOT = BPF_RB_ROOT | BPF_LIST_HEAD,
+ 	BPF_REFCOUNT   = (1 << 9),
++	BPF_WORKQUEUE  = (1 << 10),
+ };
+ 
+ typedef void (*btf_dtor_kfunc_t)(void *);
+@@ -238,6 +239,7 @@ struct btf_record {
+ 	u32 field_mask;
+ 	int spin_lock_off;
+ 	int timer_off;
++	int wq_off;
+ 	int refcount_off;
+ 	struct btf_field fields[];
+ };
+@@ -312,6 +314,8 @@ static inline const char *btf_field_type_name(enum btf_field_type type)
+ 		return "bpf_spin_lock";
+ 	case BPF_TIMER:
+ 		return "bpf_timer";
++	case BPF_WORKQUEUE:
++		return "bpf_wq";
+ 	case BPF_KPTR_UNREF:
+ 	case BPF_KPTR_REF:
+ 		return "kptr";
+@@ -340,6 +344,8 @@ static inline u32 btf_field_type_size(enum btf_field_type type)
+ 		return sizeof(struct bpf_spin_lock);
+ 	case BPF_TIMER:
+ 		return sizeof(struct bpf_timer);
++	case BPF_WORKQUEUE:
++		return sizeof(struct bpf_wq);
+ 	case BPF_KPTR_UNREF:
+ 	case BPF_KPTR_REF:
+ 	case BPF_KPTR_PERCPU:
+@@ -367,6 +373,8 @@ static inline u32 btf_field_type_align(enum btf_field_type type)
+ 		return __alignof__(struct bpf_spin_lock);
+ 	case BPF_TIMER:
+ 		return __alignof__(struct bpf_timer);
++	case BPF_WORKQUEUE:
++		return __alignof__(struct bpf_wq);
+ 	case BPF_KPTR_UNREF:
+ 	case BPF_KPTR_REF:
+ 	case BPF_KPTR_PERCPU:
+@@ -406,6 +414,7 @@ static inline void bpf_obj_init_field(const struct btf_field *field, void *addr)
+ 		/* RB_ROOT_CACHED 0-inits, no need to do anything after memset */
+ 	case BPF_SPIN_LOCK:
+ 	case BPF_TIMER:
++	case BPF_WORKQUEUE:
+ 	case BPF_KPTR_UNREF:
+ 	case BPF_KPTR_REF:
+ 	case BPF_KPTR_PERCPU:
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index cee0a7915c08..e4ae83550fb3 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -7306,6 +7306,10 @@ struct bpf_timer {
+ 	__u64 __opaque[2];
+ } __attribute__((aligned(8)));
+ 
++struct bpf_wq {
++	__u64 __opaque[2];
++} __attribute__((aligned(8)));
++
+ struct bpf_dynptr {
+ 	__u64 __opaque[2];
+ } __attribute__((aligned(8)));
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 90c4a32d89ff..a9b5b28a2630 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -3464,6 +3464,15 @@ static int btf_get_field_type(const char *name, u32 field_mask, u32 *seen_mask,
+ 			goto end;
+ 		}
+ 	}
++	if (field_mask & BPF_WORKQUEUE) {
++		if (!strcmp(name, "bpf_wq")) {
++			if (*seen_mask & BPF_WORKQUEUE)
++				return -E2BIG;
++			*seen_mask |= BPF_WORKQUEUE;
++			type = BPF_WORKQUEUE;
++			goto end;
++		}
++	}
+ 	field_mask_test_name(BPF_LIST_HEAD, "bpf_list_head");
+ 	field_mask_test_name(BPF_LIST_NODE, "bpf_list_node");
+ 	field_mask_test_name(BPF_RB_ROOT,   "bpf_rb_root");
+@@ -3515,6 +3524,7 @@ static int btf_find_struct_field(const struct btf *btf,
+ 		switch (field_type) {
+ 		case BPF_SPIN_LOCK:
+ 		case BPF_TIMER:
++		case BPF_WORKQUEUE:
+ 		case BPF_LIST_NODE:
+ 		case BPF_RB_NODE:
+ 		case BPF_REFCOUNT:
+@@ -3582,6 +3592,7 @@ static int btf_find_datasec_var(const struct btf *btf, const struct btf_type *t,
+ 		switch (field_type) {
+ 		case BPF_SPIN_LOCK:
+ 		case BPF_TIMER:
++		case BPF_WORKQUEUE:
+ 		case BPF_LIST_NODE:
+ 		case BPF_RB_NODE:
+ 		case BPF_REFCOUNT:
+@@ -3816,6 +3827,7 @@ struct btf_record *btf_parse_fields(const struct btf *btf, const struct btf_type
+ 
+ 	rec->spin_lock_off = -EINVAL;
+ 	rec->timer_off = -EINVAL;
++	rec->wq_off = -EINVAL;
+ 	rec->refcount_off = -EINVAL;
+ 	for (i = 0; i < cnt; i++) {
+ 		field_type_size = btf_field_type_size(info_arr[i].type);
+@@ -3846,6 +3858,11 @@ struct btf_record *btf_parse_fields(const struct btf *btf, const struct btf_type
+ 			/* Cache offset for faster lookup at runtime */
+ 			rec->timer_off = rec->fields[i].offset;
+ 			break;
++		case BPF_WORKQUEUE:
++			WARN_ON_ONCE(rec->wq_off >= 0);
++			/* Cache offset for faster lookup at runtime */
++			rec->wq_off = rec->fields[i].offset;
++			break;
+ 		case BPF_REFCOUNT:
+ 			WARN_ON_ONCE(rec->refcount_off >= 0);
+ 			/* Cache offset for faster lookup at runtime */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 7d392ec83655..0848e4141b00 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -559,6 +559,7 @@ void btf_record_free(struct btf_record *rec)
+ 		case BPF_SPIN_LOCK:
+ 		case BPF_TIMER:
+ 		case BPF_REFCOUNT:
++		case BPF_WORKQUEUE:
+ 			/* Nothing to release */
+ 			break;
+ 		default:
+@@ -608,6 +609,7 @@ struct btf_record *btf_record_dup(const struct btf_record *rec)
+ 		case BPF_SPIN_LOCK:
+ 		case BPF_TIMER:
+ 		case BPF_REFCOUNT:
++		case BPF_WORKQUEUE:
+ 			/* Nothing to acquire */
+ 			break;
+ 		default:
+@@ -679,6 +681,8 @@ void bpf_obj_free_fields(const struct btf_record *rec, void *obj)
+ 		case BPF_TIMER:
+ 			bpf_timer_cancel_and_free(field_ptr);
+ 			break;
++		case BPF_WORKQUEUE:
++			break;
+ 		case BPF_KPTR_UNREF:
+ 			WRITE_ONCE(*(u64 *)field_ptr, 0);
+ 			break;
+@@ -1085,7 +1089,7 @@ static int map_check_btf(struct bpf_map *map, struct bpf_token *token,
+ 
+ 	map->record = btf_parse_fields(btf, value_type,
+ 				       BPF_SPIN_LOCK | BPF_TIMER | BPF_KPTR | BPF_LIST_HEAD |
+-				       BPF_RB_ROOT | BPF_REFCOUNT,
++				       BPF_RB_ROOT | BPF_REFCOUNT | BPF_WORKQUEUE,
+ 				       map->value_size);
+ 	if (!IS_ERR_OR_NULL(map->record)) {
+ 		int i;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 2aad6d90550f..deaf2e1ab690 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -1838,6 +1838,8 @@ static void mark_ptr_not_null_reg(struct bpf_reg_state *reg)
+ 			 */
+ 			if (btf_record_has_field(map->inner_map_meta->record, BPF_TIMER))
+ 				reg->map_uid = reg->id;
++			if (btf_record_has_field(map->inner_map_meta->record, BPF_WORKQUEUE))
++				reg->map_uid = reg->id;
+ 		} else if (map->map_type == BPF_MAP_TYPE_XSKMAP) {
+ 			reg->type = PTR_TO_XDP_SOCK;
+ 		} else if (map->map_type == BPF_MAP_TYPE_SOCKMAP ||
+@@ -18155,6 +18157,13 @@ static int check_map_prog_compatibility(struct bpf_verifier_env *env,
+ 		}
+ 	}
+ 
++	if (btf_record_has_field(map->record, BPF_WORKQUEUE)) {
++		if (is_tracing_prog_type(prog_type)) {
++			verbose(env, "tracing progs cannot use bpf_wq yet\n");
++			return -EINVAL;
++		}
++	}
++
+ 	if ((bpf_prog_is_offloaded(prog->aux) || bpf_map_is_offloaded(map)) &&
+ 	    !bpf_offload_prog_map_match(prog, map)) {
+ 		verbose(env, "offload device mismatch between prog and map\n");
 
-BR, Jarkko
+-- 
+2.44.0
+
