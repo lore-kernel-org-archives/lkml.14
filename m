@@ -1,103 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730812F5B1
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412C713048E
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278982; cv=none; b=it+RJyGMFyUNzIrX0p3/8u0lR6Mw65FZGAuQJF9IpQCd4b7XF1BocBvvg03tqA85bf/AMxQmPCVpn1eZL+I9W1fVrsybtf0alxr5JWZHrOIbkLtIyXFVnOkvNtQPy//tBTeKUye9R5VNQv715wnDmlQvTvYHGnAfSOGv6YYb43s=
+	t=1713278989; cv=none; b=cQ48UOKO0n9d3lNKlLZSjyKjmHMNXW0YIZLIvwFrOHRpOQb1HlyE/2LtggrZdpTzUGx5rSm5og58cu/QL9YjezMZgp+owsokOnpZAXNFW59OpdGcStQup0f2XC9g6rZS6lKYZzzUmZsGzcEtkt06mUnadVvpuQg2pO0y4QCqFmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278982; c=relaxed/simple;
-	bh=7ARtCr6gtBIZWPixhMOKo/+c9HV56ed5oMvKe8ko6Dw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EnsH/dKHHRK0bbr8/UHwIFDqhryao9dEr7tSpLVROQF9Pi6bEUUg/Wqpq4RE8kx0vG5AvP53n822jkzJVtwir4aXGLUBoqmbI1eRu9ulLvP8gI5+unPOg3Z03n2xOZv0yFOlJWnVmMHbpU2gwo/1cIEAkw8Szud69yAFplVoxYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RrpBiHO1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713278989; c=relaxed/simple;
+	bh=slUT4zBHYjU9qi8tHgbYouEcTeqwtszCaEUoidxe348=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMVyURkceeZedYzGrkZW9kgG0M88LIo2mSL4j4oODtrO7hYrrfDhlo57H27k7zLYok1OGW4oDbzEsY/Kv15zxkyUU5uTSmm4HcCn1lDhB07CHZ3imxnErkLTagu81KhLbPCprdvg6uSxtb8BcTRsbydcXVKSiocBBH5Hxy2RDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwJ6tVrV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RrpBiHO1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713278979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Kro/6N3hNJUz0mvlhxtTHwRpm8U0aOExj9xAbQAp3R0=;
-	b=RrpBiHO1J9ueoJSFRY1JNYQkAQmKftHGnGlkKZAHe+j6pxRPKitgQhAS2ckgQA2bUd9ScV
-	1KTx/+t5g3SZlpPec3/6CRIF6SqiFhf0YoIVH9dtTb71kSc9Lor06auzZqHhwDLIYFcFze
-	lqmbnAynkzj7KgCbPm1Qfzq5Pu6xhUg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-F48Bfbb7NgShjBLlx_GDCQ-1; Tue,
- 16 Apr 2024 10:49:35 -0400
-X-MC-Unique: F48Bfbb7NgShjBLlx_GDCQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 860931C4C3A0;
-	Tue, 16 Apr 2024 14:49:34 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.194.131])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C9847492BD4;
-	Tue, 16 Apr 2024 14:49:31 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	llvm@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH v1] LoongArch/tlb: fix "error: parameter 'ptep' set but not used" due to __tlb_remove_tlb_entry()
-Date: Tue, 16 Apr 2024 16:49:26 +0200
-Message-ID: <20240416144926.599101-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwJ6tVrV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D70C113CE;
+	Tue, 16 Apr 2024 14:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713278988;
+	bh=slUT4zBHYjU9qi8tHgbYouEcTeqwtszCaEUoidxe348=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BwJ6tVrV6sLRveHEptvfeuji50XNganjw9kogO6idtAG3H8A9mSvncwvjCcmVfbFv
+	 zTorwrpg9izqbjDm7SieTN/cb04YaKvWKn1by/rFzilt25q8cpJ1wZF+tIMBeA/U/B
+	 UDXo9tIxYZb14rYbyO7KNFwbsyEgFfxBA5MDYw6O0a60pZHbNwdSMBS6oXVFydoPTi
+	 9yIO+eUUOnaIHyhyIGxWx8vwo3kfJMFqVfbgANJ2M/va34gBiSExNvUTPHtdlRXmkn
+	 wxi/FQwGYetQWXOU1gAsMir3XyQVjtFJUCjqdWqtwpbs2oFMLongmOukuOkXzABxkV
+	 MxXrw2JZHDrSw==
+Date: Tue, 16 Apr 2024 22:49:47 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Baokun Li <libaokun1@huawei.com>, xiang@kernel.org,
+	linux-erofs@lists.ozlabs.org, chao@kernel.org, huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com, viro@zeniv.linux.org.uk,
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
+	houtao1@huawei.com
+Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
+Message-ID: <Zh6QC0++kpUUL5nf@debian>
+Mail-Followup-To: Christian Brauner <brauner@kernel.org>,
+	Baokun Li <libaokun1@huawei.com>, xiang@kernel.org,
+	linux-erofs@lists.ozlabs.org, chao@kernel.org, huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com, viro@zeniv.linux.org.uk,
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
+	houtao1@huawei.com
+References: <20240415121746.1207242-1-libaokun1@huawei.com>
+ <20240415-betagten-querlatte-feb727ed56c1@brauner>
+ <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com>
+ <Zh3NAgWvNASTZSea@debian>
+ <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
+ <20240416-blumig-dachgeschoss-bc683f4ef1bf@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240416-blumig-dachgeschoss-bc683f4ef1bf@brauner>
 
-With LLVM=1 and W=1 we get:
+On Tue, Apr 16, 2024 at 02:35:08PM +0200, Christian Brauner wrote:
+> > > I'm not sure how to resolve it in EROFS itself, anyway...
+> 
+> Instead of allocating the erofs_sb_info in fill_super() allocate it
+> during erofs_get_tree() and then you can ensure that you always have the
+> info you need available during erofs_kill_sb(). See the appended
+> (untested) patch.
 
-  ./include/asm-generic/tlb.h:629:10: error: parameter 'ptep' set
-  but not used [-Werror,-Wunused-but-set-parameter]
+Hi Christian,
 
-We fixed a similar issue via Arnd in the introducing commit, missed the
-loongarch variant. Turns out, there is no need for loongarch to have a
-custom variant, so let's just drop it and rely on the asm-generic one.
+Yeah, that is a good way I think.  Although sbi will be allocated
+unconditionally instead but that is minor.
 
-Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Closes: https://lkml.kernel.org/r/CANiq72mQh3O9S4umbvrKBgMMorty48UMwS01U22FR0mRyd3cyQ@mail.gmail.com
-Fixes: 4d5bf0b6183f ("mm/mmu_gather: add tlb_remove_tlb_entries()")
-Tested-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/loongarch/include/asm/tlb.h | 2 --
- 1 file changed, 2 deletions(-)
+I'm on OSSNA this week, will test this patch more when returning.
 
-diff --git a/arch/loongarch/include/asm/tlb.h b/arch/loongarch/include/asm/tlb.h
-index da7a3b5b9374a..e071f5e9e8580 100644
---- a/arch/loongarch/include/asm/tlb.h
-+++ b/arch/loongarch/include/asm/tlb.h
-@@ -132,8 +132,6 @@ static __always_inline void invtlb_all(u32 op, u32 info, u64 addr)
- 		);
- }
- 
--#define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
--
- static void tlb_flush(struct mmu_gather *tlb);
- 
- #define tlb_flush tlb_flush
--- 
-2.44.0
+Hi Baokun,
+
+Could you also check this on your side?
+
+Thanks,
+Gao Xiang
+
+
+> From e4f586a41748b6edc05aca36d49b7b39e55def81 Mon Sep 17 00:00:00 2001
+> From: Christian Brauner <brauner@kernel.org>
+> Date: Mon, 15 Apr 2024 20:17:46 +0800
+> Subject: [PATCH] erofs: reliably distinguish block based and fscache mode
+> 
+> When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+> been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+> be mistaken for fscache mode, and then attempt to free an anon_dev that has
+> never been allocated, triggering the following warning:
+> 
+> ============================================
+> ida_free called for id=0 which is not allocated.
+> WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+> Modules linked in:
+> CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+> RIP: 0010:ida_free+0x134/0x140
+> Call Trace:
+>  <TASK>
+>  erofs_kill_sb+0x81/0x90
+>  deactivate_locked_super+0x35/0x80
+>  get_tree_bdev+0x136/0x1e0
+>  vfs_get_tree+0x2c/0xf0
+>  do_new_mount+0x190/0x2f0
+>  [...]
+> ============================================
+> 
+> Instead of allocating the erofs_sb_info in fill_super() allocate it
+> during erofs_get_tree() and ensure that erofs can always have the info
+> available during erofs_kill_sb().
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  fs/erofs/super.c | 29 ++++++++++++++++-------------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index c0eb139adb07..4ed80154edf8 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -581,7 +581,7 @@ static const struct export_operations erofs_export_ops = {
+>  static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>  {
+>  	struct inode *inode;
+> -	struct erofs_sb_info *sbi;
+> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>  	struct erofs_fs_context *ctx = fc->fs_private;
+>  	int err;
+>  
+> @@ -590,15 +590,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>  	sb->s_maxbytes = MAX_LFS_FILESIZE;
+>  	sb->s_op = &erofs_sops;
+>  
+> -	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+> -	if (!sbi)
+> -		return -ENOMEM;
+> -
+>  	sb->s_fs_info = sbi;
+>  	sbi->opt = ctx->opt;
+>  	sbi->devs = ctx->devs;
+>  	ctx->devs = NULL;
+> -	sbi->fsid = ctx->fsid;
+>  	ctx->fsid = NULL;
+>  	sbi->domain_id = ctx->domain_id;
+>  	ctx->domain_id = NULL;
+> @@ -707,8 +702,15 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>  static int erofs_fc_get_tree(struct fs_context *fc)
+>  {
+>  	struct erofs_fs_context *ctx = fc->fs_private;
+> +	struct erofs_sb_info *sbi;
+> +
+> +	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+> +	if (!sbi)
+> +		return -ENOMEM;
+>  
+> -	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
+> +	fc->s_fs_info = sbi;
+> +	sbi->fsid = ctx->fsid;
+> +	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+>  		return get_tree_nodev(fc, erofs_fc_fill_super);
+>  
+>  	return get_tree_bdev(fc, erofs_fc_fill_super);
+> @@ -762,11 +764,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+>  static void erofs_fc_free(struct fs_context *fc)
+>  {
+>  	struct erofs_fs_context *ctx = fc->fs_private;
+> +	struct erofs_sb_info *sbi = fc->s_fs_info;
+>  
+>  	erofs_free_dev_context(ctx->devs);
+>  	kfree(ctx->fsid);
+>  	kfree(ctx->domain_id);
+>  	kfree(ctx);
+> +
+> +	if (sbi)
+> +		kfree(sbi);
+>  }
+>  
+>  static const struct fs_context_operations erofs_context_ops = {
+> @@ -783,6 +789,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+>  	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+>  	if (!ctx)
+>  		return -ENOMEM;
+> +
+>  	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+>  	if (!ctx->devs) {
+>  		kfree(ctx);
+> @@ -799,17 +806,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+>  
+>  static void erofs_kill_sb(struct super_block *sb)
+>  {
+> -	struct erofs_sb_info *sbi;
+> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>  
+> -	if (erofs_is_fscache_mode(sb))
+> +	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+>  		kill_anon_super(sb);
+>  	else
+>  		kill_block_super(sb);
+>  
+> -	sbi = EROFS_SB(sb);
+> -	if (!sbi)
+> -		return;
+> -
+>  	erofs_free_dev_context(sbi->devs);
+>  	fs_put_dax(sbi->dax_dev, NULL);
+>  	erofs_fscache_unregister_fs(sb);
+> -- 
+> 2.43.0
+> 
 
