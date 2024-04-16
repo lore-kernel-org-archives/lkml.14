@@ -1,166 +1,216 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B206F129E78;
-	Tue, 16 Apr 2024 12:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7CD12A16D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 12:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713268945; cv=none; b=OkbW4+cnkP+c1Rhq8W7yMCGBCLQk+0fiBg+QxczpARr4MIHmGrUMHC2613jbQmnVymcG8yvidS3AOcEBBpTBFthJ9/UjVY5XxL7G8KNs5E/TwU1mR7iWEugUJn0kAWENcGorx8yhzkRTmDVsmMhTCZPQCCod7UyrfXqU/CH7//8=
+	t=1713268949; cv=none; b=Sg/fZILRKgXI1CBAdW0KMOHZAEvp1Ub/DRnYnEaJ+0/zgF6f3kNCjKbDVCDegkdGc1Uye8DG3ID/5O/JnVTgFxiXrGXCIF14fI7mgxIrOMXd8fn/ckYE6sR1vknJOPEtn90SjPxxahPymx1uPANGAYVjqiE6gxoDpSWsnaOvoUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713268945; c=relaxed/simple;
-	bh=mehokU/oPv9zSJz1ECT72XIz6TIwRXXiUhrnhSfTj5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DsfYT2yuODAxIC7lW/PC4H3nehZ0/Skw128u962Vj/hawjm/mIl5/2gELmulmsE0uBt9tEJNm1hfRqzQC59v4Obco7/S9Vkm6G3LIeivMexMmjk98p1A+Kwy+nwDEFes5B1NLKHaOVu3hzTcmFwPcL8leNfx2vhrVNiY/V+VbMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mvrzWBhU; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvrzWBhU"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a524ecaf215so361156866b.2;
-        Tue, 16 Apr 2024 05:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713268942; x=1713873742; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIxLUAMbjgurxXoHq9EdG3sBEmu/NGzsdsQ94b87puk=;
-        b=mvrzWBhUo9A9k76i9yZG+WtcVLVFI1iyQHDi0dn372xytKMVG/9wqc2fZVUBR8kYsu
-         r9S9d24VYHYYHNssCKecYV3QI4FIu85YYFpFYaVUhtjBSah7AgfUA//v2Adon5oTYrOk
-         P/F9PKfP51dxaptKO6qjdkA/dnQTZiF9ry/ce3AbWCj5OapEKFEmsJCto6cwqDmbeVhe
-         dfWpxktBSXz2vh/NdlbCOyCXOElMUJlfE/W/xLnp/z6IZ9yt9zlJ2pn9hR6p1heeXFQU
-         QV+8Cx6EgRaLHDut69T9Z6WIqXN3hIub4zJdBolzy5WF6aRO1Kz9elxr+jYqI8oTUBG2
-         IWrg==
+	s=arc-20240116; t=1713268949; c=relaxed/simple;
+	bh=1C8QensAqDcvNf44zqn5EdvvsKL0UVn3tH+ErfAOl+M=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ldZkS0rF+bM8+8jml7kTgUgfghdGaQTIP6s8g7TMlf24FXslUyiyaJyalDtLvjoQWBB/yPaqxZMFb1nz7Cy2vnTcUEnOc+0d/WThmSNmb1JnD79tnHII/Qa2KpVXnOZh0T3iI/6fLy5qMm6zDQe7sr4w0roevkNWC3fmKKGbuU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36a179df9fdso45535905ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:02:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713268942; x=1713873742;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QIxLUAMbjgurxXoHq9EdG3sBEmu/NGzsdsQ94b87puk=;
-        b=egfsNxF/zxwl256gN7UzPZZNxRRhKEvO/L8ojA0+2pecGBiO6fYasXfBh1nneXdo6P
-         hG6niyTkz5RCtKKoX4BPU1SNBjCGilFjvDct8HaPf+I/1YyKSJ0Y9xU0iDgNWI29UBHt
-         itpJpUX4foZplNrwhp5QLCzwE/bKr1jSdoYDNVhZbOeGpEbQYBT1JNJTEAv3yZUbgZYq
-         35sBB/rNSFCgW1qsE4q0iYLHYOFhqgxaAVxt49he839yaLQFP6gw6B0WzHXlF0RxGDiw
-         i3Igis4u7o9zOjakBvXhcWFZCaqnih8GZE3x8nJUOM7zVMcJi2ejzy43WJV/HpzORXwm
-         x8OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeGi4n1jE7QptQNMgkkihuTLfF2GBTnFc5B+iYnDEmsmKbOj8E9t3rqUVeOn8u4NsHdBdAjiEk+ar+JoLsn4C2j/hESqwH
-X-Gm-Message-State: AOJu0YyjOn8U8xbpG67B5YSjCJuIMzoJVhJaG0/SOW33dpzQlyo9mkNr
-	GYBm1vkoYlQFa4+GrxHUYYdzZ1LnA8mpDn1MvsdLoyhW/78Udam+Y7407ROQVhmq16+9mipFF0B
-	Zu0JHmtRKTmrXD3gAbFUo/GPwqWBI29/CmeI8apa0
-X-Google-Smtp-Source: AGHT+IHr6onz1rxoSR673FwAnVKaunv+548JVGn3CKC2tFRdh/wB3XKIZwJvSd13d1YzW0b9cY5jwSdjwfKpRGciYH4=
-X-Received: by 2002:a17:906:29cb:b0:a52:61b9:be48 with SMTP id
- y11-20020a17090629cb00b00a5261b9be48mr4119771eje.35.1713268941706; Tue, 16
- Apr 2024 05:02:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713268945; x=1713873745;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RliH/lwwNQjo2LcJr03DjdCa5kWkv5xAiJHUNHgwVYw=;
+        b=TsFAVpt7F/uEb2oMPQo8OpIyYHewHybTvhzRyeN3gCJNSoNAFYgYv5He8OUts6T5HY
+         jTp+VvwQql2I283zrMAQ/pgJ3ea7PhT+8orPV8dxLzBS3UXUOHu2vPqMGEc3Y5AefZOc
+         ABj42VnrCHqdM6UznGUQZIaSxTAhraoMUrWYihsZwVaT1APpWolRpiuuXdi439RqcpvB
+         9JspZ2FEhJQGrXIFuTD+ea748/lVyFq8GTVwHcjkdkkQJicgw2VXHwv/MKMWzKAz0ndK
+         HnMg7XLyQfXN5JwGvcEjl6FHx6bf8l9gQ0Eyk4LyOu+gF34CCa2xl6CDq5/4i690nZLe
+         xRog==
+X-Forwarded-Encrypted: i=1; AJvYcCWzdUkGcG+KH87Pg6KweT/CTdU+HuEtYrtR/EzXX9EwND5gEaJHid9OTksxngt9oQ5Kis2/FtyZ+oIseSEMdRa92SHJiv8OjzYdh3AH
+X-Gm-Message-State: AOJu0YzEDUJm/oxVhE9iLO0gu7NdmsZZBgAE2iYb4Z8uboGYvH0A+lCd
+	7rKx+gLh+yn2NiMdJ6Tz1odGV6umVYaSFFKxLrny6STfsC/D0JQEfHZD2BxyAvj4QuR4iE1lPWS
+	+8yps8Z3gFAIsGcZiGIxkx9I63d/JHLWioo1BgiKTQRSN3TF1k0vm07E=
+X-Google-Smtp-Source: AGHT+IGPHdee8JjKHOeuBQgVBStbNj/c5ul3p6q9T2b8cyMj+j+acL2QyjWoUjWV1FqPD1NBTzOcmL94+78qDTWCLGtM5nTs7iPr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEkJfYMdDQKY1C-wBZLiaJ=dCqfM9r=rykwwf+J-XHsFp7D9Ag@mail.gmail.com>
- <Zh5M_9K3g6-9U2VA@Laptop-X1>
-In-Reply-To: <Zh5M_9K3g6-9U2VA@Laptop-X1>
-From: Sam Sun <samsun1006219@gmail.com>
-Date: Tue, 16 Apr 2024 20:02:10 +0800
-Message-ID: <CAEkJfYNZ+X7U2-pDTy0X4q+D8O7H0ZPVdN3Z2hK6b1wFZfQekw@mail.gmail.com>
-Subject: Re: [PATCH net v2] drivers/net/bonding: Fix out-of-bounds read in bond_option_arp_ip_targets_set()
-To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, j.vosburgh@gmail.com, 
-	andy@greyhouse.net, davem@davemloft.net, Eric Dumazet <edumazet@google.com>, 
-	kuba@kernel.org, pabeni@redhat.com
+X-Received: by 2002:a05:6e02:2199:b0:36a:3f1f:bd4e with SMTP id
+ j25-20020a056e02219900b0036a3f1fbd4emr836028ila.5.1713268945260; Tue, 16 Apr
+ 2024 05:02:25 -0700 (PDT)
+Date: Tue, 16 Apr 2024 05:02:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e33add0616358204@google.com>
+Subject: [syzbot] [xfs?] possible deadlock in xfs_icwalk_ag (2)
+From: syzbot <syzbot+4248e91deb3db78358a2@syzkaller.appspotmail.com>
+To: chandan.babu@oracle.com, djwong@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 6:03=E2=80=AFPM Hangbin Liu <liuhangbin@gmail.com> =
-wrote:
->
-> On Tue, Apr 16, 2024 at 03:28:02PM +0800, Sam Sun wrote:
-> > In function bond_option_arp_ip_targets_set(), if newval->string is an
-> > empty string, newval->string+1 will point to the byte after the
-> > string, causing an out-of-bound read.
-> >
-> > BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
-> > Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
-> > CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
-> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04=
-/01/2014
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:88 [inline]
-> >  dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
-> >  print_address_description mm/kasan/report.c:364 [inline]
-> >  print_report+0xc1/0x5e0 mm/kasan/report.c:475
-> >  kasan_report+0xbe/0xf0 mm/kasan/report.c:588
-> >  strlen+0x7d/0xa0 lib/string.c:418
-> >  __fortify_strlen include/linux/fortify-string.h:210 [inline]
-> >  in4_pton+0xa3/0x3f0 net/core/utils.c:130
-> >  bond_option_arp_ip_targets_set+0xc2/0x910
-> > drivers/net/bonding/bond_options.c:1201
-> >  __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
-> >  __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:79=
-2
-> >  bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
-> >  bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c=
-:156
-> >  dev_attr_store+0x54/0x80 drivers/base/core.c:2366
-> >  sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
-> >  kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
-> >  call_write_iter include/linux/fs.h:2020 [inline]
-> >  new_sync_write fs/read_write.c:491 [inline]
-> >  vfs_write+0x96a/0xd80 fs/read_write.c:584
-> >  ksys_write+0x122/0x250 fs/read_write.c:637
-> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> >  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
-> >  entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> > ---[ end trace ]---
-> >
-> > Fix it by adding a check of string length before using it. Remove
-> > target address in netdev_err message since target is not initialized
-> > in error path and will not provide useful information.
-> >
-> > Fixes: 4fb0ef585eb2 ("bonding: convert arp_ip_target to use the new opt=
-ion API")
-> > Signed-off-by: Yue Sun <samsun1006219@gmail.com>
->
-> I think the fixes tag should be
->
-> f9de11a16594 ("bonding: add ip checks when store ip target").
->
+Hello,
 
-Sorry for my mistake. I will change the fixes label to this commit.
+syzbot found the following issue on:
 
-Best,
-Yue
+HEAD commit:    9ed46da14b9b Add linux-next specific files for 20240412
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=100fbfcb180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7ea0abc478c49859
+dashboard link: https://syzkaller.appspot.com/bug?extid=4248e91deb3db78358a2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fc649744d68c/disk-9ed46da1.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/11eab7b9945d/vmlinux-9ed46da1.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e7885afd198d/bzImage-9ed46da1.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4248e91deb3db78358a2@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.9.0-rc3-next-20240412-syzkaller #0 Not tainted
+------------------------------------------------------
+kswapd0/88 is trying to acquire lock:
+ffff88807b8bc6d8 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
+ffff88807b8bc6d8 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
+ffff88807b8bc6d8 (&xfs_dir_ilock_class){++++}-{3:3}, at: xfs_icwalk_ag+0x120e/0x1ad0 fs/xfs/xfs_icache.c:1713
+
+but task is already holding lock:
+ffffffff8e429e80 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat mm/vmscan.c:6819 [inline]
+ffffffff8e429e80 (fs_reclaim){+.+.}-{0:0}, at: kswapd+0xbe8/0x38a0 mm/vmscan.c:7201
+
+which lock already depends on the new lock.
 
 
-> Thanks
-> Hangbin
->
-> > ---
-> >  drivers/net/bonding/bond_options.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/bonding/bond_options.c
-> > b/drivers/net/bonding/bond_options.c
-> > index 4cdbc7e084f4..8f3fb91897b3 100644
-> > --- a/drivers/net/bonding/bond_options.c
-> > +++ b/drivers/net/bonding/bond_options.c
-> > @@ -1214,9 +1214,9 @@ static int bond_option_arp_ip_targets_set(struct
-> > bonding *bond,
-> >      __be32 target;
-> >
-> >      if (newval->string) {
-> > -        if (!in4_pton(newval->string+1, -1, (u8 *)&target, -1, NULL)) =
-{
-> > -            netdev_err(bond->dev, "invalid ARP target %pI4 specified\n=
-",
-> > -                   &target);
-> > +        if (!(strlen(newval->string)) ||
-> > +            !in4_pton(newval->string + 1, -1, (u8 *)&target, -1, NULL)=
-) {
-> > +            netdev_err(bond->dev, "invalid ARP target I4 specified\n")=
-;
-> >              return ret;
-> >          }
-> >          if (newval->string[0] =3D=3D '+')
-> > --
-> > 2.34.1
+the existing dependency chain (in reverse order) is:
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       __fs_reclaim_acquire mm/page_alloc.c:3825 [inline]
+       fs_reclaim_acquire+0x88/0x140 mm/page_alloc.c:3839
+       might_alloc include/linux/sched/mm.h:334 [inline]
+       slab_pre_alloc_hook mm/slub.c:3847 [inline]
+       slab_alloc_node mm/slub.c:3937 [inline]
+       __do_kmalloc_node mm/slub.c:4077 [inline]
+       __kmalloc_noprof+0xae/0x400 mm/slub.c:4091
+       kmalloc_noprof include/linux/slab.h:664 [inline]
+       xfs_attr_shortform_list+0x6f1/0x17b0 fs/xfs/xfs_attr_list.c:115
+       xfs_attr_list_ilocked fs/xfs/xfs_attr_list.c:527 [inline]
+       xfs_attr_list+0x25b/0x350 fs/xfs/xfs_attr_list.c:547
+       xfs_vn_listxattr+0x1d2/0x2c0 fs/xfs/xfs_xattr.c:314
+       vfs_listxattr fs/xattr.c:493 [inline]
+       listxattr+0x107/0x290 fs/xattr.c:840
+       path_listxattr fs/xattr.c:864 [inline]
+       __do_sys_listxattr fs/xattr.c:876 [inline]
+       __se_sys_listxattr fs/xattr.c:873 [inline]
+       __x64_sys_listxattr+0x176/0x240 fs/xattr.c:873
+       do_syscall_x64 arch/x86/entry/common.c:74 [inline]
+       do_syscall_64+0xfa/0x250 arch/x86/entry/common.c:105
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&xfs_dir_ilock_class){++++}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+       down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
+       xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
+       xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
+       xfs_icwalk_ag+0x120e/0x1ad0 fs/xfs/xfs_icache.c:1713
+       xfs_icwalk fs/xfs/xfs_icache.c:1762 [inline]
+       xfs_reclaim_inodes_nr+0x257/0x360 fs/xfs/xfs_icache.c:1011
+       super_cache_scan+0x40f/0x4b0 fs/super.c:227
+       do_shrink_slab+0x705/0x1160 mm/shrinker.c:435
+       shrink_slab+0x1092/0x14d0 mm/shrinker.c:662
+       shrink_one+0x453/0x880 mm/vmscan.c:4809
+       shrink_many mm/vmscan.c:4870 [inline]
+       lru_gen_shrink_node mm/vmscan.c:4970 [inline]
+       shrink_node+0x3b17/0x4310 mm/vmscan.c:5929
+       kswapd_shrink_node mm/vmscan.c:6741 [inline]
+       balance_pgdat mm/vmscan.c:6932 [inline]
+       kswapd+0x1882/0x38a0 mm/vmscan.c:7201
+       kthread+0x2f0/0x390 kernel/kthread.c:389
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(fs_reclaim);
+                               lock(&xfs_dir_ilock_class);
+                               lock(fs_reclaim);
+  lock(&xfs_dir_ilock_class);
+
+ *** DEADLOCK ***
+
+2 locks held by kswapd0/88:
+ #0: ffffffff8e429e80 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat mm/vmscan.c:6819 [inline]
+ #0: ffffffff8e429e80 (fs_reclaim){+.+.}-{0:0}, at: kswapd+0xbe8/0x38a0 mm/vmscan.c:7201
+ #1: ffff8880866840e0 (&type->s_umount_key#74){++++}-{3:3}, at: super_trylock_shared fs/super.c:561 [inline]
+ #1: ffff8880866840e0 (&type->s_umount_key#74){++++}-{3:3}, at: super_cache_scan+0x94/0x4b0 fs/super.c:196
+
+stack backtrace:
+CPU: 1 PID: 88 Comm: kswapd0 Not tainted 6.9.0-rc3-next-20240412-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5754
+ down_write_nested+0x3d/0x50 kernel/locking/rwsem.c:1695
+ xfs_reclaim_inode fs/xfs/xfs_icache.c:945 [inline]
+ xfs_icwalk_process_inode fs/xfs/xfs_icache.c:1631 [inline]
+ xfs_icwalk_ag+0x120e/0x1ad0 fs/xfs/xfs_icache.c:1713
+ xfs_icwalk fs/xfs/xfs_icache.c:1762 [inline]
+ xfs_reclaim_inodes_nr+0x257/0x360 fs/xfs/xfs_icache.c:1011
+ super_cache_scan+0x40f/0x4b0 fs/super.c:227
+ do_shrink_slab+0x705/0x1160 mm/shrinker.c:435
+ shrink_slab+0x1092/0x14d0 mm/shrinker.c:662
+ shrink_one+0x453/0x880 mm/vmscan.c:4809
+ shrink_many mm/vmscan.c:4870 [inline]
+ lru_gen_shrink_node mm/vmscan.c:4970 [inline]
+ shrink_node+0x3b17/0x4310 mm/vmscan.c:5929
+ kswapd_shrink_node mm/vmscan.c:6741 [inline]
+ balance_pgdat mm/vmscan.c:6932 [inline]
+ kswapd+0x1882/0x38a0 mm/vmscan.c:7201
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
