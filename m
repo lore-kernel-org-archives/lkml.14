@@ -1,41 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737EC629;
-	Tue, 16 Apr 2024 00:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12A2631
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713227378; cv=none; b=iq6v0mDQ7FBfmmBVIVO7ro3f+h7VJCduu4S+t05r6VtyFJOr0NpTiVQSiFz3CgwUdUqhSsbGqBntzLGVa2pNsyWlGOJCCHHxq+H4yJUkNEjaol9ZqUqsbA71iL+oZll4dd4UqLqdzYHdUEoqhCIV+wLJTzLwUKiLfaIuqukNERA=
+	t=1713227678; cv=none; b=DJ1hS3Gs2v1uhBt8Yd+Lh3kdObkeNTCFPGVau1wheHytndSgg7xC491MCNYN0rg7t0u3WysxhMnqKmgiOyUsYB3xkXkinKsdOdJ6Dj13utunAf2WEYnBZrpJyuxvqntmmfQjP0RWPjB4Maw5F4qYUAwrIoLnrvIHckYhVEJkC/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713227378; c=relaxed/simple;
-	bh=HfHk3WuIcIudmtsoBPGASPAMjayRcL28OAR0jozp9jU=;
+	s=arc-20240116; t=1713227678; c=relaxed/simple;
+	bh=Uu0M7GIvUdTs6LdT4T9XsdKueP/wSc1aG5j1PLQFwBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hmIWYs7Iwz36ECJ7CL3gFQyG1i2VTrK+JBkoY733QAk3fUhhvz5hlxlbOwI+Yq4r4SptucICyT6t1dH/e2gJ2a0d4g0I5iGVRQheMpncshb55pWupqhaK87+5WNg4sf0cah3NTmLQsNvbUl6vWl9TAn6Dt1zUSvfRGQiONPgeuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8L/8s+u; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hkjn2FsVZyihHkuGQvAhMbtT/d2KOSQ+gxp93C4KNKbL+ipDRrAPDER6SyOEdYr2b6Il2D4iE0c9etykMxjv+UVInuEPk0zPQwpgctGca0AYUzNN4VRBPuxBQOY0KztCFWg1BumymWylQDyitTZsJcqaLBklERBFp2JzJ/72Pv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k2T2ijEP; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8L/8s+u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF6BC113CC;
-	Tue, 16 Apr 2024 00:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713227378;
-	bh=HfHk3WuIcIudmtsoBPGASPAMjayRcL28OAR0jozp9jU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m8L/8s+u8C3+FTyXdYyV5d+CU8/uXOC6PQLwrfZHDYBbQo6P0BrPAQDUhsoRh7z57
-	 w4KUVqNZjv87vp/5ph1BtLdpnnvgf50wFXqQPZomWV8aXyLUomZ66T0qmkmRCwk9kE
-	 4xeqSl5MbazN9RwGgATWJnc5nPNp2ZOHrDQD5eW5uQrhEoencltmA/YtkvMNn6dV37
-	 Z3RCstCDuOzJF1vPiv9oEkh0tcPko8+ehvysJzaBwGbQtYGQviTt/+M6zZvqFjkcYc
-	 V5TUvWIZe+oSrDcTb3tD4NKud/NLbRZXECUj99wmdjhkQIMmu0cOZYHPpxShJl/EIb
-	 iY7R8ZCryu5mw==
-Date: Tue, 16 Apr 2024 08:16:14 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci-of-dwcmshc: Add tuning support for Sophgo
- CV1800B and SG200X
-Message-ID: <Zh3DTkc60d-lYnSI@xhacker>
-References: <20240414164112.2732-1-jszhang@kernel.org>
- <c6c041d4-d9ed-46bb-9e6e-b53dc9ac0002@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k2T2ijEP"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso3133490b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2024 17:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713227677; x=1713832477; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tECMZdHIf57W8gG8gWlbX6tFu4h7YfeqS1rrPxFzlBU=;
+        b=k2T2ijEPy9ATFpZz/wsPlE3zFzhdzzQn/9qLRM0InwfNvYvNJh8pVl5kKgUy0zNFaK
+         OHFP9A0qPNggYNdzB3LI/BGEdnnKDTvwls09p+OCGdfZKK/O8WCPl/yXSei38fcnJ8KY
+         hw2q3x0CXGxQJtQoDhqiFRVhz32XvARinF0/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713227677; x=1713832477;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tECMZdHIf57W8gG8gWlbX6tFu4h7YfeqS1rrPxFzlBU=;
+        b=H5RJLmVUoKmm4wkhMiEszoTD8dYu2OOCliJhSbKIEQhbMLO/Or5bXVw87TkD1JYgFb
+         j52qTOfjsAADKABsM2SZZ98ZcmvVno57f9eWqH7Ad1A/CCgDrrHtgZi0RKEdOHt9w5AQ
+         HH+rcE8aPw/Xa/iYua26K+S099OIQa6KmTTbJZe9RxSMs2jg7sbT9xKd0ILl/+6fqidz
+         N4PwkW9CvMT2CaoQl1PavhrbyGCj00SYAHsueMRW9m99Zpc1+KCRylIxhqYqYOVEG1jB
+         JLCTFvaOmyoCAbOoGdz89TQkwY5rN+x5Ttlut3JfJjv4LH7HXXP9DVCd9DU1fMAkIsdm
+         InPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq4xssLo//7f6zCXx1HEvZrypeZIpYsMxP8UmVt2glHqrw8HhUHYRL7tSSwMgkLrqA/T3esPyhtw1weK2KFpEkwE/3OIvdBrlyBBtl
+X-Gm-Message-State: AOJu0YyJxlA/1OQm4monRGLudPmDe2mHNE0R5o9O7wxYhOeh5m1zRZIz
+	TUFlI6/sxRLEPbDM3OO8WpPiJHPTh2GsAkKEnO/PJxP3aKnoY8y3XyJCmITRQQ==
+X-Google-Smtp-Source: AGHT+IHBTYQNm0G/5iTIWcqtCpBMx8eO+Lcv57FnkpUl7K+iOvZATxbmc2iNNHMdthR59l4Mz4CqSQ==
+X-Received: by 2002:a05:6a21:4987:b0:1a6:b689:8c29 with SMTP id ax7-20020a056a21498700b001a6b6898c29mr10500341pzc.61.1713227676987;
+        Mon, 15 Apr 2024 17:34:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k3-20020a170902694300b001e24988b99asm8503932plt.250.2024.04.15.17.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 17:34:36 -0700 (PDT)
+Date: Mon, 15 Apr 2024 17:34:35 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Jeff Xu <jeffxu@chromium.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	akpm@linux-foundation.org, jannh@google.com, sroettger@google.com,
+	willy@infradead.org, gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org, corbet@lwn.net,
+	Liam.Howlett@oracle.com, surenb@google.com, merimus@google.com,
+	rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+	groeck@chromium.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	pedro.falcato@gmail.com, dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v10 3/5] selftest mm/mseal memory sealing
+Message-ID: <202404151733.59C3EF3@keescook>
+References: <20240415163527.626541-1-jeffxu@chromium.org>
+ <20240415163527.626541-4-jeffxu@chromium.org>
+ <e1744539-a843-468a-9101-ce7a08669394@collabora.com>
+ <CABi2SkVnhcOpeA63XoKq97Uc_VyWdLUqYdOtUXxJ1fos5-Tq2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,165 +76,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c6c041d4-d9ed-46bb-9e6e-b53dc9ac0002@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABi2SkVnhcOpeA63XoKq97Uc_VyWdLUqYdOtUXxJ1fos5-Tq2g@mail.gmail.com>
 
-On Mon, Apr 15, 2024 at 09:58:31AM +0300, Adrian Hunter wrote:
-> On 14/04/24 19:41, Jisheng Zhang wrote:
-> > Implement the .platform_execute_tuning for Sophgo CV1800B and SG200X.
-> > Some code is borrowed from sdhci-esdhc-imx.c. The tuning result is
-> > similar as the one of SoC vendor's SDK.
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> 
-> One comment, otherwise:
-> 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> > ---
-> >  drivers/mmc/host/sdhci-of-dwcmshc.c | 112 ++++++++++++++++++++++++++++
-> >  1 file changed, 112 insertions(+)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > index ab4b964d4058..7b55acd9830c 100644
-> > --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> > @@ -66,6 +66,10 @@
-> >  #define CV18XX_SDHCI_PHY_CONFIG			0x4c
-> >  #define  CV18XX_PHY_TX_BPS			BIT(0)
-> >  
-> > +#define CV18XX_TUNE_MAX				128
-> > +#define CV18XX_TUNE_STEP			1
-> > +#define CV18XX_RETRY_TUNING_MAX			50
-> > +
-> >  /* Rockchip specific Registers */
-> >  #define DWCMSHC_EMMC_DLL_CTRL		0x800
-> >  #define DWCMSHC_EMMC_DLL_RXCLK		0x804
-> > @@ -685,6 +689,113 @@ static void cv18xx_sdhci_reset(struct sdhci_host *host, u8 mask)
-> >  	sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
-> >  }
-> >  
-> > +static void cv18xx_sdhci_set_tap(struct sdhci_host *host, int tap)
-> > +{
-> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> > +	struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> > +	u16 clk;
-> > +	u32 val;
-> > +
-> > +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> > +	clk &= ~SDHCI_CLOCK_CARD_EN;
-> > +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> > +
-> > +	val = sdhci_readl(host, priv->vendor_specific_area1 + CV18XX_SDHCI_MSHC_CTRL);
-> > +	val &= ~CV18XX_LATANCY_1T;
-> > +	sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_MSHC_CTRL);
-> > +
-> > +	val =  (FIELD_PREP(CV18XX_PHY_TX_DLY_MSK, 0) |
-> > +		FIELD_PREP(CV18XX_PHY_TX_SRC_MSK, CV18XX_PHY_TX_SRC_INVERT_CLK_TX) |
-> > +		FIELD_PREP(CV18XX_PHY_RX_DLY_MSK, tap));
-> > +	sdhci_writel(host, val, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_TX_RX_DLY);
-> > +
-> > +	sdhci_writel(host, 0, priv->vendor_specific_area1 + CV18XX_SDHCI_PHY_CONFIG);
-> > +
-> > +	clk |= SDHCI_CLOCK_CARD_EN;
-> > +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> > +	mdelay(1);
-> 
-> Did you consider usleep_range() instead of mdelay()?
+On Mon, Apr 15, 2024 at 01:27:32PM -0700, Jeff Xu wrote:
+> On Mon, Apr 15, 2024 at 11:32 AM Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+> >
+> > Please fix following for this and fifth patch as well:
+> >
+> > --> checkpatch.pl --codespell tools/testing/selftests/mm/mseal_test.c
+> >
+> > WARNING: Macros with flow control statements should be avoided
+> > #42: FILE: tools/testing/selftests/mm/mseal_test.c:42:
+> > +#define FAIL_TEST_IF_FALSE(c) do {\
+> > +               if (!(c)) {\
+> > +                       ksft_test_result_fail("%s, line:%d\n", __func__,
+> > __LINE__);\
+> > +                       goto test_end;\
+> > +               } \
+> > +       } \
+> > +       while (0)
+> >
+> > WARNING: Macros with flow control statements should be avoided
+> > #50: FILE: tools/testing/selftests/mm/mseal_test.c:50:
+> > +#define SKIP_TEST_IF_FALSE(c) do {\
+> > +               if (!(c)) {\
+> > +                       ksft_test_result_skip("%s, line:%d\n", __func__,
+> > __LINE__);\
+> > +                       goto test_end;\
+> > +               } \
+> > +       } \
+> > +       while (0)
+> >
+> > WARNING: Macros with flow control statements should be avoided
+> > #59: FILE: tools/testing/selftests/mm/mseal_test.c:59:
+> > +#define TEST_END_CHECK() {\
+> > +               ksft_test_result_pass("%s\n", __func__);\
+> > +               return;\
+> > +test_end:\
+> > +               return;\
+> > +}
+> >
+> I tried to fix those warnings of checkpatch in the past, but no good
+> solution. If I put the condition check in the test, the code will have
+> too many "if" and decrease readability.  If there is a better
+> solution, I'm happy to do that, suggestions are welcome.
 
-Good idea, will test and send out a v2.
+Yeah, these are more "conventions" from checkpatch. I think it's fine to
+ignore this warning, especially for selftests.
 
-> 
-> > +}
-> > +
-> > +static int cv18xx_retry_tuning(struct mmc_host *mmc, u32 opcode, int *cmd_error)
-> > +{
-> > +	int ret, retry = 0;
-> > +
-> > +	while (retry < CV18XX_RETRY_TUNING_MAX) {
-> > +		ret = mmc_send_tuning(mmc, opcode, NULL);
-> > +		if (ret)
-> > +			return ret;
-> > +		retry++;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void cv18xx_sdhci_post_tuning(struct sdhci_host *host)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = sdhci_readl(host, SDHCI_INT_STATUS);
-> > +	val |= SDHCI_INT_DATA_AVAIL;
-> > +	sdhci_writel(host, val, SDHCI_INT_STATUS);
-> > +
-> > +	sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
-> > +}
-> > +
-> > +static int cv18xx_sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
-> > +{
-> > +	int min, max, avg, ret;
-> > +	int win_length, target_min, target_max, target_win_length;
-> > +
-> > +	min = max = 0;
-> > +	target_win_length = 0;
-> > +
-> > +	sdhci_reset_tuning(host);
-> > +
-> > +	while (max < CV18XX_TUNE_MAX) {
-> > +		/* find the mininum delay first which can pass tuning */
-> > +		while (min < CV18XX_TUNE_MAX) {
-> > +			cv18xx_sdhci_set_tap(host, min);
-> > +			if (!cv18xx_retry_tuning(host->mmc, opcode, NULL))
-> > +				break;
-> > +			min += CV18XX_TUNE_STEP;
-> > +		}
-> > +
-> > +		/* find the maxinum delay which can not pass tuning */
-> > +		max = min + CV18XX_TUNE_STEP;
-> > +		while (max < CV18XX_TUNE_MAX) {
-> > +			cv18xx_sdhci_set_tap(host, max);
-> > +			if (cv18xx_retry_tuning(host->mmc, opcode, NULL)) {
-> > +				max -= CV18XX_TUNE_STEP;
-> > +				break;
-> > +			}
-> > +			max += CV18XX_TUNE_STEP;
-> > +		}
-> > +
-> > +		win_length = max - min + 1;
-> > +		/* get the largest pass window */
-> > +		if (win_length > target_win_length) {
-> > +			target_win_length = win_length;
-> > +			target_min = min;
-> > +			target_max = max;
-> > +		}
-> > +
-> > +		/* continue to find the next pass window */
-> > +		min = max + CV18XX_TUNE_STEP;
-> > +	}
-> > +
-> > +	cv18xx_sdhci_post_tuning(host);
-> > +
-> > +	/* use average delay to get the best timing */
-> > +	avg = (target_min + target_max) / 2;
-> > +	cv18xx_sdhci_set_tap(host, avg);
-> > +	ret = mmc_send_tuning(host->mmc, opcode, NULL);
-> > +
-> > +	dev_dbg(mmc_dev(host->mmc), "tuning %s at 0x%x ret %d\n",
-> > +		ret ? "failed" : "passed", avg, ret);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static const struct sdhci_ops sdhci_dwcmshc_ops = {
-> >  	.set_clock		= sdhci_set_clock,
-> >  	.set_bus_width		= sdhci_set_bus_width,
-> > @@ -721,6 +832,7 @@ static const struct sdhci_ops sdhci_dwcmshc_cv18xx_ops = {
-> >  	.get_max_clock		= dwcmshc_get_max_clock,
-> >  	.reset			= cv18xx_sdhci_reset,
-> >  	.adma_write_desc	= dwcmshc_adma_write_desc,
-> > +	.platform_execute_tuning = cv18xx_sdhci_execute_tuning,
-> >  };
-> >  
-> >  static const struct sdhci_pltfm_data sdhci_dwcmshc_pdata = {
-> 
+-- 
+Kees Cook
