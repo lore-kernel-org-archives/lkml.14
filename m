@@ -1,159 +1,150 @@
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2086.outbound.protection.outlook.com [40.107.105.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B26E3BBEC;
-	Tue, 16 Apr 2024 05:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713245733; cv=fail; b=A9Em5e9zmBdkwwyY7HGrkTDEqtRwAyRTTLKY1ALQTcPI4ASnEqAsYlltZEAauclcxIp7uu6b9VsMxnCBSd9w37tXGJtRqz9c25+BQAjT3NGrHrjc/6FJcXiJmqGB+FiHTd6ZSk1E/WhvlQUcmatI/uJQVUqJY04463/GWHnNHvs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713245733; c=relaxed/simple;
-	bh=EORdH5UENeh/FPjj/33AjD4Eb5mIyNL3JZ7wsBVs2/A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y9T5ZHHOUE+QvYCTAr7xy6WPBM6yE5BzVbMTKIQtFn13BTdc+Qjp7/XIVGf7FdkG8vGv6ZA/adnbELqb+xEGl6DKAr6QapRBprl32Inf/Ne6ZAEvNrrhq2HtTf5ZnRAYMd5wwUTNVPscfn6ZlIgLKGOwROPUcRoDoAbXza3pvK0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=o9t0W6gf; arc=fail smtp.client-ip=40.107.105.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62A2629
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 05:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713245829; cv=none; b=iQ5Hvym/b78oS6FpLFNkAWWMMEnEkVaJmUiJhBdAS/JBYEvTRMn2WcIX3YYI63UYmoD1GOZaXHuwGCZHW3q+wk/zEnwrW6GLLw/WOWogbBuQHgo1a/4wCJKkvX6mIz6UkTgxGWSLKQcK/YcaoMEo8vqOmmzVHTHmpSOwE8d470g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713245829; c=relaxed/simple;
+	bh=EfG9cFtllF9gqFm7hY3Rf2DORnZMz5q2bf9UJwLncUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9uwW6ynvCkvegqsHEQcm66qYXe87swuW1vnnMFbzAdImosxtqhN6sA6FJ8U3IHDS69ER7ByNDVrgp8YU0lJnAzpYAz9UfXzXZr8feBMZK9WOmawnn7ZFIYeP8tjI+axV8NZtrSrBOQi6rZp5bAM/6YXInBW0bYryjzaawgHVwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=b4ZYNccz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pXCJm+gt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hxeDuFm6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LRDP7kHo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="o9t0W6gf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VWl4yqf7yfKTDA3QYQmfHbgsMTU1kbVsHsDupZVE1LTwu3umIxsW8WVBYZ8ps6V60e/gzlLWB8LW7fm8K+AVMxEzxJSW1LK0Usv8yq0V0Bi0OVi+rnR3+vhnn6/mqSnTxUrW/Nh19sqOvZUOBYSGNVIapVz42QUKYYXtxP9sJcFY5aUaeIIQcyvUrr+hEaT3hHVhMmSJQafq7iSPW/eSUtiBBXRbkvSEj7HzYkyjAZIx+oZtLgsvH84baWt1cR2sH1n8uHOdp2xkmzyArBguXWjiocQZlgq4Nq+9z6KmH45falL1Q3uAAXEYHdauN9peLTnB3nYT7nuKXA3wrp974A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oNZJfSlEXEnEN8HwZbzBBuXNDsBQi6bsEwBXVIVPiDk=;
- b=P69+jflB+ytUSmoLiQiGwL0hX52X90BU5juGcxfZUlgeTBAqpIYh2Mg+y6+2iUIj6KK6pECbiboT80HCfull6xd4DxWjddDgaw//DZ985lgNFsQgegSa6NFb0l6ayhzSi17oX0t4zg0paDOQ6Y3zbYbzU03j7iFCoyfhh3vL8UUS7aedt3DKbtGRS7Q8NBhwbkdOPnEmejK5WrBmn13djunh/zGVOiw/5L5rDR8SJ3Y9ajXoHo35xQ9scBbnjUrKdgGn/ji5XMDrWkhj03H0Z3FE+R1UeJ3duXZFlewz4fz5QLdQbmY+IKLNpwWGoSW6LHNotHnb3iMylLHDyOwv0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oNZJfSlEXEnEN8HwZbzBBuXNDsBQi6bsEwBXVIVPiDk=;
- b=o9t0W6gfBQQg3LO+NChsvN6O6LZ/aZGTGZLuMvTOyZ3PHsk3q7UWPxcb/Pklcczwew+7bVQJ5kmCSaqGBwLwG2RE9GHwyX7zX12jgVuuVt5yMBBdHy9uF2e66FNlW5jchC4q92jY++XiQ9Imy8oOPfco2eFXDNgvSnG5gOaSz0A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
- by DB9PR04MB8122.eurprd04.prod.outlook.com (2603:10a6:10:25d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
- 2024 05:35:30 +0000
-Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
- ([fe80::33cc:db75:c850:63a4]) by AM9PR04MB8604.eurprd04.prod.outlook.com
- ([fe80::33cc:db75:c850:63a4%2]) with mapi id 15.20.7409.042; Tue, 16 Apr 2024
- 05:35:30 +0000
-From: Pankaj Gupta <pankaj.gupta@nxp.com>
-To: gaurav.jain@nxp.com,
-	horia.geanta@nxp.com,
-	V.Sethi@nxp.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	iuliana.prodan@nxp.com,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-imx@nxp.com
-Cc: Pankaj Gupta <pankaj.gupta@nxp.com>
-Subject: [PATCH v3 2/2] drivers: crypto: caam: i.MX8ULP donot have CAAM page0 access
-Date: Tue, 16 Apr 2024 11:03:03 +0530
-Message-Id: <20240416053303.421259-3-pankaj.gupta@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240416053303.421259-1-pankaj.gupta@nxp.com>
-References: <20240416053303.421259-1-pankaj.gupta@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0077.apcprd02.prod.outlook.com
- (2603:1096:4:90::17) To AM9PR04MB8604.eurprd04.prod.outlook.com
- (2603:10a6:20b:43b::21)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="b4ZYNccz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pXCJm+gt";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hxeDuFm6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LRDP7kHo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 660123785C;
+	Tue, 16 Apr 2024 05:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713245825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I7yI8GNAbc77sTAygJZU2zvbo6TVZ+TPVDnIN7EkyX4=;
+	b=b4ZYNcczdMR/WEfgbZ3cMfYr/vtZXiR6nhn0RK1OdgPh/3GmTHwroyFtWU3dG0hJHUklqE
+	KLqjaBZAxaptkCpepf3NfzfeI1NI8EWDxwWPd0Dbhkt4Cgj7cDrPybH6r173xZu9A59ibt
+	0QG8IPDE3rtOjfKR+D11vBA5RsqdRcY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713245825;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I7yI8GNAbc77sTAygJZU2zvbo6TVZ+TPVDnIN7EkyX4=;
+	b=pXCJm+gtEsG6qRXFp0/JqZ9xXU11xzbXYbMN1S4DHevQ2XmAhFQLVJ/SpN/JCt7BZSiomL
+	YJ2ajry7FLo/qwCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713245824; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I7yI8GNAbc77sTAygJZU2zvbo6TVZ+TPVDnIN7EkyX4=;
+	b=hxeDuFm6vZO4YateVf4M9TOuMYLOKqH0FboC+zyp35Ha1V2PLB0uelHP6Jttmy+cMdu+JN
+	itoD1bceOp8ExlzhF/GEyejiOulFBf6NErGecjVricetRjlo4RyEb9zNhMdFoijIbkCOqQ
+	mCTqTzX3YIrqgxji0W17PR2axR5b/Yc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713245824;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I7yI8GNAbc77sTAygJZU2zvbo6TVZ+TPVDnIN7EkyX4=;
+	b=LRDP7kHo8Crbn2tPoCLxKxwN8QQB8IaRoS0fqUDlLInYASBMOHqQooYWC7nDuCgjw9COaB
+	g2hPdxKrHq6HKzDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E4584138A7;
+	Tue, 16 Apr 2024 05:37:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 60sFNX8OHmbNMQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 16 Apr 2024 05:37:03 +0000
+Date: Tue, 16 Apr 2024 07:36:58 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Vishal Moola <vishal.moola@gmail.com>,
+	syzbot <syzbot+ad1b592fc4483655438b@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, muchun.song@linux.dev,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in
+ __vma_reservation_common
+Message-ID: <Zh4OemsI1Ant9rfg@localhost.localdomain>
+References: <000000000000daf1e10615e64dcb@google.com>
+ <000000000000ae5d410615fea3bf@google.com>
+ <Zh2kuFX9BWOGN1Mo@fedora>
+ <Zh2m5_MfZ45Uk-vD@casper.infradead.org>
+ <CAOzc2pzFSkwo21Uba3ys5u8=okYbtA2ptyc5bQJwHoS=H_UMtA@mail.gmail.com>
+ <Zh4AJiHFQBkD1J_F@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8604:EE_|DB9PR04MB8122:EE_
-X-MS-Office365-Filtering-Correlation-Id: 148d697c-25fc-4cd8-fc47-08dc5dd707a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	9Hk5VQpiKnnSOlvbsWJh3g5IoTpg7krF9TrHQMnF2RDLMEut5Api5NiFuGyLcv3ZBkGrvRgBhvUzCz1obA+yhZbihHYXEI1DA2eF5DWyuSdEWnBpagY62iMI/saakYNeIolII2C0aF0EsaBkF17/yrAUbjWWdgyVTMvXc3qHYviBpNQc0H+Sh3YtdSCCLaC/rnmKa+Br+XrqbRUU8e+smC/IkbIoSFlA45XAtkrz+XqAkuiw4cITNyphP7eMqqm6brouh9VMuk+tb5ZSiLa8+eJ2pjrFR3fcdfVts8Cwa+dNuoQOoLqhK4G2b8zKsODs5/2bKR8BvTBbvHBBVy5Zpg6CZwMdKQ+NtTqj/IQBfBdyjPtu5rtvQK44SdI6yzU8u6z7k69WXJ2N0kd+REJHI1F+YlHdhipPLgb5l4oZ8/ijZE7maa5bvCwd+q46E7t3AUDwb4tNxtl9pVknom5NSGUB7YoK5qArWl6fjtfVa4fAt+Bw/knXTeB0+6ES68v09Q8aSmm7rmLLFX519myTQXm2ATUTRbWTWcjwpEknO3Y95+eFEJYGZcZYlRjEni1tBYsLiT+WVZcCyqqQAY75JnLQlJyNbruUuFPrsMWsllfsg5frwVnUOaYlBDFWuP5Fk0bhNy03F4451TL2OMWSZ7FdzJoiPNA8/xkEZPzXwBX/qia+F/yzzlEP3FBalGL4oum+7H145C+lBT4MeYm0Yw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mbhu5yyJ0EmKanm5LB4BCYhDpS6PJzptC9HJUBGtgD6O7J/1CAYukbDRWy9G?=
- =?us-ascii?Q?BQOeyJ98xQAVuiLwEeVyyVQ/Zlu4icZHXjCBrpyt30vohBJmimNqXTxsRMuc?=
- =?us-ascii?Q?1s0RLR/jbhqPfBTrlcQpsLTZSEf/GLcaQKKRg9U/l7t+alsK4rJfYA4RxvhA?=
- =?us-ascii?Q?BC1LgloDlEQckBC6dh8M6NpaQ7AR+KhrsnBLLHl8n06XVj6IVWPnGVJ0Tc+i?=
- =?us-ascii?Q?PguINxDEEtulmvdE/+f7KxRdzczBpIP3qENMVJFOmQ6gB08S7TLw1hiK0EnY?=
- =?us-ascii?Q?HAYEIIlF5HqWinoU/nCGHJmkEWk8SQpk7CU0GKh0MSn06cEQrR6UnBM7TmR0?=
- =?us-ascii?Q?K4WLUMVeNcs6QntvtsOL1c0UCnGcpXU3eMfv6LPGr6SYbuv1f6AqtzMIe5Cz?=
- =?us-ascii?Q?vET6GICuflmExhgaJp1yYSH8/Mbn4KXNl3BjPL45stvzwmoBy05Kn+WKptEe?=
- =?us-ascii?Q?gf1iZwhpd49Q9OVHSqIkqt3mW2ClkGaBQ2xWVOIAY8/SE+wkZb/Oq9XjiXX0?=
- =?us-ascii?Q?QluRQV3lCMvphHyR/t/O6ncVeQj80mVjfk1oGtphGW4ntQG2bjN6nZ9qtkWv?=
- =?us-ascii?Q?vZdr9EMv5MprdaSQ1mkRfllf7QvQUtuGnE8OPdhCwuot/x1hwGcDgkP0GV7w?=
- =?us-ascii?Q?l1qKmxzoarclQ4aT4rkQaqYE3ob3aLtEbaXG/uc++bYbZ2WKP4RF8kt/STsI?=
- =?us-ascii?Q?wGKnfdZw1hZxbXeqcxPvzcoy1qUqMXHujm/uS4YEWXWLDnh9Eog2w0kaNOuY?=
- =?us-ascii?Q?daD232i2xbNP0fllMwuX5oyv89NTvTQVsyxdG5mnAyt10ma6hb3r7jlIEcDt?=
- =?us-ascii?Q?u7BDWuRovVh94wR2RoRH8pBaslbON+/fD86cVa8PlW/F++jZDVAMOm3lo+K3?=
- =?us-ascii?Q?E+m7Fv9jrjxFQYjTy6u+Qz8WLhF0RuhvE26u3zVOHU6iVXc+w8GMCCeHEK+y?=
- =?us-ascii?Q?dduwi6CfuTDJ1LlBbgutYWmOXyzVJ7xRcBZ82xvmjptPkRv7UUsQJcqY49ZP?=
- =?us-ascii?Q?AXCLxHL8Ej/VTRsn7cYLqQX4L926lZUA+EvJ5NQZyAOwUdJ0a9Dp8PiYVvcd?=
- =?us-ascii?Q?4FUJQRMGghq9PqTan3xxOmFOy8nHIMlK5ct0S1pEwx7oOHeTAmlFozJHkVCc?=
- =?us-ascii?Q?ValNZ6ksVE0l7meDrK5iGYWMMNak+tTiUKEA9sKwnFUHh7moA/idKzhaVKMw?=
- =?us-ascii?Q?tXLk27uPJkRYWcmxQXWIPjqsJEl499xTGuzsManKjP59WC56B9TdML3wuk7r?=
- =?us-ascii?Q?veUAb5H9whJ5ninQL2LXBd5V/81qrjTuLCjTLy+3Ura3wAvE0RU2AQuJEngv?=
- =?us-ascii?Q?B8ECslyiLjL+xLbDZ1aNnehEf27Y/k2boEnJwRdFBybuHuaO8Dm5adYjdu9q?=
- =?us-ascii?Q?dT2eN47ksSJp/8mvFeYn56dHTsr8764aNirsMh8YRXx7sUMfaabSgD9+3N9W?=
- =?us-ascii?Q?axEfmAUpC5wi3ToZmn2878SinOIi2D8/TvoiyFHER8RwcOQaUWJE/DZ0xJRm?=
- =?us-ascii?Q?boYym8vN8xArHNfQdr6Guph47tEGW7+3Y7IIyWBDWfuOe5n9KDCgZ+hrhiua?=
- =?us-ascii?Q?XKqcEvcY1IqFrLMWafqWQDD8avE3s9vGIyoI/IWq?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 148d697c-25fc-4cd8-fc47-08dc5dd707a1
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 05:35:30.8683
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PVNxVrh5POsGR4cMJTYraJhjQqHTqhHDSrGyABZD+3m0W6NPsGFb6yXM2CvLewAs8iGyzRQHoaR5tO9/VZIfCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zh4AJiHFQBkD1J_F@casper.infradead.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.23 / 50.00];
+	BAYES_HAM(-2.43)[97.39%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TAGGED_RCPT(0.00)[ad1b592fc4483655438b];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,syzkaller.appspotmail.com,linux-foundation.org,vger.kernel.org,kvack.org,linux.dev,googlegroups.com];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ul.ie:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,ul.ie:email];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Score: -2.23
+X-Spam-Flag: NO
 
-iMX8ULP have a secure-enclave hardware IP called EdgeLock Enclave(ELE),
-that control access to caam controller's register page, i.e., page0.
+On Tue, Apr 16, 2024 at 05:35:50AM +0100, Matthew Wilcox wrote:
+> Why does hugetlbfs use VM_MAYSHARE while regular faults use VM_SHARED?
 
-At all, if the ELE release access to CAAM controller's register page,
-it will release to secure-world only.
+It goes back to:
 
-Clocks are turned on automatically for iMX8ULP. There exists the caam
-clock gating bit, but it is not advised to gate the clock at linux, as
-optee-os or any other entity might be using it.
+commit f83a275dbc5ca1721143698e844243fcadfabf6a
+Author: Mel Gorman <mel@csn.ul.ie>
+Date:   Thu May 28 14:34:40 2009 -0700
 
-Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
----
- drivers/crypto/caam/ctrl.c | 3 +++
- 1 file changed, 3 insertions(+)
+    mm: account for MAP_SHARED mappings using VM_MAYSHARE and not VM_SHARED in hugetlbfs
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 247d42aa32df..f0f87fe8ef92 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -563,11 +563,14 @@ static const struct caam_imx_data caam_vf610_data = {
- 	.num_clks = ARRAY_SIZE(caam_vf610_clks),
- };
- 
-+static const struct caam_imx_data caam_imx8ulp_data;
-+
- static const struct soc_device_attribute caam_imx_soc_table[] = {
- 	{ .soc_id = "i.MX6UL", .data = &caam_imx6ul_data },
- 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
- 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
- 	{ .soc_id = "i.MX8M*", .data = &caam_imx7_data },
-+	{ .soc_id = "i.MX8ULP", .data = &caam_imx8ulp_data },
- 	{ .soc_id = "VF*",     .data = &caam_vf610_data },
- 	{ .family = "Freescale i.MX" },
- 	{ /* sentinel */ }
+
+"hugetlbfs currently checks if a VMA is MAP_SHARED with the VM_SHARED flag
+ and not VM_MAYSHARE.  For file-backed mappings, such as hugetlbfs,
+ VM_SHARED is set only if the mapping is MAP_SHARED and the file was opened
+ read-write.  If a shared memory mapping was mapped shared-read-write for
+ populating of data and mapped shared-read-only by other processes, then
+ hugetlbfs would account for the mapping as if it was MAP_PRIVATE.  This
+ causes processes to fail to map the file MAP_SHARED even though it should
+ succeed as the reservation is there."
+
 -- 
-2.34.1
-
+Oscar Salvador
+SUSE Labs
