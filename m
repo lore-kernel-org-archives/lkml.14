@@ -1,101 +1,160 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7466612CD9A;
-	Tue, 16 Apr 2024 14:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB36612CD84
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276374; cv=none; b=HqA0cvAdRSc8QpPg/9wI7HVkeYuOhIlZULlTotFDKA3NOR1zsJN2rLej9TMroFNiNMo563sWkHA5Cl96xpfNmHjFsmzzizPB7681AqsN+yr/Sn58wB5oU71BxM0cxGEuy1AXk6okdrtzmHeml3NH7a9m8udFQd/L1lzXqwiLMwY=
+	t=1713276457; cv=none; b=Z2DfCF83bSyp/giWsKdbisTimawJIEba+OTpsxBcrGyYOwjk2B4SWoDJBz0ci3LbWX2LeIPwioUyzdtdxr5OLpX7S8TwkrHeLv4BEjYAVcR+j8CAcTe+Ei4ZrWh1MKYPo7GOEvWf1DS0Xe/MJ1xYDXAqYUmihCObUNzn6F1Td1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276374; c=relaxed/simple;
-	bh=OIjBZ2uSrRRCPA7njEkAYgEvMcESbAP5c3QefnQVxTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ptpJD4R3w3gCnpHS4LDaUKEnT1Z+/TBXh6xNv9IQ+WuiOU1l47/Qwsb9MCtXKxctqpJugExfkxSsfZRyVjzF/O1ZpUHkCEIXqCSlxn/xFANmzYoNAYaQFZmUvNNtJk2BOV4juKniaJneVFf5wHFf/YRZg5ApDLufBINLjPE6btE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AzKDH9U5; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713276457; c=relaxed/simple;
+	bh=Pujm/r3xB6YlHkRLKYxgDrcLT8Z+/QffDjAZvYeDnX4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=RMUOpXnPYP33uFVYTFFL+caoEQJ7s4lQFAl0B7wSXIGB2ha9QwRfiuUBgX2n2C/vygZ6pzVmnRxO0h+i+usKbHD50bbagVlf7i8JsxzY8ENt7++3R1fZkwUm6jXEfVe2rRO+vCA0Si0yCcyUv2VHJRVIWMq9LwpRRJLCXMVTO1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YrVQfmJz; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AzKDH9U5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713276369; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=xEYEMePmztZfbv9xHlEGvnUIEV3Ro9LAXkzvLijPqCM=;
-	b=AzKDH9U57bdwbad16JV9nYVCvrfGqIt1Z59x5f/IyczPiIjwxucwaM9LDa7zZzIBXBBRn0FA2ysg8KM3hWZuwhe+XcdScnJcXQ0lQrg3Li3m/Bljzwr9mpnRiG4gGDnGu1OAnbECgoEJSEFGqSOIPWk3JY/wDTWLL0bRVKFx3oY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0W4i8467_1713276365;
-Received: from 30.213.156.135(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W4i8467_1713276365)
-          by smtp.aliyun-inc.com;
-          Tue, 16 Apr 2024 22:06:07 +0800
-Message-ID: <eb7eb42a-ea96-41d9-b385-c459379bed99@linux.alibaba.com>
-Date: Tue, 16 Apr 2024 22:06:04 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YrVQfmJz"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2a5457a8543so3929797a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713276454; x=1713881254; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3HMGW99TX0Cqe3aYrj5LiSxtL+KydbJYyp90EN1U2HI=;
+        b=YrVQfmJzyJVaQXvU58xrq3XdY0+gE8OO+M3CJeVtaC86Ki3fsDWRBiKpENeWyCzSMR
+         bTe2xJigvkXGTAJDDlox6sD4VVAO+S42nTxvkIujiRRYwjtXX8SM2GeTw3fZFSZ2WIvS
+         eGrldgepvtDEHtogynwU8ERcY+z+zYcmDDjyaIwZmQviOtKc09pTX4e3cGqa0dBttZg3
+         jAOEZmsXX5O78DA6BmgevrzVSGNlvtykzfJwO0AS2uzTR2Q5rYh66YkgHelwVBQUUKUz
+         dio09jg/f2ZwGllzJSx5oEM2lz5dI9FBpEYNyB0UFTxwE5C5gdDkOtt19P2tbCCCmbRP
+         iWpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713276454; x=1713881254;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3HMGW99TX0Cqe3aYrj5LiSxtL+KydbJYyp90EN1U2HI=;
+        b=p4sul6yr1Voj6Cw53SouR1rTNHBiz0cucWwqrvkwzfJavhkSMe8vHwN2zd1HKkJdLl
+         9J3IQt729hl44j1ovXozpSonKDkiOHLXhq9FHpWxqXIchgpm+dg1SEJh0dr9k9Sra3ug
+         SBlfrlB8FFoffcOiOyk2XSUdoW4avy/e6yGOJcJ3CvJIqSezqlomrYNSbmy7uPnJbqfX
+         KYMJmhnry+9ile6J+nehlQo0NJYDyzeZgMAcOI2WKKkk+U2YzgsjPYFBjVycm0KXdTEz
+         h22S8QB/lMwWd1QZLKgCt+F0WRdk+7pYUMPXL8Qz26GxQi7bSLWnywgitcFO234vdFD/
+         niqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFyPpmMZnjMSqtLdnDWhNog/eivhaI1Ky6uuucPWP8FNbdEjxd+KwYe/Sal9O30dXCHj95dQAu9y6ZNBi53fXP0h8sPyYOWFt2j9wC
+X-Gm-Message-State: AOJu0Yz/NjcNzOzR/4QfOQZvGClFMYV1UFzuzOHPS+a3D6I0GhfzWJoE
+	rPkJGpBZSSFkxaqew+Zm20znmS9VGbLhRMeCel2k+JrcsUHQxCzrnQkAimc7ipqSU8TcXrAtT+K
+	0Sw==
+X-Google-Smtp-Source: AGHT+IHY9YzbCwBFObbbVKUprvWZ1lVsqt1aqVyeCtv5WiwA+nKUa0M0YnEHgFtBrjfmqeer2cDphAZ9lOw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:e74b:b0:1e2:3051:8194 with SMTP id
+ p11-20020a170902e74b00b001e230518194mr60970plf.11.1713276453910; Tue, 16 Apr
+ 2024 07:07:33 -0700 (PDT)
+Date: Tue, 16 Apr 2024 07:07:32 -0700
+In-Reply-To: <Zh5w6rAWL+08a5lj@tpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 10/11] net/smc: adapt cursor update when
- sndbuf and peer DMB are merged
-To: Simon Horman <horms@kernel.org>
-Cc: wintera@linux.ibm.com, twinkler@linux.ibm.com, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- wenjia@linux.ibm.com, jaka@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
- <20240414040304.54255-11-guwen@linux.alibaba.com>
- <20240416110538.GK2320920@kernel.org>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <20240416110538.GK2320920@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240328171949.743211-1-leobras@redhat.com> <ZgsXRUTj40LmXVS4@google.com>
+ <ZhAAg8KNd8qHEGcO@tpad> <ZhAN28BcMsfl4gm-@google.com> <a7398da4-a72c-4933-bb8b-5bc8965d96d0@paulmck-laptop>
+ <ZhQmaEXPCqmx1rTW@google.com> <Zh2EQVj5bC0z5R90@tpad> <Zh2cPJ-5xh72ojzu@google.com>
+ <Zh5w6rAWL+08a5lj@tpad>
+Message-ID: <Zh6GC0NRonCpzpV4@google.com>
+Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
+From: Sean Christopherson <seanjc@google.com>
+To: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Leonardo Bras <leobras@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
+On Tue, Apr 16, 2024, Marcelo Tosatti wrote:
+> On Mon, Apr 15, 2024 at 02:29:32PM -0700, Sean Christopherson wrote:
+> > And snapshotting the VM-Exit time will get false negatives when the vCPU is about
+> > to run, but for whatever reason has kvm_last_guest_exit=0, e.g. if a vCPU was
+> > preempted and/or migrated to a different pCPU.
+> 
+> Right, for the use-case where waking up rcuc is a problem, the pCPU is
+> isolated (there are no userspace processes and hopefully no kernel threads
+> executing there), vCPU pinned to that pCPU.
+> 
+> So there should be no preemptions or migrations.
 
+I understand that preemption/migration will not be problematic if the system is
+configured "correctly", but we still need to play nice with other scenarios and/or
+suboptimal setups.  While false positives aren't fatal, KVM still should do its
+best to avoid them, especially when it's relatively easy to do so.
 
-On 2024/4/16 19:05, Simon Horman wrote:
-> On Sun, Apr 14, 2024 at 12:03:03PM +0800, Wen Gu wrote:
->> If the local sndbuf shares the same physical memory with peer DMB,
->> the cursor update processing needs to be adapted to ensure that the
->> data to be consumed won't be overwritten.
->>
->> So in this case, the fin_curs and sndbuf_space that were originally
->> updated after sending the CDC message should be modified to not be
->> update until the peer updates cons_curs.
->>
->> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> > My understanding is that RCU already has a timeout to avoid stalling RCU.  I don't
+> > see what is gained by effectively duplicating that timeout for KVM.
 > 
-> ...
-> 
->> @@ -255,6 +256,14 @@ int smcd_cdc_msg_send(struct smc_connection *conn)
->>   		return rc;
->>   	smc_curs_copy(&conn->rx_curs_confirmed, &curs, conn);
->>   	conn->local_rx_ctrl.prod_flags.cons_curs_upd_req = 0;
->> +
->> +	if (smc_ism_support_dmb_nocopy(conn->lgr->smcd))
->> +		/* if local sndbuf shares the same memory region with
->> +		 * peer DMB, then don't update the tx_curs_fin
->> +		 * and sndbuf_space until peer has consumed the data.
->> +		 */
->> +		return rc;
-> 
-> Hi Wen Gu,
-> 
-> A minor nit from my side:
-> 
-> To my mind "return rc" implies returning an error value.
-> But here rc is 0, which based on the comment seems correct.
-> So perhaps it would be clearer to simply return 0.
-> 
-> Flagged by Smatch.
-> 
->> +
->>   	/* Calculate transmitted data and increment free send buffer space */
->>   	diff = smc_curs_diff(conn->sndbuf_desc->len, &conn->tx_curs_fin,
->>   			     &conn->tx_curs_sent);
-> 
-> ...
+> The point is not to avoid stalling RCU. The point is to not perform RCU
+> core processing through rcuc thread (because that interrupts execution
+> of the vCPU thread), if it is known that an extended quiescent state 
+> will occur "soon" anyway (via VM-entry).
 
-OK. I will improve it and another 'return rc' at the end of
-smcd_cdc_msg_send(). Thanks! Simon.
+I know.  My point is that, as you note below, RCU will wake-up rcuc after 1 second
+even if KVM is still reporting a VM-Enter is imminent, i.e. there's a 1 second
+timeout to avoid an RCU stall to due to KVM never completing entry to the guest.
+
+> If the extended quiescent state does not occur in 1 second, then rcuc
+> will be woken up (the time_before call in rcu_nohz_full_cpu function 
+> above).
+> 
+> > Why not have
+> > KVM provide a "this task is in KVM_RUN" flag, and then let the existing timeout
+> > handle the (hopefully rare) case where KVM doesn't "immediately" re-enter the guest?
+> 
+> Do you mean something like:
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index d9642dd06c25..0ca5a6a45025 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3938,7 +3938,7 @@ static int rcu_pending(int user)
+>                 return 1;
+>  
+>         /* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
+> -       if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
+> +       if ((user || rcu_is_cpu_rrupt_from_idle() || this_cpu->in_kvm_run) && rcu_nohz_full_cpu())
+>                 return 0;
+
+Yes.  This, https://lore.kernel.org/all/ZhAN28BcMsfl4gm-@google.com, plus logic
+in kvm_sched_{in,out}().
+
+>         /* Is the RCU core waiting for a quiescent state from this CPU? */
+> 
+> The problem is:
+> 
+> 1) You should only set that flag, in the VM-entry path, after the point
+> where no use of RCU is made: close to guest_state_enter_irqoff call.
+
+Why?  As established above, KVM essentially has 1 second to enter the guest after
+setting in_guest_run_loop (or whatever we call it).  In the vast majority of cases,
+the time before KVM enters the guest can probably be measured in microseconds.
+
+Snapshotting the exit time has the exact same problem of depending on KVM to
+re-enter the guest soon-ish, so I don't understand why this would be considered
+a problem with a flag to note the CPU is in KVM's run loop, but not with a
+snapshot to say the CPU recently exited a KVM guest.
+
+> 2) While handling a VM-exit, a host timer interrupt can occur before that,
+> or after the point where "this_cpu->in_kvm_run" is set to false.
+>
+> And a host timer interrupt calls rcu_sched_clock_irq which is going to
+> wake up rcuc.
+
+If in_kvm_run is false when the IRQ is handled, then either KVM exited to userspace
+or the vCPU was scheduled out.  In the former case, rcuc won't be woken up if the
+CPU is in userspace.  And in the latter case, waking up rcuc is absolutely the
+correct thing to do as VM-Enter is not imminent.
+
+For exits to userspace, there would be a small window where an IRQ could arrive
+between KVM putting the vCPU and the CPU actually returning to userspace, but
+unless that's problematic in practice, I think it's a reasonable tradeoff.
