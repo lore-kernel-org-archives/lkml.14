@@ -1,67 +1,75 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F421134425;
-	Tue, 16 Apr 2024 18:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1C3136675;
+	Tue, 16 Apr 2024 18:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713291679; cv=none; b=af5FyrUxs6+gWmVVk8X+yqNVEjy9cs9m0DvFxlU8XWbuZ5Yw/llxMF+afFOR17A1ltXjJNjayTaURJhuvcPS5rTwu+215nlOKd4W/pTIYhr4POjRoAaMaoODxdCC7GuFnD+QGRqHof8qwPjkkF3M0zPBtE0HbkREeVqNTe+oJpg=
+	t=1713291688; cv=none; b=pCSX8pu1SSxOZSOSU+Q+ll6gI5jvqFQDxP+TO7CqsU3yHb0T86XRYhVj+Yz7N/jREcm3C8D5R5TOungYwXGYLzyi2mK2dYAu9S0Gf/iwfAISHGdMjRDXBQuvkP2bPWT4B10wfpt2KCQR/xc04nDD98DUDkTwVAdicKSKSaPl51E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713291679; c=relaxed/simple;
-	bh=QcSDkA7ChgbUxoe7C0ogFHzjt1ZYJqaTtA3uVv9HgDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DjH5AxQDH338ZzkQnBARp54jG7nuQaW8HBAV08H7t5iYs3//KqfSyRra6eKZ3KeCgQdsv9Fl2zGq7bYC+wsGOrQp8s1RUUTHADkyEft17D+4kP5SsXv+6R0jMjO5Sme9m0c8CQmN+YFwN1X5EL2vOh5/VApy1wHRzhOPHfYqm7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1FdLamt; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713291688; c=relaxed/simple;
+	bh=0uNHnY3/vyfm1OdSaRqU0rd1S/3Au1oahr6hn9+Yh9E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IuactwEf8QfBodZJVNuNkO7p36PTIxbGPuWowyMOsXgIBvQcuBij2i+ZgThcoZA/9LgXEGpH8pHO797VdTf8yB04pOohdI/LL8Q9OrGNt/m4RUOTaBIE4DKYSQKp2L9/QrnNIF/5Gu+QZRSBePW01d5iaxNmrCDaNddgHjujgxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NTQwhIjF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1FdLamt"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5aa241232faso4225878eaf.0;
-        Tue, 16 Apr 2024 11:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713291677; x=1713896477; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+S1+Bvs+KfmTiGOO6QBvwuAsVbMXrzU7cCY/wMWBHI=;
-        b=E1FdLamtkWDqFgCoecHfCQ/NtXsBa/bNXU9Lcj4dWJSlnVIeWuVEzmgFp/6DdBZZ6h
-         eFaBDVbY7za3WEdAEvp7CM2bK7s6yeM32F+WPIKGtMvN1i8I7qZmVF52H9Y1tQ5AigY2
-         VtPD8sr2UA7HAosr9835Ew1aW6bSC5Fq7eLX40v0KczoJqWUQYqHKcKydtoqp84se0I5
-         yOL+dz8Bl/AyxbOQIs1KTkR9Bhd0Xr3mte+uS71ExOHx+xuBBxr2xPwPN1ZkE036Jh0N
-         bOjZUDSKC6Ql2CAkJO9px7pm2So28i7TFdP4W5fZWnelb7NBeeEtIp8pZEGbnMdvulOl
-         c/EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713291677; x=1713896477;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y+S1+Bvs+KfmTiGOO6QBvwuAsVbMXrzU7cCY/wMWBHI=;
-        b=CgJpel28ZgM1Xv1hOiUQdUGTGYM7aUr3/Gux1PUYVY702oVRaJoitYVNhkUeLMtEtq
-         h4698YkZSC9ebQCULoaTjqmS9ntUpPJBk4/5eNON2EoSYhZRZbxwy1anlCI56v8+akkg
-         GQnY45RaBEBSO7e5g2WEF4sDycU3pP6V3fsvgnLU9eaa5SBRPHUn+rSGqq+x2DA5Pq9B
-         G8euKdL1R43KtawAktUPvlsa8AZeF5FqYTgb99dWZ5Z2SCfDQl6gBKl6d6MC65A4NWJ4
-         BW9uiYFWvmM4l+8uYDg76ewEHFbt1ZuMwiH6wONoxrC/+dvZwu1hFBi13rrXPlAM6bTS
-         XNHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPhrMk++jicyACTbBAVlb0ouRR/yUlnYIn64uQhcbl1SJQ2YZ7+bVAPH1X0WTKWryrtAYSetlQ91vZ/28i5Wtwep+piFJ2ClSvwuhjkuUdGQYHcnC16Ms/aFwjmc9y7JYCzXm1CZvc7zy6aKiw6xc8rQ==
-X-Gm-Message-State: AOJu0Yw36U5oZXqQNpD7LVxNgIrRMio+qlZg2n1V/OPR0pPDoHh49dfH
-	raGWG/M/V5VmlfGkSnUJuWNEnNDive/LfO8UY6ktNi0EMAYdTLOV
-X-Google-Smtp-Source: AGHT+IHar1Qp9jShy2P0mDMiQ6n+8tgVpCQrzeQfVJMhr4LLfzl2ihWdiFWwBmqm/CP1Zcm2+OXN9Q==
-X-Received: by 2002:a05:6870:5486:b0:22e:bace:ed96 with SMTP id f6-20020a056870548600b0022ebaceed96mr16339280oan.15.1713291677399;
-        Tue, 16 Apr 2024 11:21:17 -0700 (PDT)
-Received: from localhost.localdomain ([2600:1700:70:f702:9c77:c230:a0ba:a1a1])
-        by smtp.gmail.com with ESMTPSA id k20-20020a056830151400b006eb77e42ff5sm1289155otp.26.2024.04.16.11.21.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 11:21:17 -0700 (PDT)
-From: Mario Limonciello <superm1@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao@amd.com>,
-	platform-driver-x86@vger.kernel.org (open list:AMD HSMP DRIVER),
-	linux-kernel@vger.kernel.org (open list),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2] platform/x86/amd: Don't allow HSMP to be loaded on non-server hardware
-Date: Tue, 16 Apr 2024 13:20:57 -0500
-Message-ID: <20240416182057.8230-1-superm1@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NTQwhIjF"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GDoY8M018510;
+	Tue, 16 Apr 2024 18:21:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=GQP/S9wF50hkAtHrqa2wzWbWX4noH2h5fH52On1Who4=; b=NT
+	QwhIjFIjr/7jp0gyi4AJiJlAKkJDZ4q08HigZJ0tdNNKgK995VrChinCoCJMsCKH
+	ccaOmvPPKZwsuE3dbwpKUMRahHT8elRRjSOVNCNV6SpNF2KQWMv+1k6InBkNTOyJ
+	111FF8cX2RBASVil9DxPgWaBIS0C4COGwJEFmdOJ3sLUzvL8+ZWxjG4fmonm3Dnj
+	yg3h6QqAqVMw9fnEMcCvlUA2GEU3gPZqUj5Bg8/S2zlFdT82RVskXiP98IKVm4m3
+	z6Z0Jq5V8wPiAIvdHFbys3kBMK+rFzN7YSQEhAQdl0AtGvxx7YPF7TQ9b/IuAR33
+	DB4lw3Q1Qd0l/Bfis27Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xhtjr8vbx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 18:21:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43GILL4c009164
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 18:21:21 GMT
+Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 16 Apr 2024 11:21:15 -0700
+From: Ajit Pandey <quic_ajipan@quicinc.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>, <stable@vger.kernel.org>
+Subject: [PATCH V2 1/8] clk: qcom: clk-alpha-pll: Fix CAL_L_VAL override for LUCID EVO PLL
+Date: Tue, 16 Apr 2024 23:49:58 +0530
+Message-ID: <20240416182005.75422-2-quic_ajipan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240416182005.75422-1-quic_ajipan@quicinc.com>
+References: <20240416182005.75422-1-quic_ajipan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,57 +77,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jujZR0PCkt-404QU1KeuzIAp_DuQUgyX
+X-Proofpoint-GUID: jujZR0PCkt-404QU1KeuzIAp_DuQUgyX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-16_16,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404160115
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+In LUCID EVO PLL CAL_L_VAL and L_VAL bitfields are part of single
+PLL_L_VAL register. Update for L_VAL bitfield values in PLL_L_VAL
+register using regmap_write() API in __alpha_pll_trion_set_rate
+callback will override LUCID EVO PLL initial configuration related
+to PLL_CAL_L_VAL bit fields in PLL_L_VAL register.
 
-If the HSMP driver is compiled into the kernel or a module manually loaded
-on client hardware it can cause problems with the functionality of the PMC
-module since it probes a mailbox with a different definition on servers.
+Observed random PLL lock failures during PLL enable due to such
+override in PLL calibration value. Use regmap_update_bits() with
+L_VAL bitfield mask instead of regmap_write() API to update only
+PLL_L_VAL bitfields in __alpha_pll_trion_set_rate callback.
 
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2414
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3285
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Fixes: 260e36606a03 ("clk: qcom: clk-alpha-pll: add Lucid EVO PLL configuration interfaces")
+Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+Cc: stable@vger.kernel.org
 ---
-v1->v2:
- * use pm preferred profile instead
----
- drivers/platform/x86/amd/hsmp.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/clk/qcom/clk-alpha-pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-index 1927be901108..102a49c3e945 100644
---- a/drivers/platform/x86/amd/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp.c
-@@ -907,6 +907,17 @@ static int hsmp_plat_dev_register(void)
- 	return ret;
- }
- 
-+static bool hsmp_supported_profile(void)
-+{
-+	switch (acpi_gbl_FADT.preferred_profile) {
-+	case PM_ENTERPRISE_SERVER:
-+	case PM_SOHO_SERVER:
-+	case PM_PERFORMANCE_SERVER:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int __init hsmp_plt_init(void)
- {
- 	int ret = -ENODEV;
-@@ -917,6 +928,11 @@ static int __init hsmp_plt_init(void)
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 8a412ef47e16..81cabd28eabe 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -1656,7 +1656,7 @@ static int __alpha_pll_trion_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	if (ret < 0)
  		return ret;
- 	}
  
-+	if (!hsmp_supported_profile()) {
-+		pr_err("HSMP is only supported on servers");
-+		return ret;
-+	}
-+
- 	/*
- 	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
- 	 * if we have N SMN/DF interfaces that ideally means N sockets
+-	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++	regmap_update_bits(pll->clkr.regmap, PLL_L_VAL(pll), LUCID_EVO_PLL_L_VAL_MASK,  l);
+ 	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+ 
+ 	/* Latch the PLL input */
 -- 
-2.43.0
+2.25.1
 
