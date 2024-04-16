@@ -1,156 +1,103 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFF512DD95
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730812F5B1
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278957; cv=none; b=bMuBhPdgsA0E1jTBLh6Mk+goKlUmpTZyCF6DMyEY7E2qO32tcjMy1wGrPBiQuA9vDwP2HU+8SbMf+JkZShxhg6QTvh3ytBaFPjDd+KUFqlkOW34bS60ObqI9F0jKqPcOdTEczNCx5CXj71AuL2e56zpGYXRtDX0wjkYNXhoI7g8=
+	t=1713278982; cv=none; b=it+RJyGMFyUNzIrX0p3/8u0lR6Mw65FZGAuQJF9IpQCd4b7XF1BocBvvg03tqA85bf/AMxQmPCVpn1eZL+I9W1fVrsybtf0alxr5JWZHrOIbkLtIyXFVnOkvNtQPy//tBTeKUye9R5VNQv715wnDmlQvTvYHGnAfSOGv6YYb43s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278957; c=relaxed/simple;
-	bh=7lyToubjndBkFS/xjTwm6ZMyDvw4t6Soiztt3CZy43I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kX0S6B/Q+daYvpLWgObSiXC9kLqI4Taq8DYCl1CZaQ/6AkMHKK0poFVcZxT3gT4ATRnWTpOuZPPuAazXXe2teH5g/ciQMlgMLTFSGWTY6QFac2qs4iYatEFWw8I8guRLvuZtIoMo5t7CpyCdO0JtDd/0Fcf3yP7v6y004WlXidI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=bTNnjpIa; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1713278982; c=relaxed/simple;
+	bh=7ARtCr6gtBIZWPixhMOKo/+c9HV56ed5oMvKe8ko6Dw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EnsH/dKHHRK0bbr8/UHwIFDqhryao9dEr7tSpLVROQF9Pi6bEUUg/Wqpq4RE8kx0vG5AvP53n822jkzJVtwir4aXGLUBoqmbI1eRu9ulLvP8gI5+unPOg3Z03n2xOZv0yFOlJWnVmMHbpU2gwo/1cIEAkw8Szud69yAFplVoxYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RrpBiHO1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="bTNnjpIa"
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RrpBiHO1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713278979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Kro/6N3hNJUz0mvlhxtTHwRpm8U0aOExj9xAbQAp3R0=;
+	b=RrpBiHO1J9ueoJSFRY1JNYQkAQmKftHGnGlkKZAHe+j6pxRPKitgQhAS2ckgQA2bUd9ScV
+	1KTx/+t5g3SZlpPec3/6CRIF6SqiFhf0YoIVH9dtTb71kSc9Lor06auzZqHhwDLIYFcFze
+	lqmbnAynkzj7KgCbPm1Qfzq5Pu6xhUg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-F48Bfbb7NgShjBLlx_GDCQ-1; Tue,
+ 16 Apr 2024 10:49:35 -0400
+X-MC-Unique: F48Bfbb7NgShjBLlx_GDCQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4A8B93FE3D
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713278952;
-	bh=SQh3gD+ToMzBSqvlRyRoPbaP+xTFtE8pqccMPR/X80o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	b=bTNnjpIaXCd5s6ImaVwHNR7OSVdldJr9ZXp9rizlLvN0oab5b/ipYE1rYNTdWZcki
-	 sZiYr2Lria1r4Y3P94FTAa6fggkFwnfmoN2+KShG2m4/2STcSOG9IHkidpZ2O4Iug3
-	 kZArQ6TkTQkayjwKRqUoNi3Be6Aip/zaV/5es6pil2Y+fW2rJVAJOEXUWZFbGIjFFD
-	 ss2W4hgwqToocZT+FvWrvBkcKhYaAiN9S4dDRjGBw3n5gH65e4/4Gx67ThzOrQQTzA
-	 Ew+p07TB13snTlofinejF86g628ukNRtOZL4zmzXpAuPav7cFQ31/HxJ2tgLFg/9pV
-	 5oT28nwGfqUmg==
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a4e9ac44d37so271631466b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 07:49:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713278952; x=1713883752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQh3gD+ToMzBSqvlRyRoPbaP+xTFtE8pqccMPR/X80o=;
-        b=JsxgKYl0Ta435NBZPcrgIKwneL/8/yKuJ7oVa6AzkMDAR1J0+F3DyhX/zhsmN6EK9g
-         jan7ywXVlg8bBDKBoXeHE+1d1tzv4+Mc32TioU8hvWwSvHXZmDEMHUNTGQzytw12xfNd
-         lvVbeermOtlhUbnXIXf5RkFvTC7FZNejSMVWEqceQ50oXzQu7UsCnT8XXZw9TNaa3Fav
-         dR2tpWiRHNIFEK1Ep7kzecX5DzTuXBekrfFNePee5XY6iaWnG/Kip6olaXc/JGKr9S1X
-         3p8uTaR3iBxhUjLb/OUTvVC9/MxuJjnAN6HTX+bDss870zgll//9he0ibx12Jk5g72PJ
-         82cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7F0cLXHc36mLTgRSbm7pIztI1vI84i9AASpqj9tGGFKpcXMGBMS7BDiBDRrDejjxDEtXPJbXS87h49VnsEafgoPYvCuri5bp1DTsO
-X-Gm-Message-State: AOJu0YxyB80yBvulDfVjoDKV+21I2zyz2SuAnksveXtSjVL82gqWxkSw
-	dP8P7DlA83cK0sxDvS1LbrIpv5rRNQ3HXx3yrjPzCFACzwiiSzDJ6XoeeuVvGlakI9wX1Dyyu0D
-	vuLyQi0SNDnG6fkvneKYxemWE2DBpNYCv9fKH3zAr4T+g4tAUeGxcpT0UILW9e7SQOPWjgKpTOH
-	dkUQ==
-X-Received: by 2002:a17:906:4956:b0:a52:6a4b:c810 with SMTP id f22-20020a170906495600b00a526a4bc810mr3400662ejt.35.1713278951889;
-        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyz7nSFg/BkyuaXVLZ2ohQQZlKhJDri29PE7VWvk9uGXGz9gTCezlFmTExiTaW78zWQV6OQA==
-X-Received: by 2002:a17:906:4956:b0:a52:6a4b:c810 with SMTP id f22-20020a170906495600b00a526a4bc810mr3400639ejt.35.1713278951519;
-        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
-Received: from amikhalitsyn.lan ([2001:470:6d:781:ef8b:47ab:e73a:9349])
-        by smtp.gmail.com with ESMTPSA id gv15-20020a170906f10f00b00a517995c070sm6916856ejb.33.2024.04.16.07.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 07:49:11 -0700 (PDT)
-From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-To: horms@verge.net.au
-Cc: netdev@vger.kernel.org,
-	lvs-devel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	=?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@stgraber.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Julian Anastasov <ja@ssi.bg>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>
-Subject: [PATCH net-next] ipvs: allow some sysctls in non-init user namespaces
-Date: Tue, 16 Apr 2024 16:48:14 +0200
-Message-Id: <20240416144814.173185-1-aleksandr.mikhalitsyn@canonical.com>
-X-Mailer: git-send-email 2.34.1
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 860931C4C3A0;
+	Tue, 16 Apr 2024 14:49:34 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.194.131])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C9847492BD4;
+	Tue, 16 Apr 2024 14:49:31 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	llvm@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH v1] LoongArch/tlb: fix "error: parameter 'ptep' set but not used" due to __tlb_remove_tlb_entry()
+Date: Tue, 16 Apr 2024 16:49:26 +0200
+Message-ID: <20240416144926.599101-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-Let's make all IPVS sysctls visible and RO even when
-network namespace is owned by non-initial user namespace.
+With LLVM=1 and W=1 we get:
 
-Let's make a few sysctls to be writable:
-- conntrack
-- conn_reuse_mode
-- expire_nodest_conn
-- expire_quiescent_template
+  ./include/asm-generic/tlb.h:629:10: error: parameter 'ptep' set
+  but not used [-Werror,-Wunused-but-set-parameter]
 
-I'm trying to be conservative with this to prevent
-introducing any security issues in there. Maybe,
-we can allow more sysctls to be writable, but let's
-do this on-demand and when we see real use-case.
+We fixed a similar issue via Arnd in the introducing commit, missed the
+loongarch variant. Turns out, there is no need for loongarch to have a
+custom variant, so let's just drop it and rely on the asm-generic one.
 
-This list of sysctls was chosen because I can't
-see any security risks allowing them and also
-Kubernetes uses [2] these specific sysctls.
-
-This patch is motivated by user request in the LXC
-project [1].
-
-[1] https://github.com/lxc/lxc/issues/4278
-[2] https://github.com/kubernetes/kubernetes/blob/b722d017a34b300a2284b890448e5a605f21d01e/pkg/proxy/ipvs/proxier.go#L103
-
-Cc: Stéphane Graber <stgraber@stgraber.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Julian Anastasov <ja@ssi.bg>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Closes: https://lkml.kernel.org/r/CANiq72mQh3O9S4umbvrKBgMMorty48UMwS01U22FR0mRyd3cyQ@mail.gmail.com
+Fixes: 4d5bf0b6183f ("mm/mmu_gather: add tlb_remove_tlb_entries()")
+Tested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- net/netfilter/ipvs/ip_vs_ctl.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ arch/loongarch/include/asm/tlb.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 143a341bbc0a..92a818c2f783 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -4285,10 +4285,22 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
- 		if (tbl == NULL)
- 			return -ENOMEM;
+diff --git a/arch/loongarch/include/asm/tlb.h b/arch/loongarch/include/asm/tlb.h
+index da7a3b5b9374a..e071f5e9e8580 100644
+--- a/arch/loongarch/include/asm/tlb.h
++++ b/arch/loongarch/include/asm/tlb.h
+@@ -132,8 +132,6 @@ static __always_inline void invtlb_all(u32 op, u32 info, u64 addr)
+ 		);
+ }
  
--		/* Don't export sysctls to unprivileged users */
-+		/* Let's show all sysctls in non-init user namespace-owned
-+		 * net namespaces, but make them read-only.
-+		 *
-+		 * Allow only a few specific sysctls to be writable.
-+		 */
- 		if (net->user_ns != &init_user_ns) {
--			tbl[0].procname = NULL;
--			ctl_table_size = 0;
-+			for (idx = 0; idx < ARRAY_SIZE(vs_vars); idx++) {
-+				if (!tbl[idx].procname)
-+					continue;
-+
-+				if (!((strcmp(tbl[idx].procname, "conntrack") == 0) ||
-+				      (strcmp(tbl[idx].procname, "conn_reuse_mode") == 0) ||
-+				      (strcmp(tbl[idx].procname, "expire_nodest_conn") == 0) ||
-+				      (strcmp(tbl[idx].procname, "expire_quiescent_template") == 0)))
-+					tbl[idx].mode = 0444;
-+			}
- 		}
- 	} else
- 		tbl = vs_vars;
+-#define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
+-
+ static void tlb_flush(struct mmu_gather *tlb);
+ 
+ #define tlb_flush tlb_flush
 -- 
-2.34.1
+2.44.0
 
