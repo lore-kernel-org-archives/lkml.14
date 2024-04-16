@@ -1,70 +1,115 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866401369B2
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F052A132C1F;
+	Tue, 16 Apr 2024 18:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713290895; cv=none; b=ZhAGSKPiEBtyOIW3jtubgr/F1ywlY5XBBl03fyC8wSFosg5TK76ULyDmzjxllht71eijDGxBjSoDopbjJmqvsYJHP4WqdeZG3U5JyabKF+yNqeTMuIu57ThLqKLYswQ/vl7naSBiuWfJ1mratkspogCHY341tzxPz6+LPVNPYYE=
+	t=1713290958; cv=none; b=SqNCjE1JgzJQNA3vD4pAmyt9XcPtjkhjnMjoHeNkdDjFc38rzwMJRxKoKnNGn4ts4FhpZc6bvORWl/ABwTIdUgtJcNxuECZDxglBP3n2Vkije+rHjGuOkADAIwQ0O97TEI1WjSzOZ18C16ugGfY+oSQ+h3J/kTEVwiJhud4ey3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713290895; c=relaxed/simple;
-	bh=6S9Xirfhco5ND1Ab4f17pk/ZoYdlT3pybm4P7bukBMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IBuImLB1Covs6/QKxOM/wPZn3LN4xnF/V6S6YaWBdMuSD/BCyT6+WCQZIfGiTxhknxKOqYksQT9QSVmUcad17dLZk6vSP9x3wd3ZCCwiMfP+GJ3uThilfIfZ1EBYo6SZa17FDj1EtQKAUhqj7x32F9TxVsyZz0PVCepoYCRivH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1428540E02A5;
-	Tue, 16 Apr 2024 18:08:06 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id etacZ0GjaNw6; Tue, 16 Apr 2024 18:08:02 +0000 (UTC)
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26E8A40E00B2;
-	Tue, 16 Apr 2024 18:07:54 +0000 (UTC)
-Date: Tue, 16 Apr 2024 20:07:46 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
-	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org
-Subject: Re: [PATCH v1 1/1] x86/fred: Fix int80 emulation for FRED
-Message-ID: <20240416180746.GFZh6-cmZqCF6KX5tt@fat_crate.local>
-References: <20240412234058.1106744-1-xin@zytor.com>
- <20240416101147.GDZh5O473e4X_ZG1lZ@fat_crate.local>
- <1AE9FA53-A130-4F95-8408-C1990DD031AA@zytor.com>
+	s=arc-20240116; t=1713290958; c=relaxed/simple;
+	bh=H8MrxffkceMumKJooGQ32Ry3ywid0CvWTua4pVRYLN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qtMhSQ+EUtSTAjMSeTO+QN21B1lK+YV01ciDx5e2DtGEIrDkOzX7fwjUjLfue4dHTpbgjGeVPyZ6hSZKvadiLsUYaSvxdnw9nJ8WV3R2v6ogIyxfSx1uYgvEYiO6PmsZ+srMIa4SZ6iKOjI+t0iMRPA8b9tR7OwwS8H3kZ3qncg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GMhnFAjb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ixQmOQ/Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GMhnFAjb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ixQmOQ/Z"
+Date: Tue, 16 Apr 2024 20:09:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713290953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SKLrAI5OCUe/r2J49t7qM8eP1fCwVfsTtu23X+cbhBw=;
+	b=GMhnFAjb5aq0fLq1hjaVwDC+5vKgO0aCNwGaU5Cg54Dwdl9OeS42slUU0vCDSUpV6s95+f
+	So/JFdqMFwQ0NhjaqOe7zQ6d/VA+QxIwi1ucEUpCvWu3Z99MtkGTlNIi+1NEvgulAc7YK4
+	mGvSc0PTS7Km/W9dDgIwMo0psk4jzZkt8Hjk2JQlw+oovvt5+rRdK1El/jdfj0lNyKmJM8
+	K3c5LmVS0QcaJ04UQk8GV7B8uhyW95BRdfrKnE8JKF2ILPHxVKa8r24H2DSgA65SfvSj8e
+	eEa7YmcRxOk5ZCcqgm4uc/7pdnlChnyC0eyqwezB7TpQ98nV0HvVanFPYH5acA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713290953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SKLrAI5OCUe/r2J49t7qM8eP1fCwVfsTtu23X+cbhBw=;
+	b=ixQmOQ/Z45c/M1fP70O0/XH6yLZ1zVX1OS5AAh3Zp3iBkAq1q4nMCxItjJ18ha6HRKoS0G
+	uM/NfWOUolPOHiBA==
+From: Nam Cao <namcao@linutronix.de>
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Andreas Dilger <adilger@dilger.ca>, Al Viro <viro@zeniv.linux.org.uk>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>, Jan Kara <jack@suse.cz>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>, Ext4
+ Developers List <linux-ext4@vger.kernel.org>, Conor Dooley
+ <conor@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Anders
+ Roxell <anders.roxell@linaro.org>, Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: riscv32 EXT4 splat, 6.8 regression?
+Message-ID: <20240416200910.294ea07b@namcao>
+In-Reply-To: <875xwhuqrx.fsf@all.your.base.are.belong.to.us>
+References: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
+	<8734rlo9j7.fsf@all.your.base.are.belong.to.us>
+	<Zh6KNglOu8mpTPHE@kernel.org>
+	<20240416171713.7d76fe7d@namcao>
+	<20240416173030.257f0807@namcao>
+	<87v84h2tee.fsf@all.your.base.are.belong.to.us>
+	<20240416181944.23af44ee@namcao>
+	<875xwhuqrx.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1AE9FA53-A130-4F95-8408-C1990DD031AA@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 11:05:09AM -0700, H. Peter Anvin wrote:
-> The question was if you wanted a quick fix for x86/urgent. It's pretty
-> obvious that a FRED fork of the int80 code is called for.
+On 2024-04-16 Bj=C3=B6rn T=C3=B6pel wrote:
+> Nam Cao <namcao@linutronix.de> writes:
+>=20
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index fa34cf55037b..f600cfee0aef 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -197,7 +197,6 @@ early_param("mem", early_mem);
+> >  static void __init setup_bootmem(void)
+> >  {
+> >  	phys_addr_t vmlinux_end =3D __pa_symbol(&_end);
+> > -	phys_addr_t max_mapped_addr;
+> >  	phys_addr_t phys_ram_end, vmlinux_start;
+> > =20
+> >  	if (IS_ENABLED(CONFIG_XIP_KERNEL))
+> > @@ -238,17 +237,9 @@ static void __init setup_bootmem(void)
+> >  	/*
+> >  	 * memblock allocator is not aware of the fact that last 4K bytes of
+> >  	 * the addressable memory can not be mapped because of IS_ERR_VALUE
+> > -	 * macro. Make sure that last 4k bytes are not usable by memblock
+> > -	 * if end of dram is equal to maximum addressable memory.  For 64-bit
+> > -	 * kernel, this problem can't happen here as the end of the virtual
+> > -	 * address space is occupied by the kernel mapping then this check mu=
+st
+> > -	 * be done as soon as the kernel mapping base address is determined.
+> > +	 * macro. Make sure that last 4k bytes are not usable by memblock.
+> >  	 */
+> > -	if (!IS_ENABLED(CONFIG_64BIT)) {
+> > -		max_mapped_addr =3D __pa(~(ulong)0);
+> > -		if (max_mapped_addr =3D=3D (phys_ram_end - 1))
+> > -			memblock_set_current_limit(max_mapped_addr - 4096);
+> > -	}
+> > +	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE);
+> > =20
+> >  	min_low_pfn =3D PFN_UP(phys_ram_base);
+> >  	max_low_pfn =3D max_pfn =3D PFN_DOWN(phys_ram_end); =20
+>=20
+> Nice! Would you mind submitting this as a proper fix (unless there's a
+> way to do it non-arch specific like Matthew pointed out).
 
-Yeah, I'm thinking the FRED fork would be even easier to send to Linus
-now since no existing hw will break.
+I don't mind, but I am waiting for the discussion on the non-arch solution.
 
-Btw, I presume that patch needs to have
-
-Fixes: 55617fb991df ("x86/entry: Do not allow external 0x80 interrupts")
-
-?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Best regards,
+Nam
