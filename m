@@ -1,62 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m12823.netease.com (mail-m12823.netease.com [103.209.128.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E6639FCE;
-	Tue, 16 Apr 2024 13:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D9612A16E;
+	Tue, 16 Apr 2024 13:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.209.128.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273357; cv=none; b=X1Gl0lWQO1DEw7qK9kEe51vO/rObYNI0flwT2i/htyorpJ5l+IUgXTFQZ6HTEPvzGTTpz8W5JV4qRCKequw13UAa9ZUOC8OImrNuiwKzivoiLC21/94UHiXToYqVtZDcG2XzkM6C+ZdRRqvQ+XVtVCa4cyFS7Vn8n5MJ92sj22A=
+	t=1713273448; cv=none; b=tNi2KqnMpP/8wS3X9M78WK7AAh9lkDobBmRuhbkZVdVwEd+3hO+25hS7H4qgOcQkhTEXyq4nIQLAYQXBohlNV2KPZ90VARuWeUZxadDXYTEv1bbi+mUQ8Bg+eTHqYvkQf+S7Y7TKcXveW+/Po/9g0qWAVNjlGNJGninqrqY5zEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273357; c=relaxed/simple;
-	bh=+RaJjq58bjdpAdYGgg5kbu/PuCVvFIRqwo+91MWU5Sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJ/3rVpjFQrLAOVJU5rEV1akCuxXb5JxgGZRQC7g65DE/WQUqloSr5OD+UWkDzto9fNpFysvZ/+oFnzdL8e0+IdJq2ND6U2eFdDkKmHcV40jmtbwMibRiaiSDNkek0OfKzm1WmZxxNqiycsNtisVF/SRZKJ8BAbBU+9TNkYrE6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEZRIcto; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEZRIcto"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D011CC113CE;
-	Tue, 16 Apr 2024 13:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713273357;
-	bh=+RaJjq58bjdpAdYGgg5kbu/PuCVvFIRqwo+91MWU5Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vEZRIctom5oVGbyhmPWoDp1y+g+Fgg3GhhoBfhtPD4lBoprXDND4Q2DD3AkNyxg9k
-	 k+JNmzmm97sWw90+M0pXB3UyTPvoM5c5Ifq3Diqqqxz+fHzviHibonKiNkss4IHWER
-	 mD4RizU+WKf8qdKqLNfSR2eM/I6oYl5JyJfSRSLgBfJYNhMKngkS1NsiFvIib39jF+
-	 1HWYZk70FP6cfwgCE1pZt0IUx1yvmKtUCFFiSdd9YVoNnf9Wbz9fGG6tfh9qx10rwR
-	 lv4RjelnKUV1rZCic+UOfatQCPduPIZgtsqI0hyqzob535FEavCbScU/knKMkLZjL7
-	 Uaf49yM2nd45w==
-Date: Tue, 16 Apr 2024 08:15:54 -0500
-From: Rob Herring <robh@kernel.org>
-To: skseofh@gmail.com
-Cc: saravanak@google.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: of_reserved_mem: remove repeated call to get no-map
- property
-Message-ID: <20240416131554.GA2105823-robh@kernel.org>
-References: <20240412140938.137803-1-skseofh@gmail.com>
+	s=arc-20240116; t=1713273448; c=relaxed/simple;
+	bh=hyiEPB8L5mFUohZUkwNFrVzE6hLdGgK864C/chAB2H4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m63K5eFumOArxMSoWE/yhoVdNj+QnQrD9JD6/WtYTku0EdT8rbFYdqXrfF6rLfWS8Hj8hTNOXDjzWHNzY9c2PKzUK1OrTpeU1URfZL/HUl9w3hn4sXE/HZl+Q5X1mTkzRGLOeBTFkMVxI/JzLgTu4Cp6+8G9Ua43vtV1fo58QK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=103.209.128.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c00:5e10:948:ebda:821b:6681])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 437647E0101;
+	Tue, 16 Apr 2024 21:00:16 +0800 (CST)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH 1/2] dt-bindings: arm: rockchip: add Radxa ROCK3 Model C
+Date: Tue, 16 Apr 2024 21:00:09 +0800
+Message-Id: <20240416130010.379705-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412140938.137803-1-skseofh@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ0hLVhpKGR0YHh1DSB9CHlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSBlIQUkYS0tBTh5KS0FCT0NBHhkfGkFDSUoZQU1NQ0pZV1kWGg8SFR0UWU
+	FZT0tIVUpKS0hKQ1VKS0tVS1kG
+X-HM-Tid: 0a8ee6fe68e303a2kunm437647e0101
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Oj46PTo5VjMUAQ0vLBkBPR0a
+	TixPCj1VSlVKTEpISUxJT0pNQ05NVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0tBTh5KS0FCT0NBHhkfGkFDSUoZQU1NQ0pZV1kIAVlBSUtOTzcG
 
-On Fri, Apr 12, 2024 at 11:09:38PM +0900, skseofh@gmail.com wrote:
-> From: Daero Lee <skseofh@gmail.com>
-> 
-> In __reserved_mem_alloc_size, of_get_flat_dt_prop is called and checked
-> whether the "no-map" property exists for the node. In
-> fdt_init_reserved_mem, the only caller of __reserved_mem_alloc_size,
-> we checked this again for the same node. Therefore, repeated
-> of_get_flat_dt_prop call was removed and 'nomap' was passed as an input
-> parameter to the callee function.
+The Radxa ROCK3 Model C is a similar board to
+the Radxa ROCK3 Model A with the RK3566 SoC.
+Add devicetree binding documentation for it.
 
-This code is all about to get rearranged[1], so holding off on this.
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 99bd5e2c76a0..dc3847bd67fe 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -777,6 +777,11 @@ properties:
+           - const: radxa,rock3a
+           - const: rockchip,rk3568
+ 
++      - description: Radxa ROCK3 Model C
++        items:
++          - const: radxa,rock3c
++          - const: rockchip,rk3566
++
+       - description: Radxa ROCK 5 Model A
+         items:
+           - const: radxa,rock-5a
+-- 
+2.25.1
 
-[1] https://lore.kernel.org/lkml/20240328211543.191876-1-quic_obabatun@quicinc.com/
