@@ -1,107 +1,74 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4F2130A4B;
-	Tue, 16 Apr 2024 15:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA15130A4B
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 15:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713281210; cv=none; b=AyUuxKXt8oOHy6o7L/WgQwpBVOytJK9Fad0ihOGu5Fx2Xrvb9Rab0sBJp94ahbooeARP/+mUCbKTQ6xx9A6e98yIHMqLZQASeQtYgu6M1bWc6riKPfFG6XcYVmAJGwuTRZv+Kx2jcD4T+tjS3npeYyoJYPZfGfAaVF+xYXS2fxU=
+	t=1713281262; cv=none; b=C0c+a0h1WNv68G3RFnt8Ij6pRjHK9ooK9X3cCgA6FWJAjjcKggRHEfWil9oNXxtz+ktvs6FdnezQLpDPxx0X+z+ueHgoc15UDl8W8zj6Tx6fU7/iE8ofCoxANnHHN0ZL97f95ZUItJVsL/tl0bdc/EcP1cIAY6/Y+WGGXFr5hEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713281210; c=relaxed/simple;
-	bh=FNHcD4Sgv7zzl0ohaid6qhEVjUCQjGVryAxf4STZYOk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mpebKCLeWvlXEpIqEaereA/6aE64rq2JzG9DCPeZJa3nkp857+6HSFjZQYEWwAbHm0ze89Szt/9HsbiJA3Bxu47hwcn1GNJ8POxsG5O08/+EQLqftZyPtbcuZsoXhP+nk9AlUlLHpM7Fal0S1uIz9igaVmhnNUOzlkBDM8y91fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HefGEfta; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HefGEfta"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713281206;
-	bh=FNHcD4Sgv7zzl0ohaid6qhEVjUCQjGVryAxf4STZYOk=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=HefGEftahFgejDtXc8DcfD2s20vgfqbcpqof6CwHu727DcM/DC9SfycAdes0bq8td
-	 dOGpLR7g0/h3N2J+Q+7XRmB4z6/tpbhnVqf1h/0NlzgmsfwIsbvw8SRXByijNOgaUB
-	 Pg74NYKiXzXd18H1Gaa9/o+AvsXeUsXTkhlSFMmdEtv/7pbaP44U6ISfSaE9OXXcXk
-	 ejyArPgJMY6GmxWOyGNCuOkGjGtKnvJ4ojvK0JCCPbvs/ti+5Z35fP6oRJy5HHR4+/
-	 C8kjTlD/6j/lzeq0/YA/ZfpmejzswWwQFAJFkLRut9l6tqVylDet5M0pD0KAzwqvPz
-	 eTRSNJcvwEs+w==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 000D937804B2;
-	Tue, 16 Apr 2024 15:26:40 +0000 (UTC)
-Message-ID: <76103169-4c8c-4c70-9d42-058557115b52@collabora.com>
-Date: Tue, 16 Apr 2024 20:27:12 +0500
+	s=arc-20240116; t=1713281262; c=relaxed/simple;
+	bh=lN/LCVnSKylBG/BB/y6k7eL7xUWQTh3n78CmxC/DCaM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PEzNoK7Wk0PjNc9RNgRu7jaOrb9mY16F22eEvqTLl5PZcYhUFRTvseFZ1lSWyslAany8V5RtrDdKh2iv348IcMcZNAL3QD7pIDvzPaW12VzsI2XmgVLmfanc9fqzJfuw0MXg6h4al9cxZDNdP1S4Npjzz6LYNY3fLRQNXSnjS5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4VJnkj2nyyz4x1PN
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:19:09 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
+	by laurent.telenet-ops.be with bizsmtp
+	id BrK12C0060SSLxL01rK1SS; Tue, 16 Apr 2024 17:19:01 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rwkZl-008FRp-MW;
+	Tue, 16 Apr 2024 17:19:01 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rwkaL-00EbPG-2t;
+	Tue, 16 Apr 2024 17:19:01 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: interrupt-controller: renesas,irqc: Add r8a779g0 support
+Date: Tue, 16 Apr 2024 17:18:59 +0200
+Message-Id: <264cffccfbb1f92657420f5f869236b06a97d958.1713280616.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] selftests: exec: make binaries position independent
-To: Eric Biederman <ebiederm@xmission.com>, Kees Cook
- <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Yang Yingliang <yangyingliang@huawei.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20240416152341.3186853-1-usama.anjum@collabora.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240416152341.3186853-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/16/24 8:23 PM, Muhammad Usama Anjum wrote:
-> The -static overrides the -pie and binaries aren't position independent
-> anymore. Use -static-pie instead which would produce a static and
-> position independent binary. This has been caught by clang's warnings:
-> 
->   clang: warning: argument unused during compilation: '-pie'
->   [-Wunused-command-line-argument]
-> 
-> Tested with both gcc and clang after this change.
-> 
-> Fixes: 4d1cd3b2c5c1 ("tools/testing/selftests/exec: fix link error")
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  tools/testing/selftests/exec/Makefile | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-> index fb4472ddffd81..01940d9165d67 100644
-> --- a/tools/testing/selftests/exec/Makefile
-> +++ b/tools/testing/selftests/exec/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -CFLAGS = -Wall
-> +CFLAGS = -Wall #-Wunused-command-line-argument
-Debugging artifact here. I'll resend by removing it as v2
+Document support for the Interrupt Controller for External Devices
+(INT-EX) in the Renesas R-Car V4M (R8A779H0) SoC.
 
->  CFLAGS += -Wno-nonnull
->  CFLAGS += -D_GNU_SOURCE
->  
-> @@ -29,8 +29,8 @@ $(OUTPUT)/execveat.denatured: $(OUTPUT)/execveat
->  	cp $< $@
->  	chmod -x $@
->  $(OUTPUT)/load_address_4096: load_address.c
-> -	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000 -pie -static $< -o $@
-> +	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000 -static-pie $< -o $@
->  $(OUTPUT)/load_address_2097152: load_address.c
-> -	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x200000 -pie -static $< -o $@
-> +	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x200000 -static-pie $< -o $@
->  $(OUTPUT)/load_address_16777216: load_address.c
-> -	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000000 -pie -static $< -o $@
-> +	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000000 -static-pie $< -o $@
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../devicetree/bindings/interrupt-controller/renesas,irqc.yaml   | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
+index b417341fc8ae049b..fb3c29e813499e3f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.yaml
+@@ -39,6 +39,7 @@ properties:
+           - renesas,intc-ex-r8a779a0    # R-Car V3U
+           - renesas,intc-ex-r8a779f0    # R-Car S4-8
+           - renesas,intc-ex-r8a779g0    # R-Car V4H
++          - renesas,intc-ex-r8a779h0    # R-Car V4M
+       - const: renesas,irqc
+ 
+   '#interrupt-cells':
 -- 
-BR,
-Muhammad Usama Anjum
+2.34.1
+
