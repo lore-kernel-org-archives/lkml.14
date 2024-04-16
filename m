@@ -1,91 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A503B84A32
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B4C13342E
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 18:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713291369; cv=none; b=mGd/wKh6DM8cAoJON7u+MkjNFHkYtVobEX4l/5s/MAtlkTZvAD1GxprWgKCYzVN2lvCc6Mes5wClcjLZRxmWIGYIyp+xCQahryt9SQ5l/I/DVwfy2At+H46kN9rIFjZG+X/6bEMkqdsA6I7j+HZiY0+R1SEdJ6y/skbVOCkbovI=
+	t=1713291508; cv=none; b=NrfMgkgB2GcffcPWD3oOf10YyKOcgC+/Zf9UhYXSCrsvHR/aQz5yj7n9vYF56Ct3xcjy34goOczZWQ2LVcut3S+W32aQrEOxOp/0VbVJ8mE2NmDlges9iNI56IUNGv3JPs5EVGX+kdYXFgN+U+R1MPYCmUHPthco5F5JCdfzeDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713291369; c=relaxed/simple;
-	bh=NEewj1CKW99Q8HY/ZVFl8Uew1VV2WqrmJhOA7mr3/5c=;
+	s=arc-20240116; t=1713291508; c=relaxed/simple;
+	bh=j41BB7tWWuGzcPvptCWX6wnAqe56mddzPgpVGa2/iaQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGkiTMq3Wj3Zci3L5R9NBDgiDB22ocGXKb6AU382jVNS66GoxRhYBa+CqhMn2U7Eu90lHjtsW9s98AqHCnOPpjZvkj8IVn07fQlACj8OZrWjjhPX414Infot4TRuDLYeNI8U4/IuqmmN4CwBUkdtKxVNVyHCSiNdT0ZaQitbwI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TiFk10Rv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TiFk10Rv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713291367; x=1744827367;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NEewj1CKW99Q8HY/ZVFl8Uew1VV2WqrmJhOA7mr3/5c=;
-  b=TiFk10RvzBwSMy+d2qeqTfHvYJlLy4ltyIj9nru5cYZcijKoDq6LHxsf
-   wcTJ8PFpZL5mnZ4cBvKTNFW7ro/6q871eEbAI+hY4wgXlEa/XgwJOWhqD
-   +vRBtJn9rBpr6hpQc6ybKoFiTcXunzKVSZlfZpk9r3s2+k8kTTydZg8OV
-   L2ZpIS2k2krhka/y4AkRyBVZ+dF+rCCaFcZPxPBmdwizaSXjxRluFDUI0
-   6G6hFTwykp7+4n83+qBouohnd1uiZa9f/3FMKqDuOR604xPlQlnl5a91p
-   sktCFqfBc3giwHB/DSIRWvT0WiK520tnNp5I2ROcax5zrsdgO1ifhvCR2
-   A==;
-X-CSE-ConnectionGUID: dl06NTwrRGyOfNzrsJvyMA==
-X-CSE-MsgGUID: YNBjIZDUT5OfP/Mjg2dbQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8921720"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8921720"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:16:07 -0700
-X-CSE-ConnectionGUID: v+Ou0dG3T5Ka4X/8UlERcA==
-X-CSE-MsgGUID: 4xQo2RBzSxeNCWa75Wq5YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22930317"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 11:16:06 -0700
-Date: Tue, 16 Apr 2024 11:16:05 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/74] x86/cpu/vfm: Add/initialize x86_vfm field to
- struct cpuinfo_x86
-Message-ID: <Zh7AZY5X8_uyHrjz@agluck-desk3>
-References: <20240328164811.GDZgWfSzAWZXO7dUky@fat_crate.local>
- <20240328165251.GEZgWgY1Clb9z4t3VX@fat_crate.local>
- <SJ1PR11MB6083AADC97E50462C1137D71FC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240328171204.GGZgWk5JNOzQzoaEql@fat_crate.local>
- <SJ1PR11MB6083D8BB65748452B204ED8AFC3B2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240329114007.GAZgaolwSFtjHStiuL@fat_crate.local>
- <Zgr6kT8oULbnmEXx@agluck-desk3>
- <20240407105407.GAZhJ7T0fEhzow2MN2@fat_crate.local>
- <SJ1PR11MB60837E437DFA0595DF5B25D0FC002@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240409082217.GAZhT6uW7aELQCHOwL@fat_crate.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VruZHduy8zEMdNvVHw610PW/FrYcUoUETMt4dZVFupvKEVUYQrbGkPz1uS8HLGMjO9z/bzivB06rR5u/Wez6fgRrCPHkanNvUaIC+J/om+b1jZ2wld3DidlVhMhc48udbC47MN8kKLruNKc2ShKiPM7ZBGBWU7GXrKNFNu5u2K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F01E840E0187;
+	Tue, 16 Apr 2024 18:18:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0kWuDypYGtIH; Tue, 16 Apr 2024 18:18:21 +0000 (UTC)
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 04A4040E0177;
+	Tue, 16 Apr 2024 18:18:12 +0000 (UTC)
+Date: Tue, 16 Apr 2024 20:18:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org
+Subject: Re: [PATCH v1 1/1] x86/fred: Fix int80 emulation for FRED
+Message-ID: <20240416181807.GGZh7A30Gtnixbs3M5@fat_crate.local>
+References: <20240412234058.1106744-1-xin@zytor.com>
+ <20240416101147.GDZh5O473e4X_ZG1lZ@fat_crate.local>
+ <1AE9FA53-A130-4F95-8408-C1990DD031AA@zytor.com>
+ <20240416180746.GFZh6-cmZqCF6KX5tt@fat_crate.local>
+ <e3fbd500-f6b8-49ea-addb-bbc4803709ce@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240409082217.GAZhT6uW7aELQCHOwL@fat_crate.local>
+In-Reply-To: <e3fbd500-f6b8-49ea-addb-bbc4803709ce@zytor.com>
 
-On Tue, Apr 09, 2024 at 10:22:17AM +0200, Borislav Petkov wrote:
-> On Mon, Apr 08, 2024 at 04:20:36PM +0000, Luck, Tony wrote:
-> > So are parts 1-3 ready for TIP? If they get added I can start collecting
-> > reviews for parts 4-72.
-> 
-> I'd like for tglx to have a look at this first too.
+On Tue, Apr 16, 2024 at 11:11:44AM -0700, H. Peter Anvin wrote:
+> Yes. My fault, I gave Xin incorrect information w.r.t. Fixes: tags.
 
-Boris,
+No worries, I'll fix that up before applying.
 
-Thomas gave his Reviewed-by for parts 1-3
+-- 
+Regards/Gruss,
+    Boris.
 
-Link: https://lore.kernel.org/all/871q7e7lfu.ffs@tglx/
-Link: https://lore.kernel.org/all/87y19m66tu.ffs@tglx/
-Link: https://lore.kernel.org/all/87v84q66sn.ffs@tglx/
-
-Is there anyone else that needs a quick poke to look at these?
-
--Tony
+https://people.kernel.org/tglx/notes-about-netiquette
