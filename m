@@ -1,83 +1,77 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED1D13792A;
-	Tue, 16 Apr 2024 19:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E114A136E0A;
+	Tue, 16 Apr 2024 19:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713294918; cv=none; b=YWlKF0gvPm7sO2wIWLTJ3ru4gKojHBG0/ic8945KDQhCTUhp3RosQjJ00neqywYwOCsN/WpSIqda/p5h7n/AXU0wx+V9AEFK7df93119Iy+Vn+qJ9ePFTDnAJXpT7gFhy2++Rg6cA1e4erLNARymbPQaD3Y0soeM7QL59pYBKOM=
+	t=1713294972; cv=none; b=Q0Ds0uTGbTISYpmgvRxnj0ghA39DlUpHQLWA3vDRQrBL+4pjo/lqqa8JVo5K1sIUJNfrkvcE+eekcFKFpApdOqorxV+GlG7ciJ917vIGtoeNfHlIsepgmttubhDTvrEObWhsX7X2hNFOPAw99+9fDf6wTebzSV5EbuVykFADngc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713294918; c=relaxed/simple;
-	bh=Ac43jLMqQf/eO9EHaae+vUIk7xfngUWmCTeT+44YV3Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EOqtKIh/NWE9YHedsnZk5rtC34cDHMKr4V/OIzBWnYrta8+Q+nGWgFhv968Nyy9Jjb/kBX8P3RdvySuKoNSJF4XbSefdaoMx7r+0jY5khxu3MBtSM6fBLXfTiJHPdl190wEd4Y7uBYrqgUJIWGvAjdLbe6cGmNGPIHoadG+maRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=Q/GBub0S; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1713294972; c=relaxed/simple;
+	bh=x4epH4lPIIcIypeWgEsK/u6oozo9tz1rWzsjmyugMp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SMa+X857xvqQw+z8WKvfREQ9AZkQkLHxxXyrhMrwHFOaBR20ov1hi2pG7EbnZxQP+iDhPjnYlrdl8KZAfrQJHOzf1XQP+lFkpxPRdvNjSLUQxTSe8EzX45EAScNyNIs2yeSvPUH04Tf4A1ivEjRj/AXH7ySIjGciUcYR+Ej4Ibs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=hRwywDWs; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="Q/GBub0S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1713294909; x=1713554109;
-	bh=Ac43jLMqQf/eO9EHaae+vUIk7xfngUWmCTeT+44YV3Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=Q/GBub0SIgyBam+4opzEKK0txUbxvfCrhfAWYuAaSiYJtSNYdp44AFC9Y8RMMlxCw
-	 HXEZOppzCgWxF/UTq5ZhXx0+vd7kSizjzsE+3uoTjfdGyI1a+/F1od+NZN2/1ks8ow
-	 m6hngQhsRQdLUty/0DF+MgGgtZFff+fs/pd73fUAxuSHd7AqPrDTBMesEMQzmP9Inn
-	 Z76tf04rtmm1dt99egNjOuvc4a23AOjz7yZU007yWLt0IWhATgFMmFs5DXbiyxLrrG
-	 zrprpzfcX7aVT5enfVvRGGyU6LtRo11WdwtyqdatIFToOgHaZlECm8HiUINe/cQ+Ka
-	 /YViFEgnWX88g==
-Date: Tue, 16 Apr 2024 19:15:03 +0000
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-From: Michael Pratt <mcpratt@pm.me>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Wander Lairson Costa <wander@redhat.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Vamshi Gajjela <vamshigajjela@google.com>
-Subject: Re: [PATCH v2 3/3] serial: 8250: Set fifo timeout using uart_fifo_timeout()
-Message-ID: <CmMdmgjPFh8R-rH0-mjU0QdQcqhRwVr9bmApDJ7BV_9DjRBL35K_Qfjs7oIPVwGFv5mdT476a8tPtkgnWqY2lRBEfGvfhjk0yW9ueI4bcf8=@pm.me>
-In-Reply-To: <Zh7KIz1AGyyS3zLT@smile.fi.intel.com>
-References: <20240416182741.22514-1-mcpratt@pm.me> <20240416182741.22514-4-mcpratt@pm.me> <Zh7KIz1AGyyS3zLT@smile.fi.intel.com>
-Feedback-ID: 27397442:user:proton
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="hRwywDWs"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VJv044lxgz6Cnk8s;
+	Tue, 16 Apr 2024 19:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1713294962; x=1715886963; bh=QQRuCRfKL482skjqT5kocQ8C
+	I6EnKx1efQEktqxG58U=; b=hRwywDWsj1mdBrfxH7cxg9pqvsadWN3fhMyXdS0y
+	B5JcftNYU3mUZdyJZjvoXBhLcXhlghq7eH37r0919YNSCb9LkBuq+bhVbqhOLg0t
+	8oRxnbJfuDPL1ZQSocloUX59DiTnwzyvw77kd2cl06YVU6UkZKhDtaqnBbLEiXSd
+	+CSu/eT2qaAajxWO68H6HmmDTeRqx+4K22984cGE2fP0zw5633I4cU0lduIJh+Jh
+	5XI2UwMwshlrgcS+XdzJGlK6o106HLQ/5aKpxZS+2UMGjkxv1C+5Xt9aluJ9Xune
+	D3pqrQZfFlqEbs0bV0884RSGqcxhUC+8ExkhGCpVsjBHZg==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id sHzjJj6w1wNT; Tue, 16 Apr 2024 19:16:02 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VJv0161qNz6Cnk8m;
+	Tue, 16 Apr 2024 19:16:01 +0000 (UTC)
+Message-ID: <2bbd7e84-aee3-4c36-9cae-791b4f4d5a82@acm.org>
+Date: Tue, 16 Apr 2024 12:16:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] simplify ufshcd with the guard() macro
+To: Avri Altman <avri.altman@wdc.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240416102348.614-1-avri.altman@wdc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240416102348.614-1-avri.altman@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+On 4/16/24 03:23, Avri Altman wrote:
+> We can simplify the code with the guard() macro and co for  automatic
+> cleanup of locks. For making changes easier, this series is divided to
+> per-lock type patches and only address the ufshcd module. There are
+> still a few remaining explicit lock/unlock calls, and those are for the
+> places where we do temporary unlock/relock, which doesn't fit well with
+> the guard(), so far.
 
-On Tuesday, April 16th, 2024 at 14:57, Andy Shevchenko <andriy.shevchenko@l=
-inux.intel.com> wrote:
+Why to use only the existing primitives? Several error paths could be 
+eliminated if new macros would be included for e.g. automatically
+calling ufshcd_release() at the end of a scope.
 
->=20
-> > unsigned int status, tmout =3D 10000;
-> >=20
-> > - /* Wait up to 10ms for the character(s) to be sent. /
-> > + / Wait for a time relative to buffer size and baud */
-> > + if (up->fifo_enable && up->port.timeout)
-> > + tmout =3D jiffies_to_usecs(up->port.timeout);
->=20
->=20
-> Why do we still use that default? Can't we calculate timeout even for\
-> FIFO-less / FIFO-disabled devices?
+Bart.
 
-Maybe it's possible that there is some kind of rare case where the LSR regi=
-ster
-is not working or not configured properly for a device in which support
-is being worked on...without a timeout, that would result in an infinite lo=
-op.
-
-AFAIK, when everything is working properly, there is no such thing as needi=
-ng
-a timeout for a uart device without fifo, as every single byte written woul=
-d trigger
-an interrupt anyway.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
-
---
-MCP
