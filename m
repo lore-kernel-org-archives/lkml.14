@@ -1,94 +1,167 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5545C75808
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECC132492
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 08:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713254629; cv=none; b=sfNVDRENuiImbddWep0i2f8caHDyZ8AZwAeqv6ScNWz+8KPaDuKNap7khQ35iytEGbSmbCIArAHzExsTlEkeP6L2xQpuLVrt5l5Zk8m4uvvUPoPzLcQsC+nH1r1SPTIviBU54sPCOEm/5fxEvgY1Hx+Mg4SBc68YEkYYDE2Ez4g=
+	t=1713254680; cv=none; b=FcM3xHbpLZ44/B3GlJul4rF9nhohxLJ8yGqUXxVHwl8/2BsVYmM4Rum78GaNni8WrTxDILMpyPz62RJZeF3PMwDyLC/PsGmFMNEW+m7Ze5JJa3jJZn/+R9YMk5N8i7ObNKWJ9muO7wXulyAg0W7/hIOzM739Ph+kxAgXAmJHZlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713254629; c=relaxed/simple;
-	bh=kYNTupiv3TQw3fNvik9CrYQof7/tZvkNuRS5rjJflOw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a7NPk4gcR5x/jDemordxmlvrxKIw2ElCz7b/5SjmlPu2F7Hx3lN4tWXQR3Dd0DosCit0IeIs1lGOd5FUMUArDudhTD6iFml+jDw3K7LcdHIdXYxnE6gX8Y6u0Ze5X+GdUkO3Ch5mNhSOaSNMPqHMY5LaUbjQrts586WE6Mf931k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MyBil7y6; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1713254680; c=relaxed/simple;
+	bh=aFtDoP+ptsA+xiiT/L0BTr1limxkEohlLYO2fK22oWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eYRWdUytvDTnl4nmkQmGyh2nEE7UGdgn8nIz9i/TIDw3I/xybBDEE/K+wMwwfr6is5I6uSjAYZyesjJJSJ/2u03f+fBx79wFnvOQg+9rfcBaD9SsVBXoa41SV6jJk0huk42FyMdrzcIylROfpIax1ITVbapepTnObkO1/Q/JESw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F2qZYgyj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MyBil7y6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=YtBq8
-	yEZv097YxmGZO1uAqajLtUZ0qspENxuvlWUMkc=; b=MyBil7y69RfEJOQK3poij
-	wtEPInopyvPyO8Boov1c831gSKz9YmwGkmmBpShXwENKg5C/31BczWlB9lGnGelL
-	Go7awvruOkWKqw7AmI++8bGNQmJinP2BuR2lqRosiUEc+xTiySsbG1kyaRoHjpLA
-	X7lkaGZXEo/jKAu1IoHPl4=
-Received: from flipped.. (unknown [159.226.94.118])
-	by gzga-smtp-mta-g2-3 (Coremail) with SMTP id _____wD3Xx_DMB5m5JBDBQ--.33062S2;
-	Tue, 16 Apr 2024 16:03:16 +0800 (CST)
-From: Sicong Huang <congei42@163.com>
-To: gregkh@linuxfoundation.org,
-	johan@kernel.org,
-	elder@kernel.org
-Cc: greybus-dev@lists.linaro.org,
-	linux-kernel@vger.kernel.org,
-	Sicong Huang <congei42@163.com>
-Subject: [PATCH v1] greybus: Fix use-after-free bug in gb_interface_release due to race condition.
-Date: Tue, 16 Apr 2024 16:03:13 +0800
-Message-Id: <20240416080313.92306-1-congei42@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2qZYgyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713254674;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mpnmnLcLPbxDi7bNweS52z62pdChPh+H06QF5Sioa0=;
+	b=F2qZYgyjcDR2W5A3YYPrsNiM8JOf/aO8M1CWmBhMZ/5AC2cZxvnFJD6fPewwYjcYQyhH9o
+	o9DjjDpiYHrpYveGsJlUfl35fI6NmvkhskR6lIkgRs/iJGRx/qOTmnZN0qG1n0cW2iB5Nd
+	ryfAV+89BS6a+MI5Ia4wIrfGoLxOU0k=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-264-xJHcP4_rPCO_8-01Z6Gu6A-1; Tue, 16 Apr 2024 04:04:33 -0400
+X-MC-Unique: xJHcP4_rPCO_8-01Z6Gu6A-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a51abd0d7c6so332121466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:04:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713254671; x=1713859471;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4mpnmnLcLPbxDi7bNweS52z62pdChPh+H06QF5Sioa0=;
+        b=e3PyuHL5L5wDq38Dnp7qSttd/+1z9qUnCBj+NNyFUE3cmOHwwJ6DZaKb1CL+U832Fw
+         tF/xEVZz8ebHkzUqOJvVPGdviu8hstpTPOdjSRwbPnbnsxzT6AT0hVuw95zXbIO+f1WO
+         CX4hQcXnUX0ypRA/T+/m3DXmzVKTRsacBcLNfC1lSfKH5adNhtaJv5ghB54vQknPBLcx
+         dWvoevQpSfcKRc8LQuvyaxEPY/RQHMqkGf9mo1hi+MvxqdbRO4NpG4ox3P0lUsdpK0kg
+         iLpr3121VsdtIQlFNiGZHWn8dpFk4NvxxxN8ueeC/YvqGVTDjpAsVVIIlrRdLUTbfvRa
+         axew==
+X-Forwarded-Encrypted: i=1; AJvYcCWP2Eq2TRgAiS57HTcjESOeU/5FKn14Rb2Xe32okUlQi+5sv5CmrrblmMuHETaJgAU/YcVADx4xK4dBeGWT89PBNIMt9ezINLBFF+lZ
+X-Gm-Message-State: AOJu0YyQNXS9BZVJ5dHYNKdwo4SGnFpsNXh459Yh71QftfSX0zD+ejjP
+	JLEUIXtYttIPj+swh8D7Hpi+sOhbuTjFTltwIaQGh8pqAKZL9bo60DNP/BHm7E9lMrt52w1sESr
+	LrIF5IIDae1qTCICy8BJ2572jEAFBELMo++l7rCWpKtzRMFR/APIiQ9yBCQ0j7Crxk4wJkQ==
+X-Received: by 2002:a17:906:3110:b0:a51:dbd3:5ac4 with SMTP id 16-20020a170906311000b00a51dbd35ac4mr6705423ejx.30.1713254671483;
+        Tue, 16 Apr 2024 01:04:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJ6qRV4BzR4P7/mlY/Gcc8MwqwRiPtqgpsZtFWVOxC9g1J4h2RQXqbM+ckQZjDTocTIt3mMg==
+X-Received: by 2002:a17:906:3110:b0:a51:dbd3:5ac4 with SMTP id 16-20020a170906311000b00a51dbd35ac4mr6705406ejx.30.1713254671065;
+        Tue, 16 Apr 2024 01:04:31 -0700 (PDT)
+Received: from [10.39.194.81] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
+        by smtp.gmail.com with ESMTPSA id s8-20020a170906284800b00a4e07760215sm6503388ejc.69.2024.04.16.01.04.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2024 01:04:30 -0700 (PDT)
+From: Eelco Chaudron <echaudro@redhat.com>
+To: Jun Gu <jun.gu@easystack.cn>
+Cc: pshelar@ovn.org, dev@openvswitch.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [ovs-dev] [PATCH] net: openvswitch: Check vport name
+Date: Tue, 16 Apr 2024 10:04:29 +0200
+X-Mailer: MailMate (1.14r6029)
+Message-ID: <084E7217-6290-46D2-A47A-14ACB60EBBCA@redhat.com>
+In-Reply-To: <671d3c3b-a5c4-4dbd-800b-fbfec0fbe4dc@easystack.cn>
+References: <20240413084826.52417-1-jun.gu@easystack.cn>
+ <9D534A61-4CC2-4374-B2D8-761216745EDD@redhat.com>
+ <671d3c3b-a5c4-4dbd-800b-fbfec0fbe4dc@easystack.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3Xx_DMB5m5JBDBQ--.33062S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr1rtFWDuw1UXFy3WFWxZwb_yoW8GFW3pr
-	WrGrWUGw4DJFs8tws8KF1UXFZYgw17KryakFWxCw4xGr98Ary3Zrn0yFZrAFZ3Cw1rJr17
-	Zr4UZ3sYvas8X3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ul-erUUUUU=
-X-CM-SenderInfo: 5frqwvrlusqiywtou0bp/1tbivgbC8mV4Ir559gAAsG
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-In gb_interface_create, &intf->mode_switch_completion is bound with
-gb_interface_mode_switch_work. Then it will be started by
-gb_interface_request_mode_switch. Here is the relevant code.
-if (!queue_work(system_long_wq, &intf->mode_switch_work)) {
-	...
-}
 
-If we call gb_interface_release to make cleanup, there may be an
-unfinished work. This function will call kfree to free the object
-"intf". However, if gb_interface_mode_switch_work is scheduled to
-run after kfree, it may cause use-after-free error as
-gb_interface_mode_switch_work will use the object "intf".
-The possible execution flow that may lead to the issue is as follows:
 
-CPU0                            CPU1
+On 16 Apr 2024, at 9:57, Jun Gu wrote:
 
-                            |   gb_interface_create
-                            |   gb_interface_request_mode_switch
-gb_interface_release        |
-kfree(intf) (free)          |
-                            |   gb_interface_mode_switch_work
-                            |   mutex_lock(&intf->mutex) (use)
+> Hi Chaudron, thanks for your reply. Considerthe following scenario:
+>
+> - set a net device alias name (such as *enpxx*) into ovs.
+>
+> - |OVS_VPORT_CMD_NEW -> ||dev_get_by_name can query the net device usin=
+g *enpxx* name, but the dev->name that return is *ensxx* name. the |net_d=
+evice|struct including: ``` |struct=C2=A0net_device=C2=A0{
+>     char			name[IFNAMSIZ];
+>     RH_KABI_REPLACE(struct=C2=A0hlist_node=C2=A0name_hlist,
+>     		struct=C2=A0netdev_name_node=C2=A0*name_node)
+> ...
+> |``` name_hlist include enpxx and ensxx name and both of them point to =
+the same net_device, the net_device's name is ensxx. So when using *enpxx=
+* name to query net device, the ||net device's name that return is *ensxx=
+* name.|
+> Then, openvswitch.ko will save the net device that name is*ensxx*  to a=
+ hash table. So this will cause the below process:
+> - ovs can'tobtain the enpxx net device by |OVS_VPORT_CMD_GET.|
+> -|dpif_netlink_port_poll will get a |notification after |OVS_VPORT_CMD_=
+NEW|, but the vport's name is ensxx. ovs will query the ensxx net device =
+from interface table, but nothing. So ovs will run the port_del operation=
+=2E
+> - this will cause|OVS_VPORT_CMD_NEW|  and OVS_VPORT_CMD_DEL operation t=
+o run repeatedly.
+> So the above issue can be avoided by the patch.
 
-Fix it by canceling the work before kfree.
+Thanks for the clarification, I forgot about the alias case. And you are =
+right, OVS userspace does not support using interface aliases.
 
-Signed-off-by: Sicong Huang <congei42@163.com>
----
- drivers/greybus/interface.c | 1 +
- 1 file changed, 1 insertion(+)
+Maybe you can update the commit message, and add a code comment to clarif=
+y this in your next revision?
 
-diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
-index fd58a86b0888..d022bfb5e95d 100644
---- a/drivers/greybus/interface.c
-+++ b/drivers/greybus/interface.c
-@@ -693,6 +693,7 @@ static void gb_interface_release(struct device *dev)
- 
- 	trace_gb_interface_release(intf);
- 
-+	cancel_work_sync(&intf->mode_switch_work);
- 	kfree(intf);
- }
- 
--- 
-2.34.1
+Cheers,
+
+Eelco
+
+
+> =E5=9C=A8 4/15/24 18:04, Eelco Chaudron =E5=86=99=E9=81=93:
+>>
+>> On 13 Apr 2024, at 10:48, jun.gu wrote:
+>>
+>>> Check vport name from dev_get_by_name, this can avoid to add and remo=
+ve
+>>> NIC repeatedly when NIC rename failed at system startup.
+>>>
+>>> Signed-off-by: Jun Gu<jun.gu@easystack.cn>
+>>> ---
+>>>   net/openvswitch/vport-netdev.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-n=
+etdev.c
+>>> index 903537a5da22..de8977d7f329 100644
+>>> --- a/net/openvswitch/vport-netdev.c
+>>> +++ b/net/openvswitch/vport-netdev.c
+>>> @@ -78,7 +78,7 @@ struct vport *ovs_netdev_link(struct vport *vport, =
+const char *name)
+>>>   	int err;
+>>>
+>>>   	vport->dev =3D dev_get_by_name(ovs_dp_get_net(vport->dp), name);
+>>> -	if (!vport->dev) {
+>>> +	if (!vport->dev) || strcmp(name, ovs_vport_name(vport)) {
+>> Hi Jun, not sure if I get the point here, as ovs_vport_name() translat=
+es into vport->dev->name.
+>>
+>> So are we trying to catch the interface rename between the dev_get_by_=
+name(), and the code below? This rename could happen at any other place, =
+so this check does not guarantee anything. Or am I missing something?
+>>
+>>>   		err =3D -ENODEV;
+>>>   		goto error_free_vport;
+>>>   	}
+>>> -- =
+
+>>> 2.25.1
+>>>
+>>> _______________________________________________
+>>> dev mailing list
+>>> dev@openvswitch.org
+>>> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+>>
 
