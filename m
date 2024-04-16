@@ -1,140 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB3FF4E7;
-	Tue, 16 Apr 2024 16:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C58131BD6;
+	Tue, 16 Apr 2024 16:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713285185; cv=none; b=s8pwpq6n6NsXFN0BGpXliKNQhp8JXF07TG+obAhtHNJL5esQUXuFP83KH4PRelg3iriavFqXViT0y9TAYtifxCDIJm3Q2Ia0nx5Qbsds8Zw+x1z2OUQM0HXF5a/dif8hTv7ussB//4311UdvBEMVC/TlcbZ+NZZTbf4mg4KPyxc=
+	t=1713285187; cv=none; b=oLGzQWnO36IbQdG83BEYiKuWKxSnsiyIaU5QNt4XqQGOPRogUInFitFPnSHzsgfG64VugoPdZovRyuDaJaBF0tBbfz+shPs9A3i6GuBciEq7pgTeOKEIu96Oqd6UQ7NzdiqcaqDfKokiHphivBscUQFxggki8N+6N8M1SBzutRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713285185; c=relaxed/simple;
-	bh=gTJHR1KdErAk/qzXo5EJZZiXgCceiHY4vGZi+g7gbDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uX/Ehk+X8ROePKpNbLh0hrBuTff2WuB7F7Qalic4AavQToWJFPW5K4Aa66TVz8GnclLbUWt3Cs4LMr+5emwoUYxuDLIyDQ5ak/EH2CiK/CVceOIdbHhtBXo27DPd3WCJQbKAguzDDNKzEZY0Ygx0swICzUWc3lITUhCmDJhhLxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtqvXTIW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713285187; c=relaxed/simple;
+	bh=10WnQNId+Y5d5f+aR4s4gUOkQlkagdBYHfATkPI0LyI=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=MiJqpBj6yIOrUHQHHo2KymK+NW7kxjskHkybbWAcxrC2tvO95Wh7WcMPq1ZwNXnOhHMAnhLxiLSmV4+9BWnsT8+sy7+asnIDmU6kjf1epGC/oMrZZxpY5kek0VcY5zPSb24CKmKRVoCVA1KNrv7wWIAhd76NabHCUpi7bEvObCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGvdWpIV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtqvXTIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D926C113CE;
-	Tue, 16 Apr 2024 16:32:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGvdWpIV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D243C2BD10;
+	Tue, 16 Apr 2024 16:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713285184;
-	bh=gTJHR1KdErAk/qzXo5EJZZiXgCceiHY4vGZi+g7gbDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YtqvXTIWp4JmR1FEXjRm/DaLcxcqVbM2sHNsTceCNUlja61mLU46RASB4axT8jg7S
-	 ccSAtBcXO0XJgcAOAkoSXCk08wv1/gy8wYOwNQKVpNrnIWb1U96Y0fr1kbgyU4fuSM
-	 LDei7oagYypXMxOvgDkPZQ34bTr9dFttMUMB/hKcpj5EezRXogMzMk+ZFPnCCpGH0+
-	 /JF9F1R7RPCGjHwJCNQHo0pzQdq0BwDUuRvACQZ0id1Qh2GX6bTVvG1fVIVdX1v12L
-	 t7hmZH/NYURJMwWh2rUMqairNtEvXdZJNhrJA4dZinneJD+IcysEK6n3rjvUQaYSpk
-	 neOgd64QhpAxw==
-Date: Tue, 16 Apr 2024 19:31:54 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Andreas Dilger <adilger@dilger.ca>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>,
-	Ext4 Developers List <linux-ext4@vger.kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: riscv32 EXT4 splat, 6.8 regression?
-Message-ID: <Zh6n-nvnQbL-0xss@kernel.org>
-References: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
- <8734rlo9j7.fsf@all.your.base.are.belong.to.us>
- <Zh6KNglOu8mpTPHE@kernel.org>
- <20240416171713.7d76fe7d@namcao>
- <20240416173030.257f0807@namcao>
- <87v84h2tee.fsf@all.your.base.are.belong.to.us>
- <20240416181944.23af44ee@namcao>
+	s=k20201202; t=1713285187;
+	bh=10WnQNId+Y5d5f+aR4s4gUOkQlkagdBYHfATkPI0LyI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pGvdWpIVXlbCicg6uf72xABxgaKkoNZ8cfAv19WxMB6ZBawWZrDCSUfksff3Saqmm
+	 ix9GTX9QME7c1kK+FHpxlQu+BJgcqhvtelEvJt5T12oiMOKDf/vyNyrsjN/sPqLCQP
+	 Jt6D3yRuj3j8niO44bBrOQF/LWRlgcSGwFLdhZCqbuzthaMS7/a6uD3h4eXN17ujcg
+	 WgGI1TBAwHLRT6avrhmyfgEBcUU3Bgx+mvRPn6aOVqq2+B2ns7QIVxMO/XC6g/YJQd
+	 Nq8qNXdyW7+PziEFFBewiAhG9W848P2r0ejDxQXpu8RO8ouNTm1oq7EH+G2/BFPEiy
+	 X8EnERjZABDfg==
+Date: Tue, 16 Apr 2024 11:33:06 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240416181944.23af44ee@namcao>
+From: Rob Herring <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: keescook@chromium.org, gustavoars@kernel.org, 
+ devicetree@vger.kernel.org, djakov@kernel.org, henryc.chen@mediatek.com, 
+ linux-pm@vger.kernel.org, wenst@chromium.org, 
+ linux-arm-kernel@lists.infradead.org, amergnat@baylibre.com, 
+ matthias.bgg@gmail.com, lgirdwood@gmail.com, 
+ krzysztof.kozlowski+dt@linaro.org, linux-mediatek@lists.infradead.org, 
+ kernel@collabora.com, linux-kernel@vger.kernel.org, conor+dt@kernel.org, 
+ broonie@kernel.org
+In-Reply-To: <20240416153805.431118-3-angelogioacchino.delregno@collabora.com>
+References: <20240416153805.431118-1-angelogioacchino.delregno@collabora.com>
+ <20240416153805.431118-3-angelogioacchino.delregno@collabora.com>
+Message-Id: <171328518448.2610972.14839354170690825161.robh@kernel.org>
+Subject: Re: [PATCH v1 2/6] dt-bindings: interconnect: Add MediaTek EMI
+ Interconnect bindings
 
-On Tue, Apr 16, 2024 at 06:19:44PM +0200, Nam Cao wrote:
-> On 2024-04-16 Björn Töpel wrote:
-> > Nam Cao <namcao@linutronix.de> writes:
-> > 
-> > > Fixed version:
-> > >
-> > > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > > index fa34cf55037b..af4192bc51d0 100644
-> > > --- a/arch/riscv/mm/init.c
-> > > +++ b/arch/riscv/mm/init.c
-> > > @@ -245,6 +245,7 @@ static void __init setup_bootmem(void)
-> > >  	 * be done as soon as the kernel mapping base address is determined.
-> > >  	 */
-> > >  	if (!IS_ENABLED(CONFIG_64BIT)) {
-> > > +		memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE);
-> > >  		max_mapped_addr = __pa(~(ulong)0);
-> > >  		if (max_mapped_addr == (phys_ram_end - 1))
-> > >  			memblock_set_current_limit(max_mapped_addr - 4096);  
-> > 
-> > Nice!
-> > 
-> > Can't we get rid of the if-statement, and max_mapped_address as well?
+
+On Tue, 16 Apr 2024 17:38:01 +0200, AngeloGioacchino Del Regno wrote:
+> Add bindings for the MediaTek External Memory Interface Interconnect,
+> which providers support system bandwidth requirements through Dynamic
+> Voltage Frequency Scaling Resource Collector (DVFSRC) hardware.
 > 
-> I don't see why not :D
+> This adds bindings for MediaTek MT8183 and MT8195 SoCs.
 > 
-> Best regards,
-> Nam
-> 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index fa34cf55037b..f600cfee0aef 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -197,7 +197,6 @@ early_param("mem", early_mem);
->  static void __init setup_bootmem(void)
->  {
->  	phys_addr_t vmlinux_end = __pa_symbol(&_end);
-> -	phys_addr_t max_mapped_addr;
->  	phys_addr_t phys_ram_end, vmlinux_start;
->  
->  	if (IS_ENABLED(CONFIG_XIP_KERNEL))
-> @@ -238,17 +237,9 @@ static void __init setup_bootmem(void)
->  	/*
->  	 * memblock allocator is not aware of the fact that last 4K bytes of
->  	 * the addressable memory can not be mapped because of IS_ERR_VALUE
-> -	 * macro. Make sure that last 4k bytes are not usable by memblock
-> -	 * if end of dram is equal to maximum addressable memory.  For 64-bit
-> -	 * kernel, this problem can't happen here as the end of the virtual
-> -	 * address space is occupied by the kernel mapping then this check must
-> -	 * be done as soon as the kernel mapping base address is determined.
-> +	 * macro. Make sure that last 4k bytes are not usable by memblock.
->  	 */
-
-It's not only memblock, but buddy as well, so maybe
-
-	/*
-	 * The last 4K bytes of the addressable memory can not be used
-	 * because of IS_ERR_VALUE macro. Make sure that last 4K bytes are
-	 * not usable by kernel memory allocators.
-	 */
-
-> -	if (!IS_ENABLED(CONFIG_64BIT)) {
-> -		max_mapped_addr = __pa(~(ulong)0);
-> -		if (max_mapped_addr == (phys_ram_end - 1))
-> -			memblock_set_current_limit(max_mapped_addr - 4096);
-> -	}
-> +	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE);
-
-Ack.
-
->  	min_low_pfn = PFN_UP(phys_ram_base);
->  	max_low_pfn = max_pfn = PFN_DOWN(phys_ram_end);
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../interconnect/mediatek,mt8183-emi.yaml     | 76 +++++++++++++++++++
+>  .../interconnect/mediatek,mt8183.h            | 23 ++++++
+>  .../interconnect/mediatek,mt8195.h            | 44 +++++++++++
+>  3 files changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
+>  create mode 100644 include/dt-bindings/interconnect/mediatek,mt8183.h
+>  create mode 100644 include/dt-bindings/interconnect/mediatek,mt8195.h
 > 
 
--- 
-Sincerely yours,
-Mike.
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.example.dtb: dvfsrc@10012000: '#address-cells', '#size-cells' do not match any of the regexes: '@[0-9a-f]+$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/soc/mediatek/mediatek,mt8183-dvfsrc.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240416153805.431118-3-angelogioacchino.delregno@collabora.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
