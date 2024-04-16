@@ -1,357 +1,147 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBFF132C17;
-	Tue, 16 Apr 2024 16:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6D812BE9F
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 16:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283984; cv=none; b=DvvFfpcFtVi82DhqkAhv8v1ejFviQ7PZqtq8ufxon4YB4h5fK0nRARu7GwxwPo9R27Q2rqQO0Z90qs6JQS4/yHoahRHpZ2kwqjPmEWL0tsmDAUO/SuDc6rAMjQg/9LO9SPxkXPKjPlpI54RVJ1rd2KTtq2Dir5fURSnQ4CLXMYE=
+	t=1713284033; cv=none; b=V5y9JsndSZSqAt1w2OgcFlMsXtD3p3nbnrFP9mgsTLN9sDRgthWkF+RW5wA+moIMgujYbc/3PS5fL/kQQDJUXrphel85H+2fvbn6grkjoaNRVnK+LJ1HrxmUWs/X8fCpTfDLnMXVcLAQYZj2vZaoCPKWNqiy96hzI+l7+YDHMuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283984; c=relaxed/simple;
-	bh=8wb5CVIJLDyMys+SRGpLYKAUPgGcnDty7OZUjGoVOfM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZmMz3Bj7WTZkP+VvGV5YyqxaL/jg+wSOgjjYIhfk64j3QNLRnW8SgG3ik7powBTunB7O9pOMlZuNqoIDV3wfV9IfQDLOUc7CChd61kf/lCEc1Qcw7vFaVRGoHS/Nuw8LomH4eFDc10gFILB2paD0HlnCExANVPEdaI33XDMDMIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgtGZWC5; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgtGZWC5"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-347e635b1fcso1541164f8f.1;
-        Tue, 16 Apr 2024 09:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713283977; x=1713888777; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q8r2vrVWoun2pakpPCHmiPerhdl2nmzZoDCfJWcigRM=;
-        b=jgtGZWC5ze52J2GPGmIXXhpuVAVltjynDfzTkfllMHHAlRLNWHVjDqieUutBpGtzah
-         VNP5BFCo8WxpAyM0LNqfudqkypHyMcRYAeKdLEqgzssgW3AMmVtdimvckAAUxwoIbXzz
-         tVXjafZ+JWZLue+/Zy39Ttpl4cqUZM5ODjRJ60fAyV6UmcJGFhMedbu173MxKV2K6n/g
-         RocZyZiRbgu5LSlleMuXx4x6ARjyzBK/DcRsLla5uiWVFFMHD3LMk3KZ9YlVGf4R/Brx
-         q63yat6DyK5SR8szHDUGZR9hODZAqr6QNsu03xqS+mXtsbi39f/buPte14b3hZvV6X0O
-         uMCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713283977; x=1713888777;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q8r2vrVWoun2pakpPCHmiPerhdl2nmzZoDCfJWcigRM=;
-        b=scfMKdXm3e/Kp58N6ic1A1m8zdlu2nse/MLwnTGaa+eZokDo31/xGd0xKgsxe70A6F
-         sGSKDgFyqAWV7bQlShovmxulo2SxuJV42rqlE+lFC6bBPIBkGrI8gicRVlhNTP4w5xOY
-         j36nru2pb+S+RNn8B7bJ1IWxatj6gWemlhnWE1BYQ0T+3niMoUQgY8LD4g0mce+5vTt5
-         C6btklr2ATmjs7e1Rpd1EBbL1rV8UjroyThSD4jZs0cfSGceiTh0WxtN9W0DXSHSqMxu
-         IsC/0SGHSaumsECOfLb1uvtngqB1sLlOZJK97eOzjtNgTC+/GG/YNFpXM6AD07UP2tLG
-         1Bjw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8W0y+ZFMJRkEXKO+kKfgBXT0cpbh3D0THvh643S/6JSzHISG6xQ/wCetxiqrQriEtAVNoRM9MuDSd8RbNaGblio7gw6RZUtCxgw4ae4VdMfxvCPn+8T5IEvtdU97A2Y2ZhHKOAjsqVqgOetdB4weYp50g1bU7Eeo2i36AEpUzE2CguSk=
-X-Gm-Message-State: AOJu0YweGnUgeZLEfqAlgY0c8WntNFe4ItjIPRlQulkoy9JGE8cK3+qr
-	zTTpqIY24V8X9z2IIRRVEObdvwl4LfrSeIEhvopmgO3qZXH0maM=
-X-Google-Smtp-Source: AGHT+IHfPC1f1AWLMHRYbaD67cr+6rzUog1UlVH6v/2nEe8HwA66HYtegT5J697UsJTPFB6RnLZ6XA==
-X-Received: by 2002:adf:fe03:0:b0:343:a6fc:b2e8 with SMTP id n3-20020adffe03000000b00343a6fcb2e8mr9510667wrr.26.1713283977484;
-        Tue, 16 Apr 2024 09:12:57 -0700 (PDT)
-Received: from U4.lan ([91.66.160.190])
-        by smtp.gmail.com with ESMTPSA id t7-20020adfe447000000b00343eac2acc4sm15350743wrm.111.2024.04.16.09.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 09:12:57 -0700 (PDT)
-From: Alex Bee <knaerzche@gmail.com>
-To: Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Chris Zhong <zyw@rock-chips.com>,
-	Zhang Qing <zhangqing@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v4 5/5] regulator: rk808: Add RK816 support
-Date: Tue, 16 Apr 2024 18:12:37 +0200
-Message-ID: <20240416161237.2500037-6-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240416161237.2500037-1-knaerzche@gmail.com>
-References: <20240416161237.2500037-1-knaerzche@gmail.com>
+	s=arc-20240116; t=1713284033; c=relaxed/simple;
+	bh=EZiYXcYYhdRml4SnenIKMTRsThmm16vYt8B4S1m+SF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFTSwHzxuYqEjQN2Xs83o3bZ8teFfXHPCrks9Po6dGnDObQI7Af09nZ6OTr9pR9gP/Fazda+Ta89EGqDLf9KOwyOQYfthjzLaxpzp/Gsgy1637lMmPotbYS1RK6F7F6gLAlPxFotlVpzrBS1o/VNYrkZnkzZccqHnfT+FJTzHJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E8F4339;
+	Tue, 16 Apr 2024 09:14:18 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 980CE3F792;
+	Tue, 16 Apr 2024 09:13:47 -0700 (PDT)
+Date: Tue, 16 Apr 2024 17:13:41 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: "Moger, Babu" <babu.moger@amd.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 01/31] x86/resctrl: Fix allocation of cleanest CLOSID
+ on platforms with no monitors
+Message-ID: <Zh6jtYS0mu9xdwgS@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-2-james.morse@arm.com>
+ <36bdfb3c-2828-4188-88b1-b9d01b2a114f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36bdfb3c-2828-4188-88b1-b9d01b2a114f@amd.com>
 
-Add support for rk816 to the existing rk808 regulator driver.
+On Mon, Apr 15, 2024 at 03:27:42PM -0500, Moger, Babu wrote:
+> 
+> 
+> On 3/21/24 11:50, James Morse wrote:
+> > commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
+> > searching closid_num_dirty_rmid") added a Kconfig option that causes
+> 
+> This is not true. The Kconfig option is never added. It is added later in
+> the series. There is also comment
+> on this https://lore.kernel.org/lkml/ZhecyLQsGZ9Iv8wU@gmail.com/
+> 
+> 
+> Shouldn't the Kconfig option added first before doing this change?
+> 
+> > resctrl to search for the CLOSID with the fewest dirty cache lines when
+> > creating a new control group. This depends on the values read from the
+> > llc_occupancy counters.
 
-The infrastructure of the driver can be re-used as is. A peculiarity for
-this version is, that BUCK1/BUCK2 have a (common) bit which needs to
-toggled after a voltage change to confirm the change. Regulator regmap
-takes care of that by defining a apply_bit and apply_reg for those
-regulators.
+See David's comments and previous discussion on this patch.
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
-changes since v1:
-  - align regulator's .name and .of_match with updated binding
+You're right to point out that the description of the original commit
+does seem a bit garbled though: CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID is
+not present in Kconfig here, but already referenced by other code.
 
-changes since v2:
-  - align regulator's .name and .of_match with updated binding
-    (dropped "-regulator" prefix)
+We seem to have a consensus that it's OK to have a dangling IS_ENABLED()
+so long as the option is added formally to Kconfig later, but it looks
+like the commit message here should be reworded.
 
- drivers/regulator/rk808-regulator.c | 202 +++++++++++++++++++++++++++-
- 1 file changed, 201 insertions(+), 1 deletion(-)
+Does the following make sense?
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index a6a563e402d0..14b60abd6afc 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -158,6 +158,11 @@
- 	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
- 	_vmask, _ereg, _emask, 0, 0, _etime, &rk808_reg_ops)
- 
-+#define RK816_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
-+	_vmask, _ereg, _emask, _disval, _etime)				\
-+	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
-+	_vmask, _ereg, _emask, _emask, _disval, _etime, &rk816_reg_ops)
-+
- #define RK817_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
- 	_vmask, _ereg, _emask, _disval, _etime)				\
- 	RK8XX_DESC_COM(_id, _match, _supply, _min, _max, _step, _vreg,	\
-@@ -258,7 +263,7 @@ static const unsigned int rk808_buck1_2_ramp_table[] = {
- 	2000, 4000, 6000, 10000
- };
- 
--/* RK817 RK809 */
-+/* RK817/RK809/RK816 (buck 1/2 only) */
- static const unsigned int rk817_buck1_4_ramp_table[] = {
- 	3000, 6300, 12500, 25000
- };
-@@ -640,6 +645,38 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
- 				  rdev->desc->enable_mask);
- }
- 
-+static const struct rk8xx_register_bit rk816_suspend_bits[] = {
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 0),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 1),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 2),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 3),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 0),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 1),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 2),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 3),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 4),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG2, 5),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 5),
-+	RK8XX_REG_BIT(RK818_SLEEP_SET_OFF_REG1, 6),
-+};
-+
-+static int rk816_set_suspend_enable(struct regulator_dev *rdev)
-+{
-+	int rid = rdev_get_id(rdev);
-+
-+	return regmap_update_bits(rdev->regmap, rk816_suspend_bits[rid].reg,
-+				  rk816_suspend_bits[rid].bit,
-+				  rk816_suspend_bits[rid].bit);
-+}
-+
-+static int rk816_set_suspend_disable(struct regulator_dev *rdev)
-+{
-+	int rid = rdev_get_id(rdev);
-+
-+	return regmap_update_bits(rdev->regmap, rk816_suspend_bits[rid].reg,
-+				  rk816_suspend_bits[rid].bit, 0);
-+}
-+
- static int rk817_set_suspend_enable_ctrl(struct regulator_dev *rdev,
- 					 unsigned int en)
- {
-@@ -913,6 +950,54 @@ static const struct regulator_ops rk809_buck5_ops_range = {
- 	.set_suspend_disable	= rk817_set_suspend_disable,
- };
- 
-+static const struct regulator_ops rk816_buck1_2_ops_ranges = {
-+	.list_voltage		= regulator_list_voltage_linear_range,
-+	.map_voltage		= regulator_map_voltage_linear_range,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_mode		= rk8xx_set_mode,
-+	.get_mode		= rk8xx_get_mode,
-+	.set_suspend_mode	= rk8xx_set_suspend_mode,
-+	.set_ramp_delay		= regulator_set_ramp_delay_regmap,
-+	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
-+	.set_suspend_enable	= rk816_set_suspend_enable,
-+	.set_suspend_disable	= rk816_set_suspend_disable,
-+};
-+
-+static const struct regulator_ops rk816_buck4_ops_ranges = {
-+	.list_voltage		= regulator_list_voltage_linear_range,
-+	.map_voltage		= regulator_map_voltage_linear_range,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_voltage_time_sel	= regulator_set_voltage_time_sel,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_mode		= rk8xx_set_mode,
-+	.get_mode		= rk8xx_get_mode,
-+	.set_suspend_mode	= rk8xx_set_suspend_mode,
-+	.set_suspend_voltage	= rk808_set_suspend_voltage_range,
-+	.set_suspend_enable	= rk816_set_suspend_enable,
-+	.set_suspend_disable	= rk816_set_suspend_disable,
-+};
-+
-+static const struct regulator_ops rk816_reg_ops = {
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= rk8xx_is_enabled_wmsk_regmap,
-+	.set_suspend_voltage	= rk808_set_suspend_voltage,
-+	.set_suspend_enable	= rk816_set_suspend_enable,
-+	.set_suspend_disable	= rk816_set_suspend_disable,
-+};
-+
- static const struct regulator_ops rk817_reg_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -1392,6 +1477,117 @@ static const struct regulator_desc rk809_reg[] = {
- 			  DISABLE_VAL(3)),
- };
- 
-+static const struct linear_range rk816_buck_4_voltage_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(800000, 0, 26, 100000),
-+	REGULATOR_LINEAR_RANGE(3500000, 27, 31, 0),
-+};
-+
-+static const struct regulator_desc rk816_reg[] = {
-+	{
-+		.name = "dcdc1",
-+		.supply_name = "vcc1",
-+		.of_match = of_match_ptr("dcdc1"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK816_ID_DCDC1,
-+		.ops = &rk816_buck1_2_ops_ranges,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 64,
-+		.linear_ranges = rk805_buck_1_2_voltage_ranges,
-+		.n_linear_ranges = ARRAY_SIZE(rk805_buck_1_2_voltage_ranges),
-+		.vsel_reg = RK818_BUCK1_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.apply_reg = RK816_DCDC_EN_REG2,
-+		.apply_bit = RK816_BUCK_DVS_CONFIRM,
-+		.enable_reg = RK816_DCDC_EN_REG1,
-+		.enable_mask = BIT(4) | BIT(0),
-+		.enable_val = BIT(4) | BIT(0),
-+		.disable_val = BIT(4),
-+		.ramp_reg = RK818_BUCK1_CONFIG_REG,
-+		.ramp_mask = RK808_RAMP_RATE_MASK,
-+		.ramp_delay_table = rk817_buck1_4_ramp_table,
-+		.n_ramp_values = ARRAY_SIZE(rk817_buck1_4_ramp_table),
-+		.of_map_mode = rk8xx_regulator_of_map_mode,
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "dcdc2",
-+		.supply_name = "vcc2",
-+		.of_match = of_match_ptr("dcdc2"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK816_ID_DCDC2,
-+		.ops = &rk816_buck1_2_ops_ranges,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 64,
-+		.linear_ranges = rk805_buck_1_2_voltage_ranges,
-+		.n_linear_ranges = ARRAY_SIZE(rk805_buck_1_2_voltage_ranges),
-+		.vsel_reg = RK818_BUCK2_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.apply_reg = RK816_DCDC_EN_REG2,
-+		.apply_bit = RK816_BUCK_DVS_CONFIRM,
-+		.enable_reg = RK816_DCDC_EN_REG1,
-+		.enable_mask = BIT(5) | BIT(1),
-+		.enable_val = BIT(5) | BIT(1),
-+		.disable_val = BIT(5),
-+		.ramp_reg = RK818_BUCK2_CONFIG_REG,
-+		.ramp_mask = RK808_RAMP_RATE_MASK,
-+		.ramp_delay_table = rk817_buck1_4_ramp_table,
-+		.n_ramp_values = ARRAY_SIZE(rk817_buck1_4_ramp_table),
-+		.of_map_mode = rk8xx_regulator_of_map_mode,
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "dcdc3",
-+		.supply_name = "vcc3",
-+		.of_match = of_match_ptr("dcdc3"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK816_ID_DCDC3,
-+		.ops = &rk808_switch_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 1,
-+		.enable_reg = RK816_DCDC_EN_REG1,
-+		.enable_mask = BIT(6) | BIT(2),
-+		.enable_val =  BIT(6) | BIT(2),
-+		.disable_val = BIT(6),
-+		.of_map_mode = rk8xx_regulator_of_map_mode,
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "dcdc4",
-+		.supply_name = "vcc4",
-+		.of_match = of_match_ptr("dcdc4"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK816_ID_DCDC4,
-+		.ops = &rk816_buck4_ops_ranges,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 32,
-+		.linear_ranges = rk816_buck_4_voltage_ranges,
-+		.n_linear_ranges = ARRAY_SIZE(rk816_buck_4_voltage_ranges),
-+		.vsel_reg = RK818_BUCK4_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK4_VSEL_MASK,
-+		.enable_reg = RK816_DCDC_EN_REG1,
-+		.enable_mask = BIT(7) | BIT(3),
-+		.enable_val = BIT(7) | BIT(3),
-+		.disable_val = BIT(7),
-+		.of_map_mode = rk8xx_regulator_of_map_mode,
-+		.owner = THIS_MODULE,
-+	},
-+	RK816_DESC(RK816_ID_LDO1, "ldo1", "vcc5", 800, 3400, 100,
-+		   RK818_LDO1_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG1, ENABLE_MASK(0), DISABLE_VAL(0), 400),
-+	RK816_DESC(RK816_ID_LDO2, "ldo2", "vcc5", 800, 3400, 100,
-+		   RK818_LDO2_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG1, ENABLE_MASK(1), DISABLE_VAL(1), 400),
-+	RK816_DESC(RK816_ID_LDO3, "ldo3", "vcc5", 800, 3400, 100,
-+		   RK818_LDO3_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG1, ENABLE_MASK(2), DISABLE_VAL(2), 400),
-+	RK816_DESC(RK816_ID_LDO4, "ldo4", "vcc6", 800, 3400, 100,
-+		   RK818_LDO4_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG1, ENABLE_MASK(3), DISABLE_VAL(3), 400),
-+	RK816_DESC(RK816_ID_LDO5, "ldo5", "vcc6", 800, 3400, 100,
-+		   RK818_LDO5_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG2, ENABLE_MASK(0), DISABLE_VAL(0), 400),
-+	RK816_DESC(RK816_ID_LDO6, "ldo6", "vcc6", 800, 3400, 100,
-+		   RK818_LDO6_ON_VSEL_REG, RK818_LDO_VSEL_MASK,
-+		   RK816_LDO_EN_REG2, ENABLE_MASK(1), DISABLE_VAL(1), 400),
-+};
-+
- static const struct regulator_desc rk817_reg[] = {
- 	{
- 		.name = "DCDC_REG1",
-@@ -1714,6 +1910,10 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- 		regulators = rk809_reg;
- 		nregulators = RK809_NUM_REGULATORS;
- 		break;
-+	case RK816_ID:
-+		regulators = rk816_reg;
-+		nregulators = ARRAY_SIZE(rk816_reg);
-+		break;
- 	case RK817_ID:
- 		regulators = rk817_reg;
- 		nregulators = RK817_NUM_REGULATORS;
--- 
-2.43.2
+--8<--
 
+commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
+searching closid_num_dirty_rmid") added logic that causes resctrl to
+search for the CLOSID with the fewest dirty cache lines when creating a
+new control group, if requested by the arch code. This depends on the
+values read from the llc_occupancy counters. The logic is applicable to
+architectures where the CLOSID effectively forms part of the monitoring
+identifier and so do not allow complete freedom to choose an unused
+monitoring identifier for a given CLOSID.
+
+-->8--
+
+
+Although it would probably have been better if the Kconfig option had
+been added upstream, this patch does not create that that situation and
+the series (taken as a whole) resolves it.
+
+So I am not sure that anything would be solved or improved by changing
+the body of this patch, but if people still have concerns then I guess
+we can look at it.
+
+
+> > 
+> > This support missed that some platforms may not have these counters.
+> > This causes a NULL pointer dereference when creating a new control
+> > group as the array was not allocated by dom_data_init().
+> > 
+> > As this feature isn't necessary on platforms that don't have cache
+> > occupancy monitors, add this to the check that occurs when a new
+> > control group is allocated.
+> > 
+> > The existing code is not selected by any upstream platform, it makes
+> > no sense to backport this patch to stable.
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > ---
+> >  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > index 011e17efb1a6..1767c1affa60 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > @@ -149,7 +149,8 @@ static int closid_alloc(void)
+> >  
+> >  	lockdep_assert_held(&rdtgroup_mutex);
+> >  
+> > -	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
+> > +	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID) &&
+> > +	    is_llc_occupancy_enabled()) {
+> >  		cleanest_closid = resctrl_find_cleanest_closid();
+> >  		if (cleanest_closid < 0)
+> >  			return cleanest_closid;
+> 
+> -- 
+> Thanks
+> Babu Moger
+> 
+
+[...]
+
+Cheers
+---Dave
