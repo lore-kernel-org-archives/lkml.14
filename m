@@ -1,135 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A57FC1F
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 16:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CA7FC1F;
+	Tue, 16 Apr 2024 16:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713286145; cv=none; b=KwNybDgUFDDC/e4QkcmgvN5xf5GLf16k+dR21i6adKxmn8r2K3WjlQcfiq2EY1djgNzk0/uwlWe+jsczNfUHdi6iobNfyYJO9XqUxGlegi++7xfCuWjBFzcp2/OKfQprj7+di+6x3khpuxX1iXcWTGMmGDWBNcdZydQN0Skh6Pk=
+	t=1713286153; cv=none; b=lfgGVNEz71VqFFSw5Td0aZFkvvrL23YwcczD4A/O/ngCRFiVzClFeBrhhnODliP5XMLvAR1/ROVTJD5Lyb77dZhl0sN6YgxEv2O3M7xBlv5Xly3hU7XNpQKXnhSzRw2HZGdAECH7TTNYLuU4bGot/FgWRsww6v/7X2ZP33hSE28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713286145; c=relaxed/simple;
-	bh=HAesg3qRZc7lQplWbxqms8wxUlus9BS8t2j/gdAeWJs=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WuYkOYYCIoKoQhEseWf1kpkEQju52lYQKB4k0ujcL/QJyENvCXZYQ9HKggzj1nP7s+i7zdJxE0bFnT0zMxH7mm6fhNNO50mK69/1P+Y4OjCuZ14okBif1Erp6aJgNRpBWKh6p1vIAQYq/p0blKB4VGQ8cUYhpFBAI/Y2iJ/dj6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c11lxcyG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713286153; c=relaxed/simple;
+	bh=pU0D7p6Mrsm9UDb/aQ2TM6OzvMKuAB+Zxp5mgw2XPKU=;
+	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
+	 Date:Message-ID; b=kcnrGc03xxOxa9wSS7IjoPopez72K6hYATCDYKUBXQKy9bIex4sWND53KrgFk4mFy5MIQznNj+c+HKQMzR1OfdEhhNpAlnUzKT+X+YrieIlTNzwoTtQylvc3whSP+wX08Sxl2ZIA6lWYTFnWSUfn6NHnoMfNAagGu0kEtYDbUdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=OZgRk9jl; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c11lxcyG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0474C113CE;
-	Tue, 16 Apr 2024 16:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713286144;
-	bh=HAesg3qRZc7lQplWbxqms8wxUlus9BS8t2j/gdAeWJs=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=c11lxcyGVB6UA+AdljlYDtaJ9Rin2zGn20+yuOq0VpmK0Mpu7ThJO3lSev5W/K4AP
-	 IRW1Yo5mDJKGDM9wb+fak8Ki3XZhuYOrJpOuDBxa6aPIRAvL8a2dhVwwmgI2ZqLCMJ
-	 WpisGNxpjqjmIMljr52uOZKL6KDOTRvnChiXnWZLBRXI50+h0ZIiFxFRyMAdNNzjgX
-	 HTPhx80A6+36tkz3YT6NGcByUM1mw1OOGOnuUyESWSlhBueMfjOBoaS7sVFneVzFkI
-	 FwQRo481Ghx4vz7ztFrqGPPEwTSAaZAqBky0mkQS8RBv5y4AoxbZaBjFUNTPIUIena
-	 PtXJEUw0P6lqQ==
-Date: Tue, 16 Apr 2024 16:49:03 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 2/3 v2] f2fs: clear writeback when compression failed
-Message-ID: <Zh6r_yLKOnNkMedZ@google.com>
-References: <20240409203411.1885121-1-jaegeuk@kernel.org>
- <20240409203411.1885121-2-jaegeuk@kernel.org>
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="OZgRk9jl"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=pU0D7p6Mrs
+	m9UDb/aQ2TM6OzvMKuAB+Zxp5mgw2XPKU=; h=date:references:in-reply-to:
+	subject:to:from; d=openbsd.org; b=OZgRk9jlk6HVVL1liuGCuPFJ2Wd/cE3AWIUi
+	1dKj9S2eim+/p7/MEBIVLGnjDzmNcJk3SrhXvjCzQOoINFz8z7XieiAjr7JwyKSuds0gRv
+	NLx/0obXLezhwQ2dW1pjWUTMqgg6JizhtP8r3Bs2z0l9RBpLPrDGSyIZOazHXibDrD+N9l
+	9fK2g1F/yNU0kgZlVOaVwSQQ34BqYf47mc8L5V/+WvP3gcDClX9TOPTHv1YJYT2Rz5jwKq
+	2gmFwm9bqhkpm5QOvXdLUqnW2kw5jlFLScyDbCrEEIg8iPV/YNBuYKastWGrKwTp1eC3Vn
+	+qPMY7t2TzUNv+PW0NBHj/bTAw==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id a4496a3c;
+	Tue, 16 Apr 2024 10:42:30 -0600 (MDT)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+    akpm@linux-foundation.org, torvalds@linux-foundation.org,
+    jeffxu@chromium.org, keescook@chromium.org, jannh@google.com,
+    sroettger@google.com, willy@infradead.org,
+    gregkh@linuxfoundation.org, usama.anjum@collabora.com,
+    corbet@lwn.net, surenb@google.com, merimus@google.com,
+    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+                  akpm@linux-foundation.org,
+                  torvalds@linux-foundation.org, jeffxu@chromium.org,
+                  keescook@chromium.org, jannh@google.com,
+                  sroettger@google.com, willy@infradead.org,
+                  gregkh@linuxfoundation.org, usama.anjum@collabora.com,
+                  corbet@lwn.net, surenb@google.com, merimus@google.com,
+                  rdunlap@infradead.org, jeffxu@google.com,
+                  jorgelo@chromium.org, groeck@chromium.org,
+                  linux-kernel@vger.kernel.org,
+                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+                  pedro.falcato@gmail.com, dave.hansen@intel.com,
+                  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v10 2/5] mseal: add mseal syscall
+In-reply-to: <v22gngid25vcufvdfbv3pdymq3s72c47pizr23tkrmbbyiqoe4@y5yxseh6thnf>
+References: <20240415163527.626541-1-jeffxu@chromium.org> <20240415163527.626541-3-jeffxu@chromium.org> <v22gngid25vcufvdfbv3pdymq3s72c47pizr23tkrmbbyiqoe4@y5yxseh6thnf>
+Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@oracle.com>
+   message dated "Tue, 16 Apr 2024 10:59:34 -0400."
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409203411.1885121-2-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <43378.1713285750.1@cvs.openbsd.org>
+Date: Tue, 16 Apr 2024 10:42:30 -0600
+Message-ID: <58783.1713285750@cvs.openbsd.org>
 
-Let's stop issuing compressed writes and clear their writeback flags.
+Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
+> No per-vma change is checked prior to entering a per-vma modification
+> loop today. This means that mseal() differs in behaviour in "up-front
+> failure" vs "partial change failure" that exists in every other
+> function.
 
- Now, I don't see any kernel hang for 24hours.
+I discussed this with Liam and Jeff a while ago (seperate conversations).
 
- Change log from v1:
-  - fix bugs
+A bunch of linux m*() syscalls have weaker atomicity gaurantees than
+the other systems I looked into.
 
- fs/f2fs/compress.c | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+Linux is an outlier here. Other systems do two passes over the "entries
+in the range", before commiting to success or failure.  When success is
+returned, it means the whole range has been changed.  When an error is
+identified in the first pass, then no changes are applied, and error is
+returned.  I found no partial results in my limited reading of various
+VM systems.
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index d67c471ab5df..b12d3a49bfda 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1031,6 +1031,31 @@ static void set_cluster_writeback(struct compress_ctx *cc)
- 	}
- }
- 
-+static void cancel_cluster_writeback(struct compress_ctx *cc,
-+			struct compress_io_ctx *cic, int submitted)
-+{
-+	int i;
-+
-+	/* Wait for submitted IOs. */
-+	if (submitted > 1) {
-+		f2fs_submit_merged_write(F2FS_I_SB(cc->inode), DATA);
-+		while (atomic_read(&cic->pending_pages) !=
-+					(cc->valid_nr_cpages - submitted + 1))
-+			f2fs_io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-+	}
-+
-+	/* Cancel writeback and stay locked. */
-+	for (i = 0; i < cc->cluster_size; i++) {
-+		if (i < submitted) {
-+			inode_inc_dirty_pages(cc->inode);
-+			lock_page(cc->rpages[i]);
-+		}
-+		clear_page_private_gcing(cc->rpages[i]);
-+		if (folio_test_writeback(page_folio(cc->rpages[i])))
-+			end_page_writeback(cc->rpages[i]);
-+	}
-+}
-+
- static void set_cluster_dirty(struct compress_ctx *cc)
- {
- 	int i;
-@@ -1232,7 +1257,6 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 		.page = NULL,
- 		.encrypted_page = NULL,
- 		.compressed_page = NULL,
--		.submitted = 0,
- 		.io_type = io_type,
- 		.io_wbc = wbc,
- 		.encrypted = fscrypt_inode_uses_fs_layer_crypto(cc->inode) ?
-@@ -1358,7 +1382,16 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 			fio.compressed_page = cc->cpages[i - 1];
- 
- 		cc->cpages[i - 1] = NULL;
-+		fio.submitted = 0;
- 		f2fs_outplace_write_data(&dn, &fio);
-+		if (unlikely(!fio.submitted)) {
-+			cancel_cluster_writeback(cc, cic, i);
-+
-+			/* To call fscrypt_finalize_bounce_page */
-+			i = cc->valid_nr_cpages;
-+			*submitted = 0;
-+			goto out_destroy_crypt;
-+		}
- 		(*submitted)++;
- unlock_continue:
- 		inode_dec_dirty_pages(cc->inode);
-@@ -1392,8 +1425,11 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- out_destroy_crypt:
- 	page_array_free(cc->inode, cic->rpages, cc->cluster_size);
- 
--	for (--i; i >= 0; i--)
-+	for (--i; i >= 0; i--) {
-+		if (!cc->cpages[i])
-+			continue;
- 		fscrypt_finalize_bounce_page(&cc->cpages[i]);
-+	}
- out_put_cic:
- 	kmem_cache_free(cic_entry_slab, cic);
- out_put_dnode:
--- 
-2.44.0.683.g7961c838ac-goog
+Actually the gaurantee of having done nothing upon error, is very common
+system call behaviour.  POSIX and defacto standards don't seem to
+specify by specific wording as far as I can see, but majority of systems
+seem to do so because it matches expectations.
 
+Considering all the system calls, I can't think of any examples.  There
+are a few specific ioctl which were designed wrong.
+
+I suspect, for performance reasons, there will be little appetite to
+repair the m*() syscalls in Linux.  (I would appreciate if they were
+brought up to standard, so I guess that starts the 20 year counter :)
+
+> I think we can all agree that having some up-front and some later
+> without any reason will lead to a higher probability of things getting
+> missed.
+
+Also as attack surface.  I spent some time thinking about circumstances
+where this might help an attack.
+
+The risk is that mprotect() return value is very rarely checked, yet
+parts of objects will change. mprotect() is probably the least checked
+system call, since people assume it will always succeed entirely; not
+the case on Linux.  Even more so not the case once immutable memory
+ranges come into play, it's an even more likely error condition now.
+
+I didn't find a particular piece of software (or an old attack) which
+would help an attack with the sloppy permission handling aspects, but I only
+thought about it for a couple days... there are people with more time
+on their hands.
