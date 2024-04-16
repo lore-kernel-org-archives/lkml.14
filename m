@@ -1,117 +1,328 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74733139CF6
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978051384B1
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713298458; cv=none; b=tp9ZAfzuqXwP6yTyDYpbyMip4ZPV8l0srw0cqFPwWBlAdRK1QG3bQTJlNBLN0C00gg7pV0wni2GlOnBdr7j2RNE7xtpxbiUVTzL+/lideRCyaTr9OMtkZcUwG/xXsZLwFRgrbaN7XRyAvVyoZHnPEcz04INFjvqV1D79iKfsCNI=
+	t=1713298487; cv=none; b=PSbaKg+8Qik2YLJA29oBR1ceDI/f/wo4zXl6pIEAZdNrdS96JUucuQoKRJq8G7g0lXREO+zIvsDFllxuNPCpp2E5VAtZf2lmFtPBsQRIjww9laC0y+M54L5aHHJYul/wGI+BH39DPwvH/2s2+tjLqWCY4+wcjat9cw7z58Qe/Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713298458; c=relaxed/simple;
-	bh=wyfPN0Q4kVOjc0eOT6c2jdoyUDUNEVQHYUAxM9t/7x0=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=MGYRRoXo1grf01/mUMjFj16jSaUs+wBPkEKTrEqk65dMyvakfjb0U8bOti7f7X0AyPs2nxHuWpMu/u8Cph29lZVukKMRzg7uuvbU/rOKtCzMz8zC9tqCallOebWx7q+X1tSL6Y6cj0J9OyvqAP93xexEKK7In/kWkiqasKYIfbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=cgIVDJqD; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1713298487; c=relaxed/simple;
+	bh=2JpaBT5X0yQH1TjHzIqs8rPVdPIWs2SGt+tLfYdx2fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r8Wz91ETEJzymdk3hRclTEENKwWgKuUAuyRxAkonHwUr1oAxgfK4RB5luk1MHAoHGBXxWa3EPwN5iC4RKrKzQFyAaNAy6H63940LM7J9uvPKWQd2Bz7mv8DFFx+8072NCdKBWQWsDP2ryMRK/13+hddZ6FtTuuKalqg1fE6L+t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W8Od4/FB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ShsaUQM5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W8Od4/FB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ShsaUQM5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="cgIVDJqD"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 22B52240027
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 22:14:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1713298453; bh=wyfPN0Q4kVOjc0eOT6c2jdoyUDUNEVQHYUAxM9t/7x0=;
-	h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:
-	 Cc:Subject:Message-ID:From;
-	b=cgIVDJqDAu8CVzN/qx4sdjxXpjAfpy85fNnWSklrojd9T4b73czIwU3ZJbJQBqPAE
-	 kUrGpk6H1VvnDgvsHZd7hFooMvq7C1gpzot+AZtEDh+sN7adzAoATqNlH3VtmSrpIN
-	 l+ZsRblycxYbSa5EkdvfKjDs4WXnJ1RObjnrdZEsKDCMqMUwG+vmRLfMqr9kdOJ5+D
-	 iTnluHJjuG0naYLXEnnFOqQ2sdD9m/BqsYQ+T6WTp3fW2iKlO6pOC8oKtEgtyCf5o2
-	 dEsmnEapDPZ0lktg5VGJD0WopB3zWo8nmqkHvYmPawY90YjFFS1sY4h7u2mlEG6nD4
-	 mabMzu5CQWOAA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4VJwH81htBz9rxD;
-	Tue, 16 Apr 2024 22:14:12 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W8Od4/FB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ShsaUQM5";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W8Od4/FB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ShsaUQM5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 61C251F86A;
+	Tue, 16 Apr 2024 20:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713298482; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z7WiYuxpSuB+TscMuMCpsdNIbU6FTnps0eqdPSfyed0=;
+	b=W8Od4/FBPF+F0wX+NA//eNUeut6BjcAACj8bOXavfvnXg3V84S+m5QuGrc/ZlJ2/WQnjjS
+	LVWfL4eaDPUkImukNEwZH9RihRDtWksRP7MnkgrwHDC4/NlzZOIla43d94O66tYWkaSpku
+	HHzh+nHsgPFONIk4+PPmtoREqh+NXsg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713298482;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z7WiYuxpSuB+TscMuMCpsdNIbU6FTnps0eqdPSfyed0=;
+	b=ShsaUQM5oGWb4Y7AjW8nxUzH7WGMt1DBIUgja9uUfgJX4D5AyqS+S/4Vat7VCLuWFVlF5w
+	IrYKccrkxtlbMHDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="W8Od4/FB";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ShsaUQM5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713298482; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z7WiYuxpSuB+TscMuMCpsdNIbU6FTnps0eqdPSfyed0=;
+	b=W8Od4/FBPF+F0wX+NA//eNUeut6BjcAACj8bOXavfvnXg3V84S+m5QuGrc/ZlJ2/WQnjjS
+	LVWfL4eaDPUkImukNEwZH9RihRDtWksRP7MnkgrwHDC4/NlzZOIla43d94O66tYWkaSpku
+	HHzh+nHsgPFONIk4+PPmtoREqh+NXsg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713298482;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z7WiYuxpSuB+TscMuMCpsdNIbU6FTnps0eqdPSfyed0=;
+	b=ShsaUQM5oGWb4Y7AjW8nxUzH7WGMt1DBIUgja9uUfgJX4D5AyqS+S/4Vat7VCLuWFVlF5w
+	IrYKccrkxtlbMHDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4DBD413931;
+	Tue, 16 Apr 2024 20:14:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id //GmEjLcHmbPZAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 16 Apr 2024 20:14:42 +0000
+Message-ID: <653d0bf6-9acc-4625-a307-af195437e744@suse.cz>
+Date: Tue, 16 Apr 2024 22:14:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Tue, 16 Apr 2024 20:14:12 +0000
-From: a-development@posteo.de
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
- David.Kaplan@amd.com, Andrew.Cooper3@citrix.com, jpoimboe@kernel.org,
- gregkh@linuxfoundation.org
-Subject: Re: [RFC][PATCH 00/17] Fix up the recent SRSO patches
-In-Reply-To: <20240416084544.GAZh46uKW6ijAfftmI@fat_crate.local>
-References: <cbad6acb30e33e8dd387080e5936cc38@posteo.net>
- <20240127191942.GEZbVXTtDNzLB9hTpr@fat_crate.local>
- <181005cf4a78a4c3c5e1de77498f6c23@posteo.net>
- <20240127194139.GFZbVcc2RxhNtO3ZHD@fat_crate.local>
- <6170a3f60cd1ca68bca5829db4a8568a@posteo.net>
- <20240326222134.GNZgNKbgdBUsAU98RV@fat_crate.local>
- <d0dfa77ba8231652554c4e6088f985d1@posteo.net>
- <20240416084544.GAZh46uKW6ijAfftmI@fat_crate.local>
-Message-ID: <a49e7560f982f00ef1c5452483459b26@posteo.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slub: limit number of slabs to scan in count_partial()
+To: Jianfeng Wang <jianfeng.w.wang@oracle.com>,
+ "Christoph Lameter (Ampere)" <cl@linux.com>
+Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "penberg@kernel.org" <penberg@kernel.org>,
+ "rientjes@google.com" <rientjes@google.com>,
+ "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ Junxiao Bi <junxiao.bi@oracle.com>
+References: <20240411164023.99368-1-jianfeng.w.wang@oracle.com>
+ <e0222219-eb2d-5e1e-81e1-548eeb5f73e0@linux.com>
+ <38ef26aa-169b-48ad-81ad-8378e7a38f25@suse.cz>
+ <a8e208fb-7842-4bca-9d2d-3aae21da030c@oracle.com>
+ <1207c5d7-8bb7-4574-b811-0cd5f7eaf33d@suse.cz>
+ <e348dfcd-6944-4500-bf84-c58b8c2e657f@oracle.com>
+ <5552D041-8549-4E76-B3EC-03C76C117077@oracle.com>
+ <567ed01c-f0f5-45ee-9711-cc5719ee7666@suse.cz>
+ <91e70916-d86a-450e-8cf7-a083fc25d665@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <91e70916-d86a-450e-8cf7-a083fc25d665@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 61C251F86A
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
 
-Now that it is deactivated, the machine no longer suspends!
-
-https://up.tail.ws/txt/non-working-suspend.txt
-
-> Then, the other thing you could try is whether suspend works without
-> that proprietary crap.
-
-I refuse. I can explain. I tried lots of capture cards that stated they 
-support uvcvideo and linux.
-This problem existed prior and I need it for work on this machine.
-But none of them worked reliably or would straight up glitch out.
-Thats because they do not implement it properly.
-
-It had to be a product from Magewell, who manage an array of bash 
-scripts and the AUR maintainer gets updates if something breaks, too. 
-Why do I use a PCIe HDMI Capture Card?
-I need to use Cameras and Displays.
-
-As for USB Cameras, unless its a product from e.g Logitech, they kept 
-giving me similar headaches.
-And that included an older setup that ran a Intel i7 8700K as well.
-
-Thx.
-
-
-
-On 16.04.2024 10:45, Borislav Petkov wrote:
-> On Tue, Apr 16, 2024 at 06:48:54AM +0000, a-development@posteo.de 
-> wrote:
->> It worked, it worked!
+On 4/16/24 8:58 PM, Jianfeng Wang wrote:
+> 
+> 
+> On 4/15/24 12:35 AM, Vlastimil Babka wrote:
+>> On 4/13/24 3:17 AM, Jianfeng Wang wrote:
+>>>
+>>>> On Apr 12, 2024, at 1:44 PM, Jianfeng Wang <jianfeng.w.wang@oracle.com> wrote:
+>>>>
+>>>> On 4/12/24 1:20 PM, Vlastimil Babka wrote:
+>>>>> On 4/12/24 7:29 PM, Jianfeng Wang wrote:
+>>>>>>
+>>>>>> On 4/12/24 12:48 AM, Vlastimil Babka wrote:
+>>>>>>> On 4/11/24 7:02 PM, Christoph Lameter (Ampere) wrote:
+>>>>>>>> On Thu, 11 Apr 2024, Jianfeng Wang wrote:
+>>>>>>>>
+>>>>>>>>> So, the fix is to limit the number of slabs to scan in
+>>>>>>>>> count_partial(), and output an approximated result if the list is too
+>>>>>>>>> long. Default to 10000 which should be enough for most sane cases.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> That is a creative approach. The problem though is that objects on the 
+>>>>>>>> partial lists are kind of sorted. The partial slabs with only a few 
+>>>>>>>> objects available are at the start of the list so that allocations cause 
+>>>>>>>> them to be removed from the partial list fast. Full slabs do not need to 
+>>>>>>>> be tracked on any list.
+>>>>>>>>
+>>>>>>>> The partial slabs with few objects are put at the end of the partial list 
+>>>>>>>> in the hope that the few objects remaining will also be freed which would 
+>>>>>>>> allow the freeing of the slab folio.
+>>>>>>>>
+>>>>>>>> So the object density may be higher at the beginning of the list.
+>>>>>>>>
+>>>>>>>> kmem_cache_shrink() will explicitly sort the partial lists to put the 
+>>>>>>>> partial pages in that order.
+>>>>>>>>
+>>>
+>>> Realized that I’d do "echo 1 > /sys/kernel/slab/dentry/shrink” to sort the list explicitly.
+>>> After that, the numbers become:
+>>> N = 10000 -> diff = 7.1 %
+>>> N = 20000 -> diff = 5.7 %
+>>> N = 25000 -> diff = 5.4 %
+>>> So, expecting ~5-7% difference after shrinking.
+>>>
+>>>>>>>> Can you run some tests showing the difference between the estimation and 
+>>>>>>>> the real count?
+>>>>>>
+>>>>>> Yes.
+>>>>>> On a server with one NUMA node, I create a case that uses many dentry objects.
+>>>>>
+>>>>> Could you describe in more detail how do you make dentry cache to grow such
+>>>>> a large partial slabs list? Thanks.
+>>>>>
+>>>>
+>>>> I utilized the fact that creating a folder will create a new dentry object;
+>>>> deleting a folder will delete all its sub-folder's dentry objects.
+>>>>
+>>>> Then, I started to create N folders, while each folder has M empty sub-folders.
+>>>> Assuming that these operations would consume a large number of dentry
+>>>> objects in the sequential order. Their slabs were very likely to be full slabs.
+>>>> After all folders were created, I deleted a subset of the N folders (i.e.,
+>>>> one out of every two folders). This would create many holes, which turned a
+>>>> subset of full slabs into partial slabs.
 >> 
->> https://up.tail.ws/txt/working-suspend.txt
+>> Thanks, right, so that's quite a deterministic way to achieve the long
+>> partial lists with very close to uniform ratio of free/used, so no wonder
+>> the resulting accuracy is good and the diff is very small. But in practice
+>> the workloads that may lead to long lists will not be so uniform. The result
+>> after shrinking shows what happens if there's bias in which slabs we inspect
+>> due to the sorting. But still most of the slabs will have the near-uniform
+>> free/used ratio so the sorting will not do so much difference. But another
+>> workload might do that.
 >> 
->> I've tested it now quite some time.
->> But, I also had to start using 6.6.26-1-lts because my magewell 
->> capture card
->> wouldn't without.
+>> So what happens if you inspect X slabs from the head and X from the tail as
+>> I suggested? That should help your test case even after you sort, and also
+>> should in theory be more accurate even for less uniform workloads.
 > 
-> Right, that thing I guess:
+> Yes, the approach of counting from both directions and then approximating
+> works better after sorting the partial list.
+
+Yeah I think we could go with that approach then. Let's do 5000 from each
+side. You can check whether n->nr_partial < 10000 and then just scan the
+whole list in single direction with no approximation, and otherwise 5000
+from each side with approximation. I think the code as you show below will
+scan some slabs in the middle of the list twice if there's between 5000 and
+10000 on the list, so checking n->nr_partial would avoid that. Thanks!
+
+> Here is what I did.
+> ---
+> +static unsigned long count_partial(struct kmem_cache_node *n,
+> +                                       int (*get_count)(struct slab *))
+> +{
+> +       unsigned long flags;
+> +       unsigned long x = 0;
+> +       unsigned long scanned = 0;
+> +       struct slab *slab;
+> +
+> +       spin_lock_irqsave(&n->list_lock, flags);
+> +       list_for_each_entry(slab, &n->partial, slab_list) {
+> +               x += get_count(slab);
+> +               if (++scanned > MAX_PARTIAL_TO_SCAN)
+> +                       break;
+> +       }
+> +
+> +       if (scanned > max_partial_to_scan) {
+> +               scanned = 0;
+> +               list_for_each_entry_reverse(slab, &n->partial, slab_list) {
+> +                       x += get_count(slab);
+> +                       if (++scanned > MAX_PARTIAL_TO_SCAN) {
+> +                               /* Approximate total count of objects */
+> +                               x = mult_frac(x, n->nr_partial, scanned * 2);
+> +                               x = min(x, node_nr_objs(n));
+> +                               break;
+> +                       }
+> +               }
+> +       }
+> +       spin_unlock_irqrestore(&n->list_lock, flags);
+> +       return x;
+> +}
+> ---
 > 
-> [Mon Apr 15 18:37:58 2024] ProCapture: loading out-of-tree module 
-> taints kernel.
-> [Mon Apr 15 18:37:58 2024] ProCapture: module verification failed:
-> signature and/or required key missing - tainting kernel
+> Results:
+> ---
+> * Pre-shrink:
+> MAX_SLAB_TO_SCAN | Diff (single-direction) | Diff (double-direction) | 
+> 1000             | 0.43  %                 | 0.80   %                |
+> 5000             | 0.06  %                 | 0.16   %                |
+> 10000            | 0.02  %                 | -0.003 %                |
+> 20000            | 0.009 %                 | 0.03   %                |
 > 
-> So, machines do suspend even with SRSO enabled and since your machine 
-> is
-> affected, you probably should try without spec_rstack_overflow=off to
-> see if it works with the new kernel.
+> * After-shrink:
+> MAX_SLAB_TO_SCAN | Diff (single-direction) | Diff (double-direction) | 
+> 1000             | 12.46 %                 | 3.60   %                |
+> 5000             | 5.38  %                 | 0.22   %                |
+> 10000            | 4.99  %                 | -0.06  %                |
+> 20000            | 4.86  %                 | -0.17  %                |
+> ---
 > 
-> Then, the other thing you could try is whether suspend works without
-> that proprietary crap.
+> For |MAX_SLAB_TO_SCAN| >= 5000, count_partial() returns the exact
+> object count if the length of the partial list is not larger than
+> |MAX_SLAB_TO_SCAN|. Otherwise, it counts |MAX_SLAB_TO_SCAN| from both
+> the head and from the tail, and outputs an approximation that shows
+> <1% difference.
 > 
-> And then we can see.
-> 
-> Thx.
+> With a slightly larger limit (like 10000), count_partial() should
+> produce the exact number for most cases (that won't lead to a
+> lockup) and avoid lockups with a good estimate.
+
