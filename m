@@ -1,141 +1,113 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00C08485;
-	Tue, 16 Apr 2024 02:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E59171AB;
+	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713235476; cv=none; b=NGAf7sQf4kTq8ItA0O6C6jXh+XyVE3baiLWUjjwIqyy7CkDAKVPPN+F0Fa465YwOrJ/LAivclr62I0RO1p+qP63d4CCc1VPbtfzFJh1Sdzhv03Ri+8lH6YacR6eHbjiJnj8xancTp91J9Gww7iTEzQXAYQJ4kZlDodcZ7GSNtFs=
+	t=1713235481; cv=none; b=Lbi1tFhe7V0rD3eJZWtlE/27uSHIN1ss5MmGCyxUzK7aTDNIy4ozioB58MrxQ2rjewdVc3gcPulhwhZ722YlKP0aLEDua7bBm8oC5tOh2Y4l7nvKtvmRKx7tl9dRydGM2uwzEDUTPgCGwxWhYL9V8TCOnZHP7jRMgjxGVJ2U0uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713235476; c=relaxed/simple;
-	bh=WOP6vQcoqzks8WSee7OrShtu3+FKMyr2tXm7Fba/t1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BPzPa/+xAjBFNA+55BU1qJCjzf+qyuvVZ8lJ+jagU0uYwMKynW1gupfTnw4MKPIuvLaZr4LPDfOYuxewNOYNyejRnWBSYamRDh3YCu3O6K5ZhbK3+6LrLcLQLPOp+KhH6DuRCHxeLtM17ktWpDXJhlPLpTe033qwdU1NkjtPz3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=F9JT0Pvj; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1713235481; c=relaxed/simple;
+	bh=2pSJ5RtkTJUIWZtuMClF1MziyBCDcsQTg8O2HQnpmqY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nc3XQKdxNTUItvCqkMD5hpvJ/gHFP+OusZhQN6lVAyGoYbx7RTHBqaBulsDLhmwgaz/1EuRsalQXpF4VAoL9HD8KtU4pqi9Y95EWcXmWNLlLgW4DUPzfruDxNHPPsBXzI+sMsnB4O+tK5iX7cAckuI8OUbMe7LiMgUfiNOaKbCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZ/uc015; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F9JT0Pvj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1713235470;
-	bh=fxHKmx6FXKZbRduyay5x+5YXC7g5gOcmxuvTB4fmgXs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=F9JT0Pvj5V+l5thEcdKGemIPFQ9HOe253uXXjBukxsZNFQcCoeczklOltNUq5tteB
-	 ObkGzhf8w+xiiNA1MnJigWpKTLviFDdaMW170z2I6+W4h0z2y6OzwNQWZrn2JFYFQF
-	 UmIQoiVmjZQVtgt9VgshQdaF0I5UoUe30ZuyaiPgxTGXAn4OChiUr+0alI/IY/FcIC
-	 M2X/mUwsfleT3CTygdxNaBR7rC82ZUsbwCtWJd7f8Ezgf8YyANM8UysOI0r487mOS7
-	 nkP497ODLi9WjrcClqT7OH93Hv/m8GCK0nmBf4mwgDOW0ThAM+vTyePt1Ccilwoo9K
-	 vXp6OHkrYj2UA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VJSzy1vyhz4wcn;
-	Tue, 16 Apr 2024 12:44:29 +1000 (AEST)
-Date: Tue, 16 Apr 2024 12:44:26 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, Al
- Viro <viro@ZenIV.linux.org.uk>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Miklos Szeredi
- <mszeredi@redhat.com>
-Subject: linux-next: manual merge of the block tree with the vfs-brauner,
- vfs trees
-Message-ID: <20240416124426.624cfaf9@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZ/uc015"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 60782C4AF08;
+	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713235481;
+	bh=2pSJ5RtkTJUIWZtuMClF1MziyBCDcsQTg8O2HQnpmqY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=pZ/uc015yVBeGifN//gD3eC++vwiMoBC+d4Fu/1oRAJnpYKyKo74r8c1Fh9RPdZD+
+	 p8BC5p9fCywkqTwx/2YMLFOozbWRKHd+I+Kc9DraOcc862pIrf0AV0Gh0aeFn0t3Ns
+	 1BVOEOm/VFF2x1zQQGYZCckwCkVlo4UacqtFA/GGpDfSgestjc7bHoux+MW9nTT1w1
+	 vnp8r8RvGpAruf6iYJkVlxS/0pZ+z5dAimD9dUdYn56nPgLuU1U7TdLvIzOQmSo4pE
+	 SwjyXdd1B+ZowzCRPqU5PJvXSS24Hd3HEvS/M6IdG57l+svMqYHZyQr+6iDhhM98Ya
+	 Jxm/LkgIOBwow==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF72C05023;
+	Tue, 16 Apr 2024 02:44:41 +0000 (UTC)
+From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
+Date: Tue, 16 Apr 2024 10:44:33 +0800
+Subject: [PATCH v11 2/3] dt-bindings: input: qcom,pm8xxx-vib: add new SPMI
+ vibrator module
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/m8f_evjuhWhg6A1r=yhb4Q6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240416-pm8xxx-vibrator-new-design-v11-2-7b1c951e1515@quicinc.com>
+References: <20240416-pm8xxx-vibrator-new-design-v11-0-7b1c951e1515@quicinc.com>
+In-Reply-To: <20240416-pm8xxx-vibrator-new-design-v11-0-7b1c951e1515@quicinc.com>
+To: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Fenglin Wu <quic_fenglinw@quicinc.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713235479; l=1205;
+ i=quic_fenglinw@quicinc.com; s=20240327; h=from:subject:message-id;
+ bh=SwnogURbBf0S1flEa633BZvpsevy5nBnFae6M+y7bFo=;
+ b=MZ3zGU5XnGhBOb+KlzuigAzntA4TFiD47fvC2y/ZHUUw8LA9sAY8PTpvmaIwaGBWMZaNHpKbE
+ CLrPtyK9wxzC92qgfaTB4zzRzEVwrxgcfBHpRbsZlOHYj3uo0bf5xwv
+X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
+ pk=BF8SA4IVDk8/EBCwlBehKtn2hp6kipuuAuDAHh9s+K4=
+X-Endpoint-Received: by B4 Relay for quic_fenglinw@quicinc.com/20240327
+ with auth_id=146
+X-Original-From: Fenglin Wu <quic_fenglinw@quicinc.com>
+Reply-To: quic_fenglinw@quicinc.com
 
---Sig_/m8f_evjuhWhg6A1r=yhb4Q6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Fenglin Wu <quic_fenglinw@quicinc.com>
 
-Hi all,
+Add compatible strings to support vibrator module inside PMI632,
+PMI7250B, PM7325B, PM7550BA.
 
-Today's linux-next merge of the block tree got a conflict in:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
+---
+ .../devicetree/bindings/input/qcom,pm8xxx-vib.yaml       | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-  io_uring/rw.c
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
+index c8832cd0d7da..2025d6a5423e 100644
+--- a/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
++++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
+@@ -11,10 +11,18 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - qcom,pm8058-vib
+-      - qcom,pm8916-vib
+-      - qcom,pm8921-vib
++    oneOf:
++      - enum:
++          - qcom,pm8058-vib
++          - qcom,pm8916-vib
++          - qcom,pm8921-vib
++          - qcom,pmi632-vib
++      - items:
++          - enum:
++              - qcom,pm7250b-vib
++              - qcom,pm7325b-vib
++              - qcom,pm7550ba-vib
++          - const: qcom,pmi632-vib
+ 
+   reg:
+     maxItems: 1
 
-between commits:
+-- 
+2.25.1
 
-  210a03c9d51a ("fs: claw back a few FMODE_* bits")
-  7c98f7cb8fda ("remove call_{read,write}_iter() functions")
 
-from the vfs-brauner, vfs trees and commits:
-
-  a9165b83c193 ("io_uring/rw: always setup io_async_rw for read/write reque=
-sts")
-  0d10bd77a1be ("io_uring: get rid of struct io_rw_state")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc io_uring/rw.c
-index d517a1a29274,3134a6ece1be..000000000000
---- a/io_uring/rw.c
-+++ b/io_uring/rw.c
-@@@ -1028,13 -1003,13 +1004,13 @@@ int io_write(struct io_kiocb *req, unsi
-  	if (force_nonblock) {
-  		/* If the file doesn't support async, just async punt */
-  		if (unlikely(!io_file_supports_nowait(req)))
-- 			goto copy_iov;
-+ 			goto ret_eagain;
- =20
- -		/* File path supports NOWAIT for non-direct_IO only for block devices. =
-*/
- +		/* Check if we can support NOWAIT. */
-  		if (!(kiocb->ki_flags & IOCB_DIRECT) &&
- -			!(kiocb->ki_filp->f_mode & FMODE_BUF_WASYNC) &&
- -			(req->flags & REQ_F_ISREG))
- +		    !(req->file->f_op->fop_flags & FOP_BUFFER_WASYNC) &&
- +		    (req->flags & REQ_F_ISREG))
-- 			goto copy_iov;
-+ 			goto ret_eagain;
- =20
-  		kiocb->ki_flags |=3D IOCB_NOWAIT;
-  	} else {
-@@@ -1055,9 -1028,9 +1029,9 @@@
-  	kiocb->ki_flags |=3D IOCB_WRITE;
- =20
-  	if (likely(req->file->f_op->write_iter))
-- 		ret2 =3D req->file->f_op->write_iter(kiocb, &s->iter);
- -		ret2 =3D call_write_iter(req->file, kiocb, &io->iter);
-++		ret2 =3D req->file->f_op->write_iter(kiocb, &io->iter);
-  	else if (req->file->f_op->write)
-- 		ret2 =3D loop_rw_iter(WRITE, rw, &s->iter);
-+ 		ret2 =3D loop_rw_iter(WRITE, rw, &io->iter);
-  	else
-  		ret2 =3D -EINVAL;
- =20
-
---Sig_/m8f_evjuhWhg6A1r=yhb4Q6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYd5goACgkQAVBC80lX
-0Gzdhgf7B/64lJSehzi2t9+TjMayIbnv5trux8hxlGjDICXLRDhuBAE9nCQwddTB
-z9osMIAVuYl4D/+4ocJYWPEX7nyhGL1gMP7Gam1fW7XZhdm27veSH2XGkt2NRhVh
-BkaGdK5QY+nQsWsyl4+U9ZpbFWFk9EiWaUkRGdakRmclBB7g3K+nWvyPg6BVlGSw
-/17/5hO8FGVk6cisBAvqzfvebUNBW+JCuBU1bTilxtC4efcYO/nYd2hBRuraK8ME
-lRVcncKv4IRXKcHg2miblzpUqFHxyivAzqguS3GkwjB8W3VMde2TrDSvnrjqn3zP
-GcExA4J4DWwz/Wl995OCQhrjudhGSg==
-=2tLZ
------END PGP SIGNATURE-----
-
---Sig_/m8f_evjuhWhg6A1r=yhb4Q6--
