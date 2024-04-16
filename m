@@ -1,277 +1,105 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0491B133284;
-	Tue, 16 Apr 2024 17:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287EF13340D
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713288350; cv=none; b=HdcZsUsORrmCAo8kfifV2kmSenPXzc46j2dJG5dvXMiBHb5FHZllL2PUkLqx5u9IE1R2bnQfmJzocM0kVe8DlAqEyUutz4PW7xrIJ7Hw1wNi3f7YG8DBacBrTgtGmCyjs5GXhMEo+9vzy9ouC6nhlYibsSnu/ehsTw7fHd5AOso=
+	t=1713288362; cv=none; b=BaUKzemER9EFNMUtPUO3EIA5y67/2ajG3sxCrUgxc6xbOCUTqf8WApyKmpNe8Ozu2ZxO3O2xN35jZxolXSGTe6AhZLEAYkWAiEjWhSwIwO7kmeWFdnqt6/W7uaBmp00kxp86xRjev2hpLcf4UL6qInUXqCEa2BENDf89bNlkKeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713288350; c=relaxed/simple;
-	bh=8qCKzY35EGzYV4nWpAHAjd7zJfdPfc7UJRsZu59DAXQ=;
-	h=Message-Id:In-Reply-To:References:To:Cc:From:Date:Subject; b=oPoarQ/kEipGlukJcjVaJ0Rb3rK0cMLTRNK/DmrAc+rXWi4Me0TAUcnysQUTIbaw9xP0BxLsXjyKWCzdaQSexxd/G0Qtns1bDKj2vX0HrPxCcFFJU+kiit0jKdBoF5sBMjgP4CSEIzLLLTK6gKjj4dk89AZPU+9TFX1T5t1fDAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=fVFZT85i; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1713288362; c=relaxed/simple;
+	bh=IJuIYdnF0LWSygsLwsn6+waVDToijuxbtvLwjuDB96c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mIRxUiICfNdtdcjaOm5Aji2P0gRw3xV4kLHC8J1ZAFoA8d23/cPqWgJBsiyMPZLFTP76lUgbHDIqo+B6zPnSsplkKk5/VbmChek/pFBDAS05+jmbmDq2Im+aAI/K3yBi7SbzC+BESAn6lV8YXrhbaJZN4uZYLxjulFYV5L5IT7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c8XALg5n; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="fVFZT85i"
-Received: from pps.filterd (m0355091.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GFQBHE026682;
-	Tue, 16 Apr 2024 17:24:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	message-id:in-reply-to:references:to:cc:from:date:subject; s=
-	DKIM202306; bh=Oc2SUwX6uzMkXCJf4ZSU5CLVXrP2N2CrXvm6EA3BRc0=; b=f
-	VFZT85i9fG9UZIMquW7lOcKAq20DOeCPjOdPiSoX40Uy/gdhpas7agKPawUQhT7x
-	jlu6AEhZt7ljLk2n20UpKTnolmUli9RA4S94pfqgo82LJmyfQGSWX+2ckqN3E3a6
-	jp+/jciyo6S9UM3hNfRiVNfOIKTGmn3Gd7Kqf7Fg+ODOygCLrVJKEFbUu3tVWAti
-	fadgXso/3HtOEdqpW7Sq+tQ8RIqcbtaSSGSjhS7q9YsinUy0LnphQn2+GK2iDP1m
-	aaqJyHM7uz4vWoEonBp43YZWPoTF4kyTlWY8hHQneojPAs3B2gfooI2z9rSq2qK+
-	8Td0+HxT5kbdpLFNyLd1A==
-Received: from va32lpfpp04.lenovo.com ([104.232.228.24])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xhjbek979-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 17:24:57 +0000 (GMT)
-Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp04.lenovo.com (Postfix) with ESMTPS id 4VJrWs1Wv3zj9hH;
-	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
-Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8XALg5n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713288359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1onEK+mjIGOBc7x6Ypb0bDNESgiVTW/1kwHRGIFFvkM=;
+	b=c8XALg5nBqwNPx1DayV83y2zB9+ljr31D2dNqH1TSxhL7U0R1fgr2qbEa3+7xy+tStjB3e
+	c4Xyf1tqtSWFVYpDFQqToSes1kbFa7UbMSqX4qogAOlPPa/UACkKCFamkQ/8aZQLPcucwV
+	i9NcRbl9MfOYY4m711OezJK4M4Csbms=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-46-CG4LeTsyOi2kOFzEDet5uA-1; Tue, 16 Apr 2024 13:25:56 -0400
+X-MC-Unique: CG4LeTsyOi2kOFzEDet5uA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VJrWs17Mmz2VZS6;
-	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
-Message-Id: <20240416122254.868007168-6-mbland@motorola.com>
-In-Reply-To: <20240416122254.868007168-1-mbland@motorola.com>
-References: <20240416122254.868007168-1-mbland@motorola.com>
-To: linux-mm@kvack.org
-Cc: Maxwell Bland <mbland@motorola.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Maxwell Bland <mbland@motorola.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Yu Chien Peter Lin <peterlin@andestech.com>,
-        Song Shuai <suagrfillet@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org
-From: Maxwell Bland <mbland@motorola.com>
-Date: Mon, 15 Apr 2024 14:51:32 -0500
-Subject: [PATCH 5/5] ptdump: add state parameter for non-leaf callback
-X-Proofpoint-ORIG-GUID: Obuaco9Ts8gQobghqAGopelkIlnGG11N
-X-Proofpoint-GUID: Obuaco9Ts8gQobghqAGopelkIlnGG11N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-16_14,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 suspectscore=0 bulkscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
- mlxlogscore=960 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404160108
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2837A811001;
+	Tue, 16 Apr 2024 17:25:56 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.192.80])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DB2A949106;
+	Tue, 16 Apr 2024 17:25:53 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Shi <alexs@kernel.org>
+Subject: [PATCH v1] mm/ksm: remove page_mapcount() usage in stable_tree_search()
+Date: Tue, 16 Apr 2024 19:25:33 +0200
+Message-ID: <20240416172533.663418-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-ptdump can now note non-leaf descriptor entries, a useful addition for
-debugging table descriptor permissions when working on related code
+We want to limit the use of page_mapcount() to the places where it is
+absolutely necessary.
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
+If our folio has a stable node, it is a (small) KSM folio -- see
+folio_stable_node(). Let's use folio_mapcount() in stable_tree_search()
+instead, which results in no functional change.
+
+The mapcount > 1 check is a bit confusing, because that's usually a check
+for page sharing. Looks like the reason is that we are guaranteed to not
+exceed ksm_max_page_sharing for the tree KSM folio when merging with
+that. Let's update the documentation to make that clearer.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Shi (tencent) <alexs@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm64/mm/ptdump.c          |  6 ++++--
- arch/powerpc/mm/ptdump/ptdump.c |  2 ++
- arch/riscv/mm/ptdump.c          |  6 ++++--
- arch/s390/mm/dump_pagetables.c  |  6 ++++--
- arch/x86/mm/dump_pagetables.c   |  3 ++-
- include/linux/ptdump.h          |  1 +
- mm/ptdump.c                     | 13 +++++++++++++
- 7 files changed, 30 insertions(+), 7 deletions(-)
+ mm/ksm.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-index 796231a4fd63..1a6f4a3513e5 100644
---- a/arch/arm64/mm/ptdump.c
-+++ b/arch/arm64/mm/ptdump.c
-@@ -299,7 +299,8 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
- 			.range = (struct ptdump_range[]){
- 				{info->base_addr, end},
- 				{0, 0}
--			}
-+			},
-+			.note_non_leaf = false
- 		}
- 	};
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 486c9974f8e20..159604ad47799 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -1909,12 +1909,15 @@ static struct page *stable_tree_search(struct page *page)
+ 			if (page_node) {
+ 				VM_BUG_ON(page_node->head != &migrate_nodes);
+ 				/*
+-				 * Test if the migrated page should be merged
+-				 * into a stable node dup. If the mapcount is
+-				 * 1 we can migrate it with another KSM page
+-				 * without adding it to the chain.
++				 * If the mapcount of our migrated KSM folio is
++				 * at most 1, we can merge it with another
++				 * KSM folio where we know that we have space
++				 * for one more mapping without exceeding the
++				 * ksm_max_page_sharing limit: see
++				 * chain_prune(). This way, we can avoid adding
++				 * this stable node to the chain.
+ 				 */
+-				if (page_mapcount(page) > 1)
++				if (folio_mapcount(folio) > 1)
+ 					goto chain_append;
+ 			}
  
-@@ -335,7 +336,8 @@ bool ptdump_check_wx(void)
- 			.range = (struct ptdump_range[]) {
- 				{_PAGE_OFFSET(vabits_actual), ~0UL},
- 				{0, 0}
--			}
-+			},
-+			.note_non_leaf = false
- 		}
- 	};
- 
-diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-index 9dc239967b77..89e673f5fd3d 100644
---- a/arch/powerpc/mm/ptdump/ptdump.c
-+++ b/arch/powerpc/mm/ptdump/ptdump.c
-@@ -307,6 +307,7 @@ static int ptdump_show(struct seq_file *m, void *v)
- 		.ptdump = {
- 			.note_page = note_page,
- 			.range = ptdump_range,
-+			.note_non_leaf = false
- 		}
- 	};
- 
-@@ -340,6 +341,7 @@ bool ptdump_check_wx(void)
- 		.ptdump = {
- 			.note_page = note_page,
- 			.range = ptdump_range,
-+			.note_non_leaf = false
- 		}
- 	};
- 
-diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-index 1289cc6d3700..b355633afcaf 100644
---- a/arch/riscv/mm/ptdump.c
-+++ b/arch/riscv/mm/ptdump.c
-@@ -328,7 +328,8 @@ static void ptdump_walk(struct seq_file *s, struct ptd_mm_info *pinfo)
- 			.range = (struct ptdump_range[]) {
- 				{pinfo->base_addr, pinfo->end},
- 				{0, 0}
--			}
-+			},
-+			.note_non_leaf = false
- 		}
- 	};
- 
-@@ -350,7 +351,8 @@ bool ptdump_check_wx(void)
- 			.range = (struct ptdump_range[]) {
- 				{KERN_VIRT_START, ULONG_MAX},
- 				{0, 0}
--			}
-+			},
-+			.note_non_leaf = false
- 		}
- 	};
- 
-diff --git a/arch/s390/mm/dump_pagetables.c b/arch/s390/mm/dump_pagetables.c
-index ffd07ed7b4af..6468cfd53e2a 100644
---- a/arch/s390/mm/dump_pagetables.c
-+++ b/arch/s390/mm/dump_pagetables.c
-@@ -200,7 +200,8 @@ bool ptdump_check_wx(void)
- 			.range = (struct ptdump_range[]) {
- 				{.start = 0, .end = max_addr},
- 				{.start = 0, .end = 0},
--			}
-+			},
-+			.note_non_leaf = false
- 		},
- 		.seq = NULL,
- 		.level = -1,
-@@ -239,7 +240,8 @@ static int ptdump_show(struct seq_file *m, void *v)
- 			.range = (struct ptdump_range[]) {
- 				{.start = 0, .end = max_addr},
- 				{.start = 0, .end = 0},
--			}
-+			},
-+			.note_non_leaf = false
- 		},
- 		.seq = m,
- 		.level = -1,
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 89079ea73e65..43f00dfb955f 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -380,7 +380,8 @@ bool ptdump_walk_pgd_level_core(struct seq_file *m,
- 		.ptdump = {
- 			.note_page	= note_page,
- 			.effective_prot = effective_prot,
--			.range		= ptdump_ranges
-+			.range		= ptdump_ranges,
-+			.note_non_leaf  = false
- 		},
- 		.level = -1,
- 		.to_dmesg	= dmesg,
-diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
-index 8dbd51ea8626..b3e793a5c77f 100644
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -16,6 +16,7 @@ struct ptdump_state {
- 			  int level, u64 val);
- 	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
- 	const struct ptdump_range *range;
-+	bool note_non_leaf;
- };
- 
- bool ptdump_walk_pgd_level_core(struct seq_file *m,
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 106e1d66e9f9..97da7a765b22 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -41,6 +41,9 @@ static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
- 	if (st->effective_prot)
- 		st->effective_prot(st, 0, pgd_val(val));
- 
-+	if (st->note_non_leaf && !pgd_leaf(val))
-+		st->note_page(st, addr, 0, pgd_val(val));
-+
- 	if (pgd_leaf(val)) {
- 		st->note_page(st, addr, 0, pgd_val(val));
- 		walk->action = ACTION_CONTINUE;
-@@ -64,6 +67,9 @@ static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
- 	if (st->effective_prot)
- 		st->effective_prot(st, 1, p4d_val(val));
- 
-+	if (st->note_non_leaf && !p4d_leaf(val))
-+		st->note_page(st, addr, 1, p4d_val(val));
-+
- 	if (p4d_leaf(val)) {
- 		st->note_page(st, addr, 1, p4d_val(val));
- 		walk->action = ACTION_CONTINUE;
-@@ -87,6 +93,9 @@ static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
- 	if (st->effective_prot)
- 		st->effective_prot(st, 2, pud_val(val));
- 
-+	if (st->note_non_leaf && !pud_leaf(val))
-+		st->note_page(st, addr, 2, pud_val(val));
-+
- 	if (pud_leaf(val)) {
- 		st->note_page(st, addr, 2, pud_val(val));
- 		walk->action = ACTION_CONTINUE;
-@@ -108,6 +117,10 @@ static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
- 
- 	if (st->effective_prot)
- 		st->effective_prot(st, 3, pmd_val(val));
-+
-+	if (st->note_non_leaf && !pmd_leaf(val))
-+		st->note_page(st, addr, 3, pmd_val(val));
-+
- 	if (pmd_leaf(val)) {
- 		st->note_page(st, addr, 3, pmd_val(val));
- 		walk->action = ACTION_CONTINUE;
 -- 
-2.39.2
+2.44.0
 
