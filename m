@@ -1,159 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC2712BF3A;
-	Tue, 16 Apr 2024 14:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E97D112C7E8
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 14:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277959; cv=none; b=JFNOnnT3oEY54OmL/VbVdVKP/fo/YqPt/pT9d9sOYxI4XTEofZ3r4pscPDfs5nivR8EgGh7HI4TomZb9dhCgdiloaC61Fi+czyKNEQK89P3UNdMHO9rI1OkL5k2wEzVH0Fskql+YCGSAltd5aAJXtz7YluZo8NiwrmXzCnc+RvI=
+	t=1713277985; cv=none; b=dFhYeWKcLoZLOsv3r6/YJb3TNztPGBCwQEDY/UtrsKa+1mvgqqMRmdDdpogt9kjWu3lrxw7l2BP81zwASYE+xGaE0c7Ym2Xfr6653ajY1KBFPHfOxb/iL3sgC9ot0lcR+Ludma0j+5hCQQtdqDSIlR4CYsXwzNJET5LDK5BDKz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277959; c=relaxed/simple;
-	bh=wjp4bLJ0fT33224ygvnRP0tblkyuZ6Q22imNSXQ8bQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BC6oUK32U0Ae3LrqjJYPgXhUxdlqWzD5xLhQ3G5fc4H13LJjZpo/+kKmZDNNz8tItH+lceSJTwGIq/64ST4vLe4VmOHrGZ/bWdxh0iiDCbmnWliH6oYge0hTYDASuCGelmKc9YBGcBqyLiLNNYEtpREvUghVOtQ0dMD/sIpjr50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELC8O1hE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELC8O1hE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D84C2BD11;
-	Tue, 16 Apr 2024 14:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713277959;
-	bh=wjp4bLJ0fT33224ygvnRP0tblkyuZ6Q22imNSXQ8bQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ELC8O1hEoEIPM2E6gWK8WyW2OayVVZCojXc4wIgfrTIBqIGH3wx4xw0daVirJGf5z
-	 BGi8uSFtsLKQoFWxjXtsWDqAYrvVpjT8GEnrxcmMzg0Ui4tZddBCzMy8LpZQJmd77Z
-	 6BVJbyLGOVbhNTJv3p5gZru86qStIGA4RPaHrLj+TT2FqCBWnNGyXpuXI+vo+OwBV1
-	 GqxSL+E3iIMyQJpwLWxQ0dD8NUvxelf4+yM4O92n9JUDULl4kIrncXMJxnBzokRHF0
-	 glHQcUDstoGq2M+lbLMwi5cTBRxI0AfD0R+AsSAPhrWRi+7lg9ApXRPC+oxKBp9nki
-	 r7YrNWAzZ09zQ==
-Date: Tue, 16 Apr 2024 09:32:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_rohkumar@quicinc.com,
-	quic_pkumpatl@quicinc.com
-Subject: Re: [PATCH v2 3/8] ASoC: dt-bindings: wcd937x-sdw: add bindings for
- wcd937x-sdw
-Message-ID: <20240416143237.GA2250258-robh@kernel.org>
-References: <20240416063600.309747-1-quic_mohs@quicinc.com>
- <20240416063600.309747-4-quic_mohs@quicinc.com>
+	s=arc-20240116; t=1713277985; c=relaxed/simple;
+	bh=l5m29NIiX6i9/9OYQJmF2WeFnvO1SUvcqsKMNMHrFjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tT32nPITSt0dz8PxL3RXYJ1FHygCICEsHMgRkNhfs7AUxdrGYQFMTz69DaZb8Zp87gQ5UQ69M2waL9RhHQoW2hHyslws+ZW0XYJKi2JkmGQHfn2cvNZeN+TNZ+BbKOdoyRrHXBYqDfYn+Lj72FpnkuPViMH2h7EqH203fyiOiw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99A1B339;
+	Tue, 16 Apr 2024 07:33:31 -0700 (PDT)
+Received: from [10.1.39.189] (XHFQ2J9959.cambridge.arm.com [10.1.39.189])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07D043F738;
+	Tue, 16 Apr 2024 07:33:01 -0700 (PDT)
+Message-ID: <31b4e05d-62c6-44cd-8038-7ac8d21320c3@arm.com>
+Date: Tue, 16 Apr 2024 15:33:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416063600.309747-4-quic_mohs@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: clang: error: unknown argument '-static-libasan'; did you mean
+ '-static-libsan'?
+Content-Language: en-GB
+To: kernel test robot <yujie.liu@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
+ Linux Memory Management List <linux-mm@kvack.org>
+References: <202404141807.LgsqXPY5-lkp@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <202404141807.LgsqXPY5-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 12:05:55PM +0530, Mohammad Rafi Shaik wrote:
-> From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
++ Arnd
+
+On 16/04/2024 08:42, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   7efd0a74039fb6b584be2cb91c1d0ef0bd796ee1
+> commit: c652df8a4a9d7853fa1100b244024fd6f1a9c18a selftests: link libasan statically for tests with -fsanitize=address
+> compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
 > 
-> Qualcomm WCD9370/WCD9375 Codec is a standalone Hi-Fi audio codec IC
-> connected over SoundWire. This device has two SoundWire devices RX and
-> TX respectively.
-> This binding is for those slave devices on WCD9370/WCD9375.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <yujie.liu@intel.com>
+> | Closes: https://lore.kernel.org/r/202404141807.LgsqXPY5-lkp@intel.com/
 > 
-> Co-developed-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
->  .../bindings/sound/qcom,wcd937x-sdw.yaml      | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
+> All errors (new ones prefixed by >>):
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
-> new file mode 100644
-> index 000000000000..2b7358e266ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wcd937x-sdw.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm SoundWire Slave devices on WCD9370
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-
-Don't need '|' if no formatting.
-
-> +  Qualcomm WCD9370 Codec is a standalone Hi-Fi audio codec IC.
-> +  It has RX and TX Soundwire slave devices. This bindings is for the
-> +  slave devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: sdw20217010a00
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  qcom,tx-port-mapping:
-> +    description: |
-> +      Specifies static port mapping between slave and master tx ports.
-> +      In the order of slave port index.
-
-Are there constraints on the values of the entries?
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 4
-> +    maxItems: 4
-> +
-> +  qcom,rx-port-mapping:
-> +    description: |
-> +      Specifies static port mapping between slave and master rx ports.
-> +      In the order of slave port index.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 5
-> +    maxItems: 5
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - qcom,port-mapping
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soundwire@3210000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        reg = <0x03210000 0x2000>;
-> +        wcd937x_rx: codec@0,4 {
-> +            compatible = "sdw20217010a00";
-> +            reg  = <0 4>;
-> +            qcom,rx-port-mapping = <1 2 3 4 5>;
-> +        };
-> +    };
-> +
-> +    soundwire@3230000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        reg = <0x03230000 0x2000>;
-> +        wcd937x_tx: codec@0,3 {
-> +            compatible = "sdw20217010a00";
-> +            reg  = <0 3>;
-> +            qcom,tx-port-mapping = <2 3 4 5>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
+> # tools/testing/selftests/fchmodat2$ make CC=clang
+> clang -Wall -O2 -g -fsanitize=address -fsanitize=undefined -static-libasan -isystem usr/include     fchmodat2_test.c  -o tools/testing/selftests/fchmodat2/fchmodat2_test
+> clang: error: unknown argument '-static-libasan'; did you mean '-static-libsan'?
+> make: *** [../lib.mk:181: tools/testing/selftests/fchmodat2/fchmodat2_test] Error 1
 > 
+> # tools/testing/selftests/openat2$ make CC=clang
+> clang -Wall -O2 -g -fsanitize=address -fsanitize=undefined -static-libasan     openat2_test.c helpers.c helpers.h  -o tools/testing/selftests/openat2/openat2_test
+> clang: error: unknown argument '-static-libasan'; did you mean '-static-libsan'?
+> clang: error: cannot specify -o when generating multiple output files
+> make: *** [../lib.mk:181: tools/testing/selftests/openat2/openat2_test] Error 1
+> 
+
+Hi Arnd,
+
+This change went in quite a while ago and is on;y just blowing up. I saw your
+comment in another thread [1] that Andrew merged your change to set -Wextra.
+Perhaps that's what has caused this to show up only now? *although I don't
+actually see -Wextra in the command line).
+
+I guess the problem is that `-static-libasan` is only supported by gcc. But I'm
+Makefile-illiterate. Can anyone advise on what's the best way to make this
+argument gcc-only?
+
+Thanks,
+Ryan
+
+[1]
+https://lore.kernel.org/linux-mm/53d194db-c7d4-4026-9fbb-3b41de545849@app.fastmail.com/
