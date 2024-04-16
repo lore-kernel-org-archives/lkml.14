@@ -1,151 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E769A130ADF;
-	Tue, 16 Apr 2024 14:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D043C130E44;
+	Tue, 16 Apr 2024 14:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276618; cv=none; b=sq6RGAEzYYldv77UUOUb2Ek92Hv2OeeVUaNCfBQSgQvLqPw/VBzu8eqrwHvtEEPIHaPQTb+G68yeTdo6mxgj+n7NHz+P375vMIBYCxRYWSEdXgQ+sv3DxoismD3ck7CTfnVeNdzE73SeBKvjoZYnb0J9BPTooCqjbbfRqSRFjwE=
+	t=1713276619; cv=none; b=XpA4B93/FedZYIwGrs99MD0AQDoKT/Fwh7ExthZVkJhl+QSp/t+n56FyhezoiWkfPNX33pjbeIethpYwzfAnOs3S9i+h5PSDIz4JtraU1R2sQaF8QshDN7TAzBJqlm9fVMm/dfJ5PAaAnaYgrVPcsoHdDc+EFHJcaaX8QptDlsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276618; c=relaxed/simple;
-	bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DAZEnXDun6DMd2J2jHWEES0w/6IVc7MVQ+AT/qMWvZPLt+y2j3qkdKK4F8qpmmka4EW/9RkiUOEo3tqOPUNsTV426UamywlpYdPghUCAtzZGyKtaKRZdaQve+wTLH49uKkWFgxNlXzBj1LKtELIfYcqNt+9lue+f5DrtdG6pUuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMAyYWpk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713276619; c=relaxed/simple;
+	bh=CnqFUzo8UL/kd/hyzPQiXIi6sHVHjTGA/XehLo3EEAk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=OR2dc6CWtiBKgEN4U4UYHh0Gd/NbuRnbXc/lpYP2/YQB+zzzgeokNbnyxc9O+YLNn9xaUj+H3NdTWaVAhgcR+l/yF7K5mNj4TmEf4jWKdFPZxDz6/Q96EAYaSigLW/kgxh3pRQU3WTQ4YkUd6iFX2wFXJ9ohAHhBUs77EZ+Jksc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rc9wnS+M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMAyYWpk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F9EC2BD11;
-	Tue, 16 Apr 2024 14:10:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rc9wnS+M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75FFC32786;
+	Tue, 16 Apr 2024 14:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713276617;
-	bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=vMAyYWpk8ShSXREPy2AdBgXJ/CTwY2yCNy+uVpmQ4BHym3d2CMcxGthU7S82YEflO
-	 KWrDVYtS//sPTp73D1QC8H2s3r1lCyvkWwW/kRaDqT4K+sKzEObZjWUZqHksxD1WCN
-	 Ry964+rM2FASYSB5L584tbZ8XTnRvekJwG1TeHwxDFKUwhlSJJ+uloiyZjL+HtRhqm
-	 ib9DTPd5jPqt9O7/Jtq9W9x7NSrvzpkpqAuA9iCrV3oBhQQu/6EtQAB8kk5r+Ka+mS
-	 sJD/hNMef7dxJNEwErlDgJZdnEuTyjfkhTy3aSnhCsY4NkaLonJlWP5nWJ9vXpgq60
-	 YJw3dOJRus6eQ==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Tue, 16 Apr 2024 16:08:18 +0200
-Subject: [PATCH bpf-next 05/18] bpf: replace bpf_timer_cancel_and_free with
- a generic helper
+	s=k20201202; t=1713276619;
+	bh=CnqFUzo8UL/kd/hyzPQiXIi6sHVHjTGA/XehLo3EEAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rc9wnS+M/4NNuIAcdlGbCdArukIVQa7MRbKshkWBfu0bAlSGsTZnjaM5GpWNA+pn7
+	 OImx3KIosCJC0nj+BdMGAGeFKeJoS60S+UmZbwPHfsEdL1D2hRwJLYzrzzxhiIvEU0
+	 TPoM9i7iIG24HKYrMFK7P2K5jlpdZgUjpBDBFi9rh99R/uqVtNpVZmdQFfndlYutMP
+	 r9NIF7AJDEiOws0Al7PmhSMpwGZYc6od/dRzMHHq2lKvltw7EJRKUqs1ZcWfZ/EhL0
+	 oQ3XBb9xaeF5huxlUFSXK0+BlTRqBF4IpiVSz9N/JixSoVFCcr2LVfUI4noJSNGyt/
+	 ptMF0i9e9F+Fw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240416-bpf_wq-v1-5-c9e66092f842@kernel.org>
-References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-In-Reply-To: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713276593; l=3167;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=aV4WdVYxSNjWkAmCyi+VcGi1EENyIRC1qxYyFlJXwE0=;
- b=n1oxaBLfR9BhsnTXXtu7/YF0pj8V4GcNcAG5GfaEJB1uHwzkH+PZfg4tHgNARDKNW0v5JtxNr
- e0wxxCiNIbICB7YhMaLwPEEFeGhKwo24/Y5vUI6TFCdznPRUQDLdPqs
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 16 Apr 2024 17:10:12 +0300
+Message-Id: <D0LLVE07V8O0.S8XF3CY2DQ9A@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Haitao Huang"
+ <haitao.huang@linux.intel.com>, <dave.hansen@linux.intel.com>,
+ <kai.huang@intel.com>, <tj@kernel.org>, <mkoutny@suse.com>,
+ <linux-kernel@vger.kernel.org>, <linux-sgx@vger.kernel.org>,
+ <x86@kernel.org>, <cgroups@vger.kernel.org>, <tglx@linutronix.de>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
+Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
+ <zhanb@microsoft.com>, <anakrish@microsoft.com>,
+ <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
+ <chrisyan@microsoft.com>
+Subject: Re: [PATCH v12 14/14] selftests/sgx: Add scripts for EPC cgroup
+ testing
+X-Mailer: aerc 0.17.0
+References: <20240416032011.58578-1-haitao.huang@linux.intel.com>
+ <20240416032011.58578-15-haitao.huang@linux.intel.com>
+ <D0LLS28WEXYA.G15BAG7WOJGR@kernel.org>
+In-Reply-To: <D0LLS28WEXYA.G15BAG7WOJGR@kernel.org>
 
-Same reason than most bpf_timer* functions, we need almost the same for
-workqueues.
-So extract the generic part out of it so bpf_wq_cancel_and_free can reuse
-it.
+On Tue Apr 16, 2024 at 5:05 PM EEST, Jarkko Sakkinen wrote:
+> On Tue Apr 16, 2024 at 6:20 AM EEST, Haitao Huang wrote:
+> > With different cgroups, the script starts one or multiple concurrent SG=
+X
+> > selftests (test_sgx), each to run the unclobbered_vdso_oversubscribed
+> > test case, which loads an enclave of EPC size equal to the EPC capacity
+> > available on the platform. The script checks results against the
+> > expectation set for each cgroup and reports success or failure.
+> >
+> > The script creates 3 different cgroups at the beginning with following
+> > expectations:
+> >
+> > 1) SMALL - intentionally small enough to fail the test loading an
+> > enclave of size equal to the capacity.
+> > 2) LARGE - large enough to run up to 4 concurrent tests but fail some i=
+f
+> > more than 4 concurrent tests are run. The script starts 4 expecting at
+> > least one test to pass, and then starts 5 expecting at least one test
+> > to fail.
+> > 3) LARGER - limit is the same as the capacity, large enough to run lots=
+ of
+> > concurrent tests. The script starts 8 of them and expects all pass.
+> > Then it reruns the same test with one process randomly killed and
+> > usage checked to be zero after all processes exit.
+> >
+> > The script also includes a test with low mem_cg limit and LARGE sgx_epc
+> > limit to verify that the RAM used for per-cgroup reclamation is charged
+> > to a proper mem_cg. For this test, it turns off swapping before start,
+> > and turns swapping back on afterwards.
+> >
+> > Add README to document how to run the tests.
+> >
+> > Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+>
+> jarkko@mustatorvisieni:~/linux-tpmdd> sudo make -C tools/testing/selftest=
+s/sgx run_tests
+> make: Entering directory '/home/jarkko/linux-tpmdd/tools/testing/selftest=
+s/sgx'
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -c main.c -o /home/jarkko/linux-tpmdd/tools/tes=
+ting/selftests/sgx/main.o
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -c load.c -o /home/jarkko/linux-tpmdd/tools/tes=
+ting/selftests/sgx/load.o
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -c sigstruct.c -o /home/jarkko/linux-tpmdd/tool=
+s/testing/selftests/sgx/sigstruct.o
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -c call.S -o /home/jarkko/linux-tpmdd/tools/tes=
+ting/selftests/sgx/call.o
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -c sign_key.S -o /home/jarkko/linux-tpmdd/tools=
+/testing/selftests/sgx/sign_key.o
+> gcc -Wall -Werror -g -I/home/jarkko/linux-tpmdd/tools/testing/selftests/.=
+./../../tools/include -fPIC -o /home/jarkko/linux-tpmdd/tools/testing/selft=
+ests/sgx/test_sgx /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/main=
+.o /home/jarkko/linux-tpmdd/tools/testing/selftests/sgx/load.o /home/jarkko=
+/linux-tpmdd/tools/testing/selftests/sgx/sigstruct.o /home/jarkko/linux-tpm=
+dd/tools/testing/selftests/sgx/call.o /home/jarkko/linux-tpmdd/tools/testin=
+g/selftests/sgx/sign_key.o -z noexecstack -lcrypto
+> gcc -Wall -Werror -static-pie -nostdlib -ffreestanding -fPIE -fno-stack-p=
+rotector -mrdrnd -I/home/jarkko/linux-tpmdd/tools/testing/selftests/../../.=
+./tools/include test_encl.c test_encl_bootstrap.S -o /home/jarkko/linux-tpm=
+dd/tools/testing/selftests/sgx/test_encl.elf -Wl,-T,test_encl.lds,--build-i=
+d=3Dnone
+> /usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld:=
+ warning: /tmp/ccqvDJVg.o: missing .note.GNU-stack section implies executab=
+le stack
+> /usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld:=
+ NOTE: This behaviour is deprecated and will be removed in a future version=
+ of the linker
+> TAP version 13
+> 1..2
+> # timeout set to 45
+> # selftests: sgx: test_sgx
+> # TAP version 13
+> # 1..16
+> # # Starting 16 tests from 1 test cases.
+> # #  RUN           enclave.unclobbered_vdso ...
+> # #            OK  enclave.unclobbered_vdso
+> # ok 1 enclave.unclobbered_vdso
+> # #  RUN           enclave.unclobbered_vdso_oversubscribed ...
+> # #            OK  enclave.unclobbered_vdso_oversubscribed
+> # ok 2 enclave.unclobbered_vdso_oversubscribed
+> # #  RUN           enclave.unclobbered_vdso_oversubscribed_remove ...
+> # # main.c:402:unclobbered_vdso_oversubscribed_remove:Creating an enclave=
+ with 98566144 bytes heap may take a while ...
+> # # main.c:457:unclobbered_vdso_oversubscribed_remove:Changing type of 98=
+566144 bytes to trimmed may take a while ...
+> # # main.c:473:unclobbered_vdso_oversubscribed_remove:Entering enclave to=
+ run EACCEPT for each page of 98566144 bytes may take a while ...
+> # # main.c:494:unclobbered_vdso_oversubscribed_remove:Removing 98566144 b=
+ytes from enclave may take a while ...
+> # #            OK  enclave.unclobbered_vdso_oversubscribed_remove
+> # ok 3 enclave.unclobbered_vdso_oversubscribed_remove
+> # #  RUN           enclave.clobbered_vdso ...
+> # #            OK  enclave.clobbered_vdso
+> # ok 4 enclave.clobbered_vdso
+> # #  RUN           enclave.clobbered_vdso_and_user_function ...
+> # #            OK  enclave.clobbered_vdso_and_user_function
+> # ok 5 enclave.clobbered_vdso_and_user_function
+> # #  RUN           enclave.tcs_entry ...
+> # #            OK  enclave.tcs_entry
+> # ok 6 enclave.tcs_entry
+> # #  RUN           enclave.pte_permissions ...
+> # #            OK  enclave.pte_permissions
+> # ok 7 enclave.pte_permissions
+> # #  RUN           enclave.tcs_permissions ...
+> # #            OK  enclave.tcs_permissions
+> # ok 8 enclave.tcs_permissions
+> # #  RUN           enclave.epcm_permissions ...
+> # #            OK  enclave.epcm_permissions
+> # ok 9 enclave.epcm_permissions
+> # #  RUN           enclave.augment ...
+> # #            OK  enclave.augment
+> # ok 10 enclave.augment
+> # #  RUN           enclave.augment_via_eaccept ...
+> # #            OK  enclave.augment_via_eaccept
+> # ok 11 enclave.augment_via_eaccept
+> # #  RUN           enclave.tcs_create ...
+> # #            OK  enclave.tcs_create
+> # ok 12 enclave.tcs_create
+> # #  RUN           enclave.remove_added_page_no_eaccept ...
+> # #            OK  enclave.remove_added_page_no_eaccept
+> # ok 13 enclave.remove_added_page_no_eaccept
+> # #  RUN           enclave.remove_added_page_invalid_access ...
+> # #            OK  enclave.remove_added_page_invalid_access
+> # ok 14 enclave.remove_added_page_invalid_access
+> # #  RUN           enclave.remove_added_page_invalid_access_after_eaccept=
+ ...
+> # #            OK  enclave.remove_added_page_invalid_access_after_eaccept
+> # ok 15 enclave.remove_added_page_invalid_access_after_eaccept
+> # #  RUN           enclave.remove_untouched_page ...
+> # #            OK  enclave.remove_untouched_page
+> # ok 16 enclave.remove_untouched_page
+> # # PASSED: 16 / 16 tests passed.
+> # # Totals: pass:16 fail:0 xfail:0 xpass:0 skip:0 error:0
+> ok 1 selftests: sgx: test_sgx
+> # timeout set to 45
+> # selftests: sgx: run_epc_cg_selftests.sh
+> # # Setting up limits.
+> # ./run_epc_cg_selftests.sh: line 50: echo: write error: Invalid argument
+> # # Failed setting up misc limits.
+> not ok 2 selftests: sgx: run_epc_cg_selftests.sh # exit=3D1
+> make: Leaving directory '/home/jarkko/linux-tpmdd/tools/testing/selftests=
+/sgx'
+>
+> This is what happens now.
+>
+> BTW, I noticed a file that should not exist, i.e. README. Only thing
+> that should exist is the tests for kselftest and anything else should
+> not exist at all, so this file by definiton should not exist.
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
----
- kernel/bpf/helpers.c | 42 +++++++++++++++++++++++++-----------------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+I'd suggest to sanity-check the kselftest with a person from Intel who
+has worked with kselftest before the next version so that it will be
+nailed next time. Or better internal review this single patch with a=20
+person with expertise on kernel QA.
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index d0a645b09d3d..78847f444f79 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -1413,36 +1413,44 @@ static const struct bpf_func_proto bpf_timer_cancel_proto = {
- 	.arg1_type	= ARG_PTR_TO_TIMER,
- };
- 
--/* This function is called by map_delete/update_elem for individual element and
-- * by ops->map_release_uref when the user space reference to a map reaches zero.
-- */
--void bpf_timer_cancel_and_free(void *val)
-+static struct bpf_async_cb *__bpf_async_cancel_and_free(struct bpf_async_kern *async)
- {
--	struct bpf_async_kern *timer = val;
--	struct bpf_hrtimer *t;
-+	struct bpf_async_cb *cb;
- 
--	/* Performance optimization: read timer->timer without lock first. */
--	if (!READ_ONCE(timer->timer))
--		return;
-+	/* Performance optimization: read async->cb without lock first. */
-+	if (!READ_ONCE(async->cb))
-+		return NULL;
- 
--	__bpf_spin_lock_irqsave(&timer->lock);
-+	__bpf_spin_lock_irqsave(&async->lock);
- 	/* re-read it under lock */
--	t = timer->timer;
--	if (!t)
-+	cb = async->cb;
-+	if (!cb)
- 		goto out;
--	drop_prog_refcnt(&t->cb);
-+	drop_prog_refcnt(cb);
- 	/* The subsequent bpf_timer_start/cancel() helpers won't be able to use
- 	 * this timer, since it won't be initialized.
- 	 */
--	WRITE_ONCE(timer->timer, NULL);
-+	WRITE_ONCE(async->cb, NULL);
- out:
--	__bpf_spin_unlock_irqrestore(&timer->lock);
-+	__bpf_spin_unlock_irqrestore(&async->lock);
-+	return cb;
-+}
-+
-+/* This function is called by map_delete/update_elem for individual element and
-+ * by ops->map_release_uref when the user space reference to a map reaches zero.
-+ */
-+void bpf_timer_cancel_and_free(void *val)
-+{
-+	struct bpf_hrtimer *t;
-+
-+	t = (struct bpf_hrtimer *)__bpf_async_cancel_and_free(val);
-+
- 	if (!t)
- 		return;
- 	/* Cancel the timer and wait for callback to complete if it was running.
- 	 * If hrtimer_cancel() can be safely called it's safe to call kfree(t)
- 	 * right after for both preallocated and non-preallocated maps.
--	 * The timer->timer = NULL was already done and no code path can
-+	 * The async->cb = NULL was already done and no code path can
- 	 * see address 't' anymore.
- 	 *
- 	 * Check that bpf_map_delete/update_elem() wasn't called from timer
-@@ -1451,7 +1459,7 @@ void bpf_timer_cancel_and_free(void *val)
- 	 * return -1). Though callback_fn is still running on this cpu it's
- 	 * safe to do kfree(t) because bpf_timer_cb() read everything it needed
- 	 * from 't'. The bpf subprog callback_fn won't be able to access 't',
--	 * since timer->timer = NULL was already done. The timer will be
-+	 * since async->cb = NULL was already done. The timer will be
- 	 * effectively cancelled because bpf_timer_cb() will return
- 	 * HRTIMER_NORESTART.
- 	 */
+I did not check this but I have also suspicion that it might have some
+checks whetehr it is run as root or not. If there are any, those should
+be removed too. Let people set their environment however want...
 
--- 
-2.44.0
-
+BR, Jarkko
