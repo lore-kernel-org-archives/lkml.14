@@ -1,241 +1,84 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7C1384BC
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 19:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D28137934;
+	Tue, 16 Apr 2024 19:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713295199; cv=none; b=lxz82BRb1Y+vGCFZ3pqlOdTnFCi8EriM8YIV2feErkZWLccXILvtTtKna94rhljdXOvhn/ee+HXSIsRPCSMn6xSMsGmW13CPz5VOjqI9pso/NxzOhhf7yq0dDy9sVV/LcGhu7x7L0wH0AWDnUhp5ADYpKlk2rZmCpAOrq18f0rk=
+	t=1713295211; cv=none; b=Yt+9aqD2vEZasuAGt+GAxwRlinKcEnYGFjiW1X/4U3zO1u2iiuK14lYd2VUxiY49TskUgxF1nTbrMH6ioCbu7MXZcyxS0ZvI/9bF9h9ikTtvs9NWZtM8I93IfDfKNXEzgRTQspuaL9FyWVFesxHIj3E71US198PErJadysewRzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713295199; c=relaxed/simple;
-	bh=OzauRS3FLDoI3Yn1yPFWmd19LHfHPufgBRG5Lx/nxzk=;
-	h=Message-Id:To:Cc:From:Subject:Date; b=HWrULRYb9FiNrh9mwKz5RjkTkuQptkdbPf3W1BWWztR+IH7yu4uIBdwHU+n3y8U6KUfSPpa/mi8Q0EKzEhNMVkiEQcdjXn5nCBquFdVvhqPKeq7ZqHIiVsplX4KQMrxwlA/9Z2d5kGHkpnYVmhirfrmVrKgS8+nLHNJO0Az89cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=4+Btd8dy; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1713295211; c=relaxed/simple;
+	bh=ogCtVrBRBgX+wHrNXPPVDs4aHPlnhEfxlOiisGGj0kA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VPhz5odAIaK/d7EaVIq+PTknPLGBeqN7Fg5X/A1fJPzIgh3fxe74NBebI4/lhVeQTtLnzpPQV9YOhjPpiEuatrOoILbOp9fS+JU7169x8iyy0BlIvEBswbN07jw9iGcjebSZFx/zhb9MQ4KzS0Pta2fJJl0XihmWDZHeVoDNg00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=b2zqqvY7; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="4+Btd8dy"
-Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
-	by m0355090.ppops.net (8.17.1.24/8.17.1.24) with ESMTP id 43GJGh1x031887;
-	Tue, 16 Apr 2024 19:19:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	message-id:to:cc:from:subject:date; s=DKIM202306; bh=nPCNGDgUTjF
-	Uct67CoPadwCT/CFTexpW/OoeIwZTdjg=; b=4+Btd8dy1CjItEc9rwZIbiDJX0O
-	IryHFnpJrw5oe4DQPENGAs7ttmfQJzDZwnXLDSnXwY7wftIvMkeFgbRc5OAVnmZ2
-	ix5LoQH/x4NIA2VyWXGzNdxZmgF9SSKEhtfsc2FcxkawKWoSNHnP+5OrnxNUzCBb
-	Y5TUGLzunEELVHJ0QqX4ck5OnO+Ac2BZvGjgXY5cNRqbEndmoKVo4lV1x4xpnlDc
-	+H3k6Z8rVz3mO2lU2p9oKAVrPTbHlMFK7GNnKNGrUemibsB2vO94HCm2IYpA5bVj
-	maFQTyviLAD7CoUYzPzWJNJysHcnZv14m/bxl7CsUucHEQ6PZMZNbvA0aaA==
-Received: from ilclpfpp01.lenovo.com ([144.188.128.67])
-	by m0355090.ppops.net (PPS) with ESMTPS id 3xhrya9mbx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 19:19:22 +0000 (GMT)
-Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ilclpfpp01.lenovo.com (Postfix) with ESMTPS id 4VJv3t16vZzfBZq;
-	Tue, 16 Apr 2024 19:19:22 +0000 (UTC)
-Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="b2zqqvY7"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VJv4n5dDGz6Cnk8s;
+	Tue, 16 Apr 2024 19:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1713295208; x=1715887209; bh=Xdyvfbt1TIkpxYSFrkkGBbE7
+	xEwlKwVi2d5imCHf7/s=; b=b2zqqvY7wz5e6ZOxPCQE6VaPaRXCBNn95peMnK7j
+	j1ivgWvHtajM/diwASlsYvhtlLoMPXIGp75uXKvbd9h3sHduXJhFO1CRUx673CRR
+	1HdXyKgrQzt7I9e2saiVJqKaIVqegFsNtJjCNvsVy5A5Gtw/083aPLnjussG8OOF
+	YljCr8czGkEG6j9W/40gt3d9G6K2qvn87/ULVwRL93tbX2qOAxb7xVp6bkTNW/8q
+	gA3hGi3TGvHQ1cFXXedhdJK6wumi2YxgRt7nS5Hs2JO+kpPwiYpwKZe/u038hkKc
+	uXOoC1c/55gIddLkF9YDrT6r85hyPCvcpP8X48faw0/ezA==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id HNb3CA8AzuaF; Tue, 16 Apr 2024 19:20:08 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VJv3s72K5z2Sl9H;
-	Tue, 16 Apr 2024 19:19:21 +0000 (UTC)
-Message-ID: <20240416122254.868007168-1-mbland@motorola.com>
-To: linux-mm@kvack.org
-Cc: Maxwell Bland <mbland@motorola.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        David Hildenbrand <david@redhat.com>,
-        Conor Dooley <conor.dooley@microchip.com>
-From: Maxwell Bland <mbland@motorola.com>
-Subject: [PATCH 0/5 RESEND] mm: code and data partitioning improvements
-Date: Tue, 16 Apr 2024 14:18:14 -0500
-X-Proofpoint-ORIG-GUID: -WDqzSxHhbjwHU89TvM11yY6SxcxElaL
-X-Proofpoint-GUID: -WDqzSxHhbjwHU89TvM11yY6SxcxElaL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-16_17,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- malwarescore=0 spamscore=0 phishscore=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404160122
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VJv4l1xk3z6Cnk8m;
+	Tue, 16 Apr 2024 19:20:06 +0000 (UTC)
+Message-ID: <0beac395-0c89-4fa6-b4a1-d0565373e60a@acm.org>
+Date: Tue, 16 Apr 2024 12:20:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Message-ID: <20240416191814.MfglSSm6RAyBHkcz5wcBEWjWWeWBqSrsnc6UFkQSC04@z>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] scsi: ufs: core: Make use of guard(mutex)
+To: Avri Altman <avri.altman@wdc.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240416102348.614-1-avri.altman@wdc.com>
+ <20240416102348.614-5-avri.altman@wdc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240416102348.614-5-avri.altman@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Managing allocations to ensure code and data pages are not interleaved
-is not possible prior to this patch, as ASLR requires programming a
-dynamic _text offset while the vmalloc infrastructure maintains static
-VMALLOC_START and VMALLOC_END constants.
+On 4/16/24 03:23, Avri Altman wrote:
+> @@ -5682,9 +5681,8 @@ int ufshcd_write_ee_control(struct ufs_hba *hba)
+>   {
+>   	int err;
+>   
+> -	mutex_lock(&hba->ee_ctrl_mutex);
+> +	guard(mutex)(&hba->ee_ctrl_mutex);
+>   	err = __ufshcd_write_ee_control(hba, hba->ee_ctrl_mask);
+> -	mutex_unlock(&hba->ee_ctrl_mutex);
+>   	if (err)
+>   		dev_err(hba->dev, "%s: failed to write ee control %d\n",
+>   			__func__, err);
 
-In systems where code and data are interleaved at a PTE granularity,
-kernel improvements targeting the prevention of exploit stages which
-modify page tables are inefficient and less effective as individual PTE
-updates occur at high frequency and cannot be coarsely grouped at the
-PMD level or greater.
+This change moves the dev_err() statement inside the code block
+protected by ee_ctrl_mutex. Please do not make such changes in this
+patch.
 
-This patch adds minimal arch-specific callbacks to the initialization of
-vmalloc and when deciding whether to use a specific virtual memory area
-to satisfy a vmalloc request to provide the capability to prevent the
-allocation of specific virtual addresses under specific system states.
-By default these hooks are unimplemented.
+Thanks,
 
-To further support the practical use of these callbacks, this patch also
-adds a virtual address parameter to pmd_populate_kernel, so that this
-interface matches the equivalent pte-level interface and architectures
-are not required to perform a reverse page table lookup to determine the
-vaddr being allocated during pmd creation.
-
-To demonstrate the impact and value of these changes, this patch
-implements support for dynamic PXNTable under aarch64 in 71 lines of
-code (a single "if" check during memory allocation), by checking the
-virtual address of a given vmalloc call to determine whether it is code
-or data. From experience in trying to implement kernel page table
-immutability and protections in KVM to prevent recent CVEs, e.g.
-CVE-2024-1086, this is a necessary first step.
-
-To better help maintainers and future developers, this patch expands
-ptdump.c so that non-leaf page table descriptors can be more easily
-noted in debug output by setting a note_non_leaf bool in the ptdump
-state.
-
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
-
----
-
-Zero-eth, apologies for the triple mail of these patches. I am in the process
-of setting up a new SMTP/mail server for Motorola, but until then I've needed
-to script the raw SMTP in order to send appropriately formatted patch emails.
-
-First, thank you to a number of maintainers (Mark Rutland, Greg KH,
-Christoph Hellwig, Christophe Leroy, David Hildenbrand, Conor Dooley)
-for their feedback on
-
-<20240220203256.31153-1-mbland@motorola.com>
-and
-<CAP5Mv+ydhk=Ob4b40ZahGMgT-5+-VEHxtmA=-LkJiEOOU+K6hw@mail.gmail.com>
-
-This patch is a further refinement and overhaul of these prior two
-attempts. Also, apologies for the roughly two months delay between patch
-submissions! I had Motorola work to do.
-
-In support of testing this patch (but not included in this patch), I set
-note_non_leaf to true under arch/arm64/mm/ptdump.c and added
-PMD_TABLE_PXN to pte_bits to print out whether the PXNTable bit was set.
-The txt files under the following directory can be diff'ed to see the
-result:
-
-github.com/maxwell-bland/linux-patch-data/tree/main/code_data_parting/ptdump
-
-I also created a script to fetch and cross-compile the kernel for each
-of the 21 subarchitectures which required fixes to provide a virtual
-address to pmd_populate_kernel. I have no idea if it is useful and maybe
-one already exists, but it worked well for me over some alternatives
-(xcross, buildroot):
-
-github.com/maxwell-bland/x-linux
-
-As with the last patchset, I also measured performance using Torvald's 
-test-tlb program on an aarch64 QEMU instance, with results here:
-
-github.com/maxwell-bland/linux-patch-data/tree/main/code_data_parting/tlbperf
-
-As all changes to other arches are effectively no-ops, performance
-impacts in those domains are negligible. 
-
-Maxwell Bland (5):
-  mm: allow arch refinement/skip for vmap alloc
-  arm64: mm: code and data partitioning for aslr
-  mm: add vaddr param to pmd_populate_kernel
-  arm64: dynamic enforcement of PXNTable
-  ptdump: add state parameter for non-leaf callback
-
- arch/alpha/include/asm/pgalloc.h             |  5 +-
- arch/arc/include/asm/pgalloc.h               |  3 +-
- arch/arc/mm/highmem.c                        |  2 +-
- arch/arm/include/asm/kfence.h                |  2 +-
- arch/arm/include/asm/pgalloc.h               |  3 +-
- arch/arm/mm/kasan_init.c                     |  2 +-
- arch/arm/mm/mmu.c                            |  2 +-
- arch/arm64/include/asm/module.h              | 12 ++++
- arch/arm64/include/asm/pgalloc.h             | 15 ++++-
- arch/arm64/include/asm/vmalloc.h             | 17 ++++-
- arch/arm64/kernel/Makefile                   |  2 +-
- arch/arm64/kernel/module.c                   |  7 +-
- arch/arm64/kernel/probes/kprobes.c           |  7 +-
- arch/arm64/kernel/setup.c                    |  4 ++
- arch/arm64/kernel/vmalloc.c                  | 71 ++++++++++++++++++++
- arch/arm64/mm/ptdump.c                       | 10 +--
- arch/arm64/mm/trans_pgd.c                    |  2 +-
- arch/arm64/net/bpf_jit_comp.c                |  8 ++-
- arch/csky/include/asm/pgalloc.h              |  2 +-
- arch/hexagon/include/asm/pgalloc.h           |  2 +-
- arch/loongarch/include/asm/pgalloc.h         |  3 +-
- arch/loongarch/mm/init.c                     |  2 +-
- arch/loongarch/mm/kasan_init.c               |  2 +-
- arch/m68k/include/asm/mcf_pgalloc.h          |  2 +-
- arch/m68k/include/asm/motorola_pgalloc.h     |  3 +-
- arch/m68k/include/asm/sun3_pgalloc.h         |  3 +-
- arch/microblaze/include/asm/pgalloc.h        |  2 +-
- arch/mips/include/asm/pgalloc.h              |  2 +-
- arch/mips/kvm/mmu.c                          |  2 +-
- arch/nios2/include/asm/pgalloc.h             |  2 +-
- arch/openrisc/include/asm/pgalloc.h          |  2 +-
- arch/parisc/include/asm/pgalloc.h            |  5 +-
- arch/parisc/mm/init.c                        |  6 +-
- arch/powerpc/include/asm/book3s/32/pgalloc.h |  2 +-
- arch/powerpc/include/asm/book3s/64/pgalloc.h |  2 +-
- arch/powerpc/include/asm/nohash/32/pgalloc.h |  2 +-
- arch/powerpc/include/asm/nohash/64/pgalloc.h |  2 +-
- arch/powerpc/mm/book3s64/radix_pgtable.c     |  2 +-
- arch/powerpc/mm/kasan/init_32.c              |  4 +-
- arch/powerpc/mm/kasan/init_book3e_64.c       |  9 ++-
- arch/powerpc/mm/kasan/init_book3s_64.c       |  7 +-
- arch/powerpc/mm/nohash/book3e_pgtable.c      |  2 +-
- arch/powerpc/mm/pgtable_32.c                 |  4 +-
- arch/powerpc/mm/ptdump/ptdump.c              |  2 +
- arch/riscv/include/asm/pgalloc.h             |  2 +-
- arch/riscv/kernel/hibernate.c                |  2 +-
- arch/riscv/mm/ptdump.c                       |  6 +-
- arch/s390/include/asm/pgalloc.h              |  2 +-
- arch/s390/mm/dump_pagetables.c               |  6 +-
- arch/sh/include/asm/pgalloc.h                |  2 +-
- arch/sh/mm/init.c                            |  2 +-
- arch/sparc/include/asm/pgalloc_32.h          |  3 +-
- arch/sparc/include/asm/pgalloc_64.h          |  4 +-
- arch/sparc/mm/init_64.c                      |  8 +--
- arch/um/include/asm/pgalloc.h                |  4 +-
- arch/x86/include/asm/pgalloc.h               |  3 +-
- arch/x86/mm/dump_pagetables.c                |  3 +-
- arch/x86/mm/init_64.c                        | 14 +++-
- arch/x86/mm/ioremap.c                        |  2 +-
- arch/x86/mm/kasan_init_64.c                  |  2 +-
- arch/xtensa/include/asm/pgalloc.h            |  2 +-
- include/linux/mm.h                           |  4 +-
- include/linux/ptdump.h                       |  1 +
- include/linux/vmalloc.h                      | 24 +++++++
- mm/hugetlb_vmemmap.c                         |  4 +-
- mm/kasan/init.c                              | 14 ++--
- mm/memory.c                                  |  4 +-
- mm/percpu.c                                  |  2 +-
- mm/pgalloc-track.h                           |  3 +-
- mm/ptdump.c                                  | 13 ++++
- mm/sparse-vmemmap.c                          |  2 +-
- mm/vmalloc.c                                 | 16 +++--
- 72 files changed, 299 insertions(+), 107 deletions(-)
- create mode 100644 arch/arm64/kernel/vmalloc.c
-
-
-base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
--- 
-2.39.2
-
+Bart.
