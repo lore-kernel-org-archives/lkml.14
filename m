@@ -1,114 +1,95 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DB112BF25;
-	Tue, 16 Apr 2024 13:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8D212BF25
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 13:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273903; cv=none; b=Ey1T+MC44mHJJ4TjVB5mJbQz8jTYsFBdmJiV16Oo4o6I2KMgNMYAongOpbzdhGW5FCKSWFg5SJAVHnx1wsn62ynDDwVyKwGgUWGY+8sqNbgUOZvUHdJ9MpN+n6OjkXMFGS9fbtkErANMTh4EVDBkuXnqA6OZWNBwJGN+QjHiAP8=
+	t=1713273981; cv=none; b=D57jh7iwe9rRDmwXVBGQX0fJquT4rv2NLIonC3n7/M55XRx2f0/rjN1KfZ8CXbI94v6eGnhppSbiWonTslq0rp0MtzH3JHC45QYjo+A/evZOCLypDLGWTK9G+oJQlN+gZSz3ygny3626BpmGtQs6x3/PVWVGPNfN9Hi7M2THLhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273903; c=relaxed/simple;
-	bh=Dl20SKKKdK/glPzRJdejo+DpwoBM7fVMEjjyFFZXHMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0u0GZmvLStHMiFKcLH/6bJ8sB3eXYNbwhZ5j9b+LFBCTlKdZ/Vby+DFB8n1P6Yy5Wq57SAsIg4BQQkL+nITkyk/a4Se+msLDutsSJXXTV9VkKS4eoCGJuDvHQqFLXB7pDml6Knk22dm0dJHBLhbKkdPDmByExze1JGv3aITVaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Uazbtz7t; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1713273981; c=relaxed/simple;
+	bh=5aYaNxw9B1Vv3UwdMBqympkbBecQ21r1beQW8ZZq2DY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UvcC2tvQyRVYcbBJGPGdGANlzNyyUWoFU731fJ3BTIpoK2KRR9l+TYSgMIVm4AqOX6DRlxPaErAeTIW6/avwhncOJrDdqi8CL/G4sUW/yc7B5T0+U6fHTXzeM2ipJqAtQK6USuDDYxUxi/GhlRELTjrtdDTEQIynsD9AZhppCA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSCuqPLY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Uazbtz7t"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43GDD8YM015505;
-	Tue, 16 Apr 2024 13:25:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=lM809BDZYuTXn/Pqi/pRu243BYM375+7G+rhxIcNB9Q=;
- b=Uazbtz7toUE6L437ceiB9GampGVsD/jAFrAKDH6sULCVIyZhOjjzr6gaZZknymCHjpvV
- isrqy4FQM6fB5jrNyDWk4NXacU+YCBxgERFNu19KCIigpocsMGxNNuHC0k4UrpElGjPU
- 9mAMjP8oze+sGuhLVeHK+9NgODK4bcMZ6aTC3SjOe0A7/mAebus0EJgfKboxiujWuKon
- VcddfQU4nuoIxEdNg+Y8NE3J2FlpQEgL8bMHz71gowjRi+4P8NneOpoCRRJRdiw0/GOO
- M1ExzZFAqcwXfUf88x5JxG/883Cue9y1TONuIx/pU79DHbUNewYwoGx3D8InQprtHkym /w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xht0s011c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 13:25:00 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43GDOxvl002686;
-	Tue, 16 Apr 2024 13:24:59 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xht0s010j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 13:24:59 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43GBsqdm018152;
-	Tue, 16 Apr 2024 13:24:39 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg4ct6g17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 13:24:39 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43GDOY9V45482310
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 16 Apr 2024 13:24:36 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 07B892004E;
-	Tue, 16 Apr 2024 13:24:34 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BDB2120040;
-	Tue, 16 Apr 2024 13:24:33 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 16 Apr 2024 13:24:33 +0000 (GMT)
-Date: Tue, 16 Apr 2024 15:24:31 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        frankja@linux.ibm.com, nrb@linux.ibm.com, nsg@linux.ibm.com,
-        borntraeger@de.ibm.com, gerald.schaefer@linux.ibm.com,
-        david@redhat.com
-Subject: Re: [PATCH v1 0/2] s390/mm: fix improper use of
- __storage_key_init_range
-Message-ID: <20240416132431.8615-A-hca@linux.ibm.com>
-References: <20240416114220.28489-1-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSCuqPLY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1AEC113CE;
+	Tue, 16 Apr 2024 13:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713273981;
+	bh=5aYaNxw9B1Vv3UwdMBqympkbBecQ21r1beQW8ZZq2DY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=PSCuqPLYUlXJ9auMKlyd6garhl7QXySTp9eWlrmke6rMcEA6bSOA3LfnUC8fU3VqT
+	 GPEAto9Bkx2ZM8IF4P088l7kgOxqOuEnE+bNwHq16+/nePGty9YLofePGKDd43bcpO
+	 Bdahh5f5bc2i5XhtB1GX7qB/5fIWniJK4aX8YVhPxOh79o/Ndhs+KiNH0z6N0lVh55
+	 UybhBviVJQNPjuhuARdJgWkKgbX/9Zb/Cjx53bCtaBpu85N8j0GDbDman9uDJ9gcGd
+	 f8z5m6GHPRuEB5wi/1ujlFHNpXNGf85z3SDlMxwvjeeef71W5otMCS9CA0mdfRu71H
+	 ZR/8El87zWzzA==
+From: Robert Foss <rfoss@kernel.org>
+To: Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>,
+ Nícolas F. R. A. Prado <nfraprado@collabora.com>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Bjorn Andersson <andersson@kernel.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Maxime Ripard <mripard@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Jagan Teki <jagan@amarulasolutions.com>,
+ Adrien Grassein <adrien.grassein@gmail.com>, Vinay Simha BN <simhavcs@gmail.com>,
+ Christopher Vollo <chris@renewoutreach.org>, Marijn Suijten <marijn.suijten@somainline.org>,
+ Vinod Koul <vkoul@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, owen <qwt9588@gmail.com>,
+ Marek Vasut <marex@denx.de>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ dri-devel@lists.freedesktop.org, kernel@collabora.com, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240415-anx7625-defer-log-no-dsi-host-v3-0-619a28148e5c@collabora.com>
+References: <20240415-anx7625-defer-log-no-dsi-host-v3-0-619a28148e5c@collabora.com>
+Subject: Re: [PATCH v3 0/9] drm: Switch from dev_err to dev_err_probe for missing DSI host error path
+Message-Id: <171327397342.20734.17712631533739758920.b4-ty@kernel.org>
+Date: Tue, 16 Apr 2024 15:26:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416114220.28489-1-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Zm7f7t5x2oIaMNl7cMub2GV_QvJQcolB
-X-Proofpoint-GUID: 2AzUImr0v-tkR-NBwo1hVD6EjBQi3hhy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-16_10,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 phishscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=958 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404160081
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.10.1
 
-On Tue, Apr 16, 2024 at 01:42:18PM +0200, Claudio Imbrenda wrote:
-> The function __storage_key_init_range() expects the end address to be
-> the first byte outside the range to be initialized. I.e. end - start
-> should be the size of the area to be initialized.
+On Mon, 15 Apr 2024 17:49:28 -0400, Nícolas F. R. A. Prado wrote:
+> This series changes every occurrence of the following pattern:
 > 
-> This small series fixes two cases in which the last address in the
-> range was passed as end address. This was still functionally correct,
-> since __storage_key_init_range() will still loop over single pages and
-> correctly clear the given range, but it will be slower than clearing
-> the storage keys for the whole 1M block with a single instruction.
+> 	dsi_host = of_find_mipi_dsi_host_by_node(dsi);
+> 	if (!dsi_host) {
+> 		dev_err(dev, "failed to find dsi host\n");
+> 		return -EPROBE_DEFER;
+> 	}
 > 
-> Claudio Imbrenda (2):
->   s390/mm: fix storage key clearing for guest huge pages
->   s390/mm: fix clearing storage keys for huge pages
-> 
->  arch/s390/mm/gmap.c        | 2 +-
->  arch/s390/mm/hugetlbpage.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> [...]
 
-Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
+Applied, thanks!
+
+[1/9] drm/bridge: anx7625: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=ef4a9204d594
+[2/9] drm/bridge: icn6211: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=275fafe58faa
+[3/9] drm/bridge: lt8912b: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=b3b4695ff47c
+[4/9] drm/bridge: lt9611: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=cd0a2c6a081f
+[5/9] drm/bridge: lt9611uxc: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=6d9e877cde7e
+[6/9] drm/bridge: tc358775: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=272377aa0e3d
+[7/9] drm/bridge: dpc3433: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=24f4f575214d
+[8/9] drm/panel: novatek-nt35950: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=5ff5505b9a2d
+[9/9] drm/panel: truly-nt35597: Don't log an error when DSI host can't be found
+      https://cgit.freedesktop.org/drm/drm-misc/commit/?id=c1e4d3a6de48
+
+
+
+Rob
+
