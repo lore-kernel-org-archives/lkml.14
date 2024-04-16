@@ -1,50 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6981849
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 00:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47531849;
+	Tue, 16 Apr 2024 00:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713228822; cv=none; b=H2RaITwly6oVVm6fxbVpI6OaMbpAt6RjQxNY0XOqqojmNjW7Gs0rCQ848oYR00I2MeooG3hlKx4XCbxp5oaCM7wf647AfC9IDlbC1dwZPd0RvEzVD9V0slZgY9XLHE2olODtLA4EyOOI2JvMRwhyan6VuSUIWCQyvr+8oKakK24=
+	t=1713228870; cv=none; b=f6aJO03PppdIsV/kvoSiK7OjvdfD1MwIFpzHZxauUT+XUqy4Py5LHhrwa1+4S8pAthxCkI6ISA2vtgO3hmzKdFyP4AIyLvIYiAfiLC8tH5HMa8mgh96Pf3FpVPbY8IsTzl87vNegdZvqQOdb3Xj0+s8Y6GzHrpkuGj04n+iW7DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713228822; c=relaxed/simple;
-	bh=4QEEm7R+LYFjuTsSjB6hxpehKVVeoexWojV1jUaHKdQ=;
+	s=arc-20240116; t=1713228870; c=relaxed/simple;
+	bh=VNpMltkGybMDEtzsonkuvLdoNGOIcPPiObueOXkYm1A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sDAI6TzYJnHOhsHxkeTxBBdq5OjI5yzFiHqM+NylKZYblaClq6KCKKWySXiDLmYX4aKpd7KvmIA9ES0jQXP4KFo6k6h2m6w37oxez8x4vTTnPdziJewOTVfUdSaRfnaSHiFhdnc4vheITNbWC7oXKQQghowmAb9sf/1sX95HcCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fK7LQr/m; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=gqEkgQpcFXQ9YnyaxXrbYzc+SvvqR+cgVrWBo2mCZN08lFpG5StjWL9yl44WTHLjJszCSez8+U6Hc1OjcOutgD0SklC7+EsVtSZ/2Z0dxRsusBxXK1GRA1UrCMgOpMBNI6ny7E8El04l1MRj8Bw8JdIWjn1TmafAeetKRs3kBTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XtwmSwLX; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fK7LQr/m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713228821; x=1744764821;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4QEEm7R+LYFjuTsSjB6hxpehKVVeoexWojV1jUaHKdQ=;
-  b=fK7LQr/m45q5tdwjmidyi0KASjkt1ysdeCbPlCWbsMdDKyCQ7Sd3jXGW
-   wx0tWS+F0/i+OSryzO1c5aRA+po59ook6sBW7ewHEz+GjUGduktOly4LO
-   gT6umZ9fAdsDvc9hviT7IuKchmIONOlwCjONNE7olUC5RGXivhYziAO7w
-   kZlgnrX7wcQ72P0lFoMbluFXhxhTvp0PLcdhimk1NkzCImTVmwm/cbP3S
-   4IP7V4/cj3+z/nR3rU2OhfMB4APe6KZBWthX3JdakqVFIDpR82W6D9h+L
-   X1jR421omWdN5Z3wvS0nNg2etyRswhl5pFJM3DFwYlcM5N1zf2RTuhA/p
-   A==;
-X-CSE-ConnectionGUID: RTvwRkpISAyNx7dblc/eog==
-X-CSE-MsgGUID: hmsLbK5mRFekqbwtbH8M4Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="9198633"
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="9198633"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 17:53:40 -0700
-X-CSE-ConnectionGUID: e5Z5Dzc0ReiHkR+pNCIv2Q==
-X-CSE-MsgGUID: sqFQzT/QQrC3UAw7i2A8Fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="22089851"
-Received: from kzhong-mobl1.ccr.corp.intel.com (HELO [10.254.211.186]) ([10.254.211.186])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 17:53:37 -0700
-Message-ID: <9ba0b6a2-e6c1-46de-8d30-929567952c54@linux.intel.com>
-Date: Tue, 16 Apr 2024 08:53:34 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XtwmSwLX"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43G0Z1AI024971;
+	Tue, 16 Apr 2024 00:54:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=j0sZP/q8mi1WF1Ov9jUFp9LHWq75qUSInJQ3SCIhzEE=;
+ b=XtwmSwLXVhHwDxxtDwIRcYyydBYwCPFA+amYybror/WyLu5q/1lx1cyGuxQLXHPxWbHj
+ tid8LbvcGbVCiN4zuO4k6yuXevOn84hu2cX7LWRXwIpiW1m/8qM7WljPWU+b63JPQAwI
+ uEHjwyijRb+UD/ifzxvHWRwqi0BwrSliW2CWBHruPngQH5Y8J0AMI2RXkNGdIhmoytw6
+ OnO3r/j6QWqIzrDLOxnITh7DxRUTu4fSCbHxVvJG9WjXk0d/xOSpOWj2kHuV40vvW8N3
+ ZtmfibguQ1wssJPa1ocHQ7TDquCe8egSGYprq6Fpc0JaPoec0CC97IPULYaF+M3nfmxG JQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xhewmr0jm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 00:54:18 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43FMesKr015835;
+	Tue, 16 Apr 2024 00:51:06 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5vm30hp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 00:51:06 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43G0p3a345613358
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Apr 2024 00:51:06 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E0095804B;
+	Tue, 16 Apr 2024 00:51:03 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CBEFB58055;
+	Tue, 16 Apr 2024 00:51:02 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Apr 2024 00:51:02 +0000 (GMT)
+Message-ID: <6442f387-e45e-4019-8af0-6ca309e4ce4f@linux.ibm.com>
+Date: Mon, 15 Apr 2024 20:51:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,99 +61,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] iommu/vt-d: Remove caching mode check before
- device TLB flush
-To: Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev
-Cc: Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- linux-kernel@vger.kernel.org
-References: <20240415013835.9527-1-baolu.lu@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240415013835.9527-1-baolu.lu@linux.intel.com>
+Subject: Re: [PATCH 1/2] crypto: ecdh - Pass private key in proper byte order
+ to check valid key
+Content-Language: en-US
+To: Jarkko Sakkinen <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, ardb@kernel.org,
+        salvatore.benedetto@intel.com
+References: <20240415003026.2661270-1-stefanb@linux.ibm.com>
+ <20240415003026.2661270-2-stefanb@linux.ibm.com>
+ <D0KX9NQPXKO1.2RXZU000DD1BB@kernel.org>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <D0KX9NQPXKO1.2RXZU000DD1BB@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On 4/15/2024 9:38 AM, Lu Baolu wrote:
-> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
-> implementation caches not-present or erroneous translation-structure
-> entries except for the first-stage translation. The caching mode is
-> irrelevant to the device TLB, therefore there is no need to check it
-> before a device TLB invalidation operation.
->
-> Remove two caching mode checks before device TLB invalidation in the
-> driver. The removal of these checks doesn't change the driver's behavior
-> in critical map/unmap paths. Hence, there is no functionality or
-> performance impact, especially since commit <29b32839725f> ("iommu/vt-d:
-> Do not use flush-queue when caching-mode is on") has already disabled
-> flush-queue for caching mode. Therefore, caching mode will never call
-> intel_flush_iotlb_all().
->
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 9 ++-------
->   1 file changed, 2 insertions(+), 7 deletions(-)
->
-> Change log:
-> v3:
->   - It turned out that the removals don't change the driver's behavior,
->     hence change it from a fix patch to a cleanup one.
->   - No functionality changes.
-> v2: https://lore.kernel.org/lkml/20240410055823.264501-1-baolu.lu@linux.intel.com/
->   - Squash two patches into a single one.
->   - No functionality changes.
-> v1: https://lore.kernel.org/linux-iommu/20240407144232.190355-1-baolu.lu@linux.intel.com/
->
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index a7ecd90303dc..f0a67e9d9faf 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -1501,11 +1501,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
->   	else
->   		__iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
->   
-> -	/*
-> -	 * In caching mode, changes of pages from non-present to present require
-> -	 * flush. However, device IOTLB doesn't need to be flushed in this case.
-> -	 */
-> -	if (!cap_caching_mode(iommu->cap) || !map)
-> +	if (!map)
->   		iommu_flush_dev_iotlb(domain, addr, mask);
->   }
-
-Given devTLB flushing is irrelavent to CM, put iommu_flush_dev_iotlb()
-in iommu_flush_iotlb_psi() and called with CM checking context is not
-reasonable. the logic is buggy.
-
-static void __mapping_notify_one(struct intel_iommu *iommu, struct dmar_domain *domain,
-				 unsigned long pfn, unsigned int pages)
-{
-	/*
-	 * It's a non-present to present mapping. Only flush if caching mode
-	 * and second level.
-	 */
-	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
-		iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
-	else
-		iommu_flush_write_buffer(iommu);
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pRLxEoG8gw_ZUmTtBWBSWuusgn_O5wJ0
+X-Proofpoint-GUID: pRLxEoG8gw_ZUmTtBWBSWuusgn_O5wJ0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-15_20,2024-04-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404160004
 
 
-then how about fold all CM checking logic in iommu_flush_iotlb_psi()
-or speperate iommu_flush_dev_iotlb() from iommu_flush_iotlb_psi() ?
+
+On 4/15/24 14:53, Jarkko Sakkinen wrote:
+> On Mon Apr 15, 2024 at 3:30 AM EEST, Stefan Berger wrote:
+>> ecc_is_key_valid expects a key with the most significant digit in the last
+>> entry of the digit array. Currently ecdh_set_secret passes a reversed key
+>> to ecc_is_key_valid that then passes the rather simple test checking
+>> whether the private key is in range [2, n-3]. For all current ecdh-
+>> supported curves (NIST P192/256/384) the 'n' parameter is a rather large
+>> number, therefore easily passing this test.
+>>
+>> Throughout the ecdh and ecc codebase the variable 'priv' is used for a
+>> private_key holding the bytes in proper byte order. Therefore, introduce
+>> priv in ecdh_set_secret and copy the bytes from ctx->private_key into
+>> priv in proper byte order by using ecc_swap_digits. Pass priv to
+>> ecc_is_valid_key.
+>>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Salvatore Benedetto <salvatore.benedetto@intel.com>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> ---
+>>   crypto/ecdh.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/crypto/ecdh.c b/crypto/ecdh.c
+>> index 3049f147e011..a73853bd44de 100644
+>> --- a/crypto/ecdh.c
+>> +++ b/crypto/ecdh.c
+>> @@ -27,6 +27,7 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
+>>   			   unsigned int len)
+>>   {
+>>   	struct ecdh_ctx *ctx = ecdh_get_ctx(tfm);
+>> +	u64 priv[ECC_MAX_DIGITS];
+>>   	struct ecdh params;
+>>   
+>>   	if (crypto_ecdh_decode_key(buf, len, &params) < 0 ||
+>> @@ -40,9 +41,10 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
+>>   				       ctx->private_key);
+>>   
+>>   	memcpy(ctx->private_key, params.key, params.key_size);
+>> +	ecc_swap_digits(ctx->private_key, priv, ctx->ndigits);
+> 
+> Does swapping speed up the test that follows are what effect does it
+> have to the ecc_is_key_valid() call?
+The goal of this particular patch is to fix an issue with the byte order 
+(as description says) and, as you can see in the 2nd patch, private key 
+is always copied into priv using ecc_swap_digits before priv is being 
+used instead of ctx->private_key (or whatever it is called in the 
+function it was passed to). This patch here has nothing to do with speed 
+up but a) fixing an issue and b) using priv here as well, so fixing this 
+'outlier' here. The speed-up comes in the 2nd patch when the bytes in 
+ctx->private_key are put into proper order right away and we can get rid 
+if priv, taking the swapped bytes of ctx->private_key, everywhere and we 
+can use ctx->private_key directly.
+
+The test harness (testmgr.c) runs through part of this code here 
+providing the private key that is copied into ctx->private_key, so it's 
+being used and when you make a mistake (making the changes I did) the 
+ecdh test cases will fail.
 
 
-Thanks,
-Ethan
 
->   
-> @@ -1579,8 +1575,7 @@ static void intel_flush_iotlb_all(struct iommu_domain *domain)
->   			iommu->flush.flush_iotlb(iommu, did, 0, 0,
->   						 DMA_TLB_DSI_FLUSH);
->   
-> -		if (!cap_caching_mode(iommu->cap))
-> -			iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
-> +		iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
->   	}
->   
->   	if (dmar_domain->nested_parent)
+> 
+> Just a question to understand what is going on, not actual review
+> feedback.
+> 
+>>   
+>>   	if (ecc_is_key_valid(ctx->curve_id, ctx->ndigits,
+>> -			     ctx->private_key, params.key_size) < 0) {
+>> +			     priv, params.key_size) < 0) {
+>>   		memzero_explicit(ctx->private_key, params.key_size);
+>>   		return -EINVAL;
+>>   	}
+> 
+> BR, Jarkko
