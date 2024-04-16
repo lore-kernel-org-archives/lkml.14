@@ -1,179 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FD314199C
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 21:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EE014A0A6;
+	Tue, 16 Apr 2024 21:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713302418; cv=none; b=C5nuF0jONg28X1xq1x+X80pGn/DMa7b3kZLptTtkSSqCFCy9XnGk9V6cFKu7sQK4zPsVVfaWnoTY7kGdBmgFUORhp8n+4qgtvHpN2NMQvD7Z7jlfP2o40y8NzCa+k5qrDb4z269uNOKxOoNexOpwc+O6Tp1INceJKRnN+OHgyek=
+	t=1713302428; cv=none; b=K5NOZMh5mCAKTP/t4SCsJ1yzUjMg7xASmahRRx/QzJsqTIdAAVdhp7waBBsZoHuDQte2GuErFbHl0P6Mq9mxt8pSdFKomUWmmWCd3MEwY/4mHIp6PyJYc5/1l03rIzMmX8QlFLP5nleypwWSKF2OPsKU9k4g6PGgnucpzChDysM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713302418; c=relaxed/simple;
-	bh=Zt4IxOPcAoeZhOMeI9zMvpasMGVesn87hcB0YKloDhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=trY7TGDEuOU+32q8+Ad6rH/PCvhePuoVmxOrv5+oDfUFWOFRLP2o1IN1Us76ix/MV6livUwEIU32laUtCmTmvkptEDUR5QYCvtv+pl5QlSC9/ASOyyCOzh9ZzkrqQd/rbJIfFgHN8xTza2vK10sVDIb2Vyynrj6zDKAPSLKFRKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LqS+TDp7; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713302428; c=relaxed/simple;
+	bh=IFokjAjHlzy494mccRdVcr0RgTAmRJ8DMxWp7AMbDtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NrgICFf8dpqH8AtBoatrnNfX97id+f9psyniYgZAqW0ZC68YHm7AIF7fEY6RrKWp2loMGbQtRYkbqY88dFSsKguMZQzu5Zn9ZWwm9UKArHVFRH0FjEY/gJOlwT9KTpPJHdMrfvgmrx/nNFmq6FEWrFt7uiwDIcYfnOIBLxG4/A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EydqBD4/; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LqS+TDp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713302415; x=1744838415;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Zt4IxOPcAoeZhOMeI9zMvpasMGVesn87hcB0YKloDhE=;
-  b=LqS+TDp7IfEAf2h4/1xUXrffNqb8j42CP4Wwth5nZ0rFMyN7ZhPft8A4
-   cYjU6thxP/ZHCX828g6ZZ3hnPc9KytsonhOQFPms9qj1HLPw6Dpttxbo/
-   Hu/sOizA5d2MF9E/WjuorSiek2IFcUQxs26liJkwx85BLNPitbqipwt4z
-   N1cZHZdBRbTsWuHANWZRjjbUj5o39hpxinbcsWLQhg6npcyGGqzATe+NW
-   Kjp6WVRA3lZyyqqPc5gi17iosvPaKIJX0kcqtAG3DKMQOYgd7w6qkMTvX
-   W9A/JjClg4jciz/IkUeeC9Y7Y2swBfT00nyUpWRZtF+k/nezSAw86FGpv
-   g==;
-X-CSE-ConnectionGUID: 3QzWX/TyTCyOaixw4PZ3Dg==
-X-CSE-MsgGUID: 9hjtrCB0RKmlpd4IYS+UJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19914848"
-X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
-   d="scan'208";a="19914848"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:20:03 -0700
-X-CSE-ConnectionGUID: R9CXNqEjSoqw5Qk7cp7sxQ==
-X-CSE-MsgGUID: 0iCZEHAtTOuDpj0zn+Gplg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
-   d="scan'208";a="22872069"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:20:02 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3 38/74] x86/cpu/vfm: Update arch/x86/events/intel/core.c
-Date: Tue, 16 Apr 2024 14:19:40 -0700
-Message-ID: <20240416211941.9369-39-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240416211941.9369-1-tony.luck@intel.com>
-References: <20240416211941.9369-1-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EydqBD4/"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e3f17c6491so42059295ad.2;
+        Tue, 16 Apr 2024 14:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713302427; x=1713907227; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t2tnBfmY7bNLR1j1Au/1ahJSbQCEe3E2+XWTpaE2RZg=;
+        b=EydqBD4/fBrPk19WKiJpcQ+U92Ab3TCx6DZfvo+cRyL7LZgQ18itqK+t3Mj34q1PWv
+         cqTjfA0XGS7V3UfINK7GxHRzr2i5IhX6tY+o9cqDOgXLDriwQI9Rvs4iJufjBK7jQ+CC
+         dTeMcGkvq/pwxCErq3+sstoQbMmQALpVaGoSiupZkuZCwI5Wp5QYKK551m7DYtCcJH8g
+         Pq3VdV3/uQFcF/FVLzsbk+v9Zu9dFtZDnVZY0emR3qWAGk1V/7gdy674GiAL03lcILPY
+         Dt3gQaEkpSXoiBNrApPpCqTbQNfuky+aoIZ9VpZTcC86Lwa3yjhs8PE9kPeeo8Fveou6
+         fevg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713302427; x=1713907227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t2tnBfmY7bNLR1j1Au/1ahJSbQCEe3E2+XWTpaE2RZg=;
+        b=kg0iuNHupM8ch+mWpLc5Cc/tOWFJRArNgwiyQWoa/JSymhMPzW+7NzD+yDuFuLLE4n
+         wluxfgn8fIPCZc2QspYxZVGFyrgBnD2+Hql36nePTKF+u0QZEMJyfrugASler6zsOH1J
+         /P646c9oLLSrmes9su0Pfp3dQprnmY25aENb3aWwtjA2jnz+mL809pn2AIQ0Fz2Lke1Y
+         2Xr5FSrpqwPo4B41ymHQvc0XgBaFNuMKILzDG6Isv2TobVle0eJD7bDbTclCvDZ4Mhb4
+         sl8pqQMRl2LaFh3RxyKTPJTbVgXPMemzeX64rXqYfVC2IVKCVLnpsHc0GL9qt3tc+7KH
+         e2qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuYQQT8KRtlbfhkrOCtgPHO7/J2r8W5EhFLrd8vbeyxS9in+sxwBMEsvp1HN/T89YWCnIYAgSQJJcG6QHU/hKIGFnWEp3IKfSJElkEhQGe7aGiWXLYOdcU0s5LWk3MRZvgFmY149UMUtCzNI/C4G9uSAd4Z9Er8BC6SNDXKJJU3hh+Bw==
+X-Gm-Message-State: AOJu0YwUbHeWYB8wVztxFpE1JB7X5a7CO0eFCsIl7hBXaD9yYojTnsMa
+	3sGA8rfPNilikCgInN0rBtpKQo/hIb5G/xClYoxpq3hVn/lqrgByNLM+zA==
+X-Google-Smtp-Source: AGHT+IFCHt3kPoo08Hbf6FJbz6fwSDfalTaDVDtNncFkQX9iPxjNh1orR04y0KCWHgq/Xp7rz4w3YQ==
+X-Received: by 2002:a17:902:e5d2:b0:1e2:61ca:9449 with SMTP id u18-20020a170902e5d200b001e261ca9449mr15181757plf.40.1713302426742;
+        Tue, 16 Apr 2024 14:20:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b001e3e0a8b32asm10185701plg.45.2024.04.16.14.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 14:20:25 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 16 Apr 2024 14:20:24 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Eddie James <eajames@linux.ibm.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>, devicetree@vger.kernel.org,
+	conor+dt@kernel.org, alistair@popple.id.au,
+	linux-kernel@vger.kernel.org, lakshmiy@us.ibmcom,
+	linux-i2c@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	linux-fsi@lists.ozlabs.org, robh@kernel.org
+Subject: Re: [PATCH v2 25/31] i2c: fsi: Calculate clock divider from local
+ bus frequency
+Message-ID: <6e34260b-7d8e-4c86-9a11-6727f0c83a70@roeck-us.net>
+References: <20240226165321.91976-1-eajames@linux.ibm.com>
+ <20240226165321.91976-26-eajames@linux.ibm.com>
+ <q6bl7sbskt4ukd3mylfgwpo6dmv444umdpycs6xp7ozd2kv335@syeymu62fczb>
+ <2474f02c-c835-4691-b531-62c8c747aede@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2474f02c-c835-4691-b531-62c8c747aede@linux.ibm.com>
 
-New CPU #defines encode vendor and family as well as model.
+On Tue, Apr 16, 2024 at 01:09:04PM -0500, Eddie James wrote:
+> 
+> On 4/15/24 17:11, Andi Shyti wrote:
+> > Hi Eddie,
+> > 
+> > > @@ -689,6 +692,20 @@ static int fsi_i2c_probe(struct device *dev)
+> > >   	mutex_init(&i2c->lock);
+> > >   	i2c->fsi = to_fsi_dev(dev);
+> > >   	INIT_LIST_HEAD(&i2c->ports);
+> > > +	i2c->clock_div = I2C_DEFAULT_CLK_DIV;
+> > > +
+> > > +	lbus = fsi_device_local_bus_frequency(i2c->fsi);
+> > > +	if (lbus) {
+> > > +		u32 clock = I2C_DEFAULT_CLK_RATE;
+> > I don't see the need for initialization.
+> 
+> 
+> Does device_property_read_u32 set clock if the property isn't found? If not,
+> it needs to be initialized here. Or I can set it in an else statement from
+> device_property_read_u32.
+> 
+> 
+> > 
+> > > +
+> > > +		if (!device_property_read_u32(dev, "clock-frequency", &clock)) {
+> > > +			if (!clock)
+> > > +				clock = I2C_DEFAULT_CLK_RATE;
+> > > +		}
 
-Update INTEL_CPU_DESC() to work with vendor/family/model.
+		if (device_property_read_u32(dev, "clock-frequency", &clock) || !clock)
+			clock = I2C_DEFAULT_CLK_RATE;
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/include/asm/cpu_device_id.h |  8 ++--
- arch/x86/events/intel/core.c         | 64 ++++++++++++++--------------
- 2 files changed, 36 insertions(+), 36 deletions(-)
+> > > +
+> > > +		// i2c clock rate = local bus clock / (4 * (i2c clock div + 1))
+> > You forgot to remove this.
+> 
+> 
+> I actually meant to leave that comment to explain how the clock rate is
+> calculated, as the reverse calculation in the code is a little more
+> confusing.
+> 
 
-diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-index 833f230aeafc..71bda84c20c3 100644
---- a/arch/x86/include/asm/cpu_device_id.h
-+++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -275,10 +275,10 @@ struct x86_cpu_desc {
- 	u32	x86_microcode_rev;
- };
- 
--#define INTEL_CPU_DESC(model, stepping, revision) {		\
--	.x86_family		= 6,				\
--	.x86_vendor		= X86_VENDOR_INTEL,		\
--	.x86_model		= (model),			\
-+#define INTEL_CPU_DESC(vfm, stepping, revision) {		\
-+	.x86_family		= VFM_FAMILY(vfm),		\
-+	.x86_vendor		= VFM_VENDOR(vfm),		\
-+	.x86_model		= VFM_MODEL(vfm),		\
- 	.x86_stepping		= (stepping),			\
- 	.x86_microcode_rev	= (revision),			\
- }
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 94206f8cd371..d3294ef18aef 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5187,35 +5187,35 @@ static __init void intel_clovertown_quirk(void)
- }
- 
- static const struct x86_cpu_desc isolation_ucodes[] = {
--	INTEL_CPU_DESC(INTEL_FAM6_HASWELL,		 3, 0x0000001f),
--	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_L,		 1, 0x0000001e),
--	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_G,		 1, 0x00000015),
--	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 2, 0x00000037),
--	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 4, 0x0000000a),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL,		 4, 0x00000023),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_G,		 1, 0x00000014),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_D,		 2, 0x00000010),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_D,		 3, 0x07000009),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_D,		 4, 0x0f000009),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_D,		 5, 0x0e000002),
--	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_X,		 1, 0x0b000014),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 3, 0x00000021),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 4, 0x00000000),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 5, 0x00000000),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 6, 0x00000000),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 7, 0x00000000),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		11, 0x00000000),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_L,		 3, 0x0000007c),
--	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE,		 3, 0x0000007c),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		 9, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		 9, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		10, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		11, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_L,		12, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		10, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		11, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		12, 0x0000004e),
--	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		13, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_HASWELL,		 3, 0x0000001f),
-+	INTEL_CPU_DESC(INTEL_HASWELL_L,		 1, 0x0000001e),
-+	INTEL_CPU_DESC(INTEL_HASWELL_G,		 1, 0x00000015),
-+	INTEL_CPU_DESC(INTEL_HASWELL_X,		 2, 0x00000037),
-+	INTEL_CPU_DESC(INTEL_HASWELL_X,		 4, 0x0000000a),
-+	INTEL_CPU_DESC(INTEL_BROADWELL,		 4, 0x00000023),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_G,	 1, 0x00000014),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_D,	 2, 0x00000010),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_D,	 3, 0x07000009),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_D,	 4, 0x0f000009),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_D,	 5, 0x0e000002),
-+	INTEL_CPU_DESC(INTEL_BROADWELL_X,	 1, 0x0b000014),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		 3, 0x00000021),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		 4, 0x00000000),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		 5, 0x00000000),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		 6, 0x00000000),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		 7, 0x00000000),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_X,		11, 0x00000000),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE_L,		 3, 0x0000007c),
-+	INTEL_CPU_DESC(INTEL_SKYLAKE,		 3, 0x0000007c),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE,		 9, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE_L,	 9, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE_L,	10, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE_L,	11, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE_L,	12, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE,		10, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE,		11, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE,		12, 0x0000004e),
-+	INTEL_CPU_DESC(INTEL_KABYLAKE,		13, 0x0000004e),
- 	{}
- };
- 
-@@ -5232,9 +5232,9 @@ static __init void intel_pebs_isolation_quirk(void)
- }
- 
- static const struct x86_cpu_desc pebs_ucodes[] = {
--	INTEL_CPU_DESC(INTEL_FAM6_SANDYBRIDGE,		7, 0x00000028),
--	INTEL_CPU_DESC(INTEL_FAM6_SANDYBRIDGE_X,	6, 0x00000618),
--	INTEL_CPU_DESC(INTEL_FAM6_SANDYBRIDGE_X,	7, 0x0000070c),
-+	INTEL_CPU_DESC(INTEL_SANDYBRIDGE,	7, 0x00000028),
-+	INTEL_CPU_DESC(INTEL_SANDYBRIDGE_X,	6, 0x00000618),
-+	INTEL_CPU_DESC(INTEL_SANDYBRIDGE_X,	7, 0x0000070c),
- 	{}
- };
- 
--- 
-2.44.0
+Partially that is because you implemented DIV_ROUND_UP() manually.
 
+> 
+> > 
+> > Andi
+> > 
+> > > +		i2c->clock_div = (((lbus + (clock - 1)) / clock) / 4) - 1;
+
+				= DIV_ROUND_UP(lbus, clock) / 4 - 1
+
+Guenter
