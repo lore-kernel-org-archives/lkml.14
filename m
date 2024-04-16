@@ -1,95 +1,170 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E19B3C08D;
-	Tue, 16 Apr 2024 05:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850CE11720;
+	Tue, 16 Apr 2024 05:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713245254; cv=none; b=Ko7k9hPXp2X6pognjgizI9UYkL/dtEhNENMwyjncic+aLOv3UWLCeUs9jTnCZpKzNNsx/KM0uCqKruY9Fhg34+UQkiiAxIJjNXsAUGvW5NYVafWFQOVEsL3/nZCdFEGMT1XQhfo6w8aNh753x9qUzUpgN84WSK9iFlVD6giPT18=
+	t=1713245670; cv=none; b=Lg8yP7AFt/yrXcoYyopi95R+x65UTd7CiyXcHewwlGr5WfxZt7JAtc2cx14fQTKabmwta1KhuloI8WNyvk6Z76BsvBw/CxIYMcd+Is5rDxutkVhUQFRArhiVKVh6p3XyGJLFLEMx4rdKdlCoxaECli8xKNKgAGwz/ilYxrC8wv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713245254; c=relaxed/simple;
-	bh=THv3/79A2H9nNVIkJBfgTVoe6vvwnYyh4E5rCbVYmHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s5X/k+MsPHiUnCl3gmzjsNU+fv1sE1ku+5wAZv1TPpUdP1R7vB51kpNYLGM+TKGFQASxTr5N+HsvNDB71qJYjymtBCzncaFH5wLoGteYorGoeaUFscm4s4IdJb+jf6OOXEGInuALx08a2z7g6zKII7yoq7NKMhoGoiOERUvPX+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csqFvmk8; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713245670; c=relaxed/simple;
+	bh=kzqpX5pisSA0RMcIWuJDckngNn3ETsX1+xRIIt6hxSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bi5br6OilCfjXEjWccH8Exvt/jBS1TXhDEglUj8d1te733uSNJeAPSK1N4SMHva6jOe6c0IBZwLihmro75WqewEgV037Xe7XjmYKrH0fhQm53cy3j0BuKDFow69Yw+p+EY2BnR4FkCSO2Wq8R5loLjjAOpWhmCww47R1P/91lPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D9V+0Cju; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csqFvmk8"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d5ed700c2dso19698239f.0;
-        Mon, 15 Apr 2024 22:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713245252; x=1713850052; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Bj7b/FqbINJ9h3hT325VjbRsdDhuvdI+3SsuJJX6oM=;
-        b=csqFvmk8QrbwJUESSsX2r+z9SRVpDcp86fjCenbeb91gj5XWDrXCuFI0SmVCYXPBqq
-         dbCXDOJTIXWJq5clxv3pN5h1OGH/SJBfmNzB34mJdK7fKRt9noFYA7DIT23YJe4nKS6I
-         I4zWkuP+tS9BljAKYIUA7F/uMPeaIPrE/FjUrGJOhKyV4m2Wui3XkH/oK1G/t/XhvZY9
-         nFsW0voypOhd1gV1Nz+MgDRMKmqftY4073a7jUjHeytYGIjDRch1zieWyddcc+E1IPPX
-         +SeB+zasko9mP8SNxlhZvKQljCyui7Me9ljKMpPGNPl8gttTltimMbSzkAn34Tk87SSR
-         ACUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713245252; x=1713850052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Bj7b/FqbINJ9h3hT325VjbRsdDhuvdI+3SsuJJX6oM=;
-        b=E8W0wJ+SLJfu760WXaJWsiNua8WP9x0sM1/1wB0gz9Z71ElRKE+uoRMkkyEMI0Efnf
-         0OFFjIDWG8oqJeKAR/jjes6grX+cmtqsLwAldqYO2Zo0XgtD8aoRQVzFCwWOdrC1+AVa
-         Z8RaPiI/HTeRBQhWHiFIpAwzO7EwsW6VZMXi/btAfBvBWWIyDT+tpQ89uukulUkS2x2I
-         WoL4p107uQnqIbzm0iMGq+yHFzweiTzlHNKNLXBarxB8wVxNGa6iMngAoA80EpeywQjk
-         NSw3O7As3WJQQwBWEIGmZaKEMqHAeKjYbfrLCfWlbBWoqiXerH9sR9Rf2cMLKyk7uoHf
-         7yxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVr5Z8zAKfiZcS1cyA2U4/9Qk0yTWCMeq4EFjfGN2HkrmVBbV/JoIr0oWJ5T3/EQP3enYjyBYEbo+L22dX+x7SNSCpy
-X-Gm-Message-State: AOJu0YxBRR65i9uLdR7t8tvrLOX53j3JoJb9DHXrjkDVS7rVJaBPWc4U
-	7vyLLDWXjHbzYOeTasxIgU8w18ViqBXpu82h3+iKKeuZJd+CF8dvnsXqVnDihpG8j49ILDNB4Go
-	nWDE0biBqOudf9p8fKzibghWoJeM=
-X-Google-Smtp-Source: AGHT+IH10paInJPH+L7hyxwPhtlIilGIHl/CNqZEtYVliHjg71HXlWLA1KzKZJoYGWEtMJYJSVNqESRbGasr4hcugnU=
-X-Received: by 2002:a92:c14d:0:b0:36a:3ee8:b9f0 with SMTP id
- b13-20020a92c14d000000b0036a3ee8b9f0mr9788652ilh.0.1713245252357; Mon, 15 Apr
- 2024 22:27:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D9V+0Cju"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713245669; x=1744781669;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kzqpX5pisSA0RMcIWuJDckngNn3ETsX1+xRIIt6hxSc=;
+  b=D9V+0CjuqeXOwW7abvZlf0HPAiiYlG+Gn1mkYkrTOUyTs0c3A+lTmE6f
+   hCSFQxRP18YSjYcWuz1fGN+6BMzW43tM+OYoj6S61qa4tEFfG6IvhTei1
+   uCDrpV8ypYpxQ+BVh9kE3EM9rb1j1+7j6ioeZbeUcTdJ/YrYfQi/1Tp9y
+   CzryJfrRe9VCxKMFuzJRcWweKN/Ym8Snmgqui3IrU+ltKcr409zXqxZTT
+   LUATMqo8sKYIE8qpxBT73KozrYBDc950F/stpeQVGLP2j2S6QTLpVYU72
+   5tXezf4KFMOW54SREmZffzbDbP2jr4VbKZbjwDgW9pP/auFC8q31Lgf6m
+   Q==;
+X-CSE-ConnectionGUID: bp11ffVLSp6Flp61qhPF4Q==
+X-CSE-MsgGUID: mL9wRkw/T5GxEaXu1OJ0zA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="9217857"
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="9217857"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:34:27 -0700
+X-CSE-ConnectionGUID: m6n7iNoyThqdyNYIr9nF7A==
+X-CSE-MsgGUID: IV4WrLTeRgaMvvY208Uxrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,205,1708416000"; 
+   d="scan'208";a="22615794"
+Received: from unknown (HELO [10.238.128.139]) ([10.238.128.139])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 22:34:23 -0700
+Message-ID: <998fd76f-2bd9-4492-bf2e-e8cd981df67f@linux.intel.com>
+Date: Tue, 16 Apr 2024 13:34:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com> <Zh0ZhEU1xhndl2k8@krava>
-In-Reply-To: <Zh0ZhEU1xhndl2k8@krava>
-From: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
-Date: Tue, 16 Apr 2024 08:27:21 +0300
-Message-ID: <CANXV_Xwmf-VH5EfNdv=wcv8J=2W5L5RtOs8n-Uh5jm5a1yiMKw@mail.gmail.com>
-Subject: Re: [PATCH] bpf: btf: include linux/types.h for u32
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org, haoluo@google.com, 
-	sdf@google.com, kpsingh@kernel.org, john.fastabend@gmail.com, 
-	yonghong.song@linux.dev, song@kernel.org, eddyz87@gmail.com, 
-	andrii@kernel.org, daniel@iogearbox.net, ast@kernel.org, martin.lau@linux.dev, 
-	khazhy@chromium.org, vmalik@redhat.com, ndesaulniers@google.com, 
-	ncopa@alpinelinux.org, dxu@dxuuu.xyz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
+ kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
+ jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
+ irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
+ chao.gao@intel.com
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+ <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+ <ZhgmrczGpccfU-cI@google.com>
+ <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
+ <ZhmIrQQVgblrhCZs@google.com>
+ <2342a4e2-2834-48e2-8403-f0050481e59e@linux.intel.com>
+ <ab2953b7-18fd-4b4c-a83b-ab243e2a21e1@linux.intel.com>
+Content-Language: en-US
+From: "Zhang, Xiong Y" <xiong.y.zhang@linux.intel.com>
+In-Reply-To: <ab2953b7-18fd-4b4c-a83b-ab243e2a21e1@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 15, 2024 at 3:11=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
-> lgtm, did it actualy cause problem anywhere?
->
-> there's also tools/include/linux/btf_ids.h
 
-It caused the problems exactly in the file
-tools/include/linux/btf_ids.h and was reported in
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218647
-The patch including linux/types.h in tools/include/linux/btf_ids.h is
-already there https://lore.kernel.org/all/20240328110103.28734-1-ncopa@alpi=
-nelinux.org/
-I also faced the same compile-error of the form
 
-    error: unknown type name 'u32'
-                              u32 cnt;
-                              ^~~
-when compiling the bpf tool with glibc 2.28.
+On 4/16/2024 12:03 AM, Liang, Kan wrote:
+> 
+> 
+> On 2024-04-12 4:56 p.m., Liang, Kan wrote:
+>>> What if perf had a global knob to enable/disable mediate PMU support?  Then when
+>>> KVM is loaded with enable_mediated_true, call into perf to (a) check that there
+>>> are no existing !exclude_guest events (this part could be optional), and (b) set
+>>> the global knob to reject all new !exclude_guest events (for the core PMU?).
+>>>
+>>> Hmm, or probably better, do it at VM creation.  That has the advantage of playing
+>>> nice with CONFIG_KVM=y (perf could reject the enabling without completely breaking
+>>> KVM), and not causing problems if KVM is auto-probed but the user doesn't actually
+>>> want to run VMs.
+>> I think it should be doable, and may simplify the perf implementation.
+>> (The check in the schedule stage should not be necessary anymore.)
+>>
+>> With this, something like NMI watchdog should fail the VM creation. The
+>> user should either disable the NMI watchdog or use a replacement.
+>>
+>> Thanks,
+>> Kan
+>>> E.g. (very roughly)
+>>>
+>>> int x86_perf_get_mediated_pmu(void)
+>>> {
+>>> 	if (refcount_inc_not_zero(...))
+>>> 		return 0;
+>>>
+>>> 	if (<system wide events>)
+>>> 		return -EBUSY;
+>>>
+>>> 	<slow path with locking>
+>>> }
+>>>
+>>> void x86_perf_put_mediated_pmu(void)
+>>> {
+>>> 	if (!refcount_dec_and_test(...))
+>>> 		return;
+>>>
+>>> 	<slow path with locking>
+>>> }
+> 
+> 
+> I think the locking should include the refcount check and system wide
+> event check as well.
+> It should be possible that two VMs are created very close.
+> The second creation may mistakenly return 0 if there is no lock.
+> 
+> I plan to do something as below (not test yet).
+> 
+> +/*
+> + * Currently invoked at VM creation to
+> + * - Check whether there are existing !exclude_guest system wide events
+> + *   of PMU with PERF_PMU_CAP_MEDIATED_VPMU
+> + * - Set nr_mediated_pmu to prevent !exclude_guest event creation on
+> + *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
+> + *
+> + * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
+> + * still owns all the PMU resources.
+> + */
+> +int x86_perf_get_mediated_pmu(void)
+> +{
+> +	int ret = 0;
+> +	mutex_lock(&perf_mediated_pmu_mutex);
+> +	if (refcount_inc_not_zero(&nr_mediated_pmu_vms))
+> +		goto end;
+> +
+> +	if (atomic_read(&nr_include_guest_events)) {
+> +		ret = -EBUSY;
+> +		goto end;
+> +	}
+> +	refcount_inc(&nr_mediated_pmu_vms);
+> +end:
+> +	mutex_unlock(&perf_mediated_pmu_mutex);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(x86_perf_get_mediated_pmu);
+> +
+> +void x86_perf_put_mediated_pmu(void)
+> +{
+> +	mutex_lock(&perf_mediated_pmu_mutex);
+> +	refcount_dec(&nr_mediated_pmu_vms);
+> +	mutex_unlock(&perf_mediated_pmu_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(x86_perf_put_mediated_pmu);
+> 
+> 
+> Thanks,
+> Kan
+x86_perf_get_mediated_pmu() is called at vm_create(), x86_perf_put_mediated_pmu() is called at vm_destroy(), then system wide perf events without exclude_guest=1 can not be created during the whole vm life cycle (where nr_mediated_pmu_vms > 0 always), do I understand and use the interface correctly ?
 
-I think it might be reasonable to add the inclusion in
-include/linux/btf_ids.h as well to prevent build problems like this.
+thanks
