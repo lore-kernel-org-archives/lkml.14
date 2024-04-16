@@ -1,146 +1,99 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D541237719
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 16:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F6112AAE3;
+	Tue, 16 Apr 2024 17:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713286781; cv=none; b=Jt43gGMoHU2DEKV+1HVF/2eJSAbL+Ffs4U9S1l+X4BECLKNwy66y3j5ks1M7e5EJu1ipIBEkUtOngd2vW/khRouq8dcD7bXGl8ic7EpolF9M2aUxpJ5PAYrSxXBSLx/uHUtCPbmAjhpIvROlRHXOmzKsPtGcyX//uwo75lQtoV8=
+	t=1713286834; cv=none; b=AwYV2HB1lRHn0SvCCuHpZXnl3nCZTKIkxmKHDIi6rEy3ZkTe4Ov5+N4mx2oO6ypjUcctm3t8SCmctXS3J0PSfNtIwWcE6PiU/RisEqE3MYdVjQx7TytL3Mmrn6n51HDQiyOcbCxsmAqGeplGL6aJSYzub6TtyKhnSdmXq54hhMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713286781; c=relaxed/simple;
-	bh=OqwfRgfuRz/ivsxvdcUz3wpO0OSe7tdZKPZ6/JVHlZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bkzzrxzKlXZyj5YwAfh0p6Aq+ggHBSD4wGJ96ygbMNYHNEXkO3A22ybETsepSfFNUANnVaFUzzsNKe6E5T9a5GjJiQHw24os2npTv3M4LCgDBvz5RXpDS8S8LuA6yn7cIUirh6aoQIkmZoCqBgqmvp5IMBmmePJFm/wWHyrkGbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ENzBJ5yx; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1713286834; c=relaxed/simple;
+	bh=+eKfqkqGNqkcZA+3CL0j3nQn92dxN0Kh6lLW/1pOGwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b73xnWD2C8HNFDyQPm8n6TECcBbUTUi416YzV5zvtBmMFGTLex6IFEHi+sJqiPffF9GBi60O6R3M1JVSs1c1cZLtV54svYtnVkF3qeMTdABcb5EXZqRt4c8a9Vgu6FwIa1iGenrBDUtN0wje2Y8+fJPiLp6URnMxLEDHkjpzuak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nt9mrA1v; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ENzBJ5yx"
-Received: from [192.168.7.187] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43GGwlAN3295309
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 16 Apr 2024 09:58:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43GGwlAN3295309
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1713286728;
-	bh=TfJil0ZDbGlav4krTpp9dcUVQzx75ISIZzMZstAGT6Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ENzBJ5yxGnQURnAwcjuAXE1UBTEskLookeB5f6Tgc+7D/raTOPxJRpt0p8BWYzBfG
-	 4/Lr2fbCxsUtFelRRx5nbISu5vcnk+z5KUzBAJBbPNHSuyBSxdeQcRPZNdm/krQbNt
-	 +OPHnAa0hrnV0xkqU7+pOhgGsDz7Tz1YqXp3EVA1YNmBPsuMEM37HDH2CW8TnsP1wh
-	 v8Wd6Ylj4b9wtIah1xfIslFN5VfyPJ5jinY/yP2eewa4aiOpQB9S+TRPkRpGSEvs7f
-	 GwvwOQMB7m4cp67I1Vklxr/pkkFOeLupEeKtNZyzmG8CMxHeAYEhhN7zAzgYFN8oLg
-	 9X2c5nJ3Fg/aw==
-Message-ID: <a329ecf1-5ed9-46c1-86d2-9e8d9ce69195@zytor.com>
-Date: Tue, 16 Apr 2024 09:58:45 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nt9mrA1v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KRNBS/nNdDiPqgsHkyKzXY05QuyaoZshBLw+Rc9FXMA=; b=nt9mrA1vsAaOvdbNnhltvUwu9v
+	eWZR64hdT0sHaVKkAKmAe02tetl0haDxBjBnAHLphqFzp/yy5osgH3yZyN6EMx70yH1d9DLHOvVrz
+	dlRSWUeki4/Q/6FdINSaH5XHgpn18Dmc7bkQlSk/Sg9c13cunns8wBOiCeumO9xQ5x0BAtn5G/uU/
+	xnQs8dh9gnYgu2MH0woQlj+GOoe6kRJfmSNBff0Hup94JBNpjrNs0La/eiMr7DSYEkpv1GiMYVo3T
+	yqk61h9eHqECcuvHQGIgfFsTqPQCz0ZDqgjczHx4LBks0gwP9I1Os4OQf9wpGT5Ee1lDF7iiYEL7s
+	zChMYYyQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rwmAX-00000000yWu-3TaB;
+	Tue, 16 Apr 2024 17:00:29 +0000
+Date: Tue, 16 Apr 2024 18:00:29 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Nam Cao <namcao@linutronix.de>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Andreas Dilger <adilger@dilger.ca>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>,
+	Ext4 Developers List <linux-ext4@vger.kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: riscv32 EXT4 splat, 6.8 regression?
+Message-ID: <Zh6urRin2-wVxNeq@casper.infradead.org>
+References: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
+ <8734rlo9j7.fsf@all.your.base.are.belong.to.us>
+ <Zh6KNglOu8mpTPHE@kernel.org>
+ <20240416171713.7d76fe7d@namcao>
+ <20240416173030.257f0807@namcao>
+ <87v84h2tee.fsf@all.your.base.are.belong.to.us>
+ <20240416181944.23af44ee@namcao>
+ <Zh6n-nvnQbL-0xss@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] x86/fred: Fix int80 emulation for FRED
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com
-References: <20240412234058.1106744-1-xin@zytor.com>
- <20240416101147.GDZh5O473e4X_ZG1lZ@fat_crate.local>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240416101147.GDZh5O473e4X_ZG1lZ@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zh6n-nvnQbL-0xss@kernel.org>
 
-On 4/16/2024 3:11 AM, Borislav Petkov wrote:
-> On Fri, Apr 12, 2024 at 04:40:58PM -0700, Xin Li (Intel) wrote:
->> Commit 55617fb991df
+On Tue, Apr 16, 2024 at 07:31:54PM +0300, Mike Rapoport wrote:
+> > @@ -238,17 +237,9 @@ static void __init setup_bootmem(void)
+> >  	/*
+> >  	 * memblock allocator is not aware of the fact that last 4K bytes of
+> >  	 * the addressable memory can not be mapped because of IS_ERR_VALUE
+> > -	 * macro. Make sure that last 4k bytes are not usable by memblock
+> > -	 * if end of dram is equal to maximum addressable memory.  For 64-bit
+> > -	 * kernel, this problem can't happen here as the end of the virtual
+> > -	 * address space is occupied by the kernel mapping then this check must
+> > -	 * be done as soon as the kernel mapping base address is determined.
+> > +	 * macro. Make sure that last 4k bytes are not usable by memblock.
+> >  	 */
 > 
-> Use the full commit abbreviation when mentioning commits:
+> It's not only memblock, but buddy as well, so maybe
 > 
-> "Commit
+> 	/*
+> 	 * The last 4K bytes of the addressable memory can not be used
+> 	 * because of IS_ERR_VALUE macro. Make sure that last 4K bytes are
+> 	 * not usable by kernel memory allocators.
+> 	 */
 > 
->    55617fb991df ("x86/entry: Do not allow external 0x80 interrupts")
+> > -	if (!IS_ENABLED(CONFIG_64BIT)) {
+> > -		max_mapped_addr = __pa(~(ulong)0);
+> > -		if (max_mapped_addr == (phys_ram_end - 1))
+> > -			memblock_set_current_limit(max_mapped_addr - 4096);
+> > -	}
+> > +	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE);
 > 
-> .."
+> Ack.
 
-oh, I should have done it!
-
-> 
->> added a bunch of tests to the int $0x80 path,
-> 
-> Added a bunch of tests?
-> 
-
-'checks' might be a better term to use?
-
-> What does that even mean?
-> 
->> however they are unnecessary and event wrong in fact under FRED.
-> 
-> Are the bunch of tests wrong or is do_int80_emulation() simply the wrong
-> handler to use on a FRED?
-
-I think the explanations are below, and you saw it a bit later.
-
-BTW, comments are added around the code changes.
-
-> 
->> First FRED distinguishes external interrupts from software interrupts,
->> thus int80_emulation() should NEVER be called for handling an external
->> interrupt, and then int80_is_external() should be skipped under FRED.
->>
->> Second, the FRED kernel entry handler NEVER dispatches INTx, which is
->> of event type EVENT_TYPE_SWINT, so the user mode checking in
->> do_int80_emulation() is redundant, and should be skipped.
->>
->> It might be even better to strip down do_int80_emulation() to a lean
->> fred_int80_emulation(), not to mention int80_emulation() does a
->> CLEAR_BRANCH_HISTORY.
-> 
-> Yah, how about you do a FRED-specific INT80 handler instead of
-> sprinkling moar tests around? fred_intx() looks like the right place to
-> stuff it in...
-> 
-
-I will add fred_int80_emulation(), which duplicates a big part of
-do_int80_emulation(), however this seems more readable.
-
-Thanks!
-     Xin
+Can this go to generic code instead of letting architecture maintainers
+fall over it?
