@@ -1,103 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8B484A5F;
-	Tue, 16 Apr 2024 12:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90D912BF32;
+	Tue, 16 Apr 2024 12:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713269954; cv=none; b=Cyt3fbhsNNBRGEHlMx4hHoNsi0XEX5eLJ4wr/GLW/Gdu0Ow0RClNgQe72TR8O29XZrfHfXYKTGT/ppU1AxSaZNQS0Qs/6jqYHeML+XI1HEe0pIgMZnbw0omUBQPYawNMQkvRiY6Kb/B0zS3vn9898IC9i85CzdraCKgGUo0FUw4=
+	t=1713269957; cv=none; b=r8skHBKDjMCS9aQe9EvBzo877RLtxvYTSHxJnRWnMylm/JbO2x8ICCOYIOuBhREcbPfs0tpe2iIg8PefErW6+nXfbcJO8XwUFaK9F6Mt3mabdqIlTgOhM5XKuaqR0KNmfkoeVjo/0dppPwGBnd8QFtwk4U8IpkBQBVd9shtOtOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713269954; c=relaxed/simple;
-	bh=Kytz+UD5dTwK2Cv6gkJ/t5JrQQBUJsCTbZJPyt6gz1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKy0EOFfANUkKM61wQmSGvD/ctPXS2ieZ4bvRDH38lwYQKVJhx91T3nq8HHUfXvDIQUpfUkY9kH5n2ovF1SKfMgalCBFI0qsankzJHPH9IE9GM6vb+Hxhr53VchD/JU8aQQHUQmmFa+upH7g13SSj+R+5o8q2BPVEayutWLhKK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgfRWkUm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713269957; c=relaxed/simple;
+	bh=nqsVC29cav+O44VG4QeWXSJch8muwTP+2TH5V6jNPlU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AhLE/9AjwenIaH6cblZ3d8MHYNq+HHlrI0v/4qc5EYtOqlUuD6B6+85Ptsl98+UWO2cZv4cm4ygF7cT8bN0UVAAymBenvxHKn/0nYVk6VvhTJJZAAxV5AEHeiwkZHtEd2JoGEVX9kaCS2jzc2bckbkc/KYQhBjFS6QWCgmbN/GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvNIsDA0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgfRWkUm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B90FEC2BD10;
-	Tue, 16 Apr 2024 12:19:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvNIsDA0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8906EC113CE;
+	Tue, 16 Apr 2024 12:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713269953;
-	bh=Kytz+UD5dTwK2Cv6gkJ/t5JrQQBUJsCTbZJPyt6gz1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgfRWkUm04+Oe+cJmh3pJcySnutmqfJD5WwdEGv3DxScDd9WncSfwQfo2g0W0Wlbp
-	 WrSdvkzjmB1dpfMGcJRL67+ze9o26VkVTSK2uJ4vcGNYnpaEQirSzxKibTgzY9ZLOg
-	 q2l1E3Xb7Fj3HoKc8YIOc0RHZnnhwo9TSnZm5/jpkeZbLmRyJc1EOfDm4mS6chZ0CR
-	 gZfzpXqYXjBOzoRgTe9F6HjLRL2EYhVVQeOp1TCoOLLMdjLT3oc/1gNSPpsNevQ8cx
-	 3POspS4Y/dsZ9h3OxrcAtcnY8y7ATFZTs8SAvx0wBb954Mv7cy7WD0F+BZyter8wO+
-	 eF09JssL8N++A==
-Date: Tue, 16 Apr 2024 13:19:09 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ben Greear <greearb@candelatech.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-	Johannes Berg <johannes@sipsolutions.net>
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-Message-ID: <20240416121909.GU2399047@google.com>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
- <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <20240411070718.GD6194@google.com>
- <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+	s=k20201202; t=1713269956;
+	bh=nqsVC29cav+O44VG4QeWXSJch8muwTP+2TH5V6jNPlU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WvNIsDA0QjdVK5Ias3Y3b5vSJ9oTsHd+zV28wuBPeHdw1OKiuFYVMwpKB2ThC42Ti
+	 k+/5AKZOlosbK9AGcjhrKL+JNY7by8U3VM15gTS6AM35bIWZ2md/jgU010U/D9dezx
+	 eRsEUIuTxC0r4PcQvwNc+XsTgfxBgA3fI40PxL0wBwtg0vPNgaNq9CBT9BxTJSx2Jm
+	 0soXEF65tpM+dYrlcQOjnsJpokPEUer3zXNEAB7pL2L7sE+R3QzIOdIfn684koXcpy
+	 n1egPyuO/qLzEI3MsQeV4L5QKhBM/BxDY2gJ3MAg/+a7L0gTnnJW9zS5oYer195ldR
+	 AfKXMsaxa6GQA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 0/4] kbuild: replace $(srctree)/$(src) with $(src) in Makefiles
+Date: Tue, 16 Apr 2024 21:18:34 +0900
+Message-Id: <20240416121838.95427-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
 
-On Mon, 15 Apr 2024, Ben Greear wrote:
+This makes upstream/downstream Makefiles look consistent.
 
-> On 4/11/24 00:07, Lee Jones wrote:
-> > On Wed, 03 Apr 2024, Ben Greear wrote:
-> > 
-> > > On 4/2/24 10:38, Ben Greear wrote:
-> > > > On 4/2/24 09:37, Ben Greear wrote:
-> > > > > Hello,
-> > > > > 
-> > > > > Sometime between rc1 and today's rc2, my system quit booting.
-> > > > > I'm not seeing any splats, it just stops.  Evidently before
-> > > > > sysrq is enabled.
-> > > > > 
-> > > > > [  OK  ] Started Flush Journal to Persistent Storage.
-> > > > > [  OK  ] Started udev Coldplug all Devices.
-> > > > >            Starting udev Wait for Complete Device Initialization...
-> > > > > [  OK  ] Listening on Load/Save RF …itch Status /dev/rfkill Watch.
-> > > > > [  OK  ] Created slice system-lvm2\x2dpvscan.slice.
-> > > > >            Starting LVM2 PV scan on device 8:19...
-> > > > >            Starting LVM2 PV scan on device 8:3...
-> > > > > [  OK  ] Started Device-mapper event daemon.
-> > > > > iwlwifi 0000:04:00.0: WRT: Invalid buffer destination: 0
-> > > > > sysrq: This sysrq operation is disabled.
-> > > > > 
-> > > > > I can start a bisect, but in case anyone knows the answer already, please let me know.
-> > > > > 
-> > > > > Thanks,
-> > > > > Ben
-> > > > > 
-> > > > 
-> > > > So, deadlock I guess....
-> > 
-> > Does this help you in any way?
-> > 
-> > https://lore.kernel.org/all/bbcdbc1b-44bc-4cf8-86ef-6e6af2b009c3@gmail.com/
-> > 
-> Hello Lee,
-> 
-> I cannot see how that patch above would fix my issues since I am not using that driver,
-> but possibly some similar change needs to be made to iwlwifi.
-> 
-> Johannes, you had another suggestion: changing iwlwifi's request_module() to request_module_nowait() in
-> iwl_req_fw_callback()
-> 
-> Is that still best thing to try in your opinion?
 
-I mean the general principle, rather than the exact patch.
+Masahiro Yamada (4):
+  arch: use $(obj)/ instead of $(src)/ for preprocessed linker scripts
+  Makefile: remove some unnecessary header include paths
+  kbuild: use $(obj)/ instead of $(src)/ for pattern rules for %.[cS]
+  kbuild: use $(src) instead of $(srctree)/$(src) for source directory
 
-Yes, you would need to apply it to your own use-case.
+ Documentation/Makefile                        |  8 ++++----
+ Documentation/devicetree/bindings/Makefile    | 10 +++++-----
+ Documentation/kbuild/makefiles.rst            | 12 +++++------
+ Makefile                                      |  7 +++++++
+ arch/arc/boot/dts/Makefile                    |  3 +--
+ arch/arm/Kbuild                               |  2 +-
+ arch/arm/boot/Makefile                        |  3 +--
+ arch/arm/mach-s3c/Makefile                    |  2 +-
+ arch/arm/plat-orion/Makefile                  |  2 +-
+ arch/arm/tools/Makefile                       |  2 +-
+ arch/arm64/kernel/vdso/Makefile               |  2 +-
+ arch/arm64/kernel/vdso32/Makefile             |  2 +-
+ arch/arm64/kvm/Makefile                       |  4 ++--
+ arch/arm64/kvm/hyp/Makefile                   |  2 +-
+ arch/csky/boot/dts/Makefile                   |  4 +---
+ arch/csky/kernel/vdso/Makefile                |  4 ++--
+ arch/loongarch/kvm/Makefile                   |  2 --
+ arch/loongarch/vdso/Makefile                  |  2 +-
+ arch/mips/kernel/syscalls/Makefile            |  2 +-
+ arch/mips/vdso/Makefile                       |  4 ++--
+ arch/nios2/boot/dts/Makefile                  |  3 +--
+ arch/parisc/kernel/vdso32/Makefile            |  4 ++--
+ arch/parisc/kernel/vdso64/Makefile            |  4 ++--
+ arch/powerpc/boot/Makefile                    |  6 +++---
+ arch/powerpc/boot/dts/Makefile                |  3 +--
+ arch/powerpc/boot/dts/fsl/Makefile            |  3 +--
+ arch/powerpc/kernel/vdso/Makefile             |  8 ++++----
+ arch/riscv/kernel/compat_vdso/Makefile        |  2 +-
+ arch/riscv/kernel/vdso/Makefile               |  2 +-
+ arch/riscv/kvm/Makefile                       |  2 +-
+ arch/s390/kernel/syscalls/Makefile            |  4 ++--
+ arch/s390/kernel/vdso32/Makefile              |  4 ++--
+ arch/s390/kernel/vdso64/Makefile              |  4 ++--
+ arch/sh/kernel/vsyscall/Makefile              |  4 ++--
+ arch/sparc/vdso/Makefile                      |  2 +-
+ arch/um/kernel/Makefile                       |  2 +-
+ arch/x86/boot/Makefile                        |  2 +-
+ arch/x86/entry/vdso/Makefile                  |  2 +-
+ arch/x86/kernel/Makefile                      |  2 +-
+ arch/x86/kernel/cpu/Makefile                  |  2 +-
+ arch/x86/mm/Makefile                          |  2 +-
+ arch/x86/um/vdso/Makefile                     |  2 +-
+ arch/xtensa/boot/dts/Makefile                 |  3 +--
+ certs/Makefile                                |  4 ++--
+ drivers/Makefile                              |  5 -----
+ drivers/crypto/intel/qat/qat_420xx/Makefile   |  2 +-
+ drivers/crypto/intel/qat/qat_4xxx/Makefile    |  2 +-
+ drivers/crypto/intel/qat/qat_c3xxx/Makefile   |  2 +-
+ drivers/crypto/intel/qat/qat_c3xxxvf/Makefile |  2 +-
+ drivers/crypto/intel/qat/qat_c62x/Makefile    |  2 +-
+ drivers/crypto/intel/qat/qat_c62xvf/Makefile  |  2 +-
+ .../crypto/intel/qat/qat_dh895xcc/Makefile    |  2 +-
+ .../crypto/intel/qat/qat_dh895xccvf/Makefile  |  2 +-
+ drivers/gpu/drm/amd/amdgpu/Makefile           |  2 +-
+ drivers/gpu/drm/arm/display/komeda/Makefile   |  4 ++--
+ drivers/gpu/drm/i915/Makefile                 |  4 ++--
+ drivers/gpu/drm/imagination/Makefile          |  2 --
+ drivers/gpu/drm/msm/Makefile                  |  8 ++++----
+ drivers/gpu/drm/nouveau/Kbuild                | 10 ++++------
+ drivers/gpu/drm/xe/Makefile                   | 10 +++++-----
+ drivers/hid/amd-sfh-hid/Makefile              |  2 +-
+ drivers/hid/intel-ish-hid/Makefile            |  2 +-
+ drivers/md/dm-vdo/Makefile                    |  2 +-
+ .../net/ethernet/aquantia/atlantic/Makefile   |  2 --
+ drivers/net/ethernet/chelsio/libcxgb/Makefile |  2 +-
+ drivers/net/ethernet/fungible/funeth/Makefile |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/Makefile  |  2 +-
+ .../broadcom/brcm80211/brcmfmac/Makefile      |  4 ++--
+ .../broadcom/brcm80211/brcmfmac/bca/Makefile  |  6 +++---
+ .../broadcom/brcm80211/brcmfmac/cyw/Makefile  |  6 +++---
+ .../broadcom/brcm80211/brcmfmac/wcc/Makefile  |  6 +++---
+ .../broadcom/brcm80211/brcmsmac/Makefile      |  6 +++---
+ .../broadcom/brcm80211/brcmutil/Makefile      |  2 +-
+ .../net/wireless/intel/iwlwifi/dvm/Makefile   |  2 +-
+ .../net/wireless/intel/iwlwifi/mei/Makefile   |  2 +-
+ .../net/wireless/intel/iwlwifi/mvm/Makefile   |  2 +-
+ .../net/wireless/intel/iwlwifi/tests/Makefile |  2 +-
+ .../wireless/realtek/rtl818x/rtl8180/Makefile |  2 +-
+ .../wireless/realtek/rtl818x/rtl8187/Makefile |  2 +-
+ drivers/scsi/aic7xxx/Makefile                 | 12 +++++------
+ drivers/staging/rtl8723bs/Makefile            |  2 +-
+ fs/iomap/Makefile                             |  2 +-
+ fs/unicode/Makefile                           | 14 ++++++-------
+ fs/xfs/Makefile                               |  4 ++--
+ init/Makefile                                 |  2 +-
+ lib/Makefile                                  |  6 +++---
+ lib/raid6/Makefile                            |  2 +-
+ net/wireless/Makefile                         |  2 +-
+ rust/Makefile                                 |  6 +++---
+ samples/bpf/Makefile                          |  2 +-
+ samples/hid/Makefile                          |  2 +-
+ scripts/Kbuild.include                        |  3 +--
+ scripts/Makefile.asm-generic                  |  6 +++---
+ scripts/Makefile.build                        | 20 +++++++++----------
+ scripts/Makefile.clean                        |  2 +-
+ scripts/Makefile.host                         |  4 ++--
+ scripts/Makefile.lib                          | 10 +++++-----
+ scripts/Makefile.modpost                      |  2 +-
+ scripts/dtc/Makefile                          |  6 +++---
+ scripts/gdb/linux/Makefile                    |  2 +-
+ scripts/genksyms/Makefile                     |  4 ++--
+ scripts/kconfig/Makefile                      |  8 ++++----
+ security/tomoyo/Makefile                      |  2 +-
+ usr/Makefile                                  |  2 +-
+ usr/include/Makefile                          |  2 +-
+ 105 files changed, 193 insertions(+), 208 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
+2.40.1
+
