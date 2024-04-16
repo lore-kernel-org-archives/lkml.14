@@ -1,334 +1,181 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEEF412C483;
-	Tue, 16 Apr 2024 13:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D04912C549;
+	Tue, 16 Apr 2024 13:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713274215; cv=none; b=iwz3ikb+W3lZOb730fw09DAXHmdgVwWCD+Swa1PvT95xpb59aFcO1GHW6LCyrN9q8I4xfwMKPpPXyAAtUpmInfFoaoJJLepwCSnQQBQNiw60gYmNAVCTTc+zXgZQQ4M4sFlYoK3xBad8Kx0doQMlSwMeM+7rdwPuA5IVPf4jgLA=
+	t=1713274219; cv=none; b=Geqt+Pu4syu+eyWFzAKYchqXTorfUwhZBkCULMYRM5eMP+Bj1rPdtpdhpBzwoRXDW2LrfHk5LME++b5/Mb9ZLeVoioWWPLrNrdgIC/N7KdFN3LVM+Ri84sjkJLdY+GcigmRsuarzEbpbzLKpUAdqFicHv4CSdtS/WKdfU4M+d6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713274215; c=relaxed/simple;
-	bh=+j/6gM3a937z2BzVy5L+xPXIwJaTO68RZyd2qEEbv9U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hqrsCvhnk7iKu9SF005exezHZrYMrUjqKiDWdeU+SQFHV3FHj4KpuzUe4GAsDA+9mho0Kxn+t888MsE1N/wwUacA/PlHGRxi2BkqwECGQQDOIp6E00nPkUvbWKKcWYPy5X4j+qoarztEg+TQW1y8Fle2UVfr+G5yMXJEbJoaHQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68DE4339;
-	Tue, 16 Apr 2024 06:30:40 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EB303F738;
-	Tue, 16 Apr 2024 06:30:07 -0700 (PDT)
-Message-ID: <37fa1ff5-9e94-4def-afd6-fb9ea9356977@arm.com>
-Date: Tue, 16 Apr 2024 14:30:04 +0100
+	s=arc-20240116; t=1713274219; c=relaxed/simple;
+	bh=k2CGSaqDP2m0Z3Oc2xnWpbaC6P75yXQgcSyVyBCP3zk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VxFf30XSoLD+8gmcmFqCklcEc8K7wXrjsEosRbeynr+1N8v1TKxtpDlb7uRZOJgobxrd6Q/0xXPfxrhQ+mFj7Rw6lsdfA7cOsScaCdHlAiGkx74oSqpHLE443NSVDpxfK0RVUOf2895XLb1eqa13+aAI613rDz8kSMEBgFrHSfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h2r7DxJE; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h2r7DxJE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1F88C40009;
+	Tue, 16 Apr 2024 13:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713274209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=F0jrhu+me/D8W5kvgHhQRcQp1B1+GzO90q1V+X66rgI=;
+	b=h2r7DxJEUW6AVToxugShoo81Z5Enlb15aDdL8trr9lT6j61wVVhUni8KI+4/dzYmzhmwmP
+	KDM4RH7iJRitFCqBgXTZOM+06VajU1LbSMn1AxRuyTWLm5pE49VHij1a78iPwzLBHI0osX
+	bEDLsX1ndhqMIAxZBT9kH0qBuvxlwwpPY4ZlBPs9qtBU/9AZti/kvRGwfti1DdExRFOVWH
+	aAJnMwPj8x4B40aGf9nis/yUL0XFHukpqt70noNnjpcK+KyCRZipk6F7vH0HLT4YNcIvfV
+	xgdTlBRdWsg72mO72GuPnmRdMiZF6ZfYdLfqKym09/Ijkp3z4PXteUFjbH0eNw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v5 00/11] Add suspend to ram support for PCIe on J7200
+Date: Tue, 16 Apr 2024 15:29:49 +0200
+Message-Id: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/43] arm64: RME: Check for RME support at KVM init
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
- <20240412084309.1733783-8-steven.price@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240412084309.1733783-8-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAE19HmYC/33NTQ7CIBAF4KsY1mJgANu68h7GBZ0OFqOlgabRm
+ N5dcGeMXb75+d6LJYqeEjtsXizS7JMPQw5mu2HY2+FC3Hc5MxCghRTArxUIwUf0xBNETthK21Q
+ NKVOx/NTaRLyNdsC+vN1tmiiWxRjJ+cen6XTOufdpCvH5KZ5lmf7tmCUXvNZkTGdNPhHHNoTp5
+ ocdhjsr2AzrABSAtKs6gJoQfgG1DqgMGATSVjmL0v0Ceh3QGdg76YxSjcDafAPLsrwBuBlYy4o
+ BAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Steven
+This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-On 12/04/2024 09:42, Steven Price wrote:
-> Query the RMI version number and check if it is a compatible version. A
-> static key is also provided to signal that a supported RMM is available.
-> 
-> Functions are provided to query if a VM or VCPU is a realm (or rec)
-> which currently will always return false.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/include/asm/kvm_emulate.h | 18 +++++++++
->   arch/arm64/include/asm/kvm_host.h    |  4 ++
->   arch/arm64/include/asm/kvm_rme.h     | 56 ++++++++++++++++++++++++++++
->   arch/arm64/include/asm/virt.h        |  1 +
->   arch/arm64/kvm/Makefile              |  3 +-
->   arch/arm64/kvm/arm.c                 |  9 +++++
->   arch/arm64/kvm/rme.c                 | 52 ++++++++++++++++++++++++++
->   7 files changed, 142 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm64/include/asm/kvm_rme.h
->   create mode 100644 arch/arm64/kvm/rme.c
-> 
-> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-> index 975af30af31f..6f08398537e2 100644
-> --- a/arch/arm64/include/asm/kvm_emulate.h
-> +++ b/arch/arm64/include/asm/kvm_emulate.h
-> @@ -611,4 +611,22 @@ static __always_inline void kvm_reset_cptr_el2(struct kvm_vcpu *vcpu)
->   
->   	kvm_write_cptr_el2(val);
->   }
-> +
-> +static inline bool kvm_is_realm(struct kvm *kvm)
-> +{
-> +	if (static_branch_unlikely(&kvm_rme_is_available))
-> +		return kvm->arch.is_realm;
-> +	return false;
-> +}
-> +
-> +static inline enum realm_state kvm_realm_state(struct kvm *kvm)
-> +{
-> +	return READ_ONCE(kvm->arch.realm.state);
-> +}
-> +
-> +static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
-> +{
-> +	return false;
-> +}
-> +
->   #endif /* __ARM64_KVM_EMULATE_H__ */
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 9e8a496fb284..63b68b85db3f 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -27,6 +27,7 @@
->   #include <asm/fpsimd.h>
->   #include <asm/kvm.h>
->   #include <asm/kvm_asm.h>
-> +#include <asm/kvm_rme.h>
->   #include <asm/vncr_mapping.h>
->   
->   #define __KVM_HAVE_ARCH_INTC_INITIALIZED
-> @@ -348,6 +349,9 @@ struct kvm_arch {
->   	 * the associated pKVM instance in the hypervisor.
->   	 */
->   	struct kvm_protected_vm pkvm;
-> +
-> +	bool is_realm;
-> +	struct realm realm;
->   };
->   
->   struct kvm_vcpu_fault_info {
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> new file mode 100644
-> index 000000000000..922da3f47227
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -0,0 +1,56 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2023 ARM Ltd.
-> + */
-> +
-> +#ifndef __ASM_KVM_RME_H
-> +#define __ASM_KVM_RME_H
-> +
-> +/**
-> + * enum realm_state - State of a Realm
-> + */
-> +enum realm_state {
-> +	/**
-> +	 * @REALM_STATE_NONE:
-> +	 *      Realm has not yet been created. rmi_realm_create() may be
-> +	 *      called to create the realm.
-> +	 */
-> +	REALM_STATE_NONE,
-> +	/**
-> +	 * @REALM_STATE_NEW:
-> +	 *      Realm is under construction, not eligible for execution. Pages
-> +	 *      may be populated with rmi_data_create().
-> +	 */
-> +	REALM_STATE_NEW,
-> +	/**
-> +	 * @REALM_STATE_ACTIVE:
-> +	 *      Realm has been created and is eligible for execution with
-> +	 *      rmi_rec_enter(). Pages may no longer be populated with
-> +	 *      rmi_data_create().
-> +	 */
-> +	REALM_STATE_ACTIVE,
-> +	/**
-> +	 * @REALM_STATE_DYING:
-> +	 *      Realm is in the process of being destroyed or has already been
-> +	 *      destroyed.
-> +	 */
-> +	REALM_STATE_DYING,
-> +	/**
-> +	 * @REALM_STATE_DEAD:
-> +	 *      Realm has been destroyed.
-> +	 */
-> +	REALM_STATE_DEAD
-> +};
-> +
-> +/**
-> + * struct realm - Additional per VM data for a Realm
-> + *
-> + * @state: The lifetime state machine for the realm
-> + */
-> +struct realm {
-> +	enum realm_state state;
-> +};
-> +
-> +int kvm_init_rme(void);
-> +
-> +#endif
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 261d6e9df2e1..12cf36c38189 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -81,6 +81,7 @@ void __hyp_reset_vectors(void);
->   bool is_kvm_arm_initialised(void);
->   
->   DECLARE_STATIC_KEY_FALSE(kvm_protected_mode_initialized);
-> +DECLARE_STATIC_KEY_FALSE(kvm_rme_is_available);
->   
->   /* Reports the availability of HYP mode */
->   static inline bool is_hyp_mode_available(void)
-> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-> index c0c050e53157..1c1d8cdf381f 100644
-> --- a/arch/arm64/kvm/Makefile
-> +++ b/arch/arm64/kvm/Makefile
-> @@ -20,7 +20,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
->   	 vgic/vgic-v3.o vgic/vgic-v4.o \
->   	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
->   	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
-> -	 vgic/vgic-its.o vgic/vgic-debug.o
-> +	 vgic/vgic-its.o vgic/vgic-debug.o \
-> +	 rme.o
->   
->   kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
->   
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 3dee5490eea9..2056c660c5ee 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -38,6 +38,7 @@
->   #include <asm/kvm_mmu.h>
->   #include <asm/kvm_nested.h>
->   #include <asm/kvm_pkvm.h>
-> +#include <asm/kvm_rme.h>
->   #include <asm/kvm_emulate.h>
->   #include <asm/sections.h>
->   
-> @@ -47,6 +48,8 @@
->   
->   static enum kvm_mode kvm_mode = KVM_MODE_DEFAULT;
->   
-> +DEFINE_STATIC_KEY_FALSE(kvm_rme_is_available);
-> +
->   DECLARE_KVM_HYP_PER_CPU(unsigned long, kvm_hyp_vector);
->   
->   DEFINE_PER_CPU(unsigned long, kvm_arm_hyp_stack_page);
-> @@ -2562,6 +2565,12 @@ static __init int kvm_arm_init(void)
->   
->   	in_hyp_mode = is_kernel_in_hyp_mode();
->   
-> +	if (in_hyp_mode) {
-> +		err = kvm_init_rme();
-> +		if (err)
-> +			return err;
-> +	}
-> +
->   	if (cpus_have_final_cap(ARM64_WORKAROUND_DEVICE_LOAD_ACQUIRE) ||
->   	    cpus_have_final_cap(ARM64_WORKAROUND_1508412))
->   		kvm_info("Guests without required CPU erratum workarounds can deadlock system!\n" \
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> new file mode 100644
-> index 000000000000..3dbbf9d046bf
-> --- /dev/null
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2023 ARM Ltd.
-> + */
-> +
-> +#include <linux/kvm_host.h>
-> +
-> +#include <asm/rmi_cmds.h>
-> +#include <asm/virt.h>
-> +
-> +static int rmi_check_version(void)
-> +{
-> +	struct arm_smccc_res res;
-> +	int version_major, version_minor;
-> +	unsigned long host_version = RMI_ABI_VERSION(RMI_ABI_MAJOR_VERSION,
-> +						     RMI_ABI_MINOR_VERSION);
-> +
-> +	arm_smccc_1_1_invoke(SMC_RMI_VERSION, host_version, &res);
-> +
-> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
-> +		return -ENXIO;
-> +
-> +	version_major = RMI_ABI_VERSION_GET_MAJOR(res.a1);
-> +	version_minor = RMI_ABI_VERSION_GET_MINOR(res.a1);
-> +
+In this 5th iteration, the series was rebased on Linux 6.9-rc1.
 
-We don't seem to be using the res.a0 to determin if the RMM supports our
-requested version. As per RMM spec, section B4.3.23 :
+The PHY patches were moved to a dedicated series.
 
-"
-The status code and lower revision output values indicate which of the 
-following is true, in order of precedence:
-  a) The RMM supports an interface revision which is compatible with the
-     requested revision.
-      • The status code is RMI_SUCCESS.
-      • The lower revision is equal to the requested revision.
-  b) The RMM does not support an interface revision which is compatible
-     with the requested revision The RMM supports an interface revision
-     which is incompatible with and less than the requested revision.
-      • The status code is RMI_ERROR_INPUT.
-      • The lower revision is the highest interface revision which is
-        both less than the requested revision and supported by the RMM.
+The patch for the pinctrl-single driver was removed, as it was already
+applied to the pinctrl tree.
 
-  c) The RMM does not support an interface revision which is compatible
-     with the requested revision The RMM supports an interface revision
-     which is incompatible with and greater than the requested revision.
-      • The status code is RMI_ERROR_INPUT.
-      • The lower revision is equal to the higher revision.
+Regards,
 
-So, we could simply check the res.a0 for RMI_SUCCESS and proceed with
-marking RMM available.
+Thomas
 
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v5:
+- all: series rebased on Linux 6.9-rc1
+- pinctrl-single: patch removed (already applied to the pinctrl tree)
+- phy: patches moved to a dedicated series.
+- pci: add T_PERST_CLK_US macro.
+- pci-j721e: update the comments about T_PERST_CLK_US.
+- Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com
 
-> +	if (version_major != RMI_ABI_MAJOR_VERSION) {
-> +		kvm_err("Unsupported RMI ABI (v%d.%d) host supports v%d.%d\n",
-> +			version_major, version_minor,
-> +			RMI_ABI_MAJOR_VERSION,
-> +			RMI_ABI_MINOR_VERSION);
-> +		return -ENXIO;
-> +	}
-> +
-> +	kvm_info("RMI ABI version %d.%d\n", version_major, version_minor);
-> +
-> +	return 0;
-> +}
-> +
-> +int kvm_init_rme(void)
-> +{
-> +	if (PAGE_SIZE != SZ_4K)
-> +		/* Only 4k page size on the host is supported */
-> +		return 0;
-> +
-> +	if (rmi_check_version())
-> +		/* Continue without realm support */
-> +		return 0;
-> +
-> +	/* Future patch will enable static branch kvm_rme_is_available */
-> +
-> +	return 0;
+Changes in v4:
+- all: use SoB/Co-developed-by for patches initially developed by Théo
+  Lebrun.
+- pinctrl-single: squash the two commits.
+- i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+- mux: mux_chip_resume() return 0 or at the first error.
+- phy-j721e-wiz: clean code around dev_err_probe().
+- phy-j721e-wiz: use REF_CLK_100MHZ macros.
+- pci: fix subject line for all PCI patches.
+- pci-cadence: use fsleep() instead of usleep_range().
+- pci-cadence: remove cdns_torrent_clk_cleanup() call in
+  cdns_torrent_phy_resume_noirq().
+- pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in the probe().
+- pci-j721e: fix unordered header files.
+- pci-j721e: remove some log spammers.
+- pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+- pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+- Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com
 
-Do we ever expect this to fail the kvm initialisation ? Otherwise, we
-could leave it as a void ?
+Changes in v3:
+- pinctrl-single: split patch in two parts, a first patch to remove the
+  dead code, a second to move suspend()/resume() callbacks to noirq.
+- i2c-omap: add a comments above the suspend_noirq() callback.
+- mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+  all is ok or the first failure.
+- mmio: fix commit message.
+- phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+  the wiz_clock_init() function.
+- phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+  function to wiz_clock_probe(), extract hardware configuration part in a
+  new function wiz_clock_init().
+- phy-cadence-torrent: use dev_err_probe() and fix commit messages
+- pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+  function and extract the link setup part in a new function
+  cdns_pcie_host_link_setup().
+- pcie-cadence-host: make cdns_pcie_host_init() global.
+- pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+  functions in the resume_noirq() callback.
+- Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
 
-Suzuki
-> +}
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (8):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: Set cdns_pcie_host_init() global
+      PCI: j721e: Use dev_err_probe() in the probe() function
+      PCI: Add T_PERST_CLK_US macro
+      PCI: j721e: Use T_PERST_CLK_US macro
+
+Théo Lebrun (3):
+      mux: mmio: add resume support
+      PCI: j721e: Add reset GPIO to struct j721e_pcie
+      PCI: j721e: Add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  22 ++++
+ drivers/mux/core.c                                 |  29 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         | 121 ++++++++++++++++++---
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+ drivers/pci/pci.h                                  |   3 +
+ include/linux/mux/driver.h                         |   1 +
+ 9 files changed, 214 insertions(+), 37 deletions(-)
+---
+base-commit: 3d31103a742d8c94924848dc0fb5e2ce6b701932
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
