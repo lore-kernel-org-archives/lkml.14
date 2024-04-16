@@ -1,397 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2068.outbound.protection.outlook.com [40.107.117.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78215A92E
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 01:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713231773; cv=none; b=csFhYDyV3OPROFQJHSAkQrLdcBVETh+Le5TnwwIlAJeqpGDF+PJysWAwoD1rFDJ5nYWwZItHwub0/CWz4jBB0P99jFOpZQDOWCBZ7yVbRrK6+qgAWSGGNBNI0/PiTP7iwg5ky6tZl4pkKGWnpBmfobnIdS1ZiZiPnRoB8wNapvA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713231773; c=relaxed/simple;
-	bh=yjgus5KxN0bcJTL0XhNlIOKq4ZEdv6JoH0IaNEoUcJE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HSaAoCA/aosRBgA+7FWxne40kFLYMbDlsFl48jUTuLtckuv+pA8nBk9Ln8HGnyHDVStjDVXkHK0mnzyIBL+YPW4UE5F35Cth4EfO88UQuHn80t6WmeaBuQo2M4hJmkdBH8MeUoVpobKTafZzZVAYq9Zy/gQWvJpgwrR/gVoQKic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ioQwZmrd; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467124C7E;
+	Tue, 16 Apr 2024 01:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713232132; cv=fail; b=kV0UqDzPArEoCL53H5aiqcJFVFUPki09IOJMsGKI1/K7EMjLkiAkpbeDlNUZ4eLYFjripxjULTiMM7fmbaIKFSu3G8Tg7bow45uZY66jE8SFllwpo9kDuULN/94WJTYMkuUtQI6VnOc5akIzRd3/fnm8PxchnhkHVeK2H3jHTLU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713232132; c=relaxed/simple;
+	bh=mtcV5UWsq923Fxe2WzGnisiLmy06Hz5RGHKO+zZ4+LQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ktH4twLU/ZkPnym0nVaeMgZ1NRNfPekmKaJhN3w3rjy8Azr0pvjjt7aRmKa85om9ApL7aL6cwU52JvAytAil3DHfTKbxEjDRZWegxnPDextBhw5Q74JziOcudKroMBDKDNH0dmR09R9HbfXjGtOXN6Hiy85SIUm/YG2QF7DN7Xo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=pBHEJRJj; arc=fail smtp.client-ip=40.107.117.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ioQwZmrd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713231771; x=1744767771;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=yjgus5KxN0bcJTL0XhNlIOKq4ZEdv6JoH0IaNEoUcJE=;
-  b=ioQwZmrdi049ZEitbH6pSE22aEscE/mblgPPsxhm5ROawOZGryHJyKT7
-   rhQ1P0mBMtyEydS0sb22HMjRFWTImqSdkjpxsbYKZvnA3sNZJltofXIXB
-   2AkXGDrSxewJc+actihXaCiKeLeVg6r6d9MofOx/YlMyODH3mWBTOtkej
-   D15pzzpv9k8z/aqkoqmPOGUs72jWMGj4myS8nBYDAh51FF17t+lOuhOQq
-   FobXBQ2YucZOY8q3S2gl+wTDx4RIDY08JSkhkP+1dKgreeO/u6PpFvtFo
-   ybfPZ12LDNocjOrJ+NXri8QakJAFUQO//vBHTF8TYg0zXTS9D+WLwnF4a
-   A==;
-X-CSE-ConnectionGUID: kecqeELfRRiOdYl/uNwPcw==
-X-CSE-MsgGUID: Y6xY9gEfQGyRW89Ub7nosQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="31127223"
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="31127223"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 18:42:51 -0700
-X-CSE-ConnectionGUID: 9eKsD4wFRROMTWY14nTPgg==
-X-CSE-MsgGUID: s5lVaS31TS64kgwnNUDPNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="22113243"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 18:42:46 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,
-  baolin.wang@linux.alibaba.com,  chrisl@kernel.org,  david@redhat.com,
-  hanchuanhua@oppo.com,  hannes@cmpxchg.org,  hughd@google.com,
-  kasong@tencent.com,  ryan.roberts@arm.com,  surenb@google.com,
-  v-songbaohua@oppo.com,  willy@infradead.org,  xiang@kernel.org,
-  yosryahmed@google.com,  yuzhao@google.com,  ziy@nvidia.com,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched
- swap_free()
-In-Reply-To: <CAGsJ_4zH4RHhZembtXOqzBDL75MA5NiEjMHx7eCN-a1ifnKTBw@mail.gmail.com>
-	(Barry Song's message of "Mon, 15 Apr 2024 21:01:16 +1200")
-References: <20240409082631.187483-1-21cnbao@gmail.com>
-	<20240409082631.187483-2-21cnbao@gmail.com>
-	<87y19f2lq3.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4yPQyQpWvB2KmuOh2vyUQA0A6hNHsypEC9Gptp9XtuDgg@mail.gmail.com>
-	<87jzkz2g3t.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4wm4SfkyTBHpU46EPTFvhq8e54F3KRkKj6gTBcnOjCw1g@mail.gmail.com>
-	<87bk6b2elo.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAGsJ_4zH4RHhZembtXOqzBDL75MA5NiEjMHx7eCN-a1ifnKTBw@mail.gmail.com>
-Date: Tue, 16 Apr 2024 09:40:53 +0800
-Message-ID: <877cgy2ifu.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="pBHEJRJj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GGeka1BjmObIg41Mdm/H7s5ltWznxmDrzyIfdhfA0O0Gc/O7cY9P6nK9PGiW43Z8etcL0Vz+J9O6drKdBjpzXLzsXYj3lLsCgdyFVK9itHc88nVoeFC7FTMtyaIgrxxV8jrjhy6MnHkgdiFzjHOz0id9FHIgzZWQAE+fIyrUqlPGSJRe7jLUnJ2hw2kboCHbKFIyUMBjBu2B8DMOqj/S37Hk7HkSmkM2LFV5DiwIKCUA1qHuK8hus8pYXpaMF+iVgvelXYN0bPFgrS0/Jc5f320WBREUIvQ1iA3Vi2MJNThHpy9V8MkPb9wsR9KPh7nlC9UWDaExtjEbW5DsxbRtnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hUHqNu+CIo0jYpq7+l7ljtl+KiKvOGBm4qW6O/x6sW4=;
+ b=VufAc1O6w0j9Y2rAxIzG2qL1J+2smeWZVpZM3pKFE80Oz/rC0hK24iUEuAg/6dcpypP0LJp6sJaU91vRsnMLdZOgBUGnBzH/DWLzj3rsMOfSHCmMj34vB59sbBtbEbjuSt50y+CVi22o9h6sQPA+Hh9VaHLL5Mufw1NSzoWZMAKQQNwQ8pNMkDetw2ssiqK7gZhb1EdXdRrz5nhDTcLcuEyeDbc9EbUz3Jo9k7GH8zkwmawEkLb/sAr4mL95S7f/5RU4E5EE0Jkv+G173i91a+S3z1kZPmyKVzeKVG0FZa2Svkx/uMREmoqcTn9TtcWWqn/rfXJjIx0LmXl0UsHGww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wiwynn.com; dmarc=pass action=none header.from=wiwynn.com;
+ dkim=pass header.d=wiwynn.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hUHqNu+CIo0jYpq7+l7ljtl+KiKvOGBm4qW6O/x6sW4=;
+ b=pBHEJRJjDtD6Z631uOW824V2IyvL/AI3vN9OSr3nuW/L1MJoyePaYMacw4YN7MhlmZ3MOmQL8vfRFzlBm43j7uIcOkPnywNPUSaoJK5t4FVn3Fm1G4HGLvanxj9gUFP6N6G1ha1TApWTKoYZrwOEfhHde+kLTAyczSfSVDo0qplBP9kgJy1nwxCpEitotyztuTUUv4osvHXXbd9d7g37akZBKEn0AfBgW4NGK5TzZtqPEQcIeLXjH7aX2aOvbbkY0DvAjGs6bNcqsR1VcV5JAggcz1Xf+ndu8gRCzQxScT0S1Gj0hsEYz9W1BfsH0+f8eHARN2+Als9/+dADNr0lYA==
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com (2603:1096:400:1f3::5)
+ by PUZPR04MB6885.apcprd04.prod.outlook.com (2603:1096:301:111::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
+ 2024 01:48:45 +0000
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::9bcd:8112:b072:faca]) by TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::9bcd:8112:b072:faca%5]) with mapi id 15.20.7452.049; Tue, 16 Apr 2024
+ 01:48:45 +0000
+From: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>
+To: Guenter Roeck <linux@roeck-us.net>, Delphine_CC_Chiu/WYHQ/Wiwynn
+	<Delphine_CC_Chiu@wiwynn.com>
+CC: "patrick@stwcx.xyz" <patrick@stwcx.xyz>, Jean Delvare <jdelvare@suse.com>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] hwmon: max31790: revise the scale to write pwm
+Thread-Topic: [PATCH v1] hwmon: max31790: revise the scale to write pwm
+Thread-Index: AQHajIkmo9cWMbxIOkGH9cQc4G//sbFkmoSAgAWImEA=
+Date: Tue, 16 Apr 2024 01:48:45 +0000
+Message-ID:
+ <TYZPR04MB585382F43299E49FE1D2F2D0D6082@TYZPR04MB5853.apcprd04.prod.outlook.com>
+References: <20240412032559.3352846-1-Delphine_CC_Chiu@wiwynn.com>
+ <d82d5585-ec6c-4611-ad33-9c2d00745176@roeck-us.net>
+In-Reply-To: <d82d5585-ec6c-4611-ad33-9c2d00745176@roeck-us.net>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wiwynn.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR04MB5853:EE_|PUZPR04MB6885:EE_
+x-ms-office365-filtering-correlation-id: 6d9c031e-0daf-4f9a-d496-08dc5db75a4c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ xQwl63vZAZBIbDA+CUlqKOHtZb38QZOLgfyoHKiqeD68tA6SHtR0O4J+f9BGXmklPowq0hTfyr80bOVRwb/4g66Id35SMM1GhvFGz8SYif024tOR38jsI8MCCItawT8RpCDHitNM7Xg6cjig/HjnwC/hWfG5gJnmJy4BYSN0doMV2wbV6jkAfHnNhDS8SHBCf+c1TfrUPNPp2BSCSs/in1BFW5SX5aVOt4l80O7G/SIAXUrXaWlGBGxn+uU6RdIJiOcdqW13m2Q97YTGvNUciWcjPYEKV1NblD6mHHvnGTA6jAiH55v9OwugoUm6bHCbtzkxINVOw1SG1LAZ7G+sWFAD+H1NkmvRdppcF2HMWRiCZHzG+a+uD/KvNygiDPevWlVMN9LQbn4RNdjIDQi5cB5VQH1rsLCDXbdWXUPcsNybGmK+IvRwMUwbYiAbc7i1Ra2uCMbVDNSsH1IMuLpXfpgLKTlIQ82xyqt7uLeh+IbziwejLaPm57OAtzzZOZuXLil1HCLaxpIUKaTMGTvrBZHbAKyvTdENxQlGzAuP7SP3FQLv2VRRPt0z5pdDwaW35Cr7QoxTmw0Vsd8YpH0GroYGY5hGjPCLrQVBbKILHO8sAMu0c93vCeL8gujFl9Evf9IwqsYCnabyPUV3iYEEPrUpeAx6A3MEzcQ+t0dkaUaKq0TZ4Yv9nmhkCUY7NKjmPg3Hyqav7p1vJvLXV+qswpZxt0isWsoc4x8ky7HYaMw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR04MB5853.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?FkMbYOEUbbo4Shoydi2KppdX3fsxDAWqMbEK6JPK7xY5sw+dn9Yel1rgPNg7?=
+ =?us-ascii?Q?k+X6vtrEp+NKCakbDQGjVstQ+WnIqYBisxSnbRv98I2OqyPCDnB1kjXq2I4Y?=
+ =?us-ascii?Q?/5lZ6Ugc9QsT6HVYCd4CPomwmd3x1hk3mydxSCOx+ljbuiYGackMmjojCt8h?=
+ =?us-ascii?Q?a0ieig6AQ6P+wJXRSAM909AOzUKRkxz/FuUpLh8fGn/NVzb3Un9qGJkK9yF0?=
+ =?us-ascii?Q?hoiFIeu8B5l2iF/lVqRUdyGxljeIBSV7/vlAzLF8IFfriUGIRLo4vUQd0C3E?=
+ =?us-ascii?Q?bM1Gh9uDrN3qnTiyWp7xEE5GO2NcFGbzemi9wocDJSJCaqe1wMHmK36NnKFq?=
+ =?us-ascii?Q?Oq7hld3I4sN0WVggxvzYr59Halq9lvVWsNskfMRrBrVyfnkbi/V2+7p5DucL?=
+ =?us-ascii?Q?ZWspJ04y/s8E7XEuevdrA+gch8TPnnigz1MlRhriyqb3FRxaUBUnbaIvQF4c?=
+ =?us-ascii?Q?ZeZ2JkZYdqLWWHsBoIHGOAZAdyJDEIcKweov29LCtVxn297J7Wv6zTk2z+Eq?=
+ =?us-ascii?Q?BF4MCbtG0qgWU43RrC4qYwKbjSnXiSK3qZtXDddAd3YQuT4bCtWIz2IfWPj0?=
+ =?us-ascii?Q?Iy5ZGemkh9tnRRriVINLGVqwQF35+q52/QN+u3gp8imHo6vM+UYE9NrxZzyM?=
+ =?us-ascii?Q?hZiynqyDTcQQy5E2SvTpBy4CmAOutHZvuFXNog599uAg7Kw1Hz4165JGz89S?=
+ =?us-ascii?Q?DOLKpaK+YNR8ASjvgv79p+A21RjfA6UqdPokgBKAUkDW0kcGTOIuWUondZve?=
+ =?us-ascii?Q?B0cNTzeo8rpeleK+Mu4THall/cwFEod4zaHSwrbP8fK8Mll3GnQzP4xqjWRE?=
+ =?us-ascii?Q?9atBcUJ/OBWhJyMiAc2obeql3TsJO+Vrbll+zSPInoTq+NEwUY3jeqTjsv7Q?=
+ =?us-ascii?Q?fdsJTERVB9IeiPU9n2qXpIegNces7xqro0fqjEb3BrYn+pRYWVGBsminxz76?=
+ =?us-ascii?Q?hhgKdViQ7BPGBMELh4DOG9RLdexlNZ8cLjkhJd1P5kLJDUbZrA0Ls6UFQjBS?=
+ =?us-ascii?Q?PKvzkXeCWApQogX08+qHG7e0PtqmngLL3siSO2MSTNznGAWdmOJplBvDt79h?=
+ =?us-ascii?Q?C1yZfx/OKSnMjae3jze72lQxiRzz8YR8OV+meAGJdyQ8teKTKCunQQHe3fIU?=
+ =?us-ascii?Q?UCBt4cTETC7LHMLaEzwVKx3rxfL0URfaEnPM+HI9roWcYtwR2nuGSdpS91rY?=
+ =?us-ascii?Q?U+oUA7lqKbJN6uBAKMmvHK8mhii75DHz1n9jE4VgDJ/QUC4rJHeT754Opekx?=
+ =?us-ascii?Q?+9M35CSg9kmK5CpT3cHOc70+L4mT9CQfhubIUrE5jbnIec+BLwtG17bWtfmH?=
+ =?us-ascii?Q?zJISkdNJ1+ntgVWucnPgVldZusXDfoVM4aNIIiNMrahBbNgDGg7XgcPbf6/Z?=
+ =?us-ascii?Q?C3UCcS0GX5kFQmoO212RKSH1antlO4Y9fW0pwG0NZ899dgOwO8a1adhjd5ma?=
+ =?us-ascii?Q?YHWjoC7bnhK3xsycbrJ/L4aO3rDoMgSUNbFYaJrIwE2Y9htAy/kdxNH+njFv?=
+ =?us-ascii?Q?E8I1cYshppkB48/k/7bMIINCkiiCs+7uYtZHuh6eAX8jxbs7iJ2kWVkpfVej?=
+ =?us-ascii?Q?JL9HS/ZMMrkmOnGTrYqd1mteCa57PDdJ3lIQTnBN?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR04MB5853.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d9c031e-0daf-4f9a-d496-08dc5db75a4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2024 01:48:45.4964
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aKUSf3Q4gbm7qMpzB10+ixHgwVd8p6pZ2A+wmTTIMQbCaFQpT/fOURSWgCTZriTEqYQCFIHV1xNYT45cgZhHvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR04MB6885
 
-Barry Song <21cnbao@gmail.com> writes:
 
-> On Mon, Apr 15, 2024 at 8:53=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Barry Song <21cnbao@gmail.com> writes:
->>
->> > On Mon, Apr 15, 2024 at 8:21=E2=80=AFPM Huang, Ying <ying.huang@intel.=
-com> wrote:
->> >>
->> >> Barry Song <21cnbao@gmail.com> writes:
->> >>
->> >> > On Mon, Apr 15, 2024 at 6:19=E2=80=AFPM Huang, Ying <ying.huang@int=
-el.com> wrote:
->> >> >>
->> >> >> Barry Song <21cnbao@gmail.com> writes:
->> >> >>
->> >> >> > From: Chuanhua Han <hanchuanhua@oppo.com>
->> >> >> >
->> >> >> > While swapping in a large folio, we need to free swaps related t=
-o the whole
->> >> >> > folio. To avoid frequently acquiring and releasing swap locks, i=
-t is better
->> >> >> > to introduce an API for batched free.
->> >> >> >
->> >> >> > Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
->> >> >> > Co-developed-by: Barry Song <v-songbaohua@oppo.com>
->> >> >> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->> >> >> > ---
->> >> >> >  include/linux/swap.h |  5 +++++
->> >> >> >  mm/swapfile.c        | 51 +++++++++++++++++++++++++++++++++++++=
-+++++++
->> >> >> >  2 files changed, 56 insertions(+)
->> >> >> >
->> >> >> > diff --git a/include/linux/swap.h b/include/linux/swap.h
->> >> >> > index 11c53692f65f..b7a107e983b8 100644
->> >> >> > --- a/include/linux/swap.h
->> >> >> > +++ b/include/linux/swap.h
->> >> >> > @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
->> >> >> >  extern int swap_duplicate(swp_entry_t);
->> >> >> >  extern int swapcache_prepare(swp_entry_t);
->> >> >> >  extern void swap_free(swp_entry_t);
->> >> >> > +extern void swap_free_nr(swp_entry_t entry, int nr_pages);
->> >> >> >  extern void swapcache_free_entries(swp_entry_t *entries, int n);
->> >> >> >  extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
->> >> >> >  int swap_type_of(dev_t device, sector_t offset);
->> >> >> > @@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t sw=
-p)
->> >> >> >  {
->> >> >> >  }
->> >> >> >
->> >> >> > +void swap_free_nr(swp_entry_t entry, int nr_pages)
->> >> >> > +{
->> >> >> > +}
->> >> >> > +
->> >> >> >  static inline void put_swap_folio(struct folio *folio, swp_entr=
-y_t swp)
->> >> >> >  {
->> >> >> >  }
->> >> >> > diff --git a/mm/swapfile.c b/mm/swapfile.c
->> >> >> > index 28642c188c93..f4c65aeb088d 100644
->> >> >> > --- a/mm/swapfile.c
->> >> >> > +++ b/mm/swapfile.c
->> >> >> > @@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t entry)
->> >> >> >               __swap_entry_free(p, entry);
->> >> >> >  }
->> >> >> >
->> >> >> > +/*
->> >> >> > + * Free up the maximum number of swap entries at once to limit =
-the
->> >> >> > + * maximum kernel stack usage.
->> >> >> > + */
->> >> >> > +#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_=
-CLUSTER)
->> >> >> > +
->> >> >> > +/*
->> >> >> > + * Called after swapping in a large folio,
->> >> >>
->> >> >> IMHO, it's not good to document the caller in the function definit=
-ion.
->> >> >> Because this will discourage function reusing.
->> >> >
->> >> > ok. right now there is only one user that is why it is added. but i=
- agree
->> >> > we can actually remove this.
->> >> >
->> >> >>
->> >> >> > batched free swap entries
->> >> >> > + * for this large folio, entry should be for the first subpage =
-and
->> >> >> > + * its offset is aligned with nr_pages
->> >> >>
->> >> >> Why do we need this?
->> >> >
->> >> > This is a fundamental requirement for the existing kernel, folio's
->> >> > swap offset is naturally aligned from the first moment add_to_swap
->> >> > to add swapcache's xa. so this comment is describing the existing
->> >> > fact. In the future, if we want to support swap-out folio to discon=
-tiguous
->> >> > and not-aligned offsets, we can't pass entry as the parameter, we s=
-hould
->> >> > instead pass ptep or another different data struct which can connect
->> >> > multiple discontiguous swap offsets.
->> >> >
->> >> > I feel like we only need "for this large folio, entry should be for
->> >> > the first subpage" and drop "and its offset is aligned with nr_page=
-s",
->> >> > the latter is not important to this context at all.
->> >>
->> >> IIUC, all these are requirements of the only caller now, not the
->> >> function itself.  If only part of the all swap entries of a mTHP are
->> >> called with swap_free_nr(), can swap_free_nr() still do its work?  If
->> >> so, why not make swap_free_nr() as general as possible?
->> >
->> > right , i believe we can make swap_free_nr() as general as possible.
->> >
->> >>
->> >> >>
->> >> >> > + */
->> >> >> > +void swap_free_nr(swp_entry_t entry, int nr_pages)
->> >> >> > +{
->> >> >> > +     int i, j;
->> >> >> > +     struct swap_cluster_info *ci;
->> >> >> > +     struct swap_info_struct *p;
->> >> >> > +     unsigned int type =3D swp_type(entry);
->> >> >> > +     unsigned long offset =3D swp_offset(entry);
->> >> >> > +     int batch_nr, remain_nr;
->> >> >> > +     DECLARE_BITMAP(usage, SWAP_BATCH_NR) =3D { 0 };
->> >> >> > +
->> >> >> > +     /* all swap entries are within a cluster for mTHP */
->> >> >> > +     VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_=
-CLUSTER);
->> >> >> > +
->> >> >> > +     if (nr_pages =3D=3D 1) {
->> >> >> > +             swap_free(entry);
->> >> >> > +             return;
->> >> >> > +     }
->> >> >>
->> >> >> Is it possible to unify swap_free() and swap_free_nr() into one fu=
-nction
->> >> >> with acceptable performance?  IIUC, the general rule in mTHP effor=
-t is
->> >> >> to avoid duplicate functions between mTHP and normal small folio.
->> >> >> Right?
->> >> >
->> >> > I don't see why.
->> >>
->> >> Because duplicated implementation are hard to maintain in the long te=
-rm.
->> >
->> > sorry, i actually meant "I don't see why not",  for some reason, the "=
-not"
->> > was missed. Obviously I meant "why not", there was a "but" after it :-)
->> >
->> >>
->> >> > but we have lots of places calling swap_free(), we may
->> >> > have to change them all to call swap_free_nr(entry, 1); the other p=
-ossible
->> >> > way is making swap_free() a wrapper of swap_free_nr() always using
->> >> > 1 as the argument. In both cases, we are changing the semantics of
->> >> > swap_free_nr() to partially freeing large folio cases and have to d=
-rop
->> >> > "entry should be for the first subpage" then.
->> >> >
->> >> > Right now, the semantics is
->> >> > * swap_free_nr() for an entire large folio;
->> >> > * swap_free() for one entry of either a large folio or a small folio
->> >>
->> >> As above, I don't think the these semantics are important for
->> >> swap_free_nr() implementation.
->> >
->> > right. I agree. If we are ready to change all those callers, nothing
->> > can stop us from removing swap_free().
->> >
->> >>
->> >> >>
->> >> >> > +
->> >> >> > +     remain_nr =3D nr_pages;
->> >> >> > +     p =3D _swap_info_get(entry);
->> >> >> > +     if (p) {
->> >> >> > +             for (i =3D 0; i < nr_pages; i +=3D batch_nr) {
->> >> >> > +                     batch_nr =3D min_t(int, SWAP_BATCH_NR, rem=
-ain_nr);
->> >> >> > +
->> >> >> > +                     ci =3D lock_cluster_or_swap_info(p, offset=
-);
->> >> >> > +                     for (j =3D 0; j < batch_nr; j++) {
->> >> >> > +                             if (__swap_entry_free_locked(p, of=
-fset + i * SWAP_BATCH_NR + j, 1))
->> >> >> > +                                     __bitmap_set(usage, j, 1);
->> >> >> > +                     }
->> >> >> > +                     unlock_cluster_or_swap_info(p, ci);
->> >> >> > +
->> >> >> > +                     for_each_clear_bit(j, usage, batch_nr)
->> >> >> > +                             free_swap_slot(swp_entry(type, off=
-set + i * SWAP_BATCH_NR + j));
->> >> >> > +
->> >> >> > +                     bitmap_clear(usage, 0, SWAP_BATCH_NR);
->> >> >> > +                     remain_nr -=3D batch_nr;
->> >> >> > +             }
->> >> >> > +     }
->> >> >> > +}
->> >> >> > +
->> >> >> >  /*
->> >> >> >   * Called after dropping swapcache to decrease refcnt to swap e=
-ntries.
->> >> >> >   */
->> >> >>
->> >> >> put_swap_folio() implements batching in another method.  Do you th=
-ink
->> >> >> that it's good to use the batching method in that function here?  =
-It
->> >> >> avoids to use bitmap operations and stack space.
->> >> >
->> >> > Chuanhua has strictly limited the maximum stack usage to several
->> >> > unsigned long,
->> >>
->> >> 512 / 8 =3D 64 bytes.
->> >>
->> >> So, not trivial.
->> >>
->> >> > so this should be safe. on the other hand, i believe this
->> >> > implementation is more efficient, as  put_swap_folio() might lock/
->> >> > unlock much more often whenever __swap_entry_free_locked returns
->> >> > 0.
->> >>
->> >> There are 2 most common use cases,
->> >>
->> >> - all swap entries have usage count =3D=3D 0
->> >> - all swap entries have usage count !=3D 0
->> >>
->> >> In both cases, we only need to lock/unlock once.  In fact, I didn't
->> >> find possible use cases other than above.
->> >
->> > i guess the point is free_swap_slot() shouldn't be called within
->> > lock_cluster_or_swap_info? so when we are freeing nr_pages slots,
->> > we'll have to unlock and lock nr_pages times?  and this is the most
->> > common scenario.
->>
->> No.  In put_swap_folio(), free_entries is either SWAPFILE_CLUSTER (that
->> is, nr_pages) or 0.  These are the most common cases.
->>
->
-> i am actually talking about the below code path,
->
-> void put_swap_folio(struct folio *folio, swp_entry_t entry)
-> {
->         ...
->
->         ci =3D lock_cluster_or_swap_info(si, offset);
->         ...
->         for (i =3D 0; i < size; i++, entry.val++) {
->                 if (!__swap_entry_free_locked(si, offset + i, SWAP_HAS_CA=
-CHE)) {
->                         unlock_cluster_or_swap_info(si, ci);
->                         free_swap_slot(entry);
->                         if (i =3D=3D size - 1)
->                                 return;
->                         lock_cluster_or_swap_info(si, offset);
->                 }
->         }
->         unlock_cluster_or_swap_info(si, ci);
-> }
->
-> but i guess you are talking about the below code path:
->
-> void put_swap_folio(struct folio *folio, swp_entry_t entry)
-> {
->         ...
->
->         ci =3D lock_cluster_or_swap_info(si, offset);
->         if (size =3D=3D SWAPFILE_CLUSTER) {
->                 map =3D si->swap_map + offset;
->                 for (i =3D 0; i < SWAPFILE_CLUSTER; i++) {
->                         val =3D map[i];
->                         VM_BUG_ON(!(val & SWAP_HAS_CACHE));
->                         if (val =3D=3D SWAP_HAS_CACHE)
->                                 free_entries++;
->                 }
->                 if (free_entries =3D=3D SWAPFILE_CLUSTER) {
->                         unlock_cluster_or_swap_info(si, ci);
->                         spin_lock(&si->lock);
->                         mem_cgroup_uncharge_swap(entry, SWAPFILE_CLUSTER);
->                         swap_free_cluster(si, idx);
->                         spin_unlock(&si->lock);
->                         return;
->                 }
->         }
-> }
 
-I am talking about both code paths.  In 2 most common cases,
-__swap_entry_free_locked() will return 0 or !0 for all entries in range.
-
-> we are mTHP, so we can't assume our size is SWAPFILE_CLUSTER?
-> or you want to check free_entries =3D=3D "1 << swap_entry_order(folio_ord=
-er(folio))"
-> instead of SWAPFILE_CLUSTER for the "for (i =3D 0; i < size; i++, entry.v=
-al++)"
-> path?
-
-Just replace SWAPFILE_CLUSTER with "nr_pages" in your code.
-
->
->> >>
->> >> And, we should add batching in __swap_entry_free().  That will help
->> >> free_swap_and_cache_nr() too.
->
-> Chris Li and I actually discussed it before, while I completely
-> agree this can be batched. but i'd like to defer this as an incremental
-> patchset later to keep this swapcache-refault small.
-
-OK.
-
->>
->> Please consider this too.
-
---
-Best Regards,
-Huang, Ying
+> -----Original Message-----
+> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+> Sent: Friday, April 12, 2024 9:03 PM
+> To: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>
+> Cc: patrick@stwcx.xyz; Jean Delvare <jdelvare@suse.com>;
+> linux-hwmon@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v1] hwmon: max31790: revise the scale to write pwm
+>=20
+>   Security Reminder: Please be aware that this email is sent by an extern=
+al
+> sender.
+>=20
+> On Fri, Apr 12, 2024 at 11:25:58AM +0800, Delphine CC Chiu wrote:
+> > Since the value for PWMOUT Target Duty Cycle register is a 9 bit
+> > left-justified value that ranges from 0 to 511 and is contained in 2
+> > bytes.
+> >
+> > There is an issue that the LSB of the 9 bit would always be zero if it
+> > just left shift 8 bit for the value that write to PWMOUT Target Duty
+> > Cycle register.
+> >
+> > Therefore, revise the scale of the value that was writen to pwm input
+> > from 255 to 511 and modify the value to left-justified value.
+> >
+>=20
+> The only difference is that it writes 511 instead of 510. All other value=
+s are the
+> same. I am not sure if that is really worth the trouble. It would have ma=
+de a
+> little more sense to me if you had used DIV_ROUND_CLOSEST(), but you didn=
+'t
+> do that. As it is, I really don't understand the point. If it is really i=
+mportant to
+> write 511 instead of 510, the commit description should explain that and =
+not
+> talk about the last bit always being zero (which it still is after this p=
+atch except,
+> again, when writing 511 instead of 510).
+>=20
+> Thanks,
+> Guenter
+>=20
+Hi Guenter,
+Thanks for your reviewing.
+I'll revise the code to use DIV_ROUND_CLOSEST().
+The reason why we add this patch is that we saw an issue that the PWM signa=
+l we get with oscilloscope would not be on consistently if we set PWM to 10=
+0% to the driver, which would fail our hardware testing.
+I'll describe more detail in the commit message.
+Thanks.
