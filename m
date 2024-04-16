@@ -1,99 +1,96 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F6112AAE3;
-	Tue, 16 Apr 2024 17:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1686D1F956
+	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713286834; cv=none; b=AwYV2HB1lRHn0SvCCuHpZXnl3nCZTKIkxmKHDIi6rEy3ZkTe4Ov5+N4mx2oO6ypjUcctm3t8SCmctXS3J0PSfNtIwWcE6PiU/RisEqE3MYdVjQx7TytL3Mmrn6n51HDQiyOcbCxsmAqGeplGL6aJSYzub6TtyKhnSdmXq54hhMU=
+	t=1713286835; cv=none; b=q8tu45LYI0Rwz/oPWZpqo6vXNzxPENBbNRr53xRczpb4eN3KNjlR+WiDR/ie8BxXYuW/Z5ZP0pZ61MUyHhE6Yg4Ifc/kkoNob2vkj85jDuEcJDVFrYdmSJJC6lT/N3ghRKXlruh2GnUtuLOW2KOFZ1QueszfAy/OoHcYvmUszTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713286834; c=relaxed/simple;
-	bh=+eKfqkqGNqkcZA+3CL0j3nQn92dxN0Kh6lLW/1pOGwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b73xnWD2C8HNFDyQPm8n6TECcBbUTUi416YzV5zvtBmMFGTLex6IFEHi+sJqiPffF9GBi60O6R3M1JVSs1c1cZLtV54svYtnVkF3qeMTdABcb5EXZqRt4c8a9Vgu6FwIa1iGenrBDUtN0wje2Y8+fJPiLp6URnMxLEDHkjpzuak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nt9mrA1v; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1713286835; c=relaxed/simple;
+	bh=eWS4hkOA9c5MUyVViK475t1qOR4HpPha6Nk9Zap1JUk=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=tMjBGc/AU6FlHSlzF1MQ+eyLWX4OE1KBYwoRXWmRG5u/CnqNNOrD+3h6sW3Em6gv1zqMGFWlwsEiOR+wyS6e7SoPMog9IDYY8EGJJKMaWD/fD5vv9Z712UJLAfK9diRbRB3+RlbtWGnUcqkTy7UWxYKlPxFBlmM/lfThhWBTG0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oiKTdV94; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nt9mrA1v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KRNBS/nNdDiPqgsHkyKzXY05QuyaoZshBLw+Rc9FXMA=; b=nt9mrA1vsAaOvdbNnhltvUwu9v
-	eWZR64hdT0sHaVKkAKmAe02tetl0haDxBjBnAHLphqFzp/yy5osgH3yZyN6EMx70yH1d9DLHOvVrz
-	dlRSWUeki4/Q/6FdINSaH5XHgpn18Dmc7bkQlSk/Sg9c13cunns8wBOiCeumO9xQ5x0BAtn5G/uU/
-	xnQs8dh9gnYgu2MH0woQlj+GOoe6kRJfmSNBff0Hup94JBNpjrNs0La/eiMr7DSYEkpv1GiMYVo3T
-	yqk61h9eHqECcuvHQGIgfFsTqPQCz0ZDqgjczHx4LBks0gwP9I1Os4OQf9wpGT5Ee1lDF7iiYEL7s
-	zChMYYyQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwmAX-00000000yWu-3TaB;
-	Tue, 16 Apr 2024 17:00:29 +0000
-Date: Tue, 16 Apr 2024 18:00:29 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Andreas Dilger <adilger@dilger.ca>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv@lists.infradead.org, Theodore Ts'o <tytso@mit.edu>,
-	Ext4 Developers List <linux-ext4@vger.kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Subject: Re: riscv32 EXT4 splat, 6.8 regression?
-Message-ID: <Zh6urRin2-wVxNeq@casper.infradead.org>
-References: <20240416-deppen-gasleitung-8098fcfd6bbd@brauner>
- <8734rlo9j7.fsf@all.your.base.are.belong.to.us>
- <Zh6KNglOu8mpTPHE@kernel.org>
- <20240416171713.7d76fe7d@namcao>
- <20240416173030.257f0807@namcao>
- <87v84h2tee.fsf@all.your.base.are.belong.to.us>
- <20240416181944.23af44ee@namcao>
- <Zh6n-nvnQbL-0xss@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oiKTdV94"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso8067992276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 10:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713286832; x=1713891632; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VHZ+4taa5ZmMf/oaE74yETbEavJXLOGjMfJKJZgW7D8=;
+        b=oiKTdV94ypRqlClyB5jW9fNE0/2SdIhV1hIsbvIxY4/CpRtN/CdmX2YP43Y5fjeQDh
+         PLA52JwZt5oOyAl6PIwj6vxhXp7+hKCe+yBKPgTv7hvZ68kA9dtgoeEQRJxPzVbtJgNV
+         sAtFf2ONwIHnGAWaDcxgPvDW7ngvBMO8ORhcBQReZ7SXyH5gFwM5EWGggytRPXz/J3Fy
+         7Ht3EX7uH3x2aKqmumm2yrQ4P/T5+Y+3iFfVxKDIyTNHb8+VrxtH4nv8bQSaDwVPpVWP
+         Rh6dv/w0rXaNV0R1meo+anAGBBcc8OkjRRnNVMHULGgFlVu40DoK2mvrq7bIpd4VNkWL
+         euKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713286832; x=1713891632;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VHZ+4taa5ZmMf/oaE74yETbEavJXLOGjMfJKJZgW7D8=;
+        b=MuoEf3XXIWqJkkbQLelLD0r1WLRToK/cQL3skjhNUDYBOq9HIVVahgKdh0v8rb7zcd
+         751O4OMY+HqS1lax51hoC/mlQEg30Ym09GwNrP/EWer0v7Fmo8XPs6tE5K1ayUaT2tOO
+         ExpVobJTwkpmwYok45+hnmqeIGeBNSjtLMSimbxacmmsxiyXiPizaYPV61IyN69Gcbeh
+         U+XPpLLwXyZ/1g4OLbtZHmAswQcroIKwXBAtVfDteY/7EWxKIQnrXPBT5EvP7cBW5FCf
+         hLTtSa4wcFOHGBXIC3bfT/vQf59InkxBDksu5va+JfWlw3QjEE4W+xoo93PF0XJ7GQn5
+         vmsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNiWs996oXHau40/OEtGcr+JqHsDj16IOyjofdKZpUe5qOyI7yXTbDlCrwEuUtcITItjm/iHgYjA3f/9Seh4KF9hSkItJbq7rr+TEi
+X-Gm-Message-State: AOJu0YzaDb1LLebVFY9XxiElH4c3jhs+GHkI4zXhyAep/nV1FtAG34Mj
+	SYfmwmmzDwqHoh3T1gM7RjiagNHSLMyivvQfAv2Ql/e/y3cYH1FqOxwjrhYoIL4i/jW4JBDEOaC
+	lhCgCmQ==
+X-Google-Smtp-Source: AGHT+IHpba/rJhzl9JMKIitpVKqKH62dhmqQWuSYivFdu9/ee66XNw1Ii34iQvnlkzNQhtlYgsX0ePwTqV64
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:30c8:f541:acad:b4f7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:120e:b0:dcd:88e9:e508 with SMTP
+ id s14-20020a056902120e00b00dcd88e9e508mr4322514ybu.5.1713286832038; Tue, 16
+ Apr 2024 10:00:32 -0700 (PDT)
+Date: Tue, 16 Apr 2024 10:00:13 -0700
+Message-Id: <20240416170014.985191-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh6n-nvnQbL-0xss@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Subject: [PATCH v1 1/2] perf docs: Document bpf event modifier
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Song Liu <song@kernel.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 16, 2024 at 07:31:54PM +0300, Mike Rapoport wrote:
-> > @@ -238,17 +237,9 @@ static void __init setup_bootmem(void)
-> >  	/*
-> >  	 * memblock allocator is not aware of the fact that last 4K bytes of
-> >  	 * the addressable memory can not be mapped because of IS_ERR_VALUE
-> > -	 * macro. Make sure that last 4k bytes are not usable by memblock
-> > -	 * if end of dram is equal to maximum addressable memory.  For 64-bit
-> > -	 * kernel, this problem can't happen here as the end of the virtual
-> > -	 * address space is occupied by the kernel mapping then this check must
-> > -	 * be done as soon as the kernel mapping base address is determined.
-> > +	 * macro. Make sure that last 4k bytes are not usable by memblock.
-> >  	 */
-> 
-> It's not only memblock, but buddy as well, so maybe
-> 
-> 	/*
-> 	 * The last 4K bytes of the addressable memory can not be used
-> 	 * because of IS_ERR_VALUE macro. Make sure that last 4K bytes are
-> 	 * not usable by kernel memory allocators.
-> 	 */
-> 
-> > -	if (!IS_ENABLED(CONFIG_64BIT)) {
-> > -		max_mapped_addr = __pa(~(ulong)0);
-> > -		if (max_mapped_addr == (phys_ram_end - 1))
-> > -			memblock_set_current_limit(max_mapped_addr - 4096);
-> > -	}
-> > +	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE);
-> 
-> Ack.
+Document that 'b' is used as a modifier to make an event use a BPF
+counter.
 
-Can this go to generic code instead of letting architecture maintainers
-fall over it?
+Fixes: 01bd8efcec44 ("perf stat: Introduce ':b' modifier")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-list.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 3b12595193c9..6bf2468f59d3 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -71,6 +71,7 @@ counted. The following modifiers exist:
+  D - pin the event to the PMU
+  W - group is weak and will fallback to non-group if not schedulable,
+  e - group or event are exclusive and do not share the PMU
++ b - use BPF aggregration (see perf stat --bpf-counters)
+ 
+ The 'p' modifier can be used for specifying how precise the instruction
+ address should be. The 'p' modifier can be specified multiple times:
+-- 
+2.44.0.683.g7961c838ac-goog
+
