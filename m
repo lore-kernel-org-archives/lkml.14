@@ -1,108 +1,194 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14576F060
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956DE6CDA1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713339264; cv=none; b=PPzfIiNWILhwbOADRDREjXoi0SBzK5Hu1Wt+hGNeMjisNeNkDZiZ7WaEAqgv5HToNaDNKWCIEFes1I/HQf/nPfheK4kxRW0lUEr5Ek0I/fWJizEdYTvbsiuFQlWTfIwgQ2qexJ9StygKksX1WAItDBy1LFhOnr6zoKjhlSGszm4=
+	t=1713339263; cv=none; b=DqaCM4paq6tvmYSrCSZtfqgc+fHnR8C0vhxhzsYdziU/DVGklGI0TxtkVGlJq04ipy5JCwiibIR6RxbHTyutA+fBARd2e0/Bv0gmGqLKUVSMJzhGzeak9imWk9pecRy6xLQ23wzLARhTavePX70vSekBOgf3NmlCPgEB/0mski4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713339264; c=relaxed/simple;
-	bh=GKKQ0ELyqnwZB6LDFYITg0PJaCDG9V1PU31qvzMDlro=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=jk2dxBk4+Dimzy6vgPiXdLZQMjN4FbF1rP8gOMcxMHq4qF4MZ1yJNRz1NU/+PjFBpwctWlxfU5Ghv00mah8eOROUAXLVQ/kYokno6vqEcqKz7ZYsKjHyVTy42QT7rTlHXqDgpNGKsw8bTLZqR+c+4c5099ZW/CHiZDF3dAm5NCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-a2-661f77e25f54
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: kernel_team@skhynix.com,
-	akpm@linux-foundation.org,
-	ying.huang@intel.com,
-	vernhao@tencent.com,
-	mgorman@techsingularity.net,
-	hughd@google.com,
-	willy@infradead.org,
-	david@redhat.com,
-	peterz@infradead.org,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	rjgolo@gmail.com
-Subject: [PATCH v9 4/8] x86/tlb, mm/rmap: separate arch_tlbbatch_clear() out of arch_tlbbatch_flush()
-Date: Wed, 17 Apr 2024 16:18:43 +0900
-Message-Id: <20240417071847.29584-5-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240417071847.29584-1-byungchul@sk.com>
-References: <20240417071847.29584-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC9ZZnke6jcvk0g9afshZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
-	Nm+aymxxfMpURovfP4CKT86azOIg4PG9tY/FY+esu+weCzaVemxeoeWxeM9LJo9NqzrZPDZ9
-	msTu8e7cOXaPEzN+s3jMOxno8X7fVTaPrb/sPBqnXmPz+LxJLoAvissmJTUnsyy1SN8ugStj
-	9+ZVbAXHOSp+HnvM0sDYyt7FyMkhIWAi0f9lBSOM/WbGFBYQm01AXeLGjZ/MILaIgJnEwdY/
-	YPXMAneZJA70s4HYwgKpEgsO7AWzWQRUJSbf/wA2h1fAVGJz+zFWiJnyEqs3HACbwwk0Z3Pz
-	GrB6IaCa7yc+AtlcQDXv2SROL/7CBNEgKXFwxQ2WCYy8CxgZVjEKZeaV5SZm5pjoZVTmZVbo
-	JefnbmIEhv6y2j/ROxg/XQg+xCjAwajEw2sQJZcmxJpYVlyZe4hRgoNZSYS3RVg2TYg3JbGy
-	KrUoP76oNCe1+BCjNAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOjlfr/49s3v/36ubL7
-	39fsPw9u9Cx7LPDjwGqfjy4svKrf7eN+qyS5ND+ck/f05wsvrdm/zu18N2fJsbiMvxOEznQe
-	ebxm0sTvQtlfT6yw2Fojyv5rsqmKi2T1Z82qWWU6NzsjPu991t02P8OoO55VLeilr2/u/Nsz
-	Tr4ym7quJijnmOz7ljez05VYijMSDbWYi4oTAeUAXwt5AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC5WfdrPuoXD7N4NAxYYs569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
-	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
-	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZezevIqt4DhHxc9jj1kaGFvZuxg5OSQETCTezJjCAmKzCahL3LjxkxnEFhEw
-	kzjY+geshlngLpPEgX42EFtYIFViwYG9YDaLgKrE5PsfGEFsXgFTic3tx1ghZspLrN5wAGwO
-	J9Cczc1rwOqFgGq+n/jINoGRawEjwypGkcy8stzEzBxTveLsjMq8zAq95PzcTYzAQF5W+2fi
-	DsYvl90PMQpwMCrx8BpEyaUJsSaWFVfmHmKU4GBWEuFtEZZNE+JNSaysSi3Kjy8qzUktPsQo
-	zcGiJM7rFZ6aICSQnliSmp2aWpBaBJNl4uCUamCc/Fhtrcm3f1vZVc2/T4xN/ttwco908O3X
-	s/MKlm6oWFa/8kS056Tj8ywMnaMWKXediak8u3exUapJaar24dWf32VsdZbxtOH/OkGhLfGG
-	ycEtXxsCnk15tkLc7Xhm+vdt352+b3iy+ojohJj4n8XZ2TumvXqQdzvrd+GsP5Utlb7SXwME
-	vCtjlViKMxINtZiLihMBeTy0bGACAAA=
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1713339263; c=relaxed/simple;
+	bh=fgddyO9hlvexv3nlt/MmFf5mf73RtUyfjBgF9PLA0kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rmvuQ5x/KeALOcZ4lTXeLBbns6HoXbkeu1UsZGQaalHaBf/SqJ+W5XcZ1BExCkzZV8t37q1p4Shq0xXVaHM4epG7XG6VkumeMFJuJ0z7mmLLwBQaMSirlG4zKw78nHuM3Clo6F+Po7zz9j3mvc7E05lBngz4SpLYaKSwlbBTHCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JA/R5b9D; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JA/R5b9D"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ab1ddfded1so418052a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 00:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713339260; x=1713944060; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0K72Tz2ZkclPVJuZv0gvxvgq7QFl2/X172+ji7HZ4mc=;
+        b=JA/R5b9DKPHtNh7eCmyBdgs/Cd1Z5NmKNPCI8QBvuLiXAMm+bIhnxqEN/X76248HE+
+         FpsgCz+eQNHIV48SxxcsKRdaMlxrW5dyAuv9o2j0Swa7R+D+WXhzqa8ccM+jSy9MQLUI
+         JtEcDtzLCx9xbwdBZMAmn/N9g2ynSj/SMo22CoF2l7cfzYBwvTpNwJS5HOaj1Pgy2W6P
+         p9pJj1quHVlFxo0d5/OJwMfLc5JVNPEreVZsHp5tjcbvTm5/0sMohBMY9KVtXiPTZ/CV
+         Zj5FS1BgGyK/f3TE/3gpOKbPrRGQOXpyDiYBiqfUIBVx1tEhb1jQ9qwNTY3QmiGfk9/W
+         gVJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713339260; x=1713944060;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0K72Tz2ZkclPVJuZv0gvxvgq7QFl2/X172+ji7HZ4mc=;
+        b=kaocn3KFRPT3uqZe3MwW990LeGm7eP5po7/wXl+nTEvds02HPhTA0Gk0mXcP5D862o
+         CX23+kKWXzHt3iVRMxBJnFNQJgMDR4NbqgTPw5vQobD2npV7H7Ju4PRMUXogN2xwLWgh
+         HXInQx8dzHhquiqbipwCEed5u463obHN+/G9HXrxDpe7oW5wMWZSXvzQOXy/1Mb2InVK
+         TkR4yXCN72SED4CpVJvyCQV2hwE2/fV7L5q4HBitDVCFO9gVb96LvS0QOe6m7szyIMU4
+         4EIFqF+qRE581+/RFXvSiqxv+ZTxqQXQn7MIAYmc8ChowJ+QEcoYnZNOBaSyNGNvl0tJ
+         WJAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrVab7YnICyoCtBbh3WGV6HKxBWkkF9TgC5DnPYo3nfXeQue0PMuXpQ6muY9NKr6dDBxyPqNS+YqS++mGw16trCrpIPSsvaudHrTCa
+X-Gm-Message-State: AOJu0YwEbv0G7nTDJhoHHalB7LxqbbAYISrkVsBtMW+WHPzxiHJUDkQo
+	yhobe3o5NNazoLtCaOQDtVwZf0sbfbQxpU5H7SKUCcC1pvUNBM9VSA1e2gqhPQ==
+X-Google-Smtp-Source: AGHT+IGIAgoL/zhZk3pa0SMj5BgxpoFiLpBLAx6xC/5k4oCxlIq9Bo6Xf+jtd58QVgNCbJOeHuSBkQ==
+X-Received: by 2002:a17:90b:3c3:b0:2a6:db3:1aa5 with SMTP id go3-20020a17090b03c300b002a60db31aa5mr15282164pjb.18.1713339259756;
+        Wed, 17 Apr 2024 00:34:19 -0700 (PDT)
+Received: from thinkpad ([120.60.54.9])
+        by smtp.gmail.com with ESMTPSA id e3-20020a17090a728300b002a2b28de64esm742387pjg.14.2024.04.17.00.34.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 00:34:19 -0700 (PDT)
+Date: Wed, 17 Apr 2024 13:04:12 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: ipq9574: add PCIe2 nodes
+Message-ID: <20240417073412.GD3894@thinkpad>
+References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
+ <20240415182052.374494-8-mr.nuke.me@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240415182052.374494-8-mr.nuke.me@gmail.com>
 
-This is a preparation for migrc mechanism that requires to avoid
-redundant tlb flushes by manipulating tlb batch's arch data.  To achieve
-that, it's needed to separate the part clearing the tlb batch's arch
-data out of arch_tlbbatch_flush().
+On Mon, Apr 15, 2024 at 01:20:52PM -0500, Alexandru Gagniuc wrote:
+> On ipq9574, there are 4 PCIe controllers. Describe the pcie2 node, and
+> its PHY in devicetree.
+> 
+> Only pcie2 is described, because only hardware using that controller
+> was available for testing.
+> 
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- arch/x86/mm/tlb.c | 2 --
- mm/rmap.c         | 1 +
- 2 files changed, 1 insertion(+), 2 deletions(-)
+You should describe all the instances in DT. Since the unused ones will be
+'disabled', it won't affect anyone.
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 44ac64f3a047..24bce69222cd 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1265,8 +1265,6 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 		local_irq_enable();
- 	}
- 
--	cpumask_clear(&batch->cpumask);
--
- 	put_flush_tlb_info();
- 	put_cpu();
- }
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 2542bfe1a947..d8671d0dc416 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -673,6 +673,7 @@ void try_to_unmap_flush(void)
- 		return;
- 
- 	arch_tlbbatch_flush(&tlb_ubc->arch);
-+	arch_tlbbatch_clear(&tlb_ubc->arch);
- 	tlb_ubc->flush_required = false;
- 	tlb_ubc->writable = false;
- }
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 93 ++++++++++++++++++++++++++-
+>  1 file changed, 92 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> index 7f2e5cbf3bbb..f075e2715300 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> @@ -300,7 +300,7 @@ gcc: clock-controller@1800000 {
+>  				 <0>,
+>  				 <0>,
+>  				 <0>,
+> -				 <0>,
+> +				 <&pcie2_phy>,
+>  				 <0>,
+>  				 <0>;
+>  			#clock-cells = <1>;
+> @@ -745,6 +745,97 @@ frame@b128000 {
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie2_phy: phy@8c000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
+> +			reg = <0x0008c000 0x14f4>;
+> +
+> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
+> +				 <&gcc GCC_PCIE2_AHB_CLK>,
+> +				 <&gcc GCC_PCIE2_PIPE_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>;
+> +			clock-names = "aux",
+> +				      "cfg_ahb",
+> +				      "pipe",
+> +				      "anoc",
+> +				      "snoc";
+> +
+> +			clock-output-names = "pcie_phy2_pipe_clk";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +
+> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
+> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
+> +			reset-names = "phy",
+> +				      "common";
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie2: pcie@20000000 {
+> +			compatible = "qcom,pcie-ipq9574";
+> +			reg = <0x20000000 0xf1d>,
+> +			      <0x20000f20 0xa8>,
+> +			      <0x20001000 0x1000>,
+> +			      <0x00088000 0x4000>,
+> +			      <0x20100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
+> +
+> +			ranges = <0x81000000 0x0 0x20200000 0x20200000 0x0 0x00100000>,	/* I/O */
+
+Please use below range:
+
+<0x01000000 0x0 0x00000000 0x20200000 0x0 0x00100000>
+<0x02000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>
+
+> +				 <0x82000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>;	/* MEM */
+> +
+> +			device_type = "pci";
+> +			linux,pci-domain = <3>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <2>;
+> +			max-link-speed = <3>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie2_phy>;
+> +			phy-names = "pciephy";
+> +
+> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi";
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 0 164
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 0 165
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 0 186
+> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 0 187
+> +					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+
+Use a single line for each INTX entry even if it exceeds 80 column width.
+
+- Mani
+
 -- 
-2.17.1
-
+மணிவண்ணன் சதாசிவம்
