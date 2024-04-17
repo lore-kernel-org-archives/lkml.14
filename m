@@ -1,92 +1,81 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F79B13C668;
-	Wed, 17 Apr 2024 15:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5F713C668
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713369338; cv=none; b=CsDfqB2DZURXIOCyqdWmk3E75ge+y4S3C6z1rRF2B1lvyJi96P4gltwYz8jXE90HyIH+UOtn+puyvIFQvgL74LSjVWkdnDrFTrtk8JXbrhXUxMH9f1maYCDT7RCIhDZa52k7tI/r0cdLE21dIXMfbs7g0gSG2zusDtB58vfmYng=
+	t=1713369377; cv=none; b=J0F8RU913VS8lnd/5bzyx439x5uCl2n8D4YYE65z08IhxYOCABd2X5WSQxhXo6hnJL2CDCzhePAkU/stf64crC3ktnILgH+5e8A6aE9SAT7EkHaSyW5xjCLq7UX5H8+QG139DglsQq8077k7M/k6Vkyt9/RX3WWMDQE7uZdmBkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713369338; c=relaxed/simple;
-	bh=4OPp/HvKGr0IAlp73XYr1aBNWLKAgCI6r/zvAt0TjZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BACU1wttDR+8MYodbAr8SxbE8pzmDdiVXgnlHg+fay1Z8yd1kpBCl10dbOrBdlbuyL/+PCH0z1WiJvDx5Uk9dEXk1Zst8tIxIc4uHwfgGGqNi+/2OzbbvPf/4dqGJ1712vB5ywepaohnDde89zKaXoy0d9Camvuz+JWFF3Inxxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=cKT4+UCt; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1713369377; c=relaxed/simple;
+	bh=1HJA2VdK3RAaj67dxwu5w6hgb+z6kceHLJGcPzv7A0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tq78pz+gI1gSuIzx9Ea2kqFx1I2AKQX5Mz3204Dfhoqru+jnmDVSEj4HPVSv/1/rCfaj/EV5D9O5S4DMHCjHxIjII3YiSdci/PfZVXw8991oQWIXpHiKMVPbm8AXsRo7RYunhFTgyIekD1tCn1ej8JN32IZa5IJUfgfnPHV52jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gABxYm5r; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="cKT4+UCt"
-Received: from [192.168.42.20] (p5de45f24.dip0.t-ipconnect.de [93.228.95.36])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 706332FC0071;
-	Wed, 17 Apr 2024 17:55:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1713369332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tCL3zkxnd3wyi+giBnUtur7ZZh2+WR2bbaZ8Kg5zg9M=;
-	b=cKT4+UCtntW7Qy6XOfDrqZ6/w2+8c0Hx9eCAhxZeKlsa+77oSHsMZzaG7g1+OlIKjlqujD
-	Pw1ceCgBOb+F+9wic6XjTTSNxPBkLCTAlkklYT9eZnqsun8NiW99J/hwdnVmrQZ8fa64ij
-	jCAhgwv3EUSm9gQAq+k124hcoACIiFI=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <d5d5e679-8456-4f78-9569-ffb7f7240373@tuxedocomputers.com>
-Date: Wed, 17 Apr 2024 17:55:32 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gABxYm5r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IOcLkk8PjhwZlvBRGqM0/Q1grY9Me9kV6PKtmwbZ0LM=; b=gABxYm5rrL79az8YN5G3Iu0Rqu
+	yhOW7dgDrNJ4bLn9mSDg0KFRJrbODPpxfTTCYiFFrYYP1GQ1nJHm0RL2FGrZ9pAzkFESEEhY8+7VF
+	4e+gj5aoTsE8fUU9sgz6BZHtYo873F3xj+OckC7gKTcjr8+2bRIPzZpjMGqhKFLhfmeG7a8UvKOG5
+	rMBfMLL6sLRZWFdkCBr4bGtmP7p+Pq4SJfU0YS2lm+Lza1f2ZkGBykVXJ8bZCC9OtvQeP7kZH6kEU
+	bz+DYAfNqXODF5kyXmpGRtBQuIikOE+qhVwLM/7iCJBJMMVlHJ0T1GSsdlvF8tsUMoK3YNZNcWJhy
+	eInJNjrg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rx7db-00000003Eet-3Beb;
+	Wed, 17 Apr 2024 15:55:55 +0000
+Date: Wed, 17 Apr 2024 16:55:55 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Byungchul Park <byungchul@sk.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, akpm@linux-foundation.org,
+	ying.huang@intel.com, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, david@redhat.com,
+	peterz@infradead.org, luto@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	rjgolo@gmail.com
+Subject: Re: [PATCH v9 7/8] mm: add folio_put_mgen() to deliver migrc's
+ generation number to pcp or buddy
+Message-ID: <Zh_xC76oTjrgutl_@casper.infradead.org>
+References: <20240417071847.29584-1-byungchul@sk.com>
+ <20240417071847.29584-8-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI: resource: Do IRQ override on TongFang GXxHRXx and
- GMxHGxx
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: Christoffer Sandberg <cs@tuxedo.de>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240417103509.28657-1-wse@tuxedocomputers.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20240417103509.28657-1-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417071847.29584-8-byungchul@sk.com>
 
-Sorry noticed and issue with this, please don't apply, I will send a v2.
+On Wed, Apr 17, 2024 at 04:18:46PM +0900, Byungchul Park wrote:
+> Introduced a new API, folio_put_mgen(), to deliver migrc's generation
+> number to pcp or buddy that will be used by migrc mechanism to track
+> need of tlb flush for each page residing in pcp or buddy.
+> 
+> migrc makes decision whether tlb flush is needed or not, based on a
+> generation number stored in the interesting page and the global
+> generation number, for that tlb flush required has been completed.
+> 
+> For now, the delivery works only for the following call path but not for
+> e.g. free_the_page(), __free_pages_ok() and free_unref_page_list() that
+> are not for releasing source folios during migration:
+> 
+>    folio_put_mgen()
+>       __folio_put_mgen()
+> 	__folio_put_small()
+> 	   free_unref_page()
+> 	      free_unref_page_commit()
+> 	      free_one_page()
+> 	         __free_one_page()
 
-Am 17.04.24 um 12:35 schrieb Werner Sembach:
-> From: Christoffer Sandberg <cs@tuxedo.de>
->
-> Listed devices needs the override for keyboard to work.
->
-> Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Cc: stable@vger.kernel.org
-> ---
->   drivers/acpi/resource.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-> index 59423fe9d0f29..deeb4e182687a 100644
-> --- a/drivers/acpi/resource.c
-> +++ b/drivers/acpi/resource.c
-> @@ -558,6 +558,18 @@ static const struct dmi_system_id irq1_edge_low_force_override[] = {
->   			DMI_MATCH(DMI_BOARD_NAME, "GM6XGxX"),
->   		},
->   	},
-> +	{
-> +		.ident = "TongFang GXxHRXx/TUXEDO InfinityBook Pro Gen9 AMD",
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "GXxHRXx"),
-> +		},
-> +	},
-> +	{
-> +		.ident = "TongFang GMxHGxx/TUXEDO Stellaris Slim Gen1 AMD",
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "GMxHGxx"),
-> +		},
-> +	},
->   	{
->   		/* MAINGEAR Vector Pro 2 15 */
->   		.matches = {
+You're going to want to rebase this on mm-unstable.  __folio_put_small()
+went away in "mm: combine __folio_put_small, __folio_put_large and
+__folio_put"
+
