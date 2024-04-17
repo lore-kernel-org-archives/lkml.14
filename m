@@ -1,94 +1,137 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44A513A265;
-	Wed, 17 Apr 2024 15:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59C1411E8;
+	Wed, 17 Apr 2024 15:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713367575; cv=none; b=llgTF6/CY+dteC+LrZry//LfOgIbWtONsj9tiHLqsDgMb3ufNWtXB48jPcYG9bVs6PpkjdQ+97G8aGacVZIodFRQ43i9GTtmDEpUc5L850G2OqANp2cypGOjb4PD78msiy6b8Oh2DmDabrPNXNcr0FipVkQll4jcVO1nx/+rOmA=
+	t=1713367634; cv=none; b=nl/OihOlyqst5VB3kTcfowKaWkD4BHBMuqcA3RCkgFDbC9Bn3FMOPIxeLtU9IVxtL39AVBIFFd9ouK74eZdeBR26NDtf43VtOPItAOCEN67/pN8kH7mhDTmVfOViNg+CG3OXidJ3i521aBsCQlaKHqJI8GgnStgY2xQTioixN0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713367575; c=relaxed/simple;
-	bh=66HHTs/2NdCUJhw/VTXrtHbgKW6feJo+E59Bk3vfng4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fxg1EcdPXfM96wTVVPSHYx50876ORcv7Ii9UEZ7eWtsdoFgX9OEHJ1s7D2LhO6Fsg0qCIRM+D4LIjUPltgci/U7VsE65Se/XA3WacsCb5TlKcI8lE8PUZNrYGsrKjNz3EsMAD3VbaCiVJc/z2sp3dz1yCI3H9WxylKPuJPyLfLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJqty7dO; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713367634; c=relaxed/simple;
+	bh=dg5WTB8j8TY3F8bg0Hm8Zm5lJvymLzPO2JHZ5Byw+sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTT/KaUX7xWGMn+V012x5ZVdl1cKIZhABg4J6WWfe3hd3EPJgJf7FyGPbjRSFvMUYDA8W0LqS+HonLTFHohcsNks4kQ/lM2aAMg81ScC1YQwStrqcmK1NR554Gjz5VjD6Aj/arM275kXMUjAuRY4/5/AEDVqkJM51TjqNHzqJTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3A5zOfQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJqty7dO"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dcc4076c13so715639a12.0;
-        Wed, 17 Apr 2024 08:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713367574; x=1713972374; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=66HHTs/2NdCUJhw/VTXrtHbgKW6feJo+E59Bk3vfng4=;
-        b=KJqty7dOuK6gfwV4RuK/L2iKQLS2Oob4rYvSRb5ovTrxKiK6EKjup5mjpjRMrFxeGA
-         0kKjDWgJtlOmo710B3T9udrc+WljSJtkDuxQhgEE8RINc7HBSJIYrsfyAreW9toa9/rK
-         a9RwGIqhqR8l0w0TijKEwLvUWIjNi1taod97Lnh4BDllM/Kn4FouKPWx/sPY9MxJMpSE
-         OJjxj0K4hezztm4lQgzK2tKfUMhjTMuhiyLb/sSqlXGo3n7ilgsrUnZ0mlhQ4P9q0A7e
-         879rwffmXj6UV6tG1s4kYYfYLzUzqRa44Wy2bHAdxVLFrqwKHsjxYyWk5yBlTwpGqlEI
-         kvAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713367574; x=1713972374;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=66HHTs/2NdCUJhw/VTXrtHbgKW6feJo+E59Bk3vfng4=;
-        b=D7k86VzsB5uO+sHXQxUfRyyhF5gN3Qb6AyPKIlVhMzDHmKG1w+ArvM/FZkOcgp79yM
-         N74k/vn5b8jnhbbXDoXy6qkYl7/OU8uL6PueYkMWFrTOITAtcgOIWKgMBXLCtk1Feh0l
-         QyFdnqTM7wfy5PLGC7g5THip+gXEfNz8fv0obbvc6WB92VC99Rb8aG+NeRA4IO4INq7V
-         yg5iX7qrC7hsnfGJtDzIf/6NNmn09tioUCYH85VMjNVOb1FGrIGFSAaBQlbbDa1/ABlR
-         FDeuZooaX8Ed9bp1HWkO21zQOKlHaob4oalmMeAfXNg9v6bxQLgkbOYZR2AndmKIDhRJ
-         gZsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXl6thyoBX6NQllCYUPhSXmcQ7E/79+2BP7Io92hKsWtwkY7pN1Tu1UhjBaSjjB39IgnnQX7GjpdY3UBbuHb3N0OcUaQx2RyxcA2ZbIumArxbUlmutLMHVfUXPfueN3Q+IQTzx7hKZetCkIx7W2h1cU31kaoDuMz+iuh1g+Xdba
-X-Gm-Message-State: AOJu0YyFFnWTMsRBemnmA+lgDOdcrJu+GyYVCRZDNbR/o/gz8ZmnijmW
-	b9/bTQEPZLuf3jw5JfyeFimlcvhIvZixUAn2TiIHxaMSFZEvI2515QG7X1zZBPJp/Un+V1lv4wI
-	YX6djlHmf0i7UmBcil4CdApmLrJMoSw==
-X-Google-Smtp-Source: AGHT+IF4i0SrzyxsnPtLYiNicbYtOM4Q2ZIHhP8ToGBtaB2RlbVmAYmZGYXvLP2KLwY5nRo6rW5De+g0EbZ3thBOyqo=
-X-Received: by 2002:a17:90a:5289:b0:29b:c31:1fe1 with SMTP id
- w9-20020a17090a528900b0029b0c311fe1mr7822149pjh.10.1713367573788; Wed, 17 Apr
- 2024 08:26:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3A5zOfQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC91EC072AA;
+	Wed, 17 Apr 2024 15:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713367633;
+	bh=dg5WTB8j8TY3F8bg0Hm8Zm5lJvymLzPO2JHZ5Byw+sY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p3A5zOfQz3bv0stRAQ3CvC2UK+3R2lF57xEGF/cnQeNosW6hBZFI7PFMT8BOAE24s
+	 nVzdYex+MnlZDKf/Bjzn5UdCo1GxU3U8VcZ862jPQ1Fke+JMhCtWD3hlCd/LvUDr/D
+	 OSNdXLu7vsRoYLADmZUrAsIVzboJow/OEjo+bPCg/nBztF/IFaeTDDr0sQ0EKaH43k
+	 9z7ajxWu8uG8UTF/WNdW9bh82x4htyz/nsjll7BicYz3+BL4jED+t6WOBduwjcVlaR
+	 MvXZqaRMaNrvDD/68mBAVO/7Kh5AFXlrXCtriTd9DItXfV07b9EGjH6bgRjhaDQYHg
+	 amApZglwgxvfA==
+Date: Wed, 17 Apr 2024 08:27:13 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: alexjlzheng@gmail.com
+Cc: david@fromorbit.com, chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: Re: [PATCH v3 RESEND] xfs: remove redundant batch variables for
+ serialization
+Message-ID: <20240417152713.GX11948@frogsfrogsfrogs>
+References: <20240417120734.853960-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329133458.323041-2-valla.francesco@gmail.com>
- <20240329133458.323041-3-valla.francesco@gmail.com> <CAMZ6RqKLaYb+8EaeoFMHofcaBT5G2-qdqSb4do73xrgMvWMZaA@mail.gmail.com>
- <Zh6m3jkRovDutKnZ@fedora>
-In-Reply-To: <Zh6m3jkRovDutKnZ@fedora>
-From: Vincent Mailhol <vincent.mailhol@gmail.com>
-Date: Thu, 18 Apr 2024 00:26:01 +0900
-Message-ID: <CAMZ6RqJF7P1rGMwejmF_FM25Xtjo+R+zEGkkWnh3=hiShB_piw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] Documentation: networking: document ISO 15765-2:2016
-To: Francesco Valla <valla.francesco@gmail.com>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, fabio@redaril.me
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417120734.853960-1-alexjlzheng@tencent.com>
 
-On Wed. 17 Apr. 2024 at 01:27, Francesco Valla
-<valla.francesco@gmail.com> wrote:
-> Hi Vincent,
->
-> thank you for the review!
+On Wed, Apr 17, 2024 at 08:07:35PM +0800, alexjlzheng@gmail.com wrote:
+> From: Jinliang Zheng <alexjlzheng@tencent.com>
+> 
+> Historically, when generic percpu counters were introduced in xfs for
+> free block counters by commit 0d485ada404b ("xfs: use generic percpu
+> counters for free block counter"), the counters used a custom batch
+> size. In xfs_mod_freecounter(), originally named xfs_mod_fdblocks(),
+> this patch attempted to serialize the program using a smaller batch size
+> as parameter to the addition function as the counter approaches 0.
+> 
+> Commit 8c1903d3081a ("xfs: inode and free block counters need to use
+> __percpu_counter_compare") pointed out the error in commit 0d485ada404b
+> ("xfs: use generic percpu counters for free block counter") mentioned
+> above and said that "Because the counters use a custom batch size, the
+> comparison functions need to be aware of that batch size otherwise the
+> comparison does not work correctly". Then percpu_counter_compare() was
+> replaced with __percpu_counter_compare() with parameter
+> XFS_FDBLOCKS_BATCH.
+> 
+> After commit 8c1903d3081a ("xfs: inode and free block counters need to
+> use __percpu_counter_compare"), the existence of the batch variable is
+> no longer necessary, so this patch is proposed to simplify the code by
+> removing it.
+> 
+> Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> ---
+> Changelog:
+> 
+> v3: Resend for the second time 
+> 
+> v2: https://lore.kernel.org/linux-xfs/20230918043344.890817-1-alexjlzheng@tencent.com/
+> 
+> v1: https://lore.kernel.org/linux-xfs/20230908235713.GP28202@frogsfrogsfrogs/T/#t
 
-You are welcome.
+...you still haven't answered my question from V1: What problem are you
+solving with this patch?
 
-> I'll omit from this reply the issue about the standard to be referenced
-> and the CAN-CC naming (discussed in another thread also with Oliver).
->
-> About the typos and formatting observations: rst is not my native
-> language (I'm more on the Markdown side), I'll apply all the corrections
-> you suggested. Thank you.
->
-> Some other considerations follow.
+--D
 
-Aside from the 2024 year bump on which I replied separately, I
-acknowledge all of these. Thanks.
-
-Yours sincerely,
-Vincent Mailhol
+> ---
+>  fs/xfs/xfs_mount.c | 17 +----------------
+>  1 file changed, 1 insertion(+), 16 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index aed5be5508fe..8e47a3040893 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -1144,7 +1144,6 @@ xfs_mod_freecounter(
+>  	int64_t			lcounter;
+>  	long long		res_used;
+>  	uint64_t		set_aside = 0;
+> -	s32			batch;
+>  	bool			has_resv_pool;
+>  
+>  	ASSERT(counter == &mp->m_fdblocks || counter == &mp->m_frextents);
+> @@ -1177,20 +1176,6 @@ xfs_mod_freecounter(
+>  		return 0;
+>  	}
+>  
+> -	/*
+> -	 * Taking blocks away, need to be more accurate the closer we
+> -	 * are to zero.
+> -	 *
+> -	 * If the counter has a value of less than 2 * max batch size,
+> -	 * then make everything serialise as we are real close to
+> -	 * ENOSPC.
+> -	 */
+> -	if (__percpu_counter_compare(counter, 2 * XFS_FDBLOCKS_BATCH,
+> -				     XFS_FDBLOCKS_BATCH) < 0)
+> -		batch = 1;
+> -	else
+> -		batch = XFS_FDBLOCKS_BATCH;
+> -
+>  	/*
+>  	 * Set aside allocbt blocks because these blocks are tracked as free
+>  	 * space but not available for allocation. Technically this means that a
+> @@ -1204,7 +1189,7 @@ xfs_mod_freecounter(
+>  	 */
+>  	if (has_resv_pool)
+>  		set_aside = xfs_fdblocks_unavailable(mp);
+> -	percpu_counter_add_batch(counter, delta, batch);
+> +	percpu_counter_add_batch(counter, delta, XFS_FDBLOCKS_BATCH);
+>  	if (__percpu_counter_compare(counter, set_aside,
+>  				     XFS_FDBLOCKS_BATCH) >= 0) {
+>  		/* we had space! */
+> -- 
+> 2.39.3
+> 
+> 
