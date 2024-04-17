@@ -1,183 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92D122324;
-	Wed, 17 Apr 2024 19:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4821D36AE4
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713381288; cv=none; b=tj2glhTmyvVrbW6qcnABoT7ZXWrebhADf0SzELkEkv5DMtz2rbYBNriW4RkMGvViZGYgWFqL1p9fXTzatamj/jhJFaTVnoD4Lz1nkLermjseGnExz515oGeGXBlx6r8al0eOQl1ok7o43ntCbqTu3lEf/lHdAz3ZqKiYhWRz1Iw=
+	t=1713381296; cv=none; b=qDOZX/hIf92HOLqtTRCLU5PZSaTsynF9X0HQmNV+wEV44MyRTr+fZ7aKeXyQCv2JYvoYVfjJjzX3rFHqsaCdYv43uMrnjvVuGTEdiXwl7dFi1uB+0Y385e6JRWy/g+Mgqkv+e0wNXHlb0YcFuqOQvNXxxhdond2C2/KuzyejfEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713381288; c=relaxed/simple;
-	bh=a/flBp7hYPf0Kun3Ragy74rejtcqB40x2SVCVKa4trY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyZd9kQ8oBHnx1lcIi1na2duMvcXIE3LJNbkrZc/kohnRCS7uXLeD2SorSOKgGc2ybzVkAZVD6zMryi6nOS5xKprKHSQhcyUwUc45o1k9IOXH4JtenN5moXNbUo7r4/5mpN02iQ28k6A1rxJS5Jft29RHEDHh5ELmo27/j5r3e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2CJEN5G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713381296; c=relaxed/simple;
+	bh=IKNpru5OPVki2SHKGA6nEmwCLM3XR3Z/O47OScdmKY0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iqc2gDZt7Fd/LrU/2dhS237tQKu0nuFn2scTnP46AsMJ7V8GqMIFkQZkvqJ4KR/29bvIVyCwVmZLC/kRE0r/FhsqAi10rzyE+LcIaTKoAeXfB23QYNtwxxmn4aeJUaT4N2VP5kLpaKFcXPoW8goLgsGfkhCNv0bxPanR8YPbCOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vyAyEgWh; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2CJEN5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14948C072AA;
-	Wed, 17 Apr 2024 19:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713381287;
-	bh=a/flBp7hYPf0Kun3Ragy74rejtcqB40x2SVCVKa4trY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2CJEN5G5R5VAfeGdC+EDkUa4TYHpR24KnWWRGW+FFjvGYB9MU/zKdhXpQ+vbBRdl
-	 nrGYFWA6qWS0wxkzGyxcLDi7BG86Qf4yhrYpVzobvGKrL6CChXUr62i+nKEZ7itVJr
-	 xC3eSlZF47jp6VgvaGGpk5TIJrS5ps2M+31qb83XZmCSv+ozdUCMKAxBJJNFu+VYXU
-	 Pic75JU77c/EnWnxYp246/xeWh/Heqc7dpcW+DG8pNT2bbQiifPJu1PET4Q1+FHcZi
-	 yOOrKfxsINGG+tiAQ7KyJvHIHCIC3IUYobsslx1DY2WNVVILO7Sm+XF++37BWarfl4
-	 sgEZilsJx+bQQ==
-Date: Wed, 17 Apr 2024 14:14:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: djakov@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com, lgirdwood@gmail.com,
-	broonie@kernel.org, keescook@chromium.org, gustavoars@kernel.org,
-	henryc.chen@mediatek.com, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com,
-	wenst@chromium.org, amergnat@baylibre.com
-Subject: Re: [PATCH v2 2/7] dt-bindings: interconnect: Add MediaTek EMI
- Interconnect bindings
-Message-ID: <20240417191445.GB3101736-robh@kernel.org>
-References: <20240417091442.170505-1-angelogioacchino.delregno@collabora.com>
- <20240417091442.170505-3-angelogioacchino.delregno@collabora.com>
- <20240417145402.GA2355631-robh@kernel.org>
- <207eb8d7-1a40-4114-a84b-26616dc39fcc@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyAyEgWh"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5e5022b34faso38081a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 12:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713381294; x=1713986094; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PafBYw7ONOcmBuCbUCHZmMlU0Q7ADjoXpXWusviXFGE=;
+        b=vyAyEgWh/9pt/YgiIDwf54idaHt1S1hYtWOkX823HBgyBMb1a2IyEfcQp/hISju0mg
+         TgYwngD/KYgyUpvUIm7adsyg2GdCPaSTpI2VO9KsVYuorsnumqbRP0It336JE7pG6ASA
+         idDBDDBhUdKOOSJGpJGzDN7juQW01qZ9ETtMSfHuJFMf/ri29ypM8CBcN6v6Nl+HgGzR
+         kdWxU/5X0sZIMOMPit9uYCyAC1MhIPCCum1AdLlhsLyhqCLSIe/7vYX2nW7MFTCSX0lS
+         gRfLCL7xRi0cBEBrgQUiL+eJGIIaQm8xWehNtVD1kBzOyqdyVhcwCyXyznsvVqJxXMAs
+         7lyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713381294; x=1713986094;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PafBYw7ONOcmBuCbUCHZmMlU0Q7ADjoXpXWusviXFGE=;
+        b=Pm7RrARFH3Vz3WlDfc3QA24Vg3fd2z0y3lSff+lhyRD2S62ZlRn1KqzAZ7Cxhqwu2E
+         r2Qcs3kNFkT8jNIhIxLHbfLfabPlFyvs51DVsjRAvy/qgXd9kXNkPq1KGAfVYNMJ32PU
+         4KB6OwVwDKT7qdO/MlL3gZIIQYxaKCKLhCdnGa3a1zT9jGpXUn6j/AdJaaHJZx8vUHgx
+         hogFnappGDbSoB3TFKoSziGAAnuRqZH7wnq3iq1YgM9U8b/6cjuYKm3QbAGEbzH+YHYU
+         QkvR7rczWtghvVjmT24Ue49weWAdEFia3HJGUlxWwib4QIBaErjHmn066qxo8NKzZ1U3
+         DECA==
+X-Gm-Message-State: AOJu0YyuRShQc9lLvXpAYjCfUFhAgDC6d+mTN0Yi00rtCULBOl5q1JGl
+	jsfznNEN7NSRENOdpdWwtrSxfSx+XNaaMAEX6zRx31Vcd3DhvsNbFmh+ylj7rniUlb36aEC/Cwo
+	OAXkZSbRmOQ==
+X-Google-Smtp-Source: AGHT+IGtRoeqa9/s3PLrLUxy8CjokWV6b4MpFaVUxIoXCMqg3uRU+jsHFhwZ6hkIBayrQyka8srgIHmr/EALcQ==
+X-Received: from xllamas.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5070])
+ (user=cmllamas job=sendgmr) by 2002:a17:902:fa05:b0:1e7:b7c8:f79e with SMTP
+ id la5-20020a170902fa0500b001e7b7c8f79emr6195plb.5.1713381294383; Wed, 17 Apr
+ 2024 12:14:54 -0700 (PDT)
+Date: Wed, 17 Apr 2024 19:13:41 +0000
+In-Reply-To: <20240417191418.1341988-1-cmllamas@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <207eb8d7-1a40-4114-a84b-26616dc39fcc@collabora.com>
+Mime-Version: 1.0
+References: <20240417191418.1341988-1-cmllamas@google.com>
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Message-ID: <20240417191418.1341988-2-cmllamas@google.com>
+Subject: [PATCH 1/4] binder: introduce BINDER_SET_PROC_FLAGS ioctl
+From: Carlos Llamas <cmllamas@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Alice Ryhl <aliceryhl@google.com>
+Cc: linux-kernel@vger.kernel.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 05:32:54PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 17/04/24 16:54, Rob Herring ha scritto:
-> > On Wed, Apr 17, 2024 at 11:14:37AM +0200, AngeloGioacchino Del Regno wrote:
-> > > Add bindings for the MediaTek External Memory Interface Interconnect,
-> > > which providers support system bandwidth requirements through Dynamic
-> > > Voltage Frequency Scaling Resource Collector (DVFSRC) hardware.
-> > > 
-> > > This adds bindings for MediaTek MT8183 and MT8195 SoCs.
-> > > 
-> > > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > > ---
-> > >   .../interconnect/mediatek,mt8183-emi.yaml     | 76 +++++++++++++++++++
-> > >   .../interconnect/mediatek,mt8183.h            | 23 ++++++
-> > >   .../interconnect/mediatek,mt8195.h            | 44 +++++++++++
-> > >   3 files changed, 143 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
-> > >   create mode 100644 include/dt-bindings/interconnect/mediatek,mt8183.h
-> > >   create mode 100644 include/dt-bindings/interconnect/mediatek,mt8195.h
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml b/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
-> > > new file mode 100644
-> > > index 000000000000..3ad60fd21f83
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interconnect/mediatek,mt8183-emi.yaml
-> > > @@ -0,0 +1,76 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/interconnect/mediatek,mt8183-emi.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: MediaTek External Memory Interface (EMI) Interconnect
-> > > +
-> > > +maintainers:
-> > > +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > > +
-> > > +description: |
-> > > +  EMI interconnect providers support system bandwidth requirements through
-> > > +  Dynamic Voltage Frequency Scaling Resource Collector (DVFSRC) hardware.
-> > > +  The provider is able to communicate with the DVFSRC through Secure Monitor
-> > > +  Call (SMC).
-> > > +
-> > > +             ICC provider         ICC Nodes
-> > > +                              ----          ----
-> > > +             _________       |CPU |   |--- |VPU |
-> > > +    _____   |         |-----  ----    |     ----
-> > > +   |     |->|  DRAM   |       ----    |     ----
-> > > +   |DRAM |->|scheduler|----- |GPU |   |--- |DISP|
-> > > +   |     |->|  (EMI)  |       ----    |     ----
-> > > +   |_____|->|_________|---.   -----   |     ----
-> > > +               /|\         `-|MMSYS|--|--- |VDEC|
-> > > +                |             -----   |     ----
-> > > +                |                     |     ----
-> > > +                | change DRAM freq    |--- |VENC|
-> > > +             --------                 |     ----
-> > > +    SMC --> | DVFSRC |                |     ----
-> > > +             --------                 |--- |IMG |
-> > > +                                      |     ----
-> > > +                                      |     ----
-> > > +                                      |--- |CAM |
-> > > +                                            ----
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - mediatek,mt8183-emi
-> > > +      - mediatek,mt8195-emi
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  '#interconnect-cells':
-> > > +    const: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - '#interconnect-cells'
-> > > +
-> > > +unevaluatedProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interconnect/mediatek,mt8195.h>
-> > > +
-> > > +    soc {
-> > > +        #address-cells = <2>;
-> > > +        #size-cells = <2>;
-> > > +
-> > > +        system-controller@10012000 {
-> > > +            compatible = "mediatek,mt8195-dvfsrc";
-> > > +            reg = <0 0x10012000 0 0x1000>;
-> > > +            #address-cells = <1>;
-> > > +            #size-cells = <0>;
-> > > +
-> > > +            emi_icc: interconnect@1 {
-> > > +                compatible = "mediatek,mt8195-emi";
-> > > +                reg = <1>;
-> > > +                #interconnect-cells = <1>;
-> > 
-> > 
-> > There's not really any need for this node. Just put #interconnect-cells
-> > in the parent.
-> > 
-> 
-> Actually, I modeled it to be a subnode of the DVFSRC for multiple reasons:
-> 
-> 1. Some SoCs have more than one interconnect on the DVFSRC (two different kinds
->    of EMI interconnect, and then also a SMI interconnect); and
-> 
-> 2. Some boards will want to not enable the interconnect driver because some of
->    those are not battery powered (so they just keep the knobs at full thrust
->    from the bootloader and never care scaling busses); and
-> 
-> 3. Some DVFSRC interconnect features may depend on firmware (but I'm not
->    sure which ones and which SoCs, as there are lots of SMI/EMI ICC things that
->    are not implemented yet with this series).
-> 
-> The alternative would've been to add a property to enable, or disable, the SMI ICC
-> (not present in this series), and/or one, or the other kind of EMI ICC (this series
-> implements only the simpler EMI ICC, and I keep saying "the other" because I
-> currently don't remember the name).... which is really ugly.
-> 
-> Ideas? :-)
+This new ioctl enables userspace to control the individual behavior of
+the 'struct binder_proc' instance via flags. The driver validates and
+returns the supported subset. Some existing ioctls are migrated to use
+these flags in subsequent commits.
 
-Just provide that reasoning in the commit msg.
+Suggested-by: Arve Hj=C3=B8nnev=C3=A5g <arve@android.com>
+Signed-off-by: Carlos Llamas <cmllamas@google.com>
+---
+ drivers/android/binder.c            | 25 +++++++++++++++++++++++++
+ drivers/android/binder_internal.h   |  4 +++-
+ include/uapi/linux/android/binder.h |  6 ++++++
+ 3 files changed, 34 insertions(+), 1 deletion(-)
 
-Rob
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index bad28cf42010..e0d193bfb237 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -5334,6 +5334,26 @@ static int binder_ioctl_get_extended_error(struct bi=
+nder_thread *thread,
+ 	return 0;
+ }
+=20
++static int binder_ioctl_set_proc_flags(struct binder_proc *proc,
++				       u32 __user *user)
++{
++	u32 flags;
++
++	if (get_user(flags, user))
++		return -EFAULT;
++
++	binder_inner_proc_lock(proc);
++	flags &=3D PF_SUPPORTED_FLAGS_MASK;
++	proc->flags =3D flags;
++	binder_inner_proc_unlock(proc);
++
++	/* confirm supported flags with user */
++	if (put_user(flags, user))
++		return -EFAULT;
++
++	return 0;
++}
++
+ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned lon=
+g arg)
+ {
+ 	int ret;
+@@ -5542,6 +5562,11 @@ static long binder_ioctl(struct file *filp, unsigned=
+ int cmd, unsigned long arg)
+ 		if (ret < 0)
+ 			goto err;
+ 		break;
++	case BINDER_SET_PROC_FLAGS:
++		ret =3D binder_ioctl_set_proc_flags(proc, ubuf);
++		if (ret < 0)
++			goto err;
++		break;
+ 	default:
+ 		ret =3D -EINVAL;
+ 		goto err;
+diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_int=
+ernal.h
+index 7270d4d22207..a22e64cddbae 100644
+--- a/drivers/android/binder_internal.h
++++ b/drivers/android/binder_internal.h
+@@ -346,6 +346,8 @@ struct binder_ref {
+  * @cred                  struct cred associated with the `struct file`
+  *                        in binder_open()
+  *                        (invariant after initialized)
++ * @flags:                enum proc_flags set via BINDER_SET_PROC_FLAGS.
++ *                        (protected by @inner_lock)
+  * @deferred_work_node:   element for binder_deferred_list
+  *                        (protected by binder_deferred_lock)
+  * @deferred_work:        bitmap of deferred work to perform
+@@ -409,6 +411,7 @@ struct binder_proc {
+ 	int pid;
+ 	struct task_struct *tsk;
+ 	const struct cred *cred;
++	u32 flags;
+ 	struct hlist_node deferred_work_node;
+ 	int deferred_work;
+ 	int outstanding_txns;
+@@ -417,7 +420,6 @@ struct binder_proc {
+ 	bool sync_recv;
+ 	bool async_recv;
+ 	wait_queue_head_t freeze_wait;
+-
+ 	struct list_head todo;
+ 	struct binder_stats stats;
+ 	struct list_head delivered_death;
+diff --git a/include/uapi/linux/android/binder.h b/include/uapi/linux/andro=
+id/binder.h
+index d44a8118b2ed..281a8e2e734e 100644
+--- a/include/uapi/linux/android/binder.h
++++ b/include/uapi/linux/android/binder.h
+@@ -251,6 +251,11 @@ struct binder_extended_error {
+ 	__s32	param;
+ };
+=20
++/* Used with BINDER_SET_PROC_FLAGS ioctl */
++enum proc_flags {
++	PF_SUPPORTED_FLAGS_MASK,
++};
++
+ enum {
+ 	BINDER_WRITE_READ		=3D _IOWR('b', 1, struct binder_write_read),
+ 	BINDER_SET_IDLE_TIMEOUT		=3D _IOW('b', 3, __s64),
+@@ -266,6 +271,7 @@ enum {
+ 	BINDER_GET_FROZEN_INFO		=3D _IOWR('b', 15, struct binder_frozen_status_in=
+fo),
+ 	BINDER_ENABLE_ONEWAY_SPAM_DETECTION	=3D _IOW('b', 16, __u32),
+ 	BINDER_GET_EXTENDED_ERROR	=3D _IOWR('b', 17, struct binder_extended_error=
+),
++	BINDER_SET_PROC_FLAGS		=3D _IOWR('b', 18, __u32),
+ };
+=20
+ /*
+--=20
+2.44.0.683.g7961c838ac-goog
+
