@@ -1,235 +1,109 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92357F483;
-	Wed, 17 Apr 2024 08:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB46A02E;
+	Wed, 17 Apr 2024 08:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341608; cv=none; b=K7r/BsixFDO5rs3Z1khJqwwd3IcwDenI3YJDezxRtcBYexfmcv366H0bEe56ZEKbypwJ+kX3OvcHgVUDH6I3PVjZZYclPxOZQZDBOCPXIbfBQ/p1OPVAJpF9HnXkTKxMmKMi3oQi4QN51VonUoG37SaPi9eYn0XgphJhq8FYPMw=
+	t=1713341610; cv=none; b=nLyGyEcBeejDwAA9JnrfUdtxwYMBwH6Tlico642CGjxqNPMxFWI40VHZ6Q/6pvBJActlohk5XP8wipwPDB/APjKQewMlkLo9AbMyvmhCrcBCq/xc+zMxdwy60rHE9gUAVAXijPs7dCBo6U1sNAwXv3cf8tVPQcgS0WjaNUhk7Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341608; c=relaxed/simple;
-	bh=aeQsoJiA5Zhl5sE46uiqvd0MCMMuDd5EP5m4v77YYUM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uPDyXHTfwiyAqnfDsGzrbGzelsovBalFvK7vFQsueFiqLVTo4nD4aHR6X1zdCPa/VefU5UtYAySVLjDp4WF7+XNXp6CmSp7PAp22rgOqIyWNcymtaJtX90Tca2/ARb1f3P7jGnX+YFRMc233fDxOOmb0R8/Lvc/cSfvR10LqxVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b=EGBC7aY4; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1713341610; c=relaxed/simple;
+	bh=Fx5PXmOnt+cu8UKI/4+7CAwyifLLmMRP4sxlDsBLIqg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=at2xlLvD0BCCd+dt2x0OPeleO4bzXd5c6kmxHaYLmwsnews6M4X5ZQZso1+wb2eBLVQbu9mcge/QiEVTwgXVqPBwUvK5E/UbrF++UAVU5nsX7sk0LUtTCcMEHok8Ri9WMLFqe4P7fLkSYw6OpVzxAR9+c10FG/JD49ZY8DfHXSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W6JgFA7d; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b="EGBC7aY4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.es; i=@amazon.es; q=dns/txt; s=amazon201209;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W6JgFA7d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1713341608; x=1744877608;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Is0SqiPdgnSdKxAQ4CAcD1EdGItBNL2qVHfHGxen8hA=;
-  b=EGBC7aY43D0n2GW1/jtDYLHyPryFl2vnVowuRZbySgYgBAPwUJ+UyEnx
-   HtSDZ+4fkf+htkA/nJ6s4uR2QbGHV0rUz04igBuGMKukjTWm4t29z3ij8
-   Sm8tN9x+sQYVf3ZqJGiI2Z1SfhA1iVpTaP8pFyEwz6oyVSr30/MUgs4Va
-   w=;
-X-IronPort-AV: E=Sophos;i="6.07,208,1708387200"; 
-   d="scan'208";a="390310006"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 08:13:24 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.10.100:7038]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.40.183:2525] with esmtp (Farcaster)
- id e5e6d236-ee61-447e-9e25-fffe8bdfcd1f; Wed, 17 Apr 2024 08:13:22 +0000 (UTC)
-X-Farcaster-Flow-ID: e5e6d236-ee61-447e-9e25-fffe8bdfcd1f
-Received: from EX19D037EUB003.ant.amazon.com (10.252.61.119) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 17 Apr 2024 08:13:22 +0000
-Received: from f4d4887fdcfb.ant.amazon.com (10.1.212.48) by
- EX19D037EUB003.ant.amazon.com (10.252.61.119) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 17 Apr 2024 08:13:17 +0000
-From: Babis Chalios <bchalios@amazon.es>
-To: <tytso@mit.edu>, <Jason@zx2c4.com>, <olivia@selenic.com>,
-	<herbert@gondor.apana.org.au>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <sudanl@amazon.com>, <bchalios@amazon.es>, <graf@amazon.de>,
-	<xmarcalx@amazon.co.uk>, <dwmw@amazon.co.uk>
-Subject: [PATCH v5 2/5] virt: vmgenid: change implementation to use a platform driver
-Date: Wed, 17 Apr 2024 10:12:09 +0200
-Message-ID: <20240417081212.99657-3-bchalios@amazon.es>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
-In-Reply-To: <20240417081212.99657-1-bchalios@amazon.es>
-References: <20240417081212.99657-1-bchalios@amazon.es>
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Fx5PXmOnt+cu8UKI/4+7CAwyifLLmMRP4sxlDsBLIqg=;
+  b=W6JgFA7drF0o6KTbkn2f3q8ilIHT3v/MK8ckABXMniBsVUYVO4n3F/0O
+   5sqjJee8PWiqzw+9QVwpT0nW/yCNau0YROe0N+jsWdpSgaJDarEmm9UhW
+   ujTjn6DpunL+g21kB4QUyKTOwVtdxrT4bCrddAL2pS3WmD82yB4DlInBD
+   hmdNXcduqGElOhF1FXQGVbAU8SW/GPJaAA3pApX6hYN77uBgaEO1o42pO
+   0q5/Nk+6Fsu3cjuqGaqBvBE60QGl+7AQhDMPiR2c/anHt4Q4G84cO5WYd
+   pEvVV98/bKROfLZaFhnCJoIhujC5cGGoIDRwQAmHmmBpnzYvU1EhFRAwR
+   w==;
+X-CSE-ConnectionGUID: LkPksYK3SDuravLB6emjNw==
+X-CSE-MsgGUID: S+BcJxjCTyqHbQ1rbKdVOg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8679119"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="8679119"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:13:27 -0700
+X-CSE-ConnectionGUID: 4i3Fn0c/QZGSzXPKPX/6Uw==
+X-CSE-MsgGUID: K1VgBYjtTfGYPpnA1JUHjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="22616220"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:13:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 17 Apr 2024 11:13:21 +0300 (EEST)
+To: Michael Pratt <mcpratt@pm.me>
+cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, 
+    Wander Lairson Costa <wander@redhat.com>, 
+    Vamshi Gajjela <vamshigajjela@google.com>
+Subject: Re: [PATCH v2 3/3] serial: 8250: Set fifo timeout using
+ uart_fifo_timeout()
+In-Reply-To: <CmMdmgjPFh8R-rH0-mjU0QdQcqhRwVr9bmApDJ7BV_9DjRBL35K_Qfjs7oIPVwGFv5mdT476a8tPtkgnWqY2lRBEfGvfhjk0yW9ueI4bcf8=@pm.me>
+Message-ID: <7e66eafe-902c-38ab-b624-d9386c1bcd22@linux.intel.com>
+References: <20240416182741.22514-1-mcpratt@pm.me> <20240416182741.22514-4-mcpratt@pm.me> <Zh7KIz1AGyyS3zLT@smile.fi.intel.com> <CmMdmgjPFh8R-rH0-mjU0QdQcqhRwVr9bmApDJ7BV_9DjRBL35K_Qfjs7oIPVwGFv5mdT476a8tPtkgnWqY2lRBEfGvfhjk0yW9ueI4bcf8=@pm.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
- EX19D037EUB003.ant.amazon.com (10.252.61.119)
+Content-Type: text/plain; charset=US-ASCII
 
-From: Sudan Landge <sudanl@amazon.com>
+On Tue, 16 Apr 2024, Michael Pratt wrote:
+> On Tuesday, April 16th, 2024 at 14:57, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > > unsigned int status, tmout = 10000;
+> > > 
+> > > - /* Wait up to 10ms for the character(s) to be sent. /
+> > > + / Wait for a time relative to buffer size and baud */
+> > > + if (up->fifo_enable && up->port.timeout)
+> > > + tmout = jiffies_to_usecs(up->port.timeout);
+> > 
+> > 
+> > Why do we still use that default? Can't we calculate timeout even for\
+> > FIFO-less / FIFO-disabled devices?
 
-Re-implement vmgenid as a platform driver in preparation
-for adding devicetree bindings support in next commits.
+Yes we definitely should be able to. Unfortunately these patches just keep 
+coming back not in the form that follows the review feedback, but they 
+come up their own way of doing things which is way worse and ignores the 
+given feedback.
 
-Signed-off-by: Sudan Landge <sudanl@amazon.com>
----
- drivers/virt/vmgenid.c | 97 +++++++++++++++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 30 deletions(-)
+> Maybe it's possible that there is some kind of rare case where the LSR register
+> is not working or not configured properly for a device in which support
+> is being worked on...without a timeout, that would result in an infinite loop.
 
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index a167ccfad299..c028e2064fdd 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -7,9 +7,10 @@
-  * information to random.c.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/acpi.h>
-+#include <linux/platform_device.h>
- #include <linux/random.h>
- 
- ACPI_MODULE_NAME("vmgenid");
-@@ -21,9 +22,9 @@ struct vmgenid_state {
- 	u8 this_id[VMGENID_SIZE];
- };
- 
--static void vmgenid_notify(struct acpi_device *device, u32 event)
-+static void vmgenid_notify(struct device *device)
- {
--	struct vmgenid_state *state = acpi_driver_data(device);
-+	struct vmgenid_state *state = device->driver_data;
- 	char *envp[] = { "NEW_VMGENID=1", NULL };
- 	u8 old_id[VMGENID_SIZE];
- 
-@@ -32,21 +33,36 @@ static void vmgenid_notify(struct acpi_device *device, u32 event)
- 	if (!memcmp(old_id, state->this_id, sizeof(old_id)))
- 		return;
- 	add_vmfork_randomness(state->this_id, sizeof(state->this_id));
--	kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
-+	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
-+}
-+
-+static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
-+				 u32 __always_unused event, void *dev)
-+{
-+	vmgenid_notify(dev);
-+}
-+
-+static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
-+{
-+	if (IS_ERR(next_id))
-+		return PTR_ERR(next_id);
-+
-+	state->next_id = next_id;
-+	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
-+	add_device_randomness(state->this_id, sizeof(state->this_id));
-+	return 0;
- }
- 
--static int vmgenid_add(struct acpi_device *device)
-+static int vmgenid_add_acpi(struct device *dev,
-+			    struct vmgenid_state *state)
- {
-+	struct acpi_device *device = ACPI_COMPANION(dev);
- 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
--	struct vmgenid_state *state;
- 	union acpi_object *obj;
- 	phys_addr_t phys_addr;
- 	acpi_status status;
- 	int ret = 0;
--
--	state = devm_kmalloc(&device->dev, sizeof(*state), GFP_KERNEL);
--	if (!state)
--		return -ENOMEM;
-+	u8 *virt_addr;
- 
- 	status = acpi_evaluate_object(device->handle, "ADDR", NULL, &parsed);
- 	if (ACPI_FAILURE(status)) {
-@@ -63,40 +79,61 @@ static int vmgenid_add(struct acpi_device *device)
- 
- 	phys_addr = (obj->package.elements[0].integer.value << 0) |
- 		    (obj->package.elements[1].integer.value << 32);
--	state->next_id = devm_memremap(&device->dev, phys_addr, VMGENID_SIZE, MEMREMAP_WB);
--	if (IS_ERR(state->next_id)) {
--		ret = PTR_ERR(state->next_id);
-+
-+	virt_addr = (u8 *)devm_memremap(&device->dev, phys_addr,
-+					VMGENID_SIZE, MEMREMAP_WB);
-+	ret = setup_vmgenid_state(state, virt_addr);
-+	if (ret)
-+		goto out;
-+
-+	dev->driver_data = state;
-+	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
-+					     vmgenid_acpi_handler, dev);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "Failed to install acpi notify handler");
-+		ret = -ENODEV;
-+		dev->driver_data = NULL;
- 		goto out;
- 	}
-+out:
-+	ACPI_FREE(parsed.pointer);
-+	return ret;
-+}
- 
--	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
--	add_device_randomness(state->this_id, sizeof(state->this_id));
-+static int vmgenid_add(struct platform_device *pdev)
-+{
-+	struct vmgenid_state *state;
-+	struct device *dev = &pdev->dev;
-+	int ret = 0;
- 
--	device->driver_data = state;
-+	state = devm_kmalloc(dev, sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
-+
-+	ret = vmgenid_add_acpi(dev, state);
-+
-+	if (ret)
-+		devm_kfree(dev, state);
- 
--out:
--	ACPI_FREE(parsed.pointer);
- 	return ret;
- }
- 
--static const struct acpi_device_id vmgenid_ids[] = {
-+static const struct acpi_device_id vmgenid_acpi_ids[] = {
- 	{ "VMGENCTR", 0 },
- 	{ "VM_GEN_COUNTER", 0 },
- 	{ }
- };
--MODULE_DEVICE_TABLE(acpi, vmgenid_ids);
--
--static struct acpi_driver vmgenid_driver = {
--	.name = "vmgenid",
--	.ids = vmgenid_ids,
--	.owner = THIS_MODULE,
--	.ops = {
--		.add = vmgenid_add,
--		.notify = vmgenid_notify
--	}
-+MODULE_DEVICE_TABLE(acpi, vmgenid_acpi_ids);
-+
-+static struct platform_driver vmgenid_plaform_driver = {
-+	.probe      = vmgenid_add,
-+	.driver     = {
-+		.name   = "vmgenid",
-+		.acpi_match_table = vmgenid_acpi_ids,
-+	},
- };
- 
--module_acpi_driver(vmgenid_driver);
-+module_platform_driver(vmgenid_plaform_driver)
- 
- MODULE_DESCRIPTION("Virtual Machine Generation ID");
- MODULE_LICENSE("GPL v2");
+"without a timeout" is not what Andy said. He said you should always have 
+a timeout, regardless of there being FIFO or not. And that timeout should 
+be derived in the same manner from baudrate and FIFO size (to address the
+cases w/o FIFO, the fifosize should be lower bounded to 1 while 
+calculating the FIFO timeout).
+
+> AFAIK, when everything is working properly, there is no such thing as needing
+> a timeout for a uart device without fifo, as every single byte written would trigger
+> an interrupt anyway.
+
+While I agree the general principle, that this is backup that should not 
+even be needed, the statement is partly incorrect. We don't get interrupts 
+during console write because they're disabled. But LSR should still change 
+and allow progress without the backup timeout.
+
 -- 
-2.40.1
+ i.
 
