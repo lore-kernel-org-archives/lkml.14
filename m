@@ -1,177 +1,98 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA7913C3F2
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC384084E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713396976; cv=none; b=HhnpcGKx4QIOTYqyeiMbUY8OeS1aVbMtr4YgGo7wiGwPNYWQQZiM3PBqEf+3yo9uw6caEkQZn3/5n7CGOE3andmvAqHsFdqcYJhUVIYUEAkNnEiJgVO/RTSiQ+6+JipEur1fDDRiXmUlLVCOPRtYr4VA2rqiwi0caRzK1mLP0Bw=
+	t=1713396991; cv=none; b=JmRAktXQ5RYT4MEMa+An4snjRbGriRE9s872v9A7q8WdPQG4RlBtof38IxZEz82y27FR96oKETvGig7q4AiVt/FYTYfoGiRgp3wCVaWO3uzhFq0Wb5AUHKabkpLjhBlomNSvlMiPn5fea3jsXv/pujiNd0M3vAtPVZjaSsgYBCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713396976; c=relaxed/simple;
-	bh=vjRJ1U7DKOKEv8zqHNl/1MSWTfJ+WAHC2urS1kF08ZE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Nuo0dVhOwzy42Tq689HLyUT0ROuu6DO5z501qEpEIHErguSivusdjHD1gdclRbNnqvxJ5EVChT77xeMKyNZ+4gJNSBaJS2N+6qBEU6SpPsMkJtnQOJp7ZnTUL3Ze4LyTjzbTanjlZfPFKUDNlv6O5pBMoGyVNN/u968UKfLj+sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u3kGHDmM; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+	s=arc-20240116; t=1713396991; c=relaxed/simple;
+	bh=GAPp6KLkBdhPjfazIrelmotZOrQrWW6euSb4wdA8LNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cB/EgQh8R+wZRIrvEGnXpc7CzpL7J/Y5eaxgBsZBsboIc91WjU5QnBcdloR/TySHOEVMRzO4wchhk31B9niR4lP+d4sApW5YjAcspyWm7ggueTW0mV3h+sr3HR2xueGUe1y8ghfCY4LvAFykS/BAXXLLlujrnJ4Fr2Ifms8sMC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z078YmEd; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3kGHDmM"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1e417e43c13so4060265ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:36:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z078YmEd"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-518a56cdc03so231850e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713396974; x=1714001774; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuQpI8q1wJxBD6X4kJwl22uAmYchmA+XE2ed6Sx/XW8=;
-        b=u3kGHDmM3WeWIKAcWsNDAO4lmvYJjUM0EFTBCufzySQDLfDsvq5Wf9XFKLBGojw3QR
-         p0402lfVsJdt+YgvNp4xLvH2GHuJRnKMaPbbLEDMUGVuKth+O0JY/v0NCAWA+LeAqGh3
-         Cy45vzdZYySsg+LsMzbEmjxwt/Sg1loN2LcdCo+GgZXEJ8GrAMfZdEvQkliN+NWS0XCa
-         cRk219GkqtLqQMJU24N3U5EQTR8IpAJwIlWciKolLgbNhOTQgXatslAafV2EIHHTi43y
-         UcAjCz2CDObBmyoQNj62jIaYWm0npBCWwUM6hy1r9cxBFc2kPdOsGt2ratZvlMybmYtP
-         5VOA==
+        d=linaro.org; s=google; t=1713396988; x=1714001788; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+aUpmgDVeLgvB2gSLG8XIN5pGL3HNCRw5PXYjYZlX2s=;
+        b=z078YmEd3J+ekfZVuXGd5k2dVlANTEtMTYBGunRFdKFTvvfB4Bt/yL1wd4619sYlkB
+         WI+wIcTu6vt37zzJuKCH2gO6IbqjQwkrdJHqp4wQFFca10YYQUZB1dVAEWAf3Pgp+FTY
+         V6vexldxcykW3nQfQ218zP7Uj7D4brX1UMxVFqQTDNEs7+gv5L98yEIqlRqeJ8jln2+S
+         HQ5AQy1kOnq5WqxecI0rKEbETCTU5SW1rvfX5FEEbNPaL59AYmfhMUtD9qldhJUVEouT
+         sZjA6Bpv0x4NdCI5vT73hicyWEta0o1GHADnncTfX1thGwVBmYiAukhmoOT861l7OK6Q
+         8OsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713396974; x=1714001774;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuQpI8q1wJxBD6X4kJwl22uAmYchmA+XE2ed6Sx/XW8=;
-        b=RA91YFbGq2q1QlQDoPe++Z7XWvZWBqdEJXw2PumxWs9kNSryXNLPAt7BQYSDnb7CDB
-         BE3mz90CXa50miy+yZj5UWKM0m1uZJyCbPJGDbBkgJBQqji9sX+g8438vSfMyRbESx7q
-         L2Vw743wnh+BcPoTHfaQDQ4xtvrBhDPCMPO1dnJJ3fn7b0f5UF4VPr9NggRUJHdK62k+
-         8alKr4CCYMj6B+F3Dhnd6XcDovlnpUA2mTaDiTXn3htcCulTlLcoMnudFM8jTplE4zRN
-         BLt389jKd31PAhRUdCsc5E1DeJJC4krwftp/7+0pEwpsowOYA8+DOhIA2FiHibFtkVld
-         eg6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXkuLNBkGOQC/3uvdlH9vylZmipMnAtZFDGXAajGaptjzKiNQIC83HuuyeE6/P7RbyjW4Grn/BI7BI5BXISIv0YK4kr80892d/qiyaD
-X-Gm-Message-State: AOJu0Yy2yhk5295biEgw9B0IxfnKDe7dCKyHZRR6Gtik2213+YfK8Ye3
-	V1OqfC1iA9eQs3YA2J4eLMdjl0S3xux1Z+igZQvr6D8rv938H/lS+ovtDG5lL/9mm9X9ZXVURJj
-	jmg==
-X-Google-Smtp-Source: AGHT+IEobOYF40oLdCObDrE0/kpftePvc8OynfTVVcOc8erPQdeh2yti6opEqDb6c+vxVQiAGfnmmPMhneU=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a17:902:7c02:b0:1e0:c486:9af1 with SMTP id
- x2-20020a1709027c0200b001e0c4869af1mr2438pll.12.1713396973649; Wed, 17 Apr
- 2024 16:36:13 -0700 (PDT)
-Date: Wed, 17 Apr 2024 23:35:07 +0000
-In-Reply-To: <20240417233517.3044316-1-edliaw@google.com>
+        d=1e100.net; s=20230601; t=1713396988; x=1714001788;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+aUpmgDVeLgvB2gSLG8XIN5pGL3HNCRw5PXYjYZlX2s=;
+        b=pME+5B7PCRbWTnMgz06eQUJPYERbb8Jwst/hNOKqFk5q529PRVQ7IIxuosA9XE1j45
+         kIZhDz/qMjIKh6Y3l8U7EQ8E3B1oZHdg4PX8O4AB5vkgBV09s9t/t/8gsvtF+WoReMSD
+         PLoBsgRicI9bHYhFBgJ0lStvlrddJOdbNxXUl8cibuOirSFJwge96vv/4cniM9RFGKWo
+         EHXNVr6n+/eWzwaHarUd/3EYQmbvoR0iziOtkAtmgK3ldV5sDXAFflBPT2CY7v+nvH2W
+         kUSBGMpsbsjYeXZ5CFBqq4JsjUXaLSq4Xpu98MNBazS4krctnIVgo+GYmMo6z8El20fp
+         J+4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVw3eJGFIEhTv9pLsmD3nq/1nIzqOEZW02EAsvWM/611rYRga+LjsNcjJWNQOSFxwQfqSlUxWf8cGK+oqxzkSoLMbKsRX6r3AAG2KWF
+X-Gm-Message-State: AOJu0Yzzo46xepSvoWMJBlLHxQGHwZwqiz3ms/Xs7k6oLzxDegtWDNJU
+	nmjn2SJDlsJmhiQe1YrYqgfALervds/igvCtyMYi+fUqWW2blmfwXbTk1AJ4S4s=
+X-Google-Smtp-Source: AGHT+IERQ79ZpiSXTN99GLjWRAUeUxpJZ+H08cR71Lgik0OTCXPJvVrs/pYv2CJjCEnsG4k28u0TvA==
+X-Received: by 2002:ac2:5234:0:b0:516:d0c0:3c5 with SMTP id i20-20020ac25234000000b00516d0c003c5mr348212lfl.24.1713396987745;
+        Wed, 17 Apr 2024 16:36:27 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id eq22-20020a056512489600b00515ce9f4a2bsm36470lfb.35.2024.04.17.16.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 16:36:27 -0700 (PDT)
+Date: Thu, 18 Apr 2024 02:36:25 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Herman van Hazendonk <github.com@herrie.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] component: Support masters with no subcomponents
+Message-ID: <4xywfprr7qkxpncmnhqjc3lrrcjbv46tsmlzz5yxvcr4xr2dnq@w57ni7u2hpvu>
+References: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
+ <CACRpkdbijfwYFhg2XigzVKoPDjU00K+arqaL_kP3FNxsS82gHg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <16430256912363@kroah.com> <20240417233517.3044316-1-edliaw@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240417233517.3044316-6-edliaw@google.com>
-Subject: [PATCH 5.15.y 5/5] bpf: Fix ringbuf memory type confusion when
- passing to helpers
-From: Edward Liaw <edliaw@google.com>
-To: stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Hao Luo <haoluo@google.com>
-Cc: bpf@vger.kernel.org, kernel-team@android.com, 
-	Edward Liaw <edliaw@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbijfwYFhg2XigzVKoPDjU00K+arqaL_kP3FNxsS82gHg@mail.gmail.com>
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+On Wed, Apr 17, 2024 at 01:39:16PM +0200, Linus Walleij wrote:
+> Hi Herman,
+> 
+> thanks for your patch!
+> 
+> Do you actually have this working on real hardware? I never
+> submitted this patch because I could not get the hardware
+> working.
+> 
+> I was hoping for smarter people (Dmitry Baryshkov...) to step
+> in and help out to actually make it work before submitting
+> patches.
 
-The bpf_ringbuf_submit() and bpf_ringbuf_discard() have ARG_PTR_TO_ALLOC_MEM
-in their bpf_func_proto definition as their first argument, and thus both expect
-the result from a prior bpf_ringbuf_reserve() call which has a return type of
-RET_PTR_TO_ALLOC_MEM_OR_NULL.
+I have LVDS working on apq8064, but it requires fixes in the MMCC
+driver, in the MDP4 driver and in DTS. I need to clean up them first
+before even attempting to send them out. Also a PWM/LPG driver would
+help as otherwise the power supply is quick to be overloaded by the
+backlight.
 
-While the non-NULL memory from bpf_ringbuf_reserve() can be passed to other
-helpers, the two sinks (bpf_ringbuf_submit(), bpf_ringbuf_discard()) right now
-only enforce a register type of PTR_TO_MEM.
+Nevertheless, LVDS/LCDC-only MDP4 is a valid usecase, but it has to be
+handled in the driver rather than in the core lib.
 
-This can lead to potential type confusion since it would allow other PTR_TO_MEM
-memory to be passed into the two sinks which did not come from bpf_ringbuf_reserve().
-
-Add a new MEM_ALLOC composable type attribute for PTR_TO_MEM, and enforce that:
-
- - bpf_ringbuf_reserve() returns NULL or PTR_TO_MEM | MEM_ALLOC
- - bpf_ringbuf_submit() and bpf_ringbuf_discard() only take PTR_TO_MEM | MEM_ALLOC
-   but not plain PTR_TO_MEM arguments via ARG_PTR_TO_ALLOC_MEM
- - however, other helpers might treat PTR_TO_MEM | MEM_ALLOC as plain PTR_TO_MEM
-   to populate the memory area when they use ARG_PTR_TO_{UNINIT_,}MEM in their
-   func proto description
-
-Fixes: 457f44363a88 ("bpf: Implement BPF ring buffer and verifier support for it")
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-(cherry picked from commit a672b2e36a648afb04ad3bda93b6bda947a479a5)
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- include/linux/bpf.h   | 9 +++++++--
- kernel/bpf/verifier.c | 6 +++++-
- 2 files changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 84efd8dd139d..96b2aa567d23 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -312,7 +312,12 @@ enum bpf_type_flag {
- 	 */
- 	MEM_RDONLY		= BIT(1 + BPF_BASE_TYPE_BITS),
- 
--	__BPF_TYPE_LAST_FLAG	= MEM_RDONLY,
-+	/* MEM was "allocated" from a different helper, and cannot be mixed
-+	 * with regular non-MEM_ALLOC'ed MEM types.
-+	 */
-+	MEM_ALLOC		= BIT(2 + BPF_BASE_TYPE_BITS),
-+
-+	__BPF_TYPE_LAST_FLAG	= MEM_ALLOC,
- };
- 
- /* Max number of base types. */
-@@ -396,7 +401,7 @@ enum bpf_return_type {
- 	RET_PTR_TO_SOCKET_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
- 	RET_PTR_TO_TCP_SOCK_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
- 	RET_PTR_TO_SOCK_COMMON_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMON,
--	RET_PTR_TO_ALLOC_MEM_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_ALLOC_MEM,
-+	RET_PTR_TO_ALLOC_MEM_OR_NULL	= PTR_MAYBE_NULL | MEM_ALLOC | RET_PTR_TO_ALLOC_MEM,
- 	RET_PTR_TO_BTF_ID_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
- 
- 	/* This must be the last entry. Its purpose is to ensure the enum is
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 3dfc45ed428a..6162ba31a89e 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -567,6 +567,8 @@ static const char *reg_type_str(struct bpf_verifier_env *env,
- 
- 	if (type & MEM_RDONLY)
- 		strncpy(prefix, "rdonly_", 16);
-+	if (type & MEM_ALLOC)
-+		strncpy(prefix, "alloc_", 16);
- 
- 	snprintf(env->type_str_buf, TYPE_STR_BUF_LEN, "%s%s%s",
- 		 prefix, str[base_type(type)], postfix);
-@@ -4970,6 +4972,7 @@ static const struct bpf_reg_types mem_types = {
- 		PTR_TO_MAP_KEY,
- 		PTR_TO_MAP_VALUE,
- 		PTR_TO_MEM,
-+		PTR_TO_MEM | MEM_ALLOC,
- 		PTR_TO_BUF,
- 	},
- };
-@@ -4987,7 +4990,7 @@ static const struct bpf_reg_types int_ptr_types = {
- static const struct bpf_reg_types fullsock_types = { .types = { PTR_TO_SOCKET } };
- static const struct bpf_reg_types scalar_types = { .types = { SCALAR_VALUE } };
- static const struct bpf_reg_types context_types = { .types = { PTR_TO_CTX } };
--static const struct bpf_reg_types alloc_mem_types = { .types = { PTR_TO_MEM } };
-+static const struct bpf_reg_types alloc_mem_types = { .types = { PTR_TO_MEM | MEM_ALLOC } };
- static const struct bpf_reg_types const_map_ptr_types = { .types = { CONST_PTR_TO_MAP } };
- static const struct bpf_reg_types btf_ptr_types = { .types = { PTR_TO_BTF_ID } };
- static const struct bpf_reg_types spin_lock_types = { .types = { PTR_TO_MAP_VALUE } };
-@@ -5150,6 +5153,7 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 	case PTR_TO_MAP_VALUE:
- 	case PTR_TO_MEM:
- 	case PTR_TO_MEM | MEM_RDONLY:
-+	case PTR_TO_MEM | MEM_ALLOC:
- 	case PTR_TO_BUF:
- 	case PTR_TO_BUF | MEM_RDONLY:
- 	case PTR_TO_STACK:
 -- 
-2.44.0.769.g3c40516874-goog
-
+With best wishes
+Dmitry
