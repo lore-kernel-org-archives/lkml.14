@@ -1,212 +1,263 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB61F13F01A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20716140375;
+	Wed, 17 Apr 2024 13:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713361084; cv=none; b=a03AcpgIqVpEjUDOyA+DD8W3DsEdeM55h7YIIrP4bw34yZM3Wo0Jx6nLrsqCTkuk8VBpYqvYG8YCS5H2XjNHXX2K5aV70+msbH4cm7OqMCuf2e10063AN9FxFFEtQhKp0U0p4C7kpvFHVZWmTipr1DsPZ1DYXLhlrDGZAcOSUQg=
+	t=1713361086; cv=none; b=SKwBUSVwCtjEmOh3G7tlV48fqsvLJpqjmRM7P5AMOd+/4+wQubhsJXwZPCU6lPShratP5iRlwQn/0B+00jeFUzlc6jQyzebRs1fEM1kwBoIsFnsv1GmDeB/Q8WCefFXSABWYXAAQGtQcGOxeQB8rhi75ydHqC5pz2rTNnJY6N3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713361084; c=relaxed/simple;
-	bh=SrAwHiw5DS+3uTSjKRZI5h+3ICzAKM4DzCwh7BbwxAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KDJWg2im+PHicId/z6dca37bDAwV+LuR+Bk1ekaBMohwzCZxflwV/yfOQXq1syFJj/CzNZ3UIpicdWU3m8bFHIYs9bMWjasYSDCHsqZ3mrFmZeMw4ACNdNlvQJPuFG7bqj7frD9ruPHE2gmZR6Hh6CqF45zquhYBatYAVxDCNto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouS5hiro; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713361086; c=relaxed/simple;
+	bh=CqoEd0wLcIC4hS6m6NvFliL5pxkXkKB+UnSmqcg24W0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YZf735vyugNNHg5vM+xk4dKXTiqfuhYR7L4YgMOX6i9xwfc8zSLF0uTfimKh0g78on/cTdRbEUGUQze/t58MUROkKcIhmxH93anh7UoKGdyzbZ2XHOws0/0VRuqtNDO12DbKGac8782sBKuidLMXT3Lq9CmYSuXxIfjpy/uKXEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YjBTYRtf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouS5hiro"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e6a1edecfso8945189a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:38:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713361081; x=1713965881; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8/KcmpYcei3Au2kK2wtQQuvWtpfCCMou6DWdFUvWLAs=;
-        b=ouS5hiro/cWi0hG34ogY8GhoCee2yv3BsnNhum7rxFQ1YZ12w3/XswkUmUQzi7b0Ju
-         UDcC96pZL4Z+QBxgemtDCfA6x5MfdmOGHVGhhQ9YqzFynF6xQrzVkZGl/RvN04vH1HCH
-         gbk6sdRylFDrL/66/6H9S3c/GlgwHVBCNY/EXyACwJq25LVzXW9mYddG9c3u6+iuTvXI
-         E7kzj7AP4kCREHNBlwISUeSnK+VMPfiJ/ZQNpYcuvP23VRwwQ7x7KnFGEeDTRUiHhS2I
-         nUJzHSIQlec8+tK5l3mVgiUXv6dlShEHqi8tBRK9s3wcKgEidzx8P+eMf0NHLcLrrsbD
-         Ghjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713361081; x=1713965881;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8/KcmpYcei3Au2kK2wtQQuvWtpfCCMou6DWdFUvWLAs=;
-        b=aEOsm2Cph8c7WrkYFNGkYM/gq1LuA9VudtsWwryOIYd+tM07EsTyZVfg6Ht4J0cf4Q
-         vdTR53aYHi001OddVO91vm3IDDn27a5vhLeQ/6dEJYSoSy2Jr+SwLc++g87uHNIsqgIE
-         vlDt8vFSaOrCFXofdaasFVsj7+qYrLOUEnPjKHT+IqwjHTtVrM1g1+fEfsljdFT3uuF7
-         +qfy4f3aflYHtsfuPaLxFendmi9De1A1CqYL3zSM5XKZ/ggaO7jV17kZNHuaOVcmdSc5
-         mnsycjGv3DSazNJNPthtgfyHucI/umaPDYNmp0e+rzxa9t99/QkH0y7xP7KzAQl67Qcj
-         zp5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUxInsn/8vX6NC+gpMM0Ih5aSiWfNoF3aj0O8cJoewFsWdyII0KcgXRzsdEJLEstcW9c85dDoycwHJJ4mPp8BxLf+w+FI8bNyC/yxF8
-X-Gm-Message-State: AOJu0YyKa1CpGMoA/nTO3WxsTROZgoEmTnoGLhqtiyaRpPpiq4T5p1x1
-	e0V9NljPFtJWzOQ/OcBT1TvKhtjph0u+FOkwivAwpaIPK9Wp1hJwudHEH/gQKnk=
-X-Google-Smtp-Source: AGHT+IH8LxCS7KS5d8H7g/NIwyGENvuKbbtlWI07tDHjS6X1fV1ErfXpF9XVc1J7DgEdG+8mWfhWYA==
-X-Received: by 2002:a17:906:dc8f:b0:a51:af7d:4652 with SMTP id cs15-20020a170906dc8f00b00a51af7d4652mr15531363ejc.32.1713361080838;
-        Wed, 17 Apr 2024 06:38:00 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id y9-20020a170906470900b00a51a74409dcsm8216147ejq.221.2024.04.17.06.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 06:38:00 -0700 (PDT)
-Date: Wed, 17 Apr 2024 16:37:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Geetha sowjanya <gakula@marvell.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, kuba@kernel.org,
-	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
-	sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-	hkelam@marvell.com
-Subject: Re: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
-Message-ID: <546b7783-78ec-4fec-b338-f1980a5871d0@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YjBTYRtf"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43HACWXp023131;
+	Wed, 17 Apr 2024 13:37:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=gq5Y6fts4+0RLwl3h1ZZJoRJGSHxELdkuZ0ASezVLjQ=; b=Yj
+	BTYRtf9a21gcTx7HF+ZW4K6bJMVAbKE2Umvc5BeUiqWM0H7VpmHw/igOB0N1LrTl
+	on5T6q7T1CDFXffyDfMDZgV4sw48ju1olkNr6LaBR8Hb4g7Bq855t+Eq1trTfLpY
+	hkbXddWeD/Kpfq/NSJX+ZxYz8iFRvoTkRY6UwatK1IEMRt1bTjQSk/hRjPXxQSM+
+	Q0JseuVcat42/sglkmH8nNPvvhaqyEmT5hzLRD6FM7i7Y4KZM8cKVYqK1aEg91cc
+	RWCr1FJzi+NrMJReRVHvB+suO7PweM5u3q3gFi+EW/TbZjAC7nVFZbMjVaOaqRcH
+	aiq5TSLT+A3bNEKEfeVA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjceh0fgs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 13:37:47 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43HDbk98030713
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 13:37:46 GMT
+Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 17 Apr 2024 06:37:45 -0700
+From: Georgi Djakov <quic_c_gdjako@quicinc.com>
+To: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+        <iommu@lists.linux.dev>
+CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <robdclark@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cgoldswo@quicinc.com>, <quic_sukadev@quicinc.com>,
+        <quic_pdaly@quicinc.com>, <quic_sudaraja@quicinc.com>,
+        <djakov@kernel.org>
+Subject: [PATCH v8 4/7] iommu/arm-smmu-qcom: Use a custom context fault handler for sdm845
+Date: Wed, 17 Apr 2024 06:37:28 -0700
+Message-ID: <20240417133731.2055383-5-quic_c_gdjako@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240417133731.2055383-1-quic_c_gdjako@quicinc.com>
+References: <20240417133731.2055383-1-quic_c_gdjako@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416050616.6056-3-gakula@marvell.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ZPvc9gdfCgVNsjbD2wA4QNaWJGZ7_M5R
+X-Proofpoint-ORIG-GUID: ZPvc9gdfCgVNsjbD2wA4QNaWJGZ7_M5R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_10,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404170094
 
-Hi Geetha,
+The sdm845 platform now supports TBUs, so let's get additional debug
+info from the TBUs when a context fault occurs. Implement a custom
+context fault handler that does both software + hardware page table
+walks and TLB Invalidate All.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
+---
+ .../iommu/arm/arm-smmu/arm-smmu-qcom-debug.c  | 143 ++++++++++++++++++
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    |   4 +
+ 2 files changed, 147 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geetha-sowjanya/octeontx2-pf-Refactoring-RVU-driver/20240416-131052
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240416050616.6056-3-gakula%40marvell.com
-patch subject: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
-config: alpha-randconfig-r081-20240417 (https://download.01.org/0day-ci/archive/20240417/202404172056.MpOMwcGB-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202404172056.MpOMwcGB-lkp@intel.com/
-
-New smatch warnings:
-drivers/net/ethernet/marvell/octeontx2/nic/rep.c:95 rvu_get_rep_cnt() warn: passing zero to 'PTR_ERR'
-drivers/net/ethernet/marvell/octeontx2/nic/rep.c:140 rvu_rep_probe() warn: missing unwind goto?
-
-vim +/PTR_ERR +95 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-
-1e15129a77b419 Geetha sowjanya 2024-04-16   76  static int rvu_get_rep_cnt(struct otx2_nic *priv)
-1e15129a77b419 Geetha sowjanya 2024-04-16   77  {
-1e15129a77b419 Geetha sowjanya 2024-04-16   78  	struct get_rep_cnt_rsp *rsp;
-1e15129a77b419 Geetha sowjanya 2024-04-16   79  	struct mbox_msghdr *msghdr;
-1e15129a77b419 Geetha sowjanya 2024-04-16   80  	struct msg_req *req;
-1e15129a77b419 Geetha sowjanya 2024-04-16   81  	int err, rep;
-1e15129a77b419 Geetha sowjanya 2024-04-16   82  
-1e15129a77b419 Geetha sowjanya 2024-04-16   83  	mutex_lock(&priv->mbox.lock);
-1e15129a77b419 Geetha sowjanya 2024-04-16   84  	req = otx2_mbox_alloc_msg_get_rep_cnt(&priv->mbox);
-1e15129a77b419 Geetha sowjanya 2024-04-16   85  	if (!req) {
-1e15129a77b419 Geetha sowjanya 2024-04-16   86  		mutex_unlock(&priv->mbox.lock);
-1e15129a77b419 Geetha sowjanya 2024-04-16   87  		return -ENOMEM;
-1e15129a77b419 Geetha sowjanya 2024-04-16   88  	}
-1e15129a77b419 Geetha sowjanya 2024-04-16   89  	err = otx2_sync_mbox_msg(&priv->mbox);
-1e15129a77b419 Geetha sowjanya 2024-04-16   90  	if (err)
-1e15129a77b419 Geetha sowjanya 2024-04-16   91  		goto exit;
-1e15129a77b419 Geetha sowjanya 2024-04-16   92  
-1e15129a77b419 Geetha sowjanya 2024-04-16   93  	msghdr = otx2_mbox_get_rsp(&priv->mbox.mbox, 0, &req->hdr);
-1e15129a77b419 Geetha sowjanya 2024-04-16   94  	if (IS_ERR(msghdr)) {
-1e15129a77b419 Geetha sowjanya 2024-04-16  @95  		err = PTR_ERR(rsp);
-                                                                              ^^^
-s/rsp/msghdr/
-
-1e15129a77b419 Geetha sowjanya 2024-04-16   96  		goto exit;
-1e15129a77b419 Geetha sowjanya 2024-04-16   97  	}
-1e15129a77b419 Geetha sowjanya 2024-04-16   98  
-1e15129a77b419 Geetha sowjanya 2024-04-16   99  	rsp = (struct get_rep_cnt_rsp *)msghdr;
-1e15129a77b419 Geetha sowjanya 2024-04-16  100  	priv->hw.tx_queues = rsp->rep_cnt;
-1e15129a77b419 Geetha sowjanya 2024-04-16  101  	priv->hw.rx_queues = rsp->rep_cnt;
-1e15129a77b419 Geetha sowjanya 2024-04-16  102  	priv->rep_cnt = rsp->rep_cnt;
-1e15129a77b419 Geetha sowjanya 2024-04-16  103  	for (rep = 0; rep < priv->rep_cnt; rep++)
-1e15129a77b419 Geetha sowjanya 2024-04-16  104  		priv->rep_pf_map[rep] = rsp->rep_pf_map[rep];
-1e15129a77b419 Geetha sowjanya 2024-04-16  105  
-1e15129a77b419 Geetha sowjanya 2024-04-16  106  exit:
-1e15129a77b419 Geetha sowjanya 2024-04-16  107  	mutex_unlock(&priv->mbox.lock);
-1e15129a77b419 Geetha sowjanya 2024-04-16  108  	return err;
-1e15129a77b419 Geetha sowjanya 2024-04-16  109  }
-1e15129a77b419 Geetha sowjanya 2024-04-16  110  
-1e15129a77b419 Geetha sowjanya 2024-04-16  111  static int rvu_rep_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-1e15129a77b419 Geetha sowjanya 2024-04-16  112  {
-1e15129a77b419 Geetha sowjanya 2024-04-16  113  	struct device *dev = &pdev->dev;
-1e15129a77b419 Geetha sowjanya 2024-04-16  114  	struct otx2_nic *priv;
-1e15129a77b419 Geetha sowjanya 2024-04-16  115  	struct otx2_hw *hw;
-1e15129a77b419 Geetha sowjanya 2024-04-16  116  	int err;
-1e15129a77b419 Geetha sowjanya 2024-04-16  117  
-1e15129a77b419 Geetha sowjanya 2024-04-16  118  	err = pcim_enable_device(pdev);
-1e15129a77b419 Geetha sowjanya 2024-04-16  119  	if (err) {
-1e15129a77b419 Geetha sowjanya 2024-04-16  120  		dev_err(dev, "Failed to enable PCI device\n");
-1e15129a77b419 Geetha sowjanya 2024-04-16  121  		return err;
-1e15129a77b419 Geetha sowjanya 2024-04-16  122  	}
-1e15129a77b419 Geetha sowjanya 2024-04-16  123  
-1e15129a77b419 Geetha sowjanya 2024-04-16  124  	err = pci_request_regions(pdev, DRV_NAME);
-1e15129a77b419 Geetha sowjanya 2024-04-16  125  	if (err) {
-1e15129a77b419 Geetha sowjanya 2024-04-16  126  		dev_err(dev, "PCI request regions failed 0x%x\n", err);
-1e15129a77b419 Geetha sowjanya 2024-04-16  127  		return err;
-1e15129a77b419 Geetha sowjanya 2024-04-16  128  	}
-1e15129a77b419 Geetha sowjanya 2024-04-16  129  
-1e15129a77b419 Geetha sowjanya 2024-04-16  130  	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
-1e15129a77b419 Geetha sowjanya 2024-04-16  131  	if (err) {
-1e15129a77b419 Geetha sowjanya 2024-04-16  132  		dev_err(dev, "DMA mask config failed, abort\n");
-1e15129a77b419 Geetha sowjanya 2024-04-16  133  		goto err_release_regions;
-1e15129a77b419 Geetha sowjanya 2024-04-16  134  	}
-1e15129a77b419 Geetha sowjanya 2024-04-16  135  
-1e15129a77b419 Geetha sowjanya 2024-04-16  136  	pci_set_master(pdev);
-1e15129a77b419 Geetha sowjanya 2024-04-16  137  
-1e15129a77b419 Geetha sowjanya 2024-04-16  138  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-1e15129a77b419 Geetha sowjanya 2024-04-16  139  	if (!priv)
-1e15129a77b419 Geetha sowjanya 2024-04-16 @140  		return -ENOMEM;
-
-goto err_release_regions.
-
-1e15129a77b419 Geetha sowjanya 2024-04-16  141  	pci_set_drvdata(pdev, priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  142  	priv->pdev = pdev;
-1e15129a77b419 Geetha sowjanya 2024-04-16  143  	priv->dev = dev;
-1e15129a77b419 Geetha sowjanya 2024-04-16  144  	priv->flags |= OTX2_FLAG_INTF_DOWN;
-1e15129a77b419 Geetha sowjanya 2024-04-16  145  	priv->flags |= OTX2_FLAG_REP_MODE_ENABLED;
-1e15129a77b419 Geetha sowjanya 2024-04-16  146  
-1e15129a77b419 Geetha sowjanya 2024-04-16  147  	hw = &priv->hw;
-1e15129a77b419 Geetha sowjanya 2024-04-16  148  	hw->pdev = pdev;
-1e15129a77b419 Geetha sowjanya 2024-04-16  149  	hw->max_queues = OTX2_MAX_CQ_CNT;
-1e15129a77b419 Geetha sowjanya 2024-04-16  150  	hw->rbuf_len = OTX2_DEFAULT_RBUF_LEN;
-1e15129a77b419 Geetha sowjanya 2024-04-16  151  	hw->xqe_size = 128;
-1e15129a77b419 Geetha sowjanya 2024-04-16  152  
-1e15129a77b419 Geetha sowjanya 2024-04-16  153  	err = otx2_init_rsrc(pdev, priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  154  	if (err)
-1e15129a77b419 Geetha sowjanya 2024-04-16  155  		goto err_release_regions;
-1e15129a77b419 Geetha sowjanya 2024-04-16  156  
-1e15129a77b419 Geetha sowjanya 2024-04-16  157  	err = rvu_get_rep_cnt(priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  158  	if (err)
-1e15129a77b419 Geetha sowjanya 2024-04-16  159  		goto err_detach_rsrc;
-1e15129a77b419 Geetha sowjanya 2024-04-16  160  
-1e15129a77b419 Geetha sowjanya 2024-04-16  161  	err = rvu_rep_rsrc_init(priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  162  	if (err)
-1e15129a77b419 Geetha sowjanya 2024-04-16  163  		goto err_detach_rsrc;
-1e15129a77b419 Geetha sowjanya 2024-04-16  164  
-1e15129a77b419 Geetha sowjanya 2024-04-16  165  	return 0;
-1e15129a77b419 Geetha sowjanya 2024-04-16  166  
-1e15129a77b419 Geetha sowjanya 2024-04-16  167  err_detach_rsrc:
-1e15129a77b419 Geetha sowjanya 2024-04-16  168  	if (priv->hw.lmt_info)
-1e15129a77b419 Geetha sowjanya 2024-04-16  169  		free_percpu(priv->hw.lmt_info);
-1e15129a77b419 Geetha sowjanya 2024-04-16  170  	if (test_bit(CN10K_LMTST, &priv->hw.cap_flag))
-1e15129a77b419 Geetha sowjanya 2024-04-16  171  		qmem_free(priv->dev, priv->dync_lmt);
-1e15129a77b419 Geetha sowjanya 2024-04-16  172  	otx2_detach_resources(&priv->mbox);
-1e15129a77b419 Geetha sowjanya 2024-04-16  173  	otx2_disable_mbox_intr(priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  174  	otx2_pfaf_mbox_destroy(priv);
-1e15129a77b419 Geetha sowjanya 2024-04-16  175  	pci_free_irq_vectors(pdev);
-1e15129a77b419 Geetha sowjanya 2024-04-16  176  err_release_regions:
-1e15129a77b419 Geetha sowjanya 2024-04-16  177  	pci_set_drvdata(pdev, NULL);
-1e15129a77b419 Geetha sowjanya 2024-04-16  178  	pci_release_regions(pdev);
-1e15129a77b419 Geetha sowjanya 2024-04-16  179  	return err;
-1e15129a77b419 Geetha sowjanya 2024-04-16  180  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
+index eff7ca94ec8d..552199cbd9e2 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-debug.c
+@@ -345,6 +345,149 @@ static phys_addr_t qcom_iova_to_phys(struct arm_smmu_domain *smmu_domain,
+ 	return phys;
+ }
+ 
++static phys_addr_t qcom_smmu_iova_to_phys_hard(struct arm_smmu_domain *smmu_domain, dma_addr_t iova)
++{
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	int idx = smmu_domain->cfg.cbndx;
++	u32 frsynra;
++	u16 sid;
++
++	frsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
++	sid = FIELD_GET(ARM_SMMU_CBFRSYNRA_SID, frsynra);
++
++	return qcom_iova_to_phys(smmu_domain, iova, sid);
++}
++
++static phys_addr_t qcom_smmu_verify_fault(struct arm_smmu_domain *smmu_domain, dma_addr_t iova, u32 fsr)
++{
++	struct io_pgtable *iop = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	phys_addr_t phys_post_tlbiall;
++	phys_addr_t phys;
++
++	phys = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
++	io_pgtable_tlb_flush_all(iop);
++	phys_post_tlbiall = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
++
++	if (phys != phys_post_tlbiall) {
++		dev_err(smmu->dev,
++			"ATOS results differed across TLBIALL... (before: %pa after: %pa)\n",
++			&phys, &phys_post_tlbiall);
++	}
++
++	return (phys == 0 ? phys_post_tlbiall : phys);
++}
++
++irqreturn_t qcom_smmu_context_fault(int irq, void *dev)
++{
++	struct arm_smmu_domain *smmu_domain = dev;
++	struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	u32 fsr, fsynr, cbfrsynra, resume = 0;
++	int idx = smmu_domain->cfg.cbndx;
++	phys_addr_t phys_soft;
++	unsigned long iova;
++	int ret, tmp;
++
++	static DEFINE_RATELIMIT_STATE(_rs,
++				      DEFAULT_RATELIMIT_INTERVAL,
++				      DEFAULT_RATELIMIT_BURST);
++
++	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
++	if (!(fsr & ARM_SMMU_FSR_FAULT))
++		return IRQ_NONE;
++
++	fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
++	iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
++	cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
++
++	if (list_empty(&tbu_list)) {
++		ret = report_iommu_fault(&smmu_domain->domain, NULL, iova,
++					 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
++
++		if (ret == -ENOSYS)
++			dev_err_ratelimited(smmu->dev,
++					    "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
++					    fsr, iova, fsynr, cbfrsynra, idx);
++
++		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
++		return IRQ_HANDLED;
++	}
++
++	phys_soft = ops->iova_to_phys(ops, iova);
++
++	tmp = report_iommu_fault(&smmu_domain->domain, NULL, iova,
++				 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
++	if (!tmp || tmp == -EBUSY) {
++		dev_dbg(smmu->dev,
++			"Context fault handled by client: iova=0x%08lx, fsr=0x%x, fsynr=0x%x, cb=%d\n",
++			iova, fsr, fsynr, idx);
++		dev_dbg(smmu->dev, "soft iova-to-phys=%pa\n", &phys_soft);
++		ret = IRQ_HANDLED;
++		resume = ARM_SMMU_RESUME_TERMINATE;
++	} else {
++		phys_addr_t phys_atos = qcom_smmu_verify_fault(smmu_domain, iova, fsr);
++
++		if (__ratelimit(&_rs)) {
++			dev_err(smmu->dev,
++				"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
++				fsr, iova, fsynr, cbfrsynra, idx);
++			dev_err(smmu->dev,
++				"FSR    = %08x [%s%s%s%s%s%s%s%s%s], SID=0x%x\n",
++				fsr,
++				(fsr & 0x02) ? "TF " : "",
++				(fsr & 0x04) ? "AFF " : "",
++				(fsr & 0x08) ? "PF " : "",
++				(fsr & 0x10) ? "EF " : "",
++				(fsr & 0x20) ? "TLBMCF " : "",
++				(fsr & 0x40) ? "TLBLKF " : "",
++				(fsr & 0x80) ? "MHF " : "",
++				(fsr & 0x40000000) ? "SS " : "",
++				(fsr & 0x80000000) ? "MULTI " : "",
++				cbfrsynra);
++
++			dev_err(smmu->dev,
++				"soft iova-to-phys=%pa\n", &phys_soft);
++			if (!phys_soft)
++				dev_err(smmu->dev,
++					"SOFTWARE TABLE WALK FAILED! Looks like %s accessed an unmapped address!\n",
++					dev_name(smmu->dev));
++			if (phys_atos)
++				dev_err(smmu->dev, "hard iova-to-phys (ATOS)=%pa\n",
++					&phys_atos);
++			else
++				dev_err(smmu->dev, "hard iova-to-phys (ATOS) failed\n");
++		}
++		ret = IRQ_NONE;
++		resume = ARM_SMMU_RESUME_TERMINATE;
++	}
++
++	/*
++	 * If the client returns -EBUSY, do not clear FSR and do not RESUME
++	 * if stalled. This is required to keep the IOMMU client stalled on
++	 * the outstanding fault. This gives the client a chance to take any
++	 * debug action and then terminate the stalled transaction.
++	 * So, the sequence in case of stall on fault should be:
++	 * 1) Do not clear FSR or write to RESUME here
++	 * 2) Client takes any debug action
++	 * 3) Client terminates the stalled transaction and resumes the IOMMU
++	 * 4) Client clears FSR. The FSR should only be cleared after 3) and
++	 *    not before so that the fault remains outstanding. This ensures
++	 *    SCTLR.HUPCF has the desired effect if subsequent transactions also
++	 *    need to be terminated.
++	 */
++	if (tmp != -EBUSY) {
++		/* Clear the faulting FSR */
++		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
++
++		/* Retry or terminate any stalled transactions */
++		if (fsr & ARM_SMMU_FSR_SS)
++			arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME, resume);
++	}
++
++	return ret;
++}
++
+ static int qcom_tbu_probe(struct platform_device *pdev)
+ {
+ 	struct of_phandle_args args = { .args_count = 2 };
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 5c7cfc51b57c..a901230dbabd 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -422,6 +422,10 @@ static const struct arm_smmu_impl sdm845_smmu_500_impl = {
+ 	.reset = qcom_sdm845_smmu500_reset,
+ 	.write_s2cr = qcom_smmu_write_s2cr,
+ 	.tlb_sync = qcom_smmu_tlb_sync,
++#ifdef CONFIG_ARM_SMMU_QCOM_DEBUG
++	.context_fault = qcom_smmu_context_fault,
++	.context_fault_needs_threaded_irq = true,
++#endif
+ };
+ 
+ static const struct arm_smmu_impl qcom_adreno_smmu_v2_impl = {
