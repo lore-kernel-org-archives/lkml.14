@@ -1,64 +1,49 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF2013E041
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F367F13C910;
+	Wed, 17 Apr 2024 13:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359963; cv=none; b=d4rLyp4JT2aCirJQnSnlLykZwUm8yeGkk1ZqKPf0wfCarUdiF03ss5ShWvcKCTqHYz1q6ZOascLU5MgLQVIVXrST7EK4Og/CYSVpBm3cYxXc/V1flZHxczWJQ3zTmMD0/YgFaGd8hY1TYaY55XQzAxVb3NDyp+aJEdqlA+xnBKY=
+	t=1713359985; cv=none; b=UkBOTHy+c2nCGS8+JMVmE4y2PX/3kTrGO039WaWMuFtk20ey4Bj2qFWddQPhitD4UNoJ1SgiShTFxwNImt6+bcttF3nHEYmpuHdoy32cVK46yVnKgkRrGfpU5YqvZ8Ku/p3y6/LK+LtxvKkL7G80SwMU2jA3cVmP3ltmF3lFHFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359963; c=relaxed/simple;
-	bh=Hm9S9kOueaae4Ku1kG2pXXiHnA+XJpcNftggbxIOTeI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rgUbwP+dNY2nqR353Tu8nbF+rt0amAlrwChi90p+FPAJ8/40E8/fbKhDuLaXK3BP+/qU+uRBNKDPpysrTf0/zADlG+Kzp4Q33LcRSfN9smrN+fzLdEd3oUPdDcSdsY6M7iHqtJwrCbus+MV9ipsfPM8yv1EEvq0BXvodK9dLYs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BCyxuG+d; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCyxuG+d"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2a526803fccso3312465a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713359961; x=1713964761; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IkjQhSA3tM6FeM9oFUUpRmH9XGP0wA/a2+dvEYG/feE=;
-        b=BCyxuG+dtrtD1Mk1FMjHY9JFRuKgbYVl+wIOLjAuEGHpbNKLQXBRHDXEDaXJnJ1fOk
-         jZcQl173oUOYDZjCp8ilOe00VRlyvCDNpo+4gol+1HE7xIYjbsR/CCs9VvvvSw4YyeF1
-         4qD6nQDWDy1ygYaZZceiltbb9AmsuPIDPrek/m3P8Jhv8KOIQ+HJP/tZY1VORdVD3iZO
-         aY0jq6yLJjmGIH0WufI5eY3f6oZeACTBlYhlgj/xgVDcsVrHz8sFB5HyojVM1Q+4YaLh
-         GAfhX+M0KrkjmDYnTuYgmgm3O4OsyOGrZJmGpS31QX0LOQWMcLSNQz28GXy0nGojvYFO
-         h4+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713359961; x=1713964761;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IkjQhSA3tM6FeM9oFUUpRmH9XGP0wA/a2+dvEYG/feE=;
-        b=UcMD/6/l8HJTr5J+bO/4Z891bot9A01cf0umiuiWNVS8CTS8absj5WpJOg1b+0WxPi
-         hguSaRXQIG3bT/FEn+4y/58zSkQRkI+ASf9YkC9uXBXdPPoHjA4M5bWDh4+Jw0/6dmgP
-         jZz9sXs1QFgdevG6XI7961Kve+trM1M34bmAF4ezw0mM7IdbJhI+UdoX8/vLbsMBQerk
-         sc+FMRZ805o7QbhuPPmEX6euqNqHftKWURqHXcVb4GMcT/l2IxNuhjXdUmjQ15L1T1y3
-         F2lMllQmBDjLJxgdlWqgY8Zlt6J/UNZS8qJ4NWIaWkUpYUPkVIApjW6BSGWjlqGbHb5S
-         rm5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUcE7bPeSX6tzAro/0E+JXz1I70f8H60sQBdl/ibMDYIx+4Lq1xtgFTgRnbWfGz7g7R4DUZnlQ3JLjtdichuhOcdbgGNWWPM+ue2nfk
-X-Gm-Message-State: AOJu0Yx/FcV6tYhatWHeWMJ82eRbYPx8q7mmf1uU6zeTvAqldTd6AjRm
-	kO+VHeTPltxrv2vTXJa2Fwk6j90+cBa1wPTEbh1W9PyW/x/x8fhH2w+og8T4
-X-Google-Smtp-Source: AGHT+IEi4sVGnYmz33zeYdTofl7frUX0AP4dAWS97/Q0txIa/JayTocCKiJlUL4Ymglg86dV1aSLfg==
-X-Received: by 2002:a17:90a:ea81:b0:2a4:c2c4:4a84 with SMTP id h1-20020a17090aea8100b002a4c2c44a84mr15445513pjz.43.1713359961383;
-        Wed, 17 Apr 2024 06:19:21 -0700 (PDT)
-Received: from lima-default.. (1-175-176-70.dynamic-ip.hinet.net. [1.175.176.70])
-        by smtp.gmail.com with ESMTPSA id t13-20020a17090ad50d00b002a5dbfca370sm1329513pju.48.2024.04.17.06.19.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 06:19:21 -0700 (PDT)
-From: Chin-Chun Chen <chinchunchen2001@gmail.com>
-To: yury.norov@gmail.com
-Cc: linux@rasmusvillemoes.dk,
-	linux-kernel@vger.kernel.org,
-	Chin-Chun Chen <chinchunchen2001@gmail.com>
-Subject: [PATCH] linux/bitops.h: Refactor function fns to reduce branch usage and eliminate external calls
-Date: Wed, 17 Apr 2024 21:16:56 +0800
-Message-Id: <20240417131655.20629-1-chinchunchen2001@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1713359985; c=relaxed/simple;
+	bh=eu0fW8/30VJOEI+WpqyuddEmSY62QpF5ImnYsZBUJs0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hqWa5JiPlY1gxTPsmhfnffwObxzd38PvkoSwdLmIwBiVuHXSm81VS+UkX81BVpaVchHac8y3R+faq52Ao4dy0ZYB80ejfvwBsCPXxtLhp3nGwO4kbv3kMGVrgodJnDH5n6lbuEo7A775Bg0I/dgIN25yP8Odu+rqkbIeo/gi/fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM053y1Zz6H6vR;
+	Wed, 17 Apr 2024 21:17:41 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 93DE8140C9C;
+	Wed, 17 Apr 2024 21:19:41 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 14:19:40 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v6 01/16] ACPI: processor: Simplify initial onlining to use same path for cold and hotplug
+Date: Wed, 17 Apr 2024 14:18:54 +0100
+Message-ID: <20240417131909.7925-2-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,97 +51,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Rewrote the function fns to use macro wrote in linux/include/asm-generic/bitops/const_hweight.h
-Decrease the number of required branches and eliminate the need for external calls.
-The number of branches is now constant, unaffected by input variations.
+Separate code paths, combined with a flag set in acpi_processor.c to
+indicate a struct acpi_processor was for a hotplugged CPU ensured that
+per CPU data was only set up the first time that a CPU was initialized.
+This appears to be unnecessary as the paths can be combined by letting
+the online logic also handle any CPUs online at the time of driver load.
 
-This commit improves code efficiency and clarity.
+Motivation for this change, beyond simplification, is that ARM64
+virtual CPU HP uses the same code paths for hotplug and cold path in
+acpi_processor.c so had no easy way to set the flag for hotplug only.
+Removing this necessity will enable ARM64 vCPU HP to reuse the existing
+code paths.
 
-Signed-off-by: Chin-Chun Chen <chinchunchen2001@gmail.com>
+Leave noisy pr_info() in place but update it to not state the CPU
+was hotplugged.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 ---
- include/linux/bitops.h | 54 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+v6: New patch.
+RFT: I have very limited test resources for x86 and other
+architectures that may be affected by this change.
+---
+ drivers/acpi/acpi_processor.c   |  1 -
+ drivers/acpi/processor_driver.c | 44 ++++++++++-----------------------
+ include/acpi/processor.h        |  2 +-
+ 3 files changed, 14 insertions(+), 33 deletions(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 5842d7d03f19..18899f11aaa7 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -247,6 +247,13 @@ static inline unsigned long __ffs64(u64 word)
- 	return __ffs((unsigned long)word);
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 7a0dd35d62c9..7fc924aeeed0 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -216,7 +216,6 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	 * gets online for the first time.
+ 	 */
+ 	pr_info("CPU%d has been hot-added\n", pr->id);
+-	pr->flags.need_hotplug_init = 1;
+ 
+ out:
+ 	cpus_write_unlock();
+diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
+index 67db60eda370..55782eac3ff1 100644
+--- a/drivers/acpi/processor_driver.c
++++ b/drivers/acpi/processor_driver.c
+@@ -33,7 +33,6 @@ MODULE_AUTHOR("Paul Diefenbaugh");
+ MODULE_DESCRIPTION("ACPI Processor Driver");
+ MODULE_LICENSE("GPL");
+ 
+-static int acpi_processor_start(struct device *dev);
+ static int acpi_processor_stop(struct device *dev);
+ 
+ static const struct acpi_device_id processor_device_ids[] = {
+@@ -47,7 +46,6 @@ static struct device_driver acpi_processor_driver = {
+ 	.name = "processor",
+ 	.bus = &cpu_subsys,
+ 	.acpi_match_table = processor_device_ids,
+-	.probe = acpi_processor_start,
+ 	.remove = acpi_processor_stop,
+ };
+ 
+@@ -115,12 +113,10 @@ static int acpi_soft_cpu_online(unsigned int cpu)
+ 	 * CPU got physically hotplugged and onlined for the first time:
+ 	 * Initialize missing things.
+ 	 */
+-	if (pr->flags.need_hotplug_init) {
++	if (!pr->flags.previously_online) {
+ 		int ret;
+ 
+-		pr_info("Will online and init hotplugged CPU: %d\n",
+-			pr->id);
+-		pr->flags.need_hotplug_init = 0;
++		pr_info("Will online and init CPU: %d\n", pr->id);
+ 		ret = __acpi_processor_start(device);
+ 		WARN(ret, "Failed to start CPU: %d\n", pr->id);
+ 	} else {
+@@ -167,9 +163,6 @@ static int __acpi_processor_start(struct acpi_device *device)
+ 	if (!pr)
+ 		return -ENODEV;
+ 
+-	if (pr->flags.need_hotplug_init)
+-		return 0;
+-
+ 	result = acpi_cppc_processor_probe(pr);
+ 	if (result && !IS_ENABLED(CONFIG_ACPI_CPU_FREQ_PSS))
+ 		dev_dbg(&device->dev, "CPPC data invalid or not present\n");
+@@ -185,32 +178,21 @@ static int __acpi_processor_start(struct acpi_device *device)
+ 
+ 	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
+ 					     acpi_processor_notify, device);
+-	if (ACPI_SUCCESS(status))
+-		return 0;
++	if (!ACPI_SUCCESS(status)) {
++		result = -ENODEV;
++		goto err_thermal_exit;
++	}
++	pr->flags.previously_online = 1;
+ 
+-	result = -ENODEV;
+-	acpi_processor_thermal_exit(pr, device);
++	return 0;
+ 
++err_thermal_exit:
++	acpi_processor_thermal_exit(pr, device);
+ err_power_exit:
+ 	acpi_processor_power_exit(pr);
+ 	return result;
  }
  
-+
-+#define __const_hweight2(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))))
-+
-+#define __const_hweight4(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))) + \
-+                     (!!((word) & (1ULL << 2))) + (!!((word) & (1ULL << 3))))
- /**
-  * fns - find N'th set bit in a word
-  * @word: The word to search
-@@ -255,13 +262,48 @@ static inline unsigned long __ffs64(u64 word)
- static inline unsigned long fns(unsigned long word, unsigned int n)
- {
- 	unsigned int bit;
+-static int acpi_processor_start(struct device *dev)
+-{
+-	struct acpi_device *device = ACPI_COMPANION(dev);
+-	int ret;
 -
--	while (word) {
--		bit = __ffs(word);
--		if (--n == 0)
--			return bit;
--		__clear_bit(bit, &word);
-+	unsigned int sum = 0;
-+#if BITS_PER_LONG == 64
-+	bits = __const_hweight32(word & 0xffffffff);
-+	if (bits <= n) {
-+		n -= bits;
-+		word >>= 32;
-+		sum += 32;
-+ 	}
-+#endif
-+	bits = __const_hweight16(word & 0xffff);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 16;
-+                sum += 16;
-+        }
-+	bits = __const_hweight8(word & 0xff);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 8;
-+                sum += 8;
-+        }
-+	bits = __const_hweight4(word & 0xf);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 4;
-+                sum += 4;
-+        }
-+	bits = __const_hweight2(word & 0x3);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 2;
-+                sum += 2;
-+        }
-+	bits = (unsigned int) (word & 0x1);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 1;
-+                sum += 1;
-+        }
-+	bits = (unsigned int) (word & 0x1);
-+        if (bits <= n) {
-+                n -= bits;
-+                sum += 1;
-+        }
-+
-+	if (!n)
-+		return sum;
-+
-+ 
-+ 	return BITS_PER_LONG;
-+ }
+-	if (!device)
+-		return -ENODEV;
+-
+-	/* Protect against concurrent CPU hotplug operations */
+-	cpu_hotplug_disable();
+-	ret = __acpi_processor_start(device);
+-	cpu_hotplug_enable();
+-	return ret;
+-}
+-
+ static int acpi_processor_stop(struct device *dev)
+ {
+ 	struct acpi_device *device = ACPI_COMPANION(dev);
+@@ -279,9 +261,9 @@ static int __init acpi_processor_driver_init(void)
+ 	if (result < 0)
+ 		return result;
+ 
+-	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+-					   "acpi/cpu-drv:online",
+-					   acpi_soft_cpu_online, NULL);
++	result = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				   "acpi/cpu-drv:online",
++				   acpi_soft_cpu_online, NULL);
+ 	if (result < 0)
+ 		goto err;
+ 	hp_online = result;
+diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+index 3f34ebb27525..e6f6074eadbf 100644
+--- a/include/acpi/processor.h
++++ b/include/acpi/processor.h
+@@ -217,7 +217,7 @@ struct acpi_processor_flags {
+ 	u8 has_lpi:1;
+ 	u8 power_setup_done:1;
+ 	u8 bm_rld_set:1;
+-	u8 need_hotplug_init:1;
++	u8 previously_online:1;
+ };
+ 
+ struct acpi_processor {
 -- 
-2.40.1
+2.39.2
 
