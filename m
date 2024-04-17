@@ -1,322 +1,139 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F921420D8;
-	Wed, 17 Apr 2024 14:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCF61419A2;
+	Wed, 17 Apr 2024 14:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364853; cv=none; b=nzJJuS64XQeMdwdnFUj84s1FJsKTlO+ZX75ioruilhHqiI+iVGybrVgfiO7z7/yXgHhCl25QiWa+Xu15izUTWHrkwuFO4h9c3VYgHwEmJlcuZBetQC2lqgk6ddsm5zjIGsgQFc+pgAR5Vj/RLnezWUFShq+vsKFw8i07krBILKI=
+	t=1713364858; cv=none; b=Pke4Tt5HnBrGOUnCTstWxRPpsh3/Si2SiHaR0xdEQ2zxx0Zpph5RubjORReHy5CcHCQ+Chsy1qV1/J0EuFsflIp1M9lZcnpxzzgg2tQku4b8OQt1ug4/cJEyv1q7GQZMbQBtkgn47wWL0GptEusHYh9lgTEzc6tR3tYolpQY/SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364853; c=relaxed/simple;
-	bh=zZbNSN5rRR466mCemooE352nmXl5YX37fcrK3efRs8Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nARd8q8o3DuMmCd3Hssut9a/tfgNsOFsgrmu3pkITArDqLCE506NziZ+1TskiorIY1RMgwGmIkVUmyfQNdxrcksBDHESCdnxjT6Re8mSwyoJ4o7zygPWSQCr/HwRvzSOhJ0UhGUjQf9BixEPE+2V+7LIDp9AcErlgX3XlkYEnAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ajtul9FV; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713364858; c=relaxed/simple;
+	bh=cA9scemWzsFPzGRaNP28UzTwSugriMk3blVS/UdZG5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AmjI0fnVlplqc8ZmTAePsXjtvwaJ3DxxHpdd+xGyvIwYJSmYXa9PyAw0pAk+zpUjdt8Up3lHoJOi5PPsxGv1YkZsFjvMOQxIWhfn6qc1o91aaJJfK0GpkkvYCzf5gSgKFpwflenQl2SHFTP4/IdpEDN8R8iJ7eTOxF7VcW8xKGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzRBw2TK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ajtul9FV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E443D1BF209;
-	Wed, 17 Apr 2024 14:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713364848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWz20cThQJK6bnEQ4zhZQU/AA4dKKPqDW46wYFJOb2Y=;
-	b=Ajtul9FVWzq/gRybLPATUeFSXhqbHi5GmXm6dZG06F+iX8roTV89ZF+47oTyrt9hq0Dn5H
-	K34kemZcM3Y5GstUJziw/JWMx5XL5HsNxcag6S+YvWXvhG22FK4sf90iTVb8TvCYogUq9r
-	noU6QnCUOAFF6VeUrMcYV2b3qn/AHNBnhoMbEWXfWgb/Cgl1b6QRad30IwY+0GiYB/hqha
-	p2TRrUoFTcAiEWZrEsH9jc41Vj+lVflzDTbZmwlxPLgrgISmUTrmFPh26YYHFZ0XLrYVkb
-	DUtUTghHRbCtfc0nbao9wnihIzG9dyStfI+rqwmKnn2eP3j6kzpnZWNMIc69sw==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 17 Apr 2024 16:39:49 +0200
-Subject: [PATCH net-next v9 01/14] ethtool: Expand Ethernet Power Equipment
- with c33 (PoE) alongside PoDL
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzRBw2TK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA5F6C072AA;
+	Wed, 17 Apr 2024 14:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713364858;
+	bh=cA9scemWzsFPzGRaNP28UzTwSugriMk3blVS/UdZG5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LzRBw2TKlNf290/RbUJs5YW4I8FKBGmlxBfHu94FlQsrTRnCtbIQBYX6daCmCUTYF
+	 yp688MjUGxUF4Si6PNGxbw80Z28XuRCrG9hxHjicTVTui70H8X5pVofBDvmnetTGY8
+	 2GCc4NlMw+cG+CKNkcJkoDJQbuayL8jjIJsaNsBnsbZjezXGAMjVLKQrGBDHYaAVXW
+	 dN6Z1rv9GyNx0kCqgyyU+iideLd9fm9xzpoi+9IynigDdBjQvynIRhueNUnYU0lGns
+	 cdwAMIHvk0vhDjuwIQ2wuPy/c22Vz+T6UfPMNuqDQdtOQdCUOcIIqdOddeyBsjJE0O
+	 i9rAFiploTiQw==
+Date: Wed, 17 Apr 2024 09:40:55 -0500
+From: Rob Herring <robh@kernel.org>
+To: David Wronek <david@mainlining.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: Add Raydium RM69380
+Message-ID: <20240417144055.GA2335446-robh@kernel.org>
+References: <20240416-raydium-rm69380-driver-v3-0-21600ac4ce5f@mainlining.org>
+ <20240416-raydium-rm69380-driver-v3-1-21600ac4ce5f@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-feature_poe-v9-1-242293fd1900@bootlin.com>
-References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
- Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
- kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416-raydium-rm69380-driver-v3-1-21600ac4ce5f@mainlining.org>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Tue, Apr 16, 2024 at 08:30:48PM +0200, David Wronek wrote:
+> Raydium RM69380 is a display driver IC used to drive OLED DSI panels.
+> Add a dt-binding for it.
+> 
+> Signed-off-by: David Wronek <david@mainlining.org>
+> ---
+> Note:
+> Depends on commit 48a516363e29 ("dt-bindings: display: panel: add common dual-link schema")
+> ---
+>  .../bindings/display/panel/raydium,rm69380.yaml    | 91 ++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml
+> new file mode 100644
+> index 000000000000..0ac7d033cbe0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/raydium,rm69380.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Raydium RM6380-based DSI display panels
 
-In the current PSE interface for Ethernet Power Equipment, support is
-limited to PoDL. This patch extends the interface to accommodate the
-objects specified in IEEE 802.3-2022 145.2 for Power sourcing
-Equipment (PSE).
+RM69380-based
 
-The following objects are now supported and considered mandatory:
-- IEEE 802.3-2022 30.9.1.1.5 aPSEPowerDetectionStatus
-- IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
-- IEEE 802.3-2022 30.9.1.2.1 aPSEAdminControl
+> +
+> +maintainers:
+> +  - David Wronek <david@mainlining.org>
+> +
+> +description:
+> +  The Raydium RM69380 is a generic DSI panel IC used to control
+> +  OLED panels.
+> +
+> +allOf:
+> +  - $ref: panel-common-dual.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - lenovo,j716f-edo-rm69380
+> +      - const: raydium,rm69380
+> +    description: This indicates the panel manufacturer of the panel
+> +      that is in turn using the RM69380 panel driver. The compatible
+> +      string determines how the RM69380 panel driver shall be configured
+> +      to work with the indicated panel. The raydium,rm69380 compatible shall
+> +      always be provided as a fallback.
+> +
+> +  avdd-supply:
+> +    description: Analog voltage rail
+> +
+> +  vddio-supply:
+> +    description: I/O voltage rail
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: phandle of gpio for reset line - This should be active low
+> +
+> +  ports: true
+> +  reg: true
 
-To avoid confusion between "PoDL PSE" and "PoE PSE", which have similar
-names but distinct values, we have followed the suggestion of Oleksij
-Rempel and Andrew Lunn to maintain separate naming schemes for each,
-using c33 (clause 33) prefix for "PoE PSE".
-You can find more details in the discussion threads here:
-https://lore.kernel.org/netdev/20230912110637.GI780075@pengutronix.de/
-https://lore.kernel.org/netdev/2539b109-72ad-470a-9dae-9f53de4f64ec@lunn.ch/
+Drop these and change 'addtionalProperties' to 'unevaluatedProperties'. 
+Other properties in panel-common.yaml should be allowed. width-mm and 
+height-mm for example.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - avdd-supply
+> +  - vddio-supply
+> +  - reset-gpios
 
-Changes in v2:
-- Rename all the PoE variables and enum with a c33 prefix.
-- Add documentation, thanks to Oleksij for having written one.
+> +  - ports
 
-Changes in v3:
-- Fix documentation build warning.
+Already required in panel-common-dual.yaml.
 
-Changes in v9:
-- Remove non utf8 characters.
----
- Documentation/networking/index.rst               |  1 +
- Documentation/networking/pse-pd/index.rst        |  9 +++
- Documentation/networking/pse-pd/introduction.rst | 73 ++++++++++++++++++++++++
- include/linux/pse-pd/pse.h                       |  9 +++
- include/uapi/linux/ethtool.h                     | 43 ++++++++++++++
- include/uapi/linux/ethtool_netlink.h             |  3 +
- 6 files changed, 138 insertions(+)
-
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 473d72c36d61..7664c0bfe461 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -93,6 +93,7 @@ Contents:
-    plip
-    ppp_generic
-    proc_net_tcp
-+   pse-pd/index
-    radiotap-headers
-    rds
-    regulatory
-diff --git a/Documentation/networking/pse-pd/index.rst b/Documentation/networking/pse-pd/index.rst
-new file mode 100644
-index 000000000000..18197bc7303d
---- /dev/null
-+++ b/Documentation/networking/pse-pd/index.rst
-@@ -0,0 +1,9 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Power Sourcing Equipment (PSE) Documentation
-+============================================
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   introduction
-diff --git a/Documentation/networking/pse-pd/introduction.rst b/Documentation/networking/pse-pd/introduction.rst
-new file mode 100644
-index 000000000000..e3d3faaef717
---- /dev/null
-+++ b/Documentation/networking/pse-pd/introduction.rst
-@@ -0,0 +1,73 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Power Sourcing Equipment (PSE) in IEEE 802.3 Standard
-+=====================================================
-+
-+Overview
-+--------
-+
-+Power Sourcing Equipment (PSE) is essential in networks for delivering power
-+along with data over Ethernet cables. It usually refers to devices like
-+switches and hubs that supply power to Powered Devices (PDs) such as IP
-+cameras, VoIP phones, and wireless access points.
-+
-+PSE vs. PoDL PSE
-+----------------
-+
-+PSE in the IEEE 802.3 standard generally refers to equipment that provides
-+power alongside data over Ethernet cables, typically associated with Power over
-+Ethernet (PoE).
-+
-+PoDL PSE, or Power over Data Lines PSE, specifically denotes PSEs operating
-+with single balanced twisted-pair PHYs, as per Clause 104 of IEEE 802.3. PoDL
-+is significant in contexts like automotive and industrial controls where power
-+and data delivery over a single pair is advantageous.
-+
-+IEEE 802.3-2018 Addendums and Related Clauses
-+---------------------------------------------
-+
-+Key addenda to the IEEE 802.3-2018 standard relevant to power delivery over
-+Ethernet are as follows:
-+
-+- **802.3af (Approved in 2003-06-12)**: Known as PoE in the market, detailed in
-+  Clause 33, delivering up to 15.4W of power.
-+- **802.3at (Approved in 2009-09-11)**: Marketed as PoE+, enhancing PoE as
-+  covered in Clause 33, increasing power delivery to up to 30W.
-+- **802.3bt (Approved in 2018-09-27)**: Known as 4PPoE in the market, outlined
-+  in Clause 33. Type 3 delivers up to 60W, and Type 4 up to 100W.
-+- **802.3bu (Approved in 2016-12-07)**: Formerly referred to as PoDL, detailed
-+  in Clause 104. Introduces Classes 0 - 9. Class 9 PoDL PSE delivers up to ~65W
-+
-+Kernel Naming Convention Recommendations
-+----------------------------------------
-+
-+For clarity and consistency within the Linux kernel's networking subsystem, the
-+following naming conventions are recommended:
-+
-+- For general PSE (PoE) code, use "c33_pse" key words. For example:
-+  ``enum ethtool_c33_pse_admin_state c33_admin_control;``.
-+  This aligns with Clause 33, encompassing various PoE forms.
-+
-+- For PoDL PSE - specific code, use "podl_pse". For example:
-+  ``enum ethtool_podl_pse_admin_state podl_admin_control;`` to differentiate
-+  PoDL PSE settings according to Clause 104.
-+
-+Summary of Clause 33: Data Terminal Equipment (DTE) Power via Media Dependent Interface (MDI)
-+---------------------------------------------------------------------------------------------
-+
-+Clause 33 of the IEEE 802.3 standard defines the functional and electrical
-+characteristics of Powered Device (PD) and Power Sourcing Equipment (PSE).
-+These entities enable power delivery using the same generic cabling as for data
-+transmission, integrating power with data communication for devices such as
-+10BASE-T, 100BASE-TX, or 1000BASE-T.
-+
-+Summary of Clause 104: Power over Data Lines (PoDL) of Single Balanced Twisted-Pair Ethernet
-+--------------------------------------------------------------------------------------------
-+
-+Clause 104 of the IEEE 802.3 standard delineates the functional and electrical
-+characteristics of PoDL Powered Devices (PDs) and PoDL Power Sourcing Equipment
-+(PSEs). These are designed for use with single balanced twisted-pair Ethernet
-+Physical Layers. In this clause, 'PSE' refers specifically to PoDL PSE, and
-+'PD' to PoDL PD. The key intent is to provide devices with a unified interface
-+for both data and the power required to process this data over a single
-+balanced twisted-pair Ethernet connection.
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index 199cf4ae3cf2..be4e5754eb24 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -17,9 +17,12 @@ struct pse_controller_dev;
-  *
-  * @podl_admin_control: set PoDL PSE admin control as described in
-  *	IEEE 802.3-2018 30.15.1.2.1 acPoDLPSEAdminControl
-+ * @c33_admin_control: set PSE admin control as described in
-+ *	IEEE 802.3-2022 30.9.1.2.1 acPSEAdminControl
-  */
- struct pse_control_config {
- 	enum ethtool_podl_pse_admin_state podl_admin_control;
-+	enum ethtool_c33_pse_admin_state c33_admin_control;
- };
- 
- /**
-@@ -29,10 +32,16 @@ struct pse_control_config {
-  *	functions. IEEE 802.3-2018 30.15.1.1.2 aPoDLPSEAdminState
-  * @podl_pw_status: power detection status of the PoDL PSE.
-  *	IEEE 802.3-2018 30.15.1.1.3 aPoDLPSEPowerDetectionStatus:
-+ * @c33_admin_state: operational state of the PSE
-+ *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
-+ * @c33_pw_status: power detection status of the PSE.
-+ *	IEEE 802.3-2022 30.9.1.1.5 aPSEPowerDetectionStatus:
-  */
- struct pse_control_status {
- 	enum ethtool_podl_pse_admin_state podl_admin_state;
- 	enum ethtool_podl_pse_pw_d_status podl_pw_status;
-+	enum ethtool_c33_pse_admin_state c33_admin_state;
-+	enum ethtool_c33_pse_pw_d_status c33_pw_status;
- };
- 
- /**
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index 95c2f09f0d0a..7b9a3d890949 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -752,6 +752,49 @@ enum ethtool_module_power_mode {
- 	ETHTOOL_MODULE_POWER_MODE_HIGH,
- };
- 
-+/**
-+ * enum ethtool_c33_pse_admin_state - operational state of the PoDL PSE
-+ *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
-+ * @ETHTOOL_C33_PSE_ADMIN_STATE_UNKNOWN: state of PSE functions is unknown
-+ * @ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED: PSE functions are disabled
-+ * @ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED: PSE functions are enabled
-+ */
-+enum ethtool_c33_pse_admin_state {
-+	ETHTOOL_C33_PSE_ADMIN_STATE_UNKNOWN = 1,
-+	ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
-+	ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED,
-+};
-+
-+/**
-+ * enum ethtool_c33_pse_pw_d_status - power detection status of the PSE.
-+ *	IEEE 802.3-2022 30.9.1.1.3 aPoDLPSEPowerDetectionStatus:
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_UNKNOWN: PSE status is unknown
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED: The enumeration "disabled"
-+ *	indicates that the PSE State diagram is in the state DISABLED.
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_SEARCHING: The enumeration "searching"
-+ *	indicates the PSE State diagram is in a state other than those
-+ *	listed.
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING: The enumeration
-+ *	"deliveringPower" indicates that the PSE State diagram is in the
-+ *	state POWER_ON.
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_TEST: The enumeration "test" indicates that
-+ *	the PSE State diagram is in the state TEST_MODE.
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_FAULT: The enumeration "fault" indicates that
-+ *	the PSE State diagram is in the state TEST_ERROR.
-+ * @ETHTOOL_C33_PSE_PW_D_STATUS_OTHERFAULT: The enumeration "otherFault"
-+ *	indicates that the PSE State diagram is in the state IDLE due to
-+ *	the variable error_condition = true.
-+ */
-+enum ethtool_c33_pse_pw_d_status {
-+	ETHTOOL_C33_PSE_PW_D_STATUS_UNKNOWN = 1,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_SEARCHING,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_TEST,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_FAULT,
-+	ETHTOOL_C33_PSE_PW_D_STATUS_OTHERFAULT,
-+};
-+
- /**
-  * enum ethtool_podl_pse_admin_state - operational state of the PoDL PSE
-  *	functions. IEEE 802.3-2018 30.15.1.1.2 aPoDLPSEAdminState
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index b4f0d233d048..f17dbe54bf5e 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -913,6 +913,9 @@ enum {
- 	ETHTOOL_A_PODL_PSE_ADMIN_STATE,		/* u32 */
- 	ETHTOOL_A_PODL_PSE_ADMIN_CONTROL,	/* u32 */
- 	ETHTOOL_A_PODL_PSE_PW_D_STATUS,		/* u32 */
-+	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
-+	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
-+	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
- 
- 	/* add new constants above here */
- 	__ETHTOOL_A_PSE_CNT,
-
--- 
-2.34.1
-
+Rob
