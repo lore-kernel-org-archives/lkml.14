@@ -1,174 +1,220 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3C01474C7;
-	Wed, 17 Apr 2024 15:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E547140E29;
+	Wed, 17 Apr 2024 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713367636; cv=none; b=UyyZ7elctML+giJgWeYxgelJ6DQhC7Yag1eDn2YqMZ7gw6bc57aU8UyUmDtaLy1Y1d7n7m1a8MxK9KbNC/JCOg0fzD64y1tW3ztZMRiF75wuY+ksd3qdaf0Przr0awuipsOgLdI/sMNk1kiAVtdj9hRvcjWAc6LlEBXoK0uSrUo=
+	t=1713367705; cv=none; b=BOZlH3vSEUeIzinjC0SKypbNpTGaQIY5uORweiITd7pGsyCjXt7/hAyfVIyu8IdReDSD0+A6bEOiJuaauNEsbsGRsWYIMsCO9s8mqurI8cM3dJKjluUEnkSosbT5ORapMs411g3ECHHVvJxwH89V8rVu7DEgCbnU4BJ6bby/EXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713367636; c=relaxed/simple;
-	bh=9HPTSvA9Vl4MuqVnZmDO/gJ2gS6Uz84Qlx8Z9fvRJU4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=czPVvzGb05XZPfJNS08fkVTf0CETc1SuPAJaoUjozWugQrtl7BifTueP0yoOBqw+3GgtAJm5SKhoaf0MZWRejIzVgDwNTxiVCxrmzBD4Up30zxrCsVKl1M5HBbcwqujs+V0h8E+NhlQut23r6pZsFQKj5ClqUBTAz01U6brmbr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=SEuodbfR; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1713367705; c=relaxed/simple;
+	bh=DW3I9GoVYzSlEMTLuU0jyORDXqMAP0u2EdSKwSWXNhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rDBwqOU9+HAZGMzVxERCFbDOMoxynsUU+cIsUgvi1/bBfRxSvmg/ppbLh9yqunR4spWTxJomCr//jP+hlpCNwBV1NXOT/PbebhAMDAeMbyj43azKMQJdAY2hvEG0TAvHjopNaTAnFuh0gMpsf3HXDc0qPPx531ML91StEqaRFao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HiAbzuLT; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="SEuodbfR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1713367632; x=1713626832;
-	bh=yE1RsTT/3QhtCokhgtHPH8FIR5On7XGmjEDodbAFAQI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=SEuodbfR8tDN1iztrdISMh608nxV7gNjcXC3IkbviYQDqAG/K7kbEYXVYFyVpsZED
-	 oTSH49hr/DqRrbM+whOMt8FqBzDbVrhicQLAQ7v3k5ZBc99gTS4EaNQRkemL8/nsRD
-	 eEM1WDBbocmVXAvCYGqjAZe4/gqJx0o9XcUfkwS7MqgRJsfb9iO1HHCZjR0/OBu422
-	 vTFuAD3XuK/TnkqCwLlu0OUdK/QlEdYjy3hWUjgH27rf87Ma10qYMRAaW9TXb5QzZ5
-	 CN3DYniWeLD6vNaOPDLllM7o6ZmTPkA2rfgRtGipuPZkhwu/sF/4qlg6Phoqn4Jv2y
-	 Aaw9y+q8TerZg==
-Date: Wed, 17 Apr 2024 15:27:02 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Gary Guo <gary@garyguo.net>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
-Message-ID: <b7305f21-3e0b-4bfe-8902-5fc9367c2291@proton.me>
-In-Reply-To: <CAH5fLgjcO0mrQ=X2QG1qS+sTpWDnBfGxXGWn-3wBQzn3MP8pQQ@mail.gmail.com>
-References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com> <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com> <20240417152802.6b7a7384@eugeo> <CAH5fLgjcO0mrQ=X2QG1qS+sTpWDnBfGxXGWn-3wBQzn3MP8pQQ@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HiAbzuLT"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HF2XIa022980;
+	Wed, 17 Apr 2024 15:28:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=zAU0vRCOwSbovtMECRQap2vSgOqXnbXeo2+zCEfUK+w=;
+ b=HiAbzuLT8RE07UGwkIUjqiwKfEE15g75I1zWNU3Wwayj/CMwuiqcB5uCC3PLmUYEmBpE
+ AtLQ3FgZNpMnula1CZ8M3oRianvLRktuoq6RGzOlnx8YjownLCFIEudavfiw9cY5A3P1
+ kV3BFtc7NOd/tYKe6bFUE6Uc7HN5vi4TlEAy+C3CH7YUUZLtKQhK0xexV3XliA1nl8Vi
+ xq3/FbTm1ATInk2hIUXpgr+ImsXoiM4LiiG0irHkpqTpOSLsdLsfA/UI+94r/QXErO7A
+ tRagm7woItth5lDkzhfVOYXjV08DGCL5vhjdI8MsljuDZ93312FmhYHMGjAUcqpqkQ9V rA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgqd025x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:28:08 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HFS75A000695;
+	Wed, 17 Apr 2024 15:28:07 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjgqd0235-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:28:07 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43HEF9F2018212;
+	Wed, 17 Apr 2024 15:25:38 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg4ctdf4k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 15:25:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HFPXew50987316
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Apr 2024 15:25:35 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49FE22004B;
+	Wed, 17 Apr 2024 15:25:33 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 600B620043;
+	Wed, 17 Apr 2024 15:25:26 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.36.38])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Apr 2024 15:25:26 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        acme@redhat.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vineethr@linux.ibm.com
+Subject: [PATCH] perf sched map: Add command-name option to filter the output map
+Date: Wed, 17 Apr 2024 20:55:21 +0530
+Message-ID: <20240417152521.80340-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0hCcYBIlLnzVcwT2slL7yQSC-tRhR0rk
+X-Proofpoint-ORIG-GUID: J4fkubprsoucha22FsBHO7ktq7gB7NC5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_12,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404170107
 
-On 17.04.24 16:40, Alice Ryhl wrote:
-> On Wed, Apr 17, 2024 at 4:28=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote=
-:
->>
->> On Mon, 15 Apr 2024 07:13:53 +0000
->> Alice Ryhl <aliceryhl@google.com> wrote:
->>
->>> From: Wedson Almeida Filho <wedsonaf@gmail.com>
->>>
->>> A pointer to an area in userspace memory, which can be either read-only
->>> or read-write.
->>>
->>> All methods on this struct are safe: attempting to read or write on bad
->>> addresses (either out of the bound of the slice or unmapped addresses)
->>> will return `EFAULT`. Concurrent access, *including data races to/from
->>> userspace memory*, is permitted, because fundamentally another userspac=
-e
->>> thread/process could always be modifying memory at the same time (in th=
-e
->>> same way that userspace Rust's `std::io` permits data races with the
->>> contents of files on disk). In the presence of a race, the exact byte
->>> values read/written are unspecified but the operation is well-defined.
->>> Kernelspace code should validate its copy of data after completing a
->>> read, and not expect that multiple reads of the same address will retur=
-n
->>> the same value.
->>>
->>> These APIs are designed to make it difficult to accidentally write
->>> TOCTOU bugs. Every time you read from a memory location, the pointer is
->>> advanced by the length so that you cannot use that reader to read the
->>> same memory location twice. Preventing double-fetches avoids TOCTOU
->>> bugs. This is accomplished by taking `self` by value to prevent
->>> obtaining multiple readers on a given `UserSlicePtr`, and the readers
->>> only permitting forward reads. If double-fetching a memory location is
->>> necessary for some reason, then that is done by creating multiple
->>> readers to the same memory location.
->>>
->>> Constructing a `UserSlicePtr` performs no checks on the provided
->>> address and length, it can safely be constructed inside a kernel thread
->>> with no current userspace process. Reads and writes wrap the kernel API=
-s
->>> `copy_from_user` and `copy_to_user`, which check the memory map of the
->>> current process and enforce that the address range is within the user
->>> range (no additional calls to `access_ok` are needed).
->>>
->>> This code is based on something that was originally written by Wedson o=
-n
->>> the old rust branch. It was modified by Alice by removing the
->>> `IoBufferReader` and `IoBufferWriter` traits, and various other changes=
-.
->>>
->>> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
->>> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>> ---
->>>   rust/helpers.c         |  14 +++
->>>   rust/kernel/lib.rs     |   1 +
->>>   rust/kernel/uaccess.rs | 304 ++++++++++++++++++++++++++++++++++++++++=
-+++++++++
->>>   3 files changed, 319 insertions(+)
->>>
->>> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
->>
->>> +/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
->>> +/// [`clone_reader`]: UserSliceReader::clone_reader
->>> +pub struct UserSlice {
->>> +    ptr: *mut c_void,
->>> +    length: usize,
->>> +}
->>
->> How useful is the `c_void` in the struct and new signature? They tend
->> to not be very useful in Rust. Given that provenance doesn't matter
->> for userspace pointers, could this be `usize` simply?
->>
->> I think `*mut u8` or `*mut ()` makes more sense than `*mut c_void` for
->> Rust code even if we don't want to use `usize`.
->=20
-> I don't have a strong opinion here. I suppose a usize could make
-> sense. But I also think c_void is fine, and I lean towards not
-> changing it. :)
->=20
->> Some thinking aloud and brainstorming bits about the API.
->>
->> I wonder if it make sense to have `User<[u8]>` instead of `UserSlice`?
->> The `User` type can be defined like this:
->>
->> ```rust
->> struct User<T: ?Sized> {
->>     ptr: *mut T,
->> }
->> ```
->>
->> and this allows arbitrary T as long as it's POD. So we could have
->> `User<[u8]>`, `User<u32>`, `User<PodStruct>`. I imagine the
->> `User<[u8]>` would be the general usage and the latter ones can be
->> especially helpful if you are trying to implement ioctl and need to
->> copy fixed size data structs from userspace.
->=20
-> Hmm, we have to be careful here. Generally, when you get a user slice
-> via an ioctl, you should make sure to use the length you get from
-> userspace. In binder, it looks like this:
->=20
-> let user_slice =3D UserSlice::new(arg, _IOC_SIZE(cmd));
->=20
-> so whichever API we use, we must make sure to get the length as an
-> argument in bytes. What should we do if the length is not a multiple
-> of size_of(T)?
+By default, perf sched map prints sched-in events for all the tasks
+which may not be required all the time as it prints lot of symbols
+and rows to the terminal.
 
-We could print a warning and then just floor to the next multiple of
-`size_of::<T>()`. I agree that is not perfect, but if one uses the
-current API, one also needs to do the length check eventually.
+With --command-name option, one could specify the specific command
+for which the map has to be shown. This would help in analyzing the
+CPU usage patterns easier for that specific command. Since multiple
+PID's might have the same command name, using command-name filter
+would be more useful for debugging.
 
-> Another issue is that there's no stable way to get the length from a
-> `*mut [T]` without creating a reference, which is not okay for a user
-> slice.
+For other tasks, instead of printing the symbol, ** is printed and
+the same . is used to represent idle. ** is used instead of symbol
+for other tasks because it helps in clear visualization of command
+of interest and secondly the symbol itself doesn't mean anything
+because the sched-in of that symbol will not be printed(first sched-in
+contains pid and the corresponding symbol).
 
-Seems like `<* const [T]>::len` (feature `slice_ptr_len`) [1] was just
-stabilized 5 days ago [1].
+6.8.0
+======
+  *A0                   213864.670142 secs A0 => migration/0:18
+  *.                    213864.670148 secs .  => swapper:0
+   .  *B0               213864.670217 secs B0 => migration/1:21
+   .  *.                213864.670223 secs
+   .   .  *C0           213864.670247 secs C0 => migration/2:26
+   .   .  *.            213864.670252 secs
 
-[1]: https://doc.rust-lang.org/std/primitive.pointer.html#method.len-1
-[2]: https://github.com/rust-lang/rust/pull/123868
+6.8.0 + patch (--command-name = schbench)
+=============
+   **  .   ** *A0       213864.671055 secs A0 => schbench:104834
+  *B0  .   .   A0       213864.671156 secs B0 => schbench:104835
+  *C0  .   .   A0       213864.671187 secs C0 => schbench:104836
+  *D0  .   .   A0       213864.671219 secs D0 => schbench:104837
+  *E0  .   .   A0       213864.671250 secs E0 => schbench:104838
+   E0  .  *D0  A0
 
---=20
-Cheers,
-Benno
+This helps in visualizing how a benchmark like schbench is spread over
+the available cpus while also knowing which cpus are idle(.) and which
+are not(**). This will be more useful as number of CPUs increase.
+
+Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+---
+ tools/perf/Documentation/perf-sched.txt |  4 ++++
+ tools/perf/builtin-sched.c              | 17 ++++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+index 5fbe42bd599b..b04a37560935 100644
+--- a/tools/perf/Documentation/perf-sched.txt
++++ b/tools/perf/Documentation/perf-sched.txt
+@@ -94,6 +94,10 @@ OPTIONS for 'perf sched map'
+ --color-pids::
+ 	Highlight the given pids.
+ 
++--command-name::
++	Map output only for the given command name.
++	(** indicates other tasks while . is idle).
++
+ OPTIONS for 'perf sched timehist'
+ ---------------------------------
+ -k::
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 0fce7d8986c0..e60836da53e5 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -156,6 +156,7 @@ struct perf_sched_map {
+ 	const char		*color_pids_str;
+ 	struct perf_cpu_map	*color_cpus;
+ 	const char		*color_cpus_str;
++	const char		*command;
+ 	struct perf_cpu_map	*cpus;
+ 	const char		*cpus_str;
+ };
+@@ -1594,8 +1595,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 
+ 	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+ 
+-	printf("  ");
+-
+ 	new_shortname = 0;
+ 	if (!tr->shortname[0]) {
+ 		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+@@ -1605,7 +1604,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 			 */
+ 			tr->shortname[0] = '.';
+ 			tr->shortname[1] = ' ';
+-		} else {
++		} else if (!sched->map.command || !strcmp(thread__comm_str(sched_in),
++								sched->map.command)) {
+ 			tr->shortname[0] = sched->next_shortname1;
+ 			tr->shortname[1] = sched->next_shortname2;
+ 
+@@ -1618,10 +1618,18 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 				else
+ 					sched->next_shortname2 = '0';
+ 			}
++		} else {
++			tr->shortname[0] = '*';
++			tr->shortname[1] = '*';
+ 		}
+ 		new_shortname = 1;
+ 	}
+ 
++	if (sched->map.command && strcmp(thread__comm_str(sched_in), sched->map.command))
++		goto skip;
++
++	printf("  ");
++
+ 	for (i = 0; i < cpus_nr; i++) {
+ 		struct perf_cpu cpu = {
+ 			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+@@ -1678,6 +1686,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ out:
+ 	color_fprintf(stdout, color, "\n");
+ 
++skip:
+ 	thread__put(sched_in);
+ 
+ 	return 0;
+@@ -3560,6 +3569,8 @@ int cmd_sched(int argc, const char **argv)
+                     "highlight given CPUs in map"),
+ 	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
+                     "display given CPUs in map"),
++	OPT_STRING(0, "command-name", &sched.map.command, "command",
++		"map output only for the given command name"),
+ 	OPT_PARENT(sched_options)
+ 	};
+ 	const struct option timehist_options[] = {
+-- 
+2.39.1
 
