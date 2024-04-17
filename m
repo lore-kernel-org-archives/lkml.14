@@ -1,92 +1,142 @@
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B5F44C60;
-	Wed, 17 Apr 2024 04:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42DB1170F;
+	Wed, 17 Apr 2024 04:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713328688; cv=none; b=pF34WATojBQ7qRczFDO89B/bzLn9fbh45FhVI5su+RQ+2geByD7W4mpwooiQEn4SPz1T9WAPyLLXaLCUbCa5Kvd7aEVX7C+Es9OA7TSvSWfQfnc1hJPTK632YUeRDYJYeQnoWKPt0qLOE6iQfz31yj5v7JA6nCkwQGqNpQiUHAA=
+	t=1713328796; cv=none; b=ePygW5kMwlnO+2d5oGSxXuRs5pgIliWeGR1Gh/IaIhNStr8AMsl5L7ZbrN1Fe+KvlCuUK+YqLeg2+G26iMAHRKa1fHec7dz5Ch0r7Im6H5tcp75qC1QRUyW0yTRX/b/ljsUMn20vcUKJ+g4/R/jG7wy5f4dShgzP5bE1XsUUzxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713328688; c=relaxed/simple;
-	bh=zHKzExQqZWqAwP/VxhFaDjDzbwnfwfF4YYZd/OapYkw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WdjzeVIKHU5shOYKfxtLfV/SjisgLoMUOX3tfJuNkz+W8TqGOzMZCNjR3VF+D7Isy2nALzp/OOJkPlhBdR4HOQ2sSUdYHjmseuYNBfLDW4wT0VKdqNV3iHAdthZpUliSOOv+Ab7Lm40/KFlIJfhidrfAoliVRt96ibXT5plYTsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=TsUJBHv6; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
+	s=arc-20240116; t=1713328796; c=relaxed/simple;
+	bh=S3KeYWcnN7CaKj31q1rVFlks67eURbkzfUZxaWtCpkQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IzddBH8SOqCae8bBPgsWp77aMMTW2iGtH3NVlPL7BNYGaPMfoEVXq1agrsSTOcOF+TGe0BpMS/ZSxum3lQjWiVtAkFl2ezdH6KnWRrw5FI077RCjssevoO44L7l8acikLYxKHNtsy+AAmNtsGN0xRcUxBjnZqIerDntZiAP0G6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CQSLpV4P; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="TsUJBHv6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
-	s=protonmail; t=1713328680; x=1713587880;
-	bh=pp8p9HGXXcoQWS31K5FE4IE/aNjWd3ZLRLc51c+yVfg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=TsUJBHv6UtUA1uWa0BoAuYeveWbqs9SvbmqunDKvIqL4yRFsKZ24bt0ybsToYzUip
-	 UIoAMC8/5ZC7fUNjY/UV/rHCljRY8/P2uSIH7pHvR3rYigwQpU96ipHwgiU4zv85mv
-	 E+ilSnfuFSP+wUpfwrwoMmk9EzDta+ps9oCB9D495gAdRL4o90r1+bxQ9kb7HCqON3
-	 R31vONCuiV+Eg3wsL6ZuaOQ0+opEec/qws9gQIITXyQVmf+hnsXoapH3AObiW2jWiK
-	 w1Q0PdpSrJijH0lSQ9N57pQKtokigKU6GsrWsMMdC+C1AxnFeeAIkJtwU4Va4sX1dK
-	 WnwtY5pcmZP8g==
-Date: Wed, 17 Apr 2024 04:37:46 +0000
-To: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>
-From: Pratham Patel <prathampatel@thefossguy.com>
-Cc: linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pratham Patel <prathampatel@thefossguy.com>, thefirst1322@gmail.com
-Subject: [PATCH 1/2] kbuild: allow toggling the `with_devel` RPM macro
-Message-ID: <20240417043654.60662-2-prathampatel@thefossguy.com>
-In-Reply-To: <20240417043654.60662-1-prathampatel@thefossguy.com>
-References: <20240417043654.60662-1-prathampatel@thefossguy.com>
-Feedback-ID: 104309535:user:proton
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CQSLpV4P"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43H4cdDH029196;
+	Wed, 17 Apr 2024 04:39:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=zxcprYMTZyoW0dZd3NOUX
+	x8buyKspwXVHAPOYBlbg04=; b=CQSLpV4PVErXpXoo9GmDQ6nKTTj472zLKlxDz
+	R0h/fu45FxEviv+xyps0w4ZLRuFzD7FOjBrelOuz+iR19xa3EPETsN7SvezU5EFM
+	XJ2y9GUYOB61tZZL+9ohFOQD4L28o4LBxfjhhMgggtX9M2hKA35cXfqyG5zmbLlE
+	EndNZvHhzPU0K3qr7/y9Ri98yNj+BKD5nKb8kOcoH4QdkLHqBVHlZOTLVEEg815A
+	8eDJPooKLh1rxxESTyBmQslw3EHW0FU1giRoEkUyt3Euh5aS/ZHt9IZ764DM2coA
+	CP3M1cxPM8KSteDzenbhS8FNwCFHK3Uj/1XUsz+WycsXdjiDA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xj7j90055-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 04:39:22 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43H4dKUr028471
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 04:39:20 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 16 Apr 2024 21:39:20 -0700
+Date: Tue, 16 Apr 2024 21:39:19 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+CC: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <swboyd@chromium.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rajpat@codeaurora.org>,
+        <mka@chromium.org>, <rojay@codeaurora.org>,
+        <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
+Subject: Re: [PATCH v1] arm64: dts: qcom: sc7280: Remove CTS/RTS configuration
+Message-ID: <Zh9Sd4QVsN9TWomO@hu-bjorande-lv.qualcomm.com>
+References: <20240416105650.2626-1-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240416105650.2626-1-quic_vdadhani@quicinc.com>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qnZpEUul22HLGWytuiikdhWlsQ09LK6J
+X-Proofpoint-ORIG-GUID: qnZpEUul22HLGWytuiikdhWlsQ09LK6J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_04,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ adultscore=0 clxscore=1011 impostorscore=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404170029
 
-As it stands, there is no way to toggle the `with_devel` RPM macro
-that is defined in the scripts/package/kernel.spec file, without
-manually building the RPM.
+On Tue, Apr 16, 2024 at 04:26:50PM +0530, Viken Dadhaniya wrote:
+> Remove CTS and RTS pinctrl configuration for UART5 node as
+> it's designed for debug UART for all the board variants of the
+> sc7280 chipset.
+> 
+> Also change compatible string to debug UART.
+> 
 
-Introduce the Kbuild variable KBUILD_RPM_WITH_DEVEL to toggle the
-`with_devel` macro when building the binary PRM package.
+Why are you posting this on the public mailing list without first
+addressing the feedback and questions I gave you on the internal review
+list?
 
-The prior default of not building the `-devel` RPM package is preserved.
+Now you wasted the time of our community members, just to receive the
+same feedback I gave you last week.
 
-Signed-off-by: Pratham Patel <prathampatel@thefossguy.com>
----
- scripts/Makefile.package | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Regards,
+Bjorn
 
-diff --git a/scripts/Makefile.package b/scripts/Makefile.package
-index 38653f3e8108..715e068eae60 100644
---- a/scripts/Makefile.package
-+++ b/scripts/Makefile.package
-@@ -47,6 +47,8 @@ $(linux-tarballs): .tmp_HEAD FORCE
- # rpm-pkg srcrpm-pkg binrpm-pkg
- # ------------------------------------------------------------------------=
----
-=20
-+export KBUILD_RPM_WITH_DEVEL ?=3D 0
-+
- quiet_cmd_mkspec =3D GEN     $@
-       cmd_mkspec =3D $(srctree)/scripts/package/mkspec $@
-=20
-@@ -71,7 +73,8 @@ rpm-pkg srcrpm-pkg binrpm-pkg: rpmbuild/SPECS/kernel.spec
- =09+$(strip rpmbuild -b$(build-type) rpmbuild/SPECS/kernel.spec \
- =09--define=3D'_topdir $(abspath rpmbuild)' \
- =09$(if $(filter a b, $(build-type)), \
--=09=09--target $(UTS_MACHINE)-linux --build-in-place --noprep --define=3D'=
-_smp_mflags %{nil}' \
-+=09=09--target $(UTS_MACHINE)-linux --build-in-place --noprep \
-+=09=09--define=3D'_smp_mflags %{nil}' --define=3D'with_devel $(KBUILD_RPM_=
-WITH_DEVEL)' \
- =09=09$$(rpm -q rpm >/dev/null 2>&1 || echo --nodeps)) \
- =09$(RPMOPTS))
-=20
---=20
-2.42.0
-
-
+> Fixes: 38cd93f413fd ("arm64: dts: qcom: sc7280: Update QUPv3 UART5 DT node")
+> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 14 ++------------
+>  1 file changed, 2 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 38c183b2bb26..2a6b4c4639d1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -1440,12 +1440,12 @@
+>  			};
+>  
+>  			uart5: serial@994000 {
+> -				compatible = "qcom,geni-uart";
+> +				compatible = "qcom,geni-debug-uart";
+>  				reg = <0 0x00994000 0 0x4000>;
+>  				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
+>  				clock-names = "se";
+>  				pinctrl-names = "default";
+> -				pinctrl-0 = <&qup_uart5_cts>, <&qup_uart5_rts>, <&qup_uart5_tx>, <&qup_uart5_rx>;
+> +				pinctrl-0 = <&qup_uart5_tx>, <&qup_uart5_rx>;
+>  				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+>  				power-domains = <&rpmhpd SC7280_CX>;
+>  				operating-points-v2 = <&qup_opp_table>;
+> @@ -5397,16 +5397,6 @@
+>  				function = "qup04";
+>  			};
+>  
+> -			qup_uart5_cts: qup-uart5-cts-state {
+> -				pins = "gpio20";
+> -				function = "qup05";
+> -			};
+> -
+> -			qup_uart5_rts: qup-uart5-rts-state {
+> -				pins = "gpio21";
+> -				function = "qup05";
+> -			};
+> -
+>  			qup_uart5_tx: qup-uart5-tx-state {
+>  				pins = "gpio22";
+>  				function = "qup05";
+> -- 
+> 2.17.1
+> 
