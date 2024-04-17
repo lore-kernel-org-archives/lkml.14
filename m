@@ -1,137 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE3A6F068;
-	Wed, 17 Apr 2024 08:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1320E6F068;
+	Wed, 17 Apr 2024 08:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713340879; cv=none; b=fASI1+h4s8zvVdAmEJ+la51hw+JEvFtWd0oywnbXI/Cl200dwuiteUWuEQBOA765zUxx8SpxyxeX0AJeRVOesgPsFDFYrCGIxGMQl8KCiD0lhKvaWFWDoeFlZOdRF6yQi92SBBL8aUAmHwETjUt79AbinRyVJNReGvVv/ecXPWk=
+	t=1713340890; cv=none; b=MG14JFPgRQgoW1/GDeEkxmQrhN9CeOqx+JrEytkGl+DQem98ebJDx3NjbCfnMhufemmsS1rOQ8soRb0USAIY9sWffsx4L8VYECAygZMgROgqs6mYUMluqW3yA3Dzd0eksN8qd4PmDCWaTdz7tFzLSZhEFx+KvlH3dV4fBMozy+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713340879; c=relaxed/simple;
-	bh=stFHSl8F/ZzKI0Ru1yFqLLar6pPPZF0zWrYDY45yiow=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SfnGFmPXoSbkTcgIXpeLoUMnHEWi/vOfSY1rDPwl1eWh48vZKXYKhsdRmuqicGzANxhRTfS0ySTQzrp2vq6dL7lVcpzKGIg9nMCZLoHE1NOgBoZ3Z2uDnr0wgAsIw3hhNGva0RFTHchPhiuUOs7i87xeYnMlt8AgAXHtkwkZOIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A+EPyvmK; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1713340890; c=relaxed/simple;
+	bh=+AHxkBxgK0JVVQSGYJS1zewwUaQq0VBfzWVYWCsdqJ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rTNgYcrgbbxGDYJdhI2j2cy7Z2Jje+n/oWEZ+rQe5hppXZ8cTdvRQqqh+LGsTFPJ5dlRHGWbWfHCmixIREVidxAKfI8GkB0yB4hBYchBbYYlXnOpp0+2KezdmWVQUGuu5O+S1S435AfiiLHVu86CUmLk6mcTrkG01BuoFqFonOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzMNYHiF; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A+EPyvmK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzMNYHiF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713340876; x=1744876876;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=stFHSl8F/ZzKI0Ru1yFqLLar6pPPZF0zWrYDY45yiow=;
-  b=A+EPyvmKgVA5e4NEcCVyWjSoF3+ah1tKnpqBfHa+5yR0K4XBcmAouE71
-   PnVGPeKXfFB8fdyzT/60hxB8Oa/oeSLDHbWzW/VCx/+A7SS72vgR9IMS2
-   GSU6o40lyQeR9p7wjSbyL5Llg1qOdhEsavijGbtq+2nVisclUv6rOFMwg
-   91aEn3kj6eZcKFX62akkdqUHHkWLxp+stxgklpdN+AROTHtNzErPVLqVw
-   QBvTdEpNexWg7kbzOYKb0xoKXm6mmFEawExamwQorstXJZ5L5Tjkwe4cf
-   kS+2tHPklgCp4yhNjSW90KhW8MU0KN3fh8WY3pt2NghnjEAPUf3y3VpwD
-   w==;
-X-CSE-ConnectionGUID: hChmdGuYRNyDM7f64FI73Q==
-X-CSE-MsgGUID: tihl1K/hQGOLzylsB8ywCQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="26330373"
+  t=1713340889; x=1744876889;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+AHxkBxgK0JVVQSGYJS1zewwUaQq0VBfzWVYWCsdqJ0=;
+  b=mzMNYHiFIB3UQWJPN3grGTiBRUcZaBshJGEpUNghduJHcpM79o2+8HrO
+   W1Kp8Dw6K756ATSyTEsqweliioO5z8imzs0ZbBu7XPuYwBzHKBkK3M4rQ
+   C70tZXZCSTSQRzi/6r/Z+GCpXxVmJzT/Bf75bQxTv42ZIqKCbVe/CYeJW
+   OJTUfvHkKBWfIxZLLEPt8Oe+ex6/hYkA++t+xFh225+fISJxFJmcOUSEX
+   CDCVvPZOxbjJlOxM3Etyfz8laiNKNZGMttu4hB6HUKR2jOrR7K33X4Mec
+   slsgiQEKZsPA0tVw0IcGbpOGRxFCV5SfyeNXQqwksUTKFeBJN3XEItKf2
+   g==;
+X-CSE-ConnectionGUID: FdCnuTpwQjSxuXsnHN0EQg==
+X-CSE-MsgGUID: pNXAYMt6QLKuwpksWjFJiA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8645469"
 X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="26330373"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:01:05 -0700
-X-CSE-ConnectionGUID: GmnSLvzTR8ygVDCc8CsRQg==
-X-CSE-MsgGUID: JCuIQk/5STuYgExwZVwBew==
+   d="scan'208";a="8645469"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:01:29 -0700
+X-CSE-ConnectionGUID: B+QfucwGScGx7lVtv3A5OA==
+X-CSE-MsgGUID: Fe65QYkKT6Cu91ekTALwTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="27096732"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:01:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 17 Apr 2024 11:00:59 +0300 (EEST)
-To: Michael Pratt <mcpratt@pm.me>
-cc: LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    Wander Lairson Costa <wander@redhat.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Vamshi Gajjela <vamshigajjela@google.com>
-Subject: Re: [PATCH v2 3/3] serial: 8250: Set fifo timeout using
- uart_fifo_timeout()
-In-Reply-To: <20240416182741.22514-4-mcpratt@pm.me>
-Message-ID: <67b8f469-6634-5e58-17cf-f66f7b9a225e@linux.intel.com>
-References: <20240416182741.22514-1-mcpratt@pm.me> <20240416182741.22514-4-mcpratt@pm.me>
+   d="scan'208";a="22619310"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:01:23 -0700
+Message-ID: <f75809bb-1594-4bcd-9362-5aee8df04375@linux.intel.com>
+Date: Wed, 17 Apr 2024 10:01:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 71/74] x86/cpu/vfm: Update
+ sound/soc/intel/avs/boards/es8336.c
+Content-Language: en-US
+To: Tony Luck <tony.luck@intel.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20240416211941.9369-1-tony.luck@intel.com>
+ <20240416212257.10009-1-tony.luck@intel.com>
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20240416212257.10009-1-tony.luck@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 16 Apr 2024, Michael Pratt wrote:
-
-> Commit 8f3631f0f6eb ("serial/8250: Use fifo in 8250 console driver")
-> reworked functions for basic 8250 and 16550 type serial devices
-> in order to enable and use the internal fifo device for buffering,
-> however the default timeout of 10 ms remained, which is proving
-> to be insufficient for low baud rates like 9600, causing data overrun.
+On 4/16/2024 11:22 PM, Tony Luck wrote:
+> New CPU #defines encode vendor and family as well as model.
 > 
-> Unforunately, that commit was written and accepted just before commit
-> 31f6bd7fad3b ("serial: Store character timing information to uart_port")
-> which introduced the frame_time member of the uart_port struct
-> in order to store the amount of time it takes to send one uart frame
-> relative to the baud rate and other serial port configuration,
-> and commit f9008285bb69 ("serial: Drop timeout from uart_port")
-> which established function uart_fifo_timeout() in order to
-> calculate a reasonable timeout to wait until flushing
-> the fifo device before writing data again when partially filled,
-> using the now stored frame_time value and size of the buffer.
-> 
-> Fix this by using the stored timeout value made with this new function
-> to calculate the timeout for the fifo device, when enabled, and when
-> the buffer is larger than 1 byte (unknown port default).
-> 
-> The previous 2 commits add the struct members used here
-> in order to store the values, so that the calculations
-> are offloaded from the functions that are called
-> during a write operation for better performance.
-> 
-> Tested on a MIPS device (ar934x) at baud rates 625, 9600, 115200.
-
-Did you actually see some perfomance issue with 115000 bps? Or did you 
-just make the "better performance" claim up?
-
-> Fixes: 8f3631f0f6eb ("serial/8250: Use fifo in 8250 console driver")
-> Signed-off-by: Michael Pratt <mcpratt@pm.me>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 > ---
-> V1 -> V2:
->  Use stored values instead of calling uart_fifo_timeout()
->  or checking capability flags.
->  The existence of the timeout value satisfies fifosize > 1.
+>   sound/soc/intel/avs/boards/es8336.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
 > 
->  drivers/tty/serial/8250/8250_port.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index 5b0cfe6bc98c..cf67911a74f5 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -2066,7 +2066,10 @@ static void wait_for_lsr(struct uart_8250_port *up, int bits)
->  {
->  	unsigned int status, tmout = 10000;
->  
-> -	/* Wait up to 10ms for the character(s) to be sent. */
-> +	/* Wait for a time relative to buffer size and baud */
-> +	if (up->fifo_enable && up->port.timeout)
-> +		tmout = jiffies_to_usecs(up->port.timeout);
-> +
->  	for (;;) {
->  		status = serial_lsr_in(up);
+> diff --git a/sound/soc/intel/avs/boards/es8336.c b/sound/soc/intel/avs/boards/es8336.c
+> index 5c90a6007577..6c86c581877e 100644
+> --- a/sound/soc/intel/avs/boards/es8336.c
+> +++ b/sound/soc/intel/avs/boards/es8336.c
+> @@ -18,6 +18,7 @@
+>   #include <sound/pcm_params.h>
+>   #include <sound/soc.h>
+>   #include <sound/soc-acpi.h>
+> +#include <asm/cpu_device_id.h>
+>   #include <asm/intel-family.h>
+>   #include "../utils.h"
+>   
+> @@ -153,9 +154,9 @@ static int avs_es8336_hw_params(struct snd_pcm_substream *substream,
+>   	int clk_freq;
+>   	int ret;
+>   
+> -	switch (boot_cpu_data.x86_model) {
+> -	case INTEL_FAM6_KABYLAKE_L:
+> -	case INTEL_FAM6_KABYLAKE:
+> +	switch (boot_cpu_data.x86_vfm) {
+> +	case INTEL_KABYLAKE_L:
+> +	case INTEL_KABYLAKE:
+>   		clk_freq = 24000000;
+>   		break;
+>   	default:
 
-Hi,
-
-Is this the only reason for adding the timeout field? I think you should 
-just refactor the code such that you don't need to recalculate the timeout 
-for each characted when writing n characters?
-
--- 
- i.
-
+Any chance we could adjust topic to follow subsystem rules?
+Something like:
+ASoC: Intel: avs: boards: Update defines used in es8336
+or something like that?
