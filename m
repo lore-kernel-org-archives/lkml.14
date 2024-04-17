@@ -1,167 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from outbound8.mail.transip.nl (outbound8.mail.transip.nl [136.144.136.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB48657C3;
-	Wed, 17 Apr 2024 06:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF5524BC;
+	Wed, 17 Apr 2024 07:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.136.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713336965; cv=none; b=KvnHqTNzIENfKMO3Y5MyUR3stHAIm17pj2aXE2U4ffZYoXIPLtZuyaCzTE2rrxwUH1Zk2QeoJgmwgB/oUtK3jE3wnSdQYlg8KD9LArwd0FUhYw2UdZCybVSZhqnO2POnyUglwL5hd4oYSF1AHNU72aDtZmtQ9cbsYLcptzWCo1c=
+	t=1713337341; cv=none; b=RtwWAMOrZmy7foAhs3fFSVNUOvfwilrhVmb0tqnEs43zDOns/VV1QUUSmZHovi5QG+1xbkiGm3YYSk3GUaYiIz5mcUgW5JqQ5SWjvyFQ9DykKYrfZCWXfKPAMgTa3lp7lyMiEq7gIj8XoWx/cTcho8NovZEntIPlFFkB22C7yWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713336965; c=relaxed/simple;
-	bh=4gyETBmyEzwQWkMrvdh+Q58c/+yuC5ufSLF4lGhzQ+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UPoAFtWrg+kta1hdoTeBIFKrNiDDqXE1D6W4qqQt/DKEi5zIhkisGukH4q0/Frz7d+fPh9glWLDPsoZpWKSw2ZKucrq7mM6aoeeTBZoEgaKnr0r6CxSF2QcSx6+OKafJcC1NBAtsxcgBQ9bnkK3XEW745q8tZ6Zt99ltcsBQDpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wd6lwUK+; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713337341; c=relaxed/simple;
+	bh=oyTv7o1eonYTsAfT4cfj7AhE76HukCBjbWZvcV2c8dw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=e2lH7OKxHxP3Hihi1rGbMoEw45MpvOaOcWedyOzRqoh2RD9ODPUHwK1L9TJuMeiR2mRDWYn201fLBbJpUO19kaAdiQMDFcgqwfFINEYY++nBP995lCb5jaFCP4qrmJr+s74OliaNk70ROV73cy4LvG8gXXSDTSa1FNinGbQu/N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org; spf=pass smtp.mailfrom=herrie.org; dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b=ZPvF+/BI; arc=none smtp.client-ip=136.144.136.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herrie.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wd6lwUK+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713336963; x=1744872963;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4gyETBmyEzwQWkMrvdh+Q58c/+yuC5ufSLF4lGhzQ+8=;
-  b=Wd6lwUK+X3R3tq9jB9JYtcJxwFJQ5WPQ9uFB/VOi5Ubyq/t7BirRYaWJ
-   J2gjtozbeQF+Q2zY72K3xYICJpYEqpXaGM9yl9XFTqeYuAKXpdGjS6Mx4
-   AmBarAEoIsGrgEsurOgIkU4Od5DIT6smKbWo20PuQR7bKSaJiCSJ+6rUL
-   2XX3gv9OhXT8i/kjMhpuQBzpvI2menmyrAajFZdygyvoyyDWalNicBXbe
-   kcjhlmiGJoT/eif+7oRaZxBaW9Y0KuYvcYG+wBMajfDZMIcA54ruJi28g
-   Rp7VCzja8ttv/6I0BzBke8j3w8gmPVAdDhjWrQjoKRHwRpYsGDCVjRZiO
-   Q==;
-X-CSE-ConnectionGUID: NaxOOBOoQtmjX4E5/bXY0w==
-X-CSE-MsgGUID: v0aIhjORTgCKoAJzPoSFfQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8940345"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="8940345"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:56:02 -0700
-X-CSE-ConnectionGUID: Ju82xnaAR8O7O7nQuVFBKw==
-X-CSE-MsgGUID: vlXegU/nST+uqttb6eGwKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="59942086"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:56:01 -0700
-Date: Tue, 16 Apr 2024 23:56:00 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	Binbin Wu <binbin.wu@linux.intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 085/130] KVM: TDX: Complete interrupts after tdexit
-Message-ID: <20240417065600.GE3039520@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <aa6a927214a5d29d5591a0079f4374b05a82a03f.1708933498.git.isaku.yamahata@intel.com>
- <7d19f693-d8e9-4a9d-8cfa-3ec9c388622f@intel.com>
+	dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b="ZPvF+/BI"
+Received: from submission4.mail.transip.nl (unknown [10.103.8.155])
+	by outbound8.mail.transip.nl (Postfix) with ESMTP id 4VKBVX4TpjzY75qH;
+	Wed, 17 Apr 2024 08:55:00 +0200 (CEST)
+Received: from herrie-desktop.. (110-31-146-85.ftth.glasoperator.nl [85.146.31.110])
+	by submission4.mail.transip.nl (Postfix) with ESMTPA id 4VKBVW5l7qznTZy;
+	Wed, 17 Apr 2024 08:54:59 +0200 (CEST)
+From: Herman van Hazendonk <github.com@herrie.org>
+To: github.com@herrie.org
+Cc: benwolsieffer@gmail.com,
+	chris.chapuis@gmail.com,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dt-bindings: phy: qcom,usb-hs-phy: Add compatible
+Date: Wed, 17 Apr 2024 08:54:54 +0200
+Message-Id: <20240417065454.3599824-1-github.com@herrie.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240417065020.3599755-1-github.com@herrie.org>
+References: <20240417065020.3599755-1-github.com@herrie.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7d19f693-d8e9-4a9d-8cfa-3ec9c388622f@intel.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: ClueGetter at submission4.mail.transip.nl
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=transip-a; d=herrie.org; t=1713336900; h=from:subject:to:cc:
+ references:in-reply-to:date:mime-version;
+ bh=D6JFtwlOS+AWIs+Hh5HvpbMUdPE/n8YDLeJQmQvnz18=;
+ b=ZPvF+/BIPf/+uVoF/uO9Aw8JuwmI4AgXWBQGcK8Se6yLI1h7Rxof7+zTHSJcKP+Tla5crz
+ HUAimAbPFQ34MASE9P8Es2h7qZoH7g2XhB31t837Hu+/4H++isT/dBh4VMvUI0bAYz4+BO
+ gNsab8paxHjf+LWEFheDknSLmp+Ko8M3KYjiVhdhPmiamBQ/85DhIvHmM/98ZPOjMdAy9/
+ LfMnnWCEYz2EskriHJUkJFbOzA8HjTJvhF4LjWv5elED7Qe474A829cDRBYlWUqbcWqBKO
+ yHatklDkMyWU/WQm2tdstnF5JgcNM5i5IJ9AX7hkU1WNBfotYwWefQnO+MNJZQ==
+X-Report-Abuse-To: abuse@transip.nl
 
-On Tue, Apr 16, 2024 at 11:23:01AM -0700,
-Reinette Chatre <reinette.chatre@intel.com> wrote:
+Adds qcom,usb-hs-phy-msm8660 compatible
 
-> Hi Isaku,
-> 
-> (In shortlog "tdexit" can be "TD exit" to be consistent with
-> documentation.)
-> 
-> On 2/26/2024 12:26 AM, isaku.yamahata@intel.com wrote:
-> > From: Isaku Yamahata <isaku.yamahata@intel.com>
-> > 
-> > This corresponds to VMX __vmx_complete_interrupts().  Because TDX
-> > virtualize vAPIC, KVM only needs to care NMI injection.
-> 
-> This seems to be the first appearance of NMI and the changelog
-> is very brief. How about expending it with:
-> 
-> "This corresponds to VMX __vmx_complete_interrupts().  Because TDX
->  virtualize vAPIC, KVM only needs to care about NMI injection.
-> 
->  KVM can request TDX to inject an NMI into a guest TD vCPU when the
->  vCPU is not active. TDX will attempt to inject an NMI as soon as
->  possible on TD entry. NMI injection is managed by writing to (to
->  inject NMI) and reading from (to get status of NMI injection)
->  the PEND_NMI field within the TDX vCPU scope metadata (Trust
->  Domain Virtual Processor State (TDVPS)).
-> 
->  Update KVM's NMI status on TD exit by checking whether a requested
->  NMI has been injected into the TD. Reading the metadata via SEAMCALL
->  is expensive so only perform the check if an NMI was injected.
-> 
->  This is the first need to access vCPU scope metadata in the
->  "management" class. Ensure that needed accessor is available. 
-> "
-> 
-> > 
-> > Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-> > ---
-> > v19:
-> > - move tdvps_management_check() to this patch
-> > - typo: complete -> Complete in short log
-> > ---
-> >  arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
-> >  arch/x86/kvm/vmx/tdx.h |  4 ++++
-> >  2 files changed, 14 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index 83dcaf5b6fbd..b8b168f74dfe 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -535,6 +535,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
-> >  	 */
-> >  }
-> >  
-> > +static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
-> > +{
-> > +	/* Avoid costly SEAMCALL if no nmi was injected */
-> 
-> 	/* Avoid costly SEAMCALL if no NMI was injected. */
-> 
-> > +	if (vcpu->arch.nmi_injected)
-> > +		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
-> > +							      TD_VCPU_PEND_NMI);
-> > +}
-> > +
-> >  struct tdx_uret_msr {
-> >  	u32 msr;
-> >  	unsigned int slot;
-> > @@ -663,6 +671,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
-> >  	trace_kvm_exit(vcpu, KVM_ISA_VMX);
-> >  
-> > +	tdx_complete_interrupts(vcpu);
-> > +
-> >  	return EXIT_FASTPATH_NONE;
-> >  }
-> >  
-> > diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-> > index 44eab734e702..0d8a98feb58e 100644
-> > --- a/arch/x86/kvm/vmx/tdx.h
-> > +++ b/arch/x86/kvm/vmx/tdx.h
-> > @@ -142,6 +142,8 @@ static __always_inline void tdvps_vmcs_check(u32 field, u8 bits)
-> >  			 "Invalid TD VMCS access for 16-bit field");
-> >  }
-> >  
-> > +static __always_inline void tdvps_management_check(u64 field, u8 bits) {}
-> 
-> Is this intended to be a stub or is it expected to be fleshed out with
-> some checks?
+Used by HP Touchpad (tenderloin) for example.
 
-It was used to check if field id matches bits.  We should make
-tdvps_vmcs_check() common for vmcs, management and state_non_arch.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
+---
+ Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
+index f042d6af1594..e03b516c698c 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
+@@ -15,6 +15,7 @@ if:
+       contains:
+         enum:
+           - qcom,usb-hs-phy-apq8064
++          - qcom,usb-hs-phy-msm8660
+           - qcom,usb-hs-phy-msm8960
+ then:
+   properties:
+@@ -41,6 +42,7 @@ properties:
+       - enum:
+           - qcom,usb-hs-phy-apq8064
+           - qcom,usb-hs-phy-msm8226
++          - qcom,usb-hs-phy-msm8660
+           - qcom,usb-hs-phy-msm8916
+           - qcom,usb-hs-phy-msm8960
+           - qcom,usb-hs-phy-msm8974
