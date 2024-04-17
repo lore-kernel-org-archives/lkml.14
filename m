@@ -1,149 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD5E22338;
-	Wed, 17 Apr 2024 18:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3038F54;
+	Wed, 17 Apr 2024 18:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713379464; cv=none; b=AO1aJUcBi4Pvvfk2fk7yhCyPRJxdwvtV97zDZu39P4glwmUMTCJUJUvTbfBFEk+kfEqdCtHyhUcH6A5+0rLO8+aPIw2sbm5wvJmpe0/3cSiniE73MDZt2mzKW7YeEQXQbtaWZawXDhox4m7iQmWDTLW1UdilqJkju4yoAYuG+HM=
+	t=1713379653; cv=none; b=P+wEzGhIni5A+0tueHfReUfix5EZsZzD2blwfZoLkqmGcuQaxgMK0xKx1tjW1TTO9Gmz2ZLRTQyoLHvQJhlUnUNOJ5qq5LApeEAesjAPJTvUqVIClM+CpTACoBjp8vIcWOmSrvR8qR6K42+xKux4/8/c+IvfTSo/b0zP6++Ozfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713379464; c=relaxed/simple;
-	bh=/MgPf3JdMf3WsCCU3RTyq2hSaaAaGOGjKybT8hE2a0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGa0ChI8bzRsPaJJq4UbJeHL01jSrbflGrowoTURe24+EcjYKKtkxIlLyKv3e7URSdnxyKCkgf6p2kArQ2BMibcFYoL318pzsAxEKc8S2BFSEhSSKc1XOSw/rmVeqNyq6yUB75frR9QUqh5Hon3R8yaFCgi2sViVaFOQop3fyGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lQUQj5zI; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713379653; c=relaxed/simple;
+	bh=reaA9tTGizBB+NIGcV7bHJimHioTexx+778BpTdQZKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o23aTfSVMtMK3rpUyT9NdXRiFzX7OpXwG/IPAxXfl8H4WiGQnlQnQelAoo1CBK/nXjOPLVx5IjSEpPh2LtFozRjcfc7fwM4rf4H069w1+6cOrZZNaXcMDyt0fPK8IE4t9svxLNmrC7L9hs1MQkBkEVfoNMDnBhqTNI+mOb3ecec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T1H2Irfs; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lQUQj5zI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713379463; x=1744915463;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/MgPf3JdMf3WsCCU3RTyq2hSaaAaGOGjKybT8hE2a0I=;
-  b=lQUQj5zIIGR6weey/tTW2jLddzXuGwoTJTe+mYjX6rP6idX9WEiy19ps
-   0M0rfhDW91jw8A+lvYVksbUUHD9iqTa9kQH0AyNoXBDYMvXvsD4b1k8NZ
-   IFtgzHyF75cP2merojVuK28RjSGWlbpIpZDmKcUPWxYRxVzRbFMf60gTM
-   raLyiGzqatq/u627rWLyYZxtoel/bgB5lReBOvJhd9elNIcGk+MgZxn10
-   II1mZM4bkA85CrWkPxhWV0Bk378vCwHdoPJlS+EM3hIgTOghuXKzixFC/
-   BFl080/bXyPyT46Cglr5PUrMqzJBOiXA0UNtuf07Pej3E8yFEF+y6uY0Z
-   A==;
-X-CSE-ConnectionGUID: ksZfUWL5SiesRffaqWKNYw==
-X-CSE-MsgGUID: eMc8i/Z/RuibjJQCwTWIIw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9047005"
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="9047005"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:44:22 -0700
-X-CSE-ConnectionGUID: 2uUunGCcR+SpwJWuzhuYtA==
-X-CSE-MsgGUID: dL8AWQALQ66oDjtbRMoRDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="23309529"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:44:21 -0700
-Date: Wed, 17 Apr 2024 11:44:20 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org, isaku.yamahata@gmail.com,
-	linux-kernel@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Michael Roth <michael.roth@amd.com>,
-	David Matlack <dmatlack@google.com>,
-	Federico Parola <federico.parola@polito.it>,
-	Kai Huang <kai.huang@intel.com>, isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v2 05/10] KVM: x86/mmu: Introduce kvm_tdp_map_page() to
- populate guest memory
-Message-ID: <20240417184420.GH3039520@ls.amr.corp.intel.com>
-References: <cover.1712785629.git.isaku.yamahata@intel.com>
- <9b866a0ae7147f96571c439e75429a03dcb659b6.1712785629.git.isaku.yamahata@intel.com>
- <Zh90aFh2xr+nEcCQ@chao-email>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1H2Irfs"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2a502547460so82360a91.2;
+        Wed, 17 Apr 2024 11:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713379651; x=1713984451; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=joQ3ZujEDtWSfIGMDqZdTFSuY2rGH2GzdHPLy/M5o+s=;
+        b=T1H2IrfsKiIik5ca+DWvhhWoMPIGpPMnWBqGSGa51zAGLJHo/iOCZ7NT0kLcyOXioe
+         p6iisI8rM2lbPMblZDgvjGazvYdwj+gTFkKkoGBaTex1QtVJZgoHxX2LoxxjbGUERnnU
+         npttL0ks6gAJz3A+IiOq88Gpb5emDXUNDdWT55xLhIBKXPuAQoLNqZTrc5UqQGrj/cvF
+         y+UPtYV0hYfEBXVIpaoAMVnf8neErsJzuYvnqBL9RiY0v5Zp/67/UBnpfcW9W4qnGxJo
+         lbyERhL/UobnOxIVivCOBBjqjSJgU6y4/iiEHLZIgAK+OGvI4In9PBzgaZQg4jLSDyk0
+         QeVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713379651; x=1713984451;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=joQ3ZujEDtWSfIGMDqZdTFSuY2rGH2GzdHPLy/M5o+s=;
+        b=roTv+pTxqkWKumNkQtAQ8FXt3EauUmjj2/ZAMV7WZDN7t6TP7Iv5MK+iouWeEAzix5
+         dc8+w0Xaw+bYMIOdslNh90ykrbuaIVgbKDstfzNcdUlc5RptIJB8DBXN27eaERkaMBC+
+         B7itIAaIp7L6JXY+jnQDms1bRf3q2bKj1YhyaccafYdsbTLUqxaJwRutabRuH15u1zAU
+         THEK+9f0Gz2kHRAXWiWTZdyPg1kfNdVIwpCTzj85m0Eb7N/yIAOHzRpJv58tmWPA34Ph
+         qCN6u09eONcFy6yDIPptlmT3vMaeTGOK3+gK798HkWooRbxOGBwafuRMymB754n73d+s
+         G+Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQdWQlfXdUbIbleTfc/xq8zTr4Xwx+ejuDJW1GwGXnDSuV20docWGiWdy5fLEKYhR9LlH/J2rMYBeSuvmy6pficCV2TofKIcBPmnVThDHwdR4j+pa4UPj5UYP/t3DNXkm3N5SCh6Qt6lah8xKlY8S/O0jY5Ik7jssuNX524uoEckhlc4Wm
+X-Gm-Message-State: AOJu0YzLnEFht26C7JwSijZRyNZlvVXyThaHooLt1f4ByU2x6R1/dGgE
+	TC8425oLQltInSxqFfetFYfWprmmPGSLpE6xQdg4Lpx0LTnM2Kex8yrHgqiTxE6ETIX0AFoJtCT
+	5zk+mxHPHJolddVYVNEKxBw+dGMI=
+X-Google-Smtp-Source: AGHT+IGWSVVsPzFy94bdg08jfpPcRPLvbi4UatPxHfAaLeLZEpgp5BZ3BMi8BjGDNfJ4LsFSvF6kSGdG+NDOO8i9Ooo=
+X-Received: by 2002:a17:90b:1d8b:b0:2a2:ab2c:da40 with SMTP id
+ pf11-20020a17090b1d8b00b002a2ab2cda40mr247731pjb.33.1713379651051; Wed, 17
+ Apr 2024 11:47:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zh90aFh2xr+nEcCQ@chao-email>
+References: <20240413-tcp-ao-selftests-fixes-v1-0-f9c41c96949d@gmail.com> <20240416072809.3ae7c3d3@kernel.org>
+In-Reply-To: <20240416072809.3ae7c3d3@kernel.org>
+From: Dmitry Safonov <0x7f454c46@gmail.com>
+Date: Wed, 17 Apr 2024 19:47:18 +0100
+Message-ID: <CAJwJo6Yw4S1wCcimRVy=P8h0Ez0UDt-yw2jqSY-ph3TKsQVVGA@mail.gmail.com>
+Subject: Re: [PATCH net 0/4] selftests/net/tcp_ao: A bunch of fixes for TCP-AO selftests
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 17, 2024 at 03:04:08PM +0800,
-Chao Gao <chao.gao@intel.com> wrote:
+On Tue, 16 Apr 2024 at 15:28, Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Sat, 13 Apr 2024 02:42:51 +0100 Dmitry Safonov via B4 Relay wrote:
+> > Started as addressing the flakiness issues in rst_ipv*, that affect
+> > netdev dashboard.
+>
+> Thank you! :)
 
-> On Wed, Apr 10, 2024 at 03:07:31PM -0700, isaku.yamahata@intel.com wrote:
-> >From: Isaku Yamahata <isaku.yamahata@intel.com>
-> >
-> >Introduce a helper function to call the KVM fault handler.  It allows a new
-> >ioctl to invoke the KVM fault handler to populate without seeing RET_PF_*
-> >enums or other KVM MMU internal definitions because RET_PF_* are internal
-> >to x86 KVM MMU.  The implementation is restricted to two-dimensional paging
-> >for simplicity.  The shadow paging uses GVA for faulting instead of L1 GPA.
-> >It makes the API difficult to use.
-> >
-> >Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> >---
-> >v2:
-> >- Make the helper function two-dimensional paging specific. (David)
-> >- Return error when vcpu is in guest mode. (David)
-> >- Rename goal_level to level in kvm_tdp_mmu_map_page(). (Sean)
-> >- Update return code conversion. Don't check pfn.
-> >  RET_PF_EMULATE => EINVAL, RET_PF_CONTINUE => EIO (Sean)
-> >- Add WARN_ON_ONCE on RET_PF_CONTINUE and RET_PF_INVALID. (Sean)
-> >- Drop unnecessary EXPORT_SYMBOL_GPL(). (Sean)
-> >---
-> > arch/x86/kvm/mmu.h     |  3 +++
-> > arch/x86/kvm/mmu/mmu.c | 32 ++++++++++++++++++++++++++++++++
-> > 2 files changed, 35 insertions(+)
-> >
-> >diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-> >index e8b620a85627..51ff4f67e115 100644
-> >--- a/arch/x86/kvm/mmu.h
-> >+++ b/arch/x86/kvm/mmu.h
-> >@@ -183,6 +183,9 @@ static inline void kvm_mmu_refresh_passthrough_bits(struct kvm_vcpu *vcpu,
-> > 	__kvm_mmu_refresh_passthrough_bits(vcpu, mmu);
-> > }
-> > 
-> >+int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
-> >+		     u8 *level);
-> >+
-> > /*
-> >  * Check if a given access (described through the I/D, W/R and U/S bits of a
-> >  * page fault error code pfec) causes a permission fault with the given PTE
-> >diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >index 91dd4c44b7d8..a34f4af44cbd 100644
-> >--- a/arch/x86/kvm/mmu/mmu.c
-> >+++ b/arch/x86/kvm/mmu/mmu.c
-> >@@ -4687,6 +4687,38 @@ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> > 	return direct_page_fault(vcpu, fault);
-> > }
-> > 
-> >+int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code,
-> >+		     u8 *level)
-> >+{
-> >+	int r;
-> >+
-> >+	/* Restrict to TDP page fault. */
-> 
-> need to explain why. (just as you do in the changelog)
+Jakub, you are very welcome :)
+I'll keep an eye on the dashboard, but I very much encourage you to
+ping me in case of any other issues with tcp_ao selftests.
 
-Sure.
+I currently have v2 for tcp-ao tracepoints, but delaying it as working
+on a reproducer/selftest for an issue I think I have a patch for.
 
+BTW, do you know if those were addressed or anyone is looking into
+them? (from other tcp-ao hits, that seem not anyhow related to tcp-ao
+itself):
 
-> >+	if (vcpu->arch.mmu->page_fault != kvm_tdp_page_fault)
-> 
-> page fault handlers (i.e., vcpu->arch.mmu->page_fault()) will be called
-> finally. why not let page fault handlers reject the request to get rid of
-> this ad-hoc check? We just need to plumb a flag indicating this is a
-> pre-population request into the handlers. I think this way is clearer.
-> 
-> What do you think?
+1. [ 240.001391][ T833] Possible interrupt unsafe locking scenario:
+[  240.001391][  T833]
+[  240.001635][  T833]        CPU0                    CPU1
+[  240.001797][  T833]        ----                    ----
+[  240.001958][  T833]   lock(&p->alloc_lock);
+[  240.002083][  T833]                                local_irq_disable();
+[  240.002284][  T833]                                lock(&ndev->lock);
+[  240.002490][  T833]                                lock(&p->alloc_lock);
+[  240.002709][  T833]   <Interrupt>
+[  240.002819][  T833]     lock(&ndev->lock);
+[  240.002937][  T833]
+[  240.002937][  T833]  *** DEADLOCK ***
 
-__kvm_mmu_do_page_fault() doesn't check if the mmu mode is TDP or not.
-If we don't want to check page_fault handler, the alternative check would
-be if (!vcpu->arch.mmu->direct).  Or we will require the caller to guarantee
-that MMU mode is tdp (direct or tdp_mmu).
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/537021/14-self-connect-ipv6/stderr
+
+2. [  251.411647][   T71] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock
+order detected
+[  251.411986][   T71] 6.9.0-rc1-virtme #1 Not tainted
+[  251.412214][   T71] -----------------------------------------------------
+[  251.412533][   T71] kworker/u16:1/71 [HC0[0]:SC0[2]:HE1:SE0] is
+trying to acquire:
+[  251.412837][   T71] ffff888005182c28 (&p->alloc_lock){+.+.}-{2:2},
+at: __get_task_comm+0x27/0x70
+[  251.413214][   T71]
+[  251.413214][   T71] and this task is already holding:
+[  251.413527][   T71] ffff88802f83efd8 (&ul->lock){+.-.}-{2:2}, at:
+rt6_uncached_list_flush_dev+0x138/0x840
+[  251.413887][   T71] which would create a new lock dependency:
+[  251.414153][   T71]  (&ul->lock){+.-.}-{2:2} -> (&p->alloc_lock){+.+.}-{2:2}
+[  251.414464][   T71]
+[  251.414464][   T71] but this new dependency connects a SOFTIRQ-irq-safe lock:
+[  251.414808][   T71]  (&ul->lock){+.-.}-{2:2}
+
+https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/537201/17-icmps-discard-ipv4/stderr
+
+3. [ 264.280734][ C3] Possible unsafe locking scenario:
+[  264.280734][    C3]
+[  264.280968][    C3]        CPU0                    CPU1
+[  264.281117][    C3]        ----                    ----
+[  264.281263][    C3]   lock((&tw->tw_timer));
+[  264.281427][    C3]
+lock(&hashinfo->ehash_locks[i]);
+[  264.281647][    C3]                                lock((&tw->tw_timer));
+[  264.281834][    C3]   lock(&hashinfo->ehash_locks[i]);
+
+https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/547461/19-self-connect-ipv4/stderr
+
+I can spend some time on them after I verify that my fix for -stable
+is actually fixing an issue I think it fixes.
+Seems like your automation + my selftests are giving some fruits, hehe.
+
+Thanks,
+             Dmitry
