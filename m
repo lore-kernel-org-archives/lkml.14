@@ -1,143 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A6713D265;
-	Wed, 17 Apr 2024 13:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E79A13D61A;
+	Wed, 17 Apr 2024 13:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359641; cv=none; b=l3egTsOkcnyB1noCl81Rx6Nl8Q6KLFkDlXV8O2A2/T3NdVNBPoYhTopOh1kACKfONDUcQOICbQsyCkX7j6Xco0T+1DPvyA+jhHw/FgfG0DJJZ2X3EXv02D9ak03Ekq0k9UttoNCXwvfsNoK89i1p7f6EilfSSkca8o2w+8DFMns=
+	t=1713359722; cv=none; b=b6V8Q31PZ1toXj6gAbEIzEH+qKelMxBvDQD/8Z5CIJDTojv16iVROpFce8Ewg8k2bgaRKnQOVIoh0dWdByFdB2f3m0YG+Ez43+I/qFSvXlbf7etzfAEHUIHbF8YyZ2qhUA7j8g/wqLd3S2LRYYvTPe3M+eRP4f1ilTpjagnoD5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359641; c=relaxed/simple;
-	bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JEQI9PyqeIWntHaVcr1p27v/imn8c/ODhI3A9R6yyv4fIm7i45qQsowDDY/oFBMeS64LzqaoV7dcYP+SHqM5yFDtwuhdi4ten9AZ6FGhrSnBIiPXwz89FvmRb75p/GFVAtHC5bg/h9al5SaO4Tm3bqYMwCDuf4WQ+uM1omVaRt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfYHVyGa; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713359722; c=relaxed/simple;
+	bh=51JP3zFmO8LduqnRmpjjtDDoWC+4X1OXwmn7YXUfOww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=tjk6b4p1T5fZaKG9SpMYJD5d9BYhJ4tUXUIgU50HgK0zk7DvX83w1pJKpV9+F9jJrpfFmx9vgVt4rVOYyMzYQJsbGgKAqC8hPLff8tVt5KlTa/AuXRaKLWXk27dMcfTsAI8y5R9gdIq7MbrvUPjNgUFCE/BEsR+p9fhL0gNT7ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJAsU7AL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfYHVyGa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713359640; x=1744895640;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
-  b=cfYHVyGaKA0Bev7C0yUGEbwZGowPLigpyUSBgZjLlQ/OYkTFzMwFqTVI
-   Dn8mF2+R5wmFQv2yaGcIHatnbaQLR8vAPAXA+ZD/9JUlHNj59IBYjPjZ9
-   ESljf0Qdy9KG+KItOXGv5WznKUkcCuTED7czaryoCkr3nTDvWkSSAccAo
-   L0/CBWMHHUBpRWNUcrXXeNUgr7Xg2Lziq1vRZmIrxk67K8D/RCVnARaYy
-   xfZoKrbNkrRolXlas96jIS4uQbW1PnwDT6zvkaHBbxKq8t1SEfUrSEISj
-   uPWtRfhKcC2wWxCeAqKii7GzCPuOw6LIhkJPXuSiGIRGHSLmivGUicSvb
-   w==;
-X-CSE-ConnectionGUID: JO/GsW+vSr61kaChutsJvw==
-X-CSE-MsgGUID: mMnS+j1CQRWnGzeZb3tcdw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19997295"
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="19997295"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:59 -0700
-X-CSE-ConnectionGUID: wHxRZ53gS9ChLi8YcqDuLw==
-X-CSE-MsgGUID: lft0N95FSa6MO+oU/IOQ7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="45919609"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 17 Apr 2024 16:13:52 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/3] Documentation/ABI: Add document for Mellanox PMC
- driver
-In-Reply-To: <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
-Message-ID: <fd7c3b6c-8e5a-6112-b825-ba17763a8094@linux.intel.com>
-References: <cover.1713334019.git.shravankr@nvidia.com> <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJAsU7AL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5426C072AA;
+	Wed, 17 Apr 2024 13:15:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713359721;
+	bh=51JP3zFmO8LduqnRmpjjtDDoWC+4X1OXwmn7YXUfOww=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=iJAsU7ALIg3r8x8WZhS5rQyQ4D1mOfHq17v4Xc2tWpGxx2nmpIQ1TvTKO/cliV2I6
+	 rYHvBhNmOLipj1i9s1AI+HAAiGnlfToqyZ/4PW9Q0V5nWGiRvT665PRllh5HyFKkQa
+	 bCWa9aJZknXSMGwZQ9Gwzy5vIt4swl1BFCK5zlhRi8RjEK4suQ8jac8uYcaiMwAnZt
+	 m9I4SYGZbP6eoC03DsRJbqxFZn11WS6rsarixZ7MpInqA3hu4KlCCucF6JDZYz+3s/
+	 MrQFAGsFNz8Zl3BmquSs0YOk8qKaJclIFYoc6Gk2A3HtG8PIizPp6vvkIPUczqOfjR
+	 XG8LPyUq86KwA==
+Message-ID: <64ca6d41-8173-4e0e-9467-4fa32db812ec@kernel.org>
+Date: Wed, 17 Apr 2024 15:15:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFC: trf7970a: disable all regulators on removal
+To: Paul Geurts <paul_geurts@live.nl>, mgreer@animalcreek.com,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <AM0PR09MB2675EDFD44EC82B6BCBB430F95082@AM0PR09MB2675.eurprd09.prod.outlook.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <AM0PR09MB2675EDFD44EC82B6BCBB430F95082@AM0PR09MB2675.eurprd09.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Apr 2024, Shravan Kumar Ramani wrote:
-
-> The sysfs interface is created for programming and monitoring the
-> performance counters in various HW blocks of Mellanox BlueField-1,
-> BlueField-2 and BlueField-3.
+On 16/04/2024 22:28, Paul Geurts wrote:
+> During module probe, regulator 'vin' and 'vdd-io' are used and enabled,
+> but the vdd-io regulator overwrites the 'vin' regulator pointer. During
+> remove, only the vdd-io is disabled, as the vin regulator pointer is not
+> available anymore. When regulator_put() is called during resource
+> cleanup a kernel warning is given, as the regulator is still enabled.
 > 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Store the two regulators in separate pointers and disable both the
+> regulators on module remove.
+> 
+> Fixes: 49d22c70aaf0 ("NFC: trf7970a: Add device tree option of 1.8 Volt IO voltage")
+> 
+> Signed-off-by: Paul Geurts <paul_geurts@live.nl>
+
+No blank lines between tags. Please look at existing commits (git log).
+
 > ---
-
-This documents the existing sysfs files? Which is good, thank you!
-
-However, there's still no PATCH 4/ which would document the new interface 
-added by this series, namely use_odd_counter and count_clock, am I 
-correct?
-
--- 
- i.
-
->  .../ABI/testing/sysfs-platform-mellanox-pmc   | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+>  drivers/nfc/trf7970a.c | 42 +++++++++++++++++++++++-------------------
+>  1 file changed, 23 insertions(+), 19 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> new file mode 100644
-> index 000000000000..47094024dbeb
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> @@ -0,0 +1,49 @@
-> +HID           Driver         Description
-> +MLNXBFD0      mlxbf-pmc      Performance counters (BlueField-1)
-> +MLNXBFD1      mlxbf-pmc      Performance counters (BlueField-2)
-> +MLNXBFD2      mlxbf-pmc      Performance counters (BlueField-3)
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event_list
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		List of events supported by the counters in the specific block.
-> +		It is used to extract the event number or ID associated with
-> +		each event.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Event monitored by corresponding counter. This is used to
-> +		program or read back the event that should be or is currently
-> +		being monitored by counter<N>.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/counter<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Counter value of the event being monitored. This is used to
-> +		read the counter value of the event which was programmed using
-> +		event<N>. This is also used to clear or reset the counter value.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/enable
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Start or stop counters. This is used to start the counters
-> +		for monitoring the programmed events and also to stop the
-> +		counters after the desired duration.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/<reg>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Value of register. This is used to read or reset the registers
-> +		where various performance statistics are counted for each block.
-> +
-> 
+> diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+> index 7eb17f46a815..9e1a34e23af2 100644
+> --- a/drivers/nfc/trf7970a.c
+> +++ b/drivers/nfc/trf7970a.c
+> @@ -424,7 +424,8 @@ struct trf7970a {
+>  	enum trf7970a_state		state;
+>  	struct device			*dev;
+>  	struct spi_device		*spi;
+> -	struct regulator		*regulator;
+> +	struct regulator		*vin_regulator;
+> +	struct regulator		*vddio_regulator;
+>  	struct nfc_digital_dev		*ddev;
+>  	u32				quirks;
+>  	bool				is_initiator;
+> @@ -1883,7 +1884,7 @@ static int trf7970a_power_up(struct trf7970a *trf)
+>  	if (trf->state != TRF7970A_ST_PWR_OFF)
+>  		return 0;
+>  
+> -	ret = regulator_enable(trf->regulator);
+> +	ret = regulator_enable(trf->vin_regulator);
+
+That does not look like equivalent code. Previously this was vddio, right?
+
+
+Best regards,
+Krzysztof
+
