@@ -1,105 +1,100 @@
-Received: from zougloub.eu (zougloub.eu [69.70.16.42])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0382171A5;
-	Wed, 17 Apr 2024 18:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.70.16.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713380064; cv=none; b=IBotHv1EqeXYAKdTQgVqhoZL7hrA0R81Q8gUGdXsqy37bFkVvzknQTegzTGF7JdC+5Yc7UIjDeSbjbQMFTsnIr9ISFgRbOmuFvYHTmGgQzXyvsC07gbfmwc9HZT3pgwAPrWCe+fjiOaKniB3aPl9YTaUgAU+psp307EcrLhIO2c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713380064; c=relaxed/simple;
-	bh=GaLh8Q5WBEyaPy49ACZRYWDRLAqz47vBjUJgPI5NwTU=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=MkhzNhC0U5VJxujnwxGzF8SgNaEfGNaw82F2KTOoqDZPQ0gEI7CzFV4bPgrPHCLifS3Sqr7PwHhK/qIY7IgBJ8gFJzOS6x0f6fCul2h3hFw0oEd4xxPGieXOsG+i15xFdqmtXlGX/04qI8PFrtFDbUhKeAoOi6erW4OyZ+Ag7zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zougloub.eu; spf=pass smtp.mailfrom=zougloub.eu; dkim=pass (1024-bit key) header.d=zougloub.eu header.i=@zougloub.eu header.b=M4LPK1QD; arc=none smtp.client-ip=69.70.16.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zougloub.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zougloub.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zougloub.eu header.i=@zougloub.eu header.b="M4LPK1QD"
-Received: from pouet.cJ (exmakhina.com [69.70.16.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by zougloub.eu (Postfix) with ESMTPSA id E10AF286E3C6;
-	Wed, 17 Apr 2024 14:46:57 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=zougloub.eu;
-	s=zougloub.eu; t=1713379618;
-	bh=GaLh8Q5WBEyaPy49ACZRYWDRLAqz47vBjUJgPI5NwTU=;
-	h=Subject:From:To:Cc:Date;
-	b=M4LPK1QDaTcAYhDEkl1+npSkTtlz+KGfTriNnqIJ1pjPmuHYpVVsmBhCra/P25BLp
-	 WHwQGev4H+ejcuhDd5cmcbET1tvLHamp4BiUurKVm9ytoZqDT0q4Pann7iE/h/IJPB
-	 TW7t7GqiYvdtywpFci46TnEzf1E97GIWZt93HYwY=
-Message-ID: <a7eb665c74b5efb5140e6979759ed243072cb24a.camel@zougloub.eu>
-Subject: [BUG] e1000e, scheduling while atomic
-From: =?ISO-8859-1?Q?J=E9r=F4me?= Carretero <cJ@zougloub.eu>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, PaoloAbeni
- <pabeni@redhat.com>,  Thomas Gleixner <tglx@linutronix.de>, John Stultz
- <jstultz@google.com>, StephenBoyd <sboyd@kernel.org>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 17 Apr 2024 14:46:52 -0400
-Autocrypt: addr=cJ@zougloub.eu; prefer-encrypt=mutual;
- keydata=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
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-HdJrXOh6mReobDPrIWlL"
-User-Agent: Evolution 3.50.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562CA1BF53;
+	Wed, 17 Apr 2024 18:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713380075; cv=none; b=oVw+zWT8WZsGWF4D4N0WtmdrJfv9UWZgN1s6oVgEQoj0/FrTQIyfxbM7JiuaKOVKaQZ4PdGW/jMzt8MUsaeh7WR2URzrEmnp8iEV8n72FGBJI67ksM6RW0KI/ndNeb/TCIZ0vUCZp6AVWpD8knf/5+2bghhk3KMKN6PyRXivBFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713380075; c=relaxed/simple;
+	bh=hyCQyZHf2ncj/nXm1VIUe6nfA7at8m+jSmVswf1Wnnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Te3w6j4KwKSFIyQgchhhFHKi7vKVtKS0/7IAZpp0kyn9SevL+HHHFAyhXQ7N2CsS42TI/azF+f0/f7WRKqtLrIQIl6VPP3sx3fmykbHPXGZAksEIYwwoeb8g725CSTE7heQ7C9eMD3JF3qAE67FjnyHZsqOrPKFE0kpLw0mUKS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQ+lCLWe; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQ+lCLWe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713380074; x=1744916074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hyCQyZHf2ncj/nXm1VIUe6nfA7at8m+jSmVswf1Wnnc=;
+  b=IQ+lCLWervtdqjtpe7jjl3H1R/H5KCO2y8b8UEJQGHeZxCAda5G/dSY/
+   JXG/M9GMA29CxzYYHADASFyKQFpedY1i0RM+Q6cUc1OoBIz3TvF+NW/JR
+   WW21asAuwNaRpRyPKXTPG2xLjaQ0RA8ZwLHu0Dw+Nv5ylV5I+xaOdFd/G
+   7kaJGFA9fdooh+Az9K1gmPksu157Jip8m9IN1kfYGiagI2phjVzv6UxnL
+   ILGHuecXlsX2cFlCeDfydNkghvm7Gsof8WnvsF7XS9cKCTOQ4v4VY+Y0M
+   segmovyGeSXeyYm14dkWQyw1QVsApxCuat7gPzGZWfPwr22NcAt3H4FW5
+   w==;
+X-CSE-ConnectionGUID: jiVHNqO2Q4CiwlJHlhB/Qw==
+X-CSE-MsgGUID: j5sM6DohQGCcEVvzZuqtVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9441220"
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="9441220"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:54:34 -0700
+X-CSE-ConnectionGUID: PsnZ84biQUCxtewMM+gp4g==
+X-CSE-MsgGUID: IIUXUP1qTau8TFgvTNTJ+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="22729937"
+Received: from wangc3-mobl.amr.corp.intel.com (HELO desk) ([10.209.4.219])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:54:33 -0700
+Date: Wed, 17 Apr 2024 11:54:27 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>, kvm@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [linus:master] [x86/bugs] 6613d82e61:
+ general_protection_fault:#[##]
+Message-ID: <20240417185427.4msriy5rrt5gej2x@desk>
+References: <202403281553.79f5a16f-lkp@intel.com>
+ <20240328211742.bh2y3zsscranycds@desk>
+ <8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info>
 
+On Sun, Apr 14, 2024 at 08:41:52AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+> 
+> On 28.03.24 22:17, Pawan Gupta wrote:
+> > On Thu, Mar 28, 2024 at 03:36:28PM +0800, kernel test robot wrote:
+> >> compiler: clang-17
+> >> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> >>
+> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> >> the same patch/commit), kindly add following tags
+> >> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> >> | Closes: https://lore.kernel.org/oe-lkp/202403281553.79f5a16f-lkp@intel.com
+> 
+> TWIMC, a user report general protection faults with dosemu that were
+> bisected to a 6.6.y backport of the commit that causes the problem
+> discussed in this thread (6613d82e617dd7 ("x86/bugs: Use ALTERNATIVE()
+> instead of mds_user_clear static key")).
+> 
+> User compiles using gcc, so it might be a different problem. Happens
+> with 6.8.y as well.
+> 
+> The problem occurs with x86-32 kernels, but strangely only on some of
+> the x86-32 systems the reporter has (e.g. on some everything works
+> fine). Makes me wonder if the commit exposed an older problem that only
+> happens on some machines.
+> 
+> For details see https://bugzilla.kernel.org/show_bug.cgi?id=218707
+> Could not CC the reporter here due to the bugzilla privacy policy; if
+> you want to get in contact, please use bugzilla.
 
---=-HdJrXOh6mReobDPrIWlL
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-
-I opened https://bugzilla.kernel.org/show_bug.cgi?id=3D218740 because I'm
-not quite sure the culprit is e1000e or some timer stuff.
-
-I just verified that this happens on the latest master.
-
-
-Let me know if I can (quickly) help,
-
-
---=20
-J=C3=A9r=C3=B4me
-
-PS: Sorry if I'm sending this to too many people, I did a
-get_maintainer timer and e1000e code.
-
---=-HdJrXOh6mReobDPrIWlL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAABCAAtFiEEk5TkdsnFh9XvC+SieNwb2r75s3MFAmYgGRwPHGNqQHpvdWds
-b3ViLmV1AAoJEHjcG9q++bNzGPEP/jmSkbL5VKHv0TF1TCtUlY1nCCqedgceGbC6
-3/lg2s7ZfB3q4PmYn2zJT8CiX5aXr0rNXPPD914Na6IHwCrnPzBj/UqOG2JTFAtd
-PQinKa797fRn9zBo5w4XvVXgoaAueu5x0sIUpqzVlkuVuMdE+u9SIAOvFKCCJUO/
-7bWAzHh8WAHztC78vG0kf8jI7YB9UHyCpztGBGeA1JGZKkPHtAdhdlmoadzIq5WF
-rLUBQ8QxU0MVkVLO8pau4KNrT5sjpteMxZ8pqyfV3hsBlenajPMuBvUfKvwoKoLt
-gaDIn7gZ6ca8sdEJQgEgl5tWo6fZ0Etr3VQFaEOP2WeN+QVo2Qh0wfDi3l0Pdnr9
-1rhQXTGgr+CvD351fGyU5875Tu9MurA7eOcG57/3JgXkiPyJ2sb0mlNsCFARJC1p
-JrNCkmsxKxKNrf1Eu4efvFyRae9te7D/SNtVGzwD8o/HuN3EN7OkzaYQJYjRl95V
-Q4/4koR2GsfWGGpAGJBG36t3ZaGcikGxAs5rI1dZu5FCNnSmty0T/TC+3dcto2hV
-SDj3T+bOv0IYluKqRHsSQ5pONEJuYBooacCqRvJ8jbOVd3XAWYE3y+pnFe68cg6B
-k9rneHPBHO/fJHLSdWC4pe9hRM+SWSjuFsns/EQnAkWy5wQSbmbeshmdLkush2I6
-e4pIKYeV
-=RnpT
------END PGP SIGNATURE-----
-
---=-HdJrXOh6mReobDPrIWlL--
+Sorry for the late response, I was off work. I will look into this and
+get back. I might need help reproducing this issue, but let me first see
+if I can reproduce with the info in the bugzilla.
