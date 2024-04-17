@@ -1,79 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE937208D6;
-	Wed, 17 Apr 2024 18:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80909208CA
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 18:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713379722; cv=none; b=W+sMr8X6uw2nxphQPi41en1jSV00XGgigi1bq1tjM/9cmh2JIHqwMqqFVJFVU29gar58e4+YIX1iidy5I/B6Lt9OByCH/4gH3MQpGbwsalkPhvuhdYK2ctmDVdUeGx7OPw6wIXf68mj0pP0BCvIpz6Kgm3bnP1q8JQvS+0ZyMBw=
+	t=1713379724; cv=none; b=p6n9nMa6nGb5sXOs0lHDxG6j1PDeY12hNKC05TdQGIu8s7uFofvLqKJeusgJOGK4ugklRYz1itbkgUH40ecDJOj/T+FbRwI058AbsrwQ6LU0jOoL8a65PzCHijUnBq6827D67O+Dp95+pgcPJa3fZ43lqdUz9kWn7mOfev2XSMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713379722; c=relaxed/simple;
-	bh=vQJuYu8n6tKRsxdPMUC68Q9FqABjhqR4vGFq0S3iuzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pd+yoRv4VaKdnfXwUPxKfeIHP8Dx69sD5pcUJ1XN4+431tcFDtUQzQ0EdMipG/j3oz5NpyUEgXLFJct4fNPu+K7yZ4CO/4S2FzC+SJ7uaNTWLVCP3cwi8kl7QwILBe0MrCyvQZvg+2Le1beckZwOJ83NPvUvyc2DobVzo8mdUQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSHNArYJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713379724; c=relaxed/simple;
+	bh=rutsOn/f39LcCOHC2CAWzop5cfLJktAPax9ROiVqARI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XhuhbctKktEPD/6Tr7cNKhgqf1iZbnQ7QQqSTT/2lu7kTMPmbjuTo2X/csUZadcpD+2URrGGxz7FwhAx+PgKVicHjLvZzrSmym0lcS+CCMgg6nK13k/IF7Y4Tl8jpHoxs+uUtJNaKgga9UUE5Zr1YiLa0xdCKOP8oOUHT7XRwaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fXj8RIQO; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSHNArYJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00ECDC32781;
-	Wed, 17 Apr 2024 18:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713379722;
-	bh=vQJuYu8n6tKRsxdPMUC68Q9FqABjhqR4vGFq0S3iuzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fSHNArYJs5xOZGB0K0u7Tpp3XYM0KQpcIr8ol9MM0hAKFrG6mp1bcx/JpDfvdqYoQ
-	 l0yGgmbsUzw9xMZW2i61pR+pFfs8kpXWexlx6KReXrAwvAgJaPaemXxhrnNh34YWSY
-	 QUQLvhkqEczRD3cP+tIGCjYm1JzozVAj2YN6oc9giSdYLTP16ocmbXVtzvKORjrrM4
-	 KNYk/Re9IRy8RR0ygmPkxj2i1oOjFzmEwqfHZp8Lwe9CDUXVQZ0au0u3Kr92lVWDTk
-	 XvXaiZZmEwtRlvDRx9kfv7DGnbHFXaJ20+EMv/Yt1hQA7dRO9z52evtibPPfc5wPxo
-	 dZZqIjE0y+sDA==
-Date: Wed, 17 Apr 2024 13:48:40 -0500
-From: Rob Herring <robh@kernel.org>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-clk@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pwm@vger.kernel.org,
-	David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org,
-	Jitao Shi <jitao.shi@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Maxime Ripard <mripard@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-mediatek@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	CK Hu <ck.hu@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Subject: Re: [PATCH v2 10/18] dt-bindings: display: mediatek: rdma: add
- compatible for MT8365 SoC
-Message-ID: <171337955722.3078087.17269259484648392876.robh@kernel.org>
-References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
- <20231023-display-support-v2-10-33ce8864b227@baylibre.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fXj8RIQO"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-479d1454cb4so23008137.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713379721; x=1713984521; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3Ps7dtRF5OPrxcjL1/j+nNKltItcMv5lBmuac1kY1k=;
+        b=fXj8RIQOM1/eQ3FKPRD6YIVhxJ/uFHAtGRsdo/GXZ9yFFPyJMMlFbR49N0B+T9CGWl
+         UlqTqtOy3vnPVrB4cyXsrg7sJaU4KwJkzjOGjO5sJn8CjmTcOFTqBr7TGiCR1dxJ3yiw
+         B0zcCB4mCg4qYq53E3aGLv1lrk6/FfrsySAzg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713379721; x=1713984521;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i3Ps7dtRF5OPrxcjL1/j+nNKltItcMv5lBmuac1kY1k=;
+        b=ZZOGLQZGYuuToQwJJnMSuSOsLG/FMwP9rH8w1XVlHk17BcoJjXx9tPngFFxHS/FeJw
+         qVzfLU4sTH+dHmMTZAmHW37OQsicJi3RXSSrQABK6tXYDNl6QW/ON2q8N4SrRELQnbFO
+         HbG/P9fECADyw5zwFyX4L5kbHBVD4V/C7xaoji+6+EewiC7MMnkfNhRApQb194LXKTG4
+         LUCdkTj0uR/2WiSx0bMqM8iDvadA++kzolB9zQVfDNoxoQl5JGwh8VMP+LSaVgrOrM0b
+         bFPM/cdZJx8ay3puNae4jsQDL0NqyNuOr2VEvlGAxKyK7LbM5taYjgqCqEGVjIcxPN+k
+         zBfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjWw68ChuLIbNzBGZ4/sYRnYoHagHh3Xs2dM3YJIo0OyI114ddaJeFJHC5JYTKrxjQHUu4kD1kga8UNqjOPdoDlLMNXJx/mBmmBcrY
+X-Gm-Message-State: AOJu0YySTc6A0QPPSPxOV5AvNv+xvbUHB3axBJK3YEOBH/MXMHoD2bcv
+	/Y0YEq739n/LJ5VJhrJMijg8ixJw4AdOKOvWt58shZl57JDw2tAOoJ4SyRdEU+fcIWmHhsFD8HU
+	MlQ==
+X-Google-Smtp-Source: AGHT+IFBNSoki4/346EUrHgyC8G2qnZc4Zq4pCQ8s7YWobY6huU2DPyfxLY7xkDh931pXJ2n1tD6wA==
+X-Received: by 2002:a05:6102:c02:b0:47a:22cd:9717 with SMTP id x2-20020a0561020c0200b0047a22cd9717mr480980vss.24.1713379720897;
+        Wed, 17 Apr 2024 11:48:40 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id l25-20020ab07199000000b007e8485c3c93sm1432698uao.23.2024.04.17.11.48.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 11:48:40 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4daa8e14afbso1936181e0c.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:48:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXfFH5cwkfi6jqUY17A2Jac/CoWne24H9T9Dik6evEUDSPPOLTROtAYUlYjS8NxpWz6/1+82Kt5Sn8H1+R09QZcPDZjj8qpkDHi6vFb
+X-Received: by 2002:a05:6122:252a:b0:4d8:75d1:f733 with SMTP id
+ cl42-20020a056122252a00b004d875d1f733mr476748vkb.11.1713379719654; Wed, 17
+ Apr 2024 11:48:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231023-display-support-v2-10-33ce8864b227@baylibre.com>
+References: <ab56c444-418a-423d-8528-cf04d5d458ef@moroto.mountain>
+In-Reply-To: <ab56c444-418a-423d-8528-cf04d5d458ef@moroto.mountain>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 17 Apr 2024 20:48:23 +0200
+X-Gmail-Original-Message-ID: <CANiDSCvGc2hv-6+THH28vE6uaTL+go7144hSYafkhp21uaM1Cg@mail.gmail.com>
+Message-ID: <CANiDSCvGc2hv-6+THH28vE6uaTL+go7144hSYafkhp21uaM1Cg@mail.gmail.com>
+Subject: Re: [PATCH] media: stk1160: fix some bounds checking in stk1160_copy_video()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: =?UTF-8?Q?Ezequiel_Garc=C3=ADa?= <elezegarcia@gmail.com>, 
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Dan
 
-On Tue, 16 Apr 2024 17:53:11 +0200, Alexandre Mergnat wrote:
-> Document the display Data Path Read DMA on MT8365, which is compatible
-> with that of the MT8183.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+On Wed, 17 Apr 2024 at 19:51, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>
+> The subtract in this condition is reversed.  The ->length is the length
+> of the buffer.  The ->bytesused is how many bytes we have copied thus
+> far.  When the condition is reversed that means the result of the
+> subtraction is always negative but since it's unsigned then the result
+> is a very high positive value.  That means the overflow check is never
+> true.
+>
+> Fixes: 9cb2173e6ea8 ("[media] media: Add stk1160 new driver (easycap replacement)")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> This patch is untested, I just spotted it in review.
+>
+> When this bug is fixed, the two checks for negative values of "lencopy"
+> could be removed.  I wrote a version of this patch which removed the
+> checks, but in the end I decided to leave the checks.  They're harmless.
+>
+>  drivers/media/usb/stk1160/stk1160-video.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/media/usb/stk1160/stk1160-video.c b/drivers/media/usb/stk1160/stk1160-video.c
+> index 366f0e4a5dc0..bfb97ea352e7 100644
+> --- a/drivers/media/usb/stk1160/stk1160-video.c
+> +++ b/drivers/media/usb/stk1160/stk1160-video.c
+> @@ -139,8 +139,8 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+>          * Check if we have enough space left in the buffer.
+>          * In that case, we force loop exit after copy.
+>          */
+> -       if (lencopy > buf->bytesused - buf->length) {
+> -               lencopy = buf->bytesused - buf->length;
+> +       if (lencopy > buf->length - buf->bytesused) {
+> +               lencopy = buf->length - buf->bytesused;
+>                 remain = lencopy;
+>         }
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+I think it is a bit more complicated than bytesused.
 
+bytesused does not take into consideration the actual position where
+it is going to write.
+
+What we really want to check is if
+
+offset = dst - buf->mem;
+if (offset + lencopy > buf->length) {
+  lencopy = buf->length - offset;
+  remain = lencopy;
+}
+
+>
+> @@ -182,8 +182,8 @@ void stk1160_copy_video(struct stk1160 *dev, u8 *src, int len)
+>                  * Check if we have enough space left in the buffer.
+>                  * In that case, we force loop exit after copy.
+>                  */
+> -               if (lencopy > buf->bytesused - buf->length) {
+> -                       lencopy = buf->bytesused - buf->length;
+> +               if (lencopy > buf->length - buf->bytesused) {
+> +                       lencopy = buf->length - buf->bytesused;
+>                         remain = lencopy;
+>                 }
+>
+> --
+> 2.43.0
+>
+
+
+-- 
+Ricardo Ribalda
