@@ -1,82 +1,95 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A112912EBE2
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC2757898;
+	Wed, 17 Apr 2024 09:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713345146; cv=none; b=Jp6uy7MiXmyT9NxFSCTHlAT0a5yuSpyx7bVGKyeYktE4izpUwE44fsZK3TN4czn3LF5t/W+lvactYI9+fD9dgr4V+x6FJmeKvqz1i8vO+D/7gV8vTjQZVUO3GccfRy9RRPev8ySIAj+Ji60BYkehFQAAPsiDsQvzKLsoK+2Yr6g=
+	t=1713345182; cv=none; b=k7D1QUJQGtnmHBXBNoH8Tn+NSfEt0bzCGMIfMQ6inmaxc2dhuwDceMTYd0z+N6aPR7scdegWRaE0EQr8hf/G8n94qkxi8L7hhQgklwIIXk/K1LQlVQgljV4bWD+NDwTjby12TJs6faFSdOAUETvCjMVCjFaGv6LmZFkVynL5WOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713345146; c=relaxed/simple;
-	bh=xwwIXSY47KZfycmKt+XXuXJCWRokr5xgAS6HoTEIbOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qhd47eiPI5+f39UYzFWIi3/c7dMk1rea1JM4EFeLLAEwqVx2mc31aELSlN/1puLcqdCsRAwXIw/y7b53Xw1Ayj5F4xm7WASCarQWwCDmDmsn/IM6ffwEOL/sb/mb8tfNohiAEl4HyO84iRVlMmyZ8vFd8fPwc5W6PquioVsTXy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4781540E00B2;
-	Wed, 17 Apr 2024 09:12:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9fihFXr3HZad; Wed, 17 Apr 2024 09:12:16 +0000 (UTC)
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D086840E0177;
-	Wed, 17 Apr 2024 09:12:06 +0000 (UTC)
-Date: Wed, 17 Apr 2024 11:12:00 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: a-development@posteo.de
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
-	David.Kaplan@amd.com, Andrew.Cooper3@citrix.com,
-	jpoimboe@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [RFC][PATCH 00/17] Fix up the recent SRSO patches
-Message-ID: <20240417091200.GAZh-SYOGABCnsqpKj@fat_crate.local>
-References: <cbad6acb30e33e8dd387080e5936cc38@posteo.net>
- <20240127191942.GEZbVXTtDNzLB9hTpr@fat_crate.local>
- <181005cf4a78a4c3c5e1de77498f6c23@posteo.net>
- <20240127194139.GFZbVcc2RxhNtO3ZHD@fat_crate.local>
- <6170a3f60cd1ca68bca5829db4a8568a@posteo.net>
- <20240326222134.GNZgNKbgdBUsAU98RV@fat_crate.local>
- <d0dfa77ba8231652554c4e6088f985d1@posteo.net>
- <20240416084544.GAZh46uKW6ijAfftmI@fat_crate.local>
- <a49e7560f982f00ef1c5452483459b26@posteo.net>
- <0065fda592b2652d1a2730ddbc81cea6@posteo.net>
+	s=arc-20240116; t=1713345182; c=relaxed/simple;
+	bh=9ZnFyt9EnaFn4kkSCLK7jpsiIIqRXRrmN39V9djcWKY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DKBzxXMiEziowyITcsljcvjngzPNf6bEzWxgH7xm8qFv0WtYPweo0nd0I77nfK+NXGgQHS7zOgr1jdWXJkYSP4tYP5B6nNZvqEh/n2oyy3EHgmAA6BhU+5md0gEnTY/SUX2BTvB76XDiHvxDohr6z8IMdVII3TkI41R8Y2cBO6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=eeJ+Rzqv; arc=none smtp.client-ip=207.171.190.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="eeJ+Rzqv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1713345181; x=1744881181;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9ZnFyt9EnaFn4kkSCLK7jpsiIIqRXRrmN39V9djcWKY=;
+  b=eeJ+RzqvQzt9P4nHC81stHiXqi/tht/MWRnSUKjSZvaT0G5zRcSaXANR
+   BG1Bi5BdPPlkf2ZB3fBp2vrGV20/C35qd8IX0Iu27jEo+T7OLKE71TW7y
+   l/dATiGPugEYT5WkXxX1MeZthVWR1iqgJbJFdJY5qmJw4+qWXIY237zsk
+   w=;
+X-IronPort-AV: E=Sophos;i="6.07,208,1708387200"; 
+   d="scan'208";a="339290797"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 09:12:52 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:24771]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.40:2525] with esmtp (Farcaster)
+ id ca7a4c02-a734-4bba-bd1a-9e90b51c919c; Wed, 17 Apr 2024 09:12:50 +0000 (UTC)
+X-Farcaster-Flow-ID: ca7a4c02-a734-4bba-bd1a-9e90b51c919c
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 17 Apr 2024 09:12:50 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Wed, 17 Apr
+ 2024 09:12:47 +0000
+Message-ID: <5351cd46-7228-48d8-b1a2-8ab91dce24f7@amazon.de>
+Date: Wed, 17 Apr 2024 11:12:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0065fda592b2652d1a2730ddbc81cea6@posteo.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/5] virt: vmgenid: rearrange code to make review
+ easier
+Content-Language: en-US
+To: Babis Chalios <bchalios@amazon.es>, <tytso@mit.edu>, <Jason@zx2c4.com>,
+	<olivia@selenic.com>, <herbert@gondor.apana.org.au>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <sudanl@amazon.com>, <xmarcalx@amazon.co.uk>, <dwmw@amazon.co.uk>
+References: <20240417081212.99657-1-bchalios@amazon.es>
+ <20240417081212.99657-2-bchalios@amazon.es>
+ <10d41e7e-87b1-4036-a740-da36270a4325@amazon.de>
+ <2838b126-ad87-4642-9223-e24f3fdb2c63@amazon.es>
+From: Alexander Graf <graf@amazon.de>
+In-Reply-To: <2838b126-ad87-4642-9223-e24f3fdb2c63@amazon.es>
+X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-On Wed, Apr 17, 2024 at 08:08:53AM +0000, a-development@posteo.de wrote:
-> Today I failed to suspend, and the spec_rstack thing was off.
-> 
-> https://up.tail.ws/txt/non-working-suspend-2.txt
+Ck9uIDE3LjA0LjI0IDExOjA1LCBCYWJpcyBDaGFsaW9zIHdyb3RlOgo+Cj4KPiBPbiAxNy80LzI0
+IDEwOjM1LCBBbGV4YW5kZXIgR3JhZiB3cm90ZToKPj4KPj4gT24gMTcuMDQuMjQgMTA6MTIsIEJh
+YmlzIENoYWxpb3Mgd3JvdGU6Cj4+PiBGcm9tOiBTdWRhbiBMYW5kZ2UgPHN1ZGFubEBhbWF6b24u
+Y29tPgo+Pj4KPj4+IFJlYXJyYWdlIHRoZSBmdW5jdGlvbnMgb2Ygdm1nZW5pZCB0byBtYWtlIHRo
+ZSBuZXh0IGNvbW1pdCwKPj4+IHdoaWNoIHJlLWltcGxlbWVudHMgdm1nZW5pZCBhcyBhIHBsYXRm
+b3JtIGRyaXZlciwgZWFzaWVyIHRvIHJldmlldy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBTdWRh
+biBMYW5kZ2UgPHN1ZGFubEBhbWF6b24uY29tPgo+Pgo+Pgo+PiBZb3UgY2FuJ3Qgc2lnbiBvZmYg
+b24gYmVoYWxmIG9mIHNvbWVvbmUgZWxzZS4gVGhlIFNvQiBoZXJlIG5lZWRzIHRvIAo+PiBiZSB5
+b3Vycy4gSWYgeW91IGFyZSB0YWtpbmcgb3ZlciB0aGlzIGNvZGUgZnJvbSBTdWRhbiwgSSdkIHN1
+Z2dlc3QgdG8gCj4+IHRha2Ugb3ZlciBmdWxsIG93bmVyc2hpcCBvZiBpdCBhbmQgcHV0IHlvdXIg
+b3duIG5hbWUgYXMgYXV0aG9yIGFuZCAKPj4gU29CIGluIGFsbCBwYXRjaGVzLgo+Pgo+Cj4gSSB0
+aG91Z2h0IGFib3V0IGl0IGFuZCBpdCBzZWVtZWQgd2VpcmQgdG8gbWUgdGhhdCBJIHRha2Ugb3Zl
+ciBTb0IgYW5kIAo+IGF1dGhvcnNoaXAgc2luY2UgSSBvbmx5IHRvdWNoZWQgb25lIGxpbmUgaW4g
+b25lIG9mCj4gdGhlIHBhdGNoZXMsIGJ1dCBJIHdpbGwgYmUgdGFraW5nIG92ZXIgdGhlIHBhdGNo
+ZXMsIHNvIEkgY2FuIGRvIHRoYXQgCj4gaWYgdGhhdCdzIHRoZSB3YXkgd2UgdGhpbmdzIGFyZSBk
+b25lLgo+Cj4gRG9lcyBpdCBtYWtlIHNlbnNlIHRvIGF0IGxlYXN0IGFkZCAiQ28tYXV0aG9yZWQt
+YnkgU3VkYW4gTGFuZGdlIAo+IDxzdWRhbmxAYW1hem9uLmNvbT4iIGhlcmU/CgoKWW91IGNhbiBj
+ZXJ0YWlubHkgZG8gdGhhdCwgeWVzLgoKCkFsZXgKCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2Vu
+dGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1
+ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBh
+bSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVy
+bGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
 
-Ok, but please do not top-post. Put your reply underneath the next
-you're replying to and remove the rest of the quoted text like I just
-did.
-
-So this could be caused by the proprietary module or something else.
-
-If you want this debugged, you'd have to try to reproduce it with the
-latest upstream kernel from here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-after having removed the propietary module.
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
