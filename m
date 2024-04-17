@@ -1,57 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F8212C490
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888128529D
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713344147; cv=none; b=WG+jb2AYcc0WKMihpm19k6IGBVJYESxZA1/OkQAGjrxBd9YPItG66X148uFjLKjVd8VzClZiyDDCgylWGUdFswsvBwczg6HfFu3iCsiBYqkCqbiziJ4HgtktUBjMJcfvPrnIyYoHNyRV1fKHLE/EjnmxuPGHUhwtdgK965fBijc=
+	t=1713344168; cv=none; b=p/NPdaIh92Fg2FdHfUCL7u1svL5ImIyOD8ovosCht4RbEsFvTHRypzkc9RRQV9MFB5FbQZYA7xVBtis4W76psmhxdZBX1sYYZwGF4yk6zLvKUadVMIqQ8sTOr13kI09NE21cA8A62t7XoGEud6Ji2nb4bcpU9xMDtcLvQ5L+QDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713344147; c=relaxed/simple;
-	bh=3KtL8v+/z1deeegmlCslJhNyGqs44qnUNBL+H3cQXis=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QkT+0+0ejjUoeUDcBIVSD2UhYIgAX39xhQhNA+Ht7+9TK1efBH9xvnMvdJzMlaPO4kfh5kdJXFlrQOSL0dwgUuY6QrjVHrNFYc0J0ICjp5to02Pf4zd/wVBbWpTP40QtYp5JKSCPIGRIvAzxS35SEYTqSatwc9sE6ES3nfPLP3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RlDwOV5Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlDwOV5Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713344144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pQ0sSQeAADn6AXaSn6AcvMvh/Ro6ED1iNBV8xbxjGO0=;
-	b=RlDwOV5Q0pikQTd5DbFPSfL3mHtefBxDkFqfKiwtowtcnU8oQ0NppDpI48SShwcHABsXkr
-	M3jVXZstG7NNASdvPEBU+Fy0HQvEoQhNE1fRX2xWGQDP+XllzalZAfgM0MQZ0ZmT6T/lpW
-	rXGWel4L4c1SALE6CkOuCFWq02WE1SU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-512-VBJASLQmOlWdBbek0Y9VbQ-1; Wed,
- 17 Apr 2024 04:55:39 -0400
-X-MC-Unique: VBJASLQmOlWdBbek0Y9VbQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ABD9C1C4C394;
-	Wed, 17 Apr 2024 08:55:38 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.193.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2F55A492BC7;
-	Wed, 17 Apr 2024 08:55:36 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
-	stable@vger.kernel.org,
-	Jarkko Palviainen <jarkko.palviainen@gmail.com>
-Subject: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address before first reading
-Date: Wed, 17 Apr 2024 10:55:13 +0200
-Message-ID: <20240417085524.219532-1-jtornosm@redhat.com>
+	s=arc-20240116; t=1713344168; c=relaxed/simple;
+	bh=1yGbszGcRRJ9nQZSIzGMay1tYPtA2ul/RpguU0oQzKo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jiz3huLLfNc/mBKT+w5oMYyY2J0ojeG+99JOdiw5sPFbSqrAWme1wPEKBqaM/OmxluZR/2YIvFBELHhVa9f09X04M4Hda1aJ4O+hBYbLkmK/6IssKkR2QZeYnX15abdWCaUYS+SX1IGjWx9OkBkucy5e30oCw0l4JGPCiYBBnYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VKF6M3glVzXlTT
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:52:43 +0800 (CST)
+Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CE891800C3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:56:02 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
+ (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 16:56:01 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next] genirq: Reuse irq_is_nmi()
+Date: Wed, 17 Apr 2024 16:56:16 +0800
+Message-ID: <20240417085616.3785647-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,66 +37,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
 
-After the commit d2689b6a86b9 ("net: usb: ax88179_178a: avoid two
-consecutive device resets"), reset operation, in which the default mac
-address from the device is read, is not executed from bind operation and
-the random address, that is pregenerated just in case, is direclty written
-the first time in the device, so the default one from the device is not
-even read. This writing is not dangerous because is volatile and the
-default mac address is not missed.
+Move irq_is_nmi() definition from irqdesc.c to internals.h, and reuse it
+in manage.c and resend.c to simplify the code.
 
-In order to avoid this and keep the simplification to have only one
-reset and reduce the delays, restore the reset from bind operation and
-remove the reset that is commanded from open operation. The behavior is
-the same but everything is ready for usbnet_probe.
-
-Tested with ASIX AX88179 USB Gigabit Ethernet devices.
-Restore the old behavior for the rest of possible devices because I don't
-have the hardware to test.
-
-cc: stable@vger.kernel.org # 6.6+
-Fixes: d2689b6a86b9 ("net: usb: ax88179_178a: avoid two consecutive device resets")
-Reported-by: Jarkko Palviainen <jarkko.palviainen@gmail.com>
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
-v2:
-  - Restore reset from bind operation to avoid problems with usbnet_probe.
-v1: https://lore.kernel.org/netdev/20240410095603.502566-1-jtornosm@redhat.com/
+ kernel/irq/internals.h |  5 +++++
+ kernel/irq/irqdesc.c   |  5 -----
+ kernel/irq/manage.c    | 16 ++++++++--------
+ kernel/irq/resend.c    |  2 +-
+ 4 files changed, 14 insertions(+), 14 deletions(-)
 
- drivers/net/usb/ax88179_178a.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 69169842fa2f..a493fde1af3f 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1316,6 +1316,8 @@ static int ax88179_bind(struct usbnet *dev, struct usb_interface *intf)
- 
- 	netif_set_tso_max_size(dev->net, 16384);
- 
-+	ax88179_reset(dev);
-+
- 	return 0;
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 6c43ef3e7308..35ab6771accd 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -280,6 +280,11 @@ static inline int irq_desc_is_chained(struct irq_desc *desc)
+ 	return (desc->action && desc->action == &chained_action);
  }
  
-@@ -1694,7 +1696,6 @@ static const struct driver_info ax88179_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1707,7 +1708,6 @@ static const struct driver_info ax88178a_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
++static bool __maybe_unused irq_is_nmi(struct irq_desc *desc)
++{
++	return desc->istate & IRQS_NMI;
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ bool irq_pm_check_wakeup(struct irq_desc *desc);
+ void irq_pm_install_action(struct irq_desc *desc, struct irqaction *action);
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 382093196210..5fd4499f649e 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -971,11 +971,6 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
+ 	return desc && desc->kstat_irqs ? per_cpu(desc->kstat_irqs->cnt, cpu) : 0;
+ }
+ 
+-static bool irq_is_nmi(struct irq_desc *desc)
+-{
+-	return desc->istate & IRQS_NMI;
+-}
+-
+ unsigned int kstat_irqs_desc(struct irq_desc *desc, const struct cpumask *cpumask)
+ {
+ 	unsigned int sum = 0;
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index bf9ae8a8686f..f366e4e2af8c 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -564,7 +564,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
+ 	/* The release function is promised process context */
+ 	might_sleep();
+ 
+-	if (!desc || desc->istate & IRQS_NMI)
++	if (!desc || irq_is_nmi(desc))
+ 		return -EINVAL;
+ 
+ 	/* Complete initialisation of *notify */
+@@ -898,7 +898,7 @@ int irq_set_irq_wake(unsigned int irq, unsigned int on)
+ 		return -EINVAL;
+ 
+ 	/* Don't use NMIs as wake up interrupts please */
+-	if (desc->istate & IRQS_NMI) {
++	if (irq_is_nmi(desc)) {
+ 		ret = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -1624,7 +1624,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+ 		 */
+ 		unsigned int oldtype;
+ 
+-		if (desc->istate & IRQS_NMI) {
++		if (irq_is_nmi(desc)) {
+ 			pr_err("Invalid attempt to share NMI for %s (irq %d) on irqchip %s.\n",
+ 				new->name, irq, desc->irq_data.chip->name);
+ 			ret = -EINVAL;
+@@ -2082,7 +2082,7 @@ const void *free_nmi(unsigned int irq, void *dev_id)
+ 	unsigned long flags;
+ 	const void *devname;
+ 
+-	if (!desc || WARN_ON(!(desc->istate & IRQS_NMI)))
++	if (!desc || WARN_ON(!irq_is_nmi(desc)))
+ 		return NULL;
+ 
+ 	if (WARN_ON(irq_settings_is_per_cpu_devid(desc)))
+@@ -2548,7 +2548,7 @@ void free_percpu_nmi(unsigned int irq, void __percpu *dev_id)
+ 	if (!desc || !irq_settings_is_per_cpu_devid(desc))
+ 		return;
+ 
+-	if (WARN_ON(!(desc->istate & IRQS_NMI)))
++	if (WARN_ON(!irq_is_nmi(desc)))
+ 		return;
+ 
+ 	kfree(__free_percpu_irq(irq, dev_id));
+@@ -2684,7 +2684,7 @@ int request_percpu_nmi(unsigned int irq, irq_handler_t handler,
+ 		return -EINVAL;
+ 
+ 	/* The line cannot already be NMI */
+-	if (desc->istate & IRQS_NMI)
++	if (irq_is_nmi(desc))
+ 		return -EINVAL;
+ 
+ 	action = kzalloc(sizeof(struct irqaction), GFP_KERNEL);
+@@ -2745,7 +2745,7 @@ int prepare_percpu_nmi(unsigned int irq)
+ 	if (!desc)
+ 		return -EINVAL;
+ 
+-	if (WARN(!(desc->istate & IRQS_NMI),
++	if (WARN(!irq_is_nmi(desc),
+ 		 KERN_ERR "prepare_percpu_nmi called for a non-NMI interrupt: irq %u\n",
+ 		 irq)) {
+ 		ret = -EINVAL;
+@@ -2787,7 +2787,7 @@ void teardown_percpu_nmi(unsigned int irq)
+ 	if (!desc)
+ 		return;
+ 
+-	if (WARN_ON(!(desc->istate & IRQS_NMI)))
++	if (WARN_ON(!irq_is_nmi(desc)))
+ 		goto out;
+ 
+ 	irq_nmi_teardown(desc);
+diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
+index 5f2c66860ac6..b07a2d732ffb 100644
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -190,7 +190,7 @@ int irq_inject_interrupt(unsigned int irq)
+ 	 *  - not NMI type
+ 	 *  - activated
+ 	 */
+-	if ((desc->istate & IRQS_NMI) || !irqd_is_activated(&desc->irq_data))
++	if (irq_is_nmi(desc) || !irqd_is_activated(&desc->irq_data))
+ 		err = -EINVAL;
+ 	else
+ 		err = check_irq_resend(desc, true);
 -- 
-2.44.0
+2.34.1
 
