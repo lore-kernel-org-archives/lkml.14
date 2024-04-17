@@ -1,97 +1,129 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F0541C7A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 12:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DCEEDC;
+	Wed, 17 Apr 2024 12:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713357278; cv=none; b=kBNYy7q33Nzfh+6jO2aPTe3vk6m+z+WnfRW/b7GhrdqAFYr8WpezBcP8jVnBBWmTQmiAac+C5Hz7WhxG88ppkXWPEJm8+vsBF3Eqam5nm3NWfjWrzv8g1w6xF/jbRVGFG2quFU4gFNXhsQ84mm7lPLDJxoR4G3izcjEjo+h1tdE=
+	t=1713357311; cv=none; b=lYD0VTWblK8FOlmChivcN+i7NvTYOsychyhPMCmqEXRY+rhNAnWoZMtccACOuAMAQM/j3jvPD2Lt/RntgKOfZ8XK/Qrx3si25YFftKtFk1C1wPrqWF2HnGXTj7AC6eqhQR/Uu52AgD/jdzXmAebbhdDAYUCcX9ZmVlwEI7Mif60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713357278; c=relaxed/simple;
-	bh=E5QZtGU4PZm2is2P+MulDOxW3Rpe7EdfaFk+Lnyb7cU=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=kYrKDlawbjYypgHdWCIt4NpReVhF4fY+1/z36eChgdUSs95vWclTJLU+XrMXLitwzFpRdfmzv33KKLb9pDY7BZZKxJwYJ4kTomnmKNklzEvYYWCbrLEd1lJc6/nyhL8gum2O8DSMxmA873Hlqmwv072544zhER9MkiAUqi8DKrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=dAmwnAxB; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1713357311; c=relaxed/simple;
+	bh=xV9RyJnO8jY4uGL5tn563C63eGvy+VmK6A8flXYwhx8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i4KTQhdBDgX5tA40awvxCUtWaO0BlNhw6OBwYK3woJ1GvVJrZF3cjzpR8hIm7r1CgTplqZzySDLDhhmjmPzpYGlAxhpbB4JCc7vqYzW02pkbYNkMzfMp/iC/KeeFO7JzcgvW7NQrwzaNgAfM+k7Z4VWZpmbai05ATj6MHHaXPWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=o2wHHrBu; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="dAmwnAxB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ysZHud6S4cjBQXKHfG/FeblhiB0ojezj19lZpopi0wI=;
-  b=dAmwnAxBIKyxhRp9PioBKnPY8GhW/Olu4nx1naLHyF35gRSGUfxWFkvL
-   f9Nz6h3AmwCs0LYgFmX8H+1XmVNIA1/FPYYmRjDSbmuAnE1bKJY0MuH6r
-   x05nAocOpO4mO0hchE/anudMyyMlDknxLxefckD2YANaEjSOncapHZ2T0
-   o=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.07,209,1708383600"; 
-   d="scan'208";a="162061165"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 14:34:27 +0200
-Date: Wed, 17 Apr 2024 14:34:27 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Samin Guo <samin.guo@starfivetech.com>, 
-    Hal Feng <hal.feng@starfivetech.com>, Andrew Lunn <andrew@lunn.ch>
-cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev
-Subject: drivers/net/phy/motorcomm.c:885:12-14: WARNING opportunity for min()
- (fwd)
-Message-ID: <2119db14-c2a-9bd3-eae8-4faa5219dbc3@inria.fr>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o2wHHrBu"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43HBdBTV111559;
+	Wed, 17 Apr 2024 06:39:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713353951;
+	bh=R52pVjh/hMavFcBapHbH3dqRB91Y7TwXotnELGUYDTs=;
+	h=From:To:CC:Subject:Date;
+	b=o2wHHrBuuf86UUFFH0yCMYhP6a8ClGNQ34CxrE3XVREm7gk1qfM0MsXOv4bePSbeY
+	 B/tHwIy6dPSeFtJ6E585EVBNe4iDDYS+1r6xMakilCfqK+t+fmvuKxv8B2FLmQ8WEU
+	 J/LsbaYFvoOFu69bi2JCPs79KZyAg3ZLYKuOiuAU=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43HBdAGY060518
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 17 Apr 2024 06:39:11 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
+ Apr 2024 06:39:10 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 17 Apr 2024 06:39:10 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43HBd9i8025032;
+	Wed, 17 Apr 2024 06:39:10 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Julien Panis <jpanis@baylibre.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Dan
+ Carpenter" <dan.carpenter@linaro.org>,
+        Chintan Vankar <c-vankar@ti.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Grygorii Strashko
+	<grygorii.strashko@ti.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "Andrew Lunn" <andrew@lunn.ch>, Roger Quadros <rogerq@kernel.org>,
+        Richard
+ Cochran <richardcochran@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>, Jakub
+ Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S.
+ Miller" <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH net-next v6 0/2] Enable RX HW timestamp for PTP packets using CPTS FIFO
+Date: Wed, 17 Apr 2024 17:09:02 +0530
+Message-ID: <20240417113904.3804936-1-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+The CPSW offers two mechanisms for communicating packet ingress timestamp
+information to the host.
 
+The first mechanism is via the CPTS Event FIFO which records timestamp
+when triggered by certain events. One such event is the reception of an
+Ethernet packet with a specified EtherType field. This is used to capture
+ingress timestamps for PTP packets. With this mechanism the host must
+read the timestamp (from the CPTS FIFO) separately from the packet payload
+which is delivered via DMA.
 
----------- Forwarded message ----------
-Date: Wed, 17 Apr 2024 20:21:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: oe-kbuild@lists.linux.dev
-Cc: lkp@intel.com, Julia Lawall <julia.lawall@inria.fr>
-Subject: drivers/net/phy/motorcomm.c:885:12-14: WARNING opportunity for min()
+In the second mechanism of timestamping, CPSW driver enables hardware
+timestamping for all received packets by setting the TSTAMP_EN bit in
+CPTS_CONTROL register, which directs the CPTS module to timestamp all
+received packets, followed by passing timestamp via DMA descriptors.
+This mechanism is responsible for triggering errata i2401:
+"CPSW: Host Timestamps Cause CPSW Port to Lock up."
 
-BCC: lkp@intel.com
-CC: oe-kbuild-all@lists.linux.dev
-CC: linux-kernel@vger.kernel.org
-TO: Samin Guo <samin.guo@starfivetech.com>
-CC: Hal Feng <hal.feng@starfivetech.com>
-CC: Andrew Lunn <andrew@lunn.ch>
+The errata affects all K3 SoCs. Link to errata for AM64x:
+https://www.ti.com/lit/er/sprz457h/sprz457h.pdf
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   96fca68c4fbf77a8185eb10f7557e23352732ea2
-commit: 7a561e9351ae7e3fb1f08584d40b49c1e55dde60 net: phy: motorcomm: Add pad drive strength cfg support
-date:   9 months ago
-:::::: branch date: 2 days ago
-:::::: commit date: 9 months ago
-config: i386-randconfig-053-20240417 (https://download.01.org/0day-ci/archive/20240417/202404172059.wU4sM9Qi-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+As a workaround we can use first mechanism to timestamp received
+packets.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Julia Lawall <julia.lawall@inria.fr>
-| Closes: https://lore.kernel.org/r/202404172059.wU4sM9Qi-lkp@intel.com/
+Series is based on linux-next tagged next-20240417.
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/net/phy/motorcomm.c:885:12-14: WARNING opportunity for min()
+Link to v5:
+https://lore.kernel.org/r/20240402114405.219100-1-c-vankar@ti.com/
 
-vim +885 drivers/net/phy/motorcomm.c
+Changes from v5 to v6:
+- Defined lockless variant of "am65_cpts_fifo_read()" as
+  "__am65_cpts_fifo_read()", suggested by Paolo to avoid acquiring the
+  same lock on cpts again in "am65_cpts_fifo_read()".
+- Replaced "list_del_entry()" and "list_add()" functions with equivalent
+  "list_move()"  function.
+- Replaced "list_del_init()" and "list_add_tail()" functions with
+  equivalent "list_move_tail()" function.
 
-7a561e9351ae7e3 Samin Guo 2023-07-20  877
-7a561e9351ae7e3 Samin Guo 2023-07-20  878  static u32 yt8531_get_ldo_vol(struct phy_device *phydev)
-7a561e9351ae7e3 Samin Guo 2023-07-20  879  {
-7a561e9351ae7e3 Samin Guo 2023-07-20  880  	u32 val;
-7a561e9351ae7e3 Samin Guo 2023-07-20  881
-7a561e9351ae7e3 Samin Guo 2023-07-20  882  	val = ytphy_read_ext_with_lock(phydev, YT8521_CHIP_CONFIG_REG);
-7a561e9351ae7e3 Samin Guo 2023-07-20  883  	val = FIELD_GET(YT8531_RGMII_LDO_VOL_MASK, val);
-7a561e9351ae7e3 Samin Guo 2023-07-20  884
-7a561e9351ae7e3 Samin Guo 2023-07-20 @885  	return val <= YT8531_LDO_VOL_1V8 ? val : YT8531_LDO_VOL_1V8;
-7a561e9351ae7e3 Samin Guo 2023-07-20  886  }
-7a561e9351ae7e3 Samin Guo 2023-07-20  887
+  This changes are done as per the discussion at here:
+  https://lore.kernel.org/r/7c8be16329668d343a971e265e923543cba5e304.camel@redhat.com/
+
+Chintan Vankar (2):
+  net: ethernet: ti: am65-cpts: Enable RX HW timestamp for PTP packets
+    using CPTS FIFO
+  net: ethernet: ti: am65-cpsw/ethtool: Enable RX HW timestamp only for
+    PTP packets
+
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  13 ++-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c    |  51 +++++-----
+ drivers/net/ethernet/ti/am65-cpts.c         | 107 ++++++++++++++------
+ drivers/net/ethernet/ti/am65-cpts.h         |  11 +-
+ 4 files changed, 118 insertions(+), 64 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
