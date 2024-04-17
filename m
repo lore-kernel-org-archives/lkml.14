@@ -1,47 +1,50 @@
 Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60AE60262;
-	Wed, 17 Apr 2024 20:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B85651AB;
+	Wed, 17 Apr 2024 20:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713385928; cv=none; b=mZLXggDQRsI+bKRA/HFvBBCkLarGgpcyUwponLEbLYMdjMhgbDbudsjqL0SILFiPF2Kk63pnu7kFpnjaC/1wais4cU2uCmliRz/AfB68xLr06arl9FTBv24Ah0gD4Nc+bmlJ9sfD1KFe7TlEq3p+BSURlv7riM16Pru0hY6Wemo=
+	t=1713385932; cv=none; b=tSUZbBMfXmUbRtQ0C+mQl/NAJovbiWckSXbEd8U89hjeY/mg9WdVsKV/cgTg6sUHSaZElkTY1765G5nvzkgzV8dN7oFaeCzN/r4va+8qqrGbAARIMzPysMyEeM5DEW/QJOe/dkJkQkW3LaBJL3dJ/smsfrWbLE1S5pe705heO9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713385928; c=relaxed/simple;
-	bh=snUlQ8CUBvwt6t0rQcr2fBcuXmMSzuXKMUaznWhkeSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F2LqG7UG75VP7W7tO2GDhx6Mmgiw4w1x6GqOFtdTL+LgdyjvAKbfPXbQ0lz+PJt4y081BGBAdAX8zupXC92taOJ0sp4FPykLuNlyJ+DPJhIwnWFjLbFjoEGlQl3JZioTf9asBPCJCdwjkbQhDDMZsSNwwx6aM7VpoRy3CK7QK/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=sLatIE9L; arc=none smtp.client-ip=74.208.4.196
+	s=arc-20240116; t=1713385932; c=relaxed/simple;
+	bh=jBrmZuc+hQi/FGE2D/xlvk+OLFJTmVNAlYBeQ3oBbaw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Yb8fE+NWo1ufNqhh4zPe7A4k+KAWHjb4ryr1SWhkXU5uBBXI8MpeFq+D3+AbD870Cmxwtz1iYzrcDWelE0bJbyVuPQdL34Dsivg0CUTh4FYosGZjpCrqHUvFsTY2XvvfKkK5g+zcfaWIiRzZ5HjKvbZqL9B/fJ8xRsKd6dnE6rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=x4pdr4J/; arc=none smtp.client-ip=74.208.4.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="sLatIE9L"
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="x4pdr4J/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1713385914; x=1713990714; i=parker@finest.io;
-	bh=zvVys0faffVpris9ppwK6fTUXrOggQ+stC07pDGKPks=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
+	s=s1-ionos; t=1713385915; x=1713990715; i=parker@finest.io;
+	bh=QfpFgyFbjiFW1vFGm/sOAY+19iKk2+WxFUh4AkWal5Y=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=sLatIE9LDzt0WajpvGCr4uskAHe/yyqH7XaRP37DRUobo+hvSNb6CQO7y5FIq76y
-	 ovjTtYK+Q6wKcD6yuTvhy/nLvpysCsmjwDwWpSb1tCbuGYvnguxdgRJB2ipBY99lC
-	 MR6j4wCNLgAzxhYj4w8Afx1Ov52+5+VskoNOrOAMKOuUPfsRXiRZkQys4lqEXo8LX
-	 xAqM0nugCcJHS6wRf5zNHA+AixlwwAaugGXJQ6J6pHX8R7ImExDfIRu2HxbNHord7
-	 nswKP1iRNUjEGBXqurPasK3uQzIA2CQVYlHU+igbsXnSdkS79T3jolAFIcd8UV40c
-	 dBf871M7BxpRP5MnWA==
+	b=x4pdr4J/Iz8PtObnFCGICuk8JK1u94fdd5NBODkpfyqPI/65IDb08GgZEDsGRxOJ
+	 zIcwApNuBK17QCLa82UwwdojXirr0yFzF9vIvfwrpEH/fFTHAPsy00AfCSGRrPd0e
+	 5tyRFtGyMPlDYFI8nT6+DecLJ9nc0GVvMaAk+wW8NbUEfHCV/VmXjIJR7S3mwBS+l
+	 bi7BDeCu08TXMJuwr/fpslTZmSxtFxNit0C+hcP4PULhnshrNTck9zwYOYtdLL7as
+	 atDULNyRwVySSI65+HdKsl7Wgc3g4NmzKT5tyEG9lTyWTlHo/fV2vVKas8o3lF7On
+	 06kQiyExeyIGK0cgCQ==
 X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
 Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus004
- [74.208.5.2]) with ESMTPSA (Nemesis) id 1MbS8j-1sZ0bI3p7Z-00brjB; Wed, 17 Apr
- 2024 22:31:54 +0200
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 1M5fxm-1s4KoL24TK-007Bs6; Wed, 17 Apr
+ 2024 22:31:55 +0200
 From: Parker Newman <parker@finest.io>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-serial@vger.kernel.org
 Cc: Parker Newman <pnewman@connecttech.com>
-Subject: [PATCH v4 0/7] serial: exar: add Connect Tech serial cards to Exar driver
-Date: Wed, 17 Apr 2024 16:31:22 -0400
-Message-ID: <cover.1713382717.git.pnewman@connecttech.com>
+Subject: [PATCH v4 5/7] serial: exar: add CTI cards to exar_get_nr_ports
+Date: Wed, 17 Apr 2024 16:31:27 -0400
+Message-ID: <0c64bdf852f39aec966b38696695d951e485d7e6.1713382717.git.pnewman@connecttech.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1713382717.git.pnewman@connecttech.com>
+References: <cover.1713382717.git.pnewman@connecttech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,64 +52,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pxhcMpEC6sD5WyFezOqtCU6EWMiMS1pMpoe2ZSE50fqA/DSe0UI
- Shv36TiDEyzj94uGFXp3V0hgfQcbZ+rwgcatCxQhNqL/6l1r1IfxZdkho3BJUFIFpz75zd2
- xHfW96in4DiY/0uJb/l6klgwdEYroQZ8rU9cJO1IerAEM+BnwDK+ZErHjPpZ/qUXztYuJj+
- YFbax3Q9XmqiQMj8uEaMw==
+X-Provags-ID: V03:K1:8N3qJWX/0pGN6XI4YNvCTwhbuWBV3TEryz8g7tRdPZHrL4eKgGC
+ rMCl2TK+t++xEEgY0ntP2dT2FQwl5jZSetEmhLqlp9AFyJa9/vys9WcY3lDNhPg8aG1mr3X
+ 12lON7CCSsVzV0x4Y4ObsTTmv1fLtmddS7X3TjKmPsnHz5jcoXFAj9nOY5dzLXfeBCDTyea
+ sL0SFFOJbdpErOVOR+gaw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bayDW9b21A8=;KlaPduv0NnbVVEkA3q2/aYIF2hD
- BMy+RMfabRkxmR32Agv4r7Zl/XmcI7NwlhPg3Gs+njDfVsmRd89m8xP1WgNihHc6xINq+kn0Q
- WED5pjvaOpUaBK7TizoFbRCw/UOQsKcCDkpl5iYjdkHirODtktMB+jIVSOZPfnqGsouQpgn4+
- REezCQS6d2n7WwH4tEKgNOK4hEEwPAAxgP1iMuc6TkaKIEo8cdvw9wCpeNjEiC8voILAXRxXN
- /b1mYdK4dfV8hG8HRoSSA1+ydbAEboakoJyjuSwObTFstqBRwlWfUzWM9KJOqqUbNOtImmwJ1
- w1daMUTIYHWNhtQDbW3TcITw6FnEM1G4WCzWEzHZBxQ+hdlK3oxr0dBsI4qdCtrARUD3X8nV9
- YeuhNFAwDSsnqoGr2/3Vd2cYikxFyGwk76EEEC1TDm5/lIDLHVipHTQ34WI2H+d/ySY8jqGN+
- 9wUOOv0zdJDU5G4LZ7jYVw0dowCNaYu0RuOJKylbaGs5qU94sgk6UE0A7R0OnY4SNqbPotqsO
- jKApFAQWFRHVYajJyjI0NmMN7q2WpAfas1F7fkZ4M9pqwtJO4ibMjdpVdz1q8tH6DO5D5t10Y
- uCgahT/KNZFnFzG9hEXxDgaVdK/SeupV5jD7ezdwS+4BLVhlm77Il91s4WDdok6pJW34eqfqB
- ossMACyyESD3wVWCKwNntYJgHbFPOsQV5yNlvXAUC1Pa9UQkwxR8q02z6kAuAog+fSbnM3afs
- ubSYOrJPMSxlKt2PeyrUPlJtUNjHZnAsONNoiMX4QfiwiZNRIiLPd0=
+UI-OutboundReport: notjunk:1;M01:P0:DI5yBrAfF6U=;+j/LC8KMH+9uKL2BSQzqZtK6Na5
+ as9KKNuuRhL+VhZeRV4RA4Pq5mXw1BwaNV0ZzFRgzQvNbe97y/7GobbMqiv0QzKiwp+0KfP93
+ 0KVtBx8uag81gDfVBFMLrjC8BZuvqtHY1o7Weoy7OclPrhznb3E6+XuPMAbR+NJAX7MiDkZfn
+ hYohJmFJeT2FzvlM+qSlyhpCDdVUUX49HG5kNy3Re8fDRnr3fLAUsObXnz1mHRDRt4qyrZcGH
+ 1wIIkepI2bqeGtUfZG4IuaErV+B49ut7+/hWHXrEl9HA2KtVXsGSBXn0Z95mqqEmVJB8HKgpI
+ cONdbwaYr3SNeBNniU4zBJ4otUhp+oYQkcq/0X72mBtXXJJiAk2FKfSLUHT1Wjw5Kqmdn4JpJ
+ RM7WHpmrwC4489Wgohs5W407YOZyVDXPlOzZAfJU6fJ2C+EiVduq/Xa26Xpf4EL81/NndF7CG
+ mojJn+IYsToQsHLDkZR6/B+iM16OybqMrRMy3Q8kXo5UwCm+DlEhk0/IvQ7WWDstjkkhRkV+B
+ l4Cc/N2VJHDIIu5R/iZdDB72tlbHSKwiijoN0uFvgPeoJhgEzYqaySGIl199lFHp0QzNEdTM1
+ 9hBmT2czIAWyvBu+AZGruF+aDTwJ2ik/hrtJGcyvaU6XoyYZozTOrtpviZchmoPo/MQgVgZrO
+ vvlwpMEEsZhkjlN99MmhGs7/3PPZ/8rUHi8YESfrRaIj76ZtcuyGyOVEkMw88TVEV0hg9tD9b
+ FfU4z/ofL7zbRwoVs43tuW3wciwZ1LDCNqXTv7EWKZNWT1fl33YQ9s=
 
 From: Parker Newman <pnewman@connecttech.com>
 
-Hello,
-These patches add proper support for most of Connect Tech's (CTI) Exar
-based serial cards. Previously, only a subset of CTI's cards would work
-with the Exar driver while the rest required the CTI out-of-tree driver.
-These patches are intended to phase out the out-of-tree driver.
+Add code for getting number of ports of CTI cards to
+exar_get_nr_ports().
 
-I am new to the mailing lists and contributing to the kernel so please
-let me know if I have made any mistakes or if you have any feedback.
-
-Changes in v2:
-- Put missing PCI IDs in 8250_exar.c instead of pci_ids.h
-- Split large patch into smaller ones
-
+Signed-off-by: Parker Newman <pnewman@connecttech.com>
+=2D--
 Changes in v3:
-- Refactored patches to be easier to follow (based on feedback of v2)
-- Patch specific changes listed in corresponding patch
+- moved to separate patch
+- added spaces to single line comments
 
-Changes in v4:
-- Rebased to tty-testing branch
-- Removed v3 patch 8/8, "bug" didn't happen in current driver
-- Patch specific changes listed in corresponding patch
+ drivers/tty/serial/8250/8250_exar.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-Thank you,
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
+/8250_exar.c
+index e68029a59122..197f45e306ff 100644
+=2D-- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -711,12 +711,28 @@ static unsigned int exar_get_nr_ports(struct exar825=
+0_board *board,
+ {
+ 	unsigned int nr_ports =3D 0;
 
-Parker Newman (7):
-  serial: exar: remove old Connect Tech setup
-  serial: exar: added a exar_get_nr_ports function
-  serial: exar: add optional board_init function
-  serial: exar: moved generic_rs485 further up in 8250_exar.c
-  serial: exar: add CTI cards to exar_get_nr_ports
-  serial: exar: add CTI specific setup code
-  serial: exar: fix checkpach warnings
+-	if (pcidev->vendor =3D=3D PCI_VENDOR_ID_ACCESSIO)
++	if (pcidev->vendor =3D=3D PCI_VENDOR_ID_ACCESSIO) {
+ 		nr_ports =3D BIT(((pcidev->device & 0x38) >> 3) - 1);
+-	else if (board->num_ports)
++	} else if (board->num_ports > 0) {
++		// Check if board struct overrides number of ports
+ 		nr_ports =3D board->num_ports;
+-	else
++	} else if (pcidev->vendor =3D=3D PCI_VENDOR_ID_EXAR) {
++		// Exar encodes # ports in last nibble of PCI Device ID ex. 0358
+ 		nr_ports =3D pcidev->device & 0x0f;
++	} else  if (pcidev->vendor =3D=3D PCI_VENDOR_ID_CONNECT_TECH) {
++		// Handle CTI FPGA cards
++		switch (pcidev->device) {
++		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
++		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
++			nr_ports =3D 12;
++			break;
++		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
++			nr_ports =3D 16;
++			break;
++		default:
++			break;
++		}
++	}
 
- drivers/tty/serial/8250/8250_exar.c | 981 ++++++++++++++++++++++++++--
- 1 file changed, 916 insertions(+), 65 deletions(-)
-
-
-base-commit: b86ae40ffcf5a16b9569b1016da4a08c4f352ca2
+ 	return nr_ports;
+ }
 =2D-
 2.43.2
 
