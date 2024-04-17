@@ -1,139 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCF61419A2;
-	Wed, 17 Apr 2024 14:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1C8142640;
+	Wed, 17 Apr 2024 14:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364858; cv=none; b=Pke4Tt5HnBrGOUnCTstWxRPpsh3/Si2SiHaR0xdEQ2zxx0Zpph5RubjORReHy5CcHCQ+Chsy1qV1/J0EuFsflIp1M9lZcnpxzzgg2tQku4b8OQt1ug4/cJEyv1q7GQZMbQBtkgn47wWL0GptEusHYh9lgTEzc6tR3tYolpQY/SU=
+	t=1713364858; cv=none; b=AoXdmyzF0awbqkHfSk+dXK3uFPnLjYxYvCVkm/47WEX4mq6zLx0bD94ktV0yWXvONuCRTT7sZAxnz789jV+Y1eult6GO5wPTnX414DfNAcrwFSmGJwqtYJI/6QxVcMVWkiSISBhK0jtkeHVmH9qwojjiUjewSln2+fnECqSX1Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713364858; c=relaxed/simple;
-	bh=cA9scemWzsFPzGRaNP28UzTwSugriMk3blVS/UdZG5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AmjI0fnVlplqc8ZmTAePsXjtvwaJ3DxxHpdd+xGyvIwYJSmYXa9PyAw0pAk+zpUjdt8Up3lHoJOi5PPsxGv1YkZsFjvMOQxIWhfn6qc1o91aaJJfK0GpkkvYCzf5gSgKFpwflenQl2SHFTP4/IdpEDN8R8iJ7eTOxF7VcW8xKGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzRBw2TK; arc=none smtp.client-ip=10.30.226.201
+	bh=7yzi97Zi+bCMwtz1p8JacgcNWPsCua5gj4g4Wzfu7IY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rNRk4BzRFFB209Re8/F+tSMdC8p3RbmdEfE61Fc0N1sZqar09ERc1rXMPgEZtQhGD1CwcgiK829iRW5qBDnY4UIoMTuvQ6Nd+yi7IaF0Y0cSIMM7t/EGXJKI0Tw8jToXUZFb+AOuIUx+nRQPj6QPcBSqumwmzB2mYzTfgNRP2/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I8yd9ZF3; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzRBw2TK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA5F6C072AA;
-	Wed, 17 Apr 2024 14:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713364858;
-	bh=cA9scemWzsFPzGRaNP28UzTwSugriMk3blVS/UdZG5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LzRBw2TKlNf290/RbUJs5YW4I8FKBGmlxBfHu94FlQsrTRnCtbIQBYX6daCmCUTYF
-	 yp688MjUGxUF4Si6PNGxbw80Z28XuRCrG9hxHjicTVTui70H8X5pVofBDvmnetTGY8
-	 2GCc4NlMw+cG+CKNkcJkoDJQbuayL8jjIJsaNsBnsbZjezXGAMjVLKQrGBDHYaAVXW
-	 dN6Z1rv9GyNx0kCqgyyU+iideLd9fm9xzpoi+9IynigDdBjQvynIRhueNUnYU0lGns
-	 cdwAMIHvk0vhDjuwIQ2wuPy/c22Vz+T6UfPMNuqDQdtOQdCUOcIIqdOddeyBsjJE0O
-	 i9rAFiploTiQw==
-Date: Wed, 17 Apr 2024 09:40:55 -0500
-From: Rob Herring <robh@kernel.org>
-To: David Wronek <david@mainlining.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: Add Raydium RM69380
-Message-ID: <20240417144055.GA2335446-robh@kernel.org>
-References: <20240416-raydium-rm69380-driver-v3-0-21600ac4ce5f@mainlining.org>
- <20240416-raydium-rm69380-driver-v3-1-21600ac4ce5f@mainlining.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I8yd9ZF3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2A2181BF214;
+	Wed, 17 Apr 2024 14:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713364854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B0crV4Qgy689LLIUw77xbTVbl+c1fhIBuxMGWIT7FdA=;
+	b=I8yd9ZF3uQICf9KGe62bsTN3YkjC5ycxcXJMgAAwi6N/fcvgbDQamoYJcY+qgIGcRQBFNo
+	36Yxb/9bdNfqEg6WBooTskHfbtnvVAazyjg9+r+xHzzWhQSghcRfGXf8KK95zrhslmwCeM
+	Qu9ZEYrkmFHZUIsrDAvzLjL0csbdhPedwl5IvAQ2I+wuf9uhAA5m2Zn2YV+vTbqQXDEIvj
+	eq4s8nm7XqSFtUJsmP7x1OtyJvt4Tc3VScJASas4IruiRpWBieIYwk+QOkHibpY0IFjdoc
+	4xMAtohairUAB++P5soLdSjLDtRnyLD4MlkHmPQa6V5aGwm5ArVl9Akfoeb/Zg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Wed, 17 Apr 2024 16:39:50 +0200
+Subject: [PATCH net-next v9 02/14] net: pse-pd: Introduce PSE types
+ enumeration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416-raydium-rm69380-driver-v3-1-21600ac4ce5f@mainlining.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240417-feature_poe-v9-2-242293fd1900@bootlin.com>
+References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
+In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, Apr 16, 2024 at 08:30:48PM +0200, David Wronek wrote:
-> Raydium RM69380 is a display driver IC used to drive OLED DSI panels.
-> Add a dt-binding for it.
-> 
-> Signed-off-by: David Wronek <david@mainlining.org>
-> ---
-> Note:
-> Depends on commit 48a516363e29 ("dt-bindings: display: panel: add common dual-link schema")
-> ---
->  .../bindings/display/panel/raydium,rm69380.yaml    | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml
-> new file mode 100644
-> index 000000000000..0ac7d033cbe0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm69380.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/raydium,rm69380.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Raydium RM6380-based DSI display panels
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-RM69380-based
+Introduce an enumeration to define PSE types (C33 or PoDL),
+utilizing a bitfield for potential future support of both types.
+Include 'pse_get_types' helper for external access to PSE type info.
 
-> +
-> +maintainers:
-> +  - David Wronek <david@mainlining.org>
-> +
-> +description:
-> +  The Raydium RM69380 is a generic DSI panel IC used to control
-> +  OLED panels.
-> +
-> +allOf:
-> +  - $ref: panel-common-dual.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - lenovo,j716f-edo-rm69380
-> +      - const: raydium,rm69380
-> +    description: This indicates the panel manufacturer of the panel
-> +      that is in turn using the RM69380 panel driver. The compatible
-> +      string determines how the RM69380 panel driver shall be configured
-> +      to work with the indicated panel. The raydium,rm69380 compatible shall
-> +      always be provided as a fallback.
-> +
-> +  avdd-supply:
-> +    description: Analog voltage rail
-> +
-> +  vddio-supply:
-> +    description: I/O voltage rail
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: phandle of gpio for reset line - This should be active low
-> +
-> +  ports: true
-> +  reg: true
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-Drop these and change 'addtionalProperties' to 'unevaluatedProperties'. 
-Other properties in panel-common.yaml should be allowed. width-mm and 
-height-mm for example.
+Changes in v2:
+- Rename PSE_POE to PSE_C33 to have naming consistency.
+- Use "static inline" instead of simple static in the header
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - avdd-supply
-> +  - vddio-supply
-> +  - reset-gpios
+Changes in v3:
+- Move the pse_type enum in uapi.
+- Replace pse_get_types helper by pse_has_podl and pse_has_c33.
 
-> +  - ports
+Changes in v5:
+- Move the pse types enum in ethtool.
+- Add ethtool prefix to the value.
 
-Already required in panel-common-dual.yaml.
+Changes in v6:
+- Fix a kdoc nit.
+---
+ drivers/net/pse-pd/pse_core.c      | 12 ++++++++++++
+ drivers/net/pse-pd/pse_regulator.c |  1 +
+ include/linux/pse-pd/pse.h         | 15 +++++++++++++++
+ include/uapi/linux/ethtool.h       | 12 ++++++++++++
+ 4 files changed, 40 insertions(+)
 
-Rob
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index 146b81f08a89..fed006cbc185 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -312,3 +312,15 @@ int pse_ethtool_set_config(struct pse_control *psec,
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(pse_ethtool_set_config);
++
++bool pse_has_podl(struct pse_control *psec)
++{
++	return psec->pcdev->types & ETHTOOL_PSE_PODL;
++}
++EXPORT_SYMBOL_GPL(pse_has_podl);
++
++bool pse_has_c33(struct pse_control *psec)
++{
++	return psec->pcdev->types & ETHTOOL_PSE_C33;
++}
++EXPORT_SYMBOL_GPL(pse_has_c33);
+diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
+index 1dedf4de296e..547af384764b 100644
+--- a/drivers/net/pse-pd/pse_regulator.c
++++ b/drivers/net/pse-pd/pse_regulator.c
+@@ -116,6 +116,7 @@ pse_reg_probe(struct platform_device *pdev)
+ 	priv->pcdev.owner = THIS_MODULE;
+ 	priv->pcdev.ops = &pse_reg_ops;
+ 	priv->pcdev.dev = dev;
++	priv->pcdev.types = ETHTOOL_PSE_PODL;
+ 	ret = devm_pse_controller_register(dev, &priv->pcdev);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register PSE controller (%pe)\n",
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index be4e5754eb24..19589571157f 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -77,6 +77,7 @@ struct pse_control;
+  *            device tree to id as given to the PSE control ops
+  * @nr_lines: number of PSE controls in this controller device
+  * @lock: Mutex for serialization access to the PSE controller
++ * @types: types of the PSE controller
+  */
+ struct pse_controller_dev {
+ 	const struct pse_controller_ops *ops;
+@@ -89,6 +90,7 @@ struct pse_controller_dev {
+ 			const struct of_phandle_args *pse_spec);
+ 	unsigned int nr_lines;
+ 	struct mutex lock;
++	enum ethtool_pse_types types;
+ };
+ 
+ #if IS_ENABLED(CONFIG_PSE_CONTROLLER)
+@@ -108,6 +110,9 @@ int pse_ethtool_set_config(struct pse_control *psec,
+ 			   struct netlink_ext_ack *extack,
+ 			   const struct pse_control_config *config);
+ 
++bool pse_has_podl(struct pse_control *psec);
++bool pse_has_c33(struct pse_control *psec);
++
+ #else
+ 
+ static inline struct pse_control *of_pse_control_get(struct device_node *node)
+@@ -133,6 +138,16 @@ static inline int pse_ethtool_set_config(struct pse_control *psec,
+ 	return -ENOTSUPP;
+ }
+ 
++static inline bool pse_has_podl(struct pse_control *psec)
++{
++	return false;
++}
++
++static inline bool pse_has_c33(struct pse_control *psec)
++{
++	return false;
++}
++
+ #endif
+ 
+ #endif
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 7b9a3d890949..041e09c3515d 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -752,6 +752,18 @@ enum ethtool_module_power_mode {
+ 	ETHTOOL_MODULE_POWER_MODE_HIGH,
+ };
+ 
++/**
++ * enum ethtool_pse_types - Types of PSE controller.
++ * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
++ * @ETHTOOL_PSE_PODL: PSE controller which support PoDL
++ * @ETHTOOL_PSE_C33: PSE controller which support Clause 33 (PoE)
++ */
++enum ethtool_pse_types {
++	ETHTOOL_PSE_UNKNOWN =	1 << 0,
++	ETHTOOL_PSE_PODL =	1 << 1,
++	ETHTOOL_PSE_C33 =	1 << 2,
++};
++
+ /**
+  * enum ethtool_c33_pse_admin_state - operational state of the PoDL PSE
+  *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
+
+-- 
+2.34.1
+
