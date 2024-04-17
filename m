@@ -1,84 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99FC7E0E4
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0473027701
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713343922; cv=none; b=ZEyA4TBCo3pvFQ6l0Yq3fp7jDuF15m52W+Ts3zjQSn770VA9jtbSOuHB/p6LrKISPUduf/B2UCRwDMdIZyVCML98A67kb6p5cx1BHZV1jfyuY1kqL9KiN9Kspb43bxz/Gr07IouWSI9tu0bkZmMnZTvF6eNkEvfwisnQbA6D4xw=
+	t=1713344029; cv=none; b=eRYwT1z5YBIsL7gHvv2BAQaChWeu6Dd7lWUaosAn4rh3yF4SZeojcPcbeWIELOqUO3NaAxqdma2bB9nt+nz4YvS7IzB//hzKuDI1UspEwFjFt0ZmNWmHcKiYD+KcWhj0ET43rm9yFqiDQ8VtJBFhV12IylbTCexDW8YH9zMrxWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713343922; c=relaxed/simple;
-	bh=nLrkFEe4Sr4UShI8ScNIyCYxlUJPK0uRjdjp8ONRmus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S40urwyChCei2J5NU0yGZnwRL/ve2H3rf3vfy9jYTxzA4DPGMPl4X2RomEgYotSa1vPhmqW5LWrBzW1+NIR1gNceu6C/JI5HpijXxkSa17pnO2bU8DyFi8rrFP4CXY+g2anvLyCw0CO5a2hGhQhLC47SevlHx+sq1u0y0tl7G/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KI/92vF+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KI/92vF+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713343919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dVPyrvg8jq+Af1WjENtNQaFsERndNa/U+D0gRrpnkiw=;
-	b=KI/92vF+es5lZapOLf716WiCVPaGiY9wbs3fzijUCG2vxCAv6bA0DOfuIiWpJcKj3ogdEu
-	02DSTLxyMRahb23/Di+253wOmkiFJZ5y692urjukiU63mGxI8cu6A8ALLMtT5F9upERyXD
-	lSFQEqg3VxNABdrou5r3WTUHR33XTkE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-MHldD08jNa-ffleAeYaAPw-1; Wed,
- 17 Apr 2024 04:51:54 -0400
-X-MC-Unique: MHldD08jNa-ffleAeYaAPw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 764F028EC11B;
-	Wed, 17 Apr 2024 08:51:53 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.193.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 86208C0157D;
-	Wed, 17 Apr 2024 08:51:50 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: kuba@kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	jarkko.palviainen@gmail.com,
-	jtornosm@redhat.com,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] net: usb: ax88179_178a: avoid writing the mac address before first reading
-Date: Wed, 17 Apr 2024 10:51:42 +0200
-Message-ID: <20240417085145.219405-1-jtornosm@redhat.com>
-In-Reply-To: <20240415104802.6765bcdb@kernel.org>
-References: <20240415104802.6765bcdb@kernel.org>
+	s=arc-20240116; t=1713344029; c=relaxed/simple;
+	bh=Jxp5iGC+oiD4XSKrX3vbfULJ6vMyg2omC5NIy3We4vI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uYnPU9QqSMZXOEZcG7JdNDNacsP3ZQ5rXZYKO7s/1rwRRo2qm58AViFXqOaKTS8ItJaJZfnpWF34BgpP776mNzw1g948Z+1dvWweyUwAqo7LZi+3QZN0xLWGFwNZk1np5Nf2Umq39LIRuD2Kz1FrHpnE8zbcHLH/JK41VsFTsaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VKF454m64z1RCRw
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:50:45 +0800 (CST)
+Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0315B18001A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:53:44 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
+ (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 16:53:43 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH -next] genirq: Simplify the checks for irq_set_percpu_devid_partition()
+Date: Wed, 17 Apr 2024 16:53:56 +0800
+Message-ID: <20240417085356.3785381-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
 
-Hello Jakub,
+Since whether desc is NULL or desc->percpu_enabled is true, it returns
+-EINVAL, check them together, and assign desc->percpu_affinity
+using "?:" to simplify the code.
 
-My intention was to simplify it and reduce the delays, because two
-consecutive resets were used at initialization, one from bind (the one
-initially called during probe) and one from open.
-Indeed my initial idea was to let the one from bind/probe only but reset
-operation had to be removed from driver_info and that is the reason why 
-the one from open was choosen.
-But the one from bind/probe is better in order to avoid the commented
-issue. Let me try with this in a second version.
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ kernel/irq/irqdesc.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-Thank you again
-
-Best regards
-José Ignacio
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 23120e5a46a9..6b19c72db29a 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -911,10 +911,7 @@ int irq_set_percpu_devid_partition(unsigned int irq,
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+ 
+-	if (!desc)
+-		return -EINVAL;
+-
+-	if (desc->percpu_enabled)
++	if (!desc || desc->percpu_enabled)
+ 		return -EINVAL;
+ 
+ 	desc->percpu_enabled = kzalloc(sizeof(*desc->percpu_enabled), GFP_KERNEL);
+@@ -922,10 +919,7 @@ int irq_set_percpu_devid_partition(unsigned int irq,
+ 	if (!desc->percpu_enabled)
+ 		return -ENOMEM;
+ 
+-	if (affinity)
+-		desc->percpu_affinity = affinity;
+-	else
+-		desc->percpu_affinity = cpu_possible_mask;
++	desc->percpu_affinity = affinity ? affinity : cpu_possible_mask;
+ 
+ 	irq_set_percpu_devid_flags(irq);
+ 	return 0;
+-- 
+2.34.1
 
