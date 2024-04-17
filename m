@@ -1,171 +1,181 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86791E888;
-	Wed, 17 Apr 2024 03:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E70047F78
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713326242; cv=none; b=QEOjJALqwRIS3/wYcNJS8Og9GjxRrXNxyPh9GH+GrjpZghmDpJlc/ESdCIJy1Ti6W6cAKUrNMbMQGyEmGiA+xoHwjvGBMZH49mb2NExR7s9n5+F8kYNEirqt5VJo9ihkaZ+CL503XTCXVdg3gaN//JuAyg5e7FJqRXRw+xgS3Zg=
+	t=1713326245; cv=none; b=dC35FmOu9Ekvdvj8jbYEbfwwqdZTvpnXFVLrXEk/XifTFajqRS4g3aJVQZa8kWSe8e55fhdpnb3lWcyiIiMNjs0/nu4azdDDI/xKvrMjjC3A5N1QZTwEgaKNkk7sXmMNO7+f189V83zMaCE0z7OEqZKXhgdG5JKf5T9jNyyr1Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713326242; c=relaxed/simple;
-	bh=wii6+rVTqhTSBdS8cUxVrVBgMqOcNLARz3i+uByjOt8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=boPrnmGYsUl28sTs4r9Vtm+WS0wpr9DEBDGIWlprabL7eCk5QSme1ZEHSIgGvXtS7u3izDSPYJsl8nfH4Xy5Rd3zlC0HHbFVvVSXq2ELT62i2M++kyReR/eZxJOzYFL9pntugklyuWjoBeX1teuW5tJJAEYZh3mwtSqw8WZS0DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK6YH67Hmz4f3tNZ;
-	Wed, 17 Apr 2024 11:57:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BEA361A0175;
-	Wed, 17 Apr 2024 11:57:16 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RGaSB9mzMnFKA--.65099S6;
-	Wed, 17 Apr 2024 11:57:16 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH RESEND v2 2/2] perf/core: Fix incorrected time diff in tick adjust period
-Date: Wed, 17 Apr 2024 11:54:46 +0000
-Message-Id: <20240417115446.2908769-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
-References: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1713326245; c=relaxed/simple;
+	bh=lItD4oTGZPVNFVCkGCFJxm11aYKnuAYH+/XmW7Cqs9g=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HPzO64RyXRKwbr9D8EjX01G86twOKTQLv3WSQwQv/rkKH2gbfBIQOnsvCp3HGUnSV2tAubQ7MCk2eZgRWyyZ1zYFtqJzH5LW+XCPYcN95fLaJmWvhg0SMXnUc1XsJaVhIi2CD7nomVtHFVlaVWiNJeHmSEGIOcb3zIhq5beyLNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+sSVMqd; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+sSVMqd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713326244; x=1744862244;
+  h=date:from:to:cc:subject:message-id;
+  bh=lItD4oTGZPVNFVCkGCFJxm11aYKnuAYH+/XmW7Cqs9g=;
+  b=U+sSVMqdVahRCIQZ5K7/T4anNf6+216NKJw37icYPFzJlSaBiRTMv18W
+   R2G8wqJ2IRp105R1N12vTDat3JdRSixgRO7EZ/slprE65ECsONONVkLzj
+   68Pd5B3k9rXs/LQEkVjcs0bXr5/1tjWBx10kmU+7FrnMhya2pPOI9HVns
+   e7rVFsr8OMMoXirWXb2VhNAUIMOqifGOlF5jQsX2nLfm2Dc9nKK1pcmsW
+   Ez0gFtuqBowZUWZeExuaYS4PrgEgSdG8pCTEcTflMwU/rHBIAMmHFMv90
+   5KW8Qj7gXpl4KwAhYmBZbjXChenFqL8YYk5N0P3khXPSWS8YvwvI6dK0N
+   Q==;
+X-CSE-ConnectionGUID: wnhKBjzbR3mUfoQ9PPMxGA==
+X-CSE-MsgGUID: zDZgUWtBThO8YN/L6aP+ew==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8927723"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="8927723"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 20:57:23 -0700
+X-CSE-ConnectionGUID: plETPD9XTWKcDy7yhvz+mg==
+X-CSE-MsgGUID: b7SoAyGLR2eGmglAovCBhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="22966273"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 16 Apr 2024 20:57:22 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rwwQB-000675-1z;
+	Wed, 17 Apr 2024 03:57:19 +0000
+Date: Wed, 17 Apr 2024 11:56:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:sched/urgent] BUILD SUCCESS
+ fe90f3967bdb3e13f133e5f44025e15f943a99c5
+Message-ID: <202404171139.Rf5xIyzF-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RGaSB9mzMnFKA--.65099S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4xCw4xuF4UCFWDZrykGrg_yoWrXF1rpr
-	Wvyr13KFsrtF1j9wnYkFyrWry5Ww48Aan8G348Cw48Aw1fWr9xJF1kKF1UGF98CFZrZFyI
-	y3s0gw43tFWUtaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUpj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2048vs2IY02
-	0E87I2jVAFwI0_Jryl82xGYIkIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2
-	F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjx
-	v20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2
-	z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2
-	xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5V
-	A0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_JF0_
-	Jw1l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxAqzxv26xkF7I0En4kS14
-	v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtV
-	W8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7s
-	RERRR3UUUUU==
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Adrian found that there is a probability that the number of samples
-is small, which is caused by the unreasonable large sampling period.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
+branch HEAD: fe90f3967bdb3e13f133e5f44025e15f943a99c5  sched: Add missing memory barrier in switch_mm_cid
 
- # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
- # perf script
- ...
- test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
- ...
+elapsed time: 917m
 
-It seems that the Timer Interrupts is not coming every TICK_NSEC when
-system is idle. For example, counter increase n during 2 * TICK_NSEC,
-and it call perf_adjust_period using n and TICK_NSEC, so the final period
-we calculated will be bigger than expected one. What's more, if the
-the overflow time is larger than 2 * TICK_NSEC we cannot tune the period
-using __perf_event_account_interrupt. To fix this problem, perf can
-calculate the tick interval by itself.
+configs tested: 104
+configs skipped: 3
 
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 15 ++++++++++++---
- 2 files changed, 13 insertions(+), 3 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index afb028c54f33..2708f1d0692c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -265,6 +265,7 @@ struct hw_perf_event {
- 	 * State for freq target events, see __perf_event_overflow() and
- 	 * perf_adjust_freq_unthr_context().
- 	 */
-+	u64				freq_tick_stamp;
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
- #endif
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cad50d3439f1..0f2025d631aa 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4112,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- {
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
--	u64 now, period = TICK_NSEC;
-+	u64 now, period, tick_stamp;
- 	s64 delta;
- 
- 	/*
-@@ -4151,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 */
- 		event->pmu->stop(event, PERF_EF_UPDATE);
- 
-+		tick_stamp = perf_clock();
-+		period = tick_stamp - hwc->freq_tick_stamp;
-+		hwc->freq_tick_stamp = tick_stamp;
-+
- 		now = local64_read(&event->count);
- 		delta = now - hwc->freq_count_stamp;
- 		hwc->freq_count_stamp = now;
-@@ -4162,8 +4166,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 * to perf_adjust_period() to avoid stopping it
- 		 * twice.
- 		 */
--		if (delta > 0)
--			perf_adjust_period(event, period, delta, false);
-+		if (delta > 0) {
-+			/*
-+			 * we skip first tick adjust period
-+			 */
-+			if (likely(period != tick_stamp))
-+				perf_adjust_period(event, period, delta, false);
-+		}
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
- 	next:
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            alldefconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240417   clang
+i386         buildonly-randconfig-003-20240417   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240417   clang
+i386                  randconfig-004-20240417   clang
+i386                  randconfig-005-20240417   clang
+i386                  randconfig-006-20240417   clang
+i386                  randconfig-013-20240417   clang
+i386                  randconfig-016-20240417   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     kmeter1_defconfig   gcc  
+powerpc                     ksi8560_defconfig   gcc  
+powerpc                  storcenter_defconfig   gcc  
+powerpc                     tqm5200_defconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                           se7721_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
