@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB2010E9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6EEEDF;
 	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713313233; cv=none; b=bGbZ2l4GLfYfl3NDPuVcH9aV7PKwLkd4bZ9ZDftT+pr+xb6375aLP4N2Mrt6UiqwE+/WtgpkZNnU8FU84qZW+h07lLwnmwDzh5ASHRTKxCaOowCY4QVLTISBi9FTGKo3AnuspdGyQPG3Van5JGf5T8kw5aItdLsCd7rbA79fNTI=
+	t=1713313233; cv=none; b=VXQmeyct3y3N1YqKhsM6armezd66HwF2MekpBItK/DJjPH9w4DOUsrRZQGlJdwH16iC3iiE22H5v/pQpwZAVm2z007L9ypa6eDPviZ3xdhUG0Jn2CUfuvRWyvVMfN10TcJs5qbCb0k4JCiNCBa83IBLsRoF3BtbR2FoU0j7TurE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713313233; c=relaxed/simple;
-	bh=lpocv/z70qCxQnRbXQyLix+hr4YPw2aKx/Neh7cyi8w=;
+	bh=MuXir1a4HxUc5/elRkP4fSNYnpZOhVEyKYUO9DQGCVE=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FR2Ew6VUVc+w4k9wbNEFKjgLsWq1/iENLsG/mnfW2FSxd0IkYzUgdzERnqd9jUJuakRfe8Ru5PunqZXKlCu7L+FLEAfLjyHVKw5T/sW7fBeTji1x56ra0wX2meK6hDL9nWKVZKoAYAWmV2kevvwiC+Wyuh9nFoSQnERdWrXhaMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFaELdQ6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=q1Ty6YS6wzHB9HV3HE/NKNJKI2dFYN0OcJyFL2Cb+sAiNyW4UVDePpZYVXa6AsZRgsilEfiFBTLaKbSHLiVE/QXkmRiFMPdu8pebYXNQIc7JK2IkLu26rYeJhiSJFC+Po3dhVDElQqNdFkOXAHbdDV1gc5RHWznZkTGvwS3NDnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXAciEce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFaELdQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A11ECC2BD10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXAciEce"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 95CB2C4AF07;
 	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713313232;
-	bh=lpocv/z70qCxQnRbXQyLix+hr4YPw2aKx/Neh7cyi8w=;
+	bh=MuXir1a4HxUc5/elRkP4fSNYnpZOhVEyKYUO9DQGCVE=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pFaELdQ6DNSlIIuV6DbafKIDSFH0d6Ai4d9dtZy2Nm8sSCpg/G9QeWCxXnNelPUF3
-	 3xf3caf+NDku2zk1hRDcScBTRpC2jNtM6GOVIiDQbtOQsTWTcg+XEvi3ZsAHJL/cUO
-	 RQ0LiA7Nz4pLdhOFQpDSNzYHdK64RblOANG9voEWVwUoA7C/bumDDo0dCeRN1ZB2bu
-	 VNzESRsY/VkuidAZA3Wi6F5blYXCcmuYzajWix4BdJrzSXfcCmOQTnxQ9Y2toQpJGQ
-	 anbP3ZcoH6c9k6u6b76+WVf7hFBlP+wT9zu0OjN62Obh6i7yYhi1ynD1pSRsWY57CR
-	 caMhw8zJmHUcQ==
+	b=mXAciEceGxrBh+JjCwliKgOyglzZ57WUbPIFs8oGnZtPCu0fgjhgvAT9H4lBkzRTi
+	 Xy0Q3TQpYRoQpSov6hOvCfWpO9wxsFUgVUJjGMJwf1qK1TS4CiLzlxOQJKzIb1Awik
+	 LrOlc7o/jE+w5FlTiXNlnetilAKQg2mdQ5FWi8Kso6ru9sOuEo9Bef+Yjdq8rjLKHe
+	 oCi8Z63jfsoUoEkVcCW429JsuiN0Fui4MgjHTZUP84DDsxef8I0yqtqIP4K4JKTNAK
+	 JZANlh+/kysVxfuu4/pUln41Jhf52Wkyo9gMlfJz/Sd9OSiaReKpRLe+I6tKOUodT0
+	 rKEax4oSSrdUg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9568AD4F15F;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B7A0C395F3;
 	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: ipa: Remove unnecessary print function dev_err()
+Subject: Re: [PATCH][next] net/handshake: remove redundant assignment to variable
+ ret
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171331323260.29224.8750365048469013468.git-patchwork-notify@kernel.org>
+ <171331323256.29224.18144970785462425420.git-patchwork-notify@kernel.org>
 Date: Wed, 17 Apr 2024 00:20:32 +0000
-References: <20240415031456.10805-1-jiapeng.chong@linux.alibaba.com>
-In-Reply-To: <20240415031456.10805-1-jiapeng.chong@linux.alibaba.com>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: elder@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, abaci@linux.alibaba.com
+References: <20240415100713.483399-1-colin.i.king@gmail.com>
+In-Reply-To: <20240415100713.483399-1-colin.i.king@gmail.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: chuck.lever@oracle.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, kernel-tls-handshake@lists.linux.dev,
+ netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 15 Apr 2024 11:14:56 +0800 you wrote:
-> The print function dev_err() is redundant because
-> platform_get_irq_byname() already prints an error.
+On Mon, 15 Apr 2024 11:07:13 +0100 you wrote:
+> The variable is being assigned an value and then is being re-assigned
+> a new value in the next statement. The assignment is redundant and can
+> be removed.
 > 
-> ./drivers/net/ipa/ipa_interrupt.c:300:2-9: line 300 is redundant because platform_get_irq() already prints an error.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8756
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> Cleans up clang scan build warning:
+> net/handshake/tlshd.c:216:2: warning: Value stored to 'ret' is never
+> read [deadcode.DeadStores]
 > 
 > [...]
 
 Here is the summary with links:
-  - net: ipa: Remove unnecessary print function dev_err()
-    https://git.kernel.org/netdev/net-next/c/19ad0f3a16d2
+  - [next] net/handshake: remove redundant assignment to variable ret
+    https://git.kernel.org/netdev/net-next/c/c2b640529ec7
 
 You are awesome, thank you!
 -- 
