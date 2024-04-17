@@ -1,131 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566405FBBA
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA9262A3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713388730; cv=none; b=nvJYWwfdxBBW7vz5kgW9mcqr1z0vUMGxb8XpqfsQ8oWKsoYS2rSTyc3t/66V/msMlIOqSLstxJ5x94RcLIo7EKqIKM3UpYwz9SiMQWVJCr18lr825bzUHPQvWd/LuyTzZkR7t9DkPrVGZdO09ueQDc0m/JT/iPKrNvPW4yWw2kM=
+	t=1713388872; cv=none; b=GS4nOOhikIgy/TdEslA9FyaB0ynC4HCOqrsNKzrpyYu+NrjIYSOgLFSH3tgA2jx5jWd6qkK14pC99FWHWlEvATMzN3BHb9Do2Anu7lb07n3IB4UKmDwjCtr5bT6u8kKhLbLE3FvOEmoZHQGcd2shyhVsGsXLOvruwtd9d5W5rsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713388730; c=relaxed/simple;
-	bh=8hBBeVGOfwuGovj1gkEA8TNtFgFkqBM5g9BIRvAXat4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XYbmgBHIOMWplMVWrV5PZvkeNo+iLckJUMWZxvPR+a2ECr/hpailClSd/VCqBus87u3nZXZ2VHd1n7+2DwFa/TMhY8q4/tvlposnAwuzI+5PWvoj59dAQFxi42SznngAByzdUN7LW6Vvqnk+BzK7G446c+zY+P6HovOcPRrpSZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cnb3/8a+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713388872; c=relaxed/simple;
+	bh=ziWvNIRs5MK21vaVT8vHRJuh2HBjG2z5soqWpVvLPDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ub8ry4ALYl3as8VwScCPiunc3DnL1D0ZIV2SGXsncQy+2nYi9VqEUCEd3+Gtx+llPWQR21rQ17BlVgOX7KT9UoL2QrtqzeTAdXRib8hgIOUl0DHGj32FXF/XytEG5eQBw+8q7m5ABXfPgQnhRd+yxGnZoXLfjAXCUGv+5/Qsujk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZxSOuU9M; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnb3/8a+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713388726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=soVIv7S/cFD39BpNRdoqoVyCZSY1hvphkidLWmkZkAI=;
-	b=cnb3/8a+81BMW1uIimk7l46EvvvwJEjH31DZUdN5+WuoWU8O07rBnVCh3pk56+pcX/Gxps
-	nlkfiUwjx4fEI1dJp8xjnjaR5BGvKyM7nQ8aAZBgOh/FA3RLxhj7QvmAnJBk8Z6ogOoaB8
-	c2EBqQFOMGNoYJeoDPXzAsiWBYt8sMw=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-102-Ltq2oOU-OTub_ZmQm0mkJw-1; Wed, 17 Apr 2024 17:18:41 -0400
-X-MC-Unique: Ltq2oOU-OTub_ZmQm0mkJw-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-69b27e4ed7aso609086d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:18:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713388721; x=1713993521;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=soVIv7S/cFD39BpNRdoqoVyCZSY1hvphkidLWmkZkAI=;
-        b=negv14ERGvPy12QosBzKc0hfZuCMF5iayjjvPwWDg7DkEljFmFjbsvavikK/hBcErE
-         NI8wHGgALbmbqYSuLlIoE/Q4C0buSk1JcjuPh/MJ1rvef8uCrFjCQgRppQdDEeNYrXLL
-         dYzdNF90LbJjlHaH6ltMMVcTskbs6hsc8nqVQ0gq7lk4qYiSW7G18Ln8o5n5mAN6IsbA
-         qBja1QORVBJ+r2W1Wbgmf6y+DHTKg0V9P/Iz1U3gGxlm5hc5cgmCc16X62T/17Wr4J6O
-         OfFG9T4F7+YIoyGvEKrNXJF8h9dGByN8Q4dWCDDpF2M0gjfOS3Rvn+1MUiSHN+vPFsxA
-         T5Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCWT+dieW3D+nOYnhjDuisuq8VzMNA/88JIAWjDFnD92LktmOLIDVr2qBSnw2LZjbUQHb1erICsKIKT7MPLBt6R48pCINoKwyUCdHPk2
-X-Gm-Message-State: AOJu0YxSLwSQx+EgWm/0BvfqMRLUHL2YSJsjNxd1MyP3Q98+ZEERuZ6x
-	cyWapQcjkvet4HDN1iGKZrY4/vQ72w7f6EmlbWBDgH+0G+fSKQm9q+vI1k0FKhAfKgEhLXAKxpt
-	4l7kLZ99UMEOsJQzaPlTN7LGFtSGVmwZ/at+TIfZn4RacWMkHPlSA8r0yOYZh6g==
-X-Received: by 2002:a05:620a:40d5:b0:78e:db4f:11e8 with SMTP id g21-20020a05620a40d500b0078edb4f11e8mr665738qko.2.1713388721117;
-        Wed, 17 Apr 2024 14:18:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF29e5f56ETIzCUQyLUa1pQN9jUqXmcKYHsWC/k2I1kVI2Yma0QJE36x4pPxkZnbBNtERvaag==
-X-Received: by 2002:a05:620a:40d5:b0:78e:db4f:11e8 with SMTP id g21-20020a05620a40d500b0078edb4f11e8mr665713qko.2.1713388720577;
-        Wed, 17 Apr 2024 14:18:40 -0700 (PDT)
-Received: from x1n.redhat.com (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id c10-20020a37e10a000000b0078d667d1085sm18692qkm.84.2024.04.17.14.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 14:18:40 -0700 (PDT)
-From: Peter Xu <peterx@redhat.com>
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: peterx@redhat.com,
-	David Hildenbrand <david@redhat.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	David Rientjes <rientjes@google.com>,
-	syzbot+4b8077a5fccc61c385a1@syzkaller.appspotmail.com,
-	linux-stable <stable@vger.kernel.org>
-Subject: [PATCH 2/3] mm/hugetlb: Fix missing hugetlb_lock for resv uncharge
-Date: Wed, 17 Apr 2024 17:18:35 -0400
-Message-ID: <20240417211836.2742593-3-peterx@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240417211836.2742593-1-peterx@redhat.com>
-References: <20240417211836.2742593-1-peterx@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZxSOuU9M"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43HKJkjh027275;
+	Wed, 17 Apr 2024 21:20:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=2GZtLTSkn5P8Go1e017CsTki1su+ecSi7B1HZK8D7Ag=; b=Zx
+	SOuU9MUT6Do9lgPChdz+op/Ov2gin+jA9cYSbOOLIkHaYFE0tgAvJanRzH28T3dK
+	NO3ydQP/w6Fwf5flVgP15bZbyBczEnWJ16N48ywLo6P1hvrCD2W89ao4ZV8FlHNF
+	Lwl5a877NHXQtqmbAXBjdUeFRPq10JOFkfNW4fW7O4OtcbTb0so7V9cqDJ1u4ZKb
+	zN6PM1zp58eNp27yYnoXaZP9QpdmAa24i4xEZmRFNxCdvXVEZ44cF0+WVdwjYuRR
+	jjMB6xIxUbyse3vPJxLgy7LCkhnsH1jSjZ9m+r7rp3KWi0CuHdI70zleahtStUDn
+	gdWbqnkEJ/lHS4lOup+g==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xj9w5a79s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 21:20:33 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43HLKW9u001962
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 21:20:32 GMT
+Received: from [10.71.108.229] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Apr
+ 2024 14:20:31 -0700
+Message-ID: <e89c5c19-7c8f-476b-a96a-a5bc330278ab@quicinc.com>
+Date: Wed, 17 Apr 2024 14:20:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] drm/panel: novatek-nt36672e: stop calling
+ regulator_set_load manually
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Kaehlcke
+	<mka@chromium.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Ritesh Kumar
+	<quic_riteshk@quicinc.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
+ <20240404-drop-panel-unregister-v1-4-9f56953c5fb9@linaro.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20240404-drop-panel-unregister-v1-4-9f56953c5fb9@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: sUN5mEQ1ForeJ8f8PSD1eri1RLzGU2nn
+X-Proofpoint-GUID: sUN5mEQ1ForeJ8f8PSD1eri1RLzGU2nn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_18,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ spamscore=0 phishscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404170151
 
-There is a recent report on UFFDIO_COPY over hugetlb:
 
-https://lore.kernel.org/all/000000000000ee06de0616177560@google.com/
 
-350:	lockdep_assert_held(&hugetlb_lock);
+On 4/4/2024 3:08 AM, Dmitry Baryshkov wrote:
+> Use .init_load_uA part of the bulk regulator API instead of calling
+> register_set_load() manually.
 
-Should be an issue in hugetlb but triggered in an userfault context, where
-it goes into the unlikely path where two threads modifying the resv map
-together.  Mike has a fix in that path for resv uncharge but it looks like
-the locking criteria was overlooked: hugetlb_cgroup_uncharge_folio_rsvd()
-will update the cgroup pointer, so it requires to be called with the lock
-held.
+Hi Dmitry,
 
-Looks like a stable material, so have it copied.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-Reported-by: syzbot+4b8077a5fccc61c385a1@syzkaller.appspotmail.com
-Cc: Mina Almasry <almasrymina@google.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Fixes: 79aa925bf239 ("hugetlb_cgroup: fix reservation accounting")
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/hugetlb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 26ab9dfc7d63..3158a55ce567 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3247,9 +3247,12 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 
- 		rsv_adjust = hugepage_subpool_put_pages(spool, 1);
- 		hugetlb_acct_memory(h, -rsv_adjust);
--		if (deferred_reserve)
-+		if (deferred_reserve) {
-+			spin_lock_irq(&hugetlb_lock);
- 			hugetlb_cgroup_uncharge_folio_rsvd(hstate_index(h),
- 					pages_per_huge_page(h), folio);
-+			spin_unlock_irq(&hugetlb_lock);
-+		}
- 	}
- 
- 	if (!memcg_charge_ret)
--- 
-2.44.0
+Jessica Zhang
 
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/gpu/drm/panel/panel-novatek-nt36672e.c | 16 ++++------------
+>   1 file changed, 4 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> index 9a870b9b6765..20b7bfe4aa12 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
+> @@ -343,17 +343,7 @@ static int nt36672e_1080x2408_60hz_init(struct mipi_dsi_device *dsi)
+>   static int nt36672e_power_on(struct nt36672e_panel *ctx)
+>   {
+>   	struct mipi_dsi_device *dsi = ctx->dsi;
+> -	int ret, i;
+> -
+> -	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+> -		ret = regulator_set_load(ctx->supplies[i].consumer,
+> -				regulator_enable_loads[i]);
+> -		if (ret) {
+> -			dev_err(&dsi->dev, "regulator set load failed for supply %s: %d\n",
+> -				ctx->supplies[i].supply, ret);
+> -			return ret;
+> -		}
+> -	}
+> +	int ret;
+>   
+>   	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+>   	if (ret < 0) {
+> @@ -550,8 +540,10 @@ static int nt36672e_panel_probe(struct mipi_dsi_device *dsi)
+>   		return -ENODEV;
+>   	}
+>   
+> -	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++)
+> +	for (i = 0; i < ARRAY_SIZE(ctx->supplies); i++) {
+>   		ctx->supplies[i].supply = regulator_names[i];
+> +		ctx->supplies[i].init_load_uA = regulator_enable_loads[i];
+> +	}
+>   
+>   	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+>   			ctx->supplies);
+> 
+> -- 
+> 2.39.2
+> 
