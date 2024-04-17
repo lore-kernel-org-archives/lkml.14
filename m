@@ -1,89 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1526F08B;
-	Wed, 17 Apr 2024 08:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7344A7F470;
+	Wed, 17 Apr 2024 08:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713342349; cv=none; b=sloSYWusIVoOnkuADBfuPvCv0/j9k3wAPCoPfJQGJh7pD2w/qjHdENwRKLfXEjts8bRNYwjeI474zAWT4yLy+oZ68n+LgWRrhFQiq5ifXkPhAbp3pXk1VcheAnAadIcR46YFDebaPzFJ37X8ipt/Js3b43/G6BiIZ82auqMBnts=
+	t=1713342372; cv=none; b=pR03WQJZ9MruWAgCQRYHUCwkca5e3a784ZlwJL16Epys4R1P0Fft6llTpVgsS8n3GKvw/VQZA+Utqjw/xFFxxaD4vAovBFW+GkWRBIo9FkAJUQs5jmTG50ZIAPzsJzmdjF6oiW2bZwVV3DCuGTX3oFzVyIQxSY6lBa64A1Gt4Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713342349; c=relaxed/simple;
-	bh=ni2dZHo4oHABNTjcemnlwpO/U8ITGYPkSL4a1KmIldw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MiobAgaxYZxQeLHVwmDSOwo5vu+yTvLIbcSlQ4NdT8I6U/zoGQxbM+CAPdybERRFG2UTSQZHg4V59LBBaB6k2qDMPPwfFHXMOMQsUt6HfqvpzWOaEXk1bnZyCC5dEillZWCSuGrDGP9k8t7kzYedQ3wstyd+S0fMgs3INPlKgNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmvVruk5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713342372; c=relaxed/simple;
+	bh=kmHlwLbZHjHC2EJS+ABo1wg0PZ40MFvgtD9PeNxxQPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gOlQqcdyA4Xdc9dOrife5d2w/NbJ/yvmsikpyGLPYfMHXTXWhUpkmlKiicWdCpspaqTLnQpIMkp4aMYh9E6T1qVFwOuK0dKUl/ph5EamLn42/yrzj6QPQyK3yK6llDLMOx+HEZbmx808NISENSYbmRzq3X2AGjtDKrUebIf7DrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oTd9SgVZ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmvVruk5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBDFC072AA;
-	Wed, 17 Apr 2024 08:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713342349;
-	bh=ni2dZHo4oHABNTjcemnlwpO/U8ITGYPkSL4a1KmIldw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZmvVruk5NcE5LQL2s04sJ1tFRrbCEX+KNFmHiWJqOkKfRsNS8D/gutOoD4YkHqcd/
-	 5GBV9RNQZxB1fn3W6z6qWzg4SgZp90euUl3gCyMPOKc36ZCuZovMhS87Wh0gvTo/D2
-	 dKQF6gWGst4hRXDZUHCreODw/bictrJXgXU06kfZR3UgcKWtYMUcMQDZ4QK7kiSoHS
-	 f32shrYLfgBw1ffQaOIjXVyldEEf+yoUtag/0Qf7zoG6VNIxXmTiT6469At5DJyeXO
-	 5wZrIxxjwHjrwpJL8BoHbH/L5GWb9Pcq74FDMUfTx6i9nwCpHrt5Z2ieHooS/qo6bL
-	 utxUM8E5MX4Lg==
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6ea0a6856d7so1656853a34.1;
-        Wed, 17 Apr 2024 01:25:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+Ji/TMk7PZXexCwo/XkNd0FOv7gxpna7Bjw8Bplbvpnu+0aTEUGc53EOGIlads5hPFPpkrl+P2aIDcyA9XrMnJ6/HKKjLMCg6/g==
-X-Gm-Message-State: AOJu0YwDhlXmz4FJMHhaQyFY8N8XtQk9kKwgp5FCRKG0c2R8qazjndwz
-	e0WnLz/7rg53Lkl95PV0J2myi4Lu/k3unNIZdBx2sfInT5SjmGe3CfSZRWQshEfVQdtdM72OX9F
-	vS5iDc2IC0Q4rk0K5diws9Dk8kUw=
-X-Google-Smtp-Source: AGHT+IGTo7T4sQQ+b5Vfo2JDa0ZQEGNY6l5zAskf0HCPhag3E8pX5fEKHsYuwBiLCqqgNk2eRHFEfgJsP40ZwK7eJOA=
-X-Received: by 2002:a4a:e9f0:0:b0:5aa:6a31:4f53 with SMTP id
- w16-20020a4ae9f0000000b005aa6a314f53mr13556244ooc.0.1713342348323; Wed, 17
- Apr 2024 01:25:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oTd9SgVZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713342368;
+	bh=kmHlwLbZHjHC2EJS+ABo1wg0PZ40MFvgtD9PeNxxQPM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oTd9SgVZIiAqJCmnodpLckCDcAWx4PKtjv/xCqwa194AAZDqTERfnWrM/Kw4MP6ME
+	 hjEkfD5SOR1oXf0SAORnl0QjTdorQfj+oqytmMekXR70JTNK4caD3pBc+XOiGO5O6S
+	 bz0TvhGyiF8R4tluA8SfN0nZQKYDOSWc+vLLGMw4U2RVyq/T2e4MovmHoctxXRIhSR
+	 SpYa8UK4l3q+/bCJyNr67oOUpRam7VqD9/t+oRu4yc8rhMzPyM8s/OP9wYLZWbauyv
+	 IS+dIdXAgJtO2K6QqSiPxkkmoGatISludLOarjDsfvRltLlE8lmaFQXzDlQj1nbWz2
+	 jv7y4yMn3s/XA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9136637820F9;
+	Wed, 17 Apr 2024 08:26:07 +0000 (UTC)
+Message-ID: <ef29f74b-af21-4807-8d72-0e627586a288@collabora.com>
+Date: Wed, 17 Apr 2024 10:26:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416211941.9369-1-tony.luck@intel.com> <20240416212156.9413-1-tony.luck@intel.com>
-In-Reply-To: <20240416212156.9413-1-tony.luck@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 17 Apr 2024 10:25:36 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0inW4d3pk5=PmpCk8OZ4+dM_b6o7n-uRVKL19ib1nSQKQ@mail.gmail.com>
-Message-ID: <CAJZ5v0inW4d3pk5=PmpCk8OZ4+dM_b6o7n-uRVKL19ib1nSQKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 40/74] x86/cpu/vfm: Update drivers/acpi/acpi_lpss.c
-To: Tony Luck <tony.luck@intel.com>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] dt-bindings: soc: mediatek: Add DVFSRC bindings
+ for MT8183 and MT8195
+To: Conor Dooley <conor@kernel.org>
+Cc: djakov@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, lgirdwood@gmail.com,
+ broonie@kernel.org, keescook@chromium.org, gustavoars@kernel.org,
+ henryc.chen@mediatek.com, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com, wenst@chromium.org, amergnat@baylibre.com
+References: <20240416153805.431118-1-angelogioacchino.delregno@collabora.com>
+ <20240416153805.431118-2-angelogioacchino.delregno@collabora.com>
+ <20240416-grope-blissful-a914854b3732@spud>
+ <20240416-onion-prone-44b45d5a003e@spud>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240416-onion-prone-44b45d5a003e@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 11:22=E2=80=AFPM Tony Luck <tony.luck@intel.com> wr=
-ote:
->
-> New CPU #defines encode vendor and family as well as model.
->
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+Il 16/04/24 19:30, Conor Dooley ha scritto:
+> On Tue, Apr 16, 2024 at 06:28:58PM +0100, Conor Dooley wrote:
+>> On Tue, Apr 16, 2024 at 05:38:00PM +0200, AngeloGioacchino Del Regno wrote:
+>>> Add bindings for the MediaTek Dynamic Voltage and Frequency Scaling
+>>> Resource Collector (DVFSRC), a hardware module used to collect all the
+>>> requests from both software and the various remote processors embedded
+>>> into the SoC and decide about a minimum operating voltage and a minimum
+>>> DRAM frequency to fulfill those requests in an effort to provide the
+>>> best achievable performance per watt.
+>>>
+>>> This hardware IP is capable of transparently performing direct register
+>>> R/W on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
+>>>
+>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>> ---
+>>>   .../soc/mediatek/mediatek,mt8183-dvfsrc.yaml  | 57 +++++++++++++++++++
+>>>   1 file changed, 57 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
+>>> new file mode 100644
+>>> index 000000000000..12bcc3fdfd07
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
+>>> @@ -0,0 +1,57 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/soc/mediatek/mediatek,mt8183-dvfsrc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: MediaTek Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC)
+>>> +
+>>> +description:
+>>> +  The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
+>>> +  Hardware module used to collect all the requests from both software and the
+>>> +  various remote processors embedded into the SoC and decide about a minimum
+>>> +  operating voltage and a minimum DRAM frequency to fulfill those requests in
+>>> +  an effort to provide the best achievable performance per watt.
+>>> +  This hardware IP is capable of transparently performing direct register R/W
+>>> +  on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
+>>> +
+>>> +maintainers:
+>>> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>> +  - Henry Chen <henryc.chen@mediatek.com>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    oneOf:
+>>> +      - items:
+>>
+>> This items should not be needed with the enum, right?
+>>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Whoops. Yep items is not needed.
 
-> ---
->  drivers/acpi/acpi_lpss.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-> index 04e273167e92..e7b57dcce146 100644
-> --- a/drivers/acpi/acpi_lpss.c
-> +++ b/drivers/acpi/acpi_lpss.c
-> @@ -337,8 +337,8 @@ static const struct lpss_device_desc bsw_spi_dev_desc=
- =3D {
->  };
->
->  static const struct x86_cpu_id lpss_cpu_ids[] =3D {
-> -       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
-> -       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
-> +       X86_MATCH_VFM(INTEL_ATOM_SILVERMONT,    NULL),
-> +       X86_MATCH_VFM(INTEL_ATOM_AIRMONT,       NULL),
->         {}
->  };
->
-> --
-> 2.44.0
->
+>>> +          - enum:
+>>> +              - mediatek,mt8183-dvfsrc
+>>> +              - mediatek,mt8195-dvfsrc
+>>> +      - items:
+>>> +          - const: mediatek,mt8192-dvfsrc
+>>> +          - const: mediatek,mt8195-dvfsrc
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +    description: DVFSRC common register address and length.
+>>> +
+>>> +patternProperties:
+>>> +  "@[0-9a-f]+$":
+>>> +    type: object
+>>
+>> Why is there no enforcement of what a child could be here?
+> 
+> Seems like you know exactly what the children are: regulators and an
+> interconnect? What am I missing?
+> 
+
+I wasn't sure whether that would've been a good idea, given that there will
+be more possible children in the future - as in - more drivers that need the
+DVFSRC communication.
+
+But anyway yes, for now, it's just the regulator and interconnect drivers.
+
+>>
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    soc {
+>>> +        #address-cells = <2>;
+>>> +        #size-cells = <2>;
+>>> +
+>>> +        dvfsrc@10012000 {
+>>
+>> "dvfsrc" looks like something my (imaginary given allergies) cat would
+
+(allergies: ugh, same here - feel you)
+
+>> produce from sitting on my keyboard. Could you use full words for the
+>> node name and make it something that attempts to be generic please?
+>>
+
+I'm not entirely sure that I can find a generic name for this... I wonder if
+"remoteproc" could work - as this is a remote processor (a MCU, actually).
+
+To give you context, this doesn't need firmware to be loaded, and does not have
+any remoteproc driver.
+
+Because then, I don't think that "performance-controller" would be correct,
+even though I have this N.2 choice... ideas?
+
+Cheers,
+Angelo
+
+>>> +            compatible = "mediatek,mt8195-dvfsrc";
+>>> +            reg = <0 0x10012000 0 0x1000>;
+>>> +        };
+>>> +    };
+>>> -- 
+>>> 2.44.0
+>>>
+> 
+> 
+
