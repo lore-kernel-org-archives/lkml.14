@@ -1,94 +1,113 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00230849C
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 18:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DE8F51B;
+	Wed, 17 Apr 2024 18:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713378749; cv=none; b=RI0QUbQx8caZIQ8EVZOn0AWDpR/xc2FEjEjHk4Q7zFXDZwCTnMlaiir83FQKEz37D5p0bv3bgVvmDLySgb1ucEB9h+WOGHg63lc/1Pnyq55XIXU1Cs2S+rx9/E2En/yWd0x0yijxxB39VAqo3LziEwsnjCLVWqgrCew4DWLqxmA=
+	t=1713378848; cv=none; b=eGA/3YkREJaUwh4CogTunBNmMp2WZJKy6zVg0ZUAhEPy7rcBGhu4LHm95Tk0lmcrfmLvVdaZzEEXHxljw0Uy7QysOzqgvkvDXuN3HTrEH64oIMUXDk73tMss0vgYc9wj6/3Rgp8HKCjEpoFZ3bqaJOLxSESyo4M9IHbLpZsB+8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713378749; c=relaxed/simple;
-	bh=36hXQuEvO/yn4vEmJGlAB6y3mAmxuqgfg5ZGP25OSKY=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=eQGJ5UBZczwuXKiP9a7wNF3c+SegNZu21inibsORed5TQk25FoV9rH6HfqZNuod9/i+xK/PUnAMvA+avi+z5qeeLufs8lueFcAVPT3v+y7aJo8WkruL2tGGmcWUpQm92xgfV1Q+ukHT5RdLKBgicpGlUnuNuObfb5+A4ViMQ7eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PL5j5XyX; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1713378848; c=relaxed/simple;
+	bh=6veavc1e9T/l9NoSbIGFrOaQTgn3qFpNCXEWKSehzVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Att7oOr2ZPb9EMpoxNkCDhEmw9daRs8IRPSI0Lx6+NaFX/rOwFad09nZa6+3mxwyByjWx/YqbtYctd/ebxOl9S7qOmPvRlj9dT2vW8ArtpD8NAjxzF35sWLz3xvTbX2yEYDQIJprpagEkOF6nCnm9d6yrssOGhoHBZD6UTRtBlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ipL+I8TV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PL5j5XyX"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso94406276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713378747; x=1713983547; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=axvyU+8QUv8kTyKybxhFapUIJ4L0+ijLXSh2frDTobY=;
-        b=PL5j5XyXFKlPqmL+yZIXmnGBiZesm6YGkMItEwjpm2wTgNQgWnuNrsxhDko2QI6CXE
-         9FESNgU9AxsvCvTPEP42UhL599BuI119svdMSS1i2asU3FtFC02Gi7wV/xUgw+nHJRk5
-         dr/UwHA1RINtMgGVNtn6pxQh/Tt4OUhmHDteoBPhbC8gzQcWoavW5i9kSq8oxD4u0dW4
-         1zjWurK2zOPsU4jtTFIIW6mAE3pT1HU4XMhmPPnPClJETseZxUdhOVjUp0tWlB+wlJem
-         0xumU6YO8WgT6t7sIvGsvfOP7Imk+3SDTOHuft57sjjpuzskqBWI9nIB3qqyhdVAO6LF
-         eBQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713378747; x=1713983547;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=axvyU+8QUv8kTyKybxhFapUIJ4L0+ijLXSh2frDTobY=;
-        b=Lugs1i06/y+kLWZpBlG+RSFtuf/BEQ0QiNHVaWxJ0pPkOII2MgYgDBmIv6P8mY370D
-         UNHS4Bs+0T7EXyIBRFNCe+888YNisKB6qolbV/ixQUTEPbCGlPJbOqfulNJ4L59i5Roe
-         LBa//EgVFEWnIfxeZQj0/1MNFnbANs3rUeN4ureBi0T26cVRt4RaTLCHVVkz9kRxqn3p
-         g2PhdWZQbkQXoqQyXNlEmO8jwaOYZLkjRtWay8Vgf660Z1Zarap7qpcbP6g23jRWSyY5
-         cxr0deGbWbtk1/M3CSHBOfA6Wds8jR1+eVDEaUL6fy6gZ2PwWLC7SKqVx+F+KwLU2YxV
-         th6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWSR1TEd2963LEkIfRRRYT2cp7MeXIhZRU+zepdoR5z4YyhSv5ac5Rp8GP9ObbNCWQhm9HqY8eop5rdBmD0VqnNK7jhN2p2iDm+5Re2
-X-Gm-Message-State: AOJu0YwNB9/GdWntQKFOntg4hf2gSNGyQMfzlvUvxiQAzqBbM6xN4oWs
-	Cw3OD0Wt4hb/DfxLLhiIj5Kh8EpUu0srhmeGyzWWQiaxgHgv4/WFYblbABkvQKpQeKhDjZ8qzwl
-	gbscisA==
-X-Google-Smtp-Source: AGHT+IFBWokfc9EOakTcRvWLn9uzuvhdYjyYgTXbyLc60iS9DX7y4vkAhB/A617M4Bu0xdVWZR0/ykNlQIWu
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:21e2:a91b:3cf5:c57b])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b09:b0:de1:2220:862b with SMTP
- id fi9-20020a0569022b0900b00de12220862bmr38875ybb.12.1713378747053; Wed, 17
- Apr 2024 11:32:27 -0700 (PDT)
-Date: Wed, 17 Apr 2024 11:32:19 -0700
-Message-Id: <20240417183219.1208493-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ipL+I8TV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=qyvdskYVnamQI3a/ILIalEumJFvEM9exFz2R/7q+4jE=; b=ipL+I8TVXay+xwWsxLnGcJxNq+
+	3MXPVeffIwUTLH4aFqP2fzWB99kP6oLrc3fydU+rNpr2jleE5dV3VCx+y794YXUXnqUhYl9g208Gh
+	hm5aTjVvDdsaJfvozWQ84C1ALa7MppKCBaGT9jY22rHzGVmw0tSveXsTpH4kuza9SKH0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rxA6E-00DGzN-GY; Wed, 17 Apr 2024 20:33:38 +0200
+Date: Wed, 17 Apr 2024 20:33:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH net-next v1 1/4] net: phy: Add TimeSync delay query
+ support to PHYlib API
+Message-ID: <898f435b-99dd-4636-9a52-558780c1bb06@lunn.ch>
+References: <20240417164316.1755299-1-o.rempel@pengutronix.de>
+ <20240417164316.1755299-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-Subject: [PATCH v1] perf test: Avoid hard coded metrics in stat std output test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417164316.1755299-2-o.rempel@pengutronix.de>
 
-Hard coded metric names fail on ARM testing.
+On Wed, Apr 17, 2024 at 06:43:13PM +0200, Oleksij Rempel wrote:
+> Add a new phy_get_timesync_data_path_delays() function, to the PHY
+> device API. This function enables querying the ingress and egress
+> TimeSync delays for PHY devices, as specified in IEEE 802.3-2022
+> sections 30.13.1.3 to 30.13.1.6. The function adds the capability to
+> obtain the average delays in nanoseconds, which can be used to
+> compensate for time variations added by the PHY to PTP packets.
+> 
+> Since most PHYs do not provide register-based delay information, PHY
+> drivers should supply this data, typically dependent on the interface
+> type (MII, RGMII, etc.) and link speed. The MAC driver, or consumer of
+> this API, is expected to invoke this function upon link establishment to
+> accurately compensate for any PHY-induced time discrepancies.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat+std_output.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So your intention is that this function is called from within the
+adjust_link callback? Hence there is no locking being performed
+because the lock is already held?
 
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index cbf2894b2c84..845f83213855 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -13,7 +13,7 @@ stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
- 
- event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
- event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "frontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of all branches")
--skip_metric=("stalled cycles per insn" "tma_" "retiring" "frontend_bound" "bad_speculation" "backend_bound")
-+skip_metric=($(perf list --raw Default 2> /dev/null))
- 
- cleanup() {
-   rm -f "${stat_output}"
--- 
-2.44.0.683.g7961c838ac-goog
+> +/**
+> + * phy_get_timesync_data_path_delays - get the TimeSync data path ingress/egress
+> + *                                     delays
+> + * @phydev: phy_device struct
+> + * @tx_delay_ns: pointer to the transmit delay in nanoseconds
+> + * @rx_delay_ns: pointer to the receive delay in nanoseconds
+> + *
+> + * This function is used to get the TimeSync data path ingress/egress delays
+> + * as described in IEEE 802.3-2022 sections:
+> + * 30.13.1.3 aTimeSyncDelayTXmax, 30.13.1.4 aTimeSyncDelayTXmin,
+> + * 30.13.1.5 aTimeSyncDelayRXmax and 30.13.1.6 aTimeSyncDelayRXmin.
+> + *
+> + * The delays are returned in nanoseconds and can be used to compensate time
+> + * added by the PHY to the PTP packets.
 
+Please document the context this function should be used in. If users
+use it outside of the adjust_link callback, the locking will be
+wrong....
+
+> + *
+> + * Returns 0 on success, negative value on failure.
+
+I think kdocs now requires a : after Returns ?
+
+> +	/**
+> +	 * @get_timesync_data_path_delays: Get the PHY time sync delay values
+> +	 * @dev: PHY device
+> +	 * @tsd: PHY time sync delay values
+> +	 *
+> +	 * Returns 0 on success, or an error code.
+
+Same here.
+
+     Andrew
