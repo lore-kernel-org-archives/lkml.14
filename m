@@ -1,247 +1,368 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646FEF516;
-	Wed, 17 Apr 2024 09:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436A0F516;
+	Wed, 17 Apr 2024 09:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713346975; cv=none; b=md5yQy4WPiR7KIqpDQfHF6VZnFA/ZfmSRQV5JzovJpxWPZc+gp9QGrYdnbJL19iYV4BvItgp7ha1bmuWNW+TtH/B2gcdIhLk68tubiZ4o9nkYDNBx+330oNbpWa1Fiusffhux76zFPj/WfsI+c3jXaO1/V4Ji6+KkCgt3XLV2bE=
+	t=1713347020; cv=none; b=hMX4M9xGFaxfrQam2gE9jaXe1K7/kPaL0p7uELlR3p5NmEfgPl8C/kNHsvfHEWDwMNbH75BYhI8ldKwUBHD9RTwvXApIgoR3P8cA9UFgm7W+KhvCWCA8WpKd1n+jqidz6WHRo0dOSaT9QEjhlTNAJiBzgfHT/jgrHJpEfhs01LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713346975; c=relaxed/simple;
-	bh=VbYJ4kEHAj9Rmh1z0P+Ie72tg4lO+L1d5IkKtKg9t0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C9pDybEx/vSCIto0Qy2469tzyu+J23U0VwmI7xlY2eE6yu3PWbWNL36/ujwcXoo+OoCu6jPRLgWDZ682teDd9JKNNMQPa/Hx7VL7s/mg/7RnLUPz9ClwH+Xj8D3R88y/Hgz9VH9zWC7okX55OiAURzK69fn/6d/DvZ9RHx4myzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BUoFuiSF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BUoFuiSF"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43H8Gtd0015591;
-	Wed, 17 Apr 2024 09:42:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=nPrkdTRcH2FKiX4DtNfZTegoE6WoIshS52dgky2QtCM=; b=BU
-	oFuiSFCDx3l842lN/F1u/hFf/KWWx5VF3flwUYftNlQGJSXCLpyqODmp7C/RmQWp
-	WKkySnLulJwz4q7CM1hXSy/l5ztkNmFDIuNyyLSghKqKFgIuwXV2oPGUbjI953jE
-	y9OSh2vD+FaJ9d4l3ua4RF+41zPk+/DQqhXIaTEalwgfdUzj27rhOrcmhGu08833
-	sC7PY9/a9K6WUM897gdnK//Xdm6h23RfPprzKHSUGoD9aMi8zEM4R924Gbdpaa89
-	kXSAIm+7kdC5z17FyPPy2s6neXMOItpbzKfyFaXcTPJhMOCYMRKl0u59qW/kXlig
-	eavWaS6M73ZlCSiQApmg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjarpg69b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 09:42:47 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43H9gk0E004109
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 09:42:46 GMT
-Received: from [10.216.60.103] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Apr
- 2024 02:42:41 -0700
-Message-ID: <720e1ee0-79b0-4d30-b1b8-a90676057161@quicinc.com>
-Date: Wed, 17 Apr 2024 15:12:38 +0530
+	s=arc-20240116; t=1713347020; c=relaxed/simple;
+	bh=poh2qD6XZNTF/7nScF9hes9m2oNgfOyV9t6e2OvH4S0=;
+	h=From:To:Subject:Date:Message-Id; b=b+EBMePo+Ac9sXPloA/R2MksAORCJ49Zoe/KEWXe/KHrvqvb3BBUnD7P/DZQ436Wi44h23s7pEvY4nCalr4hgDhuGLmS1X+ec0s+e8M/1+H5t6BG8KW960QG5UnoXpWnjPCt18fj3KrM9L/8uw57dPAWRGz6Aoc8TOhoUTzWPgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 84025200478;
+	Wed, 17 Apr 2024 11:43:36 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6EB92200462;
+	Wed, 17 Apr 2024 11:43:35 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 03752183AD14;
+	Wed, 17 Apr 2024 17:43:32 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: dt-bindings: fsl,ssi: Convert to YAML
+Date: Wed, 17 Apr 2024 17:25:32 +0800
+Message-Id: <1713345932-6408-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 RESEND] slimbus: stream: Add null pointer check for
- client functions
-Content-Language: en-US
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>,
-        <quic_anupkulk@quicinc.com>, <quic_cchiluve@quicinc.com>
-References: <20240327083214.29443-1-quic_vdadhani@quicinc.com>
- <ZhgIHHP1FUeCr+vx@hu-bjorande-lv.qualcomm.com>
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <ZhgIHHP1FUeCr+vx@hu-bjorande-lv.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: a-Ht6a8lg7W_lO9ZJvW6GY13FBFlUnVe
-X-Proofpoint-ORIG-GUID: a-Ht6a8lg7W_lO9ZJvW6GY13FBFlUnVe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_08,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 adultscore=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404170066
 
+Convert the fsl,ssi binding to YAML.
 
+Add below compatible strings which were not listed
+in document:
 
-On 4/11/2024 9:26 PM, Bjorn Andersson wrote:
-> On Wed, Mar 27, 2024 at 02:02:14PM +0530, Viken Dadhaniya wrote:
->> There is a possible scenario where client driver is calling
-> 
-> How can we asses the validity or the risk of this problem?
-> How would I know if this matches e.g. a bug report reported by a user?
-> 
-> Describe the problem such that the reviewer can asses the validity and
-> severity of your bug fixes.
+fsl,imx50-ssi
+fsl,imx53-ssi
+fsl,imx25-ssi
+fsl,imx27-ssi
+fsl,imx6q-ssi
+fsl,imx6sl-ssi
+fsl,imx6sx-ssi
 
-Ok. Updated commit log in v2
+Add below fsl,mode strings which were not listed.
 
-> 
->> slimbus stream APIs in incorrect sequence and it might lead to
->> invalid null access of the stream pointer in slimbus
->> enable/disable/prepare/unprepare/free function.
->>
->> Fix this by checking validity of the stream before accessing in
->> all function API’s exposed to client.
->>
-> 
-> You use the work "fix" a few time, are you fixing an actual bug? Are you
-> just guarding the driver from incorrect usage?
-> 
-> If it's a fix, then add Fixes and Cc: stable here.
+i2s-slave
+i2s-master
+lj-slave
+lj-master
+rj-slave
+rj-master
 
-Let me correct myself there. Not a fix but consider an improvement where 
-preventing a crash due to client following the incorrect sequence.
+Then dtbs_check can pass.
 
-> 
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
->>   drivers/slimbus/stream.c | 37 +++++++++++++++++++++++++++++++++----
->>   1 file changed, 33 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/slimbus/stream.c b/drivers/slimbus/stream.c
->> index 1d6b38657917..c5a436fd0952 100644
->> --- a/drivers/slimbus/stream.c
->> +++ b/drivers/slimbus/stream.c
->> @@ -202,10 +202,16 @@ static int slim_get_prate_code(int rate)
->>   int slim_stream_prepare(struct slim_stream_runtime *rt,
->>   			struct slim_stream_config *cfg)
->>   {
->> -	struct slim_controller *ctrl = rt->dev->ctrl;
->> +	struct slim_controller *ctrl;
->>   	struct slim_port *port;
->>   	int num_ports, i, port_id, prrate;
->>   
->> +	if (!rt || !cfg) {
->> +		pr_err("%s: Stream or cfg is NULL, Check from client side\n", __func__);
-> 
-> Use dev_err() and write your error messages such that they make sense
-> without the use of __func__.
+And remove the 'codec' description which should be
+in 'codec' binding doc.
 
-For error scenario, we don't have valid dev to be used in dev_err argument.
-this log will help for debug. Please let us know any concern with pr_err
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ .../devicetree/bindings/sound/fsl,ssi.txt     |  87 --------
+ .../devicetree/bindings/sound/fsl,ssi.yaml    | 186 ++++++++++++++++++
+ 2 files changed, 186 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/fsl,ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,ssi.yaml
 
-> 
->> +		return -EINVAL;
-> 
-> Is this expected to happen during normal operation, or is this a sign of
-> a bug?
-> 
+diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.txt b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
+deleted file mode 100644
+index 7e15a85cecd2..000000000000
+--- a/Documentation/devicetree/bindings/sound/fsl,ssi.txt
++++ /dev/null
+@@ -1,87 +0,0 @@
+-Freescale Synchronous Serial Interface
+-
+-The SSI is a serial device that communicates with audio codecs.  It can
+-be programmed in AC97, I2S, left-justified, or right-justified modes.
+-
+-Required properties:
+-- compatible:       Compatible list, should contain one of the following
+-                    compatibles:
+-                      fsl,mpc8610-ssi
+-                      fsl,imx51-ssi
+-                      fsl,imx35-ssi
+-                      fsl,imx21-ssi
+-- cell-index:       The SSI, <0> = SSI1, <1> = SSI2, and so on.
+-- reg:              Offset and length of the register set for the device.
+-- interrupts:       <a b> where a is the interrupt number and b is a
+-                    field that represents an encoding of the sense and
+-                    level information for the interrupt.  This should be
+-                    encoded based on the information in section 2)
+-                    depending on the type of interrupt controller you
+-                    have.
+-- fsl,fifo-depth:   The number of elements in the transmit and receive FIFOs.
+-                    This number is the maximum allowed value for SFCSR[TFWM0].
+- - clocks:          "ipg" - Required clock for the SSI unit
+-                    "baud" - Required clock for SSI master mode. Otherwise this
+-		      clock is not used
+-
+-Required are also ac97 link bindings if ac97 is used. See
+-Documentation/devicetree/bindings/sound/soc-ac97link.txt for the necessary
+-bindings.
+-
+-Optional properties:
+-- codec-handle:     Phandle to a 'codec' node that defines an audio
+-                    codec connected to this SSI.  This node is typically
+-                    a child of an I2C or other control node.
+-- fsl,fiq-stream-filter: Bool property. Disabled DMA and use FIQ instead to
+-		    filter the codec stream. This is necessary for some boards
+-		    where an incompatible codec is connected to this SSI, e.g.
+-		    on pca100 and pcm043.
+-- dmas:		    Generic dma devicetree binding as described in
+-		    Documentation/devicetree/bindings/dma/dma.txt.
+-- dma-names:	    Two dmas have to be defined, "tx" and "rx", if fsl,imx-fiq
+-		    is not defined.
+-- fsl,mode:         The operating mode for the AC97 interface only.
+-                    "ac97-slave" - AC97 mode, SSI is clock slave
+-                    "ac97-master" - AC97 mode, SSI is clock master
+-- fsl,ssi-asynchronous:
+-                    If specified, the SSI is to be programmed in asynchronous
+-                    mode.  In this mode, pins SRCK, STCK, SRFS, and STFS must
+-                    all be connected to valid signals.  In synchronous mode,
+-                    SRCK and SRFS are ignored.  Asynchronous mode allows
+-                    playback and capture to use different sample sizes and
+-                    sample rates.  Some drivers may require that SRCK and STCK
+-                    be connected together, and SRFS and STFS be connected
+-                    together.  This would still allow different sample sizes,
+-                    but not different sample rates.
+-- fsl,playback-dma: Phandle to a node for the DMA channel to use for
+-                    playback of audio.  This is typically dictated by SOC
+-                    design.  See the notes below.
+-                    Only used on Power Architecture.
+-- fsl,capture-dma:  Phandle to a node for the DMA channel to use for
+-                    capture (recording) of audio.  This is typically dictated
+-                    by SOC design.  See the notes below.
+-                    Only used on Power Architecture.
+-
+-Child 'codec' node required properties:
+-- compatible:       Compatible list, contains the name of the codec
+-
+-Child 'codec' node optional properties:
+-- clock-frequency:  The frequency of the input clock, which typically comes
+-                    from an on-board dedicated oscillator.
+-
+-Notes on fsl,playback-dma and fsl,capture-dma:
+-
+-On SOCs that have an SSI, specific DMA channels are hard-wired for playback
+-and capture.  On the MPC8610, for example, SSI1 must use DMA channel 0 for
+-playback and DMA channel 1 for capture.  SSI2 must use DMA channel 2 for
+-playback and DMA channel 3 for capture.  The developer can choose which
+-DMA controller to use, but the channels themselves are hard-wired.  The
+-purpose of these two properties is to represent this hardware design.
+-
+-The device tree nodes for the DMA channels that are referenced by
+-"fsl,playback-dma" and "fsl,capture-dma" must be marked as compatible with
+-"fsl,ssi-dma-channel".  The SOC-specific compatible string (e.g.
+-"fsl,mpc8610-dma-channel") can remain.  If these nodes are left as
+-"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel", then the generic Elo DMA
+-drivers (fsldma) will attempt to use them, and it will conflict with the
+-sound drivers.
+diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.yaml b/Documentation/devicetree/bindings/sound/fsl,ssi.yaml
+new file mode 100644
+index 000000000000..bc8daafb7d81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,ssi.yaml
+@@ -0,0 +1,186 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/fsl,ssi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Synchronous Serial Interface
++
++maintainers:
++  - Shengjiu Wang <shengjiu.wang@nxp.com>
++
++description:
++  Notes on fsl,playback-dma and fsl,capture-dma
++  On SOCs that have an SSI, specific DMA channels are hard-wired for playback
++  and capture.  On the MPC8610, for example, SSI1 must use DMA channel 0 for
++  playback and DMA channel 1 for capture.  SSI2 must use DMA channel 2 for
++  playback and DMA channel 3 for capture.  The developer can choose which
++  DMA controller to use, but the channels themselves are hard-wired.  The
++  purpose of these two properties is to represent this hardware design.
++
++  The device tree nodes for the DMA channels that are referenced by
++  "fsl,playback-dma" and "fsl,capture-dma" must be marked as compatible with
++  "fsl,ssi-dma-channel".  The SOC-specific compatible string (e.g.
++  "fsl,mpc8610-dma-channel") can remain.  If these nodes are left as
++  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel", then the generic Elo DMA
++  drivers (fsldma) will attempt to use them, and it will conflict with the
++  sound drivers.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx50-ssi
++              - fsl,imx53-ssi
++          - enum:
++              - fsl,imx51-ssi
++          - enum:
++              - fsl,imx21-ssi
++      - items:
++          - enum:
++              - fsl,imx25-ssi
++              - fsl,imx27-ssi
++              - fsl,imx35-ssi
++              - fsl,imx51-ssi
++              - fsl,imx6q-ssi
++              - fsl,imx6sl-ssi
++              - fsl,imx6sx-ssi
++          - enum:
++              - fsl,imx21-ssi
++              - fsl,imx51-ssi
++      - items:
++          - const: fsl,mpc8610-ssi
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2]
++    description: The SSI index
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  fsl,fifo-depth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The number of elements in the transmit and receive FIFOs.
++      This number is the maximum allowed value for SFCSR[TFWM0].
++
++  clocks:
++    items:
++      - description: The ipg clock for register access
++      - description: clock for SSI master mode
++    minItems: 1
++
++  clock-names:
++    items:
++      - const: ipg
++      - const: baud
++    minItems: 1
++
++  dmas:
++    oneOf:
++      - items:
++          - description: DMA controller phandle and request line for RX
++          - description: DMA controller phandle and request line for TX
++      - items:
++          - description: DMA controller phandle and request line for RX0
++          - description: DMA controller phandle and request line for TX0
++          - description: DMA controller phandle and request line for RX1
++          - description: DMA controller phandle and request line for TX1
++
++  dma-names:
++    oneOf:
++      - items:
++          - const: rx
++          - const: tx
++      - items:
++          - const: rx0
++          - const: tx0
++          - const: rx1
++          - const: tx1
++
++  codec-handle:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to a 'codec' node that defines an audio
++      codec connected to this SSI.  This node is typically
++      a child of an I2C or other control node.
++
++  fsl,fiq-stream-filter:
++    type: boolean
++    description:
++      Disabled DMA and use FIQ instead to filter the codec stream.
++      This is necessary for some boards where an incompatible codec
++      is connected to this SSI, e.g. on pca100 and pcm043.
++
++  fsl,mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [ ac97-slave, ac97-master, i2s-slave, i2s-master,
++            lj-slave, lj-master, rj-slave, rj-master ]
++    description: |
++      "ac97-slave" - AC97 mode, SSI is clock slave
++      "ac97-master" - AC97 mode, SSI is clock master
++      "i2s-slave" - I2S mode, SSI is clock slave
++      "i2s-master" - I2S mode, SSI is clock master
++      "lj-slave" - Left justified mode, SSI is clock slave
++      "lj-master" - Left justified mode, SSI is clock master
++      "rj-slave" - Right justified mode, SSI is clock slave
++      "rj-master" - Right justified mode, SSI is clock master
++
++  fsl,ssi-asynchronous:
++    type: boolean
++    description: If specified, the SSI is to be programmed in asynchronous
++      mode.  In this mode, pins SRCK, STCK, SRFS, and STFS must
++      all be connected to valid signals.  In synchronous mode,
++      SRCK and SRFS are ignored.  Asynchronous mode allows
++      playback and capture to use different sample sizes and
++      sample rates.  Some drivers may require that SRCK and STCK
++      be connected together, and SRFS and STFS be connected
++      together.  This would still allow different sample sizes,
++      but not different sample rates.
++
++  fsl,playback-dma:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Phandle to a node for the DMA channel to use for
++      playback of audio.  This is typically dictated by SOC
++      design. Only used on Power Architecture.
++
++  fsl,capture-dma:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Phandle to a node for the DMA channel to use for
++      capture (recording) of audio.  This is typically dictated
++      by SOC design. Only used on Power Architecture.
++
++  "#sound-dai-cells":
++    const: 0
++    description: optional, some dts node didn't add it.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - fsl,fifo-depth
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++    ssi1: ssi@2028000 {
++        compatible = "fsl,imx6q-ssi",
++                     "fsl,imx51-ssi";
++        #sound-dai-cells = <0>;
++        reg = <0x02028000 0x4000>;
++        interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_SSI1_IPG>,
++                 <&clks IMX6QDL_CLK_SSI1>;
++        clock-names = "ipg", "baud";
++        dmas = <&sdma 37 1 0>, <&sdma 38 1 0>;
++        dma-names = "rx", "tx";
++        fsl,fifo-depth = <15>;
++    };
+-- 
+2.34.1
 
-It's a scenario where client doesn't follow the proper sequence and 
-slimbus driver can crash if not checked against NULL.
-
-> 
-> Neither of the two callers of this function checks the return value, so
-> is this really going to result in a good system state?
-> 
-
-we expect client to check return value of framework APIs.
-
-> 
-> It would make sense to require the client to pass valid rt and cfg
-> pointers, and if you have an issue in the client driver in which we
-> might end up with invalid points, then those drivers should be fixed -
-> rather than relying on chance and swipe it under the rug here.
-> 
-> Regards,
-> Bjorn
-> 
-
-Agree. it is sequence mismatch from client driver, and they should take 
-care. it is leading to NULL pointer access in slimbus APIs, so prevent 
-crash by adding check.
-
->> +	}
->> +
->> +	ctrl = rt->dev->ctrl;
->>   	if (rt->ports) {
->>   		dev_err(&rt->dev->dev, "Stream already Prepared\n");
->>   		return -EINVAL;
->> @@ -358,9 +364,15 @@ int slim_stream_enable(struct slim_stream_runtime *stream)
->>   {
->>   	DEFINE_SLIM_BCAST_TXN(txn, SLIM_MSG_MC_BEGIN_RECONFIGURATION,
->>   				3, SLIM_LA_MANAGER, NULL);
->> -	struct slim_controller *ctrl = stream->dev->ctrl;
->> +	struct slim_controller *ctrl;
->>   	int ret, i;
->>   
->> +	if (!stream) {
->> +		pr_err("%s: Stream is NULL, Check from client side\n", __func__);
->> +		return -EINVAL;
->> +	}
->> +
->> +	ctrl = stream->dev->ctrl;
->>   	if (ctrl->enable_stream) {
->>   		ret = ctrl->enable_stream(stream);
->>   		if (ret)
->> @@ -411,12 +423,18 @@ int slim_stream_disable(struct slim_stream_runtime *stream)
->>   {
->>   	DEFINE_SLIM_BCAST_TXN(txn, SLIM_MSG_MC_BEGIN_RECONFIGURATION,
->>   				3, SLIM_LA_MANAGER, NULL);
->> -	struct slim_controller *ctrl = stream->dev->ctrl;
->> +	struct slim_controller *ctrl;
->>   	int ret, i;
->>   
->> +	if (!stream) {
->> +		pr_err("%s: Stream is NULL, Check from client side\n", __func__);
->> +		return -EINVAL;
->> +	}
->> +
->>   	if (!stream->ports || !stream->num_ports)
->>   		return -EINVAL;
->>   
->> +	ctrl = stream->dev->ctrl;
->>   	if (ctrl->disable_stream)
->>   		ctrl->disable_stream(stream);
->>   
->> @@ -448,6 +466,11 @@ int slim_stream_unprepare(struct slim_stream_runtime *stream)
->>   {
->>   	int i;
->>   
->> +	if (!stream) {
->> +		pr_err("%s: Stream is NULL, Check from client side\n", __func__);
->> +		return -EINVAL;
->> +	}
->> +
->>   	if (!stream->ports || !stream->num_ports)
->>   		return -EINVAL;
->>   
->> @@ -476,8 +499,14 @@ EXPORT_SYMBOL_GPL(slim_stream_unprepare);
->>    */
->>   int slim_stream_free(struct slim_stream_runtime *stream)
->>   {
->> -	struct slim_device *sdev = stream->dev;
->> +	struct slim_device *sdev;
->> +
->> +	if (!stream) {
->> +		pr_err("%s: Stream is NULL, Check from client side\n", __func__);
->> +		return -EINVAL;
->> +	}
->>   
->> +	sdev = stream->dev;
->>   	spin_lock(&sdev->stream_list_lock);
->>   	list_del(&stream->node);
->>   	spin_unlock(&sdev->stream_list_lock);
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
