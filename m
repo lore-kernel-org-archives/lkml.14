@@ -1,119 +1,77 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9C84D21
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 45A9813173A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349869; cv=none; b=rAWbbx848oxGNKnxi+8HfVwH2BPy5Cm2sRladiaGAPFCV46pu1lZwU4ugeLCNZ3HceSh7GlTYnsIa4VQQsriYv4fUjJVI7xb2TlqR3YKdNJ/S0GweQb7juZLepOMd6WYWdbFmnHhLe+2L31SRDbfJGa1ZIsTmtHSfOKBPQ2a/NA=
+	t=1713349940; cv=none; b=U/n2DSRfOSq2IOvImFKVMpSA095T92OihupdlMafMkgb3FDp50PaHLALfHnGtfrf4HHNENTg4AmiHTqd76xEFC+VL8A+7S433b5AKHLc/WT/PagoN/DapEjmh5MREAOb6FHbDpCqCOeUqTFM7yZlQ7iZgWyYEqiYZqyu4SWcD3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349869; c=relaxed/simple;
-	bh=JmN3ov/nWWxkMqZnFvvpCKbxW2JVrc7zlR+YNMFMDVk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TaRmhdKCsLAvz+Ktr3Z5lbN1A2o/xlG1CUfnsume5uAufXKcPvmqrlqmnk9cuT/tupzyZOOTTyeDVL610wpHzYei6pXnWJOvDD5sTngNSnaV+ZA2lEHhfRAsYnMB/+cY7wtV7PiERoKniPJ5gr2RCMZyOiZ5oxzIFq3OWXcPTLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by albert.telenet-ops.be with bizsmtp
-	id CAX32C00P0SSLxL06AX3Va; Wed, 17 Apr 2024 12:31:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rx2Yd-009LE9-M6;
-	Wed, 17 Apr 2024 12:31:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rx2Xe-00FLSF-Fd;
-	Wed, 17 Apr 2024 12:29:26 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] pmdomain: renesas: rcar-sysc: Add R-Car M3-W power-off delay quirk
-Date: Wed, 17 Apr 2024 12:29:25 +0200
-Message-Id: <ecbc3465c598084c904dd3714e2894463094ed9a.1713348705.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1713348705.git.geert+renesas@glider.be>
-References: <cover.1713348705.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1713349940; c=relaxed/simple;
+	bh=hH1V+AE+YWCRoqcKWjtd8ekK6h5iWxEK1lCPmP0C6lQ=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P2NDFbFkQe7amK+9n9l3U6NId3KAk8TKsdA26xBQWTd4ymWwTjqu1UAjaUtX9vBhSU9/V6PpyDr6mb/7L1amVbxMFa3p0msxMXLXPs5a8Xzm1ZvmFw+itqI3HQIEylLrRJn66bXailwhDF1BN6qYlgOvnqz+UuqBQa3s3xiwqSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+Received: from mail.didiglobal.com (unknown [10.79.65.12])
+	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 5EAD3183A913F8;
+	Wed, 17 Apr 2024 18:29:06 +0800 (CST)
+Received: from didi-ThinkCentre-M930t-N000 (10.79.64.101) by
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 17 Apr 2024 18:29:06 +0800
+Date: Wed, 17 Apr 2024 18:29:00 +0800
+X-MD-Sfrom: tiozhang@didiglobal.com
+X-MD-SrcIP: 10.79.65.12
+From: Tio Zhang <tiozhang@didiglobal.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC: <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <tiozhang@didiglobal.com>,
+	<zyhtheonly@gmail.com>, <zyhtheonly@yeah.net>
+Subject: [PATCH 1/1] tracing/sched: sched_switch: place prev_comm and
+ next_comm in right order
+Message-ID: <20240417102840.GA6614@didi-ThinkCentre-M930t-N000>
+Mail-Followup-To: rostedt@goodmis.org, mhiramat@kernel.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, zyhtheonly@gmail.com,
+	zyhtheonly@yeah.net
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: ZJY01-PUBMBX-01.didichuxing.com (10.79.64.32) To
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
 
-R-Car M3-W needs a delay of 1 µs before powering off the A3IR and A3VC
-power domains.  Add support for this using a new flag, which indicates
-that a power area is subject to this quirk.
+Switch the order of prev_comm and next_comm in sched_switch's code to
+align with its printing order.
 
-Inspired by a patch in the BSP by Dien Pham.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
 ---
-Changes compared to the BSP:
-  - Use a new flag in the SoC-specific area description instead of
-    comparing PM Domain names (which applied the quirk to all SoCs),
-  - Support for R-Car H3 ES1.x was dropped in v6.4, so it no longer
-    needs handling.
----
- drivers/pmdomain/renesas/r8a77960-sysc.c | 6 ++++--
- drivers/pmdomain/renesas/rcar-sysc.c     | 4 ++++
- drivers/pmdomain/renesas/rcar-sysc.h     | 1 +
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ include/trace/events/sched.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pmdomain/renesas/r8a77960-sysc.c b/drivers/pmdomain/renesas/r8a77960-sysc.c
-index e6f2c3f961255f40..2ab3f565d2b0f889 100644
---- a/drivers/pmdomain/renesas/r8a77960-sysc.c
-+++ b/drivers/pmdomain/renesas/r8a77960-sysc.c
-@@ -32,12 +32,14 @@ static const struct rcar_sysc_area r8a77960_areas[] __initconst = {
- 	{ "ca53-cpu3",	0x200, 3, R8A7796_PD_CA53_CPU3,	R8A7796_PD_CA53_SCU,
- 	  PD_CPU_NOCR },
- 	{ "cr7",	0x240, 0, R8A7796_PD_CR7,	R8A7796_PD_ALWAYS_ON },
--	{ "a3vc",	0x380, 0, R8A7796_PD_A3VC,	R8A7796_PD_ALWAYS_ON },
-+	{ "a3vc",	0x380, 0, R8A7796_PD_A3VC,	R8A7796_PD_ALWAYS_ON,
-+	  PD_OFF_DELAY },
- 	{ "a2vc0",	0x3c0, 0, R8A7796_PD_A2VC0,	R8A7796_PD_A3VC },
- 	{ "a2vc1",	0x3c0, 1, R8A7796_PD_A2VC1,	R8A7796_PD_A3VC },
- 	{ "3dg-a",	0x100, 0, R8A7796_PD_3DG_A,	R8A7796_PD_ALWAYS_ON },
- 	{ "3dg-b",	0x100, 1, R8A7796_PD_3DG_B,	R8A7796_PD_3DG_A },
--	{ "a3ir",	0x180, 0, R8A7796_PD_A3IR,	R8A7796_PD_ALWAYS_ON },
-+	{ "a3ir",	0x180, 0, R8A7796_PD_A3IR,	R8A7796_PD_ALWAYS_ON,
-+	  PD_OFF_DELAY },
- };
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index dbb01b4b7451..a4bd4330db4c 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -239,11 +239,11 @@ TRACE_EVENT(sched_switch,
+ 	),
  
- 
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
-index a9d92e38fcee902c..b99326917330f5f1 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-sysc.c
-@@ -90,6 +90,10 @@ static int rcar_sysc_pwr_on_off(const struct rcar_sysc_pd *pd, bool on)
- 	if (ret)
- 		return -EAGAIN;
- 
-+	/* Power-off delay quirk */
-+	if (!on && (pd->flags & PD_OFF_DELAY))
-+		udelay(1);
-+
- 	/* Submit power shutoff or power resume request */
- 	iowrite32(BIT(pd->chan_bit), rcar_sysc_base + pd->chan_offs + reg_offs);
- 
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.h b/drivers/pmdomain/renesas/rcar-sysc.h
-index 8c4ec36ed7da2f9d..07ffce310686b2ce 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.h
-+++ b/drivers/pmdomain/renesas/rcar-sysc.h
-@@ -16,6 +16,7 @@
- #define PD_CPU		BIT(0)	/* Area contains main CPU core */
- #define PD_SCU		BIT(1)	/* Area contains SCU and L2 cache */
- #define PD_NO_CR	BIT(2)	/* Area lacks PWR{ON,OFF}CR registers */
-+#define PD_OFF_DELAY	BIT(3)	/* Area is subject to power-off delay quirk */
- 
- #define PD_CPU_CR	PD_CPU		  /* CPU area has CR (R-Car H1) */
- #define PD_CPU_NOCR	PD_CPU | PD_NO_CR /* CPU area lacks CR (R-Car Gen2/3) */
+ 	TP_fast_assign(
+-		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
++		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+ 		__entry->prev_pid	= prev->pid;
+ 		__entry->prev_prio	= prev->prio;
+ 		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
+-		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
++		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+ 		__entry->next_pid	= next->pid;
+ 		__entry->next_prio	= next->prio;
+ 		/* XXX SCHED_DEADLINE */
 -- 
-2.34.1
+2.17.1
 
