@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1105C172BC6;
-	Wed, 17 Apr 2024 17:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B89174EC2;
+	Wed, 17 Apr 2024 17:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713375522; cv=none; b=R0lYLVZQ2aNvk7a7ELZ24UagpLoPK5nF4WwuroLRyfHPeOdcRSrqOnG69lHVXJtO48Pyhc8lgeRrID9QcQ7Oa+n8fX0TNNvg1pN6/Dfmj2JvoMyw2wRS74gAuOQUENkBaa2N53dRLScI/Ddwdh3gXC5YtWBn8LF6IYSggReCva0=
+	t=1713375525; cv=none; b=LCl5N6qoi8Ga7iqnu8x/R/l3rDWTdEGd72P5BPQ0qmrAfANBGWl5Oouoa9CP4vhKl/xOBVeVJyxOeK31DRed+iIANIlYbNLUjSnTfb8+7DVau3Ir1y5Fi5l5Og3lfHDeE7HLZAuNU1QM36S6Pil4jagf/d9KGK/wHLWUm+kZWak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713375522; c=relaxed/simple;
-	bh=5WFj57pz2yfHy3ro+1UVQLaPmaxSgD5e6l15NEGTtrw=;
+	s=arc-20240116; t=1713375525; c=relaxed/simple;
+	bh=CcyeG5LEOSpGWOeOm3cbVKAtUzZmD4pho93LO4Lftsc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGN0tOuc/9QemHbzWo8hbmCU8+4sMviyz5qbSs0vaRhQuk61qPubIpD8+SNrkrEPsdVvlKCaG8IklRvd1NjHVhnoe9dbN9mb0waVGsuk3piQ27J+dgVlwrOhk+NwuPZuWwc45IseKiVpdDFalWZSvsSbPwoGwHMsRGL14dtxI7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nufG15dA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mh/hFF75eeUIbL62HocW30lfLe/fnGOl/OTq2Y/xC1ZlNDtMHMstiyEXmZiyqPnKxP5on0fXAsF5yL37FvArdSdOesd42gETok4xaFQ40Y/R5mJd0Shdd/jsUHn5KqDrs0NIfpQMeUm4/fcV2MxGQ6I3xVnM/20cF7ULTOmFxJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Av0RgA4q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nufG15dA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16AD0C3277B;
-	Wed, 17 Apr 2024 17:38:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Av0RgA4q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698B7C2BD11;
+	Wed, 17 Apr 2024 17:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713375520;
-	bh=5WFj57pz2yfHy3ro+1UVQLaPmaxSgD5e6l15NEGTtrw=;
+	s=k20201202; t=1713375525;
+	bh=CcyeG5LEOSpGWOeOm3cbVKAtUzZmD4pho93LO4Lftsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nufG15dAwqRmNb2rSbuPz1yZ/q3/JxHG+B2Bl0WrW6gNckMiNEmxTEix1/NERWxf1
-	 5MzEpCBr5l4MpMv7+ril30CjNZZSi2muCubnSMWDJtRhz5XdFL80khGabKeX8044f/
-	 BLQDa9pJkLt531K0GF5FVzUztZO2/qtDMR5tdcsI66e+VNdogGosGaQ9nQogmQXHvx
-	 xE2c+DY+O0g8ODQ/qNqJxTqG5o9I8Fsb+uxEjPCfQBNlPddr1UpPDyUtY+7bKmm8oa
-	 6H22xubjEQgqNCS+PedD6rHRNLHMMC2aa820Q3NfEyfTiY+sDCWt4nLMzP+aSQO1zm
-	 KMvSyLwRD+kEA==
+	b=Av0RgA4qaltC6R2UAP+IZbyAGnKjB4ekzdULv8j9eAPqnmFRvKNI/tSGeYj3OWUcp
+	 qc6c8ihVRqy5xvc1FVVs2AxLK01Y5zF1DP+w65R/cmtzKmijs4sBJAFcGvJ+PWVSTP
+	 Cs/VrPh5fAS/kkgAPnngqXBr12G9wrAq4ALJdrKkFbuR04kIY/UfY/8zewzmRyNyY4
+	 FGtYvbl/zSPCI7kUk+ONgLL+oU0ba0PVJb/rKvaJnoI9fvRcg6tMMJfO6YNiEDxytp
+	 PvkY+gEYNCBbvMfU4hPx2MfJOZBDAA8oqfeSJpxvsX31dlnXX2vy74MbgvamfGDaZI
+	 OHANGbu9LOAzA==
 From: Alexey Gladkov <legion@kernel.org>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
@@ -33,10 +33,11 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	kbd@lists.linux.dev,
 	linux-api@vger.kernel.org,
 	linux-fbdev@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v5 1/3] VT: Use macros to define ioctls
-Date: Wed, 17 Apr 2024 19:37:35 +0200
-Message-ID: <e4229fe2933a003341e338b558ab1ea8b63a51f6.1713375378.git.legion@kernel.org>
+	linux-serial@vger.kernel.org,
+	Helge Deller <deller@gmx.de>
+Subject: [PATCH v5 3/3] VT: Allow to get max font width and height
+Date: Wed, 17 Apr 2024 19:37:37 +0200
+Message-ID: <2b0c4ab198935cdd92a41dc718682b3658553961.1713375378.git.legion@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1713375378.git.legion@kernel.org>
 References: <cover.1712080158.git.legion@kernel.org> <cover.1713375378.git.legion@kernel.org>
@@ -48,212 +49,229 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-All other headers use _IOC() macros to describe ioctls for a long time
-now. This header is stuck in the last century.
+The Console drivers has more restrictive font size limits than vt_ioctl.
+This leads to errors that are difficult to handle. If a font whose size
+is not supported is used, an EINVAL error will be returned, which is
+also returned in case of errors in the font itself. At the moment there
+is no way to understand what font sizes the current console driver
+supports.
 
-Simply use the _IO() macro. No other changes.
+To solve this problem, we need to transfer information about the
+supported font to userspace from the console driver.
 
+Acked-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Alexey Gladkov <legion@kernel.org>
 ---
- include/uapi/linux/kd.h | 96 +++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 47 deletions(-)
+ drivers/video/console/newport_con.c | 21 +++++++++++++++++----
+ drivers/video/console/sticon.c      | 25 +++++++++++++++++++++++--
+ drivers/video/console/vgacon.c      | 21 ++++++++++++++++++++-
+ drivers/video/fbdev/core/fbcon.c    | 16 ++++++++++++++++
+ 4 files changed, 76 insertions(+), 7 deletions(-)
 
-diff --git a/include/uapi/linux/kd.h b/include/uapi/linux/kd.h
-index 6b384065c013..8ddb2219a84b 100644
---- a/include/uapi/linux/kd.h
-+++ b/include/uapi/linux/kd.h
-@@ -5,60 +5,61 @@
- #include <linux/compiler.h>
+diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
+index a51cfc1d560e..6167f45326ac 100644
+--- a/drivers/video/console/newport_con.c
++++ b/drivers/video/console/newport_con.c
+@@ -33,6 +33,9 @@
  
- /* 0x4B is 'K', to avoid collision with termios and vt */
-+#define KD_IOCTL_BASE	'K'
+ #define NEWPORT_LEN	0x10000
  
--#define GIO_FONT	0x4B60	/* gets font in expanded form */
--#define PIO_FONT	0x4B61	/* use font in expanded form */
-+#define GIO_FONT	_IO(KD_IOCTL_BASE, 0x60)	/* gets font in expanded form */
-+#define PIO_FONT	_IO(KD_IOCTL_BASE, 0x61)	/* use font in expanded form */
++#define NEWPORT_MAX_FONT_WIDTH 8
++#define NEWPORT_MAX_FONT_HEIGHT 16
++
+ #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
  
--#define GIO_FONTX	0x4B6B	/* get font using struct consolefontdesc */
--#define PIO_FONTX	0x4B6C	/* set font using struct consolefontdesc */
-+#define GIO_FONTX	_IO(KD_IOCTL_BASE, 0x6B)	/* get font using struct consolefontdesc */
-+#define PIO_FONTX	_IO(KD_IOCTL_BASE, 0x6C)	/* set font using struct consolefontdesc */
- struct consolefontdesc {
- 	unsigned short charcount;	/* characters in font (256 or 512) */
- 	unsigned short charheight;	/* scan lines per character (1-32) */
- 	char __user *chardata;		/* font data in expanded form */
- };
+ static unsigned char *font_data[MAX_NR_CONSOLES];
+@@ -328,8 +331,8 @@ static void newport_init(struct vc_data *vc, bool init)
+ {
+ 	int cols, rows;
  
--#define PIO_FONTRESET   0x4B6D	/* reset to default font */
-+#define PIO_FONTRESET	_IO(KD_IOCTL_BASE, 0x6D)	/* reset to default font */
+-	cols = newport_xsize / 8;
+-	rows = newport_ysize / 16;
++	cols = newport_xsize / NEWPORT_MAX_FONT_WIDTH;
++	rows = newport_ysize / NEWPORT_MAX_FONT_HEIGHT;
+ 	vc->vc_can_do_color = 1;
+ 	if (init) {
+ 		vc->vc_cols = cols;
+@@ -507,8 +510,8 @@ static int newport_set_font(int unit, const struct console_font *op,
  
--#define GIO_CMAP	0x4B70	/* gets colour palette on VGA+ */
--#define PIO_CMAP	0x4B71	/* sets colour palette on VGA+ */
-+#define GIO_CMAP	_IO(KD_IOCTL_BASE, 0x70)	/* gets colour palette on VGA+ */
-+#define PIO_CMAP	_IO(KD_IOCTL_BASE, 0x71)	/* sets colour palette on VGA+ */
+ 	/* ladis: when I grow up, there will be a day... and more sizes will
+ 	 * be supported ;-) */
+-	if ((w != 8) || (h != 16) || (vpitch != 32)
+-	    || (op->charcount != 256 && op->charcount != 512))
++	if ((w != NEWPORT_MAX_FONT_WIDTH) || (h != NEWPORT_MAX_FONT_HEIGHT) ||
++	    (vpitch != 32) || (op->charcount != 256 && op->charcount != 512))
+ 		return -EINVAL;
  
--#define KIOCSOUND	0x4B2F	/* start sound generation (0 for off) */
--#define KDMKTONE	0x4B30	/* generate tone */
-+#define KIOCSOUND	_IO(KD_IOCTL_BASE, 0x2F)	/* start sound generation (0 for off) */
-+#define KDMKTONE	_IO(KD_IOCTL_BASE, 0x30)	/* generate tone */
+ 	if (!(new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size,
+@@ -570,6 +573,15 @@ static int newport_font_default(struct vc_data *vc, struct console_font *op,
+ 	return newport_set_def_font(vc->vc_num, op);
+ }
  
--#define KDGETLED	0x4B31	/* return current led state */
--#define KDSETLED	0x4B32	/* set led state [lights, not flags] */
-+#define KDGETLED	_IO(KD_IOCTL_BASE, 0x31)	/* return current led state */
-+#define KDSETLED	_IO(KD_IOCTL_BASE, 0x32)	/* set led state [lights, not flags] */
- #define 	LED_SCR		0x01	/* scroll lock led */
- #define 	LED_NUM		0x02	/* num lock led */
- #define 	LED_CAP		0x04	/* caps lock led */
++static int newport_font_info(struct vc_data *vc, struct console_font_info *info)
++{
++	info->min_width = info->max_width = NEWPORT_MAX_FONT_WIDTH;
++	info->min_height = info->max_height = NEWPORT_MAX_FONT_HEIGHT;
++	info->flags = KD_FONT_INFO_FLAG_LOW_SIZE | KD_FONT_INFO_FLAG_HIGH_SIZE;
++
++	return 0;
++}
++
+ static int newport_font_set(struct vc_data *vc, const struct console_font *font,
+ 			    unsigned int vpitch, unsigned int flags)
+ {
+@@ -689,6 +701,7 @@ const struct consw newport_con = {
+ 	.con_scroll	  = newport_scroll,
+ 	.con_switch	  = newport_switch,
+ 	.con_blank	  = newport_blank,
++	.con_font_info	  = newport_font_info,
+ 	.con_font_set	  = newport_font_set,
+ 	.con_font_default = newport_font_default,
+ 	.con_save_screen  = newport_save_screen
+diff --git a/drivers/video/console/sticon.c b/drivers/video/console/sticon.c
+index 4c7b4959a1aa..490e6b266a31 100644
+--- a/drivers/video/console/sticon.c
++++ b/drivers/video/console/sticon.c
+@@ -56,6 +56,11 @@
+ #define BLANK 0
+ static int vga_is_gfx;
  
--#define KDGKBTYPE	0x4B33	/* get keyboard type */
-+#define KDGKBTYPE	_IO(KD_IOCTL_BASE, 0x33)	/* get keyboard type */
- #define 	KB_84		0x01
- #define 	KB_101		0x02 	/* this is what we always answer */
- #define 	KB_OTHER	0x03
++#define STICON_MIN_FONT_WIDTH 6
++#define STICON_MIN_FONT_HEIGHT 6
++#define STICON_MAX_FONT_WIDTH 32
++#define STICON_MAX_FONT_HEIGHT 32
++
+ #define STI_DEF_FONT	sticon_sti->font
  
--#define KDADDIO		0x4B34	/* add i/o port as valid */
--#define KDDELIO		0x4B35	/* del i/o port as valid */
--#define KDENABIO	0x4B36	/* enable i/o to video board */
--#define KDDISABIO	0x4B37	/* disable i/o to video board */
-+#define KDADDIO		_IO(KD_IOCTL_BASE, 0x34)	/* add i/o port as valid */
-+#define KDDELIO		_IO(KD_IOCTL_BASE, 0x35)	/* del i/o port as valid */
-+#define KDENABIO	_IO(KD_IOCTL_BASE, 0x36)	/* enable i/o to video board */
-+#define KDDISABIO	_IO(KD_IOCTL_BASE, 0x37)	/* disable i/o to video board */
+ /* borrowed from fbcon.c */
+@@ -166,8 +171,10 @@ static int sticon_set_font(struct vc_data *vc, const struct console_font *op,
+ 	struct sti_cooked_font *cooked_font;
+ 	unsigned char *data = op->data, *p;
  
--#define KDSETMODE	0x4B3A	/* set text/graphics mode */
-+#define KDSETMODE	_IO(KD_IOCTL_BASE, 0x3A)	/* set text/graphics mode */
- #define		KD_TEXT		0x00
- #define		KD_GRAPHICS	0x01
- #define		KD_TEXT0	0x02	/* obsolete */
- #define		KD_TEXT1	0x03	/* obsolete */
--#define KDGETMODE	0x4B3B	/* get current mode */
-+#define KDGETMODE	_IO(KD_IOCTL_BASE, 0x3B)	/* get current mode */
+-	if ((w < 6) || (h < 6) || (w > 32) || (h > 32) || (vpitch != 32)
+-	    || (op->charcount != 256 && op->charcount != 512))
++	if (!in_range(w, STICON_MIN_FONT_WIDTH, STICON_MAX_FONT_WIDTH) ||
++	    !in_range(h, STICON_MIN_FONT_HEIGHT, STICON_MAX_FONT_HEIGHT) ||
++	    (vpitch != 32) ||
++	    (op->charcount != 256 && op->charcount != 512))
+ 		return -EINVAL;
+ 	pitch = ALIGN(w, 8) / 8;
+ 	bpc = pitch * h;
+@@ -260,6 +267,19 @@ static int sticon_font_set(struct vc_data *vc, const struct console_font *font,
+ 	return sticon_set_font(vc, font, vpitch);
+ }
  
--#define KDMAPDISP	0x4B3C	/* map display into address space */
--#define KDUNMAPDISP	0x4B3D	/* unmap display from address space */
-+#define KDMAPDISP	_IO(KD_IOCTL_BASE, 0x3C)	/* map display into address space */
-+#define KDUNMAPDISP	_IO(KD_IOCTL_BASE, 0x3D)	/* unmap display from address space */
++static int sticon_font_info(struct vc_data *vc, struct console_font_info *info)
++{
++	info->min_width = STICON_MIN_FONT_WIDTH;
++	info->min_height = STICON_MIN_FONT_HEIGHT;
++
++	info->max_width = STICON_MAX_FONT_WIDTH;
++	info->max_height = STICON_MAX_FONT_HEIGHT;
++
++	info->flags = KD_FONT_INFO_FLAG_LOW_SIZE | KD_FONT_INFO_FLAG_HIGH_SIZE;
++
++	return 0;
++}
++
+ static void sticon_init(struct vc_data *c, bool init)
+ {
+     struct sti_struct *sti = sticon_sti;
+@@ -356,6 +376,7 @@ static const struct consw sti_con = {
+ 	.con_scroll		= sticon_scroll,
+ 	.con_switch		= sticon_switch,
+ 	.con_blank		= sticon_blank,
++	.con_font_info		= sticon_font_info,
+ 	.con_font_set		= sticon_font_set,
+ 	.con_font_default	= sticon_font_default,
+ 	.con_build_attr		= sticon_build_attr,
+diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+index 7597f04b0dc7..b5465e555fdc 100644
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -61,6 +61,10 @@ static struct vgastate vgastate;
+ #define BLANK 0x0020
  
- typedef char scrnmap_t;
- #define		E_TABSZ		256
--#define GIO_SCRNMAP	0x4B40	/* get screen mapping from kernel */
--#define PIO_SCRNMAP	0x4B41	/* put screen mapping table in kernel */
--#define GIO_UNISCRNMAP  0x4B69	/* get full Unicode screen mapping */
--#define PIO_UNISCRNMAP  0x4B6A  /* set full Unicode screen mapping */
-+#define GIO_SCRNMAP	_IO(KD_IOCTL_BASE, 0x40)	/* get screen mapping from kernel */
-+#define PIO_SCRNMAP	_IO(KD_IOCTL_BASE, 0x41)	/* put screen mapping table in kernel */
-+#define GIO_UNISCRNMAP	_IO(KD_IOCTL_BASE, 0x69)	/* get full Unicode screen mapping */
-+#define PIO_UNISCRNMAP	_IO(KD_IOCTL_BASE, 0x6A)	/* set full Unicode screen mapping */
+ #define VGA_FONTWIDTH       8   /* VGA does not support fontwidths != 8 */
++
++#define VGACON_MAX_FONT_WIDTH VGA_FONTWIDTH
++#define VGACON_MAX_FONT_HEIGHT 32
++
+ /*
+  *  Interface used by the world
+  */
+@@ -1039,6 +1043,19 @@ static int vgacon_adjust_height(struct vc_data *vc, unsigned fontheight)
+ 	return 0;
+ }
  
--#define GIO_UNIMAP	0x4B66	/* get unicode-to-font mapping from kernel */
-+#define GIO_UNIMAP	_IO(KD_IOCTL_BASE, 0x66)	/* get unicode-to-font mapping from kernel */
- struct unipair {
- 	unsigned short unicode;
- 	unsigned short fontpos;
-@@ -67,8 +68,8 @@ struct unimapdesc {
- 	unsigned short entry_ct;
- 	struct unipair __user *entries;
- };
--#define PIO_UNIMAP	0x4B67	/* put unicode-to-font mapping in kernel */
--#define PIO_UNIMAPCLR	0x4B68	/* clear table, possibly advise hash algorithm */
-+#define PIO_UNIMAP	_IO(KD_IOCTL_BASE, 0x67)	/* put unicode-to-font mapping in kernel */
-+#define PIO_UNIMAPCLR	_IO(KD_IOCTL_BASE, 0x68)	/* clear table, possibly advise hash algorithm */
- struct unimapinit {
- 	unsigned short advised_hashsize;  /* 0 if no opinion */
- 	unsigned short advised_hashstep;  /* 0 if no opinion */
-@@ -83,19 +84,19 @@ struct unimapinit {
- #define		K_MEDIUMRAW	0x02
- #define		K_UNICODE	0x03
- #define		K_OFF		0x04
--#define KDGKBMODE	0x4B44	/* gets current keyboard mode */
--#define KDSKBMODE	0x4B45	/* sets current keyboard mode */
-+#define KDGKBMODE	_IO(KD_IOCTL_BASE, 0x44)	/* gets current keyboard mode */
-+#define KDSKBMODE	_IO(KD_IOCTL_BASE, 0x45)	/* sets current keyboard mode */
++static int vgacon_font_info(struct vc_data *vc, struct console_font_info *info)
++{
++	info->min_width = VGACON_MAX_FONT_WIDTH;
++	info->min_height = 0;
++
++	info->max_width = VGACON_MAX_FONT_WIDTH;
++	info->max_height = VGACON_MAX_FONT_HEIGHT;
++
++	info->flags = KD_FONT_INFO_FLAG_LOW_SIZE | KD_FONT_INFO_FLAG_HIGH_SIZE;
++
++	return 0;
++}
++
+ static int vgacon_font_set(struct vc_data *c, const struct console_font *font,
+ 			   unsigned int vpitch, unsigned int flags)
+ {
+@@ -1048,7 +1065,8 @@ static int vgacon_font_set(struct vc_data *c, const struct console_font *font,
+ 	if (vga_video_type < VIDEO_TYPE_EGAM)
+ 		return -EINVAL;
  
- #define		K_METABIT	0x03
- #define		K_ESCPREFIX	0x04
--#define KDGKBMETA	0x4B62	/* gets meta key handling mode */
--#define KDSKBMETA	0x4B63	/* sets meta key handling mode */
-+#define KDGKBMETA	_IO(KD_IOCTL_BASE, 0x62)	/* gets meta key handling mode */
-+#define KDSKBMETA	_IO(KD_IOCTL_BASE, 0x63)	/* sets meta key handling mode */
+-	if (font->width != VGA_FONTWIDTH || font->height > 32 || vpitch != 32 ||
++	if (font->width != VGACON_MAX_FONT_WIDTH ||
++	    font->height > VGACON_MAX_FONT_HEIGHT || vpitch != 32 ||
+ 	    (charcount != 256 && charcount != 512))
+ 		return -EINVAL;
  
- #define		K_SCROLLLOCK	0x01
- #define		K_NUMLOCK	0x02
- #define		K_CAPSLOCK	0x04
--#define	KDGKBLED	0x4B64	/* get led flags (not lights) */
--#define	KDSKBLED	0x4B65	/* set led flags (not lights) */
-+#define	KDGKBLED	_IO(KD_IOCTL_BASE, 0x64)	/* get led flags (not lights) */
-+#define	KDSKBLED	_IO(KD_IOCTL_BASE, 0x65)	/* set led flags (not lights) */
+@@ -1201,6 +1219,7 @@ const struct consw vga_con = {
+ 	.con_scroll = vgacon_scroll,
+ 	.con_switch = vgacon_switch,
+ 	.con_blank = vgacon_blank,
++	.con_font_info = vgacon_font_info,
+ 	.con_font_set = vgacon_font_set,
+ 	.con_font_get = vgacon_font_get,
+ 	.con_resize = vgacon_resize,
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index fcabc668e9fb..b54031da49fd 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2452,6 +2452,21 @@ static int fbcon_do_set_font(struct vc_data *vc, int w, int h, int charcount,
+ 	return ret;
+ }
  
- struct kbentry {
- 	unsigned char kb_table;
-@@ -107,15 +108,15 @@ struct kbentry {
- #define		K_ALTTAB	0x02
- #define		K_ALTSHIFTTAB	0x03
- 
--#define KDGKBENT	0x4B46	/* gets one entry in translation table */
--#define KDSKBENT	0x4B47	/* sets one entry in translation table */
-+#define KDGKBENT	_IO(KD_IOCTL_BASE, 0x46)	/* gets one entry in translation table */
-+#define KDSKBENT	_IO(KD_IOCTL_BASE, 0x47)	/* sets one entry in translation table */
- 
- struct kbsentry {
- 	unsigned char kb_func;
- 	unsigned char kb_string[512];
- };
--#define KDGKBSENT	0x4B48	/* gets one function key string entry */
--#define KDSKBSENT	0x4B49	/* sets one function key string entry */
-+#define KDGKBSENT	_IO(KD_IOCTL_BASE, 0x48)	/* gets one function key string entry */
-+#define KDSKBSENT	_IO(KD_IOCTL_BASE, 0x49)	/* sets one function key string entry */
- 
- struct kbdiacr {
-         unsigned char diacr, base, result;
-@@ -124,8 +125,8 @@ struct kbdiacrs {
-         unsigned int kb_cnt;    /* number of entries in following array */
- 	struct kbdiacr kbdiacr[256];    /* MAX_DIACR from keyboard.h */
- };
--#define KDGKBDIACR      0x4B4A  /* read kernel accent table */
--#define KDSKBDIACR      0x4B4B  /* write kernel accent table */
-+#define KDGKBDIACR	_IO(KD_IOCTL_BASE, 0x4A)  /* read kernel accent table */
-+#define KDSKBDIACR	_IO(KD_IOCTL_BASE, 0x4B)  /* write kernel accent table */
- 
- struct kbdiacruc {
- 	unsigned int diacr, base, result;
-@@ -134,16 +135,16 @@ struct kbdiacrsuc {
-         unsigned int kb_cnt;    /* number of entries in following array */
- 	struct kbdiacruc kbdiacruc[256];    /* MAX_DIACR from keyboard.h */
- };
--#define KDGKBDIACRUC    0x4BFA  /* read kernel accent table - UCS */
--#define KDSKBDIACRUC    0x4BFB  /* write kernel accent table - UCS */
-+#define KDGKBDIACRUC	_IO(KD_IOCTL_BASE, 0xFA)  /* read kernel accent table - UCS */
-+#define KDSKBDIACRUC	_IO(KD_IOCTL_BASE, 0xFB)  /* write kernel accent table - UCS */
- 
- struct kbkeycode {
- 	unsigned int scancode, keycode;
- };
--#define KDGETKEYCODE	0x4B4C	/* read kernel keycode table entry */
--#define KDSETKEYCODE	0x4B4D	/* write kernel keycode table entry */
-+#define KDGETKEYCODE	_IO(KD_IOCTL_BASE, 0x4C)	/* read kernel keycode table entry */
-+#define KDSETKEYCODE	_IO(KD_IOCTL_BASE, 0x4D)	/* write kernel keycode table entry */
- 
--#define KDSIGACCEPT	0x4B4E	/* accept kbd generated signals */
-+#define KDSIGACCEPT	_IO(KD_IOCTL_BASE, 0x4E)	/* accept kbd generated signals */
- 
- struct kbd_repeat {
- 	int delay;	/* in msec; <= 0: don't change */
-@@ -151,10 +152,11 @@ struct kbd_repeat {
- 			/* earlier this field was misnamed "rate" */
- };
- 
--#define KDKBDREP        0x4B52  /* set keyboard delay/repeat rate;
--				 * actually used values are returned */
-+#define KDKBDREP	_IO(KD_IOCTL_BASE, 0x52)	/* set keyboard delay/repeat rate;
-+							 * actually used values are returned
-+							 */
- 
--#define KDFONTOP	0x4B72	/* font operations */
-+#define KDFONTOP	_IO(KD_IOCTL_BASE, 0x72)	/* font operations */
- 
- struct console_font_op {
- 	unsigned int op;	/* operation code KD_FONT_OP_* */
++
++static int fbcon_font_info(struct vc_data *vc, struct console_font_info *info)
++{
++	info->min_width = 0;
++	info->min_height = 0;
++
++	info->max_width = FB_MAX_BLIT_WIDTH;
++	info->max_height = FB_MAX_BLIT_HEIGHT;
++
++	info->flags = KD_FONT_INFO_FLAG_LOW_SIZE | KD_FONT_INFO_FLAG_HIGH_SIZE;
++
++	return 0;
++}
++
++
+ /*
+  *  User asked to set font; we are guaranteed that charcount does not exceed 512
+  *  but lets not assume that, since charcount of 512 is small for unicode support.
+@@ -3127,6 +3142,7 @@ static const struct consw fb_con = {
+ 	.con_scroll 		= fbcon_scroll,
+ 	.con_switch 		= fbcon_switch,
+ 	.con_blank 		= fbcon_blank,
++	.con_font_info		= fbcon_font_info,
+ 	.con_font_set 		= fbcon_set_font,
+ 	.con_font_get 		= fbcon_get_font,
+ 	.con_font_default	= fbcon_set_def_font,
 -- 
 2.44.0
 
