@@ -1,63 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578578F4A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD224AEED
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713388725; cv=none; b=LMPSdF3MiUVgQ7+ytKb3jXOx7In3P6HWDi0I/bfz8AX4YuYwvVXr/+WzH1mjQqJWkwNPmlYSyguPi8HXHMeMGpt2X8g/x/I0aIBPLUsf1GRGXbw3Y9Rdsv5AZSkbE58Yk2455O2H68b/1q2uyN2tNefax0s53Cjryz4LGyJ6pkU=
+	t=1713388727; cv=none; b=lH0jH8RTiAPqdAm+08d8XRCqrhClUxUUFm8a4hEuvPUqeBFERe3nOqoX5BnTHVTlhCGnqoE22Zb3C2HdjxPqxRieJcSpRUZCrDbA3IhUlTA6mwIM3Wj+m1i01WhcwIF3qJKBKFCu16rkcv5j1l2NylHFQAjr8Kkegbx7ZAXUTkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713388725; c=relaxed/simple;
-	bh=irYiypJgFD0pCZz/79o8iDdED7uhhTjSUbG2fBX4vyc=;
+	s=arc-20240116; t=1713388727; c=relaxed/simple;
+	bh=9JKcMI1ryyQZw1audDUIy9GcPT5/GaGd6txUjiGLFg8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XNvfAbSjME4ACmAnyaklbBNoDL5uNtAcaBPliRAXunRuRKAMpi77x1YvIHoARmsDEUOp+NR0BskMIVUVxM1hJ6Dq2qMl0quFSuIlPO6fL6m5K6sBUrvrdxzKmaxz3PBWTTqWq8xMe6J0SEs/QjfNGMlbYBz3gBALb+sHuwyY/JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UcdLszci; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=pgNA9/8GmFMszxGEoza7C39icNr02mg2J4w27JrhnsxoFR5ryD4IlL7QTTpRjmyXhBC+HVGp1ftGjWfcxoVy7dT5aojbktxmJWhIBn0GXJZ1e2avS1VM+iJHby36qFD66e8j0Ss/KnMR6VVAMZfONejdil/C8T1TTsapwSJZdhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y6RV5IiZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcdLszci"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y6RV5IiZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713388722;
+	s=mimecast20190719; t=1713388724;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vaZSbjr/Big1ZTWFV5V3ewRiOJHQfxaJnQPHMzFI5qg=;
-	b=UcdLszciuQdO/IW6/YG2bjlFb70AotHGLKjgen92SGIjwvNDpNyK0b8TuLceBx45WbGrYL
-	VpMZpHnQet9c3aPzc7a9DAUcE0VwLahpRAaONVxWfAxf8eD36znf9N1XuCTm+xZXrpTAEE
-	pR6a1SiW8mbO3wDfKlhx0Czxq96/wYw=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=RODytP55S9PjZjf+7gfJJ4x6mavqXkgxb7Ks2uWHAe4=;
+	b=Y6RV5IiZJf8iJXCNjwb7chcbUandb0LSxINYveJMniJj4cTnSAJy6rP18K1mZEnbmURUob
+	PfH9P8RBKVj5H3PdDHX1IV+1REF1eVZRMtugXOeNFomtkINQx/cW8mlpQEQyp9mb7zTYaZ
+	eia1U+1VqZpbpPB52mdJtjqgfDU9Jaw=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-623-u-Ws97VuM2ek7OnaUp6dcA-1; Wed, 17 Apr 2024 17:18:40 -0400
-X-MC-Unique: u-Ws97VuM2ek7OnaUp6dcA-1
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-5aa6ba70bcbso37356eaf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:18:40 -0700 (PDT)
+ us-mta-376-ka3Ow4UfPPeELgAN0YHo-A-1; Wed, 17 Apr 2024 17:18:42 -0400
+X-MC-Unique: ka3Ow4UfPPeELgAN0YHo-A-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6ea10c8093eso18782a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:18:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713388719; x=1713993519;
+        d=1e100.net; s=20230601; t=1713388722; x=1713993522;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vaZSbjr/Big1ZTWFV5V3ewRiOJHQfxaJnQPHMzFI5qg=;
-        b=NBnT5kxd+1GMWy6VRzwr3xqixBQ0zAIyygnGvF2m+DmPsDxPT2Puwlo+QB0npKonmi
-         XSsBOfX+4Rw0t+lgysFPUCKYx0XECWKxftVugPXdTB6tPjvzDAqSRiLDg+T3WS2fA6C3
-         wGvzoGFgnWh8Ht/twiHmO731bCtdMKhJ1Caj6w64H9kxBH1nsUUalar1U/8egyP0oX0I
-         jVkJ75O8DMVl/P0Uvr55q17I2hm9Mr2Vh/PU/W/tHobvxr6HJ8tQWITwxqvzYpDLeY6b
-         kVyCLvSAqiNghnRdomcNWQLGRM30FWLLhDwFRFfvCmMzH1XH+GcsYhIftqRuNFfAQ52p
-         MlQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuohqPY0SxHso+OSVQmczc5JKwHXBmF+YofRzSJBrmYuTZbf33smG7s/B33MPjG4InZYQ26bQQ45JHq91o/ZnsMv1ebEoADflShF2q
-X-Gm-Message-State: AOJu0Yyvs7UsgtO3QZarJ0Khlqb1EUynOAw5maQb+r2hYKFqBo3i9/vS
-	2W3tarud0hLPSpnhtKBGJWwBNyEnV5hTJiDPs2zoXrjee5zzTffh29bH4+h2MowwzhhYhiL1FlM
-	CPvyRDU/5dFilc0hzSudSuD0y3FsBdprtSlSbRbekN704RFAcUmhwi5s9wSP4ug==
-X-Received: by 2002:a05:6358:5903:b0:189:a9fa:f512 with SMTP id g3-20020a056358590300b00189a9faf512mr791808rwf.0.1713388719322;
-        Wed, 17 Apr 2024 14:18:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkJAo39kjQ/eDy9sVg3usabpSgplaT/SVidXPJ26Le9qlIHvGQ4T7UGdRB3oGfYwJTy6M4JQ==
-X-Received: by 2002:a05:6358:5903:b0:189:a9fa:f512 with SMTP id g3-20020a056358590300b00189a9faf512mr791783rwf.0.1713388718852;
-        Wed, 17 Apr 2024 14:18:38 -0700 (PDT)
+        bh=RODytP55S9PjZjf+7gfJJ4x6mavqXkgxb7Ks2uWHAe4=;
+        b=Iw7T/Fvyc2JEU0Mon6P/jKsckzY0urH/bYJ8/5IMDRgB+Rl5x3ijlOlXXbVF2toyp4
+         KyKoyQhd8wQxaquHS7FU7xBJwwgxkOPbLHjFYL/Yy7WSY4UjX9kIql6YccwTRyrq/OP3
+         ZiTB+tAcMF0hP9v+p69Lpd2gfiW82fzYZzF7KWuEecT/qPl0TdaYeFRwZKFSyOlkPlA9
+         jhu0DkLu6fKDPuCFlJrmT67WYIl1IgQpJRgUqEm0n8ZCgbdu2pTSMlkW/hnEqcvVYm+q
+         RYycIn/pkV9eFpy/lXptvW9JzvIud01PJpj0n19+opHN0cxQHQx8MfKg3TPKS+vFqHtR
+         2/mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUS1sInwgtQ9eAZh2b7jbKjh7++0pxhC2JlF/NHdnLVXb9qVvzaU1yNR/H7kV8T9F/OzLuo+0RzYXkYMD2rsR9vOHUN5pW09mmnidKk
+X-Gm-Message-State: AOJu0YyY8h6FuP7OtBJUzDw2I6TuP324jpzqjrbTunZJsxDudqiJfwxk
+	vA1MDH3B575bJAWkpYWuwsV/VMKL2J4kZ4U4Yu14RzFxLyN1Bd1ZLdVdzl4czpR1cwHoF5akxNY
+	YrgKpKVZ9SBVIn/q8nVXQQmOjQ6auK9gl91Us3sDtbRfoEQJxwaPxtH/YsI83fw==
+X-Received: by 2002:a9d:7406:0:b0:6eb:7e33:3fbb with SMTP id n6-20020a9d7406000000b006eb7e333fbbmr838906otk.0.1713388722117;
+        Wed, 17 Apr 2024 14:18:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGQuu+Ru3d/WAMoyXikWuaGubuV6xaXPDqyX9q9vBRfpwd+WdeOnRC1LPB2iMpjdigzkGg1g==
+X-Received: by 2002:a9d:7406:0:b0:6eb:7e33:3fbb with SMTP id n6-20020a9d7406000000b006eb7e333fbbmr838884otk.0.1713388721661;
+        Wed, 17 Apr 2024 14:18:41 -0700 (PDT)
 Received: from x1n.redhat.com (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id c10-20020a37e10a000000b0078d667d1085sm18692qkm.84.2024.04.17.14.18.38
+        by smtp.gmail.com with ESMTPSA id c10-20020a37e10a000000b0078d667d1085sm18692qkm.84.2024.04.17.14.18.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 14:18:38 -0700 (PDT)
+        Wed, 17 Apr 2024 14:18:41 -0700 (PDT)
 From: Peter Xu <peterx@redhat.com>
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
@@ -67,9 +67,9 @@ Cc: peterx@redhat.com,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
 	David Rientjes <rientjes@google.com>
-Subject: [PATCH 1/3] fixup! mm: always initialise folio->_deferred_list
-Date: Wed, 17 Apr 2024 17:18:34 -0400
-Message-ID: <20240417211836.2742593-2-peterx@redhat.com>
+Subject: [PATCH 3/3] mm/hugetlb: Assert hugetlb_lock in __hugetlb_cgroup_commit_charge
+Date: Wed, 17 Apr 2024 17:18:36 -0400
+Message-ID: <20240417211836.2742593-4-peterx@redhat.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240417211836.2742593-1-peterx@redhat.com>
 References: <20240417211836.2742593-1-peterx@redhat.com>
@@ -81,26 +81,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Current mm-unstable will hit this when running test_hugetlb_memcg.  This
-fixes the crash for me.
+This is similar to __hugetlb_cgroup_uncharge_folio() where it relies on
+holding hugetlb_lock.  Add the similar assertion like the other one, since
+it looks like such things may help some day.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- mm/memcontrol.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/hugetlb_cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1840ba4c355d..7703ced535a3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -7529,6 +7529,7 @@ static void uncharge_folio(struct folio *folio, struct uncharge_gather *ug)
- 
- 	VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
- 	VM_BUG_ON_FOLIO(folio_order(folio) > 1 &&
-+			!folio_test_hugetlb(folio) &&
- 			!list_empty(&folio->_deferred_list), folio);
- 
- 	/*
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index aa4486bd3904..e20339a346b9 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -308,7 +308,7 @@ static void __hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+ {
+ 	if (hugetlb_cgroup_disabled() || !h_cg)
+ 		return;
+-
++	lockdep_assert_held(&hugetlb_lock);
+ 	__set_hugetlb_cgroup(folio, h_cg, rsvd);
+ 	if (!rsvd) {
+ 		unsigned long usage =
 -- 
 2.44.0
 
