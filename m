@@ -1,98 +1,96 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFE71442FE;
-	Wed, 17 Apr 2024 14:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 941E6145356
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364883; cv=none; b=I1Li5/CZq0vGkxwydQ+K01A9Hhjhe7Q5aQPMTKwj319c/sNtI3Ma6cNjlApH/iFhzPBHp71TJwt8TtciqCa182GTbMws0Ft/1zpVz7QK8BjOZaWOwo6LUHm3Bgv9RVGqMLC0h4ns6zDdpdVF319ZD/sbmIdYxcRHymy910zRkOw=
+	t=1713364893; cv=none; b=qFVV+RNkdgkFkndk2gVxOdzr0+fZBP/OFaNqzaWQkYlrUyL+CYVQmi06TAuwP2vkKL1DKaUfF5fRoSZfoqhsFFEFOxDYVbdhkhjUxIuzZQDCqUFRcT+p2xgIP3kT/0PFFDWy44ZY/i4lXUU9fmIfZqccMneI3QssUNDbbbmVL3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364883; c=relaxed/simple;
-	bh=AuTizRlBucGQsy/udo+KknCjERM2RoNGeMqV2UjoRq0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=er+6jCVHxUCCE6OrilzHd2O8Z6GJOjuySKmkaAVe8PUG1bJ62G4qZq2hAcOJl5Uvy2QRyNSPpfSdJzv9SBgO5ex8roatIPVYKaguYHMvMlVPtoNt5GrJVa+JljXfGnitCi+w6T49B5zFXvexr3scTqDrgmJ/GFG3mHy8FAnIY2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JoRQZoQH; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JoRQZoQH"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D139C1BF21B;
-	Wed, 17 Apr 2024 14:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713364879;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K4LeRQ5OxpUS3XI25Dn4t1Qa5oIuaGs8bDOiCvVceS8=;
-	b=JoRQZoQHhq5xriRQZJd5xW/T14Idfigp3aOLQemYBHIuB0hbN9K1/uO0Z0TaE8/Et2VHF2
-	zbMVAfKUp+8iXJEphKVcxFTPZtYlzBBgOl/y4xJNwJ6rZJlViJZ2AmvFWUH5ruhbUeTcUV
-	cEogZgvnJIUuRsUWtXTGDEg4VcVPQGz8GCto+HwVnYU/dMy/t/s9fj4Si23VjsIg5J15OQ
-	BJ9ifNl4cQ66adG/WA6C7luXKnsXaiUWUbv/7tN8Ntpj1Iv49tW8gVJlI5KdMQLMqUA7DI
-	/d1fN1juhIiZKan9zzuycwtE7s/oTbQi4MQjG5WZtPHogBWD5bNfLbu6bIMwHw==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 17 Apr 2024 16:39:54 +0200
-Subject: [PATCH net-next v9 06/14] MAINTAINERS: Add myself to pse
- networking maintainer
+	s=arc-20240116; t=1713364893; c=relaxed/simple;
+	bh=QmHmQjhS4ZracszR7nZ2gUEAQ/yZV8486QKbSkbjcs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfowdyW8bBCxsVPOhHZce5BFkMMFSeWfCZg8B1Jj01xGJrNhkTlejolz4NyKBxQRZOnF52W//qODFhVpn6boRKpwlhsNU0Ic1CQD6rbEZMkKWtSvKPeWrzao2IeN2JtfPh9DMs9LO0H31DvUF4mLnUN8VyMzjoKOK9oh/4d/VWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA3AD339;
+	Wed, 17 Apr 2024 07:41:58 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 947DF3F738;
+	Wed, 17 Apr 2024 07:41:27 -0700 (PDT)
+Date: Wed, 17 Apr 2024 15:41:24 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 12/31] x86/resctrl: Move max_{name,data}_width into
+ resctrl code
+Message-ID: <Zh/flJb3obutHTbD@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-13-james.morse@arm.com>
+ <fc4ee516-54b7-47cb-b881-00ce10d311a9@intel.com>
+ <ZhfwjBJPeTvO04BL@e133380.arm.com>
+ <d269b5d2-bd6d-44b2-8d99-0e0a2790bf50@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-feature_poe-v9-6-242293fd1900@bootlin.com>
-References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
- Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
- kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d269b5d2-bd6d-44b2-8d99-0e0a2790bf50@intel.com>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+Hi Reinette,
 
-As I add support for PoE in PSE networking subsystem it seems legitimate
-to be added to the maintainers.
+On Thu, Apr 11, 2024 at 10:38:20AM -0700, Reinette Chatre wrote:
+> Hi Dave,
+> 
+> On 4/11/2024 7:15 AM, Dave Martin wrote:
+> > On Mon, Apr 08, 2024 at 08:19:15PM -0700, Reinette Chatre wrote:
+> >> Hi James,
+> >>
+> >> On 3/21/2024 9:50 AM, James Morse wrote:
+> >>> @@ -2595,6 +2601,12 @@ static int schemata_list_add(struct rdt_resource *r, enum resctrl_conf_type type
+> >>>  	if (cl > max_name_width)
+> >>>  		max_name_width = cl;
+> >>>  
+> >>> +	/*
+> >>> +	 * Choose a width for the resource data based on the resource that has
+> >>> +	 * widest name and cbm.
+> >>
+> >> Please check series to ensure upper case is used for acronyms.
+> > 
+> > [...]
+> > 
+> >> Reinette
+> > 
+> > This patch is just moving existing code around AFAICT.  See:
+> > commit de016df88f23 ("x86/intel_rdt: Update schemata read to show data in tabular format")
+> > 
+> > Since no new usage of any term is being introduced here, can it be
+> > left as-is?
+> > 
+> > There seem to be other uses of "cbm" with this sense in the resctrl
+> > code already.
+> 
+> I am not asking to change all existing usages of these terms but in
+> any new changes, please use upper case for acronyms.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
+While there is a general argument to be made here, it sounds from this
+like you are not requesting a change to this patch; can you confirm?
 
-Changes in v3:
-- New patch
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f22698a7859f..55b289f8bc05 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17782,6 +17782,7 @@ F:	net/psample
- 
- PSE NETWORK DRIVER
- M:	Oleksij Rempel <o.rempel@pengutronix.de>
-+M:	Kory Maincent <kory.maincent@bootlin.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/net/pse-pd/
-
--- 
-2.34.1
-
+Cheers
+---Dave
