@@ -1,87 +1,109 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3427175E;
-	Wed, 17 Apr 2024 08:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D256BFB3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341137; cv=none; b=Ta4c3k0qH0qVtPrhOFe6co8CUaLL3xkwl4Orns764ihHB6emiMJcJ47c0jUmWs1ETDWQRfk735V2e9t/HDoBmmWBnrvVikI/3OASTihKCMTyNKpzyYBXNPCiyMVlzGo9HNsjzJenwV7vcUEVbDzmFyGrGBrh4A2dW/IeD6Vdsbk=
+	t=1713341213; cv=none; b=kHo9EW3qF69U/lDuT+VQ8icLIql2qcAfknVzg4WcuQZudFmc38h6PjOn6mtDZtmrPPD5OE2+c2WqSdzAU5Xq3jAlLlkHoGpaV2Z7SPeC/kgxgNBUjqaz6gGyqvU0CQgUBenTSq21olQhX+k5RS7uj00NbOge6Ec/f65969xyX88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341137; c=relaxed/simple;
-	bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y3Kaayy5nS4tKBnhhmXTQ8FV45He2Hq1cqZrrQTqcbjy0iHsCMaCksOAi6Xk9gIxJ/Ru536DDYLzTRNYVNgqcqtUZ06jCd/nQNiiGfiljOVuF2NRgB1FZYHUJo9y7eTyvWHJWpOKNgPa31zAAH6s6RbjrJKGR5XXHUO+FvEKyPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mM2l7cCz; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mM2l7cCz"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a52582ecde4so396261066b.0;
-        Wed, 17 Apr 2024 01:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713341129; x=1713945929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
-        b=mM2l7cCzhfdFLWfwQiqd4nsj8qAlAWC76lgY7uyqcwZfCRRuhY28LXjoDXq1EtX0+M
-         ei15FlMncvOFof63H7YARwTt0n0M0hKCeeoVX1vmE1z3hQv2oQPssvUQ+/Rdrwt4J6ym
-         uvBVLr+qL91imy/l7S3yrEiT2CAm+KlIl7UfEDnZiVJP/4Qg9OsZ/Hg1FBnk/242wSo+
-         u+pscqP5gqFAh1rBqn36C34fmNLkIQOwTWK+in5sn5x8oE/wgTf4MWiKaYQ4nt2gzqHO
-         UvV/MjWT9syUthyxwCNFzgFZ8XuEh4qDRZb52ZImLE8ag31gd0zpNCK1i0Y4JTwllXdt
-         jc1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713341129; x=1713945929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
-        b=JPBhcob05zrqRbmLioJkVNq/3bvCeh5FxyI1rTk3SWL6n5svR4EAG+cghlkSiyC5dy
-         gDi3FTtKtg21AYGQDwC4BRJNwiV+C7HMi3EE379QTofIyATDXIQF0CWXme50A79MZz7N
-         jXDB4jDAHtMBWKTz3Tdg0vOKdqcDw6hB8JCGiFe6qeRc2MNXDOWIjVmQQi0xSmIeLarX
-         RQRpHwQRVHGGS+tf705JtFeuctWs/yqLfjklrngVHU/qfCDDtAnXyldZvSx3+n2W2ACF
-         xb4jAmA3h8l8J5Z7wgWl1/kNXrnlfUPyhNeEfqqqqnIcikXHocrbsEaWg3Rl4c+IPqaj
-         do4g==
-X-Forwarded-Encrypted: i=1; AJvYcCX88HUyseiJ65gAMkLdaSKGFljZgioVB2Uo3lcPAJJmt+RuucpL9/ThhWpNW5HqU9+KOlPG94ThNpiwfZk1+HLKrmhyii6ca4K81FG6jDAklIx05zGOjgTSxHAj6UsEbt1ViuMa8jJFDw==
-X-Gm-Message-State: AOJu0Yz4pATjAEIJc17ukxMe6+Q6pjy45ntD1rrllKHK11S0Orcj3N1Z
-	aMQ1gkha73gHiwgoqmUlFV/dHcuZ9/SUnfI1v+VK4WmJxh4EWGFQk3yjrvll0bFRqkr8XcDQBxf
-	RGjt9R1rzdpL8ocii3FSE/NcAT2Q=
-X-Google-Smtp-Source: AGHT+IHIl6XXnV6jonEwRoBIMHjCADhwAaYmaVFRLbMWFV8Gsf2seyaQPK1HAduYiy2A4nr/ZINetgBwQDbFuEejJug=
-X-Received: by 2002:a17:906:81d7:b0:a52:6899:37db with SMTP id
- e23-20020a17090681d700b00a52689937dbmr5536538ejx.50.1713341129142; Wed, 17
- Apr 2024 01:05:29 -0700 (PDT)
+	s=arc-20240116; t=1713341213; c=relaxed/simple;
+	bh=w/Urp16yxBrBlbQ0FwhKJmNlOuwGGOs/m9vemgqOvVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6xrBy8O8CiKweIZXQ7xbXrUJmSqmhb2dxO4JZ90SO70CKLrTuoedE0+6K39ti9Xv7vLS/xALvFbUgZbMtgV+xZVCs86UppBwtGBCC7oZwCLCCOBc02nkq9RmYSkZQRGJouRAB6WCWAA+bwTQPpzskPW6omyzkfEnz/vV0lWiiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx0J8-0007Ur-OT; Wed, 17 Apr 2024 10:06:18 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx0J4-00CkpM-Fr; Wed, 17 Apr 2024 10:06:14 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx0J4-002eR5-1F;
+	Wed, 17 Apr 2024 10:06:14 +0200
+Date: Wed, 17 Apr 2024 10:06:14 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Alexandre Mergnat <amergnat@baylibre.com>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 12/18] dt-bindings: pwm: mediatek,pwm-disp: add
+ compatible for mt8365 SoC
+Message-ID: <vasuzy7cf5x6p5rnrmdrk5z54oncu2yuutupf25h5fgd5y6fpl@mnkf67agw64g>
+References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
+ <20231023-display-support-v2-12-33ce8864b227@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
- <ZhpC3lLD-BHqJEZz@ishi> <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 17 Apr 2024 11:04:52 +0300
-Message-ID: <CAHp75VcofgAQLFVLdsA-A1AkjVzQBJWtam=w00+z9-rueZyv8A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: William Breathitt Gray <wbg@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="io3h7fqcywjsjxa4"
+Content-Disposition: inline
+In-Reply-To: <20231023-display-support-v2-12-33ce8864b227@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--io3h7fqcywjsjxa4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 12:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> On Sat, Apr 13, 2024 at 10:31=E2=80=AFAM William Breathitt Gray <wbg@kern=
-el.org> wrote:
+Hello,
 
-...
+On Tue, Apr 16, 2024 at 05:53:13PM +0200, Alexandre Mergnat wrote:
+> Add a compatible string for MediaTek Genio 350 MT8365's display PWM
+> block: this is the same as MT8183.
+>=20
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-> I applied it as is, if anyone wants it, this can be sent on top of it.
+I already asked in reply to v1 what the merge plan is here. There are
+changes in my pwm tree to the mediatek,pwm-disp binding already. I don't
+think they conflict with this patch, but maybe it's still easier to take
+this via pwm?!
 
-Thanks, but I assumed this should go via my tree and as PR to you. At
-least I have it already in my for-next.
+Best regards
+Uwe
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--io3h7fqcywjsjxa4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYfgvUACgkQj4D7WH0S
+/k78IAgAhF2CBY2gx+0pIvPzhA01LKYoH1PW7O9/VqjB74kUiFSUlcSeRrutEtNX
+ZEg4pND9OmmBG82ECTvIccPKIL/n/aJOrZmng5N69kS14q4JUBYSVXbDDAF1dCbX
+0PieK7SFo9D87VIaJATg+qpjGibELEWpKVbPeTeO5J2wzUJSltGSG5oNzJ8dX3XO
+uqQoTu0bGayvkTeIy6I1XXkNDC8OGER+18nco1/s6w0zkBdm26UUbc3DCy/o5eeA
+R0WD+DHqWiTxA80vpSEGFJ2RBPB96z3bbFBz4U0n5Q9vU34oqBr3oyvOd9qPXTMt
+ok+B9O4U4Q0Cag8pOsGc7GXkD41LXA==
+=hlSO
+-----END PGP SIGNATURE-----
+
+--io3h7fqcywjsjxa4--
