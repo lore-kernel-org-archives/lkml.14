@@ -1,142 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from GBR01-LO4-obe.outbound.protection.outlook.com (mail-lo4gbr01on2091.outbound.protection.outlook.com [40.107.122.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A6713C3EF;
-	Wed, 17 Apr 2024 15:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366394; cv=none; b=dGzWG4Kdb9w0yks/zgk0EY/1ZUTmrxCAfW9U5SZIgWfdSsrNklavvglFLJrDpdd9DseUeOab6FWwfXsvdI4VuRXzPetd/4b1FZlLo+Oa7fw+9yb0mq8TtlHJxJM+0dD/uWg8jhENUcqqWDLGOulvWKQnSZiiZF7TIiufvvbF0Fw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366394; c=relaxed/simple;
-	bh=csO/QBIY5zA9U55g4bmdwzHQOXGd09d6ZZbozBhSl4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VF0E8Yb7d6NxZUic0q0Qj6GWPFezWUS8XsYx/wEjVAxu3wmYEeSZ+2by1Uhc89NdETYy9lgKmLsUCwjgxSkDQ14iTPwceTQwc82RjkOMiY0MkOWSB8xcbsB65JPUpZ7ZEhW8Rf9DCnIzV7DOZJqXJbtVGCEikLLNp2WtBsW251w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWbx16Co; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8D0141995;
+	Wed, 17 Apr 2024 15:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.122.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713366406; cv=fail; b=ESkKkbjeTnF7vPPLpQv7FrDSfbPkERJUj3SlAD5tq5yR3aBSOLRajep9E0NcuRraNjUmUXoQzlgHR4fJVUpWlxBsjr/LgfnS5ZssrYabgEcaogQ1UKCjFrv80ilnzRd9TBhtBuPLbKV3NldVsEXktCSnrFFySpRnVNAijMGUqIs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713366406; c=relaxed/simple;
+	bh=odwy+n4Akagy1pgcxT8BQDWypceEtA4hBZA9vnwZkho=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CNxIERl7E2w37/Aj3jBm3MfKsOkh3pSJNQFtz312GRpfsjT9LcwQo1twDHhC5kZFXeDZdTIQ8CWRYVVPPMiKtmjeyGyV8DPgHM+5TFu19oEbkwDfvuEqZOgXpOUzOxrGiVZ16SIlmPzl+pvMTF/I130pS9q6lvqsN0NouvKj0DA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=VxzZEGHg; arc=fail smtp.client-ip=40.107.122.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWbx16Co"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67620C072AA;
-	Wed, 17 Apr 2024 15:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713366393;
-	bh=csO/QBIY5zA9U55g4bmdwzHQOXGd09d6ZZbozBhSl4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WWbx16CozNaA6xrWLXzFjR3qfMbBP2psA8necDIweTlfJOzHkeCWSIs0UfQstgqxm
-	 D6B572ou01naWEDwbo/TJYW8VJxw53oDsAyBv9/DptJ42ri4yEhUBEwvStUXt7B+Tu
-	 01QoTScXr7YvGckqHEYzfm5QjLeY3eVV/KA6Ozp1spGnZvUWWoscoNYb8L1BRbWVVJ
-	 cHgsrGg7ei51FkYVIoToGWyBGkyTEyy/aeMEgffHXaaEnpYkjBlF6sUd+D+8IJVd4L
-	 +sx92YX9tvwz4ucnxrqCRjUm86f0rEmA7+WYBNH/YS+yAW07xfeHxJqgpO6h6GUO6i
-	 YTgnKq+fwcOcA==
-Date: Wed, 17 Apr 2024 16:06:29 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: michael.opdenacker@bootlin.com, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] riscv: dts: sophgo: add initial Milk-V Duo S
- board support
-Message-ID: <20240417-guts-overture-b04cd1b8565a@spud>
-References: <20240417065311.3881023-1-michael.opdenacker@bootlin.com>
- <20240417065311.3881023-3-michael.opdenacker@bootlin.com>
- <IA1PR20MB49539A380E44459ACE19DEB6BB0F2@IA1PR20MB4953.namprd20.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="VxzZEGHg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OsvcnoFAAEPgZsUEFbeWvSz+7lzVyHxxxiVPSJHpXIkvYi5AwlQGMDowTbJqsKIsQWuNhoVyaEMkW/XWX43igYVvnfm4KhnSCozCUdrFem3SkLfQ7q8K22PacU9CfE/49IBZ1OORA5xrbCAoNLgC/A1Wh2ERsR6ycR50vVR95nmexuDFneP4AeWGksuTWOASpceXLGdDY46EEE5cjPSI8Hh8MLrT8u9VYekjOVMpuk1PljUguoGIbgMUod7FAAnnnpIa+6BkeJ8Pt0TOT5v5IPz2XD/BiZ+WVotSnOQdV3NMdndBMiLhKXFBQAsbvsNKLLJpRlfOCxW4UbEm2mlXLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QK25UUzvQusCoRdtU5HVehq/ur0HDodN10Y0Mmo0bTM=;
+ b=SqTCFBnF2GEyp7tS7Mkar0+N8kbqOrvxJxvvkrqeRzjm/rpzjtv6mzrAJZV3c2Z3PeqQ+OtTknkHRSZjUJ7ANvomc+3sK/ith9PY5QGAOYOLT/dPKfYkHSifuwJXsHsuhZiGWvp7TGSgICvISAlAfS0pkr7P/njhHt7ncKH3plc2nAO9Fe4ZNc/C04UmMJSHAKAfM2lHWKjfR8+T+VdV/EqY4/ST+PD6UeEQYpdcvBDE37VO+1Vdv5J+AjHg+K3MavZvlDDbYcW3kk8ew0JDuljE09GqJSFnLmARvCnYS/fsOJeHf0yBh/XqGAfyO1wH9Ttvly/w+H2jM/jh8uYwIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QK25UUzvQusCoRdtU5HVehq/ur0HDodN10Y0Mmo0bTM=;
+ b=VxzZEGHgkoHeNP0X6hnhwtYJ/jQ5nYUFY/jAU5DZUDRBYjrJWLN7gUfYhkUYxW2aAchxU8z/O6bZK7KJvIsJMYuRrAW0Tfd8czNnhzKs432FyV2N81AmxQgr6hlReMHPrz9d0JZpynHPdJ3487gHzXqUwlFuRfH6iJZP8LP/OH0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
+ by CWXP265MB1992.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:81::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Wed, 17 Apr
+ 2024 15:06:38 +0000
+Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1818:a2bf:38a7:a1e7%4]) with mapi id 15.20.7472.037; Wed, 17 Apr 2024
+ 15:06:38 +0000
+Date: Wed, 17 Apr 2024 16:06:36 +0100
+From: Gary Guo <gary@garyguo.net>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex
+ Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>,
+ =?UTF-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg
+ <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Martin
+ Rodriguez Reboredo <yakoyoku@gmail.com>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: init: change the generated name of guard
+ variables
+Message-ID: <20240417160636.0e649b68@eugeo>
+In-Reply-To: <ef1400ae-ba9e-4656-98db-a882ac720c1e@proton.me>
+References: <20240403194321.88716-1-benno.lossin@proton.me>
+	<Zg3IHZfYVEOh7nc4@boqun-archlinux>
+	<ef1400ae-ba9e-4656-98db-a882ac720c1e@proton.me>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO0P123CA0010.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:354::19) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:253::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lXrJLg2sMSILQKj3"
-Content-Disposition: inline
-In-Reply-To: <IA1PR20MB49539A380E44459ACE19DEB6BB0F2@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|CWXP265MB1992:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3afc39a4-b374-4e57-f9c0-08dc5eeffb51
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	cRYzGJ7r4h5uUHJzGXs/rZJCqQEDYNUurd28iAWLwTTi7pIMqBnU9XOB/m6A4vyBOu/xar9rpuPLval6FrKMqZvJaP/gJWuKDhO/Knd2pg5nKH5F+rbKGIXqYOGJRTiUq6brzBVL03ceAHX+ZdRwQa6QX718y9qZnShn/pwWwgKc48VuagbfR4IxFAisxKMstYKVHWbSIGOarnrbhCppabBSq6TTJok8yLw8qdbOt3ctC2xZi1XGuG5jqvmgFX11GbvshLjkN40byz5BMoqqhVkHmM7Lozn1IUtfXHBiv6s/fCmn6xG0mlbtoGgrRhq2XpozoV7vj+aljJiLycBim5rWYpvaZPhLqFZd3gQfPi2IpE8BD3gpT/g42Yyft+CjCwJlzzzQA0Tmilbja6cGjtZPEW8neMjVDec+GHaV5KyjhrZdi49pOkWn8xthJu0saBZDuc8ApBOkO4FgDmR2hUpvaR8Pe51gxrSmpOm6FBNixnyNgolNqyzViQQfZOholj8fthBaWe9Xmzv/Fb6cU0C6LxW0SbLaBAlM8bXnb5bnchmuW8Pd1HgMaRFbgK0NZntdbZXCImwwQrASnLPftYxnvYbuoKHhwpM1hebWWtOGZY/HWmz0vDhW8UerwM/4CWkaFkrdFr83fi9hVnHNqH+SdYuTjPIJLPUEcvE9OV4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?QeGGWxZjcqea65UM6rny2FrIwGi2n2IOFW4BGS5BcO2Y94oTKid2IZuj6svx?=
+ =?us-ascii?Q?0miMTfwbDL8WUylgdsXrTFvgSpdb9FLxVZG3oPiUYLImxL2CQYqozEwcg7QZ?=
+ =?us-ascii?Q?AXy1qYh0xfZyoI3t1QqG1awUloVtBgdcoGh9z6KnkspD1ljTdoqi+ym/wLqA?=
+ =?us-ascii?Q?qHF8yQvNoAGRWl8HI7FmNSwCSqvv6YPWAahObnr6swT10FWPsJ1LwwTXVmC3?=
+ =?us-ascii?Q?E5cPlbCPCMxdVHFd700L7bB8j3FS/KVY5ybkoQt6L8iy9tjF9YwM7F2t4XEf?=
+ =?us-ascii?Q?dmRNckqfGIVJSDf4Vu716bFwYo72ezR4xkmw+5X7eB6LuWpIBQcgV5DXMLdR?=
+ =?us-ascii?Q?Wqq9k/OUcCEQcpE0Ml4IkQul6AChFgFDqEG10WpNDq2oyyjUc0gWw6/gMwmx?=
+ =?us-ascii?Q?fMqt4SPZNiHF+8TJkBOiPy8XlxQAPvOKlqB9KJyQxoQ+N5BqPdX9nEfRmMbI?=
+ =?us-ascii?Q?R2hU8wT4hKbYbB55Tb2Y2Pv4xNOcYmail90/MjCjYDXXnksgg9YtxRwuBwue?=
+ =?us-ascii?Q?cZoo58t1hNd0DE66hTlwEOyQTXVDJWsAe4zxBNO6jyWalBt2rtsQ3Aqw7KGX?=
+ =?us-ascii?Q?ArOjgrrsWVkR8mc+fY6mDzLGvGvQpOcNLeTRQGkdH16+0xw7y+zZomUqTPVD?=
+ =?us-ascii?Q?w1nzV8pZgU1uu8EgOjuVilMSwlnVIzyzGR46OAIfIoanlImyHpo5YbTOsR4h?=
+ =?us-ascii?Q?BRv48O0zHoJRpkD7IChrilHxX3EaGtFF/4RYY7t4Dau7W7R2Ym5H/vroODTV?=
+ =?us-ascii?Q?sTUQ7YLS1uNbqKLf+SQMBu7FWdtYYPZyI/LJC03Nmu82Mk22dCPUNQp1AyPi?=
+ =?us-ascii?Q?rullP3XweBlxGRpLVsmVhk85WZMOk8pZatwuFp4th1frFQKB3OS3PqzNK9r8?=
+ =?us-ascii?Q?ImG9uRwqcafO9ps+SLUaM9ehNhZ1SOD9tdbImRgBvHPpr03wicqe/B54egQk?=
+ =?us-ascii?Q?bab+6I1eMApsxFeLW9DpMvhh9AggzBeRySE676Wpdqbc4G7lDdV/viQ4GCt8?=
+ =?us-ascii?Q?bYv584CypPS/mz8Fz56JGoPzFLSBRt2Xq0ZpYqnmUqgZtWYdXXB9oZSOtPfm?=
+ =?us-ascii?Q?zFdMKl15WWfbxRzvzE+bJ2R0xn0xexm0T4Yyor2W/grs6jRhn7S6wN9zOJI8?=
+ =?us-ascii?Q?e+FVJvOpzYCH8l5rmJmRp22mlms4G9e0eNeb+D7KVGe71UlbXsLIh723iFWe?=
+ =?us-ascii?Q?hnrlzA87yEY/MKrncFoew6cNBzt0Lc/TzQUCdhfCm0CNwNuHYyMcOfN22+3b?=
+ =?us-ascii?Q?p1f0c2om55Zl83hblKnjZorX+mApLpAle9/OAklka6n2dpuFe2drPT31sWwW?=
+ =?us-ascii?Q?muDrfi49rFSAcYDCYTYqpQ+qVd8B0qo/E/HKvhBKZ1JJ7QF75Y/CPQpe87rD?=
+ =?us-ascii?Q?3/4YRbHguQtaBKtZ6FpXBoqJT0QfpMriLniQwBj+SLB5IzDC/6/zQNSj80Ge?=
+ =?us-ascii?Q?FjykyaGQ25Ed+jggX/RuPPdHl8X0Kh2ieRqMX8An0yXvco8DWng/DS8F1WWF?=
+ =?us-ascii?Q?N+mPWMIzhMtq779VUbk/FuMnavgopZRlXbAERkANhwObPisAOwJOSOa6UIIJ?=
+ =?us-ascii?Q?25gEzhAgs8Iwq7Q1BSx0QoHa/CHRDYwBU6dQQsCu?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3afc39a4-b374-4e57-f9c0-08dc5eeffb51
+X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 15:06:38.7837
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MNKY6V3XsPDtZheX48fR/tkJk7rtt/Ayrn54Y3FK9kfUP++Hf1G+gzWgCr+yEEQKtKvhSGteOfewIYB17yEJBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP265MB1992
 
+On Wed, 03 Apr 2024 22:09:49 +0000
+Benno Lossin <benno.lossin@proton.me> wrote:
 
---lXrJLg2sMSILQKj3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 03.04.24 23:20, Boqun Feng wrote:
+> > On Wed, Apr 03, 2024 at 07:43:37PM +0000, Benno Lossin wrote:  
+> >> The initializers created by the `[try_][pin_]init!` macros utilize the
+> >> guard pattern to drop already initialized fields, when initialization
+> >> fails mid-way. These guards are generated to have the same name as the
+> >> field that they handle. To prevent namespacing issues when the field  
+> > 
+> > Do you have an example of this kind of issues?  
+> 
+> https://lore.kernel.org/rust-for-linux/1e8a2a1f-abbf-44ba-8344-705a9cbb1627@proton.me/
+> 
 
-On Wed, Apr 17, 2024 at 05:34:44PM +0800, Inochi Amaoto wrote:
-> On Wed, Apr 17, 2024 at 08:53:11AM GMT, michael.opdenacker@bootlin.com wr=
-ote:
-> > From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> >=20
-> > This adds initial support for the Milk-V Duo S board
-> > (https://milkv.io/duo-s), enabling the serial port,
-> > making it possible to boot Linux to the command line.
-> >=20
-> > Link: https://lore.kernel.org/linux-riscv/171266958507.1032617.94607491=
-36730849811.robh@kernel.org/T/#t
-> >=20
-> > Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> > ---
-> >  arch/riscv/boot/dts/sophgo/Makefile           |  1 +
-> >  .../boot/dts/sophgo/sg2000-milkv-duos.dts     | 34 +++++++++++++++++++
-> >  2 files changed, 35 insertions(+)
-> >  create mode 100644 arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> >=20
-> > diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/=
-sophgo/Makefile
-> > index 57ad82a61ea6..e008acb5240f 100644
-> > --- a/arch/riscv/boot/dts/sophgo/Makefile
-> > +++ b/arch/riscv/boot/dts/sophgo/Makefile
-> > @@ -1,4 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  dtb-$(CONFIG_ARCH_SOPHGO) +=3D cv1800b-milkv-duo.dtb
-> >  dtb-$(CONFIG_ARCH_SOPHGO) +=3D cv1812h-huashan-pi.dtb
-> > +dtb-$(CONFIG_ARCH_SOPHGO) +=3D sg2000-milkv-duos.dtb
-> >  dtb-$(CONFIG_ARCH_SOPHGO) +=3D sg2042-milkv-pioneer.dtb
-> > diff --git a/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts b/arch/ri=
-scv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> > new file mode 100644
-> > index 000000000000..c1ecf97d5e93
-> > --- /dev/null
-> > +++ b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> > @@ -0,0 +1,34 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/*
-> > + * Copyright (C) 2024 Michael Opdenacker <michael.opdenacker@bootlin.c=
-om>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "cv1812h.dtsi"
-> > +
-> > +/ {
-> > +	model =3D "Milk-V Duo S";
-> > +	compatible =3D "milkv,duos", "sophgo,cv1812h";
-> > +
-> > +	aliases {
-> > +		serial0 =3D &uart0;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path =3D "serial0:115200n8";
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		device_type =3D "memory";
-> > +		reg =3D <0x80000000 0x20000000>;
-> > +	};
->=20
-> Add a cpu specific file, and move this to it.
+Here's the simplified example:
 
-I take it that the memory is integrated into the package then?
+```
+macro_rules! f {
+    () => {
+        let a = 1;
+        let _: u32 = a;
+    }
+}
 
---lXrJLg2sMSILQKj3
-Content-Type: application/pgp-signature; name="signature.asc"
+const a: u64 = 1;
 
------BEGIN PGP SIGNATURE-----
+fn main() {
+    f!();
+}
+```
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZh/ldQAKCRB4tDGHoIJi
-0iovAQCARQaWa7RNYeDT5gcMiHGFrrlUp4jfG1PWfDEvDUPcHQEA0kweLkHMyqlV
-Z8fNVOz8ExbRPorZsQGP0jhPfhdVRwg=
-=xsp0
------END PGP SIGNATURE-----
+The `a` in `f` have a different hygiene so normally it is scoped to the
+macro expansion and wouldn't escape. Interestingly a constant is still
+preferred despite the hygiene so constants escaped into the macro,
+leading to the error.
 
---lXrJLg2sMSILQKj3--
+Would your change regress error message when `pin_init!` is used
+wrongly? Personally I would say this kind of error is niche enough
+(given the casing of constants and variables differ) that we probably
+don't really need to care. So if error message would be affected then
+we'd better off not making the change.
+
+Best,
+Gary
