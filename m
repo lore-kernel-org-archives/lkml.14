@@ -1,69 +1,61 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D1C4685
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB5C13C675;
+	Wed, 17 Apr 2024 10:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713350313; cv=none; b=Krv0fiWqUhFn/D68+lDPYju3zgn7ljWU0zzpsuydvj9zOEHlQa4tAdijM94MQp3FUwhQ9SsSEuBefnHQn2c+gfLAFr80smhQ0Y1Syf0SFPr6mIuDzYeZ6JOMl2B1dRtOWDwFa1tMr8DN1omCRqghoYRXn21kM3vEJtR204pyiKo=
+	t=1713350316; cv=none; b=WBxGNSSIGIpmf966M1VuC775jghX7+ppuiMyAU1olFieMQaVtEeWHUMXeGQIaz4O7hfx9OfjEH2Ysw/G8HO5LM5sETuk2dombJSHTKRYatVaGnDu0dcuDqgJqPc+ti9Y00OdMvPorS8iFiyvfo+ooQKn5kbpbd9217jCJSTGRuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713350313; c=relaxed/simple;
-	bh=HLEm82Qikg0GgPMP8b3IoYOKgePa6VSQprOKe1d1g1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SrMWPPtrXTy671kFGbRPiZBtoesDUdBaciu/42ejKfTnB8oQTWYlUwAJjezjZAYkGd4N+f+MCZ3Uu8X42TtKobsLL47bgLHurilNsqAPFChswY+kxG2tZ2iFSc9sxQ/Fm8qLlTBG0DnFQJEQbyzKcgmrO4MshND6eCNuVBCCEfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W0uqOtlR; arc=none smtp.client-ip=209.85.218.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713350316; c=relaxed/simple;
+	bh=F9UqnodzBIeYgsNxxhT57u+9cZfmEUsgk8l6hGT4o+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pkpdqZIyasUy/LMiqsjpceG3yz1sWwP6R8YxuXz3UwkoeogTStnpmWZd1cnhqrXGWfUdBDUptbyLrUzh6f9a2duCPX6eEnSZjUovU9Td4P6+YjQYfCz9zH74P7MZWbxkXgxpvleYcTPhfc3D2YlQWPGUefcClj3yEraffST4Ae8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eL7KmI7k; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W0uqOtlR"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a44f2d894b7so606063666b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713350309; x=1713955109; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wGPAZakFv3tW+couZM/Hz58bGfETU82f69mf8+8G4OQ=;
-        b=W0uqOtlRTkSSx0hun5Cgz1ToG2z8O6psQ0Xe44+xZ4NKi71e94TbRvouLTt/KbIYky
-         b/srf/XKtEynszQwveeg97SHbHceTN+w5kBJkg/dNt5DaCgsdVuKw72yt2zsHBdOmtSI
-         hU87ytPWK7PdxndjaSqdq2XMEZY+rC9JaBFqQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713350309; x=1713955109;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wGPAZakFv3tW+couZM/Hz58bGfETU82f69mf8+8G4OQ=;
-        b=RFPijvFOnyZcSZP7VfCvQFAiNi6J68TueCp1aV/VdoG36AV8aYDCnOTwf7oelvXFf4
-         tqqgBLyMoLTHZacklYhtGLouziKCH2iTWaxwbqIi1s1VLp98xovHLXP+kbdIj/lJ7u3i
-         1RUR6KzM71XZKJVNAfS3f8H3Rt0SOdL1xuyNQQ4q8rnzn73nkb7+1fbD4dwdtdgduTuk
-         CIEXCjOJUY5EK7QVo1u/iPuwd4fNiIV3zgj/UskUdNYJnALUMgmggQzk6QEX7LcbvTtr
-         SrVNwpfyIUP1jbxsAIgQAFui0Vd3efX1elMSiWZdKQEDqnPGOguSimwJJbo/yh6in28l
-         0XNw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7C7mZvU1S9PMiqybmfj3Xy1ternJQMj/FsSnwJZhGRjSJoAbjcqIPD6tgwvEVcfuJa6qOVITscSRrd4iwG63jEON8m0n91ziTRzaW
-X-Gm-Message-State: AOJu0YxGsOuF71z6pgA/yiJiVnMVfBnWxso1lyec+WuFDwgUqmv3UFmY
-	FfjSFjvhp+VJ/9sppCX7KzzxvyUynaczbWz4oEsu3skvPfXjFmZgBYdiAUKRYw==
-X-Google-Smtp-Source: AGHT+IFVcPG0J5A4OYw4wVn0Z7fkAtpovNHvVRNRPx9roE8nRmfmY11gcOt1EWpA8oZzc73jAWSbAg==
-X-Received: by 2002:a17:907:928b:b0:a52:54d5:7915 with SMTP id bw11-20020a170907928b00b00a5254d57915mr9533946ejc.74.1713350309663;
-        Wed, 17 Apr 2024 03:38:29 -0700 (PDT)
-Received: from orzel7.c.googlers.com.com (229.112.91.34.bc.googleusercontent.com. [34.91.112.229])
-        by smtp.gmail.com with ESMTPSA id gf14-20020a170906e20e00b00a51e6222200sm7989488ejb.156.2024.04.17.03.38.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 03:38:29 -0700 (PDT)
-From: Wojciech Macek <wmacek@chromium.org>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	chrome-platform@lists.linux.dev
-Cc: Wojciech Macek <wmacek@chromium.org>
-Subject: [PATCH v2] drm/mediatek/dp: fix mtk_dp_aux_transfer return value
-Date: Wed, 17 Apr 2024 10:38:19 +0000
-Message-ID: <20240417103819.990512-1-wmacek@chromium.org>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eL7KmI7k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713350315; x=1744886315;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F9UqnodzBIeYgsNxxhT57u+9cZfmEUsgk8l6hGT4o+8=;
+  b=eL7KmI7kEAWtw9icdmgz2Un7Qev39+BY/+rsECViqjWSDYjorNosmnIh
+   ctAoqrZO2+u41ZGCCU2dMTweZvHnq/AT3mHSZZLOxVxUceFfyufL1ucCz
+   u+wThyYmplWd9Md/uB9B0+MZ2HBO0+h/ENFGcMjw/V2dgRVfTTbk+iccA
+   SVthCzoisA5jvTZi8q9e9BBhpvu9DifpHv1e7iBpnsDvhmaN2Unm7NmaI
+   1K5UkXM9FIA+NwIhcQGWf+H5RjzxFg+HZxiOe0QPQyLKGgzZ4s2PciPn6
+   38sxrNXFgozEyqUpCfO1AVnd34QTt+Ws1fJIOBPHLyVSGckiZVCWKKC0i
+   g==;
+X-CSE-ConnectionGUID: HNuikW6wQdKj6MIDxS1YDg==
+X-CSE-MsgGUID: jwdlDio7QhKJOFHwe0fGGg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9384038"
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="9384038"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 03:38:34 -0700
+X-CSE-ConnectionGUID: wbu1214bSzKZ7VaRKKORSQ==
+X-CSE-MsgGUID: W7sFZuTHRKani18F0+sWJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="27257833"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 17 Apr 2024 03:38:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8C935491; Wed, 17 Apr 2024 13:38:30 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 0/2] gpiolib: acpi: Improve IRQ labeling
+Date: Wed, 17 Apr 2024 13:37:26 +0300
+Message-ID: <20240417103829.2324960-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,37 +64,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In case there is no DP device attached to the port the
-transfer function should return IO error, similar to what
-other drivers do.
-In case EAGAIN is returned then any read from /dev/drm_dp_aux
-device ends up in an infinite loop as the upper layers
-constantly repeats the transfer request.
+The IRQ labeling now is quite ambiguous, improve it here.
 
-Fixes: f70ac097a2cf ("drm/mediatek: Add MT8195 Embedded DisplayPort driver")
-Signed-off-by: Wojciech Macek <wmacek@chromium.org>
----
-Changelog v2-v1:
- - added "Fixes" tag
- - corrected e-mail address
+Andy Shevchenko (2):
+  gpiolib: acpi: Add fwnode name to the GPIO interrupt label
+  gpiolib: acpi: Set label for IRQ only lines
 
-V1: https://patchwork.kernel.org/project/linux-mediatek/patch/20240402071113.3135903-1-wmacek@chromium.org/
- drivers/gpu/drm/mediatek/mtk_dp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib-acpi.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek/mtk_dp.c
-index 0ba72102636a..536366956447 100644
---- a/drivers/gpu/drm/mediatek/mtk_dp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dp.c
-@@ -2104,7 +2104,7 @@ static ssize_t mtk_dp_aux_transfer(struct drm_dp_aux *mtk_aux,
- 
- 	if (mtk_dp->bridge.type != DRM_MODE_CONNECTOR_eDP &&
- 	    !mtk_dp->train_info.cable_plugged_in) {
--		ret = -EAGAIN;
-+		ret = -EIO;
- 		goto err;
- 	}
- 
 -- 
-2.44.0.683.g7961c838ac-goog
+2.43.0.rc1.1336.g36b5255a03ac
 
