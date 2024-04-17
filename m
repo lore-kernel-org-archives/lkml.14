@@ -1,132 +1,95 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D75813C9B2;
-	Wed, 17 Apr 2024 11:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB25184E15
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713353837; cv=none; b=eCYoKbx4/9J8JRNvL4fORMlC/kaUom7nxU7M5LQ+c/72S7qAwDbRH48jb+6Z6pwmkfiPxM8NThZ4z2mQ786KC/lDje5vAWcdbBBZx0XU+xyK2NXkzN0B5jTzshAPVOgxAsBYrqHoKirRH4L/LhMEmBDi8fA4v33ABVm6s4JjyhI=
+	t=1713353943; cv=none; b=rgetBex5UAlyDLSO9OhQpIzZY9Pz4yrO1oAO4/g5EZOARAT7SIiLxKXMexO2kxUEm0LBeJ7X6x7KUf2pALeOa+k7tvf/DoNvOi+7G7pv/cEzPY7x1gJgJm6s1P+Fr453SEYfHKOyvp/OUKfEE9rw1Ykew0jrhp9G1xc2eYOF8kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713353837; c=relaxed/simple;
-	bh=ni1rHrQkZPj0oa4mBUOmn8s86m7db/sCZzs6v/o4CR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkfIxwl9+Pt1c+X27fylONGLeZU01zrNMBx6hlLi8n9gMUYyT0/zrX1cZ3v+zeDDJyWxDBbY5+wuARXgy92uwXcn3JoDrUbWKzhQOfIrIE+4PSoS++Wc9JkhMDKV9KEycfnuG9oDzM7pfUqQrDsohjLQA8lv+ZTxfW2TVkbUalU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bJMw/qGp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bJMw/qGp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O4FJeYjzVSrCJLMWVOfo4rKcH+oK+crdFCS4dm+nSJw=; b=bJMw/qGpR0b9/jwlohMK0wYLf1
-	3Iwlt7Xkt9gigpNoAdTdquU7sEYatU38PE510DDkwfDrHKtGRQbpAidJD8zSXTfq4tTFDwlgDLXVh
-	F4Y3GC71PcDSALfxgIDKtiFbh5WsoIjhmwBOl9qMNila0XmgFv+8lb9bZypVyLO8eapLGebDXE6O7
-	lRkgfqEQYfMeV7FRigv654M98vQQzL6C3V2ehXS4ULWzyg9sYCgt0NgCb1yQC7Pbo5Mf0gKAGJKVP
-	3p54qePNYQE4fziXioJM6YxOb3p9UMIqBk2fXDPPa5uS43dzqlUATOkKTBpTn5qzbw2y3pOKR0JRf
-	5Jpkbk5Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rx3b5-00000002pWR-24HE;
-	Wed, 17 Apr 2024 11:37:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2553630047C; Wed, 17 Apr 2024 13:37:03 +0200 (CEST)
-Date: Wed, 17 Apr 2024 13:37:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Elizabeth Figura <zfigura@codeweavers.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	wine-devel@winehq.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Arkadiusz Hiler <ahiler@codeweavers.com>,
-	Andy Lutomirski <luto@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v4 02/27] ntsync: Introduce NTSYNC_IOC_WAIT_ALL.
-Message-ID: <20240417113703.GL30852@noisy.programming.kicks-ass.net>
-References: <20240416010837.333694-1-zfigura@codeweavers.com>
- <20240416010837.333694-3-zfigura@codeweavers.com>
+	s=arc-20240116; t=1713353943; c=relaxed/simple;
+	bh=h5EC7q98U2GwMcxqPEpZHXfJRLGRetzbo7g0quOIuHo=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=suC0+tEwKQjZw2c/Q6DYpuShCHpXVP6Iq7VXyrNSV4nyN9JZFEkrkZ1oFncXWBu12/BeHD5kbGVvdvW2tj3dxlsaGeKf1dIzy2t7UuL0M+16NTaG5Mq41h0ahD/yH2iiYIlYTAP0j37XgjX9TFlP9WIVSX2gDiMOALk2m9ucNLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VKJN80vj2z1xtxF;
+	Wed, 17 Apr 2024 19:19:52 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 727FE1A016F;
+	Wed, 17 Apr 2024 19:22:15 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 19:22:14 +0800
+Subject: Re: [PATCH V3] ubifs: correct UBIFS_DFS_DIR_LEN macro definition and
+ improve code clarity
+To: ZhaoLong Wang <wangzhaolong1@huawei.com>, <richard@nod.at>,
+	<miquel.raynal@bootlin.com>, <vigneshr@ti.com>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20240417092727.3803910-1-wangzhaolong1@huawei.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <e4bd7fcd-f740-b2f1-ad20-63860db9fa38@huawei.com>
+Date: Wed, 17 Apr 2024 19:22:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416010837.333694-3-zfigura@codeweavers.com>
+In-Reply-To: <20240417092727.3803910-1-wangzhaolong1@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-On Mon, Apr 15, 2024 at 08:08:12PM -0500, Elizabeth Figura wrote:
-> +	if (atomic_read(&sem->all_hint) > 0) {
-> +		spin_lock(&dev->wait_all_lock);
-> +		spin_lock_nest_lock(&sem->lock, &dev->wait_all_lock);
->  
-> +		prev_count = sem->u.sem.count;
-> +		ret = post_sem_state(sem, args);
-> +		if (!ret) {
-> +			try_wake_all_obj(dev, sem);
-> +			try_wake_any_sem(sem);
-> +		}
->  
-> +		spin_unlock(&sem->lock);
-> +		spin_unlock(&dev->wait_all_lock);
-> +	} else {
-> +		spin_lock(&sem->lock);
-> +
-> +		prev_count = sem->u.sem.count;
-> +		ret = post_sem_state(sem, args);
-> +		if (!ret)
-> +			try_wake_any_sem(sem);
-> +
-> +		spin_unlock(&sem->lock);
-> +	}
->  
->  	if (!ret && put_user(prev_count, user_args))
->  		ret = -EFAULT;
+ÔÚ 2024/4/17 17:27, ZhaoLong Wang Ð´µÀ:
+> The UBIFS_DFS_DIR_LEN macro, which defines the maximum length of the UBIFS
+> debugfs directory name, has an incorrect formula and misleading comments.
+> The current formula is (3 + 1 + 2*2 + 1), which assumes that both UBI device
+> number and volume ID are limited to 2 characters. However, UBI device number
+> ranges from 0 to 37 (2 characters), and volume ID ranges from 0 to 127 (up
 
-vs.
+UBI device number ranges from 0~31? UBI_MAX_DEVICES(32)
+> to 3 characters).
+> 
+> Although the current code works due to the cancellation of mathematical
+> errors (9 + 1 = 10, which matches the correct UBIFS_DFS_DIR_LEN value), it
+> can lead to confusion and potential issues in the future.
+> 
+> This patch aims to improve the code clarity and maintainability by making
+> the following changes:
+> 
+> 1. Corrects the UBIFS_DFS_DIR_LEN macro definition to (3 + 1 + 2 + 3 + 1),
+>     accommodating the maximum lengths of both UBI device number and volume ID,
+>     plus the separators and null terminator.
+> 2. Updates the snprintf calls to use UBIFS_DFS_DIR_LEN instead of
+>     UBIFS_DFS_DIR_LEN + 1, removing the unnecessary +1.
+> 3. Modifies the error checks to compare against UBIFS_DFS_DIR_LEN using >=
+>     instead of >, aligning with the corrected macro definition.
+> 4. Removes the redundant +1 in the dfs_dir_name array definitions in ubi.h
+>     and debug.h.
+> 5. Removes the duplicated UBIFS_DFS_DIR_LEN and UBIFS_DFS_DIR_NAME macro
+>     definitions in ubifs.h, as they are already defined in debug.h.
+> 
+> While these changes do not affect the runtime behavior, they make the code
+> more readable, maintainable, and less prone to future errors.
+> 
+> Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
+> ---
 
-> +	/* queue ourselves */
-> +
-> +	spin_lock(&dev->wait_all_lock);
-> +
-> +	for (i = 0; i < args.count; i++) {
-> +		struct ntsync_q_entry *entry = &q->entries[i];
-> +		struct ntsync_obj *obj = entry->obj;
-> +
-> +		atomic_inc(&obj->all_hint);
-> +
-> +		/*
-> +		 * obj->all_waiters is protected by dev->wait_all_lock rather
-> +		 * than obj->lock, so there is no need to acquire obj->lock
-> +		 * here.
-> +		 */
-> +		list_add_tail(&entry->node, &obj->all_waiters);
-> +	}
+Please add change log v2->v3 next time.
+>   drivers/mtd/ubi/debug.c | 4 ++--
+>   drivers/mtd/ubi/ubi.h   | 2 +-
+>   fs/ubifs/debug.c        | 4 ++--
+>   fs/ubifs/debug.h        | 7 ++++---
+>   fs/ubifs/sysfs.c        | 6 +++---
+>   fs/ubifs/ubifs.h        | 7 -------
+>   6 files changed, 12 insertions(+), 18 deletions(-)
 
-This looks racy, consider:
-
-	atomic_read(all_hints) /* 0 */
-
-				spin_lock(wait_all_lock)
-				atomic_inc(all_hint)	/* 1 */
-				list_add_tail()
-
-	spin_lock(sem->lock)
-	/* try_wake_all_obj() missing */
-
-
-
-
-I've not yet thought about if this is harmful or not, but if not, it
-definitely needs a comment.
-
-Anyway, I need a break, maybe more this evening.
-
-
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
