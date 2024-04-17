@@ -1,83 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5426F1487E4;
-	Wed, 17 Apr 2024 16:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C62F84E14;
+	Wed, 17 Apr 2024 16:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713370608; cv=none; b=gKX2EQZI2sJvf5qBq2Ng4esiKyJM1O06IrNREnZjEHkuWEsbLA6YbhpEvHhCMt/BianeA02jm1z+Wys6PfbbNCMb797B1AGG23WQq1oyO9ssOYBsQsOC0BQ1fQrcjUl8kDvrlXL9LjZw3L3KGcjQzJFRhCMvQVZCvbH4Zyu1ijQ=
+	t=1713370778; cv=none; b=qzC5dq1sC94gEcWZp8YgQHVbf32+M9gelmBxKl+Re5NsmWalgjsI9XnwnChHj4G58DRHlLTrKdKJoAfcP/q5UJ+LlUYV99kWL+tK2V+GIbmeHK3dSocMB3W2+eOwKchJw44DGCZp1aN3byboUBFonJ69lYceFN3yS++dvKhn8Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713370608; c=relaxed/simple;
-	bh=kilas/NCA6Kdhuk9D+qD9nfskcb8RieBMJZ8E34ynxY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V/kiPkc2DyKMhTbu9jdcfxYEO8v7A7ro+YwwZO7zc9aracV+/6PBs7psaNx3PVf0AezsOUiRmTwllMlBHLaSEvvYyFDlfi8SMgOR7R8d/U4GeUEnJDKXBLPSHX1zWZRTfRNtKyGjackpPhQNVqgC+U0aKdtxfy3/L15M2o3Ezww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9ZcRXMk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713370778; c=relaxed/simple;
+	bh=+IXw6cq41/KiaWXYS6v6T/R+F3lZu/uCGQeunZByk2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QjdEXQExw3wUKVnHbN9uWKcNrxVOlhLwSOeXekgtx9pZrTopSV3ttdflJTdcHy1YsQM3Hh4L91q2R1MS9ZMsLBMO01gaHn8qDkhDkzr55WOhAQ3I03FXpsMEDlUUhDIqfKb88qztZLV800xqLSStyTFhChuuaPPoubFSLD1TIhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oSwkGopk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9ZcRXMk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF4FC072AA;
-	Wed, 17 Apr 2024 16:16:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSwkGopk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32765C2BD11;
+	Wed, 17 Apr 2024 16:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713370607;
-	bh=kilas/NCA6Kdhuk9D+qD9nfskcb8RieBMJZ8E34ynxY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=S9ZcRXMk8vQMJLSm6szRJ2k8dw3EFMFnx0bzhC/18VdzZEtqeZhI/08DVoOPhStvx
-	 x/G6VZ2nI9FVCGk6E2Ejvkm2RJBrwIAkS6NFwEOKQcLLU2CGdrzXE8gZJeWSGNcyTo
-	 u4A980F6xBA7HFbZ0m+/BtSOcb48hxey8QKP9n9GodCpaJIsu21X6JU41F3NHo9//n
-	 e/dN7Hhad1JltT2lpHx4B+0AeB98BDynlAlwbgxfMBuO0elucPN6siZKv7eEKlaxj2
-	 nmozZs+1Td4LTUabXZkXBnucMF0gOVRHgiWxBbDTbWJ/ShtQHPwv5zH6M07mByrOOQ
-	 FIbX1lkujbNTA==
-Received: from mchehab by mail.kernel.org with local (Exim 4.97.1)
-	(envelope-from <mchehab@kernel.org>)
-	id 1rx7xk-000000001F8-0268;
-	Wed, 17 Apr 2024 17:16:44 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: linux-sound@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Athaariq Ardhiansyah <foss@athaariq.my.id>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Kailang Yang <kailang@realtek.com>,
-	Matthew Anderson <ruinairas1992@gmail.com>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Stefan Binding <sbinding@opensource.cirrus.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Vitaly Rodionov <vitalyr@opensource.cirrus.com>
-Subject: [PATCH] ALSA: hda/realtek: Add quirks for Huawei Matebook D14 NBLB-WAX9N
-Date: Wed, 17 Apr 2024 17:16:33 +0100
-Message-ID: <b92a9e49fb504eec8416bcc6882a52de89450102.1713370457.git.mchehab@kernel.org>
-X-Mailer: git-send-email 2.44.0
+	s=k20201202; t=1713370778;
+	bh=+IXw6cq41/KiaWXYS6v6T/R+F3lZu/uCGQeunZByk2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oSwkGopkw1aV1SHbTL93Jc9Rxh01yHEszIDHdobbxIhkRTYSAQZd2xTN5KVsDAvif
+	 +EwkB33fHgWvON/yBxc1LYR9D/qbuX8h3x/A6i/eATTwlBwbVcS26DVDF0VGstv7/+
+	 gXfBaXSGFttoL5ufG6rT55MgKoEOkM9sYnzvkc+JQeIefjdKt44SA21qymu77VyO3u
+	 SfQlNnDQVvHQe7ARIFUQXywWvR7L4nGeDMBSXKHmQitaRt/C8j4QEddDhOY077rntM
+	 g3AQ5BFhybooEGnICN784IOjvYH6jsTEVn/q3y2lJTvHHr9WKcwLb3KJ5DwbPYoZ+F
+	 W0iMNklAaKrhw==
+Date: Wed, 17 Apr 2024 17:19:33 +0100
+From: Simon Horman <horms@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Justin Chen <justin.chen@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net] net: bcmasp: fix memory leak when bringing down if
+Message-ID: <20240417161933.GA2320920@kernel.org>
+References: <20240412181631.3488324-1-justin.chen@broadcom.com>
+ <6881c322-8fbb-422f-bdbb-392a83d0b326@web.de>
+ <9afad2b3-38a5-470d-a66f-10aa2cba3bab@broadcom.com>
+ <8ae97386-876f-45cf-9e82-af082d8ea338@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ae97386-876f-45cf-9e82-af082d8ea338@web.de>
 
-The headset mic requires a fixup to be properly detected/used.
+On Mon, Apr 15, 2024 at 09:46:44PM +0200, Markus Elfring wrote:
+> >>> When bringing down the TX rings we flush the rings but forget to
+> >>> reclaimed the flushed packets. This lead to a memory leak since we
+> >>> do not free the dma mapped buffers. …
+> >>
+> >> I find this change description improvable.
+> >>
+> >> * How do you think about to avoid typos?
+> >>
+> >> * Would another imperative wording be more desirable?
+> >
+> > The change description makes sense to me. Can you be a bit more specific as to what isn't clear here?
+> 
+> Spelling suggestions:
+> + … forget to reclaim …
+> + … This leads to …
 
-As a reference, this specific model from 2021 reports
-the following devices:
-	https://alsa-project.org/db/?f=1a5ddeb0b151db8fe051407f5bb1c075b7dd3e4a
+Markus, let's cut to the chase.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+What portion of your responses of this thread were produced
+by an LLM or similar technology?
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 8c2467ed127e..a11d8a954e6c 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10215,6 +10215,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x152d, 0x1082, "Quanta NL3", ALC269_FIXUP_LIFEBOOK),
-+	SND_PCI_QUIRK(0x152d, 0x1262, "Huawei NBLB-WAX9N", ALC2XX_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1558, 0x0353, "Clevo V35[05]SN[CDE]Q", ALC256_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1558, 0x1323, "Clevo N130ZU", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1558, 0x1325, "Clevo N15[01][CW]U", ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE),
--- 
-2.44.0
+The suggestions in your second email are correct.
+But, ironically, your first response appears to be grammatically incorrect.
 
+Specifically:
+
+* What does "improvable" mean in this context?
+* "How do you think about to avoid typos?"
+  is, in my opinion, grammatically incorrect.
+  And, FWIW, I see no typos.
+* "Would another imperative wording be more desirable?"
+  is, in my opinion, also grammatically incorrect.
+
+And yet your comment is ostensibly about grammar.
+I'm sorry, but this strikes me as absurd.
