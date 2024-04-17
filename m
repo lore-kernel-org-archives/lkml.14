@@ -1,947 +1,145 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0589148849;
-	Wed, 17 Apr 2024 14:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7359148FF0
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364934; cv=none; b=MQZdAzh8/bvejnkGt6NfxpOOFxPZN9zTHjQGeL8bWwVFHJQVwggtBFbasqepaRezW0y20E0NOBzXm5L1ZFqAW7RXVEVr5TP5TearkuudSUzcs73Ufl9JUbT/M5VonU3hbq+iGa1CFMrYqfStK9o7xz/vxoctbY7Yxr4YdvER0WI=
+	t=1713364942; cv=none; b=JeOHXh1kkY7hyyBpS1DBUVpr84SRlZwW4p4HWKoqgRCnMhqYnIpn9uF9CsBRkoMEyYeSRoBHWD6VvlHrOEpsrgrQ+uo34nOdxiEWbXRvamxsZtmM64zDG3ew+m1DkJr5PXfjCcWJVhQfn6B5j3YAM1iA/4kFR97yA9n9XZZtTIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364934; c=relaxed/simple;
-	bh=p420LPQ6KNjjB5J7zbiDgqLaUPO0eqRJYdW5zaYUUq0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jchmhWcutlLhC9L3d5Nhv048ziS8ckbtARlxx4RVKNXZTBkjR5l9LvIY/CKVk2ijRlRue5FVnYkQxXYmRMPEMt4RNIcUtjXsdNMgMLinfJZgUNQgLXvzePMs4mGAdflS79R4WeGkqf+XTPk0CpLriL5kdexaWYp05MwfIj229oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oMrlESHf; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oMrlESHf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5195D1BF21C;
-	Wed, 17 Apr 2024 14:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713364930;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WVOuql8dKHHZkQjfmEVGEzF8aGPcGCYemOcJitXcJn8=;
-	b=oMrlESHfbgQ8/157LQnzAIkrGwFrtcVSn/dgLSr+DO5AuwoHHetzSvyh+lf4xtfUuaJ12e
-	XEJ9sHmRO5gdk6Z0LLpfg7CejBXQmvDNLunxXSMkVk7Qv4/indFS0ynAtIROsXbx11yLDD
-	y51XBju2tTdVOay0WJh53oq9ncWWZg5tRUHPUID8HaZhb5ipOV7a0DePTTCcysTH/QZ5Fr
-	3On+gS2KWsY6RRi1Rs+r+0ltsTeYHqxeQQOSuRZlCcZ4AaDTVFfzfdJ276+a9GyKawn38w
-	pDXOsU3OBy+o9aU6+ju+eenLpd3vOKcsg+wzxqMfwOeOm4ZC5/bK5MFrdC3fBQ==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 17 Apr 2024 16:40:02 +0200
-Subject: [PATCH net-next v9 14/14] net: pse-pd: Add TI TPS23881 PSE
- controller driver
+	s=arc-20240116; t=1713364942; c=relaxed/simple;
+	bh=Hv4IiBP0Sd0WmmvD5cH6NzbFEwSZ23iqzEYlWhEwTic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtvVSOK5BbsnFfRdUv/+M01v/oN9/9VLcZrDEc+dnGV9YiMVmFyf7ihvt0a4xP9dq+U2+JaGUou7xalnMMN3PJeHNCp9sPqOgQ6GzfOr/kdbP4A0LxlyeHZax3cY1TkWxhs/yDCTNW3Vfpc3IWwGaxj0rTUpm0sr5X1c8Wty7xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A0142F;
+	Wed, 17 Apr 2024 07:42:47 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AD7F3F738;
+	Wed, 17 Apr 2024 07:42:16 -0700 (PDT)
+Date: Wed, 17 Apr 2024 15:42:13 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 18/31] x86/resctrl: Allow
+ resctrl_arch_mon_event_config_write() to return an error
+Message-ID: <Zh/fxTLDAyUHTcn0@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-19-james.morse@arm.com>
+ <d598767d-1c44-4417-9dc6-7078c97df39f@intel.com>
+ <Zhfw3d3YCKu7PD3G@e133380.arm.com>
+ <fbb116ab-d3db-4ab0-a597-980f85866db9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-feature_poe-v9-14-242293fd1900@bootlin.com>
-References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
- Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
- kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbb116ab-d3db-4ab0-a597-980f85866db9@intel.com>
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+Hi Rainette,
 
-Add a new driver for the TI TPS23881 I2C Power Sourcing Equipment
-controller.
+On Thu, Apr 11, 2024 at 10:39:37AM -0700, Reinette Chatre wrote:
+> Hi Dave,
+> 
+> On 4/11/2024 7:17 AM, Dave Martin wrote:
+> > On Mon, Apr 08, 2024 at 08:23:36PM -0700, Reinette Chatre wrote:
+> >> Hi James,
+> >>
+> >> On 3/21/2024 9:50 AM, James Morse wrote:
+> >>> resctrl_arch_mon_event_config_write() writes a bitmap of events provided
+> >>> by user-space into the configuration register for the monitors.
+> >>>
+> >>> This assumes that all architectures support all the features each bit
+> >>> corresponds to.
+> >>>
+> >>> MPAM can filter monitors based on read, write, or both, but there are
+> >>> many more options in the existing bitmap. To allow this interface to
+> >>> work for machines with MPAM, allow the architecture helper to return
+> >>> an error if an incompatible bitmap is set.
+> >>>
+> >>> When valid values are provided, there is no change in behaviour. If
+> >>> an invalid value is provided, currently it is silently ignored, but
+> >>> last_cmd_status is updated. After this change, the parser will stop
+> >>> at the first invalid value and return an error to user-space. This
+> >>> matches the way changes to the schemata file are made.
+> >>>
+> >>
+> >> Is this needed? With move of mbm_cfg_mask to rdt_resource I expect
+> >> MPAM would use it to set what the valid values are. With that done,
+> >> when user space provides a value, mon_config_write() compares user
+> >> provided value against mbm_cfg_mask and will already return early
+> >> (before attempting to write to hardware) with error
+> >> if value is not supported. This seems to accomplish the goal of this
+> >> patch?
+> > 
+> > This sounds plausible.
+> > 
+> > In a recent snapshot of James' MPAM code, it looks like we could be
+> > initialising rdt_resource::mbm_cfg_mask when setting up the rdt_resource
+> > struct for resctrl, though in fact this information is captured
+> > differently right now.  I'm sure why (though James may have a
+> > reason). [1]
+> > 
+> > I don't see an obvious reason though why we couldn't set mbm_cfg_mask
+> > and detect bad config values globally in mon_config_write(), the same as
+> > for the existing AMD BMEC case.
+> > 
+> > Nothing in the MPAM architecture stops hardware vendors from randomly
+> > implementing different capabilities in different components of the
+> > system, but provided that we only expose the globally supported subset
+> > of event filtering capabilities to resctrl this approach looks workable.
+> > This consistent with the James' MPAM code deals with other feature
+> > mismatches across the system today.
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/tree/drivers/platform/mpam/mpam_resctrl.c?h=mpam/snapshot/v6.7-rc2#n730
+> 
+> My response was based on what I understood from the goal of this change
+> as described by the changelog. The patch does not appear to match with
+> the goals stated in changelog.
+> 
+> As I understand the patch it aims to detect when there is an invalid
+> event id. It is not possible for this scenario to occur because this code
+> is always called with a valid event id.
+> 
+> Reinette
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+I guess this will need discussion with James.  FWIW, my impression was
+that the real goal of this patch was to allow a bad event config to be
+detected at cross-call time and reported asynchronously.  Changes
+elsewhere look to be there just to make error reporting consistent for
+other existing paths too.
 
----
-Change in v3:
-- New patch.
+Either way, I agree that we really ought be be able to detect and
+report "bad event config" errors synchronously, unless I'm missing
+something.  I'll discuss with James whether we should be dropping this
+patch.
 
-Change in v6:
-- Fix firmware management, release_firmware was missing.
+(For MPAM, I suppose some componets grouped as a single resctrl resource
+could support event configuration and some not, but I'd hope that we can
+just not expose event configurability to resctrl at all in that case.
+A sane system design should not be affected.)
 
-Change in v7:
-- Few nit spotted by Andrew.
-- Rename *flash_fw* functions to *flash_sram_fw*.
----
- drivers/net/pse-pd/Kconfig    |   9 +
- drivers/net/pse-pd/Makefile   |   1 +
- drivers/net/pse-pd/tps23881.c | 820 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 830 insertions(+)
-
-diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
-index e3a6ba669f20..80cf373a5a0e 100644
---- a/drivers/net/pse-pd/Kconfig
-+++ b/drivers/net/pse-pd/Kconfig
-@@ -31,4 +31,13 @@ config PSE_PD692X0
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pd692x0.
- 
-+config PSE_TPS23881
-+	tristate "TPS23881 PSE controller"
-+	depends on I2C
-+	help
-+	  This module provides support for TPS23881 regulator based Ethernet
-+	  Power Sourcing Equipment.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called tps23881.
- endif
-diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
-index 9c12c4a65730..9d2898b36737 100644
---- a/drivers/net/pse-pd/Makefile
-+++ b/drivers/net/pse-pd/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
- 
- obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
- obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
-+obj-$(CONFIG_PSE_TPS23881) += tps23881.o
-diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
-new file mode 100644
-index 000000000000..98ffbb1bbf13
---- /dev/null
-+++ b/drivers/net/pse-pd/tps23881.c
-@@ -0,0 +1,820 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for the TI TPS23881 PoE PSE Controller driver (I2C bus)
-+ *
-+ * Copyright (c) 2023 Bootlin, Kory Maincent <kory.maincent@bootlin.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/firmware.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pse-pd/pse.h>
-+
-+#define TPS23881_MAX_CHANS 8
-+
-+#define TPS23881_REG_PW_STATUS	0x10
-+#define TPS23881_REG_OP_MODE	0x12
-+#define TPS23881_OP_MODE_SEMIAUTO	0xaaaa
-+#define TPS23881_REG_DIS_EN	0x13
-+#define TPS23881_REG_DET_CLA_EN	0x14
-+#define TPS23881_REG_GEN_MASK	0x17
-+#define TPS23881_REG_NBITACC	BIT(5)
-+#define TPS23881_REG_PW_EN	0x19
-+#define TPS23881_REG_PORT_MAP	0x26
-+#define TPS23881_REG_PORT_POWER	0x29
-+#define TPS23881_REG_POEPLUS	0x40
-+#define TPS23881_REG_TPON	BIT(0)
-+#define TPS23881_REG_FWREV	0x41
-+#define TPS23881_REG_DEVID	0x43
-+#define TPS23881_REG_SRAM_CTRL	0x60
-+#define TPS23881_REG_SRAM_DATA	0x61
-+
-+struct tps23881_port_desc {
-+	u8 chan[2];
-+	bool is_4p;
-+};
-+
-+struct tps23881_priv {
-+	struct i2c_client *client;
-+	struct pse_controller_dev pcdev;
-+	struct device_node *np;
-+	struct tps23881_port_desc port[TPS23881_MAX_CHANS];
-+};
-+
-+static struct tps23881_priv *to_tps23881_priv(struct pse_controller_dev *pcdev)
-+{
-+	return container_of(pcdev, struct tps23881_priv, pcdev);
-+}
-+
-+static int tps23881_pi_enable(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	u8 chan;
-+	u16 val;
-+	int ret;
-+
-+	if (id >= TPS23881_MAX_CHANS)
-+		return -ERANGE;
-+
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		val = (u16)(ret | BIT(chan));
-+	else
-+		val = (u16)(ret | BIT(chan + 4));
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			val |= BIT(chan);
-+		else
-+			val |= BIT(chan + 4);
-+	}
-+
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int tps23881_pi_disable(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	u8 chan;
-+	u16 val;
-+	int ret;
-+
-+	if (id >= TPS23881_MAX_CHANS)
-+		return -ERANGE;
-+
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		val = (u16)(ret | BIT(chan + 4));
-+	else
-+		val = (u16)(ret | BIT(chan + 8));
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			val |= BIT(chan + 4);
-+		else
-+			val |= BIT(chan + 8);
-+	}
-+
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int tps23881_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
-+{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	bool enabled;
-+	u8 chan;
-+	int ret;
-+
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		enabled = ret & BIT(chan);
-+	else
-+		enabled = ret & BIT(chan + 4);
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			enabled &= !!(ret & BIT(chan));
-+		else
-+			enabled &= !!(ret & BIT(chan + 4));
-+	}
-+
-+	/* Return enabled status only if both channel are on this state */
-+	return enabled;
-+}
-+
-+static int tps23881_ethtool_get_status(struct pse_controller_dev *pcdev,
-+				       unsigned long id,
-+				       struct netlink_ext_ack *extack,
-+				       struct pse_control_status *status)
-+{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	bool enabled, delivering;
-+	u8 chan;
-+	int ret;
-+
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4) {
-+		enabled = ret & BIT(chan);
-+		delivering = ret & BIT(chan + 4);
-+	} else {
-+		enabled = ret & BIT(chan + 4);
-+		delivering = ret & BIT(chan + 8);
-+	}
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4) {
-+			enabled &= !!(ret & BIT(chan));
-+			delivering &= !!(ret & BIT(chan + 4));
-+		} else {
-+			enabled &= !!(ret & BIT(chan + 4));
-+			delivering &= !!(ret & BIT(chan + 8));
-+		}
-+	}
-+
-+	/* Return delivering status only if both channel are on this state */
-+	if (delivering)
-+		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING;
-+	else
-+		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED;
-+
-+	/* Return enabled status only if both channel are on this state */
-+	if (enabled)
-+		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
-+	else
-+		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
-+
-+	return 0;
-+}
-+
-+/* Parse managers subnode into a array of device node */
-+static int
-+tps23881_get_of_channels(struct tps23881_priv *priv,
-+			 struct device_node *chan_node[TPS23881_MAX_CHANS])
-+{
-+	struct device_node *channels_node, *node;
-+	int i, ret;
-+
-+	if (!priv->np)
-+		return -EINVAL;
-+
-+	channels_node = of_find_node_by_name(priv->np, "channels");
-+	if (!channels_node)
-+		return -EINVAL;
-+
-+	for_each_child_of_node(channels_node, node) {
-+		u32 chan_id;
-+
-+		if (!of_node_name_eq(node, "channel"))
-+			continue;
-+
-+		ret = of_property_read_u32(node, "reg", &chan_id);
-+		if (ret) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		if (chan_id >= TPS23881_MAX_CHANS || chan_node[chan_id]) {
-+			dev_err(&priv->client->dev,
-+				"wrong number of port (%d)\n", chan_id);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		of_node_get(node);
-+		chan_node[chan_id] = node;
-+	}
-+
-+	of_node_put(channels_node);
-+	return 0;
-+
-+out:
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		of_node_put(chan_node[i]);
-+		chan_node[i] = NULL;
-+	}
-+
-+	of_node_put(node);
-+	of_node_put(channels_node);
-+	return ret;
-+}
-+
-+struct tps23881_port_matrix {
-+	u8 pi_id;
-+	u8 lgcl_chan[2];
-+	u8 hw_chan[2];
-+	bool is_4p;
-+	bool exist;
-+};
-+
-+static int
-+tps23881_match_channel(const struct pse_pi_pairset *pairset,
-+		       struct device_node *chan_node[TPS23881_MAX_CHANS])
-+{
-+	int i;
-+
-+	/* Look on every channels */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (pairset->np == chan_node[i])
-+			return i;
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+static bool
-+tps23881_is_chan_free(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+		      int chan)
-+{
-+	int i;
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (port_matrix[i].exist &&
-+		    (port_matrix[i].hw_chan[0] == chan ||
-+		    port_matrix[i].hw_chan[1] == chan))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Fill port matrix with the matching channels */
-+static int
-+tps23881_match_port_matrix(struct pse_pi *pi, int pi_id,
-+			   struct device_node *chan_node[TPS23881_MAX_CHANS],
-+			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
-+{
-+	int ret;
-+
-+	if (!pi->pairset[0].np)
-+		return 0;
-+
-+	ret = tps23881_match_channel(&pi->pairset[0], chan_node);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!tps23881_is_chan_free(port_matrix, ret)) {
-+		pr_err("tps23881: channel %d already used\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	port_matrix[pi_id].hw_chan[0] = ret;
-+	port_matrix[pi_id].exist = true;
-+
-+	if (!pi->pairset[1].np)
-+		return 0;
-+
-+	ret = tps23881_match_channel(&pi->pairset[1], chan_node);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!tps23881_is_chan_free(port_matrix, ret)) {
-+		pr_err("tps23881: channel %d already used\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	if (port_matrix[pi_id].hw_chan[0] / 4 != ret / 4) {
-+		pr_err("tps23881: 4-pair PSE can only be set within the same 4 ports group");
-+		return -ENODEV;
-+	}
-+
-+	port_matrix[pi_id].hw_chan[1] = ret;
-+	port_matrix[pi_id].is_4p = true;
-+
-+	return 0;
-+}
-+
-+static int
-+tps23881_get_unused_chan(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+			 int port_cnt)
-+{
-+	bool used;
-+	int i, j;
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		used = false;
-+
-+		for (j = 0; j < port_cnt; j++) {
-+			if (port_matrix[j].hw_chan[0] == i) {
-+				used = true;
-+				break;
-+			}
-+
-+			if (port_matrix[j].is_4p &&
-+			    port_matrix[j].hw_chan[1] == i) {
-+				used = true;
-+				break;
-+			}
-+		}
-+
-+		if (!used)
-+			return i;
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+/* Sort the port matrix to following particular hardware ports matrix
-+ * specification of the tps23881. The device has two 4-ports groups and
-+ * each 4-pair powered device has to be configured to use two consecutive
-+ * logical channel in each 4 ports group (1 and 2 or 3 and 4). Also the
-+ * hardware matrix has to be fully configured even with unused chan to be
-+ * valid.
-+ */
-+static int
-+tps23881_sort_port_matrix(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
-+{
-+	struct tps23881_port_matrix tmp_port_matrix[TPS23881_MAX_CHANS] = {0};
-+	int i, ret, port_cnt = 0, cnt_4ch_grp1 = 0, cnt_4ch_grp2 = 4;
-+
-+	/* Configure 4p port matrix */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		int *cnt;
-+
-+		if (!port_matrix[i].exist || !port_matrix[i].is_4p)
-+			continue;
-+
-+		if (port_matrix[i].hw_chan[0] < 4)
-+			cnt = &cnt_4ch_grp1;
-+		else
-+			cnt = &cnt_4ch_grp2;
-+
-+		tmp_port_matrix[port_cnt].exist = true;
-+		tmp_port_matrix[port_cnt].is_4p = true;
-+		tmp_port_matrix[port_cnt].pi_id = i;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
-+		tmp_port_matrix[port_cnt].hw_chan[1] = port_matrix[i].hw_chan[1];
-+
-+		/* 4-pair ports have to be configured with consecutive
-+		 * logical channels 0 and 1, 2 and 3.
-+		 */
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
-+		tmp_port_matrix[port_cnt].lgcl_chan[1] = (*cnt)++;
-+
-+		port_cnt++;
-+	}
-+
-+	/* Configure 2p port matrix */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		int *cnt;
-+
-+		if (!port_matrix[i].exist || port_matrix[i].is_4p)
-+			continue;
-+
-+		if (port_matrix[i].hw_chan[0] < 4)
-+			cnt = &cnt_4ch_grp1;
-+		else
-+			cnt = &cnt_4ch_grp2;
-+
-+		tmp_port_matrix[port_cnt].exist = true;
-+		tmp_port_matrix[port_cnt].pi_id = i;
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
-+
-+		port_cnt++;
-+	}
-+
-+	/* Complete the rest of the first 4 port group matrix even if
-+	 * channels are unused
-+	 */
-+	while (cnt_4ch_grp1 < 4) {
-+		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
-+		if (ret < 0) {
-+			pr_err("tps23881: port matrix issue, no chan available\n");
-+			return ret;
-+		}
-+
-+		if (port_cnt >= TPS23881_MAX_CHANS) {
-+			pr_err("tps23881: wrong number of channels\n");
-+			return -ENODEV;
-+		}
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp1;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
-+		cnt_4ch_grp1++;
-+		port_cnt++;
-+	}
-+
-+	/* Complete the rest of the second 4 port group matrix even if
-+	 * channels are unused
-+	 */
-+	while (cnt_4ch_grp2 < 8) {
-+		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
-+		if (ret < 0) {
-+			pr_err("tps23881: port matrix issue, no chan available\n");
-+			return -ENODEV;
-+		}
-+
-+		if (port_cnt >= TPS23881_MAX_CHANS) {
-+			pr_err("tps23881: wrong number of channels\n");
-+			return -ENODEV;
-+		}
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp2;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
-+		cnt_4ch_grp2++;
-+		port_cnt++;
-+	}
-+
-+	memcpy(port_matrix, tmp_port_matrix, sizeof(tmp_port_matrix));
-+
-+	return port_cnt;
-+}
-+
-+/* Write port matrix to the hardware port matrix and the software port
-+ * matrix.
-+ */
-+static int
-+tps23881_write_port_matrix(struct tps23881_priv *priv,
-+			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+			   int port_cnt)
-+{
-+	struct i2c_client *client = priv->client;
-+	u8 pi_id, lgcl_chan, hw_chan;
-+	u16 val = 0;
-+	int i, ret;
-+
-+	for (i = 0; i < port_cnt; i++) {
-+		pi_id = port_matrix[i].pi_id;
-+		lgcl_chan = port_matrix[i].lgcl_chan[0];
-+		hw_chan = port_matrix[i].hw_chan[0] % 4;
-+
-+		/* Set software port matrix for existing ports */
-+		if (port_matrix[i].exist)
-+			priv->port[pi_id].chan[0] = lgcl_chan;
-+
-+		/* Set hardware port matrix for all ports */
-+		val |= hw_chan << (lgcl_chan * 2);
-+
-+		if (!port_matrix[i].is_4p)
-+			continue;
-+
-+		lgcl_chan = port_matrix[i].lgcl_chan[1];
-+		hw_chan = port_matrix[i].hw_chan[1] % 4;
-+
-+		/* Set software port matrix for existing ports */
-+		if (port_matrix[i].exist) {
-+			priv->port[pi_id].is_4p = true;
-+			priv->port[pi_id].chan[1] = lgcl_chan;
-+		}
-+
-+		/* Set hardware port matrix for all ports */
-+		val |= hw_chan << (lgcl_chan * 2);
-+	}
-+
-+	/* Write hardware ports matrix */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_MAP, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int
-+tps23881_set_ports_conf(struct tps23881_priv *priv,
-+			struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
-+{
-+	struct i2c_client *client = priv->client;
-+	int i, ret;
-+	u16 val;
-+
-+	/* Set operating mode */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_OP_MODE,
-+					TPS23881_OP_MODE_SEMIAUTO);
-+	if (ret)
-+		return ret;
-+
-+	/* Disable DC disconnect */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DIS_EN, 0x0);
-+	if (ret)
-+		return ret;
-+
-+	/* Set port power allocation */
-+	val = 0;
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (!port_matrix[i].exist)
-+			continue;
-+
-+		if (port_matrix[i].is_4p)
-+			val |= 0xf << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
-+		else
-+			val |= 0x3 << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
-+	}
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_POWER, val);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable detection and classification */
-+	val = 0;
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (!port_matrix[i].exist)
-+			continue;
-+
-+		val |= BIT(port_matrix[i].lgcl_chan[0]) |
-+		       BIT(port_matrix[i].lgcl_chan[0] + 4);
-+		if (port_matrix[i].is_4p)
-+			val |= BIT(port_matrix[i].lgcl_chan[1]) |
-+			       BIT(port_matrix[i].lgcl_chan[1] + 4);
-+	}
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DET_CLA_EN, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int
-+tps23881_set_ports_matrix(struct tps23881_priv *priv,
-+			  struct device_node *chan_node[TPS23881_MAX_CHANS])
-+{
-+	struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS] = {0};
-+	int i, ret;
-+
-+	/* Update with values for every PSE PIs */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		ret = tps23881_match_port_matrix(&priv->pcdev.pi[i], i,
-+						 chan_node, port_matrix);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = tps23881_sort_port_matrix(port_matrix);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = tps23881_write_port_matrix(priv, port_matrix, ret);
-+	if (ret)
-+		return ret;
-+
-+	ret = tps23881_set_ports_conf(priv, port_matrix);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int tps23881_setup_pi_matrix(struct pse_controller_dev *pcdev)
-+{
-+	struct device_node *chan_node[TPS23881_MAX_CHANS] = {NULL};
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	int ret, i;
-+
-+	ret = tps23881_get_of_channels(priv, chan_node);
-+	if (ret < 0) {
-+		dev_warn(&priv->client->dev,
-+			 "Unable to parse port-matrix, default matrix will be used\n");
-+		return 0;
-+	}
-+
-+	ret = tps23881_set_ports_matrix(priv, chan_node);
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++)
-+		of_node_put(chan_node[i]);
-+
-+	return ret;
-+}
-+
-+static const struct pse_controller_ops tps23881_ops = {
-+	.setup_pi_matrix = tps23881_setup_pi_matrix,
-+	.pi_enable = tps23881_pi_enable,
-+	.pi_disable = tps23881_pi_disable,
-+	.pi_is_enabled = tps23881_pi_is_enabled,
-+	.ethtool_get_status = tps23881_ethtool_get_status,
-+};
-+
-+static const char fw_parity_name[] = "ti/tps23881/tps23881-parity-14.bin";
-+static const char fw_sram_name[] = "ti/tps23881/tps23881-sram-14.bin";
-+
-+struct tps23881_fw_conf {
-+	u8 reg;
-+	u8 val;
-+};
-+
-+static const struct tps23881_fw_conf tps23881_fw_parity_conf[] = {
-+	{.reg = 0x60, .val = 0x01},
-+	{.reg = 0x62, .val = 0x00},
-+	{.reg = 0x63, .val = 0x80},
-+	{.reg = 0x60, .val = 0xC4},
-+	{.reg = 0x1D, .val = 0xBC},
-+	{.reg = 0xD7, .val = 0x02},
-+	{.reg = 0x91, .val = 0x00},
-+	{.reg = 0x90, .val = 0x00},
-+	{.reg = 0xD7, .val = 0x00},
-+	{.reg = 0x1D, .val = 0x00},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct tps23881_fw_conf tps23881_fw_sram_conf[] = {
-+	{.reg = 0x60, .val = 0xC5},
-+	{.reg = 0x62, .val = 0x00},
-+	{.reg = 0x63, .val = 0x80},
-+	{.reg = 0x60, .val = 0xC0},
-+	{.reg = 0x1D, .val = 0xBC},
-+	{.reg = 0xD7, .val = 0x02},
-+	{.reg = 0x91, .val = 0x00},
-+	{.reg = 0x90, .val = 0x00},
-+	{.reg = 0xD7, .val = 0x00},
-+	{.reg = 0x1D, .val = 0x00},
-+	{ /* sentinel */ }
-+};
-+
-+static int tps23881_flash_sram_fw_part(struct i2c_client *client,
-+				       const char *fw_name,
-+				       const struct tps23881_fw_conf *fw_conf)
-+{
-+	const struct firmware *fw = NULL;
-+	int i, ret;
-+
-+	ret = request_firmware(&fw, fw_name, &client->dev);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(&client->dev, "Flashing %s\n", fw_name);
-+
-+	/* Prepare device for RAM download */
-+	while (fw_conf->reg) {
-+		ret = i2c_smbus_write_byte_data(client, fw_conf->reg,
-+						fw_conf->val);
-+		if (ret)
-+			goto out;
-+
-+		fw_conf++;
-+	}
-+
-+	/* Flash the firmware file */
-+	for (i = 0; i < fw->size; i++) {
-+		ret = i2c_smbus_write_byte_data(client,
-+						TPS23881_REG_SRAM_DATA,
-+						fw->data[i]);
-+		if (ret)
-+			goto out;
-+	}
-+
-+out:
-+	release_firmware(fw);
-+	return ret;
-+}
-+
-+static int tps23881_flash_sram_fw(struct i2c_client *client)
-+{
-+	int ret;
-+
-+	ret = tps23881_flash_sram_fw_part(client, fw_parity_name,
-+					  tps23881_fw_parity_conf);
-+	if (ret)
-+		return ret;
-+
-+	ret = tps23881_flash_sram_fw_part(client, fw_sram_name,
-+					  tps23881_fw_sram_conf);
-+	if (ret)
-+		return ret;
-+
-+	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_SRAM_CTRL, 0x18);
-+	if (ret)
-+		return ret;
-+
-+	mdelay(12);
-+
-+	return 0;
-+}
-+
-+static int tps23881_i2c_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct tps23881_priv *priv;
-+	int ret;
-+	u8 val;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-+		dev_err(dev, "i2c check functionality failed\n");
-+		return -ENXIO;
-+	}
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_DEVID);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret != 0x22) {
-+		dev_err(dev, "Wrong device ID\n");
-+		return -ENXIO;
-+	}
-+
-+	ret = tps23881_flash_sram_fw(client);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_FWREV);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(&client->dev, "Firmware revision 0x%x\n", ret);
-+
-+	/* Set configuration B, 16 bit access on a single device address */
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_GEN_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = ret | TPS23881_REG_NBITACC;
-+	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_GEN_MASK, val);
-+	if (ret)
-+		return ret;
-+
-+	priv->client = client;
-+	i2c_set_clientdata(client, priv);
-+	priv->np = dev->of_node;
-+
-+	priv->pcdev.owner = THIS_MODULE;
-+	priv->pcdev.ops = &tps23881_ops;
-+	priv->pcdev.dev = dev;
-+	priv->pcdev.types = ETHTOOL_PSE_C33;
-+	priv->pcdev.nr_lines = TPS23881_MAX_CHANS;
-+	ret = devm_pse_controller_register(dev, &priv->pcdev);
-+	if (ret) {
-+		return dev_err_probe(dev, ret,
-+				     "failed to register PSE controller\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct i2c_device_id tps23881_id[] = {
-+	{ "tps23881", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, tps23881_id);
-+
-+static const struct of_device_id tps23881_of_match[] = {
-+	{ .compatible = "ti,tps23881", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, tps23881_of_match);
-+
-+static struct i2c_driver tps23881_driver = {
-+	.probe		= tps23881_i2c_probe,
-+	.id_table	= tps23881_id,
-+	.driver		= {
-+		.name		= "tps23881",
-+		.of_match_table = tps23881_of_match,
-+	},
-+};
-+module_i2c_driver(tps23881_driver);
-+
-+MODULE_AUTHOR("Kory Maincent <kory.maincent@bootlin.com>");
-+MODULE_DESCRIPTION("TI TPS23881 PoE PSE Controller driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.34.1
-
+Cheers
+---Dave
+> 
+> 
+> 
+> 
+> 
