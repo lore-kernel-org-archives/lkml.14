@@ -1,124 +1,142 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C6513C689;
-	Wed, 17 Apr 2024 13:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F6513DDD5;
+	Wed, 17 Apr 2024 13:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360169; cv=none; b=Dw4JDbDJcb6cWr2dq/6lDWt13hESClf+Ar0KCxuSgewlDZhIDXjlJJPVCnydHz02aywj8BYwQPe3b3nWJvBMet3J/2R4o3jJ/7bHxjMITnuZXO8POlsB6lUV+o6jUlg8N5HRTXKC41CYlsMQz/fQ9+4wKUNSncvP8G6oMNjVz3k=
+	t=1713360192; cv=none; b=LGA9CK2MV+isr6R4jgG7iI02eL7htf/v/nuyzHhNy4KBHce6gyZifCv43gGrFa0XFpJ3P+YcX2BMRXRC8jKdz9karSxwqyUipZ/bCQpGfzl2mj0wuY+GRxMxRoqZ531G8X0J/WdSj8HfrM+y3f5D8JHt8uLw8ez9BFIQslMQGFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360169; c=relaxed/simple;
-	bh=+y77+7QZby+LVdmrVnp+NoTqJPrXhj6o2AOLhNYOMfg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KGf5FqhAwddrzDPQJD5Av7z8lm1wKfOYBV/QeJ8EfjzFKGwkYgDwIDRAHiijierjjO9V0T9cOjR27Nmk7eYaSrMs7pCUKBDx+Wepw2xSy6ISeMHGXpMVLrWeTu7XOo7Kf9lp80dZExDrNLqFoLKtkvKkSBQRrBL8Amb2mR9/i+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+	s=arc-20240116; t=1713360192; c=relaxed/simple;
+	bh=sQKHQVTz6617ttADufmp9ihU+WIIB9FwOAsc0+Q5irs=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jcealKP4kvbvONDtGDrf6k5ZXDKJ3UENAA0IHrcLZiEvPFWHOBgEi0lO3Xsvm61ZAxkYWX7IaHOKxSYbinZK0vhz/Lfx8TOVkXUbs5CkpfRl6rzcSLz1iGN6OwYciFp5Kb/BulCGf955CxQU+3eNNfid9wOle/JIv+prilJJiT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM0C6Nc2z6K7GV;
-	Wed, 17 Apr 2024 21:17:47 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8333E140C9C;
-	Wed, 17 Apr 2024 21:22:45 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 14:22:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v6 07/16] ACPI: scan: switch to flags for acpi_scan_check_and_detach();
-Date: Wed, 17 Apr 2024 14:19:00 +0100
-Message-ID: <20240417131909.7925-8-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VKM3b4PB2zNrxM;
+	Wed, 17 Apr 2024 21:20:43 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 794CF18007F;
+	Wed, 17 Apr 2024 21:23:07 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 21:23:07 +0800
+Subject: Re: [PATCH net-next v2 10/15] mm: page_frag: reuse existing bit field
+ of 'va' for pagecnt_bias
+To: Alexander H Duyck <alexander.duyck@gmail.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240415131941.51153-1-linyunsheng@huawei.com>
+ <20240415131941.51153-11-linyunsheng@huawei.com>
+ <68d1c7d3dfcd780fa3bed0bb71e41d7fb0a8c15d.camel@gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <292c98e5-e58e-3474-f214-44fe6a83e6c5@huawei.com>
+Date: Wed, 17 Apr 2024 21:23:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+In-Reply-To: <68d1c7d3dfcd780fa3bed0bb71e41d7fb0a8c15d.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-Precursor patch adds the ability to pass a uintptr_t of flags into
-acpi_scan_check_and detach() so that additional flags can be
-added to indicate whether to defer portions of the eject flow.
-The new flag follows in the next patch.
+On 2024/4/17 0:33, Alexander H Duyck wrote:
+> On Mon, 2024-04-15 at 21:19 +0800, Yunsheng Lin wrote:
+>> As alignment of 'va' is always aligned with the order of the
+>> page allocated, we can reuse the LSB bits for the pagecount
+>> bias, and remove the orginal space needed by 'pagecnt_bias'.
+>> Also limit the 'fragsz' to be at least the size of
+>> 'usigned int' to match the limited pagecnt_bias.
+>>
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> 
+> What is the point of this? You are trading off space for size on a data
+> structure that is only something like 24B in size and only allocated a
+> few times.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+As we are going to replace page_frag with page_frag_cache in patch 13,
+it is not going to only be allocated a few times as mentioned.
 
----
-v6: Based on internal feedback switch to less invasive change
-    to using flags rather than a struct.
-v5: New patch resulting from rebase.
-    - Internal review suggested we could also do this with flags
-      so I'm looking for feedback on which option people find
-      more readable.
----
- drivers/acpi/scan.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+>> ---
+>>  include/linux/page_frag_cache.h | 20 +++++++----
+>>  mm/page_frag_cache.c            | 63 +++++++++++++++++++--------------
+>>  2 files changed, 50 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
+>> index 40a7d6da9ef0..a97a1ac017d6 100644
+>> --- a/include/linux/page_frag_cache.h
+>> +++ b/include/linux/page_frag_cache.h
+>> @@ -9,7 +9,18 @@
+>>  #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
+>>  
+>>  struct page_frag_cache {
+>> -	void *va;
+>> +	union {
+>> +		void *va;
+>> +		/* we maintain a pagecount bias, so that we dont dirty cache
+>> +		 * line containing page->_refcount every time we allocate a
+>> +		 * fragment. As 'va' is always aligned with the order of the
+>> +		 * page allocated, we can reuse the LSB bits for the pagecount
+>> +		 * bias, and its bit width happens to be indicated by the
+>> +		 * 'size_mask' below.
+>> +		 */
+>> +		unsigned long pagecnt_bias;
+>> +
+>> +	};
+> 
+> Both va and pagecnt_bias are frequently accessed items. If pagecnt_bias
+> somehow ends up exceeding the alignment of the page we run the risk of
+> corrupting data or creating an page fault.
+> 
+> In my opinion this is not worth the risk especially since with the
+> previous change your new change results in 0 size savings on 64b
+> systems as the structure will be aligned to the size of the pointer.
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index d1464324de95..1ec9677e6c2d 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -244,13 +244,16 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
- 	return 0;
- }
- 
--static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
-+#define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
-+
-+static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- {
- 	struct acpi_scan_handler *handler = adev->handler;
-+	uintptr_t flags = (uintptr_t)p;
- 
--	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, check);
-+	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
- 
--	if (check) {
-+	if (flags & ACPI_SCAN_CHECK_FLAG_STATUS) {
- 		acpi_bus_get_status(adev);
- 		/*
- 		 * Skip devices that are still there and take the enabled
-@@ -288,7 +291,9 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
- 
- static void acpi_scan_check_subtree(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, (void *)true);
-+	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_STATUS;
-+
-+	acpi_scan_check_and_detach(adev, (void *)flags);
- }
- 
- static int acpi_scan_hot_remove(struct acpi_device *device)
-@@ -2601,7 +2606,9 @@ EXPORT_SYMBOL(acpi_bus_scan);
-  */
- void acpi_bus_trim(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, NULL);
-+	uintptr_t flags = 0;
-+
-+	acpi_scan_check_and_detach(adev, (void *)flags);
- }
- EXPORT_SYMBOL_GPL(acpi_bus_trim);
- 
--- 
-2.39.2
+But aren't we going to avoid a register usage and loading if reusing
+the lower bits of 'va' for the 64b systems? And added benefit is the
+memory saving for 32b systems as mentioned in previous patch.
 
+> 
+>>  #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>  	__u16 offset;
+>>  	__u16 size_mask:15;
+>> @@ -18,10 +29,6 @@ struct page_frag_cache {
+>>  	__u32 offset:31;
+>>  	__u32 pfmemalloc:1;
+>>  #endif
+>> -	/* we maintain a pagecount bias, so that we dont dirty cache line
+>> -	 * containing page->_refcount every time we allocate a fragment.
+>> -	 */
+>> -	unsigned int		pagecnt_bias;
+>>  };
+>>  
+>>  static inline void page_frag_cache_init(struct page_frag_cache *nc)
+>> @@ -56,7 +63,8 @@ static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
+>>  					     gfp_t gfp_mask,
+>>  					     unsigned int align)
+>>  {
+>> -	WARN_ON_ONCE(!is_power_of_2(align) || align >= PAGE_SIZE);
+>> +	WARN_ON_ONCE(!is_power_of_2(align) || align >= PAGE_SIZE ||
+>> +		     fragsz < sizeof(unsigned int));
+> 
+> What is the reason for this change? Seems like it is to account for an
+> issue somewhere.
+
+If the fragsz is one, we might not have enough pagecnt_bias for it,
+as we are using the lower bits of 'va' now.
+
+> 
+>>  
+>>  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, align);
