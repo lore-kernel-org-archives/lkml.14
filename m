@@ -1,66 +1,86 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCCB4428
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 02:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B75E4690;
+	Wed, 17 Apr 2024 02:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713320439; cv=none; b=M2MNnt0maOSP/6Yn5hi2Nj5ME2WJ36F3/JTyZP9nkZHj5626aurOYs9CF7XJP/k+XJB1rcgl0y8aB9+IJjPGvzKxRDyj1mUebrHDkOnxFr7kMdChtzntfTA0tIKlIzMjLP0hOs2GBhiO6TihYVGvPvAZoJV9upEngZ8U1geUWhw=
+	t=1713320440; cv=none; b=QVV52H1JVBg2csrZtFx2sJDIJyo/PJWCCIVhCN+gRk9M2i+iHC6Pf8OJ9J0bWK1p8vvPaektoWaR41MddXPhHUvAea09ja8krwN0/ESTrSF7KKSk+3RwyVnI6u/bz1F1/WtfgKm9QV7QH9tBgDdFBE6Ys4NDi3cyCUrSKDwXXqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713320439; c=relaxed/simple;
-	bh=JEO0ng65nZp0QZ6p164cReYxFc0+aDojLhQDMPMJqNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=He0ldz6XNCt8lAx2pPSzvfLMILTj3XotBGA9r8+2DW13+ibOUZGYgmxbPABNC9EKyyKEbRXEx2CodKA1p06+lZ4pD4UTvdrFs9BAOlURSC6UAHVy6pMCQOHkVg6q4TDQS9lXBxwccYER516hm75elmay39DJU8EQ9DroCL4DV94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RdVIjrNC; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RdVIjrNC"
-Date: Tue, 16 Apr 2024 22:20:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1713320434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3y5F04Fl5zfvkzhj2El1MuWEnqWlT8gtSPmgfEeDlh4=;
-	b=RdVIjrNCwkFFpawDWlb5p/go3q8DWIsZxC/YZY6MzTAeJ9IL48Qu3AuiR3aPgFsmJpOsSD
-	Pk3IzGg+83ESHtVTL5NscGWI3YxbAUeyoTlR25/gHeuJtzCDSpwVmKZS3JKKi8v8vm8V2N
-	R6DPONrgcXKRMroYaiolgtAP1mr2+Tc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Youling Tang <youling.tang@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH] bcachefs: Align the display format of
- `btrees/inodes/keys`
-Message-ID: <toosz4pt2la6wf2575vwe6efebcbzsy735cq7exmlqhzrgicrf@s7g3rrbvge2l>
-References: <20240417015448.84294-1-youling.tang@linux.dev>
+	s=arc-20240116; t=1713320440; c=relaxed/simple;
+	bh=O/kGnqJdzeQNFQSSx2VGenOa0lWt9blEJEfyihoQbos=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AEa+JEhiu77z4l+bpQmckt7ybNNeJWb5XUdilbY7ddn6d+xIQSnI0gJx8rDbMR4RZ1+oLfLRajwOaSPGf3p4hnx1OLJeLC2xhvzVWhvfbdY7wPxLsVgjJUhSyoHB/ZT1ffJXOMUaYObFHnnmckRBghaCIoXL3Dnb/giNDVihDHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK4Pg5kXsz4f3pr3;
+	Wed, 17 Apr 2024 10:20:23 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 6B1F41A04C2;
+	Wed, 17 Apr 2024 10:20:28 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.26])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7rMR9mdhjAKA--.50594S4;
+	Wed, 17 Apr 2024 10:20:28 +0800 (CST)
+From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+To: tj@kernel.org,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH -next] cgroup: don't call cgroup1_pidlist_destroy_all() for v2
+Date: Wed, 17 Apr 2024 02:13:59 +0000
+Message-Id: <20240417021359.883736-1-xiujianfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417015448.84294-1-youling.tang@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g7rMR9mdhjAKA--.50594S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWkXFWrAF1UKF45GFW8Crg_yoWfCFg_A3
+	4xXFyvqryxZw1kuFsFvrn5ZFZ5Cr45Kr1qkwnIyrWUJF1Utwn8Jwn3ZFn5ArZxuFWxKrn8
+	Cr9xXa93trn0gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbokYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
+	0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
 
-On Wed, Apr 17, 2024 at 09:54:48AM +0800, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
-> 
-> Before patch:
-> ```
->  #cat btrees/inodes/keys
->  u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:   mode=40755
->    flags= (16300000)
-> ```
-> 
-> After patch:
-> ```
->  #cat btrees/inodes/keys
->  u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:
->    mode=40755
->    flags= (16300000)
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-This would print a newline for keys that don't have a value...
+Currently cgroup1_pidlist_destroy_all() will be called when releasing
+cgroup even if the cgroup is on default hierarchy, however it doesn't
+make any sense for v2 to destroy pidlist of v1.
+
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/cgroup/cgroup-v1.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index 520a11cb12f4..46d89157d558 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -197,6 +197,8 @@ void cgroup1_pidlist_destroy_all(struct cgroup *cgrp)
+ {
+ 	struct cgroup_pidlist *l, *tmp_l;
+ 
++	if (cgroup_on_dfl(cgrp))
++		return;
+ 	mutex_lock(&cgrp->pidlist_mutex);
+ 	list_for_each_entry_safe(l, tmp_l, &cgrp->pidlists, links)
+ 		mod_delayed_work(cgroup_pidlist_destroy_wq, &l->destroy_dwork, 0);
+-- 
+2.34.1
+
