@@ -1,64 +1,49 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FB513F42A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED0A140395;
+	Wed, 17 Apr 2024 13:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360347; cv=none; b=ZxTzNnXGVfECySvBWsubbbSDY9TvgSRXyYIzO8tFjxh3OqcXjd2O0MHggUoKQdEJzGMA4JdmHIsqld51Cfl7kQoZwZNsMK+RoyNe8BjhYSey5agZIpkThytD/rl0VBZ6Se/UdsZU1YO17//Zcdh13149wTrvsl5AqIXcvO/luAQ=
+	t=1713360353; cv=none; b=USEQqu+wgUahIEBLmsdAXJFRiNSKt//CEkoiA/MH4Ep0GtMVLCw+talkOdUpRXknJ4DfBo9Cz9IxCJRAWc8KVYy23p+sl+6u/hlf9bEqmbnoL18vNkkRDMqQgsGbHvMOrkHm2KAiYdSTMMX3s9p0ZI2rB6423JsbGuJ4HQUcHqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360347; c=relaxed/simple;
-	bh=ZwsaIiVHVcCeS/Y+U6ld+aI2D7mHfJVlxiHqDirD6Hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=soQR91mRWRYCkobP5rfXGzxGIXgbXSL0sqrh+eFs8NKpdFOnj+3Q7NoMTLUfeIqMeawNDCDztuMD4wU6YwfBDR1a4phxpZo1ZYmKmz4TTX4KxMqz2BwXBBiKxFLQO1HxKCqyk90CiJvoCteShjRd93kPyHfKhPjquFFplZImZqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHQZNkyz; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHQZNkyz"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36a0f64f5e0so24877855ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713360345; x=1713965145; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1+zZdTXWkV9gVF184HLDzNZ7nVVv6bcbAinsMPWeWaE=;
-        b=YHQZNkyzOWjxdfC5G9ZomaBNvo/dkepz+nbcsi3Hde6lg+AqZnU3yH3d3290aSRgzM
-         5iGgJ4/sv6lXZJmUck6veCgtM/Ojf1Tysz+7rcIPSZkk/scgeLa5+s1HNCjAOxNK2F1O
-         sHcZpRs2S2thq8GaQ0R4Uw1UjCnCMsHTeKlBtYAhPcBxIDDfz1jLd+yCABAaybpyY02z
-         mH/k6j90qAhQnvWtui96yUiKfqVhADAGcafH3K1Fjj09B05rw3dq5KQ72f3N4RVwPCKz
-         yQQ5yEXzw2UB01SXsI5LgAs13OMM11hdPAiUNg9EOKkF3Cycpte78yqEVPW08F9XSySQ
-         v7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713360345; x=1713965145;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1+zZdTXWkV9gVF184HLDzNZ7nVVv6bcbAinsMPWeWaE=;
-        b=Yry9RS/La31X7ZCVnOWP84q8xdpNZsSNlm2a1Dg+TB9NRnwIGIzah5tolV1vuSastq
-         JKtUPG9XXof747bM6Xh0NVjhezvR2Bg2EdbkCUafxwEPuk7cXdFiBI43dF1N+a8eQkO3
-         Bvd24nH5ujsur8EYPn6OJ1tHSc+u7rwxBPeUZfaT4MqzaKohNXwbj2drFpfAHU6pccBB
-         r2l9AhFoh/3anTtYtd5Y4KJOXZfXXrrRiLrELCZvlzXcpCCzt5F3shqsNuTK43gfXYoK
-         Kg+k0fZgjQjOlTSNkA931qRFeQENAM/xoFPGhXzNAtYgpMes//GhVT1qqnmFRn4QIgSc
-         et6A==
-X-Forwarded-Encrypted: i=1; AJvYcCX64XgjVbEAEv7vf5ubBNp+gZcQH6+rlxP0LjuE/QhxArD7prsTtgyHHtZ+Us7nmNsXX3DY0w0/OBugaEl9wb6huQ+KI5uqvtUC0nv9
-X-Gm-Message-State: AOJu0YzDnhWbQe1UrEG27EAXnX+rWMA+s+8M6uy99/lUJgqFP8Fb8/oL
-	4/6grP1cGeRQSiRaQW3SSqenRubYyo6JtLcqAlu24NRIgbt9ud+U0nm3MrlU
-X-Google-Smtp-Source: AGHT+IFVnt9Hd/RMwTyurlDuliRTPKFHlWP7hlE8SBayqVxnYGg6givwoEF6ouh053OUfhn20mgd+w==
-X-Received: by 2002:a05:6e02:b4f:b0:36b:1868:fa44 with SMTP id f15-20020a056e020b4f00b0036b1868fa44mr13433964ilu.14.1713360344685;
-        Wed, 17 Apr 2024 06:25:44 -0700 (PDT)
-Received: from lima-default.. (1-175-176-70.dynamic-ip.hinet.net. [1.175.176.70])
-        by smtp.gmail.com with ESMTPSA id u127-20020a637985000000b005cd8044c6fesm10411263pgc.23.2024.04.17.06.25.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 06:25:44 -0700 (PDT)
-From: Chin-Chun Chen <chinchunchen2001@gmail.com>
-To: yury.norov@gmail.com
-Cc: linux@rasmusvillemoes.dk,
-	linux-kernel@vger.kernel.org,
-	Chin-Chun Chen <chinchunchen2001@gmail.com>
-Subject: [PATCH] linux/bitops.h: Refactor function fns to reduce branch usage and eliminate external calls
-Date: Wed, 17 Apr 2024 21:22:54 +0800
-Message-Id: <20240417132252.20773-1-chinchunchen2001@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1713360353; c=relaxed/simple;
+	bh=XmbkzAVE4AQabf0zIm/8TJPsYrckFrjybtAvwkNiyDk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nxc7BZu9RyO1daQc6aA7OpsXJnD5VRR0WVav7UbMzeawdY1tG1LqmUjkMVMiiCi8Vu1Jl6eBeozibpzdxjeI7IGFWiKsUelc/RJRbgaPMYqqdkXvfqw3I8PCo6l7AkP5aCazT6c2dhjFeKFUZTp74rzmhwTIlQnYUvW/fihYKmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM7963CTz6JBH2;
+	Wed, 17 Apr 2024 21:23:49 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B57011408FE;
+	Wed, 17 Apr 2024 21:25:49 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 14:25:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v6 13/16] arm64: arch_register_cpu() variant to check if an ACPI handle is now available.
+Date: Wed, 17 Apr 2024 14:19:06 +0100
+Message-ID: <20240417131909.7925-14-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,98 +51,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Rewrote the function fns to use macro wrote in linux/include/asm-generic/bitops/const_hweight.h
-Decrease the number of required branches and eliminate the need for external calls.
-The number of branches is now constant, unaffected by input variations.
+The ARM64 architecture does not support physical CPU HP today.
+To avoid any possibility of a bug against such an architecture if defined
+in future, check for the physical CPU HP case (not present) and
+return an error on any such attempt.
 
-This commit improves code efficiency and clarity.
+On ARM64 virtual CPU Hotplug relies on the status value that can be
+queried via the AML method _STA for the CPU object.
 
-Signed-off-by: Chin-Chun Chen <chinchunchen2001@gmail.com>
+There are two conditions in which the CPU can be registered.
+1) ACPI disabled.
+2) ACPI enabled and the acpi_handle is available.
+   _STA evaluates to the CPU is both enabled and present.
+   (Note that in absence of the _STA method they are always in this
+    state).
+
+If neither of these conditions is met the CPU is not 'yet' ready
+to be used and -EPROBE_DEFER is returned.
+
+Success occurs in the early attempt to register the CPUs if we
+are booting with DT (no concept yet of vCPU HP) if not it succeeds
+for already enabled CPUs when the ACPI Processor driver attaches to
+them.  Finally it may succeed via the CPU Hotplug code indicating that
+the CPU is now enabled.
+
+For ACPI if CONFIG_ACPI_PROCESSOR the only path to get to
+arch_register_cpu() with that handle set is via
+acpi_processor_hot_add_init() which is only called from an ACPI bus
+scan in which _STA has already been queried there is no need to
+repeat it here. Add a comment to remind us of this in the future.
+
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- include/linux/bitops.h | 54 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+v6: Add protection again Physical CPU HP to the arch specific code
+    and don't actually check _STA
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 5842d7d03f19..18899f11aaa7 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -247,6 +247,13 @@ static inline unsigned long __ffs64(u64 word)
- 	return __ffs((unsigned long)word);
- }
+Tested on arm64 with ACPI + DT build and DT only builds, booting
+with ACPI and DT as appropriate.
+---
+ arch/arm64/kernel/smp.c | 53 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index dc0e0b3ec2d4..ccb6ad347df9 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -504,6 +504,59 @@ static int __init smp_cpu_setup(int cpu)
+ static bool bootcpu_valid __initdata;
+ static unsigned int cpu_count = 1;
  
++int arch_register_cpu(int cpu)
++{
++	acpi_handle acpi_handle = acpi_get_processor_handle(cpu);
++	struct cpu *c = &per_cpu(cpu_devices, cpu);
 +
-+#define __const_hweight2(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))))
++	if (!acpi_disabled && !acpi_handle &&
++	    IS_ENABLED(CONFIG_ACPI_HOTPLUG_CPU))
++		return -EPROBE_DEFER;
 +
-+#define __const_hweight4(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))) + \
-+                     (!!((word) & (1ULL << 2))) + (!!((word) & (1ULL << 3))))
- /**
-  * fns - find N'th set bit in a word
-  * @word: The word to search
-@@ -255,13 +262,48 @@ static inline unsigned long __ffs64(u64 word)
- static inline unsigned long fns(unsigned long word, unsigned int n)
- {
-- 	unsigned int bit;
--
--	while (word) {
--		bit = __ffs(word);
--		if (--n == 0)
--			return bit;
--		__clear_bit(bit, &word);
-- 	return BITS_PER_LONG;
-+	unsigned int bits;
-+	unsigned int sum = 0;
-+#if BITS_PER_LONG == 64
-+	bits = __const_hweight32(word & 0xffffffff);
-+	if (bits <= n) {
-+		n -= bits;
-+		word >>= 32;
-+		sum += 32;
-+ 	}
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
++	/* For now block anything that looks like physical CPU Hotplug */
++	if (invalid_logical_cpuid(cpu) || !cpu_present(cpu)) {
++		pr_err_once("Changing CPU present bit is not supported\n");
++		return -ENODEV;
++	}
 +#endif
-+	bits = __const_hweight16(word & 0xffff);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 16;
-+                sum += 16;
-+        }
-+	bits = __const_hweight8(word & 0xff);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 8;
-+                sum += 8;
-+        }
-+	bits = __const_hweight4(word & 0xf);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 4;
-+                sum += 4;
-+        }
-+	bits = __const_hweight2(word & 0x3);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 2;
-+                sum += 2;
-+        }
-+	bits = (unsigned int) (word & 0x1);
-+        if (bits <= n) {
-+                n -= bits;
-+                word >>= 1;
-+                sum += 1;
-+        }
-+	bits = (unsigned int) (word & 0x1);
-+        if (bits <= n) {
-+                n -= bits;
-+                sum += 1;
-+        }
 +
-+	if (!n)
-+		return sum;
++	/*
++	 * Availability of the acpi handle is sufficient to establish
++	 * that _STA has aleady been checked. No need to recheck here.
++	 */
++	c->hotpluggable = arch_cpu_is_hotpluggable(cpu);
 +
-+ 	return BITS_PER_LONG;
- }
++	return register_cpu(c, cpu);
++}
++
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
++void arch_unregister_cpu(int cpu)
++{
++	acpi_handle acpi_handle = acpi_get_processor_handle(cpu);
++	struct cpu *c = &per_cpu(cpu_devices, cpu);
++	acpi_status status;
++	unsigned long long sta;
++
++	if (!acpi_handle) {
++		pr_err_once("Removing a CPU without associated ACPI handle\n");
++		return;
++	}
++
++	status = acpi_evaluate_integer(acpi_handle, "_STA", NULL, &sta);
++	if (ACPI_FAILURE(status))
++		return;
++
++	/* For now do not allow anything that looks like physical CPU HP */
++	if (cpu_present(cpu) && !(sta & ACPI_STA_DEVICE_PRESENT)) {
++		pr_err_once("Changing CPU present bit is not supported\n");
++		return;
++	}
++
++	unregister_cpu(c);
++}
++#endif /* CONFIG_ACPI_HOTPLUG_CPU */
++
+ #ifdef CONFIG_ACPI
+ static struct acpi_madt_generic_interrupt cpu_madt_gicc[NR_CPUS];
+ 
 -- 
-2.40.1
+2.39.2
 
