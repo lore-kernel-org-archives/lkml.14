@@ -1,90 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863B13C675
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD6413C80E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713352974; cv=none; b=TZFqBKWkCJdp1Nri6/ljpGLU/ssf5RZrX0A4Hf/KDXdTHdT21w1Tm36hXQQlcmohWjWBGaVehl7L89ohfza+YIjZnmeICfoUH4TuJi/yWNdjEbMe53475umh1hLynev8Ik23BLuiy1yftp48BXi2XY1WIqrMKi8KocTFAYyoxh0=
+	t=1713353005; cv=none; b=Aea96Nv16md6z3H1lsrtMu2krWTesXRzWkSJpV/TiLDoZS86cyG6iACG66YFxJJgMgm/S/AjfbNzjZVQb0z2m2oJSmB8bcmfxhESg0c4nJBoDisoz6X0hi5SBFWrnG5FkaINi3/n0XSfQ8LeGH8XHDUN8HV+c+19Xp3j/GReC8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713352974; c=relaxed/simple;
-	bh=b9eQVO5DEetlNMd2dejQjvjZNeo8+gjXxwiMgoytLg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XeD04ujEP2xG+kcTylsp0ZwSDhVEnOhMe/21aLveH0POTgWpFRGtIhW6D5ok23tcftql02nPwxVzK2COAKLYU3MsxXArcOfE6p6DfnxVRcsw7EogH7DbPcdX8fT6jpqnQC0e12RHpBpAR3/MnqioSPZCz//S+vvaDg98Y1LtJ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spD+u/L1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713353005; c=relaxed/simple;
+	bh=KPx2ZsqWpzZLK3m3WMgWg1Tq0M4fucX/fotRCnYiRgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFLLIpxjDGkCgzPOct5JBgV746lqxCdKdUwznbWhmj+LjBEPawQJ/7asMNyKkeQtsTP5n9fexe4wxh2cIAIDTmScr8AWP/Y4tNkuLEGDmdi/hHQZZuxw6QrqVMGBXq6wbTTUu2i111upwM6UtqB58QjIaTbs9BiZOWULV5xDnrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0xCc+NJ; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spD+u/L1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A379C072AA;
-	Wed, 17 Apr 2024 11:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713352974;
-	bh=b9eQVO5DEetlNMd2dejQjvjZNeo8+gjXxwiMgoytLg4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=spD+u/L16KVIRaZE4iypYl0pLJKCD7wfCKq26ynKvEfNV5LzwHJR66H0g9Uzf3tBC
-	 O3ZEiRTqDndUbewaJpbGy19M7NlkdBW9HyK4lhyZzWqAurdBquw10uwq2nrGY5SUtD
-	 hcE8u7rbtxrYk8b76UgxeeDOBgWWG7LPv+6yQNuxgngnvyMS/x2xJ2T+5k25f73cdG
-	 2lWlUYJ2CzsIy9bLWMPHG9ZxYcONUnMTtEBpTFqnoXIHx2GuMi5BqdzQy6jTk6F8h2
-	 RQB3De8nCGQw4VBFFF2zGbZSyUO0PGmjPpVgru3qglgKYQcaK1yzTHA5c1PZobpXgC
-	 jl+32K0O7dpiQ==
-From: Christian Brauner <brauner@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>,
-	Ilya Denisyev <dev@elkcl.ru>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Fabian Frederick <fabf@skynet.be>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Wedson Almeida Filho <walmeida@microsoft.com>,
-	KaiGai Kohei <kaigai@ak.jp.nec.com>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] jffs2: prevent xattr node from overflowing the eraseblock
-Date: Wed, 17 Apr 2024 13:22:04 +0200
-Message-ID: <20240417-kapern-angegangen-0ac84cd51096@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240412155357.237803-1-dev@elkcl.ru>
-References: <20240412155357.237803-1-dev@elkcl.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0xCc+NJ"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4187981999fso17862555e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 04:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713353002; x=1713957802; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9WUQ8LhAsMpwwq/+rPAvVmYYIR8bLgyILBO1ofwpQzI=;
+        b=k0xCc+NJ66obQpGJSfZLqkLOnH0FHj7kHKofkTpOcYnbVjmvTfjbcbYWW0GOpuWIus
+         qyr/RTzx+zCcEZQLTUspSA52NoRfHvo9X/Izx8ViYJREeFK8UpUhEFoxkQKfXel457kD
+         o/Qb0wqrBFLX3IBNLCQAIW4RNAlQO8gZlUPyFEOSGwbFsTUlpqmNQy2ieIJFPvKZS3i+
+         fBUmjLqQZhtfLzObu0u6Ha8yAj+EXoCh7qIWU2geVoyYp6esV9k486OoTXNv+oExJgjJ
+         T3q2LTE7DadQZGxZywQlK3uHgfxlyKyEzx2cblouRJNMhtQlH+CkW4ewMHhKjbMRLlj+
+         KLlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713353002; x=1713957802;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9WUQ8LhAsMpwwq/+rPAvVmYYIR8bLgyILBO1ofwpQzI=;
+        b=oS3VpOU5Vf8TDyb3bNOaAGQrX4Ua98F/6xGPNi6zRdLVNzsqsk8fX4o9bZhl0QGu9h
+         9MpgxwCb03nFtlh4N2IAA5cbT0BHwmNrvQLH7Z1YfhJ/BzpGqCMTUqINE6JWw7qtRGhq
+         9SJe/LAR3ePxbDo4AUlA63SJic0kDyTlQCAhyhwQA99Nxe67kQcDBUZ6ti/Fzxhs/5mI
+         UScukGDqSZt2lnwP5tV0GhACOGoYnAZ52PbQxtXyh+DepHOAraQ9lCVV4jU8sRBDsORx
+         +E88ZeQUGyri5XrR96tFydePRG9rlI/xtQHQmN00ipon5hkkitlVRr8iEeNI9+ayRE20
+         264g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4h6gDCghokZo08JEAVRw08y7Sf0IUjl7SuG7WuCxNViHXXTpkGqyVfmujLAYEygRlYNuX6ABv9d83lw+C0h/7TvGf6TrB4oOSul7O
+X-Gm-Message-State: AOJu0YwB2oaKIl37DXhS5RxQE6DlJZP9v9nj/hke2lVHkXdGgdmT6hjz
+	6+U0l2V7Ubu2KGTcFOLDufpRK9THfZnmOkhfUMY+KBl7XBwkMjRU
+X-Google-Smtp-Source: AGHT+IHbYjlDV0+YJR4OeiatmxSq2gp292lirHdqgY6S0B8P486DYzv2fUV1C8ws1WtegEN2YLdlEQ==
+X-Received: by 2002:a05:600c:46d0:b0:418:676d:2a51 with SMTP id q16-20020a05600c46d000b00418676d2a51mr5249443wmo.15.1713353001837;
+        Wed, 17 Apr 2024 04:23:21 -0700 (PDT)
+Received: from gmail.com (1F2EF007.nat.pool.telekom.hu. [31.46.240.7])
+        by smtp.gmail.com with ESMTPSA id cg17-20020a5d5cd1000000b0033e7a102cfesm14397193wrb.64.2024.04.17.04.23.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 04:23:20 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 17 Apr 2024 13:23:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19] Enable -Wshadow=local for kernel/sched
+Message-ID: <Zh+xJpjaHjF2qvmV@gmail.com>
+References: <20220302043451.2441320-1-willy@infradead.org>
+ <202404161413.8B4810C5@keescook>
+ <CAHk-=wg7+dfpEvDnTnB-eR9QRZ2VySbxOEHbYqL3Ai5wwkon5Q@mail.gmail.com>
+ <Zh8dTOZ_YxeGhp-L@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1405; i=brauner@kernel.org; h=from:subject:message-id; bh=b9eQVO5DEetlNMd2dejQjvjZNeo8+gjXxwiMgoytLg4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTJb/i5zlVaat5v/hnsXRWbOKbddb9YdNj8zpvUXWefm ARtallj1VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjARoxWMDOf7km0/eViH7L64 bco3V/3PO3tWv2H64FbiPmOLuaGYoTUjw7+PE6pbPjZ0/jyn8vkkm+muDDbj6UH/ZdjrloUEOen vYQQA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zh8dTOZ_YxeGhp-L@casper.infradead.org>
 
-On Fri, 12 Apr 2024 18:53:54 +0300, Ilya Denisyev wrote:
-> Add a check to make sure that the requested xattr node size is no larger
-> than the eraseblock minus the cleanmarker.
+
+* Matthew Wilcox <willy@infradead.org> wrote:
+
+> On Tue, Apr 16, 2024 at 05:29:02PM -0700, Linus Torvalds wrote:
+> > On Tue, 16 Apr 2024 at 14:15, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > I was looking at -Wshadow=local again, and remembered this series. It
+> > > sounded like things were close, but a tweak was needed. What would be
+> > > next to get this working?
+> > 
+> > So what is the solution to
+> > 
+> >     #define MAX(a,b) ({ \
+> >         typeof(a) __a = (a); \
+> >         typeof(b) __b = (b); \
+> >         __a > __b ? __a : __b; \
+> >     })
 > 
-> Unlike the usual inode nodes, the xattr nodes aren't split into parts
-> and spread across multiple eraseblocks, which means that a xattr node
-> must not occupy more than one eraseblock. If the requested xattr value is
-> too large, the xattr node can spill onto the next eraseblock, overwriting
-> the nodes and causing errors such as:
+> #define __MAX(a, __a, b, __b) ({	\
+> 	typeof(a) __a = (a);		\
+> 	typeof(b) __b = (b);		\
+> 	__a > __b ? __a : __b;		\
+> })
 > 
-> [...]
+> #define MAX(a, b)	__MAX(a, UNIQUE_ID(a), b, UNIQUE_ID(b))
+> 
+> At least, I think that was the plan.  This was two years ago and I've
+> mostly forgotten.
 
-I have to say that the rick-roll of your domain doesn't inspire a lot of
-confidence though...
+I think as long as we can keep any additional complexity inside macros it 
+would be acceptable, at least from the scheduler's POV. A UNIQUE_ID() layer 
+of indirection for names doesn't sound look a too high price.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+I had good reasults with -Wshadow in user-space projects: once the false 
+positives got ironed out, the vast percentage of new warnings was for 
+genuinely problematic new code. But they rarely used block-nested macros 
+like the kernel does.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Thanks,
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] jffs2: prevent xattr node from overflowing the eraseblock
-      https://git.kernel.org/vfs/vfs/c/c6854e5a267c
+	Ingo
