@@ -1,86 +1,76 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B75E4690;
-	Wed, 17 Apr 2024 02:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9B63A9;
+	Wed, 17 Apr 2024 02:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713320440; cv=none; b=QVV52H1JVBg2csrZtFx2sJDIJyo/PJWCCIVhCN+gRk9M2i+iHC6Pf8OJ9J0bWK1p8vvPaektoWaR41MddXPhHUvAea09ja8krwN0/ESTrSF7KKSk+3RwyVnI6u/bz1F1/WtfgKm9QV7QH9tBgDdFBE6Ys4NDi3cyCUrSKDwXXqo=
+	t=1713320440; cv=none; b=P61pUn1/LIzuGf8qjYn2Bg86ieBoslWUxek+O6WnATjrOYwJnFj0z8iT0pTVkb84thQ7phii4JqY0KFwPIhKxnsWk8vLC9j0Q1TFkhLzDsPs+ZdpnZuTqBkhNxpMVF+5Tl4BiMFjPMPZgaQCw4ThcgCOI9UrLvnMs+kgZ/JPLxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713320440; c=relaxed/simple;
-	bh=O/kGnqJdzeQNFQSSx2VGenOa0lWt9blEJEfyihoQbos=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AEa+JEhiu77z4l+bpQmckt7ybNNeJWb5XUdilbY7ddn6d+xIQSnI0gJx8rDbMR4RZ1+oLfLRajwOaSPGf3p4hnx1OLJeLC2xhvzVWhvfbdY7wPxLsVgjJUhSyoHB/ZT1ffJXOMUaYObFHnnmckRBghaCIoXL3Dnb/giNDVihDHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VK4Pg5kXsz4f3pr3;
-	Wed, 17 Apr 2024 10:20:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6B1F41A04C2;
-	Wed, 17 Apr 2024 10:20:28 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.26])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g7rMR9mdhjAKA--.50594S4;
-	Wed, 17 Apr 2024 10:20:28 +0800 (CST)
-From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-To: tj@kernel.org,
-	lizefan.x@bytedance.com,
-	hannes@cmpxchg.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH -next] cgroup: don't call cgroup1_pidlist_destroy_all() for v2
-Date: Wed, 17 Apr 2024 02:13:59 +0000
-Message-Id: <20240417021359.883736-1-xiujianfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	bh=0Hg5c0S/t8RZQIbbjbz1G+f//lzhTJ+pyxHazCXMv1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F5RH6uDXSyRlbGkVThVLdPAsPTL0pnNjQPFo5a+PWxcg3CYNZ/4zCOYQVkCY2+OPlGpc4NYvH2PjcDsGJAIHn8kbhVG0xUuCGux2cm2TFHYSv5a3ovQ4Apm1lrtKYzsQCrbZ0kBnc3P3Kkp+J/HtHbvHwyG8Yh4tzoTwzd5QXiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rseRoqw4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rseRoqw4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB7FC2BD11;
+	Wed, 17 Apr 2024 02:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713320439;
+	bh=0Hg5c0S/t8RZQIbbjbz1G+f//lzhTJ+pyxHazCXMv1Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rseRoqw4lFdF0hhyXzvd7xrgXS6prHI7OMzmlnz4IwxZqXfNOFWg364bzbK7t0RBK
+	 d0+eM2DXbEfmfryDUxqeoahYGPISMjRWv/eO3YzFxeA1JqZkRCmpleQi52sjVLBaWc
+	 7NB545njetPwrYcrBE1fsrpUtAU97jCZP9Zgz45soGkGnCwk0UN9cWux2U2ZMMJ0gs
+	 XxfKrn1krvGLkNhewiBMuZcMFnR99eg0QboUQj+GZ2vLqOahxpZ5EwvswEOBv/BsBd
+	 kOydH/0qv4J+KqJGPlf4CF0rGFl3d19ar4HYXBhSZiPmXNSzSnZZI7SY8RmeITOAQu
+	 7wtW6Sm2gKx+A==
+Date: Tue, 16 Apr 2024 19:20:37 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
+ <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown
+ <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v8 04/17] ethtool: Expand Ethernet Power
+ Equipment with c33 (PoE) alongside PoDL
+Message-ID: <20240416192037.50aa0136@kernel.org>
+In-Reply-To: <20240414-feature_poe-v8-4-e4bf1e860da5@bootlin.com>
+References: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+	<20240414-feature_poe-v8-4-e4bf1e860da5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g7rMR9mdhjAKA--.50594S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWkXFWrAF1UKF45GFW8Crg_yoWfCFg_A3
-	4xXFyvqryxZw1kuFsFvrn5ZFZ5Cr45Kr1qkwnIyrWUJF1Utwn8Jwn3ZFn5ArZxuFWxKrn8
-	Cr9xXa93trn0gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbokYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
-	0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
+On Sun, 14 Apr 2024 16:21:53 +0200 Kory Maincent wrote:
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED: "The enumeration \u201cdisabled\u201d
+> + *	indicates that the PSE State diagram is in the state DISABLED."
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_SEARCHING: "The enumeration \u201csearching\u201d
+> + *	indicates the PSE State diagram is in a state other than those
+> + *	listed."
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING: "The enumeration
+> + *	\u201cdeliveringPower\u201d indicates that the PSE State diagram is in the
+> + *	state POWER_ON."
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_TEST: "The enumeration \u201ctest\u201d indicates that
+> + *	the PSE State diagram is in the state TEST_MODE."
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_FAULT: "The enumeration \u201cfault\u201d indicates that
+> + *	the PSE State diagram is in the state TEST_ERROR."
+> + * @ETHTOOL_C33_PSE_PW_D_STATUS_OTHERFAULT: "The enumeration \u201cotherFault\u201d
 
-Currently cgroup1_pidlist_destroy_all() will be called when releasing
-cgroup even if the cgroup is on default hierarchy, however it doesn't
-make any sense for v2 to destroy pidlist of v1.
-
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/cgroup/cgroup-v1.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 520a11cb12f4..46d89157d558 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -197,6 +197,8 @@ void cgroup1_pidlist_destroy_all(struct cgroup *cgrp)
- {
- 	struct cgroup_pidlist *l, *tmp_l;
- 
-+	if (cgroup_on_dfl(cgrp))
-+		return;
- 	mutex_lock(&cgrp->pidlist_mutex);
- 	list_for_each_entry_safe(l, tmp_l, &cgrp->pidlists, links)
- 		mod_delayed_work(cgroup_pidlist_destroy_wq, &l->destroy_dwork, 0);
--- 
-2.34.1
-
+funny characters here: \u201c and \u201d
