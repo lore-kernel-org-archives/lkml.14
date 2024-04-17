@@ -1,79 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6EEEDF;
-	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52EF182AF
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 00:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713313233; cv=none; b=VXQmeyct3y3N1YqKhsM6armezd66HwF2MekpBItK/DJjPH9w4DOUsrRZQGlJdwH16iC3iiE22H5v/pQpwZAVm2z007L9ypa6eDPviZ3xdhUG0Jn2CUfuvRWyvVMfN10TcJs5qbCb0k4JCiNCBa83IBLsRoF3BtbR2FoU0j7TurE=
+	t=1713313240; cv=none; b=MJ2KEOCVzpVw9U942jDZ5xy7WXLnAUic0t0xNn7CN5VlxQ+gANuauhtgxtjWaMOaYmHBz1Fp5aQCCtdAHPDDFW+YdfLkfowkGjp+uBX2P5e/8LEoHfVRMr7hU8UXUG/h+kB2kCw+yCHLxI7MKA6RLMMTdHUEzBN59ArOBMTbjKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713313233; c=relaxed/simple;
-	bh=MuXir1a4HxUc5/elRkP4fSNYnpZOhVEyKYUO9DQGCVE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=q1Ty6YS6wzHB9HV3HE/NKNJKI2dFYN0OcJyFL2Cb+sAiNyW4UVDePpZYVXa6AsZRgsilEfiFBTLaKbSHLiVE/QXkmRiFMPdu8pebYXNQIc7JK2IkLu26rYeJhiSJFC+Po3dhVDElQqNdFkOXAHbdDV1gc5RHWznZkTGvwS3NDnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXAciEce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713313240; c=relaxed/simple;
+	bh=rKgGssGfEOKGkIRQeFs1TjmUY4hFQHkBkKqadyYn3JI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=L53IkMjZGDIEb+uDx0/8SBpOLmACQUJ62+258B99sHxognXlNzFNZ4QP4lwmo2r2XwXqkmh4kJLOKtR7VXFGNzqWzHDNKdwv7q16w1IXWnwn8mzbCNOk4utTQhM5b/g+WjINspIZvtst2l/7LOLzctgthHJy5gKiqK8ZhTvMx48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1AD88wLT; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXAciEce"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 95CB2C4AF07;
-	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713313232;
-	bh=MuXir1a4HxUc5/elRkP4fSNYnpZOhVEyKYUO9DQGCVE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mXAciEceGxrBh+JjCwliKgOyglzZ57WUbPIFs8oGnZtPCu0fgjhgvAT9H4lBkzRTi
-	 Xy0Q3TQpYRoQpSov6hOvCfWpO9wxsFUgVUJjGMJwf1qK1TS4CiLzlxOQJKzIb1Awik
-	 LrOlc7o/jE+w5FlTiXNlnetilAKQg2mdQ5FWi8Kso6ru9sOuEo9Bef+Yjdq8rjLKHe
-	 oCi8Z63jfsoUoEkVcCW429JsuiN0Fui4MgjHTZUP84DDsxef8I0yqtqIP4K4JKTNAK
-	 JZANlh+/kysVxfuu4/pUln41Jhf52Wkyo9gMlfJz/Sd9OSiaReKpRLe+I6tKOUodT0
-	 rKEax4oSSrdUg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B7A0C395F3;
-	Wed, 17 Apr 2024 00:20:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1AD88wLT"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dccc49ef73eso7537296276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713313239; x=1713918039; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wV9cZbvYcI24uBtMaKJ3e1d30YVtPK9cBpVUuoW5n2M=;
+        b=1AD88wLTE3Fk6vyFcG5QXCn4++c3CGx1d2Ejz3vDeWeuTOnLfdZsmoTA1z8zHPKYU2
+         6KVIWrb3EULP8AZu++xE/H2xUuBjvhv3HBAjum1e3BPtdie8QMAff5Kk08df+qsu9mLN
+         us66scXDyxpUgUV5NfUy3euJq/oFJkEQ+dBXw63HXS5N4yRaN0YUUT0QJu2dwC0Zu49A
+         PWOQHMeZVehjDBHCyIJEHjvpbCNwtikH6bGFg+K+eKYceu4tevck1tcn60/0LWg6LFwl
+         Um5UCw8YeGFZLXgOFxI7LlIM/BhyS3Zfauf//GrlrQyr7TiLg+dwsOPvhswb8NM1AGeN
+         rULQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713313239; x=1713918039;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wV9cZbvYcI24uBtMaKJ3e1d30YVtPK9cBpVUuoW5n2M=;
+        b=PA+362YiywXyjaJ6aPMJTMdMqd2S/LwzMbSTg1+ZwbagkE3BCeCOoJQx8+uxUrDGZ6
+         JxIviBhWmMXYAi8IM+phhxvAehFiquJ1dEDHDnayYorPe3RN1dGgwFot2ACEBl5sPORf
+         h91li1hdxp+mLAlBPfcDX2zyxqZjtlqTVzLerPx3AAGvMR3Q0qmi1K0bMvIuSNiXOv8O
+         afpCzzPd36d6MRMHHDhjSJl+wddLPlg6MYJ55kU9UiWcTZ3g7/HhXaaIN/wreHSb1VuA
+         N3oVe6V1Oxvy2l727HGLVUHzXmtYZGToDzm0bvp95zR0Cs4Yg5ZoNWFQqrGQbpSU4MQg
+         9PSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVD5KCe71H/kamxcC/lmfI7Pz1PxnFMHPbKY7QgWMw33S/acuZgaR/Z5MvTPWhP1UUXX60AEQ5mDd2WZwEbSJpsN1ldpHIKNgAib158
+X-Gm-Message-State: AOJu0YxfcZDFsRLUJNqYMFfUhJY0myXvWD/kgfMl3T72XBo6Gw4sXBuK
+	f8R5cXBV/jhrfnY+5dWlll3BTfCYOYnVNJSXW6Mh/h9yaxh5UTDMGIkbXiikzpEek0hJAgG09NA
+	/jA==
+X-Google-Smtp-Source: AGHT+IHYlFNsKKDROMObXAOA1BBSO2rcgRvoAGMMfHfg5xaJK3sOqayveOZjqsfBZjGffVPoMJWsRcgQB18=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:10c2:b0:dbd:73bd:e55a with SMTP id
+ w2-20020a05690210c200b00dbd73bde55amr1742377ybu.4.1713313238765; Tue, 16 Apr
+ 2024 17:20:38 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 16 Apr 2024 17:20:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] net/handshake: remove redundant assignment to variable
- ret
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171331323256.29224.18144970785462425420.git-patchwork-notify@kernel.org>
-Date: Wed, 17 Apr 2024 00:20:32 +0000
-References: <20240415100713.483399-1-colin.i.king@gmail.com>
-In-Reply-To: <20240415100713.483399-1-colin.i.king@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: chuck.lever@oracle.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, kernel-tls-handshake@lists.linux.dev,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+Message-ID: <20240417002034.2265113-1-seanjc@google.com>
+Subject: [ANNOUNCE] PUCK Agenda - 2024.04.17 - No topic
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+No topic for PUCK tomorrow, but I'll be online.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+A potential ad hoc topic if Paolo joins would be: are KVM stats ABI?
 
-On Mon, 15 Apr 2024 11:07:13 +0100 you wrote:
-> The variable is being assigned an value and then is being re-assigned
-> a new value in the next statement. The assignment is redundant and can
-> be removed.
-> 
-> Cleans up clang scan build warning:
-> net/handshake/tlshd.c:216:2: warning: Value stored to 'ret' is never
-> read [deadcode.DeadStores]
-> 
-> [...]
+https://lore.kernel.org/all/CABgObfZ4kqaXLaOAOj4aGB5GAe9GxOmJmOP+7kdke6OqA35HzA@mail.gmail.com
 
-Here is the summary with links:
-  - [next] net/handshake: remove redundant assignment to variable ret
-    https://git.kernel.org/netdev/net-next/c/c2b640529ec7
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Future Schedule:
+April 24th - Available
+May   1st  - Available
+May   15th - Available
