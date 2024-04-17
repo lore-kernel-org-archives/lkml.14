@@ -1,287 +1,195 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D84813328A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F88212EBDB
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713347242; cv=none; b=NEgf05GkuDNRu36sUR7VqcsLohTPmtzD6EVfCnsLClWlobtPJ0/idCYDF8eaXJ9QO3/IKfoaUhN3LgpZASLPoImFc4JFyf3gqAIEi3+f1aD5e7A6GjU/+nTgE449WGEQ27v9nPNXgYtV8Jh3rzimJzL4uBGOTpaEhdwR5AZPWNg=
+	t=1713347300; cv=none; b=ON8P8iX3o+F/taAQ/+Fs8XroS1YGBCzz4LJZscB9NLcegTJhTjSRBDrBHutosbSCAyYBoclyCK0CRQEzUZ0kXt8t2aeg/5+ByU/DLXZWZZ8kObjoFN82lfB1Y89lCIi8RyYDsi/cOEO/UGCkV7KsmyO1YQpAAavSDmXTYByprJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713347242; c=relaxed/simple;
-	bh=H1kSTITm9Nr16eIMTgiZuze+axHDcvVmad0OKfmCM90=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ah9WV2UDavJGqmYrMwRsc4xchmJwpranNe/2To+txlLMU9AGqVWaZgvFlsLk9wvheI3qMILuMlks6psE1ts5D5Fumx3zI9dqEcDKPSk3GrSx1hwIjcbFHOxq6qgGNXJEzSCSpNaYUjPbwKTD3EA8G4tFBG/nC5kPfW9/2RPyFp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c7e21711d0so442692039f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 02:47:20 -0700 (PDT)
+	s=arc-20240116; t=1713347300; c=relaxed/simple;
+	bh=i68APQ2lyTogjhJB0PE4zswrWF6uoMSKRUDeEj8xzHc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oyBG0dECJE/2YoKJ1C+1A6Nnb6b/e/xNRC/mXV/Ops7XilaMejMRZU0+QAmu4e//XMDlYgvXrCKJO2P5IxO9KAbFCsb60yW/aXXyq5kYIrmEg87joPMHI7jL5LHRxQlmFsBao+iRZ0wiHxddEd/teQlYQ2JBftCT+mYUzNiVFhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rn8aKDCp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rn8aKDCp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713347297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zlZxHt3hkdiGt31RAOSNUlAzN6IqVMpUhfirTvNIdlw=;
+	b=Rn8aKDCpSZqXytSSt1XndRpdq9G1XiKUs3BoSqSgrY3aHTu2E8mwBiRT80ioSoDI7VJatg
+	2XtpwYiAaT3f3g4nUjQ8Z5EBkgnkSKOS+QMqqLoq0n4G/rF/nfxiKsToTwn3vij5fTfc07
+	8C7Y0HCag45IqsvxfHxsdga0IZ1Nayk=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-42-U6Uz6laNMOmAOpfFZtnmuw-1; Wed, 17 Apr 2024 05:48:15 -0400
+X-MC-Unique: U6Uz6laNMOmAOpfFZtnmuw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-349e1effeb5so39300f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 02:48:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713347240; x=1713952040;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BiDd+kXH+Cj51BIsV6pHfTEfpKsHr45XJoqpvB13TaE=;
-        b=k9OIVRsUvEWyMrliXjQyykTUvi/hdgtQETvKeFVQorBnAFTdzMm/OA0+h+K3/5ki5m
-         gAOG1OVj1tf3qGaOBI5yH0PnwTDyhE0iK30L1KGXY7MUrqwLyU/fvlpY0hEUO5YW4E17
-         Pxj+HwFrIAN0P2LxIg6qb66kWLNBfs+slvlP2CkNUxP7pzPXIke61Si6nt6m+Hpze8Ud
-         LKUryq38izDslu2wfkCYH9FwbvjMKYpTrLUy5yLPZTTKwkep5eLN1TtRU3MSVoLf3AMc
-         dfe0o176cPWr4s6RWq9cuW1o8zzmv8MUZBbOO/qifsaQ2tUKpguXE3SQGsOim0b8w8kO
-         iUcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTnMe2+gdyYmF+tSRylQkimgGjbbcmBGuAuUwYZjM4ZkWkwGFnhzJbSOHp/YtlYAWEF5qJ8r0UnUnMLmh8bccJbT8cLro3l21PANOu
-X-Gm-Message-State: AOJu0Ywa+BLM0Bv5UyYUGffcFKVZrfaMZBK05VHZxFd+KWrRLIMwjmgK
-	/yJk0N/bgx3eav6dXRfcctWnqvwzTUV8sslioZZD6R0bQ+s18MZMmsO+qoPSMCJs33Vs4uMioWg
-	MBVmGkUG9eli3tZSldj4Z1A0/8t0t58KnXe0a4py3YyLwDnfU0sYOHBA=
-X-Google-Smtp-Source: AGHT+IFQqTZn2ihU3vI9xi2nIagZdslebwhIF5ml68kmnD4sfN6aAguFLX5w9t/Qi9pFNmR8FImkh9XC+byV+RqOCIa95mlKtzy7
+        d=1e100.net; s=20230601; t=1713347294; x=1713952094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zlZxHt3hkdiGt31RAOSNUlAzN6IqVMpUhfirTvNIdlw=;
+        b=IfDD3kExce1mVY1XAcl7lXACm1T+Ou6ETENoSZC0GvJnARKIMf6HAiUwYfuA7gsbVS
+         dpoBOx0JFkj6o4AwkvXMI/U8BNm22RxO85/psGwj0nBgTehyZMNrGx8nUfaYKf8WrCJF
+         fkhHxUmhlHZw4efvqur8olgjuqyE1keSfaMrkvktTNGRuqIKRikKmmnHzOH5yQca9B1O
+         1HQOsQYhyrfNAPCNkjckznnMLqgD3GVjwl+TTn6MSKeWKhVDcyYVNFAMlP0uvrhfycn+
+         /Z5lJ0DB+fS205dDutTxb8EM1+YA1VvrbENRWaUBgsh/KtVuf4hiLthS70vVbOKsoV0T
+         eSYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHYTCPtka2LmADQyeVzYUa17XCQGiCHvoaHpPHySVawM0nEZyc1Jg6+ZrNuF3BrBrZtAzB6HH6g2B6G+gnMwA1ULBxQAt2mbRAupuQ
+X-Gm-Message-State: AOJu0Yx1BPUDbEW6P2td1U9hLNP2XG6LERtkMSkZngvJUvIpMfLCf+gp
+	12TpOn0VW5Ik6m9/Lr7DyklwCu+0I6djFrBEZGWQzxxvnHhi9E36/P+DqQPh4uYa5X3ZMTdy7Vb
+	uKTWKsykl8LiL06m6NR0ZsUqYpqbJlfaMZfrjbvvXrw2jjKj6qWPK0AfHbYgc443KFM5iLXtSR4
+	Y2xNRp6OELQZ5NFxLgdm2EU5xpXCwxxI0316Ba
+X-Received: by 2002:a5d:591b:0:b0:346:f830:db09 with SMTP id v27-20020a5d591b000000b00346f830db09mr4009526wrd.31.1713347294600;
+        Wed, 17 Apr 2024 02:48:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQeuW8BecLZVPGV76NLmrX87lWpte9uNU+aOHfPGt/rbtIo4U4Ln8Ue3LR30ngxFm9oN2rCQ0jUO/W+zuxjMY=
+X-Received: by 2002:a5d:591b:0:b0:346:f830:db09 with SMTP id
+ v27-20020a5d591b000000b00346f830db09mr4009506wrd.31.1713347294140; Wed, 17
+ Apr 2024 02:48:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8929:b0:482:c7c8:5019 with SMTP id
- jc41-20020a056638892900b00482c7c85019mr927316jab.0.1713347240339; Wed, 17 Apr
- 2024 02:47:20 -0700 (PDT)
-Date: Wed, 17 Apr 2024 02:47:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a33584061647bdef@google.com>
-Subject: [syzbot] [bpf?] [trace?] possible deadlock in __send_signal_locked
-From: syzbot <syzbot+6e3b6eab5bd4ed584a38@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	rostedt@goodmis.org, sdf@google.com, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+References: <20240215160136.1256084-1-alejandro.j.jimenez@oracle.com>
+ <Zh6-h0lBCpYBahw7@google.com> <CABgObfZ4kqaXLaOAOj4aGB5GAe9GxOmJmOP+7kdke6OqA35HzA@mail.gmail.com>
+ <Zh79D2BdtS0jKO6W@google.com>
+In-Reply-To: <Zh79D2BdtS0jKO6W@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Wed, 17 Apr 2024 11:48:01 +0200
+Message-ID: <CABgObfaSTa7pC0FBhx45NVGyLtBGceZJCZbjjko-tA-J8a1tiA@mail.gmail.com>
+Subject: Re: [RFC 0/3] Export APICv-related state via binary stats interface
+To: Sean Christopherson <seanjc@google.com>
+Cc: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, joao.m.martins@oracle.com, 
+	boris.ostrovsky@oracle.com, mark.kanda@oracle.com, 
+	suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Apr 17, 2024 at 12:35=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
+> > > The hiccup with stats are that they are ABI, e.g. we can't (easily) d=
+itch stats
+> > > once they're added, and KVM needs to maintain the exact behavior.
+> >
+> > Stats are not ABI---why would they be?
+>
+> Because they exposed through an ioctl(), and userspace can and will use s=
+tats for
+> functional purposes?  Maybe I just had the wrong takeaway from an old thr=
+ead about
+> adding a big pile of stats[1], where unfortunately (for me) you weighed i=
+n on
+> whether or not tracepoints are ABI, but not stats.
 
-syzbot found the following issue on:
+I think we can agree that:
+- you don't want hundreds of stats (Marc's point)
+- a large part of the stats are very stable, but just as many (while
+useful) depend on details which are very much implementation dependent
+- a subset of stats is pretty close to being ABI (e.g. guest_mode),
+but others can change meaning depending on processor model, guest
+configuration and/or guest type (e.g. all of them affect
+interrupt-related stats due to APICv inhibits).
 
-HEAD commit:    96fca68c4fbf Merge tag 'nfsd-6.9-3' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13967bb3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=85dbe39cf8e4f599
-dashboard link: https://syzkaller.appspot.com/bug?extid=6e3b6eab5bd4ed584a38
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+While there are exceptions, the main consumer of stats (but indeed not
+the only one) is intended to be the user, not a program. This is the
+same as tracepoints, and it's why the introspection bits exist.
+(User-friendliness also means that bitmask stats are "ouch"; I guess
+we could add support for bit-sized boolean stats is things get out of
+control).
 
-Unfortunately, I don't have any reproducer for this issue yet.
+For many stats, using them for functional purposes would be
+wrong/dumb. You have to be ready for the exact behavior to change even
+if the stats remain the same. If userspace doesn't, it's being dumb.
+KVM can't be blocked from supporting new features just because they
+"break" stats, and shouldn't be blocked from adding useful debugging
+stats just because userspace could be dumb.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-96fca68c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d6d7a71ca443/vmlinux-96fca68c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/accb76ce6c9c/bzImage-96fca68c.xz
+For example, the point of pf_fast is mostly to compare it with other
+pf_* stats and see if there's something smelly going on.pf_fast used
+to affect pretty much only dirty bits; nowadays it also affects
+accessed bits on !ept_ad machines and it does not affect dirty bits if
+you have PML. So in the past it was possible to use pf_fast as a proxy
+for the number of dirty pages, for example during migration. That
+usage doesn't work anymore. Tough luck.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6e3b6eab5bd4ed584a38@syzkaller.appspotmail.com
+Perhaps you could use the halt-polling stats to toggle DISABLE_EXITS
+for VMs that consume a lot of time polling. That would be a more
+plausible use of stats to drive heuristics, but again, the power to
+look into low-level details of KVM and guest behavior comes with the
+accompanying responsibility. It is _not_ guaranteed to keep working in
+the same way as processors come out and optimizations are added to
+KVM.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.9.0-rc4-syzkaller-00031-g96fca68c4fbf #0 Not tainted
-------------------------------------------------------
-syz-executor.0/7699 is trying to acquire lock:
-ffff88806b53d998 (&pool->lock){-.-.}-{2:2}, at: __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
+So you would have to look at intentional stats breakages one by one,
+and this is again a lot like tracepoints. And many potential breakages
+would go unnoticed anyway, because there's an infinite supply of bad
+ideas when it comes to stats and heuristics.
 
-but task is already holding lock:
-ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:105 [inline]
-ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up+0x1c/0x60 kernel/sched/wait.c:127
+> That said, I'm definitely not opposed to stats _not_ being ABI, because t=
+hat would
+> give us a ton of flexibility.  E.g. we have a non-trivial number of inter=
+nal stats
+> that are super useful _for us_, but are rather heavy and might not be des=
+irable
+> for most environments.  If stats aren't considered ABI, then I'm pretty s=
+ure we
+> could land some of the more generally useful ones upstream, but off-by-de=
+fault
+> and guarded by a Kconfig.  E.g. we have a pile of stats related to mmu_lo=
+ck that
+> are very helpful in identifying performance issues, but they aren't thing=
+s I would
+> want enabled by default.
 
-which lock already depends on the new lock.
+That would be great indeed.
 
+> > Not everything makes a good stat but, if in doubt and it's cheap
+> > enough to collect it, go ahead and add it.
+>
+> Marc raised the (IMO) valid concern that "if it's cheap, add it" will lea=
+d to
+> death by a thousand cuts.  E.g. add a few hundred vCPU stats and suddenly=
+ vCPUs
+> consumes an extra KiB or three of memory.
+>
+> A few APIC stats obviously aren't going to move the needle much, I'm just=
+ pointing
+> out that not everyone agrees that KVM should be hyper permissive when it =
+comes to
+> adding new stats.
 
-the existing dependency chain (in reverse order) is:
+Yeah, that's why I made it conditional to "if in doubt". "Stats are
+not ABI" is not a free pass to add anything, also because the truth is
+closer than "Stats are generally not ABI but keeping them stable is a
+good idea". Many more stats are obviously bad to have upstream, than
+there are good ones; and when adding stats it makes sense to consider
+their stability but without making it an absolute criterion for
+inclusion.
 
--> #3 (&sighand->signalfd_wqh){....}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
-       __wake_up_common_lock kernel/sched/wait.c:105 [inline]
-       __wake_up+0x1c/0x60 kernel/sched/wait.c:127
-       signalfd_notify include/linux/signalfd.h:22 [inline]
-       __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
-       do_notify_parent+0xeb4/0x1040 kernel/signal.c:2143
-       exit_notify kernel/exit.c:754 [inline]
-       do_exit+0x1369/0x2c10 kernel/exit.c:898
-       do_group_exit+0xd3/0x2a0 kernel/exit.c:1027
-       __do_sys_exit_group kernel/exit.c:1038 [inline]
-       __se_sys_exit_group kernel/exit.c:1036 [inline]
-       __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1036
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+So for this patch, I would weigh advantages to be substantial:
++ APICv inhibits at this point are relatively stable
++ the performance impact is large enough that APICv/AVIC stats _can_
+be useful, both boolean and cumulative ones; so for example I'd add an
+interrupt_injections stat for unaccelerated injections causing a
+vmexit or otherwise hitting lapic.c.
 
--> #2 (&sighand->siglock){-...}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
-       __lock_task_sighand+0xc2/0x340 kernel/signal.c:1414
-       lock_task_sighand include/linux/sched/signal.h:746 [inline]
-       do_send_sig_info kernel/signal.c:1300 [inline]
-       group_send_sig_info+0x290/0x300 kernel/signal.c:1453
-       bpf_send_signal_common+0x2e8/0x3a0 kernel/trace/bpf_trace.c:881
-       ____bpf_send_signal_thread kernel/trace/bpf_trace.c:898 [inline]
-       bpf_send_signal_thread+0x16/0x20 kernel/trace/bpf_trace.c:896
-       ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
-       __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
-       bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-       __bpf_prog_run include/linux/filter.h:657 [inline]
-       bpf_prog_run include/linux/filter.h:664 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-       bpf_trace_run4+0x176/0x460 kernel/trace/bpf_trace.c:2422
-       __bpf_trace_mmap_lock_acquire_returned+0x134/0x180 include/trace/events/mmap_lock.h:52
-       trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
-       __mmap_lock_do_trace_acquire_returned+0x456/0x790 mm/mmap_lock.c:237
-       __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
-       mmap_write_lock include/linux/mmap_lock.h:109 [inline]
-       __do_sys_set_mempolicy_home_node+0x574/0x860 mm/mempolicy.c:1568
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+But absolutely would not go with a raw bitmask because:
+- the exact set of inhibits is subject to change
+- super high detail into niche APICv inhibits is unlikely to be useful
+- many if not most inhibits are trivially derived from VM configuration
 
--> #1 (lock#11){+.+.}-{2:2}:
-       local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-       __mmap_lock_do_trace_acquire_returned+0x97/0x790 mm/mmap_lock.c:237
-       __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
-       mmap_read_trylock include/linux/mmap_lock.h:166 [inline]
-       stack_map_get_build_id_offset+0x5df/0x7d0 kernel/bpf/stackmap.c:141
-       __bpf_get_stack+0x6bf/0x700 kernel/bpf/stackmap.c:449
-       ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1985 [inline]
-       bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1975
-       ___bpf_prog_run+0x3e51/0xabd0 kernel/bpf/core.c:1997
-       __bpf_prog_run32+0xc1/0x100 kernel/bpf/core.c:2236
-       bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
-       __bpf_prog_run include/linux/filter.h:657 [inline]
-       bpf_prog_run include/linux/filter.h:664 [inline]
-       __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
-       bpf_trace_run3+0x167/0x440 kernel/trace/bpf_trace.c:2421
-       __bpf_trace_workqueue_queue_work+0x101/0x140 include/trace/events/workqueue.h:23
-       trace_workqueue_queue_work include/trace/events/workqueue.h:23 [inline]
-       __queue_work+0x627/0x1020 kernel/workqueue.c:2382
-       queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
-       bpf_prog_load+0x19bb/0x2660 kernel/bpf/syscall.c:2944
-       __sys_bpf+0x9b4/0x4b40 kernel/bpf/syscall.c:5660
-       __do_sys_bpf kernel/bpf/syscall.c:5767 [inline]
-       __se_sys_bpf kernel/bpf/syscall.c:5765 [inline]
-       __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5765
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcf/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Paolo
 
--> #0 (&pool->lock){-.-.}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
-       queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
-       queue_work include/linux/workqueue.h:605 [inline]
-       schedule_work include/linux/workqueue.h:666 [inline]
-       p9_pollwake+0xc1/0x1d0 net/9p/trans_fd.c:538
-       __wake_up_common+0x131/0x1e0 kernel/sched/wait.c:89
-       __wake_up_common_lock kernel/sched/wait.c:106 [inline]
-       __wake_up+0x31/0x60 kernel/sched/wait.c:127
-       signalfd_notify include/linux/signalfd.h:22 [inline]
-       __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
-       force_sig_info_to_task+0x31d/0x660 kernel/signal.c:1352
-       force_sig_fault_to_task kernel/signal.c:1733 [inline]
-       force_sig_fault+0xc5/0x110 kernel/signal.c:1738
-       __bad_area_nosemaphore+0x30d/0x6b0 arch/x86/mm/fault.c:854
-       bad_area_access_error+0xc1/0x260 arch/x86/mm/fault.c:931
-       do_user_addr_fault+0xa2a/0x1080 arch/x86/mm/fault.c:1396
-       handle_page_fault arch/x86/mm/fault.c:1505 [inline]
-       exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1563
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
-other info that might help us debug this:
-
-Chain exists of:
-  &pool->lock --> &sighand->siglock --> &sighand->signalfd_wqh
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&sighand->signalfd_wqh);
-                               lock(&sighand->siglock);
-                               lock(&sighand->signalfd_wqh);
-  lock(&pool->lock);
-
- *** DEADLOCK ***
-
-3 locks held by syz-executor.0/7699:
- #0: ffff8880234465d8 (&sighand->siglock){-...}-{2:2}, at: force_sig_info_to_task+0x7a/0x660 kernel/signal.c:1334
- #1: ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up_common_lock kernel/sched/wait.c:105 [inline]
- #1: ffff888023446620 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up+0x1c/0x60 kernel/sched/wait.c:127
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #2: ffffffff8d7b0e20 (rcu_read_lock){....}-{1:2}, at: __queue_work+0xf2/0x1020 kernel/workqueue.c:2324
-
-stack backtrace:
-CPU: 2 PID: 7699 Comm: syz-executor.0 Not tainted 6.9.0-rc4-syzkaller-00031-g96fca68c4fbf #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
- __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
- _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
- __queue_work+0x23a/0x1020 kernel/workqueue.c:2346
- queue_work_on+0xf4/0x120 kernel/workqueue.c:2435
- queue_work include/linux/workqueue.h:605 [inline]
- schedule_work include/linux/workqueue.h:666 [inline]
- p9_pollwake+0xc1/0x1d0 net/9p/trans_fd.c:538
- __wake_up_common+0x131/0x1e0 kernel/sched/wait.c:89
- __wake_up_common_lock kernel/sched/wait.c:106 [inline]
- __wake_up+0x31/0x60 kernel/sched/wait.c:127
- signalfd_notify include/linux/signalfd.h:22 [inline]
- __send_signal_locked+0x951/0x11c0 kernel/signal.c:1168
- force_sig_info_to_task+0x31d/0x660 kernel/signal.c:1352
- force_sig_fault_to_task kernel/signal.c:1733 [inline]
- force_sig_fault+0xc5/0x110 kernel/signal.c:1738
- __bad_area_nosemaphore+0x30d/0x6b0 arch/x86/mm/fault.c:854
- bad_area_access_error+0xc1/0x260 arch/x86/mm/fault.c:931
- do_user_addr_fault+0xa2a/0x1080 arch/x86/mm/fault.c:1396
- handle_page_fault arch/x86/mm/fault.c:1505 [inline]
- exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1563
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7f809a860675
-Code: fe 28 6f 06 48 83 fa 40 0f 87 a7 00 00 00 62 e1 fe 28 6f 4c 16 ff 62 e1 fe 28 7f 07 62 e1 fe 28 7f 4c 17 ff c3 8b 0e 8b 34 16 <89> 0f 89 34 17 c3 0f 1f 44 00 00 83 fa 10 73 21 83 fa 08 73 36 48
-RSP: 002b:00007fff068363a8 EFLAGS: 00010202
-RAX: 0000000020000080 RBX: 0000000000000004 RCX: 0000000034747865
-RDX: 0000000000000001 RSI: 0000000000347478 RDI: 0000000020000080
-RBP: 00007f809a9ad980 R08: 00007f809a800000 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000009 R12: 0000000000018980
-R13: 000000000001894e R14: 00007fff06836550 R15: 00007f809a834cb0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
