@@ -1,193 +1,217 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2098.outbound.protection.outlook.com [40.92.43.98])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DB413AA47;
-	Wed, 17 Apr 2024 09:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713346465; cv=fail; b=cQrYK11jAdhkSJUpqDZF1QPNAZ0+S/onSGNxkaAFTstZgTw3dXxFvyWdqExao0frnIi2WddEqpu1I9tEnXsFBn8/Zb0qvFa1Xn9iUhk49Npc1hGnPHqpb4vo4dmPo2VwBrhAnwpFlTkPdjC/C5k+ULU9it+t1N8Sdiof4GetTGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713346465; c=relaxed/simple;
-	bh=vCTv35vO9FNsSBOMpBi8CfWbxApAvdmACih/exLqm10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sSm8W+uW5YS/1zxD4CmVH5CsGVW3iWvZ9EccGtxjVhr5ZD2cPZi65sRwyPLqZdphGp11LVmA7vhLyOnIeLdKhijnH0eosM7lhAFZxV4oT8CgqH75s0sa64Gh/xEVuZ8Ba6ULoalvVEvPBSc190xnHmU7ggSyNvs3u0o/Z08WP1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=PGSVMQjC; arc=fail smtp.client-ip=40.92.43.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B060B13B2B9;
+	Wed, 17 Apr 2024 09:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713346466; cv=none; b=PWIEVZweNHfEmZW0BSd/XvOiP772Kmyt5QKlmDIPbO6qDODV2SOalAVI4v6VZCqXYrt04NlleE06fsb30svB2CbxXRUvDxs3KlTZr7/m6WET0UTVDr08tBXILqo3qX9FsSNhluCmnLAJowpJ5nPYjSdSTJoHRWYD1lB/FIfA5yw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713346466; c=relaxed/simple;
+	bh=5AL7sa8E0ZkWSSFYV7dk5rfCS72kkpuULGQcD+SNzMs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ekBqRdBgO5+w9sViSlRnT7ulltRmnZoyyhVinOiSKJm0tt3uZpRKoVEpLOKhLdgMflh4e96HRylLSn8cpsz48WbqjC0eNUv1g/FqSrz+x6dhCcHol2PiHsDPM99G3Ws/U6YUb4nN1ZhpxVBDvE3THs9cfQwsD0bx/Jr1WKThmQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OpFp70WU; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="PGSVMQjC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gd4Cxzur0cuIolMX7k3wFmiaeN0SJciJ/fhgBd425o4wsjXnUYv56uKVvX8g+vHF8STSutgiy5hjTvGgLliMRpVP9K0omXdBuVtz2ui0alk3N7q1mywP9ScB4vveM3aZAHaBUrkwQWT16G8wsZfIRgdfWfq3VpaQ7Z+rDfH2vBz7jRl8/kuOFsn4G6E0nZJws4TQY2i4xIk1n/CL6nqZVcbzAfn9FDxYtWmPwur8O1hvj1UXvAEDJ7e3id3HP0Rtblq2MEI2vC3kufuuZ7zb+RCIitHccxpTl65dfv6nK3+N2lk0Skb9cSpUMDeAc15CQUNj4ltMyDbH5cdKL6Pt8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7fXYwaEsCQ3msAnuaLOE1TJLfSaRpWnHwm5saxVDOeg=;
- b=Sj+T8H1M2oBgks1RiSv7FaoaTNp7xeGPTVsa1golbiIDGbG3GNNiL58ieMjDE6fSLOilXBtBemdJQ3+4l9jreiH+rPuVz3ZElO8GNUZpfP7gMWB0OiqkGU3GL+saQmofvDBUJCwu3ppeiXuiBdvB5n8ceGMeCN1MxzPOhluKYoQhVRjDNW0vb/hme9uFVCEBvSuJVtt+lEda0jlPiocI6EZPXInJTbVjfPYmACeUVRPbyDjMXL7OQgftwDFsJaRJhkXH/C1GfduMyq5swe2zyg0DWJ8DndYfNGa33nN9duGcqRUyXbYIvisoyP3I30qJDWSFQ4WK50hU9ScBBczxSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fXYwaEsCQ3msAnuaLOE1TJLfSaRpWnHwm5saxVDOeg=;
- b=PGSVMQjCteYokFZbnBHyfj3gDtZCVsszL49KBmaEV/YMjnm+fxfVh0DzBXX2euYKqgt142ez28fDgu/Gwf5+44/O15Wv1iLN7Q2eREHdFgyg/IcUiEOqvXoizX2HKFWxojNBADvTDP5Y3PHFK5So0PnfdxliWiZzeY/yDl90Arjd0i9BKEuaeAMPDzHc+RXCtE5KGJueFRGy7RE/Zbeq9BD4yTQ1kmbgv/75gjwKN1nFmZyZHWcr/kI1qRdJIIxc+PZnyI3qlQUx0ZEunJvM/iRFIsPdrUNqiQ4NmYQO9MZrHhnDKJ3Tp5OaZWs6DSKrAKpLteYir6aqMh4kk4vWBQ==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by LV8PR20MB7291.namprd20.prod.outlook.com (2603:10b6:408:232::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 17 Apr
- 2024 09:34:21 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
- 09:34:21 +0000
-Date: Wed, 17 Apr 2024 17:34:44 +0800
-From: Inochi Amaoto <inochiama@outlook.com>
-To: michael.opdenacker@bootlin.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@outlook.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] riscv: dts: sophgo: add initial Milk-V Duo S
- board support
-Message-ID:
- <IA1PR20MB49539A380E44459ACE19DEB6BB0F2@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <20240417065311.3881023-1-michael.opdenacker@bootlin.com>
- <20240417065311.3881023-3-michael.opdenacker@bootlin.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417065311.3881023-3-michael.opdenacker@bootlin.com>
-X-TMN: [/wgaOumHrX6KZ+/QFrHj7ayN1sHa/AsQn52ebuz3cEU=]
-X-ClientProxiedBy: SL2P216CA0101.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:3::16) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <5otq7fngmhrhdoniz2clckwarpb7z5itilqt3tsq2pxeqd6emk@trsmhl6srxp6>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OpFp70WU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C4531FF815;
+	Wed, 17 Apr 2024 09:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713346457;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qn5kBLS2A7DdgWTR5t2clmRkTCWgVgr24XXxD0C7thk=;
+	b=OpFp70WU26jK6dMhlKRDdLzts+pIGuE4+G4tNik08H3Dd7bnDz71eaIofrYkj6h0FUbQpd
+	+SyEwQXg1ygJ+JW3aLzK6CxwfgTue+gbRAYIb1ZQU7yGKj0qMVtlqsrzeE/mxqYk/CKXvc
+	bFuh3wahEm2E6ywr1UU4yvbr0WT9/3F0GL3+OCuVM147aRRoRhtXLiBPDDmyv39tM0aeoh
+	wYFtLieqcISpFdV7n97lTLA9iMfKr4AUf4EeC6cVbQdnmdbqw/TUj9KdvlS28sLN9b0fuM
+	L7OVHvifqmui7YXj1oCUpSgdRJxzoO2TuJnGDg3Lj0+qkvBr5Z/Dpt+Lqg+wcw==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Wed, 17 Apr 2024 11:34:13 +0200
+Subject: [PATCH 6/6] wifi: wilc1000: read MAC address from fuse at probe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|LV8PR20MB7291:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb2929bd-97f1-4f3a-87e8-08dc5ec18fc2
-X-MS-Exchange-SLBlob-MailProps:
-	O8uo9vZ0QHVDqkOSoPIz5M4S+SNCRCoczudaXIXvZARoSselLtDteamBMRpJpUrcWwOznszVsQ8PXKplet5AmHrTWR4PoIJ6pzUQfd9ZrSjiHcU+cibdITSP/YzmEzqBftJ8wtlAy4JpJpxNluj1r0L0pS2UiBrL3e7aa3kKNOgqYlEFzn0IzXdzqNTqIDB5AFNL3JxgK/IYi8S9YVzWKrY5LkC8jy1FHoXKJ87WQQqS92JIgjSgp6Da0JfWxoBvV6QbwV/+v3O//cza8X/O3h8aN1W6BF4HZUuNsBqeSih62AE8orw9bEgwmEhmJwHOMASlIELXurDiGZgYP+5NtpLXIG5AoYqDpMOGWHUoMRVGTMBPE9SD7s6u0WjPb2d9CFf2xffpeO9KBpcE63AVRQBA4kgzfLRPsvMYDgiuKU2f8cKl7U4tlHMOGRN5klH6vZAzeivdhefFtCcmkJ/mXb3UKOvZDewcI9kgglHpeljMUUW+hlkUmAp/PT1wMPtd9KBnvmvJEMOh4DTfkPeYHAtJ2+AuLjqBfdeK5Ck/HXWZTmswOPVTHC7O8mtMXbSgMevdOTfMZDLjEkWiFtz/zc4qq0bsdC/PLq+7OflF6NaeiX1K/GpO/kqjRLTqpLLqp4hP1qQS+Pe3BidL28XWbIBnwZZjSbgkAirnzojx04MdMKn4xlKzRboN/bMk7wFcAUSQHmixnAGM3SSmmOzmwhxEuK74kMJeD1dTs5QVURk4tS7TLEy/SWAW9MLn2+2jEUBjkJU8IiftTphpmZwZ2u9UG9zEAqhaWhV/fpd/tc9Opro6GdxvkiboHr/i/GQdcIP3ahnCqe8oEYqZ/qURlKP/1/NKl7jb3JnQ718CTGDa75sUUipe1XOEqUaBOMGJTj3Ebve5L2F4kkSuz+HDpQ==
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kX+ubGFjd7lMpWr4AlAfq98nNpKi7WBj7Gu3pvVR9CvUbl8wHIEu5DGs7utLwyzeUq2kIOMl2GkCuvmbyBixj2fMdLsFpk6YZr516c0KYojv2uWqO88N0FbA7xZbhpMQfYcVMZsTeoP117QufnE76e3SYD1MO7qz7AhTavpbsa/WU0XCH/PuzsCwKJLwnY6XfNJDG6hMSOWhG5XHpkjB5l3Y5w5hhC8vzkiIcvgyZlyTwhr6oj8ltqwdDYSG1CCV8hwgZ4Lap+FjvYrNgFJjiTw0UECH64PdeeKGGX9HdahM3ZnoYQS3Ho6NvHlERvJlrr2KjMSujiSNRd0Kt9WcLd/2o1X7l5sDWAc8arwe10C2RTl9JAQes7Bk5ENnxO7+lV4+h9P1R8tMsnaoQOzpf+w2XfLiaLXNCXPVuG+qglsuKjYMEomx8jZCt2wCsbgMkKVPR1JH24kJrcQSbDXk5NF2w1lCTwppdag4xYrqHoPsGjPNQ2ejs+KcYnCLdhllcMAh4h8QfH2aqwUMDMe21oE3iQHCUKiQcoHpdW22JaqhiQcZ1e2dxdqzffeyYstMZEEG3LHrZsYHuEm7pPRHc6yzx3Yt9c7wHT/nsxPgiWYmGFGkXNXqmuymrYhsIyALlr7FZ3W+ftf/Fg9+rKtD2MqYPEtHFNqZA/HSzlHw+64kult+kaPUqatuu4bIClo8TVXlDQoR9XTyX/5ytWSnvg==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kc1jkS5I1YXgIWQPTuAfjNn/9xCh5y2ZjrwBrxCO7kDy5rZRCCFmhoxhgJiF?=
- =?us-ascii?Q?5nME4tUKURCZHSacfyk9h5i5Nq4qUDZOaXxU+koCvN8tWDSzAZFtW09qzY83?=
- =?us-ascii?Q?0QkpX7DuqvkEZocXI7KGtCkloVteEpMbzL5EjqkckxLc0k8tns8NmcQInGFE?=
- =?us-ascii?Q?7QGUoIM77cOshUYXhuw31NyXHVqu7Xkk4jP68tnsUiuwwrmJDgJqakkP5FEU?=
- =?us-ascii?Q?rfuFw7VCZ5OWOZBdSkzVJlKjohY9iuDcjmZ3E3jZmnVqvsHLgXRAr/cJcL/L?=
- =?us-ascii?Q?rJk2p+s4JdiG+5N1lmuVgD3d5+Kjakqqj0Z0KODJCc7s8KKj9p9JjuuR671+?=
- =?us-ascii?Q?19Ds6XF3ZiCFU4i4FMC88njfOpZRAapj6VTghlZZz5DXxmsj2sLdUpMmLagp?=
- =?us-ascii?Q?u19+VlJWref8gE6B/D2zED7Sj2xwxxFZmPxL0n8nbCZH6pnxKC6/hSq5hHdL?=
- =?us-ascii?Q?7IKbKlWTObvNls3mtvOXVtAJaU/UofSrpMrOgY6l9WIUrhXZr0QWeboktFxJ?=
- =?us-ascii?Q?5ObQMBTO7PUaADBUhJF7Rl+QJUrlXYl4iNba5RWxgvDJjsKR6aGfLZYafdd3?=
- =?us-ascii?Q?q0CZ0vhC4Nt0ZN+vBXaSFSZcre5GOrHnCYH4nM5pbP2wxgfo+HjrVvOVwmu4?=
- =?us-ascii?Q?/xeuTStLYu8MY5mfo8zF/zvXRRuYzLfdNj6XxiG/H5ijKAYzGl2wohV6lAtS?=
- =?us-ascii?Q?gJrLc9qPyLgA1eeZBXi2hF3Qn+hHU9X7OsGOHXxiCvK8jClInfKEThhT5kYp?=
- =?us-ascii?Q?8ea1gB/lM7mVvdQiAlwjAA6sPQlFJxYbO7/G0zdgCAGH+QUCTM+Qr5wdKsNX?=
- =?us-ascii?Q?69eRUzmA36mvCaZNOfPY8Id6L5n+vyvCJojvSgP2DjGFDJgfFcCMAFECIy1e?=
- =?us-ascii?Q?SXrAayuEru1873vFy5JiLcpYzeOS9nKUY36jnDl8lYD4S/n6MNfwi8qpvmro?=
- =?us-ascii?Q?C4Pu5oESva/le+4wokdk218Y5OF4ptIBg1IXyyZMlI1Lra00Jzb+nIVY8HbF?=
- =?us-ascii?Q?19A5nhR75GLA6w8zGyOwNdtwnR0QOLQCpOiG5SF3JW2iMx5g9eTbftxuLiUZ?=
- =?us-ascii?Q?UYhzhvQI3SWbcl80l8ZbCHCjk0JDyWQ0kQs5Coojc1mEdSsXxbb3On2yhRzU?=
- =?us-ascii?Q?DIGxnjkeGgt3kcYlexZeB6FY/6W5XarYRhIQksOelipthxmaFrm9BqNnmDkk?=
- =?us-ascii?Q?AhshGVzmrzh3UadL8CAnt7RAy8mzMS3r2xtLTpze8Q5Lj0U0LswPixeFsDau?=
- =?us-ascii?Q?HNpPtQhRcHPTSeScOEfG?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb2929bd-97f1-4f3a-87e8-08dc5ec18fc2
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 09:34:21.4868
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR20MB7291
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240417-mac_addr_at_probe-v1-6-67d6c9b3bc2b@bootlin.com>
+References: <20240417-mac_addr_at_probe-v1-0-67d6c9b3bc2b@bootlin.com>
+In-Reply-To: <20240417-mac_addr_at_probe-v1-0-67d6c9b3bc2b@bootlin.com>
+To: Ajay Singh <ajay.kathat@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Heiko Thiery <heiko.thiery@gmail.com>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Wed, Apr 17, 2024 at 08:53:11AM GMT, michael.opdenacker@bootlin.com wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> 
-> This adds initial support for the Milk-V Duo S board
-> (https://milkv.io/duo-s), enabling the serial port,
-> making it possible to boot Linux to the command line.
-> 
-> Link: https://lore.kernel.org/linux-riscv/171266958507.1032617.9460749136730849811.robh@kernel.org/T/#t
-> 
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
-> ---
->  arch/riscv/boot/dts/sophgo/Makefile           |  1 +
->  .../boot/dts/sophgo/sg2000-milkv-duos.dts     | 34 +++++++++++++++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> 
-> diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/sophgo/Makefile
-> index 57ad82a61ea6..e008acb5240f 100644
-> --- a/arch/riscv/boot/dts/sophgo/Makefile
-> +++ b/arch/riscv/boot/dts/sophgo/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_SOPHGO) += cv1800b-milkv-duo.dtb
->  dtb-$(CONFIG_ARCH_SOPHGO) += cv1812h-huashan-pi.dtb
-> +dtb-$(CONFIG_ARCH_SOPHGO) += sg2000-milkv-duos.dtb
->  dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-milkv-pioneer.dtb
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> new file mode 100644
-> index 000000000000..c1ecf97d5e93
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (C) 2024 Michael Opdenacker <michael.opdenacker@bootlin.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "cv1812h.dtsi"
-> +
-> +/ {
-> +	model = "Milk-V Duo S";
-> +	compatible = "milkv,duos", "sophgo,cv1812h";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>;
-> +	};
+From: Ajay Singh <ajay.kathat@microchip.com>
 
-Add a cpu specific file, and move this to it.
+The default netdev interface exposed by WILC1000 is registered at probe,
+but the chip mac address is not known until ndo_open, which will load and
+start chip firmware and then retrieve stored MAC address from it. As a
+consequence, the interface has uninitialized value (00:00:00:00:00) until a
+user brings up the interface.
 
-> +};
-> +
-> +&osc {
-> +	clock-frequency = <25000000>;
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.34.1
-> 
+Fix MAC address at probe by setting the following steps:
+- at probe, read MAC address directly from fuse
+- whenever a new netdevice is created, apply saved mac address (which can
+  be a user-provided address, or the eFuse Mac address if no address has
+  been passed by user)
+- whenever an interface is brought up for the first time (and so the
+  firmware is loaded and started), enforce netdevice mac address to the
+  chip (in case user has changed it)
 
-Add necessary DT node in the cpu specific file. (clint, 
-plic and clk). You also need to rebase your patch based
-on sophgo/for-next.
+Reported-by: Heiko Thiery <heiko.thiery@gmail.com>
+Closes: https://lore.kernel.org/netdev/CAEyMn7aV-B4OEhHR4Ad0LM3sKCz1-nDqSb9uZNmRWR-hMZ=z+A@mail.gmail.com/T/
+Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
+Co-developed-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+---
+ drivers/net/wireless/microchip/wilc1000/netdev.c | 38 ++++++++++++++----------
+ drivers/net/wireless/microchip/wilc1000/sdio.c   | 14 +++++++++
+ drivers/net/wireless/microchip/wilc1000/spi.c    |  6 ++++
+ 3 files changed, 42 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
+index 5ab448d0b643..f1fbc6e8a82a 100644
+--- a/drivers/net/wireless/microchip/wilc1000/netdev.c
++++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
+@@ -588,7 +588,6 @@ static int wilc_mac_open(struct net_device *ndev)
+ 	struct wilc *wl = vif->wilc;
+ 	int ret = 0;
+ 	struct mgmt_frame_regs mgmt_regs = {};
+-	u8 addr[ETH_ALEN] __aligned(2);
+ 
+ 	if (!wl || !wl->dev) {
+ 		netdev_err(ndev, "device not ready\n");
+@@ -607,25 +606,19 @@ static int wilc_mac_open(struct net_device *ndev)
+ 		return ret;
+ 	}
+ 
+-	wilc_set_operation_mode(vif, wilc_get_vif_idx(vif), vif->iftype,
+-				vif->idx);
+-
+-	if (is_valid_ether_addr(ndev->dev_addr)) {
+-		ether_addr_copy(addr, ndev->dev_addr);
+-		wilc_set_mac_address(vif, addr);
+-	} else {
+-		wilc_get_mac_address(vif, addr);
+-		eth_hw_addr_set(ndev, addr);
+-	}
+ 	netdev_dbg(ndev, "Mac address: %pM\n", ndev->dev_addr);
+-
+-	if (!is_valid_ether_addr(ndev->dev_addr)) {
+-		netdev_err(ndev, "Wrong MAC address\n");
++	ret = wilc_set_mac_address(vif, ndev->dev_addr);
++	if (ret) {
++		netdev_err(ndev, "Failed to enforce MAC address in chip");
+ 		wilc_deinit_host_int(ndev);
+-		wilc_wlan_deinitialize(ndev);
+-		return -EINVAL;
++		if (!wl->open_ifcs)
++			wilc_wlan_deinitialize(ndev);
++		return ret;
+ 	}
+ 
++	wilc_set_operation_mode(vif, wilc_get_vif_idx(vif), vif->iftype,
++				vif->idx);
++
+ 	mgmt_regs.interface_stypes = vif->mgmt_reg_stypes;
+ 	/* so we detect a change */
+ 	vif->mgmt_reg_stypes = 0;
+@@ -941,6 +934,7 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
+ 				      int vif_type, enum nl80211_iftype type,
+ 				      bool rtnl_locked)
+ {
++	u8 mac_address[ETH_ALEN];
+ 	struct net_device *ndev;
+ 	struct wilc_vif *vif;
+ 	int ret;
+@@ -969,6 +963,18 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
+ 	vif->iftype = vif_type;
+ 	vif->idx = wilc_get_available_idx(wl);
+ 	vif->mac_opened = 0;
++
++	memcpy(mac_address, wl->nv_mac_address, ETH_ALEN);
++	/* WILC firmware uses locally administered MAC address for the
++	 * second virtual interface (bit 1 of first byte set), but
++	 * since it is possibly not loaded/running yet, reproduce this behavior
++	 * in the driver during interface creation.
++	 */
++	if (vif->idx)
++		mac_address[0] |= 0x2;
++
++	eth_hw_addr_set(vif->ndev, mac_address);
++
+ 	mutex_lock(&wl->vif_mutex);
+ 	list_add_tail_rcu(&vif->list, &wl->vif_list);
+ 	wl->vif_num += 1;
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 04d6565df2cb..e6e20c86b791 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -24,6 +24,9 @@ MODULE_DEVICE_TABLE(sdio, wilc_sdio_ids);
+ 
+ #define WILC_SDIO_BLOCK_SIZE 512
+ 
++static int wilc_sdio_init(struct wilc *wilc, bool resume);
++static int wilc_sdio_deinit(struct wilc *wilc);
++
+ struct wilc_sdio {
+ 	bool irq_gpio;
+ 	u32 block_size;
+@@ -178,6 +181,16 @@ static int wilc_sdio_probe(struct sdio_func *func,
+ 	}
+ 	clk_prepare_enable(wilc->rtc_clk);
+ 
++	wilc_sdio_init(wilc, false);
++
++	ret = wilc_load_mac_from_nv(wilc);
++	if (ret) {
++		pr_err("Can not retrieve MAC address from chip\n");
++		goto clk_disable_unprepare;
++	}
++
++	wilc_sdio_deinit(wilc);
++
+ 	vif = wilc_netdev_ifc_init(wilc, "wlan%d", WILC_STATION_MODE,
+ 				   NL80211_IFTYPE_STATION, false);
+ 	if (IS_ERR(vif)) {
+@@ -187,6 +200,7 @@ static int wilc_sdio_probe(struct sdio_func *func,
+ 
+ 	dev_info(&func->dev, "Driver Initializing success\n");
+ 	return 0;
++
+ clk_disable_unprepare:
+ 	clk_disable_unprepare(wilc->rtc_clk);
+ dispose_irq:
+diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
+index add0e70a09ea..5ff940c53ad9 100644
+--- a/drivers/net/wireless/microchip/wilc1000/spi.c
++++ b/drivers/net/wireless/microchip/wilc1000/spi.c
+@@ -250,6 +250,12 @@ static int wilc_bus_probe(struct spi_device *spi)
+ 	if (ret)
+ 		goto power_down;
+ 
++	ret = wilc_load_mac_from_nv(wilc);
++	if (ret) {
++		pr_err("Can not retrieve MAC address from chip\n");
++		goto power_down;
++	}
++
+ 	wilc_wlan_power(wilc, false);
+ 	vif = wilc_netdev_ifc_init(wilc, "wlan%d", WILC_STATION_MODE,
+ 				   NL80211_IFTYPE_STATION, false);
+
+-- 
+2.44.0
 
