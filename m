@@ -1,103 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5F16A037;
-	Wed, 17 Apr 2024 08:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79E17CF3E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341375; cv=none; b=RXv2e0MbgtnZKtkWzzpeJCF85NAfKkKcPlB2OLJtGjR0CKlhaoIsPx/eS6S1kNlD4xz/ylXyL6hqdnsfE7OTSTzAR701P/v1EdpzDPwMrwkXXwR3eg/kA+i4NiUsQOt1oaY5QzOWQieWnsy8wMn6176yjAP4GPtSJ0leNOcylCc=
+	t=1713341542; cv=none; b=ow0Nd1jgdebGJmmRB92PEGthM/2BbOZlMY3128ZDZ75gL6R07DRON64lhclNRxsetTCbRTyJ9f4BFdJKlBdJJ3RVFty7/CtFkJjagA8anPZ1uq/zDOjB+QiabuE018xOl85nCkzcWmR5sJpHfC7ndgwr91TTLr/tPfFn/qvciOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341375; c=relaxed/simple;
-	bh=qi4dq7ZlMxHgGuIwJZ0/uQx20Y1bZpSQqteB+Lo305U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C8LKemAlzRWinMsyeiO3v6NW8o4djy+qGTojavqUtjBslzl8RylV4nJ164JlKY/C8Yz6lWwFCTVRwIT341BYtDe3uFyYv49s7WfulnFBUBHMZZyfW20JqJO01k/sDYt2TpF9qOGvIvDetzEOvReULVBEpVytdU8jbt2r+j18sKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lv/2d6ZV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713341542; c=relaxed/simple;
+	bh=QNQAulVJ4issHP/Ip4Ssd5g6A3f/UOyXaYlTGyCTlKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ITXmSJSO8Jfqn4M7Ub4PxyJLioEDaJJ+o8426PT0imuyRe825r0MiRzHXRnQ3Mjiv8rSkCPCPQgsdWvB3phc/0+k5Etw5wSKntLVKqV7TSH5ELKxtrM47/L8Wj51A7Y2znf/T09o0UcgOShrjbbYBiPnxT7agVQnKGEKjhwy0+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zBqb4uVw; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lv/2d6ZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B18C072AA;
-	Wed, 17 Apr 2024 08:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713341375;
-	bh=qi4dq7ZlMxHgGuIwJZ0/uQx20Y1bZpSQqteB+Lo305U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lv/2d6ZVzM67rajDFslSMUivLcQbY9/Q1biq8t0OizHYq8cF3u1PMLxp/9YiBjEka
-	 hfu9/NGADg7Lc8GxfhNhMLKn23GdOHTKa23vDaQjqPEwUKo3I2R0z4JgxygI7myD0c
-	 ZieFhuTiK+bmJHcKZeeDYNYSn7wPu9e19ltg1i4XbsL+hManp3u+D4GtFt53SdUjH/
-	 sbVk8Ny8RDXKhaA6girGhfnXVoquN5XN1s5s+eebaFQUiw4Dr4IvMFR0hQcjGSE8e9
-	 dLE2pa7NAE/vE1YKWrL9pl/CSLrFTLQh+amcL507r40fbTnZWIy+Xbrer3gEfqGv7a
-	 sf9zbLDWe4aYw==
-Date: Wed, 17 Apr 2024 09:09:26 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: helpdesk@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
- "workflows@vger.kernel.org" <workflows@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: Please create the email alias do-not-apply-to-stable@kernel.org
- -> /dev/null
-Message-ID: <20240417090918.77360289@sal.lan>
-In-Reply-To: <b452fd54-fdc6-47e4-8c26-6627f6b7eff3@leemhuis.info>
-References: <b452fd54-fdc6-47e4-8c26-6627f6b7eff3@leemhuis.info>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zBqb4uVw"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516d0c004b1so7100123e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 01:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713341539; x=1713946339; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TzkbbRIO2QimJ8RWbkwCZ+K7gIC0TeXOrUoZh+Yj+po=;
+        b=zBqb4uVwnW4hN/7AlwAL+QWGSmWijKm5+cqeKX+QoJGErtLFP/QiZFppxslFERhizU
+         Wt0AIO9BEsYbXgPxPqeLd7KuITJ7VaQwUbBpns8iK8YiCJOnbZ8PMK8yupY1Z1y9X3gc
+         VHQuR/8Pe3ccZ9bLOxWn/4qvZVPekOBBxvBx2TK/TisbsPwGzf3KVX+kQG9zrbXdkNCh
+         5wHK/iDbD8BCPL99CrOmVTnby8GpFWxGZANjA+kaobUgdFsUlW1U+iN+mvbdoMskP51/
+         Ad0hCgdADwqy4825uoj0k63yMWoP/kqbur3hfAY3rNpoDw9eGZVio8Cs8a7YVQgb6D6G
+         hnuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713341539; x=1713946339;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzkbbRIO2QimJ8RWbkwCZ+K7gIC0TeXOrUoZh+Yj+po=;
+        b=vnD/gcgZrfAb6nFMQlaHePJuXhc6M8cZIB6n6Z2JLY1F+eOKhYoebvlWyfl9n0x0Jm
+         4CVWN5i8LvOAkXW9PCM0XQ9fPqEN05IGmIPFC5YSzfI85QifE4IaJROMRuyOPuPdUpf2
+         17lYPWABUK9YDxcrmAbZ3Xmxn7igMa1mDQ5J4SOJdNP+sreACogG+K137X4Gq0DH+XDS
+         zxJaGzTxSWq5sGmSX1iQEyKxq9lJInll9eP6DeVEsQCJcIbjcSqGVMMGZY2nBSsbo70q
+         iFmGX1X87gPM5ugwBONYdwGK7zPbabWcd5zAZHXrmlmzHffISLgugnmR4xPDKPIcCBLh
+         CxAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ugq75ELeX7Cb9NwTqOAK6t8e/BCdpBcxPz9GorJe3NgxfT15DMhUselKkZyU1XLpu9RFEaVOGcrWdonBC9CD/L+8mF0p6p6y47D6
+X-Gm-Message-State: AOJu0YwG6MsMhkx3MAJNbsjzqaxUt4Z7mOrqQWbTWqp9DcpQy9fVqslR
+	wUBvsDnvKS7yPdUvUV7uNsyByz21Yrto+JEhskx/gIn2Ty9B2mzEGiNWG6P/VNQ=
+X-Google-Smtp-Source: AGHT+IH4Ux+OgM8GODN1EjrwY/h8hAJyaOMv9iN+0tmp9IOucYOjlUfi/JOumwmy4S2/VC/nm5QgBQ==
+X-Received: by 2002:a05:6512:1106:b0:518:9183:864f with SMTP id l6-20020a056512110600b005189183864fmr15160417lfg.34.1713341538799;
+        Wed, 17 Apr 2024 01:12:18 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id u10-20020aa7db8a000000b005700ef75274sm4950049edt.33.2024.04.17.01.12.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 01:12:18 -0700 (PDT)
+Message-ID: <5c2a1b27-5602-461f-abe2-1b65f8245d8f@baylibre.com>
+Date: Wed, 17 Apr 2024 10:12:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/18] Add display support for the MT8365-EVK board
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org,
+ Fabien Parent <fparent@baylibre.com>
+References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
+ <afetelidcystq4avtmfcvf6h4l5zdthwozwbhjica6jjybkiln@oxx2fqk65psx>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <afetelidcystq4avtmfcvf6h4l5zdthwozwbhjica6jjybkiln@oxx2fqk65psx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Em Wed, 17 Apr 2024 09:48:18 +0200
-Thorsten Leemhuis <linux@leemhuis.info> escreveu:
 
-> Hi kernel.org helpdesk!
+
+On 17/04/2024 09:58, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Could you please create the email alias
-> do-not-apply-to-stable@kernel.org which redirects all mail to /dev/null,
-> just like stable@kernel.org does?
+> On Tue, Apr 16, 2024 at 05:53:01PM +0200, Alexandre Mergnat wrote:
+>> Alexandre Mergnat (16):
+>>        [...]
+>>        dt-bindings: pwm: mediatek,pwm-disp: add power-domains property
+>>        dt-bindings: pwm: mediatek,pwm-disp: add compatible for mt8365 SoC
+>> [...]
+>> base-commit: 890c94ce8a456aa4d7ead5f5fd2603b98dfe7b7e
+>> change-id: 20231023-display-support-c6418b30e419
 > 
-> That's an idea GregKH brought up a few days ago here:
-> https://lore.kernel.org/all/2024041123-earthling-primarily-4656@gregkh/
+> I cannot find 890c94ce8a456aa4d7ead5f5fd2603b98dfe7b7e, neither in next
+> nor in stable nor in drm-misc nor in Linus' repository.
 > 
-> To quote:
+> For sure it's not based on next, because otherwise you'd have noticed
+> that the power-domains property is already documented there. (Currently
+> as fb7c3d8ba039df877886fd457538d8b24ca9c84b.)
+
+You're right, this V2 is based on v6.9-rc3
+
 > 
-> > How about:
-> > 	cc: <do-not-apply-to-stable@kernel.org> # Reason goes here, and must be present
-> > 
-> > and we can make that address be routed to /dev/null just like
-> > <stable@kernel.org> is?  
+> Best regards
+> Uwe
 > 
-> There was some discussion about using something shorter, but in the end
-> there was no strong opposition and the thread ended a a few days ago.
 
-Heh, a shorter name would make it a lot easier to remember, specially
-since not wanting a patch to go to stable is an exception... I bet
-I'll never remember the right syntax, needing to look at the docs
-every time it would be used.
-
-IMO, something like:
-	no-stable
-or
-	nostable
-
-would do the trick and would be a lot easier to remember.
-
-Btw, IMO, it won't hurt accepting more than one variant that
-could be allowed, e. g. using a regular expression like:
-
-	(do)?[-_]?(nt|not?).*stable
-
-at the scripts used by stable developers - and maybe at the ML server - to
-catch different variations won't hurt, as it sounds likely that people will
-end messing up with a big name like "do-not-apply-to-stable", typing
-instead things like:
-
-	do_not_apply_to_stable
-	dont-apply-to-stable
-
-and other variants.
-
-Just my 2 cents.
-
+-- 
 Regards,
-Mauro
+Alexandre
