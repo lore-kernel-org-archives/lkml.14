@@ -1,71 +1,115 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390126A02E;
-	Wed, 17 Apr 2024 11:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982313C80B;
+	Wed, 17 Apr 2024 11:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713352467; cv=none; b=CWKggYpCkMCb7xwsDWsdDRe7Z66O08sA4UFh5Y7RR22yCnjQ7l6/IQwhFMx7Bv0iUGJoqCNhjLTF6gHLGhqy97/Ks2UxdyHZsTaEar0VdJdi38N/G761MPyVKY7cF8vt8dm9SG3du8iu96FpmxlT5UWvalOeAdwDPlx5t9fXzEk=
+	t=1713352478; cv=none; b=A8ATGn/0PwOirnVPnpVrOvebEL/RyH8PV93QS77KzsRTVO8FO6YJglXmBF8BAAPylT9pUZ8S5WWytQFRKU6nrDODJqKrRYcxh67zF94FBSid5F/+XIm5CJA16rfdfjJInmrk5pUkXrC2+fKodgXuTVoQpvnAGSCydDXZJYgHpFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713352467; c=relaxed/simple;
-	bh=WzRvm8JFqBZI9PDvUaCvjiXbej6u5EVb2PLAKCqA8jk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOOMYcpz49XvX/uYlDGyS1MU9RcvW6anUSHAQm2yJNX7QLl9u7FE0AlxQpjpfgDuf6dI309a7aZi6sPAB53V+TtBvM1fPYsb0ol4IgMqXxNcB2837Ej3J7nQD4zgQ6hkjM/J6tqZKS9R7K9v5p1gy0CDno2cdF/eQbNSKxVIbck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rx3En-0003qf-00; Wed, 17 Apr 2024 13:14:01 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id B18B4C01B0; Wed, 17 Apr 2024 13:10:52 +0200 (CEST)
-Date: Wed, 17 Apr 2024 13:10:52 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] MIPS: SGI-IP27: micro-optimize arch_init_irq()
-Message-ID: <Zh+uPB0druail4XC@alpha.franken.de>
-References: <20240416173711.613750-1-yury.norov@gmail.com>
- <20240416173711.613750-2-yury.norov@gmail.com>
+	s=arc-20240116; t=1713352478; c=relaxed/simple;
+	bh=fT3fYl303jdSQU2wOrHLkWojdTgxis/f2aI/wa4Ne4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Yz3UoC80Bw5qMHRu+JWvXwTQD/k/uVBuoOhDU2HY3GWT7f0OX/p7B6Q1NlrQcKI51+f99Oscd/Fc0pyMPdBaQlreBzohKwolXk1B2UkI64lznXJ6VkiyldnGiPzsA+qR2m6TiTbj0M7majsa9Q5gDJTSaaZPJ36/X0ZausrVdAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XCU3DgYz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XCU3DgYz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F3E7C072AA;
+	Wed, 17 Apr 2024 11:14:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713352477;
+	bh=fT3fYl303jdSQU2wOrHLkWojdTgxis/f2aI/wa4Ne4g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=XCU3DgYz/jX4ZV3jTocjUICRtT+4xfLATcreV0egGqAKhNZntfx1IXnmTwizis7H7
+	 tpaS81VdSiIpWH1LFk99/V7gM71s72GVdw0V97nCbTVVQVQF3HXVv28LP24XmFnKq/
+	 0RlMTm6E2z/BmCY0xWdoaIFX4e0FHTpOBoccScNv+MEkt/ODZhFm0rsrg1TO7WjOJ5
+	 JJXCKUA8xKszpH4gvheweCAoSly6jDjuyxFCpy7Sn0kJyKUI2zKIgD3odIe3yBS+c4
+	 FEoJlxs/sh2hbLaFUKmkSAIe1crrFKxoD+pTUMTNCotjbKYzdqsHUUnAYqv1MHzepF
+	 BZxI5Z1xVlNUA==
+Date: Wed, 17 Apr 2024 06:14:35 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 4/5] PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+Message-ID: <20240417111435.GA187921@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240416173711.613750-2-yury.norov@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240417075655.GF3894@thinkpad>
 
-On Tue, Apr 16, 2024 at 10:37:10AM -0700, Yury Norov wrote:
-> The function sets adjusted groups of bits in hub_irq_map by using
-> for-loops. There's a bitmap_set() function dedicated to do this.
+On Wed, Apr 17, 2024 at 01:26:55PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Apr 16, 2024 at 12:02:42PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Apr 15, 2024 at 03:33:28PM -0400, Frank Li wrote:
+> > > Add PCIE_MSG_CODE_PME_TURN_OFF macros to enable a PCIe host driver to send
+> > > PME_Turn_Off messages.
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/pci/pci.h | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index 19b4227a8a7e8..1f6d54a5a7cfc 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -30,6 +30,8 @@
+> > >  #define PCIE_MSG_TYPE_R_LOCAL	4
+> > >  #define PCIE_MSG_TYPE_R_GATHER	5
+> > >  
+> > > +#define PCIE_MSG_CODE_PME_TURN_OFF	0x19
+> > 
+> > This is defined in PCIe r6.0, sec 2.2.8.2, so move this below the INTx
+> > #defines so they're all in the order of the spec sections and add the
 > 
-> Because [0, CPU_CALL_B_IRQ] and [NI_BRDCAST_ERR_A, MSC_PANIC_INTR]
-> ranges belong to the same machine word, bitmap_set() would boil down
-> to an inline wrapper in both cases, avoiding generating a loop, with
-> the associate overhead. Effectively, it would be a compile-time:
-> 
-> 	*hub_irq_map = GENMASK() | GENMASK();
-> 
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> ---
->  arch/mips/sgi-ip27/ip27-irq.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/mips/sgi-ip27/ip27-irq.c b/arch/mips/sgi-ip27/ip27-irq.c
-> index 8f5299b269e7..d8acdf0439d2 100644
-> --- a/arch/mips/sgi-ip27/ip27-irq.c
-> +++ b/arch/mips/sgi-ip27/ip27-irq.c
-> @@ -277,7 +277,6 @@ void __init arch_init_irq(void)
->  {
->  	struct irq_domain *domain;
->  	struct fwnode_handle *fn;
-> -	int i;
+> I think it was me who suggested moving this up to keep it sorted in ascending
+> order :/
 
-I've already applied your first version, so I need an incremental
-patch, which just removes the unused variable.
+OK, the order you suggested is fine.
 
-Thomas.
+> > spec citation to follow the same style as the surrounding #defines,
+> > i.e.,
+> > 
+> >   /* Power Management Messages; PCIe r6.0, sec 2.2.8.2 */
+> >   #define PCIE_MSG_CODE_PME_TURN_OFF   0x19
+> > 
+> > While you're at it, tweak the [1/5] comments to be:
+> > 
+> >   /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
+> >   /* INTx Mechanism Messages; PCIe r6.0, sec 2.2.8.1 */
+> > 
+> > since the "Message Routing See: PCIe ..." comments are run together
+> > and need some punctuation between the text and the citation.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+But please do add and tweak the comments.
+
+> > With these,
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Still fine to add this :)
+
+> > >  /* INTx Mechanism Messages See: PCIe r6.0, sec 2.2.8.1 */
+> > >  #define PCIE_MSG_CODE_ASSERT_INTA	0x20
+> > >  #define PCIE_MSG_CODE_ASSERT_INTB	0x21
+> > > 
+> > > -- 
+> > > 2.34.1
+> > > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
