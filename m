@@ -1,192 +1,191 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CA81411DF
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EEC22334;
+	Wed, 17 Apr 2024 14:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364822; cv=none; b=NEy5JN3GyNC3hHIAzzrR5ICgqBzyFCE5EWGuk57pbK3/exbSF0hwo1qwdZwziCKJXrpNGuaS8pTzHCOHZVuG7VKnAeWbYZ7a15hGWMFOzToCHf4eqlO8PmMkF10giZc0ogR1yBoD/PBS2dvUdubH47gVn1pOTr38e/2tkcC1zyY=
+	t=1713364847; cv=none; b=Wrg0pPvTxLkLDWmMIvO0JKld/9JZ3LLpRBfcc+NnK2i8NDkfU8F3A1AbtAX6ur1QLL9krkmAyXGI2J3du/WFBBynkvpy1BHlppK9oxkuZyep5BP1plXtVXNcmKKzS2ck+elnr+6Iz7U6eZNiz0uzFJLGOLy1dlc5KR+A993XMDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364822; c=relaxed/simple;
-	bh=CG7A0XS5Xdpm61BM+Mu/W9XBB/wYmjyn3UwZ2G16VmI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dodomxhYV306ur0oPeJ69/GX7l90r4Fqq4ePdPMiRAL7R3xnvWCyzLiieVjVzqeRHfvp1aoeN7Ejl8LFSoIMM0gBDs59N9Wf6b4LNAjqZaDuXNC7kt55BjsJPHj7A9BqFBf8sxyhiCk/dvH721rcJk5UhB/7Lu7dxr+6TKp7E/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aHZGXw63; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713364847; c=relaxed/simple;
+	bh=l6RblOlXl3Z4QxQayRZcnk20p3UpL2HUX+J+Gz0pkp8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nME87NdWriqYtolyyO8M3tngpSzA4aRDcbSj+wOwIFMEsTTq3ONOx7CXpdejxaKZAxjFIvLucXrvYFRuq3JoDFzbpToKauhtzZnNedeypS25FyHzxKHRuiHGN0eDwE6l24bIVbnyGbJ0aG6hhMPay8PBncolXmNo7Zo0GgI765I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KcENXQdd; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aHZGXw63"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-47b99c0cce3so531796137.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713364819; x=1713969619; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9STrnlwuu+n4JzHQ1nF68oOe1/KL3VmX4gpavyNIyiA=;
-        b=aHZGXw638ZeW9a/y7K3QuwK5Q5gkaSAnb+mqwZ8H1Z6ZLwXzHGQYUFsksagZt903FA
-         UA/KIqjG9+MZqzvSwZOK/1blT2kS8sNmPK5Dp6920edLid4KNdEylWt8rgVBte44U/bz
-         QgQK82WB87LkQHk4mU7cBH+ShVRH0AXQV1u1BFLH/sSjR+mXnJOtYhbgGHtC2qJBjFVI
-         1G5cjKYiouzotV7gONGaIiMRfPlQvv6vQAEcu1A0m0WON5yfxy5AF2MwKnHRn3US9Ays
-         AA4nApWCdVOcumPJKgLVnMDqWBlbY89DsltEkp3N40z7BGa3LOYVKWwaewLWGNn5aPKt
-         FVpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713364819; x=1713969619;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9STrnlwuu+n4JzHQ1nF68oOe1/KL3VmX4gpavyNIyiA=;
-        b=kNSNc+1hZpCmr0QFSQChrQEzCy3ND21uBGkZHsmG8F3iCDwIZMJ+Y/X0GbQJOmiAFX
-         P1xdZYICR1L97hN7pIpc8eTsMesiM6IUBnhgxsh7lePga+W+w8J6F1RP/bEY7FHoSKRb
-         Awy6lY/ULoLSUgzK8i+wNc4P0o4/UInABsutrRmO6xTMVMsT9FoAUubqja54tWVMSDws
-         odbpZzxZ7M8RqGpOjRe09ZfMRX4giQ5Z31ZQQpAIxjUKyFXDLUl8x5o5rVEtgj1ig9Rw
-         LaDiPiDy3HyQYo6q51hUALx8hdvhaCxCgHi73aRdgWaUeetNskEn3/+kZqDU02rInwdc
-         6CRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3bFDhHoStyAPfcNlE9f1p1qmdAaK9ahu9MzmSJcVH7WrHA4EM4/I8zyJ7KS363mWjF4CcwNZEO8hmgnCVDsnfRs9ZbQAjuSgYGgip
-X-Gm-Message-State: AOJu0Yy29W9xBSO/DkL1UOg2FreDE9miINn6UEGGWNjJXjdSKsKOQEcm
-	Ky+rkcea5i1HWVCUxhwjepjzJ5b8XQqgtU1HjoTFoE9v4YY/7mu1qIAaUXhrLk+R9LRsRSjMMo4
-	54Uqy3zi0Jn7EIJT3PA8HFKRBFNmCShapMii1
-X-Google-Smtp-Source: AGHT+IEAhdkE9/+u7jKI1qVzSkpiUAFnT/Mz0cfCADATqN+blmQ68F1aCON7VI4CU5CS05totk8sdgrrvWMi3cB58MI=
-X-Received: by 2002:a05:6122:882:b0:4c8:90e5:6792 with SMTP id
- 2-20020a056122088200b004c890e56792mr16551902vkf.7.1713364818511; Wed, 17 Apr
- 2024 07:40:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KcENXQdd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BF6CD1BF21B;
+	Wed, 17 Apr 2024 14:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713364842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=X+YKNUMaqyQFYcQmtzuWIvO6540fSDFP2uwDUeOGZe4=;
+	b=KcENXQddMF7F7+SheJ7VFPdhq5zMyY0f9Em52VPM93SknprROw3+0ZqnUpHq1PhnEWXSDv
+	ffZoRswxx6AEHGsalLmDh3GLS+Ix1XZESl/XX4/sPxu4XQ1BXyqU9Us1V6V8KLck8BzP/j
+	/1gOwO6XuUX4ZJGQRCYsku/YPasB0hM/mvPvAeSb1XtpGr5AY5QuSj1sSkCiB/L5oHs3YU
+	lBEacM6EkJT5SqHzYhkkJQM5HEdlR7184wGj+zflhPUNf8mk398gUNKQsOu5WDHXiWq6iJ
+	DQI1P9HWhLKi9l5PHbHZr8vmNpTXdPdlm5kiQlNju+DzTfH/xaEXMEaV1tm4dQ==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v9 00/14] net: Add support for Power over Ethernet
+ (PoE)
+Date: Wed, 17 Apr 2024 16:39:48 +0200
+Message-Id: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com>
- <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com> <20240417152802.6b7a7384@eugeo>
-In-Reply-To: <20240417152802.6b7a7384@eugeo>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 17 Apr 2024 16:40:07 +0200
-Message-ID: <CAH5fLgjcO0mrQ=X2QG1qS+sTpWDnBfGxXGWn-3wBQzn3MP8pQQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
-To: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADTfH2YC/23S20rEMBCA4VdZcm1lZjJNU698DxHJYeoGtF3aW
+ laWvruxIN1QL4fh+0NIbmqSMcmknk43NcqSpjT0eWgfTiqcXf8uVYp5VgSkEYirTtz8NcrbZZA
+ KdcstSKMZtMriMkqXrlvtRfUyV71cZ/WaN+c0zcP4vR2z4LbfioimKC5YQeWFLTD7jrh99sMwf
+ 6T+MQyfW2mhXRNgqSnr2kQbXDDQdO6o9Z9mILCl1r9aYyTTMJtWjprvNNal5qx17T0H0mRMOOr
+ 6TlNT6jprsh04x5bYxKM2u879UpusAwKiN+Iw+KNuds3QlrrJGlG0lS5ylH/ube80ln9gsVlLf
+ iwUayC6utTruv4ADra3qmQCAAA=
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, Apr 17, 2024 at 4:28=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote:
->
-> On Mon, 15 Apr 2024 07:13:53 +0000
-> Alice Ryhl <aliceryhl@google.com> wrote:
->
-> > From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> >
-> > A pointer to an area in userspace memory, which can be either read-only
-> > or read-write.
-> >
-> > All methods on this struct are safe: attempting to read or write on bad
-> > addresses (either out of the bound of the slice or unmapped addresses)
-> > will return `EFAULT`. Concurrent access, *including data races to/from
-> > userspace memory*, is permitted, because fundamentally another userspac=
-e
-> > thread/process could always be modifying memory at the same time (in th=
-e
-> > same way that userspace Rust's `std::io` permits data races with the
-> > contents of files on disk). In the presence of a race, the exact byte
-> > values read/written are unspecified but the operation is well-defined.
-> > Kernelspace code should validate its copy of data after completing a
-> > read, and not expect that multiple reads of the same address will retur=
-n
-> > the same value.
-> >
-> > These APIs are designed to make it difficult to accidentally write
-> > TOCTOU bugs. Every time you read from a memory location, the pointer is
-> > advanced by the length so that you cannot use that reader to read the
-> > same memory location twice. Preventing double-fetches avoids TOCTOU
-> > bugs. This is accomplished by taking `self` by value to prevent
-> > obtaining multiple readers on a given `UserSlicePtr`, and the readers
-> > only permitting forward reads. If double-fetching a memory location is
-> > necessary for some reason, then that is done by creating multiple
-> > readers to the same memory location.
-> >
-> > Constructing a `UserSlicePtr` performs no checks on the provided
-> > address and length, it can safely be constructed inside a kernel thread
-> > with no current userspace process. Reads and writes wrap the kernel API=
-s
-> > `copy_from_user` and `copy_to_user`, which check the memory map of the
-> > current process and enforce that the address range is within the user
-> > range (no additional calls to `access_ok` are needed).
-> >
-> > This code is based on something that was originally written by Wedson o=
-n
-> > the old rust branch. It was modified by Alice by removing the
-> > `IoBufferReader` and `IoBufferWriter` traits, and various other changes=
-.
-> >
-> > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/helpers.c         |  14 +++
-> >  rust/kernel/lib.rs     |   1 +
-> >  rust/kernel/uaccess.rs | 304 +++++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 319 insertions(+)
-> >
-> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
->
-> > +/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
-> > +/// [`clone_reader`]: UserSliceReader::clone_reader
-> > +pub struct UserSlice {
-> > +    ptr: *mut c_void,
-> > +    length: usize,
-> > +}
->
-> How useful is the `c_void` in the struct and new signature? They tend
-> to not be very useful in Rust. Given that provenance doesn't matter
-> for userspace pointers, could this be `usize` simply?
->
-> I think `*mut u8` or `*mut ()` makes more sense than `*mut c_void` for
-> Rust code even if we don't want to use `usize`.
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-I don't have a strong opinion here. I suppose a usize could make
-sense. But I also think c_void is fine, and I lean towards not
-changing it. :)
+This patch series aims at adding support for PoE (Power over Ethernet),
+based on the already existing support for PoDL (Power over Data Line)
+implementation. In addition, it adds support for two specific PoE
+controller, the Microchip PD692x0 and the TI TPS23881.
 
-> Some thinking aloud and brainstorming bits about the API.
->
-> I wonder if it make sense to have `User<[u8]>` instead of `UserSlice`?
-> The `User` type can be defined like this:
->
-> ```rust
-> struct User<T: ?Sized> {
->    ptr: *mut T,
-> }
-> ```
->
-> and this allows arbitrary T as long as it's POD. So we could have
-> `User<[u8]>`, `User<u32>`, `User<PodStruct>`. I imagine the
-> `User<[u8]>` would be the general usage and the latter ones can be
-> especially helpful if you are trying to implement ioctl and need to
-> copy fixed size data structs from userspace.
+3 patches has already been merged thanks to Jakub.
 
-Hmm, we have to be careful here. Generally, when you get a user slice
-via an ioctl, you should make sure to use the length you get from
-userspace. In binder, it looks like this:
+In detail:
+- Patch 1 to 10 prepare net to support PoE devices.
+- Patch 11 and 12 add PD692x0 PoE PSE controller driver and its binding.
+- Patch 13 and 14 add TI TPS23881 PSE controller driver and its binding.
 
-let user_slice =3D UserSlice::new(arg, _IOC_SIZE(cmd));
+Changes in v9:
+- Fix few kdoc return description missing.
+- Fix a reference leak.
+- Link to v8: https://lore.kernel.org/r/20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com
 
-so whichever API we use, we must make sure to get the length as an
-argument in bytes. What should we do if the length is not a multiple
-of size_of(T)?
+Changes in v8:
+- Fix a build error due to an artifact from an ancient version of the
+  series.
+- Link to v7: https://lore.kernel.org/r/20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com
 
-Another issue is that there's no stable way to get the length from a
-`*mut [T]` without creating a reference, which is not okay for a user
-slice.
+Changes in v7:
+- Fix code, doc and kdoc nit.
+- Fix few pd692x0 dt binding issues.
+- Rename *flash_fw* functions to *flash_sram_fw* in tps23881 driver.
+- Link to v6: https://lore.kernel.org/r/20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com
 
-Alice
+Changes in v6:
+- TPS23881 fix firmware management release missing.
+- Use pcdev device pointer as regulator consumer and provider.
+- Rename of_legacy to no_of_pse_pi.
+- Add kdoc, and separate functions for better readability.
+- Add vpwr-supply regulator parent.
+- Link to v5: https://lore.kernel.org/r/20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com
+
+Changes in v5:
+- Fix bindings nit.
+- Add supported-polarity parameter to bindings.
+- Fix yamllint binding errors.
+- Remove the nested lock brought by the use of regulator framework.
+- Link to v4: https://lore.kernel.org/r/20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com
+
+Changes in v4:
+- Replaced sponsored-by tag by a simple sentence.
+- Fix pse_pi node bindings.
+- Add pse pi documentation written by Oleksij.
+- Link to v3: https://lore.kernel.org/r/20240208-feature_poe-v3-0-531d2674469e@bootlin.com
+
+Changes in v3:
+- Add patches to add Oleksij and myself to PSE MAINTAINERS.
+- Add patches to add pse devlink.
+- Add TI TPS23881 PSE controller driver with its binding.
+- Replace pse_get_types helper by pse_has_podl and pse_has_c33
+- Changed the PSE core bindings.
+- Add a setup_pi_matrix callback.
+- Register regulator for each PSE PI (Power Interface).
+- Changed the PD692x0 bindings.
+- Updated PD692x0 drivers to new bindings and PSE PI description.
+- Updated PD692x0 drivers according to the reviews and made fixes.
+- Link to v2: https://lore.kernel.org/r/20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com
+
+Changes in v2:
+- Extract "firmware_loader: Expand Firmware upload error codes patches" to
+  send it alone and get it merge in an immutable branch.
+- Add "c33" prefix for PoE variables and enums.
+- Enhance few comments.
+- Add PSE Documentation.
+- Make several changes in pd692x0 driver, mainly for readibility.
+- Link to v1: https://lore.kernel.org/r/20231116-feature_poe-v1-0-be48044bf249@bootlin.com
+
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (14):
+      ethtool: Expand Ethernet Power Equipment with c33 (PoE) alongside PoDL
+      net: pse-pd: Introduce PSE types enumeration
+      net: ethtool: pse-pd: Expand pse commands with the PSE PoE interface
+      netlink: specs: Modify pse attribute prefix
+      netlink: specs: Expand the pse netlink command with PoE interface
+      MAINTAINERS: Add myself to pse networking maintainer
+      net: pse-pd: Add support for PSE PIs
+      dt-bindings: net: pse-pd: Add another way of describing several PSE PIs
+      net: pse-pd: Add support for setup_pi_matrix callback
+      net: pse-pd: Use regulator framework within PSE framework
+      dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller
+      net: pse-pd: Add PD692x0 PSE controller driver
+      dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller
+      net: pse-pd: Add TI TPS23881 PSE controller driver
+
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  169 +++
+ .../bindings/net/pse-pd/pse-controller.yaml        |  101 +-
+ .../bindings/net/pse-pd/ti,tps23881.yaml           |   95 ++
+ Documentation/netlink/specs/ethtool.yaml           |   33 +-
+ Documentation/networking/ethtool-netlink.rst       |   20 +
+ Documentation/networking/index.rst                 |    1 +
+ Documentation/networking/pse-pd/index.rst          |   10 +
+ Documentation/networking/pse-pd/introduction.rst   |   73 ++
+ Documentation/networking/pse-pd/pse-pi.rst         |  302 +++++
+ MAINTAINERS                                        |    1 +
+ drivers/net/pse-pd/Kconfig                         |   20 +
+ drivers/net/pse-pd/Makefile                        |    2 +
+ drivers/net/pse-pd/pd692x0.c                       | 1223 ++++++++++++++++++++
+ drivers/net/pse-pd/pse_core.c                      |  515 ++++++++-
+ drivers/net/pse-pd/pse_regulator.c                 |   49 +-
+ drivers/net/pse-pd/tps23881.c                      |  820 +++++++++++++
+ include/linux/pse-pd/pse.h                         |   79 +-
+ include/uapi/linux/ethtool.h                       |   55 +
+ include/uapi/linux/ethtool_netlink.h               |    3 +
+ net/ethtool/pse-pd.c                               |   60 +-
+ 20 files changed, 3534 insertions(+), 97 deletions(-)
+---
+base-commit: 4103ffb31295dee66eaa0deba04b36c5051a2db4
+change-id: 20231024-feature_poe-139490e73403
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
