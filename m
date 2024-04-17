@@ -1,109 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB46A02E;
-	Wed, 17 Apr 2024 08:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162566CDA8;
+	Wed, 17 Apr 2024 08:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341610; cv=none; b=nLyGyEcBeejDwAA9JnrfUdtxwYMBwH6Tlico642CGjxqNPMxFWI40VHZ6Q/6pvBJActlohk5XP8wipwPDB/APjKQewMlkLo9AbMyvmhCrcBCq/xc+zMxdwy60rHE9gUAVAXijPs7dCBo6U1sNAwXv3cf8tVPQcgS0WjaNUhk7Jk=
+	t=1713341627; cv=none; b=edG6t+de4QQB4ODT17FvjCoKc45/Q8lBG7Hpv7h6d0OyTIOlg89VFhEvDVvr3l2ojKwhu+QVh+t1vl8YF0mGkuZLMbos5C0ZzBRYPZtDvc289vTKU4ZEE11Z9qH8Cq+L4dWE9iEJlryiUK6WxRGEZX8GwD6M1a+wmfsRkvAl1r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341610; c=relaxed/simple;
-	bh=Fx5PXmOnt+cu8UKI/4+7CAwyifLLmMRP4sxlDsBLIqg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=at2xlLvD0BCCd+dt2x0OPeleO4bzXd5c6kmxHaYLmwsnews6M4X5ZQZso1+wb2eBLVQbu9mcge/QiEVTwgXVqPBwUvK5E/UbrF++UAVU5nsX7sk0LUtTCcMEHok8Ri9WMLFqe4P7fLkSYw6OpVzxAR9+c10FG/JD49ZY8DfHXSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W6JgFA7d; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713341627; c=relaxed/simple;
+	bh=1CfEx7En//rQTPjNkdBRxgYY8YsR3cT9VDy6Q3aq1js=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tLwtRdTnqFHH0S+OgXHIfqieRfoIOhE1fZ0TPPUnnRy1IqKB3a73HNLW/yCRXo+T9CqUsz8wrW/jrExhOCrSLqGMI4lvLeTJVPrFhxu86XAr6sGwsCXnMi5GDZknHOpZ9MRwd7O5JJqG5Xqy76BdBroDOZvxV8zJawrjlXIaQNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b=h39TEJPv; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W6JgFA7d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713341608; x=1744877608;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Fx5PXmOnt+cu8UKI/4+7CAwyifLLmMRP4sxlDsBLIqg=;
-  b=W6JgFA7drF0o6KTbkn2f3q8ilIHT3v/MK8ckABXMniBsVUYVO4n3F/0O
-   5sqjJee8PWiqzw+9QVwpT0nW/yCNau0YROe0N+jsWdpSgaJDarEmm9UhW
-   ujTjn6DpunL+g21kB4QUyKTOwVtdxrT4bCrddAL2pS3WmD82yB4DlInBD
-   hmdNXcduqGElOhF1FXQGVbAU8SW/GPJaAA3pApX6hYN77uBgaEO1o42pO
-   0q5/Nk+6Fsu3cjuqGaqBvBE60QGl+7AQhDMPiR2c/anHt4Q4G84cO5WYd
-   pEvVV98/bKROfLZaFhnCJoIhujC5cGGoIDRwQAmHmmBpnzYvU1EhFRAwR
-   w==;
-X-CSE-ConnectionGUID: LkPksYK3SDuravLB6emjNw==
-X-CSE-MsgGUID: S+BcJxjCTyqHbQ1rbKdVOg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8679119"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="8679119"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:13:27 -0700
-X-CSE-ConnectionGUID: 4i3Fn0c/QZGSzXPKPX/6Uw==
-X-CSE-MsgGUID: K1VgBYjtTfGYPpnA1JUHjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="22616220"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:13:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 17 Apr 2024 11:13:21 +0300 (EEST)
-To: Michael Pratt <mcpratt@pm.me>
-cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, 
-    Wander Lairson Costa <wander@redhat.com>, 
-    Vamshi Gajjela <vamshigajjela@google.com>
-Subject: Re: [PATCH v2 3/3] serial: 8250: Set fifo timeout using
- uart_fifo_timeout()
-In-Reply-To: <CmMdmgjPFh8R-rH0-mjU0QdQcqhRwVr9bmApDJ7BV_9DjRBL35K_Qfjs7oIPVwGFv5mdT476a8tPtkgnWqY2lRBEfGvfhjk0yW9ueI4bcf8=@pm.me>
-Message-ID: <7e66eafe-902c-38ab-b624-d9386c1bcd22@linux.intel.com>
-References: <20240416182741.22514-1-mcpratt@pm.me> <20240416182741.22514-4-mcpratt@pm.me> <Zh7KIz1AGyyS3zLT@smile.fi.intel.com> <CmMdmgjPFh8R-rH0-mjU0QdQcqhRwVr9bmApDJ7BV_9DjRBL35K_Qfjs7oIPVwGFv5mdT476a8tPtkgnWqY2lRBEfGvfhjk0yW9ueI4bcf8=@pm.me>
+	dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b="h39TEJPv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.es; i=@amazon.es; q=dns/txt; s=amazon201209;
+  t=1713341626; x=1744877626;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hme3ue3JG7Wn60xJ6N2Jtr7lrjUzAQYZjAaiSzLCYi0=;
+  b=h39TEJPvYoQLHDI+Lwl98vnCIOCgA+GziCZHX7jy9mpLnT5K1X/IQRvr
+   iLX0xn498urAtubGi18M9rVWlDn9Wm53Fml1UZ5+7PoiVGH6wNGRhvhhg
+   a3nYbQJJ6Abe4C5KtQegts9gNUxZrlhdTZpVop7S6yGxw2NjvTXV1JVUO
+   U=;
+X-IronPort-AV: E=Sophos;i="6.07,208,1708387200"; 
+   d="scan'208";a="82072282"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 08:13:42 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.17.79:52930]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.7.11:2525] with esmtp (Farcaster)
+ id fb31b545-39b8-4f6a-ba97-b76de78b4325; Wed, 17 Apr 2024 08:13:41 +0000 (UTC)
+X-Farcaster-Flow-ID: fb31b545-39b8-4f6a-ba97-b76de78b4325
+Received: from EX19D037EUB003.ant.amazon.com (10.252.61.119) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 17 Apr 2024 08:13:39 +0000
+Received: from f4d4887fdcfb.ant.amazon.com (10.1.212.48) by
+ EX19D037EUB003.ant.amazon.com (10.252.61.119) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 17 Apr 2024 08:13:34 +0000
+From: Babis Chalios <bchalios@amazon.es>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <olivia@selenic.com>,
+	<herbert@gondor.apana.org.au>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <sudanl@amazon.com>, <bchalios@amazon.es>, <graf@amazon.de>,
+	<xmarcalx@amazon.co.uk>, <dwmw@amazon.co.uk>
+Subject: [PATCH v5 3/5] virt: vmgenid: enable driver regardless of ACPI config
+Date: Wed, 17 Apr 2024 10:12:10 +0200
+Message-ID: <20240417081212.99657-4-bchalios@amazon.es>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <20240417081212.99657-1-bchalios@amazon.es>
+References: <20240417081212.99657-1-bchalios@amazon.es>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
+ EX19D037EUB003.ant.amazon.com (10.252.61.119)
 
-On Tue, 16 Apr 2024, Michael Pratt wrote:
-> On Tuesday, April 16th, 2024 at 14:57, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > > unsigned int status, tmout = 10000;
-> > > 
-> > > - /* Wait up to 10ms for the character(s) to be sent. /
-> > > + / Wait for a time relative to buffer size and baud */
-> > > + if (up->fifo_enable && up->port.timeout)
-> > > + tmout = jiffies_to_usecs(up->port.timeout);
-> > 
-> > 
-> > Why do we still use that default? Can't we calculate timeout even for\
-> > FIFO-less / FIFO-disabled devices?
+From: Sudan Landge <sudanl@amazon.com>
 
-Yes we definitely should be able to. Unfortunately these patches just keep 
-coming back not in the form that follows the review feedback, but they 
-come up their own way of doing things which is way worse and ignores the 
-given feedback.
+Since with next commits vmgenid driver will support both ACPI and
+devicetree, and since either one of CONFIG_ACPI or CONFIG_OF will
+always be enabled, there is no need for the driver compilation to
+depend on ACPI/OF. So, remove ACPI dependency for compiling the driver.
 
-> Maybe it's possible that there is some kind of rare case where the LSR register
-> is not working or not configured properly for a device in which support
-> is being worked on...without a timeout, that would result in an infinite loop.
+Signed-off-by: Sudan Landge <sudanl@amazon.com>
+---
+ drivers/virt/Kconfig   |  1 -
+ drivers/virt/vmgenid.c | 16 +++++++++++-----
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-"without a timeout" is not what Andy said. He said you should always have 
-a timeout, regardless of there being FIFO or not. And that timeout should 
-be derived in the same manner from baudrate and FIFO size (to address the
-cases w/o FIFO, the fifosize should be lower bounded to 1 while 
-calculating the FIFO timeout).
-
-> AFAIK, when everything is working properly, there is no such thing as needing
-> a timeout for a uart device without fifo, as every single byte written would trigger
-> an interrupt anyway.
-
-While I agree the general principle, that this is backup that should not 
-even be needed, the statement is partly incorrect. We don't get interrupts 
-during console write because they're disabled. But LSR should still change 
-and allow progress without the backup timeout.
-
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index 40129b6f0eca..d8c848cf09a6 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -16,7 +16,6 @@ if VIRT_DRIVERS
+ config VMGENID
+ 	tristate "Virtual Machine Generation ID driver"
+ 	default y
+-	depends on ACPI
+ 	help
+ 	  Say Y here to use the hypervisor-provided Virtual Machine Generation ID
+ 	  to reseed the RNG when the VM is cloned. This is highly recommended if
+diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+index c028e2064fdd..3d93e3fb94c4 100644
+--- a/drivers/virt/vmgenid.c
++++ b/drivers/virt/vmgenid.c
+@@ -36,13 +36,15 @@ static void vmgenid_notify(struct device *device)
+ 	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
+ }
+ 
+-static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
+-				 u32 __always_unused event, void *dev)
++static void __maybe_unused
++vmgenid_acpi_handler(acpi_handle __always_unused handle,
++		     u32 __always_unused event, void *dev)
+ {
+ 	vmgenid_notify(dev);
+ }
+ 
+-static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
++static int __maybe_unused
++setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
+ {
+ 	if (IS_ERR(next_id))
+ 		return PTR_ERR(next_id);
+@@ -53,9 +55,10 @@ static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
+ 	return 0;
+ }
+ 
+-static int vmgenid_add_acpi(struct device *dev,
+-			    struct vmgenid_state *state)
++static int vmgenid_add_acpi(struct device __maybe_unused *dev,
++			    struct vmgenid_state __maybe_unused *state)
+ {
++#if IS_ENABLED(CONFIG_ACPI)
+ 	struct acpi_device *device = ACPI_COMPANION(dev);
+ 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
+ 	union acpi_object *obj;
+@@ -98,6 +101,9 @@ static int vmgenid_add_acpi(struct device *dev,
+ out:
+ 	ACPI_FREE(parsed.pointer);
+ 	return ret;
++#else
++	return -EINVAL;
++#endif
+ }
+ 
+ static int vmgenid_add(struct platform_device *pdev)
 -- 
- i.
+2.40.1
 
