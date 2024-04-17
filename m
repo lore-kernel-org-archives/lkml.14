@@ -1,119 +1,108 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB458F72;
-	Wed, 17 Apr 2024 02:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C64187F;
+	Wed, 17 Apr 2024 02:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713321805; cv=none; b=eigm2dZ5ZGLAkYc7fL9BFCUSpHB25DVEgkgBcgIEDCXSv6q0O3rg3g7kEhJ0yATH5j7AzyMe1qXMyr30jCuhaWWsZW1YV2CcQ3KBKEWjEACktAFN8zBpIb0j2Cnfc/spmRKCRhouoR1ipVupxKn6M3sDJEa5df6mEcp+pQjkgOE=
+	t=1713321963; cv=none; b=g+nKTEsEgFLnrARyEEkV6M2XNt93OXLxCHjdM/bKKU4UN1XxUI5E2PnXr97OgTKsw/0vr4fBGNSWkmAWKfkOfdb5aa5/NtaBPdnIISq1qrUPrAops4883MVnknLvtIIVQ2W4hufjgfF9ksMUYSSh1RPgeEiVc5aZS2teV9GgDcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713321805; c=relaxed/simple;
-	bh=RW42ADRJHbjCU+N4jM5hsf6GoRXrS/Cmrp4V+FIUu5E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fucL357ZtYtre/vBOYGANK4eF+hpxctK6SlbRSMVsQ9eh358htenOHWTv1KUbWKPUfSC/oIIzUP4ATLKEzwqSqnjA+dvzZq1d4lD3MvcRE6IblP0nL2tyTtH2KPDVgaZic7yZlmRaD0OJcs3XzTRJi2uAOtn9U1k0Hg3NlkzNKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Yu5hAx2K; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713321963; c=relaxed/simple;
+	bh=oRtdwcXfjYROqHZ+bXnWxLq9Cp1snZlo3O4Podnjrow=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RxonZy8AfajPp+H/mtc5Rgr4wpBFYLJGv7Af+8rRhUOjZ3MUaLj0p/wEyBju66ezuSm8Ql3LBLMRKcQWQvuonAeVtW6TBobDp8YVKZDlaqYos9DLdHopB+m9G/6CFsAxKuPBGWshqXCOkORmqUTsJd8AORVuE2JEl4U5lBWS8tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpW4vqh0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Yu5hAx2K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713321804; x=1744857804;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=RW42ADRJHbjCU+N4jM5hsf6GoRXrS/Cmrp4V+FIUu5E=;
-  b=Yu5hAx2KL8ec4gIXlCFECeQNuexb6AQfKJ96mf0JFbOMScXI96G1J5W3
-   KZWRinjmOJNil77vNj6pEKZQ5WyGBNN1Cz7D4bdNnMZJRx2XrJvfgUkOR
-   y962GvtUcmdmhOXir9nfAMCuneDs0hjo6QOA3UDafeQ1EyMHmw9Gz7sl5
-   Wk0CI09bkxdUZzHTEG9/f7j2G0wdJt9H3Ai6kYsuoK4GIrgDS812hWIV9
-   cAB0+Xz87/3sOgCs+eG0ZynyyVnwjzvnyx6zB70R+H/7HXab+Uxe/eH+x
-   QW9l9mbkfc0flJFPKsMkQxzBsK1C2WHkZ4BPs39EdLAQHXPeHJaOq2dXV
-   A==;
-X-CSE-ConnectionGUID: lGxh+0ByRtCkzh726CowEg==
-X-CSE-MsgGUID: TmGpvyGHREyqXt8rLiNfvA==
-X-IronPort-AV: E=Sophos;i="6.07,207,1708412400"; 
-   d="scan'208";a="252174814"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Apr 2024 19:43:23 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 19:42:43 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 19:42:32 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <Dharma.B@microchip.com>, <andrzej.hajda@intel.com>,
-	<neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-	<Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
-	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <Manikandan.M@microchip.com>, <arnd@arndb.de>,
-	<geert+renesas@glider.be>, <Jason@zx2c4.com>, <mpe@ellerman.id.au>,
-	<gerg@linux-m68k.org>, <rdunlap@infradead.org>, <vbabka@suse.cz>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <oe-kbuild-all@lists.linux.dev>, Dharma Balasubiramani
-	<dharma.b@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH v6 3/4] MAINTAINERS: add SAM9X7 SoC's LVDS controller
-Date: Wed, 17 Apr 2024 08:11:36 +0530
-Message-ID: <20240417024137.144727-4-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240417024137.144727-1-dharma.b@microchip.com>
-References: <20240417024137.144727-1-dharma.b@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpW4vqh0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92545C113CE;
+	Wed, 17 Apr 2024 02:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713321963;
+	bh=oRtdwcXfjYROqHZ+bXnWxLq9Cp1snZlo3O4Podnjrow=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=fpW4vqh0BjpWsLCUBevhTAyL3ZG+QFur7d8HIWX6Yl7PECKnUaJzZcqEd5Ajg8CBU
+	 K7HvNhnlbXjf7UZJtI4CaVPZcDS0xmFpBGVy30SX5YP41IDLBxKGeOOUpg0F0DYFEI
+	 bOKY/MzExNwizaQjM7QQYUETz6XvNP5uEgTME7XokykGI2UWrI5jnRaupWxBct/vYK
+	 MML/15VIOedxSUXFFbbdLapD66lSgkXCrdhZFGEOS7lgI1kTd/afdl1RA6XdAY1J6z
+	 P36J6UIiGar0gzwO1eOYczLSgdXW5A7V4CkC3+Bi978ODdvCJjR4aBYRcmTGwv18z7
+	 7pK1Huo2rX3iw==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.Li@nxp.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240416-esai_arm_dts_warning-v2-0-879e59c0c3b8@nxp.com>
+References: <20240416-esai_arm_dts_warning-v2-0-879e59c0c3b8@nxp.com>
+Subject: Re: (subset) [PATCH v2 0/4] arm: dts: nxp: imx6: fix esai related
+ dtb_check warning
+Message-Id: <171332196061.1698800.11762670932468430918.b4-ty@kernel.org>
+Date: Wed, 17 Apr 2024 11:46:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-Add the newly added LVDS controller for the SAM9X7 SoC to the existing
-MAINTAINERS entry.
+On Tue, 16 Apr 2024 10:47:46 -0400, Frank Li wrote:
+> two patches update binding doc. two patches fix dts file.
+> 
+> dt_binding_check each patch.
+> 
+> git rebase -i aa8a0e0038936 --exec "make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml"
+> Executing: make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml
+>   LINT    Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/sound/fsl,esai.example.dts
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/sound/fsl,esai.example.dtb
+> Executing: make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml
+>   DTEX    Documentation/devicetree/bindings/sound/fsl,esai.example.dts
+>   LINT    Documentation/devicetree/bindings
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/sound/fsl,esai.example.dtb
+> Executing: make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml
+> Executing: make ARCH=arm CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,esai.yaml
+> Successfully rebased and updated refs/heads/b4/esai_arm_dts_warning.
+> 
+> [...]
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Changelog
-v5 -> v6
-- Correct the file name sam9x7-lvds.yaml -> sam9x75-lvds.yaml.
-v4 -> v5
-v3 -> v4
-- No changes.
-v2 -> v3
-- Move the entry before "MICROCHIP SAMA5D2-COMPATIBLE ADC DRIVER".
-v1 -> v2
-- No Changes.
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Applied to
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c23fda1aa1f0..e49347eac596 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14563,6 +14563,14 @@ S:	Supported
- F:	Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
- F:	drivers/pwm/pwm-atmel.c
- 
-+MICROCHIP SAM9x7-COMPATIBLE LVDS CONTROLLER
-+M:	Manikandan Muralidharan <manikandan.m@microchip.com>
-+M:	Dharma Balasubiramani <dharma.b@microchip.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
-+F:	drivers/gpu/drm/bridge/microchip-lvds.c
-+
- MICROCHIP SAMA5D2-COMPATIBLE ADC DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
- L:	linux-iio@vger.kernel.org
--- 
-2.25.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/4] ASoC: dt-bindings: fsl-esai: Remove 'fsl,*' from required list
+      commit: 5894ff6c4707af645f2faa36cf07cc2745e1658f
+[2/4] ASoC: dt-bindings: fsl-esai: Add ref: dai-common.yaml
+      commit: 9aea6d64bb3acbff6b2f33cb5bbff65e824ab9a7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
