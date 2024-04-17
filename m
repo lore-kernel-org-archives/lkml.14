@@ -1,119 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7863D0C6;
-	Wed, 17 Apr 2024 20:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085473AC01
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713385981; cv=none; b=H0aBrObcnktb1cCvoylrLpahtF0Y/4G1vg0+XdvmHSq7sZCQPLnCE/e+azBxdgjoEnHe5bDHkUY92JQail7ZbZRWnCJkARZfbZ171kGmbCkT5SokXnNwmD/zFsEFLJ/6s5OnTyo1ouDcgscuavyHb0L/vGvwjO1Mbc2Pe3zZ2FI=
+	t=1713386004; cv=none; b=E0cTYG9YQiMWFsUoJlA1iMjj2r4OKG8lv0VXSSWIGys3yBM+3ONcXN9QSYUY7onDULRx2skWbjIlVeQ++2ao+mLfO7prS7sbJj/P9b/Xoaz6IbwZrDcYQNwf7BXlXnf9efKUavr6x9S/96IOhB+rO9zhnGPvnblAzZ1Hx4qGSFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713385981; c=relaxed/simple;
-	bh=lTR6y4fPduiya82NnYrhltb4YJaAycBG4JTcNmaYLjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZR7ayma/1Ft3xU3bpK8cSLW7kUDLEA/UNHQZ1emPqPiaoDVI0dOztYS9FHn1g6C5kQBwQQgIL0GxMBOXRY0Pcyt3rStbXCFuHn3ztq3BtJpxPV7YLLVjdNtJYTA8RPdmcpm2bpfYGeEi6RbZSNi7W5Cc9y+2rb3UEbT4TSLlGW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lf5519Ya; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713386004; c=relaxed/simple;
+	bh=LU3waJkcyI1Xdf3+JQ3ynvxRqPfmiDeVyiyOnYLI/RQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKO8iQkeh3AuHwX2ngkblIHWZ1wtACTitueRDtFY5LIQzaf0iMGpj1DYvyy7N28swMnZONlR2mx2fzGg0dVZM3kXlDeSG8K5C9M7Pwy22mkv/w1NKAiTEu9MzBaheCGnjDhP4sLNfku2jdBeAnL1kzv8HyO+O2fQSS30to1GW6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuB3SxOX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lf5519Ya"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713385980; x=1744921980;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lTR6y4fPduiya82NnYrhltb4YJaAycBG4JTcNmaYLjo=;
-  b=lf5519Ya8+Gya8nbPhFkzhWZJqOzwoxOgy98QO8rVgb5dq5p9jqj35p9
-   NUy+mbOK9R+FXC/WhmJMXFph+9EKeVRuoqF12HfNiR5lBp7ejzLEaeeu0
-   V0eyTt8VyawbVu6frIzqSDUnrHtVfogStuc136A1xCIIBzI1/k61yE5L3
-   40bxz67WCks2mXyr1SD7NkslWJ7lWxa5/G8XOlM/X9lvhXp1hF111w3FZ
-   mHcQuZu7lPAT3KITXCgUBhGvlLAYIRydirdhXbrpE7Y8iSB++RmECeVU+
-   DQ5la8sE39SMGpl4JBWsYkOo85Iu5avLTMDwCgO3eixB0QHpxUiH7cSDD
-   A==;
-X-CSE-ConnectionGUID: SvdCXsi5RY27hT2rn1fl7w==
-X-CSE-MsgGUID: A+rARE3fR8ye2Gw7OlRgZA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19508325"
-X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
-   d="scan'208";a="19508325"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 13:24:10 -0700
-X-CSE-ConnectionGUID: WDGjrP4iTUqIEAcA7VY5Rw==
-X-CSE-MsgGUID: U0buHxQITXuBTBv1UXRkRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
-   d="scan'208";a="27541475"
-Received: from mfzarate-mobl.amr.corp.intel.com (HELO [10.92.4.37]) ([10.92.4.37])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 13:24:08 -0700
-Message-ID: <a44a9ac5-5afa-4226-8a59-fab3e44af352@linux.intel.com>
-Date: Wed, 17 Apr 2024 15:23:52 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuB3SxOX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBC81C072AA;
+	Wed, 17 Apr 2024 20:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713386003;
+	bh=LU3waJkcyI1Xdf3+JQ3ynvxRqPfmiDeVyiyOnYLI/RQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EuB3SxOXrJd8MRauo192hVGlhtKj14j15cF9ScWlBvDOO9qSo+tGqejI1+r9oVJGW
+	 HWo7nSz+x4y5yI3cmXv9AvjSraxMSwJ1vH074tfgv8Af9KDa+Kjl9bp39vfTlQqo2X
+	 ey7/4J0iqfI4mS0N4S9aL0Xtdeh8HtmKesquL1MFHSqzPtdKvn9xLwx8aPimBIAOcy
+	 c9rnsXVI7jvt2J683SAbfvhyfp//gR2B8q5GUhy+GqWiO2qmx26k8vfOPaUr8i2YIp
+	 D+/pXv54OP4JAF1y2PzfzKt1fTu0fkSMw+NekM+GH1SuRVynlJrXcmTy6nH/FK06pD
+	 pM2ebDQeIetSA==
+Date: Wed, 17 Apr 2024 22:33:18 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	John Stultz <jstultz@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 07/50] posix-cpu-timers: Split up posix_cpu_timer_get()
+Message-ID: <ZiAyDjQJATgfCrvj@pavilion.home>
+References: <20240410164558.316665885@linutronix.de>
+ <20240410165551.376994018@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/4] tsm: Runtime measurement registers ABI
-To: "Xing, Cedric" <cedric.xing@intel.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Samuel Ortiz <sameo@rivosinc.com>
-Cc: Qinkun Bao <qinkun@google.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
- Dionna Amalie Glaze <dionnaglaze@google.com>, biao.lu@intel.com,
- linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <a255bc36-2438-41b7-b304-bcf7a6628bef@linux.intel.com>
- <42e14f74d3819c95fdb97cd2e9b2829dcb1b1563.camel@HansenPartnership.com>
- <1557f98a-3d52-4a02-992b-4401c7c85dd7@linux.intel.com>
- <85b7a4a679eada1d17b311bf004c2d9e18ab5cd3.camel@HansenPartnership.com>
- <b8140cc8-a56b-40f6-a593-7be49db14c77@intel.com>
- <fe1722c3618a8216cb53b8fd3f1b7cbb6fdff5a0.camel@HansenPartnership.com>
- <65c2e4aa54a0_d4122947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <22088ed3-51a4-415f-932c-db84c92a2812@intel.com>
- <527da630-4952-4b1d-80c0-5a87997ff9fd@linux.intel.com>
- <332775d7218843d6cc168c963d76e6841eab5d5b.camel@HansenPartnership.com>
- <65c691e13a50d_afa42948a@dwillia2-xfh.jf.intel.com.notmuch>
- <226df539-b3f4-4099-b6a6-293fa200c536@intel.com>
- <982e19fcd71c41a162ba664281eb0a68d9dc960c.camel@HansenPartnership.com>
- <3d5ffd62-beff-4394-91e7-715b348b7bae@intel.com>
-Content-Language: en-US
-From: Dan Middleton <dan.middleton@linux.intel.com>
-In-Reply-To: <3d5ffd62-beff-4394-91e7-715b348b7bae@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240410165551.376994018@linutronix.de>
 
-On 3/4/24 7:19 PM, Xing, Cedric wrote:
-> Hi James,
->
-> In the past couple of weeks I've been thinking about what should be a 
-> good log format that can be conformant to existing standards and 
-> accommodate future applications at the same time. After discussing 
-> with folks from Alibaba and Intel internally, I created this issue - 
-> https://github.com/confidential-containers/guest-components/issues/495 
-> to document what I've found. Although it was written for CoCo, the 
-> design I believe is CEL (Canonical Event Log) conformant and generic 
-> enough to be adopted by the kernel. Hence, I revive this thread to 
-> solicit your opinion. Your valuable time and feedback will be highly 
-> appreciated!
->
-> Thanks!
->
-> -Cedric
->
+Le Thu, Apr 11, 2024 at 12:46:24AM +0200, Thomas Gleixner a écrit :
+> In preparation for addressing issues in the timer_get() and timer_set()
+> functions of posix CPU timers.
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Hi,
-
-Closing the loop on testing format options with CNCF CoCo as an adopter
-community...
-There was a robust discussion in the issue [1] posted ~1.5 months back 
-on the
-previous note on this thread.
-It seems the conversation has tailed off with agreement that the NELR format
-would work for that containers community.
-I think that's a good signal for this approach to move forward.
-
-[1] https://github.com/confidential-containers/guest-components/issues/495
-
-Regards,
-Dan
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
