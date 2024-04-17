@@ -1,114 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtpcmd13146.aruba.it (smtpcmd13146.aruba.it [62.149.156.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67180148834
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963F0147C6A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713368101; cv=none; b=Bz7J3Czmb1kPHHSNEX7jBm2/hzkH+pX3I6WXwHd8/UWGXQAwUHGUcMcgh6+FcEg9TeabSO+XfXayl6wYIHsvLqQfWIvKIz41fBARYfRtBCuC9XOAIf4tgbzDF3To/Cha+ELawEdKx/gR1IKlsgZxmeFFJgoaGn3uOtOJsoWH1tk=
+	t=1713368146; cv=none; b=fIyCQIab5FKMbHLHsts7EGc/K8WEw7x/l9ajExEhJWhJgwXPUWGuEtEj3+573tgmFiyUj4Ka7CmMB+UmKL/0VOoQZbZf0Y6IoEzyuByolVmNgBSwB9GcLLb5uQ0ekXsOwdYJE3aBsQBp+iB4shpaVINjtR8lcKY6mQQTfKhKP8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713368101; c=relaxed/simple;
-	bh=81mARjUpw+KVyq4vQ1KQan74CjOK+s4dvQQ+ghYUVsU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tjkFB2bUd/vA/fyrIrRFsda+byZeH8C2X6DHAMmUosh2TqYJys1JNRfkYGD5//W67xhpTCBniRSbAG6/9EGzQMJbTzhMbSb0jhrklWPSDiKr6gXwsy/oQBCBDPwYlflerguuRjqbErbzl51WPt2K1UD5qKZ70EQhR0rCfqT1wOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MUw6Tpl1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713368146; c=relaxed/simple;
+	bh=pDXnvTYDcnQuVId72ZBjMPQReEig8zoC6BZfnfYFX44=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nrmxfmuLa4rNXda53sGivakUC87ym0PdmDs+2u3wTV0xb9iPWxYYUBnP3BcTvvI++83dSyHjCoMzaPFL2YXK04ha9gsktgunkSpJpQkMjmyBvmbASg5OqAQcI4xEcuVo0T8/DAn61T8K9Jj74E7kNc6G1cqwgWEHkXTNS4tUL0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=j4M13Y0U; arc=none smtp.client-ip=62.149.156.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MUw6Tpl1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713368098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otExSoiFgVMzLYgIYpvIwimsI5D4FF0c+uBWyLnFbGw=;
-	b=MUw6Tpl1++QuKBNaoM6WdyELyg74ntSzKnQrZxfgzXaZer1pIZVmwJiAfH8Kk+8iBHl88n
-	XPxOKVx+lJ5QSlGohRpmpWwbLZddSnL0QbgdGrgV5CAQZhhoI36QFTGWTuC69b+clLF2ae
-	PA7YFy8eNaatR0StO+Cx4HrLwoGJF6Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-438-tFEeviQnP_64sUjVfisTNA-1; Wed, 17 Apr 2024 11:34:56 -0400
-X-MC-Unique: tFEeviQnP_64sUjVfisTNA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 384B7188ACA1;
-	Wed, 17 Apr 2024 15:34:52 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 082F0581DE;
-	Wed, 17 Apr 2024 15:34:52 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	seanjc@google.com,
-	rick.p.edgecombe@intel.com
-Subject: [PATCH 4/7] KVM: x86/mmu: Make __kvm_mmu_do_page_fault() return mapped level
-Date: Wed, 17 Apr 2024 11:34:47 -0400
-Message-ID: <20240417153450.3608097-5-pbonzini@redhat.com>
-In-Reply-To: <20240417153450.3608097-1-pbonzini@redhat.com>
-References: <20240417153450.3608097-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="j4M13Y0U"
+Received: from engicam.com ([77.32.9.15])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id x7JrrIqgbiznzx7JsrXauv; Wed, 17 Apr 2024 17:35:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1713368133; bh=pDXnvTYDcnQuVId72ZBjMPQReEig8zoC6BZfnfYFX44=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=j4M13Y0UKIEQQLubyKuY7puuKS5hkz1FaH5n8h+9l7SuNQhfg4pChcJq90yEApGDD
+	 XDop4U73PkpDe4ME5pDK5CSRSy0ZbLEZLAjLxMJqVgDKHuRESnYT+1UOBFPntM+cHh
+	 w1eyhRZu9wY51syVCYrVKqDguThcTezleqiAiFRejGci/odAXrDYl2S8hv4TvvEZ4a
+	 1u/CHeLbOpNeQZfLZDzfxwm6HQ1ECq4KDJD2xUMQiGLxiw3PJLr0JUi/ALyphMRGdK
+	 aimhmEPtjc7/bHV6hASao3wAh/bXtA19C5FjErhSAyqISezzvkr3iM9O8kcFGSUdjM
+	 a6ExR0kvICl5A==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Fabio Aiuto <fabio.aiuto@engicam.com>
+Subject: [PATCH 0/4] arm64: dts: imx93: add i.Core MX93 EDIMM 2.0 board
+Date: Wed, 17 Apr 2024 17:35:24 +0200
+Message-Id: <20240417153528.7838-1-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-CMAE-Envelope: MS4xfKf54hZLWy+EqOg5Nqgc0goNOHAhokwMzcseEGM/md4Kj+Xk6iBWYxM59JqOzXCKNRty4XULab5exIS2u3izr6RaljxgtYxGjR+musWIS2kHsPo2muOv
+ cx3OAN2qTT04yrg1TnQSd/TGRTbIBJ49ikYOuGYSAC668GVbSEiL+A4+F+NF7/UcLRNHt+Ljnq15HKJMUA19RxQpy1tgpl/+zVIFANO0OhDrAfynWBafbNqy
+ 90LKZbt8HIO9w1KJHfR486IuQhL8t3QtB6A11+64v8UOgzF3MRFf+OnPpipSZSdLmEP2BPimD/TBmqs0wevGvygwAjNPsqPcPSfytRAb1owt02fMSYPS98fV
+ dSAYjNwraYX9oQdhmcBjVWistHt5eU+ACMQB+x+o7LTyT6dOKcknOXv81kvwXtuOHcMfr6YbjT7clvO1o7g1HevnAxxsSpavI6pJWA7EE9KfjSpPMMIWXCLN
+ 6+Y/7DmdNLbtQ5JlGfwfqPigO732gyjIKhEFKgzIG53Gy0hmaaYhTBi4FGAQYneeZCTK8txkrwQJaMeAo/nNmQSrJUs4B8+RuW59dw==
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+Hello all,
 
-The guest memory population logic will need to know what page size or level
-(4K, 2M, ...) is mapped.
+this patchset adds support for i.Core MX93 EDIMM 2.0 Starter Kit,
+a SoM + Evaluation Board combination from Engicam.
 
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-ID: <eabc3f3e5eb03b370cadf6e1901ea34d7a020adc.1712785629.git.isaku.yamahata@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmu/mmu_internal.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+If I'm not wrong the change I propose on patch 2 has been already
+queued up in regulator subsystem, anyway I put it here to satisfy
+requirements for dt-bindings patch submission (if I don't do that
+checkpatch complains about that).
 
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 9baae6c223ee..b0a10f5a40dd 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -288,7 +288,8 @@ static inline void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
- }
- 
- static inline int __kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--					  u64 err, bool prefetch, int *emulation_type)
-+					  u64 err, bool prefetch,
-+					  int *emulation_type, u8 *level)
- {
- 	struct kvm_page_fault fault = {
- 		.addr = cr2_or_gpa,
-@@ -330,6 +331,8 @@ static inline int __kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gp
- 
- 	if (fault.write_fault_to_shadow_pgtable && emulation_type)
- 		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
-+	if (level)
-+		*level = fault.goal_level;
- 
- 	return r;
- }
-@@ -347,7 +350,8 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	if (!prefetch)
- 		vcpu->stat.pf_taken++;
- 
--	r = __kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, err, prefetch, emulation_type);
-+	r = __kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, err, prefetch,
-+				    emulation_type, NULL);
- 
- 	/*
- 	 * Similar to above, prefetch faults aren't truly spurious, and the
+Thanks in advance,
+
+fabio
+
+Fabio Aiuto (4):
+  dt-bindings: arm: fsl: add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+  regulator: dt-bindings: pca9450: add pca9451a support
+  arm64: dts: imx93: add Engicam i.Core MX93 SoM
+  arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0 Starter Kit
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../regulator/nxp,pca9450-regulator.yaml      |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-icore-mx93-edimm2.dts | 356 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-icore-mx93.dtsi  | 271 +++++++++++++
+ 5 files changed, 636 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93.dtsi
+
 -- 
-2.43.0
-
+2.34.1
 
