@@ -1,98 +1,136 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42738128811;
-	Wed, 17 Apr 2024 13:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A362B13E02A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360046; cv=none; b=MdkdGZNgxH850nG/K0y7d9wpACEsZsgm1ey7xz3lr7/fiOYGI8wjbGd61y9ffzn5UY/6/14ANA2OZSGl1c2EwQI/CUCEwmiX1GLVix99JzSNyxoTdWa/63IGRA+0AlSjaGqW8CHhBDka7b50BCRaw6aR1jMzIgq6ie17frrVhJQ=
+	t=1713360065; cv=none; b=Rtr52wo+lUB7uw93yN+5IciUSLn1SwF+2hBlTjh1od3wrfLkajhWi37RQ/0sc+kYNQdCyJaF77V2h1QB8/qZQmgVh+0RyZDImNezUo8eVJfk4eTMkLwATjAvi5hz+RP9FK/386o1aPYZGfc+lCY0S00wEz2olIZw7PF6k1fddUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360046; c=relaxed/simple;
-	bh=YchgKnV3IT6htKBpeyILRBdrB6Ktw5Mcs9t4BqnEwcc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QhJQrdS8YIDwhP8aliuPWRNKpN+x6b5icEgT+1m0WcXhUYomn1OnDCePQemIIstrq5CBNhQqCnlVXsuvVQfegVtMyQt61WvUVVZFFh/TEMpnt/BInWC4UIW8CSwF8/XirJJqHM9h63q/6PISAYsJwNBM18lmgp9GbEche+PiGqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKLxs1qWhz6K7JW;
-	Wed, 17 Apr 2024 21:15:45 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D4C78140D26;
-	Wed, 17 Apr 2024 21:20:42 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 14:20:42 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v6 03/16] ACPI: processor: Drop duplicated check on _STA (enabled + present)
-Date: Wed, 17 Apr 2024 14:18:56 +0100
-Message-ID: <20240417131909.7925-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713360065; c=relaxed/simple;
+	bh=nETCHB7JIutC8EKJAX2M9aPwQSEYpjvigfPP7Y07kDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kEQecvYd8NY0v2WH0VMhvs5wta/aophoh/n0HCO+n6yjxjvI5gkZLX8rFbgUo4Gs4xOPVKVV52qVzndW+/wERW7BCrhJw1PTdhsGaUgYQmp1Ir2NWX1gJmJGIXlBj02wcG5o8tNC4G5NgODHwAVkOyCJe2RLDZ9nR4+oXW29u2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B960F339;
+	Wed, 17 Apr 2024 06:21:29 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F7483F738;
+	Wed, 17 Apr 2024 06:20:59 -0700 (PDT)
+Date: Wed, 17 Apr 2024 14:20:57 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Sudeep Holla <sudeep.holla@arm.com>, james.quinlan@broadcom.com,
+	f.fainelli@gmail.com, vincent.guittot@linaro.org,
+	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
+	konrad.dybcio@linaro.org, souvik.chakravarty@arm.com
+Subject: Re: [PATCH v2 1/2] firmware: arm_scmi: Add support for multiple
+ vendors custom protocols
+Message-ID: <20240417132057.2s5s2mzgub2nnyd3@bogus>
+References: <20240408093052.3801576-1-cristian.marussi@arm.com>
+ <20240408093052.3801576-2-cristian.marussi@arm.com>
+ <20240417123208.criylj2kvdngoswe@bogus>
+ <Zh_Dyi_rJGpW4qZr@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+In-Reply-To: <Zh_Dyi_rJGpW4qZr@pluto>
 
-The ACPI bus scan will only result in acpi_processor_add() being called
-if _STA has already been checked and the result is that the
-processor is enabled and present.  Hence drop this additional check.
+On Wed, Apr 17, 2024 at 01:42:50PM +0100, Cristian Marussi wrote:
+> On Wed, Apr 17, 2024 at 01:32:08PM +0100, Sudeep Holla wrote:
+> > On Mon, Apr 08, 2024 at 10:30:51AM +0100, Cristian Marussi wrote:
+> > > Add a mechanism to be able to tag vendor protocol modules at compile-time
+> > > with a vendor/sub_vendor string and an implementation version and then to
+> > > choose to load, at run-time, only those vendor protocol modules matching
+> > > as close as possible the vendor/subvendor identification advertised by
+> > > the SCMI platform server.
+> > >
+> > > In this way, any in-tree existent vendor protocol module can be build and
+> > > shipped by default in a single kernel image, even when using the same
+> > > clashing protocol identification numbers, since the SCMI core will take
+> > > care at run-time to load only the ones pertinent to the running system.
+> > >
+> > > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > > ---
+> > >  drivers/firmware/arm_scmi/driver.c    | 165 ++++++++++++++++++++++----
+> > >  drivers/firmware/arm_scmi/protocols.h |  15 +++
+> > >  2 files changed, 158 insertions(+), 22 deletions(-)
+> > >
+> > > diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> > > index d0091459a276..aa18202054a5 100644
+> > > --- a/drivers/firmware/arm_scmi/driver.c
+> > > +++ b/drivers/firmware/arm_scmi/driver.c
+> >
+> > [...]
+> >
+> > > +static const struct scmi_protocol *
+> > > +scmi_vendor_protocol_lookup(int protocol_id, char *vendor_id,
+> > > +			    char *sub_vendor_id, u32 impl_ver)
+> > > +{
+> > > +	unsigned long key;
+> > > +	struct scmi_protocol *proto = NULL;
+> > > +
+> > > +	/* Searching for closest match ...*/
+> > > +	key = scmi_protocol_key_calculate(protocol_id, vendor_id,
+> > > +					  sub_vendor_id, impl_ver);
+> > > +	if (key)
+> > > +		proto = xa_load(&scmi_protocols, key);
+> > > +
+> > > +	if (proto)
+> > > +		return proto;
+> > > +
+> > > +	/* Any match on vendor/sub_vendor ? */
+> > > +	if (impl_ver) {
+> > > +		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
+> > > +						  sub_vendor_id, 0);
+> > > +		if (key)
+> > > +			proto = xa_load(&scmi_protocols, key);
+> > > +
+> > > +		if (proto)
+> > > +			return proto;
+> > > +	}
+> > > +
+> > > +	/* Any match on just the vendor ? */
+> > > +	if (sub_vendor_id) {
+> > > +		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
+> > > +						  NULL, 0);
+> > > +		if (key)
+> > > +			proto = xa_load(&scmi_protocols, key);
+> > > +	}
+> > >
+> >
+> > I see a pattern here, can be simplify/compress by something like below ?
+> >
+> > static const struct scmi_protocol *
+> > __scmi_vendor_protocol_lookup(int protocol_id, char *vendor_id,
+> > 			      char *sub_vendor_id, u32 impl_ver)
+> > {
+> > 	unsigned long key;
+> > 	struct scmi_protocol *proto = NULL;
+> >
+> > 	key = scmi_protocol_key_calculate(protocol_id, vendor_id,
+> > 					  sub_vendor_id, impl_ver);
+> > 	if (key)
+> > 		proto = xa_load(&scmi_protocols, key);
+> >
+> > 	return proto;
+> > }
+>
+> Sure...was not completely sure to proceed that way because only 2 lines
+> were saved for a each block....bit indeed is more clear...I'll d in V3
 
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Agreed, that's why I was asking rather than requesting you to change 😉.
+Even I was not sure by the time I completed writing the above one 😁.
+It may make it bit easier to read.
 
----
-v6: New patch to drop this unnecessary code. Now I think we only
-    need to explicitly read STA to print a warning in the ARM64
-    arch_unregister_cpu() path where we want to know if the
-    present bit has been unset as well.
----
- drivers/acpi/acpi_processor.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 7fc924aeeed0..ba0a6f0ac841 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -186,17 +186,11 @@ static void __init acpi_pcc_cpufreq_init(void) {}
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
- static int acpi_processor_hotadd_init(struct acpi_processor *pr)
- {
--	unsigned long long sta;
--	acpi_status status;
- 	int ret;
- 
- 	if (invalid_phys_cpuid(pr->phys_id))
- 		return -ENODEV;
- 
--	status = acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
--	if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
--		return -ENODEV;
--
- 	cpu_maps_update_begin();
- 	cpus_write_lock();
- 
--- 
-2.39.2
-
+--
+Regards,
+Sudeep
