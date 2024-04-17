@@ -1,79 +1,101 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CB1135A63
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0F112DD94;
+	Wed, 17 Apr 2024 09:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713347746; cv=none; b=WCZC0FjI4LgA+hL6OBmdTa+b0mAJIJ147JhFVzJGUEA5GB/ztzk8lfw0gN+IdKfsqsNgBsvAdX3Evm1K5KLPfmLVJlMpWblxmVBc6JKaqzTILi7fFFryDDbE5Us5YY53AQgD2Z66lcyLsQYroApDFNw6GXpnS5vPY1yATex82zU=
+	t=1713347788; cv=none; b=AWcBrLxhlA4/etj4NAaJuWbsoP8nvzwicFjhwDxXdaPeeVdBLH4+XMQge+VyfvPwaf+N3e7G8omUNbcNXg3feCGHoWnp6MzMYzuUWfi9V8X0QkpENhq31kDsBAyoqWttJwGLCGvvJOsuZUNKssHsUAx6eLzjPi0yhw7RYBaceJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713347746; c=relaxed/simple;
-	bh=/lXpYci1tMW5JPozoAh8F16UEmu1MI3zcs1be5M7z4s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AjcDMlJEUwffp8tv7ixDyot+f98xZLT6BAhF+rHgtwS5wki9RjftQ8OZhoFj6COQ6v9C7+LP4XPlkIEQrUr4o+hU0AY+nEbO9WWGEqgepAgB92ibC1qO7+7/6kIAez0ZLW777eG4BnVFzInKUX+dw5LMknVJwqscTrigdV/GoPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VKGTz3GdHz1HCDN;
-	Wed, 17 Apr 2024 17:54:47 +0800 (CST)
-Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21341180063;
-	Wed, 17 Apr 2024 17:55:41 +0800 (CST)
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemm600004.china.huawei.com (7.193.23.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 17:55:40 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <xuwei5@hisilicon.com>
-CC: <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <Jonathan.Cameron@Huawei.com>,
-	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH v2 1/2] soc: hisilicon: kunpeng_hccs: Add the check for obtaining complete port attribute
-Date: Wed, 17 Apr 2024 17:48:00 +0800
-Message-ID: <20240417094801.25393-2-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20240417094801.25393-1-lihuisong@huawei.com>
-References: <20240403081935.24308-1-lihuisong@huawei.com>
- <20240417094801.25393-1-lihuisong@huawei.com>
+	s=arc-20240116; t=1713347788; c=relaxed/simple;
+	bh=zZ7v7PQp0DDEHhoo/bYInJ8iPIZtAFy1cxCwkUCT9gU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2rWEh0hfu1Ek3i1yIaCtISFXbSbFs5l77XSCxP5OKj4t3So/URAFMIu1kOW1TCKCE+tjohs+fSAflwHhqST3u48bP8vy5l5VoE/806BXa8GXSoGcLkDm9Zdlu4AadHdbJsqYBxUOK5zAyC585Pz70RVNHABZms6O4p9aoAcgBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVpm9K00; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVpm9K00"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 603B1C072AA;
+	Wed, 17 Apr 2024 09:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713347788;
+	bh=zZ7v7PQp0DDEHhoo/bYInJ8iPIZtAFy1cxCwkUCT9gU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fVpm9K00ZdOv8mpz9I/gPJjSj4ALSYKsJ2JHp7KFwbtTU8SOxycZhvYqXCUt9u8L/
+	 1+gURGur7NOqehJoZfKnYmeCxhI1JNZ1tqTamFpjrPVPIZMYJm2Y04Bdn9XuVsH24I
+	 C6AbRRvfOpNOe/vCPTaR6U0OzO5aM8JADqEwsdBkbJzEGk60xb4LjaikdFc5R6OC8J
+	 WvNLkF3bPCrfggPF49hTZDmNWXgYMhhoQ1/kd1bJ6F71M6hOy8t4HbprmWLSHlBw+P
+	 00VCnT8v/pWZ0wZ9ZOMfl1WVhl7mBxjwW3r/D4Aw00EjTpyMkFVDhhHmHTPb+PgXS2
+	 hJledh2aYAfTw==
+Date: Wed, 17 Apr 2024 11:56:23 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Gustav Ekelund <gustaek@axis.com>,
+	Gustav Ekelund <gustav.ekelund@axis.com>, hare@suse.de,
+	martin.petersen@oracle.com, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel@axis.com
+Subject: Re: [PATCH] ata: Add sdev attribute to lower link speed in runtime
+Message-ID: <Zh-cx_KGK_M_qUGq@ryzen>
+References: <20240412134838.788502-1-gustav.ekelund@axis.com>
+ <4e5c88f1-1b24-4f6d-8c11-d7029329ba7a@kernel.org>
+ <7e6eb387-5a0e-460c-af08-eff070fa35ca@axis.com>
+ <898497f0-d279-4d01-be8d-aad4048df95d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600004.china.huawei.com (7.193.23.242)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <898497f0-d279-4d01-be8d-aad4048df95d@kernel.org>
 
-The hccs_get_all_port_attr() is used to obtained the attribute of all
-ports on a specified DIE from firmware. However, this interface doesn't
-ensure whether firmware reports the complete attribute of all ports or not.
-So this patch adds the check for this.
+On Wed, Apr 17, 2024 at 08:59:27AM +1000, Damien Le Moal wrote:
+> 
+> Can you send examples of the errors you are seeing ? That needs to be
+> investigated first before going the (drastic) route of allowing to manually
+> lower link speed at run-time.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/soc/hisilicon/kunpeng_hccs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Gustav, is it possible for you to share the error messages that you are
+seeing? Preferably a whole kernel boot.
 
-diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
-index 9ff70b38e5e9..e882a61636ec 100644
---- a/drivers/soc/hisilicon/kunpeng_hccs.c
-+++ b/drivers/soc/hisilicon/kunpeng_hccs.c
-@@ -556,6 +556,12 @@ static int hccs_get_all_port_attr(struct hccs_dev *hdev,
- 		start_id = rsp_head.next_id;
- 	}
- 
-+	if (left_buf_len != 0) {
-+		dev_err(hdev->dev, "failed to get the expected port number(%u) attribute.\n",
-+			size);
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.22.0
+Since you are talking hot plug, there is a bunch of libata hot-plug related
+in v6.9.x (which turns off LPM if your external port is hotplug capable).
 
+So it would be interesting to see if you still get these errors on v6.9-rc4
+(we will see if you have LPM enabled), and if so, what errors you are seeing.
+
+You could also try booting with: libata.force=nolpm on the kernel command line.
+(This will explicitly set lpm-policy to MAX_POWER, which is different from
+lpm-policy=0 (which is the default) - which means keep firmware settings.)
+
+
+Kind regards,
+Niklas
+
+> 
+> > 
+> > So I want to adapt the link, depending on the connected model, in a
+> > running system because I know that some particular models in this case
+> > will operate better in SATA2 in this system.
+> > 
+> > Can I use the libata.force module to make changes to a particular link
+> > in runtime?
+> 
+> Nope, libata.force is a module parameter so you can specify it as a kernel boot
+> parameter, or if you compile libata as a module when loading (modprobe) libata.
+> At run time, you need to rmmod+modprobe again libata, and so the ahci driver as
+> well (because of dependencies).
+> 
+> As I mentioned, if a run-time knob really is necessary (it should not be), using
+> the ata_link hw_sata_spd_limit would be a better approach. But again, that
+> really should not be necessary at all.
+> 
+> > 
+> > Best regards
+> > Gustav
+> > 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
+> 
