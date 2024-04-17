@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 367E4184D
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B1B6BB56
 	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713339262; cv=none; b=KTZ4QRFqi+9xUdFdVk/MHe1hUYQOsz8hA92YVT1+UF1+yVFtUt7LG0SezXB/uBqiY435KRXUi8MN9Tl9dX4q/QSkJojCX2E/+8WpG8l6HMlhQG2CFCGxJwLYx0komFABGdQj3yUFjTxbADbrzgVT9t6pY7I3abh7Z5Vu3D01rEQ=
+	t=1713339262; cv=none; b=al90QGI8ygIuaAXGQzhnsp9VAL3/8c/nQm1eh8oLQvqX1OJDa9/qHQDXw1D1d41hfPtJ3gzeVFkSFInFXnXHojvYcGaStsqEbtHYE/KF95dwp+DeIWiaTjCGB2f5pARnWKnrWZZ+4yt9JVZMEhgh8M9c/dCKsH6Wi+LjHA7HT5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713339262; c=relaxed/simple;
-	bh=2MKSxAJ2mBZDz9V39JhFe+05XOOJBWLN/9CInRv7UqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=c4HcZMFSjyVOw1asdJ33kf0FSJXf23U5QSe7ycTnj26UNHbPG/Gd8QxQ83MfcvX6IySyjticCk6mMgq9m4g+pX6hVL2Ic5B67KbRcAOlWKb5JANiziu2XTqtWMpjxhgiecovvE+NdUUMBFyocgvH/Bgq0SDgPGdKoBgJoFDZ5SQ=
+	bh=02cOaCrEAguODxPW9vC2szkGEgfN5B2WX9+iVHZabDE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=jBNIR5es0MsfuS5Act3w88kRiqPjrDyBkEoXDJWqm7QH2/qN8JrlcO7Od6ugFo/vbIiZtbfEi8TwOjUpGIpkkU09hWoZT0YsiWBXcI3Q5jAza6QDYc1Xe5ksPBVe7SnOuxYNYqDXyTeRRwkovlmMgmmvkuGxFS4l13ZcQb2TlZA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-92-661f77e2e210
+X-AuditID: a67dfc5b-d6dff70000001748-9d-661f77e24455
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,36 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v9 1/8] x86/tlb: add APIs manipulating tlb batch's arch data
-Date: Wed, 17 Apr 2024 16:18:40 +0900
-Message-Id: <20240417071847.29584-2-byungchul@sk.com>
+Subject: [PATCH v9 3/8] mm/rmap: recognize read-only tlb entries during batched tlb flush
+Date: Wed, 17 Apr 2024 16:18:42 +0900
+Message-Id: <20240417071847.29584-4-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240417071847.29584-1-byungchul@sk.com>
 References: <20240417071847.29584-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC9ZZnke6jcvk0g2eL+S3mrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC9ZZnoe6jcvk0g+8LJC3mrF/DZvF5wz82
 	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
-	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAldG
-	w70XLAVr+Cp6P81naWCcydPFyMkhIWAi8W72FGYY++nLfjCbTUBd4saNn2C2iICZxMHWP+wg
-	NrPAXSaJA/1sILawgI/EqZl9YDaLgKpE7/9zYPW8AqYS8xfeZ4KYKS+xesMBsDgn0JzNzWvA
-	6oWAar6f+AhkcwHVvGaTWPu7hRGiQVLi4IobLBMYeRcwMqxiFMrMK8tNzMwx0cuozMus0EvO
-	z93ECAz9ZbV/oncwfroQfIhRgINRiYfXIEouTYg1say4MvcQowQHs5IIb4uwbJoQb0piZVVq
-	UX58UWlOavEhRmkOFiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGRgu7/neSpzNfWF7d2Lk2
-	dC/DHIZZX3gaOacKqexSjTioVPPO7oNb4kpmpoPPZPmPhSwKClt2N5NzcYILa1bwnk1JvQnR
-	ovdur2zmZ3YW+8EqyfmLceL7ULPpwtsPb77gFuQe0RvINuHedual/xecen1k2qELr+ISdhfI
-	VCxmWxztHG+ykee+jxJLcUaioRZzUXEiANheHqx5AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC5WfdrPuoXD7NYNZCFos569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
-	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
-	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZTTce8FSsIavovfTfJYGxpk8XYycHBICJhJPX/Yzg9hsAuoSN278BLNFBMwk
-	Drb+YQexmQXuMkkc6GcDsYUFfCROzewDs1kEVCV6/58Dq+cVMJWYv/A+E8RMeYnVGw6AxTmB
-	5mxuXgNWLwRU8/3ER7YJjFwLGBlWMYpk5pXlJmbmmOoVZ2dU5mVW6CXn525iBAbysto/E3cw
-	frnsfohRgINRiYfXIEouTYg1say4MvcQowQHs5IIb4uwbJoQb0piZVVqUX58UWlOavEhRmkO
-	FiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDo8PJ4HcKjJfDDhsqXSyp/FZhuOwrY1C3surV
-	C1NU/jpKbZdVnZJidkB0wrQXtVX+rya5Lb7RO5H/0cov/KffX2D235J4t9zZU7Rh326/o0ur
-	8n85+M4Rs3q2LVbPe1Po81+dnhMeLlivkiIV/kV4u2/R/oVCWvcvtzp7tGo4nZmkYnDi+/q6
-	d0osxRmJhlrMRcWJALm+JTdgAgAA
+	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
+	3uWrmApmSldc27CHvYFxh1gXIyeHhICJxNaZX9lg7KNrusBsNgF1iRs3fjKD2CICZhIHW/+w
+	g9jMAneZJA70g9UIC0RKPN33FizOIqAqce/RCbB6XgFTifXvOxghZspLrN5wACzOCTRnc/Ma
+	sF4hoJrvJz4C2VxANe/ZJO5enwx1hKTEwRU3WCYw8i5gZFjFKJSZV5abmJljopdRmZdZoZec
+	n7uJERj6y2r/RO9g/HQh+BCjAAejEg+vQZRcmhBrYllxZe4hRgkOZiUR3hZh2TQh3pTEyqrU
+	ovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwcnFINjIkCzxZaf/OrKtnl/qVj
+	kUek2TajHp99civ2phkp19+rXuMedmLBAwn2xYHM185e4Fk8wW7WjA+TukxrNW9PTU/9duDD
+	vr4na1mVmIz2fprTvVVBuz1DqeSvYFutnHpI7OusJCe1pzVJy86xvLnvPPcbg5xakO2zwm2f
+	//ItPRVTXvVQsUqLQYmlOCPRUIu5qDgRAFoa4LF5AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC5WfdrPuoXD7NoOMbr8Wc9WvYLD5v+Mdm
+	8WJDO6PF1/W/mC2efupjsTg89ySrxeVdc9gs7q35z2pxftdaVosdS/cxWVw6sIDJ4njvASaL
+	+fc+s1ls3jSV2eL4lKmMFr9/ABWfnDWZxUHQ43trH4vHzll32T0WbCr12LxCy2PxnpdMHptW
+	dbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8tj6y86jceo1No/Pm+QC+KO4bFJS
+	czLLUov07RK4MvYuX8VUMFO64tqGPewNjDvEuhg5OSQETCSOruliA7HZBNQlbtz4yQxiiwiY
+	SRxs/cMOYjML3GWSONAPViMsECnxdN9bsDiLgKrEvUcnwOp5BUwl1r/vYISYKS+xesMBsDgn
+	0JzNzWvAeoWAar6f+Mg2gZFrASPDKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMBAXlb7Z+IO
+	xi+X3Q8xCnAwKvHwGkTJpQmxJpYVV+YeYpTgYFYS4W0Rlk0T4k1JrKxKLcqPLyrNSS0+xCjN
+	waIkzusVnpogJJCeWJKanZpakFoEk2Xi4JRqYDznvqdLebNf1O7N+48ZhvUndxeJ+V2u08uL
+	6db9vUEt9In0w5kCliUlYdmOZrcWPj/tbnbMJOd+MPv7wzOeRancuv3oOqOW2MH/IQ8Oa2zT
+	epL/SG3/rvj9P9MdH6y58NE683qAvIuK3/ILC0suPlog3drL8YRf/XCeteTMtcle7lN/BTYc
+	MFZiKc5INNRiLipOBAB1cBaHYAIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,56 +67,115 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-This is a preparation for migrc mechanism that needs to recognize
-read-only tlb entries during migration by separating tlb batch arch data
-into two, one is for read-only entries and the other is for writable
-ones, and merging those two when needed.
-
-Migrc also needs to optimize tlb shootdown by skipping CPUs that have
-already performed tlb flush needed for a while.  To support it, added
-APIs manipulating arch data for x86.
+Functionally, no change.  This is a preparation for migrc mechanism that
+requires to recognize read-only tlb entries and handle them in a
+different way.  The newly introduced API, fold_ubc(), will be used by
+migrc mechanism.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- arch/x86/include/asm/tlbflush.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/sched.h |  1 +
+ mm/internal.h         |  4 ++++
+ mm/rmap.c             | 31 ++++++++++++++++++++++++++++++-
+ 3 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 25726893c6f4..a14f77c5cdde 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -5,6 +5,7 @@
- #include <linux/mm_types.h>
- #include <linux/mmu_notifier.h>
- #include <linux/sched.h>
-+#include <linux/cpumask.h>
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 3c2abbc587b4..823d83b24364 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1334,6 +1334,7 @@ struct task_struct {
+ #endif
  
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-@@ -293,6 +294,23 @@ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+ 	struct tlbflush_unmap_batch	tlb_ubc;
++	struct tlbflush_unmap_batch	tlb_ubc_ro;
  
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
- 
-+static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+diff --git a/mm/internal.h b/mm/internal.h
+index 7e486f2c502c..bbaf1fd97b1c 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1019,6 +1019,7 @@ extern struct workqueue_struct *mm_percpu_wq;
+ void try_to_unmap_flush(void);
+ void try_to_unmap_flush_dirty(void);
+ void flush_tlb_batched_pending(struct mm_struct *mm);
++void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src);
+ #else
+ static inline void try_to_unmap_flush(void)
+ {
+@@ -1029,6 +1030,9 @@ static inline void try_to_unmap_flush_dirty(void)
+ static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+ {
+ }
++static inline void fold_ubc(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src)
 +{
-+	cpumask_clear(&batch->cpumask);
++}
+ #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+ 
+ extern const struct trace_print_flags pageflag_names[];
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 3746a5531018..2542bfe1a947 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -635,6 +635,28 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ }
+ 
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
++
++void fold_ubc(struct tlbflush_unmap_batch *dst,
++	      struct tlbflush_unmap_batch *src)
++{
++	if (!src->flush_required)
++		return;
++
++	/*
++	 * Fold src to dst.
++	 */
++	arch_tlbbatch_fold(&dst->arch, &src->arch);
++	dst->writable = dst->writable || src->writable;
++	dst->flush_required = true;
++
++	/*
++	 * Reset src.
++	 */
++	arch_tlbbatch_clear(&src->arch);
++	src->flush_required = false;
++	src->writable = false;
 +}
 +
-+static inline void arch_tlbbatch_fold(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	cpumask_or(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
+ /*
+  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
+  * important if a PTE was dirty when it was unmapped that it's flushed
+@@ -644,7 +666,9 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ void try_to_unmap_flush(void)
+ {
+ 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
+ 
++	fold_ubc(tlb_ubc, tlb_ubc_ro);
+ 	if (!tlb_ubc->flush_required)
+ 		return;
+ 
+@@ -675,13 +699,18 @@ void try_to_unmap_flush_dirty(void)
+ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 				      unsigned long uaddr)
+ {
+-	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc;
+ 	int batch;
+ 	bool writable = pte_dirty(pteval);
+ 
+ 	if (!pte_accessible(mm, pteval))
+ 		return;
+ 
++	if (pte_write(pteval) || writable)
++		tlb_ubc = &current->tlb_ubc;
++	else
++		tlb_ubc = &current->tlb_ubc_ro;
 +
-+static inline bool arch_tlbbatch_done(struct arch_tlbflush_unmap_batch *bdst,
-+		struct arch_tlbflush_unmap_batch *bsrc)
-+{
-+	return !cpumask_andnot(&bdst->cpumask, &bdst->cpumask, &bsrc->cpumask);
-+}
-+
- static inline bool pte_flags_need_flush(unsigned long oldflags,
- 					unsigned long newflags,
- 					bool ignore_access)
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
+ 	tlb_ubc->flush_required = true;
+ 
 -- 
 2.17.1
 
