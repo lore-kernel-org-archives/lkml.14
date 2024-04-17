@@ -1,95 +1,108 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776293D967
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B86C3D967;
+	Wed, 17 Apr 2024 20:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713387079; cv=none; b=qCY5xepV90EoVuF72U9yUywNHGpdUV0gzNR9ZX1yekGB+1MD2mbF66C5PfYJFYwkcJv1F3MFk4CoRvrltmE7tAyukfoeZj0XHKFpGaD9b9TgA4QVURq+Xao5UK4+k2+Axh1UaBLpeDrSnFAD7/vo+SaN1UbXXnJLSRq66IzFK10=
+	t=1713387088; cv=none; b=Qy5EqfYez4SWa8qLcxzaXmOLYPm+9Nx6Vr5hlSx++6EhrgVPG+3faFfJWyPRUWYdJzg83OAo/Eeg1P+uOqREIQJF9iS57eBG48bbHWXpZtnCBgqPnzRI02AuWFhqeJnyc+W/w/HXYF0iFFFmfbZbuQevr9kn31cIpF+MCByDa/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713387079; c=relaxed/simple;
-	bh=25na2u5dqSMwdfKH+InG17crUdYa9TxiMOwoUCyo2Zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l+r/5A/QRmU5C4i9R+Qp1lWsxRONPHo7hDmpJyv/v7OmVReFALLTfuy0dIVAQAX2zKPOKOjpdGqpJ8Q+6XB7T/S8/egcHgfaSne/aXowf1UADh8Nb4SFuvRl3EsMYBfgmK3x03WJM86M5xs+PKqsAImMdowbMNYYjHhOGfi2aHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E478040E0177;
-	Wed, 17 Apr 2024 20:51:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WjHW1JqznPJz; Wed, 17 Apr 2024 20:51:09 +0000 (UTC)
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21AF640E00B2;
-	Wed, 17 Apr 2024 20:50:54 +0000 (UTC)
-Date: Wed, 17 Apr 2024 22:50:48 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v3 02/14] x86/sev: Make the VMPL0 checking function more
- generic
-Message-ID: <20240417205048.GHZiA2KGbFFTQFyTAM@fat_crate.local>
-References: <cover.1711405593.git.thomas.lendacky@amd.com>
- <1b0d8ec8e671ad957a2ad888725ce24edeedf74a.1711405593.git.thomas.lendacky@amd.com>
- <20240417114658.GHZh-2sk47TZgCp4Mb@fat_crate.local>
- <505dcf34-93ff-643c-b149-8ef9ce90c023@amd.com>
+	s=arc-20240116; t=1713387088; c=relaxed/simple;
+	bh=ruJFVMpqO2dKVdbbCqF1Qew11TTMpiqoj2fWtLoLhj0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WjISfCKawevH+8kNyBF2qrMYJuG/to7RAvG7giPZ5ivAlU1jjaiAv/5WieAIyutkqhQiVAPWXJzQFQVy7MQ8VcTmKJhmN7tqz9Wh80cUEhJYfyu+8AOFU5Vp9NV+ZenPpf72vB5jrG+10LM4i9EL6Bo/t1vVA4QbGrpXpH3dVAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R12vZUJa; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R12vZUJa"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so153658a12.1;
+        Wed, 17 Apr 2024 13:51:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713387085; x=1713991885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PP9vybSDiobOue6OOFy5JQgDIqRTYmNSQ/1vik1IRyI=;
+        b=R12vZUJancYF5S5CnKBXO/s+bZWxE9BD+i3K/Cngb00aVA3g4CcbyiQhbzFiMkoUFB
+         ajb/Fte3Nqdqrxme/9T/XiVSVWHlaFpGjK5DWmDAOUcj7x00tM+7303FjGM8mMjHOPbi
+         PQFRArzLEzGF01jhRKJ4G2hv1MiFSQan1vco7usq1O78LXrkHAL531SuKD7Jj1HQs2J+
+         mMUWnk4El+DXTksgNC9QLRqN+4eeP89AAUPU9++nkmdNhjUyuLoleE0vHHDPeYznqErX
+         JYYbXf2v7q1/P7WOgzro9ZuF/Rh/8sT9RdPpCmdU3r+ONUlKMkgdVNr2oBv14JnFKqSH
+         semA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713387085; x=1713991885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PP9vybSDiobOue6OOFy5JQgDIqRTYmNSQ/1vik1IRyI=;
+        b=jcoLo/5OMA7gmuE3eLUroahYm6R6n9ryK+8omKT+O9ZP6gaJ4nbta7p0JFkhRCWLjB
+         cvW2pC9ZcENmO7ljYy/aHdYWpiDLXwF9Dld2zLTfz2RaMmfJqCHkiLpnYwbN6vW9jHuC
+         y2bTkkKQ0WRVk8u7gTPEZf5v0URhHMflDZ5EiF6NTr4LUDn/3JPOFXRAr93/mNlGznNO
+         QXN5znBm++rG9//+EPIJZO0z9o1B1fWEQE0Oo0LV3fUCPpXl3KMnnSrXqR2zP0kuYc6p
+         wKfqTmiximGHQWF/Dnd1P9ZOqjc8OfNYndgTJUha/h6aBMqFQmayeytIIhHXHmWZpAeG
+         sU4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVyGsnRpqppskF2ChCZEG1mFuGQ6grSmFPRrp8wn5a5vjpi4AyMGl0ktNpyWCPGLXFrguMiBJeLrJwJvVaF9NwMaNRhzZX+eZCf4u/+
+X-Gm-Message-State: AOJu0YxqeP0iN3PHfo29HKA9DEHVCAJbPShAmGyULZwysbOD4yLf6ckh
+	UQQS93gA4gux/jpeG4quFWAYUsZW8mSVk/ZExg5tYVVEtfyt7G4yu1f/dLdG
+X-Google-Smtp-Source: AGHT+IEkYrVGOwSA9AtKLOJjNjsII62JiYMBT5rhhOfQ7jmeYJGCFd4NFzGIucWoNWWU89oVKsxjjQ==
+X-Received: by 2002:a17:906:2748:b0:a52:27c6:ee67 with SMTP id a8-20020a170906274800b00a5227c6ee67mr482633ejd.43.1713387085026;
+        Wed, 17 Apr 2024 13:51:25 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id tx24-20020a1709078e9800b00a554177a2cdsm31752ejc.85.2024.04.17.13.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 13:51:19 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/5] net: dsa: vsc73xx: convert to PHYLINK and do some cleanup
+Date: Wed, 17 Apr 2024 22:50:43 +0200
+Message-Id: <20240417205048.3542839-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <505dcf34-93ff-643c-b149-8ef9ce90c023@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 03:35:53PM -0500, Tom Lendacky wrote:
-> Well, it doesn't really modify any permissions that matter. It tries to
-> change the permission of a lesser privileged VMPL level.
+This patch series is a result of splitting a larger patch series [0],
+where some parts needed to be refactored.
 
-Potato potato. :-P
+The first patch switches from a poll loop to read_poll_timeout.
 
-> Since the kernel only runs at a single VMPL it would never be
-> effected. The operation performed here is to update VMPL1 permission
-> levels (which can only be done successfully at VMPL0) and return the
-> result of the operation.  A success implies running at VMPL0 and
-> failure implies not running at VMPL0.
+The second patch is a simple conversion to phylink because adjust_link
+won't work anymore.
 
-Yap.
+The third patch is preparation for future use. Using the
+"phy_interface_mode_is_rgmii" macro allows for the proper recognition
+of all RGMII modes.
 
-The point is, it is calling RMPADJUST. And it does modify RMP
-permissions of a guest page.
+Patches 4-5 involve some cleanup: The fourth patch introduces
+a definition with the maximum number of ports to avoid using
+magic numbers. The next one fills in documentation.
 
-Thus, if you prefer, you can go all out and call the helper
+[0] https://patchwork.kernel.org/project/netdevbpf/list/?series=841034&state=%2A&archive=both
 
-	rmp_adjust_permissions(unsigned int tgt_vmpl, void *pa)
+Pawel Dembicki (5):
+  net: dsa: vsc73xx: use read_poll_timeout instead delay loop
+  net: dsa: vsc73xx: convert to PHYLINK
+  net: dsa: vsc73xx: use macros for rgmii recognition
+  net: dsa: vsc73xx: Add define for max num of ports
+  net: dsa: vsc73xx: add structure descriptions
 
-and make it generic from the get-go.
-
-And then have the macro wrap around it in order to explain that
-particular use with the macro name.
-
-If it is still not clear what I mean, lemme know and I'll do a diff
-ontop.
-
-Thx.
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 253 ++++++++++++-------------
+ drivers/net/dsa/vitesse-vsc73xx.h      |  27 ++-
+ 2 files changed, 143 insertions(+), 137 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
