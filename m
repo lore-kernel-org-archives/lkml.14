@@ -1,79 +1,85 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65457171A1;
-	Wed, 17 Apr 2024 20:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDD3171A1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713385406; cv=none; b=dCSMld3mp9F9LTt2hkl9ju/n1Oo6f4fOzNF/AgqAnpoKWB3w+Tn8/nCmxc6ovkyY/rQpLs45oz+5neMRy2ppwtuxF7hrf9B3bFk2g4hAJfy6UJZ8oVL7OJnZLA7MBsSiTv/2oVqCaDGvZw6Tv6lsAPZpCWiQ2a2Y9jPXrRjyLbo=
+	t=1713385521; cv=none; b=aYY+QQJ0+zACVvoVq3REMZVGCXRlsYa1Yrr8DX4G6CiiygzhtvU+MsUq/Lr9M5/SWGowGg82uehbHjTq9SG8nLpoG6tJW9vUXQSNZ+DzhNp2LfTjJO+TqksCOgi3gtVGvGRgUEq3AXXU9YjtC9GqhYAlnrPMCO6x1DaVCDLKXbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713385406; c=relaxed/simple;
-	bh=YK1LJ7V7n6YU6T4BYHDIXWISYQIofcn9Vug8OWzrD/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kV/6pOLrSDMpQN7xeWVpQLMHT/43faazig/nU8BkQxpTdlfPsrwp22KvnlYwkvq3xByFDq1RXvxM+k/KyJkwF1Cj8w28QfVrQN77M1/hSD5iyl9+u+03cw4Jk352yZ7smJhpfjj8BH4gZn77KDPfoU+Gx9o62m3GV0TMsb6FsnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=l7qkf56V; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1713385521; c=relaxed/simple;
+	bh=pWXBe/vHkE5ouscTtZT8KCIjeqHGRYUlLlnF5gAbhJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f/saCKDRbaX7aIRgkBB1kyQFoEUkoQyW0oCwbGN1/uFhYp6rUAz10Cmss+ODzY3zgZAR1/30pNn9hcx02oG3b93DMqc2cUbybbdVcxVB+swQSV7KNJVjlPKjYLRlR1NpLHjMJdirc36XbYSLg9fXXFtB7yxmMJje7bzoj8t3TqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=ATOnx/2w; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=postmarketos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="l7qkf56V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=heCx5Vxu+tju1CQvxfg2RJDT1aim0ThgpvJAHCHewkQ=; b=l7qkf56V7BsGBIxY9V8DlIkiwv
-	HKzTvHiZ3IR/UjgKfBgUcgt5wuK3C9vahLEMRO3lFXQd12JPokoSD72OtMgyoKSCroINAaAsZI0NZ
-	W/z/BQTDBeJuxBN398eLm6vkhaeh1BwzthRlG7gJz1ZrkUpSLlTBWyRmc+esYvk56H8I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rxBoB-00DHPd-Q3; Wed, 17 Apr 2024 22:23:07 +0200
-Date: Wed, 17 Apr 2024 22:23:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH net-next v1 2/4] net: phy: micrel: lan8841: set default
- PTP latency values
-Message-ID: <b44a4aee-f76f-4472-9b5c-343a09ed0d33@lunn.ch>
-References: <20240417164316.1755299-1-o.rempel@pengutronix.de>
- <20240417164316.1755299-3-o.rempel@pengutronix.de>
- <c8e3f5d0-832b-4ab1-a65f-52f983ff110a@lunn.ch>
- <ZiAtREiqPuvXkB4S@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="ATOnx/2w"
+Message-ID: <587b3cff-a8b6-4412-8cff-79eb48d9556b@postmarketos.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1713385516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h6rUr9bTJkPoASfG3Y7dLkjBo8BzVRWb+gB92W3GbXg=;
+	b=ATOnx/2wn9QuqErvMnHfiPTY09lnC1ZLFHM5UvwAOfSAHgvRB4d/DGSrfKkrKlEwVByGYd
+	4mHoyTcGU+BLIiQQi0/kBhMHLE9Ee8J+xTIueClUcSef/cglpyAAM12PRi9IRvi+55m4fS
+	Utn03zR6n6SyQzbd5MWGKSBJ1VNjX1/5h4+ASlMqsVjVr6s4cO0R4TR5iv4L2NGRLuwMEa
+	STUCTv9A+iWMhJjleADcOhtjaNUC25OPTRFf8sXmKDPFMdSUJT0+UPBycAOvIuaNRWBuIT
+	MM+8gSolkbMneBnSSqZwUHosgwA+TtQGu3Iq8jGttLX0O3KxRLxFPiY2IGlg/w==
+Date: Wed, 17 Apr 2024 23:25:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiAtREiqPuvXkB4S@pengutronix.de>
+Subject: Re: [PATCH v3 1/4] ARM: dts: qcom: msm8974: Split out common part of
+ samsung-klte
+To: Rong Zhang <i@rong.moe>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Icenowy Zheng <uwu@icenowy.me>
+References: <20240213110137.122737-1-i@rong.moe>
+ <20240213110137.122737-2-i@rong.moe>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alexey Minnekhanov <alexeymin@postmarketos.org>
+In-Reply-To: <20240213110137.122737-2-i@rong.moe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-> > What affect does this have on systems which have already applied
-> > adjustments in user space to correct for this? Will this cause
-> > regressions for such systems?
-> 
-> Yes.
-> 
-> > I know Richard has rejected changes like this in the past.
-> 
-> In this case I would need to extend the ethtool interface. The driver
-> should provide recommended values and the user space can optionally
-> read them and optionally write them to the HW.
 
-I suggest you go read older messages from Richard. It was a discussion
-with Microchip about one of their PHYs.
 
-	Andrew
+On 13.02.2024 13:58, Rong Zhang wrote:
+> Samsung Galaxy S5 has many variants. Variants that support LTE use klte*
+> as their codename. Currently, the only supported one is the one without
+> any suffix, namely, klte. It is known that other klte* variants have
+> only minor differences compared to klte and can mostly work with the
+> klte DTB.
+> 
+> Split the common part into a common DTSI so that it can be imported in
+> the DTS of klte and other klte* variants.
+> 
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+>   ... qcom-msm8974pro-samsung-klte-common.dtsi} |   7 +-
+>   .../dts/qcom/qcom-msm8974pro-samsung-klte.dts | 833 +-----------------
+>   2 files changed, 17 insertions(+), 823 deletions(-)
+>   copy arch/arm/boot/dts/qcom/{qcom-msm8974pro-samsung-klte.dts => qcom-msm8974pro-samsung-klte-common.dtsi} (98%)
+>   rewrite arch/arm/boot/dts/qcom/qcom-msm8974pro-samsung-klte.dts (99%)
+> 
+
+Tested on regular Samsung Galaxy S5 (qcom-msm8974pro-samsung-klte).
+
+Tested-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+
+-- 
+Regards,
+Alexey Minnekhanov
+postmarketOS developer
