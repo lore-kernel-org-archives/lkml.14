@@ -1,137 +1,208 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24D641C7C;
-	Wed, 17 Apr 2024 20:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EE444C8B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713384190; cv=none; b=Jsn+b/kuZDMGT1oGoPfbhBl6fu4duMtk4GPmE3TbvTV2p5wjbZ4fndlGTFBzHcJuCQk815QyAOeNKzPq4togTFj+LsYQ1Zzlv3i+HTz3Wsa0l8EfnDBmH7asbtG8g+LNg8LmYTgyYasJRqolY14YdFoRpEHcjE42Oim77U4r2+c=
+	t=1713384190; cv=none; b=um8FuIlrBZTtcybV+FjUaP01FQSeoOw2Zv1FjvvqBjf+jzpeDkW5Av0M+olN8OJ1iYUTA8XWK9WiGVnILJ8yw8eh49SAieosVkFd3+SBOfqlbfl8dtw2+Sm1tOfWxWdq806GJWcxVdEDJVPzPGKX2woRnuczXROI5izulfnj1Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713384190; c=relaxed/simple;
-	bh=1gUuVn+QjUd7F5bm51RwKzR6j6BmbQzEDGn5JENwhyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=euCeY19nJTf2cp1TmWC2DGO+7rSHMjtn9zp1sPk8eWO5FfYKhaa3saYXfh3M8l2pe3Ssejh+L5lfqPSFk733ic2Vp+CPpcO1Pc4lqV/XhyOSfP0IzFzCOhYE8l/89zT3UsQSQj+27XfkzmwELCHqzA7CczlQzjEyfL/54rlqT/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=P1f3RaYc; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	bh=9J7bTJW6Z2MeNhnVPByhcl4m6t24a8dv3hQEs4RW/1Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iNIyPKk9qe/QYEgH+VIcryJEsToTlKTzG0Zc2bLc+C9Djr09kjp0YXvJWQdLIvoeHfGz665poibAXjVknOxTdDTj6sv7O6DpkzqQkGtYyMaa7vPrnlYegoHquYHC9THShgmTSIP6jCg4TmhMOLJ41iF8Ph7Kw8yY12F97tNKlIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EIBTyTy8; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="P1f3RaYc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=8xZy/0NtF+dV+KHcJxF6iRNziuvt+mIUzs1R/Wc34/k=; b=P1f3RaYcYjmQe13JJtjSwquN0U
-	U4p4slLzfeBTaq/2KgWu+sL0pIHjRSKxKTGGdt7yYjj9++wr68kfwE5+WrCm7qWqgCWmuh4l4Wlkg
-	ibi9u/l/QNtS9BMqlDHfkItTqOWIqTR1qvYMBvdN9gmTKo4y/K0l4rLpMpZR1lLUT/P/PWvKXiRVY
-	Abq5b+5glRFq0RcQYJTL1QKMSd0EQbu8PHwcFsLhpts2Y0xOfZcicDWeWvmpGdn5MxIyw++A4GZkk
-	/27UKEb1GyF9ARASBfGcnfYPftM4BH+jg5O62lcjreJ/aPYCoYFkwlC7WA0Xg/JY3Ph04Ovzwn3+Y
-	lFXytdEA==;
-Received: from cw137ip160.mn.codeweavers.com ([10.69.137.160] helo=camazotz.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1rxBUn-00HOiY-26;
-	Wed, 17 Apr 2024 15:03:07 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- wine-devel@winehq.org,
- =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
- Wolfram Sang <wsa@kernel.org>, Arkadiusz Hiler <ahiler@codeweavers.com>,
- Andy Lutomirski <luto@kernel.org>, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH v4 02/27] ntsync: Introduce NTSYNC_IOC_WAIT_ALL.
-Date: Wed, 17 Apr 2024 15:03:05 -0500
-Message-ID: <3479054.QJadu78ljV@camazotz>
-In-Reply-To: <20240417113703.GL30852@noisy.programming.kicks-ass.net>
-References:
- <20240416010837.333694-1-zfigura@codeweavers.com>
- <20240416010837.333694-3-zfigura@codeweavers.com>
- <20240417113703.GL30852@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EIBTyTy8"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a55323f2ef9so2777566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:03:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713384187; x=1713988987; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SV6J30CfPASoymdIFYzV0/TP7ddiAe5RpBl3EgHS6Xs=;
+        b=EIBTyTy8vlNq3dUgwpcSf6H+ieLISL1DtlR4v+jfF9o00XGT+LPhJxjEcA72N8zh3/
+         VilD/csQLEkSXvaMr+hJycDAw+H2tx6XqeuP7sVOdvrok6dIf7LhKuJ7qAzsWEOooTzv
+         8qoAtYtRjEF6yYp3/dEOYqJLzctCvQG5pEJ2/jZ0EnHE7tXqL7ckib5EhkiMJpseQjnl
+         5/m8BmKnByfimogTc38lgmqWygqMhc4unOaRNXgVXTS/9AT3WTF82K9cwcodJ4lsNxvG
+         VewT+aV0mGM8dyo5PJ2WEBsypRs2Le570tjE6DkE9tEHD3RJEyEYyQ0dvYh3KvK5gGto
+         W+jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713384187; x=1713988987;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SV6J30CfPASoymdIFYzV0/TP7ddiAe5RpBl3EgHS6Xs=;
+        b=luL6mKDMchPf7i9fSNmJOMIfzB0d0Y7m6v3nB0w/dbKjRFoPIko5ItosQAzTMry+hf
+         0ZXWp/l1IlSh/hz/xOFx/0FeJVVi+KrKHL26zjbyuhmzIPOHtNqW720VZ+kK0m9DOlfE
+         FQoFJeDvwcxrbgF5yo6Gr0Tp2gClDumpqgYwO8m+3A8TvCqeECq9mCdqcwnU0+em8W8G
+         dvLR4DsbOUGhLIr1n4DxTSKB/DfgF29iBj1COIIV1TFBRRCtglPmozoR+MqHcfyq0TL1
+         2igsZaNP7C/FqnWGSvkLEeonIi4+84GytRn1xWKkEx4Q18xGt8MMfy8GrAT60OZu41wu
+         vV9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWdsAP4Njl9aRNpXNfTS77IqK8m2SWjpR6trE2pT6hLmiemlLVrvA7e0E+9OxNm80r3bqJHKoqx+r2zvBs+/3/igryhgN/Piqxvisx6
+X-Gm-Message-State: AOJu0Yz7h3PrbBOI0bTpUkLJRb8diEZeTMiZZBZQ8VMqhkTRsMjPDEdD
+	gpsKsqOUObjQkf0JDQ2mwjfn81yv6HX8fwzI8ClCAIE9nyE32p2ByENALS358FAtphbSrMzK030
+	H
+X-Google-Smtp-Source: AGHT+IEE4rTTfC2fS5MHSJv6KjEvvVOGWI1pShDXOcYNXGfN81YBcLHlG9LDzJPJpVmh0BPlqwuEww==
+X-Received: by 2002:a17:907:10c3:b0:a55:5c04:89a4 with SMTP id rv3-20020a17090710c300b00a555c0489a4mr334635ejb.21.1713384187494;
+        Wed, 17 Apr 2024 13:03:07 -0700 (PDT)
+Received: from [192.168.45.55] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id xa4-20020a170906fd8400b00a5252e69c7dsm5905590ejb.160.2024.04.17.13.03.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 13:03:07 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Wed, 17 Apr 2024 22:02:54 +0200
+Subject: [PATCH v2 2/7] soc: qcom: smem: Add a feature code getter
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240404-topic-smem_speedbin-v2-2-c84f820b7e5b@linaro.org>
+References: <20240404-topic-smem_speedbin-v2-0-c84f820b7e5b@linaro.org>
+In-Reply-To: <20240404-topic-smem_speedbin-v2-0-c84f820b7e5b@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713384181; l=3440;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=9J7bTJW6Z2MeNhnVPByhcl4m6t24a8dv3hQEs4RW/1Q=;
+ b=4u/Mox1Q9N+V2KjoOOEjCZhuqpOUYbZD0oDyrWik5Dmyg03vy2l1Q8Y0YqOLyj0NsQdNoc2OR
+ RXZWLV7bdp3CPY7/5IZlWwlKkSrH2MKosezQc/9nA71wDribMonE9+u
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Wednesday, 17 April 2024 06:37:03 CDT Peter Zijlstra wrote:
-> On Mon, Apr 15, 2024 at 08:08:12PM -0500, Elizabeth Figura wrote:
-> > +	if (atomic_read(&sem->all_hint) > 0) {
-> > +		spin_lock(&dev->wait_all_lock);
-> > +		spin_lock_nest_lock(&sem->lock, &dev->wait_all_lock);
-> > =20
-> > +		prev_count =3D sem->u.sem.count;
-> > +		ret =3D post_sem_state(sem, args);
-> > +		if (!ret) {
-> > +			try_wake_all_obj(dev, sem);
-> > +			try_wake_any_sem(sem);
-> > +		}
-> > =20
-> > +		spin_unlock(&sem->lock);
-> > +		spin_unlock(&dev->wait_all_lock);
-> > +	} else {
-> > +		spin_lock(&sem->lock);
-> > +
-> > +		prev_count =3D sem->u.sem.count;
-> > +		ret =3D post_sem_state(sem, args);
-> > +		if (!ret)
-> > +			try_wake_any_sem(sem);
-> > +
-> > +		spin_unlock(&sem->lock);
-> > +	}
-> > =20
-> >  	if (!ret && put_user(prev_count, user_args))
-> >  		ret =3D -EFAULT;
->=20
-> vs.
->=20
-> > +	/* queue ourselves */
-> > +
-> > +	spin_lock(&dev->wait_all_lock);
-> > +
-> > +	for (i =3D 0; i < args.count; i++) {
-> > +		struct ntsync_q_entry *entry =3D &q->entries[i];
-> > +		struct ntsync_obj *obj =3D entry->obj;
-> > +
-> > +		atomic_inc(&obj->all_hint);
-> > +
-> > +		/*
-> > +		 * obj->all_waiters is protected by dev->wait_all_lock rather
-> > +		 * than obj->lock, so there is no need to acquire obj->lock
-> > +		 * here.
-> > +		 */
-> > +		list_add_tail(&entry->node, &obj->all_waiters);
-> > +	}
->=20
-> This looks racy, consider:
->=20
-> 	atomic_read(all_hints) /* 0 */
->=20
-> 				spin_lock(wait_all_lock)
-> 				atomic_inc(all_hint)	/* 1 */
-> 				list_add_tail()
->=20
-> 	spin_lock(sem->lock)
-> 	/* try_wake_all_obj() missing */
->=20
->=20
->=20
->=20
-> I've not yet thought about if this is harmful or not, but if not, it
-> definitely needs a comment.
->=20
-> Anyway, I need a break, maybe more this evening.
+Recent (SM8550+ ish) Qualcomm SoCs have a new mechanism for precisely
+identifying the specific SKU and the precise speed bin (in the general
+meaning of this word, anyway): a pair of values called Product Code
+and Feature Code.
 
-Ach. I wrote this with the idea that the race isn't meaningful, but
-looking at it again you're right=E2=80=94there is a harmful race here.
+Based on this information, we can deduce the available frequencies for
+things such as Adreno. In the case of Adreno specifically, Pcode is
+useless for non-prototype SoCs.
 
-I think it should be fixable by moving the atomic_read inside the lock,
-though.
+Introduce a getter for the feature code and export it.
 
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ drivers/soc/qcom/smem.c          | 33 +++++++++++++++++++++++++++++++++
+ include/linux/soc/qcom/smem.h    |  1 +
+ include/linux/soc/qcom/socinfo.h | 26 ++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+)
+
+diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
+index 7191fa0c087f..29e708789eec 100644
+--- a/drivers/soc/qcom/smem.c
++++ b/drivers/soc/qcom/smem.c
+@@ -795,6 +795,39 @@ int qcom_smem_get_soc_id(u32 *id)
+ }
+ EXPORT_SYMBOL_GPL(qcom_smem_get_soc_id);
+ 
++/**
++ * qcom_smem_get_feature_code() - return the feature code
++ * @code: On success, return the feature code here.
++ *
++ * Look up the feature code identifier from SMEM and return it.
++ *
++ * Return: 0 on success, negative errno on failure.
++ */
++int qcom_smem_get_feature_code(u32 *code)
++{
++	struct socinfo *info;
++	u32 raw_code;
++
++	info = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_HW_SW_BUILD_ID, NULL);
++	if (IS_ERR(info))
++		return PTR_ERR(info);
++
++	/* This only makes sense for socinfo >= 16 */
++	if (__le32_to_cpu(info->fmt) < SOCINFO_VERSION(0, 16))
++		return -EOPNOTSUPP;
++
++	raw_code = __le32_to_cpu(info->feature_code);
++
++	/* Ensure the value makes sense */
++	if (raw_code >= SOCINFO_FC_INT_MAX)
++		raw_code = SOCINFO_FC_UNKNOWN;
++
++	*code = raw_code;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(qcom_smem_get_feature_code);
++
+ static int qcom_smem_get_sbl_version(struct qcom_smem *smem)
+ {
+ 	struct smem_header *header;
+diff --git a/include/linux/soc/qcom/smem.h b/include/linux/soc/qcom/smem.h
+index a36a3b9d4929..0943bf419e11 100644
+--- a/include/linux/soc/qcom/smem.h
++++ b/include/linux/soc/qcom/smem.h
+@@ -13,5 +13,6 @@ int qcom_smem_get_free_space(unsigned host);
+ phys_addr_t qcom_smem_virt_to_phys(void *p);
+ 
+ int qcom_smem_get_soc_id(u32 *id);
++int qcom_smem_get_feature_code(u32 *code);
+ 
+ #endif
+diff --git a/include/linux/soc/qcom/socinfo.h b/include/linux/soc/qcom/socinfo.h
+index 10e0a4c287f4..52439f48428f 100644
+--- a/include/linux/soc/qcom/socinfo.h
++++ b/include/linux/soc/qcom/socinfo.h
+@@ -3,6 +3,8 @@
+ #ifndef __QCOM_SOCINFO_H__
+ #define __QCOM_SOCINFO_H__
+ 
++#include <linux/types.h>
++
+ /*
+  * SMEM item id, used to acquire handles to respective
+  * SMEM region.
+@@ -82,4 +84,28 @@ struct socinfo {
+ 	__le32 boot_core;
+ };
+ 
++/* Internal feature codes */
++enum qcom_socinfo_feature_code {
++	/* External feature codes */
++	SOCINFO_FC_UNKNOWN = 0x0,
++	SOCINFO_FC_AA,
++	SOCINFO_FC_AB,
++	SOCINFO_FC_AC,
++	SOCINFO_FC_AD,
++	SOCINFO_FC_AE,
++	SOCINFO_FC_AF,
++	SOCINFO_FC_AG,
++	SOCINFO_FC_AH,
++};
++
++/* Internal feature codes */
++/* Valid values: 0 <= n <= 0xf */
++#define SOCINFO_FC_Yn(n)		(0xf1 + n)
++#define SOCINFO_FC_INT_MAX		SOCINFO_FC_Yn(0x10)
++
++/* Product codes */
++#define SOCINFO_PC_UNKNOWN		0
++#define SOCINFO_PCn(n)			(n + 1)
++#define SOCINFO_PC_RESERVE		(BIT(31) - 1)
++
+ #endif
+
+-- 
+2.44.0
 
