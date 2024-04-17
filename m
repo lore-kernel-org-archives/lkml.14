@@ -1,157 +1,184 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB24173346;
-	Wed, 17 Apr 2024 17:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05EE171099;
+	Wed, 17 Apr 2024 17:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713373284; cv=none; b=jn1gK0UUuqwTn4AZ06X3qVDGhxrPexhlE85akKQgoZrBSmz0cRutqN5miKixuX8srp/CCFg+UBm/nVQXkuuYww6H+Bh1NvPL3P8nTJUKs5XycxUZvCg7WwTjxyzGX+sNw9peSUsHDvvkhY1mbgklvzOpnmHP3U4xJG+6VKTSM1E=
+	t=1713373282; cv=none; b=jSv/H00p/Ika32fJ+8kyxrctc1ZvWzOH6hN3Nr9lcm+eoRylj3mvWsC5SR0R2gxoFvXO8dYR6ju0zUNIL46Mh/D55tVtbAclGPGy8pxE79ZOU46cBhsvufYqrpf3/dQyMf7fVP/4HbXr8ThOTjFq4a01bXrUZXpiKesTQnMYdDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713373284; c=relaxed/simple;
-	bh=O6we+RqXsiVWX/TzqcQDz134Wp7eWf6sc519p/DTcpM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=E7heZEuNVp4LGVigoInmwwXRQhnvyJ+dKNooKyuwuTIEyeOcapXOscFTInOHVHdY0nDUBPJAly1agFPnof+MFQYeKuWm01a806Kko3b+YeqANrhPZVs+HvXc1CSmlopC2xtup4bGuaxbX7ns516IO1HHb41+5BERX2WeZ4RspBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKRrM5KdMz67cSV;
-	Thu, 18 Apr 2024 00:56:19 +0800 (CST)
-Received: from lhrpeml100002.china.huawei.com (unknown [7.191.160.241])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8DDB3140B38;
-	Thu, 18 Apr 2024 01:01:17 +0800 (CST)
-Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
- lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 18:01:17 +0100
-Received: from lhrpeml500001.china.huawei.com ([7.191.163.213]) by
- lhrpeml500001.china.huawei.com ([7.191.163.213]) with mapi id 15.01.2507.035;
- Wed, 17 Apr 2024 18:01:17 +0100
-From: Salil Mehta <salil.mehta@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Russell King
-	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, "Miguel
- Luis" <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Dave
- Hansen" <dave.hansen@linux.intel.com>, Linuxarm <linuxarm@huawei.com>,
-	"justin.he@arm.com" <justin.he@arm.com>, "jianyong.wu@arm.com"
-	<jianyong.wu@arm.com>
-Subject: RE: [PATCH v6 16/16] cpumask: Add enabled cpumask for present CPUs
- that can be brought online
-Thread-Topic: [PATCH v6 16/16] cpumask: Add enabled cpumask for present CPUs
- that can be brought online
-Thread-Index: AQHakMr6k1YHIExkQkWYAEBNLS9P4bFsr2qw
-Date: Wed, 17 Apr 2024 17:01:17 +0000
-Message-ID: <8b821e5521664c58bc1990230ed757c5@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
- <20240417131909.7925-17-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20240417131909.7925-17-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1713373282; c=relaxed/simple;
+	bh=pCvbn1jf61MwV669wcYaAao51BqGxjxViYHqPph/RqE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aPKnDTpEjIrjsf/xlcU/a37dmCIaFuyilnPOP5Sh/3t0X3dcXlSaghmmE+KyXv8/TLwT/2wKZpPrTQfWYCMJ7q28JVVCG0fFp/pPLHXImQyaSPRTgT8n1OpowgtLAp7o6Mo+Y7dI41BOkJtnP85YD6DZK8FWEWJrKIf3APck+J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToSFFcbE; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToSFFcbE"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-343d1003106so4078906f8f.1;
+        Wed, 17 Apr 2024 10:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713373277; x=1713978077; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZG4WqLxP5AYNlP8VpmeGoz9TMkj0yHMcCFSjBYjuRRE=;
+        b=ToSFFcbEQfUEBaKNvdLMVQgqLsWgD3E1rSsxBR6UmxHwhp2SJAEq1wr3nh0ePGtIBR
+         or5rJ3bMOMXqV6q/QzRdTISWkDTLLpIC1sJ1Y2f2RGX9cvnEKcMzFtKL4Yz95CoP4m9j
+         lLTEACzARpRiQQTEZMriiWbH3qvy/DejZIgvDhV9ZnIlAEoiHvnxu1EGlBeg6eGJGBYT
+         10T6SDdchL0O1la9iiVPAhBRCuK4GSGvP5uZo6qz+G86X5aScupRZQrgS0FYd//gMBt3
+         8gLXuqe5O0XjkV+aiMkccjsbOqIFFuDlAk9Vs2M1EEgLO0YWt/ljd6try6t+ssyVl0/Q
+         cegg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713373277; x=1713978077;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZG4WqLxP5AYNlP8VpmeGoz9TMkj0yHMcCFSjBYjuRRE=;
+        b=B3ciQbMTqIp/URG6j6zrCbqYawXYOD47M2ap4RKF10GpZpZtgouWUgyT8p16CWfd41
+         48I+JXC6kYouV08S6xanxT7yRCulZKrH3LcCF21I6H3VoJO1VeaiFVm+5x4HpkKzLt/i
+         /N4Qc4hDPOoEz/oy335kp+qL9utik8D+8E0e6RgbhU4dSL1lIzX3YK3PIoKF/gqGeelS
+         h+EAlJ16VmGfmysvUZA913wE6S2Lm7aPNuqipTu140t1phkBt39nFRR6E5kZtAQnBByZ
+         /dYQleZRcfiNeMdTFcDJnfS2JEIGzEpzDNZm8lgzfWLsbWG9DP8PosalDgJPReqmUwN/
+         +vFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr03w3xqbrr1xwNpZWA2ZLrmzkcuWzPLJDUtngXjcP7PnhO1K6t/urC93A5yocZcKC9gxR70Nhj90So2ES47jmkukLKnR4hvIlSLrA1/cPNAo/FLuLKFf2TVf5JC0TK7fazcfcViBF9TMMg3f3H8RK2nxyQZIr4q78RxxYURXkEF18hA==
+X-Gm-Message-State: AOJu0Yy0kIUK99sa+iDdU3zeB7WXm57Z0FDhv2lB2Ev5zCwzkbK3YNIV
+	a4ZwcvwU0f6SXMFhMVmHOU958ibUIEZ4Gue9KYE8TbBrfVn1lCrO
+X-Google-Smtp-Source: AGHT+IGabgp0ffGze20cmg3gFkaG8DErVtupbaTCdQjsgtC1r5LnagzvVjbp+F6lV6IWNTAkPYw89Q==
+X-Received: by 2002:adf:f542:0:b0:349:d779:3d60 with SMTP id j2-20020adff542000000b00349d7793d60mr1261551wrp.57.1713373276711;
+        Wed, 17 Apr 2024 10:01:16 -0700 (PDT)
+Received: from spiri.. ([86.124.122.31])
+        by smtp.gmail.com with ESMTPSA id g2-20020adff3c2000000b00343300a4eb8sm17949441wrp.49.2024.04.17.10.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 10:01:16 -0700 (PDT)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: michael.hennerich@analog.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: alexandru.tachici@analog.com,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	andy@kernel.org,
+	nuno.sa@analog.com,
+	marcelo.schmitt@analog.com,
+	bigunclemax@gmail.com,
+	dlechner@baylibre.com,
+	okan.sahin@analog.com,
+	fr0st61te@gmail.com,
+	alisa.roman@analog.com,
+	marcus.folkesson@gmail.com,
+	schnelle@linux.ibm.com,
+	liambeguin@gmail.com
+Subject: [PATCH v6 3/5] iio: adc: ad7192: Add aincom supply
+Date: Wed, 17 Apr 2024 20:00:52 +0300
+Message-Id: <20240417170054.140587-4-alisa.roman@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240417170054.140587-1-alisa.roman@analog.com>
+References: <20240417170054.140587-1-alisa.roman@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
->  From: Jonathan Cameron <jonathan.cameron@huawei.com>
->  Sent: Wednesday, April 17, 2024 2:19 PM
-> =20
->  From: James Morse <james.morse@arm.com>
-> =20
->  The 'offline' file in sysfs shows all offline CPUs, including those that=
- aren't
->  present. User-space is expected to remove not-present CPUs from this lis=
-t
->  to learn which CPUs could be brought online.
-> =20
->  CPUs can be present but not-enabled. These CPUs can't be brought online
->  until the firmware policy changes, which comes with an ACPI notification
->  that will register the CPUs.
-> =20
->  With only the offline and present files, user-space is unable to determi=
-ne
->  which CPUs it can try to bring online. Add a new CPU mask that shows thi=
-s
->  based on all the registered CPUs.
-> =20
->  Signed-off-by: James Morse <james.morse@arm.com>
->  Tested-by: Miguel Luis <miguel.luis@oracle.com>
->  Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
->  Tested-by: Jianyong Wu <jianyong.wu@arm.com>
->  Acked-by: Thomas Gleixner <tglx@linutronix.de>
->  Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
->  Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> =20
->  ---
->  v5: No change
->  ---
->   .../ABI/testing/sysfs-devices-system-cpu      |  6 +++++
->   drivers/base/cpu.c                            | 10 ++++++++
->   include/linux/cpumask.h                       | 25 +++++++++++++++++++
->   kernel/cpu.c                                  |  3 +++
->   4 files changed, 44 insertions(+)
-> =20
+AINCOM should actually be a supply. AINx inputs are referenced to AINCOM
+in pseduo-differential operation mode. AINCOM voltage represets the
+offset of corresponding channels.
 
-[...]
+Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+---
+ drivers/iio/adc/ad7192.c | 37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
 
-
->  diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c index
->  b9d0d14e5960..4713b86d20f2 100644
->  --- a/drivers/base/cpu.c
->  +++ b/drivers/base/cpu.c
->  @@ -95,6 +95,7 @@ void unregister_cpu(struct cpu *cpu)  {
->   	int logical_cpu =3D cpu->dev.id;
-> =20
->  +	set_cpu_enabled(logical_cpu, false);
-
-
-sorry, It is being done here in context to (un)register)cpu().
-
-
->   	unregister_cpu_under_node(logical_cpu,
->  cpu_to_node(logical_cpu));
-> =20
->   	device_unregister(&cpu->dev);
->  @@ -273,6 +274,13 @@ static ssize_t print_cpus_offline(struct device *de=
-v,
->  }  static DEVICE_ATTR(offline, 0444, print_cpus_offline, NULL);
-> =20
->  +static ssize_t print_cpus_enabled(struct device *dev,
->  +				  struct device_attribute *attr, char *buf) {
->  +	return sysfs_emit(buf, "%*pbl\n",
->  cpumask_pr_args(cpu_enabled_mask));
->  +}
->  +static DEVICE_ATTR(enabled, 0444, print_cpus_enabled, NULL);
->  +
->   static ssize_t print_cpus_isolated(struct device *dev,
->   				  struct device_attribute *attr, char *buf)  {
->  @@ -413,6 +421,7 @@ int register_cpu(struct cpu *cpu, int num)
->   	register_cpu_under_node(num, cpu_to_node(num));
->   	dev_pm_qos_expose_latency_limit(&cpu->dev,
-> =20
->  	PM_QOS_RESUME_LATENCY_NO_CONSTRAINT);
->  +	set_cpu_enabled(num, true);
-
-
-and here.
-
-Thanks
-Salil.
-
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index fe8dbb68a8ba..8d56cf889973 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -186,6 +186,7 @@ struct ad7192_state {
+ 	struct regulator		*vref;
+ 	struct clk			*mclk;
+ 	u16				int_vref_mv;
++	u32				aincom_mv;
+ 	u32				fclk;
+ 	u32				mode;
+ 	u32				conf;
+@@ -742,10 +743,19 @@ static int ad7192_read_raw(struct iio_dev *indio_dev,
+ 			*val = -(1 << (chan->scan_type.realbits - 1));
+ 		else
+ 			*val = 0;
++		switch (chan->type) {
++		case IIO_VOLTAGE:
++			if (st->aincom_mv && !chan->differential)
++				*val += DIV_ROUND_CLOSEST_ULL((u64)st->aincom_mv * 1000000000,
++							      st->scale_avail[gain][1]);
++			return IIO_VAL_INT;
+ 		/* Kelvin to Celsius */
+-		if (chan->type == IIO_TEMP)
++		case IIO_TEMP:
+ 			*val -= 273 * ad7192_get_temp_scale(unipolar);
+-		return IIO_VAL_INT;
++			return IIO_VAL_INT;
++		default:
++			return -EINVAL;
++		}
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+ 		*val = DIV_ROUND_CLOSEST(ad7192_get_f_adc(st), 1024);
+ 		return IIO_VAL_INT;
+@@ -1052,6 +1062,7 @@ static int ad7192_probe(struct spi_device *spi)
+ {
+ 	struct ad7192_state *st;
+ 	struct iio_dev *indio_dev;
++	struct regulator *aincom;
+ 	int ret;
+ 
+ 	if (!spi->irq) {
+@@ -1067,6 +1078,27 @@ static int ad7192_probe(struct spi_device *spi)
+ 
+ 	mutex_init(&st->lock);
+ 
++	aincom = devm_regulator_get_optional(&spi->dev, "aincom");
++	if (!IS_ERR(aincom)) {
++		ret = regulator_enable(aincom);
++		if (ret) {
++			dev_err(&spi->dev, "Failed to enable specified AINCOM supply\n");
++			return ret;
++		}
++
++		ret = devm_add_action_or_reset(&spi->dev, ad7192_reg_disable, aincom);
++		if (ret)
++			return ret;
++
++		ret = regulator_get_voltage(aincom);
++		if (ret < 0)
++			return dev_err_probe(&spi->dev, ret,
++					     "Device tree error, AINCOM voltage undefined\n");
++		st->aincom_mv = ret / 1000;
++	} else {
++		st->aincom_mv = 0;
++	}
++
+ 	st->avdd = devm_regulator_get(&spi->dev, "avdd");
+ 	if (IS_ERR(st->avdd))
+ 		return PTR_ERR(st->avdd);
+@@ -1113,6 +1145,7 @@ static int ad7192_probe(struct spi_device *spi)
+ 	st->int_vref_mv = ret / 1000;
+ 
+ 	st->chip_info = spi_get_device_match_data(spi);
++
+ 	indio_dev->name = st->chip_info->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->channels = st->chip_info->channels;
+-- 
+2.34.1
 
