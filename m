@@ -1,127 +1,128 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DB1196
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 00:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583D2196;
+	Wed, 17 Apr 2024 00:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713312607; cv=none; b=U9S8akRcsT9uJB6oRZQxex7NB52FjkxaPb68Ir3Ngx5LN/+BY0akXaiV0oXZ87Pp7J1Idz3di5R+w3sxn9ZMvLI3tvty4f2B05qgaLg3E/xSoj6g1keWWYfcd/hDO1gLKqUMjQbie/yy7/qYpAnMK+DDvgzqPAMGRag8eiqFt58=
+	t=1713312689; cv=none; b=LoEZBZ3H2jV3BYY1CPbc+VykUchOR1hIN48EiJvAxcM5vxrT5lwpsBNP55UM24c/7f+Weqoe7bqlsjpsyT4WVJOPg8Q1/3K0xMq8TzeZN/yQpk2oarGlp1vjPh6oarldaztzJcv+BhsjFO2N7007DHWohsnPzPfG2KMCBDHSvbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713312607; c=relaxed/simple;
-	bh=1/QhQq/SNBvhM5Qukg8qId++gk6cla4fzJPkLM7SWYI=;
-	h=Message-Id:In-Reply-To:References:To:Cc:From:Date:Subject; b=L/u+MGEJsovGok5mQtElmZz2r2iA9YL7XVtjtKSOglg15wR301g/bOhDa4WBhUxZ6/vtvIedoIHRB2qcL4q1eFSFYmJiNFNwyDqWJIMSFBxpSmzMaoYuPmcnhp+2QKqSe76slngbt0/7C5xmOVWnVUwwK2pmNPq0vwMIW/8+4NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=ALFUaIzp; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1713312689; c=relaxed/simple;
+	bh=/0bQkhy6R6bkH+wNonZcUTdXypAMTB7A5B/WDE5cx2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KMOqxl3bn5CIFFrqMyZXfOXMRwJd/mv2FIh2xhWDrkn3d32hGAZclv0ez1d9bI0otkkKz3flA93or3QsBokNj1jgyNF0oTMaGTUe/U5uQYJ4t60t+Tta5depH1FLuklgXQaj+DF6OhZtr0fTka85oEII8tQ3HRWkHz4JMIkSCsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fKlcKsFO; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="ALFUaIzp"
-Received: from pps.filterd (m0355092.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GEstYE010955;
-	Tue, 16 Apr 2024 17:24:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	message-id:in-reply-to:references:to:cc:from:date:subject; s=
-	DKIM202306; bh=bxlhcCLLu2nVwVVshKc9HTXBGPT+xoKrYdwmFjIADko=; b=A
-	LFUaIzpDXni0XvmvS0y2Pxqhcy4PQpTgtvxQlsDj8ehh8lmGWKw/KdeDd8BuUd8Q
-	hMBekukD2lvL+7VD+InMM3QMnnniANJSzk4HQYX0F3VzKOg16JlETL9y8pT4Uewi
-	K5mg5FPC/nPBzPUS7n4OW0xJ0Lx2W91X6kEbRo1tCH913lQPZqh7mMBqyFTn2Ke6
-	5RCAEdwT2KoGnNwjqDI+okLTM6csDjI07GYqTd23+rZUqoRAUzMrgungknlghjUI
-	otEww2i4ylzuDct59uiCTfJLLIqtdgfsHjXj7PtkQXqOKESgOg+YnW7bUlt/6/qV
-	3OSJR5JfFMbHDiub4UYuA==
-Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xha96c2th-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 17:24:57 +0000 (GMT)
-Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4VJrWs1PZ0z53xyY;
-	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
-Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VJrWs15XGz2VZRf;
-	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
-Message-ID: <20240416122254.868007168-5-mbland@motorola.com>
-In-Reply-To: <20240416122254.868007168-1-mbland@motorola.com>
-References: <20240416122254.868007168-1-mbland@motorola.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxwell Bland <mbland@motorola.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Maxwell Bland <mbland@motorola.com>, linux-kernel@vger.kernel.org
-From: Maxwell Bland <mbland@motorola.com>
-Date: Fri, 12 Apr 2024 10:00:34 -0500
-Subject: [PATCH 4/5] arm64: dynamic enforcement of PXNTable
-X-Proofpoint-GUID: c40_PDWtT41G9D4WZ4RFrQBRvh-FsbVL
-X-Proofpoint-ORIG-GUID: c40_PDWtT41G9D4WZ4RFrQBRvh-FsbVL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-16_14,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- impostorscore=0 mlxlogscore=624 priorityscore=1501 adultscore=0
- lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404160108
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fKlcKsFO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713312686; x=1744848686;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/0bQkhy6R6bkH+wNonZcUTdXypAMTB7A5B/WDE5cx2w=;
+  b=fKlcKsFOM3ZrWZgT7vqpksCXeWBH5Vm+FHKufl8SxtMcx1iE/e5U6sAj
+   JJ6Pw9h4/Dbrpn9QQulbwsYN/JfE6EE6IuWatykTex7NXLU5FtI4br0mr
+   5ZVPiGCIMyksp7Pugd9/hgRAKBeekQ2S18XGLJHsFmwOScetYbO7RMbpv
+   pU38YZin6SGLROuN0y3xSRnDNSdHPf7si8YzDka3pUgIgw1V8ZGIh/WWB
+   I/2vfdg+oNKzulI960zXEDd5GFfGfjC+oQWKxlA5t8aul0wPCYTDgflw9
+   F6a4S9a7UlFoqemsB4J+r4A4UcJt+HBB0Ygf28MBJuG0aDkk7dpJL0mol
+   g==;
+X-CSE-ConnectionGUID: w9PpdUaDQiSLJ3FrUKyeRg==
+X-CSE-MsgGUID: qkO2yps4THaVsET4wbcqwg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="34172018"
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="34172018"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 17:11:25 -0700
+X-CSE-ConnectionGUID: xk91JmxwTACj/hv/y9LImA==
+X-CSE-MsgGUID: 4L3ApJL+QeOYTtVcltyO1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="22485084"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 16 Apr 2024 17:11:18 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rwstP-0005sO-2j;
+	Wed, 17 Apr 2024 00:11:15 +0000
+Date: Wed, 17 Apr 2024 08:10:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dharma Balasubiramani <dharma.b@microchip.com>,
+	"andrzej . hajda @ intel . com" <andrzej.hajda@intel.com>,
+	"neil . armstrong @ linaro . org" <neil.armstrong@linaro.org>,
+	"rfoss @ kernel . org" <rfoss@kernel.org>,
+	"Laurent . pinchart @ ideasonboard . com" <Laurent.pinchart@ideasonboard.com>,
+	"jonas @ kwiboo . se" <jonas@kwiboo.se>,
+	"jernej . skrabec @ gmail . com" <jernej.skrabec@gmail.com>,
+	"maarten . lankhorst @ linux . intel . com" <maarten.lankhorst@linux.intel.com>,
+	"mripard @ kernel . org" <mripard@kernel.org>,
+	"tzimmermann @ suse . de" <tzimmermann@suse.de>,
+	"airlied @ gmail . com" <airlied@gmail.com>,
+	"daniel @ ffwll . ch" <daniel@ffwll.ch>,
+	"robh+dt @ kernel . org" <robh+dt@kernel.org>,
+	"krzysztof . kozlowski+dt @ linaro . org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt @ kernel . org" <conor+dt@kernel.org>,
+	"linux @ armlinux . org . uk" <linux@armlinux.org.uk>,
+	"Nicolas . Ferre @ microchip . com" <Nicolas.Ferre@microchip.com>,
+	"alexandre . belloni @ bootlin . com" <alexandre.belloni@bootlin.com>,
+	"claudiu . beznea @ tuxon . dev" <claudiu.beznea@tuxon.dev>,
+	"Manikandan . M @ microchip . com" <Manikandan.M@microchip.com>,
+	"arnd @ arndb . de" <arnd@arndb.de>,
+	"geert+renesas @ glider . be" <geert+renesas@glider.be>,
+	"Jason @ zx2c4 . com" <Jason@zx2c4.com>,
+	"mpe @ ellerman . id . au" <mpe@ellerman.id.au>,
+	"gerg @ linux-m68k . org" <gerg@linux-m68k.org>,
+	"rdunlap @ infradead . org" <rdunlap@infradead.org>,
+	"vbabka @ suse . cz" <vbabka@suse.cz>,
+	"dri-devel @ lists . freedesktop . org" <dri-devel@lists.freedesktop.org>,
+	"devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
+	"linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v5 3/4] MAINTAINERS: add SAM9X7 SoC's LVDS controller
+Message-ID: <202404170727.UvHFX4sD-lkp@intel.com>
+References: <20240405043536.274220-4-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Message-ID: <20240412150034.AqJR0-to9l3FiYVc0PgLDnemGUk8-KH663zENi2lOU0@z>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405043536.274220-4-dharma.b@microchip.com>
 
-PXNTable is enforced during the init process to ensure that regions of
-user memory and kernel data cannot be executed from, preventing attacks
-which write to writable kernel pages and then modify the kernel's page
-tables to make this code executable. This patch ensures this protection
-is also preserved for dynamically allocated pages/pagetables, making it
-so that all PMDs populated outside of the module code region are
-PXNTable by default.
+Hi Dharma,
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
- arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
-index 5785272144e8..2376b4e7915c 100644
---- a/arch/arm64/include/asm/pgalloc.h
-+++ b/arch/arm64/include/asm/pgalloc.h
-@@ -12,6 +12,7 @@
- #include <asm/processor.h>
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
-+#include <asm/module.h>
- 
- #define __HAVE_ARCH_PGD_FREE
- #define __HAVE_ARCH_PUD_FREE
-@@ -119,6 +120,12 @@ static inline void __pmd_populate(pmd_t *pmdp, phys_addr_t ptep,
- 	set_pmd(pmdp, __pmd(__phys_to_pmd_val(ptep) | prot));
- }
- 
-+static inline bool vaddr_is_data(unsigned long vaddr)
-+{
-+	return ((vaddr + PMD_SIZE < MODULES_ASLR_START || vaddr >= MODULES_ASLR_END) &&
-+		(vaddr + PMD_SIZE < (unsigned long) _text || vaddr >= (unsigned long) _etext));
-+}
-+
- /*
-  * Populate the pmdp entry with a pointer to the pte.  This pmd is part
-  * of the mm address space.
-@@ -127,8 +134,11 @@ static inline void
- pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep,
- 		    unsigned long vaddr)
- {
-+	pmdval_t pmd = PMD_TYPE_TABLE | PMD_TABLE_UXN;
- 	VM_BUG_ON(mm && mm != &init_mm);
--	__pmd_populate(pmdp, __pa(ptep), PMD_TYPE_TABLE | PMD_TABLE_UXN);
-+	if (vaddr_is_data(vaddr))
-+		pmd |= PMD_TABLE_PXN;
-+	__pmd_populate(pmdp, __pa(ptep), pmd);
- }
- 
- static inline void
+[auto build test WARNING on drm-misc/drm-misc-next]
+[also build test WARNING on linus/master v6.9-rc4 next-20240416]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dharma-Balasubiramani/dt-bindings-display-bridge-add-sam9x75-lvds-binding/20240405-123901
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240405043536.274220-4-dharma.b%40microchip.com
+patch subject: [PATCH v5 3/4] MAINTAINERS: add SAM9X7 SoC's LVDS controller
+reproduce: (https://download.01.org/0day-ci/archive/20240417/202404170727.UvHFX4sD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404170727.UvHFX4sD-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/devicetree/bindings/power/wakeup-source.txt references a file that doesn't exist: Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
+   Warning: Documentation/devicetree/bindings/sound/fsl-asoc-card.txt references a file that doesn't exist: Documentation/devicetree/bindings/sound/fsl,asrc.txt
+   Warning: Documentation/gpu/amdgpu/display/display-contributing.rst references a file that doesn't exist: Documentation/GPU/amdgpu/display/mpo-overview.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
+   Using alabaster theme
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
