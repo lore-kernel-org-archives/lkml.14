@@ -1,194 +1,192 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2087.outbound.protection.outlook.com [40.107.8.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F3D1411FF;
-	Wed, 17 Apr 2024 14:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364813; cv=fail; b=TVcdS+vf9aRjg1NqRrmLHG1cgo43X3vuyJks7cofA5/HqS5V2uI9D3L4jp0cLpvbIQy0wIa9nd+pl4sLQfbDYb+XPOnl/an7SuSiNnk0eoT4460QKDm6cO9nYmUAXA7++B0UW6EvSXdl6N9Jfs87C7sSCsWiIjiBo9Cs89v5qUs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364813; c=relaxed/simple;
-	bh=zW9ULleo6DXTv8a5ky/KzX1CEhS0eEOfF4+jkCEVguQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EgPsrqPSf7v0tD0oN2fQEEZgnUiUdyRVYyfGBg3LUGmhPu+W/upFzJmj+XpS4cdSb4rx3Aeq+BRwua6H2EPmT/8Q+0Lyfcb5kzg4b2WtsXyfxsFD/DEnb864iv+l0qwAzMa7d5CPJZwBs0A3oy8f1bR9T7OSqfMD9zUgIgj6Lvw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=NwrMCbNI; arc=fail smtp.client-ip=40.107.8.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CA81411DF
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713364822; cv=none; b=NEy5JN3GyNC3hHIAzzrR5ICgqBzyFCE5EWGuk57pbK3/exbSF0hwo1qwdZwziCKJXrpNGuaS8pTzHCOHZVuG7VKnAeWbYZ7a15hGWMFOzToCHf4eqlO8PmMkF10giZc0ogR1yBoD/PBS2dvUdubH47gVn1pOTr38e/2tkcC1zyY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713364822; c=relaxed/simple;
+	bh=CG7A0XS5Xdpm61BM+Mu/W9XBB/wYmjyn3UwZ2G16VmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dodomxhYV306ur0oPeJ69/GX7l90r4Fqq4ePdPMiRAL7R3xnvWCyzLiieVjVzqeRHfvp1aoeN7Ejl8LFSoIMM0gBDs59N9Wf6b4LNAjqZaDuXNC7kt55BjsJPHj7A9BqFBf8sxyhiCk/dvH721rcJk5UhB/7Lu7dxr+6TKp7E/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aHZGXw63; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NwrMCbNI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=erTPriM6D1FCwLP3JoNllf/MHDNJyRxyqZVbVTqVZyNDcX3QZ+tTiFEKLl/66TorDTS3MK2zQhRlnRGDAzykzJ089xmfUCqsh0rLVq8wC2z3QS65BNT1eMOiuY6CDP4m6kS1ey5ZxntBgc+IrUgkSnGhhNPU5JbIgARizWLRJkW22BIfnBMGdNEaAXgjbhfAzrtXPQaYe004AuKfki+z7GPA8q5BK3D8Y7k5WVAEP59H6DXVOANlchqJbAG/9rEOviD5+U77vsWVHGX8bOKSzLPLCwgtyvnl0clBvus+ES01x1OzmhZNq1YFJ0/8Io30+N9LiVGvzEkOyhb5YQrzRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PRr9riG+SZ2CsG6J8U0wY/bRJHOcE2BBP9oAhitbFXc=;
- b=Y1EHyk/tlfmswDeTeGNq8NzTHzAqA9mLcnjCYofBu/RzCxwndyW4by9ueWVrswR4J4Wc6FO+919MoA9M8+zwkW7KvKmaA/bivNAHg2X0QpL4twz/4Toyn3hSgc6VcBV2Zjn/VdGO63X0yWB5mOin3HFOQ6lcqeDn8HR4xqXB8jw1iAJwZLOaShAlo9UeM65n4buw0CIapNTfheKtPFsd83ioNmZD6WLSBKznezhbodzC94pz83UqRpZ47QdwrGtdxcIRTJMC2QjRHxqJU/4f9UkrtYdduRT9GbvPq4jEpU0ZKREnhlWyloZ5XOFMJoBhwDpg9E4sf/mUO61p9o/WAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PRr9riG+SZ2CsG6J8U0wY/bRJHOcE2BBP9oAhitbFXc=;
- b=NwrMCbNIXR9KaD4rNP5L51M9v4fl1rfha6QGBAXpkzlQVZAi0FsGg6fLb1oMNprKUPyC0TWb7sMfPWqxbPy5IEWmy3WYWTPvS4B9G9Qt33wAMWAgrEYW3YSyZ9WL9AsklgnDGLxAyW7st22ODqmVL8NBP83kG+nePpFUWlbPUkU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VE1PR04MB7374.eurprd04.prod.outlook.com (2603:10a6:800:1ac::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Wed, 17 Apr
- 2024 14:40:08 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
- 14:40:08 +0000
-Date: Wed, 17 Apr 2024 10:40:00 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: peng.fan@nxp.com, vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, imx@lists.linux.dev, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dmaengine: fsl-edma: clean up unused
- "fsl,imx8qm-adma" compatible string
-Message-ID: <Zh/fQFdxHHxC5iXF@lizhi-Precision-Tower-5810>
-References: <20240417032642.3178669-1-joy.zou@nxp.com>
- <20240417032642.3178669-2-joy.zou@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417032642.3178669-2-joy.zou@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0037.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aHZGXw63"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-47b99c0cce3so531796137.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713364819; x=1713969619; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9STrnlwuu+n4JzHQ1nF68oOe1/KL3VmX4gpavyNIyiA=;
+        b=aHZGXw638ZeW9a/y7K3QuwK5Q5gkaSAnb+mqwZ8H1Z6ZLwXzHGQYUFsksagZt903FA
+         UA/KIqjG9+MZqzvSwZOK/1blT2kS8sNmPK5Dp6920edLid4KNdEylWt8rgVBte44U/bz
+         QgQK82WB87LkQHk4mU7cBH+ShVRH0AXQV1u1BFLH/sSjR+mXnJOtYhbgGHtC2qJBjFVI
+         1G5cjKYiouzotV7gONGaIiMRfPlQvv6vQAEcu1A0m0WON5yfxy5AF2MwKnHRn3US9Ays
+         AA4nApWCdVOcumPJKgLVnMDqWBlbY89DsltEkp3N40z7BGa3LOYVKWwaewLWGNn5aPKt
+         FVpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713364819; x=1713969619;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9STrnlwuu+n4JzHQ1nF68oOe1/KL3VmX4gpavyNIyiA=;
+        b=kNSNc+1hZpCmr0QFSQChrQEzCy3ND21uBGkZHsmG8F3iCDwIZMJ+Y/X0GbQJOmiAFX
+         P1xdZYICR1L97hN7pIpc8eTsMesiM6IUBnhgxsh7lePga+W+w8J6F1RP/bEY7FHoSKRb
+         Awy6lY/ULoLSUgzK8i+wNc4P0o4/UInABsutrRmO6xTMVMsT9FoAUubqja54tWVMSDws
+         odbpZzxZ7M8RqGpOjRe09ZfMRX4giQ5Z31ZQQpAIxjUKyFXDLUl8x5o5rVEtgj1ig9Rw
+         LaDiPiDy3HyQYo6q51hUALx8hdvhaCxCgHi73aRdgWaUeetNskEn3/+kZqDU02rInwdc
+         6CRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3bFDhHoStyAPfcNlE9f1p1qmdAaK9ahu9MzmSJcVH7WrHA4EM4/I8zyJ7KS363mWjF4CcwNZEO8hmgnCVDsnfRs9ZbQAjuSgYGgip
+X-Gm-Message-State: AOJu0Yy29W9xBSO/DkL1UOg2FreDE9miINn6UEGGWNjJXjdSKsKOQEcm
+	Ky+rkcea5i1HWVCUxhwjepjzJ5b8XQqgtU1HjoTFoE9v4YY/7mu1qIAaUXhrLk+R9LRsRSjMMo4
+	54Uqy3zi0Jn7EIJT3PA8HFKRBFNmCShapMii1
+X-Google-Smtp-Source: AGHT+IEAhdkE9/+u7jKI1qVzSkpiUAFnT/Mz0cfCADATqN+blmQ68F1aCON7VI4CU5CS05totk8sdgrrvWMi3cB58MI=
+X-Received: by 2002:a05:6122:882:b0:4c8:90e5:6792 with SMTP id
+ 2-20020a056122088200b004c890e56792mr16551902vkf.7.1713364818511; Wed, 17 Apr
+ 2024 07:40:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7374:EE_
-X-MS-Office365-Filtering-Correlation-Id: aef69817-66f0-4d22-42b8-08dc5eec4771
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	y5t8RBh6118n2y/mqOO50H3fb3zIuj3LCo5h8VSlTBoF84mvCTcI06y2OcJRV8uHB1gD9JmJOkQirOCW7d5RnoK3ZYYR+g7FcLFJ9Qj4EJUrzW53Ivim04HjXXBEeEVrOViiWpPmJqEg/efv6qb9lNYpzEi0k3vx6AKnryq1FjNferImVQwU1zxNKgZS1D64o/77rw/0mHbw9P6pL7jNtCn7aG92Za7eTlpxtiDxTQQ7hFBsTJadfUUKMoggKckbwKdtKG1u+o9pHFH9DksoN6BxEuioos78rQM3I6QwUU2Ml9YS3UvVTb7+c5XoDBA/OPJTy+7sFZTebsxZrLXavCUdR/0pig5axtWDO4zd/mIVoullKTNU3jr3Y4LVr6MMzf2TW+do90/hMOKCfGibQP5ty2IKZrxiGzzAcguSPCCcv7CSlw6tmlrA4r5e188qRYZ3tot/noiDyau/vlJanlG1eofHucJhxDzfS3PevEAf0iraHdvTvjneMleiZp5he/2SnM0oXhfqgV6KsQJJSTVh4Sg/Fe5uclbiejlEBhuRnHtZzCIFb8wpOSVx2OpQbcPmohAK+57ukiWE/hPVD8bfZe4MuJ3D93mfTdHBQr3dasO9oqAqZ6fQImbbXkzNvk79xkiC61EcfP0CmJeuDCJS7mmLzH/fOAL35hucMe0W/EoGe6625fnrSu+e2x30d0Yq1+7yZlGr8D0QDSBPXswdSWZfPIfJ9iUTePra3/A=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IcowwsSUcM+VULdgiOobRwaZt/BKbJdkA2N7clUb+rHjNJr/KQb/O9rBj+r6?=
- =?us-ascii?Q?IJZ03pa38qBPiKcLxhLgwGHEdwUELKXt/96ttqQP9Khu8ZQdnM3kgco3qOhz?=
- =?us-ascii?Q?InAb7e+lR7MkeBMYxwOrtzCZ7vHNpwkDDOJoBuS+pBZrru30Ya4VDO/TSIBs?=
- =?us-ascii?Q?Dy9JoRv6CbwxHtGCfin0QxcUZx2FNsW1YpHTPdpRi7s++LiZ554R/kMAwrt3?=
- =?us-ascii?Q?Jh8kpElqxzIuj9R5D/rZ9rMkj5uz4nQd1MpBMmV5twNFDaakJWtRjnloQ39J?=
- =?us-ascii?Q?qLuiXZp5CdmrFBWfHfwsqYTgX2YQz7y/6oeZ7wYZMse6VXNxXcSz1rgCjOSi?=
- =?us-ascii?Q?WwfRyc3dbthK+tAcXE73OQHrcubGIUvi+X0oiuqjoWNKXpTCBu7e689jxge0?=
- =?us-ascii?Q?nQ4oe9kHbDkcciLmHwvgsUpTZEr5SrAzljZVyYNfOaLsmN+lSWlsAFw/zzne?=
- =?us-ascii?Q?Kd9Rzp9ida0Y/GixUXPSO5y3vLFiHl/J4645mRahqZbZBqqGgiDxh2veEMMJ?=
- =?us-ascii?Q?bktzsIHXS21kAJ7qb0ZGwdtJn+f/U8t+zfzFooAalrgvKaAY7ZgWiKiQVCSg?=
- =?us-ascii?Q?5+1rM3eHbSBv05txSdpWjPgpb/BvZaWSFS25IrR5vCv+v1be+Q3DzYcqmHpH?=
- =?us-ascii?Q?yMrmAgy6i5fWFZZCAPRIRIAmNh2m/pd6WM+sF/cz/mW5KvoD8CtpOx1ODNV2?=
- =?us-ascii?Q?zi3+VMbE+MJq/hWaQHtR45I53H5P/ifvrFiAcYaFefGbYV93oLNtDJlFwDsA?=
- =?us-ascii?Q?QACHIv77kDmKQfTIJ8stuOTIy5hZ4M5Jq6CYcXySDNziqK5qwq2Y7f3GxCjD?=
- =?us-ascii?Q?+5bQLWXPuTxDCWed5QKU5G5vHUz5DQRKakQRp7+yQ1xli9/vEbW5OygZPZ1e?=
- =?us-ascii?Q?rTnQfYSs5IolSlRMXbW4yWgASZCJQcCSMUQcOMwvvvO2meSkz/6J3C9MLnnO?=
- =?us-ascii?Q?UG1gU9TjB6spG1ACEf7ofTB1LJl8G4wivxCVKBNgBt/Pm7PpxG3y3hyodAU6?=
- =?us-ascii?Q?UfzaEpIawdGoFHxGkBODbAwp+aEfWkMifKSPAxWRiYYTWRGKLaM9+dX4FV8x?=
- =?us-ascii?Q?ul7omwtIXx2/BWZDsS8rH3rKs1sMW+WwCkhU4ukPbpi4ZQ993B16zxg5uxfy?=
- =?us-ascii?Q?+3nPfLoq66Flyjpf0JdEKPJ/RL2/9dZeLPRCFBCeF8+QKbINadh9wy+FxG6h?=
- =?us-ascii?Q?tOhWHf6ILpG/6rgRiKv1n4Os+8jz3EvQasySxqjHwdJ0Q3BYnn3inalTJUDu?=
- =?us-ascii?Q?tpboWkbscHw51olsUkBnCRLtZQ/T8z0K0c5kkzS8DWQpYIgZucEmAK0RtipG?=
- =?us-ascii?Q?zW2cATeR7zpJJIiMivyTtZqr1s1YQz+q7ditUbcastIYYYi5bppvZxU6CVVf?=
- =?us-ascii?Q?Yh1CfVKvbE+7PYnSbjRM8NWSOjwAto21bn1npneTW13mTIaYdFAGrZ1uIno+?=
- =?us-ascii?Q?YFHcnfzZkazi9mZrWrGnL6XT57XHW5mOnpFzMmh4VzoYpjgsceCMFRUKoeQm?=
- =?us-ascii?Q?jtjcIdtgXXcNqzqLfSiFpq+nvNCSm2zOa7XNC+ZzKjPGHhUIsxYuLms5LnPW?=
- =?us-ascii?Q?wCGy/X2Fq0tmsMbgk+t8MP99gm75zHrPgB4ZBnsO?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aef69817-66f0-4d22-42b8-08dc5eec4771
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 14:40:08.5170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: THCmRw7y9BjabcSxHU/Tbf07CDrxBZikVxTiG9VbrvoFMfos/zWGuDtXKtkQdTrJhEMlMtt9eQp064X4Lvsi1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7374
+References: <20240415-alice-mm-v5-0-6f55e4d8ef51@google.com>
+ <20240415-alice-mm-v5-1-6f55e4d8ef51@google.com> <20240417152802.6b7a7384@eugeo>
+In-Reply-To: <20240417152802.6b7a7384@eugeo>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 17 Apr 2024 16:40:07 +0200
+Message-ID: <CAH5fLgjcO0mrQ=X2QG1qS+sTpWDnBfGxXGWn-3wBQzn3MP8pQQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: uaccess: add userspace pointers
+To: Gary Guo <gary@garyguo.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 11:26:41AM +0800, Joy Zou wrote:
-> The eDMA hardware issue only exist imx8QM A0. A0 never mass production.
-> So remove the workaround safely.
-> 
-> Signed-off-by: Joy Zou <joy.zou@nxp.com>
-> ---
-> Changes for v4:
-> 1.change the subject to keep consistent with the patchset.
-> 
-> Changes for v2:
-> 1. Change the subject.
-> ---
->  drivers/dma/fsl-edma-common.c | 16 ++++------------
->  drivers/dma/fsl-edma-main.c   |  8 --------
->  2 files changed, 4 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index f9144b015439..ed93e01282d5 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -75,18 +75,10 @@ static void fsl_edma3_enable_request(struct fsl_edma_chan *fsl_chan)
->  
->  	flags = fsl_edma_drvflags(fsl_chan);
->  	val = edma_readl_chreg(fsl_chan, ch_sbr);
-> -	/* Remote/local swapped wrongly on iMX8 QM Audio edma */
-> -	if (flags & FSL_EDMA_DRV_QUIRK_SWAPPED) {
+On Wed, Apr 17, 2024 at 4:28=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote:
+>
+> On Mon, 15 Apr 2024 07:13:53 +0000
+> Alice Ryhl <aliceryhl@google.com> wrote:
+>
+> > From: Wedson Almeida Filho <wedsonaf@gmail.com>
+> >
+> > A pointer to an area in userspace memory, which can be either read-only
+> > or read-write.
+> >
+> > All methods on this struct are safe: attempting to read or write on bad
+> > addresses (either out of the bound of the slice or unmapped addresses)
+> > will return `EFAULT`. Concurrent access, *including data races to/from
+> > userspace memory*, is permitted, because fundamentally another userspac=
+e
+> > thread/process could always be modifying memory at the same time (in th=
+e
+> > same way that userspace Rust's `std::io` permits data races with the
+> > contents of files on disk). In the presence of a race, the exact byte
+> > values read/written are unspecified but the operation is well-defined.
+> > Kernelspace code should validate its copy of data after completing a
+> > read, and not expect that multiple reads of the same address will retur=
+n
+> > the same value.
+> >
+> > These APIs are designed to make it difficult to accidentally write
+> > TOCTOU bugs. Every time you read from a memory location, the pointer is
+> > advanced by the length so that you cannot use that reader to read the
+> > same memory location twice. Preventing double-fetches avoids TOCTOU
+> > bugs. This is accomplished by taking `self` by value to prevent
+> > obtaining multiple readers on a given `UserSlicePtr`, and the readers
+> > only permitting forward reads. If double-fetching a memory location is
+> > necessary for some reason, then that is done by creating multiple
+> > readers to the same memory location.
+> >
+> > Constructing a `UserSlicePtr` performs no checks on the provided
+> > address and length, it can safely be constructed inside a kernel thread
+> > with no current userspace process. Reads and writes wrap the kernel API=
+s
+> > `copy_from_user` and `copy_to_user`, which check the memory map of the
+> > current process and enforce that the address range is within the user
+> > range (no additional calls to `access_ok` are needed).
+> >
+> > This code is based on something that was originally written by Wedson o=
+n
+> > the old rust branch. It was modified by Alice by removing the
+> > `IoBufferReader` and `IoBufferWriter` traits, and various other changes=
+.
+> >
+> > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> > Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> >  rust/helpers.c         |  14 +++
+> >  rust/kernel/lib.rs     |   1 +
+> >  rust/kernel/uaccess.rs | 304 +++++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 319 insertions(+)
+> >
+> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+>
+> > +/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
+> > +/// [`clone_reader`]: UserSliceReader::clone_reader
+> > +pub struct UserSlice {
+> > +    ptr: *mut c_void,
+> > +    length: usize,
+> > +}
+>
+> How useful is the `c_void` in the struct and new signature? They tend
+> to not be very useful in Rust. Given that provenance doesn't matter
+> for userspace pointers, could this be `usize` simply?
+>
+> I think `*mut u8` or `*mut ()` makes more sense than `*mut c_void` for
+> Rust code even if we don't want to use `usize`.
 
-You forget remove FSL_EDMA_DRV_QUIRK_SWAPPED in fsl-edma-common.h
+I don't have a strong opinion here. I suppose a usize could make
+sense. But I also think c_void is fine, and I lean towards not
+changing it. :)
 
-Frank
+> Some thinking aloud and brainstorming bits about the API.
+>
+> I wonder if it make sense to have `User<[u8]>` instead of `UserSlice`?
+> The `User` type can be defined like this:
+>
+> ```rust
+> struct User<T: ?Sized> {
+>    ptr: *mut T,
+> }
+> ```
+>
+> and this allows arbitrary T as long as it's POD. So we could have
+> `User<[u8]>`, `User<u32>`, `User<PodStruct>`. I imagine the
+> `User<[u8]>` would be the general usage and the latter ones can be
+> especially helpful if you are trying to implement ioctl and need to
+> copy fixed size data structs from userspace.
 
-> -		if (!fsl_chan->is_rxchan)
-> -			val |= EDMA_V3_CH_SBR_RD;
-> -		else
-> -			val |= EDMA_V3_CH_SBR_WR;
-> -	} else {
-> -		if (fsl_chan->is_rxchan)
-> -			val |= EDMA_V3_CH_SBR_RD;
-> -		else
-> -			val |= EDMA_V3_CH_SBR_WR;
-> -	}
-> +	if (fsl_chan->is_rxchan)
-> +		val |= EDMA_V3_CH_SBR_RD;
-> +	else
-> +		val |= EDMA_V3_CH_SBR_WR;
->  
->  	if (fsl_chan->is_remote)
->  		val &= ~(EDMA_V3_CH_SBR_RD | EDMA_V3_CH_SBR_WR);
-> diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-> index 755a3dc3b0a7..b06fa147d6ba 100644
-> --- a/drivers/dma/fsl-edma-main.c
-> +++ b/drivers/dma/fsl-edma-main.c
-> @@ -349,13 +349,6 @@ static struct fsl_edma_drvdata imx8qm_data = {
->  	.setup_irq = fsl_edma3_irq_init,
->  };
->  
-> -static struct fsl_edma_drvdata imx8qm_audio_data = {
-> -	.flags = FSL_EDMA_DRV_QUIRK_SWAPPED | FSL_EDMA_DRV_HAS_PD | FSL_EDMA_DRV_EDMA3,
-> -	.chreg_space_sz = 0x10000,
-> -	.chreg_off = 0x10000,
-> -	.setup_irq = fsl_edma3_irq_init,
-> -};
-> -
->  static struct fsl_edma_drvdata imx8ulp_data = {
->  	.flags = FSL_EDMA_DRV_HAS_CHMUX | FSL_EDMA_DRV_HAS_CHCLK | FSL_EDMA_DRV_HAS_DMACLK |
->  		 FSL_EDMA_DRV_EDMA3,
-> @@ -397,7 +390,6 @@ static const struct of_device_id fsl_edma_dt_ids[] = {
->  	{ .compatible = "fsl,ls1028a-edma", .data = &ls1028a_data},
->  	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
->  	{ .compatible = "fsl,imx8qm-edma", .data = &imx8qm_data},
-> -	{ .compatible = "fsl,imx8qm-adma", .data = &imx8qm_audio_data},
->  	{ .compatible = "fsl,imx8ulp-edma", .data = &imx8ulp_data},
->  	{ .compatible = "fsl,imx93-edma3", .data = &imx93_data3},
->  	{ .compatible = "fsl,imx93-edma4", .data = &imx93_data4},
-> -- 
-> 2.37.1
-> 
+Hmm, we have to be careful here. Generally, when you get a user slice
+via an ioctl, you should make sure to use the length you get from
+userspace. In binder, it looks like this:
+
+let user_slice =3D UserSlice::new(arg, _IOC_SIZE(cmd));
+
+so whichever API we use, we must make sure to get the length as an
+argument in bytes. What should we do if the length is not a multiple
+of size_of(T)?
+
+Another issue is that there's no stable way to get the length from a
+`*mut [T]` without creating a reference, which is not okay for a user
+slice.
+
+Alice
