@@ -1,107 +1,77 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC0E79D8;
-	Wed, 17 Apr 2024 03:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A84EAD7;
+	Wed, 17 Apr 2024 03:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713323783; cv=none; b=Emc5V/4ICAuXOmgnWt5yTo+HIFYqzx9A6dKcN/+/yOe2z/YIeKVqUGoNzAgc8q9ZIWvfeMiO25qoY4OcQPF9usJGvuMC9XHPGLc+s2dTioI0fnOgK4yK9rceVCP08nRxOuz385ZLzZdatjVTN0LnPRvwCxigFggMn2hJQqNLaIs=
+	t=1713323802; cv=none; b=MRxY25jo92TUA0VrWk2Fjw5uVfx3WpqkuK+65C4cQETH/UXfG5ZGzAWTFUJRLpZ3A8T1nK+tzdF2D+S6p8cKKLs5zENMLBRcAdqScsbHnjnVIPrTb6iGKNKgHMdM3ND8JsiE/ry+0S8qsqkJ6j2KybXezh5tHV9+pFSjErN39Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713323783; c=relaxed/simple;
-	bh=BRTuqyo8jhn3CXNmr8weMV6W1aXeEygb4gtcGGj6QBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lh2drkKzxpl+owMitjaNAfirRJ9FZBW4DEdZF3NsV4jNXY5qv7JgF/Q9+q1BcIKZ9aRzL0iYcJ2uNok5CFQkeDYXR5PRPV7FrB0rY+F1sCkuXJxYC6lEpihf/oiGaqLBlErjc6CVrTvMc6VM3/3AxA8NilU16oVtf3Bjsqb0kdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VK5Zk2CH9z2CcRJ;
-	Wed, 17 Apr 2024 11:13:18 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2041D18002F;
-	Wed, 17 Apr 2024 11:16:16 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 11:16:15 +0800
-Message-ID: <d17de3df-a3f2-4317-92cc-1fd02641328b@huawei.com>
-Date: Wed, 17 Apr 2024 11:16:15 +0800
+	s=arc-20240116; t=1713323802; c=relaxed/simple;
+	bh=298P4mdRpA1gJFHU3AOHwV+eJpPTEaIu8zf52O1eOjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EdYx7EsY3vq5Z2P9TuzZCLHpcXuGVAFfZrxhVXs3Zg/rfl/zeeJMjbMkRoydtPxwVhmzr+I7/ieoIXqBdLYyeKhWXS+dJ3zLN2U5tsHS5ezxCjZXIzaMgxbmanlhk0y4qaWKyIOFeAVSasrnhL0nyi9iw1Kva5GI9kUIwPM6P+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GqMbTzDv; arc=none smtp.client-ip=192.19.144.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GqMbTzDv"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 711C5C0000F3;
+	Tue, 16 Apr 2024 20:10:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 711C5C0000F3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1713323454;
+	bh=298P4mdRpA1gJFHU3AOHwV+eJpPTEaIu8zf52O1eOjk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GqMbTzDvaiGR0R9IuUPhKDMB+B0tdF1DyFq7z3CxnzWueEg/YjaC6jPoXjjL4rKxV
+	 APlzffN0g09/9kznYXVSn98XzAegXepkRl8fpvUS1Fxh+HxZw8uozol/IinDMw04I9
+	 0v3l1oZrmhBEJhIdOEFmzDHQBTgXhVE81/IKzoJ8=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 7FA6818041CAC4;
+	Tue, 16 Apr 2024 20:10:52 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	=?iso-8859-9?b?QXL9bucg3E5BTA==?= via B4 Relay <devnull+arinc.unal.arinc9.com@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Hauke Mehrtens <hauke@hauke-m.de>,
+	=?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?iso-8859-9?b?QXL9bucg3E5BTA==?= <arinc.unal@arinc9.com>
+Subject: Re: [PATCH 3/4] ARM: dts: BCM5301X: remove duplicate compatible on ASUS RT-AC3100 & AC88U
+Date: Tue, 16 Apr 2024 20:10:53 -0700
+Message-Id: <20240417031053.919389-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240414-for-soc-asus-rt-ac3100-improvements-v1-3-0e40caf1a70a@arinc9.com>
+References: <20240414-for-soc-asus-rt-ac3100-improvements-v1-0-0e40caf1a70a@arinc9.com> <20240414-for-soc-asus-rt-ac3100-improvements-v1-3-0e40caf1a70a@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bcachefs: Align the display format of
- `btrees/inodes/keys`
-To: Kent Overstreet <kent.overstreet@linux.dev>, Youling Tang
-	<youling.tang@linux.dev>
-CC: <linux-bcachefs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Youling
- Tang <tangyouling@kylinos.cn>
-References: <20240417015448.84294-1-youling.tang@linux.dev>
- <toosz4pt2la6wf2575vwe6efebcbzsy735cq7exmlqhzrgicrf@s7g3rrbvge2l>
- <66ecea56-e4d3-4241-a1dc-378d70555321@linux.dev>
- <fpvnushjgr5txyduvpihevvghv64sdso4p6t3nhhddcjimqh2k@ehzpswsmnxin>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <fpvnushjgr5txyduvpihevvghv64sdso4p6t3nhhddcjimqh2k@ehzpswsmnxin>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
 
+From: Florian Fainelli <f.fainelli@gmail.com>
 
+On Sun, 14 Apr 2024 20:01:23 +0300, Arınç ÜNAL via B4 Relay <devnull+arinc.unal.arinc9.com@kernel.org> wrote:
+> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> The compatible property on the node with the srab handle is already
+> described with the same value on the included device tree. Remove it.
+> 
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
 
-On 2024/4/17 10:59, Kent Overstreet wrote:
-> On Wed, Apr 17, 2024 at 10:50:10AM +0800, Youling Tang wrote:
->> Hi, Kent
->> On 17/04/2024 10:20, Kent Overstreet wrote:
->>> On Wed, Apr 17, 2024 at 09:54:48AM +0800, Youling Tang wrote:
->>>> From: Youling Tang <tangyouling@kylinos.cn>
->>>>
->>>> Before patch:
->>>> ```
->>>>    #cat btrees/inodes/keys
->>>>    u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:   mode=40755
->>>>      flags= (16300000)
->>>> ```
->>>>
->>>> After patch:
->>>> ```
->>>>    #cat btrees/inodes/keys
->>>>    u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:
->>>>      mode=40755
->>>>      flags= (16300000)
-The flags also with the space after "=". Is it reseonable?
->>> This would print a newline for keys that don't have a value...
->> The original intention was to make the display of the printed content in
->> '__bch2_inode_unpacked_to_text ()' consistent, without considering other
->> callbacks.
->>
->> Or just modify it in the following way?
-> 
-> Yeah, that's better
-> 
-> Do it off my master branch though, there's some printbuf imprevements in
-> there.
-> 
-> https://evilpiepirate.org/git/bcachefs.git
-> 
->> --- a/fs/bcachefs/inode.c
->> +++ b/fs/bcachefs/inode.c
->> @@ -534,6 +534,8 @@ int bch2_inode_v3_invalid(struct bch_fs *c, struct
->> bkey_s_c k,
->>   static void __bch2_inode_unpacked_to_text(struct printbuf *out,
->> struct bch_inode_unpacked *inode)
->>   {
->> +       prt_newline(out);
->> +
->>          printbuf_indent_add(out, 2);
->>          prt_printf(out, "mode=%o", inode->bi_mode);
->>          prt_newline(out);
->>
->>
->> Thanks,
->> Youling.
-> 
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree/next, thanks!
+--
+Florian
