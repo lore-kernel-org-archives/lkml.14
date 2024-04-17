@@ -1,142 +1,212 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F6513DDD5;
-	Wed, 17 Apr 2024 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2076D13DDD5;
+	Wed, 17 Apr 2024 13:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360192; cv=none; b=LGA9CK2MV+isr6R4jgG7iI02eL7htf/v/nuyzHhNy4KBHce6gyZifCv43gGrFa0XFpJ3P+YcX2BMRXRC8jKdz9karSxwqyUipZ/bCQpGfzl2mj0wuY+GRxMxRoqZ531G8X0J/WdSj8HfrM+y3f5D8JHt8uLw8ez9BFIQslMQGFw=
+	t=1713360199; cv=none; b=O9l+rjwqYSftOsEom9m0Dgm6rhhPGyZk4BC0sowNYs3RgYQTOEybMyz4H+1uqoxMnIMQYOro76hQiFXiFktcwhEt/CAmBZqjVb52D8kcEBgCMCT3hzSZPw5vEZwZ06uREbktB8+ZgnC9CHWouKdsgnviIj5qhtGKylh1PMjXwf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360192; c=relaxed/simple;
-	bh=sQKHQVTz6617ttADufmp9ihU+WIIB9FwOAsc0+Q5irs=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jcealKP4kvbvONDtGDrf6k5ZXDKJ3UENAA0IHrcLZiEvPFWHOBgEi0lO3Xsvm61ZAxkYWX7IaHOKxSYbinZK0vhz/Lfx8TOVkXUbs5CkpfRl6rzcSLz1iGN6OwYciFp5Kb/BulCGf955CxQU+3eNNfid9wOle/JIv+prilJJiT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	s=arc-20240116; t=1713360199; c=relaxed/simple;
+	bh=+Jx9cNmLoL9x+obwBWDlZTUT/Z2SQ/NbSE9pmLzfaCE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Cmkh/88ykRGW42ogl8qg7nnGfDuJHfaKdYvbsk+oUMAGP3p6zEHSmgrQ+YQwaQ4zBRiHpW9qpLBami8zEyHjgrXUS3G55bJH2BGoJBXudOTeETgkVdICt6iwWozsZUmIrVZv1zYAM9quM8YmWqPurf8zfdphIV9ErRRjAtDRdkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VKM3b4PB2zNrxM;
-	Wed, 17 Apr 2024 21:20:43 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 794CF18007F;
-	Wed, 17 Apr 2024 21:23:07 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
- 2024 21:23:07 +0800
-Subject: Re: [PATCH net-next v2 10/15] mm: page_frag: reuse existing bit field
- of 'va' for pagecnt_bias
-To: Alexander H Duyck <alexander.duyck@gmail.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
- <20240415131941.51153-11-linyunsheng@huawei.com>
- <68d1c7d3dfcd780fa3bed0bb71e41d7fb0a8c15d.camel@gmail.com>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <292c98e5-e58e-3474-f214-44fe6a83e6c5@huawei.com>
-Date: Wed, 17 Apr 2024 21:23:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM0p4104z6K8jS;
+	Wed, 17 Apr 2024 21:18:18 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 22B3B140B38;
+	Wed, 17 Apr 2024 21:23:16 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 14:23:15 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v6 08/16] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+Date: Wed, 17 Apr 2024 14:19:01 +0100
+Message-ID: <20240417131909.7925-9-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <68d1c7d3dfcd780fa3bed0bb71e41d7fb0a8c15d.camel@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 2024/4/17 0:33, Alexander H Duyck wrote:
-> On Mon, 2024-04-15 at 21:19 +0800, Yunsheng Lin wrote:
->> As alignment of 'va' is always aligned with the order of the
->> page allocated, we can reuse the LSB bits for the pagecount
->> bias, and remove the orginal space needed by 'pagecnt_bias'.
->> Also limit the 'fragsz' to be at least the size of
->> 'usigned int' to match the limited pagecnt_bias.
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> 
-> What is the point of this? You are trading off space for size on a data
-> structure that is only something like 24B in size and only allocated a
-> few times.
+From: James Morse <james.morse@arm.com>
 
-As we are going to replace page_frag with page_frag_cache in patch 13,
-it is not going to only be allocated a few times as mentioned.
+struct acpi_scan_handler has a detach callback that is used to remove
+a driver when a bus is changed. When interacting with an eject-request,
+the detach callback is called before _EJ0.
 
-> 
->> ---
->>  include/linux/page_frag_cache.h | 20 +++++++----
->>  mm/page_frag_cache.c            | 63 +++++++++++++++++++--------------
->>  2 files changed, 50 insertions(+), 33 deletions(-)
->>
->> diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
->> index 40a7d6da9ef0..a97a1ac017d6 100644
->> --- a/include/linux/page_frag_cache.h
->> +++ b/include/linux/page_frag_cache.h
->> @@ -9,7 +9,18 @@
->>  #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
->>  
->>  struct page_frag_cache {
->> -	void *va;
->> +	union {
->> +		void *va;
->> +		/* we maintain a pagecount bias, so that we dont dirty cache
->> +		 * line containing page->_refcount every time we allocate a
->> +		 * fragment. As 'va' is always aligned with the order of the
->> +		 * page allocated, we can reuse the LSB bits for the pagecount
->> +		 * bias, and its bit width happens to be indicated by the
->> +		 * 'size_mask' below.
->> +		 */
->> +		unsigned long pagecnt_bias;
->> +
->> +	};
-> 
-> Both va and pagecnt_bias are frequently accessed items. If pagecnt_bias
-> somehow ends up exceeding the alignment of the page we run the risk of
-> corrupting data or creating an page fault.
-> 
-> In my opinion this is not worth the risk especially since with the
-> previous change your new change results in 0 size savings on 64b
-> systems as the structure will be aligned to the size of the pointer.
+This means the ACPI processor driver can't use _STA to determine if a
+CPU has been made not-present, or some of the other _STA bits have been
+changed. acpi_processor_remove() needs to know the value of _STA after
+_EJ0 has been called.
 
-But aren't we going to avoid a register usage and loading if reusing
-the lower bits of 'va' for the 64b systems? And added benefit is the
-memory saving for 32b systems as mentioned in previous patch.
+Add a post_eject callback to struct acpi_scan_handler. This is called
+after acpi_scan_hot_remove() has successfully called _EJ0. Because
+acpi_scan_check_and_detach() also clears the handler pointer,
+it needs to be told if the caller will go on to call
+acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
+and clearing the handler pointer can be deferred.
+An extra flag is added to flags field introduced in the previous
+patch to achieve this.
 
-> 
->>  #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
->>  	__u16 offset;
->>  	__u16 size_mask:15;
->> @@ -18,10 +29,6 @@ struct page_frag_cache {
->>  	__u32 offset:31;
->>  	__u32 pfmemalloc:1;
->>  #endif
->> -	/* we maintain a pagecount bias, so that we dont dirty cache line
->> -	 * containing page->_refcount every time we allocate a fragment.
->> -	 */
->> -	unsigned int		pagecnt_bias;
->>  };
->>  
->>  static inline void page_frag_cache_init(struct page_frag_cache *nc)
->> @@ -56,7 +63,8 @@ static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
->>  					     gfp_t gfp_mask,
->>  					     unsigned int align)
->>  {
->> -	WARN_ON_ONCE(!is_power_of_2(align) || align >= PAGE_SIZE);
->> +	WARN_ON_ONCE(!is_power_of_2(align) || align >= PAGE_SIZE ||
->> +		     fragsz < sizeof(unsigned int));
-> 
-> What is the reason for this change? Seems like it is to account for an
-> issue somewhere.
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-If the fragsz is one, we might not have enough pagecnt_bias for it,
-as we are using the lower bits of 'va' now.
+----
+v6:
+ - Switch to flags.
+Russell, you hadn't signed off on this when posting last time.
+Do you want to insert a suitable tag now?
+v5:
+ - Rebase to take into account the changes to scan handling in the
+   meantime.
+---
+ drivers/acpi/acpi_processor.c |  4 ++--
+ drivers/acpi/scan.c           | 30 +++++++++++++++++++++++++++---
+ include/acpi/acpi_bus.h       |  1 +
+ 3 files changed, 30 insertions(+), 5 deletions(-)
 
-> 
->>  
->>  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, align);
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 0cac77961020..0e43f5b4267a 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -481,7 +481,7 @@ static int acpi_processor_add(struct acpi_device *device,
+ 
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+ /* Removal */
+-static void acpi_processor_remove(struct acpi_device *device)
++static void acpi_processor_post_eject(struct acpi_device *device)
+ {
+ 	struct acpi_processor *pr;
+ 
+@@ -650,7 +650,7 @@ static struct acpi_scan_handler processor_handler = {
+ 	.ids = processor_device_ids,
+ 	.attach = acpi_processor_add,
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+-	.detach = acpi_processor_remove,
++	.post_eject = acpi_processor_post_eject,
+ #endif
+ 	.hotplug = {
+ 		.enabled = true,
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 1ec9677e6c2d..3ec54624664a 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -245,6 +245,7 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
+ }
+ 
+ #define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
++#define ACPI_SCAN_CHECK_FLAG_EJECT	BIT(1)
+ 
+ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ {
+@@ -273,8 +274,6 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ 	if (handler) {
+ 		if (handler->detach)
+ 			handler->detach(adev);
+-
+-		adev->handler = NULL;
+ 	} else {
+ 		device_release_driver(&adev->dev);
+ 	}
+@@ -284,6 +283,28 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ 	 */
+ 	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+ 	adev->flags.initialized = false;
++
++	/* For eject this is deferred to acpi_bus_post_eject() */
++	if (!(flags & ACPI_SCAN_CHECK_FLAG_EJECT)) {
++		adev->handler = NULL;
++		acpi_device_clear_enumerated(adev);
++	}
++	return 0;
++}
++
++static int acpi_bus_post_eject(struct acpi_device *adev, void *not_used)
++{
++	struct acpi_scan_handler *handler = adev->handler;
++
++	acpi_dev_for_each_child_reverse(adev, acpi_bus_post_eject, NULL);
++
++	if (handler) {
++		if (handler->post_eject)
++			handler->post_eject(adev);
++
++		adev->handler = NULL;
++	}
++
+ 	acpi_device_clear_enumerated(adev);
+ 
+ 	return 0;
+@@ -301,6 +322,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	acpi_handle handle = device->handle;
+ 	unsigned long long sta;
+ 	acpi_status status;
++	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_EJECT;
+ 
+ 	if (device->handler && device->handler->hotplug.demand_offline) {
+ 		if (!acpi_scan_is_offline(device, true))
+@@ -313,7 +335,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 
+ 	acpi_handle_debug(handle, "Ejecting\n");
+ 
+-	acpi_bus_trim(device);
++	acpi_scan_check_and_detach(device, (void *)flags);
+ 
+ 	acpi_evaluate_lck(handle, 0);
+ 	/*
+@@ -336,6 +358,8 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	} else if (sta & ACPI_STA_DEVICE_ENABLED) {
+ 		acpi_handle_warn(handle,
+ 			"Eject incomplete - status 0x%llx\n", sta);
++	} else {
++		acpi_bus_post_eject(device, NULL);
+ 	}
+ 
+ 	return 0;
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index e7796f373d0d..51a4b936f19e 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -129,6 +129,7 @@ struct acpi_scan_handler {
+ 	bool (*match)(const char *idstr, const struct acpi_device_id **matchid);
+ 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
+ 	void (*detach)(struct acpi_device *dev);
++	void (*post_eject)(struct acpi_device *dev);
+ 	void (*bind)(struct device *phys_dev);
+ 	void (*unbind)(struct device *phys_dev);
+ 	struct acpi_hotplug_profile hotplug;
+-- 
+2.39.2
+
