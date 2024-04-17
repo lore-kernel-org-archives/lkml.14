@@ -1,106 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47D213D61A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 12:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8C984DF6;
+	Wed, 17 Apr 2024 12:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713358705; cv=none; b=c07sKH6+1okktJJn7+2Ml+JvnfbT0lbx5At2AQI2Agqz+7brV/LgK2TUQ0KDhdsL1R8EbnJjAGJgTdXsS6VrPEqmGVpExukuTwS3DaheJveiOuYqG/QggG3Av+v1HJ0DLIi4ajxCtYCjyzn/AdYwY9mhKdLsZuKT5f8teeeWop4=
+	t=1713358735; cv=none; b=C1ePYHnJ/HhR9rAgYBXgC4xwgEJxFUYgu2k1sCTmgoKUwd/rJOJISRrnJxEmipR93QmHxups9+zDHZouUVoPgSkGWhClINqeZErq0qX3y/wnXhjFOvLk8UvEKiq6jU2I33VbpAbH3/agJu5Tghm3Uxp+C6I5/Ecmcod7DDOT+kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713358705; c=relaxed/simple;
-	bh=odBinATsxiv0QntS3vmmZ+hwTGfp9CbUJ8OWIdv7zD0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B+JHPSFE5TbbDpodUJ/gsNze8QOMjc+d1ZctnH7LML5VTnOQXDnSVsK//vwqxrWLyaMRBnHm06jRTNoKOnDpT5lq3UosAf0l4qsVl1hzcMPl2aEN7kncFnuhAYclUst7v3YD3JY0OhBuhiP7P0ASm7lukquZSLEzaDkQEIEt5ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QmHNYmls; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713358735; c=relaxed/simple;
+	bh=mRlRkorupNuv+TJWx/y+uXXu1O9+ZgMbFD+YQNFOBqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tjb6XkGhsZox86JdBLtyE3D7d2DLcuBYGv+EdyNw5aw3bFmhGsSrV+VvdBIsAtG+PqbpPJWd+R6Q5uNepbYDJZlh0PZvBWN8v9BrapSg7DKGYTSO1dw20m9MyBDDS9wf0TqfcMsCEyyfVCSb4qNnR0zov+6WSBvAVFcls+NoUMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ortz7J2e; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmHNYmls"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713358701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Yf7QCrWbLl6GzRDJkeqCAapOLNVCTZM435GPN2S7N8=;
-	b=QmHNYmlsggF5Uarc9u60cPLmnJomNdZf6tDWk6SZFLvh1mWC1gFyjx6KxnevL0ljVcNdcs
-	8Gj0QocAcjd85gqlPwHNKhCAL56rwZRM2GDg9GZkIEiqhN59jAopP045+EZSyI9h9ATsV9
-	5iTf5cb6w0vAAFAjIGwEPghDRVQTyoc=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-209-POlBnhoTNX2Q7VfonUD8lQ-1; Wed, 17 Apr 2024 08:58:19 -0400
-X-MC-Unique: POlBnhoTNX2Q7VfonUD8lQ-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2a4fc4cf54dso5667285a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 05:58:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713358698; x=1713963498;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Yf7QCrWbLl6GzRDJkeqCAapOLNVCTZM435GPN2S7N8=;
-        b=VM4nKOZm7Sv2ddxD30EygkL4qW4yWjU++2nqts2ZYSPPMtvIPMaL+gISyOGdITz+Vl
-         85riLGsPIQ8iuCWNc/+wqkkuoQZzdoU+Bs5DwxcoaRJPgbz8+Y9wXVc3hpZPPRRNSfnc
-         cs2LnpraWdbF6qZAN7dzsO9uAAxdK5bNgju6TS5houU2H+1omfIkgckL9CHkXKF4Tfo0
-         AiMnaaWCF87xJqAIMNB8gvqJIuxeHH955Rq1ywKNAROQm7AVxYAOtWNNdMN47YD4ZhIX
-         jqI/f72CObwmugkRkUkYVTRsBV2K2E2NzPBubdrexMlvWLUrGiSrf+DqvTn55LXQas9R
-         iMzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5XUl+HfOF0j/LRIyz4vJGJd4B8rwnoWAZheRh0wuLT1kLdtF4Hi6tcOXCyg1Q7Qv2Ne9Oi3C3glM5zoEUJ1k6DK9hue2j7nOlZNZ3
-X-Gm-Message-State: AOJu0YzKbL0xTOtMLO8XBABxCtm5KJy/oSascYd3/TBt4rzeJmUijwn8
-	jYzY/P3ibU0dtitMVB6fqlty5BFvEy/16ofQtBwOuPwiylI2FHCcrGAyN7H/f0CFZjuNQjcSJBa
-	tDvfE9uMJtbVVz/n9Xuk1g6yK6FGlYoqe7cSN7srk/BoQmEOuqfHMLql1AHQZrdCsr2C2773vkR
-	6B+dZ3rXz/MGA/uo3HN4/GAO8OPoS6IKYowFQe
-X-Received: by 2002:a17:90b:3c3:b0:2a6:db3:1aa5 with SMTP id go3-20020a17090b03c300b002a60db31aa5mr16000807pjb.18.1713358698441;
-        Wed, 17 Apr 2024 05:58:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHeusKXHozTa59pxGQzEfxCvxThXecAwYhUkuqOmc1hiPkPd4IGoLD9R12W5ib2l84GuAmF5uPenTcpb+y/FQ4=
-X-Received: by 2002:a17:90b:3c3:b0:2a6:db3:1aa5 with SMTP id
- go3-20020a17090b03c300b002a60db31aa5mr16000792pjb.18.1713358698142; Wed, 17
- Apr 2024 05:58:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ortz7J2e"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43HClsCK003624;
+	Wed, 17 Apr 2024 14:57:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=Oy6ydHY6pQ8DYm8xK8PeLsM+pd6WltoQh0mGRUSj86E=; b=or
+	tz7J2eIpRjwTS6nxsow94Im5O+PJ8pyQKEzgQC9x+TEQyuiVxirXsxSqUmOFi5z6
+	j9JuaMCVAueB7+ptBoHkZGcb+q5wgjo9DutZh3e/xcZNv9ir2WSLw5Tx3J4ORSCe
+	EA73ib1bb2NSzUytaI+3EJVy3k1Q1gI0fSP3IQEsjwu2YJe3ZCZaDZ9kzaEBLiHp
+	IczYev9vu0LgIHwFgY0toURY1M4EinAS1+idFQEUfhYnNuSSXU5+tp4rEI3eP1EF
+	QiCs84WlUXA+URlFhvVZDuDiVG8dZypP1QlE91pV8tkChGQWA45K8voZ9I1+fYd5
+	RRPfPDBlEjqpZ5kxlIMg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xgecyea3g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Apr 2024 14:57:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E01244002D;
+	Wed, 17 Apr 2024 14:57:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E51CB214D29;
+	Wed, 17 Apr 2024 14:55:47 +0200 (CEST)
+Received: from [10.130.72.241] (10.130.72.241) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 17 Apr
+ 2024 14:55:46 +0200
+Message-ID: <ea60a9e8-6240-4a0a-a224-e132b67160b1@foss.st.com>
+Date: Wed, 17 Apr 2024 14:55:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223204233.3337324-1-seanjc@google.com> <171270505394.1590014.8020716629474398619.b4-ty@google.com>
-In-Reply-To: <171270505394.1590014.8020716629474398619.b4-ty@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 17 Apr 2024 14:58:04 +0200
-Message-ID: <CABgObfYHbsb9hySxXbwCTP_mhuKUVdRDFs71XotEB5FAaPeEpQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] KVM: SVM: Clean up VMRUN=>#VMEXIT assembly
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>, 
-	Alexey Kardashevskiy <aik@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 22/35] media: i2c: st-mipid02: Use the correct div
+ function
+To: Ricardo Ribalda <ribalda@chromium.org>,
+        Martin Tuma
+	<martin.tuma@digiteqautomotive.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Hugues Fruchet
+	<hugues.fruchet@foss.st.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Paul Kocialkowski
+	<paul.kocialkowski@bootlin.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec
+	<jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Sakari
+ Ailus <sakari.ailus@linux.intel.com>,
+        Thierry Reding
+	<thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sowjanya
+ Komatineni <skomatineni@nvidia.com>,
+        Luca Ceresoli
+	<luca.ceresoli@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Hans
+ Verkuil <hverkuil@xs4all.nl>, Sergey Kozlov <serjk@netup.ru>,
+        Abylay Ospan
+	<aospan@netup.ru>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Dmitry
+ Osipenko <digetx@gmail.com>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Sylvain
+ Petinot <sylvain.petinot@foss.st.com>,
+        Jacopo Mondi
+	<jacopo+renesas@jmondi.org>,
+        Kieran Bingham
+	<kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart
+	<laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+        Pavel Machek <pavel@ucw.cz>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-staging@lists.linux.dev>, <linux-sunxi@lists.linux.dev>,
+        <linux-tegra@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20240415-fix-cocci-v1-0-477afb23728b@chromium.org>
+ <20240415-fix-cocci-v1-22-477afb23728b@chromium.org>
+Content-Language: en-US
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <20240415-fix-cocci-v1-22-477afb23728b@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-17_10,2024-04-16_01,2023-05-22_02
 
-On Wed, Apr 10, 2024 at 2:23=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
-> Applied to kvm-x86 svm, thanks!
->
-> [1/8] KVM: SVM: Create a stack frame in __svm_vcpu_run() for unwinding
->       https://github.com/kvm-x86/linux/commit/19597a71a0c8
-> [2/8] KVM: SVM: Wrap __svm_sev_es_vcpu_run() with #ifdef CONFIG_KVM_AMD_S=
-EV
->       https://github.com/kvm-x86/linux/commit/7774c8f32e99
-> [3/8] KVM: SVM: Drop 32-bit "support" from __svm_sev_es_vcpu_run()
->       https://github.com/kvm-x86/linux/commit/331282fdb15e
-> [4/8] KVM: SVM: Clobber RAX instead of RBX when discarding spec_ctrl_inte=
-rcepted
->       https://github.com/kvm-x86/linux/commit/87e8e360a05f
-> [5/8] KVM: SVM: Save/restore non-volatile GPRs in SEV-ES VMRUN via host s=
-ave area
->       https://github.com/kvm-x86/linux/commit/c92be2fd8edf
-> [6/8] KVM: SVM: Save/restore args across SEV-ES VMRUN via host save area
->       https://github.com/kvm-x86/linux/commit/adac42bf42c1
-> [7/8] KVM: SVM: Create a stack frame in __svm_sev_es_vcpu_run()
->       https://github.com/kvm-x86/linux/commit/4367a75887ec
-> [8/8] KVM: x86: Stop compiling vmenter.S with OBJECT_FILES_NON_STANDARD
->       https://github.com/kvm-x86/linux/commit/27ca867042af
+Hi Ricardo,
 
-Do we perhaps want this in 6.9 because of the issues that was reported
-with objtool?
+Thanks a lot.
+Reviewed-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
 
-Paolo
+On 4/15/24 21:34, Ricardo Ribalda wrote:
+> link_freq does not fit in 32 bits.
+> 
+> Found by cocci:
+> drivers/media/i2c/st-mipid02.c:329:1-7: WARNING: do_div() does a 64-by-32 division, please consider using div64_s64 instead.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/i2c/st-mipid02.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+> index f250640729ca..93a40bfda1af 100644
+> --- a/drivers/media/i2c/st-mipid02.c
+> +++ b/drivers/media/i2c/st-mipid02.c
+> @@ -326,7 +326,7 @@ static int mipid02_configure_from_rx_speed(struct mipid02_dev *bridge,
+>  	}
+>  
+>  	dev_dbg(&client->dev, "detect link_freq = %lld Hz", link_freq);
+> -	do_div(ui_4, link_freq);
+> +	ui_4 = div64_s64(ui_4, link_freq);
+>  	bridge->r.clk_lane_reg1 |= ui_4 << 2;
+>  
+>  	return 0;
+> 
 
+-- 
+Regards,
+
+Benjamin
