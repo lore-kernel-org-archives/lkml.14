@@ -1,153 +1,119 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC2613CF87;
-	Wed, 17 Apr 2024 12:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5AC13CF87;
+	Wed, 17 Apr 2024 12:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713356536; cv=none; b=lIeuP1Tj00mjEvfKOkqvEZL+byZ8DpsIgi35aSAJGE+uH34lxT0XRVUd/WoxDaBmUvegxDKI5lybXS7FkpitMJcj6iiaL8ItT57feZ7xeOy4P1irn4C6NsOFkwwF3r1M0aogHawVfnXdyhFqxsup3GrBuG3nC/jnLNuPT5VKCaA=
+	t=1713356661; cv=none; b=U5b9lWT6AL0q3UVSqS4WcF0475Qdtq0zkgbkr5V3DPCmeqcFF/PEzuZSXnNpNbI5P0UGBwBF+H9tq3X089POtGkLwVC44VYsPy50499SSz9EMOIvi6pKPf+P9ePsBCGHkyMCBgpeUI89KA0p/yvGipV+2P2Y3cb9+aiqKeyxD4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713356536; c=relaxed/simple;
-	bh=eNdPSLbQ08oIwVxA3DSSN1bgvrlYuVTEEZlegEhyhrs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LnyxJhTVQ1nMbQil+E/KmueIcPeyIidMJiYuxTNEvoGAK/vITIsP3WhZcrJdprVPHIghfqKUEs8aPQaedhp0AmGcQGPv8Tsom3XdHAJVtwaTaHf+gXtGkJ/ulC7hX/yY2bBlXm4Qptz7YnZvKNZxTiD/Q8KQD6C5K8oEdWDXe+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3appNkR; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713356661; c=relaxed/simple;
+	bh=gBNNnlmORzpHW6xq9PwyOtjdy5heFzroyMx3ew5toI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Le6FH4x543P/zZkmcwsCb19L+SCg2zV9cxxGblTvn9GuGUjovwD++5nQPG39kZJBwsOQn6SBu7XKL+3wBZVa62p9lDAVmId+YI5NcvG9L2sS7PRcRrh10CwfBD7tGoEsyWhPUOgY546zjxRvBzyHKhtHygZOuvRVKxwhO5n2SuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=PqG9xg3J; arc=none smtp.client-ip=74.208.4.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3appNkR"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ea2f95ec67so2867026a34.2;
-        Wed, 17 Apr 2024 05:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713356534; x=1713961334; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r01JeIowVP/LWyk0N5hwlS9X40SHgKNE7NAoAweOa44=;
-        b=D3appNkRZLbQPoYoIuRdHoQ0V1JERPId6mE4APE+weEN/Z6SAabm97AwOcCJgqCEa5
-         0xb5RSvEc3lwxgJJYkkhKQS3aEfSFtbjuSf3Wd1Y0/7dp4IsFrP+Swtm9COrbc2Sq6GT
-         XOPvoVS8N3g+AT77GdZ0FkThLb46OBmOiDFeV/O5mr1YGnwMaRUPJCiX+CdW6rbfk2kT
-         zScfL2y4cgP6ndcNQ1ufeqTfHjEyv4G+k8eoWVlS8elH8tTXeQudlZL/pXSHKBzUnj2F
-         TXOqi+kMOwDrGfHiNw+pO8Wxmr6U9h64eIkx7xPRfoz2jEmmrnk6XkRN0Qy9lrt+90eZ
-         PdZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713356534; x=1713961334;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r01JeIowVP/LWyk0N5hwlS9X40SHgKNE7NAoAweOa44=;
-        b=jwAf33QrSh+ED5+94YSFJ8Sn002Y2VotGJOol9hX1ZxzhiuCWtfJ2f83B40R41rGDt
-         Zi9czqgSbBrsaF8QHLugjMxpVgD2PO+VsAh7e2hZDnDrzmpfurKxV4PPd6ZNnS7qG1EO
-         sT8da1qmBs7dvkWEthJG3Q7gdvOU5Z8tCvh4vbnu3GEq64nTr/zZtOAEQo3gc2JTeub5
-         P4dgYSe6pDghI/6auuSG/Fe1KjySCYmc3zBiVavxL8ZggOxXyameDobF78yQYtS/mlcx
-         NjGSqCrOq70X2BNAD9UdTiEg/8AO2eQoecWqohrBY7b+vxFpu8rNnRYdGj8lKOfvvPqD
-         JFBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZNwOaeFeMu1GUZc8kzgXvvNTIWcNOkJDRJx8tm0wAp3KV6BcuE1A7ncOmIhqIcdtYRn/dqKZhnzUGPE9CWvTHJKSu8JacQkhVp5h/OtPcY6N1G45mOuupzywI2QVbZxtyJKVTDqre
-X-Gm-Message-State: AOJu0YxZmqOLmzYRNYyxeu1Vb8NYqdHcwKhuD468XTwGtjX1OvgYSNIG
-	F4kXE6/uvy5ths/OHNzao7TWex32tvISUiZNBuCeGg19vUA84h0v
-X-Google-Smtp-Source: AGHT+IGLoiqjcjiRF/T66uGJfinnCondW9gD4nSCRJDv1UIWWlO41HvlhlYxHS4cKCwiAhUSg/6LvA==
-X-Received: by 2002:a05:6870:45a1:b0:221:8e01:4c6f with SMTP id y33-20020a05687045a100b002218e014c6fmr19834721oao.36.1713356533744;
-        Wed, 17 Apr 2024 05:22:13 -0700 (PDT)
-Received: from localhost.localdomain ([43.132.141.3])
-        by smtp.gmail.com with ESMTPSA id j3-20020a635503000000b005e83b64021fsm10361649pgb.25.2024.04.17.05.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 05:22:13 -0700 (PDT)
-From: alexjlzheng@gmail.com
-X-Google-Original-From: alexjlzheng@tencent.com
-To: david@fromorbit.com
-Cc: chandan.babu@oracle.com,
-	djwong@kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jinliang Zheng <alexjlzheng@tencent.com>
-Subject: [PATCH v3 RESEND] xfs: remove redundant batch variables for serialization
-Date: Wed, 17 Apr 2024 20:07:35 +0800
-Message-Id: <20240417120734.853960-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="PqG9xg3J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1713356654; x=1713961454; i=parker@finest.io;
+	bh=RSgA5ZypIHr9ZAVZVoPEvyLi5ROWgRxVAWumsOOJSP8=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PqG9xg3JpUZRVsU2chWUwB84RE0FxnaA6C/8E4I3Fb1vrBAPtwTXKJ5AqaBhURGQ
+	 6VeNxY/DipiIg6kqq4yMw59aICxgZciED6o+nsbZhW/+DAbsvcnMC4yKW0kUxPK1B
+	 tRPJHbKE7hFxOECOP43Fq1LYckR32XPBI3eHq7qit8JxOYb0pl/G9nkpOLBtYMRGa
+	 t/eTTGqRs0SAxSg9K85b0RX3HiTFdsQVDAdB4eP/6tiBMwspfZLXYUqJCdB2qds7/
+	 +E3Dn0XW13KB37LC9gqpbMEYGsNmK6my3814eNimOwE2wSJ6uetRRJwMbcPR9VwiW
+	 uFtpjyQ3a5IdBiw1Ww==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
+ mrelay.perfora.net (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 1N1xEj-1su4rX1ofx-012G2L; Wed, 17 Apr 2024 14:24:14 +0200
+Date: Wed, 17 Apr 2024 08:24:13 -0400
+From: Parker Newman <parker@finest.io>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, Parker Newman <pnewman@connecttech.com>
+Subject: Re: [PATCH v3 8/8] serial: exar: fix: fix crash during shutdown if
+ setup fails
+Message-ID: <20240417082413.70397ccf@SWDEV2.connecttech.local>
+In-Reply-To: <2024041746-galvanize-satchel-09a4@gregkh>
+References: <cover.1713270624.git.pnewman@connecttech.com>
+	<1a21fffe403d7181e0404db1ed92140c306f97b7.1713270624.git.pnewman@connecttech.com>
+	<2024041746-galvanize-satchel-09a4@gregkh>
+Organization: Connect Tech Inc.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7o47FeSUWwTROTViXEZ0td1cN1a5aTVyViFUE0FwTEiKCVSvn+Q
+ OZrDzSz20AubuTDKq4JgsKnkjzh55NFCCi6KTi4DGzWRzdYks+Q3cMr/1HlSUpqYHCVwFXu
+ vDdoLGPq78X/ss2jq+BnjJb8nVvGN6W9d5r3WjzKUy5xJJ+lnyBNZy2SfLTaDx08MUlsugK
+ uT7RQ0X/fRoc9wis20QbA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+3HOV8EW1BQ=;ioE1hwDgtA+gqJt8whatZf64T4K
+ mZciRq5URD4Ikumb7t+4R+cfArP0BNgmAJyFW22WF/8oet6LOm6nTgtmT7/+i1gFy6StMV0K6
+ FnvAhM+c6f7ieVTqwmtyuXXbkpei98QQw+Bbs4dJ5QF11/rCoXsfx/8Rqw0IfxV5w3wPb2Myt
+ d4ckL0JDc0k0qk82UTvWU3VD2IqnptiicVFZs8ZRevA8qO695LEML7kEM/qfrkEKg9Syj0uW/
+ yTciZwYNc70+j8pDy3ykD76AeOczc1la5P0cv/HSh84YP6Kw4TA140Uq/8mkiCJLV1uOUWWEh
+ VcxxCjlA+hH2ldM4XSrcOsn7l8Hu6EzNdIuOf8/jIxG0MXZ2ZQ3jJlrA2PQY9oAzu6IeqWqu2
+ NAy3TnYUtEdMX07VaM9MSLgAwgydZMXzDLn1HHJPzRSbHyL2RYIc4pVCUmPj5bSUJnXM0mHGG
+ 34zc/Ab1guU1jXUVF5Uz81tQpn/uGTDDuErF0Ac9J5k086NQZU5myh+cAU7poBM9zjKHXGnkd
+ qK09xYMhScsJCv4j06vb7BFSrx4FzXoeTzN9YD1Zxy8ipMjLrsvSauPr1bVgRin9Myo/hqHNQ
+ WtKy45jDGE33KV8bXJ5gwOr21QJLMajJe2BwoTdPK2UqVBzyuogUm1zeKAmJjJiFrbhkcwqNg
+ 5hv9mGM1icI5msMXZMLvfghh1yEyI/PIEsZ6UTiLM6pOmFBHALkrQ/S7gqUGsqKx1BlzcKdOi
+ uKOjWvd96nLk9l8TmRNLya7Z9HqX92lDfaByqKLiE1dLAHY3yHnHhI=
 
-From: Jinliang Zheng <alexjlzheng@tencent.com>
+On Wed, 17 Apr 2024 13:19:07 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Historically, when generic percpu counters were introduced in xfs for
-free block counters by commit 0d485ada404b ("xfs: use generic percpu
-counters for free block counter"), the counters used a custom batch
-size. In xfs_mod_freecounter(), originally named xfs_mod_fdblocks(),
-this patch attempted to serialize the program using a smaller batch size
-as parameter to the addition function as the counter approaches 0.
+> On Tue, Apr 16, 2024 at 08:55:35AM -0400, Parker Newman wrote:
+> > From: Parker Newman <pnewman@connecttech.com>
+> >
+> > If a port fails to register with serial8250_register_8250_port() the
+> > kernel can crash when shutting down or module removal.
+> >
+> > This is because "priv->line[i]" will be set to a negative error code
+> > and in the exar_pci_remove() function serial8250_unregister_port() is
+> > called without checking if the "priv->line[i]" value is valid.
+> >
+> > Signed-off-by: Parker Newman <pnewman@connecttech.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_exar.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/=
+8250/8250_exar.c
+> > index 501b9f3e9c89..f5a395ed69d1 100644
+> > --- a/drivers/tty/serial/8250/8250_exar.c
+> > +++ b/drivers/tty/serial/8250/8250_exar.c
+> > @@ -1671,7 +1671,8 @@ static void exar_pci_remove(struct pci_dev *pcid=
+ev)
+> >  	unsigned int i;
+> >
+> >  	for (i =3D 0; i < priv->nr; i++)
+> > -		serial8250_unregister_port(priv->line[i]);
+> > +		if (priv->line[i] >=3D 0)
+> > +			serial8250_unregister_port(priv->line[i]);
+>
+> Is this a bug in the current driver?  If so, can you resend it on its
+> own so we can get it merged now?
+>
 
-Commit 8c1903d3081a ("xfs: inode and free block counters need to use
-__percpu_counter_compare") pointed out the error in commit 0d485ada404b
-("xfs: use generic percpu counters for free block counter") mentioned
-above and said that "Because the counters use a custom batch size, the
-comparison functions need to be aware of that batch size otherwise the
-comparison does not work correctly". Then percpu_counter_compare() was
-replaced with __percpu_counter_compare() with parameter
-XFS_FDBLOCKS_BATCH.
+Yes it is, I can split this one out and send it on its own.
+Thanks,
+Parker
 
-After commit 8c1903d3081a ("xfs: inode and free block counters need to
-use __percpu_counter_compare"), the existence of the batch variable is
-no longer necessary, so this patch is proposed to simplify the code by
-removing it.
-
-Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
----
-Changelog:
-
-v3: Resend for the second time 
-
-v2: https://lore.kernel.org/linux-xfs/20230918043344.890817-1-alexjlzheng@tencent.com/
-
-v1: https://lore.kernel.org/linux-xfs/20230908235713.GP28202@frogsfrogsfrogs/T/#t
----
- fs/xfs/xfs_mount.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
-
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index aed5be5508fe..8e47a3040893 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -1144,7 +1144,6 @@ xfs_mod_freecounter(
- 	int64_t			lcounter;
- 	long long		res_used;
- 	uint64_t		set_aside = 0;
--	s32			batch;
- 	bool			has_resv_pool;
- 
- 	ASSERT(counter == &mp->m_fdblocks || counter == &mp->m_frextents);
-@@ -1177,20 +1176,6 @@ xfs_mod_freecounter(
- 		return 0;
- 	}
- 
--	/*
--	 * Taking blocks away, need to be more accurate the closer we
--	 * are to zero.
--	 *
--	 * If the counter has a value of less than 2 * max batch size,
--	 * then make everything serialise as we are real close to
--	 * ENOSPC.
--	 */
--	if (__percpu_counter_compare(counter, 2 * XFS_FDBLOCKS_BATCH,
--				     XFS_FDBLOCKS_BATCH) < 0)
--		batch = 1;
--	else
--		batch = XFS_FDBLOCKS_BATCH;
--
- 	/*
- 	 * Set aside allocbt blocks because these blocks are tracked as free
- 	 * space but not available for allocation. Technically this means that a
-@@ -1204,7 +1189,7 @@ xfs_mod_freecounter(
- 	 */
- 	if (has_resv_pool)
- 		set_aside = xfs_fdblocks_unavailable(mp);
--	percpu_counter_add_batch(counter, delta, batch);
-+	percpu_counter_add_batch(counter, delta, XFS_FDBLOCKS_BATCH);
- 	if (__percpu_counter_compare(counter, set_aside,
- 				     XFS_FDBLOCKS_BATCH) >= 0) {
- 		/* we had space! */
--- 
-2.39.3
+> thanks,
+>
+> greg k-h
 
