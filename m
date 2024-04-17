@@ -1,107 +1,166 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07DF1487F7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE53A17106C;
 	Wed, 17 Apr 2024 17:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713373265; cv=none; b=B3370gWZ1nPwTmzgzoHrpe0vWb3ZloX82YkaH2Z1Y2mbxCCEF97jLpucIDEN3RIuRMoI0gkhvuRdzePz1peqw1v34upwcVUWCu9v0zNdV21oWYbdi5Sf9VH3pCUd9ywZ0ttBZIx9oK77tgq33E23MZ2dMVR8BJTz0rfTAIPfT+I=
+	t=1713373265; cv=none; b=ri9tnouN7nX7VxBffNzNwFPxgrCqpgkDlBFuNuKS6o6bsiI82nNWwj1RMWFCRcScEtmQWqGS7SgZixoUEGxGYYaksZNw0/kNyFN/Lnwle75JsUUsrWw02vjg5jx5vZmsnW3emSFvrZnck0q+Nr4j/xhXChO15cQl/WJI3R1wXd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713373265; c=relaxed/simple;
-	bh=7qwad6F14l5TuReDCaxKpdYeGsRIaVMPS5X5tPUMD5E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TI4Uk5Gq51lutfS94klwsPv++TingUgpaAbjGMYLwMrSxzlsgUknhj/aVra1AoMoj37SVurlt4pRyHkM+H9QR6l5+jWPXLazjFBguOazHlAh/21VWX5q8wTBv3BbjhHZxVYlQ029eoIp8NSDvkAJlzQosbwNQjzKELXTWh2mo2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d+tp96DW; arc=none smtp.client-ip=209.85.218.47
+	bh=g7bYmI9z5WPpy0G5QsJtGrJukZj5hsolIddTlKoRjF8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AgT89SrZtvmPdQtqCz5KiJ1wxAuP2smdB2ksZiYjpuU53vplx+krqnpcifBTFTDBQyEQqx5tFXm5XURIkf/KHWKst59qpEl9ctn7veksUip7ikn1FK66r9jeXdVewiqNWCgvda9VSwtQ5US6EG6wYNFRKs8hP5ehU6Z+MOcHNM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlN5N42p; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+tp96DW"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a526d0b2349so468531666b.3;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlN5N42p"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-349545c3eb8so1342817f8f.2;
         Wed, 17 Apr 2024 10:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1713373262; x=1713978062; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7qwad6F14l5TuReDCaxKpdYeGsRIaVMPS5X5tPUMD5E=;
-        b=d+tp96DWHoTCzf5xJL5h2EkRTpY2dng5/4HwZYoUdAbVXPi0I6RCSr22xp7X7DLcPZ
-         teoRsbdMuIAwm1JKB1JtrhxhuYY+oUAcIgP6I3AiKWr5L+B+xH9d8HnP6OqM1GQixDHI
-         kxGGl8l3rPA1gxlfJ0UnDiySWQdbofht8EBt317dFsYpu9URqL3Z9WrlB+Q/43Pb7jzj
-         5juQ+DhQXXPafH7Zd9SK2DuSz59bUscin/ErN8T+8mgYk+MtulKRA/VQ8M71PwCILRZG
-         59KV5NqlQCIyUCbkUIgi/nRO1NSooyzRttTDM/IDtO9L1hoVQqI5/y5nIueXgwuFxW9H
-         vzCg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B521hDt7nLJljyJEdIYozlEz0F5MRo++dHaSN5wbsNY=;
+        b=IlN5N42pYCBD7r5qrrTdiHHWkFjXx9bUS1fSPvBX7LeMwKcpVQkb482lLLUURV13dB
+         WHa9c59FrtbwhFiaNbYnZfXKZ//6TBAanV0sDpErUhxe1SJDwRevSPUCKmTbgdxegqEf
+         aZcuMU2YAhi1yWWZanJlqSvMWnlzHchp2ynjzXh8yGJS8lcqsddvGR88ZVRGF+Jusaa+
+         0rMV0zMYhNLLAbwl7oZRuzRybcq/uD6KTIW+n9eP4k8f6d2tEQLp8JcYf0Xbu4zBqRSo
+         w0keQ4P4z0qTwts9xObWrgfGYYK9JFwHcgCVImI1gC4tdI5Vof+3D1QlJEhO9qdpgzU2
+         W3Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1713373262; x=1713978062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7qwad6F14l5TuReDCaxKpdYeGsRIaVMPS5X5tPUMD5E=;
-        b=rOeCEKcI2wMzmzm9fxjcOVmah2MzfO6EwmAi9K/uo1szipbCJwAoy9IRIYjepqP3Mp
-         A5YPQ0gaUlJAeU0yMzAf+S80/t1wP7PfURBf36SoGeUhkEhaKYTjtF91Hcy9/6UqhwVX
-         3EcqDOa911KeJpL2UqeRtVjUAAPlpLkn9CzjCnQP0AeLUsFmRKTOixOfUk+dL2QAGxPx
-         ZAriYxjAkFA5ylqqRRt/dvusLZtACPy2sY54N4SMxMiuqOjx54MUKoubFWGYVrmSBpUB
-         B7jFtDN81ImgfI05Jf1fp5Iu9Nr1fgQpwp1ia3+Li/rlUeEX91Q7mJ3RGWHw5LfNLrsv
-         nntA==
-X-Forwarded-Encrypted: i=1; AJvYcCW161dPIeUhRtsfd/uejJszX+7Gt02BQmSb/6AbJlJhr7pE1rtL3QNlg5cSr7PzqmVA6HcFpL8lCcsiNkhkLTyAAvC4WDptzmY6G6XC1byD7x2b4bzjuq2F1y9dmbzMsiOGuq8NniuL9uU=
-X-Gm-Message-State: AOJu0YyfJfthKX5Ot23HWO+aMSEBLRr1KNFtUAQTUNyHBuZZSOCvEnWj
-	Q5oShxPF/6Lqii3IitxVQw3serOioB7KEjzJLllytP4fY3sicIa0l7zzn9UGO9TjMo7n/+yxCfJ
-	1KNuq3R9UESjM4DMLaE7nhcxsYKc=
-X-Google-Smtp-Source: AGHT+IHjqTDWZmtRPVFdbj0aG9crrmkL+pewqf6E+1PmO4tYLeDDlDuje0SMjWuIQbvH+KcEtnFkaReiKAfIoAQVBLE=
-X-Received: by 2002:a17:906:b793:b0:a52:6d2b:e8f7 with SMTP id
- dt19-20020a170906b79300b00a526d2be8f7mr65234ejb.12.1713373261795; Wed, 17 Apr
- 2024 10:01:01 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B521hDt7nLJljyJEdIYozlEz0F5MRo++dHaSN5wbsNY=;
+        b=fSvg3qDqYKaJobwhFf7g6DkZqbWYOspekAL5CBk/3HH7snoedXJhoG+UujKiMqhsDK
+         6zzMC/njLMvPF1rOo8BIcfzGjBRpf4VC1W3W1zSwpLEb481PeZQWp/HGv7KqGXMC9npk
+         8/AMR/k1CR+q7rtrRfZlmzYyk/GC9WPGfXKy7IVF217QWGpbpd1V8w8+PC56BbMkdFBx
+         liM0lzRZlwAheVHYOrobefp6Z++26+h9V5FJFfLiZD8xryMdwzUKEUDjB+WIzLUbqKSu
+         8EP2wsNFPZFaZ2fo2B2+YoRCaBjH8W1n4tdLqqnwdWu/qj6IcvA93Dcf84oJjPKy6pB/
+         0Ggg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2uNSPxc54xmknGv91QNV9VkCT5YKD2n+rfZKu1DghwveQjgNUfQXWG1rHaGCCUFKmyjNiW4q9WDrGkFj1svqOxDRZiK/ASGDL6cU3J9OPHtdWRDEJMlbx6xjXYNstleVs/28Gna3nwipJXm3UqSd+XEsbBiYvePsq6XvlXzm/QffKjA==
+X-Gm-Message-State: AOJu0Yw6++KrxJYAKd2vzio+bTJkXOEsEaXwSADV9dYB7eVsqBTdkUSv
+	9UWy62+Wr7tN07NduhtJmEc2h2FhVyFjMsMMCcugnHL+X9c38aLP
+X-Google-Smtp-Source: AGHT+IFBgSLAKnJWy/yoYt0incQcA2cye6eZ9TR41TnhlVmKVN8AHeJkao9bG1Wzye1H+2dHmrT4yA==
+X-Received: by 2002:a5d:4104:0:b0:343:bb25:82f0 with SMTP id l4-20020a5d4104000000b00343bb2582f0mr10374571wrp.11.1713373262076;
+        Wed, 17 Apr 2024 10:01:02 -0700 (PDT)
+Received: from spiri.. ([86.124.122.31])
+        by smtp.gmail.com with ESMTPSA id g2-20020adff3c2000000b00343300a4eb8sm17949441wrp.49.2024.04.17.10.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 10:01:01 -0700 (PDT)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: michael.hennerich@analog.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: alexandru.tachici@analog.com,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	andy@kernel.org,
+	nuno.sa@analog.com,
+	marcelo.schmitt@analog.com,
+	bigunclemax@gmail.com,
+	dlechner@baylibre.com,
+	okan.sahin@analog.com,
+	fr0st61te@gmail.com,
+	alisa.roman@analog.com,
+	marcus.folkesson@gmail.com,
+	schnelle@linux.ibm.com,
+	liambeguin@gmail.com
+Subject: [PATCH v6 0/5] iio: adc: ad7192: Add AD7194 support
+Date: Wed, 17 Apr 2024 20:00:49 +0300
+Message-Id: <20240417170054.140587-1-alisa.roman@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416211941.9369-1-tony.luck@intel.com> <20240416212247.9949-1-tony.luck@intel.com>
- <CAHp75VcQvNqaTj6GTNmhoMbTj-qbn=WX7OSuRwiPaFO5pzPd9g@mail.gmail.com> <SJ1PR11MB608394505D03C51EC2583BFCFC0F2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-In-Reply-To: <SJ1PR11MB608394505D03C51EC2583BFCFC0F2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 17 Apr 2024 20:00:25 +0300
-Message-ID: <CAHp75VcbtB=UEjBVM+C3_7Rbt9y1VSVkBOxjpyTA6TBYvtLqzw@mail.gmail.com>
-Subject: Re: [PATCH v3 68/74] x86/cpu/vfm: Update drivers/staging/media/atomisp/include/linux/atomisp_platform.h
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 7:24=E2=80=AFPM Luck, Tony <tony.luck@intel.com> wr=
-ote:
->
-> >> New CPU #defines encode vendor and family as well as model.
-> >
-> > Thanks, but I would rather see this using the following
-> > https://elixir.bootlin.com/linux/v6.9-rc4/source/include/linux/platform=
-_data/x86/soc.h
->
-> Are you asking for drivers/staging/media/atomisp/include/linux/atomisp_pl=
-atform.h
-> to be refactored to use the new functions/macros in <linux/platform_data/=
-x86/soc.h>?
->
-> Maybe folks working on this staging driver can do that? I don't think I h=
-ave the domain
-> specific knowledge to make this update.
->
-> Note that patch 69 in this series does update <linux/platform_data/x86/so=
-c.h> to use
-> the new vendor-family-model scheme.
+Dear maintainers,
 
-So. maybe if this patch is placed after that one, it can be easily
-seen how to amend it? I would help with the conversion as I know
-something about AtomISP driver code (not as much as Hans de Goede,
-though).
+Thank you all for the feedback!
 
+I am submitting the upgraded series of patches for the ad7192 driver.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Please consider applying in order.
+
+Thank you!
+
+v5 -> v6
+  - protect ad7192_update_filter_freq_avail with lock
+  - better bindings description for AINCOM
+  - the pseudo-differential channels are no longer configured as differential
+    when aincom supply is not present in devicetree, in this case the offset for
+    the channels is set to 0
+  - because of the above change, there is no longer a need for multiple channel
+    options
+  - correct channels regex in bindings
+  - no need to move chip_info anymore
+  - change names to ad7194_parse_channel/s
+  - add else statement to highlight parse_channels effect
+
+v4 -> v5
+  - add aincom supply as discussed previously
+    https://lore.kernel.org/all/CAMknhBF5mAsN1c-194Qwa5oKmqKzef2khXnqA1cSdKpWHKWp0w@mail.gmail.com/#t
+  - ad7194 differential channels are now dynamically configured in the
+    devicetree
+
+v3 -> v4
+  - drop device properties patch, changes already applied to tree
+  - change bindings and driver such that for AD7194 there are 16
+    differential channels, by default set to AINx - AINCOM, which can be
+    configured in devicetree however the user likes
+  - corrected mistake regarding positive and negative channel macros:
+    subtract 1 from the number corresponding to AIN input
+
+v2 -> v3
+  - add precursor patch to simply functions to only pass
+    ad7192_state
+  - add patch to replace custom attribute
+  - bindings patch: correct use of allOf and some minor changes to
+    the ad7194 example
+  - add ad7194 patch:
+    - use "ad7192 and similar"
+    - ad7194 no longer needs attribute group
+    - use callback function in chip_info to parse channels
+    - move struct ad7192_chip_info
+    - change position of parse functions
+  - drop clock bindings patch
+
+v1 -> v2
+  - new commit with missing documentation for properties
+  - add constraint for channels in binding
+  - correct pattern for channels
+  - correct commit message by adding "()" to functions
+  - use in_range
+  - use preferred structure in Kconfig
+
+Kind regards,
+
+Alisa-Dariana Roman (5):
+  iio: adc: ad7192: Use standard attribute
+  dt-bindings: iio: adc: ad7192: Add aincom supply
+  iio: adc: ad7192: Add aincom supply
+  dt-bindings: iio: adc: ad7192: Add AD7194 support
+  iio: adc: ad7192: Add AD7194 support
+
+ .../bindings/iio/adc/adi,ad7192.yaml          |  83 +++++++
+ drivers/iio/adc/Kconfig                       |  11 +-
+ drivers/iio/adc/ad7192.c                      | 226 ++++++++++++++----
+ 3 files changed, 274 insertions(+), 46 deletions(-)
+
+-- 
+2.34.1
+
