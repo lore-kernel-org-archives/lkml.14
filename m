@@ -1,125 +1,107 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8C6146592;
-	Wed, 17 Apr 2024 14:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7C21428E2;
+	Wed, 17 Apr 2024 14:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364902; cv=none; b=VMqv3wttpqickOwXpOwlfyIFfwndinNKllOuIPmIA9X+nXOWAf5B+uxNXlQi3FkhDeiqxntMAkNsv9k8goFQjI0MWshnVmvO4uOjtx1wvruiolC7xtcpUa+BuEGkbsjV/8MjbTbSTlNF9nujScotZCroNeOBFii0j4+VrXr+Vn8=
+	t=1713364911; cv=none; b=JAjpmj7RZDI5erGzd7bmi3JPgXtTvcKOaV2riLzpK94kioJrND7A+xqB27cIGgzc4em80T7rEhKb0uQc2UdCI3dH2lUjlSI5zGLMarexQSBh87GI0RI52t0Yxz4Nltfv2xAgITD0K5TDl/xS+fZp044XGcZ0BCnK0I9YBijLaGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364902; c=relaxed/simple;
-	bh=u2ZvkyyevjkvJ/3k9nSvtC4QezO8DURb/I514Z0BxbY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S+1006QPk3mTCJ+BjlVauM+0ojy/3/i5dDUsNOgKmYEI4hCXo4BkDeENTIVjK289RIA4aijJmnkv8J4mwrs3Mr8i7ko77jHNTGQP1P/PhrZzYQtDINaXihu/QzBjHmDcVF1stQdFowQiWqtZTQbYUS+0cs6NRGxakE+CJnrnyRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l0rP7Vk5; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l0rP7Vk5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A610F1BF20A;
-	Wed, 17 Apr 2024 14:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713364898;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cECuaur6xBkX8FAIGxDkH2vewSpAArLyAPPvhCHjvWo=;
-	b=l0rP7Vk5lpGF2u1P3T+skPwXDF9h+ZPv339naJAFc5p5UDHkirL3yXwezTqWr6OwNStV0o
-	x1EskmeOq4bWrrptWWdhsYFs6PLJWdG15hsZtpK+RqMW8QtzZbrGTF42jSi6ryvdSksnQA
-	LZ0W4VGSnz9vexAYqtZpju2irFNqwpqddTWBBy0DfgUQo0q5npDNr/OmIVGHzFrIg81ViC
-	/82C0ufrdqietFJHgZMKKS+SqBEj3V4Fr3UyNwBeBocQRfzHYTAQMCCfkVA1UtNCsS8UvD
-	qgGW68PHd2KVbL4+TEd/H2hzai3inN68kRtAjvnJHuOLAKXWg+X3iOV6mpT0hw==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 17 Apr 2024 16:39:57 +0200
-Subject: [PATCH net-next v9 09/14] net: pse-pd: Add support for
- setup_pi_matrix callback
+	s=arc-20240116; t=1713364911; c=relaxed/simple;
+	bh=2bBUJpkv4u0ce+Rp18oWAx6MoLI8B1peg59e65KozMI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PSI3feGv2Uzm7JE2+YHO+EiquldKyfO/6WLV4nt+0VdqDf4scTsm7Y+Lr4RfjYbkhTflr1Ika/scSTN7djaFO8G3q/flELTfnaXJHjhHLhJ+06lRAFg2W+gXJz/q3RhiT39TlMqE1VGewgpUpFR6FEAXJImVqBWqH+7sP/8T6o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKNlG239gz6D8ym;
+	Wed, 17 Apr 2024 22:36:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 09442140B38;
+	Wed, 17 Apr 2024 22:41:40 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 15:41:39 +0100
+Date: Wed, 17 Apr 2024 15:41:38 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Miguel Luis
+	<miguel.luis@oracle.com>, James Morse <james.morse@arm.com>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <linuxarm@huawei.com>, <justin.he@arm.com>,
+	<jianyong.wu@arm.com>
+Subject: Re: [PATCH v6 02/16] cpu: Do not warn on arch_register_cpu()
+ returning -EPROBE_DEFER
+Message-ID: <20240417154138.0000511b@Huawei.com>
+In-Reply-To: <Zh/WPYMJYepLbST/@shell.armlinux.org.uk>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+	<20240417131909.7925-3-Jonathan.Cameron@huawei.com>
+	<Zh/WPYMJYepLbST/@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-feature_poe-v9-9-242293fd1900@bootlin.com>
-References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
- Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
- kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.14-dev
-X-GND-Sasl: kory.maincent@bootlin.com
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+On Wed, 17 Apr 2024 15:01:33 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Implement setup_pi_matrix callback to configure the PSE PI matrix. This
-functionality is invoked before registering the PSE and following the core
-parsing of the pse_pis devicetree subnode.
+> On Wed, Apr 17, 2024 at 02:18:55PM +0100, Jonathan Cameron wrote:
+> > For arm64 the CPU registration cannot complete until the ACPI
+> > interpreter us up and running so in those cases the arch specific
+> > arch_register_cpu() will return -EPROBE_DEFER at this stage and the
+> > registration will be attempted later.
+> > 
+> > Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> > Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > ---
+> > v6: tags
+> > ---
+> >  drivers/base/cpu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> > index 56fba44ba391..b9d0d14e5960 100644
+> > --- a/drivers/base/cpu.c
+> > +++ b/drivers/base/cpu.c
+> > @@ -558,7 +558,7 @@ static void __init cpu_dev_register_generic(void)
+> >  
+> >  	for_each_present_cpu(i) {
+> >  		ret = arch_register_cpu(i);
+> > -		if (ret)
+> > +		if (ret != -EPROBE_DEFER)
+> >  			pr_warn("register_cpu %d failed (%d)\n", i, ret);  
+> 
+> This looks very broken to me.
+> 
+> 		if (ret && ret != -EPROBE_DEFER)
+> 
+> surely, because we don't want to print a warning if arch_register_cpu()
+> was successful?
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
+Gah.  Excellent point.
 
-Changes in v3:
-- New patch
----
- drivers/net/pse-pd/pse_core.c | 6 ++++++
- include/linux/pse-pd/pse.h    | 2 ++
- 2 files changed, 8 insertions(+)
+thanks,
 
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index ca5ced8e0d8a..a7ff7676ab77 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -223,6 +223,12 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
- 	if (ret)
- 		return ret;
- 
-+	if (pcdev->ops->setup_pi_matrix) {
-+		ret = pcdev->ops->setup_pi_matrix(pcdev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	mutex_lock(&pse_list_mutex);
- 	list_add(&pcdev->list, &pse_controller_list);
- 	mutex_unlock(&pse_list_mutex);
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index e19d58b5e777..fa0c73da0cf1 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -49,6 +49,7 @@ struct pse_control_status {
-  *
-  * @ethtool_get_status: get PSE control status for ethtool interface
-  * @ethtool_set_config: set PSE control configuration over ethtool interface
-+ * @setup_pi_matrix: setup PI matrix of the PSE controller
-  */
- struct pse_controller_ops {
- 	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
-@@ -57,6 +58,7 @@ struct pse_controller_ops {
- 	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
- 		unsigned long id, struct netlink_ext_ack *extack,
- 		const struct pse_control_config *config);
-+	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
- };
- 
- struct module;
+Jonathan
 
--- 
-2.34.1
+> 
 
