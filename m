@@ -1,138 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651C113C3EF;
-	Wed, 17 Apr 2024 15:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E9F38DEC
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713368068; cv=none; b=ARFys+a6ITm7aw+zHvcO88YYbb08f5aTUGdKeCPLJxtxGyPkcmIZa+EdWnkQRZYinsYKRO8JJYRq+InxkAqmFoY0VOmOkEOwhY+SJeFGNIQ2Rls1zKLrDEvEviKS+Ai2mzgxuuzdBjMiEVAa70W/sToC2wenLEKW7uEDUv/+1/M=
+	t=1713368097; cv=none; b=bfvck+GBMxs8fl8B4KBpd4rKlfIbyotZTAEpcDuZRVM3GQz409wq9TC0G2HdPSvjx7yJz8WjC8ggiAvo384OXQcpTNehJG60Vn24kJ9+JzEYbtX/S6kT7HBFpz9wgb5/bH6fCsrNf5qZ4bCcp3DUqlHD4fmATaFQitcq/OqeqL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713368068; c=relaxed/simple;
-	bh=IaRbObB5dEEIBtmpY4TQrQpfkbKo3yd2zwxXbfaJry0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=jcS+eTpuaZWeVijKeU8wGzXirr/TzjuVnRf6vuvOTyySPhANT2/7qE9a31rq7CyYoztjjdnMseZOteXJdOG1qYreKfY7aiP+GkMOiscNyQfi7nc/4sIZQY0gdmz8z1SYJ+E23pEMu5YeqVZGk3SpxauCsLDcSvGR5NbgiHuQ+A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4T6AISh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713368097; c=relaxed/simple;
+	bh=IIC0tv+BlGf2j2KouQ1UALpmzmBHpO+o54MA5HqOx1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jDffPUrH1F7SHiB9chZr627rcd5loPWgZZUribBNjG34icgazJKs7/Bg1H3eRkv/NBawUuTdD4CF7D/FTo8QD9X2JCzgRqtMw2Ej/ciypvc25TaoFW94grY0vyRX4/zR/y6Pyoup/XPTM2OIKThoQY4sS6LkDxxb0oXvhsFEiss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EUhYrhoj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4T6AISh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB6DC072AA;
-	Wed, 17 Apr 2024 15:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713368068;
-	bh=IaRbObB5dEEIBtmpY4TQrQpfkbKo3yd2zwxXbfaJry0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=i4T6AIShq8iv6NzCQXuiVcBRjXys+gIu07VpRelIM/4VXfkxa3i1aKygFMcqTfTIP
-	 AxI1eScM8ogH6mCi0qFjCiT8MznN+YC6bE97ooKRydobQsZBEBBPl14dFQ/xJn7HcJ
-	 WhAUpXTxxQ+2Ln9OGR3rqkl/aitwNGoa5G5ULy5RqNdc8NReBC8F7Aw/raXUAR5Vla
-	 sVdUqc4laN664krEG2iJfuh8vTv5eP5X/Cd5kMpYf6dUmdG1Ce3KMwmHj+zgdDoFUO
-	 jLR33YbSwCQZlA1pjaR0uIv/IyOSNecht8uQWZ1RfasrybthQd67T+YCEJKhb1akT9
-	 aqEUnB1f0DATQ==
-Date: Wed, 17 Apr 2024 10:34:26 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EUhYrhoj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713368094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zkI3ZLRBrGPOfJ8o6Nqq7OH9pPAJcd5NKdBOupoX3ag=;
+	b=EUhYrhojZgzBFEGc2Jpz2EMelZ29VDuSAQyASapJPIsAM53pLeA+Z+3FQq3f5PxxV5nfBa
+	mznmY1z6PN+fxAS75bP5A/nuYiSswx4H7llAefmDKcZrFFqUd5AIrqX7JqzAks7PtR64CA
+	OMH33F79wRw9kTVme9nfe0leWxVpJ0w=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-kB9JEOLDMIS0hKF8_j0S9A-1; Wed, 17 Apr 2024 11:34:51 -0400
+X-MC-Unique: kB9JEOLDMIS0hKF8_j0S9A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47A1881B561;
+	Wed, 17 Apr 2024 15:34:51 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0530C581D3;
+	Wed, 17 Apr 2024 15:34:51 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: isaku.yamahata@intel.com,
+	xiaoyao.li@intel.com,
+	binbin.wu@linux.intel.com,
+	seanjc@google.com,
+	rick.p.edgecombe@intel.com
+Subject: [PATCH v3 0/7] KVM: Guest Memory Pre-Population API
+Date: Wed, 17 Apr 2024 11:34:43 -0400
+Message-ID: <20240417153450.3608097-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, 
- Dent Project <dentproject@linuxfoundation.org>, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- kernel@pengutronix.de, "Rafael J. Wysocki" <rafael@kernel.org>, 
- linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Russell King <linux@armlinux.org.uk>, Russ Weight <russ.weight@linux.dev>, 
- Jakub Kicinski <kuba@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Andrew Lunn <andrew@lunn.ch>, Mark Brown <broonie@kernel.org>, 
- Eric Dumazet <edumazet@google.com>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, 
- Frank Rowand <frowand.list@gmail.com>, Paolo Abeni <pabeni@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>
-In-Reply-To: <20240417-feature_poe-v9-8-242293fd1900@bootlin.com>
-References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
- <20240417-feature_poe-v9-8-242293fd1900@bootlin.com>
-Message-Id: <171336806575.2618779.157615998420721814.robh@kernel.org>
-Subject: Re: [PATCH net-next v9 08/14] dt-bindings: net: pse-pd: Add
- another way of describing several PSE PIs
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+
+Pre-population has been requested several times to mitigate KVM page faults
+during guest boot or after live migration.  It is also required by TDX
+before filling in the initial guest memory with measured contents; while
+I am not yet sure that userspace will use this ioctl, if not the code
+will be used by a TDX-specific ioctl---to pre-populate the SEPT before
+invoking TDH.MEM.PAGE.ADD or TDH.MR.EXTEND.
+
+Compared to Isaku's v2, I have reduced the scope as much as possible:
+
+- no vendor-specific hooks
+
+- just fail if pre-population is invoked while nested virt is access
+
+- just populate page tables for the SMM address space if invoked while
+  SMM is active
 
 
-On Wed, 17 Apr 2024 16:39:56 +0200, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> PSE PI setup may encompass multiple PSE controllers or auxiliary circuits
-> that collectively manage power delivery to one Ethernet port.
-> Such configurations might support a range of PoE standards and require
-> the capability to dynamically configure power delivery based on the
-> operational mode (e.g., PoE2 versus PoE4) or specific requirements of
-> connected devices. In these instances, a dedicated PSE PI node becomes
-> essential for accurately documenting the system architecture. This node
-> would serve to detail the interactions between different PSE controllers,
-> the support for various PoE modes, and any additional logic required to
-> coordinate power delivery across the network infrastructure.
-> 
-> The old usage of "#pse-cells" is unsuficient as it carries only the PSE PI
-> index information.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-> 
-> Changes in v3:
-> - New patch
-> 
-> Changes in v4:
-> - Remove $def
-> - Fix pairset-names item list
-> - Upgrade few properties description
-> - Update the commit message
-> 
-> Changes in v5:
-> - Fix yamllint error.
-> - Replace underscore by dash in properties names.
-> - Add polarity-supported property.
-> 
-> Changes in v6:
-> - Reorder the pairset pinout table documentation to shrink the lines size.
-> - Remove pairset and polarity as required fields.
-> - Add vpwr-supply regulator supply.
-> 
-> Changes in v7:
-> - Fix weird characters issue.
-> - Fix documentation nit.
-> ---
->  .../bindings/net/pse-pd/pse-controller.yaml        | 101 ++++++++++++++++++++-
->  1 file changed, 98 insertions(+), 3 deletions(-)
-> 
+There are however other changes that affect the userspace API:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+- struct name changed to `kvm_map_memory`
 
-yamllint warnings/errors:
+- added support for KVM_CHECK_EXTENSION(KVM_MAP_MEMORY) on the VM
+  file descriptor, which allows to make this ioctl supported only
+  on a subset of VM types
 
-dtschema/dtc warnings/errors:
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+- **important**: if EINTR or EAGAIN happens on
+  the first page, it is returned.  Otherwise, the ioctl *succeeds*
+  but mapping->size is left nonzero.  While this drops the detail
+  as to why the system call was interrupted, it is consistent with
+  other interruptible system calls such as read().
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Implementation changes:
+
+- the test is not x86-specific anymore (though for now only compiled
+  on x86 because no other architectures supports the feature)
+
+- instead of using __weak symbols, the code is conditional on a new
+  Kconfig CONFIG_KVM_GENERIC_MAP_MEMORY.
 
 
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml references a file that doesn't exist: Documentation/networking/pse-pd/pse-pi.rst
-Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml: Documentation/networking/pse-pd/pse-pi.rst
+This patch series depends on the other pieces that have been applied
+to the kvm-coco-queue branch (and is present on the branch).
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240417-feature_poe-v9-8-242293fd1900@bootlin.com
+Paolo
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Isaku Yamahata (7):
+  KVM: Document KVM_MAP_MEMORY ioctl
+  KVM: Add KVM_MAP_MEMORY vcpu ioctl to pre-populate guest memory
+  KVM: x86/mmu: Extract __kvm_mmu_do_page_fault()
+  KVM: x86/mmu: Make __kvm_mmu_do_page_fault() return mapped level
+  KVM: x86/mmu: Introduce kvm_tdp_map_page() to populate guest memory
+  KVM: x86: Implement kvm_arch_vcpu_map_memory()
+  KVM: selftests: x86: Add test for KVM_MAP_MEMORY
 
-pip3 install dtschema --upgrade
+ Documentation/virt/kvm/api.rst                |  54 +++++++
+ arch/x86/kvm/Kconfig                          |   1 +
+ arch/x86/kvm/mmu.h                            |   3 +
+ arch/x86/kvm/mmu/mmu.c                        |  32 +++++
+ arch/x86/kvm/mmu/mmu_internal.h               |  42 ++++--
+ arch/x86/kvm/x86.c                            |  43 ++++++
+ include/linux/kvm_host.h                      |   5 +
+ include/uapi/linux/kvm.h                      |  10 ++
+ tools/include/uapi/linux/kvm.h                |   8 ++
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ tools/testing/selftests/kvm/map_memory_test.c | 135 ++++++++++++++++++
+ virt/kvm/Kconfig                              |   3 +
+ virt/kvm/kvm_main.c                           |  61 ++++++++
+ 13 files changed, 384 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/map_memory_test.c
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.43.0
 
