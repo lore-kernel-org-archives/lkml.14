@@ -1,96 +1,128 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B178140E3D
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C04013D53B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713365892; cv=none; b=aymR3+ItFnLYuhNmaBvJIzjheapJc+42qXfsKJC8e8HgqiFU6piftmw8QNVkNppCYXv4yGXIi4IFBr5uvO20uZGh/7OEcQM1Lt8oH+q6V5wEASeHZcMHZ7BxbJ6A8eTrps748bZ0nzsrqDBCCE5HqzDr4tHBtWr9jVgyfRQf9PE=
+	t=1713366000; cv=none; b=cYvDet+00TXA/ANJLOwTW7mdoHWYEBOKHTEqWu4X30WS2eVOFgapvaJsWfm9mSO44bFj2zQxPEkh1wkT37aVuHnzKdqLdMk2XDwAhPX5M0iivAdlOP2WWHob8LnqrUesNt+F+VR5zxkEGlJpdGiJhVLv5LgHxEznmyS8+ZcJwlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713365892; c=relaxed/simple;
-	bh=2xyj0NTxTG4WCIsfGF2Dj9gu+EMZjKYzqcfchrNiejM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tz5o/BN+OgTRBL1UI7KPTmr9Cvmjgd80gxKdDwKIX+TZHg2RldRe+IuqKK+FpiuKTfXrkyKLjekWtsODT1AvR1kvGCmlgOmeDKdFVyFIWlaJgvl2MkbRz2amJnvia3bcwflCEjEkPdf/bZR3Mb+mofLzlL93IuwOYrMNHx/HvzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C152A40E0187;
-	Wed, 17 Apr 2024 14:58:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 4DOFZVzoP8VO; Wed, 17 Apr 2024 14:58:03 +0000 (UTC)
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D3E9440E0028;
-	Wed, 17 Apr 2024 14:57:43 +0000 (UTC)
-Date: Wed, 17 Apr 2024 16:57:38 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v3] x86/bugs: Only harden syscalls when needed
-Message-ID: <20240417145738.GDZh_jYguUrkT9QlXp@fat_crate.local>
-References: <eda0ec65f4612cc66875aaf76e738643f41fbc01.1713296762.git.jpoimboe@kernel.org>
+	s=arc-20240116; t=1713366000; c=relaxed/simple;
+	bh=ZgrrbaCSJMRtonK7p9OX8MB48F0JI8/7kBVr9BuIrG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rTSMW+9dIot6RqNWonV9FkfDLERBq5ipw4Hb2FoYcspbNJx7QYJ868uKt3UdMikrGzrBD72dhgczO89mJiCZR87NFkd3ar2rl/RkCRg6qwdzh6UBsPfCPAqtEay7ugfMEet7nzkGFCXvGn4YWNjLdIGoP8AJUFpFborS1Rq/nv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QvijAM6O; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QvijAM6O"
+Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43HExUMB4064032
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 17 Apr 2024 07:59:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43HExUMB4064032
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024041401; t=1713365971;
+	bh=VSJmFsr3EBbN1183B4LxpqSIbjOkuFTUUCyoRaRiqHQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QvijAM6OkDa1B0fd+ovvzDYTcAl/YS0j9Ff9btBrPwoVn3+WSbXqS/PxFEPYQFif7
+	 aeLNzePK6ihThdXJgiUGry6PNUqx7oTBRp3auf/sG05wAq6BZs7up8bILrmXNBMfen
+	 hk7F4Jk4duyFZDvTS36yQJL97ELhSIk/gJtkoDzn23Q4drJdcRiTMJzs0kxd2/1Ohm
+	 ye7cPqm0Ulc0B/EYpBY9RNcJ8V2jhqgi4dR4SwSP1gp23+eghIh7LgVlrUlpf3y0lP
+	 gbCeZsDwF/i+TIJMC93Qilq2pLHcBnIkAmp7cZ6dApNOY4pLvJUf3Aq7foLeA6iGxl
+	 8fQRJ3oyDf0zA==
+Message-ID: <5dd74948-a951-4a7a-84ac-7e75cc26bb46@zytor.com>
+Date: Wed, 17 Apr 2024 07:59:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eda0ec65f4612cc66875aaf76e738643f41fbc01.1713296762.git.jpoimboe@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] x86/fred: Fix INT80 emulation for FRED
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>, "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org
+References: <20240417063001.3773507-1-xin@zytor.com>
+ <20240417093813.GBZh-YhSQCXgy3OxFI@fat_crate.local>
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <20240417093813.GBZh-YhSQCXgy3OxFI@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 04:02:21PM -0700, Josh Poimboeuf wrote:
-> Syscall hardening (i.e., converting the syscall indirect branch to a
-> series of direct branches) may cause performance regressions in certain
-> scenarios.  Only use the syscall hardening when indirect branches are
-> considered unsafe.
+On 4/17/24 02:38, Borislav Petkov wrote:
+> On Tue, Apr 16, 2024 at 11:30:01PM -0700, Xin Li (Intel) wrote:
+>> 3) The FRED kernel entry handler does *NOT* dispatch INT instructions,
+>>     which is of event type EVENT_TYPE_SWINT, so compared with
+>>     do_int80_emulation(), there is no need to do any user mode check.
 > 
-> Fixes: 1e3ad78334a6 ("x86/syscall: Don't force use of indirect calls for system calls")
-> Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
-> v3:
-> - fix X86_FEATURE_INDIRECT_SAFE value
+> What does that mean?
 > 
->  arch/x86/entry/common.c            | 15 ++++++++++++---
->  arch/x86/entry/syscall_32.c        | 11 +----------
->  arch/x86/entry/syscall_64.c        |  6 ------
->  arch/x86/entry/syscall_x32.c       |  7 ++++++-
->  arch/x86/include/asm/cpufeatures.h |  1 +
->  arch/x86/include/asm/syscall.h     |  8 +++++++-
->  arch/x86/kernel/cpu/bugs.c         | 31 +++++++++++++++++++++++++++++-
->  7 files changed, 57 insertions(+), 22 deletions(-)
+> An event handler doesn't dispatch INT insns?
+> 
+> /me is confused.
 
-I poked at this a bit and can't find anything that I can complain about
-so
+FRED has separate entry flows depending on if the event came from user 
+space or kernel space:
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+asm_fred_entrypoint_user -> fred_entry_from_user
 
-I'll pick it up into urgent if no one complains soon.
+asm_fred_entrypoint_kernel -> fred_entry_from_kernel
 
-Thx.
+fred_entry_from_kernel does not invoke fred_intx() if the event type is 
+EVENT_TYPE_SWINT, instead it falls through to fred_bad_type(). Perhaps 
+fred_intx() should be renamed fred_intx_user() for additional clarity.
 
--- 
-Regards/Gruss,
-    Boris.
+(It might also we worth noting in that function that the reason int 
+$0x03 and int $0x04 are dispatched as INT3 and INTO is to be fully user 
+space compatible with legacy IDT, which behaves similarly.)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thus, the int $0x80 code is simply not reachable from kernel space; if 
+kernel code were to invoke int $0x80 or any other INT instruction it 
+will error out before getting to this code.
+
+>> +#ifdef CONFIG_X86_FRED
+>> +/*
+>> + * A FRED-specific INT80 handler fred_int80_emulation() is required:
+>> + *
+>> + * 1) As INT instructions and hardware interrupts are separate event
+>> + *    types, FRED does not preclude the use of vector 0x80 for external
+>> + *    interrupts. As a result the FRED setup code does *NOT* reserve
+>> + *    vector 0x80 and calling int80_is_external() is not merely
+>> + *    suboptimal but actively incorrect: it could cause a system call
+>> + *    to be incorrectly ignored.
+>> + *
+>> + * 2) fred_int80_emulation(), only called for handling vector 0x80 of
+>> + *    event type EVENT_TYPE_SWINT, will NEVER be called to handle any
+>> + *    external interrupt (event type EVENT_TYPE_EXTINT).
+>> + *
+>> + * 3) The FRED kernel entry handler does *NOT* dispatch INT instructions,
+>> + *    which is of event type EVENT_TYPE_SWINT, so compared with
+>> + *    do_int80_emulation(), there is no need to do any user mode check.
+>> + *
+>> + * 4) int80_emulation() does a CLEAR_BRANCH_HISTORY, which is likely
+>> + *    overkill for new x86 CPU implementations that support FRED.
+>> + *
+>> + * 5) int $0x80 is the FAST path for 32-bit system calls under FRED.
+>> + *
+>> + * A dedicated FRED INT80 handler duplicates quite a bit of the code in
+>> + * do_int80_emulation(), but it avoids sprinkling more tests and seems
+>> + * more readable. Just remember that we can always unify common stuff
+>> + * later if it turns out that it won't diverge anymore, i.e., after the
+>> + * FRED code settles.
+>> + */
+> 
+> And this is talking about duplication above and that text is duplicated
+> from the commit message. :)
+> 
+> I'll zap it when applying.
+> 
+
+I suggested putting it into a comment for future reference. Obviously no 
+need to duplicate it in the commit message :)
+
+	-hpa
+
