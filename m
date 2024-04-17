@@ -1,326 +1,191 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BDE6A8BA
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5A06BB2F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713338038; cv=none; b=JT/GDGsAtMEYsTYlP0Am2C4Rxp7h1XUlwuMQyib8tqTsCdsqlPs4acRgdKnkbfEViNkWK0hZ1RyKWdMDLSm8dsYAEAY32vXO1iYEg9ZWSCw+N17gWO+DdIzm8S5hV/UflVPssx/qMakeomvGo53ENWJn060MQLkIcUy9Pray0+E=
+	t=1713338043; cv=none; b=OklLPVwGw5BlTFMR2U0KlJDR+9ONLPEReErDycu8xGJvX4nr2i/Gg42kxjItlawhis5Kc1KJYuqdcTr9eB1TMm43TPsuUq2hTPlbj+b0utlhb2gOjFm63IIjmWJlKbj12yNC/Jgr0KOUtSk4KHaaDCDrHtDpvbfXZbA/lZe8FeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713338038; c=relaxed/simple;
-	bh=7BAnbozBUGliEkFA2yy81ruk4ikDMyqp7A70k41kDBQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ao/9rQ9tKwkqJ1RTx2O7+NVS2e3u+33aKQ/jK1aMoTLoiIcmK1zi9VeOMXOJULjoEqBsxxaS0BPfCTeCB5BRu7JhkRphmiViUcL4MWl/fefQBgg3x3P4poq+aMPXqRAh4S0FWfMwcK0aRFqR2/2P6BBzox/t4uaWwU/Iol+LW4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rwzUB-0003W7-EK; Wed, 17 Apr 2024 09:13:39 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rwzUA-00Ckao-B7; Wed, 17 Apr 2024 09:13:38 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rwzUA-004DbZ-0X;
-	Wed, 17 Apr 2024 09:13:38 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Wed, 17 Apr 2024 09:13:28 +0200
-Subject: [PATCH 1/4] mtd: nand: mxc_nand: separate page read from ecc calc
+	s=arc-20240116; t=1713338043; c=relaxed/simple;
+	bh=jEtvm58hsfe68giclCwNX670PHyRm5fl9eO0Wssg0qw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zh2+rxo8v+NQzMrADXVRdWe0xCRKUv+Pzevkco8sBMnxeKpvSrBaEY467Ku2HePJnuacWX4eCj8b5ss7NInsSxJ6p40kcpFnc0CN2q9ESgaYONJryzg1afPw6d8QYUvQvfZ+58DL+KvKW30+FZx/hJHzfpR9sHhtfR9FZY3DD/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VKBT51YpFz1HCMD;
+	Wed, 17 Apr 2024 14:53:45 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id BDA291400D9;
+	Wed, 17 Apr 2024 14:54:38 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 14:54:38 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <linux-kernel@vger.kernel.org>, <yangerkun@huawei.com>,
+	<houtao1@huawei.com>, <libaokun1@huawei.com>
+Subject: [PATCH v2] erofs: reliably distinguish block based and fscache mode
+Date: Wed, 17 Apr 2024 14:55:13 +0800
+Message-ID: <20240417065513.3409744-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-mtd-nand-mxc-nand-exec-op-v1-1-d12564fe54e9@pengutronix.de>
-References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
-In-Reply-To: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Sascha Hauer <s.hauer@pengutronix.de>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713338018; l=7729;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=7BAnbozBUGliEkFA2yy81ruk4ikDMyqp7A70k41kDBQ=;
- b=DKbYBh4MvTD3MudVDrCuEz38xZGebdVQ9aI1qPJrsaXxUlnpz8TlrGnwa/dsHcmoTqhwXtqyr
- OBOkXp/ftldCC+U+DjJU37WIiEHTDj9w/F6d/Ww2xZZfSmZ5vLuCNbB
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Our read_page hook currently reads out a page and also counts and
-returns the number of bitflips. In upcoming exec_op conversion we'll
-need to read the page data in exec_op, but the bitflip information
-will be needed in mxc_nand_read_page(). To ease exec_op conversion
-separate the page read out from the bitflip evaluation.
+When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+be mistaken for fscache mode, and then attempt to free an anon_dev that has
+never been allocated, triggering the following warning:
 
-For the v2/v3 controllers we can leave the bitflip information in the
-status register for later evaluation. For the v1 controller this is
-not possible, because the status register is overwritten with each
-subpage read. We therefore store the bitflip information in the private
-data.
+============================================
+ida_free called for id=0 which is not allocated.
+WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+Modules linked in:
+CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+RIP: 0010:ida_free+0x134/0x140
+Call Trace:
+ <TASK>
+ erofs_kill_sb+0x81/0x90
+ deactivate_locked_super+0x35/0x80
+ get_tree_bdev+0x136/0x1e0
+ vfs_get_tree+0x2c/0xf0
+ do_new_mount+0x190/0x2f0
+ [...]
+============================================
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and ensure that erofs can always have the info
+available during erofs_kill_sb().
+
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- drivers/mtd/nand/raw/mxc_nand.c | 140 ++++++++++++++++++++++++----------------
- 1 file changed, 86 insertions(+), 54 deletions(-)
+Changes since v1:
+  Allocate and initialise fc->s_fs_info in erofs_fc_get_tree() instead of
+  modifying fc->sb_flags.
 
-diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc_nand.c
-index 003008355b3c2..3fe0b471f4a2d 100644
---- a/drivers/mtd/nand/raw/mxc_nand.c
-+++ b/drivers/mtd/nand/raw/mxc_nand.c
-@@ -20,6 +20,7 @@
- #include <linux/irq.h>
- #include <linux/completion.h>
- #include <linux/of.h>
-+#include <linux/bitfield.h>
+V1: https://lore.kernel.org/r/20240415121746.1207242-1-libaokun1@huawei.com/
+
+ fs/erofs/super.c | 51 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index b21bd8f78dc1..4104280be2ea 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -581,8 +581,7 @@ static const struct export_operations erofs_export_ops = {
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+-	struct erofs_sb_info *sbi;
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	int err;
  
- #define DRIVER_NAME "mxc_nand"
+ 	sb->s_magic = EROFS_SUPER_MAGIC;
+@@ -590,19 +589,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
+ 	sb->s_op = &erofs_sops;
  
-@@ -47,6 +48,8 @@
- #define NFC_V1_V2_CONFIG1		(host->regs + 0x1a)
- #define NFC_V1_V2_CONFIG2		(host->regs + 0x1c)
- 
-+#define NFC_V1_V2_ECC_STATUS_RESULT_ERM GENMASK(3, 2)
-+
- #define NFC_V2_CONFIG1_ECC_MODE_4	(1 << 0)
- #define NFC_V1_V2_CONFIG1_SP_EN		(1 << 2)
- #define NFC_V1_V2_CONFIG1_ECC_EN	(1 << 3)
-@@ -132,7 +135,7 @@ struct mxc_nand_devtype_data {
- 	uint16_t (*get_dev_status)(struct mxc_nand_host *);
- 	int (*check_int)(struct mxc_nand_host *);
- 	void (*irq_control)(struct mxc_nand_host *, int);
--	u32 (*get_ecc_status)(struct mxc_nand_host *);
-+	u32 (*get_ecc_status)(struct nand_chip *);
- 	const struct mtd_ooblayout_ops *ooblayout;
- 	void (*select_chip)(struct nand_chip *chip, int cs);
- 	int (*setup_interface)(struct nand_chip *chip, int csline,
-@@ -175,6 +178,7 @@ struct mxc_nand_host {
- 	int			eccsize;
- 	int			used_oobsize;
- 	int			active_cs;
-+	unsigned int		ecc_stats_v1;
- 
- 	struct completion	op_completion;
- 
-@@ -406,19 +410,81 @@ static void irq_control(struct mxc_nand_host *host, int activate)
- 	}
+-	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	if (!sbi)
+-		return -ENOMEM;
+-
+-	sb->s_fs_info = sbi;
+-	sbi->opt = ctx->opt;
+-	sbi->devs = ctx->devs;
+-	ctx->devs = NULL;
+-	sbi->fsid = ctx->fsid;
+-	ctx->fsid = NULL;
+-	sbi->domain_id = ctx->domain_id;
+-	ctx->domain_id = NULL;
+-
+ 	sbi->blkszbits = PAGE_SHIFT;
+ 	if (erofs_is_fscache_mode(sb)) {
+ 		sb->s_blocksize = PAGE_SIZE;
+@@ -704,11 +690,32 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	return 0;
  }
  
--static u32 get_ecc_status_v1(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v1(struct nand_chip *chip)
+-static int erofs_fc_get_tree(struct fs_context *fc)
++static void erofs_ctx_to_info(struct fs_context *fc)
  {
--	return readw(NFC_V1_V2_ECC_STATUS_RESULT);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	unsigned int ecc_stats, max_bitflips = 0;
-+	int no_subpages, i;
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
 +
-+	no_subpages = mtd->writesize >> 9;
-+
-+	ecc_stats = host->ecc_stats_v1;
-+
-+	for (i = 0; i < no_subpages; i++) {
-+		switch (ecc_stats & 0x3) {
-+		case 0:
-+		default:
-+			break;
-+		case 1:
-+			mtd->ecc_stats.corrected++;
-+			max_bitflips = 1;
-+			break;
-+		case 2:
-+			mtd->ecc_stats.failed++;
-+			break;
-+		}
-+
-+		ecc_stats >>= 2;
-+	}
-+
-+	return max_bitflips;
- }
- 
--static u32 get_ecc_status_v2(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v2_v3(struct nand_chip *chip, unsigned int ecc_stat)
- {
--	return readl(NFC_V1_V2_ECC_STATUS_RESULT);
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+	u8 ecc_bit_mask, err_limit;
-+	unsigned int max_bitflips = 0;
-+	int no_subpages, err;
-+
-+	ecc_bit_mask = (host->eccsize == 4) ? 0x7 : 0xf;
-+	err_limit = (host->eccsize == 4) ? 0x4 : 0x8;
-+
-+	no_subpages = mtd->writesize >> 9;
-+
-+	do {
-+		err = ecc_stat & ecc_bit_mask;
-+		if (err > err_limit) {
-+			mtd->ecc_stats.failed++;
-+		} else {
-+			mtd->ecc_stats.corrected += err;
-+			max_bitflips = max_t(unsigned int, max_bitflips, err);
-+		}
-+
-+		ecc_stat >>= 4;
-+	} while (--no_subpages);
-+
-+	return max_bitflips;
- }
- 
--static u32 get_ecc_status_v3(struct mxc_nand_host *host)
-+static u32 get_ecc_status_v2(struct nand_chip *chip)
- {
--	return readl(NFC_V3_ECC_STATUS_RESULT);
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
-+
-+	u32 ecc_stat = readl(NFC_V1_V2_ECC_STATUS_RESULT);
-+
-+	return get_ecc_status_v2_v3(chip, ecc_stat);
++	sbi->opt = ctx->opt;
++	sbi->devs = ctx->devs;
++	ctx->devs = NULL;
++	sbi->fsid = ctx->fsid;
++	ctx->fsid = NULL;
++	sbi->domain_id = ctx->domain_id;
++	ctx->domain_id = NULL;
 +}
-+
-+static u32 get_ecc_status_v3(struct nand_chip *chip)
+ 
+-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
++static int erofs_fc_get_tree(struct fs_context *fc)
 +{
-+	struct mxc_nand_host *host = nand_get_controller_data(chip);
++	struct erofs_sb_info *sbi;
 +
-+	u32 ecc_stat = readl(NFC_V3_ECC_STATUS_RESULT);
++	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	if (!sbi)
++		return -ENOMEM;
 +
-+	return get_ecc_status_v2_v3(chip, ecc_stat);
++	fc->s_fs_info = sbi;
++	erofs_ctx_to_info(fc);
++
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		return get_tree_nodev(fc, erofs_fc_fill_super);
+ 
+ 	return get_tree_bdev(fc, erofs_fc_fill_super);
+@@ -767,6 +774,7 @@ static void erofs_fc_free(struct fs_context *fc)
+ 	kfree(ctx->fsid);
+ 	kfree(ctx->domain_id);
+ 	kfree(ctx);
++	kfree(fc->s_fs_info);
  }
  
- static irqreturn_t mxc_nfc_irq(int irq, void *dev_id)
-@@ -712,9 +778,9 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	unsigned int bitflips_corrected = 0;
- 	int no_subpages;
- 	int i;
-+	unsigned int ecc_stats = 0;
- 
- 	host->devtype_data->enable_hwecc(chip, ecc);
- 
-@@ -727,8 +793,6 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 	no_subpages = mtd->writesize >> 9;
- 
- 	for (i = 0; i < no_subpages; i++) {
--		uint16_t ecc_stats;
--
- 		/* NANDFC buffer 0 is used for page read/write */
- 		writew((host->active_cs << 4) | i, NFC_V1_V2_BUF_ADDR);
- 
-@@ -737,32 +801,18 @@ static int mxc_nand_read_page_v1(struct nand_chip *chip, void *buf, void *oob,
- 		/* Wait for operation to complete */
- 		wait_op_done(host, true);
- 
--		ecc_stats = get_ecc_status_v1(host);
--
--		ecc_stats >>= 2;
--
--		if (buf && ecc) {
--			switch (ecc_stats & 0x3) {
--			case 0:
--			default:
--				break;
--			case 1:
--				mtd->ecc_stats.corrected++;
--				bitflips_corrected = 1;
--				break;
--			case 2:
--				mtd->ecc_stats.failed++;
--				break;
--			}
--		}
-+		ecc_stats |= FIELD_GET(NFC_V1_V2_ECC_STATUS_RESULT_ERM,
-+				       readw(NFC_V1_V2_ECC_STATUS_RESULT)) << i * 2;
- 	}
- 
-+	host->ecc_stats_v1 = ecc_stats;
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -783,6 +791,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
 +
- 	if (buf)
- 		memcpy32_fromio(buf, host->main_area0, mtd->writesize);
- 	if (oob)
- 		copy_spare(mtd, true, oob);
+ 	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+ 	if (!ctx->devs) {
+ 		kfree(ctx);
+@@ -799,17 +808,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
  
--	return bitflips_corrected;
-+	return 0;
- }
- 
- static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
-@@ -770,10 +820,6 @@ static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
+ static void erofs_kill_sb(struct super_block *sb)
  {
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
--	unsigned int max_bitflips = 0;
--	u32 ecc_stat, err;
--	int no_subpages;
--	u8 ecc_bit_mask, err_limit;
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
  
- 	host->devtype_data->enable_hwecc(chip, ecc);
- 
-@@ -791,26 +837,7 @@ static int mxc_nand_read_page_v2_v3(struct nand_chip *chip, void *buf,
- 	if (oob)
- 		copy_spare(mtd, true, oob);
- 
--	ecc_bit_mask = (host->eccsize == 4) ? 0x7 : 0xf;
--	err_limit = (host->eccsize == 4) ? 0x4 : 0x8;
--
--	no_subpages = mtd->writesize >> 9;
--
--	ecc_stat = host->devtype_data->get_ecc_status(host);
--
--	do {
--		err = ecc_stat & ecc_bit_mask;
--		if (err > err_limit) {
--			mtd->ecc_stats.failed++;
--		} else {
--			mtd->ecc_stats.corrected += err;
--			max_bitflips = max_t(unsigned int, max_bitflips, err);
--		}
--
--		ecc_stat >>= 4;
--	} while (--no_subpages);
--
--	return max_bitflips;
-+	return 0;
- }
- 
- static int mxc_nand_read_page(struct nand_chip *chip, uint8_t *buf,
-@@ -818,13 +845,18 @@ static int mxc_nand_read_page(struct nand_chip *chip, uint8_t *buf,
- {
- 	struct mxc_nand_host *host = nand_get_controller_data(chip);
- 	void *oob_buf;
-+	int ret;
- 
- 	if (oob_required)
- 		oob_buf = chip->oob_poi;
+-	if (erofs_is_fscache_mode(sb))
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		kill_anon_super(sb);
  	else
- 		oob_buf = NULL;
+ 		kill_block_super(sb);
  
--	return host->devtype_data->read_page(chip, buf, oob_buf, 1, page);
-+	ret = host->devtype_data->read_page(chip, buf, oob_buf, 1, page);
-+	if (ret)
-+		return ret;
-+
-+	return host->devtype_data->get_ecc_status(chip);
- }
- 
- static int mxc_nand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
-
+-	sbi = EROFS_SB(sb);
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
 -- 
-2.39.2
+2.31.1
 
