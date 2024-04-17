@@ -1,35 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9955F4685;
-	Wed, 17 Apr 2024 02:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D04567F;
+	Wed, 17 Apr 2024 02:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713321627; cv=none; b=BF5yn7yKo1ZubeGb4p3QRNsNQqWV5Aax1Y/wyJLltBWDZoGprQmV5sdHFqmHl8nF2nSFlzMI/5aMnc63cPcl7cRC22AkXbYSK3sD0tDnXnEOknHO1pX+aW1O7muZyLfZbF2bwv++8wFaI0gPjgzLU77XGo9B2uz9jThXeJu0NT4=
+	t=1713321759; cv=none; b=uih2rVhkofR+enKKNTy/q/57+yMI2VYPv3po9pJR+D72lEd5JvmlRbJ0iUDTcitEQgaGuFmW+8Z+iVrJYM5yEhshFgMzGgd4i+UbtLrecvECdU6S5gcrX1SmtoYi7+x7SEghGhr8lSLuApaehNpv4JiGc0+CbFTDtAqBjz14R+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713321627; c=relaxed/simple;
-	bh=V99ZMHxoBTHytjMQdtrR3q5MRRZkyWWbMOm1NYQYc0I=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pv7i4JgLwz89rG/wGxZswRPGuSgEfsGitaV/bl3Z9z4MuKBEo5Mf9q5If4ENLOiEGYZYMJK94izTtqxLzIcS4AsuhEXZMTOtQq/yTvTSYzWvSAvuSf82mIUBeiYCl9DEF1AdM28GYrFqdRCdZvm1kZonOwX4uCTmbNQk/+eLfAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2Y9A9uY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713321759; c=relaxed/simple;
+	bh=8yajIAMtfrnOR0YPhjzLw1ZaJc0hJ5ZYx12eiEu4sWU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AhvomwJb7gbKzVKkcogxJvNceCrspBJhnGl4xmROimPyNejkMIRxO3hMu3jH0XejRvcAysX5CIuM5fCufE6yalUnzPFaIB/za/XxF7bm2Z/Yk6ci+sZ/z8mnV960GtIShyyD3ghL/NJul76W61UlgCymzV9VwEhuiFwCE3XvITI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CkPNGCqv; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2Y9A9uY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 183C9C3277B;
-	Wed, 17 Apr 2024 02:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713321627;
-	bh=V99ZMHxoBTHytjMQdtrR3q5MRRZkyWWbMOm1NYQYc0I=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=j2Y9A9uYUAmJdyWQQtnOwgfA++w7VjBu304Y5yKqRaGqu0NQruRhzkbSzpN7zV93j
-	 BnsOeYvEuAtXQ3ikRVpx6Q99H1oqw2ogVOdWZxnZKTPI3qUJsWj7wxtwqbeRK+AXWQ
-	 3JwZQRu3quwASWKDMYXyLlMrU1hbAPhyVJ8K6FDbuYJ+Xn1T8eCs4Ie/zlmBZD21JL
-	 rqHhoSaJr2xZL19d4N3QyKkgAwZ4xQwBxrBYy9cIaUWqY9WQsd+8pVqwPG9CvNdqTy
-	 Zlp94C8NVE0kzfu82DkURI8f36Ww8dpWHsKAN/gnfm/XTu1yfylywQEO81E0fDAwWu
-	 UqQdVGWz1X+Og==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 07FD8D4F15F;
-	Wed, 17 Apr 2024 02:40:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CkPNGCqv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713321758; x=1744857758;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8yajIAMtfrnOR0YPhjzLw1ZaJc0hJ5ZYx12eiEu4sWU=;
+  b=CkPNGCqvWmIWVhGBtfJdDD6uAUlz2o3hnRw0FkGtEB9dqZxk1sVSXJkf
+   +rLDAgtF3LZoSi7KcdKsHs3wjxXkvE2zfcW+kyGIVB9dUyxahfYtz1dYu
+   3XLOKkcfzuhkqKTz3TR7bQ3Ei8gov8uccygKOfsJFfEY9kcEcrj+YZwvx
+   2fP2Z8FqGFfp1Aq30hNVcW4/vno4XOr1jxqCHZ1tijloDVHanPRbpWoLX
+   5tl4MV4ve2nAOkH7nm0CfJ9JW6lEqnG/WH1tHnildOc4gOuQEGGFG/TH4
+   Rns76r9cNWRMa5PwftUjTFhWbtFRmA3YBqq8jC9IkfVACjcFkgTMRRJhm
+   g==;
+X-CSE-ConnectionGUID: rOmQUjIYQSOnYHCy61jG5w==
+X-CSE-MsgGUID: 3sG7qdeIQKmvyyvR8cJiww==
+X-IronPort-AV: E=Sophos;i="6.07,207,1708412400"; 
+   d="scan'208";a="21373548"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Apr 2024 19:42:31 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Apr 2024 19:42:20 -0700
+Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 19:42:09 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <Dharma.B@microchip.com>, <andrzej.hajda@intel.com>,
+	<neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+	<Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
+	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <Manikandan.M@microchip.com>, <arnd@arndb.de>,
+	<geert+renesas@glider.be>, <Jason@zx2c4.com>, <mpe@ellerman.id.au>,
+	<gerg@linux-m68k.org>, <rdunlap@infradead.org>, <vbabka@suse.cz>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <oe-kbuild-all@lists.linux.dev>, Dharma Balasubiramani
+	<dharma.b@microchip.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 1/4] dt-bindings: display: bridge: add sam9x75-lvds binding
+Date: Wed, 17 Apr 2024 08:11:34 +0530
+Message-ID: <20240417024137.144727-2-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240417024137.144727-1-dharma.b@microchip.com>
+References: <20240417024137.144727-1-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,82 +72,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v8 01/17] MAINTAINERS: net: Add Oleksij to pse-pd
- maintainers
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171332162702.29795.17179061419076983944.git-patchwork-notify@kernel.org>
-Date: Wed, 17 Apr 2024 02:40:27 +0000
-References: <20240414-feature_poe-v8-1-e4bf1e860da5@bootlin.com>
-In-Reply-To: <20240414-feature_poe-v8-1-e4bf1e860da5@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, corbet@lwn.net, mcgrof@kernel.org, russ.weight@linux.dev,
- gregkh@linuxfoundation.org, rafael@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- o.rempel@pengutronix.de, broonie@kernel.org, frowand.list@gmail.com,
- andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
- thomas.petazzoni@bootlin.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, dentproject@linuxfoundation.org,
- kernel@pengutronix.de, maxime.chevallier@bootlin.com
+Content-Type: text/plain
 
-Hello:
+Add the 'sam9x75-lvds' compatible binding, which describes the Low Voltage
+Differential Signaling (LVDS) Controller found on some Microchip's sam9x7
+series System-on-Chip (SoC) devices. This binding will be used to define
+the properties and configuration for the LVDS Controller in DT.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changelog
+v5 -> v6
+- No Changes.
+v4 -> v5
+- No changes.
+v3 -> v4
+- Rephrase the commit subject.
+v2 -> v3
+- No changes.
+v1 -> v2
+- Remove '|' in description, as there is no formatting to preserve.
+- Remove 'gclk' from clock-names as there is only one clock(pclk).
+- Remove the unused headers and include only used ones.
+- Change the compatible name specific to SoC (sam9x75) instead of entire series.
+- Change file name to match the compatible name.
+---
+ .../bridge/microchip,sam9x75-lvds.yaml        | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
 
-On Sun, 14 Apr 2024 16:21:50 +0200 you wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> Oleksij was the first to add support for pse-pd net subsystem.
-> Add himself to the maintainers seems logical.
-> 
-> Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v8,01/17] MAINTAINERS: net: Add Oleksij to pse-pd maintainers
-    https://git.kernel.org/netdev/net-next/c/57f73805b99d
-  - [net-next,v8,02/17] of: property: Add fw_devlink support for pse parent
-    https://git.kernel.org/netdev/net-next/c/93c0d8c0ac30
-  - [net-next,v8,03/17] net: pse-pd: Rectify and adapt the naming of admin_cotrol member of struct pse_control_config
-    https://git.kernel.org/netdev/net-next/c/b010bf72da5a
-  - [net-next,v8,04/17] ethtool: Expand Ethernet Power Equipment with c33 (PoE) alongside PoDL
-    (no matching commit)
-  - [net-next,v8,05/17] net: pse-pd: Introduce PSE types enumeration
-    (no matching commit)
-  - [net-next,v8,06/17] net: ethtool: pse-pd: Expand pse commands with the PSE PoE interface
-    (no matching commit)
-  - [net-next,v8,07/17] netlink: specs: Modify pse attribute prefix
-    (no matching commit)
-  - [net-next,v8,08/17] netlink: specs: Expand the pse netlink command with PoE interface
-    (no matching commit)
-  - [net-next,v8,09/17] MAINTAINERS: Add myself to pse networking maintainer
-    (no matching commit)
-  - [net-next,v8,10/17] net: pse-pd: Add support for PSE PIs
-    (no matching commit)
-  - [net-next,v8,11/17] dt-bindings: net: pse-pd: Add another way of describing several PSE PIs
-    (no matching commit)
-  - [net-next,v8,12/17] net: pse-pd: Add support for setup_pi_matrix callback
-    (no matching commit)
-  - [net-next,v8,13/17] net: pse-pd: Use regulator framework within PSE framework
-    (no matching commit)
-  - [net-next,v8,14/17] dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller
-    (no matching commit)
-  - [net-next,v8,15/17] net: pse-pd: Add PD692x0 PSE controller driver
-    (no matching commit)
-  - [net-next,v8,16/17] dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller
-    (no matching commit)
-  - [net-next,v8,17/17] net: pse-pd: Add TI TPS23881 PSE controller driver
-    (no matching commit)
-
-You are awesome, thank you!
+diff --git a/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+new file mode 100644
+index 000000000000..862ef441ac9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/microchip,sam9x75-lvds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip SAM9X75 LVDS Controller
++
++maintainers:
++  - Dharma Balasubiramani <dharma.b@microchip.com>
++
++description:
++  The Low Voltage Differential Signaling Controller (LVDSC) manages data
++  format conversion from the LCD Controller internal DPI bus to OpenLDI
++  LVDS output signals. LVDSC functions include bit mapping, balanced mode
++  management, and serializer.
++
++properties:
++  compatible:
++    const: microchip,sam9x75-lvds
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Peripheral Bus Clock
++
++  clock-names:
++    items:
++      - const: pclk
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/at91.h>
++    lvds-controller@f8060000 {
++      compatible = "microchip,sam9x75-lvds";
++      reg = <0xf8060000 0x100>;
++      interrupts = <56 IRQ_TYPE_LEVEL_HIGH 0>;
++      clocks = <&pmc PMC_TYPE_PERIPHERAL 56>;
++      clock-names = "pclk";
++    };
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
