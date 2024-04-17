@@ -1,140 +1,172 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2046.outbound.protection.outlook.com [40.107.212.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9918A13E02D;
-	Wed, 17 Apr 2024 13:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713361856; cv=none; b=jZEmiXcKqDfHtEoyvZP34At7bXAtp3t+nEYRhoLJtODCIvq4VtNzuwWoUsguJHj7WVlE31/gnTkT2sELxbuqt1pcREqwBA0P09wHOrDpNsuCQqTRGcYOiFWHBfSLnX3LmqqL89yivOTFvHiaWc/f0ICAC43bfXlviuI//OJGvfw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713361856; c=relaxed/simple;
-	bh=Ct7mYtX/3didraJsnHzIV3XLyTwwaRWO8DPvNIVVRD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IAmV8LO+GSv4nlzxPnUBF4YokMc9d0p1r0+MzuZIWx5n/f7vWF9O0KMTQTxmVnObu62f1Wjrd69tHBHUOFedsvcl2KiE+yXJMkHVi7srJwyMp6jvOgu/ezCb1rWofvaxPDuyRklDd1RZ2ua5P38hXiPm592G5nPIiszxXCe8YBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=fphK7jFf; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C089314036D;
+	Wed, 17 Apr 2024 13:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713361866; cv=fail; b=K9AbfN36UdQnQxEG4Hb29V5qj2I3RZX4HGAjVKyunDTa3dKXQCQgl9FX2ItR+kQLblDNOLxBwEoj+JOGYc3+JIGiIBwBE43nlOo3W9TdDvfEow+F1p6TK5F/wF3dHbqgC8jLGYA3VU9NXoSPtvlmrfBghPZLFWx4NHi9Bfs74mA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713361866; c=relaxed/simple;
+	bh=0i+TuQKM80eMbdvHTC9RTzJj1UbxHUvrxko7nFXZCyo=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C/XGHG82HPeFBl8gb0dgBUyraf5FrPRx3I/Tor+E5sSbFniRnK0ojgnTeQXNurw25Boj9AcymYonE/0Pc8JQAV9JrvxmHkXd6DsIuNM+EhkOEM2oAF74wiBucdk4MxIaFMuj2gFiFI+tehkqu42rzX7GlYeIyULEJ2Y2HUsj6oY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1GD8Nph4; arc=fail smtp.client-ip=40.107.212.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fphK7jFf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UTuNyDC74aMGnpALnaMRzG0hlRkuyuTWVng3Ktfqx4k=; b=fphK7jFfOdWOFdlS8QMEUYrK21
-	zM/EuLgy7KpOwoiTXGNn3ntuLskQwCxS8ak+QSpfEngqmG5XEQcwW6xETWOMgBakoECI2fzWCEz+A
-	gDwl3kKuS189hFLPCxjyMmCQnqioD02G0m/iBEvZgpBqpIcWJVezU4u6l8/lyPa7lbtUpEMC32VpZ
-	+TbKirOE9Igb6/7A5kzeCgIZNzoXk6xtV4WhNTYyRE/NNtKMsFD4ptwd7BgL1w3UTxD0LOpj7CX9L
-	ENhVrEKvh00XSc03nP061krgyYLpdih4+rK392zB/cTj7b1hLYoameFGbVBdxZWDRmxPgIk+K0tw7
-	1UKHfcQA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52554)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rx5g7-0003JF-35;
-	Wed, 17 Apr 2024 14:50:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rx5g1-00060W-Pa; Wed, 17 Apr 2024 14:50:17 +0100
-Date: Wed, 17 Apr 2024 14:50:17 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Vinod Koul <vkoul@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-input@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 00/19] amba: store owner from modules with
- amba_driver_register()
-Message-ID: <Zh/Tmarryr4TzHIA@shell.armlinux.org.uk>
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <171182151736.34189.6433134738765363803.b4-ty@linaro.org>
- <cfa5aa01-44ef-4eb1-9ca6-541ed5908db4@linaro.org>
- <8a8a8e8b-8256-4d33-a39b-9e3cbc4ccff2@arm.com>
- <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1GD8Nph4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XG5u4Ddp4l47sb45WpP7f3Qkv/SH+fik3ZjCwQcrcJPtvuhKEY46i3wPoOKRQbCe+Bgi9UdaMgPC7ld0x6avIGAUHJr/kqu3gRrrcvHOa5dGqr3nDuIdKn1BGVi0giKGg1W9I/n6sv447G4RmLPws8AJcTG5qtTS9vUZco6JQF9CJLp6ZOebb4EDKvkPMmE9yFRxQvb2WKuGaffxdBNUpcMOCcObo4LHLAJbNX9AddBpez5rUSHk8qe3MYX4nYkbhfKlVfHKxKjH2/+bqrBiQufMXIhDYrJbJcpc/ZhJOo74oZkD6vP0dAhDTyREeomn3bPKF5LtcNuBSfMxSTfqcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OdkcD08jQJk7dNZiWE9XWaAftHfS5P7ZQ30oJ8l3VJg=;
+ b=SLjVJUob6FOrW71GhPCO4hBsH8tbAT67UgLu7FaHvh11j5/923FdCL4HlehuUa4KwZLkvec9oXtfRw0JxWRLaEs9gCygaEup/0XpvHc6KzrI/e5M1dQQa55aZd41vBTdCSNX2F+9p8oWpEdoocOMPSVwX+sPFaKBALHbjQ4WYan8YXtTg0Px2u+TPgxY0vCAnsYHVlvnTCeHvlwgzvMHIjkbUz9VqMU6Gi6dUzFN6oKROhhc5tE3+fH3k7mTcALh/sFNpkpsUx1MS2AbBxcHRXiv95JGWAogVZE/aFAVaDuB4Vzdu2FIvJNSLvVKig/ssgzeaQyd9IAw6waUVLcY+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OdkcD08jQJk7dNZiWE9XWaAftHfS5P7ZQ30oJ8l3VJg=;
+ b=1GD8Nph4PMsWiNo5gKPk7SkB+f4eTDu2/kYSNRyWZJwmal5N/9CtP7b887/AVh1VD5n+iEPWRghZgQQKsjk7CMDJLmW63EU87J9YHYjVsErpNNtcwkZjOtgljamLUBs0Alyt4ZcbTXURLMM5BfenISMVDFfuBofzqf6fGFNKq7M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
+ by IA1PR12MB6041.namprd12.prod.outlook.com (2603:10b6:208:3d7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Wed, 17 Apr
+ 2024 13:51:01 +0000
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::43a5:ed10:64c2:aba3]) by BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::43a5:ed10:64c2:aba3%7]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
+ 13:51:01 +0000
+Message-ID: <b5ecdc56-11c6-47b0-9cc1-87d384b01d0f@amd.com>
+Date: Wed, 17 Apr 2024 09:50:58 -0400
+User-Agent: Mozilla Thunderbird
+Cc: yazen.ghannam@amd.com, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
+ Avadhut.Naik@amd.com, John.Allen@amd.com
+Subject: Re: [PATCH v2 01/16] x86/mce: Define mce_setup() helpers for common
+ and per-CPU fields
+To: Borislav Petkov <bp@alien8.de>
+References: <20240404151359.47970-1-yazen.ghannam@amd.com>
+ <20240404151359.47970-2-yazen.ghannam@amd.com>
+ <20240416100206.GEZh5MnlDJMeaERfQ5@fat_crate.local>
+Content-Language: en-US
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+In-Reply-To: <20240416100206.GEZh5MnlDJMeaERfQ5@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN8PR04CA0021.namprd04.prod.outlook.com
+ (2603:10b6:408:70::34) To BN8PR12MB3108.namprd12.prod.outlook.com
+ (2603:10b6:408:40::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e762eb1-864e-4bb5-ab5d-debeac19c8fa@linaro.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|IA1PR12MB6041:EE_
+X-MS-Office365-Filtering-Correlation-Id: 028127bb-e47e-4de4-36a5-08dc5ee56a96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6SaOJAsl5sBpo+Jxr9/YzaK+h2Udh1/wpawG2kRO2S0RK4tewsVazJY9jcDTkupFPUoNIHsf+YSylqiBYYQFmLSmLDfDZy+uKRnRUMaSIQe9JJf/qE8cFhnrz+mKaC9UJicTuWCsdzV5i1V4gZ2BIo+lylmGT8pJM/iImwdR1HatsDlG8yxM+gCajUw5BGeiIeNMuqWxHmY0vAaQrg/6k1vgsstou8UAaTSLasujFMLbVxcYayCXZPnb30JbhmXFmkNHW9NZubSksVmNZ+lUSeSaRnEp7CDuCivviLZDND3YCnrIYLsLJviaMnPZoCml1n5TY0TOhIqmxMthOLumC7drvOKXttorV8P8SY9mj58zNd6NoF4/CjP0N8Bjoe1W2+OBjKggkIbv9uKImwJ3LmJYa80yS1wwQLcSTNiQYWm6uCoe8AQg0dptOXfRryB0kT7cjmTW5XFNo1wzOYjruKyaR7wAaDWOIIWpvPKd6iqs+Ag3XcXFHEMR0uwXRU4Au4AejJ5KaAmFWK3uqv6mY0cvkJWIGi5bhq8CTtHXp/ZsyGjrd64DQeMiLkGBePJMvk2px1Dh+wENtcWbJx9YW6I5AQ3FVK2e4qgqs5GX4cemblH/O4lFKjRQXQKBMnZGBXHdwY3ywMeafZjZ4rjYdNWsGpOINtdL57kxTQvohDs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WGhmZ29OcmYzakMxeTh0YzMxMHpKR2cvc2hPQXYzaktZaElnTWgzZ2grZE91?=
+ =?utf-8?B?TFZtaGU2V3poWjJPcFR1QkpjMytsWUVpUDFEQWF1YzB4ZlpzVEdVR0VtT2VY?=
+ =?utf-8?B?SWdKMzEwQkhGKzFXSXdVT3FJL200cmg5TDA4YXZ2Qng4bmtHbnFYOWV3bllz?=
+ =?utf-8?B?ZHFwcWlWUExQOS8xcGZXdTdUWlhGK2ZKS1NiTUw4d1dZeG5lL3FmSHJ5M1Br?=
+ =?utf-8?B?ZEVpbUoyZUI1bWN0YzFvZzF1YjdHcy9kT0R1bTlLd3VGRkhGWjNPTmw3aU9N?=
+ =?utf-8?B?RFFmYWdBZVZTTm9nNXdPbVNDSm9jazROeUNFUUFydFc2dU01Sy9VaG1TMkJV?=
+ =?utf-8?B?MTNlbTR6WGgzTjdZN0ZlZWFtU0cvdkgveHhoTnA0Um9ydEVkU1plOXJ4U3Fl?=
+ =?utf-8?B?MzM3S1VnRjQ4ZzdSWWVHcGlzNFVEc09HZERkanRqS010N0luRUxLSGYvRDl6?=
+ =?utf-8?B?dzZrVnhRM2FjK2hYUUcxek1MRmZ2UjB0WHFEd3ZKYzArVzQzTU5hcVB1dzN0?=
+ =?utf-8?B?WWs3N3RWTWJOd0htelZLcUFOdVc4dHVPRkViZ3AvTS8vQzdQWmZablFWbUdj?=
+ =?utf-8?B?RzZGY1F4VFFDV2F2TndGTDlza1ZwVmZ5Y2ZjdDlGbXl1azRXVkdlc1VLQldk?=
+ =?utf-8?B?MGxPOFN2eVZQaGdNTDZ2YnB1eXlzUFczZ2xwZDk2VnBrcEpwNkpDdzlGbkFF?=
+ =?utf-8?B?ZEFONEU4YUtFZnMyTkJVWDVsSDNmV0dwL1QxUG1McjJoU1lrekF0aXI4L0hi?=
+ =?utf-8?B?Smp2UTV3SVRBNmFvRTM1djJoNGRTNG1Cdlp2T3dUTDFHQUU5VVVDenR2emJv?=
+ =?utf-8?B?bGdrS2NRclE0VXdkL2UxZXdrd1JQSkdoc2V5aE5NdFhtT0ZUWWNTQVNJVUxB?=
+ =?utf-8?B?N3ZlWDhPcWRSZU50NUsxdW5jU1hLUnI4dmVqRFZDV2hzbE1HcW1RNktkYitk?=
+ =?utf-8?B?L1pzUndBZjBBNWFBSmJqZnZGZnVrK0kzaHVyNjRwWE04NHhDTUZTSUhFOGow?=
+ =?utf-8?B?cm1Lc3lPZDZJNEhEV1hTZS8rNXhlWkN5YUszbFdLRktnaktadmY4d2t5ZXBq?=
+ =?utf-8?B?UTUySTU4WEtWTlNZOWxpQzE5UWlDai84ZU42dmI2M1ZZN3BwVlhlSFFabnJY?=
+ =?utf-8?B?NzhTWTFuRGRKYzBIeW1wZmtQT2djUkhlZ3dwQksvY0VhdkM5TlhTOWpySkJK?=
+ =?utf-8?B?V011clZCV0xGNzBGQU5IZGFFdjJQK2xMb3hPTTMwWWtMWUIySGJTK2hIb3B2?=
+ =?utf-8?B?c2RpeWFFUFkvSzR4K09Va0tVNFJOcTVZQityZWJseUpmdTUzWkdlbE1CcmdD?=
+ =?utf-8?B?K2R0YUhjai9FV01lKzRFTlV3N1A1Y3JlUlIxUFhCVTRSL1RJUFJFS1djbFg1?=
+ =?utf-8?B?SE53ZkJ1QktiOWZwWEFGNCtZM085Y21tbjZpQ0FPditoSjYyczRFMTlab25Q?=
+ =?utf-8?B?Mm9rNG5ncC92RVJFQ2YyZk5WMGhRajB2QzRLMWNGSUVkYlBmbFMwWXJSZkQ0?=
+ =?utf-8?B?R01kTGZ6L05Wd2tscXpnTlEzMDkweXE5UHorTTRxQmh5K1dkTjA3WjQ1dllX?=
+ =?utf-8?B?dW1HV1BqWmV6c0lNQ3l6VXowQ1d1ak9NVkpTNHBRUFA3M2xUakZjTFBHajUr?=
+ =?utf-8?B?TXZVZkFsV3hadjNKTHdMbHRkVzFLMTM5Unl0cldRcHRhMHpneDRuTUZRbWh5?=
+ =?utf-8?B?dDVUVHZHbnRSLytJdHY2N3NFL2RJa1lmdmgvTml0dlRlRkZVTTkxQlYxTXBG?=
+ =?utf-8?B?NW5UU1ptMk1waXUzVmdkOHNVMW9mZ0d5VVM1OFlBK1NOQ29BYW5BbFJTV3NQ?=
+ =?utf-8?B?UURQSWVaaGh1c1hnN3l3UDZvVnlXcUcrYW0yd0N5UHlpSjQzb0hmcmpVTlVY?=
+ =?utf-8?B?cW5YTTd6TFNERVNFa2pvN3lGb1BNZFlYSG4wdGVabXFQUjNBTkRGMWU1Q1g2?=
+ =?utf-8?B?ZTMrQzlrRUR0bVQwZTg2MFRBK0pnM0t4YW1hT3FWQzJhMElmeW9vS0NNYTJC?=
+ =?utf-8?B?US83c0hIY2wwVXd3VGVtZktnVmRZTnhwOU1OS3phVTQ5UmN5dkk2QS9ieVlp?=
+ =?utf-8?B?QVE4d2FORnRpVURSWXIyMGppNEFVVTdDajlVYnVlVTRaUlF4WEhHMHN6WGZT?=
+ =?utf-8?Q?siLHuZ+Lc/nXwwINtr0qZQNP1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 028127bb-e47e-4de4-36a5-08dc5ee56a96
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 13:51:00.9705
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HMLllcVr1dA0UD+VfyF2z+IO5sxOpG6XG2Czut6EpTRShU4CQofTzImN0almyoi2dD1IjrWQHEr850DVQg80tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6041
 
-On Wed, Apr 17, 2024 at 03:29:26PM +0200, Krzysztof Kozlowski wrote:
-> On 16/04/2024 12:41, Suzuki K Poulose wrote:
-> > + Greg
-> > 
-> > 
-> > Hi Krzysztof,
-> > 
-> > On 30/03/2024 18:00, Krzysztof Kozlowski wrote:
-> >> On 30/03/2024 18:58, Krzysztof Kozlowski wrote:
-> >>>
-> >>> On Tue, 26 Mar 2024 21:23:30 +0100, Krzysztof Kozlowski wrote:
-> >>>> Merging
-> >>>> =======
-> >>>> All further patches depend on the first amba patch, therefore please ack
-> >>>> and this should go via one tree.
-> >>>>
-> >>>> Description
-> >>>> ===========
-> >>>> Modules registering driver with amba_driver_register() often forget to
-> >>>> set .owner field.
-> >>>>
-> >>>> [...]
-> >>>
-> >>> Applied, thanks!
-> >>>
-> >>> [01/19] amba: store owner from modules with amba_driver_register()
-> >>>          (no commit info)
-> >>
-> >> Patchset applied here:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git/log/?h=for-v6.10/module-owner-amba
-> > 
-> > How do you plan to push this ? Given this affects most of the drivers/, 
-> > do you plan to send this to Greg ? We have changes in the coresight
-> > tree that would conflict with this "tag" ( I haven't merged them yet, 
-> > but is in my local queue). I want to make sure we can avoid the
-> > conflicts. I am happy to merge this to my local tree and base the
-> > changes on this, if this is going in for v6.10 and all are in agreement.
+
+
+On 4/16/24 06:02, Borislav Petkov wrote:
+> On Thu, Apr 04, 2024 at 10:13:44AM -0500, Yazen Ghannam wrote:
+>> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+>> index b5cc557cfc37..7a857b33f515 100644
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -117,20 +117,32 @@ static struct irq_work mce_irq_work;
+>>    */
+>>   BLOCKING_NOTIFIER_HEAD(x86_mce_decoder_chain);
+>>   
+>> -/* Do initial initialization of a struct mce */
+>> -void mce_setup(struct mce *m)
+>> +void mce_setup_common(struct mce *m)
 > 
-> I pushed it to arm-linux patches but it hasn't been picked up.
+> Since we're touching this...
 > 
-> I propose you take entire set then.
+> mce_setup() is a perfectly wrong name for what it does. So let's clean
+> it up. Diff ontop below.
+> 
+> * mce_prep_record() - the name says what the function does.
+> 
+> * mce_prep_record_per_cpu() - "per_cpu" as this is a common kernel
+> concept and we do use per_cpu data in there.
+> 
+> Please do this in two patches:
+> 
+> - the first one renames mce_setup() only without adding the additional
+>    functionality
+> 
+> - the second one does the split
+> 
+> Thx.
+>
 
-You are again being, IMHO, abrasive with your attitude. So far, every
-interaction with you has been abrasive and bordering on abusive.
+Okay, will do.
 
-You haven't asked me whether I will take them. I will - just not at the
-moment because 
+Should I send another revision of this entire set? Or should I split out
+the mce_setup() patches?
 
-I HAVE MEDICAL APPOINTMENTS LAST WEEK AND THIS WEEK WHICH MEAN I AM
-NOT SPENDING ALL MY TIME ON THE KERNEL.
-
-Have some bloody patience rather than behaving in your standard
-objectionable manner.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks,
+Yazen
