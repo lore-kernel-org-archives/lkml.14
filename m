@@ -1,177 +1,410 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BD063A;
-	Wed, 17 Apr 2024 13:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AA313D89F;
+	Wed, 17 Apr 2024 13:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713361038; cv=none; b=NT9rnhONRtjgvuo3LjXvW+d7ld3ovVyMQr+nFd/Z/Xa8Hh9yOd+HrlI04apUOCcCeADHanSFxDM7/Y9gpEheQMjO365VZahIVfAisLrMy28rwOGRmzZZbyEZs7TSPCcxcHwOM1kceArgeBExKC61KZOz+fjvMgQEcRgPEd9LxrM=
+	t=1713361078; cv=none; b=chEd9zJrR+iVPIpperifyMeJWpyhZo0tcLt+LKH8ClR2Ft365nN9cZgO3xlIWMmG/r8nCWwvd2NUT+4dAdEKKCMYmoJej4HIIlsQqEYDpBFYwE77pqAFi5mchw7z/Xi9vuJcXI1jbbyZEyFcRI6ykVf4OhENPuZNUVOk2CDACo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713361038; c=relaxed/simple;
-	bh=ov8GKYua+MoHO12lS96j2dho16PVFKKVsev2w6hYUdg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QAQmeg2snOuHkOddXYm8HK+YfI2etMfVUHF+lfKHt6jfMEFikzGWRNO4vVQEO/gOYSI7FHmrRNIe1fUJu8ppWGnQanuFPeXvGhx4tIamQ/4gJVHh9d7sV3uREZI7eSW/zZqJjaByPMmezM+HIMqlOf4+/dV6aXIIqZHVEvneGTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [58.61.140.80])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id F21EA7E0125;
-	Wed, 17 Apr 2024 21:30:20 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: jonas@kwiboo.se
-Cc: amadeus@jmu.edu.cn,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add Radxa ROCK3 Model C
-Date: Wed, 17 Apr 2024 21:30:16 +0800
-Message-Id: <20240417133016.62753-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <d7de2213-8dd2-42ec-9a30-a569ac71be3e@kwiboo.se>
-References: <d7de2213-8dd2-42ec-9a30-a569ac71be3e@kwiboo.se>
+	s=arc-20240116; t=1713361078; c=relaxed/simple;
+	bh=39AHeotFYiV7LmIyRhGYC2ER5DUVYKUxHjeYw5rCVhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TlEVtGXhw996GGBiwvlX9vI/tida1TLxhMM7FBxNA0T/3KD1EemI3vyb0BVaFFaPZJeWLoABqN0nLwwnQ2UmzhhrxxxwQnr1S8BTjIcR4g7UtqxG2LQ28wZr+Z1nAiHHUKAhZO+n4dDEsNIIZaIOaYmnl8ynTH57PP1Jn67l3Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF822339;
+	Wed, 17 Apr 2024 06:38:22 -0700 (PDT)
+Received: from [10.1.39.28] (FVFF763DQ05P.cambridge.arm.com [10.1.39.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CCDD3F738;
+	Wed, 17 Apr 2024 06:37:52 -0700 (PDT)
+Message-ID: <eadfc969-cd41-4dbc-85ff-8d6f8e318837@arm.com>
+Date: Wed, 17 Apr 2024 14:37:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZH09NVklOSBgZGEofQhoYTVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWU5DVU1KVUpPS1VDS1lXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
-X-HM-Tid: 0a8eec404ea403a2kunmf21ea7e0125
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzY6KTo4QzMQFQFWPjwCCC46
-	SyJPCShVSlVKTEpISE1LTUlKTUJLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWU5D
-	VU1KVUpPS1VDS1lXWQgBWUFPT0xINwY+
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/43] arm64: RME: RTT handling
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
+ <20240412084309.1733783-14-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240412084309.1733783-14-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Jonas,
->> +	model = "Radxa ROCK3 Model C";
->
-> The marketing name seems to be "Radxa ROCK 3C" according to the product
-> page at [1].
->
-> [1] https://radxa.com/products/rock3/3c
+Hi Steven
 
-According to https://wiki.radxa.com/Rock3/3c , it should be called
-"Radxa ROCK 3 Model C". I copied rock3a here without paying attention.
+minort nit, Subject: arm64: RME: RTT tear down
 
->> +	compatible = "radxa,rock3c", "rockchip,rk3566";
->
-> A personal preference would be to match the product name and the dtb
-> filename, e.g. "radxa,rock-3c".
+This patch is all about tearing the RTTs, so may be the subject could
+be adjusted accordingly.
 
-I thought so too, here is also copied from rock3a.
-I think rock3a needs fixing too?
+On 12/04/2024 09:42, Steven Price wrote:
+> The RMM owns the stage 2 page tables for a realm, and KVM must request
+> that the RMM creates/destroys entries as necessary. The physical pages
+> to store the page tables are delegated to the realm as required, and can
+> be undelegated when no longer used.
+> 
+> Creating new RTTs is the easy part, tearing down is a little more
+> tricky. The result of realm_rtt_destroy() can be used to effectively
+> walk the tree and destroy the entries (undelegating pages that were
+> given to the realm).
 
->> +		led_user: led-0 {
-> This is called user_led2 in the schematic, in case we want the symbol
-> to match the schematic.
+The patch looks functionally correct to me. Some minor style related
+comments below.
 
->> +		regulator-name = "vcc5v0_usb_host";
-> This regulator is named vcc5v0_usb30_host in schematic.
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-Thanks, I will fix it.
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |  19 ++++
+>   arch/arm64/kvm/mmu.c             |   6 +-
+>   arch/arm64/kvm/rme.c             | 171 +++++++++++++++++++++++++++++++
+>   3 files changed, 193 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index fba85e9ce3ae..4ab5cb5e91b3 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -76,5 +76,24 @@ u32 kvm_realm_ipa_limit(void);
+>   int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
+>   int kvm_init_realm_vm(struct kvm *kvm);
+>   void kvm_destroy_realm(struct kvm *kvm);
+> +void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
+> +
+> +#define RME_RTT_BLOCK_LEVEL	2
+> +#define RME_RTT_MAX_LEVEL	3
+> +
+> +#define RME_PAGE_SHIFT		12
+> +#define RME_PAGE_SIZE		BIT(RME_PAGE_SHIFT)
+> +/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
+> +#define RME_RTT_LEVEL_SHIFT(l)	\
+> +	((RME_PAGE_SHIFT - 3) * (4 - (l)) + 3)
+> +#define RME_L2_BLOCK_SIZE	BIT(RME_RTT_LEVEL_SHIFT(2))
+> +
+> +static inline unsigned long rme_rtt_level_mapsize(int level)
+> +{
+> +	if (WARN_ON(level > RME_RTT_MAX_LEVEL))
+> +		return RME_PAGE_SIZE;
+> +
+> +	return (1UL << RME_RTT_LEVEL_SHIFT(level));
+> +}
+> 
 
->> +		#clock-cells = <1>;
->> +		clock-names = "mclk";
->> +		clocks = <&cru I2S1_MCLKOUT_TX>;
->
-> I think clock-output-names may be missing? Something like:
->
->  clock-output-names = "rk809-clkout1", "rk809-clkout2";
+super minor nit: We only support 4K for now, so may be could reuse
+the ARM64 generic macro helpers. I am fine either way.
 
-Thanks, I'll add it in the next patch.
 
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pmic_int_l>, <&i2s1m0_mclk>;
->> +		rockchip,system-power-controller;
+>   #endif
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index af4564f3add5..46f0c4e80ace 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1012,17 +1012,17 @@ void stage2_unmap_vm(struct kvm *kvm)
+>   void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>   {
+>   	struct kvm *kvm = kvm_s2_mmu_to_kvm(mmu);
+> -	struct kvm_pgtable *pgt = NULL;
+> +	struct kvm_pgtable *pgt;
+>   
+>   	write_lock(&kvm->mmu_lock);
+> +	pgt = mmu->pgt;
+>   	if (kvm_is_realm(kvm) &&
+>   	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
+>   	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
+> -		/* TODO: teardown rtts */
+>   		write_unlock(&kvm->mmu_lock);
+> +		kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+>   		return;
+>   	}
+> -	pgt = mmu->pgt;
+>   	if (pgt) {
+>   		mmu->pgd_phys = 0;
+>   		mmu->pgt = NULL;
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 9652ec6ab2fd..09b59bcad8b6 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -47,6 +47,53 @@ static int rmi_check_version(void)
+>   	return 0;
+>   }
+>   
+> +static phys_addr_t __alloc_delegated_page(struct realm *realm,
+> +					  struct kvm_mmu_memory_cache *mc,
+> +					  gfp_t flags)
 
-> I think this prop is deprecated and system-power-controller
-> should be used instead.
+minor nit: Do we need "__" here ? The counter part is plain 
+free_delegated_page without the "__". We could drop the prefix
 
->> +				regulator-state-mem {
->> +					regulator-on-in-suspend;
->> +					regulator-suspend-microvolt = <900000>;
+Or we could split the function as:
 
-> Not sure we need this in suspend to ram and this can probably use:
->
->  regulator-off-in-suspend
->
-> That is also what vendor kernel does.
+alloc_delegated_page()
+{
+   if (spare_page_available)
+	return spare_page;
+   return __alloc_delegated_page(); /* Alloc and delegate a page */
+}
 
-Will be corrected in the next patch.
 
->> +			vcc3v3_sd: SWITCH_REG2 {
->> +				regulator-name = "vcc3v3_sd";
->> +				regulator-always-on;
->> +				regulator-boot-on;
->
-> If I am reading the schematic correctly this is not connected.
+> +{
+> +	phys_addr_t phys = PHYS_ADDR_MAX;
+> +	void *virt;
+> +
+> +	if (realm->spare_page != PHYS_ADDR_MAX) {
+> +		swap(realm->spare_page, phys);
+> +		goto out;
+> +	}
+> +
+> +	if (mc)
+> +		virt = kvm_mmu_memory_cache_alloc(mc);
+> +	else
+> +		virt = (void *)__get_free_page(flags);
+> +
+> +	if (!virt)
+> +		goto out;
+> +
+> +	phys = virt_to_phys(virt);
+> +
+> +	if (rmi_granule_delegate(phys)) {
+> +		free_page((unsigned long)virt);
+> +
+> +		phys = PHYS_ADDR_MAX;
+> +	}
+> +
+> +out:
+> +	return phys;
+> +}
+> +
+> +static void free_delegated_page(struct realm *realm, phys_addr_t phys)
+> +{
+> +	if (realm->spare_page == PHYS_ADDR_MAX) {
+> +		realm->spare_page = phys;
+> +		return;
+> +	}
+> +
+> +	if (WARN_ON(rmi_granule_undelegate(phys))) {
+> +		/* Undelegate failed: leak the page */
+> +		return;
+> +	}
+> +
+> +	free_page((unsigned long)phys_to_virt(phys));
+> +}
+> +
+>   u32 kvm_realm_ipa_limit(void)
+>   {
+>   	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
+> @@ -124,6 +171,130 @@ static int realm_create_rd(struct kvm *kvm)
+>   	return r;
+>   }
+>   
+> +static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
+> +			     int level, phys_addr_t *rtt_granule,
+> +			     unsigned long *next_addr)
+> +{
+> +	unsigned long out_rtt;
+> +	unsigned long out_top;
+> +	int ret;
+> +
+> +	ret = rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
+> +			      &out_rtt, &out_top);
+> +
+> +	if (rtt_granule)
+> +		*rtt_granule = out_rtt;
+> +	if (next_addr)
+> +		*next_addr = out_top;
 
-Yes, I didn't notice it was NC, thanks.
+minor nit: As mentioned in the previous patch, we could move this check 
+to the rmi_rtt_destroy().
 
->> +&sdhci {
->> +	bus-width = <8>;
->> +	max-frequency = <200000000>;
-> This board support HS200, please add:
->
->  mmc-hs200-1_8v
+> +
+> +	return ret;
+> +}
+> +
+> +static int realm_tear_down_rtt_level(struct realm *realm, int level,
+> +				     unsigned long start, unsigned long end)
+> +{
+> +	ssize_t map_size;
+> +	unsigned long addr, next_addr;
+> +
+> +	if (WARN_ON(level > RME_RTT_MAX_LEVEL))
+> +		return -EINVAL;
+> +
+> +	map_size = rme_rtt_level_mapsize(level - 1);
+> +
+> +	for (addr = start; addr < end; addr = next_addr) {
+> +		phys_addr_t rtt_granule;
+> +		int ret;
+> +		unsigned long align_addr = ALIGN(addr, map_size);
+> +
+> +		next_addr = ALIGN(addr + 1, map_size);
+> +
+> +		if (next_addr <= end && align_addr == addr) {
+> +			ret = realm_rtt_destroy(realm, addr, level,
+> +						&rtt_granule, &next_addr);
+> +		} else {
+> +			/* Recurse a level deeper */
+> +			ret = realm_tear_down_rtt_level(realm,
+> +							level + 1,
+> +							addr,
+> +							min(next_addr, end));
+> +			if (ret)
+> +				return ret;
+> +			continue;
+> +		}
 
-Will be added in the next patch.
+I think it would be better readable if we did something like :
 
->> +&sdmmc0 {
->> +	bus-width = <4>;
->> +	cap-sd-highspeed;
->> +	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
->
-> Please drop the cd-gpios prop, sdmmc0_det is used below and
-> works fine on this board.
+		/*
+		 * The target range is smaller than what this level
+		 * covers. Go deeper.
+		 */
+		if (next_addr > end || align_addr != addr) {
+			ret = realm_tear_down_rtt_level(realm,
+							level + 1, addr,
+							min(next_addr, end));
+			if (ret)
+				return ret;
+			continue;
+		}
 
-Do other rk356x boards also need this change?
+		ret = realm_rtt_destroy(realm, addr, level,
+					&rtt_granule, &next_addr);
+		
+> +
+> +		switch (RMI_RETURN_STATUS(ret)) {
+> +		case RMI_SUCCESS:
+> +			if (!WARN_ON(rmi_granule_undelegate(rtt_granule)))
+> +				free_page((unsigned long)phys_to_virt(rtt_granule));
+> +			break;
+> +		case RMI_ERROR_RTT:
+> +			if (next_addr > addr) {
+> +				/* unassigned or destroyed */
 
->> +	sd-uhs-sdr50;
->
-> Why limit to sdr50? and not use sd-uhs-sdr104?
+minor nit:
+				/* RTT doesn't exist, skip */
 
-The sdr104 mode is not stable on the rk356x platform.
-This problem has been reported on both rock3a and e25 boards.
+> +				break;
+> +			}
 
->> +	vmmc-supply = <&vcc3v3_sd>;
->
-> If I read the scematics correctly this is using the
-> vcc3v3_sys regulator and not the vcc3v3_sd.
+> +			if (WARN_ON(RMI_RETURN_INDEX(ret) != level))
+> +				return -EBUSY;
 
-Yes, you are right. I didn't notice it, thanks.
+In practise, we only call this for the full IPA range and we wouldn't go 
+deeper, if the top level entry was missing. So, there is no reason why
+the RMM didn't walk to the requested level. May be we could add a 
+comment here :
+			/*
+			 * We tear down the RTT range for the full IPA
+			 * space, after everything is unmapped. Also we
+			 * descend down only if we cannot tear down a
+			 * top level RTT. Thus RMM must be able to walk
+			 * to the requested level. e.g., a block mapping
+			 * exists at L1 or L2.
+			 */
 
->> +&sfc {
->
-> This is missing pinctrl:
->
->  pinctrl-names = "default";
->  pinctrl-0 = <&fspi_pins>;
+> +			if (WARN_ON(level == RME_RTT_MAX_LEVEL)) {
+> +				// Live entry
+> +				return -EBUSY;
 
-This is already defined on rk356x.dtsi:
 
-	sfc: spi@fe300000 {
-		compatible = "rockchip,sfc";
-		......
-		pinctrl-0 = <&fspi_pins>;
-		pinctrl-names = "default";
-		status = "disabled";
-	};
+The first part of the comment above applies to this. So may be it is
+good to have it.
 
->> +		spi-max-frequency = <104000000>;
->
-> My board is using a GD25LQ128EWIGR same as mentioned in the schematic,
-> and datasheet for this flash chip menion 120 mhz and not 104 mhz.
 
-Will be corrected in the next patch, thanks.
+> +			}
 
-Thanks,
-Chukun
+> +			/* Recurse a level deeper */
+
+minor nit:
+			/*
+			 * The table has active entries in it, recurse
+			 * deeper and tear down the RTTs.
+			 */
+
+> +			next_addr = ALIGN(addr + 1, map_size);
+> +			ret = realm_tear_down_rtt_level(realm,
+> +							level + 1,
+> +							addr,
+> +							next_addr);
+> +			if (ret)
+> +				return ret;
+> +			/* Try again at this level */
+
+			/*
+			 * Now that the children RTTs are destroyed,
+			 * retry at this level.
+			 */
+> +			next_addr = addr;
+> +			break;
+> +		default:
+> +			WARN_ON(1);
+> +			return -ENXIO;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int realm_tear_down_rtt_range(struct realm *realm,
+> +				     unsigned long start, unsigned long end)
+> +{
+> +	return realm_tear_down_rtt_level(realm, get_start_level(realm) + 1,
+> +					 start, end);
+> +}
+> +
+> +static void ensure_spare_page(struct realm *realm)
+> +{
+> +	phys_addr_t tmp_rtt;
+> +
+> +	/*
+> +	 * Make sure we have a spare delegated page for tearing down the
+> +	 * block mappings. We do this by allocating then freeing a page.
+> +	 * We must use Atomic allocations as we are called with kvm->mmu_lock
+> +	 * held.
+> +	 */
+> +	tmp_rtt = __alloc_delegated_page(realm, NULL, GFP_ATOMIC);
+> +
+> +	/*
+> +	 * If the allocation failed, continue as we may not have a block level
+> +	 * mapping so it may not be fatal, otherwise free it to assign it
+> +	 * to the spare page.
+> +	 */
+> +	if (tmp_rtt != PHYS_ADDR_MAX)
+> +		free_delegated_page(realm, tmp_rtt);
+> +}
+> +
+> +void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits)
+> +{
+> +	struct realm *realm = &kvm->arch.realm;
+> +
+> +	ensure_spare_page(realm);
+> +
+> +	WARN_ON(realm_tear_down_rtt_range(realm, 0, (1UL << ia_bits)));
+> +}
+
+minor nit: We don't seem to be using the "spare_page" yet in this patch. 
+May be a good idea to move all the related changes 
+(alloc_delegated_page() / free_delegated_page, ensure_spare_page() etc)
+to the patch where it may be better suited ?
+
+Suzuki
+
+> +
+>   /* Protects access to rme_vmid_bitmap */
+>   static DEFINE_SPINLOCK(rme_vmid_lock);
+>   static unsigned long *rme_vmid_bitmap;
+
