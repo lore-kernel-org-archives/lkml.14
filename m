@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD84C6FA8
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD87C6FB6
 	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 02:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713320287; cv=none; b=HQPwky8/hWT2oWdexvXyCCshv7wffwXuorl+k3xb/BvBgDK6CHXIAUUqYadt8CzosGvOkq7s/CcA9xnuM6ZLpaHJQo8/NlT4VVESUqJoha4mkV/68mtG2Dnugx+9Jd1MsCecMEywnZxBFFarw3wajHtOgf3KS5s/VJW3qf7gRvo=
+	t=1713320289; cv=none; b=CK72TV8ZIG3x1H+Uc08mIN9b652yjuYC9Tda2ivQ53XWK/KHry1SV/cDF+TKlI/uybb2s6RHhW13fQdgkWz6TIZqW0L1ldaZIMAFNqR+V7UbMdmzchvpzhKpNL7sYC17U+bX0i7HNipynph9hBwT2wbpslUmfetgiRqfjUzL5eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713320287; c=relaxed/simple;
-	bh=XUaNsGATuHxrKeHapXBodzbAmy25ZcO6OiFj4IeKk8U=;
+	s=arc-20240116; t=1713320289; c=relaxed/simple;
+	bh=/SO840AEl81tVqOpKLj0LFCellVuUI3o75OIgbzWhSQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hDPcM404MQJH6W7cVOWkxEiyulrXw4MemB3MwHAtZ/WsjkQDo4B0UsRZ/6ni6cWHbvVTE9v7onXFTzgxSBE1v2KocJBHWlrcmuZOV31jUkJuXONusy10/b2KmBA+94mTo2ZbCKCRIUUyG7C1/0lVBJIRsW3923xvDpsUWmDVUyc=
+	 MIME-Version; b=maxBd+C3PYsgPkbfHITSPmJxWK5IBjS3NtL/tHUK244A0tBNibLEUzAlA3TBKVWD/Hz6jY0Q27oukkl6qSOraSZCky3rYL1qqAy3Z9CkBPluV3l8m9/GSDT21P2XH54KPQdbmbVjLxp8hWSeUBo9AAq9TwT7sC8QQjikBgfwXwU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF041DA7;
-	Tue, 16 Apr 2024 19:18:26 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E958B153B;
+	Tue, 16 Apr 2024 19:18:32 -0700 (PDT)
 Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.43.7])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8EAB53F64C;
-	Tue, 16 Apr 2024 19:17:56 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 98E903F64C;
+	Tue, 16 Apr 2024 19:18:02 -0700 (PDT)
 From: Anshuman Khandual <anshuman.khandual@arm.com>
 To: linux-arm-kernel@lists.infradead.org,
 	catalin.marinas@arm.com
@@ -25,9 +25,9 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
 	Will Deacon <will@kernel.org>,
 	Mark Brown <broonie@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] arm64/sysreg: Add register fields for MDSELR_EL1
-Date: Wed, 17 Apr 2024 07:47:44 +0530
-Message-Id: <20240417021747.2361382-2-anshuman.khandual@arm.com>
+Subject: [PATCH 3/4] arm64/sysreg: Add register fields for HDFGWTR2_EL2
+Date: Wed, 17 Apr 2024 07:47:46 +0530
+Message-Id: <20240417021747.2361382-4-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240417021747.2361382-1-anshuman.khandual@arm.com>
 References: <20240417021747.2361382-1-anshuman.khandual@arm.com>
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This adds register fields for MDSELR_EL1 as per the definitions based
+This adds register fields for HDFGWTR2_EL2 as per the definitions based
 on DDI0601 2024-03.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
@@ -50,31 +50,47 @@ Cc: linux-kernel@vger.kernel.org
 Reviewed-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- arch/arm64/tools/sysreg | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/tools/sysreg | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index a4c1dd4741a4..4c58fd7a70e6 100644
+index 9bcd8a0d55c4..c38414352dd8 100644
 --- a/arch/arm64/tools/sysreg
 +++ b/arch/arm64/tools/sysreg
-@@ -93,6 +93,17 @@ Res0	63:32
- Field	31:0	DTRTX
+@@ -2472,6 +2472,33 @@ Field	1 nPMIAR_EL1
+ Field	0 nPMECR_EL1
  EndSysreg
  
-+Sysreg	MDSELR_EL1	2	0	0	4	2
-+Res0	63:6
-+Enum	5:4	BANK
-+	0b00	BANK_0
-+	0b01	BANK_1
-+	0b10	BANK_2
-+	0b11	BANK_3
-+EndEnum
-+Res0	3:0
++Sysreg HDFGWTR2_EL2	3	4	3	1	1
++Res0	63:24
++Field	23 nMDSTEPOP_EL1
++Field	22 nTRBMPAM_EL1
++Field	21 nPMZR_EL0
++Field	20 nTRCITECR_EL1
++Field	19 nPMSDSFR_EL1
++Res0	18:17
++Field	16 nSPMSCR_EL1
++Field	15 nSPMACCESSR_EL1
++Field	14 nSPMCR_EL0
++Field	13 nSPMOVS
++Field	12 nSPMINTEN
++Field	11 nSPMCNTEN
++Field	10 nSPMSELR_EL0
++Field	9 nSPMEVTYPERn_EL0
++Field	8 nSPMEVCNTRn_EL0
++Field	7 nPMSSCR_EL1
++Res0	6
++Field	5 nMDSELR_EL1
++Field	4 nPMUACR_EL1
++Field	3 nPMICFILTR_EL0
++Field	2 nPMICNTR_EL0
++Field	1 nPMIAR_EL1
++Field	0 nPMECR_EL1
 +EndSysreg
 +
- Sysreg	OSECCR_EL1	2	0	0	6	2
- Res0	63:32
- Field	31:0	EDECCR
+ Sysreg HDFGRTR_EL2	3	4	3	1	4
+ Field	63	PMBIDR_EL1
+ Field	62	nPMSNEVFR_EL1
 -- 
 2.25.1
 
