@@ -1,111 +1,79 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A856383AC
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3736208D1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713380403; cv=none; b=Lni3EaMGzFpqkbGCTfnbp2nqDQnsnlTks2ENptaisZtP33wXZtQyVuzgyJaLIKChEFN6DTSOxGh5+SsWPwhsZswFItl/twNrWjIIXOCsPKRPXO2najW7UzeMMztan6QGuUE8byWHc4ReTkJAi6RdGbSZjCe/+q8TpdmBHnZTT/U=
+	t=1713380448; cv=none; b=WPQLfyOdXBggNR1GKPpymDI3DtGrD0y6fWZsZXuIutUDNGYAvW0enmVUQare0W2M24NLHNJp51YeVxaOOMYAt2ASWQAGY20HAS5kXQ+AgU3DECISF0DtWjK45yBYmheqgaSY21TIPMUB+H3UmpDOncy/jf6B0ay2R34daU7gqbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713380403; c=relaxed/simple;
-	bh=tuV+qPoXQpGm4H3YRj7CO/TxtGIzN2KTYn38mOU54hA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AvXXLVYVw30wlnSf+L18MmawYX9GUjqwbqmSuC+y+Igi5fXif252MESWpBbWvezKWodXG2GRpW7zRX8n3TJSQ0Jn6w6n0XteAlZAA3OOOeMFkJrGZ6VgEFGGCP8r+a1X+9DBp9ryn7454X56TvPVl3H4FbJs/paDZdqGEAGsEmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mI0r/4up; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1713380448; c=relaxed/simple;
+	bh=01o4dHuglQVsTu+PcICGhK6gJNVEOr86+0KoEPkkiwE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bVGlXaYEyy5OhB+p5o0KJtZacvefYiAIiIMRmY8HYmYi4JN6qHwyqc9xDz/dZ1gYD3H162K5DlLm2/zaPWBQqZLOJc0v4dblyzsH5hRGbEWHGjznH8/b0OLOgjmQ/33Phi4JYeUeePUcvPq7zFY6kgGLXqyw4ULVsEGZhkn3x6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DGAuJXJH; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mI0r/4up"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HHiM9Y005952;
-	Wed, 17 Apr 2024 18:59:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=9v67SsM86RHd+fq1rQ349Md4AubcsHfvAyQsA3MVFJM=;
- b=mI0r/4up/xr2QNH8dwUyZLCnu1R4MSJh0AJkbntUZCyCbfBojepeT/Zf+snMF1aHjOze
- F/ilLS91wus6BeNIstW/DWGkt9tI6a+u5Xvj1z0faMQyVznEqH9oAfeWT+4mgUczC3d8
- 68H0Cm521xUDy7Q0GKID0TBPqaaeT7A4DdLQJlQKlk+zAUdnb7d9KMO33k47aN8CIflI
- lPL8XPzFn/kibEDUL5J9V/m4GFeJoIyR4Kc0RMSWDuaEQNa7Y6JWlbJiHZRZKxkmwKL4
- J8x/2B0uo43PcksMl63/F5S5QJYgL/cTuCzi8cl1Q7YKTjSBv89plNap6IblYvk1K5HJ ew== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfhxbrjx6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 18:59:48 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43HIZmGN012528;
-	Wed, 17 Apr 2024 18:59:40 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xgkwhbxj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 18:59:40 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HIxdmp026239;
-	Wed, 17 Apr 2024 18:59:39 GMT
-Received: from jfwang-mac.us.oracle.com (dhcp-10-65-140-165.vpn.oracle.com [10.65.140.165])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xgkwhbxhc-1;
-	Wed, 17 Apr 2024 18:59:39 +0000
-From: Jianfeng Wang <jianfeng.w.wang@oracle.com>
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, cl@linux.com, vbabka@suse.cz,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        junxiao.bi@oracle.com
-Subject: [PATCH v2 0/1] slub: limit number of slabs to scan in count_partial()
-Date: Wed, 17 Apr 2024 11:59:37 -0700
-Message-ID: <20240417185938.5237-1-jianfeng.w.wang@oracle.com>
-X-Mailer: git-send-email 2.42.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DGAuJXJH"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61afa75cf5aso235707b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 12:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713380446; x=1713985246; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfxuAXuPWvmyvdr5+9PlGKbmbBIGocadn3UYl5buNro=;
+        b=DGAuJXJHt2t0zZ8ltnhwKwfgn14v3+WiMvgNUk98MrvXsIBZ1Gk4XsTE12jXGCqMKH
+         N8UUoE5cFCMtkrpBnSpK6dFPgGSOd7IU6rUqhUrj0hr1aGV4s2xtJRNteKHCd5nEG9cP
+         r2qEfWb0k1B9iEEqHBMdvRqsZ/5GEIX85pdD2dpUYVVej2TFl3LnkjOPvlfNcQaFdMbl
+         nEGOADzQqw6M/E/wBX4E9HnTT4bu0AC+MlWkO87R0E/c7eA+pfVOPMxjrvv2PEZe5dLD
+         CdK9xfbVr+EP1Z6yW+R1IQ/KDy/uRtsf0Uwc1+hq8+FE27D1l9xjpyKbpOKM85TXzaoE
+         ib7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713380446; x=1713985246;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfxuAXuPWvmyvdr5+9PlGKbmbBIGocadn3UYl5buNro=;
+        b=NqbWvAUN8I9M8qSKBRSL5UHr3yNM1MzBC1WQ4A3ecDfWs7yMu/BDBV8JlaXhtLZ9rJ
+         1dqr3ca3JgYHA8S5JMoj4jX2T1HFL7qn0WrubXtGJH9v5iZvEIuuGJvplgmPXv3hAuFS
+         QhJcxmR3SyB2xP18TFdFgVHJKTdaian71rLEFqBNu1fiW++BpizuOfECzAYORnIxO3w1
+         FmTuiDai7xvu61gPrDIjyePaz1SbbBOSZ9f2sE92GKnSyqpt1k13C6b9U+wmyvRZCr+a
+         UtLe6ESTwfN1mGPqQ+j3XMh9Z/kKkUTa+gvGHf9qXzH1AtpHxyFN3yek+lIA4GH2PM3+
+         9whg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEmjQzJdolNmXMZsKS7/UBzEH5utA0MrcBtasLP83JKbrdJoylAJn/BKyBMQpY5okCjwryt87Rw0DoiX8Iuwyu8ORb1dQRb7cSXy12
+X-Gm-Message-State: AOJu0YyTq9Qobvaqqhn2iLRD9jtl1ucVNwQyyGAlIlVX6kYmhDLYEPRl
+	EjKp9X2NhjO/iiiumhOquiRiQgVLnEB4hhlVH0RoVKNcrr+2G/RX0TAHCoaMfO5UICc/otdxJFn
+	QvQ==
+X-Google-Smtp-Source: AGHT+IF1El6IZGCeA7PMlSPFtdTtFo9BlftsZ/Xw0iunvnYRq58iSoQFWMf5DXWl+OqcrZTERay510JNjxo=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:ccc7:0:b0:618:859e:3f01 with SMTP id
+ o190-20020a0dccc7000000b00618859e3f01mr21635ywd.6.1713380445908; Wed, 17 Apr
+ 2024 12:00:45 -0700 (PDT)
+Date: Wed, 17 Apr 2024 12:00:44 -0700
+In-Reply-To: <20240416211941.9369-32-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_16,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404170136
-X-Proofpoint-ORIG-GUID: OGG2cmFhFCqRvHMNTfKVATP0M2zuI7z7
-X-Proofpoint-GUID: OGG2cmFhFCqRvHMNTfKVATP0M2zuI7z7
+Mime-Version: 1.0
+References: <20240416211941.9369-1-tony.luck@intel.com> <20240416211941.9369-32-tony.luck@intel.com>
+Message-ID: <ZiAcXCQBy3rBFKOF@google.com>
+Subject: Re: [PATCH v3 31/74] x86/cpu/vfm: Update arch/x86/kvm/vmx/vmx.c
+From: Sean Christopherson <seanjc@google.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
 
-This patch fixes a known issue in get_slabinfo() which relies on
-count_partial() to get the exact count of free objects in a
-kmem_cache_node's partial list. For some slub caches, their per-node
-partial list can be extremely long. The current version of
-count_partial() traverses the partial list to get the exact count of
-objects while holding the kmem_cache_node's spinlock. This process
-may take a long time, during which slab allocations are blocked and
-IRQs are disabled. In production workloads, even NMI watchdog can be
-triggered due to this matter. Moreover, getting the exact count of
-objects may not be useful as well: the count may change right after
-the spinlock is released and re-captured by others.
+For the scope:
 
-The proposed fix is to limit the number of slabs to scan, and output
-an approximated object count for a long partial list. The v1 patch
-counts N slabs from the list's head and then uses it to approximate
-the total object count in the list. As suggested by Vlastimil, an
-alternative method, i.e., counting N/2 from both the list's head and
-tail, produces a more accurate approximation after the partial list
-is sorted by kmem_cache_shrink().
+  KVM: VMX:
 
----
-Changes since v1 [1]
- - Update the approximation method by counting from the list's head and tail
- - Cap the approximation by the total object count
- - Update the commit message to add benchmark results and explain the choice
+On Tue, Apr 16, 2024, Tony Luck wrote:
+> New CPU #defines encode vendor and family as well as model.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
 
-[1] https://lore.kernel.org/linux-mm/20240411164023.99368-1-jianfeng.w.wang@oracle.com/
-
-Thanks,
---Jianfeng
-
-Jianfeng Wang (1):
-  slub: limit number of slabs to scan in count_partial()
-
- mm/slub.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
-
--- 
-2.42.1
-
+Acked-by: Sean Christopherson <seanjc@google.com>
