@@ -1,103 +1,267 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC4F13959C;
-	Wed, 17 Apr 2024 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EE31422DF;
+	Wed, 17 Apr 2024 15:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366771; cv=none; b=lanSa5Tb4QifFOrTCp5y0OEkD8RazuNL4dJh6lWiGB1nc3SF1o/cThF961XZI9zFi00bO+m07c6JjjVMJy21RSH5uE3K5C+QSex+zbHhx4kLf3SgyByXhIKhICmQ/B2TlmOIxBNKE6L6/hgoR0JINp8XDLBVJ3428VjgGEQMHo8=
+	t=1713366782; cv=none; b=ixd8hU7/YLOuz9m9nHXTn/o3SwaOYRQDGurq2CEXeaK8dWdaFdz7j1/f29vwAjlFVWjVStoRJRxAg+i5txIp8ZibKCj67XsXJRQdHz99NLAmi3a0StEZEGWm0ktHwyTzFsKTCfNZLmUFJRoPE0oBx5hXVJkxR85h4Nb4YtLpNPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366771; c=relaxed/simple;
-	bh=SbS9sbvUTV9VYHCOQgg59EfOF3qI1Jv3FdNGo46zwRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eD//omjM9wHONeIOAFBRxTqDanNcxpTepkW7Zh4rRwrgPa5nbl6whHbzRQGEKVsgXgoyEFt1+gZNTlMJ0wZUq/mtQ6a88eJ7taFy+h/gUKNIIx/xtIzK1z1XMaHLmcYVBIRhRjYFu1lRo5vzLrR63s5kfcDSywB2+Z7G3cdbJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iya0By3K; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iya0By3K"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78f00cd23bbso15377885a.3;
-        Wed, 17 Apr 2024 08:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713366769; x=1713971569; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i/Kqg25OD7el4VbnET2f/iEY4sym/XMc8MT/TsAp6ro=;
-        b=Iya0By3KJnFwOCE+Qd3wqGOZicyzPVjH39i+LzX9C7Q/ggqAhyZ8VhgHyZ/hANtkQ4
-         9O+s8jpjAptQA/otJNCrx3YLKmpn5osJUNBhvGGMh3BpMBYbYMynaqUBZ4bhy2kWYTb6
-         BhVt/WEIMXV8nUq/W5yL3ayw/8WJFSNXCfIm4YQRzEDvHzFmzfgXyO+dUi3z0TUoEyzm
-         CVllldA1C2Glbz35w/mqDj7LdxgZJAtM/XKOUB4WTcKk1a7zUCOpt5VppCehIiIGAqCC
-         hAOPJMNvbtrnKu6AugrXJc1sF/dwNEasOjuFEGk2AB/B8C9S+P2YQGJ+QD4x325T0WFl
-         /+xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713366769; x=1713971569;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/Kqg25OD7el4VbnET2f/iEY4sym/XMc8MT/TsAp6ro=;
-        b=jFy644Acr/nHdFKsPkrKR7itdtKIEjFNitlxDzCKktNt48k66X0W4y8PNcHKsJR2p5
-         U6jUbz/2njsk10GzabPNe85ykILVLD0Ry0sclUzR49hi1jv4RZZB7PxSw3Y1xvGDDGtF
-         Cnf6Vp4Vs/e3MOdIqkJ5xax8BcsFlDQAswEMbYJQ6vxskWShjaFqhrJok9VggW3opsvK
-         yMgg5g3qgpq1PzIwyfbK9ZFm99nfViAr5JgRNA5JOuW5M0fsLPd23SiuDJzqF8gZrXFi
-         IDb9Gt75eLeC5JbzvenSbJK0Qfi/UO9FSCQfH+2CemRZCe51F7ZtaEX/67DfbnugmUFq
-         8YrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1KOfyo5i1aKjjBc/8MJd7DOzAbhS17/alavndWy+fnKC+uGkKlkS+xug+Sk8gMRRTHCdaZO7h5T7U/ApUXHZ9NBeK3QIQpUX9HnIUkiy8OqxnUw28qqpjWRmWI4vdu4f7IHKt44GCwX2qmhlg
-X-Gm-Message-State: AOJu0Yz7LSr09WsMa5bi5Ope+iEn7w+vDkJ6sWkzgQ9MmonfzZGU9Occ
-	evRXT3oqZscEgihPsXlst3WsN+N62Xt+Eyb5sX4eKRgkhnwZrzBhDcHMrA==
-X-Google-Smtp-Source: AGHT+IGgXCPX4SFSX0LoPWrYdzcEVAKN1ayBc3HBTx/9RXK9xl8obu1EohtRCQkoPreDBhZGQsQyDQ==
-X-Received: by 2002:a05:622a:58f:b0:436:7545:50f3 with SMTP id c15-20020a05622a058f00b00436754550f3mr18868247qtb.2.1713366768865;
-        Wed, 17 Apr 2024 08:12:48 -0700 (PDT)
-Received: from [172.16.102.219] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id d19-20020ac86693000000b00434f6c1458bsm8142169qtp.17.2024.04.17.08.12.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Apr 2024 08:12:48 -0700 (PDT)
-Message-ID: <9f6d22cb-2170-4b80-912a-cfee18381b43@gmail.com>
-Date: Wed, 17 Apr 2024 16:12:45 +0100
+	s=arc-20240116; t=1713366782; c=relaxed/simple;
+	bh=BeDNJBDbd5gDvNAksWz9QTioMUv2ML9Z12n2HjGKv1Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gxDwHucQVpHouhQYbHHLzrt99/KuqR8NRNN5McgAM7U2Cd30LkDNbT3/JoKwy714Cijya1E6zKxl8G21yEpaU2fEfAlXoXGqqNCN3VRHnAQ4RXtdf7u3Yl0Zpf00RXDkYGqCcHMtq41qx4l1Xqd4RRym6KO0jyrHGFB4QoY2QYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKPVn2X6Wz6H6tJ;
+	Wed, 17 Apr 2024 23:10:57 +0800 (CST)
+Received: from lhrpeml100004.china.huawei.com (unknown [7.191.162.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id A17CF140B54;
+	Wed, 17 Apr 2024 23:12:57 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ lhrpeml100004.china.huawei.com (7.191.162.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 16:12:57 +0100
+Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
+ lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.035;
+ Wed, 17 Apr 2024 16:12:57 +0100
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>
+CC: "joro@8bytes.org" <joro@8bytes.org>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>
+Subject: RE: [PATCH v5 6/6] iommu/tegra241-cmdqv: Limit CMDs for guest owned
+ VINTF
+Thread-Topic: [PATCH v5 6/6] iommu/tegra241-cmdqv: Limit CMDs for guest owned
+ VINTF
+Thread-Index: AQHajVULCff80FKHW06RtKfJgVx61rFsllJQ
+Date: Wed, 17 Apr 2024 15:12:57 +0000
+Message-ID: <1d68c21591fa4f8497aea0e6a0afda8b@huawei.com>
+References: <cover.1712977210.git.nicolinc@nvidia.com>
+ <ee70b82c8268e9a6746486ddcb3e8e7f32f0629f.1712977210.git.nicolinc@nvidia.com>
+In-Reply-To: <ee70b82c8268e9a6746486ddcb3e8e7f32f0629f.1712977210.git.nicolinc@nvidia.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] string: Implement KUnit test for str*cmp functions
-To: Andy Shevchenko <andy@kernel.org>
-Cc: keescook@chromium.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- skhan@linuxfoundation.org
-References: <20240417135415.614284-1-ivan.orlov0322@gmail.com>
- <Zh_cgnMOFHuP-lKu@smile.fi.intel.com>
- <10085ec8-0109-444c-bce4-d0b0ef1a4164@gmail.com>
- <Zh_ibi_Y6xogktg-@smile.fi.intel.com>
-Content-Language: en-US
-From: Ivan Orlov <ivan.orlov0322@gmail.com>
-In-Reply-To: <Zh_ibi_Y6xogktg-@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/17/24 15:53, Andy Shevchenko wrote:
->> There are already 2 other KUnit tests in `lib/` covering different groups of
->> string functions separately (lib/strscpy_kunit.c, lib/strcat_kunit.c), so
->> this patch just follows this pattern. I believe it makes sense: the tests
->> are separated to cover one specific group of string functions with a similar
->> purpose
-> 
-> We have handful of the string functions, are you going to have a file per
-> function? Isn't it way too many?
-> 
-> P.S>
-> Having those does not prove it's a correct approach. I would rather expect
-> somebody to incorporate those into string_kunit.c.
-> 
 
-Makes sense. Also, probably having all of them in `string_kunit.c` would 
-fit better into the KUnit test style guidelines.
 
-I'll merge this strcmp test into `string_kunit.c` in V2 of this patch, 
-thank you for the review.
+> -----Original Message-----
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Saturday, April 13, 2024 4:44 AM
+> To: will@kernel.org; robin.murphy@arm.com
+> Cc: joro@8bytes.org; jgg@nvidia.com; thierry.reding@gmail.com;
+> vdumpa@nvidia.com; jonathanh@nvidia.com; linux-kernel@vger.kernel.org;
+> iommu@lists.linux.dev; linux-arm-kernel@lists.infradead.org; linux-
+> tegra@vger.kernel.org
+> Subject: [PATCH v5 6/6] iommu/tegra241-cmdqv: Limit CMDs for guest owned
+> VINTF
+>=20
+> When VCMDQs are assigned to a VINTF owned by a guest (HYP_OWN bit unset),
+> only TLB and ATC invalidation commands are supported by the VCMDQ HW. So,
+> add a new helper to scan the input cmds to make sure every single command
+> is supported when selecting a queue.
+>=20
+> Note that the guest VM shouldn't have HYP_OWN bit being set regardless of
+> guest kernel driver writing it or not, i.e. the hypervisor running in the
+> host OS should wire this bit to zero when trapping a write access to this
+> VINTF_CONFIG register from a guest kernel.
 
--- 
-Kind regards,
-Ivan Orlov
+Just curious, suppose there is a malicious guest with a compromised kernel=
+=20
+which bypasses the HYP_OWN bit check and issues other commands, does
+the hardware has the capability to detect it and not make the host unstable
+in any way?
+
+Thanks,
+Shameer
+
+>=20
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  7 +--
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  5 ++-
+>  .../iommu/arm/arm-smmu-v3/tegra241-cmdqv.c    | 43 ++++++++++++++++++-
+>  3 files changed, 49 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index ba7a933c1efb..9af6659ea488 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -352,10 +352,11 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd,
+> struct arm_smmu_cmdq_ent *ent)
+>  	return 0;
+>  }
+>=20
+> -static struct arm_smmu_cmdq *arm_smmu_get_cmdq(struct
+> arm_smmu_device *smmu)
+> +static struct arm_smmu_cmdq *arm_smmu_get_cmdq(struct
+> arm_smmu_device *smmu,
+> +					       u64 *cmds, int n)
+>  {
+>  	if (smmu->tegra241_cmdqv)
+> -		return tegra241_cmdqv_get_cmdq(smmu);
+> +		return tegra241_cmdqv_get_cmdq(smmu, cmds, n);
+>=20
+>  	return &smmu->cmdq;
+>  }
+> @@ -765,7 +766,7 @@ static int arm_smmu_cmdq_issue_cmdlist(struct
+> arm_smmu_device *smmu,
+>  	u32 prod;
+>  	unsigned long flags;
+>  	bool owner;
+> -	struct arm_smmu_cmdq *cmdq =3D arm_smmu_get_cmdq(smmu);
+> +	struct arm_smmu_cmdq *cmdq =3D arm_smmu_get_cmdq(smmu, cmds,
+> n);
+>  	struct arm_smmu_ll_queue llq, head;
+>  	int ret =3D 0;
+>=20
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index 5b8e463c28eb..fdc3d570cf43 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -836,7 +836,8 @@ static inline void
+> arm_smmu_sva_remove_dev_pasid(struct iommu_domain *domain,
+>  struct tegra241_cmdqv *
+>  tegra241_cmdqv_acpi_probe(struct arm_smmu_device *smmu, int id);
+>  int tegra241_cmdqv_device_reset(struct arm_smmu_device *smmu);
+> -struct arm_smmu_cmdq *tegra241_cmdqv_get_cmdq(struct
+> arm_smmu_device *smmu);
+> +struct arm_smmu_cmdq *tegra241_cmdqv_get_cmdq(struct
+> arm_smmu_device *smmu,
+> +					      u64 *cmds, int n);
+>  #else /* CONFIG_TEGRA241_CMDQV */
+>  static inline struct tegra241_cmdqv *
+>  tegra241_cmdqv_acpi_probe(struct arm_smmu_device *smmu, int id)
+> @@ -850,7 +851,7 @@ static inline int tegra241_cmdqv_device_reset(struct
+> arm_smmu_device *smmu)
+>  }
+>=20
+>  static inline struct arm_smmu_cmdq *
+> -tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu)
+> +tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu, u64 *cmds, int
+> n)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> index 15683123a4ce..7aeaf810980c 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
+> @@ -262,6 +262,7 @@ struct tegra241_vcmdq {
+>   * struct tegra241_vintf - Virtual Interface
+>   * @idx: Global index in the CMDQV HW
+>   * @enabled: Enabled or not
+> + * @hyp_own: Owned by hypervisor (in-kernel)
+>   * @error: Status error or not
+>   * @cmdqv: CMDQV HW pointer
+>   * @vcmdqs: List of VCMDQ pointers
+> @@ -271,6 +272,7 @@ struct tegra241_vintf {
+>  	u16 idx;
+>=20
+>  	bool enabled;
+> +	bool hyp_own;
+>  	atomic_t error;	/* Race between interrupts and get_cmdq() */
+>=20
+>  	struct tegra241_cmdqv *cmdqv;
+> @@ -369,7 +371,32 @@ static irqreturn_t tegra241_cmdqv_isr(int irq, void
+> *devid)
+>  	return IRQ_HANDLED;
+>  }
+>=20
+> -struct arm_smmu_cmdq *tegra241_cmdqv_get_cmdq(struct
+> arm_smmu_device *smmu)
+> +static bool tegra241_vintf_support_cmds(struct tegra241_vintf *vintf,
+> +					u64 *cmds, int n)
+> +{
+> +	int i;
+> +
+> +	/* VINTF owned by hypervisor can execute any command */
+> +	if (vintf->hyp_own)
+> +		return true;
+> +
+> +	/* Guest-owned VINTF must Check against the list of supported CMDs
+> */
+> +	for (i =3D 0; i < n; i++) {
+> +		switch (FIELD_GET(CMDQ_0_OP, cmds[i *
+> CMDQ_ENT_DWORDS])) {
+> +		case CMDQ_OP_TLBI_NH_ASID:
+> +		case CMDQ_OP_TLBI_NH_VA:
+> +		case CMDQ_OP_ATC_INV:
+> +			continue;
+> +		default:
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +struct arm_smmu_cmdq *tegra241_cmdqv_get_cmdq(struct
+> arm_smmu_device *smmu,
+> +					      u64 *cmds, int n)
+>  {
+>  	struct tegra241_cmdqv *cmdqv =3D smmu->tegra241_cmdqv;
+>  	struct tegra241_vintf *vintf =3D cmdqv->vintfs[0];
+> @@ -386,6 +413,10 @@ struct arm_smmu_cmdq
+> *tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu)
+>  	if (atomic_read(&vintf->error))
+>  		return &smmu->cmdq;
+>=20
+> +	/* Unsupported CMDs go for smmu->cmdq pathway */
+> +	if (!tegra241_vintf_support_cmds(vintf, cmds, n))
+> +		return &smmu->cmdq;
+> +
+>  	/*
+>  	 * Select a vcmdq to use. Here we use a temporal solution to
+>  	 * balance out traffic on cmdq issuing: each cmdq has its own
+> @@ -575,6 +606,11 @@ int tegra241_cmdqv_device_reset(struct
+> arm_smmu_device *smmu)
+>  	if (ret)
+>  		return ret;
+>=20
+> +	/*
+> +	 * Note that HYP_OWN bit is wired to zero when running in guest kernel
+> +	 * regardless of enabling it here, as !HYP_OWN cmdqs have a restricted
+> +	 * set of supported commands, by following the HW design.
+> +	 */
+>  	regval =3D FIELD_PREP(VINTF_HYP_OWN, 1);
+>  	vintf_writel(regval, CONFIG);
+>=20
+> @@ -582,6 +618,11 @@ int tegra241_cmdqv_device_reset(struct
+> arm_smmu_device *smmu)
+>  	if (ret)
+>  		return ret;
+>=20
+> +	/*
+> +	 * As being mentioned above, HYP_OWN bit is wired to zero for a guest
+> +	 * kernel, so read it back from HW to ensure that reflects in hyp_own
+> +	 */
+> +	vintf->hyp_own =3D !!(VINTF_HYP_OWN & vintf_readl(CONFIG));
+>  	vintf->enabled =3D !!(VINTF_ENABLED & vintf_readl(STATUS));
+>  	atomic_set(&vintf->error,
+>  		   !!FIELD_GET(VINTF_STATUS, vintf_readl(STATUS)));
+> --
+> 2.43.0
+>=20
 
