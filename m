@@ -1,125 +1,103 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E7813C80B;
-	Wed, 17 Apr 2024 11:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD796A02E
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713352369; cv=none; b=DSHxx2+Azolzh2TUSDJ8IwHPCDguE3A471LC3btp0H06ShnjFdudrxDNVvMAstgj7tNOfGIYc6E27opwt+Ibaspv4yRygpKfXnKvhKC4yA5RzO8QTRCu5N2qD37zWF/ZHTyOxgb/b1rU37X31VzMFbc4HQu7KQULQjvNdx6F5As=
+	t=1713352411; cv=none; b=SOf5EWqRc/lYD5Gnh7N9BPuYF6L7NM0f2c5UVEQeUNOg3xGpJacAR/ermmiQXUCv0V9GejqDz6PixdHh2JpkRHllG7iKsfwCZRV+NkZu78lJ6lxBKig/MQxQML6GriKZUVWSKNxHXRQ4RBYShtQ11WCDQMKsGx8pwEYlp7CxqG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713352369; c=relaxed/simple;
-	bh=w7BHAEPiiQBc4yWKlXf5U4hFIr0GRkCDbTurNwZBGIk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uzahjZD5D6hA89A5CkgoCoaFyaJ0kWOUrAwEKdFQfAFTUsYO5K6IK0pBspq3+JlUS05RPnNdOZw2eYn1Shn6z9K133+I6I94MDX7RXoMiJJT9EgI1nQuohUB6gZDySoESzR5DVy7z5sE8rF9i3m8Ku5LxHz8M7w7verEG8skNNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mf5vo22U; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713352411; c=relaxed/simple;
+	bh=IarwKMiznEy1PBPWGbQKxxJWvg2/aiKR3AMJhWHgSdc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VNnsXHrIkJPvkQItEnGCsvEKg2W2ERWauF64XWmvi4r3n3kcp3DaTyaxFKi0sLbKaGfL6NJNTixlWMz6mZZYbd1d2taS9XgLs4iE9zZ/3YgaglbaOxgfnpFjyESo8O0ipiCGN/gwHAeRrywZE/wpW+p6RKOZSNX8GeQhp5VQ7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kBD5vgrY; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mf5vo22U"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso1456795ad.1;
-        Wed, 17 Apr 2024 04:12:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kBD5vgrY"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61ad5f2c231so37353427b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 04:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713352367; x=1713957167; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=znDMqSNrCUVVeJoSgBWusZB6f7cZkebLOeep7UaYw2I=;
-        b=mf5vo22UZMzJ5IaOYqrPYnABt5A2F08KexElEYkKcXrjz5PMU/3Hg0/SrRtRcFKp+P
-         TOPu7cQPIRWZTPNLxGyRHpqwOzp0X+OBFzS7vrOEPfaPPFowvd3On4Ww7xUsuXiqIJG8
-         bk3Bn07vJyTlDo/2vidmMw3F8Cai/FySQvLhlWgPOZR4/A5nELXkLu+An8Pg3J3sxJae
-         SPFtOApmyFo5oGYNYfVvVXk43xh8IvEwc1FYHXqJs4/GnQCT6UEpgMmHEFaFcJY2VeMe
-         KxPwMlVxuQ771Eh6CYx8PdfMwx0rZoffQYSsc/EzyX25v86wNSUltqdItkloqSmYeBEB
-         eg9w==
+        d=chromium.org; s=google; t=1713352409; x=1713957209; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2/YlYSS9grR85lTUsIz5s8zbmJslDTa4bnvdCNONPRc=;
+        b=kBD5vgrY+yxC/ysHRS2W4YEFt8La0s5TLdd5JVtzgvfWauQt6qKNxaO6SMAJzxF+iM
+         D8YT+wR3zl1EFvsnLpBLhT0nJdIKLPi5SYHmXHQULwGkEEQMoXZqm7z345tPpzHogMiT
+         Lv7juUbficWRHDE7TtceRMuX/dSD6selNmi6c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713352367; x=1713957167;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=znDMqSNrCUVVeJoSgBWusZB6f7cZkebLOeep7UaYw2I=;
-        b=tk5AZTaASsu+GTN6mry2btbvIIJJuSpynvlywSYQ11zP4gLXRDQMXMJvBfXgMBz7Et
-         Y7ri/EOD4bEsKjdPfIdXv3FDeefFTd5SbrYxO0gojpjhpGit4jjf0rPg/a/yYqDcqyJD
-         X+1DxuhfdfZnbN3CkospsQj7p8VyRXqKh/v9WZoSynmCN35UCgLeWWRRuO9nd0e4s6JD
-         A7mqCSNre66bQI1Gu+48hE24jrB74kpznVX19SGxpOg+9jIZN3uD+otIwoqE+p8g0G5K
-         r9nTKLJw4tjv5/hZYf0gx0Zoa88l8bn53TUt2uq25TcTCH6EUYZgICNpsEfgfLVpR6Qu
-         XMlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjfd3hgCyeP7ebMfJyWH7LEK8HL1I+fH/xL9Tqm4nG8btPkD1kwL411WYOJCPyxP7afeaxxg/f2Bi8OYYKYDl6NAIaehWXunRSFTj0pXt/NClEueBw9WRCFr40u6C7UD5HCGKzG1TMUVM77F68vQh4iH0kuvShkbnyYvvL8sZckEjf32eq
-X-Gm-Message-State: AOJu0YyllOlFfeMUmJcAw4sVEW6u9x8+3cbGdUXakq2zxqojFQ4O3OJ/
-	U6D8eednlh/5XTz2iea3JiAtdLabm/VHHl82xDwArUU39hOZ2ZjA
-X-Google-Smtp-Source: AGHT+IE+7jE5rMkww8GfZhXX3Gzr8kiwnkpgZAPJUZevYXgXkmWFi8vPndhOEbfcR3EN8xOak2wB8A==
-X-Received: by 2002:a17:902:d512:b0:1e4:3dd0:8ce0 with SMTP id b18-20020a170902d51200b001e43dd08ce0mr17745005plg.20.1713352366808;
-        Wed, 17 Apr 2024 04:12:46 -0700 (PDT)
-Received: from joaog-nb.corp.toradex.com ([201.82.41.210])
-        by smtp.gmail.com with ESMTPSA id ju14-20020a170903428e00b001e2bb03893dsm11302713plb.198.2024.04.17.04.12.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 04:12:46 -0700 (PDT)
-From: Joao Paulo Goncalves <jpaulo.silvagoncalves@gmail.com>
-To: eichest@gmail.com
-Cc: alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.torokhov@gmail.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	linus.walleij@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nick@shmanahar.org,
-	nicolas.ferre@microchip.com,
-	robh@kernel.org,
-	Joao Paulo Goncalves <joao.goncalves@toradex.com>
-Subject: RE: [PATCH v4 0/4] Add a property to turn off the max touch controller if not used 
-Date: Wed, 17 Apr 2024 08:12:30 -0300
-Message-Id: <20240417111230.785623-1-jpaulo.silvagoncalves@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417090527.15357-1-eichest@gmail.com>
-References: <20240417090527.15357-1-eichest@gmail.com>
+        d=1e100.net; s=20230601; t=1713352409; x=1713957209;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2/YlYSS9grR85lTUsIz5s8zbmJslDTa4bnvdCNONPRc=;
+        b=ihBn/aKo7vZU2ikNX8kVYEul18ancHGiu6QfLq69QJmc2/+SaBtSdqI/sbquKjePka
+         HdimELPf3w19PWRitaiO9DuIzs+peKv9lgzhLWf9zXYfOw7Q6vAuULOK0NgKJlZD0KZ1
+         ZCSLCXSZ8klmSA+neCHpdyZWyBx5AaDhlmI4ebvxbxyozSZRel5YTa7tAWjyGzFT8dq3
+         8NDdylGWICX0dFmGYb7zM9HLAG4u/5XQ0bhWrWAl/DX1TDl2/X1DXPFNny7DHg98h0oQ
+         6Y7jr6YtES/pVJlR8cHBaF9SNg69sewhl/m6OPW0ylofg0dWOKpzOu0QOCVU3Cp8v49K
+         hcBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN77vcUxKvH8851hCwW6OwV6qtuJ0YeflPwtrc7kEiGT3cPPuFEH1WlZFTQdQY00ti5su2SoTrkU3iG2B/Agq00eGPNA+RniHvYy/p
+X-Gm-Message-State: AOJu0YweJHJuuPtHaeE6rzz0ZHa4tLZu/aFJgow+UQ19t/dhy7yVrGGW
+	h71Wg8XJuJzRRnKP7QXaqdfpJhOlR7T/3V31GwiAsKCJDJ2oYZhBB7S3mMtESAPmFH4j7xLl6Ho
+	82Yec
+X-Google-Smtp-Source: AGHT+IEmMXw66U3QEKB736TaKkrEqKid7gSV/5POb+02fZWZYHvifN4RnTWG0y77E5lSwyBpH5vpNA==
+X-Received: by 2002:a81:4e0f:0:b0:61a:d0f4:326e with SMTP id c15-20020a814e0f000000b0061ad0f4326emr7564968ywb.33.1713352408737;
+        Wed, 17 Apr 2024 04:13:28 -0700 (PDT)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com. [209.85.219.47])
+        by smtp.gmail.com with ESMTPSA id i21-20020a05620a405500b0078ee852d769sm3209857qko.52.2024.04.17.04.13.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 04:13:28 -0700 (PDT)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-69b59c10720so22530836d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 04:13:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfmLlcVWuqzTg9QOj/2LM3PldVAwpYooW/1A2XvFtbRpiXuhGGqEZ6cHAxTOGwQbiZfpz9q/n6VmuhM9PfAdt+rWYHG8RSCbHdjove
+X-Received: by 2002:a05:6214:704:b0:69b:5c57:362 with SMTP id
+ c4-20020a056214070400b0069b5c570362mr12445414qvz.1.1713352407112; Wed, 17 Apr
+ 2024 04:13:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240415-minimax-v1-1-5feb20d66a79@chromium.org>
+ <fbf22b53-7b68-4e60-99c7-ab38a77a53c8@web.de> <CANiDSCuvXvjfhw2mjSef1wR8RiL=9KrDEoh+3o1ed4+8P+AqGw@mail.gmail.com>
+ <60df00eb-41ca-417f-8b8b-90dba6eaaf65@web.de>
+In-Reply-To: <60df00eb-41ca-417f-8b8b-90dba6eaaf65@web.de>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 17 Apr 2024 13:13:11 +0200
+X-Gmail-Original-Message-ID: <CANiDSCtZzAs0u2tqJGRaJz6iqCTu_p-j_rkyGU7a9HFqUbJEMg@mail.gmail.com>
+Message-ID: <CANiDSCtZzAs0u2tqJGRaJz6iqCTu_p-j_rkyGU7a9HFqUbJEMg@mail.gmail.com>
+Subject: Re: [PATCH] coccinelle: misc: minmax: Suppress reports for err returns
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Julia Lawall <Julia.Lawall@inria.fr>, cocci@inria.fr, 
+	LKML <linux-kernel@vger.kernel.org>, Denis Efremov <efremov@linux.com>, 
+	Nicolas Palix <nicolas.palix@imag.fr>
+Content-Type: text/plain; charset="UTF-8"
 
-> Our hardware has a shared regulator that powers various peripherals such
-> as the display, touch, USB hub, etc. Since the Maxtouch controller
-> doesn't currently allow it to be turned off, this regulator has to stay
-> on when not used. This increases the overall power consumption. In order
-> to turn off the controller when the system does not use it, this series
-> adds a device tree property to the maxtouch driver that allows the
-> controller to be turned off completely and ensurs that it can resume
-> from the power off state.
->
-> Changes since v3:
-> - Move the power on part to mxt_start and the power off part to
->   mxt_stop. This allows to turn the touch controller off even when not
->   in use and not only when being suspended (Dmitry)
->
-> Changes since v2:
-> - Add Reviewed-by tags from Linus and Krzysztof to the dt-bindings patch
->
-> Changes since v1:
-> - Rename the property and change the description (Krzysztof, Linus,
-> Dmitry, Conor)
->
-> Stefan Eichenberger (4):
->   Input: atmel_mxt_ts - add power off and power on functions
->   Input: atmel_mxt_ts - move calls to register the input device to
->     separate function
->   dt-bindings: input: atmel,maxtouch: add poweroff-sleep property
->   Input: atmel_mxt_ts - add support for poweroff-sleep
->
->  .../bindings/input/atmel,maxtouch.yaml        |   6 +
->  drivers/input/touchscreen/atmel_mxt_ts.c      | 162 +++++++++++++-----
->  2 files changed, 124 insertions(+), 44 deletions(-)
->
-> --
-> 2.40.1
->
+Hi "Markus"
 
-Reviewed-by: Joao Paulo Goncalves <joao.goncalves@toradex.com>
+On Tue, 16 Apr 2024 at 13:50, Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> > I think errcode needs to be executed in report and in patch mode,
+>
+> Adjustments for functionality of coccicheck operation modes can be clarified further.
 
-Regards,
-Joao Paulo
+https://lore.kernel.org/lkml/2024041643-unshaven-happiest-1405@gregkh/
 
+
+>
+>
+> > but there might be a better way to do it.
+>
+> Corresponding design options depend on varying development efforts and resources.
+>
+> Regards,
+> Markus
+
+
+
+-- 
+Ricardo Ribalda
