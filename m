@@ -1,38 +1,39 @@
-Received: from c180-39.smtp-out.ap-south-1.amazonses.com (c180-39.smtp-out.ap-south-1.amazonses.com [76.223.180.39])
+Received: from c180-17.smtp-out.ap-south-1.amazonses.com (c180-17.smtp-out.ap-south-1.amazonses.com [76.223.180.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ED0713D26C;
-	Wed, 17 Apr 2024 11:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606B13D296;
+	Wed, 17 Apr 2024 11:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713354595; cv=none; b=fFqkQm4wFnVHHRbEVQGzwnAsWeWu2DnOC8HyiMVU59spXhPGWQDzsm6ZMmfdK3CEbyf+nYj2NGDEzoGr5ki/7zydsSIJkkK6J230sR104qyJVeFMuHVeIf9VWAyHSDXecBAR21j+4y1U7AyX75xxylrZobOVqZ00esLezhVAZQc=
+	t=1713354597; cv=none; b=FBjSczY0retAjo4pomHdvMVWej0BF5ky7utwx3e80ei43qzM7h3qXi0duOypVz2DpXbVmmCDT0DQXJ/wrozUNbwU0muVfC2EHj62BwKgjDfkL8GDHWYLb5pu9lStDIk1kwxG45hAArU7BJRYAoQb6jm+OKjXve31wnwXsh890Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713354595; c=relaxed/simple;
-	bh=oVUEuuI42bWsaxNke/YXHgwDq1nx6otvSpOTGbkwhds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6l8fgt8Crxzd7aoPSApLDREhlDP4rGTZuAmXCXPVdAUwHsQkHxS1/hFKLkHPAoQhKriMFu7htZeCvt81O1QDf9KzUpLcLf4os2ltzD8GFuvaKwc8eSLaQseVK0qZ0kRWod1VPOrfoAOJRh9074FBc/MrKyyA/O6mPIbxW9XAgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=M9D7V4Nc; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=BSF0n8QH; arc=none smtp.client-ip=76.223.180.39
+	s=arc-20240116; t=1713354597; c=relaxed/simple;
+	bh=pjple3N7K1u1+TmH4sBZ9GXxe47P7tkb4dir/HgayiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CJ8Z2dbWRMn6t6z4kxVGnhr0+4BSCLUCQeVW7mO/2YjERCgEcWEU7CYGQUN96CErtaMtJc8JrFxNBOBJQJCiSL5IJAAUCGzpo+zjkc1gyOXvNXschUKuKfL8o/UbIICSmHYFJ9SwEy8WhBnw7lr7FjdxVhlUjcjPjDOeyydT8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=FKCW78ji; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=GXy/yh3/; arc=none smtp.client-ip=76.223.180.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="M9D7V4Nc";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BSF0n8QH"
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="FKCW78ji";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GXy/yh3/"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354591;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-	bh=oVUEuuI42bWsaxNke/YXHgwDq1nx6otvSpOTGbkwhds=;
-	b=M9D7V4NcXJoBiQmfQRjA3oeYN1Hudpb8Vm8j0xpRiyDZsew2rUNBvC8Esxpmx7/F
-	wwzVri8NdoixmfiBCowfxMb0ivOAAKiIVKuDQMt32O9uVfp+zbCqkQGCzWKPfLD52vX
-	rodjKF0+du/qoBOiNh5MOexnNa/4HTiuLC6Hc9IjvM0ZIAP17IoJMbipu+c4ImEauxf
-	vPsLnohpjbQYoD3PewCbeKsjRPq0c3dZmXeoBHtCTWPlQTuM/dn/XNuMxNVD+HtR6lA
-	edNsYxYsFVFDg4meH8n0xgb80ooCDfqbvGGLT+opT7bK1k2qxhWK+RdgRV1nNdhVo5b
-	SmgyZByNYA==
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354593;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=pjple3N7K1u1+TmH4sBZ9GXxe47P7tkb4dir/HgayiU=;
+	b=FKCW78jioJ43EUTvW9UHIxHH04RJpGu5gZpRE8WPtbRQNMfyX193L10yvW4gNPKO
+	ZMZbjUqQOqMwLAac8HlwU3anStiO5sMImn2WwOmiFhgxkcbaUS+yb3DxxrRa8XaooIO
+	JC5uZWVjmvYkfnnFfyN3QgcqXuYsjfmMllW9cwed6l8zE9smQWI0odHN3MnGvCtJwKA
+	uWlfFUQKGweyxJobZYTmMgq/0R9rTHGwGTxPSCKB/h5ddr5rzx1tS9jv1URRvoWRCPL
+	DS1NsroTg2OP4vwF57fCq1WQOW2j9Fo4jwn/3xvcQKX42g+ZJApB5VKJlYE0Calx9JH
+	pzuvJzcjOw==
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354591;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=oVUEuuI42bWsaxNke/YXHgwDq1nx6otvSpOTGbkwhds=;
-	b=BSF0n8QHHC0TuLLD6LWAbWjJj1fydn9gP0Az80XBzaxuROM8dVI4S8mZ0k2CnAVI
-	abCaUN6eVUNTz+7PSFqI4eJU+NqQm9SK6vQq5TGi082zRQRhppYYerNC6Q51q+YHM9g
-	cLsRPanlGLiK6ns6oglLSHu3YOhq7BrnAWwuLsrE=
+	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354593;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+	bh=pjple3N7K1u1+TmH4sBZ9GXxe47P7tkb4dir/HgayiU=;
+	b=GXy/yh3/BvSpkYyVGSqxUiAkOFo8dtFRXiC3vIDWbV2RyiLCcLwbNQDsIfWxuOn5
+	zUiHg/6HJZk+gM3wfgp1r7S1glNwhsk6VYQw6y4xBGeoibMRdZ+WGHKWcRn5CYAmUsT
+	R/3iul1Wxg6XlnKMPkrOIHKAYnt0VVi8EKH5QP+I=
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org, 
@@ -43,10 +44,12 @@ Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
 	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com, 
 	kristo@kernel.org, eblanc@baylibre.com, 
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v7 00/10]  Add support for TI TPS65224 PMIC
-Date: Wed, 17 Apr 2024 11:49:50 +0000
-Message-ID: <0109018eebe44ad2-cb18c65f-25e5-4b3b-a85c-038286600d34-000000@ap-south-1.amazonses.com>
+Subject: [PATCH v7 02/10] mfd: tps6594: use volatile_table instead of volatile_reg
+Date: Wed, 17 Apr 2024 11:49:53 +0000
+Message-ID: <0109018eebe4532e-f60a4f0a-a64f-4d67-92d6-763ff0d6b2a0-000000@ap-south-1.amazonses.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240417114934.186248-1-bhargav.r@ltts.com>
+References: <20240417114934.186248-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,94 +58,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.17-76.223.180.39
+X-SES-Outgoing: 2024.04.17-76.223.180.17
 
-This series modifies the existing TPS6594 drivers to add support for the
-TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
-similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
-PFSM, Regulators and GPIO features overlap between the two devices.
+In regmap_config use volatile_table instead of volatile_reg. This change
+makes it easier to add support for TPS65224 PMIC.
 
-TPS65224 is a Power Management IC (PMIC) which provides regulators and
-other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
-Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
-communicate through the I2C or SPI interfaces. The PMIC TPS65224
-additionally has a 12-bit ADC.
-Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
+Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Acked-by: Julien Panis <jpanis@baylibre.com>
+---
+ drivers/mfd/tps6594-core.c  | 16 ++++++++++------
+ drivers/mfd/tps6594-i2c.c   |  2 +-
+ drivers/mfd/tps6594-spi.c   |  2 +-
+ include/linux/mfd/tps6594.h |  4 +++-
+ 4 files changed, 15 insertions(+), 9 deletions(-)
 
-Driver re-use is applied following the advice of the following series:
-https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
-
-The features implemented in this series are:
-- TPS65224 Register definitions
-- Core (MFD I2C and SPI entry points)
-- PFSM	
-- Regulators
-- Pinctrl
-
-TPS65224 Register definitions:
-This patch adds macros for register field definitions of TPS65224
-to the existing TPS6594 driver.  
-
-Core description:
-I2C and SPI interface protocols are implemented, with and without
-the bit-integrity error detection feature (CRC mode).
-
-PFSM description:
-Strictly speaking, PFSM is not hardware. It is a piece of code.
-PMIC integrates a state machine which manages operational modes.
-Depending on the current operational mode, some voltage domains
-remain energized while others can be off.
-PFSM driver can be used to trigger transitions between configured
-states.
-
-Regulators description:
-4 BUCKs and 3 LDOs.
-BUCK12 can be used in dual-phase mode.
-
-Pinctrl description:
-TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
-functions such as I2C or SPI interface or watchdog disable functions.
-The driver provides both pinmuxing for the functions and GPIO capability.
-
-This series was tested on linux-next tag: next-20240118
-
-Test logs can be found here:
-https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
-
-Changelog v6 -> v7:
-- of_match_table data field now contains only chip_id
-- Refactoring pinctrl driver: combining two switch cases into one in
-  probe function. 
-
-Bhargav Raviprakash (7):
-  mfd: tps6594: use volatile_table instead of volatile_reg
-  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
-  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
-  mfd: tps6594-core: Add TI TPS65224 PMIC core
-  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
-  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
-    dts
-
-Nirmala Devi Mal Nadar (3):
-  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
-  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
-  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-
- .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
- drivers/mfd/tps6594-core.c                    | 253 +++++++++++--
- drivers/mfd/tps6594-i2c.c                     |  20 +-
- drivers/mfd/tps6594-spi.c                     |  20 +-
- drivers/misc/tps6594-pfsm.c                   |  48 ++-
- drivers/pinctrl/pinctrl-tps6594.c             | 277 +++++++++++---
- drivers/regulator/Kconfig                     |   4 +-
- drivers/regulator/tps6594-regulator.c         | 243 ++++++++++--
- include/linux/mfd/tps6594.h                   | 351 +++++++++++++++++-
- 10 files changed, 1169 insertions(+), 143 deletions(-)
-
-
-base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
+index 783ee5990..089ab8cc8 100644
+--- a/drivers/mfd/tps6594-core.c
++++ b/drivers/mfd/tps6594-core.c
+@@ -319,12 +319,16 @@ static struct regmap_irq_chip tps6594_irq_chip = {
+ 	.handle_post_irq = tps6594_handle_post_irq,
+ };
+ 
+-bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg)
+-{
+-	return (reg >= TPS6594_REG_INT_TOP && reg <= TPS6594_REG_STAT_READBACK_ERR) ||
+-	       reg == TPS6594_REG_RTC_STATUS;
+-}
+-EXPORT_SYMBOL_GPL(tps6594_is_volatile_reg);
++static const struct regmap_range tps6594_volatile_ranges[] = {
++	regmap_reg_range(TPS6594_REG_INT_TOP, TPS6594_REG_STAT_READBACK_ERR),
++	regmap_reg_range(TPS6594_REG_RTC_STATUS, TPS6594_REG_RTC_STATUS),
++};
++
++const struct regmap_access_table tps6594_volatile_table = {
++	.yes_ranges = tps6594_volatile_ranges,
++	.n_yes_ranges = ARRAY_SIZE(tps6594_volatile_ranges),
++};
++EXPORT_SYMBOL_GPL(tps6594_volatile_table);
+ 
+ static int tps6594_check_crc_mode(struct tps6594 *tps, bool primary_pmic)
+ {
+diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
+index 899c88c0f..c125b474b 100644
+--- a/drivers/mfd/tps6594-i2c.c
++++ b/drivers/mfd/tps6594-i2c.c
+@@ -187,7 +187,7 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+-	.volatile_reg = tps6594_is_volatile_reg,
++	.volatile_table = &tps6594_volatile_table,
+ 	.read = tps6594_i2c_read,
+ 	.write = tps6594_i2c_write,
+ };
+diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
+index 24b72847e..5afb1736f 100644
+--- a/drivers/mfd/tps6594-spi.c
++++ b/drivers/mfd/tps6594-spi.c
+@@ -70,7 +70,7 @@ static const struct regmap_config tps6594_spi_regmap_config = {
+ 	.reg_bits = 16,
+ 	.val_bits = 8,
+ 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+-	.volatile_reg = tps6594_is_volatile_reg,
++	.volatile_table = &tps6594_volatile_table,
+ 	.reg_read = tps6594_spi_reg_read,
+ 	.reg_write = tps6594_spi_reg_write,
+ 	.use_single_read = true,
+diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
+index e754c01ac..16543fd4d 100644
+--- a/include/linux/mfd/tps6594.h
++++ b/include/linux/mfd/tps6594.h
+@@ -1337,7 +1337,9 @@ struct tps6594 {
+ 	struct regmap_irq_chip_data *irq_data;
+ };
+ 
+-bool tps6594_is_volatile_reg(struct device *dev, unsigned int reg);
++extern const struct regmap_access_table tps6594_volatile_table;
++extern const struct regmap_access_table tps65224_volatile_table;
++
+ int tps6594_device_init(struct tps6594 *tps, bool enable_crc);
+ 
+ #endif /*  __LINUX_MFD_TPS6594_H */
 -- 
 2.25.1
 
