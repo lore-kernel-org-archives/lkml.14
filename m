@@ -1,129 +1,145 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA04213AD1D;
-	Wed, 17 Apr 2024 10:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C729413C83B;
+	Wed, 17 Apr 2024 10:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349223; cv=none; b=CV+brkzLy3y6NimzN0ch6mF0xbiomvk7V1gzGm52nRHLWRbShfhF7clBVBXtGqKRJ5aBobVomoWz2yUPsJjBNE/RmiUIJFoTCUU5cylPD+wPzao0xv5hRdj7lmRVs9kB1st3pr51FtcttSVRcjEJ/JE+N+KZrND43XzY4bHbisk=
+	t=1713349238; cv=none; b=rC4pXZEy1mHeo6QkSNjOG5AUoHQ1oxaME2RDH5xB/2RwBdZAkTGXYIRkDtaRocIyv1pBF/yPQfeYEanesT9PXwXzWxm0g2p+guxX2/sHucVkKAg43lgmVk/3sN3RtXqVgT8oyufH+qqnyfQxB0BSzSSqT5+7vKDPDzJxO/lrziM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349223; c=relaxed/simple;
-	bh=BL9sVr1FX2Bl7U7DH4Ih8dPNhWgEwo/nV1rJcFVOilg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VPpbNU6xXN5bCUvF1ACBxPcKjGl/xK1TiTNZ7WJeYdRVut9QTbraeSmqD5ZQyHWfiFPVpmVSBJDN6FF9qH1lKBio8BeQKmweDJs+X136jW8f30rb0U11XWUqye6CnwIsnKMFpgTDqZQkmhZQadZGr4fmgPDrWw22cG6J6ddhGhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SlGgvyop; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SlGgvyop"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43H9sgAb031215;
-	Wed, 17 Apr 2024 10:20:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=BL9sVr1FX2Bl7U7DH4Ih8dPNhWgEwo/nV1rJcFVOilg=;
- b=SlGgvyopI8pehtw2KLxtPHePnESLMfJCSbBzmAOQ5hSWXcQ1aAY0jC3EXXkxk43qjdfL
- 55d0MgDgF9WR9d2McwmKCkW9bI1ezvOE6xAtkdYUAKM0vcbwuuXopkdP0AhV/Lj/VYIH
- NSOy1GoHFTNIc/LHP/X3IxBg+1iKYbPpR39rCgyq+8oiq2sPaRLe8HxFaDQThwaK8YQj
- dOHCcHW140EBkmu0SzmIwdZnLoMQa9I/UNjle7VUhjiUOS67JnireicYzi2eEuEalpY8
- fq6x6pa7lbiP6tHT61VpTrje3PQ92yeeiAS0evaBlcvI9wD4isJpLmofNIDDTVyuW0BC YA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjbc4r5xw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 10:20:15 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43HAKEdb017897;
-	Wed, 17 Apr 2024 10:20:14 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xjbc4r5xp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 10:20:14 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43H8Umm0027323;
-	Wed, 17 Apr 2024 10:20:12 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg4s03tt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 10:20:12 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43HAK7Q131588628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Apr 2024 10:20:09 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 32D6E20063;
-	Wed, 17 Apr 2024 10:20:07 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BE422005A;
-	Wed, 17 Apr 2024 10:20:06 +0000 (GMT)
-Received: from [9.179.14.55] (unknown [9.179.14.55])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Apr 2024 10:20:06 +0000 (GMT)
-Message-ID: <5c1ef62610506524763bc2d4f673279e0cb624b6.camel@linux.ibm.com>
-Subject: Re: [PATCH net-next v6 02/11] net/smc: introduce loopback-ism for
- SMC intra-OS shortcut
-From: Gerd Bayer <gbayer@linux.ibm.com>
-To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com,
-        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com,
-        jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
-        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org
-Date: Wed, 17 Apr 2024 12:20:06 +0200
-In-Reply-To: <20240414040304.54255-3-guwen@linux.alibaba.com>
-References: <20240414040304.54255-1-guwen@linux.alibaba.com>
-	 <20240414040304.54255-3-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-2.fc39app4) 
+	s=arc-20240116; t=1713349238; c=relaxed/simple;
+	bh=kvpTxfMFvPgem01ruuxJKhDVMFpsajEnyI7JrOnz7sY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZaIiFrhitZeRgkEvrepwoDzER8+tVd4KDvptmDpUrSnaLc2p48EaEk20d5COFfQ99nJPKsXAelkYmkRAuEkDcs+t9yCTmrnfUCCBtN/gFE2jMd1cgunIaJt0vGcJI4K77B395AUcDe6OQiSXuGn2VZ5+xiaoZ435V5C8Lb1X62o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 221B1339;
+	Wed, 17 Apr 2024 03:21:04 -0700 (PDT)
+Received: from [10.1.39.28] (FVFF763DQ05P.cambridge.arm.com [10.1.39.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34BC53F64C;
+	Wed, 17 Apr 2024 03:20:33 -0700 (PDT)
+Message-ID: <711484c0-efae-45ff-8373-69d45dd88832@arm.com>
+Date: Wed, 17 Apr 2024 11:20:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: nq42N4N8rAnD0oGf9Kk5FcUB5bWQ0kOK
-X-Proofpoint-ORIG-GUID: xEYjGSR6ovHWU4xcYSmlh8GzMhk0EH_v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_08,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- malwarescore=0 phishscore=0 clxscore=1011 lowpriorityscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 mlxlogscore=937 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404170071
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/43] arm64: kvm: Allow passing machine type in KVM
+ creation
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
+ <20240412084309.1733783-12-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240412084309.1733783-12-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 2024-04-14 at 12:02 +0800, Wen Gu wrote:
-> This introduces a kind of Emulated-ISM device named loopback-ism for
-> SMCv2.1. The loopback-ism device is currently exclusive for SMC
-> usage, and aims to provide an SMC shortcut for sockets within the
-> same kernel, leading to improved intra-OS traffic performance.
-> Configuration of this feature is managed through the config SMC_LO.
->=20
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+On 12/04/2024 09:42, Steven Price wrote:
+> Previously machine type was used purely for specifying the physical
+> address size of the guest. Reserve the higher bits to specify an ARM
+> specific machine type and declare a new type 'KVM_VM_TYPE_ARM_REALM'
+> used to create a realm guest.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
-> =C2=A0net/smc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1=
-3 ++++
-> =C2=A0net/smc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-1 +
-> =C2=A0net/smc/af_smc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 12 +++=
--
-> =C2=A0net/smc/smc_loopback.c | 156
-> +++++++++++++++++++++++++++++++++++++++++
-> =C2=A0net/smc/smc_loopback.h |=C2=A0 43 ++++++++++++
-> =C2=A05 files changed, 224 insertions(+), 1 deletion(-)
-> =C2=A0create mode 100644 net/smc/smc_loopback.c
-> =C2=A0create mode 100644 net/smc/smc_loopback.h
->=20
+>   arch/arm64/kvm/arm.c     | 17 +++++++++++++++++
+>   arch/arm64/kvm/mmu.c     |  3 ---
+>   include/uapi/linux/kvm.h | 19 +++++++++++++++----
+>   3 files changed, 32 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 22da6493912a..c5a6139d5454 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -173,6 +173,23 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>   	mutex_unlock(&kvm->lock);
+>   #endif
+>   
+> +	if (type & ~(KVM_VM_TYPE_ARM_MASK | KVM_VM_TYPE_ARM_IPA_SIZE_MASK))
+> +		return -EINVAL;
+> +
+> +	switch (type & KVM_VM_TYPE_ARM_MASK) {
+> +	case KVM_VM_TYPE_ARM_NORMAL:
+> +		break;
+> +	case KVM_VM_TYPE_ARM_REALM:
+> +		kvm->arch.is_realm = true;
+> +		if (!kvm_is_realm(kvm)) {
+> +			/* Realm support unavailable */
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+>   	ret = kvm_share_hyp(kvm, kvm + 1);
+>   	if (ret)
+>   		return ret;
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index aae365647b62..af4564f3add5 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -877,9 +877,6 @@ int kvm_init_stage2_mmu(struct kvm *kvm, struct kvm_s2_mmu *mmu, unsigned long t
+>   	if (kvm_is_realm(kvm))
+>   		ipa_limit = kvm_realm_ipa_limit();
+>   
+> -	if (type & ~KVM_VM_TYPE_ARM_IPA_SIZE_MASK)
+> -		return -EINVAL;
+> -
+>   	phys_shift = KVM_VM_TYPE_ARM_IPA_SIZE(type);
+>   	if (is_protected_kvm_enabled()) {
+>   		phys_shift = kvm_ipa_limit;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index a1147036d1bd..5153c837c8c7 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -635,14 +635,25 @@ struct kvm_enable_cap {
+>   #define KVM_S390_SIE_PAGE_OFFSET 1
+>   
+>   /*
+> - * On arm64, machine type can be used to request the physical
+> - * address size for the VM. Bits[7-0] are reserved for the guest
+> - * PA size shift (i.e, log2(PA_Size)). For backward compatibility,
+> - * value 0 implies the default IPA size, 40bits.
+> + * On arm64, machine type can be used to request both the machine type and
+> + * the physical address size for the VM.
+> + *
+> + * Bits[11-8] are reserved for the ARM specific machine type.
+> + *
+> + * Bits[7-0] are reserved for the guest PA size shift (i.e, log2(PA_Size)).
+> + * For backward compatibility, value 0 implies the default IPA size, 40bits.
+>    */
+> +#define KVM_VM_TYPE_ARM_SHIFT		8
+> +#define KVM_VM_TYPE_ARM_MASK		(0xfULL << KVM_VM_TYPE_ARM_SHIFT)
+> +#define KVM_VM_TYPE_ARM(_type)		\
+> +	(((_type) << KVM_VM_TYPE_ARM_SHIFT) & KVM_VM_TYPE_ARM_MASK)
+> +#define KVM_VM_TYPE_ARM_NORMAL		KVM_VM_TYPE_ARM(0)
+> +#define KVM_VM_TYPE_ARM_REALM		KVM_VM_TYPE_ARM(1)
+> +
+>   #define KVM_VM_TYPE_ARM_IPA_SIZE_MASK	0xffULL
+>   #define KVM_VM_TYPE_ARM_IPA_SIZE(x)		\
+>   	((x) & KVM_VM_TYPE_ARM_IPA_SIZE_MASK)
+> +
+>   /*
+>    * ioctls for /dev/kvm fds:
+>    */
 
-Thanks Wen Gu,
 
-this looks good to me now. A W=3D1 compile-test of the whole series with
-SMC_LO undefined showed that there were no additional unresolved
-symbols introduced.
+Looks good to me.
 
-Feel free to add my
-Reviewed-by: Gerd Bayer <gbayer@linux.ibm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
