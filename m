@@ -1,101 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5ED535A9;
-	Wed, 17 Apr 2024 06:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A18524C3
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713333987; cv=none; b=giU0nnuHMcRJi9RNqFqxuYP4z+UgBdjSZjzLD6qAObHRwrZhuL6HgVf5Eo1NO/cvxFKkbnLtj02HTynXwN3tV0LZ/o6eh3hc1zY+NlpBXWj+MXp7CYDy+91T1DjbPvYNjkCuG6yzbymeEfNVEFgM3DoXM+9FUgpfMvJZrUvNJ6Q=
+	t=1713334110; cv=none; b=fMfj/Uj+7/Y09ZWGrG0UMlQkf8C+wepTHC3pTKO9SKeqRiFolBJ3kXGgW7WFBREpX3i7ClpwiNSO2fsbg6euYopZT6jnmBdr2ElqytPzHCB6OTiU0y0p4VDVIKmTM/F5kOrv5Evf0uflQEh9oqznM1ZJtPLBJ0BgpI3CK9E5XT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713333987; c=relaxed/simple;
-	bh=VGmF4lsr+/pNl/QS+FJLIeXDsdk5sY7VV1Yx8agjmfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UD5QWboaew4kE7XurA/eqnDEyfEguwXLW9hpZ/uoxrcAriR5IlBcQv8zShPk+2DrDYlDoojBVoikJDa/10neIo+d0o1Z+Kgc4ZtS9dKOabxRIshZG8V0vL4uUibO6VBxzYKva5kBSrU0QXFupyrC3y2ORGOFKUX7sPB6AZvitCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eb6kFZcL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713334110; c=relaxed/simple;
+	bh=D4KWua1ZprQ5a8JTxFoqCJy87saSKtB7mYJuy20s9wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2jtdgYTN3OtImK1gzjhL7KtyzOjSIkfL5uCPdQ/8gKMmU6hvUCcNaISzjg+V3Ri/zYKx4WRlJcsYHU9clOZovi41VCSI6DD4aoElTn1TWUd8vi9hOAZGGRl4e6GQ5TPjEInGjOKsNuehtb3QuBiXKkxYIbplNHZ2Z3WYJhQWNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=c98bEab0; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eb6kFZcL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECE8C2BD11;
-	Wed, 17 Apr 2024 06:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713333986;
-	bh=VGmF4lsr+/pNl/QS+FJLIeXDsdk5sY7VV1Yx8agjmfQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eb6kFZcLivKxpEuKYcK15PQxYOvzPh1LgPvu7eDo7SvePQWmoGJv1M+GaiLoLcfma
-	 z++AEPX8TqsJD8kFfayIg9+5TXxxGRwpzIKdizVXC66yYV4yDJtJtF+3J/EgIXNbpf
-	 3ANOATpg2aOzxrw0oXmLcLhXx+4LQoddt15704DCkCsjHLNaNmWDrrpDrzlS6KBADP
-	 E2u9isF1BkNogrjvhaVzXrcjrajVcxRdxH2FluLeWXZgYsDwGz/T8Hb/enC3KI+q8H
-	 29uM1/EfrnSw4J9h/aggW9jZy4hWPCSs05YIDzVPDLwGlK9pRROmaPy/gx449q9Gth
-	 +BZluUGmIQRVA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: x86@kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/cpufeatures: Fix dependencies for GFNI, VAES, and VPCLMULQDQ
-Date: Tue, 16 Apr 2024 23:04:34 -0700
-Message-ID: <20240417060434.47101-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="c98bEab0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=yywq
+	XfOYQbgKrN6Ho2xnGSTgnmWVUAO6JWYJoQlQPTM=; b=c98bEab0NGszyvhoy0v5
+	dfgoq6L07/wVaoJ3n3OVEMMwEvTon51N6pwsiYpU2wLyPp7K9i1JBzx/js+qOYnp
+	HHKkNawcbPVqpjuWhJiOXSJEGk7YOBEz2BoECR+Omkn9e8lkADNzNfsVOiBTO48A
+	cGDVW/UHpL4iu9nJWkYiftNTYJfXc3AdN0RKLLu8/n8aUugw5f3d0mkjSZx1KZ5I
+	YOLr867EEkK45wC324YZiISHPhR1NBx1HGacTPtEiiQU24elYBAdPv60dr5MHomo
+	olRTVKbNoqXxB+EQcTa+3Zvrw7JgEM0N1yukmPvxMMJqT99+BrmDDfoch1TsJsBG
+	Dw==
+Received: (qmail 2622412 invoked from network); 17 Apr 2024 08:08:24 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Apr 2024 08:08:24 +0200
+X-UD-Smtp-Session: l3s3148p1@oTGrrkQWns9ehhrd
+Date: Wed, 17 Apr 2024 08:08:24 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Wolfram Sang <wsa@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Lukas Bulwahn <lbulwahn@redhat.com>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.9-rc4
+Message-ID: <n3guyjqwjqk5doynaxwtmmpsqdh7trkodontshkjewnt4umpu2@3cfh5jnct3qo>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@kernel.org>, 
+	linux-i2c <linux-i2c@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, 
+	Lukas Bulwahn <lbulwahn@redhat.com>
+References: <7z65zupqngw4i4mzgablb37osz3gwz6767og5t4b32o4o3joqy@ypkuxdgilibd>
+ <p4vwnqfv6x72qypebmbgatof7k4vlilauqxp77vh5tvv547l6j@lpf3ejegkprh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u3kud47yopsbh2mj"
+Content-Disposition: inline
+In-Reply-To: <p4vwnqfv6x72qypebmbgatof7k4vlilauqxp77vh5tvv547l6j@lpf3ejegkprh>
 
-From: Eric Biggers <ebiggers@google.com>
 
-Fix cpuid_deps[] to list the correct dependencies for GFNI, VAES, and
-VPCLMULQDQ.  These features don't depend on AVX512, and there exist CPUs
-that support these features but not AVX512.  GFNI actually doesn't even
-depend on AVX.
+--u3kud47yopsbh2mj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This prevents GFNI from being unnecessarily disabled if AVX is disabled
-to mitigate the GDS vulnerability.
+Hi Andi,
 
-This also prevents all three features from being unnecessarily disabled
-if AVX512VL (or its dependency AVX512F) were to be disabled, but it
-looks like there isn't any case where this happens anyway.
+> good you didn't take this as this patch ended up in the wrong
+> branch as it's dependent on
 
-Fixes: c128dbfa0f87 ("x86/cpufeatures: Enable new SSE/AVX/AVX512 CPU features")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- arch/x86/kernel/cpu/cpuid-deps.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Good that I was on vacation this weekend :)
 
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index b7174209d855..946813d816bf 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -42,11 +42,14 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_PCLMULQDQ,		X86_FEATURE_XMM2      },
- 	{ X86_FEATURE_SSSE3,			X86_FEATURE_XMM2,     },
- 	{ X86_FEATURE_F16C,			X86_FEATURE_XMM2,     },
- 	{ X86_FEATURE_AES,			X86_FEATURE_XMM2      },
- 	{ X86_FEATURE_SHA_NI,			X86_FEATURE_XMM2      },
-+	{ X86_FEATURE_GFNI,			X86_FEATURE_XMM2      },
- 	{ X86_FEATURE_FMA,			X86_FEATURE_AVX       },
-+	{ X86_FEATURE_VAES,			X86_FEATURE_AVX       },
-+	{ X86_FEATURE_VPCLMULQDQ,		X86_FEATURE_AVX       },
- 	{ X86_FEATURE_AVX2,			X86_FEATURE_AVX,      },
- 	{ X86_FEATURE_AVX512F,			X86_FEATURE_AVX,      },
- 	{ X86_FEATURE_AVX512IFMA,		X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512PF,			X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512ER,			X86_FEATURE_AVX512F   },
-@@ -54,13 +57,10 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512DQ,			X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512BW,			X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512VL,			X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512VBMI,		X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VBMI2,		X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_GFNI,			X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_VAES,			X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_VPCLMULQDQ,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_VNNI,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_BITALG,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_4VNNIW,		X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_4FMAPS,		X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VPOPCNTDQ,		X86_FEATURE_AVX512F   },
+> Will move it to the right place.
 
-base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
--- 
-2.44.0
+OK, no worries.
 
+All the best,
+
+   Wolfram
+
+
+--u3kud47yopsbh2mj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYfZ1gACgkQFA3kzBSg
+KbY0FxAAmx8JjzgVaGG4h8z/t5G5uEI34TiOACyHPZ4+5yIpsHhsgm13nwf7d2mB
+JdjSQOc/yu1lh/S6F5eBOZ/7YIfOgDRh6OoBOc7/advILUaDLRAwuRWpq9NgnxJv
+gnXqXN3a9LOpPjlYnlOfVsQvueNAWNCHqZVN5ehPUS33Cbxai7Ew+CO0Nt3ovdr6
+/DMt+elNfHT5usC8uWBwM5zTGY+iQbopBIFfEAwFr8yx3GgE3ALHViAo271MIrt5
+9+5FGx770ztrg5hkfM4E0khy2ySmhOzbEm35qnonQ9vOjFkeBZv3GRQK7MsWcU/4
+Amknp+whkLxlRqtyCX9alvWgnl9Fz+K/8iFfQTDTBMSOcQPpj1Rbrh/59hH/AE7c
+/EisamteCsbSgkfwSRtHShlh1uOANro2SAWua0Ep+K9Nus4RTV/K6YH/6NjeomNH
+ZgbZzjxQDzyp0aBqqupjaDfCVmnoybZhEzPjkW0xWKdYqQ6QhA0htJlGBXMpuS9O
+btOrQw9Focg9y5AEu/vSvpJt8gvuh9ka+w/TqJb3+6B5gXXMLV4sH6+bPNm1YcK9
+w1gxYoJMM4GC3YldFrQdp/r5x3YrC0ntpw9lOxesszke/6taDdpvVqntaNfI7URW
+f17hmJja0kMrevfloP1ZV3BEaKdyRGXIKxpNLqElS/3zYbO2ZwM=
+=F7yr
+-----END PGP SIGNATURE-----
+
+--u3kud47yopsbh2mj--
