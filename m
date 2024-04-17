@@ -1,136 +1,237 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A362B13E02A
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1C913DDA0;
+	Wed, 17 Apr 2024 13:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360065; cv=none; b=Rtr52wo+lUB7uw93yN+5IciUSLn1SwF+2hBlTjh1od3wrfLkajhWi37RQ/0sc+kYNQdCyJaF77V2h1QB8/qZQmgVh+0RyZDImNezUo8eVJfk4eTMkLwATjAvi5hz+RP9FK/386o1aPYZGfc+lCY0S00wEz2olIZw7PF6k1fddUA=
+	t=1713360077; cv=none; b=EEbUAvb4cHl66Pzyyx8dJiHqBmvWyw0ITW5Ck0ZDgesp5DPpInqRkPqrsA3ffea9ciVOs6WGd2zPyGyhZgBljv2Zz/+zuWZWd2NxrOLNZ0G8z916Rt6ei5ibIKAayO2qLeduRoK0LiGZirf5KMUNv7iujTaXs6pk6FMiCIGeL8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360065; c=relaxed/simple;
-	bh=nETCHB7JIutC8EKJAX2M9aPwQSEYpjvigfPP7Y07kDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kEQecvYd8NY0v2WH0VMhvs5wta/aophoh/n0HCO+n6yjxjvI5gkZLX8rFbgUo4Gs4xOPVKVV52qVzndW+/wERW7BCrhJw1PTdhsGaUgYQmp1Ir2NWX1gJmJGIXlBj02wcG5o8tNC4G5NgODHwAVkOyCJe2RLDZ9nR4+oXW29u2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B960F339;
-	Wed, 17 Apr 2024 06:21:29 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F7483F738;
-	Wed, 17 Apr 2024 06:20:59 -0700 (PDT)
-Date: Wed, 17 Apr 2024 14:20:57 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Sudeep Holla <sudeep.holla@arm.com>, james.quinlan@broadcom.com,
-	f.fainelli@gmail.com, vincent.guittot@linaro.org,
-	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
-	konrad.dybcio@linaro.org, souvik.chakravarty@arm.com
-Subject: Re: [PATCH v2 1/2] firmware: arm_scmi: Add support for multiple
- vendors custom protocols
-Message-ID: <20240417132057.2s5s2mzgub2nnyd3@bogus>
-References: <20240408093052.3801576-1-cristian.marussi@arm.com>
- <20240408093052.3801576-2-cristian.marussi@arm.com>
- <20240417123208.criylj2kvdngoswe@bogus>
- <Zh_Dyi_rJGpW4qZr@pluto>
+	s=arc-20240116; t=1713360077; c=relaxed/simple;
+	bh=po6Hc5e1p+MvPE/nWcSH1E+iwLSt7JRmOnwakjjl7jE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eIxXbgyZMIH2WIRiOjUy9ShDdyg1vaZAo0Vqn8cu2H7DAaaQy6Fb1aKkEk7WF0tIO2Tfcit2TF6pUpMGHKTXfDN5fmPBU6Q0IuzCDB5zU6MiZv4CvhvOyZyHxERgFq8h+wc4MMDYx0EYXW3wYXTnWeKZbJNrmQoi9wScarhl9xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKLyR2Xwrz6K7JW;
+	Wed, 17 Apr 2024 21:16:15 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 660BC140CF4;
+	Wed, 17 Apr 2024 21:21:13 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 14:21:12 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v6 04/16] ACPI: processor: Move checks and availability of acpi_processor earlier
+Date: Wed, 17 Apr 2024 14:18:57 +0100
+Message-ID: <20240417131909.7925-5-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zh_Dyi_rJGpW4qZr@pluto>
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Apr 17, 2024 at 01:42:50PM +0100, Cristian Marussi wrote:
-> On Wed, Apr 17, 2024 at 01:32:08PM +0100, Sudeep Holla wrote:
-> > On Mon, Apr 08, 2024 at 10:30:51AM +0100, Cristian Marussi wrote:
-> > > Add a mechanism to be able to tag vendor protocol modules at compile-time
-> > > with a vendor/sub_vendor string and an implementation version and then to
-> > > choose to load, at run-time, only those vendor protocol modules matching
-> > > as close as possible the vendor/subvendor identification advertised by
-> > > the SCMI platform server.
-> > >
-> > > In this way, any in-tree existent vendor protocol module can be build and
-> > > shipped by default in a single kernel image, even when using the same
-> > > clashing protocol identification numbers, since the SCMI core will take
-> > > care at run-time to load only the ones pertinent to the running system.
-> > >
-> > > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> > > ---
-> > >  drivers/firmware/arm_scmi/driver.c    | 165 ++++++++++++++++++++++----
-> > >  drivers/firmware/arm_scmi/protocols.h |  15 +++
-> > >  2 files changed, 158 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> > > index d0091459a276..aa18202054a5 100644
-> > > --- a/drivers/firmware/arm_scmi/driver.c
-> > > +++ b/drivers/firmware/arm_scmi/driver.c
-> >
-> > [...]
-> >
-> > > +static const struct scmi_protocol *
-> > > +scmi_vendor_protocol_lookup(int protocol_id, char *vendor_id,
-> > > +			    char *sub_vendor_id, u32 impl_ver)
-> > > +{
-> > > +	unsigned long key;
-> > > +	struct scmi_protocol *proto = NULL;
-> > > +
-> > > +	/* Searching for closest match ...*/
-> > > +	key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-> > > +					  sub_vendor_id, impl_ver);
-> > > +	if (key)
-> > > +		proto = xa_load(&scmi_protocols, key);
-> > > +
-> > > +	if (proto)
-> > > +		return proto;
-> > > +
-> > > +	/* Any match on vendor/sub_vendor ? */
-> > > +	if (impl_ver) {
-> > > +		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-> > > +						  sub_vendor_id, 0);
-> > > +		if (key)
-> > > +			proto = xa_load(&scmi_protocols, key);
-> > > +
-> > > +		if (proto)
-> > > +			return proto;
-> > > +	}
-> > > +
-> > > +	/* Any match on just the vendor ? */
-> > > +	if (sub_vendor_id) {
-> > > +		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-> > > +						  NULL, 0);
-> > > +		if (key)
-> > > +			proto = xa_load(&scmi_protocols, key);
-> > > +	}
-> > >
-> >
-> > I see a pattern here, can be simplify/compress by something like below ?
-> >
-> > static const struct scmi_protocol *
-> > __scmi_vendor_protocol_lookup(int protocol_id, char *vendor_id,
-> > 			      char *sub_vendor_id, u32 impl_ver)
-> > {
-> > 	unsigned long key;
-> > 	struct scmi_protocol *proto = NULL;
-> >
-> > 	key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-> > 					  sub_vendor_id, impl_ver);
-> > 	if (key)
-> > 		proto = xa_load(&scmi_protocols, key);
-> >
-> > 	return proto;
-> > }
->
-> Sure...was not completely sure to proceed that way because only 2 lines
-> were saved for a each block....bit indeed is more clear...I'll d in V3
+Make the per_cpu(processors, cpu) entries available earlier so that
+they are available in arch_register_cpu() as ARM64 will need access
+to the acpi_handle to distinguish between acpi_processor_add()
+and earlier registration attempts (which will fail as _STA cannot
+be checked).
 
-Agreed, that's why I was asking rather than requesting you to change 😉.
-Even I was not sure by the time I completed writing the above one 😁.
-It may make it bit easier to read.
+Reorder the remove flow to clear this per_cpu() after
+arch_unregister_cpu() has completed, allowing it to be used in
+there as well.
 
---
-Regards,
-Sudeep
+Note that on x86 for the CPU hotplug case, the pr->id prior to
+acpi_map_cpu() may be invalid. Thus the per_cpu() structures
+must be initialized after that call or after checking the ID
+is valid (not hotplug path).
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v6: As per discussion in v5 thread, don't use the cpu->dev and
+    make this data available earlier by moving the assignment checks
+    int acpi_processor_get_info().
+---
+ drivers/acpi/acpi_processor.c | 79 +++++++++++++++++++++--------------
+ 1 file changed, 47 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index ba0a6f0ac841..2c164451ab53 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -184,7 +184,35 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+ 
+ /* Initialization */
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+-static int acpi_processor_hotadd_init(struct acpi_processor *pr)
++static DEFINE_PER_CPU(void *, processor_device_array);
++
++static void acpi_processor_set_per_cpu(struct acpi_processor *pr,
++				       struct acpi_device *device)
++{
++	BUG_ON(pr->id >= nr_cpu_ids);
++	/*
++	 * Buggy BIOS check.
++	 * ACPI id of processors can be reported wrongly by the BIOS.
++	 * Don't trust it blindly
++	 */
++	if (per_cpu(processor_device_array, pr->id) != NULL &&
++	    per_cpu(processor_device_array, pr->id) != device) {
++		dev_warn(&device->dev,
++			 "BIOS reported wrong ACPI id %d for the processor\n",
++			 pr->id);
++		/* Give up, but do not abort the namespace scan. */
++		return;
++	}
++	/*
++	 * processor_device_array is not cleared on errors to allow buggy BIOS
++	 * checks.
++	 */
++	per_cpu(processor_device_array, pr->id) = device;
++	per_cpu(processors, pr->id) = pr;
++}
++
++static int acpi_processor_hotadd_init(struct acpi_processor *pr,
++				      struct acpi_device *device)
+ {
+ 	int ret;
+ 
+@@ -198,6 +226,8 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	if (ret)
+ 		goto out;
+ 
++	acpi_processor_set_per_cpu(pr, device);
++
+ 	ret = arch_register_cpu(pr->id);
+ 	if (ret) {
+ 		acpi_unmap_cpu(pr->id);
+@@ -217,7 +247,8 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	return ret;
+ }
+ #else
+-static inline int acpi_processor_hotadd_init(struct acpi_processor *pr)
++static inline int acpi_processor_hotadd_init(struct acpi_processor *pr,
++					     struct acpi_device *device)
+ {
+ 	return -ENODEV;
+ }
+@@ -232,6 +263,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	acpi_status status = AE_OK;
+ 	static int cpu0_initialized;
+ 	unsigned long long value;
++	int ret;
+ 
+ 	acpi_processor_errata();
+ 
+@@ -316,10 +348,12 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 	 *  because cpuid <-> apicid mapping is persistent now.
+ 	 */
+ 	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+-		int ret = acpi_processor_hotadd_init(pr);
++		ret = acpi_processor_hotadd_init(pr, device);
+ 
+ 		if (ret)
+-			return ret;
++			goto err;
++	} else {
++		acpi_processor_set_per_cpu(pr, device);
+ 	}
+ 
+ 	/*
+@@ -357,6 +391,10 @@ static int acpi_processor_get_info(struct acpi_device *device)
+ 		arch_fix_phys_package_id(pr->id, value);
+ 
+ 	return 0;
++
++err:
++	per_cpu(processors, pr->id) = NULL;
++	return ret;
+ }
+ 
+ /*
+@@ -365,8 +403,6 @@ static int acpi_processor_get_info(struct acpi_device *device)
+  * (cpu_data(cpu)) values, like CPU feature flags, family, model, etc.
+  * Such things have to be put in and set up by the processor driver's .probe().
+  */
+-static DEFINE_PER_CPU(void *, processor_device_array);
+-
+ static int acpi_processor_add(struct acpi_device *device,
+ 					const struct acpi_device_id *id)
+ {
+@@ -395,28 +431,6 @@ static int acpi_processor_add(struct acpi_device *device,
+ 	if (result) /* Processor is not physically present or unavailable */
+ 		return 0;
+ 
+-	BUG_ON(pr->id >= nr_cpu_ids);
+-
+-	/*
+-	 * Buggy BIOS check.
+-	 * ACPI id of processors can be reported wrongly by the BIOS.
+-	 * Don't trust it blindly
+-	 */
+-	if (per_cpu(processor_device_array, pr->id) != NULL &&
+-	    per_cpu(processor_device_array, pr->id) != device) {
+-		dev_warn(&device->dev,
+-			"BIOS reported wrong ACPI id %d for the processor\n",
+-			pr->id);
+-		/* Give up, but do not abort the namespace scan. */
+-		goto err;
+-	}
+-	/*
+-	 * processor_device_array is not cleared on errors to allow buggy BIOS
+-	 * checks.
+-	 */
+-	per_cpu(processor_device_array, pr->id) = device;
+-	per_cpu(processors, pr->id) = pr;
+-
+ 	dev = get_cpu_device(pr->id);
+ 	if (!dev) {
+ 		result = -ENODEV;
+@@ -469,15 +483,16 @@ static void acpi_processor_remove(struct acpi_device *device)
+ 	device_release_driver(pr->dev);
+ 	acpi_unbind_one(pr->dev);
+ 
+-	/* Clean up. */
+-	per_cpu(processor_device_array, pr->id) = NULL;
+-	per_cpu(processors, pr->id) = NULL;
+-
+ 	cpu_maps_update_begin();
+ 	cpus_write_lock();
+ 
+ 	/* Remove the CPU. */
+ 	arch_unregister_cpu(pr->id);
++
++	/* Clean up. */
++	per_cpu(processor_device_array, pr->id) = NULL;
++	per_cpu(processors, pr->id) = NULL;
++
+ 	acpi_unmap_cpu(pr->id);
+ 
+ 	cpus_write_unlock();
+-- 
+2.39.2
+
