@@ -1,84 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7E0E572
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C04E572;
+	Wed, 17 Apr 2024 09:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713346095; cv=none; b=sT5awzpg7MEmvp16CzBuasxBGPqwWpGjw/IBYhWAle7ShtsrTf8suNa+owaIMnNUvI/w3HDHqwllr3pn4RpZ1hWTdjo5Y95jeALdy2n7I795dPpB1QeqgqfjSqWKAyVzGcog7aDFfWJcdypWYY/wyBMvsYV+hNrCuzI8o0kZa8k=
+	t=1713346178; cv=none; b=EI6liq/zmddVUafUZSN7/4Ro/BkGKw1Sfotnshkx03Ozvpa+HkNiIaVGC4E5X84Ay7FxSMoY37M9pE82HPKW+moQceFUbID1NtkCX7V/I20xO50KsxphiXkz0nGwz+1Tk571nCHJxiyrrFrd81mNnSuZJTRiveYRymUbyBt0sb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713346095; c=relaxed/simple;
-	bh=E4NxfokkS134BQqYi4l9d24KTL7bidk0mUYpB0lh7pY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NYXbbXYw1mnbOSttS/U4c37Hixmk3dtxOKAPtEo7+VzrjB6tMPG89iG2iPENLBOjaHQF6LHMP58aUkNkjjOX9+kOtG2wjeNTIdodRWFf3urw3NQak8TyLlXPDH4HwCmrrfDP4WtX18c5A8gP+wK0pj632yjMk93GYAk24Fbp1Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=t4oQDr5h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713346178; c=relaxed/simple;
+	bh=dAfMsMXvSUEMSWs22Y7XybMcFB2joyu4CM9IB29HTNY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ecSsszWEBfngpLzp0pZ3A2Br2nGK4ojo76/MvIiaKnQ/4LiRoF2abKzqtB16LgDBCCoHPdWiKapo19qVJNP0H5p+J2hIDHXkj9jDGEilDe7S9dxaQX21ltuqWW0zNMBiXWBJrj1YH4C/HLv8Vzub7/6q5ChFFioodnKaF1omGmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mhwQPRAl; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="t4oQDr5h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A6FC072AA;
-	Wed, 17 Apr 2024 09:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713346094;
-	bh=E4NxfokkS134BQqYi4l9d24KTL7bidk0mUYpB0lh7pY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t4oQDr5h3H7bnXCR4Cr7SVoVflqDgciWtzCI+XZ1BRaSCxfdTgH/0Db67Z3HjnZGi
-	 M2rQLFsltdSnsvpgsnvu5zUe2b/7uWjUEE4xAL9nwxKI2yUJkdlYAtALzvMkg+FYcm
-	 ltWSGy0EFIIYcm6hQwSdQmADIwIeSTKtlluGXBm0=
-Date: Wed, 17 Apr 2024 11:28:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Herman van Hazendonk <github.com@herrie.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] component: Support masters with no subcomponents
-Message-ID: <2024041713-devalue-unsightly-56cb@gregkh>
-References: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mhwQPRAl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C1E9040003;
+	Wed, 17 Apr 2024 09:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713346173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j3i344ERuSxhSsjZp4G790f+W4T/PKZQWnrVfudLzaQ=;
+	b=mhwQPRAl2eAxgm367WvffpWd2HLo4U9HRWSem6zyjyJ4qTy+wDutGvj550D/e+ToldascP
+	mD6PDSlmlwsqRAAIdY2F5HL1J0VuFuLEQXBXpASBgc773GYY2DIeruPSNIfeZQgLz38wtZ
+	HPlxt9dfu/J813/WWZTz3dXqSN2KlTIhVzpOAxRCdML9ylMtidCRvcduhqxpZ3eFivDi1j
+	jY2w1UyhmXOEXZ9i9CXjnOYwblYD1bhYgHrJtqKMyBjjZv543catHdGXquiH5xY9anoTkQ
+	U2pWEoVvcXWgV56po0F7Nm0O6rq3tBf7xnpDjIY2GUT2bDaIdLIcnqWxRzixyg==
+Date: Wed, 17 Apr 2024 11:30:09 +0200 (CEST)
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+cc: Romain Gantois <romain.gantois@bootlin.com>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+    Conor Dooley <conor+dt@kernel.org>, 
+    Geert Uytterhoeven <geert+renesas@glider.be>, 
+    Magnus Damm <magnus.damm@gmail.com>, 
+    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+    Russell King <linux@armlinux.org.uk>, 
+    =?ISO-8859-15?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>, 
+    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+    devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-renesas-soc@vger.kernel.org, 
+    linux-stm32@st-md-mailman.stormreply.com, 
+    linux-arm-kernel@lists.infradead.org, 
+    "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+    Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v3 2/5] net: stmmac: introduce pcs_init/pcs_exit
+ stmmac operations
+In-Reply-To: <42chuecdt7dpgm6fcrtt2crifvv5hflmtnmdrw5fvk3r7pwjgu@hlcv56dbeosf>
+Message-ID: <77722ced-4956-0e70-9492-c7b2e8557253@bootlin.com>
+References: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com> <20240415-rzn1-gmac1-v3-2-ab12f2c4401d@bootlin.com> <42chuecdt7dpgm6fcrtt2crifvv5hflmtnmdrw5fvk3r7pwjgu@hlcv56dbeosf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
+Content-Type: text/plain; charset=US-ASCII
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Wed, Apr 17, 2024 at 11:12:09AM +0200, Herman van Hazendonk wrote:
-> This happens in the MSM DRM driver when it is used
-> without any subcomponents, which is a special corner
-> case.
-> 
-> If the MDP4 is used with nothing but the LVDS display,
-> we get this problem that no components are found since
-> the LVDS is part of the MDP4 itself.
-> 
-> We cannot use a NULL match, so create a dummy match
-> with no components for this case so the driver will
-> still probe nicely without adding a secondary
-> complicated probe() path to the MSM DRM driver.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
-> ---
-> This happens in the MSM DRM driver when it is used
-> without any subcomponents, which is a special corner
-> case.
-> 
-> If the MDP4 is used with nothing but the LVDS display,
-> we get this problem that no components are found since
-> the LVDS is part of the MDP4 itself.
-> 
-> We cannot use a NULL match, so create a dummy match
-> with no components for this case so the driver will
-> still probe nicely without adding a secondary
-> complicated probe() path to the MSM DRM driver.
+Hi Serge,
 
-Why is the text duplicated here twice?
+On Tue, 16 Apr 2024, Serge Semin wrote:
 
-Also, why are you adding complexity to the core for something that has
-not been an issue for any other device?  Shouldn't the driver need to
-handle this instead if it wishes to use the component code?  Will this
-change affect any other in-tree user?
+> I am currently working on my Memory-mapped DW XPCS patchset cooking:
+> https://lore.kernel.org/netdev/20231205103559.9605-1-fancer.lancer@gmail.com/
+> The changes in this series seems to intersect to what is/will be
+> introduced in my patchset. In particular as before I am going to
+> use the "pcs-handle" property for getting the XPCS node. If so what
+> about collecting PCS-related things in a single place. Like this:
+> 
+> int stmmac_xpcs_setup(struct net_device *ndev)
+> {
+> 	...
+> 
+> 	if (priv->plat->pcs_init) {
+> 		return priv->plat->pcs_init(priv); /* Romain' part */
+>	} else if (fwnode_property_present(priv->plat->port_node, "pcs-handle")) {
+> 		/* My DW XPCS part */
+> 	} else if (priv->plat->mdio_bus_data && priv->plat->mdio_bus_data->has_xpcs) {
+> 		/* Currently implemented procedure */
+> 	}
+> 
+> 	...
+> }
 
-thanks,
+That seems like a good idea to me, although those setup functions would have to 
+be renamed to stmmac_pcs_setup/exit.
 
-greg k-h
+Thanks,
+
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
