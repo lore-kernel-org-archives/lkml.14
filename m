@@ -1,281 +1,174 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B150F1487D9
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713369765; cv=none; b=a76wLKKq0y81TAK+NfWAb5Z9/dAqaVgCB6FvdEutavDqXQvFHpcEj0ljtJyXJmTi0A2ypOzMbgREZUWSn3AI+kyj9DZDp7DqUhZ+ba6EtgFukNCrsTLCft5Az8e2pLbDU8EPcOVQ2EaSBq48f5JzbpQFG5lXmvOygJE43pJBDCg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713369765; c=relaxed/simple;
-	bh=9i5GLFu0+txx2oabKEnFrp3VW7oPnVCY8MLnNIpHG6Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIBgaj9wpx1E0Pku+jeOtuhyAHWF8u0rUXVV8v5atlOcQB1ZNY6pSX+A16ysaN0Ff6TNv6pzdWHABZ1fkx1ibaiMyeiOOQj2Av9IOA+ZO30H2Lkibs54MNFbyFit+tCsXo665xHoN7lCrqKKZ8/P6jRqGg1gZVXuxFUuaYxmclQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fgH0htXd; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494B4148302;
+	Wed, 17 Apr 2024 16:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713369899; cv=fail; b=oz3BzdxBLkZxmJskc6q592jQFKkCggXzgSQ9IekxmB+qOe7KYcRwAX52zGQZ/qerNbC/q4paF9hghATz4ObMdmIPi0oVbI9jQO4/ezG+tjeRUphzqUh9o8vWkWoHaH70LHzHXhYrY7zXdK13PvBHRSsnI307seY8r2+MGw6H+/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713369899; c=relaxed/simple;
+	bh=3QpStp14Zubuwpuh1v0cpJYQdi825pFnuyVr/3OCLMY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hlNVBvJLIAu59BVquOGuev8N3jpcTU5MNg4ZR126464LcmNh/YtvYnragzALZ1+30zgrAqczZwv/1AIEa8UOHebl1VP1/Tgj62xSJKuH52A/avlHsnuzyJ1JSBwzjI4aDLOID/1IByEXFYE0SfL6oQfzI8GQlgVCXr/EFVjEoyc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TA+d8DII; arc=fail smtp.client-ip=40.107.94.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fgH0htXd"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2db13ca0363so18992611fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713369762; x=1713974562; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nq5XbwnS+WFQsMRXNS2/WLzQBLtULwJiFEsG0xNKfbk=;
-        b=fgH0htXdSSmMkNY4k7dHlDgp2o3+1XlO+F9VYbFNb/a8jtysrIUYzJmEWrrFSZeUb/
-         9T3ydVYP2tCiJECXf4t0k84xgJBUJD7Ymx5CPJA3Y6KLsPd2HUxl8KWtm2D4XkxFu7ca
-         AvwMY8KRFCHPkkqT8+CcRjWm0sQAkdJfcmKRwABZhRzmHHK640gDwkdnebz5j6Wxv+9b
-         RcnpoirM+nGWuYhkJw/QlA3yNPWavPwNNBjuYKi2C1ATmLLdAcGUsjtb3ptoxAMrxbg2
-         /ZJYqxVg263o/zfrUofXA5crcV34dXne4hWqwYf6tbaY7UiI1wSU4fUBAl/c4QRs3vnw
-         lvfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713369762; x=1713974562;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nq5XbwnS+WFQsMRXNS2/WLzQBLtULwJiFEsG0xNKfbk=;
-        b=aexHuH3hfB9OeOqto9k3C/5QYtTjIqDAAt3iEbRIEQh9kw8Wa8/yq16J5qRRhJmkhf
-         +9bmA5uRBtaP8RmKIGYp3enGoTaSCLdx/3hO9l6NQ9ylzBjq0dLmCUG7qYTliHjCr42s
-         6N+nR9nDad8KiT9QUL+0irca3LJiAjsHloLsVXW6m4CvgMCwrefqViHJPmyqMmxIYc9D
-         TJ2zkUb8y3OzRcWRaE+UUhZXMiB/uxopNAvqRMv6u3igqIqDNRt4fIGeW0qa1IWL7VMq
-         LsadPAhHEfogthHrYYeEAHjkI2PpVPo/eqeDvhx3RG4wbfR8IlqQHlON5Q8nUOAnJ3Cs
-         3Hvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAia/Omc280ykqbg1WAugi7EsO4cQVrVs/6AuC29U7bbjwK+zKJI/5z9xu4f2LIyR9pIAciZaM7G7BgGDliWNFBnBPhIK5LlwrCWEe
-X-Gm-Message-State: AOJu0YzoeJoK/zVGVUdXNugbiWR/Cfmc/YlLTDj2uvygK9r5y3aeUFK1
-	NnEeIXawV8/zGYPm9pxsvAxVB3gwpBw0ORlojcav9DXyA+2DA2AaqXuJ1i6h6ZaBjuplJF0kXUx
-	x1lAt1tEShdY4Cqb9RFME5XuRYHmCnTx4WMVAKg==
-X-Google-Smtp-Source: AGHT+IF8BRyARCNzXyuNmvDkP/q1Tseio1Ma+qwRSuwJ80RZCervHmYYgcn37QyLe3LgnNKBKhZMr/6HOn2onwEGNlw=
-X-Received: by 2002:ac2:538c:0:b0:515:9c73:e29a with SMTP id
- g12-20020ac2538c000000b005159c73e29amr12657720lfh.66.1713369761613; Wed, 17
- Apr 2024 09:02:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TA+d8DII"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JH6Ij7uwfPmHf3viH7FY/wPll/J4Ud7q2RFkeJnLYyIKhkcF1luFiFHdgZrnQ2vUy4lFYZefif3U34PsXc3TtvUHWxNoC4IUh32cWnugT/Ug9NoHkIi/Zl6TNKeTyN/GVnfMDVliu936evWfaIMczpsS/c2TB4KbQCJdtsh/O8/xbFn9T1IOJAP9DKABXZlLJdBeB00gNP3WwFysiUD9jx4Cdx6/K9kvV/ybCHyt7zb9pcGxFThwmGZ96VpMvGLrl0RsVl7Mjzd7UAf/LdMrFdTjBQZbfh94P/oUqi4MosoqvFNGvP4NrfBPwb61m1qkBnMSk/YNRym4k09sUtKzaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MXkbvfxw18aZGwx8uo1EkVljC8dDRPeFp4ddLk8wGz4=;
+ b=ApFiW4Zyc/ibhGEizXDrVwi59RGqJ/rc2vOb5uTkqEArs7hls5m5cpikiA4+n6gGJjteYDp5y2oWurbd6wMNpFhbOZ+WB+U/d41dnifeW+pQQSeWTkVUd2RQiphKU630F+MolVOhnEv0Yf5/cNmoXKF6Z2lU+WRdxMDN0XYmzQOTpZ88waLSs1l72K+AvOHvGXh2UYnV7DyAc6Hv3tEqn0hESlC1BKOJ5gjZveHYTd1eKCZiVUuLlydhWXozyTO2ca6gqdWCbxjK0wEL5/lakaPo0oXzp9Z1yRM7Kfl4j1J5vQKLupgh8A9xOTxL3h4OAOHnZQl9F9C7/Erw66P6vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MXkbvfxw18aZGwx8uo1EkVljC8dDRPeFp4ddLk8wGz4=;
+ b=TA+d8DIIshFBBg9gnY8MSo0tfrriF4CjoScNBEz3j35bj0qeMmC9SNScvQ+C2jxw1ROsAQQGR7T0T0sXcgNEjxlCTQulgovkNMhcSqXFFB/smg7c6xGw+9+lcl1GmVdIZNwufG0j7GNTGOYltQNnJG/mr99xMjotXX+N5uHlmq1o1BtjjJwympH03zuB9OdV3AG0MvZ+vdJWZpU5Xe+usNeTq3pFvmprsyzzNwYjy62mkKpAxzCX/JZKmm9pQdS7beg8uU7kFcBC2BeScTTp7aKBnJKr+5ZkdPDzAuT+zqfdysTUDR126x/PEovc538D8xlg9NG2r5bId0iLCBJT0A==
+Received: from MN2PR15CA0018.namprd15.prod.outlook.com (2603:10b6:208:1b4::31)
+ by DS0PR12MB6535.namprd12.prod.outlook.com (2603:10b6:8:c0::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Wed, 17 Apr
+ 2024 16:04:51 +0000
+Received: from BL02EPF00021F6E.namprd02.prod.outlook.com
+ (2603:10b6:208:1b4:cafe::79) by MN2PR15CA0018.outlook.office365.com
+ (2603:10b6:208:1b4::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.34 via Frontend
+ Transport; Wed, 17 Apr 2024 16:04:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL02EPF00021F6E.mail.protection.outlook.com (10.167.249.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Wed, 17 Apr 2024 16:04:50 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 17 Apr
+ 2024 09:04:23 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 17 Apr
+ 2024 09:04:23 -0700
+Received: from Asurada-Nvidia (10.127.8.10) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
+ Transport; Wed, 17 Apr 2024 09:04:22 -0700
+Date: Wed, 17 Apr 2024 09:04:21 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+CC: "will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	"vdumpa@nvidia.com" <vdumpa@nvidia.com>, "jonathanh@nvidia.com"
+	<jonathanh@nvidia.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v5 6/6] iommu/tegra241-cmdqv: Limit CMDs for guest owned
+ VINTF
+Message-ID: <Zh/zBZoubYvqLQza@Asurada-Nvidia>
+References: <cover.1712977210.git.nicolinc@nvidia.com>
+ <ee70b82c8268e9a6746486ddcb3e8e7f32f0629f.1712977210.git.nicolinc@nvidia.com>
+ <1d68c21591fa4f8497aea0e6a0afda8b@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-2-4af9815ec746@rivosinc.com>
- <20240412-tuesday-resident-d9d07e75463c@wendy> <ZhlrdGXfSushUNTp@ghost>
- <20240412-eastcoast-disparity-9c9e7d178df5@spud> <ZhmeLoPS+tsfqv1T@ghost>
- <20240412-chemist-haunt-0a30a8f280ca@spud> <ZhmoPuoR00aS6qZp@ghost>
- <20240413-sharper-unlivable-5a65660b19e2@spud> <Zh3xrTfjjk3b4GHb@ghost>
- <20240416-husband-flavored-96c1dad58b6e@wendy> <Zh9PLhUZmCF5mLXc@ghost>
-In-Reply-To: <Zh9PLhUZmCF5mLXc@ghost>
-From: Evan Green <evan@rivosinc.com>
-Date: Wed, 17 Apr 2024 09:02:05 -0700
-Message-ID: <CALs-HssYAHrBy-uYKNT_zS02F_65qJZh80OD-W1RrmmYosFU=Q@mail.gmail.com>
-Subject: Re: [PATCH 02/19] riscv: cpufeature: Fix thead vector hwcap removal
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Conor Dooley <conor@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1d68c21591fa4f8497aea0e6a0afda8b@huawei.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6E:EE_|DS0PR12MB6535:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91a7f3a0-95fd-4652-42e3-08dc5ef81cd7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AzPgA1r1CYfY0yeRUL1ica1QtT1F2hjVvXeHnmLMZtEzGtbS64nA2plLne0b?=
+ =?us-ascii?Q?/OGHPGNzQ4Z1Z/T/vbyF8MO/Ttnqnu2WPR21u37lWGO7gwUO7GcI0Bs4U+NW?=
+ =?us-ascii?Q?LE5zF1v9hSjUkxk8r+rsf0RmpJGZVVjU69Rqw+hQdvEhIjpsOBr3MYMrcsNz?=
+ =?us-ascii?Q?go9lzbZdgB84A0IW70Abaqy7xPka8NJHbrdkqCAsuIdwJ3JazaQDp9waJ24b?=
+ =?us-ascii?Q?yWVxDEHvvua/UTWNXmDDHlSyFQ/W9AQ9au4n5KMYhhxmTOKdKoEvol3ckoTP?=
+ =?us-ascii?Q?wOZD6Jn+8HQsvi+aVztHJN5U3rGkzwWW+Ob1ePCHOeaivgYMWPb4kcH5sqcN?=
+ =?us-ascii?Q?419V4lAMTkhG+uRrbRALA1Hi54W8QCt+uvm/3ePXhYzmS8zqGJPXPgQtOWL/?=
+ =?us-ascii?Q?+aZ/Gf0UbjzpLq7B7Ks/nHZp5HTNSFqS47ycnov96dN57vwkM/rhn2j/vbwF?=
+ =?us-ascii?Q?1hwBKugai++qzz3UzacEpkHEy3bg9e3lQyhVI1/9mAg/IStEzQ4/veN++nHe?=
+ =?us-ascii?Q?o9sHAzYMmtQH1pgoWNDZ9pZCvMSMDl03bNaQdMwRfKdU1OcCebvFVGv0tXBs?=
+ =?us-ascii?Q?xrgFZxMeHfsWWIoJbNESg2EMGJP8yCOoPQz3c4MCh/LglC0VjzXCwV0tD7Aw?=
+ =?us-ascii?Q?BddpxZpWAIk+9vzQDdbZBzDDbSSSskxeNr23tTKGq5LKMVNqOFSPBVGZ2ECp?=
+ =?us-ascii?Q?dpVUK+qEDqiihOTU/NyeBeLEhixnJDSa267Vzt2WF4FnVDlTw3+9PZwdM/ct?=
+ =?us-ascii?Q?hXD1TazqdY5Sb/Hz8WQuEW2nfXay1C5RZb7tfx9qRbVMCPIxRBhyCsc6tKnx?=
+ =?us-ascii?Q?QefyGFrHuOiHrvfTSMCEDj+LYzB3VRTbpz4txYjg2c+8UaScVNM854miRK6C?=
+ =?us-ascii?Q?36M/Q4qeyGbkKXAecgzGBU+yGzCWs9AGEPPCj5neXrw/PAG9Xn1e86h9dknA?=
+ =?us-ascii?Q?GRmH9j4Rp926Fwkt7H/kzunZao4Tb0X+0bwAuVKdCDSR6wutXU0BYt0jY+T0?=
+ =?us-ascii?Q?YSphpfV+mQHjfSKsFLSh0XIEEq8EaLNJLXFxrQYsApWjzcnvB4EJzzeRaoCn?=
+ =?us-ascii?Q?AD+8RDyNVPoc+W0i7tvoWNhIIu7KdS9pY5Dd9Y6XGgEBft/0Cd54EHdzBXRR?=
+ =?us-ascii?Q?T+2o2Lf4tAM2o7oTpgR3XDnmwb0QC5+JsZ4ZoWWKIQI3QswFYk6Av5Ju3FsX?=
+ =?us-ascii?Q?C1G7Bhivnm62ot9p4QTFQH8s843NYOr2GWUGVHodZLKBdy/tzEnU3zY69azO?=
+ =?us-ascii?Q?r5hftNADSMpqzO4vxLdpahTgu6S1aC9CdLCWSb6OnBRtehphIBXEz2EqoCNy?=
+ =?us-ascii?Q?+EUVx8CpC9EKUgo0IrVLPuyayNeEcmZ4Cq/BpU+9RUhaqXc/WfobZHyiz6ry?=
+ =?us-ascii?Q?0Uc1XHM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 16:04:50.6350
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91a7f3a0-95fd-4652-42e3-08dc5ef81cd7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F6E.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6535
 
-On Tue, Apr 16, 2024 at 9:25=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> On Tue, Apr 16, 2024 at 08:36:33AM +0100, Conor Dooley wrote:
-> > On Mon, Apr 15, 2024 at 08:34:05PM -0700, Charlie Jenkins wrote:
-> > > On Sat, Apr 13, 2024 at 12:40:26AM +0100, Conor Dooley wrote:
-> > > > On Fri, Apr 12, 2024 at 02:31:42PM -0700, Charlie Jenkins wrote:
-> > > > > On Fri, Apr 12, 2024 at 10:27:47PM +0100, Conor Dooley wrote:
-> > > > > > On Fri, Apr 12, 2024 at 01:48:46PM -0700, Charlie Jenkins wrote=
-:
-> > > > > > > On Fri, Apr 12, 2024 at 07:47:48PM +0100, Conor Dooley wrote:
-> > > > > > > > On Fri, Apr 12, 2024 at 10:12:20AM -0700, Charlie Jenkins w=
-rote:
-> > > >
-> > > > > > > > > This is already falling back on the boot CPU, but that is=
- not a solution
-> > > > > > > > > that scales. Even though all systems currently have homog=
-enous
-> > > > > > > > > marchid/mvendorid I am hesitant to assert that all system=
-s are
-> > > > > > > > > homogenous without providing an option to override this.
-> > > > > > > >
-> > > > > > > > There are already is an option. Use the non-deprecated prop=
-erty in your
-> > > > > > > > new system for describing what extesions you support. We do=
-n't need to
-> > > > > > > > add any more properties (for now at least).
-> > > > > > >
-> > > > > > > The issue is that it is not possible to know which vendor ext=
-ensions are
-> > > > > > > associated with a vendor. That requires a global namespace wh=
-ere each
-> > > > > > > extension can be looked up in a table. I have opted to have a
-> > > > > > > vendor-specific namespace so that vendors don't have to worry=
- about
-> > > > > > > stepping on other vendor's toes (or the other way around). In=
- order to
-> > > > > > > support that, the vendorid of the hart needs to be known prio=
-r.
-> > > > > >
-> > > > > > Nah, I think you're mixing up something like hwprobe and having
-> > > > > > namespaces there with needing namespacing on the devicetree pro=
-bing side
-> > > > > > too. You don't need any vendor namespacing, it's perfectly fine=
- (IMO)
-> > > > > > for a vendor to implement someone else's extension and I think =
-we should
-> > > > > > allow probing any vendors extension on any CPU.
-> > > > >
-> > > > > I am not mixing it up. Sure a vendor can implement somebody else'=
-s
-> > > > > extension, they just need to add it to their namespace too.
-> > > >
-> > > > I didn't mean that you were mixing up how your implementation worke=
-d, my
-> > > > point was that you're mixing up the hwprobe stuff which may need
-> > > > namespacing for $a{b,p}i_reason and probing from DT which does not.
-> > > > I don't think that the kernel should need to be changed at all if
-> > > > someone shows up and implements another vendor's extension - we alr=
-eady
-> > > > have far too many kernel changes required to display support for
-> > > > extensions and I don't welcome potential for more.
-> > >
-> > > Yes I understand where you are coming from. We do not want it to requ=
-ire
-> > > very many changes to add an extension. With this framework, there are
-> > > the same number of changes to add a vendor extension as there is to a=
-dd
-> > > a standard extension.
+On Wed, Apr 17, 2024 at 03:12:57PM +0000, Shameerali Kolothum Thodi wrote:
+> > -----Original Message-----
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Saturday, April 13, 2024 4:44 AM
+> > To: will@kernel.org; robin.murphy@arm.com
+> > Cc: joro@8bytes.org; jgg@nvidia.com; thierry.reding@gmail.com;
+> > vdumpa@nvidia.com; jonathanh@nvidia.com; linux-kernel@vger.kernel.org;
+> > iommu@lists.linux.dev; linux-arm-kernel@lists.infradead.org; linux-
+> > tegra@vger.kernel.org
+> > Subject: [PATCH v5 6/6] iommu/tegra241-cmdqv: Limit CMDs for guest owned
+> > VINTF
 > >
-> > No, it is actually subtly different. Even if the kernel already support=
-s
-> > the extension, it needs to be patched for each vendor
+> > When VCMDQs are assigned to a VINTF owned by a guest (HYP_OWN bit unset),
+> > only TLB and ATC invalidation commands are supported by the VCMDQ HW. So,
+> > add a new helper to scan the input cmds to make sure every single command
+> > is supported when selecting a queue.
 > >
-> > > There is the upfront cost of creating the struct
-> > > for the first vendor extension from a vendor, but after that the
-> > > extension only needs to be added to the associated vendor's file (I a=
-m
-> > > extracting this out to a vendor file in the next version). This is al=
-so
-> > > a very easy task since the fields from a different vendor can be copi=
-ed
-> > > and adapted.
-> > >
-> > > > Another thing I just thought of was systems where the SoC vendor
-> > > > implements some extension that gets communicated in the ISA string =
-but
-> > > > is not the vendor in mvendorid in their various CPUs. I wouldn't wa=
-nt to
-> > > > see several different entries in structs (or several different hwpr=
-obe
-> > > > keys, but that's another story) for this situation because you're o=
-nly
-> > > > allowing probing what's in the struct matching the vendorid.
-> > >
-> > > Since the isa string is a per-hart field, the vendor associated with =
-the
-> > > hart will be used.
-> >
-> > I don't know if you just didn't really read what I said or didn't
-> > understand it, but this response doesn't address my comment.
->
-> I read what you said! This question seemed to me as another variant of
-> "what happens when one vendor implements an extension from a different
-> vendor", and since we already discussed that I was trying to figure out
-> what you were actually asking.
->
-> > Consider SoC vendor S buys CPUs from vendors A & B and asks both of the=
-m
-> > to implement Xsjam. The CPUs are have the vendorid of either A or B,
-> > depending on who made it. This scenario should not result in two
-> > different hwprobe keys nor two different in-kernel riscv_has_vendor_ext=
-()
-> > checks to see if the extension is supported. *If* the extension is vend=
-or
-> > namespaced, it should be to the SoC vendor whose extension it is, not
-> > the individual CPU vendors that implemented it.
-> >
-> > Additionally, consider that CPUs from both vendors are in the same SoC
-> > and all CPUs support Xsjam. Linux only supports homogeneous extensions
-> > so we should be able to detect that all CPUs support the extension and
-> > use it in a driver etc, but that's either not going to work (or be
-> > difficult to orchestrate) with different mappings per CPU vendor. I saw
-> > your v2 cover letter, in which you said:
-> >   Only patch vendor extension if all harts are associated with the same
-> >   vendor. This is the best chance the kernel has for working properly i=
-f
-> >   there are multiple vendors.
-> > I don't think that level of paranoia is required: if firmware tells us
-> > that an extension is supported, then we can trust that those extensions
-> > have been implemented correctly. If the fear of implementation bugs is
-> > what is driving the namespacing that you've gone for, I don't think tha=
-t
-> > it is required and we can simplify things, with the per-vendor structs
-> > being the vendor of the extension (so SoC vendor S in my example), not
-> > A and B who are the vendors of the CPU IP.
-> >
-> > Thanks,
-> > Conor.
-> >
->
-> Thank you for expanding upon this idea further. This solution of
-> indexing the extensions based on the vendor who proposed them does make
-> a lot of sense. There are some key differences here of note. When
-> vendors are able to mix vendor extensions, defining a bitmask that
-> contains all of the vendor extensions gets a bit messier. I see two
-> possible solutions.
->
-> 1. Vendor keys cannot overlap between vendors. A set bit in the bitmask
-> is associated with exactly one extension.
->
-> 2. Vendor keys can overlap between vendors. There is a vendor bitmask
-> per vendor. When setting/checking a vendor extension, first index into
-> the vendor extension bitmask with the vendor associated with the
-> extension and then with the key of the vendor extension.
->
-> A third option would be to use the standard extension framework. This
-> causes the standard extension list to become populated with extensions
-> that most harts will never implement so I am opposed to that.
->
-> This problem carries over into hwprobe since the schemes proposed by
-> Evan and I both rely on the mvendorid of harts associated with the
-> cpumask. To have this level of support in hwprobe for SoCs with a mix of
-> vendors but the same extensions I again see two options:
->
-> 1. Vendor keys cannot overlap between vendors. A set bit in the bitmask
-> is associated with exactly one extension. This bitmask would be returned
-> by the vendor extension hwprobe key.
->
-> 2. Vendor keys can overlap between vendors. There is an hwprobe key per
-> vendor. Automatic resolution of the vendor doesn't work because the
-> vendor-specific feature being requested (extensions in the case) may be
-> of a vendor that is different than the hart's vendor, in otherwords
-> there are two variables necessary: the vendor and a way to ask hwprobe
-> for a list of the vendor extensions. With hwprobe there is only the
-> "key" that can be used to encode these variables simultaneously. We
-> could have something like a HWPROBE_THEAD_EXT_0 key that would return
-> all thead vendor extensions supported by the harts corresponding to the
-> cpumask.
+> > Note that the guest VM shouldn't have HYP_OWN bit being set regardless of
+> > guest kernel driver writing it or not, i.e. the hypervisor running in the
+> > host OS should wire this bit to zero when trapping a write access to this
+> > VINTF_CONFIG register from a guest kernel.
+> 
+> Just curious, suppose there is a malicious guest with a compromised kernel
+> which bypasses the HYP_OWN bit check and issues other commands, does
+> the hardware has the capability to detect it and not make the host unstable
+> in any way?
 
-I was a big proponent of the vendor namespacing in hwprobe, as I liked
-the tidiness of it, and felt it could handle most cases (including
-mix-n-matching multiple mvendorids in a single SoC). However my
-balloon lost its air after chatting with Palmer, as there's one case
-it really can't handle: white labeling. This is where I buy a THead
-(for instance) CPU for my SoC, including all its vendor extensions,
-and do nothing but change the mvendorid to my own. If this is a thing,
-then the vendor extensions basically have to be a single global
-namespace in hwprobe (sigh).
+Only that specific VINTF/VCMDQ would stop and error an IRQ.
 
-I do like Charlie's idea of at least letting vendors allocate a key at
-a time, eg HWPROBE_THEAD_EXT_0, rather than racing to allocate a bit
-at a time in a key like HWPROBE_VENDOR_EXT_0. That gives it some
-semblance of organization, and still gives us a chance of a
-cleanup/deprecation path for vendors that stop producing chips.
--Evan
+Even a device command (ATC_INV) would be strictly checked
+against the Stream ID table that's set at the host level.
+
+Thanks
+Nicolin
