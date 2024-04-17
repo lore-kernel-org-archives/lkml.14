@@ -1,210 +1,75 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7B6146D5D;
-	Wed, 17 Apr 2024 15:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E304146D5E;
+	Wed, 17 Apr 2024 15:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713367171; cv=none; b=HvsCSIFpk17O3hNKB+FUwwlMSmWrKssTsj85WBcfSXFvqDm7dKDJM8DMha9Wlk+PICo+k9rAuKtDGC6u5/jUgckT9SLojwBA2DqsGuuOILj0Wjgvhm70Fm1nHeNKmhb1BEUgEpi5q376f/WiZY+P1/cdQm8RLPYp8U4jvMeepIU=
+	t=1713367222; cv=none; b=uBlwVeZ/ObezMxJE2Wu7r4WGSIjWIBsOEKqSD3BkH7j6eWBQlZMCekXPH+BuMv6sOSXkQM2QhujaIhPmVnfZc5LudredX6uKEoV3ORzDl0P59ZpTuSY5RSz6xEPP9fONFlen5mscPXoql9e7mNSHlh7dOqsqi5RJWAfGp62NW4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713367171; c=relaxed/simple;
-	bh=9ieCxJYZGNBDD1LiuUPAloXHCCgXHM76uCwIyEXjUiU=;
+	s=arc-20240116; t=1713367222; c=relaxed/simple;
+	bh=jEmNRf5WdmSCn9d1nQ8mj13loSgpSuoMo6q+ARRPMU0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIrGVSPrd36Jn+GN0k8StRadAx4YI0/jhtPG6dmKps62hhZVEKP2NJg7Bl4QIg9c+S/Tj/qz9H70ZaL4GioPysQ/Rtk35s9ctUN7qb6tmo/HwZpYaMEcG45CNIiMTLwSWyhM1kaIpB8GZ8a5IBRp0oY30MvlyySiooT09z+9nK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBnZrAOy; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=nIViigHBdTUAj8QF89Gw66Cx0fznRPo/rfMeKbgC7P7TCnOWUeWxJh0mvs8vGDJG5Uhmjy6bSDEn+FXnhJN5AsfLo9ZhpNDJU2EbPQQ74JCDjORMzygO02sfeBbxN8oxAUVXbdIXZepnuPd9QUs4SFekDlX9sWEKrsotGSN1MFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=P8hrE+gz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBnZrAOy"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-43716c1616dso16450181cf.2;
-        Wed, 17 Apr 2024 08:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713367169; x=1713971969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IsuMImG8y65tuxtEa3J0zOxc8q85jI16Vx7B/v7ER6c=;
-        b=VBnZrAOyEn5VczX6uD1UkqvFGOvlhz3Gicaegyd8RAdEBVGDfV8FOOD5DP5Y8ZXUWd
-         HSacl5Qo6DCPzjOwNjbyfSO8y+yvHLfTsnTptuoru9H7brGJHZnh12YueDPln4OLRSFk
-         SsFAcxDz5oikKhitjPLju3KYGzBSOKHi90yRYtmOlT91AuiDeKTcI63PaCPRFmjqBbmf
-         4L4qDlNoot8waIM/Wa+CVYou9HpRI+lgxgCbPmBLnWkh5wA8Z9nS/jUwtxGSexORNG8G
-         yMIl4IHm0uxsUgt1h3GjmmYt0h6VsVaHkwzDAqUm2Rb4ItkSPiK3YGmvk7X1dKKOSOi9
-         DvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713367169; x=1713971969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IsuMImG8y65tuxtEa3J0zOxc8q85jI16Vx7B/v7ER6c=;
-        b=xQ/GlZWwWo2bqK3OLeE62DS1xFrFIKCCTNb5ZPJ6+zrx0vpXcFMom1wqiJFJL/bpA7
-         TSloEfqGS7EAbWmSuL2PdyhTpSsBdcf8Zv0LLwjHqbQN+F7FWUd6IXVl84xnCFpT9K7H
-         ZzK9kgRTqix2qopIqqa64s1RwYi0238DoMM6uvtP4H7YJcjtTBsL/BTocmFmVyMVO4ey
-         QWsVfnWLzf2QygN2kj3xXy41aAdt30Z313e0pExwhTeDh/4SKhsk6FhVZ+7c/WPCUoCl
-         /b2FCikjWt9JV0z/yzxL7q4m3r7Mx0Y7B8eAaBF3GfvbqstSYLdfnOzNyDDZbt9+1AcW
-         Qb2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUBqD+GtitdXL1IXGGznlkhmfSOHdJvhpJslc5qyfVzzv3PFrTssQp2GAzgbomlJo+zwuhwWXp/YOuwVwwsRRAL17vRb4Xi+JBBp1oBgrrL/J/vOJrIwGBmhZI8TM3KmVPRkBU6MprpaDmOm/nuXkKubB0i9LsSU24UX0+vYUyXx8AatCAf5g==
-X-Gm-Message-State: AOJu0YwGCbGn7bXvy0VmrJkuDuNYxBwJRRzkEACVwlbQjmXzNjXJeIas
-	7K5fwn949Xf2kXgF+3JpgptZsbuE0qrUZQRt3E+2lMraD1tWT3S6Cy8P1sWO2okKTI6Jx0rFlpv
-	lDJ6sCOVwNgX2Z24OgVwmxKiT++o=
-X-Google-Smtp-Source: AGHT+IHIisIJ4FJxDLwU+mOfGl94tChPUf7fwp+QgM5rMw7GH+ywYcGEpzukiulU6fkcyGUq246BiHzlmCV8563qhBg=
-X-Received: by 2002:ac8:57cc:0:b0:436:ac83:42b8 with SMTP id
- w12-20020ac857cc000000b00436ac8342b8mr17228338qta.1.1713367169046; Wed, 17
- Apr 2024 08:19:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="P8hrE+gz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54AE5C32781;
+	Wed, 17 Apr 2024 15:20:21 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="P8hrE+gz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1713367218;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jEmNRf5WdmSCn9d1nQ8mj13loSgpSuoMo6q+ARRPMU0=;
+	b=P8hrE+gz+5Vmb7w74R4zmbHRa7j2S7bNUhLVfxfGTjZ/ka+CURx6zdurqSWwWcOUMU/glz
+	83AM5lZiRJdc32V9ZaUCsEFnAyAlTx5jYT0Am87WwMAZLPd1vKcsBwGk/dIlAFzGWF4dF7
+	2FZcJMKZHS0jzhoT894Ov7vAlWW7u1E=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id da6478ae (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 17 Apr 2024 15:20:18 +0000 (UTC)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-ddaebc9d6c9so5242182276.0;
+        Wed, 17 Apr 2024 08:20:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVEIzpBHHrJOVydYnQp99LcZ1BCA6QaQa/qR9cmqzoonbKM1SnJj/MJWJ6ttZmOM0GXMZAKuO/6Kqts7tUIE3lfch80gFSPyc2z7e06/nFrK1E4CnY22bKHPp1SVy8BLKVCcODvxgfYffTlalD+Xum4drphPAaiNsheiS9jv6hYmKVMurgkkQ==
+X-Gm-Message-State: AOJu0YwspWW4R9wYvf8CUzP95D884i8dpqesLF1ocls0SNZqAF0fP5Mx
+	Qlz8gMPLpmUUv6CvWdmKHm288KHjCR27a5C+sNnHEW+5MpQeBtm7VpTsTbmIYXRjSuAB+ZnP5Bh
+	ONIg3C5FAu/gSehsv5opBTKDxQ70=
+X-Google-Smtp-Source: AGHT+IGFuPJLnyUfwgW4MBwQgxmKUFwnpUfeu0z/FzaD5kkOiCguNLUhh5Cqx6saafSAJtm00sQKMafyEw3NudTjBq4=
+X-Received: by 2002:a25:bdd4:0:b0:dcb:be59:25e1 with SMTP id
+ g20-20020a25bdd4000000b00dcbbe5925e1mr16536339ybk.30.1713367217279; Wed, 17
+ Apr 2024 08:20:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417135111.20375-1-pratik.farkase@wsisweden.com> <20240417-obscure-denial-ae7c53d0e321@spud>
-In-Reply-To: <20240417-obscure-denial-ae7c53d0e321@spud>
-From: Pratik Farkase <pratikfarkase94@gmail.com>
-Date: Wed, 17 Apr 2024 17:19:18 +0200
-Message-ID: <CACy_QWNpUtDz16RWOHf_-xBhtwt_66_4xCaSf+wzPKFz9c6D0A@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: serial: brcm,bcm2835-aux-uart: convert to dtschema
-To: Conor Dooley <conor@kernel.org>
-Cc: Pratik Farkase <pratik.farkase@wsisweden.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+References: <20240417104046.27253-1-bchalios@amazon.es> <20240417104046.27253-5-bchalios@amazon.es>
+ <a9f1d643-f171-4b41-88c5-bd9bae0f8200@kernel.org> <433a026a-352c-48c1-84cf-e538bb30aad7@amazon.es>
+In-Reply-To: <433a026a-352c-48c1-84cf-e538bb30aad7@amazon.es>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Wed, 17 Apr 2024 17:20:06 +0200
+X-Gmail-Original-Message-ID: <CAHmME9r647g++mOuG7DGz27pwaVKyc-HrbH2Z2nmHXA4ko6h-Q@mail.gmail.com>
+Message-ID: <CAHmME9r647g++mOuG7DGz27pwaVKyc-HrbH2Z2nmHXA4ko6h-Q@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] dt-bindings: rng: Add vmgenid support
+To: Babis Chalios <bchalios@amazon.es>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, tytso@mit.edu, olivia@selenic.com, 
+	herbert@gondor.apana.org.au, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sudanl@amazon.com, graf@amazon.de, 
+	xmarcalx@amazon.co.uk, dwmw@amazon.co.uk, Alexander Graf <graf@amazon.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 4:54=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Wed, Apr 17, 2024 at 03:51:10PM +0200, Pratik Farkase wrote:
-> > Convert the Broadcom BCM2835 Auxiliary UART to newer DT schema.
-> > Created DT schema based on the .txt file which had
-> > `compatible`, `reg` `clocks` and `interrupts` as the
-> > required properties. This binding is used by Broadcom BCM2835
-> > SOC used in some Raspberry PI boards.
-> > Changes from original file:
-> > Implemented complete example which the original txt binding lacked.
-> >
-> > Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
-> > ---
-> > Changes in v2
-> > - Updated Maintainers list according to feedback
-> > - Fixed typo `Auxiliar` to `Auxiliary`
-> > ---
-> > ---
-> >  .../bindings/serial/brcm,bcm2835-aux-uart.txt | 18 -------
-> >  .../serial/brcm,bcm2835-aux-uart.yaml         | 48 +++++++++++++++++++
-> >  2 files changed, 48 insertions(+), 18 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm28=
-35-aux-uart.txt
-> >  create mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm28=
-35-aux-uart.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-=
-uart.txt b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.t=
-xt
-> > deleted file mode 100644
-> > index b5cc6297cd1b..000000000000
-> > --- a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.tx=
-t
-> > +++ /dev/null
-> > @@ -1,18 +0,0 @@
-> > -* BCM2835 AUXILIAR UART
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: "brcm,bcm2835-aux-uart"
-> > -- reg: The base address of the UART register bank.
-> > -- interrupts: A single interrupt specifier.
-> > -- clocks: Clock driving the hardware; used to figure out the baud rate
-> > -  divisor.
-> > -
-> > -Example:
-> > -
-> > -     uart1: serial@7e215040 {
-> > -             compatible =3D "brcm,bcm2835-aux-uart";
-> > -             reg =3D <0x7e215040 0x40>;
-> > -             interrupts =3D <1 29>;
-> > -             clocks =3D <&aux BCM2835_AUX_CLOCK_UART>;
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-=
-uart.yaml b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.=
-yaml
-> > new file mode 100644
-> > index 000000000000..5d4d37371d6b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.ya=
-ml
-> > @@ -0,0 +1,48 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/serial/brcm,bcm2835-aux-uart.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: BCM2835 AUXILIARY UART
-> > +
-> > +maintainers:
-> > +  - Pratik Farkase <pratikfarkase94@gmail.com>
-> > +  - Florian Fainelli <florian.fainelli@broadcom.com>
-> > +  - Stefan Wahren <wahrenst@gmx.net>
-> > +
-> > +allOf:
-> > +  - $ref: serial.yaml
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: brcm,bcm2835-aux-uart
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/bcm2835.h>
-> > +    #include <dt-bindings/clock/bcm2835-aux.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
->
-> Only 1 of these headers seems used, there's only one define below.
->
-> > +    uart1: serial@7e215040 {
->
-> The label is unused and can be dropped.
-I did not understand this part. What do you suggest i change it into?
-I took the example from original dtsi file:
-arch/arm/boot/dts/broadcom/bcm283x.dtsi
->
-> Otherwise,
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->
->
-> > +        compatible =3D "brcm,bcm2835-aux-uart";
-> > +        reg =3D <0x7e215040 0x40>;
-> > +        interrupts =3D <1 29>;
-> > +        clocks =3D <&aux BCM2835_AUX_CLOCK_UART>;
-> > +    };
-> > --
-> > 2.34.1
-> >
+On Wed, Apr 17, 2024 at 5:19=E2=80=AFPM Babis Chalios <bchalios@amazon.es> =
+wrote:
+> I will re-create the patches with correct authorship, my SoB and the
+> Reviewed-by
+> tags I had received in previous versions and send a v7.
 
+Please don't bother.
 
-
---=20
-Best Regards
-Pratik Farkase
-Be Passionate Be Smart
+Jason
