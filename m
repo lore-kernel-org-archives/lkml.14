@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2A4146D6C;
-	Wed, 17 Apr 2024 14:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6F3142914;
+	Wed, 17 Apr 2024 14:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364915; cv=none; b=UiUkvcQYYRO8SEX3tpXqK3IUT+WI3mbyFeltFAJ2Top5OpZY3cjjJmifJZT6uYLPTmThg5TM7aTwSO2fROAGxLFud1F3ZCMYUXBrK19ij2jXAgV4FN17vYl/yltFGQdt5pqbiGwzS6qhQxPsvV9ADe6V8yt6XLQivlRo+nzarhI=
+	t=1713364927; cv=none; b=CeovUCcku9tvDy4s6jv4Eh0uAbSFl4Lfw3AXC8/NiIaI4FsSoRVuvpp3JkhzSoY53bomzRxBAAht25L3fmjAcPp3ZMwh+TFDGMX/uN5QBGpwTGgVhAotYsgoeSURtHjhEhycbi6oPHaBwDCYa/7Q34KkHL8c7stkNBZ2PGbjhR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364915; c=relaxed/simple;
-	bh=jr0C6sNwIGJdObduli6FVCaxDeCtBKhG3NSdzuSaMGY=;
+	s=arc-20240116; t=1713364927; c=relaxed/simple;
+	bh=ZOgujZJeGStPMm3IlJW187ZYbZDubo00HsvPHLTtRrk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S03z1THTxGc7KHo6q6k4KCjWlSaeVjiMSB+l42co+fuENINiD/kUofrf8AcSqeRV2Xfuqp9QW8uAMzWL/2SYfvvyfYSDA052Ox2nlLcMHPAZJDcM2ZdiuBrEyBJc1qzbs49kIYTqJhNFcAP/VLLA0Eei722ciWntpjCZsE+bHHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RyH6AkJ/; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=Lrq5EKqXsEsjBkktqk1oHZi6LjNOc0KHsewOx6o23zBnBYzscOJofxKtI7Ov+iIoFQ3mZPE+uXgpRyiKlZJe95z+O960VtauJK8nNm3uBLFOVTiShVSVTA+pmrxVnc6m1Bq2T91JBNGR3tmzjwo8lt2jKQjqAMv8vtBDFsM8UD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BKU6OjmA; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RyH6AkJ/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D2421BF213;
-	Wed, 17 Apr 2024 14:41:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BKU6OjmA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2EC551BF21D;
+	Wed, 17 Apr 2024 14:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713364911;
+	t=1713364923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/M7MblF5FojAIwCImILZRFXjF6A2YTa3pBx7P1LIj6g=;
-	b=RyH6AkJ/2Qtiquf0ZEdFxUQgSusxPJOPdCH/+wu+G+1LRDINeR2adH5WZy9LJeRQPkKP7L
-	le4lp6P2oC7F6gDKZVidPjLDWQ3y9DwWCZdhmMS7p8SxoLEbjhEYNglqKvAMXM07kh/Rx5
-	6lf85yHkqHO2aF/3ooJB8QwbykHMIGCP60NwMsbYiyOZsEodex2mcQOwZxqAGA4IIqmTt9
-	LfQd1SYq163wV/pVjO7pod6wcTNvAnfj813mo34UYwb495FK8BgBog7NDgJ49XNJ+g9OY/
-	WAp1OwpysCzdVgZc4ssiGQrw1b8bY5LadtxsLkMu22DMHPxHu39MBg1fDRqQvw==
+	bh=Z9570PIByLTohnxFL2DuYK+rFm412uwcSfs1u3hj/ts=;
+	b=BKU6OjmAL7aF6cxatq/1PD5AMu7cq0h/E1pTT97f7Do6BU7cssq1j6thDNkKC8nCt2wdMK
+	Gycs0KIGjx5RqisazxELPo+cBoElHly2Ms30yrgsR920ygpQyce3Za0wOf49GvnMl3MHqC
+	F/k5pLaAnjD7A1m96YszjRvQiq+UTbE6bq4MbZ/SK9sKetOzwsB1Ux70a/Im3gVxkd1XwE
+	4ta/ebUQmVJ66iEsMZLW1dBixLouNbL/lxlWwSGmAh2WGuAKOw4pkqew1eqZoDfEDkUxzQ
+	FMBVrGZmNbEIElZsH0CFe06HDMpNj62dfxm1d2/MKc60wPk+CElDoVsYjkR8ZA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 17 Apr 2024 16:39:59 +0200
-Subject: [PATCH net-next v9 11/14] dt-bindings: net: pse-pd: Add bindings
- for PD692x0 PSE controller
+Date: Wed, 17 Apr 2024 16:40:01 +0200
+Subject: [PATCH net-next v9 13/14] dt-bindings: net: pse-pd: Add bindings
+ for TPS23881 PSE controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-feature_poe-v9-11-242293fd1900@bootlin.com>
+Message-Id: <20240417-feature_poe-v9-13-242293fd1900@bootlin.com>
 References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
 In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -67,51 +67,38 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Add the PD692x0 I2C Power Sourcing Equipment controller device tree
+Add the TPS23881 I2C Power Sourcing Equipment controller device tree
 bindings documentation.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
+Change in v3:
+- New patch.
 
-Changes in v2:
-- Enhance ports-matrix description.
-- Replace additionalProperties by unevaluatedProperties.
-- Drop i2c suffix.
+Change in v4:
+- Rename the file to ti,tps23881 as it support only this version of the PSE
+  controller.
 
-Changes in v3:
-- Remove ports-matrix parameter.
-- Add description of all physical ports and managers.
-- Add pse_pis subnode moving to the API of pse-controller binding.
-- Remove the MAINTAINERS section for this driver as I will be maintaining
-  all pse-pd subsystem.
-
-Changes in v5:
-- Remove defs used only once.
-- Replace underscore by dash.
-- Add description.
-
-Changes in v7:
-- Fix nit.
+Change in v7:
 - Add vpwr-supply property in the example.
-- Remove ports references for the manager node.
 ---
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     | 169 +++++++++++++++++++++
- 1 file changed, 169 insertions(+)
+ .../bindings/net/pse-pd/ti,tps23881.yaml           | 95 ++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
 new file mode 100644
-index 000000000000..828439398fdf
+index 000000000000..4147adb11e10
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
-@@ -0,0 +1,169 @@
++++ b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
+@@ -0,0 +1,95 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/pse-pd/microchip,pd692x0.yaml#
++$id: http://devicetree.org/schemas/net/pse-pd/ti,tps23881.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Microchip PD692x0 Power Sourcing Equipment controller
++title: TI TPS23881 Power Sourcing Equipment controller
 +
 +maintainers:
 +  - Kory Maincent <kory.maincent@bootlin.com>
@@ -122,75 +109,32 @@ index 000000000000..828439398fdf
 +properties:
 +  compatible:
 +    enum:
-+      - microchip,pd69200
-+      - microchip,pd69210
-+      - microchip,pd69220
++      - ti,tps23881
 +
 +  reg:
 +    maxItems: 1
 +
-+  managers:
++  '#pse-cells':
++    const: 1
++
++  channels:
++    description: each set of 8 ports can be assigned to one physical
++      channels or two for PoE4. This parameter describes the configuration
++      of the ports conversion matrix that establishes relationship between
++      the logical ports and the physical channels.
 +    type: object
-+    description:
-+      List of the PD69208T4/PD69204T4/PD69208M PSE managers. Each manager
-+      have 4 or 8 physical ports according to the chip version. No need to
-+      specify the SPI chip select as it is automatically detected by the
-+      PD692x0 PSE controller. The PSE managers have to be described from
-+      the lowest chip select to the greatest one, which is the detection
-+      behavior of the PD692x0 PSE controller. The PD692x0 support up to
-+      12 PSE managers which can expose up to 96 physical ports. All
-+      physical ports available on a manager have to be described in the
-+      incremental order even if they are not used.
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
 +
 +    patternProperties:
-+      "^manager@0[0-9a-b]$":
++      '^channel@[0-7]$':
 +        type: object
-+        description:
-+          PD69208T4/PD69204T4/PD69208M PSE manager exposing 4 or 8 physical
-+          ports.
-+
-+        properties:
-+          reg:
-+            description:
-+              Incremental index of the PSE manager starting from 0, ranging
-+              from lowest to highest chip select, up to 11.
-+            maxItems: 1
-+
-+          "#address-cells":
-+            const: 1
-+
-+          "#size-cells":
-+            const: 0
-+
-+        patternProperties:
-+          '^port@[0-7]$':
-+            type: object
-+            required:
-+              - reg
-+            additionalProperties: false
-+
 +        required:
 +          - reg
-+          - "#address-cells"
-+          - "#size-cells"
++
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - pse-pis
-+
-+unevaluatedProperties: false
 +
 +examples:
 +  - |
@@ -198,56 +142,24 @@ index 000000000000..828439398fdf
 +      #address-cells = <1>;
 +      #size-cells = <0>;
 +
-+      ethernet-pse@3c {
-+        compatible = "microchip,pd69200";
-+        reg = <0x3c>;
++      ethernet-pse@20 {
++        compatible = "ti,tps23881";
++        reg = <0x20>;
 +
-+        managers {
++        channels {
 +          #address-cells = <1>;
 +          #size-cells = <0>;
 +
-+          manager@0 {
++          phys0: channel@0 {
 +            reg = <0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            phys0: port@0 {
-+              reg = <0>;
-+            };
-+
-+            phys1: port@1 {
-+              reg = <1>;
-+            };
-+
-+            phys2: port@2 {
-+              reg = <2>;
-+            };
-+
-+            phys3: port@3 {
-+              reg = <3>;
-+            };
 +          };
 +
-+          manager@1 {
++          phys1: channel@1 {
 +            reg = <1>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
++          };
 +
-+            phys4: port@0 {
-+              reg = <0>;
-+            };
-+
-+            phys5: port@1 {
-+              reg = <1>;
-+            };
-+
-+            phys6: port@2 {
-+              reg = <2>;
-+            };
-+
-+            phys7: port@3 {
-+              reg = <3>;
-+            };
++          phys2: channel@2 {
++            reg = <2>;
 +          };
 +        };
 +
@@ -263,6 +175,7 @@ index 000000000000..828439398fdf
 +            polarity-supported = "MDI", "S";
 +            vpwr-supply = <&vpwr1>;
 +          };
++
 +          pse_pi1: pse-pi@1 {
 +            reg = <1>;
 +            #pse-cells = <0>;
