@@ -1,176 +1,135 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640CE139F
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462A812DDB2;
+	Wed, 17 Apr 2024 13:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713362233; cv=none; b=SBLhMyCn2QkeHaewz2u3TBrWvQAzQDSJgw/vJBH51CavcabUGWVup5LNryCXh6jOfQzQP2lullKfdLR3NOERQ+kp9+jpoJQTGhfsaAY9nx4N8O3qQESzf1cIUPzFdWztlblOuIHFhvaB0IOnA27RFQdPuz7I6IaJGLnG4nss1B4=
+	t=1713362258; cv=none; b=oy4gObZoPRSaYYSc3ifipupSbkUfWaRFr3gpDHqxmLM3ovvkToROuuqWH0IvW6153aYHd6DWH5kD9LthmpBfkF8hOL1u8rV/jBoZ7wdYtSIln9u4cQg4yN837yrTwiAqRIkBHQrgIlJMjaShlUl9MZg3rpelMOp7ljCN+CdKstI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713362233; c=relaxed/simple;
-	bh=XLvYLU4eF/dPhXr9R4HaBFMJ+6xEWfr8YB2tRLmE8JU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cnyQLQgNxTi9u/NZ0+R0VgXfUR/Mwipv8YEcwfvuM3lRPuUtHR7KYElFayAqNd6WCYjH36zUwenat+OpD3s9/4b8KDZsVlP4ceBgDJi8I92xP26h8E1Sruas2mJE/kMzqA2iUVUV5qXyhRgJd69DFIUJy4/RVSrplh/xASY/Qa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2zDDx9r; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1713362258; c=relaxed/simple;
+	bh=GfdDaJaF6I8I6t+sUUjDGTmD1djsk6nhZvqhE3RJWXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=X/U3Elmge6V9oX5anonZtBuo7SgmzLeNA1IkBgj2rhn2utvMhbM6oLAO3r7LsPz3GsgPdi/OQxrD3uKUzESUV26lT3FiHrj3RJSApCOIes2Zd9ySi17khE3Opd0jVXviH15rxIfVKhVgmJrqR+Y9+KNnaFb8LjHnEJIZXD8yp58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjDipzf5; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2zDDx9r"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e651a9f3ffso21031785ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjDipzf5"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41551500a7eso31744365e9.2;
+        Wed, 17 Apr 2024 06:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713362231; x=1713967031; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NoWPGw5XhVyWYSlc/o5noqumx8xqX3eLJxgrmq9khU4=;
-        b=d2zDDx9rDVjNqHSwVDjgCqod/0Tusgf+4cfVEwEWsmtFDZvM9b+hPD5Y6PBkOAdw5U
-         e61s7rYm916Q0DUqQcER0Dyv1D3wGpOj27Fj7j4Z0l31fTI+itUiRZULVSk/xQEAYNhF
-         2EsH+zouX4ukA0RFpA5odVLxvYYtP7WZZ/ldTRx6U5U0rNZnQFpS4kKAwD1nONAfrlyI
-         UbyPxbFuQeux5nVgw2gyoGQyO0GJO019Uxylj2OKlPGd5yB9n6Jm1KzF1uf489OKeJek
-         Fo4lCl7m9PNT6WnuzBd+miUS6rH5MSXkgfvJUaZnQJGEbu4TEe4GnTDjKpaGd8WnU7e4
-         Vtvg==
+        d=gmail.com; s=20230601; t=1713362255; x=1713967055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to:subject
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bq6F5jb5Kt/vGqlutFyQe3zVfOLe7mptq1iSMaQ2i2g=;
+        b=HjDipzf5LwqhDiqcK/Axd/fz8gXYKumJ0ESvD5KIL+XJnim5BCINi2cqkF51z5b5qm
+         Gka3Uo31H2IUTen0d+CCi2NNfmV8ZMTVm5ygNNlyvRlhNfWuZcSaRYVmzbfdNlJr5KcD
+         rvY3YHX7GGcO/RtA0tUYceP3fVTVCSVfpVAmlBSdOLUVz29TXU40wRIADkX4uVkrUbPh
+         qofbpDPc5b0dqX+fNsfKdiYQWXVcxLvLQx4oSUAirJkdDWK4IydtH6ow0u6YA4aEBoUE
+         rsWiZQptBYit2bWJnt3w9mPw1WPgkbfKDLLRYIUCVmJXD+9wlp/pKRIrs5Z1LTrzF+Zl
+         MzIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713362231; x=1713967031;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NoWPGw5XhVyWYSlc/o5noqumx8xqX3eLJxgrmq9khU4=;
-        b=JkzBqkk/nRAixE0xbf+LeisjogwTbXIsm7rabitFSsrJRuL7NRiazTJy0UcDteYpkt
-         3v26BcC4Gfg6aVTbJGtFz7lfw4tHxO2sqCw48B+wsVPFMlTOYMNQE8rce62cXtcfhem5
-         3xssreJLu+PS8nhQnbqedv35lE9y8iUoMpphzUag4WZB1i/Y6XUnRgAO8yxc6UARhaAA
-         HB9mQaicgnuMj1sN4R8SpSNwgiERHdkSJrGiLWW1vOMQrIybWYCc+Zh3iZLj7LMB/Mg2
-         i9b44/qPawnXXjnNd5wxhaSrHBjQL+2SBSwIcM82665yigNcR2UUATI0RoXeMZqFSsDq
-         UeWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrL7c0fV/IJdAhnIvSenym3jaieWi6RI6XLPBL/QswDRbUfbWW8HnDpeL/xXuyF81QmfzZM8JnlzDv2HEmkRm4JvwTnG/t12xJG9KL
-X-Gm-Message-State: AOJu0YyMYvXl5QWJrzlYhcIdLLhzanWzemyVdrxamqqsIFWD/s4+Cvpm
-	XSlnxwypMuz0s8zbBIeR9wL27ytnxXWBDZ1GM3XkS82G2I1TFQ9Q
-X-Google-Smtp-Source: AGHT+IG7HeoSlD6WjfLHgM947oAumt6yz9jgDNwugrmLPHmmflMNTCRcFoC2QKrXSPvFCaMZhJKrlg==
-X-Received: by 2002:a17:902:c951:b0:1dd:6ce3:7442 with SMTP id i17-20020a170902c95100b001dd6ce37442mr15422757pla.39.1713362231529;
-        Wed, 17 Apr 2024 06:57:11 -0700 (PDT)
-Received: from lima-default.. (1-175-176-70.dynamic-ip.hinet.net. [1.175.176.70])
-        by smtp.gmail.com with ESMTPSA id jz5-20020a170903430500b001e41f1dda43sm11623485plb.75.2024.04.17.06.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 06:57:11 -0700 (PDT)
-From: Chin-Chun Chen <chinchunchen2001@gmail.com>
-To: yury.norov@gmail.com
-Cc: linux@rasmusvillemoes.dk,
-	linux-kernel@vger.kernel.org,
-	Chin-Chun Chen <chinchunchen2001@gmail.com>
-Subject: [PATCH v2] linux/bitops.h: Refactor function fns to reduce branch usage and eliminate external calls
-Date: Wed, 17 Apr 2024 21:51:07 +0800
-Message-Id: <20240417135106.21640-1-chinchunchen2001@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240417132252.20773-1-chinchunchen2001@gmail.com>
-References: <20240417132252.20773-1-chinchunchen2001@gmail.com>
+        d=1e100.net; s=20230601; t=1713362255; x=1713967055;
+        h=content-transfer-encoding:in-reply-to:from:references:to:subject
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bq6F5jb5Kt/vGqlutFyQe3zVfOLe7mptq1iSMaQ2i2g=;
+        b=Yg74TJGTwKwKfg2RkHSI5zm3hFqb9KHpwiEtjh3iA7QarACo2I+3oKFDlLxjIq/L4m
+         p0k5q0LqLZ08UKujTbOenB5/A5bmZW5lALyDKfCYoZ363r0NTl6QQCXPfFlz0r8xeyMz
+         gF8pvyWLNuxPLPddfTHyfi6JAdzSA6ZXlJ3UNaGolp4T+0tYrVGWW2vKhM6L34WScfBd
+         +I88iCs8h9wW2IfOn84/tx6fKKQOBCGHbWR4RvemitXSGYqUy5OG74sC6eo/GbMBC4i+
+         ax8NJkvMlXCksk7AYjRobwoDGByC6ua3IB5b6pKBpsVvY+pJ7GPysgevkffCipWN96jE
+         HV6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUmyA1YnIFXzg4ffKTXItUh3u1D78g7XF8J5zalffSRe07NK/wY/5LzlHxF2Tyo0XmWhVdJuGh9cg4m7CiOvrBipMhHZX+oIm37zJWksI7kBuFPw1BMhqwtQCXEdaf6VuOHbzM7uCnYbLyiTzNL6ZM4YAeSG9ZJmMBZjHbegvR39BrcK15v
+X-Gm-Message-State: AOJu0YzA4Jn/CU63HFDcNqcD7olfPLbHtA5G0FP84kKPnF5s5yj73HtI
+	cha24/7oM/vUKYJyHSDN2u8TJ7SF0t5IKVeDNeI7jMWB9J8pso3h
+X-Google-Smtp-Source: AGHT+IHJOn4Zu63iPcjn4/f8ultHn+Ei3MuSj6R1wtla6HZQDiM9H7h81GA6gbC6L6CdKgk8EFUAeA==
+X-Received: by 2002:a05:600c:4e91:b0:418:1083:d2a0 with SMTP id f17-20020a05600c4e9100b004181083d2a0mr10442466wmq.21.1713362255319;
+        Wed, 17 Apr 2024 06:57:35 -0700 (PDT)
+Received: from debian ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id f6-20020a05600c154600b00418a02674edsm2949498wmg.38.2024.04.17.06.57.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 06:57:35 -0700 (PDT)
+Message-ID: <265469cf-2dea-41fd-8d3e-d1fef7781673@gmail.com>
+Date: Wed, 17 Apr 2024 15:57:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v7 1/3] net: gro: add {inner_}network_offset to
+ napi_gro_cb
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, dsahern@kernel.org,
+ shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240412155533.115507-1-richardbgobert@gmail.com>
+ <20240412155533.115507-2-richardbgobert@gmail.com>
+ <661b2e2ef3396_3cb63829493@willemb.c.googlers.com.notmuch>
+From: Richard Gobert <richardbgobert@gmail.com>
+In-Reply-To: <661b2e2ef3396_3cb63829493@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Rewrote the function fns to use macro wrote in linux/include/asm-generic/bitops/const_hweight.h.
-Decrease the number of required branches and eliminate the need for external calls.
-The number of branches is now constant, unaffected by input variations.
+Willem de Bruijn wrote:
+> Richard Gobert wrote:
+>> This patch adds network_offset and inner_network_offset to napi_gro_cb, and
+>> makes sure both are set correctly. In the common path there's only one
+>> write (skb_gro_reset_offset).
+>>
+>> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+>> ---
+>>  drivers/net/geneve.c           |  1 +
+>>  drivers/net/vxlan/vxlan_core.c |  1 +
+>>  include/net/gro.h              | 18 ++++++++++++++++--
+>>  net/8021q/vlan_core.c          |  2 ++
+>>  net/core/gro.c                 |  1 +
+>>  net/ethernet/eth.c             |  1 +
+>>  net/ipv4/af_inet.c             |  5 +----
+>>  net/ipv4/gre_offload.c         |  1 +
+>>  net/ipv6/ip6_offload.c         |  8 ++++----
+>>  9 files changed, 28 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/net/ipv4/gre_offload.c b/net/ipv4/gre_offload.c
+>> index d4520c3f7c09..ae596285d78c 100644
+>> --- a/net/ipv4/gre_offload.c
+>> +++ b/net/ipv4/gre_offload.c
+>> @@ -224,6 +224,7 @@ static struct sk_buff *gre_gro_receive(struct list_head *head,
+>>  	/* Adjusted NAPI_GRO_CB(skb)->csum after skb_gro_pull()*/
+>>  	skb_gro_postpull_rcsum(skb, greh, grehlen);
+>>  
+>> +	NAPI_GRO_CB(skb)->inner_network_offset = hlen;
+>>  	pp = call_gro_receive(ptype->callbacks.gro_receive, head, skb);
+>>  	flush = 0;
+> 
+> Nice that this even works for ETH_P_TEB, as eth_gro_receive will
+> overwrite the offset written here.
+>   
+>   
+>>  	list_for_each_entry(p, head, list) {
+>>  		const struct ipv6hdr *iph2;
+>> @@ -327,6 +325,7 @@ static struct sk_buff *sit_ip6ip6_gro_receive(struct list_head *head,
+>>  	}
+>>  
+>>  	NAPI_GRO_CB(skb)->encap_mark = 1;
+>> +	NAPI_GRO_CB(skb)->inner_network_offset = skb_gro_offset(skb);
+>>  
+>>  	return ipv6_gro_receive(head, skb);
+>>  }
+>> @@ -342,6 +341,7 @@ static struct sk_buff *ip4ip6_gro_receive(struct list_head *head,
+>>  	}
+>>  
+>>  	NAPI_GRO_CB(skb)->encap_mark = 1;
+>> +	NAPI_GRO_CB(skb)->inner_network_offset = skb_gro_offset(skb);
+> 
+> Do we still need encap_mark, or is it always set at the same time that
+> inner_network_offset becomes non-zero?
+> 
 
-This commit improves code efficiency and clarity.
-
-Signed-off-by: Chin-Chun Chen <chinchunchen2001@gmail.com>
----
-Changes since v1:
- * wrong patch send in v1
-
- include/linux/bitops.h | 62 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 55 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 2ba557e067fe..55d81755e56f 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -247,6 +247,13 @@ static inline unsigned long __ffs64(u64 word)
- 	return __ffs((unsigned long)word);
- }
- 
-+
-+#define __const_hweight2(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))))
-+
-+#define __const_hweight4(w)                                                 \
-+    ((unsigned int) (!!((word) & (1ULL << 0))) + (!!((word) & (1ULL << 1))) + \
-+                     (!!((word) & (1ULL << 2))) + (!!((word) & (1ULL << 3))))
- /**
-  * fns - find N'th set bit in a word
-  * @word: The word to search
-@@ -254,14 +261,55 @@ static inline unsigned long __ffs64(u64 word)
-  */
- static inline unsigned long fns(unsigned long word, unsigned int n)
- {
--	unsigned int bit;
--
--	while (word) {
--		bit = __ffs(word);
--		if (n-- == 0)
--			return bit;
--		__clear_bit(bit, &word);
--       }
--
--       return BITS_PER_LONG;
-+	unsigned int bits;
-+	unsigned int sum = 0;
-+#if BITS_PER_LONG == 64
-+	bits = __const_hweight32(word & 0xffffffff);
-+	if (bits <= n) {
-+		n -= bits;
-+		word >>= 32;
-+		sum += 32;
-+ 	}
-+#endif
-+	bits = __const_hweight16(word & 0xffff);
-+       if (bits <= n) {
-+               n -= bits;
-+               word >>= 16;
-+               sum += 16;
-+       }
-+	bits = __const_hweight8(word & 0xff);
-+       if (bits <= n) {
-+               n -= bits;
-+               word >>= 8;
-+               sum += 8;
-+       }
-+	bits = __const_hweight4(word & 0xf);
-+       if (bits <= n) {
-+               n -= bits;
-+               word >>= 4;
-+               sum += 4;
-+       }
-+	bits = __const_hweight2(word & 0x3);
-+       if (bits <= n) {
-+               n -= bits;
-+               word >>= 2;
-+               sum += 2;
-+       }
-+	bits = (unsigned int) (word & 0x1);
-+       if (bits <= n) {
-+               n -= bits;
-+               word >>= 1;
-+               sum += 1;
-+       }
-+	bits = (unsigned int) (word & 0x1);
-+       if (bits <= n) {
-+               n -= bits;
-+               sum += 1;
-+       }
-+
-+	if (!n)
-+		return sum;
-+
-+ 
-+ 	return BITS_PER_LONG;
- }
-
-base-commit: 8f2c057754b25075aa3da132cd4fd4478cdab854
--- 
-2.40.1
-
+This would require setting inner_network_header to 0 before dev_gro_receive
+which would not be favorable to the common case. (As opposed to encap_mark
+which is already set to 0 as being part of NAPI_GRO_CB->zeroed). In my
+opinion, it might also be less readable.
