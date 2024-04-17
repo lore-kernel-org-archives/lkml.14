@@ -1,497 +1,494 @@
-Received: from sonic310-24.consmr.mail.ne1.yahoo.com (sonic310-24.consmr.mail.ne1.yahoo.com [66.163.186.205])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1E510976
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 18:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.186.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA17EEAD8
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 18:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713378941; cv=none; b=ZIDUSX8xoPny0nsuWGPINVVZqtN8cmugIMmOsqI7bph4uRETpN9tiJGFiCCz12urk7Qx+uaeUDycBOilJJZGjeYvnpoMMC1fMliSZX6z3B4/L1zi31xNh1E3j8lU/82MWOhxwKVqGV0iWyecVuWIrjEPDzwxCg0lv/9GA6L+Wbs=
+	t=1713379074; cv=none; b=a7qMBLvlBJ8hYZWZp6gTNra3+/JaqE1t68J+c7W6ZlwoUKUjcJQG/VeJ7bWyvTUMIJnsWuFytTQEZMoOYNw/2ZHrNWkXddZc0yISay5ivasyAyTmdCnTQiIFvGgqQgVzsgHix++6cvHHPBaUBmkT+oqlyjsU6wAJCvERN2nMBfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713378941; c=relaxed/simple;
-	bh=xdLoKYgXC5L31IzwPVVtlrJQXBinb4Xr0q0oUyJsbU0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hDGzy+SSwfiaGZA0z1Hps7JI7+SVH4aJsHcVbDvpsicmgmGjOFSCxB7ecuotAGHZTov21Q//7cQdR5y/cvAhtBfgf9K+G8oIEz/qr9q9PTdh2E27js8XH52OI2bW0QHwYiXogzuc3ITPExzfkdCjJrGtV4BqUCPYxlZDXgsisIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=tjgfv4oV; arc=none smtp.client-ip=66.163.186.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1713379074; c=relaxed/simple;
+	bh=KEEdr0yfdKxlyJb8CipmfiokfEuWsEbwYFagxZpjgHk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Is5YzdFLVqSJRr4hPWGbhv/aIdIQxyqTeEOKmbqwEC0xOGioCJsfwFfFKU1+YHLWUfhDvFEm6N2JyqxgLj3aF7p/gB9uOwyHZQAIaagXAWKhy0mGzCOjbEIkwviZT6kboxLlzV5B/qlOK+D2tT6Ab9R0sMw0NRwPwWubrGp+tXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bgxyIcjx; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="tjgfv4oV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1713378938; bh=U/piKB9Wfuwz4dJlXxQfbdbmZItS6Racb9B8UGl68jI=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=tjgfv4oVjiZf0RTrsdGgSfZ30NBivRS8XZcCDMJ/Vy6ZASnd57YSMWr01wrqat19KZNRUj5XFLcL7P8c59jxS8Bwrq36tmWtVz521pwQN3jjsKePRQE8+0t2XCmK3i3XvWVJ4YtC3Ma75vQBkQ+C5ACyjPtbFH2ui65RVu5g4bZBe2CqsIo2jHEeMrDaM+FcKv8DlnKTf4URS3SYAm9JELyY7VeP77dKhy8RKk+9C+P68Je++VNmxeVuBjux02LCd3AeObfRJxjZXju1/QfBPnXyz5kxYrmVgEJZY2ltvEnO4ObKov6KrV8m4DZ9N6eC/V5aHb71bdpk8bfYnpo/mw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1713378938; bh=p0ZTGa4begv52Vx/BC/G1eNrzyzxKvWT8grkqFwPZ3t=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=p2SrQ7qBmFaiD8WHIy9iy6eh4lywn0GV5ZfF9X9YmvvDxUo6SF5Y2leJfE13dYDcFtNxN78F1reaecdWv8FcufHDffLRUTL6eDSkqwdeTw7dfuYLyPwlUPLeTqRViNkFGJZDXwaYEqpZKkm4uwJjTtBUkcvgG6VwYI8pu9Ew4GBGY5s/pRq0SqsYADACdLJEir6H5dbE8BVgUfrm3ZFOf+v/Gf8Lh5d7nzbWOXU2dURq5ZBh2RcSddMIIndDiLduNjFPDHvqipJsoFbtFwm6qNHppWY0pwsiTuxqJmDa0lbW60n8zw1dWFXHbv/A91GqcJaDa0SDjECqLmtaL0xnQQ==
-X-YMail-OSG: 3sXsXG4VM1lF1_Xch_VjjpZqUQU_c0.qRSmu4hH6O7hYVemHsMR4dWNyMiKmg7Y
- qjzYee14XbVBIcECFFbjysgA8XTovciso.ij4zFblIKtEfXPOu4di3ASM6LioqmVqph29yO4YWj7
- bRNH.L4AchKFn.jWpLieAelAa2JFQUUm8qMVPfgvz8J56Sc0V3EXp_TUmfcYdl1QgyvqrtOscinX
- oMtPGXwABVmRdTSJ38lPIWlB4bf8Yx90M74mqETcHK.dEkVUvvSx1.KxKG3HiNG5Sgka._gFbCfx
- D19rXwsMTRFcsWkfjoz7ucZgRdgkj6y_pv5NqP2GbHnEVTA9BfKw1XsTUIJufzbiDHFKxwZEV5L5
- CYq.ss9hvLMcxe2QsBz5Smb3Q1X3y4IUsVMUPiWR6jCahyq34QxlwQmrM_.aaEDz8r3gPsjoStSF
- AFLR2C84se3a5r6EeQ0FS7EaPvl4q3G7XnvQ5dpAQgZ56HjBiR9DdwjOAvxV_i0MYHt8F9SAvQCA
- w3VE5k60n1Kn6iLyb13CN76eHYFYJHJI10uNopSEHx_7PyHv4yAJtb0UUCFRMau8Y7Mh64ja5yp5
- zlurdNtnWG9hhqc0jK5dAGfroMAM_ihXjJ5qSTgbg7jaqkwrv1.PPB_udIvsVjJki6zhd0lw7Jqb
- JeNcQ81p6WzO9YfgGxGeJZ3pW7et_G5Tlinb5uVe3uEFC9gQOqKksrmeqYp4Ik.EIud27hNM3C7d
- DPobc9hH6Hca7ljEDIozYBi9Oa2_n_MwI53wziitNjxnJXjqo2cmXryQKhdd8vFsxczM5wM.Ii.g
- T2GMOOVXZURxOEBAO37zcLZr0sEyzjdvaZOgIFWns1Do4XzGpmVhAa3nu65djwr5IUgrKJR7N486
- kEX_9glTEdtYIQb4GWbrlxgBNg7hpBDVtVcIhRd78P6oP5xoK5OMxO06n5_mBRHT5GeuJH4ilMdk
- 4e0R7sav26xyVthT4MGDBsr845Ru_dyMH8rDb9br32kyC1l_yp5Hk6nBM8B.h_yqu53v6FnWgNGf
- 5wywY6ojaRxL2p1mfNwQKfZjK6P7FzGi3DuCtTELgHjV9uKpbCJ6AkalWJT_XpSxWOl0m1L8NZQ0
- GNWUzY9uCO0JZUXEnSv1jtZqTVh.i5xJda1vIs9xzuU5qyBSn46zS6ezBZFJoILq5kjs4dVfTlam
- rHBZz5RSl.BwjC2YwyadFfIcE_zffrn2HfnugW36wAUv_ste820EBxZz.DYqd9KF_WwhrgRPFPay
- McZ83ESNhD58I12eMBwqM1uVwYtBrbD_gC3a8DkTuVY9gIwduNmzyhrYqDaoovbhVGtpmS7x2FyG
- a28xt8mPYxQGgFysP.ztrbfY_TpvWFRWBpaV.iKVFR86vW8ElIIURo5VlltxDht.rApA0HYxj_QW
- HIRJlkSc5kkbfy0IqhVzN9k98AOa__wV6ka4_wXUJqrddThnnrsLFR1AnRMbudkurjphBWdTC4Zx
- 5FFKvdIcE9Nrk0_rLS1.k3EXs3zv9NCd9ee7J4VvlyUn9pcst9tkaOdlFUW7S1h8V.atprwc99uK
- A_d4TecgD4AvgtD2.BVeHjmdUfIWfyTCZw9zC7LDStRDawmc8pJ_TCWRhxun8EG.bTIobV7.5Plm
- e3RM2XmSvZNsJDGdzLOOUguWGZ9shPMnDaYrd0fgSuRWzyYatlUSc_7dwl7snolH_Mkfdm4gyl8S
- uJuoZjdjmzB_724oZENrYzwl1FnV7WKmC733.eRs5_VJGt64Xj2zS5A9o_3et_R2Ci6ZFIZrTF9z
- OfLCIVvH8Wu3XmqzK21ZO6ngHlsmHcnus_dlmbuNBUgsMK0Kzp0rNHFvXC7VD0gbAwVuHxNGsOcy
- YdBttMNwhWOXhIgM.HizzwXciw_sBobCaZ.AlE5SHHP3LKa81jXfOIi6HrjjW9RQFCt61b4qwvJx
- nuiOQJx1FYVulCTIXMAek7M2uZbiLwzXyhnGPp7uYtEsTyNcLs0jxiihwUd0ddE4AiGKBqV.h3Ef
- WRlz.yzgy.b.59JgcBn0FhdanSXR8mFXtKBissWRqWjDCjIZJ.H5UJ157wAmvbwrBpX_t.SASCjj
- 6kYEQSEZVsif8TOif3Kj8vsHBIf0l2GDByWPx4ea0034byQpT7.irYUmra15b8ZFjkR_AlVma2A3
- PrkwvCSPwiZzutzAdR__wSSHlXuxM9tdRUOft38vQMPHV74MvKtKj_8GUEYgwVEtgbHOdYbLqwVX
- iHiTUn7QlDKxw2u7GQX7tU7OjDOuDuTyUXdFMmMJam9WCs5SNzeodIZpqVUo33EZtSG_dneuk6U1
- 9O0hhp3LkFff9Wv_bKfs6guNm29oK5.GTMJDna8RU
-X-Sonic-MF: <ashokemailat@yahoo.com>
-X-Sonic-ID: 76638ec4-78ee-42a9-8715-12c8a8eea5b5
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Wed, 17 Apr 2024 18:35:38 +0000
-Received: by hermes--production-ne1-6488576888-g2rhl (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID efdf6dd4ecf39af123b3653e35a72d7e;
-          Wed, 17 Apr 2024 17:55:07 +0000 (UTC)
-Message-ID: <6f429c19256722f0478e5264b42c0a2a4312abc5.camel@yahoo.com>
-Subject: Re: [PATCH] staging: fbtft Removed redundant parentheses
-From: A <ashokemailat@yahoo.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	outreachy@lists.linux.dev
-Date: Wed, 17 Apr 2024 10:55:06 -0700
-In-Reply-To: <2024041724-barricade-hardly-c554@gregkh>
-References: <cc9b9357d30c4abac7301767ff01fe7947f811c4.camel.ref@yahoo.com>
-	 <cc9b9357d30c4abac7301767ff01fe7947f811c4.camel@yahoo.com>
-	 <2024041724-barricade-hardly-c554@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bgxyIcjx"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ecf05fd12fso91363b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1713379072; x=1713983872; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZpkRLMrvN7NfaF4a+EjL0Q0a8vg1rF4/rK04Ctr+BpU=;
+        b=bgxyIcjx50HAzN+FhbkOcfKOBHgSMIQYi/FjTcrpW1Z57dPZJtSlQSYbWyxTsM+52e
+         fSVjPcoz3+m+o4B0/Q3nzu0KwRirQ6g1jjUQLXjteonwGPU/a3K3wGMkwu7nKRshqS2i
+         au4gAwEJQudRGQzjy7ut0hnwZKFqiqN644Zmc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713379072; x=1713983872;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZpkRLMrvN7NfaF4a+EjL0Q0a8vg1rF4/rK04Ctr+BpU=;
+        b=UkgefbphJriBeCWjIpnki620hIqMNf6U2eoc76IsR9ktJtliUQqTYpN+o0lpNeObPI
+         LlxLSxFLou0Mu/Thus0Ja2LKrdr/W/TXqATTe43UD6jyQivp/bpFBlA16DBi8WD/h5l0
+         YG3VAPJ+6NcCXnXXs4zjJeglx7Ri2R8LCgaN1ItnBQQGAwC9ZpS8hN9qKMFdL8zssNvh
+         vBw5A2JrbuRHmdbMdG+xWVjMSjOTJCbp+MF+aATEhHjqrNoVryCcil7edwnDOoglm0Bp
+         /diOm9Tjt6akUbYZtPv2HwKFIvZcTRwfnM2sxBabQhkoEbxvN6MQhS95tuaEXLPDwXzs
+         HesA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDWuB/ILmetM0EF4t3sOnwzbIvnb0O2F/aybs/7xY0pb/8XxkcNLp3Al8XhoeNi9hCwIwW9H+inguPf9AC6SVVf98LT4nyuDm30sO+
+X-Gm-Message-State: AOJu0YwFtFgAKVYlhfCHfbwH7w7OXPMIpX0LUpX6O+U4EqlqtDkqWStm
+	Oz2jWSqBs0iFKBvG6NT6wIsz+Z3TcDxETaQGl8x1hC7ySBORH4wQyK78rR8dvH2KXMynZkWY02s
+	=
+X-Google-Smtp-Source: AGHT+IHMO1L3IENPn4qcMKhvkQWPCfZJprixYVgARL4ubREN/I94ORxsAWrIfo4ZSQ6MoWkAS+OaVg==
+X-Received: by 2002:a05:6a00:21d4:b0:6ec:e785:98b9 with SMTP id t20-20020a056a0021d400b006ece78598b9mr443532pfj.27.1713379071785;
+        Wed, 17 Apr 2024 11:37:51 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j7-20020aa783c7000000b006f0830a298dsm270796pfn.156.2024.04.17.11.37.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 11:37:51 -0700 (PDT)
+Message-ID: <2c71072b-e611-4a7c-a53f-a33fec959ee7@broadcom.com>
+Date: Wed, 17 Apr 2024 11:37:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mailer: WebService/1.1.22256 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: Issue with "kbuild: create a list of all built DTB files"
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <ea330927-2a8d-4026-a6f1-d418a916d19c@broadcom.com>
+ <CAK7LNAQJcFifScm_N40B+uHXB7o=EYyERQVRQ4=f2f0JTEM3+g@mail.gmail.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CAK7LNAQJcFifScm_N40B+uHXB7o=EYyERQVRQ4=f2f0JTEM3+g@mail.gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000fb75c906164f266e"
 
-On Wed, 2024-04-17 at 09:07 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 16, 2024 at 01:14:52PM -0700, A wrote:
-> > > From 6dbcb120581fc7cb45812193227b0a197abd8ba4 Mon Sep 17 00:00:00
-> > > 2001
-> > From: Ashok Kumar <ashokemailat@yahoo.com>
-> > Date: Tue, 16 Apr 2024 09:19:32 -0700
-> > Subject: [PATCH] [PATCH] staging: fbtft Removed redundant
-> > parentheses on
-> > =C2=A0logical expr
-> >=20
-> > Adhere to Linux Kernel coding style removed redundant parentheses,
-> > multiple blank lines and indentation alignment.
-> >=20
-> > Reported by checkpatch.pl
-> >=20
-> > ------
-> > fb_ili9320.c
-> >=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((devcode !=3D 0x0000) && (dev=
-code !=3D 0x9320))
-> >=20
-> > ------
-> > fb_ra8875.c
-> >=20
-> > CHECK: Unnecessary parentheses around 'par->info->var.xres =3D=3D 320'
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((par->info->var.xres =3D=3D 320) &&=
- (par->info->var.yres =3D=3D
-> > 240)) {
-> >=20
-> > ------
-> > fb_ssd1325.c
-> >=20
-> > CHECK: Please don't use multiple blank lines
-> > ------
-> >=20
-> > fb_tinylcd.c=C2=A0=C2=A0=C2=A0 - indentation adjustment
-> >=20
-> > -----
-> > fbtft-bus.c
-> >=20
-> > CHECK: Unnecessary parentheses around 'par->spi->bits_per_word =3D=3D
-> > 8'
-> >=20
-> > ------
-> > fbtft-core.c
-> >=20
-> > CHECK: Please don't use multiple blank lines
-> >=20
-> > CHECK: Unnecessary parentheses around '!txbuflen'
-> >=20
-> > CHECK: Please don't use multiple blank lines
-> > ------
-> >=20
-> > Signed-off-by: Ashok Kumar <ashokemailat@yahoo.com>
-> > ---
-> > =C2=A0drivers/staging/fbtft/fb_ili9320.c | 2 +-
-> > =C2=A0drivers/staging/fbtft/fb_ra8875.c=C2=A0 | 8 ++++----
-> > =C2=A0drivers/staging/fbtft/fb_ssd1325.c | 2 --
-> > =C2=A0drivers/staging/fbtft/fb_tinylcd.c | 2 +-
-> > =C2=A0drivers/staging/fbtft/fbtft-bus.c=C2=A0 | 6 +++---
-> > =C2=A0drivers/staging/fbtft/fbtft-core.c | 7 +------
-> > =C2=A06 files changed, 10 insertions(+), 17 deletions(-)
-> >=20
-> > diff --git a/drivers/staging/fbtft/fb_ili9320.c
-> > b/drivers/staging/fbtft/fb_ili9320.c
-> > index 0be7c2d51548..409b54cc562e 100644
-> > --- a/drivers/staging/fbtft/fb_ili9320.c
-> > +++ b/drivers/staging/fbtft/fb_ili9320.c
-> > @@ -37,7 +37,7 @@ static int init_display(struct fbtft_par *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0devcode =3D read_device=
-code(par);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0fbtft_par_dbg(DEBUG_INI=
-T_DISPLAY, par, "Device code:
-> > 0x%04X\n",
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 devcode);
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((devcode !=3D 0x0000) &&=
- (devcode !=3D 0x9320))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (devcode !=3D 0x0000 && d=
-evcode !=3D 0x9320)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_warn(par->info->device,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- "Unrecognized Device code: 0x%04X
-> > (expected
-> > 0x9320)\n",
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-devcode);
-> > diff --git a/drivers/staging/fbtft/fb_ra8875.c
-> > b/drivers/staging/fbtft/fb_ra8875.c
-> > index 398bdbf53c9a..4b79fb48c5f0 100644
-> > --- a/drivers/staging/fbtft/fb_ra8875.c
-> > +++ b/drivers/staging/fbtft/fb_ra8875.c
-> > @@ -50,7 +50,7 @@ static int init_display(struct fbtft_par *par)
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0par->fbtftops.reset(par=
-);
-> > =C2=A0
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((par->info->var.xres =3D=
-=3D 320) && (par->info->var.yres =3D=3D
-> > 240)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (par->info->var.xres =3D=
-=3D 320 && par->info->var.yres =3D=3D
-> > 240)
-> > {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0/* PLL clock frequency */
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x88, 0x0A);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x89, 0x02);
-> > @@ -74,8 +74,8 @@ static int init_display(struct fbtft_par *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x1D, 0x0E);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x1E, 0x00);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x1F, 0x02);
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0} else if ((par->info->var.x=
-res =3D=3D 480) &&
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (par->info->var.yres =3D=3D 272)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0} else if (par->info->var.xr=
-es =3D=3D 480 &&
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 par->info->var.yres =3D=3D 272) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0/* PLL clock frequency=C2=A0 */
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x88, 0x0A);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x89, 0x02);
-> > @@ -111,7 +111,7 @@ static int init_display(struct fbtft_par *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x04, 0x01);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0mdelay(1);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0/* horizontal settings */
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x14, 0x4F);
-> > +write_reg(par, 0x14, 0x4F);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x15, 0x05);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x16, 0x0F);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0x17, 0x01);
-> > diff --git a/drivers/staging/fbtft/fb_ssd1325.c
-> > b/drivers/staging/fbtft/fb_ssd1325.c
-> > index 796a2ac3e194..69aa808c7e23 100644
-> > --- a/drivers/staging/fbtft/fb_ssd1325.c
-> > +++ b/drivers/staging/fbtft/fb_ssd1325.c
-> > @@ -109,8 +109,6 @@ static int set_gamma(struct fbtft_par *par, u32
-> > *curves)
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int i;
-> > =C2=A0
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0fbtft_par_dbg(DEBUG_INIT_DIS=
-PLAY, par, "%s()\n", __func__);
-> > -
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i < GAMMA=
-_LEN; i++) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0if (i > 0 && curves[i] < 1) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-dev_err(par->info->device,
-> > diff --git a/drivers/staging/fbtft/fb_tinylcd.c
-> > b/drivers/staging/fbtft/fb_tinylcd.c
-> > index 9469248f2c50..60cda57bcb33 100644
-> > --- a/drivers/staging/fbtft/fb_tinylcd.c
-> > +++ b/drivers/staging/fbtft/fb_tinylcd.c
-> > @@ -38,7 +38,7 @@ static int init_display(struct fbtft_par *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0xE5, 0x=
-00);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0xF0, 0x=
-36, 0xA5, 0x53);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, 0xE0, 0x=
-00, 0x35, 0x33, 0x00, 0x00, 0x00,
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00, 0x35, 0x33,=
- 0x00, 0x00, 0x00);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00, 0x35, 0x33, 0x00, 0x00, 0x00);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, MIPI_DCS=
-_SET_PIXEL_FORMAT, 0x55);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0write_reg(par, MIPI_DCS=
-_EXIT_SLEEP_MODE);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0udelay(250);
-> > diff --git a/drivers/staging/fbtft/fbtft-bus.c
-> > b/drivers/staging/fbtft/fbtft-bus.c
-> > index 3d422bc11641..02d7dbd38678 100644
-> > --- a/drivers/staging/fbtft/fbtft-bus.c
-> > +++ b/drivers/staging/fbtft/fbtft-bus.c
-> > @@ -62,9 +62,9 @@
-> > out:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > =C2=A0}=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > =C2=A0=C2=A0=20
-> > \
-> > =C2=A0EXPORT_SYMBOL(func);
-> > =C2=A0
-> > -define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
-> > +define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8,)
-> > =C2=A0define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16,
-> > cpu_to_be16)
-> > -define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
-> > +define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16,)
-> > =C2=A0
-> > =C2=A0void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
-> > =C2=A0{
-> > @@ -85,7 +85,7 @@ void fbtft_write_reg8_bus9(struct fbtft_par *par,
-> > int
-> > len, ...)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (len <=3D 0)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return;
-> > =C2=A0
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (par->spi && (par->spi->b=
-its_per_word =3D=3D 8)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (par->spi && par->spi->bi=
-ts_per_word =3D=3D 8) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0/* we're emulating 9-bit, pad start of buffer wi=
-th
-> > no-
-> > ops
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 * (assuming here that zero is a no-op)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > diff --git a/drivers/staging/fbtft/fbtft-core.c
-> > b/drivers/staging/fbtft/fbtft-core.c
-> > index 38845f23023f..98ffca49df81 100644
-> > --- a/drivers/staging/fbtft/fbtft-core.c
-> > +++ b/drivers/staging/fbtft/fbtft-core.c
-> > @@ -216,8 +216,6 @@ static void fbtft_reset(struct fbtft_par *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!par->gpio.reset)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return;
-> > =C2=A0
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0fbtft_par_dbg(DEBUG_RESET, p=
-ar, "%s()\n", __func__);
-> > -
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpiod_set_value_canslee=
-p(par->gpio.reset, 1);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0usleep_range(20, 40);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpiod_set_value_canslee=
-p(par->gpio.reset, 0);
-> > @@ -667,7 +665,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct
-> > fbtft_display *display,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0txbuflen =3D 0;
-> > =C2=A0
-> > =C2=A0#ifdef __LITTLE_ENDIAN
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((!txbuflen) && (bpp > 8)=
-)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!txbuflen && bpp > 8)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0txbuflen =3D PAGE_SIZE; /* need buffer for
-> > byteswapping
-> > */
-> > =C2=A0#endif
-> > =C2=A0
-> > @@ -1053,8 +1051,6 @@ static int fbtft_verify_gpios(struct
-> > fbtft_par
-> > *par)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct fbtft_platform_d=
-ata *pdata =3D par->pdata;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int i;
-> > =C2=A0
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0fbtft_par_dbg(DEBUG_VERIFY_G=
-PIOS, par, "%s()\n", __func__);
-> > -
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pdata->display.busw=
-idth !=3D 9 &&=C2=A0 par->startbyte =3D=3D 0 &&
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !par=
-->gpio.dc) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(par->info->device,
-> > @@ -1159,7 +1155,6 @@ int fbtft_probe_common(struct fbtft_display
-> > *display,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0dev =3D &pdev->dev;
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (unlikely(display->d=
-ebug & DEBUG_DRIVER_INIT_FUNCTIONS))
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0dev_info(dev, "%s()\n", __func__);
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pdata =3D dev->platform=
-_data;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!pdata) {
-> > --=20
-> > 2.34.1
-> >=20
-> >=20
->=20
-> Hi,
->=20
-> This is the friendly patch-bot of Greg Kroah-Hartman.=C2=A0 You have sent
-> him
-> a patch that has triggered this response.=C2=A0 He used to manually
-> respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.=C2=A0 Hopefully you will not take offence and will fix the
-> problem
-> in your patch and resubmit it so that it can be accepted into the
-> Linux
-> kernel tree.
->=20
-> You are receiving this message because of the following common
-> error(s)
-> as indicated below:
->=20
-> - Your patch contains warnings and/or errors noticed by the
-> =C2=A0 scripts/checkpatch.pl tool.
->=20
->>>  Per guidelines in Newbies site for this 1st submission
->>>  picked up "CHECK" type fixes only. Other types in separate=20
->>>  patch.=20
->>>  Also Warnings were not fixed for following reasons as per
->>>  PatchPhilosophy guidelines=20
->>>  i) Warnings related to License issues  ("Please avoid sending=C2=A0
->>>  patches for the Licence related checkpatch.pl warnings. It=C2=A0
->>>  requires lot more discussion by driver authors and companies
->>>  before doing so and is not often preferred by maintainers to
->>>  accept them when sent by newbies")
->>>  ii) Warnings related Udelay skipped per Patch Philosophy guidance
->>>  ("Changes to udelay are also better to avoid. It is hard to be
->>>  sure that such changes are correct without access to the=C2=A0
->>>  device=C2=A0for careful testing.")
->>>  ERROR type will be a separate patch and not included in this=20
->>>  first patch is contains only "CHECK"
+--000000000000fb75c906164f266e
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> - Your patch is malformed (tabs converted to spaces, linewrapped,
-> etc.)
-> =C2=A0 and can not be applied.=C2=A0 Please read the file,
-> =C2=A0 Documentation/process/email-clients.rst in order to fix this.
->=20
-> - Your patch was attached, please place it inline so that it can be
-> =C2=A0 applied directly from the email message itself.
->=20
->>> Sent it using Evolution as per instruction in the above document
->>> Created Patch using git format-patch command
->>> In Evolution set the Format->Paragraph Style to Preformatted
->>> Then Insert Text file and picked the file formatted by git
->>> having issues in connecting mutt or git sendmail to yahoo email=20
->>> Trying to get it resolved. =20
->>> Help from anyone with similar exp welcome.
+On 4/17/24 07:31, Masahiro Yamada wrote:
+> On Wed, Apr 17, 2024 at 2:22 AM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
+>>
+>> Hi Masahiro,
+>>
+>> Sorry about the late report, commit
+>> 24507871c3c6ae4f6b460b016da7ff434cd34149 ("kbuild: create a list of all
+>> built DTB files") is breaking the build when we are doing a rsync of the
+>> Linux sources into a build directory, which is how buildroot works when
+>> doing a source directory override.
+>>
+>> This does not happen when doing a build from the git directory
+>> containing the sources, and I cannot find a missing $(obj) reference, so
+>> I am left wondering what I am missing here. The build error looks like this:
+>>
+>> cat: arch/arm64/boot/dts/actions/dtbs-list: No such file or directory
+>> host-make[3]: *** [scripts/Makefile.build:423:
+>> arch/arm64/boot/dts/dtbs-list] Error 1
+>> host-make[3]: *** Deleting file 'arch/arm64/boot/dts/dtbs-list'
+>> host-make[2]: *** [Makefile:1394: dtbs] Error 2
+>> host-make[2]: *** Waiting for unfinished jobs....
+>>
+>> running with verbose, we can see the rule not generating an empty file
+>> at all:
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=scripts/dtc
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=scripts
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts need-dtbslist=1
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=scripts/genksyms \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/actions \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/allwinner \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/altera \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/amazon \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/tools kapi
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/amd \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/amlogic \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/apm \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/apple \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/arm \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/bitmain \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/broadcom \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/cavium \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/exynos \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/freescale \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/hisilicon \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/intel \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/lg \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> # GEN     arch/arm64/include/generated/asm/cpucap-defs.h
+>>     mkdir -p arch/arm64/include/generated/asm/; awk -f
+>> arch/arm64/tools/gen-cpucaps.awk arch/arm64/tools/cpucaps >
+>> arch/arm64/include/generated/asm/cpucap-defs.h
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/marvell \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/mediatek \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> # GEN     arch/arm64/include/generated/asm/sysreg-defs.h
+>>     mkdir -p arch/arm64/include/generated/asm/; awk -f
+>> arch/arm64/tools/gen-sysreg.awk arch/arm64/tools/sysreg >
+>> arch/arm64/include/generated/asm/sysreg-defs.h
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/microchip \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/broadcom/bcmbca \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/nuvoton \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/broadcom/northstar2 \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/exynos/google \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/nvidia \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/broadcom/stingray \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/qcom \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/realtek \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/renesas \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/rockchip \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/socionext \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/sprd \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/st \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/synaptics \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/tesla \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/ti \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/toshiba \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> /home/fainelli/work/buildroot/output/arm64/host/bin/host-make -f
+>> ./scripts/Makefile.build obj=arch/arm64/boot/dts/xilinx \
+>> need-builtin= \
+>> need-modorder= \
+>>
+>> # cmd_gen_order arch/arm64/boot/dts/dtbs-list
+>>     {   cat arch/arm64/boot/dts/actions/dtbs-list;   cat
+>> arch/arm64/boot/dts/allwinner/dtbs-list;   cat
+>> arch/arm64/boot/dts/altera/dtbs-list;   cat
+>> arch/arm64/boot/dts/amazon/dtbs-list;   cat
+>> arch/arm64/boot/dts/amd/dtbs-list;   cat
+>> arch/arm64/boot/dts/amlogic/dtbs-list;   cat
+>> arch/arm64/boot/dts/apm/dtbs-list;   cat
+>> arch/arm64/boot/dts/apple/dtbs-list;   cat
+>> arch/arm64/boot/dts/arm/dtbs-list;   cat
+>> arch/arm64/boot/dts/bitmain/dtbs-list;   cat
+>> arch/arm64/boot/dts/broadcom/dtbs-list;   cat
+>> arch/arm64/boot/dts/cavium/dtbs-list;   cat
+>> arch/arm64/boot/dts/exynos/dtbs-list;   cat
+>> arch/arm64/boot/dts/freescale/dtbs-list;   cat
+>> arch/arm64/boot/dts/hisilicon/dtbs-list;   cat
+>> arch/arm64/boot/dts/intel/dtbs-list;   cat
+>> arch/arm64/boot/dts/lg/dtbs-list;   cat
+>> arch/arm64/boot/dts/marvell/dtbs-list;   cat
+>> arch/arm64/boot/dts/mediatek/dtbs-list;   cat
+>> arch/arm64/boot/dts/microchip/dtbs-list;   cat
+>> arch/arm64/boot/dts/nuvoton/dtbs-list;   cat
+>> arch/arm64/boot/dts/nvidia/dtbs-list;   cat
+>> arch/arm64/boot/dts/qcom/dtbs-list;   cat
+>> arch/arm64/boot/dts/realtek/dtbs-list;   cat
+>> arch/arm64/boot/dts/renesas/dtbs-list;   cat
+>> arch/arm64/boot/dts/rockchip/dtbs-list;   cat
+>> arch/arm64/boot/dts/socionext/dtbs-list;   cat
+>> arch/arm64/boot/dts/sprd/dtbs-list;   cat
+>> arch/arm64/boot/dts/st/dtbs-list;   cat
+>> arch/arm64/boot/dts/synaptics/dtbs-list;   cat
+>> arch/arm64/boot/dts/tesla/dtbs-list;   cat
+>> arch/arm64/boot/dts/ti/dtbs-list;   cat
+>> arch/arm64/boot/dts/toshiba/dtbs-list;   cat
+>> arch/arm64/boot/dts/xilinx/dtbs-list; :; } > arch/arm64/boot/dts/dtbs-list
+>> cat: arch/arm64/boot/dts/actions/dtbs-list: No such file or directory
+>> host-make[3]: *** [scripts/Makefile.build:423:
+>> arch/arm64/boot/dts/dtbs-list] Error 1
+>> host-make[3]: *** Deleting file 'arch/arm64/boot/dts/dtbs-list'
+>> host-make[2]: *** [Makefile:1394: dtbs] Error 2
+>> host-make[2]: *** Waiting for unfinished jobs....
+>> make[1]: *** [package/pkg-generic.mk:293:
+>> /home/fainelli/work/buildroot/output/arm64/build/linux-custom/.stamp_built]
+>> Error 2
+>> make: *** [Makefile:27: _all] Error 2
+>>
+>> Buildroot builds its own GNU Make version 4.4.1.
+>>
+>> Any clues what might be going on? My defconfig is such that only
+>> CONFIG_ARCH_BRCMSTB is enabled, and there are essentially no .dtbs file
+>> that will be generated.
+> 
+> 
+> 
+> How to reproduce this in buildroot?
 
-> - Your patch did many different things all at once, making it
-> difficult
-> =C2=A0 to review.=C2=A0 All Linux kernel patches need to only do one thin=
-g at a
-> =C2=A0 time.=C2=A0 If you need to do multiple things (such as clean up al=
-l
-> coding
-> =C2=A0 style issues in a file/driver), do it in a sequence of patches,
-> each
-> =C2=A0 one doing only one thing.=C2=A0 This will make it easier to review=
- the
-> =C2=A0 patches to ensure that they are correct, and to help alleviate any
-> =C2=A0 merge issues that larger patches can cause.
->=20
->>> Will correct it and use patchset concept and resend it again
+It is a bit involved since it would require having some intermediate 
+builds and as I was crafting an environment for you to take a look, it 
+stopped being reproducible...  I will let you know if this resurfaces again.
 
-> - You did not specify a description of why the patch is needed, or
-> =C2=A0 possibly, any description at all, in the email body.=C2=A0 Please =
-read
-> the
-> =C2=A0 section entitled "The canonical patch format" in the kernel file,
-> =C2=A0 Documentation/process/submitting-patches.rst for what is needed in
-> =C2=A0 order to properly describe the change.
->=20
->>> Had description in the body. Any help to refine/reformat welcome
+Thanks!
+-- 
+Florian
 
-> - You did not write a descriptive Subject: for the patch, allowing
-> Greg,
-> =C2=A0 and everyone else, to know what this patch is all about.=C2=A0 Ple=
-ase
-> read
-> =C2=A0 the section entitled "The canonical patch format" in the kernel
-> file,
-> =C2=A0 Documentation/process/submitting-patches.rst for what a proper
-> =C2=A0 Subject: line should look like.
->=20
->>> Tried best to put the subject as per document. However
->>> In the body of the mail I see [PATCH] [PATCH] repeated twice
->>> Help to refine/reformat this welcome.  The beginning of this=20
->>> email shows what went out originally
 
-> If you wish to discuss this problem further, or you have questions
-> about
-> how to resolve this issue, please feel free to respond to this email
-> and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
->=20
-> thanks,
->=20
-> greg k-h's patch email bot
+--000000000000fb75c906164f266e
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIEPhz3VzICpdaGWJ
+fsI6se04Ya2nayZmIhUsLzpYAYNXMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQxNzE4Mzc1MlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQD5SBHg+1yX63UYPisk895dKtQ1tPY6q+As
+VKglDb6dVAmfMsdEfmhjXLX2aOdEGZ5w+NO/VP9xvopwazOUNlY/iiqKvajkmSAPaLagGA6PCUUU
+IwMwUCq2fmUnvFPXWoZ4ohdHHV6+sbjs/WEBZ/5SOxNLxHfcUdBJkrXosSPfQYgaB8eA8o78m78c
+OEx8VGdfzh/aM461D6mBaYIX9nb3vSvbV3v7fWpGOEIiE4g1bqNY7eEDJ5gV9A4InDPSRyuX0JvT
+hpfw4dBIJJ2CB/MnYWBQhxm6cXfOJhgrhlRHUtuPULfbKmjHlthC8ALMlZ7zOb/OaxiAh/Ff+FO+
+nEMA
+--000000000000fb75c906164f266e--
