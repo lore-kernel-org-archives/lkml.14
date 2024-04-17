@@ -1,469 +1,220 @@
-Received: from mail.mainlining.org (mainlining.org [94.241.141.152])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F3B14C587;
-	Wed, 17 Apr 2024 16:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.241.141.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2030816FF48;
+	Wed, 17 Apr 2024 16:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713371383; cv=none; b=Hba2YAaP1Uod+lt1niEK3ypMUG4BrZLixB//mzcI4/YK6aDHFSByO5sqYjYhV9FY/l1JoJbT3wZKwvs+TEcXLYUvYgSuZdtTYkFcgVIt4F4JU3SPbR/5+Dhf1BbhYoKIsjiemjGglh+OQKQ2wyNPrOqh+m9nd6LSsv65/HsUCww=
+	t=1713371592; cv=none; b=rVOLfKvuwGKqzD8O8l+HmJxnxNLBHYjGChrM9B4Tzma0J0DQbI0DrGiM4Or8HoQvhCVEIZhLgpvAmIc5EF5WEk7Qoij8bkuUzdkhxYfS/fv5bOcY1eEoiKY6mhcKA3+S8yPQ9UhN1bY9JpeBA4du0B+NhAamiFULZx/maehZDfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713371383; c=relaxed/simple;
-	bh=Xcy+l38me3IRf6SU/Xo9GNlyOs6vv5f3u0l/G7ZohSo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IlTW00Dqv5WTw/gIkmi/42t4iEUhZ4fofk5cUbsGDtppW1D1JXO/4WxjnFSDwoSU8FTxU7TSjB8BN241TB6RoiwCrmOm2VGbffTd5ev7b1wkYVuGJBWBIV3EdVrUMsIskvA3Ua3peyIWE8mvE4a9b/pkQIz5VTE/ZjQyz66/xz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=fdP7xjOM; arc=none smtp.client-ip=94.241.141.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="fdP7xjOM"
-Received: from david-ryuzu.localdomain (ipbcc3a836.dynamic.kabel-deutschland.de [188.195.168.54])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 9DA44E1E3B;
-	Wed, 17 Apr 2024 16:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1713371379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X8DUAlvH/08M3XCAHb1CRL1bKQYkn2BtQJi/LvRlQA0=;
-	b=fdP7xjOM6bQbqpqUxNL4yhv8K+Y0vUAWpqS2dlZIv9sC0nqebuOJxAfNBWleym7WLZjues
-	pMfHODpY4YdsJK+OtPVe8KwpmC3eWbWsGspcgEHEZjsCFSlFanKOY+9eHzrMBGbU7SKmrT
-	djIoEvKd/1V1oRFQ3jZ2FwZRtYS6cPTMe+hTLC8N5TZQrDOLyZ4MNgLhMXcIoqWsb+5ewC
-	hmWpEtws+t0wEOxMXyau0JoQLNjWDPpr5NqyUm8FxC4ZdmOac43Q6wuidMDgifQShtCUyu
-	ZFsqgbzm56G/0uVoF3cHi0sWRE4z1U2+GTeMQNPaQNt/LlH+noIgV4Zi8N7e0A==
-From: David Wronek <david@mainlining.org>
-Date: Wed, 17 Apr 2024 18:29:34 +0200
-Subject: [PATCH v4 2/2] drm/panel: Add driver for EDO RM69380 OLED panel
+	s=arc-20240116; t=1713371592; c=relaxed/simple;
+	bh=UAYwiWBvKmvDhQwtebF4o+eeC7q31S72wjSfxQDovlo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZBz0cSQmXNHHk/+ctg1K9ptHQ4LKu0GC2WIU6gLzeHifb7fzf1teeYmU0HlvQVAjTjFdBx7EdRt3uHTpv3lxZIjQ0jSzZt5xUqJ2zrZBFTuw5wL/ifoagrJ02ihNgumCgqgVc3skmJSe+FslQqdv6ys5sw/fRgAHIWRQcEJyzz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKRHB0PHKz6K661;
+	Thu, 18 Apr 2024 00:31:02 +0800 (CST)
+Received: from lhrpeml100002.china.huawei.com (unknown [7.191.160.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id 882D41406AC;
+	Thu, 18 Apr 2024 00:33:02 +0800 (CST)
+Received: from lhrpeml500001.china.huawei.com (7.191.163.213) by
+ lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 17 Apr 2024 17:33:02 +0100
+Received: from lhrpeml500001.china.huawei.com ([7.191.163.213]) by
+ lhrpeml500001.china.huawei.com ([7.191.163.213]) with mapi id 15.01.2507.035;
+ Wed, 17 Apr 2024 17:33:02 +0100
+From: Salil Mehta <salil.mehta@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "x86@kernel.org" <x86@kernel.org>, Russell King
+	<linux@armlinux.org.uk>, "Rafael J . Wysocki" <rafael@kernel.org>, "Miguel
+ Luis" <miguel.luis@oracle.com>, James Morse <james.morse@arm.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Dave
+ Hansen" <dave.hansen@linux.intel.com>, Linuxarm <linuxarm@huawei.com>,
+	"justin.he@arm.com" <justin.he@arm.com>, "jianyong.wu@arm.com"
+	<jianyong.wu@arm.com>
+Subject: RE: [PATCH v6 13/16] arm64: arch_register_cpu() variant to check if
+ an ACPI handle is now available.
+Thread-Topic: [PATCH v6 13/16] arm64: arch_register_cpu() variant to check if
+ an ACPI handle is now available.
+Thread-Index: AQHakMrD47/IJzgFn0S+CVdTscwPrLFspk/w
+Date: Wed, 17 Apr 2024 16:33:02 +0000
+Message-ID: <073c665c658e40f080c766803d326b77@huawei.com>
+References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+ <20240417131909.7925-14-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20240417131909.7925-14-Jonathan.Cameron@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-raydium-rm69380-driver-v4-2-e9c2337d0049@mainlining.org>
-References: <20240417-raydium-rm69380-driver-v4-0-e9c2337d0049@mainlining.org>
-In-Reply-To: <20240417-raydium-rm69380-driver-v4-0-e9c2337d0049@mainlining.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
- Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- phone-devel@vger.kernel.org, David Wronek <david@mainlining.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713371375; l=11832;
- i=david@mainlining.org; s=20240121; h=from:subject:message-id;
- bh=Xcy+l38me3IRf6SU/Xo9GNlyOs6vv5f3u0l/G7ZohSo=;
- b=nonIgszVDltxeSaSLB26kkFFvAPDdPpDHqErwFjtH5ktEXouWeOz6jbAPTvCYjWb1aFI0ZJKu
- 1o4e78cH82pDMnDFpbmCFE+sGB5gYBiXWHhM9L8asWvRLEnapSpaPQX
-X-Developer-Key: i=david@mainlining.org; a=ed25519;
- pk=PJIYyFK3VrK6x+9W6ih8IGSJ5dxRXHiYay+gG1qQzqs=
 
-Add support for the 2560x1600@90Hz OLED panel by EDO bundled with a
-Raydium RM69380 controller, as found on the Lenovo Xiaoxin Pad Pro 2021.
+Hi Jonathan,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: David Wronek <david@mainlining.org>
----
- drivers/gpu/drm/panel/Kconfig                 |  12 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-raydium-rm69380.c | 344 ++++++++++++++++++++++++++
- 3 files changed, 357 insertions(+)
+>  From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>  Sent: Wednesday, April 17, 2024 2:19 PM
+> =20
+>  The ARM64 architecture does not support physical CPU HP today.
+>  To avoid any possibility of a bug against such an architecture if define=
+d in
+>  future, check for the physical CPU HP case (not present) and return an e=
+rror
+>  on any such attempt.
+> =20
+>  On ARM64 virtual CPU Hotplug relies on the status value that can be quer=
+ied
+>  via the AML method _STA for the CPU object.
+> =20
+>  There are two conditions in which the CPU can be registered.
+>  1) ACPI disabled.
+>  2) ACPI enabled and the acpi_handle is available.
+>     _STA evaluates to the CPU is both enabled and present.
+>     (Note that in absence of the _STA method they are always in this
+>      state).
+> =20
+>  If neither of these conditions is met the CPU is not 'yet' ready to be u=
+sed
+>  and -EPROBE_DEFER is returned.
+> =20
+>  Success occurs in the early attempt to register the CPUs if we are booti=
+ng
+>  with DT (no concept yet of vCPU HP) if not it succeeds for already enabl=
+ed
+>  CPUs when the ACPI Processor driver attaches to them.  Finally it may
+>  succeed via the CPU Hotplug code indicating that the CPU is now enabled.
+> =20
+>  For ACPI if CONFIG_ACPI_PROCESSOR the only path to get to
+>  arch_register_cpu() with that handle set is via
+>  acpi_processor_hot_add_init() which is only called from an ACPI bus scan=
+ in
+>  which _STA has already been queried there is no need to repeat it here.
+>  Add a comment to remind us of this in the future.
+> =20
+>  Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+>  Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>  ---
+>  v6: Add protection again Physical CPU HP to the arch specific code
+>      and don't actually check _STA
+> =20
+>  Tested on arm64 with ACPI + DT build and DT only builds, booting with AC=
+PI
+>  and DT as appropriate.
+>  ---
+>   arch/arm64/kernel/smp.c | 53
+>  +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 53 insertions(+)
+> =20
+>  diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c index
+>  dc0e0b3ec2d4..ccb6ad347df9 100644
+>  --- a/arch/arm64/kernel/smp.c
+>  +++ b/arch/arm64/kernel/smp.c
+>  @@ -504,6 +504,59 @@ static int __init smp_cpu_setup(int cpu)  static bo=
+ol
+>  bootcpu_valid __initdata;  static unsigned int cpu_count =3D 1;
+> =20
+>  +int arch_register_cpu(int cpu)
+>  +{
+>  +	acpi_handle acpi_handle =3D acpi_get_processor_handle(cpu);
+>  +	struct cpu *c =3D &per_cpu(cpu_devices, cpu);
+>  +
+>  +	if (!acpi_disabled && !acpi_handle &&
+>  +	    IS_ENABLED(CONFIG_ACPI_HOTPLUG_CPU))
+>  +		return -EPROBE_DEFER;
+>  +
+>  +#ifdef CONFIG_ACPI_HOTPLUG_CPU
+>  +	/* For now block anything that looks like physical CPU Hotplug */
+>  +	if (invalid_logical_cpuid(cpu) || !cpu_present(cpu)) {
+>  +		pr_err_once("Changing CPU present bit is not
+>  supported\n");
+>  +		return -ENODEV;
+>  +	}
+>  +#endif
+>  +
+>  +	/*
+>  +	 * Availability of the acpi handle is sufficient to establish
+>  +	 * that _STA has aleady been checked. No need to recheck here.
+>  +	 */
+>  +	c->hotpluggable =3D arch_cpu_is_hotpluggable(cpu);
+>  +
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 154f5bf82980..e2a66c21349f 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -542,6 +542,18 @@ config DRM_PANEL_RAYDIUM_RM692E5
- 	  Say Y here if you want to enable support for Raydium RM692E5-based
- 	  display panels, such as the one found in the Fairphone 5 smartphone.
- 
-+config DRM_PANEL_RAYDIUM_RM69380
-+	tristate "Raydium RM69380-based DSI panel"
-+	depends on OF && GPIOLIB
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Raydium RM69380-based
-+	  display panels.
-+
-+	  This panel controller can be found in the Lenovo Xiaoxin Pad Pro 2021
-+	  in combination with an EDO OLED panel.
-+
- config DRM_PANEL_RONBO_RB070D30
- 	tristate "Ronbo Electronics RB070D30 panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 24a02655d726..e2a2807d4ef0 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM692E5) += panel-raydium-rm692e5.o
-+obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM69380) += panel-raydium-rm69380.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_ATNA33XC20) += panel-samsung-atna33xc20.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_DB7430) += panel-samsung-db7430.o
-diff --git a/drivers/gpu/drm/panel/panel-raydium-rm69380.c b/drivers/gpu/drm/panel/panel-raydium-rm69380.c
-new file mode 100644
-index 000000000000..4dca6802faef
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-raydium-rm69380.c
-@@ -0,0 +1,344 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree.
-+ * Copyright (c) 2024 David Wronek <david@mainlining.org>
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_graph.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
-+
-+struct rm69380_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi[2];
-+	struct regulator_bulk_data supplies[2];
-+	struct gpio_desc *reset_gpio;
-+};
-+
-+static inline
-+struct rm69380_panel *to_rm69380_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct rm69380_panel, panel);
-+}
-+
-+static void rm69380_reset(struct rm69380_panel *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(15000, 16000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	msleep(30);
-+}
-+
-+static int rm69380_on(struct rm69380_panel *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi[0];
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+	if (ctx->dsi[1])
-+		ctx->dsi[1]->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd4);
-+	mipi_dsi_dcs_write_seq(dsi, 0x00, 0x80);
-+	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0xd0);
-+	mipi_dsi_dcs_write_seq(dsi, 0x48, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x26);
-+	mipi_dsi_dcs_write_seq(dsi, 0x75, 0x3f);
-+	mipi_dsi_dcs_write_seq(dsi, 0x1d, 0x1a);
-+	mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x28);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc2, 0x08);
-+
-+	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set tear on: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(20);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display on: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(36);
-+
-+	return 0;
-+}
-+
-+static int rm69380_off(struct rm69380_panel *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi[0];
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+	if (ctx->dsi[1])
-+		ctx->dsi[1]->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display off: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(35);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(20);
-+
-+	return 0;
-+}
-+
-+static int rm69380_prepare(struct drm_panel *panel)
-+{
-+	struct rm69380_panel *ctx = to_rm69380_panel(panel);
-+	struct device *dev = &ctx->dsi[0]->dev;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	rm69380_reset(ctx);
-+
-+	ret = rm69380_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rm69380_unprepare(struct drm_panel *panel)
-+{
-+	struct rm69380_panel *ctx = to_rm69380_panel(panel);
-+	struct device *dev = &ctx->dsi[0]->dev;
-+	int ret;
-+
-+	ret = rm69380_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode rm69380_mode = {
-+	.clock = (2560 + 32 + 12 + 38) * (1600 + 20 + 4 + 8) * 90 / 1000,
-+	.hdisplay = 2560,
-+	.hsync_start = 2560 + 32,
-+	.hsync_end = 2560 + 32 + 12,
-+	.htotal = 2560 + 32 + 12 + 38,
-+	.vdisplay = 1600,
-+	.vsync_start = 1600 + 20,
-+	.vsync_end = 1600 + 20 + 4,
-+	.vtotal = 1600 + 20 + 4 + 8,
-+	.width_mm = 248,
-+	.height_mm = 155,
-+	.type = DRM_MODE_TYPE_DRIVER,
-+};
-+
-+static int rm69380_get_modes(struct drm_panel *panel,
-+					struct drm_connector *connector)
-+{
-+	return drm_connector_helper_get_modes_fixed(connector, &rm69380_mode);
-+}
-+
-+static const struct drm_panel_funcs rm69380_panel_funcs = {
-+	.prepare = rm69380_prepare,
-+	.unprepare = rm69380_unprepare,
-+	.get_modes = rm69380_get_modes,
-+};
-+
-+static int rm69380_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = backlight_get_brightness(bl);
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static int rm69380_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness_large(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return brightness;
-+}
-+
-+static const struct backlight_ops rm69380_bl_ops = {
-+	.update_status = rm69380_bl_update_status,
-+	.get_brightness = rm69380_bl_get_brightness,
-+};
-+
-+static struct backlight_device *
-+rm69380_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 511,
-+		.max_brightness = 2047,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+					      &rm69380_bl_ops, &props);
-+}
-+
-+static int rm69380_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct mipi_dsi_host *dsi_sec_host;
-+	struct rm69380_panel *ctx;
-+	struct device *dev = &dsi->dev;
-+	struct device_node *dsi_sec;
-+	int ret, i;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->supplies[0].supply = "vddio";
-+	ctx->supplies[1].supply = "avdd";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-+				      ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
-+
-+	dsi_sec = of_graph_get_remote_node(dsi->dev.of_node, 1, -1);
-+
-+	if (dsi_sec) {
-+		const struct mipi_dsi_device_info info = { "RM69380 DSI1", 0,
-+							   dsi_sec };
-+
-+		dsi_sec_host = of_find_mipi_dsi_host_by_node(dsi_sec);
-+		of_node_put(dsi_sec);
-+		if (!dsi_sec_host)
-+			return dev_err_probe(dev, -EPROBE_DEFER,
-+					     "Cannot get secondary DSI host\n");
-+
-+		ctx->dsi[1] =
-+			devm_mipi_dsi_device_register_full(dev, dsi_sec_host, &info);
-+		if (IS_ERR(ctx->dsi[1]))
-+			return dev_err_probe(dev, PTR_ERR(ctx->dsi[1]),
-+					     "Cannot get secondary DSI node\n");
-+
-+		mipi_dsi_set_drvdata(ctx->dsi[1], ctx);
-+	}
-+
-+	ctx->dsi[0] = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	drm_panel_init(&ctx->panel, dev, &rm69380_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ctx->panel.backlight = rm69380_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight))
-+		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-+				     "Failed to create backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	for (i = 0; i < ARRAY_SIZE(ctx->dsi); i++) {
-+		if (!ctx->dsi[i])
-+			continue;
-+
-+		dev_dbg(&ctx->dsi[i]->dev, "Binding DSI %d\n", i);
-+
-+		ctx->dsi[i]->lanes = 4;
-+		ctx->dsi[i]->format = MIPI_DSI_FMT_RGB888;
-+		ctx->dsi[i]->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-+					  MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+		ret = devm_mipi_dsi_attach(dev, ctx->dsi[i]);
-+		if (ret < 0) {
-+			drm_panel_remove(&ctx->panel);
-+			return dev_err_probe(dev, ret,
-+					     "Failed to attach to DSI%d\n", i);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void rm69380_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct rm69380_panel *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id rm69380_of_match[] = {
-+	{ .compatible = "lenovo,j716f-edo-rm69380" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rm69380_of_match);
-+
-+static struct mipi_dsi_driver rm69380_panel_driver = {
-+	.probe = rm69380_probe,
-+	.remove = rm69380_remove,
-+	.driver = {
-+		.name = "panel-raydium-rm69380",
-+		.of_match_table = rm69380_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(rm69380_panel_driver);
-+
-+MODULE_AUTHOR("David Wronek <david@mainlining.org");
-+MODULE_DESCRIPTION("DRM driver for Raydium RM69380-equipped DSI panels");
-+MODULE_LICENSE("GPL");
 
--- 
-2.44.0
+We would still need 'enabled' bitmask as applications need a way to clearly
+get which processors are enabled and usable in case of ARM64. Otherwise,
+they will end up scanning the entire MAX CPU space to figure out which
+processors have been plugged or unplugged. It is inefficient to bank upon
+errors to detect this and unnecessary to scan again and again.
+          =20
++            set_cpu_enabled(cpu, true);   // will need this change
+
+
+And its corresponding additions of enabled bitmask along side the present m=
+asks.
+
+I think we had this discussion in Linaro Open Discussions group few years
+back.
+
+
+>  +	return register_cpu(c, cpu);
+>  +}
+>  +
+>  +#ifdef CONFIG_ACPI_HOTPLUG_CPU
+>  +void arch_unregister_cpu(int cpu)
+>  +{
+>  +	acpi_handle acpi_handle =3D acpi_get_processor_handle(cpu);
+>  +	struct cpu *c =3D &per_cpu(cpu_devices, cpu);
+>  +	acpi_status status;
+>  +	unsigned long long sta;
+>  +
+>  +	if (!acpi_handle) {
+>  +		pr_err_once("Removing a CPU without associated ACPI
+>  handle\n");
+>  +		return;
+>  +	}
+>  +
+>  +	status =3D acpi_evaluate_integer(acpi_handle, "_STA", NULL, &sta);
+>  +	if (ACPI_FAILURE(status))
+>  +		return;
+>  +
+>  +	/* For now do not allow anything that looks like physical CPU HP */
+>  +	if (cpu_present(cpu) && !(sta & ACPI_STA_DEVICE_PRESENT)) {
+>  +		pr_err_once("Changing CPU present bit is not
+>  supported\n");
+>  +		return;
+>  +	}
+>  +
+
+For the same reasons as above:
+
++            set_cpu_enabled(cpu, flase);   // will need this change
+
+
+>  +	unregister_cpu(c);
+>  +}
+>  +#endif /* CONFIG_ACPI_HOTPLUG_CPU */
+>  +
+>   #ifdef CONFIG_ACPI
+>   static struct acpi_madt_generic_interrupt cpu_madt_gicc[NR_CPUS];
+> =20
+>  --
+>  2.39.2
 
