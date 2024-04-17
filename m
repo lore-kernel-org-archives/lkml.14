@@ -1,74 +1,75 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433A547F62;
-	Wed, 17 Apr 2024 20:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960114E1DC;
+	Wed, 17 Apr 2024 20:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713387101; cv=none; b=uZ/HJj9JbNvL8EId5fUn7T2dVsy12zlowmWCoQKdXXXoZmkbQITdQq0QT8cIOY/GuOMFnR6bsC8ExIZ/0UiNa2reRJS/Ypd6frZs1VYE6+DpvxT26BafYBvkyQOHgBgh2iBQ82U9Ng/wjaOXYhpvG9S34dWRYFHOG5L15yvYQ48=
+	t=1713387106; cv=none; b=Tpwsi2l0TW7KLzMMwOYeNPXqn5CjUy9+Q+gzMfoocDGPTWCkM81A1MBPK0xw8rH03HfResR/pVnY7HKTQHjWnWpDGYD+Rv7aDUPeACbbtXVsbYl2uw8CYXGDyFc34FjAQdzkwGplnzLu8Uok6MPLFzUOedmCfnohj7RKr8uuM/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713387101; c=relaxed/simple;
-	bh=LXXsEdLA5Zq6YNNUt/uYiZq4Vdw4X9I5cr9Mkn9kCGA=;
+	s=arc-20240116; t=1713387106; c=relaxed/simple;
+	bh=RtGkM6er8E+7VK+W97dxVdmk1hp8D8nlFJpFFKqNuEM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NaHTfC49mVcCY8TMJWgBxgJnsVmcu+DbJIa8u1C/bTCoTiQy/YEgFvlhsCp3znndCL2CRyyEsk9RJzGdqxCZzsM3fTTphy5XsXl0LUR/nf/XEVG7CEt1CJtBXscuTTVUCcN8H7FWVAST4QqUmlhLpanM3WGGFynCrLC3BNUwLvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SprL8fam; arc=none smtp.client-ip=209.85.167.53
+	 MIME-Version; b=akyxchrglbyBScwKQcRg/N/iy65HpPc0LcNy4gEjq759wkWSTGLu6lm6VTQlU01xXM/7KBzpisiPg/imDWfunJX3foi90AE3DqMgPvEsJVSw3evJ8/5O6v40G+eLa23YJvSqXFNrc2Dth1wWtmC4pe8CD/Mr/u7Wja+RYoB6kMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3QHkhIN; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SprL8fam"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516f2e0edb7so127073e87.1;
-        Wed, 17 Apr 2024 13:51:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3QHkhIN"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5700a9caee0so122267a12.2;
+        Wed, 17 Apr 2024 13:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713387098; x=1713991898; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713387102; x=1713991902; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7p4soOdjEgY8AdNUYnjFSI1oGWCetbnE8kSZexjePU8=;
-        b=SprL8fam+23ACLUg5V7kW/D9VDwVC6bp8imgwgwh8dzv4LzQevH/3qJgz4SrVa1rUa
-         mlQiRED21zzPIxwd4k3Ygfu2uR+PFxWKiumlO7fKYR8DmmCfwnEqsnNXZDBrdPethj9Y
-         x5TY0/9ovotYCeJnTWGZRVETyf2cIi7aXoWKhgrJ0Ah+FzUZH2xQ0jUUCQg7FwrimWaG
-         iIhBzpMMNOMEn/Nh220pgAnmzPSyr65Z79XKdeLaEyD/DW3SUO7INU53OgvTMQa6Dpsi
-         0IRVl4GH6h+TXqul2UpkXHaZ110lln5G0r45/tRg12tjSms+LeCNya+O3GaRyrEL4aFb
-         WCBw==
+        bh=gdMpU1RPD4eyTwSkVrScFCgXE5pA7FIMCk6GiLfnXZA=;
+        b=H3QHkhINfesi/yIY9v+Gk3TfAtmXZaR4+K5kDOKSqu5HqRzrg2cCmu4Qeb1K+a81ql
+         wawnhSugX3SQlJfkjqbNPLSrJeFqQwvC4ZOuddQd213MOsydhxkOzzQNZcGWQykVQAVH
+         nJTcRTOV+AO5o6Qu0xZS2VT5Rthbw6W7O76qIN22B7BmZbGc4Jqa4ItfO24pEE49cpyC
+         UFsLnBAFzvGTRVwBcgPkm1D4ZOwckuhN4KugwLVG2eq1VQtAJsdA/IXZkA+oQp6IyxM0
+         qi3qxJ/ZK2NO3aXzF8OIGGCqqtAu5xnJwRo6vmkVOqEQDVYTg+/dd9BLuhHTD31/71Bj
+         9LBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713387098; x=1713991898;
+        d=1e100.net; s=20230601; t=1713387102; x=1713991902;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7p4soOdjEgY8AdNUYnjFSI1oGWCetbnE8kSZexjePU8=;
-        b=MVT/GZzJu4iEhzg9ZRVdmn2So1PJzQCGjFEDwDwRn6TX0gXzUI8EiBMAC8/WxEVGnC
-         RfFqIu4mkiGsRj5bwSMnxiVUgD7+bVcTbSa0vD0SAZNS9svNFIIN+I++EOz8haX25owB
-         D2jfZych3sPL+p5+5b4qSsXkeB7VJnDyoRRdjygJsyHoQeCg0UFQmqgQVImXrRfE19nq
-         87vI+3UZNh7raaTN+6T8qzOBd+sqhMYyFTWexyjtoPY2Vlnz7koE858IONqIRtFErMfV
-         T5BjqMO2OUxMbLhwIcB1mTlBM73ZfnH8iPyWTLWN0FzGrPgEjRIQr9vZc/Io5JNB2J7t
-         DTnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVP4V6st7BiEj/X9e9yqnVi1zSW8jmaojQzB/xdorkdMrPhw+AepgHShaqOOvJ1d8W2yNMhxtMhseo1CjD3loUL71tAPoMLEq/BC09J
-X-Gm-Message-State: AOJu0YxWbbX0JSIdEO0wwNfI7OGtnWE/Avf/MRQMp3Jo0GFKhqwWjo9w
-	y8C12lN0KzQ5tcwTnW7DL+Rn2TGRXARvp87y4+cyqUw7WQqC3PHklnFYZ1vY
-X-Google-Smtp-Source: AGHT+IHg93R07EBVWczpP3sS1rTp/cNe5g1XD26tAw2Nv5iFm85Ta75D4liGHJxJHBJF9STEHOInZA==
-X-Received: by 2002:a05:6512:b96:b0:518:c6f0:5f22 with SMTP id b22-20020a0565120b9600b00518c6f05f22mr319628lfv.29.1713387097944;
-        Wed, 17 Apr 2024 13:51:37 -0700 (PDT)
+        bh=gdMpU1RPD4eyTwSkVrScFCgXE5pA7FIMCk6GiLfnXZA=;
+        b=RiPF3WdXS3bx6WKEB4LwdCTLHqaTbFe14Pkf4AX+akQF3SpmtBZiBaG7g4w7VCHkjh
+         b+WqdH2koIZqAORMeJ43fvp/olQRVuRf/zfEzEY8NfKOv3+Wfqad0GZp+MNTCt7tJykA
+         zQGbSEOAuJ/HSee0NKmZneIGOQ9Y6rhdk1SyCgBE7nq894AKprQb2Ld/5+Gf6XRzitaq
+         3eVojobc3r/ct2FvjENXmjPr7NwNlVSxC301LrvOFh6oyc4k2NoBJ+0ldeVsQYrvLs+I
+         LMoo4K5X1ZaWoPIM+iWCRcvBKpR8co0kVRAeDDugbj+Qe2ZFHesRDz/DrgF4O35SCrNJ
+         G5dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKH2OuYFXCiJFJ3RqEHCNtdU2w21gTmpOHg0oad8L8oV9UQG/NLT8nVfzzrGLzVMaE0YPmk9qXeHAvrWKkYPHWgQtIB+zM2Od3qIfG
+X-Gm-Message-State: AOJu0YyOmrwF5E56OkpqlB1lO249adlETZBYfLxhmGc1cHttoU82khaY
+	QAIV79UsU2/kf0Ir1ax5g7QBi8/3dwf2UyrgI4lsxN3PBOo+fc1LWERw6Lfw
+X-Google-Smtp-Source: AGHT+IGl6pMEzcVlyPQmZPD7vYjnsd7IUwGvNKz4Z4G6xV/AIeCjA777Gb6wI2RyZdS2UPDzepjGVQ==
+X-Received: by 2002:a17:907:3f9f:b0:a52:42ce:7da6 with SMTP id hr31-20020a1709073f9f00b00a5242ce7da6mr429744ejc.10.1713387102601;
+        Wed, 17 Apr 2024 13:51:42 -0700 (PDT)
 Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id tx24-20020a1709078e9800b00a554177a2cdsm31752ejc.85.2024.04.17.13.51.37
+        by smtp.gmail.com with ESMTPSA id tx24-20020a1709078e9800b00a554177a2cdsm31752ejc.85.2024.04.17.13.51.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 13:51:37 -0700 (PDT)
+        Wed, 17 Apr 2024 13:51:42 -0700 (PDT)
 From: Pawel Dembicki <paweldembicki@gmail.com>
 To: netdev@vger.kernel.org
 Cc: Pawel Dembicki <paweldembicki@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
 	Vladimir Oltean <olteanv@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 1/5] net: dsa: vsc73xx: use read_poll_timeout instead delay loop
-Date: Wed, 17 Apr 2024 22:50:44 +0200
-Message-Id: <20240417205048.3542839-2-paweldembicki@gmail.com>
+Subject: [PATCH net-next v2 3/5] net: dsa: vsc73xx: use macros for rgmii recognition
+Date: Wed, 17 Apr 2024 22:50:46 +0200
+Message-Id: <20240417205048.3542839-4-paweldembicki@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240417205048.3542839-1-paweldembicki@gmail.com>
 References: <20240417205048.3542839-1-paweldembicki@gmail.com>
@@ -80,93 +81,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch the delay loop during the Arbiter empty check from
-vsc73xx_adjust_link() to use read_poll_timeout(). Functionally,
-one msleep() call is eliminated at the end of the loop in the timeout
-case.
+It's preparation for future use. At this moment, the RGMII port is used
+only for a connection to the MAC interface, but in the future, someone
+could connect a PHY to it. Using the "phy_interface_mode_is_rgmii" macro
+allows for the proper recognition of all RGMII modes.
 
-As Russell King suggested:
-
-"This [change] avoids the issue that on the last iteration, the code reads
-the register, tests it, finds the condition that's being waiting for is
-false, _then_ waits and end up printing the error message - that last
-wait is rather useless, and as the arbiter state isn't checked after
-waiting, it could be that we had success during the last wait."
-
-Suggested-by: Russell King <linux@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Suggested-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 ---
 v2:
   - resend only
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 30 ++++++++++++++------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index ae70eac3be28..ab5771d4d828 100644
+index 3f8edac9aa5c..09e80aac43e7 100644
 --- a/drivers/net/dsa/vitesse-vsc73xx-core.c
 +++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -17,6 +17,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/device.h>
-+#include <linux/iopoll.h>
- #include <linux/of.h>
- #include <linux/of_mdio.h>
- #include <linux/bitops.h>
-@@ -268,6 +269,9 @@
- #define IS_7398(a) ((a)->chipid == VSC73XX_CHIPID_ID_7398)
- #define IS_739X(a) (IS_7395(a) || IS_7398(a))
+@@ -810,7 +810,7 @@ static void vsc73xx_mac_link_up(struct phylink_config *config,
+ 	else
+ 		val = VSC73XX_MAC_CFG_TX_IPG_100_10M;
  
-+#define VSC73XX_POLL_SLEEP_US		1000
-+#define VSC73XX_POLL_TIMEOUT_US		10000
-+
- struct vsc73xx_counter {
- 	u8 counter;
- 	const char *name;
-@@ -779,7 +783,7 @@ static void vsc73xx_adjust_link(struct dsa_switch *ds, int port,
- 	 * after a PHY or the CPU port comes up or down.
- 	 */
- 	if (!phydev->link) {
--		int maxloop = 10;
-+		int ret, err;
- 
- 		dev_dbg(vsc->dev, "port %d: went down\n",
- 			port);
-@@ -794,19 +798,17 @@ static void vsc73xx_adjust_link(struct dsa_switch *ds, int port,
- 				    VSC73XX_ARBDISC, BIT(port), BIT(port));
- 
- 		/* Wait until queue is empty */
--		vsc73xx_read(vsc, VSC73XX_BLOCK_ARBITER, 0,
--			     VSC73XX_ARBEMPTY, &val);
--		while (!(val & BIT(port))) {
--			msleep(1);
--			vsc73xx_read(vsc, VSC73XX_BLOCK_ARBITER, 0,
--				     VSC73XX_ARBEMPTY, &val);
--			if (--maxloop == 0) {
--				dev_err(vsc->dev,
--					"timeout waiting for block arbiter\n");
--				/* Continue anyway */
--				break;
--			}
--		}
-+		ret = read_poll_timeout(vsc73xx_read, err,
-+					err < 0 || (val & BIT(port)),
-+					VSC73XX_POLL_SLEEP_US,
-+					VSC73XX_POLL_TIMEOUT_US, false,
-+					vsc, VSC73XX_BLOCK_ARBITER, 0,
-+					VSC73XX_ARBEMPTY, &val);
-+		if (ret)
-+			dev_err(vsc->dev,
-+				"timeout waiting for block arbiter\n");
-+		else if (err < 0)
-+			dev_err(vsc->dev, "error reading arbiter\n");
- 
- 		/* Put this port into reset */
- 		vsc73xx_write(vsc, VSC73XX_BLOCK_MAC, port, VSC73XX_MAC_CFG,
+-	if (interface == PHY_INTERFACE_MODE_RGMII)
++	if (phy_interface_mode_is_rgmii(interface))
+ 		val |= VSC73XX_MAC_CFG_CLK_SEL_1000M;
+ 	else
+ 		val |= VSC73XX_MAC_CFG_CLK_SEL_EXT;
 -- 
 2.34.1
 
