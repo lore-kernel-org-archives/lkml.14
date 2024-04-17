@@ -1,98 +1,108 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A4713C3EF
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139E0146D71;
+	Wed, 17 Apr 2024 15:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366462; cv=none; b=PZSmVw28Z4qOaG3fet8uHBkztM7OCIkzev5hkhxwgJPBf3JvaPctN1u5S/rRoFfJAyi+jSeJraP/Q40Jcxa3DBwzmi616LWCEGk2vIPsW0p6+bCjgVHyuX2iA+p0vAAAarA5ppRp68ghoPquGod6Acc4p+eL8xTQ8BTGXFEnYXE=
+	t=1713366467; cv=none; b=K+g7uHQtlS70apqqlrrlxTJkAlt3uMyH3plJQYRHfajnnNtj3DncP6IfiKRL98NHA93ch/hebXl7qafyVzKCqGI0S1iANB5+ZwKDyt6Z6KPcJ00/rvE/IwT+XV1gLybKTqniOXaRbqwNcZqa1TRlL1oS+cV+FMu5c1SlMeyCfEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366462; c=relaxed/simple;
-	bh=GJjCHKH2dsSjH1IMoMJgT+gbrbyzNcXL6q46u4gzC3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CvrWVy4+dlNWcmlSqVxPFvBibP6cmucVxNavt/g0pa7G2tLKSLmPqA8smOt+aTv74cZaPjLDLQHEhEcmKqurHloi6o2ZbyqpZnq4LpgQdJ4kZ16xlreZDpLNTdKN7sbcacMjYvI2QXzgcNFz/rGBAvmS9GGJn5kOQgFjRnfAt24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dgYN7RW0; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dgYN7RW0"
-Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43HF7MGM4069601
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 17 Apr 2024 08:07:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43HF7MGM4069601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1713366443;
-	bh=bzaSc0LgdgSrjspfvctBl8dHDYhVXNZrN62zA+MGLIE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dgYN7RW0lRY301XtdtT2SislSlceJ3oGEasNzgz6E+iUyOjqJ6EVeo+r8ui8V5RI9
-	 qYq2kOzgAC9CHqb5VdJKqY6Omhk1LDqFxDLr1astDQZDbBnRJ2wl5Ciztnip6pKQHA
-	 3tJulyTDa3F8dJ7YjoEknT7EGcdBKkQG1HnMGCqN9Yfm6JDpS2ReSZlpJITZmzVJhV
-	 otTtiEdTs9A+FNi6Pjc2jDtqZAQdqCCCTov3fBqlCgFBNwvRLbq2PJv5nmm1WJ9q6K
-	 meoOMVyGGgU100B6Cg4rxucmMc7BbKQBSf6MaUYyFu6qR3CoZGS3F/Q/hHb4eqVQ62
-	 MyQ7R6Q4lpbAw==
-Message-ID: <2d0e67dd-c3e3-4701-839a-68d73c61c170@zytor.com>
-Date: Wed, 17 Apr 2024 08:07:16 -0700
+	s=arc-20240116; t=1713366467; c=relaxed/simple;
+	bh=cGUDXpqRyTtoJVCTkzWt1ExYguS6miyazDkf3wMlAY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gXNa17erHSTOjR2bAOniHnXOQLC6fKuEEbvKPs7bEg6jTIlFxBddn5TmjYLMtEiDyJel/5+B3etbYgNGRYn6GzeueGqgvrn0q3cofxkGZ8lvKuGYIWgCp8uyVewPEdlPmFcrVwE+/O3I0hhjyI5pI8WXsXWmeuHp+wZlCl3AAaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de45e596a05so61590276.1;
+        Wed, 17 Apr 2024 08:07:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713366462; x=1713971262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pcm0f6cgY9tqOKkBlWhGvnzcvnieDLUDH/xJHhGRlvs=;
+        b=Yy0mld4E/WlYouZT6+ok5eUAoIUMJF/zuMbRfc8yRxXmwx6la7uFE5hjJvL4J1YuCY
+         Xeez48cRkc1q4TTLYnI4B3JZijoyrmWfu7zj5d0UOhMo/JKUSaQERKNJeGKpEY+zMO0Y
+         APHQvrEWhMQOhGpyn6omoHNTJunKtnScmKR3D0iI39mfKONlbH6fS+oWSl8RadYqm3UH
+         0hnOd+feQ8Wa0OO+ZryO5zfIKodm2cp84AaX4z9aNSd7wfZFLMnwaavghHlrwgFjbv+X
+         MtAGy8t/BH+/aD6wszKJDZIpPW/cIpOoYrcLyUKqzWIq0TeQBlx6lV3xIxPq8OBv/aYv
+         PaCA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1f9KSALGvVPPXGZzcIAt0R0Y9TI5NEtwQOken46hn7+O4HPF0EmLLdzSjKXxMG2uy++ohyYVAysbjnzLwHD4EmuVPySrpIgTy3MAtaq5lq3mkVYJC4yTU4sJPzvkg418Zb8dVk11YZUqupPBe14klnG2J7BIKg9WwDa+hS+pIoKRsdW7FnW1joGVy
+X-Gm-Message-State: AOJu0YzS2Q0z+z1PnsW8ITg2SomeXmkLkFmBMp9/KC9sfL5GRydR4PqY
+	gd7lt1eAFY3m/fnJrijIkesBbnzZZo8+JjX74h3hgKYP/ipdQ40pLTLP8p8asF0=
+X-Google-Smtp-Source: AGHT+IGfFr8duULCgklTts62aOhQumuuAyumbWGz69P7MrBZtdoDeB6xxu+IyUoWJzzukCcUi7rLvw==
+X-Received: by 2002:a81:8d02:0:b0:615:2ed7:59e with SMTP id d2-20020a818d02000000b006152ed7059emr15070616ywg.14.1713366461807;
+        Wed, 17 Apr 2024 08:07:41 -0700 (PDT)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id y15-20020a81ca4f000000b0061ada21ac4dsm1129380ywk.25.2024.04.17.08.07.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 08:07:40 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61500da846fso41913257b3.1;
+        Wed, 17 Apr 2024 08:07:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUI0acZkYHLGDtmnCsyqBwZpgw558Izil7Ud1sEWegrRdT7u4gRGASYBh7wzFjUaWmjuNPZTOspAfiXlbAu7VjyXInXvbL1dxxoHvaT8eujBt/cTsH2bg/n16rzca9a2LYRLWojv4VA4oziRYz3ggWp8DQN3c8iv07SiHwp5ueXncTFpfj5Diw1JMum
+X-Received: by 2002:a81:b54b:0:b0:61a:e3fc:512e with SMTP id
+ c11-20020a81b54b000000b0061ae3fc512emr7181123ywk.25.1713366460625; Wed, 17
+ Apr 2024 08:07:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] x86/fred: Fix INT80 emulation for FRED
-Content-Language: en-US
-To: Nikolay Borisov <nik.borisov@suse.com>, "Xin Li (Intel)" <xin@zytor.com>,
-        linux-kernel@vger.kernel.org
-Cc: luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org
-References: <20240417063001.3773507-1-xin@zytor.com>
- <d0979bd9-fd12-4672-b451-23f23fc2353c@suse.com>
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <d0979bd9-fd12-4672-b451-23f23fc2353c@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240322151219.885832-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240322151219.885832-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240322151219.885832-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 17 Apr 2024 17:07:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWCttb=ze27vfHs7LtjADU7v-nXimH8mm2zj5D6Uyvstg@mail.gmail.com>
+Message-ID: <CAMuHMdWCttb=ze27vfHs7LtjADU7v-nXimH8mm2zj5D6Uyvstg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clocksource/drivers/renesas-ostm: Allow OSTM
+ driver to reprobe for RZ/V2H(P) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/17/24 04:02, Nikolay Borisov wrote:
-> 
-> On 17.04.24 г. 9:30 ч., Xin Li (Intel) wrote:
->> Add a FRED-specific INT80 handler fred_int80_emulation():
->>
->> 1) As INT instructions and hardware interrupts are separate event
->>     types, FRED does not preclude the use of vector 0x80 for external
->>     interrupts. As a result the FRED setup code does *NOT* reserve
->>     vector 0x80 and calling int80_is_external() is not merely
->>     suboptimal but actively incorrect: it could cause a system call
->>     to be incorrectly ignored.
->>
->> 2) fred_int80_emulation(), only called for handling vector 0x80 of
->>     event type EVENT_TYPE_SWINT, will NEVER be called to handle any
->>     external interrupt (event type EVENT_TYPE_EXTINT).
->>
->> 3) The FRED kernel entry handler does *NOT* dispatch INT instructions,
->>     which is of event type EVENT_TYPE_SWINT, so compared with
->>     do_int80_emulation(), there is no need to do any user mode check.
->>
->> 4) int80_emulation() does a CLEAR_BRANCH_HISTORY, which is likely 
->> >     overkill for new x86 CPU implementations that support FRED.
-> 
-> Well, that's a bit of an overstatement/speculation, because 
-> clear_branch_history will only be effective if the machine is 
-> susceptible to the given bug and there isn't a better options (i.e using 
-> a hardware bit controlling the respective aspect of the CPU).
->>
+On Fri, Mar 22, 2024 at 4:13=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The RZ/V2H(P) (R9A09G057) SoC is equipped with the Generic Timer Module,
+> also known as OSTM. Similar to the RZ/G2L SoC, the OSTM on the RZ/V2H(P)
+> SoC requires the reset line to be deasserted before accessing any
+> registers.
+>
+> Early call to ostm_init() happens through TIMER_OF_DECLARE() which always
+> fails with -EPROBE_DEFER, as resets are not available that early in the
+> boot process.  To address this issue on the RZ/V2H(P) SoC, enable the OST=
+M
+> driver to be reprobed through the platform driver probe mechanism.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> - Updated commit description
+> - Dropped usage of IS_ENABLED() and used defined() instead
 
-It would seem like a huge stretch to expect that a FRED-capable CPU 
-would not have such a facility. This is a matter of establishing a 
-baseline for FRED-capable hardware.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-It would make more sense to me to add it if we turn out to need it; note 
-that FRED code is currently only enabled on demand, in order to defend 
-against bit rot until we have physical hardware.
+Gr{oetje,eeting}s,
 
-Now, if this is still desired, it *probably* belongs better in either 
-fred_intx()/fred_other() or asm_fred_entrypoint_user, depending on if 
-this ought to be done for all entries from userspace or only system calls.
+                        Geert
 
-	-hpa
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
