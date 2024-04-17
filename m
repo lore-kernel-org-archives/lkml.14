@@ -1,95 +1,161 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC2757898;
-	Wed, 17 Apr 2024 09:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CDA12AAE3;
+	Wed, 17 Apr 2024 09:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713345182; cv=none; b=k7D1QUJQGtnmHBXBNoH8Tn+NSfEt0bzCGMIfMQ6inmaxc2dhuwDceMTYd0z+N6aPR7scdegWRaE0EQr8hf/G8n94qkxi8L7hhQgklwIIXk/K1LQlVQgljV4bWD+NDwTjby12TJs6faFSdOAUETvCjMVCjFaGv6LmZFkVynL5WOU=
+	t=1713345290; cv=none; b=FE3aqbGcEU4H9PfOIueNkJaiUC5RLWSaq7qt42M4ejoydEHuU7YQ97/YCbGpUIxvnARcoPwbRJ4YSSv++o3GtGYU4LxYYx8VwBRLBzdiRBFCRB8cZR9cqew9SHP8JtJgG9c+tF1xcCx24NPz8ELiKRB4fbXj+NIFiXzRlJWzHF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713345182; c=relaxed/simple;
-	bh=9ZnFyt9EnaFn4kkSCLK7jpsiIIqRXRrmN39V9djcWKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DKBzxXMiEziowyITcsljcvjngzPNf6bEzWxgH7xm8qFv0WtYPweo0nd0I77nfK+NXGgQHS7zOgr1jdWXJkYSP4tYP5B6nNZvqEh/n2oyy3EHgmAA6BhU+5md0gEnTY/SUX2BTvB76XDiHvxDohr6z8IMdVII3TkI41R8Y2cBO6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=eeJ+Rzqv; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1713345290; c=relaxed/simple;
+	bh=pqobeqHfUVbkypqHwHSiTkFR/HCjK7XkjC8AjPfYgX4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MTAsbMAsFpy+wlVozR2Nmx1BlcJv7X3vFDFFZa8mAWa3abF5gHz1yocUqjjFBOO1/yvlrpg9GWAjMVMhTjLTU1COXIWsRIKKeAOS2GTLsGlzjByaFED2B+gKd0RdsW9eZf/pXFXWkWLz5qK8hqapTfjxenD+QI35ZK3IWVs1ci4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=noC8WT9n; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="eeJ+Rzqv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1713345181; x=1744881181;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9ZnFyt9EnaFn4kkSCLK7jpsiIIqRXRrmN39V9djcWKY=;
-  b=eeJ+RzqvQzt9P4nHC81stHiXqi/tht/MWRnSUKjSZvaT0G5zRcSaXANR
-   BG1Bi5BdPPlkf2ZB3fBp2vrGV20/C35qd8IX0Iu27jEo+T7OLKE71TW7y
-   l/dATiGPugEYT5WkXxX1MeZthVWR1iqgJbJFdJY5qmJw4+qWXIY237zsk
-   w=;
-X-IronPort-AV: E=Sophos;i="6.07,208,1708387200"; 
-   d="scan'208";a="339290797"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 09:12:52 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:24771]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.40:2525] with esmtp (Farcaster)
- id ca7a4c02-a734-4bba-bd1a-9e90b51c919c; Wed, 17 Apr 2024 09:12:50 +0000 (UTC)
-X-Farcaster-Flow-ID: ca7a4c02-a734-4bba-bd1a-9e90b51c919c
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 17 Apr 2024 09:12:50 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Wed, 17 Apr
- 2024 09:12:47 +0000
-Message-ID: <5351cd46-7228-48d8-b1a2-8ab91dce24f7@amazon.de>
-Date: Wed, 17 Apr 2024 11:12:45 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="noC8WT9n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713345287;
+	bh=pqobeqHfUVbkypqHwHSiTkFR/HCjK7XkjC8AjPfYgX4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=noC8WT9nMOVHMivvk5E86wS0K0xe7U7pcqTdYF6o82RCaJUy7Bb4pnU1rmn4NtoIW
+	 0KpDMmIYs1M0IBTBnjhtEw1U0oDUp5myi2V1WvylkYOwL74Bf7ggl1t9etkG0Pjwa/
+	 A+Pf9FYps396ki1qrpOe8d10btmQkGLkqoUvNmcBeVbwk+jO7MEvQikDkCGUjui3XF
+	 D7jV09wM7BK+BnfqcGvIonfV0ZUDNyZmfklFQongeQikMtdzIxTOKSuKhY9zt3dSjk
+	 tQqiq85aPurX3+G9nljn5uaL65rfHJF2cv8k4sB7ICnteqOSpPHsmWax6f51GcIyeg
+	 fpP5dAwVcO1VA==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 988E637820F9;
+	Wed, 17 Apr 2024 09:14:46 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: djakov@kernel.org
+Cc: robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	keescook@chromium.org,
+	gustavoars@kernel.org,
+	henryc.chen@mediatek.com,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	wenst@chromium.org,
+	amergnat@baylibre.com
+Subject: [PATCH v2 1/7] dt-bindings: regulator: Add bindings for MediaTek DVFSRC Regulators
+Date: Wed, 17 Apr 2024 11:14:36 +0200
+Message-ID: <20240417091442.170505-2-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240417091442.170505-1-angelogioacchino.delregno@collabora.com>
+References: <20240417091442.170505-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] virt: vmgenid: rearrange code to make review
- easier
-Content-Language: en-US
-To: Babis Chalios <bchalios@amazon.es>, <tytso@mit.edu>, <Jason@zx2c4.com>,
-	<olivia@selenic.com>, <herbert@gondor.apana.org.au>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <sudanl@amazon.com>, <xmarcalx@amazon.co.uk>, <dwmw@amazon.co.uk>
-References: <20240417081212.99657-1-bchalios@amazon.es>
- <20240417081212.99657-2-bchalios@amazon.es>
- <10d41e7e-87b1-4036-a740-da36270a4325@amazon.de>
- <2838b126-ad87-4642-9223-e24f3fdb2c63@amazon.es>
-From: Alexander Graf <graf@amazon.de>
-In-Reply-To: <2838b126-ad87-4642-9223-e24f3fdb2c63@amazon.es>
-X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-Ck9uIDE3LjA0LjI0IDExOjA1LCBCYWJpcyBDaGFsaW9zIHdyb3RlOgo+Cj4KPiBPbiAxNy80LzI0
-IDEwOjM1LCBBbGV4YW5kZXIgR3JhZiB3cm90ZToKPj4KPj4gT24gMTcuMDQuMjQgMTA6MTIsIEJh
-YmlzIENoYWxpb3Mgd3JvdGU6Cj4+PiBGcm9tOiBTdWRhbiBMYW5kZ2UgPHN1ZGFubEBhbWF6b24u
-Y29tPgo+Pj4KPj4+IFJlYXJyYWdlIHRoZSBmdW5jdGlvbnMgb2Ygdm1nZW5pZCB0byBtYWtlIHRo
-ZSBuZXh0IGNvbW1pdCwKPj4+IHdoaWNoIHJlLWltcGxlbWVudHMgdm1nZW5pZCBhcyBhIHBsYXRm
-b3JtIGRyaXZlciwgZWFzaWVyIHRvIHJldmlldy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBTdWRh
-biBMYW5kZ2UgPHN1ZGFubEBhbWF6b24uY29tPgo+Pgo+Pgo+PiBZb3UgY2FuJ3Qgc2lnbiBvZmYg
-b24gYmVoYWxmIG9mIHNvbWVvbmUgZWxzZS4gVGhlIFNvQiBoZXJlIG5lZWRzIHRvIAo+PiBiZSB5
-b3Vycy4gSWYgeW91IGFyZSB0YWtpbmcgb3ZlciB0aGlzIGNvZGUgZnJvbSBTdWRhbiwgSSdkIHN1
-Z2dlc3QgdG8gCj4+IHRha2Ugb3ZlciBmdWxsIG93bmVyc2hpcCBvZiBpdCBhbmQgcHV0IHlvdXIg
-b3duIG5hbWUgYXMgYXV0aG9yIGFuZCAKPj4gU29CIGluIGFsbCBwYXRjaGVzLgo+Pgo+Cj4gSSB0
-aG91Z2h0IGFib3V0IGl0IGFuZCBpdCBzZWVtZWQgd2VpcmQgdG8gbWUgdGhhdCBJIHRha2Ugb3Zl
-ciBTb0IgYW5kIAo+IGF1dGhvcnNoaXAgc2luY2UgSSBvbmx5IHRvdWNoZWQgb25lIGxpbmUgaW4g
-b25lIG9mCj4gdGhlIHBhdGNoZXMsIGJ1dCBJIHdpbGwgYmUgdGFraW5nIG92ZXIgdGhlIHBhdGNo
-ZXMsIHNvIEkgY2FuIGRvIHRoYXQgCj4gaWYgdGhhdCdzIHRoZSB3YXkgd2UgdGhpbmdzIGFyZSBk
-b25lLgo+Cj4gRG9lcyBpdCBtYWtlIHNlbnNlIHRvIGF0IGxlYXN0IGFkZCAiQ28tYXV0aG9yZWQt
-YnkgU3VkYW4gTGFuZGdlIAo+IDxzdWRhbmxAYW1hem9uLmNvbT4iIGhlcmU/CgoKWW91IGNhbiBj
-ZXJ0YWlubHkgZG8gdGhhdCwgeWVzLgoKCkFsZXgKCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2Vu
-dGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1
-ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBh
-bSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVy
-bGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+The Dynamic Voltage and Frequency Scaling Resource Collector Regulators
+are controlled with votes to the DVFSRC hardware.
+
+This adds support for the regulators found in MT6873, MT8183, MT8192
+and MT8195 SoCs.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../mediatek,mt6873-dvfsrc-regulator.yaml     | 71 +++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml
+
+diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml
+new file mode 100644
+index 000000000000..446f1dab4d2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6873-dvfsrc-regulator.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/mediatek,mt6873-dvfsrc-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek DVFSRC-controlled Regulators
++
++description:
++  The Dynamic Voltage and Frequency Scaling Resource Collector Regulators
++  are controlled with votes to the DVFSRC hardware.
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt6873-dvfsrc-regulator
++      - mediatek,mt8183-dvfsrc-regulator
++      - mediatek,mt8192-dvfsrc-regulator
++      - mediatek,mt8195-dvfsrc-regulator
++
++  reg:
++    maxItems: 1
++
++  dvfsrc-vcore:
++    description: DVFSRC-controlled SoC Vcore regulator
++    $ref: regulator.yaml#
++
++  dvfsrc-vscp:
++    description: DVFSRC-controlled System Control Processor regulator
++    $ref: regulator.yaml#
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        system-controller@10012000 {
++            compatible = "mediatek,mt8195-dvfsrc";
++            reg = <0 0x10012000 0 0x1000>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            regulators@0 {
++                compatible = "mediatek,mt8195-dvfsrc-regulator";
++                reg = <0>;
++
++                dvfsrc_vcore: dvfsrc-vcore {
++                        regulator-name = "dvfsrc-vcore";
++                        regulator-min-microvolt = <550000>;
++                        regulator-max-microvolt = <750000>;
++                        regulator-always-on;
++                };
++
++                dvfsrc_vscp: dvfsrc-vscp {
++                        regulator-name = "dvfsrc-vscp";
++                        regulator-min-microvolt = <550000>;
++                        regulator-max-microvolt = <750000>;
++                        regulator-always-on;
++                };
++            };
++        };
++    };
+-- 
+2.44.0
 
