@@ -1,115 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD986A339
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 07:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713338777; cv=none; b=UIcTDEbxIX9eEUaDWW1z705DuA4rve8TI2k8xjlgcMhuQv7Veb5bUt0jw5J06x6rI08qDmQbugpsVptw9RciYjelVdh3EGzvH8tIBM5JCSmDJk8cqLPGSa2PC6+khql1gGYG6bdgmvxw8FPfmP/nfnDyq5suUxzvIuGYHOqhhFc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713338777; c=relaxed/simple;
-	bh=NRb6yN6BiffLT8J6ikAQwA7PmQ1nwOOaImZKibq+JPc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UekuNP/nWYnRei4SQwg7bXM+K3mg7SCLmAdZkyndhPuI1ypP6bzpdLaEfxJIPlNppKdneu74i7BgVEJtMYurbIIypNPKSdJL6OIODEGaeyyU3h91s++GUIFrSWRzpswnKKfGA3lHe/yptTTk18QWTP068H6praSwWAPyYD/SxCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyjiaxXx; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F6D604D3;
+	Wed, 17 Apr 2024 07:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713339049; cv=fail; b=NwhJDhyDRJ4TRz7MUnb3apjACBGMP4mO2Dg2bNjFG/CGPF4KWvd2o8ztp0fFL8dJ0OiLxCwf8lOU/mo/el3diSibfH9HdcZmdfNhpXYh69UYsq+pVir5N74Hvv24BqfKpU2S50dkmfTChOdmqL73miziMqU5hdRpqe+QCElrTUM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713339049; c=relaxed/simple;
+	bh=aIFduZYNjuZDYhgFmTvvcMIhaPALoIRnY+mawj1AyZ0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SScG+cDYCbfOVXSJZDKPURgCgjRzX192mZwBYkSc5pgJF6vF0/urmgBueuyIHKiM4RJPoPPDkctxQs16ijQw/GXY3otIO/LJmgnpa/Vq3m6XHX7bQCXDPtTJlkgl/V67wGPLgUc7jJwKAXSYoI2BBzaUl/EG8z6zIbxN5lqk9U4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NEUbkjDB; arc=fail smtp.client-ip=40.107.223.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyjiaxXx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC43C072AA;
-	Wed, 17 Apr 2024 07:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713338776;
-	bh=NRb6yN6BiffLT8J6ikAQwA7PmQ1nwOOaImZKibq+JPc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=oyjiaxXxi5PF3OhNR21u6QRUxmfn5vjVAVgkcfxbd+VINZDJc8tqAuABrtKNHrJEQ
-	 7LnOMAkoy+IHfKiXWOh0zonVbEZ1XBJKw3bf4Z/dKU1sk2gXjgVLlL8sJ3p/MZ/drC
-	 uEWjISNBLhdxY9We6mOvruIRJoRGyopeGStmcKQBZXY+rZ5WJSl2FZPp2vJSvv4Lvj
-	 3tqE9XGsw94wJBZvvt57iu5AJsw1Paz64So+RHVjBMTAJIASWZxzeQ87jLgyAV02MZ
-	 U3g3pz1h9+IDpgASKP32CagUHqQesmbsXtdxbHerJuVJw27ctS4leqv6+KaenBDEtg
-	 BC4g5MCxI9SsA==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: takakura@valinux.co.jp, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, apatel@ventanamicro.com, bmeng.cn@gmail.com,
- atishp@rivosinc.com, daniel.thompson@linaro.org, arnd@arndb.de,
- sfr@canb.auug.org.au, akpm@linux-foundation.org,
- conor.dooley@microchip.com, samuel.holland@sifive.com
-Cc: taka@valinux.co.jp, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Ryo Takakura <takakura@valinux.co.jp>
-Subject: Re: [PATCH] RISC-V: Enable IPI CPU Backtrace
-In-Reply-To: <20240417050711.41930-1-takakura@valinux.co.jp>
-References: <20240417050711.41930-1-takakura@valinux.co.jp>
-Date: Wed, 17 Apr 2024 09:26:13 +0200
-Message-ID: <87bk68fo16.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NEUbkjDB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RunX36ZD/XZR4gZ/a/ggeZBCxPxpqa/I6s2zzZaTK2V7xHHsaggntlezxfrrqNQKRQQAx+4V03lwWNWYVK5fGP9ttElpRmJrimYrf5xXcPvcC88v74rtqt2nbc7zrkYKjsexohOg4tlP+7s3Ih4fJHRZ3FxGoJ44PsSa84qoG0s/9kFYvH5RSDqk64hBJw8nlNLVdG6IXbF+uGVzqFksMjqma+6yFrlxz7YQ4r2IfOkPDWqUZCTjas9WpSAqL+IUv9Mn2UJL/1zKhi58tcLkEaWAiwZHVu3PQOZu4+/5Lo6eZnP7rZ82+jECMBi2k52xfGD6D9exb+Ffi4/Um6IY6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DQZXlV/5sW0pdE+f6OPcAZHmxWuc9sFZ7/qTFPpkRPY=;
+ b=hUSgNav27teozH63/Q0TsMP2Mt+o+kzzAkhQDsP1+Six4+RBxcIcVgyHF9F5yH3a/FFl9By/fT8ipMK9jH+p0t4JM4cH0ERnTeTJKM/NQpszgK4FxOn2FA0GsCSJ0d/fZj+nLUB4oxNleDy4m/Kzig7rcccrI7uRLoVNiDKM07RRRsCi58IRYhrbGF2FAy41cqpkvTCbdnBxEwQUgk6G6AWbNZQDw5/QvgaUM5GRl7eLQAhJrOMsIxg21gwZmlWxkhjCA2SOXXvYl9tM39UDCynRcex6Ia/GT82WnEJ3it6a49/mjjBNWvFwxywFog6Qc4votbZU31+0NVZpsCq3gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DQZXlV/5sW0pdE+f6OPcAZHmxWuc9sFZ7/qTFPpkRPY=;
+ b=NEUbkjDBmUGK8Q4anrmsPMUkNKoMcy0Og1qtFp9EJuvgzYVhhdVtRfeGfTTvWEaCYnqrmFFjeYQByDvFJeqf1XnxupaSI1mpfAM7I9TIxPG6lou4nLSLDLKmJPC3N0YXwWG3+J8n+iEWKkH5f7tX2M6fn5KiWbWw5/DaVYUY2uWgc596UreSfhneokVH8X6K03Rr77Q9vtMGUW6L4Cn9nMs84faBDM501LrxLzsa/jBjpcNqYgCNQ47IEXeL5X7VLfAkvody26KlogpEGoWFPiiyf6NVwdsbGTzsr+h8uwuRvl5OokwSCpLVdy0YwXGv40rkv3Mj7geoCJ2Qhmsc+w==
+Received: from DM5PR07CA0066.namprd07.prod.outlook.com (2603:10b6:4:ad::31) by
+ SJ2PR12MB7991.namprd12.prod.outlook.com (2603:10b6:a03:4d1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.49; Wed, 17 Apr
+ 2024 07:30:44 +0000
+Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
+ (2603:10b6:4:ad:cafe::ec) by DM5PR07CA0066.outlook.office365.com
+ (2603:10b6:4:ad::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
+ Transport; Wed, 17 Apr 2024 07:30:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Wed, 17 Apr 2024 07:30:43 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 17 Apr
+ 2024 00:30:30 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 17 Apr 2024 00:30:30 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 17 Apr 2024 00:30:29 -0700
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
+ Thompson" <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 0/3] Updates to mlxbf-pmc
+Date: Wed, 17 Apr 2024 03:30:15 -0400
+Message-ID: <cover.1713334019.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|SJ2PR12MB7991:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0a178ed-7f53-4eef-e57d-08dc5eb04a9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lgGG9Cr4SicAqaz4nZc69r0VEhMvKJTGuiOTjlWpPy81oan9IIChFXJ2aiK/63t28+GYaV5jEsHVW4BpNFvQfBzZrQWcLOY3ubE5pdZnFpWwezgSN0PY6Ptz+6b0OuLz0rBEQ4TWkBFzKTK+dYQEenwa/+M/6ndcagf1aH/e65PMQIdTMo+eQ67kc/Rq2BARwCwiwXOnZf2r38tCp1CwmeuEO/JJve5v0FiVmCeNOEkBJ3kDa5U693Yce5O/9PBFmraz0OagEyFEBtK+4aqz0G9eQir+jOw0G2eK83cCBNNcgP9MJWl/qNj6ryVmXPwTXHuQfV9lw3wEVEGbihC0kZe43WPd9rLK6khTGGSFGpsje/87VA3SxQTaEbtT/G+m1rJakW+62YviRoLEu0AgTDeOXtAERsFYYZ7ivYvhdFgkrTvBKrOEZxw0NPIXrI0fs/T6pv4gFYbNTr1EeBL2a13G2KBVpL9Rk71kYQswOBT2uhTnnnalXtZaEyXBsCc/3CUq1QRCDVtOx85Iva7aix1n5jYNu3d55ttHsl+RwA90TMFUq+P7ugy29oHOdD1oXU6I7imi/TIUrTlNGUn4M1T8MdSsIL2vBsXhSun3mMaN2XSdvslfk9SgamDrmKqtBcsC8W4Lj1r9ILh9tw3dBNWt/0GgguAsi33mjqNfkzszAaZteOde2AXMU5+Ct77CTt6nz2UmAP5b2VoemRbdQLfBNwDwqNxMEi+RzzHl1qtbna8hiHm3RmWR1IexJRXm
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 07:30:43.7478
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0a178ed-7f53-4eef-e57d-08dc5eb04a9d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D8.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7991
 
-takakura@valinux.co.jp writes:
+This submission contains 3 patches relating to mlxbf-pmc.
 
-> From: Ryo Takakura <takakura@valinux.co.jp>
->
-> Add CPU backtrace feature using IPI on riscv.
-> Currently, riscv doesn't yet support the feature while other
-> architectures do. As IPI multiplexing allows to handle=20
-> multiple IPIs, I think this feature can also be enabled=20
-> on riscv by adding IPI.
->
-> This patch defines arch_trigger_all_cpu_backtrace() which triggers
-> the IPI for CPU backtrace.
-> It will be triggered in the events of oops/panic when options
-> (oops_all_cpu_backtrace/panic_print) are set accordingly.
->
-> Below is the case of oops with the oops_all_cpu_backtrace=20
-> enabled.
->
-> $ sysctl kernel.oops_all_cpu_backtrace=3D1
->
-> triggering oops shows:
-> [  435.716754] NMI backtrace for cpu 3
-> [  435.716893] CPU: 3 PID: 621 Comm: in:imklog Tainted: G           OE   =
-   6.9.0-rc4 #1
-> [  435.717086] Hardware name: riscv-virtio,qemu (DT)
-> [  435.717182] epc : fallback_scalar_usercopy+0x8/0xdc
-> [  435.717300]  ra : _copy_to_user+0x32/0x58
-> [  435.717391] epc : ffffffff80c33d88 ra : ffffffff80598e3c sp : ff200000=
-00e83b50
-> [  435.717544]  gp : ffffffff82066bf0 tp : ff60000091fd7000 t0 : 33633038=
-66660000
-> [  435.717711]  t1 : 000000000000005b t2 : 3363303866666666 s0 : ff200000=
-00e83b60
-> [  435.717874]  s1 : 00000000000001af a0 : 00007ff74d3df74f a1 : ff600000=
-82cdc800
-> [  435.718040]  a2 : 000000000000003c a3 : 0000000000000000 a4 : 00000000=
-00000000
-> [  435.718196]  a5 : 00ffffffffffffc4 a6 : 0000000000000000 a7 : 00000000=
-00000010
-> [  435.718333]  s2 : ff60000082cdc800 s3 : ffffffff82066910 s4 : 00000000=
-00001df1
-> [  435.718475]  s5 : ffffffff8206a5b8 s6 : 00007ff74d3df74f s7 : ffffffff=
-8206a5b0
-> [  435.718616]  s8 : ff60000082cdc800 s9 : ffffffff81e26208 s10: 00000000=
-0000003c
-> [  435.718760]  s11: ffffffff8206a5ad t3 : ff60000082cdc812 t4 : ff600000=
-82cdc812
-> [  435.718909]  t5 : ff60000082cdc818 t6 : 0000000000040000
-> [  435.719019] status: 0000000000040120 badaddr: 0000000000000000 cause: =
-8000000000000001
-> [  435.719191] [<ffffffff80c33d88>] fallback_scalar_usercopy+0x8/0xdc
-> [  435.719330] [<ffffffff80094eee>] syslog_print+0x1f4/0x2b2
-> [  435.719446] [<ffffffff80095e10>] do_syslog.part.0+0xb0/0x326
-> [  435.719594] [<ffffffff8009692e>] do_syslog+0x66/0x88
-> [  435.719816] [<ffffffff803a1a80>] kmsg_read+0x44/0x5c
-> [  435.720017] [<ffffffff8038ea92>] proc_reg_read+0x7a/0xa8
-> [  435.720251] [<ffffffff802fae20>] vfs_read+0x94/0x264
-> [  435.720478] [<ffffffff802fb906>] ksys_read+0x64/0xe4
-> [  435.720709] [<ffffffff802fb9a6>] __riscv_sys_read+0x20/0x2c
-> [  435.720880] [<ffffffff80c43ea2>] do_trap_ecall_u+0x60/0x1d4
-> [  435.721236] [<ffffffff80c4f74c>] ret_from_exception+0x0/0x64
->
-> Signed-off-by: Ryo Takakura <takakura@valinux.co.jp>
+Patch 1 adds documentation for the sysfs files created by the driver.
+Patches 2 and 3 add specific functionality to the driver for supporting
+64-bit ocunters, cycle count and clock_measure performance block.
 
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Shravan Kumar Ramani (3):
+  Documentation/ABI: Add document for Mellanox PMC driver
+  platform/mellanox: mlxbf-pmc: Add support for 64-bit counters and
+    cycle count
+  platform/mellanox: mlxbf-pmc: Add support for clock_measure
+    performance block
+
+ .../ABI/testing/sysfs-platform-mellanox-pmc   |  49 +++++
+ drivers/platform/mellanox/mlxbf-pmc.c         | 180 +++++++++++++++++-
+ 2 files changed, 225 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+
+-- 
+2.30.1
+
