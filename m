@@ -1,167 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4617D65E02;
-	Wed, 17 Apr 2024 06:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE0329D06;
+	Wed, 17 Apr 2024 06:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713334632; cv=none; b=UtClXVG0KLln0Zb0Ywn0DZ4TWNFsL5eIZXyTz3VbfGDbruWwxvmHNaMJDSSdt0OQeP9ipCNHEBLVfYL5pqcT2UiI8Twf5wD/1yPLKDaEXODrn7FLgg8gu7FyZLXeo3xmXNbObTuUP+c0aiENA6p3+b0CZYQLIDkNuzye9CM+kvA=
+	t=1713335178; cv=none; b=i6/ftHx6bceRA9K7BbX5/ry16nrZyBD4rjKIFQ8ghQXf5ITJ1T9RhyiRA/Bgfg8YB+mUo+VeMK8SCnCOxENnTF5hS7cnDUXtzgX7+c8Lt+un1VyIMWVlUzYqc1oJL3HLzrIn1nXR3BYSbHR+tZLKvxI5D0tlo8JDXi+YqSELbdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713334632; c=relaxed/simple;
-	bh=NFuVsgVJfZaAOKFxHZp//9+GJ3/IPPtO5nxnrAmlirg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Bo7CFjT9eZUODPPC987phEe4QHtqFb8B6CeHqzd4Unii2FGc5mM/7+vz/4umFym/YulFr8k+v8V+dloekhs+6Hb6b1qIusAWh6HeH6tjlvaJUkuU80nHV9FUo8+E24zRnq3X35OUptCJi5dxJXbc5GicmG9XpMUmvJOLk4JN9RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZqOGcod; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713335178; c=relaxed/simple;
+	bh=R8Sytcd0zdOKyMmrxcQ5ptLPbB+DTVIfGCrBabF5ANY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sbOEhTyh9UhLeMCi/qKg4uLaxR1H6BMDVGxEggw1JGS8GUCTrCzrB784mL7uZgXE/MJAyCKUDBbMDrLmHkGEOiYmRI0ZHUtbFMpU8dJ/m6T75lIVrz4iFpdPwo6Lof/8uL4TczJAT3NlrhIaSJ8sZgD2miArwxe14pqhsepe1N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2d1MAgi; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZqOGcod"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713334631; x=1744870631;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NFuVsgVJfZaAOKFxHZp//9+GJ3/IPPtO5nxnrAmlirg=;
-  b=QZqOGcod0JIxF3PzDW5Gi9WmFD3cBjGLpU9eJxgDu1O0L2nu8NMY5l1P
-   qVLFqoGDvr60qrVbm6C0m2HFJKYCBR+R/RZm7qfN3SqpT9m54VzjZxsC0
-   r6kcx91LzI2CZm6KcdXsL75WsKSzB40sBrL+PeZKL7zs9+Q61J32ODbx/
-   i5l3Nboq4QudruL9nL7FJM+nwAUczTphat5fIlv5lw8JfXlQi6vPfX/p7
-   WSvMjDLGyUTXZObdKYXbOEePx+3qTf7FMmQnkFcaZnule/nKknLMOhbjk
-   8ITTyEcKUWSE2FhS6vOOvaiEXVpAHBynfxd0OAHf6Mu6J8kPKH5ILP5RX
-   w==;
-X-CSE-ConnectionGUID: F9tpuU7eR+CfYOmG4z/83Q==
-X-CSE-MsgGUID: IaUAebC8SvGtLeENUWpdJQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="11750849"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="11750849"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:17:10 -0700
-X-CSE-ConnectionGUID: j57zaDkGTVClbWw+FTtrHA==
-X-CSE-MsgGUID: qsmEAh3gSmqncLDcL9tXNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="23109086"
-Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:17:02 -0700
-From: Zhenzhong Duan <zhenzhong.duan@intel.com>
-To: linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	james.morse@arm.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	bhelgaas@google.com,
-	helgaas@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	linmiaohe@huawei.com,
-	shiju.jose@huawei.com,
-	adam.c.preble@intel.com,
-	leoyang.li@nxp.com,
-	lukas@wunner.de,
-	Smita.KoralahalliChannabasappa@amd.com,
-	rrichter@amd.com,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	erwin.tsaur@intel.com,
-	sathyanarayanan.kuppuswamy@intel.com,
-	dan.j.williams@intel.com,
-	feiting.wanyan@intel.com,
-	yudong.wang@intel.com,
-	chao.p.peng@intel.com,
-	qingshun.wang@linux.intel.com,
-	Zhenzhong Duan <zhenzhong.duan@intel.com>
-Subject: [PATCH v3 3/3] PCI/AER: Clear UNCOR_STATUS bits that might be ANFE
-Date: Wed, 17 Apr 2024 14:14:07 +0800
-Message-Id: <20240417061407.1491361-4-zhenzhong.duan@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
-References: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2d1MAgi"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d94fde45deso25240139f.1;
+        Tue, 16 Apr 2024 23:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713335175; x=1713939975; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R8Sytcd0zdOKyMmrxcQ5ptLPbB+DTVIfGCrBabF5ANY=;
+        b=I2d1MAgisLhTuWw4urKMuFYOLKtM0QZZHlYO18SPl5xeogKsuZAMY0vGXIoNNLN/5E
+         w2UV+r8Xyka+HQG64JrI9BKSJfQlPz8pfct7VH768PojoaRvCM2JTjtA5g3aix5N5Gmr
+         nvUn93P/cTuNXZglnIFkkntlV6W4Ol85E7N0laJ4b5nXAEBrzZ9VfsnHxFFoeMKktOcr
+         vL506xrQNbQlv2RJzr3dQEEgn5wb/Rw33PxYDpAFlOLlL8lc3Du7GsSDHUy/3OWKifbX
+         SETqDKM4XU+b3tKg1roljht4pCqwekSpuUN603S6OJfeAlmxnoTjuVICHk85+C87BZu/
+         SsYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713335175; x=1713939975;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R8Sytcd0zdOKyMmrxcQ5ptLPbB+DTVIfGCrBabF5ANY=;
+        b=tBvlTMo4EpfAz71kICX02Q7SBV80cXy5AwC8vYfT7JS96+XmqsZv29j4pqA9u9OvHT
+         B0ZaVAbMcQifZerB6wW6N3nmPQeipBHdpQ+hz3CZY+QZZrgAxsM/FYXfoLL4k+DxKQPA
+         mnDL0Ccr4/hCWV57y2HHhcx5aKgV6P3+BKDoEvlavXw7D4a3z3Cf/20BEnCgm/3OGCzV
+         QZwoQLi1glOndedKtQVAdREWJI80i+c1c8cpi00zeuXg5lwAELylvhTZhLQFstifXV1/
+         2idU9zfW4jUbIs+a7cxJKGU196wW7flmUreTS61pbS6bBUMpD/BXMJ2ABWU2Mn4DGfPE
+         HrFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVux6PUPTZtO7QpxlCFXzGsmuHHw9OmSDVUahGub0gGtCgN4WVqpjaiIGgUjmYxgv48R6zsjmAVWA1GFWM1tMjGhtlNFgKm+imJmuoM+LCneOy4hMmxsI15P6E6Az8OvzFl
+X-Gm-Message-State: AOJu0YzHhwmMZsX2RkrRYD7f0IZwn1go7oAxEDrreKdbCD3QT49l/9Pd
+	edONEDupXmdZnvBQ0hYs/WSnE0QLc+VrdBTV67hilr+yZTTcoNaaR09+zIJNMc2tq7lZjF/cxMB
+	OpgoqC0OTAOEfMmer7l4iysOb8pE=
+X-Google-Smtp-Source: AGHT+IGwbrnBPuuGW3fDaUnHH3zdP9PR1lsn/gkIcmftimODj6RqHyVul1zeySTkUj80e3azBaobyXEPZDzHh5LifWg=
+X-Received: by 2002:a05:6e02:1748:b0:36a:fba4:ec45 with SMTP id
+ y8-20020a056e02174800b0036afba4ec45mr18817708ill.3.1713335175168; Tue, 16 Apr
+ 2024 23:26:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240414045124.3098560-1-dmitrii.bundin.a@gmail.com>
+ <Zh0ZhEU1xhndl2k8@krava> <CANXV_Xwmf-VH5EfNdv=wcv8J=2W5L5RtOs8n-Uh5jm5a1yiMKw@mail.gmail.com>
+ <Zh4ojsD-aV2vHROI@krava> <ddc0ac5b-9bd4-f31a-a7ec-83f7a10e6ab1@iogearbox.net>
+In-Reply-To: <ddc0ac5b-9bd4-f31a-a7ec-83f7a10e6ab1@iogearbox.net>
+From: Dmitrii Bundin <dmitrii.bundin.a@gmail.com>
+Date: Wed, 17 Apr 2024 09:26:03 +0300
+Message-ID: <CANXV_XwGhdV7v05Xjjp-g9yW4E0FjA=84M8jZ6bcf7yuooDkig@mail.gmail.com>
+Subject: Re: [PATCH] bpf: btf: include linux/types.h for u32
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	haoluo@google.com, sdf@google.com, kpsingh@kernel.org, 
+	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
+	eddyz87@gmail.com, andrii@kernel.org, ast@kernel.org, martin.lau@linux.dev, 
+	khazhy@chromium.org, vmalik@redhat.com, ndesaulniers@google.com, 
+	ncopa@alpinelinux.org, dxu@dxuuu.xyz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When processing an ANFE, ideally both correctable error(CE) status and
-uncorrectable error(UE) status should be cleared. However, there is no
-way to fully identify the UE associated with ANFE. Even worse, a Fatal
-Error(FE) or Non-Fatal Error(NFE) may set the same UE status bit as
-ANFE. Treating an ANFE as NFE will reproduce above mentioned issue,
-i.e., breaking softwore probing; treating NFE as ANFE will make us
-ignoring some UEs which need active recover operation. To avoid clearing
-UEs that are not ANFE by accident, the most conservative route is taken
-here: If any of the FE/NFE Detected bits is set in Device Status, do not
-touch UE status, they should be cleared later by the UE handler. Otherwise,
-a specific set of UEs that may be raised as ANFE according to the PCIe
-specification will be cleared if their corresponding severity is Non-Fatal.
+On Tue, Apr 16, 2024 at 5:47=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.n=
+et> wrote:
+> Please add the error description as motivation aka "why" into the commit
+> description, otherwise it's not really obvious looking at it at a later
+> point in time why the include was needed.
 
-For instance, previously when kernel receives an ANFE with Poisoned TLP
-in OS native AER mode, only status of CE will be reported and cleared:
-
-  AER: Correctable error message received from 0000:b7:02.0
-  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr
-
-If the kernel receives a Malformed TLP after that, two UEs will be
-reported, which is unexpected. Malformed TLP Header is lost since
-the previous ANFE gated the TLP header logs:
-
-  PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00041000/00180020
-     [12] TLP                    (First)
-     [18] MalfTLP
-
-Now, for the same scenario, both CE status and related UE status will be
-reported and cleared after ANFE:
-
-  AER: Correctable error message received from 0000:b7:02.0
-  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr
-    Uncorrectable errors that may cause Advisory Non-Fatal:
-     [18] TLP
-
-Tested-by: Yudong Wang <yudong.wang@intel.com>
-Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
----
- drivers/pci/pcie/aer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 870e1d1a5159..6ebe320eb0f7 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1115,9 +1115,14 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
- 		 * Correctable error does not need software intervention.
- 		 * No need to go through error recovery process.
- 		 */
--		if (aer)
-+		if (aer) {
- 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
- 					info->status);
-+			if (info->anfe_status)
-+				pci_write_config_dword(dev,
-+						       aer + PCI_ERR_UNCOR_STATUS,
-+						       info->anfe_status);
-+		}
- 		if (pcie_aer_is_native(dev)) {
- 			struct pci_driver *pdrv = dev->driver;
- 
--- 
-2.34.1
-
+Doesn't the comment /* for u32 */ following the include explain the
+purpose? I thought the include was actually missing since relying on
+indirect declaration of u32 is relatively fragile.
