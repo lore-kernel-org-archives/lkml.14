@@ -1,77 +1,27 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B94AEBB;
-	Wed, 17 Apr 2024 01:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B3CE6184F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 01:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713316928; cv=none; b=X+jNaBoV90tPSZIwYTvnd5Iszjdr7ArwT1CaSJJVu2RUs/mCXHAQFtf8gZEw7FFFucnQ+vCrKwjBalzml2ssZ6OpNQhAwH5AEXM3jkMkhCbjJCyFz+ax3l2ZT9oQ+jpRH2AtYV6RCt4bQHrD/WWNO3Wp4FK+lIH7B871asIDCSA=
+	t=1713317095; cv=none; b=hlhneIPD4qR1XpzzCZYQITOXXB66u6UeoB0hJYtFHDSQSv7Js8wwk41e9xqJWYo2zGdYYC/7zWN6nsLeZooMhDBSGXvmT7YOA9aH7InmlGRU2taVyUlvRqg/hHovztk/pl7QDMI9cHBVUltFD9mynUgFRUgQBC8mG8BZy/70fcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713316928; c=relaxed/simple;
-	bh=DUYFWX4LWKaLj5DBHUFDv8Fo12atozH9lyEhZH1CAuI=;
+	s=arc-20240116; t=1713317095; c=relaxed/simple;
+	bh=QEokpzywCij/rs8KGCbS/96yPJ0h0w2hazVYrHtROdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nmbPKVjxUT9JMipy9dUHKLycQ5TJ0bAMGnuhg+J9g0Klqryp8af+u3DloQ9KAJv5HhTkUXSJWpjotnBTUj+0t9T4UcPe0TmIAipyncZQncgsHF0ajv5KeU6PMZ622mjia8yCGsFp4RXef+tiG3LEOmLaZlRiNIMBdNTJVMIyeHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EDuDcOSX; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDuDcOSX"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2330f85c2ebso3334075fac.1;
-        Tue, 16 Apr 2024 18:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713316926; x=1713921726; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LnX24HJPnbW9GAV5sbrmRceYLlMBy8M9WyMVqDoxp/w=;
-        b=EDuDcOSXKdmYeresZNQ1ht08joplx98WZYA+MhCOBa7mieaYlS+8tiwMnBUy04/2rx
-         mOkR8iz8MULqGqavAb+gA1pXAI+uFGJMWTGwvUVio+z2CiwwsF6YXQk+SBXMNCcjwncM
-         2qrGEcG8T608pn86lU+x3RwPvKXO3iWbMhvM+rHRF/iPxa1AylLwnr3qh0CQO44E8HdX
-         reri7yCFi5AiYQVfVB1NdcKH5iWnHdEq6dsyptJznkhRJ64uAhROOKFGm2fsVlZ0LZzr
-         L6HlhhpD6mGAAV6Q/uOKRNqp+gjeYWNPkgh6FvwOpbK5SF81/Y1ies869pFrrJtI2dz5
-         LSrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713316926; x=1713921726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnX24HJPnbW9GAV5sbrmRceYLlMBy8M9WyMVqDoxp/w=;
-        b=BIVL+q9jCdGWnHljVhUwp87xWbWvsVyN5YE0pxJWcDcpS6VN3DKPNbpT6GgBxsMISU
-         B+VLv1arejyRUV3koa0swnwXKw6dCzyydCyhuRNVNIOYA2BIo5+yVKJfNGUuCskr0unL
-         4oTDZl9mPmi36ctaFsHsO5iDWZun7Ach4u3gxDITRfDA7qHisydAfFJgAFeSNJu9+b17
-         t6kvm53qd7QHfGwbh5y+OxZcOWevoGY2bnPqOjeELzXOE1H4cWtDj7ifmhaC5aM7MuOH
-         YwGsmDAO/xWhVls9O9ZyA3KdkXIzAXIUc4EnB6IYtXtYsibHptLfrj4L3XBX2Z1v76iZ
-         jr6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUIIYcaWlQIxtl+nJF2bMXJbumrhnjbCP8PPml36AT5NDyIDTbmkSOwiLLiGpUWr4PF8dWfaRV81TIF8pQAxuPw9cDc5/9VyaN7czX2F1X35Nb0N01/98DWT6yR4zWtkoL3amTGaFz6ExEQ2itohlpKtk7+HLM3xsgaOS9BxBSCHJKA
-X-Gm-Message-State: AOJu0Yx0fshlTLzyIWndMXKasaXNpytPB63j9VE9bGO6V28dbRyvQTdp
-	0MvwM55oLOiUm7spfRITt23Df1darMoJPuzC0O0l8baI89HjETg4
-X-Google-Smtp-Source: AGHT+IFQN2WvDvVvDfE7SiVQ/ZNnoEulyk0oTfQIzF72qCPjRTZocptPi/+XMX8fSvsGmb3tvGg4Ow==
-X-Received: by 2002:a05:6871:5224:b0:221:a881:df51 with SMTP id ht36-20020a056871522400b00221a881df51mr16998129oac.44.1713316926264;
-        Tue, 16 Apr 2024 18:22:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:6f51])
-        by smtp.gmail.com with ESMTPSA id x17-20020a056a00271100b006ed3509ecd0sm9665987pfv.56.2024.04.16.18.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 18:22:05 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 16 Apr 2024 15:22:04 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, chenhuacai@kernel.org, josef@toxicpanda.com,
-	jhs@mojatatu.com, svenjoac@gmx.de, raven@themaw.net,
-	pctammela@mojatatu.com, qde@naccy.de, zhaotianrui@loongson.cn,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, cgroups@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com,
-	"yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC v2 5/6] blk-throttle: support to destroy throtl_data
- when blk-throttle is disabled
-Message-ID: <Zh8kPGAu2TG4Su2M@slm.duckdns.org>
-References: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
- <20240406080059.2248314-6-yukuai1@huaweicloud.com>
- <Zhl37slglnnTSMO7@slm.duckdns.org>
- <1bb85208-1224-77dc-f0b2-7b7a228ef70b@huaweicloud.com>
- <Zh6wx4mXZy_EOViH@slm.duckdns.org>
- <19086c09-3060-a4ce-4ac6-811a29653979@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZM/9laBLaG2QJbqMxUzkwjO7EXGSyh8tTze3IEkdJRJ2BgdGTYkY4oriik4ikgD8+5tuc4SUN03CilCJJspK34zrcqlbGEdtd6kqtsLdRHsC0lAfj7YEUKrSuPCRIVUyttp2ZCfL1+j7oKJxoW/yPw3O+UrNqqj+v/8/8oiv0eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 182709 invoked by uid 1000); 16 Apr 2024 21:24:48 -0400
+Date: Tue, 16 Apr 2024 21:24:48 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+Cc: mdharm-usb@one-eyed-alien.net, gregkh@linuxfoundation.org,
+  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+  linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net
+Subject: Re: [PATCH v3] usb-storage: Optimize scan delay more precisely
+Message-ID: <4d94b2a8-dd2a-4bae-9a0c-8125747f404a@rowland.harvard.edu>
+References: <20240416082821.10164-1-Norihiko.Hama@alpsalpine.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,34 +30,229 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <19086c09-3060-a4ce-4ac6-811a29653979@huaweicloud.com>
+In-Reply-To: <20240416082821.10164-1-Norihiko.Hama@alpsalpine.com>
 
-Hello,
-
-On Wed, Apr 17, 2024 at 09:13:34AM +0800, Yu Kuai wrote:
-> > Probably a better interface is for unloading to force blk-throtl to be
-> > deactivated rather than asking the user to nuke all configs.
+On Tue, Apr 16, 2024 at 05:28:21PM +0900, Norihiko Hama wrote:
+> Current storage scan delay is reduced by the following old commit.
 > 
-> I was thinking that rmmod in this case should return busy, for example,
-> if bfq is currently used for some disk, rmmod bfq will return busy.
+> a4a47bc03fe5 ("Lower USB storage settling delay to something more reasonable")
 > 
-> Is there any example that unloading will deactivate resources that users
-> are still using?
+> It means that delay is at least 'one second', or zero with delay_use=0.
+> 'one second' is still long delay especially for embedded system but
+> when delay_use is set to 0 (no delay), still error observed on some USB drives.
+> 
+> So delay_use should not be set to 0 but 'one second' is quite long.
+> Especially for embedded system, it's important for end user
+> how quickly access to USB drive when it's connected.
+> That's why we have a chance to minimize such a constant long delay.
+> 
+> This patch optimizes scan delay more precisely
+> to minimize delay time but not to have any problems on USB drives
+> by extending module parameter 'delay_use' in milliseconds internally.
+> The parameter 'delay_use' is changed to be parsed as 3 decimal point value
+> if it has digit values with '.'.
+> It makes the range of value to 1 / 1000 in internal 32-bit value
+> but it's still enough to set the delay time.
+> By default, delay time is 'one second' for backward compatibility.
+> 
+> For example, it seems to be good by changing delay_use=0.1,
+> that is 100 millisecond delay without issues for most USB pen drives.
+> 
+> Signed-off-by: Norihiko Hama <Norihiko.Hama@alpsalpine.com>
+> ---
 
-Hmm... yeah, I'm not sure. Pinning the module while in use is definitely
-more conventional, so let's stick with that. It's usually achieved by
-inc'ing the module's ref on each usage, so here, the module refs would be
-counting the number of active rules, I guess.
+At this location you're supposed to describe how this version of the patch 
+differs from the previous version.
 
-I'm not sure about modularization tho mostly because we've historically had
-a lot of lifetime issues around block and blkcg data structures and the
-supposed gain here is rather minimal. We only have a handful of these
-policies and they aren't that big.
+>  .../admin-guide/kernel-parameters.txt         | 10 +++
+>  drivers/usb/storage/usb.c                     | 72 +++++++++++++++++--
+>  2 files changed, 78 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 561d0dd776c7..ae1eb5988706 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6190,6 +6190,16 @@
+>  	usb-storage.delay_use=
+>  			[UMS] The delay in seconds before a new device is
+>  			scanned for Logical Units (default 1).
+> +			To specify more precise delay, supports 3 decimal point.
+> +			The range of decimal point is in milliseconds,
+> +			hence the minimum value is "0.001".
 
-If hot path overhead when not being used is concern, lazy init solves most
-of it, no?
+The text could be better.  For example:
 
-Thanks.
+			The delay can have up to 3 decimal places, giving a
+			resolution of one millisecond.
 
--- 
-tejun
+> +			Example:
+> +				delay_use=1
+> +					1 second delay
+> +				delay_use=0.1
+> +					0.1 second delay
+> +				delay_use=2.55
+> +					2.55 second elay
+
+This should show all 3 decimal places:
+
+				delay_use=2.567
+					2.567 second delay
+
+>  	usb-storage.quirks=
+>  			[UMS] A list of quirks entries to supplement or
+> diff --git a/drivers/usb/storage/usb.c b/drivers/usb/storage/usb.c
+> index 90aa9c12ffac..d5eb7dd8f3b1 100644
+> --- a/drivers/usb/storage/usb.c
+> +++ b/drivers/usb/storage/usb.c
+> @@ -67,9 +67,73 @@ MODULE_AUTHOR("Matthew Dharm <mdharm-usb@one-eyed-alien.net>");
+>  MODULE_DESCRIPTION("USB Mass Storage driver for Linux");
+>  MODULE_LICENSE("GPL");
+>  
+> -static unsigned int delay_use = 1;
+> -module_param(delay_use, uint, S_IRUGO | S_IWUSR);
+> -MODULE_PARM_DESC(delay_use, "seconds to delay before using a new device");
+> +static unsigned int delay_use = 1 * MSEC_PER_SEC;
+> +
+> +static int delay_use_set(const char *s, const struct kernel_param *kp)
+> +{
+> +	unsigned int delay_ms = 0;
+> +	int frac = 3, ret;
+> +	char *p = skip_spaces(s);
+> +	char buf[16];
+> +
+> +	if (strlen(p) >= sizeof(buf) - frac)
+> +		return -EINVAL;
+> +
+> +	strscpy_pad(buf, p, sizeof(buf));
+> +
+> +	p = strchr(buf, '.');
+> +	if (p) {
+> +		int i = 0;
+> +		char *tmp = p + 1;
+> +
+> +		while (tmp[i] && tmp[i] != '\n')
+> +			*p++ = tmp[i++];
+> +
+> +		if (i == 0 || i > frac)
+> +			return -EINVAL;
+> +		frac -= i;
+> +	} else {
+> +		p = buf + strlen(buf) - 1;
+> +		if (*p != '\n')
+> +			p++;
+> +	}
+> +	while (frac-- > 0)
+> +		*p++ = '0';
+> +	*p = '\0';
+> +
+> +	ret = kstrtouint(buf, 10, &delay_ms);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*((unsigned int *)kp->arg) = delay_ms;
+> +	return 0;
+> +}
+
+As I said before, the parsing code should be in a separate function to make 
+reviewing the code easier.  It also should be written more clearly.  Here's 
+my attempt (not tested at all).  You might prefer to remove some of the 
+comments; I put in a lot of them.
+
+/**
+ * str_to_fixed_point_uint - parse an unsigned fixed-point decimal integer
+ * @str: String to parse.
+ * @ndecimals: Number of decimal places in the fixed-point value.
+ * @val: Where to store the parsed value.
+ *
+ * Parse an unsigned fixed-point decimal value in @str, containing at
+ * most ndecimal digits to the right of the decimal point.
+ * Stores the parsed value in @val, scaled by 10^(@ndecimal).
+ *
+ * As with kstrtouint(), the string must be NUL-terminated and may
+ * include a single newline before the terminating NUL.  The first
+ * character may be a plus sign but not a minus sign.  The decimal
+ * point and fractional digits are optional.
+ *
+ * Returns 0 on success, a negative error code otherwise.
+ */
+static int str_to_fixed_point_uint(const char *str, int ndecimals,
+		unsigned int *val)
+{
+	int n, n1, n2;
+	const char *p;
+	char *q;
+	char buf[16];
+
+	n = strlen(str);
+	if (n > 0 && str[n - 1] == '\n');
+		--n;
+
+	p = strchr(str, '.');
+	if (p) {
+		n1 = p++ - str;		/* Length of integral part */
+		n2 = n - (n1 + 1);	/* Length of fractional part */
+		if (n2 > ndecimals)
+			return -EINVAL;
+	} else {
+		n1 = n;			/* Length of integral part */
+		n2 = 0;			/* No fractional part */
+	}
+	if (n1 + n2 == 0 || n1 + ndecimals > sizeof(buf) - 1)
+		return -EINVAL;		/* No digits present or too long */
+
+	memcpy(buf, str, n1);		/* Integer part */
+	memcpy(buf + n1, p, n2);	/* Fractional part */
+	for (q = buf + n1 + n2; n2 < ndecimals; ++n2)
+		*q++ = '0';		/* Remaining fractional digits */
+	*q = 0;
+
+	return kstrtouint(buf, 10, val);
+}
+
+> +
+> +static int delay_use_get(char *s, const struct kernel_param *kp)
+> +{
+> +	unsigned int delay_ms = *((unsigned int *)kp->arg);
+> +	unsigned int rem = do_div(delay_ms, MSEC_PER_SEC);
+> +	int len;
+> +	char buf[16];
+> +
+> +	len = scnprintf(buf, sizeof(buf), "%d", delay_ms);
+> +	if (rem) {
+> +		len += scnprintf(buf + len, sizeof(buf) - len, ".%03d", rem);
+> +		while (buf[len - 1] == '0') {
+> +			buf[len - 1] = '\0';
+> +			if (--len <= 1)
+> +				break;
+> +		}
+> +	}
+
+While this could also go in a separate function, it's short enough to keep 
+here.
+
+Alan Stern
+
+> +	return scnprintf(s, PAGE_SIZE, "%s\n", buf);
+> +}
+> +
+> +static const struct kernel_param_ops delay_use_ops = {
+> +	.set = delay_use_set,
+> +	.get = delay_use_get,
+> +};
+> +module_param_cb(delay_use, &delay_use_ops, &delay_use, 0644);
+> +MODULE_PARM_DESC(delay_use, "time to delay before using a new device");
+>  
+>  static char quirks[128];
+>  module_param_string(quirks, quirks, sizeof(quirks), S_IRUGO | S_IWUSR);
+> @@ -1066,7 +1130,7 @@ int usb_stor_probe2(struct us_data *us)
+>  	if (delay_use > 0)
+>  		dev_dbg(dev, "waiting for device to settle before scanning\n");
+>  	queue_delayed_work(system_freezable_wq, &us->scan_dwork,
+> -			delay_use * HZ);
+> +			msecs_to_jiffies(delay_use));
+>  	return 0;
+>  
+>  	/* We come here if there are any problems */
+> -- 
+> 2.17.1
+> 
