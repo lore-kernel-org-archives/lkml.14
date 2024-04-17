@@ -1,78 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B061F516
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C1912EBE2
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713345720; cv=none; b=BU3HtilwY2PpNNOUb0Xyht9XW7T8q36t+nE9KSICRR/ryzTPnzxQvOc6/48yEu3A1CzJaYBKzRi2UIpMixS4JO1tcy/xDRnxkZi9kmzel4HRaLkF8SfO87GOaiPcAberdK2BFVNyFLXqfuIf45bYv4j99tFjpK9+JEzFLZFIak4=
+	t=1713345809; cv=none; b=jJsLKw6x7a+bHsxm+gzS7NnEk/Kr14LSeHJp6CVfhS8LmYnHPfkXzlPLFOzFnehdvESVRd4o6NHS5/bDXXUuuuEzENHbxWih/4UawJso6Kjxuzebs0V2gHbPuBMv7af5vG9a3/94UDzx5DZDZMdfoQWchNYUm6Xk9D1cyrRMVsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713345720; c=relaxed/simple;
-	bh=YQCssONq63bP0qOSXogsdrqWe5WQi1xzVV+1t1nonpE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=qnlbTeOL+shGpVH+MSFt71fPAk9kkXveCu4eDPKFMzD/4aiBKcyTqoePMgEXnjkHCqLDZEah9WfaHjsNQDhMaEcKz4zk02ObqBW1zLg59zGf6e44twJCS5N+0KLszXGSpHxUZyXoAnYBcOsEGotkXmHvLZavwo3TCs9mAy8lAEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N/oFTzHF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n7wpRnph; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713345809; c=relaxed/simple;
+	bh=kR7NgpoqseIcWNXCbEV890XSu1aVULd4AJRo63fLdGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lmFT6ZI6ZmmSMQQZ0ix1hxBjQCOrE0oJyvpm5zBxr8E+eMqzHoEAVZhanijS6PnRduhOckez7nyEVuxMH8zZn90bRmT6TwkEtl7ExpzpcxJgths4VA5Bi3zdmHem4Q4Tl15wukgc+V6qe+a+yg69Vt4N2QDjSlDZLVRRBEl1iNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WfiYuU+c; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N/oFTzHF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n7wpRnph"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713345713;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WfiYuU+c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713345807;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=uelsdtYZLBKL7jGIyaP3EG/BKK0QSDVCAZyC+ZgTgWI=;
-	b=N/oFTzHF4bDb8QRgjaC7Z6Po4wDANptnApdUW0jDwapj4DwVsdil6wL/wbDu9qN139oeWJ
-	m9QDrepaKxAjp89hm6WbRfHfRAyvMJQRnQE+NztkslFjtXq+o53shI9qpLZPeabz6+EQAM
-	cW5ERdPm2fDlJxTjSgpJH1jp63DN9/LkO3PnKHjLStDRjSdk5GZDwxZUv5YiNeeuVx6nU+
-	TfdcdtPuRBEF2KHdmOKHEYgIDDYudqYOej+wXAo4ZXy/cGD3OI4i/9QzxOx3AFzNIslPeM
-	P7LexVPri3b1i1cGiHE3I7OyIhi2uYsqAWsjUV0h85Bx0s3Dpbjd9AlgoWO5ag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713345713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=uelsdtYZLBKL7jGIyaP3EG/BKK0QSDVCAZyC+ZgTgWI=;
-	b=n7wpRnphfQAtG0IBBYh3kxYXjf4HSao3BQ+sNkaQO8ahI2LNp0bALMNVuimOVsF1QHgGQm
-	/cjhI3zKt1xxxwBA==
-To: Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Frederic Weisbecker
- <frederic@kernel.org>, John Stultz <jstultz@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Stephen Boyd
- <sboyd@kernel.org>, Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [patch V2 07/50] posix-cpu-timers: Split up posix_cpu_timer_get()
-In-Reply-To: <20240416144438.GA17990@redhat.com>
-Date: Wed, 17 Apr 2024 11:21:52 +0200
-Message-ID: <87o7a8wdhr.fsf@somnus>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4XkSYCF8J11KhT1kD3yECHdoktxsLGeadBVxc6aZ2IU=;
+	b=WfiYuU+cNDI+tUaotrawNtkbzhKH+u72O7HOZqL1iRGTT5UtYvgAuvjGONM7paQ0qJz8bC
+	xt6Dtm6+MtTi3IAi49Xt8ifby5/hs5erBLjOIU2sn+LfuIrVVPUbOmYRFgCkwSzxncRq4a
+	7+CH7CD8B1yAslg5bSuD3gsOAPi9264=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-pdv014c2NOGreuXLt_k0MQ-1; Wed, 17 Apr 2024 05:23:22 -0400
+X-MC-Unique: pdv014c2NOGreuXLt_k0MQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91F0A830E7D;
+	Wed, 17 Apr 2024 09:23:22 +0000 (UTC)
+Received: from t14s.fritz.box (unknown [10.39.193.252])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0F22C2166B36;
+	Wed, 17 Apr 2024 09:23:20 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>
+Subject: [PATCH v1 1/2] fs/proc/task_mmu: convert pagemap_hugetlb_range() to work on folios
+Date: Wed, 17 Apr 2024 11:23:12 +0200
+Message-ID: <20240417092313.753919-2-david@redhat.com>
+In-Reply-To: <20240417092313.753919-1-david@redhat.com>
+References: <20240417092313.753919-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Oleg Nesterov <oleg@redhat.com> writes:
+Let's get rid of another page_mapcount() check and simply use
+folio_likely_mapped_shared(), which is precise for hugetlb folios.
 
-> On 04/11, Thomas Gleixner wrote:
->>
->> In preparation for addressing issues in the timer_get() and timer_set()
->> functions of posix CPU timers.
->
-> Cough... I must have missed something, but posix_cpu_timer_get()
-> doesn't look right with or without this trivial patch.
->
-> It doesn't initialize itp->it_value if cpu_timer_getexpires() == 0,
-> this means that sys_timer_gettime() will copy the uninitialized
-> cur_setting->it_value on the stack to userspace?
+While at it, also check for PMD table sharing, like we do in
+smaps_hugetlb_range().
 
-The initialization of itp is already done by the callsites.
-do_timer_settime() in posix-timers.c as well as do_cpu_nanosleep() in
-posix-cpu-timers.c execute a memset before calling
-posix_cpu_timer_get(). So this should be fine - or did I miss something
-here?
+No functional change intended, except that we would now detect hugetlb
+folios shared via PMD table sharing correctly.
 
-Thanks,
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ fs/proc/task_mmu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-	Anna-Maria
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 8ff79bd427ec6..cd6e45e0cde8e 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -1578,12 +1578,13 @@ static int pagemap_hugetlb_range(pte_t *ptep, unsigned long hmask,
+ 
+ 	pte = huge_ptep_get(ptep);
+ 	if (pte_present(pte)) {
+-		struct page *page = pte_page(pte);
++		struct folio *folio = page_folio(pte_page(pte));
+ 
+-		if (!PageAnon(page))
++		if (!folio_test_anon(folio))
+ 			flags |= PM_FILE;
+ 
+-		if (page_mapcount(page) == 1)
++		if (!folio_likely_mapped_shared(folio) &&
++		    !hugetlb_pmd_shared(ptep))
+ 			flags |= PM_MMAP_EXCLUSIVE;
+ 
+ 		if (huge_pte_uffd_wp(pte))
+-- 
+2.44.0
 
