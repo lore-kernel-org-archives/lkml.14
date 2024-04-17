@@ -1,237 +1,163 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1C913DDA0;
-	Wed, 17 Apr 2024 13:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF0013D626;
+	Wed, 17 Apr 2024 13:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360077; cv=none; b=EEbUAvb4cHl66Pzyyx8dJiHqBmvWyw0ITW5Ck0ZDgesp5DPpInqRkPqrsA3ffea9ciVOs6WGd2zPyGyhZgBljv2Zz/+zuWZWd2NxrOLNZ0G8z916Rt6ei5ibIKAayO2qLeduRoK0LiGZirf5KMUNv7iujTaXs6pk6FMiCIGeL8o=
+	t=1713360091; cv=none; b=CAooz5z+7hMOyvuu6vh5hbFFK3oIxwq9fZ7Q/ZpRNnWukJPLgSs7rWRtBOmnAqlSG4I2fjyQRN130VPurBphct+W7wDBNcXuyocpexTdu2CTfMJL5g/1wgGzAUJLWgEMC0fsVfiRKJqnvG6TNBgUHBj9/lul8iEU0aPM55lNcyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360077; c=relaxed/simple;
-	bh=po6Hc5e1p+MvPE/nWcSH1E+iwLSt7JRmOnwakjjl7jE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eIxXbgyZMIH2WIRiOjUy9ShDdyg1vaZAo0Vqn8cu2H7DAaaQy6Fb1aKkEk7WF0tIO2Tfcit2TF6pUpMGHKTXfDN5fmPBU6Q0IuzCDB5zU6MiZv4CvhvOyZyHxERgFq8h+wc4MMDYx0EYXW3wYXTnWeKZbJNrmQoi9wScarhl9xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKLyR2Xwrz6K7JW;
-	Wed, 17 Apr 2024 21:16:15 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 660BC140CF4;
-	Wed, 17 Apr 2024 21:21:13 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 14:21:12 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v6 04/16] ACPI: processor: Move checks and availability of acpi_processor earlier
-Date: Wed, 17 Apr 2024 14:18:57 +0100
-Message-ID: <20240417131909.7925-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713360091; c=relaxed/simple;
+	bh=/NZ0RQIi3nqKByWv1Wl+CqCZ7YVkUOO4rBSu1lPL8qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GqHSRhwMDfEL6lumF70eM3fi1vW2zV9g3UBqI9/nKmTcYPQjs9RsB+PE/OtZAl7hjNkDSNlyTsMfmnoHKlRznWMYYYnuIJHHxHssU0evAmoAalKwRWFBJahn1CEGZO1ekawBCzq20PL7ehWAuWa1IaZSdWcrUTqMAp59vV1hLTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=V0kcuIDc; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="V0kcuIDc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Kgrqtwphnc8wVTX12ewbpNQ26rIIXy3b1ktkxRpdaIQ=; t=1713360089;
+	x=1713792089; b=V0kcuIDce9QR84iQXrr3W8XSDWX9+iyav/jMN9EraYOsskyE1f5BTKn4MxGNT
+	u5rWfI378SwU1n7bb/XJQ3wEgpOpUe5PfAIE47nNa5gf+7H8K4yEREYkVnreoRyj/WM2x9Vsz70H6
+	fbKo5B8TpWN/dWb5AQTQIPcYhuGKWyQdCC3sp5vVwcvKqHX06a/c8I02XUI702xWApv8DoDaW7f/K
+	qlj6Ot1Jjb6npM3R/r1CfV8nsFe+zGx54qaF6/M5skrWxOmGpjlR4hxIZDdPxeRP7RoEUKoPXJVA1
+	9A8mgSq+mZ4HuxCpwsFN3/oll7MfqSJVHPxddF6f8P45x67Yhw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rx5E7-0000m3-Or; Wed, 17 Apr 2024 15:21:27 +0200
+Message-ID: <e7318984-7ef4-48cd-aae4-1deda3d711a5@leemhuis.info>
+Date: Wed, 17 Apr 2024 15:21:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: Please create the email alias do-not-apply-to-stable@kernel.org
+ -> /dev/null
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: helpdesk@kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+ "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <b452fd54-fdc6-47e4-8c26-6627f6b7eff3@leemhuis.info>
+ <20240417-lively-zebu-of-tact-efc8f3@lemur>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20240417-lively-zebu-of-tact-efc8f3@lemur>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1713360089;acf7db00;
+X-HE-SMSGID: 1rx5E7-0000m3-Or
 
-Make the per_cpu(processors, cpu) entries available earlier so that
-they are available in arch_register_cpu() as ARM64 will need access
-to the acpi_handle to distinguish between acpi_processor_add()
-and earlier registration attempts (which will fail as _STA cannot
-be checked).
+On 17.04.24 14:52, Konstantin Ryabitsev wrote:
+> On Wed, Apr 17, 2024 at 09:48:18AM +0200, Thorsten Leemhuis wrote:
+>>
+>> Could you please create the email alias
+>> do-not-apply-to-stable@kernel.org which redirects all mail to /dev/null,
+>> just like stable@kernel.org does?
+>>
+>> That's an idea GregKH brought up a few days ago here:
+>> https://lore.kernel.org/all/2024041123-earthling-primarily-4656@gregkh/
+>>
+>> To quote:
+>>
+>>> How about:
+>>> 	cc: <do-not-apply-to-stable@kernel.org> # Reason goes here, and must be present
+>>>
+>>> and we can make that address be routed to /dev/null just like
+>>> <stable@kernel.org> is?
 
-Reorder the remove flow to clear this per_cpu() after
-arch_unregister_cpu() has completed, allowing it to be used in
-there as well.
+First, many thx for your feedback.
 
-Note that on x86 for the CPU hotplug case, the pr->id prior to
-acpi_map_cpu() may be invalid. Thus the per_cpu() structures
-must be initialized after that call or after checking the ID
-is valid (not hotplug path).
+> That would make it into actual commits and probably irk maintainers and 
+> Linus, no?
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v6: As per discussion in v5 thread, don't use the cpu->dev and
-    make this data available earlier by moving the assignment checks
-    int acpi_processor_get_info().
----
- drivers/acpi/acpi_processor.c | 79 +++++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 32 deletions(-)
+Yup.
 
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index ba0a6f0ac841..2c164451ab53 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -184,7 +184,35 @@ static void __init acpi_pcc_cpufreq_init(void) {}
- 
- /* Initialization */
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
--static int acpi_processor_hotadd_init(struct acpi_processor *pr)
-+static DEFINE_PER_CPU(void *, processor_device_array);
-+
-+static void acpi_processor_set_per_cpu(struct acpi_processor *pr,
-+				       struct acpi_device *device)
-+{
-+	BUG_ON(pr->id >= nr_cpu_ids);
-+	/*
-+	 * Buggy BIOS check.
-+	 * ACPI id of processors can be reported wrongly by the BIOS.
-+	 * Don't trust it blindly
-+	 */
-+	if (per_cpu(processor_device_array, pr->id) != NULL &&
-+	    per_cpu(processor_device_array, pr->id) != device) {
-+		dev_warn(&device->dev,
-+			 "BIOS reported wrong ACPI id %d for the processor\n",
-+			 pr->id);
-+		/* Give up, but do not abort the namespace scan. */
-+		return;
-+	}
-+	/*
-+	 * processor_device_array is not cleared on errors to allow buggy BIOS
-+	 * checks.
-+	 */
-+	per_cpu(processor_device_array, pr->id) = device;
-+	per_cpu(processors, pr->id) = pr;
-+}
-+
-+static int acpi_processor_hotadd_init(struct acpi_processor *pr,
-+				      struct acpi_device *device)
- {
- 	int ret;
- 
-@@ -198,6 +226,8 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
- 	if (ret)
- 		goto out;
- 
-+	acpi_processor_set_per_cpu(pr, device);
-+
- 	ret = arch_register_cpu(pr->id);
- 	if (ret) {
- 		acpi_unmap_cpu(pr->id);
-@@ -217,7 +247,8 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
- 	return ret;
- }
- #else
--static inline int acpi_processor_hotadd_init(struct acpi_processor *pr)
-+static inline int acpi_processor_hotadd_init(struct acpi_processor *pr,
-+					     struct acpi_device *device)
- {
- 	return -ENODEV;
- }
-@@ -232,6 +263,7 @@ static int acpi_processor_get_info(struct acpi_device *device)
- 	acpi_status status = AE_OK;
- 	static int cpu0_initialized;
- 	unsigned long long value;
-+	int ret;
- 
- 	acpi_processor_errata();
- 
-@@ -316,10 +348,12 @@ static int acpi_processor_get_info(struct acpi_device *device)
- 	 *  because cpuid <-> apicid mapping is persistent now.
- 	 */
- 	if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
--		int ret = acpi_processor_hotadd_init(pr);
-+		ret = acpi_processor_hotadd_init(pr, device);
- 
- 		if (ret)
--			return ret;
-+			goto err;
-+	} else {
-+		acpi_processor_set_per_cpu(pr, device);
- 	}
- 
- 	/*
-@@ -357,6 +391,10 @@ static int acpi_processor_get_info(struct acpi_device *device)
- 		arch_fix_phys_package_id(pr->id, value);
- 
- 	return 0;
-+
-+err:
-+	per_cpu(processors, pr->id) = NULL;
-+	return ret;
- }
- 
- /*
-@@ -365,8 +403,6 @@ static int acpi_processor_get_info(struct acpi_device *device)
-  * (cpu_data(cpu)) values, like CPU feature flags, family, model, etc.
-  * Such things have to be put in and set up by the processor driver's .probe().
-  */
--static DEFINE_PER_CPU(void *, processor_device_array);
--
- static int acpi_processor_add(struct acpi_device *device,
- 					const struct acpi_device_id *id)
- {
-@@ -395,28 +431,6 @@ static int acpi_processor_add(struct acpi_device *device,
- 	if (result) /* Processor is not physically present or unavailable */
- 		return 0;
- 
--	BUG_ON(pr->id >= nr_cpu_ids);
--
--	/*
--	 * Buggy BIOS check.
--	 * ACPI id of processors can be reported wrongly by the BIOS.
--	 * Don't trust it blindly
--	 */
--	if (per_cpu(processor_device_array, pr->id) != NULL &&
--	    per_cpu(processor_device_array, pr->id) != device) {
--		dev_warn(&device->dev,
--			"BIOS reported wrong ACPI id %d for the processor\n",
--			pr->id);
--		/* Give up, but do not abort the namespace scan. */
--		goto err;
--	}
--	/*
--	 * processor_device_array is not cleared on errors to allow buggy BIOS
--	 * checks.
--	 */
--	per_cpu(processor_device_array, pr->id) = device;
--	per_cpu(processors, pr->id) = pr;
--
- 	dev = get_cpu_device(pr->id);
- 	if (!dev) {
- 		result = -ENODEV;
-@@ -469,15 +483,16 @@ static void acpi_processor_remove(struct acpi_device *device)
- 	device_release_driver(pr->dev);
- 	acpi_unbind_one(pr->dev);
- 
--	/* Clean up. */
--	per_cpu(processor_device_array, pr->id) = NULL;
--	per_cpu(processors, pr->id) = NULL;
--
- 	cpu_maps_update_begin();
- 	cpus_write_lock();
- 
- 	/* Remove the CPU. */
- 	arch_unregister_cpu(pr->id);
-+
-+	/* Clean up. */
-+	per_cpu(processor_device_array, pr->id) = NULL;
-+	per_cpu(processors, pr->id) = NULL;
-+
- 	acpi_unmap_cpu(pr->id);
- 
- 	cpus_write_unlock();
--- 
-2.39.2
+> I also don't really love the idea of overloading email 
+> addresses with additional semantics. Using Cc: stable kinda makes sense, 
+> even if it's not a real email address (but it could become at some 
+> point), but this feels different.
 
+Okay.
+
+> In general, I feel this information belongs in the patch basement (the 
+> place where change-id, base-commit, etc goes). E.g.:
+> 
+>     stable-autosel: ignore
+>     [This fix requires a feature that is only present in mainline]
+> 
+> This allows passing along structured information that can be parsed by 
+> automated tooling without putting it into the commit.
+
+That afaics makes them useless for the stable team (Greg may correct me
+if I'm wrong here), as they deal with the commits and have no easy,
+fast, and reliable way to look up the patch posting to query this. Or is
+the "patch basement" available somehow in git for each commit and I just
+missed that?
+
+Guess in a better world we might use "git notes" for this, but we
+currently do not use them because they iirc are somewhat tricky (they
+are easily lost on rebases iirc is one of the reasons ) -- and starting
+to use them just for this is not worth it.
+
+>> There was some discussion about using something shorter, but in the end
+>> there was no strong opposition and the thread ended a a few days ago.
+> I feel this is a significant change to the workflow, so I would like the 
+> workflows list to have another go at this topic. :)
+
+FWIW, we could go back to what I initially proposed: use the existing
+stable tag with a pre-defined comment to mark patches that AUTOSEL et.
+al. should not pick up:
+https://lore.kernel.org/all/c0a08b160b286e8c98549eedb37404c6e784cf8a.1712812895.git.linux@leemhuis.info/
+
+Ciao, Thorsten
