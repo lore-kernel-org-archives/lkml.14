@@ -1,176 +1,368 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BE11487ED;
-	Wed, 17 Apr 2024 16:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8F5146D59;
+	Wed, 17 Apr 2024 16:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713371011; cv=none; b=W3MG5OXeqoWCJ0hsN24KZS+2XMJVHod0sntnOlA5I5CxmgcW7POkbUplXfoGDYrH8OloUGbuRNhK1gX396mOQX4uIjcle0GMtmpjE9msnZ4v3zPx+6yQGJOiEZbBRPkGlofTNpE03PDJp8dUwg2ejt+u5qb4j6RGUVNT8TG+Xqg=
+	t=1713371047; cv=none; b=qgWJakqePiHHsx+RyFcl56sbzSyFv+eWk9rQcJDPMi1VRjT7kD5a6NM4G9xlw7QwbzaOoMdSPQGx9m02nk50rR094ZOmf3tSy2BxuuLKRZyDUDrm53H0TfAbrs5XdvCtOfmGAZMDzrGEqowJRmY3JWTJdRSu7G0Z75x3e2tJ9jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713371011; c=relaxed/simple;
-	bh=lbuClAYYrtJAE6xC4mB7mjUV5gy229Hdrkrt3vGfQlo=;
+	s=arc-20240116; t=1713371047; c=relaxed/simple;
+	bh=a2NoKEZW4gOQ7cOKT3KGh/17o8s+HV8uq5uRGWmqubI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zv23m4ouM/W9w1//04aDi+QhvnKCwwJZFz4XPLQgMZq5dapr54MCczuIGHbKL1cYYhDwhfSUO6KDHIoMeI/qZ4hZrwx8rnPGTCAKAa6axxKuBUUORDKPnT3rxw3Oui2R8hQMWTXWozkgsHQy/V4gnU0hBRiEmcHqLe+kiMQ+xIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L08k37ot; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=duODRnujqIm1oFUD/fmVuDTzuCu/RpP4NADk8WguQYIFZbQq6Fxg5RuwENA6nop4g26wSgfgPoxC/5yPrPqYPJ6/v/EMZxrFI5FVr0NBBZIgtrIAZTJCLBA/WG/9nli6pGoLWPup2JqgwBJ4HKqC8U9mI6pvk96wIXIXe0wAbqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBrhd4TY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L08k37ot"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713371008; x=1744907008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lbuClAYYrtJAE6xC4mB7mjUV5gy229Hdrkrt3vGfQlo=;
-  b=L08k37othrGIWLpCnrbGbAeRfZn+qfgbXNBSoN7w6Pd6+xyt/iC+lCUz
-   mdKvAe2DnUs2ZXDahnVm+USpHf3Oy20kmMbZ7YhjqvsWzO7uERqgYgdfu
-   J3imSFcJlOov+v+Pn1VxXxy56d0wyS6Z7dPT279RT2qdw2CUhIuVQPxMx
-   gsmRMeeEpbpuz7EWbmPOdqJhrdD/ak0hKeI6Y9f7GgH39cQjSRdXSej1f
-   WMCw5axtR0KH7CRWXzWakXxDHtLW2QadoIY3X3OXO7mkjH/fwrNNRqKg0
-   68G8JRhDSR7MbFjGB/lbbrufT5oa1r/Y12owcC7w1h/PKM7NKiDJLD3v2
-   Q==;
-X-CSE-ConnectionGUID: 2bqjOPm9Txetm1qWXG+iYg==
-X-CSE-MsgGUID: oDvJErY6RIyhTHnI7k0Y5w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19478797"
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="19478797"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 09:23:27 -0700
-X-CSE-ConnectionGUID: vCeP4MbvQUiPJnIA0l6MmA==
-X-CSE-MsgGUID: s650Uxt7QJqQIO/nYkrFqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="23099263"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 17 Apr 2024 09:23:24 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rx83u-0006m4-1G;
-	Wed, 17 Apr 2024 16:23:10 +0000
-Date: Thu, 18 Apr 2024 00:22:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kuba@kernel.org, davem@davemloft.net,
-	pabeni@redhat.com, edumazet@google.com, sgoutham@marvell.com,
-	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
-Subject: Re: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
-Message-ID: <202404180051.sgxiT7pZ-lkp@intel.com>
-References: <20240416050616.6056-3-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBrhd4TY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F78C072AA;
+	Wed, 17 Apr 2024 16:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713371047;
+	bh=a2NoKEZW4gOQ7cOKT3KGh/17o8s+HV8uq5uRGWmqubI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hBrhd4TYmwozuU636PVYsZrbocwfbcJ8Ja39gSRkSbcHLeP3VtB/KHf/u1+xOzC3T
+	 5UGpqqyNyVKyYVEzFAZGHBAHfdcbnhD69rpoZtu93uhlnvp0FSMgnNZjHa4pA8r48h
+	 cE338mrzm+1HBTNdrYnwzgs0uLUv8gGcNG9p00aHlrygriPsb3iOPGdSsf8nCTl/YU
+	 ZrJN6QppJpsW4pOZ9IrwO6PTQG7jpGI0iDf5xlDbrGxHlgVnBuayFcZa3inqT7YO7n
+	 vZIs+H0hB1cZ6HhP44BJKi6bBAZzfIqo1VuxrNYQfSw04j/4Y7N31+UUIlU3u36IQr
+	 qukbhHNEX2a6w==
+Date: Wed, 17 Apr 2024 13:24:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: weilin.wang@intel.com, Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v5 02/16] perf stat: Add basic functions for the
+ hardware aware grouping
+Message-ID: <Zh_3pCLXfL-faTpx@x1>
+References: <20240412210756.309828-1-weilin.wang@intel.com>
+ <20240412210756.309828-3-weilin.wang@intel.com>
+ <CAP-5=fUTHPu_vaNyeaq9uDwf7Hq79khFZymFJK2w39k-9RdutQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240416050616.6056-3-gakula@marvell.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUTHPu_vaNyeaq9uDwf7Hq79khFZymFJK2w39k-9RdutQ@mail.gmail.com>
 
-Hi Geetha,
+On Tue, Apr 16, 2024 at 09:56:38PM -0700, Ian Rogers wrote:
+> On Fri, Apr 12, 2024 at 2:08 PM <weilin.wang@intel.com> wrote:
+> >
+> > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > Add the first set of functions for the hardware aware grouping method. Function
+> > hw_aware_parse_groups() is the entry point of this metric grouping method.  It
+> > does metric grouping on a combined list of events and will create a list of
+> > grouping strings as final results of the grouping method. These grouping strings
+> > will be used in the same manner as existing metric grouping process.
+> >
+> > This method will fall back to normal grouping when hardware aware grouping
+> > return with err so that perf stat still executes and returns with correct
+> > result.
+> >
+> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-kernel test robot noticed the following build errors:
+This one isn't applying:
 
-[auto build test ERROR on net-next/main]
+⬢[acme@toolbox perf-tools-next]$ git log -10 --oneline tools/perf/util/metricgroup.c
+b6226e7e6daa823d (HEAD -> perf-tools-next) perf stat: Add new field in stat_config to enable hardware aware grouping
+4b5ee6db2d3cd624 perf metrics: Remove the "No_group" metric group
+97b6b4ac1c5dd42a perf metrics: Fix segv for metrics with no events
+d4be39cadef0dbba perf metrics: Fix metric matching
+a59fb796a36bb6c2 perf metrics: Compute unmerged uncore metrics individually
+7bbe8f0071dfa23f perf tools: Fix calloc() arguments to address error introduced in gcc-14
+e2b005d6ec0e738d perf metrics: Avoid segv if default metricgroup isn't set
+54409997d4b99ab6 perf metric: "Compat" supports regular expression matching identifiers
+4000519eb0c66594 perf pmu-events: Add extra underscore to function names
+1c0e47956a8e1109 perf metrics: Sort the Default metricgroup
+⬢[acme@toolbox perf-tools-next]$
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Geetha-sowjanya/octeontx2-pf-Refactoring-RVU-driver/20240416-131052
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240416050616.6056-3-gakula%40marvell.com
-patch subject: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
-config: loongarch-randconfig-r064-20240417 (https://download.01.org/0day-ci/archive/20240418/202404180051.sgxiT7pZ-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240418/202404180051.sgxiT7pZ-lkp@intel.com/reproduce)
+So just the first patch was applied so far, I'll push what I have to
+tmp.perf-tools-next and then later to perf-tools-next so that this work
+can be continued from there.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404180051.sgxiT7pZ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c: In function 'otx2_tx_napi_handler':
->> drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:470:28: error: 'struct otx2_nic' has no member named 'reps'
-     470 |                 ndev = pfvf->reps[qidx]->netdev;
-         |                            ^~
-
-
-vim +470 drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-
-   449	
-   450	static int otx2_tx_napi_handler(struct otx2_nic *pfvf,
-   451					struct otx2_cq_queue *cq, int budget)
-   452	{
-   453		int tx_pkts = 0, tx_bytes = 0, qidx;
-   454		struct otx2_snd_queue *sq;
-   455		struct nix_cqe_tx_s *cqe;
-   456		struct net_device *ndev;
-   457		int processed_cqe = 0;
-   458	
-   459		if (cq->pend_cqe >= budget)
-   460			goto process_cqe;
-   461	
-   462		if (otx2_nix_cq_op_status(pfvf, cq) || !cq->pend_cqe)
-   463			return 0;
-   464	
-   465	process_cqe:
-   466		qidx = cq->cq_idx - pfvf->hw.rx_queues;
-   467		sq = &pfvf->qset.sq[qidx];
-   468	
-   469		if (pfvf->flags & OTX2_FLAG_REP_MODE_ENABLED)
- > 470			ndev = pfvf->reps[qidx]->netdev;
-   471		else
-   472			ndev = pfvf->netdev;
-   473	
-   474		while (likely(processed_cqe < budget) && cq->pend_cqe) {
-   475			cqe = (struct nix_cqe_tx_s *)otx2_get_next_cqe(cq);
-   476			if (unlikely(!cqe)) {
-   477				if (!processed_cqe)
-   478					return 0;
-   479				break;
-   480			}
-   481	
-   482			qidx = cq->cq_idx - pfvf->hw.rx_queues;
-   483	
-   484			if (cq->cq_type == CQ_XDP)
-   485				otx2_xdp_snd_pkt_handler(pfvf, sq, cqe);
-   486			else
-   487				otx2_snd_pkt_handler(pfvf, ndev, cq, &pfvf->qset.sq[qidx],
-   488						     cqe, budget, &tx_pkts, &tx_bytes);
-   489	
-   490			cqe->hdr.cqe_type = NIX_XQE_TYPE_INVALID;
-   491			processed_cqe++;
-   492			cq->pend_cqe--;
-   493	
-   494			sq->cons_head++;
-   495			sq->cons_head &= (sq->sqe_cnt - 1);
-   496		}
-   497	
-   498		/* Free CQEs to HW */
-   499		otx2_write64(pfvf, NIX_LF_CQ_OP_DOOR,
-   500			     ((u64)cq->cq_idx << 32) | processed_cqe);
-   501	
-   502		if (likely(tx_pkts)) {
-   503			struct netdev_queue *txq;
-   504	
-   505			qidx = cq->cq_idx - pfvf->hw.rx_queues;
-   506	
-   507			if (qidx >= pfvf->hw.tx_queues)
-   508				qidx -= pfvf->hw.xdp_queues;
-   509	
-   510			if (pfvf->flags & OTX2_FLAG_REP_MODE_ENABLED)
-   511				qidx = 0;
-   512			txq = netdev_get_tx_queue(pfvf->netdev, qidx);
-   513			netdev_tx_completed_queue(txq, tx_pkts, tx_bytes);
-   514			/* Check if queue was stopped earlier due to ring full */
-   515			smp_mb();
-   516			if (netif_tx_queue_stopped(txq) &&
-   517			    netif_carrier_ok(ndev))
-   518				netif_tx_wake_queue(txq);
-   519		}
-   520		return 0;
-   521	}
-   522	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Arnaldo
+ 
+> > ---
+> >  tools/perf/util/metricgroup.c | 217 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 216 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 11613450725a..8047f03b2b1f 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -159,6 +159,14 @@ struct metric {
+> >         struct evlist *evlist;
+> >  };
+> >
+> > +/**
+> > + * Each group is one node in the group string list.
+> > + */
+> > +struct metricgroup__group_strs {
+> > +       struct list_head nd;
+> > +       struct strbuf grouping_str;
+> > +};
+> > +
+> >  static void metric__watchdog_constraint_hint(const char *name, bool foot)
+> >  {
+> >         static bool violate_nmi_constraint;
+> > @@ -1432,6 +1440,101 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
+> >         return ret;
+> >  }
+> >
+> > +/**
+> > + * hw_aware_build_grouping - Build event groupings by reading counter
+> > + * requirement of the events and counter available on the system from
+> > + * pmu-events.
+> > + * @ctx: the event identifiers parsed from metrics.
+> > + * @groupings: header to the list of final event grouping.
+> > + * @modifier: any modifiers added to the events.
+> > + */
+> > +static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
+> > +                                 struct list_head *groupings __maybe_unused,
+> > +                                 const char *modifier __maybe_unused)
+> > +{
+> > +       int ret = 0;
+> > +
+> > +       pr_debug("This is a placeholder\n");
+> > +       return ret;
+> > +}
+> > +
+> > +static void group_str_free(struct metricgroup__group_strs *g)
+> > +{
+> > +       if (!g)
+> > +               return;
+> > +
+> > +       strbuf_release(&g->grouping_str);
+> > +       free(g);
+> > +}
+> > +
+> > +static void metricgroup__free_grouping_strs(struct list_head
+> > +                                          *grouping_strs)
+> > +{
+> > +       struct metricgroup__group_strs *g, *tmp;
+> > +
+> > +       list_for_each_entry_safe(g, tmp, grouping_strs, nd) {
+> > +               list_del_init(&g->nd);
+> > +               group_str_free(g);
+> > +       }
+> > +}
+> > +
+> > +/**
+> > + * hw_aware_parse_ids - Build the event string for the ids and parse them
+> > + * creating an evlist. The encoded metric_ids are decoded. Events are placed
+> > + * into groups based on event counter requirements and counter availabilities of
+> > + * the system.
+> > + * @metric_no_merge: is metric sharing explicitly disabled.
+> > + * @fake_pmu: used when testing metrics not supported by the current CPU.
+> > + * @ids: the event identifiers parsed from a metric.
+> > + * @modifier: any modifiers added to the events.
+> > + * @out_evlist: the created list of events.
+> > + */
+> > +static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
+> > +                            struct expr_parse_ctx *ids, const char *modifier,
+> > +                            struct evlist **out_evlist)
+> > +{
+> > +       struct parse_events_error parse_error;
+> > +       struct evlist *parsed_evlist;
+> > +       LIST_HEAD(groupings);
+> > +       struct metricgroup__group_strs *group;
+> > +       int ret;
+> > +
+> > +       *out_evlist = NULL;
+> > +       ret = hw_aware_build_grouping(ids, &groupings, modifier);
+> > +       if (ret) {
+> > +               metricgroup__free_grouping_strs(&groupings);
+> > +               return ret;
+> > +       }
+> > +
+> > +       parsed_evlist = evlist__new();
+> > +       if (!parsed_evlist) {
+> > +               ret = -ENOMEM;
+> > +               goto err_out;
+> > +       }
+> > +       list_for_each_entry(group, &groupings, nd) {
+> > +               struct strbuf *events = &group->grouping_str;
+> > +
+> > +               pr_debug("Parsing metric events '%s'\n", events->buf);
+> > +               parse_events_error__init(&parse_error);
+> > +               ret = __parse_events(parsed_evlist, events->buf, /*pmu_filter=*/NULL,
+> > +                                   &parse_error, fake_pmu, /*warn_if_reordered=*/false);
+> > +               if (ret) {
+> > +                       parse_events_error__print(&parse_error, events->buf);
+> > +                       goto err_out;
+> > +               }
+> > +               ret = decode_all_metric_ids(parsed_evlist, modifier);
+> > +               if (ret)
+> > +                       goto err_out;
+> > +       }
+> > +       *out_evlist = parsed_evlist;
+> > +       parsed_evlist = NULL;
+> > +err_out:
+> > +       parse_events_error__exit(&parse_error);
+> > +       evlist__delete(parsed_evlist);
+> > +       metricgroup__free_grouping_strs(&groupings);
+> > +       return ret;
+> > +}
+> > +
+> >  /**
+> >   * parse_ids - Build the event string for the ids and parse them creating an
+> >   *             evlist. The encoded metric_ids are decoded.
+> > @@ -1520,6 +1623,113 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+> >         return ret;
+> >  }
+> >
+> > +static int hw_aware_parse_groups(struct evlist *perf_evlist,
+> > +                               const char *pmu, const char *str,
+> > +                               bool metric_no_threshold,
+> > +                               const char *user_requested_cpu_list,
+> > +                               bool system_wide,
+> > +                               struct perf_pmu *fake_pmu,
+> > +                               struct rblist *metric_events_list,
+> > +                               const struct pmu_metrics_table *table)
+> > +{
+> > +       struct evlist *combined_evlist = NULL;
+> > +       LIST_HEAD(metric_list);
+> > +       struct metric *m;
+> > +       int ret;
+> > +       bool metric_no_group = false;
+> > +       bool metric_no_merge = false;
+> > +
+> > +       if (metric_events_list->nr_entries == 0)
+> > +               metricgroup__rblist_init(metric_events_list);
+> > +       ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
+> > +                                          user_requested_cpu_list,
+> > +                                          system_wide, &metric_list, table);
+> > +       if (ret)
+> > +               goto out;
+> > +
+> > +       /* Sort metrics from largest to smallest. */
+> > +       list_sort(NULL, &metric_list, metric_list_cmp);
+> > +
+> > +       if (!metric_no_merge) {
+> > +               struct expr_parse_ctx *combined = NULL;
+> > +
+> > +               ret = build_combined_expr_ctx(&metric_list, &combined);
+> > +
+> > +               if (!ret && combined && hashmap__size(combined->ids)) {
+> > +                       ret = hw_aware_parse_ids(fake_pmu, combined,
+> > +                                               /*modifier=*/NULL,
+> > +                                               &combined_evlist);
+> > +               }
+> > +
+> > +               if (combined)
+> > +                       expr__ctx_free(combined);
+> > +               if (ret)
+> > +                       goto out;
+> > +       }
+> > +
+> > +       list_for_each_entry(m, &metric_list, nd) {
+> > +               struct metric_expr *expr;
+> > +               struct metric_event *me;
+> > +               struct evsel **metric_events;
+> > +
+> > +               ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
+> > +                                        combined_evlist, &metric_events);
+> > +               if (ret) {
+> > +                       pr_debug("Cannot resolve IDs for %s: %s\n",
+> > +                               m->metric_name, m->metric_expr);
+> > +                       goto out;
+> > +               }
+> > +
+> > +               me = metricgroup__lookup(metric_events_list, metric_events[0], true);
+> > +
+> > +               expr = malloc(sizeof(struct metric_expr));
+> > +               if (!expr) {
+> > +                       ret = -ENOMEM;
+> > +                       free(metric_events);
+> > +                       goto out;
+> > +               }
+> > +
+> > +               expr->metric_refs = m->metric_refs;
+> > +               m->metric_refs = NULL;
+> > +               expr->metric_expr = m->metric_expr;
+> > +               if (m->modifier) {
+> > +                       char *tmp;
+> > +
+> > +                       if (asprintf(&tmp, "%s:%s", m->metric_name, m->modifier) < 0)
+> > +                               expr->metric_name = NULL;
+> > +                       else
+> > +                               expr->metric_name = tmp;
+> > +               } else {
+> > +                       expr->metric_name = strdup(m->metric_name);
+> > +               }
+> > +
+> > +               if (!expr->metric_name) {
+> > +                       ret = -ENOMEM;
+> > +                       free(metric_events);
+> > +                       goto out;
+> > +               }
+> > +               expr->metric_threshold = m->metric_threshold;
+> > +               expr->metric_unit = m->metric_unit;
+> > +               expr->metric_events = metric_events;
+> > +               expr->runtime = m->pctx->sctx.runtime;
+> > +               list_add(&expr->nd, &me->head);
+> > +       }
+> > +
+> > +       if (combined_evlist) {
+> > +               evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entries);
+> > +               evlist__delete(combined_evlist);
+> > +       }
+> > +
+> > +       list_for_each_entry(m, &metric_list, nd) {
+> > +               if (m->evlist)
+> > +                       evlist__splice_list_tail(perf_evlist, &m->evlist->core.entries);
+> > +       }
+> > +
+> > +out:
+> > +       metricgroup__free_metrics(&metric_list);
+> > +       return ret;
+> > +}
+> > +
+> >  static int parse_groups(struct evlist *perf_evlist,
+> >                         const char *pmu, const char *str,
+> >                         bool metric_no_group,
+> > @@ -1698,10 +1908,15 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+> >         if (!table)
+> >                 return -EINVAL;
+> >         if (hardware_aware_grouping) {
+> > +               int ret;
+> 
+> nit: there should be a '\n' between variables and code,
+> scripts/checkpatch.pl sould catch this.
+> 
+> >                 pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
+> > +               ret = hw_aware_parse_groups(perf_evlist, pmu, str,
+> > +                           metric_no_threshold, user_requested_cpu_list, system_wide,
+> > +                           /*fake_pmu=*/NULL, metric_events, table);
+> > +               if (!ret)
+> > +                       return 0;
+> >         }
+> >
+> > -
+> 
+> nit: unneeded whitespace change.
+> 
+> Thanks,
+> Ian
+> 
+> >         return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
+> >                             metric_no_threshold, user_requested_cpu_list, system_wide,
+> >                             /*fake_pmu=*/NULL, metric_events, table);
+> > --
+> > 2.42.0
+> >
