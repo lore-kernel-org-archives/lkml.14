@@ -1,61 +1,152 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD14C651B1;
-	Wed, 17 Apr 2024 21:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8240D657C5
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713389091; cv=none; b=IjpewgyTzf6526fqbenW2M2vU9uvKOe/XLDRUx0Ku6ApaiF8nTZNDwtY6pYgRl3JHTJA0qxbr7DstjgPJA8oxsH/JH53mi8voKVgg9vQz4H+3CN3fLJBXaHtQ0wFpadKON1R8XFD6NYsCY2wbs5ownE5IWtTVkRWSkmXzSGQlIo=
+	t=1713389120; cv=none; b=TvVSaeMWylcKfEncaQjTph6xl1gZxiyVrMPu6MIGHGoz76oN0P/j5gZkGcjFa7TOYVjQc0t0qAtsdIiyqWZMtk94RvT8vcVx54psKNq5uNb15a8NGY46mWL+DMeQXbf51uC3tqywKDudXkzWb8kayyrKbhSVOYygaZkwNIeBGrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713389091; c=relaxed/simple;
-	bh=RWDxjloe5cXNXdqvw/yn3xa3ExBr7v6ehROmnvloNjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iHhgRiU43cE+NcvX2jXPiwNhGxfw5KieNFsqCo4u4oIc+xMU0EYW4kXdusyhxa7LDi9xRmknl+I58MuFmVhuwYB9v+scTi5n2lEGFoCZl7WkbRi0ldw4RXVSN3T4YKyXecKyU90/Yy1pawuoCykGI6UxfsNKlCbljfpHht0ACso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e861917.versanet.de ([94.134.25.23] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rxClk-0007Yy-Mb; Wed, 17 Apr 2024 23:24:40 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Michael Riesch <michael.riesch@wolfvision.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: add wolfvision pf5 visualizer display
-Date: Wed, 17 Apr 2024 23:24:34 +0200
-Message-Id: <171338906385.2268267.11350398666302673626.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412-feature-wolfvision-pf5-display-v1-1-f032f32dba1a@wolfvision.net>
-References: <20240412-feature-wolfvision-pf5-display-v1-1-f032f32dba1a@wolfvision.net>
+	s=arc-20240116; t=1713389120; c=relaxed/simple;
+	bh=zuepX+b7EKccYFICDr9JFMM45fMCuiGRrgqD3FvuPuo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UhbHJjIZ4KLIy8qT/KNCB2xjT0FljUNuMmFrzkWEEfkVLzoloKBC34gnEYg8iqz/RcPNnxsuxwOIBFYsQFaVYETBMFuExu4d9Cw4Xl6aEcvCdh00LPdfcBwbNMlbTAMwaKeoohTYQyycDGXmQ8o5oY0F3L3bGoI2u+MoMP62iiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7d5e9c1232dso26868039f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:25:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713389118; x=1713993918;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NZC1n+8WGjMqyH8/u1eDu2rBP2vWkCU5Eb2xBcQ2Ems=;
+        b=ZRKxQ1UZMF6J1k4qqBLaQdP7DKjyumQf7pZbdVI1Hsvr9onT4x1J8pADQOfcx5DyIQ
+         kWnWZnbvsCCy1U2v5LlHyziVm6h0e1z7SYKpBKysdVDKvF+hOOYc2EHoYxfUv60upZ/Q
+         Kfhoo7NPwl86peuDY3Fb9DmHfhbHoUKtkJ6V5FPMctyJmytRF3Yn9oOopJ76Kb0ftRlt
+         dvXp8xDGf7lRr0xKmSirGaQLdf92wLsii4e4FbZ+G5d8PVWq/8Eme68WDHf4RdLbS3NG
+         +Heu5q2trsrkXTsrsPgc8dAuSU0EyjH+T9NyOyJDiR2b10Xx9mjuJaRdayzzlIX53lSo
+         qsHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIHDXT7I/SborUD+44fR0I4P0TF1RJOqLfNWYnfFwLuQK2vWvWMPCA7dAySjTyA+aO5MamRio3eft4kSqYObU1qScQHLs+hK0Y8QCu
+X-Gm-Message-State: AOJu0Ywp04tLqOE9ZbQx7BJb0YgBHJp+i4hlhzo6pN0nc04R93IvCLEO
+	4uhf9sgmxR4WnuMeu12rJmkdr6HM5eWw/zZr18hJxdk7Z5ErbKNcvk1fQvA7bZpIZZMG7nr1zEw
+	I/udPJsF6fJC5Sy30gsMYAKJv1p5xWvk2MGsrn70nVhk1kOOEXkeTkUs=
+X-Google-Smtp-Source: AGHT+IEcAonNlyOsc37A+w0t0RMsyKGFJTXKMMgJEWjKcrfDPZ8Qso5N+f8+1P8NgMUaG7Z9bw0hofRq2zF3SHWQg4ULgIf1ICvw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:4112:b0:482:f323:b373 with SMTP id
+ ay18-20020a056638411200b00482f323b373mr22113jab.2.1713389118683; Wed, 17 Apr
+ 2024 14:25:18 -0700 (PDT)
+Date: Wed, 17 Apr 2024 14:25:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c80abd0616517df9@google.com>
+Subject: [syzbot] [bpf?] possible deadlock in queue_stack_map_push_elem
+From: syzbot <syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 12 Apr 2024 14:54:09 +0200, Michael Riesch wrote:
-> Add device tree overlay for the WolfVision PF5 Visualizer display.
-> Since there shall be additional variants of the WolfVision PF5 display in
-> future, move common definitions to a device tree include file.
-> 
-> 
+Hello,
 
-Applied, thanks!
+syzbot found the following issue on:
 
-[1/1] arm64: dts: rockchip: add wolfvision pf5 visualizer display
-      commit: ecca3b96aa849bf7a6e704567c5f71bff912cec0
+HEAD commit:    f99c5f563c17 Merge tag 'nf-24-03-21' of git://git.kernel.o..
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=14ee6467180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=252bc5c744d0bba917e1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=157093d5180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1039a7cb180000
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/65d3f3eb786e/disk-f99c5f56.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/799cf7f28ff8/vmlinux-f99c5f56.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ab26c60c3845/bzImage-f99c5f56.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+252bc5c744d0bba917e1@syzkaller.appspotmail.com
+
+============================================
+WARNING: possible recursive locking detected
+6.8.0-syzkaller-05271-gf99c5f563c17 #0 Not tainted
+--------------------------------------------
+syz-executor327/5092 is trying to acquire lock:
+ffff8880754591d8 (&qs->lock){-.-.}-{2:2}, at: queue_stack_map_push_elem+0x1b2/0x660 kernel/bpf/queue_stack_maps.c:210
+
+but task is already holding lock:
+ffff8880153871d8 (&qs->lock){-.-.}-{2:2}, at: queue_stack_map_push_elem+0x1b2/0x660 kernel/bpf/queue_stack_maps.c:210
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&qs->lock);
+  lock(&qs->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+4 locks held by syz-executor327/5092:
+ #0: ffffffff8e1dacc8 (delayed_uprobe_lock){+.+.}-{3:3}, at: uprobe_clear_state+0x54/0x290 kernel/events/uprobes.c:1545
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+ #2: ffff8880153871d8 (&qs->lock){-.-.}-{2:2}, at: queue_stack_map_push_elem+0x1b2/0x660 kernel/bpf/queue_stack_maps.c:210
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+
+stack backtrace:
+CPU: 0 PID: 5092 Comm: syz-executor327 Not tainted 6.8.0-syzkaller-05271-gf99c5f563c17 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain+0x15c1/0x58e0 kernel/locking/lockdep.c:3856
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+ queue_stack_map_push_elem+0x1b2/0x660 kernel/bpf/queue_stack_maps.c:210
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
