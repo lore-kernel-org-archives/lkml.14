@@ -1,215 +1,75 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935C47D071;
-	Wed, 17 Apr 2024 13:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2023113C9BF;
+	Wed, 17 Apr 2024 13:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359244; cv=none; b=o6GrxWJ4eLsCbEEp9TGuNcH5mx00h6RbTzTU7gq6SOlkO4pII/qU3Z/oZfFfBnOYbqeErunvJ/aUJv/FY2gu8o4TDnIa/ApjJMWc/j0HJJ0lFZSdOSM+T4SD1BxmZyYDYEB2y8XqZAiZ0eD/VuIFr2OwGYeoK4FntxBc/I1I88k=
+	t=1713359271; cv=none; b=f65s0IE/v9f3nogEZ5xR4hPzSk+fo4COXKr2Pt8SsOZ3K3dbUuBy9b1hv90VMnptbaPozAaYqp+vuTBm8u8WQOA+Dh7m5aOeeUofiSnbIv0nj8Flh9isYH2ZxfZVCLBeYsT/7xEH34tDXIlJeWmxDyg1x7landY7aX2CGR8hTsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359244; c=relaxed/simple;
-	bh=z0IW3/Brxpfkh18MS9+cTaxXo9NVdBoBJ3n5eEgmBjM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=VV8aDs4vSZdCVDZP7HRaTWHtXQsQn0wQ8Sz0eLtLDZarG+XzkSiwIFCMjD/GT3S7UBwSrdoX7SnyiGzg6PC0s750Ys8cl8Umq2KE3OLA1QjXlKxkE/swOnO3aCacz+4GW1OwTiRsCkRJQmsmG5TWRXeuZOLchyDc6hQUIEZZ6n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=dQxfV0hr; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="dQxfV0hr"
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id CEC6E2126;
-	Wed, 17 Apr 2024 12:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1713358790;
-	bh=+s6MrL/MryqHMryIwr1o1fGOI0TS7160OkRPd7Inyqg=;
-	h=Date:Subject:From:To:References:In-Reply-To;
-	b=dQxfV0hr+dNtRjMRJ3grudsr3sK5G3NrH0Fv0CHTXEs5+wsSk/7rco53658zI44gb
-	 TPUz6tMEnL44M6kzO6jp8l3WMOGsnvrBO0zbR5rwDOEks5xLr/EOA69zoYWO682EOy
-	 Q0pvareU23Hr6O6ycMeuQT/WQxAB3JPGEYdpZwBE=
-Received: from [192.168.211.39] (192.168.211.39) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Wed, 17 Apr 2024 16:07:19 +0300
-Message-ID: <d282dfd1-82d0-4eda-8b9d-7b762f62a3dc@paragon-software.com>
-Date: Wed, 17 Apr 2024 16:07:18 +0300
+	s=arc-20240116; t=1713359271; c=relaxed/simple;
+	bh=UwDPpPTO8fr38xZWC6BfjYWgirJI4xegCIDYLE9yDCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oAA5QejyVs2GwSYvBMeJ7GU6dB0w7uYVmQVWIz5s2vC9TsOdciHQrbNU5dNueB/mkTTDH3sdnJap2Myy5g5pB5AwBurVg41rS3pQuej5P9WAylFM9trlHvE+psjUjqpkCqeNPmlmpDdFlQ9FCBMQ46f/VHVHdpJew3IeFx18UQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31E6D339;
+	Wed, 17 Apr 2024 06:08:13 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14CC73F738;
+	Wed, 17 Apr 2024 06:07:42 -0700 (PDT)
+Date: Wed, 17 Apr 2024 14:07:40 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@nxp.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Dhruva Gole <d-gole@ti.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v10 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <20240417130740.rxmseispc32d2sjz@bogus>
+References: <20240415-pinctrl-scmi-v10-0-59c6e7a586ee@nxp.com>
+ <6c652af8-151e-4d8b-9587-8eae1254a4fe@moroto.mountain>
+ <DU0PR04MB941737BD9ACF18526D8A50C7880F2@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 06/11] fs/ntfs3: Redesign ntfs_create_inode to return error
- code instead of inode
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To: <ntfs3@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <6c99c1bd-448d-4301-8404-50df34e8df8e@paragon-software.com>
-Content-Language: en-US
-In-Reply-To: <6c99c1bd-448d-4301-8404-50df34e8df8e@paragon-software.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DU0PR04MB941737BD9ACF18526D8A50C7880F2@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
----
-  fs/ntfs3/inode.c   | 22 +++++++++++-----------
-  fs/ntfs3/namei.c   | 31 ++++++++-----------------------
-  fs/ntfs3/ntfs_fs.h |  9 ++++-----
-  3 files changed, 23 insertions(+), 39 deletions(-)
+On Wed, Apr 17, 2024 at 12:15:57PM +0000, Peng Fan wrote:
+> Hi Dan,
+>
+> Just a short question, you will make this a standalone
+> patch part of your gpio pinctrl patchset, right?
+>
+> Or you wanna include this change in my v11 patch?
+>
+> I hope v11 + imx oem patches could land in 6.10,
 
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index eb7a8c9fba01..85a10d4a74c4 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -1210,11 +1210,10 @@ ntfs_create_reparse_buffer(struct ntfs_sb_info 
-*sbi, const char *symname,
-   *
-   * NOTE: if fnd != NULL (ntfs_atomic_open) then @dir is locked
-   */
--struct inode *ntfs_create_inode(struct mnt_idmap *idmap, struct inode *dir,
--                struct dentry *dentry,
--                const struct cpu_str *uni, umode_t mode,
--                dev_t dev, const char *symname, u32 size,
--                struct ntfs_fnd *fnd)
-+int ntfs_create_inode(struct mnt_idmap *idmap, struct inode *dir,
-+              struct dentry *dentry, const struct cpu_str *uni,
-+              umode_t mode, dev_t dev, const char *symname, u32 size,
-+              struct ntfs_fnd *fnd)
-  {
-      int err;
-      struct super_block *sb = dir->i_sb;
-@@ -1239,6 +1238,9 @@ struct inode *ntfs_create_inode(struct mnt_idmap 
-*idmap, struct inode *dir,
-      struct REPARSE_DATA_BUFFER *rp = NULL;
-      bool rp_inserted = false;
+I haven't looked at i.MX OEM patches even once so far. IIRC it is all
+in the pinctrl driver and you may not need my review/ack. But let us get
+this series in first.
 
-+    /* New file will be resident or non resident. */
-+    const bool new_file_resident = 1;
-+
-      if (!fnd)
-          ni_lock_dir(dir_ni);
+This series looks good overall. Since it has pinctrl driver, I need Linus
+to ack/agree to pick the whole series up or I can ack them so that Linus
+can take the whole series. Either way it is fine for me.
 
-@@ -1478,7 +1480,7 @@ struct inode *ntfs_create_inode(struct mnt_idmap 
-*idmap, struct inode *dir,
-          attr->size = cpu_to_le32(SIZEOF_RESIDENT);
-          attr->name_off = SIZEOF_RESIDENT_LE;
-          attr->res.data_off = SIZEOF_RESIDENT_LE;
--    } else if (S_ISREG(mode)) {
-+    } else if (!new_file_resident && S_ISREG(mode)) {
-          /*
-           * Regular file. Create empty non resident data attribute.
-           */
-@@ -1715,12 +1717,10 @@ struct inode *ntfs_create_inode(struct mnt_idmap 
-*idmap, struct inode *dir,
-      if (!fnd)
-          ni_unlock(dir_ni);
+Thanks for all your efforts in pursuing this.
 
--    if (err)
--        return ERR_PTR(err);
--
--    unlock_new_inode(inode);
-+    if (!err)
-+        unlock_new_inode(inode);
-
--    return inode;
-+    return err;
-  }
-
-  int ntfs_link_inode(struct inode *inode, struct dentry *dentry)
-diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
-index edb6a7141246..71498421ce60 100644
---- a/fs/ntfs3/namei.c
-+++ b/fs/ntfs3/namei.c
-@@ -107,12 +107,8 @@ static struct dentry *ntfs_lookup(struct inode 
-*dir, struct dentry *dentry,
-  static int ntfs_create(struct mnt_idmap *idmap, struct inode *dir,
-                 struct dentry *dentry, umode_t mode, bool excl)
-  {
--    struct inode *inode;
--
--    inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFREG | mode, 0,
--                  NULL, 0, NULL);
--
--    return IS_ERR(inode) ? PTR_ERR(inode) : 0;
-+    return ntfs_create_inode(idmap, dir, dentry, NULL, S_IFREG | mode, 0,
-+                 NULL, 0, NULL);
-  }
-
-  /*
-@@ -123,12 +119,8 @@ static int ntfs_create(struct mnt_idmap *idmap, 
-struct inode *dir,
-  static int ntfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
-                struct dentry *dentry, umode_t mode, dev_t rdev)
-  {
--    struct inode *inode;
--
--    inode = ntfs_create_inode(idmap, dir, dentry, NULL, mode, rdev, 
-NULL, 0,
--                  NULL);
--
--    return IS_ERR(inode) ? PTR_ERR(inode) : 0;
-+    return ntfs_create_inode(idmap, dir, dentry, NULL, mode, rdev, NULL, 0,
-+                 NULL);
-  }
-
-  /*
-@@ -200,15 +192,12 @@ static int ntfs_symlink(struct mnt_idmap *idmap, 
-struct inode *dir,
-              struct dentry *dentry, const char *symname)
-  {
-      u32 size = strlen(symname);
--    struct inode *inode;
-
-      if (unlikely(ntfs3_forced_shutdown(dir->i_sb)))
-          return -EIO;
-
--    inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFLNK | 0777, 0,
--                  symname, size, NULL);
--
--    return IS_ERR(inode) ? PTR_ERR(inode) : 0;
-+    return ntfs_create_inode(idmap, dir, dentry, NULL, S_IFLNK | 0777, 0,
-+                 symname, size, NULL);
-  }
-
-  /*
-@@ -217,12 +206,8 @@ static int ntfs_symlink(struct mnt_idmap *idmap, 
-struct inode *dir,
-  static int ntfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
-                struct dentry *dentry, umode_t mode)
-  {
--    struct inode *inode;
--
--    inode = ntfs_create_inode(idmap, dir, dentry, NULL, S_IFDIR | mode, 0,
--                  NULL, 0, NULL);
--
--    return IS_ERR(inode) ? PTR_ERR(inode) : 0;
-+    return ntfs_create_inode(idmap, dir, dentry, NULL, S_IFDIR | mode, 0,
-+                 NULL, 0, NULL);
-  }
-
-  /*
-diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
-index 79356fd29a14..3db6a61f61dc 100644
---- a/fs/ntfs3/ntfs_fs.h
-+++ b/fs/ntfs3/ntfs_fs.h
-@@ -714,11 +714,10 @@ int ntfs_sync_inode(struct inode *inode);
-  int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
-                struct inode *i2);
-  int inode_write_data(struct inode *inode, const void *data, size_t bytes);
--struct inode *ntfs_create_inode(struct mnt_idmap *idmap, struct inode *dir,
--                struct dentry *dentry,
--                const struct cpu_str *uni, umode_t mode,
--                dev_t dev, const char *symname, u32 size,
--                struct ntfs_fnd *fnd);
-+int ntfs_create_inode(struct mnt_idmap *idmap, struct inode *dir,
-+              struct dentry *dentry, const struct cpu_str *uni,
-+              umode_t mode, dev_t dev, const char *symname, u32 size,
-+              struct ntfs_fnd *fnd);
-  int ntfs_link_inode(struct inode *inode, struct dentry *dentry);
-  int ntfs_unlink_inode(struct inode *dir, const struct dentry *dentry);
-  void ntfs_evict_inode(struct inode *inode);
--- 
-2.34.1
-
+--
+Regards,
+Sudeep
