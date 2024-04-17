@@ -1,129 +1,99 @@
-Received: from smtp.jvdsn.com (smtp.jvdsn.com [129.153.194.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F695244;
-	Wed, 17 Apr 2024 02:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.153.194.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D9A4430;
+	Wed, 17 Apr 2024 02:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713319969; cv=none; b=FNONm+r86tMISi5THveIdO625lkKAIpVoKs2GagTmfpgGJN7jI6FZMrDX7iXg/DZ2oxG7Azi1nO3wUcGLs0s/LKCBb6iY8jk88+05weSXb0UXL0mG3vtVDDFe9wb+b/u3rZbZW9Ts73cKsSogg7kxCjGg62gTDY1qGmTgKh95Uc=
+	t=1713320120; cv=none; b=N+/XXfn8U2B/mRbH8pllcTfPs+UY1Q4MPUoj4L4CPL4Xi6jyEQS2dsv+WgL8Idt3DO56HhQOUKylgJg1A/7Dp2XO3DG9MIsHBEkTBQEWm86JULhIJODTMTWZmRjbd3Lo0ZtrOkyG2wX3501BxZpuYQLRjikBtF4U310qTZEe9QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713319969; c=relaxed/simple;
-	bh=ZiGsFSryOOKe9OzBTaWucuXuaI2CiQx4hLJ+0X+WGs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jzog7SZI5A6340VFUP2OYXm5isavMz5Pwe/G/XTL4xP8TWU3UC63NKonh/FTM/CqAxhe4j1JXOZ0FBI28frcc+n4mESim63D0LEJwcIUUPktzy+MuoiqTk+fSh7vUVFYy92n6+lswE8PYj+ON143CryKczO2olqPF3riTDDxVzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jvdsn.com; spf=pass smtp.mailfrom=jvdsn.com; dkim=pass (2048-bit key) header.d=jvdsn.com header.i=@jvdsn.com header.b=Zw2hFAYe; arc=none smtp.client-ip=129.153.194.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jvdsn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvdsn.com
+	s=arc-20240116; t=1713320120; c=relaxed/simple;
+	bh=KcjW4v9LPhuP/rC4Hb0v6FD940Tv/do/SHcz+AsZO6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I+n/tQb1DvmUCrR3hqwsYblNITcUiFSzpsZfK5NNapVRa2A8GnitZ4XH9MHnHsGPBLFsmReAASJySrBSH4OBvqymMQV1e/oLCnk1eo+cHbJPD3jG4Qsune+LXDRJO36XYjYXO/u1hqrJdxwtx+SoJFsnBcK8WLlkQjaDoJ+ctsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5wayfYw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvdsn.com header.i=@jvdsn.com header.b="Zw2hFAYe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=jvdsn.com; s=mail;
-	t=1713319967; bh=ZiGsFSryOOKe9OzBTaWucuXuaI2CiQx4hLJ+0X+WGs0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Zw2hFAYe/WnkAYjKW4AeJUMukSoVUYgRGKmm9m4pbWRUzkECDXhwyTLDo0ufmZ0XZ
-	 YWrR9gwzrHI+lNOWJ8xdg0WTLMvSI/fHpm+cqyzivDpJUx+Q2SvrVqKGS/VKImm9zm
-	 Gtm7tkA0jX9lXlvGmETdpg0qLZgQO3Gfavza28LHZOvs2Ski7LLlhCgejKubkq6vCs
-	 i30bHVdy1B89uBaL15M8suT4v4hie3ZV8jVlHKOoOCVSXTW9nw4zFSWl8aGsTfvWaw
-	 AIfJeI7GIsARAga7rDh5j2OZjGp/K1Wn4u1auqmlvvw61Ihte8up+D1o5++DyIN5rG
-	 ZGXrW/WLQLeEg==
-Message-ID: <04f5265f-77e6-45cc-856c-45cd80c278c2@jvdsn.com>
-Date: Tue, 16 Apr 2024 21:12:45 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5wayfYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA29C113CE;
+	Wed, 17 Apr 2024 02:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713320119;
+	bh=KcjW4v9LPhuP/rC4Hb0v6FD940Tv/do/SHcz+AsZO6g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=o5wayfYwbiuwQnVYrPQlpT72jghBvBMQC6rckXjnlBaNiTaRmHcoR8vmJ5oz8Nx9X
+	 Js+6FebnrF9YaP+4rDpGNQVtDOiFvhHaS6ggMkuwFUwvUimaawBbhEvqZyiFzq2S8l
+	 CWzB483BmU7R+fWbigPbXvlqLeJONF3zfS3O9BCsB5EgUHJfVG0/NTgkmh+I2sfsyv
+	 W/dN7gw9gF11ciLXU5fthI/js3PrMcdqFP17WYrV3kL1qJ1sEWa8vM4C65lwgPAi57
+	 VVyJ28M/BuTt2H7t44+/BLabCrxQkbVd68hw/q5oLMQUyr5wXqrCA4uDKomH/uTHMV
+	 sePX1d+1W0ZyQ==
+Date: Tue, 16 Apr 2024 19:15:17 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
+ <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown
+ <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v8 10/17] net: pse-pd: Add support for PSE PIs
+Message-ID: <20240416191517.65c63e21@kernel.org>
+In-Reply-To: <20240414-feature_poe-v8-10-e4bf1e860da5@bootlin.com>
+References: <20240414-feature_poe-v8-0-e4bf1e860da5@bootlin.com>
+	<20240414-feature_poe-v8-10-e4bf1e860da5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] crypto: ecdh - Pass private key in proper byte order
- to check valid key
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, ardb@kernel.org,
- salvatore.benedetto@intel.com, davem@davemloft.net,
- Jarkko Sakkinen <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
- herbert@gondor.apana.org.au
-References: <20240415003026.2661270-1-stefanb@linux.ibm.com>
- <20240415003026.2661270-2-stefanb@linux.ibm.com>
- <D0KX9NQPXKO1.2RXZU000DD1BB@kernel.org>
- <6442f387-e45e-4019-8af0-6ca309e4ce4f@linux.ibm.com>
- <D0LM72MR4LDH.3QN2WEXU4QEEJ@kernel.org>
-Content-Language: en-US
-From: Joachim Vandersmissen <git@jvdsn.com>
-In-Reply-To: <D0LM72MR4LDH.3QN2WEXU4QEEJ@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Sun, 14 Apr 2024 16:21:59 +0200 Kory Maincent wrote:
+> +/**
+> + * of_pse_match_pi - Return the PSE PI id of the device node phandle
+> + * @pcdev: a pointer to the PSE controller device
+> + * @np: a pointer to the device node
+> + */
+> +static int of_pse_match_pi(struct pse_controller_dev *pcdev,
 
-Apologies for hijacking this thread, but I don't have access to the 
-older emails.
+There's new nitpick from kernel-doc - if the function returns something
+the kdoc needs to document Return:  ..
 
-Should the new priv variable not be zeroized before the end of the 
-function? As it contains private keying material?
+Sorry I missed this check failing because the fact that the series is
+17 patches lights it up as red in patchwork :( I'll apply the first
+3 patches to make v9 smaller.
 
-Kind regards,
-Joachim
+> +			   struct device_node *np)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i <= pcdev->nr_lines; i++) {
+> +		if (pcdev->pi[i].np == np)
+> +			return i;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +/**
+> + * psec_id_xlate - translate pse_spec to the PSE line number according
+> + *		   to the number of pse-cells in case of no pse_pi node
+> + * @pcdev: a pointer to the PSE controller device
+> + * @pse_spec: PSE line specifier as found in the device tree
+> + *
+> + * Return 0 if #pse-cells = <0>. Return PSE line number otherwise.
 
-On 4/16/24 9:25 AM, Jarkko Sakkinen wrote:
-> On Tue Apr 16, 2024 at 3:51 AM EEST, Stefan Berger wrote:
->>
->> On 4/15/24 14:53, Jarkko Sakkinen wrote:
->>> On Mon Apr 15, 2024 at 3:30 AM EEST, Stefan Berger wrote:
->>>> ecc_is_key_valid expects a key with the most significant digit in the last
->>>> entry of the digit array. Currently ecdh_set_secret passes a reversed key
->>>> to ecc_is_key_valid that then passes the rather simple test checking
->>>> whether the private key is in range [2, n-3]. For all current ecdh-
->>>> supported curves (NIST P192/256/384) the 'n' parameter is a rather large
->>>> number, therefore easily passing this test.
->>>>
->>>> Throughout the ecdh and ecc codebase the variable 'priv' is used for a
->>>> private_key holding the bytes in proper byte order. Therefore, introduce
->>>> priv in ecdh_set_secret and copy the bytes from ctx->private_key into
->>>> priv in proper byte order by using ecc_swap_digits. Pass priv to
->>>> ecc_is_valid_key.
->>>>
->>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>> Cc: Salvatore Benedetto <salvatore.benedetto@intel.com>
->>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>> ---
->>>>    crypto/ecdh.c | 4 +++-
->>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/crypto/ecdh.c b/crypto/ecdh.c
->>>> index 3049f147e011..a73853bd44de 100644
->>>> --- a/crypto/ecdh.c
->>>> +++ b/crypto/ecdh.c
->>>> @@ -27,6 +27,7 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
->>>>    			   unsigned int len)
->>>>    {
->>>>    	struct ecdh_ctx *ctx = ecdh_get_ctx(tfm);
->>>> +	u64 priv[ECC_MAX_DIGITS];
->>>>    	struct ecdh params;
->>>>    
->>>>    	if (crypto_ecdh_decode_key(buf, len, &params) < 0 ||
->>>> @@ -40,9 +41,10 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
->>>>    				       ctx->private_key);
->>>>    
->>>>    	memcpy(ctx->private_key, params.key, params.key_size);
->>>> +	ecc_swap_digits(ctx->private_key, priv, ctx->ndigits);
->>> Does swapping speed up the test that follows are what effect does it
->>> have to the ecc_is_key_valid() call?
->> The goal of this particular patch is to fix an issue with the byte order
->> (as description says) and, as you can see in the 2nd patch, private key
->> is always copied into priv using ecc_swap_digits before priv is being
->> used instead of ctx->private_key (or whatever it is called in the
->> function it was passed to). This patch here has nothing to do with speed
->> up but a) fixing an issue and b) using priv here as well, so fixing this
->> 'outlier' here. The speed-up comes in the 2nd patch when the bytes in
->> ctx->private_key are put into proper order right away and we can get rid
->> if priv, taking the swapped bytes of ctx->private_key, everywhere and we
->> can use ctx->private_key directly.
->>
->> The test harness (testmgr.c) runs through part of this code here
->> providing the private key that is copied into ctx->private_key, so it's
->> being used and when you make a mistake (making the changes I did) the
->> ecdh test cases will fail.
-> OK, thanks for the explanation :-) No opposition on the change itself.
->
-> Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
->
-> BR, Jarkko
->
+here missing ":"
+
+> + */
+> +static int psec_id_xlate(struct pse_controller_dev *pcdev,
+> +			 const struct of_phandle_args *pse_spec)
