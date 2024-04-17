@@ -1,117 +1,108 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F38237714
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4339F79D8;
+	Wed, 17 Apr 2024 20:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713386785; cv=none; b=MhV+4+SWpcVIDeMeZb8F21Q2c9VvBo+vRHLO2LQ3PU5XIwdVlEQan8K/9kwKdNJjHAXeIG9iET8PmorvBN5x5KYb/X/ehmyHlCvAFfyLe6EN+NBeiG1NZ2dKDO0gxNoJrjbJmjFgUciHWbBRMfInK5QZLpCXTf9aYBW8crtpS6U=
+	t=1713386798; cv=none; b=KwNoiLReZRou3Hw0FMXGQBcRfmX9LYF8varODuW806oZt4Bp3GjW0YrFSB9Rit1FDmNNCOYMGb1Q9z79iiVK81bQH9BLs9V4jyfbOxucu4HJkYQ9MR5l0iZdvJdFdI9TlppYj4TKFuKrDj823nmMTlE3FAv6jNxsbRj7+2sAHug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713386785; c=relaxed/simple;
-	bh=EfHIRXfyzIc+zsNsIy83ZLgWQXoedpsFV93faiZ+gtw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hdzix8FY+VFQXizd4ou/x4aHx1gRp0QUPl9UF+CQdo7ZBNg/tUbeghvyX58kUrsnp2CrCPad3k39AnEywxfc0ptyZsSWZFISSxWI05TA4wyUVnR9Fwsppn+iDMhZ7Q75KFd2+cUHCrDMK2tulTajMUl6ktb3z4H8CTzKqXt3+OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GEwge8Yz; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1713386798; c=relaxed/simple;
+	bh=vpW2uBcFnTTkU4Vdy3ReQVcKp2u1xZV+wBorG7RxKjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=neTCyl00IJdlz1MUNgXpsKMFOTcTKnJ9Y0ziFqNAiffFGvNYhi+HMo2HuYeld1zfbzxijgkKQxfvhVryvrb9YmZBqUwNidysmcF9j6M2zi14ru/JuZHit0F9RPKau7qzoECaH4m/FJ//2gnqpHS9VYVxgqOAwIeatRDaeRN9mZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkJ1tHT2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GEwge8Yz"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-518bad5f598so99468e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713386782; x=1713991582; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EfHIRXfyzIc+zsNsIy83ZLgWQXoedpsFV93faiZ+gtw=;
-        b=GEwge8Yz2b3GdgHZO0lKoX5Hyj+XP76C+jNeH/mny1/WfTbS+iuPLp4uNXCXNihbXw
-         YLhpEtArqR+HBm4x8QdBbbtJtIxzT+TmfMcmLyViELH/VEKO+vvnlqNSoZVQW5FU9KIv
-         VDoug47yBqNdoVrdBkwfJhA2aM3do+zGSoWr9xBeXt3abXI1zuF+N3RHW9YEET7WHQxu
-         XrY3nrt4kUzuUPmZFU0GK3mGdWk0NXqpO6i/SzCGTolV52/kakHfPWfgMPTyn+MqQzwA
-         OZbfi6DsWZzZYeigpdrJ2TuqUI/XuoNz9BmVIQRK1K3qwntFiVYo7x+qO77gVQXbFRZJ
-         YWCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713386782; x=1713991582;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EfHIRXfyzIc+zsNsIy83ZLgWQXoedpsFV93faiZ+gtw=;
-        b=Kes8K7yomvaP4hRW+8PXHy57u6L0idWX10hZeQFlCLq48aeqPnbKb5cAY9b81eongi
-         LgHskNZn5uXiWTtPvMGfTAFnsrcMMf5KvztmlJb7onB4XZZOIW52nKsupn8GcILZ4jhM
-         7I5iqFY5WrbOgy8XtRqbqiwhcA0sqTWjIrGhK1OE16Ia0RDRmdDUbpg4SrHbM/IM9RO1
-         NxlKatjGUdBd6XU6ZxZWhZErMuecqGBANQGJzxVgkqPlDANm//20jXIKlfC3hQdgSUdZ
-         0ABCZdITdx6KQAuD5agdmTeNfG3ZEBpaRmPPnj6EGEPOteYSRL/DnHdO78XdkVURz9XA
-         +OlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMp5y8IJxYksfMA4POLhcpbziUEqlWUuDgjthpRaY42UYT2H6DrZqcm7kM+tCK7fkxxpFuGYKtyz1RrYIIfpWJXpjB4b7GVdwhI/Sv
-X-Gm-Message-State: AOJu0Yx5CVhyQhH+lDJl9mHQjh0P2VOMeOB7YXIZQVO0Hf5SCl1Hk6O5
-	GwXOIdTrCiS5/pkdwVwOCA/ey70VvWlH00/HBj0EWhHbKq7CJdiRcEqKUOHZgF5o7/kTI3ME9sX
-	PNs+zBif2jPeqcHHyh4GI7OQ6B2IOHpBss0PFOQ==
-X-Google-Smtp-Source: AGHT+IFCIy31VeQrucnBimnHF77Apjx89o4M0uTx633iUVN0szNYp+oTVukhklbGPwE42PIek7r32qYimxmIK8XwJXk=
-X-Received: by 2002:ac2:46e2:0:b0:519:2c84:2405 with SMTP id
- q2-20020ac246e2000000b005192c842405mr227184lfo.44.1713386782450; Wed, 17 Apr
- 2024 13:46:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkJ1tHT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6943BC116B1;
+	Wed, 17 Apr 2024 20:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713386797;
+	bh=vpW2uBcFnTTkU4Vdy3ReQVcKp2u1xZV+wBorG7RxKjk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RkJ1tHT27y+k0lu2QQRUrGTpEPA5UU3iWd9URd2ZdTybNiuCSoZJcWvzIScLEJTo3
+	 j2PHHyRu4FLB7fZoCfA2IziVIfmuO8kBmqRWrcMfkjT0kR6w4Wo1zZ42afTut8q4NE
+	 H4KxdWsQUxkRcixhNeIf0xLD2kViqQ3efDUTiKxw+v8SifzNUCBsDSOYfRgAEHSXDF
+	 xsECzz55hNl+R/no/eoZhtY9gEai/b9oJ7oFZQ2khaHbGdCNs8B+/tHeQaYr2Widzb
+	 D8yF16M1VOyUYZa0O/DnxSIKz43pjAF944uhasya9+85A4NRFg8oRuuMKg4J1UFUo5
+	 NTNgavSRXsFZg==
+Date: Wed, 17 Apr 2024 13:46:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/4] selftests/net/tcp_ao: A bunch of fixes for
+ TCP-AO selftests
+Message-ID: <20240417134636.102f0120@kernel.org>
+In-Reply-To: <CAJwJo6Yw4S1wCcimRVy=P8h0Ez0UDt-yw2jqSY-ph3TKsQVVGA@mail.gmail.com>
+References: <20240413-tcp-ao-selftests-fixes-v1-0-f9c41c96949d@gmail.com>
+	<20240416072809.3ae7c3d3@kernel.org>
+	<CAJwJo6Yw4S1wCcimRVy=P8h0Ez0UDt-yw2jqSY-ph3TKsQVVGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
- <ZhpC3lLD-BHqJEZz@ishi> <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
- <CAHp75VcofgAQLFVLdsA-A1AkjVzQBJWtam=w00+z9-rueZyv8A@mail.gmail.com>
- <CAMRc=MejJTnawn1=_x9Va-QJRctjoc3TJanVqQ0uZbpmDzpyjw@mail.gmail.com> <CAHp75VcXoEhxA+qO=MMoUanZeCP5hPXd9q7n-8AuRrotEfbYFw@mail.gmail.com>
-In-Reply-To: <CAHp75VcXoEhxA+qO=MMoUanZeCP5hPXd9q7n-8AuRrotEfbYFw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 17 Apr 2024 22:46:11 +0200
-Message-ID: <CAMRc=McrxEeS-BdgSEswJ+x_qDYJ7Gn_fKP8n-ctCzk2BuP29A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: William Breathitt Gray <wbg@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 17, 2024 at 10:41=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Apr 17, 2024 at 9:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> > On Wed, Apr 17, 2024 at 10:05=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Wed, Apr 17, 2024 at 12:17=E2=80=AFAM Bartosz Golaszewski <brgl@bg=
-dev.pl> wrote:
-> > > > On Sat, Apr 13, 2024 at 10:31=E2=80=AFAM William Breathitt Gray <wb=
-g@kernel.org> wrote:
->
-> ...
->
-> > > > I applied it as is, if anyone wants it, this can be sent on top of =
-it.
-> > >
-> > > Thanks, but I assumed this should go via my tree and as PR to you. At
-> > > least I have it already in my for-next.
-> >
-> > You didn't respond in any way about picking it up.
->
-> Hmm... I'm the author of it and I'm a maintainer for that driver. I'm
-> not sure if it's mandatory to respond for that purpose. Usually I
-> asked the opposite, i.e. when I'm not going to pick the thing up.
->
-> > Can you just drop
-> > it from your branch?
->
-> It's possible, but I will need to rebase, which is not a good thing to
-> perform. What about just leaving it as is and letting git to (nicely)
-> solve this?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+On Wed, 17 Apr 2024 19:47:18 +0100 Dmitry Safonov wrote:
+> 1. [ 240.001391][ T833] Possible interrupt unsafe locking scenario:
+> [  240.001391][  T833]
+> [  240.001635][  T833]        CPU0                    CPU1
+> [  240.001797][  T833]        ----                    ----
+> [  240.001958][  T833]   lock(&p->alloc_lock);
+> [  240.002083][  T833]                                local_irq_disable();
+> [  240.002284][  T833]                                lock(&ndev->lock);
+> [  240.002490][  T833]                                lock(&p->alloc_lock);
+> [  240.002709][  T833]   <Interrupt>
+> [  240.002819][  T833]     lock(&ndev->lock);
+> [  240.002937][  T833]
+> [  240.002937][  T833]  *** DEADLOCK ***
+> 
+> https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/537021/14-self-connect-ipv6/stderr
+> 
+> 2. [  251.411647][   T71] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock
+> order detected
+> [  251.411986][   T71] 6.9.0-rc1-virtme #1 Not tainted
+> [  251.412214][   T71] -----------------------------------------------------
+> [  251.412533][   T71] kworker/u16:1/71 [HC0[0]:SC0[2]:HE1:SE0] is
+> trying to acquire:
+> [  251.412837][   T71] ffff888005182c28 (&p->alloc_lock){+.+.}-{2:2},
+> at: __get_task_comm+0x27/0x70
+> [  251.413214][   T71]
+> [  251.413214][   T71] and this task is already holding:
+> [  251.413527][   T71] ffff88802f83efd8 (&ul->lock){+.-.}-{2:2}, at:
+> rt6_uncached_list_flush_dev+0x138/0x840
+> [  251.413887][   T71] which would create a new lock dependency:
+> [  251.414153][   T71]  (&ul->lock){+.-.}-{2:2} -> (&p->alloc_lock){+.+.}-{2:2}
+> [  251.414464][   T71]
+> [  251.414464][   T71] but this new dependency connects a SOFTIRQ-irq-safe lock:
+> [  251.414808][   T71]  (&ul->lock){+.-.}-{2:2}
+> 
+> https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/537201/17-icmps-discard-ipv4/stderr
+> 
+> 3. [ 264.280734][ C3] Possible unsafe locking scenario:
+> [  264.280734][    C3]
+> [  264.280968][    C3]        CPU0                    CPU1
+> [  264.281117][    C3]        ----                    ----
+> [  264.281263][    C3]   lock((&tw->tw_timer));
+> [  264.281427][    C3]
+> lock(&hashinfo->ehash_locks[i]);
+> [  264.281647][    C3]                                lock((&tw->tw_timer));
+> [  264.281834][    C3]   lock(&hashinfo->ehash_locks[i]);
+> 
+> https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/547461/19-self-connect-ipv4/stderr
+> 
+> I can spend some time on them after I verify that my fix for -stable
+> is actually fixing an issue I think it fixes.
+> Seems like your automation + my selftests are giving some fruits, hehe.
 
-It won't be solved nicely, we'll get a warning about the same commit
-appearing twice with different hashes.
+Oh, very interesting, I don't recall these coming up before.
 
-Whatever, I dropped it from my tree, it was the HEAD anyway.
-
-Bart
+We try to extract crashes but apparently we're missing lockdep splats.
+I'll try to improve the extraction logic...
