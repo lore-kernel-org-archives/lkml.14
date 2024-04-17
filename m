@@ -1,107 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1CD7FBD2
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF2512D20D
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713351195; cv=none; b=K6MYS10a3Ohf7WlzOpi1RpBPHoFTyfJsWQ0FfA/yeUW0d+h/r8rsxvZyhJuUam4X2No+dh3krzgL7IAyimkCQ0QjvrlS3Wf07La1o/Fz+NTE/WZOHbx/9zKuDe40q+ZPdXTUtxIvJLKLD0UvzJ2ATk3hpM0fQVLhNBFi8I9cQhE=
+	t=1713351370; cv=none; b=uKssSApLsGLbeK8PXTTXLmxd2g3QGo/qEFoQTlZR2CzImdZf/5BQ9g7O/9c5Q1hbbV0bnKRrpgRy9HsCSCnBt7d7VF6bn+3+Mz9LUnV4tMxQKfc23QumdNJ7eBgnfznXglhKzRX5g/99o3s6sLlffF/GqX2nmm99okmNmyoW7Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713351195; c=relaxed/simple;
-	bh=DvyqV4VNBcgPHLGo6VzuhHCFubdOg2mGm7XN7iu9Z1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D7BnKSxDnZ7DhEVLFRt1FC1pJ97RAX3A+XPcfTRHaBFo23Qgi3eOnpI9JqCfcKGu5v595E0duwsMPwq6pjdCWuc+FGHtTOYaFazGMuvh+rJ3WSCAMzWfffGFrhExjjxKJqAuV6DEbbmVVrXnOgHPMJKSOL082hdJ5/HxCD6C8to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDE41339;
-	Wed, 17 Apr 2024 03:53:40 -0700 (PDT)
-Received: from [10.1.37.181] (XHFQ2J9959.cambridge.arm.com [10.1.37.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F02873F64C;
-	Wed, 17 Apr 2024 03:53:10 -0700 (PDT)
-Message-ID: <39905c50-a228-4e85-a5de-3b10cae5f2bc@arm.com>
-Date: Wed, 17 Apr 2024 11:53:09 +0100
+	s=arc-20240116; t=1713351370; c=relaxed/simple;
+	bh=EWti/8CN6ncBmT5gymMNjUv58LReaR0BCx6NWeoqYE0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eLPmvM6SRqWKKp7LN4aXmV+uZsbW7fFBbJ3i4PFwO8DFgRSebjDc2luXxNZXvJ48O7xJfgEuTo0+a5U+M1nOESuWg+RROqSN2+S2B01CeUl82fE5nVBsnZ8NYYzoU72FTBO0bxIQ8tpRAP2ghRRekHjxhCiQAXvtmRPC8Ah/cV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERZ1YEyl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERZ1YEyl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D90B6C072AA;
+	Wed, 17 Apr 2024 10:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713351369;
+	bh=EWti/8CN6ncBmT5gymMNjUv58LReaR0BCx6NWeoqYE0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ERZ1YEyl9I2YiVpCO4Ls9TAVkyd/wNyGV0D6MjL0xcFkjAUcPLZzxjuacbG+DKZI9
+	 zTuWDbHQ8DJB9koR+B9Sx8Ho5C2mNxth9keEzlMSt0Yryd5mH+/ftj7tXGGIKuQXLe
+	 mwpA3QZHJVq4RDZWNa7iH0+Zw9e6GFn1GQYhp5u5ZrPNWh4DeOsYV+7t7h6Wg8fTdq
+	 SSE/vuJxOG0LOQictZpZaxW6UkRWvVl+z6B+ID/ocbVLKe46hoP/PNScq8yLE+WeG2
+	 7PaoJ4tgfRlF5AoyiPGXnyPVxXUJjnz4cvdqgfBLqj+SNZrB4MRr8EWpSLCtbDuwk6
+	 St/lMZWWd8p1g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rx2xT-005L7r-El;
+	Wed, 17 Apr 2024 11:56:07 +0100
+Date: Wed, 17 Apr 2024 11:56:07 +0100
+Message-ID: <86v84gqmuw.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Dawei Li <dawei.li@shingroup.cn>
+Cc: tglx@linutronix.de,
+	yury.norov@gmail.com,
+	rafael@kernel.org,
+	akpm@linux-foundation.org,
+	florian.fainelli@broadcom.com,
+	chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	anup@brainfault.org,
+	palmer@dabbelt.com,
+	samuel.holland@sifive.com,
+	linux@rasmusvillemoes.dk,
+	daniel.lezcano@linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] irqchip/gic-v3-its: Avoid explicit cpumask allocation on stack
+In-Reply-To: <20240416085454.3547175-4-dawei.li@shingroup.cn>
+References: <20240416085454.3547175-1-dawei.li@shingroup.cn>
+	<20240416085454.3547175-4-dawei.li@shingroup.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] mm/madvise: introduce clear_young_dirty_ptes()
- batch helper
-Content-Language: en-GB
-To: Lance Yang <ioworker0@gmail.com>, David Hildenbrand <david@redhat.com>
-Cc: 21cnbao@gmail.com, akpm@linux-foundation.org, fengwei.yin@intel.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
- minchan@kernel.org, peterx@redhat.com, shy828301@gmail.com,
- songmuchun@bytedance.com, wangkefeng.wang@huawei.com, xiehuan09@gmail.com,
- zokeefe@google.com
-References: <CAK1f24mEoC_Pg7-49G=y7dMUaGhzW11_A5sK0EWVhH6K1kjMMA@mail.gmail.com>
- <20240417050426.66194-1-ioworker0@gmail.com>
- <76d22c08-82db-4ea8-a7cd-c77589e132e3@redhat.com>
- <CAK1f24mFfwXky9Patwmcq-VQ8y1hxcRm8K4B4o0RO+dsr-7Q=A@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAK1f24mFfwXky9Patwmcq-VQ8y1hxcRm8K4B4o0RO+dsr-7Q=A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: dawei.li@shingroup.cn, tglx@linutronix.de, yury.norov@gmail.com, rafael@kernel.org, akpm@linux-foundation.org, florian.fainelli@broadcom.com, chenhuacai@kernel.org, jiaxun.yang@flygoat.com, anup@brainfault.org, palmer@dabbelt.com, samuel.holland@sifive.com, linux@rasmusvillemoes.dk, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 17/04/2024 10:01, Lance Yang wrote:
-> On Wed, Apr 17, 2024 at 4:19 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 17.04.24 07:04, Lance Yang wrote:
->>> Hey David, Ryan,
->>>
->>> How about this change?
->>>
->>> static inline void clear_young_dirty_ptes(struct vm_area_struct *vma,
->>>                                         unsigned long addr, pte_t *ptep,
->>>                                         unsigned int nr, cydp_t flags)
->>> {
->>>       if (flags == CYDP_CLEAR_YOUNG) {
->>>               for (;;) {
->>>                       ptep_test_and_clear_young(vma, addr, ptep);
->>>                       if (--nr == 0)
->>>                               break;
->>>                       ptep++;
->>>                       addr += PAGE_SIZE;
->>>               }
->>>               return;
->>>       }
->>>
->>>       pte_t pte;
->>>
->>>       for (;;) {
->>>               pte = ptep_get_and_clear(vma->vm_mm, addr, ptep);
->>>
->>>               if (flags & CYDP_CLEAR_YOUNG)
->>>                       pte = pte_mkold(pte);
->>>               if (flags & CYDP_CLEAR_DIRTY)
->>>                       pte = pte_mkclean(pte);
->>>
->>>               if (--nr == 0)
->>>                       break;
->>>               ptep++;
->>>               addr += PAGE_SIZE;
->>>       }
->>> }
->>
->> Likely it might be best to just KIS for now and leave it as is. The
->> compiler should optimize out based on flags already, that's what I ignored.
+On Tue, 16 Apr 2024 09:54:50 +0100,
+Dawei Li <dawei.li@shingroup.cn> wrote:
 > 
-> Got it. Let's keep it as is for now :)
-
-Yep agreed; you're passing the flags as constants so the compiler should be
-completely removing one half of the conditional. And if the input isn't a
-constant, I'd still expect the compiler to hoist the conditional out of the loop.
-
+> In general it's preferable to avoid placing cpumasks on the stack, as
+> for large values of NR_CPUS these can consume significant amounts of
+> stack space and make stack overflows more likely.
 > 
-> Thanks,
-> Lance
+> Remove cpumask var on stack and use cpumask_any_and() to address it.
 > 
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
+> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
 
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
