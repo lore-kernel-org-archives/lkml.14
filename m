@@ -1,212 +1,157 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2076D13DDD5;
-	Wed, 17 Apr 2024 13:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0B614038A;
+	Wed, 17 Apr 2024 13:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360199; cv=none; b=O9l+rjwqYSftOsEom9m0Dgm6rhhPGyZk4BC0sowNYs3RgYQTOEybMyz4H+1uqoxMnIMQYOro76hQiFXiFktcwhEt/CAmBZqjVb52D8kcEBgCMCT3hzSZPw5vEZwZ06uREbktB8+ZgnC9CHWouKdsgnviIj5qhtGKylh1PMjXwf0=
+	t=1713360200; cv=none; b=A/ye9vFume7j5Mjls9sNcEr35MqNZKVo2TYXXvKzG5N+4LkXO3oatKDSwpdMxHRrDu/1GZHjRYWNroznK5eB8jzWz+cvg5pMTP8/Zy7tISmawEtGIg+iCC3IfOsXOs/SY/zdAA/S5vHdWr5s+DZKR6hVGYf756A14WEUTccFe/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360199; c=relaxed/simple;
-	bh=+Jx9cNmLoL9x+obwBWDlZTUT/Z2SQ/NbSE9pmLzfaCE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cmkh/88ykRGW42ogl8qg7nnGfDuJHfaKdYvbsk+oUMAGP3p6zEHSmgrQ+YQwaQ4zBRiHpW9qpLBami8zEyHjgrXUS3G55bJH2BGoJBXudOTeETgkVdICt6iwWozsZUmIrVZv1zYAM9quM8YmWqPurf8zfdphIV9ErRRjAtDRdkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM0p4104z6K8jS;
-	Wed, 17 Apr 2024 21:18:18 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 22B3B140B38;
-	Wed, 17 Apr 2024 21:23:16 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 14:23:15 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v6 08/16] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
-Date: Wed, 17 Apr 2024 14:19:01 +0100
-Message-ID: <20240417131909.7925-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713360200; c=relaxed/simple;
+	bh=tcnQKu88XTy8wDaU4LOAQDFClMImiR13+BGl1UeDOcw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qo1+TeH7iwU1nIYTwTGCbmLZ2F/2qtiPgmWEwlY0oKxuHBm/xNxb9wSgzjSsZiZGwnyaszGaV4paP229z47XxWn2vLVAWT5mGE+/ESfxGdHEME0dPeO6EZpOBjqScuFQs+QV2jc+2IYhWMsE6hww8VmybLcvwxScfnsDNUx2vJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eP4UM0+N; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eP4UM0+N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 230D8C4AF0D;
+	Wed, 17 Apr 2024 13:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713360200;
+	bh=tcnQKu88XTy8wDaU4LOAQDFClMImiR13+BGl1UeDOcw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eP4UM0+NtCz0XOTbVtZ9hq4GdFytAqHlxVyBQGYbKRgFkjK/pn+0tVmHifavrNm95
+	 zOClKjmZkDB9T2wTq540cBavx9obd5Z6JpoO104EMkKZwlG/5sDK9v89YOUUDVXmnn
+	 z8xiP70oY0hPB9GtGuRfETx435RMpKcfyOz/qxi4cif5JBJvF51Hm2SGJACyetP5/A
+	 X42B53ZE2/BVc3pbKtJEhhIxhpqoGEQ9fXJBeHQPKVL50H7e7AT2uOJ5DP4IrzIGU1
+	 qc8BsVB+XhJ5Wn3Us2BhIDColZMm+oM9oCGHw018ffHOJ/xyt3ssDZOBCFFvMmWaz0
+	 TH8p9747PcjcA==
+Message-ID: <48b2e0fd-4d7f-4bb6-aadd-804847e3250c@kernel.org>
+Date: Wed, 17 Apr 2024 15:23:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+ <20240414-for-soc-asus-rt-ac3200-ac5300-v1-3-118c90bae6e5@arinc9.com>
+ <a88385a4-afad-4bd8-afc1-37e185e781f4@kernel.org>
+ <85261d11-d6cb-4718-88d9-95a7efe5c0ab@arinc9.com>
+ <e6cfe735-0a46-4c07-90ee-4ae25c921b03@kernel.org>
+ <335cdd4b-7309-4633-9b4f-6487c72c395c@arinc9.com>
+ <07c9c5f5-c4b9-44d6-b909-5aa306f56898@kernel.org>
+ <00ba4593-d720-419a-a97d-37c402c91e44@arinc9.com>
+ <7b465ddb-2b18-4e7f-8b03-d4e51006e1cb@broadcom.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7b465ddb-2b18-4e7f-8b03-d4e51006e1cb@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: James Morse <james.morse@arm.com>
+On 17/04/2024 05:15, Florian Fainelli wrote:
+> 
+> 
+> On 4/15/2024 2:10 AM, Arınç ÜNAL wrote:
+>> On 15.04.2024 10:57, Krzysztof Kozlowski wrote:
+>>> On 14/04/2024 22:21, Arınç ÜNAL wrote:
+>>>> NVRAM is described as both flash device partition and memory mapped 
+>>>> NVMEM.
+>>>> This platform stores NVRAM on flash but makes it also memory accessible.
+>>>>
+>>>> As device partitions are described in board DTS, the nvram node must 
+>>>> also
+>>>
+>>> Sorry, but we do not talk about partitions. Partitions are indeed board
+>>> property. But the piece of hardware, so NVMEM, is provided by SoC.
+>>>
+>>>> be defined there as its address and size will be different by board. 
+>>>> It has
+>>>> been widely described on at least bcm4709 and bcm47094 SoC board DTS 
+>>>> files
+>>>> here.
+>>>
+>>> These not proper arguments. What you are saying here is that SoC does no
+>>> have nvram at address 0x1c08000. Instead you are saying there some sort
+>>> of bus going out of SoC to the board and on the board physically there
+>>> is some NVRAM sort of memory attached to this bus.
+>>
+>> Yes that is the case. NVRAM is stored on a partition on the flash. On the
+>> Broadcom NorthStar platform, the NAND flash base is 0x1c000000, the NOR
+>> flash base is 0x1e000000.
+>>
+>> For the board in this patch, the flash is a NAND flash. The NVRAM partition
+>> starts at address 0x00080000. Therefore, the NVRAM component's address is
+>> 0x1c080000.
+> 
+> Because the flash is memory mapped into the CPU's address space, a 
+> separate node was defined since it is not part of the "soc" node which 
+> describes the bridge that connects all of the peripherals.
+> 
+> Whether we should create an additional bus node which describes the 
+> bridge being used to access the flash devices using the MMIO windows is 
+> debatable. Rafal, what do you think?
 
-struct acpi_scan_handler has a detach callback that is used to remove
-a driver when a bus is changed. When interacting with an eject-request,
-the detach callback is called before _EJ0.
+Sorry guys, I don't get. I don't know the addresses neither the names
+like Broadcom Northstar, so this does not clarify me at all.
 
-This means the ACPI processor driver can't use _STA to determine if a
-CPU has been made not-present, or some of the other _STA bits have been
-changed. acpi_processor_remove() needs to know the value of _STA after
-_EJ0 has been called.
+Please answer the simple questions:
+1. Is NAND flash part of SoC?
+2. If not, is NAND flash provided by Broadcom or anyone else?
 
-Add a post_eject callback to struct acpi_scan_handler. This is called
-after acpi_scan_hot_remove() has successfully called _EJ0. Because
-acpi_scan_check_and_detach() also clears the handler pointer,
-it needs to be told if the caller will go on to call
-acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
-and clearing the handler pointer can be deferred.
-An extra flag is added to flags field introduced in the previous
-patch to achieve this.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-----
-v6:
- - Switch to flags.
-Russell, you hadn't signed off on this when posting last time.
-Do you want to insert a suitable tag now?
-v5:
- - Rebase to take into account the changes to scan handling in the
-   meantime.
----
- drivers/acpi/acpi_processor.c |  4 ++--
- drivers/acpi/scan.c           | 30 +++++++++++++++++++++++++++---
- include/acpi/acpi_bus.h       |  1 +
- 3 files changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index 0cac77961020..0e43f5b4267a 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -481,7 +481,7 @@ static int acpi_processor_add(struct acpi_device *device,
- 
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
- /* Removal */
--static void acpi_processor_remove(struct acpi_device *device)
-+static void acpi_processor_post_eject(struct acpi_device *device)
- {
- 	struct acpi_processor *pr;
- 
-@@ -650,7 +650,7 @@ static struct acpi_scan_handler processor_handler = {
- 	.ids = processor_device_ids,
- 	.attach = acpi_processor_add,
- #ifdef CONFIG_ACPI_HOTPLUG_CPU
--	.detach = acpi_processor_remove,
-+	.post_eject = acpi_processor_post_eject,
- #endif
- 	.hotplug = {
- 		.enabled = true,
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 1ec9677e6c2d..3ec54624664a 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -245,6 +245,7 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
- }
- 
- #define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
-+#define ACPI_SCAN_CHECK_FLAG_EJECT	BIT(1)
- 
- static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- {
-@@ -273,8 +274,6 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- 	if (handler) {
- 		if (handler->detach)
- 			handler->detach(adev);
--
--		adev->handler = NULL;
- 	} else {
- 		device_release_driver(&adev->dev);
- 	}
-@@ -284,6 +283,28 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- 	 */
- 	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
- 	adev->flags.initialized = false;
-+
-+	/* For eject this is deferred to acpi_bus_post_eject() */
-+	if (!(flags & ACPI_SCAN_CHECK_FLAG_EJECT)) {
-+		adev->handler = NULL;
-+		acpi_device_clear_enumerated(adev);
-+	}
-+	return 0;
-+}
-+
-+static int acpi_bus_post_eject(struct acpi_device *adev, void *not_used)
-+{
-+	struct acpi_scan_handler *handler = adev->handler;
-+
-+	acpi_dev_for_each_child_reverse(adev, acpi_bus_post_eject, NULL);
-+
-+	if (handler) {
-+		if (handler->post_eject)
-+			handler->post_eject(adev);
-+
-+		adev->handler = NULL;
-+	}
-+
- 	acpi_device_clear_enumerated(adev);
- 
- 	return 0;
-@@ -301,6 +322,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 	acpi_handle handle = device->handle;
- 	unsigned long long sta;
- 	acpi_status status;
-+	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_EJECT;
- 
- 	if (device->handler && device->handler->hotplug.demand_offline) {
- 		if (!acpi_scan_is_offline(device, true))
-@@ -313,7 +335,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 
- 	acpi_handle_debug(handle, "Ejecting\n");
- 
--	acpi_bus_trim(device);
-+	acpi_scan_check_and_detach(device, (void *)flags);
- 
- 	acpi_evaluate_lck(handle, 0);
- 	/*
-@@ -336,6 +358,8 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
- 	} else if (sta & ACPI_STA_DEVICE_ENABLED) {
- 		acpi_handle_warn(handle,
- 			"Eject incomplete - status 0x%llx\n", sta);
-+	} else {
-+		acpi_bus_post_eject(device, NULL);
- 	}
- 
- 	return 0;
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index e7796f373d0d..51a4b936f19e 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -129,6 +129,7 @@ struct acpi_scan_handler {
- 	bool (*match)(const char *idstr, const struct acpi_device_id **matchid);
- 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
- 	void (*detach)(struct acpi_device *dev);
-+	void (*post_eject)(struct acpi_device *dev);
- 	void (*bind)(struct device *phys_dev);
- 	void (*unbind)(struct device *phys_dev);
- 	struct acpi_hotplug_profile hotplug;
--- 
-2.39.2
+Best regards,
+Krzysztof
 
