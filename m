@@ -1,119 +1,149 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.194])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2087.outbound.protection.outlook.com [40.107.223.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5AC13CF87;
-	Wed, 17 Apr 2024 12:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713356661; cv=none; b=U5b9lWT6AL0q3UVSqS4WcF0475Qdtq0zkgbkr5V3DPCmeqcFF/PEzuZSXnNpNbI5P0UGBwBF+H9tq3X089POtGkLwVC44VYsPy50499SSz9EMOIvi6pKPf+P9ePsBCGHkyMCBgpeUI89KA0p/yvGipV+2P2Y3cb9+aiqKeyxD4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713356661; c=relaxed/simple;
-	bh=gBNNnlmORzpHW6xq9PwyOtjdy5heFzroyMx3ew5toI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Le6FH4x543P/zZkmcwsCb19L+SCg2zV9cxxGblTvn9GuGUjovwD++5nQPG39kZJBwsOQn6SBu7XKL+3wBZVa62p9lDAVmId+YI5NcvG9L2sS7PRcRrh10CwfBD7tGoEsyWhPUOgY546zjxRvBzyHKhtHygZOuvRVKxwhO5n2SuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=PqG9xg3J; arc=none smtp.client-ip=74.208.4.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0D113CF87;
+	Wed, 17 Apr 2024 12:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713356692; cv=fail; b=m7Lgsd0oHS6WuBmznNjyRtECML/Itx3PGZqpvVZUD+sYpYYO4zwezXNymTGyDAzmwVtyThnbUTHS01iDtdRzL1lLePnGpgPb3zT1EGo+UQzpnQayETmx957LxNy8I+6rNGy9XtIwe9eArEdj1Z8zHnhs+3D0o2FtLI36DNeKbRs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713356692; c=relaxed/simple;
+	bh=gowoofUGOd/RdEgpy1PBjmfcNehglOcOZnFjwAc8QX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Q0TZ0DLRJ8X7tNdsgxY3rmrRvBBObJNpIsGLJBo4BpXLj7qYcTtXEmDO/KWGvGed1w9sHwWcVCMmkUk7CG+W9RT5eSM+MzgcUne/6+uG0dyY+WOJj9ZGhmBTxf8l+dCh8pIMxKds/iydhEVGoEWZooCWZvQJrBV8x5RqBPlAf/s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RdXC6o1D; arc=fail smtp.client-ip=40.107.223.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="PqG9xg3J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1713356654; x=1713961454; i=parker@finest.io;
-	bh=RSgA5ZypIHr9ZAVZVoPEvyLi5ROWgRxVAWumsOOJSP8=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PqG9xg3JpUZRVsU2chWUwB84RE0FxnaA6C/8E4I3Fb1vrBAPtwTXKJ5AqaBhURGQ
-	 6VeNxY/DipiIg6kqq4yMw59aICxgZciED6o+nsbZhW/+DAbsvcnMC4yKW0kUxPK1B
-	 tRPJHbKE7hFxOECOP43Fq1LYckR32XPBI3eHq7qit8JxOYb0pl/G9nkpOLBtYMRGa
-	 t/eTTGqRs0SAxSg9K85b0RX3HiTFdsQVDAdB4eP/6tiBMwspfZLXYUqJCdB2qds7/
-	 +E3Dn0XW13KB37LC9gqpbMEYGsNmK6my3814eNimOwE2wSJ6uetRRJwMbcPR9VwiW
-	 uFtpjyQ3a5IdBiw1Ww==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
- mrelay.perfora.net (mreueus004 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 1N1xEj-1su4rX1ofx-012G2L; Wed, 17 Apr 2024 14:24:14 +0200
-Date: Wed, 17 Apr 2024 08:24:13 -0400
-From: Parker Newman <parker@finest.io>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, Parker Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH v3 8/8] serial: exar: fix: fix crash during shutdown if
- setup fails
-Message-ID: <20240417082413.70397ccf@SWDEV2.connecttech.local>
-In-Reply-To: <2024041746-galvanize-satchel-09a4@gregkh>
-References: <cover.1713270624.git.pnewman@connecttech.com>
-	<1a21fffe403d7181e0404db1ed92140c306f97b7.1713270624.git.pnewman@connecttech.com>
-	<2024041746-galvanize-satchel-09a4@gregkh>
-Organization: Connect Tech Inc.
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RdXC6o1D"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hLxkvL/k8rNmCwAIvJcUi5jVb3Wj1jxVPH3nh1SMhuKg8noVMQUGAsKVrfLnAzUq9iOC6Fe2V1QZ08yxtZ17jw4nA0k/lPDjvyvWzCuoMKodARvVOY8XDN/B6gKGxgFxROtChQTf0owlEwxIYIR7yLPfMIlnL66fB2ZkWmDQMlXpwgn+zVg1g+Ww5AOu0jrrnbLDlSmvByRrCmn0hwbiZmbyeaurnl4D4fhWOwPur2ChY/qNX1qeMSvpHCZM+VvW7c/es6DvogV4mY9mfsrSa/LBGcBbHk741h553idzOt03KfrH5R86LZ/JLWMGk87tGi9htm3sCZpeSluMFnklCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=epML94k/deH4YjtzUV1zs8gm7UpOHZW+3Wo+zVBr3xQ=;
+ b=nokz23g9xXkQ9i3h05o+IxJ3/kYRRsrJ9bBM8t+gVwIPhN+lG099F6Q7ic3bJX3pHGQlLDxDazh3a32Cs4k9isPE8d4yua7/ArPEk5x4nNdlJolQYBLvFXd/IqkGonlZ+suPvPIi5tLMuo+Y9qKXbDD4BrRkNT/v/cs7fifluJUswUoCZYSYp9W/mcD1lzUPB7lNYrlCN7vizn/KTVxAMN+ZMT4KPfUDjZUe09Qc8IUAYt6GNTfZaje+7ycVrzFv8hs9tQyUZH55SUepA4JoYwJH1a7a6ujnGvExNRIOgZ2uG97GGQq2yabJRdDAZ/crbaLJCdrsQFWtZuYM0pXeEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=epML94k/deH4YjtzUV1zs8gm7UpOHZW+3Wo+zVBr3xQ=;
+ b=RdXC6o1D5RWkXQzzmwN3wIB+3mbf6UWSsTdjKpgE6BsnPoT6sqsNTOviHdriiSVXg6HbBAVHbtQiSpBAnI/gdN9ANNfPKX9yg64ltISnlSvouUGjMzJZG4MONm1AUmRwcLjPvWz6kUO/0v/VmMJDpZqGxuGL756XT1qmpjWtTqRB4vWYiBS9rj+ySniR8EOhWtvFOr3ExQlNzpm3CICCkZ6StRkSxfJg8NBYUO7PT6BhOr9n/gLs4E1HXJH1Q431Ady8B4pAex/9drYQPX7Ga8FB36cgzRpA5pby3qHTMgnv+HHWZQlZtfUzRRs/Q07wK4fum8SgvrpcFrkRiUFcvw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by CH3PR12MB7641.namprd12.prod.outlook.com (2603:10b6:610:150::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 17 Apr
+ 2024 12:24:47 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7472.037; Wed, 17 Apr 2024
+ 12:24:47 +0000
+Date: Wed, 17 Apr 2024 09:24:45 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	"vdumpa@nvidia.com" <vdumpa@nvidia.com>,
+	"jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+	Jerry Snitselaar <jsnitsel@redhat.com>
+Subject: Re: [PATCH v5 0/6] Add Tegra241 (Grace) CMDQV Support (part 1/2)
+Message-ID: <20240417122445.GO3637727@nvidia.com>
+References: <cover.1712977210.git.nicolinc@nvidia.com>
+ <20240415171426.GF3637727@nvidia.com>
+ <f92efdb774cc4cd48a59495e7cb69c27@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f92efdb774cc4cd48a59495e7cb69c27@huawei.com>
+X-ClientProxiedBy: SA0PR11CA0193.namprd11.prod.outlook.com
+ (2603:10b6:806:1bc::18) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7o47FeSUWwTROTViXEZ0td1cN1a5aTVyViFUE0FwTEiKCVSvn+Q
- OZrDzSz20AubuTDKq4JgsKnkjzh55NFCCi6KTi4DGzWRzdYks+Q3cMr/1HlSUpqYHCVwFXu
- vDdoLGPq78X/ss2jq+BnjJb8nVvGN6W9d5r3WjzKUy5xJJ+lnyBNZy2SfLTaDx08MUlsugK
- uT7RQ0X/fRoc9wis20QbA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+3HOV8EW1BQ=;ioE1hwDgtA+gqJt8whatZf64T4K
- mZciRq5URD4Ikumb7t+4R+cfArP0BNgmAJyFW22WF/8oet6LOm6nTgtmT7/+i1gFy6StMV0K6
- FnvAhM+c6f7ieVTqwmtyuXXbkpei98QQw+Bbs4dJ5QF11/rCoXsfx/8Rqw0IfxV5w3wPb2Myt
- d4ckL0JDc0k0qk82UTvWU3VD2IqnptiicVFZs8ZRevA8qO695LEML7kEM/qfrkEKg9Syj0uW/
- yTciZwYNc70+j8pDy3ykD76AeOczc1la5P0cv/HSh84YP6Kw4TA140Uq/8mkiCJLV1uOUWWEh
- VcxxCjlA+hH2ldM4XSrcOsn7l8Hu6EzNdIuOf8/jIxG0MXZ2ZQ3jJlrA2PQY9oAzu6IeqWqu2
- NAy3TnYUtEdMX07VaM9MSLgAwgydZMXzDLn1HHJPzRSbHyL2RYIc4pVCUmPj5bSUJnXM0mHGG
- 34zc/Ab1guU1jXUVF5Uz81tQpn/uGTDDuErF0Ac9J5k086NQZU5myh+cAU7poBM9zjKHXGnkd
- qK09xYMhScsJCv4j06vb7BFSrx4FzXoeTzN9YD1Zxy8ipMjLrsvSauPr1bVgRin9Myo/hqHNQ
- WtKy45jDGE33KV8bXJ5gwOr21QJLMajJe2BwoTdPK2UqVBzyuogUm1zeKAmJjJiFrbhkcwqNg
- 5hv9mGM1icI5msMXZMLvfghh1yEyI/PIEsZ6UTiLM6pOmFBHALkrQ/S7gqUGsqKx1BlzcKdOi
- uKOjWvd96nLk9l8TmRNLya7Z9HqX92lDfaByqKLiE1dLAHY3yHnHhI=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|CH3PR12MB7641:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8c3b894-a32e-4646-fb19-08dc5ed95ee2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	EgqQ32nHHA9wxFwX6h2tFqZctNMSwmbhe2vBe30oBq0bED7NECyBcorM/JYCILnEUTvT/pDRDlVlZow++7nIp+7xo6XbS4SeaidyHuNANdU3glqnlQgJDImnLXSRkICRLA+hZhiGamrBABTrmH/ERMtWMXc7r8qZi+Y8GgZHdLG/y7i4yUkYAIFM6Zj0kzOAnB3/KxqGtb9y6oJnXnhYfpagEkytbuvYohyGLiG0Tr40UBC5wuptRJh70uYGlN1887+Li07zqYYJZSm8aWGDaIPzVFm+jEqqtu/6O3Srfki9Yen2+a87/YJJimQLyRTy9vcLeb7g6M5lM7JuEbOW/SdMQ3nF2J/FiUnYUnbYUE8iUZMCk+DZjVjrbrb7OS5EKxnf9mY6dFhC27qTO1QyL6U/drzv9nyyI3QNEduu0Qk3CTXAnR52QJOzxDnCMz0Ip64xx5kv/3tADJTsHi162e/7uQxvLAVfBLHSZm5KPf4MfTvQ8Lm0VPb4C3Mmg16FKB7Wzpv8aqId7okR+JFwTZmCMlxuazyfFbwQR7xsoKg78BUNDNZY1u0dlVtLl9eBs7BeAQGpcVWv33SENDuDoj+nBw5zrkygV6osgZ/KfcPqv7FE+iZFzW61IYr9aQP4GoDcKEuWGrY6R+0JdUuyLsN/LxpA5Ix6ftGPf8TDSNk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aDguiBuE8TDxNbpUGiQ5UGi2asOe6JEypJwciiYTFgWywpyRHm5DE5+WXdrw?=
+ =?us-ascii?Q?Pfr5JqmtzYb1Ehseh1lIpRFkEeKGyOl8zoP51YNbxH2vdtkUnMA+y4HRw+Dr?=
+ =?us-ascii?Q?UxOzAcna+N7ai7oKV0W07Rvmra8z6b0V/H6+6tEViO0lsxv//I/5nnnRvyCN?=
+ =?us-ascii?Q?5l+fikvpN+oaDhchC8Ar9VD6Bh4SKTb956ihVfEbeUvkZsmx5QgYTJSFeKbh?=
+ =?us-ascii?Q?NV+y6EclTDkMzpLp6XT97SPAzeBG7XBsCBnDqOmdrV6XptKj7AnzUZXyZ603?=
+ =?us-ascii?Q?IOfjmEP4372PwpQqGw0HKNzTyruAsS6/tQm5XyxwW1I76zVt6PG8/NqqLpug?=
+ =?us-ascii?Q?uo1ISNFacHDIviTNJAjF43ibSXGy31bcXyvt2PBBy5SllnZelOLOfHAMfjqR?=
+ =?us-ascii?Q?PtBhvX75MKam8RQFNO6snTAgRmRJU3xsS1yALJTnVTZdJJSZ70IirE5aUsfO?=
+ =?us-ascii?Q?oSYOvsUhR5T81FBCASOMcjiN2gKO1KOad0yt8EOD850Urp0bC8/DQh9STx6x?=
+ =?us-ascii?Q?jP+iNcDmV4GvcLEB086H5cqPyzgQJEZaUpKx5Q60R8IRgLhrOCgHS8zATbYq?=
+ =?us-ascii?Q?KuntqRiB9F+uRNBkCDNaGEDKvFtyy1qQ9sAJ7bKXlE8yUmM/lJv9U4Y0P0lV?=
+ =?us-ascii?Q?fFLRTNGm6uc+v/phMi7FOgEtPqSahUkFRTual9bWAbeSkWHFLg41ahrrl82j?=
+ =?us-ascii?Q?gMe+SqFTV/GooQLzm5WQV9jfCCfYsMTds5rQ+wwlJeO2OnT5p+SkNsDqDAGB?=
+ =?us-ascii?Q?0Nqrjjfm3CmJeBR5FQC4TK+ipEJPdMGehe2bZPpv7B2IzYeTaOQeNiEWQQuG?=
+ =?us-ascii?Q?rMYzgI2tIB4g3hPfwhvrpem5ys4D9flpuCD8xY/tgsZIStqU/FSEUsS+j5VL?=
+ =?us-ascii?Q?Gf2WFjzIrvqAUBSGC7/G4cQ/3PocpfXIm4iYz3xHaCo+LnCFdcXZTpgh0C33?=
+ =?us-ascii?Q?yJZgQgRw28yV2Eljbmq72y3qdX4cH0Lp2VhwzfihvOSQkrHIKHRQE6sm9773?=
+ =?us-ascii?Q?/8AtO+hPAqMkJhwn8zdKYOkspxqR9QNp4AghXyJQAq3bMwlT2sjhY+1SxBpp?=
+ =?us-ascii?Q?saaJ3jiWf5R0omOuYpNFvw7t2rk+Okpeqk0J17T9bZqC4xRK3ljooGal4y7Z?=
+ =?us-ascii?Q?RqcoAyMA3+XICCI6XPipSdi4GVUECLeva5O/nBOJb4Owg0eRCi2mQ40J6PMO?=
+ =?us-ascii?Q?dhhFMi/ouyJuE0OEnSZA8IgdJCTHjB0+Qq0FzEaBjmCcx7bFIxfITcNc0knD?=
+ =?us-ascii?Q?/LHwyCmBbrAWwSpIfDaNSBIEQRpcLwnrAr7GkOuDZ2qzL+KsaqwhzFR62INh?=
+ =?us-ascii?Q?hOmGlOMNv4X8W6hIJMJm3mZzIhslTLanEfvpl+enREdtd6LmrJapZ5682cXM?=
+ =?us-ascii?Q?aVM+6EaaKQnaX9rlXiyS6ZI3NlDwQpY8PR2XPuqSvUfts6W5rISGBQ83Aq7h?=
+ =?us-ascii?Q?yM9SDBi+ZAUtywz8zm7Km5MW/gUorHYup4HY2BzvSvYD0e+uHhOmNuSqjN8A?=
+ =?us-ascii?Q?51KGM38vS9/G2p4klO0J2Do8HGDQpZr+iAkHfgCIgBOQlJBltljy7mxc1YKF?=
+ =?us-ascii?Q?4fTUuW+ROCb9Ja6iwWpDpWSrZrnSn2v/sL6r11dq?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8c3b894-a32e-4646-fb19-08dc5ed95ee2
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 12:24:47.4051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4uoK/dvc/O6PE2Ao13q+nxTR/d45Knuer2IANvx7ibsyg4Evb+tSXrET+2bWUP1V
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7641
 
-On Wed, 17 Apr 2024 13:19:07 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On Wed, Apr 17, 2024 at 08:01:10AM +0000, Shameerali Kolothum Thodi wrote:
+> We do have plans to revive the SMMUv3 ECMDQ series posted a while back[0]
+> and looking at this series, I am just wondering whether it makes sense to have
+> a similar one with ECMDQ as well?  I see that the NVIDIA VCMDQ has a special bit 
+> to restrict the commands that can be issued from user space. If we end up assigning
+> a ECMDQ to user space, is there any potential risk in doing so?
 
-> On Tue, Apr 16, 2024 at 08:55:35AM -0400, Parker Newman wrote:
-> > From: Parker Newman <pnewman@connecttech.com>
-> >
-> > If a port fails to register with serial8250_register_8250_port() the
-> > kernel can crash when shutting down or module removal.
-> >
-> > This is because "priv->line[i]" will be set to a negative error code
-> > and in the exar_pci_remove() function serial8250_unregister_port() is
-> > called without checking if the "priv->line[i]" value is valid.
-> >
-> > Signed-off-by: Parker Newman <pnewman@connecttech.com>
-> > ---
-> >  drivers/tty/serial/8250/8250_exar.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/=
-8250/8250_exar.c
-> > index 501b9f3e9c89..f5a395ed69d1 100644
-> > --- a/drivers/tty/serial/8250/8250_exar.c
-> > +++ b/drivers/tty/serial/8250/8250_exar.c
-> > @@ -1671,7 +1671,8 @@ static void exar_pci_remove(struct pci_dev *pcid=
-ev)
-> >  	unsigned int i;
-> >
-> >  	for (i =3D 0; i < priv->nr; i++)
-> > -		serial8250_unregister_port(priv->line[i]);
-> > +		if (priv->line[i] >=3D 0)
-> > +			serial8250_unregister_port(priv->line[i]);
->
-> Is this a bug in the current driver?  If so, can you resend it on its
-> own so we can get it merged now?
->
+I think there is some risk/trouble, ECMDQ needs some enhancement
+before it can be really safe to use from less privileged software, and
+it wasn't designed to have an isolated doorbell page either.
 
-Yes it is, I can split this one out and send it on its own.
-Thanks,
-Parker
+> Not clear to me what are the major concerns here and maybe we can come up with 
+> something to address that in kernel.
 
-> thanks,
->
-> greg k-h
+I haven't looked deeply but my impression has been the ECMDQ is not
+workable to support virtualization. At a minimum it has no way to
+constrain the command flow to a VMID and to do VSID -> PSID
+translation.
 
+I suggest you talk directly to ARM on this if you are interested in
+this.
+
+Jason
