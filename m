@@ -1,30 +1,30 @@
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E14F13C3C4
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9C84D21
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349868; cv=none; b=pOnYgYudrgbQpzJ6L5cmZvSSi5XuDlcL/SXkgNM6sk2cUR4kxmeF88IUcqxhMIH6EUZcUjhsBqModRfxjhst4ApUqog19PMEsHoFVC040nMF54w8JRNbHcyFHg0xDFWlrrqBzQAxMTZOAoR0jCdot63u/dtyiXqLAVEsJAIUQZY=
+	t=1713349869; cv=none; b=rAWbbx848oxGNKnxi+8HfVwH2BPy5Cm2sRladiaGAPFCV46pu1lZwU4ugeLCNZ3HceSh7GlTYnsIa4VQQsriYv4fUjJVI7xb2TlqR3YKdNJ/S0GweQb7juZLepOMd6WYWdbFmnHhLe+2L31SRDbfJGa1ZIsTmtHSfOKBPQ2a/NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349868; c=relaxed/simple;
-	bh=VYGYacanQjsqexakylgPmDCVpmOxfFn9P+P9QCnq0fk=;
+	s=arc-20240116; t=1713349869; c=relaxed/simple;
+	bh=JmN3ov/nWWxkMqZnFvvpCKbxW2JVrc7zlR+YNMFMDVk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YuRE0Um00rm7viRR1OCbvqGOD7K96+H2mkbeWtpkUf2LhBaYnZ6DiWOP9yemQ/CTt151kJ5lHBQgGLQYU4hSnEGZ/upW2S5DoSJO3ZZT+XwRZ/4VWEX1y0ytrwCacYO3Q9QjASkIBFqqUByC6q0aiHFsN/CxSKtuGxUmXdFPG0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+	 MIME-Version:Content-Type; b=TaRmhdKCsLAvz+Ktr3Z5lbN1A2o/xlG1CUfnsume5uAufXKcPvmqrlqmnk9cuT/tupzyZOOTTyeDVL610wpHzYei6pXnWJOvDD5sTngNSnaV+ZA2lEHhfRAsYnMB/+cY7wtV7PiERoKniPJ5gr2RCMZyOiZ5oxzIFq3OWXcPTLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by xavier.telenet-ops.be with bizsmtp
-	id CAX42C0010SSLxL01AX4DW; Wed, 17 Apr 2024 12:31:04 +0200
+	by albert.telenet-ops.be with bizsmtp
+	id CAX32C00P0SSLxL06AX3Va; Wed, 17 Apr 2024 12:31:04 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rx2Yd-009LEI-Tx;
+	id 1rx2Yd-009LE9-M6;
 	Wed, 17 Apr 2024 12:31:03 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rx2Xe-00FLS0-CU;
+	id 1rx2Xe-00FLSF-Fd;
 	Wed, 17 Apr 2024 12:29:26 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Ulf Hansson <ulf.hansson@linaro.org>
@@ -32,9 +32,9 @@ Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
 	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] pmdomain: renesas: rcar-sysc: Absorb rcar_sysc_ch into rcar_sysc_pd
-Date: Wed, 17 Apr 2024 12:29:22 +0200
-Message-Id: <672805a8c52ce63200e342212bbe6f84a445397b.1713348705.git.geert+renesas@glider.be>
+Subject: [PATCH 4/4] pmdomain: renesas: rcar-sysc: Add R-Car M3-W power-off delay quirk
+Date: Wed, 17 Apr 2024 12:29:25 +0200
+Message-Id: <ecbc3465c598084c904dd3714e2894463094ed9a.1713348705.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1713348705.git.geert+renesas@glider.be>
 References: <cover.1713348705.git.geert+renesas@glider.be>
@@ -44,178 +44,76 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Until commit 7e8a50df26f4e700 ("soc: renesas: rcar-sysc: Drop legacy
-handling") in v4.19, the rcar_sysc_ch structure was part of the API for
-legacy board code not yet using DT.  Since then, there is no longer a
-reason to keep it as a separate structure.
+R-Car M3-W needs a delay of 1 µs before powering off the A3IR and A3VC
+power domains.  Add support for this using a new flag, which indicates
+that a power area is subject to this quirk.
 
-Moreover, a future quirk handling will need access to the rcar_sysc_pd
-structure's flags member in rcar_sysc_pwr_on_off().  Hence absorb the
-rcar_sysc_ch structure into the rcar_sysc_pd structure, and pass around
-the latter instead of the former.
+Inspired by a patch in the BSP by Dien Pham.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pmdomain/renesas/rcar-sysc.c | 54 +++++++++++++---------------
- 1 file changed, 24 insertions(+), 30 deletions(-)
+Changes compared to the BSP:
+  - Use a new flag in the SoC-specific area description instead of
+    comparing PM Domain names (which applied the quirk to all SoCs),
+  - Support for R-Car H3 ES1.x was dropped in v6.4, so it no longer
+    needs handling.
+---
+ drivers/pmdomain/renesas/r8a77960-sysc.c | 6 ++++--
+ drivers/pmdomain/renesas/rcar-sysc.c     | 4 ++++
+ drivers/pmdomain/renesas/rcar-sysc.h     | 1 +
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
-index 35d9aa0dfab867fc..a60ce08e7d3b09cb 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-sysc.c
-@@ -56,17 +56,20 @@
- 
- #define RCAR_PD_ALWAYS_ON	32	/* Always-on power area */
- 
--struct rcar_sysc_ch {
-+struct rcar_sysc_pd {
-+	struct generic_pm_domain genpd;
- 	u16 chan_offs;
- 	u8 chan_bit;
- 	u8 isr_bit;
-+	unsigned int flags;
-+	char name[];
+diff --git a/drivers/pmdomain/renesas/r8a77960-sysc.c b/drivers/pmdomain/renesas/r8a77960-sysc.c
+index e6f2c3f961255f40..2ab3f565d2b0f889 100644
+--- a/drivers/pmdomain/renesas/r8a77960-sysc.c
++++ b/drivers/pmdomain/renesas/r8a77960-sysc.c
+@@ -32,12 +32,14 @@ static const struct rcar_sysc_area r8a77960_areas[] __initconst = {
+ 	{ "ca53-cpu3",	0x200, 3, R8A7796_PD_CA53_CPU3,	R8A7796_PD_CA53_SCU,
+ 	  PD_CPU_NOCR },
+ 	{ "cr7",	0x240, 0, R8A7796_PD_CR7,	R8A7796_PD_ALWAYS_ON },
+-	{ "a3vc",	0x380, 0, R8A7796_PD_A3VC,	R8A7796_PD_ALWAYS_ON },
++	{ "a3vc",	0x380, 0, R8A7796_PD_A3VC,	R8A7796_PD_ALWAYS_ON,
++	  PD_OFF_DELAY },
+ 	{ "a2vc0",	0x3c0, 0, R8A7796_PD_A2VC0,	R8A7796_PD_A3VC },
+ 	{ "a2vc1",	0x3c0, 1, R8A7796_PD_A2VC1,	R8A7796_PD_A3VC },
+ 	{ "3dg-a",	0x100, 0, R8A7796_PD_3DG_A,	R8A7796_PD_ALWAYS_ON },
+ 	{ "3dg-b",	0x100, 1, R8A7796_PD_3DG_B,	R8A7796_PD_3DG_A },
+-	{ "a3ir",	0x180, 0, R8A7796_PD_A3IR,	R8A7796_PD_ALWAYS_ON },
++	{ "a3ir",	0x180, 0, R8A7796_PD_A3IR,	R8A7796_PD_ALWAYS_ON,
++	  PD_OFF_DELAY },
  };
  
- static void __iomem *rcar_sysc_base;
- static DEFINE_SPINLOCK(rcar_sysc_lock); /* SMP CPUs + I/O devices */
- static u32 rcar_sysc_extmask_offs, rcar_sysc_extmask_val;
  
--static int rcar_sysc_pwr_on_off(const struct rcar_sysc_ch *sysc_ch, bool on)
-+static int rcar_sysc_pwr_on_off(const struct rcar_sysc_pd *pd, bool on)
- {
- 	unsigned int sr_bit, reg_offs;
- 	u32 val;
-@@ -88,16 +91,15 @@ static int rcar_sysc_pwr_on_off(const struct rcar_sysc_ch *sysc_ch, bool on)
+diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
+index a9d92e38fcee902c..b99326917330f5f1 100644
+--- a/drivers/pmdomain/renesas/rcar-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-sysc.c
+@@ -90,6 +90,10 @@ static int rcar_sysc_pwr_on_off(const struct rcar_sysc_pd *pd, bool on)
+ 	if (ret)
  		return -EAGAIN;
  
++	/* Power-off delay quirk */
++	if (!on && (pd->flags & PD_OFF_DELAY))
++		udelay(1);
++
  	/* Submit power shutoff or power resume request */
--	iowrite32(BIT(sysc_ch->chan_bit),
--		  rcar_sysc_base + sysc_ch->chan_offs + reg_offs);
-+	iowrite32(BIT(pd->chan_bit), rcar_sysc_base + pd->chan_offs + reg_offs);
+ 	iowrite32(BIT(pd->chan_bit), rcar_sysc_base + pd->chan_offs + reg_offs);
  
- 	return 0;
- }
+diff --git a/drivers/pmdomain/renesas/rcar-sysc.h b/drivers/pmdomain/renesas/rcar-sysc.h
+index 8c4ec36ed7da2f9d..07ffce310686b2ce 100644
+--- a/drivers/pmdomain/renesas/rcar-sysc.h
++++ b/drivers/pmdomain/renesas/rcar-sysc.h
+@@ -16,6 +16,7 @@
+ #define PD_CPU		BIT(0)	/* Area contains main CPU core */
+ #define PD_SCU		BIT(1)	/* Area contains SCU and L2 cache */
+ #define PD_NO_CR	BIT(2)	/* Area lacks PWR{ON,OFF}CR registers */
++#define PD_OFF_DELAY	BIT(3)	/* Area is subject to power-off delay quirk */
  
--static int rcar_sysc_power(const struct rcar_sysc_ch *sysc_ch, bool on)
-+static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
- {
--	unsigned int isr_mask = BIT(sysc_ch->isr_bit);
--	unsigned int chan_mask = BIT(sysc_ch->chan_bit);
-+	unsigned int isr_mask = BIT(pd->isr_bit);
-+	unsigned int chan_mask = BIT(pd->chan_bit);
- 	unsigned int status, k;
- 	unsigned long flags;
- 	int ret;
-@@ -125,12 +127,11 @@ static int rcar_sysc_power(const struct rcar_sysc_ch *sysc_ch, bool on)
- 
- 	/* Submit power shutoff or resume request until it was accepted */
- 	for (k = 0; k < PWRER_RETRIES; k++) {
--		ret = rcar_sysc_pwr_on_off(sysc_ch, on);
-+		ret = rcar_sysc_pwr_on_off(pd, on);
- 		if (ret)
- 			goto out;
- 
--		status = ioread32(rcar_sysc_base +
--				  sysc_ch->chan_offs + PWRER_OFFS);
-+		status = ioread32(rcar_sysc_base + pd->chan_offs + PWRER_OFFS);
- 		if (!(status & chan_mask))
- 			break;
- 
-@@ -158,28 +159,21 @@ static int rcar_sysc_power(const struct rcar_sysc_ch *sysc_ch, bool on)
- 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
- 
- 	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
--		 sysc_ch->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
-+		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
- 	return ret;
- }
- 
--static bool rcar_sysc_power_is_off(const struct rcar_sysc_ch *sysc_ch)
-+static bool rcar_sysc_power_is_off(const struct rcar_sysc_pd *pd)
- {
- 	unsigned int st;
- 
--	st = ioread32(rcar_sysc_base + sysc_ch->chan_offs + PWRSR_OFFS);
--	if (st & BIT(sysc_ch->chan_bit))
-+	st = ioread32(rcar_sysc_base + pd->chan_offs + PWRSR_OFFS);
-+	if (st & BIT(pd->chan_bit))
- 		return true;
- 
- 	return false;
- }
- 
--struct rcar_sysc_pd {
--	struct generic_pm_domain genpd;
--	struct rcar_sysc_ch ch;
--	unsigned int flags;
--	char name[];
--};
--
- static inline struct rcar_sysc_pd *to_rcar_pd(struct generic_pm_domain *d)
- {
- 	return container_of(d, struct rcar_sysc_pd, genpd);
-@@ -190,7 +184,7 @@ static int rcar_sysc_pd_power_off(struct generic_pm_domain *genpd)
- 	struct rcar_sysc_pd *pd = to_rcar_pd(genpd);
- 
- 	pr_debug("%s: %s\n", __func__, genpd->name);
--	return rcar_sysc_power(&pd->ch, false);
-+	return rcar_sysc_power(pd, false);
- }
- 
- static int rcar_sysc_pd_power_on(struct generic_pm_domain *genpd)
-@@ -198,7 +192,7 @@ static int rcar_sysc_pd_power_on(struct generic_pm_domain *genpd)
- 	struct rcar_sysc_pd *pd = to_rcar_pd(genpd);
- 
- 	pr_debug("%s: %s\n", __func__, genpd->name);
--	return rcar_sysc_power(&pd->ch, true);
-+	return rcar_sysc_power(pd, true);
- }
- 
- static bool has_cpg_mstp;
-@@ -252,12 +246,12 @@ static int __init rcar_sysc_pd_setup(struct rcar_sysc_pd *pd)
- 		goto finalize;
- 	}
- 
--	if (!rcar_sysc_power_is_off(&pd->ch)) {
-+	if (!rcar_sysc_power_is_off(pd)) {
- 		pr_debug("%s: %s is already powered\n", __func__, genpd->name);
- 		goto finalize;
- 	}
- 
--	rcar_sysc_power(&pd->ch, true);
-+	rcar_sysc_power(pd, true);
- 
- finalize:
- 	error = pm_genpd_init(genpd, &simple_qos_governor, false);
-@@ -412,9 +406,9 @@ static int __init rcar_sysc_pd_init(void)
- 
- 		memcpy(pd->name, area->name, n);
- 		pd->genpd.name = pd->name;
--		pd->ch.chan_offs = area->chan_offs;
--		pd->ch.chan_bit = area->chan_bit;
--		pd->ch.isr_bit = area->isr_bit;
-+		pd->chan_offs = area->chan_offs;
-+		pd->chan_bit = area->chan_bit;
-+		pd->isr_bit = area->isr_bit;
- 		pd->flags = area->flags;
- 
- 		error = rcar_sysc_pd_setup(pd);
-@@ -473,10 +467,10 @@ static int rcar_sysc_power_cpu(unsigned int idx, bool on)
- 			continue;
- 
- 		pd = to_rcar_pd(genpd);
--		if (!(pd->flags & PD_CPU) || pd->ch.chan_bit != idx)
-+		if (!(pd->flags & PD_CPU) || pd->chan_bit != idx)
- 			continue;
- 
--		return rcar_sysc_power(&pd->ch, on);
-+		return rcar_sysc_power(pd, on);
- 	}
- 
- 	return -ENOENT;
+ #define PD_CPU_CR	PD_CPU		  /* CPU area has CR (R-Car H1) */
+ #define PD_CPU_NOCR	PD_CPU | PD_NO_CR /* CPU area lacks CR (R-Car Gen2/3) */
 -- 
 2.34.1
 
