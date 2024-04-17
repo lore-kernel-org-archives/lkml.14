@@ -1,124 +1,131 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB2813B5AE;
-	Wed, 17 Apr 2024 10:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7B913D299;
+	Wed, 17 Apr 2024 10:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349190; cv=none; b=MiFv6nhtUWOXrdWlg3DEQfhWhTdnEt/Yp3x3Bqey2klnhkwZwexh1y9gA0soG4OTxwqpoD7qs7oSvc/rQlxjvx+GQXDfB93RWSUVkOr55WCNcgzFIsozWw/P2iJQ6cIplHNhcjMLFKgATxr+sAJ+va2JOvl9mm9NnfsJznBaMi8=
+	t=1713349194; cv=none; b=MjTYvX6wGULxzkSX4Ch7WKjGq2do6GRh7ASXxIxyCVCBb4mdsDhW/YPuXROa0jIWKsaa8GWprIsgE0M1TlCulNqZF7azCyS2G8JO6Yuu3RPFceFLhk0eRXLOE5jlGgt5f7SAM2yooeRgLeDz99Xr/QTJ12MK7bUs7dVrw85Jmiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349190; c=relaxed/simple;
-	bh=KpH/GhjCXXgVAzGKKcfwNjiWuVqRoJLtjOgyw/WOkf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p2rh/e6B0WU+KOxvroelzu+Yg9gSy/iTG/zbC0s2DtvwQ8x7aQwpR3ZEQSag6D24yCN3h9B4izThj+LR/UA8edItmrkDIxtnRYPHVKrRCG30jUIp3YJM9EPeYbpRokSRGRaHS7isXDoTDbrTcBu2bGjBQJbSua/Y3FV0UgJPWI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D734339;
-	Wed, 17 Apr 2024 03:20:15 -0700 (PDT)
-Received: from [10.1.39.28] (FVFF763DQ05P.cambridge.arm.com [10.1.39.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCD063F64C;
-	Wed, 17 Apr 2024 03:19:44 -0700 (PDT)
-Message-ID: <b40b263b-3744-41d9-be45-99b38c7f5e6e@arm.com>
-Date: Wed, 17 Apr 2024 11:19:42 +0100
+	s=arc-20240116; t=1713349194; c=relaxed/simple;
+	bh=O9e24V6PiADRPuas4hKybpLpvCD9gH1/TlfDs45hvPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ez8bmR6CLj37btGMAG+3bTIACIBrY4VGdWbc71yDZ3v6E72iRpSkuSET1tmrVam345UYlKQ/DMFBIk2NLd6DC0uf7Lgu/zCrpzFxzDUiTq3zGD0j4/troB+uSmaDsyALTIrEr5NHKW+vP3vkp+3WDbERqfgYhQ8NLmUrisbeaKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YlQOTkLL; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlQOTkLL"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ed691fb83eso4440778b3a.1;
+        Wed, 17 Apr 2024 03:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713349192; x=1713953992; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=f5dQLAEVl6XJIGmhvn4StU4aF5gN006BMgNvMVPMtZ8=;
+        b=YlQOTkLLXiF4KHKRG0nhCc1gpCjvBrMkyPWaicLnGzC8YDW0HjmadA1aKZByvD7Zw8
+         0lbmj9VZwqNdOLVpM7IsUVMQyGMtVNw+4V/9UNg1GqcWqU25QfGHXCRNLqCgQkqGvod2
+         zFoSAjSbb4mrKSHqSVYVpCCNam6wT5JtXjwhWhrwg8YhunrbzPnYIHd8dTpbZdqM1KmU
+         gT6shGbnmZ0zwLJpLwE//sn4jf+gXCvw0Yl27Xnu1eVKXdBZIkNZkRKZbfoKVqsOxKAr
+         YFtGJ1zbwBLpb82q7IheKgnNhWjIJ1px3akmUozgdvV/SYnSWbKLm4+9HvcqzuVeY27Z
+         XZ+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713349192; x=1713953992;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f5dQLAEVl6XJIGmhvn4StU4aF5gN006BMgNvMVPMtZ8=;
+        b=JEwttoWX/NAI+AM8Mp2xjEb1LEpy8RoVCS2hXCJJxOX9ojUVi5WOuJx7F3TMsiHAGb
+         DYev4v79tBAhjGGKmmY/pccyWiSSaO+IFUs+N1BzX5AQYQmytvNfjclWMS0MJrb/4MGT
+         PqMEevnWURKYR3BIu8SvZW6MFZ4jkgLituBqzaDf3+hyiZmvq8ver3LnvnZ24bysp/P8
+         o8p/8PQLdjXWq2kNTPHOX4jYR4KhAcr83wF7coc9Eh6KU/SfpLpL4HW5dCZz1IexQtCP
+         lP9ace8Q+4WE84iF2BYXXiiki6j5TiknZYIHRot8sXtVhrtGzLJ//xSvxCDs7N+B3BnU
+         Fcxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVL/x2qU8UfIx+qHtUnlnL9eE5/UJFarEfMMjh3moxiktM/EHon2kJykBCZHR+aYHAO/ss1FADgX2P6gVNNeAbG5ByajOTqSCE+RYhmKyNHVynufDCAlJsydcP0bDqXjxxgs+GQZYJZMjY
+X-Gm-Message-State: AOJu0YxXsDJ5U/p6lTitiV5iwAIQhxdiqrUk04mS633V/7RzDtXerZ+n
+	0607vgQNf/HBibFdpcW+NlSPKaCsLhuXa0Ifl7cXmHFyRQkkqHQ663djtQ==
+X-Google-Smtp-Source: AGHT+IGaaZja4PRU1ctflcpS2ogtjcMwFa+oKkRP67URbw+72wWAhM4uMJwv+s5bxIQMO5SGVuCjEA==
+X-Received: by 2002:a05:6a00:3913:b0:6ea:8e89:7faf with SMTP id fh19-20020a056a00391300b006ea8e897fafmr17078587pfb.28.1713349192337;
+        Wed, 17 Apr 2024 03:19:52 -0700 (PDT)
+Received: from libra05 ([143.248.188.128])
+        by smtp.gmail.com with ESMTPSA id y7-20020a62b507000000b006ed00ea504asm10309282pfe.159.2024.04.17.03.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 03:19:52 -0700 (PDT)
+Date: Wed, 17 Apr 2024 19:19:48 +0900
+From: Yewon Choi <woni9911@gmail.com>
+To: "Starke, Daniel" <daniel.starke@siemens.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	"Dae R. Jeong" <threeearcat@gmail.com>,
+	syzbot+6e3e8f30f269f5028e5d@syzkaller.appspotmail.com
+Subject: Re: tty: n_gsm: race condition in gsmld_ioctl
+Message-ID: <Zh+iROsYkqoRsJQj@libra05>
+References: <Zh5Zj35zeobGGzKj@libra05>
+ <69b4cd22-3a02-4d5c-a110-152b8ba8200b@kernel.org>
+ <DB9PR10MB5881D2170678C169FB42A423E0082@DB9PR10MB5881.EURPRD10.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/43] arm64: RME: Keep a spare page delegated to the
- RMM
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
- <20240412084309.1733783-13-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240412084309.1733783-13-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB9PR10MB5881D2170678C169FB42A423E0082@DB9PR10MB5881.EURPRD10.PROD.OUTLOOK.COM>
 
-Hi Steven
-
-On 12/04/2024 09:42, Steven Price wrote:
-> Pages can only be populated/destroyed on the RMM at the 4KB granule,
-> this requires creating the full depth of RTTs. However if the pages are
-> going to be combined into a 4MB huge page the last RTT is only
-
-minor nit: 2MB huge page.
-
-> temporarily needed. Similarly when freeing memory the huge page must be
-> temporarily split requiring temporary usage of the full depth oF RTTs.
+On Tue, Apr 16, 2024 at 12:26:30PM +0000, Starke, Daniel wrote:
+> > We think either (1) gsm_dlci_alloc() should hold a lock(mutex) and do 
+> > internal check about whether gsm->dlci[addr] is NUll or not, OR
+> > (2) all callers of gsm_dlci_alloc() should hold gsm->mutex and check 
+> > whether gsm->dlci[addr] is NUll or not (like gsmtty_install()).
+> > 
+> > Could you check this? If it makes sense, we will write a patch 
+> > following one of the suggestions.
 > 
-> To avoid needing to perform a temporary allocation and delegation of a
-> page for this purpose we keep a spare delegated page around. In
-> particular this avoids the need for memory allocation while destroying
-> the realm guest.
+> We are currently dealing with multiple race conditions in the n_gsm. Not
+> only for the syzkaller reports but in recent exploits for example, too.
+> I believe we need an overall concept/solution for these.
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/include/asm/kvm_rme.h | 5 +++++
->   arch/arm64/kvm/rme.c             | 8 ++++++++
->   2 files changed, 13 insertions(+)
+> Currently, the following actors can race:
+> - ioctl (e.g. resetting the mux or one of its DLCIs)
+> - ldisc callbacks (e.g. receiving SABM or DISC in gsm_queue())
+> - tty callbacks (e.g. gsmtty_hangup())
+> - internal write task (gsmld_write_task())
+> - internal timers (e.g. gsm_control_keep_alive())
+> - driver removal
 > 
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index cf8cc4d30364..fba85e9ce3ae 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -50,6 +50,9 @@ enum realm_state {
->    * @state: The lifetime state machine for the realm
->    * @rd: Kernel mapping of the Realm Descriptor (RD)
->    * @params: Parameters for the RMI_REALM_CREATE command
-> + * @spare_page: A physical page that has been delegated to the Realm world but
-> + *              is otherwise free. Used to avoid temporary allocation during
-> + *              RTT operations.
->    * @num_aux: The number of auxiliary pages required by the RMM
->    * @vmid: VMID to be used by the RMM for the realm
->    * @ia_bits: Number of valid Input Address bits in the IPA
-> @@ -60,6 +63,8 @@ struct realm {
->   	void *rd;
->   	struct realm_params *params;
->   
-> +	phys_addr_t spare_page;
-> +
->   	unsigned long num_aux;
->   	unsigned int vmid;
->   	unsigned int ia_bits;
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 658d14e8d87d..9652ec6ab2fd 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -103,6 +103,7 @@ static int realm_create_rd(struct kvm *kvm)
->   	}
->   
->   	realm->rd = rd;
-> +	realm->spare_page = PHYS_ADDR_MAX;
->   
->   	if (WARN_ON(rmi_rec_aux_count(rd_phys, &realm->num_aux))) {
->   		WARN_ON(rmi_realm_destroy(rd_phys));
-> @@ -283,6 +284,13 @@ void kvm_destroy_realm(struct kvm *kvm)
->   
->   	rme_vmid_release(realm->vmid);
->   
-> +	if (realm->spare_page != PHYS_ADDR_MAX) {
-> +		/* Leak the page if the undelegate fails */
-> +		if (!WARN_ON(rmi_granule_undelegate(realm->spare_page)))
-> +			free_page((unsigned long)phys_to_virt(realm->spare_page));
-> +		realm->spare_page = PHYS_ADDR_MAX;
-> +	}
-> +
->   	for (i = 0; i < pgt->pgd_pages; i++) {
->   		phys_addr_t pgd_phys = kvm->arch.mmu.pgd_phys + i * PAGE_SIZE;
->   
+> Each with another and ioctl's from multiple threads.
+> 
+> Guarding these is not trivial for the following reasons:
+> - execution context may not allow sleep (timers, write task, tty callbacks?)
+> - creating an atomic section may conflict inner sleeps (e.g. ioctl)
+> - dead-locking needs to be considered
+> - locking may introduce high performance bottlenecks
+> 
+> Still, not guarding one of the racing actors does not appears to be
+> possible as I see it.
+> 
+> Unfortunately, for the same reason the sleep while atomic issue when using
+> a console on a virtual tty has not been fixed yet, I have no solution at
+> hand. We are dealing with a quite complex situation here.
+> 
+> Nevertheless, creating many small patches here and there should not be our
+> solution for obvious reasons. This does not give a complete solution and
+> makes it harder to find the remaining corner cases.
+> 
+> I can assist to find a solution here, but I have not enough time to do this
+> alone at the moment.
+> 
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Thank you for your comprehensive explanation.
+
+As you described, there are many concurrency issues entangled each other and 
+fixing single one will be rather confusing.
+I hope this mail is supportive on solving the problems.
+
+Sincerely,
+Yewon Choi
+
+> Best regards,
+> Daniel Starke
