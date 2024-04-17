@@ -1,379 +1,272 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D009A13C68F;
-	Wed, 17 Apr 2024 08:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713344114; cv=fail; b=GC9xzVC3ILlPL6UybkGKLu8v8cyNXDw2DUrfKvzE1C8Taaxkw3tQhUiguoIyVNosSGPeT+Gl+qQOrow8DgJlesL4Kx7JvXZlRn6PcRYI26/Rz+lFiOArCIvD2LqYZnsKyik4InEKrrO/jRgvSat7r0v0S6/NjhCGEbFOOyV3Tl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713344114; c=relaxed/simple;
-	bh=AfMSgWSQr14Kq7RRN+mCLxiDZzv7bYqh+EGqO3emaZE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k8p5wKIP0cyb+b21mPfw028tZYFH9p5q6BNYf2y/5W25p0CE0PMrCKirFOtGOqcEluQKTWrV4ine5tj0rYs08/R1dbHZfNq8QI/EKZ+PrHjdiSSR/WtfjAwX6lDIRnoJOMm/f9gyXk75qmbqh+tIwy31ZBfH4vMJ4EA95OkVI5o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nwjekkMu; arc=fail smtp.client-ip=40.107.92.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nwjekkMu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FRbE/wOvj6ultxaGaasZ14lnvQOKyQxBTsF61H9bE6wG9TUj3i4iJSxdvhNmY39tPNi5DxAC2ZDiOfOrIRAhLIdF/GAFul/OY6lWhehNlvCJ6OV8bi8iNXeO8g5wfeVlCq5suGUy2nvl3NIe99ktYk9sonvP1UFI9+m0oley4r8+eFnAvApz7CAejocHkGaV8Dbh5y0bxJ/g6jPaVOidiVaaIMzEk3D0Wqe0Q3+y7HEeu4pUSo34h1Y6E0DXdSYlsQTUlifBmknM8ysZ5rH0Uzc9EAhsryhk/VevcUudqN/iOwmUnG3F8ZQ0H5+8kC2k6npE32mfPrU+7+Vr+zIPyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=38Gdhk3KN04AsB2+FtnOPufQa9OPd0VNkEYGnuMTvIE=;
- b=P1xGKjepoa/KgooQaK7BjXsJ3XuPQPWTLOuSdY263YXh90s2e0DLkixrf8f1QHbq6sHulSWREHBEgl3FKCQ3K9JCOOsIrtf5hjV/8UghnQ5YkieptqwAVdWpKOnLiP7btMyFhbRHhxtzluhWZ8xgcjBd+shXzkki3yVYkp6yFJBBrXaLXeHu5pPP7POOgXY48+D+OY0jp4FR3qTGxhSjPCS0wNR8vsFhGnP+pqC4+wPpX8JfrCt/5NCZ+l98pYbFL9snhYt4dLJ0SZCmwgzq8A2leA+lh95E8AUhQRP/gNVZ1r+2bnyhGRldsJXPdO7FnUVPQl4GwPgtMZORbwbqrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=38Gdhk3KN04AsB2+FtnOPufQa9OPd0VNkEYGnuMTvIE=;
- b=nwjekkMuS0CHuT3+UAbsKiXQVDklKPQ/afh81desiWCGGAJTnPDNmrjWn4/lzq7dMsmJu1LIf5rfFSxjiYL/zGjg5De6oTRA2PbKddCyQ0l94K8FSdQCtUXxTcL3PoN9Jl+fQ2XwzO6ssYkkPgXlrFruGMQE8lEBykH6lfnF6wsvR780XQHyb13i3Jmtdn2kxXYmp7ydW9xN2H+ZUJdf615s2sogdAxm0DbyJn3p/QAFYvqFuJ21AJeaGG9YYi5Lp+4ZTsmij/glCw+1D2jD/beBrGurfgKzNqHemBtjvaBbZfYxN2yV/JSXAsNMQpXrLP92XjjlCQ0o5YvYY1sZsQ==
-Received: from DM6PR17CA0012.namprd17.prod.outlook.com (2603:10b6:5:1b3::25)
- by CH3PR12MB8536.namprd12.prod.outlook.com (2603:10b6:610:15e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Wed, 17 Apr
- 2024 08:55:10 +0000
-Received: from DS1PEPF00017094.namprd03.prod.outlook.com
- (2603:10b6:5:1b3:cafe::de) by DM6PR17CA0012.outlook.office365.com
- (2603:10b6:5:1b3::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
- Transport; Wed, 17 Apr 2024 08:55:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS1PEPF00017094.mail.protection.outlook.com (10.167.17.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Wed, 17 Apr 2024 08:55:09 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 17 Apr
- 2024 01:55:01 -0700
-Received: from dev-r-vrt-155.mtr.labs.mlnx (10.126.230.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Wed, 17 Apr 2024 01:54:55 -0700
-From: Danielle Ratson <danieller@nvidia.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <corbet@lwn.net>, <linux@armlinux.org.uk>,
-	<sdf@google.com>, <kory.maincent@bootlin.com>,
-	<maxime.chevallier@bootlin.com>, <vladimir.oltean@nxp.com>,
-	<przemyslaw.kitszel@intel.com>, <ahmed.zaki@intel.com>,
-	<richardcochran@gmail.com>, <shayagr@amazon.com>, <paul.greenwalt@intel.com>,
-	<jiri@resnulli.us>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mlxsw@nvidia.com>, <petrm@nvidia.com>,
-	<idosch@nvidia.com>, <danieller@nvidia.com>
-Subject: [PATCH net-next v3 09/10] ethtool: Add ability to flash transceiver modules' firmware
-Date: Wed, 17 Apr 2024 11:53:46 +0300
-Message-ID: <20240417085347.2836385-10-danieller@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240417085347.2836385-1-danieller@nvidia.com>
-References: <20240417085347.2836385-1-danieller@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E9C13C8F7
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713344119; cv=none; b=g5u3sajXHYNcw43EVRHxuVZQCF9CMfwGktrp7IveLrSLFJ+ZPLpNAu18jcv9rTshmyX9ajtrYDiVTu8fnIUJN8FHcN3Z2eJPEmffk1f7VPXxIJeMv7Fs9k1emKcL0/IkyoLN8/AOjmtsXeuAMckVPSgpEXAELBDqiiAtw6INpyc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713344119; c=relaxed/simple;
+	bh=H57y7Y7SnlHSeuSUqZhBHFGHI8cMySAbnqmyq0S06Ng=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VBvP/OiqJrMa1JUyMjv8b1WaPs66ybDc4CQhtbcY8eJH56rkRXThCzpUMjlHgodQ5xQAuKfwnW+4LE702pERxMBAasB85LV7j8sGD6JUYD3aKa4ROJKJhDCIXVblrl4zT52yKkbdmd4bIYofD+pu0QO1Ph9n10TwpFxQHEFboEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d65ffc786fso554717239f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 01:55:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713344117; x=1713948917;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zh1HrmkMpxkFxJvtc6D3gSemQqObtNz2dVEHVmtIHrA=;
+        b=bbNmU7yQl8WoJ6IXiZ1/mNHVA8HKGyigwoB+0zqJwcfIBSc5s1HkbqyZjnQ6G+RYSE
+         PV5fOKxIEBkfBrbEmpjhW2XuX5eRAPoaO5/eRih+H85Z7N8E5koCUfDW+B6otAevnU2A
+         nci8otfv4flsH5EPUvJYQxbm2AQwzmdRg8ReO2XHyWs+vyYGYIbb7m+gwZR2CChS/J5e
+         Io8KpaRojo/rIxkfGa4RSGPsELRqxX1nPnQzsex3lUIGusNfbQHwjS59136OIP9zLvNt
+         tWWLzEnXnU5vWacBHKAx4SajU13izD9XFpoXtq4UJBM76KrACX3QST7D8WelT+OuC/Vb
+         rZyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXw/tcJUy5qUEpGbbCLjwvK0n5pP+awUb0diaVAkwUHaIkeZWCwyAk/5RA3iN5ZwuCKrDHkPv+lz2iFEGI117g6QOP1AgXb/AJUgS1V
+X-Gm-Message-State: AOJu0Yz3yBtzrsghAXiV2UW0KUrt4oAB9nX+KE9/uBIHYamJwFu783de
+	kogrHbhzjMel/lnxZrWn3LWOtJsh61uPRm08NsWmXGF+r9rIJUKEgqwSurKKnjOzLA+FGBfbB5g
+	CbipAFv3eK2gdVTjMmW54Egpgf24drenb4k0IfBnkS+p6PaG7nyP8EpE=
+X-Google-Smtp-Source: AGHT+IF/9ofp2ga6ea7Pm+pvk/+Urt7/h+0S2w+bfsKAYoQCWa5yhnc+eou4k2du+7yaWbUUDLDcDY5fvOCS1gtdAPZ35jfhWPOh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017094:EE_|CH3PR12MB8536:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80645e5a-8c51-4fb3-f04a-08dc5ebc1653
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	z33CSchLGsZB+/hYART6kqnVhrHLBKgUx90kfJokbXFLPIj5ddSZEODg/vft5i+2TkFlX9flmA1aVO7XJpH142NmuDnooaEaoyIoeYSw476zOHb7Q5/0/FhUOk1GJjI15XQbjAiIvqiH0aPA2lFd9kxg0S6OeH0+WTODRL5KfSJBFI8KbtQMKcjQSIv26UK/oPv9WpYG3Bb5mFyoVJhDW0aOMPYqlz9+k47sD/+V8ztb2dE8pAY7t/4OdqNHk1gSgY9oKlWa7VUzO5yP3X1f7lKto2+FBSGqpVoc9tYN9v4GkVLnb42XwQUsTJZpNaevuRDm7faT7bFyrlCeC7AD/6G7pg0wsmiBqwr78J3j41AsEmS9t6XstEztmkahmFwiaaxTVz64Q1VN7pzyE1JRXi2nYxqYIKq/MEGN44+IuXdOEmm6ZbKWAFidH0JmEyIzelDQmJ9ZrC0o8vE1ICRhxm03oVow+9NfIhxwn611QxXKCGqObifQFTDdXT9YRZm48qCtmsQLp9SeECD3Yzvvgvm8F2535TOOM90WVmcCrpQWwqOFCuqmn39csBy+TsO15N1WFRQBfwmC6FkMRlBSIq83baAODLHu/fn6AEylKxQyDwC58ODAp359Gw1Fmxcaiq+5yjp+6G1FmGGe0QPTXulWBiWeF8ec3/ejL/+fYQca2i1Nbfwpva5QVQ9HutDOHjbb1EeF9McJ69yiHIolQ0wd1sK1DTcQFmk9FVQT/ZwOV5OKBJ6vWNifFFjCIrrk
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 08:55:09.9667
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80645e5a-8c51-4fb3-f04a-08dc5ebc1653
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017094.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8536
+X-Received: by 2002:a05:6638:411c:b0:482:f1bb:d927 with SMTP id
+ ay28-20020a056638411c00b00482f1bbd927mr608210jab.3.1713344117000; Wed, 17 Apr
+ 2024 01:55:17 -0700 (PDT)
+Date: Wed, 17 Apr 2024 01:55:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000078df8c061647039e@google.com>
+Subject: [syzbot] [jffs2?] possible deadlock in jffs2_read_folio
+From: syzbot <syzbot+7cab786a93f00e566e5b@syzkaller.appspotmail.com>
+To: dwmw2@infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add the ability to flash the modules' firmware by implementing the
-interface between the user space and the kernel.
+Hello,
 
-Example from a succeeding implementation:
+syzbot found the following issue on:
 
- # ethtool --flash-module-firmware swp40 file test.bin
+HEAD commit:    b5d2afe8745b Merge branches 'for-next/kbuild', 'for-next/m..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=1321c40b180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=560f5db1d0b3f6d0
+dashboard link: https://syzkaller.appspot.com/bug?extid=7cab786a93f00e566e5b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
- Transceiver module firmware flashing started for device eth0
+Unfortunately, I don't have any reproducer for this issue yet.
 
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 0%
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/50bff35e1638/disk-b5d2afe8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4eeaa73e7ed1/vmlinux-b5d2afe8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8e796b089aa9/Image-b5d2afe8.gz.xz
 
- [...]
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7cab786a93f00e566e5b@syzkaller.appspotmail.com
 
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 50%
+jffs2: notice: (9998) jffs2_build_xattr_subsystem: complete building xattr subsystem, 1 of xdatum (0 unchecked, 0 orphan) and 2 of xref (0 dead, 0 orphan) found.
+======================================================
+WARNING: possible circular locking dependency detected
+6.9.0-rc3-syzkaller-gb5d2afe8745b #0 Not tainted
+------------------------------------------------------
+syz-executor.4/9998 is trying to acquire lock:
+ffff0000efee8c18 (&f->sem){+.+.}-{3:3}, at: jffs2_read_folio+0x6c/0xd0 fs/jffs2/file.c:125
 
- [...]
+but task is already holding lock:
+ffff0000efee8f68 (mapping.invalidate_lock#11){.+.+}-{3:3}, at: filemap_invalidate_lock_shared include/linux/fs.h:850 [inline]
+ffff0000efee8f68 (mapping.invalidate_lock#11){.+.+}-{3:3}, at: filemap_fault+0x6b4/0x1004 mm/filemap.c:3296
 
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 100%
+which lock already depends on the new lock.
 
- Transceiver module firmware flashing completed for device eth0
 
-Signed-off-by: Danielle Ratson <danieller@nvidia.com>
+the existing dependency chain (in reverse order) is:
+
+-> #2 (mapping.invalidate_lock#11){.+.+}-{3:3}:
+       down_read+0x58/0x2fc kernel/locking/rwsem.c:1526
+       filemap_invalidate_lock_shared include/linux/fs.h:850 [inline]
+       filemap_fault+0x6b4/0x1004 mm/filemap.c:3296
+       __do_fault+0x11c/0x374 mm/memory.c:4531
+       do_read_fault mm/memory.c:4894 [inline]
+       do_fault mm/memory.c:5024 [inline]
+       do_pte_missing mm/memory.c:3880 [inline]
+       handle_pte_fault mm/memory.c:5300 [inline]
+       __handle_mm_fault+0x36d0/0x5920 mm/memory.c:5441
+       handle_mm_fault+0x1e8/0x63c mm/memory.c:5606
+       __do_page_fault arch/arm64/mm/fault.c:505 [inline]
+       do_page_fault+0x550/0xaec arch/arm64/mm/fault.c:620
+       do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:704
+       do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:840
+       el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
+       el1h_64_sync_handler+0x60/0xac arch/arm64/kernel/entry-common.c:492
+       el1h_64_sync+0x64/0x68 arch/arm64/kernel/entry.S:593
+       __arch_copy_from_user+0xb8/0x230 arch/arm64/lib/copy_template.S:110
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:904 [inline]
+       __se_sys_ioctl fs/ioctl.c:890 [inline]
+       __arm64_sys_ioctl+0x14c/0x1c8 fs/ioctl.c:890
+       __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+       el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+       el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+
+-> #1 (&mm->mmap_lock){++++}-{3:3}:
+       __might_fault+0xc4/0x124 mm/memory.c:6220
+       filldir64+0x2d4/0x948 fs/readdir.c:375
+       dir_emit include/linux/fs.h:3570 [inline]
+       jffs2_readdir+0x314/0x42c fs/jffs2/dir.c:152
+       iterate_dir+0x3f8/0x580 fs/readdir.c:110
+       __do_sys_getdents64 fs/readdir.c:409 [inline]
+       __se_sys_getdents64 fs/readdir.c:394 [inline]
+       __arm64_sys_getdents64+0x1c4/0x4a0 fs/readdir.c:394
+       __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+       el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+       el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+
+-> #0 (&f->sem){+.+.}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain kernel/locking/lockdep.c:3869 [inline]
+       __lock_acquire+0x3384/0x763c kernel/locking/lockdep.c:5137
+       lock_acquire+0x248/0x73c kernel/locking/lockdep.c:5754
+       __mutex_lock_common+0x190/0x21a0 kernel/locking/mutex.c:608
+       __mutex_lock kernel/locking/mutex.c:752 [inline]
+       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:804
+       jffs2_read_folio+0x6c/0xd0 fs/jffs2/file.c:125
+       filemap_read_folio+0x14c/0x39c mm/filemap.c:2331
+       filemap_fault+0xab8/0x1004 mm/filemap.c:3381
+       __do_fault+0x11c/0x374 mm/memory.c:4531
+       do_read_fault mm/memory.c:4894 [inline]
+       do_fault mm/memory.c:5024 [inline]
+       do_pte_missing mm/memory.c:3880 [inline]
+       handle_pte_fault mm/memory.c:5300 [inline]
+       __handle_mm_fault+0x36d0/0x5920 mm/memory.c:5441
+       handle_mm_fault+0x1e8/0x63c mm/memory.c:5606
+       __do_page_fault arch/arm64/mm/fault.c:505 [inline]
+       do_page_fault+0x550/0xaec arch/arm64/mm/fault.c:620
+       do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:704
+       do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:840
+       el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
+       el1h_64_sync_handler+0x60/0xac arch/arm64/kernel/entry-common.c:492
+       el1h_64_sync+0x64/0x68 arch/arm64/kernel/entry.S:593
+       __arch_copy_from_user+0xb8/0x230 arch/arm64/lib/copy_template.S:110
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:904 [inline]
+       __se_sys_ioctl fs/ioctl.c:890 [inline]
+       __arm64_sys_ioctl+0x14c/0x1c8 fs/ioctl.c:890
+       __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+       el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+       el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+
+other info that might help us debug this:
+
+Chain exists of:
+  &f->sem --> &mm->mmap_lock --> mapping.invalidate_lock#11
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  rlock(mapping.invalidate_lock#11);
+                               lock(&mm->mmap_lock);
+                               lock(mapping.invalidate_lock#11);
+  lock(&f->sem);
+
+ *** DEADLOCK ***
+
+2 locks held by syz-executor.4/9998:
+ #0: ffff0000cd860190 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:990 [inline]
+ #0: ffff0000cd860190 (&dev->mutex){....}-{3:3}, at: usbdev_do_ioctl drivers/usb/core/devio.c:2608 [inline]
+ #0: ffff0000cd860190 (&dev->mutex){....}-{3:3}, at: usbdev_ioctl+0x24c/0x66e0 drivers/usb/core/devio.c:2824
+ #1: ffff0000efee8f68 (mapping.invalidate_lock#11){.+.+}-{3:3}, at: filemap_invalidate_lock_shared include/linux/fs.h:850 [inline]
+ #1: ffff0000efee8f68 (mapping.invalidate_lock#11){.+.+}-{3:3}, at: filemap_fault+0x6b4/0x1004 mm/filemap.c:3296
+
+stack backtrace:
+CPU: 1 PID: 9998 Comm: syz-executor.4 Not tainted 6.9.0-rc3-syzkaller-gb5d2afe8745b #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call trace:
+ dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:317
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:324
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:114
+ dump_stack+0x1c/0x28 lib/dump_stack.c:123
+ print_circular_bug+0x150/0x1b8 kernel/locking/lockdep.c:2060
+ check_noncircular+0x310/0x404 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain kernel/locking/lockdep.c:3869 [inline]
+ __lock_acquire+0x3384/0x763c kernel/locking/lockdep.c:5137
+ lock_acquire+0x248/0x73c kernel/locking/lockdep.c:5754
+ __mutex_lock_common+0x190/0x21a0 kernel/locking/mutex.c:608
+ __mutex_lock kernel/locking/mutex.c:752 [inline]
+ mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:804
+ jffs2_read_folio+0x6c/0xd0 fs/jffs2/file.c:125
+ filemap_read_folio+0x14c/0x39c mm/filemap.c:2331
+ filemap_fault+0xab8/0x1004 mm/filemap.c:3381
+ __do_fault+0x11c/0x374 mm/memory.c:4531
+ do_read_fault mm/memory.c:4894 [inline]
+ do_fault mm/memory.c:5024 [inline]
+ do_pte_missing mm/memory.c:3880 [inline]
+ handle_pte_fault mm/memory.c:5300 [inline]
+ __handle_mm_fault+0x36d0/0x5920 mm/memory.c:5441
+ handle_mm_fault+0x1e8/0x63c mm/memory.c:5606
+ __do_page_fault arch/arm64/mm/fault.c:505 [inline]
+ do_page_fault+0x550/0xaec arch/arm64/mm/fault.c:620
+ do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:704
+ do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:840
+ el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
+ el1h_64_sync_handler+0x60/0xac arch/arm64/kernel/entry-common.c:492
+ el1h_64_sync+0x64/0x68 arch/arm64/kernel/entry.S:593
+ __arch_copy_from_user+0xb8/0x230 arch/arm64/lib/copy_template.S:110
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:904 [inline]
+ __se_sys_ioctl fs/ioctl.c:890 [inline]
+ __arm64_sys_ioctl+0x14c/0x1c8 fs/ioctl.c:890
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+
+
 ---
- net/ethtool/module.c  | 174 ++++++++++++++++++++++++++++++++++++++++++
- net/ethtool/netlink.c |   7 ++
- net/ethtool/netlink.h |   2 +
- 3 files changed, 183 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/ethtool/module.c b/net/ethtool/module.c
-index 1c659bd85160..836c198d2cc4 100644
---- a/net/ethtool/module.c
-+++ b/net/ethtool/module.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/ethtool.h>
-+#include <linux/firmware.h>
-+#include <linux/sfp.h>
- 
- #include "netlink.h"
- #include "common.h"
-@@ -160,6 +162,178 @@ const struct ethnl_request_ops ethnl_module_request_ops = {
- 	.set_ntf_cmd		= ETHTOOL_MSG_MODULE_NTF,
- };
- 
-+/* MODULE_FW_FLASH_ACT */
-+
-+const struct nla_policy
-+ethnl_module_fw_flash_act_policy[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD + 1] = {
-+	[ETHTOOL_A_MODULE_FW_FLASH_HEADER] =
-+		NLA_POLICY_NESTED(ethnl_header_policy),
-+	[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME] = { .type = NLA_NUL_STRING },
-+	[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD] = { .type = NLA_U32 },
-+};
-+
-+#define MODULE_EEPROM_PHYS_ID_PAGE	0
-+#define MODULE_EEPROM_PHYS_ID_I2C_ADDR	0x50
-+
-+static int module_flash_fw_work_init(struct ethtool_module_fw_flash *module_fw,
-+				     struct net_device *dev,
-+				     struct netlink_ext_ack *extack)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+	struct ethtool_module_eeprom page_data = {};
-+	u8 phys_id;
-+	int err;
-+
-+	/* Fetch the SFF-8024 Identifier Value. For all supported standards, it
-+	 * is located at I2C address 0x50, byte 0. See section 4.1 in SFF-8024,
-+	 * revision 4.9.
-+	 */
-+	page_data.page = MODULE_EEPROM_PHYS_ID_PAGE;
-+	page_data.offset = SFP_PHYS_ID;
-+	page_data.length = sizeof(phys_id);
-+	page_data.i2c_address = MODULE_EEPROM_PHYS_ID_I2C_ADDR;
-+	page_data.data = &phys_id;
-+
-+	err = ops->get_module_eeprom_by_page(dev, &page_data, extack);
-+	if (err < 0)
-+		return err;
-+
-+	switch (phys_id) {
-+	case SFF8024_ID_QSFP_DD:
-+	case SFF8024_ID_OSFP:
-+	case SFF8024_ID_DSFP:
-+	case SFF8024_ID_QSFP_PLUS_CMIS:
-+	case SFF8024_ID_SFP_DD_CMIS:
-+	case SFF8024_ID_SFP_PLUS_CMIS:
-+		INIT_WORK(&module_fw->work, ethtool_cmis_fw_update);
-+		break;
-+	default:
-+		NL_SET_ERR_MSG(extack,
-+			       "Module type does not support firmware flashing");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __module_flash_fw_schedule(struct net_device *dev,
-+				      struct netlink_ext_ack *extack)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+
-+	if (!ops->set_module_eeprom_by_page ||
-+	    !ops->get_module_eeprom_by_page) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Flashing module firmware is not supported by this device");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!ops->reset) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Reset module is not supported by this device, so flashing is not permitted");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+module_flash_fw_schedule(struct net_device *dev, const char *file_name,
-+			 struct ethtool_module_fw_flash_params *params,
-+			 struct netlink_ext_ack *extack)
-+{
-+	struct ethtool_module_fw_flash *module_fw;
-+	int err;
-+
-+	err = __module_flash_fw_schedule(dev, extack);
-+	if (err < 0)
-+		return err;
-+
-+	module_fw = kzalloc(sizeof(*module_fw), GFP_KERNEL);
-+	if (!module_fw)
-+		return -ENOMEM;
-+
-+	module_fw->params = *params;
-+	err = request_firmware_direct(&module_fw->fw, file_name, &dev->dev);
-+	if (err) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Failed to request module firmware image");
-+		goto err_request_firmware;
-+	}
-+
-+	err = module_flash_fw_work_init(module_fw, dev, extack);
-+	if (err < 0) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Flashing module firmware is not supported by this device");
-+		goto err_work_init;
-+	}
-+
-+	dev->module_fw_flash_in_progress = true;
-+	netdev_hold(dev, &module_fw->dev_tracker, GFP_KERNEL);
-+	module_fw->dev = dev;
-+
-+	schedule_work(&module_fw->work);
-+
-+	return 0;
-+
-+err_work_init:
-+	release_firmware(module_fw->fw);
-+err_request_firmware:
-+	kfree(module_fw);
-+	return err;
-+}
-+
-+static int module_flash_fw(struct net_device *dev, struct nlattr **tb,
-+			   struct genl_info *info)
-+{
-+	struct ethtool_module_fw_flash_params params = {};
-+	const char *file_name;
-+	struct nlattr *attr;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME))
-+		return -EINVAL;
-+
-+	file_name = nla_data(tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]);
-+
-+	attr = tb[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD];
-+	if (attr) {
-+		params.password = cpu_to_be32(nla_get_u32(attr));
-+		params.password_valid = true;
-+	}
-+
-+	return module_flash_fw_schedule(dev, file_name, &params, info->extack);
-+}
-+
-+int ethnl_act_module_fw_flash(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct ethnl_req_info req_info = {};
-+	struct nlattr **tb = info->attrs;
-+	struct net_device *dev;
-+	int ret;
-+
-+	ret = ethnl_parse_header_dev_get(&req_info,
-+					 tb[ETHTOOL_A_MODULE_FW_FLASH_HEADER],
-+					 genl_info_net(info), info->extack,
-+					 true);
-+	if (ret < 0)
-+		return ret;
-+	dev = req_info.dev;
-+
-+	rtnl_lock();
-+	ret = ethnl_ops_begin(dev);
-+	if (ret < 0)
-+		goto out_rtnl;
-+
-+	ret = module_flash_fw(dev, tb, info);
-+
-+	ethnl_ops_complete(dev);
-+
-+out_rtnl:
-+	rtnl_unlock();
-+	ethnl_parse_header_dev_put(&req_info);
-+	return ret;
-+}
-+
- /* MODULE_FW_FLASH_NTF */
- 
- static void
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 563e94e0cbd8..1a4f6bd1ec7f 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -1169,6 +1169,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.policy = ethnl_mm_set_policy,
- 		.maxattr = ARRAY_SIZE(ethnl_mm_set_policy) - 1,
- 	},
-+	{
-+		.cmd	= ETHTOOL_MSG_MODULE_FW_FLASH_ACT,
-+		.flags	= GENL_UNS_ADMIN_PERM,
-+		.doit	= ethnl_act_module_fw_flash,
-+		.policy	= ethnl_module_fw_flash_act_policy,
-+		.maxattr = ARRAY_SIZE(ethnl_module_fw_flash_act_policy) - 1,
-+	},
- };
- 
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index d57a890b5d9e..e1e2edd05206 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -446,6 +446,7 @@ extern const struct nla_policy ethnl_plca_set_cfg_policy[ETHTOOL_A_PLCA_MAX + 1]
- extern const struct nla_policy ethnl_plca_get_status_policy[ETHTOOL_A_PLCA_HEADER + 1];
- extern const struct nla_policy ethnl_mm_get_policy[ETHTOOL_A_MM_HEADER + 1];
- extern const struct nla_policy ethnl_mm_set_policy[ETHTOOL_A_MM_MAX + 1];
-+extern const struct nla_policy ethnl_module_fw_flash_act_policy[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD + 1];
- 
- int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
- int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info);
-@@ -453,6 +454,7 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_doit(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_start(struct netlink_callback *cb);
- int ethnl_tunnel_info_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
-+int ethnl_act_module_fw_flash(struct sk_buff *skb, struct genl_info *info);
- 
- extern const char stats_std_names[__ETHTOOL_STATS_CNT][ETH_GSTRING_LEN];
- extern const char stats_eth_phy_names[__ETHTOOL_A_STATS_ETH_PHY_CNT][ETH_GSTRING_LEN];
--- 
-2.43.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
