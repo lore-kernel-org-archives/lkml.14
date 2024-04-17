@@ -1,115 +1,164 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42A146D56;
-	Wed, 17 Apr 2024 15:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741A2146D5E;
+	Wed, 17 Apr 2024 15:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.241.18.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366837; cv=none; b=YIQ4xguanxxX068B0bd4bJnMdeZ3UrzkEcuz9tEV9wgNAtCk4OD77V2sCDffMvl3akRABbQ7tZlGT79axQjebR22heKD55NEBhcNaSJyT1q12rPfmMPR3zy/xANJ64sv6uQ7QKZgP+HuV03qN7Y+yMV5r1OGkyZYvg/Fw1kxHSA=
+	t=1713366839; cv=none; b=RCkt7url/1F6NTS6ZpoOJPEh+jTJc3HwBmmKCl0mf44Hd82fQ9GMTbGJQ2wuouv1ybKkJiY5EO4k2q8ry0askvtt1gZMmuFCpLj+mZl6vimEsvgbuErrVvPMSkols+KyRPvHJ9zBVkhu1HiaVa3HeM6SWQWDBVsRok4hSetYhKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366837; c=relaxed/simple;
-	bh=nJjGtUnwDKua1iw4lX8BX7gh9RSzpuswBQi+p9c105c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mtf3zhyPWtOSybdy6G44wSEAIdPwbWv3sjCwhYuAzS8iRZXrbp2Nr7J4V89F1+D26Wcs4il5LYbnRSWF3JisW2+afHFHla9xWjtHz6XlgnHK7WPGK3LEPJO+Oa+ZF0Ek+NVwuC45jL2V6eFpGQgFZfcgVYnEU85iaDk8zEp9o00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKPWr6YZKz6H6yd;
-	Wed, 17 Apr 2024 23:11:52 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3D59E1406AC;
-	Wed, 17 Apr 2024 23:13:53 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 16:13:52 +0100
-Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
- lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.035;
- Wed, 17 Apr 2024 16:13:52 +0100
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-	"vdumpa@nvidia.com" <vdumpa@nvidia.com>, "jonathanh@nvidia.com"
-	<jonathanh@nvidia.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: RE: [PATCH v5 0/6] Add Tegra241 (Grace) CMDQV Support (part 1/2)
-Thread-Topic: [PATCH v5 0/6] Add Tegra241 (Grace) CMDQV Support (part 1/2)
-Thread-Index: AQHajVTpda5PtrGZ80+YonTPgO6cRrFphU4AgAKXr6CAADwLgIAAP9dA
-Date: Wed, 17 Apr 2024 15:13:52 +0000
-Message-ID: <85e7752fed7444ea8611dbc5be288044@huawei.com>
-References: <cover.1712977210.git.nicolinc@nvidia.com>
- <20240415171426.GF3637727@nvidia.com>
- <f92efdb774cc4cd48a59495e7cb69c27@huawei.com>
- <20240417122445.GO3637727@nvidia.com>
-In-Reply-To: <20240417122445.GO3637727@nvidia.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1713366839; c=relaxed/simple;
+	bh=ReJbikJ2kepuUijelUZQhkZwPh2q88Pj0bpQ80tCjGE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTpXsLN9TLz37Q+nspuwaXbvX3xIRAbGqJrBeh6hvF5vkGgEfsGhdnBf2dpyZXX/Q5PUwxCn1MchkdgTtvELmmYd3IayOYOCpQjdsT145DtWSNvMRUyA/RYhNUfMNGQq5jMPDTVBxv8XIdQMQizgZN1prwxP4/hsxvCuXg6qHGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com; spf=pass smtp.mailfrom=de.adit-jv.com; arc=none smtp.client-ip=93.241.18.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
+Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
+	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 68F0D5203A7;
+	Wed, 17 Apr 2024 17:13:47 +0200 (CEST)
+Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
+ (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.37; Wed, 17 Apr
+ 2024 17:13:47 +0200
+Date: Wed, 17 Apr 2024 17:13:42 +0200
+From: Hardik Gajjar <hgajjar@de.adit-jv.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+CC: Ferry Toth <fntoth@gmail.com>, Hardik Gajjar <hgajjar@de.adit-jv.com>,
+	<gregkh@linuxfoundation.org>, <s.hauer@pengutronix.de>,
+	<jonathanh@nvidia.com>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <quic_linyyuan@quicinc.com>,
+	<paul@crapouillou.net>, <quic_eserrao@quicinc.com>, <erosca@de.adit-jv.com>
+Subject: Re: [PATCH v4] usb: gadget: u_ether: Replace netif_stop_queue with
+ netif_device_detach
+Message-ID: <20240417151342.GA56989@vmlxhi-118.adit-jv.com>
+References: <20240115132720.GA98840@vmlxhi-118.adit-jv.com>
+ <f25283fc-4550-4725-960b-2ea783fd62e1@gmail.com>
+ <aeee83d8-dee3-42ed-b705-988b17800721@gmail.com>
+ <20240405113855.GA121923@vmlxhi-118.adit-jv.com>
+ <321e908e-0d10-4e36-8dc4-6997c73fe2eb@gmail.com>
+ <ZhbOZsp-XHemVhQz@smile.fi.intel.com>
+ <20240411142637.GA110162@vmlxhi-118.adit-jv.com>
+ <ZhgSPCq6sVejRjbj@smile.fi.intel.com>
+ <be8904bd-71ea-4ae1-b0bc-9170461fd0d9@gmail.com>
+ <Zh6BsK8F3gCzGJfE@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zh6BsK8F3gCzGJfE@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
+ hi2exch02.adit-jv.com (10.72.92.28)
+
+On Tue, Apr 16, 2024 at 04:48:32PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 11, 2024 at 10:52:36PM +0200, Ferry Toth wrote:
+> > Op 11-04-2024 om 18:39 schreef Andy Shevchenko:
+> > > On Thu, Apr 11, 2024 at 04:26:37PM +0200, Hardik Gajjar wrote:
+> > > > On Wed, Apr 10, 2024 at 08:37:42PM +0300, Andy Shevchenko wrote:
+> > > > > On Sun, Apr 07, 2024 at 10:51:51PM +0200, Ferry Toth wrote:
+> > > > > > Op 05-04-2024 om 13:38 schreef Hardik Gajjar:
+> 
+> ...
+> 
+> > > > > > Exactly. And this didn't happen before the 2 patches.
+> > > > > > 
+> > > > > > To be precise: /sys/class/net/usb0 is not removed and it is a link, the link
+> > > > > > target /sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/gadget.0/net/usb0 no
+> > > > > > longer exists
+> > > > So, it means that the /sys/class/net/usb0 is present, but the symlink is
+> > > > broken. In that case, the dwc3 driver should recreate the device, and the
+> > > > symlink should become active again
+> > 
+> > Yes, on first enabling gadget (when device mode is activated):
+> > 
+> > root@yuna:~# ls /sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/gadget.0/
+> > driver  net  power  sound  subsystem  suspended  uevent
+> > 
+> > Then switching to host mode:
+> > 
+> > root@yuna:~# ls /sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/gadget.0/
+> > ls: cannot access
+> > '/sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/gadget.0/': No such file
+> > or directory
+> > 
+> > Then back to device mode:
+> > 
+> > root@yuna:~# ls /sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/gadget.0/
+> > driver  power  sound  subsystem  suspended  uevent
+> > 
+> > net is missing. But, network functions:
+> > 
+> > root@yuna:~# ping 10.42.0.1
+> > PING 10.42.0.1 (10.42.0.1): 56 data bytes
+> > 
+> > Mass storage device is created and removed each time as expected.
+> 
+> So, what's the conclusion? Shall we move towards revert of those two changes?
 
 
+As promised, I have the tested the this patch with the dwc3 gadget. I could not reproduce
+the issue. 
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Wednesday, April 17, 2024 1:25 PM
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> Cc: Nicolin Chen <nicolinc@nvidia.com>; will@kernel.org;
-> robin.murphy@arm.com; joro@8bytes.org; thierry.reding@gmail.com;
-> vdumpa@nvidia.com; jonathanh@nvidia.com; linux-kernel@vger.kernel.org;
-> iommu@lists.linux.dev; linux-arm-kernel@lists.infradead.org; linux-
-> tegra@vger.kernel.org; Jerry Snitselaar <jsnitsel@redhat.com>
-> Subject: Re: [PATCH v5 0/6] Add Tegra241 (Grace) CMDQV Support (part 1/2)
->=20
-> On Wed, Apr 17, 2024 at 08:01:10AM +0000, Shameerali Kolothum Thodi wrote=
-:
-> > We do have plans to revive the SMMUv3 ECMDQ series posted a while back[=
-0]
-> > and looking at this series, I am just wondering whether it makes sense =
-to have
-> > a similar one with ECMDQ as well?  I see that the NVIDIA VCMDQ has a sp=
-ecial
-> bit
-> > to restrict the commands that can be issued from user space. If we end =
-up
-> assigning
-> > a ECMDQ to user space, is there any potential risk in doing so?
->=20
-> I think there is some risk/trouble, ECMDQ needs some enhancement
-> before it can be really safe to use from less privileged software, and
-> it wasn't designed to have an isolated doorbell page either.
->=20
-> > Not clear to me what are the major concerns here and maybe we can come =
-up
-> with
-> > something to address that in kernel.
->=20
-> I haven't looked deeply but my impression has been the ECMDQ is not
-> workable to support virtualization. At a minimum it has no way to
-> constrain the command flow to a VMID and to do VSID -> PSID
-> translation.
+I can see the usb0 exist all the time and accessible regardless of the role switching of the USB mode (peripheral <-> host)
 
-Ok. That makes sense.
+Following are the logs:
+//Host to device
 
->=20
-> I suggest you talk directly to ARM on this if you are interested in
-> this.
->=20
+console:/sys/bus/platform/devices/a800000.ssusb # echo "peripheral" > mode
+console:/sys/bus/platform/devices/a800000.ssusb # ls a800000.dwc3/gadget/net/
+usb0
 
-Sure. Will check.
+//device to host
+console:/sys/bus/platform/devices/a800000.ssusb # echo "host" > mode
+console:/sys/bus/platform/devices/a800000.ssusb # ls a800000.dwc3/gadget/net/
+usb0
+s a800000.dwc3/gadget/net/usb0                                                <
+addr_assign_type    duplex             phys_port_name
+addr_len            flags              phys_switch_id
+address             gro_flush_timeout  power
+broadcast           ifalias            proto_down
+carrier             ifindex            queues
+carrier_changes     iflink             speed
+carrier_down_count  link_mode          statistics
+carrier_up_count    mtu                subsystem
+dev_id              name_assign_type   tx_queue_len
+dev_port            netdev_group       type
+device              operstate          uevent
+dormant             phys_port_id       waiting_for_supplier
+console:/sys/bus/platform/devices/a800000.ssusb # ifconfig -a usb0
+usb0      Link encap:Ethernet  HWaddr 3a:8b:63:97:1a:9a
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 TX bytes:0
 
-Thanks,
-Shameer
+console:/sys/bus/platform/devices/a800000.ssusb #
+
+I strongly advise against reverting the patch solely based on the observed issue of removing the /sys/class/net/usb0 directory while the usb0 interface remains available. 
+Instead, I recommend enabling FTRACE to trace the functions involved and identify which faulty call is responsible for removing usb0.
+
+According to current kernel architecture of u_ether driver, only gether_cleanup should remove the usb0 interface along with its kobject and sysfs interface.
+I suggest sharing the analysis here to understand why this practice is not followed in your use case or driver ?
+
+I am curious why the driver was developed without adhering to the kernel's gadget architecture.
+
+> 
+> > > > I have the dwc3 IP base usb controller, Let me check with this patch and
+> > > > share result here.  May be we need some fix in dwc3
+> > Would have been nice if someone could test on other controller as well. But
+> > another instance of dwc3 is also very welcome.
+> > > It's quite possible, please test on your side.
+> > > We are happy to test any fixes if you come up with.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
