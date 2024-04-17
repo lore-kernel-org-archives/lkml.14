@@ -1,105 +1,119 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3544B1E48B;
-	Wed, 17 Apr 2024 20:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7863D0C6;
+	Wed, 17 Apr 2024 20:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713385947; cv=none; b=qfIrHDV0SUzdN1Qrac3H60BjkWlujkEDTuRSxR1LnET3uGHqoiTwi3Yz+bDmEW28xMoXGp3/xEtcDnHJ43kVrtHMYwso/ECP9PHhQ9xPqLdWEk7fBQtGStz65Y3/xxR+ZCodbfd7pfDYXmM87vbvXttAJGAgau0MCcE29cN50xg=
+	t=1713385981; cv=none; b=H0aBrObcnktb1cCvoylrLpahtF0Y/4G1vg0+XdvmHSq7sZCQPLnCE/e+azBxdgjoEnHe5bDHkUY92JQail7ZbZRWnCJkARZfbZ171kGmbCkT5SokXnNwmD/zFsEFLJ/6s5OnTyo1ouDcgscuavyHb0L/vGvwjO1Mbc2Pe3zZ2FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713385947; c=relaxed/simple;
-	bh=Bp7/jJqYjF0Ufn+wONJ27PQy6j++8W3yduqSFKReMUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FtU5Z/q59q9SJMTd4qawT1hHOg149sJ42hmBFIpPuL0XVHW/7hxo9kAY1bpdx5BB4cWCikw58UUlwZtClos4VBsPIWpGtfV4chYO9LGsDB5STNkKuh9Wc7L4i7R/sCvvk9i+nS6ElPSAY0jWrwrCYg3diXUS8XFDXvmaXrHpdV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jd5lCre+; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713385981; c=relaxed/simple;
+	bh=lTR6y4fPduiya82NnYrhltb4YJaAycBG4JTcNmaYLjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZR7ayma/1Ft3xU3bpK8cSLW7kUDLEA/UNHQZ1emPqPiaoDVI0dOztYS9FHn1g6C5kQBwQQgIL0GxMBOXRY0Pcyt3rStbXCFuHn3ztq3BtJpxPV7YLLVjdNtJYTA8RPdmcpm2bpfYGeEi6RbZSNi7W5Cc9y+2rb3UEbT4TSLlGW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lf5519Ya; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jd5lCre+"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-418d1edcd4cso1276625e9.1;
-        Wed, 17 Apr 2024 13:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713385944; x=1713990744; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3lo45R9LbyC8+5GXWJMBZAtN3X7dVs96M7iPR9wUUDU=;
-        b=Jd5lCre++/rYWjiYoMcL6GmgPwTOZdiD53WDRwO0z4AQZwlRFLkqnVzsg6GZSpQg6b
-         dInsjq0Iz0AzWxj0wcGeoQVLbc3YCTKHnDyUquzkHg9at/m8pDwNeLQ1MQQ6Xxbvkll+
-         RTbacRcdDxXIgxKTVF6FAHrjmoQJXkSC0KJKyirph74u2KoArJQpRuQgWBi/0PZ6HE2Q
-         yATYOGW2GOApaw6dkebN7xJURnC+abkdi3mdQIi5fuGju36cmUNOOGMaq6so3+gs5cKX
-         OW1u9LhIXBrCbFk3OKINDX9fl9noXfciqQ8lV68UMDPHuufB7t2A/7QDwSEtBsrZefoW
-         2feg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713385944; x=1713990744;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3lo45R9LbyC8+5GXWJMBZAtN3X7dVs96M7iPR9wUUDU=;
-        b=bY3ZRr9xQOz0FTgxrPr2xLatabhP3fLS9gAm3h0Hsc75DMqr5Jrzcp4GtqflKo4G23
-         kga93SWXBlIEdigGs/Zl1YN/krI+5DxIZZfBxkcP0ntvm+8k86+jQpkE2QI0K6iS2bW0
-         LxYU7futVV06bgGrsrB0QlOLYBjboQlNDbIazbEM04RJHYalYuOI40J3araapTLxki0B
-         7sG15xTStWEV/wingPthNDpg7ewjNURrwjoKbY52XocAhL/sWlWts5W49TQ8wuE16JKc
-         PjWCfNRLZUZITUvTz4NdA8Gxaq+1davbuX3myVr2pvlWE/JDDTnAxDYfc1Ln4V5007P+
-         sCMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUj62/esPPYh+TQR0nnVAQHop5376yfHrCoEOaWsOU6jULGhuX27blLSAI1yavOAy3PqLv63fVGOAVArdXGPYq+qR6WwdPJ+4GSWl1r8AdLoROOgVCiGBOZ38T6nN5Ql8aGEi9gT/A6zQ6y1zHs8vSRdcM4h52Ve4d3QbvriO1iUNOlog==
-X-Gm-Message-State: AOJu0YzGj3AwPDAPts67f5DSkCBAMegfgVC+LOocZxS5YCG1VUeFSDhU
-	1BXtqDvIgG5rRl7Ph/as5ECAjNG9XkP2UWsvS4qoeaQHv3PQcLu+
-X-Google-Smtp-Source: AGHT+IEraNpT/6Vq6fA9vsxYdOXx0g1Se19Swwcf429ga+GBrjJSwS7ijIkP2LbUsDhoqDXbbwUDOA==
-X-Received: by 2002:a05:600c:1ca9:b0:418:93f4:b4ef with SMTP id k41-20020a05600c1ca900b0041893f4b4efmr601343wms.0.1713385944301;
-        Wed, 17 Apr 2024 13:32:24 -0700 (PDT)
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id s6-20020a05600c45c600b00418244d459esm222251wmo.4.2024.04.17.13.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 13:32:23 -0700 (PDT)
-Date: Wed, 17 Apr 2024 22:32:21 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] pwm: mc33xs2410: add support for direct inputs
-Message-ID: <20240417203221.GB148552@debian>
-References: <20240301111124.29283-1-dima.fedrau@gmail.com>
- <20240301111124.29283-4-dima.fedrau@gmail.com>
- <dwd6idyv2dvfih57sdfnr6cxztrx6gv3pwuy6rdopjw2lv2z6y@in2sn56t3x5k>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lf5519Ya"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713385980; x=1744921980;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lTR6y4fPduiya82NnYrhltb4YJaAycBG4JTcNmaYLjo=;
+  b=lf5519Ya8+Gya8nbPhFkzhWZJqOzwoxOgy98QO8rVgb5dq5p9jqj35p9
+   NUy+mbOK9R+FXC/WhmJMXFph+9EKeVRuoqF12HfNiR5lBp7ejzLEaeeu0
+   V0eyTt8VyawbVu6frIzqSDUnrHtVfogStuc136A1xCIIBzI1/k61yE5L3
+   40bxz67WCks2mXyr1SD7NkslWJ7lWxa5/G8XOlM/X9lvhXp1hF111w3FZ
+   mHcQuZu7lPAT3KITXCgUBhGvlLAYIRydirdhXbrpE7Y8iSB++RmECeVU+
+   DQ5la8sE39SMGpl4JBWsYkOo85Iu5avLTMDwCgO3eixB0QHpxUiH7cSDD
+   A==;
+X-CSE-ConnectionGUID: SvdCXsi5RY27hT2rn1fl7w==
+X-CSE-MsgGUID: A+rARE3fR8ye2Gw7OlRgZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19508325"
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="19508325"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 13:24:10 -0700
+X-CSE-ConnectionGUID: WDGjrP4iTUqIEAcA7VY5Rw==
+X-CSE-MsgGUID: U0buHxQITXuBTBv1UXRkRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="27541475"
+Received: from mfzarate-mobl.amr.corp.intel.com (HELO [10.92.4.37]) ([10.92.4.37])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 13:24:08 -0700
+Message-ID: <a44a9ac5-5afa-4226-8a59-fab3e44af352@linux.intel.com>
+Date: Wed, 17 Apr 2024 15:23:52 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dwd6idyv2dvfih57sdfnr6cxztrx6gv3pwuy6rdopjw2lv2z6y@in2sn56t3x5k>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/4] tsm: Runtime measurement registers ABI
+To: "Xing, Cedric" <cedric.xing@intel.com>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Samuel Ortiz <sameo@rivosinc.com>
+Cc: Qinkun Bao <qinkun@google.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>, biao.lu@intel.com,
+ linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <a255bc36-2438-41b7-b304-bcf7a6628bef@linux.intel.com>
+ <42e14f74d3819c95fdb97cd2e9b2829dcb1b1563.camel@HansenPartnership.com>
+ <1557f98a-3d52-4a02-992b-4401c7c85dd7@linux.intel.com>
+ <85b7a4a679eada1d17b311bf004c2d9e18ab5cd3.camel@HansenPartnership.com>
+ <b8140cc8-a56b-40f6-a593-7be49db14c77@intel.com>
+ <fe1722c3618a8216cb53b8fd3f1b7cbb6fdff5a0.camel@HansenPartnership.com>
+ <65c2e4aa54a0_d4122947f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <22088ed3-51a4-415f-932c-db84c92a2812@intel.com>
+ <527da630-4952-4b1d-80c0-5a87997ff9fd@linux.intel.com>
+ <332775d7218843d6cc168c963d76e6841eab5d5b.camel@HansenPartnership.com>
+ <65c691e13a50d_afa42948a@dwillia2-xfh.jf.intel.com.notmuch>
+ <226df539-b3f4-4099-b6a6-293fa200c536@intel.com>
+ <982e19fcd71c41a162ba664281eb0a68d9dc960c.camel@HansenPartnership.com>
+ <3d5ffd62-beff-4394-91e7-715b348b7bae@intel.com>
+Content-Language: en-US
+From: Dan Middleton <dan.middleton@linux.intel.com>
+In-Reply-To: <3d5ffd62-beff-4394-91e7-715b348b7bae@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Am Tue, Mar 19, 2024 at 05:38:52PM +0100 schrieb Uwe Kleine-König:
-> Hello Dimitri,
+On 3/4/24 7:19 PM, Xing, Cedric wrote:
+> Hi James,
 >
-Hi Uwe,
-
-> On Fri, Mar 01, 2024 at 12:11:24PM +0100, Dimitri Fedrau wrote:
-> > Add support for direct inputs, which are used to directly turn-on or
-> > turn-off the outputs. Direct inputs have the advantage over the SPI
-> > controlled outputs that they aren't limited to the frequency steps.
-> > Frequency resolution depends on the input signal, range is still
-> > from 0.5Hz to 2.048kHz.
-> 
-> I didn't make a big effort, but I fail to understand the concept here.
-> I'll delay giving more feedback till the next review round for this
-> driver. Maybe then the description is easier to grasp.
+> In the past couple of weeks I've been thinking about what should be a 
+> good log format that can be conformant to existing standards and 
+> accommodate future applications at the same time. After discussing 
+> with folks from Alibaba and Intel internally, I created this issue - 
+> https://github.com/confidential-containers/guest-components/issues/495 
+> to document what I've found. Although it was written for CoCo, the 
+> design I believe is CEL (Canonical Event Log) conformant and generic 
+> enough to be adopted by the kernel. Hence, I revive this thread to 
+> solicit your opinion. Your valuable time and feedback will be highly 
+> appreciated!
 >
-I will drop it for now and come back later with a separate patch. I
-think this would make it easier for now.
+> Thanks!
+>
+> -Cedric
+>
 
-> Best regards
-> Uwe
-> 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Hi,
 
-Best regards
-Dimitri
+Closing the loop on testing format options with CNCF CoCo as an adopter
+community...
+There was a robust discussion in the issue [1] posted ~1.5 months back 
+on the
+previous note on this thread.
+It seems the conversation has tailed off with agreement that the NELR format
+would work for that containers community.
+I think that's a good signal for this approach to move forward.
+
+[1] https://github.com/confidential-containers/guest-components/issues/495
+
+Regards,
+Dan
+
