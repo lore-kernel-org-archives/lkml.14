@@ -1,125 +1,208 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D639A13C3EA
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0154013AD25;
+	Wed, 17 Apr 2024 10:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713350199; cv=none; b=Z85BFfZy7WrKU8oLcHEuMYpLzB4TIltG6fAgCOQscrseLqBD48i1j1PI2In+g0mTSTh3zB0OVsslbOvPUQ7IOz9P0OjDA8vncF7HeKEI1r2F8ca5R5YdaeS3HrqWBJNnwDoWhSyBHmkjqO1xzgEYKNTPqERFKt6SrI7x2qDukeE=
+	t=1713350279; cv=none; b=oDuRkpjBI2mM5Ehyfe4jCb/tqhNzWWVydKVOxxeNHrao2u+OBB9s1cxVn/DgmdLzSy1fK/hfVY/xh4OdstJrk1rY456nXF0/7bY4BrZ0pMsN5lzGc0fSA36y6F76LISerJmbrqwJHAfQWbqOSkITpI5GYuv14nwwYl7MWbIIJsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713350199; c=relaxed/simple;
-	bh=wK3zkKd+UDmBzbfDsMuwS6Y4b8KUIj/36OIFXRYFiWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qif0lPZ/C6PxupChEHRSeplFjaVS8BUn//rFoBexuvFxFpnM4JhKmeOf/l7Eoz3N8qvHJRF6SjTQgsCg8tgRMzWVA6OM87mapWCokMJHwcubph/mtjMAxzCLFlIPRNrF9Xa38qTDZJt6IBuAvzgg9geRDCmMwtEtbx3d7aOfQ08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 215CC339;
-	Wed, 17 Apr 2024 03:37:05 -0700 (PDT)
-Received: from [10.57.19.189] (unknown [10.57.19.189])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D766C3F64C;
-	Wed, 17 Apr 2024 03:36:35 -0700 (PDT)
-Message-ID: <bb417978-06b4-4b2c-bcf6-a39601b079be@arm.com>
-Date: Wed, 17 Apr 2024 11:36:26 +0100
+	s=arc-20240116; t=1713350279; c=relaxed/simple;
+	bh=D8QRemH30gl7Dx0jkJVKi6TU6cwZ0jVUfI7KwoD5GGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yq4MT/BGR8T0VIBHkmm8rbIkkIjoTVBt//lOIjB26wVAG5Zupy8wayjilAvZsjarI0bhbsswCZbCtP6Z+5oY1YFINUIbu26SE98+whmCWBq8B9fwERgJuvLVYirNLRgvhj8OYTPiBtP/dOk/Y4gr+7u9GZH8xxC0uCvgNigIDuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YE4sxQ9s; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=XNRSWQ0O reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YE4sxQ9s";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="XNRSWQ0O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1713350276; x=1744886276;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=48A9qXlHYbdLR6pAymipmKQX31M+zjp12feMhPewqe8=;
+  b=YE4sxQ9s7sF4F48+QDzes77EjpHlDlJjS/WU4SQnTpQwQw2WNbBBLstX
+   LUOoBYnnvzNI0+LdyafZppL1LNmpNisjOYAyhG01gFAnK8nhbxOzD2HXJ
+   Z3Ob6M38i1KhNjKlqVzsGyDx6/0pkaA/wgj3lv5EfoOyw163IkS1dDLac
+   5bQS6KcMs9hTZgkOuorHC6lSelW1W/Tsj0c6EIhtV7sFAcKGo2EveHWnf
+   0bWitGKYc/PGDof7wXp8Qetp//wNkDV9J7fOBlFfaQG5H674ggO/43JKj
+   4e4ZlWg/iXpPjWE8NhqmCniyxO2xM+nraknKRgyrV+uD+nuGXMti+rX1p
+   g==;
+X-IronPort-AV: E=Sophos;i="6.07,209,1708383600"; 
+   d="scan'208";a="36465195"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 17 Apr 2024 12:37:52 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 776081724B0;
+	Wed, 17 Apr 2024 12:37:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1713350268;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=48A9qXlHYbdLR6pAymipmKQX31M+zjp12feMhPewqe8=;
+	b=XNRSWQ0OB91gwNGE4JCIVrZlHZqzXsTrIap/Ev3xLBK1UuLG+IvD7bARjPJ1efxw2QxytO
+	Dav944IpaCp4vxPvDbuHhf1Q26E+/7Dy+bue3Wb0TiyIPOLbp1ekgWQ1US/hJgJnL8P4EY
+	lIT/gdcJIJ1o71hiL9VVrHwGwmlpolp60bJcJeFnfC+dqFxydWZHRhgF4fhvpIJ6e4Mp8k
+	8cgkhknxWSqE+lgH9jXIdnVS0CA4Da0uWe5hWoeX+62Paf/FZfgEB0E4xGChJQaVH1O75x
+	fdjMA/CJmgvsspiIGR9AhNJy68ZuHPZnQhfTyRjcKLeLo2P24Kaa9eMD3HimPg==
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH net v2] net: dsa: mv88e6xx: fix supported_interfaces setup in mv88e6250_phylink_get_caps()
+Date: Wed, 17 Apr 2024 12:37:37 +0200
+Message-ID: <20240417103737.166651-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel 6.7 regression doesn't boot if using AMD eGPU
-To: Vasant Hegde <vashegde@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Eric Wagner <ewagner12@gmail.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <CAHudX3zLH6CsRmLE-yb+gRjhh-v4bU5_1jW_xCcxOo_oUUZKYg@mail.gmail.com>
- <20240415163056.GP223006@ziepe.ca>
- <CAHudX3zhagFWBv4isZzAtC8dA7EAAtY6Yk7fkJ31hf0D9zrNqw@mail.gmail.com>
- <65d4d7e0-4d90-48d7-8e4a-d16800df148a@arm.com>
- <20240416003903.GR223006@ziepe.ca>
- <47d4bfd6-1d76-4bb8-a33c-c9c99b86656b@arm.com>
- <4ec76a54-cb83-40b1-a156-a6da3453da5c@amd.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <4ec76a54-cb83-40b1-a156-a6da3453da5c@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 2024-04-16 1:44 pm, Vasant Hegde wrote:
-> Robin,
-> 
-> On 4/16/2024 4:55 PM, Robin Murphy wrote:
->> On 2024-04-16 1:39 am, Jason Gunthorpe wrote:
->>> On Mon, Apr 15, 2024 at 10:44:34PM +0100, Robin Murphy wrote:
->>>> On 2024-04-15 7:57 pm, Eric Wagner wrote:
->>>>> Apologies if I made a mistake in the first bisect, I'm new to kernel
->>>>> debugging.
->>>>>
->>>>> I tested cedc811c76778bdef91d405717acee0de54d8db5 (x86/amd) and
->>>>> 3613047280ec42a4e1350fdc1a6dd161ff4008cc (core) directly and both 
->>>>> were good.
->>>>> Then I ran git bisect again with 
->>>>> e8cca466a84a75f8ff2a7a31173c99ee6d1c59d2
->>>>> as the bad and 6e6c6d6bc6c96c2477ddfea24a121eb5ee12b7a3 as the good 
->>>>> and the
->>>>> bisect log is attached. It ended up at the same commit as before.
->>>>>
->>>>> I've also attached a picture of the boot screen that occurs when it 
->>>>> hangs.
->>>>> 0000:05:00.0 is the PCIe bus address of the RX 580 eGPU that's 
->>>>> causing the
->>>>> problem.
-> 
-> .../...
-> 
->>
->> "Failing" iommu_probe_device is merely how we tell ourselves that 
->> we're not interested in a device, and consequently tell the rest of 
->> the kernel it doesn't have an IOMMU (via device_iommu_mapped() 
->> returning false). This is normal and expected for devices which 
->> legitimately have no IOMMU in the first place; conversely we don't do 
->> a great deal for unexpected failures since those typically represent 
->> system-fatal conditions whatever we might try to do. We've never had 
->> much of a notion of expected failures when an IOMMU *is* present, but 
->> even then, denying any trace of the IOMMU and removing ourselves from 
->> the picture is clearly not the ideal way to approach that. We're 
->> running off a bus notifier (or even later), so ultimately our return 
->> value is meaningless; at that point the device already exists and has 
->> been added to its bus, we can't undo that.
->>
->> However it looks to be even more fun if failure occurs in *deferred* 
->> default domain creation via bus_iommu_probe(), since then we give up 
->> and dismiss the entire IOMMU. Except the x86 drivers ignore the return 
->> from iommu_device_register(), so further hilarity ensues...
->>
->> I think I've now satisfied myself that a simple fix for the core code 
->> is appropriate and will write that up now; one other thing I couldn't 
->> quite figure out is whether the AMD driver somehow prevents PASIDs 
->> being used while the group is attached to a non-identity (and 
->> non-nested) domain - that's probably one for Vasant to confirm.
-> 
-> AMD driver supports PASID with below domain type :
->    - Identity domain
->    - DMA translation mode (DMA and DMA_FQ) with AMD v2 page table 
-> (amd_iommu=pgtbl_v2).
-> 
-> 
-> Currently amd_iommu_def_domain_type() tries to put PASID capable devices 
-> in identity domain mode. This is something to fix. Its in my TODO list. 
-> I will try to get into it soon.
-> 
-> Hope this clarifies.
+With the recent PHYLINK changes requiring supported_interfaces to be set,
+MV88E6250 family switches like the 88E6020 fail to probe - cmode is
+never initialized on these devices, so mv88e6250_phylink_get_caps() does
+not set any supported_interfaces flags.
 
-Ooh, I see you now have GIoV to allow that similarly to how SMMUv3 does 
-it - that wasn't in the older version of the spec that I've previously 
-been referring to :)
+Instead of a cmode, on 88E6250 we have a read-only port mode value that
+encodes similar information. There is no reason to bother mapping port
+mode to the cmodes of other switch models; instead we introduce a
+mv88e6250_setup_supported_interfaces() that is called directly from
+mv88e6250_phylink_get_caps().
 
-Can you confirm there's no hardware actually been made to the older 
-spec, supporting v2 and PASIDs but *not* having GIoV? Otherwise, I think 
-you'll still have the problem that if you use the GPA-SPA translation in 
-the DTE to implement IOMMU_DOMAIN_DMA for the RID, it makes all the 
-PASID GVA-GPA mappings useless for host SVA.
+Fixes: de5c9bf40c45 ("net: phylink: require supported_interfaces to be filled")
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
 
-Cheers,
-Robin.
+Changelog:
+
+v2: Replace mv88e6250_port_get_mode() with
+    mv88e6250_setup_supported_interfaces(), make sure we don't set
+    PHY_INTERFACE_MODE_NA in the bitmap
+
+ drivers/net/dsa/mv88e6xxx/chip.c | 56 +++++++++++++++++++++++++++++---
+ drivers/net/dsa/mv88e6xxx/port.h | 23 ++++++++++---
+ 2 files changed, 71 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index c95787cb90867..59b5dd0e2f41d 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -566,13 +566,61 @@ static void mv88e6xxx_translate_cmode(u8 cmode, unsigned long *supported)
+ 		phy_interface_set_rgmii(supported);
+ }
+ 
+-static void mv88e6250_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
+-				       struct phylink_config *config)
++static void
++mv88e6250_setup_supported_interfaces(struct mv88e6xxx_chip *chip, int port,
++				     struct phylink_config *config)
+ {
+ 	unsigned long *supported = config->supported_interfaces;
++	int err;
++	u16 reg;
+ 
+-	/* Translate the default cmode */
+-	mv88e6xxx_translate_cmode(chip->ports[port].cmode, supported);
++	err = mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
++	if (err) {
++		dev_err(chip->dev, "p%d: failed to read port status\n", port);
++		return;
++	}
++
++	switch (reg & MV88E6250_PORT_STS_PORTMODE_MASK) {
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_FULL_PHY:
++		__set_bit(PHY_INTERFACE_MODE_REVMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_HALF:
++	case MV88E6250_PORT_STS_PORTMODE_MII_FULL:
++		__set_bit(PHY_INTERFACE_MODE_MII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_200_RMII_FULL_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_HALF_PHY:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL_PHY:
++		__set_bit(PHY_INTERFACE_MODE_REVRMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL:
++	case MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL:
++		__set_bit(PHY_INTERFACE_MODE_RMII, supported);
++		break;
++
++	case MV88E6250_PORT_STS_PORTMODE_MII_100_RGMII:
++		__set_bit(PHY_INTERFACE_MODE_RGMII, supported);
++		break;
++
++	default:
++		dev_err(chip->dev,
++			"p%d: invalid port mode in status register: %04x\n",
++			port, reg);
++	}
++}
++
++static void mv88e6250_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
++				       struct phylink_config *config)
++{
++	if (!mv88e6xxx_phy_is_internal(chip, port))
++		mv88e6250_setup_supported_interfaces(chip, port, config);
+ 
+ 	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100;
+ }
+diff --git a/drivers/net/dsa/mv88e6xxx/port.h b/drivers/net/dsa/mv88e6xxx/port.h
+index 86deeb347cbc1..ddadeb9bfdaee 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.h
++++ b/drivers/net/dsa/mv88e6xxx/port.h
+@@ -25,10 +25,25 @@
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_100_HALF	0x0900
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_10_FULL		0x0a00
+ #define MV88E6250_PORT_STS_PORTMODE_PHY_100_FULL	0x0b00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_10_HALF		0x0c00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_100_HALF	0x0d00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_10_FULL		0x0e00
+-#define MV88E6250_PORT_STS_PORTMODE_MII_100_FULL	0x0f00
++/* - Modes with PHY suffix use output instead of input clock
++ * - Modes without RMII or RGMII use MII
++ * - Modes without speed do not have a fixed speed specified in the manual
++ *   ("DC to x MHz" - variable clock support?)
++ */
++#define MV88E6250_PORT_STS_PORTMODE_MII_DISABLED		0x0000
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_RGMII		0x0100
++#define MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL_PHY	0x0200
++#define MV88E6250_PORT_STS_PORTMODE_MII_200_RMII_FULL_PHY	0x0400
++#define MV88E6250_PORT_STS_PORTMODE_MII_DUAL_100_RMII_FULL	0x0600
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL	0x0700
++#define MV88E6250_PORT_STS_PORTMODE_MII_HALF			0x0800
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_HALF_PHY	0x0900
++#define MV88E6250_PORT_STS_PORTMODE_MII_FULL			0x0a00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_100_RMII_FULL_PHY	0x0b00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_HALF_PHY		0x0c00
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_HALF_PHY		0x0d00
++#define MV88E6250_PORT_STS_PORTMODE_MII_10_FULL_PHY		0x0e00
++#define MV88E6250_PORT_STS_PORTMODE_MII_100_FULL_PHY		0x0f00
+ #define MV88E6XXX_PORT_STS_LINK			0x0800
+ #define MV88E6XXX_PORT_STS_DUPLEX		0x0400
+ #define MV88E6XXX_PORT_STS_SPEED_MASK		0x0300
+-- 
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
+
