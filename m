@@ -1,84 +1,81 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8119571734
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F272B84FB1
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713394942; cv=none; b=mKURjJvd5kHKQaM0VZ7tRsNF03g8wP5rFICabmYqvfJNLNPfkRJQD1ZYAt1r+6uBfeF/85f6CFQuAnFowkhe1brVnfpUJ+0fDHvv7hRIJylkdyCYYwzb1CZ+/CKnr3TQiPKkxLSeX6UKLmNg+4J0umexVp7O2e+P9S+g55476IY=
+	t=1713395055; cv=none; b=a+OsmtUifXcWneFzWxGRMByHI6hTYkAL3sa+tlhjtQRdQuSSs9dAWYjZ0ry/+luOzq8a3YYGKkPleTEgEB85QKBgQzsPyv8KdRxGOeQHAm51v1pYT5Y/oVAFZK73tAwpMdLXyr0Imd8pYzBNE/Vr5JOhZ0tmuQLuB98LdHLEHdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713394942; c=relaxed/simple;
-	bh=MjGEyWU6iRwQGLCvLbsauuSqXMR5IC0GgjI1b0nT/PA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XwzPFO5IwZ+fRVcTtZdyO9RtfDgIuoYpnYpDy9Gbem2QfLpmLtfeK1oDqqaZX5AidNm0e7oavk2AGQ3P3J5JpuXXcI2dktKbgSs9BD0z+cqINBLPfz3gZLSWZeUGtbLygk1UUH0easF9Ce9G02Y0Bwk0QaK1Pa902CXQc1Sk7Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0ZdFPFJq; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713395055; c=relaxed/simple;
+	bh=SY67Ye4fXpcxOTsqzg1ms9haefD+0Alokfj1Tuddqd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=crrfBiFBlOy5z/mmJHRKm9i/0FyVBcCRjAjepjMI2kAV5mxtGVAijDqxoqYNM3gvtUkQxiySDgl2BZI0gbG7/Oe0H8VrhY0tNM8X6LUr6MkxCGxBp5Xeknba9q/SWOOgRSd+LJMFI+uTA9qeYKSvmVGOoLZGXDLmZukabA1bz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh8Pg/tz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0ZdFPFJq"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso474156276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713394940; x=1713999740; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5We5W+rsfzPdvXFTCnohAUBKzbHH6tan/Fy+crluqZA=;
-        b=0ZdFPFJqlBL0VRUml2c3qUsAt9V6MhLzw8pN6j5zQaOrXMGbrX4aM2oqQqlE5jpg2G
-         xSASIIqJLah1q6VUUsgImyV7kcxQLEQfM1XS1G3Ks9OtwiJilMloPJIw4wz9WPnpKOHE
-         VL2G3y7yTWEGOJKpZkgePEv+4QKb5Z57d669a397Nw8dIgnbT103lLX8TUeCD6tw+re/
-         DOCZ6zkxyaJQaRF4kVYrRuoeGv+8kJ4R5xPxmv1b/XOwb1HqdHUjTeFEcmfWAQVbjkYu
-         yw0qf+IOfiu/hRNZWjWvDle+Wt0G3BTUz2TsWprjZmt/emWQYdkJ9tXirM+h+BWzwb/k
-         RQ4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713394940; x=1713999740;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5We5W+rsfzPdvXFTCnohAUBKzbHH6tan/Fy+crluqZA=;
-        b=RnCYmPKEf368gMoWfR6P/UGdAubtajtkkUlBkbDU0qFKNYfhzmdabwEBjg8V2SKfGu
-         Szcs9kj1HeIhQjws/A+tZwtAeQMiZPRWWqsNQxULg9EE88UkdjXN0bBkf/t3u66w9WRs
-         kOdXbOUc8wLvejGyjMGmjoFRSAY6/wEzynDkRSlROCaCFItJ+M5bhxLDaguV5VbFbZXi
-         mmKyVKEGYcLtZqn8d4GF+JO4okA7Duz5T8msXWBOQNnANZSPgfy5DOLY1LUpSrDGUTlR
-         q9adAW+XHDo+wErs62KylV5WHwPIjX9vi2u/3Q3ACWPapA5kqqKYyDbvv7LTqB1EPg3W
-         uahw==
-X-Gm-Message-State: AOJu0Yz1oGrf1xhj7bIRltEdTapgZeUuhhGCmcBzivyYRsLW7MQl4lLo
-	6cWzUi3+AY6cabOUO3ZKjh16r5LnlxwJTAE5ZI6HBozD/TbBgQbwHZXBa2AXqJghQbhhe0akWMp
-	xcA==
-X-Google-Smtp-Source: AGHT+IERzpfBosJp5941x37Yo9n4uDrw4qeM+u1IpyiGpJYuIIdVxD1NzoxJcFf/f2t5gypae1skW2hucLw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1007:b0:dcc:6065:2b3d with SMTP id
- w7-20020a056902100700b00dcc60652b3dmr221743ybt.8.1713394940536; Wed, 17 Apr
- 2024 16:02:20 -0700 (PDT)
-Date: Wed, 17 Apr 2024 16:02:19 -0700
-In-Reply-To: <20240416201935.3525739-9-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh8Pg/tz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5FCC072AA;
+	Wed, 17 Apr 2024 23:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713395054;
+	bh=SY67Ye4fXpcxOTsqzg1ms9haefD+0Alokfj1Tuddqd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gh8Pg/tzqB5Boyp4lpwLS/UpIkGzHeX9g8VbuspPSQPEISNFPLBgc1DONIA9hhU+P
+	 mUnojip8XGey8tnpl7OPy1s+xhstbB/mnoy5/xLr1Z6vZwKZJgfSJ9+5gU5FVWubQg
+	 Hnzh50TUvTPv3korqHoNKY1id/L4UiI2yTkzLXXtAruHaiR9ZHKonUP2HE2cRpO1p1
+	 8In6ZUjZQsPI0ZV3F+hh9+XlfIJ5wfWcUmQth6uh3lfhKWfzeOkASnFzOzACeNOo/K
+	 QC/n8Et2nU+T6WHjN4WTkB8tOKsbkOS+3NNSWDiyAGTjv0rwfXBLmJ9RC52p6IvX5p
+	 4iAPYk28gPDVA==
+Date: Thu, 18 Apr 2024 01:04:11 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	John Stultz <jstultz@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 11/50] posix-cpu-timers: Handle SIGEV_NONE timers
+ correctly in timer_set()
+Message-ID: <ZiBVa8oSVq-GAyt1@pavilion.home>
+References: <20240410164558.316665885@linutronix.de>
+ <20240410165551.635345704@linutronix.de>
+ <8734rrvr1p.fsf@somnus>
+ <87zftzzhfv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240416201935.3525739-1-pbonzini@redhat.com> <20240416201935.3525739-9-pbonzini@redhat.com>
-Message-ID: <ZiBU-3PlL4dp3nFP@google.com>
-Subject: Re: [PATCH v2 08/10] KVM: x86/mmu: Pass around full 64-bit error code
- for KVM page faults
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	isaku.yamahata@intel.com, xiaoyao.li@intel.com, binbin.wu@linux.intel.com, 
-	chao.gao@intel.com, Michael Roth <michael.roth@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87zftzzhfv.ffs@tglx>
 
-On Tue, Apr 16, 2024, Paolo Bonzini wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
+Le Fri, Apr 12, 2024 at 12:02:28AM +0200, Thomas Gleixner a écrit :
+> On Thu, Apr 11 2024 at 17:48, Anna-Maria Behnsen wrote:
 > 
-> In some cases the full 64-bit error code for the KVM page fault will be
-> needed to determine things like whether or not a fault was for a private
-> or shared guest page, so update related code to accept the full 64-bit
-> value so it can be plumbed all the way through to where it is needed.
+> > Thomas Gleixner <tglx@linutronix.de> writes:
+> >
+> >> Expired SIGEV_NONE oneshot timers must return 0 nsec for the expiry time in
+> >> timer_get(), but the posix CPU timer implementation returns 1 nsec.
+> >
+> > copy paste error (get/set) ?
 > 
-> The use of lower_32_bits() moves from kvm_mmu_page_fault() to
-> FNAME(page_fault), since walking is independent of the data in the
-> upper bits of the error code.
+> Yes.
+> 
+> >> Add the missing conditional.
+> >>
+> >> This will be cleaned up in a follow up patch.
+> >
+> > I'm confused. Why do you want to cleanup the conditional in a follow up
+> > patch?
+> 
+> This patch is to fix the issue. The next one consolidates the code, but
+> I can see why the "this will be ..." part of the changelog does not make
+> sense.
 
-Heh, I prefer my version, which is already in kvm/queue :-)
-
-0a5df50a2d6b ("KVM: x86/mmu: Pass full 64-bit error code when handling page faults")
+But please keep it cut that way. FWIW it's much easier to review than the
+previous take. That way we aren't missing subtle changes.
