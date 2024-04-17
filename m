@@ -1,559 +1,165 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5474EB5C;
-	Wed, 17 Apr 2024 05:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713330012; cv=none; b=qoMi9JRE8L835OjmxDzeFu8fQNZkdzay+3OtOTR8WcL3PCD4FY/Fu0HrKCySWGKSApwqJRKU312vVjvJqqEuY22JQCdB8mQTGP2Ze0KHMv9aDglbo1cfNo34KnOX8IOGI83mQp5smvHIZd3oPE/eta1uzkjIAx0zNb2b6pNXzO0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713330012; c=relaxed/simple;
-	bh=gQf/NvzASDZ0M4ToFluS/SITmULOuKDY5l6HFsuqtSU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Esp81UqQAQ/sgvquWCyTKwa0vbwyDbDIYoNcaEwKguV9HGxZA9LZUr9D05OuyqkHpzCGgI7HU/VPyfDv5sNTxzgMNgZ3CyDIBPzps5XNFDyo0ChpjigTvuCbJQmAOnqTlNOzqtKPG5M3k4Ma6mEBtH5j5UgVPgej5zaoWLEEaUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Z6SX4RXI; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3954EB5F;
+	Wed, 17 Apr 2024 05:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713330182; cv=fail; b=UjVgfSnz8wrTqxLdr4rqpscEcuCq8MixAuNVIaEK0STmJ1fua7DBFqbNnZ5kHXJ/NZuvZYVV9tXCE1+5ujqH2X1BB6SXhw8hru4XzkD8y1Fye9aF27/CJ4xE0ebah0utQKek6QHSGA7LDY9sekax5WOaTAfrp7yB9uMQGGuZsk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713330182; c=relaxed/simple;
+	bh=mNOJjOlGgsuvDAE4oHyPq5C20yhWIP1wGBjzgi+0miY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LfS9VcuefOoG85dbGzlDFqyK8V/stq3xXMnwB1w4e0fwX5tCH+h/wg2VztAqldAIbSNzQZpcwOhA+8CcRrPblZQk5xWo0QgyDOt570z4joFl+aqiOWgIsaiomJPsmp/NuxLZooydQQRkO0n5R8cqMmfpqlfy7+Ngj7S4bcrxbAE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HO+mo9w6; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Z6SX4RXI"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GK1tsm016891;
-	Tue, 16 Apr 2024 21:29:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pfpt0220; bh=N1DS92IuWebgeO+LrH6S+L
-	JrkeZ68tnc5F+BwH+A7zc=; b=Z6SX4RXIcKsAgwHw+w9Wl1OK3gfLLY7fVAS85r
-	CZfPaNff2LTjbdyvCCgSYQ4nyLAWFwqsVYlJTMozICv8u4AqepAeBnwgQvuqVUPs
-	v7ugv1dQdlLilMjjNR+TpYxnzxCfsJhaSZdmJpJFAPi4wM1Y4w821QcVzY++pmbC
-	BJzz+IDYkVCdVKJUxgAeDPZzMGsVLpq36HPjtBdwIy5NeneyPs3fK5zYjiQftiCX
-	t4TltlQjdJpIXGEQttIcWspc3U8yqatEtfaCJyzIrdto3gQDmNLtpXgALzsuBeVF
-	tAT+BgaYM36td9ER+8JxtbkZk4Ujr+Ai414DHAozJWUYDz0w==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3xhfdn4w4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 21:29:55 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HO+mo9w6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713330181; x=1744866181;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=mNOJjOlGgsuvDAE4oHyPq5C20yhWIP1wGBjzgi+0miY=;
+  b=HO+mo9w6l/3M38gU3LBa60frrzqrjS/Fe4H1YBkcqAMmwyTvDXegXMUt
+   OTBkrVfPSE5We1XEbxeB2Q4TRybqN+Yc8avdRniKqjJOOFoBRjecFge4b
+   BZciw5Zw3DGJEWv4iJI6yTgB9eHm3z5BZgTeZ7xripfmLXP8JS/xt1g4+
+   hshiIyz6sJl4U62bMmr/3QEIuEW6cBoHhGAWeGdP4wZSFGXLzvozfc+Ri
+   Cbp6gl8pPnIoxPJWYkMBUI/dIQJS7I5hORgXt8AzPMb0pPPGqv82wdbhh
+   cldGG9Jbw7OuawrGYGPi9jMHE5B0DqnHCsqzkLwkB0+ZYZem0150ItFdY
+   Q==;
+X-CSE-ConnectionGUID: NkpNpwVdR6ixaCSddLwGQA==
+X-CSE-MsgGUID: YdOUhFv0R8Gd1BteFdEc3w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9354857"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="9354857"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 22:03:00 -0700
+X-CSE-ConnectionGUID: HmnKy3FhQCaitZ5X4Nfjug==
+X-CSE-MsgGUID: C4o1rmb6SsaY9TX2vzb33Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="22501322"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Apr 2024 22:03:00 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Apr 2024 22:02:59 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 16 Apr 2024 22:02:59 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 22:02:59 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 16 Apr 2024 21:29:55 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 16 Apr 2024 21:29:54 -0700
-Received: from IPBU-BLR-SERVER1 (IPBU-BLR-SERVER1.marvell.com [10.28.8.41])
-	by maili.marvell.com (Postfix) with SMTP id E11163F7082;
-	Tue, 16 Apr 2024 21:29:50 -0700 (PDT)
-Date: Wed, 17 Apr 2024 09:59:49 +0530
-From: George Cherian <george.cherian@marvell.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-CC: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Lee Jones
-	<lee@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Wim Van
- Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 5/6] watchdog: ROHM BD96801 PMIC WDG driver
-Message-ID: <20240417042949.GA3513394@IPBU-BLR-SERVER1>
-References: <cover.1712920132.git.mazziesaccount@gmail.com>
- <d52fd63e98635293022e5a607fd763b580e24189.1712920132.git.mazziesaccount@gmail.com>
+ 15.1.2507.35; Tue, 16 Apr 2024 22:02:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FoQ8n4z+vLM8q/JnE+fsRdRilC2xNBbuw0+GFPkcDs6gnA1vcaPIctPShDARGR1JmXFgF2qI0Ybg4Yr51hs2B/nbtebVb29UekDhSv9pV7A+zWM8iT3aJi8bFiculDrq48AopoiAJb/kEl8z1AO1f9NYls7orrKNkWWxdL+YR71NKAqEDtF0MVq+K308WOw5UFMK57TQ5Giu9MpmvYoEy0gDB5xdbDNBaLoN5zr4hlR/4yZKgd/9Plk07jAp+i/Hr/FBua+CA5QDjmkwn7CHMi2BwOKzlh+n+qHsDGGdSWddTXSEVkfGkLb7x6TeUpk2ksaZHKqdpUvCh4jExP8Wqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mNOJjOlGgsuvDAE4oHyPq5C20yhWIP1wGBjzgi+0miY=;
+ b=N3UUrhY8u7wK6q/v8eiW1cNPD5dIho+QGFcGQNCDHaOtEmHeNsMdwKsXVBwHSHTwyH9hsPswQv1h1Ay6zi3HKptWf6gWIpGE+lYkupcG39vUpjcNRbQHzsPEl5GfEHTfrg0xpdMBaJpz6rcqHK/Ff7q0c/w8MiFJ8DX2nwwSp0nnh2bx9x31nZ827tjN5SPF9mFaQp341N0Hedk5RsSaNG4l8uMdoMUdTch6yUdGBijNQSQR13GmYDTsuiFFVMtu68PSAKxgGVde/RFqxvopCiaRQSDkwawDs151aUrnunmnm/oJRLhAXaJVHioE4MXwN1mKfKfRLkmPs73iGdzCkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by MN0PR11MB6086.namprd11.prod.outlook.com (2603:10b6:208:3ce::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.26; Wed, 17 Apr
+ 2024 05:02:52 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234%6]) with mapi id 15.20.7472.027; Wed, 17 Apr 2024
+ 05:02:52 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Ye Bin <yebin10@huawei.com>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "Chatre, Reinette" <reinette.chatre@intel.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "brauner@kernel.org"
+	<brauner@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] vfio/pci: fix potential memory leak in vfio_intx_enable()
+Thread-Topic: [PATCH] vfio/pci: fix potential memory leak in
+ vfio_intx_enable()
+Thread-Index: AQHajtdALXQmxco44k6vhV3B6hw9K7Fr6ynw
+Date: Wed, 17 Apr 2024 05:02:52 +0000
+Message-ID: <BN9PR11MB52760CE6BF65BBF7954A45D98C0F2@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240415015029.3699844-1-yebin10@huawei.com>
+In-Reply-To: <20240415015029.3699844-1-yebin10@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|MN0PR11MB6086:EE_
+x-ms-office365-filtering-correlation-id: 5df3af52-e601-470b-823c-08dc5e9ba2a7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qZcdfYbo1Wzc089fXwovphnV7qOCTfGaFq50jIfhUkKYz4X1FyqRFY5DVwnfwCzb/2UrGlaooMRz8D2dRtb5XxDDk8RPyJl8wK/CXAmwbeTZ8HSZnsDm/vjVI0Lc/uKEIAHxdX5j1cIWNhOifcorCK4pIVAoKaoxuUGLIAxEyXHB1wAIEo05KhQ4xyHORwUeQaHpFPrGEnsY2wNyax+1/eNlawC8XxJFqorx7xZJSeLkcAQCp8TwTUgD24kUDwmlTu7K510uDtOOWmjM7/dhl2IEILFE+PUMbQK3Xv4eWR5pULl382PF4ZHbifMtmBPujEisHdytjJ9ayFC7zks8bhd9zpc8TQjM5BbKS3U/KcBcO44v6WuOehugrisg5UQe7Wj78PUxlp7CD06dYPIJLnq11UihOPb/GDeKk1jrp1+QmqdSuVP4nwKUvpwUwNf5OmV/kL0r39D2tOo1WhZqssrMvVqFTzGLWAhyH2UOQ4RZp1hprMF1nupG2WaRop/Gz7WoevnMAOG9bpxF91Vy8mQLSYiFkvRC9ECLS9dpCdumwbkHI5O6lRoliK0+Wp9ioiaW9lUXnjVm2pQoooQMQB4y3JyCFlerBfVRMFtX+lltbhz9DIjADf5X2WL+MCzZTWd/RsZC4VDM29IZRIpHD5/ZR6CmHvmN774Ef6/w0lvXWttn8vJkMUbnx1bCaiy7O/1Tt7shaI5+rzyjihPvnA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Mcn8Vhe251A7DmShUGN19kUhzBBa7Y5AsiYx5WIliGb+BPgbuiaWwFcVI8vW?=
+ =?us-ascii?Q?Xa0qKvVKunDExki0ltS8Mqr8lV7eVSBmXotvaCygtTSQ2KD64bIS4UzBA4qP?=
+ =?us-ascii?Q?Q4ohuvnpb1xizGdJ4/RSmLN9nYW0aKokcjQrHEJ56wTiI/Nr8jrzlGwLzo3X?=
+ =?us-ascii?Q?NW1T0DiQbsNsHdm5TyMujTJH80N/cmf7s3Ehkkwq4HDLB2pGXIo5NUv/pCiF?=
+ =?us-ascii?Q?IKUc+YxQvz+XoPURZ8Ko2pjRzo4+wJeYicb2UZSH53oB6aFWf7TpgJ2bUayU?=
+ =?us-ascii?Q?tiWvQ6JoFcbzBs/oLSJkHsoLmJPYh0KuraSSuxanDDlmxJ9lOcf8lY11OXr0?=
+ =?us-ascii?Q?ASJ0nnISusaOiygjmAVhw8nd3i+iErbl0E145Gredvar/IBLCiAD8yvxAwxx?=
+ =?us-ascii?Q?aR15X/+K3Zd/NspU4KE/no+SxSHOoZv30kZQSxR22pe/Syxjd56Jq/qtefLr?=
+ =?us-ascii?Q?LTsYLiE0QecIS9eOJv0yJDPTOh2eVt5BmT66xhKuMibOzkyrzw0zZec9EgoT?=
+ =?us-ascii?Q?O9h9HSkwdMiEjkbZlgqn3jOkyTDGDtn238u5vxIeFgomHf4iUM42Mgl6/3lf?=
+ =?us-ascii?Q?V2osq2jwCEzhk4wckbTsvLYgJi9BtmeJbD3amWZ62amdz7PTPkxkznlN29me?=
+ =?us-ascii?Q?ed0J13bczifX48ln4Vy08AQT4OWmiuPBLPooLcpwCac2fCR5/hZlGfObWn9z?=
+ =?us-ascii?Q?EbsD8W9BBxnezLAOKIEhExsVZPsZvfqdopXfk0pkVQB6dWMoIA3NLO7r+e84?=
+ =?us-ascii?Q?3IPllpc3/OKz5pEI3GphfgS89HlTy3k56DVdKJTYPg4KT5EDYfoNq90GskW8?=
+ =?us-ascii?Q?HiiB6c4jo2pYWYBYJBMy+Be3rDamg8/2DuVjH/6KjT/CcABMti9qgnq8XzyK?=
+ =?us-ascii?Q?OsKoybbWqIraShaxQAHtWeBiMoRq6TeMP3aWOq+I4sA+gaLP7DPV44gG0kam?=
+ =?us-ascii?Q?4gtAZ3yeZBKJ3vs+KZQ1PlNCzRTQXhCgtDwi1E1+hP/qRIZxucBssm+5N674?=
+ =?us-ascii?Q?V9x9VPphuK/RV4f67A5Em6e3GtjLMo6jn2czCrLicV9qbBuGZBcM8G848Cij?=
+ =?us-ascii?Q?WO8UoWygZ83NuCCG4o6UP4KxcZb1brtrsXTNEv7/gvO5GaIXhxJb4w5R1EUZ?=
+ =?us-ascii?Q?yPv5cu4Ng7cGfiKutNWjK00AKGqOtoLZqCGTTDswFyuzbC9vW4OKm66lqMGO?=
+ =?us-ascii?Q?lrCiiRmQWHUmVXsxShLiy8yciO+3ONqrLLtauUCWxpvdFyu2/mlJUsARKINT?=
+ =?us-ascii?Q?EFC57ZqFIvNEYIHbTLofswvx2osU9LdNDMFBn/pDFXtS+LqGToZ7xPSZSptR?=
+ =?us-ascii?Q?7D5+qdZI9ICGlKFsIvttVOor75fge/878FQi+biirEYca3DLMxS0pAVfnNou?=
+ =?us-ascii?Q?rr1/q7TH07YFE4cM+B4M3aGwodkn7GcDUgjpaSBm1BWd7HVZ4DGtapBvCWZX?=
+ =?us-ascii?Q?CeVkFJu591+64BXU/apbKZ//g24G10m5xahXuD6k4LKxJy4VlgeXAtRi3lzm?=
+ =?us-ascii?Q?Dgn9XIgAIfSyaXI0Z6fZ1XfUtgJwtFvVKmsa03AXa4Z7bcxrKB77RumlWjMH?=
+ =?us-ascii?Q?Msca+gBqGQPEcuamu9JKsjfkqERzCitIQRQbk7Uj?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <d52fd63e98635293022e5a607fd763b580e24189.1712920132.git.mazziesaccount@gmail.com>
-X-Proofpoint-GUID: gzDIpBzbgS_dRykYWiLtKuySY3_TAn74
-X-Proofpoint-ORIG-GUID: gzDIpBzbgS_dRykYWiLtKuySY3_TAn74
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_03,2024-04-16_01,2023-05-22_02
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5df3af52-e601-470b-823c-08dc5e9ba2a7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2024 05:02:52.1368
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ve4gf95MvoNsAd1UrSGk92QiIaEQswTKVB4w+I7ngUnB7kaA/+ficChWJkziegP+/esB3h8qPl9b4SU1JgKYlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6086
+X-OriginatorOrg: intel.com
 
-On 2024-04-12 at 16:52:46, Matti Vaittinen (mazziesaccount@gmail.com) wrote:
-> Introduce driver for WDG block on ROHM BD96801 scalable PMIC.
-> 
-> This driver only supports watchdog with I2C feeding and delayed
-> response detection. Whether the watchdog toggles PRSTB pin or
-> just causes an interrupt can be configured via device-tree.
-> 
-> The BD96801 PMIC HW supports also window watchdog (too early
-> feeding detection) and Q&A mode. These are not supported by
-> this driver.
-> 
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> 
-> ---
-> Revision history:
-> RFCv1 => RFCv2:
-> - remove always running
-> - add IRQ handling
-> - call emergency_restart()
-> - drop MODULE_ALIAS and add MODULE_DEVICE_TABLE
-> ---
->  drivers/watchdog/Kconfig       |  13 ++
->  drivers/watchdog/Makefile      |   1 +
->  drivers/watchdog/bd96801_wdt.c | 389 +++++++++++++++++++++++++++++++++
->  3 files changed, 403 insertions(+)
->  create mode 100644 drivers/watchdog/bd96801_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 6bee137cfbe0..d97e735e1faa 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -181,6 +181,19 @@ config BD957XMUF_WATCHDOG
->  	  watchdog. Alternatively say M to compile the driver as a module,
->  	  which will be called bd9576_wdt.
->  
-> +config BD96801_WATCHDOG
-> +	tristate "ROHM BD96801 PMIC Watchdog"
-> +	depends on MFD_ROHM_BD96801
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Support for the watchdog in the ROHM BD96801 PMIC. Watchdog can be
-> +	  configured to only generate IRQ or to trigger system reset via reset
-> +	  pin.
-> +
-> +	  Say Y here to include support for the ROHM BD96801 watchdog.
-> +	  Alternatively say M to compile the driver as a module,
-> +	  which will be called bd96801_wdt.
-> +
->  config CROS_EC_WATCHDOG
->  	tristate "ChromeOS EC-based watchdog"
->  	select WATCHDOG_CORE
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 3710c218f05e..31bc94436c81 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -217,6 +217,7 @@ obj-$(CONFIG_XEN_WDT) += xen_wdt.o
->  
->  # Architecture Independent
->  obj-$(CONFIG_BD957XMUF_WATCHDOG) += bd9576_wdt.o
-> +obj-$(CONFIG_BD96801_WATCHDOG) += bd96801_wdt.o
->  obj-$(CONFIG_CROS_EC_WATCHDOG) += cros_ec_wdt.o
->  obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->  obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
-> diff --git a/drivers/watchdog/bd96801_wdt.c b/drivers/watchdog/bd96801_wdt.c
-> new file mode 100644
-> index 000000000000..08fab9a87aec
-> --- /dev/null
-> +++ b/drivers/watchdog/bd96801_wdt.c
-> @@ -0,0 +1,389 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2024 ROHM Semiconductors
-> + *
-> + * ROHM BD96801 watchdog driver
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/rohm-bd96801.h>
-> +#include <linux/mfd/rohm-generic.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/watchdog.h>
-> +
-> +static bool nowayout;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +		"Watchdog cannot be stopped once started (default=\"false\")");
-> +
-> +#define BD96801_WD_TMO_SHORT_MASK	0x70
-> +#define BD96801_WD_RATIO_MASK		0x3
-> +#define BD96801_WD_TYPE_MASK		0x4
-> +#define BD96801_WD_TYPE_SLOW		0x4
-> +#define BD96801_WD_TYPE_WIN		0x0
-> +
-> +#define BD96801_WD_EN_MASK		0x3
-> +#define BD96801_WD_IF_EN		0x1
-> +#define BD96801_WD_QA_EN		0x2
-> +#define BD96801_WD_DISABLE		0x0
-> +
-> +#define BD96801_WD_ASSERT_MASK		0x8
-> +#define BD96801_WD_ASSERT_RST		0x8
-> +#define BD96801_WD_ASSERT_IRQ		0x0
-> +
-> +#define BD96801_WD_FEED_MASK		0x1
-> +#define BD96801_WD_FEED			0x1
-> +
-> +/* units in uS */
-> +#define FASTNG_MIN			3370
-> +#define BD96801_WDT_DEFAULT_MARGIN	6905120
-> +/* Unit is seconds */
-> +#define DEFAULT_TIMEOUT 30
-> +
-> +/*
-> + * BD96801 WDG supports window mode so the TMO consists of SHORT and LONG
-> + * timeout values. SHORT time is meaningfull only in window mode where feeding
-> + * period shorter than SHORT would be an error. LONG time is used to detect if
-> + * feeding is not occurring within given time limit (SoC SW hangs). The LONG
-> + * timeout time is a multiple of (2, 4, 8 0r 16 times) the SHORT timeout.
-> + */
-> +
-> +struct wdtbd96801 {
-> +	struct device		*dev;
-> +	struct regmap		*regmap;
-> +	struct watchdog_device	wdt;
-> +};
-> +
-> +static int bd96801_wdt_ping(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd96801 *w = watchdog_get_drvdata(wdt);
-> +
-> +	return regmap_update_bits(w->regmap, BD96801_REG_WD_FEED,
-> +				 BD96801_WD_FEED_MASK, BD96801_WD_FEED);
-> +}
-> +
-> +static int bd96801_wdt_start(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd96801 *w = watchdog_get_drvdata(wdt);
-> +	int ret;
-> +
-> +	ret = regmap_update_bits(w->regmap, BD96801_REG_WD_CONF,
-> +				 BD96801_WD_EN_MASK, BD96801_WD_IF_EN);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bd96801_wdt_stop(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd96801 *w = watchdog_get_drvdata(wdt);
-> +
-> +	return regmap_update_bits(w->regmap, BD96801_REG_WD_CONF,
-> +				  BD96801_WD_EN_MASK, BD96801_WD_DISABLE);
-> +}
-> +
-> +static const struct watchdog_info bd96801_wdt_info = {
-> +	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
-> +			  WDIOF_SETTIMEOUT,
-> +	.identity	= "BD96801 Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops bd96801_wdt_ops = {
-> +	.start		= bd96801_wdt_start,
-> +	.stop		= bd96801_wdt_stop,
-> +	.ping		= bd96801_wdt_ping,
-> +};
-Is there no way to setup a timeout to the WDOG device from userspace?
+> From: Ye Bin <yebin10@huawei.com>
+> Sent: Monday, April 15, 2024 9:50 AM
+>=20
+> If vfio_irq_ctx_alloc() failed will lead to 'name' memory leak.
+>=20
+> Fixes: 18c198c96a81 ("vfio/pci: Create persistent INTx handler")
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
 
-> +
-> +static int find_closest_fast(int target, int *sel, int *val)
-> +{
-> +	int i;
-> +	int window = FASTNG_MIN;
-> +
-> +	for (i = 0; i < 8 && window < target; i++)
-> +		window <<= 1;
-> +
-> +	*val = window;
-> +	*sel = i;
-> +
-> +	if (i == 8)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int find_closest_slow_by_fast(int fast_val, int *target, int *slowsel)
-> +{
-> +	int sel;
-> +	static const int multipliers[] = {2, 4, 8, 16};
-> +
-> +	for (sel = 0; sel < ARRAY_SIZE(multipliers) &&
-> +	     multipliers[sel] * fast_val < *target; sel++)
-> +		;
-> +
-> +	if (sel == ARRAY_SIZE(multipliers))
-> +		return -EINVAL;
-> +
-> +	*slowsel = sel;
-> +	*target = multipliers[sel] * fast_val;
-> +
-> +	return 0;
-> +}
-> +
-> +static int find_closest_slow(int *target, int *slow_sel, int *fast_sel)
-> +{
-> +	static const int multipliers[] = {2, 4, 8, 16};
-> +	int i, j;
-> +	int val = 0;
-> +	int window = FASTNG_MIN;
-> +
-> +	for (i = 0; i < 8; i++) {
-> +		for (j = 0; j < ARRAY_SIZE(multipliers); j++) {
-> +			int slow;
-> +
-> +			slow = window * multipliers[j];
-> +			if (slow >= *target && (!val || slow < val)) {
-> +				val = slow;
-> +				*fast_sel = i;
-> +				*slow_sel = j;
-> +			}
-> +		}
-> +		window <<= 1;
-> +	}
-> +	if (!val)
-> +		return -EINVAL;
-> +
-> +	*target = val;
-> +
-> +	return 0;
-> +}
-> +
-> +static int bd96801_set_wdt_mode(struct wdtbd96801 *w, int hw_margin,
-> +			       int hw_margin_min)
-> +{
-> +	int ret, fastng, slowng, type, reg, mask;
-> +	struct device *dev = w->dev;
-> +
-> +	/* convert to uS */
-> +	hw_margin *= 1000;
-> +	hw_margin_min *= 1000;
-> +	if (hw_margin_min) {
-> +		int min;
-> +
-> +		type = BD96801_WD_TYPE_WIN;
-> +		dev_dbg(dev, "Setting type WINDOW 0x%x\n", type);
-> +		ret = find_closest_fast(hw_margin_min, &fastng, &min);
-> +		if (ret) {
-> +			dev_err(dev, "bad WDT window for fast timeout\n");
-> +			return ret;
-> +		}
-> +
-> +		ret = find_closest_slow_by_fast(min, &hw_margin, &slowng);
-> +		if (ret) {
-> +			dev_err(dev, "bad WDT window\n");
-> +			return ret;
-> +		}
-> +		w->wdt.min_hw_heartbeat_ms = min / 1000;
-> +	} else {
-> +		type = BD96801_WD_TYPE_SLOW;
-> +		dev_dbg(dev, "Setting type SLOW 0x%x\n", type);
-> +		ret = find_closest_slow(&hw_margin, &slowng, &fastng);
-> +		if (ret) {
-> +			dev_err(dev, "bad WDT window\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	w->wdt.max_hw_heartbeat_ms = hw_margin / 1000;
-> +
-> +	fastng <<= ffs(BD96801_WD_TMO_SHORT_MASK) - 1;
-> +
-> +	reg = slowng | fastng;
-> +	mask = BD96801_WD_RATIO_MASK | BD96801_WD_TMO_SHORT_MASK;
-> +	ret = regmap_update_bits(w->regmap, BD96801_REG_WD_TMO,
-> +				 mask, reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(w->regmap, BD96801_REG_WD_CONF,
-> +				 BD96801_WD_TYPE_MASK, type);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bd96801_set_heartbeat_from_hw(struct wdtbd96801 *w,
-> +					 unsigned int conf_reg)
-> +{
-> +	int ret;
-> +	unsigned int val, sel, fast;
-> +
-> +	/*
-> +	 * The BD96801 supports a somewhat peculiar QA-mode, which we do not
-> +	 * support in this driver. If the QA-mode is enabled then we just
-> +	 * warn and bail-out.
-> +	 */
-> +	if ((conf_reg & BD96801_WD_EN_MASK) != BD96801_WD_IF_EN) {
-> +		dev_warn(w->dev, "watchdog set to Q&A mode - exiting\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = regmap_read(w->regmap, BD96801_REG_WD_TMO, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sel = val & BD96801_WD_TMO_SHORT_MASK;
-> +	sel >>= ffs(BD96801_WD_TMO_SHORT_MASK) - 1;
-> +	fast = FASTNG_MIN << sel;
-> +
-> +	sel = (val & BD96801_WD_RATIO_MASK) + 1;
-> +	w->wdt.max_hw_heartbeat_ms = (fast << sel) / USEC_PER_MSEC;
-> +
-> +	if ((conf_reg & BD96801_WD_TYPE_MASK) == BD96801_WD_TYPE_WIN)
-> +		w->wdt.min_hw_heartbeat_ms = fast / USEC_PER_MSEC;
-> +
-> +	return 0;
-> +}
-> +
-> +static int init_wdg_hw(struct wdtbd96801 *w)
-> +{
-> +	u32 hw_margin[2];
-> +	int count, ret;
-> +	u32 hw_margin_max = BD96801_WDT_DEFAULT_MARGIN, hw_margin_min = 0;
-> +
-> +	count = device_property_count_u32(w->dev->parent, "rohm,hw-timeout-ms");
-Why is that timeout need to be configured from a devicce-tree property?
-set_timeout/get_timeout can't be done for this device?
-
-> +	if (count < 0 && count != -EINVAL)
-> +		return count;
-> +
-> +	if (count > 0) {
-> +		if (count > ARRAY_SIZE(hw_margin))
-> +			return -EINVAL;
-> +
-> +		ret = device_property_read_u32_array(w->dev->parent,
-> +						     "rohm,hw-timeout-ms",
-> +						     &hw_margin[0], count);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (count == 1)
-> +			hw_margin_max = hw_margin[0];
-> +
-> +		if (count == 2) {
-> +			hw_margin_max = hw_margin[1];
-> +			hw_margin_min = hw_margin[0];
-> +		}
-> +	}
-> +
-> +	ret = bd96801_set_wdt_mode(w, hw_margin_max, hw_margin_min);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = device_property_match_string(w->dev->parent, "rohm,wdg-action",
-> +					   "prstb");
-> +	if (ret >= 0) {
-> +		ret = regmap_update_bits(w->regmap, BD96801_REG_WD_CONF,
-> +				 BD96801_WD_ASSERT_MASK,
-> +				 BD96801_WD_ASSERT_RST);
-> +		return ret;
-> +	}
-> +
-> +	ret = device_property_match_string(w->dev->parent, "rohm,wdg-action",
-> +					   "intb-only");
-> +	if (ret >= 0) {
-> +		ret = regmap_update_bits(w->regmap, BD96801_REG_WD_CONF,
-> +				 BD96801_WD_ASSERT_MASK,
-> +				 BD96801_WD_ASSERT_IRQ);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +extern void emergency_restart(void);
-> +static irqreturn_t bd96801_irq_hnd(int irq, void *data)
-> +{
-> +	emergency_restart();
-In case of a full system hang will this function get executed?
-> +	return IRQ_NONE;
-> +}
-> +
-> +static int bd96801_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct wdtbd96801 *w;
-> +	int ret, irq;
-> +	unsigned int val;
-> +
-> +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-> +	if (!w)
-> +		return -ENOMEM;
-> +
-> +	w->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	w->dev = &pdev->dev;
-> +
-> +	w->wdt.info = &bd96801_wdt_info;
-> +	w->wdt.ops =  &bd96801_wdt_ops;
-> +	w->wdt.parent = pdev->dev.parent;
-> +	w->wdt.timeout = DEFAULT_TIMEOUT;
-> +	watchdog_set_drvdata(&w->wdt, w);
-> +
-> +	ret = regmap_read(w->regmap, BD96801_REG_WD_CONF, &val);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Failed to get the watchdog state\n");
-> +
-> +	/*
-> +	 * If the WDG is already enabled we assume it is configured by boot.
-> +	 * In this case we just update the hw-timeout based on values set to
-> +	 * the timeout / mode registers and leave the hardware configs
-> +	 * untouched.
-> +	 */
-> +	if ((val & BD96801_WD_EN_MASK) != BD96801_WD_DISABLE) {
-> +		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-> +		ret = bd96801_set_heartbeat_from_hw(w, val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		set_bit(WDOG_HW_RUNNING, &w->wdt.status);
-> +	} else {
-> +		/* If WDG is not running so we will initializate it */
-> +		ret = init_wdg_hw(w);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	watchdog_init_timeout(&w->wdt, 0, pdev->dev.parent);
-> +	watchdog_set_nowayout(&w->wdt, nowayout);
-> +	watchdog_stop_on_reboot(&w->wdt);
-> +
-> +	irq = platform_get_irq_byname(pdev, "bd96801-wdg");
-> +	if (irq > 0) {
-> +		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +						bd96801_irq_hnd,
-> +						IRQF_ONESHOT,  "bd96801-wdg",
-> +						NULL);
-> +		if (ret)
-> +			return dev_err_probe(&pdev->dev, ret,
-> +					     "Failed to register IRQ\n");
-> +	}
-> +
-> +	return devm_watchdog_register_device(&pdev->dev, &w->wdt);
-> +}
-> +
-> +static const struct platform_device_id bd96801_wdt_id[] = {
-> +	{ "bd96801-wdt", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, bd96801_wdt_id);
-> +
-> +static struct platform_driver bd96801_wdt = {
-> +	.driver = {
-> +		.name = "bd96801-wdt"
-> +	},
-> +	.probe = bd96801_wdt_probe,
-> +	.id_table = bd96801_wdt_id,
-> +};
-> +module_platform_driver(bd96801_wdt);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("BD96801 watchdog driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.43.2
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
-
--George
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
