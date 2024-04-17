@@ -1,95 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2069.outbound.protection.outlook.com [40.92.40.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20E91411CF
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713368533; cv=none; b=FgEQo+ZZh+rchTIzdZkkU6A6saL681Qdu1BmCUz7b8/LujJJ1yVwxN5pifU62KI7WfzAUylfoT6YNj0ceeZH6mXANxc4aTldXsbcoMSr/YEYzqBiWCO1sTBp9561218pp45x8tVsoBsx8Dogunt7dZDCqukZTcgljt8n1D7qL6I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713368533; c=relaxed/simple;
-	bh=7gVkTYWNNgR6Ee0qa0UmIW+l7/HdkMilyXO4kdChYvw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jORn3VydLgF6jA/rVI/yIZAK8MjqW23IhMYp/n3H259l8JBf/5fmA4vb4zcyEfW7CreXWBva8cDGxWyjKA4FEAxjDt4fnOjUvptkViQ+dO7y1u2GxHEBDn45NfJGa7jWuMOnW4y4uYTf2+V+mwtM6XiZdsbF2pOr0mtxEfj6nHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WZ0JJtC2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4D038DEC;
+	Wed, 17 Apr 2024 15:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713368634; cv=fail; b=h01eKNknPwLXz0yc0lVBPlhDH79owH+GPGH26GloTMJV3st7LneAETnB2mPcJkL0VtP0mJo1rWtBgezOsYeROEC2fB5nEvQ9dlII4E9GLSsuEDoYYSS3iDBEZeikY8yo6Xkcok6HVeoIIcnfNzPB48nsD1ZQ+L7JcQcfGzjjFyA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713368634; c=relaxed/simple;
+	bh=CXh5jlFXtMRsKjBfX5XG78HbZteOWOtMgHMrzV4Xs/M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dd4AWTheQtNSur6ZrgYAvME2oQYB9/VcVbbxc3aqhcS5JMemsRVUkZF2mTt7uEf53AWHYP6G1WyNKS2zWPqAvdirVX615pATi5a/Ak2OoSCGS9jXFz00Oj/n6VuZg7FK+Aj1PiEyQ2JGQC4MGuoQX79PNUBcH+ep8rh13d+skR4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LpRMZR8/; arc=fail smtp.client-ip=40.92.40.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ0JJtC2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713368530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dzERyazOZhZDFp//yk13CO/EeXSCUMQ4vzlhZ6tsJ4s=;
-	b=WZ0JJtC2UgMV8K0Jqiqb0DOi3ikMRg0E9mxrN5LKh4CnfBdSOUkisFgUc2bg3XIqwgy0Mu
-	pEnBBOf6zN3oQ9qVlhG+qIl9zLiiiOoU4HwUXClogw1eaA1IqVZw1dEiTNw/WAME92wjl/
-	Nv8O/8dVI/Vwk4zAMP0iT6xqDcA2P78=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-tdWWWZMAOg-zqL0m4MHnCg-1; Wed, 17 Apr 2024 11:42:09 -0400
-X-MC-Unique: tdWWWZMAOg-zqL0m4MHnCg-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5ce67a3f275so4113887a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 08:42:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713368528; x=1713973328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dzERyazOZhZDFp//yk13CO/EeXSCUMQ4vzlhZ6tsJ4s=;
-        b=dGOdZ7pHwyNiCOAzZvwKXbX6woTUfKwkGtcuLWLJEZ/aYHN+UZOlWalmp9pHS/S0gU
-         leK6lCjn1k2KCr+Sb1JHxBdZJd/4JeYybNmRqTrT+/9u41Fr9QQczbTq6zcGVAJJ8WcI
-         LKIkFnS3Yp0+5lqWfMz/R4qjWzDXpnuzkLBPNtqgZjS9lKvg91MwgtLByHB+BlrNJ6jx
-         ZOoHT+/jgDIbpkNOsPTL56Rb8HdLS9UixLDK720ILS3wfs08eHjuDpJCUK5TwwpS8GtP
-         38DYaxp5Szt9F6nCb+eUc+nTppYReBUWs/7/W6fuQGAfG7e4PFOWfQfrb5SryLQTDyRs
-         WEtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxGSJ+KHzemz2i1+s0MSHe5DX7eM/5ewX67RCUSsGf8mWfPGS0KUKXP58YS7jQZLCs6sECzBKD4xIVL8qf0ltJb5lVH4CCO9/3uxlC
-X-Gm-Message-State: AOJu0YwIzcXVles1rKyPjyo5DW5bxOFNQQR4Ie2iRBU8WJrTIO854vEs
-	4jAOe54jWPHlLxbwbIe5HChxXaxnU76fJ/7fP330Xu58EfiyaoSTrHB+6NTFcZpORVXRZdmKT7P
-	9XKDpj8+CbGvNIX37u5grWnYmEA64wmZRhtmeJzA63gb/rcHMaZs5yFwjFxJXiquEdddmafHnZo
-	3gOx5cNW/3Zr2c49or9SoO/iZMjoarmjGTtcE1
-X-Received: by 2002:a05:6a21:8802:b0:1a7:4a6f:ec4b with SMTP id ta2-20020a056a21880200b001a74a6fec4bmr17428750pzc.35.1713368528175;
-        Wed, 17 Apr 2024 08:42:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGA7qaavrOyPAmWc+BQO+KFe4vxronaHCXQ8eu3uFOXgOr20CvQtR70dFyBzIAxlmu+kRXqTad/LyK2LFTXMi8=
-X-Received: by 2002:a05:6a21:8802:b0:1a7:4a6f:ec4b with SMTP id
- ta2-20020a056a21880200b001a74a6fec4bmr17428721pzc.35.1713368527850; Wed, 17
- Apr 2024 08:42:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LpRMZR8/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NAmJbIaeZ2TYRu2HCmr+mCjvH/bpLQb02NdnDBQGqHv2hZGlCbNWXmjj6Axh8zlpsoVyYoYTJfR+tPxPR3oqsvZynvqdycGaRl1bPNa/1PDNhF/DhzF++NbVkVEXYr+GuyCo8ovLn+bduUf7lfzZvnkUV8d4s7LB8yvvQEFQvVsz9h1sgWA50RqsyibGwI/4osfLA5h5koeMhmiBGyTjJGJxU6vdDSI79zPHiKfKG4F+EJDAcWcredcgREd+fSn6bHKU+C54CQAR7BrMfrcTUQynjlVJlTBWpt6A9dpbJ8Y2PU3VjeDdzDAZxWYtPobkgvdjxjemfsNHOCxzrVcc3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z+4ZJ/Raujh3Ya6fv1WHoORjsMKHYaanXs0J2KRtWtM=;
+ b=WaaOGVwdVDFHU1WurTuufgHSsUYlOJLB+JEYy6BqiUNVKdR11kXD4bJypIi6apYw+1AbW+c/X1nkioHcglKmEFau+3k/nnyqSjCin8q4OzRWuCboKEnb70j9XoX0563j0pVBPOVEuDDQScK2If1aEFd7P+dbjCNSpcmKEgvIpS+9qFdlWUHzyZLXVb68sgbLqqm489aBWMxDYluZnf3BJL1NoK44lRvG6RqWUnqGNdqfMpAZUCvAMFwBNHBIb5Vv+lltr2pLGjgQW0oDfyERpZHSmUmMl3cg6uEqJfnYnNR1oKGJCtg9XrCgjU2lHay1RYMevmVOwP/YgxE1bOjoYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z+4ZJ/Raujh3Ya6fv1WHoORjsMKHYaanXs0J2KRtWtM=;
+ b=LpRMZR8/CLkLWTS1naTp//3qvf2SGfptaN7CqNDuyeYzjmKr6amIKHd8/8sdiWtIXUvnivx62MGz42Hcu1aH55dmVdzV/uw08/z6SZXmaSmxyUsrYUh1unJYh7/0mtwaiUBn1KGsyDcqmwrrxHUdJiVmB+YhaFA4R53Wl/LNOcaUaTxawcozpkdORmWVzyaNc1jIkQHDqoo6wI4FhnjdgfLg56jcoCKfIbEaxswIfh97ij2GGyH0Ri8nv9a+N/23PQBHzAbN4SVsD48MM1OmLjTydZEKXSfcv7+B3MGE8tEwDIWSlf0JBHvPFr16d0yYHDq3NuqC48I0SuFnunBofQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ2PR02MB9894.namprd02.prod.outlook.com (2603:10b6:a03:537::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Wed, 17 Apr
+ 2024 15:43:49 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7452.049; Wed, 17 Apr 2024
+ 15:43:49 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Jean Delvare <jdelvare@suse.de>, Michael Schierl <schierlm@gmx.de>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] firmware: dmi: Stop decoding on broken entry
+Thread-Topic: [PATCH] firmware: dmi: Stop decoding on broken entry
+Thread-Index: AQHakNyeQHU2XdbvxkyqvOE9tFpqPLFsmKbA
+Date: Wed, 17 Apr 2024 15:43:49 +0000
+Message-ID:
+ <SN6PR02MB415755044A025D66B4BC8955D40F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <b702b36b90b63b615d41e778570707043ea81551.camel@suse.de>
+In-Reply-To: <b702b36b90b63b615d41e778570707043ea81551.camel@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [elEnpwY/FuEeyEiyGNASYtEkyZLiR6VA]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ2PR02MB9894:EE_
+x-ms-office365-filtering-correlation-id: 31262e71-8338-4f63-beba-08dc5ef52cfd
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ hCCW1j9X3QKY5atkmSND7w6YEfcZys9EV8EfMvgoDoLL70I49ypKIizh7P6j7d44UWnskKDgdemxCKz/rkMwIrT3Ox8DeW6Y/vkY1QgKYkY2FoOibVPYDt9CI1GJI4HDCVcC+QkdVbEGWnj6CrLXj7BgjYxy+ScsHFCfbdiLSO5A00jjRUsdiRh5bhTIxAH2ynBsjhrLvkwT+9oyDW14rnhP+b9MbeVbXsjDrK3czXVVV8QZffTB4IsNg/l3egpslg9kpmcOcl53Th/CKJnOocuB1Yw1X2ZIh4NHcX4hOnac0f00TwmVRtuJe1J+0JSUFUtqxy+sN0r6W0+Pri/Pclih7Oa5zkp3xmcxPihKxnzTSA13Mkg1q72b0gWKo9cz1mj8gKYWf1hGaZDaUg/AejDlZhdRXEq5mOXdW7OVR8vI3UrTsr09YzbaXnMEayufoFzIxmWUJiR9ZovxRBH/QNcy7rGVaIkADMVSuKRWEKsCjeEKnAvfJUjb1YmCFGi0Z6hs73tUTk3kRoNtlLqMEgcMme1SJM89L6XQHlF2cp9l99NnwjbmzxmPNnO31DlsC9WoocxbHG57dyNdi+cBFVSot8bAnazDUYby+QLxzRCMRHeoH2WjKYy6D9AJalwpqdPOofXVxSErqprqByJsJ/Oj8yHLT+VcCZJBRuvaOVY=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?kHXGmgO3TNYTX9iw8ZF125FF2sKrp3sHRf/LO7pzAEIaryqvlT1GogSuFINJ?=
+ =?us-ascii?Q?49k7em7KK66FL/UM7/03H7v0UqAgQy+79oo2g81S7sa1JUkkukF7p4DmrtWn?=
+ =?us-ascii?Q?qXdxmyyS2Tcv+B+N12yCIldWTOkIvateqwGxmmIQf9x6y3XxFL5L/U8OJaVc?=
+ =?us-ascii?Q?bIzanrUmBF6XlLHAbnvMIL0bY3E4EPgAvu/JCFVPiVUs7X7A2eVzV1p1dEiE?=
+ =?us-ascii?Q?ulE6Cq83yKdOyRiN8b01FWHPvrPQ0hVwjFxsWVO7Y2HmTBiLCwCAX4Vyv3aX?=
+ =?us-ascii?Q?Qc+VGeum/dpkbl/3hWpqcJiTLDjedWPmVwkL+798ezCdy6naCNOkR8RyjXT9?=
+ =?us-ascii?Q?cLESdJU2mw6X/w2rCb8DIZrCiBVK3Ap9aPRn4qiQ5w8/0CuuYxjwrYRymCsu?=
+ =?us-ascii?Q?0bwJmVW/cmTXhP6B/2tVJKmf1r/yP7+9IuaTkz7zJX74xgpYulFuCOVEiCgQ?=
+ =?us-ascii?Q?qIznLq1hnyD3qKJbQndNAvaTWsd2NEYJK/H3Ok7syutvZZBSKL9WS4OS6tSC?=
+ =?us-ascii?Q?mfq6VlGx/8p1FdvKSFvXc9qkDycw4Qtv/HXKEoCvtkVVsTsoovkOQeYZodG/?=
+ =?us-ascii?Q?6MPbPfF5qPhz2GwYuO4DychiRGIJC0gaxaBQcfIBj+XpiXIlXxm+ecjK0+FQ?=
+ =?us-ascii?Q?kCHGVLNCtQsyPY+H3h33kguADwEKK8F1pI81zTZ4YwMyS1QsRi6PtbP+hgFM?=
+ =?us-ascii?Q?xcelMY1k1u1xwzAqiVaGHtmtKPKW7r6nUSFK3aBq4O4lnjVwlenuxnhPW1we?=
+ =?us-ascii?Q?53ZG2/AbHl73UWHV6iYX9W4Z8rykZWH8EsOUaBusxAJEOwawGfS/KUig65xx?=
+ =?us-ascii?Q?bzaZywJTm+fMXVqNGt66nPeUqv7d3U/Vy66uyFmaOq2aMyH4YpONLZ5mQ+wX?=
+ =?us-ascii?Q?IvNZ34rWQQYZTkJnsbHSUAU60QlLC0nkb6KocOmyHIYjkH8ycyOXbIYrrrfa?=
+ =?us-ascii?Q?2Ro6aPUKE8COwr81swhW00JpLuKMUl3h0D4q94fNxiwMPX/1Dm/qDuQpI4Nr?=
+ =?us-ascii?Q?35oxtUdlpVw00ubkwjHnSBqXrWWGwBWEtN/q1j7AZPGRQfrz25VNwIYudQdP?=
+ =?us-ascii?Q?I4O5AR0gzuQB8obJPbu9iacLyrbYfqercGEIfowsL698o+cT1JoIi4wGrIUm?=
+ =?us-ascii?Q?Fg6R3ubPRcYQI9OBwEvekzKFvubbFbGSlW6Oj0j2BO6KEwfyzVg+YZZ2z8lT?=
+ =?us-ascii?Q?+QwLftQQiXfsP1TqW/I9y1t5TvEEYYw2oUB6Iw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1712785629.git.isaku.yamahata@intel.com>
- <ddf1d98420f562707b11e12c416cce8fdb986bb1.1712785629.git.isaku.yamahata@intel.com>
- <621c260399a05338ba6d034e275e19714ad3665c.camel@intel.com> <20240416235230.GB3039520@ls.amr.corp.intel.com>
-In-Reply-To: <20240416235230.GB3039520@ls.amr.corp.intel.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 17 Apr 2024 17:41:55 +0200
-Message-ID: <CABgObfb0AFfnLnEz3wervoHLE8em_nDbGEFzSH8F5WZObyWk0g@mail.gmail.com>
-Subject: Re: [PATCH v2 03/10] KVM: x86/mmu: Extract __kvm_mmu_do_page_fault()
-To: Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
-	"federico.parola@polito.it" <federico.parola@polito.it>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, isaku.yamahata@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31262e71-8338-4f63-beba-08dc5ef52cfd
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2024 15:43:49.4010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR02MB9894
 
-On Wed, Apr 17, 2024 at 1:52=E2=80=AFAM Isaku Yamahata <isaku.yamahata@inte=
-l.com> wrote:
-> As Chao pointed out, this patch is unnecessary.  I'll use
-> kvm_mmu_do_page_fault() directly with updating vcpu->stat.
+From: Jean Delvare <jdelvare@suse.de> Sent: Wednesday, April 17, 2024 8:34 =
+AM
+>=20
+> If a DMI table entry is shorter than 4 bytes, it is invalid. Due to
+> how DMI table parsing works, it is impossible to safely recover from
+> such an error, so we have to stop decoding the table.
+>=20
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Link: https://lore.kernel.org/linux-kernel/Zh2K3-HLXOesT_vZ@liuwe-devbox-=
+debian-v2/T/
+> ---
+> Michael, can you please test this patch and confirm that it prevents
+> the early oops?
+>=20
+> The root cause of the DMI table corruption still needs to be
+> investigated.
+>=20
+>  drivers/firmware/dmi_scan.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> --- linux-6.8.orig/drivers/firmware/dmi_scan.c
+> +++ linux-6.8/drivers/firmware/dmi_scan.c
+> @@ -102,6 +102,17 @@ static void dmi_decode_table(u8 *buf,
+>  		const struct dmi_header *dm =3D (const struct dmi_header *)data;
+>=20
+>  		/*
+> +		 * If a short entry is found (less than 4 bytes), not only it
+> +		 * is invalid, but we cannot reliably locate the next entry.
+> +		 */
+> +		if (dm->length < sizeof(struct dmi_header)) {
+> +			pr_warn(FW_BUG
+> +				"Corrupted DMI table (only %d entries processed)\n",
+> +				i);
 
-Actually I prefer to have this patch.
+It would be useful to also output the three header fields: type, handle, an=
+d length,
+and perhaps also the offset of the header in the DMI blob (i.e., "data - bu=
+f").
+When looking at the error reported by user space dmidecode, the first thing
+I did was add those fields to the error message.
 
-pf_* stats do not make sense for pre-population, and updating them
-confuses things because pre-population (outside TDX) has the purpose
-of avoiding page faults.
+Michael=20
 
-Paolo
-
+> +			break;
+> +		}
+> +
+> +		/*
+>  		 *  We want to know the total length (formatted area and
+>  		 *  strings) before decoding to make sure we won't run off the
+>  		 *  table in dmi_decode or dmi_string
+>=20
+> --
+> Jean Delvare
+> SUSE L3 Support
