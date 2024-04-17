@@ -1,148 +1,604 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E9A14263B
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6900B1428E4;
+	Wed, 17 Apr 2024 14:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713364912; cv=none; b=U1tWy2ydq8KkKEvfh+KV8qMbS+5rMJdUYIGPf6Mr0UgW28Uo0Hit5aAosCVtREWIxJeR/0pJEvlLo7R4qxItIRTsYupJpGjLdcjpN93DFdDxSU3EB4Z+/I5a+3w236+eBTYTYcoIFB9w5od2xx+/TBgX6sKCrCbJNOiEBpZ/QfY=
+	t=1713364909; cv=none; b=KN2g4ED+W9SdLbl2/uDWYgEQXfXgAKzMdrFS2aIBa8HClbrfkDUwq7iWf7bNF2pmTL+nwR1h/fRbRdnqWyyh/7S9TkDI3enancVTMbsBZlaFaDuZsKxDSa2/bQUYBJKhl4lQ5DO2CytH9zJLoU6Vmn1xUvExde/eGvyhqynOd0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713364912; c=relaxed/simple;
-	bh=qjC+xTCHfDtidcanQVL+BiMGEOTpfihi17X1cLx5J4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+lGfLRdcTtzw95hgsliQiUfiTnWkXqYpvXBlrn2QXIw20ymCUukt22fhJAHl7QlZkBu9kv4TdAW3SNYa1zyYrVRXKRpa3oNfaJLfBLHHXFXZp/oqAYWyo++5b/DrjvWhU5av1H2/GbUaFHsTw5nbHzN/tX/cteebGHIMOcCtyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64986339;
-	Wed, 17 Apr 2024 07:42:18 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4562E3F738;
-	Wed, 17 Apr 2024 07:41:47 -0700 (PDT)
-Date: Wed, 17 Apr 2024 15:41:44 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 17/31] x86/resctrl: Move mbm_cfg_mask to struct
- rdt_resource
-Message-ID: <Zh/fqIFJDjsb1jYT@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-18-james.morse@arm.com>
- <966b7b32-6600-4b1f-9535-0298fedd57a7@intel.com>
- <Zhfwzh4sHvTYyTJ1@e133380.arm.com>
- <c96cdf6a-02a8-4ee2-91f5-e4329015e276@intel.com>
+	s=arc-20240116; t=1713364909; c=relaxed/simple;
+	bh=3ZXFK0KJ1wl6Jkyah6UW/JjXudLDafBGB+KRtVxM7yY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Y5CkXXa9a16w0XAKDM/Cqk+Vx7ZR0JT5uGtjeoljNQzlqEHTqdR3zIn205dCjQuJNNyzkCVqzRKe3UllrD2vOSuykVfbpLWKsCAsxdTkz5eETleQkp4DjQkqU17eV6GmvumwfJlywnGTDZZmSam/PNnnFWn1dCPo9GFT8UPL1c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dRXR7mF+; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dRXR7mF+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CC82F1BF219;
+	Wed, 17 Apr 2024 14:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713364904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ui3xi/uFfLmqbPeD3IM8iO3qwsgvzzg5oeZB2PVTyAU=;
+	b=dRXR7mF+garxFNX8ZZ+jNGFAyusZYFpRobsC5cjOhxOxN9f/GWHKOKaewtDNqyCsWU6NqZ
+	3f8Fid9tr5QFz/mT3wvaQn1fH+CYCNNNM3ibvvAOOfRjbOAHET6haEWEd5GwZePV8i3TcI
+	WAy3RzJiDG3iNgoHjXNIwe0sSSEoP853Rsn9gQn9bOy8+SIHd+tkDoup9jXvHC4E7IxQQy
+	Wo7tILumV3r7LhTl/9JWan8N6HVTmn2JjKMuW/4dBm0zwLUhP+nOGy1+mkxQiA7E8nW2vf
+	LcsFWoVMSplAtJEUpVnfo7jNgVH2rZHmtsdueL+erz4tY5qcmBdT4JcGtOHdJA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Wed, 17 Apr 2024 16:39:58 +0200
+Subject: [PATCH net-next v9 10/14] net: pse-pd: Use regulator framework
+ within PSE framework
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c96cdf6a-02a8-4ee2-91f5-e4329015e276@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240417-feature_poe-v9-10-242293fd1900@bootlin.com>
+References: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
+In-Reply-To: <20240417-feature_poe-v9-0-242293fd1900@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Thu, Apr 11, 2024 at 10:39:06AM -0700, Reinette Chatre wrote:
-> Hi Dave,
-> 
-> On 4/11/2024 7:16 AM, Dave Martin wrote:
-> > On Mon, Apr 08, 2024 at 08:21:24PM -0700, Reinette Chatre wrote:
-> >> Hi James,
-> >>
-> >> On 3/21/2024 9:50 AM, James Morse wrote:
-> >>> The mbm_cfg_mask field lists the bits that user-space can set when
-> >>> configuring an event. This value is output via the last_cmd_status
-> >>> file.
-> >>>
-> >>> Once the filesystem parts of resctrl are moved to live in /fs/, the
-> >>> struct rdt_hw_resource is inaccessible to the filesystem code. Because
-> >>> this value is output to user-space, it has to be accessible to the
-> >>> filesystem code.
-> >>>
-> >>> Move it to struct rdt_resource.
-> >>>
-> >>> Signed-off-by: James Morse <james.morse@arm.com>
-> >>
-> >> ..
-> >>
-> >>> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> >>> index 975b80102fbe..8a7367d1ce45 100644
-> >>> --- a/include/linux/resctrl.h
-> >>> +++ b/include/linux/resctrl.h
-> >>> @@ -140,6 +140,8 @@ struct resctrl_membw {
-> >>>   * @format_str:		Per resource format string to show domain value
-> >>>   * @evt_list:		List of monitoring events
-> >>>   * @fflags:		flags to choose base and info files
-> >>> + * @mbm_cfg_mask:	Bandwidth sources that can be tracked when Bandwidth
-> >>> + *			Monitoring Event Configuration (BMEC) is supported.
-> > 
-> > [...]
-> > 
-> >> Reinette
-> >>
-> >> BMEC is an AMD term. If MPAM is planning to use this member then this comment
-> >> should be made generic.
-> > 
-> > MPAM can (at least) filter reads and/or writes, and it looks like James
-> > is expecting to support this.
-> > 
-> > However, it probably does make sense to keep the comments neutral in a
-> > common header.
-> > 
-> > Would the following work?
-> > 
-> > 	* @ mbm_cfg_mask:	Arch-specific event configuration flags
-> > 
-> > 
-> > 
-> > I think that's broad enough to cover all bases, but I'll wait for your
-> > response.
-> 
-> Since this is exposed to user space, ideally all architectures would use
-> the same bits to mean the same thing. I assumed that is what James intended
-> by placing the existing (AMD BMEC) bits in the global resctrl_types.h.
-> 
-> Reinette
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Maybe, but the bits as defined by AMD BMEC look rather architecture and
-bus specific, and I am suspicious that there is no guaranteed clean
-mapping between MPAM's config and BMEC's config.
+Integrate the regulator framework to the PSE framework for enhanced
+access to features such as voltage, power measurement, and limits, which
+are akin to regulators. Additionally, PSE features like port priorities
+could potentially enhance the regulator framework. Note that this
+integration introduces some implementation complexity, including wrapper
+callbacks, but the potential benefits make it worthwhile.
 
-MPAM currently just has "reads" and "writes" (or both), though as for
-BMEC, the meanings of these are not fully defined.  I suppose finer
-filtering granularity might be supported in future (at least, it is not
-explicitly ruled out).
+Regulator are using enable counter with specific behavior.
+Two calls to regulator_disable will trigger kernel warnings.
+If the counter exceeds one, regulator_disable call won't disable the
+PSE PI. These behavior isn't suitable for PSE control.
+Added a boolean 'enabled' state to prevent multiple calls to
+regulator_enable/disable. These calls will only be called from PSE
+framework as it won't have any regulator children, therefore no mutex are
+needed to safeguards this boolean.
 
-James' current approach seems to be to pick a single BMEC flag that's
-in the right sort of area for each MPAM bit (though not equivalent) and
-translate that bit across to drive a corresponding the MPAM bit.  But
-I'd say that this is arch-specific configuration masquerading as
-generic configuration IMHO and not really generic at all.
+regulator_get needs the consumer device pointer. Use PSE as regulator
+provider and consumer device until we have RJ45 ports represented in
+the Kernel.
 
-See "untested: arm_mpam: resctrl: Allow monitors to be configured"
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.7-rc2&id=db0ac51f60675b6c4a54ccd24fa7198ec321c56d
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
 
-I guess this needs discussion with James, since there will have been
-additional thought process behind all this that is not captured; either
-way, I guess it could be resolved after this series, but it will need a
-decision before the MPAM support is merged (or at least, before MPAM
-exposes userspace support for event configuration upstream).
+Changes in v3:
+- New patch
 
-(If this has already been discussed and James' current approach has
-already been agreed as the least worst option, then I guess I can live
-with it; I just find it icky, and it looks odd to have AMD specifics in
-a common header.)
+Changes in v4:
+- Remove the nested lock as the regulator_enable/disable ops will only
+  be called from the PSE framework. No need to protect the 'enabled'
+  boolean.
+- Update regulator to current instead of voltage.
 
-Cheers
----Dave
+Changes in v5:
+- Update Kernel documentation.
+- Fix errors management in pse_control_get_internal function.
+
+Changes in v6:
+- Rename enable flag to admin_state_enable
+- Fix a podl issue in pse_set_config.
+- Use the pcdev device pointer as consumer and provider until we get Linux
+  RJ45 port abstraction.
+- Add a missing devm_regulator_put due to the device being the consumer
+  and the provider.
+
+Changes in v7:
+- Fix few kdoc nit.
+
+Changes in v8:
+- Fix a build error due to an artifact from an ancient version of the
+  series.
+---
+ drivers/net/pse-pd/pse_core.c      | 249 ++++++++++++++++++++++++++++++++++---
+ drivers/net/pse-pd/pse_regulator.c |  48 +++----
+ include/linux/pse-pd/pse.h         |  15 ++-
+ 3 files changed, 267 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index a7ff7676ab77..31f23c454678 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -8,6 +8,8 @@
+ #include <linux/device.h>
+ #include <linux/of.h>
+ #include <linux/pse-pd/pse.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
+ 
+ static DEFINE_MUTEX(pse_list_mutex);
+ static LIST_HEAD(pse_controller_list);
+@@ -16,12 +18,14 @@ static LIST_HEAD(pse_controller_list);
+  * struct pse_control - a PSE control
+  * @pcdev: a pointer to the PSE controller device
+  *         this PSE control belongs to
++ * @ps: PSE PI supply of the PSE control
+  * @list: list entry for the pcdev's PSE controller list
+  * @id: ID of the PSE line in the PSE controller device
+  * @refcnt: Number of gets of this pse_control
+  */
+ struct pse_control {
+ 	struct pse_controller_dev *pcdev;
++	struct regulator *ps;
+ 	struct list_head list;
+ 	unsigned int id;
+ 	struct kref refcnt;
+@@ -132,6 +136,10 @@ static int of_load_pse_pis(struct pse_controller_dev *pcdev)
+ 	if (!np)
+ 		return -ENODEV;
+ 
++	pcdev->pi = kcalloc(pcdev->nr_lines, sizeof(*pcdev->pi), GFP_KERNEL);
++	if (!pcdev->pi)
++		return -ENOMEM;
++
+ 	pis = of_get_child_by_name(np, "pse-pis");
+ 	if (!pis) {
+ 		/* no description of PSE PIs */
+@@ -139,12 +147,6 @@ static int of_load_pse_pis(struct pse_controller_dev *pcdev)
+ 		return 0;
+ 	}
+ 
+-	pcdev->pi = kcalloc(pcdev->nr_lines, sizeof(*pcdev->pi), GFP_KERNEL);
+-	if (!pcdev->pi) {
+-		of_node_put(pis);
+-		return -ENOMEM;
+-	}
+-
+ 	for_each_child_of_node(pis, node) {
+ 		struct pse_pi pi = {0};
+ 		u32 id;
+@@ -205,13 +207,124 @@ static int of_load_pse_pis(struct pse_controller_dev *pcdev)
+ 	return ret;
+ }
+ 
++static int pse_pi_is_enabled(struct regulator_dev *rdev)
++{
++	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
++	const struct pse_controller_ops *ops;
++	int id, ret;
++
++	ops = pcdev->ops;
++	if (!ops->pi_is_enabled)
++		return -EOPNOTSUPP;
++
++	id = rdev_get_id(rdev);
++	mutex_lock(&pcdev->lock);
++	ret = ops->pi_is_enabled(pcdev, id);
++	mutex_unlock(&pcdev->lock);
++
++	return ret;
++}
++
++static int pse_pi_enable(struct regulator_dev *rdev)
++{
++	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
++	const struct pse_controller_ops *ops;
++	int id, ret;
++
++	ops = pcdev->ops;
++	if (!ops->pi_enable)
++		return -EOPNOTSUPP;
++
++	id = rdev_get_id(rdev);
++	mutex_lock(&pcdev->lock);
++	ret = ops->pi_enable(pcdev, id);
++	if (!ret)
++		pcdev->pi[id].admin_state_enabled = 1;
++	mutex_unlock(&pcdev->lock);
++
++	return ret;
++}
++
++static int pse_pi_disable(struct regulator_dev *rdev)
++{
++	struct pse_controller_dev *pcdev = rdev_get_drvdata(rdev);
++	const struct pse_controller_ops *ops;
++	int id, ret;
++
++	ops = pcdev->ops;
++	if (!ops->pi_disable)
++		return -EOPNOTSUPP;
++
++	id = rdev_get_id(rdev);
++	mutex_lock(&pcdev->lock);
++	ret = ops->pi_disable(pcdev, id);
++	if (!ret)
++		pcdev->pi[id].admin_state_enabled = 0;
++	mutex_unlock(&pcdev->lock);
++
++	return ret;
++}
++
++static const struct regulator_ops pse_pi_ops = {
++	.is_enabled = pse_pi_is_enabled,
++	.enable = pse_pi_enable,
++	.disable = pse_pi_disable,
++};
++
++static int
++devm_pse_pi_regulator_register(struct pse_controller_dev *pcdev,
++			       char *name, int id)
++{
++	struct regulator_init_data *rinit_data;
++	struct regulator_config rconfig = {0};
++	struct regulator_desc *rdesc;
++	struct regulator_dev *rdev;
++
++	rinit_data = devm_kzalloc(pcdev->dev, sizeof(*rinit_data),
++				  GFP_KERNEL);
++	if (!rinit_data)
++		return -ENOMEM;
++
++	rdesc = devm_kzalloc(pcdev->dev, sizeof(*rdesc), GFP_KERNEL);
++	if (!rdesc)
++		return -ENOMEM;
++
++	/* Regulator descriptor id have to be the same as its associated
++	 * PSE PI id for the well functioning of the PSE controls.
++	 */
++	rdesc->id = id;
++	rdesc->name = name;
++	rdesc->type = REGULATOR_CURRENT;
++	rdesc->ops = &pse_pi_ops;
++	rdesc->owner = pcdev->owner;
++
++	rinit_data->constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
++	rinit_data->supply_regulator = "vpwr";
++
++	rconfig.dev = pcdev->dev;
++	rconfig.driver_data = pcdev;
++	rconfig.init_data = rinit_data;
++
++	rdev = devm_regulator_register(pcdev->dev, rdesc, &rconfig);
++	if (IS_ERR(rdev)) {
++		dev_err_probe(pcdev->dev, PTR_ERR(rdev),
++			      "Failed to register regulator\n");
++		return PTR_ERR(rdev);
++	}
++
++	pcdev->pi[id].rdev = rdev;
++
++	return 0;
++}
++
+ /**
+  * pse_controller_register - register a PSE controller device
+  * @pcdev: a pointer to the initialized PSE controller device
+  */
+ int pse_controller_register(struct pse_controller_dev *pcdev)
+ {
+-	int ret;
++	size_t reg_name_len;
++	int ret, i;
+ 
+ 	mutex_init(&pcdev->lock);
+ 	INIT_LIST_HEAD(&pcdev->pse_control_head);
+@@ -229,6 +342,31 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
+ 			return ret;
+ 	}
+ 
++	/* Each regulator name len is pcdev dev name + 7 char +
++	 * int max digit number (10) + 1
++	 */
++	reg_name_len = strlen(dev_name(pcdev->dev)) + 18;
++
++	/* Register PI regulators */
++	for (i = 0; i < pcdev->nr_lines; i++) {
++		char *reg_name;
++
++		/* Do not register regulator for PIs not described */
++		if (!pcdev->no_of_pse_pi && !pcdev->pi[i].np)
++			continue;
++
++		reg_name = devm_kzalloc(pcdev->dev, reg_name_len, GFP_KERNEL);
++		if (!reg_name)
++			return -ENOMEM;
++
++		snprintf(reg_name, reg_name_len, "pse-%s_pi%d",
++			 dev_name(pcdev->dev), i);
++
++		ret = devm_pse_pi_regulator_register(pcdev, reg_name, i);
++		if (ret)
++			return ret;
++	}
++
+ 	mutex_lock(&pse_list_mutex);
+ 	list_add(&pcdev->list, &pse_controller_list);
+ 	mutex_unlock(&pse_list_mutex);
+@@ -297,6 +435,10 @@ static void __pse_control_release(struct kref *kref)
+ 
+ 	lockdep_assert_held(&pse_list_mutex);
+ 
++	if (psec->pcdev->pi[psec->id].admin_state_enabled)
++		regulator_disable(psec->ps);
++	devm_regulator_put(psec->ps);
++
+ 	module_put(psec->pcdev->owner);
+ 
+ 	list_del(&psec->list);
+@@ -329,6 +471,7 @@ static struct pse_control *
+ pse_control_get_internal(struct pse_controller_dev *pcdev, unsigned int index)
+ {
+ 	struct pse_control *psec;
++	int ret;
+ 
+ 	lockdep_assert_held(&pse_list_mutex);
+ 
+@@ -344,16 +487,38 @@ pse_control_get_internal(struct pse_controller_dev *pcdev, unsigned int index)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	if (!try_module_get(pcdev->owner)) {
+-		kfree(psec);
+-		return ERR_PTR(-ENODEV);
++		ret = -ENODEV;
++		goto free_psec;
+ 	}
+ 
++	psec->ps = devm_regulator_get_exclusive(pcdev->dev,
++						rdev_get_name(pcdev->pi[index].rdev));
++	if (IS_ERR(psec->ps)) {
++		ret = PTR_ERR(psec->ps);
++		goto put_module;
++	}
++
++	ret = regulator_is_enabled(psec->ps);
++	if (ret < 0)
++		goto regulator_put;
++
++	pcdev->pi[index].admin_state_enabled = ret;
++
+ 	psec->pcdev = pcdev;
+ 	list_add(&psec->list, &pcdev->pse_control_head);
+ 	psec->id = index;
+ 	kref_init(&psec->refcnt);
+ 
+ 	return psec;
++
++regulator_put:
++	devm_regulator_put(psec->ps);
++put_module:
++	module_put(pcdev->owner);
++free_psec:
++	kfree(psec);
++
++	return ERR_PTR(ret);
+ }
+ 
+ /**
+@@ -486,6 +651,54 @@ int pse_ethtool_get_status(struct pse_control *psec,
+ }
+ EXPORT_SYMBOL_GPL(pse_ethtool_get_status);
+ 
++static int pse_ethtool_c33_set_config(struct pse_control *psec,
++				      const struct pse_control_config *config)
++{
++	int err = 0;
++
++	/* Look at admin_state_enabled status to not call regulator_enable
++	 * or regulator_disable twice creating a regulator counter mismatch
++	 */
++	switch (config->c33_admin_control) {
++	case ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED:
++		if (!psec->pcdev->pi[psec->id].admin_state_enabled)
++			err = regulator_enable(psec->ps);
++		break;
++	case ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED:
++		if (psec->pcdev->pi[psec->id].admin_state_enabled)
++			err = regulator_disable(psec->ps);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++	}
++
++	return err;
++}
++
++static int pse_ethtool_podl_set_config(struct pse_control *psec,
++				       const struct pse_control_config *config)
++{
++	int err = 0;
++
++	/* Look at admin_state_enabled status to not call regulator_enable
++	 * or regulator_disable twice creating a regulator counter mismatch
++	 */
++	switch (config->podl_admin_control) {
++	case ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED:
++		if (!psec->pcdev->pi[psec->id].admin_state_enabled)
++			err = regulator_enable(psec->ps);
++		break;
++	case ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED:
++		if (psec->pcdev->pi[psec->id].admin_state_enabled)
++			err = regulator_disable(psec->ps);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++	}
++
++	return err;
++}
++
+ /**
+  * pse_ethtool_set_config - set PSE control configuration
+  * @psec: PSE control pointer
+@@ -496,20 +709,16 @@ int pse_ethtool_set_config(struct pse_control *psec,
+ 			   struct netlink_ext_ack *extack,
+ 			   const struct pse_control_config *config)
+ {
+-	const struct pse_controller_ops *ops;
+-	int err;
+-
+-	ops = psec->pcdev->ops;
++	int err = 0;
+ 
+-	if (!ops->ethtool_set_config) {
+-		NL_SET_ERR_MSG(extack,
+-			       "PSE driver does not configuration");
+-		return -EOPNOTSUPP;
++	if (pse_has_c33(psec)) {
++		err = pse_ethtool_c33_set_config(psec, config);
++		if (err)
++			return err;
+ 	}
+ 
+-	mutex_lock(&psec->pcdev->lock);
+-	err = ops->ethtool_set_config(psec->pcdev, psec->id, extack, config);
+-	mutex_unlock(&psec->pcdev->lock);
++	if (pse_has_podl(psec))
++		err = pse_ethtool_podl_set_config(psec, config);
+ 
+ 	return err;
+ }
+diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
+index 547af384764b..64ab36974fe0 100644
+--- a/drivers/net/pse-pd/pse_regulator.c
++++ b/drivers/net/pse-pd/pse_regulator.c
+@@ -24,37 +24,41 @@ static struct pse_reg_priv *to_pse_reg(struct pse_controller_dev *pcdev)
+ }
+ 
+ static int
+-pse_reg_ethtool_set_config(struct pse_controller_dev *pcdev, unsigned long id,
+-			   struct netlink_ext_ack *extack,
+-			   const struct pse_control_config *config)
++pse_reg_pi_enable(struct pse_controller_dev *pcdev, int id)
+ {
+ 	struct pse_reg_priv *priv = to_pse_reg(pcdev);
+ 	int ret;
+ 
+-	if (priv->admin_state == config->podl_admin_control)
+-		return 0;
+-
+-	switch (config->podl_admin_control) {
+-	case ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED:
+-		ret = regulator_enable(priv->ps);
+-		break;
+-	case ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED:
+-		ret = regulator_disable(priv->ps);
+-		break;
+-	default:
+-		dev_err(pcdev->dev, "Unknown admin state %i\n",
+-			config->podl_admin_control);
+-		ret = -ENOTSUPP;
+-	}
+-
++	ret = regulator_enable(priv->ps);
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->admin_state = config->podl_admin_control;
++	priv->admin_state = ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED;
++	return 0;
++}
++
++static int
++pse_reg_pi_disable(struct pse_controller_dev *pcdev, int id)
++{
++	struct pse_reg_priv *priv = to_pse_reg(pcdev);
++	int ret;
+ 
++	ret = regulator_disable(priv->ps);
++	if (ret)
++		return ret;
++
++	priv->admin_state = ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED;
+ 	return 0;
+ }
+ 
++static int
++pse_reg_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
++{
++	struct pse_reg_priv *priv = to_pse_reg(pcdev);
++
++	return regulator_is_enabled(priv->ps);
++}
++
+ static int
+ pse_reg_ethtool_get_status(struct pse_controller_dev *pcdev, unsigned long id,
+ 			   struct netlink_ext_ack *extack,
+@@ -80,7 +84,9 @@ pse_reg_ethtool_get_status(struct pse_controller_dev *pcdev, unsigned long id,
+ 
+ static const struct pse_controller_ops pse_reg_ops = {
+ 	.ethtool_get_status = pse_reg_ethtool_get_status,
+-	.ethtool_set_config = pse_reg_ethtool_set_config,
++	.pi_enable = pse_reg_pi_enable,
++	.pi_is_enabled = pse_reg_pi_is_enabled,
++	.pi_disable = pse_reg_pi_disable,
+ };
+ 
+ static int
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index fa0c73da0cf1..6d07c95dabb9 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -48,17 +48,20 @@ struct pse_control_status {
+  * struct pse_controller_ops - PSE controller driver callbacks
+  *
+  * @ethtool_get_status: get PSE control status for ethtool interface
+- * @ethtool_set_config: set PSE control configuration over ethtool interface
+  * @setup_pi_matrix: setup PI matrix of the PSE controller
++ * @pi_is_enabled: Return 1 if the PSE PI is enabled, 0 if not.
++ *		   May also return negative errno.
++ * @pi_enable: Configure the PSE PI as enabled.
++ * @pi_disable: Configure the PSE PI as disabled.
+  */
+ struct pse_controller_ops {
+ 	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
+ 		unsigned long id, struct netlink_ext_ack *extack,
+ 		struct pse_control_status *status);
+-	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
+-		unsigned long id, struct netlink_ext_ack *extack,
+-		const struct pse_control_config *config);
+ 	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
++	int (*pi_is_enabled)(struct pse_controller_dev *pcdev, int id);
++	int (*pi_enable)(struct pse_controller_dev *pcdev, int id);
++	int (*pi_disable)(struct pse_controller_dev *pcdev, int id);
+ };
+ 
+ struct module;
+@@ -90,10 +93,14 @@ struct pse_pi_pairset {
+  *
+  * @pairset: table of the PSE PI pinout alternative for the two pairset
+  * @np: device node pointer of the PSE PI node
++ * @rdev: regulator represented by the PSE PI
++ * @admin_state_enabled: PI enabled state
+  */
+ struct pse_pi {
+ 	struct pse_pi_pairset pairset[2];
+ 	struct device_node *np;
++	struct regulator_dev *rdev;
++	bool admin_state_enabled;
+ };
+ 
+ /**
+
+-- 
+2.34.1
+
