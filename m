@@ -1,261 +1,151 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6061A13C3E0
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F9F13B295
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349194; cv=none; b=MP0OCxLuVJxv7YsJ4RHeVlNZgwLiQ5FhuM+ZynLu7D7Q+octHGWp/+7TChe3DL0bvM1jU70sTF3H7RUaX12XjdIiBGcdb9ylMnYwDTenhFVvwbiO7h/Dp5q6tBECeLyGpeiAQVe7ARx4AlM3wlDq+WvigDFEigxWRnK//ll5Y6E=
+	t=1713349213; cv=none; b=tnp71dW0+VSexk0K1oykuwHofzk/mdhblY1gnRaoRalVBshQxylTmJEGF0bsAuyp8BmkoMvFwmQpqoEC7VYsPknnsrslohrDRL/M+5iIQwE8wXHJBcPN8O3gaROWEHl4nJjJn8aLBPcQG1bYSOPYC9jP/Fu9z02FHN96F/gyl4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349194; c=relaxed/simple;
-	bh=9PGzZUtrKcSj3foyq61b5I7RHwcJBkBGFzfqcGRHuIM=;
+	s=arc-20240116; t=1713349213; c=relaxed/simple;
+	bh=dDjG6YB8WcpgRH4sCEbHA+wVKctkcmxmzME/qEIroiY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8zXJoYmZr8om/xec7e6y/mTwL/G6odSy5tGmfDFvsTlb/Xk4LItLAza/GMggqK6mxIWVUMY+0CDmOnTuwX23JKEiR82u7sStKlrrIK4nKGcWDr8tm6b1KrkkCvIY/saqpFtLMsRhHqYVo9nX2wKRxJmsiRomnJCIKv7hbUi9AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dLm3WKg3; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=hw58oN0E/m2p3UFUBy+3FpDrM2shoR5fU7wEk/qF7NG+6V4rF5tKyjJ6eT6r43YxEsZVgYoqikPLO7adNVUGtgsYSnNKB/867JuQnrAnXAF2VEgLWiBB1oWavCHUF6By+mNj5Q+b7a16LX/AJg5QDh3FTeiKLBxsKi+zFT+aejo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nr3mPg5X; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLm3WKg3"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e5aa82d1f6so4260805ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:19:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nr3mPg5X"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516d1c8dc79so6948669e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713349191; x=1713953991; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PU/XWViQTEmW8SgEtJM7+RauCEP6w6F2ew9COsWxkFM=;
-        b=dLm3WKg3tXulM5QLTU+zPMZWEDHFkcmvhG9adARGRXXbUPhx1tSZJfbepCpPeVAw2F
-         AiMRi3tXkn+yUQ83/DXBkKF132o61GBpmQ2a4RFuqGQqbYz/U0JnaaySWALInKYLoxbi
-         MeQxccWdVMQE4wrLpIjFXmG3Xl8I+SLOt5IvWtbo7xnAc7De5iGE/2pudFOBAJ5Vmf6P
-         XJVSa4BOMQ9KyaGbJpNHcRiGKhGOaMBdiQ/Zvpdq9j6otl6N8mg1segrdZpLR8WgGrvw
-         +kNTGHF/Win7lbYP+0O/wBjxGl7EubxujTwVitJ+gaN4inpWBuNXtTVbOO3bwQ5Mg3Fh
-         G2IQ==
+        d=linaro.org; s=google; t=1713349209; x=1713954009; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zrs6iAAO4SVBswghNTTZW+QUAJVqns3ugAjr/mrsbC8=;
+        b=nr3mPg5X1MMEh9dvZRrrD1XDqRHCySxUpmuQTN3fFndrRQCnyXfz3ZyYGqVAnXF9Fn
+         OEuRGI8Q54G8G5mwBHtnI/4tsgcE9soWdXpMSNdIMyvI5GOFOqpsRJf4vF6Xeur4zYG7
+         7O9RApRL+d2lGKrCdmn5ngkFdsQrGkunxFTBkNV/Dw2zhbnKj1i9G5jXPQz+n78Ni8F5
+         QKJ8pcwE0NJTYMHJbF5gkggJb+Cl0YXvaflwV9+69in7MkCYxsG6DWx0sA8WYMqrpCT+
+         yLcXXUg2s3INznva5yqq1t0Tyfdghx+S5nml6EsNL5KkyozkxBPsd8Hy/KEJtN8jCxxB
+         blmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713349191; x=1713953991;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PU/XWViQTEmW8SgEtJM7+RauCEP6w6F2ew9COsWxkFM=;
-        b=FzvdXWW3LE8hUJZLGprV3u4OXciQQcSNrV69IBB4NXBMEsj8bNoB4mPBo59sqSs0mx
-         piKPjZtIeiVlWG1nG0/FO/wGAJV7IGGTVIRLBTF3ekJJReYZRO0yzm3pcw+qzLkpyWbz
-         zCPXCs6kY0aYdiqBYhmhVBNPSZGAExVW9FnU2+M95cybZPdu6NSXlsFhe1XlZ5b5alem
-         mWtTtKOlaZ+OnR8GOOqqEJgADxFE/ZLlZ0Lb/LpK5ixGmfeFjQFd1FN7/AOrcdLq5Jho
-         6yqDJx5J881pkqkXfVxyGXZQlq6Lb43XxTs1Fg9cd9O+fPwkz4mA/EptQYLQM1IGSXIM
-         /aZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtnWD1oxOs9Vd3YIBYpSG4O34eydooHk1jdE9+Jt9IgTpeHrmiY5nsOs14XVRJHAUp25hMx+4USDFDvF17t/M8cnIzY72wnzeXvlfQ
-X-Gm-Message-State: AOJu0YxTr48OOpKKuIYj/I9y19RZAP4D+jew/hQgXicQZPh82wgOEIg1
-	asAexlLBXHTJewER36f7pu1ImbFBvDscBi61Q3X/pCxfCyBXGf3uNDUClasM2jD1AWR3Ib2IaB0
-	=
-X-Google-Smtp-Source: AGHT+IGMvtY2LJrdCA9xIHskJdG82rcCR+m0wyFcKGMioJv9TMmpPry214t23HYzOr44mdAz17XoYA==
-X-Received: by 2002:a17:90a:134c:b0:2a2:c40a:1a5 with SMTP id y12-20020a17090a134c00b002a2c40a01a5mr6797660pjf.12.1713349190457;
-        Wed, 17 Apr 2024 03:19:50 -0700 (PDT)
-Received: from thinkpad ([120.60.54.9])
-        by smtp.gmail.com with ESMTPSA id hi20-20020a17090b30d400b002a219f8079fsm1035262pjb.33.2024.04.17.03.19.46
+        d=1e100.net; s=20230601; t=1713349209; x=1713954009;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zrs6iAAO4SVBswghNTTZW+QUAJVqns3ugAjr/mrsbC8=;
+        b=whSdNXZmtatcASn1Md+Tt38wdS+TzSbs3ookPgUYIBbAj7N/LdBnqzuYJDVxa0pY8Z
+         eoCqNcDLwZeLVKCruusPDPgjWQwdEFD7a1OxtHi65t4SIdRGenwBfAQw1JUINtAusdjJ
+         DwzMfO97az+xe13oUr+1gveh/nb/K4y2H81OJEWijErrBQYJpczDkP6GazpRn1YwDVuM
+         0xjsVil4/e9+J8nDTR8wx5fUdmzh5bUPxo4PtgRtSJuJ9I50063TWCjB5FxAqFe8mnFD
+         S21fLkmLJPb7AMtCUjNJdZVEEHQCYO61jqIJZvAYQq8KWHe6JxlAZY7MiBRvWqXWfK1f
+         1FXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd+oCIQc5z2kxLbnnuv64pVqB/GM7jP9NjAhp2Ljxf87ykkDLNIW8Tf2QdKEL7miKG+F37/4uW/b1iUVTh66/rpGlAwfcGw4XXDDS7
+X-Gm-Message-State: AOJu0YxCB3347xDrrd/g22hV4Xsxdd6DkyOtXRB/Nq4aI5D5dljQTJ0L
+	pdcVRx/iL409+pXK3u2/sYQob4mz29JCsu7Tbj3xlp9Qgz2jIojEs5Xn4xS4KKw=
+X-Google-Smtp-Source: AGHT+IEOahWQed32kV3EmBcZ13tNLL9ukzZ1h1XrxShRCPrrH1eKgqV1FmVUa9zexHbub5gfEuA/6g==
+X-Received: by 2002:a05:6512:a88:b0:515:a8e0:bf3c with SMTP id m8-20020a0565120a8800b00515a8e0bf3cmr14614083lfu.32.1713349209568;
+        Wed, 17 Apr 2024 03:20:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id w12-20020ac2598c000000b00516c403d243sm1901592lfn.60.2024.04.17.03.20.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 03:19:50 -0700 (PDT)
-Date: Wed, 17 Apr 2024 15:49:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 5/5] PCI: dwc: Add generic MSG TLP support for sending
- PME_Turn_Off when system suspend
-Message-ID: <20240417101944.GG3894@thinkpad>
-References: <20240415-pme_msg-v6-0-56dad968ad3a@nxp.com>
- <20240415-pme_msg-v6-5-56dad968ad3a@nxp.com>
+        Wed, 17 Apr 2024 03:20:09 -0700 (PDT)
+Date: Wed, 17 Apr 2024 13:20:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Herman van Hazendonk <github.com@herrie.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] component: Support masters with no subcomponents
+Message-ID: <h47tqpveo7iitrz2luqifb7fidrhfv4o4rsivvb7bacbhj4qcg@xmamgxyfk3qr>
+References: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240415-pme_msg-v6-5-56dad968ad3a@nxp.com>
+In-Reply-To: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
 
-On Mon, Apr 15, 2024 at 03:33:29PM -0400, Frank Li wrote:
-> Instead of relying on the vendor specific implementations to send the
-> PME_Turn_Off message, let's introduce a generic way of sending the message
-> using the MSG TLP.
+On Wed, Apr 17, 2024 at 11:12:09AM +0200, Herman van Hazendonk wrote:
+> This happens in the MSM DRM driver when it is used
+> without any subcomponents, which is a special corner
+> case.
 > 
-> This is achieved by reserving a region for MSG TLP of size
-> 'pci->region_align', at the end of the first IORESOURCE_MEM window of the
-> host bridge. And then sending the PME_Turn_Off message during system
-> suspend with the help of iATU.
+> If the MDP4 is used with nothing but the LVDS display,
+> we get this problem that no components are found since
+> the LVDS is part of the MDP4 itself.
 > 
-> The reserve space at end is a little bit better than alloc_resource()
-> because the below reasons.
-> - alloc_resource() will allocate space at begin of IORESOURCE_MEM window.
-> There will be a hole when first Endpoint Device (EP) try to alloc a bigger
-> space then 'region_align' size.
-> - Keep EP device's IORESOURCE_MEM space unchange with/without this patch.
+> We cannot use a NULL match, so create a dummy match
+> with no components for this case so the driver will
+> still probe nicely without adding a secondary
+> complicated probe() path to the MSM DRM driver.
 > 
-
-I'd rewrite the above sentence as:
-
-'The reason for reserving the MSG TLP region at the end of the
-IORESOURCE_MEM is to avoid generating holes in between. Because, when the region
-is allocated using allocate_resource(), memory will be allocated from the start
-of the window. Later, if memory gets allocated for an endpoint of size bigger
-than 'region_align', there will be a hole between MSG TLP region and endpoint
-memory.'
-
-> It should be noted that this generic implementation is optional for the
-> glue drivers and can be overridden by a custom 'pme_turn_off' callback.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 94 ++++++++++++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h      |  3 +
->  2 files changed, 93 insertions(+), 4 deletions(-)
+> This happens in the MSM DRM driver when it is used
+> without any subcomponents, which is a special corner
+> case.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 3a9cb4be22ab2..5001cdf220123 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -398,6 +398,31 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	return 0;
+> If the MDP4 is used with nothing but the LVDS display,
+> we get this problem that no components are found since
+> the LVDS is part of the MDP4 itself.
+> 
+> We cannot use a NULL match, so create a dummy match
+> with no components for this case so the driver will
+> still probe nicely without adding a secondary
+> complicated probe() path to the MSM DRM driver.
+> ---
+>  drivers/base/component.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/base/component.c b/drivers/base/component.c
+> index 741497324d78..bb79e7a77bb0 100644
+> --- a/drivers/base/component.c
+> +++ b/drivers/base/component.c
+> @@ -497,6 +497,10 @@ static void free_aggregate_device(struct aggregate_device *adev)
+>  	kfree(adev);
 >  }
 >  
-> +static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct resource_entry *win;
-> +	struct resource *res;
-> +
-> +	win = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> +	if (win) {
-> +		res = devm_kzalloc(pci->dev, sizeof(*res), GFP_KERNEL);
-> +		if (!res)
-> +			return;
-> +
-> +		/* Reserve last region_align block as message TLP space */
+> +static struct component_match dummy_match = {
+> +	.num = 0,
+> +};
 
-		/*
-		 * Allocate MSG TLP region of size 'region_align' at the end of
-		 * the host bridge window.
-		 */
+I think it's better to handle this in the MDP4 driver code.
 
-> +		res->start = win->res->end - pci->region_align + 1;
-> +		res->end = win->res->end;
-> +		res->name = "msg";
-> +		res->flags = win->res->flags | IORESOURCE_BUSY;
+Also note that LVDS / LCDC support should be fixed anyway. The DT needs
+to pass LCDC clock (which it doesn't). apq8064 uses DSI2 clock after
+reparenting it onto the LVDS clock generated by MDP4. Previous
+generations should have a separate LCDC clock coming from MMCC.
+
 > +
-> +		if (!devm_request_resource(pci->dev, win->res, res))
-> +			pp->msg_res = res;
-> +		else
-> +			devm_kfree(pci->dev, res);
-
-You are explicitly freeing 'msg_res' everywhere. So either drop devm_ or rely
-on devm to free the memory.
-
-> +	}
-> +}
-> +
->  int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -484,6 +509,16 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  /**
+>   * component_master_add_with_match - register an aggregate driver
+>   * @parent: parent device of the aggregate driver
+> @@ -516,6 +520,9 @@ int component_master_add_with_match(struct device *parent,
+>  	struct aggregate_device *adev;
+>  	int ret;
 >  
->  	dw_pcie_iatu_detect(pci);
->  
-> +	/*
-> +	 * Allocate the resource for MSG TLP before programming the iATU outbound window in
-> +	 * dw_pcie_setup_rc(). Since the allocation depends on the value of 'region_align', this has
-> +	 * to be done after dw_pcie_iatu_detect().
-
-Please wrap the comments to 80 columns.
-
-> +	 *
-> +	 * Glue driver need set use_atu_msg before dw_pcie_host_init() if want MSG TLP feature.
-
-How about,
-
-	 * Glue drivers need to set 'use_atu_msg' before dw_pcie_host_init() to
-	 * make use of the generic MSG TLP implementation.
-
-> +	 */
-> +	if (pp->use_atu_msg)
-> +		dw_pcie_host_request_msg_tlp_res(pp);
+> +	if (!match)
+> +		match = &dummy_match;
 > +
->  	ret = dw_pcie_edma_detect(pci);
+>  	/* Reallocate the match array for its true size */
+>  	ret = component_match_realloc(match, match->num);
 >  	if (ret)
->  		goto err_free_msi;
-> @@ -541,6 +576,11 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
->  
->  	dw_pcie_edma_remove(pci);
->  
-> +	if (pp->msg_res) {
-> +		release_resource(pp->msg_res);
-> +		devm_kfree(pci->dev, pp->msg_res);
-> +	}
-> +
->  	if (pp->has_msi_ctrl)
->  		dw_pcie_free_msi(pp);
->  
-> @@ -702,6 +742,10 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  		atu.pci_addr = entry->res->start - entry->offset;
->  		atu.size = resource_size(entry->res);
->  
-> +		/* MSG TLB window resource reserve at one of end of IORESOURCE_MEM resource */
-
-How about,
-
-		/* Adjust iATU size if MSG TLP region was allocated before */
-		if (pp->msg_res && pp->msg_res->parent == entry->res)
-			atu.size = resource_size(entry->res) -
-					resource_size(pp->msg_res);
-		else
-			atu.size = resource_size(entry->res);
-
-> +		if (pp->msg_res && pp->msg_res->parent == entry->res)
-> +			atu.size -= resource_size(pp->msg_res);
-> +
->  		ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  		if (ret) {
->  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
-> @@ -733,6 +777,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
->  			 pci->num_ob_windows);
->  
-> +	pp->msg_atu_index = i;
-> +
->  	i = 0;
->  	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
->  		if (resource_type(entry->res) != IORESOURCE_MEM)
-> @@ -838,11 +884,48 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
->  
-> +/* Using message outbound ATU to send out PME_Turn_Off message for dwc PCIe controller */
-
-No need of this comment.
-
-> +static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
-> +{
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
-> +	void __iomem *mem;
-> +	int ret;
-> +
-> +	if (pci->num_ob_windows <= pci->pp.msg_atu_index)
-> +		return -EINVAL;
-
-		return -ENOSPC;
-
-> +
-> +	if (!pci->pp.msg_res)
-> +		return -EINVAL;
-
-		return -ENOSPC;
-- Mani
+> 
+> ---
+> base-commit: 96fca68c4fbf77a8185eb10f7557e23352732ea2
+> change-id: 20240417-component-dummy-a9aae5ac7234
+> 
+> Best regards,
+> -- 
+> Herman van Hazendonk <github.com@herrie.org>
+> 
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With best wishes
+Dmitry
