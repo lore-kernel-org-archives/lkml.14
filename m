@@ -1,125 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0012171099
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 17:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16B7171678;
+	Wed, 17 Apr 2024 17:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713376275; cv=none; b=B9rxT4iXE44daX1mhYuw4979K0DFTxC3vPdPBz0/2jQB1F9Z1jo4qGEjNr0Hbda39B90H/SwMqxkmivWhpEhuXxAW6IEaFEmkXHMhfpgavuG49MyZixlUL9w0urISy99ebqJtpKsvpTFtEAlSeVUj1NN0faYZrbhRLBF3x1vGXM=
+	t=1713376275; cv=none; b=VMHNbZf1wBO9EDoIjTotXuGFOfk5nnDyBmbqOFdMnTDVXgSDJqPs2NKbsC0b0Ut4OcMXkcJbHuQnRkyB7+iT3nnxmUOmJbiE8M6JKpNuz9FXRPC2rdXnHJREVSaCXuIPpwvcII56qsIyTpClVLmz6kLKwk0CnWICGFHysJs7K3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713376275; c=relaxed/simple;
-	bh=mEWPo64/cqVvVE5N5PI7TzK6kqyhCqwo5a2U4Vz8R1I=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=QMGqaOH2yBIXjdezBdZzE2llUBTI75pAenAPDFbqwbpon1547P4m3uaNTKXxp4YO4KHX8W3yrABQ2CcScSfzbIJQ0KDwwuVynO4yGMgbTF+0l/cXqxmCdMnDWpoQ1I2Uk1C1m8vBddjHqNPM9k5SFW3adDD3m+Ripcb6f6LMZdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=di7Cy8Om; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=jfbqZBhQwdfbJjm2u3os2gYoQzVOvcpFVFeob+6Huh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OBnw+RDE3LLrtK90iIz/lkkXgUrzCCN6qt4zdR3NRhxZS5sqOMIoR7rDsMZOwy8C5uvUcF99lz9rzi5jIEheb/wK7WpX9pfCWAezE+PWiLANt1m/SCF26knbU/MJ1iAeobEzBcQz3/M2NfED6rTToKh1PjLDaVTTuFxZupmrxUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HwgsgcoK; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="di7Cy8Om"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713376272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=kujO86Jl3C4sFlf0wfnUMZttB5N1ylWd1xY1DJNRkI0=;
-	b=di7Cy8OmUyQkfuX03qUwsX1ZL1hY9x0kMZEqbSDNMvpM3aWIL5HDoOZZYEKdY78O9OGcgo
-	CUmNNTIsqz8WCQ4+U1gHnvIwkhedO+OBrFmTHgCZz56ZLB9SMFvdiN4z1mEfVTsd6+Y3rX
-	GrVP34+oBmROH8CZiJDVsNqnNaPNZd8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-2KCdiRelO4OyUP-a8xoxTA-1; Wed, 17 Apr 2024 13:51:09 -0400
-X-MC-Unique: 2KCdiRelO4OyUP-a8xoxTA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC621812C55;
-	Wed, 17 Apr 2024 17:51:08 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B7CC35430;
-	Wed, 17 Apr 2024 17:51:08 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 751F330C2BF7; Wed, 17 Apr 2024 17:51:08 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 7190E3FD7A;
-	Wed, 17 Apr 2024 19:51:08 +0200 (CEST)
-Date: Wed, 17 Apr 2024 19:51:08 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Mike Snitzer <msnitzer@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-    Damien Le Moal <dlemoal@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-    Waiman Long <longman@redhat.com>
-cc: Guangwu Zhang <guazhang@redhat.com>, dm-devel@lists.linux.dev, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dm-io: don't warn if flush takes too long time
-Message-ID: <a9bb519d-77de-4e3-a37-e8207bf2938a@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwgsgcoK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-418cdc52627so238475e9.0;
+        Wed, 17 Apr 2024 10:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713376271; x=1713981071; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVNaml9URaHp31c9KJm3syS03yWvEA9+eMiOQdyd5w8=;
+        b=HwgsgcoKEz7ALHSr0mYH7uJBo5eO2L3ihhRr+b14TWQLs1u+/LBNdS7GzqZE0VWhV7
+         loC9mpGpEtPciSL9VQLS4eDeJ48SkZ7X6uHrRgxYqey4vwh6F0Ql1En5UTpnb54GMWj5
+         2g7QcbmIRRWGxKqm/GURimKjWiocpWufIHNsASeQs+dlqDgGkLMAJzpHFfwemqVCdTMj
+         H1ii5yHDU/KkvzNGBN8U+MQ0ujoWHCq3JG6cpBpGz9h8LiqoSXNaJSk4n4wQP06Bj/Rx
+         PsJOiBcf8F8Y7erI2XYHIv5OWhQBdx37/YzIiufEwbFUSJkv8qquwj9ZnXWljzOsSDmi
+         z+hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713376271; x=1713981071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qVNaml9URaHp31c9KJm3syS03yWvEA9+eMiOQdyd5w8=;
+        b=RT4R0BEP4WOpelCYodYmutorB9nKTLM1CSB9fJQq1uPE60ZR/Gkxpg+rsk52sMZWSd
+         ljRjCtOQz8Wf9Rw+16YYzwbuofYaY5ook3RHY2yVS2v+tAkJEYpnNbB88VFVzqLKYf5A
+         9GdOv0+3132SKcixssnwW6B4VUng12TcKwUj+cmrwURW2LQbfngdzoqTZSOMTR79vkAO
+         b78XVbHPsQpnL542fUJa5sq8oFb/JAXMNC2sQDZKMtnC/fTIW1bIVLKcGJk3n+JF1BXU
+         t3PrmgM8if8AB5fTQtdPt9K0TCq49ULAhLV92PGiciW0xl6z0ZhYlOZaA6g/qr22Zubx
+         LAZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlnLoOIhnjBe12y0wHz3tJ2xBEsUawZXi4emHAFAczkAm3R29EBa65NaLyw4jIC8FBcUUkj0jHh+pUBnJebo5pqO/IM/QBIxO7BBZVGvEMunKSyYQivH8d0mYjbln9yEEbo+42UNq1
+X-Gm-Message-State: AOJu0Yx2PbhhK8q6PZwiXMbNanuSSB3GzZPOpDQGVhNIBY8QMql2Onb6
+	MRKxlkmkei1WTE+Plvh6ic7sPd8LHX1KYPU7g2o22sTtUmNF3gzYPUzN7rllRhc=
+X-Google-Smtp-Source: AGHT+IGcJJTynUREi6vtwF/8AEFhUQVGY9oq+V1ujfNF1XPbjEQ+5JuCU+zzogD96nWIP5hinIH2sw==
+X-Received: by 2002:a05:600c:3595:b0:418:93d1:ef15 with SMTP id p21-20020a05600c359500b0041893d1ef15mr239395wmq.10.1713376271208;
+        Wed, 17 Apr 2024 10:51:11 -0700 (PDT)
+Received: from fedora.. (cable-178-148-234-71.dynamic.sbb.rs. [178.148.234.71])
+        by smtp.gmail.com with ESMTPSA id v7-20020a05600c470700b00418916f5848sm3569866wmo.43.2024.04.17.10.51.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 10:51:10 -0700 (PDT)
+From: Aleksa Savic <savicaleksa83@gmail.com>
+To: linux-hwmon@vger.kernel.org
+Cc: David Flemstrom <david.flemstrom@gmail.com>,
+	Aleksa Savic <savicaleksa83@gmail.com>,
+	Jack Doan <me@jackdoan.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] hwmon: (aquacomputer_d5next) Support for Octo flow sensor and pulses
+Date: Wed, 17 Apr 2024 19:50:34 +0200
+Message-ID: <20240417175037.32499-1-savicaleksa83@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
 
-There was reported hang warning when using dm-integrity on the top of loop
-device on XFS on a rotational disk. The warning was triggered because
-flush on the loop device was too slow.
+This patch series adds support for the flow sensor and flow sensor pulses
+of the Aquacomputer Octo fan controller.
 
-There's no easy way to reduce the latency, so I made a commit that shuts
-the warning up.
+Aleksa Savic (2):
+  hwmon: (aquacomputer_d5next) Add support for Octo flow sensor
+  hwmon: (aquacomputer_d5next) Add support for Octo flow sensor pulses
 
-This commit replaces wait_for_completion_io with
-wait_for_completion_long_io, so that the warning is avoided.
+ Documentation/hwmon/aquacomputer_d5next.rst |  9 ++--
+ drivers/hwmon/aquacomputer_d5next.c         | 51 ++++++++++++++-------
+ 2 files changed, 39 insertions(+), 21 deletions(-)
 
-[ 1352.586981] INFO: task kworker/1:2:14820 blocked for more than 120 seconds.
-[ 1352.593951] Not tainted 4.18.0-552.el8_10.x86_64 #1
-[ 1352.599358] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1352.607202] Call Trace:
-[ 1352.609670] __schedule+0x2d1/0x870
-[ 1352.613173] ? update_load_avg+0x7e/0x710
-[ 1352.617193] ? update_load_avg+0x7e/0x710
-[ 1352.621214] schedule+0x55/0xf0
-[ 1352.624371] schedule_timeout+0x281/0x320
-[ 1352.628393] ? __schedule+0x2d9/0x870
-[ 1352.632065] io_schedule_timeout+0x19/0x40
-[ 1352.636176] wait_for_completion_io+0x96/0x100
-[ 1352.640639] sync_io+0xcc/0x120 [dm_mod]
-[ 1352.644592] dm_io+0x209/0x230 [dm_mod]
-[ 1352.648436] ? bit_wait_timeout+0xa0/0xa0
-[ 1352.652461] ? vm_next_page+0x20/0x20 [dm_mod]
-[ 1352.656924] ? km_get_page+0x60/0x60 [dm_mod]
-[ 1352.661298] dm_bufio_issue_flush+0xa0/0xd0 [dm_bufio]
-[ 1352.666448] dm_bufio_write_dirty_buffers+0x1a0/0x1e0 [dm_bufio]
-[ 1352.672462] dm_integrity_flush_buffers+0x32/0x140 [dm_integrity]
-[ 1352.678567] ? lock_timer_base+0x67/0x90
-[ 1352.682505] ? __timer_delete.part.36+0x5c/0x90
-[ 1352.687050] integrity_commit+0x31a/0x330 [dm_integrity]
-[ 1352.692368] ? __switch_to+0x10c/0x430
-[ 1352.696131] process_one_work+0x1d3/0x390
-[ 1352.700152] ? process_one_work+0x390/0x390
-[ 1352.704348] worker_thread+0x30/0x390
-[ 1352.708019] ? process_one_work+0x390/0x390
-[ 1352.712214] kthread+0x134/0x150
-[ 1352.715459] ? set_kthread_struct+0x50/0x50
-[ 1352.719659] ret_from_fork+0x1f/0x40 
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-
----
- drivers/md/dm-io.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: linux-2.6/drivers/md/dm-io.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-io.c	2024-04-17 19:43:07.000000000 +0200
-+++ linux-2.6/drivers/md/dm-io.c	2024-04-17 19:43:07.000000000 +0200
-@@ -450,7 +450,7 @@ static int sync_io(struct dm_io_client *
- 
- 	dispatch_io(opf, num_regions, where, dp, io, 1, ioprio);
- 
--	wait_for_completion_io(&sio.wait);
-+	wait_for_completion_long_io(&sio.wait);
- 
- 	if (error_bits)
- 		*error_bits = sio.error_bits;
+-- 
+2.44.0
 
