@@ -1,129 +1,93 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF1313C9A7
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D34146A98;
+	Wed, 17 Apr 2024 15:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366420; cv=none; b=oxHo68LlxrVGqESjuAyOV4dH+X/VyhWq9hno3vHKjXbegR3CsGvFmEBWWLYHA1VV+sf90FQLuC+d779iqVSHSqJx/mtFccc/BnyKUUbk5RQH4AykcDxGAMRLIqNkSS72/ECiKJGCQioZTIVh1q49kuqh8VUMpkEe58eBEkcosik=
+	t=1713366426; cv=none; b=tBid08NDqpdZv0Cffd3Eo7ikwyRNC4otjl3gTgl9mRIe/scIbiJvkmf3AOxzZFWAKVdpinsgSNbTqTRnhA0/GUgirU4I/v5CHRhoyTiYXermzlYbvXbXuI3AAbHR0rT0iZMU4gBUlyPGNaypy5/TLk56qQHTsvtHpCp13Ctn4FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366420; c=relaxed/simple;
-	bh=UNPb0zlkcnhUQib87xagHEcOVpvTSkc5NdfcbnpIiM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ixL9Ac1/2cG4Lc9MqWrErJBX7FAb1OsP970BZK09/YkWzJnyxEYmhOTWfmarhRCnZCXBRm9JKDs1pJIGQzNZgxQ+RvupnmwSN3fkJdZ6gN4SDOcVxhTKCGx+7VWYwysOEDruXf6aGZd/+haMAcNcR2/nsh2BzIxOnw6BmaCSEh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=PK+OC6ZQ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1713366426; c=relaxed/simple;
+	bh=yApPYuulzE17i6dmwrXZM/IajwO1lP0UGISZ6thL88s=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hx8fcaFg42d7a+3iV+eNIjKgy7NO2QlTwuyDN3WcZ8FnSrsch2oH5/PK+8RmWG4HtP+6Gye6ckkD4WekBiEH1nZi/ApQQbswOqPnkhxGLrUoUaVJRoAKleJrITPfmslpcQ4sXo9QRDVG6mIldhZKeeDhqrJQfG2hrtnkSFlbBlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=drjTnJfB; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PK+OC6ZQ"
-Received: from [192.168.7.187] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 43HF6X6x4069325
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 17 Apr 2024 08:06:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 43HF6X6x4069325
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024041401; t=1713366394;
-	bh=cycOB8apwOCGz0P/eQl6gDVIreOL8E6POCyJAVWDA2M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PK+OC6ZQAW/LLmhCpbeswphwxvOIazSVbLSYpIa3mTvPRZYSEnfeVHcBDbECe1DJ6
-	 1T3kzfZ8pUbdSB001ATu/aZcNIJOMY/u8gto339ZvnUFsPLDXAYIbRiAXi0Jcxxbkl
-	 Wg/J1frV+S7JOIZBx8hSRwgXqHIi2sYK1ERN+aBDGm4xPvL/Ro5aBeo94K5FxlHvFu
-	 +gbZLOW3GD/Og+fowms1ymtOq92S/4VHRXIc55SFM6EOl8ZFUv23C6t8LQhJIS+FxP
-	 HI7E7ZaMOXrtULvO1M/h2oYnIrDyjDUj+Tt+E3aEb8p+UjnS19yVWBFgaahziBgrFJ
-	 2w+Znk7vlDoGw==
-Message-ID: <e8180be8-b108-4047-ab49-2cfc532a2b52@zytor.com>
-Date: Wed, 17 Apr 2024 08:06:31 -0700
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="drjTnJfB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cF+8R035uNTlFeFw8pdAD8eweWCrr746jpBDTBrOITI=;
+  b=drjTnJfB6VZlnR3tWr7VSVrKyUCBJxJjqykiaDui2j20B3sUoUijYEwc
+   3qfpluVzgV4G0dIOQwavDfPDRmcgB5n4uGir4KjhlAS84UFSN3A9Elni6
+   u2ycOjDJAcvNrvmWYdtNBLQjImXaPukLGw3YHvHdsq2+S+iTuEd4SnP0R
+   g=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,209,1708383600"; 
+   d="scan'208";a="85068655"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 17:06:54 +0200
+Date: Wed, 17 Apr 2024 17:06:53 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Wenchao Hao <haowenchao22@gmail.com>
+cc: Markus Elfring <Markus.Elfring@web.de>, 
+    Wenchao Hao <haowenchao2@huawei.com>, linux-scsi@vger.kernel.org, 
+    kernel-janitors@vger.kernel.org, 
+    "James E. J. Bottomley" <jejb@linux.ibm.com>, 
+    "Martin K. Petersen" <martin.petersen@oracle.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] SCSI: Fix issues between removing device and
+ error handle
+In-Reply-To: <b55da065-dbbb-4d8e-8baf-50807b507cc4@gmail.com>
+Message-ID: <173b55ca-cde-ab3-be92-d9c8b4b6b5c@inria.fr>
+References: <20240307144311.73735-1-haowenchao2@huawei.com> <99598b98-8550-4dca-beea-4c2d61d46f78@web.de> <b55da065-dbbb-4d8e-8baf-50807b507cc4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] x86/fred: Fix INT80 emulation for FRED
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com
-References: <20240417063001.3773507-1-xin@zytor.com>
- <20240417093813.GBZh-YhSQCXgy3OxFI@fat_crate.local>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240417093813.GBZh-YhSQCXgy3OxFI@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-1787994114-1713366413=:3710"
 
-On 4/17/2024 2:38 AM, Borislav Petkov wrote:
-> On Tue, Apr 16, 2024 at 11:30:01PM -0700, Xin Li (Intel) wrote:
->> 3) The FRED kernel entry handler does *NOT* dispatch INT instructions,
->>     which is of event type EVENT_TYPE_SWINT, so compared with
->>     do_int80_emulation(), there is no need to do any user mode check.
-> 
-> What does that mean?
-> 
-> An event handler doesn't dispatch INT insns?
-> 
-> /me is confused.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Maybe better to say?
-
-The FRED kernel entry handler fred_entry_from_kernel() calls 
-fred_bad_type() if an event is of type EVENT_TYPE_SWINT because Kernel 
-does not use INT insns! So if the kernel is handling an INT insn, it can 
-only be from a user level application.
+--8323329-1787994114-1713366413=:3710
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
->> + * A dedicated FRED INT80 handler duplicates quite a bit of the code in
->> + * do_int80_emulation(), but it avoids sprinkling more tests and seems
->> + * more readable. Just remember that we can always unify common stuff
->> + * later if it turns out that it won't diverge anymore, i.e., after the
->> + * FRED code settles.
->> + */
-> 
-> And this is talking about duplication above and that text is duplicated
-> from the commit message. :)
 
-I wanted to keep it as a TODO.  I can remove it in the next iteration.
+On Wed, 17 Apr 2024, Wenchao Hao wrote:
 
-> 
-> I'll zap it when applying.
-> 
-> Thx.
-> 
+> On 4/15/24 11:07 PM, Markus Elfring wrote:
+> > …
+> >> These issues are triggered because devices in removing would be skipped
+> >> when calling shost_for_each_device().
+> > …
+> >
+> > How do you think about to add the tag “Fixes” to any of your patches?
+> >
+>
+> Thanks for your suggestion, but I don't know how to add this tag. Could you
+> please tell me how to do?
+>
+> I just added "fix" in my cover letter and some patch's subject.
 
+Search in the git history for other patches that contain Fixes:
+
+Search in process/submitting-patches.rst for Fixes:
+
+julia
+
+>
+> > Regards,
+> > Markus
+> >
+>
+>
+>
+--8323329-1787994114-1713366413=:3710--
