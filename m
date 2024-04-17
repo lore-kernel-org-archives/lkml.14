@@ -1,150 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E338513AD14;
-	Wed, 17 Apr 2024 10:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD7413B280
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 10:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713348880; cv=none; b=XQjvxekTqebJ4a2Nce3KIckyiCBVHXKqqG7KY9Z1TjIwA4Gd0Ujsr5wOL4WJZL2415VgsI33qtLFHOua8nRcKCkzwJGDRqkm/Yv6p9rGWKuB5Xcj1ue4HWNE8MEQyG47waUWWLrAliUiAxhwucbvPsFHaNgx1a97UfYS7w0c9Vw=
+	t=1713348889; cv=none; b=m5Rcoz4AFmPMp72pCWomSFHS6/NnDtYxGhpg14xFk7VgnGdNOfVJGIQ3/b8IT4FPvpPiJ5DzwXRYsiWAUOBQX0GrrLO6jtSs0+BIvcXUEDeThJiRtL4Q+0/bUA4/lB7vBSkJ1aIFjfx3T2QpGm6C+q1N7P556cw0cYXi1mh+B6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713348880; c=relaxed/simple;
-	bh=YvVBQEYNETjnryX3V3rRszU6fJ5mSGyMpP5/6fWcdx0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nH79UEyextzik5Wt3026Ot3Esog/iy8Abb4rNEfwuVVbrvDK+uLLfqtiNxPmb6A8IVjWi9BWuThAQfd98KGqlBPMe59plPy8HLkB7lZBSeeKIkNcKf25EPyWtKYfX99L1521h7Zbo3wMIHaplMFWpP2Yl4+mxeku3lrPed/fGec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZRCz0NtO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713348889; c=relaxed/simple;
+	bh=Nsjf4W046CIAEyOcmt/MlZoEUduqPetqmPDoVbBknjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IsYDyFm3kiqlOF4gcERwPp1mWmVgGpkx8V4rAU6giw5umtbLLY39ZSi80Bx2VbVPBavixwaPcYRjSm4FO+6deqLnuFxAUxA/q3gkfqhFI4tmkRQEnrrAv98+ts8PzO/sN78typ3Wvuu0oCFWW2dlQt90hAJl7xwJp/pqHEhwkb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VWC1jbih; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZRCz0NtO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713348877;
-	bh=YvVBQEYNETjnryX3V3rRszU6fJ5mSGyMpP5/6fWcdx0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZRCz0NtOmGL19dZ/AZdo/eQy9yQ/QLs/EgbA8ahuojL/37QEyFW/BCKJYkFjZy3x/
-	 q9Ammmd57wt4pdsZfcbnDam3UveEKyWuDwOgxPUqd/BoGzRBke/cPeyuRuQ4lI3DGL
-	 UKFDrnWF5J4xbfrW6UuFUMZZDiNrGwMpX6RPmFNHZqEAnmaRvlN5aTS2N6UE9dc78d
-	 iWoe5AFsSG0un1IExZ5Gd2YI5S9PuLzKCDdqyG6iQfNFfZhv28KHPlOfppszSx1hJa
-	 ATLyLerogfrBucrR0WZ+Gjq1/L4Ay3hmdnhAaP9EmZa+vCM0iAn2+zXPvMIRbtpllT
-	 pj7RwG5VkGNRQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B84D437820F9;
-	Wed, 17 Apr 2024 10:14:35 +0000 (UTC)
-Message-ID: <2550d65a-7963-40d1-b360-8ce7a2aff1a8@collabora.com>
-Date: Wed, 17 Apr 2024 12:14:35 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VWC1jbih"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713348887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mfznY1Xt+1agp915j30/FccRLbon5LKlLd7NU6tQjbY=;
+	b=VWC1jbihrlhykawVWWzGbX518hICl/ApFmJ8wEPiMoLVtISWkiuxpA/mfAAcCesWKYpW1R
+	lNLjwpZCTGHWL2jfIZ7pXQKIlPrFPUiP99Ke85Ft1QnyyKDse99/WB52dbJxEoN3A0yIZO
+	poSuG6mdm5Z0Ig9PLSfPiSHfYCHXFY8=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-hBF8pXRNMJyCMgE3R0h-yw-1; Wed, 17 Apr 2024 06:14:46 -0400
+X-MC-Unique: hBF8pXRNMJyCMgE3R0h-yw-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3c613c1c51eso4878547b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713348885; x=1713953685;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mfznY1Xt+1agp915j30/FccRLbon5LKlLd7NU6tQjbY=;
+        b=eSv2ort3gAMCaG5OHS9fejhaMldv3/Itqb5eMxzPZ1r0PF0t9zVziT7c0IZ8r2uw66
+         H4uV2PB+uiha0SxBIHugGnfQBOnaEImHiYwWu663jcwWzA3uqD3N9cRJ1YsSfClAFBSy
+         lgSWGo4XV0ebAPxPyxi5KdGcOllKF9JpPxBOU24CuzZZywpGTvLo0i1Nu2qPfcVHl7hK
+         qVcMUjBKZycw7ahkLlWCwcG9zvfMiwTng9fBMS2eDQL06S+gDacWB1QGwx0XYTj2d0K9
+         61AJ/ARsN6vpYviUUWuOHAHH0MrA2ctgrqDUlwpnOq24ZFXfFKNLZjvqJoFQkhSF8FAC
+         0zBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGfVx/TUEmHK7Nbx8tjj8blGp0OzhbDmaaLM2AZyFu9HEGGmMp2c/7h29u2pm1tIOqleFkfHsdHtzLwmLxp+AQvUPG+oZju3UHcZaH
+X-Gm-Message-State: AOJu0YyRuce4zxcyJ0RgdBfoldAyFa4Yp/yaqnwUE2KnTjO+pcQ0bExR
+	cVi6diUBvf53iU+3VcolLv3oSXG5hcxug5Y5pRGdgFIhWy9tMcyz6Snt3z52Mm9fcJ7OKp2XUF7
+	1gEtGFve8WBP2CfwsRB/Q1Ft43wo3ApuXdjbNW2E8rX6k1Fm7T/DOZ2VcQg9d9zENs9x41Q==
+X-Received: by 2002:a05:6808:6243:b0:3c7:13fd:d878 with SMTP id dt3-20020a056808624300b003c713fdd878mr7873799oib.9.1713348885191;
+        Wed, 17 Apr 2024 03:14:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDz0OAbOJqHdNWrsnzh2Aggk3FP1TUtJ619gQjpyPq9dPplYtFuLf0MpY36myUuCQuf7T1/g==
+X-Received: by 2002:a05:6808:6243:b0:3c7:13fd:d878 with SMTP id dt3-20020a056808624300b003c713fdd878mr7873788oib.9.1713348884914;
+        Wed, 17 Apr 2024 03:14:44 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
+        by smtp.gmail.com with ESMTPSA id js7-20020a05622a808700b0043781985244sm71939qtb.59.2024.04.17.03.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 03:14:44 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Akira Yokosawa <akiyks@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: repair file entry in DOCUMENTATION
+Date: Wed, 17 Apr 2024 12:14:29 +0200
+Message-ID: <20240417101429.240495-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/18] drm/mediatek: add mt8365 dpi support
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>,
- CK Hu <ck.hu@mediatek.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
- <20231023-display-support-v2-14-33ce8864b227@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20231023-display-support-v2-14-33ce8864b227@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 16/04/24 17:53, Alexandre Mergnat ha scritto:
-> - Add compatibles and platform data into the Mediatek DPI driver.
-> - Fix the DPI0 parent clock to be consistent.
-> 
-> This SoC is compatible with the mt8183 calculate factor.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->   drivers/clk/mediatek/clk-mt8365-mm.c |  2 +-
->   drivers/gpu/drm/mediatek/mtk_dpi.c   | 18 ++++++++++++++++++
->   2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/mediatek/clk-mt8365-mm.c b/drivers/clk/mediatek/clk-mt8365-mm.c
-> index 01a2ef8f594e..3f62ec750733 100644
-> --- a/drivers/clk/mediatek/clk-mt8365-mm.c
-> +++ b/drivers/clk/mediatek/clk-mt8365-mm.c
-> @@ -53,7 +53,7 @@ static const struct mtk_gate mm_clks[] = {
->   	GATE_MM0(CLK_MM_MM_DSI0, "mm_dsi0", "mm_sel", 17),
->   	GATE_MM0(CLK_MM_MM_DISP_RDMA1, "mm_disp_rdma1", "mm_sel", 18),
->   	GATE_MM0(CLK_MM_MM_MDP_RDMA1, "mm_mdp_rdma1", "mm_sel", 19),
-> -	GATE_MM0(CLK_MM_DPI0_DPI0, "mm_dpi0_dpi0", "vpll_dpix", 20),
-> +	GATE_MM0(CLK_MM_DPI0_DPI0, "mm_dpi0_dpi0", "dpi0_sel", 20),
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-While I can agree with that change, this needs a Fixes tag and needs a commit on
-its own.
+Commit 1e596d5eff3d ("docs: Detect variable fonts and suggest denylisting
+them") adds the new script check-variable-fonts.sh and intends to refer to
+it in the DOCUMENTATION section in MAINTAINERS. However, the file entry
+refers to scripts/check-variable-font.sh. Note the missing "s".
 
->   	GATE_MM0(CLK_MM_MM_FAKE, "mm_fake", "mm_sel", 21),
->   	GATE_MM0(CLK_MM_MM_SMI_COMMON, "mm_smi_common", "mm_sel", 22),
->   	GATE_MM0(CLK_MM_MM_SMI_LARB0, "mm_smi_larb0", "mm_sel", 23),
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index beb7d9d08e97..a4f9376ee472 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -997,6 +997,23 @@ static const struct mtk_dpi_conf mt8195_dpintf_conf = {
->   	.csc_enable_bit = DPINTF_CSC_ENABLE,
->   };
->   
-> +static const struct mtk_dpi_conf mt8365_conf = {
-> +	.cal_factor = mt8183_calculate_factor,
-> +	.reg_h_fre_con = 0xe0,
-> +	.max_clock_khz = 150000,
-> +	.output_fmts = mt8183_output_fmts,
-> +	.num_output_fmts = ARRAY_SIZE(mt8183_output_fmts),
-> +	.pixels_per_iter = 1,
-> +	.is_ck_de_pol = true,
-> +	.swap_input_support = true,
-> +	.support_direct_pin = true,
-> +	.dimension_mask = HPW_MASK,
-> +	.hvsize_mask = HSIZE_MASK,
-> +	.channel_swap_shift = CH_SWAP,
-> +	.yuv422_en_bit = YUV422_EN,
-> +	.csc_enable_bit = CSC_ENABLE,
-> +};
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+broken reference.
 
-You don't need this, as that's a direct copy of `mt8192_conf`.
+Repair this new file entry in the DOCUMENTATION section.
 
-> +
->   static int mtk_dpi_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -1092,6 +1109,7 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
->   	{ .compatible = "mediatek,mt8188-dp-intf", .data = &mt8195_dpintf_conf },
->   	{ .compatible = "mediatek,mt8192-dpi", .data = &mt8192_conf },
->   	{ .compatible = "mediatek,mt8195-dp-intf", .data = &mt8195_dpintf_conf },
-> +	{ .compatible = "mediatek,mt8365-dpi", .data = &mt8365_conf },
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...and you don't need to add any mt8365 specific compatible in there as well,
-as you can simply add the node as
-
-compatible = "mediatek,mt8365-dpi", "mediatek,mt8192-dpi";
-
-Cheers,
-Angelo
-
->   	{ /* sentinel */ },
->   };
->   MODULE_DEVICE_TABLE(of, mtk_dpi_of_ids);
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4356b28ce625..250c8f8caa08 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6493,7 +6493,7 @@ S:	Maintained
+ P:	Documentation/doc-guide/maintainer-profile.rst
+ T:	git git://git.lwn.net/linux.git docs-next
+ F:	Documentation/
+-F:	scripts/check-variable-font.sh
++F:	scripts/check-variable-fonts.sh
+ F:	scripts/documentation-file-ref-check
+ F:	scripts/kernel-doc
+ F:	scripts/sphinx-pre-install
+-- 
+2.44.0
 
