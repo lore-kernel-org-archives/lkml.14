@@ -1,79 +1,70 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B21813F443;
-	Wed, 17 Apr 2024 13:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97F812DD8C;
+	Wed, 17 Apr 2024 13:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713362267; cv=none; b=VFcXMrZRTu+ss9FqHuqgLP9TRessLXBvXn4N8HsTlQ6CFsLe1vpM7FWAruJi5MRtg4Kt0HtSe4UAoXJWgXHZ2u17j0U0I70SRrrkcciZUW4dhCCAiyRcitoAwRNOqVCAx4Zbp+VEGnvLvsYEcyoyB+s9lKQTEXXQX6yX4TgXIw0=
+	t=1713362280; cv=none; b=n0emPmKwpk3AN6wc9B9HM9B5jrzPdfLAU0W0TPuq1EPMQwdzPko0N9ovrYJFIV9c/AazPymIFvsgCPKcA59/8FYs3drGbhZGNM7RkVY9CAmVqAgmp+ZTkre3j86raHW9IsDgm3qxEotJveb+7uN3FLGe/pbIrGTaPIvaVtPq+go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713362267; c=relaxed/simple;
-	bh=tAuTme6GkvilwxtiDUHh+kXeYKrHGiZ7i8iQOkzrPBg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=InFuWzyg+czyAZ/0dBOlT38rBmczfvtJwLm9QSUvzUaaEZG9lJBkUpQRPp5O6nQjlfvJEu3lJ+L/yhuAwdTCRo8pExZQob1SSNvdqI632MKTZacGrBPDEU5Hz1hQCNXX4ecAviwJ8InfehZ/RisYbbhMYHLcQyBU/hAzsMVnMZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WELsYkuE; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713362280; c=relaxed/simple;
+	bh=YGiHg3475zYSA8eegskwRimqstTpcKy5o/hOQLnCkFQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K6ek/O3INSWdWwY0BtRsh8Z0GCxGKtWBgX8lq9EsjAKKzIyMImsdmXMtAhGq/+piCacoMIJgepTP1K15m0Uk1QoOiNF9QO1m8/S8+5xx2aA10w83/sw+BCvaM/RESAOvfFSEN70tGpTqGcdLF6cyT9lC75qJqhTaabEf1gGhC2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YY+YdHIw; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WELsYkuE"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d8863d8a6eso72972451fa.3;
-        Wed, 17 Apr 2024 06:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713362264; x=1713967064; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4CPt5wsPPyfiuSaFsXxCJvkSsW2VMZQ8yMjMPQ4gYeA=;
-        b=WELsYkuE8+DsMAIZkP1dXlRBmiYEGRDFXl3KCwgDOAwnMYMcHwUBVwPXoBXBTuE2qw
-         iQ7B8wBV3u3XfE0VFoeq2LB0yF+C7DEIy1Yk/saRHhehyEfp2+EC3H08VaHX+Mi5gBxw
-         c/do0vM3MI/LhVJ2YWZMPsqWJ/F4EOHfBCJMTUFB1dpCPWWDCMcXc/rZJtu5Unzl88Ka
-         yLphbsBFMBWbjnHcvHTCDUbkZMQDskZkPN/mGKHvSoRCZrQuXAqKFKrtpulV6avd1Ezq
-         kolHQoLnMF4FPJ5v/T8eDof6MyjTGrZ0qEiyEfDieMJ+km1rusl3HBe5HhuVH3XamcYG
-         OD2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713362264; x=1713967064;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4CPt5wsPPyfiuSaFsXxCJvkSsW2VMZQ8yMjMPQ4gYeA=;
-        b=Zhy2bXn34M1xgkC5eirBWXkLl8nuzcV+OGWfdAB7fCVVVZZljf0pG/dxiEwf6zIBVO
-         UNG15qgjb3Wf9Y5+IIigS/OAUE3JKwXhIVQa6JywMqa8EFdJf1adi197Kz9rV4RXI49z
-         REV5c/+q64iAYzBOxjcalrYT4gQSk4o94Qc7I0XaBl3atpBeONeYYWVInXTwZpcZ5IDB
-         +k64hwEg8tOV1do3seTfwo1/qXaE87U5zdIj3gL2Bjq51Z7yrtwFxOVTb2DzYcEBQuCN
-         zsWgE+Q0sAIuc0ycna+7ZT0eNfp1GpYofU6zbWLHbDHbnN5XA5o1Abczmxn6Zu4TvAqN
-         hlJg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcHVPaZ2uCQnOg9PccnBS953PrNcwuWITbnqfWaFkbNjbvcsJe5AM5g/XV0wRJlZKH0yT3p/56Kvfja9As9HIPz1E8MsSz1bPV9Ht/L11BQVEpyZ/e8cgiENeoDqLLMtq6a1NCqIFPRYs9oVE2aL/TgV1MqZPwSxCFMEcJg1F8qPfwXyxQ6g==
-X-Gm-Message-State: AOJu0Yzsk0lQ7rTh086OrssEc4I7ShBApEaF8jW4wxn8w2DQeSBsehVp
-	7x2YTNXB/MmzNrrVEavg4tXmpCHNEwcsRwFeQQRdvqIlGZuy7S4A
-X-Google-Smtp-Source: AGHT+IHxA3at9V3J8oOOjFoQI8Hxcudvb/valQNqHmVnxagYSsadcG/jKBH3OuVO++fYzASwT0Gzcg==
-X-Received: by 2002:a2e:a695:0:b0:2da:38e:f73d with SMTP id q21-20020a2ea695000000b002da038ef73dmr11056940lje.51.1713362264074;
-        Wed, 17 Apr 2024 06:57:44 -0700 (PDT)
-Received: from pratik-IdeaPad.lan (customer-145-40-29-195.stosn.net. [145.40.29.195])
-        by smtp.googlemail.com with ESMTPSA id e9-20020a2e8189000000b002d7095bf808sm1864467ljg.128.2024.04.17.06.57.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 06:57:43 -0700 (PDT)
-From: Pratik Farkase <pratikfarkase94@gmail.com>
-X-Google-Original-From: Pratik Farkase <pratik.farkase@wsisweden.com>
-To: 
-Cc: Pratik Farkase <pratik.farkase@wsisweden.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Pratik Farkase <pratikfarkase94@gmail.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: serial: brcm,bcm2835-aux-uart: convert to dtschema
-Date: Wed, 17 Apr 2024 15:51:10 +0200
-Message-Id: <20240417135111.20375-1-pratik.farkase@wsisweden.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YY+YdHIw"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43HBdC8l023169;
+	Wed, 17 Apr 2024 06:39:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1713353952;
+	bh=0ftwtGLpcw5ZTrWumiWY4clcxPQXBY878sZZ/jkXSd4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=YY+YdHIwxK6sVuj00o+a04QXAf5b2PFpyv1sStuMXYZI7Nf5P9FVQRC5vnW1oUyW6
+	 6pjy+xx+34KlDey6ap5mDj0K+751wjoSGcdHlAWc18WR9DF8XS/LU8kRLJEru+OyKb
+	 yRW27ygXTpdUjmrjl+z+LH0vzWzVSjTrPIe7FYQU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43HBdCiX082198
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 17 Apr 2024 06:39:12 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
+ Apr 2024 06:39:12 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 17 Apr 2024 06:39:12 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43HBdBdb018042;
+	Wed, 17 Apr 2024 06:39:11 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Julien Panis <jpanis@baylibre.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Dan
+ Carpenter" <dan.carpenter@linaro.org>,
+        Chintan Vankar <c-vankar@ti.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Grygorii Strashko
+	<grygorii.strashko@ti.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "Andrew Lunn" <andrew@lunn.ch>, Roger Quadros <rogerq@kernel.org>,
+        Richard
+ Cochran <richardcochran@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>, Jakub
+ Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S.
+ Miller" <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH net-next v6 1/2] net: ethernet: ti: am65-cpts: Enable RX HW timestamp for PTP packets using CPTS FIFO
+Date: Wed, 17 Apr 2024 17:09:03 +0530
+Message-ID: <20240417113904.3804936-2-c-vankar@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240417113904.3804936-1-c-vankar@ti.com>
+References: <20240417113904.3804936-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,106 +72,186 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Convert the Broadcom BCM2835 Auxiliary UART to newer DT schema.
-Created DT schema based on the .txt file which had
-`compatible`, `reg` `clocks` and `interrupts` as the
-required properties. This binding is used by Broadcom BCM2835
-SOC used in some Raspberry PI boards.
-Changes from original file:
-Implemented complete example which the original txt binding lacked.
+Add a new function "am65_cpts_rx_timestamp()" which checks for PTP
+packets from header and timestamps them.
 
-Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
----
-Changes in v2
-- Updated Maintainers list according to feedback
-- Fixed typo `Auxiliar` to `Auxiliary`
----
----
- .../bindings/serial/brcm,bcm2835-aux-uart.txt | 18 -------
- .../serial/brcm,bcm2835-aux-uart.yaml         | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
+Add another function "am65_cpts_find_rx_ts()" which finds CPTS FIFO
+Event to get the timestamp of received PTP packet.
 
-diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
-deleted file mode 100644
-index b5cc6297cd1b..000000000000
---- a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--* BCM2835 AUXILIAR UART
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
+
+Link to v5:
+https://lore.kernel.org/r/20240402114405.219100-2-c-vankar@ti.com/
+
+Changes from v5 to v6:
+- Defined lockless variant of "am65_cpts_fifo_read()" as
+  "__am65_cpts_fifo_read()", suggested by Paolo to avoid acquiring the
+  same lock on cpts again in "am65_cpts_fifo_read()".
+- Replaced "list_del_entry()" and "list_add()" functions with equivalent
+  "list_move()"  function.
+- Replaced "list_del_init()" and "list_add_tail()" functions with
+  equivalent "list_move_tail()" function.
+
+ drivers/net/ethernet/ti/am65-cpts.c | 84 ++++++++++++++++++++++++++---
+ drivers/net/ethernet/ti/am65-cpts.h |  6 +++
+ 2 files changed, 83 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
+index c66618d91c28..599454c1d19f 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.c
++++ b/drivers/net/ethernet/ti/am65-cpts.c
+@@ -275,15 +275,13 @@ static bool am65_cpts_fifo_pop_event(struct am65_cpts *cpts,
+ 	return true;
+ }
+ 
+-static int am65_cpts_fifo_read(struct am65_cpts *cpts)
++static int __am65_cpts_fifo_read(struct am65_cpts *cpts)
+ {
+ 	struct ptp_clock_event pevent;
+ 	struct am65_cpts_event *event;
+ 	bool schedule = false;
+ 	int i, type, ret = 0;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&cpts->lock, flags);
+ 	for (i = 0; i < AM65_CPTS_FIFO_DEPTH; i++) {
+ 		event = list_first_entry_or_null(&cpts->pool,
+ 						 struct am65_cpts_event, list);
+@@ -312,8 +310,7 @@ static int am65_cpts_fifo_read(struct am65_cpts *cpts)
+ 			event->tmo = jiffies +
+ 				msecs_to_jiffies(AM65_CPTS_EVENT_RX_TX_TIMEOUT);
+ 
+-			list_del_init(&event->list);
+-			list_add_tail(&event->list, &cpts->events);
++			list_move_tail(&event->list, &cpts->events);
+ 
+ 			dev_dbg(cpts->dev,
+ 				"AM65_CPTS_EV_TX e1:%08x e2:%08x t:%lld\n",
+@@ -356,14 +353,24 @@ static int am65_cpts_fifo_read(struct am65_cpts *cpts)
+ 	}
+ 
+ out:
+-	spin_unlock_irqrestore(&cpts->lock, flags);
 -
--Required properties:
--
--- compatible: "brcm,bcm2835-aux-uart"
--- reg: The base address of the UART register bank.
--- interrupts: A single interrupt specifier.
--- clocks: Clock driving the hardware; used to figure out the baud rate
--  divisor.
--
--Example:
--
--	uart1: serial@7e215040 {
--		compatible = "brcm,bcm2835-aux-uart";
--		reg = <0x7e215040 0x40>;
--		interrupts = <1 29>;
--		clocks = <&aux BCM2835_AUX_CLOCK_UART>;
--	};
-diff --git a/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
-new file mode 100644
-index 000000000000..5d4d37371d6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/brcm,bcm2835-aux-uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 	if (schedule)
+ 		ptp_schedule_worker(cpts->ptp_clock, 0);
+ 
+ 	return ret;
+ }
+ 
++static int am65_cpts_fifo_read(struct am65_cpts *cpts)
++{
++	unsigned long flags;
++	int ret = 0;
 +
-+title: BCM2835 AUXILIARY UART
++	spin_lock_irqsave(&cpts->lock, flags);
++	ret = __am65_cpts_fifo_read(cpts);
++	spin_unlock_irqrestore(&cpts->lock, flags);
 +
-+maintainers:
-+  - Pratik Farkase <pratikfarkase94@gmail.com>
-+  - Florian Fainelli <florian.fainelli@broadcom.com>
-+  - Stefan Wahren <wahrenst@gmx.net>
++	return ret;
++}
 +
-+allOf:
-+  - $ref: serial.yaml
+ static u64 am65_cpts_gettime(struct am65_cpts *cpts,
+ 			     struct ptp_system_timestamp *sts)
+ {
+@@ -906,6 +913,69 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
+ 	return 1;
+ }
+ 
++static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, u32 skb_mtype_seqid)
++{
++	struct list_head *this, *next;
++	struct am65_cpts_event *event;
++	unsigned long flags;
++	u32 mtype_seqid;
++	u64 ns = 0;
 +
-+properties:
-+  compatible:
-+    const: brcm,bcm2835-aux-uart
++	spin_lock_irqsave(&cpts->lock, flags);
++	__am65_cpts_fifo_read(cpts);
++	list_for_each_safe(this, next, &cpts->events) {
++		event = list_entry(this, struct am65_cpts_event, list);
++		if (time_after(jiffies, event->tmo)) {
++			list_move(&event->list, &cpts->pool);
++			continue;
++		}
 +
-+  reg:
-+    maxItems: 1
++		mtype_seqid = event->event1 &
++			      (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
++			       AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
++			       AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
 +
-+  interrupts:
-+    maxItems: 1
++		if (mtype_seqid == skb_mtype_seqid) {
++			ns = event->timestamp;
++			list_move(&event->list, &cpts->pool);
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&cpts->lock, flags);
 +
-+  clocks:
-+    maxItems: 1
++	return ns;
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
++void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb)
++{
++	struct am65_cpts_skb_cb_data *skb_cb = (struct am65_cpts_skb_cb_data *)skb->cb;
++	struct skb_shared_hwtstamps *ssh;
++	int ret;
++	u64 ns;
 +
-+unevaluatedProperties: false
++	/* am65_cpts_rx_timestamp() is called before eth_type_trans(), so
++	 * skb MAC Hdr properties are not configured yet. Hence need to
++	 * reset skb MAC header here
++	 */
++	skb_reset_mac_header(skb);
++	ret = am65_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
++	if (!ret)
++		return; /* if not PTP class packet */
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/bcm2835.h>
-+    #include <dt-bindings/clock/bcm2835-aux.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    uart1: serial@7e215040 {
-+        compatible = "brcm,bcm2835-aux-uart";
-+        reg = <0x7e215040 0x40>;
-+        interrupts = <1 29>;
-+        clocks = <&aux BCM2835_AUX_CLOCK_UART>;
-+    };
++	skb_cb->skb_mtype_seqid |= (AM65_CPTS_EV_RX << AM65_CPTS_EVENT_1_EVENT_TYPE_SHIFT);
++
++	dev_dbg(cpts->dev, "%s mtype seqid %08x\n", __func__, skb_cb->skb_mtype_seqid);
++
++	ns = am65_cpts_find_rx_ts(cpts, skb_cb->skb_mtype_seqid);
++	if (!ns)
++		return;
++
++	ssh = skb_hwtstamps(skb);
++	memset(ssh, 0, sizeof(*ssh));
++	ssh->hwtstamp = ns_to_ktime(ns);
++}
++EXPORT_SYMBOL_GPL(am65_cpts_rx_timestamp);
++
+ /**
+  * am65_cpts_tx_timestamp - save tx packet for timestamping
+  * @cpts: cpts handle
+diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
+index 6e14df0be113..90296968a75c 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.h
++++ b/drivers/net/ethernet/ti/am65-cpts.h
+@@ -22,6 +22,7 @@ void am65_cpts_release(struct am65_cpts *cpts);
+ struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
+ 				   struct device_node *node);
+ int am65_cpts_phc_index(struct am65_cpts *cpts);
++void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
+@@ -48,6 +49,11 @@ static inline int am65_cpts_phc_index(struct am65_cpts *cpts)
+ 	return -1;
+ }
+ 
++static inline void am65_cpts_rx_timestamp(struct am65_cpts *cpts,
++					  struct sk_buff *skb)
++{
++}
++
+ static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
+ 					  struct sk_buff *skb)
+ {
 -- 
 2.34.1
 
