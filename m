@@ -1,78 +1,96 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id CAAA352F86
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898ED14037F;
+	Wed, 17 Apr 2024 14:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713363834; cv=none; b=KiJskKQtsru4U+jZBKHGYHfSM7h3PDXXKys2mxWI3WJEXdimmiDyrKoU4M+cidgBPVX3FukfCZGRFr9tFGwT6VRnNuThFJiWl5dmGNv8YgvukP2hN4bzugbvKchdTXlxPJ88L7BFul6eeOWi/2YsV5poOJyPlhrBy6IsAMwUmr0=
+	t=1713364031; cv=none; b=C6go9xEpwkQ3dh1crD90M2mz6e/WyagBwKe1nOa62Pcbzf02CnHAgUZIckN6dW96Q2LQkpNBixgHegk7xi/9GOXgpmmMgaHMI46IqqVVnH+rvVnpeiShng/hnZn+Cgk+vPPUO9w3ulqgFnY/Y895tAI8DZytQMcelt+b7nPKl+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713363834; c=relaxed/simple;
-	bh=cxUQhRnqHadkF6BkpNtuin2PtIpnIK0xeBndPTSzJT4=;
+	s=arc-20240116; t=1713364031; c=relaxed/simple;
+	bh=tfYWaw2Pa+tky697wv72LhqAvV2DQdIG4P8eLYh3vng=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBthdGfjaz3g9iEaor5pzwyTstuV5qqaRSZ+BLtS4YN+vNf1Xz7ASsOA0oe1B1/7VCLSjlue+0LGvKxt+oMCamSekUJE+HerRYspfo3+Kw6OqO/Ku9gUzRRDM9HbmzNZvqJfBBvdnzwqB3wBgxMmsYs3+PM3Hxp6gvfSzpGfEa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 201056 invoked by uid 1000); 17 Apr 2024 10:23:51 -0400
-Date: Wed, 17 Apr 2024 10:23:51 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-  Greg KH <gregkh@linuxfoundation.org>, swboyd@chromium.org,
-  ricardo@marliere.net, hkallweit1@gmail.com, heikki.krogerus@linux.intel.com,
-  mathias.nyman@linux.intel.com, royluo@google.com,
-  syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
-Subject: Re: [Linux kernel bug] general protection fault in disable_store
-Message-ID: <de997acf-300a-4592-87c5-024171d19c29@rowland.harvard.edu>
-References: <92fe8e95-bc01-4d7d-9678-8cfc55cc4a7b@rowland.harvard.edu>
- <CAEkJfYORHKO16xT3DCS04JFzkquz6oZ5CdC2USJ5-c0WihAMXg@mail.gmail.com>
- <45e246ab-01e8-40b7-8ede-b47957df0d7b@rowland.harvard.edu>
- <CAEkJfYMjO+vMBGPcaLa51gjeKxFAJBrSa0t_iJUtauQD3DaK8w@mail.gmail.com>
- <69a6f4c9-6470-40d1-99f1-aaf532497d02@rowland.harvard.edu>
- <CAEkJfYNJyyGhR9AAWc0V7o8i6pmS+OB=KSbh6XqVWAAGetS9hA@mail.gmail.com>
- <5704ac63-5e5b-416c-a2a1-57528e76a02f@rowland.harvard.edu>
- <CAEkJfYMSwuikpBJudOaFYrxgf9e=_O4nig6sTPLLAtpdEKQuyQ@mail.gmail.com>
- <5f3526a6-6ede-4181-a4ff-076e022cfb49@rowland.harvard.edu>
- <CAEkJfYMPQJn+kYzxFwwix3fwKeu3aAdYKgp+Ksvq=o4CoTXEWQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6WyF7Vj+mDoNqrVu1xFgkkjWLNKpIlcPZv/6Xnbv61YXIs/J1Z7wlsNmWTZ/dE9u6lshLZN2YX5i8WEOBGyZT2GfxKQH+g4eV0UKSR9V5bgHwisz71/kYjxMtwdg6kuvocsPbtnUtXtRp4uSSxfe8D+Ms1gWCGyseW+8xCJpbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBhg6BOC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBhg6BOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E29BC32781;
+	Wed, 17 Apr 2024 14:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713364031;
+	bh=tfYWaw2Pa+tky697wv72LhqAvV2DQdIG4P8eLYh3vng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SBhg6BOCwvMj2SlAde+4h5wM84YNqRoO7++DuN+4f3bQGJse/i/SrogCqfv3rmq9t
+	 fDpcx4eGhgdU7m0VTQ1rxxdO7XC4Gdltub9vonnbMN4qcJKfu7bHKHhnEAgNIbFY8k
+	 ISwdCcwY65ifCHtlqHZU2KCPwBl7faXVBzZbLUYHPYUyc8od5X52sr5tqoc7aGA3QT
+	 7ETrslJV6iwgrvsIuvtEC8xOdkKkeMSKyzBocUY+r778pNMhuk97mnjYj1voI1iWlo
+	 Bg0Kw+qCGzLpR0DZCvFst+Ht+6Lpte/7BsQV/ltYUeO1ra7B0Rta6+Xbo3k5J7RBV/
+	 BXHryz1jx4a3g==
+Date: Wed, 17 Apr 2024 19:57:06 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Herman van Hazendonk <github.com@herrie.org>
+Cc: benwolsieffer@gmail.com, chris.chapuis@gmail.com,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: phy: qcom,usb-hs-phy: Add compatible
+Message-ID: <Zh_cOgt3yaHhhH8J@matsya>
+References: <20240417065020.3599755-1-github.com@herrie.org>
+ <20240417065454.3599824-1-github.com@herrie.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEkJfYMPQJn+kYzxFwwix3fwKeu3aAdYKgp+Ksvq=o4CoTXEWQ@mail.gmail.com>
+In-Reply-To: <20240417065454.3599824-1-github.com@herrie.org>
 
-On Wed, Apr 17, 2024 at 03:39:02PM +0800, Sam Sun wrote:
-> On Wed, Apr 17, 2024 at 12:35 AM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > It turns out that patch is no good.  The reason is mentioned in the
-> > changelog for commit 543d7784b07f ("USB: fix race between hub_disconnect
-> > and recursively_mark_NOTATTACHED"); it says that the port devices have to
-> > be removed _after_ maxchild has been set to 0.
-> >
+On 17-04-24, 08:54, Herman van Hazendonk wrote:
+> Adds qcom,usb-hs-phy-msm8660 compatible
 > 
-> I checked the commit you mentioned. Maybe your first fix is all we
-> need to fix the problem? At least no race would occur for
-> hdev->maxchild and usb_set_intfdata().
+> Used by HP Touchpad (tenderloin) for example.
 
-No, the first patch won't help, even though it passed your testing.  The 
-race it eliminates is a harmless one -- or at least, it's harmless in 
-this context.  If usb_hub_to_struct_hub() sees bad values for 
-hdev->maxchild or usb_get_intfdata(), it will simply return NULL.  But 
-this can happen even with the first patch applied, if the user tries to 
-access disable_store() during the brief time between when hdev->maxchild 
-is set to 0 and when the port devices are removed.
+This lgtm, where is the dts for this, would like to check that before I
+pick this
 
-The true fix is simply to check whether the return value from 
-usb_hub_to_struct_hub() is NULL, which is what this patch does.
+> 
+> Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
+> ---
+>  Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
+> index f042d6af1594..e03b516c698c 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml
+> @@ -15,6 +15,7 @@ if:
+>        contains:
+>          enum:
+>            - qcom,usb-hs-phy-apq8064
+> +          - qcom,usb-hs-phy-msm8660
+>            - qcom,usb-hs-phy-msm8960
+>  then:
+>    properties:
+> @@ -41,6 +42,7 @@ properties:
+>        - enum:
+>            - qcom,usb-hs-phy-apq8064
+>            - qcom,usb-hs-phy-msm8226
+> +          - qcom,usb-hs-phy-msm8660
+>            - qcom,usb-hs-phy-msm8916
+>            - qcom,usb-hs-phy-msm8960
+>            - qcom,usb-hs-phy-msm8974
+> 
+> -- 
+> linux-phy mailing list
+> linux-phy@lists.infradead.org
+> https://lists.infradead.org/mailman/listinfo/linux-phy
 
-> I applied this patch and it also can fix the warning. I am not sure
-> which one is better.
-
-I'm quite sure that this one is better.  I will submit it shortly, with 
-your Tested-by:.
-
-Thanks a lot; the work you have done on this has been a big help.
-
-Alan Stern
+-- 
+~Vinod
