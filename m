@@ -1,107 +1,93 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B742D60C;
-	Wed, 17 Apr 2024 12:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83F03D72
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713358767; cv=none; b=m0417BN+GwcZbxNDjmzVk0VRev4fu6//gxY5Kmnn/83qwanBkb4kY0qu8Cku/nVfGIeDsuoW6U7IOia+r55iBuO5wVzLhZAon7dnLG+mqlvQ/nkPhsJI3Xot6fRKgoE7AXw3HxUpctrToR/1X9p5gl1cHwUxnv1X0GG7y1ak/0Q=
+	t=1713359003; cv=none; b=hH7Gd1rUSf2NUT/SN9izWRORHkm7C+n52ehvrol7hF2pdS7ipThkXv7xqti3zsD1SV4l/67w6YT0lPklPkD5lu7VLWZmxRSPFDWAMpBnilAZcYOWJlv3TcBVbcKJsb0I4s+NB5jJ0GE8Byg0uigrCZXN52QWYDeQ6ev7PHdHbqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713358767; c=relaxed/simple;
-	bh=HFvWvay/5DDWO9T/F/109Vc0YMZS09zONeLb7BQUvMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFF9C4b35655I7HjP5++VTf0TT6GTCYlY/nbbvfSY4hf9m5pKoGueMMj8nm4P/bRs5PGgj2Y8WddQG5Ng/2AINItIqcElAIoSZyRoQwy/T4QkfIRt4XCUehUb78l7fsBKnOxz1PTYDq+fxEBbiY9zZeVvzlvbQr53RWmnBG7T70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 4EE061C0080; Wed, 17 Apr 2024 14:59:17 +0200 (CEST)
-Date: Wed, 17 Apr 2024 14:59:16 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
-	alex.williamson@redhat.com, seanjc@google.com, jpoimboe@redhat.com,
-	michael.roth@amd.com, dsterba@suse.com, aric.cyr@amd.com
-Subject: Re: [PATCH 5.10 000/294] 5.10.215-rc1 review
-Message-ID: <Zh/HpAGFqa7YAFuM@duo.ucw.cz>
-References: <20240411095435.633465671@linuxfoundation.org>
+	s=arc-20240116; t=1713359003; c=relaxed/simple;
+	bh=xa9Y2JlAzPWgzeTQg3xFw/b6FgTih5DMjmNr0dCbG3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DpwcHF/UlUVo8Dzmplk/CUa6+dxqbyjzbpLGHaZP0q6Tval6irqLJ25gb1kl7A10SXv01+1fYBv+b9ozxa5JvodWeB59GoKIJehGrDZY4Mpcpwnx8E6HWhKIIMH6zV9iZxgbJg+hu9LJQqHb0ClPYtSw8rOazfTrJh92LdglZ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wn00AVNj; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wn00AVNj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713358984; x=1713963784; i=markus.elfring@web.de;
+	bh=xa9Y2JlAzPWgzeTQg3xFw/b6FgTih5DMjmNr0dCbG3w=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=wn00AVNjAWypuN4K5zt0FQOjhUsO/eCWIa31kq9s4DTUnFPwbjO2mdX1Io7YgdWf
+	 urT5xTBZfgOOho5P6LSU4VT2GNDvSP6Qi370ZyDKYP4n55gjm9eiuIq6JaRv1vHYB
+	 IMlzTdwVvSahn9CsMmEzpqfFXklmE4QIXo0++L/J/IF17I+9JfeRpNjbbE1wLyKMc
+	 5IXm7vK24ooqhikXDUUqM1vmcgZN/hyUqZzDMGYiOksKrsnDsvc5vNJTgrIK7OEJu
+	 g2BdhzXoyR7EQiXdYh3dTyV4Gn2Bcx3azCrdwGvMDTVTR/vRxcWxJ+kjoZOQEAINm
+	 akbZ3yD3AD32tf4bnA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MSZMD-1sKxcX1Jft-00RG2W; Wed, 17
+ Apr 2024 15:03:04 +0200
+Message-ID: <ba67e3ac-33c4-4ced-86ca-fc590ca0ed36@web.de>
+Date: Wed, 17 Apr 2024 15:02:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WebcVGuD/i7sDG85"
-Content-Disposition: inline
-In-Reply-To: <20240411095435.633465671@linuxfoundation.org>
-
-
---WebcVGuD/i7sDG85
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: coccinelle: misc: minmax: Suppress reports for err returns
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Julia Lawall <Julia.Lawall@inria.fr>, cocci@inria.fr
+Cc: LKML <linux-kernel@vger.kernel.org>, Denis Efremov <efremov@linux.com>,
+ Nicolas Palix <nicolas.palix@imag.fr>
+References: <20240415-minimax-v1-1-5feb20d66a79@chromium.org>
+ <fbf22b53-7b68-4e60-99c7-ab38a77a53c8@web.de>
+ <CANiDSCuvXvjfhw2mjSef1wR8RiL=9KrDEoh+3o1ed4+8P+AqGw@mail.gmail.com>
+ <60df00eb-41ca-417f-8b8b-90dba6eaaf65@web.de>
+ <CANiDSCtZzAs0u2tqJGRaJz6iqCTu_p-j_rkyGU7a9HFqUbJEMg@mail.gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <CANiDSCtZzAs0u2tqJGRaJz6iqCTu_p-j_rkyGU7a9HFqUbJEMg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Id/SyUE37WytGTXv9/AzLmpUP6D+3CgV5CSpMPXJ6Ha2AdKXIvU
+ nkdtbHWZ797VjYOZV14VbyarnqFGn6vYzl57mNLE46em0NbwjurUoxzn+0uCUP+Ex3lMNVJ
+ R2h0ZOsm5IHV/nzTSDmsPYa/Oa9EKguqFY4Xb58U1KG+GpmOE5ucf01jsOa2iIxISvdv4kr
+ lX19sgDD5z8X/+IEjiwVA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Tk5eMEQ2d4o=;2DAq3UailJ6az1acc0gW0vsf3aL
+ QXj8elUWfmbY5J7eZ4AWgrdHt0U8Ex7ErIzHurLGu9fUyT9SSRJn1Xx2pvD4GDYIIpJiiU6iF
+ pqFIFRgwXReZgZ2cPvOqMhATOh2uzfHnt3AUN0ZjY3H66w7XKtl8ivTkJGeiVDtlTcfKaOl/c
+ B3gAVCVNG35g+gllcpkurRQ/SSY89ZvJXMM6OxlQLz0UqUxS19KOjxFQoeavSE5qGiV/QaILx
+ PUpuWO9XdREoHNnlkExgrWiLbA7c/i8KsEYYPaA/1ZI69/IzmefwkiJIYkFZr1BSwJO5ddqd9
+ qmzU2RRk4kTGkGW8f2MmPBFhyMRvgA2K14DZ34X45elAFgbVpCW8QSlNXhp0O+ysJFOyJhq6R
+ 2efk1IXFZe7it0beaIbKrzpjG8dKMgnw0K6guiYRO6V8C+dGd/8kx3YnoJyGftB53KchF48Ni
+ O272abTsp+mVp1IUUvS0F6+l27tGsjuYggq5YvHp9IKw6p1NL+ZKkGLOQMwPFBFcp/p89RGiB
+ Sy6P5GTRlpT45eK4W3FxHKU48wg2EjnxCFve6XPXNKNzfirQwPFJiHNEUI9Iv+VtctK12Tvhs
+ tTcgKOwqt9lsonC+E9hWC2ttXW51QeY8f0CMKwsHdWyhYydURIn0Leq7kwGBu1s8snhWf94S1
+ oNuvTC4lm4zw5ZB/ZpUTfCrPaeq47UrCOCmslVqgJ7NO+XI5VBQ1UWqCYuSOguwszI8m1dWe0
+ ZIJ5ec2a3nllDf+XJ9zmMIScAdBGP7MLuSnB5ZU/eGAKi5Gszw0R/PCrX319vmrjrwbWkG2g4
+ WILBecNreaUpAyLEfXIEOFRj/PrBtLz1OXVifly640H1s=
 
-Hi!
+>> Adjustments for functionality of coccicheck operation modes can be clar=
+ified further.
+>
+> https://lore.kernel.org/lkml/2024041643-unshaven-happiest-1405@gregkh/
 
-> This is the start of the stable review cycle for the 5.10.215 release.
-> There are 294 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+I hope that remaining communication difficulties can be resolved in more c=
+onstructive ways.
 
-> Alex Williamson <alex.williamson@redhat.com>
->     vfio/pci: Create persistent INTx handler
 
-This introduces memory leak in vfio_intx_enable() -- name is not freed
-in case vdev->ctx =3D kzalloc() fails, for example.
+Do you get further development ideas from previous contributions on presen=
+ted topics?
 
-> Sean Christopherson <seanjc@google.com>
->     x86/cpufeatures: Add CPUID_LNX_5 to track recently added Linux-define=
-d word
-
-AFAICT this is not needed in 5.10.
-
-> Josh Poimboeuf <jpoimboe@redhat.com>
->     objtool: Add asm version of STACK_FRAME_NON_STANDARD
-
-Asm version of this macro is not used in 5.10.
-
-> Michael Roth <michael.roth@amd.com>
->     x86/head/64: Re-enable stack protection
-
-This is preparation for preparation for SEV-SNP CPUID patches, I don't
-believe we plan that for 6.1.
-
-> David Sterba <dsterba@suse.com>
->     btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
-
-(This applies to 4.19, too). mutex_unlock() is needed before "goto
-error" here.
-
-> Aric Cyr <aric.cyr@amd.com>
->     drm/amd/display: Fix nanosec stat overflow
-
-(This applies to 4.19, too). This is wrong. It updates prototypes but
-not actual functions.
-
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---WebcVGuD/i7sDG85
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZh/HpAAKCRAw5/Bqldv6
-8jQNAKCgA7GiY1skcB6NPefx12bHsL8tcgCePTp6JbCq8u+7xNLXCnN/mluCLio=
-=GdgS
------END PGP SIGNATURE-----
-
---WebcVGuD/i7sDG85--
+Regards,
+Markus
