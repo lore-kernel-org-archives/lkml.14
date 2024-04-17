@@ -1,39 +1,39 @@
-Received: from c180-41.smtp-out.ap-south-1.amazonses.com (c180-41.smtp-out.ap-south-1.amazonses.com [76.223.180.41])
+Received: from c180-14.smtp-out.ap-south-1.amazonses.com (c180-14.smtp-out.ap-south-1.amazonses.com [76.223.180.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B52C13DDD7;
-	Wed, 17 Apr 2024 11:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F19213FD95;
+	Wed, 17 Apr 2024 11:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713354602; cv=none; b=PP3AAi89IIITH/kNchK0t5y8Pb3qxXGK1EcPPZkff7SEdqZybsy/mxN46M4u0ZVqK1dV/YDLHBwKLsyEzpBpj9wB0rxOuC5+/0N6n1LeY8z260rfbggtXVOyTRmCouSEbNCxyFFtrkFSRr5YVxIkhfYs2zB8mXBj75am2ELENFU=
+	t=1713354605; cv=none; b=RJS7dzbEshd0sabmcME4CwZ/1sKD7iN+3ENHrTgvcrR5F+wbrYMbfuY0Hff6vbnLmDV5VvR82VGrc2GXElOemoQah4eapFF8ZzclqfBVFJWTHnhXTvZKM7xLxDE7L5/KQPshumjFlrCIBiow1rTtFXWbCWOe6ZQfODYTiQIdpUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713354602; c=relaxed/simple;
-	bh=1gMX5bo0GFeYRXKHCNluOUds4LsT0ZpSan3/q316atY=;
+	s=arc-20240116; t=1713354605; c=relaxed/simple;
+	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s6YMVjYAvyp5kFaqVw3VtX9LpRotm4kbwaileDh9WWczUOU5d2F9ftsKjElD3mT8VBw1a5rJyCwa37nwbxV+KFsShnL2sR5B6eWFKxmugRawbnyfo1NyhI93GoJvQDyFXds5AvBiC00Vez9a/au7Cn971iuTPfNxMVnyYgcpdqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=V3PyjJal; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=DXUHK/AO; arc=none smtp.client-ip=76.223.180.41
+	 MIME-Version; b=nuWFWqo3vX0qdTYQjWIceFyDF5GZPGsvHgKAWjsN6st84HJY0EYXE18gwXC6Klmhj59ly+JxkNmPR/ogJE42Z4+/0xL8S3hWbmfbwAdOFUKs3tDOGurwXRan8cGqjjBJfyfCDLalWTGUEnVrsIYHSXX81NbQ7TkKEm0GEVm0Flo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=w72rADFt; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=IEXm3b2+; arc=none smtp.client-ip=76.223.180.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="V3PyjJal";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="DXUHK/AO"
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="w72rADFt";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IEXm3b2+"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354597;
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354601;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=1gMX5bo0GFeYRXKHCNluOUds4LsT0ZpSan3/q316atY=;
-	b=V3PyjJall+Oi5RB5o0Xcu3Q5fV0Eqmv3g+wl3QLueZzc+UaoDGtrWDIEgvfYFYgt
-	yVQN7BYmm2LDiZwDIJdXH4m0kYpslkZlaOeBwrdcmHoRlUlOwMjuOJB5yqTzXJBR7wf
-	WPGReN4f83dSCaqBFh4ob/K4bnd7GfrZco1mtVwMA3Opa9+1dFNneOb/TeSJkZNSS4T
-	RmtdhOC4jbHVsSN6cd0jFmZd73Hn0CByQJ3vgXgRdBvobxhY1VuVQaRMcbOSlaN4Nj/
-	hTGD926in7XKtVp3sMfsTpa1uCtZJdQFHIljzppH6ydEUYX0XUemPNk8KYtkBWa2AI2
-	kUbQ4O0CsA==
+	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
+	b=w72rADFtax6uLMMXytZYMwtpa6xNEWbfNqdU8IxLhsN5fDc1yHGF9rhe9Jj3eVSm
+	cC5j2PO4j5+1BtroYHQy88jD1dbtstyVbSH2Pnnv6TsWOjsRYxxjcjIBztTtRm+Mvly
+	/VF5s/RYAy+/5CQlcxrhHfzXu2nHGdVQjpkbnrLwRrVhV2CPS91gQbvuVu8dz12pDf6
+	OMpq4qOSmZy3+ZqDhLtaaqBPYyVbMzzsdx19od4DcyMmaBZuqGXfUmwx5nSkJk8b2s8
+	QAxQ+qsfIMckkDbdspVEVIfLAyZ0A8RutmO/tKcf5Yz9aygoKgJmjRLYHchbdL1GiOx
+	XDD+QZbvBA==
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354597;
+	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354601;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=1gMX5bo0GFeYRXKHCNluOUds4LsT0ZpSan3/q316atY=;
-	b=DXUHK/AO9NHlj0DbjNF/XJHapHNsvCnJGErQ9aQYmLwrAMWVxslN31JsNjsbGzmT
-	DUlLtW7qs3zr5P1+XjcWbNKjuVg23UUot0KUHvtj+KnvJP7l6nOWAp5ydKzUhcVWAU5
-	QXtyUZ2rd007Luku9PKTfiahn2mNE3O5xph6CQVU=
+	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
+	b=IEXm3b2+tR2m53kB7oEtN2JCU4zQHoVrFexE7GvvcY92aZmbo2z9BaWqONI8DkXG
+	nJIxMiiAzl0Xhce3INVZHEosMU3kYoXnK97Cgyc0/5Wp8CIRc9leBLznwZkLWBalpfY
+	UYtdIetcLy1iTGJo8tnt3KhOt+Xdr3Z7yybVf/wM=
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org, 
@@ -44,9 +44,9 @@ Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
 	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com, 
 	kristo@kernel.org, eblanc@baylibre.com, 
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v7 06/10] mfd: tps6594-core: Add TI TPS65224 PMIC core
-Date: Wed, 17 Apr 2024 11:49:57 +0000
-Message-ID: <0109018eebe462ee-636f1fa5-535d-43fe-9c3b-e3be3fe15554-000000@ap-south-1.amazonses.com>
+Subject: [PATCH v7 10/10] arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P dts
+Date: Wed, 17 Apr 2024 11:50:01 +0000
+Message-ID: <0109018eebe4727f-13c86fa9-7650-469a-a1f5-1c0230b82625-000000@ap-south-1.amazonses.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240417114934.186248-1-bhargav.r@ltts.com>
 References: <20240417114934.186248-1-bhargav.r@ltts.com>
@@ -58,357 +58,143 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.17-76.223.180.41
+X-SES-Outgoing: 2024.04.17-76.223.180.14
 
-Add functionality of the TPS65224 PMIC to the TPS6594 core driver. This
-includes adding IRQ resource, MFD cells, and device initialization for
-TPS65224.
+Add support for TPS65224 PMIC in device tree of AM62P EVM. Adds regulator
+configuration, pinmux configurations and pmic device nodes.
 
 Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-Acked-by: Julien Panis <jpanis@baylibre.com>
 ---
- drivers/mfd/tps6594-core.c | 237 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 219 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 95 +++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/drivers/mfd/tps6594-core.c b/drivers/mfd/tps6594-core.c
-index 089ab8cc8..c59f3d7e3 100644
---- a/drivers/mfd/tps6594-core.c
-+++ b/drivers/mfd/tps6594-core.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Core functions for TI TPS6594/TPS6593/LP8764 PMICs
-+ * Core functions for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
-  *
-  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
-  */
-@@ -278,16 +278,159 @@ static const unsigned int tps6594_irq_reg[] = {
- 	TPS6594_REG_RTC_STATUS,
- };
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+index 1773c05f7..5d8e4321b 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+@@ -112,6 +112,16 @@ vddshv_sdio: regulator-3 {
+ 		bootph-all;
+ 	};
  
-+/* TPS65224 Resources */
-+
-+static const struct resource tps65224_regulator_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BUCK1_UVOV, TPS65224_IRQ_NAME_BUCK1_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BUCK2_UVOV, TPS65224_IRQ_NAME_BUCK2_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BUCK3_UVOV, TPS65224_IRQ_NAME_BUCK3_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BUCK4_UVOV, TPS65224_IRQ_NAME_BUCK4_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_LDO1_UVOV, TPS65224_IRQ_NAME_LDO1_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_LDO2_UVOV, TPS65224_IRQ_NAME_LDO2_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_LDO3_UVOV, TPS65224_IRQ_NAME_LDO3_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_VCCA_UVOV, TPS65224_IRQ_NAME_VCCA_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_VMON1_UVOV, TPS65224_IRQ_NAME_VMON1_UVOV),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_VMON2_UVOV, TPS65224_IRQ_NAME_VMON2_UVOV),
-+};
-+
-+static const struct resource tps65224_pinctrl_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO1, TPS65224_IRQ_NAME_GPIO1),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO2, TPS65224_IRQ_NAME_GPIO2),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO3, TPS65224_IRQ_NAME_GPIO3),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO4, TPS65224_IRQ_NAME_GPIO4),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO5, TPS65224_IRQ_NAME_GPIO5),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_GPIO6, TPS65224_IRQ_NAME_GPIO6),
-+};
-+
-+static const struct resource tps65224_pfsm_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_VSENSE, TPS65224_IRQ_NAME_VSENSE),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_ENABLE, TPS65224_IRQ_NAME_ENABLE),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_SHORT, TPS65224_IRQ_NAME_PB_SHORT),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_FSD, TPS65224_IRQ_NAME_FSD),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_SOFT_REBOOT, TPS65224_IRQ_NAME_SOFT_REBOOT),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BIST_PASS, TPS65224_IRQ_NAME_BIST_PASS),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_EXT_CLK, TPS65224_IRQ_NAME_EXT_CLK),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_REG_UNLOCK, TPS65224_IRQ_NAME_REG_UNLOCK),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_TWARN, TPS65224_IRQ_NAME_TWARN),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_LONG, TPS65224_IRQ_NAME_PB_LONG),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_FALL, TPS65224_IRQ_NAME_PB_FALL),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PB_RISE, TPS65224_IRQ_NAME_PB_RISE),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_TSD_ORD, TPS65224_IRQ_NAME_TSD_ORD),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BIST_FAIL, TPS65224_IRQ_NAME_BIST_FAIL),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_REG_CRC_ERR, TPS65224_IRQ_NAME_REG_CRC_ERR),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_RECOV_CNT, TPS65224_IRQ_NAME_RECOV_CNT),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_TSD_IMM, TPS65224_IRQ_NAME_TSD_IMM),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_VCCA_OVP, TPS65224_IRQ_NAME_VCCA_OVP),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_PFSM_ERR, TPS65224_IRQ_NAME_PFSM_ERR),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_BG_XMON, TPS65224_IRQ_NAME_BG_XMON),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_IMM_SHUTDOWN, TPS65224_IRQ_NAME_IMM_SHUTDOWN),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_ORD_SHUTDOWN, TPS65224_IRQ_NAME_ORD_SHUTDOWN),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_MCU_PWR_ERR, TPS65224_IRQ_NAME_MCU_PWR_ERR),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_SOC_PWR_ERR, TPS65224_IRQ_NAME_SOC_PWR_ERR),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_COMM_ERR, TPS65224_IRQ_NAME_COMM_ERR),
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_I2C2_ERR, TPS65224_IRQ_NAME_I2C2_ERR),
-+};
-+
-+static const struct resource tps65224_adc_resources[] = {
-+	DEFINE_RES_IRQ_NAMED(TPS65224_IRQ_ADC_CONV_READY, TPS65224_IRQ_NAME_ADC_CONV_READY),
-+};
-+
-+static const struct mfd_cell tps65224_common_cells[] = {
-+	MFD_CELL_RES("tps65224-adc", tps65224_adc_resources),
-+	MFD_CELL_RES("tps6594-pfsm", tps65224_pfsm_resources),
-+	MFD_CELL_RES("tps6594-pinctrl", tps65224_pinctrl_resources),
-+	MFD_CELL_RES("tps6594-regulator", tps65224_regulator_resources),
-+};
-+
-+static const struct regmap_irq tps65224_irqs[] = {
-+	/* INT_BUCK register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BUCK1_UVOV, 0, TPS65224_BIT_BUCK1_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BUCK2_UVOV, 0, TPS65224_BIT_BUCK2_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BUCK3_UVOV, 0, TPS65224_BIT_BUCK3_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BUCK4_UVOV, 0, TPS65224_BIT_BUCK4_UVOV_INT),
-+
-+	/* INT_VMON_LDO register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_LDO1_UVOV, 1, TPS65224_BIT_LDO1_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_LDO2_UVOV, 1, TPS65224_BIT_LDO2_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_LDO3_UVOV, 1, TPS65224_BIT_LDO3_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_VCCA_UVOV, 1, TPS65224_BIT_VCCA_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_VMON1_UVOV, 1, TPS65224_BIT_VMON1_UVOV_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_VMON2_UVOV, 1, TPS65224_BIT_VMON2_UVOV_INT),
-+
-+	/* INT_GPIO register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO1, 2, TPS65224_BIT_GPIO1_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO2, 2, TPS65224_BIT_GPIO2_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO3, 2, TPS65224_BIT_GPIO3_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO4, 2, TPS65224_BIT_GPIO4_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO5, 2, TPS65224_BIT_GPIO5_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_GPIO6, 2, TPS65224_BIT_GPIO6_INT),
-+
-+	/* INT_STARTUP register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_VSENSE, 3, TPS65224_BIT_VSENSE_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_ENABLE, 3, TPS6594_BIT_ENABLE_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_PB_SHORT, 3, TPS65224_BIT_PB_SHORT_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_FSD, 3, TPS6594_BIT_FSD_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_SOFT_REBOOT, 3, TPS6594_BIT_SOFT_REBOOT_INT),
-+
-+	/* INT_MISC register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BIST_PASS, 4, TPS6594_BIT_BIST_PASS_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_EXT_CLK, 4, TPS6594_BIT_EXT_CLK_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_REG_UNLOCK, 4, TPS65224_BIT_REG_UNLOCK_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_TWARN, 4, TPS6594_BIT_TWARN_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_PB_LONG, 4, TPS65224_BIT_PB_LONG_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_PB_FALL, 4, TPS65224_BIT_PB_FALL_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_PB_RISE, 4, TPS65224_BIT_PB_RISE_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_ADC_CONV_READY, 4, TPS65224_BIT_ADC_CONV_READY_INT),
-+
-+	/* INT_MODERATE_ERR register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_TSD_ORD, 5, TPS6594_BIT_TSD_ORD_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BIST_FAIL, 5, TPS6594_BIT_BIST_FAIL_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_REG_CRC_ERR, 5, TPS6594_BIT_REG_CRC_ERR_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_RECOV_CNT, 5, TPS6594_BIT_RECOV_CNT_INT),
-+
-+	/* INT_SEVERE_ERR register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_TSD_IMM, 6, TPS6594_BIT_TSD_IMM_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_VCCA_OVP, 6, TPS6594_BIT_VCCA_OVP_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_PFSM_ERR, 6, TPS6594_BIT_PFSM_ERR_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_BG_XMON, 6, TPS65224_BIT_BG_XMON_INT),
-+
-+	/* INT_FSM_ERR register */
-+	REGMAP_IRQ_REG(TPS65224_IRQ_IMM_SHUTDOWN, 7, TPS6594_BIT_IMM_SHUTDOWN_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_ORD_SHUTDOWN, 7, TPS6594_BIT_ORD_SHUTDOWN_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_MCU_PWR_ERR, 7, TPS6594_BIT_MCU_PWR_ERR_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_SOC_PWR_ERR, 7, TPS6594_BIT_SOC_PWR_ERR_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_COMM_ERR, 7, TPS6594_BIT_COMM_ERR_INT),
-+	REGMAP_IRQ_REG(TPS65224_IRQ_I2C2_ERR, 7, TPS65224_BIT_I2C2_ERR_INT),
-+};
-+
-+static const unsigned int tps65224_irq_reg[] = {
-+	TPS6594_REG_INT_BUCK,
-+	TPS6594_REG_INT_LDO_VMON,
-+	TPS6594_REG_INT_GPIO,
-+	TPS6594_REG_INT_STARTUP,
-+	TPS6594_REG_INT_MISC,
-+	TPS6594_REG_INT_MODERATE_ERR,
-+	TPS6594_REG_INT_SEVERE_ERR,
-+	TPS6594_REG_INT_FSM_ERR,
-+};
-+
- static inline unsigned int tps6594_get_irq_reg(struct regmap_irq_chip_data *data,
- 					       unsigned int base, int index)
- {
- 	return tps6594_irq_reg[index];
- };
- 
-+static inline unsigned int tps65224_get_irq_reg(struct regmap_irq_chip_data *data,
-+						unsigned int base, int index)
-+{
-+	return tps65224_irq_reg[index];
-+};
-+
- static int tps6594_handle_post_irq(void *irq_drv_data)
- {
- 	struct tps6594 *tps = irq_drv_data;
- 	int ret = 0;
-+	unsigned int regmap_reg, mask_val;
- 
- 	/*
- 	 * When CRC is enabled, writing to a read-only bit triggers an error,
-@@ -299,10 +442,17 @@ static int tps6594_handle_post_irq(void *irq_drv_data)
- 	 * COMM_ADR_ERR_INT bit set. Clear immediately this bit to avoid raising
- 	 * a new interrupt.
- 	 */
--	if (tps->use_crc)
--		ret = regmap_write_bits(tps->regmap, TPS6594_REG_INT_COMM_ERR,
--					TPS6594_BIT_COMM_ADR_ERR_INT,
--					TPS6594_BIT_COMM_ADR_ERR_INT);
-+	if (tps->use_crc) {
-+		if (tps->chip_id == TPS65224) {
-+			regmap_reg = TPS6594_REG_INT_FSM_ERR;
-+			mask_val = TPS6594_BIT_COMM_ERR_INT;
-+		} else {
-+			regmap_reg = TPS6594_REG_INT_COMM_ERR;
-+			mask_val = TPS6594_BIT_COMM_ADR_ERR_INT;
-+		}
-+
-+		ret = regmap_write_bits(tps->regmap, regmap_reg, mask_val, mask_val);
-+	}
- 
- 	return ret;
- };
-@@ -319,6 +469,18 @@ static struct regmap_irq_chip tps6594_irq_chip = {
- 	.handle_post_irq = tps6594_handle_post_irq,
- };
- 
-+static struct regmap_irq_chip tps65224_irq_chip = {
-+	.ack_base = TPS6594_REG_INT_BUCK,
-+	.ack_invert = 1,
-+	.clear_ack = 1,
-+	.init_ack_masked = 1,
-+	.num_regs = ARRAY_SIZE(tps65224_irq_reg),
-+	.irqs = tps65224_irqs,
-+	.num_irqs = ARRAY_SIZE(tps65224_irqs),
-+	.get_irq_reg = tps65224_get_irq_reg,
-+	.handle_post_irq = tps6594_handle_post_irq,
-+};
-+
- static const struct regmap_range tps6594_volatile_ranges[] = {
- 	regmap_reg_range(TPS6594_REG_INT_TOP, TPS6594_REG_STAT_READBACK_ERR),
- 	regmap_reg_range(TPS6594_REG_RTC_STATUS, TPS6594_REG_RTC_STATUS),
-@@ -330,17 +492,35 @@ const struct regmap_access_table tps6594_volatile_table = {
- };
- EXPORT_SYMBOL_GPL(tps6594_volatile_table);
- 
-+static const struct regmap_range tps65224_volatile_ranges[] = {
-+	regmap_reg_range(TPS6594_REG_INT_TOP, TPS6594_REG_STAT_SEVERE_ERR),
-+};
-+
-+const struct regmap_access_table tps65224_volatile_table = {
-+	.yes_ranges = tps65224_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(tps65224_volatile_ranges),
-+};
-+EXPORT_SYMBOL_GPL(tps65224_volatile_table);
-+
- static int tps6594_check_crc_mode(struct tps6594 *tps, bool primary_pmic)
- {
- 	int ret;
-+	unsigned int regmap_reg, mask_val;
-+
-+	if (tps->chip_id == TPS65224) {
-+		regmap_reg = TPS6594_REG_CONFIG_2;
-+		mask_val = TPS65224_BIT_I2C1_SPI_CRC_EN;
-+	} else {
-+		regmap_reg = TPS6594_REG_SERIAL_IF_CONFIG;
-+		mask_val = TPS6594_BIT_I2C1_SPI_CRC_EN;
++	vcc_3v3_main: regulator-4 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3_main";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vmain_pd>;
++		regulator-always-on;
++		regulator-boot-on;
 +	};
- 
- 	/*
- 	 * Check if CRC is enabled.
- 	 * Once CRC is enabled, it can't be disabled until next power cycle.
- 	 */
- 	tps->use_crc = true;
--	ret = regmap_test_bits(tps->regmap, TPS6594_REG_SERIAL_IF_CONFIG,
--			       TPS6594_BIT_I2C1_SPI_CRC_EN);
-+	ret = regmap_test_bits(tps->regmap, regmap_reg, mask_val);
- 	if (ret == 0) {
- 		ret = -EIO;
- 	} else if (ret > 0) {
-@@ -355,6 +535,15 @@ static int tps6594_check_crc_mode(struct tps6594 *tps, bool primary_pmic)
- static int tps6594_set_crc_feature(struct tps6594 *tps)
- {
- 	int ret;
-+	unsigned int regmap_reg, mask_val;
 +
-+	if (tps->chip_id == TPS65224) {
-+		regmap_reg = TPS6594_REG_CONFIG_2;
-+		mask_val = TPS65224_BIT_I2C1_SPI_CRC_EN;
-+	} else {
-+		regmap_reg = TPS6594_REG_FSM_I2C_TRIGGERS;
-+		mask_val = TPS6594_BIT_TRIGGER_I2C(2);
-+	}
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -580,6 +590,12 @@ &main_uart1 {
+ &mcu_pmx0 {
+ 	bootph-all;
  
- 	ret = tps6594_check_crc_mode(tps, true);
- 	if (ret) {
-@@ -363,8 +552,7 @@ static int tps6594_set_crc_feature(struct tps6594 *tps)
- 		 * on primary PMIC.
- 		 */
- 		tps->use_crc = false;
--		ret = regmap_write_bits(tps->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
--					TPS6594_BIT_TRIGGER_I2C(2), TPS6594_BIT_TRIGGER_I2C(2));
-+		ret = regmap_write_bits(tps->regmap, regmap_reg, mask_val, mask_val);
- 		if (ret)
- 			return ret;
- 
-@@ -420,6 +608,9 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
- {
- 	struct device *dev = tps->dev;
- 	int ret;
-+	struct regmap_irq_chip *irq_chip;
-+	const struct mfd_cell *cells;
-+	int n_cells;
- 
- 	if (enable_crc) {
- 		ret = tps6594_enable_crc(tps);
-@@ -433,26 +624,35 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to set PMIC state\n");
- 
--	tps6594_irq_chip.irq_drv_data = tps;
--	tps6594_irq_chip.name = devm_kasprintf(dev, GFP_KERNEL, "%s-%ld-0x%02x",
--					       dev->driver->name, tps->chip_id, tps->reg);
-+	if (tps->chip_id == TPS65224) {
-+		irq_chip = &tps65224_irq_chip;
-+		n_cells = ARRAY_SIZE(tps65224_common_cells);
-+		cells = tps65224_common_cells;
-+	} else {
-+		irq_chip = &tps6594_irq_chip;
-+		n_cells = ARRAY_SIZE(tps6594_common_cells);
-+		cells = tps6594_common_cells;
-+	}
++	pmic_irq_pins_default: pmic-irq-default-pins {
++		pinctrl-single,pins = <
++			AM62PX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (B10) MCU_GPIO0_0 */
++		>;
++	};
 +
-+	irq_chip->irq_drv_data = tps;
-+	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-%ld-0x%02x",
-+					dev->driver->name, tps->chip_id, tps->reg);
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		pinctrl-single,pins = <
+ 			AM62PX_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
+@@ -589,6 +605,13 @@ AM62PX_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
+ 		>;
+ 		bootph-all;
+ 	};
++
++	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
++		pinctrl-single,pins = <
++			AM62PX_MCU_IOPAD(0x04c, PIN_INPUT, 0) /* (A13) WKUP_I2C0_SCL */
++			AM62PX_MCU_IOPAD(0x050, PIN_INPUT, 0) /* (C11) WKUP_I2C0_SDA */
++		>;
++	};
+ };
  
--	if (!tps6594_irq_chip.name)
-+	if (!irq_chip->name)
- 		return -ENOMEM;
+ &wkup_uart0 {
+@@ -599,6 +622,78 @@ &wkup_uart0 {
+ 	bootph-all;
+ };
  
- 	ret = devm_regmap_add_irq_chip(dev, tps->regmap, tps->irq, IRQF_SHARED | IRQF_ONESHOT,
--				       0, &tps6594_irq_chip, &tps->irq_data);
-+				       0, irq_chip, &tps->irq_data);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to add regmap IRQ\n");
- 
--	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, tps6594_common_cells,
--				   ARRAY_SIZE(tps6594_common_cells), NULL, 0,
-+	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cells, n_cells, NULL, 0,
- 				   regmap_irq_get_domain(tps->irq_data));
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to add common child devices\n");
- 
--	/* No RTC for LP8764 */
--	if (tps->chip_id != LP8764) {
-+	/* No RTC for LP8764 and TPS65224 */
-+	if (tps->chip_id != LP8764 && tps->chip_id != TPS65224) {
- 		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, tps6594_rtc_cells,
- 					   ARRAY_SIZE(tps6594_rtc_cells), NULL, 0,
- 					   regmap_irq_get_domain(tps->irq_data));
-@@ -465,5 +665,6 @@ int tps6594_device_init(struct tps6594 *tps, bool enable_crc)
- EXPORT_SYMBOL_GPL(tps6594_device_init);
- 
- MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
-+MODULE_AUTHOR("Bhargav Raviprakash <bhargav.r@ltts.com");
- MODULE_DESCRIPTION("TPS6594 Driver");
- MODULE_LICENSE("GPL");
++&wkup_i2c0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&wkup_i2c0_pins_default>;
++	clock-frequency = <400000>;
++
++	tps65224: pmic@48 {
++		compatible = "ti,tps65224-q1";
++		reg = <0x48>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_irq_pins_default>;
++		interrupt-parent = <&mcu_gpio0>;
++		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
++		ti,primary-pmic;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		buck12-supply = <&vcc_3v3_main>;
++		buck3-supply = <&vcc_3v3_main>;
++		buck4-supply = <&vcc_3v3_main>;
++
++		ldo1-supply = <&vcc_3v3_main>;
++		ldo2-supply = <&vcc_3v3_main>;
++		ldo3-supply = <&vcc1v8_sys>;
++
++		regulators {
++			vcc_core: buck12 {
++				regulator-name = "vcc_core_buck12";
++				regulator-min-microvolt = <715000>;
++				regulator-max-microvolt = <895000>;
++				regulator-always-on;
++			};
++
++			vcc1v8_sys: buck3 {
++				regulator-name = "vcc1v8_sys_buck3";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			vcc1v1: buck4 {
++				regulator-name = "vcc1v1_buck4";
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			vdda1v8: ldo1 {
++				regulator-name = "vdda1v8_ldo1";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			dvdd3v3: ldo2 {
++				regulator-name = "dvdd3v3_ldo2";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vcc_0v85: ldo3 {
++				regulator-name = "vcc_0v85_ldo3";
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
+ /* mcu_gpio0 and mcu_gpio_intr are reserved for mcu firmware usage */
+ &mcu_gpio0 {
+ 	status = "reserved";
 -- 
 2.25.1
 
