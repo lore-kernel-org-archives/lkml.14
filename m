@@ -1,202 +1,101 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBEE7D3E4;
-	Wed, 17 Apr 2024 08:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1C96A8D0;
+	Wed, 17 Apr 2024 08:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341847; cv=none; b=GUGLQEwEKwCXYI0lxiw6+KgrPKrQwivtZkNqZ5XNcrHW7l6SbK0iPpCQcQVJlO2GocNWBvaU+iOC0vUHinLdfisJKyDFl5Ta44B1nlM2bXo9+JdNGwBfKjRJ4eb+v7cpqn18ZI900be2X5Wm2bMLtpBAWW1vDvoKytar9bZJau0=
+	t=1713341923; cv=none; b=RfKLXv6VgAOxPFdGE3hbQmnXr307eCiBbDaHjgemhw1fylRafmWnzYULRPBvXNSDV43jtVRHPEHvXL99UwCazboGutNWg+Crh8RXrxTl5SYURtiqwGibPMIltYbhM3qKBlm5sSZwaxRiyP2N1zfpiQ5OfE5u9csJiIF65qBC1uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341847; c=relaxed/simple;
-	bh=RM9ZBHtvZ8LTwszIbZZWTkb98vredc/IQ7JGaF2pg7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ltLxWYI6J/3Xf2dY5Za1Gt0I2cF4YnxwQ55bkKh3FUv5jjZrErrq9FX/1zruR0DuGt6ygqnRIJ3cs5BJa1ggOfOwt4ApbBecS2A7XR27yxVw/PRoAglySKsDy46KuFlZ3G7s3RWhpMctKbrlSzrsTAGiUxUjzSw6qKvr7BYqaNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ivKuyAT5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713341923; c=relaxed/simple;
+	bh=a3P9nelLo/PDdkDikvNisOmc9OwfBNQXroeq20WsmG4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Mk35jLO28Q/184ORKhjZh8Jpbp8uxTmj7/tRB3ZeqExpDi/R69E2XDWymFYBUhYtLWTICIZ5RSeFw+6GuflOQ6ayhdbiajN7j3wNOT6+5ssrbxJCR11l1YdXkVDkShrOPTYBfxkhkxySCqKd1P6RrqkZFmJD/+4MhbdTL8C1N7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJxw78Xg; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ivKuyAT5"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43H6pNTJ005096;
-	Wed, 17 Apr 2024 08:17:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Htu9QXA5aLlbaAxRyDgW1Hl5A5etbp7+sMkhoF3/F+k=; b=iv
-	KuyAT5kwmF+JgfSVVFVVg9RlSOiK0WPriR1IYBxryrfPHv/qrEPfgc/Fzi7VwoQk
-	yk+c05xdPvWpMjUq4Ihu6w05qzojExFLCPPFxFZ/o1a7ubQ7VlQegaoyVnDeTfjT
-	oJQTSP6yZM9xqvWXLhUlD63Bt6VNv2Wn5mwZAZ+v0d3Bprg+lyPswhm2x9bu8nja
-	Jir3aCKrkRkJ7yZQiF2T+TRviFRMkKqoNmv9/eC9+3NqfcIqFpV7qxDxmEKDP2YB
-	cIaHfNxILBxJoD7gC+Q/MFdY87DbVjpSr9UZf92wVYhjhP3yA1anup+7TOv+BcXs
-	HPTqQ6A8NSGP8r1eT79g==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xj2sxs1wj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 08:17:09 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43H8H8uX007517
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 08:17:08 GMT
-Received: from [10.216.25.227] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 17 Apr
- 2024 01:17:03 -0700
-Message-ID: <13bff1dd-d134-e5ab-6691-b2bcb0a786c8@quicinc.com>
-Date: Wed, 17 Apr 2024 13:47:00 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJxw78Xg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713341922; x=1744877922;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=a3P9nelLo/PDdkDikvNisOmc9OwfBNQXroeq20WsmG4=;
+  b=NJxw78XgoZvaNBxPtbupMFflS24SGXY/RQ7Ultm3QNkUuA1CblNnuiRC
+   yT7EqW904HwEvYFZkMIRurgc/VBkigML0vIOIJ3FdOzw7HHqPugBs3f6r
+   z9TLtgDlFcbDt7xAE1WXbmmFcD7sbYL0ZG1Ce2X/jIlNTkfJYNrG37xej
+   fjVXosNqd0bH273CaqFzTZ/oMiZXw4VMJKo0L9rOL7zmPub/a11ZMOD+0
+   PeMnejblOPD1pPIIaVeYxesdBdIMq565DaK7D/3oyf1B1ssSzosIgg05u
+   dxN+TTQKdJD15E7wRqCkDpvq/v5pAXU4tVGrHefux99XS0dD4f3VTpetz
+   Q==;
+X-CSE-ConnectionGUID: GKsHBWpfT/C98SRjXpf6tQ==
+X-CSE-MsgGUID: SgJsr82XT1WORxOQ1j6Umw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="20209618"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="20209618"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:18:40 -0700
+X-CSE-ConnectionGUID: Q4Xhe7nSTmGgIbThMNYtYQ==
+X-CSE-MsgGUID: o+pWPl+fSAOWLovgwsIK7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="22552533"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 01:18:37 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 17 Apr 2024 11:18:33 +0300 (EEST)
+To: Michael Pratt <mcpratt@pm.me>
+cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, 
+    Wander Lairson Costa <wander@redhat.com>, 
+    Vamshi Gajjela <vamshigajjela@google.com>
+Subject: Re: [PATCH v2 1/3] serial: core: Store fifo timeout again
+In-Reply-To: <zTaajAZtS59Hv5offvbHJV1ptivBxD4WaZP_M-zQkicUtDb4mokpuKCFGIzUVL3p2yDSqHx9Uf2vIYVlbGeHN8xMJ6H3VWxwH3MPe1cH5a4=@pm.me>
+Message-ID: <35bd3e50-8a60-7c0e-23a9-ae483e293a15@linux.intel.com>
+References: <20240416182741.22514-1-mcpratt@pm.me> <20240416182741.22514-2-mcpratt@pm.me> <Zh7KV0FuM2B56J7w@smile.fi.intel.com> <zTaajAZtS59Hv5offvbHJV1ptivBxD4WaZP_M-zQkicUtDb4mokpuKCFGIzUVL3p2yDSqHx9Uf2vIYVlbGeHN8xMJ6H3VWxwH3MPe1cH5a4=@pm.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 3/8] ASoC: dt-bindings: wcd937x-sdw: add bindings for
- wcd937x-sdw
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami
-	<bgoswami@quicinc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai
-	<tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_rohkumar@quicinc.com>, <quic_pkumpatl@quicinc.com>
-References: <20240416063600.309747-1-quic_mohs@quicinc.com>
- <20240416063600.309747-4-quic_mohs@quicinc.com>
- <20240416143237.GA2250258-robh@kernel.org>
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-In-Reply-To: <20240416143237.GA2250258-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 0HHyvM2ank2fxScBe0q2l6VEcz40MkiC
-X-Proofpoint-ORIG-GUID: 0HHyvM2ank2fxScBe0q2l6VEcz40MkiC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_07,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404170056
+Content-Type: text/plain; charset=US-ASCII
 
-On 4/16/2024 8:02 PM, Rob Herring wrote:
-> On Tue, Apr 16, 2024 at 12:05:55PM +0530, Mohammad Rafi Shaik wrote:
->> From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->>
->> Qualcomm WCD9370/WCD9375 Codec is a standalone Hi-Fi audio codec IC
->> connected over SoundWire. This device has two SoundWire devices RX and
->> TX respectively.
->> This binding is for those slave devices on WCD9370/WCD9375.
->>
->> Co-developed-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->>   .../bindings/sound/qcom,wcd937x-sdw.yaml      | 71 +++++++++++++++++++
->>   1 file changed, 71 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->> new file mode 100644
->> index 000000000000..2b7358e266ba
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd937x-sdw.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/qcom,wcd937x-sdw.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm SoundWire Slave devices on WCD9370
->> +
->> +maintainers:
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +
->> +description: |
+On Tue, 16 Apr 2024, Michael Pratt wrote:
+> On Tuesday, April 16th, 2024 at 14:58, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Don't need '|' if no formatting.
+> > > + if (port->fifosize > 1)
+> > > + port->timeout = uart_fifo_timeout(port);
+> > 
+> > 
+> > else
+> > port->timeout = port->frame_time;
+> > 
 > 
->> +  Qualcomm WCD9370 Codec is a standalone Hi-Fi audio codec IC.
->> +  It has RX and TX Soundwire slave devices. This bindings is for the
->> +  slave devices.
->> +
->> +properties:
->> +  compatible:
->> +    const: sdw20217010a00
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  qcom,tx-port-mapping:
->> +    description: |
->> +      Specifies static port mapping between slave and master tx ports.
->> +      In the order of slave port index.
 > 
-> Are there constraints on the values of the entries?
+> Consistent with what I said in the other reply, the only reason that
+> I have an if statement here, is to avoid doing extra math for devices
+> without a fifo, as a specifically calculated timeout value would be useless
+> in those cases.
 
-The port mapping entries are fixed values.
-There is no constraints.
+Please benchmark to show this actually matters if want to make this claim. 
+Otherwise just do the math always.
 
-Thanks
-Rafi
-> 
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 4
->> +    maxItems: 4
->> +
->> +  qcom,rx-port-mapping:
->> +    description: |
->> +      Specifies static port mapping between slave and master rx ports.
->> +      In the order of slave port index.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    minItems: 5
->> +    maxItems: 5
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - qcom,port-mapping
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    soundwire@3210000 {
->> +        #address-cells = <2>;
->> +        #size-cells = <0>;
->> +        reg = <0x03210000 0x2000>;
->> +        wcd937x_rx: codec@0,4 {
->> +            compatible = "sdw20217010a00";
->> +            reg  = <0 4>;
->> +            qcom,rx-port-mapping = <1 2 3 4 5>;
->> +        };
->> +    };
->> +
->> +    soundwire@3230000 {
->> +        #address-cells = <2>;
->> +        #size-cells = <0>;
->> +        reg = <0x03230000 0x2000>;
->> +        wcd937x_tx: codec@0,3 {
->> +            compatible = "sdw20217010a00";
->> +            reg  = <0 3>;
->> +            qcom,tx-port-mapping = <2 3 4 5>;
->> +        };
->> +    };
->> +
->> +...
->> -- 
->> 2.25.1
->>
+> However, if you don't like the 10 ms default timeout, perhaps port->frame_time
+> could actually be a more reasonable default value? That is, provided 
+> that we have a process 
+> for calculating the proper value already in place...
+
+While it would be a step toward the correct direction, you'd still need to 
+add the safety there which is already done by uart_fifo_timeout(). So no, 
+I don't think there's advantage of using port->frame_time over just 
+calling uart_fifo_timeout() and ensuring uart_fifo_timeout() is always 
+using at least 1 as the FIFO size when it does the calculations.
+
+-- 
+ i.
 
