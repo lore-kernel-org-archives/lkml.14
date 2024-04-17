@@ -1,39 +1,39 @@
-Received: from c180-39.smtp-out.ap-south-1.amazonses.com (c180-39.smtp-out.ap-south-1.amazonses.com [76.223.180.39])
+Received: from c180-41.smtp-out.ap-south-1.amazonses.com (c180-41.smtp-out.ap-south-1.amazonses.com [76.223.180.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A113B13D62C;
-	Wed, 17 Apr 2024 11:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E30913D26C;
+	Wed, 17 Apr 2024 11:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713354600; cv=none; b=svJJM68xv2NPlVEpSAdTDcYJOICI07U9UhTuGaNCoDIyBBsk59gmDyfqG+lA6LcXeRe5/MoVGeGSVqM+LszVfPPIIjzTZni3xnLeqAS2Ho7zsdnkkFpvBcMsKBkBDbHpUAbmiYekgM5z9nGLHrHOueVeyXVHMyrDHIrEVsaYlec=
+	t=1713354602; cv=none; b=QSj/P4kBYv6DxCNDOZUbiIiULo3Fs5uEe7k5+tLc1RohyB+mshnH2VZhXpFguU6fRl62xWTPb3AqfBMnIF8kKnD2yHS0XUmOSFyzI3barLDaH1LTvCtUIfQcrkTTFZVxca3NJHlZZ0Po35FYNYSUqZis9zKkb+3G64pnr4es5VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713354600; c=relaxed/simple;
-	bh=IJCwVFHC82xALU9Z+JouTycL0dke5j/Wvz5yZnuBIwI=;
+	s=arc-20240116; t=1713354602; c=relaxed/simple;
+	bh=iFYczu1Wr+uRIXgLgGIxVu11RyoBjz1N8NcMbmiHQVA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hV2XBJ4xg5iTKmmwIVis9npGrrGDTP1uZOtry/VMWpoc1Hqsg+/tmI/4yZxtpBbPJ3hx7qb2fQr4QEvuApaP7BIQMrHSjtDJQR5By9Lt/X/1zJ6Vr3BmpnKlbUCOR/fuMGFgkCOe+26TBHoIvwHNdEycbLe40uTpxEduWULyyII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=wiy4mEFz; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=AlPoElaa; arc=none smtp.client-ip=76.223.180.39
+	 MIME-Version; b=ldtapCORheQyEgIjz4fy4eBpJ4W9aygXdbqKBq+7mHAT0mHpwZ+HWiP6vuH/tTwJU3NCKH6JlwfGFIQ6jWgDrqvb0JvzHquRR5HhJ/iaTEtSK0x8WX7yTcrBmFyWUJjis9s4nLk2CBuCO/LemXNZ0w4sEh8aCN22oLkaMzHxAoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=uk0i1AWM; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=dCd3D8pg; arc=none smtp.client-ip=76.223.180.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="wiy4mEFz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="AlPoElaa"
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="uk0i1AWM";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dCd3D8pg"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354596;
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713354598;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=IJCwVFHC82xALU9Z+JouTycL0dke5j/Wvz5yZnuBIwI=;
-	b=wiy4mEFzdDsconXdj9saFtiUTNauojzhkC9sNaayY4UYv5w4OeaVOENRzkDeCQK3
-	BTk+XeIcnrWtknR/BaISH8G62Y6uB1yQ3e9dJ7YX4JfI2DzDBPSGjazcj3U4F/wIedd
-	kGpFasI5WIw2HfgY36JYiASD4jFV5k27uMS6ydLsRppNnGQFm1LadNwFh5p4POClsoc
-	1U2LltbdCX2kbXpV4qejvqKPiDPVQyA/iy5u38FN5SFJ+55cB0Odw9nS3ycfstCJdJJ
-	PFDKJ0eAUv8jLEswpEj8Po3N9wcJCXz9GIpDiu9yPEjaCDd2ZxJD90iKh+gu+shWzKU
-	A7oeeriBzw==
+	bh=iFYczu1Wr+uRIXgLgGIxVu11RyoBjz1N8NcMbmiHQVA=;
+	b=uk0i1AWMjyg1vgaUDPpmip2SXOZMBZ2+ld50Tvm7IaQVNBG0zRQhcYOal2S6jSv0
+	5P4lL9gF0I/lZAA/IsFWiUhiY/dhFGVRaXLVfIB+XS4xlnYB/LZ+YbuEwQXAiO6qdGj
+	C5B3laUCxvA1H5554jdDEy4Lf20WnTjfJAMZArehoG54RLEljVYxCTGpfeesUgfbP2S
+	o372cdDBeSGVzjqUmxQU98IU/lhIuXIejjLGgVqrDN3YIr+bimgsIDrdrkFwGBVXGaq
+	wPT/ySUiPS1WPIradVmngPoDOnaXI1xoqCqHIaHMRdZJjyClZQoHUheJhz0qs39Kfj/
+	j8pDTvXUHg==
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354596;
+	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713354598;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=IJCwVFHC82xALU9Z+JouTycL0dke5j/Wvz5yZnuBIwI=;
-	b=AlPoElaas3p1c/qeSSY5zbzCO8gAgv12uZW3D1wjf0l3SYJSri6Cqnn4Bd7A5kmy
-	eFSpfRZtG3EAhciG7ktwTdL/pLAUVxdtGLYzTqg+cbeZeBNFADPfp+tNNtWEZXThJyB
-	kxVItaAE2TmTcwd21Ca6Cy5mANqr84ENsWGg+JUg=
+	bh=iFYczu1Wr+uRIXgLgGIxVu11RyoBjz1N8NcMbmiHQVA=;
+	b=dCd3D8pg0FplHYNU++ikip+MWgS/QDoeFccivJ+v2SPx44I8ZbSfurC0HeLrSdXA
+	t1C560U695Rxl2DmB0QVuBOspAF7hEMUzlOJDInLvnCiQ1gMJNUTLAS7dygUokrO7p+
+	DvWdQdufV0g2W9ZWtNoBE+xezDmbrd82brwRS4Zg=
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org, 
@@ -44,9 +44,9 @@ Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
 	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com, 
 	kristo@kernel.org, eblanc@baylibre.com, 
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v7 05/10] mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
-Date: Wed, 17 Apr 2024 11:49:56 +0000
-Message-ID: <0109018eebe45f0a-6aef6bbc-11ee-4e48-b39e-b1fbf42e510d-000000@ap-south-1.amazonses.com>
+Subject: [PATCH v7 07/10] misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+Date: Wed, 17 Apr 2024 11:49:58 +0000
+Message-ID: <0109018eebe4668d-ad6750f9-b036-4be6-9b45-f0cc2109144b-000000@ap-south-1.amazonses.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240417114934.186248-1-bhargav.r@ltts.com>
 References: <20240417114934.186248-1-bhargav.r@ltts.com>
@@ -58,76 +58,134 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.17-76.223.180.39
+X-SES-Outgoing: 2024.04.17-76.223.180.41
 
-Add support for TPS65224 PMIC in TPS6594's SPI driver which has
-significant functional overlap.
+Add support for TPS65224 PFSM in the TPS6594 PFSM driver as they share
+significant functionality.
 
 Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 Acked-by: Julien Panis <jpanis@baylibre.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mfd/tps6594-spi.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/misc/tps6594-pfsm.c | 48 +++++++++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
-index 5afb1736f..6ebccb79f 100644
---- a/drivers/mfd/tps6594-spi.c
-+++ b/drivers/mfd/tps6594-spi.c
+diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+index 88dcac814..9bcca1856 100644
+--- a/drivers/misc/tps6594-pfsm.c
++++ b/drivers/misc/tps6594-pfsm.c
 @@ -1,6 +1,6 @@
  // SPDX-License-Identifier: GPL-2.0
  /*
-- * SPI access driver for TI TPS6594/TPS6593/LP8764 PMICs
-+ * SPI access driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+- * PFSM (Pre-configurable Finite State Machine) driver for TI TPS6594/TPS6593/LP8764 PMICs
++ * PFSM (Pre-configurable Finite State Machine) driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
   *
   * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
   */
-@@ -66,7 +66,7 @@ static int tps6594_spi_reg_write(void *context, unsigned int reg, unsigned int v
- 	return spi_write(spi, buf, count);
- }
- 
--static const struct regmap_config tps6594_spi_regmap_config = {
-+static struct regmap_config tps6594_spi_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
-@@ -81,6 +81,7 @@ static const struct of_device_id tps6594_spi_of_match_table[] = {
- 	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
- 	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
- 	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-+	{ .compatible = "ti,tps65224-q1", .data = (void *)TPS65224, },
- 	{}
+@@ -39,10 +39,12 @@
+  *
+  * @miscdev: misc device infos
+  * @regmap:  regmap for accessing the device registers
++ * @chip_id: chip identifier of the device
+  */
+ struct tps6594_pfsm {
+ 	struct miscdevice miscdev;
+ 	struct regmap *regmap;
++	unsigned long chip_id;
  };
- MODULE_DEVICE_TABLE(of, tps6594_spi_of_match_table);
-@@ -101,15 +102,18 @@ static int tps6594_spi_probe(struct spi_device *spi)
- 	tps->reg = spi_get_chipselect(spi, 0);
- 	tps->irq = spi->irq;
  
--	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
--	if (IS_ERR(tps->regmap))
--		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
--
- 	match = of_match_device(tps6594_spi_of_match_table, dev);
- 	if (!match)
- 		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
- 	tps->chip_id = (unsigned long)match->data;
+ static ssize_t tps6594_pfsm_read(struct file *f, char __user *buf,
+@@ -133,21 +135,29 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 	struct tps6594_pfsm *pfsm = TPS6594_FILE_TO_PFSM(f);
+ 	struct pmic_state_opt state_opt;
+ 	void __user *argp = (void __user *)arg;
++	unsigned int regmap_reg, mask;
+ 	int ret = -ENOIOCTLCMD;
  
-+	if (tps->chip_id == TPS65224)
-+		tps6594_spi_regmap_config.volatile_table = &tps65224_volatile_table;
+ 	switch (cmd) {
+ 	case PMIC_GOTO_STANDBY:
+-		/* Disable LP mode */
+-		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-					TPS6594_BIT_LP_STANDBY_SEL);
+-		if (ret)
+-			return ret;
++		/* Disable LP mode on TPS6594 Family PMIC */
++		if (pfsm->chip_id != TPS65224) {
++			ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
++						TPS6594_BIT_LP_STANDBY_SEL);
 +
-+	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
-+	if (IS_ERR(tps->regmap))
-+		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
++			if (ret)
++				return ret;
++		}
+ 
+ 		/* Force trigger */
+ 		ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_FSM_I2C_TRIGGERS,
+ 					TPS6594_BIT_TRIGGER_I2C(0), TPS6594_BIT_TRIGGER_I2C(0));
+ 		break;
+ 	case PMIC_GOTO_LP_STANDBY:
++		/* TPS65224 does not support LP STANDBY */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
 +
- 	crc8_populate_msb(tps6594_spi_crc_table, TPS6594_CRC8_POLYNOMIAL);
+ 		/* Enable LP mode */
+ 		ret = regmap_set_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+ 				      TPS6594_BIT_LP_STANDBY_SEL);
+@@ -169,6 +179,10 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 				      TPS6594_BIT_NSLEEP1B | TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	case PMIC_SET_MCU_ONLY_STATE:
++		/* TPS65224 does not support MCU_ONLY_STATE */
++		if (pfsm->chip_id == TPS65224)
++			return ret;
++
+ 		if (copy_from_user(&state_opt, argp, sizeof(state_opt)))
+ 			return -EFAULT;
  
- 	return tps6594_device_init(tps, enable_crc);
-@@ -125,5 +129,5 @@ static struct spi_driver tps6594_spi_driver = {
- module_spi_driver(tps6594_spi_driver);
+@@ -192,14 +206,20 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 			return -EFAULT;
  
- MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
--MODULE_DESCRIPTION("TPS6594 SPI Interface Driver");
-+MODULE_DESCRIPTION("SPI Interface Driver for TPS65224, TPS6594/3, and LP8764");
- MODULE_LICENSE("GPL");
+ 		/* Configure wake-up destination */
++		if (pfsm->chip_id == TPS65224) {
++			regmap_reg = TPS65224_REG_STARTUP_CTRL;
++			mask = TPS65224_MASK_STARTUP_DEST;
++		} else {
++			regmap_reg = TPS6594_REG_RTC_CTRL_2;
++			mask = TPS6594_MASK_STARTUP_DEST;
++		}
++
+ 		if (state_opt.mcu_only_startup_dest)
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_MCU_ONLY);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_MCU_ONLY);
+ 		else
+-			ret = regmap_write_bits(pfsm->regmap, TPS6594_REG_RTC_CTRL_2,
+-						TPS6594_MASK_STARTUP_DEST,
+-						TPS6594_STARTUP_DEST_ACTIVE);
++			ret = regmap_write_bits(pfsm->regmap, regmap_reg,
++						mask, TPS6594_STARTUP_DEST_ACTIVE);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -211,7 +231,8 @@ static long tps6594_pfsm_ioctl(struct file *f, unsigned int cmd, unsigned long a
+ 
+ 		/* Modify NSLEEP1-2 bits */
+ 		ret = regmap_clear_bits(pfsm->regmap, TPS6594_REG_FSM_NSLEEP_TRIGGERS,
+-					TPS6594_BIT_NSLEEP2B);
++					pfsm->chip_id == TPS65224 ?
++					TPS6594_BIT_NSLEEP1B : TPS6594_BIT_NSLEEP2B);
+ 		break;
+ 	}
+ 
+@@ -262,6 +283,7 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+ 					    tps->chip_id, tps->reg);
+ 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+ 	pfsm->miscdev.parent = dev->parent;
++	pfsm->chip_id = tps->chip_id;
+ 
+ 	for (i = 0 ; i < pdev->num_resources ; i++) {
+ 		irq = platform_get_irq_byname(pdev, pdev->resource[i].name);
 -- 
 2.25.1
 
