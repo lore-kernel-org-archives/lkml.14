@@ -1,122 +1,95 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A1EEAC8;
-	Wed, 17 Apr 2024 20:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776293D967
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 20:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713387004; cv=none; b=MHqcd6wwgyNPwNb2op3tBBf0G+IJxiZxMIxNseAhpqdzMZdppXASnJ4XGj7LIBP6KjO2dZs9mHZWaxG+w42B4EYggvQSp9JcImr7T5/TEvwKiyNEGGkFUhCCz+yg5lY520iGNaBWQq6JFLxK8flcMffEHojNyGqlEJbVvh5v1Zg=
+	t=1713387079; cv=none; b=qCY5xepV90EoVuF72U9yUywNHGpdUV0gzNR9ZX1yekGB+1MD2mbF66C5PfYJFYwkcJv1F3MFk4CoRvrltmE7tAyukfoeZj0XHKFpGaD9b9TgA4QVURq+Xao5UK4+k2+Axh1UaBLpeDrSnFAD7/vo+SaN1UbXXnJLSRq66IzFK10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713387004; c=relaxed/simple;
-	bh=t6VcluM2g/Mu+jFisa9J/W3a8G4RAcSvmnsCy3JyYe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FypZbu3EOKBsb0FQCGF8QmJpXwgH47bIQCA8P4d2+JdsJEcD6hZ221u0q93MNidBuOhsY4TvBphzp1rePCXtxhHZ4mGkI7V5k8dLQBgO8d7mgb4zF7LNvMlnr1xC7BnI4hQObkmg69hEkAozojamx7gt6qveT2gLfp8Ju2F35bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GX7Kzbh3; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GX7Kzbh3"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e2c1650d8so128783a12.0;
-        Wed, 17 Apr 2024 13:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713387001; x=1713991801; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t6VcluM2g/Mu+jFisa9J/W3a8G4RAcSvmnsCy3JyYe8=;
-        b=GX7Kzbh31rWCoZI97HFpP1fslezFBkDC51TfrdR9HCUs0POhMxXfPX4wl4eOAoKQii
-         2JMAk7Y51iNNLvIqgrHu3lp48Xsv+yuKK2wR95QUIsJpn+fkZvXj2X012OvR+hcE3X4a
-         MBQXJGh8HAi3hbOI5omnySWtXKNGc7nY+EyZVjbKDmdp2yxtRZrk5kOUERLizsYwRi8u
-         q39/1zxq8qgptccJexjdfJ1ktMkCKN2kF3Zf5WKSH0IivQiPR/zRIBT31I83N9U81lmr
-         MEHwtPkXjYXmZ64iSa/JKcBQP41Eisxdc7CrfMKXy0RWkLGC+Div4Dah0QlnmuBhdfwr
-         9p1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713387001; x=1713991801;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t6VcluM2g/Mu+jFisa9J/W3a8G4RAcSvmnsCy3JyYe8=;
-        b=j78Kk1KQFbcidtqtKSc/DxCDyc8/d9EmGOWR/Rg15pZrw5HiluYYJ5lMUeFgCR4gsT
-         o11XTaO76XdPs4qq5IKtlMRiWhhIrSSDsh+G2tE5bIwapR/oV2l66r1ov7lCCmiLax3j
-         iTQUAIJcksNbwklgFtYhYHA5AhjdSrJKXRrbT01d0NxYGGnBGXUdLHfvy4ZO2l0GRozY
-         DgetWq5M9UyZBm1l1ExfpYODIRMiu07/f/P5tv21c819SIdB0xX3Xov0Evs7YVSEWdVs
-         VsE6RJ9n5/hhlitT9yyP+9/J3cL2BKMmrwivCof8SpVEacY+DYD2ekNkRgmff7EreCas
-         h+Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaKIg/QTJbAVsxmR2VNh1/j3WPS+vg4Sa4jC5bKok+baQ77rLnubC2qXSp9HFa8HJfTj869dLu5t17dy1c4157WGujaNDOA25kHQZfqKUUMdawOpxQJzKrmmHkVz7MKle0UYI4E4kYqw==
-X-Gm-Message-State: AOJu0Yxab+v/TXW3ZXKaWdchOOFnKm7Fjq+Jd/N4eDSLsRG/dtAOuxA5
-	LgANGob8mY8p69c52crrlU90yEcnCILIrwJxRPtyRLqEvGEzI+tFvvkIyixTZJP3fKNSrK5Eejc
-	WGx5zMWVCm3gRl1Yzmj/dmExYKX8=
-X-Google-Smtp-Source: AGHT+IFA8KNHMlNf/iAxCcPVh3Su8L1Ji2NTnzwGJKbUlfmLRFAeyN7nHywkOQ5MbRQlFk6S+nmLKPAf4SAE5xt18pU=
-X-Received: by 2002:a17:906:717:b0:a55:5516:39fa with SMTP id
- y23-20020a170906071700b00a55551639famr355938ejb.64.1713387001149; Wed, 17 Apr
- 2024 13:50:01 -0700 (PDT)
+	s=arc-20240116; t=1713387079; c=relaxed/simple;
+	bh=25na2u5dqSMwdfKH+InG17crUdYa9TxiMOwoUCyo2Zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+r/5A/QRmU5C4i9R+Qp1lWsxRONPHo7hDmpJyv/v7OmVReFALLTfuy0dIVAQAX2zKPOKOjpdGqpJ8Q+6XB7T/S8/egcHgfaSne/aXowf1UADh8Nb4SFuvRl3EsMYBfgmK3x03WJM86M5xs+PKqsAImMdowbMNYYjHhOGfi2aHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E478040E0177;
+	Wed, 17 Apr 2024 20:51:14 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id WjHW1JqznPJz; Wed, 17 Apr 2024 20:51:09 +0000 (UTC)
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21AF640E00B2;
+	Wed, 17 Apr 2024 20:50:54 +0000 (UTC)
+Date: Wed, 17 Apr 2024 22:50:48 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>
+Subject: Re: [PATCH v3 02/14] x86/sev: Make the VMPL0 checking function more
+ generic
+Message-ID: <20240417205048.GHZiA2KGbFFTQFyTAM@fat_crate.local>
+References: <cover.1711405593.git.thomas.lendacky@amd.com>
+ <1b0d8ec8e671ad957a2ad888725ce24edeedf74a.1711405593.git.thomas.lendacky@amd.com>
+ <20240417114658.GHZh-2sk47TZgCp4Mb@fat_crate.local>
+ <505dcf34-93ff-643c-b149-8ef9ce90c023@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
- <ZhpC3lLD-BHqJEZz@ishi> <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
- <CAHp75VcofgAQLFVLdsA-A1AkjVzQBJWtam=w00+z9-rueZyv8A@mail.gmail.com>
- <CAMRc=MejJTnawn1=_x9Va-QJRctjoc3TJanVqQ0uZbpmDzpyjw@mail.gmail.com>
- <CAHp75VcXoEhxA+qO=MMoUanZeCP5hPXd9q7n-8AuRrotEfbYFw@mail.gmail.com> <CAMRc=McrxEeS-BdgSEswJ+x_qDYJ7Gn_fKP8n-ctCzk2BuP29A@mail.gmail.com>
-In-Reply-To: <CAMRc=McrxEeS-BdgSEswJ+x_qDYJ7Gn_fKP8n-ctCzk2BuP29A@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 17 Apr 2024 23:49:25 +0300
-Message-ID: <CAHp75VdDRYU7UguQQSm+QTRPMpsteno2pEQ2kz_03cEjFatJXg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: William Breathitt Gray <wbg@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <505dcf34-93ff-643c-b149-8ef9ce90c023@amd.com>
 
-On Wed, Apr 17, 2024 at 11:46=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> On Wed, Apr 17, 2024 at 10:41=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Apr 17, 2024 at 9:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> > > On Wed, Apr 17, 2024 at 10:05=E2=80=AFAM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Wed, Apr 17, 2024 at 12:17=E2=80=AFAM Bartosz Golaszewski <brgl@=
-bgdev.pl> wrote:
-> > > > > On Sat, Apr 13, 2024 at 10:31=E2=80=AFAM William Breathitt Gray <=
-wbg@kernel.org> wrote:
+On Wed, Apr 17, 2024 at 03:35:53PM -0500, Tom Lendacky wrote:
+> Well, it doesn't really modify any permissions that matter. It tries to
+> change the permission of a lesser privileged VMPL level.
 
-...
+Potato potato. :-P
 
-> > > > > I applied it as is, if anyone wants it, this can be sent on top o=
-f it.
-> > > >
-> > > > Thanks, but I assumed this should go via my tree and as PR to you. =
-At
-> > > > least I have it already in my for-next.
-> > >
-> > > You didn't respond in any way about picking it up.
-> >
-> > Hmm... I'm the author of it and I'm a maintainer for that driver. I'm
-> > not sure if it's mandatory to respond for that purpose. Usually I
-> > asked the opposite, i.e. when I'm not going to pick the thing up.
-> >
-> > > Can you just drop
-> > > it from your branch?
-> >
-> > It's possible, but I will need to rebase, which is not a good thing to
-> > perform. What about just leaving it as is and letting git to (nicely)
-> > solve this?
->
-> It won't be solved nicely, we'll get a warning about the same commit
-> appearing twice with different hashes.
+> Since the kernel only runs at a single VMPL it would never be
+> effected. The operation performed here is to update VMPL1 permission
+> levels (which can only be done successfully at VMPL0) and return the
+> result of the operation.  A success implies running at VMPL0 and
+> failure implies not running at VMPL0.
 
-Oh, this sounds like a new check in Linux Next? Or somewhere else?
+Yap.
 
-> Whatever, I dropped it from my tree, it was the HEAD anyway.
+The point is, it is calling RMPADJUST. And it does modify RMP
+permissions of a guest page.
 
-Thank you!
+Thus, if you prefer, you can go all out and call the helper
 
---=20
-With Best Regards,
-Andy Shevchenko
+	rmp_adjust_permissions(unsigned int tgt_vmpl, void *pa)
+
+and make it generic from the get-go.
+
+And then have the macro wrap around it in order to explain that
+particular use with the macro name.
+
+If it is still not clear what I mean, lemme know and I'll do a diff
+ontop.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
