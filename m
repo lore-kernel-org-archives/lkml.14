@@ -1,88 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B00718C19
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 09:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FC812837C;
+	Wed, 17 Apr 2024 09:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713344695; cv=none; b=kbtki9r2CmVCfHuPkUzYUbKjs8DXbmNvlibAm8cXd5sTWNxNdPBdeqFHN3Pmvc6BiUBKK9OwmrR2T3toPiii13cSWKE6N5J8jqoHwsgt5K+EMDRPW+BpJ4s7WZU/JqmtlgSFLPXHOnnp3f4M4U27BER+aDJZtPkXRu93kCZe+fg=
+	t=1713344731; cv=none; b=GJ9X2LgNbb/qFnzFtAwDMesb6pY5KicJ/fDz5ciQX3LMG6C21znkUIuHHfnwqi43wmrFGQqlr553wnLsFBWPq7bkUoxVS8RCaZ/F/fgWJZzeLnwmwLEmb1upPJXBoZelIk/qw0ZOJajSZC8Chgl3y2pdA3BjXZUoJDHxfcpkRqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713344695; c=relaxed/simple;
-	bh=qPI0pCxxPzUoBEsI0BzOZn8buvMBR2S+RPSF+No4b5c=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=pCcCb1RxvdHXhoei1hzQ5NpBPwfn0HV6IbLdURBB0sbKdNXXL80qxToa3l96HM8KsawWIxJ02lk+lxQV+Bgi7nZs7sqpRzNBUY0uzCmKcaqTXhGYheLb4iukEneAOpF/cP2w3NxvI1R1UhyjbXECwVFOodxmuGV7XUtJMvRQ3D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PClp2aGU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713344731; c=relaxed/simple;
+	bh=qEvEcdnHm8khTYsI96xtmLJDTERDUDkkzMTZ8zo0B4s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V+dxIIareGuTOY3oKWhUZCH3FbG6mp+qB67a38awaRvNuQV6dKcMTbjlfWtO3JjM2sO2vYuGMZ3U6invn4yL+Gwq5w7CxrMCfeGqF2MmJnQEOhutb1Ql8Ye6OWT4T7STB0zzwQRxMoC0JHWf8XUyxG+taQf22rWEzS1NLLfq/jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1Cd+oao; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PClp2aGU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713344693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l0o9cqWvopzRGIbQrWEpYy4RFrMHbVHwEFIkzoBARCg=;
-	b=PClp2aGU/CUUsP7TpgznwHy+a3mEanzrquUb7eY9NBPAePRVDQ046ar/it9kcLplhDWQiw
-	uzyzSdxYXSfS3qqGUG6UfStYt6lG7CQHqK75hLzR9DUyNI9sfvIX7kQObvsMSrMTjMSnGp
-	aYLyozmr1muP/mlSGhZN2DbTfrXcIg8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-140-NWduv8-0ObmjjPW5VGH_hQ-1; Wed, 17 Apr 2024 05:04:44 -0400
-X-MC-Unique: NWduv8-0ObmjjPW5VGH_hQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9A15C806528;
-	Wed, 17 Apr 2024 09:04:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 24BDC490DD;
-	Wed, 17 Apr 2024 09:04:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <f555b324b79829d6fc63da0d05995ce337969f65.camel@kernel.org>
-References: <f555b324b79829d6fc63da0d05995ce337969f65.camel@kernel.org> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-18-dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Gao Xiang <hsiangkao@linux.alibaba.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Matthew Wilcox <willy@infradead.org>,
-    Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
-    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/26] netfs: Fix writethrough-mode error handling
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1Cd+oao"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a526a200879so421753066b.1;
+        Wed, 17 Apr 2024 02:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713344728; x=1713949528; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NGmjfmjvJt/yjSXYMBDNTlpob7e25JoHrGjnnPxXC80=;
+        b=H1Cd+oaoPb6W0GDN/4ufwqSpC8tTEQpAHKP0VVrgQXpnFl0FMtFO1D6avJIYftOsY7
+         3xhydxO+bp854oQRWLgAOXwz5KemvU2ucaT9hesAhQs3wuoho+pQxF78kevSTC5P/+EF
+         vBLUGvckF9ctbDlclroiUOEdtRG5WbnXpbb2i8GIqmDSsKO1uoAZs0y3duhvEBJMs4oB
+         7lU9goWeYXLga9gjxCJxzwmkVL6bN4Mz2iKqx7ezXhdakXALoojfxBdCIBAH40QaJs6a
+         GnoRxf2lnUeWxReL8qFj98Uz191ke4+St7qtclTbG0b6vuBeHojeY6HtEYTGtr7rb7Vs
+         UJ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713344728; x=1713949528;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NGmjfmjvJt/yjSXYMBDNTlpob7e25JoHrGjnnPxXC80=;
+        b=GIkv6iEO3lcD/lgHO4OWrgas/QxUB9QWpltu4gScqiwtM1Ezd64ttkNwYtkJo+PMX/
+         h+wuu5FW0yrPXJh12w/JTQo41S3pEeAVHm+1p/cRf1V53vVh+lM5wXaiL/9nLS3Rbi6J
+         JvlBKYrVM9C1/cdr42hNXhswaWkfXvJeFm8zNGTt4Rlgf6wb/DPZgEqpEtsH1KKFAiJQ
+         ssu8QuV5aWGVVuwGIt8SWMgF1otP++9kTJZqiYQtwrxhOYRk0P+X0y/On9meKuVKX8Y0
+         kLngvmwjnyeXY9hTMMisGwblgdoUfFVFOzdIZLB6+dkPGLVShKkeBb9OkqYq+eEbF4c8
+         G7wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXx7w/WTKhbLkdIokr1lwc8cJPvTal/VoSwlCvXkCcCpVEda1Jag8VSlzxc318AInvI5eTiOOyemZcQPc6lCgqZrZRmpeV0Cbcbja6LbaotUMvBZgP9xw2c37CfVYN09WsEjxIkLBbwIQ==
+X-Gm-Message-State: AOJu0Yy+8YI+v/8fvTaNAzEO6Mx5Rh4IOyhGZqP1huZ71GtvOtJ4O+SR
+	ozQLNkBIe6q53ycTX4CG58+d0tmUdMT1sPtW//uXPW2kA79JYdh5
+X-Google-Smtp-Source: AGHT+IGEiY2JB0qdptuZ7ccCF8KInrVw1xa3h+hNmYB4Kd7mL5BMZwNGp6ps35fhUTL0Ra2SxLpEew==
+X-Received: by 2002:a17:906:46ca:b0:a55:36d7:d0ff with SMTP id k10-20020a17090646ca00b00a5536d7d0ffmr3787755ejs.46.1713344728114;
+        Wed, 17 Apr 2024 02:05:28 -0700 (PDT)
+Received: from eichest-laptop.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
+        by smtp.gmail.com with ESMTPSA id x16-20020a170906135000b00a51a7832a7asm7897814ejb.199.2024.04.17.02.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 02:05:27 -0700 (PDT)
+From: Stefan Eichenberger <eichest@gmail.com>
+To: nick@shmanahar.org,
+	dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	linus.walleij@linaro.org
+Cc: linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Add a property to turn off the max touch controller if not used 
+Date: Wed, 17 Apr 2024 11:05:23 +0200
+Message-Id: <20240417090527.15357-1-eichest@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28313.1713344659.1@warthog.procyon.org.uk>
-Date: Wed, 17 Apr 2024 10:04:19 +0100
-Message-ID: <28314.1713344659@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
 
-Jeff Layton <jlayton@kernel.org> wrote:
+Our hardware has a shared regulator that powers various peripherals such
+as the display, touch, USB hub, etc. Since the Maxtouch controller
+doesn't currently allow it to be turned off, this regulator has to stay
+on when not used. This increases the overall power consumption. In order
+to turn off the controller when the system does not use it, this series
+adds a device tree property to the maxtouch driver that allows the
+controller to be turned off completely and ensurs that it can resume
+from the power off state.
 
-> Should this be merged independently? It looks like a bug that's present
-> now.
+Changes since v3:
+- Move the power on part to mxt_start and the power off part to
+  mxt_stop. This allows to turn the touch controller off even when not
+  in use and not only when being suspended (Dmitry)
 
-Yes.  I've just posted that as a separate fix for Christian to pick up.  I
-still need to keep it in this set, though, until it is upstream.
+Changes since v2:
+- Add Reviewed-by tags from Linus and Krzysztof to the dt-bindings patch
 
-David
+Changes since v1:
+- Rename the property and change the description (Krzysztof, Linus,
+Dmitry, Conor)
+
+Stefan Eichenberger (4):
+  Input: atmel_mxt_ts - add power off and power on functions
+  Input: atmel_mxt_ts - move calls to register the input device to
+    separate function
+  dt-bindings: input: atmel,maxtouch: add poweroff-sleep property
+  Input: atmel_mxt_ts - add support for poweroff-sleep
+
+ .../bindings/input/atmel,maxtouch.yaml        |   6 +
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 162 +++++++++++++-----
+ 2 files changed, 124 insertions(+), 44 deletions(-)
+
+-- 
+2.40.1
 
