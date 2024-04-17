@@ -1,95 +1,82 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB25184E15
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF8213CA8B
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713353943; cv=none; b=rgetBex5UAlyDLSO9OhQpIzZY9Pz4yrO1oAO4/g5EZOARAT7SIiLxKXMexO2kxUEm0LBeJ7X6x7KUf2pALeOa+k7tvf/DoNvOi+7G7pv/cEzPY7x1gJgJm6s1P+Fr453SEYfHKOyvp/OUKfEE9rw1Ykew0jrhp9G1xc2eYOF8kA=
+	t=1713353971; cv=none; b=ER/GQMGb5rJnIUlA3n1HQrbjVtdc2+30GmRZnYeBaLeUu9wgQ+xZcamo20wuzwCVNhxrFhoXx6/WhoMGaf2JCfHWlerjrQM2rd5hbqJ1Y1sRq0PQjkZId+HF+mP2HKMcZknj3Y5ZeX+WXOd9CWyJx2bb968QZQhN9GurVprI9X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713353943; c=relaxed/simple;
-	bh=h5EC7q98U2GwMcxqPEpZHXfJRLGRetzbo7g0quOIuHo=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=suC0+tEwKQjZw2c/Q6DYpuShCHpXVP6Iq7VXyrNSV4nyN9JZFEkrkZ1oFncXWBu12/BeHD5kbGVvdvW2tj3dxlsaGeKf1dIzy2t7UuL0M+16NTaG5Mq41h0ahD/yH2iiYIlYTAP0j37XgjX9TFlP9WIVSX2gDiMOALk2m9ucNLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VKJN80vj2z1xtxF;
-	Wed, 17 Apr 2024 19:19:52 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 727FE1A016F;
-	Wed, 17 Apr 2024 19:22:15 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 19:22:14 +0800
-Subject: Re: [PATCH V3] ubifs: correct UBIFS_DFS_DIR_LEN macro definition and
- improve code clarity
-To: ZhaoLong Wang <wangzhaolong1@huawei.com>, <richard@nod.at>,
-	<miquel.raynal@bootlin.com>, <vigneshr@ti.com>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <yangerkun@huawei.com>
-References: <20240417092727.3803910-1-wangzhaolong1@huawei.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <e4bd7fcd-f740-b2f1-ad20-63860db9fa38@huawei.com>
-Date: Wed, 17 Apr 2024 19:22:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1713353971; c=relaxed/simple;
+	bh=Ioj9DnkX+ObVSDL6/fpvkdjT0u8OzlkNnV61k9vgk3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L2MLFN4qKMW3Yt4vRkpbECOGmzq9alDOdOJLJ5VCAaVfVONDVB79kiz9RRy6VAM8HryGSFjuOPjEI+K2+E23p0uKhz+OoNqfg5//sfAo0f3HDqilZjsV1VRVQftW8CP6KFf21Xig8AktaPHLHtEJsjCwmA8vPA3Gs57dCM4y3dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SlN29j/T; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SlN29j/T"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcc73148611so6104722276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 04:39:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713353968; x=1713958768; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ioj9DnkX+ObVSDL6/fpvkdjT0u8OzlkNnV61k9vgk3c=;
+        b=SlN29j/T7mf/fmifgHuw0Izecr5l2bt6MaqPKYasH1BqGb+Co/lz1l3dIXZ7qnY3vz
+         rNDNdgvyE+ewYIoGIJbpYbXPmEOBR2zdr+dnZOvgXr6OBREKRST86virgi5luEEre2S6
+         O1Az2/LMudCKZamLaVsB8ewDPW5NCWW46Y5OoFPlVGkynXUWnRZwv4VGmU6tygoJCtNw
+         j60dAzk2NO2sIfs4HlXMwe0/uByDYfdIRCSAH06djW7tbFd57c/FDWMojxqEqTDuZEbf
+         CW7YuksPfBug2+tDjwk5cRSUiBUNmV4d7EYT+Tc14M6JMKOefFhFvJeOIw32olPCfLcA
+         LgrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713353968; x=1713958768;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ioj9DnkX+ObVSDL6/fpvkdjT0u8OzlkNnV61k9vgk3c=;
+        b=h6e5oO2MJ548rgDgJZrbzso10gQSGokpyH4xO69u8pSR+7WGI2ZSxiHYkRNy/0O6CE
+         o+rIsObuQxvFdn4Mvh4ffiJAiKMRZnr23RLwUEGHivpB/dr9lanOloAk6nMazZUNYdrm
+         HbZN7p6rvImewLj2Xr6uBozJpE7t7ehfc/a46Vco8d1hDa0MvA4wcvG0Ul71BpwDgTMO
+         WEj1XvUf6g9dtHTD4EubNPBnBy9GI1Gveyw1TdpI/7OK7XZmZpJmoOVxT2vn1tZbUi9Z
+         64zZam+eZE82U21VdqZRWH4UAg2VX1mGR93y61LyaeWoWkuTb6kpGRtd2fe5/SBGla3A
+         JBAg==
+X-Forwarded-Encrypted: i=1; AJvYcCV78sxLY/znmWAVHgEKKqp4cVcFbfe1/puxQpBBIKphMHeNzxsvJrlBDRsW+1LF7C8ItQ6TwSMrExKGrNpY6Kg0jyKbdBzaS5CZhVOa
+X-Gm-Message-State: AOJu0Yzh/e8dN+RtpdIjyd26u3a8H852e2Tt9HsgBpqzebniFkpN19Pq
+	6jddxmRdaShqjxWiq7CVSKTug/yNmn/bPEMv+vH0FsXpRCk+fWkJ1nKgrIbBYu7O03lCS196yyF
+	PN02nUVKALlQlIwrk95baVjNTvlCacGeRNu7lMA==
+X-Google-Smtp-Source: AGHT+IGto7S93HRGORyq0GvXIhVAp6wm5zMdY16fzYtx/hb1OWYbqCpxV9/Z5ojkl/ieoD41Fqkg4zQQmmhDYZoEYzI=
+X-Received: by 2002:a25:ef51:0:b0:dcf:f9bd:fe05 with SMTP id
+ w17-20020a25ef51000000b00dcff9bdfe05mr16431807ybm.48.1713353968629; Wed, 17
+ Apr 2024 04:39:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240417092727.3803910-1-wangzhaolong1@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+References: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
+In-Reply-To: <20240417-component-dummy-v1-1-b0854665c760@herrie.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 17 Apr 2024 13:39:16 +0200
+Message-ID: <CACRpkdbijfwYFhg2XigzVKoPDjU00K+arqaL_kP3FNxsS82gHg@mail.gmail.com>
+Subject: Re: [PATCH] component: Support masters with no subcomponents
+To: Herman van Hazendonk <github.com@herrie.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-ÔÚ 2024/4/17 17:27, ZhaoLong Wang Ð´µÀ:
-> The UBIFS_DFS_DIR_LEN macro, which defines the maximum length of the UBIFS
-> debugfs directory name, has an incorrect formula and misleading comments.
-> The current formula is (3 + 1 + 2*2 + 1), which assumes that both UBI device
-> number and volume ID are limited to 2 characters. However, UBI device number
-> ranges from 0 to 37 (2 characters), and volume ID ranges from 0 to 127 (up
+Hi Herman,
 
-UBI device number ranges from 0~31? UBI_MAX_DEVICES(32)
-> to 3 characters).
-> 
-> Although the current code works due to the cancellation of mathematical
-> errors (9 + 1 = 10, which matches the correct UBIFS_DFS_DIR_LEN value), it
-> can lead to confusion and potential issues in the future.
-> 
-> This patch aims to improve the code clarity and maintainability by making
-> the following changes:
-> 
-> 1. Corrects the UBIFS_DFS_DIR_LEN macro definition to (3 + 1 + 2 + 3 + 1),
->     accommodating the maximum lengths of both UBI device number and volume ID,
->     plus the separators and null terminator.
-> 2. Updates the snprintf calls to use UBIFS_DFS_DIR_LEN instead of
->     UBIFS_DFS_DIR_LEN + 1, removing the unnecessary +1.
-> 3. Modifies the error checks to compare against UBIFS_DFS_DIR_LEN using >=
->     instead of >, aligning with the corrected macro definition.
-> 4. Removes the redundant +1 in the dfs_dir_name array definitions in ubi.h
->     and debug.h.
-> 5. Removes the duplicated UBIFS_DFS_DIR_LEN and UBIFS_DFS_DIR_NAME macro
->     definitions in ubifs.h, as they are already defined in debug.h.
-> 
-> While these changes do not affect the runtime behavior, they make the code
-> more readable, maintainable, and less prone to future errors.
-> 
-> Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
-> ---
+thanks for your patch!
 
-Please add change log v2->v3 next time.
->   drivers/mtd/ubi/debug.c | 4 ++--
->   drivers/mtd/ubi/ubi.h   | 2 +-
->   fs/ubifs/debug.c        | 4 ++--
->   fs/ubifs/debug.h        | 7 ++++---
->   fs/ubifs/sysfs.c        | 6 +++---
->   fs/ubifs/ubifs.h        | 7 -------
->   6 files changed, 12 insertions(+), 18 deletions(-)
+Do you actually have this working on real hardware? I never
+submitted this patch because I could not get the hardware
+working.
 
-Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+I was hoping for smarter people (Dmitry Baryshkov...) to step
+in and help out to actually make it work before submitting
+patches.
+
+Yours,
+Linus Walleij
