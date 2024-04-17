@@ -1,111 +1,83 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EDF63A;
-	Wed, 17 Apr 2024 14:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB6D130A75
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 14:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713362520; cv=none; b=kgOuS1bY3LVtytDivwyGeNQyCGMOBJUKn/kYVFA7NjjVi0Xov3Lma4WE67lWo5k1ppZascEZyYexOVS6bnFh70qu+dUnTlyGjQCvdH28MFRHZkkraNDzdl7tgjzugIpXjR07z1BKPZDhzabX2LW6P66EmUFqCTcBDpwWbFOYqTs=
+	t=1713362578; cv=none; b=DDle9zPUJX6csDA4YC/9ymgEBaZ4ROgclzBGzMKgXrA1aghrPVoFdjoJJCTWkAlIE/ukvuMeMDMIYCzCVUqLQw4woIG5o9XBT/OaJB2WiOWBMTabDU9ms+rJzpjfZN7wKqjX7CSS3eP0Qu+1iGQWnklZm4NxTtaUg0FIMCSrOco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713362520; c=relaxed/simple;
-	bh=GcvFtHsGPo/adYGfXVbwQgc0u1QkR/LMy1fy6H5Whzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=klcheJxNkY6Aytdgy64qsFProPSFhdTh4BtymWIn4jtbOtK1UrWl1gkU/b8/Y3m9ZyRV/8ISam2EoPjDVtY3K4bOsTdyCf32d2vCsQ4OY16u2amKsdwpKiA8H0/U9PmvjD50FgDQeK0lckNIZ+Fh80NKvTBTWZxoDbgvZ/9kuWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XOn+gjvb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1713362578; c=relaxed/simple;
+	bh=MGjG7Fg0KiUleiimGGY97MAa9R8hH4iMSokJZuzSwgg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hXlMOJOUQO/C4tX1XiYTgjKI1/y1rYeHCkYv6vXXo6Fh7fg0OBoT+Ctg2pbsP7LWWGkPq1WYa9VT+8kBuBDmFHxjbnrxAU478PsiICCFJi1622DXCyP8h5YNlzyG5ULA+H1zrQ7ZkE1YvubQtJVE2L8k/cb1pu2eIfRW38GY8Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NKYb8Lw5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RrNY4mt8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XOn+gjvb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4DfjWgrkyvkic8aAP5HZNr2ZFskxZL3uphk8p5naRQc=; b=XOn+gjvbTRu7w9/J4ik571TRh1
-	WpwMuJDjUPD+eGILxTBNMdQDeSBTbLr0K8mQTS+CQ/xvO2AhXfEwwuzqRGRBExGGX3UTjr60AT5SR
-	y2QgfBy789+J1BubFE/19NAsQURnDz1ZFGJuTd+3/dsy3ONa/XUPdmKo0JTAr1YkOBP2KZBTLAg5l
-	qUAgrutp73V7VR5y4EN6C3ZN9mMoOhr6s+qJRr9gj7NGN9EKaPgb1qyT75PL9kai2RlgNSIAUDTJ6
-	ZquxXVIAW7Ft/t3rd1M3sB0pWtdr+H273fuz5rQ+XKzGEfWZ0bpWoF/g16isq6ZG3dNx8JBtoozl5
-	7eAR19nw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53384)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rx5qy-0003LA-24;
-	Wed, 17 Apr 2024 15:01:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rx5qv-00060f-Aq; Wed, 17 Apr 2024 15:01:33 +0100
-Date: Wed, 17 Apr 2024 15:01:33 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	James Morse <james.morse@arm.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, linuxarm@huawei.com,
-	justin.he@arm.com, jianyong.wu@arm.com
-Subject: Re: [PATCH v6 02/16] cpu: Do not warn on arch_register_cpu()
- returning -EPROBE_DEFER
-Message-ID: <Zh/WPYMJYepLbST/@shell.armlinux.org.uk>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
- <20240417131909.7925-3-Jonathan.Cameron@huawei.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NKYb8Lw5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RrNY4mt8"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713362572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wgtvolD3VwfLc7c5esRJoObIH1mRJb2EO2S63FnqUZw=;
+	b=NKYb8Lw5FvjGD9mBLKp4Fl2KeJYrR4qeUTiJNZmdH/q66cAy9nwFs2ZvUy1MtPCLpjDe38
+	bRD3fM6qVaOijznI/5r0ckg2vtCx3cnP8clKY1XilcMUbNtGuhB0W6ut1mWmULhYBuOGK8
+	rMQXx7JCI/51G5c+doIjQ2GOXd7jQ3cSg3JkiiZxI6rtVm37tVTz2ew7DQP5BUwFeuhtDA
+	n2Wtqa1kfvOYWKieSd2nRbrKGmXQ7Ao00ey+QzWYOobvohn7EJ/n/T19RzEG/+cUNjJEFc
+	I7Dj2qrbzCDLQj/gFamVi+uDcrf0Oo6w5lNOpXzzs47s6V0Z0qkJ7+vIRN2CIQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713362572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wgtvolD3VwfLc7c5esRJoObIH1mRJb2EO2S63FnqUZw=;
+	b=RrNY4mt8aFSb25bhc4TE54S+92hNxXgSyqdGC4xASnOe6HK2uHz5TaBj7ys5832m8nZA0J
+	jReMl8S4J1zQ0OAw==
+To: linux-kernel@vger.kernel.org
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH] timerqueue: Remove never used function timerqueue_node_expires()
+Date: Wed, 17 Apr 2024 16:02:29 +0200
+Message-Id: <20240417140229.19633-1-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417131909.7925-3-Jonathan.Cameron@huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 02:18:55PM +0100, Jonathan Cameron wrote:
-> For arm64 the CPU registration cannot complete until the ACPI
-> interpreter us up and running so in those cases the arch specific
-> arch_register_cpu() will return -EPROBE_DEFER at this stage and the
-> registration will be attempted later.
-> 
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> ---
-> v6: tags
-> ---
->  drivers/base/cpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-> index 56fba44ba391..b9d0d14e5960 100644
-> --- a/drivers/base/cpu.c
-> +++ b/drivers/base/cpu.c
-> @@ -558,7 +558,7 @@ static void __init cpu_dev_register_generic(void)
->  
->  	for_each_present_cpu(i) {
->  		ret = arch_register_cpu(i);
-> -		if (ret)
-> +		if (ret != -EPROBE_DEFER)
->  			pr_warn("register_cpu %d failed (%d)\n", i, ret);
+This function was introduced with commit 60bda037f1dd ("posix-cpu-timers:
+Utilize timerqueue for storage") but never used. Remove it.
 
-This looks very broken to me.
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+---
+ include/linux/timerqueue.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-		if (ret && ret != -EPROBE_DEFER)
-
-surely, because we don't want to print a warning if arch_register_cpu()
-was successful?
-
+diff --git a/include/linux/timerqueue.h b/include/linux/timerqueue.h
+index 62973f7d4610..d306d9dd2207 100644
+--- a/include/linux/timerqueue.h
++++ b/include/linux/timerqueue.h
+@@ -37,11 +37,6 @@ static inline bool timerqueue_node_queued(struct timerqueue_node *node)
+ 	return !RB_EMPTY_NODE(&node->node);
+ }
+ 
+-static inline bool timerqueue_node_expires(struct timerqueue_node *node)
+-{
+-	return node->expires;
+-}
+-
+ static inline void timerqueue_init_head(struct timerqueue_head *head)
+ {
+ 	head->rb_root = RB_ROOT_CACHED;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.39.2
+
