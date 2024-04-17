@@ -1,167 +1,178 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FF286260
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CB385633
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713396789; cv=none; b=YQEDy4svDBzfuI9wHBIG7R1jQJnAej/ysq6Drdq4gyg6By09hLjFx3NIXR9hGC1DlCG5yLNWbT5tZXhl9U/5WWSJuxoVGqi2JKcKO8B0JpUYsulZXteEOa96jmBxHXq995WEaLsr8XzxHX6SjBWeuXkINbljLbHlmmUtNPH8YqQ=
+	t=1713396955; cv=none; b=Wy9tJ1nnHEh2LhMiX9cGR5bVGGctj2RjTC+mcBOJfUmRsTwDVe9DC5Q2QUPmeX+qf8g1YJRVd5o7gwcAB7StMdoZUHhxVZooHlY1U8Q43ktO9qFKEBhi6F6wZWZMFsBUrzTizcSO/PsKMadMDMWtag07Uj7f5skArwXB95qv5QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713396789; c=relaxed/simple;
-	bh=F0mBqWZiiOdCg3f4DoGJPTXC8lMSKQdH2gEVKgPiLGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hGJUbE+Tl5gVm9G1KuKz+ACGTtQ4hhk+JqGsP33Znpfjof9jnrLz/SqfUwVClGLfu8MdApF65Mi0i2OMIrrczm4mkveDTbRSEVJBVbr7NW7nX6NC6x77DKwjsdouGGRb+xLMGhMxAcMkfrBYVxZuX3+NQ8xKvFTyPP2hixHcUds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GmQQJJfv; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713396955; c=relaxed/simple;
+	bh=EV0AKrLfU/yoYpRarWPNuys3sAe1Nq/9n2sVWYSToyY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A9cir3HSB7NZEJUf0+nJcugw/7gm+dqhnxdw14Z7pSwZu66rWLTzhic8NbsSDOj3pJDiUrhBia4rYW4HoWnUwJHK6WJpBCEX0ak+pBuF7U3fi7ZRl8RJedA0VJcAI9p1Ky04pCOMUW7YO+gxboWwlo+tDOPhmYz09JJDb382syU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RH4cxJpR; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GmQQJJfv"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-516d68d7a8bso300977e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:33:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RH4cxJpR"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61ab173fe00so4272007b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713396786; x=1714001586; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GytF7V18qJIXql1WNL67e4Efwso8d/2I3bcLgaa+9g4=;
-        b=GmQQJJfvx+3SBOD3c5Er7SGomMRhe7dbKTPSUgeAoDGFS5xxtETza4Y2AimRuYVBOS
-         9ONaRoHHhaQi4WodlVS2dnX+e8F3FdikApQ5qiZeOW9HhdClIuV4RUkC+EpEaq5oitpe
-         gUZuw8Op2Eht+JzzGUi1FBEFeiHGXvC0ulRHLXe5VXGuoPosbnnD2AypMd4t04j5dFHt
-         +cGYpGn1OTwdgwd74uy3V1hXvPLyg6gtERLiJwZkbNGDKGlmC1DjVTXwv1nLJipnDdyw
-         w5s2GmY6d4Xcjvma3KZ1sbJ97jOZVXcYyyU9ZjI90c+m+NsPQZ4GW8VNOsi1KlrK469Q
-         72zw==
+        d=google.com; s=20230601; t=1713396953; x=1714001753; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NirJD3ZZcaTlw8nUlwu/ibV9B8oPJQME/V178SLfQT8=;
+        b=RH4cxJpRf8j8Fg6IUenyDGV3CnDdK1MVxbpx5TALfzgda4IFXUsciEeHWTloarQqnj
+         gxoBf8mcVZ4+r82WXYY0Ce/bC2Wumigwz+nGzYNddyXcO7L4ZxnK/yhuznqlMiEMcUmM
+         uzyA80+/MAaZkjZjXdtPf7PtaV3ciM/dyRU09EP3e4HlOXkRb2sfZ39dqr/34Df5QFMA
+         jVpWPoHGWMK/MCDuvc9vSfVrNDw5pmieNEzUOVqvAVwekEsWsY39LXQc7xGhBUC7DTbb
+         rD1vAkDSoE2Vl2vnnsSTH2cfXwkWhaNBfcJTCPahLkVlbNaKT0a56EcMwWqYg4SQE9O8
+         et4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713396786; x=1714001586;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GytF7V18qJIXql1WNL67e4Efwso8d/2I3bcLgaa+9g4=;
-        b=gp4kj7MNZzKUuHyKRDYkEJnSJV0rumZlyZVrEJgwev79nmaQUiFrT1hFfy/j6AZbD4
-         K8HgQDNN/pE2K03/ZIYP34yXDhKG062vSp7CCrXFpfkfjrPm0yI+XU/gaSzND9zqrXZ9
-         LNcsXgLh7I1mYWJZArr/5ybizb//zcFYqG6ry4SzVxOenhSwAC+pJqv1RdZ5yBAGnzp9
-         O+YH0p7zM1j5gSl0cx64HMdsuyb3xsbg+eyFYIBPYUqY2mJRjWjIzMkM3JqlDiX2Vv+6
-         K6O5g+xnu11uFhlapjGSaSKPldWHRZsBmKeqs/nNKXBAvybKDexll7KvlOmvDgKb3Yrd
-         O3QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVudRn95dhoyUjfJQ+xULItrVq6nan5up7Xol0/wBJdtWqrSvuA8spIRmbL0at9CLGqd8MJzcq09U/hfFZcDYrHKZ6mHUPrRDjvTO+h
-X-Gm-Message-State: AOJu0YwTgKPZJFOEXhzSJ35Yx2K6FUNVc+iIiUEuKX7nhjLpNmmgQNuF
-	1Zh1VPJM9+2ehQsEJODVzBxfsDSCH5GFhQ49+ObY+D+0OKD2vuLLQBZkO9FkboE=
-X-Google-Smtp-Source: AGHT+IHb+xsUm4VWJnMlwMtid9HXu7fUVpDqeCABMYuWcpnukoEv8gokW3GsekdP+AHyE8ovJem9iw==
-X-Received: by 2002:a19:914c:0:b0:519:5fb9:832b with SMTP id y12-20020a19914c000000b005195fb9832bmr122358lfj.12.1713396786144;
-        Wed, 17 Apr 2024 16:33:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id e4-20020ac25464000000b00515d1c97053sm33367lfn.223.2024.04.17.16.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 16:33:05 -0700 (PDT)
-Date: Thu, 18 Apr 2024 02:33:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Archit Taneja <architt@codeaurora.org>, 
-	Chandan Uddaraju <chandanu@codeaurora.org>, Vinod Koul <vkoul@kernel.org>, 
-	Sravanthi Kollukuduru <skolluku@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Jordan Crouse <jordan@cosmicpenguin.net>, Rajesh Yadav <ryadav@codeaurora.org>, 
-	Jeykumar Sankaran <jsanka@codeaurora.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Martin Botka <martin.botka@somainline.org>, Jami Kettunen <jami.kettunen@somainline.org>
-Subject: Re: [PATCH 7/7] drm/msm/dpu: Rename `ctx` parameter to `intf` to
- match other functions
-Message-ID: <er2p6zazlvc2okzbbqjkzy4mif3ukjes56nfow6kwybmkjxvtr@4ihyqymqzvit>
-References: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org>
- <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-7-78ae3ee9a697@somainline.org>
+        d=1e100.net; s=20230601; t=1713396953; x=1714001753;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NirJD3ZZcaTlw8nUlwu/ibV9B8oPJQME/V178SLfQT8=;
+        b=DF5JtlKIrANvmYd12B+NLYh2i6ywy6PcrdTqir0WR4iNGg0PQqLvuEXLVAtd+t/fYS
+         tE+wZJoSZ7lRMlI6g7R00osue6SrYGHSSohJEhPu54TScvh35bvwP56XhghJDiTW1kB6
+         4eePdgsHOwNgbv24+9y3syddH+F3ImZCvIa43/yU8kt5J10wnQHu1vy287wlzuQN5yRX
+         THUdGyTv9fGcoYwaJRxTrTAcIDvTcSINTOXK7yOvcxRyyAzOnkJ7DAk6rpjgqRjwBwT2
+         5E5ecy1X5WupCcF2vjaiITawuANNsI/GlwX1Flrg7PrBg/MMa2beeBGGspTOoL74otRu
+         rJcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWi5Oa/9k+vRQvIm0m72I88O1yiBBm/kx0duMheJldd5PvLmuvZ3i2D8vv1JYddFHXM5zWu4bAQ/9w4K9LaN57LAkg3j/3H2B3wY7Pe
+X-Gm-Message-State: AOJu0Yybbq+zG+soZjyWSxYd8rsfNLsCy9I2STkhfkcpi9RNwbYv//jK
+	AW68qtnPh82Wu78Wlqm//N2VcsiVfS5PzwO+L/iCe81DXtHZumZJBKbP7LKEBHNIONFU1nTpdM4
+	ryg==
+X-Google-Smtp-Source: AGHT+IFOEHpwzdozPVxqUnlSfoWlpxvDliZGJf68SoqSvZOKzC5+Fe9J92CrBOtOUeQb0G7mypA5g1jUWGM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:1f83:0:b0:dcc:50ca:e153 with SMTP id
+ f125-20020a251f83000000b00dcc50cae153mr230133ybf.7.1713396953157; Wed, 17 Apr
+ 2024 16:35:53 -0700 (PDT)
+Date: Wed, 17 Apr 2024 16:35:51 -0700
+In-Reply-To: <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-7-78ae3ee9a697@somainline.org>
+Mime-Version: 1.0
+References: <20240322212321.GA1994522@ls.amr.corp.intel.com>
+ <461b78c38ffb3e59229caa806b6ed22e2c847b77.camel@intel.com>
+ <ZhawUG0BduPVvVhN@google.com> <8afbb648-b105-4e04-bf90-0572f589f58c@intel.com>
+ <Zhftbqo-0lW-uGGg@google.com> <6cd2a9ce-f46a-44d0-9f76-8e493b940dc4@intel.com>
+ <Zh7KrSwJXu-odQpN@google.com> <900fc6f75b3704780ac16c90ace23b2f465bb689.camel@intel.com>
+ <Zh_exbWc90khzmYm@google.com> <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
+Message-ID: <ZiBc13qU6P3OBn7w@google.com>
+Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
+ loading the KVM intel kernel module
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Apr 17, 2024 at 01:57:47AM +0200, Marijn Suijten wrote:
-> All other functions in dpu_hw_intf name the "self" parameter `intf`,
-> except dpu_hw_intf_setup_timing_engine() and the recently added
-> dpu_hw_intf_program_intf_cmd_cfg().  Clean that up for consistency.
-
-I really have mixed feelings towards such patches. On one hand it
-improves readability, on the other hand, it's just a name, it has no
-specific value.
-
-Still:
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-
+On Thu, Apr 18, 2024, Kai Huang wrote:
+> On 18/04/2024 2:40 am, Sean Christopherson wrote:
+> > This way, architectures that aren't saddled with out-of-tree hypervisors can do
+> > the dead simple thing of enabling hardware during their initialization sequence,
+> > and the TDX code is much more sane, e.g. invoke kvm_x86_enable_virtualization()
+> > during late_hardware_setup(), and kvm_x86_disable_virtualization() during module
+> > exit (presumably).
 > 
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> Fine to me, given I am not familiar with other ARCHs, assuming always enable
+> virtualization when KVM present is fine to them. :-)
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> index 965692ef7892..34d0c4e04d27 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-> @@ -96,11 +96,11 @@
->  #define INTF_CFG2_DCE_DATA_COMPRESS     BIT(12)
->  
->  
-> -static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
-> +static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *intf,
->  		const struct dpu_hw_intf_timing_params *p,
->  		const struct dpu_format *fmt)
->  {
-> -	struct dpu_hw_blk_reg_map *c = &ctx->hw;
-> +	struct dpu_hw_blk_reg_map *c = &intf->hw;
->  	u32 hsync_period, vsync_period;
->  	u32 display_v_start, display_v_end;
->  	u32 hsync_start_x, hsync_end_x;
-> @@ -118,7 +118,7 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
->  	/* read interface_cfg */
->  	intf_cfg = DPU_REG_READ(c, INTF_CONFIG);
->  
-> -	if (ctx->cap->type == INTF_DP)
-> +	if (intf->cap->type == INTF_DP)
->  		dp_intf = true;
->  
->  	hsync_period = p->hsync_pulse_width + p->h_back_porch + p->width +
-> @@ -223,7 +223,7 @@ static void dpu_hw_intf_setup_timing_engine(struct dpu_hw_intf *ctx,
->  	DPU_REG_WRITE(c, INTF_FRAME_LINE_COUNT_EN, 0x3);
->  	DPU_REG_WRITE(c, INTF_CONFIG, intf_cfg);
->  	DPU_REG_WRITE(c, INTF_PANEL_FORMAT, panel_format);
-> -	if (ctx->cap->features & BIT(DPU_DATA_HCTL_EN)) {
-> +	if (intf->cap->features & BIT(DPU_DATA_HCTL_EN)) {
->  		/*
->  		 * DATA_HCTL_EN controls data timing which can be different from
->  		 * video timing. It is recommended to enable it for all cases, except
-> @@ -518,10 +518,10 @@ static void dpu_hw_intf_disable_autorefresh(struct dpu_hw_intf *intf,
->  
->  }
->  
-> -static void dpu_hw_intf_program_intf_cmd_cfg(struct dpu_hw_intf *ctx,
-> +static void dpu_hw_intf_program_intf_cmd_cfg(struct dpu_hw_intf *intf,
->  					     struct dpu_hw_intf_cmd_mode_cfg *cmd_mode_cfg)
->  {
-> -	u32 intf_cfg2 = DPU_REG_READ(&ctx->hw, INTF_CONFIG2);
-> +	u32 intf_cfg2 = DPU_REG_READ(&intf->hw, INTF_CONFIG2);
->  
->  	if (cmd_mode_cfg->data_compress)
->  		intf_cfg2 |= INTF_CFG2_DCE_DATA_COMPRESS;
-> @@ -529,7 +529,7 @@ static void dpu_hw_intf_program_intf_cmd_cfg(struct dpu_hw_intf *ctx,
->  	if (cmd_mode_cfg->wide_bus_en)
->  		intf_cfg2 |= INTF_CFG2_DATABUS_WIDEN;
->  
-> -	DPU_REG_WRITE(&ctx->hw, INTF_CONFIG2, intf_cfg2);
-> +	DPU_REG_WRITE(&intf->hw, INTF_CONFIG2, intf_cfg2);
->  }
->  
->  struct dpu_hw_intf *dpu_hw_intf_init(struct drm_device *dev,
+> Two questions below:
 > 
-> -- 
-> 2.44.0
+> > +int kvm_x86_enable_virtualization(void)
+> > +{
+> > +	int r;
+> > +
+> > +	guard(mutex)(&vendor_module_lock);
 > 
+> It's a little bit odd to take the vendor_module_lock mutex.
+> 
+> It is called by kvm_arch_init_vm(), so more reasonablly we should still use
+> kvm_lock?
 
--- 
-With best wishes
-Dmitry
+I think this should take an x86-specific lock, since it's guarding x86-specific
+data.  And vendor_module_lock fits the bill perfectly.  Well, except for the
+name, and I definitely have no objection to renaming it.
+
+> Also, if we invoke kvm_x86_enable_virtualization() from
+> kvm_x86_ops->late_hardware_setup(), then IIUC we will deadlock here because
+> kvm_x86_vendor_init() already takes the vendor_module_lock?
+
+Ah, yeah.  Oh, duh.  I think the reason I didn't initially suggest late_hardware_setup()
+is that I was assuming/hoping TDX setup could be done after kvm_x86_vendor_exit().
+E.g. in vt_init() or whatever it gets called:
+
+	r = kvm_x86_vendor_exit(...);
+	if (r)
+		return r;
+
+	if (enable_tdx) {
+		r = tdx_blah_blah_blah();
+		if (r)
+			goto vendor_exit;
+	}
+
+> > +	if (kvm_usage_count++)
+> > +		return 0;
+> > +
+> > +	r = kvm_enable_virtualization();
+> > +	if (r)
+> > +		--kvm_usage_count;
+> > +
+> > +	return r;
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_x86_enable_virtualization);
+> > +
+> 
+> [...]
+> 
+> > +int kvm_enable_virtualization(void)
+> >   {
+> > +	int r;
+> > +
+> > +	r = cpuhp_setup_state(CPUHP_AP_KVM_ONLINE, "kvm/cpu:online",
+> > +			      kvm_online_cpu, kvm_offline_cpu);
+> > +	if (r)
+> > +		return r;
+> > +
+> > +	register_syscore_ops(&kvm_syscore_ops);
+> > +
+> > +	/*
+> > +	 * Manually undo virtualization enabling if the system is going down.
+> > +	 * If userspace initiated a forced reboot, e.g. reboot -f, then it's
+> > +	 * possible for an in-flight module load to enable virtualization
+> > +	 * after syscore_shutdown() is called, i.e. without kvm_shutdown()
+> > +	 * being invoked.  Note, this relies on system_state being set _before_
+> > +	 * kvm_shutdown(), e.g. to ensure either kvm_shutdown() is invoked
+> > +	 * or this CPU observes the impedning shutdown.  Which is why KVM uses
+> > +	 * a syscore ops hook instead of registering a dedicated reboot
+> > +	 * notifier (the latter runs before system_state is updated).
+> > +	 */
+> > +	if (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF ||
+> > +	    system_state == SYSTEM_RESTART) {
+> > +		unregister_syscore_ops(&kvm_syscore_ops);
+> > +		cpuhp_remove_state(CPUHP_AP_KVM_ONLINE);
+> > +		return -EBUSY;
+> > +	}
+> > +
+> 
+> Aren't we also supposed to do:
+> 
+> 	on_each_cpu(__kvm_enable_virtualization, NULL, 1);
+> 
+> here?
+
+No, cpuhp_setup_state() invokes the callback, kvm_online_cpu(), on each CPU.
+I.e. KVM has been doing things the hard way by using cpuhp_setup_state_nocalls().
+That's part of the complexity I would like to get rid of.
