@@ -1,208 +1,235 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E2A7D08D;
-	Wed, 17 Apr 2024 08:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92357F483;
+	Wed, 17 Apr 2024 08:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341603; cv=none; b=bVeYO+mjvUOBW/fdNfLu6TWZjHpxETvHBQj7uePC6DfgHJPmfltv1QeV/8ucDOytEwEE3ImxlREgvEoThA8+MlikORU6RZru9jf0GDCIynuEHWwhyJwgvasV9oLiSaDXtuF19mp9DVa+tQf3ssAox7QlTcJlUjajCkwHiYLWcJo=
+	t=1713341608; cv=none; b=K7r/BsixFDO5rs3Z1khJqwwd3IcwDenI3YJDezxRtcBYexfmcv366H0bEe56ZEKbypwJ+kX3OvcHgVUDH6I3PVjZZYclPxOZQZDBOCPXIbfBQ/p1OPVAJpF9HnXkTKxMmKMi3oQi4QN51VonUoG37SaPi9eYn0XgphJhq8FYPMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341603; c=relaxed/simple;
-	bh=i+9ibrN7xQYF7jszyyKajXwvT9v6vT1EHAkllbhGHok=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ABqeKWIXW3or6FDM5KLWRgxvNWMuoIOKH3AjIaLe1pN37fnJw4McWLPQ/tQZWWHvQQV0Wumfe5hIgHKXVpVh8QVAB0LkpxUiPV+3L96ByV55B/mAMiBXcA5ZIU5bQSqWuInl1DF2yqhI11HePSSBn5KuHkcItVh0Czrhx7H60Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=U9cQ+UQ3; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1713341608; c=relaxed/simple;
+	bh=aeQsoJiA5Zhl5sE46uiqvd0MCMMuDd5EP5m4v77YYUM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uPDyXHTfwiyAqnfDsGzrbGzelsovBalFvK7vFQsueFiqLVTo4nD4aHR6X1zdCPa/VefU5UtYAySVLjDp4WF7+XNXp6CmSp7PAp22rgOqIyWNcymtaJtX90Tca2/ARb1f3P7jGnX+YFRMc233fDxOOmb0R8/Lvc/cSfvR10LqxVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b=EGBC7aY4; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.es
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="U9cQ+UQ3"
-Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 22A4688414;
-	Wed, 17 Apr 2024 10:13:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1713341599;
-	bh=EBRwVJBVGCvWEFjCFr9Su6sxchjpnOMHNir9g/hPkxg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U9cQ+UQ34JjNLbJ5fP0O4qG7KxmT2+b6pRK7XyzsmfczUbKLPGiJvxofs6tVMCPek
-	 TQArD17gTgQ7yFkXGeigRXN+RBT+BdF5gxxCZdgcgjLPKOm6PIirn6lgVNzzH+Rgme
-	 P1Mw9Fimp9c5MPYdTCyuCLlYzVesUHwqzRxa4IenJc5UAZvgURRmhhvdblhTNBvaT9
-	 M2GcDvJR2q0RMl9tRG2vnpIZcKjEWxRDTYep8z2tldqBX1bFdSobsPZmOGCoV/Mx+8
-	 Jdv25h9lz+9kHsj/HMUTWA9SPPQu2bCF9Ud9yLP4PSQv83KLjOdnb+2jipktfK74xx
-	 /DrHTClWDHZVw==
-Date: Wed, 17 Apr 2024 10:13:11 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Casper Andersson <casper.casan@gmail.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
- <edumazet@google.com>, Vladimir Oltean <olteanv@gmail.com>, "David S.
- Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Oleksij
- Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>, Paolo Abeni <pabeni@redhat.com>,
- Ravi Gunasekaran <r-gunasekaran@ti.com>, Simon Horman <horms@kernel.org>,
- Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Murali Karicheri
- <m-karicheri2@ti.com>, Jiri Pirko <jiri@resnulli.us>, Dan Carpenter
- <dan.carpenter@linaro.org>, Ziyang Xuan <william.xuanziyang@huawei.com>,
- Shigeru Yoshida <syoshida@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] net: hsr: Provide RedBox support (HSR-SAN)
-Message-ID: <20240417101311.72228af0@wsk>
-In-Reply-To: <86v84yfhn9.fsf@gmail.com>
-References: <20240402085850.229058-1-lukma@denx.de>
-	<86v84yfhn9.fsf@gmail.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amazon.es header.i=@amazon.es header.b="EGBC7aY4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.es; i=@amazon.es; q=dns/txt; s=amazon201209;
+  t=1713341608; x=1744877608;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Is0SqiPdgnSdKxAQ4CAcD1EdGItBNL2qVHfHGxen8hA=;
+  b=EGBC7aY43D0n2GW1/jtDYLHyPryFl2vnVowuRZbySgYgBAPwUJ+UyEnx
+   HtSDZ+4fkf+htkA/nJ6s4uR2QbGHV0rUz04igBuGMKukjTWm4t29z3ij8
+   Sm8tN9x+sQYVf3ZqJGiI2Z1SfhA1iVpTaP8pFyEwz6oyVSr30/MUgs4Va
+   w=;
+X-IronPort-AV: E=Sophos;i="6.07,208,1708387200"; 
+   d="scan'208";a="390310006"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 08:13:24 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.10.100:7038]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.40.183:2525] with esmtp (Farcaster)
+ id e5e6d236-ee61-447e-9e25-fffe8bdfcd1f; Wed, 17 Apr 2024 08:13:22 +0000 (UTC)
+X-Farcaster-Flow-ID: e5e6d236-ee61-447e-9e25-fffe8bdfcd1f
+Received: from EX19D037EUB003.ant.amazon.com (10.252.61.119) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 17 Apr 2024 08:13:22 +0000
+Received: from f4d4887fdcfb.ant.amazon.com (10.1.212.48) by
+ EX19D037EUB003.ant.amazon.com (10.252.61.119) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 17 Apr 2024 08:13:17 +0000
+From: Babis Chalios <bchalios@amazon.es>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <olivia@selenic.com>,
+	<herbert@gondor.apana.org.au>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <sudanl@amazon.com>, <bchalios@amazon.es>, <graf@amazon.de>,
+	<xmarcalx@amazon.co.uk>, <dwmw@amazon.co.uk>
+Subject: [PATCH v5 2/5] virt: vmgenid: change implementation to use a platform driver
+Date: Wed, 17 Apr 2024 10:12:09 +0200
+Message-ID: <20240417081212.99657-3-bchalios@amazon.es>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <20240417081212.99657-1-bchalios@amazon.es>
+References: <20240417081212.99657-1-bchalios@amazon.es>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ehB5eGyndMJSU/tCS.JccLQ";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWA003.ant.amazon.com (10.13.139.18) To
+ EX19D037EUB003.ant.amazon.com (10.252.61.119)
 
---Sig_/ehB5eGyndMJSU/tCS.JccLQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Sudan Landge <sudanl@amazon.com>
 
-Hi Casper,
+Re-implement vmgenid as a platform driver in preparation
+for adding devicetree bindings support in next commits.
 
-> Hi,
->=20
-> Out of curiosity, are you planning to implement the remaining RedBox
-> modes too (PRP-SAN, HSR-HSR, HSR-PRP)?
->=20
+Signed-off-by: Sudan Landge <sudanl@amazon.com>
+---
+ drivers/virt/vmgenid.c | 97 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 67 insertions(+), 30 deletions(-)
 
-Currently I'm assigned to implement HSR-SAN.
+diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+index a167ccfad299..c028e2064fdd 100644
+--- a/drivers/virt/vmgenid.c
++++ b/drivers/virt/vmgenid.c
+@@ -7,9 +7,10 @@
+  * information to random.c.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/acpi.h>
++#include <linux/platform_device.h>
+ #include <linux/random.h>
+ 
+ ACPI_MODULE_NAME("vmgenid");
+@@ -21,9 +22,9 @@ struct vmgenid_state {
+ 	u8 this_id[VMGENID_SIZE];
+ };
+ 
+-static void vmgenid_notify(struct acpi_device *device, u32 event)
++static void vmgenid_notify(struct device *device)
+ {
+-	struct vmgenid_state *state = acpi_driver_data(device);
++	struct vmgenid_state *state = device->driver_data;
+ 	char *envp[] = { "NEW_VMGENID=1", NULL };
+ 	u8 old_id[VMGENID_SIZE];
+ 
+@@ -32,21 +33,36 @@ static void vmgenid_notify(struct acpi_device *device, u32 event)
+ 	if (!memcmp(old_id, state->this_id, sizeof(old_id)))
+ 		return;
+ 	add_vmfork_randomness(state->this_id, sizeof(state->this_id));
+-	kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
++	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
++}
++
++static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
++				 u32 __always_unused event, void *dev)
++{
++	vmgenid_notify(dev);
++}
++
++static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
++{
++	if (IS_ERR(next_id))
++		return PTR_ERR(next_id);
++
++	state->next_id = next_id;
++	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
++	add_device_randomness(state->this_id, sizeof(state->this_id));
++	return 0;
+ }
+ 
+-static int vmgenid_add(struct acpi_device *device)
++static int vmgenid_add_acpi(struct device *dev,
++			    struct vmgenid_state *state)
+ {
++	struct acpi_device *device = ACPI_COMPANION(dev);
+ 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
+-	struct vmgenid_state *state;
+ 	union acpi_object *obj;
+ 	phys_addr_t phys_addr;
+ 	acpi_status status;
+ 	int ret = 0;
+-
+-	state = devm_kmalloc(&device->dev, sizeof(*state), GFP_KERNEL);
+-	if (!state)
+-		return -ENOMEM;
++	u8 *virt_addr;
+ 
+ 	status = acpi_evaluate_object(device->handle, "ADDR", NULL, &parsed);
+ 	if (ACPI_FAILURE(status)) {
+@@ -63,40 +79,61 @@ static int vmgenid_add(struct acpi_device *device)
+ 
+ 	phys_addr = (obj->package.elements[0].integer.value << 0) |
+ 		    (obj->package.elements[1].integer.value << 32);
+-	state->next_id = devm_memremap(&device->dev, phys_addr, VMGENID_SIZE, MEMREMAP_WB);
+-	if (IS_ERR(state->next_id)) {
+-		ret = PTR_ERR(state->next_id);
++
++	virt_addr = (u8 *)devm_memremap(&device->dev, phys_addr,
++					VMGENID_SIZE, MEMREMAP_WB);
++	ret = setup_vmgenid_state(state, virt_addr);
++	if (ret)
++		goto out;
++
++	dev->driver_data = state;
++	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
++					     vmgenid_acpi_handler, dev);
++	if (ACPI_FAILURE(status)) {
++		dev_err(dev, "Failed to install acpi notify handler");
++		ret = -ENODEV;
++		dev->driver_data = NULL;
+ 		goto out;
+ 	}
++out:
++	ACPI_FREE(parsed.pointer);
++	return ret;
++}
+ 
+-	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
+-	add_device_randomness(state->this_id, sizeof(state->this_id));
++static int vmgenid_add(struct platform_device *pdev)
++{
++	struct vmgenid_state *state;
++	struct device *dev = &pdev->dev;
++	int ret = 0;
+ 
+-	device->driver_data = state;
++	state = devm_kmalloc(dev, sizeof(*state), GFP_KERNEL);
++	if (!state)
++		return -ENOMEM;
++
++	ret = vmgenid_add_acpi(dev, state);
++
++	if (ret)
++		devm_kfree(dev, state);
+ 
+-out:
+-	ACPI_FREE(parsed.pointer);
+ 	return ret;
+ }
+ 
+-static const struct acpi_device_id vmgenid_ids[] = {
++static const struct acpi_device_id vmgenid_acpi_ids[] = {
+ 	{ "VMGENCTR", 0 },
+ 	{ "VM_GEN_COUNTER", 0 },
+ 	{ }
+ };
+-MODULE_DEVICE_TABLE(acpi, vmgenid_ids);
+-
+-static struct acpi_driver vmgenid_driver = {
+-	.name = "vmgenid",
+-	.ids = vmgenid_ids,
+-	.owner = THIS_MODULE,
+-	.ops = {
+-		.add = vmgenid_add,
+-		.notify = vmgenid_notify
+-	}
++MODULE_DEVICE_TABLE(acpi, vmgenid_acpi_ids);
++
++static struct platform_driver vmgenid_plaform_driver = {
++	.probe      = vmgenid_add,
++	.driver     = {
++		.name   = "vmgenid",
++		.acpi_match_table = vmgenid_acpi_ids,
++	},
+ };
+ 
+-module_acpi_driver(vmgenid_driver);
++module_platform_driver(vmgenid_plaform_driver)
+ 
+ MODULE_DESCRIPTION("Virtual Machine Generation ID");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.40.1
 
-> On 2024-04-02 10:58 +0200, Lukasz Majewski wrote:
-> > Changes for v3:
-> >
-> > - Modify frame passed Port C (Interlink) to have RedBox's source
-> > address (SA) This fixes issue with connecting L2 switch to
-> > Interlink Port as switches drop frames with SA other than one
-> > registered in their (internal) routing tables. =20
->=20
-> > +	/* When HSR node is used as RedBox - the frame received
-> > from HSR ring
-> > +	 * requires source MAC address (SA) replacement to one
-> > which can be
-> > +	 * recognized by SAN devices (otherwise, frames are
-> > dropped by switch)
-> > +	 */
-> > +	if (port->type =3D=3D HSR_PT_INTERLINK)
-> > +		ether_addr_copy(eth_hdr(skb)->h_source,
-> > +				port->hsr->macaddress_redbox); =20
->=20
-> I'm not really understanding the reason for this change. Can you
-> explain it in more detail?
-
-According to the HSR standard [1] the RedBox device shall work as a
-"proxy" [*] between HSR network and SAN (i.e. "normal" ethernet)
-devices.
-
-This particular snippet handles the situation when frame from HSR node
-is supposed to be sent to SAN network. In that case the SA of HSR
-(SA_A) is replaced with SA of RedBox (SA_RB) as the MAC address of
-RedBox is known and used by SAN devices.
-
-
-Node A  hsr1  |=3D=3D=3D=3D=3D=3D| hsr1 Node Redbox |   |
-(SA_A) [**]   |	     |           eth3   |---| ethX SAN
-	      |      |        	 (SA_RB)|   |  (e.g switch)
-
-
-(the =3D=3D=3D=3D=3D=3D represents duplicate link - like lan1,lan2)
-
-If the SA_A would be passed to SAN (e.g. switch) the switch could get
-confused as also RedBox MAC address would be used. Hence, all the
-frames going out from "Node Redbox" have SA set to SA_RB.
-
-According to [1] - RedBox shall have the MAC address.
-This is similar to problem from [2].
-
-> The standard does not say to modify the
-> SA. However, it also does not say to *not* modify it in HSR-SAN mode
-> like it does in other places. In HSR-HSR and HSR-PRP mode modifying
-> SA breaks the duplicate discard.
-
-IMHO, the HSR-SAN shall be regarded as a "proxy" [*] between two types
-(and not fully compatible) networks.
-
-> So keeping the same behavior for all
-> modes would be ideal.
->=20
-> I imagine any HW offloaded solutions will not modify the SA, so if
-> possible the SW should also behave as such.
-
-The HW offloading in most cases works with HSR-HSR setup (i.e. it
-duplicates frames automatically or discards them when recived - like
-ksz9477).
-
-I think that RedBox HW offloading would be difficult to achieve to
-comply with standard. One "rough" idea would be to configure
-aforementioned ksz9477 to pass all frames in its HW between.
-
-
-
->=20
-> BR,
-> Casper
-
-Notes:
-
-[*] - However there is no specific "guidelines" on how the "proxy"
-shall be implemented.
-
-[**] - With current approach - the SAN MAC addresses are added to
-"node table" of Node A. For Node RedBox those are stored in a separate
-ProxyNodeTable. I'm not sure if this is the best possible approach
-[***], as ideally only MAC addresses of HSR "network" nodes shall be
-visible.
-
-[***] - I think that this "improvement" could be addressed when HSR
-support is added to Linux as it is the pre-requisite to add support for
-it to iproute2. Afterwards, the code can be further refined (as it
-would be added to net-next anyway).
-
-[****] - As I'm now "on the topic" - I can share full setup for busybox to =
-run
-tests included to v5 of this patch set.
-
-
-Links:
-
-[1] - IEC 62439-3:2021
-
-[2] -
-https://elixir.bootlin.com/linux/latest/source/net/hsr/hsr_framereg.c#L397
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/ehB5eGyndMJSU/tCS.JccLQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmYfhJcACgkQAR8vZIA0
-zr2n0Af/YMTGB4xu7QXPD1weAXmR0tgdhdYYtwdh3U5rz9H5k5RLkwtFDyX63elc
-0Bb2JGLzYpdJHt9c5OhQ6jxyLdJUOE4WfdJ237OMd3tUKQqU0oOPM2yK6h6N1r7g
-2dgauxn1DuFI1UV2zHHH/n8H3Xb+efsK2vaOTtxWUsCwoXjnmcU0yo8qMtu/UXC1
-aug03+4EBfqKkgdbTmcH8TlRt7uOHkd4ehdgU1w0LuGChj+Zl/YkM3SPsnQt1vL8
-bAy/aIgMhIKWCOBsdXizz4be32uFVhjvizYfwlgcXr04P/O5H3F+MVTU3TpimVMA
-LbdDk7JDSp4++jJS5eEdR/Dju6c/Cg==
-=YZMw
------END PGP SIGNATURE-----
-
---Sig_/ehB5eGyndMJSU/tCS.JccLQ--
