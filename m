@@ -1,116 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68972D60C;
-	Wed, 17 Apr 2024 13:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2167313D61A;
+	Wed, 17 Apr 2024 13:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359859; cv=none; b=ZHyFH/xkHy0244vGSmpIEp6dQaeEkPb1D6MUebqZAPsC3VdztDHdW8HQ2abNz5jLBsHpmFzXPimwMuuCw6ssV0KtGqCtjX+tG6A/w6dPA+2i3XH54wJhG67ULGU6n+eGe51ooHJBn33gc2SLVbnoy9bDaf4HDHE15uzpnkilAOE=
+	t=1713359862; cv=none; b=C7YIZK7FbP8INoyxj07crdjZEL3yv4/nefC3Yc5PxknVv/CFsBP4gONh586tQh2XweN1OPojaVtIdmO0xPbkSogwrSyyFTcSf0fgWCaK+LWjqXFqdyd4QydVn/hftNFwY1po2/VvLSpW07FMWgo2YLEQyfpminHFQWmVnXnchmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359859; c=relaxed/simple;
-	bh=VUjBNNV86MlEhK9OC6B2C1JbNAc/QnHg1wQm4gM7K78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m/JkVfK7KJYtYj6MpD2rCYAnF2XlWBMD50Wzk8bTMNoXLXuIg/lmXMP3V7RFUf0Q+rciekk8Uc5hGzts651oBu2auMFvpunfiveXwu5dyBPFiJO/ffpmx2WRZd5TESTPGxZ3Y2N1yeHQB56Otcbogdgd2lwJJSvczanFCpVd7Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmrKxFmJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmrKxFmJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24575C072AA;
-	Wed, 17 Apr 2024 13:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713359859;
-	bh=VUjBNNV86MlEhK9OC6B2C1JbNAc/QnHg1wQm4gM7K78=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gmrKxFmJfFp0WvZZ6ZOS9ZVzXuK4XxGXZZGG2IlcwlZK4W9LvEzfTkKfUFEtha5kn
-	 0bAoNVN7Gp/qu4tykoj3vPHAB4QB8HCO7NUBQfllPZzwVv1LfsN1QacwoQfO3+BjNN
-	 12Zi9eLQvFTJN/C5m2kvyKzhMJWyrzSQZWfVJ/GYDjlb8cb51JU8YPfisMAfJjqLBA
-	 ixCzsaGyM16KJw7Wr1oFgRxGu3QU7GN7QckOhMFFmQDbkGGGyBE+zmVdUyW0K84o4K
-	 2qK4Yyxyqsu7bgQGnRR82/PZXyoQPFCyxTyZIzWhvx6mVAF5R7uHEdm8NZEzFRidm9
-	 g5J/Oj4owdwdg==
-Message-ID: <3efcea18-5c5d-4ed5-8679-e8c26f585151@kernel.org>
-Date: Wed, 17 Apr 2024 15:17:38 +0200
+	s=arc-20240116; t=1713359862; c=relaxed/simple;
+	bh=kPctOQN1NiPsgd5sYtuk+rAAWuCKGGFlQdAqcvgczng=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=k2GXkrGM1N8Pvrw1YOdh4hblqQDFAGwtUn1+7V8EvQmuvmGgFd1QLIMfk/VPyg3I7r2EmsLBLdApwGD9FFuUhdqbfP2JjZ7AsrB8DT+f/l5h7i16TbnnkGRNXrt+SLyw6KMZJrfdPudqtzUnbPL+uS3jykmBFJdiMyLcAZwv8rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VKLwM3VBVzwSdy;
+	Wed, 17 Apr 2024 21:14:27 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id B29401800C3;
+	Wed, 17 Apr 2024 21:17:30 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 21:17:30 +0800
+Subject: Re: [PATCH net-next v2 05/15] mm: page_frag: use initial zero offset
+ for page_frag_alloc_align()
+To: Alexander H Duyck <alexander.duyck@gmail.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>
+References: <20240415131941.51153-1-linyunsheng@huawei.com>
+ <20240415131941.51153-6-linyunsheng@huawei.com>
+ <b03bca93fba5a1c1a1bef3db89df11fbc755670b.camel@gmail.com>
+ <6a78b9ad-0d20-a495-52ca-fac180408658@huawei.com>
+ <712b14031ca37a12c1871d1745794b1f0be0498f.camel@gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <3da33d4c-a70e-23a4-8e00-23fe96dd0c1a@huawei.com>
+Date: Wed, 17 Apr 2024 21:17:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] virt: vmgenid: add support for devicetree bindings
-To: Babis Chalios <bchalios@amazon.es>, tytso@mit.edu, Jason@zx2c4.com,
- olivia@selenic.com, herbert@gondor.apana.org.au, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, linux-crypto@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: sudanl@amazon.com, graf@amazon.de, xmarcalx@amazon.co.uk,
- dwmw@amazon.co.uk
-References: <20240417081212.99657-1-bchalios@amazon.es>
- <20240417081212.99657-6-bchalios@amazon.es>
+In-Reply-To: <712b14031ca37a12c1871d1745794b1f0be0498f.camel@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240417081212.99657-6-bchalios@amazon.es>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-On 17/04/2024 10:12, Babis Chalios wrote:
-> From: Sudan Landge <sudanl@amazon.com>
+On 2024/4/16 23:51, Alexander H Duyck wrote:
+> On Tue, 2024-04-16 at 21:11 +0800, Yunsheng Lin wrote:
+>> On 2024/4/16 7:55, Alexander H Duyck wrote:
+>>> On Mon, 2024-04-15 at 21:19 +0800, Yunsheng Lin wrote:
+>>>> We are above to use page_frag_alloc_*() API to not just
+>>>> allocate memory for skb->data, but also use them to do
+>>>> the memory allocation for skb frag too. Currently the
+>>>> implementation of page_frag in mm subsystem is running
+>>>> the offset as a countdown rather than count-up value,
+>>>> there may have several advantages to that as mentioned
+>>>> in [1], but it may have some disadvantages, for example,
+>>>> it may disable skb frag coaleasing and more correct cache
+>>>> prefetching
+>>>>
+>>>> We have a trade-off to make in order to have a unified
+>>>> implementation and API for page_frag, so use a initial zero
+>>>> offset in this patch, and the following patch will try to
+>>>> make some optimization to aovid the disadvantages as much
+>>>> as possible.
+>>>>
+>>>> 1. https://lore.kernel.org/all/f4abe71b3439b39d17a6fb2d410180f367cadf5c.camel@gmail.com/
+>>>>
+>>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
+>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>> ---
+>>>>  mm/page_frag_cache.c | 31 ++++++++++++++-----------------
+>>>>  1 file changed, 14 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+>>>> index 64993b5d1243..dc864ee09536 100644
+>>>> --- a/mm/page_frag_cache.c
+>>>> +++ b/mm/page_frag_cache.c
+>>>> @@ -65,9 +65,8 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>>>  			      unsigned int fragsz, gfp_t gfp_mask,
+>>>>  			      unsigned int align_mask)
+>>>>  {
+>>>> -	unsigned int size = PAGE_SIZE;
+>>>> +	unsigned int size, offset;
+>>>>  	struct page *page;
+>>>> -	int offset;
+>>>>  
+>>>>  	if (unlikely(!nc->va)) {
+>>>>  refill:
+>>>> @@ -75,10 +74,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>>>  		if (!page)
+>>>>  			return NULL;
+>>>>  
+>>>> -#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>>> -		/* if size can vary use size else just use PAGE_SIZE */
+>>>> -		size = nc->size;
+>>>> -#endif
+>>>>  		/* Even if we own the page, we do not use atomic_set().
+>>>>  		 * This would break get_page_unless_zero() users.
+>>>>  		 */
+>>>> @@ -87,11 +82,18 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+>>>>  		/* reset page count bias and offset to start of new frag */
+>>>>  		nc->pfmemalloc = page_is_pfmemalloc(page);
+>>>>  		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+>>>> -		nc->offset = size;
+>>>> +		nc->offset = 0;
+>>>>  	}
+>>>>  
+>>>> -	offset = nc->offset - fragsz;
+>>>> -	if (unlikely(offset < 0)) {
+>>>> +#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+>>>> +	/* if size can vary use size else just use PAGE_SIZE */
+>>>> +	size = nc->size;
+>>>> +#else
+>>>> +	size = PAGE_SIZE;
+>>>> +#endif
+>>>> +
+>>>> +	offset = ALIGN(nc->offset, -align_mask);
+>>>
+>>> I am not sure if using -align_mask here with the ALIGN macro is really
+>>> to your benefit. I would be curious what the compiler is generating.
+>>>
+>>> Again, I think you would be much better off with:
+>>> 	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
+>>>
+>>> That will save you a number of conversions as the use of the ALIGN
+>>> macro gives you:
+>>> 	offset = (nc->offset + (-align_mask - 1)) & ~(-align_mask -
+>>> 1);
+>>>
+>>> whereas what I am suggesting gives you:
+>>> 	offset = (nc->offset + ~align_mask) & ~(~align_mask));
+>>>
+>>> My main concern is that I am not sure the compiler will optimize around
+>>> the combination of bit operations and arithmetic operations. It seems
+>>> much cleaner to me to stick to the bitwise operations for the alignment
+>>> than to force this into the vhost approach which requires a power of 2
+>>> aligned mask.
+>>
+>> My argument about the above is in [1]. But since you seems to not be working
+>> through the next patch yet, I might just do it as you suggested in the next
+>> version so that I don't have to repeat my argument again:(
+>>
+>> 1. https://lore.kernel.org/all/df826acf-8867-7eb6-e7f0-962c106bc28b@huawei.com/
 > 
-> Extend the vmgenid platform driver to support devicetree bindings.
-> With this support, hypervisors can send vmgenid notifications to
-> the virtual machine without the need to enable ACPI.
-> The bindings are located at:
-> Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+> Sorry, I didn't have time to go digging through the mailing list to
+> review all the patches from the last set. I was only Cced on a few of
+
+I thought adding 'CC: Alexander Duyck <alexander.duyck@gmail.com>' in
+the cover letter would enable the git sendmail to send all the patches
+to a specific email, apparently it did not. And I seems to only add that
+in rfc and v1, but forgot to add it in the newest v2 version:(
+
+> them as I recall. As you know I have the fbnic patches I also have been
+> trying to get pushed out so that was my primary focus the last couple
+> weeks.
+
+Understood.
+
 > 
-> Signed-off-by: Sudan Landge <sudanl@amazon.com>
+> That said, this just goes into my earlier complaints. You are now
+> optimizing for the non-aligned paths. There are few callers that are
+> asking for this to provide non-aligned segments. In most cases they are
 
-Missing SoB.
+I suppose that 'optimizing for the non-aligned paths' is referring to
+doing the data alignment in a inline helper for aligned API caller and
+avoid doing the data alignment for non-aligned API caller in the patch 6?
 
-> ---
->  drivers/virt/vmgenid.c | 53 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 51 insertions(+), 2 deletions(-)
+For the existing user, it seems there are more callers for the non-aligned
+API than callers for aligned API:
+
+Referenced in 13 files:
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/napi_alloc_frag
+
+Referenced in 2 files:
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/napi_alloc_frag_align
+
+Referenced in 15 files:
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/netdev_alloc_frag
+
+No references found in the database
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/netdev_alloc_frag_align
+
+Referenced in 6 files:
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/page_frag_alloc
+
+Referenced in 3 files:
+https://elixir.bootlin.com/linux/v6.7-rc8/A/ident/page_frag_alloc_align
+
+And we are adding new users mostly asking for non-aligned segments in
+patch 13.
+
+I would argue that it is not about optimizing for the non-aligned paths,
+it is about avoid doing the data alignment operation for non-aligned API.
+
+> at least cache aligned. Specifically the __netdev_alloc_frag_align and
+> __napi_alloc_frag_align are aligning things at a minimum to
+> SMP_CACHE_BYTES by aligning the fragsz argument using SKB_DATA_ALIGN.
+
+It seems the above is doing the aligning operation for fragsz, most of
+callers are calling __netdev_alloc_frag_align() and __napi_alloc_frag_align()
+with align_mask being ~0u.
+
+> Perhaps it would be better to actually incorporate that alignment
+> guarantee into the calls themselves by doing an &= with the align_mask
+> request for those two functions to make this more transparent.
+
+Did you means doing something like below for fragsz too?
+fragsz = __ALIGN_KERNEL_MASK(fragsz, ~align_mask);
+
 > 
+>>>
+>>> Also the old code was aligning on the combination of offset AND fragsz.
+>>> This new logic is aligning on offset only. Do we run the risk of
+>>> overwriting blocks of neighbouring fragments if two users of
+>>> napi_alloc_frag_align end up passing arguments that have different
+>>> alignment values?
+>>
+>> I am not sure I understand the question here.
+>> As my understanding, both the old code and new code is aligning on
+>> the offset, and both might have space reserved before the offset
+>> due to aligning. The memory returned to the caller is in the range
+>> of [offset, offset + fragsz). Am I missing something obvious here?
+> 
+> My main concern is that by aligning offset - fragsz by the alignment
+> mask we were taking care of all our variables immediately ourselves. If
+> we didn't provide a correct value it was all traceable to one call as
+> the assumption was that fragsz would be a multiple of the alignment
+> value.
+> 
+> With your change the alignment is done in the following call. So now it
+> splits up the alignment of fragsz from the alignment of the offset. As
+> such we will probably need to add additional overhead to guarantee
+> fragsz is a multiple of the alignment.
 
-Best regards,
-Krzysztof
+I am not thinking it through how the above will affect the API caller yet
+if different caller is passing different alignment for the same
+'page_frag_cache' instance, does it cause some cache bouncing or dma
+issue if used for dma?
 
+I am supposing it depends on what alignment semantics are we providing
+here:
+1. Ensure alignment for both offset and fragsz.
+2. Ensure alignment for offset only.
+3. Ensure alignment for fragsz only.
+
+It seems you are in favour of option 1?
+I am supposing it is a balance between performance and API flexibility
+here? If it is possible to enforce the caller to use the same alignment
+for the same 'page_frag_cache' instance, and give a warning if it is
+not using the same alignment? So that we only need to ensure alignment
+for offset or fragsz, but not both of them.
+
+I am not sure if there is a strong use case to support both alignment
+for offset and fragsz, we might create a new API for it if it is a
+strong use case?
