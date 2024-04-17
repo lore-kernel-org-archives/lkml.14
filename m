@@ -1,108 +1,212 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DD513F423;
-	Wed, 17 Apr 2024 13:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB61F13F01A
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 13:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713361086; cv=none; b=kmmI0uJo/eTc91YWEIha9ga6lQjid8mcRxuFOSi4rgRLhsrnRNACkt6oiDy4O1kTuJwfoVyE0RDXl8Le2QKQZX7RFB4bFMBnpprGASuabLz8uKab69Xxr8/y6QtVFpo9RzMuR5J1kNpLaAXZ3vEjZaKEJKZ+Fo6oljwvQZgm2Zo=
+	t=1713361084; cv=none; b=a03AcpgIqVpEjUDOyA+DD8W3DsEdeM55h7YIIrP4bw34yZM3Wo0Jx6nLrsqCTkuk8VBpYqvYG8YCS5H2XjNHXX2K5aV70+msbH4cm7OqMCuf2e10063AN9FxFFEtQhKp0U0p4C7kpvFHVZWmTipr1DsPZ1DYXLhlrDGZAcOSUQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713361086; c=relaxed/simple;
-	bh=lbGG9EHWAA7ZoK4ZLhE6JVQnWYRZ4JZnoG++fcerdC8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pSw2KR3B2kgFNQ4KCVZE3GLGxTHQ5UUkNLdgnYi7ROm1E8QAqpP7fXT0RYiZVcC/9Iofj/7oo4JwQ0A8Un4MQ5AQkl3XjNXYM3BLmfD+Kr7Soa5VAx5qPEy3ft+EpkFQF6/fsNdmYdOWQovso7XgzzY3q96QD1J4hhdAoNqxVdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AizfUCVP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713361084; c=relaxed/simple;
+	bh=SrAwHiw5DS+3uTSjKRZI5h+3ICzAKM4DzCwh7BbwxAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KDJWg2im+PHicId/z6dca37bDAwV+LuR+Bk1ekaBMohwzCZxflwV/yfOQXq1syFJj/CzNZ3UIpicdWU3m8bFHIYs9bMWjasYSDCHsqZ3mrFmZeMw4ACNdNlvQJPuFG7bqj7frD9ruPHE2gmZR6Hh6CqF45zquhYBatYAVxDCNto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouS5hiro; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AizfUCVP"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43H5UFMc001500;
-	Wed, 17 Apr 2024 13:37:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=RV0qy7WIPUfTrUCSHD9ms1u7EkMj1qyRdKfPviaE00o=; b=Ai
-	zfUCVPUlqnzN1dNeGPbkFtlm+1yKHMJgsdKbUpjD7Qr1pI99bnODLUcNyNcvpadW
-	9nK5bSh82dLIOpEBo5b5UZyuUg6Yph0AhcmJLdo7ZyPp61YjT+Tgna3lI06c7xOY
-	kTlwe+TTmOAWwb3M9Q2vn37D9/Eu3Tu9kMNPB977FeV+mhgDQPj0TsY7OgGC8g3S
-	5QUyGkRRyz5GnzKoZDpY3DtR0MHK4Sq5MiWO8WUINPkVXBDOWv6y0LD8f2blDW1B
-	ivyOuqpbuXVCgnbsNusuC6SHEiTBJf1hVZLvfEFUZp/+1/IOkgu2B1DvsvQIbzz+
-	41uegHJy1ZZDiUYn3Twg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xj8aus328-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 13:37:48 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43HDbl6B022506
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Apr 2024 13:37:47 GMT
-Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 17 Apr 2024 06:37:46 -0700
-From: Georgi Djakov <quic_c_gdjako@quicinc.com>
-To: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
-        <iommu@lists.linux.dev>
-CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <robdclark@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cgoldswo@quicinc.com>, <quic_sukadev@quicinc.com>,
-        <quic_pdaly@quicinc.com>, <quic_sudaraja@quicinc.com>,
-        <djakov@kernel.org>
-Subject: [PATCH v8 6/7] iommu/arm-smmu-qcom: Use the custom fault handler on more platforms
-Date: Wed, 17 Apr 2024 06:37:30 -0700
-Message-ID: <20240417133731.2055383-7-quic_c_gdjako@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417133731.2055383-1-quic_c_gdjako@quicinc.com>
-References: <20240417133731.2055383-1-quic_c_gdjako@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouS5hiro"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e6a1edecfso8945189a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 06:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713361081; x=1713965881; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8/KcmpYcei3Au2kK2wtQQuvWtpfCCMou6DWdFUvWLAs=;
+        b=ouS5hiro/cWi0hG34ogY8GhoCee2yv3BsnNhum7rxFQ1YZ12w3/XswkUmUQzi7b0Ju
+         UDcC96pZL4Z+QBxgemtDCfA6x5MfdmOGHVGhhQ9YqzFynF6xQrzVkZGl/RvN04vH1HCH
+         gbk6sdRylFDrL/66/6H9S3c/GlgwHVBCNY/EXyACwJq25LVzXW9mYddG9c3u6+iuTvXI
+         E7kzj7AP4kCREHNBlwISUeSnK+VMPfiJ/ZQNpYcuvP23VRwwQ7x7KnFGEeDTRUiHhS2I
+         nUJzHSIQlec8+tK5l3mVgiUXv6dlShEHqi8tBRK9s3wcKgEidzx8P+eMf0NHLcLrrsbD
+         Ghjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713361081; x=1713965881;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8/KcmpYcei3Au2kK2wtQQuvWtpfCCMou6DWdFUvWLAs=;
+        b=aEOsm2Cph8c7WrkYFNGkYM/gq1LuA9VudtsWwryOIYd+tM07EsTyZVfg6Ht4J0cf4Q
+         vdTR53aYHi001OddVO91vm3IDDn27a5vhLeQ/6dEJYSoSy2Jr+SwLc++g87uHNIsqgIE
+         vlDt8vFSaOrCFXofdaasFVsj7+qYrLOUEnPjKHT+IqwjHTtVrM1g1+fEfsljdFT3uuF7
+         +qfy4f3aflYHtsfuPaLxFendmi9De1A1CqYL3zSM5XKZ/ggaO7jV17kZNHuaOVcmdSc5
+         mnsycjGv3DSazNJNPthtgfyHucI/umaPDYNmp0e+rzxa9t99/QkH0y7xP7KzAQl67Qcj
+         zp5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUxInsn/8vX6NC+gpMM0Ih5aSiWfNoF3aj0O8cJoewFsWdyII0KcgXRzsdEJLEstcW9c85dDoycwHJJ4mPp8BxLf+w+FI8bNyC/yxF8
+X-Gm-Message-State: AOJu0YyKa1CpGMoA/nTO3WxsTROZgoEmTnoGLhqtiyaRpPpiq4T5p1x1
+	e0V9NljPFtJWzOQ/OcBT1TvKhtjph0u+FOkwivAwpaIPK9Wp1hJwudHEH/gQKnk=
+X-Google-Smtp-Source: AGHT+IH8LxCS7KS5d8H7g/NIwyGENvuKbbtlWI07tDHjS6X1fV1ErfXpF9XVc1J7DgEdG+8mWfhWYA==
+X-Received: by 2002:a17:906:dc8f:b0:a51:af7d:4652 with SMTP id cs15-20020a170906dc8f00b00a51af7d4652mr15531363ejc.32.1713361080838;
+        Wed, 17 Apr 2024 06:38:00 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id y9-20020a170906470900b00a51a74409dcsm8216147ejq.221.2024.04.17.06.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 06:38:00 -0700 (PDT)
+Date: Wed, 17 Apr 2024 16:37:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Geetha sowjanya <gakula@marvell.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, kuba@kernel.org,
+	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
+	sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+	hkelam@marvell.com
+Subject: Re: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
+Message-ID: <546b7783-78ec-4fec-b338-f1980a5871d0@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: M3taxFw9XFwy-834U0UKUCJkQqi7rzJW
-X-Proofpoint-GUID: M3taxFw9XFwy-834U0UKUCJkQqi7rzJW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-17_10,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015 mlxscore=0
- suspectscore=0 adultscore=0 impostorscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404170094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416050616.6056-3-gakula@marvell.com>
 
-The TBU support is now available, so let's allow it to be used on other
-platforms that have the Qualcomm SMMU-500 implementation with TBUs. This
-will allow the context fault handler to query the TBUs when a context
-fault occurs.
+Hi Geetha,
 
-Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
----
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 4 ++++
- 1 file changed, 4 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index a901230dbabd..25f034677f56 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -413,6 +413,10 @@ static const struct arm_smmu_impl qcom_smmu_500_impl = {
- 	.reset = arm_mmu500_reset,
- 	.write_s2cr = qcom_smmu_write_s2cr,
- 	.tlb_sync = qcom_smmu_tlb_sync,
-+#ifdef CONFIG_ARM_SMMU_QCOM_DEBUG
-+	.context_fault = qcom_smmu_context_fault,
-+	.context_fault_needs_threaded_irq = true,
-+#endif
- };
- 
- static const struct arm_smmu_impl sdm845_smmu_500_impl = {
+url:    https://github.com/intel-lab-lkp/linux/commits/Geetha-sowjanya/octeontx2-pf-Refactoring-RVU-driver/20240416-131052
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240416050616.6056-3-gakula%40marvell.com
+patch subject: [net-next PATCH 2/9] octeontx2-pf: RVU representor driver
+config: alpha-randconfig-r081-20240417 (https://download.01.org/0day-ci/archive/20240417/202404172056.MpOMwcGB-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202404172056.MpOMwcGB-lkp@intel.com/
+
+New smatch warnings:
+drivers/net/ethernet/marvell/octeontx2/nic/rep.c:95 rvu_get_rep_cnt() warn: passing zero to 'PTR_ERR'
+drivers/net/ethernet/marvell/octeontx2/nic/rep.c:140 rvu_rep_probe() warn: missing unwind goto?
+
+vim +/PTR_ERR +95 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+
+1e15129a77b419 Geetha sowjanya 2024-04-16   76  static int rvu_get_rep_cnt(struct otx2_nic *priv)
+1e15129a77b419 Geetha sowjanya 2024-04-16   77  {
+1e15129a77b419 Geetha sowjanya 2024-04-16   78  	struct get_rep_cnt_rsp *rsp;
+1e15129a77b419 Geetha sowjanya 2024-04-16   79  	struct mbox_msghdr *msghdr;
+1e15129a77b419 Geetha sowjanya 2024-04-16   80  	struct msg_req *req;
+1e15129a77b419 Geetha sowjanya 2024-04-16   81  	int err, rep;
+1e15129a77b419 Geetha sowjanya 2024-04-16   82  
+1e15129a77b419 Geetha sowjanya 2024-04-16   83  	mutex_lock(&priv->mbox.lock);
+1e15129a77b419 Geetha sowjanya 2024-04-16   84  	req = otx2_mbox_alloc_msg_get_rep_cnt(&priv->mbox);
+1e15129a77b419 Geetha sowjanya 2024-04-16   85  	if (!req) {
+1e15129a77b419 Geetha sowjanya 2024-04-16   86  		mutex_unlock(&priv->mbox.lock);
+1e15129a77b419 Geetha sowjanya 2024-04-16   87  		return -ENOMEM;
+1e15129a77b419 Geetha sowjanya 2024-04-16   88  	}
+1e15129a77b419 Geetha sowjanya 2024-04-16   89  	err = otx2_sync_mbox_msg(&priv->mbox);
+1e15129a77b419 Geetha sowjanya 2024-04-16   90  	if (err)
+1e15129a77b419 Geetha sowjanya 2024-04-16   91  		goto exit;
+1e15129a77b419 Geetha sowjanya 2024-04-16   92  
+1e15129a77b419 Geetha sowjanya 2024-04-16   93  	msghdr = otx2_mbox_get_rsp(&priv->mbox.mbox, 0, &req->hdr);
+1e15129a77b419 Geetha sowjanya 2024-04-16   94  	if (IS_ERR(msghdr)) {
+1e15129a77b419 Geetha sowjanya 2024-04-16  @95  		err = PTR_ERR(rsp);
+                                                                              ^^^
+s/rsp/msghdr/
+
+1e15129a77b419 Geetha sowjanya 2024-04-16   96  		goto exit;
+1e15129a77b419 Geetha sowjanya 2024-04-16   97  	}
+1e15129a77b419 Geetha sowjanya 2024-04-16   98  
+1e15129a77b419 Geetha sowjanya 2024-04-16   99  	rsp = (struct get_rep_cnt_rsp *)msghdr;
+1e15129a77b419 Geetha sowjanya 2024-04-16  100  	priv->hw.tx_queues = rsp->rep_cnt;
+1e15129a77b419 Geetha sowjanya 2024-04-16  101  	priv->hw.rx_queues = rsp->rep_cnt;
+1e15129a77b419 Geetha sowjanya 2024-04-16  102  	priv->rep_cnt = rsp->rep_cnt;
+1e15129a77b419 Geetha sowjanya 2024-04-16  103  	for (rep = 0; rep < priv->rep_cnt; rep++)
+1e15129a77b419 Geetha sowjanya 2024-04-16  104  		priv->rep_pf_map[rep] = rsp->rep_pf_map[rep];
+1e15129a77b419 Geetha sowjanya 2024-04-16  105  
+1e15129a77b419 Geetha sowjanya 2024-04-16  106  exit:
+1e15129a77b419 Geetha sowjanya 2024-04-16  107  	mutex_unlock(&priv->mbox.lock);
+1e15129a77b419 Geetha sowjanya 2024-04-16  108  	return err;
+1e15129a77b419 Geetha sowjanya 2024-04-16  109  }
+1e15129a77b419 Geetha sowjanya 2024-04-16  110  
+1e15129a77b419 Geetha sowjanya 2024-04-16  111  static int rvu_rep_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+1e15129a77b419 Geetha sowjanya 2024-04-16  112  {
+1e15129a77b419 Geetha sowjanya 2024-04-16  113  	struct device *dev = &pdev->dev;
+1e15129a77b419 Geetha sowjanya 2024-04-16  114  	struct otx2_nic *priv;
+1e15129a77b419 Geetha sowjanya 2024-04-16  115  	struct otx2_hw *hw;
+1e15129a77b419 Geetha sowjanya 2024-04-16  116  	int err;
+1e15129a77b419 Geetha sowjanya 2024-04-16  117  
+1e15129a77b419 Geetha sowjanya 2024-04-16  118  	err = pcim_enable_device(pdev);
+1e15129a77b419 Geetha sowjanya 2024-04-16  119  	if (err) {
+1e15129a77b419 Geetha sowjanya 2024-04-16  120  		dev_err(dev, "Failed to enable PCI device\n");
+1e15129a77b419 Geetha sowjanya 2024-04-16  121  		return err;
+1e15129a77b419 Geetha sowjanya 2024-04-16  122  	}
+1e15129a77b419 Geetha sowjanya 2024-04-16  123  
+1e15129a77b419 Geetha sowjanya 2024-04-16  124  	err = pci_request_regions(pdev, DRV_NAME);
+1e15129a77b419 Geetha sowjanya 2024-04-16  125  	if (err) {
+1e15129a77b419 Geetha sowjanya 2024-04-16  126  		dev_err(dev, "PCI request regions failed 0x%x\n", err);
+1e15129a77b419 Geetha sowjanya 2024-04-16  127  		return err;
+1e15129a77b419 Geetha sowjanya 2024-04-16  128  	}
+1e15129a77b419 Geetha sowjanya 2024-04-16  129  
+1e15129a77b419 Geetha sowjanya 2024-04-16  130  	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
+1e15129a77b419 Geetha sowjanya 2024-04-16  131  	if (err) {
+1e15129a77b419 Geetha sowjanya 2024-04-16  132  		dev_err(dev, "DMA mask config failed, abort\n");
+1e15129a77b419 Geetha sowjanya 2024-04-16  133  		goto err_release_regions;
+1e15129a77b419 Geetha sowjanya 2024-04-16  134  	}
+1e15129a77b419 Geetha sowjanya 2024-04-16  135  
+1e15129a77b419 Geetha sowjanya 2024-04-16  136  	pci_set_master(pdev);
+1e15129a77b419 Geetha sowjanya 2024-04-16  137  
+1e15129a77b419 Geetha sowjanya 2024-04-16  138  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+1e15129a77b419 Geetha sowjanya 2024-04-16  139  	if (!priv)
+1e15129a77b419 Geetha sowjanya 2024-04-16 @140  		return -ENOMEM;
+
+goto err_release_regions.
+
+1e15129a77b419 Geetha sowjanya 2024-04-16  141  	pci_set_drvdata(pdev, priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  142  	priv->pdev = pdev;
+1e15129a77b419 Geetha sowjanya 2024-04-16  143  	priv->dev = dev;
+1e15129a77b419 Geetha sowjanya 2024-04-16  144  	priv->flags |= OTX2_FLAG_INTF_DOWN;
+1e15129a77b419 Geetha sowjanya 2024-04-16  145  	priv->flags |= OTX2_FLAG_REP_MODE_ENABLED;
+1e15129a77b419 Geetha sowjanya 2024-04-16  146  
+1e15129a77b419 Geetha sowjanya 2024-04-16  147  	hw = &priv->hw;
+1e15129a77b419 Geetha sowjanya 2024-04-16  148  	hw->pdev = pdev;
+1e15129a77b419 Geetha sowjanya 2024-04-16  149  	hw->max_queues = OTX2_MAX_CQ_CNT;
+1e15129a77b419 Geetha sowjanya 2024-04-16  150  	hw->rbuf_len = OTX2_DEFAULT_RBUF_LEN;
+1e15129a77b419 Geetha sowjanya 2024-04-16  151  	hw->xqe_size = 128;
+1e15129a77b419 Geetha sowjanya 2024-04-16  152  
+1e15129a77b419 Geetha sowjanya 2024-04-16  153  	err = otx2_init_rsrc(pdev, priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  154  	if (err)
+1e15129a77b419 Geetha sowjanya 2024-04-16  155  		goto err_release_regions;
+1e15129a77b419 Geetha sowjanya 2024-04-16  156  
+1e15129a77b419 Geetha sowjanya 2024-04-16  157  	err = rvu_get_rep_cnt(priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  158  	if (err)
+1e15129a77b419 Geetha sowjanya 2024-04-16  159  		goto err_detach_rsrc;
+1e15129a77b419 Geetha sowjanya 2024-04-16  160  
+1e15129a77b419 Geetha sowjanya 2024-04-16  161  	err = rvu_rep_rsrc_init(priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  162  	if (err)
+1e15129a77b419 Geetha sowjanya 2024-04-16  163  		goto err_detach_rsrc;
+1e15129a77b419 Geetha sowjanya 2024-04-16  164  
+1e15129a77b419 Geetha sowjanya 2024-04-16  165  	return 0;
+1e15129a77b419 Geetha sowjanya 2024-04-16  166  
+1e15129a77b419 Geetha sowjanya 2024-04-16  167  err_detach_rsrc:
+1e15129a77b419 Geetha sowjanya 2024-04-16  168  	if (priv->hw.lmt_info)
+1e15129a77b419 Geetha sowjanya 2024-04-16  169  		free_percpu(priv->hw.lmt_info);
+1e15129a77b419 Geetha sowjanya 2024-04-16  170  	if (test_bit(CN10K_LMTST, &priv->hw.cap_flag))
+1e15129a77b419 Geetha sowjanya 2024-04-16  171  		qmem_free(priv->dev, priv->dync_lmt);
+1e15129a77b419 Geetha sowjanya 2024-04-16  172  	otx2_detach_resources(&priv->mbox);
+1e15129a77b419 Geetha sowjanya 2024-04-16  173  	otx2_disable_mbox_intr(priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  174  	otx2_pfaf_mbox_destroy(priv);
+1e15129a77b419 Geetha sowjanya 2024-04-16  175  	pci_free_irq_vectors(pdev);
+1e15129a77b419 Geetha sowjanya 2024-04-16  176  err_release_regions:
+1e15129a77b419 Geetha sowjanya 2024-04-16  177  	pci_set_drvdata(pdev, NULL);
+1e15129a77b419 Geetha sowjanya 2024-04-16  178  	pci_release_regions(pdev);
+1e15129a77b419 Geetha sowjanya 2024-04-16  179  	return err;
+1e15129a77b419 Geetha sowjanya 2024-04-16  180  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
