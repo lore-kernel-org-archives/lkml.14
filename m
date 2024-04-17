@@ -1,197 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923048563C;
-	Wed, 17 Apr 2024 23:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A74FC1F
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713395056; cv=none; b=CIEk5DIi5cNIISgQOhlWR9zQbL33RPV79Q1VvYzNvc+Dw4azw2ETqAc8977YBQzEkHqxhXtin2JIS7fmQWkJbBhNs15kZNpohkIr9QpDKJ/5cm/3ggDPxEDx24Ovu3ou7UbNOMF+2dhFRG26GDp8ld9cRg+/SO3FSuL48FBEhP4=
+	t=1713395168; cv=none; b=XI52RIdxZlYqaka799UQhE9hl1dzxJg7Moq+Qp41AWklh83s0dkqgojBcdT3HwcsCU6efbllHpEeEb4wJeHlApmDXEmooKE/r8D52Mz7EbnUTjhr0f5CJpuSyTWK6OJOy/CdRYa2KPPyJrQ6NEie5RyJMf0GxhpucF8UUoipg3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713395056; c=relaxed/simple;
-	bh=DleZPmzIjopdcwuK5ScXde4KztmrAG+BSDTdahj4F34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fWReTn63Aby50qvM/MrrZG/30m9jSOlGJcZyCymy/YGJVPw2Gg9+flcTZyp4E39LNl6D6JnWaJY2ZNVSb842PLmb9bCLl9IFaEAz/SvQnXfeeZE/WwRKw+md1dfJGJdu7Tr9+wMQyIbncGyrSXIxN4X1dlUJlLU2ltNMLDFumVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUvqalSF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713395168; c=relaxed/simple;
+	bh=WqgaLntv683En9Ah2PbvQfLoPDQahPKEqmQivL49I0I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZZYuUNOz/1hwAK4/aBATVbayo9ywekIQ3qxeu+YYtQ6tb0e2cDzVeOFTmM2VNbFGuZYeySh6PhGjOQU80UXmx4D1laEpFKQiF0IvO9Iupl4lInpBC4cJMIkn2N1T2Fg3zF+/s6uQHsRRX5vr6auEUifZ+s0YPfcSPl+VPeZ7vkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M9WK5xH7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WjBhdRMh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUvqalSF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C76C32786;
-	Wed, 17 Apr 2024 23:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713395056;
-	bh=DleZPmzIjopdcwuK5ScXde4KztmrAG+BSDTdahj4F34=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KUvqalSFcV7qWl7RPj4p2dAkP/ZOE6htLrjxrb2m0xtesPjAe9AGjsdAf/e8gdlh9
-	 2n+mYf8ezjDn8uv/EPeEQBJv07PBMJdceCeuoRZSpYO9oRHNdk9YD+jF5WMgdKkaVK
-	 M1ckHynpWJhOrhmQ2gZL22DrtoGLRrt3e5sDPXG/8trJnobsdOl8ybkWTfdeiC6iMI
-	 U0u1isSfwpqkWSpy/4+KGRsQv2SA4nYmIKChisqswmIqB00MPbzA/8Jl/vlXmOw8qp
-	 qa6z+ljwKUoQf7Y0efhRhv0mP1YBFpxmW/8BmeiIIPhafgKyF9NiiyJV1pdoq4Cw4/
-	 l1KZ78OyuGztA==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d8764656so47041e87.1;
-        Wed, 17 Apr 2024 16:04:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWYYLY8L62q81DIGuL+i/gKUl07G61vBS1DvGn/O2faXG5pLdYeQJdiJfjg4gnQXKcPw0LuAKhNXrPZ8Vby/RABHc0cvZuKtZn2EnnbMszvE8eePvIDIfTkPfm9DcbhqOgDPwxg7c8R3Vnuh6ST1Fl/1/a5GOpDxU22fG8yDlAiQO0ZN8gXksM9345o7Bmku9nsXT2KO2nohKlmcs98/T0xjQ==
-X-Gm-Message-State: AOJu0Ywar3TTneXVE8e4BaLrPVBXv3cuRwgR+i4CnsJhunMPABFLdjYE
-	P7jndSvl6aNvwv1bRAHKGN3QX2NVsolg8MZax5idm7W8vb15w2NtsU/ELcCJJEGCnVU5Zej4vsK
-	n/593K9i13mMnvm7r6sPo0nwOUHM=
-X-Google-Smtp-Source: AGHT+IFynaJ23hI7LhBWah3AipQ/kHcj/2JC6nvWkyzyNtZt6uqnI9CxfUUV/FX4nKwOeNmYWCU+4a78uhTwgWEFRTk=
-X-Received: by 2002:ac2:51bc:0:b0:519:592d:adcd with SMTP id
- f28-20020ac251bc000000b00519592dadcdmr335876lfk.3.1713395054395; Wed, 17 Apr
- 2024 16:04:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M9WK5xH7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WjBhdRMh"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713395161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1lHykT6pMWD44u+/0yrZeXfaT6lgxVyh522+nMVcD9c=;
+	b=M9WK5xH7biqIz6B/7Z9kHLaPHMcofN02dMgTn02WkyckFbBq8X7LKQDhKtHc00Uiq1WBHg
+	anlvfK5KlmdZzMp0Mhi7aiz/Cy+pgPpbnnE8tvVhNAiDEOz+OiK86BrWltVoAkG9sw0pNd
+	oYAiIoLy/us74mxXrG1zASEAFFOoFI2FmiF8cZw1z7DjEHSu0HsJczwKgmaZBBVz+ktAcN
+	erBtLQi7mNK3eShJtAX5oav2pPn62SXlnodicCwXlAA/4CWLAhlIq/VvjVQ6FcbT+5CDHo
+	CY9JBFmvdCq6nvV2H/rHmgFdMnQZMp93KS4PcvVcd/74k2/S9ub+HcwtmIjRWQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713395161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1lHykT6pMWD44u+/0yrZeXfaT6lgxVyh522+nMVcD9c=;
+	b=WjBhdRMhy3v53mrv8rAI6NJl3VTE2tbV+38zyt8A24EBYiPPE2QoAJQ/bUyOCk4qrVJzBe
+	h9Ju0BtjVk1I8GBg==
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v4 17/27] printk: nbcon: Use nbcon consoles in
+ console_flush_all()
+In-Reply-To: <ZhgCgBK7JdRruvkj@localhost.localdomain>
+References: <20240402221129.2613843-1-john.ogness@linutronix.de>
+ <20240402221129.2613843-18-john.ogness@linutronix.de>
+ <ZhfwXsEE2Y8IPPxX@localhost.localdomain>
+ <ZhgCgBK7JdRruvkj@localhost.localdomain>
+Date: Thu, 18 Apr 2024 01:11:59 +0206
+Message-ID: <87plunoai0.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412073046.1192744-1-wenst@chromium.org> <20240412073046.1192744-2-wenst@chromium.org>
-In-Reply-To: <20240412073046.1192744-2-wenst@chromium.org>
-From: Sean Wang <sean.wang@kernel.org>
-Date: Wed, 17 Apr 2024 16:04:02 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzp=MKNYc70ZeGCAEgWfFVPOAOZQQ86BXukk+EQQM_C+OA@mail.gmail.com>
-Message-ID: <CAGp9Lzp=MKNYc70ZeGCAEgWfFVPOAOZQQ86BXukk+EQQM_C+OA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: net: bluetooth: Add MediaTek MT7921S
- SDIO Bluetooth
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Sean Wang <sean.wang@mediatek.com>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Chen-Yu,
+On 2024-04-11, Petr Mladek <pmladek@suse.com> wrote:
+> I am trying to make a full picture when and how the nbcon consoles
+> will get flushed. My current understanding and view is the following,
+> starting from the easiest priority:
+>
+>
+>   1. NBCON_PRIO_PANIC messages will be flushed by calling
+>      nbcon_atomic_flush_pending() directly in vprintk_emit()
+>
+>      This will take care of any previously added messages.
+>
+>      Non-panic CPUs are not allowed to add messages anymore
+>      when there is a panic in progress.
+>
+>      [ALL OK]
 
-On Fri, Apr 12, 2024 at 12:31=E2=80=AFAM Chen-Yu Tsai <wenst@chromium.org> =
-wrote:
->
-> The MediaTek MT7921S is a WiFi/Bluetooth combo chip that works over
-> SDIO. WiFi and Bluetooth are separate SDIO functions within the chip.
-> While the Bluetooth SDIO function is fully discoverable, the chip has
-> a pin that can reset just the Bluetooth core, as opposed to the full
-> chip. This should be described in the device tree.
->
-> Add a device tree binding for the Bluetooth SDIO function of the MT7921S
-> specifically to document the reset line. This binding is based on the MMC
-> controller binding, which specifies one device node per SDIO function.
->
-> Cc: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> Changes since v2:
-> - Expand description and commit message to clearly state that WiFi and
->   Bluetooth are separate SDIO functions, and that each function should
->   be a separate device node, as specified by the MMC binding.
-> - Change 'additionalProperties' to 'unevaluatedProperties'
-> - Add missing separating new line
-> - s/ot/to/
->
-> Angelo's reviewed-by was not picked up due to the above changes.
->
-> Changes since v1:
-> - Reworded descriptions
-> - Moved binding maintainer section before description
-> - Added missing reference to bluetooth-controller.yaml
-> - Added missing GPIO header to example
-> ---
->  .../bluetooth/mediatek,mt7921s-bluetooth.yaml | 55 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/media=
-tek,mt7921s-bluetooth.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7=
-921s-bluetooth.yaml b/Documentation/devicetree/bindings/net/bluetooth/media=
-tek,mt7921s-bluetooth.yaml
-> new file mode 100644
-> index 000000000000..67ff7caad599
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-bl=
-uetooth.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/bluetooth/mediatek,mt7921s-blueto=
-oth.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MT7921S Bluetooth
-> +
-> +maintainers:
-> +  - Sean Wang <sean.wang@mediatek.com>
-> +
-> +description:
-> +  MT7921S is an SDIO-attached dual-radio WiFi+Bluetooth Combo chip; each
-> +  function is its own SDIO function on a shared SDIO interface. The chip
-> +  has two dedicated reset lines, one for each function core.
-> +  This binding only covers the Bluetooth SDIO function, with one device
-> +  node describing only this SDIO function.
-> +
-> +allOf:
-> +  - $ref: bluetooth-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt7921s-bluetooth
-> +
-> +  reg:
-> +    const: 2
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      An active-low reset line for the Bluetooth core; on typical M.2
-> +      key E modules this is the W_DISABLE2# pin.
-> +
+OK, because the end of panic will perform unsafe takeovers if necessary.
 
-Thanks for adding the new setup for the MT7921S devices. They look good to =
-me.
-Sometimes, the MT7921S might be set up to wake up the host when it's
-asleep using a sideband signal.
-This might need an extra pin called "wakeup" to make it happen. Can
-you help add this pin to the settings in the same update, or should I
-do it later?
+>   2. NBCON_PRIO_EMERGENCY messages will be flushed by calling
+>      nbcon_atomic_flush_pending() directly in nbcon_cpu_emergency_exit().
+>
+>      This would cover all previously added messages, including
+>      the ones printed by the code between
+>      nbcon_cpu_emergency_enter()/exit().
 
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    mmc {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        bluetooth@2 {
-> +            compatible =3D "mediatek,mt7921s-bluetooth";
-> +            reg =3D <2>;
-> +            reset-gpios =3D <&pio 8 GPIO_ACTIVE_LOW>;
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 88981d9f3958..218bc2a21207 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13818,6 +13818,7 @@ M:      Sean Wang <sean.wang@mediatek.com>
->  L:     linux-bluetooth@vger.kernel.org
->  L:     linux-mediatek@lists.infradead.org (moderated for non-subscribers=
-)
->  S:     Maintained
-> +F:     Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-=
-bluetooth.yaml
->  F:     Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
->  F:     drivers/bluetooth/btmtkuart.c
+This is best effort. If the console is owned by another context and is
+marked unsafe, nbcon_atomic_flush_pending() will do nothing.
+
+[ PROBLEM: In this case, who will flush the emergency messages? ]
+
+>      This won't cover later added messages which might be
+>      a problem. Let's look at this closer. Later added
+>      messages with:
 >
-> --
-> 2.44.0.683.g7961c838ac-goog
+> 	+ NBCON_PRIO_PANIC will be handled in vprintk_emit()
+> 	  as explained above [OK]
 >
+> 	+ NBCON_PRIO_EMERGENCY() will be handled in the
+> 	  related nbcon_cpu_emergency_exit() as described here.
+> 	  [OK]
 >
+> 	+ NBCON_PRIO_NORMAL will be handled, see below. [?]
+>
+>      [ PROBLEM: later added NBCON_PRIO_NORMAL messages, see below. ]
+
+Yes, this is also an issue, although the solution may be the same for
+this and the above problem.
+
+>   3. NBCON_PRIO_NORMAL messages will be flushed by:
+>
+>        + the printk kthread when it is available
+>
+>        + the legacy loop via
+>
+> 	 + console_unlock()
+> 	    + console_flush_all()
+> 	      + console nbcon_legacy_emit_next_record() [PROBLEM]
+>
+> PROBLEM: console_flush_all() does not guarantee progress with
+> 	 nbcon consoles as explained above (previous mail).
+
+Not only this. If there is no kthread available, no printing will occur
+until the _next_ printk(), whenever that is.
+
+
+Above we have listed 3 problems:
+
+- emergency messages will not flush if owned by another context and
+  unsafe
+
+- normal messages will not flush if owned by another context
+
+- for the above 2 problems, if there is no kthread, nobody will flush
+  the messages
+
+
+My question: Is this really a problem?
+
+The main idea behind the rework is that printing is deferred. The
+kthreads exist for this. If the kthreads are not available (early boot
+or shutdown) or the kthreads are not reliable enough (emergency
+messages), a best-safe-effort is made to print in the caller
+context. Only the panic situation is designed to force output (unsafely,
+if necessary). Is that not enough?
+
+> My proposal:
+>
+> 	1. console_flush_all() will flush nbcon consoles only
+> 	   in NBCON_PRIO_NORMAL and when the kthreads are not
+> 	   available.
+>
+> 	   It will make it clear that this is the flusher in
+> 	   this situation.
+
+This is the current PREEMPT_RT implementation.
+
+> 	2. Allow to skip nbcon consoles in console_flush_all() when
+> 	   it can't take the context (as suggested in my previous
+> 	   reply).
+>
+> 	   This won't guarantee flushing NORMAL messages added
+> 	   while nbcon_cpu_emergency_exit() calls
+> 	   nbcon_atomic_flush_pending().
+
+This was the previous version. And I agree that we need to go back to
+that.
+
+> 	   Solve this problem by introducing[*] nbcon_atomic_flush_all()
+> 	   which would flush even newly added messages and
+> 	   call this in nbcon_cpu_emergency_exit() when the printk
+> 	   kthread does not work. It should bail out when there
+> 	   is a panic in progress.
+>
+> 	   Motivation: It does not matter which "atomic" context
+> 		flushes NORMAL/EMERGENCY messages when
+> 		the printk kthread is not available.
+
+I do not think that solves the problem. If the console is in an unsafe
+section, nothing can be printed.
+
+> 	  [*] Alternatively we could modify nbcon_atomic_flush_pending()
+> 	      to flush even newly added messages when the kthread is
+> 	      not working. But it might create another mess.
+
+This discussion is about when kthreads are not available. If this is a
+concern, I wonder if maybe in this situation an irq_work should be
+triggered upon release of the console.
+
+For example, something like:
+
+static bool flush_pending(struct console *con)
+{
+	/* If there is a kthread, let it do the work. */
+	if (con->kthread)
+		return false;
+
+	/* Make sure a record is pending. */
+	if (!prb_read_valid(prb, nbcon_seq_read(con), NULL))
+		return false;
+
+	return true;
+}
+
+static void nbcon_context_release(struct nbcon_context *ctxt)
+{
+	...
+
+	/* Trigger irq_work to flush if necessary. */
+	if (flush_pending(con))
+		defer_console_output();
+}
+
+John
