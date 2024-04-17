@@ -1,118 +1,145 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52E81411E5;
-	Wed, 17 Apr 2024 16:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42D084E14;
+	Wed, 17 Apr 2024 16:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713370845; cv=none; b=WW1CDiQ7s/z7CklUkMuYbwxcX0tQgVYJMDaIko+fvh5Dkm7tw20lsA3ufxadPqjcOsT0NYX7qK5UvXUBd3LgtFqW+kxMiMSedMm7KPRuOuqAhWeY4/5RijfjdIAU0DHGRgqY253S/2W7Izt7abQK+mhZmFQ7uvvigdIU7AW7dfU=
+	t=1713370895; cv=none; b=X4hbGu7/K+FfhcqN/P3reNAzM7yXfElVkUnJmb0zPEa2/aHNkv6Q0p2gL6y1oEMFB2MmKNgSceYDdEttiFQ7GZYNwKL/DmsMWU4Z9pbe8oRSuuDkeroOgVxq9Ix+29eoaPwAfSV6VH/X7ipCtUxnsw9ttYb4n9Jk/r/2RAav+FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713370845; c=relaxed/simple;
-	bh=WvRqDAOGM1jvsBeaH6GT/HasZDYxKW3jTSqaapCeaOc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=QJ9JD8V64PdkkgL7JQzKOHmU9DPuc9syXxBv7mJGxZwuV4onEGjMzUer2EldVoGWJtNIl6OjU2kCAgqqx05fg8wqjNrLkbjJwOOztLKKkv0IBGWSbnPrpr/05j4t81xoqZM+GQ4KEoFHjGilWgwYRFpcYf3iiEnqODEO2beC1EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dhjPI/0V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+gOervJP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713370895; c=relaxed/simple;
+	bh=J3FQVL9iRcFEAIRpNm/D0Zmcow0IikX+upco464NSvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKlLUAzzPoDuylgi81eUJkAXh3fPkciehqjP06MSPiMH3P0POJ9TjyC9uQ4+9QfeeS8f4h8nrzRmzLuby0sFcPF0jBIVZuHLdCmQXPhRjUxZQ3rj7dO0zI9ayEWVy67atUdiwVV7vgVfsahOvHNWm8yh+cpYD+8wi7aqXmQR+GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnYqRRpU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dhjPI/0V";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+gOervJP"
-Date: Wed, 17 Apr 2024 16:20:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713370842;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kwzTSJdCNy24smZLpTE4WljCedgTHM2JpxAfIkTwyt4=;
-	b=dhjPI/0VMdBSkBl5XfFat0CCFcC2C7scN+JK4fOhgFkYZ0zMSbgBQ4nRPo4Yf9UUUUsz4O
-	kA6URHBuae14lTdrU6fxY0HWnQQ7g+YHj+eJQy5T0PLHvh3WBUk/H8nt0IcNhA1uBU5K+j
-	dvPxcW7esf6UN0riWxiAHY3oNliUfofRAP9jINefZdwbdHa5WBjIJUiQgtvg22IgKCyhkO
-	ZOhSXjIOooA+/BS1YS+5nB5wzrpgHBxu61GIjRFc5I8uAv4hEicYYE1mlnSIx3x8FsfViG
-	603m0MUCwJ481c96FnuYfU1VTVZ/0a/SKnzyC89RVuEdBEYbxy5tnWbBMkVoSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713370842;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kwzTSJdCNy24smZLpTE4WljCedgTHM2JpxAfIkTwyt4=;
-	b=+gOervJPalJBHPT1qUYoVzl4s1Niik0HwXr76RGPGP/ibokO7i6Q3yEFXIV4sHGwl1AQ6E
-	tYIizffTqQS7ctBA==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/retpolines: Enable the default thunk warning
- only on relevant configs
-Cc: Klara Modin <klarasmodin@gmail.com>, Erhard Furtner <erhard_f@mailbox.org>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <78e0d19c-b77a-4169-a80f-2eef91f4a1d6@gmail.com>
-References: <78e0d19c-b77a-4169-a80f-2eef91f4a1d6@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnYqRRpU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A72C2BD11;
+	Wed, 17 Apr 2024 16:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713370895;
+	bh=J3FQVL9iRcFEAIRpNm/D0Zmcow0IikX+upco464NSvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QnYqRRpUic+FDelR4GktLivA+b2yziRIAN2h2lw7leM6sB1YUFVG72LGEu2c25hCP
+	 5h+cUHg+WzEWyX6qXkv/yTrEWmZmZ3TpEm+hxvkiIcAhFqSP9hIOl39DQpda5HKDd6
+	 /C2hYWNANCQlsxuM7BljkzDDWsZIj1CJZOMUwcfOSyQgeEfN9eL4IQNQHUqyibiUis
+	 FxZHNEa6/Wr2iArt7ZUzEv5aW+fficEYRzWAJkkUWmFJUK6Layj1nB4qyAaK5ohi9A
+	 5rAMq+K2mRxMXtLqcoG0sui26o5eO9zR/bc2sp1CIWMFThaPncO/I8fTWsSE+qnFTt
+	 GPzuIHv8wdsew==
+Date: Wed, 17 Apr 2024 13:21:31 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: weilin.wang@intel.com, Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v5 01/16] perf stat: Add new field in stat_config to
+ enable hardware aware grouping.
+Message-ID: <Zh_3C47MQ-PiIuXD@x1>
+References: <20240412210756.309828-1-weilin.wang@intel.com>
+ <20240412210756.309828-2-weilin.wang@intel.com>
+ <CAP-5=fWNREXxROJhKC2T+Oaw+PBjM=VYdpm_eiaCgc1DLnbm3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171337084085.10875.15469076883683682514.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWNREXxROJhKC2T+Oaw+PBjM=VYdpm_eiaCgc1DLnbm3A@mail.gmail.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue, Apr 16, 2024 at 08:49:21PM -0700, Ian Rogers wrote:
+> On Fri, Apr 12, 2024 at 2:08 PM <weilin.wang@intel.com> wrote:
+> >
+> > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > Hardware counter and event information could be used to help creating event
+> > groups that better utilize hardware counters and improve multiplexing.
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > ---
+> >  tools/perf/builtin-stat.c     | 5 +++++
+> >  tools/perf/util/metricgroup.c | 5 +++++
+> >  tools/perf/util/metricgroup.h | 1 +
+> >  tools/perf/util/stat.h        | 1 +
+> >  4 files changed, 12 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 6bba1a89d030..c4a5f0984295 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -2106,6 +2106,7 @@ static int add_default_attributes(void)
+> >                                                 stat_config.metric_no_threshold,
+> >                                                 stat_config.user_requested_cpu_list,
+> >                                                 stat_config.system_wide,
+> > +                                               stat_config.hardware_aware_grouping,
+> >                                                 &stat_config.metric_events);
+> >         }
+> >
+> > @@ -2139,6 +2140,7 @@ static int add_default_attributes(void)
+> >                                                 stat_config.metric_no_threshold,
+> >                                                 stat_config.user_requested_cpu_list,
+> >                                                 stat_config.system_wide,
+> > +                                               stat_config.hardware_aware_grouping,
+> >                                                 &stat_config.metric_events);
+> >         }
+> >
+> > @@ -2173,6 +2175,7 @@ static int add_default_attributes(void)
+> >                                                 /*metric_no_threshold=*/true,
+> >                                                 stat_config.user_requested_cpu_list,
+> >                                                 stat_config.system_wide,
+> > +                                               stat_config.hardware_aware_grouping,
+> >                                                 &stat_config.metric_events) < 0)
+> >                         return -1;
+> >         }
+> > @@ -2214,6 +2217,7 @@ static int add_default_attributes(void)
+> >                                                         /*metric_no_threshold=*/true,
+> >                                                         stat_config.user_requested_cpu_list,
+> >                                                         stat_config.system_wide,
+> > +                                                       stat_config.hardware_aware_grouping,
+> >                                                         &stat_config.metric_events) < 0)
+> >                                 return -1;
+> >
+> > @@ -2748,6 +2752,7 @@ int cmd_stat(int argc, const char **argv)
+> >                                                 stat_config.metric_no_threshold,
+> >                                                 stat_config.user_requested_cpu_list,
+> >                                                 stat_config.system_wide,
+> > +                                               stat_config.hardware_aware_grouping,
+> >                                                 &stat_config.metric_events);
+> >
+> >                 zfree(&metrics);
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 79ef6095ab28..11613450725a 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -1690,12 +1690,17 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+> >                               bool metric_no_threshold,
+> >                               const char *user_requested_cpu_list,
+> >                               bool system_wide,
+> > +                             bool hardware_aware_grouping,
+> >                               struct rblist *metric_events)
+> >  {
+> >         const struct pmu_metrics_table *table = pmu_metrics_table__find();
+> >
+> >         if (!table)
+> >                 return -EINVAL;
+> > +       if (hardware_aware_grouping) {
+> > +               pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
+> > +       }
+> 
+> nit: single line if statements shouldn't have curlies:
+> https://www.kernel.org/doc/html/v6.8/process/coding-style.html#placing-braces-and-spaces
 
-Commit-ID:     6376306adde5b252ee7c73572e35d13fb13f6f18
-Gitweb:        https://git.kernel.org/tip/6376306adde5b252ee7c73572e35d13fb13f6f18
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Mon, 15 Apr 2024 18:15:43 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 17 Apr 2024 18:02:05 +02:00
+Fixed  this while applying this patch.
 
-x86/retpolines: Enable the default thunk warning only on relevant configs
-
-The using-default-thunk warning check makes sense only with
-configurations which actually enable the special return thunks.
-
-Otherwise, it fires on unrelated 32-bit configs on which the special
-return thunks won't even work (they're 64-bit only) and, what is more,
-those configs even go off into the weeds when booting in the
-alternatives patching code, leading to a dead machine.
-
-Fixes: 4461438a8405 ("x86/retpoline: Ensure default return thunk isn't used at runtime")
-Reported-by: Klara Modin <klarasmodin@gmail.com>
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Tested-by: Klara Modin <klarasmodin@gmail.com>
-Link: https://lore.kernel.org/r/78e0d19c-b77a-4169-a80f-2eef91f4a1d6@gmail.com
-Link: https://lore.kernel.org/r/20240413024956.488d474e@yea
----
- arch/x86/lib/retpoline.S | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
-index e674ccf..391059b 100644
---- a/arch/x86/lib/retpoline.S
-+++ b/arch/x86/lib/retpoline.S
-@@ -382,8 +382,15 @@ SYM_FUNC_END(call_depth_return_thunk)
- SYM_CODE_START(__x86_return_thunk)
- 	UNWIND_HINT_FUNC
- 	ANNOTATE_NOENDBR
-+#if defined(CONFIG_MITIGATION_UNRET_ENTRY) || \
-+    defined(CONFIG_MITIGATION_SRSO) || \
-+    defined(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)
- 	ALTERNATIVE __stringify(ANNOTATE_UNRET_SAFE; ret), \
- 		   "jmp warn_thunk_thunk", X86_FEATURE_ALWAYS
-+#else
-+	ANNOTATE_UNRET_SAFE
-+	ret
-+#endif
- 	int3
- SYM_CODE_END(__x86_return_thunk)
- EXPORT_SYMBOL(__x86_return_thunk)
+- Arnaldo
