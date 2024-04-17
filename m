@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA71A1482F5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68281482E3
 	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 15:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713368099; cv=none; b=otpNItId6q5AUvBa6r/kjc1HpbGzq0ZACT3NBqqcbo2HSvfFmrEINltSziu90Qtrw49JTeM4PiQm7tLN13Cgww9oQ3z/Zxu6WvqUlzEH9zqUXbrAPxBWUXsPqv3+TMor8k2PIfaShoi70C7XN452INFLxhI2qQImAKCOigm6NJ8=
+	t=1713368099; cv=none; b=ZYh6aRX3OcF1XiFQfs87OXQl3ccXbNU4imew/E9xuKeAFe1TDnzT7ulvnon2x2/XRiFzVLk/rMwkmZCl/G5/vyboEjRJ/v3FII8P0ghzq/2j3ZylE2mGn5+bz8zF4wlAK6vCweKtDMovUNNDqjtGN9GP3sRqHEE5LQBoatlf2G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713368099; c=relaxed/simple;
-	bh=rlBoMCC4//sfGrQFFIwHVDxKJN5+vVzVUBJTEepXgqw=;
+	bh=2OBq+23pCM3PkNKzgJeo539rzBtPFjT7bbLCv5kFpa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WLFTc0LQdPb/OZmZDn0M1lavnOKsQV1rR2aZ4Ahn6UtibhoRO9dizIMDaoNzNqmKK/nLzAKnz4qmWBPVTOqBLW0xW6H81AwNIvi5tW3mMBgRsA8+epj/e67yCWI6AHUqI0frfNSjz5oXGciF5ZVR97qZIxvyLioEbALW3Z2UoLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fkHQOpFJ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=mpXTfBI2Te/SCvqn7B3U2OeJ9vG/72hfcHSHIIj6pu5S0qEd7XCTv5VHWKrctVBRr13GalN5fkjOz0ikfHLdxWN923DfvviAcFOdp+8relx8n5zgI0zm/ciBTvOfQ1yDyNTWsjCvzxGYYJ4ZBu/lpgJyC29GPCYRMIUaR9d0w3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=edLC6k7o; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkHQOpFJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="edLC6k7o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713368097;
+	s=mimecast20190719; t=1713368096;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E5+7UvXw2tljyq+ZcDpXUa1GgQHlyrzaHv6gQXx3TS8=;
-	b=fkHQOpFJ9hGGYm/JEQh1h2uxA3PP+EXAXnw3eE6vt1B/OHNYrGlPTzoRRypPHBLmNtSvpp
-	3fF6ggoN5bOXBPSVB3sZlfwzOlhBND/QVXpvG3MFkferF2BMdCGvxWTcfmcC6ZBfIBF8v/
-	aMqjR9Nvds+6jlY59AlfDaZlDvMZTX8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-32-JhPoMVDQPDui_ZWzoEHDaw-1; Wed,
- 17 Apr 2024 11:34:52 -0400
-X-MC-Unique: JhPoMVDQPDui_ZWzoEHDaw-1
+	bh=QOJHbzxI/eRU/siHQ5cJPVsyiTsUtZ2Sjfr3m4DsPPE=;
+	b=edLC6k7oR3FqViYs7hu/T9Ban1IjlQaF+d7m4PgBBgoNr3oK+h5eGrPxAVGA/Aqvtigls/
+	l+3dz6Ern5A/42bdX0fzoxcvzCpueqzGf6ubLRswut1xpJSinBMHSiSxIApE01IDjag688
+	bnuZG7FPZh6VT6Zt0Kfr125lW3LNHYQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-481-Xm1epxzaN_Oi-9_nzuTWtw-1; Wed, 17 Apr 2024 11:34:53 -0400
+X-MC-Unique: Xm1epxzaN_Oi-9_nzuTWtw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 000BA3C108C9;
-	Wed, 17 Apr 2024 15:34:51 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E31B49C2F24;
+	Wed, 17 Apr 2024 15:34:52 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C33B2581CD;
-	Wed, 17 Apr 2024 15:34:51 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B2EC8581CD;
+	Wed, 17 Apr 2024 15:34:52 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: isaku.yamahata@intel.com,
 	binbin.wu@linux.intel.com,
 	seanjc@google.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH 3/7] KVM: x86/mmu: Extract __kvm_mmu_do_page_fault()
-Date: Wed, 17 Apr 2024 11:34:46 -0400
-Message-ID: <20240417153450.3608097-4-pbonzini@redhat.com>
+Subject: [PATCH 7/7] KVM: selftests: x86: Add test for KVM_MAP_MEMORY
+Date: Wed, 17 Apr 2024 11:34:50 -0400
+Message-ID: <20240417153450.3608097-8-pbonzini@redhat.com>
 In-Reply-To: <20240417153450.3608097-1-pbonzini@redhat.com>
 References: <20240417153450.3608097-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -65,90 +65,190 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Extract out __kvm_mmu_do_page_fault() from kvm_mmu_do_page_fault().  The
-inner function is to initialize struct kvm_page_fault and to call the fault
-handler, and the outer function handles updating stats and converting
-return code.  KVM_MAP_MEMORY will call the KVM page fault handler.
+Add a test case to exercise KVM_MAP_MEMORY and run the guest to access the
+pre-populated area.  It tests KVM_MAP_MEMORY ioctl for KVM_X86_DEFAULT_VM
+and KVM_X86_SW_PROTECTED_VM.
 
-This patch makes the emulation_type always set irrelevant to the return
-code.  kvm_mmu_page_fault() is the only caller of kvm_mmu_do_page_fault(),
-and references the value only when PF_RET_EMULATE is returned.  Therefore,
-this adjustment doesn't affect functionality.
-
-No functional change intended.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-ID: <ddf1d98420f562707b11e12c416cce8fdb986bb1.1712785629.git.isaku.yamahata@intel.com>
+Message-ID: <32427791ef42e5efaafb05d2ac37fa4372715f47.1712785629.git.isaku.yamahata@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu_internal.h | 38 +++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ tools/include/uapi/linux/kvm.h                |   8 ++
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ tools/testing/selftests/kvm/map_memory_test.c | 135 ++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/map_memory_test.c
 
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index e68a60974cf4..9baae6c223ee 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -287,8 +287,8 @@ static inline void kvm_mmu_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
- 				      fault->is_private);
- }
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index c3308536482b..69a43c5ae33c 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -2227,4 +2227,12 @@ struct kvm_create_guest_memfd {
+ 	__u64 reserved[6];
+ };
  
--static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--					u64 err, bool prefetch, int *emulation_type)
-+static inline int __kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+					  u64 err, bool prefetch, int *emulation_type)
- {
- 	struct kvm_page_fault fault = {
- 		.addr = cr2_or_gpa,
-@@ -318,6 +318,27 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 		fault.slot = kvm_vcpu_gfn_to_memslot(vcpu, fault.gfn);
- 	}
- 
-+	if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) && fault.is_tdp)
-+		r = kvm_tdp_page_fault(vcpu, &fault);
-+	else
-+		r = vcpu->arch.mmu->page_fault(vcpu, &fault);
++#define KVM_MAP_MEMORY	_IOWR(KVMIO, 0xd5, struct kvm_map_memory)
 +
-+	if (r == RET_PF_EMULATE && fault.is_private) {
-+		kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
-+		r = -EFAULT;
++struct kvm_map_memory {
++	__u64 base_address;
++	__u64 size;
++	__u64 flags;
++};
++
+ #endif /* __LINUX_KVM_H */
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 871e2de3eb05..41def90f7dfb 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -144,6 +144,7 @@ TEST_GEN_PROGS_x86_64 += set_memory_region_test
+ TEST_GEN_PROGS_x86_64 += steal_time
+ TEST_GEN_PROGS_x86_64 += kvm_binary_stats_test
+ TEST_GEN_PROGS_x86_64 += system_counter_offset_test
++TEST_GEN_PROGS_x86_64 += map_memory_test
+ 
+ # Compiled outputs used by test targets
+ TEST_GEN_PROGS_EXTENDED_x86_64 += x86_64/nx_huge_pages_test
+diff --git a/tools/testing/selftests/kvm/map_memory_test.c b/tools/testing/selftests/kvm/map_memory_test.c
+new file mode 100644
+index 000000000000..e52e33145f01
+--- /dev/null
++++ b/tools/testing/selftests/kvm/map_memory_test.c
+@@ -0,0 +1,135 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024, Intel, Inc
++ *
++ * Author:
++ * Isaku Yamahata <isaku.yamahata at gmail.com>
++ */
++#include <linux/sizes.h>
++
++#include <test_util.h>
++#include <kvm_util.h>
++#include <processor.h>
++
++/* Arbitrarily chosen values */
++#define TEST_SIZE		(SZ_2M + PAGE_SIZE)
++#define TEST_NPAGES		(TEST_SIZE / PAGE_SIZE)
++#define TEST_SLOT		10
++
++static void guest_code(uint64_t base_gpa)
++{
++	volatile uint64_t val __used;
++	int i;
++
++	for (i = 0; i < TEST_NPAGES; i++) {
++		uint64_t *src = (uint64_t *)(base_gpa + i * PAGE_SIZE);
++
++		val = *src;
 +	}
 +
-+	if (fault.write_fault_to_shadow_pgtable && emulation_type)
-+		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
-+
-+	return r;
++	GUEST_DONE();
 +}
 +
-+static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+					u64 err, bool prefetch, int *emulation_type)
++static void map_memory(struct kvm_vcpu *vcpu, u64 base_address, u64 size,
++		       bool should_succeed)
 +{
-+	int r;
++	struct kvm_map_memory mapping = {
++		.base_address = base_address,
++		.size = size,
++		.flags = 0,
++	};
++	int ret;
 +
- 	/*
- 	 * Async #PF "faults", a.k.a. prefetch faults, are not faults from the
- 	 * guest perspective and have already been counted at the time of the
-@@ -326,18 +347,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	if (!prefetch)
- 		vcpu->stat.pf_taken++;
- 
--	if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) && fault.is_tdp)
--		r = kvm_tdp_page_fault(vcpu, &fault);
--	else
--		r = vcpu->arch.mmu->page_fault(vcpu, &fault);
--
--	if (r == RET_PF_EMULATE && fault.is_private) {
--		kvm_mmu_prepare_memory_fault_exit(vcpu, &fault);
--		return -EFAULT;
--	}
--
--	if (fault.write_fault_to_shadow_pgtable && emulation_type)
--		*emulation_type |= EMULTYPE_WRITE_PF_TO_SP;
-+	r = __kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, err, prefetch, emulation_type);
- 
- 	/*
- 	 * Similar to above, prefetch faults aren't truly spurious, and the
++	do {
++		ret = __vcpu_ioctl(vcpu, KVM_MAP_MEMORY, &mapping);
++	} while (ret >= 0 && mapping.size);
++
++	if (should_succeed)
++		__TEST_ASSERT_VM_VCPU_IOCTL(!ret, "KVM_MAP_MEMORY", ret, vcpu->vm);
++	else
++		/* No memory slot causes RET_PF_EMULATE. it results in -EINVAL. */
++		__TEST_ASSERT_VM_VCPU_IOCTL(ret && errno == EINVAL,
++					    "KVM_MAP_MEMORY", ret, vcpu->vm);
++}
++
++static void __test_map_memory(unsigned long vm_type, bool private)
++{
++	const struct vm_shape shape = {
++		.mode = VM_MODE_DEFAULT,
++		.type = vm_type,
++	};
++	struct kvm_vcpu *vcpu;
++	struct kvm_run *run;
++	struct kvm_vm *vm;
++	struct ucall uc;
++
++	uint64_t guest_test_phys_mem;
++	uint64_t guest_test_virt_mem;
++	uint64_t alignment, guest_page_size;
++
++	vm = vm_create_shape_with_one_vcpu(shape, &vcpu, guest_code);
++
++	alignment = guest_page_size = vm_guest_mode_params[VM_MODE_DEFAULT].page_size;
++	guest_test_phys_mem = (vm->max_gfn - TEST_NPAGES) * guest_page_size;
++#ifdef __s390x__
++	alignment = max(0x100000UL, guest_page_size);
++#else
++	alignment = SZ_2M;
++#endif
++	guest_test_phys_mem = align_down(guest_test_phys_mem, alignment);
++	guest_test_virt_mem = guest_test_phys_mem;
++
++	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
++				    guest_test_phys_mem, TEST_SLOT, TEST_NPAGES,
++				    private ? KVM_MEM_GUEST_MEMFD : 0);
++	virt_map(vm, guest_test_virt_mem, guest_test_phys_mem, TEST_NPAGES);
++
++	if (private)
++		vm_mem_set_private(vm, guest_test_phys_mem, TEST_SIZE);
++	map_memory(vcpu, guest_test_phys_mem, SZ_2M, true);
++	map_memory(vcpu, guest_test_phys_mem + SZ_2M, PAGE_SIZE, true);
++	map_memory(vcpu, guest_test_phys_mem + TEST_SIZE, PAGE_SIZE, false);
++
++	vcpu_args_set(vcpu, 1, guest_test_virt_mem);
++	vcpu_run(vcpu);
++
++	run = vcpu->run;
++	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
++		    "Wanted KVM_EXIT_IO, got exit reason: %u (%s)",
++		    run->exit_reason, exit_reason_str(run->exit_reason));
++
++	switch (get_ucall(vcpu, &uc)) {
++	case UCALL_ABORT:
++		REPORT_GUEST_ASSERT(uc);
++		break;
++	case UCALL_DONE:
++		break;
++	default:
++		TEST_FAIL("Unknown ucall 0x%lx.", uc.cmd);
++		break;
++	}
++
++	kvm_vm_free(vm);
++}
++
++static void test_map_memory(unsigned long vm_type, bool private)
++{
++	if (vm_type && !(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type))) {
++		pr_info("Skipping tests for vm_type 0x%lx\n", vm_type);
++		return;
++	}
++
++	__test_map_memory(vm_type, private);
++}
++
++int main(int argc, char *argv[])
++{
++	TEST_REQUIRE(kvm_check_cap(KVM_CAP_MAP_MEMORY));
++
++	test_map_memory(0, false);
++#ifdef __x86_64__
++	test_map_memory(KVM_X86_SW_PROTECTED_VM, false);
++	test_map_memory(KVM_X86_SW_PROTECTED_VM, true);
++#endif
++	return 0;
++}
 -- 
 2.43.0
-
 
