@@ -1,150 +1,95 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1870537ED;
-	Wed, 17 Apr 2024 06:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C189E53807;
+	Wed, 17 Apr 2024 06:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713334625; cv=none; b=sYQaQM+OznebDpvEsQiggCLoiEbOjKvvf5M5w77bVv9khTkwGMI0KH3BiuOm+bLt0b2DPEFmMxRAy36fP3k28fzxuve/imoMpOZKznttG+3R5qXyKRiC6j8fRGBtsnZNot86NXAzmYGt2IJfryLyGKCb8ytuQWLyvsw2SaqSTrY=
+	t=1713334625; cv=none; b=MPAYz4/oKypK9fJI2dEC8J2H+r6siTEZFDFm+UzfV1JdwpXH6RXKgoEAfAbSHdvwcNIltPakgq9eRidp1mPEo8LOl0fNe03D50uhlyEkSak0U+Orzfv/p34yFLzmuVxNp74M6kQaMb/tghlr+uPUjySh4wZcKzhwxD31b86czr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713334625; c=relaxed/simple;
-	bh=ub6kq74U0aYFIEC3DfFei2mAsfVCPJ20ozkIwFL9EQY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j6iwkYHvvwMlNiHq4orv0FcEIWCE4xyp3oKyezIZuAQTEJJHwW4hJ5cLgxzJR7/l7hXR54t6XpZBLVV4PoFw3JuR+UxqzEl/eh+01QjgO6FOrR1+cNAKChM7O7HxH0+ma2ODqQq9J/3U/qj1s6EY6XGYPOJspmjase7NsAYeL/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oAplKs2H; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=0J1Qe7V2WFO72quDvEDPSDcrlOlYGUy9Qip9dj5vZ0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MWWKxuSbvqpBdhkILCdabyRHM9Zivr+u62gGr04JMOtyOmPXYVrMC51xtWPGBhOWAKnEElnS58BkcJXQoFWkPbkxWdtkxedCNGe6+BAk0AItVkTZLXnBC80pA5ZbeWTiAc7ES8aBOfNVe0HEfaxQPw5gBskJnNWoXINtQ/tJ2nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+xTBtPK; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oAplKs2H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+xTBtPK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1713334624; x=1744870624;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ub6kq74U0aYFIEC3DfFei2mAsfVCPJ20ozkIwFL9EQY=;
-  b=oAplKs2HuWAYr+LA54zvzXW4vYha1WUsQpPen/r8cb1EpZVDnsQwyJnJ
-   903+oW8nXlYhtNGA5ASuDDRQCuQZls53FvWSf+esGnbiFoS87++/mS4oy
-   5ZcdGJA0Wf8Lg6oCDJ0odMnyDHfvkuP5qs0OFdYK2T8W2V6HWg2VnqY0J
-   FNGc63co+8SeYWpd9kRphH27OmSC7pdog7MXrBpONZ9nIcSLfmR05L/NK
-   DWhNKEu6DbNEOPb7xYAs7E3Y2IXpFR2m2p8UVP3btqCnw8kLYYky3V84P
-   a0TN5rc+G0+/OJAS5TNZX2EzBSIGaiL37o03yW/X8gtJZhwrEkB7jFiF6
-   w==;
-X-CSE-ConnectionGUID: 7irgcBpMRg6+wN07igDiCQ==
-X-CSE-MsgGUID: JrkHt6DpTnKyGPh816tfBg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="11750823"
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0J1Qe7V2WFO72quDvEDPSDcrlOlYGUy9Qip9dj5vZ0A=;
+  b=F+xTBtPKej9gUIWZBq1uDBphLsSGef1Kz8Ks7nLv/McC/GMjNP39CC/s
+   fwTd4QDV52YmwMpT6X4Y47jY9DjbOlMGqspUD94bXo1vlMnlmH2fpdHX2
+   6Ua6Xw2iwxrK9m2UgjIfZZQ25FHnQ+do37Jzt90wBTOUX023y7tokxdgG
+   xHc2ZdnuSMLWzSrFx45xfDGf02qfbKZEXtHgAGEKU2pUQmnE79Op9JbPN
+   LAmXJWNG2ZCpgROwbMz8YH8qWgS8mjZb8SpLZLrwwGwBsDLOrDDqI8wiE
+   57qlJc2sHaeel0KOjfh3PIFBoaFWESW856gkJ90fp8qbQTcvBLJN1xqyV
+   A==;
+X-CSE-ConnectionGUID: 8QkL/u5VQsujHOhCPkUxQQ==
+X-CSE-MsgGUID: kL25jsnhTz25lXWnkzGoCg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="11750832"
 X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="11750823"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:17:02 -0700
-X-CSE-ConnectionGUID: abTWy6MlTSue4rwbuM6wug==
-X-CSE-MsgGUID: QIvtvlAbQQmcqJ/4U5WcuQ==
+   d="scan'208";a="11750832"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:17:03 -0700
+X-CSE-ConnectionGUID: Sw/+0tTkSwORlNrgJa1Iww==
+X-CSE-MsgGUID: /Xo3zss/RYenwmYmBg/J+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="23109064"
-Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:16:53 -0700
-From: Zhenzhong Duan <zhenzhong.duan@intel.com>
-To: linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	james.morse@arm.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	bhelgaas@google.com,
-	helgaas@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	linmiaohe@huawei.com,
-	shiju.jose@huawei.com,
-	adam.c.preble@intel.com,
-	leoyang.li@nxp.com,
-	lukas@wunner.de,
-	Smita.KoralahalliChannabasappa@amd.com,
-	rrichter@amd.com,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	erwin.tsaur@intel.com,
-	sathyanarayanan.kuppuswamy@intel.com,
-	dan.j.williams@intel.com,
-	feiting.wanyan@intel.com,
-	yudong.wang@intel.com,
-	chao.p.peng@intel.com,
-	qingshun.wang@linux.intel.com,
-	Zhenzhong Duan <zhenzhong.duan@intel.com>
-Subject: [PATCH v3 2/3] PCI/AER: Print UNCOR_STATUS bits that might be ANFE
-Date: Wed, 17 Apr 2024 14:14:06 +0800
-Message-Id: <20240417061407.1491361-3-zhenzhong.duan@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
-References: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
+   d="scan'208";a="59932999"
+Received: from unknown (HELO [10.238.13.36]) ([10.238.13.36])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:16:59 -0700
+Message-ID: <8d489a08-784b-410d-8714-3c0ffc8dfb39@linux.intel.com>
+Date: Wed, 17 Apr 2024 14:16:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 105/130] KVM: TDX: handle KVM hypercall with
+ TDG.VP.VMCALL
+To: Isaku Yamahata <isaku.yamahata@intel.com>, Chao Gao <chao.gao@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+ isaku.yamahata@linux.intel.com
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <ab54980da397e6e9b7b8d6636dc88c11c303364f.1708933498.git.isaku.yamahata@intel.com>
+ <ZgvHXk/jiWzTrcWM@chao-email>
+ <20240404012726.GP2444378@ls.amr.corp.intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20240404012726.GP2444378@ls.amr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When an Advisory Non-Fatal error(ANFE) triggers, both correctable error(CE)
-status and ANFE related uncorrectable error(UE) status will be printed:
 
-  AER: Correctable error message received from 0000:b7:02.0
-  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr
-    Uncorrectable errors that may cause Advisory Non-Fatal:
-     [18] TLP
 
-Tested-by: Yudong Wang <yudong.wang@intel.com>
-Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
----
- drivers/pci/pcie/aer.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 4/4/2024 9:27 AM, Isaku Yamahata wrote:
+> On Tue, Apr 02, 2024 at 04:52:46PM +0800,
+> Chao Gao <chao.gao@intel.com> wrote:
+>
+>>> +static int tdx_emulate_vmcall(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +	unsigned long nr, a0, a1, a2, a3, ret;
+>>> +
+>> do you need to emulate xen/hyper-v hypercalls here?
+>
+> No. kvm_emulate_hypercall() handles xen/hyper-v hypercalls,
+> __kvm_emulate_hypercall() doesn't.
+So for TDX, kvm doesn't support xen/hyper-v, right?
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 27364ab4b148..870e1d1a5159 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -681,6 +681,7 @@ static void __aer_print_error(struct pci_dev *dev,
- {
- 	const char **strings;
- 	unsigned long status = info->status & ~info->mask;
-+	unsigned long anfe_status = info->anfe_status;
- 	const char *level, *errmsg;
- 	int i;
- 
-@@ -701,6 +702,20 @@ static void __aer_print_error(struct pci_dev *dev,
- 				info->first_error == i ? " (First)" : "");
- 	}
- 	pci_dev_aer_stats_incr(dev, info);
-+
-+	if (!anfe_status)
-+		return;
-+
-+	strings = aer_uncorrectable_error_string;
-+	pci_printk(level, dev, "Uncorrectable errors that may cause Advisory Non-Fatal:\n");
-+
-+	for_each_set_bit(i, &anfe_status, 32) {
-+		errmsg = strings[i];
-+		if (!errmsg)
-+			errmsg = "Unknown Error Bit";
-+
-+		pci_printk(level, dev, "   [%2d] %s\n", i, errmsg);
-+	}
- }
- 
- void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
--- 
-2.34.1
+Then, should KVM_CAP_XEN_HVM and KVM_CAP_HYPERV be filtered out for TDX?
+
+>
+>> Nothing tells userspace that xen/hyper-v hypercalls are not supported and
+>> so userspace may expose related CPUID leafs to TD guests.
+>>
 
