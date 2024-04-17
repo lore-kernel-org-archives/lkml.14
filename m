@@ -1,221 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733B079D8
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713323538; cv=fail; b=Zd2OGGnU0fxrzQ/DplncUJ4gLSf7HkomKFfbtYY5ASjcYWjJerc1JyBEDQQd8NmzHjsT2OIgpWPpZNLzHGeSkDK3+I04ALqw8h0wdHfa4+yDFAy+hh0g5ZdaV0EhlxBIJS3VLwAaIZ6MB1syg8NDEAsVNVrMXXqLSwhGZyAeteM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713323538; c=relaxed/simple;
-	bh=DtXECkapG113dHsNyM5tIDdQ2rBCkC5CoeDPbKl8BDc=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=q1ENPazVcQVi+ORnlleFwnKr6H9QJxkKK6S7uEXmCRjZjIxeUkheDI5As9YYnBwXPcBe7+67iQAFpCqsOMisYcZXpBomfLLuZNcuDdiWY0ZIA1NMo1oK2foJEvTvLoQqmHb4eCvEFwWazprHD+zcaNiCxP+gQeIm39gNmAgr3/M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nmde2R3t; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0DE1851
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 03:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713323713; cv=none; b=Qy0EDmD2lZzOiNgdit4Geb8tThRiVpw9IpoXqll/9XqOlHq1uviYKw7TXU+YuzRfOVQiT4oBiVfl2xeu3R0QQPvqv7yciPBUpIsPGRFvYFDswfoFYHihmb6l9Yg7R1IrzgB+DKFX0ef3rNlS9bnqLoz6T5o3nrI02Fk1T8PvQ/4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713323713; c=relaxed/simple;
+	bh=gIK7Zcm3GU6p9R5xRfn0153OVJxvpH1NOiwiuJDbZek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qeQM4/dIcl5IzZ221uz2xPtG7KfWyhLQJtBGlDwwv5dQ0LAC76c9US69VuCc5QXfmLA9mfOrrDFnjSxMRoR8CWP2RbYIndDPHvgA0EPhg8RF1Tq3lumT5lyRuI342z6x8bzScAz1JFKP6BdA/3q9uqUUeBePBcHzbCWTnQEYbyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WxALzxIm; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nmde2R3t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713323537; x=1744859537;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DtXECkapG113dHsNyM5tIDdQ2rBCkC5CoeDPbKl8BDc=;
-  b=Nmde2R3tmsjK8H2Jh43n3oEBk0LOr87WqEi16eukmWMUoezeLLhtZsy3
-   MYKYu5tuzbiq0fNtVLFBCa4ddvB6urbpa1uDKgUkDORvyIVmeJnu4Olw9
-   MTOH6JmGoQQqkeF32IobFmo2YXKSFOhMGWCialg02CUy8qJY+UlE0ghvc
-   XqKK8zpoZGC5TdQTapO6OrknIyo8CNcSE1BGaIg1sUJ8LX2wELHurTPEd
-   SVX/bSw02doj3yYJzoFPYn+OqAqiYDHG69KwZk1VNWcf9NrEeTm657hRW
-   gM7SM4uGe4UUiyofq1oqeKjJG31GxbbmizjZ96GQ4RigPaecg0jur/ZLf
-   w==;
-X-CSE-ConnectionGUID: wCHSwlTUThaOkT7ZLa/lJQ==
-X-CSE-MsgGUID: LEvvaOf6Q6ii1BiBz47dTQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8722052"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="8722052"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 20:12:16 -0700
-X-CSE-ConnectionGUID: DPrBaV4rTSWCzpN6FLm8Wg==
-X-CSE-MsgGUID: 34EYDxegQ/CzbQ1Ronq/hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="22551009"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Apr 2024 20:12:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 20:12:13 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 16 Apr 2024 20:12:12 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 16 Apr 2024 20:12:12 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 16 Apr 2024 20:12:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Os48y33SkmvJiw0p6Ogdk9g1wNaS7t0qg2njOh7Bgtxl3KP0Sn7lVn+W0wV0zNzcPAlhS81Xtdd1HbThCuGpNkCDJ1XwItKCgK3mB4VJtm8xgIHEmaeEbUd9atNQxqyaMYQoFwtcsIyhhQrhtujOKazBj/576ZLpr/0h9MtPFCDNWL7n8rHTDQkbcy1iYxPNJ+GhdKAMOt7yA7g2jij+m8QE+61sEVlbpqsIvlN7Nj+e1woW2pLOTIiRLDuiuN7DVHAtMPfBat/8QNxsaA9HzQjKk1Fflimgi1jPKKlf2wO6t8HBoz+e6Q2RyBZD5HcmEqdrt0MPTDifij3rfyIg6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RCuocoTZ+PdSRWB4flsB4DO4BYFoAl3to3s+q76aKy4=;
- b=njwXwQoSkRDW3pKL9u4lHUcKC2uNXLm2OjetK5oikd6zVYRUH6IbHJ2+9NdWOn9/9+SCIKz7EXlE9oGBdM6D11PcRoZ4iSCrn2aXrpPibO1ZOne8mvgt6XPoO7VM7X/pbVuVCnc5V+VD0mD9V6GTaAPlhZNz0l1WeLCylD5oRPEbW1/ROa5QfK26NSNBytwsxod7t6EvNiCYqS+i8rJz2uzdI5un6g3Y1BwJoWbkD1m+tQRpBWk5CwVYYqHScYjNTe9bXr897n/eBdi01Nftpw6x17AYXaesa/bc3FiqL54IfPvXhkjLkKylqfUMi/qCIKzqIKZRQq8WeGjiMnrzHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com (2603:10b6:806:373::21)
- by PH0PR11MB7445.namprd11.prod.outlook.com (2603:10b6:510:26e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.49; Wed, 17 Apr
- 2024 03:12:10 +0000
-Received: from SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::c0cf:689c:129c:4bcd]) by SA1PR11MB8393.namprd11.prod.outlook.com
- ([fe80::c0cf:689c:129c:4bcd%6]) with mapi id 15.20.7472.037; Wed, 17 Apr 2024
- 03:12:10 +0000
-Date: Wed, 17 Apr 2024 11:05:34 +0800
-From: kernel test robot <yujie.liu@intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Kees Cook
-	<keescook@chromium.org>
-Subject: ./../kselftest_harness.h:1152:30: error: format string is empty
-Message-ID: <202404170611.Kkkdkvdy-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI2PR01CA0027.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::7) To SA1PR11MB8393.namprd11.prod.outlook.com
- (2603:10b6:806:373::21)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WxALzxIm"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed01c63657so4586111b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 20:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1713323711; x=1713928511; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IvJgPEKfApjGaaWsvymUmKFv+OXbTSoE3bSNn3GOF10=;
+        b=WxALzxImC+YmOFcWHp2GySkxOaYGsNtulsvUcDotM39gZGf7zuFGblM63kaG8agLfo
+         ILNeWDHikJebISst1j9SWMyvqZ/DJ9TSbp1PD+VGuT4CjgpBBBGNEYJeXeMNhdCJszKk
+         P77O2fvYdgGj+g973/Lh8mDgybrlxtHNmH4VI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713323711; x=1713928511;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IvJgPEKfApjGaaWsvymUmKFv+OXbTSoE3bSNn3GOF10=;
+        b=VKrsSUlPhsWmTb9XQ/AbPuI+EfJt5Hg69JsghHAZ8yvS92S/rRnnh6VJge+Lbk/T8x
+         HqTFxRGGoJrS4YtAT2g5ixIt7eXRr9Ilc4IfNvwmHxfFj8fcJgk0gmPwgs6+EKeE+UGP
+         IQ7boz2qAora0edQ7bC04fvM1tjbVCCOTB5yRlnupSzPHqIC3ta32qu0UJjH2TYxD6qp
+         0tV/D4VCh0FuvOuMkfPRCdwfCn0Z2MkPzvn+FhyVa7n5Cc/SppDx/raCTXCGDMnneYSv
+         xz6cadgbQag4nlD90Bq3GVscLQkEWD7sIAxkrOx0TtQjrKrH3YaJ8Zjk/iLC/cYykf30
+         Jggg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtQY4k0eb8XqeroC1sT+FhG3snyZ6kCNeEnLJPUqtODFKoVBz/UNYqcYjST5oTP9e32Iw6jNUfbimwtdi0wzyQGPFSNujNhb3SyHzA
+X-Gm-Message-State: AOJu0Ywt+5loH92V+6Zv2P3TeP/BYi2nc0qz0WRY1e2ekwVnBgZB9izT
+	GO/g8KW3nK1pEfs8DIMawIThRyjFcfzItbyY2WDMfmcZtfiUSIWR7rX7MveyGg==
+X-Google-Smtp-Source: AGHT+IFjC/luh0HqH1Epr0Vv/iN2i/GQ0swehTb6RFrsbpSQMAGBfwWvI/BUv7COnb/a9rb+RvoU5w==
+X-Received: by 2002:a05:6a00:a87:b0:6ed:4a80:133c with SMTP id b7-20020a056a000a8700b006ed4a80133cmr15817679pfl.1.1713323710985;
+        Tue, 16 Apr 2024 20:15:10 -0700 (PDT)
+Received: from [10.230.29.214] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id hq6-20020a056a00680600b006ed14fed3a5sm9758366pfb.154.2024.04.16.20.15.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 20:15:10 -0700 (PDT)
+Message-ID: <7b465ddb-2b18-4e7f-8b03-d4e51006e1cb@broadcom.com>
+Date: Tue, 16 Apr 2024 20:15:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8393:EE_|PH0PR11MB7445:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4758f520-1f2e-4693-80fd-08dc5e8c2b59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EbU+LLgt0s7tqXIUHEcI+KdnDuHjPSjNXUn1+of3dEqPQdfWU8FsH2IlT9KJ+ejOC4GBHqgDgaT7O6xDmIrGtvZZ/s9EQvqfHmvn1nMFVxoRlJgeGVnsKajX+ZzWquCAMHAC9ans5fXazmbbjE0vErTOv5tHTywsd4AngfPAX199sVR/cr4oWNSegus0CJMXtZtGHWwdgFBSsld4lfiMdN/ievvZHNuBFk5QStT3HffDmcwglIS2jt2CjF+5lF+hCll0exM9bjJTWzknf5Yy2bPAmJfjFwbfZIfL8Ab3NZ2INtiWdEeqXQsDtgXrOPhqb7TYsBspUVbiwp6J+pdvPezexgDVWQYgJKPN579n1BB79M3JY36+atwW16F6GxdX4j5Bv+8O65YqxRZ4FF1LM7sgmpsQEctzlr+FI5cbPNR2TzmGlfVfp6h58ExxKbnhmGArbj2XazQBf15LJSXUooCEZL9wrk57nmdWtpO/SQCZvbhblayiRPIEioHykPuqOQ72XyD+QMlCGTrSwJZHZ2r89iQ8wS/mWaNm9xN8lQFL8MGYnQ10tnOAs4GpLkXlss6gkyqudQoKKfNNtgBBJeR1OkE+0tlXBTZfxJjKroSB+PssG9qBH6RCRiT81BB+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8393.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wU+fOozWZoUDVWOEIRc2eGzNVYtd5Fof5VSjjFj34vConXOKffYFlKO2WdkN?=
- =?us-ascii?Q?Z++png0+J8vTXYKyyl0pMFigzvZXMCgtf00K4DQ1VyraFMAdySUEFrV+qt/Y?=
- =?us-ascii?Q?2cBFGJq5Kwqac/nQVFlU/isIVTbBX6ZPDuz0HFwzLnV+C5n7ygZ1s4zLEr2d?=
- =?us-ascii?Q?ONTOogU8ZD3WcOKOBeCrZcIjdMLTvA8akiyGPOrxWl4pl7cqDnu8119uWpLq?=
- =?us-ascii?Q?xN4AzF1v2bsbAzL76tswIpw5OBkK3bYdL1XAVTe71dIPhR/7U1y4LBEZazrB?=
- =?us-ascii?Q?GDgxtr7kZ3/2kIz1aq/8OEQOS2OZESYf5ITzXLtNRzqjjzWT6vZSQxDIKw06?=
- =?us-ascii?Q?E5+TgncU+zyAQINU4P+ku8+fvPc05/EhhQjI00JXqAIY1EQ82oYKyYUbjh29?=
- =?us-ascii?Q?dBW0pTacOGIiz8SKzWGUpJoLhw6ZMjwNQWYK6sGE57Gb8Ow3jELEHT2BpziW?=
- =?us-ascii?Q?O17vkEYDRvxHHPXh7JXI/QynnVIjEIvFEcMjDn6EglbQumT+raKqXCVo6wYq?=
- =?us-ascii?Q?xmqv8YYrhBYF5kD/RvXQwfan/YKsPDyORKe1SvIegiS1YjwBZ8vPD45jRYR7?=
- =?us-ascii?Q?F765esGGC2BVHn+DeUI1X9PLhyvegJojgsaqp/bOEp4k1ZTZca+KYJtPVpUh?=
- =?us-ascii?Q?3G1zNwLyPVqyIXNAGbuDO+PGdvYDND9GW7IeqW5mxOKiwpmrBzr5y7A40qrC?=
- =?us-ascii?Q?drV03OpLASlH3wV9U5t5c8arVoqxaIiI1Tm2Imj8n5xubxa9vyRWRCcKtBS/?=
- =?us-ascii?Q?TubObOFJrxrRgI5g2KzIkt0rk8pmLNNGYYPsCszdgUdwcbJahECSdnakvPxz?=
- =?us-ascii?Q?CEh3/GFIQ+aFHUznqediPXV3KyuZRnxWDci/TDW+B3yzGsabJvHw9P3V7bXR?=
- =?us-ascii?Q?E8EaIk330f5hizT+lceu0TFh1/H3e2B3kBvqHAKEzKDZahptZi+Nr5xRddcQ?=
- =?us-ascii?Q?wsWYFQPTM6wP4yTlI4rcJ2VWqMc8Tz8zECMtByeHiSDCARJLeJRYy97gHJvd?=
- =?us-ascii?Q?2fnNLE0ZmHglMuKZDh3UdMld2fm1VF4r+477UuNz+bwWDCY9hck5KBt0ZkRt?=
- =?us-ascii?Q?9FEP1eewYN5uncp1HIQBCJldP8pQMNKiQLzf+aGvzno89dZij12+tq5xZ8HQ?=
- =?us-ascii?Q?jRd/qpSz+zK/fxbT+jwr9kFyTH3nmZ7sJZmvRZXLOe+Gi1dMkOysQifEJLwe?=
- =?us-ascii?Q?3NB7Dp891udmo3+ynEmnXKMjGlcc5BD3bJB7JGxgCdX/UCR8SV6INFnygPB0?=
- =?us-ascii?Q?AZpJj5vNS4VZvxP2e/5J+boC+HvPLJ4z/3mKK0/Z33IVZ0O33rVm0iPiulx5?=
- =?us-ascii?Q?WfVAP32FVaT3vRKc8I3nEhTLxB/olQqBrBcydNSkaXHeBqzr/9O2u8yxPiCp?=
- =?us-ascii?Q?fABxsVZo8cuzFhbThePug8FIPwAupRZSJhB/1EXVkXVu46gPqSIW7BQZSAU1?=
- =?us-ascii?Q?/tXfPSfJPKX4JOQ5jH5/iUkgLQnhpaIlFdr6r2iVWufdwCyIkuXvWbxhkDyM?=
- =?us-ascii?Q?orK0phyTWUoxLLkmRv0gMz7cAK0r99aN/JrovCSq4lrWl0Qy7VOcBdqjcXec?=
- =?us-ascii?Q?vv56pkW983WkIclwvuWbUPbilNPTcFY4Ja5z/nsY?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4758f520-1f2e-4693-80fd-08dc5e8c2b59
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8393.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 03:12:09.8081
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1AmDZajfAQ1bdT+024X8k6Vj+GC7BBWuj7azQYX7cVbxzYiwiAYaV0a0fh4sK0TJn7AMhPWdMYnaKFEqPDhVcA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7445
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] ARM: dts: BCM5301X: Add DT for ASUS RT-AC3200
+To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Hauke Mehrtens <hauke@hauke-m.de>, Rafal Milecki <zajec5@gmail.com>,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: Tom Brautaset <tbrautaset@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240414-for-soc-asus-rt-ac3200-ac5300-v1-0-118c90bae6e5@arinc9.com>
+ <20240414-for-soc-asus-rt-ac3200-ac5300-v1-3-118c90bae6e5@arinc9.com>
+ <a88385a4-afad-4bd8-afc1-37e185e781f4@kernel.org>
+ <85261d11-d6cb-4718-88d9-95a7efe5c0ab@arinc9.com>
+ <e6cfe735-0a46-4c07-90ee-4ae25c921b03@kernel.org>
+ <335cdd4b-7309-4633-9b4f-6487c72c395c@arinc9.com>
+ <07c9c5f5-c4b9-44d6-b909-5aa306f56898@kernel.org>
+ <00ba4593-d720-419a-a97d-37c402c91e44@arinc9.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <00ba4593-d720-419a-a97d-37c402c91e44@arinc9.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000367482061642431c"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   96fca68c4fbf77a8185eb10f7557e23352732ea2
-commit: 378193eff3399acb8529d0b553709e8f91d34fe3 selftests: kselftest_harness: let PASS / FAIL provide diagnostic
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240417/202404170611.Kkkdkvdy-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <yujie.liu@intel.com>
-| Closes: https://lore.kernel.org/r/202404170611.Kkkdkvdy-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from hid_bpf.c:5:
->> ./../kselftest_harness.h:1152:30: error: format string is empty [-Werror,-Wformat-zero-length]
-    1152 |                               diagnostic ? "%s" : "", diagnostic);
-         |                                                   ^~
-   1 error generated.
+--000000000000367482061642431c
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-vim +1152 tools/testing/selftests/hid/./../kselftest_harness.h
 
-65177e47d3035c tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2023-01-25  1108  
-142aca6b388c8a tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1109  void __run_test(struct __fixture_metadata *f,
-74bc7c97fa88ae tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1110  		struct __fixture_variant_metadata *variant,
-142aca6b388c8a tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1111  		struct __test_metadata *t)
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1112  {
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1113  	char test_name[LINE_MAX];
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1114  	const char *diagnostic;
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1115  
-74bc7c97fa88ae tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1116  	/* reset test struct */
-69fe8ec4f673b5 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1117  	t->exit_code = KSFT_PASS;
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1118  	t->trigger = 0;
-0ef67a888375b0 tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-06-22  1119  	memset(t->results->reason, 0, sizeof(t->results->reason));
-74bc7c97fa88ae tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1120  
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1121  	snprintf(test_name, sizeof(test_name), "%s%s%s.%s",
-74bc7c97fa88ae tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1122  		 f->name, variant->name[0] ? "." : "", variant->name, t->name);
-c8bd596f9388bc tools/testing/selftests/kselftest_harness.h    Michael Ellerman 2020-09-17  1123  
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1124  	ksft_print_msg(" RUN           %s ...\n", test_name);
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1125  
-c8bd596f9388bc tools/testing/selftests/kselftest_harness.h    Michael Ellerman 2020-09-17  1126  	/* Make sure output buffers are flushed before fork */
-c8bd596f9388bc tools/testing/selftests/kselftest_harness.h    Michael Ellerman 2020-09-17  1127  	fflush(stdout);
-c8bd596f9388bc tools/testing/selftests/kselftest_harness.h    Michael Ellerman 2020-09-17  1128  	fflush(stderr);
-c8bd596f9388bc tools/testing/selftests/kselftest_harness.h    Michael Ellerman 2020-09-17  1129  
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1130  	t->pid = fork();
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1131  	if (t->pid < 0) {
-e80068be21824e tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-06-22  1132  		ksft_print_msg("ERROR SPAWNING TEST CHILD\n");
-69fe8ec4f673b5 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1133  		t->exit_code = KSFT_FAIL;
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1134  	} else if (t->pid == 0) {
-92d25637a3a459 tools/testing/selftests/kselftest_harness.h    Li Zhijian       2021-12-17  1135  		setpgrp();
-74bc7c97fa88ae tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2020-04-27  1136  		t->fn(t, variant);
-796a344fa4315f tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1137  		_exit(t->exit_code);
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1138  	} else {
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1139  		__wait_for_test(t);
-f46f576280595f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-03-13  1140  	}
-38c957f0703827 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1141  	ksft_print_msg("         %4s  %s\n",
-69fe8ec4f673b5 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1142  		       __test_passed(t) ? "OK" : "FAIL", test_name);
-9847d24af95c7f tools/testing/selftests/kselftest_harness.h    Kees Cook        2020-06-22  1143  
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1144  	if (t->results->reason[0])
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1145  		diagnostic = t->results->reason;
-378193eff3399a tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1146  	else if (t->exit_code == KSFT_PASS || t->exit_code == KSFT_FAIL)
-378193eff3399a tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1147  		diagnostic = NULL;
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1148  	else
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1149  		diagnostic = "unknown";
-fa1a53d83674b3 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1150  
-732e2035280bf4 tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28  1151  	ksft_test_result_code(t->exit_code, test_name,
-378193eff3399a tools/testing/selftests/kselftest_harness.h    Jakub Kicinski   2024-02-28 @1152  			      diagnostic ? "%s" : "", diagnostic);
-c99ee51a9d9716 tools/testing/selftests/seccomp/test_harness.h Kees Cook        2015-06-16  1153  }
-c99ee51a9d9716 tools/testing/selftests/seccomp/test_harness.h Kees Cook        2015-06-16  1154  
+On 4/15/2024 2:10 AM, Arınç ÜNAL wrote:
+> On 15.04.2024 10:57, Krzysztof Kozlowski wrote:
+>> On 14/04/2024 22:21, Arınç ÜNAL wrote:
+>>> NVRAM is described as both flash device partition and memory mapped 
+>>> NVMEM.
+>>> This platform stores NVRAM on flash but makes it also memory accessible.
+>>>
+>>> As device partitions are described in board DTS, the nvram node must 
+>>> also
+>>
+>> Sorry, but we do not talk about partitions. Partitions are indeed board
+>> property. But the piece of hardware, so NVMEM, is provided by SoC.
+>>
+>>> be defined there as its address and size will be different by board. 
+>>> It has
+>>> been widely described on at least bcm4709 and bcm47094 SoC board DTS 
+>>> files
+>>> here.
+>>
+>> These not proper arguments. What you are saying here is that SoC does no
+>> have nvram at address 0x1c08000. Instead you are saying there some sort
+>> of bus going out of SoC to the board and on the board physically there
+>> is some NVRAM sort of memory attached to this bus.
+> 
+> Yes that is the case. NVRAM is stored on a partition on the flash. On the
+> Broadcom NorthStar platform, the NAND flash base is 0x1c000000, the NOR
+> flash base is 0x1e000000.
+> 
+> For the board in this patch, the flash is a NAND flash. The NVRAM partition
+> starts at address 0x00080000. Therefore, the NVRAM component's address is
+> 0x1c080000.
 
+Because the flash is memory mapped into the CPU's address space, a 
+separate node was defined since it is not part of the "soc" node which 
+describes the bridge that connects all of the peripherals.
+
+Whether we should create an additional bus node which describes the 
+bridge being used to access the flash devices using the MMIO windows is 
+debatable. Rafal, what do you think?
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Florian
 
+--000000000000367482061642431c
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIESeGUcSZtm6fWzj
+iusaHPeABiKFdv63CB/TRVV6rQ1OMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQxNzAzMTUxMVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCE4Owk3LL9mosedYgwNkc3OgnQCZwTofam
+abEj5xIL5cBdWALg9dAbXmHUzInrgI/7iELL4dHGN0LMRzpDcoj13Wne2XPlLxFAUVzk8G5ko/3E
+EtBRX7yDVnEhDv4bdl+nfvnNNnByd7hm/HVXf09Xko8ofaccpgtqeF0rihWstdgGLmD5YVe8VvvT
+5TecR2cUC2cQwWx0UXe4wBOvC+TI2VqvBGbSvBfPjH5A/i+JH/NXZ5r5vo0i93ie2GxjYSDL+urA
+1U5bCYjIyKMHvmLnxV7FPzRwnZjQO8dwKOtWfp7lEcBthdNwltBmfEVGFBtVC5EVxUZaZwVmTwbT
+gp+g
+--000000000000367482061642431c--
