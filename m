@@ -1,160 +1,111 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE9B13EFEF;
-	Wed, 17 Apr 2024 13:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A9513C3F5;
+	Wed, 17 Apr 2024 13:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713360292; cv=none; b=EgKuWh2/Os3bJikbrPnfr8cQSDIFHQsj9GBdfVNSVbhfeAQBhY/UqpFmP+4M1rbFEra8jbLJiPmta5xdNGb2nEvdY8zgbj73MYo9MaESIU6pi8dngjXiPYt8FEiomHOkgTyEFy+AHO5pwzWgW33XAIgPb7OJGh1SaHOT0np3Uvc=
+	t=1713360297; cv=none; b=rToo/8WESePWbd4UFAoNgQDROfQiVMDxMzwEOznA6i/UtxbPnpnK4KgivoTO01PdoHbnddemRCsvdki/TLBmOQKxYMHvXeTeorsP+eotYuRT2aGHT93gBNx1NPp3fkYprHmzUmANZyl5Hm+p1GsJsl3IBuQA2sS6Q+U5iUxnedg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713360292; c=relaxed/simple;
-	bh=zAPte4ncf56IvnReb/VYq+RT45jYBDRCK8Tgm4y9Dpc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uQLMzccEux4k2iElBHeBP9JEMntvnHK61Gq3lmbej5x6DcuKo0eEtz2diV/rlM/2dNfOxYpZK+i45JrmL+sgswp1yFsuCZOc4E18rpxY9LiquD8oa8PVtcZPvxo0EvlV12wZH5fxYln9FPmUc0ciCBGovU6kSkVxN+Wu0TCJII0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKM601sW8z6H7xl;
-	Wed, 17 Apr 2024 21:22:48 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 54EAC140A08;
-	Wed, 17 Apr 2024 21:24:48 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 14:24:47 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v6 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
-Date: Wed, 17 Apr 2024 14:19:04 +0100
-Message-ID: <20240417131909.7925-12-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
-References: <20240417131909.7925-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713360297; c=relaxed/simple;
+	bh=uphtWyL4Vdav4pHrPyDm5t6wcResh5pkONc4k4dfnNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J7Xy9MUzv68Rf+qBlU+Dw0a/clJj4f7a0Vo+CiLZRtv01nLx65XbP1/pfp10l50J/Nu1FCsG5iq8iRJLbJEpShizZytooDM1a2tEVpLSc8xHnULZm5fcIm5AwuUJ73GgtZuvWt0F+I6VtXetuKKsuBopNJtOTUUwMnYJTTMSz/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bl1V080Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bl1V080Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44A7C072AA;
+	Wed, 17 Apr 2024 13:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713360296;
+	bh=uphtWyL4Vdav4pHrPyDm5t6wcResh5pkONc4k4dfnNY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Bl1V080Z/Brh3SaLd7k+Y5SGafjuopXU3nAM/f117Ci08cbKMC8KFvVqlwlN05Ffs
+	 sDkqMlqP8AmpUM4YjhHdo5Azq9DMwCs7mGe1jqHrMZ9IcTjHpKJkU6QSOBThHUvGCA
+	 YGN+vKls8antpHp56mo/wBLqd5rnwziAIU1Ho04kVVcZaWhhya28hDGHom2catEFW9
+	 ZDrW4+JiHws719yvCpF2AtmciaIW3BFY7xRy/oxhdT7HwUt0h444YCjWYGqp6YToM8
+	 KU6zf7627hmrHmIXLv5DHgJkqGxiRajwn4wJdpxqeD1HuPJCasgXPSwCAIXPtdhmff
+	 ilHlMz0MRcXYA==
+Message-ID: <81f692c1-87cb-4bd8-8bff-db50ccd9e16c@kernel.org>
+Date: Wed, 17 Apr 2024 15:24:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] dt-bindings: arm: rockchip: Add ArmSoM Sige7
+To: Weizhao Ouyang <o451686892@gmail.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ sfr@canb.auug.org.au, weizhao.ouyang@arm.com
+References: <20240416034626.317823-1-liujianfeng1994@gmail.com>
+ <20240416034626.317823-3-liujianfeng1994@gmail.com>
+ <CAHk0Hosivk8=2LNC6Pz1qAGFg1791z12tYRf-cEZNLZb7HaQVQ@mail.gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAHk0Hosivk8=2LNC6Pz1qAGFg1791z12tYRf-cEZNLZb7HaQVQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: James Morse <james.morse@arm.com>
+On 16/04/2024 13:11, Weizhao Ouyang wrote:
+> On Tue, Apr 16, 2024 at 11:46 AM Jianfeng Liu <liujianfeng1994@gmail.com> wrote:
+>>
+>> Add devicetree binding for ArmSoM Sige7 board
+>>
+>> Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Reviewed-by: Weizhao Ouyang <weizhao.ouyang@arm.com>
 
-To support virtual CPU hotplug, ACPI has added an 'online capable' bit
-to the MADT GICC entries. This indicates a disabled CPU entry may not
-be possible to online via PSCI until firmware has set enabled bit in
-_STA.
+This does not match your email. What did you exactly review here?
 
-This means that a "usable" GIC is one that is marked as either enabled,
-or online capable. Therefore, change acpi_gicc_is_usable() to check both
-bits. However, we need to change the test in gic_acpi_match_gicc() back
-to testing just the enabled bit so the count of enabled distributors is
-correct.
-
-What about the redistributor in the GICC entry? ACPI doesn't want to say.
-Assume the worst: When a redistributor is described in the GICC entry,
-but the entry is marked as disabled at boot, assume the redistributor
-is inaccessible.
-
-The GICv3 driver doesn't support late online of redistributors, so this
-means the corresponding CPU can't be brought online either. Clear the
-possible and present bits.
-
-Systems that want CPU hotplug in a VM can ensure their redistributors
-are always-on, and describe them that way with a GICR entry in the MADT.
-
-When mapping redistributors found via GICC entries, handle the case
-where the arch code believes the CPU is present and possible, but it
-does not have an accessible redistributor. Print a warning and clear
-the present and possible bits.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v5: No Change.
----
- drivers/irqchip/irq-gic-v3.c | 21 +++++++++++++++++++--
- include/linux/acpi.h         |  3 ++-
- 2 files changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 10af15f93d4d..66132251c1bb 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2363,11 +2363,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
- 				(struct acpi_madt_generic_interrupt *)header;
- 	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
- 	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
-+	int cpu = get_cpu_for_acpi_id(gicc->uid);
- 	void __iomem *redist_base;
- 
- 	if (!acpi_gicc_is_usable(gicc))
- 		return 0;
- 
-+	/*
-+	 * Capable but disabled CPUs can be brought online later. What about
-+	 * the redistributor? ACPI doesn't want to say!
-+	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
-+	 * Otherwise, prevent such CPUs from being brought online.
-+	 */
-+	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
-+		pr_warn_once("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
-+		set_cpu_present(cpu, false);
-+		set_cpu_possible(cpu, false);
-+		return 0;
-+	}
-+
- 	redist_base = ioremap(gicc->gicr_base_address, size);
- 	if (!redist_base)
- 		return -ENOMEM;
-@@ -2413,9 +2427,12 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
- 
- 	/*
- 	 * If GICC is enabled and has valid gicr base address, then it means
--	 * GICR base is presented via GICC
-+	 * GICR base is presented via GICC. The redistributor is only known to
-+	 * be accessible if the GICC is marked as enabled. If this bit is not
-+	 * set, we'd need to add the redistributor at runtime, which isn't
-+	 * supported.
- 	 */
--	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
-+	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
- 		acpi_data.enabled_rdists++;
- 
- 	return 0;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9844a3f9c4e5..fcfb7bb6789e 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -239,7 +239,8 @@ void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
- 
- static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
- {
--	return gicc->flags & ACPI_MADT_ENABLED;
-+	return gicc->flags & (ACPI_MADT_ENABLED |
-+			      ACPI_MADT_GICC_ONLINE_CAPABLE);
- }
- 
- /* the following numa functions are architecture-dependent */
--- 
-2.39.2
+Best regards,
+Krzysztof
 
