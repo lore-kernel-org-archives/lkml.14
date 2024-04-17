@@ -1,118 +1,212 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8161613D2BD;
-	Wed, 17 Apr 2024 12:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5DD13D295;
+	Wed, 17 Apr 2024 12:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713356694; cv=none; b=PNFQMGgZjqidW6yxj3ctjvjtNKNDOET3D02YvR+tqyOeNVauZJnbrISS3p67/o7Cv04xRQf4HbFDO7iZ5f4h3uYMfZI2IlixCMWobdlP3G9OkuuZAnaI/+4otNMWQSz2EXr1N5H9E+22/PBEwiJ4h+aZVAtyxptPvA58MukXYkw=
+	t=1713356700; cv=none; b=SCfJCzFzuiM66Mrmu13bmw/y3pFXf9ES9p+wTmDPYiEm4ZrtsB0mpX04T3jyLKB/ehOoJub36/fT6zJbNdbDqIMdoD1lqaM2XA4q77/EqfY7VCtbJK06TM28820rharnSRAkqRt/qFNlhkQe3jB/aqUEPuLX7yY9siWDxGp4LC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713356694; c=relaxed/simple;
-	bh=z4Gu5qWkv/b/cx2hcRaqKXSN/jIg5ez6d7+8R7hTHOk=;
+	s=arc-20240116; t=1713356700; c=relaxed/simple;
+	bh=Q8zT258WQRDiwJmPtFZzZIyJIR1jdZVS+ZzaCdOE9JI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Als+h0FLr6W74jDdgVO19nFAiYc5OHWof+6NdEwHmjN0WSzZEbMWxCRr/Vn16bXzGtzGz/9rqRO++D5OvzxqZlcZ/bifKDb1A18WvVravQxGH3VPD6w9+DMZA8OfVjbEgB6gkMi4LdY1c67wB6cN1tZEwdbarThf74YSu5XUXaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=VAcYSu3S; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kZtRR5ba; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=R02+U87ua6PRL8QJiha44WF+C3nC8tl+Y1sxmRyt4c4kwMIxLDZCTWjkMsZ9sxClvSSGCPYes+Q+na5UulaDwGN4J7qJs2DV99TN3Ok0gK7MPPfYrtaJzPnpiahJvg70PliDEajgHACsZOpNSdZp5GumQqm9nBEN7kyEw2leEyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0QedpGj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="VAcYSu3S";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kZtRR5ba"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7956C33C1A;
-	Wed, 17 Apr 2024 12:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1713356690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n7gZgeMX+J5HSmuMB3qC2Ah2TcNIJGZlP9Si3K/N6/o=;
-	b=VAcYSu3Sx7uIbxCWr4HgSjnU7tCl+7FrsmI2lO/cVDmcBJJwOuClb9ZNzmf1ZN6ch9TsAD
-	dUX8vt+XTpb4pUUDIPx3BGcM5V9H0ZwMkhzGie2aQv5LyQTTLp9JnuTEJOVl5pbWuuHH31
-	qgsEdEipZZDNT8KEygfx4AAloz9EhZA=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1713356689; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n7gZgeMX+J5HSmuMB3qC2Ah2TcNIJGZlP9Si3K/N6/o=;
-	b=kZtRR5baUVfIrI5lz/QyQku+8P3TIY7z8OHgtV6v8sqxES0onFTnFSfn/AG93o9NwWY2f5
-	/hk00JZ/VBXJKXZjqlGFv9v6xj22GD5ILB9JNUX99qn3t9ORao0niYn4JoxSgNJpcD+0xN
-	S/8yABdzfBXZJUdQrZOjniMXX5Qn9wM=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 524BE1384C;
-	Wed, 17 Apr 2024 12:24:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id l6CQEZG/H2b4GwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 17 Apr 2024 12:24:49 +0000
-Date: Wed, 17 Apr 2024 14:24:44 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: lipeifeng@oppo.com
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, muchun.song@linux.dev,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: fix the comment error of memcontrol.h
-Message-ID: <Zh-_jOtSyv6DoETP@tiehlicka>
-References: <20240417121645.25355-1-lipeifeng@oppo.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0QedpGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C983C072AA;
+	Wed, 17 Apr 2024 12:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713356700;
+	bh=Q8zT258WQRDiwJmPtFZzZIyJIR1jdZVS+ZzaCdOE9JI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h0QedpGjj8RNmOqZMuHdkWOw1mh0PWamjez5Zq/LUjHsHnN8lLUFYpt9r7HF6zDyU
+	 U6kdycDZ+zKka5PgDsOIoPodGOy0JIpRNqDQ/nBqtBxcQn0Nd+6LfLMCx9mXpVlSKN
+	 OenkBaLJNzBsHVK+JDiqWNAvKYBLua0mJE2fz8n1LcHErcEkV6hOsQWvw3SivP+nUz
+	 pTt9FJs96J7FswU9Ru6XkyCmJeiBmUURrzlpxGhiPyGHmlPzFCDjHZx+MxMBOXA5eI
+	 q0VzeO8Kg2hh+x4/linpnOCPbOsR9BFrxJ8bfiMjt5NilkOo/TdyHeIuEYoU4hJMzC
+	 76GNDNcExvjpA==
+Date: Wed, 17 Apr 2024 13:24:54 +0100
+From: Lee Jones <lee@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [RFC PATCH 3/6] mfd: support ROHM BD96801 PMIC core
+Message-ID: <20240417122454.GY2399047@google.com>
+References: <cover.1712058690.git.mazziesaccount@gmail.com>
+ <b86b7a73968810339b6cea7701bc3b6f626b4086.1712058690.git.mazziesaccount@gmail.com>
+ <20240411143856.GD2399047@google.com>
+ <25c959bc-fb02-42d9-b973-4a74cebd7208@gmail.com>
+ <20240412072347.GM2399047@google.com>
+ <700b63a1-ce91-4d91-9db7-43c195ba7a6f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240417121645.25355-1-lipeifeng@oppo.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.16 / 50.00];
-	BAYES_HAM(-2.36)[97.05%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oppo.com:email]
-X-Spam-Score: -3.16
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <700b63a1-ce91-4d91-9db7-43c195ba7a6f@gmail.com>
 
-On Wed 17-04-24 20:16:45, lipeifeng@oppo.com wrote:
-> From: Peifeng Li <lipeifeng@oppo.com>
-> 
-> Signed-off-by: Peifeng Li <lipeifeng@oppo.com>
-> ---
->  include/linux/memcontrol.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 394fd0a887ae..07d08be706bf 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1679,7 +1679,7 @@ static inline bool folio_matches_lruvec(struct folio *folio,
->  	       lruvec_memcg(lruvec) == folio_memcg(folio);
->  }
->  
-> -/* Don't lock again iff page's lruvec locked */
-> +/* Don't lock again if page's lruvec locked */
+On Fri, 12 Apr 2024, Matti Vaittinen wrote:
 
-Not a typo. iff stands for if and only if
+> On 4/12/24 10:23, Lee Jones wrote:
+> > On Fri, 12 Apr 2024, Matti Vaittinen wrote:
+> > 
+> > > Hi deee Ho Lee!
+> > > 
+> > > Thanks a ton for taking a look at this :) I already sent the V2 yesterday,
+> > > briefly before receiving your comments. I think all of the comments are
+> > > relevant for the V2 as well, I will fix them for the V3 when I get to that.
+> > > If you find the time to take a look at V2, then the major things are
+> > > addition of a watchdog IRQ + a work-around for the debugFS name collision
+> > > for IRQ domains.
+> > > 
+> > > On 4/11/24 17:38, Lee Jones wrote:
+> > > > On Tue, 02 Apr 2024, Matti Vaittinen wrote:
+> > > > 
+> > > > > The ROHM BD96801 PMIC is highly customizable automotive grade PMIC
+> > > > > which integrates regulator and watchdog funtionalities.
+> > > > > 
+> > > > > Provide IRQ and register accesses for regulator/watchdog drivers.
+> > > > > 
+> > > > > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > > > > ---
+> > > > >    drivers/mfd/Kconfig              |  13 +
+> > > > >    drivers/mfd/Makefile             |   1 +
+> > > > >    drivers/mfd/rohm-bd96801.c       | 454 +++++++++++++++++++++++++++++++
+> > > > >    include/linux/mfd/rohm-bd96801.h | 212 +++++++++++++++
+> > > > >    include/linux/mfd/rohm-generic.h |   1 +
+> > > > >    5 files changed, 681 insertions(+)
+> > > > >    create mode 100644 drivers/mfd/rohm-bd96801.c
+> > > > >    create mode 100644 include/linux/mfd/rohm-bd96801.h
+> > > > > 
+> > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > index 4b023ee229cf..947045eb3a8e 100644
+> > > > > --- a/drivers/mfd/Kconfig
+> > > > > +++ b/drivers/mfd/Kconfig
+> > > > > @@ -2089,6 +2089,19 @@ config MFD_ROHM_BD957XMUF
+> > > > >    	  BD9573MUF Power Management ICs. BD9576 and BD9573 are primarily
+> > > > >    	  designed to be used to power R-Car series processors.
+> > > > > +config MFD_ROHM_BD96801
+> > > > > +	tristate "ROHM BD96801 Power Management IC"
+> > > > > +	depends on I2C=y
+> > > > > +	depends on OF
+> > > > > +	select REGMAP_I2C
+> > > > > +	select REGMAP_IRQ
+> > > > > +	select MFD_CORE
+> > > > > +	help
+> > > > > +	  Select this option to get support for the ROHM BD96801 Power
+> > > > > +	  Management IC. The ROHM BD96801 is a highly scalable power management
+> > > > 
+> > > > Power Management
+> > > 
+> > > Out of the curiosity, why is the "Power Management IC" written with
+> > > capitals, when speaking of a class of devices instead of a model? (I am 100%
+> > > fine with the change, just curious).
+> > 
+> > It's no different to how its expressed in the tristate section above.
+> > 
+> > Power Management IC or PMIC.
+> > 
+> >    "provides power management capabilities" describes its function?
+> > 
+> >    "is a scalable Power Management IC", describes the device?
+> > 
+> > But actually, it just looks odd when both are used in the same section.
+> > 
+> > /me likes uniformity and consistency.
+> 
+> It's okay, thanks for the explanation :)
+> 
+> > > > > +	  IC for industrial and automotive use. The BD96801 can be used as a
+> > > > > +	  master PMIC in a chained PMIC solutions with suitable companion PMICs
+> > > ...
+> > > 
+> > > > > +static int bd96801_i2c_probe(struct i2c_client *i2c)
+> > > > > +{
+> > > > > +	int i, ret, intb_irq, errb_irq, num_regu_irqs, num_intb, num_errb = 0;
+> > > > > +	struct regmap_irq_chip_data *intb_irq_data, *errb_irq_data;
+> > > > > +	struct irq_domain *intb_domain, *errb_domain;
+> > > > > +	const struct fwnode_handle *fwnode;
+> > > > > +	struct resource *regulator_res;
+> > > > > +	struct regmap *regmap;
+> > > > > +
+> > > > > +	fwnode = dev_fwnode(&i2c->dev);
+> > > > > +	if (!fwnode) {
+> > > > > +		dev_err(&i2c->dev, "no fwnode\n");
+> > > > > +		return -EINVAL;
+> > > > 
+> > > > Why not dev_err_probe() here for uniformity?
+> > > 
+> > > I can change it to dev_err_probe() if it's strongly preferred. It just feels
+> > > silly to use dev_err_probe() when the return value is hardcoded.
+> > 
+> > Not at all:
+> > 
+> > git grep dev_err_probe | grep "\-[A-Z]"
+> 
+> Yes, I know people do use the dev_err_probe() with hardcoded errors but it
+> does not make me feel any better about it :)
+
+<look into my swirling eyes> Uniformity within the function!
+
+> > > Intentionally writing code like
+> > > 
+> > > err = -EINVAL;
+> > > if (err == ...)
+> > > 
+> > > just makes me feel a bit sick.
+> > 
+> > Why would you want to do that?
+> 
+> This is what the dev_err_probe() with a hardcoded err does, right?
+> 
+> int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
+> {
+> 	...
+> 	if (err != -EPROBE_DEFER) {
+> 		dev_err(dev, "error %pe: %pV", ERR_PTR(err), &vaf);
+> 	} else {
+> 		device_set_deferred_probe_reason(dev, &vaf);
+> 		dev_dbg(dev, "error %pe: %pV", ERR_PTR(err), &vaf);
+> 	}
+> 	...
+> }
+
+Attempt to purge this info from you brain!
+
+> > > > > +	}
+> > > > > +
+> > > > > +	intb_irq = fwnode_irq_get_byname(fwnode, "intb");
+> > > > > +	if (intb_irq < 0)
+> > > > > +		return dev_err_probe(&i2c->dev, intb_irq,
+> > > > > +				     "No INTB IRQ configured\n");
+> > > > 
+> > > > This function would look nicer if you expanded to 100-chars.
+> > > 
+> > > The reason why I still prefer the good old 80-chars for files I work with,
+> > > is that I am often having 3 terminal windows parallel on my laptop screen.
+> > > (Or, when I have my wide mofnitor connected it is 3 editor windows +
+> > > minicom). I need to keep the terminals small enough. Besides... I hate to
+> > > admit this, but the time is finally taking it's toll. My eyes aren't quite
+> > > the same they were 2 years ago...
+> > 
+> > Upgrade your 14" CRT monitor to something more modern. :)
+> 
+> But those things were built to last! And throwing away perfectly working
+> stuff... :)
+
+Can't argue with that!  Maybe put 2 side-by-side or 4 in a matrix!
 
 -- 
-Michal Hocko
-SUSE Labs
+Lee Jones [李琼斯]
