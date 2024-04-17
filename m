@@ -1,178 +1,101 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CB385633
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBD412B177
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713396955; cv=none; b=Wy9tJ1nnHEh2LhMiX9cGR5bVGGctj2RjTC+mcBOJfUmRsTwDVe9DC5Q2QUPmeX+qf8g1YJRVd5o7gwcAB7StMdoZUHhxVZooHlY1U8Q43ktO9qFKEBhi6F6wZWZMFsBUrzTizcSO/PsKMadMDMWtag07Uj7f5skArwXB95qv5QU=
+	t=1713396959; cv=none; b=UqBMjri7mWSORDMI0r3tIbh14KOzzMfdfuouG4CD0Zqf9Uqi2QEWjhw6qb/IQ1kV+eOdwmHgmDDj35agx0djFxL+tjTDFyfJOETQ/HcfxzEIJfCJyzEzB8UexjS3F3Ddpm7Quxk9Az0hiLUNUd2ITzbeNM6bL09YoPwWGsmggTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713396955; c=relaxed/simple;
-	bh=EV0AKrLfU/yoYpRarWPNuys3sAe1Nq/9n2sVWYSToyY=;
+	s=arc-20240116; t=1713396959; c=relaxed/simple;
+	bh=wvWcGs6xPteYiNkneq2pnXvtLThrV3P28wEAG4lJmWk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=A9cir3HSB7NZEJUf0+nJcugw/7gm+dqhnxdw14Z7pSwZu66rWLTzhic8NbsSDOj3pJDiUrhBia4rYW4HoWnUwJHK6WJpBCEX0ak+pBuF7U3fi7ZRl8RJedA0VJcAI9p1Ky04pCOMUW7YO+gxboWwlo+tDOPhmYz09JJDb382syU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RH4cxJpR; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=GmcZppnfzH7xIi///pexACbr/uvXpwGOcMEhBlKcbgpUivFflHcY6ywhPYiaQ4zeEM/FG4W2Sy38dWOGbJmoSiOLTGXsIXLxuv4BohNfR+N+6G2Y+hRD4dNh1iZwcnFj8oE4QvoKgn5PloCfVp8J1rUlyGTRqcKoIYePhF2LfMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yYXc1+BO; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RH4cxJpR"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61ab173fe00so4272007b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:35:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yYXc1+BO"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-615138794f5so3810977b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 16:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713396953; x=1714001753; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1713396957; x=1714001757; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NirJD3ZZcaTlw8nUlwu/ibV9B8oPJQME/V178SLfQT8=;
-        b=RH4cxJpRf8j8Fg6IUenyDGV3CnDdK1MVxbpx5TALfzgda4IFXUsciEeHWTloarQqnj
-         gxoBf8mcVZ4+r82WXYY0Ce/bC2Wumigwz+nGzYNddyXcO7L4ZxnK/yhuznqlMiEMcUmM
-         uzyA80+/MAaZkjZjXdtPf7PtaV3ciM/dyRU09EP3e4HlOXkRb2sfZ39dqr/34Df5QFMA
-         jVpWPoHGWMK/MCDuvc9vSfVrNDw5pmieNEzUOVqvAVwekEsWsY39LXQc7xGhBUC7DTbb
-         rD1vAkDSoE2Vl2vnnsSTH2cfXwkWhaNBfcJTCPahLkVlbNaKT0a56EcMwWqYg4SQE9O8
-         et4Q==
+        bh=V3z9SggHDBHR47UgbLQGuJMnhn0kcj9pVDDXn/yYf9o=;
+        b=yYXc1+BO8pN3ZGbtWBN1BCdOpXp4bYd14RfcUw6FYRW13dv8/LKAWgIOcK2wYjtiKS
+         1qrZC6QA53CmAk8bElaxc4atrm/JkUXFHjKoHAM+Yhg8rlRj+vA993UpAvnr62Gt1uIw
+         xQHEMgxepEx+UkMAhO9AW3Iq2mGVRCAQFvNtoDLPTWsa6ze3C5tSJjLbcGdOwadIHY5X
+         yHTCOMYS6WzDBDffKNwgIR/k9jGbgaEFCnJEjITTG0IOEhUNaw/5ah04aU9xWmlZDcAy
+         y08ylTdIDyGc9U8YxHKx/uAyW1PMoz2prwmoj6IdpM6O0OMGb8UtO4SWu8QQyiJTgvi2
+         POJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713396953; x=1714001753;
+        d=1e100.net; s=20230601; t=1713396957; x=1714001757;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NirJD3ZZcaTlw8nUlwu/ibV9B8oPJQME/V178SLfQT8=;
-        b=DF5JtlKIrANvmYd12B+NLYh2i6ywy6PcrdTqir0WR4iNGg0PQqLvuEXLVAtd+t/fYS
-         tE+wZJoSZ7lRMlI6g7R00osue6SrYGHSSohJEhPu54TScvh35bvwP56XhghJDiTW1kB6
-         4eePdgsHOwNgbv24+9y3syddH+F3ImZCvIa43/yU8kt5J10wnQHu1vy287wlzuQN5yRX
-         THUdGyTv9fGcoYwaJRxTrTAcIDvTcSINTOXK7yOvcxRyyAzOnkJ7DAk6rpjgqRjwBwT2
-         5E5ecy1X5WupCcF2vjaiITawuANNsI/GlwX1Flrg7PrBg/MMa2beeBGGspTOoL74otRu
-         rJcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWi5Oa/9k+vRQvIm0m72I88O1yiBBm/kx0duMheJldd5PvLmuvZ3i2D8vv1JYddFHXM5zWu4bAQ/9w4K9LaN57LAkg3j/3H2B3wY7Pe
-X-Gm-Message-State: AOJu0Yybbq+zG+soZjyWSxYd8rsfNLsCy9I2STkhfkcpi9RNwbYv//jK
-	AW68qtnPh82Wu78Wlqm//N2VcsiVfS5PzwO+L/iCe81DXtHZumZJBKbP7LKEBHNIONFU1nTpdM4
-	ryg==
-X-Google-Smtp-Source: AGHT+IFOEHpwzdozPVxqUnlSfoWlpxvDliZGJf68SoqSvZOKzC5+Fe9J92CrBOtOUeQb0G7mypA5g1jUWGM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:1f83:0:b0:dcc:50ca:e153 with SMTP id
- f125-20020a251f83000000b00dcc50cae153mr230133ybf.7.1713396953157; Wed, 17 Apr
- 2024 16:35:53 -0700 (PDT)
-Date: Wed, 17 Apr 2024 16:35:51 -0700
-In-Reply-To: <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
+        bh=V3z9SggHDBHR47UgbLQGuJMnhn0kcj9pVDDXn/yYf9o=;
+        b=p+JGGN8VffCC7WBedhhWzVBli9rXoEjhm9gY1i6TKbDM1JRl+tQ2UEaUccFBWMnMce
+         /yx24mh/cUKd7B7XMH3Y2ON611QUTiodmXtBXlZuxL8jdqPz3KbAPv5/OPE8PvI5GKL3
+         SDm1pzB6TfmLvdep3peGMDStSzG0BKG80zZwEiGGbEYp33XnlnVxQ9Ul/Plc/c003eEH
+         7mzlOP9suM70ubjamB36KjThmDlnZ4W4lBrFTK/vtdHSy3v6o5EERERfpry+acAkKvP7
+         tbM17ncrgRZrkGeOIpHutRkWtT3ol2uM9gi4bX54lnZoIUKTdX7FXQmPlfH7L9+xlJmr
+         d0Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXS9jgi7xo0Vb6pYIia/5ncS6w8ZYdZ5sgJfgc3+80/OhsVeQ5DW9Xi+Rbs4feugEHm2wJTZSgD06jaUkHCRy3QkaBkaQgWPD7rv9vo
+X-Gm-Message-State: AOJu0Yy8WytQfxex3jbLunrTNQS8I6JGuLv+iRWUt3wXTB+mn8gZrV76
+	cuhbx7zy7JLFucvcy8rzbpycmfWXnbUrZykZFkvmNf9Rtd+qPNwbt2Ps1+j/gDsAK8NK4tPUXQH
+	tSQ==
+X-Google-Smtp-Source: AGHT+IHfFq+aF8xYM7GSWrh8v3NuRbJUzyiS8iRdxL1PjY2Je4Ddh58E6RfgKeq4JS0EktYEYAj6DG8R/nw=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6902:1005:b0:dcb:fb69:eadc with SMTP id
+ w5-20020a056902100500b00dcbfb69eadcmr117528ybt.6.1713396956811; Wed, 17 Apr
+ 2024 16:35:56 -0700 (PDT)
+Date: Wed, 17 Apr 2024 23:35:02 +0000
+In-Reply-To: <16430256912363@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240322212321.GA1994522@ls.amr.corp.intel.com>
- <461b78c38ffb3e59229caa806b6ed22e2c847b77.camel@intel.com>
- <ZhawUG0BduPVvVhN@google.com> <8afbb648-b105-4e04-bf90-0572f589f58c@intel.com>
- <Zhftbqo-0lW-uGGg@google.com> <6cd2a9ce-f46a-44d0-9f76-8e493b940dc4@intel.com>
- <Zh7KrSwJXu-odQpN@google.com> <900fc6f75b3704780ac16c90ace23b2f465bb689.camel@intel.com>
- <Zh_exbWc90khzmYm@google.com> <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
-Message-ID: <ZiBc13qU6P3OBn7w@google.com>
-Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
- loading the KVM intel kernel module
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
-	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+References: <16430256912363@kroah.com>
+X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
+Message-ID: <20240417233517.3044316-1-edliaw@google.com>
+Subject: [PATCH 5.15.y 0/5] Backport bounds checks for bpf
+From: Edward Liaw <edliaw@google.com>
+To: stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Hao Luo <haoluo@google.com>
+Cc: bpf@vger.kernel.org, kernel-team@android.com, 
+	Edward Liaw <edliaw@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 18, 2024, Kai Huang wrote:
-> On 18/04/2024 2:40 am, Sean Christopherson wrote:
-> > This way, architectures that aren't saddled with out-of-tree hypervisors can do
-> > the dead simple thing of enabling hardware during their initialization sequence,
-> > and the TDX code is much more sane, e.g. invoke kvm_x86_enable_virtualization()
-> > during late_hardware_setup(), and kvm_x86_disable_virtualization() during module
-> > exit (presumably).
-> 
-> Fine to me, given I am not familiar with other ARCHs, assuming always enable
-> virtualization when KVM present is fine to them. :-)
-> 
-> Two questions below:
-> 
-> > +int kvm_x86_enable_virtualization(void)
-> > +{
-> > +	int r;
-> > +
-> > +	guard(mutex)(&vendor_module_lock);
-> 
-> It's a little bit odd to take the vendor_module_lock mutex.
-> 
-> It is called by kvm_arch_init_vm(), so more reasonablly we should still use
-> kvm_lock?
+These backports fix CVE-2021-4204, CVE-2022-23222 for 5.15.y.
 
-I think this should take an x86-specific lock, since it's guarding x86-specific
-data.  And vendor_module_lock fits the bill perfectly.  Well, except for the
-name, and I definitely have no objection to renaming it.
+This includes a conflict resolution with 45ce4b4f9009 ("bpf: Fix crash
+due to out of bounds access into reg2btf_ids.") which was cherry-picked
+previously.
+Link: https://lore.kernel.org/all/20220428235751.103203-11-haoluo@google.com/
 
-> Also, if we invoke kvm_x86_enable_virtualization() from
-> kvm_x86_ops->late_hardware_setup(), then IIUC we will deadlock here because
-> kvm_x86_vendor_init() already takes the vendor_module_lock?
+They were tested on 5.15.94 to pass LTP test bpf_prog06 with no
+regressions from the bpf selftests.
 
-Ah, yeah.  Oh, duh.  I think the reason I didn't initially suggest late_hardware_setup()
-is that I was assuming/hoping TDX setup could be done after kvm_x86_vendor_exit().
-E.g. in vt_init() or whatever it gets called:
+Daniel Borkmann (4):
+  bpf: Generalize check_ctx_reg for reuse with other types
+  bpf: Generally fix helper register offset check
+  bpf: Fix out of bounds access for ringbuf helpers
+  bpf: Fix ringbuf memory type confusion when passing to helpers
 
-	r = kvm_x86_vendor_exit(...);
-	if (r)
-		return r;
+Kumar Kartikeya Dwivedi (1):
+  bpf: Extend kfunc with PTR_TO_CTX, PTR_TO_MEM argument support
 
-	if (enable_tdx) {
-		r = tdx_blah_blah_blah();
-		if (r)
-			goto vendor_exit;
-	}
+ include/linux/bpf.h          |  9 +++-
+ include/linux/bpf_verifier.h |  4 +-
+ kernel/bpf/btf.c             | 93 ++++++++++++++++++++++++++++--------
+ kernel/bpf/verifier.c        | 66 +++++++++++++++++--------
+ 4 files changed, 129 insertions(+), 43 deletions(-)
 
-> > +	if (kvm_usage_count++)
-> > +		return 0;
-> > +
-> > +	r = kvm_enable_virtualization();
-> > +	if (r)
-> > +		--kvm_usage_count;
-> > +
-> > +	return r;
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_x86_enable_virtualization);
-> > +
-> 
-> [...]
-> 
-> > +int kvm_enable_virtualization(void)
-> >   {
-> > +	int r;
-> > +
-> > +	r = cpuhp_setup_state(CPUHP_AP_KVM_ONLINE, "kvm/cpu:online",
-> > +			      kvm_online_cpu, kvm_offline_cpu);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	register_syscore_ops(&kvm_syscore_ops);
-> > +
-> > +	/*
-> > +	 * Manually undo virtualization enabling if the system is going down.
-> > +	 * If userspace initiated a forced reboot, e.g. reboot -f, then it's
-> > +	 * possible for an in-flight module load to enable virtualization
-> > +	 * after syscore_shutdown() is called, i.e. without kvm_shutdown()
-> > +	 * being invoked.  Note, this relies on system_state being set _before_
-> > +	 * kvm_shutdown(), e.g. to ensure either kvm_shutdown() is invoked
-> > +	 * or this CPU observes the impedning shutdown.  Which is why KVM uses
-> > +	 * a syscore ops hook instead of registering a dedicated reboot
-> > +	 * notifier (the latter runs before system_state is updated).
-> > +	 */
-> > +	if (system_state == SYSTEM_HALT || system_state == SYSTEM_POWER_OFF ||
-> > +	    system_state == SYSTEM_RESTART) {
-> > +		unregister_syscore_ops(&kvm_syscore_ops);
-> > +		cpuhp_remove_state(CPUHP_AP_KVM_ONLINE);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> 
-> Aren't we also supposed to do:
-> 
-> 	on_each_cpu(__kvm_enable_virtualization, NULL, 1);
-> 
-> here?
+--
+2.44.0.769.g3c40516874-goog
 
-No, cpuhp_setup_state() invokes the callback, kvm_online_cpu(), on each CPU.
-I.e. KVM has been doing things the hard way by using cpuhp_setup_state_nocalls().
-That's part of the complexity I would like to get rid of.
