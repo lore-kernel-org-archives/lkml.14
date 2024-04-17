@@ -1,60 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998E2744B
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 11:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EE113C68E;
+	Wed, 17 Apr 2024 11:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713352182; cv=none; b=SYaROR/Y6tYnylj+PhT3QoC6ceoyEWFJYQ3H/LCoWjt8sFp1ru9bRTEfEJnrxZX2sFqJ4nGaEgZJWMsvPw3iRnBzuzhxKHi1TkrlMuzcPMhlbslQlTikMY3sUB1LSU6V1DWz8KC9TPj+7o76yPENWPa2xciH/PrIrhgaCLTs3Nw=
+	t=1713352205; cv=none; b=AjJKpu31JKE6R4nOXm5UYxUIH/mouzXFW4YRcuzd4Fqw3NxBcBSfIkwDWpcB6SwLGJyXpTuJ3bEsHxJ+psqaZIUHK2G76UqFxtQLa2ziE54tTW0RNCrLmtFhBdJ4AEfK0SnflwRfoptgZXThWi8+xDgmT5Mp7wKbMGoBXlnKMSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713352182; c=relaxed/simple;
-	bh=8hmmXLTj/2sUJvXXbIiKT5QGG3NWZGbMJdnVyduZ2UM=;
+	s=arc-20240116; t=1713352205; c=relaxed/simple;
+	bh=+/Y1TqpJnFBRwRqnv1AMakhZION2OOFVGxAQI9xnZtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n97kkNw7wx0F2R5YtoCJecgan0U4utt+xSHBJIQqqqqR51whv/B9r95kVKaK9M4eYbAiir0YzcnpQhKmOp8aA21sWisB8+Rfaa+dMfBQ9juWxQxLuuXZzG7Q17y1J9ipppYmnacbaLuYV5FOUEdIuTVVPMCLDAQxuo2PEmoPonk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDrkr/E5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJUd4a3DKwmUNWgAlDRv/D7b5QGSOzO8gZroM50B5ZZhcXBdNpVBQPWHOS1VG+Uet7Iag0uWB5opIZ8FDApbWe1G7A2iv/+h+7LBZ7Dd5d+0dV1Y1Lq7PvrNkCzgVJEn/fp0nWIoQN7yUuJ68PVo415rq5V7WzbW0MoQLEiC6kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Em8TZBwG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Swm0bX9A; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Em8TZBwG; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Swm0bX9A; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDrkr/E5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713352179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8hmmXLTj/2sUJvXXbIiKT5QGG3NWZGbMJdnVyduZ2UM=;
-	b=FDrkr/E5RNrTBBwOWfBTVzC7XU3O9Ki1lDm6IwNFv8mhHKxISi11PCiAXFTHBCKCswY6vp
-	E7SSdpF86Qf2YsxVOonifPv0gNUee1K/3cY5mkaVEiWiztjCVE20TQJyanhbi25/WT1+Cl
-	VnyLr6kGbp2FvUHMFwZMMyN2fqE0x2M=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-287-iHh2QwPLPqaB_5d9GzSgWQ-1; Wed,
- 17 Apr 2024 07:09:36 -0400
-X-MC-Unique: iHh2QwPLPqaB_5d9GzSgWQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Em8TZBwG";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Swm0bX9A";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Em8TZBwG";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Swm0bX9A"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CBF4F3C14941;
-	Wed, 17 Apr 2024 11:09:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.182])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 96F411C060A6;
-	Wed, 17 Apr 2024 11:09:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 17 Apr 2024 13:08:10 +0200 (CEST)
-Date: Wed, 17 Apr 2024 13:08:03 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	John Stultz <jstultz@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [patch V2 07/50] posix-cpu-timers: Split up posix_cpu_timer_get()
-Message-ID: <20240417110803.GA27840@redhat.com>
-References: <20240416144438.GA17990@redhat.com>
- <87o7a8wdhr.fsf@somnus>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C2A8433B67;
+	Wed, 17 Apr 2024 11:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713352201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qaQbAuymIyWXl7clH/m9soo1SrBAkUCeIKbNu703u8=;
+	b=Em8TZBwGsY3v2ac1dac2wkMo6/bVVz1QGJnCr/wV9+xkbk4ee7vqW8WAbuVvioDPZVH3IL
+	p7+vmfE9vRncjj5l3tHv4FYm/p0gDFLJ9s85BbUGThSE9kRgfEqEEpBgu44qhXuWaotQrJ
+	+MfwWf7RXK+KUbtGTUrVJ4OhUIjJMIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713352201;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qaQbAuymIyWXl7clH/m9soo1SrBAkUCeIKbNu703u8=;
+	b=Swm0bX9AnQEPsCqCQVNr3NmWbcAYZ93kf67JeTeWR+wrnSK1hLH3moDJuw6je9vqkjosHA
+	AHX9F4HufK9+egAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1713352201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qaQbAuymIyWXl7clH/m9soo1SrBAkUCeIKbNu703u8=;
+	b=Em8TZBwGsY3v2ac1dac2wkMo6/bVVz1QGJnCr/wV9+xkbk4ee7vqW8WAbuVvioDPZVH3IL
+	p7+vmfE9vRncjj5l3tHv4FYm/p0gDFLJ9s85BbUGThSE9kRgfEqEEpBgu44qhXuWaotQrJ
+	+MfwWf7RXK+KUbtGTUrVJ4OhUIjJMIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1713352201;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qaQbAuymIyWXl7clH/m9soo1SrBAkUCeIKbNu703u8=;
+	b=Swm0bX9AnQEPsCqCQVNr3NmWbcAYZ93kf67JeTeWR+wrnSK1hLH3moDJuw6je9vqkjosHA
+	AHX9F4HufK9+egAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B5C1C1384C;
+	Wed, 17 Apr 2024 11:10:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 45JdLAmuH2bAfgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 17 Apr 2024 11:10:01 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5911AA082E; Wed, 17 Apr 2024 13:10:01 +0200 (CEST)
+Date: Wed, 17 Apr 2024 13:10:01 +0200
+From: Jan Kara <jack@suse.cz>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, Zach O'Keefe <zokeefe@google.com>,
+	linux-kernel@vger.kernel.org,
+	Maxim Patlasov <MPatlasov@parallels.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] mm/writeback: fix possible divide-by-zero in
+ wb_dirty_limits(), again
+Message-ID: <20240417111001.fa2eg5gp6t2wiwco@quack3>
+References: <20240118181954.1415197-1-zokeefe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,35 +89,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o7a8wdhr.fsf@somnus>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+In-Reply-To: <20240118181954.1415197-1-zokeefe@google.com>
+X-Spam-Level: ****
+X-Spamd-Result: default: False [4.30 / 50.00];
+	BAYES_SPAM(5.10)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: 4.30
+X-Spam-Flag: NO
 
-On 04/17, Anna-Maria Behnsen wrote:
->
-> Oleg Nesterov <oleg@redhat.com> writes:
->
-> > On 04/11, Thomas Gleixner wrote:
-> >>
-> >> In preparation for addressing issues in the timer_get() and timer_set()
-> >> functions of posix CPU timers.
-> >
-> > Cough... I must have missed something, but posix_cpu_timer_get()
-> > doesn't look right with or without this trivial patch.
-> >
-> > It doesn't initialize itp->it_value if cpu_timer_getexpires() == 0,
-> > this means that sys_timer_gettime() will copy the uninitialized
-> > cur_setting->it_value on the stack to userspace?
->
-> The initialization of itp is already done by the callsites.
-> do_timer_settime() in posix-timers.c as well as do_cpu_nanosleep() in
-> posix-cpu-timers.c execute a memset before calling
-> posix_cpu_timer_get().
+On Thu 18-01-24 10:19:53, Zach O'Keefe wrote:
+> (struct dirty_throttle_control *)->thresh is an unsigned long, but is
+> passed as the u32 divisor argument to div_u64().  On architectures where
+> unsigned long is 64 bytes, the argument will be implicitly truncated.
+> 
+> Use div64_u64() instead of div_u64() so that the value used in the "is
+> this a safe division" check is the same as the divisor.
+> 
+> Also, remove redundant cast of the numerator to u64, as that should
+> happen implicitly.
+> 
+> This would be difficult to exploit in memcg domain, given the
+> ratio-based arithmetic domain_drity_limits() uses, but is much easier in
+> global writeback domain with a BDI_CAP_STRICTLIMIT-backing device, using
+> e.g. vm.dirty_bytes=(1<<32)*PAGE_SIZE so that dtc->thresh == (1<<32)
+> 
+> Fixes: f6789593d5ce ("mm/page-writeback.c: fix divide by zero in bdi_dirty_limits()")
+> Cc: Maxim Patlasov <MPatlasov@parallels.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Zach O'Keefe <zokeefe@google.com>
 
-Indeed. Somehow I missed this memset(). Even if I tried to read the
-simple do_timer_gettime/posix_cpu_timer_get functions several times ;)
+I've come across this change today and it is broken in several ways:
 
-Thanks for correcting me!
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index cd4e4ae77c40a..02147b61712bc 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -1638,7 +1638,7 @@ static inline void wb_dirty_limits(struct dirty_throttle_control *dtc)
+>  	 */
+>  	dtc->wb_thresh = __wb_calc_thresh(dtc);
+>  	dtc->wb_bg_thresh = dtc->thresh ?
+> -		div_u64((u64)dtc->wb_thresh * dtc->bg_thresh, dtc->thresh) : 0;
+> +		div64_u64(dtc->wb_thresh * dtc->bg_thresh, dtc->thresh) : 0;
 
-Oleg.
+Firstly, the removed (u64) cast from the multiplication will introduce a
+multiplication overflow on 32-bit archs if wb_thresh * bg_thresh >= 1<<32
+(which is actually common - the default settings with 4GB of RAM will
+trigger this). Secondly, the div64_u64() is unnecessarily expensive on
+32-bit archs. We have div64_ul() in case we want to be safe & cheap.
+Thirdly, if thresholds are larger than 1<<32 pages, then dirty balancing is
+going to blow up in many other spectacular ways - consider only the
+multiplication on this line - it will not necessarily fit into u64 anymore.
+The whole dirty limiting code is interspersed with assumptions that limits
+are actually within u32 and we do our calculations in unsigned longs to
+avoid worrying about overflows (with occasional typing to u64 to make it
+more interesting because people expected those entities to overflow 32 bits
+even on 32-bit archs). Which is lame I agree but so far people don't seem
+to be setting limits to 16TB or more. And I'm not really worried about
+security here since this is global-root-only tunable and that has much
+better ways to DoS the system.
 
+So overall I'm all for cleaning up this code but in a sensible way please.
+E.g. for these overflow issues at least do it one function at a time so
+that we can sensibly review it.
+
+Andrew, can you please revert this patch until we have a better fix? So far
+it does more harm than good... Thanks!
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
