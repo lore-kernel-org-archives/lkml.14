@@ -1,419 +1,219 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C86184127;
-	Thu, 18 Apr 2024 19:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469744; cv=fail; b=Efp4kTeCWVFwCs+rcQqHwdGWxarabRW0if0z8BTzcwo3kZIjmoch0kfMnD+ia12ma8dG7LwtoJwdj6s1uOf26W6sUOitbWE1T5xL49QhIBjpQRZZ4QFKVKGElcAdecV+0T94J+Ywfutbc5b14V7nj2aByOilXLyhWs75ctkW3DA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713469744; c=relaxed/simple;
-	bh=TywdgYIs4nzhUrcOYx8QmJwkMBIybxLXfN7cAZwuPGc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bmBjr20y/L3tlhOk9lhaYoNwECX94jMQk9zXkH5QjM1r2FRWvxkMjejLzamwf5LYsjcFIHwqKCM5ntIPBm6Poy8pWbP0XztjtcWFo/SDWpYEK9VxIu5Iocny6Z1nFyaLNmg3Dii6JdyOGFBR+DK5V2NjxflBkkXN3RjWpO+LyLk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b0+dBFW+; arc=fail smtp.client-ip=40.107.93.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b0+dBFW+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IMoEDIqQYfw291/yF01mkDVXoLBSzF/ibImjNp3z/d84AAiB4S0pPQLfD35Wyb6/fJcXBYrCTZe02BJLgvLsG2ZTAtvCWUEHfG4devi7QkequBoG/Cu79s7OYtBlP8MUDag0fuJ8ThC4L+hVz/JqYMR1+6L32YIdHpG57wBVv+AQN8ieyJVS2LugCsnEudkOIupKZqwnLc67qW2W6bnfpVA4qgL+yFglX9gXd32u1TvEDtlOhv21hCW6lQdSIiMahPeQFQhvsr4X/yQK6+27IUh4/CidzwfZh+MVA28thDHHTyW2Fl4+7R1oceQTZ1HilnE0FIRttShezBE1cyQggw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=odYMF9wN/jQkyJ9bByOpgiL8veyUMzdfUThcHu7U1Dk=;
- b=KzuYDijxY2gkxt9slmJCGkW2RVhn4EMbMrjVOjfKXR+IRYtQiPHexKXEbj0vch8mbBmaCpXZyCBHSIOT1GwdbS6KXcZMNhWf2dRSzzSUkEFs4eDQJuHzeJiNljqW1CMwKgPJ/Ah94M9+PaH7Thxy3WAlAhdJvg6abkREyPUF1wudg2L0lruS/FnL9RgQqIWFz2bNHppoSUcagQDEeflqLor8OkWkpq2M9VI5JHHsgL5LKQwRrDk7iPhMnD8gB2JrQFeFkMeshgiJ4DWDOqH/m0ywD8WSqYPcRjGuKm/MiAv9+/z4a2Lp2DZ1PvgU7WpBRb6hFi5iBaxUeoLPaLgE4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=odYMF9wN/jQkyJ9bByOpgiL8veyUMzdfUThcHu7U1Dk=;
- b=b0+dBFW+W3QcO0F/vx/v8xqRJ9xOI65wRz2HpVqEoBr0rB5GkfBEW4Aeavi3kJTT+CFAJWW3iu6o3ZTc+w9H6VY9dsoAh9aw8HMtFIZPblCwLW6nLfY3nEtbhNN7ZqsXb0kSe885dLyEJ9AamR+qS/o3x35+UBJmuhHaapjtjxA=
-Received: from SN6PR08CA0010.namprd08.prod.outlook.com (2603:10b6:805:66::23)
- by SN7PR12MB7227.namprd12.prod.outlook.com (2603:10b6:806:2aa::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
- 2024 19:48:58 +0000
-Received: from SN1PEPF0002BA4E.namprd03.prod.outlook.com
- (2603:10b6:805:66:cafe::4f) by SN6PR08CA0010.outlook.office365.com
- (2603:10b6:805:66::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.28 via Frontend
- Transport; Thu, 18 Apr 2024 19:48:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002BA4E.mail.protection.outlook.com (10.167.242.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 19:48:57 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
- 2024 14:48:57 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: [PATCH v13 26/26] KVM: SEV: Provide support for SNP_EXTENDED_GUEST_REQUEST NAE event
-Date: Thu, 18 Apr 2024 14:41:33 -0500
-Message-ID: <20240418194133.1452059-27-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240418194133.1452059-1-michael.roth@amd.com>
-References: <20240418194133.1452059-1-michael.roth@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9FB184129
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 19:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713469764; cv=none; b=f4XX1m1/OzVLL6rkxIr9izb33Ep2R17yscrepVbk+4FQ6jt8WyDOaQGRdUZQ1FZRhiD1iZmdgGI1Y2fo0YmIBJI2pCCqlEgT5uy8SpF6fnJIOmqp5K1xQF1jOGemROsSXXQBf9JzT6Sw00DmcSsNys4N2ldpxdgY7yEGpIUsvKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713469764; c=relaxed/simple;
+	bh=z19mW6qTZfZbfrbyLqR6xWcNYaNFAHqFswaD+QTI1Mk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MoGnYSAOYosmQiOBVbLqF5bHy1ulvRP3A4lh0Mgvwxk6Zc1sIRZqeGoI30xZed+Nygul+tfVbgtw+yGvqS5zZnbDcZtMajJfNMbEDAfKbeDXatn2Fxn1JA1L9oMP2KhQOTXYgEztGFtYgDTE9dWoPLQfj/GDEUAKoI4IIeBoLZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d9913d3174so166590339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:49:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713469762; x=1714074562;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lx2lfu92VvlIcFboRX1aSCjCk1LvRsraXbwJor+JgDQ=;
+        b=koWAXu+B5JJ4r+DUarODJiMZqSAAr40D7QjAJ+a4HhSWhFVr/YLr2Uz9nm3tjMOQVT
+         hBvvKmpUvRjQLfDV/bT/p46n8kysUWOZDFry1H8WjGpddQrLpnpg8gV70aCkzoPTHRDX
+         2xW4bHYHZpDUnFuyJIW/tgIBBmzhDqSpokvIyc0qQ36K4uj8f92IVhdOYzIUEu5U+Lx6
+         1/u30NsMPYF3iF7SoLhTZsNVxAxgI/lXP/X9YIGeOrohOADhPmmbS5g3n66MOTwTe1MV
+         vUYSNXPfKG83Ioz5CBYTWv1sWRsL65bNgaWMg+SIdXAfQ+9SbOmXjD5egCO6tgkwnBci
+         juuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3VXfoT0ysXj1RIAT3J7nhO2IUKBG5FuUnMw8P3g/0KW0fDnuKRoymgZmm+ks64XgtdVrn0o6CIOVsKWqWbNETlaSkOyUKrQIeZmes
+X-Gm-Message-State: AOJu0YzjNBdWC3azfZ4La2UNaMnxsFE19Gan3rZ7pB9ZMUOFE+BvtKLG
+	/qqImBTNvp4RQaGX70k2KQ+V7JIkBp5mocb7xJLB3EgF2msqrU27zL7QYTplmH5/JHusgaUlmWK
+	utLl8Yti+wGqZp9QDoGbqhjEYZnwL4EYEZ4sc4TU+trZE7bQvmv/tvyc=
+X-Google-Smtp-Source: AGHT+IH7qEWStHARNkfjepKJJvCl717mn6Sf/GDHsz0AauSM3xT4RTr5N9918wgnz1EwOEAKPksUQn2IpOuDHiY2UJ4J1WtxY3Tg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4E:EE_|SN7PR12MB7227:EE_
-X-MS-Office365-Filtering-Correlation-Id: 34b4a03a-5cf5-43ec-a3b6-08dc5fe09664
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	3OVYTlmvENaANFfoxB4n1wqPWAUjtqCfG5HFAcLl2vjWTMQXpTMLFpAQfLCUZpXdpjVSyhqYaSzdzaKY6bPupzx/BBUa4qF9X/6PBaS9rO0ImvoGtIyoysu4L5pxx6MINC2NwimjMa45OQUg6p59BnXlNPfKXuqk6LgkNUPNLz/5KaVgQ3cyXtmmp5aoSG2+cNmdSZMyjkOe0nXI+iRenB+sIXBvGfS38Vj8dhwvY0gxymWu16rjdNsGO59bkVF7YDy3kl0KkJ61OhsFIcSA6fahhXvxTdIW2tbTKqrdFlCh8htbQpw6SW2i1r811yvN1kGTa8S13jsWktJsT9VBLaOln11pU0iRhSWPXBayzbleyixVhyQLdNS2KVfU2AddumM84jT/xwdykF29kSAVo/FMNi0L/JWZgQS8f5mVMvbCAgyaRSTjsKlPegcmi9z9JK2ggaD/XYbdrCTE6ubNJkbBEcaVAfeISija0SLDXqkYJyiQCKgXXVullGgJh3wTIT6CzMuEyqDFVJDI8oCQKNh4q2kxIZiOlqiqeX4OgojUfD8dw7M8bETqqsajaBEQj/XinI1PONSHzPratyS4m4d3kaO87zY/DO2aybu7pu2rlPFrmK+cYzN6ILr63xjdvAMMR+Di+AzksTkvjmwKzdPcC0zMtMbMDivnYZwIUW5h3RdgM+g307PYSQEc2HJcMf1DM+DjXnTkcBXNIpRbv3y6/epFVPIyzpa+0e0yXQvrpYcJZTyX+bOctIRAVBjJ
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(82310400014)(376005)(7416005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 19:48:57.9633
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34b4a03a-5cf5-43ec-a3b6-08dc5fe09664
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4E.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7227
+X-Received: by 2002:a05:6638:8726:b0:482:fcbc:c131 with SMTP id
+ iw38-20020a056638872600b00482fcbcc131mr252814jab.0.1713469761924; Thu, 18 Apr
+ 2024 12:49:21 -0700 (PDT)
+Date: Thu, 18 Apr 2024 12:49:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007e3fd2061664443e@google.com>
+Subject: [syzbot] [perf?] WARNING: suspicious RCU usage in __schedule (2)
+From: syzbot <syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Version 2 of GHCB specification added support for the SNP Extended Guest
-Request Message NAE event. This event serves a nearly identical purpose
-to the previously-added SNP_GUEST_REQUEST event, but allows for
-additional certificate data to be supplied via an additional
-guest-supplied buffer to be used mainly for verifying the signature of
-an attestation report as returned by firmware.
+Hello,
 
-This certificate data is supplied by userspace, so unlike with
-SNP_GUEST_REQUEST events, SNP_EXTENDED_GUEST_REQUEST events are first
-forwarded to userspace via a KVM_EXIT_VMGEXIT exit type, and then the
-firmware request is made only afterward.
+syzbot found the following issue on:
 
-Implement handling for these events.
+HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1348ceb3180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=ae891a39094db8049d6c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Since there is a potential for race conditions where the
-userspace-supplied certificate data may be out-of-sync relative to the
-reported TCB or VLEK that firmware will use when signing attestation
-reports, make use of the synchronization mechanisms wired up to the
-SNP_{PAUSE,RESUME}_ATTESTATION SEV device ioctls such that the guest
-will be told to retry the request while attestation has been paused due
-to an update being underway on the system.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Signed-off-by: Michael Roth <michael.roth@amd.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com
+
+=============================
+WARNING: suspicious RCU usage
+6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
+-----------------------------
+kernel/sched/core.c:5982 Illegal context switch in RCU-bh read-side critical section!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor.4/5285:
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
+
+stack backtrace:
+CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
+ schedule_debug kernel/sched/core.c:5982 [inline]
+ __schedule+0x23b/0x4a20 kernel/sched/core.c:6629
+ preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
+ preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
+ trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
+ __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
+ graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
+ mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
+ mark_usage kernel/locking/lockdep.c:4587 [inline]
+ __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
+ bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
+ reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
+ register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
+ hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
+ perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
+ perf_init_event kernel/events/core.c:11738 [inline]
+ perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
+ __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
+ __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f1ad6e7de69
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
+ </TASK>
+
+=============================
+WARNING: suspicious RCU usage
+6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
+-----------------------------
+kernel/sched/core.c:5982 Illegal context switch in RCU-sched read-side critical section!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor.4/5285:
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
+ #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
+
+stack backtrace:
+CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
+ schedule_debug kernel/sched/core.c:5982 [inline]
+ __schedule+0x28a/0x4a20 kernel/sched/core.c:6629
+ preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
+ preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
+ trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
+ __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
+ graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
+ mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
+ mark_usage kernel/locking/lockdep.c:4587 [inline]
+ __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
+ bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
+ reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
+ register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
+ hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
+ perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
+ perf_init_event kernel/events/core.c:11738 [inline]
+ perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
+ __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
+ __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f1ad6e7de69
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
+RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
+RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
+ </TASK>
+
+
 ---
- Documentation/virt/kvm/api.rst | 26 +++++++++++
- arch/x86/include/asm/sev.h     |  6 +++
- arch/x86/kvm/svm/sev.c         | 82 ++++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.h         |  3 ++
- arch/x86/virt/svm/sev.c        | 37 +++++++++++++++
- include/uapi/linux/kvm.h       |  6 +++
- 6 files changed, 160 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 85099198a10f..6cf186ed8f66 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7066,6 +7066,7 @@ values in kvm_run even if the corresponding bit in kvm_dirty_regs is not set.
- 		struct kvm_user_vmgexit {
- 		#define KVM_USER_VMGEXIT_PSC_MSR	1
- 		#define KVM_USER_VMGEXIT_PSC		2
-+		#define KVM_USER_VMGEXIT_EXT_GUEST_REQ	3
- 			__u32 type; /* KVM_USER_VMGEXIT_* type */
- 			union {
- 				struct {
-@@ -7079,6 +7080,11 @@ values in kvm_run even if the corresponding bit in kvm_dirty_regs is not set.
- 					__u64 shared_gpa;
- 					__u64 ret;
- 				} psc;
-+				struct {
-+					__u64 data_gpa;
-+					__u64 data_npages;
-+					__u32 ret;
-+				} ext_guest_req;
- 			};
- 		};
- 
-@@ -7108,6 +7114,26 @@ private/shared state. Userspace will return a value in 'ret' that is in
- agreement with the GHCB-defined return values that the guest will expect
- in the SW_EXITINFO2 field of the GHCB in response to these requests.
- 
-+For the KVM_USER_VMGEXIT_EXT_GUEST_REQ type, the ext_guest_req union type
-+is used. The kernel will supply in 'data_gpa' the value the guest supplies
-+via the RAX field of the GHCB when issued extended guest requests.
-+'data_npages' will similarly contain the value the guest supplies in RBX
-+denoting the number of shared pages available to write the certificate
-+data into.
-+
-+  - If the supplied number of pages is sufficient, userspace should write
-+    the certificate data blob (in the format defined by the GHCB spec) in
-+    the address indicated by 'data_gpa' and set 'ret' to 0.
-+
-+  - If the number of pages supplied is not sufficient, userspace must write
-+    the required number of pages in 'data_npages' and then set 'ret' to 1.
-+
-+  - If userspace is temporarily unable to handle the request, 'ret' should
-+    be set to 2 to inform the guest to retry later.
-+
-+  - If some other error occurred, userspace should set 'ret' to a non-zero
-+    value that is distinct from the specific return values mentioned above.
-+
- 6. Capabilities that can be enabled on vCPUs
- ============================================
- 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index baf223eb5633..65a012f6bcb4 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -276,6 +276,9 @@ void snp_leak_pages(u64 pfn, unsigned int npages);
- void kdump_sev_callback(void);
- int snp_pause_attestation(u64 *transaction_id);
- void snp_resume_attestation(u64 *transaction_id);
-+u64 snp_transaction_get_id(void);
-+bool __snp_transaction_is_stale(u64 transaction_id);
-+bool snp_transaction_is_stale(u64 transaction_id);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
-@@ -291,6 +294,9 @@ static inline void snp_leak_pages(u64 pfn, unsigned int npages) {}
- static inline void kdump_sev_callback(void) { }
- static inline int snp_pause_attestation(u64 *transaction_id) { return 0; }
- static inline void snp_resume_attestation(u64 *transaction_id) {}
-+static inline u64 snp_transaction_get_id(void) { return 0; }
-+static inline bool __snp_transaction_is_stale(u64 transaction_id) { return false; }
-+static inline bool snp_transaction_is_stale(u64 transaction_id) { return false; }
- #endif
- 
- #endif
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 953f00ddf31b..8ba29b2b2b0a 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3283,6 +3283,7 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
- 	case SVM_VMGEXIT_PSC:
- 	case SVM_VMGEXIT_TERM_REQUEST:
- 	case SVM_VMGEXIT_GUEST_REQUEST:
-+	case SVM_VMGEXIT_EXT_GUEST_REQUEST:
- 		break;
- 	default:
- 		reason = GHCB_ERR_INVALID_EVENT;
-@@ -3803,6 +3804,84 @@ static void snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp
- 	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
- }
- 
-+static int snp_complete_ext_guest_req(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	struct vmcb_control_area *control;
-+	struct kvm *kvm = vcpu->kvm;
-+	sev_ret_code fw_err = 0;
-+	int vmm_ret;
-+
-+	vmm_ret = vcpu->run->vmgexit.ext_guest_req.ret;
-+	if (vmm_ret) {
-+		if (vmm_ret == SNP_GUEST_VMM_ERR_INVALID_LEN)
-+			vcpu->arch.regs[VCPU_REGS_RBX] =
-+				vcpu->run->vmgexit.ext_guest_req.data_npages;
-+		goto abort_request;
-+	}
-+
-+	control = &svm->vmcb->control;
-+
-+	/*
-+	 * To avoid the message sequence number getting out of sync between the
-+	 * actual value seen by firmware verses the value expected by the guest,
-+	 * make sure attestations can't get paused on the write-side at this
-+	 * point by holding the lock for the entire duration of the firmware
-+	 * request so that there is no situation where SNP_GUEST_VMM_ERR_BUSY
-+	 * would need to be returned after firmware sees the request.
-+	 */
-+	mutex_lock(&snp_pause_attestation_lock);
-+
-+	if (__snp_transaction_is_stale(svm->snp_transaction_id))
-+		vmm_ret = SNP_GUEST_VMM_ERR_BUSY;
-+	else if (!__snp_handle_guest_req(kvm, control->exit_info_1,
-+					 control->exit_info_2, &fw_err))
-+		vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
-+
-+	mutex_unlock(&snp_pause_attestation_lock);
-+
-+abort_request:
-+	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-+
-+	return 1; /* resume guest */
-+}
-+
-+static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
-+{
-+	int vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	unsigned long data_npages;
-+	sev_ret_code fw_err;
-+	gpa_t data_gpa;
-+
-+	if (!sev_snp_guest(vcpu->kvm))
-+		goto abort_request;
-+
-+	data_gpa = vcpu->arch.regs[VCPU_REGS_RAX];
-+	data_npages = vcpu->arch.regs[VCPU_REGS_RBX];
-+
-+	if (!IS_ALIGNED(data_gpa, PAGE_SIZE))
-+		goto abort_request;
-+
-+	svm->snp_transaction_id = snp_transaction_get_id();
-+	if (snp_transaction_is_stale(svm->snp_transaction_id)) {
-+		vmm_ret = SNP_GUEST_VMM_ERR_BUSY;
-+		goto abort_request;
-+	}
-+
-+	vcpu->run->exit_reason = KVM_EXIT_VMGEXIT;
-+	vcpu->run->vmgexit.type = KVM_USER_VMGEXIT_EXT_GUEST_REQ;
-+	vcpu->run->vmgexit.ext_guest_req.data_gpa = data_gpa;
-+	vcpu->run->vmgexit.ext_guest_req.data_npages = data_npages;
-+	vcpu->arch.complete_userspace_io = snp_complete_ext_guest_req;
-+
-+	return 0; /* forward request to userspace */
-+
-+abort_request:
-+	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-+	return 1; /* resume guest */
-+}
-+
- static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- {
- 	struct vmcb_control_area *control = &svm->vmcb->control;
-@@ -4067,6 +4146,9 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
- 		snp_handle_guest_req(svm, control->exit_info_1, control->exit_info_2);
- 		ret = 1;
- 		break;
-+	case SVM_VMGEXIT_EXT_GUEST_REQUEST:
-+		ret = snp_begin_ext_guest_req(vcpu);
-+		break;
- 	case SVM_VMGEXIT_UNSUPPORTED_EVENT:
- 		vcpu_unimpl(vcpu,
- 			    "vmgexit: unsupported event - exit_info_1=%#llx, exit_info_2=%#llx\n",
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8a8ee475ad86..28140bc8af27 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -303,6 +303,9 @@ struct vcpu_svm {
- 
- 	/* Guest GIF value, used when vGIF is not enabled */
- 	bool guest_gif;
-+
-+	/* Transaction ID associated with SNP config updates */
-+	u64 snp_transaction_id;
- };
- 
- struct svm_cpu_data {
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index b75f2e7d4012..f1f7486a3dcf 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -72,6 +72,7 @@ static unsigned long snp_nr_leaked_pages;
- 
- /* For synchronizing TCB/certificate updates with extended guest requests */
- DEFINE_MUTEX(snp_pause_attestation_lock);
-+EXPORT_SYMBOL_GPL(snp_pause_attestation_lock);
- static u64 snp_transaction_id;
- static bool snp_attestation_paused;
- 
-@@ -611,3 +612,39 @@ void snp_resume_attestation(u64 *transaction_id)
- 	mutex_unlock(&snp_pause_attestation_lock);
- }
- EXPORT_SYMBOL_GPL(snp_resume_attestation);
-+
-+u64 snp_transaction_get_id(void)
-+{
-+	u64 id;
-+
-+	mutex_lock(&snp_pause_attestation_lock);
-+	id = snp_transaction_id;
-+	mutex_unlock(&snp_pause_attestation_lock);
-+
-+	return id;
-+}
-+EXPORT_SYMBOL_GPL(snp_transaction_get_id);
-+
-+/* Must be called with snp_pause_attestion_lock held */
-+bool __snp_transaction_is_stale(u64 transaction_id)
-+{
-+	lockdep_assert_held(&snp_pause_attestation_lock);
-+
-+	return (snp_attestation_paused ||
-+		transaction_id != snp_transaction_id);
-+}
-+EXPORT_SYMBOL_GPL(__snp_transaction_is_stale);
-+
-+bool snp_transaction_is_stale(u64 transaction_id)
-+{
-+	bool stale;
-+
-+	mutex_lock(&snp_pause_attestation_lock);
-+
-+	stale = __snp_transaction_is_stale(transaction_id);
-+
-+	mutex_unlock(&snp_pause_attestation_lock);
-+
-+	return stale;
-+}
-+EXPORT_SYMBOL_GPL(snp_transaction_is_stale);
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index e33c48bfbd67..585de3a2591e 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -138,6 +138,7 @@ struct kvm_xen_exit {
- struct kvm_user_vmgexit {
- #define KVM_USER_VMGEXIT_PSC_MSR	1
- #define KVM_USER_VMGEXIT_PSC		2
-+#define KVM_USER_VMGEXIT_EXT_GUEST_REQ	3
- 	__u32 type; /* KVM_USER_VMGEXIT_* type */
- 	union {
- 		struct {
-@@ -151,6 +152,11 @@ struct kvm_user_vmgexit {
- 			__u64 shared_gpa;
- 			__u64 ret;
- 		} psc;
-+		struct {
-+			__u64 data_gpa;
-+			__u64 data_npages;
-+			__u32 ret;
-+		} ext_guest_req;
- 	};
- };
- 
--- 
-2.25.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
