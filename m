@@ -1,184 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF2615AAA8;
-	Thu, 18 Apr 2024 08:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B05315AACA;
+	Thu, 18 Apr 2024 08:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713430751; cv=none; b=boAxutmh2R+CYuOfPkiNVxWBlEBm0W56mpUcuYRVfqfw6nCPhbxvIXrJ0piZjRosDH986idKjl0U0x3Q69zFr50NP7cD/tq5zloAoKamaGdb7iMJgQm5GRKmezl4XpnzVWA2G46kg/KetLWq18AQVsdqflVjV+JLZLKVlg5Zy3k=
+	t=1713430760; cv=none; b=OCvQfiykKQKSaNtu6FTwK+4N9urRJMFF7gDmnIQyojNhCUYIbqgCIio87xOZ8vZrsBRvGGFDm5uOLve2k1PQIT35bK9hNB4opGn82TsBP+DcGFjdqUkfjlqQts6CWkGHVHXAJRTpYimh2CMMRF8R5FxMoyzaYYDr3Uqf6toRBqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713430751; c=relaxed/simple;
-	bh=ZEsPCpG7/bePMkAti19PTun4xE4R1F48IXuZVXgQlZU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Oqc6zWrJALiFS9lpmOVOL+YX5ZJX/jG5fHn7Yi8Cu2ZzFmSyl8zltbetNWKXZU/1VOD3UOiBeQ4HjktH8E5cgjE+fpGCo05UhUqVGfsKAbB8KFimaP4bANtVpKeh6L+NveuH40/YC5bLc8UlApTK2whtVG1QUQzsLV42xdLiw2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tJwwBFsN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9qCIBcLw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713430760; c=relaxed/simple;
+	bh=0CpQwN2sY7E8w9r+RH403hk74qO8mXZSxBiz6OoTlT8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TR2Pl0sMaD2djWF1CeREQauPofDWlXODP+ao5oBFbiTkgjXTvbVgF5a8XyjoLUlllc3F/z8o8NBvz1bq3OHWXrx2NT7xCOA7vwhLQneLapmxn94PZIL31GLu8NGbjNuZxGpyTSvPMBjJbqwqR/0ziMDlj4mYigc6mVJnrhT7KBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=usvMwDNr; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tJwwBFsN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9qCIBcLw"
-Date: Thu, 18 Apr 2024 08:59:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713430747;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3DzCTW/rvviKfEef1seIKYEq7DyCVwKK623GNOwOcOY=;
-	b=tJwwBFsNXoRUv4mP1ju3vaeExsLeiwwuW6uNnk3N6uxyI+YBMD7EAHxljQSt6O25RmnP3i
-	Bg/dDe6M2OVHxC9PwiXD5xXZsZFOhxJgbli56mYa0J6S+CA1o3jJtSEud8IvzMd6Vw8783
-	80JuzTQN9tvOmXdprca6vfLrnOn+swHPYEDZOqNZoFTpoHAn76wg5+qwcKrmUf8PQ0jHik
-	FJXHKy7PhzBwb0IsVil5d2TCT15Ov36hawmw3lhAaPgT9FfMHflFtwdAhbZfpMKle8Yg4G
-	w2Uph8yWsg+qfo+IQ9CGNnDyMhpAK+IGrxnR7aRzjlBEZIAt6oaovmr983V1AQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713430747;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3DzCTW/rvviKfEef1seIKYEq7DyCVwKK623GNOwOcOY=;
-	b=9qCIBcLwAwTdk3oRYLAg7LuXTbthwCq77C5td+QR16SKVW6n/7jc8w5UqD7+gW+hSQCog5
-	QTyGm6MKbo4bxkCA==
-From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/fred: Fix INT80 emulation for FRED
-Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240417174731.4189592-1-xin@zytor.com>
-References: <20240417174731.4189592-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="usvMwDNr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713430758; x=1744966758;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0CpQwN2sY7E8w9r+RH403hk74qO8mXZSxBiz6OoTlT8=;
+  b=usvMwDNrOOHV1aZm15tDshDISJCglxYqPaH+KrED4C6evXwpNF1JSACD
+   t4kLZeYCD0hdHNwlEZHiNyzD3urciijCKe5uwDsHT5fx4gsijSglM9C3K
+   xpHLAurbwkDguUlsSAYjgsn86EKpswug7XA/i0Tnr+Cd4fL5SpWMBL4iM
+   n3q0+T2VgU8x9WtjfxCPveaIvWK+8EclhFSi9IywtXAN47yfT0Sx6Vz0Y
+   Nh+QbGrv5+iO+KZO7dXTDD1B1ToG2IUp6HWEQj3n8v6UvEytd9ZmZbdyG
+   GyUFWe2hV/HY2PIa9pU3sX2n2wgnOHQ6QoP/HtBSEegG/tmF8Um/R/j8W
+   Q==;
+X-CSE-ConnectionGUID: R+PXq/rzTeCdCQmY8Xy7jA==
+X-CSE-MsgGUID: hF1xpleMR0K5xu0Z7/mHaw==
+X-IronPort-AV: E=Sophos;i="6.07,211,1708412400"; 
+   d="scan'208";a="188866875"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 01:59:17 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Apr 2024 01:58:57 -0700
+Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 01:58:45 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: "dmitry . baryshkov @ linaro . org" <dmitry.baryshkov@linaro.org>,
+	"andrzej . hajda @ intel . com" <andrzej.hajda@intel.com>, "neil . armstrong
+ @ linaro . org" <neil.armstrong@linaro.org>, "rfoss @ kernel . org"
+	<rfoss@kernel.org>, "Laurent . pinchart @ ideasonboard . com"
+	<Laurent.pinchart@ideasonboard.com>, "jonas @ kwiboo . se" <jonas@kwiboo.se>,
+	"jernej . skrabec @ gmail . com" <jernej.skrabec@gmail.com>, "maarten .
+ lankhorst @ linux . intel . com" <maarten.lankhorst@linux.intel.com>,
+	"mripard @ kernel . org" <mripard@kernel.org>, "tzimmermann @ suse . de"
+	<tzimmermann@suse.de>, "airlied @ gmail . com" <airlied@gmail.com>, "daniel @
+ ffwll . ch" <daniel@ffwll.ch>, "robh+dt @ kernel . org" <robh+dt@kernel.org>,
+	"krzysztof . kozlowski+dt @ linaro . org"
+	<krzysztof.kozlowski+dt@linaro.org>, "conor+dt @ kernel . org"
+	<conor+dt@kernel.org>, "linux @ armlinux . org . uk" <linux@armlinux.org.uk>,
+	"Nicolas . Ferre @ microchip . com" <Nicolas.Ferre@microchip.com>, "alexandre
+ . belloni @ bootlin . com" <alexandre.belloni@bootlin.com>, "claudiu . beznea
+ @ tuxon . dev" <claudiu.beznea@tuxon.dev>, "Manikandan . M @ microchip . com"
+	<Manikandan.M@microchip.com>, "arnd @ arndb . de" <arnd@arndb.de>,
+	"geert+renesas @ glider . be" <geert+renesas@glider.be>, "Jason @ zx2c4 .
+ com" <Jason@zx2c4.com>, "mpe @ ellerman . id . au" <mpe@ellerman.id.au>,
+	"gerg @ linux-m68k . org" <gerg@linux-m68k.org>, "rdunlap @ infradead . org"
+	<rdunlap@infradead.org>, "vbabka @ suse . cz" <vbabka@suse.cz>, "dri-devel @
+ lists . freedesktop . org" <dri-devel@lists.freedesktop.org>, "devicetree @
+ vger . kernel . org" <devicetree@vger.kernel.org>, "linux-kernel @ vger .
+ kernel . org" <linux-kernel@vger.kernel.org>, "oe-kbuild-all @ lists . linux
+ . dev" <oe-kbuild-all@lists.linux.dev>, "Hari . PrasathGE @ microchip . com"
+	<Hari.PrasathGE@microchip.com>
+CC: Dharma Balasubiramani <dharma.b@microchip.com>, "Hari Prasath Gujulan
+ Elango" <hari.prasathge@microchip.com>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>
+Subject: [PATCH v7 4/4] ARM: configs: at91: Enable LVDS serializer support
+Date: Thu, 18 Apr 2024 14:27:25 +0530
+Message-ID: <20240418085725.373797-5-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240418085725.373797-1-dharma.b@microchip.com>
+References: <20240418085725.373797-1-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171343074673.10875.6611903314262261610.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The following commit has been merged into the x86/urgent branch of tip:
+Enable LVDS serializer support for display pipeline.
 
-Commit-ID:     32f5f73b79ffdef215e2e1bcb6ad74387c0f925c
-Gitweb:        https://git.kernel.org/tip/32f5f73b79ffdef215e2e1bcb6ad74387c0f925c
-Author:        Xin Li (Intel) <xin@zytor.com>
-AuthorDate:    Wed, 17 Apr 2024 10:47:31 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 18 Apr 2024 10:37:11 +02:00
-
-x86/fred: Fix INT80 emulation for FRED
-
-Add a FRED-specific INT80 handler and document why it differs from the
-current one. Eventually, the common bits will be unified once FRED hw is
-available and it turns out that no further changes are needed but for
-now, keep the handlers separate for everyone's sanity's sake.
-
-  [ bp: Zap duplicated commit message, massage. ]
-
-Fixes: 55617fb991df ("x86/entry: Do not allow external 0x80 interrupts")
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240417174731.4189592-1-xin@zytor.com
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+Acked-by: Hari Prasath Gujulan Elango <hari.prasathge@microchip.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
- arch/x86/entry/common.c     | 65 ++++++++++++++++++++++++++++++++++++-
- arch/x86/entry/entry_fred.c |  2 +-
- 2 files changed, 66 insertions(+), 1 deletion(-)
+Changelog
+v6 -> v7
+v5 -> v6
+v4 -> v5
+v3 -> v4
+v2 -> v3
+- No Changes.
+---
+ arch/arm/configs/at91_dt_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 6de50b8..51cc9c7 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -255,6 +255,71 @@ __visible noinstr void do_int80_emulation(struct pt_regs *regs)
- 	instrumentation_end();
- 	syscall_exit_to_user_mode(regs);
- }
-+
-+#ifdef CONFIG_X86_FRED
-+/*
-+ * A FRED-specific INT80 handler is warranted for the follwing reasons:
-+ *
-+ * 1) As INT instructions and hardware interrupts are separate event
-+ *    types, FRED does not preclude the use of vector 0x80 for external
-+ *    interrupts. As a result, the FRED setup code does not reserve
-+ *    vector 0x80 and calling int80_is_external() is not merely
-+ *    suboptimal but actively incorrect: it could cause a system call
-+ *    to be incorrectly ignored.
-+ *
-+ * 2) It is called only for handling vector 0x80 of event type
-+ *    EVENT_TYPE_SWINT and will never be called to handle any external
-+ *    interrupt (event type EVENT_TYPE_EXTINT).
-+ *
-+ * 3) FRED has separate entry flows depending on if the event came from
-+ *    user space or kernel space, and because the kernel does not use
-+ *    INT insns, the FRED kernel entry handler fred_entry_from_kernel()
-+ *    falls through to fred_bad_type() if the event type is
-+ *    EVENT_TYPE_SWINT, i.e., INT insns. So if the kernel is handling
-+ *    an INT insn, it can only be from a user level.
-+ *
-+ * 4) int80_emulation() does a CLEAR_BRANCH_HISTORY. While FRED will
-+ *    likely take a different approach if it is ever needed: it
-+ *    probably belongs in either fred_intx()/ fred_other() or
-+ *    asm_fred_entrypoint_user(), depending on if this ought to be done
-+ *    for all entries from userspace or only system
-+ *    calls.
-+ *
-+ * 5) INT $0x80 is the fast path for 32-bit system calls under FRED.
-+ */
-+DEFINE_FREDENTRY_RAW(int80_emulation)
-+{
-+	int nr;
-+
-+	enter_from_user_mode(regs);
-+
-+	instrumentation_begin();
-+	add_random_kstack_offset();
-+
-+	/*
-+	 * FRED pushed 0 into regs::orig_ax and regs::ax contains the
-+	 * syscall number.
-+	 *
-+	 * User tracing code (ptrace or signal handlers) might assume
-+	 * that the regs::orig_ax contains a 32-bit number on invoking
-+	 * a 32-bit syscall.
-+	 *
-+	 * Establish the syscall convention by saving the 32bit truncated
-+	 * syscall number in regs::orig_ax and by invalidating regs::ax.
-+	 */
-+	regs->orig_ax = regs->ax & GENMASK(31, 0);
-+	regs->ax = -ENOSYS;
-+
-+	nr = syscall_32_enter(regs);
-+
-+	local_irq_enable();
-+	nr = syscall_enter_from_user_mode_work(regs, nr);
-+	do_syscall_32_irqs_on(regs, nr);
-+
-+	instrumentation_end();
-+	syscall_exit_to_user_mode(regs);
-+}
-+#endif
- #else /* CONFIG_IA32_EMULATION */
- 
- /* Handles int $0x80 on a 32bit kernel */
-diff --git a/arch/x86/entry/entry_fred.c b/arch/x86/entry/entry_fred.c
-index ac120cb..9fa18b8 100644
---- a/arch/x86/entry/entry_fred.c
-+++ b/arch/x86/entry/entry_fred.c
-@@ -66,7 +66,7 @@ static noinstr void fred_intx(struct pt_regs *regs)
- 	/* INT80 */
- 	case IA32_SYSCALL_VECTOR:
- 		if (ia32_enabled())
--			return int80_emulation(regs);
-+			return fred_int80_emulation(regs);
- 		fallthrough;
- #endif
- 
+diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
+index 1d53aec4c836..6eabe2313c9a 100644
+--- a/arch/arm/configs/at91_dt_defconfig
++++ b/arch/arm/configs/at91_dt_defconfig
+@@ -143,6 +143,7 @@ CONFIG_VIDEO_OV2640=m
+ CONFIG_VIDEO_OV7740=m
+ CONFIG_DRM=y
+ CONFIG_DRM_ATMEL_HLCDC=y
++CONFIG_DRM_MICROCHIP_LVDS_SERIALIZER=y
+ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_PANEL_EDP=y
+ CONFIG_FB_ATMEL=y
+-- 
+2.25.1
+
