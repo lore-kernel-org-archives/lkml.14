@@ -1,231 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCD515E20F;
-	Thu, 18 Apr 2024 17:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B37B172790;
+	Thu, 18 Apr 2024 17:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461150; cv=none; b=EH/QfMbeYKfZIKvsQruthoRS180B0Pw39Dve2NyL7wd3g/NbEPdEZ6DZjP/BFy3VHbTwL3/Fq56zcMIpHhk5hvEbu/MApy19y5c7a/2+/FFKQQoy0zJJ6nYZU4Bq/vgE+VRmo8S+vFpmTbioSh6NXEL4Z7LcWNfjRFQW9RI2A20=
+	t=1713461228; cv=none; b=ahjXVxWmlThKI5qQPgHz2u1eGhs32VIrnBBGTgCc8p61j8INWN95jzb81zWUzdivTtk0t0/+FHWq8GvsYwiY6PD+6xmMLy8SBlDYOXeRko7dIVsrUfRmBCWI0DYAaHyHFXjfu6CX1B6VvkisLuOZP6FAM5XmyU+NauiEe2Ecu6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713461150; c=relaxed/simple;
-	bh=FLXjmNmKcSXrfleW5MB4+b5p9DMCOnw1IiCEtELCQWg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=E3TWAkqTOWGAc11UQPDXC6Ia6bRXdJht5KJki5vVh49mBxrHlojmyFn0StPqWAvmluHZa9AiJJALiitZp3OnuObwAPIbEnJPzEcbTM9IjjTgsgXEwn8DuLkwLmS8601yYEx4AdvEc4dxuNTY/KmR617gkWpn4/AOfU83H1bdbr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIqHG3uC; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713461228; c=relaxed/simple;
+	bh=rP0Xkz7LY/9paQcIY9KIgH2ieBP45u1ZxnYsJw7BSs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcFbfS+FM/cKCeGYRppAbmiaaRwHe4AmhwCJ1Mt1rqlhGJiChBmcStW3k61+UkuGL0Hcnffr9Pf1iOGPerWnS2RJr/7rqT3Sk0WfEuY7mQ3rTMoVQtZNCkpK42Y08P9WwvFXNvXqvI3B+yhUl9OaObGGMyKV+0NBatS6HGafEV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lg0GAjAm; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIqHG3uC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713461149; x=1744997149;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=FLXjmNmKcSXrfleW5MB4+b5p9DMCOnw1IiCEtELCQWg=;
-  b=kIqHG3uC0o5CocQlvR/7G5csvbXBcamycBydoTqQ8ai1ZZ2GXWQgCo0Q
-   nhQtMs6jirKbE/pqtutsqUebICTX2SR17buR9V0Kmnpm5jbPnmW4ZvkLA
-   HaCHhnsyq0HEFBZZz9YUJd/aidCpCm7nFtp7JFIBg6fsE/6KZBEOxSFn6
-   zZf/64HIptCkzo0uTeICOOZUuyVuiQH0qubvS14dyoKaHAI5I6Y5u/QpV
-   A4/JQTpiQGOfPiRu6mYEPEcnkfIrjIZmAd74BaSu8e1ayiSsdZ2gJGoMM
-   rSxcFpx1MAmgeSma52RKeBzSdk0yYRNmWukDzLyfVPFpP5ugKLahyef7V
-   Q==;
-X-CSE-ConnectionGUID: ARjZ/c6RRGaUortvFzgyYg==
-X-CSE-MsgGUID: Lbo6DcYVTsarA2ZGMaZ6iA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="20171551"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="20171551"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 10:25:48 -0700
-X-CSE-ConnectionGUID: kTUPgKk2SB6XicQ0car4CA==
-X-CSE-MsgGUID: TpaEAdTRRTSYKZDpcjXPJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="22927333"
-Received: from unknown (HELO localhost) ([10.245.247.37])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 10:25:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 18 Apr 2024 20:25:41 +0300 (EEST)
-To: Parker Newman <parker@finest.io>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    Parker Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH v4 6/7] serial: exar: add CTI specific setup code
-In-Reply-To: <20240418130346.12530fdb@SWDEV2.connecttech.local>
-Message-ID: <2f51079c-061a-2a04-2569-3ece3cd9beca@linux.intel.com>
-References: <cover.1713382717.git.pnewman@connecttech.com> <ae4a66e7342b686cb8d4b15317585dfb37222cf4.1713382717.git.pnewman@connecttech.com> <f2353b8c-2079-b895-2707-f6be83161288@linux.intel.com> <20240418102153.554d56ba@SWDEV2.connecttech.local>
- <8c91f3a5-e124-aa28-06bb-2e6a699d4998@linux.intel.com> <20240418130346.12530fdb@SWDEV2.connecttech.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lg0GAjAm"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78f049ddd7dso74104485a.1;
+        Thu, 18 Apr 2024 10:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713461226; x=1714066026; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=lKzOdELtr17UxT9sbgBt88s9IxuTCx7orfaIApRzVA8=;
+        b=lg0GAjAmQzQeMPryoqa2Sa0BbFcbTt82hSNl50zMplaIioPdXtyGzEN2IW7/7Q4Cu/
+         eXcyyhcSC80o2bzYHEDAfaZQVHRHS9QyYht6VkHKeYPm52Qijl2LVjeXLUBDIEBcTqIj
+         /nbr8KGa3eYTG+XCe0wbT45pMoKyFojnxNuQEl0t61/lmd2/3vrhDbJXRAsJh43CO4i1
+         lw/m0Ydx5QSd5MjL9r7jJPipATkiEDPss9S3dKG81LtZKG2nTofx8DAEg/+phQzmghD6
+         u3Fwv+wXC8xVPtSxIuaEjobcKOE1ky/NT6+g8ajqETrLe6D3DJju5xMh/uU5Sy86ZYz2
+         odaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713461226; x=1714066026;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lKzOdELtr17UxT9sbgBt88s9IxuTCx7orfaIApRzVA8=;
+        b=RvhAH5ie6MqzarIigxopb44VbcPdnfBIatZvDoLW6UOt8BOBLia8vLsVwImwR8mNsS
+         zTM3IyeAy5z/HDP/sGdJy9lhFn52L8YrpU5ylMdpJs/GgAqTvD3dbFQ2KNYXc8HpjgN+
+         rMCbuQz0xKycxbKqfefxnIhyixnHOhTuZmVkuHVYSi0ajLliRdOaP9Cv9kz9VFFKihKI
+         /LOPF3ng+cCOA5ngfCvqkdeoxtwgzMxOA2L6D6h0N9fijtNmEDlwRUSo/rD7GD1lH9t/
+         iyBeCODRtBYeJqVHmvbvSfkekJlsh+8gyLbQOL5xFSsR8aAGIGYbxQnDHowEb3IznFdF
+         QyRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGvKE+C3ykYg+W2kcLiUooISvfeCfhV1eVji+TQZjj85AsDndw+bypDWVn1uFTki3XBaBEyHPgjsntaOEPtwKk/7aAYQ5wI5G8y259i5T1q2riB1/m+smMnUQWjbtB3t2ZHcyrVCq98srEgvU=
+X-Gm-Message-State: AOJu0YxCRbTLYC7Dzlab6p0AyKMQen49vGs7+tNsyzgVb6AJ5WFRmJhx
+	HDuVWEN0VrqUuRg0q5tP15/E6LUIoPP9ZiPU7XPWB5yK7p8xFQLZ
+X-Google-Smtp-Source: AGHT+IEyP13rku9EoBhl3GBbdeEvkFMwjRN2G8cKqPKJDutUNj7zCLBRGGi8Q5ZNqInv4TdRcVurtw==
+X-Received: by 2002:a05:6214:b05:b0:6a0:583b:8cc5 with SMTP id u5-20020a0562140b0500b006a0583b8cc5mr1986476qvj.33.1713461226239;
+        Thu, 18 Apr 2024 10:27:06 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d27-20020a0caa1b000000b0069b1db7b0f8sm819856qvb.23.2024.04.18.10.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 10:27:05 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id EEB73120007D;
+	Thu, 18 Apr 2024 13:19:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Thu, 18 Apr 2024 13:19:52 -0400
+X-ME-Sender: <xms:OFYhZoPVSGZr4ThZoIZ-o8InQS79beav4r0k2k2VvyRWYlKC4jacpQ>
+    <xme:OFYhZu-2kLOiTCv3xz8gwRBYI_xIyVYcr2IfMJHq-AkJent6R8LIS8BA-GieNR1s9
+    uAl4n-ReCbxX3z0zA>
+X-ME-Received: <xmr:OFYhZvT1rFYbaA-BETvn9NP-8lkDvKYrbcEsKzN6FejMnvA4Z2WEroQkizbuhg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudektddgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepueho
+    qhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtf
+    frrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledthffgheegkeekiefgudek
+    hffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeeh
+    tdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmse
+    hfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:OFYhZgtdceZ7od9uw63rtZ8CY7Dl3E6h2fpD7GOpMBjjJxT56m49hg>
+    <xmx:OFYhZgdERIQaB_Lbi4DH4osqkOv0rpAgOytWR8rTKFZEprMzYjP1qA>
+    <xmx:OFYhZk3die_i5r4BHdy1zVIIf4Wb2Z5HqhuU_gg9t4NfKWbGCPFurA>
+    <xmx:OFYhZk_5HxYH4MVHXayPgfbTl2Jzj3dkfO0ymJ18tTtYUrgbUc5bVw>
+    <xmx:OFYhZn_tHoWAw4caBBPumKl71b-rQK3jJpUPzua1q-GlJGkIgN6xy9-U>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 18 Apr 2024 13:19:52 -0400 (EDT)
+Date: Thu, 18 Apr 2024 10:19:28 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v6 3/4] rust: uaccess: add typed accessors for userspace
+ pointers
+Message-ID: <ZiFWIFMSBbU0i8JF@boqun-archlinux>
+References: <20240418-alice-mm-v6-0-cb8f3e5d688f@google.com>
+ <20240418-alice-mm-v6-3-cb8f3e5d688f@google.com>
+ <5fd684d8-d46d-4009-bcf8-134dab342322@proton.me>
+ <CAH5fLgiMLxmmm0AVX_5HQF61FzzN69GCKabrr-uM_oV-rRMuHw@mail.gmail.com>
+ <c6239407-8410-49e2-a8a1-16be8468ab88@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1078240065-1713460633=:986"
-Content-ID: <72bd82c3-c51e-cadf-48ce-05b20dd3eee6@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c6239407-8410-49e2-a8a1-16be8468ab88@proton.me>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Apr 18, 2024 at 04:23:06PM +0000, Benno Lossin wrote:
+> On 18.04.24 15:17, Alice Ryhl wrote:
+> > On Thu, Apr 18, 2024 at 3:02 PM Benno Lossin <benno.lossin@proton.me> wrote:
+> >>
+> >> On 18.04.24 10:59, Alice Ryhl wrote:
+> >>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> >>> index 8fad61268465..9c57c6c75553 100644
+> >>> --- a/rust/kernel/types.rs
+> >>> +++ b/rust/kernel/types.rs
+> >>> @@ -409,3 +409,67 @@ pub enum Either<L, R> {
+> >>>       /// Constructs an instance of [`Either`] containing a value of type `R`.
+> >>>       Right(R),
+> >>>   }
+> >>> +
+> >>> +/// Types for which any bit pattern is valid.
+> >>> +///
+> >>> +/// Not all types are valid for all values. For example, a `bool` must be either zero or one, so
+> >>> +/// reading arbitrary bytes into something that contains a `bool` is not okay.
+> >>> +///
+> >>> +/// It's okay for the type to have padding, as initializing those bytes has no effect.
+> >>> +///
+> >>> +/// # Safety
+> >>> +///
+> >>> +/// All bit-patterns must be valid for this type. This type must not have interior mutability.
+> >>
+> >> What is the reason for disallowing interior mutability here? I agree
+> >> that it is necessary for `AsBytes`, but I don't think we need it here.
 
---8323328-1078240065-1713460633=:986
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <91b8c041-f96c-5039-04c0-16ec44733eb6@linux.intel.com>
+Hmm.. technically, if the interior mutability behaves in a way that each
+byte is still initialized during the modification, then it should be
+fine for `AsBytes`, for example and `AtomicI32` (implemented by asm
+blocks)? Not making any change suggestion, just checking my understand.
 
-On Thu, 18 Apr 2024, Parker Newman wrote:
+Regards,
+Boqun
 
-> On Thu, 18 Apr 2024 19:29:44 +0300 (EEST)
-> Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
->=20
-> > On Thu, 18 Apr 2024, Parker Newman wrote:
-> > > On Thu, 18 Apr 2024 16:20:15 +0300 (EEST)
-> > > Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > >  =20
-> > > > On Wed, 17 Apr 2024, Parker Newman wrote: =20
-> > > > > From: Parker Newman <pnewman@connecttech.com>
-> > > > >=20
-> > > > > This is a large patch but is only additions. All changes and remo=
-vals
-> > > > > are made in previous patches in this series.
-> > > > >=20
-> > > > > - Add CTI board_init and port setup functions for each UART type
-> > > > > - Add CTI_EXAR_DEVICE() and CTI_PCI_DEVICE() macros
-> > > > > - Add support for reading a word from the Exar EEPROM.
-> > > > > - Add support for configuring and setting a single MPIO
-> > > > > - Add various helper functions for CTI boards.
-> > > > > - Add osc_freq to struct exar8250
-> > > > >=20
-> > > > > Signed-off-by: Parker Newman <pnewman@connecttech.com> =20
-> >=20
-> > > > > @@ -192,11 +252,201 @@ struct exar8250_board {
-> > > > >=20
-> > > > >  struct exar8250 {
-> > > > >  =09unsigned int=09=09nr;
-> > > > > +=09unsigned int=09=09osc_freq;
-> > > > >  =09struct exar8250_board=09*board;
-> > > > >  =09void __iomem=09=09*virt;
-> > > > >  =09int=09=09=09line[];
-> > > > >  };
-> > > > >=20
-> > > > > +static inline void exar_write_reg(struct exar8250 *priv,
-> > > > > +=09=09=09=09unsigned int reg, u8 value)
-> > > > > +{
-> > > > > +=09writeb(value, priv->virt + reg);
-> > > > > +}
-> > > > > +
-> > > > > +static inline u8 exar_read_reg(struct exar8250 *priv, unsigned i=
-nt reg)
-> > > > > +{
-> > > > > +=09return readb(priv->virt + reg);
-> > > > > +}   =20
-> > > >=20
-> > > > I tried to understand what is going on with this priv->virt in 8250=
-_exar=20
-> > > > in general and why it exists but I failed. It seems to BAR0 is mapp=
-ed=20
-> > > > there but also serial8250_pci_setup_port() does map the same BAR an=
-d=20
-> > > > sets it up into the usual place in membase.
-> > > >  =20
-> > >=20
-> > > Exar PCI/PCIe UARTs have global configuration registers from 0x80-0x9=
-B.
-> > > These registers are for reading the EEPROM, configuring the MPIO, etc=
-=2E
-> > > As these registers are only at 0x80, and not port specific, the drive=
-r maps
-> > > BAR0 to priv->virt for accessing them.  =20
-> >=20
-> > Okay, thanks for explaining. The naming & lack of comments wasn't exact=
-ly=20
-> > making it easy to follow this bit (this is not your fault in anyway but=
-=20
-> > a pre-existing problem in the driver's code).
-> >=20
-> > I've a follow up question now that it's confirmed they're different,=20
-> > see below...
-> >=20
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_8XMODE), 0x00);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_FCTR), UART_FCTR_EXA=
-R_TRGD);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_TXTRG), 128);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_RXTRG), 128);   =20
-> > > >=20
-> > > > Unnecessary parenthesis. =20
-> >=20
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_8XMODE), 0x00);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_FCTR), UART_FCTR_EXA=
-R_TRGD);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_TXTRG), 32);
-> > > > > +=09exar_write_reg(priv, (offset + UART_EXAR_RXTRG), 32);   =20
-> > > >=20
-> > > > Unnecessary parenthesis.
-> > > >  =20
-> > >=20
-> > > I will fix these in my cleanup patches.  =20
-> >=20
-> > Based on the wording in your response, I'm not sure you got this right.=
- It=20
-> > is code you're adding in this patch so the parenthesis should be remove=
-d=20
-> > from this change so they never appear in the commit history.
-> >=20
->=20
-> Greg has already merged this series into his testing branch. I assumed an=
-y
-> changes would need to be made in a separate patch series? Sorry if I=20
-> misunderstood. I already sent these fixes in a new mini-series.=20
-
-Okay. I was only aware he took the first patch but seemingly he took all=20
-of them. So you're correct then, ignore my advice which was based on=20
-incomplete picture.
-
-> > > > I recommend you add a helper for this as it is repeated twice. Are =
-the=20
-> > > > values 32 and 128 literal or do they have some specific meaning? If=
- the=20
-> > > > latter case, they should be using named defines (this likely applie=
-s to=20
-> > > > the existing trigger code in the driver too).
-> > > >=20
-> > > >  =20
-> > >=20
-> > > They are the FIFO trigger levels so they are literally 128 and 32.  =
-=20
-> >=20
-> > Okay, no problem then if its 128 characters and 32 characters.
-> >=20
-> > > These 4 writes come from Exar's out-of-tree driver and are in=20
-> > > pci_xr17v35x_setup() and some other vendor specific functions.=20
-> > >=20
-> > > I am not sure why/if these are needed.  =20
-> >=20
-> > ...So the follow-up question. I see the existing code in=20
-> > pci_fastcom335_setup() and pci_xr17v35x_setup() writes into membase=20
-> > based address but your code uses exar_write_reg() which is priv->virt=
-=20
-> > based. Is this difference intentional?
-> >=20
->=20
-> Both methods are effectively the same thing. I used exar_write_reg() to b=
-e
-> consistent with my other code and it is a bit cleaner than:
-
-Those people used to serial subsystem, using membase is way more familiar=
-=20
-than using some driver private thing.
-
-> =09u8 __iomem *p;
->=20
-> =09p =3D port->port.membase;
->=20
-> =09writeb(0x00, p + UART_EXAR_8XMODE);
-
-It's inconsistent with the other two uses now but since you told they're=20
-effectively the same thing, I was hoping all of 4 places in 8250_exar=20
-would be converted to use a helper that is just given the threshold as=20
-parameter (the helper doesn't exist yet).
-
---=20
- i.
---8323328-1078240065-1713460633=:986--
+> >> For example it is fine to convert `u8` to `UnsafeCell<u8>`. Niches also
+> >> should not be a problem, since eg `Option<UnsafeCell<NonNull<u8>>>`
+> >> already fails the "All bit-patterns must be valid for this type".
+> > 
+> > If T: FromBytes allows transmuting &[u8; size_of::<T>] into &T, then
+> > it would be a problem as you could then use it to modify the original
+> > &[u8].
+> 
+> Ahh that makes a lot of sense.
+> 
+> -- 
+> Cheers,
+> Benno
+> 
+> 
