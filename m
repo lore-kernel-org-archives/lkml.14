@@ -1,48 +1,47 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2988BFA;
-	Thu, 18 Apr 2024 12:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793BD1DFCF;
+	Thu, 18 Apr 2024 12:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445055; cv=none; b=Kf2pcbRvLrkxxRaiIvks7D3//amdrmM3jmFzSGFvXJ9eAAH1MGVsJ9uDawpaKPGI58Q941KcphJqo/kf2vk+XcngIONwwi3yA0IU51s3qgYdLCF99yqQhLNj9R/xrI9kd5MkcD+5Y9vuzDHBrIt7wphlc5QQS7Zbor/25d9lx2w=
+	t=1713445055; cv=none; b=uFkJso331hDNg/j1Q10EBra3pSHC/xabGI3SNELY0Kv+jnq418xrfS1375iH+fpw5oQyPB5tqmKmoyH2pbY3aQtGE6QSqPor5aWyPRQvxAxtTuqVBlLDUp4wTLY7eAS1bsl4U8GoXLdqM2SDARwe4X64geWfz5yXMkM5RtNcibY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713445055; c=relaxed/simple;
-	bh=hzs+cdhElRvkfgSeBVU0J84Khj0Utaoqs/UY4zJhumY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YRw2/xE4zgJ0PQGzzziN8ToIiiGWmuFuUr/Z/SC+WF8u6UibMaWB2r8dBHz/QSHmLmX8qLflO7FOzeSyLvhyE7h05ij8rMY6HJnXxg3HUailnNP8QK/TZtBz7gg6yatEiYYTSbjJmkFvaWXnZN5PYoqi/fx5ON2iV3eUIGZxr9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pPZQ3MGV; arc=none smtp.client-ip=68.232.154.123
+	bh=Rb3bBJy2VszRT+9R2AqUbAa53uLcfwNZ4YFhpNUDcKs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ggicz2Yv7my4e+hrc2ozBJIgIgnz/RlAs9HMienbDM6vgWHfFZO9OyfcfYmUJnWRBxHheNE+C8/MZOLp+ZoR4a15qHP6fQfGf7k/miNemxNV+BGchwykFBAhc5ScoiW9FtCZm6PdlSGj6M27TQv1FIG17sgzCfD4upKPHbciZAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bHVazGJb; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pPZQ3MGV"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bHVazGJb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
   t=1713445053; x=1744981053;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hzs+cdhElRvkfgSeBVU0J84Khj0Utaoqs/UY4zJhumY=;
-  b=pPZQ3MGVBApxia1BaJCtMZE4SvopQE/8APPVSf0n9nKBsrEJSzY3O5LF
-   dpEzSdCAV2tUG1lbm0LYYySmm66P2PXUlu7bpbTiobE1EHMtMZOd8RB4V
-   oEus3sIX5yhjD/HcO7j23pcnN37YjL+6Xohj0YNhbVk+0wC9A2FtIk/qd
-   V5mDfjTiDDDoUeak7r7zuLOAA8goP1hQoHrZ0sj70U9Omll1+44NNEump
-   5OJPG/lTJLAxt4jAagh9/3AL0hatZpq0rAsuq1nqQ5ys9rrqvApREZGes
-   WjQF0XAhUvVHD1ltwrtCz0IotPreMC4/bk5jkdo1pV2+rTgkWCu7VTlFY
-   g==;
-X-CSE-ConnectionGUID: /GOC6xhST+W/rwirabmEJg==
-X-CSE-MsgGUID: dcaDkZCaR7mItOV91KRkVQ==
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Rb3bBJy2VszRT+9R2AqUbAa53uLcfwNZ4YFhpNUDcKs=;
+  b=bHVazGJbtJ1Kc7c7jltPsYiSz+Czqo/26KhUCCCShVsktbyVexQneSaR
+   f5aNk9ZKC3iO3sJReJhEj/BP77kWSj6zEhtyocZhTkYgZStNR5yKJ3JLS
+   G/wFig2hpqj3/nOLtihBrO5hx7P0D9PMRb7VFjr7UhiABie0P9f/9tkzj
+   zveK73BGyqQjZocu2Q0AhWhZ0FQzD3G2JIYDhCVz8iImAspROYYVz59Hz
+   tSqDl02J5WJCCyqqbDY37xnphDSw/XfIijlt81as9M1oZ2oOuhX6fXb0H
+   1Kwip40ELk+/YPc34lF60ompvmwvFJb5Kkhop4QAaVGwI9YftNtDHIK1v
+   w==;
+X-CSE-ConnectionGUID: Gt9eIEHaS7e6ziafVgNwUQ==
+X-CSE-MsgGUID: LjOmlH8UQR6gdapeZhRjbA==
 X-IronPort-AV: E=Sophos;i="6.07,212,1708412400"; 
-   d="scan'208";a="22153713"
+   d="scan'208";a="21557019"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 05:57:31 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 05:57:31 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 05:57:12 -0700
+ 15.1.2507.35; Thu, 18 Apr 2024 05:56:47 -0700
 Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 05:57:04 -0700
+ 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 05:56:38 -0700
 From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
@@ -57,12 +56,10 @@ CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
 	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
 	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
 	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Subject: [PATCH net-next v4 03/12] net: ethernet: oa_tc6: implement register read operation
-Date: Thu, 18 Apr 2024 18:26:39 +0530
-Message-ID: <20240418125648.372526-4-Parthiban.Veerasooran@microchip.com>
+Subject: [PATCH net-next v4 00/12] Add support for OPEN Alliance 10BASE-T1x MACPHY Serial Interface
+Date: Thu, 18 Apr 2024 18:26:36 +0530
+Message-ID: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
-References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,153 +69,172 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Implement register read operation according to the control communication
-specified in the OPEN Alliance 10BASE-T1x MACPHY Serial Interface
-document. Control read commands are used by the SPI host to read
-registers within the MAC-PHY. Each control read commands are composed of
-a 32 bits control command header.
+This patch series contain the below updates,
+- Adds support for OPEN Alliance 10BASE-T1x MACPHY Serial Interface in the
+  net/ethernet/oa_tc6.c.
+  Link to the spec:
+  -----------------
+  https://opensig.org/download/document/OPEN_Alliance_10BASET1x_MAC-PHY_Serial_Interface_V1.1.pdf
 
-The MAC-PHY ignores all data from the SPI host following the control
-header for the remainder of the control read command. Control read
-commands can read either a single register or multiple consecutive
-registers. When multiple consecutive registers are read, the address is
-automatically post-incremented by the MAC-PHY. Reading any unimplemented
-or undefined registers shall return zero.
+- Adds driver support for Microchip LAN8650/1 Rev.B1 10BASE-T1S MACPHY
+  Ethernet driver in the net/ethernet/microchip/lan865x/lan865x.c.
+  Link to the product:
+  --------------------
+  https://www.microchip.com/en-us/product/lan8650
 
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
----
- drivers/net/ethernet/oa_tc6.c | 84 ++++++++++++++++++++++++++++++++++-
- include/linux/oa_tc6.h        |  3 ++
- 2 files changed, 85 insertions(+), 2 deletions(-)
+Testing Details:
+----------------
+The driver performance was tested using iperf3 in the below two setups
+separately.
 
-diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
-index a92337de4534..f563329912e2 100644
---- a/drivers/net/ethernet/oa_tc6.c
-+++ b/drivers/net/ethernet/oa_tc6.c
-@@ -38,6 +38,7 @@ enum oa_tc6_header_type {
- };
- 
- enum oa_tc6_register_op {
-+	OA_TC6_CTRL_REG_READ = 0,
- 	OA_TC6_CTRL_REG_WRITE = 1,
- };
- 
-@@ -113,7 +114,8 @@ static void oa_tc6_prepare_ctrl_spi_buf(struct oa_tc6 *tc6, u32 address,
- 
- 	*tx_buf = oa_tc6_prepare_ctrl_header(address, length, reg_op);
- 
--	oa_tc6_update_ctrl_write_data(tc6, value, length);
-+	if (reg_op == OA_TC6_CTRL_REG_WRITE)
-+		oa_tc6_update_ctrl_write_data(tc6, value, length);
- }
- 
- static int oa_tc6_check_ctrl_write_reply(struct oa_tc6 *tc6, u8 size)
-@@ -132,6 +134,30 @@ static int oa_tc6_check_ctrl_write_reply(struct oa_tc6 *tc6, u8 size)
- 	return 0;
- }
- 
-+static int oa_tc6_check_ctrl_read_reply(struct oa_tc6 *tc6, u8 size)
-+{
-+	u32 *tx_buf = tc6->spi_ctrl_tx_buf;
-+	u32 *rx_buf = tc6->spi_ctrl_rx_buf + OA_TC6_CTRL_IGNORED_SIZE;
-+
-+	/* The echoed control read header must match with the one that was
-+	 * transmitted.
-+	 */
-+	if (*tx_buf != *rx_buf)
-+		return -EPROTO;
-+
-+	return 0;
-+}
-+
-+static void oa_tc6_copy_ctrl_read_data(struct oa_tc6 *tc6, u32 value[],
-+				       u8 length)
-+{
-+	__be32 *rx_buf = tc6->spi_ctrl_rx_buf + OA_TC6_CTRL_IGNORED_SIZE +
-+			 OA_TC6_CTRL_HEADER_SIZE;
-+
-+	for (int i = 0; i < length; i++)
-+		value[i] = be32_to_cpu(*rx_buf++);
-+}
-+
- static int oa_tc6_perform_ctrl(struct oa_tc6 *tc6, u32 address, u32 value[],
- 			       u8 length, enum oa_tc6_register_op reg_op)
- {
-@@ -152,8 +178,62 @@ static int oa_tc6_perform_ctrl(struct oa_tc6 *tc6, u32 address, u32 value[],
- 	}
- 
- 	/* Check echoed/received control write command reply for errors */
--	return oa_tc6_check_ctrl_write_reply(tc6, size);
-+	if (reg_op == OA_TC6_CTRL_REG_WRITE)
-+		return oa_tc6_check_ctrl_write_reply(tc6, size);
-+
-+	/* Check echoed/received control read command reply for errors */
-+	ret = oa_tc6_check_ctrl_read_reply(tc6, size);
-+	if (ret)
-+		return ret;
-+
-+	oa_tc6_copy_ctrl_read_data(tc6, value, length);
-+
-+	return 0;
-+}
-+
-+/**
-+ * oa_tc6_read_registers - function for reading multiple consecutive registers.
-+ * @tc6: oa_tc6 struct.
-+ * @address: address of the first register to be read in the MAC-PHY.
-+ * @value: values to be read from the starting register address @address.
-+ * @length: number of consecutive registers to be read from @address.
-+ *
-+ * Maximum of 128 consecutive registers can be read starting at @address.
-+ *
-+ * Returns 0 on success otherwise failed.
-+ */
-+int oa_tc6_read_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
-+			  u8 length)
-+{
-+	int ret;
-+
-+	if (!length || length > OA_TC6_CTRL_MAX_REGISTERS) {
-+		dev_err(&tc6->spi->dev, "Invalid register length parameter\n");
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&tc6->spi_ctrl_lock);
-+	ret = oa_tc6_perform_ctrl(tc6, address, value, length,
-+				  OA_TC6_CTRL_REG_READ);
-+	mutex_unlock(&tc6->spi_ctrl_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(oa_tc6_read_registers);
-+
-+/**
-+ * oa_tc6_read_register - function for reading a MAC-PHY register.
-+ * @tc6: oa_tc6 struct.
-+ * @address: register address of the MAC-PHY to be read.
-+ * @value: value read from the @address register address of the MAC-PHY.
-+ *
-+ * Returns 0 on success otherwise failed.
-+ */
-+int oa_tc6_read_register(struct oa_tc6 *tc6, u32 address, u32 *value)
-+{
-+	return oa_tc6_read_registers(tc6, address, value, 1);
- }
-+EXPORT_SYMBOL_GPL(oa_tc6_read_register);
- 
- /**
-  * oa_tc6_write_registers - function for writing multiple consecutive registers.
-diff --git a/include/linux/oa_tc6.h b/include/linux/oa_tc6.h
-index 99c490f1c8a8..85aeecf87306 100644
---- a/include/linux/oa_tc6.h
-+++ b/include/linux/oa_tc6.h
-@@ -15,3 +15,6 @@ struct oa_tc6 *oa_tc6_init(struct spi_device *spi);
- int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value);
- int oa_tc6_write_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
- 			   u8 length);
-+int oa_tc6_read_register(struct oa_tc6 *tc6, u32 address, u32 *value);
-+int oa_tc6_read_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
-+			  u8 length);
+Setup 1:
+--------
+Node 0 - Raspberry Pi 4 with LAN8650 MAC-PHY 
+Node 1 - Raspberry Pi 4 with EVB-LAN8670-USB USB Stick
+
+Setup 2:
+--------
+Node 0 - SAMA7G54-EK with LAN8650 MAC-PHY 
+Node 1 - Raspberry Pi 4 with EVB-LAN8670-USB USB Stick
+
+Achieved maximum of 9.4 Mbps.
+
+Some systems like Raspberry Pi 4 need performance mode enabled to get the
+proper clock speed for SPI. Refer below link for more details.
+
+https://github.com/raspberrypi/linux/issues/3381#issuecomment-1144723750
+
+Changes:
+v2:
+- Removed RFC tag.
+- OA TC6 framework configured in the Kconfig and Makefile to compile as a
+  module.
+- Kerneldoc headers added for all the API methods exposed to MAC driver.
+- Odd parity calculation logic updated from the below link,
+  https://elixir.bootlin.com/linux/latest/source/lib/bch.c#L348
+- Control buffer memory allocation moved to the initial function.
+- struct oa_tc6 implemented as an obaque structure.
+- Removed kthread for handling mac-phy interrupt instead threaded irq is
+  used.
+- Removed interrupt implementation for soft reset handling instead of
+  that polling has been implemented.
+- Registers name in the defines changed according to the specification
+  document.
+- Registers defines are arranged in the order of offset and followed by
+  register fields.
+- oa_tc6_write_register() implemented for writing a single register and
+  oa_tc6_write_registers() implemented for writing multiple registers.
+- oa_tc6_read_register() implemented for reading a single register and
+  oa_tc6_read_registers() implemented for reading multiple registers.
+- Removed DRV_VERSION macro as git hash provided by ethtool.
+- Moved MDIO bus registration and PHY initialization to the OA TC6 lib.
+- Replaced lan865x_set/get_link_ksettings() functions with
+  phy_ethtool_ksettings_set/get() functions.
+- MAC-PHY's standard capability register values checked against the
+  user configured values.
+- Removed unnecessary parameters validity check in various places.
+- Removed MAC address configuration in the lan865x_net_open() function as
+  it is done in the lan865x_probe() function already.
+- Moved standard registers and proprietary vendor registers to the
+  respective files.
+- Added proper subject prefixes for the DT bindings.
+- Moved OA specific properties to a separate DT bindings and corrected the
+  types & mistakes in the DT bindings.
+- Inherited OA specific DT bindings to the LAN865x specific DT bindings.
+- Removed sparse warnings in all the places.
+- Used net_err_ratelimited() for printing the error messages.
+- oa_tc6_process_rx_chunks() function and the content of oa_tc6_handler()
+  function are split into small functions.
+- Used proper macros provided by network layer for calculating the
+  MAX_ETH_LEN.
+- Return value of netif_rx() function handled properly.
+- Removed unnecessary NULL initialization of skb in the
+  oa_tc6_rx_eth_ready() function removed.
+- Local variables declaration ordered in reverse xmas tree notation.
+
+v3:
+- Completely redesigned all the patches.
+- Control and data interface patches are divided into multiple small
+  patches.
+- Device driver APIs added in the oa-tc6-framework.rst file.
+- Code readability improved in all the patches.
+- Defined macros wherever is possible.
+- Changed RESETC to STATUS0_RESETC for improving the readability.
+- Removed OA specific DT bindings.
+- Used default configurations defined in the OA spec.
+- All variables are named properly as per OA spec for more redability.
+- Bigger functions are split into multiple smaller functions.
+- DT binding check is done.
+- Phy mask is removed in phy scanning.
+- Used NET_RX_DROP to compare the rx packet submission status.
+- Indentation in the Kconfig file corrected.
+- Removed CONFIG_OF and CONFIG_ACPI ifdefs.
+- Removed MODULE_ALIAS().
+
+v4:
+- Fixed indentation in oa-tc6-framework.rst file.
+- Replaced ENODEV error code with EPROTO in the
+  oa_tc6_check_ctrl_write_reply and oa_tc6_check_ctrl_read_reply()
+  functions.
+- Renamed oa_tc6_read_sw_reset_status() function as
+  oa_tc6_read_status0().
+- Changed software reset polling delay as 1ms and polling timeout as 1s.
+- Implemented clause 45 registers direct access.
+- Replaced ENODEV error code with ENOMEM in the
+  oa_tc6_mdiobus_register() function.
+- Changed transmit skbs queue size as 2.
+- Added skb_linearize() function to convert contiguous packet data.
+- Checked kthread_should_stop() in the oa_tc6_spi_thread_handler()
+  function before proceeding for the oa_tc6_try_spi_transfer().
+- Removed netdev_err() print in the oa_tc6_allocate_rx_skb() function.
+- Added spi-peripheral-props reference in the dt-bindings.
+- Changed the fallback order in the dt-bindings.
+- Replaced netif_start_queue() with netif_wake_queue().
+- Empty data transfer performed in the oa_tc6_init() function to clear
+  the reset complete interrupt.
+- ZARFE bit in the CONFIG0 register is set to 1 to avoid lan865x halt
+  based on the recommendation in the lan865x errata.
+
+Parthiban Veerasooran (12):
+  Documentation: networking: add OPEN Alliance 10BASE-T1x MAC-PHY serial
+    interface
+  net: ethernet: oa_tc6: implement register write operation
+  net: ethernet: oa_tc6: implement register read operation
+  net: ethernet: oa_tc6: implement software reset
+  net: ethernet: oa_tc6: implement error interrupts unmasking
+  net: ethernet: oa_tc6: implement internal PHY initialization
+  net: ethernet: oa_tc6: enable open alliance tc6 data communication
+  net: ethernet: oa_tc6: implement transmit path to transfer tx ethernet
+    frames
+  net: ethernet: oa_tc6: implement receive path to receive rx ethernet
+    frames
+  net: ethernet: oa_tc6: implement mac-phy interrupt
+  microchip: lan865x: add driver support for Microchip's LAN865X MAC-PHY
+  dt-bindings: net: add Microchip's LAN865X 10BASE-T1S MACPHY
+
+ .../bindings/net/microchip,lan865x.yaml       |   80 +
+ Documentation/networking/oa-tc6-framework.rst |  491 ++++++
+ MAINTAINERS                                   |   15 +
+ drivers/net/ethernet/Kconfig                  |   11 +
+ drivers/net/ethernet/Makefile                 |    1 +
+ drivers/net/ethernet/microchip/Kconfig        |    1 +
+ drivers/net/ethernet/microchip/Makefile       |    1 +
+ .../net/ethernet/microchip/lan865x/Kconfig    |   19 +
+ .../net/ethernet/microchip/lan865x/Makefile   |    6 +
+ .../net/ethernet/microchip/lan865x/lan865x.c  |  384 +++++
+ drivers/net/ethernet/oa_tc6.c                 | 1321 +++++++++++++++++
+ drivers/net/phy/microchip_t1s.c               |   30 +
+ include/linux/oa_tc6.h                        |   23 +
+ include/uapi/linux/mdio.h                     |    1 +
+ 14 files changed, 2384 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/microchip,lan865x.yaml
+ create mode 100644 Documentation/networking/oa-tc6-framework.rst
+ create mode 100644 drivers/net/ethernet/microchip/lan865x/Kconfig
+ create mode 100644 drivers/net/ethernet/microchip/lan865x/Makefile
+ create mode 100644 drivers/net/ethernet/microchip/lan865x/lan865x.c
+ create mode 100644 drivers/net/ethernet/oa_tc6.c
+ create mode 100644 include/linux/oa_tc6.h
+
 -- 
 2.34.1
 
