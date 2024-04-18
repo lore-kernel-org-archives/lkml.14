@@ -1,125 +1,164 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2040.outbound.protection.outlook.com [40.92.99.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F85421373;
-	Thu, 18 Apr 2024 06:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713422627; cv=fail; b=QLAtsxGbfrdlKug093C/1H83kepdnnFcyDa+Yqgm920ASm5JqZuoLSJFvJ0fiPCJzwojUC1frVzu99KzUmF8Wx9bFh9U8U5rbRoIGSHGQvtqLA1EwIIQtC3ziEDz8polwM+91QywgUnEA/Iy4Pol2aHc1ckbjNuetxcOtjkEqWc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713422627; c=relaxed/simple;
-	bh=AFYosN6+GsczlP5oIvbgbP/8Wzdf6jGdSYaj5IJZhGo=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=X5txMIX7e18Ql6KM6Ty4GxvYxjQwiPh/hV4IxgA3gySYp5i/A4kCi0oTwzqDBlRHamNGeFBHz6aDs6wkEu/RkcDZEX19xshSdxyYZkEv3LUyRWqzsIJgvTMMtIftb9nn7Rom8gSXLDHVCYqprAES2gGtTRF2XZ4kj3zhVqZNpFY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=svpEvHW8; arc=fail smtp.client-ip=40.92.99.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA328C11
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713422649; cv=none; b=BMSO5+gSWHqOwasszedrCHAg41cfj4e69evZ1v4w7VOLT6Gfa8g4Uj0WEAvX/CzbCeAhTC6wuw0H46wx1F/nDQMijPdp9oLXEVQ85oa+7rZIruWXMcvcHcT9KnIWsj/soBRNb82mrChYsIqXe4MXv5LHAnEr/zfI0Hq33lTbHWA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713422649; c=relaxed/simple;
+	bh=m3Ryu5pNPT9NKoAFnVN5C3vBRFE2G9wUJfovS31lKBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dbiCdx+06FKkQHE+EfNquX5KkT4Bm5nLF9jFfQyyZWJn54PeDxxdU6ApzNzGAFm2ICzEonWIBNDAltuJgZhMoQifVc8MhjPw1aq8mjOC8BgjaVz92hAplt/L8kHFykX2RXxNTRY9XLY2GRH6rT9CX/l9KNSoXWeZFhuO8BCkbUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FUjVAFoi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="svpEvHW8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z3wDMs9gicnuuHmJI4MVKOI8tbLbfUb87atU2w18xVH1exTqM+S5qRQbhn3w583juciW6lEbgap7xbP8M8vhe1DtYWM1nOZXC/GG+6tFUimf9DnBI1D4glCekcJV+cB19CdfyPzegV1PG8vCi/EkAwrxeGRNKDhgE7F86VnS8nd961Bfw/JaNgz8GPIg3OUJMD5TveN8edrYlH/F8fr4bHBITWPcKBc/QPMdXq405XiBvtneG8QESUt8gRWT7XvAgyhCdptHFTDMyfG9qZNKxIDdeONNrhjjWgWWsnuUTcMVSbJAxXm0nOs81JYigbCEfreJNT82Ch2Vz+7S2aNguQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NjoWZOiZp2AsHP2HZwEPaNYesD6tRkSp80Q0IXFaWh8=;
- b=Hm5QBCgBm2DCl5VJbyJCjeWlXYDCFojM1gw35TgVSewbtRTULBYwP3sVTkKwzwlejcVgHjTks0AEJsydzauk/pvqatJDBK44MhGYhA18MuvMg9vjkbXPonlySOKHLFwSFnbQlXbJMxN+I95tTWbVQh2Ijudi8alKYgqESUXm07jlOuxBKbKZ04QXlmoRsCIYEU0JitzERCGHBxK0a/FftzofFJBCOjRONIAWsUdyv00TXhZrX+iYdjaROB8L/RDbvHVtjwEKnsiAVpt5tpmxbivY4CDG5C2uG3YUXFnwTNrzRJx/ytVnrC3BLK012wlBnffqdmJ7sfXuPLnf88CFTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NjoWZOiZp2AsHP2HZwEPaNYesD6tRkSp80Q0IXFaWh8=;
- b=svpEvHW8/dgDnibzGXkgiK2w2DWjnyNoUT4HTLXIBdghUJq1ZrpLxcfmpcz/lMxJu01uKdXS86JhHvDmQLmX0+Ox8xohLDu7NHta6Ip7TZpg9IBaY79uWfB/OONKN1Nw56p63/k2aELA+93cIUjjxmSbMFf90bOTxXQz7WEpEsMi/fgDG5CkEqfth12toh4ztlzyoENFx1MnpkNFxOQ9Vyvt2ExEy5lRwrlsLJ6kKfqovXvgcBG1ZqPwTYB3mOJzuoxUVPoc4xkfDynpJdqAWXAxB89wRKjqBDZ7+il2RAyzipqgvpFZS4YcwsWsVJ1RQwRJBBvnE/eZPePegzRM9Q==
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:209::11)
- by TYCP286MB3599.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3ac::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Thu, 18 Apr
- 2024 06:43:42 +0000
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8]) by TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8%4]) with mapi id 15.20.7452.050; Thu, 18 Apr 2024
- 06:43:42 +0000
-From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-To: james.schulman@cirrus.com,
-	david.rhodes@cirrus.com,
-	rf@opensource.cirrus.com
-Cc: patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ArcticLampyrid <ArcticLampyrid@outlook.com>
-Subject: [PATCH v2 0/2] ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
-Date: Thu, 18 Apr 2024 14:43:28 +0800
-Message-ID:
- <TYCP286MB253523D85F6E0ECAA3E03D58C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [VnCgDr9U8MiDEUKAQK4UK4WI3q5N2mgiSxBxAO84ez5TDey63NZ9Gg==]
-X-ClientProxiedBy: TYCP286CA0060.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b5::15) To TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:209::11)
-X-Microsoft-Original-Message-ID:
- <20240418064328.12758-1-ArcticLampyrid@outlook.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FUjVAFoi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713422647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v+jyIdNmCmRDq2Tfb24hu6l/6jJfbfj68TnMmrtzF+w=;
+	b=FUjVAFoiDPCB0PH4SZvhRb0o5ZlUwPUVePi7Xc+zEzQJoL5oLdu106tlRe8W+qv/jXX3vV
+	e/wzLUCHYpZ9/hi996p1YbIIlDJUqkWD/SyE9eCvs8lVcpIVlPEV8pmaAwVFGHt9CqiHS5
+	NdNJFvj5pOOklH4aPvrVE4YIhQWHj8w=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-LybonVTfOSyBAUiOEHYUVQ-1; Thu, 18 Apr 2024 02:44:05 -0400
+X-MC-Unique: LybonVTfOSyBAUiOEHYUVQ-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1e851c0204aso7838025ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:44:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713422644; x=1714027444;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v+jyIdNmCmRDq2Tfb24hu6l/6jJfbfj68TnMmrtzF+w=;
+        b=AMgGIrsxAwBFrZLFLbOGQNwozctsodaAjbZCYwv0uAYA1LbKaVpEN08/n9qm0k0o2k
+         CUhSVGm5BWd5wYE7EmcnzLMrfo1IHYc+9C9k7kV41lvauq+nlbGtzE/Wq/9xvLSA6u7j
+         27mTzaDtRDnrs6JMQSk8MFJ0mW7zcZFGydiPiBn5f/tZXcMaFdPL6hX1No8r42HyNLsf
+         o7wP8DCpcuEjUMQzBcFOWrVw53jZVN6+oKSLH3g+4/N7FGXVQkrHRapQXIO8qojMX/kw
+         sjPK6SKTxdqLnWvqU+0V1JKmjTl2cimv01Axe/foKL+nxiNd4VWJuh5Bd2a1nbFBri77
+         6Clg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfk/jiYEiZ6O99PZtaUGpQWEeQtJdemmIWiJoXryT8z8OEq6ChVmmW+969FCYJPphfvJmp9zOrci/tTZ6lSMYCmFWRogOx2l8H+QQz
+X-Gm-Message-State: AOJu0YxrivdJy/T0fHzcOasTtckuBoboXfjYt0fSkVyHQLrmsE3LbscW
+	vf2v1K70/wmS+bDMMTCpstPXNtCpIOrVKoUXFUvUzEvAt19Jn8rE1s4lfY8xsDqne0/4hkc1G7h
+	TjZMPnLg1ilWsXY4lb2ZGm0bUmjaMilCMvw4ms2q/B8W+T8lbCvOnF2fXj/VUkA==
+X-Received: by 2002:a17:902:b907:b0:1e4:9ad5:7522 with SMTP id bf7-20020a170902b90700b001e49ad57522mr1802474plb.21.1713422644467;
+        Wed, 17 Apr 2024 23:44:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7i13VHRnkWqSR3qq0QcNNIr94YcswslzKaupW+/Lkc72QhLzt9HvulwLD2aNX2Rfh804ROA==
+X-Received: by 2002:a17:902:b907:b0:1e4:9ad5:7522 with SMTP id bf7-20020a170902b90700b001e49ad57522mr1802459plb.21.1713422644061;
+        Wed, 17 Apr 2024 23:44:04 -0700 (PDT)
+Received: from [10.72.116.7] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id n8-20020a170902e54800b001e2bb03893dsm737003plf.198.2024.04.17.23.44.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 23:44:03 -0700 (PDT)
+Message-ID: <d206e1c7-34f8-434a-b690-dd43b9e92205@redhat.com>
+Date: Thu, 18 Apr 2024 14:43:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCP286MB2535:EE_|TYCP286MB3599:EE_
-X-MS-Office365-Filtering-Correlation-Id: d23cc1fe-bbd4-4ff1-9605-08dc5f72e320
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qdmLgSScYYnCvXd92IfdoMe49/i/UO4SRZ3GXM5uBNTm+kfDsTjR2eXdIQREA0THxy2Gf5xBFA73GkDUT2OVtUUS4y6HNy8Cy+hAIL4WImG+3FUSQgb9ohpO3STEx5T+Q4qj/AetjX97JYmhMSDA68LhWv4oyFqlVOe6KOK/P2ogXw7/HBzjzK13vsGmSvQaJ+Ybtsy6QS5OGoxypA6qB+GamGOladi1+ci/wom9oRI0CwXU6jkZoHnUHhSk2u/K84oTN9rDCD2RxKhsxrRk9FaYQzwtrrO+kLPOePVFGGHoaVsKdu4RZ3AGqFcZ03jGVpB96dZvwg8BIxRfwsXMf1D2SKrDbosdX/UlKYRSiirvkzjyGYVuFE5k0CWjn7icJAo3p4asVq4h1YXlvEagMp9sf2aFXrZIfr+gmawY1/lzrkLemb4lOXPJF+PXEs2Ccw29Z101p+MzY/c3dNRQ17sb+9MRY69IPimQdRVhFwPdOq+olBl8jLzgqazG50eehGoR0DCzB1rVGfo5dcWIZYxgFPQ7B/y5qj/hQbscELlXzlwsLk02kJ3M6bmnac/ydCMsmIvcGDaiOoY2CZlDiqH77NBZMBxRKsQSjL5A8esB9WGrnV00gKP3I5kxSCZD
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BLu8PwHJmwxjJFmyxwVy9WJh8Sh+Jmis0eKaNATYr8UGltj9xkiqG5FlJcL6?=
- =?us-ascii?Q?FyGbWUlPoY6ePqyVX565rYeyfEhDwOmVTHtiy18Wt9kJJjNFsDoT4yvRiY3p?=
- =?us-ascii?Q?bEYNSMxMTUuBlHZQ0sk1bOSUnXKGoU5FC8uxC6VhhQWd0dJh97bHrPhfYh4f?=
- =?us-ascii?Q?1hBHWbESkwco/NLhqOMDYfkQyvx+QAyNKTcUJLVok6SrNEfENB5rlWBt6a/6?=
- =?us-ascii?Q?GF1rWd9Sco/kgkalGR3S4c3bl6lPWOmewHxVfObrc7crvqP75xIoTLeWaRHk?=
- =?us-ascii?Q?QGS3rl9XxOwY5siw9Lr0+a+z1wQg4oaT/pDBj3DAwbNfPmZjmPn5xhurzSn6?=
- =?us-ascii?Q?m0Db2RUJDSim2NlEkwzvR0oe0QRsoX69uCG0/5/R0x6RZ4pV/nsuWSfVhJIZ?=
- =?us-ascii?Q?RmGlM643qxTfvrxbV3RKEtwXBs5Rca9RuacJq2GxyB+GPVfILLTSm8KiZZxH?=
- =?us-ascii?Q?JkQTLbweuE9TujGOANtQ9inf8IW2g7RL4O7nOJRkO3S4z4h5oL7a52aUjJMB?=
- =?us-ascii?Q?9oCSiudLluLgUvgXLDa/tmpsNsjNX0rHldqjUgQG5uoevNPoX6iEoiJzOsRv?=
- =?us-ascii?Q?NYowNqRrWaJVwK8jOLCFFI+pWNYf/RLS2XEvSsWD3EqvgggjjdLLMQnQ09Dw?=
- =?us-ascii?Q?Xmfm5tnNUPMPY4I3bxSrevnzQTq+upGjR7A9Vb+No+ztm3kDUTqEr8n4K+gF?=
- =?us-ascii?Q?VnlFh1uozZSAQn1qanXWleUTCsDdv7cHyT4viwD37MdLkPJR3BU/c8/0IY3U?=
- =?us-ascii?Q?MDi1dNA15KVeypcg6TKqsMIpYn2A9YIoebQLBXHatk6/wXkwPe+hr7YWqy56?=
- =?us-ascii?Q?1ejtgWjCK/TXnelWsF25iCFzDEBfs0j3PvEaFOkkrV9n2wLsXAvPfRJSN53v?=
- =?us-ascii?Q?W1v1TmqgEHEvG+m0H81MoYiVLUzZbR+T22i2vZJ41X/9h43Z7+q+FxWm+kGE?=
- =?us-ascii?Q?djgZdOi1y5PPm+ZkehxWe4+Hc2M0Ip9ZXXtV3tUypTZ+1fIHmWwgwSWaUr/S?=
- =?us-ascii?Q?KvZE5+1EDOwWeWrHLl8+oGPMCe20xXTA4Dib9wxA7CVoVmlrMHj/BnZwl6Ly?=
- =?us-ascii?Q?xkf+NRebCBUy3+dQKanI981XQzvbNx8OfHZrFNVA8N6znidMIwP9/HvtH7Ma?=
- =?us-ascii?Q?WHB62cqJbEZv9ef07fZw2kDFSKNdDyllshC8Tim6DELthtwyHeBE/hrbLDrg?=
- =?us-ascii?Q?0S3c13LkWai2EZ7uGi7tXkR667sUy7OQkVDPy1eOxkpgG92jTHX9iCxdmuq9?=
- =?us-ascii?Q?jMgEE7Arwhx9JHtBayTX/3tnCoAKdRyXQSo1WxCRwg=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d23cc1fe-bbd4-4ff1-9605-08dc5f72e320
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 06:43:42.6098
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB3599
+User-Agent: Mozilla Thunderbird
+Subject: Re: xfs : WARNING: possible circular locking dependency detected
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-xfs@vger.kernel.org, chandan.babu@oracle.com, djwong@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <a0caa289-ca02-48eb-9bf2-d86fd47b71f4@redhat.com>
+ <ZiCp2ArgSzjGQZql@dread.disaster.area>
+Content-Language: en-US
+From: Xiubo Li <xiubli@redhat.com>
+In-Reply-To: <ZiCp2ArgSzjGQZql@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This fixes the sound not working from internal speakers on
-Lenovo Legion Y9000X 2022 IAH7 models.
 
-ArcticLampyrid (2):
-  ALSA: cs35l41: obey the trigger type from DSDT
-  ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
+On 4/18/24 13:04, Dave Chinner wrote:
+> On Thu, Apr 18, 2024 at 11:39:25AM +0800, Xiubo Li wrote:
+>> Hi all
+>>
+>> BTW, is this a known issue and has it been fixed already ? I can reproduce
+>> this always with my VMs:
+>>
+>>
+>> <4>[ 9009.171195]
+>> <4>[ 9009.171205] ======================================================
+>> <4>[ 9009.171208] WARNING: possible circular locking dependency detected
+>> <4>[ 9009.171211] 6.9.0-rc3+ #49 Not tainted
+>> <4>[ 9009.171214] ------------------------------------------------------
+>> <4>[ 9009.171216] kswapd0/149 is trying to acquire lock:
+>> <4>[ 9009.171219] ffff88811346a920 (&xfs_nondir_ilock_class){++++}-{4:4},
+>> at: xfs_reclaim_inode+0x3ac/0x590 [xfs]
+>> <4>[ 9009.171580]
+>> <4>[ 9009.171580] but task is already holding lock:
+>> <4>[ 9009.171583] ffffffff8bb33100 (fs_reclaim){+.+.}-{0:0}, at:
+>> balance_pgdat+0x5d9/0xad0
+>> <4>[ 9009.171593]
+>> <4>[ 9009.171593] which lock already depends on the new lock.
+>> <4>[ 9009.171593]
+>> <4>[ 9009.171595]
+>> <4>[ 9009.171595] the existing dependency chain (in reverse order) is:
+>> <4>[ 9009.171597]
+>> <4>[ 9009.171597] -> #1 (fs_reclaim){+.+.}-{0:0}:
+>> <4>[ 9009.171603]        __lock_acquire+0x7da/0x1030
+>> <4>[ 9009.171610]        lock_acquire+0x15d/0x400
+>> <4>[ 9009.171614]        fs_reclaim_acquire+0xb5/0x100
+>> <4>[ 9009.171618] prepare_alloc_pages.constprop.0+0xc5/0x230
+>> <4>[ 9009.171622]        __alloc_pages+0x12a/0x3f0
+>> <4>[ 9009.171625]        alloc_pages_mpol+0x175/0x340
+>> <4>[ 9009.171630]        stack_depot_save_flags+0x4c5/0x510
+>> <4>[ 9009.171635]        kasan_save_stack+0x30/0x40
+>> <4>[ 9009.171640]        kasan_save_track+0x10/0x30
+>> <4>[ 9009.171643]        __kasan_slab_alloc+0x83/0x90
+>> <4>[ 9009.171646]        kmem_cache_alloc+0x15e/0x4a0
+>> <4>[ 9009.171652]        __alloc_object+0x35/0x370
+>> <4>[ 9009.171659]        __create_object+0x22/0x90
+>> <4>[ 9009.171665] __kmalloc_node_track_caller+0x477/0x5b0
+>> <4>[ 9009.171672]        krealloc+0x5f/0x110
+>> <4>[ 9009.171679]        xfs_iext_insert_raw+0x4b2/0x6e0 [xfs]
+>> <4>[ 9009.172172]        xfs_iext_insert+0x2e/0x130 [xfs]
+> The only krealloc() in this path is:
+>
+> 	new = krealloc(ifp->if_data, new_size,
+>                          GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOFAIL);
+>
+> And it explicitly uses __GFP_NOLOCKDEP to tell lockdep not to warn
+> about this allocation because of this false positive situation.
+>
+> Oh. I've seen this before. This is a KASAN bug, and I'm pretty sure
+> I've posted a patch to fix it a fair while back that nobody seemed
+> to care about enough to review or merge it.
+>
+> That is: kasan_save_stack() is doing a fixed GFP_KERNEL allocation
+> in an context where GFP_KERNEL allocations are known to generate
+> lockdep false positives.  This occurs depsite the XFS and general
+> memory allocation code doing exactly the right thing to avoid the
+> lockdep false positives (i.e. using and obeying __GFP_NOLOCKDEP).
+>
+> The kasan code ends up in stack_depot_save_flags(), which does a
+> GFP_KERNEL allocation but filters out __GFP_NOLOCKDEP and does not
+> add it back. Hence kasan generates the false positive lockdep
+> warnings, not the code doing the original allocation.
+>
+> kasan and/or stack_depot_save_flags() needs fixing here.
 
- sound/pci/hda/cs35l41_hda.c          | 9 +++++++++
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- sound/pci/hda/patch_realtek.c        | 1 +
- 3 files changed, 12 insertions(+)
+Hi Dave,
 
--- 
-2.44.0
+Thanks very much for your feedback.
+
+BTW, do you have the link of your patch ? I can help test it.
+
+Thanks
+
+- Xiubo
+
+
+> -Dave.
 
