@@ -1,146 +1,111 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A36C16ABC2;
-	Thu, 18 Apr 2024 14:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A9C165FB6;
+	Thu, 18 Apr 2024 14:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713450274; cv=none; b=QJcgmFhxDK+PDCvAa9XuwY0Ft96l3lkNjx2T5AjElVgBPccITINRJC1m6Nq0ZTPboctj6P7Qm+torpGnMWbeZJRE5SHBzwKHAuReUJJx06/HBe/rxeV/CRSQ5qP6mkrxVGS7qZ7L2EYuejPjBwOax3HdF0YVcvI4RUGBDjn2Skc=
+	t=1713450334; cv=none; b=QX8kmCs1Pk8nS3kJ97wC4Qt4zL3i76nGuXBKvIBvtKnk+9dKBU1pfP9Owvg2/YJwkwRd7D8k60o/qv/DCX1/q1WY/fvQnWfDD1tX7jCMAsgJWcZBFOxit3e7L5PRIXQgbeJ2GybfUQZBLHTO3YB07A/URr2E9CNoyS3fWsBkbH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713450274; c=relaxed/simple;
-	bh=pH0PBRBEjyEaCCaHbzJ9ynfPi+tXKlFVFiy1Z9RjDgo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rq8/LbVSkpGm8sM4Y5XCyjvRCjcCH30dZGKedua6uQUDI63yAgAvGPL15lHCXrR1pD96ue3lmFGFrjx1DvwpDlJX9mRWxFM972NlTXJXTJyrEkp9AZX8ucwz3t0Wdw+fMjjn8AXljUfVUlYcmMssjLIsFTrJQrtU0wOAvY0qtgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oVn8UC/W; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713450334; c=relaxed/simple;
+	bh=xKOoXd2m5g86klzLlV+Y20rOFjFNzLeMpDwIzLipyeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OqIOQGSiHapLuBQ5WeKGyJwxmCXv50TCbIRGtNiK74y9wwhYjNp9UPPZ0JWHUN/r3kRXwROPolJjR1kkIicFpTTLn5kYwHKm3FiiSEWQxEcNYfufMZly01E+dj7q99njDHSQxjzPsMMs0Y5uoivwoqYsvyjLg6m2NbxjTRv/654=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=a54bZwdj; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oVn8UC/W"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43IENhfk047904;
-	Thu, 18 Apr 2024 09:23:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713450223;
-	bh=d7W/YpTIZxIdyewzNIraH7hxkKMvrK+9RnPBHoiRgYU=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=oVn8UC/WraJiR9DfhqgRAMmWCKRPIN5gA4g9LgtVfHyr9ZYa0wpT1D1L9eCfM7V0I
-	 1kGeA3ACt202+YA8etLSCi4dNNilaO9oBQFFqcvrsUeQegCCSt1xx61Wj3XLbh5lUN
-	 TOOZmxV7HXQassnk1lpdykUeIfQeyrSrA+F0zYJo=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43IENhFG118313
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 18 Apr 2024 09:23:43 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
- Apr 2024 09:23:42 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 18 Apr 2024 09:23:42 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43IENfLj049819;
-	Thu, 18 Apr 2024 09:23:42 -0500
-Date: Thu, 18 Apr 2024 19:53:41 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Julien Panis <jpanis@baylibre.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Russell King
-	<linux@armlinux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann
-	<daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John
- Fastabend <john.fastabend@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Simon Horman
-	<horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Ratheesh Kannoth
-	<rkannoth@marvell.com>,
-        Naveen Mamindlapalli <naveenm@marvell.com>,
-        Jacob
- Keller <jacob.e.keller@intel.com>, <danishanwar@ti.com>,
-        <yuehaibing@huawei.com>, <rogerq@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-Subject: Re: [PATCH net-next v9 0/3] Add minimal XDP support to TI AM65 CPSW
- Ethernet driver
-Message-ID: <b406c8bd-5d25-4516-8553-4041705b2211@ti.com>
-References: <20240223-am65-cpsw-xdp-basic-v9-0-2c194217e325@baylibre.com>
- <260d258f-87a1-4aac-8883-aab4746b32d8@ti.com>
- <08319f88-36a9-445a-9920-ad1fba666b6a@baylibre.com>
- <1da48c7e-ba87-4f7a-b6d1-d35961005ab0@ti.com>
- <7f7fb71a-6d15-46f1-b63c-b569a2e230b7@baylibre.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="a54bZwdj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Zj6q68EGA4RlIzYy/XSYT8WM4sscbczTrgcDryITQrk=;
+	t=1713450332; x=1713882332; b=a54bZwdjVmPGx6Bp1QZG6UhImC4InVF7GniPpFaR86VvgGp
+	6CaUimQQITS+FXKoWJTTTUy1lxokl6U9RlmLq4dEoj32himcsPkjE3PzVhzjAeDhEikFSKBrOI181
+	3I2sXYhFprrv602dq77ZvJRZgayCnTAzwIqNgD9oqpJ6sIaTmVh0QiE8g/JzENwABgs2TSnF8B5zs
+	piwUfkDw/UuWOWWRrihiSANjh51N81SftxTYS4tTpzed8AlaiqmHcgtvPAjhDMq9mAMzxG2tAXNtS
+	fFIpXg0cfwg23Dtuvn4ycfHL1LlRG/iFktC5mIXit85HvZLnyEApGwVVPlLdQ3QA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rxShb-0005cg-PE; Thu, 18 Apr 2024 16:25:27 +0200
+Message-ID: <93766ae3-30d9-4dd3-ba01-870cc6387df4@leemhuis.info>
+Date: Thu, 18 Apr 2024 16:25:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7f7fb71a-6d15-46f1-b63c-b569a2e230b7@baylibre.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Christian Heusel <christian@heusel.eu>
+Cc: Chengming Zhou <chengming.zhou@linux.dev>, Nhat Pham <nphamcs@gmail.com>,
+ Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>,
+ Vitaly Wool <vitaly.wool@konsulko.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>,
+ "Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>,
+ regressions@lists.linux.dev, Yosry Ahmed <yosryahmed@google.com>
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+ <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+ <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
+ <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev>
+ <20240417143324.GA1055428@cmpxchg.org>
+ <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
+ <20240418124043.GC1055428@cmpxchg.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240418124043.GC1055428@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713450332;df5152e4;
+X-HE-SMSGID: 1rxShb-0005cg-PE
 
-On Thu, Apr 18, 2024 at 04:03:15PM +0200, Julien Panis wrote:
-> On 4/18/24 13:25, Siddharth Vadapalli wrote:
-> > On Thu, Apr 18, 2024 at 01:17:47PM +0200, Julien Panis wrote:
-> > > On 4/18/24 13:00, Siddharth Vadapalli wrote:
-> > > > On 12-04-2024 21:08, Julien Panis wrote:
-> > > > > This patch adds XDP support to TI AM65 CPSW Ethernet driver.
-> > > > > 
-> > > > > The following features are implemented: NETDEV_XDP_ACT_BASIC,
-> > > > > NETDEV_XDP_ACT_REDIRECT, and NETDEV_XDP_ACT_NDO_XMIT.
-> > > > > 
-> > > > > Zero-copy and non-linear XDP buffer supports are NOT implemented.
-> > > > > 
-> > > > > Besides, the page pool memory model is used to get better performance.
-> > > > > 
-> > > > > Signed-off-by: Julien Panis <jpanis@baylibre.com>
-> > > > Hello Julien,
-> > > > 
-> > > > This series crashes Linux on AM62ax SoC which also uses the
-> > > > AM65-CPSW-NUSS driver:
-> > > > https://gist.github.com/Siddharth-Vadapalli-at-TI/5ed0e436606001c247a7da664f75edee
-> > > > 
-> > > > Regards,
-> > > > Siddharth.
-> > > Hello Siddharth.
-> > > 
-> > > Thanks for the log. I can read:
-> > > [    1.966094] Missing net_device from driver
-> > > 
-> > > Did you check that nodes exist in the device tree for the net devices ?
-> > Yes it exists. The device-tree used was also built with linux-next
-> > tagged next-20240417. The node corresponding to eth0 is cpsw_port1 which
-> > is present and enabled in the device-tree:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=next-20240417#n644
-> > 
-> > Regards,
-> > Siddharth.
+On 18.04.24 14:40, Johannes Weiner wrote:
+> On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
+>> On 24/04/17 10:33AM, Johannes Weiner wrote:
+> Christian reports a NULL deref in zswap that he bisected down to the
+> zswap shrinker. The issue also cropped up in the bug trackers of
+> libguestfs [1] and the Red Hat bugzilla [2].
 > 
-> I could reproduce the bug by disabling 'cpsw_port2' in my device tree,
-> which is 'k3-am625-sk.dts' for the board I use.
+> The problem is that when memcg is disabled with the boot time flag,
+> the zswap shrinker might get called with sc->memcg == NULL. This is
+> okay in many places, like the lruvec operations. But it crashes in
+> memcg_page_state() - which is only used due to the non-node accounting
+> of cgroup's the zswap memory to begin with.
 > 
-> A condition is missing in am65_cpsw_create_xdp_rxqs() and
-> am65_cpsw_destroy_xdp_rxqs() functions.
-> 
-> For these 2 functions, the code which is in the for loop should be
-> run only when port ethX is enabled. That's why it crashes with
-> your device tree (cpsw_port2 is disabled, which is not the case by
-> default for the board I developed with).
-> 
-> I'll send a patch to fix the issue. Thanks for reporting it.
+> Nhat spotted that the memcg can be NULL in the memcg-disabled case,
+> and I was then able to reproduce the crash locally as well.
 
-Thank you for root-causing and working on the fix for this issue.
+Thx for the fix. Nitpicking:
 
-Regards,
-Siddharth.
+> [1] https://github.com/libguestfs/libguestfs/issues/139
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2275252
+
+FWIW, those should ideally look like this:
+
+Link: https://github.com/libguestfs/libguestfs/issues/139 [1]
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2275252 [2]
+
+> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> Cc: stable@vger.kernel.org	[v6.8]
+> Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
+> Reported-by: Christian Heusel <christian@heusel.eu>
+
+And here checkpatch.pl should have complained that the above line should
+ideally be followed by a Link or Closes tag to the report, e.g.:
+
+Closes:
+https://lore.kernel.org/all/3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2/
+
+Which in this case would be nice, as I'm tracking this regression, hence
+regzbot will then track the patch and consider the regression resolved
+once the fix lands in mainline.
+
+Ciao, Thorsten
