@@ -1,131 +1,108 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEC21DFCF;
-	Thu, 18 Apr 2024 13:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445816; cv=fail; b=K+bUz7YbLthfMt7qTsZTl6JHEDq8+9eNCQ7AhqQpdc+3cDgyOIn1Fl9W5gZ+qInNk6YJVyVHFFUGWLnEW/WNsy/AFMvkMizOUuylAFuJfvtaOwVwsDgTO7c3lzbnSdPsgzeHBR0xPDOJxMOSrGqkrDt4Vyjvm8J2MtYnRdLwNYE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713445816; c=relaxed/simple;
-	bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
-	h=References:From:To:CC:Subject:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=FQrLQYZqwx7y8ly+LGeq1XtxGWOdWLCkh0dA3Niq5doNyuaOSkrdNJQzw35CNH2koB03ZGNq/jdyE5EcKP0gFLqd2CiiP16T+8p3MOp38hieMvaLFjw08DcmQ1MimYS1XmziXSvxQXGtrdOxRSwsco5bVi39RXWr3xMgBPCSntY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FOV+4dQW; arc=fail smtp.client-ip=40.107.93.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80B013C3FF;
+	Thu, 18 Apr 2024 13:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713445827; cv=none; b=SAkQQu96gXxYI6/B6nsL7bX1RKslAhXdI3nwyo4+sFsTzgkud/2WV5H3nbU6+Psyji7zSXmM6I30cF5gDwOyvu66p9qhlslMwml+TU1YLTxZ+/cAa4NMriiB3SFVHpkEvW5eiJAlS8+Jg/Q4V8VHvnYl9c8LG692c0jpc7hxUrI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713445827; c=relaxed/simple;
+	bh=fPZ9DpCJk3Y2zRw5kWl7PSP4OLa6YCUAoXfziirfp8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XvXd5N3Ow+amln1drfTBG0HGmzLbsKQvk7DxAr1oBJBaooxEEYkBNTZ9lVPs8e41w+RRlSjxdXPvKuuBntICD4N/u5POYjuqBTvqluHOIwvqqlUJFnL67Wb3ZlIBqQY23wSYTp7HVCb3YcKdjFacBLjoD0XM3ksdFwXr4bMoAh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9QxW8Im; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FOV+4dQW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kyFxCPKbcx5VbdZsFm9z+DHrCfEMCl2twocLEArwbE3XhlCKfASUdEgF0q0YbZ942SeSLn+zVrPuXjsIn6A4+QJTKhP2tdgRlJyeCaTDVGmgKiS3JDsLwpXYKajNK30XA2CECyoCbSuKIHHI+sU+/H2weZVX+YaaU0L8B0yi6TduLqxAam8gaekaIAykyN5mQ5NNpBp5vrHxuaXqkl1L9Qu630SX0zhSYi8juU04AE6dMsdCn16kOlznb9BI5F7V0NCiSYmrq4Zcj2GrlpBYrVSQcUIccOtyXoCFAkDr5HrYiPbfup66DFmUSWCu4EUgfGs6oU3uvOpxJmUfeThB/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
- b=KBZC83/R5Ni/iUGLCQZSkpug4iyXOtsHkM/3QzIeEfWcdrAWamkMie6QL52P6QCOmcozdIxeOlhUljM/nO50FKrDOZb1lPHsuJKnMcg82Rl+hRfh+kZim6PJIpvH9p+iwrXjI5uT8XdjO0Kgo88ZCpcAtfWfF+mmD0gAyhT+f3uU/Uo8AlHOaiWNlJk0VEwCMjvfvfzRjXm1G1QHyNSDNt/VqyIVAl3KTSDP00XZr34rnE3c4+HuimaNWs6vvm76l6GcOqFBgHHxs2/xLE1PtQbkENtYDxordTvIDzEc92Joxfo0RxI4xztny0joQ7eD5lDjDM1hXhSOc2Ctv3gERQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
- b=FOV+4dQWbfC+o4CFO8dbEeDHmY4aix1crWBlxB6n+/Ddk75YdvInEQqMFdh8TxwRNftTexCkdQN+NKowIcyZyG8dTqNbJCbtOBxSBr+lAKkr5MfzzeJRF9jQCNxYlNUpe/I6oyAyGXIyKqleo4SzSjKQ6NFjLxAzp1V/lNqeOVlrdv6cNAu5BlOn4AXExTU6uJvcjUaI2zJ6H4tfQRiIl0KnTU7gpj4OtYR/viAwK/f4BquHA6f64m9wZWMGwf56fiekzHtHt/Hxk2Ena0bwjy6xurY5jxss+rmMgsCdkNGJJyC9mNdl73ZAT+QAuPTqUwD3PmoTUfHrPYdSmHk7LQ==
-Received: from SJ0PR03CA0388.namprd03.prod.outlook.com (2603:10b6:a03:3a1::33)
- by DS7PR12MB5766.namprd12.prod.outlook.com (2603:10b6:8:75::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
- 2024 13:10:08 +0000
-Received: from SJ1PEPF00001CE2.namprd05.prod.outlook.com
- (2603:10b6:a03:3a1:cafe::d9) by SJ0PR03CA0388.outlook.office365.com
- (2603:10b6:a03:3a1::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.20 via Frontend
- Transport; Thu, 18 Apr 2024 13:10:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF00001CE2.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 13:10:08 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
- 2024 06:09:56 -0700
-Received: from yaviefel (10.126.230.35) by drhqmail201.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
- 2024 06:09:52 -0700
-References: <20240417135131.99921-1-ast@fiberby.net>
- <87o7a8c76m.fsf@nvidia.com>
-User-agent: mu4e 1.8.11; emacs 28.3
-From: Petr Machata <petrm@nvidia.com>
-To: Petr Machata <petrm@nvidia.com>
-CC: =?utf-8?Q?Asbj=C3=B8rn?= Sloth =?utf-8?Q?T=C3=B8nnesen?=
-	<ast@fiberby.net>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Ido
- Schimmel" <idosch@nvidia.com>
-Subject: Re: [PATCH net-next] mlxsw: spectrum_flower: validate control flags
-Date: Thu, 18 Apr 2024 14:58:50 +0200
-In-Reply-To: <87o7a8c76m.fsf@nvidia.com>
-Message-ID: <87plumbyw3.fsf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9QxW8Im"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B5ABC113CC;
+	Thu, 18 Apr 2024 13:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713445826;
+	bh=fPZ9DpCJk3Y2zRw5kWl7PSP4OLa6YCUAoXfziirfp8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S9QxW8ImvY08pMZCQGTLd+TE9QQh3W/q9gYW7iXhIMlQ6GZcjFBRt8XAjY37tbLCm
+	 5WhVJQk24NcORuoWGmUJQAZOlhefsBAWWm8M5IGLnTTTmKmRaeULkl2rdkdqRE4SuK
+	 x6aFmJ/ykArb53DNCok15aNCYytV84gmJDiFKni8Nl9AN8O6SlLz+n5ZRE3kEWp4C1
+	 cc1IxmwwGFYKNqRKRvd3lUUHJHIrSw+sgJNuXdqpXxhoLlQbH9weGr34ZjuBGNoYou
+	 hJqDbuH1yzpqubp76DF1CmbgQnAFx89uQXCi5td469G1zm8rMc8RkKzm6NidwTe3zu
+	 s4sDzv0CVx4oA==
+Date: Thu, 18 Apr 2024 08:10:24 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: vkoul@kernel.org, pankaj.gupta@nxp.com,
+	20240409185416.2224609-1-Frank.Li@nxp.com, shenwei.wang@nxp.com,
+	xu.yang_2@nxp.com, shengjiu.wang@nxp.com,
+	devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	krzk@kernel.org, linux-kernel@vger.kernel.org, peng.fan@nxp.com,
+	imx@lists.linux.dev, conor+dt@kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] dt-bindings: dma: fsl-edma: allow 'power-domains'
+ property
+Message-ID: <171344580514.1090639.5974994638297885495.robh@kernel.org>
+References: <20240417152457.361340-1-Frank.Li@nxp.com>
+ <20240417152457.361340-2-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- drhqmail201.nvidia.com (10.126.190.180)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE2:EE_|DS7PR12MB5766:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f8636c8-6f5b-40c0-cd94-08dc5fa8df43
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kgDJ5myEj+l+BoBT8Nojq76EQCWUmYmDWV1zY/8akLQ9L2MLg0uFfRmnOQ/Gj1vZpQd2fO7mo7tjDjKV1BiMIoMNS5bt82cDOT6Jv72wWo7IUo4/UdHEPrnjvewnk/ISAZrwY5T+hAXuBJyefAZUg1DIjBahaa++sbTZo/OicsUshVHBG2PsO7IdNa0Ot31vvMR2Ar9pvYCHDEO+PtdeJfbJz9+tSbSX1xVyDqCNiTTl3xmPw4nIjsBpEu8+h0pmmwM0ySpEGnakwTDVPp71ONdT88Hygx5ntV65iWYt+5HeghqmnZBL9DPjMbtegSDpfkFh/YbnG0gwVyGsUs2u1sL/IuQKOhLkwqCmmi0Dh02L1nM82S2q+UB5beVIT9F/e72/tdyiv/JaS63UBK+kB15oV+7jvGOWYCU3ToXmocWG5SuKKBq+g9s7Z32NxOnxQKYfloFq88tpGiLq99CQM5rlSsNQn+a8M8f5aQAIFHErSyAxNfLlQAcgjxcATmkV1HK3QTT9IjVidGBvEoEHaAz6JOKY/WIdOR86hlsWapev1fczhbqZDKlgAth47GSEvi4oNp7udG/YLnj4dx3x9Z7SOyhFbR0BuOJ/fwOGGldkgFSRdhoE9ZwEO2jcV2f7KQX1XHgypNZ0WIMkGKPEMrZkytpV+O23RTbBW78mMEOFW90dt9nDFoeiNnmcbRC6UW8p1f/zDPAHZUIXWLqfIy/wrnZFN7f2IAsX/mUul+S3JPmxxsp2aJmRrPnnFrBH
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 13:10:08.3893
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f8636c8-6f5b-40c0-cd94-08dc5fa8df43
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5766
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417152457.361340-2-Frank.Li@nxp.com>
 
 
-Petr Machata <petrm@nvidia.com> writes:
+On Wed, 17 Apr 2024 11:24:57 -0400, Frank Li wrote:
+> Allow 'power-domains' property because i.MX8DXL i.MX8QM and i.MX8QXP need
+> it. EDMA supports each power-domain for each dma channel. So minItems and
+> maxItems align 'dma-channels'.
+> 
+> Change fsl,imx93-edma3 example to fsl,imx8qm-edma to reflect this variants.
+> 
+> Fixed below DTB_CHECK warning:
+>   dma-controller@599f0000: Unevaluated properties are not allowed ('power-domains' was unexpected)
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v4 to v5
+>     - Add description according to rob's suggest.
+> 
+>      "The number of power domains matches the number of channels, arranged
+>      in ascending order according to their associated DMA channels."
+> 
+>     Change from v3 to v4
+>     - Remove 'contains' change should be belong to first patch when rebase.
+> 
+>     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,edma.yaml
+>       LINT    Documentation/devicetree/bindings
+>       DTEX    Documentation/devicetree/bindings/dma/fsl,edma.example.dts
+>       CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>       DTC_CHK Documentation/devicetree/bindings/dma/fsl,edma.example.dtb
+> 
+>     After this patch no warning for imx8dxl-evk.dtb.
+> 
+>     touch arch/arm64/boot/dts/freescale/imx8dxl.dtsi
+>     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  CHECK_DTBS=y freescale/imx8dxl-evk.dtb
+>       DTC_CHK arch/arm64/boot/dts/freescale/imx8dxl-evk.dtb
+> 
+>     Change from v2 to v3
+>     - set 'power-domains' false for other compatitble string
+>     - change imx93 example to 8qm example to affect this change according to
+>     Krzysztof Kozlowski's suggestion, choose least channel number edma
+>     instance to reduce code copy. max channel number is 64.
+> 
+>     - Rebase to latest dmaengine/next, fixes conflicts.
+> 
+>     Change from v1 to v2
+>     - using maxitem: 64. Each channel have one power domain. Max 64 dmachannel.
+>     - add power-domains to 'required' when compatible string is fsl,imx8qm-adma
+>         or fsl,imx8qm-edma
+> 
+>  .../devicetree/bindings/dma/fsl,edma.yaml     | 80 ++++++++++---------
+>  1 file changed, 42 insertions(+), 38 deletions(-)
+> 
 
-> Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net> writes:
->
->> This driver currently doesn't support any control flags.
->>
->> Use flow_rule_has_control_flags() to check for control flags,
->> such as can be set through `tc flower ... ip_flags frag`.
->>
->> In case any control flags are masked, flow_rule_has_control_flags()
->> sets a NL extended error message, and we return -EOPNOTSUPP.
->>
->> Only compile-tested.
->>
->> Signed-off-by: Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net>
->
-> Thanks, I'll take this through our regression.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Nothing bombed.
-
-Tested-by: Petr Machata <petrm@nvidia.com>
