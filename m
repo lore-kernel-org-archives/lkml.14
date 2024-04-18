@@ -1,98 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DD215B578
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99BC15D5D6;
+	Thu, 18 Apr 2024 11:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713441405; cv=none; b=CG1uZETetY5rkCKapH2JIRJJLGezJgsd0bOxQujG6oAE0EZgIfj2NL+nXIYK8DmwUzmpxGwTEix93T6aYnK2DEIaANed7HFZvC6n5Rpye260h5csZ68VWEgJCij7hn1DMt4RcX9X9wj6S2of3qKoxA3HUvxUXgZ8qco3mv2Ahcg=
+	t=1713441435; cv=none; b=I27qv2qQY785kiym2kiUH34xyBhGZ1Q89aVm4YW8vlHwJ1U53c55dlgUz7hyyGPzlQyqNU4aF8+umzErHGSHhZtqvVxoAFncBixVnv2Vt8yrvUYdrXoauHP/bXk0owjdfR1WQCEeyv7TvnDijdPtPrQ/ihK7C/EG0TVUo2SbI3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713441405; c=relaxed/simple;
-	bh=Geu961+SVr9aZ7BLK4Mm8AQ6E9OjYikibtvsd2knVAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c9PEfosW+MVkOLS3SHhbZJmdUmLENErhgLQweybi0e/obZiVshhh/2235aSni6jsDyIst6XS7sx8LLMPogcA6q1iKucVXi1xZXQcv9gjKrFddPPKe4uyyom/sZRuY84b7VkkTC2qF5sbbLN7+XS3v5E28tSZDX5j0qiiIVK9W0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OHibYdSt; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713441435; c=relaxed/simple;
+	bh=M7F9AOhLfsq2Uh4staUpb8IChltcrroxoNWvR3Qvuxc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IxjEJ3BrwCjMPPf3Hgt/uFw12F4MktI64W4bIeNZogmnEdNbZ05LvG+XuhrEYIthHdlGad+efeT5ubaBXzQatyPn2fdCheG2eXC/gm+EbaH4M5ArQTQJ5K+Rw32jDWRpYBOhtF85DWuSRCVrkMV7r3s9YF9IN8ogbYlyDx1R4pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hy2SsbNn; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OHibYdSt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713441404; x=1744977404;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Geu961+SVr9aZ7BLK4Mm8AQ6E9OjYikibtvsd2knVAs=;
-  b=OHibYdStON1vQz20JTySKcp0sijFp/QhFY9ZciCNHUwyQLetHfb9YsGx
-   2W/eGzDdMeagLV+DLL4sV1f8Ofns6PqHSm6+doTdnT2gJrdhrxwqAbeY6
-   s78xW89rSWfTUeYdU25C3kKa5hxneUpmwZTyeqiJij+bXDLNTMZ2neHRY
-   GHipZrRbbG4n1yR5Q9F4XdP1dbA0Fc3msXd0wXL6p4DrXlu6iZZaNBF4r
-   /B2oISD8bshAOVkzgmriFGPvcX0JrhIFR1t5x9gHALm5uhjV29tNFS0tR
-   opJm/FQXCtCE6p6VwHRb10sljBd9Ix66lRLcRh/pVd6KsAxbiwB7BU+og
-   w==;
-X-CSE-ConnectionGUID: SFEI+ve6SGu5/bZPX0W14A==
-X-CSE-MsgGUID: mAz2NvW+Qq+gjshuigdr7Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="20128123"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="20128123"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:56:43 -0700
-X-CSE-ConnectionGUID: ybbDpHq6RhaPbzSEQhiOAw==
-X-CSE-MsgGUID: ZgfGlSTURE2FhXwvBTtjgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="27732961"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:56:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rxQNX-00000000Jfk-2mVN;
-	Thu, 18 Apr 2024 14:56:35 +0300
-Date: Thu, 18 Apr 2024 14:56:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Baojun Xu <baojun.xu@ti.com>
-Cc: tiwai@suse.de, robh+dt@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-	pierre-louis.bossart@linux.intel.com, kevin-lu@ti.com,
-	shenghao-ding@ti.com, navada@ti.com, 13916275206@139.com,
-	v-po@ti.com, niranjan.hy@ti.com, alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org, liam.r.girdwood@intel.com,
-	yung-chuan.liao@linux.intel.com, broonie@kernel.org, soyer@irl.hu
-Subject: Re: [PATCH v3 1/3] ALSA: hda/tas2781: Modification for add tas2781
- driver for SPI
-Message-ID: <ZiEKc4OTVlOt8llU@smile.fi.intel.com>
-References: <20240418040240.2337-1-baojun.xu@ti.com>
- <20240418040240.2337-2-baojun.xu@ti.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hy2SsbNn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AD03D1BF20C;
+	Thu, 18 Apr 2024 11:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713441431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O1G2JcwttleuEX4OArtvrIC9rhjBFn4pb36VCCBIh/k=;
+	b=Hy2SsbNnYmDiJbouDoQakG4O9hhGXW4f+OjvJAR3aQz8kL2s8/mbpBjipIEcykp1brgcjr
+	kJ+d9gSauDycypI+PmrGrD9mrzFGc23eeqRwQYLbkzGRyeXVKEcMiWZg5hWbUgpJznFlRn
+	5V7abewlK8QD2a6f8PjfAXELplvwBZP2YIPnkUR+48xmyi0cvNa/YPqRE2B2fk1ozWk2Y6
+	MU2FCi0NcSbFEC7E0hWlLKOWpRrQBUDsU6a9RVthAORmx26StgefFaaICrvbzSgrLdQppE
+	1ZmdlRAGxtTWxKIcm+wOGUO8UuWr6897yKZsU3eT7r8zUI5i35pKX4KaHo9c2A==
+Date: Thu, 18 Apr 2024 13:57:47 +0200 (CEST)
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+cc: Romain Gantois <romain.gantois@bootlin.com>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+    Conor Dooley <conor+dt@kernel.org>, 
+    Geert Uytterhoeven <geert+renesas@glider.be>, 
+    Magnus Damm <magnus.damm@gmail.com>, 
+    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+    Russell King <linux@armlinux.org.uk>, 
+    =?ISO-8859-15?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>, 
+    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+    devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-renesas-soc@vger.kernel.org, 
+    linux-stm32@st-md-mailman.stormreply.com, 
+    linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v3 4/5] net: stmmac: add support for RZ/N1
+ GMAC
+In-Reply-To: <xp34tp5cjmdshefxjczltz2prqtiikagfspf4lobznzypvsyah@ihpmwfynwzhh>
+Message-ID: <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
+References: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com> <20240415-rzn1-gmac1-v3-4-ab12f2c4401d@bootlin.com> <xp34tp5cjmdshefxjczltz2prqtiikagfspf4lobznzypvsyah@ihpmwfynwzhh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418040240.2337-2-baojun.xu@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Thu, Apr 18, 2024 at 12:02:37PM +0800, Baojun Xu wrote:
-> Integrate tas2781 configs for HP Laptops. Every tas2781 in the laptop
-> will work as a single speaker on SPI bus. The code support realtek as
+Hi Serge,
 
-Realtek
+On Tue, 16 Apr 2024, Serge Semin wrote:
 
-> the primary codec.
+> > +static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv,
+> 
+> > +			       struct mac_device_info *hw)
+> 
+> AFAICS hw is unused, and the mac_device_info instance is reached via
+> the priv pointer. What about dropping the unused argument then?
 
-...
+Unfortunately, this is an implementation of the pcs_init() callback, which is 
+also used by socfpga (see patch 4/6 in this series). The socfpga implementations 
+use the hw parameter for both pcs_init() and pcs_exit() so I can't remove it.
 
->  sound/pci/hda/Kconfig                           | 15 +++++++++++++++
->  sound/pci/hda/Makefile                          |  2 ++
-
-Is this correct? You are adding a dead "code", isn't it?
-
-...
-
-The rest LGTM.
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
