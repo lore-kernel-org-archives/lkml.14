@@ -1,91 +1,96 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DB015FA73;
-	Thu, 18 Apr 2024 15:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCE716C6A0;
+	Thu, 18 Apr 2024 15:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713453686; cv=none; b=krLIeVflU/Bmi9Cpwav3OVz6/TqhDZlQYcd7zX9uLxJTKOPDa4+VNH1gpS+OgxddurO7jN0n5ypbdd6TLM087iSUDR3JAvtB5oqqxGHTAmJSqZBau4urjIOiWTtjCKpegaHrjaUp01KAV+r7iIe5yWSiGeige8Vl0A1/yyPol2c=
+	t=1713453697; cv=none; b=p0AcoXma0brM8CBHAx3LF6pZuO7IaSCOzNSaf2jqHcyJIIywB7hiCnrk7mrP8DeZKUwIpzI3Cy4qgcGc3wl5gHcEP01fn9h2jflz+/dGhYPo5erlvHrEKdcMJ1czxNkMSIT9vxN5g9qyA61a+fJ8qUAOcJOcbAGEsaZLoIzIf+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713453686; c=relaxed/simple;
-	bh=xIdCwlOhtU2CLSyz6WT/cwG7jpS5kkfbpyk3hcleqLA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=BSbfTpGCM9upjAl8tx7yw/p8lpDVmlXoQYkYfWpmSIkmVrrIqwu5Rnn+oWrLE4z3Vqyeq+w94sdLoecCfvboAfeawOdZ3rePsn+7QEypySE6CqGWkqrTNloebHc1FJmZVWmaxoU45Y8FssRtmmMuEMl346/xDuBEd1ZO/fDp5eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=AqtQxprh; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="AqtQxprh"
+	s=arc-20240116; t=1713453697; c=relaxed/simple;
+	bh=7UYcCUeYn6Coe86aauPHZ6/NFvTa59LJUiHO1ntopsI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fmOagAXua71zFzRQmeWt/vEmZWdWqf6PNEPN9RssEMgGiQtQWhkBhPtIx0x3tNNF0FOxQ4KQCkeUAh3ALl0qWIZpXme64//0NpKsEA8n/WGBgKabVyG7X2hX4ENC1mPsiHRKk+e2g7XH1uHnUUrVLnjBWUstGdItULuRm45UR8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-de462979e00so1267030276.3;
+        Thu, 18 Apr 2024 08:21:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713453695; x=1714058495;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U+69YcfMmJc9DOa/fxucqvVTNDdF8csV69viBtfool8=;
+        b=W7NWlxs6iNcoyD2IBh0x1R0u+PtYt0aqm1NT68q+cNMo98YJt7PZVjxNFHZRRNWvNv
+         x2Gyx+TIV563+ZmBPc5QyfdTaZduKULqZilp0je5bjS4nyny+e76h0AyQSQYmDGgp80L
+         SVp1Mqc6AbGj0GL5LO56fsNSuPFddzHFTKtjdq6Omwpuw5o/opvAxxkOjrB+OvBw0OX9
+         SPWUqBkSpfjv7ioEnkXYRpcegRFcb41aHbDmU646R7SVeENedl3wvVXEfq5JNjPVW/na
+         X6Yyn8S+ff+m2bibLdAZdSYzkEwhORZaIuLLOvsvdVAMBmv0UDTLszd7BNl1/tZ/HTGP
+         yYgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUezGbYeUokJ5U1l7p7V1eGphAwKQXhXrlCOCu4iUn6E6fshpGM2+az0+cqJWg7oAhtrA1M/OcD1NRLCMe6m/07jZFTHK2ntdDXy1Jx7kxGVce4+YjyuqUnhNGI3/wxRGijZIh90JkSgoyScI0fZVTfgF/PS0xV2qCaS5TnkgWAz01/VcqzW1yIGQ3/
+X-Gm-Message-State: AOJu0Ywmw6DBrSOC5R/mhKK3faLm9lxeA1prDcGcZzbt3YoVT2Vihqt3
+	dpTKXSfqGkGBLOfgZx8Dx/7IVuKC5uV08FmSBPO/ARnSOhLRNT5JgunTB5H+
+X-Google-Smtp-Source: AGHT+IFRzi5o6EGgWbMuGvJEhg9M+n6oLlbtaSwEcn6drUQWCWPLfRUH6XeylcZJ1Zrbe60AHw7FaA==
+X-Received: by 2002:a25:938c:0:b0:de4:68c2:423d with SMTP id a12-20020a25938c000000b00de468c2423dmr2000703ybm.14.1713453694856;
+        Thu, 18 Apr 2024 08:21:34 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id v16-20020a258490000000b00de0e1b77311sm395336ybk.15.2024.04.18.08.21.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 08:21:34 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc71031680so1063319276.2;
+        Thu, 18 Apr 2024 08:21:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdsJq70BYu1hso9oz8BZ31p58yffY2OfpYruaa9EeXIrN1e9upojP2syuptxGO76pb4DUblozxWyjuqO2+i56dmLBV2eOqAnGFDApLrUP3uKE01UJtujflXwmPM9rxw1TiFRpKEU+x9IhNRz+HMftYTLiq2CQ4wp57zBeH/IjrKvGz6oqFDG9OSPcW
+X-Received: by 2002:a25:aa49:0:b0:dc2:2d0a:4d55 with SMTP id
+ s67-20020a25aa49000000b00dc22d0a4d55mr3040669ybi.63.1713453694453; Thu, 18
+ Apr 2024 08:21:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1713453680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A7pDzprEULb6CX6lMCrdxJvnLBOtCYuc57B+5gNsxmg=;
-	b=AqtQxprhMc32q9g8MXCW5LY11LtyaPhs3Orfxlig93+Yp6qilPMh3Yu1G8WvwKR6tOkI6E
-	KwsfhKMfvjIvvX9ujuyIU2Eb1z8NnzGLJFSoXlvGecAjLNCGHIJ2FMJS6sb875NF78Zgqh
-	ZI14BtUe3koLWe1qXcCn2rZ55g3IiEeIVob0Va5JOJmFd+3tv/dXUbqd4Fal7CpUmaTXqk
-	l06Cka29b9MyU1MRfcwnhxtZ8TNGdth61r63jrXZnxBrm4Y5o5Q5jul8a1zf4TO1CjsW6B
-	TD0n6okY0jPdOwz2eq61VJieBJPCkF4Nfp8BsPcZeSj0BlTqqr4umUxs6Rkarg==
-Date: Thu, 18 Apr 2024 17:21:18 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Rob Herring
- <robh@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, FUKAUMI Naoki <naoki@radxa.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: correct the model name
- for Radxa ROCK 3A
-In-Reply-To: <20240418130120.67663-1-amadeus@jmu.edu.cn>
-References: <20240418130120.67663-1-amadeus@jmu.edu.cn>
-Message-ID: <d00953aab0f1c978e3720885a6844caa@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+References: <20240417112003.428348-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240417112003.428348-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Apr 2024 17:21:22 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUAe7hCA4=6H=xHSOEppE9fvGpjzLGynvPR8cy_XXFzKA@mail.gmail.com>
+Message-ID: <CAMuHMdUAe7hCA4=6H=xHSOEppE9fvGpjzLGynvPR8cy_XXFzKA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: rzg3s-smarc-som: Enable eMMC by default
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-04-18 15:01, Chukun Pan wrote:
-> According to https://radxa.com/products/rock3/3a,
-> the name of this board should be "Radxa ROCK 3A".
-> Also update compatible to match the model name.
-> 
-> Suggested-by: FUKAUMI Naoki <naoki@radxa.com>
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+On Wed, Apr 17, 2024 at 1:20=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Enable eMMC by default on the RZ/G3S SMARC platform, as previously done
+> on RZ/G2L boards and other Renesas platforms.
+>
+> The SW_CONFIG2 setting selects between the uSD0 card and eMMC. By setting
+> SW_CONFIG2 to SW_OFF, we select eMMC by default.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Looking good to me.  I'll send the remaining naming cleanup patches
-a bit later.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.10.
 
-Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> index 99bd5e2c76a0..88e9e0011953 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> @@ -772,9 +772,9 @@ properties:
->            - const: radxa,rock2-square
->            - const: rockchip,rk3288
-> 
-> -      - description: Radxa ROCK3 Model A
-> +      - description: Radxa ROCK 3A
->          items:
-> -          - const: radxa,rock3a
-> +          - const: radxa,rock-3a
->            - const: rockchip,rk3568
-> 
->        - description: Radxa ROCK 5 Model A
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
