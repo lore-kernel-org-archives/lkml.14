@@ -1,94 +1,191 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73615171646;
-	Thu, 18 Apr 2024 16:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA6C16F8F7;
+	Thu, 18 Apr 2024 16:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713459134; cv=none; b=e2TqAABTMlhONK3l5XhbAcdgwd63KXpJtScyqnAzvdOBGUFcdxmqsRZ7B6YEBD55+ccHgV30gSSxOTFc1W9ivo+hUmsETyMt59Z3gkrYJwkS7GFYuOM+j6N1LyipoymFVKKyf2WyBQArknxNycLRt3VFOAos3BLH5NUM/YMw/14=
+	t=1713459243; cv=none; b=THaULIbiTWQqztUthBEq2bVhqLX+sfZPSVTagCu2t3ogajUGG+bG0INv/XX1fNFNxuscJkaKdiKdyfSpo8fNyCJ1XJBOW4LV/ehe6f2+O9+02Gi1bjm7/8eP4lOIPGOKD7Rv4RIRhZ8iEOqNUAm5Gu/nNkhJGt/fC+kcD/BU+hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713459134; c=relaxed/simple;
-	bh=USYxCd+6xF7K5pkaEdGKIuCmDU74c0xRd5gM491L5uY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=GvyccN1cM3Coq26xMrrPctQfO0G0vRTKjzwVwGarTPayDGvkqWwFOysPC2b3SWRVZSUOqxRx2QbDbKlXcIOcXJpKY2XQvNbLhWP5myfUfVb15gT49fh98uhsusORdLdiS4eH/BqPstIDCmSkJQK0XycIu78EryS2si6BdIfB2z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tFTXJCb+; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1713459243; c=relaxed/simple;
+	bh=Td96Pr2RLxCmccrLCbz0GSBYtl2efgCYqTBO4CPC85Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=etOstbJZuGlqIyr2vsSeJbrjOPeqVi0l4vNJGRSOrDpZ94wbxdqvAmfKfsqZMpIYvQptLtPpdmDrZEweyjUF0CYxs1uzUffLR/I5kHTX4buXdCybbKMBbWGuZjlPLi56W/iITqnZ1XMnOWogxneCGmpTfdXR+r3nN9ecZ1FGBHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LR5SOtA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tFTXJCb+"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1093220FD8C4;
-	Thu, 18 Apr 2024 09:52:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1093220FD8C4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713459131;
-	bh=usFNmjgTL6o5J7+904XNALZFx9gHBIeiQH0Vr4rMqvE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tFTXJCb+gAVRa5xBhiNQU3IburUjdpK/uVk/+2xq+dt3aHEtd8QM+M2BKC9O7YggH
-	 kOEQHSz5QS3VRxnwnPkuNmdHFU214zT/+qd0WRoYF2proCoApzw91tZk7c1/6pDjMn
-	 Le0WjOhlZLimf9lNA9zG8NrmcX8Xg6Vj+r0QkW1s=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next 0/6] RDMA/mana_ib: Implement RNIC CQs
-Date: Thu, 18 Apr 2024 09:51:59 -0700
-Message-Id: <1713459125-14914-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LR5SOtA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F01C113CC;
+	Thu, 18 Apr 2024 16:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713459242;
+	bh=Td96Pr2RLxCmccrLCbz0GSBYtl2efgCYqTBO4CPC85Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LR5SOtA8WsHMP6vVIvV29C88LXwY4oD+ef/jdGjbN3bb54kSGt4EoJHQg89DKFlRi
+	 jJ5gOUQHX8QKRHrbQgrjvklqJroXZjGvGntVSvJ0JIClsi0k1C8TETJyXK1+EfQ9PR
+	 639TjYZyOQswbawi0oVjBq77Ithr9GznM+wr4uIy93snA3jlvZ74ZbfhtOqrKLLXAi
+	 42UUK6THGudljukfqbn7Tg0P1EtQCPLgssw+SO0QetYbyXIB7Q9vr862R7zLRENx88
+	 TjbVtJkE5kioS84t+pzUqjwDnGciFsuX3e4akgNc6bzc/0+1lkF/jK0QX8ROzMNrae
+	 oLckb+4wXzjVg==
+Date: Thu, 18 Apr 2024 17:53:55 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>,
+	Guo Ren <guoren@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	Vincent Chen <vincent.chen@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Joel Granados <j.granados@samsung.com>,
+	Jerry Shih <jerry.shih@sifive.com>
+Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
+ to ZVE32X
+Message-ID: <20240418-ultimatum-yam-11de4b063b83@spud>
+References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
+ <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
+ <20240418-brook-chili-4d3e61d1a55c@wendy>
+ <20240418155256.GA2410@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="caZE0P60wQJMi2ZH"
+Content-Disposition: inline
+In-Reply-To: <20240418155256.GA2410@sol.localdomain>
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
 
-This patch series implements creation and destruction of CQs
-which can be used with RC QPs.
+--caZE0P60wQJMi2ZH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patches with RC QPs will be sent in the next patch series.
+On Thu, Apr 18, 2024 at 08:52:56AM -0700, Eric Biggers wrote:
+> Hi Conor,
+>=20
+> On Thu, Apr 18, 2024 at 12:02:10PM +0100, Conor Dooley wrote:
+> > +CC Eric, Jerry
+> >=20
+> > On Fri, Apr 12, 2024 at 02:49:03PM +0800, Andy Chiu wrote:
+> > > Make has_vector take one argument. This argument represents the minim=
+um
+> > > Vector subextension that the following Vector actions assume.
+> > >=20
+> > > Also, change riscv_v_first_use_handler(), and boot code that calls
+> > > riscv_v_setup_vsize() to accept the minimum Vector sub-extension,
+> > > ZVE32X.
+> > >=20
+> > > Most kernel/user interfaces requires minimum of ZVE32X. Thus, programs
+> > > compiled and run with ZVE32X should be supported by the kernel on most
+> > > aspects. This includes context-switch, signal, ptrace, prctl, and
+> > > hwprobe.
+> > >=20
+> > > One exception is that ELF_HWCAP returns 'V' only if full V is support=
+ed
+> > > on the platform. This means that the system without a full V must not
+> > > rely on ELF_HWCAP to tell whether it is allowable to execute Vector
+> > > without first invoking a prctl() check.
+> > >=20
+> > > Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> > > Acked-by: Joel Granados <j.granados@samsung.com>
+> >=20
+> > I'm not sure that I like this patch to be honest. As far as I can tell,
+> > every user here of has_vector(ext) is ZVE32X, so why bother actually
+> > having an argument?
+> >=20
+> > Could we just document that has_vector() is just a tyre kick of "is
+> > there a vector unit and are we allowed to use it", and anything
+> > requiring more than the bare-minimum (so zve32x?)must explicitly check
+> > for that form of vector using riscv_has_extension_[un]likely()?
+> >=20
+> > Finally, the in-kernel crypto stuff or other things that use
+> > can_use_simd() to check for vector support - do they all function corre=
+ctly
+> > with all of the vector flavours? I don't understand the vector
+> > extensions well enough to evaluate that - I know that they do check for
+> > the individual extensions like Zvkb during probe but don't have anything
+> > for the vector version (at least in the chacha20 and sha256 glue code).
+> > If they don't, then we need to make sure those drivers do not probe with
+> > the cut-down variants.
+>=20
+> As far as I know, none of the RISC-V vector crypto code has been tested w=
+ith
+> Zve* yet.  Currently it always checks for VLEN >=3D 128, which should exc=
+lude most
+> Zve* implementations.
+>=20
+> Currently it doesn't check for EEW >=3D 64, even though it sometimes assu=
+mes that.
+> It looks like a check for EEW >=3D 64 needs to be added in order to exclu=
+de Zve32x
+> and Zve32f implementations that don't support EEW =3D=3D 64.
 
-To create a CQ for RNIC, mana_ib requires creation of EQs
-within mana_ib device. An EQ of mana ethernet cannot be used.
+Cool, glad I asked then :)
 
-To make the implementation of create_cq cleaner, this series
-also introduces minor changes to mana_cq structure (cqe->buf_size)
-and adds a helper to remove CQ callbacks.
+> If it would be useful to do so, we should be able to enable some of the c=
+ode
+> with a smaller VLEN and/or EEW once it has been tested in those configura=
+tions.
+> Some of it should work, but some of it won't be able to work.  (For examp=
+le, the
+> SHA512 instructions require EEW=3D=3D64.)
+>=20
+> Also note that currently all the RISC-V vector crypto code only supports =
+riscv64
+> (XLEN=3D64).  Similarly, that could be relaxed in the future if people re=
+ally need
+> the vector crypto acceleration on 32-bit CPUs...  But similarly, the code=
+ would
+> need to be revised and tested in that configuration.
+>=20
+> > Eric/Jerry (although read the previous paragraph too):
+> > I noticed that the sha256 glue code calls crypto_simd_usable(), and in
+> > turn may_use_simd() before kernel_vector_begin(). The chacha20 glue code
+> > does not call either, which seems to violate the edict in
+> > kernel_vector_begin()'s kerneldoc:
+> > "Must not be called unless may_use_simd() returns true."
+>=20
+> skcipher algorithms can only be invoked in process and softirq context.  =
+This
+> differs from shash algorithms which can be invoked in any context.
+>=20
+> My understanding is that, like arm64, RISC-V always allows non-nested
+> kernel-mode vector to be used in process and softirq context -- and in fa=
+ct,
+> this was intentionally done in order to support use cases like this.  So =
+that's
+> why the RISC-V skcipher algorithms don't check for may_use_simd() before =
+calling
+> kernel_vector_begin().
 
-Mana ethernet and mana_ib CQs are different entities which are
-created in different isolation zones (ethernet vs rnic).
-As a result, RNIC cannot use ethenet CQs and ethernet cannot
-use RNIC CQs.
-That is why, we use existing udata request for creation of
-ethernet CQs. If the request has extra fields, then we create
-an RNIC CQ. The kernel-level CQs will be RNIC CQs (in future
-patches).
+I see, thanks for explaining that. I think you should probably check
+somewhere if has_vector() returns true in that driver though before
+using vector instructions. Only checking vlen seems to me like relying on
+an implementation detail and if we set vlen for the T-Head/0.7.1 vector
+it'd be fooled. That said, I don't think that any of the 0.7.1 vector
+systems actually support Zvkb, but I hope you get my drift.
 
-To preserve backward and forward compatibility with RDMA-CORE,
-we will make the following changes to mana provider in RDMA-CORE:
+Thanks,
+Conor.
 
-The rdma-core will request RNIC CQs by default, with the proposed
-request format.
-If the mana has installed an allocator with manadv_set_context_attr,
-then the rdma-core undestands that this is a DPDK use-case and
-requests an ethernet CQ, using old short request format.
+--caZE0P60wQJMi2ZH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Konstantin Taranov (6):
-  RDMA/mana_ib: create EQs for RNIC CQs
-  RDMA/mana_ib: create and destroy RNIC cqs
-  RDMA/mana_ib: replace duplicate cqe with buf_size
-  RDMA/mana_ib: introduce a helper to remove cq callbacks
-  RDMA/mana_ib: boundary check before installing cq callbacks
-  RDMA/mana_ib: implement uapi for creation of rnic cq
+-----BEGIN PGP SIGNATURE-----
 
- drivers/infiniband/hw/mana/cq.c      | 77 ++++++++++++++++++++----
- drivers/infiniband/hw/mana/main.c    | 88 +++++++++++++++++++++++++++-
- drivers/infiniband/hw/mana/mana_ib.h | 36 +++++++++++-
- drivers/infiniband/hw/mana/qp.c      | 30 ++--------
- include/uapi/rdma/mana-abi.h         |  7 +++
- 5 files changed, 200 insertions(+), 38 deletions(-)
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiFQIwAKCRB4tDGHoIJi
+0gl8AQCH5jcR0fwp68BBBcX8uk063UxUZdEjt7Yt3nU+80K6GgEA64+MkNFk/ns9
+57UBSy8tcN6JCY0eSgoJEzI8o/6y4gY=
+=d1id
+-----END PGP SIGNATURE-----
 
--- 
-2.43.0
-
+--caZE0P60wQJMi2ZH--
