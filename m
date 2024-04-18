@@ -1,184 +1,165 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DB11649DE
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 15:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2425916ABEA
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 15:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713452637; cv=none; b=M0myg/0xDGo5QLRJwOAJfSM51LpH+EZ1sZeU6Tq7ojX0BTxxTLgeZJADfyCDsnDsHWV5MuGdW5So8GHUo/0LRbEaQ7p72wCV3lWFVzfsJs1ofAMmptcAVCiDWvPK0bjEh/P3xS7ckEwnIIwJ2K+RyH7OTw3wt/jTCO76EQUrPjA=
+	t=1713452760; cv=none; b=FNZq7+1veIbuftos+jSK1ePLghXUUgc4F5hpFUy3pvLJ4R78geL8hRnmQPLvU8sgt8JkjRpscXFnH9s0S5FEwACAlzDIjY8MOtMidycaQlBsdaqiZX/LxjfE/k2DP9uoYmqhVFt0izobi7Kph+QkYL5inKrZbyYbzX9VYF08byc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713452637; c=relaxed/simple;
-	bh=xGfPRY1qTmJ7gvR6rws0haqyz6KMxDGzBv7XztbhHGg=;
+	s=arc-20240116; t=1713452760; c=relaxed/simple;
+	bh=+n6ASrep4rJoEHRc9MR1zx75DlI9VbOIWLCu5kaRRS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CN4mZE98pcrZC89QpoVBlm2m/MZHscAfT7FEKpDIexvaE2U+64Wft6PbQgUVETUAFaEfPbX3IhS0YbrIyKOkJRY7FT6iPfAb9wqfh69Wuf/puNEshu6JQ2MXNR+Udj+T/JEYbFq6QfBbLk5i6tJOeoX3Eq4Nu70j54Q9t0accfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EujSt0qI; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sa9kczCWjoKU3xS51MBE+vf/f2kYNChVawBd9VrcrXy4Gn/WdWuXzmEfjPkHHq1Rh2kGYCeoeO8BS7MrfdNUMnY1CW5qytwicB4nv/EcYck0qXJ96b9HeYNQ4HvM5LNTh5E4sEGu+5tOsd3q9G6exP4QEczPeiSNeHbB6atiNuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mE03bmgw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EujSt0qI"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-418dde387a3so7543965e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 08:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1713452630; x=1714057430; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/iG0C4gcrx0ejEYPefXn/oJdDvpEFVh0exY1ffll4kg=;
-        b=EujSt0qISzEfrsI2PqPfiQX1mzI28CU+OXIHz/+xfnagDqmkD87bFDo5bR1veKButk
-         IyYji2SgCkCgclxd17bXFh+ScV/ifdQl0P6UrOxvMWcCWKgIPLYg2aT0g+C7SjrR3JHq
-         v10SWyQiLz8z7SJff24hbc4bwLyfKS+7VGBjtAkK69nYpvS5dvHMRcTd7O0I8dgXk6KA
-         sjsf60YwcuTx5mqkYeWhv/NQ6IzQconZrV0wa6MUB1mCvvMqaAYAFle689MopSVnxKGT
-         jbnUVzR1row0EbXlFyVcVFxwOINg+jcJLA4ctM6Wgq+C/HzI6SnNsO3jACsH+Jt38SJe
-         TGaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713452630; x=1714057430;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/iG0C4gcrx0ejEYPefXn/oJdDvpEFVh0exY1ffll4kg=;
-        b=SqNP970K9n6EqRIXKU3CRWJnA0JMpBdJ9gnN59iMTKe7CN1EpVoLPvSYWpgwSTHTH2
-         5ez7FbhHDTfIbl8aEKffyugH7tkXJKrKOkhFCsmkDi1trKyBubS12moXB5msArRBZ8km
-         VvSCiVmV4luQ7LpenF/TQB8X0UAgZqE8eheyXSwhWut/PH1rlr0zDaZUMaUMf4n73BGq
-         NiGHuVRdPGnE1C1wr5HZHaczUgq8LfLGQR/Qiy50QeVOne3szY9pPKTbfbY/B7p+uqql
-         FarSLaJVXzeaXGzEZLp31B/cAoA6T4ZVT4ys4rX7NQaUkufdpHOaG8xtFe5C+7j/KNcJ
-         RYOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTP/cBqfLkBw68p5vsW24i3qPZ7ziOTl3CNKvnLPQE/JjzK850JI7VnNWaq9Zw25QYQ2V3vg8nfjYu3yRq8J2DJzvArPv04tFhy1to
-X-Gm-Message-State: AOJu0YwPvVWWDUY/hz8j0RxBSrJbs/RQNbFPQOZf6sbGVXzHwFSj/eoZ
-	WFD5gjXaL5LYXmf2Es9zg0syfig9KHmaGYD/HBzB2bEVEn9XDTwckiaRhX27kHo=
-X-Google-Smtp-Source: AGHT+IE07HzTBUUk6cHsSABxdSCMqvtNsGxapy+8fEBxDBZ8dapr7sEIHtnyquqaF8VQ77kvjBTG5A==
-X-Received: by 2002:a05:600c:1c03:b0:418:2e93:163e with SMTP id j3-20020a05600c1c0300b004182e93163emr2678761wms.31.1713452630240;
-        Thu, 18 Apr 2024 08:03:50 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id h4-20020a5d5044000000b00343daeddcb2sm2031301wrt.45.2024.04.18.08.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 08:03:49 -0700 (PDT)
-Date: Thu, 18 Apr 2024 17:03:48 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH printk v4 06/27] printk: nbcon: Add callbacks to
- synchronize with driver
-Message-ID: <ZiE2VO9Q03TvHJ_t@pathway.suse.cz>
-References: <20240402221129.2613843-1-john.ogness@linutronix.de>
- <20240402221129.2613843-7-john.ogness@linutronix.de>
- <ZhUIatzxietD4F-m@localhost.localdomain>
- <87y19djqr0.fsf@jogness.linutronix.de>
- <Zh_IrB4MyHwU8OJE@pathway.suse.cz>
- <87bk68niod.fsf@jogness.linutronix.de>
- <ZiD3FNBZh_iMOVWY@pathway.suse.cz>
- <87h6fyswgn.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mE03bmgw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70079C113CC;
+	Thu, 18 Apr 2024 15:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713452760;
+	bh=+n6ASrep4rJoEHRc9MR1zx75DlI9VbOIWLCu5kaRRS0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mE03bmgwtprNd/G1IRYw0JNGMZbK3KktG2zSr0Nn4pRG4ZnbILOkUnUoQcns8qQPT
+	 3N9p7MVJzYT4xOjy2n+ga/vowLGxcraGOm6bOG06q/oWanx10qOEKQvHgoX6BJ+i2A
+	 GIEk62HwkKAOv9Ae0tp0tPWft2fCbvd7nxeP86/0E0Sy/VlgRWf4YNxSJ70XYRH/jF
+	 gF9czmv0d+oSy70KmhUvl8zpoiE69hqmNl1VbsmMhIYCtN5VYEo1jORmuhiAtELy4T
+	 deYoX24zrtX1JDVCtpkTa7dUrV+nlm/jyMEepxscwfFDIr4cTpYMxgauabdNjZOd8l
+	 hDHSN7mYwDp1Q==
+Date: Thu, 18 Apr 2024 16:05:55 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Xu Lu <luxu.kernel@bytedance.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	andy.chiu@sifive.com, guoren@kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	lihangjing@bytedance.com, dengliang.1214@bytedance.com,
+	xieyongji@bytedance.com, chaiwen.cc@bytedance.com,
+	Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [RFC 1/2] riscv: process: Introduce idle thread using Zawrs
+ extension
+Message-ID: <20240418-dove-deferral-2b01100e13ca@spud>
+References: <20240418114942.52770-1-luxu.kernel@bytedance.com>
+ <20240418114942.52770-2-luxu.kernel@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="W4+rgWywh9lWFt3p"
+Content-Disposition: inline
+In-Reply-To: <20240418114942.52770-2-luxu.kernel@bytedance.com>
+
+
+--W4+rgWywh9lWFt3p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h6fyswgn.fsf@jogness.linutronix.de>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu 2024-04-18 14:16:16, John Ogness wrote:
-> On 2024-04-18, Petr Mladek <pmladek@suse.com> wrote:
-> > I am not sure how it is done in other parts of kernel code where
-> > RT needed to introduce some tricks. But I think that we should
-> > really start mentioning RT behavior in the commit messages and
-> > and comments where the RT mode makes huge changes.
-> 
-> Yes, our motivation is RT. But these semantics are not RT-specific. They
-> apply to the general kernel locking model.
++ Drew,
 
-Yes, but RT is a nice example where it is clear what want to achieve.
-IMHO, a clear example is always better then a scientific formulation
-where every word might be important. Especially when different people
-might understand some words different ways.
+On Thu, Apr 18, 2024 at 07:49:41PM +0800, Xu Lu wrote:
+> The Zawrs extension introduces a new instruction WRS.NTO, which will
+> register a reservation set and causes the hart to temporarily stall
+> execution in a low-power state until a store occurs to the reservation
+> set or an interrupt is observed.
+>=20
+> This commit implements new version of idle thread for RISC-V via Zawrs
+> extension.
+>=20
+> Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+> Reviewed-by: Hangjing Li <lihangjing@bytedance.com>
+> Reviewed-by: Liang Deng <dengliang.1214@bytedance.com>
+> Reviewed-by: Wen Chai <chaiwen.cc@bytedance.com>
+> ---
+>  arch/riscv/Kconfig                 | 24 +++++++++++++++++
+>  arch/riscv/include/asm/cpuidle.h   | 11 +-------
+>  arch/riscv/include/asm/hwcap.h     |  1 +
+>  arch/riscv/include/asm/processor.h | 17 +++++++++++++
+>  arch/riscv/kernel/cpu.c            |  5 ++++
+>  arch/riscv/kernel/cpufeature.c     |  1 +
+>  arch/riscv/kernel/process.c        | 41 +++++++++++++++++++++++++++++-
+>  7 files changed, 89 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index be09c8836d56..a0d344e9803f 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -19,6 +19,7 @@ config RISCV
+>  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+>  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+>  	select ARCH_HAS_BINFMT_FLAT
+> +	select ARCH_HAS_CPU_FINALIZE_INIT
+>  	select ARCH_HAS_CURRENT_STACK_POINTER
+>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>  	select ARCH_HAS_DEBUG_VM_PGTABLE
+> @@ -525,6 +526,20 @@ config RISCV_ISA_SVPBMT
+> =20
+>  	   If you don't know what to do here, say Y.
+> =20
+> +config RISCV_ISA_ZAWRS
+> +	bool "Zawrs extension support for wait-on-reservation-set instructions"
+> +	depends on RISCV_ALTERNATIVE
+> +	default y
+> +	help
+> +	   Adds support to dynamically detect the presence of the Zawrs
+> +	   extension and enable its usage.
 
+Drew, could you, in your update, use the wording:
+	   Add support for enabling optimisations in the kernel when the
+	   Zawrs extension is detected at boot.
 
-> For example, even for a !RT system, it is semantically incorrect to
-> take a spin_lock while holding a raw_spin_lock.
+There was some confusion recently about what these options were actually
+for, because this option doesn't control "dynamic detection" as the
+ACPI or DT detection is compiled at all times. I had written a patch for
+this wording in other options at the time but had forgotten to properly
+send it:
+https://lore.kernel.org/linux-riscv/20240418-stable-railway-7cce07e1e440@sp=
+ud/T/#u
 
-Really? I am not aware of it. I know that lockdep complains even
-in no-RT configuration. But I have expected that it only helps
-to catch potential problems when the same code is used with
-RT enabled.
+> +
+> +	   The Zawrs extension defines a pair of instructions to be used
+> +	   in polling loops that allows a core to enter a low-power state
+> +	   and wait on a store to a memory location.
+> +
+> +	   If you don't know what to do here, say Y.
+> +
+>  config TOOLCHAIN_HAS_V
+>  	bool
+>  	default y
+> @@ -1075,6 +1090,15 @@ endmenu # "Power management options"
+> =20
+>  menu "CPU Power Management"
+> =20
+> +config RISCV_ZAWRS_IDLE
+> +	bool "Idle thread using ZAWRS extensions"
+> +	depends on RISCV_ISA_ZAWRS
+> +	default y
+> +	help
+> +		Adds support to implement idle thread using ZAWRS extension.
+> +
+> +		If you don't know what to do here, say Y.
 
-Is there any difference between spin_lock() and raw_spin_lock()
-when RT is disabled. I do not see any. This is from
-include/linux/spinlock.h:
+I don't think this second option is needed, why would we not always want
+to use the Zawrs version of this when it is available? Can we do it
+unconditionally when RISCV_ISA_ZAWRS is set and the extension is
+detected at runtime?
 
-	/* Non PREEMPT_RT kernel, map to raw spinlocks: */
-	#ifndef CONFIG_PREEMPT_RT
-	[...]
-	static __always_inline void spin_lock(spinlock_t *lock)
-	{
-		raw_spin_lock(&lock->rlock);
-	}
-
-Would raw_spinlock() API exist without CONFIG_PREEMPT_RT?
-
-Maybe, you do not understand what I suggest. Let's talk about
-particular comments in the code.
-
-
-> In the full PREEMPT_RT series I have tried to be careful about only
-> mentioning PREEMPT_RT when it is really PREEMPT_RT-specific. For example
-> [0][1][2].
-> 
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?h=linux-6.9.y-rt-rebase&id=1564af55a92c32fe215af35cf55cb9359c5fff30
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?h=linux-6.9.y-rt-rebase&id=033b416ad25b17dc60d5f71c1a0b33a5fbc17639
-> 
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?h=linux-6.9.y-rt-rebase&id=7929ba9e5c110148a1fcd8bd93d6a4eff37aa265
-> 
-> > The race could NOT happen in:
-> >
-> >    + NBCON_PRIO_PANIC context because it does not schedule
-> 
-> Yes.
-> 
-> >    + NBCON_PRIO_EMERGENCY context because we explicitly disable
-> >      preemption there
-> 
-> Yes.
-> 
-> >    + NBCON_NORMAL_PRIO context when we ALWAYS do nbcon_try_acquire()
-> >      under con->device() lock. Here the con->device_lock() serializes
-> >      nbcon_try_acquire() calls even between running tasks.
-> 
-> The nbcon_legacy_emit_next_record() printing as NBCON_NORMAL_PRIO is a
-> special situation where write_atomic() is used. It is safe because it
-> disables hard interrupts and is never called from NMI context.
-> 
-> nbcon_atomic_flush_pending() as NBCON_NORMAL_PRIO is safe in !NMI
-> because it also disables hard interrupts. However,
-> nbcon_atomic_flush_pending() could be called in NMI with
-> NBCON_NORMAL_PRIO. I need to think about this case.
-
-It is safe. The race scenario requires _double_ scheduling (A->B->A):
-
- 1. [CPU 0]: process A acquires the context and is scheduled (CPU 0)
-
- 2. [CPU 1] The nbcon context is taken over and released in emergency.
-
- 3. [CPU 0] process B acquires the context and is scheduled
-
- 4. [CPU 0] process A thinks that it still owns the context
-	    and continue when it ended.
-
-
-This could not happen with the current code when:
-
-   + nbcon_try_acquire() is serialized by con->device_lock()
-     because process B would get blocked on this lock.
-
-   + nbcon_try_acquire() is called in atomic context
-     because the context is always released before scheduling.
+Cheers,
+Conor.
 
 
-I would say that this is far from obvious and we really need
-to document this somehow. I would mention these details above
-nbcon_context_try_acquire().
 
-Best Regards,
-Petr
+--W4+rgWywh9lWFt3p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiE20wAKCRB4tDGHoIJi
+0mB2AP9jDM+N0TaP3N/aRVlNJxBAwWPjQeQiXXdjkXc4uIfepAEAxccqrQyX3H0O
+FYtsk8xkGJ2X1LJ0uU4Kb7k4EqyF5wA=
+=byH8
+-----END PGP SIGNATURE-----
+
+--W4+rgWywh9lWFt3p--
