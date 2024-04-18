@@ -1,89 +1,86 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317D915D5AE;
-	Thu, 18 Apr 2024 16:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F4415D5AE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456048; cv=none; b=mjISVEvVtxIxqEUS0ML5y5at1Zk+4K6cWdjmO1SRezjcWBx0q/jEJvw13z0QDLDq0/T+Zz1DtY1cx6Kiyelyv6e5czJF2do9VtzNPRt5eA5kQTvblut/yfhvJYXz+ixu4ZDGRkfQIoZy0Bcap4qriFFutBfFPe5PdlxAIenwDtU=
+	t=1713456052; cv=none; b=pGaz9W5lfp8QGZS8OJSNEA+uzFxC7MRw6qQHwD76P5UnW34BoIWQ/IM/u12DM54QLQxMdHMopaeGDUAHFQiNpOCAgMjuPAvMpRwDL3f09uhvxY2XzMKhMpfTnbF1uO8C4aAAFT5X+t+s7k5lW1Rug7VdkspDMufVaWKF8c+ZrGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456048; c=relaxed/simple;
-	bh=2tvjJQzckk7me2qDQz2+/czKkqYeyc4qjDGM18IMo/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIWgliBNdfKnradyvHu2pbYTzE3nLhVhN+jLK3gpBI/XgnQIHcJhf8yjE7epAnB5w8/HkwhYqZZ2hWweit7qz2q/OUYsxPjg4GmCSNKMrEFQJrWVgTkz61mgDwTehoNE+JC1q9Dsottb3crxwsTwixDwlWkkHYRIlwHra/cDDfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBidoEn9; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713456052; c=relaxed/simple;
+	bh=cyofhNpuzNoJ61d5zp30RxmRNrJJzUEO0QXv/sR7gDc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WKeEkBvQHhm0gH8imu9o4HmGUKBsN4dEliWaSPDkOJTqfRKbbmh0tJllboCoXZE2vytOYgObvQTlbSg0Vk77C+X3BonmigM8BO7Ni6jNu1RThBX3aeppBZMlCSAG5gi0C+vdFqDfpoQHX5CTsQMTdNEic6Xpd7pf52WddU1w6DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z6FG1YNN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBidoEn9"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e4266673bbso9560005ad.2;
-        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713456045; x=1714060845; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PQ8NnE95Wng2cbF08yApBUNklEsbuY7jF+Twef4QuI0=;
-        b=VBidoEn9MxhUEdWJNlWJzYEkSoPovRp9yRuHYCa3e3WTRNg1plIC/etfwIDPKdF2wJ
-         Oer4y+g5rPofSpcWRSqk6JS2I7IGCIi54c4bKAt3l5EiP3t+900ZcE/J/nHmW/xbTs8P
-         zvzFy5Cca9kn+OwN3T937+RXdAm8rPHy1ozsYFi4GrjYr5KoAxhViBYVUIkeiWF8pIJk
-         rLTaKWXAvmpLqiwtG0OrpZsrP91MhkYqlxjipNEUGlQA9oIlhqAZvmDK3mVrQXLETSIR
-         7TWzrm56hVOf6OrbiOkQLSHqn9LwrB77OgAyYl8Uo07JeD9mxnhRFhgM2NTxSI5o1KST
-         2DHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713456045; x=1714060845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PQ8NnE95Wng2cbF08yApBUNklEsbuY7jF+Twef4QuI0=;
-        b=ObouYg0jC61OecC88ihVMEOKoV7UsRA/b2iUqmDaOf7zzC37bBNr0jkSLbxiHmPpcw
-         xEsUGHPf4+0/Ud3KZbreTuiKk+d8rRQVYSFqtg+28l5VcEShDAX+tmepCeukWwj23HCW
-         KDNQ6ef0WkWzdBTJ8roFfvHwAmmrTSCx2Ss2ycsILJyV4V7uDTBgetckvEcIUwKCt4Lh
-         gZqoYLzq21CoiJUjM/w3keAp39/oxA7wuJDfVrTIYT+4CUNyQ4PPn84stK7cV8rJgZU1
-         +lA4JAD3pXhbtcjGOtvzAihSnPGECDvTKfdSumoGTk29UmOck+Y3R7ah+uLMikOpxhVu
-         jygA==
-X-Forwarded-Encrypted: i=1; AJvYcCVk8pM583nGABDmI6OMx0U5b6rHS/yA8U/OlH9p8Im6VjCK34opuV7p2R/QWDCaitCG2QOSY3fSDIHZHpM9tlaC9hx4yWE97qkZhOAxxpTSG/iAUx53GlWMUMrCBcEWODmd7xS6TlMg8EOFe+nG/izJ5+aM09wwPxOSvB4DY+OZMg==
-X-Gm-Message-State: AOJu0YzigPnjsU8Btwgm7NARFaPjvr6hCIRtapNqkTumJaeYLkeeoFUx
-	I/DV/F1PDH5yfHmSc9rS5FPtcPyemULtIs9xkH2hPSx3Ox3vfGUw
-X-Google-Smtp-Source: AGHT+IE4e7zmJlTVm+rOJDjXS8ojKP/o+9OmVobTcNe+p/oMU7S06QGA/ADKTuXfUm0fMYIAFgeE+Q==
-X-Received: by 2002:a17:902:e742:b0:1e5:4f00:3754 with SMTP id p2-20020a170902e74200b001e54f003754mr4096356plf.8.1713456045245;
-        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:6f51])
-        by smtp.gmail.com with ESMTPSA id m5-20020a170902768500b001e4478e9b21sm1673804pll.244.2024.04.18.09.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 18 Apr 2024 06:00:43 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc: lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Subject: Re: [PATCH -next] docs, cgroup: add entries for pids to cgroup-v2.rst
-Message-ID: <ZiFDq5NuAKLYslmn@slm.duckdns.org>
-References: <20240418123012.916411-1-xiujianfeng@huawei.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z6FG1YNN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713456050;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=F0ag/Egk0C8yEugn2IgQOhKenICLMcEUisuefA5gpJU=;
+	b=Z6FG1YNNmebDBiLkxKFnWAinOxJbW54ME507E8gSNp9RKoonczMTttbWmKPcz+OqLen9QS
+	6/rA2LC9u7/hoNBKBpFJOzYjwGBovmnmXLeDg2C7i0QcyP5lLLukmFkYlkgfYqwRHSm5D0
+	uN56S8zZsvz2HdCZh/jPJgDkcm4kgxg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-V4V5UnIUPrikEavOkqdOMQ-1; Thu,
+ 18 Apr 2024 12:00:45 -0400
+X-MC-Unique: V4V5UnIUPrikEavOkqdOMQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A6F73816442;
+	Thu, 18 Apr 2024 16:00:45 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.16.186])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5516E40357A7;
+	Thu, 18 Apr 2024 16:00:42 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-kselftest@vger.kernel.org (open list:KERNEL UNIT TESTING FRAMEWORK (KUnit)),
+	kunit-dev@googlegroups.com (open list:KERNEL UNIT TESTING FRAMEWORK (KUnit)),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Wander Lairson Costa <wander@redhat.com>
+Subject: [PATCH v2 0/2] kunit: fix minor error path mistakes
+Date: Thu, 18 Apr 2024 13:00:36 -0300
+Message-ID: <20240418160039.69993-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418123012.916411-1-xiujianfeng@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-(cc'ing Michal for potential conflict in the pids controller documentation)
+Hi,
 
-On Thu, Apr 18, 2024 at 12:30:12PM +0000, Xiu Jianfeng wrote:
-> This patch add two entries (pids.peak and pids.events) for pids
-> controller, and also update pids.current because it's on non-root.
-> 
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+These two patches fix some minor error path mistakes in the device
+module.
 
-Applied to cgroup/for-6.10.
+Changes:
+--------
 
-Thanks.
+v1->v2:
+* Add fixes tag.
+* Add an imperative statement in the first commit descripton.
+
+Wander Lairson Costa (2):
+  kunit: unregister the device on error
+  kunit: avoid memory leak on device register error
+
+ lib/kunit/device.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 -- 
-tejun
+2.44.0
+
