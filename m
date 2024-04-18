@@ -1,94 +1,193 @@
-Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2087.outbound.protection.outlook.com [40.107.96.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32D3168B06;
-	Thu, 18 Apr 2024 17:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713462658; cv=none; b=QF6xlZwM0wlt36le8IEhSSCjMF5MEHDK1tKtnslE98zQbogJB3f3SHrGhoMdwchm+nFBidncFUfI+3ET/QXhvGMldzTYULptHdMRwCQTZEYvmKIE6tTl4qT10i3bfPocrlR3oJTEzymHmQIpIoOU5No3c5ZDB42L2CFwzxYkjXQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713462658; c=relaxed/simple;
-	bh=rNe8Fy7Y8K2hLaFXzMJJFlHwm2uFh2o7gtVK7iibMas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pi+rUf/bPmCQ5HVbtgTSotIG1D2NFTpy2LMzVFJ40gy5iVFsrt7vIFK+Pt2/ARRbfEZkF+RkJcv3AnkXre81X+jVFkw3hpZIzKLvF+Fz9anA7gUQpQIdgsmrdSCSloO4mMWOkIDi28z+LJUgEXxQch8KvsN8hMlD07W8fPqbB10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=dR1AH/e9; arc=none smtp.client-ip=206.189.193.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8C71442F4;
+	Thu, 18 Apr 2024 17:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713462657; cv=fail; b=ictEBJnr0P4gkAmd/uLpeD/VCwz/g6TPjfW1N7n5/FmPDjheRS0paN8n6Tjf4qTIkvYCk6GmxcVWiLc3oQ4/wo8c5q5NeTBL+weumUe0kBJeF1s3fIbZtrvuFtzlcCt5vh5GoM9ddtG0xhOIOIUAjQdtwqaDZilpYa5airIRHEA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713462657; c=relaxed/simple;
+	bh=4RtSnB4k4UyAZO4z+xcCFZoHyvYzzNo8OZLBk+JmcnQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g4/1ANji6V8nSUwUjlks7VdqouPb5qhksVXwfAmsgPJ1Re1fqeRH9kg0FiI8MTlSuQN9qKM6B1d6vIYUwaPpM9IdT26ha1x4ZMJhP0VLKmhAd7FJTHKHtRelWBJ+eePmnoxbjai5tjkOcWYY1EUeiiHlJBD2NjewPxOcO2rIQDk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NzcFfWac; arc=fail smtp.client-ip=40.107.96.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="dR1AH/e9"
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-	by a.peacevolution.org (Postfix) with ESMTPA id 56A0444E48;
-	Thu, 18 Apr 2024 17:50:54 +0000 (UTC)
-Date: Thu, 18 Apr 2024 13:50:52 -0400
-From: Aren <aren@peacevolution.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Ondrej Jirman <megi@xff.cz>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	Willow Barraco <contact@willowbarraco.fr>
-Subject: Re: [PATCH 2/4] iio: light: stk3310: Implement vdd supply and power
- it off during suspend
-Message-ID: <fvuaq2yo4jh6jc3cklkvatr5r5du2jzmqblvvkpkpmxdt7e2ys@345lrhtnipfw>
-References: <20240414175300.956243-1-aren@peacevolution.org>
- <20240414175716.958831-1-aren@peacevolution.org>
- <20240414175716.958831-2-aren@peacevolution.org>
- <CAHp75VdZavToGYqLYnkKYt53HXoQxXnRER5Cn5b2==gWTvkAWQ@mail.gmail.com>
- <xxeg3as5m5vmmu6fbjujcnvchrerxs2rr42nloirwsktbv4r57@vpxtxblxmspl>
- <CAHp75Veoibnk2pYuAY-T+u=8t7ackQ8zBjxSHcWb1AeHnq84yQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NzcFfWac"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bX+NTupk//WxW9gVjJKCguOTFiklges8f3CT5Cgli6x3FQVFplZi6+unCHvDtdngS8LrXb0HDtKmKeLMQArJRclQh4fHGlRL0KhYh8XgeTQ+dF4JtC8PVSex0kqEr9XwDCNU+M8nHVB+K90IC/3zCkHFx9MidT8c8wzazPvhGwmoL+SyN6zkMJ4rKkgWSiIXfTHHSsSwuloOwWotqtOxG4PLYeDNDQEatEwX7w0cdsL/VebbeTRC7tdddueTExrGiimErmDmyDhs+8TyJ0yl7v2MjRHQM0PDel0uH6xh+4qlafbMGlG/qkyPlkUgszXBtljKgxuUlr2wUjTMRO2vAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y82wlPYsBKuKZP7Z4V77tukVWKnZHErs4EDVcuPaNAE=;
+ b=oS6n8hMRufCPHJLRnHXSPJIZ3Ojguc8aZD1zqQS/n81sofNuw+840b64BNY/+FL0nrKGiv9MUNJLKW/0/wzSFM0wEz6bYOviSNSe5XnGmowOIlf8dPOndlQpUav3G8OL38ZuhaHPpzE6NBFVxY+VKKkCKgPJoAWbPyHiby4pvhkfeHmPy8aEogwyL3AXqKzRYPY3tTzIaSrDMTxtaH3qLR3jU89RKPrTPLYYEsAc1mB8cUFJvwUndQ8kbskqYpff9GflVhEhYRZ25ehHHqOOl5zjPeV2EiwjifvTb3wjOQwdlZyeWXYmi4NTO1LZMUEGSzJzWQ+kc6n+4xQOjiAO2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y82wlPYsBKuKZP7Z4V77tukVWKnZHErs4EDVcuPaNAE=;
+ b=NzcFfWacd+7PXwmOJwQ45PEoSZddA6zsUzX3PcAogpRtvbHxfDRhrq2U4fwtjvg/y5rsTVjZQOPgz2CVIT2eebog7xYoQ6MA/ezgJ/Ze5i1nilOPeacG/Wp9j2awqVFOKPbSHbUwJrk6kXZ7L2e/VFLZBzxW3i05dgahgSL1NP4=
+Received: from CH2PR18CA0042.namprd18.prod.outlook.com (2603:10b6:610:55::22)
+ by CY8PR12MB7513.namprd12.prod.outlook.com (2603:10b6:930:91::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 17:50:49 +0000
+Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
+ (2603:10b6:610:55:cafe::96) by CH2PR18CA0042.outlook.office365.com
+ (2603:10b6:610:55::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.27 via Frontend
+ Transport; Thu, 18 Apr 2024 17:50:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 17:50:49 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
+ 2024 12:50:48 -0500
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 18 Apr 2024 12:50:47 -0500
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <nishad.saraf@amd.com>,
+	<sonal.santan@amd.com>, <max.zhen@amd.com>
+Subject: [PATCH V12 0/1] AMD QDMA driver
+Date: Thu, 18 Apr 2024 10:50:42 -0700
+Message-ID: <1713462643-11781-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Veoibnk2pYuAY-T+u=8t7ackQ8zBjxSHcWb1AeHnq84yQ@mail.gmail.com>
-X-Spamd-Bar: /
-Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
-	s=dkim; t=1713462655;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-	bh=CpuYA2U5zadpTrpInLy8Sg85CTz03F2QsvGOdLrnGeA=;
-	b=dR1AH/e9KzKYSyF/GUm1Q6nVED2/EsOuZ8Eg5UhDFIPVJCfWquLu9qcFxv4fT5yrlV+xzm
-	ojtYymcNuCN6xCcAxKJDRHfnSRZQX8u4hFFQQCvSlHIUfPI4922XfZoe92YYAWUBmUogiU
-	w+yBRCWIPEw/51bWz81gYO3NGCwo6XU=
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|CY8PR12MB7513:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99abe3d8-8713-4f37-64ac-08dc5fd0153c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	fDi3Hiu2Uv75KBcPsEMFkS0L3T8nSdyYuEki15JQTgOu7m/KCJJ4OltXeywK4q3ugBKSqalHDz9K3RAZzgA+nSkEdwBGLw/NEHaAHT3pOnQ9QPSazveV+sTAN1MkLS0oz0wPOgh+AIoORexYY+KUpZB2PXkIlPhcs5P9U8jL4bqf0bnZN2AefmzPXo8KyEAFcq3/puFB2tefEvmxCU6LYmQRiwGueugXv8MApq2AHlnTPvTq3dnFcG3/aiXQFLjNlqjsa6xxQt8Gq30m2L7sNznq2s4eZK0GGEwwrITxm5a8dPgq8HpZU5cYBSPrcAljYxJD7lh9Wey+tHZWsJp0uPtTwqR8D42XQBuHHN6qaRHXiB9Z17Un0YSQXCTwlxlR+1erPWMApfJAdDjBaINkpbCCF/kKLyFAEHVUE3RYdg0PQsaPI6k+Nykq82g98aYpwwzb3IRuBPrgG85P69U5rw4n4NWoVKZ4swXut3CDpscSFUAHb2ANjcuyDHza/A73Uj0sCtj67O+q1eXiryMfSxZbpzcLsFX+by5p7zBF8rLwvV52fP25FG0enkukt9kR5pVYhc538NHBSDi8B8xX/K3pEt19jy5IBHNRfjbodiI0wg2q90sxqWZ+l0gf/q0IHX8uPAI2xS8/iT4XwfoyZKAEY3Fc+uBT/i0RVA1hKLDfkKgN+h07ZZf6tL9apNFhLNmsen1cr8B5wG0DwJvSGsNyOoQcPFuczXf+TiRf6jLF4ljsqdYqPww3M+38IOxxt1CU42kNB/JjI6zk9tAZ5w==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 17:50:49.2321
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99abe3d8-8713-4f37-64ac-08dc5fd0153c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D4.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7513
 
-On Thu, Apr 18, 2024 at 06:56:09PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 18, 2024 at 6:06 PM Aren <aren@peacevolution.org> wrote:
-> > On Mon, Apr 15, 2024 at 05:04:53PM +0300, Andy Shevchenko wrote:
-> > > On Sun, Apr 14, 2024 at 8:57 PM Aren Moynihan <aren@peacevolution.org> wrote:
-> 
-> ...
-> 
-> > > >         stk3310_set_state(iio_priv(indio_dev), STK3310_STATE_STANDBY);
-> > > > +       if (data->vdd_reg)
-> > > > +               regulator_disable(data->vdd_reg);
-> > >
-> > > I forgot to check the order of freeing resources, be sure you have no
-> > > devm_*() releases happening before this call.
-> >
-> > If I understand what you're saying, this should be fine. The driver just
-> > uses devm to clean up acquired resources after remove is called. Or am I
-> > missing something and resources could be freed before calling
-> > stk3310_remove?
-> 
-> I'm not objecting to that. The point here is that the resources should
-> be freed in the reversed order. devm-allocated resources are deferred
-> to be freed after the explicit driver ->remove() callback. At the end
-> it should not interleave with each other, i.o.w. it should be
-> probe: devm followed by non-devm
-> remove: non-devm only.
+Hello,
 
-I think what you're describing is already the case, with the exception
-of parts of the probe function not changed in this patch mixing
-acquiring resources through devm with configuring the device.
+The QDMA subsystem is used in conjunction with the PCI Express IP block
+to provide high performance data transfer between host memory and the
+card's DMA subsystem.
 
-I hope I'm not being dense, thanks for the clarification
- - Aren
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
+
+Comparing to AMD/Xilinx XDMA subsystem,
+    https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
+the QDMA subsystem is a queue based, configurable scatter-gather DMA
+implementation which provides thousands of queues, support for multiple
+physical/virtual functions with single-root I/O virtualization (SR-IOV),
+and advanced interrupt support. In this mode the IP provides AXI4-MM and
+AXI4-Stream user interfaces which may be configured on a per-queue basis.
+
+The QDMA has been used for Xilinx Alveo PCIe devices.
+    https://www.xilinx.com/applications/data-center/v70.html
+
+This patch series is to provide the platform driver for AMD QDMA subsystem
+to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
+and SR-IOV, will be supported by future patches.
+
+The device driver for any FPGA based PCIe device which leverages QDMA can
+call the standard dmaengine APIs to discover and use the QDMA subsystem
+without duplicating the QDMA driver code in its own driver.
+
+Changes since v11:
+- Removed metadata callback and added device_config callback
+
+Changes since v10:
+- Fixed Copyright
+
+Changes since v9:
+- Merge 2 patches into 1 patch
+
+Changes since v8:
+- Replaced dma_alloc_coherent() with dmam_alloc_coherent()
+
+Changes since v7:
+- Fixed smatch warnings
+
+Changes since v6:
+- Added a patch to create amd/ and empty Kconfig/Makefile for AMD drivers
+- Moved source code under amd/qdma/
+- Minor changes for code review comments
+
+Changes since v5:
+- Add more in patch description.
+
+Changes since v4:
+- Convert to use platform driver callback .remove_new()
+
+Changes since v3:
+- Minor changes in Kconfig description.
+
+Changes since v2:
+- A minor change from code review comments.
+
+Changes since v1:
+- Minor changes from code review comments.
+- Fixed kernel robot warning.
+
+Nishad Saraf (1):
+  dmaengine: amd: qdma: Add AMD QDMA driver
+
+ MAINTAINERS                            |    8 +
+ drivers/dma/Kconfig                    |    2 +
+ drivers/dma/Makefile                   |    1 +
+ drivers/dma/amd/Kconfig                |   14 +
+ drivers/dma/amd/Makefile               |    3 +
+ drivers/dma/amd/qdma/Makefile          |    5 +
+ drivers/dma/amd/qdma/qdma-comm-regs.c  |   64 ++
+ drivers/dma/amd/qdma/qdma.c            | 1143 ++++++++++++++++++++++++
+ drivers/dma/amd/qdma/qdma.h            |  266 ++++++
+ include/linux/platform_data/amd_qdma.h |   36 +
+ 10 files changed, 1542 insertions(+)
+ create mode 100644 drivers/dma/amd/Kconfig
+ create mode 100644 drivers/dma/amd/Makefile
+ create mode 100644 drivers/dma/amd/qdma/Makefile
+ create mode 100644 drivers/dma/amd/qdma/qdma-comm-regs.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.c
+ create mode 100644 drivers/dma/amd/qdma/qdma.h
+ create mode 100644 include/linux/platform_data/amd_qdma.h
+
+-- 
+2.34.1
+
