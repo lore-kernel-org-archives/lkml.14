@@ -1,216 +1,128 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574DA53AC
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5959E29A9;
+	Thu, 18 Apr 2024 02:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713406587; cv=none; b=X+dYzjVfI2LvvIOhQPqRNDRjoaH4oCnb7uJb97VJncy5Gn1gm35eq83EwW+gSfiJGW/VJE/nODSyIHv/YUMeJ2dSYsU9mYxmGtVL+x2Q5jUsYQwnYqlW6fDHbzfYno4eLo493KZy61xxrXbsnyMSMQpC8gYkFgqz6US2ldO3Ru8=
+	t=1713406719; cv=none; b=nqPX+SKRFexhuSFDOfQxzX5nHrtLYlCwLFOdwaju/yxI7YHfk2bjRerK5cUGgCEd7ktoXQSirmhj/rSYpWyvAi7BtA0CbkkqnYpHpW6QP4fvaM+rw9tCNNfpDx4hrTh2d8v6CmL29siNBOxbRppBuCQuALwm4ohe9taA0qt9rcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713406587; c=relaxed/simple;
-	bh=om5S56drMap1VIxWGUiL99nWRa3VfL3sZ1hI3fORSts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sWNvQ6zRl8mkJxeL9h6mHnQhYO1uollpqG6TN5pUp/GbZXChXKmwWG5aKX6rpL41p8VU5bMiGrZuG+Gq1uF4LqBadRGQH2G11KX/I7iLUF4xF5nVV+pBbP5zhpH6GCm33jpvHYFWl8QT/CLw5F7uzrxv7neL49rRUJPq+wtSXwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rTh0DBgu; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713406719; c=relaxed/simple;
+	bh=LdBOiQwvjg5Kp+MeXZph3ue8qXhzEm0I8QJrxpgzuGs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fKChnRH37Jf8ZQzKYto4H0ev9u18BYx9eaVejeuRZJvsamoyCvQygExz0je09fHadQv0BOfkFOvT98y4Zm+ocO2KZwquPXEDAVHW9QzwACtNKZvUktnXl90mTs0Q7QwF98DAphFBVwr5Z1oa04R1ua4+H/SgySKZ7bz+tagF0eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FpNPlP36; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rTh0DBgu"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713406581; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=TM7yh3Pc+NlyrCnP/xTpDY59CYpvgC4vK6lCHL3DuuQ=;
-	b=rTh0DBguVLd8j+ibpuK9B1l8/MqCHrh58g9GVNgsuHmAo41LpwnlUFedXZMyOGWctjYBqws1RaEJDzwDMDae2Mg0Z1xW7LkFGDoZxRpeMfnstufAWdUge4xs6YTuOv4NSbxGVaeU7GgswyyEiNMb8heyC+yd4YPFo9OoEvJGIAs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W4mrYNk_1713406579;
-Received: from 30.221.145.60(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W4mrYNk_1713406579)
-          by smtp.aliyun-inc.com;
-          Thu, 18 Apr 2024 10:16:21 +0800
-Message-ID: <71e66b02-9c2b-4981-83e1-8af72d6c0975@linux.alibaba.com>
-Date: Thu, 18 Apr 2024 10:16:18 +0800
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FpNPlP36"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HM4eYX005387;
+	Thu, 18 Apr 2024 02:18:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=hNrEjDB9bjRSHaUcmPAg94SOw3Fy9F6a5F/ZJLVVE+4=;
+ b=FpNPlP36jEI4gOopMjgC1HzMKrvNc1k2uMYdjbg5FzGW5pjryWvsY9F7BzlK2kO9eYNM
+ Zi27ClStCiRtkZdDTeoN873eWWheeOT16UPvlpBlqzjx1ZXwk7hMeUzkl0iYcITwj8EF
+ 0qO3sVNyjgAnFTF7aAbJNCpV4f5+Gin5lMT9bcocKLYUOBUs4drZeN6Q/Eu1AnGSk8z4
+ QaPl+cqnZkRKqGaAGWUXXsqJjW2ggC8Oj34lBbMoy86ObnwAphccW8nMELLP6++xPuXE
+ WZ4u8TTo8wrWq6yLf2PzN5OyXydW/Uqp+uyzOYQLnK10KnaQMV9fq1xeAySxW3C8PV7E 4Q== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfhxbs66j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Apr 2024 02:18:31 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43I04cYt029294;
+	Thu, 18 Apr 2024 02:18:30 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xfgg9qa20-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Apr 2024 02:18:30 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43I2ITLo012052;
+	Thu, 18 Apr 2024 02:18:30 GMT
+Received: from alaljime-dev-e4flex-vm.osdevelopmeniad.oraclevcn.com (alaljime-dev-e4flex-vm.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.249.106])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xfgg9q9y8-2;
+	Thu, 18 Apr 2024 02:18:30 +0000
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+To: kvm@vger.kernel.org, seanjc@google.com
+Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+        joao.m.martins@oracle.com, boris.ostrovsky@oracle.com,
+        suravee.suthikulpanit@amd.com, mlevitsk@redhat.com,
+        alejandro.j.jimenez@oracle.com
+Subject: [PATCH v2 1/2] KVM: x86: Only set APICV_INHIBIT_REASON_ABSENT if APICv is enabled
+Date: Thu, 18 Apr 2024 02:18:22 +0000
+Message-Id: <20240418021823.1275276-2-alejandro.j.jimenez@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
+References: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: reliably distinguish block based and fscache
- mode
-To: Baokun Li <libaokun1@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
- viro@zeniv.linux.org.uk, brauner@kernel.org, linux-kernel@vger.kernel.org,
- yangerkun@huawei.com, houtao1@huawei.com
-References: <20240417065513.3409744-1-libaokun1@huawei.com>
-Content-Language: en-US
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20240417065513.3409744-1-libaokun1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_01,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404180015
+X-Proofpoint-ORIG-GUID: HVQxBm7xcUsyr1U4AaL_Ee7-llFMD3X8
+X-Proofpoint-GUID: HVQxBm7xcUsyr1U4AaL_Ee7-llFMD3X8
 
-Hi Baokun,
+Use the APICv enablement status to determine if APICV_INHIBIT_REASON_ABSENT
+needs to be set, instead of unconditionally setting the reason during
+initialization.
 
-Thanks for catching this and move forward fixing this!
+Specifically, in cases where AVIC is disabled via module parameter or lack
+of hardware support, unconditionally setting an inhibit reason due to the
+absence of an in-kernel local APIC can lead to a scenario where the reason
+incorrectly remains set after a local APIC has been created by either
+KVM_CREATE_IRQCHIP or the enabling of KVM_CAP_IRQCHIP_SPLIT. This is
+because the helpers in charge of removing the inhibit return early if
+enable_apicv is not true, and therefore the bit remains set.
 
+This leads to confusion as to the cause why APICv is not active, since an
+incorrect reason will be reported by tracepoints and/or a debugging tool
+that examines the currently set inhibit reasons.
 
-On 4/17/24 2:55 PM, Baokun Li wrote:
-> When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
-> been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
-> be mistaken for fscache mode, and then attempt to free an anon_dev that has
-> never been allocated, triggering the following warning:
-> 
-> ============================================
-> ida_free called for id=0 which is not allocated.
-> WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
-> Modules linked in:
-> CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
-> RIP: 0010:ida_free+0x134/0x140
-> Call Trace:
->  <TASK>
->  erofs_kill_sb+0x81/0x90
->  deactivate_locked_super+0x35/0x80
->  get_tree_bdev+0x136/0x1e0
->  vfs_get_tree+0x2c/0xf0
->  do_new_mount+0x190/0x2f0
->  [...]
-> ============================================
-> 
-> Instead of allocating the erofs_sb_info in fill_super() allocate it
-> during erofs_get_tree() and ensure that erofs can always have the info
-> available during erofs_kill_sb().
+Fixes: ef8b4b720368 ("KVM: ensure APICv is considered inactive if there is no APIC")
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+---
+ arch/x86/kvm/x86.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-
-I'm not sure if allocating erofs_sb_info in erofs_init_fs_context() will
-be better, as I see some filesystems (e.g. autofs) do this way.  Maybe
-another potential advantage of doing this way is that erofs_fs_context
-is not needed anymore and we can use sbi directly.
-
-
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> ---
-> Changes since v1:
->   Allocate and initialise fc->s_fs_info in erofs_fc_get_tree() instead of
->   modifying fc->sb_flags.
-> 
-> V1: https://lore.kernel.org/r/20240415121746.1207242-1-libaokun1@huawei.com/
-> 
->  fs/erofs/super.c | 51 ++++++++++++++++++++++++++----------------------
->  1 file changed, 28 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index b21bd8f78dc1..4104280be2ea 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -581,8 +581,7 @@ static const struct export_operations erofs_export_ops = {
->  static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  {
->  	struct inode *inode;
-> -	struct erofs_sb_info *sbi;
-> -	struct erofs_fs_context *ctx = fc->fs_private;
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
->  	int err;
->  
->  	sb->s_magic = EROFS_SUPER_MAGIC;
-> @@ -590,19 +589,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  	sb->s_maxbytes = MAX_LFS_FILESIZE;
->  	sb->s_op = &erofs_sops;
->  
-> -	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> -	if (!sbi)
-> -		return -ENOMEM;
-> -
-> -	sb->s_fs_info = sbi;
-> -	sbi->opt = ctx->opt;
-> -	sbi->devs = ctx->devs;
-> -	ctx->devs = NULL;
-> -	sbi->fsid = ctx->fsid;
-> -	ctx->fsid = NULL;
-> -	sbi->domain_id = ctx->domain_id;
-> -	ctx->domain_id = NULL;
-> -
->  	sbi->blkszbits = PAGE_SHIFT;
->  	if (erofs_is_fscache_mode(sb)) {
->  		sb->s_blocksize = PAGE_SIZE;
-> @@ -704,11 +690,32 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->  	return 0;
->  }
->  
-> -static int erofs_fc_get_tree(struct fs_context *fc)
-> +static void erofs_ctx_to_info(struct fs_context *fc)
->  {
->  	struct erofs_fs_context *ctx = fc->fs_private;
-> +	struct erofs_sb_info *sbi = fc->s_fs_info;
-> +
-> +	sbi->opt = ctx->opt;
-> +	sbi->devs = ctx->devs;
-> +	ctx->devs = NULL;
-> +	sbi->fsid = ctx->fsid;
-> +	ctx->fsid = NULL;
-> +	sbi->domain_id = ctx->domain_id;
-> +	ctx->domain_id = NULL;
-> +}
-
-I'm not sure if abstracting this logic into a seperate helper really
-helps understanding the code as the logic itself is quite simple and
-easy to be understood. Usually it's a hint of over-abstraction when a
-simple helper has only one caller.
-
-
->  
-> -	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
-> +static int erofs_fc_get_tree(struct fs_context *fc)
-> +{
-> +	struct erofs_sb_info *sbi;
-> +
-> +	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> +	if (!sbi)
-> +		return -ENOMEM;
-> +
-> +	fc->s_fs_info = sbi;
-> +	erofs_ctx_to_info(fc);
-> +
-> +	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
->  		return get_tree_nodev(fc, erofs_fc_fill_super);
->  
->  	return get_tree_bdev(fc, erofs_fc_fill_super);
-> @@ -767,6 +774,7 @@ static void erofs_fc_free(struct fs_context *fc)
->  	kfree(ctx->fsid);
->  	kfree(ctx->domain_id);
->  	kfree(ctx);
-> +	kfree(fc->s_fs_info);
->  }
->  
->  static const struct fs_context_operations erofs_context_ops = {
-> @@ -783,6 +791,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
->  	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
->  	if (!ctx)
->  		return -ENOMEM;
-> +
->  	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
->  	if (!ctx->devs) {
->  		kfree(ctx);
-> @@ -799,17 +808,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
->  
->  static void erofs_kill_sb(struct super_block *sb)
->  {
-> -	struct erofs_sb_info *sbi;
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
->  
-> -	if (erofs_is_fscache_mode(sb))
-> +	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
->  		kill_anon_super(sb);
->  	else
->  		kill_block_super(sb);
->  
-> -	sbi = EROFS_SB(sb);
-> -	if (!sbi)
-> -		return;
-> -
->  	erofs_free_dev_context(sbi->devs);
->  	fs_put_dax(sbi->dax_dev, NULL);
->  	erofs_fscache_unregister_fs(sb);
-
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 26288ca05364..09052ff5a9a0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9995,15 +9995,14 @@ static void set_or_clear_apicv_inhibit(unsigned long *inhibits,
+ 
+ static void kvm_apicv_init(struct kvm *kvm)
+ {
+-	unsigned long *inhibits = &kvm->arch.apicv_inhibit_reasons;
++	enum kvm_apicv_inhibit reason = enable_apicv ?
++						APICV_INHIBIT_REASON_ABSENT :
++						APICV_INHIBIT_REASON_DISABLE;
+ 
+-	init_rwsem(&kvm->arch.apicv_update_lock);
+-
+-	set_or_clear_apicv_inhibit(inhibits, APICV_INHIBIT_REASON_ABSENT, true);
++	set_or_clear_apicv_inhibit(&kvm->arch.apicv_inhibit_reasons, reason,
++				   true);
+ 
+-	if (!enable_apicv)
+-		set_or_clear_apicv_inhibit(inhibits,
+-					   APICV_INHIBIT_REASON_DISABLE, true);
++	init_rwsem(&kvm->arch.apicv_update_lock);
+ }
+ 
+ static void kvm_sched_yield(struct kvm_vcpu *vcpu, unsigned long dest_id)
 -- 
-Thanks,
-Jingbo
+2.39.3
+
