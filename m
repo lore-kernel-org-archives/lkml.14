@@ -1,382 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF4B15EFD2;
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458A815EFCD;
 	Thu, 18 Apr 2024 09:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713432222; cv=none; b=QhabjB5Eag/ajhSeurADfUxk4K/8b7oOFz+4jpnra6Avmk4xPs033c8swLxW27HJWjT1kdGs1Eo9ZphcdM5lVxDJQgtB+wBxG9Rr++UgYQtsD4hjCYYWoAemKsw9o88BwexUIyMtEBlOC0ocm9tk7OEZpLABJonmJ1oVideYZEo=
+	t=1713432223; cv=none; b=qj1/k8b6PVuiGGojAj+C+i29icOJ6AFgIoFQi/YyPWPAPT2drF4aw6fCUQ5m86sRgRpgT2K/bsaLsvrbinw+1BbcY1sBCWFKP6xtm2ykO9PcBIewc1ADsXZgwpA5XPo2QDtElTeTHA8erwQmRqbYXghcunmLrs5n5kgJQvxfMuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713432222; c=relaxed/simple;
-	bh=OH+74VFa5Lmuf9FRrVDGvrVSNIzV/ol9B/HVoqNNo/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AYQ9BO3UC0CpWKu/pJZFf60mY34vp3tQ4m+GJwcaLjq+VcHls243uSo/WhRMiJ8rO+sFP3evYVBo4kgTKuRDj+OCDHr3jAG9nZaebDDOObxxliJK8rjMXPY4ggq969J8hfVygjrjDffAHQbTckuFO7ClxVVsg+5cyxv9jFtHeNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5122A339;
-	Thu, 18 Apr 2024 02:24:07 -0700 (PDT)
-Received: from [10.57.84.16] (unknown [10.57.84.16])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250513F64C;
-	Thu, 18 Apr 2024 02:23:37 -0700 (PDT)
-Message-ID: <70c38786-445c-4818-b04d-0ff5a7cc48bf@arm.com>
-Date: Thu, 18 Apr 2024 10:23:35 +0100
+	s=arc-20240116; t=1713432223; c=relaxed/simple;
+	bh=Fac+43+ZkiTIwPw+5Eung8Nlq978sDrkCo5KeRfxUBI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pk4XNlc8MV03FCQwPUmYFZCyx7J7Shmm+REXbEoBTQs/erZPv+ObbeBZiOHiUjsn3RW3LPbrm7xhpS+46K/oLpDmyqv1x3m1Yf5OhOQfKMJ6MlIVHXZAfL7IQACRX7MZVOGWS8SBxnY1VRCPwDk9kNm3cMjFoClkcpL/IoSy0Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NiL2VV3a; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NiL2VV3a"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43I3kDao020377;
+	Thu, 18 Apr 2024 09:23:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=SilJgGv
+	0S/cTHjIt82kNZFIHhQaYicUU3VKMfUPu6X4=; b=NiL2VV3aw73r8jbLdtG3VcI
+	ryYNZSLQ6Dk0eltAVeISrdZUCQvWR6tp/tuF2WxjQOaZ2OWK6/q++yZNzFkOjtMP
+	TV+fdfHDoSpWgZqC1jrSZN/KgSQsZ+dLh51TMmqCBEpKypNq5QmMqTZPcPJaQwCW
+	CwNSJs4Abs0E1CYYC3mdzNscR/kyo/qjYWtRK0ryiZJpgG7aS0/5R4QrNuScF4IA
+	USj1RqwHvE8OTDaXops29OyvYbAuF5j1SSsF1+01U+cmrk+mqKVn7k6EpPEBNNKo
+	MIJ82vJxgEPWJk9DnTiIXbxyycxLV/tMgXUFdb25NqhtMNkFQs+4HBT3Eu4eR5A=
+	=
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xju74rs8j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 09:23:35 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43I9NYBw024740
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 09:23:34 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 18 Apr 2024 02:23:29 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
+        <quic_varada@quicinc.com>, <dmitry.baryshkov@linaro.org>,
+        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [PATCH v9 0/6] Add interconnect driver for IPQ9574 SoC
+Date: Thu, 18 Apr 2024 14:52:59 +0530
+Message-ID: <20240418092305.2337429-1-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/43] arm64: RME: Allocate/free RECs to match vCPUs
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
- <20240412084309.1733783-15-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240412084309.1733783-15-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aenDTy-QT9pWuzS8t7P8dq6frnwxg5Nv
+X-Proofpoint-ORIG-GUID: aenDTy-QT9pWuzS8t7P8dq6frnwxg5Nv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_08,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=970
+ mlxscore=0 suspectscore=0 spamscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404180065
 
-On 12/04/2024 09:42, Steven Price wrote:
-> The RMM maintains a data structure known as the Realm Execution Context
-> (or REC). It is similar to struct kvm_vcpu and tracks the state of the
-> virtual CPUs. KVM must delegate memory and request the structures are
-> created when vCPUs are created, and suitably tear down on destruction.
-> 
+MSM platforms manage NoC related clocks and scaling from RPM.
+However, in IPQ SoCs, RPM is not involved in managing NoC
+related clocks and there is no NoC scaling.
 
-May be a good idea to add a note about the AUX granules, to help the
-reader with the context.
+However, there is a requirement to enable some NoC interface
+clocks for the accessing the peripherals present in the
+system. Hence add a minimalistic interconnect driver that
+establishes a path from the processor/memory to those peripherals
+and vice versa.
 
-RECs must be supplied with additional pages (AUX Granules) for storing
-the larger registers state (e.g., SVE). The number of AUX granules for
-a REC depends on the "parameters" with which the Realm was created.
+---
+v9:	Squash icc-clk driver change and cbf-msm8996 change
+	Remove HWS_DATA macro
+v8:	Change icc-clk driver to take master and slave ids instead
+	of auto generating
+	Remove ICC_xxx defines from dt-bindings header
+	Define MASTER/SLAVE_xxx macros from 0 .. n
 
-Also the register states for the REC cannot be modified by KVM after the
-REC is created.
+v7:	Fix macro names in dt-bindings header
+	Do clock get in icc driver
 
+v6:	Removed 'Reviewed-by: Krzysztof' from dt-bindings patch
+	Remove clock get from ICC driver as suggested by Stephen Boyd
+	so that the actual peripheral can do the clock get
+	first_id -> icc_first_node_id
+	Remove tristate from INTERCONNECT_CLK
+v5:
+	Split gcc-ipq9574.c and common.c changes into separate patches
+	Introduce devm_icc_clk_register
+	Fix error handling
+v4:
+gcc-ipq9574.c
+	Use clk_hw instead of indices
+common.c
+	Do icc register in qcom_cc_probe() call stream
+common.h
+	Add icc clock info to qcom_cc_desc structure
 
+v3:
+qcom,ipq9574.h
+	Move 'first id' define to clock driver
+gcc-ipq9574.c:
+	Use indexed identifiers here to avoid confusion
+	Fix error messages and move code to common.c as it can be
+	shared with future SoCs
 
+v2:
+qcom,ipq9574.h
+	Fix license identifier
+	Rename macros
+qcom,ipq9574-gcc.yaml
+	Include interconnect-cells
+gcc-ipq9574.c
+	Update commit log
+	Remove IS_ENABLED(CONFIG_INTERCONNECT) and auto select it from Kconfig
+ipq9574.dtsi
+	Moved to separate patch
+	Include interconnect-cells to clock controller node
+drivers/clk/qcom/Kconfig:
+	Auto select CONFIG_INTERCONNECT & CONFIG_INTERCONNECT_CLK
 
-> See Realm Management Monitor specification (DEN0137) for more information:
-> https://developer.arm.com/documentation/den0137/
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/include/asm/kvm_emulate.h |   2 +
->   arch/arm64/include/asm/kvm_host.h    |   3 +
->   arch/arm64/include/asm/kvm_rme.h     |  18 ++++
->   arch/arm64/kvm/arm.c                 |   2 +
->   arch/arm64/kvm/reset.c               |  11 ++
->   arch/arm64/kvm/rme.c                 | 150 +++++++++++++++++++++++++++
->   6 files changed, 186 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-> index c606316f4729..2209a7c6267f 100644
-> --- a/arch/arm64/include/asm/kvm_emulate.h
-> +++ b/arch/arm64/include/asm/kvm_emulate.h
-> @@ -631,6 +631,8 @@ static inline bool kvm_realm_is_created(struct kvm *kvm)
->   
->   static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
->   {
-> +	if (static_branch_unlikely(&kvm_rme_is_available))
-> +		return vcpu->arch.rec.mpidr != INVALID_HWID;
->   	return false;
->   }
->   
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 63b68b85db3f..f7ac40ce0caf 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -694,6 +694,9 @@ struct kvm_vcpu_arch {
->   
->   	/* Per-vcpu CCSIDR override or NULL */
->   	u32 *ccsidr;
-> +
-> +	/* Realm meta data */
-> +	struct realm_rec rec;
->   };
->   
->   /*
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index 4ab5cb5e91b3..915e76068b00 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -6,6 +6,7 @@
->   #ifndef __ASM_KVM_RME_H
->   #define __ASM_KVM_RME_H
->   
-> +#include <asm/rmi_smc.h>
->   #include <uapi/linux/kvm.h>
->   
->   /**
-> @@ -70,6 +71,21 @@ struct realm {
->   	unsigned int ia_bits;
->   };
->   
-> +/**
-> + * struct realm_rec - Additional per VCPU data for a Realm
-> + *
-> + * @mpidr: MPIDR (Multiprocessor Affinity Register) value to identify this VCPU
-> + * @rec_page: Kernel VA of the RMM's private page for this REC
-> + * @aux_pages: Additional pages private to the RMM for this REC
-> + * @run: Kernel VA of the RmiRecRun structure shared with the RMM
-> + */
-> +struct realm_rec {
-> +	unsigned long mpidr;
-> +	void *rec_page;
-> +	struct page *aux_pages[REC_PARAMS_AUX_GRANULES];
-> +	struct rec_run *run;
-> +};
-> +
->   int kvm_init_rme(void);
->   u32 kvm_realm_ipa_limit(void);
->   
-> @@ -77,6 +93,8 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
->   int kvm_init_realm_vm(struct kvm *kvm);
->   void kvm_destroy_realm(struct kvm *kvm);
->   void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
-> +int kvm_create_rec(struct kvm_vcpu *vcpu);
-> +void kvm_destroy_rec(struct kvm_vcpu *vcpu);
->   
->   #define RME_RTT_BLOCK_LEVEL	2
->   #define RME_RTT_MAX_LEVEL	3
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index c5a6139d5454..d70c511e16a0 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -432,6 +432,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->   	/* Force users to call KVM_ARM_VCPU_INIT */
->   	vcpu_clear_flag(vcpu, VCPU_INITIALIZED);
->   
-> +	vcpu->arch.rec.mpidr = INVALID_HWID;
-> +
->   	vcpu->arch.mmu_page_cache.gfp_zero = __GFP_ZERO;
->   
->   	/*
-> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-> index 68d1d05672bd..6e6eb4a15095 100644
-> --- a/arch/arm64/kvm/reset.c
-> +++ b/arch/arm64/kvm/reset.c
-> @@ -134,6 +134,11 @@ int kvm_arm_vcpu_finalize(struct kvm_vcpu *vcpu, int feature)
->   			return -EPERM;
->   
->   		return kvm_vcpu_finalize_sve(vcpu);
-> +	case KVM_ARM_VCPU_REC:
-> +		if (!kvm_is_realm(vcpu->kvm))
-> +			return -EINVAL;
-> +
-> +		return kvm_create_rec(vcpu);
->   	}
->   
->   	return -EINVAL;
-> @@ -144,6 +149,11 @@ bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu)
->   	if (vcpu_has_sve(vcpu) && !kvm_arm_vcpu_sve_finalized(vcpu))
->   		return false;
->   
-> +	if (kvm_is_realm(vcpu->kvm) &&
-> +	    !(vcpu_is_rec(vcpu) &&
-> +	      READ_ONCE(vcpu->kvm->arch.realm.state) == REALM_STATE_ACTIVE))
-> +		return false;
-> +
->   	return true;
->   }
->   
-> @@ -157,6 +167,7 @@ void kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu)
->   		kvm_unshare_hyp(sve_state, sve_state + vcpu_sve_state_size(vcpu));
->   	kfree(sve_state);
->   	kfree(vcpu->arch.ccsidr);
-> +	kvm_destroy_rec(vcpu);
->   }
->   
->   static void kvm_vcpu_reset_sve(struct kvm_vcpu *vcpu)
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index 09b59bcad8b6..629a095bea61 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -474,6 +474,156 @@ void kvm_destroy_realm(struct kvm *kvm)
->   	kvm_free_stage2_pgd(&kvm->arch.mmu);
->   }
->   
-> +static void free_rec_aux(struct page **aux_pages,
-> +			 unsigned int num_aux)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < num_aux; i++) {
-> +		phys_addr_t aux_page_phys = page_to_phys(aux_pages[i]);
-> +
-> +		/* If the undelegate fails then leak the page */
-> +		if (WARN_ON(rmi_granule_undelegate(aux_page_phys)))
-> +			continue;
-> +
-> +		__free_page(aux_pages[i]);
-> +	}
-> +}
-> +
-> +static int alloc_rec_aux(struct page **aux_pages,
-> +			 u64 *aux_phys_pages,
-> +			 unsigned int num_aux)
-> +{
-> +	int ret;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < num_aux; i++) {
-> +		struct page *aux_page;
-> +		phys_addr_t aux_page_phys;
-> +
-> +		aux_page = alloc_page(GFP_KERNEL);
-> +		if (!aux_page) {
-> +			ret = -ENOMEM;
-> +			goto out_err;
-> +		}
-> +		aux_page_phys = page_to_phys(aux_page);
-> +		if (rmi_granule_delegate(aux_page_phys)) {
-> +			__free_page(aux_page);
-> +			ret = -ENXIO;
-> +			goto out_err;
-> +		}
-> +		aux_pages[i] = aux_page;
-> +		aux_phys_pages[i] = aux_page_phys;
-> +	}
-> +
-> +	return 0;
-> +out_err:
-> +	free_rec_aux(aux_pages, i);
-> +	return ret;
-> +}
-> +
-> +int kvm_create_rec(struct kvm_vcpu *vcpu)
-> +{
-> +	struct user_pt_regs *vcpu_regs = vcpu_gp_regs(vcpu);
-> +	unsigned long mpidr = kvm_vcpu_get_mpidr_aff(vcpu);
-> +	struct realm *realm = &vcpu->kvm->arch.realm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long rec_page_phys;
-> +	struct rec_params *params;
-> +	int r, i;
-> +
-> +	if (kvm_realm_state(vcpu->kvm) != REALM_STATE_NEW)
-> +		return -ENOENT;
-> +
-> +	/*
-> +	 * The RMM will report PSCI v1.0 to Realms and the KVM_ARM_VCPU_PSCI_0_2
-> +	 * flag covers v0.2 and onwards.
-> +	 */
-> +	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_PSCI_0_2))
-> +		return -EINVAL;
-> +
-> +	BUILD_BUG_ON(sizeof(*params) > PAGE_SIZE);
-> +	BUILD_BUG_ON(sizeof(*rec->run) > PAGE_SIZE);
-> +
-> +	params = (struct rec_params *)get_zeroed_page(GFP_KERNEL);
-> +	rec->rec_page = (void *)__get_free_page(GFP_KERNEL);
-> +	rec->run = (void *)get_zeroed_page(GFP_KERNEL);
-> +	if (!params || !rec->rec_page || !rec->run) {
-> +		r = -ENOMEM;
-> +		goto out_free_pages;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(params->gprs); i++)
-> +		params->gprs[i] = vcpu_regs->regs[i];
-> +
-> +	params->pc = vcpu_regs->pc;
-> +
-> +	if (vcpu->vcpu_id == 0)
-> +		params->flags |= REC_PARAMS_FLAG_RUNNABLE;
-> +
-> +	rec_page_phys = virt_to_phys(rec->rec_page);
-> +
-> +	if (rmi_granule_delegate(rec_page_phys)) {
-> +		r = -ENXIO;
-> +		goto out_free_pages;
-> +	}
-> +
-> +	r = alloc_rec_aux(rec->aux_pages, params->aux, realm->num_aux);
-> +	if (r)
-> +		goto out_undelegate_rmm_rec;
-> +
-> +	params->num_rec_aux = realm->num_aux;
-> +	params->mpidr = mpidr;
-> +
-> +	if (rmi_rec_create(virt_to_phys(realm->rd),
-> +			   rec_page_phys,
-> +			   virt_to_phys(params))) {
-> +		r = -ENXIO;
-> +		goto out_free_rec_aux;
-> +	}
-> +
-> +	rec->mpidr = mpidr;
-> +
-> +	free_page((unsigned long)params);
-> +	return 0;
-> +
-> +out_free_rec_aux:
-> +	free_rec_aux(rec->aux_pages, realm->num_aux);
-> +out_undelegate_rmm_rec:
-> +	if (WARN_ON(rmi_granule_undelegate(rec_page_phys)))
-> +		rec->rec_page = NULL;
-> +out_free_pages:
-> +	free_page((unsigned long)rec->run);
-> +	free_page((unsigned long)rec->rec_page);
-> +	free_page((unsigned long)params);
-> +	return r;
-> +}
-> +
-> +void kvm_destroy_rec(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm *realm = &vcpu->kvm->arch.realm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long rec_page_phys;
-> +
-> +	if (!vcpu_is_rec(vcpu))
-> +		return;
-> +
-> +	rec_page_phys = virt_to_phys(rec->rec_page);
-> +
-> +	/* If the REC destroy fails, leak all pages relating to the REC */
+Varadarajan Narayanan (6):
+  interconnect: icc-clk: Allow user to specify master/slave ids
+  dt-bindings: interconnect: Add Qualcomm IPQ9574 support
+  interconnect: icc-clk: Add devm_icc_clk_register
+  clk: qcom: common: Add interconnect clocks support
+  clk: qcom: ipq9574: Use icc-clk for enabling NoC related clocks
+  arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
 
-minor nit: May be we could clarify the situation of AUX granules.
+ .../bindings/clock/qcom,ipq9574-gcc.yaml      |  3 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  2 +
+ drivers/clk/qcom/Kconfig                      |  2 +
+ drivers/clk/qcom/clk-cbf-8996.c               |  7 ++-
+ drivers/clk/qcom/common.c                     | 35 ++++++++++-
+ drivers/clk/qcom/common.h                     |  9 +++
+ drivers/clk/qcom/gcc-ipq9574.c                | 31 ++++++++++
+ drivers/interconnect/icc-clk.c                | 24 +++++++-
+ .../dt-bindings/interconnect/qcom,ipq9574.h   | 59 +++++++++++++++++++
+ include/linux/interconnect-clk.h              |  4 ++
+ 10 files changed, 171 insertions(+), 5 deletions(-)
+ create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
 
-	/*
-	 * We cannot reclaim the REC page and any AUX pages
-	 * until the REC is destroyed. So, if we fail to destroy
-	 * the REC, leak the REC and AUX pages.
-	 */
-> +	if (WARN_ON(rmi_rec_destroy(rec_page_phys)))
-> +		return;
-> +
-> +	free_rec_aux(rec->aux_pages, realm->num_aux);
-> +
-> +	/* If the undelegate fails then leak the REC page */
-> +	if (WARN_ON(rmi_granule_undelegate(rec_page_phys)))
-> +		return;
-> +
-> +	free_page((unsigned long)rec->rec_page);
-
-
-> +	free_page((unsigned long)rec->run);
-
-I think this can be freed irrespective of the delegated pages.
-So, may be we could do move it to the top.
-
-
-> +}
-> +
-
-Suzuki
-
-
->   int kvm_init_realm_vm(struct kvm *kvm)
->   {
->   	struct realm_params *params;
+-- 
+2.34.1
 
