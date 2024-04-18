@@ -1,274 +1,175 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2068.outbound.protection.outlook.com [40.107.20.68])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5D1635BB;
-	Thu, 18 Apr 2024 14:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448899; cv=fail; b=djsB8caJhVaxw6xsorZCP/tEaLAURpR4+rlmyA3GVmKCQjib9Bw7duPJoNhV0SwXGdX0CGARnmDmyyaGMmW/q+0/XvXpnaMsGWRMNlF/lhR6Mt8nlvAM50rU74I68qlL2qWtlk7DpJ0mIRCIDEoZmKZea1z2Dw/efDR0shJdNDw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448899; c=relaxed/simple;
-	bh=RHaIjnRFAZzW4+0EhN5cJNG95xS65VnruMOB1iCJUWU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=sJTABicLd07YcxKt2G1DSZzbsdoVEhwKvDbyio30WY0/XpaoEwilnx0FV5gjgMC7crot7eF1mdlPSuoNTcaFqTWvWWYOpq31epZCSBlPLLD2kHmR0GQXC1ObCmqKlhu1ccygPlKKhaJlopWMzO7Rxa0+9U+GsTaJzmlTkJF9Paw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=geRVJk7t; arc=fail smtp.client-ip=40.107.20.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="geRVJk7t"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OT1WXVw5ALlXRqEa84bFFojiPG5dR9JPQ8j7RwKdHXyg20MnrQvrv+7JZNtM2TytFNkxApIFrjCPIEhJF71Hav3pXNTr7fv6+/+98R0r/DkziBKGtk9qpBpwxuzHRbw+wCh4BLKJH3b6HPJnEstOrTEu0uNMb+fnWxM/4NTFO/EbXhfUxYB483LkdA/wzPWngY+voT+HANtYTWUrVi/XQvUBuvlrMai6TSIswWCwj/UpeBvsSr6M+wQysUhQMUJZCjso05eIboNHpvrLjiUGNfmgwNCPIK+5A5V/G0T28YEnTzOLN63HmRYQeQeHAwTSXe+ItDz2iSglPGT7hn7Tzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lpfg3g86U30WOag0s9btWQ57QAcyhFrJDXUYQicaCLQ=;
- b=C/4D8/Rik5YYx9m3PlKCfA5ClTCw9iypDdnKX9sN3crhcMQ4xWLUPOlf6gnn45C9KRAFhdir23dmR6z4pXEMRbMuSYj2rngW1QjE6nKJoMOuex2O7BVMgq95jHySUKpTIoDIKj3vkJVBL93UxOx75CmLj3NhNr1Gxum4fvQPgby46s83/Vcmyl2Ht93JYPEuuhrY52Pk37iWYTtBFaCl46vMz6i0ILik6DIhk3lMTW44jgYxO8A5YlAyu+gkdbPJHnrbsNK8YKYAi15u+W64fvQQ6dEqq+/YxvbVco+HLyK2tcF4Kp55gk7Oz68427S+VHg2ALtZXGzcI9fHXyGVlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=ffwll.ch smtp.mailfrom=axis.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=axis.com; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lpfg3g86U30WOag0s9btWQ57QAcyhFrJDXUYQicaCLQ=;
- b=geRVJk7tlWJec9m1AXXEoXwGmFstqK/CIt0P1eAiLHxcj152nyxhO9X57yvZ9acx/0CuTR56aNZXLgIrpSnwutdxU2Zgz8F7m/O+eGn3aeqQsuIrohe0qNtyoYyS3DhZVnnihs64eNG8wenWobdt6AIr6kHTVVBrozef4lsJNW8=
-Received: from DB7PR02CA0024.eurprd02.prod.outlook.com (2603:10a6:10:52::37)
- by DU0PR02MB8385.eurprd02.prod.outlook.com (2603:10a6:10:3b7::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Thu, 18 Apr
- 2024 14:01:31 +0000
-Received: from DB1PEPF000509E6.eurprd03.prod.outlook.com
- (2603:10a6:10:52:cafe::4f) by DB7PR02CA0024.outlook.office365.com
- (2603:10a6:10:52::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.23 via Frontend
- Transport; Thu, 18 Apr 2024 14:01:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509E6.mail.protection.outlook.com (10.167.242.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 14:01:30 +0000
-Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 18 Apr
- 2024 16:01:30 +0200
-Received: from se-mail02w.axis.com (10.20.40.8) by SE-MAILARCH01W.axis.com
- (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 18 Apr
- 2024 16:01:30 +0200
-Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
- (10.20.40.8) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Thu, 18 Apr 2024 16:01:30 +0200
-Received: from pc51235-2237.se.axis.com (pc51235-2237.se.axis.com [10.96.29.3])
-	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 30431315E;
-	Thu, 18 Apr 2024 16:01:30 +0200 (CEST)
-Received: by pc51235-2237.se.axis.com (Postfix, from userid 3319)
-	id 2B57E4027BC9; Thu, 18 Apr 2024 16:01:30 +0200 (CEST)
-From: Johan Adolfsson <johan.adolfsson@axis.com>
-Date: Thu, 18 Apr 2024 16:01:14 +0200
-Subject: [PATCH 1/2] drm/panel: panel-simple: Add generic panel-dsi driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1206C165FBA;
+	Thu, 18 Apr 2024 14:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713448922; cv=none; b=OzLxtYHIzxIDSS2+Q2erLtkUcOMSHirZPhqVD3Dn0Fyk00eSwBVRsmIYePLATJw+zbr9Vd0Y4U9OBrGgYmWlkDdseLNXnS0fqT5EjCP9yK1rCadBh7BeGxG4D+GcL6GHi2c3ZIj/P57dyazmBTen2+Pu8lMqt9/WKv3/BtHJzLc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713448922; c=relaxed/simple;
+	bh=17LJ8PPEslEeN+FJm+ML+5/gPpuIz6+G0l/XypqAI0M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s0xv1ccvpnyJeEz88nhMbvc+/JfhXCPi3jsmsCVgZCQJidrk8n3Yg3zuiM0pfaxokCGRnwCMd45PkdMo9CSKgvTcMxk1NOqG/WgrZ0En5/gMDf+Q5OIXc3EiESkY1F2oRGquT1cMbuUhQ0MWxTZSFA2lg64LY1rC/MFoHBFJABk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKztJ4X1Nz6K6Sx;
+	Thu, 18 Apr 2024 21:59:52 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 013D814038F;
+	Thu, 18 Apr 2024 22:01:56 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 15:01:55 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 15/16] arm64: document virtual CPU hotplug's expectations
+Date: Thu, 18 Apr 2024 14:54:11 +0100
+Message-ID: <20240418135412.14730-16-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240418-foo-fix-v1-1-461bcc8f5976@axis.com>
-References: <20240418-foo-fix-v1-0-461bcc8f5976@axis.com>
-In-Reply-To: <20240418-foo-fix-v1-0-461bcc8f5976@axis.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
-	<quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-CC: Johan Adolfsson <johan.adolfsson@axis.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <kernel@axis.com>
-X-Mailer: b4 0.13.0
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509E6:EE_|DU0PR02MB8385:EE_
-X-MS-Office365-Filtering-Correlation-Id: cae9f3d7-16ec-4f80-6715-08dc5fb00ca0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	e3b1T4VBXzwkCEDtp0+8/cCnXdDH5Jq6K43f2kyA/81u3amIal1tUAaUe+XgIDJWWVYCq0oTdil0fRIwzYv9ONFvGa+f/TBk6jMmPvDVCqOQugN9BZNxLpa3hJSdLoadOVC87IQYX2Hr4zxlVOfMhFj+Kd1hZXwQBKdeL63/KE+rSN36hAS6UAPta/krwu1K9XvAQ+3fmUi6KduE5UtpZDhfQsiP2YLTc+V3j3Amdoam0UfwhPD59VXOkxN2aUm7shfCqM5JLLQ9BD1m+PQch08m+FSUMJULyKdpAHEYhhR6EuOjh6FfbJh30/p5grroPyUZw00AqqX7zaqlFoGsNyOKWtuyieXAZ5jWPyjA6yuc9Utw5LWcpgPhlOTdoHZ1ipxNWGTLBIfnvbqVKjr8DQ3JKsJnuDx+Iuu4hurzgl3mb4vzDscfqhGeGLDwZzEFMF+zIeZOyPyYdBf+y+Iviny+0AluNbMuvZTGPhpL3YOxS0hf4utwPyr5Jd0gEYfG2Fn5Bb9eTawX0PH0qLwbr2ahQYKRhgBOgdODnwc8YLWuMZSEpM4DNr4JXSj4YLBmCUibj0Yfv+E9dUszkDCNqQ9Mw4K99wYJa6Qbne75Uefc8NogBeKAEUzON2MpFXk0kx4I895jAuejttEkvKNyBbB3alk6biKdxgE8clJGSCwbNeccWHZ+9t2C7/9/r+lEc2x/TNq5o6l8Lws7gpFUYILkgFx7bUl51aAAxl2B+kWQQ1X6n0YAzqaWTkxvncDtDvn6QfgNjRROfJJPRrLFFw==
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(82310400014)(36860700004)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 14:01:30.9708
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cae9f3d7-16ec-4f80-6715-08dc5fb00ca0
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509E6.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8385
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Add generic panel-dsi panel, similar to panel-dpi that can have it's
-timing, lanes and flags overridden by devicetree.
-Add some dev_err() and dev_warn() calls.
+From: James Morse <james.morse@arm.com>
 
-Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
+Add a description of physical and virtual CPU hotplug, explain the
+differences and elaborate on what is required in ACPI for a working
+virtual hotplug system.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 ---
- drivers/gpu/drm/panel/panel-simple.c | 76 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 3 deletions(-)
+v7: No change.
+---
+ Documentation/arch/arm64/cpu-hotplug.rst | 79 ++++++++++++++++++++++++
+ Documentation/arch/arm64/index.rst       |  1 +
+ 2 files changed, 80 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index d493ee735c73..3b812fb9ae9e 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -455,7 +455,9 @@ static const struct drm_panel_funcs panel_simple_funcs = {
- 	.get_timings = panel_simple_get_timings,
- };
- 
--static struct panel_desc panel_dpi;
-+static struct panel_desc panel_dpi = {
-+	.connector_type = DRM_MODE_CONNECTOR_DPI
-+};
- 
- static int panel_dpi_probe(struct device *dev,
- 			   struct panel_simple *panel)
-@@ -471,6 +473,8 @@ static int panel_dpi_probe(struct device *dev,
- 	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
- 	if (!desc)
- 		return -ENOMEM;
-+	if (panel->desc)
-+		*desc = *panel->desc;
- 
- 	timing = devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
- 	if (!timing)
-@@ -503,6 +507,20 @@ static int panel_dpi_probe(struct device *dev,
- 	return 0;
- }
- 
-+static int panel_dsi_probe(struct device *dev,
-+			   struct panel_simple *panel)
-+{
-+	int ret;
+diff --git a/Documentation/arch/arm64/cpu-hotplug.rst b/Documentation/arch/arm64/cpu-hotplug.rst
+new file mode 100644
+index 000000000000..76ba8d932c72
+--- /dev/null
++++ b/Documentation/arch/arm64/cpu-hotplug.rst
+@@ -0,0 +1,79 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. _cpuhp_index:
 +
-+	ret = panel_dpi_probe(dev, panel);
-+	if (panel->desc) {
-+		struct panel_desc *desc = (struct panel_desc *)panel->desc;
++====================
++CPU Hotplug and ACPI
++====================
 +
-+		desc->connector_type = DRM_MODE_CONNECTOR_DSI;
-+	}
-+	return ret;
-+}
++CPU hotplug in the arm64 world is commonly used to describe the kernel taking
++CPUs online/offline using PSCI. This document is about ACPI firmware allowing
++CPUs that were not available during boot to be added to the system later.
 +
- #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
- 	(to_check->field.typ >= bounds->field.min && \
- 	 to_check->field.typ <= bounds->field.max)
-@@ -533,11 +551,16 @@ static void panel_simple_parse_panel_timing_node(struct device *dev,
- 		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vactive) ||
- 		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vfront_porch) ||
- 		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vback_porch) ||
--		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vsync_len))
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vsync_len)) {
-+			dev_warn(dev, "timing bounds failed\n");
- 			continue;
-+		}
- 
--		if (ot->flags != dt->flags)
-+		/* Allow mismatch in flags for last entry */
-+		if (i + 1 < panel->desc->num_timings && ot->flags != dt->flags) {
-+			dev_warn(dev, "flags mismatch: ot %x vs dt %x\n", ot->flags, dt->flags);
- 			continue;
-+		}
- 
- 		videomode_from_timing(ot, &vm);
- 		drm_display_mode_from_videomode(&vm, &panel->override_mode);
-@@ -4752,6 +4775,39 @@ struct panel_desc_dsi {
- 	unsigned int lanes;
- };
- 
-+static const struct display_timing generic_800x480_timing = {
-+	.pixelclock = { 16400000, 864 * 490 * 60, (1920 + 512) * (1920 + 512) * 60 },
-+	.hactive = { 400, 800, 1920 },
-+	.hfront_porch = { 2, 16, 512 },
-+	.hback_porch = { 2, 16, 512 },
-+	.hsync_len = { 1, 10, 40 },
-+	.vactive = { 400, 480, 1920 },
-+	.vfront_porch = { 2, 5, 512 },
-+	.vback_porch = { 2, 5, 512 },
-+	.vsync_len = { 1, 10, 20 },
-+	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-+		 DISPLAY_FLAGS_SYNC_POSEDGE
-+};
++``possible`` and ``present`` refer to the state of the CPU as seen by linux.
 +
-+static struct panel_desc_dsi panel_dsi = {
-+	.desc = {
-+		.timings = &generic_800x480_timing,
-+		.num_timings = 1,
-+		.bpc = 8,
-+		.size = {
-+			.width = 152,
-+			.height = 91,
-+		},
-+		.connector_type = DRM_MODE_CONNECTOR_DSI,
-+	 },
-+	.flags = MIPI_DSI_MODE_VIDEO |
-+		 MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		 MIPI_DSI_MODE_VIDEO_HSE | /* Needed to generate Hsync End Short package */
-+		 MIPI_DSI_MODE_VIDEO_NO_HBP,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.lanes = 2,
-+};
 +
- static const struct drm_display_mode auo_b080uan01_mode = {
- 	.clock = 154500,
- 	.hdisplay = 1200,
-@@ -4976,6 +5032,9 @@ static const struct of_device_id dsi_of_match[] = {
- 	}, {
- 		.compatible = "osddisplays,osd101t2045-53ts",
- 		.data = &osd101t2045_53ts
-+	}, {
-+		.compatible = "panel-dsi",
-+		.data = &panel_dsi,
- 	}, {
- 		/* sentinel */
- 	}
-@@ -4992,17 +5051,28 @@ static int panel_simple_dsi_probe(struct mipi_dsi_device *dsi)
- 		return -ENODEV;
- 
- 	err = panel_simple_probe(&dsi->dev, &desc->desc);
-+	if (err)
-+		dev_err(&dsi->dev, "%s: err %i\n", __func__, err);
++CPU Hotplug on physical systems - CPUs not present at boot
++----------------------------------------------------------
 +
-+	if (desc == &panel_dsi) {
-+		struct panel_simple *panel = mipi_dsi_get_drvdata(dsi);
-+		/* Handle the generic panel-dsi binding */
-+		err = panel_dsi_probe(&dsi->dev, panel);
-+	}
++Physical systems need to mark a CPU that is ``possible`` but not ``present`` as
++being ``present``. An example would be a dual socket machine, where the package
++in one of the sockets can be replaced while the system is running.
 +
- 	if (err < 0)
- 		return err;
- 
- 	dsi->mode_flags = desc->flags;
- 	dsi->format = desc->format;
- 	dsi->lanes = desc->lanes;
-+	of_property_read_u32(dsi->dev.of_node, "lanes", &dsi->lanes);
- 
- 	err = mipi_dsi_attach(dsi);
- 	if (err) {
- 		struct panel_simple *panel = mipi_dsi_get_drvdata(dsi);
- 
-+		dev_err(&dsi->dev, "probe attach err: %i", err);
- 		drm_panel_remove(&panel->base);
- 	}
- 
-
++This is not supported.
++
++In the arm64 world CPUs are not a single device but a slice of the system.
++There are no systems that support the physical addition (or removal) of CPUs
++while the system is running, and ACPI is not able to sufficiently describe
++them.
++
++e.g. New CPUs come with new caches, but the platform's cache toplogy is
++described in a static table, the PPTT. How caches are shared between CPUs is
++not discoverable, and must be described by firmware.
++
++e.g. The GIC redistributor for each CPU must be accessed by the driver during
++boot to discover the system wide supported features. ACPI's MADT GICC
++structures can describe a redistributor associated with a disabled CPU, but
++can't describe whether the redistributor is accessible, only that it is not
++'always on'.
++
++arm64's ACPI tables assume that everything described is ``present``.
++
++
++CPU Hotplug on virtual systems - CPUs not enabled at boot
++---------------------------------------------------------
++
++Virtual systems have the advantage that all the properties the system will
++ever have can be described at boot. There are no power-domain considerations
++as such devices are emulated.
++
++CPU Hotplug on virtual systems is supported. It is distinct from physical
++CPU Hotplug as all resources are described as ``present``, but CPUs may be
++marked as disabled by firmware. Only the CPU's online/offline behaviour is
++influenced by firmware. An example is where a virtual machine boots with a
++single CPU, and additional CPUs are added once a cloud orchestrator deploys
++the workload.
++
++For a virtual machine, the VMM (e.g. Qemu) plays the part of firmware.
++
++Virtual hotplug is implemented as a firmware policy affecting which CPUs can be
++brought online. Firmware can enforce its policy via PSCI's return codes. e.g.
++``DENIED``.
++
++The ACPI tables must describe all the resources of the virtual machine. CPUs
++that firmware wishes to disable either from boot (or later) should not be
++``enabled`` in the MADT GICC structures, but should have the ``online capable``
++bit set, to indicate they can be enabled later. The boot CPU must be marked as
++``enabled``.  The 'always on' GICR structure must be used to describe the
++redistributors.
++
++CPUs described as ``online capable`` but not ``enabled`` can be set to enabled
++by the DSDT's Processor object's _STA method. On virtual systems the _STA method
++must always report the CPU as ``present``. Changes to the firmware policy can
++be notified to the OS via device-check or eject-request.
++
++CPUs described as ``enabled`` in the static table, should not have their _STA
++modified dynamically by firmware. Soft-restart features such as kexec will
++re-read the static properties of the system from these static tables, and
++may malfunction if these no longer describe the running system. Linux will
++re-discover the dynamic properties of the system from the _STA method later
++during boot.
+diff --git a/Documentation/arch/arm64/index.rst b/Documentation/arch/arm64/index.rst
+index d08e924204bf..78544de0a8a9 100644
+--- a/Documentation/arch/arm64/index.rst
++++ b/Documentation/arch/arm64/index.rst
+@@ -13,6 +13,7 @@ ARM64 Architecture
+     asymmetric-32bit
+     booting
+     cpu-feature-registers
++    cpu-hotplug
+     elf_hwcaps
+     hugetlbpage
+     kdump
 -- 
-2.30.2
+2.39.2
 
