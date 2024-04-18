@@ -1,284 +1,142 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2090.outbound.protection.outlook.com [40.92.18.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F10161935;
-	Thu, 18 Apr 2024 15:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713453914; cv=none; b=NT3Nvo8flW/Vwfxxyn/iYnQQ/5Eb3xj9O02QQ8ctWgZDhIqAjRo+YN0VXg8nYalX87cnqmWPnDK4RmXe0fRnoLK86zd7KW5w/NQ8oGli28sTfvN/41kRKK4vLKNfEzjob/CK3ncUovfCIRwqMTOMVqTZhKJV+JamGUsLFYJdED4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713453914; c=relaxed/simple;
-	bh=wIp1OyJRTONbNiPVv/rWK0BHYLndnYQTYlGt+9NjYpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TboVYFQR/FkOrqTaIIsQTY76nVBfDpLxOz9gwC739cbZqyQYMPhFeASWYY+QZI8efY+XkfZ1oeYa55raJpAdlUS8E9G83/iXVZFKmynRtLtnWZRl01Dv9X5Zo1FYmkvpmR4edVaCGfqIkhMau6mB42ZkS5pdfRyJNxxrRSn2xK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=os3wnYbc; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECB5161935;
+	Thu, 18 Apr 2024 15:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713453952; cv=fail; b=qLlRmZ+Kem/QRXN0WgblmDpW6QMQWJu+NUtAMPGavsLz7Ts3YIAZ2qajpSlfH1Vw+1IfFHeMkp/e1jfgx8dBF52q6dkocvSXKUJ+Jp/9byxmARkBOj9nBIJo5a2ZpiWIeyxYqciYBHDVhXXywVG0ziI0K1ldCMkX+PsTziCTBWQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713453952; c=relaxed/simple;
+	bh=k1NuydLhAUmibwDMxM6bSHmVgSD8ZulZDnS5kKChrbg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pJ6V77pWqM7xpELQqn0Mn86TXjp6XCcBBRfnOH9kAjcfaImUo6HVeksORm75kLhryO5X5PzBzSmePWgQieQIyGLIGgoR1njA5Aqwq4sBASMU3pt84G/wPuWbleA+F0dnEsPUkKBaFDc4IXUX+thcgdpVgfdYIAbm+zKgaFF1M6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DnHFHmYs; arc=fail smtp.client-ip=40.92.18.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="os3wnYbc"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43IF7dJC008809;
-	Thu, 18 Apr 2024 15:25:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Cy7WE2z4hn+BQsTHXo/YGYnvvL4TaoNDWmc0/gsWXZ0=;
- b=os3wnYbc45cNCUmUms+b5p3BGYfiXlZomnh+5kTR+ajEU8g95YGuElfuJhkeG6vOM1Pw
- 60gcXcS82F/NkkLGdbf7bwaP8+eQMNHAzSJ/CnB1ZMI+PabjYVm1iJRN8DZcQynLGEgp
- X1XDdphrbQmDkXyN/uXk+iTtVOkGB+S3BG9Lk8j3T/TzcRwk/lt0yRVYsZUGBb7HNBJ4
- RbgXum8PbAk7xyVpEZRgOzLwmBsD0XL/mkFlgncYcKWtoQMKs3viZJ4BO71nWYakJFrC
- DUOv3Mak/dSnUkbfXzSYyEyf3QBVDWNrsMJ4gUOnqNUCB0Sgao806/YtaNoCP52+b6cb ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk5vj81mn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 15:25:01 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43IFOAQZ012834;
-	Thu, 18 Apr 2024 15:25:00 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk5vj81mj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 15:25:00 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43IC6wea023575;
-	Thu, 18 Apr 2024 15:24:59 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg5cpbbh1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 15:24:59 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43IFOv8g22479432
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Apr 2024 15:24:59 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5F49958066;
-	Thu, 18 Apr 2024 15:24:55 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7052D58077;
-	Thu, 18 Apr 2024 15:24:54 +0000 (GMT)
-Received: from sbct-3.bos2.lab (unknown [9.47.158.153])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Apr 2024 15:24:54 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, ardb@kernel.org,
-        git@jvdsn.com, hkario@redhat.com, simo@redhat.com,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Salvatore Benedetto <salvatore.benedetto@intel.com>
-Subject: [PATCH v3 2/2] crypto: ecdh & ecc - Initialize ctx->private_key in proper byte order
-Date: Thu, 18 Apr 2024 11:24:45 -0400
-Message-ID: <20240418152445.2773042-3-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240418152445.2773042-1-stefanb@linux.ibm.com>
-References: <20240418152445.2773042-1-stefanb@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DnHFHmYs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TQlwY28pSxH+38t0/u8r/VWqkCTmtli1zmJvrovVVdK5H5QmkEWDdxiMV6xrVhTzHdiuhUd5FH9qljydnej4iSReiDEyWl35UY7jU12ZyzyAe48AD6/yLR+exZ6Z4byikg7HeTt0NVvF+BiwEfvFrQtSHJwlmAu5BUMgobQWQ12JuAmGpdUlg8l2ZvJ8HuGMyzl7Kff2U2Y2nGOgYNJO9hDYPBUj4xkWVdeg/RW96+X28uHKESfCIEy05TyIfY+e4k0Y50Jh6RNtHAYM3D8EWnvhShlnHOukL49wxjLxN4nYdTmwDUNNGtbBKGiMaUkNPMMiGRWWno4GMjSZG9obew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JkdL7xjz4aO/iybJ8lM/saFQhcff1yi/wIEEydrW44g=;
+ b=HNrhUNXrfeLzVccXed6xVg3q8PPYGwah5Q6sTxDhaCzRtd+noPKd74rgjbdm5hmmaf6Co86wO5F/uwg7nFxMn74wsfHkFMkqoUJKLmv9a+0kfTChWLR3GQA1zH1V/7Iv5PPoFpadx0OX0viVDWyl/aQW6rtLRj6WaJD/1i5jszaMvPllqLALbmpL5sNJarH+WmBqiRcJ8nTri0sv3fekek2F2NsgAROTj3xymh9I1TKSboK4qsxTK1BX6DWa36CqkpGp8b3FhvcPob/+v5807nR5cq4ysGFlmfSUtSorkGaKzYAjeFxrGMF4ScjDNg420IfvjQZATUCIKwqyUxxdlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JkdL7xjz4aO/iybJ8lM/saFQhcff1yi/wIEEydrW44g=;
+ b=DnHFHmYsXH/2iqIGvEHQBqw8B+Ku8/vbjk8iFtEM2s2r+LgkqL3TuhOsi7iqp9/KyQNouCPSal9r3hKutcnmjsoFSu6PdnZib7cyPKgZdDmoEmpzIDgN/jJL7YILWw19uXJkDxkOW9aTfdKpkdm4HLE5pYzwz8J3lZQfsIOzvcfVVvAmjlz2Qy1kFNes6nPwIbeTLCA/beqbGNQOM8ekbD+TakTFKnMu1KawFs3St95kNSkFrRf6gJmk8se7mR821Q3TfoFbARx0UH2+YZWQw8ys58eAbbDAiTcOzvyKYwPp9hfQXBsKYDBNbQbPOD1sQPilkVhcgLTjkVF4cFsZkw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CYYPR02MB9927.namprd02.prod.outlook.com (2603:10b6:930:bf::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 15:25:48 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
+ 15:25:48 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Matthew Wilcox <willy@infradead.org>
+CC: "robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "will@kernel.org" <will@kernel.org>, "hch@lst.de"
+	<hch@lst.de>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "petr@tesarici.cz" <petr@tesarici.cz>,
+	"roberto.sassu@huaweicloud.com" <roberto.sassu@huaweicloud.com>
+Subject: RE: [PATCH 1/1] Documentation/core-api: Add swiotlb documentation
+Thread-Topic: [PATCH 1/1] Documentation/core-api: Add swiotlb documentation
+Thread-Index: AQHakZfceiYYTi0lC0K56jdO8yuO3rFuFjoAgAAPoyA=
+Date: Thu, 18 Apr 2024 15:25:47 +0000
+Message-ID:
+ <SN6PR02MB415745AA09BE9E468001EFBED40E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240418135213.426671-1-mhklinux@outlook.com>
+ <ZiEuGIoa-FCE0p4X@casper.infradead.org>
+In-Reply-To: <ZiEuGIoa-FCE0p4X@casper.infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [cy1y2jeAaiWiOMVLoqpRcDSLQBMqTkn2]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CYYPR02MB9927:EE_
+x-ms-office365-filtering-correlation-id: 20262499-b887-4229-d8e6-08dc5fbbd2be
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ ax6Eb/JSVNu6zWHB32KzAcs7/8sijf767Agd0UnTeasepHWg7VjLEOwZ3Qie27BbdCwzL45YUJHNBur5GTOwUsJq0vHRdIQdd56ExJgO4uqgwUWfYzf+IcORiOvGjyolTMf5cEH3dYRaktdaeU2tf/jKg65AJiHLxGzVnlcJCAreZMOjHgiEROTcA0ces/UDOpc0k5+k021TXGoWcbMJcj2wMBnf9/juAJ3IGMVqcNsHui5ciN8iWItVbWz/4rh17NtWxLwh+RpUCDJluV00AqwjuxuGr/h6VHE5AcOI/bWBW4xTjSwrAPx43m+OsqW1MkFC8k7hovO6iqMyPZ8P1SSO9yWQBYQk7W3KT1SZpdVtdB3AlvBM4hJKSm7h0g+PG68NwrXT7mSBWRpNAJzV7lwlVzOPzufTG7lpWK++gOUmzAc8mSWpYlY8iCOFLpEqQMiUAeMm7KI4nJXVglbX7E3jP4i6BRumDck45VpgbGMsd8IpQAz+O9aMrWI/B4Q4XbeFOYHa2Z8Mz1xPjh7VSJCNJA1Fb0tMxYl8DhfLNP8riqq6lDSGgRzPA66ObHrk
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?+cuhHkOkQS/whAb1sFtEJZzhks9OAW+a0rBNDYQxP6RRBMeRdNB5J+Kn1nKj?=
+ =?us-ascii?Q?dQz82SqkEFGfKJAWj72WzWQ5Wqglvm2pHxQ80l2GukK6Tzp9Gg3rQIu6Qw0b?=
+ =?us-ascii?Q?F4lpKnDaLgeACCpQtUvqn0DQsfSznz3wcILwnplLW6D/j72osxSBX1Ek3wDw?=
+ =?us-ascii?Q?XeYWS+IIh0nQyA67LPRctbjHtV/KItQ7+2qGJxRA8DSpixx5yq0dPR46FTa0?=
+ =?us-ascii?Q?DFcotffYtC7ubNF/OYwDCwX2TJYLoJQ3Vkr2ieuz8K9THm8yq6keMpPjTwBJ?=
+ =?us-ascii?Q?kwqy//4n/pPZalOdGAMNogsELitGdPwlRKn5w4dDlxHGnhWpXQX+pNGE31og?=
+ =?us-ascii?Q?+0tc9c/q2b6eQzvhTWOrswlSbfa0mrkvV4sWBjI/zn39Nd5mY0nUnpKkpL85?=
+ =?us-ascii?Q?cAqgYnARFp92bj5A62HKbp56DIkHzKBHJ5qZ37hdaLUnuOstxKBhERuNSwtG?=
+ =?us-ascii?Q?fwKuVpyqt54q51OIbhq/fqtc0D+gQq97CkdCH9gtUACg4g0YwUp2lQiDzLJo?=
+ =?us-ascii?Q?PY+l07JgAwG0gikb0zd8MOzKEFTCIA+V338Kk/3RT7WvFe10P/rk5UOyRpxh?=
+ =?us-ascii?Q?254NbJm4Uk3ZS/hMh6s37iquq26kV7+YLzXCcEYSvT2bdj7tfeaPe+ITy9UD?=
+ =?us-ascii?Q?vUhZc9PyzwlybWeuMAmGBu648VHl9mItBwlGFBHpFJNmgy4E9UdtAD4aa0ej?=
+ =?us-ascii?Q?ykDvU7dJzmWDy45y1tdUY/h9BZ5f6hkm7GR29P0ON257w0tVEqW5vrz3gH4h?=
+ =?us-ascii?Q?K/qsA0Jz7VVZeWH6duhd4bJ5wzuB3SywQIe5041PF+Awj3jbxOMoQN7zfVBR?=
+ =?us-ascii?Q?i+79U0+7se71fRt6kpyKFOdz5cO7aqgjRtHgO18CUGBz90/IEdDhW3hAMIHR?=
+ =?us-ascii?Q?u8R4PFtXt2qune0wAT3AOMmOy3ZmIGZMDO2A3zTSi+8UpCM95KCNi092caCp?=
+ =?us-ascii?Q?lZlCoTDzvPygv2JgAsp+ZBegIDj5CcWK+tb5/0nSO/cQ1rYE6HP/OUq4h/gP?=
+ =?us-ascii?Q?cCRPZkvGe8/7y5NNc4JQhMZ6Xd7MZX7Wb7CB7giL70wkwsH3zTg1wjoa06z8?=
+ =?us-ascii?Q?8x34KwxMq/be+pG4jsbVrT4H2bJdkImo6txeR+KzUPlkX5BlKx2Z6FgU3RVg?=
+ =?us-ascii?Q?EhaDe/RKPHCLe0SuoRcVXao2I08oywaBlysl+HnwsclWKiolq40zwvBoo9wC?=
+ =?us-ascii?Q?R2Qg5vR36C07kd6Ll2WyqHSxOIFKiBEWP1ZVDw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: G0QQmk13jctGAvejwHedHJWMhJSEyR12
-X-Proofpoint-GUID: 2zIaKX8OTq3ti0ggxGIFSmYNtPzYWG7R
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_13,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 impostorscore=0
- suspectscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404180109
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20262499-b887-4229-d8e6-08dc5fbbd2be
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2024 15:25:47.8651
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR02MB9927
 
-The private key in ctx->private_key is currently initialized in reverse
-byte order in ecdh_set_secret and whenever the key is needed in proper
-byte order the variable priv is introduced and the bytes from
-ctx->private_key are copied into priv while being byte-swapped
-(ecc_swap_digits). To get rid of the unnecessary byte swapping initialize
-ctx->private_key in proper byte order and clean up all functions that were
-previously using priv or were called with ctx->private_key:
+From: Matthew Wilcox <willy@infradead.org> Sent: Thursday, April 18, 2024 7=
+:29 AM
 
-- ecc_gen_privkey: Directly initialize the passed ctx->private_key with
-  random bytes filling all the digits of the private key. Get rid of the
-  priv variable. This function only has ecdh_set_secret as a caller to
-  create NIST P192/256/384 private keys.
+>=20
+> On Thu, Apr 18, 2024 at 06:52:13AM -0700, mhkelley58@gmail.com wrote:
+> > There's currently no documentation for the swiotlb. Add documentation
+> > describing usage scenarios, the key APIs, and implementation details.
+> > Group the new documentation with other DMA-related documentation.
+>=20
+> This is really well written.  Thank you.  One minor nit below.
+>=20
+> > +Usage Scenarios
+> > +---------------
+> > +The swiotlb was originally created to handle DMA for devices
+> > +with addressing limitations. As physical memory sizes grew
+> > +beyond 4 Gbytes, some devices could only provide 32-bit DMA
+> > +addresses. By allocating bounce buffer memory below the 4 Gbyte
+>=20
+> I'd prefer GiB to Gbytes; we might also prefer GB, Gigabyte or Gibibyte,
+> but Gbytes seems wrong.
 
-- crypto_ecdh_shared_secret: Called only from ecdh_compute_value with
-  ctx->private_key. Get rid of the priv variable and work with the passed
-  private_key directly.
+Good point.  I'll update sizes throughout to use the correct terminology.
 
-- ecc_make_pub_key: Called only from ecdh_compute_value with
-  ctx->private_key. Get rid of the priv variable and work with the passed
-  private_key directly.
+Michael
 
-Cc: Salvatore Benedetto <salvatore.benedetto@intel.com>
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- crypto/ecc.c                  | 29 ++++++++++-------------------
- crypto/ecdh.c                 |  8 +++-----
- include/crypto/internal/ecc.h |  3 ++-
- 3 files changed, 15 insertions(+), 25 deletions(-)
-
-diff --git a/crypto/ecc.c b/crypto/ecc.c
-index 2e05387b9499..c1d2e884be1e 100644
---- a/crypto/ecc.c
-+++ b/crypto/ecc.c
-@@ -1497,10 +1497,10 @@ EXPORT_SYMBOL(ecc_is_key_valid);
-  * This method generates a private key uniformly distributed in the range
-  * [2, n-3].
-  */
--int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey)
-+int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits,
-+		    u64 *private_key)
- {
- 	const struct ecc_curve *curve = ecc_get_curve(curve_id);
--	u64 priv[ECC_MAX_DIGITS];
- 	unsigned int nbytes = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
- 	unsigned int nbits = vli_num_bits(curve->n, ndigits);
- 	int err;
-@@ -1509,7 +1509,7 @@ int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey)
- 	 * Step 1 & 2: check that N is included in Table 1 of FIPS 186-5,
- 	 * section 6.1.1.
- 	 */
--	if (nbits < 224 || ndigits > ARRAY_SIZE(priv))
-+	if (nbits < 224)
- 		return -EINVAL;
- 
- 	/*
-@@ -1527,17 +1527,16 @@ int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey)
- 		return -EFAULT;
- 
- 	/* Step 3: obtain N returned_bits from the DRBG. */
--	err = crypto_rng_get_bytes(crypto_default_rng, (u8 *)priv, nbytes);
-+	err = crypto_rng_get_bytes(crypto_default_rng,
-+				   (u8 *)private_key, nbytes);
- 	crypto_put_default_rng();
- 	if (err)
- 		return err;
- 
- 	/* Step 4: make sure the private key is in the valid range. */
--	if (__ecc_is_key_valid(curve, priv, ndigits))
-+	if (__ecc_is_key_valid(curve, private_key, ndigits))
- 		return -EINVAL;
- 
--	ecc_swap_digits(priv, privkey, ndigits);
--
- 	return 0;
- }
- EXPORT_SYMBOL(ecc_gen_privkey);
-@@ -1547,23 +1546,20 @@ int ecc_make_pub_key(unsigned int curve_id, unsigned int ndigits,
- {
- 	int ret = 0;
- 	struct ecc_point *pk;
--	u64 priv[ECC_MAX_DIGITS];
- 	const struct ecc_curve *curve = ecc_get_curve(curve_id);
- 
--	if (!private_key || ndigits > ARRAY_SIZE(priv)) {
-+	if (!private_key) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
--	ecc_swap_digits(private_key, priv, ndigits);
--
- 	pk = ecc_alloc_point(ndigits);
- 	if (!pk) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	ecc_point_mult(pk, &curve->g, priv, NULL, curve, ndigits);
-+	ecc_point_mult(pk, &curve->g, private_key, NULL, curve, ndigits);
- 
- 	/* SP800-56A rev 3 5.6.2.1.3 key check */
- 	if (ecc_is_pubkey_valid_full(curve, pk)) {
-@@ -1647,13 +1643,11 @@ int crypto_ecdh_shared_secret(unsigned int curve_id, unsigned int ndigits,
- {
- 	int ret = 0;
- 	struct ecc_point *product, *pk;
--	u64 priv[ECC_MAX_DIGITS];
- 	u64 rand_z[ECC_MAX_DIGITS];
- 	unsigned int nbytes;
- 	const struct ecc_curve *curve = ecc_get_curve(curve_id);
- 
--	if (!private_key || !public_key ||
--	    ndigits > ARRAY_SIZE(priv) || ndigits > ARRAY_SIZE(rand_z)) {
-+	if (!private_key || !public_key || ndigits > ARRAY_SIZE(rand_z)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1674,15 +1668,13 @@ int crypto_ecdh_shared_secret(unsigned int curve_id, unsigned int ndigits,
- 	if (ret)
- 		goto err_alloc_product;
- 
--	ecc_swap_digits(private_key, priv, ndigits);
--
- 	product = ecc_alloc_point(ndigits);
- 	if (!product) {
- 		ret = -ENOMEM;
- 		goto err_alloc_product;
- 	}
- 
--	ecc_point_mult(product, pk, priv, rand_z, curve, ndigits);
-+	ecc_point_mult(product, pk, private_key, rand_z, curve, ndigits);
- 
- 	if (ecc_point_is_zero(product)) {
- 		ret = -EFAULT;
-@@ -1692,7 +1684,6 @@ int crypto_ecdh_shared_secret(unsigned int curve_id, unsigned int ndigits,
- 	ecc_swap_digits(product->x, secret, ndigits);
- 
- err_validity:
--	memzero_explicit(priv, sizeof(priv));
- 	memzero_explicit(rand_z, sizeof(rand_z));
- 	ecc_free_point(product);
- err_alloc_product:
-diff --git a/crypto/ecdh.c b/crypto/ecdh.c
-index c02c9a2b9682..72cfd1590156 100644
---- a/crypto/ecdh.c
-+++ b/crypto/ecdh.c
-@@ -27,7 +27,6 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
- 			   unsigned int len)
- {
- 	struct ecdh_ctx *ctx = ecdh_get_ctx(tfm);
--	u64 priv[ECC_MAX_DIGITS];
- 	struct ecdh params;
- 	int ret = 0;
- 
-@@ -41,15 +40,14 @@ static int ecdh_set_secret(struct crypto_kpp *tfm, const void *buf,
- 		return ecc_gen_privkey(ctx->curve_id, ctx->ndigits,
- 				       ctx->private_key);
- 
--	memcpy(ctx->private_key, params.key, params.key_size);
--	ecc_swap_digits(ctx->private_key, priv, ctx->ndigits);
-+	ecc_digits_from_bytes(params.key, params.key_size,
-+			      ctx->private_key, ctx->ndigits);
- 
- 	if (ecc_is_key_valid(ctx->curve_id, ctx->ndigits,
--			     priv, params.key_size) < 0) {
-+			     ctx->private_key, params.key_size) < 0) {
- 		memzero_explicit(ctx->private_key, params.key_size);
- 		ret = -EINVAL;
- 	}
--	memzero_explicit(priv, sizeof(priv));
- 
- 	return ret;
- }
-diff --git a/include/crypto/internal/ecc.h b/include/crypto/internal/ecc.h
-index 4e2f5f938e91..7ca1f463d1ec 100644
---- a/include/crypto/internal/ecc.h
-+++ b/include/crypto/internal/ecc.h
-@@ -103,7 +103,8 @@ int ecc_is_key_valid(unsigned int curve_id, unsigned int ndigits,
-  * Returns 0 if the private key was generated successfully, a negative value
-  * if an error occurred.
-  */
--int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey);
-+int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits,
-+		    u64 *private_key);
- 
- /**
-  * ecc_make_pub_key() - Compute an ECC public key
--- 
-2.43.0
-
+>=20
+> You've written a lot here, and I'm not an expert on swiommu, but nothing
+> else leapt out at me.
