@@ -1,193 +1,128 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A856FB0;
-	Thu, 18 Apr 2024 02:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887252AC29;
+	Thu, 18 Apr 2024 02:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713408176; cv=none; b=q9APcIaSjMVsTv/FGkir+jm7F8VXAbvEX0KNHncJTCZn3ohaw6bnwKXTL5uagzfmfz8dZzMVYgtjrCmovAtmbowr67zJIK74AUTSNK1dS4LverU+x34ITROpZ7Eu2BcaBGa+R488kgFb34bJ9npPPN7Zm/EiH8/Y+hDi+rnufEg=
+	t=1713408176; cv=none; b=jww+KGpDaT58YaPxAaUJ+RCraOp+Z2jlLSk7/JooobksBs9PRYI5rlrpr1SV6+AUZ5LovxjgsyXqF/7KpsMdif6FDA/MjDH8h1SMAiXjssTru7UrDKNWXTZlIAWYC7y7zG/2GA+yMGNQoG5Jg+XPECtimgMOwQoF/G0bAkBztt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713408176; c=relaxed/simple;
-	bh=lyNSUQkG5hAPF0cdgrzZAOyzvIpcbVYT5Loo2w3/q+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=s5HiCvvCd4tz+8uZOefKvpIqqp58VXA6lnfLgCNLfQrEqEpljjpTz7sxtM1J7g206DNoessCm3s8Vf2HfqR5P93/4OYC2m90USj1yZ8Nv0YJP6ssMeBGCrOv4N9II3iww2mtED4uk1Nt9pxnUysUqHthmw8hYr6NMhsAGCrpFvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VKhpK6byvzNrvV;
-	Thu, 18 Apr 2024 10:40:25 +0800 (CST)
-Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5F9FF18006D;
-	Thu, 18 Apr 2024 10:42:50 +0800 (CST)
-Received: from [10.67.120.108] (10.67.120.108) by
- dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 18 Apr 2024 10:42:50 +0800
-Message-ID: <f1d32ff4-dba3-037b-b9f1-f20feab1304a@huawei.com>
-Date: Thu, 18 Apr 2024 10:42:49 +0800
+	bh=nc0l6I8uY2Sfpbn0gl6LiAY4AgSqwND6FWwyoGGgez4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hF/HhLm+HrPTNS3RkQ009hlEuDsPCR7qEwrt7jufSZyEd2X3SgCf/bkoqh+X7LMV2hnL+3ObMKQr07GV6NPcgxCVxup9VXVafDkZ/fQu1k48RiyXY0eJ+a89/3RtjmZkDs29g2jQ1AD2VmRBDaHZwP4TGrjUGNunHxgPxCWfwlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvU/ncvk; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvU/ncvk"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d715638540so4336601fa.3;
+        Wed, 17 Apr 2024 19:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713408173; x=1714012973; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/TQOSEIxhOk2cmOktSZ5shcHbGjzSHGcTvMcNwlLnO0=;
+        b=TvU/ncvknU4OO7x/d+H/i7v+aVx0L4D2OZ5zKHQhLaNO33awmWPMK/F9pjnMgS1Hmr
+         qd4o5rbk++VlBWiiWbHKhvT6bqNGKbEUUXRxBfgS68vq7T6P6RzzwhNzOJhPAQVZmfEt
+         sNGiSUzbwz159WYJlBz/iHOkGQ4XZ7bARxbRABTfLQiTYRXZvGc/5+3k0UYmhYi9fDNQ
+         t9GnUXG5k3xtsNWuZVwM2XTdcPQpQFvE2bMhZXIUxGTgk82EnM8Rv/RFdTH/F76zhIgF
+         H7DG609LeFN4bjgYHWG78vAyPw8tlZysa8shkAX/bLPHJJbbzhCoQSFD9w7CYV1vE/OV
+         KPYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713408173; x=1714012973;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/TQOSEIxhOk2cmOktSZ5shcHbGjzSHGcTvMcNwlLnO0=;
+        b=ZLiYNu7afm3FQNdME3Da3dIB3GkQh5L1wf0hBOSNvszRpUor56k7OcyoJSQNU+JDd1
+         Vz8GnRbaQY7Ijt8weQ0ARuxQxvYLULKT0NniLorJZ43GuEyL3bPlGf4gOBb2zie7oDHU
+         TPo1L5b5ASv/XY7wUHJaowOnaxbIssa12jwvoZBp/gMHO9cvSWy8XgG0erz+OeszHzGO
+         5F8Sr+2tqAIaTpjxW3u1fJoNVaI7zmUBEyIEurhL2+wTOzAMmW7VJyeHl40Yr9hlhPo6
+         lOYz6ZK2YEOMlDwN0rusXcUAAFRyN0v7VIXgjSAj0fl6uLO8VMAQOgUmVZkmJa05EG6O
+         R1yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWmnpWN93NxUjLqUlquJRxPfQy1/pM/Mueq8hc2d3id7/rgkLZ8ldeQ3zjFuZlB41wkUFPtxhmGaYTce2JYA4FFraJ/DIz02yGoNQNIUhXSdd9WtnlbEyC2CxvCZpWDAP1HjFgt86W7I4WBg==
+X-Gm-Message-State: AOJu0YzmrKpBnJBPOBtLvQCNc3HIYFMgnKnDk5sxm/JfI0wqjkw43mRG
+	Q/TeIoXrw9EDGljmPhbGV5EsZ03bCTKe96dTcqPHRUmD7wugny/VmBgBqq24sZUQgDqjeOb8/Pa
+	EqyQy3BXERFRuLmYYTaKGvPIRSI0=
+X-Google-Smtp-Source: AGHT+IGUEZNaH1Nq5WQddmFU8g1mQEhzGkckKwS8KO/2Erjlf+2TGH5g2oFxff0F3SECj/jdoY4ESxgMVnXuKs22ShI=
+X-Received: by 2002:a2e:9402:0:b0:2da:d964:fc2b with SMTP id
+ i2-20020a2e9402000000b002dad964fc2bmr435026ljh.49.1713408172451; Wed, 17 Apr
+ 2024 19:42:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH] scsi: libsas: Fix exp-attached end device cannot be
- scanned in again after probe failed
-Content-Language: en-CA
-To: Jason Yan <yanaijie@huawei.com>, <john.g.garry@oracle.com>,
-	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-References: <20240416030727.17074-1-yangxingui@huawei.com>
- <e33272f8-1ff5-561f-60a3-b4d24fe27c6b@huawei.com>
- <e7e26224-0e0c-f6bf-d24e-5a9a6d84a8e1@huawei.com>
- <59f29a27-a7c4-6278-d5ac-be802027b603@huawei.com>
-From: yangxingui <yangxingui@huawei.com>
-In-Reply-To: <59f29a27-a7c4-6278-d5ac-be802027b603@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggpemm500007.china.huawei.com (7.185.36.183) To
- dggpemd100001.china.huawei.com (7.185.36.94)
+References: <20240417160842.76665-1-ryncsn@gmail.com> <20240417160842.76665-8-ryncsn@gmail.com>
+ <CAGsJ_4xv8m-Xjih0PmKD1PcUSGVRsti8EH0cbStZOFmX+YhnFA@mail.gmail.com>
+In-Reply-To: <CAGsJ_4xv8m-Xjih0PmKD1PcUSGVRsti8EH0cbStZOFmX+YhnFA@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 18 Apr 2024 10:42:35 +0800
+Message-ID: <CAMgjq7Am+5ftvAW4X2xOhAZ+zotSR8gD8oG+_CV=pJvsqy2Oyw@mail.gmail.com>
+Subject: Re: [PATCH 7/8] mm: drop page_index/page_file_offset and convert swap
+ helpers to use folio
+To: Barry Song <21cnbao@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	"Huang, Ying" <ying.huang@intel.com>, Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>, 
+	Barry Song <v-songbaohua@oppo.com>, Ryan Roberts <ryan.roberts@arm.com>, Neil Brown <neilb@suse.de>, 
+	Minchan Kim <minchan@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jason,
+On Thu, Apr 18, 2024 at 9:55=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> On Thu, Apr 18, 2024 at 4:12=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wr=
+ote:
+> >
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > When applied on swap cache pages, page_index / page_file_offset was use=
+d
+> > to retrieve the swap cache index or swap file offset of a page, and the=
+y
+> > have their folio equivalence version: folio_index / folio_file_pos.
+> >
+> > We have eliminated all users for page_index / page_file_offset, everyth=
+ing
+> > is using folio_index / folio_file_pos now, so remove the old helpers.
+> >
+> > Then convert the implementation of folio_index / folio_file_pos to
+> > to use folio natively.
+> >
+> > After this commit, all users that might encounter mixed usage of swap
+> > cache and page cache will only use following two helpers:
+> >
+> > folio_index (calls __folio_swap_cache_index)
+> > folio_file_pos (calls __folio_swap_file_pos)
+> >
+> > The offset in swap file and index in swap cache is still basically the
+> > same thing at this moment, but will be different in following commits.
+> >
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+>
+> Hi Kairui, thanks !
+>
+> I also find it rather odd that folio_file_page() is utilized for both
+> swp and file.
+>
+> mm/memory.c <<do_swap_page>>
+>              page =3D folio_file_page(folio, swp_offset(entry));
+> mm/swap_state.c <<swapin_readahead>>
+>              return folio_file_page(folio, swp_offset(entry));
+> mm/swapfile.c <<unuse_pte>>
+>              page =3D folio_file_page(folio, swp_offset(entry));
+>
+> Do you believe it's worthwhile to tidy up?
+>
 
-On 2024/4/18 9:46, Jason Yan wrote:
-> On 2024/4/17 15:47, yangxingui wrote:
->>
->>
->> On 2024/4/17 9:46, Jason Yan wrote:
->>> Hi Xingui,
->>>
->>> On 2024/4/16 11:07, Xingui Yang wrote:
->>>> We found that it is judged as broadcast flutter and exits directly 
->>>> when the
->>>> exp-attached end device reconnects after the end device probe failed.
->>>
->>> Can you please describe how to reproduce this issue in detail?
->> The test steps we currently construct are to simulate link 
->> abnormalities and adjust the rate of the remote phy when running IO on 
->> all disks.
->>
->> When the sata disk is probed and the IDENTIFY command is sent to the 
->> disk, the expander return rate is abnormal, causing sata disk probe 
->> fail. But there may be many reasons for device probe failure, 
->> including expander or disk instability or link abnormalities.
->>
->>>
->>> Thanks,
->>> Jason
->>>
->>>>
->>>> [78779.654026] sas: broadcast received: 0
->>>> [78779.654037] sas: REVALIDATING DOMAIN on port 0, pid:10
->>>> [78779.654680] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->>>> [78779.662977] sas: ex 500e004aaaaaaa1f phy05 originated 
->>>> BROADCAST(CHANGE)
->>>> [78779.662986] sas: ex 500e004aaaaaaa1f phy05 new device attached
->>>> [78779.663079] sas: ex 500e004aaaaaaa1f phy05:U:8 attached: 
->>>> 500e004aaaaaaa05 (stp)
->>>> [78779.693542] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] found
->>>> [78779.701155] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->>>> [78779.707864] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
->>>> ...
->>>> [78835.161307] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 
->>>> 0 tries: 1
->>>> [78835.171344] sas: sas_probe_sata: for exp-attached device 
->>>> 500e004aaaaaaa05 returned -19
->>>> [78835.180879] hisi_sas_v3_hw 0000:b4:02.0: dev[16:5] is gone
->>>> [78835.187487] sas: broadcast received: 0
->>>> [78835.187504] sas: REVALIDATING DOMAIN on port 0, pid:10
->>>> [78835.188263] sas: ex 500e004aaaaaaa1f phy05 change count has changed
->>>> [78835.195870] sas: ex 500e004aaaaaaa1f phy05 originated 
->>>> BROADCAST(CHANGE)
->>>> [78835.195875] sas: ex 500e004aaaaaaa1f rediscovering phy05
->>>> [78835.196022] sas: ex 500e004aaaaaaa1f phy05:U:A attached: 
->>>> 500e004aaaaaaa05 (stp)
->>>> [78835.196026] sas: ex 500e004aaaaaaa1f phy05 broadcast flutter
->>>> [78835.197615] sas: done REVALIDATING DOMAIN on port 0, pid:10, res 0x0
->>>>
->>>> The cause of the problem is that the related ex_phy information was not
->>>> cleared after the end device probe failed. In order to solve the above
->>>> problem, a function sas_ex_unregister_end_dev() is defined to clear the
->>>> ex_phy information and unregister the end device when the 
->>>> exp-attached end
->>>> device probe failed.
->>>>
->>>> As the sata device is an asynchronous probe, the sata device may probe
->>>> failed after done REVALIDATING DOMAIN. Then after the port is added 
->>>> to the
->>>> sas_port_del_list, the port will not be deleted until the end of the 
->>>> next
->>>> REVALIDATING DOMAIN and sas_destruct_ports() is called. A warning about
->>>> creating a duplicate port will occur in the new REVALIDATING DOMAIN 
->>>> when
->>>> the end device reconnects. Therefore, the previous destroy_list and
->>>> sas_port_del_list should be handled before REVALIDATING DOMAIN.
->>>>
->>>> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
->>>> ---
->>>>   drivers/scsi/libsas/sas_discover.c |  2 ++
->>>>   drivers/scsi/libsas/sas_expander.c | 16 ++++++++++++++++
->>>>   drivers/scsi/libsas/sas_internal.h |  6 +++++-
->>>>   3 files changed, 23 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/scsi/libsas/sas_discover.c 
->>>> b/drivers/scsi/libsas/sas_discover.c
->>>> index 8fb7c41c0962..aae90153f4c6 100644
->>>> --- a/drivers/scsi/libsas/sas_discover.c
->>>> +++ b/drivers/scsi/libsas/sas_discover.c
->>>> @@ -517,6 +517,8 @@ static void sas_revalidate_domain(struct 
->>>> work_struct *work)
->>>>       struct sas_ha_struct *ha = port->ha;
->>>>       struct domain_device *ddev = port->port_dev;
->>>> +    sas_destruct_devices(port);
->>>> +    sas_destruct_ports(port);
->>>>       /* prevent revalidation from finding sata links in recovery */
->>>>       mutex_lock(&ha->disco_mutex);
->>>>       if (test_bit(SAS_HA_ATA_EH_ACTIVE, &ha->state)) {
->>>> diff --git a/drivers/scsi/libsas/sas_expander.c 
->>>> b/drivers/scsi/libsas/sas_expander.c
->>>> index f6e6db8b8aba..6ae1f4aaaf61 100644
->>>> --- a/drivers/scsi/libsas/sas_expander.c
->>>> +++ b/drivers/scsi/libsas/sas_expander.c
->>>> @@ -1856,6 +1856,22 @@ static void 
->>>> sas_unregister_devs_sas_addr(struct domain_device *parent,
->>>>       }
->>>>   }
->>>> +void sas_ex_unregister_end_dev(struct domain_device *dev)
->>>> +{
->>>> +    struct domain_device *parent = dev->parent;
->>>> +    struct expander_device *parent_ex = &parent->ex_dev;
->>>> +    int i;
->>>> +
->>>> +    for (i = 0; i < parent_ex->num_phys; i++) {
->>>> +        struct ex_phy *phy = &parent_ex->ex_phy[i];
->>>> +
->>>> +        if (sas_phy_match_dev_addr(dev, phy)) {
->>>> +            sas_unregister_devs_sas_addr(parent, i, true);
->>>> +            break;
->>>> +        }
->>>> +    }
->>>
->>> Did you mean this end device is a wide-port end device ? How could 
->>> this happen?
->>
->> No, the end device described here is a non-expander device. Such as: 
->> sata/sas disk. But these devices are exp-attached.
-> 
-> If it is not a wide port, why do they have the same sas address here? 
-> Why do you add this function to unregister these PHYs? And the last 
-> parameter of sas_unregister_devs_sas_addr() means the last PHY of the 
-> wide port, you just all passed true, it is irrational.
-The non-expander end device does not have a wide port, such as a sata 
-disk, and there is only one ex_phy corresponding to it. This function 
-finds the ex_phy corresponding to the end dev through dev->sas_addr, 
-then clears the ex_phy information and unregister the end device.
+Hi Barry,
 
-Thanks,
-Xingui
+I'm not sure about this. Using folio_file_page doesn't look too bad,
+and it will be gone once we convert them to always use folio, this
+shouldn't take too long.
