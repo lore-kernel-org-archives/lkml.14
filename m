@@ -1,125 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC894D9E8;
-	Thu, 18 Apr 2024 15:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0957416EBEA;
+	Thu, 18 Apr 2024 15:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713454742; cv=none; b=LOE2264RrTi0EwgbB2z6HCc0ownWq8TEO+15IdLPmBHynrW7RZnOYW8/ipUsEVsEeVMzdzKP7RThNVJN7KbIKJ3Ovlx4Plc5VQxpxq4lLMwnOmCs7aM1/Izaxe0R1lfmWOETrKoEbLBTRDfNq884zTyVWmbiz5IwZwCF7p5bS0s=
+	t=1713454752; cv=none; b=fKijyL+YYIiI+2sHng86TTZ55fJqZJEsIPnOrNa4VH5pEC0ALjUcIWO6jNfKcRswB+TWwcZ3gjiGeW69Z6Un9wnv2gaRXQHO0xp20ZZ+MfVJuSgbmwX8IoZRr1VGS9aId5sbF1pr2+O8Q6IroJUNnZtLzal/6hj31YzYzxNDBFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713454742; c=relaxed/simple;
-	bh=I0N7vqLgwx/ovzLroPQMJTt+Vv+sX7iT2xBPYrabm9g=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=gmFAuzUTVdMXxWG/uRfCSVMbgJZHd20n0OgJT5xYWwkFdBZfiHB70HavOwgUikWAdl8GGM3lARZLHn05mH3GrQNxtyhSWrO10gU8SwJPa9Wdj5qEpP1ca7FdzfQq4ut1UmfU9i46RAso09E1QcxignTPkF6dsjGD39gciC9JMoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oXLB5sN0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oUbLhnlm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713454752; c=relaxed/simple;
+	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgUz23QpKjmd6XW7OENeB6X87D6AebhPYH9qWBnL7uAo2vMfbECw0MbCyKL/bAz6SZfNYydUEIia4+9G0e68sWR7lR9uZdZZ7t2yDDzxkdxpydxE/fi3zCEWwMLyyO25ow7PUeEIAXZKMJOH/b+5mEmgIoyjWss3DYxy82O3aqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dhagt/Ds; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oXLB5sN0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oUbLhnlm"
-Date: Thu, 18 Apr 2024 15:38:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713454736;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IvA/t2jivurkcDV9sAhbbUx0Y5eX5ZVHrL8eAhn+ZGA=;
-	b=oXLB5sN0DjlOz9owHsXsC++DrBVu9Lql6/WdYKQ8ao+ePVuTgM27zaN3PFxrLoZnKtvVPH
-	5igLlrcHyCl8Z2Wbfp5oDc+g9qonWyYwACWhFtD2JAK9X8evHcflOAXLv6oeEl6/Bmbj3y
-	FzGB/38eRhoqUxapRav33K1VRXTHQZ9TEv/0Q53K7PdgeOmsZfOtQClpGwMk5YncPCln2A
-	vn2M0tMxKEbs5SiWo0ZNK4OkdKUZ5UMrFJvLpLhvUCULDdsRiqLJbA06a053ekiwx+nM+c
-	6m2dAXvnn8iss5M1izHCUNi5a3h6YqVyblHZ8XkA9L5LFQpO1z+WzgjculGb0g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713454736;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IvA/t2jivurkcDV9sAhbbUx0Y5eX5ZVHrL8eAhn+ZGA=;
-	b=oUbLhnlm7boHJKXg6gAolFtjpQ+xHAFnAsCvL5LuS76rKyRPA7ndvpozRgQpgEw76Pp1pr
-	yKAIULJjE41DqFAA==
-From: "tip-bot2 for Eric Biggers" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpufeatures: Fix dependencies for GFNI, VAES,
- and VPCLMULQDQ
-Cc: Eric Biggers <ebiggers@google.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240417060434.47101-1-ebiggers@kernel.org>
-References: <20240417060434.47101-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dhagt/Ds"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB10C113CC;
+	Thu, 18 Apr 2024 15:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713454751;
+	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dhagt/DsCV508bBCSM8PQFh0KZ4ChVYVPTqwgApoowoaluDog1pdK/qIVJU1bAfJ1
+	 yTHdqpTqCwsTRyfpVzaQYmToVgTGF005G8P5bcBRn51+TfjO6upp0QzeXZdpRVmP9T
+	 DyDQSEZc+G77sXhvEvzJVgEwHd81+hiEegtvxJRrNRYHrUsgJx5AWmHmLJX+3OoPI9
+	 DgUEekwf3Gv6AvfsAJ1j1lmBPCAVlRdxF5BEqB76VwjdS5tGiPR4UhLWWIRbIEiDfd
+	 AIVB7M07XTdJ0VLvAnDkmSjg91AV2IlHsKb94RwxZ2UFTajWhnfg+q+QMNKv4wdsDX
+	 0LvSLkPCKaqng==
+Date: Thu, 18 Apr 2024 18:37:52 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Masami Hiramatsu <masami.hiramatsu@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v4 14/15] kprobes: remove dependency on CONFIG_MODULES
+Message-ID: <ZiE-UE27NalI-IeW@kernel.org>
+References: <20240411160051.2093261-1-rppt@kernel.org>
+ <20240411160051.2093261-15-rppt@kernel.org>
+ <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171345473538.10875.3268830377740163335.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi Masami,
 
-Commit-ID:     9543f6e26634537997b6e909c20911b7bf4876de
-Gitweb:        https://git.kernel.org/tip/9543f6e26634537997b6e909c20911b7bf4876de
-Author:        Eric Biggers <ebiggers@google.com>
-AuthorDate:    Tue, 16 Apr 2024 23:04:34 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 18 Apr 2024 17:27:52 +02:00
+On Thu, Apr 18, 2024 at 06:16:15AM +0900, Masami Hiramatsu wrote:
+> Hi Mike,
+> 
+> On Thu, 11 Apr 2024 19:00:50 +0300
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > kprobes depended on CONFIG_MODULES because it has to allocate memory for
+> > code.
+> > 
+> > Since code allocations are now implemented with execmem, kprobes can be
+> > enabled in non-modular kernels.
+> > 
+> > Add #ifdef CONFIG_MODULE guards for the code dealing with kprobes inside
+> > modules, make CONFIG_KPROBES select CONFIG_EXECMEM and drop the
+> > dependency of CONFIG_KPROBES on CONFIG_MODULES.
+> 
+> Thanks for this work, but this conflicts with the latest fix in v6.9-rc4.
+> Also, can you use IS_ENABLED(CONFIG_MODULES) instead of #ifdefs in
+> function body? We have enough dummy functions for that, so it should
+> not make a problem.
 
-x86/cpufeatures: Fix dependencies for GFNI, VAES, and VPCLMULQDQ
+I'll rebase and will try to reduce ifdefery where possible.
 
-Fix cpuid_deps[] to list the correct dependencies for GFNI, VAES, and
-VPCLMULQDQ.  These features don't depend on AVX512, and there exist CPUs
-that support these features but not AVX512.  GFNI actually doesn't even
-depend on AVX.
+> Thank you,
+> 
+> > 
+> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > ---
+> >  arch/Kconfig                |  2 +-
+> >  kernel/kprobes.c            | 43 +++++++++++++++++++++----------------
+> >  kernel/trace/trace_kprobe.c | 11 ++++++++++
+> >  3 files changed, 37 insertions(+), 19 deletions(-)
+> > 
+> 
+> -- 
+> Masami Hiramatsu
 
-This prevents GFNI from being unnecessarily disabled if AVX is disabled
-to mitigate the GDS vulnerability.
-
-This also prevents all three features from being unnecessarily disabled
-if AVX512VL (or its dependency AVX512F) were to be disabled, but it
-looks like there isn't any case where this happens anyway.
-
-Fixes: c128dbfa0f87 ("x86/cpufeatures: Enable new SSE/AVX/AVX512 CPU features")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20240417060434.47101-1-ebiggers@kernel.org
----
- arch/x86/kernel/cpu/cpuid-deps.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index b717420..946813d 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -44,7 +44,10 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_F16C,			X86_FEATURE_XMM2,     },
- 	{ X86_FEATURE_AES,			X86_FEATURE_XMM2      },
- 	{ X86_FEATURE_SHA_NI,			X86_FEATURE_XMM2      },
-+	{ X86_FEATURE_GFNI,			X86_FEATURE_XMM2      },
- 	{ X86_FEATURE_FMA,			X86_FEATURE_AVX       },
-+	{ X86_FEATURE_VAES,			X86_FEATURE_AVX       },
-+	{ X86_FEATURE_VPCLMULQDQ,		X86_FEATURE_AVX       },
- 	{ X86_FEATURE_AVX2,			X86_FEATURE_AVX,      },
- 	{ X86_FEATURE_AVX512F,			X86_FEATURE_AVX,      },
- 	{ X86_FEATURE_AVX512IFMA,		X86_FEATURE_AVX512F   },
-@@ -56,9 +59,6 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512VL,			X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512VBMI,		X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VBMI2,		X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_GFNI,			X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_VAES,			X86_FEATURE_AVX512VL  },
--	{ X86_FEATURE_VPCLMULQDQ,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_VNNI,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_BITALG,		X86_FEATURE_AVX512VL  },
- 	{ X86_FEATURE_AVX512_4VNNIW,		X86_FEATURE_AVX512F   },
+-- 
+Sincerely yours,
+Mike.
