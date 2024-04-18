@@ -1,91 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FFFA15D5D6
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159C915E5CE;
+	Thu, 18 Apr 2024 10:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437458; cv=none; b=tWR9fqyxB77Nx0vmrJ7Fj3AV1IK31ghRib+IivAGEGl0LbriVvaZUYqMflx7Oas/ymae/IBiS5DUM6kFIM1sGbOh7dch7ydW6VdKI6ACHgh9fqp8XzX331ajcEdP/b/uUuYihJcFJjs3VQp5mEITCJm1d0Z0p3lUnWpfoVsvaYI=
+	t=1713437462; cv=none; b=hylpwdp5Nmazadiy0OgZjvezRkcTczcn4uaMWnF/kjSgU2QdXoeHi2tN8eSd2zE/dz2dVfWzWubYQ5JUIYj49c+2MmnxHf5xCVgWkkCA8NCzEFMTd0ALezpgolBY9i3Fsb4LycBj8iimo49r5xYOwv7pb9ZccsXke9CSjybAigI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437458; c=relaxed/simple;
-	bh=dKY2WJomerr9QZ5RzjY7LsILZQASd08BlEcCuguh4Cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1YisDPm+sQDjfibNPperTZl1SkVrVSo61vMo1ZHDoAnlCrrJMPqpiwFzeZqKyPcWjM4QpLHG4kg+HN6ltRv49MdSUvLRyuGXvPmG8k7xxHGsQ+EMIp9a1RA9/ND9obxd4E6ssiJEdYR/l06G9RBxVucvK+Rg/7RoSfCPBjj5OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89EBA339;
-	Thu, 18 Apr 2024 03:51:24 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 128223F792;
-	Thu, 18 Apr 2024 03:50:54 -0700 (PDT)
-Date: Thu, 18 Apr 2024 11:50:52 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Beata Michalska <beata.michalska@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com,
-	will@kernel.org, catalin.marinas@arm.com,
-	vincent.guittot@linaro.org, sumitg@nvidia.com,
-	yang@os.amperecomputing.com, lihuisong@huawei.com,
-	viresh.kumar@linaro.org
-Subject: Re: [PATCH v5 2/5] arm64: amu: Rule out potential use after free
-Message-ID: <20240418105052.zvkomz5yeayie4ph@bogus>
-References: <20240417093848.1555462-1-beata.michalska@arm.com>
- <20240417093848.1555462-3-beata.michalska@arm.com>
+	s=arc-20240116; t=1713437462; c=relaxed/simple;
+	bh=WBVRxLIdWKwIhWvkYX40p+kNDCgLtSNi083tiZeIF84=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fnRGtYme9OVMocRXu5P/61iDzIDzpyYMKdc05qVxdV/JEflcRHKX4Rih3BUoAIOBoq82/O9r42rEkkUzQJJhkvMS0oHzxfbebZw6XDPiBppb6nzcum53yrE+y/BFzvvbBFWyGu1htL9n06V+SGyNaouJRJF6SmSSorVzGE//ee0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp84t1713437427tx0r3mqm
+X-QQ-Originating-IP: rYl7aVSFMInFEJldnKJN23SbhrmIjafTmB1/3rjQe6U=
+Received: from localhost ( [112.0.147.129])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 18 Apr 2024 18:50:26 +0800 (CST)
+X-QQ-SSF: 01400000000000903000000A0000000
+X-QQ-FEAT: W+onFc5Tw4NcMRc6QjsEEEWUHz1Dtd6wntwnHBFMv84a1FNBfmtd9FZStN0R2
+	pRuiVh5Lt5J9wTXP4CQmlu//N65YJM560JYcenFgkSZ05ACquRteIQyqZt1kfSIv4ssg1ay
+	krqKI7k0wgODYU+qmaUu7fRFfxU1JW/zuD17MH8q1dH++dnPS5aeboX1rlXwNgZjUC5HgvB
+	0ulamcokuYP3VI82BzrOpn1EyPKaOOQSyxtZot6ZPtCw4Wzw6e3WRcCT+jMctf2mGslBL58
+	WaDY4mt3Zyk+QPpmu9Q3FkB/OcGubiqIxXVxwTrbOpcTeJTKYWc6EH97Xmji9YyYvo77Fdj
+	hU/7frTVLIfTSI0j1/j8+gyNXLmO79tUHpXe+HLldtbKd0RQ4P4mPvauZ0x9Q4cS9Yb3Yjh
+	giPuUAwE5DZckGRWffT69w==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 17361949652161301272
+From: Dawei Li <dawei.li@shingroup.cn>
+To: davem@davemloft.net,
+	andreas@gaisler.com
+Cc: sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH 5/5] sparc: Remove on-stack cpumask var
+Date: Thu, 18 Apr 2024 18:49:49 +0800
+Message-Id: <20240418104949.3606645-6-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240418104949.3606645-1-dawei.li@shingroup.cn>
+References: <20240418104949.3606645-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417093848.1555462-3-beata.michalska@arm.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-On Wed, Apr 17, 2024 at 10:38:45AM +0100, Beata Michalska wrote:
-> For the time being, the amu_fie_cpus cpumask is being exclusively used
-> by the AMU-related internals of FIE support and is guaranteed to be
-> valid on every access currently made. Still the mask is not being
-> invalidated on one of the error handling code paths, which leaves
-> a soft spot with potential risk of uaf for CPUMASK_OFFSTACK cases.
-> To make things sound, set the cpumaks pointer explicitly to NULL upon
-> failing to register the cpufreq notifier.
-> Note that, due to the quirks of CPUMASK_OFFSTACK, this change needs to
-> be wrapped with grim ifdefing (it would be better served by
-> incorporating this into free_cpumask_var ...)
->
+In general it's preferable to avoid placing cpumasks on the stack, as
+for large values of NR_CPUS these can consume significant amounts of
+stack space and make stack overflows more likely.
 
-Yes it doesn't look neat.
+Since the cpumask var resides in __init function, which means it's free
+of any concurrenct access, it can be safely marked with static to get
+rid of allocation on stack.
 
-> Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> ---
->  arch/arm64/kernel/topology.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index 1a2c72f3e7f8..3c814a278534 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -244,8 +244,12 @@ static int __init init_amu_fie(void)
->
->  	ret = cpufreq_register_notifier(&init_amu_fie_notifier,
->  					CPUFREQ_POLICY_NOTIFIER);
-> -	if (ret)
-> +	if (ret) {
->  		free_cpumask_var(amu_fie_cpus);
-> +#ifdef CONFIG_CPUMASK_OFFSTACK
-> +		amu_fie_cpus = NULL;
-> +#endif
-> +	}
+while at it, mark it with __initdata to keep it from persistently
+consumed memory.
 
-Instead of this #ifdeffery, I was wondering if we can actually do the
-allocation in init_amu_fie_callback() the first time it gets called
-checking if amu_fie_cpus is NULL. init_amu_fie_callback() must get called
-only if the cpufreq_register_notifier() succeeds right ?
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ arch/sparc/mm/init_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also I don't see anyone calling amu_fie_setup(), so where do you think
-the possible use after free could occur for amu_fie_cpus. Just thinking
-out loud to check if I missed anything.
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index 1ca9054d9b97..088d9c103dcc 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -1438,7 +1438,7 @@ static int __init numa_attach_mlgroup(struct mdesc_handle *md, u64 grp,
+ static int __init numa_parse_mdesc_group(struct mdesc_handle *md, u64 grp,
+ 					 int index)
+ {
+-	cpumask_t mask;
++	static cpumask_t mask __initdata;
+ 	int cpu;
+ 
+ 	numa_parse_mdesc_group_cpus(md, grp, &mask);
+-- 
+2.27.0
 
---
-Regards,
-Sudeep
