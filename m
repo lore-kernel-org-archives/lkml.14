@@ -1,188 +1,156 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15B223D7
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9435023D7;
+	Thu, 18 Apr 2024 16:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456782; cv=none; b=FhdBJa4saOyVCHdxe/hpoxLgt/hcfFAvVUkDMxbuamd4ryAjZlYrw04Zp+CnFyr603wobMXd1Y+OQa3KEhD4cqIciKG5GZMyib4ixa8RSENagCnAmA4gRdTiRCAAjILVKs5pL/mwo1pB183j4ccfgwrVYX5r5xyOxWDJ2XakrcA=
+	t=1713456821; cv=none; b=b5gXJpVfXCTedyIO9rdVajN0bQEu/RPKLlNCRzsKU8ScYvRtNPDSy+y/U+fKd02JKK2CaR7HcFYb4BPOIyFxiSNIgXkb/SThSfCOXikPnN+0pOJobb3VYuGfp+T5F0gLQoKRldfNWQE0qTxtIGc1m1PGCIkyA4TKroO9XRDtyp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456782; c=relaxed/simple;
-	bh=7O5CaiYMx3o81DATDCx+mdTRxyfXstzYIysSrKy8ixI=;
+	s=arc-20240116; t=1713456821; c=relaxed/simple;
+	bh=q/TFlw8SQh+Cko4nU/ng2SJ+spicGdHxGtHPBf/Abnk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=utOtU7iliGhkk6vvXScoYuWEr9ZuePEsc7LcHQ+Kgj86OgIBBSYveyXvnLnF2eihHo7SRW5tBZ0RHoseFctXWCA+zPnKZ0LaYWhubQnSESLk0nKp1jDWxsAUCXCEr1xW5K7aMHNzcbEXS/pZQCsoyhtPr45oZjcQYYARPgFQZ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jDdf8fco; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 To:Cc:Content-Type; b=sa5qnWUQX0RErrpdnnxH7GgWCr5lEqhJwDAuJnGGize3UarOoOIuloejC7OxMSPLUwwPPT1eEdd9me6y0BaubUNVx7nV5Dix2Fj+CvTEwHFU2X31FKk5Xed6nJQ+i3oeN2e/Doq0jWcPc62fTzQTO1p+xnswM3qk9TRO4PfG7KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M66D379U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jDdf8fco"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2a7e19c43faso818537a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1713456780; x=1714061580; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/WYegnjNIT6ITUxIPv0/Q8MWBXWcokuDnEdLFw52f4Y=;
-        b=jDdf8fcoxdYv1zIvWActMsrWTBqzfgWUVi8QW4kpIpkCy7zKx3jpTxqnoTpzQaP0n0
-         cXMbS846m1O0KLEMkJPluKwyG6Pa7uQnpPTpN9/kLh30ObqWscVjpBrZ0HN3+t7gJE5o
-         ASLUQvBrWXTAOz0BnANv8evlGN+3Cv3/dJO7NyzfD58orvcSoBk0G3H6X2U6DuCTwI7u
-         MD4ULmnTkz21lWz1p1/zkLQVWMkRQvUA3bd6UB22z/k6Nn2u7vTd63xBBJWlZgiHR/ld
-         Wvtl+qUGThRxbod+DZPaqenFEnUhq69lGSj9FlMfakTgRBFc++8NnJe92hrqZEhVJOku
-         uGpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713456780; x=1714061580;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/WYegnjNIT6ITUxIPv0/Q8MWBXWcokuDnEdLFw52f4Y=;
-        b=OQnx7Vxm2reKxnpeLaorXatjObodpLfpB3pbcHhNtWzAtWV/yUzbR79+Q6qeV1utzf
-         6sv/s5pmjG1XutCUYNq+zBdykJnmXg/VUUPNML9VXcdcSAwkUGNHa8JJol5PwFGg65NI
-         0bdgnEXxNPfuCElFB4xq4tIkj+rYjjUv3QLqDW9y4Oug64mIAXkUeT3KkkS8SsxycVSi
-         T5PgcOrxqdHUrgbabKHEf7O+x+zIt3yCQYHjmJ3TQc5zdoqvApcATexL7psDbcQc0Re1
-         xa2y3uxgPkIf87PhLhinEwuVcgIzvVqSF42XwfIJbinrVxLhvzGLtMkRG2mXCEe2qP/M
-         LLRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyHrQy0Lv+8fcCp15FNt2jUiMdXQg/zoXWdJ93YOQUAjW8XoitU9EY5Ek0ujOVmL2n3m9lJ/4rQu48oax4eohmhKoGlnJ22dWeChX1
-X-Gm-Message-State: AOJu0Yx4mCL29YbEjAeSfS2ijcFkxP3oHZW/4T5quj3OqyBU+H5DOaSW
-	MpwkF04/+qIAa+2BsiMj/w3tc7AlNY0g+SyZhGvZvpC+fV7PRzJC/ZDf9XYiNoiImWLPClez44O
-	vdZC2FVLhjd4x0lvJcQOhNgIxU8F6I+xWl7mobg==
-X-Google-Smtp-Source: AGHT+IE540tIbatlzBLLRdYDFdE/gaEn76X4nIZPEK27zBxxh80jC+Hni9udU6puJgxg5fEqmSDfdWteIZhb/AFmz3M=
-X-Received: by 2002:a17:90b:4c92:b0:2a5:395e:8673 with SMTP id
- my18-20020a17090b4c9200b002a5395e8673mr3284250pjb.5.1713456779903; Thu, 18
- Apr 2024 09:12:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M66D379U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FA7C32783;
+	Thu, 18 Apr 2024 16:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713456821;
+	bh=q/TFlw8SQh+Cko4nU/ng2SJ+spicGdHxGtHPBf/Abnk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M66D379UjZi2pzII5y0MS95jTIIdgeaP5CeOU5t6T8ugoVGoFqm+PLgIbtbjL7jJB
+	 NWZmI3wmyAW6yd89gdzYoIAx8VH5oZAnUb+Nm6vIWzmLAIwB+yayQqOZ7130lPGtZc
+	 76JyrlVTFHePR2a2syZozERpds1Ug/Dsrn50BaO6JXr296Nahb9Dr77AX8YroHZzWq
+	 ciX+VZkyUUoI9u3hjnf+cfLWuwOsKCHK6cQNotuS8wjUQA9NYe2vZrosUyMIWeB+1J
+	 tItBnOKtFJxbN9219aDk9FhAD2AC9p6dPGaByqxXhKspOCjdnFu5QP7jGAJaqTXGND
+	 Hk/edIrXHleKg==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5196fe87775so1055976e87.3;
+        Thu, 18 Apr 2024 09:13:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWzxuaphsl+RABbKWgK+hHzWpVoE5uljVBdLb52fmQ0owrzbH3CEcvvjgOCi5BH9Kyow2XR2gNjz+j65gOSvQuBKFO7vv/Rx787BrFVcKQF2toqDopOnNBcDMgwIxPCbBeBVah/xoVOxcH6QBZMzbn+Bz0mwpNeIgh23YBHjPRyDcEJXse08UfAEJSpArLWBpHd7YcJfnJBwhxF6tbG7Trce9qqIPM5nEL+OLV2VLnsaL9eQsQMlSzM6e1OGKpKfTjCwMcaYUIOd4txRINW1sBWAQxyJfKcnnIL7Cmh1ag2Sq9WE5b12vaF8fIZ3rwGK557FUEvg8Fo4mzjwSjuhjx2QNw+aOaGkWpsdsHdbSLAruZytryCfxkikgcKk0WI/sx9mQE3oYxhoJzzPyOCXEfgmpqimuGlMpAK5Ofy4XHmjECTrH0Y3XgIifc=
+X-Gm-Message-State: AOJu0YwmiN4vTEBt/JgaK4RfY8DCk8e/WtC0+HAR6P6/ODoCrPpahoYl
+	Fl1u33dU7gW4WNBpEHPDJEOuhZSfyJ8cRzLZymo5mR8lTKpNwRux4SIYTchgMsu9LcgjJwJuIZM
+	uq6vAGlg/julyKhA4aAUTNtsK/QU=
+X-Google-Smtp-Source: AGHT+IHLiDWbpJNv5cpg7tSucX1RJbILlT9QE6EE0zaOt0RsDuLJ8JfO9fqfVmmivnqe0091gRHYHRJJ+tsSYBR5kLA=
+X-Received: by 2002:ac2:5fad:0:b0:519:569b:361b with SMTP id
+ s13-20020ac25fad000000b00519569b361bmr1973077lfe.63.1713456819439; Thu, 18
+ Apr 2024 09:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418114942.52770-1-luxu.kernel@bytedance.com>
- <20240418114942.52770-2-luxu.kernel@bytedance.com> <20240418-dove-deferral-2b01100e13ca@spud>
-In-Reply-To: <20240418-dove-deferral-2b01100e13ca@spud>
-From: Xu Lu <luxu.kernel@bytedance.com>
-Date: Fri, 19 Apr 2024 00:14:47 +0800
-Message-ID: <CAPYmKFsddST1n2ZU+5=c_yPqAKTjQ4X1mKVFMZbhfo8xiB+OTA@mail.gmail.com>
-Subject: Re: [External] Re: [RFC 1/2] riscv: process: Introduce idle thread
- using Zawrs extension
-To: Conor Dooley <conor@kernel.org>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	andy.chiu@sifive.com, guoren@kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, lihangjing@bytedance.com, 
-	dengliang.1214@bytedance.com, xieyongji@bytedance.com, 
-	chaiwen.cc@bytedance.com, Andrew Jones <ajones@ventanamicro.com>
+References: <20240411160051.2093261-1-rppt@kernel.org> <20240411160051.2093261-6-rppt@kernel.org>
+ <20240415075241.GF40213@noisy.programming.kicks-ass.net> <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
+ <Zh4nJp8rv1qRBs8m@kernel.org> <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
+ <ZiE91CJcNw7gBj9g@kernel.org>
+In-Reply-To: <ZiE91CJcNw7gBj9g@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 18 Apr 2024 09:13:27 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
+Message-ID: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
+Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
+	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 11:06=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
+On Thu, Apr 18, 2024 at 8:37=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> + Drew,
+[...]
+> >
+> > Is +/- 2G enough for all realistic use cases? If so, I guess we don't
+> > really need
+> > EXECMEM_ANYWHERE below?
+> >
+> > > >
+> > > > * I'm not sure about BPF's requirements; it seems happy doing the s=
+ame as
+> > > >   modules.
+> > >
+> > > BPF are happy with vmalloc().
+> > >
+> > > > So if we *must* use a common execmem allocator, what we'd reall wan=
+t is our own
+> > > > types, e.g.
+> > > >
+> > > >       EXECMEM_ANYWHERE
+> > > >       EXECMEM_NOPLT
+> > > >       EXECMEM_PREL32
+> > > >
+> > > > ... and then we use those in arch code to implement module_alloc() =
+and friends.
+> > >
+> > > I'm looking at execmem_types more as definition of the consumers, may=
+be I
+> > > should have named the enum execmem_consumer at the first place.
+> >
+> > I think looking at execmem_type from consumers' point of view adds
+> > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kpro=
+be,
+> > and bpf (and maybe also module text) all have the same requirements.
+> > Did I miss something?
 >
-> On Thu, Apr 18, 2024 at 07:49:41PM +0800, Xu Lu wrote:
-> > The Zawrs extension introduces a new instruction WRS.NTO, which will
-> > register a reservation set and causes the hart to temporarily stall
-> > execution in a low-power state until a store occurs to the reservation
-> > set or an interrupt is observed.
-> >
-> > This commit implements new version of idle thread for RISC-V via Zawrs
-> > extension.
-> >
-> > Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
-> > Reviewed-by: Hangjing Li <lihangjing@bytedance.com>
-> > Reviewed-by: Liang Deng <dengliang.1214@bytedance.com>
-> > Reviewed-by: Wen Chai <chaiwen.cc@bytedance.com>
-> > ---
-> >  arch/riscv/Kconfig                 | 24 +++++++++++++++++
-> >  arch/riscv/include/asm/cpuidle.h   | 11 +-------
-> >  arch/riscv/include/asm/hwcap.h     |  1 +
-> >  arch/riscv/include/asm/processor.h | 17 +++++++++++++
-> >  arch/riscv/kernel/cpu.c            |  5 ++++
-> >  arch/riscv/kernel/cpufeature.c     |  1 +
-> >  arch/riscv/kernel/process.c        | 41 +++++++++++++++++++++++++++++-
-> >  7 files changed, 89 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index be09c8836d56..a0d344e9803f 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -19,6 +19,7 @@ config RISCV
-> >       select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
-> >       select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
-> >       select ARCH_HAS_BINFMT_FLAT
-> > +     select ARCH_HAS_CPU_FINALIZE_INIT
-> >       select ARCH_HAS_CURRENT_STACK_POINTER
-> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> >       select ARCH_HAS_DEBUG_VM_PGTABLE
-> > @@ -525,6 +526,20 @@ config RISCV_ISA_SVPBMT
-> >
-> >          If you don't know what to do here, say Y.
-> >
-> > +config RISCV_ISA_ZAWRS
-> > +     bool "Zawrs extension support for wait-on-reservation-set instruc=
-tions"
-> > +     depends on RISCV_ALTERNATIVE
-> > +     default y
-> > +     help
-> > +        Adds support to dynamically detect the presence of the Zawrs
-> > +        extension and enable its usage.
+> It's enough to have one architecture with different constrains for kprobe=
+s
+> and bpf to warrant a type for each.
 >
-> Drew, could you, in your update, use the wording:
->            Add support for enabling optimisations in the kernel when the
->            Zawrs extension is detected at boot.
->
-> There was some confusion recently about what these options were actually
-> for, because this option doesn't control "dynamic detection" as the
-> ACPI or DT detection is compiled at all times. I had written a patch for
-> this wording in other options at the time but had forgotten to properly
-> send it:
-> https://lore.kernel.org/linux-riscv/20240418-stable-railway-7cce07e1e440@=
-spud/T/#u
->
-> > +
-> > +        The Zawrs extension defines a pair of instructions to be used
-> > +        in polling loops that allows a core to enter a low-power state
-> > +        and wait on a store to a memory location.
-> > +
-> > +        If you don't know what to do here, say Y.
-> > +
-> >  config TOOLCHAIN_HAS_V
-> >       bool
-> >       default y
-> > @@ -1075,6 +1090,15 @@ endmenu # "Power management options"
-> >
-> >  menu "CPU Power Management"
-> >
-> > +config RISCV_ZAWRS_IDLE
-> > +     bool "Idle thread using ZAWRS extensions"
-> > +     depends on RISCV_ISA_ZAWRS
-> > +     default y
-> > +     help
-> > +             Adds support to implement idle thread using ZAWRS extensi=
-on.
-> > +
-> > +             If you don't know what to do here, say Y.
->
-> I don't think this second option is needed, why would we not always want
-> to use the Zawrs version of this when it is available? Can we do it
-> unconditionally when RISCV_ISA_ZAWRS is set and the extension is
-> detected at runtime?
->
-> Cheers,
-> Conor.
 
-Indeed, we can always choose WRS.NTO when entering idle.
+AFAICT, some of these constraints can be changed without too much work.
 
-This config is introduced for the second commit in this patch series.
-In the second commit, we detect whether the target cpu is idle when
-sending IPI and write IPI info to the reserve set of idle cpu so as to
-avoid sending a physical IPI. Besides, the target idle cpu need not to
-go through traditional interrupt handling routine. However, if all
-cpus are busy and hardly enter idle, this commit may introduce
-performance overhead of extra instructions when sending IPI. Thus we
-introduce this config just in case.
-
-Regards,
-Xu Lu
-
+> Where do you see unnecessary complexity?
 >
+> > IOW, we have
+> >
+> > enum execmem_type {
+> >         EXECMEM_DEFAULT,
+> >         EXECMEM_TEXT,
+> >         EXECMEM_KPROBES =3D EXECMEM_TEXT,
+> >         EXECMEM_FTRACE =3D EXECMEM_TEXT,
+> >         EXECMEM_BPF =3D EXECMEM_TEXT,      /* we may end up without
+> > _KPROBE, _FTRACE, _BPF */
+> >         EXECMEM_DATA,  /* rw */
+> >         EXECMEM_RO_DATA,
+> >         EXECMEM_RO_AFTER_INIT,
+> >         EXECMEM_TYPE_MAX,
+> > };
+> >
+> > Does this make sense?
 >
+> How do you suggest to deal with e.g. riscv that has separate address spac=
+es
+> for modules, kprobes and bpf?
+
+IIUC, modules and bpf use the same address space on riscv, while kprobes us=
+e
+vmalloc address. I haven't tried this yet, but I think we can let
+kprobes use the
+same space as modules and bpf, which is:
+
+ffffffff00000000 |  -4     GB | ffffffff7fffffff |    2 GB | modules, BPF
+
+Did I get this right?
+
+Thanks,
+Song
