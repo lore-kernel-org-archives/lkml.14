@@ -1,103 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F3015FA9F;
-	Thu, 18 Apr 2024 15:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38EE16E89E;
+	Thu, 18 Apr 2024 15:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713455825; cv=none; b=SigxKr5ZqfUYYKS0cDUyGCd7hUodFiiFTreBiWTZLOknqxmpZSxhDlexv0rWcx9bKxOZ+6RZMXxxWp8dLNpkhTkjv8fq6MVDvazEttG9SUT5pIc9AGNlAzXKVMhctNAPKeacG0Ag/fj7UQjpFE4h7mc1ApRZmdC4I1tUp9sXl1o=
+	t=1713455838; cv=none; b=VmfV6VLYcBDQTvkfyQ1LeTZSaMMCluRQagFUR6V4kkXS8HTD9ORYxW8IOXWdUNwI2oALuaSAPF+q0u5YwNZPvUn0OV+WHc4ozbAfyqNuGkQJrZFD+onjppFIqkYbBwLdCfi8hFKkgG2AmkNJduQdq58CpY5MwucgKgb1WFH63sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713455825; c=relaxed/simple;
-	bh=NuLhSfmYURyeA4KyKnBJ8GgZw3mwTQhoH5JrHj17W2U=;
+	s=arc-20240116; t=1713455838; c=relaxed/simple;
+	bh=NZIjz58uChGfVrQTFf9J8bzx9/b0OCWG32jP5AflxYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RjaSI5HlAi1YmUYhBYJmcAyTUYrlRr0xu7+qwphS0ZZer7r5BXsOCUYe67h6KS+R/QvtSERck9GHLozAs2ceLKQF02FEw8vdL/nrvuEc1Km6TxwmD+WBJtpRfPG63t4915uC6SKJD706M31aZEnFsEHvqq0R2ZdffQK99lWN8Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HC8VKVm5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HULfq3W278JXWEduOSjb8tISUjCa5dncSyNOPA/r5O/Txp7gyLoS2/d2gOZIvpAeRFoaUaLzT6/z16Hc6jlauzAPNtYg4Mj8JwqcE1zeK+2bfF6HusveVbXpT6ukh8hqXPSp2hofkIrKp9m18qj7vqwjesUe/oS8gQsFDf5Kz0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FyijSi3H; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HC8VKVm5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE17C113CC;
-	Thu, 18 Apr 2024 15:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713455824;
-	bh=NuLhSfmYURyeA4KyKnBJ8GgZw3mwTQhoH5JrHj17W2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HC8VKVm5hRy2IWpiv+a8i3bjGGmhEFdfpcgke+gWkBdnKp/GfF5li0yOqubX0m3bt
-	 dPTnBjB0ibYwUMXtA2qBD04QQf5EYFdGid5NPHouU9RvlXo+XwuXwUw8wOytI5JqR6
-	 5pNPmDYJhJYEswFyq/7AUHJIjxUqIvis0irOFtW1D9pBQJYQ5OblC72B43UYRj0bxK
-	 Deli09g5qDv4VpnClB9wlI3cSXOhCANJ1AjMl1xnZnomcAIOEm2vAHSCNM5+6OX+cM
-	 r8mxMVYUwJvZpel05v/cxU1PtG1fTuh0LCjX1s2Oq2/ESfT0i3W9u6nX3eyJ5od/Fi
-	 yB4TX5eQPHC0A==
-Date: Thu, 18 Apr 2024 16:57:00 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, FUKAUMI Naoki <naoki@radxa.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: correct the model name
- for Radxa ROCK 3A
-Message-ID: <20240418-skinless-aptitude-245665a7c757@spud>
-References: <20240418130120.67663-1-amadeus@jmu.edu.cn>
- <d00953aab0f1c978e3720885a6844caa@manjaro.org>
- <20240418-drove-boasting-d189ee3e22e0@spud>
- <7fec3e2f4e16b1aca6cd08e1882bd885@manjaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyijSi3H"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ee0642f718so1562470b3a.0;
+        Thu, 18 Apr 2024 08:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713455836; x=1714060636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=31gcKiCM041JeHwiuTiAkytMVofo37R4KQG8kS1eMO4=;
+        b=FyijSi3Hs31tWdXijU3isd+usZivxkuUt0qq58SxqQFkfNfLoCyKibCpOkts6YoR1t
+         qtt2XSv0okFYv0xJ7520NnhFtsc25GTjavWxm2tx6etm6aURZlHRP0w6qQWMpMlnxDow
+         qBW0JbDyhgBxbK4PBew2q+xa8TDruF9bzprUAnz0mJZdVBn1CTXHr7zy8+pvRJGU3a0x
+         uf0+l7DDoFwDJ4DSLOh5zvJr60efr8mM5UzuUQB7C6vxUV+wb7DX5Xjyh0qF6UPIGYiy
+         eNd2rQ9FjqrgqtPV9feZN3CBn/ObILQ9gD6ccD4ynPN+Hr9si8A/IIo+JyL6UHg+w9S3
+         QFMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713455836; x=1714060636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=31gcKiCM041JeHwiuTiAkytMVofo37R4KQG8kS1eMO4=;
+        b=ilyTyeKjMALGysslseJXT8C8HppLldc8qMcXfHS0U11UsENbHEIsbxBmYJjidkSLJW
+         87ZnNZe0ZUOzswXXheG8udKGExyq5ZnUN0LBrRioJGyJwRgPbNZTjWCFMkuf+yDgBRE0
+         0wiZvJUaroU1Q5xC3nLvzIRE5Z3IUZL+qkk4AIygtw/feH4DRk9XmSA9YX/b/8EvNdZa
+         zJ0uShJxcfsZg/5/ocTu2F+v4BmrjwEVk7eC9BDa8e3mGT5lzs54jx/3PZ2r7dS9UXJk
+         5xBIdvXnUWckjkxkymcy/QETC16HDW0uRHPJG+XipOikfUOjQOwQe2QhWewrXSBsX48j
+         W6BA==
+X-Forwarded-Encrypted: i=1; AJvYcCU45zyTH7cs/Cry17r9Vk6DSLMfmt1M3DKxiYfaJHnZciKv9fhPoyjH1+OZq3NJ0XiR9PkYODi+4MqM+l4/N9ichjIGGudJIQMcS0uQ/Z9aJ/i81BDsPjo9GWAuzy6eZ+NX5gzbmw==
+X-Gm-Message-State: AOJu0Ywq9M7rNEcLvUk/gsz6zhwgIWIzQx1nkhE+rs9ERD8maQFFQsgV
+	VqaSiy/cLd07PuBj/kU707OYqphf8UtlOD141YGITHWEKP15dbphNIkgi/cK
+X-Google-Smtp-Source: AGHT+IECbU03OA/uDtt/4eiPZmOnQn58qU66mWE0ULSPEhGbJvwpcV57muu+sGx72J6Sn//yYT08ag==
+X-Received: by 2002:a05:6a21:2723:b0:1a7:9b0e:ded3 with SMTP id rm35-20020a056a21272300b001a79b0eded3mr3931879pzb.11.1713455836062;
+        Thu, 18 Apr 2024 08:57:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id g13-20020a62e30d000000b006ecfd2ad4ddsm1696343pfh.146.2024.04.18.08.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 08:57:15 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 18 Apr 2024 05:57:14 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
+Cc: lizefan.x@bytedance.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 -next] cgroup: don't call
+ cgroup1_pidlist_destroy_all() for v2
+Message-ID: <ZiFC2u5g5QGGRFFa@slm.duckdns.org>
+References: <20240418021930.914245-1-xiujianfeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e6Eqyn2mnOtnO6RB"
-Content-Disposition: inline
-In-Reply-To: <7fec3e2f4e16b1aca6cd08e1882bd885@manjaro.org>
-
-
---e6Eqyn2mnOtnO6RB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240418021930.914245-1-xiujianfeng@huaweicloud.com>
 
-On Thu, Apr 18, 2024 at 05:46:30PM +0200, Dragan Simic wrote:
-> Hello Conor,
->=20
-> On 2024-04-18 17:37, Conor Dooley wrote:
-> > On Thu, Apr 18, 2024 at 05:21:18PM +0200, Dragan Simic wrote:
-> > > On 2024-04-18 15:01, Chukun Pan wrote:
-> > > > According to https://radxa.com/products/rock3/3a,
-> > > > the name of this board should be "Radxa ROCK 3A".
-> > > > Also update compatible to match the model name.
-> > > >
-> > > > Suggested-by: FUKAUMI Naoki <naoki@radxa.com>
-> > > > Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-> > >=20
-> > > Looking good to me.  I'll send the remaining naming cleanup patches
-> > > a bit later.
-> >=20
-> > What remaining patches?
->=20
-> The same naming cleanups need to be performed for the Radxa
-> ROCK 5 boards. [1]  I had some more cleanups for the ROCK 4
-> boards in mind, but I'll drop them after your NAK. [2]
->=20
-> Though, I'm not really sure why the NAK?  Those names aren't
-> used anywhere, neither in the Linux kernel, nor in U-Boot.
+On Thu, Apr 18, 2024 at 02:19:30AM +0000, Xiu Jianfeng wrote:
+> From: Xiu Jianfeng <xiujianfeng@huawei.com>
+> 
+> Currently cgroup1_pidlist_destroy_all() will be called when releasing
+> cgroup even if the cgroup is on default hierarchy, however it doesn't
+> make any sense for v2 to destroy pidlist of v1.
+> 
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-There may well be other users outside of those two projects that are
-actually looking at it - I don't think that adding a hyphen is worth
-disrupting anyone for, it seems perfectly clear without it what board
-this is.
+Applied to cgroup/for-6.10.
 
---e6Eqyn2mnOtnO6RB
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiFCzAAKCRB4tDGHoIJi
-0qZRAQDvp1WMjeZQ5UkpdXHldOb66YBev1YO2u1XU0t6ffUyzgEAkK6CFkop9QIu
-mtkvqS5obGem7DzXQW/A9taovKtQTQw=
-=VAgQ
------END PGP SIGNATURE-----
-
---e6Eqyn2mnOtnO6RB--
+-- 
+tejun
