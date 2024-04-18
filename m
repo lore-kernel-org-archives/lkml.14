@@ -1,692 +1,384 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2043.outbound.protection.outlook.com [40.107.244.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F299415A499
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713431699; cv=none; b=YHThQnvxE0Ng0isCQ5lQvBK/02LpWitl140eLyF6k3PJUH+Mv5o/DYXJ0cfjNqu2WmXg+d/l5yFtUzGiZ/i319uzSr1TynYpzUBX7QlHEtyLPmV2WJfFMBi6v78o+/CuxPhuyDEUK8XBbC5DEl6SMtM2ctPlztM7h08u3XIv/HU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713431699; c=relaxed/simple;
-	bh=f2D1GhcySDMy8/qnRUNzAmyV+jZJk9VQdN2gJIvQ2OQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bRp08eAQCZOGfN0gutxEyecUeXgtowKMDpB9SHlcJ4+vrTNNAxWM4qi+SfebIeJvhjId6Jo6jYX/Q/BXlrGWCDSmM1o5oNyHqiqMU900M8RXs5Abi+PqIM9lnGvj91dmotw2Um5KK/ZlllvtlfdvnjJsF9B5wEf3ev9/c1sURk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6iaNygG; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DA4158858;
+	Thu, 18 Apr 2024 09:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713431736; cv=fail; b=Acte8y+QpF0mbxIwg/yQSWjLl72FK4cT8rcOp+RC3C6FAUUh9J8X61tRAfYKVkI7dq7CZIoFNR+iXLdlM430UpOzyE/564C4EnTC3r7zvgiNqVsN984Fo0noIUwrV8zuylA9WijAPmm/VETxLeQYpPCUDq4KfSu//9yKcNKdwHQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713431736; c=relaxed/simple;
+	bh=L2HxD5g3MF0V9RADclts2bKuPKMfzeciROqWgHN3JKE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dE+ZYrYHmEZdKy0WLfUbCZqh57UKz9dIIA68BZjmbPKxbr0ePjDDLG/1LcWSY2OkH0CoSC9hk3PHfNYsaQEZfoHkmEZvGinUO59IcZrQ1a09+VwTp1qCdwmmAv6oy+rCqTekqbIkESt+A+TTd5vxHwMw9h4CbhauNn6XoEUUULk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FnJQy1Wm; arc=fail smtp.client-ip=40.107.244.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6iaNygG"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4dac112e142so208078e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713431696; x=1714036496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0uFXiqaMwXoo8/JHTKBB1Bo8adWkXp3D6NyREx2fjsg=;
-        b=G6iaNygGRJ88+01qQ8OB2SAimWZsWm/euz8IGLd6E8eSMuslAs4LgVQaHmFsc+jcYG
-         kKi8E3PeMZ+sQuPgZ6sMaZ5QoS5XH0qaVsqpVQL2Rdi93afxHLjKaDR1iAnrZ0qFlRQp
-         KqvtlYv6g7q0kYJ1S/hSZEFupYL70jsDsUi4MUzkUTOkXz5AHIs3ZyRzOj9F38RRx8x2
-         nTHJIOlHnb0fTgXLzczQ4U6Olql+0KRf+h0JrdS0CNdDscZXvOvweu4+NVPbkhJBXUF6
-         +o0p+4pwmfGsa6hc+y+S+I9g4X3FcXZUrfmuZtoUJt1vwnv5rC9dkLaHzxuvvtZYLs48
-         AdyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713431696; x=1714036496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0uFXiqaMwXoo8/JHTKBB1Bo8adWkXp3D6NyREx2fjsg=;
-        b=KEUZu9LNdwCtG3pEY1/O7f+78CnQ/halIrp3/Xc35vFJk5yw05V6oKCK/YOLZ1j8yg
-         UMStV2s9BheclL0Q/WUgzsSOGu394vZu9c0RH2OcrW2qw34JD4UWYLus7EfPxYSqRFRB
-         3aHtP+e3AKpsWvmO77OUXxXkmPPYB5zdhO+5XTo6UTaNTyrNLV/VDeu7JRS88PAifxUP
-         BE8IdLcoEAZqwDmKj12z+1J9FO2xwFm7POitPSFClM/3SL63zGybbfosLk+jegckmbRL
-         zriftwy8Wxlbs9ZD80AIFGRTA5EyAAOwMBhPAr4CVF0IhDBOdofzLy0vQN0h9Er7XnDF
-         0EFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTSY52j5sLbHvCzNP8CnI7L37nPQulXm2AAcMxscFJk+ujgtpMJG+3ez4gmvqCe2i/3L9WiLAs7HQZLPCIzgWj+smZ0u+Brfp9M7iI
-X-Gm-Message-State: AOJu0YyhM7WVRV1TtMW1/X3tZt1MTN2BL7JYOfiJKvPW83SctoGV6Q+z
-	4w8pZsireM+FVOBK+BFPhQnCPjxqANlV142oPa/ksVEaym76KSXNRv4AeR/B9X13zGNHmYfjTpM
-	FwMtaze4BCj/TxZVdqm/Q7zCwhNI=
-X-Google-Smtp-Source: AGHT+IEH1UBe4r5gDOje4+5/5IxMxCr5XWtqpmKtsFUIoLLvCEIuK5DL1UZFw1AbR1BUHH5CSTYk0MfLEn6LdY3Ir+Y=
-X-Received: by 2002:a05:6122:9a4:b0:4da:9bcd:b097 with SMTP id
- g36-20020a05612209a400b004da9bcdb097mr2261447vkd.9.1713431694667; Thu, 18 Apr
- 2024 02:14:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FnJQy1Wm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HtD9hAZstF1Ij25FeMbWSPCRy3dUx1bpBqBVMZM5O1YiGynxHRnPxYVSR2cyvn7vHntQUn9QCe3pCApZtmwoAe7R1p7fFdTSq+F5EYAty2nWv7+8SVAHrwsLUOMVPhmGRx0G6Nonw62GnagoCvoPmNOz64hXUKETMzyjK/We59lTqd01vDwTR+Z0sgT/W0DlCFY6ZFuYcWrOLntjoUxTa+I6RKL7h7vMI3ubGDUGZkSg/Kwxm9/THsFneXA7mkxvqCCK2pePLrRvELYP0s8Ok8df5DWIVNl4TsC9mFJtrmK3k9yXnRHRzX8YI8InYZkaOEDkca8RYA5hE95P1xEDdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ANvIptWtVm7JYRAqpgtD2rWLqklaqRb6dbyubt4Aakk=;
+ b=KHE2aDwMuMXW3TEyJoge6BtXxWreeQVX9huPYlzS/wNBfi3nat8WpuroA/jCbuHOJflpKBDgyZVJZq4r8JnJRiTEILzmuJi/7+YskdfcHxsyLcAw7+5CSbpQ8IojLCgYfHs00bAVDbytUY8iF0z8J744ZQ78snznuEwWV7S26s9fg3FJqRkXICEjdi9sGdV9Q4tJglsG/lNSoNKCFWmbUkNe2oUsIG5cmpN9TDF6giMnr9FVkcQ5uzWevPB9AXlU1A/LwieEDyzvEBPeBxx4FftFf0WFBeDO386LU0rnB807HOcj1w06um3Q+YIfqVftEmD05H/OrHwzTFK6Btz+bA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ANvIptWtVm7JYRAqpgtD2rWLqklaqRb6dbyubt4Aakk=;
+ b=FnJQy1WmDPohXB03HgsU1fJEvf2Wgut0aR1o5vQ+ezGKQgbOReb3CltZpIdR73ZRarnaLPSmlbnllDf0ZaSYDp8+hjBgvQ5SCVyl931zvlQdCYgYdSfbhemt0InaY5zOpt5DZdNLjOxLkZimMO5bk3yHDCAbs4wpunSQg5SZZkI=
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com (2603:10b6:930:c4::19)
+ by PH7PR12MB5735.namprd12.prod.outlook.com (2603:10b6:510:1e2::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.55; Thu, 18 Apr
+ 2024 09:15:31 +0000
+Received: from CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::64d2:3c49:7c63:1749]) by CYYPR12MB8655.namprd12.prod.outlook.com
+ ([fe80::64d2:3c49:7c63:1749%4]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
+ 09:15:31 +0000
+From: "Yuan, Perry" <Perry.Yuan@amd.com>
+To: "Huang, Ray" <Ray.Huang@amd.com>
+CC: "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "Limonciello,
+ Mario" <Mario.Limonciello@amd.com>, "viresh.kumar@linaro.org"
+	<viresh.kumar@linaro.org>, "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+	"Petkov, Borislav" <Borislav.Petkov@amd.com>, "Deucher, Alexander"
+	<Alexander.Deucher@amd.com>, "Huang, Shimmer" <Shimmer.Huang@amd.com>,
+	"oleksandr@natalenko.name" <oleksandr@natalenko.name>, "Du, Xiaojian"
+	<Xiaojian.Du@amd.com>, "Meng, Li (Jassmine)" <Li.Meng@amd.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v10 3/8] cpufreq: amd-pstate: Unify computation of
+ {max,min,nominal,lowest_nonlinear}_freq
+Thread-Topic: [PATCH v10 3/8] cpufreq: amd-pstate: Unify computation of
+ {max,min,nominal,lowest_nonlinear}_freq
+Thread-Index: AQHafqlOStDko7smtkqhbMmpukPdgrFpjFKAgARXt+A=
+Date: Thu, 18 Apr 2024 09:15:31 +0000
+Message-ID:
+ <CYYPR12MB8655C0C64AA779F8FA9E09159C0E2@CYYPR12MB8655.namprd12.prod.outlook.com>
+References: <cover.1711335714.git.perry.yuan@amd.com>
+ <31e4c97f791837c97c0b2caca61bcdfeabc3f97f.1711335714.git.perry.yuan@amd.com>
+ <Zh0/p4tzcqxQvnm7@amd.com>
+In-Reply-To: <Zh0/p4tzcqxQvnm7@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ActionId=5d47542b-47d7-48af-9eed-d3fb5d10099d;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=0;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=true;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2024-04-18T09:13:30Z;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CYYPR12MB8655:EE_|PH7PR12MB5735:EE_
+x-ms-office365-filtering-correlation-id: 8f7e3e2b-f897-45bc-8268-08dc5f8818bd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ HD9ZRV7RbxDx75mYZEc3ahq3dObsqLh0nEBOV2amG4+P8pU/rh/Tt2ZjUTH+ipwZprpd7ADE6hKOCRH/RGh7g/4Xx+l5yas93zSfMqyDAyp9pdsxT2UNzjoGC4Y+gOh/IB7UOAtSIt8mRabD4B4nSuY04C494pLI20fHlHFA/v63rYXIrGwSmUUtgIzO6A3NbZ8lo89mFdbiLz0nMWbNMg3tgjwNct0CHbGjP+mwg+pt8seRjc+q1Z2OMPIDCA3B0xYY142e96UL1U+w5nPdrNA9AuQPgFKhSJF3zEk3cn7kmYHMxu/AS0y35UEFKARWMSxsjd11z6FMMYoxCdw8B+c5uHQ1/dk2RHP/KhJ4BliKLolW+g1Q91ByS0rlD271DizSeMIIwW+kEEZTBfExx+4PTNp8oPp4KQks/wth2rF0uE1cImeT9slfuLvWrzD++lPfkEu8kBxa1Pe4vzRJi0fKkqrRg5n53DrhmeXPDJdvYfkAjXPiNDgWfBk2tAQpOtVqb55mb6ZhAjhycU2w48X/3Bk5UH3O2CkD9bBMhAJX7Zfvh8AlQ20whegNGcbdGFOQr6hVJYhU1KBOfX/Lh6tI9SP8UaQCs8+MHEw2Ce9qLAnbpFqkh5kN3xqlJHjxLujl9A+UwFFw5RuF23Nw/d/2gwvfj+wXrrlo86+g6F1ygLdK2EvPziE7yecPFAzhn/oVZl9Kevcl9hfxeRTPoQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8655.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?p54D24KfjY2D9h9hSDgdvYGYtOCeYo517TCPUYnv6cLL0fOpRa1Qsq7s0Ia4?=
+ =?us-ascii?Q?zECA1kFddtP78qR+X/jOLqlSd49OBAtnFXl/WsTpOhR0zGDHi9slm0HbnXS0?=
+ =?us-ascii?Q?faIMHzplFQu02AVt7q6RCBKsGSrtkFDJ5slX74ZrDvapVRX5I7h2la3iRxnU?=
+ =?us-ascii?Q?rYqXGTqXPxTnPf+7/5D/vr0mpWpYFjEfdoIifC+lG+xPoiDBkxy14cJDiWPq?=
+ =?us-ascii?Q?RtCw1WaqEjBnukGPXV2fS6hqqwVt/H+NDEE8sd2wpEchSLSMVSIYM20itRZd?=
+ =?us-ascii?Q?kGe/BvOCBX8ROzvRln6jEQfs45FlSEmF3YVYanulVgXLBr/TQpOYlkVAu6oj?=
+ =?us-ascii?Q?F9zc+M8qX5RwQMzSfqw4PnxtK6kPwYCVgPW3ToFO5sqPESkFgrJcpS6wAytm?=
+ =?us-ascii?Q?PNVzwx89fPGPyXdK+dgMg16X1EA5KdTBDR/HKBZ3jtY+T+FAJuxseIn55bWo?=
+ =?us-ascii?Q?3pQAi3P4gIhL/TzEJBBEmpjJwfXCGJuISFkn29pqdgYFGuNffFpLikJoodvI?=
+ =?us-ascii?Q?82JW8YemjnM4BtkkTtZWXRwGvP3gt1a/myS2yyTHZhlVcYrnIJhVp3BaZ56M?=
+ =?us-ascii?Q?9ulICZA42RyeaptVrXNsKn8sb7k8boCljWtAYqpAOGIJ73UU08zuOhc8Fw5m?=
+ =?us-ascii?Q?5Sp6DMZ6ge2mymzVaaUqyUDQgIXcT6q+3zHQrE2ZHTzTEqo/L09vHiRAPJFD?=
+ =?us-ascii?Q?64LaL5f5usVC5LLyuhGw9lRlWLmDBropXQMoFcszA6DdmwNNcIURDj2VOfE3?=
+ =?us-ascii?Q?473+gk1NyEizuZfJCgmX6EH64OzrtXKdjwS5vGU487qa/L6o6AYuH15w00ue?=
+ =?us-ascii?Q?XpM6wFc6gXRGa8VeHrPeYIURJfkGpgqinU43N8nfkZ8mQJyPPoqUhOVxQ0zz?=
+ =?us-ascii?Q?m9pE5B/c8n2nFSXXFF6tlYDbwRpIQBlQrs0DqIJpYjjGtz3TDXF4Xw2oBm8S?=
+ =?us-ascii?Q?zimlaSIZ8zKxqASCnap8zDI+MQUcIBzjDx6ezJEkMuJAvXmkVFl7oJJI20+W?=
+ =?us-ascii?Q?8LTejEwuyaVNxXUa7TSHm9gEHv19jaauw9kcNVmqZgVCxwklgskITITyDq8s?=
+ =?us-ascii?Q?qeoqGZvvue8UNRTaV9K8rkWbSdLWJQhs17ZX3WswACkqX87vI8NI9f1dC0g4?=
+ =?us-ascii?Q?1F78eAOCd2jPtRAGO/YjqZsPI5KiN6lw469nOWUJPxu686SQjRTeTtQf53Jl?=
+ =?us-ascii?Q?oeRcRakrayMyiH4B5LZsKyefDPR/cMFoxhb6Q7vkH5oWl0PtXGqwSA9Lj1Jh?=
+ =?us-ascii?Q?hX748iWWae5Cedst8xhDGjjuQq9Em7G4c5mlte+6k/Vr7+wbYJH0JrpF6kuV?=
+ =?us-ascii?Q?+r6zJXHjVi2iOK/8mDQS8XT3211LJX+XK3HcsUYIAs6lzwJZMJYdl3LlchD+?=
+ =?us-ascii?Q?dk/nTJ9KjgeC6tLFiPbzrFJ19JnIypI7OZWgnpMOglYneyghP28LIakzgxxh?=
+ =?us-ascii?Q?Lmh2cjyCzIcvIAtXJZsC4Wn2ZiKX+C2h9vhpHFNpI/NySgAPsXEX3A1BB6Zc?=
+ =?us-ascii?Q?8ieeSIPoCnBKRJ95k/R3qnqoIoFaXxJJt+ggTe0C/cvp5id/ZeJlvwISgcIE?=
+ =?us-ascii?Q?miTBT+SdXd8LVfKzg2bnLrp74pwsbm7+3ZxMR3gu?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409082631.187483-1-21cnbao@gmail.com> <20240409082631.187483-2-21cnbao@gmail.com>
- <87y19f2lq3.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4yPQyQpWvB2KmuOh2vyUQA0A6hNHsypEC9Gptp9XtuDgg@mail.gmail.com>
- <87jzkz2g3t.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4wm4SfkyTBHpU46EPTFvhq8e54F3KRkKj6gTBcnOjCw1g@mail.gmail.com>
- <87bk6b2elo.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4zH4RHhZembtXOqzBDL75MA5NiEjMHx7eCN-a1ifnKTBw@mail.gmail.com>
- <877cgy2ifu.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4yim-PQW0JBjZD8dpGBG3FQm=xZb1V51+Nr37nJEwEPzA@mail.gmail.com>
- <87ttk20zns.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4xigDba15o9K84z9nR_ZW1nXsUWa0LRNmUAfDdxcqsddw@mail.gmail.com>
- <87jzkw25hl.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAGsJ_4wTsJe2yK3k+Tif6obgL9LUUuqXEBxhqMSZSFZpbvrzmA@mail.gmail.com>
- <CAGsJ_4ymv-tmpmH0s1D5+GF13UOPv5UdRFrLOxVE5X+xNUHveg@mail.gmail.com> <87le5bxd6n.fsf@yhuang6-desk2.ccr.corp.intel.com>
-In-Reply-To: <87le5bxd6n.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 18 Apr 2024 21:14:42 +1200
-Message-ID: <CAGsJ_4wtpkGrfAP23+LgUuUi0BDqS3jjdGu6Y2JDbwTskgA3yQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched swap_free()
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	baolin.wang@linux.alibaba.com, chrisl@kernel.org, david@redhat.com, 
-	hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com, 
-	kasong@tencent.com, ryan.roberts@arm.com, surenb@google.com, 
-	v-songbaohua@oppo.com, willy@infradead.org, xiang@kernel.org, 
-	yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8655.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f7e3e2b-f897-45bc-8268-08dc5f8818bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2024 09:15:31.4946
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jtDb1l8xrXQ3826T9CcRRD0OYO+pvW7bF7fXkFMVzewmmCcYTmWMo27mjCN5uJDkMq3zH0u8h6ub7pLQ/jqzCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5735
 
-On Thu, Apr 18, 2024 at 8:57=E2=80=AFPM Huang, Ying <ying.huang@intel.com> =
-wrote:
+[AMD Official Use Only - General]
+
+> -----Original Message-----
+> From: Huang, Ray <Ray.Huang@amd.com>
+> Sent: Monday, April 15, 2024 10:55 PM
+> To: Yuan, Perry <Perry.Yuan@amd.com>
+> Cc: rafael.j.wysocki@intel.com; Limonciello, Mario
+> <Mario.Limonciello@amd.com>; viresh.kumar@linaro.org; Shenoy, Gautham
+> Ranjal <gautham.shenoy@amd.com>; Petkov, Borislav
+> <Borislav.Petkov@amd.com>; Deucher, Alexander
+> <Alexander.Deucher@amd.com>; Huang, Shimmer
+> <Shimmer.Huang@amd.com>; oleksandr@natalenko.name; Du, Xiaojian
+> <Xiaojian.Du@amd.com>; Meng, Li (Jassmine) <Li.Meng@amd.com>; linux-
+> pm@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v10 3/8] cpufreq: amd-pstate: Unify computation of
+> {max,min,nominal,lowest_nonlinear}_freq
 >
-> Barry Song <21cnbao@gmail.com> writes:
+> On Mon, Mar 25, 2024 at 11:03:23AM +0800, Yuan, Perry wrote:
+> > Currently the amd_get_{min, max, nominal, lowest_nonlinear}_freq()
+> > helpers computes the values of min_freq, max_freq, nominal_freq and
+> > lowest_nominal_freq respectively afresh from cppc_get_perf_caps().
+> > This is not necessary as there are fields in cpudata to cache these
+> > values.
+> >
+> > To simplify this, add a single helper function named
+> > amd_pstate_init_freq() which computes all these frequencies at once,
+> > and caches it in cpudata.
+> >
+> > Use the cached values everywhere else in the code.
+> >
+> > Reviewed-by: Li Meng <li.meng@amd.com>
+> > Tested-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> > Co-developed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> > Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> > Signed-off-by: Perry Yuan <perry.yuan@amd.com>
 >
-> > On Wed, Apr 17, 2024 at 1:35=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
-wrote:
-> >>
-> >> On Wed, Apr 17, 2024 at 12:34=E2=80=AFPM Huang, Ying <ying.huang@intel=
-.com> wrote:
-> >> >
-> >> > Barry Song <21cnbao@gmail.com> writes:
-> >> >
-> >> > > On Tue, Apr 16, 2024 at 3:13=E2=80=AFPM Huang, Ying <ying.huang@in=
-tel.com> wrote:
-> >> > >>
-> >> > >> Barry Song <21cnbao@gmail.com> writes:
-> >> > >>
-> >> > >> > On Tue, Apr 16, 2024 at 1:42=E2=80=AFPM Huang, Ying <ying.huang=
-@intel.com> wrote:
-> >> > >> >>
-> >> > >> >> Barry Song <21cnbao@gmail.com> writes:
-> >> > >> >>
-> >> > >> >> > On Mon, Apr 15, 2024 at 8:53=E2=80=AFPM Huang, Ying <ying.hu=
-ang@intel.com> wrote:
-> >> > >> >> >>
-> >> > >> >> >> Barry Song <21cnbao@gmail.com> writes:
-> >> > >> >> >>
-> >> > >> >> >> > On Mon, Apr 15, 2024 at 8:21=E2=80=AFPM Huang, Ying <ying=
-.huang@intel.com> wrote:
-> >> > >> >> >> >>
-> >> > >> >> >> >> Barry Song <21cnbao@gmail.com> writes:
-> >> > >> >> >> >>
-> >> > >> >> >> >> > On Mon, Apr 15, 2024 at 6:19=E2=80=AFPM Huang, Ying <y=
-ing.huang@intel.com> wrote:
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> Barry Song <21cnbao@gmail.com> writes:
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> > From: Chuanhua Han <hanchuanhua@oppo.com>
-> >> > >> >> >> >> >> >
-> >> > >> >> >> >> >> > While swapping in a large folio, we need to free sw=
-aps related to the whole
-> >> > >> >> >> >> >> > folio. To avoid frequently acquiring and releasing =
-swap locks, it is better
-> >> > >> >> >> >> >> > to introduce an API for batched free.
-> >> > >> >> >> >> >> >
-> >> > >> >> >> >> >> > Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
-> >> > >> >> >> >> >> > Co-developed-by: Barry Song <v-songbaohua@oppo.com>
-> >> > >> >> >> >> >> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> >> > >> >> >> >> >> > ---
-> >> > >> >> >> >> >> >  include/linux/swap.h |  5 +++++
-> >> > >> >> >> >> >> >  mm/swapfile.c        | 51 ++++++++++++++++++++++++=
-++++++++++++++++++++
-> >> > >> >> >> >> >> >  2 files changed, 56 insertions(+)
-> >> > >> >> >> >> >> >
-> >> > >> >> >> >> >> > diff --git a/include/linux/swap.h b/include/linux/s=
-wap.h
-> >> > >> >> >> >> >> > index 11c53692f65f..b7a107e983b8 100644
-> >> > >> >> >> >> >> > --- a/include/linux/swap.h
-> >> > >> >> >> >> >> > +++ b/include/linux/swap.h
-> >> > >> >> >> >> >> > @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(sw=
-p_entry_t);
-> >> > >> >> >> >> >> >  extern int swap_duplicate(swp_entry_t);
-> >> > >> >> >> >> >> >  extern int swapcache_prepare(swp_entry_t);
-> >> > >> >> >> >> >> >  extern void swap_free(swp_entry_t);
-> >> > >> >> >> >> >> > +extern void swap_free_nr(swp_entry_t entry, int nr=
-_pages);
-> >> > >> >> >> >> >> >  extern void swapcache_free_entries(swp_entry_t *en=
-tries, int n);
-> >> > >> >> >> >> >> >  extern void free_swap_and_cache_nr(swp_entry_t ent=
-ry, int nr);
-> >> > >> >> >> >> >> >  int swap_type_of(dev_t device, sector_t offset);
-> >> > >> >> >> >> >> > @@ -564,6 +565,10 @@ static inline void swap_free(s=
-wp_entry_t swp)
-> >> > >> >> >> >> >> >  {
-> >> > >> >> >> >> >> >  }
-> >> > >> >> >> >> >> >
-> >> > >> >> >> >> >> > +void swap_free_nr(swp_entry_t entry, int nr_pages)
-> >> > >> >> >> >> >> > +{
-> >> > >> >> >> >> >> > +}
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> >  static inline void put_swap_folio(struct folio *fo=
-lio, swp_entry_t swp)
-> >> > >> >> >> >> >> >  {
-> >> > >> >> >> >> >> >  }
-> >> > >> >> >> >> >> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> >> > >> >> >> >> >> > index 28642c188c93..f4c65aeb088d 100644
-> >> > >> >> >> >> >> > --- a/mm/swapfile.c
-> >> > >> >> >> >> >> > +++ b/mm/swapfile.c
-> >> > >> >> >> >> >> > @@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t e=
-ntry)
-> >> > >> >> >> >> >> >               __swap_entry_free(p, entry);
-> >> > >> >> >> >> >> >  }
-> >> > >> >> >> >> >> >
-> >> > >> >> >> >> >> > +/*
-> >> > >> >> >> >> >> > + * Free up the maximum number of swap entries at o=
-nce to limit the
-> >> > >> >> >> >> >> > + * maximum kernel stack usage.
-> >> > >> >> >> >> >> > + */
-> >> > >> >> >> >> >> > +#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 51=
-2 : SWAPFILE_CLUSTER)
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +/*
-> >> > >> >> >> >> >> > + * Called after swapping in a large folio,
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> IMHO, it's not good to document the caller in the fun=
-ction definition.
-> >> > >> >> >> >> >> Because this will discourage function reusing.
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > ok. right now there is only one user that is why it is=
- added. but i agree
-> >> > >> >> >> >> > we can actually remove this.
-> >> > >> >> >> >> >
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> > batched free swap entries
-> >> > >> >> >> >> >> > + * for this large folio, entry should be for the f=
-irst subpage and
-> >> > >> >> >> >> >> > + * its offset is aligned with nr_pages
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> Why do we need this?
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > This is a fundamental requirement for the existing ker=
-nel, folio's
-> >> > >> >> >> >> > swap offset is naturally aligned from the first moment=
- add_to_swap
-> >> > >> >> >> >> > to add swapcache's xa. so this comment is describing t=
-he existing
-> >> > >> >> >> >> > fact. In the future, if we want to support swap-out fo=
-lio to discontiguous
-> >> > >> >> >> >> > and not-aligned offsets, we can't pass entry as the pa=
-rameter, we should
-> >> > >> >> >> >> > instead pass ptep or another different data struct whi=
-ch can connect
-> >> > >> >> >> >> > multiple discontiguous swap offsets.
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > I feel like we only need "for this large folio, entry =
-should be for
-> >> > >> >> >> >> > the first subpage" and drop "and its offset is aligned=
- with nr_pages",
-> >> > >> >> >> >> > the latter is not important to this context at all.
-> >> > >> >> >> >>
-> >> > >> >> >> >> IIUC, all these are requirements of the only caller now,=
- not the
-> >> > >> >> >> >> function itself.  If only part of the all swap entries o=
-f a mTHP are
-> >> > >> >> >> >> called with swap_free_nr(), can swap_free_nr() still do =
-its work?  If
-> >> > >> >> >> >> so, why not make swap_free_nr() as general as possible?
-> >> > >> >> >> >
-> >> > >> >> >> > right , i believe we can make swap_free_nr() as general a=
-s possible.
-> >> > >> >> >> >
-> >> > >> >> >> >>
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> > + */
-> >> > >> >> >> >> >> > +void swap_free_nr(swp_entry_t entry, int nr_pages)
-> >> > >> >> >> >> >> > +{
-> >> > >> >> >> >> >> > +     int i, j;
-> >> > >> >> >> >> >> > +     struct swap_cluster_info *ci;
-> >> > >> >> >> >> >> > +     struct swap_info_struct *p;
-> >> > >> >> >> >> >> > +     unsigned int type =3D swp_type(entry);
-> >> > >> >> >> >> >> > +     unsigned long offset =3D swp_offset(entry);
-> >> > >> >> >> >> >> > +     int batch_nr, remain_nr;
-> >> > >> >> >> >> >> > +     DECLARE_BITMAP(usage, SWAP_BATCH_NR) =3D { 0 =
-};
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +     /* all swap entries are within a cluster for =
-mTHP */
-> >> > >> >> >> >> >> > +     VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_page=
-s > SWAPFILE_CLUSTER);
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +     if (nr_pages =3D=3D 1) {
-> >> > >> >> >> >> >> > +             swap_free(entry);
-> >> > >> >> >> >> >> > +             return;
-> >> > >> >> >> >> >> > +     }
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> Is it possible to unify swap_free() and swap_free_nr(=
-) into one function
-> >> > >> >> >> >> >> with acceptable performance?  IIUC, the general rule =
-in mTHP effort is
-> >> > >> >> >> >> >> to avoid duplicate functions between mTHP and normal =
-small folio.
-> >> > >> >> >> >> >> Right?
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > I don't see why.
-> >> > >> >> >> >>
-> >> > >> >> >> >> Because duplicated implementation are hard to maintain i=
-n the long term.
-> >> > >> >> >> >
-> >> > >> >> >> > sorry, i actually meant "I don't see why not",  for some =
-reason, the "not"
-> >> > >> >> >> > was missed. Obviously I meant "why not", there was a "but=
-" after it :-)
-> >> > >> >> >> >
-> >> > >> >> >> >>
-> >> > >> >> >> >> > but we have lots of places calling swap_free(), we may
-> >> > >> >> >> >> > have to change them all to call swap_free_nr(entry, 1)=
-; the other possible
-> >> > >> >> >> >> > way is making swap_free() a wrapper of swap_free_nr() =
-always using
-> >> > >> >> >> >> > 1 as the argument. In both cases, we are changing the =
-semantics of
-> >> > >> >> >> >> > swap_free_nr() to partially freeing large folio cases =
-and have to drop
-> >> > >> >> >> >> > "entry should be for the first subpage" then.
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > Right now, the semantics is
-> >> > >> >> >> >> > * swap_free_nr() for an entire large folio;
-> >> > >> >> >> >> > * swap_free() for one entry of either a large folio or=
- a small folio
-> >> > >> >> >> >>
-> >> > >> >> >> >> As above, I don't think the these semantics are importan=
-t for
-> >> > >> >> >> >> swap_free_nr() implementation.
-> >> > >> >> >> >
-> >> > >> >> >> > right. I agree. If we are ready to change all those calle=
-rs, nothing
-> >> > >> >> >> > can stop us from removing swap_free().
-> >> > >> >> >> >
-> >> > >> >> >> >>
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +     remain_nr =3D nr_pages;
-> >> > >> >> >> >> >> > +     p =3D _swap_info_get(entry);
-> >> > >> >> >> >> >> > +     if (p) {
-> >> > >> >> >> >> >> > +             for (i =3D 0; i < nr_pages; i +=3D ba=
-tch_nr) {
-> >> > >> >> >> >> >> > +                     batch_nr =3D min_t(int, SWAP_=
-BATCH_NR, remain_nr);
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +                     ci =3D lock_cluster_or_swap_i=
-nfo(p, offset);
-> >> > >> >> >> >> >> > +                     for (j =3D 0; j < batch_nr; j=
-++) {
-> >> > >> >> >> >> >> > +                             if (__swap_entry_free=
-_locked(p, offset + i * SWAP_BATCH_NR + j, 1))
-> >> > >> >> >> >> >> > +                                     __bitmap_set(=
-usage, j, 1);
-> >> > >> >> >> >> >> > +                     }
-> >> > >> >> >> >> >> > +                     unlock_cluster_or_swap_info(p=
-, ci);
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +                     for_each_clear_bit(j, usage, =
-batch_nr)
-> >> > >> >> >> >> >> > +                             free_swap_slot(swp_en=
-try(type, offset + i * SWAP_BATCH_NR + j));
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> > +                     bitmap_clear(usage, 0, SWAP_B=
-ATCH_NR);
-> >> > >> >> >> >> >> > +                     remain_nr -=3D batch_nr;
-> >> > >> >> >> >> >> > +             }
-> >> > >> >> >> >> >> > +     }
-> >> > >> >> >> >> >> > +}
-> >> > >> >> >> >> >> > +
-> >> > >> >> >> >> >> >  /*
-> >> > >> >> >> >> >> >   * Called after dropping swapcache to decrease ref=
-cnt to swap entries.
-> >> > >> >> >> >> >> >   */
-> >> > >> >> >> >> >>
-> >> > >> >> >> >> >> put_swap_folio() implements batching in another metho=
-d.  Do you think
-> >> > >> >> >> >> >> that it's good to use the batching method in that fun=
-ction here?  It
-> >> > >> >> >> >> >> avoids to use bitmap operations and stack space.
-> >> > >> >> >> >> >
-> >> > >> >> >> >> > Chuanhua has strictly limited the maximum stack usage =
-to several
-> >> > >> >> >> >> > unsigned long,
-> >> > >> >> >> >>
-> >> > >> >> >> >> 512 / 8 =3D 64 bytes.
-> >> > >> >> >> >>
-> >> > >> >> >> >> So, not trivial.
-> >> > >> >> >> >>
-> >> > >> >> >> >> > so this should be safe. on the other hand, i believe t=
-his
-> >> > >> >> >> >> > implementation is more efficient, as  put_swap_folio()=
- might lock/
-> >> > >> >> >> >> > unlock much more often whenever __swap_entry_free_lock=
-ed returns
-> >> > >> >> >> >> > 0.
-> >> > >> >> >> >>
-> >> > >> >> >> >> There are 2 most common use cases,
-> >> > >> >> >> >>
-> >> > >> >> >> >> - all swap entries have usage count =3D=3D 0
-> >> > >> >> >> >> - all swap entries have usage count !=3D 0
-> >> > >> >> >> >>
-> >> > >> >> >> >> In both cases, we only need to lock/unlock once.  In fac=
-t, I didn't
-> >> > >> >> >> >> find possible use cases other than above.
-> >> > >> >> >> >
-> >> > >> >> >> > i guess the point is free_swap_slot() shouldn't be called=
- within
-> >> > >> >> >> > lock_cluster_or_swap_info? so when we are freeing nr_page=
-s slots,
-> >> > >> >> >> > we'll have to unlock and lock nr_pages times?  and this i=
-s the most
-> >> > >> >> >> > common scenario.
-> >> > >> >> >>
-> >> > >> >> >> No.  In put_swap_folio(), free_entries is either SWAPFILE_C=
-LUSTER (that
-> >> > >> >> >> is, nr_pages) or 0.  These are the most common cases.
-> >> > >> >> >>
-> >> > >> >> >
-> >> > >> >> > i am actually talking about the below code path,
-> >> > >> >> >
-> >> > >> >> > void put_swap_folio(struct folio *folio, swp_entry_t entry)
-> >> > >> >> > {
-> >> > >> >> >         ...
-> >> > >> >> >
-> >> > >> >> >         ci =3D lock_cluster_or_swap_info(si, offset);
-> >> > >> >> >         ...
-> >> > >> >> >         for (i =3D 0; i < size; i++, entry.val++) {
-> >> > >> >> >                 if (!__swap_entry_free_locked(si, offset + i=
-, SWAP_HAS_CACHE)) {
-> >> > >> >> >                         unlock_cluster_or_swap_info(si, ci);
-> >> > >> >> >                         free_swap_slot(entry);
-> >> > >> >> >                         if (i =3D=3D size - 1)
-> >> > >> >> >                                 return;
-> >> > >> >> >                         lock_cluster_or_swap_info(si, offset=
-);
-> >> > >> >> >                 }
-> >> > >> >> >         }
-> >> > >> >> >         unlock_cluster_or_swap_info(si, ci);
-> >> > >> >> > }
-> >> > >> >> >
-> >> > >> >> > but i guess you are talking about the below code path:
-> >> > >> >> >
-> >> > >> >> > void put_swap_folio(struct folio *folio, swp_entry_t entry)
-> >> > >> >> > {
-> >> > >> >> >         ...
-> >> > >> >> >
-> >> > >> >> >         ci =3D lock_cluster_or_swap_info(si, offset);
-> >> > >> >> >         if (size =3D=3D SWAPFILE_CLUSTER) {
-> >> > >> >> >                 map =3D si->swap_map + offset;
-> >> > >> >> >                 for (i =3D 0; i < SWAPFILE_CLUSTER; i++) {
-> >> > >> >> >                         val =3D map[i];
-> >> > >> >> >                         VM_BUG_ON(!(val & SWAP_HAS_CACHE));
-> >> > >> >> >                         if (val =3D=3D SWAP_HAS_CACHE)
-> >> > >> >> >                                 free_entries++;
-> >> > >> >> >                 }
-> >> > >> >> >                 if (free_entries =3D=3D SWAPFILE_CLUSTER) {
-> >> > >> >> >                         unlock_cluster_or_swap_info(si, ci);
-> >> > >> >> >                         spin_lock(&si->lock);
-> >> > >> >> >                         mem_cgroup_uncharge_swap(entry, SWAP=
-FILE_CLUSTER);
-> >> > >> >> >                         swap_free_cluster(si, idx);
-> >> > >> >> >                         spin_unlock(&si->lock);
-> >> > >> >> >                         return;
-> >> > >> >> >                 }
-> >> > >> >> >         }
-> >> > >> >> > }
-> >> > >> >>
-> >> > >> >> I am talking about both code paths.  In 2 most common cases,
-> >> > >> >> __swap_entry_free_locked() will return 0 or !0 for all entries=
- in range.
-> >> > >> >
-> >> > >> > I grasp your point, but if conditions involving 0 or non-0 valu=
-es fail, we'll
-> >> > >> > end up repeatedly unlocking and locking. Picture a scenario wit=
-h a large
-> >> > >> > folio shared by multiple processes. One process might unmap a p=
-ortion
-> >> > >> > while another still holds an entire mapping to it. This could l=
-ead to situations
-> >> > >> > where free_entries doesn't equal 0 and free_entries doesn't equ=
-al
-> >> > >> > nr_pages, resulting in multiple unlock and lock operations.
-> >> > >>
-> >> > >> This is impossible in current caller, because the folio is in the=
- swap
-> >> > >> cache.  But if we move the change to __swap_entry_free_nr(), we m=
-ay run
-> >> > >> into this situation.
-> >> > >
-> >> > > I don't understand why it is impossible, after try_to_unmap_one() =
-has done
-> >> > > on one process, mprotect and munmap called on a part of the large =
-folio
-> >> > > pte entries which now have been swap entries, we are removing the =
-PTE
-> >> > > for this part. Another process can entirely hit the swapcache and =
-have
-> >> > > all swap entries mapped there, and we call swap_free_nr(entry, nr_=
-pages) in
-> >> > > do_swap_page. Within those swap entries, some have swapcount=3D1 a=
-nd others
-> >> > > have swapcount > 1. Am I missing something?
-> >> >
-> >> > For swap entries with swapcount=3D1, its sis->swap_map[] will be
-> >> >
-> >> > 1 | SWAP_HAS_CACHE
-> >> >
-> >> > so, __swap_entry_free_locked() will return SWAP_HAS_CACHE instead of=
- 0.
-> >> >
-> >> > The swap entries will be free in
-> >> >
-> >> > folio_free_swap
-> >> >   delete_from_swap_cache
-> >> >     put_swap_folio
-> >> >
-> >>
-> >> Yes. I realized this after replying to you yesterday.
-> >>
-> >> > >> > Chuanhua has invested significant effort in following Ryan's su=
-ggestion
-> >> > >> > for the current approach, which generally handles all cases, es=
-pecially
-> >> > >> > partial unmapping. Additionally, the widespread use of swap_fre=
-e_nr()
-> >> > >> > as you suggested across various scenarios is noteworthy.
-> >> > >> >
-> >> > >> > Unless there's evidence indicating performance issues or bugs, =
-I believe
-> >> > >> > the current approach remains preferable.
-> >> > >>
-> >> > >> TBH, I don't like the large stack space usage (64 bytes).  How ab=
-out use
-> >> > >> a "unsigned long" as bitmap?  Then, we use much less stack space,=
- use
-> >> > >> bitmap =3D=3D 0 and bitmap =3D=3D (unsigned long)(-1) to check th=
-e most common
-> >> > >> use cases.  And, we have enough batching.
-> >> > >
-> >> > > that is quite a straightforward modification like,
-> >> > >
-> >> > > - #define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_C=
-LUSTER)
-> >> > > + #define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 64 ? 64 : SWAPFILE_CLU=
-STER)
-> >> > >
-> >> > > there is no necessity to remove the bitmap API and move to raw
-> >> > > unsigned long operations.
-> >> > > as bitmap is exactly some unsigned long. on 64bit CPU, we are now =
-one
-> >> > > unsigned long,
-> >> > > on 32bit CPU, it is now two unsigned long.
-> >> >
-> >> > Yes.  We can still use most bitmap APIs if we use "unsigned long" as
-> >> > bitmap.  The advantage of "unsigned long" is to guarantee that
-> >> > bitmap_empty() and bitmap_full() is trivial.  We can use that for
-> >> > optimization.  For example, we can skip unlock/lock if bitmap_empty(=
-).
-> >>
-> >> anyway we have avoided lock_cluster_or_swap_info and unlock_cluster_or=
-_swap_info
-> >> for each individual swap entry.
-> >>
-> >> if bitma_empty(), we won't call free_swap_slot() so no chance to
-> >> further take any lock,
-> >> right?
-> >>
-> >> the optimization of bitmap_full() seems to be more useful only after w=
-e have
-> >> void free_swap_slot(swp_entry_t entry, int nr)
-> >>
-> >> in which we can avoid many spin_lock_irq(&cache->free_lock);
-> >>
-> >> On the other hand, it seems we can directly call
-> >> swapcache_free_entries() to skip cache if
-> >> nr_pages >=3D SWAP_BATCH(64) this might be an optimization as we are n=
-ow
-> >> having a bitmap exactly equals 64.
+> I am thinking patch 3 and 4 should be squeezed together, because they are=
+ all
+> refining frequencies in cpudata. But I am fine if you want to continue ke=
+ep
+> them separately.
+
+Yes,   we would like to keep changes in two patches,   then patches don't n=
+eed to get review again in v11.
+Thanks.
+
+Perry.
+
+>
+> > ---
+> >  drivers/cpufreq/amd-pstate.c | 126
+> > ++++++++++++++++-------------------
+> >  1 file changed, 59 insertions(+), 67 deletions(-)
 > >
-> > Hi ying,
-> > considering the below code which has changed bitmap to 64 and generally=
- support
-> > different nr_pages(1 and ever cross cluster),
+> > diff --git a/drivers/cpufreq/amd-pstate.c
+> > b/drivers/cpufreq/amd-pstate.c index 2015c9fcc3c9..ba1baa6733e6
+> 100644
+> > --- a/drivers/cpufreq/amd-pstate.c
+> > +++ b/drivers/cpufreq/amd-pstate.c
+> > @@ -606,74 +606,22 @@ static void amd_pstate_adjust_perf(unsigned int
+> > cpu,
 > >
-> > #define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 64 ? 64 : SWAPFILE_CLUSTER)
+> >  static int amd_get_min_freq(struct amd_cpudata *cpudata)  {
+> > -   struct cppc_perf_caps cppc_perf;
+> > -
+> > -   int ret =3D cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+> > -   if (ret)
+> > -           return ret;
+> > -
+> > -   /* Switch to khz */
+> > -   return cppc_perf.lowest_freq * 1000;
+> > +   return READ_ONCE(cpudata->min_freq);
+> >  }
 > >
-> > void swap_free_nr(swp_entry_t entry, int nr_pages)
+> >  static int amd_get_max_freq(struct amd_cpudata *cpudata)  {
+> > -   struct cppc_perf_caps cppc_perf;
+> > -   u32 max_perf, max_freq, nominal_freq, nominal_perf;
+> > -   u64 boost_ratio;
+> > -
+> > -   int ret =3D cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+> > -   if (ret)
+> > -           return ret;
+> > -
+> > -   nominal_freq =3D cppc_perf.nominal_freq;
+> > -   nominal_perf =3D READ_ONCE(cpudata->nominal_perf);
+> > -   max_perf =3D READ_ONCE(cpudata->highest_perf);
+> > -
+> > -   boost_ratio =3D div_u64(max_perf << SCHED_CAPACITY_SHIFT,
+> > -                         nominal_perf);
+> > -
+> > -   max_freq =3D nominal_freq * boost_ratio >> SCHED_CAPACITY_SHIFT;
+> > -
+> > -   /* Switch to khz */
+> > -   return max_freq * 1000;
+> > +   return READ_ONCE(cpudata->max_freq);
+> >  }
+> >
+> >  static int amd_get_nominal_freq(struct amd_cpudata *cpudata)  {
+> > -   struct cppc_perf_caps cppc_perf;
+> > -
+> > -   int ret =3D cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+> > -   if (ret)
+> > -           return ret;
+> > -
+> > -   /* Switch to khz */
+> > -   return cppc_perf.nominal_freq * 1000;
+> > +   return READ_ONCE(cpudata->nominal_freq);
+> >  }
+> >
+> >  static int amd_get_lowest_nonlinear_freq(struct amd_cpudata *cpudata)
 > > {
-> >         int i =3D 0, j;
-> >         struct swap_cluster_info *ci;
-> >         struct swap_info_struct *p;
-> >         unsigned int type =3D swp_type(entry);
-> >         unsigned long offset =3D swp_offset(entry);
-> >         int batch_nr, remain_nr;
-> >         DECLARE_BITMAP(usage, SWAP_BATCH_NR) =3D { 0 };
+> > -   struct cppc_perf_caps cppc_perf;
+> > -   u32 lowest_nonlinear_freq, lowest_nonlinear_perf,
+> > -       nominal_freq, nominal_perf;
+> > -   u64 lowest_nonlinear_ratio;
+> > -
+> > -   int ret =3D cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+> > -   if (ret)
+> > -           return ret;
+> > -
+> > -   nominal_freq =3D cppc_perf.nominal_freq;
+> > -   nominal_perf =3D READ_ONCE(cpudata->nominal_perf);
+> > -
+> > -   lowest_nonlinear_perf =3D cppc_perf.lowest_nonlinear_perf;
+> > -
+> > -   lowest_nonlinear_ratio =3D div_u64(lowest_nonlinear_perf <<
+> SCHED_CAPACITY_SHIFT,
+> > -                                    nominal_perf);
+> > -
+> > -   lowest_nonlinear_freq =3D nominal_freq * lowest_nonlinear_ratio >>
+> SCHED_CAPACITY_SHIFT;
+> > -
+> > -   /* Switch to khz */
+> > -   return lowest_nonlinear_freq * 1000;
+> > +   return READ_ONCE(cpudata->lowest_nonlinear_freq);
+> >  }
 > >
-> >         remain_nr =3D nr_pages;
-> >         p =3D _swap_info_get(entry);
-> >         if (!p)
-> >                 return;
+> >  static int amd_pstate_set_boost(struct cpufreq_policy *policy, int
+> > state) @@ -828,6 +776,53 @@ static void
+> amd_pstate_update_limits(unsigned int cpu)
+> >     mutex_unlock(&amd_pstate_driver_lock);
+> >  }
 > >
-> >         for ( ; ; ) {
-> >                 batch_nr =3D min3(SWAP_BATCH_NR, remain_nr,
-> >                                 (int)(SWAPFILE_CLUSTER - (offset %
-> > SWAPFILE_CLUSTER)));
+> > +/**
+> > + * amd_pstate_init_freq: Initialize the max_freq, min_freq,
+> > + *                       nominal_freq and lowest_nonlinear_freq for
+> > + *                       the @cpudata object.
+> > + *
+> > + *  Requires: highest_perf, lowest_perf, nominal_perf and
+> > + *            lowest_nonlinear_perf members of @cpudata to be
+> > + *            initialized.
+> > + *
+> > + *  Returns 0 on success, non-zero value on failure.
+> > + */
+> > +static int amd_pstate_init_freq(struct amd_cpudata *cpudata) {
+> > +   int ret;
+> > +   u32 min_freq;
+> > +   u32 highest_perf, max_freq;
+> > +   u32 nominal_perf, nominal_freq;
+> > +   u32 lowest_nonlinear_perf, lowest_nonlinear_freq;
+> > +   u32 boost_ratio, lowest_nonlinear_ratio;
+> > +   struct cppc_perf_caps cppc_perf;
+> > +
+> > +
+> > +   ret =3D cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+> > +   if (ret)
+> > +           return ret;
+> > +
+> > +   min_freq =3D cppc_perf.lowest_freq * 1000;
+> > +   nominal_freq =3D cppc_perf.nominal_freq * 1000;
+> > +   nominal_perf =3D READ_ONCE(cpudata->nominal_perf);
+> > +
+> > +   highest_perf =3D READ_ONCE(cpudata->highest_perf);
+> > +   boost_ratio =3D div_u64(highest_perf << SCHED_CAPACITY_SHIFT,
+> nominal_perf);
+> > +   max_freq =3D nominal_freq * boost_ratio >> SCHED_CAPACITY_SHIFT;
+> > +
+> > +   lowest_nonlinear_perf =3D READ_ONCE(cpudata-
+> >lowest_nonlinear_perf);
+> > +   lowest_nonlinear_ratio =3D div_u64(lowest_nonlinear_perf <<
+> SCHED_CAPACITY_SHIFT,
+> > +                                    nominal_perf);
+> > +   lowest_nonlinear_freq =3D nominal_freq * lowest_nonlinear_ratio >>
+> > +SCHED_CAPACITY_SHIFT;
+> > +
+> > +   WRITE_ONCE(cpudata->min_freq, min_freq);
+> > +   WRITE_ONCE(cpudata->lowest_nonlinear_freq,
+> lowest_nonlinear_freq);
+> > +   WRITE_ONCE(cpudata->nominal_freq, nominal_freq);
+> > +   WRITE_ONCE(cpudata->max_freq, max_freq);
+> > +
+> > +   return 0;
+> > +}
+> > +
+> >  static int amd_pstate_cpu_init(struct cpufreq_policy *policy)  {
+> >     int min_freq, max_freq, nominal_freq, lowest_nonlinear_freq, ret;
+> @@
+> > -855,6 +850,10 @@ static int amd_pstate_cpu_init(struct cpufreq_policy
+> *policy)
+> >     if (ret)
+> >             goto free_cpudata1;
 > >
-> >                 ci =3D lock_cluster_or_swap_info(p, offset);
-> >                 for (j =3D 0; j < batch_nr; j++) {
-> >                         if (__swap_entry_free_locked(p, offset + i *
-> > SWAP_BATCH_NR + j, 1))
-> >                                 __bitmap_set(usage, j, 1);
-> >                 }
-> >                 unlock_cluster_or_swap_info(p, ci);
+> > +   ret =3D amd_pstate_init_freq(cpudata);
+> > +   if (ret)
+> > +           goto free_cpudata1;
+> > +
+> >     min_freq =3D amd_get_min_freq(cpudata);
+> >     max_freq =3D amd_get_max_freq(cpudata);
+> >     nominal_freq =3D amd_get_nominal_freq(cpudata); @@ -896,13
+> +895,8 @@
+> > static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+> >             goto free_cpudata2;
+> >     }
 > >
-> >                 for_each_clear_bit(j, usage, batch_nr)
-> >                         free_swap_slot(swp_entry(type, offset + i *
-> > SWAP_BATCH_NR + j));
+> > -   /* Initial processor data capability frequencies */
+> > -   cpudata->max_freq =3D max_freq;
+> > -   cpudata->min_freq =3D min_freq;
+> >     cpudata->max_limit_freq =3D max_freq;
+> >     cpudata->min_limit_freq =3D min_freq;
+> > -   cpudata->nominal_freq =3D nominal_freq;
+> > -   cpudata->lowest_nonlinear_freq =3D lowest_nonlinear_freq;
 > >
-> >                 i +=3D batch_nr;
-> >                 if (i >=3D nr_pages)
-> >                         break;
+> >     policy->driver_data =3D cpudata;
 > >
-> >                 bitmap_clear(usage, 0, SWAP_BATCH_NR);
-> >                 remain_nr -=3D batch_nr;
-> >         }
-> > }
+> > @@ -1317,6 +1311,10 @@ static int amd_pstate_epp_cpu_init(struct
+> cpufreq_policy *policy)
+> >     if (ret)
+> >             goto free_cpudata1;
 > >
-> > I still don't see the benefits of using bitmap_full and bitmap_empty ov=
-er simple
-> > for_each_clear_bit() unless we begin to support free_swap_slot_nr(), wh=
-ich,
-> > I believe, needs a separate incremental patchset.
+> > +   ret =3D amd_pstate_init_freq(cpudata);
+> > +   if (ret)
+> > +           goto free_cpudata1;
+> > +
+> >     min_freq =3D amd_get_min_freq(cpudata);
+> >     max_freq =3D amd_get_max_freq(cpudata);
+> >     nominal_freq =3D amd_get_nominal_freq(cpudata); @@ -1333,12
+> +1331,6 @@
+> > static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+> >     /* It will be updated by governor */
+> >     policy->cur =3D policy->cpuinfo.min_freq;
 > >
-> > using bitmap_empty and full, if we want to free all slots, we need
-> > if (bitmap_empty(usage))
-> > {
-> >     for (i=3D0;i<batch_nr;i++)
-> >               free_swap_slot(swp_entry(type, offset + i * SWAP_BATCH_NR=
- + j));
-> > }
-> > This seems just a game replacing for_each_clear_bit by
-> > bitmap_empty()+another for loop.
+> > -   /* Initial processor data capability frequencies */
+> > -   cpudata->max_freq =3D max_freq;
+> > -   cpudata->min_freq =3D min_freq;
+> > -   cpudata->nominal_freq =3D nominal_freq;
+> > -   cpudata->lowest_nonlinear_freq =3D lowest_nonlinear_freq;
+> > -
+> >     policy->driver_data =3D cpudata;
 > >
-> > if we don't want to free any one, we need
-> > if(bitmap_full(usage)
-> >        do_nothing.
+> >     cpudata->epp_cached =3D amd_pstate_get_epp(cpudata, 0);
+> > --
+> > 2.34.1
 > >
-> > in the for_each_clear_bit() case, the loop just simply ends.
-> >
-> > What's your proposal code to use bitmap_empty and bitmap_full here?
-> > Am I missing something?
->
-> My idea is something as below.  It's only build tested.
->
-> static void cluster_swap_free_nr(struct swap_info_struct *sis,
->                                  unsigned long offset, int nr_pages)
-> {
->         struct swap_cluster_info *ci;
->         DECLARE_BITMAP(to_free, BITS_PER_LONG) =3D { 0 };
->         int i, nr;
->
->         ci =3D lock_cluster_or_swap_info(sis, offset);
->         while (nr_pages) {
->                 nr =3D min(BITS_PER_LONG, nr_pages);
->                 for (i =3D 0; i < nr; i++) {
->                         if (!__swap_entry_free_locked(sis, offset + i, 1)=
-)
->                                 bitmap_set(to_free, i, 1);
->                 }
->                 if (!bitmap_empty(to_free, BITS_PER_LONG)) {
->                         unlock_cluster_or_swap_info(sis, ci);
->                         for_each_set_bit(i, to_free, BITS_PER_LONG)
->                                 free_swap_slot(swp_entry(sis->type, offse=
-t + i));
->                         if (nr =3D=3D nr_pages)
->                                 return;
->                         bitmap_clear(to_free, 0, BITS_PER_LONG);
->                         ci =3D lock_cluster_or_swap_info(sis, offset);
->                 }
->                 offset +=3D nr;
->                 nr_pages -=3D nr;
->         }
->         unlock_cluster_or_swap_info(sis, ci);
-> }
->
-> void swap_free_nr(swp_entry_t entry, int nr_pages)
-> {
->         int nr;
->         struct swap_info_struct *sis;
->         unsigned long offset =3D swp_offset(entry);
->
->         sis =3D _swap_info_get(entry);
->         if (!sis)
->                 return;
->
->         while (nr_pages >=3D 0) {
->                 nr =3D min_t(int, nr_pages, SWAPFILE_CLUSTER - offset % S=
-WAPFILE_CLUSTER);
->                 cluster_swap_free_nr(sis, offset, nr);
->                 offset +=3D nr;
->                 nr_pages -=3D nr;
->         }
-> }
-
-Thanks!
-It seems quite promising. I guess your intention is appreciating the
-advantage of
-small_const_nbits().
-Conversely, you've created a distinct function for entries within a cluster=
-.
-
-I also agree with your change to:
-if (!__swap_entry_free_locked(sis, offset + i, 1))
-
-This adjustment ensures that for_each_set_bit() can also benefit from
-small_const_nbits.
-The original code didn't pass a compile-time const to for_each_clear_bit.
-
->
-> --
-> Best Regards,
-> Huang, Ying
-
-Thanks
-Barry
