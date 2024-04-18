@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847CB140E40;
-	Thu, 18 Apr 2024 08:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F175143867;
+	Thu, 18 Apr 2024 08:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713428909; cv=none; b=e1RQWTB/KJCAsAHOqnrLu2kBRpiije/PGI+ekB7a7mOeKyFPVPXeHigb8p/pnto3FQJfdTlP5DLQyA0qsp2R2w/8caog4RG111yZ46yJhOtRFqZQEX+VE6qX6rsXpsJ8Rb4Lx5BlUYsE6zjSQX2r02VB2xXi9lnIaazl44WLu2k=
+	t=1713428909; cv=none; b=akJqEc12N4oyO3nXv/6Y7/g4y8W+aGyLo+bD2ZzrpD0xhIeXC85SQN2NM5IwPnG9WgS3OuW+3JiHmO18Le4BJHSKrh2EItGin5r66AxiSMlrgM/blfdncA29m41Qf68ZHbjcXF4+rSU37fISJuUCRzDDSA2KZQwnaxudHs0FWlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713428909; c=relaxed/simple;
-	bh=UYe8/W7VAx7VwajQk2KmjPzIcdGVq0lvp1J4Qo5OOus=;
+	bh=xJ47AhVCJnPzfAzCCyTdF9TGxPyIWa3chHq1ZLjt15I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LtTw8U6xVFV2eECWgrgeer0qlM19ToUxatBSReSrc3x6Qj5msT2n7Pvs6/tWzRmiITNkKbISe3u4vhIgjMTG+OBGhmhYhHtX4sUCcH/fyvRrZEDCr06uxAwGtP8+wpK4VaN4NwLy4WaDuAIywUKRJRjsi4tB/Wl8XFz7zlnsj90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5nIzNCel; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=eoh9E/Tc9b3uoZIrFjhHojvJYl+lQpzoX3Tf0cHFod/h1EEumKfnx5qjcLYvpfhJTliL2tvOoKL19+a8lM0sCl49LyXRgLwKI4iceqoc3NXkvzw/xLoE3Kbjfz2MRYXy+kAEODNj99RbwsYva429qp2zF5ZVzcbkctT7MKE3ePE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=e5GW/Wog; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5nIzNCel"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="e5GW/Wog"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713428905;
-	bh=UYe8/W7VAx7VwajQk2KmjPzIcdGVq0lvp1J4Qo5OOus=;
+	s=mail; t=1713428901;
+	bh=xJ47AhVCJnPzfAzCCyTdF9TGxPyIWa3chHq1ZLjt15I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=5nIzNCelUrTeBpMfuQvZWcoSd4p+EUFsee7tG/f3keaEnHwwi7IlpMU8ttUk1uHZF
-	 dlz5R4Ej7Sd6HnXiYF3O6FtGdpMjgSUF3/oXgJjscDWVhiqzywOtII+jFN1JYwjfeJ
-	 OB6QLaxHSXX12jxLmjBlvIhWiB9Wjp8u/XIkFrEA/HLm5OuHWdRsqzUlN7Um3t2bb+
-	 PC4NrJLCbKf8jjiyYYYq24yaSgYJstL6pO5eZslSszeWDU6uev9G0Pf1250wvmHJvx
-	 2yYhw/DoXOBtkONPZv1UvHPQ96Br/JfDSbiywwlUpdewysK771CBRfNPGcVzdsBN1t
-	 gWy0eTwtSYT1A==
+	b=e5GW/WogRV/CULnhstD/d5HInPvtFtwGdcUDR3vX8KNUMZapdpKf25egaE2LYtQKG
+	 aTIgNC9Ynj1xLDzW9BJpKzTx3GMm6Ht7aLIprY8p3vf5WgIV5JOAD0vquEmDiw03P4
+	 ek15kfXoMbjrCH6Gq7SHYJaHpppwW4VOmWakd888Lw0CGnOg39GUDv5PDvwbP5tmP3
+	 OzfVX6lBU7557Xwc4ZkhsA9LksgqZTyP/bwmb1bZCLETAjHzySD7dA9lcT2A4kV3oA
+	 1Lfigu90IGTBNckSYrpYimYpK35PvjC8yJsIarvIuBYdsGqeREW+9X+JhxxHRr9wA1
+	 Jgv6F5jqNye7A==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 848F13782147;
-	Thu, 18 Apr 2024 08:28:24 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 01C533782146;
+	Thu, 18 Apr 2024 08:28:19 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: djakov@kernel.org
 Cc: robh@kernel.org,
@@ -53,9 +53,9 @@ Cc: robh@kernel.org,
 	kernel@collabora.com,
 	wenst@chromium.org,
 	amergnat@baylibre.com
-Subject: [PATCH v3 6/7] regulator: Add refactored mtk-dvfsrc-regulator driver
-Date: Thu, 18 Apr 2024 10:28:11 +0200
-Message-ID: <20240418082812.152270-7-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v3 3/7] dt-bindings: soc: mediatek: Add DVFSRC bindings for MT8183 and MT8195
+Date: Thu, 18 Apr 2024 10:28:08 +0200
+Message-ID: <20240418082812.152270-4-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240418082812.152270-1-angelogioacchino.delregno@collabora.com>
 References: <20240418082812.152270-1-angelogioacchino.delregno@collabora.com>
@@ -67,225 +67,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The previous driver never worked, and never got even compiled because
-it was missing the DVFSRC driver entirely, including needed neaders.
+Add bindings for the MediaTek Dynamic Voltage and Frequency Scaling
+Resource Collector (DVFSRC), a hardware module used to collect all the
+requests from both software and the various remote processors embedded
+into the SoC and decide about a minimum operating voltage and a minimum
+DRAM frequency to fulfill those requests in an effort to provide the
+best achievable performance per watt.
 
-This is a full (or nearly full) refactoring of the MediaTek DVFSRC
-controlled Regulators driver, retaining support for the MT6873, MT8183
-and MT8192 SoC, and adding MT8195.
-
-As part of the refactoring, this driver is now probed using its own
-devicetree compatible, as this is a child of the main DVFSRC driver
-and gets probed as a subnode of that.
+This hardware IP is capable of transparently performing direct register
+R/W on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/regulator/mtk-dvfsrc-regulator.c | 196 +++++++++++++++++++++++
- 1 file changed, 196 insertions(+)
- create mode 100644 drivers/regulator/mtk-dvfsrc-regulator.c
+ .../soc/mediatek/mediatek,mt8183-dvfsrc.yaml  | 94 +++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
 
-diff --git a/drivers/regulator/mtk-dvfsrc-regulator.c b/drivers/regulator/mtk-dvfsrc-regulator.c
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
 new file mode 100644
-index 000000000000..9d398d72d2fb
+index 000000000000..da948098eebe
 --- /dev/null
-+++ b/drivers/regulator/mtk-dvfsrc-regulator.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
++++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8183-dvfsrc.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/mediatek/mediatek,mt8183-dvfsrc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/soc/mediatek/dvfsrc.h>
++title: MediaTek Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC)
 +
-+enum dvfsrc_regulator_id {
-+	DVFSRC_ID_VCORE,
-+	DVFSRC_ID_VSCP,
-+	DVFSRC_ID_MAX
-+};
++description:
++  The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
++  Hardware module used to collect all the requests from both software and the
++  various remote processors embedded into the SoC and decide about a minimum
++  operating voltage and a minimum DRAM frequency to fulfill those requests in
++  an effort to provide the best achievable performance per watt.
++  This hardware IP is capable of transparently performing direct register R/W
++  on all of the DVFSRC-controlled regulators and SoC bandwidth knobs.
 +
-+struct dvfsrc_regulator_pdata {
-+	struct regulator_desc *descs;
-+	u32 size;
-+};
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++  - Henry Chen <henryc.chen@mediatek.com>
 +
-+#define MTK_DVFSRC_VREG(match, _name, _volt_table)	\
-+{							\
-+	.name = match,					\
-+	.of_match = match,				\
-+	.ops = &dvfsrc_vcore_ops,			\
-+	.type = REGULATOR_VOLTAGE,			\
-+	.id = DVFSRC_ID_##_name,			\
-+	.owner = THIS_MODULE,				\
-+	.n_voltages = ARRAY_SIZE(_volt_table),		\
-+	.volt_table = _volt_table,			\
-+}
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - mediatek,mt8183-dvfsrc
++          - mediatek,mt8195-dvfsrc
++      - items:
++          - const: mediatek,mt8192-dvfsrc
++          - const: mediatek,mt8195-dvfsrc
 +
-+static inline struct device *to_dvfs_regulator_dev(struct regulator_dev *rdev)
-+{
-+	return rdev_get_dev(rdev)->parent;
-+}
++  reg:
++    maxItems: 1
++    description: DVFSRC common register address and length.
 +
-+static inline struct device *to_dvfsrc_dev(struct regulator_dev *rdev)
-+{
-+	return to_dvfs_regulator_dev(rdev)->parent;
-+}
++  '#address-cells':
++    const: 1
 +
-+static int dvfsrc_get_cmd(int rdev_id, enum mtk_dvfsrc_cmd *cmd)
-+{
-+	switch (rdev_id) {
-+	case DVFSRC_ID_VCORE:
-+		*cmd = MTK_DVFSRC_CMD_VCORE_LEVEL;
-+		break;
-+	case DVFSRC_ID_VSCP:
-+		*cmd = MTK_DVFSRC_CMD_VSCP_LEVEL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
++  '#size-cells':
++    enum: [ 0, 1 ]
 +
-+	return 0;
-+}
++patternProperties:
++  "regulators@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/regulator/mediatek,mt6873-dvfsrc-regulator.yaml#
 +
-+static int dvfsrc_set_voltage_sel(struct regulator_dev *rdev,
-+				  unsigned int selector)
-+{
-+	struct device *dvfsrc_dev = to_dvfsrc_dev(rdev);
-+	enum mtk_dvfsrc_cmd req_cmd;
-+	int id = rdev_get_id(rdev);
-+	int ret;
++  "interconnect@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/interconnect/mediatek,mt8183-emi.yaml#
 +
-+	ret = dvfsrc_get_cmd(id, &req_cmd);
-+	if (ret)
-+		return ret;
++required:
++  - compatible
++  - reg
 +
-+	return mtk_dvfsrc_send_request(dvfsrc_dev, req_cmd, selector);
-+}
++additionalProperties: false
 +
-+static int dvfsrc_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct device *dvfsrc_dev = to_dvfsrc_dev(rdev);
-+	enum mtk_dvfsrc_cmd query_cmd;
-+	int id = rdev_get_id(rdev);
-+	int val, ret;
++examples:
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
 +
-+	ret = dvfsrc_get_cmd(id, &query_cmd);
-+	if (ret)
-+		return ret;
++        system-controller@10012000 {
++            compatible = "mediatek,mt8195-dvfsrc";
++            reg = <0 0x10012000 0 0x1000>;
++            #address-cells = <1>;
++            #size-cells = <0>;
 +
-+	ret = mtk_dvfsrc_query_info(dvfsrc_dev, query_cmd, &val);
-+	if (ret)
-+		return ret;
++            regulators@0 {
++                compatible = "mediatek,mt8195-dvfsrc-regulator";
++                reg = <0>;
 +
-+	return val;
-+}
++                dvfsrc_vcore: dvfsrc-vcore {
++                        regulator-name = "dvfsrc-vcore";
++                        regulator-min-microvolt = <550000>;
++                        regulator-max-microvolt = <750000>;
++                        regulator-always-on;
++                };
 +
-+static const struct regulator_ops dvfsrc_vcore_ops = {
-+	.list_voltage = regulator_list_voltage_table,
-+	.get_voltage_sel = dvfsrc_get_voltage_sel,
-+	.set_voltage_sel = dvfsrc_set_voltage_sel,
-+};
++                dvfsrc_vscp: dvfsrc-vscp {
++                        regulator-name = "dvfsrc-vscp";
++                        regulator-min-microvolt = <550000>;
++                        regulator-max-microvolt = <750000>;
++                        regulator-always-on;
++                };
++            };
 +
-+static const unsigned int mt6873_voltages[] = {
-+	575000,
-+	600000,
-+	650000,
-+	725000,
-+};
-+
-+static struct regulator_desc mt6873_regulators[] = {
-+	MTK_DVFSRC_VREG("dvfsrc-vcore", VCORE, mt6873_voltages),
-+	MTK_DVFSRC_VREG("dvfsrc-vscp", VSCP, mt6873_voltages),
-+};
-+
-+static const struct dvfsrc_regulator_pdata mt6873_data = {
-+	.descs = mt6873_regulators,
-+	.size = ARRAY_SIZE(mt6873_regulators),
-+};
-+
-+static const unsigned int mt8183_voltages[] = {
-+	725000,
-+	800000,
-+};
-+
-+static struct regulator_desc mt8183_regulators[] = {
-+	MTK_DVFSRC_VREG("dvfsrc-vcore", VCORE, mt8183_voltages),
-+};
-+
-+static const struct dvfsrc_regulator_pdata mt8183_data = {
-+	.descs = mt8183_regulators,
-+	.size = ARRAY_SIZE(mt8183_regulators),
-+};
-+
-+static const unsigned int mt8195_voltages[] = {
-+	550000,
-+	600000,
-+	650000,
-+	750000,
-+};
-+
-+static struct regulator_desc mt8195_regulators[] = {
-+	MTK_DVFSRC_VREG("dvfsrc-vcore", VCORE, mt8195_voltages),
-+	MTK_DVFSRC_VREG("dvfsrc-vscp", VSCP, mt8195_voltages),
-+};
-+
-+static const struct dvfsrc_regulator_pdata mt8195_data = {
-+	.descs = mt8195_regulators,
-+	.size = ARRAY_SIZE(mt8195_regulators),
-+};
-+
-+static int dvfsrc_vcore_regulator_probe(struct platform_device *pdev)
-+{
-+	struct regulator_config config = { .dev = &pdev->dev };
-+	const struct dvfsrc_regulator_pdata *pdata;
-+	int i;
-+
-+	pdata = device_get_match_data(&pdev->dev);
-+	if (!pdata)
-+		return -EINVAL;
-+
-+	for (i = 0; i < pdata->size; i++) {
-+		struct regulator_desc *vrdesc = &pdata->descs[i];
-+		struct regulator_dev *rdev;
-+
-+		rdev = devm_regulator_register(&pdev->dev, vrdesc, &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "failed to register %s\n", vrdesc->name);
-+			return PTR_ERR(rdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mtk_dvfsrc_regulator_match[] = {
-+	{ .compatible = "mediatek,mt6873-dvfsrc-regulator", .data = &mt6873_data },
-+	{ .compatible = "mediatek,mt8183-dvfsrc-regulator", .data = &mt8183_data },
-+	{ .compatible = "mediatek,mt8192-dvfsrc-regulator", .data = &mt6873_data },
-+	{ .compatible = "mediatek,mt8195-dvfsrc-regulator", .data = &mt8195_data },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mtk_dvfsrc_regulator_match);
-+
-+static struct platform_driver mtk_dvfsrc_regulator_driver = {
-+	.driver = {
-+		.name  = "mtk-dvfsrc-regulator",
-+		.of_match_table = mtk_dvfsrc_regulator_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.probe = dvfsrc_vcore_regulator_probe,
-+};
-+module_platform_driver(mtk_dvfsrc_regulator_driver);
-+
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_AUTHOR("Arvin wang <arvin.wang@mediatek.com>");
-+MODULE_LICENSE("GPL");
++            emi_icc: interconnect@1 {
++                compatible = "mediatek,mt8195-emi";
++                reg = <1>;
++                #interconnect-cells = <1>;
++            };
++        };
++    };
 -- 
 2.44.0
 
