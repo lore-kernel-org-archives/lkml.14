@@ -1,119 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8794194C74;
-	Thu, 18 Apr 2024 20:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8902180A91;
+	Thu, 18 Apr 2024 20:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713471012; cv=none; b=ePqrDT9fibwiYoUiz81zeC16K+83GgMHCVCCsr1mEImJYxHF+dUH6Hd9vV8gxuuRLxzUvSHJddBNxe8W2lcUYJClXnevTLaEAq5IeHq4vxcAd+O8DQWzr5izV6rABnVyJYfvJgPmzqCT+XqdpzA2FYuFkd/e43bsZZtRfg+Uhkw=
+	t=1713471028; cv=none; b=iBiUt/hTddlEor7YLAqlLOiYfpfGq6HPKM9OyvLoANgMKxgLRYfhrfXjtYD0Y+AxjN6MGIn7O7YfS1pjEBVYEJvbiC2wRWEZEUISd//FUiZlc6tbUUdRNAiumq+Z+rElJKAxeU348tjxoM4CGsk9iDmgDhO2WFWZq2g3HUIq/ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713471012; c=relaxed/simple;
-	bh=1jbCnAE/ii2sK8qE3QI3BU+zcM+GW4I6gtOic2jfh/E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZmsU54OAnTsQ0wD3MwQwEjVCsm+YKFRHbalY4mpPiimUb76PWkNyhQ1rN9r+bJD2obdAPe2y3AZ4+9Ad4uxhiMz49cA705tcM7B9DFB0NMwX+GUmm6wRyJw6uXa+3gEuIvlGLaglybZDXoJHPyHQR5lsrpK2/2JqNdExJvs7/XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maHvPThe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713471028; c=relaxed/simple;
+	bh=L2abxBcVUBmmFLTG6EI3/0+IXyveZMl8fuM7G0KmSOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BY+oX6bKRtlrpd1H5PV7Qd4tetZvsod2SIi1gI/esu29+qyIKHE4HzLtDOWRDXRWoIepRbyVuLEcNrzjYFRKsson8tN6aPgch5fyAwVdwBmiNVNSJU1h28SMK4QIa0K6vuX2pNnV97xo/5AanVoEZ7CSz36LoKim+cSz3Dl3pEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3PvX9A5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maHvPThe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 328C4C113CC;
-	Thu, 18 Apr 2024 20:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3PvX9A5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40942C113CC;
+	Thu, 18 Apr 2024 20:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713471011;
-	bh=1jbCnAE/ii2sK8qE3QI3BU+zcM+GW4I6gtOic2jfh/E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=maHvPTheexlW8Hckm36c6THqkXj57VC9Zg+iPO0oegPO6TEP0a1soaMRmcPLmKWWj
-	 UyFCY74mwJmUQtjH1WYEBvEtOahlhTSp7VrzaqrMlRYRzNW/p/J6eAMLiVEVZ1dMDn
-	 zZzutXtm3NY7JZ1JuRRVO/Ux2qXq2leHoOGwtqr0K4g82CFWe+Ua0paI2LK1CUdJWN
-	 gHciySLXMJ+PjNNgZWE4gythG/pdNz+gKMEjzlaXWP5IQB1sqa8U/QemeyunOUQr7C
-	 MFvShtooBgsgX7FUbrpXRmPMX9n/578Qxq11X3vSd1GlikpEx6bWtt3a1+OpydIRLe
-	 8FyV/FAINIJ1Q==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 18 Apr 2024 15:09:26 -0500
-Subject: [PATCH 2/2] arm64: dts: freescale: ls1028a: Add standard PCI
- device compatible strings to ENETC
+	s=k20201202; t=1713471028;
+	bh=L2abxBcVUBmmFLTG6EI3/0+IXyveZMl8fuM7G0KmSOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V3PvX9A52DMRzywhdQYX+U6IstP0Nb3LfrGc2baaw3MF36PXxTe/CNAqqyBYf2lJP
+	 tnul7nrI/x4pwcAke0H+HEXz/81xAHe2JX3EKw15JmnNYN8IiZ9hUwt9c/2KpAQ+CG
+	 aT47HM+3UK1O6jkagWp1ZSKSZEB59XRdP4APOtOBcxTOJsFaKLgU3dbqCL3Er5mKF+
+	 g0Ix1FgTlXmfnBCtQlrfNu4cBjg/zqRyCnYKeABjYRtSUhcKwndlc7Xm1QLrMy6kVb
+	 +bICYDX4jM6A8KStjs/I4UrfNPxs6MGC4sPvja3cpescD4IVS8xJsWgnqeEmutpIdL
+	 /h2qNckccHPBA==
+Date: Thu, 18 Apr 2024 21:10:23 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sam Sun <samsun1006219@gmail.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	j.vosburgh@gmail.com, Hangbin Liu <liuhangbin@gmail.com>,
+	Eric Dumazet <edumazet@google.com>, pabeni@redhat.com,
+	kuba@kernel.org, andy@greyhouse.net, davem@davemloft.net
+Subject: Re: [PATCH net v3] drivers/net/bonding: Fix out-of-bounds read in
+ bond_option_arp_ip_targets_set()
+Message-ID: <20240418201023.GS3975545@kernel.org>
+References: <CAEkJfYOnsLLiCrtgOpq2Upr+_W0dViYVHU8YdjJOi-mxD8H9oQ@mail.gmail.com>
+ <20240416142428.GO2320920@kernel.org>
+ <CAEkJfYPR-jeZoVz63b2UmvjgBOen7DDy8yyrojLckD9OT2XaiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240418-dt-ls1028a-pci-fixes-v1-2-95f17405e481@kernel.org>
-References: <20240418-dt-ls1028a-pci-fixes-v1-0-95f17405e481@kernel.org>
-In-Reply-To: <20240418-dt-ls1028a-pci-fixes-v1-0-95f17405e481@kernel.org>
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Richard Cochran <richardcochran@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-X-Mailer: b4 0.14-dev
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEkJfYPR-jeZoVz63b2UmvjgBOen7DDy8yyrojLckD9OT2XaiQ@mail.gmail.com>
 
-PCI devices should have a compatible string based on the vendor and device
-IDs. Add these to the Freescale ENETC devices.
+On Wed, Apr 17, 2024 at 02:34:49PM +0800, Sam Sun wrote:
+> On Tue, Apr 16, 2024 at 10:24 PM Simon Horman <horms@kernel.org> wrote:
+> >
+> > On Tue, Apr 16, 2024 at 08:09:44PM +0800, Sam Sun wrote:
+> > > In function bond_option_arp_ip_targets_set(), if newval->string is an
+> > > empty string, newval->string+1 will point to the byte after the
+> > > string, causing an out-of-bound read.
+> > >
+> > > BUG: KASAN: slab-out-of-bounds in strlen+0x7d/0xa0 lib/string.c:418
+> > > Read of size 1 at addr ffff8881119c4781 by task syz-executor665/8107
+> > > CPU: 1 PID: 8107 Comm: syz-executor665 Not tainted 6.7.0-rc7 #1
+> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> > > Call Trace:
+> > >  <TASK>
+> > >  __dump_stack lib/dump_stack.c:88 [inline]
+> > >  dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
+> > >  print_address_description mm/kasan/report.c:364 [inline]
+> > >  print_report+0xc1/0x5e0 mm/kasan/report.c:475
+> > >  kasan_report+0xbe/0xf0 mm/kasan/report.c:588
+> > >  strlen+0x7d/0xa0 lib/string.c:418
+> > >  __fortify_strlen include/linux/fortify-string.h:210 [inline]
+> > >  in4_pton+0xa3/0x3f0 net/core/utils.c:130
+> > >  bond_option_arp_ip_targets_set+0xc2/0x910
+> > > drivers/net/bonding/bond_options.c:1201
+> > >  __bond_opt_set+0x2a4/0x1030 drivers/net/bonding/bond_options.c:767
+> > >  __bond_opt_set_notify+0x48/0x150 drivers/net/bonding/bond_options.c:792
+> > >  bond_opt_tryset_rtnl+0xda/0x160 drivers/net/bonding/bond_options.c:817
+> > >  bonding_sysfs_store_option+0xa1/0x120 drivers/net/bonding/bond_sysfs.c:156
+> > >  dev_attr_store+0x54/0x80 drivers/base/core.c:2366
+> > >  sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
+> > >  kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
+> > >  call_write_iter include/linux/fs.h:2020 [inline]
+> > >  new_sync_write fs/read_write.c:491 [inline]
+> > >  vfs_write+0x96a/0xd80 fs/read_write.c:584
+> > >  ksys_write+0x122/0x250 fs/read_write.c:637
+> > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > >  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+> > >  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+> > > ---[ end trace ]---
+> > >
+> > > Fix it by adding a check of string length before using it.
+> > >
+> > > v2
+> > > According to Jay and Hangbin's opinion, remove target address in
+> > > netdev_err message since target is not initialized in error path and
+> > > will not provide useful information.
+> > >
+> > > v3
+> > > According to Hangbin's opinion, change Fixes tag from 4fb0ef585eb2
+> > > ("bonding: convert arp_ip_target to use the new option API") to
+> > > f9de11a16594 ("bonding: add ip checks when store ip target").
+> > >
+> > > Fixes: f9de11a16594 ("bonding: add ip checks when store ip target")
+> > > Signed-off-by: Yue Sun <samsun1006219@gmail.com>
+> > > ---
+> >
+> > Hi Sam Sun,
+> >
+> > Some comments about the formatting of this submission:
+> >
+> > * The list of chances, (v2, v3, ...) should be below rather than
+> >   above the scissors ("---"), so it is not included when the patch
+> >   is applied.
+> >
+> > * Looking at git history, the patch prefix should probably be "bonding:"
+> >
+> >         Subject: [PATCH net v3] bonding: ...
+> >
+> > * The diff seems to be a bit mangled, f.e. tabs seem to
+> >   have been translated into spaces. So it does not apply.
+> >   Which breaks automated testing. And for this reason
+> >   I am asking you to repost this patch.
+> >
+> >   git send-email, and b4, are two tools that can typically be used
+> >   to send patches in a way that this doesn't occur.
+> >
+> > ---
+> > pw-bot: changes-requested
+> 
+> I sincerely apologize for not using git send-email. I tried to set up
+> the environment but it did not work. For some reason, I needed to use
+> a proxy to connect with my gmail account, but the proxy service
+> provider banned using their proxy to send email through smtp. Maybe I
+> need to rent a VPS and set up a working environment there, but it
+> would take time and I don't know for sure whether the VPS provider
+> would allow me to send email through smtp either.
+> 
+> Could you or anyone please help me submit this patch? Sorry for
+> causing this trouble.
 
-Putting the PCI compatible string first as vendor and device ID is more
-specific than a compatible without any device specific information.
+Sure, happy to help.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 8f8179924851..70b8731029c4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -1105,19 +1105,19 @@ pcie@1f0000000 { /* Integrated Endpoint Root Complex */
- 					<0000 0 0 2 &gic 0 0 GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			enetc_port0: ethernet@0,0 {
--				compatible = "fsl,enetc";
-+				compatible = "pci1957,e100", "fsl,enetc";
- 				reg = <0x000000 0 0 0 0>;
- 				status = "disabled";
- 			};
- 
- 			enetc_port1: ethernet@0,1 {
--				compatible = "fsl,enetc";
-+				compatible = "pci1957,e100", "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 				status = "disabled";
- 			};
- 
- 			enetc_port2: ethernet@0,2 {
--				compatible = "fsl,enetc";
-+				compatible = "pci1957,e100", "fsl,enetc";
- 				reg = <0x000200 0 0 0 0>;
- 				phy-mode = "internal";
- 				status = "disabled";
-@@ -1130,14 +1130,14 @@ fixed-link {
- 			};
- 
- 			enetc_mdio_pf3: mdio@0,3 {
--				compatible = "fsl,enetc-mdio";
-+				compatible = "pci1957,ee01", "fsl,enetc-mdio";
- 				reg = <0x000300 0 0 0 0>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 			};
- 
- 			ethernet@0,4 {
--				compatible = "fsl,enetc-ptp";
-+				compatible = "pci1957,ee02", "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
- 				clocks = <&clockgen QORIQ_CLK_HWACCEL 3>;
- 				little-endian;
-@@ -1205,7 +1205,7 @@ fixed-link {
- 			};
- 
- 			enetc_port3: ethernet@0,6 {
--				compatible = "fsl,enetc";
-+				compatible = "pci1957,e100", "fsl,enetc";
- 				reg = <0x000600 0 0 0 0>;
- 				phy-mode = "internal";
- 				status = "disabled";
-
--- 
-2.43.0
-
+I'll look at doing this tomororw (Friday),
+unless someone else does so beforehand.
