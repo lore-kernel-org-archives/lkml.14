@@ -1,160 +1,83 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC1684D02;
-	Thu, 18 Apr 2024 13:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E111F84D02;
+	Thu, 18 Apr 2024 13:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448796; cv=none; b=DQYYN7xo0dkqH7VZR0u8O4Cn8kvgfrf2eCVHTWyi3fvbXN/2UrUZ/fofAfMF9n3QbymEL0s04jv9AXEn51IY3qlHU6HSEC8u8ZjPZbM/K6f9Hzlnj4OZnXPv3AkO6BUNKo6rFQ30nO7DHciIbqkN+vwWTQeYIS0JC7giBZzQaDM=
+	t=1713448801; cv=none; b=I1KA5grR7Z9ePK9ZCcWLQj/fVOh5TfvkSDR+9sWXABjtq6dENQiw1UlEuiTVVvJCq1c9AcDgN/uEEMXIe0htun3r9uFuLOT0sD7PJlTOeMmfCpOpLCqh8aMkTBfsDCAXWexcstLvh0orqAhP70EK6uQa3glQwWmIlKYcipuIPA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448796; c=relaxed/simple;
-	bh=l63rgEKkK2YHcojZ0gDd66M0WrtP39NBco35zbYOsT0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rCdvaS6vGYTuf76g2mTG+DpaUdXemGlCU8+xr1BTxSP+Il3N6zaebHC4lPJui+zjLL9Wf64/WSbr9aXHgG2u9VoneVCsnPW+wdpXw3JyO3KghP/UHsulL0Dg69DvUmY4z8vmPsHqCY+daVK0DW/thyA7vikTv6YcB8y2vwzoOck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzmY0vjKz6K9T4;
-	Thu, 18 Apr 2024 21:54:53 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A7C31140519;
-	Thu, 18 Apr 2024 21:59:52 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:59:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v7 11/16] irqchip/gic-v3: Add support for ACPI's disabled but 'online capable' CPUs
-Date: Thu, 18 Apr 2024 14:54:07 +0100
-Message-ID: <20240418135412.14730-12-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713448801; c=relaxed/simple;
+	bh=AJPEjPlUPQHJ4hOGffADPP2SRRuSF2ri7CkK+4eg5ro=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XsCeEimNA2wKvLo0vL0rCwAhRVmACVAGhbTGydrUV/fczsGfTd1+KOhOWhbHgyCKlaRfeHsgpBN/XR6KrPCB/BnZCEjA5zlLAa+Po8lR9pDaPX37ocqjp/mF9jsyvLsfKA0GaE8Pk9sjkfyD50DeRLxYCJf5Knzd4Ax13E47hqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Jla47F2B; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Jla47F2B"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43I4kSSo025732;
+	Thu, 18 Apr 2024 08:59:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=RViRRtMM8/41BS4
+	fsufbmgDyWahRy+WUSOiq+FX5YFc=; b=Jla47F2B05U0+DpWmxSAtlFEchV+PoB
+	+6us+KXEh7/ptsumv/cUSMS+3sjIwcEydfhucC68WWDVu5dDL21uVfWNbpiuTwbl
+	xjy3ZOnV+Th2yH0OOMevp/tQ1ihqV7IGKX5Valuf57i8qHQm9S1/3PYQdmnF5R2V
+	xMSKsB3u6TJYa6dDsL2MvY6lPSiluyGqMi1o6lCTwkntxf/HQ9fFy/Matci99PHl
+	PlBCjOf4QX9izX5ww6vPTI2RwTVCRwJLeO0c+TNzsTX3Jo6nJAwnUcCjQRphgwOa
+	nsGg4fcCkHWs4ccgK9/m5KgAxDfu7rd5mza2hxxtXASAFalu9/S5R6A==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xfqeyctxv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 08:59:55 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
+ 2024 14:59:53 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Thu, 18 Apr 2024 14:59:53 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 61517820245;
+	Thu, 18 Apr 2024 13:59:53 +0000 (UTC)
+Date: Thu, 18 Apr 2024 13:59:52 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: ArcticLampyrid <ArcticLampyrid@outlook.com>
+CC: <sbinding@opensource.cirrus.com>, <david.rhodes@cirrus.com>,
+        <james.schulman@cirrus.com>, <linux-kernel@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <rf@opensource.cirrus.com>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] ALSA: hda/realtek: Fix internal speakers for
+ Legion Y9000X 2022 IAH7
+Message-ID: <ZiEnWBbvmWwKqytK@ediswmail9.ad.cirrus.com>
+References: <TYCP286MB25357A4599E935F26A8AAB24C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+ <TYCP286MB25359B61BB685A4B3110BB44C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <TYCP286MB25359B61BB685A4B3110BB44C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+X-Proofpoint-GUID: CX0RV_R6dqnRXP9MnD36QRZK8Bh6ECaB
+X-Proofpoint-ORIG-GUID: CX0RV_R6dqnRXP9MnD36QRZK8Bh6ECaB
+X-Proofpoint-Spam-Reason: safe
 
-From: James Morse <james.morse@arm.com>
+On Thu, Apr 18, 2024 at 09:20:06PM +0800, ArcticLampyrid wrote:
+> This fixes the sound not working from internal speakers on
+> Lenovo Legion Y9000X 2022 IAH7 models.
+> 
+> Signed-off-by: ArcticLampyrid <ArcticLampyrid@outlook.com>
 
-To support virtual CPU hotplug, ACPI has added an 'online capable' bit
-to the MADT GICC entries. This indicates a disabled CPU entry may not
-be possible to online via PSCI until firmware has set enabled bit in
-_STA.
+I would wait for Stefan to review the content before respinning
+but you need to use your real name for the Signed-off-by line as
+per Documentation/process/submitting-patches.rst, it's a legal
+thing.
 
-This means that a "usable" GIC is one that is marked as either enabled,
-or online capable. Therefore, change acpi_gicc_is_usable() to check both
-bits. However, we need to change the test in gic_acpi_match_gicc() back
-to testing just the enabled bit so the count of enabled distributors is
-correct.
-
-What about the redistributor in the GICC entry? ACPI doesn't want to say.
-Assume the worst: When a redistributor is described in the GICC entry,
-but the entry is marked as disabled at boot, assume the redistributor
-is inaccessible.
-
-The GICv3 driver doesn't support late online of redistributors, so this
-means the corresponding CPU can't be brought online either. Clear the
-possible and present bits.
-
-Systems that want CPU hotplug in a VM can ensure their redistributors
-are always-on, and describe them that way with a GICR entry in the MADT.
-
-When mapping redistributors found via GICC entries, handle the case
-where the arch code believes the CPU is present and possible, but it
-does not have an accessible redistributor. Print a warning and clear
-the present and possible bits.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v7: No Change.
----
- drivers/irqchip/irq-gic-v3.c | 21 +++++++++++++++++++--
- include/linux/acpi.h         |  3 ++-
- 2 files changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 10af15f93d4d..66132251c1bb 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2363,11 +2363,25 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
- 				(struct acpi_madt_generic_interrupt *)header;
- 	u32 reg = readl_relaxed(acpi_data.dist_base + GICD_PIDR2) & GIC_PIDR2_ARCH_MASK;
- 	u32 size = reg == GIC_PIDR2_ARCH_GICv4 ? SZ_64K * 4 : SZ_64K * 2;
-+	int cpu = get_cpu_for_acpi_id(gicc->uid);
- 	void __iomem *redist_base;
- 
- 	if (!acpi_gicc_is_usable(gicc))
- 		return 0;
- 
-+	/*
-+	 * Capable but disabled CPUs can be brought online later. What about
-+	 * the redistributor? ACPI doesn't want to say!
-+	 * Virtual hotplug systems can use the MADT's "always-on" GICR entries.
-+	 * Otherwise, prevent such CPUs from being brought online.
-+	 */
-+	if (!(gicc->flags & ACPI_MADT_ENABLED)) {
-+		pr_warn_once("CPU %u's redistributor is inaccessible: this CPU can't be brought online\n", cpu);
-+		set_cpu_present(cpu, false);
-+		set_cpu_possible(cpu, false);
-+		return 0;
-+	}
-+
- 	redist_base = ioremap(gicc->gicr_base_address, size);
- 	if (!redist_base)
- 		return -ENOMEM;
-@@ -2413,9 +2427,12 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
- 
- 	/*
- 	 * If GICC is enabled and has valid gicr base address, then it means
--	 * GICR base is presented via GICC
-+	 * GICR base is presented via GICC. The redistributor is only known to
-+	 * be accessible if the GICC is marked as enabled. If this bit is not
-+	 * set, we'd need to add the redistributor at runtime, which isn't
-+	 * supported.
- 	 */
--	if (acpi_gicc_is_usable(gicc) && gicc->gicr_base_address)
-+	if (gicc->flags & ACPI_MADT_ENABLED && gicc->gicr_base_address)
- 		acpi_data.enabled_rdists++;
- 
- 	return 0;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 9844a3f9c4e5..fcfb7bb6789e 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -239,7 +239,8 @@ void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
- 
- static inline bool acpi_gicc_is_usable(struct acpi_madt_generic_interrupt *gicc)
- {
--	return gicc->flags & ACPI_MADT_ENABLED;
-+	return gicc->flags & (ACPI_MADT_ENABLED |
-+			      ACPI_MADT_GICC_ONLINE_CAPABLE);
- }
- 
- /* the following numa functions are architecture-dependent */
--- 
-2.39.2
-
+Thanks,
+Charles
