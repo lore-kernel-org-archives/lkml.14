@@ -1,156 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9435023D7;
-	Thu, 18 Apr 2024 16:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C73156F54;
+	Thu, 18 Apr 2024 16:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456821; cv=none; b=b5gXJpVfXCTedyIO9rdVajN0bQEu/RPKLlNCRzsKU8ScYvRtNPDSy+y/U+fKd02JKK2CaR7HcFYb4BPOIyFxiSNIgXkb/SThSfCOXikPnN+0pOJobb3VYuGfp+T5F0gLQoKRldfNWQE0qTxtIGc1m1PGCIkyA4TKroO9XRDtyp8=
+	t=1713456873; cv=none; b=Y/Vpjy+ifdg0dze4F+88AptmgZakR4AKMKLhiKQcUzN1c17gB+8q/BpMCQrNVpAvIOsUDU9c8UAahIsC6mjm9f+64GR5YWYr2knqA3kXZ8dd9G2m6jjMdnmJ20+blxBS1isYam/YeAWfOZ8K3hlMgh027gYIKwXC12HczuA3Pug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456821; c=relaxed/simple;
-	bh=q/TFlw8SQh+Cko4nU/ng2SJ+spicGdHxGtHPBf/Abnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sa5qnWUQX0RErrpdnnxH7GgWCr5lEqhJwDAuJnGGize3UarOoOIuloejC7OxMSPLUwwPPT1eEdd9me6y0BaubUNVx7nV5Dix2Fj+CvTEwHFU2X31FKk5Xed6nJQ+i3oeN2e/Doq0jWcPc62fTzQTO1p+xnswM3qk9TRO4PfG7KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M66D379U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713456873; c=relaxed/simple;
+	bh=9r4p8A+grzt9+R6tG2B3r+bIJI41c+ksyzkS1k6re2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpwsWFJWQZlF+qnl/ybwYpAFtqpVU3WMWGRs4P4k9/kJldBMn+vlpsQ4hSGzb+8TcBp7mawF5zB43ateccHY3T/Geu8fj3GRYqEFkqW4GDL9tMB+nVL5J04B4lhQYSjTCeus+x4mIOsCKqgGMx72i5u3jVKmGj/QlSrxHeTn2KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDVYX5TI; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M66D379U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FA7C32783;
-	Thu, 18 Apr 2024 16:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713456821;
-	bh=q/TFlw8SQh+Cko4nU/ng2SJ+spicGdHxGtHPBf/Abnk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M66D379UjZi2pzII5y0MS95jTIIdgeaP5CeOU5t6T8ugoVGoFqm+PLgIbtbjL7jJB
-	 NWZmI3wmyAW6yd89gdzYoIAx8VH5oZAnUb+Nm6vIWzmLAIwB+yayQqOZ7130lPGtZc
-	 76JyrlVTFHePR2a2syZozERpds1Ug/Dsrn50BaO6JXr296Nahb9Dr77AX8YroHZzWq
-	 ciX+VZkyUUoI9u3hjnf+cfLWuwOsKCHK6cQNotuS8wjUQA9NYe2vZrosUyMIWeB+1J
-	 tItBnOKtFJxbN9219aDk9FhAD2AC9p6dPGaByqxXhKspOCjdnFu5QP7jGAJaqTXGND
-	 Hk/edIrXHleKg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5196fe87775so1055976e87.3;
-        Thu, 18 Apr 2024 09:13:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWzxuaphsl+RABbKWgK+hHzWpVoE5uljVBdLb52fmQ0owrzbH3CEcvvjgOCi5BH9Kyow2XR2gNjz+j65gOSvQuBKFO7vv/Rx787BrFVcKQF2toqDopOnNBcDMgwIxPCbBeBVah/xoVOxcH6QBZMzbn+Bz0mwpNeIgh23YBHjPRyDcEJXse08UfAEJSpArLWBpHd7YcJfnJBwhxF6tbG7Trce9qqIPM5nEL+OLV2VLnsaL9eQsQMlSzM6e1OGKpKfTjCwMcaYUIOd4txRINW1sBWAQxyJfKcnnIL7Cmh1ag2Sq9WE5b12vaF8fIZ3rwGK557FUEvg8Fo4mzjwSjuhjx2QNw+aOaGkWpsdsHdbSLAruZytryCfxkikgcKk0WI/sx9mQE3oYxhoJzzPyOCXEfgmpqimuGlMpAK5Ofy4XHmjECTrH0Y3XgIifc=
-X-Gm-Message-State: AOJu0YwmiN4vTEBt/JgaK4RfY8DCk8e/WtC0+HAR6P6/ODoCrPpahoYl
-	Fl1u33dU7gW4WNBpEHPDJEOuhZSfyJ8cRzLZymo5mR8lTKpNwRux4SIYTchgMsu9LcgjJwJuIZM
-	uq6vAGlg/julyKhA4aAUTNtsK/QU=
-X-Google-Smtp-Source: AGHT+IHLiDWbpJNv5cpg7tSucX1RJbILlT9QE6EE0zaOt0RsDuLJ8JfO9fqfVmmivnqe0091gRHYHRJJ+tsSYBR5kLA=
-X-Received: by 2002:ac2:5fad:0:b0:519:569b:361b with SMTP id
- s13-20020ac25fad000000b00519569b361bmr1973077lfe.63.1713456819439; Thu, 18
- Apr 2024 09:13:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDVYX5TI"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e40042c13eso8650525ad.2;
+        Thu, 18 Apr 2024 09:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713456870; x=1714061670; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hz5AqVbMIQVzagVfr43mCYrmlccOEhqDHxOQ5R4Qr/E=;
+        b=gDVYX5TIIEl+Kx4MhzpPKClTswucuZYXmJvfeTWcT0+7p5Epf9n2Cq2dgBWcYPhL48
+         shwZE8RZO1GCRmN3awT+MPCBEu4KEc99dgubD/0GIzXIWRBdstxJI2bH2C3jg8A9pw6w
+         ogJUWw7LmUVn4rvo597SmF6bqB17gAxBVsxnjp2zaNGhEUe7Fg+fXtY8P9TVFzE1O3E5
+         3W32Q8Y9Wv02VBBkDM1Ep4Nfcya/dCm2kVcOu9fUGHongZWPyaar6prv55atK/rcNU0n
+         jq6oRyBhszwKOC+YNa/TvOxOtaNKjriehlC6zyp63c1Sd5kIFlL4pE1acRL7q4XwJFYP
+         MaAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713456870; x=1714061670;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hz5AqVbMIQVzagVfr43mCYrmlccOEhqDHxOQ5R4Qr/E=;
+        b=mfP1Xkpryo6fN5ojqGj3aqMjUMeUJhTeXX6JVKQhuSy4+Lrsqc9nJDygAtZBojOjBw
+         vUpO9oqL31exUPHmZ12ouyVclCPDVQnfokItcIjMKoEb8OxIT4riQ72OAPZc1RkIdRTO
+         Gf4RMXnpTSxvrbaGEywyeX2vtxswYHCAS39+wE2RhZRNucpwrHAK8byLxdSODRlwGxnK
+         cE7ZTwGgJKRECgm6gsOHwxL/U4V0hH7iCJu2PvrtpSRCzhKRuXvsZoY9W/ZXYvCv5WBL
+         QnufYy0jJAzs2A0zUW6ldJ9Sqw38eFh7ZqrQytR8nnHhrFEZcS5RUxixsAM56ZevsHlH
+         aRYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvMtvtEmjiMiRCvyqvWnTpRDF+wBqrzNszQMwv5yqIbM4F9ckRooARQ0og0ghjC0byAM9QMz4DIUAWaacNX7dJC7Gl9IyLX+2zXtd0lHZXyGl53r0TjlJxUiyQtP8Afm+H12Ca42WdFTyxojvcLFgtQrpU+pPsT16KhdbvaaD1XN4i
+X-Gm-Message-State: AOJu0Yz+MsxDlzyeR2Y8w9b9dRHwDQwyiEuiWGE3+VHe3X2XtPdXOJBl
+	gZ1hxBbXCW0RgDMQ9tEqZZlu6mWnccDNHnIN154fyX0y/e0wzNOx
+X-Google-Smtp-Source: AGHT+IEMg34T9/sHL1htsox4qC0LnWXh8YAzs15J15MH+wNZC7UiWdVMZSp+B14Rj9cBheMe3xORLg==
+X-Received: by 2002:a17:902:ec92:b0:1e4:9ac6:1f3f with SMTP id x18-20020a170902ec9200b001e49ac61f3fmr4223968plg.5.1713456869965;
+        Thu, 18 Apr 2024 09:14:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id s10-20020a170902a50a00b001e0da190a07sm1707307plq.167.2024.04.18.09.14.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 09:14:29 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 18 Apr 2024 06:14:28 -1000
+From: Tejun Heo <tj@kernel.org>
+To: linan666@huaweicloud.com
+Cc: josef@toxicpanda.com, axboe@kernel.dk, hch@lst.de,
+	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH] blk-iocost: do not WARNING if iocg has already offlined
+Message-ID: <ZiFG5KtGGpYdOmnY@slm.duckdns.org>
+References: <20240418072340.2090877-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411160051.2093261-1-rppt@kernel.org> <20240411160051.2093261-6-rppt@kernel.org>
- <20240415075241.GF40213@noisy.programming.kicks-ass.net> <Zh1lnIdgFeM1o8S5@FVFF77S0Q05N.cambridge.arm.com>
- <Zh4nJp8rv1qRBs8m@kernel.org> <CAPhsuW6Pbg2k_Gu4dsBx+H8H5XCHvNdtEZJBPiG_eT0qqr9D1w@mail.gmail.com>
- <ZiE91CJcNw7gBj9g@kernel.org>
-In-Reply-To: <ZiE91CJcNw7gBj9g@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 18 Apr 2024 09:13:27 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
-Message-ID: <CAPhsuW4au6v8k8Ab7Ff6Yj64rGvZ7wkz=Xrgh8ZZtLyscpChqQ@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm: introduce execmem_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Bjorn Topel <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418072340.2090877-1-linan666@huaweicloud.com>
 
-On Thu, Apr 18, 2024 at 8:37=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-[...]
-> >
-> > Is +/- 2G enough for all realistic use cases? If so, I guess we don't
-> > really need
-> > EXECMEM_ANYWHERE below?
-> >
-> > > >
-> > > > * I'm not sure about BPF's requirements; it seems happy doing the s=
-ame as
-> > > >   modules.
-> > >
-> > > BPF are happy with vmalloc().
-> > >
-> > > > So if we *must* use a common execmem allocator, what we'd reall wan=
-t is our own
-> > > > types, e.g.
-> > > >
-> > > >       EXECMEM_ANYWHERE
-> > > >       EXECMEM_NOPLT
-> > > >       EXECMEM_PREL32
-> > > >
-> > > > ... and then we use those in arch code to implement module_alloc() =
-and friends.
-> > >
-> > > I'm looking at execmem_types more as definition of the consumers, may=
-be I
-> > > should have named the enum execmem_consumer at the first place.
-> >
-> > I think looking at execmem_type from consumers' point of view adds
-> > unnecessary complexity. IIUC, for most (if not all) archs, ftrace, kpro=
-be,
-> > and bpf (and maybe also module text) all have the same requirements.
-> > Did I miss something?
->
-> It's enough to have one architecture with different constrains for kprobe=
-s
-> and bpf to warrant a type for each.
->
+Hello,
 
-AFAICT, some of these constraints can be changed without too much work.
+On Thu, Apr 18, 2024 at 03:23:40PM +0800, linan666@huaweicloud.com wrote:
+> From: Li Nan <linan122@huawei.com>
+> 
+> In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
+> is intended to confirm iocg is avitve when it has debt. However, warn
+> can be triggered during removing cgroup controller, as
 
-> Where do you see unnecessary complexity?
->
-> > IOW, we have
-> >
-> > enum execmem_type {
-> >         EXECMEM_DEFAULT,
-> >         EXECMEM_TEXT,
-> >         EXECMEM_KPROBES =3D EXECMEM_TEXT,
-> >         EXECMEM_FTRACE =3D EXECMEM_TEXT,
-> >         EXECMEM_BPF =3D EXECMEM_TEXT,      /* we may end up without
-> > _KPROBE, _FTRACE, _BPF */
-> >         EXECMEM_DATA,  /* rw */
-> >         EXECMEM_RO_DATA,
-> >         EXECMEM_RO_AFTER_INIT,
-> >         EXECMEM_TYPE_MAX,
-> > };
-> >
-> > Does this make sense?
->
-> How do you suggest to deal with e.g. riscv that has separate address spac=
-es
-> for modules, kprobes and bpf?
+Maybe saying "a blkcg is being removed" is clearer?
 
-IIUC, modules and bpf use the same address space on riscv, while kprobes us=
-e
-vmalloc address. I haven't tried this yet, but I think we can let
-kprobes use the
-same space as modules and bpf, which is:
+> iocg_waitq_timer_fn() is awakened at that time.
+> 
+>   WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
+>   Call trace:
+>   iocg_pay_debt+0x14c/0x190
+>   iocg_kick_waitq+0x438/0x4c0
+>   iocg_waitq_timer_fn+0xd8/0x130
+>   __run_hrtimer+0x144/0x45c
+>   __hrtimer_run_queues+0x16c/0x244
+>   hrtimer_interrupt+0x2cc/0x7b0
+> 
+> The warn in this situation is meaningless. Since this iocg is being
+> removed, the state of the 'active_list' is irrelevant, and 'waitq_timer'
+> is canceled after removing 'active_list' in ioc_pd_free(), which ensure
+> iocg is freed after iocg_waitq_timer_fn() returns.
+> 
+> Therefore, add the check if iocg has already offlined to avoid warn
+> when removing cgroup controller.
+> 
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>  block/blk-iocost.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+> index baa20c85799d..2e109c016a39 100644
+> --- a/block/blk-iocost.c
+> +++ b/block/blk-iocost.c
+> @@ -1440,7 +1440,7 @@ static void iocg_pay_debt(struct ioc_gq *iocg, u64 abs_vpay,
+>  	lockdep_assert_held(&iocg->waitq.lock);
+>  
+>  	/* make sure that nobody messed with @iocg */
+> -	WARN_ON_ONCE(list_empty(&iocg->active_list));
+> +	WARN_ON_ONCE(list_empty(&iocg->active_list) && iocg->pd.online);
 
-ffffffff00000000 |  -4     GB | ffffffff7fffffff |    2 GB | modules, BPF
+Can you add a comment explaining why we need the pd.online test?
 
-Did I get this right?
+Other than the above nits, looks great to me. Please feel free to add
 
-Thanks,
-Song
+  Acked-by: Tejun Heo <tj@kernel.org>
+
+Thanks.
+
+-- 
+tejun
