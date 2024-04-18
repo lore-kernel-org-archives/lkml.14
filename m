@@ -1,138 +1,229 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3423C15E5C7;
-	Thu, 18 Apr 2024 10:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A573515E1EE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437899; cv=none; b=hCFcYJ4lzXZu2C9rA0GqdBkESBXsjB1DMxfv+ZzzmG7+zvnpebmI0JteduCTdHgS8aeztzHPhzW86CBaI8qHGbc8ZVgy7pMWD1BiAb9mNSOOLT4xIMQcGBpe0qmD22C315Jie/2u+wvljoG7HbYYsxcsl3wduEjYM13JY1YCNok=
+	t=1713437901; cv=none; b=nwlN68Ov6WY2NSGn9W1pgz72UZoHwOTuiE05eUuAY+VVd4i1S9IcRT0FRn2+33sD7DkdGvgxHLFyydYSh51Bb0G2QyX1RH6x9DcZwuqFZsR0EBVd1IBAVr/WYRY0Yp9vR6HzTJYFN+RaAoHt6YgDBpaWlRnO173RM4wih4WuP7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437899; c=relaxed/simple;
-	bh=aG5dZ+d3QHN3xIqCCpbZWxkzuRvR4q/UcWO1COl9Q8U=;
-	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=n5HwpFj9p1HYYfi5g3o6bBrU8cfCFvux0XuApeSsy16PjmQbnq6WkNMAxtL4OMkqHnwD4i6jntYwgO+/WMOC7F+AR9lVxvHcTOdMjIYzNwm3KILRuJK6OFg+6sz3PuEx3vyIA63sN6OPmy89R2cdY3lwFfpgb+fuuKfOwslEN1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=cgVhfUZV; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1713437901; c=relaxed/simple;
+	bh=YS1E84UOxIjSnPESm8G/PnNhVqV2TAef9FqSYBszYkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rpwQkdyDqvyX0YqFjFsdhN7L0g0Ar1UCIvPNZJ+8lxKAnvlrQqfqyLReK5+PQ0uYUR4wWoCCP+Id19gQpavIn6EKMZqGc3reQ/pZ2cwx17+GJGhfU4yWNoSLNtYH4khSQSqtGXXgE787/b4ajfU8KXfbaZBeff7BjiQfc0ncHHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WooYMqLb; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cgVhfUZV"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43I4kSKS025732;
-	Thu, 18 Apr 2024 05:58:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:references:in-reply-to:subject:date:message-id
-	:mime-version:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=7sFDW0pZEjFEt7FMhT7204tWMxNby+5KfqvWAUN05Ao=; b=
-	cgVhfUZVMBcR8qpJFP+/n5c2j1c7OvZyRCR00nZcl7+VjWrmNfLZuwbiMF+YHqfZ
-	psgb6iv9G8xmm5I0fGeL4jONW6H3KEMNNLb8LJydv8T2Lx7toRoFkqp9jbCvaNj+
-	NeYRWdIkSl3V89NaxrJtlBWfnUngab5yPg++Lzn7nCoeRJC+m3W1+55seAq6XmPV
-	1VrMd5UDnBQqUk8fXRXsBleTLPZ2I39rj6Y4rcavBDNTq+sDM5jiwGc8s5zSyKN/
-	A+NyhXPffPVP7gdTbB9gYgTVbUaiUtKJG1/WZXFm3ksE0R5uRC7bulsvLOQpbQxk
-	EwChqLbom4oom1u3B+4z1w==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xfqeycn9r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 05:58:15 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
- 2024 11:58:13 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Thu, 18 Apr 2024 11:58:12 +0100
-Received: from LONN2DGDQ73 (LONN2DGDQ73.ad.cirrus.com [198.61.64.201])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id AB399820245;
-	Thu, 18 Apr 2024 10:58:12 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: 'ArcticLampyrid' <ArcticLampyrid@outlook.com>, <james.schulman@cirrus.com>,
-        <david.rhodes@cirrus.com>, <rf@opensource.cirrus.com>
-CC: <patches@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <TYCP286MB253523D85F6E0ECAA3E03D58C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM> <TYCP286MB253551BDCC83320C246BD494C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-In-Reply-To: <TYCP286MB253551BDCC83320C246BD494C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-Subject: RE: [PATCH v2 1/2] ALSA: cs35l41: obey the trigger type from DSDT
-Date: Thu, 18 Apr 2024 11:58:12 +0100
-Message-ID: <002001da917f$4ebdb2e0$ec3918a0$@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WooYMqLb"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ed0e9ccca1so765703b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 03:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713437899; x=1714042699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lkdNcUi/cFtD91tOAv56m6RXgS21TIueDzxwluwn/Lw=;
+        b=WooYMqLbQWuw4ih3+vlrZIERruXz85GZSfMW810uVOF8nV8hplh1rJ+RARKxSebTj9
+         JwAzHVvuuSUw02z47rQANtxkfgzFGePLqYin2xkdQLC3YzOh+ALt9lQMYUwlcq6LiabX
+         mSkbFQJ1yf4vy0A+qVwPBrExjrrfASFeARt9dRIh+ZYgolGMh1NzvPIOP4FBeWNOJyfB
+         vPj1A1huHcys+PYFnVwYw1PZEDxmXPf0w7O77Iqtb1yJiSH8WwQobgcrTfoSIzd9L7Da
+         Vx64LQAJEH/yO1+yXAQ/wJxkl7jQ2F4m3/2OZ/v3Uvfyq+8MJVM9yGiPHlIbW4AENhKm
+         r+JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713437899; x=1714042699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lkdNcUi/cFtD91tOAv56m6RXgS21TIueDzxwluwn/Lw=;
+        b=AahIU/2gpbckai0Czx67eZrRXQh9WeYo8Z42x+DDbGnr4eV1Ng2YuL2z6HLqLVjWp3
+         ez6AVpAN6orMu2NN04UadBgJoBaBgQmsR7X6x6L2P4sWYzeZEgXZkTQwlaRNG6/QmDTm
+         joA/WzUQPgmQk3rZ4NiZGlKeBWsjfePBbyU61pqep4NZ2Z6fTGg2iBLtFHZNB16dJnsB
+         4U3typ4zp1dKJuXNMBAw7GvKblxqoEcL6nsGQOSftbqTL07JLQvVTi5BCYUr6Rg5A7VQ
+         lIjjBpGKGI/vh7jWEBHXXpOCJVJulpxO4JGhFHXJZx4pS3h1QPbUwQJqb5MGhNZVLNVt
+         kDIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWuRbDu9P6iE2pEb4XSVcNZ8Hb5WePQmKd0Y/6zRBfpzmGMtnKlVzFUoYKzJ96SIAwaonoIWqxsoWSQ/gIaEBVKKwG0mSLfApDpK9Tg
+X-Gm-Message-State: AOJu0Yx3AhU3HfzKnrrEvwtS+BHMbnKzIRNwd7XvDZ4Ohf97avwUtkdE
+	xNmq9UC1r+6luKTF7o2lESCg28DelnnSaHG/VpNDR3Ux64zJBI7h
+X-Google-Smtp-Source: AGHT+IF4GTJLmtDlsAiq1UBHnJLKlM7tfb3a1b5r2w5ICLJMQHsjTAFqJxOVL/DbBjBw6Z9Mr8QknQ==
+X-Received: by 2002:a05:6a00:1749:b0:6ea:d740:62a4 with SMTP id j9-20020a056a00174900b006ead74062a4mr2701566pfc.25.1713437898934;
+        Thu, 18 Apr 2024 03:58:18 -0700 (PDT)
+Received: from LancedeMBP.lan ([112.10.225.217])
+        by smtp.gmail.com with ESMTPSA id gd26-20020a056a00831a00b006ea923678a6sm1200487pfb.137.2024.04.18.03.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 03:58:18 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	21cnbao@gmail.com,
+	mhocko@suse.com,
+	fengwei.yin@intel.com,
+	zokeefe@google.com,
+	shy828301@gmail.com,
+	xiehuan09@gmail.com,
+	wangkefeng.wang@huawei.com,
+	songmuchun@bytedance.com,
+	peterx@redhat.com,
+	minchan@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Lance Yang <ioworker0@gmail.com>
+Subject: [PATCH v9 1/4] mm/madvise: introduce clear_young_dirty_ptes() batch helper
+Date: Thu, 18 Apr 2024 18:57:47 +0800
+Message-Id: <20240418105750.98866-2-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20240418105750.98866-1-ioworker0@gmail.com>
+References: <20240418105750.98866-1-ioworker0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQJzUjqa4IlF22ZsXxMyjNS9IQLhdQHJdBdKsC4OJvA=
-X-Proofpoint-GUID: zUNP5uEu8i7xy497Qi-UziALsKJh1S6N
-X-Proofpoint-ORIG-GUID: zUNP5uEu8i7xy497Qi-UziALsKJh1S6N
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This commit introduces clear_young_dirty_ptes() to replace mkold_ptes().
+By doing so, we can use the same function for both use cases
+(madvise_pageout and madvise_free), and it also provides the flexibility
+to only clear the dirty flag in the future if needed.
 
-Looking at the ACPI attached previously, this issue needs some more
-investigation.
-I don't think this patch is a good idea, since it is unknown what
-effects this patch will have on other laptops.
+Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Lance Yang <ioworker0@gmail.com>
+---
+ include/linux/mm_types.h |  9 +++++
+ include/linux/pgtable.h  | 74 ++++++++++++++++++++++++----------------
+ mm/madvise.c             |  3 +-
+ 3 files changed, 55 insertions(+), 31 deletions(-)
 
-Thanks,
-Stefan
-
-> -----Original Message-----
-> From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-> Sent: Thursday, April 18, 2024 7:46 AM
-> To: james.schulman@cirrus.com; david.rhodes@cirrus.com;
-> rf@opensource.cirrus.com
-> Cc: patches@opensource.cirrus.com; linux-sound@vger.kernel.org;
-linux-
-> kernel@vger.kernel.org; ArcticLampyrid <ArcticLampyrid@outlook.com>
-> Subject: [PATCH v2 1/2] ALSA: cs35l41: obey the trigger type from
-DSDT
-> 
-> On some models, CSC3551's interrupt pin connected to
-> APIC. We need to obey the trigger type from DSDT in this case.
-> 
-> Signed-off-by: ArcticLampyrid <ArcticLampyrid@outlook.com>
-> ---
->  sound/pci/hda/cs35l41_hda.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/sound/pci/hda/cs35l41_hda.c
-b/sound/pci/hda/cs35l41_hda.c
-> index d3fa6e136744..d9c7b4034684 100644
-> --- a/sound/pci/hda/cs35l41_hda.c
-> +++ b/sound/pci/hda/cs35l41_hda.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
->  #include <sound/hda_codec.h>
-> +#include <linux/irq.h>
->  #include <sound/soc.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/spi/spi.h>
-> @@ -1511,6 +1512,14 @@ static int
-cs35l41_hda_apply_properties(struct
-> cs35l41_hda *cs35l41)
->  	irq_pol = cs35l41_gpio_config(cs35l41->regmap, hw_cfg);
-> 
->  	if (cs35l41->irq && using_irq) {
-> +		struct irq_data *irq_data;
-> +
-> +		irq_data = irq_get_irq_data(cs35l41->irq);
-> +		if (irq_data && irqd_trigger_type_was_set(irq_data)) {
-> +			irq_pol = irqd_get_trigger_type(irq_data);
-> +			dev_info(cs35l41->dev, "Using configured IRQ
-> Polarity: %d\n", irq_pol);
-> +		}
-> +
->  		ret = devm_regmap_add_irq_chip(cs35l41->dev, cs35l41-
-> >regmap, cs35l41->irq,
->  					       IRQF_ONESHOT |
-> IRQF_SHARED | irq_pol,
->  					       0,
-> &cs35l41_regmap_irq_chip, &cs35l41->irq_data);
-> --
-> 2.44.0
-> 
-
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index db0adf5721cc..24323c7d0bd4 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1368,6 +1368,15 @@ enum fault_flag {
+ 
+ typedef unsigned int __bitwise zap_flags_t;
+ 
++/* Flags for clear_young_dirty_ptes(). */
++typedef int __bitwise cydp_t;
++
++/* Clear the access bit */
++#define CYDP_CLEAR_YOUNG		((__force cydp_t)BIT(0))
++
++/* Clear the dirty bit */
++#define CYDP_CLEAR_DIRTY		((__force cydp_t)BIT(1))
++
+ /*
+  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
+  * other. Here is what they mean, and how to use them:
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index e2f45e22a6d1..18019f037bae 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -361,36 +361,6 @@ static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
+ }
+ #endif
+ 
+-#ifndef mkold_ptes
+-/**
+- * mkold_ptes - Mark PTEs that map consecutive pages of the same folio as old.
+- * @vma: VMA the pages are mapped into.
+- * @addr: Address the first page is mapped at.
+- * @ptep: Page table pointer for the first entry.
+- * @nr: Number of entries to mark old.
+- *
+- * May be overridden by the architecture; otherwise, implemented as a simple
+- * loop over ptep_test_and_clear_young().
+- *
+- * Note that PTE bits in the PTE range besides the PFN can differ. For example,
+- * some PTEs might be write-protected.
+- *
+- * Context: The caller holds the page table lock.  The PTEs map consecutive
+- * pages that belong to the same folio.  The PTEs are all in the same PMD.
+- */
+-static inline void mkold_ptes(struct vm_area_struct *vma, unsigned long addr,
+-		pte_t *ptep, unsigned int nr)
+-{
+-	for (;;) {
+-		ptep_test_and_clear_young(vma, addr, ptep);
+-		if (--nr == 0)
+-			break;
+-		ptep++;
+-		addr += PAGE_SIZE;
+-	}
+-}
+-#endif
+-
+ #ifndef __HAVE_ARCH_PMDP_TEST_AND_CLEAR_YOUNG
+ #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG)
+ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+@@ -489,6 +459,50 @@ static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
+ }
+ #endif
+ 
++#ifndef clear_young_dirty_ptes
++/**
++ * clear_young_dirty_ptes - Mark PTEs that map consecutive pages of the
++ *		same folio as old/clean.
++ * @mm: Address space the pages are mapped into.
++ * @addr: Address the first page is mapped at.
++ * @ptep: Page table pointer for the first entry.
++ * @nr: Number of entries to mark old/clean.
++ * @flags: Flags to modify the PTE batch semantics.
++ *
++ * May be overridden by the architecture; otherwise, implemented by
++ * get_and_clear/modify/set for each pte in the range.
++ *
++ * Note that PTE bits in the PTE range besides the PFN can differ. For example,
++ * some PTEs might be write-protected.
++ *
++ * Context: The caller holds the page table lock.  The PTEs map consecutive
++ * pages that belong to the same folio.  The PTEs are all in the same PMD.
++ */
++static inline void clear_young_dirty_ptes(struct vm_area_struct *vma,
++					  unsigned long addr, pte_t *ptep,
++					  unsigned int nr, cydp_t flags)
++{
++	pte_t pte;
++
++	for (;;) {
++		if (flags == CYDP_CLEAR_YOUNG)
++			ptep_test_and_clear_young(vma, addr, ptep);
++		else {
++			pte = ptep_get_and_clear(vma->vm_mm, addr, ptep);
++			if (flags & CYDP_CLEAR_YOUNG)
++				pte = pte_mkold(pte);
++			if (flags & CYDP_CLEAR_DIRTY)
++				pte = pte_mkclean(pte);
++			set_pte_at(vma->vm_mm, addr, ptep, pte);
++		}
++		if (--nr == 0)
++			break;
++		ptep++;
++		addr += PAGE_SIZE;
++	}
++}
++#endif
++
+ static inline void ptep_clear(struct mm_struct *mm, unsigned long addr,
+ 			      pte_t *ptep)
+ {
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 4b869b682fd5..f5e3699e7b54 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -507,7 +507,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 			continue;
+ 
+ 		if (!pageout && pte_young(ptent)) {
+-			mkold_ptes(vma, addr, pte, nr);
++			clear_young_dirty_ptes(vma, addr, pte, nr,
++					       CYDP_CLEAR_YOUNG);
+ 			tlb_remove_tlb_entries(tlb, pte, nr, addr);
+ 		}
+ 
+-- 
+2.33.1
 
