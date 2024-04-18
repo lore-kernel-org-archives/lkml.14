@@ -1,473 +1,131 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1880D12FF75;
-	Thu, 18 Apr 2024 12:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F15165FB4;
+	Thu, 18 Apr 2024 12:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445064; cv=none; b=YNG+W4uWQXHv6rlbhviSBkT1L+RJr57U4ET9Qra4I4wLFH9Y98H97H/U04ziNLyI2+JC3UtECPOZOfhsSNC3sEOIbccEDh80neLs6YVHot2SFxfQqTERBpAYG0iiBajgXcIwnGC+AtEy6BQWaa0cwZiXxKIW075cAA/jsSTwkgI=
+	t=1713445070; cv=none; b=oi4fdO5WmLf9SO4iHq5yO/yfSoTHOOe/ZSJEPVGuznRdiDSUUDpbERIdj/evudCjUxA4qSWfJsamsMqyURH90XGHf915igtRJ19aHoO7f+n4arP+uI+mjVqlTp+PJ2AtAWXXuK6svTedWDBzyZpgEVil1Dc/5QAeMNzRijTAwOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713445064; c=relaxed/simple;
-	bh=hMAx3F4EpPhGYFK9B8YTuJqNm5+V4TKLs3OdDNY1mSE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oL6mcPV8ITkGsdTw4+Avsco668jJadC+crxLpK5nAoa793/vPGN6X2y9T+ftd4xa94YRoJpHsUW+AOmPqyQLEz7qdsMfUBsKQ8Nv5UquUfyUfVHyHJ2KSzjrvbqfrxz3fsiaKvCuTWA8D9aXo7XHt2KdJyiFdzDID+03Oehih8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PVMwD7TO; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713445070; c=relaxed/simple;
+	bh=mq0LVEhgLrutQcuF19JR7w3laIzCRdDcXlTvXzp+kR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCczj1KGN0CZD5Xr5Di+HgSSwPHc6o8ZYmjTwAPum89MeJJ4kdkU1IJzoSqH7pgiOrL426ylVvjjhy+HqnzmjbYL/ANPkjR9t4+N8kez9J7oML5CSzX7u9TKgyn6eesnHbMHkF42db1XDvaYlaHGuc70737IHEflp+v5X1K4sf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VX7SseTS; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PVMwD7TO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713445063; x=1744981063;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hMAx3F4EpPhGYFK9B8YTuJqNm5+V4TKLs3OdDNY1mSE=;
-  b=PVMwD7TO0dY6r2swm+4DAGFHNiBop1OvZ2t+BZyLsnpS+5kO5EjrhJtJ
-   jjZrQFnUcd1l8uM3+N5IoPueMY3xeN9Xz6uW33btpo9ti9b6WiuJOprJF
-   dLJ7kIwd227SNEvn0u4FllaBoeRKv+yAmpt2QwNxGpRZ+h1MPyGxFoF2x
-   pTKY4t+LH3nRSykApc7SpFt+CPEHwB9rq0WFOYpIxmCqZhjqYScwqh6nn
-   Ov41flZXMk4IVUvxuZVhgVKYr0elp6GWH3x1zN0nbi2qloqlWFPkT1M4k
-   DogISlxkSOKqCQ7razIqQOgO/8ZUj+XMqkqfWvd2P63e1L88itxWrlbyv
-   A==;
-X-CSE-ConnectionGUID: buBoWaUbT9SIXw2DlVlEBg==
-X-CSE-MsgGUID: Ujrcz+0xSJWTwxS/esqjxA==
-X-IronPort-AV: E=Sophos;i="6.07,212,1708412400"; 
-   d="scan'208";a="23619641"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 05:57:39 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 05:57:38 -0700
-Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 05:57:30 -0700
-From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
-	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <horatiu.vultur@microchip.com>,
-	<ruanjinjie@huawei.com>, <steen.hegelund@microchip.com>,
-	<vladimir.oltean@nxp.com>
-CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
-	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
-	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
-	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
-Subject: [PATCH net-next v4 06/12] net: ethernet: oa_tc6: implement internal PHY initialization
-Date: Thu, 18 Apr 2024 18:26:42 +0530
-Message-ID: <20240418125648.372526-7-Parthiban.Veerasooran@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
-References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VX7SseTS"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2da0f8f7b24so9948741fa.1;
+        Thu, 18 Apr 2024 05:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713445067; x=1714049867; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H7TvlJDHh6PM8Lai+72isa4pBtCMtiwvjV7L+/XlE4U=;
+        b=VX7SseTSyaorQla78jmVqGvTMcrIOP9x4/fUZGjX+cwsRV2ZqVveFXYM0ufThK/PvQ
+         W2ck8Lx3KSVk8IZju/2XUH3E55UL+W3ui1keDu1xcMIw3PxYtedXBicYwVkujnei5mx2
+         yaRPQseRLy4J1qbn/6mcM3vRozqEqEXhcYeKV9VtZxihF1OMgAv9GzqfhgYN3FpXCkU/
+         8EfH4l2HQvmOIy0AcKedgwMGmELCJbpnXu32g1Uarz7NJiWFFH+HNSNW1sXnIK5XM7X6
+         PriS8U4FRITTDFkMpi7EN/ZceESsCNpB3Wr23gsUbpegWJIhv1112iGpjBxg4Fxd4BzW
+         Ge7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713445067; x=1714049867;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7TvlJDHh6PM8Lai+72isa4pBtCMtiwvjV7L+/XlE4U=;
+        b=p1eEfi9DTFqs/u7iBa0sGVkHeh0vAOtx4OgmQ9hZyVXgrvhkm9dydCIX6t8IQV/p5+
+         lAHgUbbwGMO7CXCTFKC0Go3hCLwdHMhAIklfFKoIkgIOZbDYKz0Tk029rGyEdOcWEz43
+         ELAEXHXcWq6+JoPv7Umk+CG+tm4PebIH0Cazx/wdebYelCsrH96rotChM6GKG4O5R67y
+         iPAMDqm33oZiaIadXPsNZ+jj80wwH/WlZZYNIWq/NSw1R0i0zrNMusegYzKhFXvCHQNY
+         9owkO9/DmdXfsIKaPfMa8fUFaIS96zsVqYaHccMfUUDT4wVGOkrsBhqPry7PrOoBp6we
+         jo2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYDnvHB3pc9CU1qKKFK4kkY1sC2lYlqI2rQbVuBo435GGuyRs4dH546nvIE0uzlMn6JPkNXHVm32K4QHgqLfBD9Bk00GAJg0z4jaKHqviNCmJJ6FKK13ihkV2oAZpVZ7vptlNlbaEDMI+y0MgKKWhHk78/YTSndxaakTh8WtC1ReG/kDh9P8gw1j97u0WAaoPQKR2x2FXE/DRj9g7JJvHAA+3I
+X-Gm-Message-State: AOJu0YxHIvJQ0XPwlI+v1D1GvRFLA5KS2jyaGRn/s6ldg6Hikde0SEpe
+	jUs+3gQo8a3sCT2qqPLtYxbaO0bE5HMRd4PcBrYLaJ4eq7+UCSUU
+X-Google-Smtp-Source: AGHT+IHfKLq2UzaMXO/4uNIuhb8wjwhcxG7kZvjOwkPLDKwcLA+nxELTBqKKXudYnYTNlpQpw0rHVQ==
+X-Received: by 2002:a2e:9f17:0:b0:2d7:1a35:d580 with SMTP id u23-20020a2e9f17000000b002d71a35d580mr683715ljk.15.1713445067067;
+        Thu, 18 Apr 2024 05:57:47 -0700 (PDT)
+Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
+        by smtp.gmail.com with ESMTPSA id f23-20020a2eb5b7000000b002d88804b368sm190667ljn.43.2024.04.18.05.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 05:57:46 -0700 (PDT)
+Date: Thu, 18 Apr 2024 15:57:44 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v3 4/5] net: stmmac: add support for RZ/N1 GMAC
+Message-ID: <eqfta73ost45nbzz3aoa2tw5tasg3geehf4fgphu4teq5yfvar@ngif2e6j5j2k>
+References: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com>
+ <20240415-rzn1-gmac1-v3-4-ab12f2c4401d@bootlin.com>
+ <xp34tp5cjmdshefxjczltz2prqtiikagfspf4lobznzypvsyah@ihpmwfynwzhh>
+ <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
 
-Internal PHY is initialized as per the PHY register capability supported
-by the MAC-PHY. Direct PHY Register Access Capability indicates if PHY
-registers are directly accessible within the SPI register memory space.
-Indirect PHY Register Access Capability indicates if PHY registers are
-indirectly accessible through the MDIO/MDC registers MDIOACCn defined in
-OPEN Alliance specification. Currently the direct register access is only
-supported.
+On Thu, Apr 18, 2024 at 01:57:47PM +0200, Romain Gantois wrote:
+> Hi Serge,
+> 
+> On Tue, 16 Apr 2024, Serge Semin wrote:
+> 
+> > > +static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv,
+> > 
+> > > +			       struct mac_device_info *hw)
+> > 
+> > AFAICS hw is unused, and the mac_device_info instance is reached via
+> > the priv pointer. What about dropping the unused argument then?
+> 
 
-Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
----
- drivers/net/ethernet/oa_tc6.c   | 230 +++++++++++++++++++++++++++++++-
- drivers/net/phy/microchip_t1s.c |  30 +++++
- include/linux/oa_tc6.h          |   4 +-
- include/uapi/linux/mdio.h       |   1 +
- 4 files changed, 263 insertions(+), 2 deletions(-)
+> Unfortunately, this is an implementation of the pcs_init() callback, which is 
+> also used by socfpga (see patch 4/6 in this series). The socfpga implementations 
+> use the hw parameter for both pcs_init() and pcs_exit() so I can't remove it.
 
-diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
-index 850765574d30..f04c4c13e8d3 100644
---- a/drivers/net/ethernet/oa_tc6.c
-+++ b/drivers/net/ethernet/oa_tc6.c
-@@ -7,9 +7,15 @@
- 
- #include <linux/bitfield.h>
- #include <linux/iopoll.h>
-+#include <linux/mdio.h>
-+#include <linux/phy.h>
- #include <linux/oa_tc6.h>
- 
- /* OPEN Alliance TC6 registers */
-+/* Standard Capabilities Register */
-+#define OA_TC6_REG_STDCAP			0x0002
-+#define STDCAP_DIRECT_PHY_REG_ACCESS		BIT(8)
-+
- /* Reset Control and Status Register */
- #define OA_TC6_REG_RESET			0x0003
- #define RESET_SWRESET				BIT(0)	/* Software Reset */
-@@ -25,6 +31,10 @@
- #define INT_MASK0_RX_BUFFER_OVERFLOW_ERR_MASK	BIT(3)
- #define INT_MASK0_TX_PROTOCOL_ERR_MASK		BIT(0)
- 
-+/* PHY Clause 22 and 29 registers base address and mask */
-+#define OA_TC6_PHY_STD_REG_ADDR_BASE		0xFF00
-+#define OA_TC6_PHY_STD_REG_ADDR_MASK		0x3F
-+
- /* Control command header */
- #define OA_TC6_CTRL_HEADER_DATA_NOT_CTRL	BIT(31)
- #define OA_TC6_CTRL_HEADER_WRITE_NOT_READ	BIT(29)
-@@ -33,6 +43,15 @@
- #define OA_TC6_CTRL_HEADER_LENGTH		GENMASK(7, 1)
- #define OA_TC6_CTRL_HEADER_PARITY		BIT(0)
- 
-+/* PHY – Clause 45 registers memory map selector (MMS) as per table 6 in the
-+ * OPEN Alliance specification.
-+ */
-+#define OA_TC6_PHY_C45_PCS_MMS2			2	/* MMD 3 */
-+#define OA_TC6_PHY_C45_PMA_PMD_MMS3		3	/* MMD 1 */
-+#define OA_TC6_PHY_C45_VS_PLCA_MMS4		4	/* MMD 31 */
-+#define OA_TC6_PHY_C45_AUTO_NEG_MMS5		5	/* MMD 7 */
-+#define OA_TC6_PHY_C45_POWER_UNIT_MMS6		6	/* MMD 13 */
-+
- #define OA_TC6_CTRL_HEADER_SIZE			4
- #define OA_TC6_CTRL_REG_VALUE_SIZE		4
- #define OA_TC6_CTRL_IGNORED_SIZE		4
-@@ -46,6 +65,10 @@
- 
- /* Internal structure for MAC-PHY drivers */
- struct oa_tc6 {
-+	struct device *dev;
-+	struct net_device *netdev;
-+	struct phy_device *phydev;
-+	struct mii_bus *mdiobus;
- 	struct spi_device *spi;
- 	struct mutex spi_ctrl_lock; /* Protects spi control transfer */
- 	void *spi_ctrl_tx_buf;
-@@ -298,6 +321,191 @@ int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value)
- }
- EXPORT_SYMBOL_GPL(oa_tc6_write_register);
- 
-+static int oa_tc6_check_phy_reg_direct_access_capability(struct oa_tc6 *tc6)
+I had that patch content in mind when was writing my comment. There is
+no point in passing the hw-pointer there either because you already
+have the stmmac_priv pointer. There is stmmac_priv::hw field which you
+can use instead in the same way as you do in this patch. Here is the
+respective change for your SoCFPGA patch:
+
++static int socfpga_dwmac_pcs_init(struct stmmac_priv *priv,
++				  struct mac_device_info *hw)
 +{
-+	u32 regval;
-+	int ret;
+...
 +
-+	ret = oa_tc6_read_register(tc6, OA_TC6_REG_STDCAP, &regval);
-+	if (ret)
-+		return ret;
-+
-+	if (!(regval & STDCAP_DIRECT_PHY_REG_ACCESS))
-+		return -ENODEV;
-+
++	priv->hw->phylink_pcs = pcs;
 +	return 0;
 +}
 +
-+static void oa_tc6_handle_link_change(struct net_device *netdev)
++static void socfpga_dwmac_pcs_exit(struct stmmac_priv *priv,
++				   struct mac_device_info *hw)
 +{
-+	phy_print_status(netdev->phydev);
++	if (priv->hw->phylink_pcs)
++		lynx_pcs_destroy(priv->hw->phylink_pcs);
 +}
-+
-+static int oa_tc6_mdiobus_read(struct mii_bus *bus, int addr, int regnum)
-+{
-+	struct oa_tc6 *tc6 = bus->priv;
-+	u32 regval;
-+	bool ret;
-+
-+	ret = oa_tc6_read_register(tc6, OA_TC6_PHY_STD_REG_ADDR_BASE |
-+				   (regnum & OA_TC6_PHY_STD_REG_ADDR_MASK),
-+				   &regval);
-+	if (ret)
-+		return -ENODEV;
-+
-+	return regval;
-+}
-+
-+static int oa_tc6_mdiobus_write(struct mii_bus *bus, int addr, int regnum,
-+				u16 val)
-+{
-+	struct oa_tc6 *tc6 = bus->priv;
-+
-+	return oa_tc6_write_register(tc6, OA_TC6_PHY_STD_REG_ADDR_BASE |
-+				     (regnum & OA_TC6_PHY_STD_REG_ADDR_MASK),
-+				     val);
-+}
-+
-+static int oa_tc6_get_phy_c45_mms(int devnum)
-+{
-+	switch (devnum) {
-+	case MDIO_MMD_PCS:
-+		return OA_TC6_PHY_C45_PCS_MMS2;
-+	case MDIO_MMD_PMAPMD:
-+		return OA_TC6_PHY_C45_PMA_PMD_MMS3;
-+	case MDIO_MMD_VEND2:
-+		return OA_TC6_PHY_C45_VS_PLCA_MMS4;
-+	case MDIO_MMD_AN:
-+		return OA_TC6_PHY_C45_AUTO_NEG_MMS5;
-+	case MDIO_MMD_POWER_UNIT:
-+		return OA_TC6_PHY_C45_POWER_UNIT_MMS6;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int oa_tc6_mdiobus_read_c45(struct mii_bus *bus, int addr, int devnum,
-+				   int regnum)
-+{
-+	struct oa_tc6 *tc6 = bus->priv;
-+	u32 regval;
-+	int ret;
-+
-+	ret = oa_tc6_get_phy_c45_mms(devnum);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = oa_tc6_read_register(tc6, (ret << 16) | regnum, &regval);
-+	if (ret)
-+		return ret;
-+
-+	return regval;
-+}
-+
-+static int oa_tc6_mdiobus_write_c45(struct mii_bus *bus, int addr, int devnum,
-+				    int regnum, u16 val)
-+{
-+	struct oa_tc6 *tc6 = bus->priv;
-+	int ret;
-+
-+	ret = oa_tc6_get_phy_c45_mms(devnum);
-+	if (ret < 0)
-+		return ret;
-+
-+	return oa_tc6_write_register(tc6, (ret << 16) | regnum, val);
-+}
-+
-+static int oa_tc6_mdiobus_register(struct oa_tc6 *tc6)
-+{
-+	int ret;
-+
-+	tc6->mdiobus = mdiobus_alloc();
-+	if (!tc6->mdiobus) {
-+		netdev_err(tc6->netdev, "MDIO bus alloc failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	tc6->mdiobus->priv = tc6;
-+	tc6->mdiobus->read = oa_tc6_mdiobus_read;
-+	tc6->mdiobus->write = oa_tc6_mdiobus_write;
-+	/* OPEN Alliance 10BASE-T1x compliance MAC-PHYs will have both C22 and
-+	 * C45 registers space. If the PHY is discovered via C22 bus protocol it
-+	 * assumes it uses C22 protocol and always uses C22 registers indirect
-+	 * access to access C45 registers. This is because, we don't have a
-+	 * clean separation between C22/C45 register space and C22/C45 MDIO bus
-+	 * protocols. Resulting, PHY C45 registers direct access can't be used
-+	 * which can save multiple SPI bus access. To support this feature, PHY
-+	 * drivers can set .read_mmd/.write_mmd in the PHY driver to call
-+	 * .read_c45/.write_c45. Ex: drivers/net/phy/microchip_t1s.c
-+	 */
-+	tc6->mdiobus->read_c45 = oa_tc6_mdiobus_read_c45;
-+	tc6->mdiobus->write_c45 = oa_tc6_mdiobus_write_c45;
-+	tc6->mdiobus->name = "oa-tc6-mdiobus";
-+	tc6->mdiobus->parent = tc6->dev;
-+
-+	snprintf(tc6->mdiobus->id, ARRAY_SIZE(tc6->mdiobus->id), "%s",
-+		 dev_name(&tc6->spi->dev));
-+
-+	ret = mdiobus_register(tc6->mdiobus);
-+	if (ret) {
-+		netdev_err(tc6->netdev, "Could not register MDIO bus\n");
-+		mdiobus_free(tc6->mdiobus);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void oa_tc6_mdiobus_unregister(struct oa_tc6 *tc6)
-+{
-+	mdiobus_unregister(tc6->mdiobus);
-+	mdiobus_free(tc6->mdiobus);
-+}
-+
-+static int oa_tc6_phy_init(struct oa_tc6 *tc6)
-+{
-+	int ret;
-+
-+	ret = oa_tc6_check_phy_reg_direct_access_capability(tc6);
-+	if (ret) {
-+		netdev_err(tc6->netdev,
-+			   "Direct PHY register access is not supported by the MAC-PHY\n");
-+		return ret;
-+	}
-+
-+	ret = oa_tc6_mdiobus_register(tc6);
-+	if (ret)
-+		return ret;
-+
-+	tc6->phydev = phy_find_first(tc6->mdiobus);
-+	if (!tc6->phydev) {
-+		netdev_err(tc6->netdev, "No PHY found\n");
-+		oa_tc6_mdiobus_unregister(tc6);
-+		return -ENODEV;
-+	}
-+
-+	tc6->phydev->is_internal = true;
-+	ret = phy_connect_direct(tc6->netdev, tc6->phydev,
-+				 &oa_tc6_handle_link_change,
-+				 PHY_INTERFACE_MODE_INTERNAL);
-+	if (ret) {
-+		netdev_err(tc6->netdev, "Can't attach PHY to %s\n",
-+			   tc6->mdiobus->id);
-+		oa_tc6_mdiobus_unregister(tc6);
-+		return ret;
-+	}
-+
-+	phy_attached_info(tc6->netdev->phydev);
-+
-+	return 0;
-+}
-+
-+static void oa_tc6_phy_exit(struct oa_tc6 *tc6)
-+{
-+	phy_disconnect(tc6->phydev);
-+	oa_tc6_mdiobus_unregister(tc6);
-+}
-+
- static int oa_tc6_read_status0(struct oa_tc6 *tc6)
- {
- 	u32 regval;
-@@ -351,11 +559,12 @@ static int oa_tc6_unmask_macphy_error_interrupts(struct oa_tc6 *tc6)
- /**
-  * oa_tc6_init - allocates and initializes oa_tc6 structure.
-  * @spi: device with which data will be exchanged.
-+ * @netdev: network device interface structure.
-  *
-  * Returns pointer reference to the oa_tc6 structure if the MAC-PHY
-  * initialization is successful otherwise NULL.
-  */
--struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
-+struct oa_tc6 *oa_tc6_init(struct spi_device *spi, struct net_device *netdev)
- {
- 	struct oa_tc6 *tc6;
- 	int ret;
-@@ -365,6 +574,8 @@ struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
- 		return NULL;
- 
- 	tc6->spi = spi;
-+	tc6->netdev = netdev;
-+	SET_NETDEV_DEV(netdev, &spi->dev);
- 	mutex_init(&tc6->spi_ctrl_lock);
- 
- 	/* Set the SPI controller to pump at realtime priority */
-@@ -395,10 +606,27 @@ struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
- 		return NULL;
- 	}
- 
-+	ret = oa_tc6_phy_init(tc6);
-+	if (ret) {
-+		dev_err(&tc6->spi->dev,
-+			"MAC internal PHY initialization failed: %d\n", ret);
-+		return NULL;
-+	}
-+
- 	return tc6;
- }
- EXPORT_SYMBOL_GPL(oa_tc6_init);
- 
-+/**
-+ * oa_tc6_exit - exit function.
-+ * @tc6: oa_tc6 struct.
-+ */
-+void oa_tc6_exit(struct oa_tc6 *tc6)
-+{
-+	oa_tc6_phy_exit(tc6);
-+}
-+EXPORT_SYMBOL_GPL(oa_tc6_exit);
-+
- MODULE_DESCRIPTION("OPEN Alliance 10BASE‑T1x MAC‑PHY Serial Interface Lib");
- MODULE_AUTHOR("Parthiban Veerasooran <parthiban.veerasooran@microchip.com>");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/net/phy/microchip_t1s.c b/drivers/net/phy/microchip_t1s.c
-index 534ca7d1b061..769a88254285 100644
---- a/drivers/net/phy/microchip_t1s.c
-+++ b/drivers/net/phy/microchip_t1s.c
-@@ -268,6 +268,34 @@ static int lan86xx_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
-+/* OPEN Alliance 10BASE-T1x compliance MAC-PHYs will have both C22 and
-+ * C45 registers space. If the PHY is discovered via C22 bus protocol it assumes
-+ * it uses C22 protocol and always uses C22 registers indirect access to access
-+ * C45 registers. This is because, we don't have a clean separation between
-+ * C22/C45 register space and C22/C45 MDIO bus protocols. Resulting, PHY C45
-+ * registers direct access can't be used which can save multiple SPI bus access.
-+ * To support this feature, set .read_mmd/.write_mmd in the PHY driver to call
-+ * .read_c45/.write_c45 in the OPEN Alliance framework
-+ * drivers/net/ethernet/oa_tc6.c
-+ */
-+static int lan865x_phy_read_mmd(struct phy_device *phydev, int devnum,
-+				u16 regnum)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int addr = phydev->mdio.addr;
-+
-+	return bus->read_c45(bus, addr, devnum, regnum);
-+}
-+
-+static int lan865x_phy_write_mmd(struct phy_device *phydev, int devnum,
-+				 u16 regnum, u16 val)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int addr = phydev->mdio.addr;
-+
-+	return bus->write_c45(bus, addr, devnum, regnum, val);
-+}
-+
- static struct phy_driver microchip_t1s_driver[] = {
- 	{
- 		PHY_ID_MATCH_EXACT(PHY_ID_LAN867X_REVB1),
-@@ -285,6 +313,8 @@ static struct phy_driver microchip_t1s_driver[] = {
- 		.features           = PHY_BASIC_T1S_P2MP_FEATURES,
- 		.config_init        = lan865x_revb0_config_init,
- 		.read_status        = lan86xx_read_status,
-+		.read_mmd           = lan865x_phy_read_mmd,
-+		.write_mmd          = lan865x_phy_write_mmd,
- 		.get_plca_cfg	    = genphy_c45_plca_get_cfg,
- 		.set_plca_cfg	    = genphy_c45_plca_set_cfg,
- 		.get_plca_status    = genphy_c45_plca_get_status,
-diff --git a/include/linux/oa_tc6.h b/include/linux/oa_tc6.h
-index 85aeecf87306..606ba9f1e663 100644
---- a/include/linux/oa_tc6.h
-+++ b/include/linux/oa_tc6.h
-@@ -7,11 +7,13 @@
-  * Author: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
-  */
- 
-+#include <linux/etherdevice.h>
- #include <linux/spi/spi.h>
- 
- struct oa_tc6;
- 
--struct oa_tc6 *oa_tc6_init(struct spi_device *spi);
-+struct oa_tc6 *oa_tc6_init(struct spi_device *spi, struct net_device *netdev);
-+void oa_tc6_exit(struct oa_tc6 *tc6);
- int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value);
- int oa_tc6_write_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
- 			   u8 length);
-diff --git a/include/uapi/linux/mdio.h b/include/uapi/linux/mdio.h
-index c0c8ec995b06..f0d3f268240d 100644
---- a/include/uapi/linux/mdio.h
-+++ b/include/uapi/linux/mdio.h
-@@ -23,6 +23,7 @@
- #define MDIO_MMD_DTEXS		5	/* DTE Extender Sublayer */
- #define MDIO_MMD_TC		6	/* Transmission Convergence */
- #define MDIO_MMD_AN		7	/* Auto-Negotiation */
-+#define MDIO_MMD_POWER_UNIT	13	/* PHY Power Unit */
- #define MDIO_MMD_C22EXT		29	/* Clause 22 extension */
- #define MDIO_MMD_VEND1		30	/* Vendor specific 1 */
- #define MDIO_MMD_VEND2		31	/* Vendor specific 2 */
--- 
-2.34.1
 
+-Serge(y)
+
+> 
+> Thanks,
+> 
+> -- 
+> Romain Gantois, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
