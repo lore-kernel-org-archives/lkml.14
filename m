@@ -1,269 +1,167 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5F5181BA7
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 19:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289A317B4F8;
+	Thu, 18 Apr 2024 19:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470011; cv=none; b=uBtn+e0pvFbOWy1cats/MgTqKliFt5PGTPlJIMQz1yOWVkJa4M2zDJ89u3F1YNKUMPW8gpRVztgAjLzPu63Ry3ByBmNOQsF8i7QKGeMqlwVTJd8+nQNUMewKKrjQ8+fYcoIjmsVSNIu4Rn1buJUL2Tu4rvSpAXi1L5W6e2sdroU=
+	t=1713470308; cv=none; b=OOx1i2Bt+8onerg2RLDw33Z7ZgKDYR2BcJGI4iKpJc97sAlUay42sLKo9J2tClrqRr2ee0yA45FS0tXL4+FW3bhl0mXRk/26k9vmWZCjwt9KRIqnPbsCBHzKzwTy5Ra67ixjYjyyqrcfvCprIJsbEu5T9ajKxpZ4xYgSAfZHbws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470011; c=relaxed/simple;
-	bh=il+9bbj7Kl9RhDUwHRlD6PElXcZpj4hshubhhFULYxI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=be3qMrl4lLHPvYdlk+26n8rCmeUQdNiv65x25iEVeRGvizswKiko5HMBp4Bh8lET0qmSdDisaioQcUruMdOdvUFM7bqeWUZR3H/CsdzdAUJ7lEyph8rw6ObC+uIx3PTG9qC7PW5Oh4qmjoFJ/stncqJP4QoGGPbqMDMclYtU3Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YZ1pWEwS; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1713470308; c=relaxed/simple;
+	bh=tisi65k+YGyhsUQNNBAR+SpVnahnqmqz5uWVgPGomCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Tkmm0I14IfOyYDDUq+KBu1DNtTSL7UsHtugA+XLS3NbNeBfbmc1V4p8zBhdL+lGnQWNe4avBbCC7YNIiaXBy6ngvAZCQ0JwbvTaJRdg1lYeo1I8wqtw9Zw7DaUL1eCv44HfivSBk+fYY7/gJYLUkHbpoMzJ8yo7IAR/Gv2VnmZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hbBiCr+R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YZ1pWEwS"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6156b93c768so23022727b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713470008; x=1714074808; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
-        b=YZ1pWEwSwKfzg29f9CqfdwlDzesejVg5BnUVEIHZzcqRbanwhqMfZiiymZMMlSolTP
-         yDUM8GypdJ86L4YlWlGhM3mKp/o8JN9UfuoNWuXVZh/peYJwZcFq7mlR6GTKMsrZaFyG
-         mpNUhhYJgN8v+v7wKuGQUHCLjP+XANOb6wlBrWPglMl5rE13W7eO2ZFiFMWHB7fv+i0L
-         CBHqkmzCUUqZ1ociyNy+YaP1rIT5swURz1a2JJtNfV8vJY+8BiCBSMSZ2+j7MgXwDlGM
-         VNdnNStKxdzrd07anmf+8UtlCC+fS2TeftumhDxZuNeoF1+7D3tEP+fLPfFnqcKcqGcw
-         MsiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713470008; x=1714074808;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Fwrx9M7PjHp4hPBDgNAvgC8cnKrAzhv9n1yaPxLSA8=;
-        b=QeIFXVnDDWv58fTOB34Fmomt+DL1KFgK1eYuFLEELM/hRKDdGJpEiMQibtTybCospL
-         LO1k1grVvuXtQwBVwOfKgDgxgEmsXW7IPWQOEEAH92uktJX76YTbJbABx7j3elLhsHca
-         NQDKBUXh90E7idlwyMVJPI8RAP9zeYZMzkz4MywrStgHi5dOULRgIaVC8+h0a0vjsfAs
-         vogaaMTP3aFqkESrd35x+Ph2dLAYWUifYiuRLmNqo6DyZgc7Qffd1YEq1+SaFr4h+6F9
-         dnSkJldoYxDQbo+YnO3f6CiJS17XOb1dbHQHvf16nGdX4CLPypYWDzjkc4mzxDW3EHA3
-         +7yA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWZOxWt/btOkF5VW4ynQdSHt1nCtZiJpwqXjFWFs2S/vQtCiulpHxJrgoNlFds8dBoCNQ8ajR/WJK5G9h1NBpiznd0jovn3d5mjSuR
-X-Gm-Message-State: AOJu0YxZFY97dH6fXC9nL5wHjf8a/w93YYZ3fz4IS3VtggN/k9nf3kcL
-	PX+iVVU78mCHSHXv7eeriaYaQC2jlNzS7wrM6XLY5vsZHVv6p87opIpPJ7Wm33+Jkmd90dHcVof
-	pBg==
-X-Google-Smtp-Source: AGHT+IGGyn2/Eis9yr5uvFbHSsNr+5jpucEC9aioMrlcMqw+x+tJjikMNMKUFalz9faFMmsjcJGmE2MmVtI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:d9d3:0:b0:618:9044:4f8b with SMTP id
- b202-20020a0dd9d3000000b0061890444f8bmr785538ywe.7.1713470008510; Thu, 18 Apr
- 2024 12:53:28 -0700 (PDT)
-Date: Thu, 18 Apr 2024 12:53:26 -0700
-In-Reply-To: <20240418141932.GA1855@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hbBiCr+R"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IJh1AK031009;
+	Thu, 18 Apr 2024 19:58:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=G3e6TiNghqcS7ahLIcRBHCG1AFPyU/zwTm2IKBSzs74=; b=hb
+	BiCr+RYNWzNqrj21IoJXwa9hI4rYocdHbwS7e5mb/1yo66HEWzb4YPO6/6lB4SST
+	l9Koi3R4FtXlaJI22zSyyOjURgBvGX7SgZ5+NT/s2Kt0TpXhBfRhgVAtEPIKl83c
+	U8gKu/Q3u56M6y1FcUAekqeEn4ScNVvWSr9FLEgHc9JZY6NDjeMHHKPaI71ccDXH
+	zbLmJrGl5QGrpWlphh06KSK7+kB1w41TodPybcnKjguJfAQqiC4wtEwIM7Q4V9i8
+	FMQJCV2IAH3bGqGjdn4+elPzbRGdo9e3ww1jYY2G0Qg+oRpIhoCMjjXQJR+9s7nT
+	BOFMKw0zznVRfkVithoQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xk4vm8une-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 19:58:05 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43IJw4qL030491
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 19:58:04 GMT
+Received: from [10.110.72.56] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
+ 2024 12:58:00 -0700
+Message-ID: <9a1f8011-2156-4855-8724-fea89d73df11@quicinc.com>
+Date: Thu, 18 Apr 2024 12:58:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405115815.3226315-1-pbonzini@redhat.com> <20240405115815.3226315-2-pbonzini@redhat.com>
- <20240412104408.GA27645@willie-the-truck> <86jzl2sovz.wl-maz@kernel.org>
- <ZhlLHtfeSHk9gRRO@google.com> <86h6g5si0m.wl-maz@kernel.org>
- <Zh1d94Pl6gneVoDd@google.com> <20240418141932.GA1855@willie-the-truck>
-Message-ID: <ZiF6NgGYLSsPNEOg@google.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-From: Sean Christopherson <seanjc@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nicholas Piggin <npiggin@gmail.com>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH bpf-next v4 1/2] net: Rename mono_delivery_time to
+ tstamp_type for scalabilty
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Halaney <ahalaney@redhat.com>,
+        "Martin
+ KaFai Lau" <martin.lau@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
+CC: <kernel@quicinc.com>
+References: <20240418004308.1009262-1-quic_abchauha@quicinc.com>
+ <20240418004308.1009262-2-quic_abchauha@quicinc.com>
+ <66216adc8677c_f648a294aa@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <66216adc8677c_f648a294aa@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: AcgPrii5VN7hizySZenTQUQVW40I3_Bw
+X-Proofpoint-GUID: AcgPrii5VN7hizySZenTQUQVW40I3_Bw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_18,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=956 mlxscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404180144
 
-On Thu, Apr 18, 2024, Will Deacon wrote:
-> On Mon, Apr 15, 2024 at 10:03:51AM -0700, Sean Christopherson wrote:
-> > On Sat, Apr 13, 2024, Marc Zyngier wrote:
-> > > On Fri, 12 Apr 2024 15:54:22 +0100, Sean Christopherson <seanjc@google.com> wrote:
-> > > > 
-> > > > On Fri, Apr 12, 2024, Marc Zyngier wrote:
-> > > > > On Fri, 12 Apr 2024 11:44:09 +0100, Will Deacon <will@kernel.org> wrote:
-> > > > > > On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> > > > > > Also, if you're in the business of hacking the MMU notifier code, it
-> > > > > > would be really great to change the .clear_flush_young() callback so
-> > > > > > that the architecture could handle the TLB invalidation. At the moment,
-> > > > > > the core KVM code invalidates the whole VMID courtesy of 'flush_on_ret'
-> > > > > > being set by kvm_handle_hva_range(), whereas we could do a much
-> > > > > > lighter-weight and targetted TLBI in the architecture page-table code
-> > > > > > when we actually update the ptes for small ranges.
-> > > > > 
-> > > > > Indeed, and I was looking at this earlier this week as it has a pretty
-> > > > > devastating effect with NV (it blows the shadow S2 for that VMID, with
-> > > > > costly consequences).
-> > > > > 
-> > > > > In general, it feels like the TLB invalidation should stay with the
-> > > > > code that deals with the page tables, as it has a pretty good idea of
-> > > > > what needs to be invalidated and how -- specially on architectures
-> > > > > that have a HW-broadcast facility like arm64.
-> > > > 
-> > > > Would this be roughly on par with an in-line flush on arm64?  The simpler, more
-> > > > straightforward solution would be to let architectures override flush_on_ret,
-> > > > but I would prefer something like the below as x86 can also utilize a range-based
-> > > > flush when running as a nested hypervisor.
-> > 
-> > ...
-> > 
-> > > I think this works for us on HW that has range invalidation, which
-> > > would already be a positive move.
-> > > 
-> > > For the lesser HW that isn't range capable, it also gives the
-> > > opportunity to perform the iteration ourselves or go for the nuclear
-> > > option if the range is larger than some arbitrary constant (though
-> > > this is additional work).
-> > > 
-> > > But this still considers the whole range as being affected by
-> > > range->handler(). It'd be interesting to try and see whether more
-> > > precise tracking is (or isn't) generally beneficial.
-> > 
-> > I assume the idea would be to let arch code do single-page invalidations of
-> > stage-2 entries for each gfn?
+
+
+On 4/18/2024 11:47 AM, Willem de Bruijn wrote:
+> Abhishek Chauhan wrote:
+>> mono_delivery_time was added to check if skb->tstamp has delivery
+>> time in mono clock base (i.e. EDT) otherwise skb->tstamp has
+>> timestamp in ingress and delivery_time at egress.
+>>
+>> Renaming the bitfield from mono_delivery_time to tstamp_type is for
+>> extensibilty for other timestamps such as userspace timestamp
+>> (i.e. SO_TXTIME) set via sock opts.
+>>
+>> As we are renaming the mono_delivery_time to tstamp_type, it makes
+>> sense to start assigning tstamp_type based on enum defined
+>> in this commit.
+>>
+>> Earlier we used bool arg flag to check if the tstamp is mono in
+>> function skb_set_delivery_time, Now the signature of the functions
+>> accepts tstamp_type to distinguish between mono and real time.
+>>
+>> In future tstamp_type:1 can be extended to support userspace timestamp
+>> by increasing the bitfield.
+>>
+>> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
+>> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
 > 
-> Right, as it's the only code which knows which ptes actually ended up
-> being aged.
+>> +/**
+>> + * tstamp_type:1 can take 2 values each
+>> + * represented by time base in skb
+>> + * 0x0 => real timestamp_type
+>> + * 0x1 => mono timestamp_type
+>> + */
+>> +enum skb_tstamp_type {
+>> +	SKB_CLOCK_REAL,	/* Time base is skb is REALTIME */
+>> +	SKB_CLOCK_MONO,	/* Time base is skb is MONOTONIC */
+>> +};
+>> +
 > 
-> > Unless I'm having a brain fart, x86 can't make use of that functionality.  Intel
-> > doesn't provide any way to do targeted invalidation of stage-2 mappings.  AMD
-> > provides an instruction to do broadcast invalidations, but it takes a virtual
-> > address, i.e. a stage-1 address.  I can't tell if it's a host virtual address or
-> > a guest virtual address, but it's a moot point because KVM doen't have the guest
-> > virtual address, and if it's a host virtual address, there would need to be valid
-> > mappings in the host page tables for it to work, which KVM can't guarantee.
+> Can drop the comments. These names are self documenting.
+
+Noted! . I will take care of this
 > 
-> Ah, so it sounds like it would need to be an arch opt-in then.
+>>  /**
+>>   * DOC: Basic sk_buff geometry
+>>   *
+>> @@ -819,7 +830,7 @@ typedef unsigned char *sk_buff_data_t;
+>>   *	@dst_pending_confirm: need to confirm neighbour
+>>   *	@decrypted: Decrypted SKB
+>>   *	@slow_gro: state present at GRO time, slower prepare step required
+>> - *	@mono_delivery_time: When set, skb->tstamp has the
+>> + *	@tstamp_type: When set, skb->tstamp has the
+>>   *		delivery_time in mono clock base (i.e. EDT).  Otherwise, the
+>>   *		skb->tstamp has the (rcv) timestamp at ingress and
+>>   *		delivery_time at egress.
+> 
+> Is this still correct? I think all egress does now annotate correctly
+> as SKB_CLOCK_MONO. So when not set it always is SKB_CLOCK_REAL.
+> 
+That is correct. 
 
-Even if x86 (or some other arch code) could use the precise tracking, I think it
-would make sense to have the behavior be arch specific.  Adding infrastructure
-to get information from arch code, only to turn around and give it back to arch
-code would be odd.
+>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+>> index 61119d42b0fd..a062f88c47c3 100644
+>> --- a/net/ipv4/tcp_output.c
+>> +++ b/net/ipv4/tcp_output.c
+>> @@ -1300,7 +1300,7 @@ static int __tcp_transmit_skb(struct sock *sk, struct sk_buff *skb,
+>>  	tp = tcp_sk(sk);
+>>  	prior_wstamp = tp->tcp_wstamp_ns;
+>>  	tp->tcp_wstamp_ns = max(tp->tcp_wstamp_ns, tp->tcp_clock_cache);
+>> -	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, true);
+>> +	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, CLOCK_MONOTONIC);
+> 
+> Multiple references to CLOCK_MONOTONIC left
+> 
+I think i took care of all the references. Apologies if i didn't understand your comment here. 
 
-Unless arm64 can't do the invalidation immediately after aging the stage-2 PTE,
-the best/easiest solution would be to let arm64 opt out of the common TLB flush
-when a SPTE is made young.
 
-With the range-based flushing bundled in, this?
-
----
- include/linux/kvm_host.h |  2 ++
- virt/kvm/kvm_main.c      | 40 +++++++++++++++++++++++++---------------
- 2 files changed, 27 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index afbc99264ffa..8fe5f5e16919 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2010,6 +2010,8 @@ extern const struct kvm_stats_header kvm_vcpu_stats_header;
- extern const struct _kvm_stats_desc kvm_vcpu_stats_desc[];
- 
- #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
-+int kvm_arch_flush_tlb_if_young(void);
-+
- static inline int mmu_invalidate_retry(struct kvm *kvm, unsigned long mmu_seq)
- {
- 	if (unlikely(kvm->mmu_invalidate_in_progress))
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 38b498669ef9..5ebef8ef239c 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -595,6 +595,11 @@ static void kvm_null_fn(void)
- }
- #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
- 
-+int __weak kvm_arch_flush_tlb_if_young(void)
-+{
-+	return true;
-+}
-+
- /* Iterate over each memslot intersecting [start, last] (inclusive) range */
- #define kvm_for_each_memslot_in_hva_range(node, slots, start, last)	     \
- 	for (node = interval_tree_iter_first(&slots->hva_tree, start, last); \
-@@ -611,6 +616,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 	struct kvm_gfn_range gfn_range;
- 	struct kvm_memory_slot *slot;
- 	struct kvm_memslots *slots;
-+	bool need_flush = false;
- 	int i, idx;
- 
- 	if (WARN_ON_ONCE(range->end <= range->start))
-@@ -663,10 +669,22 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 					break;
- 			}
- 			r.ret |= range->handler(kvm, &gfn_range);
-+
-+		       /*
-+			* Use a precise gfn-based TLB flush when possible, as
-+			* most mmu_notifier events affect a small-ish range.
-+			* Fall back to a full TLB flush if the gfn-based flush
-+			* fails, and don't bother trying the gfn-based flush
-+			* if a full flush is already pending.
-+			*/
-+		       if (range->flush_on_ret && !need_flush && r.ret &&
-+			   kvm_arch_flush_remote_tlbs_range(kvm, gfn_range.start,
-+							    gfn_range.end - gfn_range.start + 1))
-+			       need_flush = true;
- 		}
- 	}
- 
--	if (range->flush_on_ret && r.ret)
-+	if (need_flush)
- 		kvm_flush_remote_tlbs(kvm);
- 
- 	if (r.found_memslot)
-@@ -680,7 +698,8 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 						unsigned long start,
- 						unsigned long end,
--						gfn_handler_t handler)
-+						gfn_handler_t handler,
-+						bool flush_on_ret)
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	const struct kvm_mmu_notifier_range range = {
-@@ -688,7 +707,7 @@ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 		.end		= end,
- 		.handler	= handler,
- 		.on_lock	= (void *)kvm_null_fn,
--		.flush_on_ret	= true,
-+		.flush_on_ret	= flush_on_ret,
- 		.may_block	= false,
- 	};
- 
-@@ -700,17 +719,7 @@ static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn
- 							 unsigned long end,
- 							 gfn_handler_t handler)
- {
--	struct kvm *kvm = mmu_notifier_to_kvm(mn);
--	const struct kvm_mmu_notifier_range range = {
--		.start		= start,
--		.end		= end,
--		.handler	= handler,
--		.on_lock	= (void *)kvm_null_fn,
--		.flush_on_ret	= false,
--		.may_block	= false,
--	};
--
--	return __kvm_handle_hva_range(kvm, &range).ret;
-+	return kvm_handle_hva_range(mn, start, end, handler, false);
- }
- 
- void kvm_mmu_invalidate_begin(struct kvm *kvm)
-@@ -876,7 +885,8 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
- {
- 	trace_kvm_age_hva(start, end);
- 
--	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn);
-+	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn,
-+				    kvm_arch_flush_tlb_if_young());
- }
- 
- static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
-
-base-commit: eae53272c8ad4e7ed2bbb11bd0456eb5b0484f0c
--- 
-
+> 
+> 
