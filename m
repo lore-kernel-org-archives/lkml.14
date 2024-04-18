@@ -1,138 +1,107 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E657A168B05
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D716016ABC0;
+	Thu, 18 Apr 2024 14:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713452241; cv=none; b=ttEjZHa+0WxCnWl+52PTsL0+upZJli+myoL7OAdwmEcCgD2PiV68iWddvVupk24Z5U9pq/FsD6t4/xJYc1yDBgVFV2umjwdy58nD+fSqSv9vAmpdxkWoamy7PnJIdE5s10/QkIt5IPYdpZHFlf0PH+BDGdE6edMQIMR5BO+EGGg=
+	t=1713452272; cv=none; b=lVoVq8Ol+RGwPirRLPwm6OrVitRr6JACdDWCudwox0++VYXnK/NnaTP2yY1+zGbWKSgC/BS4xKsYs54jgFOqOqzZpcw3gMPFGgv5qZXeNSvb5of9M2DLsjgW31v/RCoIj4953f1O3EqUq5SweN3aIb5gTOEnVzkK8Q4HO6vdlhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713452241; c=relaxed/simple;
-	bh=5zKvUXdJBFPuQozJy4Os5tScuNYVv5VcQ1CguS1yJFM=;
+	s=arc-20240116; t=1713452272; c=relaxed/simple;
+	bh=Eb/EVSMY879H2500DGFBLbJRSwhWpGh81TIuhr6YDhc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L/Wto2r88YSFWPXy+MmslH4vZauKYCv6cDgY2uP6rouElAQh56N3af734y3H8b0vT+pB+AcM+OCq/Ome76Tm0CfIPQpnghuOHvHeR/e/hE7xbruVp2s+bKcTbod3IvVPIhSVjYrtTKGqhxRlTFbd7EQCRCTI5yz4VaTG+L/L7aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D5mGcHDp; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D5mGcHDp"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-519ab23dd06so689259e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713452238; x=1714057038; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4170ZhgzJpAXwr6ljG/YSDARpsJn4+o6qTKEWZM1ZqQ=;
-        b=D5mGcHDpZV/3eDVGsdQM7kdPi6AjESzRhwzc6Ezf9ieNqqjEkxU5kWPXzA9TaFzf4T
-         4ikezSPrKU3QOY9rYUOj0KhOMGul2WDGqP7PWN+zngWpkY4xxXVUkkQ6s701sueYh5gF
-         zhFErGT61zNQYrzOO6sH55jKjzBurhdoEADZEXHb9qqqVHrkFRYvSKX1rzWQJfBHhNlF
-         dUxi9lYysDsrN7weVq7FYSmGnyCOspOT6/W6DCf6/WJV765NvzMUqnVIBcuDWwz4AmOt
-         w0Iv8vwahVnvhvmp3X0pKdD/5FlLP1ACwEk1qjLw3s+c1p7z29pJKVeatY3xK6DkG0Y7
-         QAXQ==
+	 To:Cc:Content-Type; b=UDDSyr/A5q1p1XAU+iT/QcsASGoNBxCq2RbghyPWwzH44c+lIp+pMkhN3/19bBEqD2MZVK8Bpg6NP+x4yCz/DsYNqKY1XgfIHFCqbuGP+fP7Nf/GH37y9Eqf+fQV8gmAnu86YI303twzHMuyL6D9fTZpF+SDSnB12O+mzMdJD/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc742543119so1112327276.0;
+        Thu, 18 Apr 2024 07:57:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713452238; x=1714057038;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4170ZhgzJpAXwr6ljG/YSDARpsJn4+o6qTKEWZM1ZqQ=;
-        b=NMKzHAzVuQmbcK7sOzI/khL2pTZMUB7/pdhgj1YBWMKltHJAqyIiXtQKCADIhQ6/TM
-         yYmCfoP43ozX2XOSfTpyllh2lHt4RfkP7qMKe7Yrjj2vRZu6/FfkL+487OCa4NTVHY+G
-         C7KPCHZ2cfCp414R787jsl7brhvpodmqNRiCwjQ1zzE/hGtWTnMRQs5mfHVXrCGpsGqi
-         5+uIKzOuo+insQIfmAgqK2adop3NOhZpFZWc6QaROIC9kKL2W0OgFu12YzHNjlUw8L0K
-         t0ltdhc+QTBrUwi3m32jCaxeiZQaUlzWUExSBKCblQyyMP7n3PT+1S7P2p6wsAv5rvDn
-         Mm9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUUIpqutVocAYEpryrbrpt1pycImySWHcMVwZEi1+RdPOFxnH9tO2D7XwhY3UQ7Ee4xwKuFpqo7hy3GZ7sqomrA3osz7Fd30VXOseIB
-X-Gm-Message-State: AOJu0YwbfRuffxQYu27+hhvq/1Nmka1ZXHdUm4nihLMIFAtXsGRDa7XE
-	mi0aal3wCZ0t9pTkyqr+5LhLV9rsUeX2Xnrw2CLabpMdIapGM/XS7mgBwJO/3p2Ta+qbxhzuu9y
-	cJK56BBKV992lNMw8idTc0r3tNMMigPXnSvdlVA==
-X-Google-Smtp-Source: AGHT+IGgo5ZpK7ScQ3STj7jd+rPX7sm4nXqGrRIqUtUQ4a24HhXvoJYmRFhhYV7WswO4nrk1SpVmPZ75uDv3YLj6r+o=
-X-Received: by 2002:a05:6512:3f0d:b0:519:7738:a5cf with SMTP id
- y13-20020a0565123f0d00b005197738a5cfmr1605328lfa.25.1713452238069; Thu, 18
- Apr 2024 07:57:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713452269; x=1714057069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tBkk7IToPf8pTng3q6RoyHKsGOCoZ6cSUuNVh7MUIdE=;
+        b=RPH85LIOwF3MZezkmlgMlGeHuk7ggQtIVMWoozkjNNj/5zwUf6y2lx+eWDILOZMBkM
+         IIV3zztkWEJKcIC1oEaowfOZZjBx4WAQVnUjQQOL9YeaS8mxSCFOA/KMK8SnovhIqymC
+         YM8RzkcAXzazlr0AmOzJLEi56qlm4cxSBpqnNWonYhsXbpu4cOlGVnu5hUk9nc9sGZ5X
+         TC01lg4m3DZaFRk3bI/2TsYD/3HlLho+qIDw4RrmdeLWIFXbNtOvcmKFnzVjeLd36xnn
+         7MFx4yaqAZQbHIsDLj81YE1Z7Rug0+S5umok0GQXKuoNfAEI+/9pwKyiMcaJGtIlB6p3
+         GnsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+QNy9iNZ/mkuoqIlQmNtDGiZEm4if6HeL8Vanh5Nlo3GqyT/m7qOe1mEZkTuaZwZJ8NL/uxLTF4XwDMFGSMQGoLVGkMJOXRuVYy66MJ+P+hMblLZUYU9U0f6EQAGds6+7acFuK34hjHHn71a8yIW3OHGU7zRJ5wHQN+Ep8LsL+BZH+dkCaOu6I7Lx
+X-Gm-Message-State: AOJu0Yxw5EzKYBO+4HnXimx75hMgofn7orAgVVrGtugmG860+YHkyuWa
+	h6bZizgdrEb8BWcDH/xHjDTHxk/xAjAg0mdj5B6yN/Wp50zCfmjT+DIIwhxE
+X-Google-Smtp-Source: AGHT+IGIyMJFVhgtnxFONQA1/XGvMga9mv7jVfqh26rTZKafJEORDSLkz8+VMvLteIzHPdwn0CkxxA==
+X-Received: by 2002:a25:d30c:0:b0:dcf:f525:2b81 with SMTP id e12-20020a25d30c000000b00dcff5252b81mr3078678ybf.46.1713452268895;
+        Thu, 18 Apr 2024 07:57:48 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id z18-20020a5b0e92000000b00dcdb0f80b69sm385665ybr.48.2024.04.18.07.57.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 07:57:48 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-61ac45807cbso10236837b3.1;
+        Thu, 18 Apr 2024 07:57:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+jo2g0pGOU4qUqoLAoHPzXT/8xDJd8Sv7jEcqhCgPKQveMA1Pr94dZfymlvy2c2cywmNYUKyFqvhJhfJ1FBCd3M+THOgajLCoIxbiwSB5wdLzZdCiTLpRU85lrdP8PHNXjQ+XGqYVIEgU3BBi9IztRIW0n8kBx4TYLF5kHOLvKA+vZ7hyPt1or0Tb
+X-Received: by 2002:a25:aaaa:0:b0:dcc:2f09:4742 with SMTP id
+ t39-20020a25aaaa000000b00dcc2f094742mr2918100ybi.51.1713452268112; Thu, 18
+ Apr 2024 07:57:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418113616.1108566-1-aleksander.lobakin@intel.com> <20240418113616.1108566-7-aleksander.lobakin@intel.com>
-In-Reply-To: <20240418113616.1108566-7-aleksander.lobakin@intel.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Thu, 18 Apr 2024 17:56:41 +0300
-Message-ID: <CAC_iWjL6j5xS9GsLiZdLPJgJgfGNMbjKZPTMqnvX9U_9Dgq=ZQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v10 06/10] page_pool: add DMA-sync-for-CPU inline helper
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexander Duyck <alexanderduyck@fb.com>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Christoph Lameter <cl@linux.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com, netdev@vger.kernel.org, 
-	intel-wired-lan@lists.osuosl.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
+References: <20240403203503.634465-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240403203503.634465-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240403203503.634465-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Apr 2024 16:57:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVmat=o-+_KX+G275SEcdC-OxAjOw5CS-rag9ZxnQFHfg@mail.gmail.com>
+Message-ID: <CAMuHMdVmat=o-+_KX+G275SEcdC-OxAjOw5CS-rag9ZxnQFHfg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] riscv: dts: renesas: r9a07g043f: Add IRQC node to
+ RZ/Five SoC DTSI
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 18 Apr 2024 at 14:37, Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
+Hi Prabhakar,
+
+On Wed, Apr 3, 2024 at 10:36=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Each driver is responsible for syncing buffers written by HW for CPU
-> before accessing them. Almost each PP-enabled driver uses the same
-> pattern, which could be shorthanded into a static inline to make driver
-> code a little bit more compact.
-> Introduce a simple helper which performs DMA synchronization for the
-> size passed from the driver. It can be used even when the pool doesn't
-> manage DMA-syncs-for-device, just make sure the page has a correct DMA
-> address set via page_pool_set_dma_addr().
+> Add the IRQC node to RZ/Five (R9A07G043F) SoC DTSI.
 >
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for the update!
+
 > ---
->  include/net/page_pool/helpers.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-> index c7bb06750e85..873631c79ab1 100644
-> --- a/include/net/page_pool/helpers.h
-> +++ b/include/net/page_pool/helpers.h
-> @@ -52,6 +52,8 @@
->  #ifndef _NET_PAGE_POOL_HELPERS_H
->  #define _NET_PAGE_POOL_HELPERS_H
->
-> +#include <linux/dma-mapping.h>
-> +
->  #include <net/page_pool/types.h>
->
->  #ifdef CONFIG_PAGE_POOL_STATS
-> @@ -395,6 +397,28 @@ static inline bool page_pool_set_dma_addr(struct page *page, dma_addr_t addr)
->         return false;
->  }
->
-> +/**
-> + * page_pool_dma_sync_for_cpu - sync Rx page for CPU after it's written by HW
-> + * @pool: &page_pool the @page belongs to
-> + * @page: page to sync
-> + * @offset: offset from page start to "hard" start if using PP frags
-> + * @dma_sync_size: size of the data written to the page
-> + *
-> + * Can be used as a shorthand to sync Rx pages before accessing them in the
-> + * driver. Caller must ensure the pool was created with ``PP_FLAG_DMA_MAP``.
-> + * Note that this version performs DMA sync unconditionally, even if the
-> + * associated PP doesn't perform sync-for-device.
-> + */
-> +static inline void page_pool_dma_sync_for_cpu(const struct page_pool *pool,
-> +                                             const struct page *page,
-> +                                             u32 offset, u32 dma_sync_size)
-> +{
-> +       dma_sync_single_range_for_cpu(pool->p.dev,
-> +                                     page_pool_get_dma_addr(page),
-> +                                     offset + pool->p.offset, dma_sync_size,
-> +                                     page_pool_get_dma_dir(pool));
-> +}
-> +
->  static inline bool page_pool_put(struct page_pool *pool)
->  {
->         return refcount_dec_and_test(&pool->user_cnt);
-> --
-> 2.44.0
->
+> v1->v2
+> - Dropped using SOC_PERIPHERAL_IRQ() macro
 
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+and change the bus-err interrupt to from EDGE_RISING to LEVEL_HIGH,
+to match the documentation ;-)
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.10, with patches 4/5 and 5/5.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
