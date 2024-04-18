@@ -1,114 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C6F16D314;
-	Thu, 18 Apr 2024 20:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933ED17F394
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470408; cv=none; b=nqg9TR9hkFsjJ1+BZnpOjQBZEzBH6iZduhEFQiUSGi5D3vUw6rnvhAAh2UdD988pVp+/fTfS1K8/F2yRNE7U1lLMUUhULg8mxgqtlwj6JMjrhyu7aXPs3C0RbACJkgi8DrIFxFwtxNwhlJBBIg4oZD2wuOvdae3Z/7TVU9tq2pQ=
+	t=1713470431; cv=none; b=f6s7hcEXZlQuik7Iz6KFcLHnyYjkHLQzQ4yvcwJsh4rZg9GRhq95xtVcfcu0Wh8CrizA7MffV/+E1Sop33clZkXgbgf6FbEnQMRiw1Kzcw9hy9qWPQAsjBPr5n0NYmDBHbmV4LXYSgCR4Ft19trbiERVOSIChxPLzQpbAcHD7iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470408; c=relaxed/simple;
-	bh=HWefGnwQI2HwNz4Knpy1Fh114LZYu0wgCLBTdlxtmUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+tkgY+fvZtBuM+ENr0k0NIhjhFuMoia0wjM7de6oC5nPQLeab0L4kERid5AuOYxFghLc6FvsR7UuXlhG2JRnGtkBgVOAsgJuwGf3qWUdX0gx9wEJEgXFiV1H1m+81kO1UvcjGXRqMkGyy31QYL6ayZ+jySJyU7DNDAEbum0xuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY4rQTR0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY4rQTR0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6AAFC113CC;
-	Thu, 18 Apr 2024 20:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713470408;
-	bh=HWefGnwQI2HwNz4Knpy1Fh114LZYu0wgCLBTdlxtmUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eY4rQTR0vB3nF31du2IEDKNwwn+Arhad3fDAJYF8yZ1FJh3Dhu/OomZi51qGz0+xm
-	 yra/nkWPz4cFawkghV0gdBKi6ECmIsqrPWj3/SQU3/50UuGZrAWlq2RS2efp5kTKhn
-	 sEsyCi98quhg615KvU+4ANrTH8KbscCy6oiuVNXuib7kuD0Id9WX3lNppWvtA90Im5
-	 0AKhCGhrvZTB2b9mhHgqt6RU8CbmlUzz8j1iWRciRpAczvqRefIU8Dz3FAeIcL/OOI
-	 zD8tMN5uEBWYh68fDMPlqOQL0e7l0KYx5v22crgl35DzYqXvHmF+v+qdFjxzsYhJvr
-	 6SFqrgLNKRXPw==
-Date: Thu, 18 Apr 2024 21:00:01 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>,
-	Guo Ren <guoren@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	Vincent Chen <vincent.chen@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Joel Granados <j.granados@samsung.com>,
-	Jerry Shih <jerry.shih@sifive.com>
-Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
- to ZVE32X
-Message-ID: <20240418-dolphin-epileptic-749c9628e5a9@spud>
-References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
- <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
- <20240418-brook-chili-4d3e61d1a55c@wendy>
- <20240418155256.GA2410@sol.localdomain>
- <20240418-ultimatum-yam-11de4b063b83@spud>
- <20240418173203.GA1081@sol.localdomain>
- <20240418173946.GB1081@sol.localdomain>
- <20240418-sterling-sanding-d59c3b0a2aaa@spud>
- <20240418184129.GA1071@sol.localdomain>
+	s=arc-20240116; t=1713470431; c=relaxed/simple;
+	bh=ySCKXj6c+3614/kDHxqx/25WYz77e4ES1LSGaIfup3A=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rRA30XbPUL98GwF7yvvp6B9q8SIH//MegdaIwQ+9Sf2A1DQOx8f32AciaNkR2X6r/Ht5IXnysn6LFXGEsUTLN2etlTAyrc9LIqNJPgvik2LZxMQzL87Q/xZ3h/jRHvck9j4TBl1tzeaJgme6sM79ozdSvTDL3UUJhsy86Qmjg5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c9aa481ce4so198554739f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:00:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713470429; x=1714075229;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HvCAvI2t36jvI9ciusgvIvLSXfRKhzbxpMLYmWITJdw=;
+        b=a6uqrk0PrChzJVVPO5N4kcQNV5iWE7kNwrJltlf9NbwAOnVME7YGmmRqIdcODoEi8G
+         5zYwTl/gYDLbsOl4+rSfmhV8xVxhjlPIiudE0w5DVAGWdtCpjPffeFPIuLazar8CUUhj
+         YyurqBiuTYmhaTeLKrQzITHb/fyR3DQ8NY0Ahi+HHjEcCU4li96agjnXCukPymIrMGIH
+         Z+wMfVRSLhWTWPrmenZpDip2H228AACeda5i2jyswQVyHs8qoBbacsJYZfGL3rCEPp9D
+         UrqMUNvOTPxydHP9UVikOkCOZxtO0U89Wc+5gQ/SXOcABPAE69yICqr9FGNU8bTqoR6q
+         6rxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXO9hWS/A0xVql8bgQijKwHOBNMRVMLb0B8MmAnRjf0/dsCkWBiMQ1Q1PXOBiLtOO8vlAGUMUDf0hYzvxD4ab7/RFjLlPJbsisJUn3D
+X-Gm-Message-State: AOJu0YxYrVRGPTGnvO/T61IPdIZCuUtFPDrv592eBo4RNl4MQ/4pKICR
+	FbLnILb33sx1AcceOdBX4YKIrEYWnm81rAnP5331vIOYLRFzlywwkPWfXAV0TBRUGFXs0hVSD2g
+	4D8KPdk1/e5D1Ca5dABL0srO08C2ptP3pt2WN3Nq6R12fH238w8wH+F0=
+X-Google-Smtp-Source: AGHT+IGk+XtOKy4Po7IaRVWu88agNqIiebP1iXGQ/Btezc2IjMMqNUq1N7cDNgJ3owAris5vDFSgf7YXJEIgD75wZvzo0+FRfgdJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MEYWdzN/KoxvaYBs"
-Content-Disposition: inline
-In-Reply-To: <20240418184129.GA1071@sol.localdomain>
+X-Received: by 2002:a05:6638:164b:b0:482:e69d:b0c6 with SMTP id
+ a11-20020a056638164b00b00482e69db0c6mr232411jat.6.1713470428901; Thu, 18 Apr
+ 2024 13:00:28 -0700 (PDT)
+Date: Thu, 18 Apr 2024 13:00:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003f81750616646cb8@google.com>
+Subject: [syzbot] [bpf?] possible deadlock in __stack_map_get
+From: syzbot <syzbot+dddd99ae26c656485d89@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    f99c5f563c17 Merge tag 'nf-24-03-21' of git://git.kernel.o..
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15d7c52b180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=dddd99ae26c656485d89
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10869857180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f1f7cb180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/65d3f3eb786e/disk-f99c5f56.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/799cf7f28ff8/vmlinux-f99c5f56.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ab26c60c3845/bzImage-f99c5f56.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dddd99ae26c656485d89@syzkaller.appspotmail.com
+
+============================================
+WARNING: possible recursive locking detected
+6.8.0-syzkaller-05271-gf99c5f563c17 #0 Not tainted
+--------------------------------------------
+syz-executor224/5098 is trying to acquire lock:
+ffff888021ef61d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x14b/0x4b0 kernel/bpf/queue_stack_maps.c:140
+
+but task is already holding lock:
+ffff888021ef51d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x14b/0x4b0 kernel/bpf/queue_stack_maps.c:140
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&qs->lock);
+  lock(&qs->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+4 locks held by syz-executor224/5098:
+ #0: ffffffff8e200c68 (pcpu_alloc_mutex){+.+.}-{3:3}, at: pcpu_alloc+0x27b/0x1670 mm/percpu.c:1769
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+ #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+ #2: ffff888021ef51d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x14b/0x4b0 kernel/bpf/queue_stack_maps.c:140
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
+ #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
+
+stack backtrace:
+CPU: 0 PID: 5098 Comm: syz-executor224 Not tainted 6.8.0-syzkaller-05271-gf99c5f563c17 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+ check_deadlock kernel/locking/lockdep.c:3062 [inline]
+ validate_chain+0x15c1/0x58e0 kernel/locking/lockdep.c:3856
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
+ __stack_map_get+0x14b/0x4b0 kernel/bpf/queue_stack_maps.c:140
+ bpf_prog_7a16b54e5ee857f9+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+ bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+ __traceiter_contention_end+0x7b/0xb0 include/trace/events/lock.h:122
+ trace_contention_end+0xf6/0x120 include/trace/events/lock.h:122
+ __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
+ _raw_spin_lock_irqsave+0xe1/0x120 kernel/locking/spinlock.c:162
+ __stack_map_get+0x14b/0x4b0 kernel/bpf/queue_stack_maps.c:140
+ bpf_prog_7a16b54e5ee857f9+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
+ __bpf_prog_run include/linux/filter.h:657 [inline]
+ bpf_prog_run include/linux/filter.h:664 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
+ bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
+ __traceiter_contention_end+0x7b/0xb0 include/trace/events/lock.h:122
+ trace_contention_end+0xd7/0x100 include/trace/events/lock.h:122
+ __mutex_lock_common kernel/locking/mutex.c:617 [inline]
+ __mutex_lock+0x2e5/0xd70 kernel/locking/mutex.c:752
+ pcpu_alloc+0x27b/0x1670 mm/percpu.c:1769
+ bpf_prog_alloc_no_stats+0x10b/0x4a0 kernel/bpf/core.c:112
+ bpf_prog_alloc+0x3b/0x1b0 kernel/bpf/core.c:144
+ bpf_prog_load+0x7f7/0x20f0 kernel/bpf/syscall.c:2805
+ __sys_bpf+0x4ee/0x810 kernel/bpf/syscall.c:5631
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7fb8f4667f69
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc6855faf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fb8f4667f69
+RDX: 0000000000000090 RSI: 00000000200000c0 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 00000000000000a0 R09: 00000000000000a0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
 
---MEYWdzN/KoxvaYBs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On Thu, Apr 18, 2024 at 11:41:29AM -0700, Eric Biggers wrote:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-> If the RISC-V kernel ever disables V, then it should also disable everyth=
-ing
-> that depends on V.
->=20
-> This would be similar to how on x86, if the kernel decides to disable AVX=
- to
-> mitigate the Gather Data Sampling vulnerability, it also disables AVX2, A=
-VX512,
-> VAES, VPCLMULQDQ, etc.  See cpuid_deps[] in arch/x86/kernel/cpu/cpuid-dep=
-s.c.
->=20
-> Sometimes CPU features depend on other ones.  That's just the way things =
-work.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-=F0=9F=A4=A8
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-> Whenever possible that should be handled centrally, not pushed down to ev=
-ery
-> user both in-kernel and userspace.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-FWIW, anything detected but rejected while probing the DT or ACPI tables
-will cause riscv_isa_extension_available() (or other APIs) to return false.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-
---MEYWdzN/KoxvaYBs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiF7wQAKCRB4tDGHoIJi
-0lrQAP0ZnhY2j8dAgcGtM2slb23/HOfAFrbbsZhuBfSx0uoWSAEAubVPWlDs59pJ
-eFvw6AB3RzfrfggfMB1wA9nLHCZYzQs=
-=Ogch
------END PGP SIGNATURE-----
-
---MEYWdzN/KoxvaYBs--
+If you want to undo deduplication, reply with:
+#syz undup
