@@ -1,105 +1,81 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F5D6138
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7E939FD4;
+	Thu, 18 Apr 2024 02:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713406050; cv=none; b=q2lIkUww2Fy+GmUAD6FaqFJReyEefuCN0UojoaKUIGcs4YA89pz6yGtO6tTHEPKII13ptE1NmDfqUysu6jm3Za82GZymKNNj1pgYEr8rlqUW0WBySNZSZgNCyR61yWoB7hrFisFoyQo6G2GhEvYtsczobDXC5UV4MV3IR3axIE0=
+	t=1713406228; cv=none; b=pXTJObYF2TnwIMs4xuIa9dHDBm7jJJ3YfSFa05ObJWeANFUM9mgSy/70TFmyiPuiqfr18A2R7GvLbAyykr1y4WpoKuA12Idk2d5BM3v43AjcGoqVIZmiIqMFB/5wW9hLyyxYGtAanoCbxg2XX5Bm26xn0zSd0jIqlLlp3zkw7FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713406050; c=relaxed/simple;
-	bh=+KEGnBcOMKQg1e6jhwZpTqi+bVvKRdapHRMb2dM0wtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJYyN/c9afp9VkVESA7pKVnvhMZpkEfkvpvhX2SG9l4HeLUBUMEIajlinTnL4wX/U9pqUdgkA6ss1G4K5cNjoPMGXNFShmegfQFF6cjq0cLtpp/MC6u4GItymtASLzPGgTJ8zS4txygTYqc1HNb7NFtHKJW+8oCFmIaezViU0rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASVVbVwz; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713406228; c=relaxed/simple;
+	bh=JvPOQX1m6VS2TnDTVCWVo4cYrpLbtbm0fzT/89T9mV0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=oRCNUl/Bq201bYdChJsrM62N6ePs38wp0Fyf4ItUusZd6C1k/BwSK3LTGdYh8Do91m4GTyL0GFP6N6EXYmk7tNim7hefdyOySd/trOCGCj0WnwCgtOHiZHzfovW2npZUekHsGZI+B02/l4iITc9vd/i+RSVdXb+A6FSbmhlcIi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhwIp13G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASVVbVwz"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-22fa18566adso206099fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713406048; x=1714010848; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
-        b=ASVVbVwzZ4sx9/Jkpm3Lqw5y3aFM+/HOAkx93baMcwocGvZdYMGS77yneIcjgMtLH3
-         XDKj4/XdLceJxgsdm9eHMlaxawLzWsEQ2OdV+a2byzqwA5LLFjDfZZb9ODX32brssK0S
-         Nplfaz63D42ERia5GcnzL+7kcHju4nNjY/LaXCMaZlAh73EAxn+kiA0nfShwEVqFjj8S
-         NPc0U2D06IZr/UqRAnjkBQnMzwjEJTtgnG1GrDpgW4Ni3QLmDnpr78JEDt3eMvMpW4BN
-         GcfDr7j3Rp5vDmYbXLp7MT1lkq0dTo0W61zmAmUf9xGFHBlV9/d+uX7pi2n6ZX7eQuSn
-         EdUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713406048; x=1714010848;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
-        b=SyFa8aPj3kaLLrxM2QCaiEpX04UCyruy38UUKQZ5E6RSA4cbNUiZVNBnuXVpGNGfry
-         zn4I6hD1CY5hae1ZMBblO3UJlEGx4l2MXz4U+L6ycgKTqerlnCIVrBPwa4j4l/v3EC9S
-         HCu6R0jH8dYEtywNtXdS8/krfo81rc02NBDIp2+3/rKei5b1Gx/cvKPnl0fWA35yH9qJ
-         bHTlfcOz5oIpnBRA6Cq6MQkWUlFOibt9FZhrNnmYTD4cHWMp/fQOIV3wpmDgnd7SFsXg
-         2SOawbsEL+BLzovEMa6kL88jUJLz0a9GKyDmy3RKYR0qZSQXt1Jl02MLg/WfwMvm+oh0
-         eCxA==
-X-Forwarded-Encrypted: i=1; AJvYcCULBdNTELDXFCbdWGZtf7dhsUSLA6Yo0NceXCUAOUZPtLOOg0BxuBU8oWbMgapMbus4gtqVWJmcBFt15Q2aUsI4uBwTCNWcMhvU9jzM
-X-Gm-Message-State: AOJu0YydUdEQMWAPX0n4CLTPHFcNTHRl9VjskCrAfIbMsmvGJnlOS8es
-	o1bbnh0nHQ8hBopd2MLNZsWRbv8RI33j+LkvQkTfxfXVN2EszzA5
-X-Google-Smtp-Source: AGHT+IHkRREgGYfHbnLerfWwG1l/nPL22jRK5el/rJ7qosjGL2kgjZfx5vUtE7jmFBUVX7TkEjKdJw==
-X-Received: by 2002:a05:6870:610c:b0:22a:6c9a:ece8 with SMTP id s12-20020a056870610c00b0022a6c9aece8mr1783850oae.21.1713406048246;
-        Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:6f51])
-        by smtp.gmail.com with ESMTPSA id kq12-20020a056a004b0c00b006e6c81b6055sm356551pfb.6.2024.04.17.19.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 19:07:27 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Wed, 17 Apr 2024 16:07:26 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
-Message-ID: <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
-References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
- <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
- <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
- <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
- <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
- <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
- <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhwIp13G"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4C11FC32782;
+	Thu, 18 Apr 2024 02:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713406228;
+	bh=JvPOQX1m6VS2TnDTVCWVo4cYrpLbtbm0fzT/89T9mV0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XhwIp13GS9iJfeIX3StUHnCkvbM709wrE7EVVPGakGd1/Nyu0XXIxBRu6dN6h0JGB
+	 nhCE25VSANdmOIfd1BADV0o6UTgN+l7OaJymeatq4XLiKJMXcDNPat0ZeOAdP/xmGj
+	 Zs9nFlBIa+oXMp/7HKMf+Ut55ezomdSXyytdU351np0YDJZmU/PZ0mCwW0gXAieHjz
+	 sgUPPrXhKkmXvY/T9D2/39OabVc08mnMi31Uik7hUpuWBv2Cvu75bPkhbWUtrc6pa7
+	 sUeZ4Sv3vAxmvDWKaW4nFadNCNXBGqFicqDLmPKfSFWHgGVSEuphx3FtbBWu4ql4Ji
+	 SeyQk731JEexQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 396DAC43619;
+	Thu, 18 Apr 2024 02:10:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: ethernet: mtk_eth_soc: fix WED + wifi reset
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171340622823.10413.6361491426499037138.git-patchwork-notify@kernel.org>
+Date: Thu, 18 Apr 2024 02:10:28 +0000
+References: <20240416082330.82564-1-nbd@nbd.name>
+In-Reply-To: <20240416082330.82564-1-nbd@nbd.name>
+To: Felix Fietkau <nbd@nbd.name>
+Cc: netdev@vger.kernel.org, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
+ lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, sujuan.chen@mediatek.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
 
-Hello, Thorsten.
+Hello:
 
-On Wed, Apr 17, 2024 at 07:48:33AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > Can you elaborate why Bjorn's case is different?
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 16 Apr 2024 10:23:29 +0200 you wrote:
+> The WLAN + WED reset sequence relies on being able to receive interrupts from
+> the card, in order to synchronize individual steps with the firmware.
+> When WED is stopped, leave interrupts running and rely on the driver turning
+> off unwanted ones.
+> WED DMA also needs to be disabled before resetting.
 > 
-> Well "not booting at all when using 'nohz_full=0'"[as reported two
-> times] and "I start neovim, send SIGSTOP (i.e. ^Z) to it, start another
-> neovim instance and upon sending SIGSTOP to that instance all of
-> userspace locks up - 100% reproducible."[while no 'nohz_full=0' in use]
-> at least on the first sight to and outsider sound a lot like different
-> problems to me -- but of course that impression might be wrong and you
-> know better about these things.
-
-You are right. That is very different.
-
-> > I was assuming it was the
-> > same problem and that Oleg's fixes would address the issue.
+> Fixes: f78cd9c783e0 ("net: ethernet: mtk_wed: update mtk_wed_stop")
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
 > 
-> Bjorn, could you give it a try?
+> [...]
 
-Yeah, I'm curious whether it's just a different symptom of the same problem.
+Here is the summary with links:
+  - [net] net: ethernet: mtk_eth_soc: fix WED + wifi reset
+    https://git.kernel.org/netdev/net/c/94667949ec3b
 
-Thanks.
-
+You are awesome, thank you!
 -- 
-tejun
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
