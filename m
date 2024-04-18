@@ -1,147 +1,134 @@
-Received: from e3i51.smtp2go.com (e3i51.smtp2go.com [158.120.84.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61CD15AABB
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E2D15A4BB;
+	Thu, 18 Apr 2024 09:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713431540; cv=none; b=hKYYkqNgvuiptFOmRHRE6IV2vFol8bSfCe+CXTpAGS4nU6kB03iM9ZgOwEONQ8Hjn77xovuocApihPjnWTXMBRKwBJTDzzRmOe+3w2tCXVQNpamSSDOjQrdgUdWezAvTeg6on4j7I1tBNTyist3qyuoODrhyxA+vYQvx3TowaW0=
+	t=1713431558; cv=none; b=Mujo0KoMcRDIhhaP4RoN2/gwbTBK9/gbh3WKtGCdc41XLMFh7olueTHHVZF4nSzJ5z/O3iuzNFY03iDXkKqY9pTuETJTHDBrU/l7wBvrhUPFhfJm4aACwm86TFkDNUWrEPLa69/Te00VKdzPyOVFEoR9Di86pQ+Ce0tGFaSUWRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713431540; c=relaxed/simple;
-	bh=1653cXZwkdY1XGP9TZy+tiKha1dxQmkE1Ob1WqnIEbg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LE+WMvX46gzj7q7VZnw2U+SsmVpSg/+jAt8po5Q8jWDcSCghIbohKgIzOd5+bzfDK3PB5zo8+851K8t/BBPW36Vto6UHv6E81DGo9D5Rs+ZWW9qAU3fxwmQw7ntErgpEKdIJiNMLkleF05mXazjiaX+lCsYxuSR5upJBm8TfnlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=rL4m/TE1; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=l2VrDT16; arc=none smtp.client-ip=158.120.84.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
+	s=arc-20240116; t=1713431558; c=relaxed/simple;
+	bh=4t2cLoLBXffGWFuuzf20vblalSwZwoEoyJ/BXtoEVhc=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=bje//TsXdMi7pBfVbduLmb7BcS0GSPWIkVLIxmMX25zAV9SkeeRIE/vO1toZoXc2EwU38L3/DOwFZBXmykOER1sExqi8zf8T4+ANZpXZYZz5hdc6gBDP1/07Uz0BaS8k1ibrOKFAMjiR9AVcjroDgZQGSQVl8fezbmbN7ZBCQfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n2CN5d18; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="rL4m/TE1";
-	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="l2VrDT16"
-Received: from [10.86.249.198] (helo=asas054.asem.intra)
-	by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
-	(envelope-from <f.suligoi@asem.it>)
-	id 1rxNoR-wSS1uD-0s;
-	Thu, 18 Apr 2024 09:12:11 +0000
-Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
-	 Thu, 18 Apr 2024 11:12:09 +0200
-From: Flavio Suligoi <f.suligoi@asem.it>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Flavio Suligoi <f.suligoi@asem.it>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/1] dt-bindings: net: snps,dwmac: remove tx-sched-sp property
-Date: Thu, 18 Apr 2024 11:11:48 +0200
-Message-Id: <20240418091148.1968155-2-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418091148.1968155-1-f.suligoi@asem.it>
-References: <20240418091148.1968155-1-f.suligoi@asem.it>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n2CN5d18"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713431556; x=1744967556;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4t2cLoLBXffGWFuuzf20vblalSwZwoEoyJ/BXtoEVhc=;
+  b=n2CN5d18i5LHASZMsaBYG87Rr/8pUAetZojaSn5qJPeJ4VdyZPKh1V/t
+   2U343n/mvh5WGKgY0ucpBn6+jYDnMXCUYSHVpXCGxaiPrKg63Oy1GX0Un
+   rKghgJ0LWhpAaTp33rSGZCz9z/iiyRCFkKhBmCqbDJ7P6cm+qgjrhB3gq
+   GUBsKfBbN7oEvIO8Gt+YZ8oXJaMMjf4ZWQh2ftfQOEJmnJexh0GKQuE3E
+   kAvud1FAoXs/nxAC5QYDj4MLrBecPRridtaW/e+HYIEya/ZC1pTu4XfZe
+   P2Jof9aBApU9BpmMEpWFIz4hDtAk8OA1ukpBW4Swjfd6YABQK9AL5wCv7
+   w==;
+X-CSE-ConnectionGUID: VhbnCsBiSAC6CNClbW3fKw==
+X-CSE-MsgGUID: U/xzei4XRk6rTgXre82UYA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12803418"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="12803418"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 02:12:34 -0700
+X-CSE-ConnectionGUID: opN75KlGSvCABr06Ru7qHA==
+X-CSE-MsgGUID: PN5c//8OTkS3wx6mFqLPNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="60343594"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.36])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 02:12:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 18 Apr 2024 12:03:32 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.9-3
+Message-ID: <pdx86-pr-20240418120332-847319520@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 18 Apr 2024 09:12:09.0335 (UTC) FILETIME=[7DC61870:01DA9170]
-X-smtpcorp-track: 1rxNoRwSS1ID0s.mDeouQBFWJ9Le
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpcorp.com;
- i=@smtpcorp.com; q=dns/txt; s=a1-4; t=1713431532; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe;
- bh=dIA5kz04Cu10qs9gImcSljfbfip11thLhvuLyaEhzfU=;
- b=rL4m/TE1mD6p8MSzOTiWFZ+gHWyorpJf4ZTctdTIy0Z2EL54Y1il6upqprZrAdoTDmyzq
- GQyj7MsJ+75ZksZO66+QMKyY5/aR5VChCxta9MLPKvKODW+48QjKW19Fu26qfi6EBeXjV7Q
- 8LwfoEXrH/oLOdaKzxxF+C13LQQTCSDtr56S2+MuV0s1qtZFNb9jKkxz1M058jiaQ5mJHnE
- 7LvpUhckOXpb1TOks3eD+0f2N3ZbLERbUjIje0OsQnFlh6HpKCyF4/tEvKZnXNo4mdzmx6O
- YM3idCU2+0BcB0ovAJNZwduzrS8MtfMbJ3nSbTovmH2MvM/N5st8b4McvKeg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
- i=@asem.it; q=dns/txt; s=s1174574; t=1713431532; h=from : subject : to
- : message-id : date; bh=dIA5kz04Cu10qs9gImcSljfbfip11thLhvuLyaEhzfU=;
- b=l2VrDT169Aujq/fnwUHVhU0ZW/fL8fuGDVaeqrINCCfsCu8SRekvxvncSk1vC/T9x7A5G
- SDoaf+Z1GuYYNSD59NkhEp+TNC7SxxL3BViYom2NgyP69YuPtLLE57GvC4UV7t+MXBJDNwI
- hv/8VV0AcOyvJmCZnpt1zTNM0UbLxQW2N1jg+Ed2GGNOCvLuNNZ79DLjljO/hv5kEfx6x31
- rf+qkU6teG5yMjXHyFGkNWZQVnbnh1HpF9lOJrD1AKrHxQ7abhMMRbfY74bxfIENmmvKOE/
- Z6ePU6+3rsJ20je9LlkoQgi3p0TaBqbDyn/mXWOaMVR/dQILd9+qZf8S0e2w==
 
-Strict priority for the tx scheduler is by default in Linux driver, so the
-tx-sched-sp property was removed in commit aed6864035b1 ("net: stmmac:
-platform: Delete a redundant condition branch").
+Hi Linus,
 
-This property is still in use in the following DT (and it will be removed
-in a separate patch series):
+Here is a platform-drivers-x86 fixes PR for v6.9. Except for adding the
+quirks support code into amd/pmf, this one has simple and well-contained
+changes.
 
-- arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-- arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-- arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
-- arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-- arch/arm64/boot/dts/qcom/sa8775p-ride.dts
+Changes:
+ - amd/pmf: Add SPS notifications quirk (+ quirk support)
+ - amd/pmf: Lower Smart PC check message severity
+ - x86/ISST: New HW support
+ - x86/intel-uncore-freq: Bump minor version to avoid "unsupported" message
+ - amd/pmc: New BIOS version still needs Spurious IRQ1 quirk
 
-There is no problem if that property is still used in the DTs above,
-since, as seen above, it is a default property of the driver.
+Regards, i.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../devicetree/bindings/net/snps,dwmac.yaml        | 14 --------------
- 1 file changed, 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 15073627c53a..21cc27e75f50 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -328,9 +328,6 @@ properties:
-       snps,tx-sched-dwrr:
-         type: boolean
-         description: Deficit Weighted Round Robin
--      snps,tx-sched-sp:
--        type: boolean
--        description: Strict priority
-     allOf:
-       - if:
-           required:
-@@ -339,7 +336,6 @@ properties:
-           properties:
-             snps,tx-sched-wfq: false
-             snps,tx-sched-dwrr: false
--            snps,tx-sched-sp: false
-       - if:
-           required:
-             - snps,tx-sched-wfq
-@@ -347,7 +343,6 @@ properties:
-           properties:
-             snps,tx-sched-wrr: false
-             snps,tx-sched-dwrr: false
--            snps,tx-sched-sp: false
-       - if:
-           required:
-             - snps,tx-sched-dwrr
-@@ -355,15 +350,6 @@ properties:
-           properties:
-             snps,tx-sched-wrr: false
-             snps,tx-sched-wfq: false
--            snps,tx-sched-sp: false
--      - if:
--          required:
--            - snps,tx-sched-sp
--        then:
--          properties:
--            snps,tx-sched-wrr: false
--            snps,tx-sched-wfq: false
--            snps,tx-sched-dwrr: false
-     patternProperties:
-       "^queue[0-9]$":
-         description: Each subnode represents a queue.
--- 
-2.34.1
+The following changes since commit e71c8481692582c70cdfd0996c20cdcc71e425d3:
 
+  platform/x86: lg-laptop: fix %s null argument warning (2024-04-08 18:32:14 +0300)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-3
+
+for you to fetch changes up to f609e7b1b49e4d15cf107d2069673ee63860c398:
+
+  platform/x86/amd/pmc: Extend Framework 13 quirk to more BIOSes (2024-04-17 17:05:30 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.9-3
+
+Changes:
+ - amd/pmf: Add SPS notifications quirk (+ quirk support)
+ - amd/pmf: Lower Smart PC check message severity
+ - x86/ISST: New HW support
+ - x86/intel-uncore-freq: Bump minor version to avoid "unsupported" message
+ - amd/pmc: New BIOS version still needs Spurious IRQ1 quirk
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmc:
+ -  Extend Framework 13 quirk to more BIOSes
+
+amd: pmf:
+ -  Add infrastructure for quirking supported funcs
+ -  Add quirk for ROG Zephyrus G14
+ -  Decrease error message to debug
+
+intel-uncore-freq:
+ -  Increase minor number support
+
+ISST:
+ -  Add Granite Rapids-D to HPM CPU list
+
+----------------------------------------------------------------
+Mario Limonciello (4):
+      platform/x86/amd: pmf: Decrease error message to debug
+      platform/x86/amd: pmf: Add infrastructure for quirking supported funcs
+      platform/x86/amd: pmf: Add quirk for ROG Zephyrus G14
+      platform/x86/amd/pmc: Extend Framework 13 quirk to more BIOSes
+
+Srinivas Pandruvada (2):
+      platform/x86: ISST: Add Granite Rapids-D to HPM CPU list
+      platform/x86/intel-uncore-freq: Increase minor number support
+
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |  9 ++++
+ drivers/platform/x86/amd/pmf/Makefile              |  2 +-
+ drivers/platform/x86/amd/pmf/acpi.c                |  7 ++-
+ drivers/platform/x86/amd/pmf/core.c                |  1 +
+ drivers/platform/x86/amd/pmf/pmf-quirks.c          | 51 ++++++++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h                 |  3 ++
+ .../x86/intel/speed_select_if/isst_if_common.c     |  1 +
+ .../intel/uncore-frequency/uncore-frequency-tpmi.c |  4 +-
+ 8 files changed, 73 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/platform/x86/amd/pmf/pmf-quirks.c
