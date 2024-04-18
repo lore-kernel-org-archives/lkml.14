@@ -1,177 +1,106 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCDF5CB0
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 01:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0664411;
+	Thu, 18 Apr 2024 01:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713402468; cv=none; b=XTDH/QcTa1fN2Da+zkZYOCwAzPSoe1CEasuq5HaUfdtHoRcK9uB5shJCaI/3X3unvnwdxULA0T/e1Cr3spHwC3in0apG/Lq4NjPwPch6caSNOaqremYm2a6P3R0cv4kCqMRMuoeJeLQtpdALjYVVqyEVPUgp43JF6MKAWUuSap8=
+	t=1713402592; cv=none; b=kk4c7Zk/FG7fIMITSesDJrIRYNCCn4tChmSRK1opd/nlFF8fRIQ940FEotVXyyQJ1kY1ubiJ8T5vWpXx8z9f1jaLx318zUIc0zRxn4N2s4lxSkvlK025ornCeMRUmpQsR8BMFKNHP2/T1PkhC88DUuQK3JzBP4diHQ2lSRQEZaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713402468; c=relaxed/simple;
-	bh=vjRJ1U7DKOKEv8zqHNl/1MSWTfJ+WAHC2urS1kF08ZE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mYqYShhf/jcVHCfE/51JcSjV7OBohafPXtSibPDjOGh8XLBrJkDPZJdiSHmLOSljE8StilWEOhYbzTC/artu0tUwptlNik1uNxC8fbddv/fnpF/XzQq9/xK6YOTPVws/tJeaiOuTMHgjfwPZuZ2mLixioy1hGGmWNRKT1WrQ4+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UHH1q+NA; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UHH1q+NA"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2abc5b4f3c7so217590a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 18:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713402465; x=1714007265; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuQpI8q1wJxBD6X4kJwl22uAmYchmA+XE2ed6Sx/XW8=;
-        b=UHH1q+NAnkAIYmnfTLZbtjKDEB1MeEw/V2YGrHVRgkHNgViYvAcYhGbanCgx1+KyUa
-         mSFsJiFUEggS3i6hBRDxT46S58f8JmbGkcG2+T6NZgnCroX2zcULVWzY3/li6YgWQ88c
-         i9wVom7OjPQSWru/F65Mz3S5CRweovRex77GgbLdeL8p8NR+IzqCAXXPifjv2N1DsmJ4
-         1xInCgPaK2AApo/85qAuAntj6NYPfJevmg8A88Nbb0i5eTA/i9VXByge+sJ6GkNCmjKR
-         aE3YIbAzCIcSVa4vBW805BJ2xJzSPFdm4WKMv37NanPYvfCqHK9FPMLPFlhb4ZIMvA/+
-         oyFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713402465; x=1714007265;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuQpI8q1wJxBD6X4kJwl22uAmYchmA+XE2ed6Sx/XW8=;
-        b=ZRxkbQuoRbMANT0wATmWBUCIdD4pkN0rIr4EBPEUPEve7DVlUI+d/mpuaYx8wrRJBK
-         klaCvMN71ro2m+FOXqfEP2+vFwV0Teub9WDIAyO1hkAh+2UjeR+7206uCuBuocyzer0X
-         n0cASJoUiWkYifP0st/obSo79fOjDdI/fJq7ga+M0B4MpdAPinQ+WAFcDuo/xhf4ByPE
-         GCKwdlDaoFtIM8UAHuXZS3Tx9jTOO3lhxxl3A2YJdgNlhkQggVeXdgCd4dnaiYtwDRPG
-         e54SONtFZe+fnfUHGPXnMMeh5GelntpjGzq5eFv3pAdrsQpTfTNMpOFmpJmk0ll6pSbq
-         RJjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVW/bgWDjH5Mt9kNUIKsQ6FBkChnUFh0GoFZPP/0ejr6sHE5Xg9FZH8uUool6vGoqS1WktdTbKDASDbMBFW6e9tdVT+BFlOE6fxj9Tn
-X-Gm-Message-State: AOJu0YxS6O0uKv9UEwEeVZKwZ6T/9mPDaLwFl+YLy2RvuA3AOmEkvsOt
-	3gK1W4717BOAPo8DEyRfxByCB1PmEh9sVbp7eRpczOaHqNCYT1wqWPuEenlOECdLvsEl0gh2WOT
-	lAQ==
-X-Google-Smtp-Source: AGHT+IHGZwUXxnIi8umgtcmk1AYnoU9sLsjsWPwJKD9HL4ufshZxqeVmZB8Cu9P+R7pMCrRGbgVEpjMIq+c=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a17:90a:d081:b0:2a2:5697:f90d with SMTP id
- k1-20020a17090ad08100b002a25697f90dmr2975pju.6.1713402463538; Wed, 17 Apr
- 2024 18:07:43 -0700 (PDT)
-Date: Thu, 18 Apr 2024 01:07:14 +0000
-In-Reply-To: <20240418010723.3069001-1-edliaw@google.com>
+	s=arc-20240116; t=1713402592; c=relaxed/simple;
+	bh=lvGFpFWG/c5SJn5k6EpKDjuGe+uh1Zqt7Kd70bAY8Ys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GIy2MUIsHcaTt2pOjOlcaBhz4NgVO9a685i4QWUDVYLyz4ER6t3o9v058B3efMte5vkW4xbJNRWnTGpO82qjO8ZHjrusXlbpGBGl1Z38G7gzCSIBYY00BCk1Ux2sAfLfBgEz6xwR5CCv33QCtaTOf75/Tt92aTb0qbW5ADXVUhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VKfkB3yl6zwSkL;
+	Thu, 18 Apr 2024 09:06:42 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 557C3140120;
+	Thu, 18 Apr 2024 09:09:46 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 09:09:46 +0800
+Message-ID: <bd0b9517-63d1-4a49-90fd-c68e66dd464a@huawei.com>
+Date: Thu, 18 Apr 2024 09:09:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <16430256912363@kroah.com> <20240418010723.3069001-1-edliaw@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240418010723.3069001-6-edliaw@google.com>
-Subject: [PATCH 5.15.y v2 5/5] bpf: Fix ringbuf memory type confusion when
- passing to helpers
-From: Edward Liaw <edliaw@google.com>
-To: stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Hao Luo <haoluo@google.com>
-Cc: bpf@vger.kernel.org, kernel-team@android.com, 
-	Edward Liaw <edliaw@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bcachefs: Align the display format of
+ `btrees/inodes/keys`
+To: Youling Tang <youling.tang@linux.dev>, Kent Overstreet
+	<kent.overstreet@linux.dev>
+CC: <linux-bcachefs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Youling
+ Tang <tangyouling@kylinos.cn>
+References: <20240418005055.45482-1-youling.tang@linux.dev>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20240418005055.45482-1-youling.tang@linux.dev>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-From: Daniel Borkmann <daniel@iogearbox.net>
 
-The bpf_ringbuf_submit() and bpf_ringbuf_discard() have ARG_PTR_TO_ALLOC_MEM
-in their bpf_func_proto definition as their first argument, and thus both expect
-the result from a prior bpf_ringbuf_reserve() call which has a return type of
-RET_PTR_TO_ALLOC_MEM_OR_NULL.
 
-While the non-NULL memory from bpf_ringbuf_reserve() can be passed to other
-helpers, the two sinks (bpf_ringbuf_submit(), bpf_ringbuf_discard()) right now
-only enforce a register type of PTR_TO_MEM.
+On 2024/4/18 8:50, Youling Tang wrote:
+> From: Youling Tang <tangyouling@kylinos.cn>
+> 
+> Before patch:
+> ```
+>   #cat btrees/inodes/keys
+>   u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:   mode=40755
+>     flags= (16300000)
+>     bi_size=0
+> ```
+> 
+> After patch:
+> ```
+>   #cat btrees/inodes/keys
+>   u64s 17 type inode_v3 0:4096:U32_MAX len 0 ver 0:
+>     mode=40755
+>     flags=(16300000)
+>     bi_size=0
+> ```
+> 
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+> v2:
+> - Adjust where to add new lines of code.
+> - Remove flags ` ` by Hongbo suggestion.
+> 
+>   fs/bcachefs/inode.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/bcachefs/inode.c b/fs/bcachefs/inode.c
+> index f0da2b0048cc..5c9ee41baa72 100644
+> --- a/fs/bcachefs/inode.c
+> +++ b/fs/bcachefs/inode.c
+> @@ -534,12 +534,13 @@ int bch2_inode_v3_invalid(struct bch_fs *c, struct bkey_s_c k,
+>   static void __bch2_inode_unpacked_to_text(struct printbuf *out,
+>   					  struct bch_inode_unpacked *inode)
+>   {
+> +	prt_printf(out, "\n");
+>   	printbuf_indent_add(out, 2);
+>   	prt_printf(out, "mode=%o\n", inode->bi_mode);
+>   
+>   	prt_str(out, "flags=");
+>   	prt_bitflags(out, bch2_inode_flag_strs, inode->bi_flags & ((1U << 20) - 1));
+> -	prt_printf(out, " (%x)\n", inode->bi_flags);
+> +	prt_printf(out, "(%x)\n", inode->bi_flags);
+>   
+>   	prt_printf(out, "journal_seq=%llu\n",	inode->bi_journal_seq);
+>   	prt_printf(out, "bi_size=%llu\n",	inode->bi_size);
 
-This can lead to potential type confusion since it would allow other PTR_TO_MEM
-memory to be passed into the two sinks which did not come from bpf_ringbuf_reserve().
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
-Add a new MEM_ALLOC composable type attribute for PTR_TO_MEM, and enforce that:
-
- - bpf_ringbuf_reserve() returns NULL or PTR_TO_MEM | MEM_ALLOC
- - bpf_ringbuf_submit() and bpf_ringbuf_discard() only take PTR_TO_MEM | MEM_ALLOC
-   but not plain PTR_TO_MEM arguments via ARG_PTR_TO_ALLOC_MEM
- - however, other helpers might treat PTR_TO_MEM | MEM_ALLOC as plain PTR_TO_MEM
-   to populate the memory area when they use ARG_PTR_TO_{UNINIT_,}MEM in their
-   func proto description
-
-Fixes: 457f44363a88 ("bpf: Implement BPF ring buffer and verifier support for it")
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-(cherry picked from commit a672b2e36a648afb04ad3bda93b6bda947a479a5)
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- include/linux/bpf.h   | 9 +++++++--
- kernel/bpf/verifier.c | 6 +++++-
- 2 files changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 84efd8dd139d..96b2aa567d23 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -312,7 +312,12 @@ enum bpf_type_flag {
- 	 */
- 	MEM_RDONLY		= BIT(1 + BPF_BASE_TYPE_BITS),
- 
--	__BPF_TYPE_LAST_FLAG	= MEM_RDONLY,
-+	/* MEM was "allocated" from a different helper, and cannot be mixed
-+	 * with regular non-MEM_ALLOC'ed MEM types.
-+	 */
-+	MEM_ALLOC		= BIT(2 + BPF_BASE_TYPE_BITS),
-+
-+	__BPF_TYPE_LAST_FLAG	= MEM_ALLOC,
- };
- 
- /* Max number of base types. */
-@@ -396,7 +401,7 @@ enum bpf_return_type {
- 	RET_PTR_TO_SOCKET_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
- 	RET_PTR_TO_TCP_SOCK_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
- 	RET_PTR_TO_SOCK_COMMON_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMON,
--	RET_PTR_TO_ALLOC_MEM_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_ALLOC_MEM,
-+	RET_PTR_TO_ALLOC_MEM_OR_NULL	= PTR_MAYBE_NULL | MEM_ALLOC | RET_PTR_TO_ALLOC_MEM,
- 	RET_PTR_TO_BTF_ID_OR_NULL	= PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
- 
- 	/* This must be the last entry. Its purpose is to ensure the enum is
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 3dfc45ed428a..6162ba31a89e 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -567,6 +567,8 @@ static const char *reg_type_str(struct bpf_verifier_env *env,
- 
- 	if (type & MEM_RDONLY)
- 		strncpy(prefix, "rdonly_", 16);
-+	if (type & MEM_ALLOC)
-+		strncpy(prefix, "alloc_", 16);
- 
- 	snprintf(env->type_str_buf, TYPE_STR_BUF_LEN, "%s%s%s",
- 		 prefix, str[base_type(type)], postfix);
-@@ -4970,6 +4972,7 @@ static const struct bpf_reg_types mem_types = {
- 		PTR_TO_MAP_KEY,
- 		PTR_TO_MAP_VALUE,
- 		PTR_TO_MEM,
-+		PTR_TO_MEM | MEM_ALLOC,
- 		PTR_TO_BUF,
- 	},
- };
-@@ -4987,7 +4990,7 @@ static const struct bpf_reg_types int_ptr_types = {
- static const struct bpf_reg_types fullsock_types = { .types = { PTR_TO_SOCKET } };
- static const struct bpf_reg_types scalar_types = { .types = { SCALAR_VALUE } };
- static const struct bpf_reg_types context_types = { .types = { PTR_TO_CTX } };
--static const struct bpf_reg_types alloc_mem_types = { .types = { PTR_TO_MEM } };
-+static const struct bpf_reg_types alloc_mem_types = { .types = { PTR_TO_MEM | MEM_ALLOC } };
- static const struct bpf_reg_types const_map_ptr_types = { .types = { CONST_PTR_TO_MAP } };
- static const struct bpf_reg_types btf_ptr_types = { .types = { PTR_TO_BTF_ID } };
- static const struct bpf_reg_types spin_lock_types = { .types = { PTR_TO_MAP_VALUE } };
-@@ -5150,6 +5153,7 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
- 	case PTR_TO_MAP_VALUE:
- 	case PTR_TO_MEM:
- 	case PTR_TO_MEM | MEM_RDONLY:
-+	case PTR_TO_MEM | MEM_ALLOC:
- 	case PTR_TO_BUF:
- 	case PTR_TO_BUF | MEM_RDONLY:
- 	case PTR_TO_STACK:
--- 
-2.44.0.769.g3c40516874-goog
+Thanks.
+Hongbo Li
 
