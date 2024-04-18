@@ -1,78 +1,90 @@
-Received: from forward400c.mail.yandex.net (forward400c.mail.yandex.net [178.154.239.223])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD781649DE;
-	Thu, 18 Apr 2024 14:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995CB165FB3;
+	Thu, 18 Apr 2024 14:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713449119; cv=none; b=s9Nsyq6lXA1beRjR1i2TExkS3aeiNp6d/alQ9dxlWm/13YsCTWmtaWF3TFO7qsT+DS2YYSfTZB8wxDtc84zkUTaW5/dxxQ3pFIkKqm9ZjIFZQfLlXfNcXWHiOb7Uj1AxIu4RWXhq2wa6Bb8lGXPex0tdZAwccK7WyBkfjVAbc8k=
+	t=1713449142; cv=none; b=NIjqMX1YoMQmHInuU8OwArqiWiraLDEzYccP3l8MmOk1zZjUWRlU0+82AXen3fcTcEN3JaeMnC8RY2Ptm05zt0D7zk9DBQlwn8R89OjbDLE96unHPbeHJtpzZRwkhR9XVu1HJSkyyr7eXFzoyUNcTVpItkVqOdVv1KUMjRR9sIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713449119; c=relaxed/simple;
-	bh=ex+30tcMVfxyUUaSDHrkFZx2Ws3xvFmrPzJt0E2CC+g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rsJ2utA/4LBiiyXsJKK7TUWlHwwmSxcbRQd+d7YUiLW8yUFZbWYYLgYbnDwQU/PgtK6srZ9U+7PBlpiUmpEIkNmkzwxMOZstHSCVRd5odc3tSauH9fkD6+CIamBT5FZN3OR4TjYvyyV7RR2EDFIPMHe6QO8g7497M2Xgktma+aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=NDFuMdPF; arc=none smtp.client-ip=178.154.239.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+	s=arc-20240116; t=1713449142; c=relaxed/simple;
+	bh=ybtstFCIQIBh/h+bTa3AowDxZdhqZXHjP7CMzjXMl2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dvO1JNWvAvg/HIN9mzPS5LxeONCpMZxWqNLbEPdNISpKB4bcru6evan1vxUzpVpW691Ux4DXVwjVzECUDbyRpHd0I4KxXJjwPNGHnFHkvNv5zZBx8pS6fuK/9J97VgJau4rDQ7AOZAccNZOzGeBjWIHFANjxuinJWlVIvb/WuXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wu93NQS1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gqs+4Wd3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="NDFuMdPF"
-Received: from mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:c8ad:0:640:7c75:0])
-	by forward400c.mail.yandex.net (Yandex) with ESMTPS id 0FEDB68E2C;
-	Thu, 18 Apr 2024 16:57:45 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id gvF5FWNoJ8c0-8KFtarnq;
-	Thu, 18 Apr 2024 16:57:44 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1713448664; bh=FfhBEk6M6XmT6yLhIJFRQ99L15wWJZxAlbi/OQfzRCo=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=NDFuMdPFBykaLLJO4cPMMoM0oEL4+cGP/LsBY7eK6lCEPgS6x38S6Ofvr0oTrCetD
-	 dxmPDbmKRe4PoxW6oAPp09/0nEEtptRqGfFPRQ+5VNJhKNLYJnyrlhaB4NQ1y2AAjJ
-	 22ZDw1NDMjIxWq/osN6ftBObHAerkqy8W5h5uQCY=
-Authentication-Results: mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To: 
-Cc: Konstantin Pugin <ria.freelander@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v2 0/3] add support for EXAR XR20M1172 UART
-Date: Thu, 18 Apr 2024 16:57:31 +0300
-Message-Id: <20240418135737.3659498-1-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wu93NQS1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gqs+4Wd3"
+Date: Thu, 18 Apr 2024 16:05:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713449128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MdvgBf6ZpsA4n+BoYvD1NnnaPdS5+NDIXIaVMmgP4hU=;
+	b=Wu93NQS1Iz2e7QuZtENBDdrlllSJjvCgf3fn/D4KJTe7mIoe907CKwFSkJ4vcoHBfDgzt5
+	0aD0nIh0fAk2xY64eYSssFby3uybIltLqPaLyDz1uA3VDX0xiEc6TtiNHaiZfWZrNTSfVJ
+	BL64QPsCzkIqpV0gPY5T/ywIVa7y0m3pLDRnbXzFPKIVg+3KGrmpsdALVmEUotkxmOl+T5
+	UkTIRKffnude85aVxnGmuMwKmH5CM5HRoHL98stWY2jV61m7ZvL0df+cJKFPngrUf1iL5B
+	4uGFoFeLoEPbpbwauSObHWyUkGuyhFtKApyOgq4AXwHCS4KvfRHTDAhampTEyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713449128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MdvgBf6ZpsA4n+BoYvD1NnnaPdS5+NDIXIaVMmgP4hU=;
+	b=gqs+4Wd3U0rfgEjP80HwkKZ4qF3kQb0jGka9A+b37lMDO0zvuizvVSj2HFl1TbSt4JzOKl
+	GMPiRTk6EfmtCHCw==
+From: Nam Cao <namcao@linutronix.de>
+To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ jayalk@intworks.biz, Daniel Vetter <daniel@ffwll.ch>, deller@gmx.de,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ tiwai@suse.de, bigeasy@linutronix.de, LKML <linux-kernel@vger.kernel.org>,
+ Vegard Nossum <vegard.nossum@oracle.com>, George Kennedy
+ <george.kennedy@oracle.com>, Darren Kenny <darren.kenny@oracle.com>,
+ chuansheng.liu@intel.com
+Subject: Re: [bug-report] task info hung problem in fb_deferred_io_work()
+Message-ID: <20240418160526.3b3c385f@namcao>
+In-Reply-To: <CAMeQTsbCESSTrEyHgqF9HreSuzQ9kMBnGpKLT0QNJ+n4hv9qOw@mail.gmail.com>
+References: <271372d6-e665-4e7f-b088-dee5f4ab341a@oracle.com>
+	<CAMeQTsbCESSTrEyHgqF9HreSuzQ9kMBnGpKLT0QNJ+n4hv9qOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Konstantin Pugin <ria.freelander@gmail.com>
+On 2024-04-18 Patrik Jakobsson wrote:
+> This sounds similar to the SUSE bug [1]. We fixed it by reverting [2]
+> in the SUSE kernel. The problem seems to be that flush_delayed_work()
+> kills the timer and re-queues the work but doesn't guarantee that it
+> is finished when returning. So when the device is closed, the
+> fb_deferred_io_work() function can still be queued and tries to access
+> memory that's been freed.
 
-EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
-it has additional register which can change UART multiplier
-to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used this
-flag to guard access to its specific DLD register. It seems than
-other EXAR SPI UART modules also have this register, but I tested
-only XR20M1172.
+flush_delayed_work() *does* guarantee the work is finished before
+returning.
 
-Changes in v2:
-  use full name in git authorship
-
-Konstantin Pugin (3):
-  serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
-  serial: sc16is7xx: Add bindings documentation for EXAR XR20M1172 UART
-  serial: sc16is7xx: add support for EXAR XR20M1172 UART
-
- .../bindings/serial/nxp,sc16is7xx.yaml        |  1 +
- drivers/tty/serial/sc16is7xx.c                | 56 +++++++++++++++++--
- 2 files changed, 53 insertions(+), 4 deletions(-)
-
--- 
-2.34.1
+> Patch [2] tries to solve the problem of not throwing away pending data
+> when closing the device. Perhaps calling cancel_delayed_work_sync()
+> and then follow up with a manual call to fb_deferred_io_work() would
+> be enough to flush the remaining data?
+> 
+> -Patrik
+> 
+> [1] https://bugzilla.suse.com/show_bug.cgi?id=1221814
+> [2] 33cd6ea9c067 fbdev: flush deferred IO before closing
+> 
+> >
+> >
+> > Thanks,
+> > Harshit  
 
