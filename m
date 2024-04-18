@@ -1,240 +1,382 @@
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E8515B0F4
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF4B15EFD2;
+	Thu, 18 Apr 2024 09:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713432208; cv=none; b=uifAZO6KKFYbTe7R2V8XYy7hGvsHX/iwJ96XIf/Om7vCZ1btaD6/y483BlO3YMCOR2Fa88PdQJ2/nVAC0kYSwoHTlH0vxFB3iqHnl3OGVIHXMw6GIC6Rlq35n9da1yp3riZcFQMuUPqxooRpQMhQS/z1lfjNL191xTezFRLQ6Jg=
+	t=1713432222; cv=none; b=QhabjB5Eag/ajhSeurADfUxk4K/8b7oOFz+4jpnra6Avmk4xPs033c8swLxW27HJWjT1kdGs1Eo9ZphcdM5lVxDJQgtB+wBxG9Rr++UgYQtsD4hjCYYWoAemKsw9o88BwexUIyMtEBlOC0ocm9tk7OEZpLABJonmJ1oVideYZEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713432208; c=relaxed/simple;
-	bh=vcrT1TYwKnqYJ5PZxNHW/N9+G0t6gtyJtgQOMM2ZuAg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wj+ttnB0f5al/lkULWj/IaagydgATbRz276c6ylT1JFxJpU+zEWfGQcpGOKLxZV6OVzNNivFEmXWGANT/kQNK0RHjzZ98QjmZL5HyPy7fgRY6X8VJCIdtB+YOL1DrGP7ZiIzNX6gA0ROYNpZPGq72taA3bmujYAtLnpeCz5h1Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=CuDOMn5q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Wtn1C5B3; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="CuDOMn5q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wtn1C5B3"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 99CD61140156;
-	Thu, 18 Apr 2024 05:23:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 18 Apr 2024 05:23:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1713432205; x=
-	1713518605; bh=EOlC4Zi0Zmvr/N4ssp9EJZk79C5SCm6pNZw7lzj8X9g=; b=C
-	uDOMn5qNjXJaOklHhGGbmujk5dfKMhifgd44/yrcg2WTgKNNFRzdrsnhV9azaRd2
-	r/T8AutERuXyOWlLVTC26yWNBl8b8dcuWrD0eET9heq3lwwPFDcAoU9kL2tUOd45
-	adARqMLJ3tAwTe8VJ+eM66JL5+6rEGKRSIlpRcrXTULUUlldBqQSjIFZSPmuszBP
-	hx2f3DK0qqms+x9Wv0WN1R5OP2T0cRV+VWOlHw3QajVWHWsqfUdVUykRcBmu1mwk
-	koRy/ox8pCzBi8xaCWiNXaID3QOqUallBWxa2yACqI4Jhb3a5Q+vlEhdGk0sAGbV
-	Qd+NNNVYIAKzPwjjcEx5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1713432205; x=
-	1713518605; bh=EOlC4Zi0Zmvr/N4ssp9EJZk79C5SCm6pNZw7lzj8X9g=; b=W
-	tn1C5B3va83kDpDyYKnT0eFWvZaxQZOik5FvHxfcHiio9BtLa09tRgr5idJsavUR
-	bUED4wWjxFzvpIO9V06NyQuTNppgBTjEH+5D80GV6X84PTHPNiuhnbTOb8sKjbes
-	ldeDujR1jpoeZxVUXBsJHx0sUK7WiPgjsiBeV7mmjhziEoQ/qVcLSCclArAQM9YG
-	u2gPyaBHF+J7lKW1vypf1KVWSjav+7VuuLGXRvxCA5zGqQTTG6K0FqfCT9qhY6TS
-	AkJYz9p0Jw4wxLuczxkhV/L5r7pSYPH1t+TRP+ESHzdaUL7jHQAxSC+4pAcK7SlW
-	fS7P3RQRCP4BsbNGs94tA==
-X-ME-Sender: <xms:jeYgZho45otOSuA8ROFSxeMDM8x0aE-rmaCgx2KfYFgN-TXaaH-dfA>
-    <xme:jeYgZjpbW_NwOIVSV9izhtcPvIYDfGlBSYKlOgzXp8TnpnBRMybIaVrIALtWglKxp
-    kwFuSipGnPzKzQgouo>
-X-ME-Received: <xmr:jeYgZuNLtA7X1FigDX5fS7wKr3UV3-98O6UnjlwDEAZJNsiPZqfydZ0tUrLdSTcvjg3wDyDAvbLD67QXf3VWbDj8TYZ1_j2WmcMOLAuRxW3_DA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudektddgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
-    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpedvjefgje
-    euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
-    vghrufhiiigvpeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
-    hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:jeYgZs6tGVO-1jbkrWKf75uv7S1-2f2ipPvkjD1nyVElVSczAhrXsg>
-    <xmx:jeYgZg7ZQY5Esg3Tp3ZzMJFY2fWNrdEOgHkEPj1c206mqU7cZzWyuA>
-    <xmx:jeYgZkib2ngTycPh9cYvCDHEgX-_xHVwKqA733tY8TVSdmR21F8zIw>
-    <xmx:jeYgZi5flOUyJ5WDwZXP5CFQHK2QVGToQREzH1TP9JPZ7tukdip8aA>
-    <xmx:jeYgZgG6HQry5RoWQxArsnCE7qu5QX0jx047_DlMejerq4tPwEf2Kbeb>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 18 Apr 2024 05:23:24 -0400 (EDT)
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 13/13] firewire: core: add tracepoints events for asynchronous outbound response
-Date: Thu, 18 Apr 2024 18:23:03 +0900
-Message-ID: <20240418092303.19725-14-o-takashi@sakamocchi.jp>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240418092303.19725-13-o-takashi@sakamocchi.jp>
-References: <20240418092303.19725-1-o-takashi@sakamocchi.jp>
- <20240418092303.19725-2-o-takashi@sakamocchi.jp>
- <20240418092303.19725-3-o-takashi@sakamocchi.jp>
- <20240418092303.19725-4-o-takashi@sakamocchi.jp>
- <20240418092303.19725-5-o-takashi@sakamocchi.jp>
- <20240418092303.19725-6-o-takashi@sakamocchi.jp>
- <20240418092303.19725-7-o-takashi@sakamocchi.jp>
- <20240418092303.19725-8-o-takashi@sakamocchi.jp>
- <20240418092303.19725-9-o-takashi@sakamocchi.jp>
- <20240418092303.19725-10-o-takashi@sakamocchi.jp>
- <20240418092303.19725-11-o-takashi@sakamocchi.jp>
- <20240418092303.19725-12-o-takashi@sakamocchi.jp>
- <20240418092303.19725-13-o-takashi@sakamocchi.jp>
+	s=arc-20240116; t=1713432222; c=relaxed/simple;
+	bh=OH+74VFa5Lmuf9FRrVDGvrVSNIzV/ol9B/HVoqNNo/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AYQ9BO3UC0CpWKu/pJZFf60mY34vp3tQ4m+GJwcaLjq+VcHls243uSo/WhRMiJ8rO+sFP3evYVBo4kgTKuRDj+OCDHr3jAG9nZaebDDOObxxliJK8rjMXPY4ggq969J8hfVygjrjDffAHQbTckuFO7ClxVVsg+5cyxv9jFtHeNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5122A339;
+	Thu, 18 Apr 2024 02:24:07 -0700 (PDT)
+Received: from [10.57.84.16] (unknown [10.57.84.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250513F64C;
+	Thu, 18 Apr 2024 02:23:37 -0700 (PDT)
+Message-ID: <70c38786-445c-4818-b04d-0ff5a7cc48bf@arm.com>
+Date: Thu, 18 Apr 2024 10:23:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 14/43] arm64: RME: Allocate/free RECs to match vCPUs
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
+ <20240412084309.1733783-15-steven.price@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240412084309.1733783-15-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In a view of core transaction service, the asynchronous outbound response
-consists of two stages; initiation and completion.
+On 12/04/2024 09:42, Steven Price wrote:
+> The RMM maintains a data structure known as the Realm Execution Context
+> (or REC). It is similar to struct kvm_vcpu and tracks the state of the
+> virtual CPUs. KVM must delegate memory and request the structures are
+> created when vCPUs are created, and suitably tear down on destruction.
+> 
 
-This commit adds a pair of events for the asynchronous outbound response.
+May be a good idea to add a note about the AUX granules, to help the
+reader with the context.
 
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/core-transaction.c | 21 ++++++---
- drivers/firewire/trace.h            | 68 +++++++++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 7 deletions(-)
+RECs must be supplied with additional pages (AUX Granules) for storing
+the larger registers state (e.g., SVE). The number of AUX granules for
+a REC depends on the "parameters" with which the Realm was created.
 
-diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
-index 1b972e95fe36..c963832d9824 100644
---- a/drivers/firewire/core-transaction.c
-+++ b/drivers/firewire/core-transaction.c
-@@ -667,6 +667,8 @@ static void free_response_callback(struct fw_packet *packet,
- {
- 	struct fw_request *request = container_of(packet, struct fw_request, response);
- 
-+	trace_async_response_outbound_complete(card, request, packet);
-+
- 	// Decrease the reference count since not at in-flight.
- 	fw_request_put(request);
- 
-@@ -849,6 +851,9 @@ static struct fw_request *allocate_request(struct fw_card *card,
- void fw_send_response(struct fw_card *card,
- 		      struct fw_request *request, int rcode)
- {
-+	u32 *data = NULL;
-+	unsigned int data_length = 0;
-+
- 	/* unified transaction or broadcast transaction: don't respond */
- 	if (request->ack != ACK_PENDING ||
- 	    HEADER_DESTINATION_IS_BROADCAST(request->request_header)) {
-@@ -856,17 +861,19 @@ void fw_send_response(struct fw_card *card,
- 		return;
- 	}
- 
--	if (rcode == RCODE_COMPLETE)
--		fw_fill_response(&request->response, request->request_header,
--				 rcode, request->data,
--				 fw_get_response_length(request));
--	else
--		fw_fill_response(&request->response, request->request_header,
--				 rcode, NULL, 0);
-+	if (rcode == RCODE_COMPLETE) {
-+		data = request->data;
-+		data_length = fw_get_response_length(request);
-+	}
-+
-+	fw_fill_response(&request->response, request->request_header, rcode, data, data_length);
- 
- 	// Increase the reference count so that the object is kept during in-flight.
- 	fw_request_get(request);
- 
-+	trace_async_response_outbound_initiate(card, request, &request->response, data,
-+					       data ? data_length / 4 : 0);
-+
- 	card->driver->send_response(card, &request->response);
- }
- EXPORT_SYMBOL(fw_send_response);
-diff --git a/drivers/firewire/trace.h b/drivers/firewire/trace.h
-index ba09eb720933..0109a70d3b02 100644
---- a/drivers/firewire/trace.h
-+++ b/drivers/firewire/trace.h
-@@ -190,6 +190,74 @@ TRACE_EVENT(async_request_inbound,
- 	)
- )
- 
-+TRACE_EVENT(async_response_outbound_initiate,
-+	TP_PROTO(const struct fw_card *card, const struct fw_request *request,
-+		 const struct fw_packet *packet, const u32 *data, unsigned int data_count),
-+	TP_ARGS(card, request, packet, data, data_count),
-+	TP_STRUCT__entry(
-+		__field(u64, transaction)
-+		__field(u8, scode)
-+		__field(u8, generation)
-+		__field(u16, destination)
-+		__field(u8, tlabel)
-+		__field(u8, retry)
-+		__field(u8, tcode)
-+		__field(u8, priority)
-+		__field(u16, source)
-+		__field(u8, rcode)
-+		__dynamic_array(u32, data, data_count)
-+	),
-+	TP_fast_assign(
-+		__entry->transaction = (u64)request;
-+		__entry->scode = packet->speed;
-+		__entry->generation = packet->generation;
-+		__entry->destination = async_header_get_destination(packet->header);
-+		__entry->tlabel = async_header_get_tlabel(packet->header);
-+		__entry->retry = async_header_get_retry(packet->header);
-+		__entry->tcode = async_header_get_tcode(packet->header);
-+		__entry->priority = async_header_get_priority(packet->header);
-+		__entry->source = async_header_get_source(packet->header);
-+		__entry->rcode = async_header_get_rcode(packet->header);
-+		memcpy(__get_dynamic_array(data), data, __get_dynamic_array_len(data));
-+	),
-+	TP_printk(
-+		"transaction=0x%llx scode=%u generation=%u dst_id=0x%04x tlabel=%u retry=%u tcode=%u priority=%u src_id=0x%04x rcode=%u data=%s",
-+		__entry->transaction,
-+		__entry->scode,
-+		__entry->generation,
-+		__entry->destination,
-+		__entry->tlabel,
-+		__entry->retry,
-+		__entry->tcode,
-+		__entry->priority,
-+		__entry->source,
-+		__entry->rcode,
-+		__print_array(__get_dynamic_array(data), __get_dynamic_array_len(data), sizeof(u32))
-+	)
-+)
-+
-+TRACE_EVENT(async_response_outbound_complete,
-+	TP_PROTO(const struct fw_card *card, const struct fw_request *request,
-+		 const struct fw_packet *packet),
-+	TP_ARGS(card, request, packet),
-+	TP_STRUCT__entry(
-+		__field(u64, transaction)
-+		__field(u8, ack)
-+		__field(u16, timestamp)
-+	),
-+	TP_fast_assign(
-+		__entry->transaction = (u64)request;
-+		__entry->ack = packet->ack;
-+		__entry->timestamp = packet->timestamp;
-+	),
-+	TP_printk(
-+		"transaction=0x%llx ack=%u timestamp=0x%04x",
-+		__entry->transaction,
-+		__entry->ack,
-+		__entry->timestamp
-+	)
-+)
-+
- #endif // _FIREWIRE_TRACE_EVENT_H
- 
- #define TRACE_INCLUDE_PATH	.
--- 
-2.43.0
+Also the register states for the REC cannot be modified by KVM after the
+REC is created.
+
+
+
+
+> See Realm Management Monitor specification (DEN0137) for more information:
+> https://developer.arm.com/documentation/den0137/
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_emulate.h |   2 +
+>   arch/arm64/include/asm/kvm_host.h    |   3 +
+>   arch/arm64/include/asm/kvm_rme.h     |  18 ++++
+>   arch/arm64/kvm/arm.c                 |   2 +
+>   arch/arm64/kvm/reset.c               |  11 ++
+>   arch/arm64/kvm/rme.c                 | 150 +++++++++++++++++++++++++++
+>   6 files changed, 186 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+> index c606316f4729..2209a7c6267f 100644
+> --- a/arch/arm64/include/asm/kvm_emulate.h
+> +++ b/arch/arm64/include/asm/kvm_emulate.h
+> @@ -631,6 +631,8 @@ static inline bool kvm_realm_is_created(struct kvm *kvm)
+>   
+>   static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
+>   {
+> +	if (static_branch_unlikely(&kvm_rme_is_available))
+> +		return vcpu->arch.rec.mpidr != INVALID_HWID;
+>   	return false;
+>   }
+>   
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 63b68b85db3f..f7ac40ce0caf 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -694,6 +694,9 @@ struct kvm_vcpu_arch {
+>   
+>   	/* Per-vcpu CCSIDR override or NULL */
+>   	u32 *ccsidr;
+> +
+> +	/* Realm meta data */
+> +	struct realm_rec rec;
+>   };
+>   
+>   /*
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index 4ab5cb5e91b3..915e76068b00 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -6,6 +6,7 @@
+>   #ifndef __ASM_KVM_RME_H
+>   #define __ASM_KVM_RME_H
+>   
+> +#include <asm/rmi_smc.h>
+>   #include <uapi/linux/kvm.h>
+>   
+>   /**
+> @@ -70,6 +71,21 @@ struct realm {
+>   	unsigned int ia_bits;
+>   };
+>   
+> +/**
+> + * struct realm_rec - Additional per VCPU data for a Realm
+> + *
+> + * @mpidr: MPIDR (Multiprocessor Affinity Register) value to identify this VCPU
+> + * @rec_page: Kernel VA of the RMM's private page for this REC
+> + * @aux_pages: Additional pages private to the RMM for this REC
+> + * @run: Kernel VA of the RmiRecRun structure shared with the RMM
+> + */
+> +struct realm_rec {
+> +	unsigned long mpidr;
+> +	void *rec_page;
+> +	struct page *aux_pages[REC_PARAMS_AUX_GRANULES];
+> +	struct rec_run *run;
+> +};
+> +
+>   int kvm_init_rme(void);
+>   u32 kvm_realm_ipa_limit(void);
+>   
+> @@ -77,6 +93,8 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
+>   int kvm_init_realm_vm(struct kvm *kvm);
+>   void kvm_destroy_realm(struct kvm *kvm);
+>   void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
+> +int kvm_create_rec(struct kvm_vcpu *vcpu);
+> +void kvm_destroy_rec(struct kvm_vcpu *vcpu);
+>   
+>   #define RME_RTT_BLOCK_LEVEL	2
+>   #define RME_RTT_MAX_LEVEL	3
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index c5a6139d5454..d70c511e16a0 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -432,6 +432,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>   	/* Force users to call KVM_ARM_VCPU_INIT */
+>   	vcpu_clear_flag(vcpu, VCPU_INITIALIZED);
+>   
+> +	vcpu->arch.rec.mpidr = INVALID_HWID;
+> +
+>   	vcpu->arch.mmu_page_cache.gfp_zero = __GFP_ZERO;
+>   
+>   	/*
+> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> index 68d1d05672bd..6e6eb4a15095 100644
+> --- a/arch/arm64/kvm/reset.c
+> +++ b/arch/arm64/kvm/reset.c
+> @@ -134,6 +134,11 @@ int kvm_arm_vcpu_finalize(struct kvm_vcpu *vcpu, int feature)
+>   			return -EPERM;
+>   
+>   		return kvm_vcpu_finalize_sve(vcpu);
+> +	case KVM_ARM_VCPU_REC:
+> +		if (!kvm_is_realm(vcpu->kvm))
+> +			return -EINVAL;
+> +
+> +		return kvm_create_rec(vcpu);
+>   	}
+>   
+>   	return -EINVAL;
+> @@ -144,6 +149,11 @@ bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu)
+>   	if (vcpu_has_sve(vcpu) && !kvm_arm_vcpu_sve_finalized(vcpu))
+>   		return false;
+>   
+> +	if (kvm_is_realm(vcpu->kvm) &&
+> +	    !(vcpu_is_rec(vcpu) &&
+> +	      READ_ONCE(vcpu->kvm->arch.realm.state) == REALM_STATE_ACTIVE))
+> +		return false;
+> +
+>   	return true;
+>   }
+>   
+> @@ -157,6 +167,7 @@ void kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu)
+>   		kvm_unshare_hyp(sve_state, sve_state + vcpu_sve_state_size(vcpu));
+>   	kfree(sve_state);
+>   	kfree(vcpu->arch.ccsidr);
+> +	kvm_destroy_rec(vcpu);
+>   }
+>   
+>   static void kvm_vcpu_reset_sve(struct kvm_vcpu *vcpu)
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 09b59bcad8b6..629a095bea61 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -474,6 +474,156 @@ void kvm_destroy_realm(struct kvm *kvm)
+>   	kvm_free_stage2_pgd(&kvm->arch.mmu);
+>   }
+>   
+> +static void free_rec_aux(struct page **aux_pages,
+> +			 unsigned int num_aux)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < num_aux; i++) {
+> +		phys_addr_t aux_page_phys = page_to_phys(aux_pages[i]);
+> +
+> +		/* If the undelegate fails then leak the page */
+> +		if (WARN_ON(rmi_granule_undelegate(aux_page_phys)))
+> +			continue;
+> +
+> +		__free_page(aux_pages[i]);
+> +	}
+> +}
+> +
+> +static int alloc_rec_aux(struct page **aux_pages,
+> +			 u64 *aux_phys_pages,
+> +			 unsigned int num_aux)
+> +{
+> +	int ret;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < num_aux; i++) {
+> +		struct page *aux_page;
+> +		phys_addr_t aux_page_phys;
+> +
+> +		aux_page = alloc_page(GFP_KERNEL);
+> +		if (!aux_page) {
+> +			ret = -ENOMEM;
+> +			goto out_err;
+> +		}
+> +		aux_page_phys = page_to_phys(aux_page);
+> +		if (rmi_granule_delegate(aux_page_phys)) {
+> +			__free_page(aux_page);
+> +			ret = -ENXIO;
+> +			goto out_err;
+> +		}
+> +		aux_pages[i] = aux_page;
+> +		aux_phys_pages[i] = aux_page_phys;
+> +	}
+> +
+> +	return 0;
+> +out_err:
+> +	free_rec_aux(aux_pages, i);
+> +	return ret;
+> +}
+> +
+> +int kvm_create_rec(struct kvm_vcpu *vcpu)
+> +{
+> +	struct user_pt_regs *vcpu_regs = vcpu_gp_regs(vcpu);
+> +	unsigned long mpidr = kvm_vcpu_get_mpidr_aff(vcpu);
+> +	struct realm *realm = &vcpu->kvm->arch.realm;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long rec_page_phys;
+> +	struct rec_params *params;
+> +	int r, i;
+> +
+> +	if (kvm_realm_state(vcpu->kvm) != REALM_STATE_NEW)
+> +		return -ENOENT;
+> +
+> +	/*
+> +	 * The RMM will report PSCI v1.0 to Realms and the KVM_ARM_VCPU_PSCI_0_2
+> +	 * flag covers v0.2 and onwards.
+> +	 */
+> +	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_PSCI_0_2))
+> +		return -EINVAL;
+> +
+> +	BUILD_BUG_ON(sizeof(*params) > PAGE_SIZE);
+> +	BUILD_BUG_ON(sizeof(*rec->run) > PAGE_SIZE);
+> +
+> +	params = (struct rec_params *)get_zeroed_page(GFP_KERNEL);
+> +	rec->rec_page = (void *)__get_free_page(GFP_KERNEL);
+> +	rec->run = (void *)get_zeroed_page(GFP_KERNEL);
+> +	if (!params || !rec->rec_page || !rec->run) {
+> +		r = -ENOMEM;
+> +		goto out_free_pages;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(params->gprs); i++)
+> +		params->gprs[i] = vcpu_regs->regs[i];
+> +
+> +	params->pc = vcpu_regs->pc;
+> +
+> +	if (vcpu->vcpu_id == 0)
+> +		params->flags |= REC_PARAMS_FLAG_RUNNABLE;
+> +
+> +	rec_page_phys = virt_to_phys(rec->rec_page);
+> +
+> +	if (rmi_granule_delegate(rec_page_phys)) {
+> +		r = -ENXIO;
+> +		goto out_free_pages;
+> +	}
+> +
+> +	r = alloc_rec_aux(rec->aux_pages, params->aux, realm->num_aux);
+> +	if (r)
+> +		goto out_undelegate_rmm_rec;
+> +
+> +	params->num_rec_aux = realm->num_aux;
+> +	params->mpidr = mpidr;
+> +
+> +	if (rmi_rec_create(virt_to_phys(realm->rd),
+> +			   rec_page_phys,
+> +			   virt_to_phys(params))) {
+> +		r = -ENXIO;
+> +		goto out_free_rec_aux;
+> +	}
+> +
+> +	rec->mpidr = mpidr;
+> +
+> +	free_page((unsigned long)params);
+> +	return 0;
+> +
+> +out_free_rec_aux:
+> +	free_rec_aux(rec->aux_pages, realm->num_aux);
+> +out_undelegate_rmm_rec:
+> +	if (WARN_ON(rmi_granule_undelegate(rec_page_phys)))
+> +		rec->rec_page = NULL;
+> +out_free_pages:
+> +	free_page((unsigned long)rec->run);
+> +	free_page((unsigned long)rec->rec_page);
+> +	free_page((unsigned long)params);
+> +	return r;
+> +}
+> +
+> +void kvm_destroy_rec(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm *realm = &vcpu->kvm->arch.realm;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long rec_page_phys;
+> +
+> +	if (!vcpu_is_rec(vcpu))
+> +		return;
+> +
+> +	rec_page_phys = virt_to_phys(rec->rec_page);
+> +
+> +	/* If the REC destroy fails, leak all pages relating to the REC */
+
+minor nit: May be we could clarify the situation of AUX granules.
+
+	/*
+	 * We cannot reclaim the REC page and any AUX pages
+	 * until the REC is destroyed. So, if we fail to destroy
+	 * the REC, leak the REC and AUX pages.
+	 */
+> +	if (WARN_ON(rmi_rec_destroy(rec_page_phys)))
+> +		return;
+> +
+> +	free_rec_aux(rec->aux_pages, realm->num_aux);
+> +
+> +	/* If the undelegate fails then leak the REC page */
+> +	if (WARN_ON(rmi_granule_undelegate(rec_page_phys)))
+> +		return;
+> +
+> +	free_page((unsigned long)rec->rec_page);
+
+
+> +	free_page((unsigned long)rec->run);
+
+I think this can be freed irrespective of the delegated pages.
+So, may be we could do move it to the top.
+
+
+> +}
+> +
+
+Suzuki
+
+
+>   int kvm_init_realm_vm(struct kvm *kvm)
+>   {
+>   	struct realm_params *params;
 
