@@ -1,163 +1,142 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219372CCC2;
-	Thu, 18 Apr 2024 06:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3496F28DDE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713422510; cv=none; b=Jv4hXZu1XEIPE/NbkkafOEPS6xioRJPcBr+700ZnkHI65oXECXNcQTFvkl3gU2oo5cU2vjC/lL5ADmNGxPRUvT/W8cUlCoZwD3L9imQBv/OcJKEydqI5Flt6ruIUO7xiO31Rt7+MrH05y3vIu9SM/pO6LzGJmxsoF18mrCSopbQ=
+	t=1713422542; cv=none; b=Fc2ofDyMXEcQ8P4ACMu+k2EgI+9mhdP/nxSVLD3UJ+e0QZtkgr3J/XiAm/FIsN8qRRfljS6mwSzc4w39/aJoNcJNVGbNeM2k/kD7/h6wnBSguDnFGAM/RfjE9eVtw3Q26BOfBqqukO0j8KVauv6dKECYaSeLk4bXMkCJMj0EiU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713422510; c=relaxed/simple;
-	bh=SzE8IQJ48xc7908eyTNtDsHkCKQFHLy2DgGThS09xpo=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fq9007cjwY1lIJtBLd2goHMwCKvINKac89hI1vZQ1j5aua7IOBnanpq8+NYE76TKx0xUzj9NC6T9XDTEDfA6EL51hDtyTyGDUsKophOlo86ljPtFK0dU0Qb9R+yXCkLH1WrYY/7kwRyGeL0k5iGK9dP6byzrGOuLI4Do/8Bevcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 43I5iYZe2019031; Thu, 18 Apr 2024 14:44:34 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 43I5iE7j2465865; Thu, 18 Apr 2024 14:44:14 +0900
-X-Iguazu-Qid: 2rWhYYPQE6cu19H1s9
-X-Iguazu-QSIG: v=2; s=0; t=1713419053; q=2rWhYYPQE6cu19H1s9; m=afDSdK3UvNipDoLKBSLLnma5OONPJ5FrYHGDMbHQdyY=
-Received: from CNN1EMTA01.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1121) id 43I5iCX22637104
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 18 Apr 2024 14:44:13 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA01.test.kioxia.com (Postfix) with ESMTP id D4E4B48A81;
-	Thu, 18 Apr 2024 14:44:12 +0900 (JST)
-Received: from CNN1ESTR04.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id 2778B1900001EB;
-	Thu, 18 Apr 2024 14:31:30 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR04.kioxia.com with ESMTP id 0003QAAAAAA02211;
-	 Thu, 18 Apr 2024 14:31:30 +0900
-Received: from CNN1EXMB02.r1.kioxia.com (CNN1EXMB02.r1.kioxia.com [10.232.20.151])
-	by Switcher-Pre_Send (Postfix) with ESMTP id 1BFCBA0640E18;
-	Thu, 18 Apr 2024 14:31:30 +0900 (JST)
-Received: from CNN1EXMB04.r1.kioxia.com (10.232.20.153) by
- CNN1EXMB02.r1.kioxia.com (10.232.20.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:44:12 +0900
-Received: from CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) by
- CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) with mapi id 15.01.2507.035; Thu,
- 18 Apr 2024 14:44:12 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: "song@kernel.org" <song@kernel.org>,
-        "yukuai3@huawei.com"
-	<yukuai3@huawei.com>
-CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 05/11] md: match the type of variables to percpu_ref
-Thread-Topic: [PATCH v2 05/11] md: match the type of variables to percpu_ref
-Thread-Index: AdqLx+FXdNJkPwyDSq2lcgBOkP0WcQ==
-Date: Thu, 18 Apr 2024 05:44:11 +0000
-Message-ID: <1c04e1a6d79c494faad6bdc21d86d76e@kioxia.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-as-result: No-10--5.106300-8.000000
-x-tmase-matchedrid: g7XVaO+YFMumagT1k9kBpgrcxrzwsv5uXPK9y3z82GsPdZmyx8xAa+K5
-	fhRxt1aADpxsntCj+iajrLRBxwnZS7VQ6XPWwtdyEXjPIvKd74BMkOX0UoduuRFBDiQWqOMkJwY
-	Oi+iMxY3U5iXDpe6YeP6mFiC4o7QUdJMdJS+tDywZgmFGHqyx630tCKdnhB581kTfEkyaZdz6C0
-	ePs7A07QsfaqMZktsd9K4u2mW1AZ3iZawwAP+WlZ2c5QMBYjIDRSkcJMJhH2I=
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--5.106300-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-snts-smtp: 206CAC30B0DCD9F165B7D62BF7D51A0DF8E8655C7C4CA21B759AF0D5981D8EF02000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1713422542; c=relaxed/simple;
+	bh=uBpaZXZ//+wXoMiuJq7TUiP5CU/5ciB016fjPPA4UKI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q7x9jS0TvhcnMzr7hfty1nSuR3/QUX8v7wsYNePVBwZ4pEO9Njjta+bSxttSAUwAHJIjo8Acg08YJo35HsHk0pYc0xuJ8jWp1pd99p5AZ4CHwE2Y8PSsxtAbOmxMTaFplmW12PFomin9XaLDFac6VN83cZGHxUaUj+b27kc2r4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YJXG2QHC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5wbPw0WV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=igUgPFJG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ER/RxnMo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YJXG2QHC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5wbPw0WV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="igUgPFJG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ER/RxnMo"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4B75234A58;
+	Thu, 18 Apr 2024 06:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713422539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GCC2ifPdYJijtvyIoC+2l6z43cA42cTEO8PRZ+VUXG4=;
+	b=YJXG2QHCmYMVJDxLoYLYi/HzPZTT6bhKKnzFAHPzxDZGPVXv7N8qYzEcoTRyL2XYfVDw2A
+	Xof7oAlddueIN0a8qhgsxE8MLCXjyEfzTnLdW1eF80GwmKfgtbAZ2s99vHc98SCjHzGmVF
+	Z0lg6bCzVrYDiiGQD4N4VIstIW22tSE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713422539;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GCC2ifPdYJijtvyIoC+2l6z43cA42cTEO8PRZ+VUXG4=;
+	b=5wbPw0WVq6xh+omxhE34k77Pq1ZczjeD0rcvui9rgW7GIVr93YXxPliCmnKwFJ4WzblGH2
+	chNGp4FkN9IpTgCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713422538; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GCC2ifPdYJijtvyIoC+2l6z43cA42cTEO8PRZ+VUXG4=;
+	b=igUgPFJGTg2hV9ds2L3Y5DNPEVuICXtQSA7R5CYoT0GVJjdS481O0W7lMioLZRzoaybY/W
+	lr5uslL4cud8e57pi9zGjMZis+zJ1kChAeRFqpVK1oshisxBh81qd64a8gd7h3QtYg9o8f
+	sLci7+R76FdIt6SOAMHju7G58nJrBZg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713422538;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GCC2ifPdYJijtvyIoC+2l6z43cA42cTEO8PRZ+VUXG4=;
+	b=ER/RxnMoW4ULBR99bDF3u9ufHG0jKo7tBR1EB6Ru1r7Ip+HmPzTAgB0gDclX9BHLDgUXcc
+	n08hWzpoERIFPrAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B435413687;
+	Thu, 18 Apr 2024 06:42:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 82hMKsnAIGbadwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 18 Apr 2024 06:42:17 +0000
+Date: Thu, 18 Apr 2024 08:42:26 +0200
+Message-ID: <87jzkvxjcd.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<lgirdwood@gmail.com>,
+	<perex@perex.cz>,
+	<pierre-louis.bossart@linux.intel.com>,
+	<13916275206@139.com>,
+	<mimperial@lenovo.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<liam.r.girdwood@intel.com>,
+	<bard.liao@intel.com>,
+	<yung-chuan.liao@linux.intel.com>,
+	<kevin-lu@ti.com>,
+	<robinchen@ti.com>,
+	<baojun.xu@ti.com>,
+	<soyer@irl.hu>,
+	<Baojun.Xu@fpt.com>,
+	<navada@ti.com>,
+	<v-po@ti.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Add new vendor_id and subsystem_id to support ThinkPad ICE-1
+In-Reply-To: <20240411091823.1644-1-shenghao-ding@ti.com>
+References: <20240411091823.1644-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB02.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB02.r1.kioxia.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.62 / 50.00];
+	BAYES_HAM(-2.32)[96.83%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,139.com,lenovo.com,alsa-project.org,vger.kernel.org,intel.com,ti.com,irl.hu,fpt.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -2.62
+X-Spam-Flag: NO
 
-This patch depends on patch 04.
+On Thu, 11 Apr 2024 11:18:22 +0200,
+Shenghao Ding wrote:
+> 
+> Add new vendor_id and subsystem_id to support new Lenovo laptop
+> ThinkPad ICE-1
+> 
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-The counter size of percpu_ref is different from that of atomic_t.
-This is the only place where the value of nr_pending is read.
-The others are used for zero check and type has no effect.
-
-Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
-Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
----
- drivers/md/md.h     | 4 ++--
- drivers/md/raid1.c  | 4 ++--
- drivers/md/raid10.c | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 2eaf8606af9e..783fec1f1445 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -231,9 +231,9 @@ static inline bool nr_pending_is_not_zero(struct md_rde=
-v *rdev)
- 	return atomic_read(&rdev->nr_pending) !=3D 0;
- }
-=20
--static inline unsigned int nr_pending_read(struct md_rdev *rdev)
-+static inline unsigned long nr_pending_read(struct md_rdev *rdev)
- {
--	return atomic_read(&rdev->nr_pending);
-+	return (unsigned long)atomic_read(&rdev->nr_pending);
- }
-=20
- static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
-s,
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 962cebbba6cd..12318fb15a88 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -751,7 +751,7 @@ static bool rdev_readable(struct md_rdev *rdev, struct =
-r1bio *r1_bio)
- struct read_balance_ctl {
- 	sector_t closest_dist;
- 	int closest_dist_disk;
--	int min_pending;
-+	long min_pending;
- 	int min_pending_disk;
- 	int sequential_disk;
- 	int readable_disks;
-@@ -771,7 +771,7 @@ static int choose_best_rdev(struct r1conf *conf, struct=
- r1bio *r1_bio)
- 	for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
- 		struct md_rdev *rdev;
- 		sector_t dist;
--		unsigned int pending;
-+		unsigned long pending;
-=20
- 		if (r1_bio->bios[disk] =3D=3D IO_BLOCKED)
- 			continue;
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 2b1238befd8a..b91dd6c0be5a 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -733,7 +733,7 @@ static struct md_rdev *read_balance(struct r10conf *con=
-f,
- 	int do_balance;
- 	int best_dist_slot, best_pending_slot;
- 	bool has_nonrot_disk =3D false;
--	unsigned int min_pending;
-+	unsigned long min_pending;
- 	struct geom *geo =3D &conf->geo;
-=20
- 	raid10_find_phys(conf, r10_bio);
-@@ -753,7 +753,7 @@ static struct md_rdev *read_balance(struct r10conf *con=
-f,
- 		sector_t first_bad;
- 		int bad_sectors;
- 		sector_t dev_sector;
--		unsigned int pending;
-+		unsigned long pending;
- 		bool nonrot;
-=20
- 		if (r10_bio->devs[slot].bio =3D=3D IO_BLOCKED)
---=20
-2.34.1
+Applied now.  Thanks.
 
 
+Takashi
