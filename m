@@ -1,138 +1,112 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362856A8AD;
-	Thu, 18 Apr 2024 07:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33894EB45;
+	Thu, 18 Apr 2024 07:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713425542; cv=none; b=beIImV/aJfz3RxHRwqvnzPzszHrwHHDP/63zKDHBoDjtb/p1jYjzbmji2CXmqJeec+AtpLPwBNEXAElD7RH3enMC9IhGkFcYXQGJKXXaaeHSQm2j5ZRU7HKlE+CD/3gEcY+4M71cWgF1fnI5AavoL7IIJiLO8re0P3oeL0YSbgI=
+	t=1713425557; cv=none; b=RDZowdvyT5tQ+r72HtqpbWoysihIxuynTU1Dg4/M10bCrbIy7do5vgG/4Zj24GMHwUwMkvATDbcO+DblC5XvTchYsydJ1Ss+KN705ZvXOPudXXid51qSnvxnXhe7AhutQoDSrZZyfm+cFjzme56gf362LwMeedNyV4Iu7FHLI/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713425542; c=relaxed/simple;
-	bh=90YhdNNJcxrDaRsu55Rjh/2OZ7oiSVLChqVXQkJ6qK0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oX0yk/ck5o4QnHpIHJeZuaf0b/ZozxQ591sczPWAS6vObci5WepQ5WNX6JtDqt/Zvq3NTxGg+U+CuO3m6Kl4IxMbuByQUvgnUjlEOcCFF29z87ophNHgJnJtITvwqAGZUKWQJW7viiOQOMcVccEKhtPWZjx4g2B4ETnTBRYvMTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rT7vRLN1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZdiEr3HP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rT7vRLN1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZdiEr3HP; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rT7vRLN1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZdiEr3HP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rT7vRLN1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZdiEr3HP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 57C8534AFC;
-	Thu, 18 Apr 2024 07:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713425535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FKRoM0BRzYX0RT/WZrESQAqQcadfdTDQIy5FQXB1umI=;
-	b=rT7vRLN1WzMjsARKZhDofgz4r2kSB6s/87hU82UL8pFiKX4ED29btrxGJ53KUTIFQaslWI
-	2Pd6vw7IXXWFnAjFZcNqH/Nvg788gSNh0YtIi6nhYpjYzE0fo0vghwgNEC3qwLAgqv0YpF
-	u7C29Z2FCt3l5DQJaVnofJFCEekDZc4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713425535;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FKRoM0BRzYX0RT/WZrESQAqQcadfdTDQIy5FQXB1umI=;
-	b=ZdiEr3HPLg4llHafwf4QDgE2lt76Cm9ohE8CWJD5o32RNaLj3mAc+48WvLRWLPffFnJylP
-	8zh8VZmPFvvK96Bw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713425535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FKRoM0BRzYX0RT/WZrESQAqQcadfdTDQIy5FQXB1umI=;
-	b=rT7vRLN1WzMjsARKZhDofgz4r2kSB6s/87hU82UL8pFiKX4ED29btrxGJ53KUTIFQaslWI
-	2Pd6vw7IXXWFnAjFZcNqH/Nvg788gSNh0YtIi6nhYpjYzE0fo0vghwgNEC3qwLAgqv0YpF
-	u7C29Z2FCt3l5DQJaVnofJFCEekDZc4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713425535;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FKRoM0BRzYX0RT/WZrESQAqQcadfdTDQIy5FQXB1umI=;
-	b=ZdiEr3HPLg4llHafwf4QDgE2lt76Cm9ohE8CWJD5o32RNaLj3mAc+48WvLRWLPffFnJylP
-	8zh8VZmPFvvK96Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F36571384C;
-	Thu, 18 Apr 2024 07:32:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id x+kZOn7MIGaACwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 18 Apr 2024 07:32:14 +0000
-Date: Thu, 18 Apr 2024 09:32:23 +0200
-Message-ID: <87bk67xh14.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-sound@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.com>,
+	s=arc-20240116; t=1713425557; c=relaxed/simple;
+	bh=h7PVw/s5YkA2E6D/+aBzDZKszhArG5Oeh3JVPlHIBSI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r3XEftZ7kDOOl90od4ifQE5nUYYmY4gcHUbNysmZUYwNMTxFnIFNSSGAK6wAfzyCNHxEakiFQDwwnpD4u1jwW+Z4KM9pIANLDg1oAC38/VTqgTqCoiv6q2qrwg5e65WdfKTpsHI83VoC6TpoEY0izMCdjXztV55+q1V9WxC8LiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VKqHD6cJ3z4f3kFb;
+	Thu, 18 Apr 2024 15:32:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 27D831A0175;
+	Thu, 18 Apr 2024 15:32:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxCOzCBmBygqKQ--.12535S4;
+	Thu, 18 Apr 2024 15:32:31 +0800 (CST)
+From: linan666@huaweicloud.com
+To: tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk
+Cc: hch@lst.de,
+	cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Athaariq Ardhiansyah <foss@athaariq.my.id>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Kailang Yang <kailang@realtek.com>,
-	Matthew Anderson <ruinairas1992@gmail.com>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Stefan Binding <sbinding@opensource.cirrus.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Vitaly Rodionov <vitalyr@opensource.cirrus.com>
-Subject: Re: [PATCH] ALSA: hda/realtek: Add quirks for Huawei Matebook D14 NBLB-WAX9N
-In-Reply-To: <b92a9e49fb504eec8416bcc6882a52de89450102.1713370457.git.mchehab@kernel.org>
-References: <b92a9e49fb504eec8416bcc6882a52de89450102.1713370457.git.mchehab@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] blk-iocost: do not WARNING if iocg has already offlined
+Date: Thu, 18 Apr 2024 15:23:40 +0800
+Message-Id: <20240418072340.2090877-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -1.41
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.41 / 50.00];
-	BAYES_HAM(-1.11)[88.30%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.com,ljones.dev,athaariq.my.id,perex.cz,realtek.com,gmail.com,ti.com,opensource.cirrus.com,linux.intel.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxCOzCBmBygqKQ--.12535S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryxtrW3tryUXFWxJr4rGrg_yoW8WFWDpF
+	4agwnFkF1jqr13KF4kK3Z2q348uan5Wws3Jw4fWrZ8Za4fur1xX3Z7Zr4YyFySqrn5AFs3
+	ZF48G3y7Aa1UWaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBSoJUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On Wed, 17 Apr 2024 18:16:33 +0200,
-Mauro Carvalho Chehab wrote:
-> 
-> The headset mic requires a fixup to be properly detected/used.
-> 
-> As a reference, this specific model from 2021 reports
-> the following devices:
-> 	https://alsa-project.org/db/?f=1a5ddeb0b151db8fe051407f5bb1c075b7dd3e4a
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+From: Li Nan <linan122@huawei.com>
 
-Applied now.  Thanks.
+In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
+is intended to confirm iocg is avitve when it has debt. However, warn
+can be triggered during removing cgroup controller, as
+iocg_waitq_timer_fn() is awakened at that time.
 
+  WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
+  Call trace:
+  iocg_pay_debt+0x14c/0x190
+  iocg_kick_waitq+0x438/0x4c0
+  iocg_waitq_timer_fn+0xd8/0x130
+  __run_hrtimer+0x144/0x45c
+  __hrtimer_run_queues+0x16c/0x244
+  hrtimer_interrupt+0x2cc/0x7b0
 
-Takashi
+The warn in this situation is meaningless. Since this iocg is being
+removed, the state of the 'active_list' is irrelevant, and 'waitq_timer'
+is canceled after removing 'active_list' in ioc_pd_free(), which ensure
+iocg is freed after iocg_waitq_timer_fn() returns.
+
+Therefore, add the check if iocg has already offlined to avoid warn
+when removing cgroup controller.
+
+Signed-off-by: Li Nan <linan122@huawei.com>
+---
+ block/blk-iocost.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index baa20c85799d..2e109c016a39 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1440,7 +1440,7 @@ static void iocg_pay_debt(struct ioc_gq *iocg, u64 abs_vpay,
+ 	lockdep_assert_held(&iocg->waitq.lock);
+ 
+ 	/* make sure that nobody messed with @iocg */
+-	WARN_ON_ONCE(list_empty(&iocg->active_list));
++	WARN_ON_ONCE(list_empty(&iocg->active_list) && iocg->pd.online);
+ 	WARN_ON_ONCE(iocg->inuse > 1);
+ 
+ 	iocg->abs_vdebt -= min(abs_vpay, iocg->abs_vdebt);
+-- 
+2.39.2
+
