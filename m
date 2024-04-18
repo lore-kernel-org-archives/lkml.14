@@ -1,172 +1,135 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF996D1C7
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371B4165FD6;
+	Thu, 18 Apr 2024 21:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713473780; cv=none; b=kd59QLyAHywfYllOibnevj48TV6hrnJtxwQpr/jSARVw2NkMi8GXdCOPDKLgXRZj4iBfo76U37S1ROzmYrFSvlZxPrlguCGKeJxZoZCNE83uD1EfZIvfmyD3BPEl7n8uPL3AJhBR38cXFMogx92Kaq7TKNDrp/9DvHpml8vpiU8=
+	t=1713474047; cv=none; b=E93PKmbGR5YK9lL0/PaFSWxGhPGe1oMOw4In4m9kPwcYhSXWIO8OAhv9n7s2YnijcJnRkhg2oCS+oJLHHc2A/mhiBqOvuG4v8l7ZMbWlk0+9teaXxe2EhXEZoJkvNmHZO7XlaZulHKM6zcOiSA/Oele56ZwkVMnkxBOWMXHZvyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713473780; c=relaxed/simple;
-	bh=wGzGycJk/Oi2kpbEFgexVOpTcNGX5gvdXuAs44SRsFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SAeahd5PXPerpydbu++9uTdAPao/IRMn7ITvt6A58eLwPCnNu/KtJ471SS1GobtOKm6cyu3Ya3X2nKDVCi/5zneqcZ/aLfIhiSPqcI8rezEYzAZleaDbFjT09m9iPY/O4qpwTHn7VP0RiAwJFU0PiGaXPieTdk3jpy4/xYguCfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j8hncsoK; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713474047; c=relaxed/simple;
+	bh=8FcS+d3XqPALYlKipast1fx6gvgoQgjVL9Fu3VpDnLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XPtLob/FQ03bJZDd9MdTIIDhke3NtPJnGjcf25Qzx6HRAhwEXrV8ERrctcG7NHEyvaJf1SAbVntHnS8sZSnZLS2haQxDb9RkeWjxFQYik6mUGxcoZ2H2hbzXlkKvSQLI83reGjFVk+CDzAeHLq8+C+A3ylYzpT0wbmDIzZj4A/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPl5kAtR; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8hncsoK"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2dac628f08fso3574821fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713473775; x=1714078575; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sNOD//alu/YfcmSed7oxxw7a4+KJ3u8Ghpd/YaoyNuE=;
-        b=j8hncsoKYUqw879Y2+8Lx8xT9ymDcPIE4I2gBi9a9hn4fVOYX8frQk+4C5QMlDkeVC
-         0dA14wy6rkMQpQIoKy15C1CVetKDGa6SIxCNbGy70iN9EYS9XYwwKw6Iw2H1IfAp5BYT
-         VoWVUR/m1NepTXhnWYtAJw1Nh5pHkMyYWOxhD/JceJ/35O9QQFqaePKjAcbxgQFJgxXT
-         QvMZIW34cnIFH8cIQ+nUKE4byVYjyT5x67+tinqt87tMj4LeCFSBd52c4h+JrpxhFd6f
-         QmrpbmU0mkwAdHLUlkpf+8My16N85pUF+izF3g5bjg7vTfjsp+doh3UuQRRjG42duCdG
-         LJvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713473775; x=1714078575;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNOD//alu/YfcmSed7oxxw7a4+KJ3u8Ghpd/YaoyNuE=;
-        b=Lu27gq+I4Mr10RXLFbsCYPYL39/360euLTbq+hAIp2Lh8fXCGSaumQg3t79ouIhMDY
-         NnmmJPoPvU3DNmcltCLnCTKeUBpRXPx1dOOmjeCYDco5q7qdAIimM2tsqgYhjqr7JaYA
-         GePwE20GnJ3lvDeOS3gFcEEbUPGbBhplg/4g7c61cB+k6mVmbc3/w9Y+i+IbKyLbSRW+
-         tIclQKmOyGSrcDKBRebR00ZYUo0HOVo9FS6oMPAyv/bgXRHpfI9Tg393gBepE/07Yvl8
-         pJXSovFo7u6hY7ztgi9huTXG0Qdb292BnFUnwON1ThnCDVGWXKAVksnza7aeQ2fSjLk5
-         7ZZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWP3PWsEn16Lh/jHkSAffm/0rDQikPnC1dibYy05OHpKF4atJUYXzBrsnm2mHfQ79/ex/fJb+L3iU2cyujnTpAMTOom68nI5TPk22l+
-X-Gm-Message-State: AOJu0Yxu1VUPp0NDV9ysMhZ1lYlDbLtXI7F+8dk9FVKGRsTJR6eepWPA
-	7BIL5EORm23ecPkSJAIyfX4Dez/v2sHovw5BHH13V+p18EPuzIbJGf+/JcNHev0=
-X-Google-Smtp-Source: AGHT+IG0XdbMufW8P2nIZpf7qgVe3OH9Abfq3vBzkYJB/UwVOmO2hShAkFLgUgPW173oxVGi2cgNFQ==
-X-Received: by 2002:ac2:4db9:0:b0:513:ec32:aa89 with SMTP id h25-20020ac24db9000000b00513ec32aa89mr96655lfe.2.1713473775021;
-        Thu, 18 Apr 2024 13:56:15 -0700 (PDT)
-Received: from [192.168.1.102] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
-        by smtp.gmail.com with ESMTPSA id m9-20020ac24ac9000000b0051950b81ae7sm380825lfp.237.2024.04.18.13.56.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 13:56:14 -0700 (PDT)
-Message-ID: <752f077d-68a8-4bb5-86cf-c6d49cfe4606@linaro.org>
-Date: Thu, 18 Apr 2024 23:56:09 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPl5kAtR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713474047; x=1745010047;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8FcS+d3XqPALYlKipast1fx6gvgoQgjVL9Fu3VpDnLA=;
+  b=RPl5kAtRpAcuAbJqxzwsGcjpeTg5pIsamhEGIso2xUzLBC3IFzJOFxPg
+   +RVLJw52f9JCmihI6AUVb3uGV0hvWeYeHeWaTncnVlxmPvbErYfuS1twr
+   j2E51xmB2tiHb+a8EmlHvp53EucAQ5hwft8B4RXbRaBAaH6rN7Fkbuvoy
+   JRVcwdVWyN2QJRQ7Y7in/RhnEKI28mBvaeDtyHSgmnl/MVYnl7aubV3IB
+   PLVDWV3MEZHgayCS9/diDMS7aCpXw/v0EB6eAXB3pZNVrWPC9+OHEDvh0
+   n9viuEey5War5H1HuGm52tezYzr+d2KWMRcqdukJhFMtZuSsG40Wt0OmN
+   g==;
+X-CSE-ConnectionGUID: MN+mgiDQQU+mV+yJGkcy2g==
+X-CSE-MsgGUID: IsJfKF/9Rfu7vaorLvNsFA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8887569"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="8887569"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 14:00:46 -0700
+X-CSE-ConnectionGUID: nELOdJapRMKou4dSOlVNNw==
+X-CSE-MsgGUID: PG/RLJrHQxqtfy0ZX+NVSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27879557"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 14:00:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rxYs4-00000000Uaz-1KZK;
+	Fri, 19 Apr 2024 00:00:40 +0300
+Date: Fri, 19 Apr 2024 00:00:40 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dmaengine: dw: Simplify prepare CTL_LO methods
+Message-ID: <ZiGJ-DspJq5R6Dym@smile.fi.intel.com>
+References: <20240416162908.24180-1-fancer.lancer@gmail.com>
+ <20240416162908.24180-4-fancer.lancer@gmail.com>
+ <Zh7LyszPd2sNfWRm@smile.fi.intel.com>
+ <lzcgxh7trwoksd4bx2fsybellbngvpwhgq2a76ou2iufemockp@3dca4bfox2ps>
+ <ZiEIRluj-50FMIgp@smile.fi.intel.com>
+ <xfa7evanbrvdxdoq6473wpymvqogezspwkdoawu2dr6mnyxiwq@zx2schip66wj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 RESEND 6/6] arm64: dts: qcom: sm8650: Add video and
- camera clock controllers
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>
-References: <20240321092529.13362-1-quic_jkona@quicinc.com>
- <20240321092529.13362-7-quic_jkona@quicinc.com>
- <0a7da687-18fb-437f-b33a-e4a1de20177e@linaro.org>
- <9ac4117c-755e-4e49-b3a2-661e7195a7ed@linaro.org>
-From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-In-Reply-To: <9ac4117c-755e-4e49-b3a2-661e7195a7ed@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xfa7evanbrvdxdoq6473wpymvqogezspwkdoawu2dr6mnyxiwq@zx2schip66wj>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Konrad,
+On Thu, Apr 18, 2024 at 10:00:02PM +0300, Serge Semin wrote:
+> On Thu, Apr 18, 2024 at 02:47:18PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 17, 2024 at 11:11:46PM +0300, Serge Semin wrote:
+> > > On Tue, Apr 16, 2024 at 10:04:42PM +0300, Andy Shevchenko wrote:
+> > > > On Tue, Apr 16, 2024 at 07:28:57PM +0300, Serge Semin wrote:
 
-On 3/23/24 02:33, Konrad Dybcio wrote:
-> On 21.03.2024 14:07, Vladimir Zapolskiy wrote:
->> Hello Jagadeesh,
->>
->> On 3/21/24 11:25, Jagadeesh Kona wrote:
->>> Add device nodes for video and camera clock controllers on Qualcomm
->>> SM8650 platform.
->>>
->>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->>> ---
->>>    arch/arm64/boot/dts/qcom/sm8650.dtsi | 28 ++++++++++++++++++++++++++++
->>>    1 file changed, 28 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>> index 32c0a7b9aded..d862aa6be824 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
->>> @@ -4,6 +4,8 @@
->>>     */
->>>      #include <dt-bindings/clock/qcom,rpmh.h>
->>> +#include <dt-bindings/clock/qcom,sm8450-videocc.h>
->>> +#include <dt-bindings/clock/qcom,sm8650-camcc.h>
->>>    #include <dt-bindings/clock/qcom,sm8650-dispcc.h>
->>>    #include <dt-bindings/clock/qcom,sm8650-gcc.h>
->>>    #include <dt-bindings/clock/qcom,sm8650-gpucc.h>
->>> @@ -3110,6 +3112,32 @@ opp-202000000 {
->>>                };
->>>            };
->>>    +        videocc: clock-controller@aaf0000 {
->>> +            compatible = "qcom,sm8650-videocc";
->>> +            reg = <0 0x0aaf0000 0 0x10000>;
->>> +            clocks = <&bi_tcxo_div2>,
->>> +                 <&gcc GCC_VIDEO_AHB_CLK>;
->>> +            power-domains = <&rpmhpd RPMHPD_MMCX>;
->>> +            required-opps = <&rpmhpd_opp_low_svs>;
->>
->> Please add default status = "disabled";
->>
->>> +            #clock-cells = <1>;
->>> +            #reset-cells = <1>;
->>> +            #power-domain-cells = <1>;
->>> +        };
->>> +
->>> +        camcc: clock-controller@ade0000 {
->>> +            compatible = "qcom,sm8650-camcc";
->>> +            reg = <0 0x0ade0000 0 0x20000>;
->>> +            clocks = <&gcc GCC_CAMERA_AHB_CLK>,
->>> +                 <&bi_tcxo_div2>,
->>> +                 <&bi_tcxo_ao_div2>,
->>> +                 <&sleep_clk>;
->>> +            power-domains = <&rpmhpd RPMHPD_MMCX>;
->>> +            required-opps = <&rpmhpd_opp_low_svs>;
->>
->> Please add default status = "disabled";
->>
->>> +            #clock-cells = <1>;
->>> +            #reset-cells = <1>;
->>> +            #power-domain-cells = <1>;
->>> +        };
->>> +
->>>            mdss: display-subsystem@ae00000 {
->>>                compatible = "qcom,sm8650-mdss";
->>>                reg = <0 0x0ae00000 0 0x1000>;
->>
->> After disabling the clock controllers
+...
+
+> > > > > +	if (dwc->direction == DMA_MEM_TO_DEV) {
+> > > > > +		sms = dwc->dws.m_master;
+> > > > > +		smsize = 0;
+> > > > > +		dms = dwc->dws.p_master;
+> > > > > +		dmsize = sconfig->dst_maxburst;
+> > > 
+> > > > I would group it differently, i.e.
+> > > > 
+> > > > 		sms = dwc->dws.m_master;
+> > > > 		dms = dwc->dws.p_master;
+> > > > 		smsize = 0;
+> > > > 		dmsize = sconfig->dst_maxburst;
+> > > 
+> > > Could you please clarify, why? From my point of view it was better to
+> > > group the source master ID and the source master burst size inits
+> > > together.
 > 
-> Clock controllers should never be disabled period, that defeats the
-> entire point of having unused clk/pd cleanup.
-
-hm, that's very sane, I didn't think about it from this point, thanks!
-
-> The only reason for them to be disabled is for cases where platform
-> crashes on access due to stinky "security" settings (like with audio
-> clocks), or when people are too lazy to upstream panel drivers and
-> end up partially upstreaming display-related changes and continue
-> using the bootloader-initialized framebuffer. This takes away from
-> the very little determinism we have.
+> > Sure. The point here is that when you look at the DMA channel configuration
+> > usually you operate with the semantically tied fields for source and
+> > destination. At least this is my experience, I always check both sides
+> > of the transfer for the same field, e.g., master setting, hence I want to
+> > have them coupled.
 > 
+> Ok. I see. Thanks for clarification. I normally do that in another
+> order: group the functionally related fields together - all
+> source-related configs first, then all destination-related configs.
+> Honestly I don't have strong opinion about this part, it's just my
+> personal preference. Am I right to think that from your experience in
+> kernel it's normally done in the order you described?
 
---
-Best wishes,
-Vladimir
+In this driver I believe I have followed that one, yes.
+
+> > > > > +	} else if (dwc->direction == DMA_DEV_TO_MEM) {
+> > > > > +		sms = dwc->dws.p_master;
+> > > > > +		smsize = sconfig->src_maxburst;
+> > > > > +		dms = dwc->dws.m_master;
+> > > > > +		dmsize = 0;
+> > > > > +	} else /* DMA_MEM_TO_MEM */ {
+> > > > > +		sms = dwc->dws.m_master;
+> > > > > +		smsize = 0;
+> > > > > +		dms = dwc->dws.m_master;
+> > > > > +		dmsize = 0;
+> > > > > +	}
+> > > > 
+> > > > Ditto for two above cases.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
