@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FE7171093;
-	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A91172BC6
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461005; cv=none; b=FgOXO5PskAzdkBGpkysFomPpcaB0F6gycHt+W+MoGex+hPsWvCtNt/RlyoOMSjpNnykpTFyhFmZp/506Gb+Kv49m6E1K4jioJrwp7K3n4qBhsiDqcD913FdsnW7dOWaTGGQbgaVWmONHeD8a8NU3gnNqBv01oxg+aUDuQURFYyY=
+	t=1713461005; cv=none; b=apOiwgx0fuihkmM8eKvvxTNmD+XiDo3nHr7EdR0Q/yvdzR+16Cos5EOD8VZUlSqvbmipiEZP1LCy28flg1Fuft6NoCKuW2lD+9myLkVyyEmgYXisUUKxekai6LPekvcAOJC4ESbVSwEpgL+RhuZu24C8j0u2TN7m/ZU1AibhUBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713461005; c=relaxed/simple;
-	bh=O+BlYr5B88IYB6tmQUGNTReB34mdgGymzzFo8OXKIo8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oPSkn7eol7zeVe8KvyJuU4h18kE5lFwmN4ud6hwCvGSv1DDBc8tOOw+VWyLtoAfKpiFQ7grU+SGWpCZeKj0hn+/9OoNj/QXKiDXSJb4cFNO6a+8FbNh6yx5LjvYvZmCuMcX6nr3ozEAmLyVnw07c1GLbxJ/JFTriRpnwFcoBRN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tm8Quevk; arc=none smtp.client-ip=10.30.226.201
+	bh=IJ2lEuV74eFW3VetmAOc9Er7xJsIH+58/HXpxW/mB/M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=IIJWmdbTJVwYXQVTjV6iy5i72PkOsuUDgT2NRQugU+z2tKYommFVVVvgDs2m5qeAk6lgQ9u6d6oBM09Brk5atJJHU6p7VFqkogwNROpwK9B1YtFBvsScliEGQsbzKbghwA9sFdVog6YQU4mGZMpQMOx9FTxuaPWBl37gUBfcsLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eis3hRb6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tm8Quevk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 855BAC116B1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eis3hRb6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6037C32781;
 	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1713461005;
-	bh=O+BlYr5B88IYB6tmQUGNTReB34mdgGymzzFo8OXKIo8=;
+	bh=IJ2lEuV74eFW3VetmAOc9Er7xJsIH+58/HXpxW/mB/M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Tm8Quevk0VMpU27oNfPP46g1u29s7k9gVG38abIxQixUgNg8nahZt5yFFuo8Gmd+A
-	 /okaAF2p/jUzc8mR4bm7imU5ysTp0mHu7TVK5h9gfHzp0oGiX3jQ+R+rUXNRP3n4It
-	 SKEehRHo4oWT+LZMTRBPxiBoCryYWlWnIVRTbzx98aC0tgpAhBlcnGZHy87997PZWd
-	 Rbm8C9h/s74WCKGFe5Gx+PQLOioLTrchevC+I9szKTtTkwRihWOBt66my4bO2wNIcO
-	 N0E/8Uh5pNWfr6dQaO7A6fll+tUzNvAltZUdEhD7Te3G2rDVrmDcbTy6KlsRJTaA8F
-	 DcGzgpXDcuIqw==
+	b=Eis3hRb6JyiJlwkA56JpKrAFIQ8DOFpUjb6nLnmAV2Mt8yaa0no21M4jw3sHJUvax
+	 102frs06Hw/APlsMWwYSyxKbOvewU7DgwkLOndQLoAUdMyU/eWARqTlKVN03NKQsup
+	 zhJPZ7hJyMZAffusfzZZe3TU39sxyCMgny3El9p0ZIzlXzKUCdT4jhXm9AzWvgGRAV
+	 qLxBHeZmECmOU7FYLrAa5HqUzQbuEx082pqExl1uRQqil6VhsGrHdJk6L2jxE90DmB
+	 WfCr6iO/9vqrhsPhIP/+QA8es3nPGMPh8QUdi0OVczIOJBZpeamWYgCHBthNkqwjtN
+	 DS0G1dyYQ5Gsw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 71930C43619;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 96B9FD5B3C0;
 	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-3
+Subject: Re: [GIT PULL] random number generator fixes for 6.9-rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20240418120332-847319520@linux.intel.com>
-References: <pdx86-pr-20240418120332-847319520@linux.intel.com>
+In-Reply-To: <20240418154717.427109-1-Jason@zx2c4.com>
+References: <20240418154717.427109-1-Jason@zx2c4.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20240418120332-847319520@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-3
-X-PR-Tracked-Commit-Id: f609e7b1b49e4d15cf107d2069673ee63860c398
+X-PR-Tracked-Message-Id: <20240418154717.427109-1-Jason@zx2c4.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git tags/random-6.9-rc5-for-linus
+X-PR-Tracked-Commit-Id: 3aadf100f93d80815685493d60cd8cab206403df
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c2d88559121ba4b6434493b4f8ed46657be6cc08
-Message-Id: <171346100545.11189.8214122422847991143.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: e4add02086a61247e9ff65a4600dd84a31aacc92
+Message-Id: <171346100561.11189.8062412567602603821.pr-tracker-bot@kernel.org>
 Date: Thu, 18 Apr 2024 17:23:25 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 18 Apr 2024 12:03:32 +0300:
+The pull request you sent on Thu, 18 Apr 2024 17:47:17 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-3
+> https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git tags/random-6.9-rc5-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c2d88559121ba4b6434493b4f8ed46657be6cc08
+https://git.kernel.org/torvalds/c/e4add02086a61247e9ff65a4600dd84a31aacc92
 
 Thank you!
 
