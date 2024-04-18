@@ -1,162 +1,200 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2063.outbound.protection.outlook.com [40.107.102.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600BB3D62;
-	Thu, 18 Apr 2024 20:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470604; cv=fail; b=Rxi6X+rygzlCsrfUNo3wAU0xA14QHfdINxomZi+cFlo7je292hFXs4KNbCPf3KxmHjYRjDq8n+kVkBGFTqPpGiFDyjdbMxMZ/9fZk/yQnMqjFAz8ZIuKiccFpSFHZI7XJmaYJzsTL/e+QhGuY6tJrEg6+/Ya/sNsd/YW0UaEBJ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470604; c=relaxed/simple;
-	bh=052H+aW9suF3VfJSnAm85r92IAzTRYyjmGREvPhhEJM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PpUnxJLxjya3RoYhJK+cOncpZJjx7d0WG70/XHqVO4IVBDzctseGlH/djTqxIquD8ccB79a24LmC1XGslWJCOn703T/8GekzfDuLRIqTgB/EN6vNuZDobgoxHcc0ieb9NVBCmeAevEIM88z+qBE38Q1H8QgUF+CYPfXfcaY5Dw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gdHx1lqI; arc=fail smtp.client-ip=40.107.102.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53995180A8D
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713471005; cv=none; b=WAKUASH2n+iIoWLa28B0np04+pthEptHcxEFx/eZZZZ2Yfv1a5NZ0wGShqbfuqNXik1zmXihFC7u3aS7NK6k8Mh2+5zbJIXro1peOnxAcV4Zx8GdoVMhX/fny7HgGjgPVHK1aOmqvIo/1aaXYWFUy2k9H+P+d1ZBM2276c4z17I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713471005; c=relaxed/simple;
+	bh=s9iI3OKQXwaBu4CUf7G1NuE/rQMlTxloyWIe7jxfkJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mCgYTaoFywZaTvLJdtivW2CTBSZ1FIBJxlF0fbtMRvpEu0f8fKkinIPxxqBPxb2dmP0iKddPXw4lwxU6+Yk2XcPfh9KZZdjH4StbDhT/Yx2W03S3/t3C/9ZOwJf+I35hIo9EJJdeIZmiJOGEEE0UioSOqwRqX8GMmDm4iYe8xpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UvUZ0NM5; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gdHx1lqI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AGhP7uiwuD8meaSLEgq6eNWYi5WcHZWypPagBUFVSB6RoU4F8MDVMjU/LqaBcTkfsyhjGIZ/U9Yb2ph9tpIH1ooYxXbS4XEq0Om1QvXpoW3+NRxW3klq2fHpzJzhxx8OJGY0p4TeFAQdGfBz9sutQ2KoZPB9T/DUS12t8qOvp5vNXwqTSO+m5JlCfHAP/UcT9TD2KDNqQckfPBhFL7vMR9+PhDTAIjz4/278HnfCNybIcN3tQo7VZVkS5eu4vGryX1HjPQ9tU/f+4bRWmJ4scOTRXQQWvd1dTzz0rOo31ZRE+QkLx4QmmmUDaH5VU5DSJsJg4ZTakG/5R44EoGzSOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mWUZwqBM7GZGVd9g4qAU12o35H4l74rP3aHiyiVwwp0=;
- b=Qblz3eH4nNts/lZFkkD2NsrPGjD6zbYXMfHW63tVzAK1S4Kh5APnXj5YLfA2mxSpFbrQmC6IRtiBV6+DxJvnhBFF58/Wr0YFzRWVEKnfgxkvL+wjJ2WLJU0z+NahOYQLEm9IddyO4Y+EFIfe7OhxOYc7oPaTxQypr+cysdQCghrC0feEmCTEH0g7SshmOpoEf9cdyluh6x5DR5FMjE//mrCVsAygkeVP+ERqIjk+8rgV7nxvUjekbt0qKHZN512arkYPlOt6jsxiDoDLqITkaeUKiB9Ah5rEXoeC3gxj8dzvL6x4GnsKgKFcI88GfhNfZRbVnL7eS7q0l4kNE0Tt5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mWUZwqBM7GZGVd9g4qAU12o35H4l74rP3aHiyiVwwp0=;
- b=gdHx1lqIxigYH474PYgDlI2vDqyZ4z+EKe7BFPoKPEKX5X2nrr1bvqNNKXE74hH/uJjeWkeFgoTpxDrjrvMrWiEI7F/kK7/uC7DvCKkS0P0JSAUyb27a0XMCS21mMqnDeCMy0KBuPj3JXOE8XsrTa56QqlmYFi+gPIxZcfEj9Es=
-Received: from MN2PR18CA0001.namprd18.prod.outlook.com (2603:10b6:208:23c::6)
- by DM4PR12MB8521.namprd12.prod.outlook.com (2603:10b6:8:17e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
- 2024 20:03:15 +0000
-Received: from MN1PEPF0000ECDB.namprd02.prod.outlook.com
- (2603:10b6:208:23c:cafe::19) by MN2PR18CA0001.outlook.office365.com
- (2603:10b6:208:23c::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.26 via Frontend
- Transport; Thu, 18 Apr 2024 20:03:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECDB.mail.protection.outlook.com (10.167.242.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 20:03:15 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
- 2024 15:03:14 -0500
-Date: Thu, 18 Apr 2024 14:57:54 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <seanjc@google.com>, <vkuznets@redhat.com>,
-	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
-	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
-	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
-	<dovmurik@linux.ibm.com>, <tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>,
-	<kirill@shutemov.name>, <ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
-Subject: Re: [PATCH v12 22/29] KVM: SEV: Implement gmem hook for invalidating
- private pages
-Message-ID: <20240418195754.h6gl5qd62kas7crx@amd.com>
-References: <20240329225835.400662-1-michael.roth@amd.com>
- <20240329225835.400662-23-michael.roth@amd.com>
- <f1e5aef5-989c-4f07-82af-9ed54cc192be@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UvUZ0NM5"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516d3a470d5so1548739e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713471001; x=1714075801; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
+        b=UvUZ0NM5tDw0b7dfYGOyzmF+386XnR4E3ZJUGqaULFdtdOnW2orR14YP8Ct13kH30I
+         rAc6tt9hI1XNpLiYzUSCDUwpdj0JQhOw3Kgg+HpJX4MbYgv2MtuW+Y+frKJZ1JEi/U9T
+         jpZlJt0IpHxtwrqDvuttPcv3didtW9+zlw3g+YMrcFZH3JMnHR5waRSkTYd88VnhOak8
+         jNZqnJP3UDHVkbNjOt+qe2Oe1xFtXWqz3d4kXYsUdClk+Cc8V5+LcggCuCZkQaGsiTdp
+         44429IL2Uxd5RSCMJQhJwklBaQt4oZlumW2yDBpq+XFfhsUJo4T5lq7bXibUzv8IG7/Q
+         /kQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713471001; x=1714075801;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
+        b=G9DEf9DmHPLMNvOxUUhg8fdxImBU+cgCH2BanIQbzOFYieLn0iU6SyvPvid1t/s3fB
+         fvd1sZIJOl3zKtGiDX7AH+4V1cz6d0uloZcmYqiJYXxlu6aMGUMrOmJuILkHAQbBcsc+
+         kbGpcdB80INpJGPPtZn9ClgPMGTGybA4njz58/ki69oj9tE/pvvKt32HpoV71GWoJJj/
+         FoXzuzIJGVdzY72qxt0xfWQRGSUy6gavDTXg9D6CnE9pdDuL7ph1ymR+tmhumgprNLdd
+         PUwc4ZL+wBLeu3eB0CRIRWq9jtdxGvysqoJiu5/OlBAsnuS7GMiPJc4OzLNH8AGGyXPF
+         EIoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiC5sioezYThLYcNpRbCsHhGZ0oRkD4r/9CE4cWwLvufxYiAOkpaGSMuTh8fQTH82zC/81rKELgwGkoj/mJbcYs819tIJhyBnwD5Bk
+X-Gm-Message-State: AOJu0YxqjwovpTLea/T8ssnnIt36/7LNM36Fj/E9TqxyB4giT/GYHk0/
+	+Q9/91PFr/hp26X4JXFkbfdIwJEXoqjtCLQNJg4xQgayv96WQnYgNRwhmfk2StMuxPbo2fSrLap
+	/cTtbuYsHuNVp+ktyNAzfycaP4iWfG/eRffvVNXJ1SyN3PRyAgh6uLTs=
+X-Google-Smtp-Source: AGHT+IGLDG+Dc0014dtU8+cIhp81ZKUWtv/7wQd5vaFrsMLyPtvkI6wgcg66uZWMynrXXfhRZfZa+0OQy8ad/+Cb/Og=
+X-Received: by 2002:ac2:5d44:0:b0:518:baa1:381b with SMTP id
+ w4-20020ac25d44000000b00518baa1381bmr46743lfd.50.1713471001029; Thu, 18 Apr
+ 2024 13:10:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f1e5aef5-989c-4f07-82af-9ed54cc192be@redhat.com>
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDB:EE_|DM4PR12MB8521:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4012ab85-c981-4eab-f4e6-08dc5fe295a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	YzpMOCb/tgZpKgq6eE8r5BNSDeWJt2o4Yg9Smzth5/FJTwpiH9MUp6rj2xRIpTur8IaHEL2t8TNyNtzefBdWy2GEiHzQrrRn4Ealkm2QYHQZaLwn75B1UmfArVMkQPSe2JwgUmYf5+DefztPZcBJy9i9kWRfZad+oKrN4IxwwrX0Q/6rmEwtVMBr58tx6lJrVX9qVXcXWifnfG4mD5obuq9/UpA3kvecnVVp6nPkVSnDGqeqeM1R0FlVj4Mw/JpNdVVy9cqp2mwn59jGGrhIGcAIkStv+4Z7qxXVIxUz0PqcEOnpAO5hSQUA5SgBlDPNNqEly5phg21cyF7JCP+VFoQ+8sgAIKm60VGDXi7tfxUBbrPmdM/VrZYSwaHftz9FuhcQiNEEWb48XpSU4wmU++xVIOGVxDLRm2ZBNrSuw9U0qbZlPo1iljG2IK78NasMFznlpoMI1uE8GqDxpO9mzi5iHWtuDCdP/gGC6r2BAxbmm/wjwBNz3jTHgHhMNHzF90Tln9RnatyEwVCev+X0bA+ZXTViPS1FdY1hLS6X8amjSs4SJ5J41WQA6D4EpeF+9tUKYfYkOsz/ICI+8dEjFVqsgRqHZQSqQwv91E6O3ZOqa47pQzMnp5790v1mHdPj3SIyq7Gso/nE30kX6UPNFvACqv2lsGxNh8Q9JtULXFkrmSg1g4QHqYgX2TBRW7DFMQSj/oGcM1aY9QLJGK97fg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(376005)(7416005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 20:03:15.5937
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4012ab85-c981-4eab-f4e6-08dc5fe295a2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECDB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8521
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+ <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+ <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
+ <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev> <20240417143324.GA1055428@cmpxchg.org>
+ <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb> <20240418124043.GC1055428@cmpxchg.org>
+In-Reply-To: <20240418124043.GC1055428@cmpxchg.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Apr 2024 13:09:22 -0700
+Message-ID: <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Christian Heusel <christian@heusel.eu>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>, 
+	Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
+	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 30, 2024 at 10:31:47PM +0100, Paolo Bonzini wrote:
-> On 3/29/24 23:58, Michael Roth wrote:
-> > +		/*
-> > +		 * If an unaligned PFN corresponds to a 2M region assigned as a
-> > +		 * large page in he RMP table, PSMASH the region into individual
-> > +		 * 4K RMP entries before attempting to convert a 4K sub-page.
-> > +		 */
-> > +		if (!use_2m_update && rmp_level > PG_LEVEL_4K) {
-> > +			rc = snp_rmptable_psmash(pfn);
-> > +			if (rc)
-> > +				pr_err_ratelimited("SEV: Failed to PSMASH RMP entry for PFN 0x%llx error %d\n",
-> > +						   pfn, rc);
-> > +		}
-> 
-> Ignoring the PSMASH failure is pretty scary...  At this point .free_folio
-> cannot fail, should the psmash part of this patch be done in
-> kvm_gmem_invalidate_begin() before kvm_mmu_unmap_gfn_range()?
-> 
-> Also, can you get PSMASH_FAIL_INUSE and if so what's the best way to address
-> it?  Should fallocate() return -EBUSY?
+On Thu, Apr 18, 2024 at 5:40=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
+> > On 24/04/17 10:33AM, Johannes Weiner wrote:
+> > >
+> > > Christian, can you please test the below patch on top of current
+> > > upstream?
+> > >
+> >
+> > Hey Johannes,
+> >
+> > I have applied your patch on top of 6.9-rc4 and it did solve the crash =
+for
+> > me, thanks for hacking together a fix so quickly! =F0=9F=A4=97
+> >
+> > Tested-By: Christian Heusel <christian@heusel.eu>
+>
+> Thanks for confirming it, and sorry about the breakage.
+>
+> Andrew, can you please use the updated changelog below?
+>
+> ---
+>
+> From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Thu, 18 Apr 2024 08:26:28 -0400
+> Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disable=
+=3Dmemory
+>
+> Christian reports a NULL deref in zswap that he bisected down to the
+> zswap shrinker. The issue also cropped up in the bug trackers of
+> libguestfs [1] and the Red Hat bugzilla [2].
+>
+> The problem is that when memcg is disabled with the boot time flag,
+> the zswap shrinker might get called with sc->memcg =3D=3D NULL. This is
+> okay in many places, like the lruvec operations. But it crashes in
+> memcg_page_state() - which is only used due to the non-node accounting
+> of cgroup's the zswap memory to begin with.
+>
+> Nhat spotted that the memcg can be NULL in the memcg-disabled case,
+> and I was then able to reproduce the crash locally as well.
+>
+> [1] https://github.com/libguestfs/libguestfs/issues/139
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D2275252
+>
+> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> Cc: stable@vger.kernel.org      [v6.8]
+> Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
+> Reported-by: Christian Heusel <christian@heusel.eu>
+> Debugged-by: Nhat Pham <nphamcs@gmail.com>
+> Suggested-by: Nhat Pham <nphamcs@gmail.com>
+> Tested-By: Christian Heusel <christian@heusel.eu>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-FAIL_INUSE shouldn't occur since at this point the pages have been unmapped
-from NPT and only the task doing the cleanup should be attempting to
-access/PSMASH this particular 2M HPA range at this point.
+Thanks for fixing this. A couple of comments/questions below, but anyway LG=
+TM:
 
-However, since FAIL_INUSE is transient, there isn't a good reason why we
-shouldn't retry until it clears itself up rather than risk hosing the
-system if some unexpected case ever did pop up, so I've updated
-snp_rmptable_psmash() to handle that case automatically and simplify the
-handling in sev_handle_rmp_fault() as well. (in the case of #NPF RMP
-faults there is actually potential for PSMASH errors other than
-FAIL_INUSE due to races with other vCPU threads which can interleave and
-put the RMP entry in an unexpected state, so there's additional
-handling/reporting to deal with those cases, but here they are not expected
-and will trigger WARN_*ONCE()'s now)
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
-I used this hacked up version of Sean's original patch to re-enable 2MB
-hugepage support in gmem for the purposes of re-testing this:
+> ---
+>  mm/zswap.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index caed028945b0..6f8850c44b61 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(struct =
+shrinker *shrinker,
+>         if (!gfp_has_io_fs(sc->gfp_mask))
+>                 return 0;
+>
+> -#ifdef CONFIG_MEMCG_KMEM
+> -       mem_cgroup_flush_stats(memcg);
+> -       nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHI=
+FT;
+> -       nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
+> -#else
+> -       /* use pool stats instead of memcg stats */
+> -       nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
+> -       nr_stored =3D atomic_read(&zswap_nr_stored);
+> -#endif
+> +       /*
+> +        * For memcg, use the cgroup-wide ZSWAP stats since we don't
+> +        * have them per-node and thus per-lruvec. Careful if memcg is
+> +        * runtime-disabled: we can get sc->memcg =3D=3D NULL, which is o=
+k
+> +        * for the lruvec, but not for memcg_page_state().
+> +        *
+> +        * Without memcg, use the zswap pool-wide metrics.
+> +        */
+> +       if (!mem_cgroup_disabled()) {
 
-  https://github.com/mdroth/linux/commit/15aa4f81811485997953130fc184e829ba4399d2
+With the current shrinker code, it seems like we cannot get sc->memcg
+=3D=3D NULL unless mem_cgroup_disabled() is true indeed. However, maybe
+it's better to check if sc->memcg is not NULL directly instead?
 
--Mike
+This would be more resilient in case the shrinker code changes and
+passing sc->memcg =3D=3D NULL becomes possible in other cases (e.g. during
+global shrinking). It seems like other shrinkers do this, for example
+see count_shadow_nodes() and deferred_split_count().
 
-> 
-> Thanks,
-> 
-> Paolo
-> 
-> 
+I am also wondering if we should also check !mem_cgroup_is_root()
+here? We can avoid the expensive global flush and use the global stats
+directly in this case. I could also send a follow up patch for this if
+that's preferred.
+
+> +               mem_cgroup_flush_stats(memcg);
+> +               nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> =
+PAGE_SHIFT;
+> +               nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
+> +       } else {
+> +               nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
+> +               nr_stored =3D atomic_read(&zswap_nr_stored);
+> +       }
+>
+>         if (!nr_stored)
+>                 return 0;
+> --
+> 2.44.0
