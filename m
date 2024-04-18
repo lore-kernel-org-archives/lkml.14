@@ -1,123 +1,167 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C39165FD1
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B71649DE;
+	Thu, 18 Apr 2024 14:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448839; cv=none; b=BqPEW8fPyBvtO/baj7Ob1r/AE23Kahyg3lk+oD/V5G62n8h61hwiL4QfqtkldmLdsp5gJwoEG+HHZkl0Kjp0cQroGFVcXPRCL9EyAyWnkNX7mcq+ojObFGGMabBT/PLfvaWiehBmUeLZzHUS+PwC9yiXeo23UDHpZhp3luXJtKU=
+	t=1713448862; cv=none; b=G0+xlb3A8tF6nT5Wkx+aG6CdDAqyQpFTibJsRrYuoj6OuKCP3V3gpZaFZzXwnSijjojQJaTVxRGQONfHm7haSf6v+gFQxOM/rvE+xoeO/N8H9IZtJIZiozXVOoIDD/wbMlO13aMtNfUXNppzYV+RXFfvf99gkwx0yWidFuL+Z8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448839; c=relaxed/simple;
-	bh=CUz1FL6OrWD9gkCWSmzSXTuA30S6H+md2CZJdOSANdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BxjS8x5Uh4MDrr9tJ/DBYHJhiShSApwapaE586JSiD8/ux+9cfb0z03ei+Ecpi5kwYshqoLl5wog52oKRNCib9XX3Ta/KIBJyOndEejBDBNZGSFEXayvktsTX0LtReTZzypnzO60TUKRNdUFP+5Sxtkc75BbTJ9HOnU3dWgFfvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nTdxmyn6; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nTdxmyn6"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-de45e5c3c68so1069078276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713448837; x=1714053637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LfdRxoYWFZnh1Pzjp/pkGuOdpYAMzwLC3mfVu9MRkXs=;
-        b=nTdxmyn6gEFreaudLtwHACCjfLX9/3zbcDSjYPD09faiP+3QNjbxMeoT0P1iGlCFtp
-         WPNilWwIL0A/yGuy8GsbFyJzL7j1LO09AlaMaOgOdjjH2iOrs2LK+61VidwLbXmxAUQg
-         EL/lUHdxCC9fd51YP4HmNxnDbKSmZqUnxjAOdDHtivab78/8DMqx4dbsA5es043rLdhm
-         PakDyDT8tuPOyw0MaZ/6vtaeBuVI/FJz5PDQAnpykz+oGEeqgqrpCEDsn2GAkb0B5zmc
-         G0SmJNuwvTDKMcRh8Sx2WWAq1I3YNWHqQQxkzvvwreVQEmOElrCorXwFk6MIUSE5hyPE
-         CO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713448837; x=1714053637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LfdRxoYWFZnh1Pzjp/pkGuOdpYAMzwLC3mfVu9MRkXs=;
-        b=Loj8gtvEUp/T/qaQR9k2Lw+NnfYXDOOjdV6af5ST+zq4s/2ZRzTZlNfGQ/8Fl0dnnn
-         vb8dMrkM8JQqRw+xXWIiKLcd2PXVk7fUS6GjaCNbxeMwR3afOW/qv9qdZ7TTadD2F3CU
-         fzLfGlv6YkF0ALplQSUHemzrVjy5z4UR9wKe2yhdo7nXBlY4Ovpey47XA68MGDTu9auo
-         nTiv1yj0WStcP/ioYEc9fv0dMI5aMcJJemkhl24m2FsU3a7MOdEa/0tTBt/1WoRY8Z2x
-         eq2N2si0z4JUKbPOgC8wbGNBZB1FSxgZ1WoLIhW3NBSeumEAGRtTu64FEqDMkX/wm08N
-         fTvw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4ZVepoTkWjtttZynL44GsF0k/b5ZFdwAWbSMh0yhy3ERJDce64GUJ5dN/JfwWyH9oW7+uzKzDTDz5nntpiW7XN5cP1qVYQVtV1+O/
-X-Gm-Message-State: AOJu0Yz2WH/6YG1TqW1jhYzkB+b7UXNJOaiuz10u+9Q2Bf7+FNQrZZwB
-	VBv5yjbxJEHJshBTmXQxJlxXvlXs2dbG3PlecC420h0dNpO/sKaaXr9AGZZ6tZ6vyW43OwyjwNj
-	OjPQPdA1EdQP9K3/M8EqddXr2VQqr0iTpfQH7lQ==
-X-Google-Smtp-Source: AGHT+IG6AB7cK4gQyrTBcYydPTwRbBVUhUDB6blxZ1fiVtij9UP56RzjDgGZ+5mPHYa0AbKtxwlXvMzWeyimBXDNk1Y=
-X-Received: by 2002:a25:ef05:0:b0:dcc:96db:fc0d with SMTP id
- g5-20020a25ef05000000b00dcc96dbfc0dmr2573050ybd.25.1713448836586; Thu, 18 Apr
- 2024 07:00:36 -0700 (PDT)
+	s=arc-20240116; t=1713448862; c=relaxed/simple;
+	bh=/ZnEJWnVjdAFNyug63GYeRolkDuCDosA3A9pYTnZbXI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tfv/8CCArFf3+yQ5/kPxbKCx4O8HuSdRuohoZBqy1At5S6e6TJpzI/ZtXfnNhsZhhgLrjR5549TGbxzz/Jl4TtzKUqluT9QIHBEpHDesAYqx5Qe+zzcq5GZsXtgYn5ZKctjay1+nUToiOYsZTiZnnr71XyI4gAORO6t40lf+X3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzs72BgZz6K6DF;
+	Thu, 18 Apr 2024 21:58:51 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A577F140517;
+	Thu, 18 Apr 2024 22:00:54 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 15:00:53 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 13/16] arm64: arch_register_cpu() variant to check if an ACPI handle is now available.
+Date: Thu, 18 Apr 2024 14:54:09 +0100
+Message-ID: <20240418135412.14730-14-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410071439.2152588-1-yangcong5@huaqin.corp-partner.google.com>
- <20240410071439.2152588-3-yangcong5@huaqin.corp-partner.google.com>
- <CAD=FV=V2J=Tth2zhpo-kPo4uvESt70mFneO2V6TV-haac0VZuQ@mail.gmail.com>
- <CACRpkdYtM=5jdQddCqRFgBRXvcJEjk1ULJNKKFz7jhhkGxV59Q@mail.gmail.com> <CAHwB_NLfaQWhFSbZ2ASmYgXJaVOTrjac3F0hyCJdwTTo-zHJrQ@mail.gmail.com>
-In-Reply-To: <CAHwB_NLfaQWhFSbZ2ASmYgXJaVOTrjac3F0hyCJdwTTo-zHJrQ@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 18 Apr 2024 16:00:24 +0200
-Message-ID: <CACRpkdYoM40RZyjTxLwDNta2+uV31_zzoj7XrXqhyyqrDtd5zQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] drm/panel: boe-tv101wum-nl6: Support for BOE
- nv110wum-l60 MIPI-DSI panel
-To: cong yang <yangcong5@huaqin.corp-partner.google.com>
-Cc: Doug Anderson <dianders@chromium.org>, sam@ravnborg.org, neil.armstrong@linaro.org, 
-	daniel@ffwll.ch, airlied@gmail.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Apr 18, 2024 at 2:42=E2=80=AFPM cong yang
-<yangcong5@huaqin.corp-partner.google.com> wrote:
+The ARM64 architecture does not support physical CPU HP today.
+To avoid any possibility of a bug against such an architecture if defined
+in future, check for the physical CPU HP case (not present) and
+return an error on any such attempt.
 
-> I learned from himax that even if the same controller is used with
-> different glasses, the corresponding parameters are not fixed.
->
-> For example: _INIT_DCS_CMD(0xB9, 0x83, 0x10, 0x21, 0x55, 0x00),
->
-> even in the group initial code, the same register will be loaded with
-> parameters twice.
-(...)
-> So assuming that the registers of the two screens is the same now,
-> it cannot be set as a common parameter.
-> Otherwise, it may be a bit troublesome for the maintainers.
->
-> If necessary, I can break out starry_himax83102_j02, boe_nv110wum and
-> ivo_t109nw41
-> as separate driver. Then add some define to these registers.
+On ARM64 virtual CPU Hotplug relies on the status value that can be
+queried via the AML method _STA for the CPU object.
 
-Why would you do a separate driver per panel despite they have
-the same display controller? I don't get it.
+There are two conditions in which the CPU can be registered.
+1) ACPI disabled.
+2) ACPI enabled and the acpi_handle is available.
+   _STA evaluates to the CPU is both enabled and present.
+   (Note that in absence of the _STA method they are always in this
+    state).
 
-Use one driver, use different compatible strings for the different
-panels and use the corresponding sequence for each panel
-selected by compatible string.
+If neither of these conditions is met the CPU is not 'yet' ready
+to be used and -EPROBE_DEFER is returned.
 
-For example, see drivers/gpu/drm/panel/panel-novatek-nt35510.c:
+Success occurs in the early attempt to register the CPUs if we
+are booting with DT (no concept yet of vCPU HP) if not it succeeds
+for already enabled CPUs when the ACPI Processor driver attaches to
+them.  Finally it may succeed via the CPU Hotplug code indicating that
+the CPU is now enabled.
 
-static const struct of_device_id nt35510_of_match[] =3D {
-        {
-                .compatible =3D "frida,frd400b25025",
-                .data =3D &nt35510_frida_frd400b25025,
-        },
-        {
-                .compatible =3D "hydis,hva40wv1",
-                .data =3D &nt35510_hydis_hva40wv1,
-        },
-        { }
-};
+For ACPI if CONFIG_ACPI_PROCESSOR the only path to get to
+arch_register_cpu() with that handle set is via
+acpi_processor_hot_add_init() which is only called from an ACPI bus
+scan in which _STA has already been queried there is no need to
+repeat it here. Add a comment to remind us of this in the future.
 
+Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v7: No change.
+v6: Add protection again Physical CPU HP to the arch specific code
+    and don't actually check _STA
 
-Take some inspiration from this driver and how we parameterize
-the different data depending on compatible string.
+Tested on arm64 with ACPI + DT build and DT only builds, booting
+with ACPI and DT as appropriate.
+---
+ arch/arm64/kernel/smp.c | 53 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Yours,
-Linus Walleij
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index dc0e0b3ec2d4..ccb6ad347df9 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -504,6 +504,59 @@ static int __init smp_cpu_setup(int cpu)
+ static bool bootcpu_valid __initdata;
+ static unsigned int cpu_count = 1;
+ 
++int arch_register_cpu(int cpu)
++{
++	acpi_handle acpi_handle = acpi_get_processor_handle(cpu);
++	struct cpu *c = &per_cpu(cpu_devices, cpu);
++
++	if (!acpi_disabled && !acpi_handle &&
++	    IS_ENABLED(CONFIG_ACPI_HOTPLUG_CPU))
++		return -EPROBE_DEFER;
++
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
++	/* For now block anything that looks like physical CPU Hotplug */
++	if (invalid_logical_cpuid(cpu) || !cpu_present(cpu)) {
++		pr_err_once("Changing CPU present bit is not supported\n");
++		return -ENODEV;
++	}
++#endif
++
++	/*
++	 * Availability of the acpi handle is sufficient to establish
++	 * that _STA has aleady been checked. No need to recheck here.
++	 */
++	c->hotpluggable = arch_cpu_is_hotpluggable(cpu);
++
++	return register_cpu(c, cpu);
++}
++
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
++void arch_unregister_cpu(int cpu)
++{
++	acpi_handle acpi_handle = acpi_get_processor_handle(cpu);
++	struct cpu *c = &per_cpu(cpu_devices, cpu);
++	acpi_status status;
++	unsigned long long sta;
++
++	if (!acpi_handle) {
++		pr_err_once("Removing a CPU without associated ACPI handle\n");
++		return;
++	}
++
++	status = acpi_evaluate_integer(acpi_handle, "_STA", NULL, &sta);
++	if (ACPI_FAILURE(status))
++		return;
++
++	/* For now do not allow anything that looks like physical CPU HP */
++	if (cpu_present(cpu) && !(sta & ACPI_STA_DEVICE_PRESENT)) {
++		pr_err_once("Changing CPU present bit is not supported\n");
++		return;
++	}
++
++	unregister_cpu(c);
++}
++#endif /* CONFIG_ACPI_HOTPLUG_CPU */
++
+ #ifdef CONFIG_ACPI
+ static struct acpi_madt_generic_interrupt cpu_madt_gicc[NR_CPUS];
+ 
+-- 
+2.39.2
+
