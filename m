@@ -1,103 +1,127 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F2C161935;
-	Thu, 18 Apr 2024 15:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B018161935;
+	Thu, 18 Apr 2024 15:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713453896; cv=none; b=BzbBVE/0nB0GMLiqEY20qoMKmHWWsaLJY6NgZumIn08G4CLvjuYa3YYSHGHatcNeP7sjrt5Shl7V9235K2YX0so2ytSr6bjHUFaaI8wjegyji4bKQqyYzRwseZWZLj0CIZd8Shlyqkgj5GTn2Sdc4zvVLVDvEpoXn2MbSjTbUw0=
+	t=1713453907; cv=none; b=QeYd4u4meRaqkeb+S/xR1RF6pZ3DXi0kpMHHgSd/F4AFI/7qDGhV5BAdikBuDIWYMEip5jNfWeitZD4OgCmYcllbzwHFOLXdXP1Bh24A2fD2NpeYFSt/FgdqQ97pL9u7oiMXlD/LwhhtIE8ZhGNsvrQiabtdNf9mKJns/BsIVKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713453896; c=relaxed/simple;
-	bh=K6si/qWNSSEtfjq7a1SEzSelcRddlzdgf8u7W2c9iVw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ide1gCuZmhqz9ilRq+akFd2qTMrdqnsclvRCigCxZzVZlJcakCEmGGkzL2Fz8XbrX59UVDgFqHK3UuOtrZHeINRFgrHcGM1B5C8EFTN/dZR5iDo0OBxs4coASUPHo+cNINlCGceSSTnOyHf+zgJ9DKwm8sS2HqSQL4we+pM3CUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=he8nYJjF; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713453907; c=relaxed/simple;
+	bh=wWjAJ4S4d5MkuoDto+B9EKc+OQaYQW91f7+3yJ8CSGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hBALLCfHrJmSpWb1fvJyHDUNrfwULbh+pHt3uBh+q0a4Xx8uAbhGkd2HIfR9L+tyvdMyrLbL0WV8gmfktOdY80/cPLFDB+1vBsEP25sv2UECb8Y/QE86FKPP2PBTkjAWuGEq+qaS0eIeEsG+5yKcsZDmTsqMm0DoJp23c6KYyTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y9XGMIJd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="he8nYJjF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713453888; x=1714058688; i=markus.elfring@web.de;
-	bh=Vq9VWrH+gFfZimn1lXPfohIhS0gZTVPNGthLTor5jMs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=he8nYJjF8NSkYh7XVLsTbYt46l2oJtjrf7sFBEZI087XsHoijwCi8SYflOC5S93i
-	 oMhyfqoTtyFw1N+LevQ8O6PaHdplLpvhhGvgCQ72vbALXvqA2PjJ3NpiCqIhX9xfF
-	 P59EoYB4Gjn41LvycD3FkWHGAvrafh1rzC2YY2vUKAxVTHj4v++/cV7T8SnEOJMFF
-	 4kz0SgAUv/BJqoWXrOCqYNvcEnpxUXs5+szlWh418GNU1aSh6dcs4VVV9/fLJjI6R
-	 lNROEawpPyXDiWszg2NeHJA+LnFOEnW/gZRt0SeR4OsfYp+6mOamj22AWiZA7zE0N
-	 aNnTiHfLSFH/EYUC6w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mf3qY-1sdvze1UwU-00dp4F; Thu, 18
- Apr 2024 17:24:48 +0200
-Message-ID: <9ff84256-c7d2-48e5-b06b-09a993db2c39@web.de>
-Date: Thu, 18 Apr 2024 17:24:47 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y9XGMIJd"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43IFAlkY022338;
+	Thu, 18 Apr 2024 15:24:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=EE4+WRzBA2XlcVrOR4MaW+MheWrkZfAx+4CxF8kZI3A=;
+ b=Y9XGMIJdw8pIh26Kv5tuCG5YkbxarcHWr+2LYjBNLCz06YviWlHuLjldYCsfzeameyoF
+ D4EArf3/NCClB+W5ygjfDHW/T8PsIKfPHKcFROX74DNuUAkK2QGd5pBegfmuoXu+CUHH
+ S9PZDldF6j2dmts4WvuZZhH2SIo1LlH1ZgwAbr1eIMNNXH16co9P9u0H/5Dj0Fy81l/k
+ y9tUkpXQOTETLM8WUtseJMeZV2MgzEQ7Ovdr8IawaVU6GGPhpgNcsRP7nVal5XNI8rgo
+ pw7/wqpxQY4JTMHGsTw8Z8S+GRa+psxspPme+XMLRNxFj3P0FKoMHyPqQm38H62eR6I3 lQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk5wyr1p6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 15:24:57 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43IFMIuI010880;
+	Thu, 18 Apr 2024 15:24:56 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk5wyr1p4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 15:24:56 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43ID4UGj011110;
+	Thu, 18 Apr 2024 15:24:56 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xg732txwc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 15:24:56 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43IFOrKJ43778346
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Apr 2024 15:24:55 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 376CB58070;
+	Thu, 18 Apr 2024 15:24:53 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4DFAE5805A;
+	Thu, 18 Apr 2024 15:24:52 +0000 (GMT)
+Received: from sbct-3.bos2.lab (unknown [9.47.158.153])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Apr 2024 15:24:52 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, jarkko@kernel.org, ardb@kernel.org,
+        git@jvdsn.com, hkario@redhat.com, simo@redhat.com,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v3 0/2] crypto: ecdh & ecc: Fix private key byte ordering issues
+Date: Thu, 18 Apr 2024 11:24:43 -0400
+Message-ID: <20240418152445.2773042-1-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Wander Lairson Costa <wander@redhat.com>, kunit-dev@googlegroups.com,
- linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Brendan Higgins <brendan.higgins@linux.dev>, David Gow
- <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240418131754.58217-3-wander@redhat.com>
-Subject: Re: [PATCH 2/2] kunit: avoid memory leak on device register error
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240418131754.58217-3-wander@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:18nIa5u5Z6yCz71VW5nr+AuTvLfOR5QY3AKj//R8Y/Oo6/3krry
- w1YOHjzYkwn4FfejR8lTSWBz/3UydDAgMyIUgBAKBqnAKL4FCkRKsJ+479V3zLa/USpSBby
- FLbnIHJmC/Ar/AhmHrVapw3NTVc7a0pgN0Xg9MrHxaRE4jNqudCHNH4GwzRlWocpDLgLxxc
- FG7pD6xuD/cIfev6+yqXA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bv2N6UDqpNk=;q+yVHgJcfitJbCwRSNQKvalCrrl
- IZYAYamBlDjlWvVcnOizvwlPw+NxUcyMOspNOoS2UyZwweBn2AkLnJsVWgUqysNBvDViwk9Fn
- nWwS38GPvESSAwElOVg8JhdaSOxyb4VFrAfiVMmnVZbfpsNf5Qwzg6VAh0nRugpHhlpN0JF4d
- fBC/5Gjgax30/DmJI1LlML5/H3SPfEYhHt/7r4LFv5CHB716p4eQLWi9sfTjkHCHfkzLTd4BF
- tKYDeSho6nIVLGdSHmvFKI0Hdcw3OyGwkYrB7kW+hSeSzrVwYZqVCJR8RmggBHXLu6DVlKAu3
- sMAEwKXiANQ/jvP4AwRXXuKthFK3H+urBcAZc4W8BVREKD7mfMvheD/kjfeFFHyZRFrcs/mXt
- Q8UxoC5g5ni2a4fqqVoXVfjG5qc+HGSFdrXdQIUBUOvXGodk/Pjyx5jd3G487OBiGavX1Vg2R
- nSyKGQEYK/ZCTOLfr+H7Zcz/l2DoqqSYsDAVmFfOTle3kJy6d/H9705q2gL1Y+DyR8qSaFons
- 7s4RxSji2dky2zs08/keO09kiFT4abU5fArXvtxGOTSJOLcqAHFqJ71wG98vrHEE90VrGcom1
- enXJeOvyqN0U5P1vJcWwKb0nij8iIpTIBLFXd9tXZ4G22jxfgDsVGAZTjFyM7chhRLt7RoiVQ
- HUQkcm1AX6aO4/JDl0YwDy1tzC+2I1v+vUSCSDJ4D7ZWWUHFH6gPK3G0LvF+jrS5MEPDUFHO7
- gZwFss9kH77P7ARAeUPXsZWN2x8rhvmg8Wkmx2s0J+YJuLZt0RbZ7VoHnjhUZvtOi5jC+n0OL
- 8DHXPjUYxrtlqjTGBf9T62XfAhspE4KMmFizrhSQ4cIDM=
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gsKcfQhTL37dpVpm05UACsqRAnOnmLVu
+X-Proofpoint-ORIG-GUID: EbGWLyzxZR7DDrbKBSd3Lct6H6lKL2IC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_13,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ mlxlogscore=998 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404180109
 
-> If the device register fails, free the allocated memory before
-> returning.
+The 1st patch fixes a byte ordering issue where ctx->private_key is
+currently passed to ecc_is_key_valid but the key is in reverse byte order.
+To solve this issue it introduces the variable 'priv', that is already used
+throughout the ecc and ecdh code bases for a private key in proper byte
+order, and calls ecc_is_key_valid with 'priv'. Note that ecc_gen_privkey
+also calls __ecc_is_key_valid with 'priv' already.
 
-* I suggest to use the word =E2=80=9Cregistration=E2=80=9D (instead of =E2=
-=80=9Cregister=E2=80=9D)
-  in the commit message.
-
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
-
-
-> +++ b/lib/kunit/device.c
-> @@ -131,6 +131,7 @@ static struct kunit_device *kunit_device_register_in=
-ternal(struct kunit *test,
->  	err =3D device_register(&kunit_dev->dev);
->  	if (err) {
->  		put_device(&kunit_dev->dev);
-> +		kfree(kunit_dev);
->  		return ERR_PTR(err);
->  	}
-
-Common error handling code can be used instead
-if an additional label would be applied for a corresponding jump target.
-
-How do you think about to increase the application of scope-based resource=
- management here?
+The 2nd patch gets rid of the 'priv' variable wherever it is used to hold
+a private key (byte-swapped initialized from ctx->private_key) in proper
+byte order and uses ctx->private_key directly that is now initialized in
+proper byte order.
 
 Regards,
-Markus
+  Stefan
+
+v3:
+  - Added Jarkko's A-b tag
+  - Expanded on the description of changes to ecc_gen_privkey (2/2)
+
+v2:
+  - Added missing zeroizing of priv variable (1/2)
+  - Improved patch description (2/2)
+
+
+
+
+Stefan Berger (2):
+  crypto: ecdh - Pass private key in proper byte order to check valid
+    key
+  crypto: ecdh & ecc - Initialize ctx->private_key in proper byte order
+
+ crypto/ecc.c                  | 29 ++++++++++-------------------
+ crypto/ecdh.c                 |  9 ++++++---
+ include/crypto/internal/ecc.h |  3 ++-
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+
+-- 
+2.43.0
+
