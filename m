@@ -1,72 +1,56 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D6C2AEFA;
-	Thu, 18 Apr 2024 15:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFAC16C84E;
+	Thu, 18 Apr 2024 15:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713455572; cv=none; b=K8AsT+WxkVvgwSEY8SI7ppO6blYm/2IXkQT2MLUO+Q2nZrnsK4+usySTLIv1NSuQIScn5KKd5y5zJoDFj2fqjfrpY3tOHzdz/3inkIqR1ff7qIEpJp0QqEK5m6w/VMqYXvONO/xRU6+rPa0Os+oXjw5SbrkQABP9/lnFOi2cJ1g=
+	t=1713455579; cv=none; b=mgwJHIXDG9K1R/X6afqfXz/TL+4m4iw7kDkIqhQOjnckwMBoW0BwEdJ7ACvRzSKpQgnKgFbjLHiB8x3hLp6Ro9YWl5A6K3dk5hRdDjbMSPBoL97tbPhpEvL65xW1C7eD7gKD3EC1XNug81tbKoKsoXHRCTe1HaZJofTezzbIVPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713455572; c=relaxed/simple;
-	bh=WkAAHyvVDeP+e2sfdfroKn2jp46qnZOOyePAl/GIvN0=;
+	s=arc-20240116; t=1713455579; c=relaxed/simple;
+	bh=6yP7DNU81gVVaBLvr4Yz015ghuSP2nPtHJYZrJGgZkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JW4SprdEczPrGYzUAvCsgvUajWsa8iF69iwiexislr0HYx5XzlO6oUv6jNRDOEBi6vAHLo2f5rjMZw/SZMZRabk2KwAYGTwnbAjXFYfqECVpoHEb3me4Gg9NFmutPC+qOAYNGEj8zd4WBfwkL2QCqV7Q+s1RjLsl+Odb91TGAfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9NC9Dkl; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4zEJ044xwT1oY1h2EVH5GK0AiFyTzpSf9XnahgKwT3rIwCqjL1jHhBNYEoHb8lLMqnwQZjwN4dJTrRTalT7E3XjuVT3uw/LTVmiun1OyVq/RCWptDNdme/izA5reAd6t3xxuY8sAga+gfGwRP66qjqhGcBXh4fpJ7kVqSQsbnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zi83tpc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9NC9Dkl"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2da01cb187cso18945281fa.0;
-        Thu, 18 Apr 2024 08:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713455569; x=1714060369; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=80IOZRJAg3n+luujCnfZpyZXCYpVPrOJyohSTrYNWpc=;
-        b=V9NC9DklaVLSNmAGDOUQSqSzz7hqln20JAwF4NWJgR7+5SE2/bfcXeflRpkt2Jdgho
-         /ve4JrSY9OQfZGSS9Nv9C/Lk1bCp3adMMlFw2EmHZ8ZVi/szD5LG7QHf/bt1ZKXI8SFQ
-         7S1sQSQeecv2amrrhgqaKsT5iDSI+9gnhZ7ww2BBlG07PLpbHtaY/PojwUPu4MRDro0o
-         eZ1nYRgmSLxFFloBdFVHcPVATLHUe1WO6gC6JaJIHvz4t97J6ZLZWDKinVlkCxfPtUvv
-         61RcjSO8UnqtUgqE635H9PSHSQziZ3eyUMj6XWzHlipjcfeB37n8nXqD7SlMEDUIIBSh
-         1rsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713455569; x=1714060369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=80IOZRJAg3n+luujCnfZpyZXCYpVPrOJyohSTrYNWpc=;
-        b=wjqMyRQ1rTimONuhToMsVNjBbqEGPP6lx4iOsowZBdnMcgMSzGjhhvqly4x+1/nSMO
-         TFPBJUo41cZEsNsNL6l/TcS2Xc3K3/hmWSo54qU4mnCmvzISrTdPf0cEzkDp5GdxYEU1
-         Iy3mQAsazR3UFuwb/juVTR/vMtReAqwFL5VTs3AXFSFQHrDIZpIe5E+nmqp7zMW9SVIc
-         Hu/e/hSwcU4+KdxdoVhhU1+VBTtygUG4tqNY+kkHXsblVgeTvBUAO85fx0BlT3mRftXE
-         0c340V1hbLUc5foP/UL3J2UOrifmJ54qGJufuXfoRtpwaPbgS6P+U6Ud3gsPcUYN9ae+
-         yhcA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkrY5GKNEtoR1mWvEBBehTx3t/69Y743C347kRD/77WTFKdbVnU3gerj0nwWsUVQE8Htb8v39CN6S+hgM9D8YvV0hFOmyXcdLVfl20NKInF3S3VWysQHu3FYvFT+eM+x3+ZeqaImAKeU9b5LLlAhVAfWlOOHNU9DSipmCt31Qx1FDYnaSm
-X-Gm-Message-State: AOJu0Yx7h3uPbvQBy5aEzzYf3oa6o9bk87z+IvV2VpF8vMxDgTPku14K
-	JZnCDGEOhiz784y+37E/i4AY3GcyVMxJnlm/9LmlDAmmcRueDL5z
-X-Google-Smtp-Source: AGHT+IGQBxhUssFgYIcYFhb0iGzTgiERBaBVOH1kvO22eJtoubzPk2q+XBi65mwuJxQjyxgWfAYq9g==
-X-Received: by 2002:a2e:908e:0:b0:2da:7cd1:3f1f with SMTP id l14-20020a2e908e000000b002da7cd13f1fmr2175351ljg.52.1713455568884;
-        Thu, 18 Apr 2024 08:52:48 -0700 (PDT)
-Received: from mobilestation.baikal.int ([94.125.187.42])
-        by smtp.gmail.com with ESMTPSA id h25-20020a2e3a19000000b002da968f03f9sm237734lja.89.2024.04.18.08.52.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 08:52:48 -0700 (PDT)
-Date: Thu, 18 Apr 2024 18:52:46 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, dmaengine@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/4] dmaengine: dw: Add memory bus width verification
-Message-ID: <3aias5ufn2gdta7lr4g2phzg4vfynarrup36zmiuxndd6zgzqc@6z57kf4wk4ut>
-References: <20240416162908.24180-1-fancer.lancer@gmail.com>
- <20240416162908.24180-3-fancer.lancer@gmail.com>
- <Zh7Hpuo-TzSmlz69@smile.fi.intel.com>
- <lzipslbrr4fkpqc3plfllltls2sy2mrlentp7clpjoppvgscoi@zlmysqym2kyb>
- <ZiAGpsldQMB-dKkn@smile.fi.intel.com>
- <nroj7c7hvo5ao5gfuububc2zqj7z4rpkoji5flhbrie3xrmgwg@6rhzllxwgj4w>
- <ZiDpxb-diEt91My4@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zi83tpc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3773FC113CC;
+	Thu, 18 Apr 2024 15:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713455579;
+	bh=6yP7DNU81gVVaBLvr4Yz015ghuSP2nPtHJYZrJGgZkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zi83tpc6ru6TyArQhR6ravdTE5SWs2XiYm2p5hQUcjNinfQDw2cHCSmtmm6RwfWZV
+	 mptYHPMCzvu4Y0fz5PNnv4MkCgjUVgtC/A7m6CcFgB8RkDUgOANAcuBIZWN7X2b3Fi
+	 v/xjqf97txq8FkqnuDHLw3th53BtVEFnlXTFtnkRQJuyijFHXeKtoA/ux82SRH+ba0
+	 7PHwOlUjBi8jQfeGgz9stAJ4AFCbmooPwKFAj4gzV6saPUSUc1j4wy9OIQDsThF2vT
+	 tNRVlc3dBP7B7wp3WPYnzVcAFyHYu5IV7X3TotEjKuTGgrugDkjP2sbVgNymPmtKrU
+	 lNW6hPVqMU+nA==
+Date: Thu, 18 Apr 2024 08:52:56 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Andy Chiu <andy.chiu@sifive.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>,
+	Guo Ren <guoren@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	Vincent Chen <vincent.chen@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Joel Granados <j.granados@samsung.com>,
+	Jerry Shih <jerry.shih@sifive.com>
+Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
+ to ZVE32X
+Message-ID: <20240418155256.GA2410@sol.localdomain>
+References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
+ <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
+ <20240418-brook-chili-4d3e61d1a55c@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,37 +59,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZiDpxb-diEt91My4@smile.fi.intel.com>
+In-Reply-To: <20240418-brook-chili-4d3e61d1a55c@wendy>
 
-On Thu, Apr 18, 2024 at 12:37:09PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 17, 2024 at 09:52:42PM +0300, Serge Semin wrote:
-> > On Wed, Apr 17, 2024 at 08:28:06PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Apr 17, 2024 at 08:13:59PM +0300, Serge Semin wrote:
+Hi Conor,
+
+On Thu, Apr 18, 2024 at 12:02:10PM +0100, Conor Dooley wrote:
+> +CC Eric, Jerry
 > 
-> ...
-> 
-> > > Got it. Maybe a little summary in the code to explain all this magic?
+> On Fri, Apr 12, 2024 at 02:49:03PM +0800, Andy Chiu wrote:
+> > Make has_vector take one argument. This argument represents the minimum
+> > Vector subextension that the following Vector actions assume.
 > > 
-> > Will it be enough to add something like this:
-> > /*
-> >  * It's possible to have a data portion locked in the DMA FIFO in case
-> >  * of the channel suspension. Subsequent channel disabling will cause
-> >  * that data silent loss. In order to prevent that maintain the src
-> >  * and dst transfer widths coherency by means of the relation:
-> >  * (CTLx.SRC_TR_WIDTH * CTLx.SRC_MSIZE >= CTLx.DST_TR_WIDTH)
-> >  */
+> > Also, change riscv_v_first_use_handler(), and boot code that calls
+> > riscv_v_setup_vsize() to accept the minimum Vector sub-extension,
+> > ZVE32X.
+> > 
+> > Most kernel/user interfaces requires minimum of ZVE32X. Thus, programs
+> > compiled and run with ZVE32X should be supported by the kernel on most
+> > aspects. This includes context-switch, signal, ptrace, prctl, and
+> > hwprobe.
+> > 
+> > One exception is that ELF_HWCAP returns 'V' only if full V is supported
+> > on the platform. This means that the system without a full V must not
+> > rely on ELF_HWCAP to tell whether it is allowable to execute Vector
+> > without first invoking a prctl() check.
+> > 
+> > Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> > Acked-by: Joel Granados <j.granados@samsung.com>
 > 
-> Yes, and you may add something like
-> "Look for the details in the commit message that brings this change."
-> at the end of it.
+> I'm not sure that I like this patch to be honest. As far as I can tell,
+> every user here of has_vector(ext) is ZVE32X, so why bother actually
+> having an argument?
+> 
+> Could we just document that has_vector() is just a tyre kick of "is
+> there a vector unit and are we allowed to use it", and anything
+> requiring more than the bare-minimum (so zve32x?)must explicitly check
+> for that form of vector using riscv_has_extension_[un]likely()?
+> 
+> Finally, the in-kernel crypto stuff or other things that use
+> can_use_simd() to check for vector support - do they all function correctly
+> with all of the vector flavours? I don't understand the vector
+> extensions well enough to evaluate that - I know that they do check for
+> the individual extensions like Zvkb during probe but don't have anything
+> for the vector version (at least in the chacha20 and sha256 glue code).
+> If they don't, then we need to make sure those drivers do not probe with
+> the cut-down variants.
 
-Agreed. Thanks.
+As far as I know, none of the RISC-V vector crypto code has been tested with
+Zve* yet.  Currently it always checks for VLEN >= 128, which should exclude most
+Zve* implementations.
 
--Serge(y)
+Currently it doesn't check for EEW >= 64, even though it sometimes assumes that.
+It looks like a check for EEW >= 64 needs to be added in order to exclude Zve32x
+and Zve32f implementations that don't support EEW == 64.
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+If it would be useful to do so, we should be able to enable some of the code
+with a smaller VLEN and/or EEW once it has been tested in those configurations.
+Some of it should work, but some of it won't be able to work.  (For example, the
+SHA512 instructions require EEW==64.)
+
+Also note that currently all the RISC-V vector crypto code only supports riscv64
+(XLEN=64).  Similarly, that could be relaxed in the future if people really need
+the vector crypto acceleration on 32-bit CPUs...  But similarly, the code would
+need to be revised and tested in that configuration.
+
+> Eric/Jerry (although read the previous paragraph too):
+> I noticed that the sha256 glue code calls crypto_simd_usable(), and in
+> turn may_use_simd() before kernel_vector_begin(). The chacha20 glue code
+> does not call either, which seems to violate the edict in
+> kernel_vector_begin()'s kerneldoc:
+> "Must not be called unless may_use_simd() returns true."
+
+skcipher algorithms can only be invoked in process and softirq context.  This
+differs from shash algorithms which can be invoked in any context.
+
+My understanding is that, like arm64, RISC-V always allows non-nested
+kernel-mode vector to be used in process and softirq context -- and in fact,
+this was intentionally done in order to support use cases like this.  So that's
+why the RISC-V skcipher algorithms don't check for may_use_simd() before calling
+kernel_vector_begin().
+
+Has that changed?  If so, why?
+
+Some architectures like x86 do provide no-SIMD fallbacks for all skcipher
+algorithms, but it's very annoying to do.  We were hoping to avoid that in
+RISC-V.
+
+- Eric
