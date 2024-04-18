@@ -1,109 +1,142 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB9256464;
-	Thu, 18 Apr 2024 11:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EDA15ADBB
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713438076; cv=none; b=nmK1x/UAj3DB6IFBsLkExfhqCE1hZsNdgIII9ohgbZv1QAMm8ebhKRUjXD7w4JRDrRM1qZW0+Gz4yBZ3r2h3ZamLdJJZIK/6MxxlKqL0wfB4nBniEJkhxN0MPBlEY0o/G+HblG+kLuRF5sKgAF00azq+9UneMO430byz9hNYu3k=
+	t=1713438137; cv=none; b=jeTKeI2CVH6FrjCup85gd118Nc4qeuXdBSj2zcemJ2Je5Y7SkjKQrlSKPwmF4irUWskJqv4gLp/gf5n3NVgOBajndWhgxxWXfTI74sDVXL8pnEAoVgoeOcwvq0UGEBH0JbdRoN+u5E7PBB8nHD1HjjkqLXfQBCxu6cxpxq8tMhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713438076; c=relaxed/simple;
-	bh=3zJU5bgxcWmtkNz86EQPd0gLB0h4nbvQXxqDcg0/kvk=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AFFD3vpUg5JyjX8NmE/yFQJl0hQticuFcrs9wgUVDlip3I5Bgv0anL4wVthjQawO8tN9CixFsYCdWoqCT8Noa5UbxHCBJ9pqoMNfzUL7zwxb27qPF4IQzxO8xuyVRNw4yw0IEUKwEOwCpj1KNxpA0fxuJQ33Xbk8/F7G7qV14Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QxZGlHNu; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1713438137; c=relaxed/simple;
+	bh=F/TmGD6P/eBNZve0CmXoI/nVfjo5Bnc9S/wABpwztCg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lg3VIlOa2SCFOdv85LDrgSpgofvE6oxaN67Ukfd+4PTDmYH9IKypUbaXm7uIocY0BeVxMZHTZ4qpmSpy3sCUU1eJGiC6znlimZM6bw1vLRqgUlYmyYPNU68N/p32rvCZv+tkxmuBMn8Tl1KPESZ6CyJTgUGa8yEkj5YimFiK6lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Zj8lifKr; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QxZGlHNu"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43IB0Nta078283;
-	Thu, 18 Apr 2024 06:00:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713438023;
-	bh=at/Dt6MSNlVNPyZjMygOEL5FNpd0NMfncK9CjfBmIac=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=QxZGlHNu5wFp9UtqUY7hG11xXZySfQsvIQRSN5rcgjLYP9jUu7AtOj5CG3MWaymXV
-	 3ofJ/MT3wFpFVjGC2l+qrvCXfWlKC0DBoJ8GwN8C0LqlmdusYWtacsG4ePa2cnjy+o
-	 OxAZqRvaUBfbqxYl0CuKxxYzNsgOw/PCHrNnajm4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43IB0Nq3068002
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 18 Apr 2024 06:00:23 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
- Apr 2024 06:00:23 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 18 Apr 2024 06:00:23 -0500
-Received: from [172.24.21.253] (lt5cd112gssc.dhcp.ti.com [172.24.21.253])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43IB0E3B059919;
-	Thu, 18 Apr 2024 06:00:15 -0500
-Message-ID: <260d258f-87a1-4aac-8883-aab4746b32d8@ti.com>
-Date: Thu, 18 Apr 2024 16:30:13 +0530
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Zj8lifKr"
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 335553F8E5
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1713438125;
+	bh=AOGV+CBOV8eiaEz1GoNMtohBk1/aB8bFkBW7cPKL6oU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=Zj8lifKroqtWPZeSBTFG4xaigDMSFk61lNN+TOQ0/qFH3z1Oj/URB1PrWQMhPXRtB
+	 zcfP4aqo+MUK9qcRCaGsOATOPQq9Blkui7OGy0VZQjSHxFwyZlEADMaL7al0Vct/is
+	 KWIdz2OAJdoXhagsJh8l9zto6OipzSxaUGE+eoHJFmufUaKprT9FHR5e33toSvOhE0
+	 0k/ZXV8hBfBhyWMfl/ZkNI5yqxJ5Cor/c1swZI08G3Fpo77xeToW0f39Ea7TcJdfPS
+	 8Z5oK0MKV5yfvSbKF5HGZ14U9TXhqEJAkITI2JkFNkml9QVs3uviNM+G7E+iqHl2Qv
+	 HsEmItHmaeaOA==
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a51c03c9b8bso25739266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 04:02:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713438124; x=1714042924;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOGV+CBOV8eiaEz1GoNMtohBk1/aB8bFkBW7cPKL6oU=;
+        b=GTPvpZBTyrgXJZcXhJPiwhrCtHmQLvUrrlQm9691zesWAFyzygRsZlLwC7SHf3MZWw
+         6ZzZTn7FMCfvnjiYd20IFEVh4C5SsH0TWavEU3k5r2C8iHBct3wmONPEbbBwh5PrFy3p
+         w3ufjQGMlG1cFuU8y9ZVPScsJtEBjszx3Xfx+uNoPUVYgRVjwE9JdJR6xUmO8OHgR7wJ
+         jldm3GEZ1j2YMuKnYoKCrFGJyZrG0b8DbMCrfIQAsvLadFX9WNSKHmshqr8rcB795dQ/
+         BF0FDD73+NJT75XOAulcwGbOtwXv+YaasbarwpeSiYEtXFOdDeNf3QnjZqi64TH+hALQ
+         9LBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcdWppfmgIeiUNvvNBYGZANCHg1FCYeIVTqQjUq22YEiYQkIyYZU8Bm+ytEaxQP56hZJAQTMQXltsIb5liv/MKqCFVQVX3RsWvlYTb
+X-Gm-Message-State: AOJu0YzLfttbZAbcGwZc6mh/1dz/JX1GvAF+ubDWO7zzetODfizHT559
+	g8W6pwleC/nl9M4UxaMWug1huSONnX4MZg7R+jXlY/yDua37E1TYYzgD199/MfijbUuZ6JNufq2
+	koMtzii+WmNQHvZTDNi5yh3DUxrIZELS3g/bhG2WWHWwPi8kQr+dt1YuzndfAm8N3p/yjXNp611
+	pQWg==
+X-Received: by 2002:a17:906:5a8c:b0:a52:5a02:2432 with SMTP id l12-20020a1709065a8c00b00a525a022432mr1500555ejq.50.1713438124766;
+        Thu, 18 Apr 2024 04:02:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFK0FFwqxygVS/MakVnyy4i3LBAXhMuv1GAxCYpN0cDVcZFrxU5v8w8WwAoL/TOLrTzl1iuHA==
+X-Received: by 2002:a17:906:5a8c:b0:a52:5a02:2432 with SMTP id l12-20020a1709065a8c00b00a525a022432mr1500533ejq.50.1713438124401;
+        Thu, 18 Apr 2024 04:02:04 -0700 (PDT)
+Received: from amikhalitsyn.lan ([2001:470:6d:781:320c:9c91:fb97:fbfc])
+        by smtp.gmail.com with ESMTPSA id yk18-20020a17090770d200b00a51983e6190sm728594ejb.205.2024.04.18.04.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 04:02:04 -0700 (PDT)
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: horms@verge.net.au
+Cc: netdev@vger.kernel.org,
+	lvs-devel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Julian Anastasov <ja@ssi.bg>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Subject: [PATCH net-next v2 1/2] ipvs: add READ_ONCE barrier for ipvs->sysctl_amemthresh
+Date: Thu, 18 Apr 2024 13:01:52 +0200
+Message-Id: <20240418110153.102781-1-aleksandr.mikhalitsyn@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <danishanwar@ti.com>, <yuehaibing@huawei.com>, <rogerq@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <s-vadapalli@ti.com>
-Subject: Re: [PATCH net-next v9 0/3] Add minimal XDP support to TI AM65 CPSW
- Ethernet driver
-Content-Language: en-US
-To: Julien Panis <jpanis@baylibre.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Russell King
-	<linux@armlinux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann
-	<daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John
- Fastabend <john.fastabend@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Simon Horman
-	<horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Ratheesh Kannoth
-	<rkannoth@marvell.com>,
-        Naveen Mamindlapalli <naveenm@marvell.com>,
-        Jacob
- Keller <jacob.e.keller@intel.com>
-References: <20240223-am65-cpsw-xdp-basic-v9-0-2c194217e325@baylibre.com>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <20240223-am65-cpsw-xdp-basic-v9-0-2c194217e325@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On 12-04-2024 21:08, Julien Panis wrote:
-> This patch adds XDP support to TI AM65 CPSW Ethernet driver.
-> 
-> The following features are implemented: NETDEV_XDP_ACT_BASIC,
-> NETDEV_XDP_ACT_REDIRECT, and NETDEV_XDP_ACT_NDO_XMIT.
-> 
-> Zero-copy and non-linear XDP buffer supports are NOT implemented.
-> 
-> Besides, the page pool memory model is used to get better performance.
-> 
-> Signed-off-by: Julien Panis <jpanis@baylibre.com>
+Cc: Julian Anastasov <ja@ssi.bg>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc: Florian Westphal <fw@strlen.de>
+Suggested-by: Julian Anastasov <ja@ssi.bg>
+Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+---
+ net/netfilter/ipvs/ip_vs_ctl.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Hello Julien,
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 143a341bbc0a..daa62b8b2dd1 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -94,6 +94,7 @@ static void update_defense_level(struct netns_ipvs *ipvs)
+ {
+ 	struct sysinfo i;
+ 	int availmem;
++	int amemthresh;
+ 	int nomem;
+ 	int to_change = -1;
+ 
+@@ -105,7 +106,8 @@ static void update_defense_level(struct netns_ipvs *ipvs)
+ 	/* si_swapinfo(&i); */
+ 	/* availmem = availmem - (i.totalswap - i.freeswap); */
+ 
+-	nomem = (availmem < ipvs->sysctl_amemthresh);
++	amemthresh = max(READ_ONCE(ipvs->sysctl_amemthresh), 0);
++	nomem = (availmem < amemthresh);
+ 
+ 	local_bh_disable();
+ 
+@@ -146,8 +148,8 @@ static void update_defense_level(struct netns_ipvs *ipvs)
+ 	case 1:
+ 		if (nomem) {
+ 			ipvs->drop_rate = ipvs->drop_counter
+-				= ipvs->sysctl_amemthresh /
+-				(ipvs->sysctl_amemthresh-availmem);
++				= amemthresh /
++				(amemthresh-availmem);
+ 			ipvs->sysctl_drop_packet = 2;
+ 		} else {
+ 			ipvs->drop_rate = 0;
+@@ -156,8 +158,8 @@ static void update_defense_level(struct netns_ipvs *ipvs)
+ 	case 2:
+ 		if (nomem) {
+ 			ipvs->drop_rate = ipvs->drop_counter
+-				= ipvs->sysctl_amemthresh /
+-				(ipvs->sysctl_amemthresh-availmem);
++				= amemthresh /
++				(amemthresh-availmem);
+ 		} else {
+ 			ipvs->drop_rate = 0;
+ 			ipvs->sysctl_drop_packet = 1;
+-- 
+2.34.1
 
-This series crashes Linux on AM62ax SoC which also uses the
-AM65-CPSW-NUSS driver:
-https://gist.github.com/Siddharth-Vadapalli-at-TI/5ed0e436606001c247a7da664f75edee
-
-Regards,
-Siddharth.
