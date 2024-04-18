@@ -1,122 +1,306 @@
-Received: from e3i51.smtp2go.com (e3i51.smtp2go.com [158.120.84.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C37D1635CA
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A734FE57B;
+	Thu, 18 Apr 2024 12:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713443383; cv=none; b=I29TSCLtblwIgmU1XxXkBHJROVwsZ4lr7ix4bIqshaoXMBCdUkA/sCHIx1RpfXznxRpK3/nSn09GCVzMCClfFDRtPtTOiyBDUiCoB34xqR1nbuEt7J/K4+1TKdYP+phwrPgYCpm4XOhrS60tjg9Ko4EMkRE7Tis8v0hWziI4Chg=
+	t=1713443522; cv=none; b=tgiIB44WUUNxaRG6GJQHzOiWnTlUomHmEQxM0IfKPv93RdYrpv5LX8wpsHu2vnGs/61iG2YSaR8bN1Rn1Cv1zxPqBI5VVeeYO8QliZ7f4DiCXqloqipNrkbB39j6wykLUBj74dEPZPeLIXtxKXG/q/W6BANFsEv17HN0yOk5skE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713443383; c=relaxed/simple;
-	bh=70ZT+ixekGA7Dp6gZqaclj06/R0USy8Kl4atAXCRXx0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JczeIvl+RHtXOjmtdRO6IfG7eBuBSW1nBTyeR9yB8Z8fuJZhbBQyk0qmwGAU+H1+c5zCnZGopI3RpoXaEWOdjQMwFf/RzUT03bruyYSSWxcgKjh2//kQczLDoA24YMPW7vYsdsHoiqLR3cFK41KTLWKMNyoVB7y3YIwOp4Z05nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=AJMOg5JV; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=cp9pX5Xd; arc=none smtp.client-ip=158.120.84.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
+	s=arc-20240116; t=1713443522; c=relaxed/simple;
+	bh=8T5tDNpijMOGTkIpZA85sKyrwj4gV3Qgom9RsdstytQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbbabniFvyVYE1cGG5JuSX7z0GGEcAGvqnLd44L2aaAFTkFqN6ZuvAscnHZDrmFWZbjZvOQztVLyjJNKi11wT9bT/gzknkBGN6ZdAoLefrkIxZIGIX+YaiC8rSvC75Me9CwT95hLoNoZCStAnUFKnEZxjw145u+LQpg+0+8iEMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bL6auBgc; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="AJMOg5JV";
-	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="cp9pX5Xd"
-Received: from [10.86.249.198] (helo=asas054.asem.intra)
-	by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
-	(envelope-from <f.suligoi@asem.it>)
-	id 1rxQtL-wSFvR6-2o;
-	Thu, 18 Apr 2024 12:29:27 +0000
-Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
-	 Thu, 18 Apr 2024 14:29:23 +0200
-From: Flavio Suligoi <f.suligoi@asem.it>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bL6auBgc"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-343d2b20c4bso585123f8f.2;
+        Thu, 18 Apr 2024 05:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713443519; x=1714048319; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f20jXAs0R410nde+WOZddVWtxUvYuYRobOHpSmKOaaQ=;
+        b=bL6auBgcQPYBnWJltKDmPU7TZ/0HKjRzFsPBcmt114QZ/9BpovI5RaTLUqbgdfveDP
+         4jconqddv44KwVds53tGEBsEr//S1B/mbneunwUEbeG5A+Ifasko9C2PhzvUjqKwjrT9
+         hf7YrtYCDBpsbfJpMiskUFtNIOdEqxUm0WnxPNSmqCVKhsjTCcEa/2k3cIHNCVdCVsha
+         MlsLkhMQTfqLFhXeQZTI+Lgya6AH+cfQKyS61GM3beIeT6AYcJhCULv7n0ErEaiY57MJ
+         VA9TdNLgO3XVGH9NCjxlqDsJM1HXQLExkwu5ptpEgkcWk79VZG5My9OTMld2chmwQu9M
+         81OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713443519; x=1714048319;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f20jXAs0R410nde+WOZddVWtxUvYuYRobOHpSmKOaaQ=;
+        b=qIvwfZTTY+6gegTTsYzkqeLXM3qhDuYP/CLAvXKthER+IxWuofNICgJzoH1Cj47yB7
+         EE+5or0bIGUzzxzZ3kOJ3UoQs+3/U+LZhPN8JPG4dQwbzn0Nyo6y/1VVxwkY26rH9l8X
+         ZpOWXeQz3/PSxDRxyIqFw+RFuS7sYkRRAxjostCDOk+JHEcUsaiTWLS47YtNOcGZ+B+h
+         6k4lIfXjofbuLXyTRaQKTFEWSHnp6j1pFa2O+zsLEhkFTXnoboutp118UaP9V6p+j3kF
+         dZPuR8f+jxQOxouYAgCAONLzMUe+icytkSBxwmWySL00UWv1laBVk4wwVRQKScBfuvt+
+         Q9iw==
+X-Forwarded-Encrypted: i=1; AJvYcCULmWynKR+7BMGobwCQuX3jaNxD6EG2EQT6lG1d10U3v3BG69KLKmpy4O+xhjgRDRY08HrW2b9hDrckbs+fs7SpEsmll1FDwMQDBL7Heti8908YQ2qvKcG1WLuW0Q8741boRrvR
+X-Gm-Message-State: AOJu0Yykizl9q3Hkx3gMclodZUwhbTEg2UaEMWi5wu9tUwSLCF/xAVm9
+	DPXbiG1K1YeOW4yQixb4XKlMc3Hib0VemggWTkhsktpzvNs1DoOm
+X-Google-Smtp-Source: AGHT+IGNDZ9xxSlFasBFyFMQ9stqMTrPtzNuO2e6Tiex39gwe1cv2145+fyDbw4VjYUw/oakuTtrIA==
+X-Received: by 2002:a5d:5266:0:b0:343:84ca:ef27 with SMTP id l6-20020a5d5266000000b0034384caef27mr1703207wrc.41.1713443518595;
+        Thu, 18 Apr 2024 05:31:58 -0700 (PDT)
+Received: from debian ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id e5-20020adfe385000000b003455e5d2569sm1790839wrm.0.2024.04.18.05.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 05:31:57 -0700 (PDT)
+Date: Thu, 18 Apr 2024 14:31:55 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Flavio Suligoi <f.suligoi@asem.it>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: sa8775p-ride: remove tx-sched-sp property
-Date: Thu, 18 Apr 2024 14:28:59 +0200
-Message-Id: <20240418122859.2079099-6-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418122859.2079099-1-f.suligoi@asem.it>
-References: <20240418122859.2079099-1-f.suligoi@asem.it>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@ew.tq-group.com,
+	alexander.stein@ew.tq-group.com
+Subject: Re: [PATCH v2] net: phy: marvell-88q2xxx: add support for Rev B1 and
+ B2
+Message-ID: <20240418123155.GA248236@debian>
+References: <20240417-mv88q222x-revb1-b2-init-v2-1-7ef41f87722a@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 18 Apr 2024 12:29:23.0923 (UTC) FILETIME=[0BBCEA30:01DA918C]
-X-smtpcorp-track: 1rxQtLwSFvR62o.mcmMue4JiIFLt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpcorp.com;
- i=@smtpcorp.com; q=dns/txt; s=a1-4; t=1713443369; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe;
- bh=V+1vvwjdWgujcNcq0BbcQl1Gr7TpP6SphXfO1RK3Fmk=;
- b=AJMOg5JVI2t5sI29vja97AfBrGrhiEjJEN3WZcSw+hBeQ3x9ipsp92qenqfT3pdEm5/6C
- o9DHqTfyXkOoyUFIa+vJrAA3UtYPfwgBRWHGCM0avr6bBXkOBAP20xt8Z/Bc/JIShIs49rV
- id3Be3iDBi8JToChrMX6yKVTZVb32sck/nM6u7r4UHb6NzgBVdR9eL/ZIbSoDkx3yQ6Ldos
- fXd1SKP5jK3qbno3wz3mp/Atuh9aDAJvYc14dQKzzzMf5G2cp5a+h3pvnUkCTafYHeZKDJm
- f3vqLL7HS3K1g+sBOcMDK1ME9QBGTBWVOKlj3s4in3r06F6sm4ue3pl3u23w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
- i=@asem.it; q=dns/txt; s=s1174574; t=1713443369; h=from : subject : to
- : message-id : date; bh=V+1vvwjdWgujcNcq0BbcQl1Gr7TpP6SphXfO1RK3Fmk=;
- b=cp9pX5XdOfVUX4Hunh9Bw4/25GhkWfFmud+EgMVjqP2a6k1LqVMYH8jRo8zqhKGBCfg6G
- GAOfAbz/yQheVDK/xHu10iTKjxF7a27DcvbGq7NsTskASfoM5Ci37RWmh2NTaja0HFk8cux
- 2NiWy3RhXpezYl3nKm+HIrsPqb96niRuuMaGFva5us2gDnGS7F4k5i+0WuE5tEsz8cGKb/X
- EVbEq2Ibleq2/hAluS/KHGk1XTNLnmH9qFZMDN8yeNBO35lXNK7AqEVRcYcmy4sIF0BrEvn
- DcGpdnGawD9I5ihswXuCh7U8U9As6AoCXigGxqI0oLXZliDAYD0Md6X9Gr+A==
+In-Reply-To: <20240417-mv88q222x-revb1-b2-init-v2-1-7ef41f87722a@ew.tq-group.com>
 
-Strict priority for the tx scheduler is by default in Linux driver, so the
-tx-sched-sp property was removed in commit aed6864035b1 ("net: stmmac:
-platform: Delete a redundant condition branch").
+Am Wed, Apr 17, 2024 at 04:06:36PM +0200 schrieb Gregor Herburger:
+> Different revisions of the Marvell 88q2xxx phy needs different init
+> sequences.
+> 
+> Add init sequence for Rev B1 and Rev B2. Rev B2 init sequence skips one
+> register write.
+> 
+> Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+> ---
+> Hi,
+> 
+> as discussed when adding support for Marvell 88Q2220 Revision B0 [1],
+> newer revisions need different init sequences. So add support for Rev B1
+> and B2 with this patch.
+> 
+> [1] https://lore.kernel.org/netdev/20240216205302.GC3873@debian/
+> 
+> Best regards
+> Gregor
+> ---
+> Changes in v2:
+> - Add helper function to write phy mmd sequences
+> - Link to v1: https://lore.kernel.org/r/20240403-mv88q222x-revb1-b2-init-v1-1-48b855464c37@ew.tq-group.com
+> ---
+>  drivers/net/phy/marvell-88q2xxx.c | 119 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 103 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
+> index 6b4bd9883304..bbbb3efb7877 100644
+> --- a/drivers/net/phy/marvell-88q2xxx.c
+> +++ b/drivers/net/phy/marvell-88q2xxx.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/hwmon.h>
+>  
+>  #define PHY_ID_88Q2220_REVB0	(MARVELL_PHY_ID_88Q2220 | 0x1)
+> +#define PHY_ID_88Q2220_REVB1	(MARVELL_PHY_ID_88Q2220 | 0x2)
+> +#define PHY_ID_88Q2220_REVB2	(MARVELL_PHY_ID_88Q2220 | 0x3)
+>  
+>  #define MDIO_MMD_AN_MV_STAT			32769
+>  #define MDIO_MMD_AN_MV_STAT_ANEG		0x0100
+> @@ -129,6 +131,49 @@ static const struct mmd_val mv88q222x_revb0_init_seq1[] = {
+>  	{ MDIO_MMD_PCS, 0xfe05, 0x755c },
+>  };
+>  
+> +static const struct mmd_val mv88q222x_revb1_init_seq0[] = {
+> +	{ MDIO_MMD_PCS, 0xFFE4, 0x0007 },
+> +	{ MDIO_MMD_AN, MDIO_AN_T1_CTRL, 0x0 },
+> +	{ MDIO_MMD_PCS, 0xFFE3, 0x7000 },
+> +	{ MDIO_MMD_PMAPMD, MDIO_CTRL1, 0x0840 },
+> +};
+> +
+> +static const struct mmd_val mv88q222x_revb2_init_seq0[] = {
+> +	{ MDIO_MMD_PCS, 0xFFE4, 0x0007 },
+> +	{ MDIO_MMD_AN, MDIO_AN_T1_CTRL, 0x0 },
+> +	{ MDIO_MMD_PMAPMD, MDIO_CTRL1, 0x0840 },
+> +};
+> +
+> +static const struct mmd_val mv88q222x_revb1_revb2_init_seq1[] = {
+> +	{ MDIO_MMD_PCS, 0xFE07, 0x125A },
+> +	{ MDIO_MMD_PCS, 0xFE09, 0x1288 },
+> +	{ MDIO_MMD_PCS, 0xFE08, 0x2588 },
+> +	{ MDIO_MMD_PCS, 0xFE72, 0x042C },
+> +	{ MDIO_MMD_PCS, 0xFFE4, 0x0071 },
+> +	{ MDIO_MMD_PCS, 0xFFE4, 0x0001 },
+> +	{ MDIO_MMD_PCS, 0xFE1B, 0x0048 },
+> +	{ MDIO_MMD_PMAPMD, 0x0000, 0x0000 },
+> +	{ MDIO_MMD_PCS, 0x0000, 0x0000 },
+> +	{ MDIO_MMD_PCS, 0xFFDB, 0xFC10 },
+> +	{ MDIO_MMD_PCS, 0xFE1B, 0x58 },
+> +	{ MDIO_MMD_PCS, 0xFCAD, 0x030C },
+> +	{ MDIO_MMD_PCS, 0x8032, 0x6001 },
+> +	{ MDIO_MMD_PCS, 0xFDFF, 0x05A5 },
+> +	{ MDIO_MMD_PCS, 0xFDEC, 0xDBAF },
+> +	{ MDIO_MMD_PCS, 0xFCAB, 0x1054 },
+> +	{ MDIO_MMD_PCS, 0xFCAC, 0x1483 },
+> +	{ MDIO_MMD_PCS, 0x8033, 0xC801 },
+> +	{ MDIO_MMD_AN, 0x8032, 0x2020 },
+> +	{ MDIO_MMD_AN, 0x8031, 0xA28 },
+> +	{ MDIO_MMD_AN, 0x8031, 0xC28 },
+> +	{ MDIO_MMD_PCS, 0xFBBA, 0x0CB2 },
+> +	{ MDIO_MMD_PCS, 0xFBBB, 0x0C4A },
+> +	{ MDIO_MMD_PCS, 0xFE5F, 0xE8 },
+> +	{ MDIO_MMD_PCS, 0xFE05, 0x755C },
+> +	{ MDIO_MMD_PCS, 0xFA20, 0x002A },
+> +	{ MDIO_MMD_PCS, 0xFE11, 0x1105 },
+> +};
+> +
+nit: use small letters for hex values.
 
-So we can safely remove this property from this device-tree.
+>  static int mv88q2xxx_soft_reset(struct phy_device *phydev)
+>  {
+>  	int ret;
+> @@ -687,31 +732,72 @@ static int mv88q222x_soft_reset(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> -static int mv88q222x_revb0_config_init(struct phy_device *phydev)
+> +static int mv88q222x_write_mmd_vals(struct phy_device *phydev,
+> +				    const struct mmd_val *vals, size_t len)
+>  {
+> -	int ret, i;
+> +	int ret;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb0_init_seq0); i++) {
+> -		ret = phy_write_mmd(phydev, mv88q222x_revb0_init_seq0[i].devad,
+> -				    mv88q222x_revb0_init_seq0[i].regnum,
+> -				    mv88q222x_revb0_init_seq0[i].val);
+> +	for (; len; vals++, len--) {
+> +		ret = phy_write_mmd(phydev, vals->devad, vals->regnum,
+> +				    vals->val);
+>  		if (ret < 0)
+>  			return ret;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static int mv88q222x_revb0_config_init(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +
+> +	ret = mv88q222x_write_mmd_vals(phydev, mv88q222x_revb0_init_seq0,
+> +				       ARRAY_SIZE(mv88q222x_revb0_init_seq0));
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	usleep_range(5000, 10000);
+>  
+> -	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb0_init_seq1); i++) {
+> -		ret = phy_write_mmd(phydev, mv88q222x_revb0_init_seq1[i].devad,
+> -				    mv88q222x_revb0_init_seq1[i].regnum,
+> -				    mv88q222x_revb0_init_seq1[i].val);
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> +	ret = mv88q222x_write_mmd_vals(phydev, mv88q222x_revb0_init_seq1,
+> +				       ARRAY_SIZE(mv88q222x_revb0_init_seq1));
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	return mv88q2xxx_config_init(phydev);
+>  }
+>  
+> +static int mv88q222x_revb1_revb2_config_init(struct phy_device *phydev)
+> +{
+> +	bool is_rev_b1 = phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] == PHY_ID_88Q2220_REVB1;
+> +	int ret;
+> +
+> +	if (is_rev_b1)
+> +		ret = mv88q222x_write_mmd_vals(phydev, mv88q222x_revb1_init_seq0,
+> +					       ARRAY_SIZE(mv88q222x_revb1_init_seq0));
+> +	else
+> +		ret = mv88q222x_write_mmd_vals(phydev, mv88q222x_revb2_init_seq0,
+> +					       ARRAY_SIZE(mv88q222x_revb2_init_seq0));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	usleep_range(3000, 5000);
+> +
+> +	ret = mv88q222x_write_mmd_vals(phydev, mv88q222x_revb1_revb2_init_seq1,
+> +				       ARRAY_SIZE(mv88q222x_revb1_revb2_init_seq1));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return mv88q2xxx_config_init(phydev);
+> +}
+> +
+> +static int mv88q222x_config_init(struct phy_device *phydev)
+> +{
+> +	if (phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] == PHY_ID_88Q2220_REVB0)
+> +		return mv88q222x_revb0_config_init(phydev);
+> +	else
+> +		return mv88q222x_revb1_revb2_config_init(phydev);
+> +}
+> +
+>  static int mv88q222x_cable_test_start(struct phy_device *phydev)
+>  {
+>  	int ret;
+> @@ -810,14 +896,15 @@ static struct phy_driver mv88q2xxx_driver[] = {
+>  		.get_sqi_max		= mv88q2xxx_get_sqi_max,
+>  	},
+>  	{
+> -		PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0),
+> +		.phy_id			= MARVELL_PHY_ID_88Q2220,
+> +		.phy_id_mask		= MARVELL_PHY_ID_MASK,
+>  		.name			= "mv88q2220",
+>  		.flags			= PHY_POLL_CABLE_TEST,
+>  		.probe			= mv88q2xxx_probe,
+>  		.get_features		= mv88q2xxx_get_features,
+>  		.config_aneg		= mv88q2xxx_config_aneg,
+>  		.aneg_done		= genphy_c45_aneg_done,
+> -		.config_init		= mv88q222x_revb0_config_init,
+> +		.config_init		= mv88q222x_config_init,
+>  		.read_status		= mv88q2xxx_read_status,
+>  		.soft_reset		= mv88q222x_soft_reset,
+>  		.config_intr		= mv88q2xxx_config_intr,
+> @@ -836,7 +923,7 @@ module_phy_driver(mv88q2xxx_driver);
+>  
+>  static struct mdio_device_id __maybe_unused mv88q2xxx_tbl[] = {
+>  	{ MARVELL_PHY_ID_88Q2110, MARVELL_PHY_ID_MASK },
+> -	{ PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0), },
+> +	{ MARVELL_PHY_ID_88Q2220, MARVELL_PHY_ID_MASK },
+>  	{ /*sentinel*/ }
+>  };
+>  MODULE_DEVICE_TABLE(mdio, mv88q2xxx_tbl);
+>
+Hi Gregor,
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/qcom/sa8775p-ride.dts | 2 --
- 1 file changed, 2 deletions(-)
+tested it for rev. B0 and it works as expected.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-index 26ad05bd3b3f..2e1770e07f45 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-@@ -334,7 +334,6 @@ queue3 {
- 
- 	mtl_tx_setup: tx-queues-config {
- 		snps,tx-queues-to-use = <4>;
--		snps,tx-sched-sp;
- 
- 		queue0 {
- 			snps,dcb-algorithm;
-@@ -404,7 +403,6 @@ queue3 {
- 
- 	mtl_tx_setup1: tx-queues-config {
- 		snps,tx-queues-to-use = <4>;
--		snps,tx-sched-sp;
- 
- 		queue0 {
- 			snps,dcb-algorithm;
--- 
-2.34.1
+Tested-by: Dimitri Fedrau <dima.fedrau@gmail.com>
 
+Best regards,
+Dimitri Fedrau
+
+> ---
+> base-commit: 1fdad13606e104ff103ca19d2d660830cb36d43e
+> change-id: 20240403-mv88q222x-revb1-b2-init-9961d2cf1d27
+> 
+> Best regards,
+> -- 
+> TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+> Amtsgericht München, HRB 105018
+> Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+> https://www.tq-group.com/
+> 
