@@ -1,270 +1,163 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4986F9E9
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219372CCC2;
+	Thu, 18 Apr 2024 06:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713422467; cv=none; b=HrB/pPenhWr3CCQ2Z0Vij/U1WJzjQGL/5r3Ff2LhhJEsc44kNJwbMBe2APDzAeb5Z9KNi63AFvjkf3B4lOmfN2ito2Mroulf02Rmj6rK3wMaIcHA4IJZYBjtEhxgYII/MlZb5SWEu0exsaTTfGniK283ja2Z4Y1GaJjswJ860mE=
+	t=1713422510; cv=none; b=Jv4hXZu1XEIPE/NbkkafOEPS6xioRJPcBr+700ZnkHI65oXECXNcQTFvkl3gU2oo5cU2vjC/lL5ADmNGxPRUvT/W8cUlCoZwD3L9imQBv/OcJKEydqI5Flt6ruIUO7xiO31Rt7+MrH05y3vIu9SM/pO6LzGJmxsoF18mrCSopbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713422467; c=relaxed/simple;
-	bh=YCGca0HmuMoGzksuJmN6LIUBTV1yjU/EK/K2wYM1GTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fAEeGTTJ66W7bY4KSEWLPQmXQGzrVIlTMUwN6xZrn1SL5lSV9QJydw7F/Xa74w5lQnuVZyVVzBP5zAevx5XbiHT5h7lYIV3T9Lf649oujy+3vYVDHp53VjU5pHNzgkj5NsTusg1vkaNAYOop2B3UsT45zX+NGg7OtQWU/BvTgCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ik9GgEqa; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik9GgEqa"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5708d8a773aso510050a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 23:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713422464; x=1714027264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIerMe8DUgO/cLvMnfZab0s5jOGtP6wHZHAzU3l1c0E=;
-        b=Ik9GgEqaaR/asy7y9qa5VICZA3PYDr8JbsoI9QtPz2R7NAr+vUM7nGgCeXbO6a8cDO
-         1a0IxHM8Y0czo19VelskhkN0os1k0cfjQWp+s3PapNUFBlZebcutivMMS2x3jq1yrPf5
-         JIqdDB5PzMbimhMC7fWg/stx671BScBUXN6J+hzDKvcntRcJyMFOyaTo5RqcYsaTgn0x
-         VEj4LBMmL2W8Q6a6SKgFmXgAhTiHk8jJflj+THk8IXx+ZNjm8LNcR9ZGeULbzJ4sCvrP
-         PddifFvi/rsAs7ed90tkvoTUXMIu447DWV817NJQoXqS6BFXcuM/XK+yKybf1BBjTsdb
-         8Qxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713422464; x=1714027264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIerMe8DUgO/cLvMnfZab0s5jOGtP6wHZHAzU3l1c0E=;
-        b=Lc8uhVm+rBSLi4cnt88MdoD6+ovjWvMIvRVy3E3cGj3G7CEXfWx5ia7uHOc3b5QeiV
-         mOSCAyeziZ+02Bo50J1O/fClBXcg4EqqHI2xwGiQwCwlckWOLl1pZT/wEcSJ4iNOzsvS
-         ReRg4jNSzmzX35BIWivwE45wUmhAz+Dr2s7+Fy9gqgWj4tLscyQefVqNXT2Ro+WI82bP
-         yGQIdKIrXDcmHnNAw9e8a1Y8sgFNnpFvZl7t47/jbp8h1oeh4qFBluKRuv7X6fZY5/2b
-         P5ZQb0YwJjmj4hLhuRzAr/vBJGD+w2dnU9Wz9jMrE1Ld4ERlxwkgkTAclYocafaWjjeU
-         dOzg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3oXuvF10BfAEcuPl7tt+BQRr45uGV9cstLlW9j+Dv2NdAwParb52nHFD4uBTZxoPB7M47gwqnJKLkuXihKttDEl7Tb2q7Pnd7y+lQ
-X-Gm-Message-State: AOJu0Yw2+h+Icd4jNb1FxgbAshAihONDztS2IwLeKvmH9m1QsrkFGSq9
-	OiOtHnfXH+Ko3szO5O8AAbuSLj8Ei4kq3FdzjyJG/RoWBCOcJf9dAMNfUcGLInRglzsYouHUhZz
-	5qR/04do9XgzrmNb2v9OGmtYDpsg=
-X-Google-Smtp-Source: AGHT+IEQ3LDhpLFH5ATWJNwiISmPisd/m02AjpsHkEAeYYdCzggM9Oa0oxcnvypWBRgJfGu9OshAjGaGazlGe6r2g3k=
-X-Received: by 2002:a50:9f83:0:b0:56e:3175:6065 with SMTP id
- c3-20020a509f83000000b0056e31756065mr1148834edf.9.1713422463742; Wed, 17 Apr
- 2024 23:41:03 -0700 (PDT)
+	s=arc-20240116; t=1713422510; c=relaxed/simple;
+	bh=SzE8IQJ48xc7908eyTNtDsHkCKQFHLy2DgGThS09xpo=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fq9007cjwY1lIJtBLd2goHMwCKvINKac89hI1vZQ1j5aua7IOBnanpq8+NYE76TKx0xUzj9NC6T9XDTEDfA6EL51hDtyTyGDUsKophOlo86ljPtFK0dU0Qb9R+yXCkLH1WrYY/7kwRyGeL0k5iGK9dP6byzrGOuLI4Do/8Bevcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 43I5iYZe2019031; Thu, 18 Apr 2024 14:44:34 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 43I5iE7j2465865; Thu, 18 Apr 2024 14:44:14 +0900
+X-Iguazu-Qid: 2rWhYYPQE6cu19H1s9
+X-Iguazu-QSIG: v=2; s=0; t=1713419053; q=2rWhYYPQE6cu19H1s9; m=afDSdK3UvNipDoLKBSLLnma5OONPJ5FrYHGDMbHQdyY=
+Received: from CNN1EMTA01.test.kioxia.com ([202.248.33.144])
+	by relay.securemx.jp (mx-mr1121) id 43I5iCX22637104
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 18 Apr 2024 14:44:13 +0900
+Received: from Switcher-Post_Send (gateway [10.232.20.1])
+	by CNN1EMTA01.test.kioxia.com (Postfix) with ESMTP id D4E4B48A81;
+	Thu, 18 Apr 2024 14:44:12 +0900 (JST)
+Received: from CNN1ESTR04.kioxia.com (localhost [127.0.0.1])
+	by Switcher-Post_Send (Postfix) with ESMTP id 2778B1900001EB;
+	Thu, 18 Apr 2024 14:31:30 +0900 (JST)
+Received: from localhost [127.0.0.1] 
+	 by CNN1ESTR04.kioxia.com with ESMTP id 0003QAAAAAA02211;
+	 Thu, 18 Apr 2024 14:31:30 +0900
+Received: from CNN1EXMB02.r1.kioxia.com (CNN1EXMB02.r1.kioxia.com [10.232.20.151])
+	by Switcher-Pre_Send (Postfix) with ESMTP id 1BFCBA0640E18;
+	Thu, 18 Apr 2024 14:31:30 +0900 (JST)
+Received: from CNN1EXMB04.r1.kioxia.com (10.232.20.153) by
+ CNN1EXMB02.r1.kioxia.com (10.232.20.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Apr 2024 14:44:12 +0900
+Received: from CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) by
+ CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) with mapi id 15.01.2507.035; Thu,
+ 18 Apr 2024 14:44:12 +0900
+From: tada keisuke <keisuke1.tada@kioxia.com>
+To: "song@kernel.org" <song@kernel.org>,
+        "yukuai3@huawei.com"
+	<yukuai3@huawei.com>
+CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 05/11] md: match the type of variables to percpu_ref
+Thread-Topic: [PATCH v2 05/11] md: match the type of variables to percpu_ref
+Thread-Index: AdqLx+FXdNJkPwyDSq2lcgBOkP0WcQ==
+Date: Thu, 18 Apr 2024 05:44:11 +0000
+Message-ID: <1c04e1a6d79c494faad6bdc21d86d76e@kioxia.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28328.001
+x-tm-as-result: No-10--5.106300-8.000000
+x-tmase-matchedrid: g7XVaO+YFMumagT1k9kBpgrcxrzwsv5uXPK9y3z82GsPdZmyx8xAa+K5
+	fhRxt1aADpxsntCj+iajrLRBxwnZS7VQ6XPWwtdyEXjPIvKd74BMkOX0UoduuRFBDiQWqOMkJwY
+	Oi+iMxY3U5iXDpe6YeP6mFiC4o7QUdJMdJS+tDywZgmFGHqyx630tCKdnhB581kTfEkyaZdz6C0
+	ePs7A07QsfaqMZktsd9K4u2mW1AZ3iZawwAP+WlZ2c5QMBYjIDRSkcJMJhH2I=
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--5.106300-8.000000
+x-tmase-version: ISME-14.0.0.2080-9.0.1002-28328.001
+x-tm-snts-smtp: 206CAC30B0DCD9F165B7D62BF7D51A0DF8E8655C7C4CA21B759AF0D5981D8EF02000:8
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417141111.77855-1-ioworker0@gmail.com> <2062c2d1-4ebb-4a40-89f9-3083e6912301@redhat.com>
-In-Reply-To: <2062c2d1-4ebb-4a40-89f9-3083e6912301@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Thu, 18 Apr 2024 14:40:51 +0800
-Message-ID: <CAK1f24kDtOVRC67khxazQw1fS9LUyRrTzzf_ewRqYHQQu_r6AQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/vmscan: avoid split PMD-mapped THP during shrink_folio_list()
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, maskray@google.com, 
-	ziy@nvidia.com, ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com, 
-	fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com, 
-	xiehuan09@gmail.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
-	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB02.r1.kioxia.com
+X-OrganizationHeadersPreserved: CNN1EXMB02.r1.kioxia.com
 
-Hey David,
+This patch depends on patch 04.
 
-Thanks for taking time to review.
+The counter size of percpu_ref is different from that of atomic_t.
+This is the only place where the value of nr_pending is read.
+The others are used for zero check and type has no effect.
 
-On Wed, Apr 17, 2024 at 11:02=E2=80=AFPM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> On 17.04.24 16:11, Lance Yang wrote:
-> > When the user no longer requires the pages, they would use madvise(madv=
-_free)
-> > to mark the pages as lazy free. IMO, they would not typically rewrite t=
-o the
-> > given range.
-> >
-> > At present, a PMD-mapped THP marked as lazyfree during shrink_folio_lis=
-t()
-> > is unconditionally split, which may be unnecessary. If the THP is exclu=
-sively
-> > mapped and clean, and the PMD associated with it is also clean, then we=
- can
-> > attempt to remove the PMD mapping from it. This change will improve the
-> > efficiency of memory reclamation in this case.
-> >
-> > On an Intel i5 CPU, reclaiming 1GiB of PMD-mapped THPs using
-> > mem_cgroup_force_empty() results in the following runtimes in seconds
-> > (shorter is better):
-> >
-> > --------------------------------------------
-> > |     Old       |      New       |  Change  |
-> > --------------------------------------------
-> > |   0.683426    |    0.049197    |  -92.80% |
-> > --------------------------------------------
-> >
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
-> >   include/linux/huge_mm.h |  1 +
-> >   include/linux/rmap.h    |  1 +
-> >   mm/huge_memory.c        |  2 +-
-> >   mm/rmap.c               | 81 ++++++++++++++++++++++++++++++++++++++++=
-+
-> >   mm/vmscan.c             |  7 ++++
-> >   5 files changed, 91 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > index 7cd07b83a3d0..02a71c05f68a 100644
-> > --- a/include/linux/huge_mm.h
-> > +++ b/include/linux/huge_mm.h
-> > @@ -36,6 +36,7 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsign=
-ed long old_addr,
-> >   int change_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vm=
-a,
-> >                   pmd_t *pmd, unsigned long addr, pgprot_t newprot,
-> >                   unsigned long cp_flags);
-> > +inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd);
-> >
-> >   vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool w=
-rite);
-> >   vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool w=
-rite);
-> > diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-> > index 0f906dc6d280..8c2f45713351 100644
-> > --- a/include/linux/rmap.h
-> > +++ b/include/linux/rmap.h
-> > @@ -100,6 +100,7 @@ enum ttu_flags {
-> >                                        * do a final flush if necessary =
-*/
-> >       TTU_RMAP_LOCKED         =3D 0x80, /* do not grab rmap lock:
-> >                                        * caller holds it */
-> > +     TTU_LAZYFREE_THP        =3D 0x100, /* avoid split PMD-mapped THP =
-*/
-> >   };
-> >
-> >   #ifdef CONFIG_MMU
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index 58f2c4745d80..309fba9624c2 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -1801,7 +1801,7 @@ bool madvise_free_huge_pmd(struct mmu_gather *tlb=
-, struct vm_area_struct *vma,
-> >       return ret;
-> >   }
-> >
-> > -static inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pm=
-d)
-> > +inline void zap_deposited_table(struct mm_struct *mm, pmd_t *pmd)
-> >   {
-> >       pgtable_t pgtable;
-> >
-> > diff --git a/mm/rmap.c b/mm/rmap.c
-> > index 2608c40dffad..4994f9e402d4 100644
-> > --- a/mm/rmap.c
-> > +++ b/mm/rmap.c
-> > @@ -77,6 +77,7 @@
-> >   #include <linux/mm_inline.h>
-> >
-> >   #include <asm/tlbflush.h>
-> > +#include <asm/tlb.h>
-> >
-> >   #define CREATE_TRACE_POINTS
-> >   #include <trace/events/tlb.h>
-> > @@ -1606,6 +1607,80 @@ void folio_remove_rmap_pmd(struct folio *folio, =
-struct page *page,
-> >   #endif
-> >   }
-> >
-> > +static bool __try_to_unmap_lazyfree_thp(struct vm_area_struct *vma,
-> > +                                          unsigned long address,
-> > +                                          struct folio *folio)
-> > +{
-> > +     spinlock_t *ptl;
-> > +     pmd_t *pmdp, orig_pmd;
-> > +     struct mmu_notifier_range range;
-> > +     struct mmu_gather tlb;
-> > +     struct mm_struct *mm =3D vma->vm_mm;
-> > +     struct page *page;
-> > +     bool ret =3D false;
-> > +
-> > +     VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
-> > +     VM_WARN_ON_FOLIO(folio_test_swapbacked(folio), folio);
-> > +     VM_WARN_ON_FOLIO(!folio_test_pmd_mappable(folio), folio);
-> > +     VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
-> > +
-> > +     /*
-> > +      * If we encounter a PMD-mapped THP that marked as lazyfree, we
-> > +      * will try to unmap it without splitting.
-> > +      *
-> > +      * The folio exclusively mapped should only have two refs:
-> > +      * one from the isolation and one from the rmap.
-> > +      */
-> > +     if (folio_entire_mapcount(folio) !=3D 1 || folio_test_dirty(folio=
-) ||
-> > +         folio_ref_count(folio) !=3D 2)
->
-> folio_mapcount() =3D=3D 1 is a bit nicer. Bit I assume you can drop that
-> completely and only check the refcount?
+Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
+Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
+---
+ drivers/md/md.h     | 4 ++--
+ drivers/md/raid1.c  | 4 ++--
+ drivers/md/raid10.c | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Thanks for your suggestion!
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 2eaf8606af9e..783fec1f1445 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -231,9 +231,9 @@ static inline bool nr_pending_is_not_zero(struct md_rde=
+v *rdev)
+ 	return atomic_read(&rdev->nr_pending) !=3D 0;
+ }
+=20
+-static inline unsigned int nr_pending_read(struct md_rdev *rdev)
++static inline unsigned long nr_pending_read(struct md_rdev *rdev)
+ {
+-	return atomic_read(&rdev->nr_pending);
++	return (unsigned long)atomic_read(&rdev->nr_pending);
+ }
+=20
+ static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
+s,
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 962cebbba6cd..12318fb15a88 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -751,7 +751,7 @@ static bool rdev_readable(struct md_rdev *rdev, struct =
+r1bio *r1_bio)
+ struct read_balance_ctl {
+ 	sector_t closest_dist;
+ 	int closest_dist_disk;
+-	int min_pending;
++	long min_pending;
+ 	int min_pending_disk;
+ 	int sequential_disk;
+ 	int readable_disks;
+@@ -771,7 +771,7 @@ static int choose_best_rdev(struct r1conf *conf, struct=
+ r1bio *r1_bio)
+ 	for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
+ 		struct md_rdev *rdev;
+ 		sector_t dist;
+-		unsigned int pending;
++		unsigned long pending;
+=20
+ 		if (r1_bio->bios[disk] =3D=3D IO_BLOCKED)
+ 			continue;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 2b1238befd8a..b91dd6c0be5a 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -733,7 +733,7 @@ static struct md_rdev *read_balance(struct r10conf *con=
+f,
+ 	int do_balance;
+ 	int best_dist_slot, best_pending_slot;
+ 	bool has_nonrot_disk =3D false;
+-	unsigned int min_pending;
++	unsigned long min_pending;
+ 	struct geom *geo =3D &conf->geo;
+=20
+ 	raid10_find_phys(conf, r10_bio);
+@@ -753,7 +753,7 @@ static struct md_rdev *read_balance(struct r10conf *con=
+f,
+ 		sector_t first_bad;
+ 		int bad_sectors;
+ 		sector_t dev_sector;
+-		unsigned int pending;
++		unsigned long pending;
+ 		bool nonrot;
+=20
+ 		if (r10_bio->devs[slot].bio =3D=3D IO_BLOCKED)
+--=20
+2.34.1
 
- + if (folio_test_dirty(folio) || folio_ref_count(folio) !=3D 2)
 
-I'm not sure if it's safe without checking the folio_mapcount.
-
->
-> > +             return false;
-> > +
-> > +     pmdp =3D mm_find_pmd(mm, address);
-> > +     if (unlikely(!pmdp))
-> > +             return false;
-> > +     if (pmd_dirty(*pmdp))
-> > +             return false;
-> > +
-> > +     tlb_gather_mmu(&tlb, mm);
-> > +     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
-> > +                             address & HPAGE_PMD_MASK,
-> > +                             (address & HPAGE_PMD_MASK) + HPAGE_PMD_SI=
-ZE);
-> > +     mmu_notifier_invalidate_range_start(&range);
-> > +
-> > +     ptl =3D pmd_lock(mm, pmdp);
-> > +     orig_pmd =3D *pmdp;
-> > +     if (unlikely(!pmd_present(orig_pmd) || !pmd_trans_huge(orig_pmd))=
-)
-> > +             goto out;
-> > +
-> > +     page =3D pmd_page(orig_pmd);
-> > +     if (unlikely(page_folio(page) !=3D folio))
-> > +             goto out;
-> > +
-> > +     orig_pmd =3D pmdp_huge_get_and_clear(mm, address, pmdp);
-> > +     tlb_remove_pmd_tlb_entry(&tlb, pmdp, address);
->
-> Until this point, the page could have been pinned (including GUP-fast)
-> and we might be in trouble if we drop it.
-
-Thanks for pointing that out!
-
-+ if (pmd_dirty(orig_pmd) || folio_maybe_dma_pinned(folio) ||
-folio_ref_count(folio) !=3D 2) {
-+     set_pmd_at(mm, address, pmdp, orig_pmd);
-+ } else {
-
-Could I check the folio->_pincount using folio_maybe_dma_pinned() and
-then re-check the refcount here? Or should I just re-check the refcount?
-
-IIUC, this folio has been already unlinked from the PMD and the process
-cannot get an additional pin on this folio.
-
-Thanks again for the review!
-Lance
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
