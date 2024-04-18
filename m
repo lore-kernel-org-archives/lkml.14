@@ -1,217 +1,347 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E053B79F
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F7C56462;
+	Thu, 18 Apr 2024 07:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713426564; cv=none; b=ZCs5JyvHv1br7aKnHpXuiJLO6aqb0pYb8NvGHL1y3L/f0z+tFTjl0SJYdkmriKkXHciUW8eyMnUsP8OUhxoI48DFgU3qkUqGZbECPgNAXIuzfk/MCgIYCDvqUjtgB2r8oePlCui0d2MIGUFyS99E8qWFx2Wv5n5iTxLUBRmHj1w=
+	t=1713426592; cv=none; b=WDRbKrcxMr9Z4T1f+oVVT3pSmnCPwPJJILJEQUr6a/p9gBLFNVBVip4RKFP9HSuBcGRQZMylvVuo6xpZvj11GwZiAIYUN/QGhGPRDKGfLgdhUM8mFhK6F90J0FV9n7kR9fSazpml7HXv/lGtDI1wAlhHqsVxdk1bc6NIWQvYEO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713426564; c=relaxed/simple;
-	bh=tOG2QuI93DOp+bJmmh7Zv4ScyQbFEf3WUpu5J3kJgB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiC6mM/pGjYP2i3ScXaxWL9gb8agTMiiwY/xG24psXqWHJDLAdHGv0K9hchFpRPHVIYXMdN78qOOVdv+JXWlaYgqJrxOWzHLl420G9hhzb7uXEid/xZjJzvzWPGgQCO2G7qa+AZvFqri/XvsULwk8hCuATnqLh8NdxoRD7W9RVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuWjR6cA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713426592; c=relaxed/simple;
+	bh=9+3RpHdiu9N+hHXVc785KNc32OSelwLqLQLwZye2W9A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=AW6YSpbgnW/SssNT14hw8o9hlZp8f/kPBpTm9z9RSgLOnDWsltFKhWXP1CLHcD8y/yRT+brumQPoGXtCGEvJEE3cKR0AvyXarpRQhKHmC3pXR5YR2JRC0Rb1zaxP59KJx7Mxlxbti4Lu1mKc/PUrlrK03omcVrpHG0usFp2Hjfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=gWL47aLn; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuWjR6cA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD70C113CC;
-	Thu, 18 Apr 2024 07:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713426563;
-	bh=tOG2QuI93DOp+bJmmh7Zv4ScyQbFEf3WUpu5J3kJgB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uuWjR6cAbT8LcS5lff1QDoZC0Ukf9nBlj4mip5mHsTLHK2j25/bWNM6431AzE9ibF
-	 Ovz8qVbXyw6t7TlFv/fVQP2gjEbp+z/+TWbgO1p24c1wpXUt0rpd/nkrmGoWvZDWVg
-	 yR2C68ee7ejaQl7qg9PGHkur6zfg6dgTWKDm0zJ8yCAhMzx4B2wGZel06VuE9Jq8hL
-	 9bxrcGqnihH/TDu29vqW9mVtXLh5H5d/mr3D9In9S1OX933jTwErWPX2+knEw+g1Vp
-	 l9caeyllnKGDx9LXGHMToilBAtveSxRUZfgtOQRpGLn+G/tdKFCPeglJIZuSeRfLXM
-	 cpkoks1YgxRsQ==
-Date: Thu, 18 Apr 2024 15:49:22 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
-	xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
-	viro@zeniv.linux.org.uk, brauner@kernel.org,
-	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
-	houtao1@huawei.com
-Subject: Re: [PATCH v2] erofs: reliably distinguish block based and fscache
- mode
-Message-ID: <ZiDQgmN0hC2uIiPA@debian>
-Mail-Followup-To: Baokun Li <libaokun1@huawei.com>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>,
-	linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
-	huyue2@coolpad.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	linux-kernel@vger.kernel.org, yangerkun@huawei.com,
-	houtao1@huawei.com
-References: <20240417065513.3409744-1-libaokun1@huawei.com>
- <71e66b02-9c2b-4981-83e1-8af72d6c0975@linux.alibaba.com>
- <7fdf4bff-2d3d-bdc0-5446-caa58aeca314@huawei.com>
- <fb65c7d0-c348-409e-b977-07616d28b279@linux.alibaba.com>
- <48b21671-19ae-0dbd-96cd-7300fd600c9b@huawei.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gWL47aLn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713426589; x=1744962589;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=9+3RpHdiu9N+hHXVc785KNc32OSelwLqLQLwZye2W9A=;
+  b=gWL47aLnX8x4mGW9sKRQnir0UeTEmTdXXm3A1/5i0ZAaSs2y/oI4Griz
+   x8H5yKUiGBPSzVv7rxxUuLBJaewztbCxh8mPtqG/cW+A5yYxsM8hzURFt
+   nZFN976eCglIAAuge3VBujJi+cpa+y/LfDnqazbCx1WxlFsVZJmAgUpsq
+   Ujg9KaDJe0o35t0psdTqY65UxjE7kZ1nZzz3MnPHVpyQ8ZvnwzkCQi6Zv
+   nuyrsHZ9T9nzSx2jifgE05dNoCA8Ehesfh6pAqlCNGlYYqz/9FNHff2l6
+   6DKQe5XU7eH9yvg7v2LGmrkUjJhQF8OE2dipAgxKgNqrDPmnjnErCUKuW
+   A==;
+X-CSE-ConnectionGUID: DF5lhuK2QDKj8XIcvI9wEw==
+X-CSE-MsgGUID: ez9VgbwCTLe5n/4MYIzxvA==
+X-IronPort-AV: E=Sophos;i="6.07,211,1708412400"; 
+   d="scan'208";a="252373479"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 00:49:47 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Apr 2024 00:49:40 -0700
+Received: from DEN-DL-M70577.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 00:49:37 -0700
+From: Daniel Machon <daniel.machon@microchip.com>
+Date: Thu, 18 Apr 2024 09:49:02 +0200
+Subject: [PATCH net-next 3/5] net: sparx5: add port mirroring
+ implementation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <48b21671-19ae-0dbd-96cd-7300fd600c9b@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240418-port-mirroring-v1-3-e05c35007c55@microchip.com>
+References: <20240418-port-mirroring-v1-0-e05c35007c55@microchip.com>
+In-Reply-To: <20240418-port-mirroring-v1-0-e05c35007c55@microchip.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Lars Povlsen <lars.povlsen@microchip.com>, "Steen
+ Hegelund" <Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	Russell King <linux@armlinux.org.uk>
+CC: <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Horatiu Vultur
+	<horatiu.vultur@microchip.com>, "Russell King (Oracle)"
+	<rmk+kernel@armlinux.org.uk>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Yue Haibing <yuehaibing@huawei.com>, Daniel Machon
+	<daniel.machon@microchip.com>
+X-Mailer: b4 0.14-dev
 
-Hi,
+The hardware supports three independent mirroring probes. Each probe can
+be configured to mirror rx or tx traffic (direction).
 
-On Thu, Apr 18, 2024 at 02:12:39PM +0800, Baokun Li wrote:
-> On 2024/4/18 13:50, Jingbo Xu wrote:
-> > 
-> > On 4/18/24 11:36 AM, Baokun Li wrote:
-> > > On 2024/4/18 10:16, Jingbo Xu wrote:
-> > > > Hi Baokun,
-> > > > 
-> > > > Thanks for catching this and move forward fixing this!
-> > > Hi Jingbo，
-> > > 
-> > > Thanks for your review！
-> > > 
-> > > > On 4/17/24 2:55 PM, Baokun Li wrote:
-> > > > > When erofs_kill_sb() is called in block dev based mode, s_bdev may
-> > > > > not have
-> > > > > been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it
-> > > > > will
-> > > > > be mistaken for fscache mode, and then attempt to free an anon_dev
-> > > > > that has
-> > > > > never been allocated, triggering the following warning:
-> > > > > 
-> > > > > ============================================
-> > > > > ida_free called for id=0 which is not allocated.
-> > > > > WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
-> > > > > Modules linked in:
-> > > > > CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
-> > > > > RIP: 0010:ida_free+0x134/0x140
-> > > > > Call Trace:
-> > > > >    <TASK>
-> > > > >    erofs_kill_sb+0x81/0x90
-> > > > >    deactivate_locked_super+0x35/0x80
-> > > > >    get_tree_bdev+0x136/0x1e0
-> > > > >    vfs_get_tree+0x2c/0xf0
-> > > > >    do_new_mount+0x190/0x2f0
-> > > > >    [...]
-> > > > > ============================================
-> > > > > 
-> > > > > Instead of allocating the erofs_sb_info in fill_super() allocate it
-> > > > > during erofs_get_tree() and ensure that erofs can always have the info
-> > > > > available during erofs_kill_sb().
-> > > > I'm not sure if allocating erofs_sb_info in erofs_init_fs_context() will
-> > > > be better, as I see some filesystems (e.g. autofs) do this way.  Maybe
-> > > > another potential advantage of doing this way is that erofs_fs_context
-> > > > is not needed anymore and we can use sbi directly.
-> > > Yes, except for some extra memory usage when remounting,
-> > > this idea sounds great. Let me send a version of v3 to get rid
-> > > of erofs_fs_context.
-> > I'm not sure if Gao Xaing also prefers this.  I think it would be better
-> > to wait and listen for his thoughts before we sending v3.
->  Okay, there's no rush on this.
+Using tc matchall, it is now possible to add a source port and a monitor
+port to a mirror probe. Depending on the mirror direction, rx or tx
+traffic from a source port will be mirrored to the monitor port.
 
-I checked days ago, for example, XFS is also worked in this way.
-And .reconfigure() needs to be carefully handled too.
+A single source port can be a member of multiple mirror probes.
 
-> > > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> > > > > ---
-> > > > > Changes since v1:
-> > > > >     Allocate and initialise fc->s_fs_info in erofs_fc_get_tree()
-> > > > > instead of
-> > > > >     modifying fc->sb_flags.
-> > > > > 
-> > > > > V1:
-> > > > > https://lore.kernel.org/r/20240415121746.1207242-1-libaokun1@huawei.com/
-> > > > > 
-> > > > >    fs/erofs/super.c | 51 ++++++++++++++++++++++++++----------------------
-> > > > >    1 file changed, 28 insertions(+), 23 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> > > > > index b21bd8f78dc1..4104280be2ea 100644
-> > > > > --- a/fs/erofs/super.c
-> > > > > +++ b/fs/erofs/super.c
-> > > > > @@ -581,8 +581,7 @@ static const struct export_operations
-> > > > > erofs_export_ops = {
-> > > > >    static int erofs_fc_fill_super(struct super_block *sb, struct
-> > > > > fs_context *fc)
-> > > > >    {
-> > > > >        struct inode *inode;
-> > > > > -    struct erofs_sb_info *sbi;
-> > > > > -    struct erofs_fs_context *ctx = fc->fs_private;
-> > > > > +    struct erofs_sb_info *sbi = EROFS_SB(sb);
-> > > > >        int err;
-> > > > >          sb->s_magic = EROFS_SUPER_MAGIC;
-> > > > > @@ -590,19 +589,6 @@ static int erofs_fc_fill_super(struct
-> > > > > super_block *sb, struct fs_context *fc)
-> > > > >        sb->s_maxbytes = MAX_LFS_FILESIZE;
-> > > > >        sb->s_op = &erofs_sops;
-> > > > >    -    sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-> > > > > -    if (!sbi)
-> > > > > -        return -ENOMEM;
-> > > > > -
-> > > > > -    sb->s_fs_info = sbi;
-> > > > > -    sbi->opt = ctx->opt;
-> > > > > -    sbi->devs = ctx->devs;
-> > > > > -    ctx->devs = NULL;
-> > > > > -    sbi->fsid = ctx->fsid;
-> > > > > -    ctx->fsid = NULL;
-> > > > > -    sbi->domain_id = ctx->domain_id;
-> > > > > -    ctx->domain_id = NULL;
-> > > > > -
-> > > > >        sbi->blkszbits = PAGE_SHIFT;
-> > > > >        if (erofs_is_fscache_mode(sb)) {
-> > > > >            sb->s_blocksize = PAGE_SIZE;
-> > > > > @@ -704,11 +690,32 @@ static int erofs_fc_fill_super(struct
-> > > > > super_block *sb, struct fs_context *fc)
-> > > > >        return 0;
-> > > > >    }
-> > > > >    -static int erofs_fc_get_tree(struct fs_context *fc)
-> > > > > +static void erofs_ctx_to_info(struct fs_context *fc)
-> > > > >    {
-> > > > >        struct erofs_fs_context *ctx = fc->fs_private;
-> > > > > +    struct erofs_sb_info *sbi = fc->s_fs_info;
-> > > > > +
-> > > > > +    sbi->opt = ctx->opt;
-> > > > > +    sbi->devs = ctx->devs;
-> > > > > +    ctx->devs = NULL;
-> > > > > +    sbi->fsid = ctx->fsid;
-> > > > > +    ctx->fsid = NULL;
-> > > > > +    sbi->domain_id = ctx->domain_id;
-> > > > > +    ctx->domain_id = NULL;
-> > > > > +}
-> > > > I'm not sure if abstracting this logic into a seperate helper really
-> > > > helps understanding the code as the logic itself is quite simple and
-> > > > easy to be understood. Usually it's a hint of over-abstraction when a
-> > > > simple helper has only one caller.
-> > > > 
-> > > Static functions that have only one caller are compiled inline, so we
-> > > don't have to worry about how that affects the code.
-> > > 
-> > > The reason these codes are encapsulated in a separate function is so
-> > > that the code reader understands that these codes are integrated
-> > > as a whole, and that we shouldn't have to move one or two of these
-> > > lines individually.
-> > > 
-> > > But after we get rid of erofs_fs_context, those won't be needed
-> > > anymore.
-> > Yeah, I understand. It's only coding style concerns.
-> > 
-> > 
-> > 
-> Okay, thanks！
+Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
+Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
+---
+ drivers/net/ethernet/microchip/sparx5/Makefile     |   3 +-
+ .../net/ethernet/microchip/sparx5/sparx5_main.h    |  12 ++
+ .../net/ethernet/microchip/sparx5/sparx5_mirror.c  | 196 +++++++++++++++++++++
+ 3 files changed, 210 insertions(+), 1 deletion(-)
 
-I'm fine to get rid of those (erofs_fs_context) as long as the codebase
-is more clearer and simple.  BTW, for the current codebase, I also think
-it's unneeded to have a separate helper called once without extra actual
-meaning...
+diff --git a/drivers/net/ethernet/microchip/sparx5/Makefile b/drivers/net/ethernet/microchip/sparx5/Makefile
+index 1cb1cc3f1a85..b68fe9c9a656 100644
+--- a/drivers/net/ethernet/microchip/sparx5/Makefile
++++ b/drivers/net/ethernet/microchip/sparx5/Makefile
+@@ -10,7 +10,8 @@ sparx5-switch-y  := sparx5_main.o sparx5_packet.o \
+  sparx5_switchdev.o sparx5_calendar.o sparx5_ethtool.o sparx5_fdma.o \
+  sparx5_ptp.o sparx5_pgid.o sparx5_tc.o sparx5_qos.o \
+  sparx5_vcap_impl.o sparx5_vcap_ag_api.o sparx5_tc_flower.o \
+- sparx5_tc_matchall.o sparx5_pool.o sparx5_sdlb.o sparx5_police.o sparx5_psfp.o
++ sparx5_tc_matchall.o sparx5_pool.o sparx5_sdlb.o sparx5_police.o \
++ sparx5_psfp.o sparx5_mirror.o
+ 
+ sparx5-switch-$(CONFIG_SPARX5_DCB) += sparx5_dcb.o
+ sparx5-switch-$(CONFIG_DEBUG_FS) += sparx5_vcap_debugfs.o
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_main.h b/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
+index 4de37a5387a4..5d026e1670f5 100644
+--- a/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_main.h
+@@ -228,12 +228,20 @@ struct sparx5_mdb_entry {
+ 	u16 pgid_idx;
+ };
+ 
++struct sparx5_mall_mirror_entry {
++	u32 idx;
++	struct sparx5_port *port;
++};
++
+ struct sparx5_mall_entry {
+ 	struct list_head list;
+ 	struct sparx5_port *port;
+ 	unsigned long cookie;
+ 	enum flow_action_id type;
+ 	bool ingress;
++	union {
++		struct sparx5_mall_mirror_entry mirror;
++	};
+ };
+ 
+ #define SPARX5_PTP_TIMEOUT		msecs_to_jiffies(10)
+@@ -551,6 +559,10 @@ void sparx5_psfp_init(struct sparx5 *sparx5);
+ void sparx5_new_base_time(struct sparx5 *sparx5, const u32 cycle_time,
+ 			  const ktime_t org_base_time, ktime_t *new_base_time);
+ 
++/* sparx5_mirror.c */
++int sparx5_mirror_add(struct sparx5_mall_entry *entry);
++void sparx5_mirror_del(struct sparx5_mall_entry *entry);
++
+ /* Clock period in picoseconds */
+ static inline u32 sparx5_clk_period(enum sparx5_core_clockfreq cclock)
+ {
+diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_mirror.c b/drivers/net/ethernet/microchip/sparx5/sparx5_mirror.c
+new file mode 100644
+index 000000000000..540bde15eeff
+--- /dev/null
++++ b/drivers/net/ethernet/microchip/sparx5/sparx5_mirror.c
+@@ -0,0 +1,196 @@
++// SPDX-License-Identifier: GPL-2.0+
++/* Microchip Sparx5 Switch driver
++ *
++ * Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries.
++ */
++
++#include "sparx5_main.h"
++#include "sparx5_main_regs.h"
++#include "sparx5_tc.h"
++
++#define SPX5_MIRROR_PROBE_MAX 3
++#define SPX5_MIRROR_DISABLED 0
++#define SPX5_MIRROR_EGRESS 1
++#define SPX5_MIRROR_INGRESS 2
++#define SPX5_MIRROR_MONITOR_PORT_DEFAULT 65
++#define SPX5_QFWD_MP_OFFSET 9 /* Mirror port offset in the QFWD register */
++
++/* Convert from bool ingress/egress to mirror direction */
++static u32 sparx5_mirror_to_dir(bool ingress)
++{
++	return ingress ? SPX5_MIRROR_INGRESS : SPX5_MIRROR_EGRESS;
++}
++
++/* Get ports belonging to this mirror */
++static u64 sparx5_mirror_port_get(struct sparx5 *sparx5, u32 idx)
++{
++	return (u64)spx5_rd(sparx5, ANA_AC_PROBE_PORT_CFG1(idx)) << 32 |
++	       spx5_rd(sparx5, ANA_AC_PROBE_PORT_CFG(idx));
++}
++
++/* Add port to mirror (only front ports) */
++static void sparx5_mirror_port_add(struct sparx5 *sparx5, u32 idx, u32 portno)
++{
++	u32 val, reg = portno;
++
++	val = BIT(do_div(reg, 32));
++
++	if (reg == 0)
++		return spx5_rmw(val, val, sparx5, ANA_AC_PROBE_PORT_CFG(idx));
++	else
++		return spx5_rmw(val, val, sparx5, ANA_AC_PROBE_PORT_CFG1(idx));
++}
++
++/* Delete port from mirror (only front ports) */
++static void sparx5_mirror_port_del(struct sparx5 *sparx5, u32 idx, u32 portno)
++{
++	u32 val, reg = portno;
++
++	val = BIT(do_div(reg, 32));
++
++	if (reg == 0)
++		return spx5_rmw(0, val, sparx5, ANA_AC_PROBE_PORT_CFG(idx));
++	else
++		return spx5_rmw(0, val, sparx5, ANA_AC_PROBE_PORT_CFG1(idx));
++}
++
++/* Check if mirror contains port */
++static bool sparx5_mirror_contains(struct sparx5 *sparx5, u32 idx, u32 portno)
++{
++	return (sparx5_mirror_port_get(sparx5, idx) & BIT_ULL(portno)) != 0;
++}
++
++/* Check if mirror is empty */
++static bool sparx5_mirror_is_empty(struct sparx5 *sparx5, u32 idx)
++{
++	return sparx5_mirror_port_get(sparx5, idx) == 0;
++}
++
++/* Get direction of mirror */
++static u32 sparx5_mirror_dir_get(struct sparx5 *sparx5, u32 idx)
++{
++	u32 val = spx5_rd(sparx5, ANA_AC_PROBE_CFG(idx));
++
++	return ANA_AC_PROBE_CFG_PROBE_DIRECTION_GET(val);
++}
++
++/* Set direction of mirror */
++static void sparx5_mirror_dir_set(struct sparx5 *sparx5, u32 idx, u32 dir)
++{
++	spx5_rmw(ANA_AC_PROBE_CFG_PROBE_DIRECTION_SET(dir),
++		 ANA_AC_PROBE_CFG_PROBE_DIRECTION, sparx5,
++		 ANA_AC_PROBE_CFG(idx));
++}
++
++/* Set the monitor port for this mirror */
++static void sparx5_mirror_monitor_set(struct sparx5 *sparx5, u32 idx,
++				      u32 portno)
++{
++	spx5_rmw(QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL_SET(portno),
++		 QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL, sparx5,
++		 QFWD_FRAME_COPY_CFG(idx + SPX5_QFWD_MP_OFFSET));
++}
++
++/* Get the monitor port of this mirror */
++static u32 sparx5_mirror_monitor_get(struct sparx5 *sparx5, u32 idx)
++{
++	u32 val = spx5_rd(sparx5,
++			  QFWD_FRAME_COPY_CFG(idx + SPX5_QFWD_MP_OFFSET));
++
++	return QFWD_FRAME_COPY_CFG_FRMC_PORT_VAL_GET(val);
++}
++
++/* Check if port is the monitor port of this mirror */
++static bool sparx5_mirror_has_monitor(struct sparx5 *sparx5, u32 idx,
++				      u32 portno)
++{
++	return sparx5_mirror_monitor_get(sparx5, idx) == portno;
++}
++
++/* Get a suitable mirror for this port */
++static int sparx5_mirror_get(struct sparx5_port *sport,
++			     struct sparx5_port *mport, u32 dir, u32 *idx)
++{
++	struct sparx5 *sparx5 = sport->sparx5;
++	u32 i;
++
++	/* Check if this port is already used as a monitor port */
++	for (i = 0; i < SPX5_MIRROR_PROBE_MAX; i++)
++		if (sparx5_mirror_has_monitor(sparx5, i, sport->portno))
++			return -EINVAL;
++
++	/* Check if existing mirror can be reused
++	 * (same direction and monitor port).
++	 */
++	for (i = 0; i < SPX5_MIRROR_PROBE_MAX; i++) {
++		if (sparx5_mirror_dir_get(sparx5, i) == dir &&
++		    sparx5_mirror_has_monitor(sparx5, i, mport->portno)) {
++			*idx = i;
++			return 0;
++		}
++	}
++
++	/* Return free mirror */
++	for (i = 0; i < SPX5_MIRROR_PROBE_MAX; i++) {
++		if (sparx5_mirror_is_empty(sparx5, i)) {
++			*idx = i;
++			return 0;
++		}
++	}
++
++	return -ENOENT;
++}
++
++int sparx5_mirror_add(struct sparx5_mall_entry *entry)
++{
++	u32 mirror_idx, dir = sparx5_mirror_to_dir(entry->ingress);
++	struct sparx5_port *sport, *mport;
++	struct sparx5 *sparx5;
++	int err;
++
++	/* Source port */
++	sport = entry->port;
++	/* monitor port */
++	mport = entry->mirror.port;
++	sparx5 = sport->sparx5;
++
++	if (sport->portno == mport->portno)
++		return -EINVAL;
++
++	err = sparx5_mirror_get(sport, mport, dir, &mirror_idx);
++	if (err)
++		return err;
++
++	if (sparx5_mirror_contains(sparx5, mirror_idx, sport->portno))
++		return -EEXIST;
++
++	/* Add port to mirror */
++	sparx5_mirror_port_add(sparx5, mirror_idx, sport->portno);
++
++	/* Set direction of mirror */
++	sparx5_mirror_dir_set(sparx5, mirror_idx, dir);
++
++	/* Set monitor port for mirror */
++	sparx5_mirror_monitor_set(sparx5, mirror_idx, mport->portno);
++
++	entry->mirror.idx = mirror_idx;
++
++	return 0;
++}
++
++void sparx5_mirror_del(struct sparx5_mall_entry *entry)
++{
++	struct sparx5_port *port = entry->port;
++	struct sparx5 *sparx5 = port->sparx5;
++	u32 mirror_idx = entry->mirror.idx;
++
++	sparx5_mirror_port_del(sparx5, mirror_idx, port->portno);
++	if (!sparx5_mirror_is_empty(sparx5, mirror_idx))
++		return;
++
++	sparx5_mirror_dir_set(sparx5, mirror_idx, SPX5_MIRROR_DISABLED);
++
++	sparx5_mirror_monitor_set(sparx5,
++				  mirror_idx,
++				  SPX5_MIRROR_MONITOR_PORT_DEFAULT);
++}
 
-Thanks,
-Gao Xiang
+-- 
+2.34.1
 
-> 
-> -- 
-> With Best Regards,
-> Baokun Li
