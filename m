@@ -1,160 +1,197 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE31D15F330
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0922A15F3EE
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 11:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713440907; cv=none; b=OEtzu0ZK6O2x1qKgBjBfsg/5PftQZs+G4w8srFMYJhqTn93/8EdPzskSGrnzAfMuv8ajM4PxyuFK+vFJJUG64g6yXBAj+T2r6k7BYlxHAamjLEJiULdlcFw7k4W474kBnoHiHgtMzOzJNT25hPN8bNxdVIV1TDw8N8LhGO0rYec=
+	t=1713440908; cv=none; b=YyG+mBZCxo7t2k1LIQNKxaIn3/OMTF3iFluCBtj4VwEOxNBtyBQPJBwO0SE3xv3XorprGJW2TBIfc5glEmHS67XVKqzan98O/W1lxO9kd3P+tBvGk8uW3QSW0pZ9sr7mS+AetoM2dubRJed/cPIXo8iwzVzjFQA/vHivnJaF0cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713440907; c=relaxed/simple;
-	bh=gE136ijLAtKzyRYGVhVe2CMoT2C2wSdXn/ajEG1GWyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HpJ5/SAxQU6526Eh0KmEdi9j9sT1pVyKmvdxSglSixKBpri6Ntup1WUWZXNKomuFGsRMI/ukg/izxOeRzoeAJ7MwHWpwRCbK3ZEqlXyUdP5biz3UjnEpvSkhrsa6sHZQX8pP4ACqfj7Qcv4dMSEw3+xKSIE4h6F/2iojW+c0cpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vsNt5fbK; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713440908; c=relaxed/simple;
+	bh=D3XjbZW0yuTOp1ZDBE83DOAAEdGjTbx+zwXrb6aammA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sCXKu8mSW7YX7Uy9Kj/wpdJ4H0qrt88FurTnQ/wDnckM+ekL5HWaFLYMHJv+FmRdDjWlLlQYM5ThRkgcOV41bGL2r3lTByQsLZHSLl3j3AKUYuDwW070uS+QU04KGxEaLidOrkEspRKT9frpbFZZPe+muhBn/4gTlds6wl7ivDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FibndAW+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vsNt5fbK"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so638783276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 04:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713440905; x=1714045705; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NuxTFXDlrm+BFnpHmLBiKm3zNo8+3C9CrzDgCHuzRNk=;
-        b=vsNt5fbKOxQkX010Y7B0jwogqFOgePEz+AGFZqPHSmeQeVOrlEEzKl0hO76Amvsgal
-         u5r3LP4eECgjWFfcpzb1WXottf2q0j0Guicou9cmWr/eMkcFlz3Z36hIRDrYna8OXzMN
-         XDty0nq04+OmzrtmoYhZ3PnBC3gBPdKAS17/67qiBSZ6AsArf2a85CruazPsx075v9a2
-         iPXaSOXj97eSc9qBn4xj3QeVwkAIxx1kPiilbhz9R8sw4SRMRZvC7L6/peb7gKWYXf9x
-         zTvcvrjjbEC6mlaf8RAYf8IhZ8nCTHkXToozwom+fqc0YB63v43gMgkZuyL45CqI4Ruh
-         V+zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713440905; x=1714045705;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NuxTFXDlrm+BFnpHmLBiKm3zNo8+3C9CrzDgCHuzRNk=;
-        b=souv0uS/bTHMRzbtepVNFTEhiR828QT4mvWLYuwO0Zf6SEUXeuqHvymsPNnQw2tD/N
-         vYSMSnmyEALd3Vaa6p5aqzrxSKhKVN3d2PW/bblgjhgWHbUNl61mq2KJRUebCZm6LCTR
-         af+hyH5cpgzEnV4TxT9tYi0AXPdi7ox6CiPUyNOndg32UGbBsJRaNdwxsW1KgD/CZvYB
-         bBietNiqJ4U3i14Sy6bOG7tlZMt7x8EYtE/dLjS6BA6Uz/UvDJP5TgiSmdK54Zw7kjZQ
-         I9Sr5e47vMFxZCTGy8DzmCkAfc26dz6eDo0F7PfFSPQgtSVLKVanfY9lgDw3T3CGabab
-         P3Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3cKkiQUQhDWkvtYV1fyaQy0aNUU+HNyhv6YhqFGXpfzIBzXF0OsuqyOsTte+KGAlpjm57+iIHGDUwLjB7RhVbpTCxabyxyaWiscUI
-X-Gm-Message-State: AOJu0Yx9F/w09HertL9b3xiZXwRbwIxm8dPFs1s6JZxukKIrvq3g99N5
-	mJ7NepUmrnPlZq9j/Up8/hzzWaYOdNfpoLn6VCUj7PBOg1sIUfI6q1B4Pvy+c80N8Ik3juOyXEH
-	JESEfh0UFIyzYQQ80yOnTpUlx381eYIlPAWLs6Q==
-X-Google-Smtp-Source: AGHT+IGKBPlfH5drQwVfSarXKWibHJIXInY29SG6VZ1jJJB3cdumDdDbAMYX6JlD836WHkNKoYSwv0xG3WG+/ElPO7w=
-X-Received: by 2002:a25:b121:0:b0:dc6:d1a9:d858 with SMTP id
- g33-20020a25b121000000b00dc6d1a9d858mr1686669ybj.8.1713440904861; Thu, 18 Apr
- 2024 04:48:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FibndAW+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713440907; x=1744976907;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=D3XjbZW0yuTOp1ZDBE83DOAAEdGjTbx+zwXrb6aammA=;
+  b=FibndAW+bivUarsG1C31guf2ETisfjV7FMsf2Z9x234aV1D7dGKD+6uD
+   oOaxY6VvY3n96WVEeLrTuiD/dXsjZ/OwuF/ssB3hT0CtWLpgga5xVVju9
+   DEk2nsKSgKKQsNAPYlAerolsO8l4WMx3K7pw588rylYZuzH6UlCR0SjWG
+   hqR9k6S7H4+cGPekDp7MKRXDzv2Nkwdudbr4DjI2CLAYZQw5vlXTfZGWQ
+   jIAuhDcqsMmG7am/Y/9OdCDVfZ+aglt1exgLgEMLhD1+DxQQ6SZJ1g6bw
+   SjQ2j6bofqXQoywoF4oJkTf4p4TWO4BImS0jug92rNkdrBG1YIHK9wME8
+   g==;
+X-CSE-ConnectionGUID: Oovi3EXTQASFWjhRpDBryw==
+X-CSE-MsgGUID: aD/S+RUhSPi7a/Val80xIA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12769373"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="12769373"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:48:27 -0700
+X-CSE-ConnectionGUID: aViuX9dzQoGqYb3zXGUE3g==
+X-CSE-MsgGUID: zcNjLafuTmyGKK2V/6iDGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="23019892"
+Received: from vgannu-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.212.134.136])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:48:22 -0700
+From: Kai Huang <kai.huang@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	dave.hansen@intel.com,
+	bp@alien8.de,
+	kirill.shutemov@linux.intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	hpa@zytor.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	thomas.lendacky@amd.com,
+	ashish.kalra@amd.com,
+	chao.gao@intel.com,
+	bhe@redhat.com,
+	nik.borisov@suse.com,
+	pbonzini@redhat.com,
+	seanjc@google.com
+Subject: [PATCH v4 2/5] x86/kexec: do unconditional WBINVD for bare-metal in relocate_kernel()
+Date: Thu, 18 Apr 2024 23:48:02 +1200
+Message-ID: <6cbd40389458acbfdbd2d804da1d363dec06f750.1713439632.git.kai.huang@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1713439632.git.kai.huang@intel.com>
+References: <cover.1713439632.git.kai.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404-topic-smem_speedbin-v2-0-c84f820b7e5b@linaro.org>
- <20240404-topic-smem_speedbin-v2-3-c84f820b7e5b@linaro.org>
- <hi7vzqm5ebypzs6m6bw64ghgfwsdzuaxy65jpah37iw5ww7fku@n3c5sucic27i>
- <bfd6aa32-a28e-47a4-82c7-76c5dd99a44d@linaro.org> <7ynodjzjuxwwqkjgns5jtnkckw52qyldfpsqpjh7645swva4xk@7wucftyjyyy3>
- <2b5f33ba-2108-464c-b4d2-eff2cc6e59cf@linaro.org>
-In-Reply-To: <2b5f33ba-2108-464c-b4d2-eff2cc6e59cf@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 18 Apr 2024 14:48:13 +0300
-Message-ID: <CAA8EJpqW-YxJdw-+QDEdhqjwAPK1dzmW1dW6=18wcRQgp+Oq6w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] drm/msm/adreno: Implement SMEM-based speed bin
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 18 Apr 2024 at 14:31, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->
-> On 18.04.2024 1:07 PM, Dmitry Baryshkov wrote:
-> > On Thu, Apr 18, 2024 at 11:51:16AM +0200, Konrad Dybcio wrote:
-> >> On 18.04.2024 1:43 AM, Dmitry Baryshkov wrote:
-> >>> On Wed, Apr 17, 2024 at 10:02:55PM +0200, Konrad Dybcio wrote:
-> >>>> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
-> >>>> abstracted through SMEM, instead of being directly available in a fuse.
-> >>>>
-> >>>> Add support for SMEM-based speed binning, which includes getting
-> >>>> "feature code" and "product code" from said source and parsing them
-> >>>> to form something that lets us match OPPs against.
-> >>>>
-> >>>> Due to the product code being ignored in the context of Adreno on
-> >>>> production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
-> >>>>
-> >>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> >>>> ---
-> >>
-> >> [...]
-> >>
-> >>>> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> >>>> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> >>>> @@ -6,6 +6,8 @@
-> >>>>   * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
-> >>>>   */
-> >>>>
-> >>>> +#include <linux/soc/qcom/socinfo.h>
-> >>>> +
-> >>>
-> >>> Stray leftover?
-> >>
-> >> Looks like
-> >>
-> >> [...]
-> >>
-> >>>> +
-> >>>> +#ifdef CONFIG_QCOM_SMEM
-> >>>
-> >>> Please extract to a separate function and put the function under ifdef
-> >>> (providing a stub otherwise). Having #ifndefs inside funciton body is
-> >>> frowned upon.
-> >>
-> >> Hm, this looked quite sparse and straightforward, but I can do that.
-> >>
-> >> [...]
-> >>
-> >>>> +/* As of SM8650, PCODE on production SoCs is meaningless wrt the GPU bin */
-> >>>> +#define ADRENO_SKU_ID_FCODE               GENMASK(15, 0)
-> >>>> +#define ADRENO_SKU_ID(fcode)      (SOCINFO_PC_UNKNOWN << 16 | fcode)
-> >>>
-> >>> If we got rid of PCode matching, is there a need to actually use
-> >>> SOCINFO_PC_UNKNOWN here? Or just 0 would be fine?
-> >>
-> >> The IDs need to stay constant for mesa
-> >>
-> >> I used the define here to:
-> >>
-> >> a) define the SKU_ID structure so that it's clear what it's comprised of
-> >> b) make it easy to add back Pcode in case it becomes useful with future SoCs
-> >> c) avoid mistakes - PC_UNKNOWN happens to be zero, but that's a lucky
-> >>    coincidence
-> >>
-> >> We don't *match* based on PCODE, but still need to construct the ID properly
-> >>
-> >> Another option would be to pass the real pcode and add some sort of
-> >> "pcode_invalid" property that if found would ignore this part of the
-> >> SKU_ID in mesa, but that sounds overly and unnecessarily complex.
-> >
-> > It's fine, just add a comment please. Maybe we can rename PC_UNKNOWN to
-> > PC_PRODUCTION?
->
-> I don't think that's right. The SoC "product code" may actually mean something
-> (again, not necessarily for Adreno specifically), and with Adreno in mind, it
-> being only meaningful for engineering samples may change in the future.
+Both SME and TDX can leave caches in incoherent state due to memory
+encryption.  During kexec, the caches must be flushed before jumping to
+the second kernel to avoid silent memory corruption to the second kernel.
 
-Ack
+During kexec, the WBINVD in stop_this_cpu() flushes caches for all
+remote cpus when they are being stopped.  For SME, the WBINVD in
+relocate_kernel() flushes the cache for the last running cpu (which is
+executing the kexec).
 
+Similarly, to support kexec for TDX host, after stopping all remote cpus
+with cache flushed, the kernel needs to flush cache for the last running
+cpu.
 
+Use the existing WBINVD in relocate_kernel() to cover TDX host as well.
+
+However, instead of sprinkling around vendor-specific checks, just do
+unconditional WBINVD to cover both SME and TDX.  Kexec is not a fast path
+so having one additional WBINVD for platforms w/o SME/TDX is acceptable.
+
+But only do WBINVD for bare-metal because TDX guests and SEV-ES/SEV-SNP
+guests will get unexpected (and yet unnecessary) exception (#VE or #VC)
+which the kernel is unable to handle at this stage.
+
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Dave Young <dyoung@redhat.com>
+---
+
+v3 -> v4:
+ - Use "exception (#VE or #VC)" for TDX and SEV-ES/SEV-SNP in changelog
+   and comments.  (Kirill, Tom)
+ - "Save the bare_metal" -> "Save the bare_metal flag" (Tom)
+ - Point out "WBINVD is not necessary for TDX and SEV-ES/SEV-SNP guests"
+   in the comment.  (Tom)
+
+v2 -> v3:
+ - Change to only do WBINVD for bare metal
+
+---
+ arch/x86/include/asm/kexec.h         |  2 +-
+ arch/x86/kernel/machine_kexec_64.c   |  2 +-
+ arch/x86/kernel/relocate_kernel_64.S | 19 +++++++++++++++----
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 91ca9a9ee3a2..455f8a6c66a9 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -128,7 +128,7 @@ relocate_kernel(unsigned long indirection_page,
+ 		unsigned long page_list,
+ 		unsigned long start_address,
+ 		unsigned int preserve_context,
+-		unsigned int host_mem_enc_active);
++		unsigned int bare_metal);
+ #endif
+ 
+ #define ARCH_HAS_KIMAGE_ARCH
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index b180d8e497c3..a454477b7b4c 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -358,7 +358,7 @@ void machine_kexec(struct kimage *image)
+ 				       (unsigned long)page_list,
+ 				       image->start,
+ 				       image->preserve_context,
+-				       cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT));
++				       !boot_cpu_has(X86_FEATURE_HYPERVISOR));
+ 
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (image->preserve_context)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 56cab1bb25f5..6e1590b24e41 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -50,7 +50,7 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	 * %rsi page_list
+ 	 * %rdx start address
+ 	 * %rcx preserve_context
+-	 * %r8  host_mem_enc_active
++	 * %r8  bare_metal
+ 	 */
+ 
+ 	/* Save the CPU context, used for jumping back */
+@@ -78,7 +78,7 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
+ 	pushq $0
+ 	popfq
+ 
+-	/* Save SME active flag */
++	/* Save the bare_metal flag */
+ 	movq	%r8, %r12
+ 
+ 	/*
+@@ -160,9 +160,20 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	movq	%r9, %cr3
+ 
+ 	/*
+-	 * If SME is active, there could be old encrypted cache line
++	 * The kernel could leave caches in incoherent state on SME/TDX
++	 * capable platforms.  Just do unconditional WBINVD to avoid
++	 * silent memory corruption to the new kernel for these platforms.
++	 *
++	 * For SME, need to flush cache here before copying the kernel.
++	 * When it is active, there could be old encrypted cache line
+ 	 * entries that will conflict with the now unencrypted memory
+-	 * used by kexec. Flush the caches before copying the kernel.
++	 * used by kexec.
++	 *
++	 * Do WBINVD for bare-metal only to cover both SME and TDX.  It
++	 * isn't necessary to perform a WBINVD in a guest and performing
++	 * one could result in an exception (#VE or #VC) for a TDX or
++	 * SEV-ES/SEV-SNP guest that can crash the guest since, at this
++	 * stage, the kernel has torn down the IDT.
+ 	 */
+ 	testq	%r12, %r12
+ 	jz 1f
 -- 
-With best wishes
-Dmitry
+2.43.2
+
