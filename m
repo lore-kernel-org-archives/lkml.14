@@ -1,102 +1,75 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D586D1C7;
-	Thu, 18 Apr 2024 20:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868CC184135
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713472692; cv=none; b=KFOWu2IyEKHH9GBOA25DS+N3LKKeLOR7OpDDVMMk30uxRBzxlcwz2zbHldjqN3nnKIv1HnTOAzxYF+kjlHXruwbk/8Ph48dHFXisughrL9/YC07agrmfPLIRlqTUmJ160HEvaFKqp4ZedEvfbHxaSQnuog7h9+XufuN66Cpq+b8=
+	t=1713472698; cv=none; b=NYxJK/Gokc13jkc75MZHO3d7OozQ0IxMYX9FQ02IwHjqAqSJAtc2FPt9yETSjid5QsT6rtbU3RABmvNdb9mHr8Z9R0+2kS5vSvwSybjuwD34vwHkgFCzlrIZ/XRmkVImlbedNEMkSrpJlsEeyhobEGi4TjlXBBJOD6y8O6w9xE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713472692; c=relaxed/simple;
-	bh=sKiv4SDu35oSMqZnfSXRLAkPw/aQxk9pkreC9OwjRh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W+d1mSdY4kYF7y3HXK0iVrw/+79CsvarMB12g6qDzOLs2i6gpNVSlgZKk37kdya8acwsC96QtSGtWZYFdj3OiCddfcpNfs+Th9Rt5s/fAoWJ5xgb5WUwYTCChTCDbvDHD3LsSg/mP0imK1WRIfwLCTRuOvsS58EkV0iFcjjfnc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQzP2Gjv; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713472698; c=relaxed/simple;
+	bh=w5RGyzVBvoGAtMUsTnU34Y0CJu5FBsbDHlJjmWZiX9w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KVucJTIzo3HhLpHGNTyTNayxCl9uuWdy57oifMCl2WK/ybhzfEuFiKYoiI1vyqNE3YEU5UsDkircoDI1+kFBDuAkB0FyZqvDOdUDrV/VYDG8RWM+YEvyT7aOkN6rrLXUh+M2/NlVZ/FpHa3fSTbORZQOg07Nn6iR7N9UdimPDK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HE17W2pX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQzP2Gjv"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-516d0c004b1so1760014e87.2;
-        Thu, 18 Apr 2024 13:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713472689; x=1714077489; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JF4x+kNM/mmae+ZYoHJR13wougtTUOzbFPCVrpt7xuQ=;
-        b=WQzP2Gjvjws3y3w3Pv2uACEP+xv89bXfhNbpuaCYqXBoCot71SCTqtmnfgmN2ioRK8
-         Ld2VEijORIdsnu10gG60gG5YNR5pmp24bQl9qgtjtd+4gVoIkTcKARSWRq4mv0c44W4V
-         S8jFradTmigBPod1hwfpnAvFCcJy3W/8yJMybGTROsIxQWElbniC63pqYw2sMLkXWn9D
-         2dEKAJpsEA2hbMJzpq7F3PNjXn2V3HXCTih+kOOtohhLGvTBbbKE4DVToVPwM+9A7xPT
-         /z1ZhEqJ90lNTdB+07zhqmKwaAvpHSyt5nQeqk0uuppzLte+CGIQhLzPxw+ySAvld7LC
-         zpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713472689; x=1714077489;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JF4x+kNM/mmae+ZYoHJR13wougtTUOzbFPCVrpt7xuQ=;
-        b=cytii94OsPVy9mVDfVbdtY1qww3CABSe8gmsbLo1QzR/O4PTVAjW/8SF10yPBmvh0L
-         JUH3+OjR3oZ3vMQckbP+obxDo3d/bjJSAj4RXLjIKRa1u4WCmkU4706DiSpZo19TyrKB
-         AyvePeP1Nf9VOCZH3wfOPR8/UkytwtrqD4CAQdhfnB7wqfhORQM2fhhPG91JVTv2w5CW
-         ZOaVD958zxYV73lJ7Of+HrCN0slBqXQ6Uh/kfF+OzFnCUS0SrLin7ircwWmmkg28qFhM
-         uw95s5klcPb9BADgmxp0PldGbrPTeN7M+xkede6Iew/Zz+FxAVoamwVGon7c29JhOihW
-         lp7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV1WZXMOJdZ5tLNt5TTc+dVnIx6TYQp+Ly0vMlSjZXn4lwOmasb3bWcF110Ngm4QbB0ZdcMkuS46w4HjDMti1Gb0Do9lNvqG3kRkJK/6BXBDlDJvWvY470/PR7vAXMoa28MnGO5W7Vd4w==
-X-Gm-Message-State: AOJu0Yzz1C0snFowppt3VXVcrlIt+eZRe4jq8PBbocZfuxdNcoHaC5Q3
-	N/2Em8E5z5MggYRIVmMSvqvHm2yCA+UIXbh2f+mpyeYQXk7MldM6
-X-Google-Smtp-Source: AGHT+IEQdvifaiqzhQgGeM5KMZbCp8qQgxPJ+Bl+TS4jV006wTpcy9/73atGZ2nqI696XMF1UUWulA==
-X-Received: by 2002:a05:6512:2111:b0:513:9e44:c68c with SMTP id q17-20020a056512211100b005139e44c68cmr105129lfr.6.1713472688803;
-        Thu, 18 Apr 2024 13:38:08 -0700 (PDT)
-Received: from lmc-playground.localdomain ([188.25.209.252])
-        by smtp.gmail.com with ESMTPSA id l21-20020a170906079500b00a473774b027sm1305649ejc.207.2024.04.18.13.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 13:38:08 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>,
-	Liu Ying <victor.liu@nxp.com>
-Cc: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/3] Add DSP node for imx8ulp
-Date: Thu, 18 Apr 2024 23:37:17 +0300
-Message-Id: <20240418203720.8492-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HE17W2pX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161D2C113CC;
+	Thu, 18 Apr 2024 20:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1713472698;
+	bh=w5RGyzVBvoGAtMUsTnU34Y0CJu5FBsbDHlJjmWZiX9w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HE17W2pXfryr1qP1csdJB5HMM6g/LCw0KRag6Rbrltd2xCWWYPBEjPp9b0p5aMxMO
+	 6oP2ODaoNH3oXamowSKFFW5G+RFn+/+SA7bbm7KGWyNYHgx42d/6H4q9hm+OKWgRTc
+	 67MKC0gHKcvMwEMXEjosllHUn9GWgZ9uOtKiEQmo=
+Date: Thu, 18 Apr 2024 13:38:17 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Miaohe Lin <linmiaohe@huawei.com>
+Cc: <muchun.song@linux.dev>, <david@redhat.com>, <vbabka@suse.cz>,
+ <willy@infradead.org>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] mm/hugetlb: fix unable to handle page fault for
+ address dead000000000108
+Message-Id: <20240418133817.afb65c8dcd11cfea7c686d25@linux-foundation.org>
+In-Reply-To: <20240418022000.3524229-3-linmiaohe@huawei.com>
+References: <20240418022000.3524229-1-linmiaohe@huawei.com>
+	<20240418022000.3524229-3-linmiaohe@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Thu, 18 Apr 2024 10:20:00 +0800 Miaohe Lin <linmiaohe@huawei.com> wrote:
 
-Add devicetree node for imx8ulp's DSP core. Also,
-update the schema for the DSP node to accomodate
-the clocks used by it and add a new schema for its
-syscon type node dependency.
+> Below panic occurs when I did memory failure test:
+> 
+> BUG: unable to handle page fault for address: dead000000000108
+> 
+> ...
+>
+> The root cause is that list_del() is used to remove folio from list when
+> dissolve_free_hugetlb_folio(). But list_move() might be used to reenqueue
+> hugetlb folio when free_huge_folio() leading to above panic. Fix this
+> issue by using list_del_init() to remove folio.
+> 
+> ...
+>
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1642,7 +1642,7 @@ static void __remove_hugetlb_folio(struct hstate *h, struct folio *folio,
+>  	if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
+>  		return;
+>  
+> -	list_del(&folio->lru);
+> +	list_del_init(&folio->lru);
+>  
+>  	if (folio_test_hugetlb_freed(folio)) {
+>  		h->free_huge_pages--;
 
-Laurentiu Mihalcea (3):
-  dt-bindings: dsp: support imx8ulp dsp clocks
-  dt-bindings: mfd: add schema for 8ulp AVD-SIM
-  arm64: dts: imx8ulp: add DSP node
-
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 51 ++++++++++++++-----
- .../bindings/mfd/fsl,imx8ulp-avd-sim.yaml     | 42 +++++++++++++++
- arch/arm64/boot/dts/freescale/imx8ulp-evk.dts | 39 ++++++++++++++
- arch/arm64/boot/dts/freescale/imx8ulp.dtsi    | 22 ++++++++
- 4 files changed, 142 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx8ulp-avd-sim.yaml
-
--- 
-2.34.1
-
+We should cc:stable and find a Fixes:.  This appears to predate
+6eb4e88a6d27022ea8aff424d47a0a5dfc9fcb34, after which I got lost.
