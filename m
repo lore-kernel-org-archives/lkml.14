@@ -1,145 +1,102 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1121.securemx.jp [210.130.202.129])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF0658119;
-	Thu, 18 Apr 2024 06:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9A0657D4;
+	Thu, 18 Apr 2024 06:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713421259; cv=none; b=HO1WESGTsGpFK40nX09gc20PsRik+YBibH+EKs0nI8rs4HFoeRtLnfQyrXXgIVRdz05ycIlSoV0O53x+zVy27dK6a4cMgC9GGYY+PiT2Xz0vSU8/Jlxog3eQewWGLQZdNAf9gw4Jw179MFdqBmRhVBPBFZ/10XJJe2Vn4uzhLXM=
+	t=1713421355; cv=none; b=ARguYMisFuXakTnyvIY3kQ4NIPBW6G1lAsOyQzlOUFAzCVjvtC3kLVrS6Z/5qmzx4JiSd4qLSMbhAUToU+gMItgFKe022qKVTTd7wmDpIIc8rX3Hrjnd9xOBc2BIPhgmPzwkS9Bnu4j+YKg35KvrsYzMOqXPW5zeR7iPL2SS6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713421259; c=relaxed/simple;
-	bh=XopwifXpuSYMxTu0djZ7l5KAMkauC5yrSO6iBds929Q=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L148c0Y4maptD1ulmZZKy87FP5qDNu60WWOGsoSZVRIpy4UGMXd8slK6GaL6L8Z/Ld++KAJj8opFBpqVFH3iJZBnySU8wtGYkeXdZq/+09PjEytSCPyh4DTAPBB3yRX05175q+7e6xyGZyeX/Imwmsa3YOvndH77GMBmdIg3hqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1121) id 43I5iSGZ2031330; Thu, 18 Apr 2024 14:44:29 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 43I5huV71973228; Thu, 18 Apr 2024 14:43:56 +0900
-X-Iguazu-Qid: 2rWhlfeQc0hSsjZa8G
-X-Iguazu-QSIG: v=2; s=0; t=1713419035; q=2rWhlfeQc0hSsjZa8G; m=j+Pm1D1XhGYku2T5ouRzXGoXJW46/+QRkInjIAawLJs=
-Received: from CNN1EMTA01.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1121) id 43I5hteu2636276
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 18 Apr 2024 14:43:55 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA01.test.kioxia.com (Postfix) with ESMTP id 1561B48A81;
-	Thu, 18 Apr 2024 14:43:55 +0900 (JST)
-Received: from CNN1ESTR03.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id DFE9C1947AEC50;
-	Thu, 18 Apr 2024 14:21:56 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR03.kioxia.com with ESMTP id 0002QAAAAAA01FEA;
-	 Thu, 18 Apr 2024 14:21:56 +0900
-Received: from CNN1EXMB04.r1.kioxia.com (CNN1EXMB04.r1.kioxia.com [10.232.20.153])
-	by Switcher-Pre_Send (Postfix) with ESMTP id D448AAA28483C;
-	Thu, 18 Apr 2024 14:21:56 +0900 (JST)
-Received: from CNN1EXMB04.r1.kioxia.com (10.232.20.153) by
- CNN1EXMB04.r1.kioxia.com (10.232.20.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:43:54 +0900
-Received: from CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) by
- CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) with mapi id 15.01.2507.035; Thu,
- 18 Apr 2024 14:43:54 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: "song@kernel.org" <song@kernel.org>,
-        "yukuai3@huawei.com"
-	<yukuai3@huawei.com>
-CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 00/11] md: avoid counter operation conflicts
-Thread-Topic: [PATCH v2 00/11] md: avoid counter operation conflicts
-Thread-Index: AdqLxvhW3yuFLJT7RSafviwhPizLJw==
-Date: Thu, 18 Apr 2024 05:43:54 +0000
-Message-ID: <3c0ab8eb94ad4b6fb4cb2159f0638650@kioxia.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-as-result: No-10--8.702300-8.000000
-x-tmase-matchedrid: gIzQ6PxOy4OmagT1k9kBpppg8IOIewHQKQNhMboqZlrk6Qbi+9i6D9BB
-	eW0QNlfKOuzeNmOGKnMoztzelpYOLoV30ZD7XA/lOIQ9GP2P2u8CtGYG0znilOZYcdJgScjxW8R
-	Edt1lp4+09yOz81cF1VqwbjhrO/15FZiP0To6+OjNgrlT5Ajc7jfQpIdR5pWY33Nl3elSfspWIq
-	OpyCFExzbFumM3RppUG7nZVjdmJcUQQGM6WcQD/LnHu4BcYSmtVeAZ5VSHdZ2bKItl61J/yZ+in
-	TK0bC9e/N9/P5Y462I=
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--8.702300-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-snts-smtp: 1DD97C27C0337261ED25501F0EA644C35AC96E2C0497ED9F1CC646863CB8607B2000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1713421355; c=relaxed/simple;
+	bh=RMxeGlytSzr2yICesp6CIsJyZqfq/CE7BwA5I7Ia270=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SAiYc2DzPEx5FQ/Uc3wQIyI36U/DuJpej3kBdIenCK11bQYqdk3/Z/5mzrecDuHVEwz6UVwaindytU59yRJZQVj5C174bYe0Zq9+AiW8pMx25VR52HFI3FGyPI6neIf6LgPUS9Cw2wbUYU3nySiJq9k0hTDr+RddfPZZXh1i1Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KoHVXMFn; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoHVXMFn"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78edbed6e86so11859785a.0;
+        Wed, 17 Apr 2024 23:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713421353; x=1714026153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7FTPzIVtyQWqUeYbXLNcbKqJXloSnrql2UGPViVWAig=;
+        b=KoHVXMFnthpiXMM6P5csbVFtpmBemHEGTyCpoJooAGr/W+jN2u57DD1J1Img78XENU
+         uK6m4YaSNa3RTQHGjxJP17kDZQPkcFAA7Xzc2tIT1LQKzCA0bMqfIe2uEOtnpM46Om7F
+         7z972isepZLWacfWWDvEb9/CZ9nzIIkr910vMdAGoMfvJPuYhWKH6mf7D6H7nuuA71uT
+         3LR9ooNtObd+KCJqALCjV9u1pruNe63qBx/eYt3+v6jXSC/ROeBL2TZ0KlPjMO2yO9FM
+         /VMi61XmE4bquaJIliQjQ+3upD3b5tpHx9pTEXjaZerGZc8lAh/13A7Jb2myhOeAu9Cx
+         DrRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713421353; x=1714026153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7FTPzIVtyQWqUeYbXLNcbKqJXloSnrql2UGPViVWAig=;
+        b=SFYOZbYPcDEA0mLNphBQt1t/863VqtdCNHfVPg+sNa6YK5Bo1Ysa1DwVlHtEGxjBQf
+         nlE1qXF0YRXA4gIf6ePq3zmJWGzGcsjA4qOBIRm3Gqf1h9RJXPgW0i1N5r9VMBTl+UVm
+         +eYoMxP8lSs+vdy9mkMtStVGkdvLqHKkXiKMh9CBAJMpc4zb1vsOCXUcCCpPXlVKOfXP
+         dRpNxvb47q9MJvNedYLWXu5JTj6tXYZn44cIsQSY4zuF9Smd6GzlQV8qxa3HFOu4zkeF
+         YR+VRsIO5G/QUmQyzNHlgJGOCByvoROMshMnSrvHe9YtmyITaA+PXZeg6NNI0oe9vC1+
+         A92w==
+X-Forwarded-Encrypted: i=1; AJvYcCVq3rgGxG092bxLmUFOD6AB/M8dTEVoiDgF28XNZnQK1zMgquectN5Xe6UJ91jQkvdJTxhGDehwW2VVgCc25owtkTJMzHY9O6nF9g8=
+X-Gm-Message-State: AOJu0Yye46T0iu/ZlOvwHmNmy9p2dmjOyZBuLJ1TVVl/26XyOqycK6kF
+	XEc2k1JdIjfWijZtxyPfnGUD07+iImqAf6TX5mstUQ6PKJKcJRY5Lx1k00aMRSbq5/I0WCftlM9
+	4Q+WJQw5ALFro77hid6iVxdWHrI6/9Uh1FTbTNw==
+X-Google-Smtp-Source: AGHT+IEuHnFnHDtQ+KH89IzMYUvms+I6LyrcSf+qewCMk2G7Y/fKVhQjaTLu0qwY5IBnfPOvj9Ls2vXkmTWx1rUCcCg=
+X-Received: by 2002:a05:6214:e4f:b0:69b:3bd5:240d with SMTP id
+ o15-20020a0562140e4f00b0069b3bd5240dmr1987358qvc.2.1713421353367; Wed, 17 Apr
+ 2024 23:22:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB04.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB04.r1.kioxia.com
+References: <CABXGCsNmEtrN9DK-XmESaPm_1xpXm8A+juE+44Jf6AK5JE0+TQ@mail.gmail.com>
+ <874jcl7e83.wl-tiwai@suse.de> <CABXGCsMmRFW3EYJ3UvNd-LO7ZTOyoNqjc_3OAmaCDSL=LuxJqg@mail.gmail.com>
+ <87v851e2di.wl-tiwai@suse.de> <CABXGCsNMBRUaY-V8mhUQKdq+CQW5+eGUWL_YCJWXo0cgh9bGJQ@mail.gmail.com>
+ <87h6glt9zc.wl-tiwai@suse.de> <CABXGCsMcazRvmiN4XtiHQCE9=dB=M=VsRqB=v+RPmtuhBL29DA@mail.gmail.com>
+ <a6f4e20ea2a68f56a7d2c4d76280bca44d6bf421.camel@gmail.com>
+In-Reply-To: <a6f4e20ea2a68f56a7d2c4d76280bca44d6bf421.camel@gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Thu, 18 Apr 2024 11:22:22 +0500
+Message-ID: <CABXGCsPdqfXeZUw1ocx8O3NdOEb+h4yQ77+zdNpcwP_4JrYXuQ@mail.gmail.com>
+Subject: Re: regression/bisected/6.9 commit 587d67fd929ad89801bcc429675bda90d53f6592
+ decrease 30% of gaming performance
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
- - Add message of performance in cover.
- - Fix a problem of error code initialization in patch 6.
- - Fix a problem of sleeping during rcu_read_lock() in patch 9.
- - Change base-commit from md-6.9 to md-6.10
+On Tue, Apr 2, 2024 at 12:29=E2=80=AFAM <mikhail.v.gavrilov@gmail.com> wrot=
+e:
+>
+> On Mon, 2024-04-01 at 21:50 +0500, Mikhail Gavrilov wrote:
+> > On Mon, Apr 1, 2024 at 7:48=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wro=
+te:
+> > >
+> > >
+> > > Then it shouldn't be dmix/dsnoop.  You'd better try profiling
+> > > what's
+> > > going on there.  e.g. try to get perf results with and without the
+> > > commit.
+> >
+> >
+> > Here is original perf files:
+> > [1] perf-with-revert-587d67fd929a.data -
+> > https://mega.nz/file/EpZmXbgL#vEnxuODoB__jM6TwV6XbwC_TWMMqvT7qaWkJU22JY=
+48
+> > [2] perf-with-revert-587d67fd929a-beb45974dd49.data -
+> > https://mega.nz/file/0lI31CDA#hKsv6vX7t5u-Sx1_p2E7-Y32-z5VFPlW2Y793oM-J=
+RU
+> >
 
-Currently, active_aligned_reads and nr_pending used as counters are atomic =
-types.
-Therefore, when inc/dec in a multi-core results in conflicts and READ I/O b=
-ecomes slow.
-To improve performance, use "percpu_ref" counters that can avoid conflicts =
-and maintain consistency.
+Excuse me. Can you have time to look in my perf files?
 
-Switch modes of percpu_ref to achieve both consistency and conflict avoidan=
-ce.
-During normal operations such as inc/dec, it operates as percpu mode.
-When consistency is required, it operates as atomic mode.
-The operations that require consistency are as follows:
- - Zero check for the counter
- - All operations in RAID 1/10
-
-Patches 1, 3, 6 change active_aligned_reads, and patches 2, 4, 5, 7 to 11 c=
-hange nr_pending.
-nr_pending temporarily switch from percpu mode to atomic mode in patch 7.
-This is to reduce the amount of changes from patches 8 to 10.
-Finally, nr_pending switch from atomic mode to percpu mode in patch 11.
-
-We applied the patch to base-commit and used fio to compare IOPS.
-CPU: AMD EPYC 7313P (3.0GHz, 16cores)
-DISK: ramdisk x 3 (modprobe brd rd_nr=3D3)
-RAID: level 5
-fio config: bs=3D4k, rw=3Drandread, iodepth=3D128, numjobs=3D16
-
-without patch: 3.64 MIOPS
-with patch   : 3.84 MIOPS
-
-Keisuke TADA (11):
-  add infra for active_aligned_reads changes
-  add infra for nr_pending changes
-  workaround for inconsistency of config state in takeover
-  minimize execution of zero check for nr_pending
-  match the type of variables to percpu_ref
-  avoid conflicts in active_aligned_reads operations
-  change the type of nr_pending from atomic_t to percpu_ref
-  add atomic mode switching in RAID 1/10
-  add atomic mode switching when removing disk
-  add atomic mode switching when I/O completion
-  avoid conflicts in nr_pending operations
-
- drivers/md/md-bitmap.c   |  2 +-
- drivers/md/md.c          | 48 ++++++++++++++++++---
- drivers/md/md.h          | 62 +++++++++++++++++++++++----
- drivers/md/raid1.c       | 37 +++++++++++------
- drivers/md/raid10.c      | 60 ++++++++++++++++-----------
- drivers/md/raid5-cache.c |  4 +-
- drivers/md/raid5.c       | 90 +++++++++++++++++++++++++++-------------
- drivers/md/raid5.h       | 17 +++++++-
- 8 files changed, 238 insertions(+), 82 deletions(-)
-
-
-base-commit: 9d1110f99c253ccef82e480bfe9f38a12eb797a7
---
-2.34.1
-
-
+--=20
+Best Regards,
+Mike Gavrilov.
