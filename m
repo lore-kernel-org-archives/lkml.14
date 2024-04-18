@@ -1,193 +1,71 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2087.outbound.protection.outlook.com [40.107.96.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8C71442F4;
-	Thu, 18 Apr 2024 17:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713462657; cv=fail; b=ictEBJnr0P4gkAmd/uLpeD/VCwz/g6TPjfW1N7n5/FmPDjheRS0paN8n6Tjf4qTIkvYCk6GmxcVWiLc3oQ4/wo8c5q5NeTBL+weumUe0kBJeF1s3fIbZtrvuFtzlcCt5vh5GoM9ddtG0xhOIOIUAjQdtwqaDZilpYa5airIRHEA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713462657; c=relaxed/simple;
-	bh=4RtSnB4k4UyAZO4z+xcCFZoHyvYzzNo8OZLBk+JmcnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g4/1ANji6V8nSUwUjlks7VdqouPb5qhksVXwfAmsgPJ1Re1fqeRH9kg0FiI8MTlSuQN9qKM6B1d6vIYUwaPpM9IdT26ha1x4ZMJhP0VLKmhAd7FJTHKHtRelWBJ+eePmnoxbjai5tjkOcWYY1EUeiiHlJBD2NjewPxOcO2rIQDk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NzcFfWac; arc=fail smtp.client-ip=40.107.96.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NzcFfWac"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bX+NTupk//WxW9gVjJKCguOTFiklges8f3CT5Cgli6x3FQVFplZi6+unCHvDtdngS8LrXb0HDtKmKeLMQArJRclQh4fHGlRL0KhYh8XgeTQ+dF4JtC8PVSex0kqEr9XwDCNU+M8nHVB+K90IC/3zCkHFx9MidT8c8wzazPvhGwmoL+SyN6zkMJ4rKkgWSiIXfTHHSsSwuloOwWotqtOxG4PLYeDNDQEatEwX7w0cdsL/VebbeTRC7tdddueTExrGiimErmDmyDhs+8TyJ0yl7v2MjRHQM0PDel0uH6xh+4qlafbMGlG/qkyPlkUgszXBtljKgxuUlr2wUjTMRO2vAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y82wlPYsBKuKZP7Z4V77tukVWKnZHErs4EDVcuPaNAE=;
- b=oS6n8hMRufCPHJLRnHXSPJIZ3Ojguc8aZD1zqQS/n81sofNuw+840b64BNY/+FL0nrKGiv9MUNJLKW/0/wzSFM0wEz6bYOviSNSe5XnGmowOIlf8dPOndlQpUav3G8OL38ZuhaHPpzE6NBFVxY+VKKkCKgPJoAWbPyHiby4pvhkfeHmPy8aEogwyL3AXqKzRYPY3tTzIaSrDMTxtaH3qLR3jU89RKPrTPLYYEsAc1mB8cUFJvwUndQ8kbskqYpff9GflVhEhYRZ25ehHHqOOl5zjPeV2EiwjifvTb3wjOQwdlZyeWXYmi4NTO1LZMUEGSzJzWQ+kc6n+4xQOjiAO2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y82wlPYsBKuKZP7Z4V77tukVWKnZHErs4EDVcuPaNAE=;
- b=NzcFfWacd+7PXwmOJwQ45PEoSZddA6zsUzX3PcAogpRtvbHxfDRhrq2U4fwtjvg/y5rsTVjZQOPgz2CVIT2eebog7xYoQ6MA/ezgJ/Ze5i1nilOPeacG/Wp9j2awqVFOKPbSHbUwJrk6kXZ7L2e/VFLZBzxW3i05dgahgSL1NP4=
-Received: from CH2PR18CA0042.namprd18.prod.outlook.com (2603:10b6:610:55::22)
- by CY8PR12MB7513.namprd12.prod.outlook.com (2603:10b6:930:91::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
- 2024 17:50:49 +0000
-Received: from DS3PEPF000099D4.namprd04.prod.outlook.com
- (2603:10b6:610:55:cafe::96) by CH2PR18CA0042.outlook.office365.com
- (2603:10b6:610:55::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.27 via Frontend
- Transport; Thu, 18 Apr 2024 17:50:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D4.mail.protection.outlook.com (10.167.17.5) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 17:50:49 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
- 2024 12:50:48 -0500
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 18 Apr 2024 12:50:47 -0500
-From: Lizhi Hou <lizhi.hou@amd.com>
-To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Lizhi Hou <lizhi.hou@amd.com>, <nishad.saraf@amd.com>,
-	<sonal.santan@amd.com>, <max.zhen@amd.com>
-Subject: [PATCH V12 0/1] AMD QDMA driver
-Date: Thu, 18 Apr 2024 10:50:42 -0700
-Message-ID: <1713462643-11781-1-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227AF176FB0
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713462665; cv=none; b=ZgvRo1HMhykSlSOQbJPsziS/8JaabMx8El8gAqbkvnM/tqD6B5cHuprKuSk5fBMaK5EP3OYRGqShnW0o/PqwRSSG5hXxr5bV4KtAescxCv4W28bhmlp4AjasPa7gTyFaP/i0U6X1IjlWzJ+j/lDEJ1D6wKVEnXr2WZEllzzw4b4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713462665; c=relaxed/simple;
+	bh=053jrm3rbROA5OWPfP4StZh3u4avv94NNVjPrNZ41lY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=juy/ADr6daaB3Vybch3RzaC/vKo+tTeVZwu3QidShx/N3Y68jPtnscoH1RKq/7xKIwIDUDBL+48pDCokz/ukSYXmnSlkesXoRILn2GqKtxKEbALtaSsIKe4tt1NcYrfp0/sMToe8xURW7SZoS68NpdyoTZJB5ztBRAGreYlW8eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da18a77b4eso148146139f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:51:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713462663; x=1714067463;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VF8LZCSNJI+NdS3+F0FwamjpC+fjCn4iGgRfKFc2zKk=;
+        b=i1NYUIUEj8TbjAC5CJeuK3sFp3Fms01rF5CqRAjT/6RL0WyYe0j2UNI1WJcVBrFWZc
+         HLzVwYL61HSWTTkcCF6H+rA76b+0eP8Kb1Tg2Yw3L+UpYkdu7zaO25fG3w1k4lPSlCDq
+         et4mRfSx4iwlkXv5VPW2dXHU9nowO08aQYEbpPBuIeKDXXUJvMp5sFKb0rC3oyDRBExZ
+         6iVB/PLxFFa4Z71t1Iz2UQM6IIpHiKr1g6hJhWLTbKvfb+6YgQMKfWM1aMi51hT1z/pK
+         KxPwM5QpLoS71F5+dFrqQWBKzFBIczt7MHNNe1GRv9WWSpRpQc1soyJDO3tAzHV/n54N
+         eA1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXeFlq09LQpEjS0+tX4BBfdFbE5cEwF02jw17YI6dMhh/qBLT5VNqcEI4OlHRurluMU2t7ceIDjFdnld4o48nZeKdUcPt5qpsyrY+Bp
+X-Gm-Message-State: AOJu0Yy9dpngGdtlx6YUpU+l2AkM8r38bixSDg934OznhLEYZbeLQWM0
+	FOldrISNa7dm4wDfVyGNYjcRRFjS2PZtDpkA+XFERpATf3bAMTQ4SgQuisvoTt4azEEVV7dWg1N
+	1Vm57vm9qR/BXSatOH/o/G16O+lpTQJGOl3UG5ciZ9K+R3gjFzGSYLtU=
+X-Google-Smtp-Source: AGHT+IFRNjZGY1hRDbMwPVgtkQ5SQ1lLARGta+xRlcEkDDsYxdmPUiPwFy3+U2TPsN/gbgLVO6ev3IHq51OBCzzeKkNd0xuRATTd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D4:EE_|CY8PR12MB7513:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99abe3d8-8713-4f37-64ac-08dc5fd0153c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fDi3Hiu2Uv75KBcPsEMFkS0L3T8nSdyYuEki15JQTgOu7m/KCJJ4OltXeywK4q3ugBKSqalHDz9K3RAZzgA+nSkEdwBGLw/NEHaAHT3pOnQ9QPSazveV+sTAN1MkLS0oz0wPOgh+AIoORexYY+KUpZB2PXkIlPhcs5P9U8jL4bqf0bnZN2AefmzPXo8KyEAFcq3/puFB2tefEvmxCU6LYmQRiwGueugXv8MApq2AHlnTPvTq3dnFcG3/aiXQFLjNlqjsa6xxQt8Gq30m2L7sNznq2s4eZK0GGEwwrITxm5a8dPgq8HpZU5cYBSPrcAljYxJD7lh9Wey+tHZWsJp0uPtTwqR8D42XQBuHHN6qaRHXiB9Z17Un0YSQXCTwlxlR+1erPWMApfJAdDjBaINkpbCCF/kKLyFAEHVUE3RYdg0PQsaPI6k+Nykq82g98aYpwwzb3IRuBPrgG85P69U5rw4n4NWoVKZ4swXut3CDpscSFUAHb2ANjcuyDHza/A73Uj0sCtj67O+q1eXiryMfSxZbpzcLsFX+by5p7zBF8rLwvV52fP25FG0enkukt9kR5pVYhc538NHBSDi8B8xX/K3pEt19jy5IBHNRfjbodiI0wg2q90sxqWZ+l0gf/q0IHX8uPAI2xS8/iT4XwfoyZKAEY3Fc+uBT/i0RVA1hKLDfkKgN+h07ZZf6tL9apNFhLNmsen1cr8B5wG0DwJvSGsNyOoQcPFuczXf+TiRf6jLF4ljsqdYqPww3M+38IOxxt1CU42kNB/JjI6zk9tAZ5w==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 17:50:49.2321
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99abe3d8-8713-4f37-64ac-08dc5fd0153c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D4.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7513
+X-Received: by 2002:a05:6638:4115:b0:482:8f32:97ca with SMTP id
+ ay21-20020a056638411500b004828f3297camr245691jab.4.1713462662708; Thu, 18 Apr
+ 2024 10:51:02 -0700 (PDT)
+Date: Thu, 18 Apr 2024 10:51:02 -0700
+In-Reply-To: <20240418104952.2615-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000058d4c80616629d53@google.com>
+Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in hugetlb_fault
+From: syzbot <syzbot+7fd4b85697bcf2a9daa2@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
-The QDMA subsystem is used in conjunction with the PCI Express IP block
-to provide high performance data transfer between host memory and the
-card's DMA subsystem.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-            +-------+       +-------+       +-----------+
-   PCIe     |       |       |       |       |           |
-   Tx/Rx    |       |       |       |  AXI  |           |
- <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
-            |       |       |       |       |           |
-            +-------+       +-------+       +-----------+
+Reported-and-tested-by: syzbot+7fd4b85697bcf2a9daa2@syzkaller.appspotmail.com
 
-Comparing to AMD/Xilinx XDMA subsystem,
-    https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
-the QDMA subsystem is a queue based, configurable scatter-gather DMA
-implementation which provides thousands of queues, support for multiple
-physical/virtual functions with single-root I/O virtualization (SR-IOV),
-and advanced interrupt support. In this mode the IP provides AXI4-MM and
-AXI4-Stream user interfaces which may be configured on a per-queue basis.
+Tested on:
 
-The QDMA has been used for Xilinx Alveo PCIe devices.
-    https://www.xilinx.com/applications/data-center/v70.html
+commit:         9ed46da1 Add linux-next specific files for 20240412
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=147e17b3180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7ea0abc478c49859
+dashboard link: https://syzkaller.appspot.com/bug?extid=7fd4b85697bcf2a9daa2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16c94a53180000
 
-This patch series is to provide the platform driver for AMD QDMA subsystem
-to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
-and SR-IOV, will be supported by future patches.
-
-The device driver for any FPGA based PCIe device which leverages QDMA can
-call the standard dmaengine APIs to discover and use the QDMA subsystem
-without duplicating the QDMA driver code in its own driver.
-
-Changes since v11:
-- Removed metadata callback and added device_config callback
-
-Changes since v10:
-- Fixed Copyright
-
-Changes since v9:
-- Merge 2 patches into 1 patch
-
-Changes since v8:
-- Replaced dma_alloc_coherent() with dmam_alloc_coherent()
-
-Changes since v7:
-- Fixed smatch warnings
-
-Changes since v6:
-- Added a patch to create amd/ and empty Kconfig/Makefile for AMD drivers
-- Moved source code under amd/qdma/
-- Minor changes for code review comments
-
-Changes since v5:
-- Add more in patch description.
-
-Changes since v4:
-- Convert to use platform driver callback .remove_new()
-
-Changes since v3:
-- Minor changes in Kconfig description.
-
-Changes since v2:
-- A minor change from code review comments.
-
-Changes since v1:
-- Minor changes from code review comments.
-- Fixed kernel robot warning.
-
-Nishad Saraf (1):
-  dmaengine: amd: qdma: Add AMD QDMA driver
-
- MAINTAINERS                            |    8 +
- drivers/dma/Kconfig                    |    2 +
- drivers/dma/Makefile                   |    1 +
- drivers/dma/amd/Kconfig                |   14 +
- drivers/dma/amd/Makefile               |    3 +
- drivers/dma/amd/qdma/Makefile          |    5 +
- drivers/dma/amd/qdma/qdma-comm-regs.c  |   64 ++
- drivers/dma/amd/qdma/qdma.c            | 1143 ++++++++++++++++++++++++
- drivers/dma/amd/qdma/qdma.h            |  266 ++++++
- include/linux/platform_data/amd_qdma.h |   36 +
- 10 files changed, 1542 insertions(+)
- create mode 100644 drivers/dma/amd/Kconfig
- create mode 100644 drivers/dma/amd/Makefile
- create mode 100644 drivers/dma/amd/qdma/Makefile
- create mode 100644 drivers/dma/amd/qdma/qdma-comm-regs.c
- create mode 100644 drivers/dma/amd/qdma/qdma.c
- create mode 100644 drivers/dma/amd/qdma/qdma.h
- create mode 100644 include/linux/platform_data/amd_qdma.h
-
--- 
-2.34.1
-
+Note: testing is done by a robot and is best-effort only.
