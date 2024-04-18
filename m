@@ -1,52 +1,49 @@
-Received: from forward500c.mail.yandex.net (forward500c.mail.yandex.net [178.154.239.208])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2941635D8;
-	Thu, 18 Apr 2024 13:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0C16132C;
+	Thu, 18 Apr 2024 13:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448690; cv=none; b=TXG2I9Ud/7IzWAX0QrFJ8vmNfECZRLnpo1cYUsWFgYp19+6jTJ3jVmWhRnVlIvJolMugK4MRI1vo07JxE+frE6jCEbYO8b1OJrjFYzMwmTAxgEGFIeeLHdktEJX8ZHjMb9Bq8pxca1P8vYpTPcLEZq/sDbrqmU2hSjovrstQLGA=
+	t=1713448703; cv=none; b=ZT8sr2TIW85Ug7iLo4Piko35JVZP4krV9Fo9b1rD+U+XKsiYR0qQWDCdd/wVcwLPqLe7SzYxRXjCdkUbaUDtuBk8fxjBk29whxnXf+JAjlJ56/lrbiJpfIenkAdYVj4nd2N0yhBXxLD+kuWJyGVynyAYpLbqb5Sol/jb/1A/B24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448690; c=relaxed/simple;
-	bh=I0yeIY7D8yKRNRnvX+XLrfDsn7nMHd9Me/ZYslSqegs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q8L+rjLnswx27z2VrFn2WZhEy5/M6TSVLHJ8nKZKsGlsdtuAfOesT8wotM0cssrCyQlviMriK7m+nmtsOJWqTsgPXys79CKP+K0cimqFIL+/cS4cgw52+4SCnxZaBRvT8Wno7a4Ydrij8xKq3OfPAvf7hYuUBeRudQJvv3oP+Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=aITZgeeO; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="aITZgeeO"
-Received: from mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:c8ad:0:640:7c75:0])
-	by forward500c.mail.yandex.net (Yandex) with ESMTPS id DFA006104D;
-	Thu, 18 Apr 2024 16:58:05 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id gvF5FWNoJ8c0-szya4TNz;
-	Thu, 18 Apr 2024 16:58:05 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1713448685; bh=rcYDGNKniFozwILzvpRXKReJQeQuzjeYpRIJOGjEHeM=;
-	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=aITZgeeOPElim/uC0pMZB52iIp+f6uRgeTe1960IRqAxoO22UIM3E0pcYDax16QhB
-	 AZW638fWFSgdOHMMR9sewwLWFJK7uph8EknDsjH4OdIS70W+dau7NvslFTd5IrkZdm
-	 RFtSxcsRgti4tUcV4IYiq6PuSjHFQJgMYyTxFT4w=
-Authentication-Results: mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net; dkim=pass header.i=@ya.ru
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To: 
-Cc: Konstantin Pugin <ria.freelander@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lech Perczak <lech.perczak@camlingroup.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v2 3/3] serial: sc16is7xx: add support for EXAR XR20M1172 UART
-Date: Thu, 18 Apr 2024 16:57:34 +0300
-Message-Id: <20240418135737.3659498-4-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418135737.3659498-1-rilian.la.te@ya.ru>
-References: <20240418135737.3659498-1-rilian.la.te@ya.ru>
+	s=arc-20240116; t=1713448703; c=relaxed/simple;
+	bh=wl9+LyQkX3DiNMZ2z0Jwgdr8/XJ0rkH2r7mPv0GPPQ0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vfg3FDEGS/7uxhnKetjiqpG69BGHiF2DFeo751j92sqvl6E6JfWdlxM+VpAPtWvKGd1wQR/oYWLopYPuCXBd5Dxp9KtDATHupMcpERxFcwuwoyHKQQd+vL6YYK4ov2SNMFu6lQSdb6H01i+lqfG8fuSThh/ji6xvrYLJlTgpWfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzp83NpPz6K6T1;
+	Thu, 18 Apr 2024 21:56:16 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3877B1400CD;
+	Thu, 18 Apr 2024 21:58:20 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 14:58:19 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 08/16] ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+Date: Thu, 18 Apr 2024 14:54:04 +0100
+Message-ID: <20240418135412.14730-9-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,172 +51,164 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-From: Konstantin Pugin <ria.freelander@gmail.com>
+From: James Morse <james.morse@arm.com>
 
-Its register set is mostly compatible with SC16IS762, but
-it has a support for additional division rates of UART
-with special DLD register. So, add handling this register
-via UPF_MAGIC_MULTIPLIER port flag.
+struct acpi_scan_handler has a detach callback that is used to remove
+a driver when a bus is changed. When interacting with an eject-request,
+the detach callback is called before _EJ0.
 
-Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+This means the ACPI processor driver can't use _STA to determine if a
+CPU has been made not-present, or some of the other _STA bits have been
+changed. acpi_processor_remove() needs to know the value of _STA after
+_EJ0 has been called.
+
+Add a post_eject callback to struct acpi_scan_handler. This is called
+after acpi_scan_hot_remove() has successfully called _EJ0. Because
+acpi_scan_check_and_detach() also clears the handler pointer,
+it needs to be told if the caller will go on to call
+acpi_bus_post_eject(), so that acpi_device_clear_enumerated()
+and clearing the handler pointer can be deferred.
+An extra flag is added to flags field introduced in the previous
+patch to achieve this.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Joanthan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+----
+v7:
+ - No change.
+v6:
+ - Switch to flags.
+Russell, you hadn't signed off on this when posting last time.
+Do you want to insert a suitable tag now?
+v5:
+ - Rebase to take into account the changes to scan handling in the
+   meantime.
 ---
- drivers/tty/serial/sc16is7xx.c | 54 ++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_processor.c |  4 ++--
+ drivers/acpi/scan.c           | 30 +++++++++++++++++++++++++++---
+ include/acpi/acpi_bus.h       |  1 +
+ 3 files changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index a300eebf1401..7fc1c19b3891 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -65,6 +65,7 @@
- /* Special Register set: Only if ((LCR[7] == 1) && (LCR != 0xBF)) */
- #define SC16IS7XX_DLL_REG		(0x00) /* Divisor Latch Low */
- #define SC16IS7XX_DLH_REG		(0x01) /* Divisor Latch High */
-+#define SC16IS7XX_DLD_REG		(0x02) /* Divisor Latch Mode (only on EXAR chips) */
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 4e65011e706c..beb1761db579 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -471,7 +471,7 @@ static int acpi_processor_add(struct acpi_device *device,
  
- /* Enhanced Register set: Only if (LCR == 0xBF) */
- #define SC16IS7XX_EFR_REG		(0x02) /* Enhanced Features */
-@@ -218,6 +219,20 @@
- #define SC16IS7XX_TCR_RX_HALT(words)	((((words) / 4) & 0x0f) << 0)
- #define SC16IS7XX_TCR_RX_RESUME(words)	((((words) / 4) & 0x0f) << 4)
- 
-+/* Divisor Latch Mode bits (EXAR extension)
-+ *
-+ * EXAR hardware is mostly compatible with SC16IS7XX, but supports additional feature:
-+ * 4x and 8x divisor, instead of default 16x. It has a special register to program it.
-+ * Bits 0 to 3 is fractional divisor, it used to set value of last 16 bits of
-+ * uartclk * (16 / divisor) / baud, in case of default it will be uartclk / baud.
-+ * Bits 4 and 5 used as switches, and should not be set to 1 simultaneously.
-+ */
-+
-+#define SC16IS7XX_DLD_16X		0
-+#define SC16IS7XX_DLD_DIV(m)	((m) & 0xf)
-+#define SC16IS7XX_DLD_8X		BIT(4)
-+#define SC16IS7XX_DLD_4X		BIT(5)
-+
- /*
-  * TLR register bits
-  * If TLR[3:0] or TLR[7:4] are logical 0, the selectable trigger levels via the
-@@ -310,6 +325,7 @@ struct sc16is7xx_devtype {
- 	char	name[10];
- 	int	nr_gpio;
- 	int	nr_uart;
-+	bool has_dld;
- };
- 
- #define SC16IS7XX_RECONF_MD		(1 << 0)
-@@ -522,6 +538,13 @@ static const struct sc16is7xx_devtype sc16is762_devtype = {
- 	.nr_uart	= 2,
- };
- 
-+static const struct sc16is7xx_devtype xr20m1172_devtype = {
-+	.name		= "XR20M1172",
-+	.nr_gpio	= 8,
-+	.nr_uart	= 2,
-+	.has_dld	= true,
-+};
-+
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+ /* Removal */
+-static void acpi_processor_remove(struct acpi_device *device)
++static void acpi_processor_post_eject(struct acpi_device *device)
  {
- 	switch (reg) {
-@@ -559,13 +582,29 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- 	struct sc16is7xx_one *one = to_sc16is7xx_one(port, port);
- 	u8 lcr;
- 	u8 prescaler = 0;
--	unsigned long clk = port->uartclk, div = clk / 16 / baud;
-+	u8 divisor = 16;
-+	u8 dld_mode = SC16IS7XX_DLD_16X;
-+	bool has_dld = !!(port->flags & UPF_MAGIC_MULTIPLIER);
-+	unsigned long clk = port->uartclk, div, div16;
-+
-+	if (has_dld)
-+		while (DIV_ROUND_CLOSEST(port->uartclk, baud) < divisor)
-+			divisor /= 2;
-+
-+	div16 = clk * (16 / divisor) / baud;
-+	div = div16 / 16; /* For divisor = 16, it is the same as clk / 16 / baud */
+ 	struct acpi_processor *pr;
  
- 	if (div >= BIT(16)) {
- 		prescaler = SC16IS7XX_MCR_CLKSEL_BIT;
- 		div /= 4;
- 	}
- 
-+	/* Count additional divisor for EXAR devices */
-+	if (divisor == 8)
-+		dld_mode = SC16IS7XX_DLD_8X;
-+	if (divisor == 4)
-+		dld_mode = SC16IS7XX_DLD_4X;
-+
- 	/* Enable enhanced features */
- 	sc16is7xx_efr_lock(port);
- 	sc16is7xx_port_update(port, SC16IS7XX_EFR_REG,
-@@ -586,12 +625,14 @@ static int sc16is7xx_set_baud(struct uart_port *port, int baud)
- 	regcache_cache_bypass(one->regmap, true);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLH_REG, div / 256);
- 	sc16is7xx_port_write(port, SC16IS7XX_DLL_REG, div % 256);
-+	if (has_dld)
-+		sc16is7xx_port_write(port, SC16IS7XX_DLD_REG, dld_mode | SC16IS7XX_DLD_DIV(div16));
- 	regcache_cache_bypass(one->regmap, false);
- 
- 	/* Restore LCR and access to general register set */
- 	sc16is7xx_port_write(port, SC16IS7XX_LCR_REG, lcr);
- 
--	return DIV_ROUND_CLOSEST(clk / 16, div);
-+	return DIV_ROUND_CLOSEST(clk / divisor, div);
+@@ -639,7 +639,7 @@ static struct acpi_scan_handler processor_handler = {
+ 	.ids = processor_device_ids,
+ 	.attach = acpi_processor_add,
+ #ifdef CONFIG_ACPI_HOTPLUG_CPU
+-	.detach = acpi_processor_remove,
++	.post_eject = acpi_processor_post_eject,
+ #endif
+ 	.hotplug = {
+ 		.enabled = true,
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 1ec9677e6c2d..3ec54624664a 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -245,6 +245,7 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
  }
  
- static void sc16is7xx_handle_rx(struct uart_port *port, unsigned int rxlen,
-@@ -1014,6 +1055,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 	unsigned int lcr, flow = 0;
- 	int baud;
- 	unsigned long flags;
-+	bool has_dld = !!(port->flags & UPF_MAGIC_MULTIPLIER);
+ #define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
++#define ACPI_SCAN_CHECK_FLAG_EJECT	BIT(1)
  
- 	kthread_cancel_delayed_work_sync(&one->ms_work);
+ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ {
+@@ -273,8 +274,6 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ 	if (handler) {
+ 		if (handler->detach)
+ 			handler->detach(adev);
+-
+-		adev->handler = NULL;
+ 	} else {
+ 		device_release_driver(&adev->dev);
+ 	}
+@@ -284,6 +283,28 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
+ 	 */
+ 	acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+ 	adev->flags.initialized = false;
++
++	/* For eject this is deferred to acpi_bus_post_eject() */
++	if (!(flags & ACPI_SCAN_CHECK_FLAG_EJECT)) {
++		adev->handler = NULL;
++		acpi_device_clear_enumerated(adev);
++	}
++	return 0;
++}
++
++static int acpi_bus_post_eject(struct acpi_device *adev, void *not_used)
++{
++	struct acpi_scan_handler *handler = adev->handler;
++
++	acpi_dev_for_each_child_reverse(adev, acpi_bus_post_eject, NULL);
++
++	if (handler) {
++		if (handler->post_eject)
++			handler->post_eject(adev);
++
++		adev->handler = NULL;
++	}
++
+ 	acpi_device_clear_enumerated(adev);
  
-@@ -1093,7 +1135,7 @@ static void sc16is7xx_set_termios(struct uart_port *port,
- 	/* Get baud rate generator configuration */
- 	baud = uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / 4 / 0xffff,
--				  port->uartclk / 16);
-+				  port->uartclk / (has_dld ? 4 : 16));
+ 	return 0;
+@@ -301,6 +322,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	acpi_handle handle = device->handle;
+ 	unsigned long long sta;
+ 	acpi_status status;
++	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_EJECT;
  
- 	/* Setup baudrate generator */
- 	baud = sc16is7xx_set_baud(port, baud);
-@@ -1550,6 +1592,9 @@ static int sc16is7xx_probe(struct device *dev,
- 		s->p[i].port.type	= PORT_SC16IS7XX;
- 		s->p[i].port.fifosize	= SC16IS7XX_FIFO_SIZE;
- 		s->p[i].port.flags	= UPF_FIXED_TYPE | UPF_LOW_LATENCY;
-+		/* If we have DLD register, then set UPF_MAGIC_MULTIPLIER flag */
-+		if (devtype->has_dld)
-+			s->p[i].port.flags |= UPF_MAGIC_MULTIPLIER;
- 		s->p[i].port.iobase	= i;
- 		/*
- 		 * Use all ones as membase to make sure uart_configure_port() in
-@@ -1688,6 +1733,7 @@ static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- 	{ .compatible = "nxp,sc16is752",	.data = &sc16is752_devtype, },
- 	{ .compatible = "nxp,sc16is760",	.data = &sc16is760_devtype, },
- 	{ .compatible = "nxp,sc16is762",	.data = &sc16is762_devtype, },
-+	{ .compatible = "exar,xr20m1172",	.data = &xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
-@@ -1776,6 +1822,7 @@ static const struct spi_device_id sc16is7xx_spi_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
+ 	if (device->handler && device->handler->hotplug.demand_offline) {
+ 		if (!acpi_scan_is_offline(device, true))
+@@ -313,7 +335,7 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
  
-@@ -1826,6 +1873,7 @@ static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
- 	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
- 	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
- 	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ "xr20m1172",	(kernel_ulong_t)&xr20m1172_devtype, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
+ 	acpi_handle_debug(handle, "Ejecting\n");
+ 
+-	acpi_bus_trim(device);
++	acpi_scan_check_and_detach(device, (void *)flags);
+ 
+ 	acpi_evaluate_lck(handle, 0);
+ 	/*
+@@ -336,6 +358,8 @@ static int acpi_scan_hot_remove(struct acpi_device *device)
+ 	} else if (sta & ACPI_STA_DEVICE_ENABLED) {
+ 		acpi_handle_warn(handle,
+ 			"Eject incomplete - status 0x%llx\n", sta);
++	} else {
++		acpi_bus_post_eject(device, NULL);
+ 	}
+ 
+ 	return 0;
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index e7796f373d0d..51a4b936f19e 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -129,6 +129,7 @@ struct acpi_scan_handler {
+ 	bool (*match)(const char *idstr, const struct acpi_device_id **matchid);
+ 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
+ 	void (*detach)(struct acpi_device *dev);
++	void (*post_eject)(struct acpi_device *dev);
+ 	void (*bind)(struct device *phys_dev);
+ 	void (*unbind)(struct device *phys_dev);
+ 	struct acpi_hotplug_profile hotplug;
 -- 
-2.34.1
+2.39.2
 
