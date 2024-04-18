@@ -1,117 +1,103 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661276FB0
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2063238F94;
+	Thu, 18 Apr 2024 14:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713452196; cv=none; b=ggKWrokJGKAdQFySEdcaabFawSM/oxtEq5WisXucE2GxTiOA33zwGTGy290DPqmTHUAS//FMzghVOcdHG3Hs1+KP14S1tW2p25MrEIEl0ZJ3xjoKuw840KschCdcrZ5cA5uUP1o6HNktRL1NTaqqLRfZt+c0WaXDlWdg0n6J7oI=
+	t=1713452224; cv=none; b=oP07qmWYvlTXcUNb/2Fe8A8UuOn2v3BJ71Ezc1r1NrpoowZ4A6BmVdG/qZKN3YwAsFOSqDKSNdhAjcKdJJT5aUt6fg5qhzUHmO6mXeQP8YcZiATEP1Y9ZKgOVfBs++tUUm8LlQ0ERNXjz9Q0PBEwX8xChxCSjSqHp10rLI/Ie48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713452196; c=relaxed/simple;
-	bh=LCgK1Nl7X6eiOEgLnSDHPjrE4OmWhWaXYy1AgFyQE4c=;
+	s=arc-20240116; t=1713452224; c=relaxed/simple;
+	bh=99zFdr7f7pW36moWRYjqx7oFdIfJZDCDZ7X565EDoEs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bL7pUsLkf8P0ggFt2lNuO+S2wGifKEUTYslqT89RUtCOqOiL5C4y0xX0C7hjFurn9Yjh5LnZ9qHYR8/fuo2JS/BQb5D6jhMKwoFZne+Z+/7FgDSeUWcRz2/L/kpLx63Verc9slMc8ugST01QKGeTWLO9qNXypU936dcPBXMXEUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pf47Y+eM; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pf47Y+eM"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de466c64163so806851276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713452192; x=1714056992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V4lP11AC4mEgAygBmUrYdUs5fesWy/SPsDBJGp96UBo=;
-        b=Pf47Y+eMT+p3ZzFS/PCe8WBSpgREFwme6x77bmIOwtmxRZalN0Wr2VPqDVYrQ/sK5A
-         MZqSo1DF+vVUK1Tm1RJ9cLFAvAA8J8C/FLG63CtA8aHA1Q6SDI+q1hYJppLvtqWz0mkl
-         grG8ywpcR1J/0o294kRuffKkS20NTJULm7bDSW0sX/SQAirRllihO9AMCfRi43zW04/T
-         fivg2GkbKsV6Bm51SLJcQmQLOy6XkLgbQ2vXTTqi7LBJ56qPuwVm56AuYPMcv5CFswtl
-         5O9+vUP83JKMldlcYxKpLx29A4EFFpGfg5fyb1YaezrGya1T8t8s4mMWHl3TdatprsTl
-         7n+w==
+	 To:Cc:Content-Type; b=P73DmJYE3tSstCdHAQoUAAO8R04xBsgXkOXvOwulPtv2m51EMHMyiLZn5JXVuovMt/dkkD/Zwwbvhws5elOzVwS+iD8DMWTHLJjBLTJGzFvWSWzKZp2Piy5RmXV0lp117EIrwewYud7x/rT7wROG5Bgx21P+S/0AxvwvZAYp7SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61ae4743d36so10570847b3.2;
+        Thu, 18 Apr 2024 07:57:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713452192; x=1714056992;
+        d=1e100.net; s=20230601; t=1713452221; x=1714057021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V4lP11AC4mEgAygBmUrYdUs5fesWy/SPsDBJGp96UBo=;
-        b=tQbm6nmm+4Zd+MmY18Hsj87MENZBSqzo82a4c0ZpSrkIwrJjAYrXBAVpwyAfnp9I+1
-         tm4qDzN8FxU/hO3y6ywwyrBj11QJXc+z0Vwtav29y/iGwDSQQrKfhTqoa33hMZH4MlhD
-         UwSB2RWCthwMlr8qwwjYXyj/20pqpLuNobFB4w1hmnPEFZ1zzWbKUG8XDuO0WmDbVNgA
-         NuUZCHPE6iNkgRMfKtznGUk4DQKV/hS1yyEQwjFD+elRaIH6V0o+7M/hvk95wqGXcAcF
-         UgxE48kQ4orX0kWpTGU9qc3Th8Kk0KUKRWAXrupVksmUuhh8wGbnXiNbTIUF87OovE8L
-         7nug==
-X-Forwarded-Encrypted: i=1; AJvYcCUgbD1c54eeG7A5sL3LJ/RDXEOCO4c874g6V99dmwMyghEdhtZlO2UNJ95IJ4hRKHrYQoGKYnDCKPpkzYDHqM6KjejngBFOMHaL4Q0z
-X-Gm-Message-State: AOJu0YyV+Wgej8eV5wSQrt6yExZTLT5BC8pcomqJaeSb/AVcD/vnnm2k
-	WvqK5eBlDJ3j0OfJVq+j/TpPX6TqON+3G6aRtwBdhxTJIL8Vf/VpDgFI0dhhgHtf5mLRxQ22y/H
-	MS5udyc6I3oyk28jGjIgl5Om4gdQr9608obn+Tg==
-X-Google-Smtp-Source: AGHT+IFYsnYxZkuoVUYNlb8Ts5dFS8t8z3/D+sz6e79RFN3U2QXIkbUK1DFABjBRkpsq61z+xoVBtqPAJ7iR6Mrk2nI=
-X-Received: by 2002:a25:ae1f:0:b0:dcc:787:e8f9 with SMTP id
- a31-20020a25ae1f000000b00dcc0787e8f9mr3107129ybj.51.1713452192453; Thu, 18
- Apr 2024 07:56:32 -0700 (PDT)
+        bh=xr9Tyh0ygfrfVF1SBXD1C/Nz/HkQ5oZlmuTTcyMKogs=;
+        b=XZ2oBhmwaHg7Bm1C2Klgo1AciiBIk5eOqnFgpeJmoHv4E1Kcs/vDanBt7Wwnjw8GI8
+         s45Wzckql9WIAKa56epood1JsbMPrQxDKQXGDST56nYqca6ejnW82q6j8b1/NJzNN0td
+         p2KvQhY3CIImJcM84AJ1A6igUAsb1eKm5/hpSdGkL34VC1h521ey26NGQ2Rtz3jWOOjH
+         elUIXSeIW3VRVHIyXXATcA2fTg+jB0w+gvBhIrNMM9/HLDvWZ1FpXBe97vI0LOoqjciS
+         UgUDqbaJA4QJ5UwDO01Sb0G9UMRJbVfAAmIjs4bdAb8oTsGdwOAibU7cDE/LXQPTZ+kY
+         m6SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+OIHCKI+A0wopQEG1Yg/2VO54uF9ivHqOBW4UUsJVPINUgppJbYm06tkoRGJuebfKtDqQdRT0iKTtjCESibu8HUKJm53+PBm6ylzW57ctoyQy6Ljzlxv6gQAUplzkbIeRmY1Df8GQI24nnaZLK/+XRZg5sY0olR1D7KLGd8JjTIh2hzrwaV5upM0=
+X-Gm-Message-State: AOJu0YyxEHPQWetUyBsaWvk4sK0kjQRGweZafpmKF4thLoFjawLUQ4S/
+	ykV5pw9a1pt+fIF8C/8IQNn72jvRxk1sgWrMfI99vLxblscd8MkRcdTIEM0V
+X-Google-Smtp-Source: AGHT+IG+YIuRzgOgaut4xtN2kTcFx3Mn1DLKrirWi+ONk0n2FmtHn//lWh5Q3mQLOO8+jG7I08A2xA==
+X-Received: by 2002:a05:690c:6d8b:b0:617:c383:42ac with SMTP id iw11-20020a05690c6d8b00b00617c38342acmr3176488ywb.51.1713452220937;
+        Thu, 18 Apr 2024 07:57:00 -0700 (PDT)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id i126-20020a0dc684000000b006158165c606sm364587ywd.136.2024.04.18.07.57.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 07:57:00 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so1038914276.1;
+        Thu, 18 Apr 2024 07:57:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVkrlBZAydSblHHNu4C8glS6BOBXByEKvc+JuVobIT+g7sH8rJq7Ci+hcybj991VokrqizlV1Rj3FJBd/Tj3WGwB5UsZp4h+PauOtMq9k8Re+4MW2k7MGYgjl7mLivRszy92fcm8R2VyZ5I538TkKodECvCIYxzbO65mGhn/wF0z0Qq+xgvQX1JL3Y=
+X-Received: by 2002:a5b:902:0:b0:de1:1af9:c7ea with SMTP id
+ a2-20020a5b0902000000b00de11af9c7eamr3334836ybq.1.1713452220525; Thu, 18 Apr
+ 2024 07:57:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1713348705.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1713348705.git.geert+renesas@glider.be>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 18 Apr 2024 16:55:56 +0200
-Message-ID: <CAPDyKFqSmBOgiUumtctsd71_Ee1LqZ+vuZ87SkUYVPYT0VStNA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pmdomain: renesas: rcar-sysc: Cleanups and R-Car M3-W
- quirk handling
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240403200952.633084-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVN_B3xhNnq1=NOs=LmWw3P=dJGr0MhQMdqsChQ=VXWLA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVN_B3xhNnq1=NOs=LmWw3P=dJGr0MhQMdqsChQ=VXWLA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Apr 2024 16:56:49 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV98b2DR1P380JqAaJ_DhB_ZB=31sVA1pg08biKGHwERw@mail.gmail.com>
+Message-ID: <CAMuHMdV98b2DR1P380JqAaJ_DhB_ZB=31sVA1pg08biKGHwERw@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: r9a07g043: Add clock and reset entry for PLIC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 17 Apr 2024 at 12:31, Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->         Hi all,
->
-> According to the hardware team, R-Car H3 ES1.0 and R-Car M3-W have a
-> rare quirk where powering down the A3IR, A3VC, and A3VP power domains
-> requires an extra delay of 1 =C2=B5s.  So far upstream never handled that=
-,
-> but the BSP has a fix[1].  As support for R-Car H3 ES1.x was dropped in
-> v6.4, only R-Car M3-W still needs to be handled.
->
-> The BSP fix relies on hard-coded string comparisons of power domain
-> names, and thus applies to all R-Car Gen3 SoCs (many introduced after
-> the original fix was written) having domains with a matching name,
-> whether they are affected or not.  Hence I took the opportunity to
-> refactor the R-Car SYSC driver first, and came up with a less-intrusive
-> fix.
->
-> Thanks for your comments!
->
-> [1] https://github.com/renesas-rcar/linux-bsp/commit/495e47e390499c522197=
-352a08f423e8a3b41e83
->
-> Geert Uytterhoeven (4):
->   pmdomain: renesas: rcar-sysc: Absorb rcar_sysc_ch into rcar_sysc_pd
->   pmdomain: renesas: rcar-sysc: Split R-Car M3-W and M3-W+ sub-drivers
->   pmdomain: renesas: rcar-sysc: Remove rcar_sysc_nullify() helper
->   pmdomain: renesas: rcar-sysc: Add R-Car M3-W power-off delay quirk
->
->  drivers/pmdomain/renesas/Makefile             |  4 +-
->  .../{r8a7796-sysc.c =3D> r8a77960-sysc.c}       | 34 +++------
->  .../{r8a7796-sysc.c =3D> r8a77961-sysc.c}       | 28 ++------
->  drivers/pmdomain/renesas/rcar-sysc.c          | 70 ++++++++-----------
->  drivers/pmdomain/renesas/rcar-sysc.h          |  9 +--
->  5 files changed, 43 insertions(+), 102 deletions(-)
->  copy drivers/pmdomain/renesas/{r8a7796-sysc.c =3D> r8a77960-sysc.c} (64%=
-)
->  rename drivers/pmdomain/renesas/{r8a7796-sysc.c =3D> r8a77961-sysc.c} (6=
-9%)
->
+Hi Prabhakar,
 
-Applied for next, thanks!
+On Thu, Apr 18, 2024 at 4:53=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Wed, Apr 3, 2024 at 10:11=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add the missing clock and reset entry for PLIC. Also add
+> > R9A07G043_NCEPLIC_ACLK to critical clocks list.
+> >
+> > Fixes: b3e77da00f1b ("riscv: dts: renesas: Add initial devicetree for R=
+enesas RZ/Five SoC")
 
-Kind regards
-Uffe
+That is not the correct commit, I'll replace it by
+Fixes: 95d48d270305ad2c ("clk: renesas: r9a07g043: Add support for RZ/Five =
+SoC")
+while applying.
+
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-clk for v6.10.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
