@@ -1,98 +1,141 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A16815C3
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 00:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E129F382
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 00:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713399621; cv=none; b=cDZRE+HLci3vFIXMrWoGrkKVO1YwhUTt5A7CdKlMxY5otX+piyz62KJjeZpQUYdqHAZDwFdd1Jw13HrNh5M5za+MO6ukkX+J6hMxDlyPC53FDwqfwK5YpSRXD5uuzZ1G+1qP3CaEG7DNF+zy7SHqHiStCTP6dGKb49I+KoGM50c=
+	t=1713399832; cv=none; b=biATAhT2lB06MRfeHeXCWMI8P2sZPxoKnrx9z4GKT1226fMXDTgk9VhgqLl/tyw6OO8Lan0zTpSHPDKBTuPEaU9VXw/WUci9Hr5E5jYwpzBI7HGyuOgsioxxg+MSNijiOSKG2E4sIXk9v5IWAyV3Xu8QQ93WYCzF32DUTzKpEAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713399621; c=relaxed/simple;
-	bh=NFzlsbK07pt2WYy9cHPGToQsa2pus3HKKGJ2e71BD9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XJ02jvFdWfZnWATUB0qxpq+4kESNQp/OQKipf9OVjr3ztDM1EQ6u7778h5hUsPnqco2xzo+QfbAaMen5+FT/QeWlXDgN24xA84LQNvnDfr67Coes6oqLSlgvcvE15/m+GU1M2KWTSebNnZNGaZH0Eo52ranXszdnMDIGp04RjnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-5a-6620673d3442
-Date: Thu, 18 Apr 2024 09:20:08 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org,
-	ying.huang@intel.com, vernhao@tencent.com,
-	mgorman@techsingularity.net, hughd@google.com, david@redhat.com,
-	peterz@infradead.org, luto@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	rjgolo@gmail.com
-Subject: Re: [PATCH v9 7/8] mm: add folio_put_mgen() to deliver migrc's
- generation number to pcp or buddy
-Message-ID: <20240418002008.GA3592@system.software.com>
-References: <20240417071847.29584-1-byungchul@sk.com>
- <20240417071847.29584-8-byungchul@sk.com>
- <Zh_xC76oTjrgutl_@casper.infradead.org>
+	s=arc-20240116; t=1713399832; c=relaxed/simple;
+	bh=8+F6PP2qvcM28ExvjGoCq9ck+Fvk40LFrhNIeFQyvd4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bewnLoVzRszPf6mVjSiBVeVMXJzM+81fW5wYRqoO74ab2/4DD3ljugpvnfVR9ttjotrkBY/i809y8mIHtunO3DcOlDOptPrjMiywTFg8+ghRPLXxvkq/68kjSKzUhw+ds6GzoOqbX53nJ+a/ApDZN+OPp5ou2I2oZVv8zTjEwf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EQmJXtT+; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EQmJXtT+"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51967f75729so287026e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 17:23:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713399829; x=1714004629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9i9VTKXdwVrZUiFoJtRZUvp3SrFLNeCVgmhZ/CQHQQo=;
+        b=EQmJXtT+38OaKNZVPehAP4pcfhVzRa8UaVwm1sbV+WFV1DbSXfgjo2SlAax21A3Laz
+         itpKBsD3DbkklYVsT8uyKgBG/FVQBwlkECUT6lPG1+9CPEw6aOOEPB+zmZrspA06d7qN
+         i8bywpX+VlCrkSkdZEyxrQJxutb3RmsWX0rk28k7I4j3+GKjQYHd+cI8M28DwBiIUo7A
+         rLGPDzTmAeHB+MLpzIMBH5JfCgSUbnn224EAttsj3G8cetG9uAnR5gqm+KsBz/KhozbX
+         ddE2Ua5HT9nykeaxAGQ6CKX4Fo7E+9Zm2w6pcZFbu8NDtZvuzR3kzcCl8uf0u7ByAgXU
+         cKuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713399829; x=1714004629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9i9VTKXdwVrZUiFoJtRZUvp3SrFLNeCVgmhZ/CQHQQo=;
+        b=ocrOYtPXJIsLlvLHGKD68o/w8/FYlTI8KPbtQpA2jw8V+vUmc7DLmMfU/WwSuSLESo
+         I9iz8bRWzi0365W51JpZeyGWHw6+B2uU5RXDv5jt5MW5RQF4U3CKFDg8NiWqA4Y+Qx5o
+         Z/rwnK3ROX95wR7nlRbokpfnKDT8rrBdTD03Ohkaux8ws0pjpiNxpuxEylbc89wo10Dl
+         1oV+294sUkYU50NNG+o5fHu/zRQadEl18EhYvlIY22WY2eB2CyMQhOz535jadycYbpW1
+         Z6oXMXx01XkL/7LcpsrzLrlpiDvU8xdElMfc5ZbckKXva5Z+3eQo/nctkXGzjNQRLBVG
+         1Qww==
+X-Forwarded-Encrypted: i=1; AJvYcCX9/C1ziP8NMeIOT8x29geWeWoY8wyE0TgVVQlblEFFYqNptqL+9OrEuzokbv5KVifPBky92XbX97XhMuH8oqDQBiuJNPAdIpPDu/hl
+X-Gm-Message-State: AOJu0YzNiaVAyhdBW1eAczEUlCnbzwDu03DvFHYzB4Myct0Uk3gb/EtH
+	g/sPhVH7Lbmd4Z7jBVdExRVLVTNyeFXZjWb2DyaA8jSzF3EMFeeIAQIzQARF8oEwdEu8tODkH9B
+	uLNwMciccw5Hlz2jPQhuVXZEDlqD/1FC9G6X+S0pXyYyonKF1NTU=
+X-Google-Smtp-Source: AGHT+IFSP7fv6n7n7EIN3wTedD5rHV4pAWwZx/vDgr9JJwfPB43rEvOuqvl3kArK2oSeRzx1fctxxl5dppJuW0GjOMk=
+X-Received: by 2002:ac2:446b:0:b0:516:d4cf:f957 with SMTP id
+ y11-20020ac2446b000000b00516d4cff957mr374456lfl.60.1713399828947; Wed, 17 Apr
+ 2024 17:23:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh_xC76oTjrgutl_@casper.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsXC9ZZnka5tukKawdtPKhZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
-	Nm+aymxxfMpURovfP4CKT86azOIg4PG9tY/FY+esu+weCzaVemxeoeWxeM9LJo9NqzrZPDZ9
-	msTu8e7cOXaPEzN+s3jMOxno8X7fVTaPrb/sPBqnXmPz+LxJLoAvissmJTUnsyy1SN8ugStj
-	/p4vjAVnOSuuzr7J1MC4j72LkZNDQsBE4uPnv6xdjBxg9vkPTiBhFgFViRfnrjKC2GwC6hI3
-	bvxkBikREdCQeLPFCCTMLPCKSeLGCUMQW1ggW6L//BkmEJtXwFxi4ZJjzCC2kEA3o8TWqZEQ
-	cUGJkzOfsED0aknc+PeSCWQks4C0xPJ/HCBhTqADbvdfANsqKqAscWDbcaASLqDDVrFLPNz3
-	HupiSYmDK26wTGAUmIVk7CwkY2chjF3AyLyKUSgzryw3MTPHRC+jMi+zQi85P3cTIzAGl9X+
-	id7B+OlC8CFGAQ5GJR7ekwfk04RYE8uKK3MPMUpwMCuJ8LYIy6YJ8aYkVlalFuXHF5XmpBYf
-	YpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYHR80VT+pIHxeIEgZ2vnQdfrnamNn8Xz
-	ZrJUyZb1PpDdb1hpea9tzcO5H3e+CmbtffhRZvdTEd49F6R62UK23foZyNFutpNt70d793n9
-	FkvntslO3qa/8f/mawERFot4oj51lkfazfU7cmLVKoed2tzd64T9HqTvmPvQ+d+sbv099gtb
-	Hjw7a6bEUpyRaKjFXFScCAB3earRvQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsXC5WfdrGubrpBmsOa/pMWc9WvYLD5v+Mdm
-	8WJDO6PF1/W/mC2efupjsTg89ySrxeVdc9gs7q35z2pxftdaVosdS/cxWVw6sIDJ4njvASaL
-	+fc+s1ls3jSV2eL4lKmMFr9/ABWfnDWZxUHQ43trH4vHzll32T0WbCr12LxCy2PxnpdMHptW
-	dbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8tj6y86jceo1No/Pm+QC+KO4bFJS
-	czLLUov07RK4Mubv+cJYcJaz4ursm0wNjPvYuxg5OCQETCTOf3DqYuTkYBFQlXhx7iojiM0m
-	oC5x48ZPZpASEQENiTdbjEDCzAKvmCRunDAEsYUFsiX6z59hArF5BcwlFi45xgxiCwl0M0ps
-	nRoJEReUODnzCQtEr5bEjX8vmUBGMgtISyz/xwES5gQ64Hb/BbCtogLKEge2HWeawMg7C0n3
-	LCTdsxC6FzAyr2IUycwry03MzDHVK87OqMzLrNBLzs/dxAiMqGW1fybuYPxy2f0QowAHoxIP
-	74kD8mlCrIllxZW5hxglOJiVRHhbhGXThHhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmk
-	J5akZqemFqQWwWSZODilGhiL0o3fnoud+r78ce15pTK5TQ1BDSuF32/1dHlw/75vHF/tmzly
-	7GuuXLNs5+grKb/ZLnCiJDrS5/QRIfvES79m3qubYi/ff3nxHufK6SqqJa4Lyp8U7NnKviZm
-	2QWGW75TReMaXs2bMO8q/7zKV0kO8qdTuLlPdn9tU+N+2FZvFV+U9Dz3Q64SS3FGoqEWc1Fx
-	IgAGAOccpAIAAA==
-X-CFilter-Loop: Reflected
+References: <20240417230637.2592473-1-dtokazaki@google.com> <CAMRc=Mcbi8BQ-tHNs+BVjbm3aDSVY0zzOM4QfND3d2y8ryT62g@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcbi8BQ-tHNs+BVjbm3aDSVY0zzOM4QfND3d2y8ryT62g@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 18 Apr 2024 02:23:38 +0200
+Message-ID: <CAMRc=McRiv6vtU5LySrkbfdbCaqZ2tXbHnazo4iahRS-SKAXxg@mail.gmail.com>
+Subject: Re: [PATCH v1] at24: fix memory corruption race condition
+To: Daniel Okazaki <dtokazaki@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel-team@android.com, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 04:55:55PM +0100, Matthew Wilcox wrote:
-> On Wed, Apr 17, 2024 at 04:18:46PM +0900, Byungchul Park wrote:
-> > Introduced a new API, folio_put_mgen(), to deliver migrc's generation
-> > number to pcp or buddy that will be used by migrc mechanism to track
-> > need of tlb flush for each page residing in pcp or buddy.
-> > 
-> > migrc makes decision whether tlb flush is needed or not, based on a
-> > generation number stored in the interesting page and the global
-> > generation number, for that tlb flush required has been completed.
-> > 
-> > For now, the delivery works only for the following call path but not for
-> > e.g. free_the_page(), __free_pages_ok() and free_unref_page_list() that
-> > are not for releasing source folios during migration:
-> > 
-> >    folio_put_mgen()
-> >       __folio_put_mgen()
-> > 	__folio_put_small()
-> > 	   free_unref_page()
-> > 	      free_unref_page_commit()
-> > 	      free_one_page()
-> > 	         __free_one_page()
-> 
-> You're going to want to rebase this on mm-unstable.  __folio_put_small()
-> went away in "mm: combine __folio_put_small, __folio_put_large and
-> __folio_put"
+On Thu, Apr 18, 2024 at 1:59=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Thu, Apr 18, 2024 at 1:07=E2=80=AFAM Daniel Okazaki <dtokazaki@google.=
+com> wrote:
+> >
+> > If the eeprom is not accessible, an nvmem device will be registered, th=
+e
+> > read will fail, and the device will be torn down. If another driver
+> > accesses the nvmem device after the teardown, it will reference
+> > invalid memory.
+> >
+> > Move the failure point before registering the nvmem device.
+> >
+> > Signed-off-by: Daniel Okazaki <dtokazaki@google.com>
+> > ---
+> >  drivers/misc/eeprom/at24.c | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> > index 572333ead5fb..4bd4f32bcdab 100644
+> > --- a/drivers/misc/eeprom/at24.c
+> > +++ b/drivers/misc/eeprom/at24.c
+> > @@ -758,15 +758,6 @@ static int at24_probe(struct i2c_client *client)
+> >         }
+> >         pm_runtime_enable(dev);
+> >
+> > -       at24->nvmem =3D devm_nvmem_register(dev, &nvmem_config);
+> > -       if (IS_ERR(at24->nvmem)) {
+> > -               pm_runtime_disable(dev);
+> > -               if (!pm_runtime_status_suspended(dev))
+> > -                       regulator_disable(at24->vcc_reg);
+> > -               return dev_err_probe(dev, PTR_ERR(at24->nvmem),
+> > -                                    "failed to register nvmem\n");
+> > -       }
+> > -
+> >         /*
+> >          * Perform a one-byte test read to verify that the chip is func=
+tional,
+> >          * unless powering on the device is to be avoided during probe =
+(i.e.
+> > @@ -782,6 +773,15 @@ static int at24_probe(struct i2c_client *client)
+> >                 }
+> >         }
+> >
+> > +       at24->nvmem =3D devm_nvmem_register(dev, &nvmem_config);
+> > +       if (IS_ERR(at24->nvmem)) {
+> > +               pm_runtime_disable(dev);
+> > +               if (!pm_runtime_status_suspended(dev))
+> > +                       regulator_disable(at24->vcc_reg);
+> > +               return dev_err_probe(dev, PTR_ERR(at24->nvmem),
+> > +                                    "failed to register nvmem\n");
+> > +       }
+> > +
+> >         /* If this a SPD EEPROM, probe for DDR3 thermal sensor */
+> >         if (cdata =3D=3D &at24_data_spd)
+> >                 at24_probe_temp_sensor(client);
+> > --
+> > 2.44.0.683.g7961c838ac-goog
+> >
+>
+> Looks good, can you add a Fixes tag?
+>
+> Thanks,
+> Bartosz
 
-I checked it. Indeed. Thanks for the information.
+Wait... While the patch is still correct - we shouldn't needlessly
+create the nvmem device - why would anything crash? Looks like a
+problem with nvmem then? How did you trigger this issue?
 
-	Byungchul
+Bart
