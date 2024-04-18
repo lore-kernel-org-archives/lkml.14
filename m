@@ -1,120 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6764FEAD2;
-	Thu, 18 Apr 2024 13:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E38EAD2;
+	Thu, 18 Apr 2024 13:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448317; cv=none; b=eGDOolQl9N3fOoPFAmDgUeczqziUgX9m7QWJKFYMAllUShczcPShPe6RnvQBTcdh0Dc5fRog5jZggfRyd0omNMjIEYZGfTZuFiwPnJ6M9sLW9dcV3BTQuuza8VoAHQrIrFhMYow4NDI5ghgfqnQSiFyCl61sVX0fBoLRCQXjvXo=
+	t=1713448354; cv=none; b=U6TNRrL6G1MnZEgbDT2QPLYPRYbVhkS1IT35dCfFPP9imBNq1vNwPQ5j+g8iNbIGyk5aOiGpViFxFH9/ncFLaLENX99jl486B7xWKBCSV2ZAZ04LChsYoE7Fd4VX6kmsCbXjw0TJ/kBN8nGYHPQf/fAn61sVOyhNJJmqLb7DmXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448317; c=relaxed/simple;
-	bh=/AePQYYlE4rgjN8mQKUL+TS+cAZpdj5pA/ak+RGccg0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f74mTJ0v4oEfLYNe8MEzINp0yb6+xgf8B56aANiRs6meup5LdOLv9UQv37+QG0w/y/B5cpHj8G3sPgpI8JwVcCZv8r2jsC//QykwpTymTsS6/LRP8aer3+C7vhzE1/uJYSgyDJdZKgPLsSuQtAqfJtnvkzxIlKwjBUpjznt0EcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EfKz6XKj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713448354; c=relaxed/simple;
+	bh=Je31ci+eyD97RXiVi+9JjGy6yYzwIgH+zf+ojiy2P8U=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=n0PyD9gXoKwy7NrF5S3wKrU/yaQBZABboI9hvzrj/BBjvUK3MnmorAIq3Xr9H6XxodI2mkCJDa1ErSu6iw+HGxjgdxd99YyszfWsMS3gB3eM6efIPWgMqQpFkkVC0pFE+c8d6JsH77zSuzdJfGTV/Vwq7UKK62oEKXy76GbHdUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nXJI8z3w; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EfKz6XKj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713448316; x=1744984316;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/AePQYYlE4rgjN8mQKUL+TS+cAZpdj5pA/ak+RGccg0=;
-  b=EfKz6XKj//AsIqmokuvJy/0wjWZ1af32eMvDaLHCuQt71a7ClLJKjWTV
-   VPIURnNIoB5gJ2l2j44Kvm7szf/vA7Na6+YO4/MK0mjmA4SMyYUifdVcs
-   BsqAFTt5i76lqIJZ3WpYHm4w4x/l0buldwBC616nxUO0D/EqCvFSUdVrh
-   nKuCICCzUgz2fKQITEYgUdY8UcUoJbdCeEa+Oi+67TVHRBrytvLbC2s2N
-   WtgCLW542F0nh0VMZptO70hm+AZ5yE7f8TrPtVGaRlzDIKV9dmQmrA2yv
-   7yyTbsExPeLaCrt7Fitfnsgoca/jCC5p0oznoCUh5dgtMQQZBJ02G+WQY
-   A==;
-X-CSE-ConnectionGUID: r6vBJUM1QJmfqwhuRiMyOw==
-X-CSE-MsgGUID: mRYn5ptDSF6uaJO/rk6aKQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12782296"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="12782296"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 06:51:55 -0700
-X-CSE-ConnectionGUID: ixemoxb4TrCbHevpB1fLhw==
-X-CSE-MsgGUID: JzYUla7xQQyT19Tsnj/nWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="60415341"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.36])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 06:51:53 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 18 Apr 2024 16:51:48 +0300 (EEST)
-To: Mario Limonciello <superm1@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
-    Carlos Bilbao <carlos.bilbao@amd.com>, 
-    "open list:AMD HSMP DRIVER" <platform-driver-x86@vger.kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2] platform/x86/amd: Don't allow HSMP to be loaded on
- non-server hardware
-In-Reply-To: <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
-Message-ID: <85728284-d771-bf06-9ed3-333633ebf8b0@linux.intel.com>
-References: <20240416182057.8230-1-superm1@gmail.com> <ca6e0dc7-f5ea-4c0a-b9fe-0667fadc78a6@redhat.com> <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXJI8z3w"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61500da846fso6349287b3.1;
+        Thu, 18 Apr 2024 06:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713448352; x=1714053152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KWDkD4GBnwBQNPancuw8naTRgpzqp6wkxrmNfvesCMc=;
+        b=nXJI8z3wGOsRB73GfOuJT9zurZ6Ji06lBZbCd1QoSnzm+Eij+0qE5Mgw6GCoZZNw++
+         GIDSSx7zG1V9hA7160zKDQ2eG1i8qXN8XthIKoBEZeEBcBOKS1gdtktmrub4q23YyLao
+         jVXmUe/5Xk1ANbzxKkF8M085EZr4MEGO2/5OE053f9f2tF3IjtJIvXJjxo1vi2VR3fOs
+         zZEQ0BqBHOtlQt2bPZEsQF4ibr1vPovxdtToo7y3bxJK8+JspKtDQ2CIjdeFaL7zJP4s
+         bQAAYVWLY9+9ZREBgicg0Fe4VD/+KerJsW+Sn58f5ZzT6rvcmEIP0eEUy+O892fkdS3r
+         8EcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713448352; x=1714053152;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KWDkD4GBnwBQNPancuw8naTRgpzqp6wkxrmNfvesCMc=;
+        b=bdGcOPoqnRHME90qUZhnytR2jULGST+Wm3+3qHMLrLMkR+FlW2YABuiFVZzmBswqpT
+         41zOD+mgm7drcMrIyXn3zi4piM/VU75J0LKHwVShRSC6sAakTpU04/MYTviiYVzKncqe
+         uNmFzySzAgJ/IcPJS114X2CBkdLSftUq9ihtmytg30euu6nXxLayBqh3qfmmBt43BfCu
+         nsr4/dxPDMRttU7HzxbTxLLNVzJNqIXr1VWg6+o+6RiE/THJbgt95AlslRX48u6jIMVz
+         lLM9CGIFjQsrbOQNIhvGs8eN0cP8krNV6TJNbWIDWJKpsqbPe96+OxAtrvzrJ3W/PDs+
+         n5BA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPwEMPyCOuJeqi987XZTW5Wxt77OIY110nswniCiPK+790FS9fuPTi7eEmkVpz+N8DgN3uiv1YXDdzL7MWFKKGXN7vKFb4ZxxnQA9MvMlIUDBQ1Sc09I/4njVE93PrCqBbN1kk
+X-Gm-Message-State: AOJu0Yxvqf6bgiOrc0J1spWBs0NuYODBndRFMm/Lu6L12FLGPJkvn7lo
+	0Z2Yh/OH4n34bwflpj9L6x1lMxDgpm7dKmpSBuTL3IIHp24Y6oaY3+aKsA==
+X-Google-Smtp-Source: AGHT+IHcC/d5g/vrVO8yq6W/ye3vmtyJcu0gh/Sfv4UXpVtFtmjp0tOz0EvRUuueXnSjUeruqSxwbw==
+X-Received: by 2002:a05:690c:25c7:b0:61b:2:6c36 with SMTP id dv7-20020a05690c25c700b0061b00026c36mr2640195ywb.24.1713448350174;
+        Thu, 18 Apr 2024 06:52:30 -0700 (PDT)
+Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
+        by smtp.gmail.com with ESMTPSA id ku20-20020a05622a0a9400b00437add246c2sm240951qtb.7.2024.04.18.06.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 06:52:29 -0700 (PDT)
+Date: Thu, 18 Apr 2024 09:52:29 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>, 
+ Yick Xie <yick.xie@gmail.com>, 
+ willemdebruijn.kernel@gmail.com, 
+ willemb@google.com
+Cc: netdev@vger.kernel.org, 
+ davem@davemloft.net, 
+ dsahern@kernel.org, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+Message-ID: <6621259d66d0f_ec9b929478@willemb.c.googlers.com.notmuch>
+In-Reply-To: <0a17d6745d5c6d4bb635cfac1029e90c1ac2c676.camel@redhat.com>
+References: <20240416190330.492972-1-yick.xie@gmail.com>
+ <0a17d6745d5c6d4bb635cfac1029e90c1ac2c676.camel@redhat.com>
+Subject: Re: [PATCH net v2] udp: don't be set unconnected if only UDP cmsg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 18 Apr 2024, Mario Limonciello wrote:
-> On 4/18/24 04:04, Hans de Goede wrote:
-> > On 4/16/24 8:20 PM, Mario Limonciello wrote:
-> > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > > 
-> > > If the HSMP driver is compiled into the kernel or a module manually loaded
-> > > on client hardware it can cause problems with the functionality of the PMC
-> > > module since it probes a mailbox with a different definition on servers.
-> > > 
-> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2414
-> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3285
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > ---
-> > > v1->v2:
-> > >   * use pm preferred profile instead
-> > 
-> > Thanks, patch looks good to me:
-> > 
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > 
-> > Mario, should this go in as a fix for the 6.9 cylce, or is
-> > this for-next material ?  (I'm not sure what to do myself)
-> The main risk with this patch is if there are servers that previously loaded
-> amd-hsmp no longer working because of a BIOS bug to exporting the incorrect
-> profile.  I think this is quite unlikely but not non-zero.
+Paolo Abeni wrote:
+> Hi,
 > 
-> To at least give some time for anything like that to be raised I feel this
-> should go to for-next.
-
-I was also thinking it would be better to route this through for-next.
-
-> Ideally I do want to see it go to stable kernels after we're all sufficiently
-> happy though.  Random bug reports to me like the ones I added to the commit
-> message get raised mostly by people who compile their own (stable) kernels and
-> enable all the AMD stuff because they have AMD hardware.
+> On Wed, 2024-04-17 at 03:03 +0800, Yick Xie wrote:
+> > If "udp_cmsg_send()" returned 0 (i.e. only UDP cmsg),
+> > "connected" should not be set to 0. Otherwise it stops
+> > the connected socket from using the cached route.
+> > 
+> > Fixes: 2e8de8576343 ("udp: add gso segment cmsg")
+> > Signed-off-by: Yick Xie <yick.xie@gmail.com>
+> > Cc: stable@vger.kernel.org
 > 
-> So how about we target for-next, but also add a stable tag for when it gets
-> merged in the 6.10 cycle?
+> Minor: the patch subj is IMHO a bit confusing, what about removing the
+> double negation?
+> 
+> preserve connect status with UDP-only cmsg
+> 
+> > ---
+> > v2: Add Fixes tag
+> > v1: https://lore.kernel.org/netdev/20240414195213.106209-1-yick.xie@gmail.com/
+> > ---
+> >  net/ipv4/udp.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+> > index c02bf011d4a6..420905be5f30 100644
+> > --- a/net/ipv4/udp.c
+> > +++ b/net/ipv4/udp.c
+> 
+> What about ipv6? why this fix does not apply there, too?
 
-That's possible but if you want to retain true control over it, don't add 
-stable tag at all now. You can send it on your own volition into stable 
-address later once the change is in Linus' tree and your "happy" condition 
-is met (Option 3 in Documentation/process/stable-kernel-rules.rst). 
-
-Otherwise, stable will autoselect it the moment it lands into Linus' tree
-and you don't have much control over the timeline from that point on (I've 
-seen stable folks to grumble when somebody asked to delay including a 
-patch marked for stable, their reasoning was that their autotools keep 
-reselecting the patch over and over again).
-
--- 
- i.
-
+Oops. Thanks Paolo. Yes, this definitely also applies to ipv6.
