@@ -1,107 +1,61 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5900016FF48;
-	Thu, 18 Apr 2024 16:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A254923D7;
+	Thu, 18 Apr 2024 16:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456952; cv=none; b=mMJnwIOd50dKoJm7xlhEwPABUvF84S3nFQb2GvY6t2RrADnjt163Rst/lhsnR7JVM1qGMNvSSogzbOL7O40td7jSKE4S0/qpiGbp3CyBr8yMiyn2fDCoUuE1iHgwabRZXu62S17DvofKSeCUlgoedaKHs8c5sZizSB6RgKWmb/M=
+	t=1713457106; cv=none; b=r1/ftAiVbltZPlOOXXtgRBO9Sieztw3R/5m1P1Eaco+LEm2XfoeAvixc4ux30K0y+PniEjOwMlwVgGYCPFEJ7csbAZ6JFCTSg0IRZZnSb/kzH1kSMFfFdBYs5wDBuv5tyKASdaAaG7knFnN/a+JU2cktFFynqgAiZMc4lRFpGSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456952; c=relaxed/simple;
-	bh=dzWJk/AKNpODHXz+qqTZXgmHW+ImAxMS1UX+Qpbdyzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JBlABd60j9gaIPIa2NmTXRWXFqwn58PpXYL7bqAiAnOuawY8JRILpPSF+zHHYB9YYZ2HXFoA+Om3R/RmkDYh6r9x2H5UPvexNEEELP/8V4OPdpipKKYTp+akvjoWOAneeptzjbSEKlsnUSLtVSrLeo1v7mFaUzl4NWlanBp65U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I+DPm/06; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1713457106; c=relaxed/simple;
+	bh=vFLgheje66Qv6l45gylaRtvz0SlV/4DPRUamMmh1528=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=Uj4y6api1bBMouxklBpEM0Mjp9RIuvpzQ8vWkod1usjdhzLst5IAO+3Q1j8OX8Cv1wMc3LlyHwAgaluGar0sc4RwL85SGdor55BpeYs7w+vNAnoHDQO02oB95DuYCL7x89OD6ImGR5ZSaKy16+8NjJT7shyu6awTbIgX9ojz0+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JR5MGKKR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I+DPm/06"
-Received: from [100.72.0.75] (unknown [20.236.11.102])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 68A3720FD8C4;
-	Thu, 18 Apr 2024 09:15:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 68A3720FD8C4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1713456950;
-	bh=MWOwTVDiu4K6YbjXv7uAPQpvbdgODgAb4GN8I5OuR7k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I+DPm/062TYCzU2rLwp0nsTAu4f1ZG79Rs0Uj/5pNupY+3mNAjWZRjiFTSAENC9Iq
-	 VXPb6a2PeNZh8WAQpPYFlepFy8DlJ8URIU2irBFW5umkNrYJvwXbvqoK1PnVnj+rtk
-	 ugrDiMk2lGJyxvNgL+8z/W/SlyQRHWJ5gqyvIx7E=
-Message-ID: <19df975d-167f-424a-92ce-5135cbeb8a07@linux.microsoft.com>
-Date: Thu, 18 Apr 2024 09:15:51 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JR5MGKKR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69A8C113CC;
+	Thu, 18 Apr 2024 16:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713457106;
+	bh=vFLgheje66Qv6l45gylaRtvz0SlV/4DPRUamMmh1528=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=JR5MGKKRFWuT6H5/kroIKoNFq9foiF9OQGxJGoJDqeN4yDH2ZXpfh8q9CEgSBbeKJ
+	 lvLATEUeSSbL2aikZwl/G03CfyuwWLdy+JuqYUYkQC5gXZ18E1pWCOJgEiM9Ym68Uj
+	 qU5bqGg1zMcPocqazcPRW591ZPn667rPSyHolSydmbzyMaRN69k7V9awtOb+nto4+n
+	 jJLKBp/J5rkbAB3JebRS6JZ8LCCsrTZVGIKTtS7ZFQF0CEpOvC1RyUzRJ1nVsJz775
+	 bYf6KwaMH362Ua/As8viNSmseNPV4pbu++WWiBm50cmUNRDbRWnTEacpv0c0Xt/TQ9
+	 VcA2H/stu9gGQ==
+Message-ID: <37cee03809aee9051d00eff068eaf77c@kernel.org>
+Date: Thu, 18 Apr 2024 16:18:23 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Wander Lairson Costa" <wander@redhat.com>
+Subject: Re: [PATCH v2 0/2] kunit: fix minor error path mistakes
+In-Reply-To: <20240418160039.69993-1-wander@redhat.com>
+References: <20240418160039.69993-1-wander@redhat.com>
+Cc: "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Matti Vaittinen" <mazziesaccount@gmail.com>, "Maxime
+ Ripard" <mripard@kernel.org>, "Rae Moar" <rmoar@google.com>, "Shuah Khan" <skhan@linuxfoundation.org>, "open
+ list" <linux-kernel@vger.kernel.org>, =?utf-8?b?Im9wZW4gbGlzdDpLRVJORUwg?=
+ =?utf-8?b?VU5JVCBURVNUSU5HIEZSQU1FV09SSyAoS1VuaXQpIg==?= <kunit-dev@googlegroups.com>,
+ =?utf-8?b?b3BlbiBsaXN0OktFUk5FTCBVTklUIFRFU1RJTkcgRlJBTUVXT1JLIChLVW5p?=
+ =?utf-8?b?dCk=?= <linux-kselftest@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Add a header in ifcfg and nm keyfiles describing the
- owner of the files
-To: Ani Sinha <anisinha@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>
-Cc: shradhagupta@linux.microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240418120549.59018-1-anisinha@redhat.com>
-Content-Language: en-CA
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <20240418120549.59018-1-anisinha@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 4/18/2024 5:05 AM, Ani Sinha wrote:
-> A comment describing the source of writing the contents of the ifcfg and
-> network manager keyfiles (hyperv kvp daemon) is useful. It is valuable both
-> for debugging as well as for preventing users from modifying them.
+On Thu, 18 Apr 2024 13:00:36 -0300, Wander Lairson Costa wrote:
+> Hi,
 > 
-> CC: shradhagupta@linux.microsoft.com
-> CC: eahariha@linux.microsoft.com
-> CC: wei.liu@kernel.org
-> Signed-off-by: Ani Sinha <anisinha@redhat.com>
-> ---
->  tools/hv/hv_kvp_daemon.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> These two patches fix some minor error path mistakes in the device
+> module.
 > 
-> changelog:
-> v2: simplify and fix issues with error handling.
 > 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index ae57bf69ad4a..014e45be6981 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -94,6 +94,8 @@ static char *lic_version = "Unknown version";
->  static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
->  static struct utsname uts_buf;
->  
-> +#define CFG_HEADER "# Generated by hyperv key-value pair daemon. Please do not modify.\n"
-> +
->  /*
->   * The location of the interface configuration file.
->   */
-> @@ -1435,6 +1437,18 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  		return HV_E_FAIL;
->  	}
->  
-> +	/* Write the config file headers */
-> +	error = fprintf(ifcfg_file, CFG_HEADER);
-> +	if (error < 0) {
-> +		error = HV_E_FAIL;
-> +		goto setval_error;
-> +	}
-> +	error = fprintf(nmfile, CFG_HEADER);
-> +	if (error < 0) {
-> +		error = HV_E_FAIL;
-> +		goto setval_error;
-> +	}
-> +
->  	/*
->  	 * First write out the MAC address.
->  	 */
+> [ ... ]
 
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Looks good to me, I'll defer to other folks on the recipient list on whether "hyperv" should be capitalized
-as HyperV or other such feedback.
-
-Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-
-Thanks,
-Easwar
+Thanks!
+Maxime
