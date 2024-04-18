@@ -1,82 +1,64 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309381836EF;
-	Thu, 18 Apr 2024 19:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469410; cv=fail; b=hSf1SnA394rNvzO0mI3TlYgd834MON2q6FfnKNhR82nK3rBEoo1QKPaJGV9H/Af9rBn/oWqyAyKmCCq74wGGfiTl86XpTZ8S9FdjPcyev3HNx2vO0/nc/XSHq/NT70VR5M2Tsh8+Ms85BVig8Fzvf9gwOKzSWLQlwJn99pGs/d0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713469410; c=relaxed/simple;
-	bh=Kl8Ejg/lTpR8l5lJ7YNmzHpkD1UWv+K901q9pv6IEZs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lKE/Zzl1VIVZOzwBm6mq4Bt8oi2F0wJVyE8W0aHbIAMgYZOxjgd/MxbHbzipD2i+gD/mhmYNbttE4UHoSu4mWMVXydVAFoqc+0mLpcQlIS3FUraY9vvzJYeNVlCNUcUrC+qH4K9Zmvykf+pZ3Z5TO9FpCEzdWhUdtxP/0ZIU7kY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=diLe2fIO; arc=fail smtp.client-ip=40.107.94.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B1518410C;
+	Thu, 18 Apr 2024 19:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713469432; cv=none; b=KwY5P1GXgSlr0gD61mucDILNrrCEdqQ4yPgkPzxm3k2VDAgAY7uJVnwnssBZEVoBLG4rDT0fhIoXe3ba1MynT3CTI9eJt9g1JqJ0p+efYFTxGWRKYCKAuYsx3mm4LpsqqkNy0KipEGHx8CwQSbb2h8cejYTQAjjmw0JrHXWynT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713469432; c=relaxed/simple;
+	bh=48PtL5gWdzK0GYHTiXEUyz2NGhSsoaMH/8i2OTad/Vo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GPswwFlpIKFcPaMaSA4L9c3HbWylWbfb/WgjUqM6Ama5qoKN1znz+Tr7g6xQHUZ/Q90W/WgOWelMIIDIwhVeAHMnupYeifBdL1aoGWw5ge/UvOra4Ba28T/dcCawNNVR2yJHj7iiAbXqdNFkJ8dUJUTGhnQncO0va6CqE/n2fOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Uy4dqf1p; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="diLe2fIO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D/lgdwILJ4VDbB9RRMYE4VOcf7vXGbclgdOgoWrVKjFm5fL8/ljWfYHzKXApyVil6PE51djC6d+uubTdiy3rBTw2LrrYyOSahf0osQ1n2ZKNz8yTFTAHMcp7J9V7na+Q0Z/v8E8555Cx9THJWuC+Cmeaa28Jntzqluu1cHrxpx2tg8xs72+4zbbtwqAkSUDM1SRbEj2yrPQ5BoE0G6lG+nWVh0xa/XsWVimyrVIeKLj5dBQLrfap7ajZEBp+vTfEDyyxXXudI+IXatCy4gcWAy7NYbif4ymHGbxbYLZrbD3TuTltM3npY8QOm/SlruW5EAhEmmjWmZLEwmrNMus+/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bAvTloRu93OvoLbZYR3VRr5XMtYt0A8EUcyw4snn6Dg=;
- b=JEV1DEBFUcsXlai0U5xXfUKhjDEWtcu+H5ZcqaFOWTfh8hTKUzkNrsVHbbrQL/mqqFLWk/rhR+IdDlyuUvmMLVMNrhFp7PvtAqYL4kpkms/uWL8SoJwD0kORFvMSVYlU1aPFCharOl9IWtV8yq4hfGXmU7MAcgCjPJ4T6cEKNUxGQI6nMYJ9bVRa8vra468ZeQM010or7v14gtkBJRcaz8j4IHLnX8XV8ThEiVQpvb31CSCWOzFgmQyJmshGf4CNteG+kLNj3XsjamzNz63UuPOtKgE5HGwYYJZ3s041Z5Hux/6FYM6Vk1vt6PGr/ePfnAFSrd0/vaREkhBqL+yeVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bAvTloRu93OvoLbZYR3VRr5XMtYt0A8EUcyw4snn6Dg=;
- b=diLe2fIOCVnPKbmpX3hKja57QcscqumMdZFvdIapKbTx7kZgiLQaMawHpSYHzionR0/ElB7DKLHxCmF6e7Rousl1tkzGTZdbTqhgyODNhl0Q/Cqsjs27g+2PCHVWFZklotWXrQ7TPO4LcjsVSB1dy5j2wNigfUVYm9Mhzigsr+M=
-Received: from SJ0PR13CA0108.namprd13.prod.outlook.com (2603:10b6:a03:2c5::23)
- by DM4PR12MB6448.namprd12.prod.outlook.com (2603:10b6:8:8a::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7472.37; Thu, 18 Apr 2024 19:43:26 +0000
-Received: from SJ5PEPF000001CB.namprd05.prod.outlook.com
- (2603:10b6:a03:2c5:cafe::b7) by SJ0PR13CA0108.outlook.office365.com
- (2603:10b6:a03:2c5::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.12 via Frontend
- Transport; Thu, 18 Apr 2024 19:43:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001CB.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 19:43:26 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
- 2024 14:43:24 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, Brijesh Singh
-	<brijesh.singh@amd.com>
-Subject: [PATCH v13 12/26] KVM: SEV: Add support to handle GHCB GPA register VMGEXIT
-Date: Thu, 18 Apr 2024 14:41:19 -0500
-Message-ID: <20240418194133.1452059-13-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240418194133.1452059-1-michael.roth@amd.com>
-References: <20240418194133.1452059-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uy4dqf1p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=JczFER/uLfzT7v2MtR0zw58FaNHGCbQC3EHOj6U+O60=; b=Uy4dqf1pnXh8jB/sJFLUv+aaTQ
+	XLgaywOlJP8OVitgRlwm0wmmQYaXypzVX2gzb0GUz3yE01DKEDB9zeZqneJIOtHtMQgcs2tuh6Ckq
+	Y58kyJADhx3GuvKTAJlRhb/hDtebWBcpdfT936YU3Hgg9w5OfPGyiZ4uVI9WohKTbK/0VlAE9+L8W
+	mcfJBslja6QTu8mefvidf3XKa48Gs+gqrVeA5AlxH4J7DSzagHeexCOjI0mjYS19mZB9xNLxtx36E
+	OTbTbGSBBt7qCmGPDoHSUpmbMp3P/R4mlc4/7hj7PC8L4aqmlWPopXzONhBE4S+9qZIM6oVQs9H09
+	sPrKg9WQ==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rxXXf-0000000C8MP-2o6d;
+	Thu, 18 Apr 2024 19:35:36 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rxXXf-00000000Asq-0f90;
+	Thu, 18 Apr 2024 20:35:31 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Paul Durrant <paul@xen.org>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	jalliste@amazon.co.uk,
+	sveith@amazon.de
+Subject: [PATCH 09/10] KVM: x86: Kill KVM_REQ_GLOBAL_CLOCK_UPDATE
+Date: Thu, 18 Apr 2024 20:34:48 +0100
+Message-ID: <20240418193528.41780-10-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240418193528.41780-1-dwmw2@infradead.org>
+References: <20240418193528.41780-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,140 +66,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CB:EE_|DM4PR12MB6448:EE_
-X-MS-Office365-Filtering-Correlation-Id: 757f82ed-0a97-41e9-e181-08dc5fdfd0b6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	eBly+86411/42OlXwgtA8VN6g4j333zrWr4POiO+8SWNojTIh4Sa7Lcrjv6b0cf5dwtBpH7Vz0Nge9U7aIiFDuExahPL0iVuUTUJLnV3qc/2eTzVd8wJHGpG6DQ6S/uvQxeZLBH0El5UVAgvij7Y6XsZg0svbOq9RL5oycoYZULhrml9tTBf0CnwtNPHeNd9yDmeZZHdOs6RHYx7u5T1r+tQqd9Ut0/D8/wXg0oxy20pmq9OX2yRoHFKYWgqbaecYKlJa2OA8DWjfHg789AD/Q2EjGqEcJya3stVWugqW1R31gqIx/ONYEOZTNltVZm29SE96dcnDr+VaLbXVz5ZqeXSCb99koGE0aSKGY04Kbe8rmWrWmnTK8MTugILZ3p5XHzy+e8pw6WoZdNyKPR1POYONMFU0fA/fqKfFPC7Apw5BAl1YiWjtkp3JOd/30juQsl+yex1cvnZlwXtbEsX9AauvHrXcug83kIKkv9QNekn1s87Mc65ARDgIj1tJehRqqfDhfF8Q0NK+7/jKOt3zQHt9KTSj9wlz5fKGX/oU7aCZwrrFOXdQU+2okptf+PFhlVDJSKHH4omJZjEaHdCPlTu86+vq/P3UKEDT6goqp89DVr0BZSxml774Fkog1VvfcWBdvrvGt2mxoPkLenV4Dy20mIL/UMy/usQuJJ5dripXtGy8sJ1KJkTqrCt8dIPFjw9gHMg1ivfUCdmlCP5WpOrTw6hh3mFNEEWICFPuA0P8O3Wtvx1AYU3ZaG91Slz
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 19:43:26.2509
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 757f82ed-0a97-41e9-e181-08dc5fdfd0b6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6448
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Brijesh Singh <brijesh.singh@amd.com>
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-SEV-SNP guests are required to perform a GHCB GPA registration. Before
-using a GHCB GPA for a vCPU the first time, a guest must register the
-vCPU GHCB GPA. If hypervisor can work with the guest requested GPA then
-it must respond back with the same GPA otherwise return -1.
+This was introduced in commit 0061d53daf26 ("KVM: x86: limit difference
+between kvmclock updates") to reduce cross-vCPU differences which arose
+because the KVM clock was based on CLOCK_MONOTONIC and thus subject to
+NTP frequency corrections.
 
-On VMEXIT, verify that the GHCB GPA matches with the registered value.
-If a mismatch is detected, then abort the guest.
+However, commit 53fafdbb8b21 ("KVM: x86: switch KVMCLOCK base to
+monotonic raw clock") switched to using CLOCK_MONOTONIC_RAW as the basis
+for the KVM clock, avoiding the NTP frequency skew altogether.
 
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
+So remove KVM_REQ_GLOBAL_CLOCK_UPDATE. In kvm_write_system_time(), all
+that's needed is a single KVM_REQ_CLOCK_UPDATE for the vCPU whose KVM
+clock is being configured.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/sev-common.h |  8 ++++++++
- arch/x86/kvm/svm/sev.c            | 27 +++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.h            |  7 +++++++
- 3 files changed, 42 insertions(+)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/x86.c              | 57 ++-------------------------------
+ 2 files changed, 4 insertions(+), 55 deletions(-)
 
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index 5a8246dd532f..1006bfffe07a 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -59,6 +59,14 @@
- #define GHCB_MSR_AP_RESET_HOLD_RESULT_POS	12
- #define GHCB_MSR_AP_RESET_HOLD_RESULT_MASK	GENMASK_ULL(51, 0)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 8440c4081727..cfac72b4aa64 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -98,7 +98,7 @@
+ 	KVM_ARCH_REQ_FLAGS(14, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+ #define KVM_REQ_SCAN_IOAPIC \
+ 	KVM_ARCH_REQ_FLAGS(15, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+-#define KVM_REQ_GLOBAL_CLOCK_UPDATE	KVM_ARCH_REQ(16)
++/* KVM_ARCH_REQ(16) is available to be reused */
+ #define KVM_REQ_APIC_PAGE_RELOAD \
+ 	KVM_ARCH_REQ_FLAGS(17, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+ #define KVM_REQ_HV_CRASH		KVM_ARCH_REQ(18)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 4ec4eb850c5b..f870e29d2558 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2354,13 +2354,13 @@ static void kvm_write_system_time(struct kvm_vcpu *vcpu, gpa_t system_time,
+ 	}
  
-+/* Preferred GHCB GPA Request */
-+#define GHCB_MSR_PREF_GPA_REQ		0x010
-+#define GHCB_MSR_GPA_VALUE_POS		12
-+#define GHCB_MSR_GPA_VALUE_MASK		GENMASK_ULL(51, 0)
-+
-+#define GHCB_MSR_PREF_GPA_RESP		0x011
-+#define GHCB_MSR_PREF_GPA_NONE		0xfffffffffffff
-+
- /* GHCB GPA Register */
- #define GHCB_MSR_REG_GPA_REQ		0x012
- #define GHCB_MSR_REG_GPA_REQ_VAL(v)			\
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 78412c7c6708..bd7f46c61c64 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3532,6 +3532,26 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
- 		set_ghcb_msr_bits(svm, GHCB_MSR_HV_FT_RESP,
- 				  GHCB_MSR_INFO_MASK, GHCB_MSR_INFO_POS);
- 		break;
-+	case GHCB_MSR_PREF_GPA_REQ:
-+		set_ghcb_msr_bits(svm, GHCB_MSR_PREF_GPA_NONE, GHCB_MSR_GPA_VALUE_MASK,
-+				  GHCB_MSR_GPA_VALUE_POS);
-+		set_ghcb_msr_bits(svm, GHCB_MSR_PREF_GPA_RESP, GHCB_MSR_INFO_MASK,
-+				  GHCB_MSR_INFO_POS);
-+		break;
-+	case GHCB_MSR_REG_GPA_REQ: {
-+		u64 gfn;
-+
-+		gfn = get_ghcb_msr_bits(svm, GHCB_MSR_GPA_VALUE_MASK,
-+					GHCB_MSR_GPA_VALUE_POS);
-+
-+		svm->sev_es.ghcb_registered_gpa = gfn_to_gpa(gfn);
-+
-+		set_ghcb_msr_bits(svm, gfn, GHCB_MSR_GPA_VALUE_MASK,
-+				  GHCB_MSR_GPA_VALUE_POS);
-+		set_ghcb_msr_bits(svm, GHCB_MSR_REG_GPA_RESP, GHCB_MSR_INFO_MASK,
-+				  GHCB_MSR_INFO_POS);
-+		break;
-+	}
- 	case GHCB_MSR_TERM_REQ: {
- 		u64 reason_set, reason_code;
+ 	vcpu->arch.time = system_time;
+-	kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
  
-@@ -3595,6 +3615,13 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
- 	trace_kvm_vmgexit_enter(vcpu->vcpu_id, svm->sev_es.ghcb);
+ 	/* we verify if the enable bit is set... */
+-	if (system_time & 1)
++	if (system_time & 1) {
+ 		kvm_gpc_activate(&vcpu->arch.pv_time, system_time & ~1ULL,
+ 				 sizeof(struct pvclock_vcpu_time_info));
+-	else
++		kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
++	} else
+ 		kvm_gpc_deactivate(&vcpu->arch.pv_time);
  
- 	sev_es_sync_from_ghcb(svm);
-+
-+	/* SEV-SNP guest requires that the GHCB GPA must be registered */
-+	if (sev_snp_guest(svm->vcpu.kvm) && !ghcb_gpa_is_registered(svm, ghcb_gpa)) {
-+		vcpu_unimpl(&svm->vcpu, "vmgexit: GHCB GPA [%#llx] is not registered.\n", ghcb_gpa);
-+		return -EINVAL;
-+	}
-+
- 	ret = sev_es_validate_vmgexit(svm);
- 	if (ret)
- 		return ret;
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 0654fc91d4db..730f5ced2a2e 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -208,6 +208,8 @@ struct vcpu_sev_es_state {
- 	u32 ghcb_sa_len;
- 	bool ghcb_sa_sync;
- 	bool ghcb_sa_free;
-+
-+	u64 ghcb_registered_gpa;
- };
- 
- struct vcpu_svm {
-@@ -361,6 +363,11 @@ static __always_inline bool sev_snp_guest(struct kvm *kvm)
- #endif
+ 	return;
+@@ -3391,46 +3391,6 @@ uint64_t kvm_get_wall_clock_epoch(struct kvm *kvm)
+ 	return ktime_get_real_ns() - get_kvmclock_ns(kvm);
  }
  
-+static inline bool ghcb_gpa_is_registered(struct vcpu_svm *svm, u64 val)
-+{
-+	return svm->sev_es.ghcb_registered_gpa == val;
-+}
-+
- static inline void vmcb_mark_all_dirty(struct vmcb *vmcb)
+-/*
+- * kvmclock updates which are isolated to a given vcpu, such as
+- * vcpu->cpu migration, should not allow system_timestamp from
+- * the rest of the vcpus to remain static. Otherwise ntp frequency
+- * correction applies to one vcpu's system_timestamp but not
+- * the others.
+- *
+- * So in those cases, request a kvmclock update for all vcpus.
+- * We need to rate-limit these requests though, as they can
+- * considerably slow guests that have a large number of vcpus.
+- * The time for a remote vcpu to update its kvmclock is bound
+- * by the delay we use to rate-limit the updates.
+- */
+-
+-#define KVMCLOCK_UPDATE_DELAY msecs_to_jiffies(100)
+-
+-static void kvmclock_update_fn(struct work_struct *work)
+-{
+-	unsigned long i;
+-	struct delayed_work *dwork = to_delayed_work(work);
+-	struct kvm_arch *ka = container_of(dwork, struct kvm_arch,
+-					   kvmclock_update_work);
+-	struct kvm *kvm = container_of(ka, struct kvm, arch);
+-	struct kvm_vcpu *vcpu;
+-
+-	kvm_for_each_vcpu(i, vcpu, kvm) {
+-		kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+-		kvm_vcpu_kick(vcpu);
+-	}
+-}
+-
+-static void kvm_gen_kvmclock_update(struct kvm_vcpu *v)
+-{
+-	struct kvm *kvm = v->kvm;
+-
+-	kvm_make_request(KVM_REQ_CLOCK_UPDATE, v);
+-	schedule_delayed_work(&kvm->arch.kvmclock_update_work,
+-					KVMCLOCK_UPDATE_DELAY);
+-}
+-
+ /* These helpers are safe iff @msr is known to be an MCx bank MSR. */
+ static bool is_mci_control_msr(u32 msr)
  {
- 	vmcb->control.clean = 0;
+@@ -5018,12 +4978,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 		if (kvm_lapic_hv_timer_in_use(vcpu))
+ 			kvm_lapic_restart_hv_timer(vcpu);
+ 
+-		/*
+-		 * On a host with synchronized TSC, there is no need to update
+-		 * kvmclock on vcpu->cpu migration
+-		 */
+-		if (!vcpu->kvm->arch.use_master_clock || vcpu->cpu == -1)
+-			kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
+ 		if (vcpu->cpu != cpu)
+ 			kvm_make_request(KVM_REQ_MIGRATE_TIMER, vcpu);
+ 		vcpu->cpu = cpu;
+@@ -10961,8 +10915,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 			__kvm_migrate_timers(vcpu);
+ 		if (kvm_check_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu))
+ 			kvm_update_masterclock(vcpu->kvm);
+-		if (kvm_check_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu))
+-			kvm_gen_kvmclock_update(vcpu);
+ 		if (kvm_check_request(KVM_REQ_CLOCK_UPDATE, vcpu)) {
+ 			r = kvm_guest_time_update(vcpu);
+ 			if (unlikely(r))
+@@ -12780,8 +12732,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	kvm->arch.hv_root_tdp = INVALID_PAGE;
+ #endif
+ 
+-	INIT_DELAYED_WORK(&kvm->arch.kvmclock_update_work, kvmclock_update_fn);
+-
+ 	kvm_apicv_init(kvm);
+ 	kvm_hv_init_vm(kvm);
+ 	kvm_xen_init_vm(kvm);
+@@ -12820,7 +12770,6 @@ static void kvm_unload_vcpu_mmus(struct kvm *kvm)
+ 
+ void kvm_arch_sync_events(struct kvm *kvm)
+ {
+-	cancel_delayed_work_sync(&kvm->arch.kvmclock_update_work);
+ 	kvm_free_pit(kvm);
+ }
+ 
 -- 
-2.25.1
+2.44.0
 
