@@ -1,106 +1,119 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F4715CD51;
-	Thu, 18 Apr 2024 10:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAAB15CD43
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713435721; cv=none; b=F3Q/oAZbsIls9ekGw9lAEBGWdZVDKsrHPdEyrcsXW+YD6wHSnvj4zBVxcum2UgQnkVXYyRvscrmBcDeScJNRck/pK+Ig1F6q7lzdXOIg66rookYnWO7i4DfJ2/+7PzjZY2H6WlLUdnqsVipqn21JP9c5ej7N/Td2Blk5rXHBV90=
+	t=1713435758; cv=none; b=f/Y+mGNYmO9pXLKVl2nZUOe4NnVgML0AO99G/q2/lF+sKjVOj+b8rkVeairIbEA4E66gsq7hwICt3sYX7U2zOlZX/xLIfD3PxPhpMR0lUlxpbQFYkRIEz2KbaurgW3CTHwR5J2EExKSkDfAtHiW/c5TuVYgN+P6W9LAQFy2f9k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713435721; c=relaxed/simple;
-	bh=9hq0MbHS2MZ4Vl7dzWJ4AWW2yuB2FdAWiTYckqmPylA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mwOvXUiSW1b8NFDpIs4pvHEmCYuoMmBi++dL13X7J0zf21jImitLORmNjJpMYLT063v5q7uZcvHg74jrJxST+C2FoC7VGXovAKbeeA1iqtviu3X7ISfM9MLTaPFjr1tLlzSMJIg40VN9tIGoEG8POPiAdayHA1x8SCE40a8q7s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=y8EGkjW2; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1713435758; c=relaxed/simple;
+	bh=g88ezTfAckaptJZiToK56mT5BjIsikVqvolo+i3NmL0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YPvhffiyqclhDIDVvA0vN2ZCzCUovO/i1fUdh59typqRyDWa87mQ+5fMNnUaSLs/xnrpQz0tN0zoLyFzFQTE0Wfpbdkue8r8/mnZrXVl160J0Hw2QSVXjvisaMnMIrUqL2FWX+FRAl5NVUu4UAj/Bd2Uy8EhXYGytJeo7GJS7C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vTGzOFFb; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="y8EGkjW2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1713435721; x=1744971721;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9hq0MbHS2MZ4Vl7dzWJ4AWW2yuB2FdAWiTYckqmPylA=;
-  b=y8EGkjW2KwA8qorYdwbL6mJ7arNejJnt2kJFPNlQ8YXx44K99g0dqFv9
-   dwx98dEQwD0P8poSM2ea5Slh7+It4n+6TsYjdgs/lrYLCRbxUqdknAU76
-   1NZenFxt9ZTGc6/bdkCye/PPcNzrLVnY4qYyfZZk7ubxX6NfUhRTxreTj
-   +cVtdrROocaJYXApAzSRIhVIFyKsjQyvJ+Yrdmezn7OznCrumeQ4jhGte
-   f5l6XlQKG9I4FaZM4YDKB/0XkAoBbquUh51Ru1Elj+vCmuBZcwRkczQ8I
-   sYD8RJ9h7XCYsPqbEZTYqMuIW5LdYOpdGN6zBG11YTSo7WSODmZmfoAu8
-   g==;
-X-CSE-ConnectionGUID: 2BlBkMo/RkCgCTcxqrBIpg==
-X-CSE-MsgGUID: fof2w0dDS92WJg8ouQypAw==
-X-IronPort-AV: E=Sophos;i="6.07,211,1708412400"; 
-   d="asc'?scan'208";a="21586637"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 03:22:00 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 03:21:37 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 18 Apr 2024 03:21:33 -0700
-Date: Thu, 18 Apr 2024 11:21:18 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Andy Chiu <andy.chiu@sifive.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner
-	<heiko@sntech.de>, Guo Ren <guoren@kernel.org>, Conor Dooley
-	<conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Evan
- Green <evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Shuah Khan <shuah@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Palmer
- Dabbelt <palmer@rivosinc.com>, Vincent Chen <vincent.chen@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>, <devicetree@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 5/9] dt-bindings: riscv: add Zve32[xf] Zve64[xfd] ISA
- extension description
-Message-ID: <20240418-litigate-zippy-d05379b5ace0@wendy>
-References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
- <20240412-zve-detection-v4-5-e0c45bb6b253@sifive.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTGzOFFb"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343b7c015a8so497120f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 03:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713435755; x=1714040555; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vqFBnUYqWjHtuRBL7UFjmbmXzv3dRjGPkMqRE6NGT/Y=;
+        b=vTGzOFFbpRXgM4RKBXfgP5buoLkjNJBgEEk6wpg7hHf/pIuDWtTuIuqYYiNKmVSFgh
+         s/ALKbsOjJPSPIMoh4owIQacspa0cZrTn3I+KDfgfEglHijwTHPfq74A/kg3z6auy9DY
+         K09dZdap4WuEWm12pWY8eh+n11Lu3zvWgo3n+R0CzXdfbRdDSlDhcV2GMOfWtd3f5NeN
+         gwNN3Q8zc0QW+XtOg568jnJpFaRzo52f3e1QkmFEc3e6d62k6ROQKgXcxYmxvm8l/5RZ
+         Cr9BOA7hKL4RrfVu/uLyWMd9QXBXfbE0TQOUPWHoXuX2wDpUFzx0lmb9IzOnbCP8Bivr
+         L7Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713435755; x=1714040555;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vqFBnUYqWjHtuRBL7UFjmbmXzv3dRjGPkMqRE6NGT/Y=;
+        b=aRHTYySnbt0ULj9HEz8+ATgpJyBAOsTcEQRH4IRWCHWxI7Rk1g/NQP/JZPtPPYtYI6
+         otsC8HKsRkESlQU3g+MF9HJTHwhqR3z/PsQ9ZwAC0Edfjb4byyDrNkg5nQ0prIYFF+dS
+         ov8xNy4zPnfxc3FqFt3lJTaRnm6/iFKNwvzYcLtkFMH+2zaJ14mZndRhIBUFCU8xtWqR
+         GHFWj+WTDpUkIX1UFara0QCd694uIdz7Q41edHXhBIOBobuW84L3Afgmjb6w6RXmoXWY
+         9Bj/HlCoLdfQOYtyLQ0EhrYuTbl0pulrD7ts/Mj/9ZDpePwCgkrHRGbpcIHqg3pCQnHd
+         edTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9qvhCRHbAWUp+YugKCzdmSY9IdZ1ROoS66gbsG5FAzPrWRMtr9uM0TLBjHoKu/ksY2IuDa4+sy0xY6g7hj9zQeIBua9Xy2ekQsnmB
+X-Gm-Message-State: AOJu0YwyAIKiuzS0pSboMQuZGzgU8qALpNJxcgPuiuq6uwsRfs6/4n3f
+	T/D28aYza3Z+t3WYGBj9vGLWtMgsGDXhjhvm8WufHqpfx/GoN2r87LgmGL/b/rk=
+X-Google-Smtp-Source: AGHT+IGRk4TcsdmzUU3S4KO9/Z9b3IiVV0MPR3zkJ8KLS2qeob3FXNCohxO17ohfXp49ed6JbTdKKQ==
+X-Received: by 2002:a5d:4689:0:b0:346:65dd:55f1 with SMTP id u9-20020a5d4689000000b0034665dd55f1mr1214547wrq.31.1713435755394;
+        Thu, 18 Apr 2024 03:22:35 -0700 (PDT)
+Received: from [127.0.1.1] ([62.231.100.236])
+        by smtp.gmail.com with ESMTPSA id e32-20020a5d5960000000b0033ec9ddc638sm1472731wri.31.2024.04.18.03.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 03:22:35 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH 0/3] arm64: dts: qcom: x1e80100: Fix the data-lanes and
+ link-frequencies
+Date: Thu, 18 Apr 2024 13:22:17 +0300
+Message-Id: <20240418-x1e80100-dts-fix-mdss-dp3-v1-0-9f8420e395d4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IKul8mjn3Ad3mqHY"
-Content-Disposition: inline
-In-Reply-To: <20240412-zve-detection-v4-5-e0c45bb6b253@sifive.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFn0IGYC/x2MSwqEQAwFryJZG0h/BJmriAvpfs5koSMdEUG8u
+ 43Loqi6yFAURp/mooJDTf9rBdc2lH7T+gVrrkxefJToej4denEinHfjWU9eshnnLXDyIXZAAPx
+ Mtd8Kqn/fw3jfD0+Nig1rAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Rajendra Nayak <quic_rjendra@quicinc.com>, 
+ Sibi Sankar <quic_sibis@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=961; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=g88ezTfAckaptJZiToK56mT5BjIsikVqvolo+i3NmL0=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmIPRdcE/0l298JORSkNny351yxby0lPLs2h5fC
+ gVOqXhhwlOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZiD0XQAKCRAbX0TJAJUV
+ VimDEACysaNZ9He02cR2cVVLph8XbdGqGwZYoBbWKQDvfJGZful45d/hh1584iMxlKJGcIdnThU
+ n+1QXUeyBtg5yJ9X4Zxv5IzyzXPueDglUEi2TOiQwiniSpyY63RCvgmX6+DVCtKlj+fjCOWNZdm
+ 6ShdjE41PUagfi+ONcykGeRrPwneTsXIQz3DNqVubySUpFHg6EyNwgcLiiSSeEf9CDS0WRzyXGJ
+ vlUiZgm1rBZ29EQBdS/Ih0gv2pnGXjqcgaSjadMV3nP/7q0Ncq/dai8mKmgk4+zXTgw6w4KIo/v
+ iofLse0atFj+ZZj843YqvEazZmojlMb+xVZzLuGnKP2w1kjJveaenOy2xmdGMQvg0BAxoheRmvE
+ t8BRRO1lhCXs+StIhTKmeGSboBMLZi3ArxsjG+nZFScoMd3nac+gCkdsSMd3LzZA0Jm9/FA347m
+ rBRkiPnOnXjyFYNuRKs0xfKV+noM4yC9+Fs0a8VZamLvzZRwHFJ/vBj+ykfAG1B2HpNWoitJa8r
+ OMRNIx+UDukSz6Uz7ShjWiZk3C8tRfrXL0WdlBt/GGdoPp3uLeubTbMWj+v7PTPspwJbl74C0Fb
+ e+Ji5kQXYsot3JIB+rWlewj8BEi5PycxmWBnZcuSQRCMvHACvO17H/inkAte+EIvrx9Xippv8cA
+ AB6l04HdpmLpSjg==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
---IKul8mjn3Ad3mqHY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Both the CRD and the QCP have the data-lanes and the link-frequencies
+for the DP3 in the wrong place. Both are properties of the out remote
+endpoint. So move them to the mdss_dp3_out for each board.
 
-On Fri, Apr 12, 2024 at 02:49:01PM +0800, Andy Chiu wrote:
-> Add description for Zve32x Zve32f Zve64x Zve64f Zve64d ISA extensions.
->=20
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+Without these fixes, the eDP is broken on both boards.
 
-Technically this should be before the patch using them in the kernel,
-but=20
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+Abel Vesa (3):
+      arm64: dts: qcom: x1e80100: Drop the link-frequencies from mdss_dp3_in
+      arm64: dts: qcom: x1e80100-crd: Add data-lanes and link-frequencies to DP3
+      arm64: dts: qcom: x1e80100-qcp: Add data-lanes and link-frequencies to DP3
 
-Cheers,
-Conor.
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dts | 5 +++--
+ arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 5 +++--
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi    | 1 -
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+---
+base-commit: 4eab358930711bbeb85bf5ee267d0d42d3394c2c
+change-id: 20240418-x1e80100-dts-fix-mdss-dp3-c2345ee3ee2f
 
---IKul8mjn3Ad3mqHY
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+-- 
+Abel Vesa <abel.vesa@linaro.org>
 
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiD0HgAKCRB4tDGHoIJi
-0n1wAPd1er7jDl4Eexl9WWN83HD+Ca2d7uVxpq71neDpZ5hxAQDgD/U89OOnw5dd
-hmkxzNHP/2AVHlS/1DyRsZjUghB3AA==
-=ofyD
------END PGP SIGNATURE-----
-
---IKul8mjn3Ad3mqHY--
