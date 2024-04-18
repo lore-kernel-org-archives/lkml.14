@@ -1,77 +1,62 @@
-Received: from mail-m6032.netease.com (mail-m6032.netease.com [210.79.60.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B48356464;
-	Thu, 18 Apr 2024 10:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.79.60.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D215156464
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437410; cv=none; b=EEP08Rfqffr1G8ba00a72pDaTWmbrA2q+xdgws6HQ+JCbU6ebtlSnhb6l49s79SbY9hw+8WvKJCRKoCgEMLaesn/gn3AgMtppoOtEDFQ4q3NvJpK0ynPv5FWOsemCdx/A9DURPmlSwzbvZULQwzPu6CvvErPebf6uoHNxrnjHqk=
+	t=1713437415; cv=none; b=jvwvMQtc1tzEMzDB2sYz/81K//GFKOWEiycXURGdv/F4dwl/Zqg3wQDmkG6ZBYXNCENMj2e8aQlZ/4DXG1m7kMGHW7HDu/uoDN9vLtyHMO/aXyTxfHJvwM5FKidZz+Bv+7QSCH10lw1ODgaHlnMwMAyIjBDKUmZYz5r9UfrzQuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437410; c=relaxed/simple;
-	bh=iiOufjOIkL3haOEHZ1PQmwIhrHyxYpHcfZJEjBfNLSk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IP2GNsg+RZeiNzBVii8qOWgzzRdqfFEs1VraKGJgMPAF4XEtXTr5z699I8IMtHRjY707YUBU8Vb8ZTkWU/VaNOFpkYP/4mPCMvo5j19NmtUaibFbBMe2w9y+XJHBEYCpmk6CyQ7sSg6twnvs3CSbRvokomMMeD2qFJ7jeQbdwZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=210.79.60.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from localhost.localdomain (unknown [110.185.170.227])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 6AE235601A7;
-	Thu, 18 Apr 2024 10:32:44 +0800 (CST)
-From: "jun.gu" <jun.gu@easystack.cn>
-To: echaudro@redhat.com
-Cc: dev@openvswitch.org,
-	jun.gu@easystack.cn,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v4] net: openvswitch: Check vport netdev name
-Date: Thu, 18 Apr 2024 10:32:42 +0800
-Message-Id: <20240418023242.259542-1-jun.gu@easystack.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <811765EC-AD27-4210-9AFC-034129F24BFA@redhat.com>
-References: <811765EC-AD27-4210-9AFC-034129F24BFA@redhat.com>
+	s=arc-20240116; t=1713437415; c=relaxed/simple;
+	bh=Gb01zz7qAuzJeG4CS2gKsjN09lALUK7BnQ027MT77so=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YK7N+XvKK9lnUxgH3TuJPt++ycwxd7AorXkq3PxOZdXq1bcqUzEEvYrcVA6Glv5Pr/ls+frX+LB4EZ79SvNwiU4Z0N8nUxEeKv912ASik96N/J9Sj/hd0QuxbLSUEGuXkKSJfvjcAzMytDlwmmJZmDBrigg9rnomDawliN38KmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CFAF339;
+	Thu, 18 Apr 2024 03:50:41 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94EAC3F792;
+	Thu, 18 Apr 2024 03:50:11 -0700 (PDT)
+Date: Thu, 18 Apr 2024 11:50:08 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Beata Michalska <beata.michalska@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com,
+	will@kernel.org, catalin.marinas@arm.com,
+	vincent.guittot@linaro.org, sumitg@nvidia.com,
+	yang@os.amperecomputing.com, lihuisong@huawei.com,
+	viresh.kumar@linaro.org
+Subject: Re: [PATCH v5 1/5] arch_topology: init capacity_freq_ref to 0
+Message-ID: <20240418105008.auhtzjv47zrrud77@bogus>
+References: <20240417093848.1555462-1-beata.michalska@arm.com>
+ <20240417093848.1555462-2-beata.michalska@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSxhCVk9MTk1DT0pNSEkdSVUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUpKS1VKQ05VSkxLVUlJTFlXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
-	Y+
-X-HM-Tid: 0a8eef0c9ae6023dkunm6ae235601a7
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OC46HQw5Sjc4QhkLLBUhOUoc
-	HUMwCS1VSlVKTEpIT0tMTk1PQ0pNVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlK
-	SktVSkNOVUpMS1VJSUxZV1kIAVlBSkJKTTcG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417093848.1555462-2-beata.michalska@arm.com>
 
-Ensure that the provided netdev name is not one of its aliases to
-prevent unnecessary creation and destruction of the vport by
-ovs-vswitchd.
+On Wed, Apr 17, 2024 at 10:38:44AM +0100, Beata Michalska wrote:
+> From: Ionela Voinescu <ionela.voinescu@arm.com>
+> 
+> It's useful to have capacity_freq_ref initialized to 0 for users of
+> arch_scale_freq_ref() to detect when capacity_freq_ref was not
+> yet set.
+> 
+> The only scenario affected by this change in the init value is when a
+> cpufreq driver is never loaded. As a result, the only setter of a
+> cpu scale factor remains the call of topology_normalize_cpu_scale()
+> from parse_dt_topology(). There we cannot use the value 0 of
+> capacity_freq_ref so we have to compensate for its uninitialized state.
+>
 
-Signed-off-by: Jun Gu <jun.gu@easystack.cn>
-Acked-by: Eelco Chaudron <echaudro@redhat.com>
----
- net/openvswitch/vport-netdev.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
-index 903537a5da22..7003e76b8172 100644
---- a/net/openvswitch/vport-netdev.c
-+++ b/net/openvswitch/vport-netdev.c
-@@ -78,7 +78,10 @@ struct vport *ovs_netdev_link(struct vport *vport, const char *name)
- 	int err;
- 
- 	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
--	if (!vport->dev) {
-+	/* Ensure that the device exists and that the provided
-+	 * name is not one of its aliases.
-+	 */
-+	if ((!vport->dev) || strcmp(name, ovs_vport_name(vport))) {
- 		err = -ENODEV;
- 		goto error_free_vport;
- 	}
 -- 
-2.25.1
-
+Regards,
+Sudeep
