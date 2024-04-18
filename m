@@ -1,219 +1,236 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9FB184129
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 19:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469764; cv=none; b=f4XX1m1/OzVLL6rkxIr9izb33Ep2R17yscrepVbk+4FQ6jt8WyDOaQGRdUZQ1FZRhiD1iZmdgGI1Y2fo0YmIBJI2pCCqlEgT5uy8SpF6fnJIOmqp5K1xQF1jOGemROsSXXQBf9JzT6Sw00DmcSsNys4N2ldpxdgY7yEGpIUsvKQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E16918412C;
+	Thu, 18 Apr 2024 19:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713469764; cv=fail; b=aq3WsJh7oNRbJtDRzMogUoWzfF6G4K55Qj4sL8IZwKy32mk0zRGE2SNKWLtfGVVqfkqtY02ZUQW1/ULBbchb1GgmdX18bHsbtSYqSzNvvmSFkSWs665Duv3KAvq0X4jqiMj494aBSS2HrYEtArY8CmsaDTYJ9h+pv1IxraYWL5A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713469764; c=relaxed/simple;
-	bh=z19mW6qTZfZbfrbyLqR6xWcNYaNFAHqFswaD+QTI1Mk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MoGnYSAOYosmQiOBVbLqF5bHy1ulvRP3A4lh0Mgvwxk6Zc1sIRZqeGoI30xZed+Nygul+tfVbgtw+yGvqS5zZnbDcZtMajJfNMbEDAfKbeDXatn2Fxn1JA1L9oMP2KhQOTXYgEztGFtYgDTE9dWoPLQfj/GDEUAKoI4IIeBoLZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d9913d3174so166590339f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:49:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713469762; x=1714074562;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lx2lfu92VvlIcFboRX1aSCjCk1LvRsraXbwJor+JgDQ=;
-        b=koWAXu+B5JJ4r+DUarODJiMZqSAAr40D7QjAJ+a4HhSWhFVr/YLr2Uz9nm3tjMOQVT
-         hBvvKmpUvRjQLfDV/bT/p46n8kysUWOZDFry1H8WjGpddQrLpnpg8gV70aCkzoPTHRDX
-         2xW4bHYHZpDUnFuyJIW/tgIBBmzhDqSpokvIyc0qQ36K4uj8f92IVhdOYzIUEu5U+Lx6
-         1/u30NsMPYF3iF7SoLhTZsNVxAxgI/lXP/X9YIGeOrohOADhPmmbS5g3n66MOTwTe1MV
-         vUYSNXPfKG83Ioz5CBYTWv1sWRsL65bNgaWMg+SIdXAfQ+9SbOmXjD5egCO6tgkwnBci
-         juuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3VXfoT0ysXj1RIAT3J7nhO2IUKBG5FuUnMw8P3g/0KW0fDnuKRoymgZmm+ks64XgtdVrn0o6CIOVsKWqWbNETlaSkOyUKrQIeZmes
-X-Gm-Message-State: AOJu0YzjNBdWC3azfZ4La2UNaMnxsFE19Gan3rZ7pB9ZMUOFE+BvtKLG
-	/qqImBTNvp4RQaGX70k2KQ+V7JIkBp5mocb7xJLB3EgF2msqrU27zL7QYTplmH5/JHusgaUlmWK
-	utLl8Yti+wGqZp9QDoGbqhjEYZnwL4EYEZ4sc4TU+trZE7bQvmv/tvyc=
-X-Google-Smtp-Source: AGHT+IH7qEWStHARNkfjepKJJvCl717mn6Sf/GDHsz0AauSM3xT4RTr5N9918wgnz1EwOEAKPksUQn2IpOuDHiY2UJ4J1WtxY3Tg
+	bh=/LyX0lMdUIy7Re5uMF7sJFrGKLk94ez+2D00SwZmmSM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OojihXXmWX5oP1MDxQgDXK0lFc1YoA2duJooq0A70Tz+0hm649uS4Zc0ko3JLDwCimwJgSPoT+ciQwUML2jvIXD1pb77dRzX5H4YOvV9o8Q43ZEHWTgWjkzqFPd+w5Wt5ep3bCjgxsEK7Nr9jlsAGd72j5JpDqwKAfGKbDJ1qxA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KbrsZkdp; arc=fail smtp.client-ip=40.107.237.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KbrsZkdp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dk5SXXHIjy0LcJzRIKYL8c2ckBhqdB+r/GW/chZpBNwYk6lq+5bJP/SoqfaEN7p0ChL4b1G1XH98df21s0QmDBRELRvPWe9vIfHyVu+njDkfw/DPqTbTlZPBJRF3/d+Gbbg5N2yo2qReomycabqPA7ELvB6vH8jGa/fjPieVu//kQb2pDG0vSzr01FbVEWqp132DYJXzAMP0JFGai+I6KdtdzCk0dhv2RJVUGO494qPsp36miV0MzG8kKzNVx8Q22sGoY5vu03oTLWDuLrKP8Wpt4hfqY6lRL0EVhBsfJ2eq+6RFLeANg8G+nuClI+GbOIg63vl4bJaxsw6ZXeJsRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pvZLQjrPFSHZU6UdddtPnKlQpxoW832vsCNW4OOtrX8=;
+ b=addtLWZDMS2fO0VbV6Jf6vMEt9l98CoUxj5sFub8wnigBGS/V5KuRCQfl0nIbPPhMy1VxAT0B9xRHjbYdrWBEg3FN/ZEwyMXXxiBBNykOodpvT6eklsfvppykAVgPGK9788Fmg4UjFver9ky/K6oUkxOLSKCuFBC/6aHt4wBUagteSDPbeZ8fvAXIzIw8s+/7DEsD3dBfgaRcFIoneThEKSOdX9YJG2bj+S9AOCfcW0uWUffcS2O481AblJrHU+SgFSVTN+wfJM7c6X7XPiZa1loerk+VAPuQv/hFgEc3kOPcIJmJ2ROFffcVjAIK+FPHRIsj0JeVHn8LKbe3f28ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pvZLQjrPFSHZU6UdddtPnKlQpxoW832vsCNW4OOtrX8=;
+ b=KbrsZkdp0Fxypm8dduEptXITP32sKgde2zjg5oxU5/x8bR6bSGa6xXaxK04imOErzxTeADD9/FzyisUF99ozqcBUCkNH7SaOzaxLBFT2QnLypjFn8JpScDqSV7gffXpLyLg9D3oIjLdNY6kgwJ2CTx3ID2LJvqaBcJhO05jc8pI=
+Received: from SA9PR03CA0025.namprd03.prod.outlook.com (2603:10b6:806:20::30)
+ by SJ2PR12MB8941.namprd12.prod.outlook.com (2603:10b6:a03:542::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 19:49:20 +0000
+Received: from SN1PEPF0002BA4B.namprd03.prod.outlook.com
+ (2603:10b6:806:20:cafe::b9) by SA9PR03CA0025.outlook.office365.com
+ (2603:10b6:806:20::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.28 via Frontend
+ Transport; Thu, 18 Apr 2024 19:49:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4B.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 19:49:20 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
+ 2024 14:49:19 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: <kvm@vger.kernel.org>
+CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
+	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
+	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
+	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
+	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
+	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
+	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
+	<ak@linux.intel.com>, <tony.luck@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
+	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
+	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
+Subject: [PATCH v13 02/26] [TEMP] x86/cc: Add cc_platform_set/_clear() helpers
+Date: Thu, 18 Apr 2024 14:41:09 -0500
+Message-ID: <20240418194133.1452059-3-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240418194133.1452059-1-michael.roth@amd.com>
+References: <20240418194133.1452059-1-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8726:b0:482:fcbc:c131 with SMTP id
- iw38-20020a056638872600b00482fcbcc131mr252814jab.0.1713469761924; Thu, 18 Apr
- 2024 12:49:21 -0700 (PDT)
-Date: Thu, 18 Apr 2024 12:49:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007e3fd2061664443e@google.com>
-Subject: [syzbot] [perf?] WARNING: suspicious RCU usage in __schedule (2)
-From: syzbot <syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4B:EE_|SJ2PR12MB8941:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18d8d66b-5193-4e22-ff08-08dc5fe0a397
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7Hi69/DLJoZX/Uv7JnYDgrBYFG0NJIga1LP56oKOvondWpFPFl8/kxhk2nkWTBQluAEdjIe3c0VD/no2PJr5XX/qRlJi5pmHiQ3CmrgLMvQSSx3/R7vO8nC7N9zU56FN/sSCyoTazzxR+4j7EdLMeKg88EDmVOowlQ/P5kXVrK26IGtAMtGeF0jDCrbCrJSOlkxfoBkbQG1pgaaW649JLKmB3o7UfDHfoktscwdHDSMSJKGZ4pgN7yHq4QkxePRgPSu2x69sUgJguv6gmIXEbF/W6V/pzr71D6nIByGWBOKVqGuXpbpX6VbRIUdxUVLrOrOeGaeAQLcqPAPLuaiYUFd18rDiimyeUse4azLSN1YU9KO4TC5RIb+S+bLTWu04RFmthUkVNVk4E8uCVEEG6HDjyJgfL5e5AF7INp2uA6lOxWwv9IA6Yjjj7/+EVRaTnXs5fkrhEMkm5C3nMvUJNQHK1howY7gJC+2NWkeYYfw6H82cV/m2Qq7WYYgvgNt65IhF4hxWq0l3p7/t+1wmf6h+sMpTHUcahKVoWKkZ0DFY43cUOkcPnjDgUDF5OGu6azUMMWFnbA//Ly5sztArfkUtPllAsyoVbwBUO1RwOAroL2oj/IeQq1il5h25wpSwdZJBzck0IXB5rVPuw8KMka43l4LkDv51njFf4LYvbTk4HGW+fr3QvhWYdq+foxAaSpruee1JfkGMZoSg1mF//1MbILmlE1jXY/RyujpPKddBNTDwYgZ6pLUaDZo4Ov8+
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(36860700004)(376005)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 19:49:20.1103
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d8d66b-5193-4e22-ff08-08dc5fe0a397
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8941
 
-Hello,
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-syzbot found the following issue on:
+Add functionality to set and/or clear different attributes of the
+machine as a confidential computing platform. Add the first one too:
+whether the machine is running as a host for SEV-SNP guests.
 
-HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1348ceb3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=ae891a39094db8049d6c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ae891a39094db8049d6c@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-bh read-side critical section!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.4/5285:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
-
-stack backtrace:
-CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x23b/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
- preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
- trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
- graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
- mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
- mark_usage kernel/locking/lockdep.c:4587 [inline]
- __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f1ad6e7de69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
- </TASK>
-
-=============================
-WARNING: suspicious RCU usage
-6.8.0-syzkaller-05236-g443574b03387 #0 Not tainted
------------------------------
-kernel/sched/core.c:5982 Illegal context switch in RCU-sched read-side critical section!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.4/5285:
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_init_event kernel/events/core.c:11698 [inline]
- #0: ffffffff94511910 (&pmus_srcu){.+.+}-{0:0}, at: perf_event_alloc+0xacf/0x2130 kernel/events/core.c:12018
-
-stack backtrace:
-CPU: 1 PID: 5285 Comm: syz-executor.4 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
- schedule_debug kernel/sched/core.c:5982 [inline]
- __schedule+0x28a/0x4a20 kernel/sched/core.c:6629
- preempt_schedule_notrace+0x100/0x140 kernel/sched/core.c:7008
- preempt_schedule_notrace_thunk+0x1a/0x30 arch/x86/entry/thunk_64.S:13
- trace_contention_end+0x108/0x120 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- lockdep_lock+0x1b0/0x2b0 kernel/locking/lockdep.c:144
- graph_lock+0x5/0x60 kernel/locking/lockdep.c:170
- mark_lock+0x15c/0x350 kernel/locking/lockdep.c:4659
- mark_usage kernel/locking/lockdep.c:4587 [inline]
- __lock_acquire+0x112d/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- percpu_down_write+0x57/0x320 kernel/locking/percpu-rwsem.c:229
- bp_constraints_lock+0xdd/0x1c0 kernel/events/hw_breakpoint.c:133
- reserve_bp_slot kernel/events/hw_breakpoint.c:600 [inline]
- register_perf_hw_breakpoint+0x90/0x250 kernel/events/hw_breakpoint.c:718
- hw_breakpoint_event_init+0x8d/0x110 kernel/events/hw_breakpoint.c:958
- perf_try_init_event+0x139/0x3f0 kernel/events/core.c:11668
- perf_init_event kernel/events/core.c:11738 [inline]
- perf_event_alloc+0xeed/0x2130 kernel/events/core.c:12018
- __do_sys_perf_event_open kernel/events/core.c:12525 [inline]
- __se_sys_perf_event_open+0x7f9/0x38d0 kernel/events/core.c:12416
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f1ad6e7de69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1ad7c780c8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f1ad6fabf80 RCX: 00007f1ad6e7de69
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000180
-RBP: 00007f1ad6eca47a R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007f1ad6fabf80 R15: 00007fff0dbffce8
- </TASK>
-
-
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/x86/coco/core.c        | 52 +++++++++++++++++++++++++++++++++++++
+ include/linux/cc_platform.h | 12 +++++++++
+ 2 files changed, 64 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
+index d07be9d05cd0..8c3fae23d3c6 100644
+--- a/arch/x86/coco/core.c
++++ b/arch/x86/coco/core.c
+@@ -16,6 +16,11 @@
+ enum cc_vendor cc_vendor __ro_after_init = CC_VENDOR_NONE;
+ u64 cc_mask __ro_after_init;
+ 
++static struct cc_attr_flags {
++	__u64 host_sev_snp	: 1,
++	      __resv		: 63;
++} cc_flags;
++
+ static bool noinstr intel_cc_platform_has(enum cc_attr attr)
+ {
+ 	switch (attr) {
+@@ -89,6 +94,9 @@ static bool noinstr amd_cc_platform_has(enum cc_attr attr)
+ 	case CC_ATTR_GUEST_SEV_SNP:
+ 		return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+ 
++	case CC_ATTR_HOST_SEV_SNP:
++		return cc_flags.host_sev_snp;
++
+ 	default:
+ 		return false;
+ 	}
+@@ -148,3 +156,47 @@ u64 cc_mkdec(u64 val)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(cc_mkdec);
++
++static void amd_cc_platform_clear(enum cc_attr attr)
++{
++	switch (attr) {
++	case CC_ATTR_HOST_SEV_SNP:
++		cc_flags.host_sev_snp = 0;
++		break;
++	default:
++		break;
++	}
++}
++
++void cc_platform_clear(enum cc_attr attr)
++{
++	switch (cc_vendor) {
++	case CC_VENDOR_AMD:
++		amd_cc_platform_clear(attr);
++		break;
++	default:
++		break;
++	}
++}
++
++static void amd_cc_platform_set(enum cc_attr attr)
++{
++	switch (attr) {
++	case CC_ATTR_HOST_SEV_SNP:
++		cc_flags.host_sev_snp = 1;
++		break;
++	default:
++		break;
++	}
++}
++
++void cc_platform_set(enum cc_attr attr)
++{
++	switch (cc_vendor) {
++	case CC_VENDOR_AMD:
++		amd_cc_platform_set(attr);
++		break;
++	default:
++		break;
++	}
++}
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+index cb0d6cd1c12f..60693a145894 100644
+--- a/include/linux/cc_platform.h
++++ b/include/linux/cc_platform.h
+@@ -90,6 +90,14 @@ enum cc_attr {
+ 	 * Examples include TDX Guest.
+ 	 */
+ 	CC_ATTR_HOTPLUG_DISABLED,
++
++	/**
++	 * @CC_ATTR_HOST_SEV_SNP: AMD SNP enabled on the host.
++	 *
++	 * The host kernel is running with the necessary features
++	 * enabled to run SEV-SNP guests.
++	 */
++	CC_ATTR_HOST_SEV_SNP,
+ };
+ 
+ #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
+@@ -107,10 +115,14 @@ enum cc_attr {
+  * * FALSE - Specified Confidential Computing attribute is not active
+  */
+ bool cc_platform_has(enum cc_attr attr);
++void cc_platform_set(enum cc_attr attr);
++void cc_platform_clear(enum cc_attr attr);
+ 
+ #else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
+ 
+ static inline bool cc_platform_has(enum cc_attr attr) { return false; }
++static inline void cc_platform_set(enum cc_attr attr) { }
++static inline void cc_platform_clear(enum cc_attr attr) { }
+ 
+ #endif	/* CONFIG_ARCH_HAS_CC_PLATFORM */
+ 
+-- 
+2.25.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
