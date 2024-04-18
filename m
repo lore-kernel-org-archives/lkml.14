@@ -1,213 +1,186 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FDD16D313;
-	Thu, 18 Apr 2024 15:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B66B3B18D;
+	Thu, 18 Apr 2024 15:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713454408; cv=none; b=s0ZDBvL+8AZgYLB4TbqUV1rrXtHDNg02VorXDDwzu+cllr7o4I6yyqAkWV1LoXK/wcSkpU+nfxLq3L6jL8bJ5wjgGpJltoxMvO/+4BeE19LxaWMC6WOFlZnAiiJx3IRUNgTNGGr4GohUpo73IRA7azStS0VL+xI1ktuVO3J7wuA=
+	t=1713454517; cv=none; b=KwoM3cD/EqOwrx9wp9mzh3l7N1M51xbm2fdeKYix67zOkdVETvpS4Q/HNAR2kHWZ/FO91VEr5MrbjF85ye6PXnzvmJfkvM24KvnyE/khFwutTK6jN+Ut/Qu+f68I3RNKV9L9FP7KB/8xkZGkc6nt6OLItFxk9NbvEa+dIP62WMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713454408; c=relaxed/simple;
-	bh=Pe8LF00fKAkUIpSGDfqhCDFPUTrRkXNW/s0iu1qxFS4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ozPrNdYyClYtlMyycHYrHouwzWZZb7th7PwtXZZ0eFpN8aWPSEcFQyXQqoA1VrsvPDbH4L6Pl0h51BwUgTjkj9iUJX4OiSRorPd+5sisVpZ35dhSfXp1ltAHtIeNo5TMjLO2D6d8fZc0tEBrFgCPJB2pF7awksf/ifZi4MVsSV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyurcYtR; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713454517; c=relaxed/simple;
+	bh=OXoMHYERL63GkJ/oIQoh4RY1yeo5XbdvZz9GQ/ui6CM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=N4mvV1e4UNOPm9aLKxh+Tdj2o7V3EOznL/sbxK/pgvWWVkcMDgWFVLzYtqUFFT29sNDGmdPH3fCoNwy4FM8xAj8IztYRVvAOwVYHGpxIKv+7RytCHHYsUSri+epObam3x/FLWsuwq6PWMg+anyH0QbZOn+OLechnDHdINRnZTOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FB+qG7eR; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyurcYtR"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5aa1e9527d1so749092eaf.1;
-        Thu, 18 Apr 2024 08:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713454406; x=1714059206; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0PpqV3h5TqPps9cVfBqAG1UcArnq9DB4nfERwYi+F10=;
-        b=PyurcYtR3Uh2CQr/ZiQhaIKJWeyWKk8qwj9HOUmIYD3IH1qhMRYZyBkI6PX+Kn9fsD
-         p1/P4tBYb9CaFK8f9yM4iYnkEuMVN0M58nWHJFXBNF3XUBCHXbFu9BykIXNxYs0RJKUn
-         ihaAN5Bhj4mZSnrqlAaRaXd/1wwwswHkVFHaXE/jVYu8ndpTQ47CKlVlsa4MNGSuV7zg
-         7Mh5gv5DzQ5xSvNb/i13yp3ZlQmS/uChIDF7KtCywycrpewGhYCVzIZKZC4QO7EjolHI
-         4XFsiScm8L9VxdRkCPhF/oFFFIAlrjXn17tf7DlBenp/eAIhn9jOVjUWvEw6ZSdVPLc0
-         P4Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713454406; x=1714059206;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0PpqV3h5TqPps9cVfBqAG1UcArnq9DB4nfERwYi+F10=;
-        b=sQozywEd2Lb4z11Atj6Zyl0mO+7N+HeqTnvs3CNx9yqdUFe16vJc+U55i0aFw4oUca
-         GJUqqEUsU9BsZOW5WT1R8yN3Ua+jftaw9Hvy+8TFTYV3PzkbNDUXQdbLbjFzGr1N9AtU
-         GxOawVNZ/Jkx7Qa3Oe7kH5sxpNdEt5XzcKtzhLCWoBezaVGF1n07ySsOcpyWuiBW9pOg
-         3GDv1vVQTkypW7HrWyMg3eo/v0xYjBHrRCHEjEqnN0fYzDIS6TBIeH8qQMyKU9B59RFb
-         3YcnAOTklfiLS4sEvC7EKuPmNwAeNB4sgdWYe/DTx7KHSR79+KfxSG8wSZr3ehFuO9lt
-         Dr4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHY9vxVWDi6dQ+aAR7U0qydkPPtZKHTKFPtCfI3URxeDZxLfEZJPyLCu9x+73+kkL4Cb7cJ0mBYuvzprEeGn1Xiu/nmipiAK1vfxQW593dDhS5Abc707Ms83GzVl85wRvRhjPiRh7erVO3a/6gXBTGfKRrC2keQ81GIEqhJlQv4fwCPLqeD71oaFovBy3SjK0H2qqO65pjHKYJQX5evieEvbPg2/jKNU8i5MlvRpXtT5A2yR5qB/34nTdrKuk=
-X-Gm-Message-State: AOJu0YzcHu7WqdaUCzZ2lZDzfdBdsYnnYKYeB/Wa9keIBAOLWSSC8Dng
-	vm7QWaCQ9K/sWPKnn/3ba4IRw3s3y9bN2Ye7q9yS/JOyzfYxEU9y
-X-Google-Smtp-Source: AGHT+IFPSo0EiZkOCg4SbYDajm04Bi8eymG+RVOa0yqnQTLBlt5WMDawfM15TlYrRZA1R3HZD5ZEcg==
-X-Received: by 2002:a4a:98c8:0:b0:5ac:9ece:a7c with SMTP id b8-20020a4a98c8000000b005ac9ece0a7cmr3660118ooj.5.1713454405693;
-        Thu, 18 Apr 2024 08:33:25 -0700 (PDT)
-Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id bu10-20020a0568201aca00b005a4799f5428sm421440oob.21.2024.04.18.08.33.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 08:33:25 -0700 (PDT)
-Message-ID: <e8957b07-692f-7d38-e276-b0e3791d31f4@gmail.com>
-Date: Thu, 18 Apr 2024 10:33:23 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FB+qG7eR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713454514; x=1744990514;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=OXoMHYERL63GkJ/oIQoh4RY1yeo5XbdvZz9GQ/ui6CM=;
+  b=FB+qG7eRwTSwAAA2rPKZGuTny+eCN/fswyIXKyIcgyE1V2scA9KrQI+B
+   yDrmwjfIU5R9/beH/GElZPNDSD65rx1f8YE70aslj5E1YWIQfrtmwafTM
+   s1KS5pJNkz4EN1iye2V7JC/bwUr2/mt9B2f/EEV8ASCOzpxTljLoFNdg9
+   U7w0mdUccZ4I3dJTGl+BunSeHd74JQBEwZms8qYP/xJYzF+Mk0TkLHKo5
+   aRzOKGu935YYDVr26O/zouEER8q5sVnZ70AxD9iQdYfPO3J52yEfs83uG
+   pXS5YKHCyKbY473UHEgheBua3sWDtJBFSSgdFtpmQaRgq6LVoMAN1aXvv
+   g==;
+X-CSE-ConnectionGUID: A/zIIgX4RtKRD4VUwENocw==
+X-CSE-MsgGUID: HisK9yvzQtWNYU0g9ZuICw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8874990"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="8874990"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 08:35:14 -0700
+X-CSE-ConnectionGUID: lRs5YyPKQ/S0K/pEzpp3yQ==
+X-CSE-MsgGUID: cM21zVMpSWurulbX493h9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="54207050"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 08:35:14 -0700
+Received: from [10.213.167.231] (kliang2-mobl1.ccr.corp.intel.com [10.213.167.231])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id D2871206DFDC;
+	Thu, 18 Apr 2024 08:35:12 -0700 (PDT)
+Message-ID: <550e5ca5-f28c-48e1-b86e-9de3458a5737@linux.intel.com>
+Date: Thu, 18 Apr 2024 11:35:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: ipq9574: add PCIe2 nodes
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1] perf pmu: Assume sysfs events are always lowercase
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240413040812.4042051-1-irogers@google.com>
 Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-clk@vger.kernel.org
-References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
- <20240415182052.374494-8-mr.nuke.me@gmail.com>
- <20240417073412.GD3894@thinkpad>
-From: mr.nuke.me@gmail.com
-In-Reply-To: <20240417073412.GD3894@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240413040812.4042051-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/17/24 02:34, Manivannan Sadhasivam wrote:
-> On Mon, Apr 15, 2024 at 01:20:52PM -0500, Alexandru Gagniuc wrote:
->> On ipq9574, there are 4 PCIe controllers. Describe the pcie2 node, and
->> its PHY in devicetree.
->>
->> Only pcie2 is described, because only hardware using that controller
->> was available for testing.
->>
+On 2024-04-13 12:08 a.m., Ian Rogers wrote:
+> Perf event names aren't case sensitive. For sysfs events the entire
+> directory of events is read then iterated comparing names in a case
+> insensitive way, most often to see if an event is present.
 > 
-> You should describe all the instances in DT. Since the unused ones will be
-> 'disabled', it won't affect anyone.
-
-My concern with untested but "disabled" descriptions is that someone may 
-think it's supported, try to enable it on their board, and run into 
-issues. Theoretically, we could describe pcie3, as it uses the same 
-gen3x2 phy.
-
-The pcie0 and pcie1 use a gen3x1 phy, which I do not support in this 
-series. I would have to leave the "phys" and "phy-names" for these 
-nodes, leading to an incomplete description
-
-Given this info, do you still wish that I add all other pcie nodes?
-
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->> ---
->>   arch/arm64/boot/dts/qcom/ipq9574.dtsi | 93 ++++++++++++++++++++++++++-
->>   1 file changed, 92 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> index 7f2e5cbf3bbb..f075e2715300 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> @@ -300,7 +300,7 @@ gcc: clock-controller@1800000 {
->>   				 <0>,
->>   				 <0>,
->>   				 <0>,
->> -				 <0>,
->> +				 <&pcie2_phy>,
->>   				 <0>,
->>   				 <0>;
->>   			#clock-cells = <1>;
->> @@ -745,6 +745,97 @@ frame@b128000 {
->>   				status = "disabled";
->>   			};
->>   		};
->> +
->> +		pcie2_phy: phy@8c000 {
->> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
->> +			reg = <0x0008c000 0x14f4>;
->> +
->> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
->> +				 <&gcc GCC_PCIE2_AHB_CLK>,
->> +				 <&gcc GCC_PCIE2_PIPE_CLK>,
->> +				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
->> +				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>;
->> +			clock-names = "aux",
->> +				      "cfg_ahb",
->> +				      "pipe",
->> +				      "anoc",
->> +				      "snoc";
->> +
->> +			clock-output-names = "pcie_phy2_pipe_clk";
->> +			#clock-cells = <0>;
->> +			#phy-cells = <0>;
->> +
->> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
->> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
->> +			reset-names = "phy",
->> +				      "common";
->> +			status = "disabled";
->> +		};
->> +
->> +		pcie2: pcie@20000000 {
->> +			compatible = "qcom,pcie-ipq9574";
->> +			reg = <0x20000000 0xf1d>,
->> +			      <0x20000f20 0xa8>,
->> +			      <0x20001000 0x1000>,
->> +			      <0x00088000 0x4000>,
->> +			      <0x20100000 0x1000>;
->> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
->> +
->> +			ranges = <0x81000000 0x0 0x20200000 0x20200000 0x0 0x00100000>,	/* I/O */
+> Consider:
+> $ perf stat -e inst_retired.any true
 > 
-> Please use below range:
+> The event inst_retired.any may be present in any PMU, so every PMU's
+> sysfs events are loaded and then searched with strcasecmp to see if
+> any match. This event is only present on the cpu PMU as a json event
+> so a lot of events were loaded from sysfs unnecessarily just to prove
+> an event didn't exist there.
 > 
-> <0x01000000 0x0 0x00000000 0x20200000 0x0 0x00100000>
-> <0x02000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>
-> 
-Of course, thank you.
+> This change avoids loading all the events by assuming sysfs event
+> names are always lowercase. 
 
->> +				 <0x82000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>;	/* MEM */
->> +
->> +			device_type = "pci";
->> +			linux,pci-domain = <3>;
->> +			bus-range = <0x00 0xff>;
->> +			num-lanes = <2>;
->> +			max-link-speed = <3>;
->> +			#address-cells = <3>;
->> +			#size-cells = <2>;
->> +
->> +			phys = <&pcie2_phy>;
->> +			phy-names = "pciephy";
->> +
->> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "msi";
->> +
->> +			#interrupt-cells = <1>;
->> +			interrupt-map-mask = <0 0 0 0x7>;
->> +			interrupt-map = <0 0 0 1 &intc 0 0 164
->> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->> +					<0 0 0 2 &intc 0 0 165
->> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->> +					<0 0 0 3 &intc 0 0 186
->> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
->> +					<0 0 0 4 &intc 0 0 187
->> +					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> 
-> Use a single line for each INTX entry even if it exceeds 80 column width.
+From what I searched in the kernel, it looks like all the sysfs event
+names (from different ARCHs and devices) are lowercase. It should not
+break the existing usages.
+I don't see a reason why a event name must be uppercase.
+However, I think we need to add something to guarantee the assumption.
 
-Yes. Will do.
+Could you please update the doc to describe the assumption?
+Documentation/ABI/testing/sysfs-bus-event_source-devices-events
+So everybody can follow the rule.
 
-> - Mani
+I think a perf test is required as well.
+Maybe we can extend the test__pmu_events() to do the name check.
+
+Thanks,
+Kan
+
+> It then uses file exists and only loads
+> the events when the desired event is present.
 > 
+> For the example above, the number of openat calls measured by perf
+> trace on a tigerlake laptop goes from 325 down to 255. The reduction
+> will be larger for machines with many PMUs, particularly replicated
+> uncore PMUs.
+> 
+> Make pmu_aliases_parse early return when aliases are loaded, ensure
+> the function is called before all uses of the aliases list.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index ab30f22eaf10..ce72c99e4f61 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -425,9 +425,16 @@ static struct perf_pmu_alias *perf_pmu__find_alias(struct perf_pmu *pmu,
+>  {
+>  	struct perf_pmu_alias *alias;
+>  
+> -	if (load && !pmu->sysfs_aliases_loaded)
+> -		pmu_aliases_parse(pmu);
+> +	if (load && !pmu->sysfs_aliases_loaded) {
+> +		char event_file_name[FILENAME_MAX + 8];
+>  
+> +		scnprintf(event_file_name, sizeof(event_file_name), "events/%s", name);
+> +		for (size_t i = 7, n = 7 + strlen(name); i < n; i++)
+> +			event_file_name[i] = tolower(event_file_name[i]);
+> +
+> +		if (perf_pmu__file_exists(pmu, event_file_name))
+> +			pmu_aliases_parse(pmu);
+> +	}
+>  	list_for_each_entry(alias, &pmu->aliases, list) {
+>  		if (!strcasecmp(alias->name, name))
+>  			return alias;
+> @@ -605,6 +612,9 @@ static int pmu_aliases_parse(struct perf_pmu *pmu)
+>  	size_t len;
+>  	int fd, dir_fd;
+>  
+> +	if (pmu->sysfs_aliases_loaded)
+> +		return 0;
+> +
+>  	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
+>  	if (!len)
+>  		return 0;
+> @@ -1689,9 +1699,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+>  {
+>  	size_t nr;
+>  
+> -	if (!pmu->sysfs_aliases_loaded)
+> -		pmu_aliases_parse(pmu);
+> -
+> +	pmu_aliases_parse(pmu);
+>  	nr = pmu->sysfs_aliases;
+>  
+>  	if (pmu->cpu_aliases_added)
+> @@ -1750,6 +1758,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+>  	struct strbuf sb;
+>  
+>  	strbuf_init(&sb, /*hint=*/ 0);
+> +	pmu_aliases_parse(pmu);
+>  	pmu_add_cpu_aliases(pmu);
+>  	list_for_each_entry(event, &pmu->aliases, list) {
+>  		size_t buf_used;
+> @@ -2154,6 +2163,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
+>  	if (!pmu)
+>  		return NULL;
+>  
+> +	pmu_aliases_parse(pmu);
+>  	pmu_add_cpu_aliases(pmu);
+>  	list_for_each_entry(event, &pmu->aliases, list) {
+>  		struct perf_event_attr attr = {.config = 0,};
