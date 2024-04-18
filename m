@@ -1,196 +1,146 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1121.securemx.jp [210.130.202.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9666B38DD3;
-	Thu, 18 Apr 2024 07:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F41A53805;
+	Thu, 18 Apr 2024 07:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713423893; cv=none; b=KRT4c/mPDpMHqFKTLm7AXOPaaCQCuDI3oL2vSsPxQkNu35y/5wui95/Q2TQU1bc9WEA38zqlKIpSBOraZnB3JH3l3EBa1iUzqaDSuuyMaO73aWuwCgUgFkAgEqNgzGMlo+UQJVgmVlkPZRWED/pflMXaVSFad4W4v9Njo2hWoZk=
+	t=1713423899; cv=none; b=SrjwoG849GKStrzNs8gUUeiTIkyEvz5W2YE3d/NO8cui2o2bRoXwoT98EpljwgIQgQ+H6mQPOBa6/4m/XOqftGJPhTuuClfPmMh/dTZ1W/8DknXTKr4f9LoDQhWYc49BoPfWkQNXXg/Ev1DcseLilx62KU83nbXO5+Re0AOHbiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713423893; c=relaxed/simple;
-	bh=uoNEKKgt7kzgTLPceRuEH7vqG26qiW6Mlgun+OQdhUc=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hbFknlpBLr0SL5q2G/XYPRq2QD0navEpIgZJEoxFhoVl1WcXP7YHkIf3EjkRRHNPCBQECeRt3oJULpbI5/f6wHD+uVPF8cvGjaVTyUQBSATys6SCWPFNyL50jQaWdb3jndWE4Sncc6CRMbllzqVpUiKpKQ9XrHaQaLWkZODLpbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1121) id 43I5iX9d2031332; Thu, 18 Apr 2024 14:44:33 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 43I5iKQA1974974; Thu, 18 Apr 2024 14:44:20 +0900
-X-Iguazu-Qid: 2rWhclmqQjRb7VEOHb
-X-Iguazu-QSIG: v=2; s=0; t=1713419059; q=2rWhclmqQjRb7VEOHb; m=mBAfYaaefeel5VPM0onU99bupKNgugriUCfLeVqX7Wg=
-Received: from CNN1EMTA03.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1122) id 43I5iJUt2852443
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 18 Apr 2024 14:44:19 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA03.test.kioxia.com (Postfix) with ESMTP id 093132FE0F;
-	Thu, 18 Apr 2024 14:44:19 +0900 (JST)
-Received: from CNN1ESTR03.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id D46111947AEC50;
-	Thu, 18 Apr 2024 14:22:20 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR03.kioxia.com with ESMTP id 0002QAAAAAA01G4A;
-	 Thu, 18 Apr 2024 14:22:20 +0900
-Received: from CNN1EXMB04.r1.kioxia.com (CNN1EXMB04.r1.kioxia.com [10.232.20.153])
-	by Switcher-Pre_Send (Postfix) with ESMTP id C9198AA28483C;
-	Thu, 18 Apr 2024 14:22:20 +0900 (JST)
-Received: from CNN1EXMB04.r1.kioxia.com (10.232.20.153) by
- CNN1EXMB04.r1.kioxia.com (10.232.20.153) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:44:18 +0900
-Received: from CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) by
- CNN1EXMB04.r1.kioxia.com ([10.13.100.23]) with mapi id 15.01.2507.035; Thu,
- 18 Apr 2024 14:44:18 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: "song@kernel.org" <song@kernel.org>,
-        "yukuai3@huawei.com"
-	<yukuai3@huawei.com>
-CC: "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 07/11] md: change the type of nr_pending from atomic_t to
- percpu_ref
-Thread-Topic: [PATCH v2 07/11] md: change the type of nr_pending from atomic_t
- to percpu_ref
-Thread-Index: AdqLx+Sa7q7ZO7b2TwapHpdnlQ/uTw==
-Date: Thu, 18 Apr 2024 05:44:18 +0000
-Message-ID: <7da99b09cb524bdcb705be1b74fdf3e0@kioxia.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-as-result: No-10--11.170200-8.000000
-x-tmase-matchedrid: q6+TWfRxf4emagT1k9kBpgrcxrzwsv5uXPK9y3z82GsPdZmyx8xAa4Ul
-	JlxlTIT+uzW0mXOtDblgTs7PNu5YyogrKnsJ1GRgTuctSpiuWyUUi4Ehat05499RlPzeVuQQbo+
-	zo8QXL7dce6BqICgMNO++yHYM+maWCEeKzjvXhRNT3j6uyvUYPHO1oaQ51CuNyPRAwD/3abY9/h
-	S2mXmf7hyQILeil6Pygimqy60vioomCg+Lak4DCfQxpA7auLwMsnK72MaPSqdKcHrMrTS0BKPFj
-	JEFr+olSXhbxZVQ5H+OhzOa6g8KrYMsC4HjxGgcpp5TBDDn4/99nh8vjJfPPtOGGDxfqdGKNS6d
-	yfmO4Lc=
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--11.170200-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28328.001
-x-tm-snts-smtp: 9B7AE58AE751170A3157A162B8CC0E64CFF4C7F0FF471CCE1172567A353084412000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1713423899; c=relaxed/simple;
+	bh=THspLrgp0dm7HYB2DRoS7oTyg58EUuqya1qgBzZOvX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JQEbXh/5zg7F+8XGv0hKDt31EFEvJpeUmjvo1K1txHn27suDcoQdb2FkMlSqZJAbmM7eRLf0aS5/UqZNq1qKqPAHRCBwQLFFozw6/WWEDdE/DFO7ubFu/O0g9RISvLCmVIz2PY9Sis0BCHlzR7K/5hKVmU36bXzFEL31gzIxmzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dYCX0zWn; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dYCX0zWn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=aFU1pmM4PT0Au5q+if2PAvyCDfRZZhJiwcf5XooFGg8=; t=1713423897;
+	x=1713855897; b=dYCX0zWnLiv954jUc8tDvc7r3BoYwm9e+R30JyohY6t1QWdVJRwT1KD58YKtS
+	GWnZWS22eiD58E/eKO2LgmUJIejfKyUyhE1hNJ5LiYTcr+iHRJRgzdh3cFp4upstAM8LayO5cRA4A
+	dOtmD+6936J5yUN4gB3Br7haVqsSnA45eITrkuGOZQ5UapQsTmWEd9mJXsyraBL+gx+hG2UtMC7r/
+	FEv+4IeXqfAvaY/ZbM46JMQz4uDvWGFn438/HHv0lpFaDTzfYIMC7jbOv9ik8gfC5ynWAyqOnyiFn
+	dEESlDqv86eRrEMMITlSNYQuuIMdW0Sja0x+OI8F50MukkpYog==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rxLpG-00071c-39; Thu, 18 Apr 2024 09:04:54 +0200
+Message-ID: <d4853f43-2538-4a92-9ac4-aff5c7b0893e@leemhuis.info>
+Date: Thu, 18 Apr 2024 09:04:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB04.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB04.r1.kioxia.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: Please create the email alias do-not-apply-to-stable@kernel.org
+ -> /dev/null
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ helpdesk@kernel.org, "workflows@vger.kernel.org"
+ <workflows@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <b452fd54-fdc6-47e4-8c26-6627f6b7eff3@leemhuis.info>
+ <20240417-lively-zebu-of-tact-efc8f3@lemur>
+ <e7318984-7ef4-48cd-aae4-1deda3d711a5@leemhuis.info>
+ <2024041734-gleeful-freewill-b24b@gregkh>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <2024041734-gleeful-freewill-b24b@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1713423897;09b7764c;
+X-HE-SMSGID: 1rxLpG-00071c-39
 
-This patch depends on patch 05.
+On 17.04.24 15:38, Greg KH wrote:
+> On Wed, Apr 17, 2024 at 03:21:12PM +0200, Thorsten Leemhuis wrote:
+>> On 17.04.24 14:52, Konstantin Ryabitsev wrote:
+>>> On Wed, Apr 17, 2024 at 09:48:18AM +0200, Thorsten Leemhuis wrote:
+>>>> Could you please create the email alias
+>>>> do-not-apply-to-stable@kernel.org which redirects all mail to /dev/null,
+>>>> just like stable@kernel.org does?
+>>>>
+>>>> To quote:
+>>>>
+>>>>> How about:
+>>>>> 	cc: <do-not-apply-to-stable@kernel.org> # Reason goes here, and must be present
+>>>>>
+>>>>> and we can make that address be routed to /dev/null just like
+>>>>> <stable@kernel.org> is?
+>>
+>> FWIW, we could go back to what I initially proposed: use the existing
+>> stable tag with a pre-defined comment to mark patches that AUTOSEL et.
+>> al. should not pick up:
+>> https://lore.kernel.org/all/c0a08b160b286e8c98549eedb37404c6e784cf8a.1712812895.git.linux@leemhuis.info/
+> 
+> If you can pick a better string, possibly, yes.
 
-Change the type of nr_pending from atomic_t to percpu_ref.
-Additionally, temporarily switch from percpu mode to atomic mode.
-This is to reduce the amount of changes from patches 8 to 10.
-Patches 8 to 10 assume that nr_pending is run in percpu mode.
-Finally, switch from atomic mode to percpu mode in patch 11.
+What did you think of Konstantin's
 
-Signed-off-by: Keisuke TADA <keisuke1.tada@kioxia.com>
-Signed-off-by: Toshifumi OHTAKE <toshifumi.ootake@kioxia.com>
----
- drivers/md/md.c | 13 ++++++++++++-
- drivers/md/md.h | 18 +++++++++---------
- 2 files changed, 21 insertions(+), 10 deletions(-)
+Cc: stable+noautosel@kernel.org # Reason
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index d53ca23bacf7..7e6966e65d0d 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1002,6 +1002,7 @@ void md_rdev_clear(struct md_rdev *rdev)
- 		put_page(rdev->bb_page);
- 		rdev->bb_page =3D NULL;
- 	}
-+	percpu_ref_exit(&rdev->nr_pending);
- 	badblocks_exit(&rdev->badblocks);
- }
- EXPORT_SYMBOL_GPL(md_rdev_clear);
-@@ -3724,8 +3725,14 @@ static const struct kobj_type rdev_ktype =3D {
- 	.default_groups	=3D rdev_default_groups,
- };
-=20
-+static void percpu_wakeup_handle_req_pending(struct percpu_ref *ref)
-+{
-+}
-+
- int md_rdev_init(struct md_rdev *rdev)
- {
-+	int ret;
-+
- 	rdev->desc_nr =3D -1;
- 	rdev->saved_raid_disk =3D -1;
- 	rdev->raid_disk =3D -1;
-@@ -3736,7 +3743,11 @@ int md_rdev_init(struct md_rdev *rdev)
- 	rdev->last_read_error =3D 0;
- 	rdev->sb_loaded =3D 0;
- 	rdev->bb_page =3D NULL;
--	atomic_set(&rdev->nr_pending, 0);
-+	ret =3D percpu_ref_init(&rdev->nr_pending, percpu_wakeup_handle_req_pendi=
-ng,
-+		PERCPU_REF_ALLOW_REINIT, GFP_KERNEL);
-+	WARN_ON(ret);
-+	percpu_ref_switch_to_atomic_sync(&rdev->nr_pending);
-+	nr_pending_dec(rdev);
- 	atomic_set(&rdev->read_errors, 0);
- 	atomic_set(&rdev->corrected_errors, 0);
-=20
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 783fec1f1445..ab09e312c9bb 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -107,10 +107,10 @@ struct md_rdev {
- 					 */
- 	};
-=20
--	atomic_t	nr_pending;	/* number of pending requests.
--					 * only maintained for arrays that
--					 * support hot removal
--					 */
-+	struct percpu_ref	nr_pending;	/* number of pending requests.
-+						 * only maintained for arrays that
-+						 * support hot removal
-+						 */
- 	atomic_t	read_errors;	/* number of consecutive read errors that
- 					 * we have tried to ignore.
- 					 */
-@@ -213,27 +213,27 @@ enum flag_bits {
-=20
- static inline void nr_pending_inc(struct md_rdev *rdev)
- {
--	atomic_inc(&rdev->nr_pending);
-+	percpu_ref_get(&rdev->nr_pending);
- }
-=20
- static inline void nr_pending_dec(struct md_rdev *rdev)
- {
--	atomic_dec(&rdev->nr_pending);
-+	percpu_ref_put(&rdev->nr_pending);
- }
-=20
- static inline bool nr_pending_is_zero(struct md_rdev *rdev)
- {
--	return atomic_read(&rdev->nr_pending) =3D=3D 0;
-+	return percpu_ref_is_zero(&rdev->nr_pending);
- }
-=20
- static inline bool nr_pending_is_not_zero(struct md_rdev *rdev)
- {
--	return atomic_read(&rdev->nr_pending) !=3D 0;
-+	return !percpu_ref_is_zero(&rdev->nr_pending);
- }
-=20
- static inline unsigned long nr_pending_read(struct md_rdev *rdev)
- {
--	return (unsigned long)atomic_read(&rdev->nr_pending);
-+	return atomic_long_read(&rdev->nr_pending.data->count);
- }
-=20
- static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sector=
-s,
---=20
-2.34.1
+That looked like a good solution -- and I wondered why I did not come up
+with that idea myself. Sure, "autosel" would also imply/mean "the
+scripts/tools that look out for Fixes: tags", but does that matter?
 
+> But in the end, your proposal seems to imply:
+> 
+> 	cc: stable@kernel.org	# Psych!  Just kidding, never backport this!
+> 
+> but really, that's just mean, and again, this is a VERY rare case you
+> are trying to automate here. We have MUCH better and simpler ways for> maintainers to not have their subsystems scanned for stuff like this,
+> why are we spending all of our time on this topic?
 
+It started with various minor reasons -- and after some "this would be
+nice to have" feedback it felt wrong to give up. It also looked like we
+had some agreement already before a new discussion began.
+
+Ciao, Thorsten
