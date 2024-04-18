@@ -1,165 +1,106 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8AE16C685;
-	Thu, 18 Apr 2024 15:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7726916C43B;
+	Thu, 18 Apr 2024 15:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713452764; cv=none; b=Ui6vkDQnkTXM1eHQdLEJxg2mH40XxGo8w0qhu2374kOMPGul1FXRxEp0Yg0IoqIvlQmot2lj1diq5SPFC1+iHmgGcIDqNzhY1cpGajoE9r3gUpX3fe3DtoGefo4CNULCz28QECwlwFmhhWM8suzL10IeyawrbNo9hV+nj3q5E+I=
+	t=1713452775; cv=none; b=TKDH4Yxj4N9uMTpHSyAoH0ZIfNxbrcdOCGdldRaRtCynRE94boXaTLqHvS7fcer4ZK4TVJkAqA6apykwaD7bVT9u2I99tBapZrzRnHEEr5J1dihtecAymSJdz63XkrySnDP/y+H319403bEivs8fxEsUlRenCFGTQcVCCYZ0nhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713452764; c=relaxed/simple;
-	bh=xz1KryzBkXPpCkiszO0fSTagmb1tt/fdTNZWOu6yhsA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m0SZiiFeJUF4Ew7hJXAcGr2aRbesTNfGt+DJgAn65xypls6IATXhuV7X8ialIBgLJV5EjVBDOPoRnrlrQJT88TQ2tKskIIhNT0XP6dxaujzrjjbDygOkl2voCHY2xaCc1CyHiGU3CqXxcfok7wPXEUoKwPhGWcuIqdLuJ5quFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9rIHRet; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713452775; c=relaxed/simple;
+	bh=/GJmJIxgwpeXg6nGwefkpZv+RUFN7WkwtYfpoHK8lNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHmXJlsK8I1NXsQm1WVhgkLSBUxXHr68IM56Xv97NuxPUNDIbJ9U0W1JskL4FomOEBNYa3h4kOpDPmvbbnH3DhwhrW5r35NX0EO3RrnZvlJGEiTKkbmfNV9VQj2X+e56E6y+7dKwBUGcSh9jPkQoC2ZYovC+Pc0qL9wJvf11BmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QO4a+es3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9rIHRet"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-34388753650so483273f8f.3;
-        Thu, 18 Apr 2024 08:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713452761; x=1714057561; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to:subject
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2e/V3U1UC9ugP6i7TU7zPmhluDvsy6sYXgqrEvEBwwY=;
-        b=C9rIHRetxmzPQ3wkgHnWBQ/7ACNbIePWHIuyWPXrmziIMraePz5CFlRoyjogkH7XT3
-         GhcaPkcuc76UJ4THGpz8ZjFqR1Ghc4einfCK/wdx1i5rOmjGVSz1ClUO8HVPa7lhDAwZ
-         XVyjdQJ5Tg+JjbmNaKifCbXw3oehMgiGzaW/AwN/yG54Eng/GraFKl8hNhdli6z54Duf
-         TM7xs/Y7WO6D1fzcgBK5EJp8AaW1l49pZsee3ck0KLlW6Lrvje9ukscGZaHnh++0A3Rr
-         6QaAuP2Pik1fwyba0NF3JcXMLQlCj3GKuxfOZUnhBYaNo51hMH2i9hbRwwdh7tXPapjD
-         DO7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713452761; x=1714057561;
-        h=content-transfer-encoding:in-reply-to:from:references:to:subject
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2e/V3U1UC9ugP6i7TU7zPmhluDvsy6sYXgqrEvEBwwY=;
-        b=Kj9DBCxnV+0Cn4H9EOA5fv4yj63x9M7NEeT5H64B0ITiDutS0zYFDU8pzKK74fT0KE
-         UAqifrNW+/GaCDExHfkv0yAvmJpeWkq6bSuJUkR1nPn//AywMJfUi9hN55twVbQLjFm3
-         73FLFtr70F9UOU/Oq5iGX+U3iqkhsJwMk2b6Q7R0j6mCfnCNx7TxWvcaztcOXHW3HtDO
-         UkYz39Qr+J55hQOTgRYJ3kyJ3HSYoDLEUIgSZBSrmhpgbombNzFPiWL5tlpnthQWL378
-         f6VWOgRo/je9Qf66Y1kC4UU2Fwo0rTadiyQkZ//vNinbQnkoLtQqNtl0uIUO3mJ+msex
-         /4vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXi8Dn2N1e098oGm7evElCvhc1AeEP8U0B/kMDG3uCUG+zeknSTdGxfRDXX+RSNDbQ5TNOdgGlXELJJSsAWF8n4xu8hOksu9i8/8/bQynyrhCGF+4jY1o5ZXIMV6qK9/wpxSUIp6EawYkbLM5nEZboqR50+Sh0iNV42l3bCCbVCsvYm5QRk
-X-Gm-Message-State: AOJu0Yw+niYiVhHjFVVl8Yc+iDHC29pD1XKwwFOEC1y1twCgGtuadT49
-	3DxZi8uTZ4zH44CTGyXbOUeVN+D4SGK8QiXK89abKEltl7YxQJrd
-X-Google-Smtp-Source: AGHT+IH+5mlTQpMMxVoyFt8D37CbaekJa0gy7uCGu59GilYj7x1ah3z0l5u9qwAxEJYwtfdM36z4Dg==
-X-Received: by 2002:a05:6000:25b:b0:347:9bec:9ba3 with SMTP id m27-20020a056000025b00b003479bec9ba3mr1954606wrz.66.1713452761184;
-        Thu, 18 Apr 2024 08:06:01 -0700 (PDT)
-Received: from debian ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id d4-20020a5d6dc4000000b00341ce80ea66sm2040456wrz.82.2024.04.18.08.05.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 08:06:00 -0700 (PDT)
-Message-ID: <f4b10cc8-fdd9-4dd6-92c7-60acf66702e0@gmail.com>
-Date: Thu, 18 Apr 2024 17:05:42 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QO4a+es3"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 1EFB020FD8B4; Thu, 18 Apr 2024 08:06:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1EFB020FD8B4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1713452767;
+	bh=YLrF65GkaRI97civNB8NhoqUIrCEEdcrIySZDt5Q0LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QO4a+es39sVfjgRPixoZvKK9reiFB/6ZcNzygVZHvRx0NTUwneQHWoZrA/0Wn2TwW
+	 ZGTm/ns6EWJD6ZK5/heMrbFElihTAtHo80EoyOwKZeUcXpPDxxYN3eXYJ3tn0JA101
+	 lBxJrH7zGaxcTTE5I5XSQ+1gjW3JHqntqLvBYgrY=
+Date: Thu, 18 Apr 2024 08:06:07 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+Cc: adityanagesh@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] Drivers: hv: Cosmetic changes for hv.c and balloon.c
+Message-ID: <20240418150607.GA27653@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1712899683-20311-1-git-send-email-adityanagesh@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v7 2/3] net: gro: move L3 flush checks to
- tcp_gro_receive and udp_gro_receive_segment
-To: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, dsahern@kernel.org,
- willemdebruijn.kernel@gmail.com, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20240412155533.115507-1-richardbgobert@gmail.com>
- <20240412155533.115507-3-richardbgobert@gmail.com>
- <a36bf0b117f7786bbf028494d68185486025777d.camel@redhat.com>
- <469c26d112600bce3a7fe77131c62eae4ecae5d1.camel@redhat.com>
-From: Richard Gobert <richardbgobert@gmail.com>
-In-Reply-To: <469c26d112600bce3a7fe77131c62eae4ecae5d1.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1712899683-20311-1-git-send-email-adityanagesh@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-
-Paolo Abeni wrote:
-> On Tue, 2024-04-16 at 11:21 +0200, Paolo Abeni wrote:
->> On Fri, 2024-04-12 at 17:55 +0200, Richard Gobert wrote:
->>> {inet,ipv6}_gro_receive functions perform flush checks (ttl, flags,
->>> iph->id, ...) against all packets in a loop. These flush checks are used
->>> currently in all tcp flows and in some UDP flows in GRO.
->>>
->>> These checks need to be done only once and only against the found p skb,
->>> since they only affect flush and not same_flow.
->>>
->>> Leveraging the previous commit in the series, in which correct network
->>> header offsets are saved for both outer and inner network headers -
->>> allowing these checks to be done only once, in tcp_gro_receive and
->>> udp_gro_receive_segment. As a result, NAPI_GRO_CB(p)->flush is not used at
->>> all. In addition, flush_id checks are more declarative and contained in
->>> inet_gro_flush, thus removing the need for flush_id in napi_gro_cb.
->>>
->>> This results in less parsing code for UDP flows and non-loop flush tests
->>> for TCP flows.
->>>
->>> To make sure results are not within noise range - I've made netfilter drop
->>> all TCP packets, and measured CPU performance in GRO (in this case GRO is
->>> responsible for about 50% of the CPU utilization).
->>>
->>> L3 flush/flush_id checks are not relevant to UDP connections where
->>> skb_gro_receive_list is called. The only code change relevant to this flow
->>> is inet_gro_receive. The rest of the code parsing this flow stays the
->>> same.
->>>
->>> All concurrent connections tested are with the same ip srcaddr and
->>> dstaddr.
->>>
->>> perf top while replaying 64 concurrent IP/UDP connections (UDP fwd flow):
->>> net-next:
->>>         3.03%  [kernel]  [k] inet_gro_receive
->>>
->>> patch applied:
->>>         2.78%  [kernel]  [k] inet_gro_receive
->>
->> Why there are no figures for
->> udp_gro_receive_segment()/gro_network_flush() here?
->>
->> Also you should be able to observer a very high amount of CPU usage by
->> GRO even with TCP with very high speed links, keeping the BH/GRO on a
->> CPU and the user-space/data copy on a different one (or using rx zero
->> copy).
+On Thu, Apr 11, 2024 at 10:28:03PM -0700, Aditya Nagesh wrote:
+> Fix issues reported by checkpatch.pl script in hv.c and
+> balloon.c
+>  - Remove unnecessary parentheses
+>  - Remove extra newlines
+>  - Remove extra spaces
+>  - Add spaces between comparison operators
+>  - Remove comparison with NULL in if statements
 > 
-> To be more explicit: I think at least the above figures are required, 
-> and I still fear the real gain in that case would range from zero to
-> negative. 
+> No functional changes intended
 > 
-
-I wrote about it in the commit message in short, sorry if I wasn't clear
-enough.
-
-gro_network_flush is compiled in-line to both udp_gro_receive_segment and
-tcp_gro_receive. udp_gro_receive_segment is compiled in-line to
-udp_gro_receive.
-
-The UDP numbers I posted are not relevant anymore after Willem and
-Alexander's thread, after which we understood flush and flush_id should be
-calculated for all UDP flows.
-
-I can post new numbers for the UDP fwd path after implementing the correct
-change. As for TCP - the numbers I posted stay the same.
-
-You should note there is an increase in CPU utilization in tcp_gro_receive
-because of the inline compilation of gro_network_flush. The numbers make
-sense and show performance enhancement in the case I showed when both
-inet_gro_receive and tcp_gro_receive are accounted for.
-
-> If you can't do the TCP part of the testing, please provide at least
-> the figures for a single UDP flow, that should give more indication WRT
-> the result we can expect with TCP.
+> Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+> ---
+> [V3]
+> Fix alignment issues in multiline function parameters.
 > 
-> Note that GRO is used mainly by TCP and TCP packets with different
-> src/dst port will land into different GRO hash buckets, having
-> different RX hash.
+> [V2]
+> Change Subject from "Drivers: hv: Fix Issues reported by checkpatch.pl script"
+>  to "Drivers: hv: Cosmetic changes for hv.c and balloon.c"
 > 
-> That will happen even for UDP, at least for some (most?) nics include
-> the UDP ports in the RX hash.
+>  drivers/hv/hv.c         |  35 +++++++-------
+>  drivers/hv/hv_balloon.c | 101 +++++++++++++++-------------------------
+>  2 files changed, 54 insertions(+), 82 deletions(-)
 > 
-> Thanks,
-> 
-> Paolo
-> 
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index a8ad728354cb..4906611475fb 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -45,7 +45,7 @@ int hv_init(void)
+>   * This involves a hypercall.
+>   */
+>  int hv_post_message(union hv_connection_id connection_id,
+> -		  enum hv_message_type message_type,
+> +		    enum hv_message_type message_type,
+
+This line is fixed now, but now below line is unaligned.
+
+>  		  void *payload, size_t payload_size)
+>  {
+
+<snip>
+
+>  
+>  	if (req->more_pages == 1)
+>  		return;
+> @@ -1415,7 +1395,7 @@ static int dm_thread_func(void *dm_dev)
+>  
+>  	while (!kthread_should_stop()) {
+>  		wait_for_completion_interruptible_timeout(
+> -						&dm_device.config_event, 1*HZ);
+> +						&dm_device.config_event, 1 * HZ);
+
+IMO, we can move this to previous line, as now 100 characters are allowed in single line.
+
+
+Once fixed above,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+
+- Saurabh
+
