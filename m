@@ -1,167 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289A317B4F8;
-	Thu, 18 Apr 2024 19:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C6F16D314;
+	Thu, 18 Apr 2024 20:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470308; cv=none; b=OOx1i2Bt+8onerg2RLDw33Z7ZgKDYR2BcJGI4iKpJc97sAlUay42sLKo9J2tClrqRr2ee0yA45FS0tXL4+FW3bhl0mXRk/26k9vmWZCjwt9KRIqnPbsCBHzKzwTy5Ra67ixjYjyyqrcfvCprIJsbEu5T9ajKxpZ4xYgSAfZHbws=
+	t=1713470408; cv=none; b=nqg9TR9hkFsjJ1+BZnpOjQBZEzBH6iZduhEFQiUSGi5D3vUw6rnvhAAh2UdD988pVp+/fTfS1K8/F2yRNE7U1lLMUUhULg8mxgqtlwj6JMjrhyu7aXPs3C0RbACJkgi8DrIFxFwtxNwhlJBBIg4oZD2wuOvdae3Z/7TVU9tq2pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470308; c=relaxed/simple;
-	bh=tisi65k+YGyhsUQNNBAR+SpVnahnqmqz5uWVgPGomCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Tkmm0I14IfOyYDDUq+KBu1DNtTSL7UsHtugA+XLS3NbNeBfbmc1V4p8zBhdL+lGnQWNe4avBbCC7YNIiaXBy6ngvAZCQ0JwbvTaJRdg1lYeo1I8wqtw9Zw7DaUL1eCv44HfivSBk+fYY7/gJYLUkHbpoMzJ8yo7IAR/Gv2VnmZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hbBiCr+R; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713470408; c=relaxed/simple;
+	bh=HWefGnwQI2HwNz4Knpy1Fh114LZYu0wgCLBTdlxtmUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G+tkgY+fvZtBuM+ENr0k0NIhjhFuMoia0wjM7de6oC5nPQLeab0L4kERid5AuOYxFghLc6FvsR7UuXlhG2JRnGtkBgVOAsgJuwGf3qWUdX0gx9wEJEgXFiV1H1m+81kO1UvcjGXRqMkGyy31QYL6ayZ+jySJyU7DNDAEbum0xuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY4rQTR0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hbBiCr+R"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IJh1AK031009;
-	Thu, 18 Apr 2024 19:58:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=G3e6TiNghqcS7ahLIcRBHCG1AFPyU/zwTm2IKBSzs74=; b=hb
-	BiCr+RYNWzNqrj21IoJXwa9hI4rYocdHbwS7e5mb/1yo66HEWzb4YPO6/6lB4SST
-	l9Koi3R4FtXlaJI22zSyyOjURgBvGX7SgZ5+NT/s2Kt0TpXhBfRhgVAtEPIKl83c
-	U8gKu/Q3u56M6y1FcUAekqeEn4ScNVvWSr9FLEgHc9JZY6NDjeMHHKPaI71ccDXH
-	zbLmJrGl5QGrpWlphh06KSK7+kB1w41TodPybcnKjguJfAQqiC4wtEwIM7Q4V9i8
-	FMQJCV2IAH3bGqGjdn4+elPzbRGdo9e3ww1jYY2G0Qg+oRpIhoCMjjXQJR+9s7nT
-	BOFMKw0zznVRfkVithoQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xk4vm8une-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 19:58:05 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43IJw4qL030491
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 19:58:04 GMT
-Received: from [10.110.72.56] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
- 2024 12:58:00 -0700
-Message-ID: <9a1f8011-2156-4855-8724-fea89d73df11@quicinc.com>
-Date: Thu, 18 Apr 2024 12:58:00 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY4rQTR0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6AAFC113CC;
+	Thu, 18 Apr 2024 20:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713470408;
+	bh=HWefGnwQI2HwNz4Knpy1Fh114LZYu0wgCLBTdlxtmUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eY4rQTR0vB3nF31du2IEDKNwwn+Arhad3fDAJYF8yZ1FJh3Dhu/OomZi51qGz0+xm
+	 yra/nkWPz4cFawkghV0gdBKi6ECmIsqrPWj3/SQU3/50UuGZrAWlq2RS2efp5kTKhn
+	 sEsyCi98quhg615KvU+4ANrTH8KbscCy6oiuVNXuib7kuD0Id9WX3lNppWvtA90Im5
+	 0AKhCGhrvZTB2b9mhHgqt6RU8CbmlUzz8j1iWRciRpAczvqRefIU8Dz3FAeIcL/OOI
+	 zD8tMN5uEBWYh68fDMPlqOQL0e7l0KYx5v22crgl35DzYqXvHmF+v+qdFjxzsYhJvr
+	 6SFqrgLNKRXPw==
+Date: Thu, 18 Apr 2024 21:00:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>,
+	Guo Ren <guoren@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	Vincent Chen <vincent.chen@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Joel Granados <j.granados@samsung.com>,
+	Jerry Shih <jerry.shih@sifive.com>
+Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
+ to ZVE32X
+Message-ID: <20240418-dolphin-epileptic-749c9628e5a9@spud>
+References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
+ <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
+ <20240418-brook-chili-4d3e61d1a55c@wendy>
+ <20240418155256.GA2410@sol.localdomain>
+ <20240418-ultimatum-yam-11de4b063b83@spud>
+ <20240418173203.GA1081@sol.localdomain>
+ <20240418173946.GB1081@sol.localdomain>
+ <20240418-sterling-sanding-d59c3b0a2aaa@spud>
+ <20240418184129.GA1071@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH bpf-next v4 1/2] net: Rename mono_delivery_time to
- tstamp_type for scalabilty
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Halaney <ahalaney@redhat.com>,
-        "Martin
- KaFai Lau" <martin.lau@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-CC: <kernel@quicinc.com>
-References: <20240418004308.1009262-1-quic_abchauha@quicinc.com>
- <20240418004308.1009262-2-quic_abchauha@quicinc.com>
- <66216adc8677c_f648a294aa@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
-In-Reply-To: <66216adc8677c_f648a294aa@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AcgPrii5VN7hizySZenTQUQVW40I3_Bw
-X-Proofpoint-GUID: AcgPrii5VN7hizySZenTQUQVW40I3_Bw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_18,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 impostorscore=0 bulkscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 mlxlogscore=956 mlxscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404180144
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MEYWdzN/KoxvaYBs"
+Content-Disposition: inline
+In-Reply-To: <20240418184129.GA1071@sol.localdomain>
 
 
+--MEYWdzN/KoxvaYBs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/18/2024 11:47 AM, Willem de Bruijn wrote:
-> Abhishek Chauhan wrote:
->> mono_delivery_time was added to check if skb->tstamp has delivery
->> time in mono clock base (i.e. EDT) otherwise skb->tstamp has
->> timestamp in ingress and delivery_time at egress.
->>
->> Renaming the bitfield from mono_delivery_time to tstamp_type is for
->> extensibilty for other timestamps such as userspace timestamp
->> (i.e. SO_TXTIME) set via sock opts.
->>
->> As we are renaming the mono_delivery_time to tstamp_type, it makes
->> sense to start assigning tstamp_type based on enum defined
->> in this commit.
->>
->> Earlier we used bool arg flag to check if the tstamp is mono in
->> function skb_set_delivery_time, Now the signature of the functions
->> accepts tstamp_type to distinguish between mono and real time.
->>
->> In future tstamp_type:1 can be extended to support userspace timestamp
->> by increasing the bitfield.
->>
->> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
->> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
-> 
->> +/**
->> + * tstamp_type:1 can take 2 values each
->> + * represented by time base in skb
->> + * 0x0 => real timestamp_type
->> + * 0x1 => mono timestamp_type
->> + */
->> +enum skb_tstamp_type {
->> +	SKB_CLOCK_REAL,	/* Time base is skb is REALTIME */
->> +	SKB_CLOCK_MONO,	/* Time base is skb is MONOTONIC */
->> +};
->> +
-> 
-> Can drop the comments. These names are self documenting.
+On Thu, Apr 18, 2024 at 11:41:29AM -0700, Eric Biggers wrote:
 
-Noted! . I will take care of this
-> 
->>  /**
->>   * DOC: Basic sk_buff geometry
->>   *
->> @@ -819,7 +830,7 @@ typedef unsigned char *sk_buff_data_t;
->>   *	@dst_pending_confirm: need to confirm neighbour
->>   *	@decrypted: Decrypted SKB
->>   *	@slow_gro: state present at GRO time, slower prepare step required
->> - *	@mono_delivery_time: When set, skb->tstamp has the
->> + *	@tstamp_type: When set, skb->tstamp has the
->>   *		delivery_time in mono clock base (i.e. EDT).  Otherwise, the
->>   *		skb->tstamp has the (rcv) timestamp at ingress and
->>   *		delivery_time at egress.
-> 
-> Is this still correct? I think all egress does now annotate correctly
-> as SKB_CLOCK_MONO. So when not set it always is SKB_CLOCK_REAL.
-> 
-That is correct. 
+> If the RISC-V kernel ever disables V, then it should also disable everyth=
+ing
+> that depends on V.
+>=20
+> This would be similar to how on x86, if the kernel decides to disable AVX=
+ to
+> mitigate the Gather Data Sampling vulnerability, it also disables AVX2, A=
+VX512,
+> VAES, VPCLMULQDQ, etc.  See cpuid_deps[] in arch/x86/kernel/cpu/cpuid-dep=
+s.c.
+>=20
+> Sometimes CPU features depend on other ones.  That's just the way things =
+work.
 
->> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->> index 61119d42b0fd..a062f88c47c3 100644
->> --- a/net/ipv4/tcp_output.c
->> +++ b/net/ipv4/tcp_output.c
->> @@ -1300,7 +1300,7 @@ static int __tcp_transmit_skb(struct sock *sk, struct sk_buff *skb,
->>  	tp = tcp_sk(sk);
->>  	prior_wstamp = tp->tcp_wstamp_ns;
->>  	tp->tcp_wstamp_ns = max(tp->tcp_wstamp_ns, tp->tcp_clock_cache);
->> -	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, true);
->> +	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, CLOCK_MONOTONIC);
-> 
-> Multiple references to CLOCK_MONOTONIC left
-> 
-I think i took care of all the references. Apologies if i didn't understand your comment here. 
+=F0=9F=A4=A8
+
+> Whenever possible that should be handled centrally, not pushed down to ev=
+ery
+> user both in-kernel and userspace.
+
+FWIW, anything detected but rejected while probing the DT or ACPI tables
+will cause riscv_isa_extension_available() (or other APIs) to return false.
 
 
-> 
-> 
+--MEYWdzN/KoxvaYBs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiF7wQAKCRB4tDGHoIJi
+0lrQAP0ZnhY2j8dAgcGtM2slb23/HOfAFrbbsZhuBfSx0uoWSAEAubVPWlDs59pJ
+eFvw6AB3RzfrfggfMB1wA9nLHCZYzQs=
+=Ogch
+-----END PGP SIGNATURE-----
+
+--MEYWdzN/KoxvaYBs--
