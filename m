@@ -1,92 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3BA3BBFE;
-	Thu, 18 Apr 2024 12:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4C11DA26;
+	Thu, 18 Apr 2024 12:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713443701; cv=none; b=FHk75pm8LvIyFvAA9nK+zKH2ZWY+MJnQfKygmreWRVu8nuHV9BZlt6JJp32GbfkoYYkNFMBNHcpgn/TdH7APQQgVSB5d6W1t2S4mpAjvcZmvN76XvY6NpJE4AaKCRN318lXIiUNd+zp9YYPytfVaJLXSn5nN43ZJ87/VZNrSaqk=
+	t=1713443809; cv=none; b=u61AClSL4I8nd7Z0gzPpNL5fEmAmvA1ugTDnRI1jKDHwMbtxmaijmuZExxbZh3j9aS4Fj7+MZsdd41St95nqgsBSZgTcDRh6yVtz5TJ1rrJ0RyTgzbv17lNgvUcCQ01DRixOjM1W/0u41nynn/+TRemuoULu6PCz4C5lwUpML94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713443701; c=relaxed/simple;
-	bh=QoJZ9cDGA2Of8vEpXDv/CLcAZv4SkKX2GQYHhqv/IbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTboaRtiKpirj8eMhvI1mMUUSbPkisKCgqrZux5MQ+LwCidrvB/p5Nn7aiGgCTqyYpFiQX/vvexRPm99nntgVuvuI7/isyeHEzTzExAv3NTNbzdz0hpgt1eILWuDJJFk69u0CWQnZHI/H7IIPvsQNPK0NAhVHmKjjh1qZ/IFaJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CQyTwiPo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CQyTwiPo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC3CC113CC;
-	Thu, 18 Apr 2024 12:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1713443700;
-	bh=QoJZ9cDGA2Of8vEpXDv/CLcAZv4SkKX2GQYHhqv/IbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CQyTwiPoVVC0pNAFTtI1GZv01E2u9Ol/4Cjb3RJC+O0Co/QR9Cydl/HrENH+jiyF8
-	 pxewW0+3oBDpvtyIBzfGPd2tHdQkLNxC28zcq5P+5JEznmItWBBjuy1eX0XkQ9QXh6
-	 eKSbPs/NnSfARu3CQeMLGot5uovNpuKX8WWiBMFQ=
-Date: Thu, 18 Apr 2024 14:34:57 +0200
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Siddh Raman Pant <siddh.raman.pant@oracle.com>
-Cc: "cve@kernel.org" <cve@kernel.org>,
-	"linux-cve-announce@vger.kernel.org" <linux-cve-announce@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: CVE-2024-26920: tracing/trigger: Fix to return error if failed
- to alloc snapshot
-Message-ID: <2024041805-rippling-entourage-1a72@gregkh>
-References: <2024041738-CVE-2024-26920-a681@gregkh>
- <6fa1eb4368cbaa2d0b243539f1d91692da95e117.camel@oracle.com>
+	s=arc-20240116; t=1713443809; c=relaxed/simple;
+	bh=3YUauoGbeJ5ZxfusdnLISD6V1rVbaD0VMA4lUVm8NDU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PRbuY3HpWwtH+w2Ira+Iw8pFVrs9Sy9LB8PsVWVH6P1wKuZ+6OXfay8Wf99m1Wn9wVj0FGPgGNRLzzZcNJNqLIRDvB54JJNYNxAHfNj/6HECFlRctscU9GXzkbQ9pu6dKB9Szgj2t7/MOFGB+DqADkeAIOjkkvQV2a0dFGiJ4RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VKxzT4Q43zNnwl;
+	Thu, 18 Apr 2024 20:34:13 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8908418006B;
+	Thu, 18 Apr 2024 20:36:38 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 20:36:38 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>,
+	<corbet@lwn.net>
+CC: <cgroups@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] docs, cgroup: add entries for pids to cgroup-v2.rst
+Date: Thu, 18 Apr 2024 12:30:12 +0000
+Message-ID: <20240418123012.916411-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fa1eb4368cbaa2d0b243539f1d91692da95e117.camel@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-On Thu, Apr 18, 2024 at 11:59:41AM +0000, Siddh Raman Pant wrote:
-> Hi Greg,
-> 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > tracing/trigger: Fix to return error if failed to alloc snapshot
-> > 
-> > Fix register_snapshot_trigger() to return error code if it failed to
-> > allocate a snapshot instead of 0 (success). Unless that, it will register
-> > snapshot trigger without an error.
-> 
-> This commit is problematic on 4.19.y, 5.4.y, 5.10.y, and 5.15.y,
-> and should be reversed, and this CVE should be rejected for those
-> versions.
+This patch add two entries (pids.peak and pids.events) for pids
+controller, and also update pids.current because it's on non-root.
 
-Then please submit a patch for this.
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ Documentation/admin-guide/cgroup-v2.rst | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-But note, CVEs are not for specific versions, sorry.  We give a hint as
-to what kernel versions might be affected, but we don not assign CVE to
-versions.
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index d8b00f0ea96d..6f6fe744452e 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2188,11 +2188,25 @@ PID Interface Files
+ 	Hard limit of number of processes.
+ 
+   pids.current
+-	A read-only single value file which exists on all cgroups.
++	A read-only single value file which exists on non-root cgroups.
+ 
+ 	The number of processes currently in the cgroup and its
+ 	descendants.
+ 
++  pids.peak
++	A read-only single value file which exists on non-root cgroups.
++
++	The maximum value that the number of processes in the cgroup and its
++	descendants has ever reached.
++
++  pids.events
++	A read-only flat-keyed file which exists on non-root cgroups. The
++	following entries are defined. Unless specified otherwise, a value
++	change in this file generates a file modified event.
++
++	  max
++		Number of times fork failed because limit was hit.
++
+ Organisational operations are not blocked by cgroup policies, so it is
+ possible to have pids.current > pids.max.  This can be done by either
+ setting the limit to be smaller than pids.current, or attaching enough
+-- 
+2.34.1
 
-
-> 
-> The return value should be 0 on failure, because in the functions
-> event_trigger_callback() and event_enable_trigger_func(), we have:
-> 
-> 	ret = cmd_ops->reg(glob, trigger_ops, trigger_data, file);
-> 	/*
-> 	 * The above returns on success the # of functions enabled,
-> 	 * but if it didn't find any functions it returns zero.
-> 	 * Consider no functions a failure too.
-> 	 */
-> 	if (!ret) {
-> 		ret = -ENOENT;
-> 
-> Thus, the commit breaks this assumption.
-> 
-> This commit needs b8cc44a4d3c1 ("tracing: Remove logic for registering
-> multiple event triggers at a time") as a prerequisite, as it removes
-> the above.
-
-Should we just take that patch instead?
-
-thanks,
-
-greg k-h
