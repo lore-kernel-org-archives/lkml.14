@@ -1,187 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA8F4EB45
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827112576F
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713424997; cv=none; b=ejB/fRoGRmj7YpA6MKTeLnk2VCSTphOM1N9EfRxRaUMM6Bnx4X9AH5fU3lvjA9P9GMHPQbvwe+u185tx9wuSXdmuULDrRE8uNxBoCzYfS9jHOsdziawxhCz49nkMX1dZkifpREab30rFpnnWr6erK7Ig80WHdlY1K+edr/bOza8=
+	t=1713425105; cv=none; b=X+SPoNMwuAkhDBGlT4zRCz8DGGYL8suh/tvl5X8EdfqO00Q1lI48mDfc9AfAgBUsy+VqwKdNWkCyi0qFpqb8V+MOtLvWFRmzbN0nIXQAW/X0mnaPfuPijNV++EojK0aZgLBjBVreVHdX5kZLJOzxXvLyQ5yLisoRCefW3n2LYp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713424997; c=relaxed/simple;
-	bh=vgK0r6JlkgRyVng0vK7xeA2Mb4CDysk3xJwerY7ubwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kr6TclnZyvmf2wWUtlN2TihNFJkkg/Bvk0zAd4UgUncRp/G2ZNHBu3tMHbY1LGt5/YzAfJ+99BpT+U+hKWd/YjwG3KNR6r6m+ee7e7WFhXMmkJ1bCwZuGZocFnGk/usBLeqayrga7GovD60fMgEhMgkIxtdfbSIxaje4iKTrsj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VjWkmSy9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VjWkmSy9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713424994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cVEgCUNH2+ucbxNW8o7LrLo4xbai7FQO2lfQoIgrFHE=;
-	b=VjWkmSy98uksvOUNsnMKbFST6OeSILuBcps5/SE93pbDU/3S14T6X9Kyiz0+QfDHH4OL6z
-	UGaga6DBNSGltfxuYJZptA5lPURORWJN3w1M3UcbDpVwBmBOy2sQIQYIR7gD7v2q2f8MJW
-	387TGLWRtYvhlhgT6WvR+Hhov4JWavQ=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-bx_d_xSiPeeKetv2ovdnDQ-1; Thu, 18 Apr 2024 03:23:13 -0400
-X-MC-Unique: bx_d_xSiPeeKetv2ovdnDQ-1
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6edddd0375fso688193b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 00:23:12 -0700 (PDT)
+	s=arc-20240116; t=1713425105; c=relaxed/simple;
+	bh=3BjsP3nfhcuCH1XUcvjc1mQjPG2rS/A9hNNMjKKloA4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=joKXbxszmmDs2yBvOMd3/gH6NLyi79HOr1yK50gwxL5TUdAVKSpJ6L8GQDzH6GnPk4VIA4Fw4HsEGwXd6VKfEKiGzbIGx1/hRJhrz2qwpTAbgLMIbXoxptI0Mwy75sz74miFJe0Et0CKGYvuH6aqY0VtABgh7GnLSw9kZU/LF9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c8a960bd9eso75361839f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 00:25:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713424991; x=1714029791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cVEgCUNH2+ucbxNW8o7LrLo4xbai7FQO2lfQoIgrFHE=;
-        b=vRb1OTiKgc9/FWVRSqKG+OL7NJzjO+3m+dCL7Sh9r1lH8IybN8VhV9eJuejNm30e3f
-         kbIgjmUOyiih1APsn9kJG3bUmLTbfIadgpkucDafZr7a39HNR8oOolUocFvecIVSeizj
-         +1a+/okKK4hbd71d1ibJDJLqkhqh7P9gVpCXCHSbcU1569XLFlMubUptbWONRwoNYWwp
-         2XU48W/nFc9082xmbK1aCso7/MC5hu2ZpExy5kW0SZHn1x/MvpVt2SwD/I3zwvRme1Qm
-         PO9Ab1/iziVgBAVSR9pMXxQ2PvgQjoRcMvHtAABFW/nsi7KGo4pRYAiDefP7yk8uY4Yf
-         +jOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTxYFa0pJXneqEoLaruBcS+KtkkpPVnXZ+5Fj/IKwVAfprBe6gtSNOTBfMU4VPvTeP1xHSoeRMf51ICI4yKC+jWdwr2dDeIwdE29eA
-X-Gm-Message-State: AOJu0Yz+RWmNAzpo7OSD6yawFPVRE9L6iMdbvHpLot/S/wjGY1LQsjje
-	6FXRymebcd1VDT2xzKPdgrWT5NIUrAeUBCvbPB5NKAuJlYlWe/9lqoWhOnjVjf7j3FsWWg9o/if
-	vYPXfZS0lCerOR04AsRG5kjrxlqkCnzgXJLMBDKHOMKUEYpfRUE+LGN/iw5IG0ZWE0z4O/My8z2
-	DuXApkrUp8SYKf7TycCewmgomVmKw5Be9L7ynq
-X-Received: by 2002:a05:6a21:999b:b0:1aa:66ad:6094 with SMTP id ve27-20020a056a21999b00b001aa66ad6094mr2646451pzb.8.1713424990633;
-        Thu, 18 Apr 2024 00:23:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFb6KDSdMbWA5pEE2/RfPBEDrTWyeMJrakgp6Dj7adISR0wr3x3K1kxRaRUXVxLHPRcarcIGEu4VMy3oL4mikE=
-X-Received: by 2002:a05:6a21:999b:b0:1aa:66ad:6094 with SMTP id
- ve27-20020a056a21999b00b001aa66ad6094mr2646428pzb.8.1713424990300; Thu, 18
- Apr 2024 00:23:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713425103; x=1714029903;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=emqYNM6uPXqfGXvH8IFE1wN5OYo8rRqGNB03LA9Oayo=;
+        b=rQADYB0IC5JmUMsZOO3Mw6AyL2o9c5RlPItCIU7UflXJdhE89G9QDvXO/7z7+pAKKm
+         1wem+xVUwXCHjIbacWfXYUXgGBhzSu7RXqC7TUQFKWBr8h5RAiO7np1oI5B9/pfm1x81
+         dNq9Ic/n39z3s88nBCzcQkugIODpWRHxjRx1sxfQk2Ezpo8PHpnr7L91runva4XEEA5E
+         uQ88kbpdfW60kLqMDPFdnWrmNuBo+VkX/DT+MsFCaZ5oxR57QARo5s0HUPfhHor76Kqw
+         oLcvMpR2GoQ/GoJGXzCRElbOp5C62rXHmjVDXxZa2x/m24eJYEMT++B/ZYwyqOLwM8Me
+         qoIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNataKkdJv3vRfletzZpU5jgTxuopSkVZsKvAbYQ3C9bT4SUAniFPyXkV1zO+quKG4MjSkwJzeVIRodLGPt+becwRyvhR0aB00kWDo
+X-Gm-Message-State: AOJu0YzY2vnLBOC3057MqwKAjDvs8+DSHXbxP2WPqzmiMAeuYW4oZWjC
+	21R67Rb5lCERVGUiZBvDLlUHm/qvX/e8eYcQfF72rOhR9JsHZ4x1vgGQDy7uFhglP42vju9EwgX
+	7ZOT/OP/VMFrJSnjpDrmrGwmbiFpBVBf57dtwca4Q2PJ6lzF4zgzJkpI=
+X-Google-Smtp-Source: AGHT+IGF7JBT1SXcfdi6VGIsYxKj6xCHnV9Ax77U49+mdHX7Gx1j4+mnLdCI3KvBBHJuH4ka95TKOzduhybc14CQuB94/6DNyKVL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416053909.256319-1-hpa@redhat.com> <20240416053909.256319-3-hpa@redhat.com>
- <CAHp75Vdw6gCN=45iRdKcm=qT07Z90+z6Cw=inYR+C6+5gML+_Q@mail.gmail.com>
-In-Reply-To: <CAHp75Vdw6gCN=45iRdKcm=qT07Z90+z6Cw=inYR+C6+5gML+_Q@mail.gmail.com>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Thu, 18 Apr 2024 15:22:59 +0800
-Message-ID: <CAEth8oHx66Q8esGNNgXnOOT2RJXTFMAo3RJPLHDYh9oewxJKxQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] leds: rgb: leds-ktd202x: Get device properties
- through fwnode to support ACPI
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+X-Received: by 2002:a05:6638:22d4:b0:482:fa29:27fa with SMTP id
+ j20-20020a05663822d400b00482fa2927famr103840jat.1.1713425103510; Thu, 18 Apr
+ 2024 00:25:03 -0700 (PDT)
+Date: Thu, 18 Apr 2024 00:25:03 -0700
+In-Reply-To: <000000000000e21aa80604153281@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a4f241061659def0@google.com>
+Subject: Re: [syzbot] [jfs?] INFO: task hung in jfs_commit_inode (2)
+From: syzbot <syzbot+9157524e62303fd7b21c@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, shaggy@kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+syzbot suspects this issue was fixed by commit:
 
-Thank you for reviewing.
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-On Wed, Apr 17, 2024 at 1:29=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Apr 16, 2024 at 8:39=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote=
-:
-> >
-> > This LED controller is installed on a Xiaomi pad2 and it is an x86
-> > platform. The original driver is based on the device tree and can't be
-> > used for this ACPI based system. This patch migrated the driver to use
-> > fwnode to access the properties. Moreover, the fwnode API supports the
-> > device tree so this work won't affect the original implementations.
->
-> ...
->
-> > -       int num_channels;
-> > +       int num_channels =3D 0;
->
-> Split this assignment, so...
->
-> >         int i =3D 0;
->
-> > -       num_channels =3D of_get_available_child_count(np);
->
-> ...it become
->
->   num_channels =3D 0;
->
-> here.
->
-> > +       fwnode_for_each_available_child_node(fwnode, child)
-> > +               num_channels++;
->
+    fs: Block writes to mounted block devices
 
-It will look like this:
-       num_channels =3D 0;
-       fwnode_for_each_available_child_node(fwnode, child)
-              num_channels++;
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155eb8f7180000
+start commit:   4f9e7fabf864 Merge tag 'trace-v6.5-rc6' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1b32f62c755c3a9c
+dashboard link: https://syzkaller.appspot.com/bug?extid=9157524e62303fd7b21c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101aff5ba80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d78db0680000
 
-> ...
->
-> > -static int ktd202x_add_led(struct ktd202x *chip, struct device_node *n=
-p, unsigned int index)
-> > +static int ktd202x_add_led(struct ktd202x *chip,
-> > +                          struct fwnode_handle *fwnode,
-> > +                          unsigned int index)
->
-> Why split over 3 lines? I believe it can be still two or one
-> (depending if you use a relaxed limit).
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Make it to be one line.
+#syz fix: fs: Block writes to mounted block devices
 
->
-> ...
->
-> >  static int ktd202x_probe_dt(struct ktd202x *chip)
->
-> Perhaps you want to rename this to something like ktd202x_probe_fw().
-
-Sounds good.
-
->
-> ...
->
-> > +       fwnode =3D dev_fwnode(dev);
->
-> Will be no use if the bellow applied, right?
-
-Right. It can be dropped.
-
->
-> ...
->
-> > -       for_each_available_child_of_node(np, child) {
-> > +       fwnode_for_each_available_child_node(fwnode, child) {
->
-> Use device_for_each_child_node() instead.
-
-Okay.
-
->
-> >         }
->
-> ...
->
-> > -       .shutdown =3D ktd202x_shutdown,
-> > +       .shutdown =3D ktd202x_shutdown
->
-> Stray change.
-
-I know the reason  :)
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
-
-
---=20
-BR,
-Kate
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
