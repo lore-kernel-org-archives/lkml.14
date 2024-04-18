@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B9161911;
-	Thu, 18 Apr 2024 11:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500E11635C3;
+	Thu, 18 Apr 2024 11:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713440231; cv=none; b=S22luvBm0z78HbWLIYG6MC6+UTsZ2zuhrdZJXe4LYzdaFtEIcNyS2gzSZ+Nsf1n5cEQdXiwTQ4cTnXWUluY42F6FtZu1scT+vsucG98JRt8FE4MNweWdNkVgwf7EPFTeveWPd7Rph2QsU7MKZyZJi1rXzxwRWHrbhmEugMU3NqM=
+	t=1713440239; cv=none; b=ld0+2iBPmBhHHYGdZI6g6rBh+kORyauvPakWCC1jetlkGZqQXQjBaz1Ve+GFqyJ6poqxCkZLfFYD7E+njuak79+XZPEcrsd/9KWpMR5JaClq3opY42lCjrAAlX+Ak1kAdZwUBQqpaTGkhMoR+alRL9TRIVsHFiHTRK0mpeAJnsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713440231; c=relaxed/simple;
-	bh=kSrcRx/NAAWdhuB//E1o7Q3AqnsepHC5nNY58kWnwK8=;
+	s=arc-20240116; t=1713440239; c=relaxed/simple;
+	bh=32K2pvuotD+LXN0arHaoAwsqYB5fmgxg0lL5o2RpF68=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sr3cVZWAQY+Zpa8DIIhJq0dgDECTUo1xhXkxqWKmdJRVZ25lVrSzIHkDZkYZxFyy3MV8Li63BWNyxU1Qq06YQiZ92fMLxJ0n25IW72o0ICl2F7cwuDqK8vVuPeGHQRe93Wu3EuX8YzQRbf4bPk6ngFjp0vGL/pWLYP4EP599arg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kZqa1dtA; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=J+/ZxTe9B+RvJWu2LxogLfZrwByIeIejzrhvIe55Yj7W1IFvitHXkXeP+a+3j4b8H34JbSEFeWXGuZ/TyDYcbtOhGdZsx46yXe8TtGnpNXRH1QYLsOCy9VjXrLvqdhrYZqc3kX2+0tqeveVda/F2nlfKMcxwxD4w/1YHxFwi7h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBBYcrMN; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kZqa1dtA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBBYcrMN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713440229; x=1744976229;
+  t=1713440238; x=1744976238;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kSrcRx/NAAWdhuB//E1o7Q3AqnsepHC5nNY58kWnwK8=;
-  b=kZqa1dtAkACmewr2uIm/5UKN3xai+VMdhrLavwWDHgxLhJrRQyhLSrRy
-   Nyh+N7TBSyTpSm2pZPTieJUhhIrG6KmwlHUHpA8NqeFRv+dFcG+viFBLr
-   R/7W4TEa1zlsev5cnmwgBccJeQ7uXk1EM8G9Rtc2zam0EgAZm/b4snclb
-   gZgE3ssy40eZiRPWKmYH6GQAs7h8AmViZJHK9uCDq1sGhgW2MFVTBxDJl
-   Frq3Iaf+NQbnH338BhJGrx64mnmTKQQqyStutfbMl6OKMHiS8yCfqNJ6U
-   ej30dkotZwysI+t7IXxViXs1hZ0FbwlwO5k7IG/U173m0zxCGhQa0bBqz
+  bh=32K2pvuotD+LXN0arHaoAwsqYB5fmgxg0lL5o2RpF68=;
+  b=UBBYcrMNPZn/aiC5/r54OPMDKIQVdUHXvfN+Px2/uH8wU8FR8WZ9WLH4
+   OARMmhoxw5b4EJfb6XdlcEi7WlA4AYCnVmGx8gsdgzpNQC4b2HzX3Nbgd
+   GFQXQj3dSWjT1DLGz1+UNQBXUn3VegYwMzFLB3WPoBDn1HmUeOE0R24Nk
+   cMvkL63BOwcNbqFSQAtzzwatGpF1f5RPy3sRb4FsbH4R8Sb4j26Q5y0pG
+   nfQpYw2N8mZ6adxPoKuJtZUfR/Ng3Csr2d78ggScnu0dZgKhebEqzDrY4
+   I6dQONTWwlQF6sNDkm0Lu7tfF5XfR2vD+DxNRhfCPfGZn5YMbfnep2c1V
    A==;
-X-CSE-ConnectionGUID: vngShiikRNWYwRlaNuSsGA==
-X-CSE-MsgGUID: yNDaUi+wQYKo/SagnrO/UQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19587818"
+X-CSE-ConnectionGUID: JlI6Diy1T0yZB31ymujU+g==
+X-CSE-MsgGUID: pI/C95tgTEG019DlfYms4Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19587850"
 X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="19587818"
+   d="scan'208";a="19587850"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:37:09 -0700
-X-CSE-ConnectionGUID: K64o/89+TC+ds7zfU2Yybw==
-X-CSE-MsgGUID: UOs9e55lRzq/XZW8d5CUDA==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:37:18 -0700
+X-CSE-ConnectionGUID: p3PmWh1VSJuoSx/X/w7GmA==
+X-CSE-MsgGUID: 1B/oRPmQQIaneUWN6a5oOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="27586154"
+   d="scan'208";a="27586251"
 Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa004.fm.intel.com with ESMTP; 18 Apr 2024 04:37:05 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 18 Apr 2024 04:37:13 -0700
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -62,9 +62,9 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	intel-wired-lan@lists.osuosl.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v10 08/10] iavf: pack iavf_ring more efficiently
-Date: Thu, 18 Apr 2024 13:36:14 +0200
-Message-ID: <20240418113616.1108566-9-aleksander.lobakin@intel.com>
+Subject: [PATCH net-next v10 10/10] MAINTAINERS: add entry for libeth and libie
+Date: Thu, 18 Apr 2024 13:36:16 +0200
+Message-ID: <20240418113616.1108566-11-aleksander.lobakin@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240418113616.1108566-1-aleksander.lobakin@intel.com>
 References: <20240418113616.1108566-1-aleksander.lobakin@intel.com>
@@ -76,143 +76,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Before replacing the Rx buffer management with libie, clean up
-&iavf_ring a bit.
-There are several fields not used anywhere in the code -- simply remove
-them. Move ::tail up to remove a hole. Replace ::arm_wb boolean with
-1-bit flag in ::flags to free 1 more byte. Finally, move ::prev_pkt_ctr
-out of &iavf_tx_queue_stats -- it doesn't belong there (used for Tx
-stall detection). Place it next to the stats on the ring itself to fill
-the 4-byte slot.
-The result: no holes and all the hot fields fit into the first 64-byte
-cacheline.
+Add myself as a maintainer/supporter for libeth and libie. Let they have
+separate entries from the Intel ethernet code as it's a bit different
+case and all patches will go through me rather than Tony.
 
 Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
- drivers/net/ethernet/intel/iavf/iavf_txrx.h | 22 +++------------------
- drivers/net/ethernet/intel/iavf/iavf_txrx.c | 12 +++++------
- 2 files changed, 9 insertions(+), 25 deletions(-)
+ MAINTAINERS | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.h b/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-index e01777531635..ed559fa6f214 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.h
-@@ -227,7 +227,6 @@ struct iavf_tx_queue_stats {
- 	u64 tx_done_old;
- 	u64 tx_linearize;
- 	u64 tx_force_wb;
--	int prev_pkt_ctr;
- 	u64 tx_lost_interrupt;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f22698a7859f..6c42ce3ab266 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12392,6 +12392,26 @@ F:	drivers/ata/
+ F:	include/linux/ata.h
+ F:	include/linux/libata.h
  
-@@ -237,12 +236,6 @@ struct iavf_rx_queue_stats {
- 	u64 alloc_buff_failed;
- };
- 
--enum iavf_ring_state_t {
--	__IAVF_TX_FDIR_INIT_DONE,
--	__IAVF_TX_XPS_INIT_DONE,
--	__IAVF_RING_STATE_NBITS /* must be last */
--};
--
- /* some useful defines for virtchannel interface, which
-  * is the only remaining user of header split
-  */
-@@ -264,10 +257,8 @@ struct iavf_ring {
- 		struct iavf_tx_buffer *tx_bi;
- 		struct iavf_rx_buffer *rx_bi;
- 	};
--	DECLARE_BITMAP(state, __IAVF_RING_STATE_NBITS);
--	u16 queue_index;		/* Queue number of ring */
--	u8 dcb_tc;			/* Traffic class of ring */
- 	u8 __iomem *tail;
-+	u16 queue_index;		/* Queue number of ring */
- 
- 	/* high bit set means dynamic, use accessors routines to read/write.
- 	 * hardware only supports 2us resolution for the ITR registers.
-@@ -277,22 +268,14 @@ struct iavf_ring {
- 	u16 itr_setting;
- 
- 	u16 count;			/* Number of descriptors */
--	u16 reg_idx;			/* HW register index of the ring */
- 
- 	/* used in interrupt processing */
- 	u16 next_to_use;
- 	u16 next_to_clean;
- 
--	u8 atr_sample_rate;
--	u8 atr_count;
--
--	bool ring_active;		/* is ring online or not */
--	bool arm_wb;		/* do something to arm write back */
--	u8 packet_stride;
--
- 	u16 flags;
- #define IAVF_TXR_FLAGS_WB_ON_ITR		BIT(0)
--/* BIT(1) is free, was IAVF_RXR_FLAGS_BUILD_SKB_ENABLED */
-+#define IAVF_TXR_FLAGS_ARM_WB			BIT(1)
- /* BIT(2) is free */
- #define IAVF_TXRX_FLAGS_VLAN_TAG_LOC_L2TAG1	BIT(3)
- #define IAVF_TXR_FLAGS_VLAN_TAG_LOC_L2TAG2	BIT(4)
-@@ -306,6 +289,7 @@ struct iavf_ring {
- 		struct iavf_rx_queue_stats rx_stats;
- 	};
- 
-+	int prev_pkt_ctr;		/* For Tx stall detection */
- 	unsigned int size;		/* length of descriptor ring in bytes */
- 	dma_addr_t dma;			/* physical address of ring */
- 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-index c7602c173420..2ec68b51bebe 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-@@ -185,7 +185,7 @@ void iavf_detect_recover_hung(struct iavf_vsi *vsi)
- 			 * pending work.
- 			 */
- 			packets = tx_ring->stats.packets & INT_MAX;
--			if (tx_ring->tx_stats.prev_pkt_ctr == packets) {
-+			if (tx_ring->prev_pkt_ctr == packets) {
- 				iavf_force_wb(vsi, tx_ring->q_vector);
- 				continue;
- 			}
-@@ -194,7 +194,7 @@ void iavf_detect_recover_hung(struct iavf_vsi *vsi)
- 			 * to iavf_get_tx_pending()
- 			 */
- 			smp_rmb();
--			tx_ring->tx_stats.prev_pkt_ctr =
-+			tx_ring->prev_pkt_ctr =
- 			  iavf_get_tx_pending(tx_ring, true) ? packets : -1;
- 		}
- 	}
-@@ -320,7 +320,7 @@ static bool iavf_clean_tx_irq(struct iavf_vsi *vsi,
- 		    ((j / WB_STRIDE) == 0) && (j > 0) &&
- 		    !test_bit(__IAVF_VSI_DOWN, vsi->state) &&
- 		    (IAVF_DESC_UNUSED(tx_ring) != tx_ring->count))
--			tx_ring->arm_wb = true;
-+			tx_ring->flags |= IAVF_TXR_FLAGS_ARM_WB;
- 	}
- 
- 	/* notify netdev of completed buffers */
-@@ -675,7 +675,7 @@ int iavf_setup_tx_descriptors(struct iavf_ring *tx_ring)
- 
- 	tx_ring->next_to_use = 0;
- 	tx_ring->next_to_clean = 0;
--	tx_ring->tx_stats.prev_pkt_ctr = -1;
-+	tx_ring->prev_pkt_ctr = -1;
- 	return 0;
- 
- err:
-@@ -1491,8 +1491,8 @@ int iavf_napi_poll(struct napi_struct *napi, int budget)
- 			clean_complete = false;
- 			continue;
- 		}
--		arm_wb |= ring->arm_wb;
--		ring->arm_wb = false;
-+		arm_wb |= !!(ring->flags & IAVF_TXR_FLAGS_ARM_WB);
-+		ring->flags &= ~IAVF_TXR_FLAGS_ARM_WB;
- 	}
- 
- 	/* Handle case where we are called by netpoll with a budget of 0 */
++LIBETH COMMON ETHERNET LIBRARY
++M:	Alexander Lobakin <aleksander.lobakin@intel.com>
++L:	netdev@vger.kernel.org
++L:	intel-wired-lan@lists.osuosl.org (moderated for non-subscribers)
++S:	Supported
++T:	git https://github.com/alobakin/linux.git
++F:	drivers/net/ethernet/intel/libeth/
++F:	include/net/libeth/
++K:	libeth
++
++LIBIE COMMON INTEL ETHERNET LIBRARY
++M:	Alexander Lobakin <aleksander.lobakin@intel.com>
++L:	intel-wired-lan@lists.osuosl.org (moderated for non-subscribers)
++L:	netdev@vger.kernel.org
++S:	Supported
++T:	git https://github.com/alobakin/linux.git
++F:	drivers/net/ethernet/intel/libie/
++F:	include/linux/net/intel/libie/
++K:	libie
++
+ LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
+ M:	Vishal Verma <vishal.l.verma@intel.com>
+ M:	Dan Williams <dan.j.williams@intel.com>
 -- 
 2.44.0
 
