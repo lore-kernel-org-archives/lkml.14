@@ -1,207 +1,232 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753162E403
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 08:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C592E403
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 08:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713430471; cv=none; b=asxTyjcKigYqu5hgIijvk1WVHrM1ffDDxZKyAYp428ZroyAIaquxr9al2alVQFOl/TZFkbWv8bzZXJzE6xKUKeJgrO2B9ZO23092cquPpvtFsphIBkviAuHS2VcZ50K6L8x8fZbUW83S81NnW39ut6kjyP/s+bpYcSyBHOInuwM=
+	t=1713430523; cv=none; b=akpC0eY1cmrFBIumu8RRUKzmoA8r6yf/eFcdjPqupotISvmucIscDQuZHmCSup2WikPg1U1qOS06wTObaL2fhyM+kijnewC5DAkk//L2j+UhpVRT5fCPxgPTRpmr9R4LaTQxHIFq/ow/e8K+ZxWC6FedgI2XDFClTW4We/10diI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713430471; c=relaxed/simple;
-	bh=8Sf5p45HSy4PMZeqkZfsSMWf65uGHI432sC/e+pLm7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WxJt0Cl4nd81MbHuk0cCxBiOEXWyASCPH9S/DvDQKV0SLUI8DlU3f7BD7NVuEV+A/aPNv80ltfC9yuzRDd+v1Um2eBY6Tg710esg7GXv4+/1lE6o/G/c1eEPD5fAFyHCkWM8RzhJ59CtiJbtlLNuJOc8MxpebsqxyRP/edTD1dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HFy+V53N; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1713430523; c=relaxed/simple;
+	bh=QLn7nZFfQAUU4e0jB/sbvHmNydyEmjT8RxkvfhX2GTM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CvsphGpTJBRKEaw3g18fM009/ALV7kuR8rAwhZAeEJVHK8xuWNA7vaP73RbEcrjasdrcBT8jQhMnZcS365oVHyecoP9qPDYiNtMhua8eNJ4NlgZlxaw8DdbGcrdDq0eGefDe92bsBVpeHD1DrDbsC9tARyAeF/Q93B3g4zoHSIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYfc6xjD; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HFy+V53N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=z4UaoqgXsB0dca6CbFSbaOwi49boLq7Lal+1iuniKEA=; b=HFy+V53NdreiJ6pN2dRGcws+/D
-	UofqvY2nGkYTbzIbJ1m2BZLT87xgZRR4jfR3dInytuImyKqurUL2XXLUYrvsve5I98P522JwvxYMG
-	h1/no2qbHxCWSjcDQf7PzIwL9yl5edtjHFSIgQeCb2JmZdURlT9DbfMSQaJaZV372kB0TQo1+4+5+
-	wAbFg3DlBEIEqavJ9cOIxp2dZZjpOURDOi5wK31cArB46wHd9yik4n4fc8OueVxpDPrGv39sLq97R
-	3SBpcm198ws6Y1/iUsnymuJ1vUAL7dc/WUhLTi5oc6ZxBPp0WgCg7vftpFEkeX3syrN2iA+0j1COd
-	NS+w6PYA==;
-Received: from [84.65.0.132] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rxNWz-005s44-QP; Thu, 18 Apr 2024 10:54:09 +0200
-Message-ID: <99b39d9e-1fae-41a5-96f9-d1298c7cc29c@igalia.com>
-Date: Thu, 18 Apr 2024 09:54:08 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYfc6xjD"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5176f217b7bso931610e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 01:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713430519; x=1714035319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ATTOtpITJHTqXd4qITdiMR9j7i3v4ta7d8GuQUxjQKg=;
+        b=mYfc6xjDWhMyuayl92t86NeHak1zKnD04PCzKaszgdGg+Whs4hWRNCarJQ+zIydLQ8
+         UQxCpqlPUAdW7s2oJ2RqElmJYjMajaiFuxNEH2KPTJX/tBtND83A2mV19CUIx1AJanWe
+         50Hg9JTA6+A4gOA43XvZo7/nUQEySG3BiKgvT+XGMkqUFknMEkAqP3DhoszLgDAge5dJ
+         ZECGtmB67H2sPCTna62agIWKbtZPHuhyf0PVlUQRk5S52szIUmc/K+cz3QWVbSORm4No
+         IVhGTnPNgXgwRhLK5QlWG5PiOZv6IpXx9Cbi2qgJhsZHW+3bsnwnaRuAcF4dSKFa97NT
+         w8gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713430519; x=1714035319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ATTOtpITJHTqXd4qITdiMR9j7i3v4ta7d8GuQUxjQKg=;
+        b=iC1I8ytFhXqvN8hONAoarovbOunfdqo+3K8mUC9F0gDGb+KjQ09BNnOmvRRWZ/2Xyb
+         UUH1Y3vHiX9GDYxn6MGNDZCQnT9ipNEBnQ5goMhD3fBcaWaCOuagf6qDCbBAaHdwBccd
+         URm09WaBG/GwDC+fpuwWggVR/2iUKPy67r9dXm3DrVcfPzF58Styj/OL3iK+IPeR4zJR
+         z/iU7ZW8GFxh5JcC6E1L1jLYrkLQIpAsTA06vxeC8+qCmbZLuimFYJJSdgT/RoVxdsVu
+         dbFdvkOACqPq8kIcn2HoIFoQjiYKHbUYp8lMDKjBrZya+QGlAqLm+FonT93EVJOc8m3D
+         dPfw==
+X-Forwarded-Encrypted: i=1; AJvYcCW990zPbYV34ZVmGFKCQF66hUKyI6WAtKh30coQQl2QhFol21GPJWP+/g2npC4TI5tDrhptB/3E4BvYDTT2usnKzIUmP3lI5T4KHhXq
+X-Gm-Message-State: AOJu0YzucHsL4nXZCyHUK0VJ8OSertYJ8VLr3fObZaGn2AG4oOTuKX9n
+	LMLMqhCajvnnuT4dKSkOBjOBx2a6vmc7qhH5KcbKOxeOaFm2WQHR
+X-Google-Smtp-Source: AGHT+IHi5RkkzxI9vaTl7K0CKyoJi0lVLO/HprgvfOejQQ/ALyXGw9R75sHNZaJznI+ya9Itzk7Lcw==
+X-Received: by 2002:a19:434a:0:b0:516:cd71:9bb1 with SMTP id m10-20020a19434a000000b00516cd719bb1mr1195915lfj.38.1713430519072;
+        Thu, 18 Apr 2024 01:55:19 -0700 (PDT)
+Received: from pc636 (host-90-233-210-75.mobileonline.telia.com. [90.233.210.75])
+        by smtp.gmail.com with ESMTPSA id p26-20020ac246da000000b005192bf678a3sm155253lfo.104.2024.04.18.01.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 01:55:18 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 18 Apr 2024 10:55:16 +0200
+To: Maxwell Bland <mbland@motorola.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: Re: [PATCH 1/5] mm: allow arch refinement/skip for vmap alloc
+Message-ID: <ZiDf9AeFUG22CEU5@pc636>
+References: <20240416122254.868007168-1-mbland@motorola.com>
+ <20240416122254.868007168-2-mbland@motorola.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/psi: Optimise psi_group_change a bit
-Content-Language: en-GB
-To: Tvrtko Ursulin <tursulin@igalia.com>, Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Tvrtko Ursulin <tursulin@ursulin.net>,
- Suren Baghdasaryan <surenb@google.com>, Peter Ziljstra
- <peterz@infradead.org>, kernel-dev@igalia.com,
- Johannes Weiner <hannes@cmpxchg.org>
-References: <20240329160648.86999-1-tursulin@igalia.com>
- <20240329185147.GA877460@cmpxchg.org> <20240409223847.GE1057805@cmpxchg.org>
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20240409223847.GE1057805@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416122254.868007168-2-mbland@motorola.com>
 
-
-Hi Ingo,
-
-On 09/04/2024 23:38, Johannes Weiner wrote:
-> [ Oops, I still had an old mutt alias for Ingo's address. ]
+On Tue, Apr 02, 2024 at 03:15:01PM -0500, Maxwell Bland wrote:
+> Makes red black tree allocation more flexible on a per-architecture
+> basis by introducing an optional hooks to refine the red-black tree
+> structuring and exposing vmalloc functions for clipping vmap areas,
+> finding vmap areas, and inserting vmap areas.
 > 
-> Ingo, would you mind taking this through the scheduler tree?
+> With this patch, the red-black vmap tree can be refined to account for
+> architecture-specific memory management operations, most notably address
+> space layout randomization, as these features conflict with generic
+> management of a single vmalloc_start to vmalloc_end range as given by
+> mm/vmalloc.c.
+> 
+> For example, x86 is forced to restrict aslr to 1024 possible locations,
+> which is a very, very small number, and arm64 breaks standard code/data
+> partitioning altogether, which prevents the enforcement of performant
+> immmutability on kernel page tables.
+> 
+> Signed-off-by: Maxwell Bland <mbland@motorola.com>
+> ---
+>  include/linux/vmalloc.h | 24 ++++++++++++++++++++++++
+>  mm/vmalloc.c            | 16 ++++++++++------
+>  2 files changed, 34 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 98ea90e90439..3c5ce7ee0bea 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -12,6 +12,7 @@
+>  
+>  #include <asm/vmalloc.h>
+>  
+> +struct kmem_cache;
+>  struct vm_area_struct;		/* vma defining user mapping in mm_types.h */
+>  struct notifier_block;		/* in notifier.h */
+>  struct iov_iter;		/* in uio.h */
+> @@ -125,6 +126,21 @@ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
+>  }
+>  #endif
+>  
+> +#ifndef arch_skip_va
+> +static inline bool arch_skip_va(struct vmap_area *va, unsigned long vstart)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+> +#ifndef arch_refine_vmap_space
+> +static inline void arch_refine_vmap_space(struct rb_root *root,
+> +					  struct list_head *head,
+> +					  struct kmem_cache *cachep)
+> +{
+> +}
+> +#endif
+> +
+>  /*
+>   *	Highlevel APIs for driver use
+>   */
+> @@ -214,6 +230,14 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
+>  void free_vm_area(struct vm_struct *area);
+>  extern struct vm_struct *remove_vm_area(const void *addr);
+>  extern struct vm_struct *find_vm_area(const void *addr);
+> +extern void insert_vmap_area_augment(struct vmap_area *va, struct rb_node *from,
+> +				     struct rb_root *root,
+> +				     struct list_head *head);
+> +extern int va_clip(struct rb_root *root, struct list_head *head,
+> +		   struct vmap_area *va, unsigned long nva_start_addr,
+> +		   unsigned long size);
+> +extern struct vmap_area *__find_vmap_area(unsigned long addr,
+> +					  struct rb_root *root);
+>
+To me it looks like you want to make internal functions as public for
+everyone which is not good, imho.
 
-Gentle reminder so this one does not fall through the cracks.
+>  struct vmap_area *find_vmap_area(unsigned long addr);
+>  
+>  static inline bool is_vm_area_hugepages(const void *addr)
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 68fa001648cc..de4577a3708e 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -989,7 +989,7 @@ unsigned long vmalloc_nr_pages(void)
+>  	return atomic_long_read(&nr_vmalloc_pages);
+>  }
+>  
+> -static struct vmap_area *__find_vmap_area(unsigned long addr, struct rb_root *root)
+> +struct vmap_area *__find_vmap_area(unsigned long addr, struct rb_root *root)
+>  {
+>  	struct rb_node *n = root->rb_node;
+>  
+> @@ -1322,7 +1322,7 @@ insert_vmap_area(struct vmap_area *va,
+>  		link_va(va, root, parent, link, head);
+>  }
+>  
+> -static void
+> +void
+>  insert_vmap_area_augment(struct vmap_area *va,
+>  	struct rb_node *from, struct rb_root *root,
+>  	struct list_head *head)
+> @@ -1501,7 +1501,7 @@ find_vmap_lowest_match(struct rb_root *root, unsigned long size,
+>  				vstart < va->va_start) {
+>  			node = node->rb_left;
+>  		} else {
+> -			if (is_within_this_va(va, size, align, vstart))
+> +			if (!arch_skip_va(va, vstart) && is_within_this_va(va, size, align, vstart))
+>  				return va;
+>  
+>  			/*
+> @@ -1522,7 +1522,8 @@ find_vmap_lowest_match(struct rb_root *root, unsigned long size,
+>  			 */
+>  			while ((node = rb_parent(node))) {
+>  				va = rb_entry(node, struct vmap_area, rb_node);
+> -				if (is_within_this_va(va, size, align, vstart))
+> +				if (!arch_skip_va(va, vstart) &&
+> +				    is_within_this_va(va, size, align, vstart))
+>  					return va;
+>  
+>  				if (get_subtree_max_size(node->rb_right) >= length &&
+> @@ -1554,7 +1555,7 @@ find_vmap_lowest_linear_match(struct list_head *head, unsigned long size,
+>  	struct vmap_area *va;
+>  
+>  	list_for_each_entry(va, head, list) {
+> -		if (!is_within_this_va(va, size, align, vstart))
+> +		if (arch_skip_va(va, vstart) || !is_within_this_va(va, size, align, vstart))
+>  			continue;
+>  
+arch_skip_va() injections into the search algorithm sounds like a hack
+and might lead(if i do not miss something, need to check closer) to alloc
+failures when we go toward a reserved VA but we are not allowed to allocate
+from.
 
-Regards,
+>  		return va;
+> @@ -1617,7 +1618,7 @@ classify_va_fit_type(struct vmap_area *va,
+>  	return type;
+>  }
+>  
+> -static __always_inline int
+> +__always_inline int
+>  va_clip(struct rb_root *root, struct list_head *head,
+>  		struct vmap_area *va, unsigned long nva_start_addr,
+>  		unsigned long size)
+> @@ -5129,4 +5130,7 @@ void __init vmalloc_init(void)
+>  	vmap_node_shrinker->count_objects = vmap_node_shrink_count;
+>  	vmap_node_shrinker->scan_objects = vmap_node_shrink_scan;
+>  	shrinker_register(vmap_node_shrinker);
+> +
+> +	arch_refine_vmap_space(&free_vmap_area_root, &free_vmap_area_list,
+> +			       vmap_area_cachep);
+>  }
+>
+Why do not you allocate just using a specific range from MODULES_ASLR_START
+till VMALLOC_END?
 
-Tvrtko
+Thanks!
 
-> On Fri, Mar 29, 2024 at 02:51:53PM -0400, Johannes Weiner wrote:
->> On Fri, Mar 29, 2024 at 04:06:48PM +0000, Tvrtko Ursulin wrote:
->>> From: Tvrtko Ursulin <tursulin@ursulin.net>
->>>
->>> The current code loops over the psi_states only to call a helper which
->>> then resolves back to the action needed for each state using a switch
->>> statement. That is effectively creating a double indirection of a kind
->>> which, given how all the states need to be explicitly listed and handled
->>> anyway, we can simply remove. Both the for loop and the switch statement
->>> that is.
->>>
->>> The benefit is both in the code size and CPU time spent in this function.
->>> YMMV but on my Steam Deck, while in a game, the patch makes the CPU usage
->>> go from ~2.4% down to ~1.2%. Text size at the same time went from 0x323 to
->>> 0x2c1.
->>>
->>> Signed-off-by: Tvrtko Ursulin <tursulin@ursulin.net>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Suren Baghdasaryan <surenb@google.com>
->>> Cc: Peter Ziljstra <peterz@infradead.org>
->>> Cc: linux-kernel@vger.kernel.org
->>> Cc: kernel-dev@igalia.com
->>
->> This is great.
->>
->> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->>
->> Ingo, would you mind please taking this through the scheduler tree? I
->> think Peter is still out.
->>
->> Remaining quote below.
->>
->> Thanks
->>
->>> ---
->>>   kernel/sched/psi.c | 54 +++++++++++++++++++++++-----------------------
->>>   1 file changed, 27 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
->>> index 7b4aa5809c0f..55720ecf420e 100644
->>> --- a/kernel/sched/psi.c
->>> +++ b/kernel/sched/psi.c
->>> @@ -218,28 +218,32 @@ void __init psi_init(void)
->>>   	group_init(&psi_system);
->>>   }
->>>   
->>> -static bool test_state(unsigned int *tasks, enum psi_states state, bool oncpu)
->>> +static u32 test_states(unsigned int *tasks, u32 state_mask)
->>>   {
->>> -	switch (state) {
->>> -	case PSI_IO_SOME:
->>> -		return unlikely(tasks[NR_IOWAIT]);
->>> -	case PSI_IO_FULL:
->>> -		return unlikely(tasks[NR_IOWAIT] && !tasks[NR_RUNNING]);
->>> -	case PSI_MEM_SOME:
->>> -		return unlikely(tasks[NR_MEMSTALL]);
->>> -	case PSI_MEM_FULL:
->>> -		return unlikely(tasks[NR_MEMSTALL] &&
->>> -			tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING]);
->>> -	case PSI_CPU_SOME:
->>> -		return unlikely(tasks[NR_RUNNING] > oncpu);
->>> -	case PSI_CPU_FULL:
->>> -		return unlikely(tasks[NR_RUNNING] && !oncpu);
->>> -	case PSI_NONIDLE:
->>> -		return tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] ||
->>> -			tasks[NR_RUNNING];
->>> -	default:
->>> -		return false;
->>> +	const bool oncpu = state_mask & PSI_ONCPU;
->>> +
->>> +	if (tasks[NR_IOWAIT]) {
->>> +		state_mask |= BIT(PSI_IO_SOME);
->>> +		if (!tasks[NR_RUNNING])
->>> +			state_mask |= BIT(PSI_IO_FULL);
->>>   	}
->>> +
->>> +	if (tasks[NR_MEMSTALL]) {
->>> +		state_mask |= BIT(PSI_MEM_SOME);
->>> +		if (tasks[NR_RUNNING] == tasks[NR_MEMSTALL_RUNNING])
->>> +			state_mask |= BIT(PSI_MEM_FULL);
->>> +	}
->>> +
->>> +	if (tasks[NR_RUNNING] > oncpu)
->>> +		state_mask |= BIT(PSI_CPU_SOME);
->>> +
->>> +	if (tasks[NR_RUNNING] && !oncpu)
->>> +		state_mask |= BIT(PSI_CPU_FULL);
->>> +
->>> +	if (tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] || tasks[NR_RUNNING])
->>> +		state_mask |= BIT(PSI_NONIDLE);
->>> +
->>> +	return state_mask;
->>>   }
->>>   
->>>   static void get_recent_times(struct psi_group *group, int cpu,
->>> @@ -770,7 +774,6 @@ static void psi_group_change(struct psi_group *group, int cpu,
->>>   {
->>>   	struct psi_group_cpu *groupc;
->>>   	unsigned int t, m;
->>> -	enum psi_states s;
->>>   	u32 state_mask;
->>>   
->>>   	groupc = per_cpu_ptr(group->pcpu, cpu);
->>> @@ -841,10 +844,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
->>>   		return;
->>>   	}
->>>   
->>> -	for (s = 0; s < NR_PSI_STATES; s++) {
->>> -		if (test_state(groupc->tasks, s, state_mask & PSI_ONCPU))
->>> -			state_mask |= (1 << s);
->>> -	}
->>> +	state_mask = test_states(groupc->tasks, state_mask);
->>>   
->>>   	/*
->>>   	 * Since we care about lost potential, a memstall is FULL
->>> @@ -1194,7 +1194,7 @@ void psi_cgroup_restart(struct psi_group *group)
->>>   	/*
->>>   	 * After we disable psi_group->enabled, we don't actually
->>>   	 * stop percpu tasks accounting in each psi_group_cpu,
->>> -	 * instead only stop test_state() loop, record_times()
->>> +	 * instead only stop test_states() loop, record_times()
->>>   	 * and averaging worker, see psi_group_change() for details.
->>>   	 *
->>>   	 * When disable cgroup PSI, this function has nothing to sync
->>> @@ -1202,7 +1202,7 @@ void psi_cgroup_restart(struct psi_group *group)
->>>   	 * would see !psi_group->enabled and only do task accounting.
->>>   	 *
->>>   	 * When re-enable cgroup PSI, this function use psi_group_change()
->>> -	 * to get correct state mask from test_state() loop on tasks[],
->>> +	 * to get correct state mask from test_states() loop on tasks[],
->>>   	 * and restart groupc->state_start from now, use .clear = .set = 0
->>>   	 * here since no task status really changed.
->>>   	 */
->>> -- 
->>> 2.44.0
->>>
+--
+Uladzislau Rezki
