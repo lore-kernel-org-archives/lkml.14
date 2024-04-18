@@ -1,206 +1,277 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6D415B0E6;
-	Thu, 18 Apr 2024 09:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164AA15AAB3;
+	Thu, 18 Apr 2024 09:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713432279; cv=none; b=lGjajdRCxI3ShvqAnUfombuoZGDsm7oNlEBqU/nnqshc7vImZepb/x228qer0nE/8o1EgMePoKW5D2RLfQ2tbKgKf/qWOzTgzbMww0lvHRexrJAY3exg7Xd4SWhQbIcbNpzt0nIfrT6Niq3d3boGgFgpodS1prBzduZut0wkHf0=
+	t=1713432610; cv=none; b=lelzGS7unv8MGBNFmCrpv5PwykAmnBP59T3l2mqafE0bE2n+z5AasVglgtepqEQNHb7a+o/PvynB0Qia/L6OC3oQhtMTTHJS/1KfRHcbytzOkdT9rhjR6U8pBJ0G7i3/BgKaw4md8YwvVbIBzi3iR6U6MFuJg75eYxHkSLiYO6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713432279; c=relaxed/simple;
-	bh=TI+Duxp2EJGVJ4LdDfnyodpBJpXYgGGAd/jITQiOpN0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=czn4y7/rJl/M0aeC2rmneQ2w/Xnh+UKCaifIt9oT/w8nrqluPEf3KAlYzGbqxBmDKX8fqmU7lkHWihwwrtk2w40hDII3xflwVXNQrTeji6FqyGTw7mryHimENE27E151tTcVpcDD/rxJrPDZjmgABXEOIuHMIWNzK85aF+nISbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZPidlU95; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713432610; c=relaxed/simple;
+	bh=KTC/5h+4P88i8jlp71n8fmWzUjluo3avp8IXAeXSmCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Htqj2hXdTJlrAScOEeGxsme+P0A3PaMr3xhZRPZmHyaEDyyGKlCz5k0uwJo1m3B0jOBpPL/OrWTeQHp9AQHUNLKiyjMkZbBPSSQItJYvQOjb+OJ5J2zcSrRJbyg6gcQX58qt59mdaXVRpD6UeUWHVgBmO1+HS2bxh6Lf8LdLgdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IOvOXYGu; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZPidlU95"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43I6JibM007521;
-	Thu, 18 Apr 2024 09:24:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=bTD3rZD1+ix+HL2KnDkU+hVfMXeUhq9jJbKM8O/mw78=; b=ZP
-	idlU95whYITm5uDhrjfUteG63zAj5mwLtkWJk8BJiTi1PrpYaacLZAiwDioQsvwV
-	Uu6M9qpXS5OtV9Q1R2JvuQIiHxB+nkmZ7uBcbSmG4IkyjKlLF9gzrHp0bs7cJqEi
-	sIfPKbqixw5rfX2Re8b9JWUJPI8qTK6nLyjBtVkHMdpEI0wL1byxWq94ZTt306n3
-	InG/d/ZTPmJXM6odJdtE5YEJUHQQNBwIe99ttESbp2lX5ljC4oO2bBgrEUWNyE/0
-	ieVGTu40k7TsLA8ZbBt6+Mi7OIgmc523S8DE80z3heefLul5sa6HovSB5Q8l7CoC
-	5Loim04Q0qzZhDdpEugw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjx54gdar-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 09:24:34 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43I9NslX012822
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 09:23:54 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 18 Apr 2024 02:23:49 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <quic_varada@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v9 4/6] clk: qcom: common: Add interconnect clocks support
-Date: Thu, 18 Apr 2024 14:53:03 +0530
-Message-ID: <20240418092305.2337429-5-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240418092305.2337429-1-quic_varada@quicinc.com>
-References: <20240418092305.2337429-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IOvOXYGu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713432608; x=1744968608;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KTC/5h+4P88i8jlp71n8fmWzUjluo3avp8IXAeXSmCc=;
+  b=IOvOXYGuCWtSpJg0FFdiJQhIXbe0YLexH0ur/WHE8fJUQ+ztQorJo2dT
+   Kz5xki4xmWK07HIRy2lFeHfrMKYjwui99VFzgTOFUc7Kt/Qa7d3MYP2O7
+   wCtCm/PJqBPEDg751VAvH7C0HWFu+FuwvamdmFtweQGn60SdHkW5K1243
+   QVJ1aYhWMLaRI7DPga4rk3VU+vMqBrs6PWMMkztbLZOTNaXPbLPxm5gfy
+   ZSKltaf7vNR6wgKrC7Qbus7+qaALApXtlhjb2uzhEzzrCHpumDHztTAza
+   msCTOkqVGxe7DQWzQMEaIX6zK4vWS8NoB3nGLzqWuTXF5NAdxJG0z2S4y
+   g==;
+X-CSE-ConnectionGUID: O5LTIcxTQlKLnBlE0psyvA==
+X-CSE-MsgGUID: Y7KaU8yDSwqfyid5RRKcWw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8832523"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="8832523"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 02:29:50 -0700
+X-CSE-ConnectionGUID: fKVN5g7GQ5SES0YEOJM/rA==
+X-CSE-MsgGUID: 6fyCwlNXSn68Add3gP9mmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="23009598"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.236.140]) ([10.124.236.140])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 02:29:46 -0700
+Message-ID: <e2400cf8-ee36-4e7f-ba1f-bb0c740b045c@linux.intel.com>
+Date: Thu, 18 Apr 2024 17:29:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: j5yO9rlF3iYdUpt2CiCh0iVNw2cpMJ5G
-X-Proofpoint-ORIG-GUID: j5yO9rlF3iYdUpt2CiCh0iVNw2cpMJ5G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_08,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404180066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 110/130] KVM: TDX: Handle TDX PV MMIO hypercall
+To: isaku.yamahata@intel.com,
+ Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a4421e0f2eafc17b4703c920936e32489d2382a3.1708933498.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <a4421e0f2eafc17b4703c920936e32489d2382a3.1708933498.git.isaku.yamahata@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Unlike MSM platforms that manage NoC related clocks and scaling
-from RPM, IPQ SoCs dont involve RPM in managing NoC related
-clocks and there is no NoC scaling.
 
-However, there is a requirement to enable some NoC interface
-clocks for accessing the peripheral controllers present on
-these NoCs. Though exposing these as normal clocks would work,
-having a minimalistic interconnect driver to handle these clocks
-would make it consistent with other Qualcomm platforms resulting
-in common code paths. This is similar to msm8996-cbf's usage of
-icc-clk framework.
 
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v9: Remove HWS_DATA macro
-v8: Explicitly set master and slave ids
-v7: Restore clk_get
-v6: first_id -> icc_first_node_id
-    Remove clock get so that the peripheral that uses the clock
-    can do the clock get
-v5: Split changes in common.c to separate patch
-    Fix error handling
-    Use devm_icc_clk_register instead of icc_clk_register
-v4: Use clk_hw instead of indices
-    Do icc register in qcom_cc_probe() call stream
-    Add icc clock info to qcom_cc_desc structure
-v3: Use indexed identifiers here to avoid confusion
-    Fix error messages and move to common.c
-v2: Move DTS to separate patch
-    Update commit log
-    Auto select CONFIG_INTERCONNECT & CONFIG_INTERCONNECT_CLK to fix build error
----
- drivers/clk/qcom/common.c | 35 ++++++++++++++++++++++++++++++++++-
- drivers/clk/qcom/common.h |  9 +++++++++
- 2 files changed, 43 insertions(+), 1 deletion(-)
+On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> Export kvm_io_bus_read and kvm_mmio tracepoint and wire up TDX PV MMIO
+> hypercall to the KVM backend functions.
+>
+> kvm_io_bus_read/write() searches KVM device emulated in kernel of the given
+> MMIO address and emulates the MMIO.  As TDX PV MMIO also needs it, export
+> kvm_io_bus_read().  kvm_io_bus_write() is already exported.  TDX PV MMIO
+> emulates some of MMIO itself.  To add trace point consistently with x86
+> kvm, export kvm_mmio tracepoint.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 114 +++++++++++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/x86.c     |   1 +
+>   virt/kvm/kvm_main.c    |   2 +
+>   3 files changed, 117 insertions(+)
+>
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 55fc6cc6c816..389bb95d2af0 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -1217,6 +1217,118 @@ static int tdx_emulate_io(struct kvm_vcpu *vcpu)
+>   	return ret;
+>   }
+>   
+> +static int tdx_complete_mmio(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long val = 0;
+> +	gpa_t gpa;
+> +	int size;
+> +
+> +	KVM_BUG_ON(vcpu->mmio_needed != 1, vcpu->kvm);
+> +	vcpu->mmio_needed = 0;
+> +
+> +	if (!vcpu->mmio_is_write) {
+> +		gpa = vcpu->mmio_fragments[0].gpa;
+> +		size = vcpu->mmio_fragments[0].len;
+> +
+> +		memcpy(&val, vcpu->run->mmio.data, size);
+> +		tdvmcall_set_return_val(vcpu, val);
+> +		trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
+> +	}
+> +	return 1;
+> +}
+> +
+> +static inline int tdx_mmio_write(struct kvm_vcpu *vcpu, gpa_t gpa, int size,
+> +				 unsigned long val)
+> +{
+> +	if (kvm_iodevice_write(vcpu, &vcpu->arch.apic->dev, gpa, size, &val) &&
+> +	    kvm_io_bus_write(vcpu, KVM_MMIO_BUS, gpa, size, &val))
+> +		return -EOPNOTSUPP;
+> +
+> +	trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, size, gpa, &val);
+> +	return 0;
+> +}
+> +
+> +static inline int tdx_mmio_read(struct kvm_vcpu *vcpu, gpa_t gpa, int size)
+> +{
+> +	unsigned long val;
+> +
+> +	if (kvm_iodevice_read(vcpu, &vcpu->arch.apic->dev, gpa, size, &val) &&
+> +	    kvm_io_bus_read(vcpu, KVM_MMIO_BUS, gpa, size, &val))
+> +		return -EOPNOTSUPP;
+> +
+> +	tdvmcall_set_return_val(vcpu, val);
+> +	trace_kvm_mmio(KVM_TRACE_MMIO_READ, size, gpa, &val);
+> +	return 0;
+> +}
+> +
+> +static int tdx_emulate_mmio(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_memory_slot *slot;
+> +	int size, write, r;
+> +	unsigned long val;
+> +	gpa_t gpa;
+> +
+> +	KVM_BUG_ON(vcpu->mmio_needed, vcpu->kvm);
+> +
+> +	size = tdvmcall_a0_read(vcpu);
+> +	write = tdvmcall_a1_read(vcpu);
+> +	gpa = tdvmcall_a2_read(vcpu);
+> +	val = write ? tdvmcall_a3_read(vcpu) : 0;
+> +
+> +	if (size != 1 && size != 2 && size != 4 && size != 8)
+> +		goto error;
+> +	if (write != 0 && write != 1)
+> +		goto error;
+> +
+> +	/* Strip the shared bit, allow MMIO with and without it set. */
+Based on the discussion 
+https://lore.kernel.org/all/ZcUO5sFEAIH68JIA@google.com/
+Do we still allow the MMIO without shared bit?
 
-diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
-index 75f09e6e057e..a6410b1828ca 100644
---- a/drivers/clk/qcom/common.c
-+++ b/drivers/clk/qcom/common.c
-@@ -8,6 +8,7 @@
- #include <linux/regmap.h>
- #include <linux/platform_device.h>
- #include <linux/clk-provider.h>
-+#include <linux/interconnect-clk.h>
- #include <linux/reset-controller.h>
- #include <linux/of.h>
- 
-@@ -234,6 +235,38 @@ static struct clk_hw *qcom_cc_clk_hw_get(struct of_phandle_args *clkspec,
- 	return cc->rclks[idx] ? &cc->rclks[idx]->hw : NULL;
- }
- 
-+static int qcom_cc_icc_register(struct device *dev,
-+				const struct qcom_cc_desc *desc)
-+{
-+	struct icc_clk_data *icd;
-+	struct clk_hw *hws;
-+	int i;
-+
-+	if (!IS_ENABLED(CONFIG_INTERCONNECT_CLK))
-+		return 0;
-+
-+	if (!desc->icc_hws)
-+		return 0;
-+
-+	icd = devm_kcalloc(dev, desc->num_icc_hws, sizeof(*icd), GFP_KERNEL);
-+	if (!icd)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < desc->num_icc_hws; i++) {
-+		icd[i].master_id = desc->icc_hws[i].master_id;
-+		icd[i].slave_id = desc->icc_hws[i].slave_id;
-+		hws = &desc->clks[desc->icc_hws[i].clk_id]->hw;
-+		icd[i].clk = devm_clk_hw_get_clk(dev, hws, "icc");
-+		if (!icd[i].clk)
-+			return dev_err_probe(dev, -ENOENT,
-+					     "(%d) clock entry is null\n", i);
-+		icd[i].name = clk_hw_get_name(hws);
-+	}
-+
-+	return devm_icc_clk_register(dev, desc->icc_first_node_id,
-+						     desc->num_icc_hws, icd);
-+}
-+
- int qcom_cc_really_probe(struct platform_device *pdev,
- 			 const struct qcom_cc_desc *desc, struct regmap *regmap)
- {
-@@ -303,7 +336,7 @@ int qcom_cc_really_probe(struct platform_device *pdev,
- 	if (ret)
- 		return ret;
- 
--	return 0;
-+	return qcom_cc_icc_register(dev, desc);
- }
- EXPORT_SYMBOL_GPL(qcom_cc_really_probe);
- 
-diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
-index 9c8f7b798d9f..ea96b2ca3cac 100644
---- a/drivers/clk/qcom/common.h
-+++ b/drivers/clk/qcom/common.h
-@@ -19,6 +19,12 @@ struct clk_hw;
- #define PLL_VOTE_FSM_ENA	BIT(20)
- #define PLL_VOTE_FSM_RESET	BIT(21)
- 
-+struct qcom_icc_hws_data {
-+	int master_id;
-+	int slave_id;
-+	int clk_id;
-+};
-+
- struct qcom_cc_desc {
- 	const struct regmap_config *config;
- 	struct clk_regmap **clks;
-@@ -29,6 +35,9 @@ struct qcom_cc_desc {
- 	size_t num_gdscs;
- 	struct clk_hw **clk_hws;
- 	size_t num_clk_hws;
-+	struct qcom_icc_hws_data *icc_hws;
-+	size_t num_icc_hws;
-+	unsigned int icc_first_node_id;
- };
- 
- /**
--- 
-2.34.1
+> +	gpa = gpa & ~gfn_to_gpa(kvm_gfn_shared_mask(vcpu->kvm));
+> +
+> +	if (size > 8u || ((gpa + size - 1) ^ gpa) & PAGE_MASK)
+"size > 8u" can be removed, since based on the check of size above, it 
+can't be greater than 8.
+
+
+> +		goto error;
+> +
+> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, gpa_to_gfn(gpa));
+> +	if (slot && !(slot->flags & KVM_MEMSLOT_INVALID))
+> +		goto error;
+> +
+> +	if (!kvm_io_bus_write(vcpu, KVM_FAST_MMIO_BUS, gpa, 0, NULL)) {
+Should this be checked for write first?
+
+I check the handle_ept_misconfig() in VMX, it doesn't check write first 
+neither.
+
+Functionally, it should be OK since guest will not read the address 
+range of fast mmio.
+So the read case will be filtered out by ioeventfd_write().
+But it has take a long way to get to ioeventfd_write().
+Isn't it more efficient to check write first?
+
+
+> +		trace_kvm_fast_mmio(gpa);
+> +		return 1;
+> +	}
+> +
+> +	if (write)
+> +		r = tdx_mmio_write(vcpu, gpa, size, val);
+> +	else
+> +		r = tdx_mmio_read(vcpu, gpa, size);
+> +	if (!r) {
+> +		/* Kernel completed device emulation. */
+> +		tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
+> +		return 1;
+> +	}
+> +
+> +	/* Request the device emulation to userspace device model. */
+> +	vcpu->mmio_needed = 1;
+> +	vcpu->mmio_is_write = write;
+> +	vcpu->arch.complete_userspace_io = tdx_complete_mmio;
+> +
+> +	vcpu->run->mmio.phys_addr = gpa;
+> +	vcpu->run->mmio.len = size;
+> +	vcpu->run->mmio.is_write = write;
+> +	vcpu->run->exit_reason = KVM_EXIT_MMIO;
+> +
+> +	if (write) {
+> +		memcpy(vcpu->run->mmio.data, &val, size);
+> +	} else {
+> +		vcpu->mmio_fragments[0].gpa = gpa;
+> +		vcpu->mmio_fragments[0].len = size;
+> +		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, size, gpa, NULL);
+> +	}
+> +	return 0;
+> +
+> +error:
+> +	tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
+> +	return 1;
+> +}
+> +
+>   static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+>   {
+>   	if (tdvmcall_exit_type(vcpu))
+> @@ -1229,6 +1341,8 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+>   		return tdx_emulate_hlt(vcpu);
+>   	case EXIT_REASON_IO_INSTRUCTION:
+>   		return tdx_emulate_io(vcpu);
+> +	case EXIT_REASON_EPT_VIOLATION:
+> +		return tdx_emulate_mmio(vcpu);
+>   	default:
+>   		break;
+>   	}
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 03950368d8db..d5b18cad9dcd 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -13975,6 +13975,7 @@ EXPORT_SYMBOL_GPL(kvm_sev_es_string_io);
+>   
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_entry);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_exit);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_mmio);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_fast_mmio);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_inj_virq);
+>   EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_page_fault);
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e27c22449d85..bc14e1f2610c 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2689,6 +2689,7 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_memslot(struct kvm_vcpu *vcpu, gfn_t gfn
+>   
+>   	return NULL;
+>   }
+> +EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_memslot);
+>   
+>   bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
+>   {
+> @@ -5992,6 +5993,7 @@ int kvm_io_bus_read(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx, gpa_t addr,
+>   	r = __kvm_io_bus_read(vcpu, bus, &range, val);
+>   	return r < 0 ? r : 0;
+>   }
+> +EXPORT_SYMBOL_GPL(kvm_io_bus_read);
+>   
+>   int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+>   			    int len, struct kvm_io_device *dev)
 
