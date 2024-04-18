@@ -1,99 +1,110 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095F315DBD6;
-	Thu, 18 Apr 2024 13:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB2A161339
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445341; cv=none; b=mPzAnEVGs6EQxc2YLWVmVLgzhXfFMR+Mvz7C8iqpnsnanKPs+NTQ9WTf0t3AGt9q7ZhILJjk/mFFfWSSUet9GpMPY+uG4QER8NlYca0+6NdzrM8pmqhulDsDDLj2CL5rVKUAX46wqKwgAQkk3gxa0xe4weJuFaSYdRbEsPM5qHQ=
+	t=1713445362; cv=none; b=h/baPv3/bHEU25bBX0dSANAc6S6WW1HyVyx9Z62FtZwwpjW9iyxisqYJA93gNOdUOLIZ7vC14DQtAZUQXT22Iy1qlJ1/bCRResDptL8gafWgai2ryG2zq3bILgYvdUnwKYwpa80jIKmyDJQF/6KlAsCp9WDn5RyYz5WTLO18ECA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713445341; c=relaxed/simple;
-	bh=wNhnXhJl0BimI0FnxrFsan2/eQTs5jA8t+ECKzsx8yI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RCDeFAdOxb0UnixZqfamW51HZPAMcnr0hX1GznqBnvq88f0zYy6NX5hTANw5nQsfr1RralHXegsMKQ02YHGszpwJknydUJ4fod6O+Kzmj37IE+omNgFpKOrMKgmwJW44rTahGm1UvwiwJc9LRcHj+Moe4q5T8qND9Z7eMf8YpXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=RpVqEyPH; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1713445362; c=relaxed/simple;
+	bh=uZrB5vZp14AnyqyXxGpgGZ10yCrOT+gwRlBBTnMyGWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=shFYf/JbjGZNIbmkfyYeFacLNAdBmcLQ7kzh32akV23waMRUzFF2SZQdYV1DIJtxvtpQALkrlKbuaNM+Va8RoKP2zRLCXdrjb0HM0ww582CFNelKsxdnX18wa1Yxkkx0mOarNyt8V7fIFLQOt6xmgjElUHj2ZUalXENBroguhT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=aa54c0oM; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="RpVqEyPH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1713445325; x=1713704525;
-	bh=ABmUIlM/+0TTsmSAW6kea20HyxX5pv8vg2oi+dkTWWw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=RpVqEyPHGYdAeCCRn9WA4rKt34/0xi/epM4XaGUJRiThGqiJiC0GMruCZ2ZZOPAw1
-	 l7ul+FmMjMNDUNdqq98y7CfOnwxfG4dHaiUvUXhjQyiSf6sUeYldhxnUdVL9doS5DD
-	 3lS4z/zMb6f2frGgts8W1QFMvgKrrkZtwR5NPL+Pw47KNGWpSIBirIGKmiyvGvmaGF
-	 slX5qCs83Kgm4bkQrDQ7mh29h8FwC9wpkhb82MtJ6oxt3Ac5qWtwCVbAzBJvhVoSGN
-	 TSKzko6TxoCYdmqNSc2clKK/lI+IBIN4Q5tloLfaTo37hhCmABoLD2s9I/1YqFdGIh
-	 GUivWSumPFT0A==
-Date: Thu, 18 Apr 2024 13:01:20 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v6 3/4] rust: uaccess: add typed accessors for userspace pointers
-Message-ID: <5fd684d8-d46d-4009-bcf8-134dab342322@proton.me>
-In-Reply-To: <20240418-alice-mm-v6-3-cb8f3e5d688f@google.com>
-References: <20240418-alice-mm-v6-0-cb8f3e5d688f@google.com> <20240418-alice-mm-v6-3-cb8f3e5d688f@google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 73974adc566aff94727dc6833659914e59314d2f
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="aa54c0oM"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5557e3ebcaso148679166b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:02:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713445359; x=1714050159; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bVyPUZzpnAkaHf5uIez6yP0jHFtLyERSTeCCJwCmVdY=;
+        b=aa54c0oMddNzgGXnJXlwodm/eQ8VoSD7dIeW86Us0U64DoZmx7UxVWEe6E5HKSK93L
+         TU1WXGVZ4FI4b8lXTc5btkBlwhwl30BpsNe+DepYByfleYwMn+okdsAlT8/4wFZC/nJu
+         geZPxPtdECgMufIpk4EWTo934m05EHi+eKrB/YMcQ00YRWVHX1X+WdYciHa3zz0PzslV
+         QDpuguMQdtlycE8dHhpbs4GRdlma6nHg7LYe2pR3ZP/P5opP3mjsKKXOdgGjWGZ4gl5i
+         /kCPSxmW3BJMUuqnFykugK7AAjMw0oL+QR/PC7WuBN7ETarS7hNLW3cpjkSkUhhPnAPG
+         7GsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713445359; x=1714050159;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bVyPUZzpnAkaHf5uIez6yP0jHFtLyERSTeCCJwCmVdY=;
+        b=Jnr+/K5XnXn6oMuVUNL66VGn5gGRjHPrKVlIyN2aszgFES2zy2wEQkgR3q8DLyJBql
+         iDn97Nrl4k/FDoV5G+n/YV8xt5es48q0bK3hNbCWi4bgXtZlyL2ezZkDL8Zs+STwLLmi
+         59YnJnJ1bU7RG2/adncMpkTCjM5szPYbC2Qj2cHo0qtK/Y4qz2WAXL2PCnD6CB7vpY6u
+         kvxc5p463tIBHEN0aQUpFi24J1a1KfRsTNYUBQn+bCspOfoOjdqZpZkpERQb45a+ZU6X
+         QQKbhrg1G66XGEvASvl3/j2QMOSi+/o6soYLKNnw/+suGYgbDL6j71K1ozBRaeYmGYlZ
+         rNFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe++mFYT/GQ+m85pL7Xkobi7EHKIHAz9DsEJtn1ZwsQxFUflzka4F0XIXL8dqbpzRDyuyAcqMaJmo/rUr3KZAgMHUWJP0+QhwDB3ec
+X-Gm-Message-State: AOJu0YyRGtahDpDUtONk9hKCdEJTVVcMa1qkhtIPoy82nMbslqFxm8pA
+	CUVXjNvo0iSMIZecLWdAGNAch88jn6hygTqMj3NrH7849vT1ejX6cNZQ747EkEM=
+X-Google-Smtp-Source: AGHT+IH0N89eEQyHSFCXfRykybkZDOZuDp2tJqO99tXBPvhuSPwv2IlxEhe/EsNO/07OXybXEnBOWw==
+X-Received: by 2002:a17:907:36c1:b0:a55:6135:7ab7 with SMTP id bj1-20020a17090736c100b00a5561357ab7mr2297200ejc.6.1713445359195;
+        Thu, 18 Apr 2024 06:02:39 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id w23-20020a170907271700b00a556f2f18d6sm794633ejk.57.2024.04.18.06.02.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 06:02:38 -0700 (PDT)
+Message-ID: <57d55af9-33d1-45de-b8e2-ff9ab2e74e4f@baylibre.com>
+Date: Thu, 18 Apr 2024 15:02:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 18/18] arm64: dts: mediatek: add display support for
+ mt8365-evk
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>,
+ CK Hu <ck.hu@mediatek.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
+ <20231023-display-support-v2-18-33ce8864b227@baylibre.com>
+ <ee8d0a32-b4fb-4fc4-83b2-300f7453d95f@collabora.com>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <ee8d0a32-b4fb-4fc4-83b2-300f7453d95f@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 18.04.24 10:59, Alice Ryhl wrote:
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 8fad61268465..9c57c6c75553 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -409,3 +409,67 @@ pub enum Either<L, R> {
->      /// Constructs an instance of [`Either`] containing a value of type =
-`R`.
->      Right(R),
->  }
-> +
-> +/// Types for which any bit pattern is valid.
-> +///
-> +/// Not all types are valid for all values. For example, a `bool` must b=
-e either zero or one, so
-> +/// reading arbitrary bytes into something that contains a `bool` is not=
- okay.
-> +///
-> +/// It's okay for the type to have padding, as initializing those bytes =
-has no effect.
-> +///
-> +/// # Safety
-> +///
-> +/// All bit-patterns must be valid for this type. This type must not hav=
-e interior mutability.
 
-What is the reason for disallowing interior mutability here? I agree
-that it is necessary for `AsBytes`, but I don't think we need it here.
-For example it is fine to convert `u8` to `UnsafeCell<u8>`. Niches also
-should not be a problem, since eg `Option<UnsafeCell<NonNull<u8>>>`
-already fails the "All bit-patterns must be valid for this type".
 
---=20
-Cheers,
-Benno
+On 17/04/2024 12:27, AngeloGioacchino Del Regno wrote:
+> 
+>> +        irq_ite_pins {
+> 
+> Did you run dtbs_check?!? :-)
 
-> +pub unsafe trait FromBytes {}
-> +
-> +// SAFETY: All bit patterns are acceptable values of the types below.
-> +unsafe impl FromBytes for u8 {}
-> +unsafe impl FromBytes for u16 {}
-> +unsafe impl FromBytes for u32 {}
-> +unsafe impl FromBytes for u64 {}
-> +unsafe impl FromBytes for usize {}
-> +unsafe impl FromBytes for i8 {}
-> +unsafe impl FromBytes for i16 {}
-> +unsafe impl FromBytes for i32 {}
-> +unsafe impl FromBytes for i64 {}
-> +unsafe impl FromBytes for isize {}
+Yes without error, here my command:
+dt-validate -s Documentation/devicetree/bindings arch/arm64/boot/dts/mediatek/mt8365-evk.dtb
 
+Also I've done a "make dtbs_check" just to be sure, nothing wrong on mt8365-evk.dtb.
+
+For you, what is the issue please ?
+
+-- 
+Regards,
+Alexandre
