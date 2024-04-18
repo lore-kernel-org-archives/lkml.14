@@ -1,96 +1,191 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2125.outbound.protection.partner.outlook.cn [139.219.17.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467E15FEED
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 08:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713428523; cv=none; b=ICusRkvUZq8dCk7i20mMQHgZGgNC5LIPQcwu7w/yr3ru0492uMkriPxZ5bHrIRkXndX+WNvOoDlmL4uM7GIJZUId1GXnoH7xwuFTfCKspHPl3FoqVO/OiPhaf1FzTaGZbUiSvEhSK0NKZcSwcJ8gsGfh4A3yZEq9Fn82Hy9gOgM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713428523; c=relaxed/simple;
-	bh=0ZDj0G/BGIyYtXLBhUWNKzrpPYx4AB0yhF4/Ou7P5iQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X2BoR9O0/4nwbdN9m5925ZAyyGqCEvkiq9VLW+mlA1fHBGmQQE12Yzn2Jjm6M8jbXCncAlJuCWV+Tc/ZbgHyezQKeJC2juq/YIYrdZBL17p5A+TXSvOGL3REV957aY/jL6D8HJijbHuKkuVoE6dOYGnf1yUj80tFtKttNWzq/Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C2RmqyBv; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C2RmqyBv"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7e978e12390so176184241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 01:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713428521; x=1714033321; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K+8bkpMeAf9u6G5CwH+yaUjM/yOhNANN61v8jzel8hY=;
-        b=C2RmqyBvS152diBHytk9gbTz8/EKx7MaL5kJ6nTgOuK9spFSaKJj/8Hwz/UZtJ+Qp9
-         EAl+sWKAM43Mqm4ZEEAOfAwqLW+FbjkE0SK1T3biqqEh2chJJf+wEx9wVDpQSxse3s48
-         +MRT2nO4Xov3W2hpzRVIycUbfXrzpPIpSleksYLzdvxV9w+TNHPuYfedJiqy66e8qNwM
-         aKlwAJwyG7PMNJDjNDYZEC21Gmb017OriCzUimLQgWQkZbaxuwZnfndmEtDjDPq2HgYK
-         usGrzBbF3DICgYcPiDtTgp6IwBP1E4QBcpU2qiMmEHvq9mKTsKT3LKERxJIvAShsKeN1
-         Ds5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713428521; x=1714033321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K+8bkpMeAf9u6G5CwH+yaUjM/yOhNANN61v8jzel8hY=;
-        b=DtFX84DfD/JqHlGbUz04afGXTexf84tw7mkDsUdgQ9+GYnnRNLTKIL+CZLwdC5o1ob
-         kuy1cXApXFkEQ8JI8C3ACOa52lrZSK16er/Rf/JZniW8TdFFbF6eIUKpBKp9APaEAI/l
-         dnaio//IvoEewKK2Yc9RZezw38E0bMK0jPaC5YyRZB/MHNplXoKS7TquiCMPivYh1ezG
-         tQRZfvyuzjrwfXG4WSsoLM0OseAMdElhvRdnxmxhh7VAQB9EpvMNVpZH3/IgkA228yfj
-         AiWVjQgMhQ7ojbdksciRVPhuVvll/3oG4v5mg4btCqan0Cy2ZhaU3PlnhXHLGS5AdLte
-         Q+Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWspGQMCjIwhIFGBo4B6XKFvW5HwUm1CJpgIZ1x14OfBs2xAnH+a1LW9IOfF7yIsW+s5pqBka6IYmdVWXJLoxCV1BMEXM1ChCC3nCoF
-X-Gm-Message-State: AOJu0YxZ5HxEpvr3MaOgppo7H0T4P2fzRLHdwaSBfnPXwjN5SFl3qxmX
-	1CYnGCpBE6t4r1exYsXMp7WokHrPZUQvC+lfwKsEeUs91ORrU4Tb6brL1w5+epBrgYP6bgd9B2O
-	YebeGQbbrqt6WeC1wLcT7yn9Z1mjHao8HekmS
-X-Google-Smtp-Source: AGHT+IEUOJTBAR2iL+ELdgsREv5GHKjxwTtv4asZUy+RiErrHbJm524xwjfu0xd/Stgxsku30/Zgd0S3nI7G/Bxbn8A=
-X-Received: by 2002:a05:6122:208f:b0:4da:9aa1:dd5e with SMTP id
- i15-20020a056122208f00b004da9aa1dd5emr2606088vkd.10.1713428520877; Thu, 18
- Apr 2024 01:22:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507315FEED;
+	Thu, 18 Apr 2024 08:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713428602; cv=fail; b=arTjhTXrZMq78sbd16jEgjHSbK6Uv0RgR4PLO7GrrWVijf6GcbnB9Id/EaVFnxdCQB3mxmFf4aC+DhphhWvNo1NRUGuafbSs7t4K/fZQdfNbaAaR+QFcEeJVg1WsfrrhS3wuqJmnRODK5qf67Cheqlp6LMi/e9iLJ12D/JPX8P4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713428602; c=relaxed/simple;
+	bh=xJjltQkq6/OjxpJgmseY9RTa2sNkk3Csbr85pW1+CUA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sPsBBhlPLiG9dUiwznJigH2nX+Ao6f5zbT9ar6ecf1EkWnWbDlNxCULJ1E5tobCb+I1NA+JrvQa7SK6uaeIficVzilOFgjzgfuxKJifGxKm80W2sQCOc3kyVhHfg243MD/ER6NhAGOT+v52UF8deEy51XDPdCuim7sp1xJIgkek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mUBB046rlaxVvdgLb2v3XB1zoZolfUX2IFvwJDKlWiugru2iolwtoo2zApdNOL4/mFrVXTFJfWYEjQppUgE8PpWLGd+Ivlqz6LaInicT+r06nmOSJBRhsKCYacHUIwLOOrnCn1kS+7czs9TYFfUNWvqztl74QKtVxLpD6Y+ccYsSRRsQ9abWaW539HEI/gP+hFilBqkN9Zo38RKQHsYBGO+vyvo5Bf9GbTyjMIhHBPG71xGaNZlzh2UbxjXc8CXgnoBNHYnWH8rkNrMIKWXwrE4M48Zchj4biKJqIciTiTE9qzBGrgcIaDRGD2tiF4KZTUY2zzxrDMhzmVkHQ6GmLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rNv0XYTAuK2gbD9fA/WE+fPExIotgIFv66Pt2Y4CS5Y=;
+ b=khAfQ8PGaAaqI6WzhIrTjmj9u6K4dyi64gEUw83R/Om6CAjvBH/MKPGXqKI5ePAyuzdv348+C4zZdxup7AbyKcQpRH8PX+uj4WtRgKIgdpRs0TsKAX7CSWKdnHwDH/3ZnXXwlsaTW/KYjG2gUSSCoknNL0nw4b1qVmH14lDd/mjlHrJAn1ahTddkbY1MKihZJh5pKsfoZs+uVZy47nmeXTm00jpAsjL3e59nMr+zzgmgmamxTmnYeOGtBvKUQI0v8kLW+MXvcBodL9U74pBDTDjSA8khc42LRnWni/AQDz82oa+cfQYIBOGNvdr4W6bF/9iytc01HsuORJ7xeLd8AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:3::6) by NT0PR01MB1071.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:3::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 18 Apr
+ 2024 03:50:34 +0000
+Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ ([fe80::103a:5792:ddaf:4283]) by
+ NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::103a:5792:ddaf:4283%4])
+ with mapi id 15.20.7409.042; Thu, 18 Apr 2024 03:50:33 +0000
+From: Shengyang Chen <shengyang.chen@starfivetech.com>
+To: devicetree@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Cc: vkoul@kernel.org,
+	kishon@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	minda.chen@starfivetech.com,
+	changhuang.liang@starfivetech.com,
+	rogerq@kernel.org,
+	geert+renesas@glider.be,
+	keith.zhao@starfivetech.com,
+	shengyang.chen@starfivetech.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] Add JH7110 MIPI DPHY TX support
+Date: Thu, 18 Apr 2024 11:50:18 +0800
+Message-Id: <20240418035020.47876-1-shengyang.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0036.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::13) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:3::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417191418.1341988-1-cmllamas@google.com> <20240417191418.1341988-4-cmllamas@google.com>
-In-Reply-To: <20240417191418.1341988-4-cmllamas@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 18 Apr 2024 10:21:49 +0200
-Message-ID: <CAH5fLghRmYFLa-ag9vo4vv_P281jXGFfsDFyGq5pk5g0PUXtUA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] binder: add support for PF_LARGE_HANDLES
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB1071:EE_
+X-MS-Office365-Filtering-Correlation-Id: a963dd02-07d2-4d1f-38df-08dc5f5ab32f
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	mpCSgAXvFu3VvauFTAOFlrD1N/i7M90duS9SHruQIgAve//Jh7zgYzSZjpHtTTpWa2WdoMnaJVpAYtwOVJPv6jVEEqGFEqk4XV5K26ovquw8OwWUIzcW+yJXjEtZvxSW67JXtmO7jIkr0zsPhOLgLTmZTWzqXmHJjkE1SvJYau56n5NkoRJIJEu/DQPKM4AxudtbeiwQ5VAYXdNHZde/NrjqDIQGggC8Vc0aloXwWC/cApkq7ppSauDSfT8hJ2KN5AsEjJ4Y5iAmSNBMHBKPCcIysMIP3jmtXCD/BeeuxuCdp/jd+aIJagnYrWzEvD1T/bVDcI/ha/YFycLoPiriEy5r5THziQfJUV6I+0ICGOM15Oy0SGIVavPrQdXgdII7dQMYJH+sIunAAJGFpq/UPULnPU8grLXjN+qnTFt6VDUdwwEiVqBbuDyOmNoU7hBBpOsSN+EFUfVcuN4H97ZRDVS4YJQASTd8au8YWqnh7gdvn8jkGkHSV6V0+5otfRvMbm4L45QxSW4T3IxSZTV8Ce2jmFsmglr6QmoCpXRCcBX5wg0aTGPG0N2ToE6GcU/dZjuRAV52HMjAhE1aISyu9BwCrSU9c9Kcp34OoRjA6q84aQAzua8EvtbectUqBzsE
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(1800799015)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NDxPCyKFshGTRQSaqFSit5GBO7O8x903KMiYFvH/K/XD5BPdz4DUxpattV+h?=
+ =?us-ascii?Q?8trCD4ih6g2tObZwqFiSevbDzXNDY+dkuzxyhf706c9+CR5sAQekV5BAe1/M?=
+ =?us-ascii?Q?NUMHQHTBcq0rcSqk1qlTYiY+xBNjSyl6CDCX3w5mJ4Q8wXvHN6BKHMwb9Med?=
+ =?us-ascii?Q?Fna2NJk7PSfE1iqc03UVFPsSGjLlZB4+kX7KwfVIR+IA2fdaSOQEdOJaI5jM?=
+ =?us-ascii?Q?i8YV2/e8QtXCIo9Q40SdzsfiTUn7nj4GagHCO/JRzhJtwRAzDO+x3XaDphCs?=
+ =?us-ascii?Q?IKIRVtU5jweePLUobEj+FFxV07XYSbmGd0J/VDEStkaRw/rfnn6KS+9mkkdO?=
+ =?us-ascii?Q?d5ta/Oiq7w/HjdJxqEUvFCDBvgbzyR3SiNPAAI4xJ8DOjt8Y9af3Ci8SxAuy?=
+ =?us-ascii?Q?dBcJvutbk8vmmpQTHKC8kHIWLPLVmmbNgeK+s2ZV2KhUlQBcDR7hIG92k05N?=
+ =?us-ascii?Q?dgHworIXRZtpEmQ8La6xYgjub1LZ6B0DfUEpyXnUjwzRlgnlwhmApLlBypCx?=
+ =?us-ascii?Q?fN6rFFnQT232UhVJYtLBVopTSUmuo0eqy5JclSX1RgiWpameLgQ5Kp8q3RJ7?=
+ =?us-ascii?Q?62FUWA+wf0mHQlNsQGJTmQ6fCan+gn6JPkjRDxDnHfRCgzIccjPWv4AvGcI0?=
+ =?us-ascii?Q?WErZvh4VDIGWjETC6UgOMmSmakvD5PtkY8zMA+2YXF/aUDnHWT8A5C5NJF4c?=
+ =?us-ascii?Q?eBxdv4KOUyGGqsb/yXqpN0fXdBurT2FeCHrd5T1ijQcb7jlLT3tSDIjbCrqc?=
+ =?us-ascii?Q?VORpiwlECUi4EaUCC4s/HjVZR014Yr1kb8VkYHX7HFHmLrDvprSS7HIcRRgW?=
+ =?us-ascii?Q?XWI0dUUQLWG3QDbN6ZWpGXmquJi47h/rvP2lVebstlNkPs30oja/UB5J1HME?=
+ =?us-ascii?Q?mpC9XwgVUensGRPY7daiG1ClzSf8QYO6IBBwP2PmS+sjtfUqegV/sDokQuW5?=
+ =?us-ascii?Q?dhqQAgj6zDqQb534HsT9vXdgrdMSq0dIBCfHHzkO06fStyohC+HdJPsHhiRP?=
+ =?us-ascii?Q?gTuIM6S0ZbSjS2dQ7wAMvPQhIfDrZpGabuXwHLrSPyIhFwlRBdFi0PwncvOp?=
+ =?us-ascii?Q?pgzYNYHlacs1tzoXJRblrFoVq5blNPRj3ZsaBYFyQOlfHN0aonqYMRjugjL+?=
+ =?us-ascii?Q?y8MWiG3sjXEsCDHPF3WSTg0XMYjC6a2+FIU7CXmr+B5192PLOpNZa1zqcnjS?=
+ =?us-ascii?Q?M3O20wiY+0nrh/M0z0dRvxvaxdozkZaHv85CB+C9j9H5slUKVXhjIzSCYdOa?=
+ =?us-ascii?Q?o1yF2BCMkwkkQxqkHv5bqPqb1z9QhjHCuofHcku2jFDa5E9FrYpL2M+kNjE7?=
+ =?us-ascii?Q?w1Ef0U9eu4Q5ighj/m8pvtV3nGCLpkh0JoNKxqLnIM4LVJ0DDhFjRBkydjKC?=
+ =?us-ascii?Q?di3wYJ7VFHuahEajW3bMJVM++9IkgfrOKohA4/cj6Ryl80t3wTGRC03SmnDe?=
+ =?us-ascii?Q?/gkjof/m86IijoNiqbsZ5Ppbw1pKtcQEHpinAChY1KUfROG7REUgOf3RIlHf?=
+ =?us-ascii?Q?6ycVFwgS94KV2s0b4g7681/c/7w25HUCS4r0B1IZvu87BsVxQNAOqRXT2407?=
+ =?us-ascii?Q?Z1iBii8Quwaq1c+nsJc4ImbmMmET7xDNxaYkZJv4XPFMPDnR8RMIRqkt+z5G?=
+ =?us-ascii?Q?KGSoZHvdoACEFhKtjT7yoI8=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a963dd02-07d2-4d1f-38df-08dc5f5ab32f
+X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 03:50:33.9022
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: usdba8WN/cqxzbJ4qYT37ZRPcYBFsXgDWzyM20bWR4V/TIg05YcPgNgtgZxNeXrkGjvzkxULUBwkeQYo07PUNY4PRUdBCp/d0mHNseDT0+E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1071
 
-On Wed, Apr 17, 2024 at 9:15=E2=80=AFPM Carlos Llamas <cmllamas@google.com>=
- wrote:
->
-> Introduce the PF_LARGE_HANDLES flag to enable the use of monotonically
-> increasing counters to generate handles. This improves performance in
-> transactions when dealing with a large number of references.
->
-> The legacy logic performs an inorder traversal of an rbtree to find the
-> smallest unused handle. This limitation is due to userspace using the
-> handles as indexes (e.g. in vectors). The new logic scales much better
-> but requires userspace to support large handle numbers.
->
-> The benchmark below with 100,000 references shows the performance gains
-> in binder_get_ref_for_node_olocked() calls with PF_LARGE_HANDLES.
->
->   [  167.855945] binder_get_ref_for_node_olocked: 17us (flag on)
->   [  237.088072] binder_get_ref_for_node_olocked: 18178us (flag off)
->
-> Suggested-by: Tim Murray <timmurray@google.com>
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Carlos Llamas <cmllamas@google.com>
+This patchset adds mipi dphy tx support for the StarFive JH7110 SoC.
+It is used to transfer DSI data. The series has been tested on
+the VisionFive 2 board.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+
+change since v4:
+- Rebased on tag v6.9-rc4.
+
+patch 2:
+-Drop shift macro definitions.
+-Drop useless member variables of config array.
+-Drop stf_dphy_set_reg() and  stf_dphy_get_reg().
+-Add readl_poll_timeout_atomic() for delay in stf_dphy_hw_reset().
+-Rewrite register configure logic with FIELD_PREP()/FIELD_GET() and writel()/readl().
+
+v4: https://patchwork.kernel.org/project/linux-phy/cover/20240301012406.92589-1-shengyang.chen@starfivetech.com/
+
+
+change since v3:
+- Rebased on tag v6.8-rc6.
+
+patch 2:
+- Lower case for hex value.
+- Replace bit shifts operation with macro definitions.
+- Drop delay in stf_dphy_hw_reset().
+- Change variable declarations order in stf_dphy_configure().
+
+v3: https://patchwork.kernel.org/project/linux-phy/cover/20240206061921.107372-1-shengyang.chen@starfivetech.com/
+
+
+change since v2:
+- Rebased on tag v6.8-rc3.
+
+patch 2:
+- Drop regulator operation.
+
+v2: https://patchwork.kernel.org/project/linux-phy/cover/20240109071246.24065-1-shengyang.chen@starfivetech.com/
+
+
+changes since v1:
+- Rebased on tag v6.7.
+
+patch 1:
+- Drop 'dphy_'prefix.
+- Drop DSI reset.
+- Drop unnecessary resets.
+
+
+patch 2:
+- Changed the commit message.
+- Use dev_err_probe() and PTR_ERR() in probing.
+- Drop DSI reset operation.
+- Drop unnecessary resets operation.
+- Add configs in array for full support of the module
+- Changed 'void *io_addr' to 'void __iomem *io_addr'.
+
+v1: https://patchwork.kernel.org/project/linux-phy/cover/20231117130421.79261-1-shengyang.chen@starfivetech.com/
+
+Shengyang Chen (2):
+  dt-bindings: phy: Add starfive,jh7110-dphy-tx
+  phy: starfive: Add mipi dphy tx support
+
+ .../bindings/phy/starfive,jh7110-dphy-tx.yaml |  68 +++
+ MAINTAINERS                                   |   7 +
+ drivers/phy/starfive/Kconfig                  |  10 +
+ drivers/phy/starfive/Makefile                 |   1 +
+ drivers/phy/starfive/phy-jh7110-dphy-tx.c     | 459 ++++++++++++++++++
+ 5 files changed, 545 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml
+ create mode 100644 drivers/phy/starfive/phy-jh7110-dphy-tx.c
+
+-- 
+2.17.1
+
