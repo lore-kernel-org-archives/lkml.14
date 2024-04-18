@@ -1,82 +1,89 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward502a.mail.yandex.net (forward502a.mail.yandex.net [178.154.239.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEA216191A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D6F171E77;
+	Thu, 18 Apr 2024 17:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713460329; cv=none; b=hWnTSsPA0TWrQLPiktuFcPE+raMKOkvCcmAbtKkpO0e4whhfaR3iDXTKbPS/OIBWEMdCKY+ciaa69MFf86R78+hJkJ2ASY23oNS/og3tyfGRAJz4FYzR31ZeuemAQyKIGZY8lL+X3KOJUzZK7jd1GDPjdbqX7tkRrMHC/sFuZfs=
+	t=1713460341; cv=none; b=aEOJ7ka0hRhyXhgKepiYJOow2mtL0dWCT4wwwJBQz/fgHibqGUlRNAMwSamUFy7cRMQO5vPSlFg43COAx0R/cn2zP5uODKJfCKieWH9tj30APdrXGYPR2rqM4gKeAEdUon3GneD0qEf61VLD+WZjVzeuxYAmb3xvcAqsrSgbbZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713460329; c=relaxed/simple;
-	bh=V4bD0JhlT+UQ1ATauOhPA9TteDqpGdm2KZM8d041ViM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPBqhnNXS7RuMv28V8tRzgZK0WjLDGbhoA+t+KHYwgWQkeVq71sCJnNS/tt8ucM6pkm1C+qCb+RHQTs/hx226hPaIVtXUMXT4ySsiKJkqnKaJiUp8/9qBYNfw+rCjQSAb4EQhtBgwq6EGBh1Yz1eaad5pk1L2Ec0IjAa71YrOpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=c2/2f+K3; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1713460341; c=relaxed/simple;
+	bh=ecGG+6eR6iUO2Pn7NUZfGbmMq6Q/v6kfW7DmsPl6BmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kECqoILtuJQRW4d+ZOloLnKJtDi32xhgV0hzFEZcCy9mgk/ePnKegA3pTGetQZz8VnUQQPkQDg2Tg50ISdUoqrZkQeTPgoge9Hd0v8kfwRmmEfIbYavIw5gHdlDoRxYMcXi6HD5SzbS2FneJfO68gx/DNb9P2v2eMdJOjBu9Adg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=DgFFqFEB; arc=none smtp.client-ip=178.154.239.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c2/2f+K3"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so10019605ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713460328; x=1714065128; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Srcc8GSfebZLoUs5UEqC/Q5n1RryFdWaKvCpiJ/RKN0=;
-        b=c2/2f+K3iNgmz9NGLiIrElX2rcXto28Q773Y5I2zC2/ext9ebHLiBn5t/R7eJnJaRj
-         /PoD3mqROt5aFHFxPXdY/RNO5VXF4g1gU6wj4lJmrP7QYIgdl3wh2eubW19wUGf6vMnL
-         ewaGuVjAHJV+LMZDbF2X2g7fhHEqOP43wPm+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713460328; x=1714065128;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Srcc8GSfebZLoUs5UEqC/Q5n1RryFdWaKvCpiJ/RKN0=;
-        b=qcavGmjPBzrkxUrgrvyTLFELptC6GuhOSRsIV5X7Y2xCt1wTqs14NhqFOUEVcWzkjA
-         p8oHN8TeLJute3tZWSRXEFTLXad12IVRRC1E/QL4OC3z5GF8JsjpEVRwCHOHIuD5xfzE
-         6PJ++3ejyAyFXWIB6/e2CsN4bfxMfsfcskuetukC56nzeUcG+lmPkOjviAQStsPsE19t
-         nsxcL/lyiWIDOnskxA5cwK306fKcAVKI3oToqmpAiedJBKkUIdSJa5MrGheKApK8o+ny
-         klls0lRQ3htZpGCH13/MOLzZ48/44b9miOYQPAjLEITwXwD7WwxCOtRUdKOYw8/GrbHJ
-         Oc9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXNx9jmT82f+8F6c3DwVa936xCsMTHuYB3reL54ahOtkH3zvBawZoRNGpAk90ANmdxpnM9iKnVKjmxPUsz+g59mpd9NI/FVAsWjD/VV
-X-Gm-Message-State: AOJu0YxHtwDjhbb8m8buaFrTcotik0zMs3FCWrPfrlKvADkKV0m2xdGp
-	CE1K26KE0a30OKb4GzgHRIe3Ogw/1IS2suS5stLdFs8XShmOT23c9tR7NNqumw==
-X-Google-Smtp-Source: AGHT+IGXRsPSakc8glvVR0fVaanCDT0iQFBXasCGzm9NwhaKMLnvjPABcG55nXEozQZ+YUznpYVeKA==
-X-Received: by 2002:a17:903:493:b0:1e2:6165:8086 with SMTP id jj19-20020a170903049300b001e261658086mr3335872plb.61.1713460327781;
-        Thu, 18 Apr 2024 10:12:07 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x7-20020a1709027c0700b001e2c8bc6bebsm1765424pll.81.2024.04.18.10.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 10:12:07 -0700 (PDT)
-Date: Thu, 18 Apr 2024 10:12:06 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Alex Elder <elder@linaro.org>, corbet@lwn.net,
-	gregkh@linuxfoundation.org, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: coding-style: don't encourage WARN*()
-Message-ID: <202404181010.5C27FE82D@keescook>
-References: <20240414170850.148122-1-elder@linaro.org>
- <20240418161430.GB2410@sol.localdomain>
+	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="DgFFqFEB"
+Received: from mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1d:2c01:0:640:acf3:0])
+	by forward502a.mail.yandex.net (Yandex) with ESMTPS id D4EFD60FF1;
+	Thu, 18 Apr 2024 20:06:29 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id M6JHjm3m3Gk0-JMZhCufi;
+	Thu, 18 Apr 2024 20:06:29 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
+	t=1713459989; bh=NFbssjhmyBLMOqhYAakji5yGXBVIHuEqJMJ6/5nfKYg=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=DgFFqFEB1JS58Yiyxt1y7YHpq0ctgBE/wk40dFVzJiOsvP+BLJRw8CbsjGGMGkKRC
+	 jLPeq2iyEVhHSlA++cqvMPmbxxeOa56Rqr7qGf4nnS7KygzhzLPg7tkk+cSblAzFN3
+	 2wOqveSOg92KHOwbG2LG9LPOS2YsvS/sXmYjwdPc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+From: Konstantin Pugin <rilian.la.te@ya.ru>
+To: 
+Cc: Konstantin Pugin <ria.freelander@gmail.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v3 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
+Date: Thu, 18 Apr 2024 20:06:05 +0300
+Message-Id: <20240418170610.759838-2-rilian.la.te@ya.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240418170610.759838-1-rilian.la.te@ya.ru>
+References: <20240418170610.759838-1-rilian.la.te@ya.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418161430.GB2410@sol.localdomain>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 09:14:30AM -0700, Eric Biggers wrote:
-> Also, it's not true that "Android" sets this option.  It might be the case that
-> some individual Android OEMs have decided to use it for some reason (they do
-> have the ability to customize their kernel command line, after all).  It's
-> certainly not used by default or even recommended.
+From: Konstantin Pugin <ria.freelander@gmail.com>
 
-Ah yes, you are right. I had misremembered; last I looked Android uses
-of CONFIG_UBSAN_TRAP=y, which has a similar affect (effectively promoting
-warning into bug) for UBSAN checks.
+The hardware supports both RTS_ON_SEND and RTS_AFTER_SEND modes, but
+after the commit 4afeced55baa ("serial: core: fix sanitizing check for
+RTS settings") we always end up with SER_RS485_RTS_AFTER_SEND and
+always write in the register field SC16IS7XX_EFCR_RTS_INVERT_BIT, which
+breaks some hardware using these chips.
 
+Fixes: 267913ecf737 ("serial: sc16is7xx: Fill in rs485_supported")
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+---
+ drivers/tty/serial/sc16is7xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 929206a9a6e1..a300eebf1401 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1458,7 +1458,7 @@ static int sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s,
+ }
+ 
+ static const struct serial_rs485 sc16is7xx_rs485_supported = {
+-	.flags = SER_RS485_ENABLED | SER_RS485_RTS_AFTER_SEND,
++	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_RTS_AFTER_SEND,
+ 	.delay_rts_before_send = 1,
+ 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
+ };
 -- 
-Kees Cook
+2.34.1
+
