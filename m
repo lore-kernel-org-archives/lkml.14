@@ -1,243 +1,163 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03215E1EE
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2358E15E1EE;
+	Thu, 18 Apr 2024 10:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437920; cv=none; b=grhjgI5SRdUSdy7QUzIth+IXO9NKKtf1YDaGaBLShPTV5Mjq3a8cDzLQjaLVe6XybITBgNHECk/kZtOub7xKTXixnKXoiOpMwdEP1cTQpPZP+HZQ5W88lNxsdlrQNcZnw7VZumPxiwHgj2Yjev9kA/lECVavCy34oRvKA4CUQLA=
+	t=1713437966; cv=none; b=uUDNdTm13uvkiZqSRw4iUjBJh9424iy8zWJ7Hmd5SwBDAskIwQivG0MJx4Y/oZUq+FDR+E9VWWWA/6UPZ1j9TDkCAsd/Xz49YZFCJpRgxmVef5hmKutnoLFzkkyDy8yHcxKT+jsnTsuP8KwxBGjF7eXC0doTUaRCQ8Zo95wWYTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437920; c=relaxed/simple;
-	bh=sTz2Pp+8IsOE9Kkx3okka4q7c48jbMNCvkE4Ama0VsI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qtZs3R1j016B6E1LOuqwWo9FTAbQHaWaGwfR4ttIPDa/H3PLkNf1Sdfys8U/cqm2qzUOsbbZ81Bktkp1NBg246gbdu8uiV3rXyGjTSwiXn9iUcpDLErg637vuXAnX1IXkM4r8u1su+PWAl1mGBT8alvrBA36QzjDgIpD9RZcljo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJVD+lj6; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713437966; c=relaxed/simple;
+	bh=Dmw2mzRePDDaTlpv0cyxsROjXNG2sIARTqcRZ94iPag=;
+	h=From:To:CC:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mHZLlOArs3KxIbn2k/PGtKPDfJPI4Yoa7Q77XSv6J0neVOACiC7kykpvNC8JWJPAIHj/7A/KF43VYaK/hHT20vxV3GznNV7Y9FTLzbIuzMYI7WaGWzDRmpliy80hxT1yjWc2gjoLiu074FNe5beGZ1r9TVFL1fzCkuUw/POwbNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=EsgIvVEN; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJVD+lj6"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6eb7b6f92d4so399765a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 03:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713437918; x=1714042718; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O8NkjRR32gwNlYRbH1lR13f1NodvtqYs34036pu1WAk=;
-        b=DJVD+lj6ImNBfYh/lYYYyLYPclb5AK7Rzbsmw6VY2ulQhtIDA9IfTRy2RpyqKL0SBO
-         qRU91vH1DlSVfi5hfbJXrnHjcZc6+or7O5Fwi64p+cgMWY5xNd7WJyOwtnoBVZdDk9lm
-         LIbhs738qNwyQq+Fq4Oi87S7YFB7VlEXPfUD29I8PFelYZlm6UOLE9mRQd9srYuA12FA
-         0Bc6Ssfg1+S3wr6IYWtOqdTdm7fcgGx17wq9kKPCQMJMJVt7o+VmW0VlgQh6xLR1WADF
-         yadhC1nOq3FFc8jYjpF5GfTFSXrgrVEtJCLDMoF1VcFI3kmNhiCeVJLcSPJFPQel3rLu
-         uYhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713437918; x=1714042718;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O8NkjRR32gwNlYRbH1lR13f1NodvtqYs34036pu1WAk=;
-        b=Bs34sF7i8zut+OKXmcE+x96xqhcLU/zRvKAgFUDimhFwOpcbiW76DcktstWpKwcRdn
-         rwqS2wrF9An54/5ZX9Frltmy+iGRxNbALQIoIrlSZMBBnVZsGFq/b+VJxcYKeeIyqk4g
-         hs6Qa+bNy8YYhFIYhB7EuZZXHF7y58HdbvsfD5c61DMtx+5WZ0p6o2iDKmrE9XpTTWvD
-         IDhDzD2ljLbVVxOKmnem2RmT4ESHdnvSWa4aF9QhL42ji4EEcWaD7yc/a+32wHIsV76K
-         spV0F0HMQo+QN3cgcSP+6UtZawutK5QNpoma+RPfrKEb8AlO1FIlNQSBsq8oh5OCE26w
-         AEdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8tmYT/eucuRKzbP5A9Y+RdIJ6Tynv/Rm3RFgS9skaNcW72DMy9bykGZ+pR8cO73juHdM8cUHivDwfhxCfTcNvwMj2QlNQT8HXopF+
-X-Gm-Message-State: AOJu0Yylt8vhj9uSuoGMVei3qSSVGoBoDfztI3spEGj2Gd2G/woAkR0V
-	3++O0g3O8uNfzaYO4Nd2H3vLw4cG2rjKpamSssUcy0j16MXGBItA
-X-Google-Smtp-Source: AGHT+IE0Wend3e5EpVQTSC9tsdUxn2WDCsJjwIeBC6hJ6WUDqPXTIzMmKsKYHmthb5COY6jTF/NdRg==
-X-Received: by 2002:a05:6870:7096:b0:22e:dfbc:4d9d with SMTP id v22-20020a056870709600b0022edfbc4d9dmr2903143oae.1.1713437917381;
-        Thu, 18 Apr 2024 03:58:37 -0700 (PDT)
-Received: from LancedeMBP.lan ([112.10.225.217])
-        by smtp.gmail.com with ESMTPSA id gd26-20020a056a00831a00b006ea923678a6sm1200487pfb.137.2024.04.18.03.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 03:58:37 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com,
-	david@redhat.com,
-	21cnbao@gmail.com,
-	mhocko@suse.com,
-	fengwei.yin@intel.com,
-	zokeefe@google.com,
-	shy828301@gmail.com,
-	xiehuan09@gmail.com,
-	wangkefeng.wang@huawei.com,
-	songmuchun@bytedance.com,
-	peterx@redhat.com,
-	minchan@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Lance Yang <ioworker0@gmail.com>
-Subject: [PATCH v9 4/4] mm/madvise: optimize lazyfreeing with mTHP in madvise_free
-Date: Thu, 18 Apr 2024 18:57:50 +0800
-Message-Id: <20240418105750.98866-5-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20240418105750.98866-1-ioworker0@gmail.com>
-References: <20240418105750.98866-1-ioworker0@gmail.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EsgIvVEN"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43I7MKuD021498;
+	Thu, 18 Apr 2024 05:59:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:references:in-reply-to:subject:date:message-id
+	:mime-version:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=RlY3ymPRlrecGeYIf3u9yTqQFB6fZZei6Z2kUrb0t0k=; b=
+	EsgIvVENbI5fwPQNQDDWrnF2zv15un8Qa81c955laK2qpLYdYRZ8kzMxEQDbZ+m0
+	BAy9kUU5T0YG7H+qEUeHz1ook4QeXsx+5Cx9zBYM/4EG9tHTfV7l6jdX995SMIGr
+	E5x53e4HfGn2uPHjz47E7BGllRK+pFsZmTBKwWo51Itj2Piqlv+EKD99b2kGmq7K
+	Ekkts8qKHUvDuhnK6OElr4sLEQKV0L6bG7k7ouFBuQ3emRlIhhRECEt7PbJtqTxV
+	0Q2GoVt5S23lCE4Qsw5B9j90rsxuy52W2BfhQVvHvOjSBKgFVD3AEm5VC7CalgkJ
+	sJUnN9fIkpaQccBJyfNg7A==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xfpfhvnad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 05:59:21 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
+ 2024 11:59:19 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Thu, 18 Apr 2024 11:59:19 +0100
+Received: from LONN2DGDQ73 (LONN2DGDQ73.ad.cirrus.com [198.61.64.201])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 36044820245;
+	Thu, 18 Apr 2024 10:59:19 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: 'ArcticLampyrid' <ArcticLampyrid@outlook.com>, <james.schulman@cirrus.com>,
+        <david.rhodes@cirrus.com>, <rf@opensource.cirrus.com>
+CC: <patches@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <TYCP286MB253523D85F6E0ECAA3E03D58C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM> <TYCP286MB25358BF2246DE04CE8D12BE8C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+In-Reply-To: <TYCP286MB25358BF2246DE04CE8D12BE8C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+Subject: RE: [PATCH v2 2/2] ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
+Date: Thu, 18 Apr 2024 11:59:19 +0100
+Message-ID: <002201da917f$766278d0$63276a70$@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-gb
+Thread-Index: AQJzUjqa4IlF22ZsXxMyjNS9IQLhdQGIbEcssDAWyjA=
+X-Proofpoint-ORIG-GUID: 6cGaL1IhxL8DSA0rTQRDX4c1sl7LL6Q3
+X-Proofpoint-GUID: 6cGaL1IhxL8DSA0rTQRDX4c1sl7LL6Q3
+X-Proofpoint-Spam-Reason: safe
 
-This patch optimizes lazyfreeing with PTE-mapped mTHP[1]
-(Inspired by David Hildenbrand[2]). We aim to avoid unnecessary folio
-splitting if the large folio is fully mapped within the target range.
+Hi,
 
-If a large folio is locked or shared, or if we fail to split it, we just
-leave it in place and advance to the next PTE in the range. But note that
-the behavior is changed; previously, any failure of this sort would cause
-the entire operation to give up. As large folios become more common,
-sticking to the old way could result in wasted opportunities.
+> -----Original Message-----
+> From: ArcticLampyrid <ArcticLampyrid@outlook.com>
+> Sent: Thursday, April 18, 2024 7:46 AM
+> To: james.schulman@cirrus.com; david.rhodes@cirrus.com;
+> rf@opensource.cirrus.com
+> Cc: patches@opensource.cirrus.com; linux-sound@vger.kernel.org;
+linux-
+> kernel@vger.kernel.org; ArcticLampyrid <ArcticLampyrid@outlook.com>;
+> stable@vger.kernel.org
+> Subject: [PATCH v2 2/2] ALSA: hda/realtek: Fix internal speakers for
+Legion
+> Y9000X 2022 IAH7
+> 
+> This fixes the sound not working from internal speakers on
+> Lenovo Legion Y9000X 2022 IAH7 models.
+> 
+> Signed-off-by: ArcticLampyrid <ArcticLampyrid@outlook.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>  sound/pci/hda/cs35l41_hda_property.c | 2 ++
+>  sound/pci/hda/patch_realtek.c        | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/sound/pci/hda/cs35l41_hda_property.c
+> b/sound/pci/hda/cs35l41_hda_property.c
+> index 8fb688e41414..60ad2344488b 100644
+> --- a/sound/pci/hda/cs35l41_hda_property.c
+> +++ b/sound/pci/hda/cs35l41_hda_property.c
+> @@ -109,6 +109,7 @@ static const struct cs35l41_config
+> cs35l41_config_table[] = {
+>  	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 1, -1, 0, 0, 0, 0 },
+>  	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 1, 2, 0, 0, 0, 0 },
+>  	{ "10433A60", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 1, 2, 0, 1000, 4500, 24 },
+> +	{ "17AA386E", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
 
-On an Intel I5 CPU, lazyfreeing a 1GiB VMA backed by PTE-mapped folios of
-the same size results in the following runtimes for madvise(MADV_FREE) in
-seconds (shorter is better):
+Looking at your ACPI, its clear that the Speaker ID is at index 2 not
+index 1.
+Thus, this should be:
 
-Folio Size |   Old    |   New    | Change
-------------------------------------------
-      4KiB | 0.590251 | 0.590259 |    0%
-     16KiB | 2.990447 | 0.185655 |  -94%
-     32KiB | 2.547831 | 0.104870 |  -95%
-     64KiB | 2.457796 | 0.052812 |  -97%
-    128KiB | 2.281034 | 0.032777 |  -99%
-    256KiB | 2.230387 | 0.017496 |  -99%
-    512KiB | 2.189106 | 0.010781 |  -99%
-   1024KiB | 2.183949 | 0.007753 |  -99%
-   2048KiB | 0.002799 | 0.002804 |    0%
+	{ "17AA386E", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+}, 0, 2, -1, 0, 0, 0 },
 
-[1] https://lkml.kernel.org/r/20231207161211.2374093-5-ryan.roberts@arm.com
-[2] https://lore.kernel.org/linux-mm/20240214204435.167852-1-david@redhat.com
+Thanks,
+Stefan
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Lance Yang <ioworker0@gmail.com>
----
- mm/madvise.c | 85 +++++++++++++++++++++++++++-------------------------
- 1 file changed, 44 insertions(+), 41 deletions(-)
+>  	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, -1, -1, 0, 0, 0 },
+>  	{ "17AA3877", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+>  	{ "17AA3878", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0
+> }, 0, 1, -1, 0, 0, 0 },
+> @@ -500,6 +501,7 @@ static const struct cs35l41_prop_model
+> cs35l41_prop_model_table[] = {
+>  	{ "CSC3551", "10431F1F", generic_dsd_config },
+>  	{ "CSC3551", "10431F62", generic_dsd_config },
+>  	{ "CSC3551", "10433A60", generic_dsd_config },
+> +	{ "CSC3551", "17AA386E", generic_dsd_config },
+>  	{ "CSC3551", "17AA386F", generic_dsd_config },
+>  	{ "CSC3551", "17AA3877", generic_dsd_config },
+>  	{ "CSC3551", "17AA3878", generic_dsd_config },
+> diff --git a/sound/pci/hda/patch_realtek.c
+> b/sound/pci/hda/patch_realtek.c
+> index cdcb28aa9d7b..ac729187f6a7 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -10382,6 +10382,7 @@ static const struct snd_pci_quirk
+> alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5",
+> ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
+>  	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6",
+> ALC287_FIXUP_LEGION_16ITHG6),
+>  	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7",
+> ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
+> +	SND_PCI_QUIRK(0x17aa, 0x386e, "Legion Y9000X 2022 IAH7",
+> ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x17aa, 0x386f, "Legion 7i 16IAX7",
+> ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7",
+> ALC287_FIXUP_YOGA7_14ARB7_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x3877, "Lenovo Legion 7 Slim
+> 16ARHA7", ALC287_FIXUP_CS35L41_I2C_2),
+> --
+> 2.44.0
+> 
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 4597a3568e7e..375ab3234603 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -643,6 +643,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
- 
- {
-+	const cydp_t cydp_flags = CYDP_CLEAR_YOUNG | CYDP_CLEAR_DIRTY;
- 	struct mmu_gather *tlb = walk->private;
- 	struct mm_struct *mm = tlb->mm;
- 	struct vm_area_struct *vma = walk->vma;
-@@ -697,44 +698,57 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 			continue;
- 
- 		/*
--		 * If pmd isn't transhuge but the folio is large and
--		 * is owned by only this process, split it and
--		 * deactivate all pages.
-+		 * If we encounter a large folio, only split it if it is not
-+		 * fully mapped within the range we are operating on. Otherwise
-+		 * leave it as is so that it can be marked as lazyfree. If we
-+		 * fail to split a folio, leave it in place and advance to the
-+		 * next pte in the range.
- 		 */
- 		if (folio_test_large(folio)) {
--			int err;
-+			bool any_young, any_dirty;
- 
--			if (folio_likely_mapped_shared(folio))
--				break;
--			if (!folio_trylock(folio))
--				break;
--			folio_get(folio);
--			arch_leave_lazy_mmu_mode();
--			pte_unmap_unlock(start_pte, ptl);
--			start_pte = NULL;
--			err = split_folio(folio);
--			folio_unlock(folio);
--			folio_put(folio);
--			if (err)
--				break;
--			start_pte = pte =
--				pte_offset_map_lock(mm, pmd, addr, &ptl);
--			if (!start_pte)
--				break;
--			arch_enter_lazy_mmu_mode();
--			pte--;
--			addr -= PAGE_SIZE;
--			continue;
-+			nr = madvise_folio_pte_batch(addr, end, folio, pte,
-+						     ptent, &any_young, NULL);
-+
-+			if (nr < folio_nr_pages(folio)) {
-+				int err;
-+
-+				if (folio_likely_mapped_shared(folio))
-+					continue;
-+				if (!folio_trylock(folio))
-+					continue;
-+				folio_get(folio);
-+				arch_leave_lazy_mmu_mode();
-+				pte_unmap_unlock(start_pte, ptl);
-+				start_pte = NULL;
-+				err = split_folio(folio);
-+				folio_unlock(folio);
-+				folio_put(folio);
-+				start_pte = pte =
-+					pte_offset_map_lock(mm, pmd, addr, &ptl);
-+				if (!start_pte)
-+					break;
-+				arch_enter_lazy_mmu_mode();
-+				if (!err)
-+					nr = 0;
-+				continue;
-+			}
-+
-+			if (any_young)
-+				ptent = pte_mkyoung(ptent);
-+			if (any_dirty)
-+				ptent = pte_mkdirty(ptent);
- 		}
- 
- 		if (folio_test_swapcache(folio) || folio_test_dirty(folio)) {
- 			if (!folio_trylock(folio))
- 				continue;
- 			/*
--			 * If folio is shared with others, we mustn't clear
--			 * the folio's dirty flag.
-+			 * If we have a large folio at this point, we know it is
-+			 * fully mapped so if its mapcount is the same as its
-+			 * number of pages, it must be exclusive.
- 			 */
--			if (folio_mapcount(folio) != 1) {
-+			if (folio_mapcount(folio) != folio_nr_pages(folio)) {
- 				folio_unlock(folio);
- 				continue;
- 			}
-@@ -750,19 +764,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 		}
- 
- 		if (pte_young(ptent) || pte_dirty(ptent)) {
--			/*
--			 * Some of architecture(ex, PPC) don't update TLB
--			 * with set_pte_at and tlb_remove_tlb_entry so for
--			 * the portability, remap the pte with old|clean
--			 * after pte clearing.
--			 */
--			ptent = ptep_get_and_clear_full(mm, addr, pte,
--							tlb->fullmm);
--
--			ptent = pte_mkold(ptent);
--			ptent = pte_mkclean(ptent);
--			set_pte_at(mm, addr, pte, ptent);
--			tlb_remove_tlb_entry(tlb, pte, addr);
-+			clear_young_dirty_ptes(vma, addr, pte, nr, cydp_flags);
-+			tlb_remove_tlb_entries(tlb, pte, nr, addr);
- 		}
- 		folio_mark_lazyfree(folio);
- 	}
--- 
-2.33.1
 
