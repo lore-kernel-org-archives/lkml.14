@@ -1,203 +1,158 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A5E199EBA;
-	Thu, 18 Apr 2024 20:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E594190663
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713472710; cv=none; b=q6NQuWq1GI8ZI6VliVPGjkQoJms5wMpFNKYEgKg4f39CzUS70dwpF2UfQXlDGt3OTF7G8lzO5z8QKAmIkd/ERIDUNj2Jyy0Bwg5yrrB67umrZe3IwsAWl9g8LNHtUNtWaJiFlboKZoly+NMAOgZjjzcp6dudp+An471eM0v79uE=
+	t=1713472742; cv=none; b=ltwSXEjgQTvwl14Gms6HnkPZYG4+RGjJvxubW+8Pfkt26FsQPyfY31pykDwexvbFI4fzAVcZ53tusqXOaneEVuS285X1tOWwUAGGQkzSIk6dMpr6IPuK08Qr5VEEJm3W4wgWzJNoPq9Ml6y40hzOaEJ1kUQXQBaaJJs6KG+qwQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713472710; c=relaxed/simple;
-	bh=U8Jdac4J7AbOYdOO7iaSyo1Pc4fD5186kqXjTCi5JXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eF6ABxvaozhJV+5HORurTS99u6RzC3bFdJuUPJwn/cCQMcbMrUcEvgT37VHhXEsRGZszW5yerIsn+w9Bw/nWQLivB39AkBg2+PIcztSkRCkygBmYUPy8kfuJQPH2zzmMXZGQLMdG/K+I/6b1W2c6BJq9spiQLdnJHfJ7npyMGHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KgWJPvG+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1713472742; c=relaxed/simple;
+	bh=EQjWnSkdAXaSrCFiO96RSYAuq6uV5rmr2APeMYWUk2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W8gRbixw9JPHEXvEU/nWtPEliXR9PropdO/yF9c3gAXT65BoYKyYqfZrcgGVXOPDkjBsS7G+WJBwD5t9cmIiZn98dAmUNCTQ76nVw7AHJgFcDjGMGsmuEuuyB1i6ef6FFffIVr78xCsHfqdJ0Nml7PFZkhQUr9jbY7VJBOyJFwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nys+YJQS; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KgWJPvG+"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IKZuNi030508;
-	Thu, 18 Apr 2024 20:38:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=KK0ofOdVlXP7XXsVIpp96JdiQ3FZc76aKMyRRIPwHNc=; b=Kg
-	WJPvG+TC66/vLt70OcF5CEIbz8J1F+e/ezsjULGllWm2d9jjUypcvUrBN1yC+a1q
-	HIX4nxA8RWX+VQpOnUHxAm5JNyczIQT4L3r0iGOhOfhKuPqPDPh/Qm+zSfu7rvoM
-	wre6PP7Mcy+qCCV5YVRpy+nGQa3po38iqzQXV39pwQvixuw4K/NTXj/e4xL8b/Ju
-	6mCxvSHhP5/3mV7/lE2tdtVNxEh4uOmmGvbI+Wr1+VOGEWCyGhBA05KHtMnFv3LN
-	PnyxuMSS7hiMlRWI5QhI2b57znXkqm1Dx91KHJGkKiWV/qZWrogwWRECXavT0aw2
-	0GWFtIGN9Vz1eUsiB+sg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xk155hedd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 20:38:08 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43IKc7Cx020072
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 20:38:07 GMT
-Received: from [10.110.72.56] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
- 2024 13:38:03 -0700
-Message-ID: <d25533d6-5d09-4c9f-8801-54ac35db98ed@quicinc.com>
-Date: Thu, 18 Apr 2024 13:38:03 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nys+YJQS"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a52582ecde4so122012866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713472739; x=1714077539; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kB9PcMjE0hVVpql+JbzqFJwr2b8GY15J6ZW7aMEdH3Q=;
+        b=nys+YJQSD+bVtq0Co48PcXIVYeRGNykKREGFF+/QL7SEkPdariZrDfXd8UjgV9BdM9
+         55fBydZ6jx3w7G/PF8bIt8fNamPQhrryGrVEDJS6NWAw62Lwkn/5fSo1BBKJKk53QZh4
+         BH7sWmiD8hoiapl75oSTrDtFyI5zIkHFbO9nAeIHbkAEUtRQHiHJQaEiwDcE5PO0byrF
+         qRmkulUB0Wds/AIJm6zVHiKSna9HC+C+M8qk25X5RO7OBya28nTikrSc21gtRJEwWnKt
+         R16rJxEnTMjw6iK1jPla0z2LbRo6cQuirj207jiLAxcdgfwHupq33ZCN7GXWEj2Gv3df
+         K8YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713472739; x=1714077539;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kB9PcMjE0hVVpql+JbzqFJwr2b8GY15J6ZW7aMEdH3Q=;
+        b=oDo1D0HhixhiTmgYVogBbHEbjL1DkgvWdMKUFnyGobvJaPCyV+rnVA9Vo3Fre9CW17
+         fH3L6My+BP5xuJj3aS9j1dkq2wvhRudh8H8+WdrLoGpOFJU40LJnuzjs9Zog5AulI5bE
+         ii//Ur1nxZiWNWPf65k1O3xfLVrwa43WqVjDIDvcUS1YXBgiqESPTsvIZPKzzcw03Ksd
+         66er7em5HwE/qMQiVXPq5zo6p4ChDSR1GxT8nA0TY7CfXzBEwScxwpiBJ+8OzuI53q6h
+         eyyMlK7lwLToNy1iekTHVh1X/pNof/kXVo2Jv3cdR4VIe1MsoL3fHBSf5MCrSc5WN7qS
+         N0hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKsKoS7CGT7XLfcXGyf4pXB2LHe4JcgmZGqbdGgLkWd21YivUOLUbOU0b1JCEd+Uxn+g2RYAD1qywGQ0h319ZLszwu+PEjA7pdGXm3
+X-Gm-Message-State: AOJu0Yw1WMrliFH2TaDPIramLuXXyYP9DkxKLIeTH61QyoMyPdpWqNhe
+	04eDXnFhXd+kTwJs6Bfq1LQ+jddkdkSAQ8rnt8wsaSib5zxYgyjGl5ZnEZqZOxUnbf9Ny/v2iFF
+	z8UpkFEAOk/467vs+wA6Mv/0q6CCDsSSGQC3g
+X-Google-Smtp-Source: AGHT+IE5WBFPkQE1UYAhvIFf0d5mnAUdlsEGWrhC2zVPDjA0RfuTTaSKcmUw73ewun1AK1uASHQuPihQ9bZCIaT/BJw=
+X-Received: by 2002:a17:906:a24c:b0:a55:59e6:13f5 with SMTP id
+ bi12-20020a170906a24c00b00a5559e613f5mr170031ejb.26.1713472738744; Thu, 18
+ Apr 2024 13:38:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH bpf-next v4 1/2] net: Rename mono_delivery_time to
- tstamp_type for scalabilty
-Content-Language: en-US
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Halaney <ahalaney@redhat.com>,
-        "Martin
- KaFai Lau" <martin.lau@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-CC: <kernel@quicinc.com>
-References: <20240418004308.1009262-1-quic_abchauha@quicinc.com>
- <20240418004308.1009262-2-quic_abchauha@quicinc.com>
- <66216adc8677c_f648a294aa@willemb.c.googlers.com.notmuch>
- <9a1f8011-2156-4855-8724-fea89d73df11@quicinc.com>
- <66217e7ccb46b_f9d5d294b0@willemb.c.googlers.com.notmuch>
-From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
-In-Reply-To: <66217e7ccb46b_f9d5d294b0@willemb.c.googlers.com.notmuch>
+References: <171328983017.3930751.9484082608778623495.stgit@firesoul>
+ <171328989335.3930751.3091577850420501533.stgit@firesoul> <CAJD7tkZFnQK9CFofp5rxa7Mv9wYH2vWF=Bb28Dchupm8LRt7Aw@mail.gmail.com>
+ <651a52ac-b545-4b25-b82f-ad3a2a57bf69@kernel.org>
+In-Reply-To: <651a52ac-b545-4b25-b82f-ad3a2a57bf69@kernel.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Apr 2024 13:38:20 -0700
+Message-ID: <CAJD7tkbU1PB6ocRUVM0mw_q-c6kq1r9WsgkZwe1ppNkZG8KdQA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] cgroup/rstat: convert cgroup_rstat_lock back to mutex
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: tj@kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com, 
+	cgroups@vger.kernel.org, longman@redhat.com, netdev@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, shakeel.butt@linux.dev, 
+	kernel-team@cloudflare.com, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, mhocko@kernel.org, Wei Xu <weixugc@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gDZKXrd7xPRM0cOdYqGIB6iqtzTdTHAH
-X-Proofpoint-GUID: gDZKXrd7xPRM0cOdYqGIB6iqtzTdTHAH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_18,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 clxscore=1015 lowpriorityscore=0
- suspectscore=0 malwarescore=0 bulkscore=0 impostorscore=0 spamscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404180149
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 18, 2024 at 2:02=E2=80=AFAM Jesper Dangaard Brouer <hawk@kernel=
+.org> wrote:
+>
+>
+>
+> On 18/04/2024 04.19, Yosry Ahmed wrote:
+> > On Tue, Apr 16, 2024 at 10:51=E2=80=AFAM Jesper Dangaard Brouer <hawk@k=
+ernel.org> wrote:
+> >>
+> >> Since kernel v4.18, cgroup_rstat_lock has been an IRQ-disabling spinlo=
+ck,
+> >> as introduced by commit 0fa294fb1985 ("cgroup: Replace cgroup_rstat_mu=
+tex
+> >> with a spinlock").
+> >>
+> >> Despite efforts in cgroup_rstat_flush_locked() to yield the lock when
+> >> necessary during the collection of per-CPU stats, this approach has le=
+d
+> >> to several scaling issues observed in production environments. Holding
+> >> this IRQ lock has caused starvation of other critical kernel functions=
+,
+> >> such as softirq (e.g., timers and netstack). Although kernel v6.8
+> >> introduced optimizations in this area, we continue to observe instance=
+s
+> >> where the spin_lock is held for 64-128 ms in production.
+> >>
+> >> This patch converts cgroup_rstat_lock back to being a mutex lock. This
+> >> change is made possible thanks to the significant effort by Yosry Ahme=
+d
+> >> to eliminate all atomic context use-cases through multiple commits,
+> >> ending in 0a2dc6ac3329 ("cgroup: removecgroup_rstat_flush_atomic()"),
+> >> included in kernel v6.5.
+> >>
+> >> After this patch lock contention will be less obvious, as converting t=
+his
+> >> to a mutex avoids multiple CPUs spinning while waiting for the lock, b=
+ut
+> >> it doesn't remove the lock contention. It is recommended to use the
+> >> tracepoints to diagnose this.
+> >
+> > I will keep the high-level conversation about using the mutex here in
+> > the cover letter thread, but I am wondering why we are keeping the
+> > lock dropping logic here with the mutex?
+> >
+>
+> I agree that yielding the mutex in the loop makes less sense.
+> Especially since the raw_spin_unlock_irqrestore(cpu_lock, flags) call
+> will be a preemption point for my softirq.   But I kept it because, we
+> are running a CONFIG_PREEMPT_VOLUNTARY kernel, so I still worried that
+> there was no sched point for other userspace processes while holding the
+> mutex, but I don't fully know the sched implication when holding a mutex.
 
+I guess dropping the lock before rescheduling could be more preferable
+in this case since we do not need to keep holding the lock for
+correctness.
 
-On 4/18/2024 1:11 PM, Willem de Bruijn wrote:
-> Abhishek Chauhan (ABC) wrote:
->>
->>
->> On 4/18/2024 11:47 AM, Willem de Bruijn wrote:
->>> Abhishek Chauhan wrote:
->>>> mono_delivery_time was added to check if skb->tstamp has delivery
->>>> time in mono clock base (i.e. EDT) otherwise skb->tstamp has
->>>> timestamp in ingress and delivery_time at egress.
->>>>
->>>> Renaming the bitfield from mono_delivery_time to tstamp_type is for
->>>> extensibilty for other timestamps such as userspace timestamp
->>>> (i.e. SO_TXTIME) set via sock opts.
->>>>
->>>> As we are renaming the mono_delivery_time to tstamp_type, it makes
->>>> sense to start assigning tstamp_type based on enum defined
->>>> in this commit.
->>>>
->>>> Earlier we used bool arg flag to check if the tstamp is mono in
->>>> function skb_set_delivery_time, Now the signature of the functions
->>>> accepts tstamp_type to distinguish between mono and real time.
->>>>
->>>> In future tstamp_type:1 can be extended to support userspace timestamp
->>>> by increasing the bitfield.
->>>>
->>>> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
->>>> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
->>>
->>>> +/**
->>>> + * tstamp_type:1 can take 2 values each
->>>> + * represented by time base in skb
->>>> + * 0x0 => real timestamp_type
->>>> + * 0x1 => mono timestamp_type
->>>> + */
->>>> +enum skb_tstamp_type {
->>>> +	SKB_CLOCK_REAL,	/* Time base is skb is REALTIME */
->>>> +	SKB_CLOCK_MONO,	/* Time base is skb is MONOTONIC */
->>>> +};
->>>> +
->>>
->>> Can drop the comments. These names are self documenting.
->>
->> Noted! . I will take care of this
->>>
->>>>  /**
->>>>   * DOC: Basic sk_buff geometry
->>>>   *
->>>> @@ -819,7 +830,7 @@ typedef unsigned char *sk_buff_data_t;
->>>>   *	@dst_pending_confirm: need to confirm neighbour
->>>>   *	@decrypted: Decrypted SKB
->>>>   *	@slow_gro: state present at GRO time, slower prepare step required
->>>> - *	@mono_delivery_time: When set, skb->tstamp has the
->>>> + *	@tstamp_type: When set, skb->tstamp has the
->>>>   *		delivery_time in mono clock base (i.e. EDT).  Otherwise, the
->>>>   *		skb->tstamp has the (rcv) timestamp at ingress and
->>>>   *		delivery_time at egress.
->>>
->>> Is this still correct? I think all egress does now annotate correctly
->>> as SKB_CLOCK_MONO. So when not set it always is SKB_CLOCK_REAL.
->>>
->> That is correct. 
->>
->>>> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
->>>> index 61119d42b0fd..a062f88c47c3 100644
->>>> --- a/net/ipv4/tcp_output.c
->>>> +++ b/net/ipv4/tcp_output.c
->>>> @@ -1300,7 +1300,7 @@ static int __tcp_transmit_skb(struct sock *sk, struct sk_buff *skb,
->>>>  	tp = tcp_sk(sk);
->>>>  	prior_wstamp = tp->tcp_wstamp_ns;
->>>>  	tp->tcp_wstamp_ns = max(tp->tcp_wstamp_ns, tp->tcp_clock_cache);
->>>> -	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, true);
->>>> +	skb_set_delivery_time(skb, tp->tcp_wstamp_ns, CLOCK_MONOTONIC);
->>>
->>> Multiple references to CLOCK_MONOTONIC left
->>>
->> I think i took care of all the references. Apologies if i didn't understand your comment here. 
-> 
-> On closer read, there is a type issue here.
-> 
-> skb_set_delivery_time takes a u8 tstamp_type. But it is often passed
-> a clockid_t, and that is also what the switch expects.
-> 
-> But it does also get called with a tstamp_type in code like the
-> following:
-> 
-> +       u8 tstamp_type = skb->tstamp_type;
->         unsigned int hlen, ll_rs, mtu;
->         ktime_t tstamp = skb->tstamp;
->         struct ip_frag_state state;
-> @@ -82,7 +82,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
->                         if (iter.frag)
->                                 ip_fraglist_prepare(skb, &iter);
->   
-> -                       skb_set_delivery_time(skb, tstamp, mono_delivery_time);
-> +                       skb_set_delivery_time(skb, tstamp, tstamp_type);
-> 
-> So maybe we need two variants, one that takes a tstamp_type and one
-> that tames a clockid_t?
-> 
-> The first can be simple, not switch needed. Just apply the two stores.
-I agree to what you are saying but clockid_t => points to int itself. 
+>
+> > If this is to reduce lock contention, why does it depend on
+> > need_resched()? spin_needbreak() is a good indicator for lock
+> > contention, but need_resched() isn't, right?
+> >
+>
+> As I said, I'm unsure of the semantics of holding a mutex.
+>
+>
+> > Also, how was this tested?
+> >
+>
+> I tested this in a testlab, prior to posting upstream, with parallel
+> reader of the stat files.
 
-For example :- 
-		void qdisc_watchdog_init_clockid(struct qdisc_watchdog *wd, struct Qdisc *qdisc,
-				 clockid_t clockid)
+I believe high concurrency is a key point here. CC'ing Wei who
+reported regressions on previous attempts of mine before to address
+the lock contention from userspace.
 
-		qdisc_watchdog_init_clockid(wd, qdisc, CLOCK_MONOTONIC); => sch_api.c
-	       qdisc_watchdog_init_clockid(&q->watchdog, sch, q->clockid); =>sch_etf.c (q->clockid is int)
-	
-But i can change it to two new APIs one which accepts only clock_id (with switch) and other accepts u8 to directly store whatever is given. 
+> As I said in other mail, I plan to experiment
+> with these patches(2+3) in production, as micro-benchmarking will not
+> reveal the corner cases we care about.
+
+Right, but micro-benchmarking should give us a signal about
+regressions. It was very useful for me when working with this code
+before to use synthetic benchmarks with high concurrency of userspace
+reads and/or kernel flushers.
