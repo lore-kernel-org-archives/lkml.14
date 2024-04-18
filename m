@@ -1,144 +1,131 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17440145337;
-	Thu, 18 Apr 2024 13:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445776; cv=none; b=MZO4gUdzaNju7YKoBPkizDMrTEIpFe7OAl714NNjtB2h4lolKe8ivcDGwj/6UCxooVv4zpQIrZ9MlC53XLlN/tXFwjw0lXGCObRILGPi3iWmw6SxgtAJe+sTWT6+JKJQFAGPpKPJho5O+Qiy6850FTGHaHudaqYh1uJzkL+eyKs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713445776; c=relaxed/simple;
-	bh=Z8LqLKETTuqPbNx9AIZuOgf3LNGzlBMZYBlVi5bQc3A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rnDtckvEwxWz9Et4vskt67uJGDbZ7mgaS51UmbTwIstPRn3h9ei9S32ufvpOxnezeITCzP2cIkQjbPBWy+W24YMo1AbYU23lP/LJLrFqEm1yQfBL3gyVI1aY1JGodfeQJPdsNlcUpdG/ivC/WP3D8d/qoKq/CsRz5kuUQuHThSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GStT0MXM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEC21DFCF;
+	Thu, 18 Apr 2024 13:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713445816; cv=fail; b=K+bUz7YbLthfMt7qTsZTl6JHEDq8+9eNCQ7AhqQpdc+3cDgyOIn1Fl9W5gZ+qInNk6YJVyVHFFUGWLnEW/WNsy/AFMvkMizOUuylAFuJfvtaOwVwsDgTO7c3lzbnSdPsgzeHBR0xPDOJxMOSrGqkrDt4Vyjvm8J2MtYnRdLwNYE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713445816; c=relaxed/simple;
+	bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
+	h=References:From:To:CC:Subject:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=FQrLQYZqwx7y8ly+LGeq1XtxGWOdWLCkh0dA3Niq5doNyuaOSkrdNJQzw35CNH2koB03ZGNq/jdyE5EcKP0gFLqd2CiiP16T+8p3MOp38hieMvaLFjw08DcmQ1MimYS1XmziXSvxQXGtrdOxRSwsco5bVi39RXWr3xMgBPCSntY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FOV+4dQW; arc=fail smtp.client-ip=40.107.93.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GStT0MXM"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43ID8jU3007642;
-	Thu, 18 Apr 2024 13:09:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=RaI5RA/Q5QPRrrhoR9duIhNVwqkwcc6C9qMHRKNHl+Q=;
- b=GStT0MXMLM/fZ9pe8YXt69mb+WpGa4ehYFCflmtI1TebfTGuMbPUuO7bFFnEttDSGBpW
- wVjQT2tYVG8bdJ5Dp0s8vaUIjKR3RCxcLs48OrDl9BDsHP8mgIt4bC3h/HXWy87Ur1ea
- OG9YwjXWDQgRJ3xAyBqYuela6as1U9OG3ItFOtMY6xuJO3ksmt8+q6QcY4JBOUX8EU6t
- aTY6SuWGr6L6Sa3qMYJOWu+A/ACjxwgvja03h9WYrHbiyap/VyGC7jtnVQ3bkhm2zmeo
- liJWDwa2pRwk/Mgrered6Ws1P8sjCBP9Z2EJssVeAecdv7ag1WdPqSTLHHeM5tyWcBQQ 9g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk44rr044-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 13:09:28 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43ID9SkW008360;
-	Thu, 18 Apr 2024 13:09:28 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xk44rr041-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 13:09:28 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43IB566T027289;
-	Thu, 18 Apr 2024 13:09:27 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xg4s0aw1y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Apr 2024 13:09:27 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43ID9LH348693672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Apr 2024 13:09:23 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8FB9520043;
-	Thu, 18 Apr 2024 13:09:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 591E320040;
-	Thu, 18 Apr 2024 13:09:21 +0000 (GMT)
-Received: from [9.152.224.222] (unknown [9.152.224.222])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Apr 2024 13:09:21 +0000 (GMT)
-Message-ID: <453afb13-c7e3-4156-9dbb-c6317503c715@linux.ibm.com>
-Date: Thu, 18 Apr 2024 15:09:20 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FOV+4dQW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kyFxCPKbcx5VbdZsFm9z+DHrCfEMCl2twocLEArwbE3XhlCKfASUdEgF0q0YbZ942SeSLn+zVrPuXjsIn6A4+QJTKhP2tdgRlJyeCaTDVGmgKiS3JDsLwpXYKajNK30XA2CECyoCbSuKIHHI+sU+/H2weZVX+YaaU0L8B0yi6TduLqxAam8gaekaIAykyN5mQ5NNpBp5vrHxuaXqkl1L9Qu630SX0zhSYi8juU04AE6dMsdCn16kOlznb9BI5F7V0NCiSYmrq4Zcj2GrlpBYrVSQcUIccOtyXoCFAkDr5HrYiPbfup66DFmUSWCu4EUgfGs6oU3uvOpxJmUfeThB/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
+ b=KBZC83/R5Ni/iUGLCQZSkpug4iyXOtsHkM/3QzIeEfWcdrAWamkMie6QL52P6QCOmcozdIxeOlhUljM/nO50FKrDOZb1lPHsuJKnMcg82Rl+hRfh+kZim6PJIpvH9p+iwrXjI5uT8XdjO0Kgo88ZCpcAtfWfF+mmD0gAyhT+f3uU/Uo8AlHOaiWNlJk0VEwCMjvfvfzRjXm1G1QHyNSDNt/VqyIVAl3KTSDP00XZr34rnE3c4+HuimaNWs6vvm76l6GcOqFBgHHxs2/xLE1PtQbkENtYDxordTvIDzEc92Joxfo0RxI4xztny0joQ7eD5lDjDM1hXhSOc2Ctv3gERQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5pGUrpsICmQLTPWIM8Or6o4cyW3gYlpGBCIU5JKWTF4=;
+ b=FOV+4dQWbfC+o4CFO8dbEeDHmY4aix1crWBlxB6n+/Ddk75YdvInEQqMFdh8TxwRNftTexCkdQN+NKowIcyZyG8dTqNbJCbtOBxSBr+lAKkr5MfzzeJRF9jQCNxYlNUpe/I6oyAyGXIyKqleo4SzSjKQ6NFjLxAzp1V/lNqeOVlrdv6cNAu5BlOn4AXExTU6uJvcjUaI2zJ6H4tfQRiIl0KnTU7gpj4OtYR/viAwK/f4BquHA6f64m9wZWMGwf56fiekzHtHt/Hxk2Ena0bwjy6xurY5jxss+rmMgsCdkNGJJyC9mNdl73ZAT+QAuPTqUwD3PmoTUfHrPYdSmHk7LQ==
+Received: from SJ0PR03CA0388.namprd03.prod.outlook.com (2603:10b6:a03:3a1::33)
+ by DS7PR12MB5766.namprd12.prod.outlook.com (2603:10b6:8:75::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 13:10:08 +0000
+Received: from SJ1PEPF00001CE2.namprd05.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::d9) by SJ0PR03CA0388.outlook.office365.com
+ (2603:10b6:a03:3a1::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.20 via Frontend
+ Transport; Thu, 18 Apr 2024 13:10:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SJ1PEPF00001CE2.mail.protection.outlook.com (10.167.242.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 13:10:08 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
+ 2024 06:09:56 -0700
+Received: from yaviefel (10.126.230.35) by drhqmail201.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
+ 2024 06:09:52 -0700
+References: <20240417135131.99921-1-ast@fiberby.net>
+ <87o7a8c76m.fsf@nvidia.com>
+User-agent: mu4e 1.8.11; emacs 28.3
+From: Petr Machata <petrm@nvidia.com>
+To: Petr Machata <petrm@nvidia.com>
+CC: =?utf-8?Q?Asbj=C3=B8rn?= Sloth =?utf-8?Q?T=C3=B8nnesen?=
+	<ast@fiberby.net>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Ido
+ Schimmel" <idosch@nvidia.com>
+Subject: Re: [PATCH net-next] mlxsw: spectrum_flower: validate control flags
+Date: Thu, 18 Apr 2024 14:58:50 +0200
+In-Reply-To: <87o7a8c76m.fsf@nvidia.com>
+Message-ID: <87plumbyw3.fsf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] s390/mm: re-enable the shared zeropage for !PV and
- !skeys KVM guests
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>, Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20240411161441.910170-1-david@redhat.com>
- <20240411161441.910170-3-david@redhat.com>
- <Zh1w1QTNSy+rrCH7@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <8533cb18-42ff-42bc-b9e5-b0537aa51b21@redhat.com>
- <Zh4cqZkuPR9V1t1o@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <20d1d8c5-70e9-4b00-965b-918f275cfae7@linux.ibm.com>
- <a6a4b284-e21b-4a04-88d1-7402eb5a08ef@redhat.com>
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <a6a4b284-e21b-4a04-88d1-7402eb5a08ef@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: U_NintKTDQIUuOR8ZvOzcdWvOEEHjrHp
-X-Proofpoint-ORIG-GUID: T0JHOIK5lgqLYJh6QQs6jAcpUgEmZbJt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_11,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=782
- priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0 adultscore=0
- clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404180093
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ drhqmail201.nvidia.com (10.126.190.180)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE2:EE_|DS7PR12MB5766:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f8636c8-6f5b-40c0-cd94-08dc5fa8df43
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kgDJ5myEj+l+BoBT8Nojq76EQCWUmYmDWV1zY/8akLQ9L2MLg0uFfRmnOQ/Gj1vZpQd2fO7mo7tjDjKV1BiMIoMNS5bt82cDOT6Jv72wWo7IUo4/UdHEPrnjvewnk/ISAZrwY5T+hAXuBJyefAZUg1DIjBahaa++sbTZo/OicsUshVHBG2PsO7IdNa0Ot31vvMR2Ar9pvYCHDEO+PtdeJfbJz9+tSbSX1xVyDqCNiTTl3xmPw4nIjsBpEu8+h0pmmwM0ySpEGnakwTDVPp71ONdT88Hygx5ntV65iWYt+5HeghqmnZBL9DPjMbtegSDpfkFh/YbnG0gwVyGsUs2u1sL/IuQKOhLkwqCmmi0Dh02L1nM82S2q+UB5beVIT9F/e72/tdyiv/JaS63UBK+kB15oV+7jvGOWYCU3ToXmocWG5SuKKBq+g9s7Z32NxOnxQKYfloFq88tpGiLq99CQM5rlSsNQn+a8M8f5aQAIFHErSyAxNfLlQAcgjxcATmkV1HK3QTT9IjVidGBvEoEHaAz6JOKY/WIdOR86hlsWapev1fczhbqZDKlgAth47GSEvi4oNp7udG/YLnj4dx3x9Z7SOyhFbR0BuOJ/fwOGGldkgFSRdhoE9ZwEO2jcV2f7KQX1XHgypNZ0WIMkGKPEMrZkytpV+O23RTbBW78mMEOFW90dt9nDFoeiNnmcbRC6UW8p1f/zDPAHZUIXWLqfIy/wrnZFN7f2IAsX/mUul+S3JPmxxsp2aJmRrPnnFrBH
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 13:10:08.3893
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f8636c8-6f5b-40c0-cd94-08dc5fa8df43
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5766
 
 
+Petr Machata <petrm@nvidia.com> writes:
 
-Am 16.04.24 um 15:41 schrieb David Hildenbrand:
-> On 16.04.24 14:02, Christian Borntraeger wrote:
+> Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net> writes:
+>
+>> This driver currently doesn't support any control flags.
 >>
+>> Use flow_rule_has_control_flags() to check for control flags,
+>> such as can be set through `tc flower ... ip_flags frag`.
 >>
->> Am 16.04.24 um 08:37 schrieb Alexander Gordeev:
+>> In case any control flags are masked, flow_rule_has_control_flags()
+>> sets a NL extended error message, and we return -EOPNOTSUPP.
 >>
->>>> We could piggy-back on vm_fault_to_errno(). We could use
->>>> vm_fault_to_errno(rc, FOLL_HWPOISON), and only continue (retry) if the rc is 0 or
->>>> -EFAULT, otherwise fail with the returned error.
->>>>
->>>> But I'd do that as a follow up, and also use it in break_ksm() in the same fashion.
->>>
->>> @Christian, do you agree with this suggestion?
+>> Only compile-tested.
 >>
->> I would need to look into that more closely to give a proper answer. In general I am ok
->> with this but I prefer to have more eyes on that.
->>   From what I can tell we should cover all the normal cases with our CI as soon as it hits
->> next. But maybe we should try to create/change a selftest to trigger these error cases?
-> 
-> If we find a shared zeropage we expect the next unsharing fault to succeed except:
-> 
-> (1) OOM, in which case we translate to -ENOMEM.
-> 
-> (2) Some obscure race with MADV_DONTNEED paired with concurrent truncate(), in which case we get an error, but if we look again, we will find the shared zeropage no longer mapped. (this is what break_ksm() describes)
-> 
-> (3) MCE while copying the page, which doesn't quite apply here.
-> 
-> For the time being, we only get shared zeropages in (a) anon mappings (b) MAP_PRIVATE shmem mappings via UFFDIO_ZEROPAGE. So (2) is hard or even impossible to trigger. (1) is hard to test as well, and (3) ...
-> 
-> No easy way to extend selftests that I can see.
+>> Signed-off-by: Asbj=C3=B8rn Sloth T=C3=B8nnesen <ast@fiberby.net>
+>
+> Thanks, I'll take this through our regression.
 
-Yes, lets just go forward.
-> 
-> If we repeatedly find a shared zeropage in a COW mapping and get an error from the unsharing fault, something else would be deeply flawed. So I'm not really worried about that, but I agree that having a more centralized check will make sense.
+Nothing bombed.
+
+Tested-by: Petr Machata <petrm@nvidia.com>
