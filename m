@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2DA7D3F4
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCE4115B56B
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713433910; cv=none; b=IXWHZD45yMdcd5gHibWlemprc6cbMGgpRmouhJcAghJmM70mMr1ytL0c6h8/XsagyoRmmgo5kc6zj7gCQQBXspOZUUrVgIU4A9xmrByJG7GzSgmghzzh9tYy1X1m3x/zGfV10K55OJ2juFXQzjMKu+rcXm4//NRyLpYYD01W488=
+	t=1713433913; cv=none; b=Y0P+Flu8EuQaimNTJhmJVBH3kZiid0BubkAN6Ut2WJBBOo/HiY+UOg3V8AyXYGgsyzb+A0YBM+N6XM3VhlgGdegTlobq5q/4rIliyBDglw6UbB2Y6HiYyHIAlr+dCzenXpeiR0R+aiTL4NYcAYiIETcZyor3PlSunoefFrx+K24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713433910; c=relaxed/simple;
-	bh=VL2RPQJdUq2KgisxeBg+uyuZyFKyguDUJolkJiOZw54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Blb4uK3q9Rifg/LylauGaF8bb6OQ4vlzvtZ5DMBbh/L3Xh9L9cTgp9p4icSEmLtgu2bUaA4VF7t+dCkzolqrSAWbX2IQRIyt+/JHQbTSbRamwAtIiGGYvedJ3dRPxxF0+gxRmJOtNEt92bvaPkKbfJm5cr+8Pvt8zFctv6aDOjU=
+	s=arc-20240116; t=1713433913; c=relaxed/simple;
+	bh=NsGjx/jomoCy4xShRYD7a+fxBdFl3tLSSNdfPyeTJyU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D0eKSTMM7pRo+rJij49rUi4s+wBUCGiDL73Nu/eXVqFFGAxTq2hKFAwdjyG5AcS8aE/NhYW5V5cK69Lqdn4nR9JiCp4ugvmCVFtmrc060wtKn2G63berOYvYyPjP8MzY9mhSsJU/OJ6zqXRJOdC3y9CCyGuZL4NV7/65jEDc5us=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1166E339;
-	Thu, 18 Apr 2024 02:52:14 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2D811595;
+	Thu, 18 Apr 2024 02:52:18 -0700 (PDT)
 Received: from pluto.guestnet.cambridge.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570B03F64C;
-	Thu, 18 Apr 2024 02:51:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00F0D3F64C;
+	Thu, 18 Apr 2024 02:51:48 -0700 (PDT)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -30,10 +31,12 @@ Cc: sudeep.holla@arm.com,
 	konrad.dybcio@linaro.org,
 	souvik.chakravarty@arm.com,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH v3 0/2] SCMI multiple vendor protocol support
-Date: Thu, 18 Apr 2024 10:51:19 +0100
-Message-ID: <20240418095121.3238820-1-cristian.marussi@arm.com>
+Subject: [PATCH v3 2/2] firmware: arm_scmi: Add dedicated vendor protocols submenu
+Date: Thu, 18 Apr 2024 10:51:21 +0100
+Message-ID: <20240418095121.3238820-3-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240418095121.3238820-1-cristian.marussi@arm.com>
+References: <20240418095121.3238820-1-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,81 +45,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Add a dedicated Kconfig submenu and directory where to collect SCMI vendor
+protocols implementations.
 
-this is meant to address the possibility of having multiple vendors
-implementing distinct SCMI vendor protocols with possibly the same
-overlapping protocol number without the need of crafting the Kconfig
-at compile time to include only wanted protos
-
-Basic idea is simple:
-
-- vendor protos HAS to be 'tagged' at build time with a vendor_id
-- vendor protos COULD also optionally be tagged at build time with
-sub_vendor_id and implementation version
-
-- at init all the build vendor protos are registered with the SCMI core
-  using a key derived from the above tags
-
-- at SCMI probe time the platform is identified via Base protocol as
-  usual and all the required vendor protos (i.e. IDs defined in the DT
-  as usual) are loaded (if required) after a lookup process based on the
-  following rules:
-
-  + protocol DB is searched using the platform/Base runtime provided tags
-
-  	<vendor> / <sub_vendor> / <impl_ver>
-
-    using the following search logic (keys), first match:
-
-     1. proto_id / <vendor_id> / <sub_vendor_id> / <impl_ver>
-
-     2. proto_id / <vendor_id> / <sub_vendor_id> / 0
-
-     3. proto_id / <vendor_id> / NULL / 0
-
-  IOW, closest match, depending on how much fine grained is your
-  protocol tuned (tagged) for the platform.
-
-  I am still doubtful about the usage of <impl_ver>, and tempted to drop it
-  since we have anyway protocol version and NEGOTIATE_PROTOCOL_VERSION
-  to deal with slight difference in fw revision...
-
-In V2 a dedicated vendors dir/Makefile/Kconfig is added: not sure if we
-want to provide also a way of grouping SCMI vendor protocol headers under
-include/linux...open to any suggestion/opinion.
-
-Based on sudeep/for-next/scmi/updates on top of
-
-commit bb48844a08a0 ("clk: scmi: Add support for get/set duty_cycle operations")
-
-Any feedback welcome
-
-Thanks,
-Cristian
-
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
-v2 -> v3
-- renaming base vendor proto define to SCMI_PROTOCOL_VENDOR_BASE
-- adding a dedicated helper __scmi_vendor_protocol_lookup to cleanup protocol
-  lookup
-v1 -> v2
-- added a dedicated vendors/ directory and Kconfig under arm_scmi/
-
-Cristian Marussi (2):
-  firmware: arm_scmi: Add support for multiple vendors custom protocols
-  firmware: arm_scmi: Add dedicated vendor protocols submenu
-
- drivers/firmware/arm_scmi/Kconfig          |   2 +
- drivers/firmware/arm_scmi/Makefile         |   1 +
- drivers/firmware/arm_scmi/driver.c         | 169 ++++++++++++++++++---
- drivers/firmware/arm_scmi/protocols.h      |  15 ++
- drivers/firmware/arm_scmi/vendors/Kconfig  |   4 +
- drivers/firmware/arm_scmi/vendors/Makefile |   2 +
- 6 files changed, 171 insertions(+), 22 deletions(-)
+ drivers/firmware/arm_scmi/Kconfig          | 2 ++
+ drivers/firmware/arm_scmi/Makefile         | 1 +
+ drivers/firmware/arm_scmi/vendors/Kconfig  | 4 ++++
+ drivers/firmware/arm_scmi/vendors/Makefile | 2 ++
+ 4 files changed, 9 insertions(+)
  create mode 100644 drivers/firmware/arm_scmi/vendors/Kconfig
  create mode 100644 drivers/firmware/arm_scmi/vendors/Makefile
 
+diff --git a/drivers/firmware/arm_scmi/Kconfig b/drivers/firmware/arm_scmi/Kconfig
+index aa5842be19b2..db9166e99177 100644
+--- a/drivers/firmware/arm_scmi/Kconfig
++++ b/drivers/firmware/arm_scmi/Kconfig
+@@ -180,4 +180,6 @@ config ARM_SCMI_POWER_CONTROL
+ 	  called scmi_power_control. Note this may needed early in boot to catch
+ 	  early shutdown/reboot SCMI requests.
+ 
++source "drivers/firmware/arm_scmi/vendors/Kconfig"
++
+ endmenu
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index a7bc4796519c..1316892a230d 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -15,6 +15,7 @@ scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+ 
+ obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+ obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o
++obj-$(CONFIG_ARM_SCMI_PROTOCOL) += vendors/
+ 
+ obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+ 
+diff --git a/drivers/firmware/arm_scmi/vendors/Kconfig b/drivers/firmware/arm_scmi/vendors/Kconfig
+new file mode 100644
+index 000000000000..7c1ca7a12603
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/vendors/Kconfig
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++menu "ARM SCMI Vendor Protocols"
++
++endmenu
+diff --git a/drivers/firmware/arm_scmi/vendors/Makefile b/drivers/firmware/arm_scmi/vendors/Makefile
+new file mode 100644
+index 000000000000..c6c214158dd8
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/vendors/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# obj-$(CONFIG_ARM_SCMI_PROTOCOL_<your_vendor_proto>) += <your_vendor_proto>.o
 -- 
 2.44.0
 
