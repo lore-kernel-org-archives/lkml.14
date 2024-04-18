@@ -1,58 +1,57 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E408419DF46
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE151A0AFA
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713473265; cv=none; b=ZGlkNUqRcja4beXk34gtjf2HHHBKxGmEkxbjP6OuOXobJmdIaH4gvRWr7pVVJtNglWzACQfVQPcDY65zG/IOBjXat9OTPffpK/Zb5BtEIbEQfku5jd4RbnOFvUrZkojNf96W01bsW+bNXhmDuEB5jILjrXE4PLlJPVobgW1JTXg=
+	t=1713473266; cv=none; b=AjaQxS93/Un/6CnoeJglriBpc4KIrUHxhZVXcLjqlRSnIDezvty/23uaDRqkXe6Ya5KS/oGzeuaOscVH+p8rInX0ghkHEiTDGfro2HbPFFHKlvGrIr6fCBKOhjafp+s3jm/SgJggf2i9thgNeCieMRKcj/h+WWTTIj5HDvFM1MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713473265; c=relaxed/simple;
-	bh=/O26O0SPwaQndb7Gk11BnaA079JRAE9KvwG8Uy+fgkI=;
+	s=arc-20240116; t=1713473266; c=relaxed/simple;
+	bh=EM+PQeT/+Ayv+DqVTXJ6eeqpjOeHpKwRxGVuenJZOr8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g1QscAvH7QurKZDCMarA3sqhRJqi3EWpG+Mp8hL6Iwf7CyOUWUrnycyzIbwnjQbF/pXN2VJjynKbCAD3tSxGkXpo0fLrQ029fdLDQ+WmAJ/S3ZDUENL9SgtNjQPJ6X1SZHf/uQWVRaJEkbyI4XrfjLV2ZffTKEIW3uTDRs0009U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZYjQt/ct; arc=none smtp.client-ip=209.85.166.46
+	 MIME-Version; b=PkQ88QCxOElPq3z/gURQTcBtAcDrd7Vib9aTXb1KkZkRprph/t36uNx8iKlCMQTo6gdWEy4QI5apRlt3+XbPxkLK0UvRH+LxnUQJ5WgP+Z5dVux+AeRYHfY2VxpRuOPMKXtv2jIVH6nLE0fXzhSvvhwtojRFdZl1sz5Q3ZcmO8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V7ImgRe7; arc=none smtp.client-ip=209.85.160.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZYjQt/ct"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d6b0c766e9so45659039f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:47:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V7ImgRe7"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-22edcfcd187so489434fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713473262; x=1714078062; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713473264; x=1714078064; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H3Jy4pWunk3gIi2kTc2gXOgQDTDQJh8keviaOUz7uIE=;
-        b=ZYjQt/ct3cSn6dvp1SKUcDXcgH2FKAR52Q3W2nIGlJJGgaTvC/4zZFVFT2etV6rday
-         O5mKZshbjyXK9iXvziVoRcdPICnO38fguID/IFrxhMRrtK603J+pUvfajz3BXmE2UlqE
-         1T6pi4HzGsjrprgJBxGgUqc7PnRb0Rzvv0FDNATLKqny6+sZUl+eZzhE5IRZLjbQuRm/
-         1mnYhWBVDFhyQzarDCAoP29U/nR+xl/E2HVPstkqsVIFmAGa6MayucaK+p8+dFfJZjsO
-         xbl0+Lqqt1DMFHytNbr1JoIickSFBT5IjubMu8NEHI3RXlAJYWz1EUczTZHVt4+OEf6j
-         E9HQ==
+        bh=NOsLWHf1aG7QjlwAYhzu9K+FfSOj8nw2eYMqyFikvmc=;
+        b=V7ImgRe7jkpHOts93G+lm8ZfO9vtJki+bHJ0OYnS501S6N72QFl2VAqL0oZk92QG3q
+         m02rMzaHK9lln9LRB+LTNpKjMZM8eEUfyD2J1i88LyKH7kHzLT25MnE9nQFjXSSa0nNA
+         LZCG0xLUPXsSPUL7eoiKlZgCVixeEm3fhiN/bh+NLnpt4pdDafK0fLfYLL0RSWF9ZqPN
+         Tt2ff0T86NtzDvaqQ3/zBxJpzMMar+O82fDKHWqoBt3Ak9Odhwa0bcnlHrzZSbNbBHWH
+         WrtxPOv+FVFLhMoupMyksg6vgMYsANQq0WHtaV62EczENhL4tIsGr+Tu4JF1S1Hg7+ji
+         dq9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713473262; x=1714078062;
+        d=1e100.net; s=20230601; t=1713473264; x=1714078064;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H3Jy4pWunk3gIi2kTc2gXOgQDTDQJh8keviaOUz7uIE=;
-        b=tx7IRLpuofKA5QS+vgdgz4SYYVggB0etidaxrUogEekii4Iu7/qxe3rQ4PZGSdP32B
-         NdQ1hoxeuDqkkIGPn5lPCe/jfwDHpTq0UtXri8pLobtsixfrxM6gz2ipYbtU5OXr1QnF
-         61Wm8CH/kd1frjqwHC+5G72X7jy811NQ5X3oWRtZwucTxfqPI0/Gkx9gElq1o5q1mHkt
-         m3s7dWCTHJ7fkHPrZNN7OK/n4O1Lr7Cb8842M1BuYCULx0qGIo06k1rBN9GkgAik4+ut
-         MefnVdcUr3NK3Etz1gbrnDY/9ncM8mp8U6bmJEo6+WezD78jfxkGv83W+mfDkzNAUa4K
-         FsfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvGtqyh2wjA8GrfQyocwpTDln9JW0X0bOKr7YzHrF4lxbZamcTrV4nnHiYIUZdMyHUYKAGVq21nUdjp1l13J0f5UyFcc0Dno9sJbS6
-X-Gm-Message-State: AOJu0Yy8OLSKX409cS7+LLUMvWP4jg2nsQDRg9gby3qQZjYu1QlqlOLr
-	p2oeDjVhDrVNZ198szp9oXf8JZ9BC4Os5Op0BDQ6ye+LWt3XPX2hntdKKH8gRnGE3g6edQa5hlf
-	Z
-X-Google-Smtp-Source: AGHT+IG8BLSKKt4Z+OUV/Ccbn8w8o09vBKQ7lL5VpQxMYtcdH5yIUGgB0k1msp2eDPQ+0DIyHdZwIw==
-X-Received: by 2002:a5e:8b04:0:b0:7da:1911:8a9f with SMTP id g4-20020a5e8b04000000b007da19118a9fmr468131iok.4.1713473262075;
-        Thu, 18 Apr 2024 13:47:42 -0700 (PDT)
+        bh=NOsLWHf1aG7QjlwAYhzu9K+FfSOj8nw2eYMqyFikvmc=;
+        b=oKT2QfRNKt5RYaM5vN8VQI7l5OTy89XTS2SErCim6t10YqxcAwYeCCkwv/A6EpH0u6
+         Xrn6TnK3ECF5wOkPoQ5eH0Sz4rIyIRia1J6QcayVpfWIhCee7qbbT2GQam42hfX9hvwI
+         EwZq96iYeh0SoflzMnONILommPipMcNX18UIUvLshyLdFB/Q81pHiBL6z0QhVFehe5TV
+         yJhxt4f16R1+o8QcbDvDI22kmtpeyhQK6//T1ybD3nPaUQvEaswKygAFenNe50xhw6Z4
+         tLH11IYZyFRXNeb/ztp+FPAlfcEe9GLMdsxLjq2qHDFdkoBhi0E6mexiMHU5oe4E2fc4
+         el0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWdXCbLoo+ebHL1xF0JN6svURRZiKISmjcgbbABe6T1HqSqGm/EqBgj6bThlC3zUXT27X3IFjAZYwexfND7mJTykVSoJN3FxTA3zqn6
+X-Gm-Message-State: AOJu0Yyp4FiYMlbFXSI1OSeN6er1YcK+KlBlHq74PFZurj4ZQIn2zQGr
+	3Qg/wS0Oq6RmvEqeulsbkS9+qH0tkQRbGL+Eq7sP/x1a2hJ/flhQ2ngAa6JlGsE=
+X-Google-Smtp-Source: AGHT+IHgblJ9h1CLqLo4U6C2hS5Ih8NHrIzQTKnvXZ8o0ZznahnKl3ojygI4TwopwZYSah+zGVzmBw==
+X-Received: by 2002:a05:6870:d886:b0:22e:e1e5:b8d with SMTP id oe6-20020a056870d88600b0022ee1e50b8dmr240440oac.51.1713473264566;
+        Thu, 18 Apr 2024 13:47:44 -0700 (PDT)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id r6-20020a056638300600b00484948cb8f5sm626998jak.91.2024.04.18.13.47.41
+        by smtp.gmail.com with ESMTPSA id r6-20020a056638300600b00484948cb8f5sm626998jak.91.2024.04.18.13.47.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 13:47:41 -0700 (PDT)
+        Thu, 18 Apr 2024 13:47:44 -0700 (PDT)
 From: Alex Elder <elder@linaro.org>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -68,9 +67,9 @@ Cc: mka@chromium.org,
 	netdev@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 5/8] net: ipa: make ipa_table_hash_support() a real function
-Date: Thu, 18 Apr 2024 15:47:26 -0500
-Message-Id: <20240418204729.1952353-6-elder@linaro.org>
+Subject: [PATCH net-next 7/8] net: ipa: fix two minor ipa_cmd problems
+Date: Thu, 18 Apr 2024 15:47:28 -0500
+Message-Id: <20240418204729.1952353-8-elder@linaro.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240418204729.1952353-1-elder@linaro.org>
 References: <20240418204729.1952353-1-elder@linaro.org>
@@ -82,69 +81,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the exception of ipa_table_hash_support(), nothing defined in
-"ipa_table.h" requires the full definition of the IPA structure.
+In "ipa_cmd.h", ipa_cmd_data_valid() is declared, but that function
+does not exist.  So delete that declaration.
 
-Change that function to be a "real" function rather than an inline,
-to avoid requring the IPA structure to be defined.
+Also, for some reason ipa_cmd_init() never gets called.  It isn't
+really critical--it just validates that some memory offsets and a
+size can be represented in some register fields, and they won't fail
+with current data.  Regardless, call the function in ipa_probe().
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_table.c | 8 +++++++-
- drivers/net/ipa/ipa_table.h | 7 ++-----
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ipa/ipa_cmd.h  | 8 --------
+ drivers/net/ipa/ipa_main.c | 4 ++++
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ipa/ipa_table.c b/drivers/net/ipa/ipa_table.c
-index a24ac11b8893d..9b4bb6d3f152a 100644
---- a/drivers/net/ipa/ipa_table.c
-+++ b/drivers/net/ipa/ipa_table.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/net/ipa/ipa_cmd.h b/drivers/net/ipa/ipa_cmd.h
+index e2cf1c2b0ef24..100a4e1133b5e 100644
+--- a/drivers/net/ipa/ipa_cmd.h
++++ b/drivers/net/ipa/ipa_cmd.h
+@@ -57,14 +57,6 @@ enum ipa_cmd_opcode {
+ bool ipa_cmd_table_init_valid(struct ipa *ipa, const struct ipa_mem *mem,
+ 			      bool route);
  
- /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-- * Copyright (C) 2018-2023 Linaro Ltd.
-+ * Copyright (C) 2018-2024 Linaro Ltd.
-  */
- 
- #include <linux/types.h>
-@@ -161,6 +161,12 @@ ipa_table_mem(struct ipa *ipa, bool filter, bool hashed, bool ipv6)
- 	return ipa_mem_find(ipa, mem_id);
- }
- 
-+/* Return true if hashed tables are supported */
-+bool ipa_table_hash_support(struct ipa *ipa)
-+{
-+	return ipa->version != IPA_VERSION_4_2;
-+}
-+
- bool ipa_filtered_valid(struct ipa *ipa, u64 filtered)
- {
- 	struct device *dev = ipa->dev;
-diff --git a/drivers/net/ipa/ipa_table.h b/drivers/net/ipa/ipa_table.h
-index 7cc951904bb48..16d4d15df9e9c 100644
---- a/drivers/net/ipa/ipa_table.h
-+++ b/drivers/net/ipa/ipa_table.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
- /* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-- * Copyright (C) 2019-2022 Linaro Ltd.
-+ * Copyright (C) 2019-2024 Linaro Ltd.
-  */
- #ifndef _IPA_TABLE_H_
- #define _IPA_TABLE_H_
-@@ -23,10 +23,7 @@ bool ipa_filtered_valid(struct ipa *ipa, u64 filtered);
-  * ipa_table_hash_support() - Return true if hashed tables are supported
-  * @ipa:	IPA pointer
-  */
--static inline bool ipa_table_hash_support(struct ipa *ipa)
--{
--	return ipa->version != IPA_VERSION_4_2;
--}
-+bool ipa_table_hash_support(struct ipa *ipa);
- 
+-/**
+- * ipa_cmd_data_valid() - Validate command-realted configuration is valid
+- * @ipa:	- IPA pointer
+- *
+- * Return:	true if assumptions required for command are valid
+- */
+-bool ipa_cmd_data_valid(struct ipa *ipa);
+-
  /**
-  * ipa_table_reset() - Reset filter and route tables entries to "none"
+  * ipa_cmd_pool_init() - initialize command channel pools
+  * @channel:	AP->IPA command TX GSI channel pointer
+diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+index 59e7abb4a0d19..04dc0540ff7fb 100644
+--- a/drivers/net/ipa/ipa_main.c
++++ b/drivers/net/ipa/ipa_main.c
+@@ -866,6 +866,10 @@ static int ipa_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_reg_exit;
+ 
++	ret = ipa_cmd_init(ipa);
++	if (ret)
++		goto err_mem_exit;
++
+ 	ret = gsi_init(&ipa->gsi, pdev, ipa->version, data->endpoint_count,
+ 		       data->endpoint_data);
+ 	if (ret)
 -- 
 2.40.1
 
