@@ -1,129 +1,142 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96315FCFC;
-	Thu, 18 Apr 2024 13:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A831649D2
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448734; cv=none; b=Fz7ONJFDIQ4qc/M/nFZekKP/sngRG06/Lx2SWzLSyamxm+p7uaXMt3VFI7jBf6AVQHZ4Dz9uau77SVgda1fJrkR6J3FOIL9+CBprrwvIoUmkFwrI9dBJHPIt36qpZgTDFqEWGPICcwu6b95J2MwJ3Hv93YeevLBHEzGg+i6wvv8=
+	t=1713448740; cv=none; b=OTmXlp9Z/ZhZYjvclDOPYrCrteCTtHFU9f8jncG+nhMwFk2alnosk61ge+hVc1RfGKQvCn2hOse1pwHyRQ1eQxEqmKZMaLehoMywC8e6a6rIbbfCyIXX9o5SdOTCeJ+WhqFhBKcf3ydyFXfCpYtlwpW3xihBCKSrWWBKZ2ANj5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448734; c=relaxed/simple;
-	bh=LMOtMDsVNJpeHpfVlq19OUSm2SdXirDuYt2br/Fd5YU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gRJlRSkfIWge1rnGM+QFq7MvuV5ZC6gANVS2EW/tmReYCDjU91n4LP+IgOsmLILv2O6R+ROOFc+A8HSm16WMMB2uaLiE1lt9Ai62yoCcGIa0ghT2o6Jv4c0DJWdX7JhSPk9LIHIBkJT3g4PJ3HYfsFdsbBHZDORPfiqw5QjoREE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzpl6JBHz6K69w;
-	Thu, 18 Apr 2024 21:56:47 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 38E4D1400CD;
-	Thu, 18 Apr 2024 21:58:51 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:58:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v7 09/16] arm64: acpi: Move get_cpu_for_acpi_id() to a header
-Date: Thu, 18 Apr 2024 14:54:05 +0100
-Message-ID: <20240418135412.14730-10-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713448740; c=relaxed/simple;
+	bh=jfJM8dSb6kGhQc66FRxX40igRNLtbqPBPjraUYrcYeU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VkxNk+Vpy9Z93XN+4Wk1JJ2URL0553HlUoJYmothqAytD09eNuZTm6zSEPkOZ/j7+oBKOpG3T69UDqjRsq46GQrt3T7KKqv8mqKZLmQuVXfokol7NG8S9eiwjtpzgxKVyybvouQUEdfTKCBhmXcDvaWai5ECSqyT1J0mZ+DtX+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JKFr0e5d; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JKFr0e5d"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5d5a080baf1so928491a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713448739; x=1714053539; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNDmhaFib5vUgSCj1EuHEP0N8f9l8mHKtBljI9aZIys=;
+        b=JKFr0e5d8H4A5jufLLQ28H0ENJ/8+aeFjRpZau5tDyynDdenWvHHYuyz3X6fNchT7y
+         ncuGLkybbx03H20nUu4s/gwr1as/f/60P0yr95NFSMrOyjVY9F4xwxMqVof3BmQYA2dD
+         usEBi3hVPCWpwA5bvGnygRJwgbXJROV4s5+1dSslV/uvMKJavcmK34P9Fjcu8GmA+tQs
+         63stFCCwYfoVrtLhWlNJIYRBTMng5BM3scp+4SlYLpySUUdzTWzGWjdDADoO8MZU7Puw
+         6V1Ci9AyoIfLcGSbF3G0Q3xI6TvEV+V/teXfou4QkCzuk1kBk2rQztC9zHmyLhY3Ytk7
+         Vbow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713448739; x=1714053539;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNDmhaFib5vUgSCj1EuHEP0N8f9l8mHKtBljI9aZIys=;
+        b=JkDGX90yggQRD4BupugSgc8ZGy0mkT+1RSwM5nVeP/KzMcA6fm/FLtoSkjQef9IAKt
+         cHTocOcWq6ehlFsmi0DmKgHGSubNoatPinvkj9+MSaKDN1vcYfd/ctrkwbWvj+qA5+FV
+         SVFF0G0REFWN6yedux9vEt5no+tkx9co+S4wzpx9/MG3lt3gBGFtdCxIJhdk76BfcYZz
+         FWSmi2HRQmhu12iK5JseUw/H4yOUq6VKJnxXzQ/QfdccUEn53O1/VkHAWAPG2WhDCcpH
+         zmlbUFupl0SenRq5TAnO+UjXxL+jgW+E358bRG4eyRJ9tcyur7vckgtBcmpMlo1lprB6
+         XmLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOh5F7XxQwW8Gt01QgrcQWwDwtoqXmKfJQwgzslGcmh/e9pF2ZSMeHNXleP4RhDdWYZ9PHFJyVOaVSmIAvM49ICAleYdf6EJ4j660i
+X-Gm-Message-State: AOJu0YzHtc7i4EbwqiJnCE3Vnd8bJSKjXirAs4uRDPuBk2zVWk8V/A7A
+	GsqE9Df8fEgp/gQQfdG9D00u43mjnhpy6hvmP5go2Z5eHnUB+BgcdsiWi6jtlZoXAPWpNPo9DFE
+	PRQ==
+X-Google-Smtp-Source: AGHT+IF/NVV828WbXcekdzll/VFb0eXEt6pK7hsJ3IAg6SEtS8UxqRGfLTiacsRBhENxV1bZpBNSUKpoYJk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:4854:0:b0:5d5:1e4d:c845 with SMTP id
+ x20-20020a634854000000b005d51e4dc845mr24856pgk.10.1713448738618; Thu, 18 Apr
+ 2024 06:58:58 -0700 (PDT)
+Date: Thu, 18 Apr 2024 06:58:56 -0700
+In-Reply-To: <DS0PR11MB63739BE4347EC6369ED22EBADC0E2@DS0PR11MB6373.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Mime-Version: 1.0
+References: <20240417150354.275353-1-wei.w.wang@intel.com> <Zh_4QN7eFxyu9hgA@google.com>
+ <DS0PR11MB63739BE4347EC6369ED22EBADC0E2@DS0PR11MB6373.namprd11.prod.outlook.com>
+Message-ID: <ZiEnIFW3ZQhDwdZ-@google.com>
+Subject: Re: [RFC PATCH v1] KVM: x86: Introduce macros to simplify KVM_X86_OPS
+ static calls
+From: Sean Christopherson <seanjc@google.com>
+To: Wei W Wang <wei.w.wang@intel.com>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-From: James Morse <james.morse@arm.com>
+On Thu, Apr 18, 2024, Wei W Wang wrote:
+> On Thursday, April 18, 2024 12:27 AM, Sean Christopherson wrote:
+> > On Wed, Apr 17, 2024, Wei Wang wrote:
+> > > Introduces two new macros, KVM_X86_SC() and KVM_X86_SCC(), to
+> > > streamline the usage of KVM_X86_OPS static calls. The current
+> > > implementation of these calls is verbose and can lead to alignment
+> > > challenges due to the two pairs of parentheses. This makes the code
+> > > susceptible to exceeding the "80 columns per single line of code"
+> > > limit as defined in the coding-style document. The two macros are
+> > > added to improve code readability and maintainability, while adhering to
+> > the coding style guidelines.
+> > 
+> > Heh, I've considered something similar on multiple occasionsi.  Not because
+> > the verbosity bothers me, but because I often search for exact "word" matches
+> > when looking for function usage and the kvm_x86_ prefix trips me up.
+> 
+> Yeah, that's another compelling reason for the improvement.
+> 
+> > IIRC, static_call_cond() is essentially dead code, i.e. it's the exact same as
+> > static_call().  I believe there's details buried in a proposed series to remove
+> > it[*].  And to not lead things astray, I verified that invoking a NULL kvm_x86_op
+> > with static_call() does no harm (well, doesn't explode at least).
+> > 
+> > So if we add wrapper macros, I would be in favor in removing all
+> > static_call_cond() as a prep patch so that we can have a single macro.
+> 
+> Sounds good. Maybe KVM_X86_OP_OPTIONAL could now also be removed? 
 
-ACPI identifies CPUs by UID. get_cpu_for_acpi_id() maps the ACPI UID
-to the Linux CPU number.
+No, KVM_X86_OP_OPTIONAL() is what allow KVM to WARN if a mandatory hook isn't
+defined.  Without the OPTIONAL and OPTIONAL_RET variants, KVM would need to assume
+every hook is optional, and thus couldn't WARN.
 
-The helper to retrieve this mapping is only available in arm64's NUMA
-code.
+  static inline void kvm_ops_update(struct kvm_x86_init_ops *ops)
+  {
+	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
 
-Move it to live next to get_acpi_id_for_cpu().
+#define __KVM_X86_OP(func) \
+	static_call_update(kvm_x86_##func, kvm_x86_ops.func);
+#define KVM_X86_OP(func) \
+	WARN_ON(!kvm_x86_ops.func); __KVM_X86_OP(func)
+#define KVM_X86_OP_OPTIONAL __KVM_X86_OP
+#define KVM_X86_OP_OPTIONAL_RET0(func) \
+	static_call_update(kvm_x86_##func, (void *)kvm_x86_ops.func ? : \
+					   (void *)__static_call_return0);
+#include <asm/kvm-x86-ops.h>
+#undef __KVM_X86_OP
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-Tested-by: Miguel Luis <miguel.luis@oracle.com>
-Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v7: No change
----
- arch/arm64/include/asm/acpi.h | 11 +++++++++++
- arch/arm64/kernel/acpi_numa.c | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+	kvm_pmu_ops_update(ops->pmu_ops);
+  }
 
-diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-index 6792a1f83f2a..bc9a6656fc0c 100644
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -119,6 +119,17 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
- }
- 
-+static inline int get_cpu_for_acpi_id(u32 uid)
-+{
-+	int cpu;
-+
-+	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-+		if (uid == get_acpi_id_for_cpu(cpu))
-+			return cpu;
-+
-+	return -EINVAL;
-+}
-+
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
- void __init acpi_init_cpus(void);
- int apei_claim_sea(struct pt_regs *regs);
-diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-index e51535a5f939..0c036a9a3c33 100644
---- a/arch/arm64/kernel/acpi_numa.c
-+++ b/arch/arm64/kernel/acpi_numa.c
-@@ -34,17 +34,6 @@ int __init acpi_numa_get_nid(unsigned int cpu)
- 	return acpi_early_node_map[cpu];
- }
- 
--static inline int get_cpu_for_acpi_id(u32 uid)
--{
--	int cpu;
--
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
--		if (uid == get_acpi_id_for_cpu(cpu))
--			return cpu;
--
--	return -EINVAL;
--}
--
- static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *header,
- 				      const unsigned long end)
- {
--- 
-2.39.2
+> > kvm_ops_update() already WARNs if a mandatory hook isn't defined, so doing
+> > more checks at runtime wouldn't provide any value.
+> 
+> > 
+> > As for the name, what about KVM_X86_CALL() instead of KVM_X86_SC()?  Two
+> > extra characters, but should make it much more obvious what's going on for
+> > readers that aren't familiar with the infrastructure.
+> 
+> I thought the macro definition is quite intuitive and those encountering it for the
+> first time could get familiar with it easily from the definition.
+> Similarly, KVM_X86_CALL() is fine to me, despite the fact that it doesn't explicitly
+> denote "static" calls.
 
+Repeat readers/developers will get used to KVM_X86_SC(), but for someone that has
+never read KVM code before, KVM_X86_SC() is unintuitive, e.g. basically requires
+looking at the implementation, especially if the reader isn't familiar with the
+kernel's static call framework.
+
+In other words, there needs to be "CALL" somewhere in the name to convey the basic
+gist of the code.  And IMO, the "static" part is a low level detail that isn't
+necessary to understand the core functionality of the code, so omitting it to
+shorten line lengths is a worthwhile tradeoff.
