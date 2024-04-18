@@ -1,232 +1,293 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5FF15F418
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637D16FB0
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713451283; cv=none; b=qgO73CQf3Bc3VzCNpCuZYmDMI8HNg0PnoEmC/BlLiZZaYWri6gV4HzrBvp2eMvkiMuFBy4QM6cH+vvcwm7ixyNiBlI5Hb3FtY0jFG7L8aitJaBOZyADKlzOCUrFx3zbI32Y6fV7T41ReXQOjdmi+ff8xBxMX+iHfrjHUYg7e/EE=
+	t=1713451382; cv=none; b=bBNtX3aQf5bR+5GX8oNxVHavXWxACBV4LnLw7afIiR2QQPKlCIx/Ex9/ZH/CFZrghCJn7eMN9SJVxZgcyUDu3P7DL1tr1wN20G6+Ioh7ZuYKXGdAiduHBg6geqON+FdLXjNvoWPDMT4ZZpm3/HnqaPGFxTERQKFL193ftmN5JZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713451283; c=relaxed/simple;
-	bh=cb8e64hTN+ciIfjJf2xgHxs+vQdw4/48ZtIbLXnFx74=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=axS4v5STxF6h9/UxYz0b5dSRsglq4CR0BiekGKeEp1dBaVIHzq3r+Dk8BqeUcW3s2oJmlAEKmXxThgxU32O03HXC1YyP6TXLZnSZPFxParl5W7VHsr7ablBHQSkTqnHlMxcXqOe+SmsOeT9DHg78Su2/wBmQaIolTBKHq3c7iKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36b145c00a2so13883815ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:41:21 -0700 (PDT)
+	s=arc-20240116; t=1713451382; c=relaxed/simple;
+	bh=3K68nrF2JdYrQUwVMNCXY/PuccHh9vrIKiN5ajEtkII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=em9QmhuTl81MKp6jJVqF6pWJGLiYibVV2aj3SZD69z44GiMam/K6NjOoL1k7jQ3RaCaTIHR2iHeBxuaAy2B7v12QT5hi+8MR/oz2SjXeieHcjdhS63S6MmsJIxdG+mhytn0fM/TFp59xDehOY5pdCKsr80BtYD95Ivm0Xy/XXcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f3+mCh8S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f3+mCh8S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713451379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DEulY1IMYG1CkL7+y8mcNYU6ll3ZaZWsDvpO/gddOTE=;
+	b=f3+mCh8SW5XZJ4dTM5RuTdf0fXcJfBaKZw/NSOoQQEX3DM1S/NeU2ZQg3cy1JcO5pPvTg1
+	k5F13Bw6VCkZ57eN9RE/OZMuPl3dnhuk5AeuK/erjfBhNH4BST4V1qqhjpnS9CM04QaqP4
+	j1+GIEjdZhe2SzxunUIfZV6Dh7k6xRY=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-341-XcFi7NMMPWK2dhN1Umntiw-1; Thu, 18 Apr 2024 10:42:57 -0400
+X-MC-Unique: XcFi7NMMPWK2dhN1Umntiw-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d87b880861so8618801fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:42:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713451281; x=1714056081;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p944Q1Jelj4Rnuk1KD0m4dCxzYg5EdGsKtMgGEjY+Qg=;
-        b=w5fG0fAJ0/lIhmMhVbArN4wrV5JGONntSdfZzSkuYpVvTObuMNVwh4vYNIlTSiU9x9
-         I9IOEXazHxBwCIqQc3EApN8OdLw91L//PXO6PI9Taeo/dJJMHLzvcWWaaLP8e+duQEzm
-         8MhMUnacJtpZlfuuLh3LeDfJVW8sBfURFJlCXgnsYgB3hDx+y4XEdtu6n2vhL27+2NWw
-         Y39WD8Pkm3k2HdT+7b8O+b/VJ4Yq4tLzvXfJWiFybgJtLzaajKkrRu0xFyoXzuVCz9GX
-         jszxH7jxCACXRRMnTaDsLDkS/Or58mWec2FRk1+BDmZhR0Zh9XaLo5Pt+7HGvldnPgob
-         jebg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUNPv8DV8xF061iOYnmcAAmfYNGDxa9Q5UN8u+TOEXx2sbfzATSVPjOw3AlDL9GptForDziW4CQd7d4/4iTNYT14UykjQ+dEGpeaVC
-X-Gm-Message-State: AOJu0YzulMeUjxwrepE/t2yeSQSlth5R8ns8xwr0yhZWGZz3jo7j+dA+
-	LnyeRnqfsOCfaLgMTe08vrdchwU5P7fPh9+V1gdwZMhZZ0VbtU0d6MzSsRu9Xkyz2n0ZmVcfrAP
-	AgSTXufWrp9nzN+pfVUHdZIE2ccyfym3E02raZPzLmp9+5fefUg2mh8w=
-X-Google-Smtp-Source: AGHT+IGoS2S7omMqxq4HRfbb1lpmt8F3YvnvOHVAkcNBEeQI/MRKGHOBmBJvv6eLtRIVRTihvGzUElDsQoWE1zviw0knWT+W0SdJ
+        d=1e100.net; s=20230601; t=1713451376; x=1714056176;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DEulY1IMYG1CkL7+y8mcNYU6ll3ZaZWsDvpO/gddOTE=;
+        b=IcgSJfuAY6jMzV9q/35H8G0i2507zsQeN+VhqtCJl5JQVJxpgblwxwkyzMmviHoyUE
+         zyep2//2sDUUKAiRQYrrUFRnr0Af7KKsx1GYKJKOo8WFQPQurMH/KWo4i0A6DjyEaLrU
+         1mEmni2jxkPJX9lqdCPSu8Ui5l3augcwRXiRWztYbQUXq1bVvXl6QT/Q+ggzFYfEDghK
+         MMkYJEIzkXnzv/xmZ4hUQcxEuL4CvId4V/fzxUsm/+7rTZkzsdoUkePo2+OFFmPN0exU
+         CZ5lMwW+gd1jVvW1Teyd06gJ5GQLrTW0WxKLAsr3ICV6lzncpUtCpKUqDnGKrCWoqI5X
+         pjTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaxM40AsHnOqCBTuHD6q3ZouxC5pfxrT2hHCny/y+R5wzszESMo2gTaZ2ou0rrQKwyKsdzDsvQFPBdRXawKIir4gFcqm265EQbM6Cb
+X-Gm-Message-State: AOJu0YxveBqiSvrsvdROYPLL6/VoP2Qkp1mYARkDqQNoTAjJ/v18Eugn
+	VQ1k9ILbuuKxGeqDx79XcjYNv8GhEScC+MVdp/aTw6dHYOPLlcJgFA/9FunS/X5sJNPxfp1wc1p
+	+GFwo85s3O37oVSpVkRM6xatF1mtS6T3s+S0fB5r20UNPcgD8bH/kgX/JmClN5A==
+X-Received: by 2002:a19:5e55:0:b0:519:5df9:d945 with SMTP id z21-20020a195e55000000b005195df9d945mr1745981lfi.4.1713451376349;
+        Thu, 18 Apr 2024 07:42:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IELpXwRPctoeGKFEBAu2CYwaNSavV4jtl33oD/gar4gd/CLiWonOSCOeeOnpK7gTrukHkmE5w==
+X-Received: by 2002:a19:5e55:0:b0:519:5df9:d945 with SMTP id z21-20020a195e55000000b005195df9d945mr1745961lfi.4.1713451375758;
+        Thu, 18 Apr 2024 07:42:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id k13-20020a508acd000000b0056ff510c327sm985991edk.94.2024.04.18.07.42.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 07:42:55 -0700 (PDT)
+Message-ID: <472cf6b8-dbc2-4446-9c6e-aa3a257013c3@redhat.com>
+Date: Thu, 18 Apr 2024 16:42:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fe6:b0:36b:f8:e87e with SMTP id
- dt6-20020a056e021fe600b0036b00f8e87emr86480ilb.1.1713451280917; Thu, 18 Apr
- 2024 07:41:20 -0700 (PDT)
-Date: Thu, 18 Apr 2024 07:41:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f07c2606165ff63a@google.com>
-Subject: [syzbot] [hfs?] possible deadlock in hfs_extend_file (3)
-From: syzbot <syzbot+2a62f58f1a4951a549bb@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] platform/x86: thinkpad_acpi: Support for
+ trackpoint doubletap
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, Nitin Joshi1 <njoshi1@lenovo.com>,
+ Vishnu Sankar <vsankar@lenovo.com>,
+ Peter Hutterer <peter.hutterer@redhat.com>,
+ Vishnu Sankar <vishnuocv@gmail.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240417173124.9953-1-mpearson-lenovo@squebb.ca>
+ <20240417173124.9953-2-mpearson-lenovo@squebb.ca>
+ <98082080-0fcf-470f-afa5-76ec2bbffee7@redhat.com>
+ <55ded7c3-fbc5-4fa5-8b63-da4d7aa4966c@redhat.com>
+ <a7f7d94a-f1c8-4d6a-9c65-b5de59b9f7c0@app.fastmail.com>
+ <76d92fdc-ad0a-40a2-9e1b-d550f8e07267@redhat.com>
+ <0917e5bc-a198-4aa8-812e-31434408e78d@app.fastmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <0917e5bc-a198-4aa8-812e-31434408e78d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi,
 
-syzbot found the following issue on:
+On 4/18/24 2:24 PM, Mark Pearson wrote:
+> Hi Hans,
+> 
+> On Thu, Apr 18, 2024, at 7:34 AM, Hans de Goede wrote:
+>> Hi Mark,
+>>
+>> On 4/18/24 1:57 AM, Mark Pearson wrote:
+>>> Hi Hans,
+>>>
+>>> On Wed, Apr 17, 2024, at 4:06 PM, Hans de Goede wrote:
+>>>> Hi Mark,
+>>>>
+>>>> On 4/17/24 9:39 PM, Hans de Goede wrote:
+>>>>> Hi Mark,
+>>>>>
+>>>>> Thank you for the new version of this series, overall this looks good,
+>>>>> one small remark below.
+>>>>>
+>>>>> On 4/17/24 7:31 PM, Mark Pearson wrote:
+>>>>>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>>>>>> This handles the doubletap event and sends the KEY_PROG1 event to
+>>>>>> userspace.
+>>>>>>
+>>>>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>>>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+>>>>>> ---
+>>>>>> Changes in v2:
+>>>>>>  - Use KEY_PROG1 instead of KEY_DOUBLETAP as input maintainer doesn't
+>>>>>>    want new un-specific key codes added.
+>>>>>>  - Add doubletap to hotkey scan code table and use existing hotkey
+>>>>>>    functionality.
+>>>>>>  - Tested using evtest, and then gnome settings to configure a custom shortcut
+>>>>>>    to launch an application.
+>>>>>>
+>>>>>>  drivers/platform/x86/thinkpad_acpi.c | 18 ++++++++++++++++++
+>>>>>>  1 file changed, 18 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>>>>>> index 3b48d893280f..6d04d45e8d45 100644
+>>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>>>>> @@ -232,6 +232,9 @@ enum tpacpi_hkey_event_t {
+>>>>>>  
+>>>>>>  	/* Misc */
+>>>>>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
+>>>>>> +
+>>>>>> +	/* Misc2 */
+>>>>>> +	TP_HKEY_EV_TRACK_DOUBLETAP      = 0x8036, /* trackpoint doubletap */
+>>>>>>  };
+>>>>>>  
+>>>>>>  /****************************************************************************
+>>>>>> @@ -1786,6 +1789,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+>>>>>>  	TP_ACPI_HOTKEYSCAN_NOTIFICATION_CENTER,
+>>>>>>  	TP_ACPI_HOTKEYSCAN_PICKUP_PHONE,
+>>>>>>  	TP_ACPI_HOTKEYSCAN_HANGUP_PHONE,
+>>>>>
+>>>>> I understand why you've done this but I think this needs a comment,
+>>>>> something like:
+>>>>>
+>>>>>         /*
+>>>>>          * For TP_HKEY_EV_TRACK_DOUBLETAP, unlike the codes above which map to:
+>>>>>          * (hkey_event - 0x1300) + TP_ACPI_HOTKEYSCAN_EXTENDED_START, this is
+>>>>>          * hardcoded for TP_HKEY_EV_TRACK_DOUBLETAP handling. Therefor this must
+>>>>>          * always be the last entry (after any 0x1300-0x13ff entries).
+>>>>>          */
+>>>>> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
+>>>>
+>>>> Ugh, actually this will not work becuuse we want hotkeyscancodes to be stable
+>>>> because these are userspace API since they can be remapped using hwdb so we
+>>>> cannot have the hotkeyscancode changing when new 0x1300-0x13ff range entries
+>>>> get added.
+>>>>
+>>>> So we need to either grow the table a lot and reserve a whole bunch of space
+>>>> for future 0x13xx - 0x13ff codes or maybe something like this:
+>>>>
+>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+>>>> b/drivers/platform/x86/thinkpad_acpi.c
+>>>> index 771aaa7ae4cf..af3279889ecc 100644
+>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>>> @@ -1742,7 +1742,12 @@ enum {	/* hot key scan codes (derived from ACPI 
+>>>> DSDT) */
+>>>>  	TP_ACPI_HOTKEYSCAN_VOLUMEDOWN,
+>>>>  	TP_ACPI_HOTKEYSCAN_MUTE,
+>>>>  	TP_ACPI_HOTKEYSCAN_THINKPAD,
+>>>> -	TP_ACPI_HOTKEYSCAN_UNK1,
+>>>> +	/*
+>>>> +	 * Note this gets send both on 0x1019 and on 
+>>>> TP_HKEY_EV_TRACK_DOUBLETAP
+>>>> +	 * hotkey-events. 0x1019 events have never been seen on any actual hw
+>>>> +	 * and a scancode is needed for the special 0x8036 doubletap 
+>>>> hotkey-event.
+>>>> +	 */
+>>>> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
+>>>>  	TP_ACPI_HOTKEYSCAN_UNK2,
+>>>>  	TP_ACPI_HOTKEYSCAN_UNK3,
+>>>>  	TP_ACPI_HOTKEYSCAN_UNK4,
+>>>>
+>>>> or just hardcode KEY_PROG1 like your previous patch does, but I'm not
+>>>> a fan of that because of loosing hwdb remapping functionality for this
+>>>> "key" then.
+>>>>
+>>>> Note I'm open to other suggestions.
+>>>>
+>>> Oh...I hadn't thought of that impact. That's not great :(
+>>>
+>>> I have an idea, but want to prototype it to see if it works out or not. Will update once I've had a chance to play with it.
+>>
+>> Thinking more about this I just realized that the input subsystem
+>> already has a mechanism for dealing with scancode ranges with
+>> (big) holes in them in the form of linux/input/sparse-keymap.h .
+>>
+>> I think that what needs to be done is convert the existing code
+>> to use sparse-keymap, keeping the mapping of the "MHKP"
+>> returned hkey codes to internal TP_ACPI_HOTKEYSCAN_* values
+>> for currently supported "MHKP" hkey codes for compatibility
+>> and then for new codes just directly map them in the sparse map
+>> aka the struct key_entry table. After converting the existing code
+>> to use sparse-keymap, then for the new events we would simply add:
+>>
+>>
+>> 	{ KE_KEY, 0x131d, { KEY_VENDOR} }, /* Fn + N, system debug info */
+>> 	{ KE_KEY, 0x8036, { KEY_PROG1 } }, /* Trackpoint doubletap */
+>>
+>> entries to the table without needing to define intermediate
+>> TP_ACPI_HOTKEYSCAN_* values for these.
+>>
+> 
+> Ah! I didn't know about sparse-keymap but it looks similar to what I was thinking and played with a bit last night. Agreed using existing infrastructure is better.
+> 
+> Only things I'd flag is that:
+>  - It did look like it would be useful to identify keys that the driver handles (there aren't many but a few). Maybe one of the other key types can help handle that?
+>  - There are also some keys that use the tpacpi_input_send_key_masked that might need some special consideration.
+> 
+>> I already have somewhat of a design for this in my head and I really
+>> believe this is the way forward as it uses existing kernel infra
+>> and it will avoid hitting this problem again when some other new
+>> "MHKP" hkey codes show up.
+>>
+>> I plan to start working on implementing conversion of the existing
+>> code to use sparse-keymap, which should result in a nice cleanup
+>> after lunch and I hope to have something for you to test no later
+>> then next Tuesday.
+>>
+> 
+> That would be amazing - do let me know if there is anything I can help with. Agreed this will help clean up a bunch of the keycode handling :)
 
-HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1556f7cb180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=aef2a55903e5791c
-dashboard link: https://syzkaller.appspot.com/bug?extid=2a62f58f1a4951a549bb
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+I noticed a small problem while working on this. The hwdb shipped with
+systemd has:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+# thinkpad_acpi driver
+evdev:name:ThinkPad Extra Buttons:dmi:bvn*:bvr*:bd*:svnIBM*:pn*:*
+ KEYBOARD_KEY_01=battery                                # Fn+F2
+ KEYBOARD_KEY_02=screenlock                             # Fn+F3
+ KEYBOARD_KEY_03=sleep                                  # Fn+F4
+ KEYBOARD_KEY_04=wlan                                   # Fn+F5
+ KEYBOARD_KEY_06=switchvideomode                        # Fn+F7
+ KEYBOARD_KEY_07=zoom                                   # Fn+F8 screen expand
+ KEYBOARD_KEY_08=f24                                    # Fn+F9 undock
+ KEYBOARD_KEY_0b=suspend                                # Fn+F12
+ KEYBOARD_KEY_0f=brightnessup                           # Fn+Home
+ KEYBOARD_KEY_10=brightnessdown                         # Fn+End
+ KEYBOARD_KEY_11=kbdillumtoggle                         # Fn+PgUp - ThinkLight
+ KEYBOARD_KEY_13=zoom                                   # Fn+Space
+ KEYBOARD_KEY_14=volumeup
+ KEYBOARD_KEY_15=volumedown
+ KEYBOARD_KEY_16=mute
+ KEYBOARD_KEY_17=prog1                                  # ThinkPad/ThinkVantage button (high k
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/089e25869df5/disk-fe46a7dd.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/423b1787914f/vmlinux-fe46a7dd.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4c043e30c07d/bzImage-fe46a7dd.xz
+Notice the last line, this last line maps the old thinkpad /
+thinkvantage key: https://www.thinkwiki.org/wiki/ThinkPad_Button
+which is define by the kernel as KEY_VENDOR to KEY_PROG1 to
+use a keycode below 240 for X11 compatiblity which does not
+handle higher keycodes.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2a62f58f1a4951a549bb@syzkaller.appspotmail.com
+This means that in practice at least on older models
+KEY_PROG1 is already taken and the thinkpad / thinkvantage key
+does the same (open lenovo help center / sysinfo) as
+what the new Fn + N key combo does. So it does makes sense
+to map Fn + N to KEY_VENDOR so those align but given the existing
+remapping of the thinkpad / thinkvantage key to PROG1 I think
+it would be better to not use PROG1 for the doubletap.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.8.0-syzkaller-08951-gfe46a7dd189e #0 Not tainted
-------------------------------------------------------
-syz-executor.3/5818 is trying to acquire lock:
-ffff888060dd1af8 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
+I guess we can just use PROG2 instead to avoid the overlap
+with the remapped old ThinkPad / ThinkVantage buttons
+(which are more like Fn + N then doubletap).
 
-but task is already holding lock:
-ffff88802c4140b0 (&tree->tree_lock#2/1){+.+.}-{3:3}, at: hfs_find_init+0x183/0x220 fs/hfs/bfind.c:33
+Regards,
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&tree->tree_lock#2/1){+.+.}-{3:3}:
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
-       hfs_find_init+0x183/0x220 fs/hfs/bfind.c:33
-       hfs_ext_read_extent+0x19c/0x9e0 fs/hfs/extent.c:200
-       hfs_extend_file+0x4e4/0xb10 fs/hfs/extent.c:401
-       hfs_bmap_reserve+0x29c/0x380 fs/hfs/btree.c:234
-       hfs_cat_create+0x22b/0x810 fs/hfs/catalog.c:104
-       hfs_create+0x6b/0xf0 fs/hfs/dir.c:202
-       lookup_open.isra.0+0x10a1/0x13c0 fs/namei.c:3497
-       open_last_lookups fs/namei.c:3566 [inline]
-       path_openat+0x92f/0x2990 fs/namei.c:3796
-       do_filp_open+0x1dc/0x430 fs/namei.c:3826
-       do_sys_openat2+0x17a/0x1e0 fs/open.c:1406
-       do_sys_open fs/open.c:1421 [inline]
-       __do_sys_openat fs/open.c:1437 [inline]
-       __se_sys_openat fs/open.c:1432 [inline]
-       __x64_sys_openat+0x175/0x210 fs/open.c:1432
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x6d/0x75
-
--> #0 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
-       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
-       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
-       hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
-       hfs_bmap_reserve+0x29c/0x380 fs/hfs/btree.c:234
-       __hfs_ext_write_extent+0x3cf/0x520 fs/hfs/extent.c:121
-       __hfs_ext_cache_extent fs/hfs/extent.c:174 [inline]
-       hfs_ext_read_extent+0x809/0x9e0 fs/hfs/extent.c:202
-       hfs_extend_file+0x4e4/0xb10 fs/hfs/extent.c:401
-       hfs_get_block+0x17f/0x830 fs/hfs/extent.c:353
-       __block_write_begin_int+0x4fb/0x16e0 fs/buffer.c:2105
-       __block_write_begin fs/buffer.c:2154 [inline]
-       block_write_begin+0xb1/0x4a0 fs/buffer.c:2213
-       cont_write_begin+0x53d/0x740 fs/buffer.c:2567
-       hfs_write_begin+0x87/0x150 fs/hfs/inode.c:53
-       generic_perform_write+0x272/0x620 mm/filemap.c:3930
-       __generic_file_write_iter+0x1fd/0x240 mm/filemap.c:4025
-       generic_file_write_iter+0xe7/0x350 mm/filemap.c:4051
-       call_write_iter include/linux/fs.h:2108 [inline]
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0x6db/0x1100 fs/read_write.c:590
-       ksys_write+0x12f/0x260 fs/read_write.c:643
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x6d/0x75
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&tree->tree_lock#2/1);
-                               lock(&HFS_I(tree->inode)->extents_lock);
-                               lock(&tree->tree_lock#2/1);
-  lock(&HFS_I(tree->inode)->extents_lock);
-
- *** DEADLOCK ***
-
-5 locks held by syz-executor.3/5818:
- #0: ffff888011652348 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xeb/0x180 fs/file.c:1191
- #1: ffff88802ce58420 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0x12f/0x260 fs/read_write.c:643
- #2: ffff888060dd6aa8 (&sb->s_type->i_mutex_key#23){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:793 [inline]
- #2: ffff888060dd6aa8 (&sb->s_type->i_mutex_key#23){+.+.}-{3:3}, at: generic_file_write_iter+0x92/0x350 mm/filemap.c:4048
- #3: ffff888060dd68f8 (&HFS_I(inode)->extents_lock#2){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
- #4: ffff88802c4140b0 (&tree->tree_lock#2/1){+.+.}-{3:3}, at: hfs_find_init+0x183/0x220 fs/hfs/bfind.c:33
-
-stack backtrace:
-CPU: 0 PID: 5818 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1b1/0x540 kernel/locking/lockdep.c:5719
- __mutex_lock_common kernel/locking/mutex.c:608 [inline]
- __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
- hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
- hfs_bmap_reserve+0x29c/0x380 fs/hfs/btree.c:234
- __hfs_ext_write_extent+0x3cf/0x520 fs/hfs/extent.c:121
- __hfs_ext_cache_extent fs/hfs/extent.c:174 [inline]
- hfs_ext_read_extent+0x809/0x9e0 fs/hfs/extent.c:202
- hfs_extend_file+0x4e4/0xb10 fs/hfs/extent.c:401
- hfs_get_block+0x17f/0x830 fs/hfs/extent.c:353
- __block_write_begin_int+0x4fb/0x16e0 fs/buffer.c:2105
- __block_write_begin fs/buffer.c:2154 [inline]
- block_write_begin+0xb1/0x4a0 fs/buffer.c:2213
- cont_write_begin+0x53d/0x740 fs/buffer.c:2567
- hfs_write_begin+0x87/0x150 fs/hfs/inode.c:53
- generic_perform_write+0x272/0x620 mm/filemap.c:3930
- __generic_file_write_iter+0x1fd/0x240 mm/filemap.c:4025
- generic_file_write_iter+0xe7/0x350 mm/filemap.c:4051
- call_write_iter include/linux/fs.h:2108 [inline]
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0x6db/0x1100 fs/read_write.c:590
- ksys_write+0x12f/0x260 fs/read_write.c:643
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7efc4247de69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007efc41fff0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007efc425abf80 RCX: 00007efc4247de69
-RDX: 000000000208e24b RSI: 00000000200004c0 RDI: 0000000000000005
-RBP: 00007efc424ca47a R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007efc425abf80 R15: 00007ffea65dcd48
- </TASK>
+Hans
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
 
-If you want to undo deduplication, reply with:
-#syz undup
