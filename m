@@ -1,131 +1,417 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F15165FB4;
-	Thu, 18 Apr 2024 12:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8953E2C68C;
+	Thu, 18 Apr 2024 12:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713445070; cv=none; b=oi4fdO5WmLf9SO4iHq5yO/yfSoTHOOe/ZSJEPVGuznRdiDSUUDpbERIdj/evudCjUxA4qSWfJsamsMqyURH90XGHf915igtRJ19aHoO7f+n4arP+uI+mjVqlTp+PJ2AtAWXXuK6svTedWDBzyZpgEVil1Dc/5QAeMNzRijTAwOU=
+	t=1713445083; cv=none; b=sIfU+gYnVZ9zqJEFUa+kZ5oI7c4CxZ1W8xfM5UfzOa2RSWWfLuMlnMLv9mu3wDdwLmhXRRW1Y9u626tHus+togcdrX0bdaJzs9l+Lvp9cHF3LsnBnEOGURj6Sl9KOCaJeLX1kj1q4ZNtTeUESObtEeW7hgHOXpCLyGc5XIZfEM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713445070; c=relaxed/simple;
-	bh=mq0LVEhgLrutQcuF19JR7w3laIzCRdDcXlTvXzp+kR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCczj1KGN0CZD5Xr5Di+HgSSwPHc6o8ZYmjTwAPum89MeJJ4kdkU1IJzoSqH7pgiOrL426ylVvjjhy+HqnzmjbYL/ANPkjR9t4+N8kez9J7oML5CSzX7u9TKgyn6eesnHbMHkF42db1XDvaYlaHGuc70737IHEflp+v5X1K4sf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VX7SseTS; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713445083; c=relaxed/simple;
+	bh=ej1h3WciPFqpWoiGsccmv5uKW8Enr5Y7MZGln+UwXT4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PajzNJlo3g75bqQefeGJcRREXBue+51TWhXf7j5mmDoMEPX5vxiV4jJ0GTfSFmgyvHO8rAKenIbaEtLy1orqmSSmr01VpS8bdEGvRlg74RSubHjTXdl8DrKQlScRRuOOIiesohqalcuZEc8rsHF9ClGEy2BFNVwIVd2LptUAe2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=KuftiXHd; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VX7SseTS"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2da0f8f7b24so9948741fa.1;
-        Thu, 18 Apr 2024 05:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713445067; x=1714049867; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7TvlJDHh6PM8Lai+72isa4pBtCMtiwvjV7L+/XlE4U=;
-        b=VX7SseTSyaorQla78jmVqGvTMcrIOP9x4/fUZGjX+cwsRV2ZqVveFXYM0ufThK/PvQ
-         W2ck8Lx3KSVk8IZju/2XUH3E55UL+W3ui1keDu1xcMIw3PxYtedXBicYwVkujnei5mx2
-         yaRPQseRLy4J1qbn/6mcM3vRozqEqEXhcYeKV9VtZxihF1OMgAv9GzqfhgYN3FpXCkU/
-         8EfH4l2HQvmOIy0AcKedgwMGmELCJbpnXu32g1Uarz7NJiWFFH+HNSNW1sXnIK5XM7X6
-         PriS8U4FRITTDFkMpi7EN/ZceESsCNpB3Wr23gsUbpegWJIhv1112iGpjBxg4Fxd4BzW
-         Ge7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713445067; x=1714049867;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H7TvlJDHh6PM8Lai+72isa4pBtCMtiwvjV7L+/XlE4U=;
-        b=p1eEfi9DTFqs/u7iBa0sGVkHeh0vAOtx4OgmQ9hZyVXgrvhkm9dydCIX6t8IQV/p5+
-         lAHgUbbwGMO7CXCTFKC0Go3hCLwdHMhAIklfFKoIkgIOZbDYKz0Tk029rGyEdOcWEz43
-         ELAEXHXcWq6+JoPv7Umk+CG+tm4PebIH0Cazx/wdebYelCsrH96rotChM6GKG4O5R67y
-         iPAMDqm33oZiaIadXPsNZ+jj80wwH/WlZZYNIWq/NSw1R0i0zrNMusegYzKhFXvCHQNY
-         9owkO9/DmdXfsIKaPfMa8fUFaIS96zsVqYaHccMfUUDT4wVGOkrsBhqPry7PrOoBp6we
-         jo2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXYDnvHB3pc9CU1qKKFK4kkY1sC2lYlqI2rQbVuBo435GGuyRs4dH546nvIE0uzlMn6JPkNXHVm32K4QHgqLfBD9Bk00GAJg0z4jaKHqviNCmJJ6FKK13ihkV2oAZpVZ7vptlNlbaEDMI+y0MgKKWhHk78/YTSndxaakTh8WtC1ReG/kDh9P8gw1j97u0WAaoPQKR2x2FXE/DRj9g7JJvHAA+3I
-X-Gm-Message-State: AOJu0YxHIvJQ0XPwlI+v1D1GvRFLA5KS2jyaGRn/s6ldg6Hikde0SEpe
-	jUs+3gQo8a3sCT2qqPLtYxbaO0bE5HMRd4PcBrYLaJ4eq7+UCSUU
-X-Google-Smtp-Source: AGHT+IHfKLq2UzaMXO/4uNIuhb8wjwhcxG7kZvjOwkPLDKwcLA+nxELTBqKKXudYnYTNlpQpw0rHVQ==
-X-Received: by 2002:a2e:9f17:0:b0:2d7:1a35:d580 with SMTP id u23-20020a2e9f17000000b002d71a35d580mr683715ljk.15.1713445067067;
-        Thu, 18 Apr 2024 05:57:47 -0700 (PDT)
-Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
-        by smtp.gmail.com with ESMTPSA id f23-20020a2eb5b7000000b002d88804b368sm190667ljn.43.2024.04.18.05.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 05:57:46 -0700 (PDT)
-Date: Thu, 18 Apr 2024 15:57:44 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v3 4/5] net: stmmac: add support for RZ/N1 GMAC
-Message-ID: <eqfta73ost45nbzz3aoa2tw5tasg3geehf4fgphu4teq5yfvar@ngif2e6j5j2k>
-References: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com>
- <20240415-rzn1-gmac1-v3-4-ab12f2c4401d@bootlin.com>
- <xp34tp5cjmdshefxjczltz2prqtiikagfspf4lobznzypvsyah@ihpmwfynwzhh>
- <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KuftiXHd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1713445082; x=1744981082;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ej1h3WciPFqpWoiGsccmv5uKW8Enr5Y7MZGln+UwXT4=;
+  b=KuftiXHd8dvRrppQb/Jnia0WIpeJjCiwaon04dEYbie8qUwh2aVxg00a
+   oh/fUYMKlkbWiaHj8AozK7zEID7j0dCZtBuA4mFpA/bq58TYAyi1K6bwT
+   SJNmihwpcYaFzrHxmexcv00Xw4ksE+f3w4E7BI853sXjY9uXuWpqOobOX
+   MXsXB5Pt8g5enoJuwfL7fnfSuegAc+tnteAqgavw5YOwyP5BSsoOQ+UVy
+   4eA3QwHPuswp7a/5o3F4eJl2P0qVaaYuSQQKbcbg8gvLaGsL6vIxvJuzg
+   Y/5skfs7nyPeJZAKbDpZxhSdKDEsG9s07eGc+Fq+/AFqqw37WUqMlxChn
+   w==;
+X-CSE-ConnectionGUID: QFsfLBrER4KIUgEtGyszkA==
+X-CSE-MsgGUID: ffYIRa0FTB+JGEihP7WbLg==
+X-IronPort-AV: E=Sophos;i="6.07,212,1708412400"; 
+   d="scan'208";a="252407862"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Apr 2024 05:58:00 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 18 Apr 2024 05:57:04 -0700
+Received: from CHE-LT-I17164LX.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 18 Apr 2024 05:56:55 -0700
+From: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <saeedm@nvidia.com>,
+	<anthony.l.nguyen@intel.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <andrew@lunn.ch>, <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <horatiu.vultur@microchip.com>,
+	<ruanjinjie@huawei.com>, <steen.hegelund@microchip.com>,
+	<vladimir.oltean@nxp.com>
+CC: <UNGLinuxDriver@microchip.com>, <Thorsten.Kummermehr@microchip.com>,
+	<Pier.Beruto@onsemi.com>, <Selvamani.Rajagopal@onsemi.com>,
+	<Nicolas.Ferre@microchip.com>, <benjamin.bigler@bernformulastudent.ch>,
+	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Subject: [PATCH net-next v4 02/12] net: ethernet: oa_tc6: implement register write operation
+Date: Thu, 18 Apr 2024 18:26:38 +0530
+Message-ID: <20240418125648.372526-3-Parthiban.Veerasooran@microchip.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 01:57:47PM +0200, Romain Gantois wrote:
-> Hi Serge,
-> 
-> On Tue, 16 Apr 2024, Serge Semin wrote:
-> 
-> > > +static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv,
-> > 
-> > > +			       struct mac_device_info *hw)
-> > 
-> > AFAICS hw is unused, and the mac_device_info instance is reached via
-> > the priv pointer. What about dropping the unused argument then?
-> 
+Implement register write operation according to the control communication
+specified in the OPEN Alliance 10BASE-T1x MACPHY Serial Interface
+document. Control write commands are used by the SPI host to write
+registers within the MAC-PHY. Each control write commands are composed of
+a 32 bits control command header followed by register write data.
 
-> Unfortunately, this is an implementation of the pcs_init() callback, which is 
-> also used by socfpga (see patch 4/6 in this series). The socfpga implementations 
-> use the hw parameter for both pcs_init() and pcs_exit() so I can't remove it.
+The MAC-PHY ignores the final 32 bits of data from the SPI host at the
+end of the control write command. The write command and data is also
+echoed from the MAC-PHY back to the SPI host to enable the SPI host to
+identify which register write failed in the case of any bus errors.
+Control write commands can write either a single register or multiple
+consecutive registers. When multiple consecutive registers are written,
+the address is automatically post-incremented by the MAC-PHY. Writing to
+any unimplemented or undefined registers shall be ignored and yield no
+effect.
 
-I had that patch content in mind when was writing my comment. There is
-no point in passing the hw-pointer there either because you already
-have the stmmac_priv pointer. There is stmmac_priv::hw field which you
-can use instead in the same way as you do in this patch. Here is the
-respective change for your SoCFPGA patch:
+Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+---
+ MAINTAINERS                   |   2 +
+ drivers/net/ethernet/Kconfig  |  11 ++
+ drivers/net/ethernet/Makefile |   1 +
+ drivers/net/ethernet/oa_tc6.c | 240 ++++++++++++++++++++++++++++++++++
+ include/linux/oa_tc6.h        |  17 +++
+ 5 files changed, 271 insertions(+)
+ create mode 100644 drivers/net/ethernet/oa_tc6.c
+ create mode 100644 include/linux/oa_tc6.h
 
-+static int socfpga_dwmac_pcs_init(struct stmmac_priv *priv,
-+				  struct mac_device_info *hw)
-+{
-...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 79fa7abb4ec9..603528948f61 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16405,6 +16405,8 @@ M:	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/networking/oa-tc6-framework.rst
++F:	drivers/include/linux/oa_tc6.h
++F:	drivers/net/ethernet/oa_tc6.c
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ M:	Rob Herring <robh+dt@kernel.org>
+diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
+index 6a19b5393ed1..eb53372c60b4 100644
+--- a/drivers/net/ethernet/Kconfig
++++ b/drivers/net/ethernet/Kconfig
+@@ -157,6 +157,17 @@ config ETHOC
+ 	help
+ 	  Say Y here if you want to use the OpenCores 10/100 Mbps Ethernet MAC.
+ 
++config OA_TC6
++	tristate "OPEN Alliance TC6 10BASE-T1x MAC-PHY support"
++	depends on SPI
++	select PHYLIB
++	help
++	  This library implements OPEN Alliance TC6 10BASE-T1x MAC-PHY
++	  Serial Interface protocol for supporting 10BASE-T1x MAC-PHYs.
 +
-+	priv->hw->phylink_pcs = pcs;
++	  To know the implementation details, refer documentation in
++	  <file:Documentation/networking/oa-tc6-framework.rst>.
++
+ source "drivers/net/ethernet/packetengines/Kconfig"
+ source "drivers/net/ethernet/pasemi/Kconfig"
+ source "drivers/net/ethernet/pensando/Kconfig"
+diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
+index 0d872d4efcd1..cf5487fc0761 100644
+--- a/drivers/net/ethernet/Makefile
++++ b/drivers/net/ethernet/Makefile
+@@ -104,3 +104,4 @@ obj-$(CONFIG_NET_VENDOR_XILINX) += xilinx/
+ obj-$(CONFIG_NET_VENDOR_XIRCOM) += xircom/
+ obj-$(CONFIG_NET_VENDOR_SYNOPSYS) += synopsys/
+ obj-$(CONFIG_NET_VENDOR_PENSANDO) += pensando/
++obj-$(CONFIG_OA_TC6) += oa_tc6.o
+diff --git a/drivers/net/ethernet/oa_tc6.c b/drivers/net/ethernet/oa_tc6.c
+new file mode 100644
+index 000000000000..a92337de4534
+--- /dev/null
++++ b/drivers/net/ethernet/oa_tc6.c
+@@ -0,0 +1,240 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * OPEN Alliance 10BASE‑T1x MAC‑PHY Serial Interface framework
++ *
++ * Author: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/oa_tc6.h>
++
++/* Control command header */
++#define OA_TC6_CTRL_HEADER_DATA_NOT_CTRL	BIT(31)
++#define OA_TC6_CTRL_HEADER_WRITE_NOT_READ	BIT(29)
++#define OA_TC6_CTRL_HEADER_MEM_MAP_SELECTOR	GENMASK(27, 24)
++#define OA_TC6_CTRL_HEADER_ADDR			GENMASK(23, 8)
++#define OA_TC6_CTRL_HEADER_LENGTH		GENMASK(7, 1)
++#define OA_TC6_CTRL_HEADER_PARITY		BIT(0)
++
++#define OA_TC6_CTRL_HEADER_SIZE			4
++#define OA_TC6_CTRL_REG_VALUE_SIZE		4
++#define OA_TC6_CTRL_IGNORED_SIZE		4
++#define OA_TC6_CTRL_MAX_REGISTERS		128
++#define OA_TC6_CTRL_SPI_BUF_SIZE		(OA_TC6_CTRL_HEADER_SIZE +\
++						(OA_TC6_CTRL_MAX_REGISTERS *\
++						OA_TC6_CTRL_REG_VALUE_SIZE) +\
++						OA_TC6_CTRL_IGNORED_SIZE)
++
++/* Internal structure for MAC-PHY drivers */
++struct oa_tc6 {
++	struct spi_device *spi;
++	struct mutex spi_ctrl_lock; /* Protects spi control transfer */
++	void *spi_ctrl_tx_buf;
++	void *spi_ctrl_rx_buf;
++};
++
++enum oa_tc6_header_type {
++	OA_TC6_CTRL_HEADER,
++};
++
++enum oa_tc6_register_op {
++	OA_TC6_CTRL_REG_WRITE = 1,
++};
++
++static int oa_tc6_spi_transfer(struct oa_tc6 *tc6,
++			       enum oa_tc6_header_type header_type, u16 length)
++{
++	struct spi_transfer xfer = { 0 };
++	struct spi_message msg;
++
++	xfer.tx_buf = tc6->spi_ctrl_tx_buf;
++	xfer.rx_buf = tc6->spi_ctrl_rx_buf;
++	xfer.len = length;
++
++	spi_message_init(&msg);
++	spi_message_add_tail(&xfer, &msg);
++
++	return spi_sync(tc6->spi, &msg);
++}
++
++static int oa_tc6_get_parity(u32 p)
++{
++	/* Public domain code snippet, lifted from
++	 * http://www-graphics.stanford.edu/~seander/bithacks.html
++	 */
++	p ^= p >> 1;
++	p ^= p >> 2;
++	p = (p & 0x11111111U) * 0x11111111U;
++
++	/* Odd parity is used here */
++	return !((p >> 28) & 1);
++}
++
++static __be32 oa_tc6_prepare_ctrl_header(u32 address, u8 length,
++					 enum oa_tc6_register_op reg_op)
++{
++	u32 header;
++
++	header = FIELD_PREP(OA_TC6_CTRL_HEADER_DATA_NOT_CTRL,
++			    OA_TC6_CTRL_HEADER) |
++		 FIELD_PREP(OA_TC6_CTRL_HEADER_WRITE_NOT_READ, reg_op) |
++		 FIELD_PREP(OA_TC6_CTRL_HEADER_MEM_MAP_SELECTOR, address >> 16) |
++		 FIELD_PREP(OA_TC6_CTRL_HEADER_ADDR, address) |
++		 FIELD_PREP(OA_TC6_CTRL_HEADER_LENGTH, length - 1);
++	header |= FIELD_PREP(OA_TC6_CTRL_HEADER_PARITY,
++			     oa_tc6_get_parity(header));
++
++	return cpu_to_be32(header);
++}
++
++static void oa_tc6_update_ctrl_write_data(struct oa_tc6 *tc6, u32 value[],
++					  u8 length)
++{
++	__be32 *tx_buf = tc6->spi_ctrl_tx_buf + OA_TC6_CTRL_HEADER_SIZE;
++
++	for (int i = 0; i < length; i++)
++		*tx_buf++ = cpu_to_be32(value[i]);
++}
++
++static u16 oa_tc6_calculate_ctrl_buf_size(u8 length)
++{
++	/* Control command consists 4 bytes header + 4 bytes register value for
++	 * each register + 4 bytes ignored value.
++	 */
++	return OA_TC6_CTRL_HEADER_SIZE + OA_TC6_CTRL_REG_VALUE_SIZE * length +
++	       OA_TC6_CTRL_IGNORED_SIZE;
++}
++
++static void oa_tc6_prepare_ctrl_spi_buf(struct oa_tc6 *tc6, u32 address,
++					u32 value[], u8 length,
++					enum oa_tc6_register_op reg_op)
++{
++	__be32 *tx_buf = tc6->spi_ctrl_tx_buf;
++
++	*tx_buf = oa_tc6_prepare_ctrl_header(address, length, reg_op);
++
++	oa_tc6_update_ctrl_write_data(tc6, value, length);
++}
++
++static int oa_tc6_check_ctrl_write_reply(struct oa_tc6 *tc6, u8 size)
++{
++	u8 *tx_buf = tc6->spi_ctrl_tx_buf;
++	u8 *rx_buf = tc6->spi_ctrl_rx_buf;
++
++	rx_buf += OA_TC6_CTRL_IGNORED_SIZE;
++
++	/* The echoed control write must match with the one that was
++	 * transmitted.
++	 */
++	if (memcmp(tx_buf, rx_buf, size - OA_TC6_CTRL_IGNORED_SIZE))
++		return -EPROTO;
++
 +	return 0;
 +}
 +
-+static void socfpga_dwmac_pcs_exit(struct stmmac_priv *priv,
-+				   struct mac_device_info *hw)
++static int oa_tc6_perform_ctrl(struct oa_tc6 *tc6, u32 address, u32 value[],
++			       u8 length, enum oa_tc6_register_op reg_op)
 +{
-+	if (priv->hw->phylink_pcs)
-+		lynx_pcs_destroy(priv->hw->phylink_pcs);
++	u16 size;
++	int ret;
++
++	/* Prepare control command and copy to SPI control buffer */
++	oa_tc6_prepare_ctrl_spi_buf(tc6, address, value, length, reg_op);
++
++	size = oa_tc6_calculate_ctrl_buf_size(length);
++
++	/* Perform SPI transfer */
++	ret = oa_tc6_spi_transfer(tc6, OA_TC6_CTRL_HEADER, size);
++	if (ret) {
++		dev_err(&tc6->spi->dev, "SPI transfer failed for control: %d\n",
++			ret);
++		return ret;
++	}
++
++	/* Check echoed/received control write command reply for errors */
++	return oa_tc6_check_ctrl_write_reply(tc6, size);
 +}
++
++/**
++ * oa_tc6_write_registers - function for writing multiple consecutive registers.
++ * @tc6: oa_tc6 struct.
++ * @address: address of the first register to be written in the MAC-PHY.
++ * @value: values to be written from the starting register address @address.
++ * @length: number of consecutive registers to be written from @address.
++ *
++ * Maximum of 128 consecutive registers can be written starting at @address.
++ *
++ * Returns 0 on success otherwise failed.
++ */
++int oa_tc6_write_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
++			   u8 length)
++{
++	int ret;
++
++	if (!length || length > OA_TC6_CTRL_MAX_REGISTERS) {
++		dev_err(&tc6->spi->dev, "Invalid register length parameter\n");
++		return -EINVAL;
++	}
++
++	mutex_lock(&tc6->spi_ctrl_lock);
++	ret = oa_tc6_perform_ctrl(tc6, address, value, length,
++				  OA_TC6_CTRL_REG_WRITE);
++	mutex_unlock(&tc6->spi_ctrl_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(oa_tc6_write_registers);
++
++/**
++ * oa_tc6_write_register - function for writing a MAC-PHY register.
++ * @tc6: oa_tc6 struct.
++ * @address: register address of the MAC-PHY to be written.
++ * @value: value to be written in the @address register address of the MAC-PHY.
++ *
++ * Returns 0 on success otherwise failed.
++ */
++int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value)
++{
++	return oa_tc6_write_registers(tc6, address, &value, 1);
++}
++EXPORT_SYMBOL_GPL(oa_tc6_write_register);
++
++/**
++ * oa_tc6_init - allocates and initializes oa_tc6 structure.
++ * @spi: device with which data will be exchanged.
++ *
++ * Returns pointer reference to the oa_tc6 structure if the MAC-PHY
++ * initialization is successful otherwise NULL.
++ */
++struct oa_tc6 *oa_tc6_init(struct spi_device *spi)
++{
++	struct oa_tc6 *tc6;
++
++	tc6 = devm_kzalloc(&spi->dev, sizeof(*tc6), GFP_KERNEL);
++	if (!tc6)
++		return NULL;
++
++	tc6->spi = spi;
++	mutex_init(&tc6->spi_ctrl_lock);
++
++	/* Set the SPI controller to pump at realtime priority */
++	tc6->spi->rt = true;
++	spi_setup(tc6->spi);
++
++	tc6->spi_ctrl_tx_buf = devm_kzalloc(&tc6->spi->dev,
++					    OA_TC6_CTRL_SPI_BUF_SIZE, GFP_KERNEL);
++	if (!tc6->spi_ctrl_tx_buf)
++		return NULL;
++
++	tc6->spi_ctrl_rx_buf = devm_kzalloc(&tc6->spi->dev,
++					    OA_TC6_CTRL_SPI_BUF_SIZE, GFP_KERNEL);
++	if (!tc6->spi_ctrl_rx_buf)
++		return NULL;
++
++	return tc6;
++}
++EXPORT_SYMBOL_GPL(oa_tc6_init);
++
++MODULE_DESCRIPTION("OPEN Alliance 10BASE‑T1x MAC‑PHY Serial Interface Lib");
++MODULE_AUTHOR("Parthiban Veerasooran <parthiban.veerasooran@microchip.com>");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/oa_tc6.h b/include/linux/oa_tc6.h
+new file mode 100644
+index 000000000000..99c490f1c8a8
+--- /dev/null
++++ b/include/linux/oa_tc6.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * OPEN Alliance 10BASE‑T1x MAC‑PHY Serial Interface framework
++ *
++ * Link: https://opensig.org/download/document/OPEN_Alliance_10BASET1x_MAC-PHY_Serial_Interface_V1.1.pdf
++ *
++ * Author: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
++ */
++
++#include <linux/spi/spi.h>
++
++struct oa_tc6;
++
++struct oa_tc6 *oa_tc6_init(struct spi_device *spi);
++int oa_tc6_write_register(struct oa_tc6 *tc6, u32 address, u32 value);
++int oa_tc6_write_registers(struct oa_tc6 *tc6, u32 address, u32 value[],
++			   u8 length);
+-- 
+2.34.1
 
--Serge(y)
-
-> 
-> Thanks,
-> 
-> -- 
-> Romain Gantois, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
