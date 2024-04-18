@@ -1,98 +1,115 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041C9548E9;
-	Thu, 18 Apr 2024 14:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141F01635BB;
+	Thu, 18 Apr 2024 14:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448814; cv=none; b=J2ySf3/Sr0+ffPiF/Cyi/x52IvceHHHSZrb22P6ym/Dod6aySt5buw1ynELS9wU1O4XTv1iTewsS7uGDJGGulBQmfgMldes7XaUYOQfERgkM2oilBtw7APFsf4ThCjhhUD74XsV7yjiTFfBo7D5qksF1kOk4e4kiDS4AQb3tYao=
+	t=1713448830; cv=none; b=CRkJVwLPAtZ77X67n/CnS6hAg51p1Y9L0nXloQFlyv7sUmHOkJMQyqSN17/ta22cLxSL3iXsaoovTGvMceL7jZrsv+ssXCCNhkyp/dOb6ZCY6IvVN/Ob4/2HmrmzjctVO415KP5HBZ/tuPmIUbmDNZ9wLfFgYzOKxkPlvhuC2FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448814; c=relaxed/simple;
-	bh=3x4YtFem5i68pHRvsRarHF+OwK1l9hPtEIyAaNF1kBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oSibZyF/DIjTaFKDB8tY0likJPBmeQXH0NrY0PVQIk+iGmZx/HOUFqpiipi0GMd30BO+rM826V1lP3wDjdquvEp6ergeOsjT8Ftsum4CaY4jjxhBYhK7w7IEn1urs9s/rRlZ1PrpQF0MnwcqON+rRbIDUrx476BaCEd3bIxDUME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6K2/8Ff; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6K2/8Ff"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3465921600dso758812f8f.3;
-        Thu, 18 Apr 2024 07:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713448811; x=1714053611; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RrJobdf05VR55MPzvvqAhAZGqW+VKfpfsZCu1Cykk0o=;
-        b=L6K2/8Ffw6YzFm/3odFoXhkcsqGYeW05gpz2MJne5Bz9kCPEa3efHHiDdCI/BPFJ0t
-         mKR0mbkn8RFqG0z2mzBgheShnrUYLj0lC6UZoCjwMWjwpbUVnuNQzyqt+oq2MAb85v/U
-         ltbOv+qR86YD3SY78LiigvnZ4H7iIYwq60ztqSM8ls7Ftj/E5CGx5e7KTYWVJB+oMnSX
-         BEWyljaT80LLp24znDy1cLnxfQG8Tu/B6XCbz6lzicmz6MIun2MCjSCUo0t+fPD2KKRv
-         0n0o22uOtpp8/F0ZWeHxPqHvLxtZox4S/wzOk4HF0CMbfOYOoIBZSKf5MSWdEXbEmR9C
-         vGkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713448811; x=1714053611;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RrJobdf05VR55MPzvvqAhAZGqW+VKfpfsZCu1Cykk0o=;
-        b=YFLnfZ6r9k8gObkkzgsb2xHhwhfkk61ldyI9eQj52g/0pET+P3pGtOtEToeU9XN+66
-         0dUMTd1Jutcsm2SBt4JgXCxvjxUKq1WrvH+iq/0Gwzl6/woIuYJrmmaHn5GTio+DEooY
-         vrt4AyznWXduhWq1FelAWM9SNKpFftY3JiVTcos7Rh9Rf6e17J0LtWKBdEZw5rZAqw5q
-         OBbJMtgxpdNBzr3ifZ3P+RuFq/4KF2RtffrDKiFKjXKzd49vkHrAYqLblfbi59frb25g
-         7IUfUt7Jwwvg3DvEcnE3yNdeYtrLa5MN98veXVt23q4d0JsvuotRBIQRwiDb0gub8Orq
-         Qc8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWKu3RGAjh2i3Hk9vfh4l9PufzVtSUXyAO+V0trEoYLQjPsYnY/7vxtolMF3yRt6Sa3tYypPGp8HaFUT3bd5cjPZRh3N/B9v0rgJ6GBR1HqxcMzXLrxhqtGPD1zrMaV8xAqsanEByAG
-X-Gm-Message-State: AOJu0YyTyB9GaJM8poLgr5jDw271Yo0IwbbhVrHjzfVzBOf/uKhv8eDs
-	VMd/PhnykR5CEUiiwxcfrnpGD0hHE8zx7lEJ2x6YsBDkhlgrwDVncdlKxTVl/2NJRZofVNBxAyo
-	ZvIf2YFAcfkgvU+BwSf+eVAA5kG0=
-X-Google-Smtp-Source: AGHT+IF4io6pWaC1pV+NK3eAMZgzmqLFDQ0IApf4hVd6v3XiYlCwckn3UzXvWbZkzuxlzBatD0+J2HpKSZ+9ShNiJ64=
-X-Received: by 2002:adf:e481:0:b0:349:cafd:a779 with SMTP id
- i1-20020adfe481000000b00349cafda779mr1555514wrm.68.1713448811029; Thu, 18 Apr
- 2024 07:00:11 -0700 (PDT)
+	s=arc-20240116; t=1713448830; c=relaxed/simple;
+	bh=LnYHA1GISFJUZ/Ao1v8Uv5HrdhevxbRgsM+jBHyEe5s=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O32YpOzicY3cQwrTQrUbwEISovmMkIvpxgm4HId2xxPqgfwimjO/9v8FOw5sVXosycJF1OZKkBulgQ9xC7fchdIQhQdVcoQfjfHyABxIIKK5S/WT61QcHUDyW/Bmuv+DlfZmix5JSUGvvlsDnDePk5p8HCT0pX+shfaZCZyr1rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzn84C2Vz6K9Sp;
+	Thu, 18 Apr 2024 21:55:24 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id AE48E140B55;
+	Thu, 18 Apr 2024 22:00:23 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 15:00:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 12/16] arm64: psci: Ignore DENIED CPUs
+Date: Thu, 18 Apr 2024 14:54:08 +0100
+Message-ID: <20240418135412.14730-13-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZiCp2ArgSzjGQZql@dread.disaster.area> <ZiDECInm854YiSPo@infradead.org>
-In-Reply-To: <ZiDECInm854YiSPo@infradead.org>
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Date: Thu, 18 Apr 2024 15:58:52 +0200
-Message-ID: <CAPAsAGxPEZYBCb30=an8yyku9zNZT74g3n4W_XFCRwLgg=9Xyw@mail.gmail.com>
-Subject: Re: xfs : WARNING: possible circular locking dependency detected
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Dave Chinner <david@fromorbit.com>, Xiubo Li <xiubli@redhat.com>, linux-xfs@vger.kernel.org, 
-	chandan.babu@oracle.com, djwong@kernel.org, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Apr 18, 2024 at 8:56=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> Adding the KASAN maintainer so that we actuall have a chane of
-> fixing this instead of a rant that just gets lost on the xfs list..
->
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-Thanks.
+When a CPU is marked as disabled, but online capable in the MADT, PSCI
+applies some firmware policy to control when it can be brought online.
+PSCI returns DENIED to a CPU_ON request if this is not currently
+permitted. The OS can learn the current policy from the _STA enabled bit.
 
-> On Thu, Apr 18, 2024 at 03:04:24PM +1000, Dave Chinner wrote:
-> > The only krealloc() in this path is:
-> >
-> >       new =3D krealloc(ifp->if_data, new_size,
-> >                         GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOFAIL);
-> >
-> > And it explicitly uses __GFP_NOLOCKDEP to tell lockdep not to warn
-> > about this allocation because of this false positive situation.
-> >
-> > Oh. I've seen this before. This is a KASAN bug, and I'm pretty sure
-> > I've posted a patch to fix it a fair while back that nobody seemed
-> > to care about enough to review or merge it.
-> >
+Handle the PSCI DENIED return code gracefully instead of printing an
+error.
 
-Sorry, must have been my bad. I didn't find the actual patch though,
-only proposed way to fix this bug:
-https://lkml.kernel.org/r/%3C20230119045253.GI360264@dread.disaster.area%3E
-So I'll cook patch and will send it shortly.
+See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+[ morse: Rewrote commit message ]
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Miguel Luis <miguel.luis@oracle.com>
+Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v7: No change
+---
+ arch/arm64/kernel/psci.c | 2 +-
+ arch/arm64/kernel/smp.c  | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index 29a8e444db83..fabd732d0a2d 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+ {
+ 	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+ 	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+-	if (err)
++	if (err && err != -EPERM)
+ 		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
+ 
+ 	return err;
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 4ced34f62dab..dc0e0b3ec2d4 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -132,7 +132,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	/* Now bring the CPU into our world */
+ 	ret = boot_secondary(cpu, idle);
+ 	if (ret) {
+-		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
++		if (ret != -EPERM)
++			pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+ 		return ret;
+ 	}
+ 
+-- 
+2.39.2
+
