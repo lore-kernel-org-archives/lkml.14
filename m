@@ -1,128 +1,122 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6E416F851
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 15:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9FC16F851;
+	Thu, 18 Apr 2024 15:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713455862; cv=none; b=mfPuOl4CQN3CiNUc5ElDwsnrHhaxPh2jOuSTS6nbPTgQugE3XAUiN+L03zzpg9LZantbV0zvYKar8gQ/MHBALSugyiawyyDiLnCXFB2j3dJv+u6rrxGWw1YzCL4+kXS7SfHpqpy/OQiohtIoGlYN5MpJWLUDZQcIeV51+7usXI0=
+	t=1713455865; cv=none; b=OwbCgvSiSP8A/AQ6DXa5DfklhXPaz3nVxxhrpgwwNpCkyIqByXdgfGuaHppYYvefED30PqoJLG6SDqwVdCdKUB2H9jESDz8lfZeVsvlqgUvaNouMWthl+vmfe1oIgR+dpoR7jW8gAa/ZGu0+DwmwLFXkWRgukTiB5+vhqcqbEjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713455862; c=relaxed/simple;
-	bh=cZ3+TYpIR/lBULnBJellkQ5YnuCM3qph2lvrK3Pgs7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSkV6xk1CaZbUzh75FWIjRV0FzaWk0LeHU4NivqGPlfrVqQ3PaWOUpUIs80irqpj2Fw5NR+Chu4vKFjegg9JyQ+EeCYw7RDVNKrsYxwJOzDBCxiFrXuEfn//O6i3DwiCCiduXA93cg8tdzAmuY48QZMRNNrSA8wD4o00iMZZmdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxU8H-0006Yg-SF; Thu, 18 Apr 2024 17:57:05 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxU8D-00D07n-UP; Thu, 18 Apr 2024 17:57:01 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rxU8D-003YUR-2e;
-	Thu, 18 Apr 2024 17:57:01 +0200
-Date: Thu, 18 Apr 2024 17:57:01 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Fabien Parent <fparent@baylibre.com>, Markus Schneider-Pargmann <msp@baylibre.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 11/17] dt-bindings: pwm: mediatek,pwm-disp: add
- compatible for mt8365 SoC
-Message-ID: <ddqgzbhmkp57wupumrm7ht3bivohukfzebn5vez2ft2ksij4yc@irllweyitwoy>
-References: <20231023-display-support-v3-0-53388f3ed34b@baylibre.com>
- <20231023-display-support-v3-11-53388f3ed34b@baylibre.com>
+	s=arc-20240116; t=1713455865; c=relaxed/simple;
+	bh=qI2NDyYBetjYiJ8+DJsHQPX1KNa1xaxmLQvZQPm4Y+M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=muJmzG8G9T0htO8X/FXzLaYKuFyfc/ylfBXiHAOK23AxUmZb7JozSwFvapNq++9R9BZd7ZboJBP7cOZYTu6xKJP0rD2pV65eRUDrl2kgjEwiD0z8kvvOK2zWIUg4DIE7rEaiD0Mj667apdrg71PPy9oehYDtl3Nyqtv75NBRb+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mUmbAQTK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mUmbAQTK"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IDLr3n026802;
+	Thu, 18 Apr 2024 15:57:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=keHmXRi4wuYZaHcMOahf+
+	Dk9RbwXyJs1kracniYm16k=; b=mUmbAQTKygnnDNK26Fsg/fQ/gjW7X0S7DecDO
+	rfWyjXNOeIcsBd8yUbi07zbbEpJnm5mxq7JMpLZVz5OGucRupnguMqj9OCnBLyLP
+	X5kNpAtzAi31B1Y9ntOJm0flQjJtkOPD4VJne5DdC6mLKL+CJBvr76BqIi3fYebe
+	6QLW8YS3otMgxRZBj34fjMGnx79MMP3a6grq3gIwvrUqwFSbWqT3MaLRzJ4ChGKc
+	Q9cUtuXJPgviqfcGLpfg+fhaMWKmtUdFZW4NJaa9MDOjstEEUUmNGlsUB5GUmSmS
+	v3NebBC7dq9hwOySJMu6NubLHmStro+UyVhC2+Y5VJQpeqOxQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xjx54h90f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 15:57:39 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43IFvcF1013191
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 15:57:38 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 18 Apr 2024 08:57:38 -0700
+Date: Thu, 18 Apr 2024 08:57:37 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Rajendra Nayak" <quic_rjendra@quicinc.com>,
+        Sibi Sankar
+	<quic_sibis@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: x1e80100: Drop the
+ link-frequencies from mdss_dp3_in
+Message-ID: <ZiFC8d6cD35B+PaC@hu-bjorande-lv.qualcomm.com>
+References: <20240418-x1e80100-dts-fix-mdss-dp3-v1-0-9f8420e395d4@linaro.org>
+ <20240418-x1e80100-dts-fix-mdss-dp3-v1-1-9f8420e395d4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mfe5lzcqzhilqxcv"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20231023-display-support-v3-11-53388f3ed34b@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240418-x1e80100-dts-fix-mdss-dp3-v1-1-9f8420e395d4@linaro.org>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NW4TPYbzOL1EXy3pjwrDa-nvTR2SjDn5
+X-Proofpoint-ORIG-GUID: NW4TPYbzOL1EXy3pjwrDa-nvTR2SjDn5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-18_14,2024-04-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=359 bulkscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404180113
 
+On Thu, Apr 18, 2024 at 01:22:18PM +0300, Abel Vesa wrote:
+> The link-frequences belong in mdss_dp3_out. Display is broken because of
+> this. Drop them from mdss_dp3_in.
+> 
 
---mfe5lzcqzhilqxcv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why is display broken because you have this property in the wrong node?
+Isn't it broken because you don't have it in &mdss_dp3_out and this is
+just a cleanup of an invalid property?
 
-Hello,
+Perhaps that's what you're trying to say? Would be nice to have that
+clarified.
 
-On Thu, Apr 18, 2024 at 04:16:59PM +0200, Alexandre Mergnat wrote:
-> Add a compatible string for MediaTek Genio 350 MT8365's display PWM
-> block: this is the same as MT8183.
->=20
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+Regards,
+Bjorn
+
+> Fixes: 1940c25eaa63 ("arm64: dts: qcom: x1e80100: Add display nodes")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 > ---
->  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml=
- b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> index f8988af05287..180dd8366935 100644
-> --- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> @@ -31,6 +31,7 @@ properties:
->                - mediatek,mt8188-disp-pwm
->                - mediatek,mt8192-disp-pwm
->                - mediatek,mt8195-disp-pwm
-> +              - mediatek,mt8365-disp-pwm
->            - const: mediatek,mt8183-disp-pwm
-> =20
->    reg:
-
-As there is still no feedback about how this should be merged, I went on
-and applied this patch to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-=2E
-
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mfe5lzcqzhilqxcv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYhQswACgkQj4D7WH0S
-/k7XLwf9E9OpRFmUhJZZk3JE9n1r/ktNvu8zeUbfAQag5XpWlYUY2beEvVqVuxZC
-YtZvITxe3UZ0UpMk7znYoeI1PMZlUTyZwOEOvltlWl6macba9jX+VQ+xjK82f63C
-A3rcI9ENcwhZWaHCstFPn/bjUp6Axjay+g/s7ROlANv+DzfuuB6qvGB9XWnegBap
-dNX5ml9DULwd+nNqH5wWO1BEaVqLtsxd9tV+yitrdLW3AQnpfS95u9XH1MKDq/aS
-f+X9nY+zJ3mb4nGhHCvq4Hw3jZkqobclHUVI9D7yD05LBe5HnVJji2dSOGssblDB
-SjQo2XmiwuL8WgQ3MXKJZ2QiytiyPA==
-=cDLN
------END PGP SIGNATURE-----
-
---mfe5lzcqzhilqxcv--
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index f5a3b39ae70e..0642b5e88639 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -4096,7 +4096,6 @@ port@0 {
+>  						mdss_dp3_in: endpoint {
+>  							remote-endpoint = <&mdss_intf5_out>;
+>  
+> -							link-frequencies = /bits/ 64 <8100000000>;
+>  						};
+>  					};
+>  
+> 
+> -- 
+> 2.34.1
+> 
