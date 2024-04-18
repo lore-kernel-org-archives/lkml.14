@@ -1,116 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D8315D5AE
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317D915D5AE;
+	Thu, 18 Apr 2024 16:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456006; cv=none; b=VUcqGFopiflQIV1HvND8+yWuwlUr35vV91S0ytaRVjsTCSkQdRgpJYEEgfwBs1BiilOKFO4pyLcCJdqNTu08hbOcuwfwu4k0BsJzlkqlQFiK6GbRV33nk4uVXn0WYyCYN66Zy0H2wtJB3Uw0A13fME8QRR4cppc5zsdq361TJ+Y=
+	t=1713456048; cv=none; b=mjISVEvVtxIxqEUS0ML5y5at1Zk+4K6cWdjmO1SRezjcWBx0q/jEJvw13z0QDLDq0/T+Zz1DtY1cx6Kiyelyv6e5czJF2do9VtzNPRt5eA5kQTvblut/yfhvJYXz+ixu4ZDGRkfQIoZy0Bcap4qriFFutBfFPe5PdlxAIenwDtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456006; c=relaxed/simple;
-	bh=Hp5KTEXhVIq6MVBrhhK0mtcu3ZcUPbGX9anKs1DqGQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s4xQ9hPB11egmkcg9t7AG2+TiixRneMXJRNNncZ/8QJ+G/tE1DtzYN8OhGntzfMJjb83Kw7Epv19xsVmzAsvqh7wU3L+hRnv/cc0C1ib+5RDIEeVcMi4mXzHeBBwyEp3ahsfz4AzheaietFD+Di727c03x9lw5dN01BivTjp/jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T94+CWwt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713456048; c=relaxed/simple;
+	bh=2tvjJQzckk7me2qDQz2+/czKkqYeyc4qjDGM18IMo/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NIWgliBNdfKnradyvHu2pbYTzE3nLhVhN+jLK3gpBI/XgnQIHcJhf8yjE7epAnB5w8/HkwhYqZZ2hWweit7qz2q/OUYsxPjg4GmCSNKMrEFQJrWVgTkz61mgDwTehoNE+JC1q9Dsottb3crxwsTwixDwlWkkHYRIlwHra/cDDfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VBidoEn9; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T94+CWwt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA2FC113CC
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713456006;
-	bh=Hp5KTEXhVIq6MVBrhhK0mtcu3ZcUPbGX9anKs1DqGQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T94+CWwtWNbbqAdBfNV0gGtJZEWong40cDwDpSpNSmGVixSCnauAIbPcl9O5cL0Mm
-	 OYpPaH5XLOojp/uzgCK5ZyxI3sQ5iW8SA0Tmoii6cA3nKjluL+S/AdGaOMBLiRFnRp
-	 GW1Mj4mjcljYxW5tu8JbBS+qRNtsYd4M9ElgIyuGbFlKpawTYkr2/4iVoEvnCu5SQl
-	 p3gls9UM+zOskZJdZJOLgj8DKLEk7lpvizR0ZfU0PIcV9bQzFkOZK4mSKjrXzNSjc+
-	 Sx7+f7V+HrFkjWzzixjH9C85x9NUq31ATzr55IcJ0ryU2FBsG49AhMvz9i6CWQfx0j
-	 8kaxfzRfTf+nQ==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5193363d255so1298591e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:00:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYjnkUhLvqU1xQAprOVSWmCuY/PwfFEIBo9kNPoqEcHibICRcxd+zomVvg0/OTHFyobkrjWWUyTNQmLmlmfl0A/OycxsOems8SD52z
-X-Gm-Message-State: AOJu0YxAIiqijB1Q9Bk3veNsBwbWS87DpMpjNFRF968R+2H2ahalEfKk
-	dJxvdpRr7qKl6JLbaavydqqJduJ7WZJIPHMgRS31inlnKUvpENvlQ3mbWy2HA/fOCGDEpM50IKt
-	b+jaJY4TOG82eDK5h8kAN2l04i9I=
-X-Google-Smtp-Source: AGHT+IE3esknj6rnGRTfXAha0sULnP3J2grUQPDIpHSNw5T4GNwd0MTsH9nhVMktl4LlEDfMcVvDnMxpDtmmvnTlV7Q=
-X-Received: by 2002:ac2:5334:0:b0:518:bb48:f060 with SMTP id
- f20-20020ac25334000000b00518bb48f060mr1630854lfh.19.1713456004867; Thu, 18
- Apr 2024 09:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBidoEn9"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e4266673bbso9560005ad.2;
+        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713456045; x=1714060845; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PQ8NnE95Wng2cbF08yApBUNklEsbuY7jF+Twef4QuI0=;
+        b=VBidoEn9MxhUEdWJNlWJzYEkSoPovRp9yRuHYCa3e3WTRNg1plIC/etfwIDPKdF2wJ
+         Oer4y+g5rPofSpcWRSqk6JS2I7IGCIi54c4bKAt3l5EiP3t+900ZcE/J/nHmW/xbTs8P
+         zvzFy5Cca9kn+OwN3T937+RXdAm8rPHy1ozsYFi4GrjYr5KoAxhViBYVUIkeiWF8pIJk
+         rLTaKWXAvmpLqiwtG0OrpZsrP91MhkYqlxjipNEUGlQA9oIlhqAZvmDK3mVrQXLETSIR
+         7TWzrm56hVOf6OrbiOkQLSHqn9LwrB77OgAyYl8Uo07JeD9mxnhRFhgM2NTxSI5o1KST
+         2DHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713456045; x=1714060845;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQ8NnE95Wng2cbF08yApBUNklEsbuY7jF+Twef4QuI0=;
+        b=ObouYg0jC61OecC88ihVMEOKoV7UsRA/b2iUqmDaOf7zzC37bBNr0jkSLbxiHmPpcw
+         xEsUGHPf4+0/Ud3KZbreTuiKk+d8rRQVYSFqtg+28l5VcEShDAX+tmepCeukWwj23HCW
+         KDNQ6ef0WkWzdBTJ8roFfvHwAmmrTSCx2Ss2ycsILJyV4V7uDTBgetckvEcIUwKCt4Lh
+         gZqoYLzq21CoiJUjM/w3keAp39/oxA7wuJDfVrTIYT+4CUNyQ4PPn84stK7cV8rJgZU1
+         +lA4JAD3pXhbtcjGOtvzAihSnPGECDvTKfdSumoGTk29UmOck+Y3R7ah+uLMikOpxhVu
+         jygA==
+X-Forwarded-Encrypted: i=1; AJvYcCVk8pM583nGABDmI6OMx0U5b6rHS/yA8U/OlH9p8Im6VjCK34opuV7p2R/QWDCaitCG2QOSY3fSDIHZHpM9tlaC9hx4yWE97qkZhOAxxpTSG/iAUx53GlWMUMrCBcEWODmd7xS6TlMg8EOFe+nG/izJ5+aM09wwPxOSvB4DY+OZMg==
+X-Gm-Message-State: AOJu0YzigPnjsU8Btwgm7NARFaPjvr6hCIRtapNqkTumJaeYLkeeoFUx
+	I/DV/F1PDH5yfHmSc9rS5FPtcPyemULtIs9xkH2hPSx3Ox3vfGUw
+X-Google-Smtp-Source: AGHT+IE4e7zmJlTVm+rOJDjXS8ojKP/o+9OmVobTcNe+p/oMU7S06QGA/ADKTuXfUm0fMYIAFgeE+Q==
+X-Received: by 2002:a17:902:e742:b0:1e5:4f00:3754 with SMTP id p2-20020a170902e74200b001e54f003754mr4096356plf.8.1713456045245;
+        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902768500b001e4478e9b21sm1673804pll.244.2024.04.18.09.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 09:00:45 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 18 Apr 2024 06:00:43 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc: lizefan.x@bytedance.com, hannes@cmpxchg.org, corbet@lwn.net,
+	cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Subject: Re: [PATCH -next] docs, cgroup: add entries for pids to cgroup-v2.rst
+Message-ID: <ZiFDq5NuAKLYslmn@slm.duckdns.org>
+References: <20240418123012.916411-1-xiujianfeng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417-x86-fix-kexec-with-llvm-18-v1-0-5383121e8fb7@kernel.org>
- <46343CD5-24D6-46BF-92A7-0B0FA0E6937D@alien8.de> <CAKwvOd=3Jrzju++=Ve61=ZdeshxUM=K3-bGMNREnGOQgNw=aag@mail.gmail.com>
-In-Reply-To: <CAKwvOd=3Jrzju++=Ve61=ZdeshxUM=K3-bGMNREnGOQgNw=aag@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 18 Apr 2024 17:59:53 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH+rNU4pa0ywcgkohXBu4G+iCXML_s9WVJW03ZRwtwW-w@mail.gmail.com>
-Message-ID: <CAMj1kXH+rNU4pa0ywcgkohXBu4G+iCXML_s9WVJW03ZRwtwW-w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] x86/purgatory: Avoid kexec runtime warning with LLVM 18
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>, Arthur Eubanks <aeubanks@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, morbo@google.com, 
-	justinstitt@google.com, song@kernel.org, ribalda@chromium.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
-	ns <0n-s@users.noreply.github.com>, Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418123012.916411-1-xiujianfeng@huawei.com>
 
-On Thu, 18 Apr 2024 at 17:44, Nick Desaulniers <ndesaulniers@google.com> wr=
-ote:
->
-> On Thu, Apr 18, 2024 at 4:15=E2=80=AFAM Borislav Petkov <bp@alien8.de> wr=
-ote:
-> > How much of this silliness should we expect now for other parts of the =
-kernel?
->
-> Looks like ARCH=3Dpowerpc sets -mcmodel=3Dlarge for modules and ARCH=3Dum
-> does for the whole kernel. So that LLVM change may have implications
-> for those 2 other architectures.  Not sure we've had any bug reports
-> or breakage in CI yet, like we have for x86+kexec.
->
-> > Can we turn this off?
->
-> Maybe we need to revisit
-> commit e16c2983fba0 ("x86/purgatory: Change compiler flags from
-> -mcmodel=3Dkernel to -mcmodel=3Dlarge to fix kexec relocation errors")
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3De16c2983fba0fa6763e43ad10916be35e3d8dc05
->
-> at least the -mcmodel=3Dkernel addition (since that patch added a few
-> additional compiler flags that still LGTM).
->
-...
+(cc'ing Michal for potential conflict in the pids controller documentation)
 
-> + Fangrui, Ard, who might know of alternative solutions to
-> -mcmodel=3Dlarge for e16c2983fba0.
->
+On Thu, Apr 18, 2024 at 12:30:12PM +0000, Xiu Jianfeng wrote:
+> This patch add two entries (pids.peak and pids.events) for pids
+> controller, and also update pids.current because it's on non-root.
+> 
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-I think it would be better to use -mcmodel=3Dsmall -fpic. As Nick
-explains, the large code model is really more suitable for executables
-that span a large memory range. The issue with the purgatory seems to
-be that it can be placed anywhere in memory, not that it is very big.
+Applied to cgroup/for-6.10.
 
--mcmodel=3Dsmall -fpic is what user space typically uses, so it is much
-less likely to create problems.
+Thanks.
 
-Note that I have been looking into whether we can build the entire
-kernel with -fpic (for various reasons). There are some issues to
-resolve there, mostly related to per-CPU variables and the per-CPU
-stack protector, but beyond that, things work happily and the number
-of boot time relocations drops dramatically, due to the use of
-RIP-relative references. So for the purgatory, I wouldn't expect too
-many surprises.
-
-> Otherwise, I think the dedicated linker script is the way to go. We
-> really want tight control over what is or is not in the purgatory
-> image.
-
-Linker scripts are a bit tedious when it comes to maintenance,
-especially with weird executables such as this one and needing to
-support different linkers. So I'd prefer to avoid this.
+-- 
+tejun
