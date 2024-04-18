@@ -1,98 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35E171E68;
-	Thu, 18 Apr 2024 16:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122A0174ECA;
+	Thu, 18 Apr 2024 16:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713458052; cv=none; b=bkGSHGe7WAEqpTUhVA+8voNVRVZbA5ZJNL7GP5GMexzAVisFDVf8+0a8SW0bx40rYawLk5b3mzqHMrmzPRmkZZHlRZ4Aebe9KEbgYxirbliU313d5b/NsxjGvFbbdpWnHV6LMBnOQgQuTM/hqxmEspMgt1PpKObhQ1HQ5vXiwgo=
+	t=1713458056; cv=none; b=LhTLabAAX8Dmtutrg2crHYejp9cYvUolHBAVARmdW8ffG/ooZHfJwfOgoLlzI3kZzSw1SylIk/NnhM+rXBJ2aN0par88ZUC789HLZmWCDcYBVL1JJHFowR56FSKjcXIYEcfT47N4P2uYDrJThrGKsho+3ljtv7q0VZ5zkv/1fcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713458052; c=relaxed/simple;
-	bh=V3m/+HoOyHHRcPC4//NZxdIwWzYIWlQVXMeeEhk29vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5P0hdd0r3bWRQwa6WaKk7iUz8a9K5MfA7RP290F1NKBmRJkGQYukhl/IV0EdKhbBfTH4gH3nQYT+CQKR5iezkiZyUHa+CNOuTc33jcG2P3Tx1NsxVEH5c+iGcUM+I+5Da9x/vOL/1e615CaRgALlWy+Gwr2DQKeD23cHpNNE3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMddz6fG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713458056; c=relaxed/simple;
+	bh=u/EmtiRaLybzXhqOhz8n8iP61f2w08tm7qMXyf9XZxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aGtOcqgB1dsJJ+Jer1lTSu4z5u7K9eMgZ60arC3VjNzXFCQARgJx70c1o1GFfLFKefY2yMyhT2efjsDT7i94AZlWDFWeQ94GONCXC+3rG23yZq0WiUGfty01MxHzC5zdTjAhmzg8wHVi5E8l7AnZUOyJYcqmlj9lZ+bXt5EJB8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEU7qUKc; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMddz6fG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D19C3277B;
-	Thu, 18 Apr 2024 16:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713458051;
-	bh=V3m/+HoOyHHRcPC4//NZxdIwWzYIWlQVXMeeEhk29vY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NMddz6fG9oGgpKB/S7mRYdjttW/BhgcZpAAtuuj+YZks/pnuobbn+AFBUAr+DCiKR
-	 prDy+RkQPTO577fcl1ANKjyM1SITvfCXvln9jtCEmJFoUA7yPOs/QysLD92m3fWsuq
-	 tnFPVTWhSo9wQFtxlqQEShAPOW1yUIUtU4FpAXYcCmQU/Hf2OQaf3SKW06dQp6LR6Y
-	 vgEG9/WDaqmSMUyK30LEcgnPO0AtsBBLOxjvPl4JVeZYKVNCdZ9SUPM4e5g7nNwDFa
-	 TW6MvHA3kYZv596JNJQspS/QMdqgrwY6Qo9KWbHagGKf8O00djU2f0sX70k5N52mVD
-	 Zwurhifk4CheA==
-Date: Thu, 18 Apr 2024 17:34:07 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Fabio Aiuto <fabio.aiuto@engicam.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: fsl: add Engicam i.Core MX93
- EDIMM 2.0 Starter Kit
-Message-ID: <20240418-distort-dial-c56ca175d8b0@spud>
-References: <20240418133923.3705-1-fabio.aiuto@engicam.com>
- <20240418133923.3705-2-fabio.aiuto@engicam.com>
- <20240418-lapel-monstrous-5774610c7405@spud>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEU7qUKc"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e40042c13eso8827315ad.2;
+        Thu, 18 Apr 2024 09:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713458054; x=1714062854; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6g4LCoPE+ljeoLvZRIiB0MJO/6AQkzVDaqR+XYwNS0Y=;
+        b=NEU7qUKc12nty1GIEHRyy8d8d9akSOmFcXQ62bQ9IA2PpQpzkAq5FAWIcx4rhZRb2G
+         BzKfBie8fXdsqS+fsrOX1xxwUCXgUNbMAKN6+uE/cHS2xHFYHShN4TaQCn47MpXzzxB3
+         fqd2wUT5mcnUxxy/MQb/ZmxyjMV1MDAIMn6hWR6t5qdUl+N4gvrAj4Qc5+37uoIh95kK
+         xKn0k3bBmPy2nFXabw2msW/u0ZPw6+cOuSdBFf/PdSRRI3IjdpzdQnqTyRfr1Ps2kMlE
+         6In8UIbfQCS8oOgSlXKsVtlEueK2MvvUxWd3ANZHrffHw7aMr+R5y5uFIODHrMw9t9Py
+         qkag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713458054; x=1714062854;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6g4LCoPE+ljeoLvZRIiB0MJO/6AQkzVDaqR+XYwNS0Y=;
+        b=BTky0pzDcwZH/mrvAkqYgwkeul8y0QXyzDf90/TJfnN0vRtXImgYLS+HnXczUyHDO0
+         x475fxjKxsYbpiNytf31s/xIMFPteuLNFJ50NDtbh+4CYeYAWDoeQT4we3cUTSnYtUP9
+         ut33szC0sYl3DvG82Eiou3FZSDj+4uR4cyoFGvLrxcPzR1vFM0Y+8aN81vN96t9Z8pz8
+         9d3AlUkunBSDpcGS1MYR+cYrkqQ6DecLfvmHcVoKIjsPjJFGX2Oh4to3zrE5jx+w6iyR
+         3m0nFEA5GNABdk2UcKRPNI649i9mbGuX7c00CPx9vX5PZP4s1r2Yve93lOz3o2+KDSha
+         R9Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6tVco+Cw2RzbODK3vM/lOvoaSZHOgbLhZRIkMSO77krmrR7gpQ+46N9sJ62K5Cp1+SJ7rIDL/Cgy59G+bf9H8IWmNVN16uebiM678bXj2Ns3g98u+HEIlnAScHh7jDEq0DIa5lBL58OB1DdQc4P7+mE8NdLCVZPbFvSwkiqlviy6eRKlOw4ngvuauZ9DY+BXYrpzsTnwooC4CP94njIAMVlw=
+X-Gm-Message-State: AOJu0YyMQLwav1HgJp7bT7arE4mE6mND1BK17QgRhsEs6OAuo5Jakmlb
+	YnAK32nx7IIzqG9we2S9s5axPg0H8HcMCcvsSlL8OPappCXDYcH6
+X-Google-Smtp-Source: AGHT+IFChv3YgQYETC4JqyameENL27arMYPIiHxYKM/mHw2RlWtdkWXAExJxuP/XnmMazmxvZhG8hQ==
+X-Received: by 2002:a17:903:24c:b0:1e3:e1c4:eaf3 with SMTP id j12-20020a170903024c00b001e3e1c4eaf3mr3765416plh.43.1713458054185;
+        Thu, 18 Apr 2024 09:34:14 -0700 (PDT)
+Received: from localhost (ec2-3-111-32-5.ap-south-1.compute.amazonaws.com. [3.111.32.5])
+        by smtp.gmail.com with UTF8SMTPSA id kh3-20020a170903064300b001e48565b40csm1721343plb.210.2024.04.18.09.34.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 09:34:13 -0700 (PDT)
+From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>,
+	Thierry Reding <treding@nvidia.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: dt-bindings: tegra20-das: Convert to schema
+Date: Thu, 18 Apr 2024 22:03:24 +0530
+Message-ID: <20240418163326.58365-1-sheharyaar48@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0u7/MAZsV63WLHSd"
-Content-Disposition: inline
-In-Reply-To: <20240418-lapel-monstrous-5774610c7405@spud>
+Content-Transfer-Encoding: 8bit
 
+Convert NVIDIA Tegra20 DAS (Digital Audio Switch) binding to schema.
 
---0u7/MAZsV63WLHSd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+---
+ .../bindings/sound/nvidia,tegra20-das.txt     | 12 -------
+ .../bindings/sound/nvidia,tegra20-das.yaml    | 36 +++++++++++++++++++
+ 2 files changed, 36 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra20-das.yaml
 
-On Thu, Apr 18, 2024 at 04:33:21PM +0100, Conor Dooley wrote:
-> On Thu, Apr 18, 2024 at 03:39:21PM +0200, Fabio Aiuto wrote:
-> > i.Core MX93 is a NXP i.MX93 based EDIMM SoM by Engicam.
-> >=20
-> > EDIMM 2.0 Starter Kit is an EDIMM 2.0 Form Factor Capacitive
-> > Evaluation Board by Engicam.
-> >=20
-> > i.Core MX93 needs to be mounted on top of EDIMM 2.0 Starter Kit
-> > to get the full i.Core MX93 EDIMM 2.0 Starter Kit board.
-> >=20
-> > Add bindings for this board.
-> >=20
-> > Cc: Matteo Lisi <matteo.lisi@engicam.com>
-> > Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-> > Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
->=20
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
+deleted file mode 100644
+index 6de3a7ee4efb..000000000000
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-NVIDIA Tegra 20 DAS (Digital Audio Switch) controller
+-
+-Required properties:
+-- compatible : "nvidia,tegra20-das"
+-- reg : Should contain DAS registers location and length
+-
+-Example:
+-
+-das@70000c00 {
+-	compatible = "nvidia,tegra20-das";
+-	reg = <0x70000c00 0x80>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.yaml
+new file mode 100644
+index 000000000000..44c5ce8ee6be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra20-das.yaml
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/nvidia,tegra20-das.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NVIDIA Tegra 20 DAS (Digital Audio Switch) controller
++
++maintainers:
++  - Thierry Reding <treding@nvidia.com>
++  - Jon Hunter <jonathanh@nvidia.com>
++
++properties:
++  compatible:
++    const: nvidia,tegra20-das
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    bus {
++        #address-cells = <1>;
++        #size-cells = <1>;
++        das@70000c00 {
++            compatible = "nvidia,tegra20-das";
++            reg = <0x70000c00 0x80>;
++        };
++    };
++...
+-- 
+2.44.0
 
-Looks like you might've already got an Ack from Krzysztof on a previous
-version. Please make sure to pick up acks etc when you post new
-versions.
-
-Thanks,
-Conor.
-
---0u7/MAZsV63WLHSd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiFLfwAKCRB4tDGHoIJi
-0m/cAP9lDew2O967UVxosiWdBCxu3U06yqIrNDGktcCB1Af5egD/fIWWhK3+Mq8J
-uX3IuFqiXvRTFpq5cc5iljpXO56OrA8=
-=Xwh5
------END PGP SIGNATURE-----
-
---0u7/MAZsV63WLHSd--
