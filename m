@@ -1,118 +1,188 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC204172BAA
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571CA4F1FC
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 16:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713457914; cv=none; b=AZ/9snKI9sLZFn7NCFvBkpMRGxCGS00cVpmnOsafO4G6kMduBsOf2m6C/saCY2/HTHl66ePxVH9e6fwsa9I/qkn0uqmRR75FBJTApLYFmTHQE3aV5h6WnaHudJ4HeWLqXfKjOuZZSQ8obtgE3cHuMsek7CoFXsyPgi3uB6wKeuI=
+	t=1713457955; cv=none; b=ncYZ9vuq27rvBjnGvNkP//iTsoZ68PuwflJtLdJfx0mX5hmxLbhT3NlkBvh47JsmV7/WYYamVRiBGbYT+PFyRJkYby1Ds4oUeGMXA97mW+gJqL0dEPso0ZAqxpyI6Hmtk0cOAujzfRWQC5KymDZLbezmMyxWEwE0185PDEoqp8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713457914; c=relaxed/simple;
-	bh=c2CK72lGJDZxhkE+vu1jRDsSGgFezzCof9rwe6Qg764=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AKL0NwINNOMzSgO8TbKabIs3gpOcMUaUB/OivocxaQSOrvmo0T61oRcKT23L0EZaBur8Si1GDYmX8ABScHq5AC8JFEpHnPfVsO3OrSqDtJ/YZHiR5YCcfdfqLROcHSgSHQzitwJ6t/Nj2U6WmCqcc3To+8bWYpleqZIqBpyjocE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c33FeuoV; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
+	s=arc-20240116; t=1713457955; c=relaxed/simple;
+	bh=dg7kiyLQdxJDu/DhZjBYy9+fyv9Ey2Xh3fyL/js/tQE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YnnfWiUi0O9LwTWUOeedIqAlG8KW40y8YCpzhCrcC+gKl+nY2eCJSGt8P5kIjb3QcLSQ2MsmSgXm7eRsf5+htQrXMr2TDkOpYHXm2ptCmqKEAaybKWaU66es7Nl1P5XJSeu43aLOXEM+hKeWafsnxd0nivIlqaq2VJ/NFUeo/So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Y6rVLtcu; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c33FeuoV"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc64f63d768so2014126276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:31:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Y6rVLtcu"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f074520c8cso1085052b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713457912; x=1714062712; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/WdHir/Mi2mSDEW62XszsH6Iho8VZ+3enjU3uPIcDs=;
-        b=c33FeuoVmUcQ0l0C4pwHQaC3m8gGLZAI3AId2TelkMcM8A3JPeBr3ZIsjrioymToj4
-         Xa0eyWUvWzwJmXR8P54KgR7lERWLP2x17qhZe7TdW/dKgnaRodgKgd+Mb/GbpRBV509p
-         mvoxHfTcmSoHcJCdxnfbDKtCBP9KjFy+VZH4FufagmUzcfzA6fch2CkmHpsMAD95stMM
-         jN6MmrWoTnwjt1SIqsDg2WEMCBKzmm5Lv45mu7WFd9GmdlHLigHUKWV6AVRSHOckCsWQ
-         kthOx/RvFLO81kLzyLApEiRKjncxblJjGkrsSYRMeS3o5+YZyPptIITxeXgRymSh1HD8
-         8puw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713457952; x=1714062752; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6qw41A+dZx7I8Diykai2FpeK5mNXOqfbEJEaS+qGnKM=;
+        b=Y6rVLtcuMcdlMUEVo7lGLkrI+8ITGMGGxJlLJKkjqj147on6k+kLgILSBTsH8VotJ3
+         J3bD+QYGjz9EnsWZ9wbgIxr1BbsfC5wvYdyt+xRm714eKp/rBrIlq0akP9D8pW/B0BIJ
+         RzWfY+tVhiN+vk1uGx+WPyH3PzEuBB01XuovTckTtL3H5g6oJzyzXGMQ2ajJCyXw/TLb
+         qo9DKP8nDg3bq461JlFKpbesq2RB/Mv+xF99kg6SkMw7FhUt2Z+1FDBJQL4X04F6yTEj
+         RxBkGAR3wLvgxWMa0KaXVOMMTLI9HHXZYbgxAA12QDVV6lv1PUGyxSStats3hMF3UCxi
+         SM7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713457912; x=1714062712;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/WdHir/Mi2mSDEW62XszsH6Iho8VZ+3enjU3uPIcDs=;
-        b=DHjbiLh6ES6ipVxt9j20Ir4aKcjb2df+VF82XmyMl9BZLDiZ0p+aRNlCj9AyBy/ljA
-         YbYj5aEVfjcjQswnGPFymRPtG6EOF4ibNvAkkW3V0d3FW2DKgzoxGTh+Z37fcTSQHDBA
-         ZCm3EA4RnoB4a4gdLgEmG1SynwHFUGddjpiYAjZ0pX5aGEwA6M4LZvblUfv89/HcUaLS
-         7srtWNwvNTq0eb4NsmKzdESIy3U1C4dNCktrq7GMrIZSRCojybVPC4Ei3omKOskNsqa4
-         tvkCN5JEZbiWQFiWu6f+yVMMQLXp5cPMX1jdRAtQVcjj+OPtuF7kWmClPulf66sp7NJc
-         cPRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsq8vAddY+qZo7PTk9P3xGe47nQFO+n6DFVm2/Dlg1NtrWEM5H2rS+ulddXaEAi16ozqJEumMtD6J9G8QJqmmZafIZ2Y7W35E1ills
-X-Gm-Message-State: AOJu0YygnvOWDuhwPknBBm3QQh3f3loiSiZfItiuzHWl7urkv5Ncy2zo
-	gENdN6+x/P53nxBRyDgDHnUEvIb5W+tRMU7UxsgmcQ4cpjnWTwGfxLcHiK8n9rz95LuzDBvwh0u
-	WPqCg0J08tkoOMtmx3j5mRVNqtw==
-X-Google-Smtp-Source: AGHT+IFU3gG7mhRXP799oGDxBlPxLgFLfF8KRo1VK5xtAu+Ns8G5jem0y2bESQeN8vefdLLSBSCfbA/Pv4M4UuLpEoo=
-X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
- (user=sebastianene job=sendgmr) by 2002:a05:6902:2b8e:b0:dc6:cd85:bcd7 with
- SMTP id fj14-20020a0569022b8e00b00dc6cd85bcd7mr831056ybb.3.1713457911701;
- Thu, 18 Apr 2024 09:31:51 -0700 (PDT)
-Date: Thu, 18 Apr 2024 16:30:26 +0000
-In-Reply-To: <20240418163025.1193763-2-sebastianene@google.com>
+        d=1e100.net; s=20230601; t=1713457952; x=1714062752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6qw41A+dZx7I8Diykai2FpeK5mNXOqfbEJEaS+qGnKM=;
+        b=syEBSZOZL4II0+eH+BvqG+dSmebNm2zv+o/ilmN1iDRu2aiYdpHBql+4/j9VFsOGGz
+         z4EzMmqRHBaSTCjNrnQf/iRdSKCWVmHISUjjv7xGgy4FOhI9SHES+aVq/uYBrDYMMmKy
+         xPO7KfHfMNs7IKerl3gCWMKufOIkOND3cRFhw3JzdvvE+EWUpysOQb3H2oPWtj8CTHWA
+         ZaGTqZdDBfz5DSDAeUpecl5OXYee1aw3OxyuSZGHMhsLqKt0DBCbA3tUquzqommpezVt
+         toPkHcxQFiBq7KkAyPRd/D+79Joi6PX+mGOge2Gc7sxv/7KIUwhdAY2T8YIBBCgb4iej
+         yc6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXtPUpoJb6BkF+Uc9hnvMyxE8xIcUKOvxzST7p3ClJQJ2uH/1HaBgElWSqo7YOezYA5afuVIBjV75a/hYMbs2E739zFhk3znGWjz/YA
+X-Gm-Message-State: AOJu0YyL+JI7/p131PihIQa6QwfpZt9l7Y/8Yy5oWyfVbwgUGAhOtJBO
+	U9u3MR0SPlFqq48s3kRKMvYFKxFDrZQWSUDNJN3GboNvzG/IEyJyMJYYydbxs2I=
+X-Google-Smtp-Source: AGHT+IGrx2JZaOHUbHgOAjjqs5+H2ptnSIVhy93nY5s3x5VPcvniqdkm0SstG8X7B934i3pyGqk/Hg==
+X-Received: by 2002:a05:6a00:3a1d:b0:6e6:9af4:409a with SMTP id fj29-20020a056a003a1d00b006e69af4409amr3933457pfb.33.1713457952604;
+        Thu, 18 Apr 2024 09:32:32 -0700 (PDT)
+Received: from tjeznach.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id b19-20020a056a000a9300b006eae3aac040sm1674755pfl.31.2024.04.18.09.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 09:32:32 -0700 (PDT)
+From: Tomasz Jeznach <tjeznach@rivosinc.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Nick Kossifidis <mick@ics.forth.gr>,
+	Sebastien Boeuf <seb@rivosinc.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux@rivosinc.com,
+	Tomasz Jeznach <tjeznach@rivosinc.com>
+Subject: [PATCH v2 0/7] Linux RISC-V IOMMU Support
+Date: Thu, 18 Apr 2024 09:32:18 -0700
+Message-Id: <cover.1713456597.git.tjeznach@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240418163025.1193763-2-sebastianene@google.com>
-X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240418163025.1193763-6-sebastianene@google.com>
-Subject: [PATCH 4/4] KVM: arm64: Use FF-A 1.1 with pKVM
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org, 
-	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com, 
-	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
-	tabba@google.com, will@kernel.org, yuzenghui@huawei.com, 
-	lpieralisi@kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Sebastian Ene <sebastianene@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Now that the layout of the structures is compatible with 1.1 it is time
-to probe the 1.1 version of the FF-A protocol inside the hypervisor. If
-the TEE doesn't support it, it should return the minimum supported
-version.
+This patch series introduces support for RISC-V IOMMU architected
+hardware into the Linux kernel.
 
-Signed-off-by: Sebastian Ene <sebastianene@google.com>
----
- arch/arm64/kvm/hyp/nvhe/ffa.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+The RISC-V IOMMU specification, which this series is based on, is
+ratified and available at GitHub/riscv-non-isa [1].
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index d53f50c73acb..8633c8e0b09b 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -455,7 +455,7 @@ static __always_inline void do_ffa_mem_xfer(const u64 func_id,
- 	memcpy(buf, host_buffers.tx, fraglen);
- 
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, host_buffers.ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	if (!offset || buf->ep_count != 1 || buf->sender_id != HOST_FFA_ID) {
- 		ret = FFA_RET_INVALID_PARAMETERS;
-@@ -534,7 +534,7 @@ static void do_ffa_mem_reclaim(struct arm_smccc_res *res,
- 	fraglen = res->a2;
- 
- 	ep_mem_access = (void *)buf +
--			ffa_mem_desc_offset(buf, 0, FFA_VERSION_1_0);
-+			ffa_mem_desc_offset(buf, 0, host_buffers.ffa_version);
- 	offset = ep_mem_access->composite_off;
- 	/*
- 	 * We can trust the SPMD to get this right, but let's at least
-@@ -789,7 +789,7 @@ int hyp_ffa_init(void *pages)
- 	if (kvm_host_psci_config.smccc_version < ARM_SMCCC_VERSION_1_2)
- 		return 0;
- 
--	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_0, 0, 0, 0, 0, 0, 0, &res);
-+	arm_smccc_1_1_smc(FFA_VERSION, FFA_VERSION_1_1, 0, 0, 0, 0, 0, 0, &res);
- 	if (res.a0 == FFA_RET_NOT_SUPPORTED)
- 		return 0;
- 
+At a high level, the RISC-V IOMMU specification defines:
+
+1) Data structures:
+  - Device-context: Associates devices with address spaces and holds
+    per-device parameters for address translations.
+  - Process-contexts: Associates different virtual address spaces based
+    on device-provided process identification numbers.
+  - MSI page table configuration used to direct an MSI to a guest
+    interrupt file in an IMSIC.
+2) In-memory queue interface:
+  - Command-queue for issuing commands to the IOMMU.
+  - Fault/event queue for reporting faults and events.
+  - Page-request queue for reporting "Page Request" messages received
+    from PCIe devices.
+  - Message-signaled and wire-signaled interrupt mechanisms.
+3) Memory-mapped programming interface:
+  - Mandatory and optional register layout and description.
+  - Software guidelines for device initialization and capabilities discovery.
+
+
+This series introduces RISC-V IOMMU hardware initialization and complete
+single-stage translation with paging domain support.
+
+The patches are organized as follows:
+
+Patch 1: Introduces minimal required device tree bindings for the driver.
+Patch 2: Defines RISC-V IOMMU data structures, hardware programming interface
+         registers layout, and minimal initialization code for enabling global
+         pass-through for all connected masters.
+Patch 3: Implements the device driver for PCIe implementation of RISC-V IOMMU
+         architected hardware.
+Patch 4: Introduces IOMMU interfaces to the kernel subsystem.
+Patch 5: Implements device directory management with discovery sequences for
+         I/O mapped or in-memory device directory table location, hardware
+         capabilities discovery, and device to domain attach implementation.
+Patch 6: Implements command and fault queue, and introduces directory cache
+         invalidation sequences.
+Patch 7: Implements paging domain, with page table using the same format as the
+         CPU’s MMU. This patch series enables only 4K mappings; complete support
+         for large page mappings will be introduced in follow-up patch series.
+
+Follow-up patch series, providing large page support and updated walk cache
+management based on the revised specification, and complete ATS/PRI/SVA support,
+will be posted to GitHub [2] in the next few days.
+
+Changes from v1:
+
+  This version includes major reorganization of the code related to queue
+  and page table management, removal of all ATS/PRI/SVA features to be addressed
+  in follow-up patch series, removal of unnecessary checks, and adoption of new
+  interfaces for identity and paging domain allocations.
+
+Apologies for the delay in sending v2 series, and thank you for valuable feedback
+and patience with last patch series.
+
+Best regards,
+ Tomasz Jeznach
+
+[1] link: https://github.com/riscv-non-isa/riscv-iommu
+[2] link: https://github.com/tjeznach/linux
+v1 link:  https://lore.kernel.org/linux-iommu/cover.1689792825.git.tjeznach@rivosinc.com/
+
+Tomasz Jeznach (7):
+  dt-bindings: iommu: riscv: Add bindings for RISC-V IOMMU
+  iommu/riscv: Add RISC-V IOMMU platform device driver
+  iommu/riscv: Add RISC-V IOMMU PCIe device driver
+  iommu/riscv: Enable IOMMU registration and device probe.
+  iommu/riscv: Device directory management.
+  iommu/riscv: Command and fault queue support
+  iommu/riscv: Paging domain support
+
+ .../bindings/iommu/riscv,iommu.yaml           |  149 ++
+ MAINTAINERS                                   |   14 +
+ drivers/iommu/Kconfig                         |    1 +
+ drivers/iommu/Makefile                        |    2 +-
+ drivers/iommu/riscv/Kconfig                   |   23 +
+ drivers/iommu/riscv/Makefile                  |    3 +
+ drivers/iommu/riscv/iommu-bits.h              |  782 +++++++++
+ drivers/iommu/riscv/iommu-pci.c               |  154 ++
+ drivers/iommu/riscv/iommu-platform.c          |   94 ++
+ drivers/iommu/riscv/iommu.c                   | 1441 +++++++++++++++++
+ drivers/iommu/riscv/iommu.h                   |   88 +
+ 11 files changed, 2750 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+ create mode 100644 drivers/iommu/riscv/Kconfig
+ create mode 100644 drivers/iommu/riscv/Makefile
+ create mode 100644 drivers/iommu/riscv/iommu-bits.h
+ create mode 100644 drivers/iommu/riscv/iommu-pci.c
+ create mode 100644 drivers/iommu/riscv/iommu-platform.c
+ create mode 100644 drivers/iommu/riscv/iommu.c
+ create mode 100644 drivers/iommu/riscv/iommu.h
+
+
+base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
 -- 
-2.44.0.769.g3c40516874-goog
+2.34.1
 
