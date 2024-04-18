@@ -1,199 +1,218 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2048.outbound.protection.outlook.com [40.107.244.48])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2084.outbound.protection.outlook.com [40.107.212.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFCE15E5B2
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D348615F404;
+	Thu, 18 Apr 2024 12:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713441964; cv=fail; b=qbKhBc6Zgapsdo4r+R7u9vtFa2FPkrcEOluUsskflwxfIBjyWSJVASX/Et6D+RX5UGWlvBrWyq06rQYjabHVFhuYzGkSxl22KY8OOcTrZABLHLBAnYNFdC/0ifGy2k/WQt4Q2MVLijVS+lyq3yso2ZnH0pkgVM7GomonBNPsduE=
+	t=1713441992; cv=fail; b=XSA/VzxFsCIQJj4yz4ioxG1KLLuPzaV8Bcbpwitten+m87EBJIfai+/6Z7tb968vYqglHZhXYBhWfHwTzSKdyQ4dsUFcmPP+8vViHUaE+pVh2bA9+eaH7hkY3E0nlljKgV0vOae7uO43MJwc+BtvB3ZNqbbyq8EMwZYhtinG7iI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713441964; c=relaxed/simple;
-	bh=5bomFa9lXv5Z43gx8vWRwtZFs8vLTmn1tidGh3fld3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q2Vn5Om5NyhJZz4WbNZZKkfK6EnWAlKpmx+eTUVXD0ckYqLTr2Emz6KeJt4qIFdgceyJsAfDzoXUaTiXQsT1AtVPhqWR+/PshPXVIHR8a0QVm766VsrRlK6eikhXTUKNdLZ77qq4tWGMXZm/3TuywcuUbPlXAuvN58495Khavdw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iNHix+fM; arc=fail smtp.client-ip=40.107.244.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1713441992; c=relaxed/simple;
+	bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k6yvqWNvBgOTydsDFUK1V8Njv6U7HH28ORAi4B6w+DOl/jlUwkwn81H/dp2QCK2nOkuUZrMEk2GGbQI12Bxs8cwTbngwaMmaVK2sJvkuRuRWZ6zSco8jsX2GW33oo5t2MqOoIOLrD9PVfhyhQQuB99I8LbiNcXIjogS7Ug0mCXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OH4tm4jQ; arc=fail smtp.client-ip=40.107.212.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iNHix+fM"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OH4tm4jQ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dVlAGcTrhwBnKloHnrGEmt5hwVCy3Sj6Zeon8M2kHBYFVJNKruswPdmRfU4zrRF+DpSOFIrIsXBKskZtSQiOQgfuDfIbvLErOPMT5uvdkebgVZHVUqkNW0VBZdydDI2cg27W9Nru6Bl4noMNL3aSM6KZxGxvrd6fHwD/Hy77jFFiKiAzc9EuTReswi1c77Jr+PCe34erb6/9ezrk7RGoyMZCE0GtGyDWZIBGlCAFlsA9vbwD1A5H6rL2l38Wgmp0MS0crbEZdhyqcxKFIjxizdGWI2qHzMBoY4uxxmyXaEFQOpGjEmw5SeXN5NZOIjqGKmvKdNLgBtNvwDQMjvaQbQ==
+ b=S/BFWaAzG9WuZf4pf8FEFuXrwexzHBZuBcnsFNmwxtBviWZfYS7vruy999LBvyNJtphCjgTDHYF2T/CdRW6BXrV1BNoZ6rgvOH95M8eDsZybJDEPU9yGCZtAC/tXFxsUCexbEfEKVcuHLQ0AQkwz2RoMn5tNMso5TJphkkD7qtYAiGBCH+FF1fsxHqM27GoQceDNVZ0ncyF73PviASiH+Cy8vFj8T+AL0wDab1Rr8OvjBWSFQBnDTrWFMAhY32E8Gp4ImqgcDV21UkpeFFdvJR5gtVapYdjT+t3SJ7/hw8jSJu2aOJzjkCR+BYDEZ/JlUz/gGQRcFik00DyIQmK01A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QITnup423DPxcArR2zfby0c9mBpl/s/nXjrq3xDTUIM=;
- b=J2Pngmn0jXmFM1iAkfINIVefvP03P0aAdM1or/+noWobOdQhxNikOZf5JZDLA3NUBPKpAXTTyrtHePW9Vk1PCxPXkv+d3hqvCRVDNNj9rAVsbxT6O/inUvV9jQCuz+ZKVM+aFUcpBGk00xmhky175DeM/OJ/inTX0T9XXmpwfPooSXU/zRgipKb6Yb4Sh16jU8osoq+GdmIO+OxCRyelyJBNFGuvWcjIrIExDF3y3Z+08hwHfeFgX5reFsxp1RAodm0ChEpSMyTg7SBucAeFh2n4DVeu4rHPECFlXO9LkgGCWyIBVLfKvUOpAWEfI9lIi7RTVKOw//j/j/7tmYC3Ng==
+ bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+ b=OqcmihcXlxJ30vBMNWF63yQyxOqp+tsAzsbdPQqTpeL2Ez0XZKBaex26ArkbgCV/BA5ddHpezjwlxq7U7R/v5T4VysxaWgpPfGBan2057BurtbeT8eaELhyzt5zmt6ODfwHpb6m/tPfQqRo/4oZI0DqOmwBp2seT71Rb+S0mZOTwNlG5BAv/kCMV7ahSYxfA5abb4Aqdb45mkdig2ik2BIBvYc4paYODFEKeyBudhO+Oq3icTq0r+xXfP5kJPOyqtEB7pDwEgoPOapcxGHMi+aTqWqqnD+Lk+1aOs14JsbamAgg+mI/wOrktS6JLo8GNrVCnOFXs8Wrk5lgGlRpb+Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QITnup423DPxcArR2zfby0c9mBpl/s/nXjrq3xDTUIM=;
- b=iNHix+fMW5dz/honntxAI7pO4p2OoMZWjonLY7yaQl42oA1nY8EV5wsuK2xQYCf7+967WBfHLMc+IQ44pZXNrljm0PdfyhLBqc05KHaELWbXcYZqiuUfrF6eUshvY2X4cX6ml6ass8G3+c1HkIDbIJQqltVadD6ya7uuYbuz/MA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by SA3PR12MB7974.namprd12.prod.outlook.com (2603:10b6:806:307::17) with
+ bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+ b=OH4tm4jQUclpLsfGA2qGYpSRqlRoktNhGs+L8wipCpA5Z2F7ihk9m2gQrpUrvYTA33R+GRXShuW09K1cxc7begkc4PP4wTtp1ODP3aUgbPm+DclZZT5cjV8tIl4z4kTMcuL46BY/YNC0UrI4pWE13m3yI2CuHUF0mRY3xUk4epbluslFwpnJRAvi5NjS/lvHE5kTwsvS1ejcQ3S2Jq8R9sDD9fph/C09ZaY8tqSZJLuAbx/WikKsPhp8W8bYqoVARgIsEDMmPZnHm1XffgiMazD83TbN5/CVj7wT5zXFpDkUOgiKEoYVSyMXlmedjKjNueBxmEVCVoKMliDPVVqTFg==
+Received: from DM4PR12MB5136.namprd12.prod.outlook.com (2603:10b6:5:393::23)
+ by SA1PR12MB6848.namprd12.prod.outlook.com (2603:10b6:806:25f::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
- 2024 12:05:56 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::7ecf:eda6:7dc7:119]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::7ecf:eda6:7dc7:119%7]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
- 12:05:56 +0000
-Date: Thu, 18 Apr 2024 14:05:49 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, jgross@suse.com, tglx@linutronix.de,
-	x86@kernel.org, Kim Phillips <kim.phillips@amd.com>,
-	Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 2/4] perf/x86/ibs: Use CPUID region helper
-Message-ID: <ZiEMnWaHkn99_oyW@rric.localdomain>
-References: <20240403153508.7328E749@davehans-spike.ostc.intel.com>
- <20240403153511.75CB9DA0@davehans-spike.ostc.intel.com>
- <20240416151242.GGZh6VaiO2gC4ej2BT@fat_crate.local>
- <f142e9c4-4829-4ace-8757-485246ad3572@intel.com>
- <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240416174850.GEZh66AmnDjrLxoXaw@fat_crate.local>
-X-ClientProxiedBy: FR5P281CA0045.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f3::12) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 12:06:23 +0000
+Received: from DM4PR12MB5136.namprd12.prod.outlook.com
+ ([fe80::5404:f658:2d07:451f]) by DM4PR12MB5136.namprd12.prod.outlook.com
+ ([fe80::5404:f658:2d07:451f%7]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
+ 12:06:23 +0000
+From: Shravan Ramani <shravankr@nvidia.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>,
+	David Thompson <davthompson@nvidia.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+Thread-Topic: [PATCH v1 2/3] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+Thread-Index: AQHakJktkEiBSozD4E+AQxbCdqj0ObFsclCAgAFyTeU=
+Date: Thu, 18 Apr 2024 12:06:22 +0000
+Message-ID:
+ <DM4PR12MB513613B05FB14A933AB7304DC00E2@DM4PR12MB5136.namprd12.prod.outlook.com>
+References: <cover.1713334019.git.shravankr@nvidia.com>
+ <aec3aaa44a5738940b2511726177976336a6c72d.1713334019.git.shravankr@nvidia.com>
+ <e77f01b4-f314-6822-8533-95f37a42cd4f@linux.intel.com>
+In-Reply-To: <e77f01b4-f314-6822-8533-95f37a42cd4f@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB5136:EE_|SA1PR12MB6848:EE_
+x-ms-office365-filtering-correlation-id: 3c1a988b-4c44-4c7a-8f63-08dc5f9ff71c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 33yQvW3+kAZgT+i7cXmKKOi+LTu2+tPSVQdsrsUL3bDuPjMs7GlQVAf4ViLhIcIfOpuyu6yoIoe3nBQK2QlEgi7bjYRFf8Txp8QdE61F3Mc1VXeds/xCToZLz6YW1sISD8gBGehYkmFdnW3cuxLB7Sgqo6GU3+labWSDGvSUTamZQSGNREYqHOQaC45EVAINqPYP3T8vvihtogWgiRrwZ0sDwtd3RFz5OfWfcqVveulGZjzoCtMzCy5tz0ycqDGdKk3bwwMEKTwv82D/L2f/DJylulK5vg2saA9tIo1gtVsinW22LXG2BZa7SjnmA1/mxnznyEn8WjP7rNQHh7MuYdKnhVeRLy6ZsC0q0YfXny91d8JEs1gq/f93FzpHLU0g8D9VdUD9QkkSAJguoA54yWa1Wp8NWTKTU6JPSJeNxCKUXoe9Uk5LHRrj4gEVGCgK4HuRjXQUJkY/q/eSG30xNkM30XNjJUb3IEkYFxV2NNNlbSYJx/ylMLDLwiSvvY6Uf/cFHWkcNnyctSXNQNRXNl7jk/5nF3wHOKPwHONEpjR8DyBBa1KA5j2kxlUvOaxw5rGDAVUKljazKztefSMzBB319pag+ZlXqhBqj6h/oULDWl+KeUSpfklvB2Svs0G+mymnCKEhaojf4PPvMz2udJjlSMG+Bg1WI3xv3k7GcPBTZgdlj2J3DFplpbqRT4QSoQ3fgcwKig1tqU2htDY1UOtFx4d93H4S3L4wOEKWn7o=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5136.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?sBueUcV8wrvvcSKHQ/L7dL8APHCaTpaSXMpkGU2z04d0UvklJZ7j+JDphG?=
+ =?iso-8859-1?Q?6DdbsDXXwu86gyBVdNuQGO+ks7/9FZQ2GJmwdpUavVwHdOMb8A5Kf3bQU9?=
+ =?iso-8859-1?Q?YvFA9oPAuq0c1YA/4cIh6PqsqfrUoYQQURmZgr8KrRHzw4oGSd4ufCfajC?=
+ =?iso-8859-1?Q?k31H7Upk674Y56hyXc4rhXquJY19Lhb6Gx97ZoQnJAFUCGyChUfY7XZcyn?=
+ =?iso-8859-1?Q?4XTzlrv6F9rquC2hjC27TRkLbXvItFQiLJoPO21p56gJ6RyjGbCJCpckZZ?=
+ =?iso-8859-1?Q?eyUfVtk78dDkZn658UASOMw+upKp1A72VlPPcdirouZ6k87dbR2VHWdvGG?=
+ =?iso-8859-1?Q?mb2NBzXZUUOSfJ3V+RoIse+ccCKCsd4vhyGrvvcZ4gnn9Su8RXoyUaCH+n?=
+ =?iso-8859-1?Q?6P3EmSJyUX2sq67CwcWi2sdMg2ZQ87TfyIkCjgkyCfMC0XxwEw/sX6G5JR?=
+ =?iso-8859-1?Q?ptNX7nTznIPMaY5pdtBYTDgv5RSNOi/JANM9DvZ3uSHghE1/2tvfttBECH?=
+ =?iso-8859-1?Q?G726HXj8Ff9P0TXJQhAAn3hUG0pz21EmX2b1R+e+LLcD13cajo/dpH5VpZ?=
+ =?iso-8859-1?Q?ZGRc5Wq1lXFCUKmR93QMHmDUaw41OEcCQ8DBGqNCsuib5yta/brn95jJaz?=
+ =?iso-8859-1?Q?72oSCx1UQTAVQ61FSRtRx7UrL9Rny5uWkjYveR0LdnbeXBkAiBGFANJN1b?=
+ =?iso-8859-1?Q?lUfp04lG2ITRzh5HsBBVlpifDe5bDeVE/cHDpUNikuiPiNmuhUGMB+Mfwa?=
+ =?iso-8859-1?Q?WtYiVNDYd/gZATJa5mzzg01DQdBWos0H988ZJX/5qujD/3f/ebuXDcAtsE?=
+ =?iso-8859-1?Q?ZnHlDAyHFUnH1xkn5LdTIrFjb6uC7hd59XL5yl6p0VMFdVA3lD0JZFDyiP?=
+ =?iso-8859-1?Q?G6yOhX4c9QYwRVGqxyF8KJRHEh9NZD0IsW4Ze74ZWSq6ASEXWXJ7fx7Dx/?=
+ =?iso-8859-1?Q?0Js3hCkq53K1C8GB8oK3FYw3pZ/bZbqnoLTpZF8e2EVGIVsRnwhrNXEduW?=
+ =?iso-8859-1?Q?SLfVrIQf1pPMQpmeyya1/qeMe5ALM/FasfVeWvRj4PAR8vLVJOUOFWGNPw?=
+ =?iso-8859-1?Q?TQHixn5kBh5xJp7cUDsUdvjbOq2HYvpheLG4e1N66iJXAJVUGWtXo7g9gz?=
+ =?iso-8859-1?Q?g+mbyEiYt1RD3ZV1GktLlaoqpCEiyxRUrKl4RWik4Pf1TFvX+eu88LEqVU?=
+ =?iso-8859-1?Q?9VUhtcF8f9o6BXjrvLqQskrDuUjfFqaDw0CgnrQnlyjJB6bCMtaFZygtp6?=
+ =?iso-8859-1?Q?rHIjq2Aw3houUNV34IZyrxoSYQHHUB1LsWtlJYOEelzD4hgCcNg8grbIOQ?=
+ =?iso-8859-1?Q?pCdnfZH3kuXQwgMymro9DYrovTL80lrbvAGMCAKFJb+LhoM6P9eU12gjeH?=
+ =?iso-8859-1?Q?tFI3mNuSY6vPlJ5rDJmBtknGX0jxhX4J5nkYQHJz2vmsZVGhyxaz8tbIC8?=
+ =?iso-8859-1?Q?+jtrLrZ1QxpK1Lmsv9Q7K2tAwor9S/dgUP11RMRQLzcSzyQPQX755R8Fl/?=
+ =?iso-8859-1?Q?YlOd0nwg6uc7XKY3bWntU66q1UO+kkCgz/ch5q1Txl8S3ihoywQgMZd7r7?=
+ =?iso-8859-1?Q?dee6O8fJjyKHgEc8714CMv+fsFs4zj2WiDow8ZYlQAp5y++z/0WCtqOSr2?=
+ =?iso-8859-1?Q?AM8zFlojM0KYc=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|SA3PR12MB7974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b6d9e4f-2f36-429a-7b12-08dc5f9fe6c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	h3jev8kCsJ95xCfaDI5gzaGHssuK4c0IAVFstqfZo5bgpAGACQD+UrJW0R+CiSuOhN0BLlM62AMMi0Y39a9+R6AnoSspFuzqKTfI/1V7bMMUaDzgJS716VTcxUt+gxkkY+ZFjRv3opLVU8PvcqLYxX/MdawJFhLCpe/w86BrOEowjzfgJ7ZiCKSLA6FKmkpIJSsj+e/w6DgeXlDGIlNo41uvSXrBwBJx+LFoekIwt1MFLVbw69bSb/70rluJtTIW2eT9repGRg45vQQg09rrzoHBuK/gy7Mgw8U6ESgAhkDm94vcXyGEI4PIgw6D/0uIDsn4V8q1lmfZ3nlQrX0ppcgBzVSzzdFeSM8/izttrSucnfHWhfDYT990V94qzTU/5Ui3ErxFJa6JYGg3xki2k/MZWHcXvU5dBIXrVK7ECkCGe81fpgbrkR21B52BXAWbmKU7mpxesx3u2uEV787Mynpf+FnImN5eMUWy7XHCqIOKkSW5NRqNNdk2B9BCoPi2NmQ/E388ZpZwVbmjreMDxuXJT7uDjiUgoN1cqPcN7HyUAz/pb8kQfv8iA/WOw0US3ld2UaY7wyXkn32VUekvqE9SxhrDttUBSbyTn82Q+347SFIe7TL9+U4H7gpaWbhzanWkVw3vLkbG0X8IlJdfjWCFf08ZlTNW2vx4MnYAQ2M=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cpD/o1f8xc1D2kAwW96ixjVJwVNEGWmY3FixT1NP2c5n356AYNBtnMs9PRw0?=
- =?us-ascii?Q?eGvJv7d1qOIi8EgctiPhZyKAA8OH+D11c7S1L1g0VAMOLWiXDyDIVxifANS1?=
- =?us-ascii?Q?c3VVl1hAZF+r9OwQMUtPJU6R4PmE46aWoQKBPtRdcqGlfQqdGW2+4qQTck3K?=
- =?us-ascii?Q?7yrsVaJZqPraTtKAZ2SmfEq6rTFL27VUkbu51seKF6FCGA6V3kaInXPtZe2U?=
- =?us-ascii?Q?31EfyDDX8B+ttxLOynKi2IsgXziOJ6VjyJxJ0YtSqdYpsMEOmR2GEyZJ820z?=
- =?us-ascii?Q?5ozHcS9X3QfBL+EMTNi1O02PNhrkmdfUTunKUx1JVsWQ1lnKqvfcKVwU5w6v?=
- =?us-ascii?Q?vsBOlbAEoXFk6u/6HNPQNfIX5frfoVVsKwVABpvTAnACEd9CH9UfOee3F8UG?=
- =?us-ascii?Q?TNWdTrXXpKHwdB9RQ/9vrCRxDNC3N195AMd8D1P0bpbCtaAL4GWQZSL3OE2o?=
- =?us-ascii?Q?X3/MHbIubrtyPmCyTW2BgQHZh8oYv+vX7a93Hwr8zT3s5LRRRWzzdyHaN+RR?=
- =?us-ascii?Q?HptrCUIL1qR6Aj71AiqJbV1Zx1Ee8KyPzYAtqmqMvwLmkIoSPAPNe3OTSH5M?=
- =?us-ascii?Q?IqKGElHpK0FOK2RVbarsrzFPOsQWzROAxbjUdr3zc2JU+NGgJEuar5f5E1i0?=
- =?us-ascii?Q?yoLf6wkapH5lhffG4t58Qt1VLyiPe2foYpswFq/RPlBUpNzqRIa35+fbUnJo?=
- =?us-ascii?Q?qDms22I0SUl61D+ob1wrPEaWhn3bO4AmhmcaqBD/yfAkPAiS+lhFtVI4v+iR?=
- =?us-ascii?Q?oz+ohpjCnvmQCgVNKusAsJ8HDRei9IBSfQlcqyXevT8ZSgX637A+AmHUVgPr?=
- =?us-ascii?Q?m5ntlsJAP7hJDT43ypek4QXaG7YfMRP3Mzi5VSFoUEtavNIe+oKW5xZQSChm?=
- =?us-ascii?Q?CUPeS8AFCKpcK1v7JubC8fMu+zc+sY+Me49emIbo1fbOeYOijhURoaBzytVB?=
- =?us-ascii?Q?+IU4joirGTHoKfCDFJuCPCxshBH3Sil8Rd7oF8G4FVH1krwmrJ1tf+GdLt6I?=
- =?us-ascii?Q?onA8AayqG/nmyGxvLsEciq15VA14izCsfV7pyQh0ikSLoSP+clduBMmsMcuK?=
- =?us-ascii?Q?5Fw3g9lGfH39mJNpqpvRNEpRKDogz/3+AW2XzQt9OBSr1s6+l8/JinCRLE8g?=
- =?us-ascii?Q?Vc5sJdmPpLn38rOv0fcKT53zJBv8ZuzeFsf6+CDZibp0QvqiKNUNLT1OaKdZ?=
- =?us-ascii?Q?kf0Qx/uMbehzuHlpmb0eyMPTXOiDO+nLO5T2dDgrOSAzounp2E7kM/Tc0uoE?=
- =?us-ascii?Q?nJZv2ptTAr8sQlZG7lGsGsNrgZwyom0kp5N4IavgqO/ROux5akdip635SH4x?=
- =?us-ascii?Q?YXmPbE5LS8aogESC4mkqpGVL1nwO+hGlwXcEAe46NL5V0qVcdCqn+vmwSRRL?=
- =?us-ascii?Q?Y2YtP575TGc9chIilXQBN2yguz6iI7/HPU7PzsfXiUSCiK1QV0j+XkiWvU1Y?=
- =?us-ascii?Q?3vdyt0MXymVuvg9iGCfJH7Es/VZXalkRizuVkn3jwAq6BF6fEjYjl0+ZwOot?=
- =?us-ascii?Q?0hu+DItW9oJ/5squTGxu9rYxnc9ZwqR6ZbgQnYKn/lsocciG0zzWhPqmalNJ?=
- =?us-ascii?Q?Axjclop7YxT4IuiFkOECkiLGvbiFdZhYyt6ELWA7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b6d9e4f-2f36-429a-7b12-08dc5f9fe6c5
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 12:05:55.9247
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5136.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c1a988b-4c44-4c7a-8f63-08dc5f9ff71c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2024 12:06:22.9455
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MtFTUDQ/hjDE6+h+1gzntQEpweZn6ALVDWHOtY6IFwS5L1yWx5qTXhwQq8j6tHMjprF2SJFS6taaYFFbuOjzZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7974
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xJJgfziixLWVPMFs3MSbS4hAfT4wZem1d0KO2h2w5rSA+wjvW9DRnh2PId2j4RL//+eCq3BIf1clmkXSAX4jKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6848
 
-On 16.04.24 19:48:50, Borislav Petkov wrote:
-> On Tue, Apr 16, 2024 at 08:23:58AM -0700, Dave Hansen wrote:
-> > When I was looking at it, I (maybe wrongly) assumed that 0x8000001b and
-> > X86_FEATURE_IBS were independent for a reason.  Because, oddly enough:
-> > 
-> > 	#define IBS_CAPS_DEFAULT         (IBS_CAPS_AVAIL         \
-> >                                          | IBS_CAPS_FETCHSAM    \
-> >                                          | IBS_CAPS_OPSAM)
-> > 
-> > So, if the CPU enumerates X86_FEATURE_IBS but has a
-> > max_level<IBS_CPUID_FEATURES then it assumes there's a working IBS
-> > because the software-inserted IBS_CAPS_DEFAULT has IBS_CAPS_AVAIL set.
-> 
-> Right, that's why I added Robert. I found this in a F10h doc (old
-> Greyhound CPU rust):
-> 
-> "CPUID Fn8000_0001_ECX Feature Identifiers
-> 
-> ...
-> 
-> 10: IBS: Instruction Based Sampling = 1.
-> 
-> ...
-> 
-> CPUID Fn8000_001B Instruction Based Sampling Identifiers
-> 
-> ...
-> 
-> IBSFFV. IBS feature flags valid. Revision B = 0. Revision C = 1."
-> 
-> which makes this look like some hack to fix broken CPUID IBS reporting.
-
-There is the X86_FEATURE_IBS bit (Fn8000_0001_ECX, bit 10) which is
-available from the beginning of IBS (all Fam10h production releases,
-revB onwards).
-
-And right, IBS_CPUID_FEATURES (CPUID Fn8000_001B) was introduced with
-revC. The capabilities of revB are set in IBS_CAPS_DEFAULT.
-
-It doesn't look broken to me, simply the ibs caps field was introduced
-later which can be determined checking the return code of
-get_cpuid_region_leaf().
-
-> 
-> And if it is that, I don't think we care, frankly, because revB is
-> ooold. Mine is somewhere in the basement on some old board which got
-> bricked so I don't know even if I could use it anymore.
-> 
-> And I'm not even planing to - that CPU is almost 20 years old and no one
-> cares whether it can even do IBS.
-> 
-> So I wouldn't mind at all if we simplify this code for the sake of it.
-> I don't think anyone would care or notice.
-> 
-> But let's see what Robert says first...
-
-My preference would be:
-
-	[...]
-	if (!get_cpuid_region_leaf(IBS_CPUID_FEATURES, CPUID_EAX, &caps))
-		return IBS_CAPS_DEFAULT;
-
-	if (caps & IBS_CAPS_AVAIL)
-		return caps;
-
-	return 0;
-	[...]
-
-Not too complex?
-
-This slightly modifies the functionality so that 0 is return if
-!IBS_CAPS_AVAIL (instead of IBS_CAPS_DEFAULT). The feature could be
-disabled then by overriding IBS_CAPS_AVAIL by just clearing the ibs
-leaf, valid even for newer systems.
-
-Thanks,
-
--Robert
+> On Wed, 17 Apr 2024, Shravan Kumar Ramani wrote:=0A=
+> =0A=
+> > Add support for programming any counter to monitor the cycle count.=0A=
+> > Since counting of cycles using 32-bit ocunters would result in frequent=
+=0A=
+> > wraparounds, add the ability to combine 2 adjacent 32-bit counters to=
+=0A=
+> > form 1 64-bit counter.=0A=
+> > Both these features are supported by BlueField-3 PMC hardware, hence=0A=
+> > the required bit-fields are exposed by the driver via sysfs to allow=0A=
+> > the user to configure as needed.=0A=
+> >=0A=
+> > Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>=0A=
+> > Reviewed-by: David Thompson <davthompson@nvidia.com>=0A=
+> > Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>=0A=
+> > ---=0A=
+> =0A=
+> > @@ -1799,6 +1902,37 @@ static int mlxbf_pmc_init_perftype_counter(struc=
+t device *dev, unsigned int blk_=0A=
+> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> >=A0=A0=A0=A0=A0=A0=A0 }=0A=
+> >=A0=0A=
+> > +=A0=A0=A0=A0 if (pmc->block[blk_num].type =3D=3D MLXBF_PMC_TYPE_CRSPAC=
+E) {=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Couple adjacent odd and even=
+ 32-bit counters to form 64-bit counters=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * using "use_odd_counter" sysf=
+s which has one bit per even counter.=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D &pmc->block[blk_num].att=
+r_use_odd_counter;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.mode =3D 0644=
+;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.show =3D mlxbf_pmc=
+_use_odd_counter_show;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.store =3D mlxbf_pm=
+c_use_odd_counter_store;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->nr =3D blk_num;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.name =3D devm=
+_kasprintf(dev, GFP_KERNEL,=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 "use_odd_counter");=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!attr->dev_attr.attr.name)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -E=
+NOMEM;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pmc->block[blk_num].block_attr[++=
+i] =3D &attr->dev_attr.attr;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> > +=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /* Program crspace counters to co=
+unt clock cycles using "count_clock" sysfs */=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D &pmc->block[blk_num].att=
+r_count_clock;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.mode =3D 0644=
+;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.show =3D mlxbf_pmc=
+_count_clock_show;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.store =3D mlxbf_pm=
+c_count_clock_store;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->nr =3D blk_num;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.name =3D devm=
+_kasprintf(dev, GFP_KERNEL,=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 "count_clock");=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!attr->dev_attr.attr.name)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -E=
+NOMEM;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pmc->block[blk_num].block_attr[++=
+i] =3D &attr->dev_attr.attr;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> > +=A0=A0=A0=A0 }=0A=
+> =0A=
+> Hi,=0A=
+> =0A=
+> What was the reason why this driver could not use .dev_groups to setup=0A=
+> sysfs (filtering can be done with .is_visible)?=0A=
+> =0A=
+=0A=
+The current approach was suggested during the initial submission of the dri=
+ver and the same has=0A=
+been followed since. Do you mean to add a is_visible routine for each of th=
+e sysfs types like=0A=
+count_clock, use_odd_counter, etc and check the conditions for their inclus=
+ion in this routine?=0A=
+=0A=
+Thanks,=0A=
+Shravan=0A=
+=0A=
