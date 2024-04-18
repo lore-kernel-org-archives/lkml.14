@@ -1,119 +1,150 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2034.outbound.protection.outlook.com [40.92.18.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB81160796;
-	Thu, 18 Apr 2024 13:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448612; cv=none; b=ckISazS3GoO2UXlMGowKVWgJB02KvNuiyA0LJdTCFFppHvgtwe24i/IRiANoYDMgG3dC1ixrpXegeIKoWCsPPTR1L1/lmMLeRURFI+4LZtsCwvR16xy8ObysSXCZjnZ0lNmCMU9VU/tmkzYLajPzkX4ZpsUpSG1uIbQoyIUOuf0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448612; c=relaxed/simple;
-	bh=ppP0GFROJEK5J9qW3Ew0oILsB5KOIchYLxLxwRsKnNo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OcGcZIskhB13BZwsw1TDBknlzxl/rAh+YMUfI4QwGSlfsZ3AnuhTevBaj/uAfPNnmD3qTPbhw8kS5y8rj59d64e5bTKUExLEBWv45aO8++FzpNiFz6g4OPL/X2axtK6k6FLhDUgL+hi1QV3uDuQ4j/Ur/u5M2iFFS6+o9LwthPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzmN5g61z6D94c;
-	Thu, 18 Apr 2024 21:54:44 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9944F140519;
-	Thu, 18 Apr 2024 21:56:47 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:56:46 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v7 05/16] ACPI: processor: Add acpi_get_processor_handle() helper
-Date: Thu, 18 Apr 2024 14:54:01 +0100
-Message-ID: <20240418135412.14730-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130E21649D5;
+	Thu, 18 Apr 2024 13:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713448614; cv=fail; b=Fd2i59q5ZpyabdTv83xzgg+bcUQq5jbmdHCpKA3TYeYWiQN9Tdp8HG2sVnqxa5PoH44VJPaO+tPQPAANvwy3CfkyaoPszAuA7Z/p/u651s7p2Sot+wrK/SHXp+euTVtSh9XFX0m0PVNbtS0z6DbAxDXoCGYMaiu/3VZdw9VfJdM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713448614; c=relaxed/simple;
+	bh=HlJsfb/TlgIgxwOUp5wIz0J/YhQ5isvqMs5g6JX5R3g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G36UaLlgNeDgBdFXvQ9lyGx2L/fzjOvVLwa7er6WSGCGyg29YP/dI44HRnzafjngltQpepWmyv74k5p4jHkcarQqZ9HurXsNQ/s/553F2BLX2fmmIopTVTVkTJe8raWh+651DW3vqBL9P74gLiruTTmuHWtLGkmHTdFivj3Rtdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=F19z3Dz3; arc=fail smtp.client-ip=40.92.18.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="F19z3Dz3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oeOk5jKjsiaij1wpdLehAufmdvy9owVgfeIjLXhp1fYGSNSk9zWHu6Jgg1dHEVWx6EGWggwFrblX1I3oQ6fCMNNDe7lB1s5UlvBTwRbNTyoi0i8qSvPEUzFkP2NeQMuGEUcVCY5ebpmVhvgLE8d2e8pZ4nseJmk4K4jQq/acub4asZyAeZzqNokjDDARwSwIfPYpXVkFY3kKyc8Vbq4qsutXhOwVqq3OqqWh+/YC/MaDQlvuKGjKt1kAomuvQt2c5B8K6MwQtMd54N5bugZlgkA0DF8ske5YEjL37+PFzF/G0IwXdZuQ6ckoax8eFvyFipGlU1jQXrj9Egq+VDIL/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+hdT+BL+ygv9itSHI08CmEC/LpBZ9n3tHg4jp3A2+0c=;
+ b=V1iIBH96zFZBr2ck8snGtHlZrmxaMuPjWbiKpzMYEI1IyJb5FpHevKcS9LVOGyhYaQnuqrEyjEoJsRUohRk8uZdrBPB3cK4RJSgTw3eqvfUHSaGpP++fZUSTyD0zbvaw2FwZWq8AoH7hBuCy63UBkjIyFnlh6iHCbWPsr6DlxbDq9pL/GUjsVuus8WeCiHn+cXktIQz+SdXDa2nB+3M0hJNS1vIJAX6e1T2DMI/p3pJdTazErXeMxr9osZyWMHavSLo6Y+FecZRrfB76NzDDn+JR3J5frcOqc1iDakdju5OqMH4W4GoHvGM+I9EFuwEh1g8vRWQLXl6uFRGqsmQUCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+hdT+BL+ygv9itSHI08CmEC/LpBZ9n3tHg4jp3A2+0c=;
+ b=F19z3Dz3gcQHLUNTVf5vk3lhx/mnvwygs5wkUY9fgjwJzDozMRJkmCppJzV+8I9ZVZUTvacHNQwXdxeP+p/Cjto+GTg1JxOQWFtskr2YUF9hh32SsDeayo+s8YkwYYdR4FSsZawkVApvC+NBz4VuDuVN6JQ1KNBnLLN5w3PN9tS6LaGNg6tEAQ2FKV1b3SXLealKupnrtk4ho4OhwYOX0xusQpOLWMaX1vMOV7+9xv/6hd2n+GsT/gMEoHyFsFLBuzCtaEyyyvh6/GeZs/kAvpI2Uw2OazaJBAxL6m7MHFMYdP6DnIN36t4FKsIFOjY5ao88mwtptJbC3qB5WUfLCA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SN4PR0201MB8840.namprd02.prod.outlook.com (2603:10b6:806:207::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
+ 2024 13:56:51 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::1276:e87b:ae1:a596%5]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
+ 13:56:51 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Jean Delvare <jdelvare@suse.de>, Michael Schierl <schierlm@gmx.de>
+CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] firmware: dmi: Stop decoding on broken entry
+Thread-Topic: [PATCH v2] firmware: dmi: Stop decoding on broken entry
+Thread-Index: AQHakYvPrt/ylfUZoUy5VQ48m3QhGLFuDMKA
+Date: Thu, 18 Apr 2024 13:56:51 +0000
+Message-ID:
+ <SN6PR02MB41578A69B87041B9EEFF983BD40E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240418142734.56e1db4b@endymion.delvare>
+In-Reply-To: <20240418142734.56e1db4b@endymion.delvare>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [74kwStrky6nlzCZAGxbNYrNxrL1hxx4B]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SN4PR0201MB8840:EE_
+x-ms-office365-filtering-correlation-id: d811348e-5fd9-46f2-d208-08dc5faf65e4
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ NUGHu5onA7av6ENJEtZLlGa6hhQdiEWMG8sDjBsgH9WbfcFxiuyS4Adg//U3L0ZPVjnh5Y7+gtTgvzS/3ClRt3qzkx4iWjo2X4DB8AXx/JW4DzcivJuTLm0aaiKMBgCo+FSi6Ks9ou18qResUPHoHyO9oHyL8QY+RsIaiGy8oooYbMLjB9EBhnurlZetS6gadjK2VnAis0OTaKkjIG7biQWgr3l8duWfeJSdzmncym1sykdF3s/iVsc9q+EubbriMLHfIQwHp3hI2zq1ZqkbZ7Z8n/WEMbHizG1VgLBfDavdSLqBilzzDdMt+pgTZgjSKII+y8FeFcp+98EZBChqJBDei1+qCZYTktoIPIKPlY9+QWJr58476pwnJ3v/QEZcKGqn0XWgu8PLSuERBg41obNSxgjmf0pV5d9QqL3kskS7wzIdiaRGJjdNIkCQGuGTqVRl/ZfWNCJHePZsTTlMTF4/bkG1p/eJRX2SJYjskCSW9TelFDwB0gDwngr+64fWKv8hELat5dCfs+QZF+MW+KGYZl2Bt9n0oNChY7/vUDoiR0p+rsxBEH6xpuJoEidZRyMNsYBV/aRIrucRF0nGDeEV3ip3h1Sb0POsfF3dmY/Qcg8hw3AQlamOkfN0JS/0IZRZHQFi9e+EgY1MoRa8nQb9yOUkYGOq6IP0u8Veu9w=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Gx0PIyryYMVcAmYLnWWIss4jnqJU/emBfDjbJUWeQ9dHHJ7wXhkufCAa9BCb?=
+ =?us-ascii?Q?LKARJmHzkQgvGHMAnwICRcmv3hHeWkP6KBDfFFpA2LxAJyWL0b2EQClTd7ds?=
+ =?us-ascii?Q?vClm15Qr16zhL+NMzNrY6i7QvPlvcBJoWIsOI3EQtO8vmfGfa09nF4j1d0Q7?=
+ =?us-ascii?Q?3K4plgoWWFH6h3Yr0dvi9pEmXcIYPdJfIZWU3bDIFC6NZ2k0+MWWE46K6dBA?=
+ =?us-ascii?Q?8tqxtR25hAKVD13h0gMpVVV4q8oxHHCWFFSUpMdPVpLuQTn6Gr88isbmpexk?=
+ =?us-ascii?Q?HkXBvQjwYHMmlAdTJxxa5mQ9ojhPORGuQrN2JlopByCymf5R6OwfTku3P5NY?=
+ =?us-ascii?Q?VKECW4fNpuiQoPBAdLbBznMAaVop/3mX1CczoGW12rY4Xf0Mkh64vVg0IvQb?=
+ =?us-ascii?Q?406Vc2s4PTUmkm+oysHwYjHhMsFD+tdJYRgbwQN7bQiUvKMVXW8Dw3c7g2og?=
+ =?us-ascii?Q?4FolEmi56xk74T1EWqg1nhNrP4EqbCR8wenS8D0s3WZuTdpv3tx6LrZJ45wy?=
+ =?us-ascii?Q?QE+yvtF+ilmTc8PDVFY5MLWXLJqkylwxROvnaUrVldIrunQY5J8064fSl403?=
+ =?us-ascii?Q?BF0dqOjKOaHpBKPM/MMrqGvz5aV4JHEAanENDNrPHTig5Ys69nMuw1UyaoMg?=
+ =?us-ascii?Q?XhWGh3CjzvYad2hnRbMPq1yeAddjz1BI/3e6Hu6jPbNOAjIXliq6MmQQlwdI?=
+ =?us-ascii?Q?cXiY5iPNQSaBtMi18tHbtxgRs4Vum344TP2Nld7pRMfIaBAa4QthtF9uAnWd?=
+ =?us-ascii?Q?Rt/s9VdPqdnnjL6Na0HOb3jb2dndOfWrCG4U4suXke8QArUwHzFLOA2NLk+x?=
+ =?us-ascii?Q?y2dhUJ44TxyGwdOH7qSVzK0xLvMdiPOkdiGmjAnOKstNw8ucLGcbmkxpy5Ss?=
+ =?us-ascii?Q?EQ4Y7C5GMgvJdB+nwhDoZjFmmYm0c7jjkqDe5XwMQckE4dDfeIc3NpsBli84?=
+ =?us-ascii?Q?7wGllP7FRxV0Qxm9V62oY98a3qk6zqyocKwtvEacPtTRWHkvF9rIVYMV8mkx?=
+ =?us-ascii?Q?8omKqoe7ZX6Np1y4rmL7fGqV333BR2pQHZ+rmJd5ziugFG8h9+xImYOhfMKt?=
+ =?us-ascii?Q?hqMIapEyVNBZlbNQHuepkybkIjhxt/g7P+x3T77U0967KkrTp1KoCju0hA5o?=
+ =?us-ascii?Q?uEors6B7ZBV07owC2h57RcKBuWNmFI0hMYjGbKMVIt+xcq8+nzRShjvkXu/8?=
+ =?us-ascii?Q?4X5LcYM3cuoxMnZME2NftGcIc9MId3WrIPrNdQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d811348e-5fd9-46f2-d208-08dc5faf65e4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2024 13:56:51.2963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB8840
 
-If CONFIG_ACPI_PROCESSOR provide a helper to retrieve the
-acpi_handle for a given CPU allowing access to methods
-in DSDT.
+From: Jean Delvare <jdelvare@suse.de> Sent: Thursday, April 18, 2024 5:28 A=
+M
+>=20
+> If a DMI table entry is shorter than 4 bytes, it is invalid. Due to
+> how DMI table parsing works, it is impossible to safely recover from
+> such an error, so we have to stop decoding the table.
+>=20
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Reported-by: Michael Schierl <schierlm@gmx.de>
+> Link: https://lore.kernel.org/linux-kernel/Zh2K3-HLXOesT_vZ@liuwe-devbox-=
+debian-v2/T/
+> Tested-by: Michael Schierl <schierlm@gmx.de>
+> ---
+> Changes since v1:
+>  * Also log the offset of the corrupted entry (suggested by Michael Kelle=
+y)
+>=20
+>  drivers/firmware/dmi_scan.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> --- linux-6.8.orig/drivers/firmware/dmi_scan.c
+> +++ linux-6.8/drivers/firmware/dmi_scan.c
+> @@ -102,6 +102,17 @@ static void dmi_decode_table(u8 *buf,
+>  		const struct dmi_header *dm =3D (const struct dmi_header *)data;
+>=20
+>  		/*
+> +		 * If a short entry is found (less than 4 bytes), not only it
+> +		 * is invalid, but we cannot reliably locate the next entry.
+> +		 */
+> +		if (dm->length < sizeof(struct dmi_header)) {
+> +			pr_warn(FW_BUG
+> +				"Corrupted DMI table, offset %ld (only %d entries processed)\n",
+> +				data - buf, i);
+> +			break;
+> +		}
+> +
+> +		/*
+>  		 *  We want to know the total length (formatted area and
+>  		 *  strings) before decoding to make sure we won't run off the
+>  		 *  table in dmi_decode or dmi_string
+>=20
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v7: No change
-v6: New patch
----
- drivers/acpi/acpi_processor.c | 10 ++++++++++
- include/linux/acpi.h          |  7 +++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index ac7ddb30f10e..127ae8dcb787 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -35,6 +35,16 @@ EXPORT_PER_CPU_SYMBOL(processors);
- struct acpi_processor_errata errata __read_mostly;
- EXPORT_SYMBOL_GPL(errata);
- 
-+acpi_handle acpi_get_processor_handle(int cpu)
-+{
-+	acpi_handle handle = NULL;
-+	struct acpi_processor *pr = per_cpu(processors, cpu);;
-+
-+	if (pr)
-+		handle = pr->handle;
-+
-+	return handle;
-+}
- static int acpi_processor_errata_piix4(struct pci_dev *dev)
- {
- 	u8 value1 = 0;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 34829f2c517a..9844a3f9c4e5 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -309,6 +309,8 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
- int acpi_unmap_cpu(int cpu);
- #endif /* CONFIG_ACPI_HOTPLUG_CPU */
- 
-+acpi_handle acpi_get_processor_handle(int cpu);
-+
- #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
- int acpi_get_ioapic_id(acpi_handle handle, u32 gsi_base, u64 *phys_addr);
- #endif
-@@ -1077,6 +1079,11 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
- 	return false;
- }
- 
-+static inline acpi_handle acpi_get_processor_handle(int cpu)
-+{
-+	return NULL;
-+}
-+
- #endif	/* !CONFIG_ACPI */
- 
- extern void arch_post_acpi_subsys_init(void);
--- 
-2.39.2
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
