@@ -1,94 +1,212 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188B15AAA4;
-	Thu, 18 Apr 2024 13:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709771635D0;
+	Thu, 18 Apr 2024 13:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448485; cv=none; b=hphZctdtUlPPotSqJYxUCjn1VknNG120tPNILaX9d9tYYUGyTT03N/sUBzMTi0DqotvOE6OcmXSq3lGy3hEpyyaYst9FGS1iN5HfVjPwrJu8ze3/5ah2NWOQJOxszQkDLDL/k82O8PZgkK9gMPFmsKeDG2W3n4UYonuV6+fLU6U=
+	t=1713448490; cv=none; b=TWt7gjoeEtVpnheDGA0emMbEP39/soqxvY+YyWY7Q6hh314mutbfL7pnA/pj8wS/SkGHyCxWsNY+5CUe4ivkSvNHtirfvpl3qiT/dNZa0V2wW13CbrAK8ud+6OSM9YzVjDvJmKWy1jCd0gavvFgNzzNVk31v8pQpBSI7ANuMmFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448485; c=relaxed/simple;
-	bh=d4qDJxtj0TKPWtUGjhTmuDRXiwM9jmNP0Ljg54XpF3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sr9xqKv8E1+RQps1boxweYPqNB9SjOhrZF7n7szPejLhM5/QwpV10wYxKwkkZ5tLpM6tr1BMPnPTnhlpT0uqr2kL2OdGbNSvNYdrNQQi26nrR7m1QmTYiixiHhuOEf8x3CuL5LXHcWAKkkY8nR1TMNrBxdm5AA1MYdtnXCrsHcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=uCvMHtqw; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=uCvMHtqw; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="uCvMHtqw";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="uCvMHtqw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1713448026; bh=d4qDJxtj0TKPWtUGjhTmuDRXiwM9jmNP0Ljg54XpF3U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uCvMHtqwEOf8PCo2M08gknm7c5L8y8eo9UzDePHvd/Rt1vR1zjUDSpGfQj8S2proF
-	 JOOHDuwjGUlf+otQ3hsiw2lRRPb+Z2vpqpQSHDcZsX2lgf8LhpF2tqpyeW02wgr/Hd
-	 zggQgDgnU6uw9dUFHGsCezaWXxTtzw+XLxtAcTIgj8f+l0taPw5+xgqnHBuGngCg73
-	 uttu9dP4Xx0j2nYuk5slhze8++ZcIBPw+HadMrH8FtdqFflqpj6UlON7Ykk0NPRiPO
-	 RAL6jfhm3KP55CXAqpPLwm6/k9W1Yps1CX+4mmE7fi7hqGOBEM2UlPbYqRaEp9r/FV
-	 /exwmV9lPQBww==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id 937EA4677E3;
-	Thu, 18 Apr 2024 13:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1713448026; bh=d4qDJxtj0TKPWtUGjhTmuDRXiwM9jmNP0Ljg54XpF3U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uCvMHtqwEOf8PCo2M08gknm7c5L8y8eo9UzDePHvd/Rt1vR1zjUDSpGfQj8S2proF
-	 JOOHDuwjGUlf+otQ3hsiw2lRRPb+Z2vpqpQSHDcZsX2lgf8LhpF2tqpyeW02wgr/Hd
-	 zggQgDgnU6uw9dUFHGsCezaWXxTtzw+XLxtAcTIgj8f+l0taPw5+xgqnHBuGngCg73
-	 uttu9dP4Xx0j2nYuk5slhze8++ZcIBPw+HadMrH8FtdqFflqpj6UlON7Ykk0NPRiPO
-	 RAL6jfhm3KP55CXAqpPLwm6/k9W1Yps1CX+4mmE7fi7hqGOBEM2UlPbYqRaEp9r/FV
-	 /exwmV9lPQBww==
-Message-ID: <ca1e249b-2f2b-4936-8c88-935c3112356e@mleia.com>
-Date: Thu, 18 Apr 2024 16:47:04 +0300
+	s=arc-20240116; t=1713448490; c=relaxed/simple;
+	bh=paN2ZGFym5I7Te0qPjdv46j8+ois1fpA2WR9szVVfgI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f8uaS41yO/XAD5BBZF/UOtsG+O95/GIGy66ybDzaGWk20bN1WEHmgfPbZVl20k0i8dBql9qneHqCNqJ3Boo21RTqj69H08UzL8L/xaQlxG3SWwvsbBcn33k29hM5WKwkIV/8HTPn77UdBLFONHWurPBsyPHioLZM1i/YXsYyitY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKzfd3DFCz6K7SP;
+	Thu, 18 Apr 2024 21:49:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 95891140519;
+	Thu, 18 Apr 2024 21:54:44 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 14:54:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
+	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
+ Brucker <jean-philippe@linaro.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
+	<justin.he@arm.com>, <jianyong.wu@arm.com>
+Subject: [PATCH v7 01/16] ACPI: processor: Simplify initial onlining to use same path for cold and hotplug
+Date: Thu, 18 Apr 2024 14:53:57 +0100
+Message-ID: <20240418135412.14730-2-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] serial: sc16is7xx: Add bindings documentation for
- EXAR XR20M1172 UART
-Content-Language: en-US
-To: Konstantin <rilian.la.te@ya.ru>
-Cc: Konstantin <ria.freelander@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Lech Perczak <lech.perczak@camlingroup.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240418132508.3447800-1-rilian.la.te@ya.ru>
- <20240418132508.3447800-3-rilian.la.te@ya.ru>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20240418132508.3447800-3-rilian.la.te@ya.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20240418_134706_631872_0B25327F 
-X-CRM114-Status: UNSURE (   8.06  )
-X-CRM114-Notice: Please train this message. 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Konstantin,
+Separate code paths, combined with a flag set in acpi_processor.c to
+indicate a struct acpi_processor was for a hotplugged CPU ensured that
+per CPU data was only set up the first time that a CPU was initialized.
+This appears to be unnecessary as the paths can be combined by letting
+the online logic also handle any CPUs online at the time of driver load.
 
-On 4/18/24 16:25, Konstantin wrote:
-> From: Konstantin <ria.freelander@gmail.com>
+Motivation for this change, beyond simplification, is that ARM64
+virtual CPU HP uses the same code paths for hotplug and cold path in
+acpi_processor.c so had no easy way to set the flag for hotplug only.
+Removing this necessity will enable ARM64 vCPU HP to reuse the existing
+code paths.
 
-please use a full name, which points to the author of the change, thank you!
+Leave noisy pr_info() in place but update it to not state the CPU
+was hotplugged.
 
-> This patch adds the devicetree documentation for the XR20M1172 UART.
-> 
-> Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Other than that the change is good from my point of view.
+---
+v7: No change.
+v6: New patch.
+RFT: I have very limited test resources for x86 and other
+architectures that may be affected by this change.
+---
+ drivers/acpi/acpi_processor.c   |  1 -
+ drivers/acpi/processor_driver.c | 44 ++++++++++-----------------------
+ include/acpi/processor.h        |  2 +-
+ 3 files changed, 14 insertions(+), 33 deletions(-)
 
-Please make the requested update, add my tag below and resubmit v2 of the change.
+diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+index 7a0dd35d62c9..7fc924aeeed0 100644
+--- a/drivers/acpi/acpi_processor.c
++++ b/drivers/acpi/acpi_processor.c
+@@ -216,7 +216,6 @@ static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+ 	 * gets online for the first time.
+ 	 */
+ 	pr_info("CPU%d has been hot-added\n", pr->id);
+-	pr->flags.need_hotplug_init = 1;
+ 
+ out:
+ 	cpus_write_unlock();
+diff --git a/drivers/acpi/processor_driver.c b/drivers/acpi/processor_driver.c
+index 67db60eda370..55782eac3ff1 100644
+--- a/drivers/acpi/processor_driver.c
++++ b/drivers/acpi/processor_driver.c
+@@ -33,7 +33,6 @@ MODULE_AUTHOR("Paul Diefenbaugh");
+ MODULE_DESCRIPTION("ACPI Processor Driver");
+ MODULE_LICENSE("GPL");
+ 
+-static int acpi_processor_start(struct device *dev);
+ static int acpi_processor_stop(struct device *dev);
+ 
+ static const struct acpi_device_id processor_device_ids[] = {
+@@ -47,7 +46,6 @@ static struct device_driver acpi_processor_driver = {
+ 	.name = "processor",
+ 	.bus = &cpu_subsys,
+ 	.acpi_match_table = processor_device_ids,
+-	.probe = acpi_processor_start,
+ 	.remove = acpi_processor_stop,
+ };
+ 
+@@ -115,12 +113,10 @@ static int acpi_soft_cpu_online(unsigned int cpu)
+ 	 * CPU got physically hotplugged and onlined for the first time:
+ 	 * Initialize missing things.
+ 	 */
+-	if (pr->flags.need_hotplug_init) {
++	if (!pr->flags.previously_online) {
+ 		int ret;
+ 
+-		pr_info("Will online and init hotplugged CPU: %d\n",
+-			pr->id);
+-		pr->flags.need_hotplug_init = 0;
++		pr_info("Will online and init CPU: %d\n", pr->id);
+ 		ret = __acpi_processor_start(device);
+ 		WARN(ret, "Failed to start CPU: %d\n", pr->id);
+ 	} else {
+@@ -167,9 +163,6 @@ static int __acpi_processor_start(struct acpi_device *device)
+ 	if (!pr)
+ 		return -ENODEV;
+ 
+-	if (pr->flags.need_hotplug_init)
+-		return 0;
+-
+ 	result = acpi_cppc_processor_probe(pr);
+ 	if (result && !IS_ENABLED(CONFIG_ACPI_CPU_FREQ_PSS))
+ 		dev_dbg(&device->dev, "CPPC data invalid or not present\n");
+@@ -185,32 +178,21 @@ static int __acpi_processor_start(struct acpi_device *device)
+ 
+ 	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
+ 					     acpi_processor_notify, device);
+-	if (ACPI_SUCCESS(status))
+-		return 0;
++	if (!ACPI_SUCCESS(status)) {
++		result = -ENODEV;
++		goto err_thermal_exit;
++	}
++	pr->flags.previously_online = 1;
+ 
+-	result = -ENODEV;
+-	acpi_processor_thermal_exit(pr, device);
++	return 0;
+ 
++err_thermal_exit:
++	acpi_processor_thermal_exit(pr, device);
+ err_power_exit:
+ 	acpi_processor_power_exit(pr);
+ 	return result;
+ }
+ 
+-static int acpi_processor_start(struct device *dev)
+-{
+-	struct acpi_device *device = ACPI_COMPANION(dev);
+-	int ret;
+-
+-	if (!device)
+-		return -ENODEV;
+-
+-	/* Protect against concurrent CPU hotplug operations */
+-	cpu_hotplug_disable();
+-	ret = __acpi_processor_start(device);
+-	cpu_hotplug_enable();
+-	return ret;
+-}
+-
+ static int acpi_processor_stop(struct device *dev)
+ {
+ 	struct acpi_device *device = ACPI_COMPANION(dev);
+@@ -279,9 +261,9 @@ static int __init acpi_processor_driver_init(void)
+ 	if (result < 0)
+ 		return result;
+ 
+-	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+-					   "acpi/cpu-drv:online",
+-					   acpi_soft_cpu_online, NULL);
++	result = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				   "acpi/cpu-drv:online",
++				   acpi_soft_cpu_online, NULL);
+ 	if (result < 0)
+ 		goto err;
+ 	hp_online = result;
+diff --git a/include/acpi/processor.h b/include/acpi/processor.h
+index 3f34ebb27525..e6f6074eadbf 100644
+--- a/include/acpi/processor.h
++++ b/include/acpi/processor.h
+@@ -217,7 +217,7 @@ struct acpi_processor_flags {
+ 	u8 has_lpi:1;
+ 	u8 power_setup_done:1;
+ 	u8 bm_rld_set:1;
+-	u8 need_hotplug_init:1;
++	u8 previously_online:1;
+ };
+ 
+ struct acpi_processor {
+-- 
+2.39.2
 
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-
---
-Best wishes,
-Vladimir
