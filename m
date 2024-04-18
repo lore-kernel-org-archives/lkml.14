@@ -1,118 +1,105 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073E22AC29
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F5D6138
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713405930; cv=none; b=q+jrOwyb3gXF5cnjAYh8j+WxlEI7mQTfQRS3Jym11dGCJoKGdJhQEF4525dC3jK1qGI18hERwG2HiWiCBhCYoKIXTHpPoh5cIdnYk80t0skxEnrwMAveOCfJBPp6jo9d0n14jjwL1UUj6fGB6twG1cyQzktzJ8nuTybe84zEOrk=
+	t=1713406050; cv=none; b=q2lIkUww2Fy+GmUAD6FaqFJReyEefuCN0UojoaKUIGcs4YA89pz6yGtO6tTHEPKII13ptE1NmDfqUysu6jm3Za82GZymKNNj1pgYEr8rlqUW0WBySNZSZgNCyR61yWoB7hrFisFoyQo6G2GhEvYtsczobDXC5UV4MV3IR3axIE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713405930; c=relaxed/simple;
-	bh=T0QnjAhdYrmACiuwAPDxnR5HIy4p9penGkBMygu+5uU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tB1GoSJKraM3+uoPbTf0Jml3jqWd3Ae/nXj7g3h/aY6q1RWvvR1DRBxdnO9uEUO/7+/Zquh2PiWo4s2DPR2T30TLr6LZ+bLc0desCRN2X6XoZUBzdKGhvnQlWfGtppj9NqJRjksEyNbzyIjQ5VpfaoBtWX7TotYyWGFF8n0+8D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iaQXswJS; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713406050; c=relaxed/simple;
+	bh=+KEGnBcOMKQg1e6jhwZpTqi+bVvKRdapHRMb2dM0wtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJYyN/c9afp9VkVESA7pKVnvhMZpkEfkvpvhX2SG9l4HeLUBUMEIajlinTnL4wX/U9pqUdgkA6ss1G4K5cNjoPMGXNFShmegfQFF6cjq0cLtpp/MC6u4GItymtASLzPGgTJ8zS4txygTYqc1HNb7NFtHKJW+8oCFmIaezViU0rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASVVbVwz; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaQXswJS"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2db2f6cb312so6776931fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:05:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASVVbVwz"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-22fa18566adso206099fac.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713405927; x=1714010727; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T0QnjAhdYrmACiuwAPDxnR5HIy4p9penGkBMygu+5uU=;
-        b=iaQXswJSwbd6W25fe4Gm0Pjcaxlny+oZVrwFZ5yeQDqUCqctGQ0oJzeErLjcaqSVjQ
-         c5rROx3N5EHWyGn7GYvncjhJ2MW+mzH4mfu0FnHyvfU/krB54BJpgMR7zL7aXg3gHt1h
-         Cix3sRYVObXpzTpratyv/GQAbufq/aQo47i5wFdquZDGtwXA1bRzIChHOiU9gnz9YgWO
-         pVtgb4K/M67JhK2l5S2DYN/nP1WKudwWA/AFyov3uh9pQgyGoFU2m8gEh9/1UdgACd/e
-         /VoLNfpm6mfQJYZ3SJRs1JomoDjYLJ055rtMehVwPTfjEW5/Vs2/KqpkVDlMUOR2Prfc
-         BuBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713405927; x=1714010727;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1713406048; x=1714010848; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T0QnjAhdYrmACiuwAPDxnR5HIy4p9penGkBMygu+5uU=;
-        b=EMOyYZLpQjC5eLDtXBMB0eTWX/09ger7KH65Y1HK0p26tmuk5Q6B65pbypQV8Vxnad
-         5ugwigWy1uLvJrBzfGJ9D9WeaHi6UDvDnnOGX+3aSQi5YWcTPNpazkGUJebXVBJ1JW2y
-         IVQA2b5jeQ/TcDo4mDjvY/0Zyi9nEioOmdmoGvFEzhiaIKioylak1Zt8cJ3ue08SS7b5
-         oV28FCoMlbd0sGS27YzBiH/2Ml8Jw6odTIQqjzB0lNFxhCcs5I7oBAOt+dTCm6AhBA7d
-         n5AHnXotNVOQJ0JQZcpa/VK9MSOXq8kHcVr+J3KpFH7yYjr1fvvfu052qFGhDCDL+URA
-         P6dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULA3CZ4hDFaui/21XXKGAR4zR9r/0dok7S12F90DcnRoe+vztvml5z8FokEH+0LqNkhPzYzDqZxfcznXL+nEjbdRM9zlLige3DsR7Y
-X-Gm-Message-State: AOJu0YxJG6Gfpramd3vCxTWN2h0CH+Kgz9hasHvAUj+gYyYjhPJyhLE7
-	zyHfTV1bTZpduOKPiFqUD1FIafrt13MTRYpbxCBZ9noFSN/TS+5qN/9Pl+oRe1LIeaG65FyGdti
-	OxAP9UKEJ+pjPhqscEVFGc/62EABqTnh6Sl+C
-X-Google-Smtp-Source: AGHT+IFCm3pN2ShD28Z+g4gvIKer7DIONCtgHex5oajrniOoI2un8C3zrZeQwrRhrc0hLYs0bHNGtT9KLILyXzzacvw=
-X-Received: by 2002:a2e:9003:0:b0:2d8:bda5:c5f5 with SMTP id
- h3-20020a2e9003000000b002d8bda5c5f5mr644366ljg.35.1713405927096; Wed, 17 Apr
- 2024 19:05:27 -0700 (PDT)
+        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
+        b=ASVVbVwzZ4sx9/Jkpm3Lqw5y3aFM+/HOAkx93baMcwocGvZdYMGS77yneIcjgMtLH3
+         XDKj4/XdLceJxgsdm9eHMlaxawLzWsEQ2OdV+a2byzqwA5LLFjDfZZb9ODX32brssK0S
+         Nplfaz63D42ERia5GcnzL+7kcHju4nNjY/LaXCMaZlAh73EAxn+kiA0nfShwEVqFjj8S
+         NPc0U2D06IZr/UqRAnjkBQnMzwjEJTtgnG1GrDpgW4Ni3QLmDnpr78JEDt3eMvMpW4BN
+         GcfDr7j3Rp5vDmYbXLp7MT1lkq0dTo0W61zmAmUf9xGFHBlV9/d+uX7pi2n6ZX7eQuSn
+         EdUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713406048; x=1714010848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
+        b=SyFa8aPj3kaLLrxM2QCaiEpX04UCyruy38UUKQZ5E6RSA4cbNUiZVNBnuXVpGNGfry
+         zn4I6hD1CY5hae1ZMBblO3UJlEGx4l2MXz4U+L6ycgKTqerlnCIVrBPwa4j4l/v3EC9S
+         HCu6R0jH8dYEtywNtXdS8/krfo81rc02NBDIp2+3/rKei5b1Gx/cvKPnl0fWA35yH9qJ
+         bHTlfcOz5oIpnBRA6Cq6MQkWUlFOibt9FZhrNnmYTD4cHWMp/fQOIV3wpmDgnd7SFsXg
+         2SOawbsEL+BLzovEMa6kL88jUJLz0a9GKyDmy3RKYR0qZSQXt1Jl02MLg/WfwMvm+oh0
+         eCxA==
+X-Forwarded-Encrypted: i=1; AJvYcCULBdNTELDXFCbdWGZtf7dhsUSLA6Yo0NceXCUAOUZPtLOOg0BxuBU8oWbMgapMbus4gtqVWJmcBFt15Q2aUsI4uBwTCNWcMhvU9jzM
+X-Gm-Message-State: AOJu0YydUdEQMWAPX0n4CLTPHFcNTHRl9VjskCrAfIbMsmvGJnlOS8es
+	o1bbnh0nHQ8hBopd2MLNZsWRbv8RI33j+LkvQkTfxfXVN2EszzA5
+X-Google-Smtp-Source: AGHT+IHkRREgGYfHbnLerfWwG1l/nPL22jRK5el/rJ7qosjGL2kgjZfx5vUtE7jmFBUVX7TkEjKdJw==
+X-Received: by 2002:a05:6870:610c:b0:22a:6c9a:ece8 with SMTP id s12-20020a056870610c00b0022a6c9aece8mr1783850oae.21.1713406048246;
+        Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id kq12-20020a056a004b0c00b006e6c81b6055sm356551pfb.6.2024.04.17.19.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 19:07:27 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 17 Apr 2024 16:07:26 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+Message-ID: <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
+ <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+ <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
+ <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
+ <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
+ <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
+ <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJD7tkbn-wFEbhnhGWTy0-UsFoosr=m7wiJ+P96XnDoFnSH7Zg@mail.gmail.com>
- <ac4cf07f-52dd-454f-b897-2a4b3796a4d9@kernel.org> <96728c6d-3863-48c7-986b-b0b37689849e@redhat.com>
- <CAJD7tkZrVjhe5PPUZQNoAZ5oOO4a+MZe283MVTtQHghGSxAUnA@mail.gmail.com>
- <4fd9106c-40a6-415a-9409-c346d7ab91ce@redhat.com> <f72ab971-989e-4a1c-9246-9b8e57201b60@kernel.org>
- <CAJD7tka=1AnBNFn=frp7AwfjGsZMGcDjw=xiWeqNygC5rPf6uQ@mail.gmail.com>
- <75d837cc-4d33-44f6-bb0c-7558f0488d4e@kernel.org> <CAJD7tka_ESbcK6cspyEfVqv1yTW0uhWSvvoO4bqMJExn-j-SEg@mail.gmail.com>
- <9f6333ec-f28c-4a91-b7b9-07a028d92225@kernel.org> <f6daabzdesdwo7zdouexow5mdub3qnzr7e67lonmhh3itjgk5j@qw3xpvqoyb7j>
-In-Reply-To: <f6daabzdesdwo7zdouexow5mdub3qnzr7e67lonmhh3itjgk5j@qw3xpvqoyb7j>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 17 Apr 2024 19:04:50 -0700
-Message-ID: <CAJD7tkYnSRwJTpXxSnGgo-i3-OdD7cdT-e3_S_yf7dSknPoRKw@mail.gmail.com>
-Subject: Re: Advice on cgroup rstat lock
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>, 
-	Jesper Dangaard Brouer <jesper@cloudflare.com>, "David S. Miller" <davem@davemloft.net>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Shakeel Butt <shakeelb@google.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	kernel-team <kernel-team@cloudflare.com>, cgroups@vger.kernel.org, 
-	Linux-MM <linux-mm@kvack.org>, Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Ivan Babrou <ivan@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
 
-[..]
+Hello, Thorsten.
 
-> > > I personally don't like mem_cgroup_flush_stats_ratelimited() very
-> > > much, because it is time-based (unlike memcg_vmstats_needs_flush()),
-> > > and a lot of changes can happen in a very short amount of time.
-> > > However, it seems like for some workloads it's a necessary evil :/
-> > >
->
-> Other than obj_cgroup_may_zswap(), there is no other place which really
-> need very very accurate stats. IMO we should actually make ratelimited
-> version the default one for all the places. Stats will always be out of
-> sync for some time window even with non-ratelimited flush and I don't
-> see any place where 2 second old stat would be any issue.
+On Wed, Apr 17, 2024 at 07:48:33AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Can you elaborate why Bjorn's case is different?
+> 
+> Well "not booting at all when using 'nohz_full=0'"[as reported two
+> times] and "I start neovim, send SIGSTOP (i.e. ^Z) to it, start another
+> neovim instance and upon sending SIGSTOP to that instance all of
+> userspace locks up - 100% reproducible."[while no 'nohz_full=0' in use]
+> at least on the first sight to and outsider sound a lot like different
+> problems to me -- but of course that impression might be wrong and you
+> know better about these things.
 
-We disagreed about this before, and I am not trying to get you to
-debate this with me again :)
+You are right. That is very different.
 
-I just prefer that we avoid this if possible. We have seen cases where
-the 2 sec window caused issues. Not because 2 sec is a long time, but
-because userspace reads the stats after an event occurs (e.g.
-proactive reclaim), but gets stats from before the event.
+> > I was assuming it was the
+> > same problem and that Oleg's fixes would address the issue.
+> 
+> Bjorn, could you give it a try?
 
-[..]
->
-> >
-> >
-> > With a mutex lock contention will be less obvious, as converting this to
-> > a mutex avoids multiple CPUs spinning while waiting for the lock, but
-> > it doesn't remove the lock contention.
-> >
->
-> I don't like global sleepable locks as those are source of priority
-> inversion issues on highly utilized multi-tenant systems but I still
-> need to see how you are handling that.
+Yeah, I'm curious whether it's just a different symptom of the same problem.
 
-For context, this was discussed before as well in [1].
+Thanks.
 
-[1]https://lore.kernel.org/lkml/CALvZod441xBoXzhqLWTZ+xnqDOFkHmvrzspr9NAr+nybqXgS-A@mail.gmail.com/
+-- 
+tejun
