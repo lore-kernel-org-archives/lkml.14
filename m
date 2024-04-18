@@ -1,67 +1,96 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF16713A86B;
-	Thu, 18 Apr 2024 12:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF681EA8F;
+	Thu, 18 Apr 2024 12:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713444623; cv=none; b=S6izGEeS/u69iPG6+/xsbMuU84yPDxe2cLiF1AiZvC618TFGHQ8RbzgVmI4FoNJENZowDhEOqlgNGFfL5WKXqelU7CLpgObdnGdGQk8drFc9hbTE4Hf/3ueZeY3eaD1JDTgLNx5vwEDtkQkUJIPtX2hfF96NrZIbDW41/PPYkZQ=
+	t=1713444781; cv=none; b=QtYwkf0Ve5JoW9bDwJZf56UlBdgazkVSksmf64gL6FRu+ZTK+kVEFjV1SM59eIBY2zwbPtBSKvB+EGhNWngrtrEhV58B1BzrA+ZnHP1B144fiLBdliTQrn9OLM0lSYKIpWcPZeTIazhAB4XBIVlJHsCaZ8JGHhFx6FrOmUIBO9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713444623; c=relaxed/simple;
-	bh=m17shzuosOvHU/kE5f6ihW08W3NrfbNpnfTEWvxWw6E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qU0GC2nK4Iy1qb5EC0yMkRkjg3mQyD2mUPloi91USEob5RiAq2WZVJKBshh3PAgMeXDpe2mK5WDkHg7WKyH8L5El7Xeut0brHKYdMUQ+MbyjaIFC9RbqLw6m8ObvqGldRqffgR8bEmZnHqn9wC6eYzEOu9w/x6UIXvr3FNYnxMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VKyGf2Dq9z1R8ZH;
-	Thu, 18 Apr 2024 20:47:22 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 21D26140382;
-	Thu, 18 Apr 2024 20:50:16 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 20:50:15 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup, legacy_freezer: update comment for freezer_css_offline()
-Date: Thu, 18 Apr 2024 12:43:49 +0000
-Message-ID: <20240418124349.916770-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713444781; c=relaxed/simple;
+	bh=chR6ij2HPD0n94HeheQrXEw9wvJW6PqsAZOmneyaWdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jwHKPtggErIQ8cwCGDlH265axapOTveBY5ZUR3774BySH82+RROZn0Y8AOpY9Hd4LJYmlVa4VTWOnXAA33qiJvMCFyFpB+x3od0HHkVpjyRqvooco/P3ZE6LpyedisQUDyhWP8KLyfpYYQ5LCFWZJDowRezU78lkAvxa8Cpo8TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F6E0339;
+	Thu, 18 Apr 2024 05:53:26 -0700 (PDT)
+Received: from e124191.cambridge.arm.com (e124191.cambridge.arm.com [10.1.197.45])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73FFF3F738;
+	Thu, 18 Apr 2024 05:52:57 -0700 (PDT)
+Date: Thu, 18 Apr 2024 13:52:50 +0100
+From: Joey Gouly <joey.gouly@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, kernel@collabora.com,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: mm: restore settings from only parent process
+Message-ID: <20240418125250.GA2941398@e124191.cambridge.arm.com>
+References: <20240314094045.157149-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314094045.157149-1-usama.anjum@collabora.com>
 
-After commit f5d39b020809 ("freezer,sched: Rewrite core freezer logic"),
-system_freezing_count was replaced by freezer_active.
+Hi again,
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/cgroup/legacy_freezer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Mar 14, 2024 at 02:40:45PM +0500, Muhammad Usama Anjum wrote:
+> The atexit() is called from parent process as well as forked processes.
+> Hence the child restores the settings at exit while the parent is still
+> executing. Fix this by checking pid of atexit() calling process and only
+> restore THP number from parent process.
+> 
+> Fixes: c23ea61726d5 ("selftests/mm: protection_keys: save/restore nr_hugepages settings")
+> Tested-by: Joey Gouly <joey.gouly@arm.com>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+>  tools/testing/selftests/mm/protection_keys.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/mm/protection_keys.c b/tools/testing/selftests/mm/protection_keys.c
+> index f822ae31af22e..374a308174d2b 100644
+> --- a/tools/testing/selftests/mm/protection_keys.c
+> +++ b/tools/testing/selftests/mm/protection_keys.c
+> @@ -1745,9 +1745,12 @@ void pkey_setup_shadow(void)
+>  	shadow_pkey_reg = __read_pkey_reg();
+>  }
+>  
+> +pid_t parent_pid;
+> +
+>  void restore_settings_atexit(void)
+>  {
+> -	cat_into_file(buf, "/proc/sys/vm/nr_hugepages");
+> +	if (parent_pid == getpid())
+> +		cat_into_file(buf, "/proc/sys/vm/nr_hugepages");
+>  }
+>  
+>  void save_settings(void)
+> @@ -1773,6 +1776,7 @@ void save_settings(void)
+>  		exit(__LINE__);
+>  	}
+>  
+> +	parent_pid = getpid();
+>  	atexit(restore_settings_atexit);
+>  	close(fd);
+>  }
 
-diff --git a/kernel/cgroup/legacy_freezer.c b/kernel/cgroup/legacy_freezer.c
-index 66d1708042a7..afbf7f8a86c0 100644
---- a/kernel/cgroup/legacy_freezer.c
-+++ b/kernel/cgroup/legacy_freezer.c
-@@ -133,7 +133,7 @@ static int freezer_css_online(struct cgroup_subsys_state *css)
-  * freezer_css_offline - initiate destruction of a freezer css
-  * @css: css being destroyed
-  *
-- * @css is going away.  Mark it dead and decrement system_freezing_count if
-+ * @css is going away.  Mark it dead and decrement freezer_active if
-  * it was holding one.
-  */
- static void freezer_css_offline(struct cgroup_subsys_state *css)
--- 
-2.34.1
+After more testing, this is not actually enough. It passes sometimes, which is
+why I gave my Tested-by, but it can still fail the same way as I originally
+said.
 
+assert() at protection_keys.c::812 test_nr: 19 iteration: 1
+running abort_hooks()...
+errno at assert: 12
+
+I think the parent process needs to wait for all it's child processes (recursively).
+This is due to the test_pkey_alloc_exhaust() calling become_child(), where it
+exits, and that exit may be from the original PID.
+
+Thanks,
+Joey
