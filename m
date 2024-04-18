@@ -1,207 +1,151 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2098.outbound.protection.partner.outlook.cn [139.219.17.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC425537EF;
-	Thu, 18 Apr 2024 04:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713413158; cv=fail; b=TlraHa1F6UC5chiPqjlxiGmYynTFIWzmIq9bYUa/AzbFlafnj3pd3YiHmIi34i0petl5TtO5WeMDLttuEZMsmo820q5b7WPVJ/yEnUOL2d8JN+mXdU/qAUS3Yl1DDj06tJTdCouFDXHG1ZzNJb3vVyW3rl3+XWpj8uYHYlBSTrk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713413158; c=relaxed/simple;
-	bh=wUpxNct44GGjaCxiXjPB8YPNRruiCvkT72VnJlto0xQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=utlBQH3y6T8rynXrDXe287QqOwOoNkC4dj9eQ0FC7gxgfkdjGbNluMhZfkK047UI4Yu+0RRRSqCmCMouCMthdwGtqwyrRFWSaXlr3gqDgFX39jBV88kCwTMMusNUvL8O2RKI9kLb09znSI8h5BE7BUWuIu84pXzUTLjj4tkxpcc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yq1q69oUcIHQGaeOwZ2LFHoKY5DFXVwCZCR6FM37YRLFprmWJDYR6Q3AypyEPhdr1gc6xbGMq6c3B2MStY810Jz4WaUAAvHuksyrT6ZMkSdPTg6X1RKZbixEu68r/+NPmhtQKPPqLFHmUpQjME1ZTumihEh2LAqbbOmAcLFlZC9EZXcCDCWvARQ/sZxmgZmcL6iVrm77td8dZc9R3usZENGWT1M0fqv8owRb3LnmhfYmd29yzLlJFvQam7N9bPdtV2NXX0RO76aPGH00N1pLz4JqxpfBbDGhTIPbepIElktFFHYlA+jzFTNd82T3qBlVTYksbhQeL3mPEA7XAWhVnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jpbv33Qm5JbEyqBAkVoJlNkxqwRsX4nokG26GW9Gtbg=;
- b=EZF5SOCUOAizzJREvq9sRs+uwbU61b5jJnAVp/kDXyVVEZb1MjdwsEAmvkgtiIchNmhZWzd5LJPJKxgmjf68KGYbATTAVXY+aixiCjD8xtXqLq1gCxDYbE4oxFp990xRTRW9Ck8enBKerG0x6G6P8ZD4Nk9X5Gv7141YcOJLa2DF/dJMort9WCL3bsT/dPy1FDj/fTrb/ZfA+I1nnk2GQqS+Q8uwQ9DEXdik7EpFf+QUgSBCWIhJ/WJkJvmH459JVjfLZKTETmATVo9XIUDsi0edIzRa2EA80FTbpyQQX2711GIVQ4gRp/0MIlEJdfw2nYXuEhD2omlUe2zJa3WCjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6) by NT0PR01MB1071.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 18 Apr
- 2024 03:50:34 +0000
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- ([fe80::103a:5792:ddaf:4283]) by
- NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::103a:5792:ddaf:4283%4])
- with mapi id 15.20.7409.042; Thu, 18 Apr 2024 03:50:34 +0000
-From: Shengyang Chen <shengyang.chen@starfivetech.com>
-To: devicetree@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Cc: vkoul@kernel.org,
-	kishon@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	minda.chen@starfivetech.com,
-	changhuang.liang@starfivetech.com,
-	rogerq@kernel.org,
-	geert+renesas@glider.be,
-	keith.zhao@starfivetech.com,
-	shengyang.chen@starfivetech.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] dt-bindings: phy: Add starfive,jh7110-dphy-tx
-Date: Thu, 18 Apr 2024 11:50:19 +0800
-Message-Id: <20240418035020.47876-2-shengyang.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240418035020.47876-1-shengyang.chen@starfivetech.com>
-References: <20240418035020.47876-1-shengyang.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0036.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::13) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C985339A
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 04:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713413306; cv=none; b=a47W3Vsby+eC0wtxJo1e7oFmHmeR0tdpCdFtEznaTO/D7X4IVjAlflhTI8XYakjAWJVgY2QRpbIMTKxl/npgQcFj7EuEmw9KcbLUcNe/2mub0/5sB5Y8DMrmgIFd+rURYEe9Mfq9s0zpS59NqUA86GAF1NMRxSBV7FAL552aykM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713413306; c=relaxed/simple;
+	bh=9EPin60FMQwmiUIVEuZfRjJCOiYzUKIb+YY7pff0TiY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ILT8Sdz4yoLjgeg6At7CGy/GXe5If9wRbQLRgpxj62IQodBVnVGwpn/Do3tMjvJmwrCskSEgw7bp3T45LvLQnuscIKmebhKSNs2X30oGkpI8CxALi2x673D+cIU7nIwBcqSSh54NIv3SRXPKSUT2ayIt9GPjE5OisDzdsnvVZbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d9913d3174so58823239f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 21:08:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713413303; x=1714018103;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xEM+T9nXxPjWZkYEN8IWHVP344j+ho4lS7Ek9uvoVuk=;
+        b=xSHqOd8EPV5Jh9quLfeu9OBX7JgLfG2ihY+68CrjxjuoRxjSGEJo183PPIB8TYNxdI
+         u5F6sOM/Ro6N7zIvZebkVJwYhDWW0JpH0INOSMxp7JMM4Vbd36SRmaT5hgb9Amoy7XSQ
+         Gm1qVy8mvRogU0QBVeDZpTM2jxN4QjbFsJ7K0H2nJnYzcvleJiPJrueZOfSGHF7Wo6qE
+         /vXeDV0ttdQNww1zD0jUymNcrgqFDF5ol8ZMPiatuCg0pk1zo7CvYdX8hGNuTt8jItsY
+         DMR2KLzHJD1TkGyHwdjkK2ZQjoMGat2P8lqxQDSkxeHIDXwXuqvoW/BP+yQLQMkIMFcm
+         N7rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLcInfxZRgXXs4pn+w6rMBWqnyEhSDPRHzCC10cCERQyvWHHc1OeXj4U7O5H5D1tSPSgXhYPfe6Kwi4cUyhGh/hQdzIrCMXqzwjwHq
+X-Gm-Message-State: AOJu0Yyum63soUde7Et0LnnV818aYwKxHSmMdiiA0bUnoTOFb1yleRGY
+	vcne9o9GJrSYnpCirnQ11JCtE90Plcr4TmQe1YVRWBkkjQ0Z/+iM9c6ILOqAXId5GqkYMq76KQE
+	81wk91xrpcgrxTxg3J6deXY6LBP5OA48s6jq4iloiwXayb60KPX1K9mY=
+X-Google-Smtp-Source: AGHT+IGwAdiCevEF3sEmP4AsPpg0YvxJYhO7El/Z4OL7Y5tMo/4Dz301dpzt2f4nSUgjxumT+r6SwJ7TEng/JzXeCd6iml7jhmbE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB1071:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71299701-1f91-421e-4cf7-08dc5f5ab3ab
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	3Hjq/6LZrKc/hYMnNyieq/s61X1LMNQh6GYNJrxJedYzJVvavAZnMPqmr0CcgPHI/B+1zkgQILwbKKWxARi0FGUjnp4z7Yilx0Eojmo1xmhiFvKV685gaYtjKt4SDJUXnOeeGSinZ/YGr01YagvT6nwdGL/afq6OPFeaR49r0+7HCo3/UwENbFZxoWCUkSMk8EAZzSY8qysIjSGD1eDBdXzRk86k5cUpbRO/qTiYu+ng7+JD+agckwExTZ817oPIcZ7L16n41Hv5AOi3eZG5DJzGrQMfwUdg51mjC88qijbGS2cEgScJKRST1W8U2kEqW09gqh+u4WbRaFT32RH2rXL5dvuMZUGnp1ZRrRdZizRDaZjDTolSQIWgG8OhzKxfwGTiHfMp5ykTgcfb5c7/CxThjYG2yujBFY2Jyjd4koVNAomL6yRx3rOISuh90hgpd49zhLrhq6YUYn/+ffeQHdkkGc+6qk8/LdGFgWGiM5e/GSkXTJfh4OoYcz4Ygf3SDHQ1TS0CUEQGOhfqxx8FsjOVPFoWlwi4fljO3M5YDwbiJogpwyR49zvoeYdaJ8QNGoZv/ncHc9crVKnOJas3B5GCHgwnoc9xk9QHWDrxAQ/dtqp5QjqZtZ7aAsUq3SRI
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(1800799015)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YEojOIK9Wr8CxYZMqV8A4laFf0gKDY/9Ypmr6C3wCzrB+IFDTyGX9C6zDqn+?=
- =?us-ascii?Q?/8McJwnrNmaBD40bfGvuncjI3VhRbybiH2K1y/eTqslZw4SGh3xonpo6nEkS?=
- =?us-ascii?Q?4155Umy03CIqgMzz7hmP87G1+GPjHxIp5fsRq8NGz/hNyOAafWLDoT7EwzSx?=
- =?us-ascii?Q?4bjMuhe2QXfX4DPY5U1ZdF/zGhHyr+FOgA07+MpQUAt22gwkTUqmaASfbUqB?=
- =?us-ascii?Q?sw1FN4NsKy8lD6FUdLfskSI7m75AUD9iX9Ogcwetw9pYT5CXikV9gWsMgVIS?=
- =?us-ascii?Q?Az+amN/ow3Gzdt+dCiHzBJSezLgowet3FToukOEHuv9GRBFHrnV/EwF3BBpS?=
- =?us-ascii?Q?lVI9qQ4nGFhkGa1+b8t5RuuPDzdfkbookcdS+RRbZdbk1OHldJdhkni6u8CV?=
- =?us-ascii?Q?uIhDVTBbUyZ+0FCQ+uuElfUPV9/eXCf0FvCr0ixGKUGo/bY4MwFRn+lcbkAw?=
- =?us-ascii?Q?PmzEAqm/YORlsNbC7ewmiyNBIB3KzlukIwv+FEv/I9kPhFEJlLwYOCVEWQg8?=
- =?us-ascii?Q?1FlLnHG00ThNN2YoWQ+b6dYqZsS82P+pJKWYyDw1xlfoAUYlyBWv7oZikZ5B?=
- =?us-ascii?Q?gaMi6odwRereANVMofS8fevDEzqa11SkyXecGyOg1eERdOu6XV+tBlC+X2Lv?=
- =?us-ascii?Q?c9rKRiCpR2mUNVv8zWGyDdEfdEA8N3err+oHU10VGbkwTk5uHIDsykUNiElO?=
- =?us-ascii?Q?j/dojBSyHU6S7sUkKRARHMrMXIkIsKqAbt3fR9fLOyijp1lQ0ZPP8AR9F1sM?=
- =?us-ascii?Q?u16m0Qa47jRmLLcf1LVi8lYaFdIgnlpf0K+jWo3JmYPipWNUP18UxhKDewG2?=
- =?us-ascii?Q?hxzR7mMQw8bDJgFdEhi1soT1B7+Z4zAj/8IZKtiMShqTuUC5vBvoVRuSQveE?=
- =?us-ascii?Q?uJ6aqEvtVVWMWwZFq8JFRygIi+Zrf5btBl+9gG9p6xGNtp8hef6yezAyRuuv?=
- =?us-ascii?Q?HGFXCRffXZ6bu2drZNkMbpVZrPMi+S/rx3MJDu/+iHYqFo6lu2eWRDPA+CO8?=
- =?us-ascii?Q?1qeiyNmSPNjucaOT3Q1O5WlkPvLsq3Z88dBaON1LMjeiboB9PxdVok1kI1zA?=
- =?us-ascii?Q?zDR/rnSvgzX2DjLZrYtm2wZaFNYp+PiJ9RtlYN4hkOetTLpgtIiHVJYQ1IQj?=
- =?us-ascii?Q?bOxgyP01GchQF0MgKKD8qjHdOD/Pg4qFEATTrv+PnJx6gv4a8PFKvyDcWgAX?=
- =?us-ascii?Q?aNJYun8ivQWK/UCgkgih6+knCnTdmK+bRL5q63W9HcPAhDMr7ZXgZshNZS5g?=
- =?us-ascii?Q?gNyfCy7ztQLhxqV8/NVGNv8DII3FXRUZoEc76+9Jf18nJeqOcdaPD6iSVdP7?=
- =?us-ascii?Q?L4qqc+9kLLSqrXhhwBQImy4YhiyQGr8diSGNmYK6afAqMT9m6OoBR3o9y4x2?=
- =?us-ascii?Q?ELMYbfp0qxNTvd9KLW8xozeoSMxs9uwM0GyjrjHpa2NHPx3vAHHhWHjmghce?=
- =?us-ascii?Q?2k4zaDrsjH6jkIAuFraC7ya0bXD86VZJpdcYb50gSdqNwFQnWD5lYsxG9Cnp?=
- =?us-ascii?Q?t+wPggiuuX/8dlz+MISq7nG8bf8+VydmAKUXsUjJBOaR5YEz9AKquUSdC3B6?=
- =?us-ascii?Q?PPA66L/gydYpfO/RpEI6cQcXQe18lQag0rV6kE+CbigToMsc8NIrELNTQ1hh?=
- =?us-ascii?Q?r+ONiVdegHgDx+Ni24RvTlk=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71299701-1f91-421e-4cf7-08dc5f5ab3ab
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 03:50:34.8086
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fpgipPBCpYGL3kHSR5oJueMLdLxWvWO60ZzDJ0Z05QV44Bbmv4iC/cksf7VRvMpfaT9n4E68ha53eO5QQ0RRP9uj6cC4O5V3MvmfRVnqw9c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1071
+X-Received: by 2002:a05:6638:850e:b0:482:fa6f:78f1 with SMTP id
+ is14-20020a056638850e00b00482fa6f78f1mr90141jab.6.1713413303202; Wed, 17 Apr
+ 2024 21:08:23 -0700 (PDT)
+Date: Wed, 17 Apr 2024 21:08:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004a86bf0616571fc7@google.com>
+Subject: [syzbot] [net?] KMSAN: uninit-value in hsr_get_node (3)
+From: syzbot <syzbot+a81f2759d022496b40ab@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-StarFive SoCs like the jh7110 use a MIPI D-PHY TX
-controller based on a M31 IP. Add a binding for it.
+Hello,
 
-Signed-off-by: Shengyang Chen <shengyang.chen@starfivetech.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+syzbot found the following issue on:
+
+HEAD commit:    0bbac3facb5d Linux 6.9-rc4
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15d9a36d180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87a805e655619c64
+dashboard link: https://syzkaller.appspot.com/bug?extid=a81f2759d022496b40ab
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14069fcb180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=155da7cb180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/93eb2bab28b5/disk-0bbac3fa.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/47a883d2dfaa/vmlinux-0bbac3fa.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6bc56900ec1d/bzImage-0bbac3fa.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a81f2759d022496b40ab@syzkaller.appspotmail.com
+
+syz_tun: entered promiscuous mode
+batadv_slave_0: entered promiscuous mode
+=====================================================
+BUG: KMSAN: uninit-value in hsr_get_node+0xab0/0xad0 net/hsr/hsr_framereg.c:250
+ hsr_get_node+0xab0/0xad0 net/hsr/hsr_framereg.c:250
+ fill_frame_info net/hsr/hsr_forward.c:577 [inline]
+ hsr_forward_skb+0x330/0x30e0 net/hsr/hsr_forward.c:615
+ hsr_handle_frame+0xa20/0xb50 net/hsr/hsr_slave.c:69
+ __netif_receive_skb_core+0x1cff/0x6190 net/core/dev.c:5432
+ __netif_receive_skb_one_core net/core/dev.c:5536 [inline]
+ __netif_receive_skb+0xca/0xa00 net/core/dev.c:5652
+ netif_receive_skb_internal net/core/dev.c:5738 [inline]
+ netif_receive_skb+0x58/0x660 net/core/dev.c:5798
+ tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1549
+ tun_get_user+0x5566/0x69e0 drivers/net/tun.c:2002
+ tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048
+ call_write_iter include/linux/fs.h:2110 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xb63/0x1520 fs/read_write.c:590
+ ksys_write+0x20f/0x4c0 fs/read_write.c:643
+ __do_sys_write fs/read_write.c:655 [inline]
+ __se_sys_write fs/read_write.c:652 [inline]
+ __x64_sys_write+0x93/0xe0 fs/read_write.c:652
+ x64_sys_call+0x3062/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+ alloc_pages_mpol+0x299/0x990 mm/mempolicy.c:2264
+ alloc_pages+0x1bf/0x1e0 mm/mempolicy.c:2335
+ skb_page_frag_refill+0x2bf/0x7c0 net/core/sock.c:2921
+ tun_build_skb drivers/net/tun.c:1679 [inline]
+ tun_get_user+0x1258/0x69e0 drivers/net/tun.c:1819
+ tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048
+ call_write_iter include/linux/fs.h:2110 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xb63/0x1520 fs/read_write.c:590
+ ksys_write+0x20f/0x4c0 fs/read_write.c:643
+ __do_sys_write fs/read_write.c:655 [inline]
+ __se_sys_write fs/read_write.c:652 [inline]
+ __x64_sys_write+0x93/0xe0 fs/read_write.c:652
+ x64_sys_call+0x3062/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:2
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 1 PID: 5050 Comm: syz-executor387 Not tainted 6.9.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+=====================================================
+
+
 ---
- .../bindings/phy/starfive,jh7110-dphy-tx.yaml | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml b/Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml
-new file mode 100644
-index 000000000000..4a06a2642b4a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/starfive,jh7110-dphy-tx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Starfive SoC MIPI D-PHY Tx Controller
-+
-+maintainers:
-+  - Keith Zhao <keith.zhao@starfivetech.com>
-+  - Shengyang Chen <shengyang.chen@starfivetech.com>
-+
-+description:
-+  The Starfive SoC uses the MIPI DSI D-PHY based on M31 IP to transfer
-+  DSI data.
-+
-+properties:
-+  compatible:
-+    const: starfive,jh7110-dphy-tx
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: txesc
-+
-+  resets:
-+    items:
-+      - description: MIPITX_DPHY_SYS reset
-+
-+  reset-names:
-+    items:
-+      - const: sys
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - power-domains
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    phy@295e0000 {
-+      compatible = "starfive,jh7110-dphy-tx";
-+      reg = <0x295e0000 0x10000>;
-+      clocks = <&voutcrg 14>;
-+      clock-names = "txesc";
-+      resets = <&syscrg 10>;
-+      reset-names = "sys";
-+      power-domains = <&aon_syscon 0>;
-+      #phy-cells = <0>;
-+    };
--- 
-2.17.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
