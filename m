@@ -1,57 +1,57 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C23168AFD
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8C816C438
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 14:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713450434; cv=none; b=Jr4+aVHKMNYH8YjWOwdKEPeOuhGuOMte+Lam0tKZHDnsABXIX5eBlYuuCde+SXQS6QdQxN0mptCpB+Zz2TkpL/jojI+J8SsKrFAyuACrIELel+aVQLJnLvz2EGbS5Aa5shdufU8xrvLiFCyCSX8wx9i29+68iVKon2Zoaa49L7o=
+	t=1713450437; cv=none; b=m/1qikewJ+4mG055zm0Ke1+YNNYaLZj7nfvOB8GmDcM4kTZo/tvwpuCWygRInnG8nqnlbHtR/4otw/2LVV3H7C6kfz+3zv5MXYOugS41jxVKWPHxhiZRFRHqdl2TP4wAv39RcavsFFuBX3RNJv2GyFDfuxOdhqCO2WbKZlVYZYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713450434; c=relaxed/simple;
-	bh=Qq3qZUDiX+qVcrmtRiXkpIAVW4TFc7HS4hoqHhPDUsQ=;
+	s=arc-20240116; t=1713450437; c=relaxed/simple;
+	bh=n26bGGJNXdZkz4TRas8Z8PR3vR2k7ylQj5DGZP8ph5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RBWfeNxf0BTRxPn15H9yak7+9QMKdEHNmQUTdRf08jXvvUnJ1NyCl5bdTyvBJKBplU3QXNpUEr12Y+LnsPElof4+UZ2/6UaFMP7kRbOLmr/gcntgymSUHCP35EU0VEJLAfbne99oM3w2AukSt4fl/yA0G9k2TnMrrNTW+P11DTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=citmvoJC; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=RSUunUcpJ4DZFjuedkAt5jAdB2jYeSK60EV8fPcxNp7u7JimwPlM5v9b2CLwHF7sUdA6k8WzJs0Jol4agh/QmlOX3HN0NF+PNH1jJpdUNQ/tn8vt63IANKsWAOh1Qu7kVVOUXz/m9NTU0XiAkPwGOXehe6rO630ybyRF306Zp6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=K9MDlXGl; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="citmvoJC"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-349a35aba9dso167598f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:27:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="K9MDlXGl"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-343d32aba7eso184351f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713450431; x=1714055231; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713450434; x=1714055234; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pjYeEsui4m5xv1lGH5o6mH+W8BXsONKsbiY648bn26Q=;
-        b=citmvoJCHwNuL4C+DMYdoAfA7QLh9agRZiWdOsKZgN92U3eOrdWPu/uyj7zCQ5osxu
-         yIO1tsRAd1OIUntIy+c6wIl1MhLG2LLIEnnW91331Daxl+8V7KEe548cmtEvIukFdEax
-         to3LwDr+wx4toPxxoIhKrIyWxfDOs705z4Dsb8zJu9Y4rxPuqjwd8PDYSzfVHNws1hDU
-         1boA7MY9hhKbyTNK+p4+PBbhXxsdr5o1dhpkXyb4j491buMrVVIHTHH6Nj0v7kQF1l+g
-         2t3mbDF+fQX+vMSabHqXfmQszaVXWSkRnXCDdohkhk9OZZ+wHJArqTKjrFA0kKhcEh91
-         Y+nQ==
+        bh=m/abrO6aRdYSwYEiniLJTSjXDsMHpzNjwZUI0bHiQJI=;
+        b=K9MDlXGlRteIDLHFQYLS22vAZQ5DJHbVUSZgobSzh6f221PtEQGNsE2BT0kn379ra5
+         hMpM3gr/09Kmm7VCKfm96Q1IFHKN9RKg+gmb7kfMq9D5qYHPF9HJk2EQK+6r3In3Milq
+         MnMtNX791XrIOMBzAON8dVEd+7uwDwhCydWdNGEvVkuHoP4PNSZP85kWkTie96snTmpP
+         x/fmMsJNk8obEIbeb7IOWKP5M22NmFVB7PGey4f+WL/QRMOBYhFVzf4WQkn+oZJEb9G7
+         9GXc6qogXtAHbOdVbz9ChKbBmRQVOkwC1WO3DkM9DyVeGCRv1oA12e4GxCKqsRBPl32T
+         VTgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713450431; x=1714055231;
+        d=1e100.net; s=20230601; t=1713450434; x=1714055234;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pjYeEsui4m5xv1lGH5o6mH+W8BXsONKsbiY648bn26Q=;
-        b=PTIBYwhqpvcW+0SEF0YrX3yvFy188eb01TGE2ATq+6BM+1KhppNScQr5oyNt/WzdgM
-         4WBrB9GoBei0tt4iYgTaR3l/E6X69oBc1lBTGAMqXh5EK841C0zpRyKTABhMrBU1qDb/
-         WGYZMisJDtfeA4U862HVLPHB1luLUsG9UKUFCA80tErv64MHplkpMK5GhuKHhc0yODJI
-         ADx5FOSQFqRJvjcsRqmjdmk707qzFBJT2CacJaHIXPMaXqSj2TJV9jL5ZcXw9krPszWX
-         /SPPb6qBzvQx1ess9NaJ/w6oeTFx41ConfHnDxjbufK9VMklT4NFxv3ncYZE3Z+FNVQ4
-         vRkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwzNLItfYVq8RkLfyRVnJI2YiH3OFGJBIEOxETOtUSOGtbCD+lPcy3y7FOgJVeogzBl5rgotQeiWNlpM2Y0fcGqRevrls57ORB7QeT
-X-Gm-Message-State: AOJu0Yw/QSReUPzkv3Uh7X2AnFHWFo6VIWrO1ljMtE6JiNmCwS5yvO9y
-	Qe86aThZ2huXvvvxZ67ea5BfPvnQ3YTqJAWs0oJEE+hflJODarMAMeGvQ9kMisc=
-X-Google-Smtp-Source: AGHT+IFFwaascQCVwSoWuecZs0QNk4WI1qD1KbtUyisTXBvH15F7tw1GRlm2dKuVmVzvSHfB6Uh8Ag==
-X-Received: by 2002:a05:600c:3554:b0:416:7b2c:df05 with SMTP id i20-20020a05600c355400b004167b2cdf05mr2100856wmq.1.1713450431422;
-        Thu, 18 Apr 2024 07:27:11 -0700 (PDT)
+        bh=m/abrO6aRdYSwYEiniLJTSjXDsMHpzNjwZUI0bHiQJI=;
+        b=HQmKCeF/o6RiiD8SMnLk2j5kC5uIdXhzIgaxYC3I5QhMhad5fYcsxkrkZfYf0ItEll
+         zNbvwe+NvCLJ3aYwATkkfF1XH8lqri+nfH59iilg94OcvPP7cU+SVn5mdLGoHIoTDpQW
+         U9JSE3ZI/8fmqCw3XtnPI3HxfsEZM0arGmi0Fq7FPKrZgxp0YzF3+aGenI5m+iDIZcZI
+         wXQAwsEjKS36SurBDi3Q3JKukW9dqs6QMSyYp+YjmgyzQ83R9zwCAMTcPYWsLqES/9Vz
+         kuMPvfo6oFW2uXj+4uFsBWo9/N4ruRsPNaCvKLlTTDWTQQqHzEQJH2hgqTEiE0gCC2Bs
+         oWag==
+X-Forwarded-Encrypted: i=1; AJvYcCVJvrjd4v12crP8QTg0Uij+tVaBcrlXuHvd2Zl7bsIh6Zw5zZAYOTPYM4RkOhmFryCA1XdcLnvoeUbpaSgMYnwjGSBcryPfo6ltE8RV
+X-Gm-Message-State: AOJu0YyFXPFw66oU8vBQve5kNl2jgWVEXIFezY7iYCp/5d3Wng/srqrA
+	RrLa2N8G1L+AiTv3V4wnpAejY45KM1wEg7a/SvPijLst4rbF3Jdfd1VwIzpPeq0=
+X-Google-Smtp-Source: AGHT+IEkGDIAezbeIVZmmrT9rlRCJjcxopA8THm4S/C75RtVNLUvN35X394KK2J0KQ/iPXZ6II3FvA==
+X-Received: by 2002:a05:600c:4f8a:b0:418:f770:ba0 with SMTP id n10-20020a05600c4f8a00b00418f7700ba0mr505923wmq.0.1713450434242;
+        Thu, 18 Apr 2024 07:27:14 -0700 (PDT)
 Received: from carbon-x1.. ([2a01:e0a:999:a3a0:7b64:4d1d:16d8:e38b])
-        by smtp.gmail.com with ESMTPSA id v10-20020a05600c470a00b00418a386c059sm2873645wmo.42.2024.04.18.07.27.10
+        by smtp.gmail.com with ESMTPSA id v10-20020a05600c470a00b00418a386c059sm2873645wmo.42.2024.04.18.07.27.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 07:27:10 -0700 (PDT)
+        Thu, 18 Apr 2024 07:27:13 -0700 (PDT)
 From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
 To: Conor Dooley <conor@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -68,9 +68,9 @@ Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
 	kvm@vger.kernel.org,
 	kvm-riscv@lists.infradead.org,
 	Ved Shanbhogue <ved@rivosinc.com>
-Subject: [RFC PATCH 1/7] riscv: kvm: add support for FWFT SBI extension
-Date: Thu, 18 Apr 2024 16:26:40 +0200
-Message-ID: <20240418142701.1493091-2-cleger@rivosinc.com>
+Subject: [RFC PATCH 4/7] riscv: handle Ssdbltrp mstatus SDT bit
+Date: Thu, 18 Apr 2024 16:26:43 +0200
+Message-ID: <20240418142701.1493091-5-cleger@rivosinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240418142701.1493091-1-cleger@rivosinc.com>
 References: <20240418142701.1493091-1-cleger@rivosinc.com>
@@ -83,325 +83,172 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add support for FWFT extension in KVM
+When Ssdbltrp is enabled, we must take care of clearing SDT after
+sensitive phases are over to avoid generating a double trap. This
+is mainly about exceptions handling so clear SDT once we have
+saved enough information (critical CSRs) but also clears it during SATP
+mode detection which generates an "inline" trap and thus sets SDT
+implicitely.
 
 Signed-off-by: Clément Léger <cleger@rivosinc.com>
 ---
- arch/riscv/include/asm/kvm_host.h          |   5 +
- arch/riscv/include/asm/kvm_vcpu_sbi.h      |   1 +
- arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h |  37 ++++++
- arch/riscv/include/uapi/asm/kvm.h          |   1 +
- arch/riscv/kvm/Makefile                    |   1 +
- arch/riscv/kvm/vcpu.c                      |   5 +
- arch/riscv/kvm/vcpu_sbi.c                  |   4 +
- arch/riscv/kvm/vcpu_sbi_fwft.c             | 136 +++++++++++++++++++++
- 8 files changed, 190 insertions(+)
- create mode 100644 arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
- create mode 100644 arch/riscv/kvm/vcpu_sbi_fwft.c
+ arch/riscv/include/asm/csr.h  |  1 +
+ arch/riscv/kernel/entry.S     | 52 ++++++++++++++++++++---------------
+ arch/riscv/kernel/head.S      |  4 +++
+ arch/riscv/kernel/sse_entry.S |  4 +--
+ 4 files changed, 37 insertions(+), 24 deletions(-)
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 484d04a92fa6..be60aaa07f57 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -19,6 +19,7 @@
- #include <asm/kvm_vcpu_fp.h>
- #include <asm/kvm_vcpu_insn.h>
- #include <asm/kvm_vcpu_sbi.h>
-+#include <asm/kvm_vcpu_sbi_fwft.h>
- #include <asm/kvm_vcpu_timer.h>
- #include <asm/kvm_vcpu_pmu.h>
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 5528159b3d5d..905cdf894a57 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -17,6 +17,7 @@
+ #define SR_SPP		_AC(0x00000100, UL) /* Previously Supervisor */
+ #define SR_MPP		_AC(0x00001800, UL) /* Previously Machine */
+ #define SR_SUM		_AC(0x00040000, UL) /* Supervisor User Memory Access */
++#define SR_SDT		_AC(0x01000000, UL) /* Supervisor Double Trap */
  
-@@ -169,6 +170,7 @@ struct kvm_vcpu_csr {
- struct kvm_vcpu_config {
- 	u64 henvcfg;
- 	u64 hstateen0;
-+	u64 hedeleg;
- };
+ #define SR_FS		_AC(0x00006000, UL) /* Floating-point Status */
+ #define SR_FS_OFF	_AC(0x00000000, UL)
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 1591e0781569..07da91080839 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -49,23 +49,12 @@ SYM_CODE_START(handle_exception)
+ 	REG_S x5,  PT_T0(sp)
+ 	save_from_x6_to_x31
  
- struct kvm_vcpu_smstateen_csr {
-@@ -261,6 +263,9 @@ struct kvm_vcpu_arch {
- 	/* Performance monitoring context */
- 	struct kvm_pmu pmu_context;
+-	/*
+-	 * Disable user-mode memory access as it should only be set in the
+-	 * actual user copy routines.
+-	 *
+-	 * Disable the FPU/Vector to detect illegal usage of floating point
+-	 * or vector in kernel space.
+-	 */
+-	li t0, SR_SUM | SR_FS_VS
+-
+ 	REG_L s0, TASK_TI_USER_SP(tp)
+-	csrrc s1, CSR_STATUS, t0
+ 	csrr s2, CSR_EPC
+ 	csrr s3, CSR_TVAL
+ 	csrr s4, CSR_CAUSE
+ 	csrr s5, CSR_SCRATCH
+ 	REG_S s0, PT_SP(sp)
+-	REG_S s1, PT_STATUS(sp)
+ 	REG_S s2, PT_EPC(sp)
+ 	REG_S s3, PT_BADADDR(sp)
+ 	REG_S s4, PT_CAUSE(sp)
+@@ -77,6 +66,21 @@ SYM_CODE_START(handle_exception)
+ 	 */
+ 	csrw CSR_SCRATCH, x0
  
-+	/* Firmware feature SBI extension context */
-+	struct kvm_sbi_fwft fwft_context;
++	/*
++	 * Disable user-mode memory access as it should only be set in the
++	 * actual user copy routines.
++	 *
++	 * Disable the FPU/Vector to detect illegal usage of floating point
++	 * or vector in kernel space.
++	 *
++	 * Clear supervisor double trap bit as all trap context is saved and we
++	 * can handle another one
++	 */
++	li t0, SR_SUM | SR_FS_VS | SR_SDT
 +
- 	/* 'static' configurations which are set only once */
- 	struct kvm_vcpu_config cfg;
++	csrrc s1, CSR_STATUS, t0
++	REG_S s1, PT_STATUS(sp)
++
+ 	/* Load the global pointer */
+ 	load_global_pointer
  
-diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-index b96705258cf9..3a33bbacc233 100644
---- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-+++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-@@ -86,6 +86,7 @@ extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_srst;
- extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_hsm;
- extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_dbcn;
- extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_sta;
-+extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_fwft;
- extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_experimental;
- extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_vendor;
+@@ -123,15 +127,25 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+ #ifdef CONFIG_RISCV_M_MODE
+ 	/* the MPP value is too large to be used as an immediate arg for addi */
+ 	li t0, SR_MPP
+-	and s0, s0, t0
++	and t1, s0, t0
+ #else
+-	andi s0, s0, SR_SPP
++	andi t1, s0, SR_SPP
++#endif
++
++#ifdef CONFIG_RISCV_ISA_V_PREEMPTIVE
++	move a0, sp
++	call riscv_v_context_nesting_end
+ #endif
+-	bnez s0, 1f
++	/*
++	 * Restore STATUS now to set supervisor double trap bit which means that
++	 * from now on, we can not handle an exception up to "sret"
++	 */
++	csrw CSR_STATUS, s0
++	bnez t1, 1f
  
-diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h b/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
-new file mode 100644
-index 000000000000..7dc1b80c7e6c
---- /dev/null
-+++ b/arch/riscv/include/asm/kvm_vcpu_sbi_fwft.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2023 Rivos Inc
-+ *
-+ * Authors:
-+ *     Atish Patra <atishp@rivosinc.com>
-+ */
-+
-+#ifndef __KVM_VCPU_RISCV_FWFT_H
-+#define __KVM_VCPU_RISCV_FWFT_H
-+
-+#include <asm/sbi.h>
-+
-+#define KVM_SBI_FWFT_FEATURE_COUNT	1
-+
-+struct kvm_sbi_fwft_config;
-+struct kvm_vcpu;
-+
-+struct kvm_sbi_fwft_feature {
-+	enum sbi_fwft_feature_t id;
-+	int (*set)(struct kvm_vcpu *vcpu, struct kvm_sbi_fwft_config *conf, unsigned long value);
-+	int (*get)(struct kvm_vcpu *vcpu, struct kvm_sbi_fwft_config *conf, unsigned long *value);
-+};
-+
-+struct kvm_sbi_fwft_config {
-+	const struct kvm_sbi_fwft_feature *feature;
-+	unsigned long flags;
-+};
-+
-+/* FWFT data structure per vcpu */
-+struct kvm_sbi_fwft {
-+	struct kvm_sbi_fwft_config configs[KVM_SBI_FWFT_FEATURE_COUNT];
-+};
-+
-+#define vcpu_to_fwft(vcpu) (&(vcpu)->arch.fwft_context)
-+
-+#endif /* !__KVM_VCPU_RISCV_FWFT_H */
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index 7499e88a947c..fa3097da91c0 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -185,6 +185,7 @@ enum KVM_RISCV_SBI_EXT_ID {
- 	KVM_RISCV_SBI_EXT_VENDOR,
- 	KVM_RISCV_SBI_EXT_DBCN,
- 	KVM_RISCV_SBI_EXT_STA,
-+	KVM_RISCV_SBI_EXT_FWFT,
- 	KVM_RISCV_SBI_EXT_MAX,
- };
+ 	/* Save unwound kernel stack pointer in thread_info */
+-	addi s0, sp, PT_SIZE_ON_STACK
+-	REG_S s0, TASK_TI_KERNEL_SP(tp)
++	addi t1, sp, PT_SIZE_ON_STACK
++	REG_S t1, TASK_TI_KERNEL_SP(tp)
  
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index c9646521f113..19175bd5b40a 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -27,6 +27,7 @@ kvm-y += vcpu_sbi_base.o
- kvm-y += vcpu_sbi_replace.o
- kvm-y += vcpu_sbi_hsm.o
- kvm-y += vcpu_sbi_sta.o
-+kvm-y += vcpu_sbi_fwft.o
- kvm-y += vcpu_timer.o
- kvm-$(CONFIG_RISCV_PMU_SBI) += vcpu_pmu.o vcpu_sbi_pmu.o
- kvm-y += aia.o
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index b5ca9f2e98ac..461ef60d4eda 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -505,6 +505,8 @@ static void kvm_riscv_vcpu_setup_config(struct kvm_vcpu *vcpu)
- 		if (riscv_isa_extension_available(isa, SMSTATEEN))
- 			cfg->hstateen0 |= SMSTATEEN0_SSTATEEN0;
- 	}
-+
-+	cfg->hedeleg = csr_read(CSR_HEDELEG);
- }
+ 	/* Save the kernel shadow call stack pointer */
+ 	scs_save_current
+@@ -142,11 +156,6 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+ 	 */
+ 	csrw CSR_SCRATCH, tp
+ 1:
+-#ifdef CONFIG_RISCV_ISA_V_PREEMPTIVE
+-	move a0, sp
+-	call riscv_v_context_nesting_end
+-#endif
+-	REG_L a0, PT_STATUS(sp)
+ 	/*
+ 	 * The current load reservation is effectively part of the processor's
+ 	 * state, in the sense that load reservations cannot be shared between
+@@ -167,7 +176,6 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+ 	REG_L  a2, PT_EPC(sp)
+ 	REG_SC x0, a2, PT_EPC(sp)
  
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-@@ -521,6 +523,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	csr_write(CSR_VSTVAL, csr->vstval);
- 	csr_write(CSR_HVIP, csr->hvip);
- 	csr_write(CSR_VSATP, csr->vsatp);
-+	csr_write(CSR_HEDELEG, cfg->hedeleg);
- 	csr_write(CSR_HENVCFG, cfg->henvcfg);
- 	if (IS_ENABLED(CONFIG_32BIT))
- 		csr_write(CSR_HENVCFGH, cfg->henvcfg >> 32);
-@@ -551,6 +554,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-+	struct kvm_vcpu_config *cfg = &vcpu->arch.cfg;
+-	csrw CSR_STATUS, a0
+ 	csrw CSR_EPC, a2
  
- 	vcpu->cpu = -1;
+ 	REG_L x1,  PT_RA(sp)
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 4236a69c35cb..bcc2b6678f40 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -106,6 +106,10 @@ relocate_enable_mmu:
+ 	csrw CSR_SATP, a0
+ .align 2
+ 1:
++	/* A trap potentially set the SDT flag, clear it */
++	li t0, SR_SDT
++	csrc CSR_STATUS, t0
++
+ 	/* Set trap vector to spin forever to help debug */
+ 	la a0, .Lsecondary_park
+ 	csrw CSR_TVEC, a0
+diff --git a/arch/riscv/kernel/sse_entry.S b/arch/riscv/kernel/sse_entry.S
+index d3c7286f3372..e69d386e36e9 100644
+--- a/arch/riscv/kernel/sse_entry.S
++++ b/arch/riscv/kernel/sse_entry.S
+@@ -65,7 +65,7 @@ SYM_CODE_START(handle_sse)
+ 	REG_S a4, PT_SP(sp)
  
-@@ -574,6 +578,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 	csr->vstval = csr_read(CSR_VSTVAL);
- 	csr->hvip = csr_read(CSR_HVIP);
- 	csr->vsatp = csr_read(CSR_VSATP);
-+	cfg->hedeleg = csr_read(CSR_HEDELEG);
- }
+ 	/* Disable user memory access and floating/vector computing */
+-	li t0, SR_SUM | SR_FS_VS
++	li t0, SR_SUM | SR_FS_VS | SR_SDT
+ 	csrc CSR_STATUS, t0
  
- static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index 72a2ffb8dcd1..76901f0f34b7 100644
---- a/arch/riscv/kvm/vcpu_sbi.c
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -74,6 +74,10 @@ static const struct kvm_riscv_sbi_extension_entry sbi_ext[] = {
- 		.ext_idx = KVM_RISCV_SBI_EXT_STA,
- 		.ext_ptr = &vcpu_sbi_ext_sta,
- 	},
-+	{
-+		.ext_idx = KVM_RISCV_SBI_EXT_FWFT,
-+		.ext_ptr = &vcpu_sbi_ext_fwft,
-+	},
- 	{
- 		.ext_idx = KVM_RISCV_SBI_EXT_EXPERIMENTAL,
- 		.ext_ptr = &vcpu_sbi_ext_experimental,
-diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/vcpu_sbi_fwft.c
-new file mode 100644
-index 000000000000..b9b7f8fa6d22
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2021 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/kvm_host.h>
-+#include <asm/sbi.h>
-+#include <asm/kvm_vcpu_sbi.h>
-+#include <asm/kvm_vcpu_sbi_fwft.h>
-+
-+#define MIS_DELEG (1UL << EXC_LOAD_MISALIGNED | 1UL << EXC_STORE_MISALIGNED)
-+
-+static int kvm_sbi_fwft_set_misaligned_delegation(struct kvm_vcpu *vcpu,
-+					struct kvm_sbi_fwft_config *conf,
-+					unsigned long value)
-+{
-+	if (value)
-+		csr_set(CSR_HEDELEG, MIS_DELEG);
-+	else
-+		csr_clear(CSR_HEDELEG, MIS_DELEG);
-+
-+	return SBI_SUCCESS;
-+}
-+
-+static int kvm_sbi_fwft_get_misaligned_delegation(struct kvm_vcpu *vcpu,
-+					struct kvm_sbi_fwft_config *conf,
-+					unsigned long *value)
-+{
-+	*value = (csr_read(CSR_HEDELEG) & MIS_DELEG) != 0;
-+
-+	return SBI_SUCCESS;
-+}
-+
-+static struct kvm_sbi_fwft_config *
-+kvm_sbi_fwft_get_config(struct kvm_vcpu *vcpu, enum sbi_fwft_feature_t feature)
-+{
-+	int i = 0;
-+	struct kvm_sbi_fwft *fwft = vcpu_to_fwft(vcpu);
-+
-+	for (i = 0; i < KVM_SBI_FWFT_FEATURE_COUNT; i++) {
-+		if (fwft->configs[i].feature->id == feature)
-+			return &fwft->configs[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static int kvm_sbi_fwft_set(struct kvm_vcpu *vcpu,
-+			    enum sbi_fwft_feature_t feature,
-+			    unsigned long value, unsigned long flags)
-+{
-+	struct kvm_sbi_fwft_config *conf = kvm_sbi_fwft_get_config(vcpu,
-+								   feature);
-+	if (!conf)
-+		return SBI_ERR_DENIED;
-+
-+	if ((flags & ~SBI_FWFT_SET_FLAG_LOCK) != 0)
-+		return SBI_ERR_INVALID_PARAM;
-+
-+	if (conf->flags & SBI_FWFT_SET_FLAG_LOCK)
-+		return SBI_ERR_DENIED;
-+
-+	conf->flags = flags;
-+
-+	return conf->feature->set(vcpu, conf, value);
-+}
-+
-+static int kvm_sbi_fwft_get(struct kvm_vcpu *vcpu,
-+			    enum sbi_fwft_feature_t feature,
-+			    unsigned long *value)
-+{
-+	struct kvm_sbi_fwft_config *conf = kvm_sbi_fwft_get_config(vcpu,
-+								   feature);
-+	if (!conf)
-+		return SBI_ERR_DENIED;
-+
-+	return conf->feature->get(vcpu, conf, value);
-+}
-+
-+static int kvm_sbi_ext_fwft_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
-+				    struct kvm_vcpu_sbi_return *retdata)
-+{
-+	int ret = 0;
-+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-+	unsigned long funcid = cp->a6;
-+
-+	switch (funcid) {
-+	case SBI_EXT_FWFT_SET:
-+		ret = kvm_sbi_fwft_set(vcpu, cp->a0, cp->a1, cp->a2);
-+		break;
-+	case SBI_EXT_FWFT_GET:
-+		ret = kvm_sbi_fwft_get(vcpu, cp->a0, &retdata->out_val);
-+		break;
-+	default:
-+		ret = SBI_ERR_NOT_SUPPORTED;
-+		break;
-+	}
-+
-+	retdata->err_val = ret;
-+
-+	return 0;
-+}
-+
-+static const struct kvm_sbi_fwft_feature features[] = {
-+	{
-+		.id = SBI_FWFT_MISALIGNED_DELEG,
-+		.set = kvm_sbi_fwft_set_misaligned_delegation,
-+		.get = kvm_sbi_fwft_get_misaligned_delegation,
-+	}
-+};
-+
-+static_assert(ARRAY_SIZE(features) == KVM_SBI_FWFT_FEATURE_COUNT);
-+
-+
-+static unsigned long kvm_sbi_ext_fwft_probe(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_sbi_fwft *fwft = vcpu_to_fwft(vcpu);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(features); i++)
-+		fwft->configs[i].feature = &features[i];
-+
-+	return 1;
-+}
-+
-+const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_fwft = {
-+	.extid_start = SBI_EXT_FWFT,
-+	.extid_end = SBI_EXT_FWFT,
-+	.handler = kvm_sbi_ext_fwft_handler,
-+	.probe = kvm_sbi_ext_fwft_probe,
-+};
+ 	load_global_pointer
+@@ -131,8 +131,8 @@ SYM_CODE_START(handle_sse)
+ 
+ SYM_INNER_LABEL(ret_from_sse, SYM_L_GLOBAL)
+ 	/* Restore saved CSRs */
+-	csrw CSR_SSCRATCH, s4
+ 	csrw CSR_SSTATUS, s5
++	csrw CSR_SSCRATCH, s4
+ 
+ #ifdef CONFIG_FRAME_POINTER
+ 	/* Frame pointer is created only when kernel is interrupted */
 -- 
 2.43.0
 
