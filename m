@@ -1,160 +1,210 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2011.outbound.protection.outlook.com [40.92.99.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B3A15F322;
-	Thu, 18 Apr 2024 13:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713446421; cv=fail; b=CQgmLM6/U8N06ujmArpjaNwrWTJPGG1MdvGRDdxkjVJ5BD1Jd1pemjvXcgIqjDh5uq7aqf8NiDTtOD94VdEqeI4XDq4eGWp4DEV832czSfsZw0PfWgI5BoSeNb70Xopng8RLuHevagjEwWw+6/FkcfkX3xfVR+QYxJhixX7KKlI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713446421; c=relaxed/simple;
-	bh=WhODe3gufWWOOpfzoyXcjR7gT/5DIFACrmbIGE3uSU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZIIj0SJsXIkH6fTgMGwY3JoGt5b0NmRaeypfY2xFSJKX8yI/EGDLNF6l5EVyyu+DTjcNW4JMXXQ/fAG3OX/rndzrDfJxcyi7QvGXtyfWCSqaKxSKUAyh0b9GSHLYB2Zk5S+ZrzGJTpvzZ8JfhLIMugBsk9j1m+P9ZyW036T0wqg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=C1QKe2CD; arc=fail smtp.client-ip=40.92.99.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B58C16078C
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713446429; cv=none; b=k+qGDiiCh98A+D55ogzSsnUxWRPQ6/kuNwY1Gg/y46oUjLM6EqigGXJns1lSlNmTr8ldn5wcnqD9BbyI3Lgsn6TSBg/6DoaYCXqJ8fcsNr4Oxpl9fw1tlDWN7uhyHoIOMBqsvIaiN+dg0XbZpOCNSebUsIKtBbhK7tTLYo3b9iw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713446429; c=relaxed/simple;
+	bh=Ij0WftYV/5ZMg5fO9jgZuOZnGI9lrIxnyxWRy7o1chQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UKq6qvZWZGmsRJkJKqZyLJGB8w4U58NZdMH9x/5k2qz9YFZtN8x+4fT32EwwxQTI6pbKgY/4BrbLIFrvA79PBMmCEujw1Tc9+GMOYDZzqNjsAaIcWIFGAtIQV7QGKIcm+v0cecvzpUMZSTQQTs+JySwI7/6lGC+MtvoPgDqlzGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hI9W2kT7; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="C1QKe2CD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DFYNeLxUFKhvHsA6tW8NDS3s3IKD38SwH9/gSeOqAkrHotz0iQ0B8slLAUByZTbU2+Xvp672MYree1wsJ3C8hqQjHJMJxLfGoiF0Aj5nFzmYg5aDXL+Mz2lUjYEULfEuN0HMXInT01sQSCt4JrhDsk2Ev8Nq69/uiGRhIPWyk6QELeP0F6VZFuO/QQukYCEuaSf8Xza8DZ+Y0Mp45LTnStv6YRzE5QvPSynbvlyHd+b+Vv67eGGrpCQPoFqaCtOVRIAeGtEbZXyh1N84kX9nZe2Qy9tTJ1cY2KjcQz6sRtHGrauERnDEuchICa2L1MctT/w3lO8xBSxQbq3A0/yNFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BJRnX7h9ubQ22I7OrKHbSgjtvd/KLvo7Ahw2L6hSxl0=;
- b=edF+ayNPzBVpzInHtm9E79II349xEw57GYbgpzhbHQyXCfZrnJiS7sK9ayY7EP5+lyRCdh2EmAaYq2XUuBeerHyx0WeE7yxbNFmI+MZiUzlhZjMMtND7JCpmq6c5l33d1DjbCokBK0qUzvuZBpNZmEhF7asO7PneIPoGN/kCP+QsIzWwYQ72nvZ6mqt7Chr34oZo9ByXwKxGcnEMsVFtOqU5ssFp5obE2PwevsIlFfISaffSteI8wnux3QwH1q3nmbi9rkBBkWgTCpPBMGbB5l/tQan/GNv4zXLmg9P3/Ue6gSXNT6GAcmSaMWJ5WTwGKZ6Y023w/L0qcINGILEbJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BJRnX7h9ubQ22I7OrKHbSgjtvd/KLvo7Ahw2L6hSxl0=;
- b=C1QKe2CDXEbQIGoSHrjBjwC76eU1M6kKRKK9+3vEY25BkEhji6Rb8L9gHF8T/YMzhGgBBhn5wrYu+UyxrXM6eHdEykCpnXV01D7JTIEEv/ygaKpHXGRvuwSz4zFvdKsrph+ufFQ11PgDRXct4vFoG7fEG56veBbZGqxmIlhLWIRJvjginwP0F6UeeY1Hu3z4GvkAAYzcwEQjjOtzVUZzLBtp4XhBuWu8hhx9am+kMgRP5pRZ4zB3kVG59q5OjKQR0b5VMe8ss03j7kZBrjYRdr3Sl6R7g+XwR4gJeiCdcL7t1pwHAUdUxcf+FENKL6GlHfZONNMd6wbj1M31h5kLmg==
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:209::11)
- by TYWP286MB2794.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:23d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Thu, 18 Apr
- 2024 13:20:17 +0000
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8]) by TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8%4]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
- 13:20:17 +0000
-From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-To: sbinding@opensource.cirrus.com
-Cc: david.rhodes@cirrus.com,
-	james.schulman@cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	ArcticLampyrid <ArcticLampyrid@outlook.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3 2/2] ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
-Date: Thu, 18 Apr 2024 21:20:06 +0800
-Message-ID:
- <TYCP286MB25359B61BB685A4B3110BB44C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <TYCP286MB25357A4599E935F26A8AAB24C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-References: <TYCP286MB25357A4599E935F26A8AAB24C40E2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [l0sJwAMOLHFq6BML0NSJEaIBTgXAVtynt8Dodmh2D5Wv5Sk4yCKIEg==]
-X-ClientProxiedBy: TYCP286CA0065.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:31a::6) To TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:209::11)
-X-Microsoft-Original-Message-ID:
- <20240418132006.32013-1-ArcticLampyrid@outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hI9W2kT7"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5aa28cde736so511763eaf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713446426; x=1714051226; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kv/eRlfqI9fnVJrlsdInFKVMVhQmcxt9AimltQ38bU4=;
+        b=hI9W2kT7VEnNzepqozO6CsirkQ87gJT6BbCrodwmQQVbLuVDsUJiKI3tykUM+HP9S/
+         eed/NaEkNHh98ebwISsdFegj5BfJ/0evAevx4fqGvdtEWP9SLJ37AaVOTYZxk9AeCMuW
+         rWKXaHY6mqr7ZU2YOopgr0+uyjh4+9fVu/6+fY19xw7h+KIvkcaQ0hlLhCJe0LpM7oiS
+         rdi7eKufPWOhtCqaERieSSJxr+aSPStPlWT7sGo7cVTBpLJmkD6mdDnUkHD5LnLeupD/
+         YgLLYz9ogrq1UkWYu1zryJDjZd7ISd84phdqd07AG3DpP/LDSWuyXtgxRijsnZK5eC1h
+         yOlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713446426; x=1714051226;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kv/eRlfqI9fnVJrlsdInFKVMVhQmcxt9AimltQ38bU4=;
+        b=RV+QBS5MwJZiZ8LyEoU3yH1k2B8VX4uLz0BkHXiVaC1Z+NmWsGTCWcrRjlUf+MK/RR
+         E/DsZyP7fRqGEJNXKsTUXqGx8DtOvYm2yYSFjz071LS+n7GV8NHQ5Q93y5Jb0bgMnn3n
+         SmLqIkzUW2DiuVo3SBngfFDS/ku7NKV4zyyaZA2yi58aZhEy00dnW4+KzC3l2wzcpVz0
+         EorzRgZBo5yRid6E8RiUrOLKaJO8yXHiKX5LeOZLAwfPM8iHBkcFOM1QBiICV0Nz3e62
+         TqACb0MD8N2g/RWqhRBe3WvMqRo5/IyZsoBFdul6uAVH7gMTKCaHScLcUAeMKeAvpOIy
+         EVgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJd0ziHxd31OZhmwunhAR/mE8wpcDQeVG7HSIIEZJU4YFqwiI6/4PfcsUenWL5lk29yorg7HhUD1svNHn9RjlByMYYmgei4c4gHi4s
+X-Gm-Message-State: AOJu0Yz2UVM2K7/yjBLCJEkpxTEQqsur9XsJMltE5AmhGo4JetwFuuJe
+	6rMRgFhJMuHlixwfy6bd9/+oibsIjsusVCS2243BicJsJIxyFFTdTH+IBp1EtlBEvCReGmkrUt+
+	cYjaNWlk7eYN+FfH+3I2Dz1Au0zGRiHZ1kCV+3A==
+X-Google-Smtp-Source: AGHT+IHb/MdViNDEYLGDlZta2cUpYEdAdq/Zq5yJhTp7tH/XZ2cMCev0RXDqyzn43o1+A8jwrKM5rxrFUIw8Q5yDYVo=
+X-Received: by 2002:a4a:ac89:0:b0:5aa:676e:9ad9 with SMTP id
+ b9-20020a4aac89000000b005aa676e9ad9mr3474499oon.2.1713446426269; Thu, 18 Apr
+ 2024 06:20:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCP286MB2535:EE_|TYWP286MB2794:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4eb2a7dd-a04b-4c29-272a-08dc5faa49d5
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	N70CgTSviV9WdkHcMTeSzzKK1N1LBiE/yAk+CdSC9I6xPdyFrxbZaUodIov2wqI0tfHRrFbGm60u3H57gHsg4HO9g8PAdJ3lIAYC0NBg2eDXmeJ2kAG2MZ7FtvblgX0fBiPbzX5687ct0cUs57olXTQPhx5u/O3g3ppDSi9xnonHyoVccJDZKBYFEO5tqDgdNj5sFsWfQ2jZEMs+7mwOWKJ5PTuACxDU6KSAYn4zOLCeNLH4ereTCsrwNGbkGSKPxCJA4La9i/IYJ713sRUD3fDfqlBgE96p0BIrh0QKRvgYLx0IlGxxawKkaavj/kHb7BD3gBT1dPMlad3CJj44cELhRoa9wzfjs4YK+fGUbnjlYlEvcoaRWlH8YJgQnSy4IhaJBU1MT60yODYg+zZuee9XBJ0b2SdGSbtUyzWNnqbU1Gn5juSVf4DJBJTptnQI0MFdoBqgGYsj7XUNPoTFXQf8kAh0ANthdfWYicAQGQoZgspqnMmeUQEEVtzoF4haoyQZWFOMk6fSXP0B9erzdM4WTetoEiU0dHBpKEm+2BRFNo2GrOEVWbEeG0tqCk8wlwQ4MGwBWUYpnuCsQxwNRAcmv6N03fR19TnrqTxCp9U=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aAsa638dkhHrUlgZM8+YrYIKK2+QlOV8RG0KnrJH7NAKk8h2mdiP8U/d7E3U?=
- =?us-ascii?Q?tISfsDR6N8uQdYr1zu1op0fn8i1SKLWdStG6glx5vszCvk/KCSOQe6uYJCjX?=
- =?us-ascii?Q?P6F+w6oEe/agdxOhULXqhblsBjThTbnX3/Rz/mfsUs1fajyBWdhVZm/ieEx3?=
- =?us-ascii?Q?3y47C8w/IYS6bvFRbzuwt8y+kbtsliSdOkERv+eWRqxRfJtM/A2wyJPd9Ol9?=
- =?us-ascii?Q?DA5pxgpAzS1MWwC6XRMP8fBkNoIcHz+Q1YTZhjV8Jka6wFYF0XhbZumKhisD?=
- =?us-ascii?Q?7cTsHGR0yQMeneeGRVeapEyduIGjHtW+ZE4sOQDGudYmRmw6t8xnvhye6CJ1?=
- =?us-ascii?Q?6UabspU+3z6QfGfI7Gsbe840ZOgr2kZv2iOwxtuSvuzbFngY8v1LiOE3emSL?=
- =?us-ascii?Q?If27LIxOtcueHvq5Dd9tntBRuVD0Ya88ukj7ifoIpXdzNLM65pwg+1sVFEYp?=
- =?us-ascii?Q?1LzCeZaXVkmU6mwkjvbRaNNrU9L59u8lxXTwqohljUBAq9umoCwAJoRucw2l?=
- =?us-ascii?Q?RJiHU8wO07XGEqJZ/7pecZXQuUvOXDZhXmZY9mfTDBj7CNZd2OjEPRNeAAoU?=
- =?us-ascii?Q?NCxTDytUNBs/weoVrdufQ5vPw4Kt3l62copnuxrD51ernRX39lLE6KHnR9El?=
- =?us-ascii?Q?hFUasVVCX7YqgbDgB9ffbnnuvYZQuiTtqLNuRVKVfZnW3/QDid8mzIiWI6OQ?=
- =?us-ascii?Q?gA1KR663s8A9nnZ4GA7LSFqqKvM4BTXmgdKT0S1e8/LuNV5yV2ZfUJX8UFMC?=
- =?us-ascii?Q?3JC9uEm104Yzw0HyXTy8ogbIZUz5FR9BmuxSW6DqaPd1pStAZw9cb3mna6ho?=
- =?us-ascii?Q?MATA9fPVI5zwdnI7Rcl4jJ6/hKBcsMRL/OSeGm2E4MQqewwHZLL02iAwbUTm?=
- =?us-ascii?Q?5IhsGUk3S1zh4uSs4JNrzPRqqSJCPgneiOXcofm2W/Fva5GZwNPUFeNYQLyt?=
- =?us-ascii?Q?x1+9uCa+AioA0A5aAWdLaLar0UlSM/vjJQxY74xPcfSK/F1iaUj3kmxgy3C9?=
- =?us-ascii?Q?3sYiPCiZ8VQmm/3VZ2vYx0FwcJFmJCYUyxOF1fnSSMPlfdRfur/3FK8Mbjos?=
- =?us-ascii?Q?2UkI75J+4QaiGc7+lxfsZyHLS5TPIwX1K3rAdRLFQ+wHEdtF7oqzLumDLSEa?=
- =?us-ascii?Q?RHzRG65hKoAm96Hwx/N7Wibvy5OrP+fxRqI7hwruqbsPo+usTZw9p0ogQs3q?=
- =?us-ascii?Q?6bxwtRTczAj3DxO5He1par1ndv2ZKx1m7wdameO1wgtkKCYioCPuGoyoQjBM?=
- =?us-ascii?Q?DyxbA44ect51NwN9PTjpqZMpTboPu5CnOPmO3qc8iw=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eb2a7dd-a04b-4c29-272a-08dc5faa49d5
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 13:20:17.0182
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB2794
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
+ <20240404122559.898930-8-peter.griffin@linaro.org> <4ed72378-672e-46d6-9f29-fa118f598739@kernel.org>
+In-Reply-To: <4ed72378-672e-46d6-9f29-fa118f598739@kernel.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Thu, 18 Apr 2024 14:20:15 +0100
+Message-ID: <CADrjBPpaR86R6FMwMqos7ojVfDpGxS=ygW50UBCy1DTsoXHJgQ@mail.gmail.com>
+Subject: Re: [PATCH 07/17] arm64: dts: exynos: gs101: Add ufs, ufs-phy and ufs
+ regulator dt nodes
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org, 
+	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
+	s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
+	martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
+	linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
+	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-This fixes the sound not working from internal speakers on
-Lenovo Legion Y9000X 2022 IAH7 models.
+Hi Krzysztof,
 
-Signed-off-by: ArcticLampyrid <ArcticLampyrid@outlook.com>
-Cc: <stable@vger.kernel.org>
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- sound/pci/hda/patch_realtek.c        | 1 +
- 2 files changed, 3 insertions(+)
+Thanks for your review feedback.
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 8fb688e41414..ee195737d388 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -109,6 +109,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
- 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "10433A60", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-+	{ "17AA386E", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
- 	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
- 	{ "17AA3877", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA3878", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
-@@ -500,6 +501,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431F1F", generic_dsd_config },
- 	{ "CSC3551", "10431F62", generic_dsd_config },
- 	{ "CSC3551", "10433A60", generic_dsd_config },
-+	{ "CSC3551", "17AA386E", generic_dsd_config },
- 	{ "CSC3551", "17AA386F", generic_dsd_config },
- 	{ "CSC3551", "17AA3877", generic_dsd_config },
- 	{ "CSC3551", "17AA3878", generic_dsd_config },
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index cdcb28aa9d7b..ac729187f6a7 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10382,6 +10382,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
- 	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6", ALC287_FIXUP_LEGION_16ITHG6),
- 	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
-+	SND_PCI_QUIRK(0x17aa, 0x386e, "Legion Y9000X 2022 IAH7", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x386f, "Legion 7i 16IAX7", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7", ALC287_FIXUP_YOGA7_14ARB7_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x3877, "Lenovo Legion 7 Slim 16ARHA7", ALC287_FIXUP_CS35L41_I2C_2),
--- 
-2.44.0
+On Fri, 5 Apr 2024 at 08:53, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On 04/04/2024 14:25, Peter Griffin wrote:
+> > Enable the ufs controller, ufs phy and ufs regulator in device tree.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  .../boot/dts/exynos/google/gs101-oriole.dts   | 17 +++++++++
+> >  arch/arm64/boot/dts/exynos/google/gs101.dtsi  | 35 +++++++++++++++++++
+>
+> If you wish you can split DTSI and DTS into separate patches. Up to you.
 
+Thanks for the heads up
+>
+> >  2 files changed, 52 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> > index 6be15e990b65..986eb5c9898a 100644
+> > --- a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> > +++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> > @@ -53,6 +53,14 @@ button-power {
+> >                       wakeup-source;
+> >               };
+> >       };
+> > +
+> > +     ufs_0_fixed_vcc_reg: regulator-0 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "ufs-vcc";
+> > +             gpio = <&gpp0 1 0>;
+>
+> Use defines for GPIO flags,
+
+Will fix in v2
+
+> but more important: are you sure this is not
+> coming from a PMIC? What's the voltage? It looks like a stub for missing
+> PMIC, because UFS voltages are usually provided by PMIC.
+
+UFS vcc is 1.2v. The gpio signal from gs101 SoC is called BOOTLD0, and
+it is connected to slave pmic (S2MPG11) UFS_EN signal which is a gpio
+enabled voltage rail for UFS (LDO8S).
+
+The downstream driver code declares the UFS supply as regulator-fixed
+even though it has a fully featured regulator driver for the pmic,
+with the LDO8S regulator exposed. Checking the DT for the pmic the min
+and max volt are different, so using regulator-fixed seems wrong for
+downstream.
+
+s_ldo8_reg: LDO8S {
+    regulator-name = "S2MPG11_LDO8";
+    regulator-min-microvolt = <1127800>;
+    regulator-max-microvolt = <1278600>;
+    regulator-always-on;
+    regulator-initial-mode = <SEC_OPMODE_SUSPEND>;
+    channel-mux-selection = <0x28>;
+    schematic-name = "L8S_UFS_VCCQ";
+    subsys-name = "UFS";
+ };
+
+So I think you're correct this is a stub pending full pmic support. I
+propose in v2 to add a comment similar to what we have in
+exynos850-e850-96.dts today above the regulator-fixed node like /*
+TODO: Remove this once PMIC is implemented  */?
+
+regards,
+
+Peter.
+
+
+
+
+>
+> > +             regulator-boot-on;
+> > +             enable-active-high;
+> > +     };
+> >  };
+> >
+> >  &ext_24_5m {
+> > @@ -106,6 +114,15 @@ &serial_0 {
+> >       status = "okay";
+> >  };
+> >
+> > +&ufs_0 {
+> > +     status = "okay";
+> > +     vcc-supply = <&ufs_0_fixed_vcc_reg>;
+> > +};
+> > +
+> > +&ufs_0_phy {
+> > +     status = "okay";
+> > +};
+> > +
+> >  &usi_uart {
+> >       samsung,clkreq-on; /* needed for UART mode */
+> >       status = "okay";
+> > diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > index 608369cec47b..9c94829bf14c 100644
+> > --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > @@ -1277,6 +1277,41 @@ pinctrl_hsi2: pinctrl@14440000 {
+> >                       interrupts = <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH 0>;
+> >               };
+> >
+> > +             ufs_0_phy: phy@17e04000 {
+> > +                     compatible = "google,gs101-ufs-phy";
+> > +                     reg = <0x14704000 0x3000>;
+> > +                     reg-names = "phy-pma";
+> > +                     samsung,pmu-syscon = <&pmu_system_controller>;
+> > +                     #phy-cells = <0>;
+> > +                     clocks = <&ext_24_5m>;
+> > +                     clock-names = "ref_clk";
+> > +                     status = "disabled";
+> > +             };
+> > +
+> > +             ufs_0: ufs@14700000 {
+> > +                     compatible = "google,gs101-ufs";
+> > +
+>
+> Drop blank line.
+>
+> > +                     reg = <0x14700000 0x200>,
+> > +                           <0x14701100 0x200>,
+> > +                           <0x14780000 0xa000>,
+> > +                           <0x14600000 0x100>;
+>
+>
+> Best regards,
+> Krzysztof
+>
