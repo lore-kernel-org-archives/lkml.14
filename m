@@ -1,88 +1,129 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5CC16EC02;
-	Thu, 18 Apr 2024 16:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73662171648;
+	Thu, 18 Apr 2024 16:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713459034; cv=none; b=bluiPUY8IVcX4jZjFHzy7CWk7rg4LeNH0IAWYkfK9bJr+vpNHuWVas5OJ1KBFfZVPETWRTZCw+NBRLbkr9saC/Wv89qbjlFdhEymcCYmV08b4nLqYEU0GO+UMVaw8fuscp11Puo66PqioHOHlHrEaq84KtVQTU4YMcR74NtxFhE=
+	t=1713459132; cv=none; b=pdnMfKDRut+ZjBFst9FFSB11IX0kCVsF6J8+ggKDE6QM/kc3/eh0NlMlUI65O3Uz1UA6QwMlWuH6o7Vlnb5uUjiPspk0i9dEMowBxw/Q4FT+PausYEplm2pdX61ad4mPU9TnKjMM38qUr//N7Cisy5L1jgroXTLH4KjeateEykg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713459034; c=relaxed/simple;
-	bh=gA7kr3P8rammQuVG8J+GOuRW2Trrize3tToG0qF1s44=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nP5aO6KdlUsujVQyFM725TTCIiEfo0pXrXEcUnFx5eh6PRwNxtm8M6TG3M00AYtNanPlvNyjyettbadHe/5adD5p57kdNVMvEdSBAEgPjyj92H5bp7TOmD0Z2XQPLneeUaWpBwY6XWMN7fvfhpuZujhkUJG6TMPMYXlly6BQkfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUY9ASaY; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713459132; c=relaxed/simple;
+	bh=/0uuLjjYWxSxyb5NnVn+FuSGipT7WnI35hM/uEhelXE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aVMW2bn+Pz9ju3FH3suoAPhrV1bVWRK1wCBybBaOHfBU4Iy+R2cYQ0PEB9I2A16qqxmyesWt6kBfd6syzsGZMWzKMPBUB2cfrP3hHy389CU+Hd+zlPdbYN3Nlmyu/wq5ge1Dyo7IsjWFovQPjfYPPy60YAbOQ0cR/jBSTe4lR2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GANkhwYJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUY9ASaY"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-418c1920313so9301055e9.1;
-        Thu, 18 Apr 2024 09:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713459031; x=1714063831; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gA7kr3P8rammQuVG8J+GOuRW2Trrize3tToG0qF1s44=;
-        b=iUY9ASaYi1OjXSdCHzq/+uPyCutSh1oIn7jNO4wtf8hmBqN1OSW3gvzSSE+UFqMd42
-         yMne/Fz7Oa0jJDa8rgNxVwzv4Ls2gVcRCgHe0+DGTSYfeEilJGfJ+jn9N2fld6SZF5y8
-         ckFNxEyEZ9eWMmqE93yC9HlTh+Vdt91SXMBpt/A+k2+OSbjHAAcDeapK+Lne4cz+3vUv
-         4r+D4xQbBYsICEC/iaStA0wXmLd6P7ITd6ftOI3sM/OW+ec7nqA8gKROUVSp6reVt8Oe
-         txN14lkpd1h1AKxBQPVo/77rQ61ixRK4p7J3WPaOKZuFOtHnKVHkBPTRlm1MVZ+1tQ/9
-         9XIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713459031; x=1714063831;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gA7kr3P8rammQuVG8J+GOuRW2Trrize3tToG0qF1s44=;
-        b=axz0NWSrpYkcGgsTC6H6pJsDg2ze5g5Uq70pb0Ltkv+afuAL2cPKKcSER2aPlLpdYT
-         5Ujf9Kg3DEtebHC5F1ilY3lPNA1FZo7erj8bEuk1ramRWdyfOUZWMu5basujpT45gERC
-         3/0uh1+4rRgkW0VdhFgnI3Uh+L1dVqJH+u6zROYQoOG1OgO401cUlhV76uC+0JOiUoKy
-         /DRBlqq5vqZlFV6f03IvVdq9onUUizTHcRBYBhP1TmF2LUITTPK/vnl0C1aagNC4aLPP
-         0S76/SI65xYxS0XlHgUkfEOmE+8S+UHqVcD1LKYDmwljhTF6EH2xgTq0VaSHJIbIpGUD
-         oC7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVHB+511C1iQsayb8qEPiaTn9NKmRHsHw/sa4tJqC+zdLfp1tozw7OJQ8amKnv1qTEz5/j1QlglTPtI/6FRU1XIf7EClPPGLQQ4b5U14wtSIFJC2zyJtAGTNCtn/opJQFgdutu/DEwkiruTy+hhnrF7YpC2BARPHyU9fco8VShBzBo8x+4IGmBprz0YZI5qfgxvQ3BLip0r4yp3Qf+Dv2g=
-X-Gm-Message-State: AOJu0YxGxMX3sYSMf7J27WJqB/4YccK1b66qgj0Gj0AhTS3nulCi7b8N
-	dT+Zd7M5ouCh8+0qsIsumajm5Ie3yUx0IhBBrPSsnSt7yg94tD4K
-X-Google-Smtp-Source: AGHT+IHMfj38JoZUDpClMWDwQ5C3bc7yi/tNoR0G8uDumFXmFP2ZjAKxHbWtJ3fy5o0rdm/ner2vrg==
-X-Received: by 2002:a5d:4082:0:b0:346:305c:b0eb with SMTP id o2-20020a5d4082000000b00346305cb0ebmr2404081wrp.22.1713459030879;
-        Thu, 18 Apr 2024 09:50:30 -0700 (PDT)
-Received: from ?IPv6:2001:8a0:e622:f700:cffe:40a8:31d4:2e61? ([2001:8a0:e622:f700:cffe:40a8:31d4:2e61])
-        by smtp.gmail.com with ESMTPSA id cg3-20020a5d5cc3000000b00349bd105089sm2223076wrb.47.2024.04.18.09.50.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 09:50:30 -0700 (PDT)
-Message-ID: <e6b42e27b3fd4a0970904224d7bd32c52159a788.camel@gmail.com>
-Subject: Re: [PATCH] pmdomain: imx8m-blk-ctrl: fix suspend/resume order
-From: Vitor Soares <ivitro@gmail.com>
-To: Markus Elfring <Markus.Elfring@web.de>, Vitor Soares
- <vitor.soares@toradex.com>, linux-pm@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org, 
- kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, Sascha Hauer
- <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Ulf Hansson
- <ulf.hansson@linaro.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, LKML
- <linux-kernel@vger.kernel.org>,  stable@vger.kernel.org
-Date: Thu, 18 Apr 2024 17:50:29 +0100
-In-Reply-To: <29e1a687-99f5-4e9f-a8c5-50154312cac4@web.de>
-References: <20240418155151.355133-1-ivitro@gmail.com>
-	 <29e1a687-99f5-4e9f-a8c5-50154312cac4@web.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GANkhwYJ"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2984920FD8CD;
+	Thu, 18 Apr 2024 09:52:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2984920FD8CD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1713459131;
+	bh=tAsZJIj2Of05p989qQAkdOWhFJMrfd7SNYTDHemiUHk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GANkhwYJ0GkY+gLzPtqLD9B8+RN6oUeJHrLt6gxBTWT4eYW2fmFe1hrh6qH2qfios
+	 VbKl+rdXoX/bzpJIn0+D58z88BlaF6elWGQ16eLuyfUiDOwU71vMLfqkuRbYo4cDi5
+	 mlgfTft+VN/W/XOVLzG7niJj6gHalGXsOyiFNNJU=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rdma-next 1/6] RDMA/mana_ib: create EQs for RNIC CQs
+Date: Thu, 18 Apr 2024 09:52:00 -0700
+Message-Id: <1713459125-14914-2-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1713459125-14914-1-git-send-email-kotaranov@linux.microsoft.com>
+References: <1713459125-14914-1-git-send-email-kotaranov@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-SGkgTWFya3VzLAoKCk9uIFRodSwgMjAyNC0wNC0xOCBhdCAxODoyNCArMDIwMCwgTWFya3VzIEVs
-ZnJpbmcgd3JvdGU6Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg4oCmLCBhZGQgYSBkZXZpY2Ug
-bGluayBiZXR3ZWVtCj4gPiBibGtfY3RybCBhbmQgZ2VucGQgcG93ZXJfZGV2LiDigKYKPiAKPiBJ
-IGhvcGUgdGhhdCBhIHR5cG8gd2lsbCBiZSBhdm9pZGVkIGluIHRoaXMgY2hhbmdlIGRlc2NyaXB0
-aW9uIGZvciB0aGUgZmluYWwgY29tbWl0Lgo+IAoKVGhhbmtzIGZvciB5b3UgZmVlZGJhY2suCkkg
-d2lsbCBmaXggaXQgbmV4dCB2ZXJzaW9uLgoKQmVzdCByZWdhcmRzLApWaXRvciBTb2FyZXMKCj4g
-UmVnYXJkcywKPiBNYXJrdXMKCg==
+From: Konstantin Taranov <kotaranov@microsoft.com>
+
+Create EQs within mana_ib device. Such EQs are required
+for creation of RNIC CQs.
+
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+---
+ drivers/infiniband/hw/mana/main.c    | 34 ++++++++++++++++++++++++++--
+ drivers/infiniband/hw/mana/mana_ib.h |  1 +
+ 2 files changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index f540147..546d059 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -658,7 +658,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
+ {
+ 	struct gdma_context *gc = mdev_to_gc(mdev);
+ 	struct gdma_queue_spec spec = {};
+-	int err;
++	int err, i;
+ 
+ 	spec.type = GDMA_EQ;
+ 	spec.monitor_avl_buf = false;
+@@ -672,12 +672,42 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
+ 	if (err)
+ 		return err;
+ 
++	mdev->eqs = kcalloc(mdev->ib_dev.num_comp_vectors, sizeof(struct gdma_queue *),
++			    GFP_KERNEL);
++	if (!mdev->eqs) {
++		err = -ENOMEM;
++		goto destroy_fatal_eq;
++	}
++
++	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++) {
++		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
++		err = mana_gd_create_mana_eq(mdev->gdma_dev, &spec, &mdev->eqs[i]);
++		if (err)
++			goto destroy_eqs;
++	}
++
+ 	return 0;
++
++destroy_eqs:
++	while (i-- > 0)
++		mana_gd_destroy_queue(gc, mdev->eqs[i]);
++	kfree(mdev->eqs);
++destroy_fatal_eq:
++	mana_gd_destroy_queue(gc, mdev->fatal_err_eq);
++	return err;
+ }
+ 
+ void mana_ib_destroy_eqs(struct mana_ib_dev *mdev)
+ {
+-	mana_gd_destroy_queue(mdev_to_gc(mdev), mdev->fatal_err_eq);
++	struct gdma_context *gc = mdev_to_gc(mdev);
++	int i;
++
++	mana_gd_destroy_queue(gc, mdev->fatal_err_eq);
++
++	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++)
++		mana_gd_destroy_queue(gc, mdev->eqs[i]);
++
++	kfree(mdev->eqs);
+ }
+ 
+ int mana_ib_gd_create_rnic_adapter(struct mana_ib_dev *mdev)
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index 4c1240d..bfcf6df 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -56,6 +56,7 @@ struct mana_ib_dev {
+ 	struct gdma_dev *gdma_dev;
+ 	mana_handle_t adapter_handle;
+ 	struct gdma_queue *fatal_err_eq;
++	struct gdma_queue **eqs;
+ 	struct mana_ib_adapter_caps adapter_caps;
+ };
+ 
+-- 
+2.43.0
 
