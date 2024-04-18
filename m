@@ -1,108 +1,169 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB33543AAD;
-	Thu, 18 Apr 2024 02:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75E2481A7
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 02:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713406719; cv=none; b=Ebk1L66fUkpguv/4k4UyHguZ04X00HDVwHIPTuZhlUMAGcCVofmpDu7JumdBbE3ZYW4EAoP8G18tOElJzstlRx9AIGefloAQZ1HahbNCKq8VOM8Gs98xXQSzSB9EQDpLfT3KqM1VbuIeaB5IcWYnCVLLCYaqrybYs4DcImsv8RU=
+	t=1713406803; cv=none; b=YNAkTw3tqlMTn1LEb598z0qsoBu9nQS+7u394pbS6W/vDLnvHMnEZaOSOmj/g16poliEh4/PabRz7M1/y2Y5Xvsku8le1tgcfIo8TunVkPNHD/H6huKj/DstwJHjbFOXAEMU3d0kHPQx+CHd/p5ddETppcGKg+fX/8c/u7qWcOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713406719; c=relaxed/simple;
-	bh=4nGTBiDvzsV3UPPg4p0qRTy7EDCT600LVYyPJv+rr6M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jo7g6qj9MU0Gl9ryTWi8B03CqxwtuZe9sn3/kMPh8WxXmSsIi/Nkn/gnKe3a0t2YQzvBND2idmNSZRszQVLiZpeg3cVJ3ekCJ3gG8s/A8AR0Qn5l74jXTYJN2gPJlj6QrnIrtLR6pdmPSZBSB0gVoL0jTTfhwYdn4VT4HrVXLt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IVpx+GvJ; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1713406803; c=relaxed/simple;
+	bh=RdX3hBeambhUwtUbPCfKYg0ONGhQHhSOOXYxifTN1XI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b0bOsEIJjjcSnTg+0uOQ5J5FKEdCNd3pgOgxnfa32ytrDjQ+nQwZczfDUgjWYdxAM9nulg9n771rACDq5jSg0alAJ7I2c/+hsgeuwFimfndheo/87CZ+T1W2rPDMN1Mg+b4/0G8K92oCAdNtwCgGI72h7xXxZSmocJ+0MR1Y5Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tuX5plZ+; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IVpx+GvJ"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43HM4dSZ011199;
-	Thu, 18 Apr 2024 02:18:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=oeI3mdv5Vths/wN59qgdVlMqlhdifdF9wFALCHB7w0U=;
- b=IVpx+GvJs9A1QTPoqgWO/2IrcrpsEgS2osF7fJTqYZosI6ID0R8tcuVQGhHJzIacU75o
- +iRyQe3a1Zyoq395CQ1PvSke7Nt2/tgfQsYG2uFmtsGwinPrZnRm2ZTCcOKcnuYmYfqF
- iIGYDC3rF9aq5hssCsCx8razofQurM7S4402NX02bg7xKk/GkMmkT7pdfgRUz8ThTCls
- tfOW2wW7K8vkIqo6J0EHMIjtg6WivZD6R4G/vPmcOPKCwE5khORUgkz87yHFr4qEqXad
- VccjZn5lx0QSKQhTwy7hVZwBMZrn+HIir48eeSe7ukcAyWZZcC7pRcp/6lYKRgxpjSbD sA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xfgn2s9g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Apr 2024 02:18:30 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43I0nopC029348;
-	Thu, 18 Apr 2024 02:18:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xfgg9qa17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Apr 2024 02:18:29 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43I2ITLm012052;
-	Thu, 18 Apr 2024 02:18:29 GMT
-Received: from alaljime-dev-e4flex-vm.osdevelopmeniad.oraclevcn.com (alaljime-dev-e4flex-vm.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.249.106])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xfgg9q9y8-1;
-	Thu, 18 Apr 2024 02:18:29 +0000
-From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
-To: kvm@vger.kernel.org, seanjc@google.com
-Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org,
-        joao.m.martins@oracle.com, boris.ostrovsky@oracle.com,
-        suravee.suthikulpanit@amd.com, mlevitsk@redhat.com,
-        alejandro.j.jimenez@oracle.com
-Subject: [PATCH v2 0/2] APICv-related fixes for inhibits and tracepoint
-Date: Thu, 18 Apr 2024 02:18:21 +0000
-Message-Id: <20240418021823.1275276-1-alejandro.j.jimenez@oracle.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tuX5plZ+"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516dc51bb72so365409e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 19:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713406800; x=1714011600; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/ZUBtcOuh4tZX+VBSdand1Gk2+djVxkGCB8r1DIsuKU=;
+        b=tuX5plZ+AKIMXhKV/NkHIFlySyfxyt4RErMFQxmj5Yk8cYbswgg337kRsADp2bE8wW
+         Z4tscTZ8507MEtGjgXNR00i1aOkqGuzPK26cyJhinfiKSJrAQI1rBS27w5uxcS9j6sHS
+         71Kg7UkFJxXagxs9Qcng5z+l+WmYAmpTImrfvwWSS+Si5CN2Zic5swU319Pxr76lMeEP
+         1tDg5nv86u5c2LO78g7ItmISvz3uExnvfW2SeX9xfgOOXKqAgOgAWIAfsCMJbWie/KuD
+         4Emk7KBGqoc5keKzL26QPRcypENMlD2DvBvMWyckAG2+35KCYTYpqktGfgcroqOQdILb
+         Wz3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713406800; x=1714011600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/ZUBtcOuh4tZX+VBSdand1Gk2+djVxkGCB8r1DIsuKU=;
+        b=n6r44Wc19R/ZKX11ikGxDLAFcy8uSuijSdBTa3OGiZUzbSZjtbtsZvGSwEimRbacbn
+         pFIjZOYnoUU8rClKU+Vr0hQAEWrHzETL8pIjBJ/Mh59mQMm+lKRVGt93ZMQU3wAOfi/a
+         Z3vDNKgroW+JFaojQJUoEgyFQJvvddP1h40namh0tHlHtTHGBp1oUisEW+8l1Wu33OGR
+         yjrlNaVlq+4fwqxk2Ji3q0gClAcUKvSrmswFKvbsMVz4uQzNICvkddYG8bOcOw1e3nZ7
+         F8BIYaSke6XVU73va4Xhp08rksgvyiPFTiZBCm9jncWzLXXBe/DPIRPDDSCF3+Ck4yy6
+         ckrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIL6aYP9uxX/NCvc+01lLe/1RPvon6vCn8bh2jbsIPpxO+XJQhkjVNQUemcD9eF4vkYiqMInXfBduMVYROt7zIUDRf0XvIZMAY5td2
+X-Gm-Message-State: AOJu0Yynoq0U5xcpU94Dvb8TZ+220eLvV6H7fdWfbKEMG5JcfNec69lO
+	PKOe0Bt+eQTGAYYsWF3hqoTDdbqOa61b870dY48sEuEYPsSiPA88k2vH88KYnCDeSq1te5lLXdC
+	104VmjrRKYTuPPRY7KDb1D5GDNkL81nCgUAzBN8l/S2latm//tRG1CIg=
+X-Google-Smtp-Source: AGHT+IGcsMlJFNtz4Wb4Xe1MH6eieW6vX+0//7/qp2kTOMG+G32KLjSuQdOumHYhlT0kb5Kfe4k+6rHp4QdNpVzW9z8=
+X-Received: by 2002:ac2:4356:0:b0:516:7739:354c with SMTP id
+ o22-20020ac24356000000b005167739354cmr487518lfl.58.1713406799629; Wed, 17 Apr
+ 2024 19:19:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_01,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=834 phishscore=0 mlxscore=0 malwarescore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404180015
-X-Proofpoint-ORIG-GUID: 9SHXZgIpiwjg9Wgs_EyViWlgUKCJMUPE
-X-Proofpoint-GUID: 9SHXZgIpiwjg9Wgs_EyViWlgUKCJMUPE
+References: <171328983017.3930751.9484082608778623495.stgit@firesoul> <171328989335.3930751.3091577850420501533.stgit@firesoul>
+In-Reply-To: <171328989335.3930751.3091577850420501533.stgit@firesoul>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 17 Apr 2024 19:19:23 -0700
+Message-ID: <CAJD7tkZFnQK9CFofp5rxa7Mv9wYH2vWF=Bb28Dchupm8LRt7Aw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] cgroup/rstat: convert cgroup_rstat_lock back to mutex
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: tj@kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com, 
+	cgroups@vger.kernel.org, longman@redhat.com, netdev@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, shakeel.butt@linux.dev, 
+	kernel-team@cloudflare.com, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, mhocko@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-v2: Add Sean's changes to [PATCH 1/2].
+On Tue, Apr 16, 2024 at 10:51=E2=80=AFAM Jesper Dangaard Brouer <hawk@kerne=
+l.org> wrote:
+>
+> Since kernel v4.18, cgroup_rstat_lock has been an IRQ-disabling spinlock,
+> as introduced by commit 0fa294fb1985 ("cgroup: Replace cgroup_rstat_mutex
+> with a spinlock").
+>
+> Despite efforts in cgroup_rstat_flush_locked() to yield the lock when
+> necessary during the collection of per-CPU stats, this approach has led
+> to several scaling issues observed in production environments. Holding
+> this IRQ lock has caused starvation of other critical kernel functions,
+> such as softirq (e.g., timers and netstack). Although kernel v6.8
+> introduced optimizations in this area, we continue to observe instances
+> where the spin_lock is held for 64-128 ms in production.
+>
+> This patch converts cgroup_rstat_lock back to being a mutex lock. This
+> change is made possible thanks to the significant effort by Yosry Ahmed
+> to eliminate all atomic context use-cases through multiple commits,
+> ending in 0a2dc6ac3329 ("cgroup: removecgroup_rstat_flush_atomic()"),
+> included in kernel v6.5.
+>
+> After this patch lock contention will be less obvious, as converting this
+> to a mutex avoids multiple CPUs spinning while waiting for the lock, but
+> it doesn't remove the lock contention. It is recommended to use the
+> tracepoints to diagnose this.
 
---
+I will keep the high-level conversation about using the mutex here in
+the cover letter thread, but I am wondering why we are keeping the
+lock dropping logic here with the mutex?
 
-Patch 1 fixes an issue when avic=0 (current default) where
-APICV_INHIBIT_REASON_ABSENT remains set even after an in-kernel local APIC has
-been created. e.g. tracing the inhibition tracepoint shows:
+If this is to reduce lock contention, why does it depend on
+need_resched()? spin_needbreak() is a good indicator for lock
+contention, but need_resched() isn't, right?
 
-<...>-196432  [247] ..... 70380.628931: kvm_apicv_inhibit_changed: set reason=2, inhibits=0x4
-<...>-196432  [247] ..... 70380.628941: kvm_apicv_inhibit_changed: set reason=0, inhibits=0x5
+Also, how was this tested?
 
-and the reason=2 inhibit is not removed after the local APIC is created.
+When I did previous changes to the flushing logic I used to make sure
+that userspace read latency was not impacted, as well as in-kernel
+flushers (e.g. reclaim). We should make sure there are no regressions
+on both fronts.
 
-Patch 2 modifies the wording in the pi_irte_update tracepoint to make it clear
-that it is used by the posted interrupt implementation of both vendors. I have
-reservations about modifying the tracepoint output and breaking user scripts,
-but according to recent discussions tracepoints are not strictly a stable ABI,
-so I'd consider this minor change to avoid confusion around this area.
-
-Thank you,
-Alejandro
-
-
-Alejandro Jimenez (2):
-  KVM: x86: Only set APICV_INHIBIT_REASON_ABSENT if APICv is enabled
-  KVM: x86: Remove VT-d mention in posted interrupt tracepoint
-
- arch/x86/kvm/trace.h |  4 ++--
- arch/x86/kvm/x86.c   | 13 ++++++-------
- 2 files changed, 8 insertions(+), 9 deletions(-)
-
-
-base-commit: 2d181d84af38146748042a6974c577fc46c3f1c3
--- 
-2.39.3
-
+>
+> Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
+> ---
+>  kernel/cgroup/rstat.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+> index ff68c904e647..a90d68a7c27f 100644
+> --- a/kernel/cgroup/rstat.c
+> +++ b/kernel/cgroup/rstat.c
+> @@ -9,7 +9,7 @@
+>
+>  #include <trace/events/cgroup.h>
+>
+> -static DEFINE_SPINLOCK(cgroup_rstat_lock);
+> +static DEFINE_MUTEX(cgroup_rstat_lock);
+>  static DEFINE_PER_CPU(raw_spinlock_t, cgroup_rstat_cpu_lock);
+>
+>  static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
+> @@ -238,10 +238,10 @@ static inline void __cgroup_rstat_lock(struct cgrou=
+p *cgrp, int cpu_in_loop)
+>  {
+>         bool contended;
+>
+> -       contended =3D !spin_trylock_irq(&cgroup_rstat_lock);
+> +       contended =3D !mutex_trylock(&cgroup_rstat_lock);
+>         if (contended) {
+>                 trace_cgroup_rstat_lock_contended(cgrp, cpu_in_loop, cont=
+ended);
+> -               spin_lock_irq(&cgroup_rstat_lock);
+> +               mutex_lock(&cgroup_rstat_lock);
+>         }
+>         trace_cgroup_rstat_locked(cgrp, cpu_in_loop, contended);
+>  }
+> @@ -250,7 +250,7 @@ static inline void __cgroup_rstat_unlock(struct cgrou=
+p *cgrp, int cpu_in_loop)
+>         __releases(&cgroup_rstat_lock)
+>  {
+>         trace_cgroup_rstat_unlock(cgrp, cpu_in_loop, false);
+> -       spin_unlock_irq(&cgroup_rstat_lock);
+> +       mutex_unlock(&cgroup_rstat_lock);
+>  }
+>
+>  /* see cgroup_rstat_flush() */
+> @@ -278,7 +278,7 @@ static void cgroup_rstat_flush_locked(struct cgroup *=
+cgrp)
+>                 }
+>
+>                 /* play nice and yield if necessary */
+> -               if (need_resched() || spin_needbreak(&cgroup_rstat_lock))=
+ {
+> +               if (need_resched()) {
+>                         __cgroup_rstat_unlock(cgrp, cpu);
+>                         if (!cond_resched())
+>                                 cpu_relax();
