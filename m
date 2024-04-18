@@ -1,112 +1,84 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtpcmd14162.aruba.it (smtpcmd14162.aruba.it [62.149.156.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33894EB45;
-	Thu, 18 Apr 2024 07:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A770C36B01
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713425557; cv=none; b=RDZowdvyT5tQ+r72HtqpbWoysihIxuynTU1Dg4/M10bCrbIy7do5vgG/4Zj24GMHwUwMkvATDbcO+DblC5XvTchYsydJ1Ss+KN705ZvXOPudXXid51qSnvxnXhe7AhutQoDSrZZyfm+cFjzme56gf362LwMeedNyV4Iu7FHLI/s=
+	t=1713425614; cv=none; b=cLORjvuZ1YgWuY3seuKCw7zY24/D60bDpe04xwedB2id3dPdMJNUnIDTSiSXtwThzqPhhMhlI2ozORFw7lGX+0ApRaneWt2a0T+XYHXQJows5D1UEzgNIuB80xKjkaDUydrUTmdT3iDOxjVlAg9cALWxIwbZ1ZIe40VWNVWv84k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713425557; c=relaxed/simple;
-	bh=h7PVw/s5YkA2E6D/+aBzDZKszhArG5Oeh3JVPlHIBSI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r3XEftZ7kDOOl90od4ifQE5nUYYmY4gcHUbNysmZUYwNMTxFnIFNSSGAK6wAfzyCNHxEakiFQDwwnpD4u1jwW+Z4KM9pIANLDg1oAC38/VTqgTqCoiv6q2qrwg5e65WdfKTpsHI83VoC6TpoEY0izMCdjXztV55+q1V9WxC8LiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VKqHD6cJ3z4f3kFb;
-	Thu, 18 Apr 2024 15:32:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 27D831A0175;
-	Thu, 18 Apr 2024 15:32:32 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxCOzCBmBygqKQ--.12535S4;
-	Thu, 18 Apr 2024 15:32:31 +0800 (CST)
-From: linan666@huaweicloud.com
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: hch@lst.de,
-	cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH] blk-iocost: do not WARNING if iocg has already offlined
-Date: Thu, 18 Apr 2024 15:23:40 +0800
-Message-Id: <20240418072340.2090877-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1713425614; c=relaxed/simple;
+	bh=QjDsPauPVvETjdDUqVUtGoBEtOicY6rA+B+E3Pa/tIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9wr8P7KGgyoTiOfz2Cx/MIxQLqa5pKXsekJoh6x9U1M7d5FEnfE7Fr0KUG+R5nZL6Uf575+SNYCG1f5iq2+bOGOsqoIu1Mm7rjOUEoEq6C/Q3R5VbmyhtDa8k6NEsZVjpasGTFTrGodhXkmd8TsbP7/JDxiMUyuL3VCCIee1c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=KKFu+8iC; arc=none smtp.client-ip=62.149.156.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="KKFu+8iC"
+Received: from engicam ([146.241.28.123])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id xMA0r2HrjjEwexMA1rCLye; Thu, 18 Apr 2024 09:26:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1713425182; bh=QjDsPauPVvETjdDUqVUtGoBEtOicY6rA+B+E3Pa/tIg=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=KKFu+8iCRp0A4zk+iLwfqMUjAUFPhEZugyZw0GpYZxpul4HlhdFpUehgi5llQpiNc
+	 gQJ6O5jahEk0+VVi614/3HvzRIo5uUZJqh87iTvwNW1RLbg81/PvVsF96F+xwlzI+C
+	 SBL7Inqg8OorN+qbDKborDmZUuzGv1hPpMTtSPY55yPQ2KwTDwpPKGUhRSFXWFrcxt
+	 C5AmOEqXvZKfwzmrmTsvIsKGRr8EH2/QNf++CXcRAuK0cpGbWmQxh6G0+9T5Rkc+XY
+	 UM0sBlbDOlSppts9yVhju7us5gxFYAlijYvk2ZHr4FjwJ7hL4ofZODAcUyX/52pHIk
+	 Z0Uut/LVfFlpA==
+Date: Thu, 18 Apr 2024 09:26:19 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: Re: [PATCH 2/4] regulator: dt-bindings: pca9450: add pca9451a support
+Message-ID: <ZiDLGzJymI4W+LII@engicam>
+References: <20240417153528.7838-1-fabio.aiuto@engicam.com>
+ <20240417153528.7838-3-fabio.aiuto@engicam.com>
+ <ZiBrbghc510G02tx@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxCOzCBmBygqKQ--.12535S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7WryxtrW3tryUXFWxJr4rGrg_yoW8WFWDpF
-	4agwnFkF1jqr13KF4kK3Z2q348uan5Wws3Jw4fWrZ8Za4fur1xX3Z7Zr4YyFySqrn5AFs3
-	ZF48G3y7Aa1UWaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBSoJUUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZiBrbghc510G02tx@finisterre.sirena.org.uk>
+X-CMAE-Envelope: MS4xfBz44pDssyOg9TqbSc5MDfBh5D8WhSxeCJhJX37EgF1N/qzG/L7rZwwFPltMRjeHtI4EcG34jlBQYAgpAwfHmdgim7KrBa3KewvI5hLdsqaMS5aCvBdP
+ IvQqxK9hAW1AoUI4QUU/yqy6XuWyYb5cFJIjTNWY4Uw4twBH7mTkC95EWe3LXYyiYwxdRVbmpaec4WmvgA5gTDAQ3fPFM1jN+pcqrSmcFQxDU3WO09DVqlec
+ VnKC6wRLhcTpUtY4Y+JHHb9k6lC/e2Bahtrevmhljyjxc2Y0bCLxoIK/PfEzeJzWy+uckkaHe8iOxIgfvJc0YNt0H9QqnfUfVTFy7Y4/ByNi788fcgVKaDK7
+ cX0lqtkHmV/NjmCGTQy+SDKy+XM2ug065m9TzepVMv9RTfGpX3ltJ2m75fTHFZBB5Qw5RoZIQUDivJ5BegEFAgT8KvVI89I6svKBKccjmKHAhrZQIy2twP25
+ EWVuQDnyWUOddC9SDaAlPLza92rKItw77DJg0TTxS/t3VgqjusA81ri7wNRKyCOHcY8USP4+CrSEt/5JgvJLEAQVNPyri2SKmVdd0wzRO5AN30h51+33ewcV
+ Hb+97l7UtJ2nIF2amU1px/SP
 
-From: Li Nan <linan122@huawei.com>
+Dear Mark,
 
-In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
-is intended to confirm iocg is avitve when it has debt. However, warn
-can be triggered during removing cgroup controller, as
-iocg_waitq_timer_fn() is awakened at that time.
+Il Thu, Apr 18, 2024 at 09:38:06AM +0900, Mark Brown ha scritto:
+> On Wed, Apr 17, 2024 at 05:35:26PM +0200, Fabio Aiuto wrote:
+> > Update bindings for pca9451a support.
+> 
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
 
-  WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
-  Call trace:
-  iocg_pay_debt+0x14c/0x190
-  iocg_kick_waitq+0x438/0x4c0
-  iocg_waitq_timer_fn+0xd8/0x130
-  __run_hrtimer+0x144/0x45c
-  __hrtimer_run_queues+0x16c/0x244
-  hrtimer_interrupt+0x2cc/0x7b0
+thank you, I was in doubt because I did the whole job based on
+shawnguo's repo where the patch isn't applied yet.
 
-The warn in this situation is meaningless. Since this iocg is being
-removed, the state of the 'active_list' is irrelevant, and 'waitq_timer'
-is canceled after removing 'active_list' in ioc_pd_free(), which ensure
-iocg is freed after iocg_waitq_timer_fn() returns.
+Maybe this approach was not good, should I have considered broonie's
+repo for this single patch, shouldn't I?
 
-Therefore, add the check if iocg has already offlined to avoid warn
-when removing cgroup controller.
+Anyway I'm dropping this patch for a v2.
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- block/blk-iocost.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kr,
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index baa20c85799d..2e109c016a39 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1440,7 +1440,7 @@ static void iocg_pay_debt(struct ioc_gq *iocg, u64 abs_vpay,
- 	lockdep_assert_held(&iocg->waitq.lock);
- 
- 	/* make sure that nobody messed with @iocg */
--	WARN_ON_ONCE(list_empty(&iocg->active_list));
-+	WARN_ON_ONCE(list_empty(&iocg->active_list) && iocg->pd.online);
- 	WARN_ON_ONCE(iocg->inuse > 1);
- 
- 	iocg->abs_vdebt -= min(abs_vpay, iocg->abs_vdebt);
--- 
-2.39.2
-
+fabio
