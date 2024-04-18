@@ -1,75 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA6937165;
-	Thu, 18 Apr 2024 12:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF16713A86B;
+	Thu, 18 Apr 2024 12:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713444567; cv=none; b=l41AdFTdwVQTVXVVdp2idOmR+C03RdriBMZ6kaVRuUJ2a1v+WtFYwBCI7wI02xfayYrC1fSeqsWwiE3Syh94e+OSzOOErmgrmQfqUpgh9wSZRq0RBkQ3XModZchYm7gdZO7fHFzjy4S7lbJ3gxjwg+ucnnKXpZlojrAEnp2dLcM=
+	t=1713444623; cv=none; b=S6izGEeS/u69iPG6+/xsbMuU84yPDxe2cLiF1AiZvC618TFGHQ8RbzgVmI4FoNJENZowDhEOqlgNGFfL5WKXqelU7CLpgObdnGdGQk8drFc9hbTE4Hf/3ueZeY3eaD1JDTgLNx5vwEDtkQkUJIPtX2hfF96NrZIbDW41/PPYkZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713444567; c=relaxed/simple;
-	bh=G8iIaDSoTzX8WwprmZzksy2cT8VoIMe2ObbDA5sfRks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l/GxTvu47HWIJ1FXqEtCPEiCIPvhm3ZzVIMe+0Sd+oR6CynWaxjv1pr16PuPmfCKJkqi5s3ADH+9iE5+dpb46sVXLkwK6CGm7jKnsOn0AbHw1YMWyPgZ1Mu8C3vRLEZ8N9THPMDpFfGXV6tINcAMg1iQH2vNmQXtkjTIg16CLGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgVbWLpd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgVbWLpd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA4AC113CC;
-	Thu, 18 Apr 2024 12:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713444566;
-	bh=G8iIaDSoTzX8WwprmZzksy2cT8VoIMe2ObbDA5sfRks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BgVbWLpdSqyUhBogIz8YhMvuKkPpyMVD064SsnwwAWjiH81oDUoAKnL2bTdpYIj7D
-	 yjXVcw1l+dhS1QAwLtRs+Q3S9AekJoj7ymUKvL7wsh7mo2WVxMSJwGuIpvOsVz/nwW
-	 NNpU9W5T3WM5LNCf3Qn9J1G+YgLSND354UbUm4MqPvsB9Z03+pBIKHHNt6KoWCR5tC
-	 eZb/7PuULVOfnmgZLzEQWtaQdDB8bpIem3KkHKDsnKPadqeiFVZ6GtrM5qbJq2tB3n
-	 xeLQ8mwZD2ZP37MfBy7HtW728a4DhWHAdnpbVubVJF9oa9uHs6Ravx25tPFHi7g2Zn
-	 YGTuLDfsn9g+w==
-Date: Thu, 18 Apr 2024 07:49:23 -0500
-From: Rob Herring <robh@kernel.org>
-To: David Wronek <david@mainlining.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>, ~postmarketos/upstreaming@lists.sr.ht,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	phone-devel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: panel: Add Raydium RM69380
-Message-ID: <171344451492.997671.11196384805681693246.robh@kernel.org>
-References: <20240417-raydium-rm69380-driver-v4-0-e9c2337d0049@mainlining.org>
- <20240417-raydium-rm69380-driver-v4-1-e9c2337d0049@mainlining.org>
+	s=arc-20240116; t=1713444623; c=relaxed/simple;
+	bh=m17shzuosOvHU/kE5f6ihW08W3NrfbNpnfTEWvxWw6E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qU0GC2nK4Iy1qb5EC0yMkRkjg3mQyD2mUPloi91USEob5RiAq2WZVJKBshh3PAgMeXDpe2mK5WDkHg7WKyH8L5El7Xeut0brHKYdMUQ+MbyjaIFC9RbqLw6m8ObvqGldRqffgR8bEmZnHqn9wC6eYzEOu9w/x6UIXvr3FNYnxMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VKyGf2Dq9z1R8ZH;
+	Thu, 18 Apr 2024 20:47:22 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21D26140382;
+	Thu, 18 Apr 2024 20:50:16 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 20:50:15 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup, legacy_freezer: update comment for freezer_css_offline()
+Date: Thu, 18 Apr 2024 12:43:49 +0000
+Message-ID: <20240418124349.916770-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417-raydium-rm69380-driver-v4-1-e9c2337d0049@mainlining.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
+After commit f5d39b020809 ("freezer,sched: Rewrite core freezer logic"),
+system_freezing_count was replaced by freezer_active.
 
-On Wed, 17 Apr 2024 18:29:33 +0200, David Wronek wrote:
-> Raydium RM69380 is a display driver IC used to drive OLED DSI panels.
-> Add a dt-binding for it.
-> 
-> Signed-off-by: David Wronek <david@mainlining.org>
-> ---
-> Note:
-> Depends on commit 48a516363e29 ("dt-bindings: display: panel: add common dual-link schema")
-> ---
->  .../bindings/display/panel/raydium,rm69380.yaml    | 89 ++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
-> 
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ kernel/cgroup/legacy_freezer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+diff --git a/kernel/cgroup/legacy_freezer.c b/kernel/cgroup/legacy_freezer.c
+index 66d1708042a7..afbf7f8a86c0 100644
+--- a/kernel/cgroup/legacy_freezer.c
++++ b/kernel/cgroup/legacy_freezer.c
+@@ -133,7 +133,7 @@ static int freezer_css_online(struct cgroup_subsys_state *css)
+  * freezer_css_offline - initiate destruction of a freezer css
+  * @css: css being destroyed
+  *
+- * @css is going away.  Mark it dead and decrement system_freezing_count if
++ * @css is going away.  Mark it dead and decrement freezer_active if
+  * it was holding one.
+  */
+ static void freezer_css_offline(struct cgroup_subsys_state *css)
+-- 
+2.34.1
 
