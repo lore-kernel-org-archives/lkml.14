@@ -1,79 +1,79 @@
 Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092DF15CD76
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284FD15D5D0
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 09:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713432202; cv=none; b=WDiGD/0ibfL1wJ3kP+Atm3HmCAeQeT9RT66MeS2kaaEe1VWe9sURWkFcqjj6dDB5SVW8PpRLO5p5tcx7YwDK3i/O8BfdkHy+8UIvT/7Zgnd8xOw+r65ZPNZu63Ywyn6w8RFf3yp7NSEOJzLfdnY93mGrQLMr58HV9lope7hXFLY=
+	t=1713432203; cv=none; b=OOYF7m1in975sZVoBXADGDV/LalhaUhwkoUI8ItEL1Nq9eJJGBhQCryiAQrkiyZ0qgDU+RmJzkNIY61LW1O+OZZ7tUub0amB03iQMt6sZorHagRRMJZ59C6PiZRfJ8aZ9OTY3rXE5T6xvcVK81kFj1t2WHdR1Ea/6BV3rzei4Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713432202; c=relaxed/simple;
-	bh=uTOfGq0h6+lnuHB1WN07O0CMmN/tHW246Cg9evlPFmA=;
+	s=arc-20240116; t=1713432203; c=relaxed/simple;
+	bh=zA23cZDQyGLohQCzPuFxnsJDg2EuKgcHcPyeqmLNnB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ky6IC7Lz6SJZjJ+FNwXV2EMqoyqYC5dciw/x/ZHIMz8MS6li+mpTOrflVhtyZj3bgM0IJxQKtITzSN0e6W7ynLwQx1tLpffpFfB5vOsBCUakXT5yuvMqa7hnAEkqZ+RB3GySMNx6MEcAUQU10+ZE0M5Rfd7Q19FPMYR6kMwKFy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=cVzmE+6p; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FNxU8BAO; arc=none smtp.client-ip=103.168.172.153
+	 MIME-Version; b=UJvUuet5Yv8wjzlY1ogryQeXtjYsyfvFoYS6XOZB5ebIn5qDCaDMio63sNRpGQtC18FleMwk53S1+XLUAedeG4KsfHIC9P564xUEURLkxhEc8S9B2QhJNMhN4URMfP2wwEqoHwaIVKHov+3PyLzwXFxqWSxAn5CphQdUuQAoMlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=Ssg59Sjc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bn6wtJ5p; arc=none smtp.client-ip=103.168.172.153
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="cVzmE+6p";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FNxU8BAO"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 2169111400F6;
-	Thu, 18 Apr 2024 05:23:20 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="Ssg59Sjc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bn6wtJ5p"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 760D8114010A;
+	Thu, 18 Apr 2024 05:23:21 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 18 Apr 2024 05:23:20 -0400
+  by compute7.internal (MEProxy); Thu, 18 Apr 2024 05:23:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1713432200; x=
-	1713518600; bh=I8JF/lc0fwY+8HUxUwF74jT5UxEyTs7wRVVyo2OzKhg=; b=c
-	VzmE+6p60aLdEBC73ImhLsE0bhZv6wPyQLbSjxY9N5/JIhIsEZKgBOakVwR5n7+Y
-	v1GROfYVXqsSGe1qK3hkm1IWf7lXtf8tGabpVxiCD0a2MgedIJq9eWG+tJ6rTebi
-	lU2KiXKs7LrMWEgHqRpIZEeA160bJ8k5p2eduPv19w4sQ4RK2BmD3C1XzpS7GSA/
-	jYhEjfeVrDa9IqOlGC1pdr/Qmr+3GG6CXpKsjdiyWY/lfLR9vxSWZBj1alO+WzmO
-	roWxSRC/qBO7zZwIlKe2dN578ftEupuGrSFVSx9G9vjbzp0pQUVfkvYKdU/V1HBS
-	jVPSGCiGHdYyB/5oivrkw==
+	:reply-to:subject:subject:to:to; s=fm3; t=1713432201; x=
+	1713518601; bh=3OABItpF1JJisjkVcgLVvbjO0GkY74R1iQwCloYtwbM=; b=S
+	sg59SjcTv4+DcqC8eMlsZ/zPxkKv2iNV/yvgcOUwG87KpxzoC3t3ix3nE1nuh0Ns
+	LfB8FuqlCTwKvIVZbFF4zp82gIsq1SpTgi230MPYdSCwhMJn91gVs6aYz30OBA5/
+	lOGnwkhH7pWo0yRaJKGHdHstXAnjqlP1nl7IpMlQ7x3l/Pw/df+0FXLkOlSdmxv8
+	t4orY++nOeDIm90HuafC3HmxCqpbouaMB+/aJcStAK1hkg3QPPGkMY5aLvfYceUL
+	+VCXdT8ECBMA0QtMu4f3AnfyEpAEG+UVutwSlxx1gFKsrlIGfESXlj2StgZ60hEn
+	Cki/wv/NhbRABYhUx4nkw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1713432200; x=
-	1713518600; bh=I8JF/lc0fwY+8HUxUwF74jT5UxEyTs7wRVVyo2OzKhg=; b=F
-	NxU8BAO9nyZIwT1e7f0ujBthRff7xUmLgItgICiS3jln6fqvjCIUxwXxXNHD8fRk
-	lfmbdA+M2sI4dwXtcHEvJu8TSuYTWzAeAAsVQjHCuERy6qqc/dIv06JcdQc6B8aX
-	ur3zss6X5APx6ocSmid/uuaOAsgrek+Y2pJ/d7nypD+Q+LcL930PSK48zGdtA/83
-	E8PsnqS80c6/+RVI5dRvUd06VeTA+wwYPZuYRrC3kYmjokOymLh61wH3H0KCzx2j
-	0PVyR7wejin8lgUTrAvYZdONlYM57RmXMhJZRLqN4zfX7vDeH97wWonGv+hNlxpr
-	UBsmDNpF5+hFge7mB/HKw==
-X-ME-Sender: <xms:h-YgZoCfnVQoDA19oqqICd_nGJNMEIlSvvxclMwqvVFEMcLi6BJqwA>
-    <xme:h-YgZqgFYPZZMzQkHrvfcvF6Oox5QoCSVaoYmsVwxhnt8u4rgBsCdBzYmM7EOU7Ur
-    ju5jd9Jzyp8kZa0_Zw>
-X-ME-Received: <xmr:h-YgZrmwNwo1QhLfCeiDs5_Nfm0ma8h9CNRqGGnIIJErc0ae34GRIbVsicf18h_g0rdb_S37MxZh-DFI6UHaEmkeKBJuBU0hxLfiajSvMU55vA>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1713432201; x=
+	1713518601; bh=3OABItpF1JJisjkVcgLVvbjO0GkY74R1iQwCloYtwbM=; b=b
+	n6wtJ5pHVVmTnjKnScJB0ZzTxISLQPJmAVhKli9CSUIoMIBlziSN/RFl7OC5gA7H
+	wGkXgzwqatmJ0ym8MylluMLrPIIQtEsqC04Kv+eae4aWLru6eec22AqRxGUrSplw
+	f1g7WO48BspDa9pY+QilhFxv1b5rKLisSjrTZRcLXUl2jxDXK7GwHxOh1zVmM5CM
+	s4l6/SLg72c4CEyq8InWwgWvfpwP2mdELkQamQgRbV+SCc5ZWCLhoB6lbk5q6uyI
+	TdXgCDRhKayLST68tinhzMYzZVyICiqVSlN5cD/flkVb13MaIKqwVy+oKbQ+2MEe
+	9fcIUtQ9ql16/tLfjpmBg==
+X-ME-Sender: <xms:ieYgZphEQ2gse6UcCFn-954uezXYBU3Px5Y6wesViI9evv4ct-Tyfw>
+    <xme:ieYgZuDgWijWfvc6G7TLIxD0FrTOF-AbP36UNiOi9du0fTe4gyRjdHKwdS-imfKUh
+    zRu4npJLEsjBXYm7Ic>
+X-ME-Received: <xmr:ieYgZpFXm1puASJXlZ59_qH8lmnCI4vFBPBpOKEShcQdHmps5XhClmM0JhWFSN99YGonX9JrBPuupqWrqLDKgT_mEpuKK8mdW4SYC9LPhDABbA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudektddgudehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
     rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpedvjefgje
     euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
-    vghrufhiiigvpeefnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
+    vghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
     hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:h-YgZuzg6_-KElappZdKrzW9JlTOaPHjQyYbtkX9-T5-J0m4u-gR6Q>
-    <xmx:h-YgZtSQViEOOcBamlkgOgN3ALjSxpQgrNuZtYAwrETjp0pxM-M0eg>
-    <xmx:h-YgZpa-UNSDVMfqoGhd337X6qt6Gcnw6O1mODJqHTR52_Go3jpNTQ>
-    <xmx:h-YgZmR7gSrQp1joI_CPBFvteRwZClzFE9YcROZqWXeATKQ0ombBbA>
-    <xmx:iOYgZodki2dy5YFEtsE4L5pyg5zH5nxdDshrAzjjb0YfCXEYppEF-BsC>
+X-ME-Proxy: <xmx:ieYgZuT6X-Ee2xWpYtDftVGEjv-T_vUwKYJorGV8AdhA4fNDMO5lQw>
+    <xmx:ieYgZmxvum82f2R9LGOP_f-AdhlqVqXDnVxRC4188MCUaYZiHVnJzg>
+    <xmx:ieYgZk4V8_Ks81qgw6A6kB0KZl5QoNnedIOvE3gSg_n41ImyWyPTiw>
+    <xmx:ieYgZry3KZGQJsSxhxZaOEgvbedmIQipH0cl9NCHBykqNgGoA0OOGQ>
+    <xmx:ieYgZh9-ox2WDnMSE-m7xRJwEahebUoK0JqrKzulQfL_PPwjIYgAaMUb>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 18 Apr 2024 05:23:18 -0400 (EDT)
+ 18 Apr 2024 05:23:20 -0400 (EDT)
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: linux1394-devel@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 09/13] firewire: core: add support for Linux kernel tracepoints
-Date: Thu, 18 Apr 2024 18:22:59 +0900
-Message-ID: <20240418092303.19725-10-o-takashi@sakamocchi.jp>
+Subject: [RFC PATCH 10/13] firewire: core: add tracepoints events for asynchronous outbound request
+Date: Thu, 18 Apr 2024 18:23:00 +0900
+Message-ID: <20240418092303.19725-11-o-takashi@sakamocchi.jp>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240418092303.19725-9-o-takashi@sakamocchi.jp>
+In-Reply-To: <20240418092303.19725-10-o-takashi@sakamocchi.jp>
 References: <20240418092303.19725-1-o-takashi@sakamocchi.jp>
  <20240418092303.19725-2-o-takashi@sakamocchi.jp>
  <20240418092303.19725-3-o-takashi@sakamocchi.jp>
@@ -83,6 +83,7 @@ References: <20240418092303.19725-1-o-takashi@sakamocchi.jp>
  <20240418092303.19725-7-o-takashi@sakamocchi.jp>
  <20240418092303.19725-8-o-takashi@sakamocchi.jp>
  <20240418092303.19725-9-o-takashi@sakamocchi.jp>
+ <20240418092303.19725-10-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,75 +92,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Linux Kernel Tracepoints framework is enough useful to trace
-packet data inbound to and outbound from core.
+In a view of core transaction service, the asynchronous outbound request
+consists of two stages; initiation and completion.
 
-This commit adds firewire subsystem to use the framework.
+This commit adds a pair of event for them.
 
 Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- drivers/firewire/Makefile |  5 ++++-
- drivers/firewire/trace.c  |  5 +++++
- drivers/firewire/trace.h  | 17 +++++++++++++++++
- 3 files changed, 26 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firewire/trace.c
- create mode 100644 drivers/firewire/trace.h
+ drivers/firewire/core-transaction.c |  6 +++
+ drivers/firewire/trace.h            | 80 ++++++++++++++++++++++++++++-
+ 2 files changed, 85 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firewire/Makefile b/drivers/firewire/Makefile
-index bbde29a0fba6..92376e045805 100644
---- a/drivers/firewire/Makefile
-+++ b/drivers/firewire/Makefile
-@@ -3,12 +3,15 @@
- # Makefile for the Linux IEEE 1394 implementation
- #
+diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
+index 52d8d483c178..11a60094182a 100644
+--- a/drivers/firewire/core-transaction.c
++++ b/drivers/firewire/core-transaction.c
+@@ -29,6 +29,7 @@
+ #include <asm/byteorder.h>
  
--firewire-core-y += core-card.o core-cdev.o core-device.o \
-+firewire-core-y += trace.o core-card.o core-cdev.o core-device.o \
-                    core-iso.o core-topology.o core-transaction.o
- firewire-ohci-y += ohci.o
- firewire-sbp2-y += sbp2.o
- firewire-net-y  += net.o
- 
-+# Let "include/trace/define_trace.h" find the header.
-+CFLAGS_trace.o := -I$(src)
-+
- obj-$(CONFIG_FIREWIRE)      += firewire-core.o
- obj-$(CONFIG_FIREWIRE_OHCI) += firewire-ohci.o
- obj-$(CONFIG_FIREWIRE_SBP2) += firewire-sbp2.o
-diff --git a/drivers/firewire/trace.c b/drivers/firewire/trace.c
-new file mode 100644
-index 000000000000..ffe427764a90
---- /dev/null
-+++ b/drivers/firewire/trace.c
-@@ -0,0 +1,5 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2024 Takashi Sakamoto
-+
-+#define CREATE_TRACE_POINTS
+ #include "core.h"
 +#include "trace.h"
+ #include "packet-header-definitions.h"
+ 
+ #define HEADER_DESTINATION_IS_BROADCAST(header) \
+@@ -173,6 +174,8 @@ static void transmit_complete_callback(struct fw_packet *packet,
+ 	struct fw_transaction *t =
+ 	    container_of(packet, struct fw_transaction, packet);
+ 
++	trace_async_request_outbound_complete(card, t, packet);
++
+ 	switch (status) {
+ 	case ACK_COMPLETE:
+ 		close_transaction(t, card, RCODE_COMPLETE, packet->timestamp);
+@@ -394,6 +397,9 @@ void __fw_send_request(struct fw_card *card, struct fw_transaction *t, int tcode
+ 
+ 	spin_unlock_irqrestore(&card->lock, flags);
+ 
++	trace_async_request_outbound_initiate(card, t, &t->packet, payload,
++					      tcode_is_read_request(tcode) ? 0 : length / 4);
++
+ 	card->driver->send_request(card, &t->packet);
+ }
+ EXPORT_SYMBOL_GPL(__fw_send_request);
 diff --git a/drivers/firewire/trace.h b/drivers/firewire/trace.h
-new file mode 100644
-index 000000000000..d36a10460301
---- /dev/null
+index d36a10460301..0f7d176ba647 100644
+--- a/drivers/firewire/trace.h
 +++ b/drivers/firewire/trace.h
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2024 Takashi Sakamoto
+@@ -7,8 +7,86 @@
+ #define _FIREWIRE_TRACE_EVENT_H
+ 
+ #include <linux/tracepoint.h>
++#include <linux/firewire.h>
+ 
+-// Placeholder for future use.
++#include <linux/firewire-constants.h>
 +
-+#define TRACE_SYSTEM	firewire
++#include "packet-header-definitions.h"
 +
-+#if !defined(_FIREWIRE_TRACE_EVENT_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _FIREWIRE_TRACE_EVENT_H
++TRACE_EVENT(async_request_outbound_initiate,
++	TP_PROTO(const struct fw_card *card, const struct fw_transaction *transaction,
++		 const struct fw_packet *packet, const u32 *data, size_t data_count),
++	TP_ARGS(card, transaction, packet, data, data_count),
++	TP_STRUCT__entry(
++		__field(u64, transaction)
++		__field(u8, scode)
++		__field(u8, generation)
++		__field(u16, destination)
++		__field(u8, tlabel)
++		__field(u8, retry)
++		__field(u8, tcode)
++		__field(u8, priority)
++		__field(u16, source)
++		__field(u64, offset)
++		__dynamic_array(u32, data, data_count)
++	),
++	TP_fast_assign(
++		__entry->transaction = (u64)transaction;
++		__entry->scode = packet->speed;
++		__entry->generation = packet->generation;
++		__entry->destination = async_header_get_destination(packet->header);
++		__entry->tlabel = async_header_get_tlabel(packet->header);
++		__entry->retry = async_header_get_retry(packet->header);
++		__entry->tcode = async_header_get_tcode(packet->header);
++		__entry->priority = async_header_get_priority(packet->header);
++		__entry->source = async_header_get_source(packet->header);
++		__entry->offset = async_header_get_offset(packet->header);
++		memcpy(__get_dynamic_array(data), data, __get_dynamic_array_len(data));
++	),
++	TP_printk(
++		"transaction=0x%llx scode=%u generation=%u dst_id=0x%04x tlabel=%u retry=%u tcode=%u priority=%u src_id=0x%04x offset=0x%012llx data=%s",
++		__entry->transaction,
++		__entry->scode,
++		__entry->generation,
++		__entry->destination,
++		__entry->tlabel,
++		__entry->retry,
++		__entry->tcode,
++		__entry->priority,
++		__entry->source,
++		__entry->offset,
++		__print_array(__get_dynamic_array(data),
++			      __get_dynamic_array_len(data) / sizeof(u32), sizeof(u32))
++	)
++)
 +
-+#include <linux/tracepoint.h>
-+
-+// Placeholder for future use.
-+
-+#endif // _FIREWIRE_TRACE_EVENT_H
-+
-+#define TRACE_INCLUDE_PATH	.
-+#define TRACE_INCLUDE_FILE	trace
-+#include <trace/define_trace.h>
++TRACE_EVENT(async_request_outbound_complete,
++	TP_PROTO(const struct fw_card *card, const struct fw_transaction *transaction,
++		 const struct fw_packet *packet),
++	TP_ARGS(card, transaction, packet),
++	TP_STRUCT__entry(
++		__field(u64, transaction)
++		__field(u8, scode)
++		__field(u8, generation)
++		__field(u8, ack)
++		__field(u16, timestamp)
++	),
++	TP_fast_assign(
++		__entry->transaction = (u64)transaction;
++		__entry->scode = packet->speed;
++		__entry->generation = packet->generation;
++		__entry->ack = packet->ack;
++		__entry->timestamp = packet->timestamp;
++	),
++	TP_printk(
++		"transaction=0x%llx scode=%u generation=%u ack=%u timestamp=0x%04x",
++		__entry->transaction,
++		__entry->scode,
++		__entry->generation,
++		__entry->ack,
++		__entry->timestamp
++	)
++)
+ 
+ #endif // _FIREWIRE_TRACE_EVENT_H
+ 
 -- 
 2.43.0
 
