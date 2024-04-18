@@ -1,151 +1,128 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C0911CA0
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4E616191A;
+	Thu, 18 Apr 2024 17:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713460537; cv=none; b=Qk2SYne5fvq/tYQZyPLCqQvEbJ5ICnQvnuXWwnnQH2B/x7XMFpz14y3AtV3EIxGL25M5QKFNx8XsjygvfFy8cvwvCsafG5/c6R0n+6PXqdWwKMu9r1MKldJcEUkaawQqXYp2cFNBtZKW8Bu4okExAq3CfE6TTLi0CPMK8pmopSk=
+	t=1713460556; cv=none; b=WChx58RtAf7oo9Hh53u836CjjWAjZliV7Hbue7C/GT4BoIf5dbFZcinj2F7jwXtgcxbyVljeK9Mrijiucs2o1LPhA4kPSCbEf1BHL3iAHnOUWaKCLRfJSeZx9g+4WD2cQcPwF1VD8LKqelJ1mxuHaTMgF3pkAH3dpYdkH78DRZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713460537; c=relaxed/simple;
-	bh=JTXMwFeW01OOs8LHe2+n/J0SrYeNHEbZD8y9gLOPC4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U8vuCGO0GL8sav2W7tlTRcBD0A3oJ9XR6DGvZQ6Q7MkzvuL1i6opkuH6USwW+GxjXiuVplAFWUNp9LlqHxdIAKfmI/jg69W8dS/uir/FHlv/HtW3Xw98liabxE0aK1Hx1w3cuKcwOT2RPXVCG9NC2dgt9x2UtYcVxAUXv3RLa8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ftmCCZ+i; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713460556; c=relaxed/simple;
+	bh=LgJPMxU3HO9QRE31RUOPaGcABDjdwgiW7iye+x76HXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dAZKGUNGi8eKz3ni3/d4bf5MrBP+9x9jY0ljgRha19ymErVVb8WgdZQy5frkL6Zu+cKNWokA+33BDRyIvt8iaqaIQTk7FXSz0ab/8l2YfAcj4cK1JCCA4LbW43L0tw0aXqVZ1CfUxQAXKq6DFjwzPo0S6XDnqWYnxSN9yS1D0N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjptRVcn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ftmCCZ+i"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de4640ec49fso1184804276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713460534; x=1714065334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l6pJ+RQ7vG5rhlYvkzygwnEoE0kpj8juw3ibwvL2Tm4=;
-        b=ftmCCZ+iDF1+RFd7vBH7JGT7ztvkpVluxseaybxrmfN/DBKbUvKlLepTWp4uUt9aDd
-         KtYoNcNB6O8di5rSgxp/VrZATpe+UdmsgvJQwp/lS5P6Z2OXXtG7keg4aSx3En5kRxOZ
-         /t1dR7BJQKBdA525wQDtEFhIEfzjxAk6z8/gAWV2d5Gy6PNXw0w0kNjBL3cN4Z6P0e/j
-         e/+gXQ8ivoJt0YIjePvGZ4XiJjxdt6FSIIgYe/aOx+YKl5sFFs20Ftu2yPfL+ZBIO3jn
-         FTJPQCoROJs0/vM2OkTts//j6bnn4qd/kDuSYfnTEbR29aCVKilpFvvsSIOebbbpoRvT
-         r/xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713460534; x=1714065334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l6pJ+RQ7vG5rhlYvkzygwnEoE0kpj8juw3ibwvL2Tm4=;
-        b=iGePioI5f0n/1P45/cZh/tSqs+ZgySicQCrQ+EEfRwMNWyXveQMV/1UmbMGmG4oQPS
-         +RIW8aHApsPcF+RXbo9++06WOnxvpen4reTC2cNbKuaNazLWRdliHhUR+D3hicgtO9y3
-         QUaW+t48fvhK5nJ3gUGH4oH6MEwGQcObbSRSt3nkI7PwAhx3fG7XdDCE5+vrNKHHFnU4
-         qnN6OHhUcsEGm+VZZds3XU2HHNgVuWwjkUX7qL6+Av3PMrhxIHVNsR2gWiv5IYRLn5EI
-         6UgcvPNrwxI09Y0RU9z5xHybtGcb3ESOEu9MT6WEgDJchggdR2KX/wL7qeAX3NpVnTVO
-         jdcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/tzSk8DvOlETOjfUr57JH7nNcH85fck3qVceVdSvyMVbHacdD0gkXTzp4FtP436rUpXYG/g+HrbMijBLmRMpXmv8NHcfCMAGJzAp7
-X-Gm-Message-State: AOJu0YwTC33Ao5qKgbOlJZsNHcp4WarkrIPvxHDUUAj9vXG4mZvjrtPq
-	Gd4WSxZJgEWYZTGvIupTNbBbTzRjQaMqhk1qwyJlp55mZYpRx9VAYXA3XNEHv5TzZQXHDgSfxjy
-	3j5IxOz6j8K4QvqJa2y6kbzJoNl4U0UqbenZ/
-X-Google-Smtp-Source: AGHT+IHlWUMGIipX1LvxC1GyJuJB6xEEYMf+INZVeKfznaGw3fXHiTNz9amxChHh+gOw4Jb393ic8L8iw67AkFfwlKs=
-X-Received: by 2002:a25:55:0:b0:dcc:6d85:586a with SMTP id 82-20020a250055000000b00dcc6d85586amr3699602yba.49.1713460534336;
- Thu, 18 Apr 2024 10:15:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjptRVcn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A22C1C113CC;
+	Thu, 18 Apr 2024 17:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713460555;
+	bh=LgJPMxU3HO9QRE31RUOPaGcABDjdwgiW7iye+x76HXU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CjptRVcnWckpf1w0k3mjQdfgDyZNJ9iiw5mf48AG27ABJcUFrlWeDe2520MNdOMQv
+	 Vsx8nHFWxYmvK8YXEQfxqEeIr3D/5C9C8/pBiWqHxxheNJMANFtbReKOkY/+xR4fM/
+	 v+RiLZuudMNONV2yB0JFCxq6xDP9T58AVEAqhOEjUtK9+gueTcpp3LHOdISjDuX084
+	 f82SPmO/83F0s7X1yTX1yC3JvbiivFEhWnCPlaI4vB/i7ZFCHrAR4alLE7Gk4iN5I3
+	 tv7eWlIv8YaO5tiCeFTI+ae6iBsjl31Iy1z0BCWjPPKhhur9FbqQyqPL9FqZIf7irE
+	 f76Dj7kxQM7jw==
+Date: Thu, 18 Apr 2024 12:15:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: linux-pci@vger.kernel.org, Mateusz Kaduk <mateusz.kaduk@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, Tj <linux@iam.tj>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86/pci: Skip early E820 check for ECAM region
+Message-ID: <20240418171554.GA243364@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226211237.48415-1-ppbuk5246@gmail.com> <Ze_x3kovSFe4z9SO@Levi-MacBook-Pro.local>
- <CAJuCfpFdbh37qWFS8eCXk0CCQD9bA2wtpOj5BMYPNTcz-0Oxnw@mail.gmail.com>
-In-Reply-To: <CAJuCfpFdbh37qWFS8eCXk0CCQD9bA2wtpOj5BMYPNTcz-0Oxnw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 18 Apr 2024 10:15:21 -0700
-Message-ID: <CAJuCfpHpYGMT9Gpf4BxGBB3OLM6QgvifMyPADmzKakPn1-hV2A@mail.gmail.com>
-Subject: Re: [PATCH v2] psi: Fix avg trigger being fired unexpectedly.
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "levi.yun" <ppbuk5246@gmail.com>, hannes@cmpxchg.org, peterz@infradead.org, 
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c1897030-77a4-416d-86c4-6d4d560e5fd8@redhat.com>
 
-On Tue, Mar 26, 2024 at 10:49=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
-com> wrote:
->
-> On Tue, Mar 12, 2024 at 6:10=E2=80=AFAM levi.yun <ppbuk5246@gmail.com> wr=
-ote:
-> >
-> > Gentle ping..
-> >
-> > On Mon, Feb 26, 2024 at 09:12:37PM +0000, Levi Yun wrote:
-> > > commit 915a087e4c473("psi: Fix trigger being fired unexpectedly at in=
-itial")
-> > > fixes unexpected event fired when group->total accumulated for PSI_PO=
-LL.
-> > > But, for PSI_AVGS, win->value should be initialized with group->total=
-[PSI_AVGS].
-> > > Moreover, to get exact initial value for win->value, it should be set
-> > > under each trigger lock to avoid concurrent changes to group->total[]=
-.
-> > >
-> > > Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
-> > > Acked-by: Suren Baghdasaryan <surenb@google.com>
->
-> Hi Peter,
-> Could you please pull this patch into your tree? I don't see it in any
-> tree, so I think you missed it.
+On Thu, Apr 18, 2024 at 10:14:21AM +0200, Hans de Goede wrote:
+> On 4/17/24 10:40 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Arul, Mateusz, Imcarneiro91, and Aman reported a regression caused by
+> > 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map").  On the
+> > Lenovo Legion 9i laptop, that commit removes the area containing ECAM from
+> > E820, which means the early E820 validation started failing, which meant we
+> > didn't enable ECAM in the "early MCFG" path
+> > 
+> > The lack of ECAM caused many ACPI methods to fail, resulting in the
+> > embedded controller, PS/2, audio, trackpad, and battery devices not being
+> > detected.  The _OSC method also failed, so Linux could not take control of
+> > the PCIe hotplug, PME, and AER features:
+> > 
+> >   # pci_mmcfg_early_init()
+> > 
+> >   PCI: ECAM [mem 0xc0000000-0xce0fffff] (base 0xc0000000) for domain 0000 [bus 00-e0]
+> >   PCI: not using ECAM ([mem 0xc0000000-0xce0fffff] not reserved)
+> > 
+> >   ACPI Error: AE_ERROR, Returned by Handler for [PCI_Config] (20230628/evregion-300)
+> >   ACPI: Interpreter enabled
+> >   ACPI: Ignoring error and continuing table load
+> >   ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.RP01._SB.PC00], AE_NOT_FOUND (20230628/dswload2-162)
+> >   ACPI Error: AE_NOT_FOUND, During name lookup/catalog (20230628/psobject-220)
+> >   ACPI: Skipping parse of AML opcode: OpcodeName unavailable (0x0010)
+> >   ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.RP01._SB.PC00], AE_NOT_FOUND (20230628/dswload2-162)
+> >   ACPI Error: AE_NOT_FOUND, During name lookup/catalog (20230628/psobject-220)
+> >   ...
+> >   ACPI Error: Aborting method \_SB.PC00._OSC due to previous error (AE_NOT_FOUND) (20230628/psparse-529)
+> >   acpi PNP0A08:00: _OSC: platform retains control of PCIe features (AE_NOT_FOUND)
+> > 
+> >   # pci_mmcfg_late_init()
+> > 
+> >   PCI: ECAM [mem 0xc0000000-0xce0fffff] (base 0xc0000000) for domain 0000 [bus 00-e0]
+> >   PCI: [Firmware Info]: ECAM [mem 0xc0000000-0xce0fffff] not reserved in ACPI motherboard resources
+> >   PCI: ECAM [mem 0xc0000000-0xce0fffff] is EfiMemoryMappedIO; assuming valid
+> >   PCI: ECAM [mem 0xc0000000-0xce0fffff] reserved to work around lack of ACPI motherboard _CRS
+> > 
+> > Per PCI Firmware r3.3, sec 4.1.2, ECAM space must be reserved by a PNP0C02
+> > resource, but it need not be mentioned in E820, so we shouldn't look at
+> > E820 to validate the ECAM space described by MCFG.
+> > 
+> > 946f2ee5c731 ("[PATCH] i386/x86-64: Check that MCFG points to an e820
+> > reserved area") added a sanity check of E820 to work around buggy MCFG
+> > tables, but that over-aggressive validation causes failures like this one.
+> > 
+> > Keep the E820 validation check only for older BIOSes (pre-2016) so the
+> > buggy 2006-era machines don't break.  Skip the early E820 check for 2016
+> > and newer BIOSes.
+> 
+> I know a fix for this has been long in the making so I don't want to throw
+> a spanner into the works, but I wonder why is the is_efi_mmio() check inside
+> the if (!early && !acpi_disabled) {} block (before this patch) ?
+> 
+> is_efi_mmio() only relies on EFI memdescriptors and those are setup pretty
+> early. Assuming that the EFI memdescriptors are indeed setup before
+> pci_mmcfg_reserved(..., ..., early=true) gets called we could simply move
+> the is_efi_mmio(&cfg->res) outside (below) the if (!early && !acpi_disabled)
+> {} so that it always runs before the is_mmconf_reserved(e820__mapped_all, ...)
+> check.
+> 
+> Looking at the dmesg above the is_efi_mmio() check does succeed, so this
+> should fix the issue without needing a BIOS year check ?
 
-I heard Peter is currently unavailable. Ingo, would you please take
-this patch into the scheduler tree?
-Thanks,
-Suren.
+As far as I know there is no spec requirement that an area described
+by MCFG appear in either the E820 map or the EFI map.
 
-> Thanks,
-> Suren.
->
-> > > ---
-> > > v2: Fix commit message.
-> > > ---
-> > >  kernel/sched/psi.c | 8 +++++---
-> > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> > > index 7b4aa5809c0f..e7f66ab2ad3e 100644
-> > > --- a/kernel/sched/psi.c
-> > > +++ b/kernel/sched/psi.c
-> > > @@ -1323,9 +1323,6 @@ struct psi_trigger *psi_trigger_create(struct p=
-si_group *group, char *buf,
-> > >       t->state =3D state;
-> > >       t->threshold =3D threshold_us * NSEC_PER_USEC;
-> > >       t->win.size =3D window_us * NSEC_PER_USEC;
-> > > -     window_reset(&t->win, sched_clock(),
-> > > -                     group->total[PSI_POLL][t->state], 0);
-> > > -
-> > >       t->event =3D 0;
-> > >       t->last_event_time =3D 0;
-> > >       t->of =3D of;
-> > > @@ -1336,6 +1333,8 @@ struct psi_trigger *psi_trigger_create(struct p=
-si_group *group, char *buf,
-> > >
-> > >       if (privileged) {
-> > >               mutex_lock(&group->rtpoll_trigger_lock);
-> > > +             window_reset(&t->win, sched_clock(),
-> > > +                             group->total[PSI_POLL][t->state], 0);
-> > >
-> > >               if (!rcu_access_pointer(group->rtpoll_task)) {
-> > >                       struct task_struct *task;
-> > > @@ -1361,6 +1360,9 @@ struct psi_trigger *psi_trigger_create(struct p=
-si_group *group, char *buf,
-> > >       } else {
-> > >               mutex_lock(&group->avgs_lock);
-> > >
-> > > +             window_reset(&t->win, sched_clock(),
-> > > +                             group->total[PSI_AVGS][t->state], 0);
-> > > +
-> > >               list_add(&t->node, &group->avg_triggers);
-> > >               group->avg_nr_triggers[t->state]++;
-> > >
-> > > --
-> > > 2.39.2
+I would like to get away from relying on these things that the spec
+doesn't require because they are so prone to breakage.
+
+I would love to just get rid of this early usage of
+pci_mmcfg_reserved() completely; I'm just afraid of breaking some
+ancient 2006-era machine that still happens to be running.
+
+Did I understand your question correctly?
+
+Bjorn
