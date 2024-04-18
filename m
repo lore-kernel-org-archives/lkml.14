@@ -1,191 +1,138 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2125.outbound.protection.partner.outlook.cn [139.219.17.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507315FEED;
-	Thu, 18 Apr 2024 08:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713428602; cv=fail; b=arTjhTXrZMq78sbd16jEgjHSbK6Uv0RgR4PLO7GrrWVijf6GcbnB9Id/EaVFnxdCQB3mxmFf4aC+DhphhWvNo1NRUGuafbSs7t4K/fZQdfNbaAaR+QFcEeJVg1WsfrrhS3wuqJmnRODK5qf67Cheqlp6LMi/e9iLJ12D/JPX8P4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713428602; c=relaxed/simple;
-	bh=xJjltQkq6/OjxpJgmseY9RTa2sNkk3Csbr85pW1+CUA=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=sPsBBhlPLiG9dUiwznJigH2nX+Ao6f5zbT9ar6ecf1EkWnWbDlNxCULJ1E5tobCb+I1NA+JrvQa7SK6uaeIficVzilOFgjzgfuxKJifGxKm80W2sQCOc3kyVhHfg243MD/ER6NhAGOT+v52UF8deEy51XDPdCuim7sp1xJIgkek=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mUBB046rlaxVvdgLb2v3XB1zoZolfUX2IFvwJDKlWiugru2iolwtoo2zApdNOL4/mFrVXTFJfWYEjQppUgE8PpWLGd+Ivlqz6LaInicT+r06nmOSJBRhsKCYacHUIwLOOrnCn1kS+7czs9TYFfUNWvqztl74QKtVxLpD6Y+ccYsSRRsQ9abWaW539HEI/gP+hFilBqkN9Zo38RKQHsYBGO+vyvo5Bf9GbTyjMIhHBPG71xGaNZlzh2UbxjXc8CXgnoBNHYnWH8rkNrMIKWXwrE4M48Zchj4biKJqIciTiTE9qzBGrgcIaDRGD2tiF4KZTUY2zzxrDMhzmVkHQ6GmLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rNv0XYTAuK2gbD9fA/WE+fPExIotgIFv66Pt2Y4CS5Y=;
- b=khAfQ8PGaAaqI6WzhIrTjmj9u6K4dyi64gEUw83R/Om6CAjvBH/MKPGXqKI5ePAyuzdv348+C4zZdxup7AbyKcQpRH8PX+uj4WtRgKIgdpRs0TsKAX7CSWKdnHwDH/3ZnXXwlsaTW/KYjG2gUSSCoknNL0nw4b1qVmH14lDd/mjlHrJAn1ahTddkbY1MKihZJh5pKsfoZs+uVZy47nmeXTm00jpAsjL3e59nMr+zzgmgmamxTmnYeOGtBvKUQI0v8kLW+MXvcBodL9U74pBDTDjSA8khc42LRnWni/AQDz82oa+cfQYIBOGNvdr4W6bF/9iytc01HsuORJ7xeLd8AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6) by NT0PR01MB1071.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 18 Apr
- 2024 03:50:34 +0000
-Received: from NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- ([fe80::103a:5792:ddaf:4283]) by
- NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn ([fe80::103a:5792:ddaf:4283%4])
- with mapi id 15.20.7409.042; Thu, 18 Apr 2024 03:50:33 +0000
-From: Shengyang Chen <shengyang.chen@starfivetech.com>
-To: devicetree@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Cc: vkoul@kernel.org,
-	kishon@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	minda.chen@starfivetech.com,
-	changhuang.liang@starfivetech.com,
-	rogerq@kernel.org,
-	geert+renesas@glider.be,
-	keith.zhao@starfivetech.com,
-	shengyang.chen@starfivetech.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/2] Add JH7110 MIPI DPHY TX support
-Date: Thu, 18 Apr 2024 11:50:18 +0800
-Message-Id: <20240418035020.47876-1-shengyang.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0036.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::13) To NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:3::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCB75804;
+	Thu, 18 Apr 2024 08:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713428603; cv=none; b=V4NZt4dxYGOnGmUs4dPG6BXmI0hCcjSz39UXRyhyADH4dwdn2YTFpum/hc7m7fI8v4Hn/vXKjfcYivqMMUa0l1InYuShbzc7OvSe3ch/el7OVSRdVc57NDhz4jkjB9zpcnFs9mhOpKrWkKRatC0Ltn26nqUnPfNhn6H0wcfmO3o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713428603; c=relaxed/simple;
+	bh=TH3QyWiKd2juU+oSKxSy/lDwl1nklskSwO6+vNj1TYY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=gMpqJMtWn9SDx0qTqS+4fzpWsPO7dgwtA7m9mpnoXpiCdupdgHeNpgZ7VrIq5Uee74xeS7pUDTtH8MPXJn0Q2mts9PBPEQ1omC9jFuW3YymYCoco+urFCEV+2YddDFhwAaQdeQXzdEQkGiOgGQA0umxnAhW1KqKd455iSCbFh7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4RNxu/+; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4RNxu/+"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-617e6c873f3so5603897b3.2;
+        Thu, 18 Apr 2024 01:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713428601; x=1714033401; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6P6MwEhWs+WTqrRhQNWlJQgr1xPVQGum8AsCHKue2xE=;
+        b=S4RNxu/+h3DUCdN95ZkDkTedYVh6PHPBJzyWlEtOf6a7BAS605Z/sjWOkrDcs4Rp3M
+         T8CCkqplNVOhqyZGC6ctE84pA9vpa7z7tsVL8eqlLJPZy6BQKV5oVTz92dBAp/AOHeMN
+         3vcczhktrJr+qjpK1Dwb39q9Wxh/zfTaeJR01HQC1HBeYwkvZsnwW9m8Me1oIS6fPosN
+         lOfzdBIV+A/xbghwmnSGFBlkGu3r7sATTQvbCSJbQ/NsZ037mnSZ67s99KG+KwsbzyOb
+         xWca+XiCeECmsgjjoJdsZAtAg6PU3dxTI1og3+r43qqoMg9xAgTCfJdVR/o3Za/hgoY4
+         TdLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713428601; x=1714033401;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6P6MwEhWs+WTqrRhQNWlJQgr1xPVQGum8AsCHKue2xE=;
+        b=heUcxucQnbcOA7yH289hVzO1p+/w2ZwKVFZ2EA18c3Zo3AhdZxLWeu3Kf1wtTZE9vl
+         mclVdFDF//BgcvnKE8s+g14GFo4P82FCxfOiTwAnuJM7EzbcBTcrSwfL5wzudH45L8rz
+         eYs3w2kK8huBpBuvkny9wYolXo0KK1AcxW5povMv+ciMLQJ9ZXXE6EIROgX74ZE1ex7s
+         8Ft2kLOn6D3+GD24ve8ziNuMx9tksmogLhp8Bw2clP9pGbVMmXdF/Apk/Lvy3V2gUrMh
+         VEVNUSA5suFJalUm9ocnCch2RcWyseE5KS85gB7LXBrcYA+sNp30aQ4yiIaKtVsazPce
+         Tpdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkAWm2utBbvI0mwWZBasgcZVP/XdCum94oPMG74VumdnEe49uunl3x2UV/w6F30v6rDCWz7QrBsKcmUkNrWVSH5GmwlzrgvCE43ls921XhqC4UySUDYYs2Gfh3bWhghQQR2/UP1xEY
+X-Gm-Message-State: AOJu0YxphYkBzwU+JyRGe8hdjrngj8u3EpqhhxozVgs5WEnGrJ5t0Ieo
+	gM9A6GaHNKy3psYsu0yU+kuGnNXai3U/+p9VP0MOguufZi6zWmKk
+X-Google-Smtp-Source: AGHT+IGpquJXXFyR2to9qlJmM8dB5OmlGcqWdrlZfDuV9d9lRI3/NN/rALPvsJHmJWO51OyqgI9VtA==
+X-Received: by 2002:a05:690c:7089:b0:615:8c1:d7ec with SMTP id jg9-20020a05690c708900b0061508c1d7ecmr2054399ywb.33.1713428601174;
+        Thu, 18 Apr 2024 01:23:21 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id s21-20020a632155000000b005cd8044c6fesm881273pgm.23.2024.04.18.01.23.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 01:23:20 -0700 (PDT)
+Message-ID: <6875fb17-f781-4594-803a-c11969f36022@gmail.com>
+Date: Thu, 18 Apr 2024 17:23:17 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NT0PR01MB1070:EE_|NT0PR01MB1071:EE_
-X-MS-Office365-Filtering-Correlation-Id: a963dd02-07d2-4d1f-38df-08dc5f5ab32f
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	mpCSgAXvFu3VvauFTAOFlrD1N/i7M90duS9SHruQIgAve//Jh7zgYzSZjpHtTTpWa2WdoMnaJVpAYtwOVJPv6jVEEqGFEqk4XV5K26ovquw8OwWUIzcW+yJXjEtZvxSW67JXtmO7jIkr0zsPhOLgLTmZTWzqXmHJjkE1SvJYau56n5NkoRJIJEu/DQPKM4AxudtbeiwQ5VAYXdNHZde/NrjqDIQGggC8Vc0aloXwWC/cApkq7ppSauDSfT8hJ2KN5AsEjJ4Y5iAmSNBMHBKPCcIysMIP3jmtXCD/BeeuxuCdp/jd+aIJagnYrWzEvD1T/bVDcI/ha/YFycLoPiriEy5r5THziQfJUV6I+0ICGOM15Oy0SGIVavPrQdXgdII7dQMYJH+sIunAAJGFpq/UPULnPU8grLXjN+qnTFt6VDUdwwEiVqBbuDyOmNoU7hBBpOsSN+EFUfVcuN4H97ZRDVS4YJQASTd8au8YWqnh7gdvn8jkGkHSV6V0+5otfRvMbm4L45QxSW4T3IxSZTV8Ce2jmFsmglr6QmoCpXRCcBX5wg0aTGPG0N2ToE6GcU/dZjuRAV52HMjAhE1aISyu9BwCrSU9c9Kcp34OoRjA6q84aQAzua8EvtbectUqBzsE
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(1800799015)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NDxPCyKFshGTRQSaqFSit5GBO7O8x903KMiYFvH/K/XD5BPdz4DUxpattV+h?=
- =?us-ascii?Q?8trCD4ih6g2tObZwqFiSevbDzXNDY+dkuzxyhf706c9+CR5sAQekV5BAe1/M?=
- =?us-ascii?Q?NUMHQHTBcq0rcSqk1qlTYiY+xBNjSyl6CDCX3w5mJ4Q8wXvHN6BKHMwb9Med?=
- =?us-ascii?Q?Fna2NJk7PSfE1iqc03UVFPsSGjLlZB4+kX7KwfVIR+IA2fdaSOQEdOJaI5jM?=
- =?us-ascii?Q?i8YV2/e8QtXCIo9Q40SdzsfiTUn7nj4GagHCO/JRzhJtwRAzDO+x3XaDphCs?=
- =?us-ascii?Q?IKIRVtU5jweePLUobEj+FFxV07XYSbmGd0J/VDEStkaRw/rfnn6KS+9mkkdO?=
- =?us-ascii?Q?d5ta/Oiq7w/HjdJxqEUvFCDBvgbzyR3SiNPAAI4xJ8DOjt8Y9af3Ci8SxAuy?=
- =?us-ascii?Q?dBcJvutbk8vmmpQTHKC8kHIWLPLVmmbNgeK+s2ZV2KhUlQBcDR7hIG92k05N?=
- =?us-ascii?Q?dgHworIXRZtpEmQ8La6xYgjub1LZ6B0DfUEpyXnUjwzRlgnlwhmApLlBypCx?=
- =?us-ascii?Q?fN6rFFnQT232UhVJYtLBVopTSUmuo0eqy5JclSX1RgiWpameLgQ5Kp8q3RJ7?=
- =?us-ascii?Q?62FUWA+wf0mHQlNsQGJTmQ6fCan+gn6JPkjRDxDnHfRCgzIccjPWv4AvGcI0?=
- =?us-ascii?Q?WErZvh4VDIGWjETC6UgOMmSmakvD5PtkY8zMA+2YXF/aUDnHWT8A5C5NJF4c?=
- =?us-ascii?Q?eBxdv4KOUyGGqsb/yXqpN0fXdBurT2FeCHrd5T1ijQcb7jlLT3tSDIjbCrqc?=
- =?us-ascii?Q?VORpiwlECUi4EaUCC4s/HjVZR014Yr1kb8VkYHX7HFHmLrDvprSS7HIcRRgW?=
- =?us-ascii?Q?XWI0dUUQLWG3QDbN6ZWpGXmquJi47h/rvP2lVebstlNkPs30oja/UB5J1HME?=
- =?us-ascii?Q?mpC9XwgVUensGRPY7daiG1ClzSf8QYO6IBBwP2PmS+sjtfUqegV/sDokQuW5?=
- =?us-ascii?Q?dhqQAgj6zDqQb534HsT9vXdgrdMSq0dIBCfHHzkO06fStyohC+HdJPsHhiRP?=
- =?us-ascii?Q?gTuIM6S0ZbSjS2dQ7wAMvPQhIfDrZpGabuXwHLrSPyIhFwlRBdFi0PwncvOp?=
- =?us-ascii?Q?pgzYNYHlacs1tzoXJRblrFoVq5blNPRj3ZsaBYFyQOlfHN0aonqYMRjugjL+?=
- =?us-ascii?Q?y8MWiG3sjXEsCDHPF3WSTg0XMYjC6a2+FIU7CXmr+B5192PLOpNZa1zqcnjS?=
- =?us-ascii?Q?M3O20wiY+0nrh/M0z0dRvxvaxdozkZaHv85CB+C9j9H5slUKVXhjIzSCYdOa?=
- =?us-ascii?Q?o1yF2BCMkwkkQxqkHv5bqPqb1z9QhjHCuofHcku2jFDa5E9FrYpL2M+kNjE7?=
- =?us-ascii?Q?w1Ef0U9eu4Q5ighj/m8pvtV3nGCLpkh0JoNKxqLnIM4LVJ0DDhFjRBkydjKC?=
- =?us-ascii?Q?di3wYJ7VFHuahEajW3bMJVM++9IkgfrOKohA4/cj6Ryl80t3wTGRC03SmnDe?=
- =?us-ascii?Q?/gkjof/m86IijoNiqbsZ5Ppbw1pKtcQEHpinAChY1KUfROG7REUgOf3RIlHf?=
- =?us-ascii?Q?6ycVFwgS94KV2s0b4g7681/c/7w25HUCS4r0B1IZvu87BsVxQNAOqRXT2407?=
- =?us-ascii?Q?Z1iBii8Quwaq1c+nsJc4ImbmMmET7xDNxaYkZJv4XPFMPDnR8RMIRqkt+z5G?=
- =?us-ascii?Q?KGSoZHvdoACEFhKtjT7yoI8=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a963dd02-07d2-4d1f-38df-08dc5f5ab32f
-X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1070.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 03:50:33.9022
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: usdba8WN/cqxzbJ4qYT37ZRPcYBFsXgDWzyM20bWR4V/TIg05YcPgNgtgZxNeXrkGjvzkxULUBwkeQYo07PUNY4PRUdBCp/d0mHNseDT0+E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1071
+User-Agent: Mozilla Thunderbird
+To: bagasdotme@gmail.com
+Cc: Naohiro.Aota@wdc.com, frederic@kernel.org, jiangshanlai@gmail.com,
+ kent.overstreet@linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
+ tj@kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <20240418072100.30670-2-bagasdotme@gmail.com>
+Subject: Re: [PATCH] Documentation: workqueue: Inline WQ_* flag pattern
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20240418072100.30670-2-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patchset adds mipi dphy tx support for the StarFive JH7110 SoC.
-It is used to transfer DSI data. The series has been tested on
-the VisionFive 2 board.
+[+Cc: Jon]
 
+On Thu, 18 Apr 2024 14:21:01 +0700, Bagas Sanjaya wrote:
+> Sphinx reports htmldocs warning:
+> 
+> Documentation/core-api/workqueue:776: ./include/linux/workqueue.h:493: WARNING: Inline literal start-string without end-string.
+> 
+> The warning is caused by unescaped wildcard in the pattern that matches
+> all workqueue flags (WQ_*). The pattern is rendered as normal text
+> (with surrounding double backticks due to @argument syntax usage)
+> instead of inline text like in individual flag names as a result.
+> 
+> Inline the pattern to fix the warning.
+> 
+> Fixes: 5797b1c18919 ("workqueue: Implement system-wide nr_active enforcement for unbound workqueues")
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>  include/linux/workqueue.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> index 158784dd189ab2..c9fec74e130459 100644
+> --- a/include/linux/workqueue.h
+> +++ b/include/linux/workqueue.h
+> @@ -463,7 +463,7 @@ void workqueue_softirq_dead(unsigned int cpu);
+>  /**
+>   * alloc_workqueue - allocate a workqueue
+>   * @fmt: printf format for the name of the workqueue
+> - * @flags: WQ_* flags
+> + * @flags: ``WQ_*`` flags
+>   * @max_active: max in-flight work items, 0 for default
+>   * remaining args: args for @fmt
+>   *
+> @@ -490,7 +490,7 @@ void workqueue_softirq_dead(unsigned int cpu);
+>   * min_active which is set to min(@max_active, %WQ_DFL_MIN_ACTIVE). This means
+>   * that the sum of per-node max_active's may be larger than @max_active.
+>   *
+> - * For detailed information on %WQ_* flags, please refer to
+> + * For detailed information on ``WQ_*`` flags, please refer to
+>   * Documentation/core-api/workqueue.rst.
+>   *
+>   * RETURNS:
 
-change since v4:
-- Rebased on tag v6.9-rc4.
+In my opinion, reST-specific clutters like these should be avoided in
+kernel-doc comments as far as possible.
 
-patch 2:
--Drop shift macro definitions.
--Drop useless member variables of config array.
--Drop stf_dphy_set_reg() and  stf_dphy_get_reg().
--Add readl_poll_timeout_atomic() for delay in stf_dphy_hw_reset().
--Rewrite register configure logic with FIELD_PREP()/FIELD_GET() and writel()/readl().
+Instead, I think you can educate kernel-doc (script) so that "*" is
+allowed in the %CONSTANT pattern, meaning %WQ_* can be converted
+to ``WQ_*`` in reST.
 
-v4: https://patchwork.kernel.org/project/linux-phy/cover/20240301012406.92589-1-shengyang.chen@starfivetech.com/
+For similar changes made against the @param pattern, see commits
+69fc23efc7e5 ("kernel-doc: Add unary operator * to $type_param_ref")
+and 8aaf297a0dd6 ("docs: scripts: kernel-doc: accept bitwise negation
+like ~@var").
 
+I guess it is $type_constant2 that needs a tweak in this case.
 
-change since v3:
-- Rebased on tag v6.8-rc6.
+HTH,
+Akira
 
-patch 2:
-- Lower case for hex value.
-- Replace bit shifts operation with macro definitions.
-- Drop delay in stf_dphy_hw_reset().
-- Change variable declarations order in stf_dphy_configure().
-
-v3: https://patchwork.kernel.org/project/linux-phy/cover/20240206061921.107372-1-shengyang.chen@starfivetech.com/
-
-
-change since v2:
-- Rebased on tag v6.8-rc3.
-
-patch 2:
-- Drop regulator operation.
-
-v2: https://patchwork.kernel.org/project/linux-phy/cover/20240109071246.24065-1-shengyang.chen@starfivetech.com/
-
-
-changes since v1:
-- Rebased on tag v6.7.
-
-patch 1:
-- Drop 'dphy_'prefix.
-- Drop DSI reset.
-- Drop unnecessary resets.
-
-
-patch 2:
-- Changed the commit message.
-- Use dev_err_probe() and PTR_ERR() in probing.
-- Drop DSI reset operation.
-- Drop unnecessary resets operation.
-- Add configs in array for full support of the module
-- Changed 'void *io_addr' to 'void __iomem *io_addr'.
-
-v1: https://patchwork.kernel.org/project/linux-phy/cover/20231117130421.79261-1-shengyang.chen@starfivetech.com/
-
-Shengyang Chen (2):
-  dt-bindings: phy: Add starfive,jh7110-dphy-tx
-  phy: starfive: Add mipi dphy tx support
-
- .../bindings/phy/starfive,jh7110-dphy-tx.yaml |  68 +++
- MAINTAINERS                                   |   7 +
- drivers/phy/starfive/Kconfig                  |  10 +
- drivers/phy/starfive/Makefile                 |   1 +
- drivers/phy/starfive/phy-jh7110-dphy-tx.c     | 459 ++++++++++++++++++
- 5 files changed, 545 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/starfive,jh7110-dphy-tx.yaml
- create mode 100644 drivers/phy/starfive/phy-jh7110-dphy-tx.c
-
--- 
-2.17.1
 
