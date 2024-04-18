@@ -1,101 +1,137 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652C26A8CA;
-	Thu, 18 Apr 2024 13:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD001607B2
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448356; cv=none; b=ZKjOrqTuJE/EF5vU2s7jauO22adZTTuNkzOviX7mgjlL7eXpUSWhAmth2wdN77XYEhWcOr+rBJr8j6Pckr0lc/qaqWrkxxW+mhTFeyCc1pIambwZoWf+U4jdIfDwHirru5c5D+gaTsQl0QIJ7xXHBqLIkwFdlGaz3zma6i0ST/U=
+	t=1713448374; cv=none; b=VH0967zbWbVhHad+J6S78spAsE1XHUiOdFpFk/KAu7kVw2YW4hGdkWD/MNpzYd++SUUmPe8MBohiwpY72t5QHIyVKzZwpo/S3Mpm2l+Obl3DUBAh+MerXjhv9grXO7PxfsFPjocy1fHM1vbfTKECy9HqcTlbJjW8Z8yNZvXmB7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448356; c=relaxed/simple;
-	bh=DFMBpvLg9bEM08JQ9ob6upTO1i+WiZqw2n6cDonSo4w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hkLPK5vSU7Qq1oCMXrswgANtXkRoEOkivWE8HPXRsi8HmUIENYbZi/bAkLl+XpSaD9NKBGffq3D9MXtSnB707scAflPYNu8JMHnNsAncAttM2XpQ5VrCdaN97XoLuq2DqfnQihtwFjdVbGTR+Yqit+dLkiTuxM8LXs7nX/l8D+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RmxsbDgx; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713448374; c=relaxed/simple;
+	bh=rrJLEic6b430M5d1gdVy4F5Gjj2IiF/kZAlAhOoSm+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i95GH/Hc3BRFIzMI7/2NzCqzli1vtgibgTcFfxhZ4MtL31x/hBrOvfM+TMkr1rze0dHc61n+Y42853Te+mdrAuAaXwmrYpnPT5xphTWWykAu1jqV5TvmzcxXVk23zLhTRjgyNOKBuePSImQ1G8o2KjyM+D9y7n6FDBt9i/puQSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qckfZu1D; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RmxsbDgx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C2C281BF209;
-	Thu, 18 Apr 2024 13:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713448351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8wUOi164P3lAmjE1ClSdezuP19LGck9A7BJ4c8R2rWo=;
-	b=RmxsbDgxhNpNQOPoFlayXDpwdP+tytqkGF2OJI6z52D3jvdH0BINaMaSOJABYa6/o6WxeC
-	ghog+bvm/6xdvqTf7B+xQM1u8PJB3QGicA2yN5ueeF17yS8iO+LMOt3yX/95A/69vx0wFU
-	cWHL5OJ6Vcw7APt18HuFE96l5gziHKoup8zj+aF3KookZJxRSzPjCOjoJAU1e0WxFzVysT
-	v/WQR3MUr8UJwvigXjjQu2WXU9bhHEg4YS9NtOcNTo94oqfGuwGimoaaP5yb6TJK1bx/Ff
-	aiZo6SsBfRs+qKWkz/kuZH1VCi7XUvW5NuGt7bGVzPZKfEQBmV9RD8UVbJaq/w==
-Date: Thu, 18 Apr 2024 15:53:07 +0200 (CEST)
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-cc: Romain Gantois <romain.gantois@bootlin.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    Geert Uytterhoeven <geert+renesas@glider.be>, 
-    Magnus Damm <magnus.damm@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jose Abreu <joabreu@synopsys.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, 
-    =?ISO-8859-15?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>, 
-    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
-    devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-renesas-soc@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v3 4/5] net: stmmac: add support for RZ/N1
- GMAC
-In-Reply-To: <eqfta73ost45nbzz3aoa2tw5tasg3geehf4fgphu4teq5yfvar@ngif2e6j5j2k>
-Message-ID: <c99b452b-be35-3a67-1c87-042dbc5fce49@bootlin.com>
-References: <20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com> <20240415-rzn1-gmac1-v3-4-ab12f2c4401d@bootlin.com> <xp34tp5cjmdshefxjczltz2prqtiikagfspf4lobznzypvsyah@ihpmwfynwzhh> <232e3b0c-ca55-2da0-1c9f-47520a1bcfbd@bootlin.com>
- <eqfta73ost45nbzz3aoa2tw5tasg3geehf4fgphu4teq5yfvar@ngif2e6j5j2k>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qckfZu1D"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-418effbc70cso3554915e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713448370; x=1714053170; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RWbG4sKC6MWj6GtrMOZNqb19mu2ielKzyJ3R5+Nz7mI=;
+        b=qckfZu1DXtbJ8whmn9PW11MBPw0iD6mpnnjyx2sbpzqS4CgWY+LFbA6x/2HJBIzfEx
+         MqJNwRT9t5WM8+DDjD//TNcnPRovgn8ZE39TNyU7KqSTmYAxPIB8k5Az26s0A/+Q5EXH
+         /2Z5DGAR3OIMI2mdHfihU16F5HYH6jiIdb9ps9hPP4a8IlxCZwCmTG0jMC/5C4oxxpke
+         asIPPVNDx7gJAW29i+qPlmMzGjZjtsEVfU0n5Fzrk/vfDL8+xG6xgs6rom27MH440jzr
+         20KHWu8VkjcFOB9IwEoPXRKRoxKFgzxXRXsNsc1tTwykDumjz7WwTWSfjIBgfpbiLJwz
+         /C8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713448370; x=1714053170;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RWbG4sKC6MWj6GtrMOZNqb19mu2ielKzyJ3R5+Nz7mI=;
+        b=YkYYuAbNF9vps1ChQzvCR2v8aXqWkpOl1GLRkWw1lnvnnmI3PJcqPEreBGUbpFb2eY
+         u49T54/BlqJSUoDKUvuuwsMI2ggE/7oD48Pb4oiYxgbNZkgnv0C2pz0cAJQv6/DtxRH/
+         yq9t/73MyEv3i89DUGx5ceMJmPzMDnZK+DtICD5fQBngOGz9i4rXVHIMFeYM3XURvISq
+         dkEdoyFeSteyBJC5m7jeSdI3OqLRHSL0f+WkmLwHiEpHHmqJLfSr1H5GlO7tStBZvy/V
+         S/bsMTaYoWDJlYn3D0ceHEcFZYMy7secYWjxi3Sw3/LFUAqQUu2eYAGixXTUdZ9gXeGn
+         qCPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKGSoHTRNRdPA07R/EXPmdRQhwqpHjmCVR2qkzsDy/jXnjvYGJkNYItiH1Q8CmY2VUqHPG8PNO4roXDgEj/DYDm2jMnTMrmzPBv1RU
+X-Gm-Message-State: AOJu0Yww/jiJMGfB9DJ0ZtNxrXUuAeF/6I356BoXWykVfufsO4YtDWvw
+	DSOzPN00WBwPt+t3w3923pm50b4jD+io/bOMWuYcnaL+lblwYwM52t6MDTiWhc4=
+X-Google-Smtp-Source: AGHT+IHftEyUpBzc5z2d24qG1D0jDGSYD+HoX1PiiOfhTW9sfi19sqqjij+wzfohFDIByM5q6oSYtA==
+X-Received: by 2002:a05:600c:548b:b0:417:d44f:5c50 with SMTP id iv11-20020a05600c548b00b00417d44f5c50mr1996191wmb.41.1713448370076;
+        Thu, 18 Apr 2024 06:52:50 -0700 (PDT)
+Received: from linaro.org ([62.231.100.236])
+        by smtp.gmail.com with ESMTPSA id fj3-20020a05600c0c8300b00416b2cbad06sm6660102wmb.41.2024.04.18.06.52.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 06:52:49 -0700 (PDT)
+Date: Thu, 18 Apr 2024 16:52:48 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: dispcc-x1e80100: Drop the reconfiguring of
+ PLL0 on probe
+Message-ID: <ZiElsMSXImj49Qle@linaro.org>
+References: <20240418-x1e80100-dispcc-drop-pll0-reconfigure-v1-1-453e4e70e940@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418-x1e80100-dispcc-drop-pll0-reconfigure-v1-1-453e4e70e940@linaro.org>
 
-On Thu, 18 Apr 2024, Serge Semin wrote:
-
-> On Thu, Apr 18, 2024 at 01:57:47PM +0200, Romain Gantois wrote:
-> > Hi Serge,
-> > 
-> > On Tue, 16 Apr 2024, Serge Semin wrote:
-> > 
-> > > > +static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv,
-> > > 
-> > > > +			       struct mac_device_info *hw)
-> > > 
-> > > AFAICS hw is unused, and the mac_device_info instance is reached via
-> > > the priv pointer. What about dropping the unused argument then?
-> > 
+On 24-04-18 13:51:22, Abel Vesa wrote:
+> Currently, PLL0 is configured by the bootloader is the parent of the
+> mdp_clk_src. Reconfiguring it on probe leaves the PLL0 in "stand-by"
+> state (unlocked), which will trigger RCG child clocks to not update
+> their config, which then breaks eDP on all x1e80100 boards. So rely
+> on the bootloader for now. Drop the config values as well. Also add
+> a comment to explain why the PLL0 is not configured alongside PLL1.
 > 
-> > Unfortunately, this is an implementation of the pcs_init() callback, which is 
-> > also used by socfpga (see patch 4/6 in this series). The socfpga implementations 
-> > use the hw parameter for both pcs_init() and pcs_exit() so I can't remove it.
+> Fixes: ee3f0739035f ("clk: qcom: Add dispcc clock driver for x1e80100")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+
+Ignore this one. Sent a separate patch that handles this in another way:
+https://lore.kernel.org/all/20240418-clk-qcom-lucid-evo-skip-configuring-enabled-v1-1-caede5f1c7a3@linaro.org/
+
+>  drivers/clk/qcom/dispcc-x1e80100.c | 16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
 > 
-> I had that patch content in mind when was writing my comment. There is
-> no point in passing the hw-pointer there either because you already
-> have the stmmac_priv pointer. There is stmmac_priv::hw field which you
-> can use instead in the same way as you do in this patch. Here is the
-> respective change for your SoCFPGA patch:
+> diff --git a/drivers/clk/qcom/dispcc-x1e80100.c b/drivers/clk/qcom/dispcc-x1e80100.c
+> index 0b2ee6456762..525f645094a8 100644
+> --- a/drivers/clk/qcom/dispcc-x1e80100.c
+> +++ b/drivers/clk/qcom/dispcc-x1e80100.c
+> @@ -73,20 +73,6 @@ static const struct pll_vco lucid_ole_vco[] = {
+>  	{ 249600000, 2300000000, 0 },
+>  };
+>  
+> -static const struct alpha_pll_config disp_cc_pll0_config = {
+> -	.l = 0xd,
+> -	.alpha = 0x6492,
+> -	.config_ctl_val = 0x20485699,
+> -	.config_ctl_hi_val = 0x00182261,
+> -	.config_ctl_hi1_val = 0x82aa299c,
+> -	.test_ctl_val = 0x00000000,
+> -	.test_ctl_hi_val = 0x00000003,
+> -	.test_ctl_hi1_val = 0x00009000,
+> -	.test_ctl_hi2_val = 0x00000034,
+> -	.user_ctl_val = 0x00000000,
+> -	.user_ctl_hi_val = 0x00000005,
+> -};
+> -
+>  static struct clk_alpha_pll disp_cc_pll0 = {
+>  	.offset = 0x0,
+>  	.vco_table = lucid_ole_vco,
+> @@ -1670,7 +1656,7 @@ static int disp_cc_x1e80100_probe(struct platform_device *pdev)
+>  		goto err_put_rpm;
+>  	}
+>  
+> -	clk_lucid_evo_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
+> +	/* Configure only PLL1. PLL0 is already configured by bootloader */
+>  	clk_lucid_evo_pll_configure(&disp_cc_pll1, regmap, &disp_cc_pll1_config);
+>  
+>  	/* Enable clock gating for MDP clocks */
 > 
-
-You're right, I'll remove the parameter.
-
-Thanks,
-
--- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> ---
+> base-commit: 4eab358930711bbeb85bf5ee267d0d42d3394c2c
+> change-id: 20240418-x1e80100-dispcc-drop-pll0-reconfigure-0111b338c838
+> 
+> Best regards,
+> -- 
+> Abel Vesa <abel.vesa@linaro.org>
+> 
