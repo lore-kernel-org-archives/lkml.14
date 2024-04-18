@@ -1,174 +1,162 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2063.outbound.protection.outlook.com [40.107.102.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745C117BB2C;
-	Thu, 18 Apr 2024 20:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713470506; cv=none; b=qX6IoLnLLKogXoZWDHW/Np31Hd4AIGbQrH/1g1odFjunQpRQMMNiC04GjgNpOHb3T//02PwnP1w5Z0V+AUJxsrv679B7yHfWm4SqHiPsJrFn4c6PoVZsJkgqNre5V/xbLtr0MKt5EdCPdXrfCNy0+kVjXr6O0t/w+0+bGulBcdQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713470506; c=relaxed/simple;
-	bh=KCTidw9vRB31lBRexx3e+unentIUwTOohcO9L341OtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsK+qCY+gAY70Xm+pvJTxnPxNCvDydR41didthA4qgM48Qr3Rz8Oafeier1KIZW4UkzkhPg+ij5+m41lIGrTMxQ6obhZBFf8zeBgsrQ3dgP84oOY0udxS46QR5Az6ESjT4wWW0NyHgWvRBOu9usELP+p46o2q+IvPSYUV+skt+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAFMVr1+; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600BB3D62;
+	Thu, 18 Apr 2024 20:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713470604; cv=fail; b=Rxi6X+rygzlCsrfUNo3wAU0xA14QHfdINxomZi+cFlo7je292hFXs4KNbCPf3KxmHjYRjDq8n+kVkBGFTqPpGiFDyjdbMxMZ/9fZk/yQnMqjFAz8ZIuKiccFpSFHZI7XJmaYJzsTL/e+QhGuY6tJrEg6+/Ya/sNsd/YW0UaEBJ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713470604; c=relaxed/simple;
+	bh=052H+aW9suF3VfJSnAm85r92IAzTRYyjmGREvPhhEJM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PpUnxJLxjya3RoYhJK+cOncpZJjx7d0WG70/XHqVO4IVBDzctseGlH/djTqxIquD8ccB79a24LmC1XGslWJCOn703T/8GekzfDuLRIqTgB/EN6vNuZDobgoxHcc0ieb9NVBCmeAevEIM88z+qBE38Q1H8QgUF+CYPfXfcaY5Dw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gdHx1lqI; arc=fail smtp.client-ip=40.107.102.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAFMVr1+"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-69629b4ae2bso10852726d6.3;
-        Thu, 18 Apr 2024 13:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713470504; x=1714075304; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=p5U2uM1qAfDBe46uPOXJfDBT1BwgCpqdYnUA213Koas=;
-        b=GAFMVr1+56KkT2ugTlj3b3Wk+wJ8bgxz2MJBRUZq4liMOCIjvk9X5aVrpqmawoVYyi
-         X7u7vVoV6hhdLPLgRXIvvvk+yCbfyzgZZ5bvJP3Nt694Uzh0xCryISuSWYlmzFSzcuZ6
-         ukyWR+++/x+wECl1BVOQC21LQXwbDARFvrX2st9QidieK770WdznYSRpv6bjlxbliUjF
-         /i+AxmKju5EsM1DM6f0xJn2bu0cEsAm2frg1HoHbdclAikwKlAZLjrSlM9mpFHE5S47H
-         IspA1Ce99vw30tk9q3xzq85Gj9YFpbBJoMYlvZSmSaMWveGcj0Rtjc+JMdch/yHa1ywK
-         CtbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713470504; x=1714075304;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p5U2uM1qAfDBe46uPOXJfDBT1BwgCpqdYnUA213Koas=;
-        b=SEpFXmSnkGNLaL6wFY2ESqRBLrN+eVvLsJk4XvLMbugCDUsG8AlpzguwWgxeGjR6tn
-         FZ9g9F8tCVuZ2OUZtwms1RuyCZM+CvdV1pBqfRQciEld7mCgM1BRA5b2CI703di6i0SY
-         KenAcs4U+TvXVFOWQgUDAepWBNdmM0LDmW6By0G6lyzH6wgyoS3+oduD1CYYJ3OZz1Zp
-         29n4yI3h9Qp/gZGICU2TtaLphg1+6fbcGKy6eQjR022t4cXIGHtp9YEjKXB2uhxJisZy
-         1tb/wUz+kyVqNtnyrVwD+QO8+kH3XWDW6Yi8+fJ9iJmSgVTBYw6xL2W1BkCdfp4KJPRR
-         6/AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4eIKv+PL6t82zsTumM3rEhvetI/QJFgZlpx2Li0h9uIo1OoXNwGKMynsTWEgfGN05cYm8OKTKoBrv1iGv379NeHjBUZrLOX2cZu3pNMlHqcasGdk/2j3BE5OdUnCKZvnrOOC/TWnAcO9q5tI=
-X-Gm-Message-State: AOJu0YxmkKpugxz5LGRjb+N4xWSCr5kVVvOzUdiTBR+AurZrlHAGlhPV
-	dgmR4EuUo1itN+7Rhmj0MGP1BX2QhbpmBP5p/WziZtgStn9HWCwa
-X-Google-Smtp-Source: AGHT+IHHWzl1+nKVAwM7dNU7DNh/vXCt5ExjFummesJ4M9MCAmCraD0SqGCzuz7G5x0biMnpsT/nZw==
-X-Received: by 2002:a05:6214:705:b0:69b:5576:49e7 with SMTP id c5-20020a056214070500b0069b557649e7mr40348qvz.45.1713470504285;
-        Thu, 18 Apr 2024 13:01:44 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id w19-20020a0562140b3300b006a056736f10sm751933qvj.25.2024.04.18.13.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 13:01:43 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 8DDF81200066;
-	Thu, 18 Apr 2024 16:01:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 18 Apr 2024 16:01:42 -0400
-X-ME-Sender: <xms:JnwhZo6JFcXmaecT5V0xbj5igWyagTF6kv_Uvz5gC0YCjaZsSCH9wA>
-    <xme:JnwhZp5Bn34z62aCWy1G820w1GzX7lqlSkp01FtiL9gs9aEz9XyIUm4b3LajeHmI_
-    JdkZkuiKXqZbANUaQ>
-X-ME-Received: <xmr:JnwhZnc8y3cQapL7gFvURoAr-p9nwtOgyztreTz3QVFvIeqsHXIVpvxsoPNPVA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudektddgudegvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepueho
-    qhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledthffgheegkeekiefgudek
-    hffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeeh
-    tdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmse
-    hfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:JnwhZtIUc86mAUXKYgWqus_QUbqhxqhufDLM7O-NzrAJPZBT7jIIWQ>
-    <xmx:JnwhZsJNkNVm1P_qOMK6mhFMEXaU7xA4tImED-Cb4tBiLvroQ9gWXw>
-    <xmx:JnwhZuwDDAAnSYQ--k3pIOMLRYNSdhjFrPoJVV3oQEDmEMK_pHsGTQ>
-    <xmx:JnwhZgJF0YgP5FtgWbmqaa6sl7QXXu8hiLAbmUlclPtqFvvCc3yDHQ>
-    <xmx:JnwhZrb6oqd_5XldUxQBEsqTShozsedmuUzXrl3ibZG9_ou5fcBF8AKa>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 18 Apr 2024 16:01:41 -0400 (EDT)
-Date: Thu, 18 Apr 2024 13:01:17 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, Trevor Gross <tmgross@umich.edu>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v6 3/4] rust: uaccess: add typed accessors for userspace
- pointers
-Message-ID: <ZiF8DcuGw1KgD4Tz@boqun-archlinux>
-References: <20240418-alice-mm-v6-0-cb8f3e5d688f@google.com>
- <20240418-alice-mm-v6-3-cb8f3e5d688f@google.com>
- <5fd684d8-d46d-4009-bcf8-134dab342322@proton.me>
- <CAH5fLgiMLxmmm0AVX_5HQF61FzzN69GCKabrr-uM_oV-rRMuHw@mail.gmail.com>
- <c6239407-8410-49e2-a8a1-16be8468ab88@proton.me>
- <ZiFWIFMSBbU0i8JF@boqun-archlinux>
- <CAH5fLghTqbK-b4z_GJYJF9PFj8JkkKE+dNNpELFZspC2o9Oa1A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gdHx1lqI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AGhP7uiwuD8meaSLEgq6eNWYi5WcHZWypPagBUFVSB6RoU4F8MDVMjU/LqaBcTkfsyhjGIZ/U9Yb2ph9tpIH1ooYxXbS4XEq0Om1QvXpoW3+NRxW3klq2fHpzJzhxx8OJGY0p4TeFAQdGfBz9sutQ2KoZPB9T/DUS12t8qOvp5vNXwqTSO+m5JlCfHAP/UcT9TD2KDNqQckfPBhFL7vMR9+PhDTAIjz4/278HnfCNybIcN3tQo7VZVkS5eu4vGryX1HjPQ9tU/f+4bRWmJ4scOTRXQQWvd1dTzz0rOo31ZRE+QkLx4QmmmUDaH5VU5DSJsJg4ZTakG/5R44EoGzSOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mWUZwqBM7GZGVd9g4qAU12o35H4l74rP3aHiyiVwwp0=;
+ b=Qblz3eH4nNts/lZFkkD2NsrPGjD6zbYXMfHW63tVzAK1S4Kh5APnXj5YLfA2mxSpFbrQmC6IRtiBV6+DxJvnhBFF58/Wr0YFzRWVEKnfgxkvL+wjJ2WLJU0z+NahOYQLEm9IddyO4Y+EFIfe7OhxOYc7oPaTxQypr+cysdQCghrC0feEmCTEH0g7SshmOpoEf9cdyluh6x5DR5FMjE//mrCVsAygkeVP+ERqIjk+8rgV7nxvUjekbt0qKHZN512arkYPlOt6jsxiDoDLqITkaeUKiB9Ah5rEXoeC3gxj8dzvL6x4GnsKgKFcI88GfhNfZRbVnL7eS7q0l4kNE0Tt5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mWUZwqBM7GZGVd9g4qAU12o35H4l74rP3aHiyiVwwp0=;
+ b=gdHx1lqIxigYH474PYgDlI2vDqyZ4z+EKe7BFPoKPEKX5X2nrr1bvqNNKXE74hH/uJjeWkeFgoTpxDrjrvMrWiEI7F/kK7/uC7DvCKkS0P0JSAUyb27a0XMCS21mMqnDeCMy0KBuPj3JXOE8XsrTa56QqlmYFi+gPIxZcfEj9Es=
+Received: from MN2PR18CA0001.namprd18.prod.outlook.com (2603:10b6:208:23c::6)
+ by DM4PR12MB8521.namprd12.prod.outlook.com (2603:10b6:8:17e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
+ 2024 20:03:15 +0000
+Received: from MN1PEPF0000ECDB.namprd02.prod.outlook.com
+ (2603:10b6:208:23c:cafe::19) by MN2PR18CA0001.outlook.office365.com
+ (2603:10b6:208:23c::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.26 via Frontend
+ Transport; Thu, 18 Apr 2024 20:03:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000ECDB.mail.protection.outlook.com (10.167.242.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Thu, 18 Apr 2024 20:03:15 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
+ 2024 15:03:14 -0500
+Date: Thu, 18 Apr 2024 14:57:54 -0500
+From: Michael Roth <michael.roth@amd.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
+	<ardb@kernel.org>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
+	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
+	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
+	<dovmurik@linux.ibm.com>, <tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>,
+	<kirill@shutemov.name>, <ak@linux.intel.com>, <tony.luck@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
+	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
+	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>
+Subject: Re: [PATCH v12 22/29] KVM: SEV: Implement gmem hook for invalidating
+ private pages
+Message-ID: <20240418195754.h6gl5qd62kas7crx@amd.com>
+References: <20240329225835.400662-1-michael.roth@amd.com>
+ <20240329225835.400662-23-michael.roth@amd.com>
+ <f1e5aef5-989c-4f07-82af-9ed54cc192be@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLghTqbK-b4z_GJYJF9PFj8JkkKE+dNNpELFZspC2o9Oa1A@mail.gmail.com>
+In-Reply-To: <f1e5aef5-989c-4f07-82af-9ed54cc192be@redhat.com>
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDB:EE_|DM4PR12MB8521:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4012ab85-c981-4eab-f4e6-08dc5fe295a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YzpMOCb/tgZpKgq6eE8r5BNSDeWJt2o4Yg9Smzth5/FJTwpiH9MUp6rj2xRIpTur8IaHEL2t8TNyNtzefBdWy2GEiHzQrrRn4Ealkm2QYHQZaLwn75B1UmfArVMkQPSe2JwgUmYf5+DefztPZcBJy9i9kWRfZad+oKrN4IxwwrX0Q/6rmEwtVMBr58tx6lJrVX9qVXcXWifnfG4mD5obuq9/UpA3kvecnVVp6nPkVSnDGqeqeM1R0FlVj4Mw/JpNdVVy9cqp2mwn59jGGrhIGcAIkStv+4Z7qxXVIxUz0PqcEOnpAO5hSQUA5SgBlDPNNqEly5phg21cyF7JCP+VFoQ+8sgAIKm60VGDXi7tfxUBbrPmdM/VrZYSwaHftz9FuhcQiNEEWb48XpSU4wmU++xVIOGVxDLRm2ZBNrSuw9U0qbZlPo1iljG2IK78NasMFznlpoMI1uE8GqDxpO9mzi5iHWtuDCdP/gGC6r2BAxbmm/wjwBNz3jTHgHhMNHzF90Tln9RnatyEwVCev+X0bA+ZXTViPS1FdY1hLS6X8amjSs4SJ5J41WQA6D4EpeF+9tUKYfYkOsz/ICI+8dEjFVqsgRqHZQSqQwv91E6O3ZOqa47pQzMnp5790v1mHdPj3SIyq7Gso/nE30kX6UPNFvACqv2lsGxNh8Q9JtULXFkrmSg1g4QHqYgX2TBRW7DFMQSj/oGcM1aY9QLJGK97fg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(376005)(7416005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 20:03:15.5937
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4012ab85-c981-4eab-f4e6-08dc5fe295a2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECDB.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8521
 
-On Thu, Apr 18, 2024 at 09:35:53PM +0200, Alice Ryhl wrote:
-> On Thu, Apr 18, 2024 at 7:27 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Thu, Apr 18, 2024 at 04:23:06PM +0000, Benno Lossin wrote:
-> > > On 18.04.24 15:17, Alice Ryhl wrote:
-> > > > On Thu, Apr 18, 2024 at 3:02 PM Benno Lossin <benno.lossin@proton.me> wrote:
-> > > >>
-> > > >> On 18.04.24 10:59, Alice Ryhl wrote:
-> > > >>> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> > > >>> index 8fad61268465..9c57c6c75553 100644
-> > > >>> --- a/rust/kernel/types.rs
-> > > >>> +++ b/rust/kernel/types.rs
-> > > >>> @@ -409,3 +409,67 @@ pub enum Either<L, R> {
-> > > >>>       /// Constructs an instance of [`Either`] containing a value of type `R`.
-> > > >>>       Right(R),
-> > > >>>   }
-> > > >>> +
-> > > >>> +/// Types for which any bit pattern is valid.
-> > > >>> +///
-> > > >>> +/// Not all types are valid for all values. For example, a `bool` must be either zero or one, so
-> > > >>> +/// reading arbitrary bytes into something that contains a `bool` is not okay.
-> > > >>> +///
-> > > >>> +/// It's okay for the type to have padding, as initializing those bytes has no effect.
-> > > >>> +///
-> > > >>> +/// # Safety
-> > > >>> +///
-> > > >>> +/// All bit-patterns must be valid for this type. This type must not have interior mutability.
-> > > >>
-> > > >> What is the reason for disallowing interior mutability here? I agree
-> > > >> that it is necessary for `AsBytes`, but I don't think we need it here.
-> >
-> > Hmm.. technically, if the interior mutability behaves in a way that each
-> > byte is still initialized during the modification, then it should be
-> > fine for `AsBytes`, for example and `AtomicI32` (implemented by asm
-> > blocks)? Not making any change suggestion, just checking my understand.
+On Sat, Mar 30, 2024 at 10:31:47PM +0100, Paolo Bonzini wrote:
+> On 3/29/24 23:58, Michael Roth wrote:
+> > +		/*
+> > +		 * If an unaligned PFN corresponds to a 2M region assigned as a
+> > +		 * large page in he RMP table, PSMASH the region into individual
+> > +		 * 4K RMP entries before attempting to convert a 4K sub-page.
+> > +		 */
+> > +		if (!use_2m_update && rmp_level > PG_LEVEL_4K) {
+> > +			rc = snp_rmptable_psmash(pfn);
+> > +			if (rc)
+> > +				pr_err_ratelimited("SEV: Failed to PSMASH RMP entry for PFN 0x%llx error %d\n",
+> > +						   pfn, rc);
+> > +		}
 > 
-> No, that's UB. When the type is not interior mutable, then any two
-> loads from the same immutable reference may be assumed to return the
-> same value. Changing it with an atomic would violate that since the
-> value changes.
+> Ignoring the PSMASH failure is pretty scary...  At this point .free_folio
+> cannot fail, should the psmash part of this patch be done in
+> kvm_gmem_invalidate_begin() before kvm_mmu_unmap_gfn_range()?
 > 
+> Also, can you get PSMASH_FAIL_INUSE and if so what's the best way to address
+> it?  Should fallocate() return -EBUSY?
 
-Oh, that makes sense! Thanks!
+FAIL_INUSE shouldn't occur since at this point the pages have been unmapped
+from NPT and only the task doing the cleanup should be attempting to
+access/PSMASH this particular 2M HPA range at this point.
 
-Regards,
-Boqun
+However, since FAIL_INUSE is transient, there isn't a good reason why we
+shouldn't retry until it clears itself up rather than risk hosing the
+system if some unexpected case ever did pop up, so I've updated
+snp_rmptable_psmash() to handle that case automatically and simplify the
+handling in sev_handle_rmp_fault() as well. (in the case of #NPF RMP
+faults there is actually potential for PSMASH errors other than
+FAIL_INUSE due to races with other vCPU threads which can interleave and
+put the RMP entry in an unexpected state, so there's additional
+handling/reporting to deal with those cases, but here they are not expected
+and will trigger WARN_*ONCE()'s now)
 
-> Alice
+I used this hacked up version of Sean's original patch to re-enable 2MB
+hugepage support in gmem for the purposes of re-testing this:
+
+  https://github.com/mdroth/linux/commit/15aa4f81811485997953130fc184e829ba4399d2
+
+-Mike
+
+> 
+> Thanks,
+> 
+> Paolo
+> 
+> 
