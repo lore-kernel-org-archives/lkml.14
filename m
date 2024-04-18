@@ -1,121 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C86D15AAD9;
-	Thu, 18 Apr 2024 10:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7019B15B96A;
+	Thu, 18 Apr 2024 10:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713435694; cv=none; b=bd7/6N5LhhhYbfab3j82Zk/0Cg/PMjHbOC+Fwb1U4CI4wf4P4Ljjyx+4zS8eOYhtJyHU5iSm1oegfZJgTQHgRp21m1dIc5L5ldKYgW6imos+OynGcy7GWLrpuzqv0J4ZklTp7E2OSB4HNjuv7miARB0nJVeIJDAdXHcXfYocrSA=
+	t=1713435716; cv=none; b=OURW9tXn1RXTbJZi+XGexNb41tent1OOvv/do7WbOwSGYSjQT53HUf9uarIVU7Zk9SPnrHkipUYPuItzN/6s8i3P/gMaEYFxH7APBzpP7dgJJdEJRIBujBUL1DjtQl5/2ryz5+slsVZyQsBMuPtsmCUmzvvBkSkmJaw3P35Kwtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713435694; c=relaxed/simple;
-	bh=GIF39x+DoxCddvDNRomXCworfiQAca8ygUjDy3+kOkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EgpGF4OF2T51IvROcPFCNlgkLQPpqYIMOyAm+tqk2ViNJUx0g4QjNfjeYKbVtuR3IJ9Tz0JMB9OkrYoxdBSrM8NuPf6FOq3Bgb70tS0mjlLVD3QUv9rPabXmP1+57eQhs8/ESsl9O8A0dyfT5ecgorpjUBnq8GjtUJOxoK0QYtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SELAoNeX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713435716; c=relaxed/simple;
+	bh=P4sbd+3pJKDK4SD5ImAjJjDozCp4Sq4s5N8AojfbsIQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BLadICK2GXx7e+oGwHsMQx+ae+19lq5+PqDCXwi+7pGn8GryXjXicPlwescCdPT3Y+onGvUD25RXuU+r1FqiVEy5SdwvsDowYkQLOk3e304KrwzUQ9WcEGm6z31EdWrWCGxaNu6wKoY4qt32XfWnBtjb/LiC2zyc5YEX11QRt0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=MHeb3n/2; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SELAoNeX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE78C113CC;
-	Thu, 18 Apr 2024 10:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713435694;
-	bh=GIF39x+DoxCddvDNRomXCworfiQAca8ygUjDy3+kOkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SELAoNeXc3Beu0HbaRnXjo5QYZwKVoBtQiv3DGWKIGD1ByoQxYtKIRMmvzmqWXRIs
-	 l28WXlrgf45drPhQ9fcY+C862qqlcZ84I3lISaD2oLaKCzcGbAykPBulJ9k6bwvlRz
-	 LV8NaKjnWubu4ei2CwJbivkB4YEQEKSRsSyVzaW8Mxs5W6YReOjEi+EuEAD86bBnwS
-	 qFPhIxsVlHHsOebyI08OR68Lghu75Srbh8a5UrbpGFwRlRYkMIVyzmMjHu+Dqlrqq9
-	 fLqc6ctyg9Ep6vn3VgTN09QBUzcZ5AVisQI/jdvTkZRhUWxPwNNaW0QWW5GqKdhOFZ
-	 JlWziN6p3qThQ==
-Date: Thu, 18 Apr 2024 13:20:17 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Nadav Amit <nadav.amit@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>, Helge Deller <deller@gmx.de>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	"open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [RFC PATCH 3/7] module: prepare to handle ROX allocations for
- text
-Message-ID: <ZiDz4YbIHEOAnpwF@kernel.org>
-References: <20240411160526.2093408-1-rppt@kernel.org>
- <20240411160526.2093408-4-rppt@kernel.org>
- <0C4B9C1A-97DE-4798-8256-158369AF42A4@gmail.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="MHeb3n/2"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43I4kSJ5025732;
+	Thu, 18 Apr 2024 05:21:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=P4sbd+3pJKDK4SD
+	5ImAjJjDozCp4Sq4s5N8AojfbsIQ=; b=MHeb3n/25i/TKPJsrqnriXd2rC2TgDS
+	8/tjSdgVH1V4xB3TUPYyHgSwtaZ6+8EqT4ZZcy0UKdOflh+JuShpK5gfLet1xKj8
+	rX/kZl+jhXtIlS8N/o6P8JzRFuHImDy9ZVb4j0q+K03YnDofm7+oIHtwXeG4rw9n
+	KAFRQDESnUXto70t9c60T3rnbuzFGgeMwrEqeYnoRomjcnBo/D+m4kcPdvDMXJOP
+	UXoWoDyzEkPA1/K+oXbcvEX9WxIF8w2Jx4RJkw3nJrRF6unBiNWM8JiEHdJyhATE
+	KEdyGe+TzBT0+R5GioQHY4gmG2sf047Lcj8rDG8aoqcWdoXWTMgUmzQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xfqeycmcg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Apr 2024 05:21:46 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 18 Apr
+ 2024 11:21:44 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Thu, 18 Apr 2024 11:21:44 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id A0F57820245;
+	Thu, 18 Apr 2024 10:21:44 +0000 (UTC)
+Date: Thu, 18 Apr 2024 10:21:43 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Maciej Strozek <mstrozek@opensource.cirrus.com>
+CC: Mark Brown <broonie@kernel.org>, <patches@opensource.cirrus.com>,
+        <alsa-devel@alsa-project.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi: cs42l43: Correct name of ACPI property
+Message-ID: <ZiD0N24MpYX7uj1U@ediswmail9.ad.cirrus.com>
+References: <20240418094206.1323489-1-mstrozek@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0C4B9C1A-97DE-4798-8256-158369AF42A4@gmail.com>
+In-Reply-To: <20240418094206.1323489-1-mstrozek@opensource.cirrus.com>
+X-Proofpoint-GUID: iOergdAmvvoNkdmHzP23eCDEat5Yd9v_
+X-Proofpoint-ORIG-GUID: iOergdAmvvoNkdmHzP23eCDEat5Yd9v_
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, Apr 16, 2024 at 12:36:08PM +0300, Nadav Amit wrote:
-> 
-> 
-> > On 11 Apr 2024, at 19:05, Mike Rapoport <rppt@kernel.org> wrote:
-> > 
-> > @@ -2440,7 +2479,24 @@ static int post_relocation(struct module *mod, const struct load_info *info)
-> > 	add_kallsyms(mod, info);
-> > 
-> > 	/* Arch-specific module finalizing. */
-> > -	return module_finalize(info->hdr, info->sechdrs, mod);
-> > +	ret = module_finalize(info->hdr, info->sechdrs, mod);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	for_each_mod_mem_type(type) {
-> > +		struct module_memory *mem = &mod->mem[type];
-> > +
-> > +		if (mem->is_rox) {
-> > +			if (!execmem_update_copy(mem->base, mem->rw_copy,
-> > +						 mem->size))
-> > +				return -ENOMEM;
-> > +
-> > +			vfree(mem->rw_copy);
-> > +			mem->rw_copy = NULL;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > }
-> 
-> I might be missing something, but it seems a bit racy.
-> 
-> IIUC, module_finalize() calls alternatives_smp_module_add(). At this
-> point, since you don’t hold the text_mutex, some might do text_poke(),
-> e.g., by enabling/disabling static-key, and the update would be
-> overwritten. No?
+On Thu, Apr 18, 2024 at 10:42:06AM +0100, Maciej Strozek wrote:
+> Fixes: 1f05252a3a95 ("Add bridged amplifiers to cs42l43")
 
-Right :(
-Even worse, for UP case alternatives_smp_unlock() will "patch" still empty
-area.
+Sorry actually are you sure this commit ID is right, I don't
+think it matches the one in Mark's tree?
 
-So I'm thinking about calling alternatives_smp_module_add() from an
-additional callback after the execmem_update_copy().
-
-Does it make sense to you?
-
--- 
-Sincerely yours,
-Mike.
+Thanks,
+Charles
