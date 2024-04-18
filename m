@@ -1,40 +1,34 @@
-Received: from mail115-79.sinamail.sina.com.cn (mail115-79.sinamail.sina.com.cn [218.30.115.79])
+Received: from mail-m6032.netease.com (mail-m6032.netease.com [210.79.60.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFF115D5C1
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B48356464;
+	Thu, 18 Apr 2024 10:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.79.60.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437409; cv=none; b=AkMU/iEBKlmNClB8CHLd1a/lslmxMYs3eH0vZEV8ilXVXxwJwrtFfAfasDkYYG6j2Hjws6sGOApAMtOsCtwsf0lUk84uAg7LJM6KVIE27/7EVWODDgFPQUwAHKATq484XLLZGOFWNBSUcTuLiDDLEKtvQPY1yE/OClzjFdyXviA=
+	t=1713437410; cv=none; b=EEP08Rfqffr1G8ba00a72pDaTWmbrA2q+xdgws6HQ+JCbU6ebtlSnhb6l49s79SbY9hw+8WvKJCRKoCgEMLaesn/gn3AgMtppoOtEDFQ4q3NvJpK0ynPv5FWOsemCdx/A9DURPmlSwzbvZULQwzPu6CvvErPebf6uoHNxrnjHqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437409; c=relaxed/simple;
-	bh=AG8TyXJaQL3/lvYQvQsLtrYzfqub/rhZXTldlGAvJIQ=;
+	s=arc-20240116; t=1713437410; c=relaxed/simple;
+	bh=iiOufjOIkL3haOEHZ1PQmwIhrHyxYpHcfZJEjBfNLSk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j5x2x3tHZybwv3ITIXtS/nEQ/nxJ1KC3U1V00x6EtSNPhFk0fOWDbKEFry6GQ4Vj8R/DOV9Ozx8+LhUlQKcxfCuSStwrwfjKC2JH7+QO06NOkGnAFsmrUE2YjDDauz1T7Yk9Sz+lAQ7e4vFX9kBEot29U1YVBJnM86kF6zjjpRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.50.128])
-	by sina.com (10.75.12.45) with ESMTP
-	id 6620FAD100009CB9; Thu, 18 Apr 2024 18:49:55 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 69856531457805
-X-SMAIL-UIID: F42076E6E42B471386F28FD80FF96B6D-20240418-184955-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+7fd4b85697bcf2a9daa2@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mm?] KASAN: slab-use-after-free Read in hugetlb_fault
-Date: Thu, 18 Apr 2024 18:49:52 +0800
-Message-Id: <20240418104952.2615-1-hdanton@sina.com>
-In-Reply-To: <000000000000b3c7fa061652665f@google.com>
-References: 
+	 MIME-Version; b=IP2GNsg+RZeiNzBVii8qOWgzzRdqfFEs1VraKGJgMPAF4XEtXTr5z699I8IMtHRjY707YUBU8Vb8ZTkWU/VaNOFpkYP/4mPCMvo5j19NmtUaibFbBMe2w9y+XJHBEYCpmk6CyQ7sSg6twnvs3CSbRvokomMMeD2qFJ7jeQbdwZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn; spf=pass smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=210.79.60.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
+Received: from localhost.localdomain (unknown [110.185.170.227])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 6AE235601A7;
+	Thu, 18 Apr 2024 10:32:44 +0800 (CST)
+From: "jun.gu" <jun.gu@easystack.cn>
+To: echaudro@redhat.com
+Cc: dev@openvswitch.org,
+	jun.gu@easystack.cn,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v4] net: openvswitch: Check vport netdev name
+Date: Thu, 18 Apr 2024 10:32:42 +0800
+Message-Id: <20240418023242.259542-1-jun.gu@easystack.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <811765EC-AD27-4210-9AFC-034129F24BFA@redhat.com>
+References: <811765EC-AD27-4210-9AFC-034129F24BFA@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,57 +36,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSxhCVk9MTk1DT0pNSEkdSVUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUpKS1VKQ05VSkxLVUlJTFlXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
+	Y+
+X-HM-Tid: 0a8eef0c9ae6023dkunm6ae235601a7
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OC46HQw5Sjc4QhkLLBUhOUoc
+	HUMwCS1VSlVKTEpIT0tMTk1PQ0pNVTMWGhIXVREOFVUcDjseGggCCA8aGBBVGBVFWVdZEgtZQVlK
+	SktVSkNOVUpMS1VJSUxZV1kIAVlBSkJKTTcG
 
-On Wed, 17 Apr 2024 15:30:26 -0700
-> syzbot found the following issue on:
-> 
-> HEAD commit:    9ed46da14b9b Add linux-next specific files for 20240412
-> git tree:       linux-next
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f89857180000
+Ensure that the provided netdev name is not one of its aliases to
+prevent unnecessary creation and destruction of the vport by
+ovs-vswitchd.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git  9ed46da14b9b
+Signed-off-by: Jun Gu <jun.gu@easystack.cn>
+Acked-by: Eelco Chaudron <echaudro@redhat.com>
+---
+ net/openvswitch/vport-netdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- x/mm/hugetlb.c
-+++ y/mm/hugetlb.c
-@@ -6251,6 +6251,12 @@ static vm_fault_t hugetlb_no_page(struct
- 							VM_UFFD_MISSING);
- 		}
+diff --git a/net/openvswitch/vport-netdev.c b/net/openvswitch/vport-netdev.c
+index 903537a5da22..7003e76b8172 100644
+--- a/net/openvswitch/vport-netdev.c
++++ b/net/openvswitch/vport-netdev.c
+@@ -78,7 +78,10 @@ struct vport *ovs_netdev_link(struct vport *vport, const char *name)
+ 	int err;
  
-+		if (!(vma->vm_flags & VM_MAYSHARE)) {
-+			ret = vmf_anon_prepare(vmf);
-+			if (unlikely(ret))
-+				goto out;
-+		}
-+
- 		folio = alloc_hugetlb_folio(vma, vmf->address, 0);
- 		if (IS_ERR(folio)) {
- 			/*
-@@ -6290,15 +6296,12 @@ static vm_fault_t hugetlb_no_page(struct
- 				restore_reserve_on_error(h, vma, vmf->address,
- 							folio);
- 				folio_put(folio);
-+				ret = VM_FAULT_SIGBUS;
- 				goto out;
- 			}
- 			new_pagecache_folio = true;
- 		} else {
- 			folio_lock(folio);
--
--			ret = vmf_anon_prepare(vmf);
--			if (unlikely(ret))
--				goto backout_unlocked;
- 			anon_rmap = 1;
- 		}
- 	} else {
---- x/kernel/softirq.c
-+++ y/kernel/softirq.c
-@@ -564,7 +564,7 @@ restart:
+ 	vport->dev = dev_get_by_name(ovs_dp_get_net(vport->dp), name);
+-	if (!vport->dev) {
++	/* Ensure that the device exists and that the provided
++	 * name is not one of its aliases.
++	 */
++	if ((!vport->dev) || strcmp(name, ovs_vport_name(vport))) {
+ 		err = -ENODEV;
+ 		goto error_free_vport;
  	}
- 
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT) &&
--	    __this_cpu_read(ksoftirqd) == current)
-+	    __this_cpu_read(ksoftirqd) == current && in_task())
- 		rcu_softirq_qs();
- 
- 	local_irq_disable();
---
+-- 
+2.25.1
+
