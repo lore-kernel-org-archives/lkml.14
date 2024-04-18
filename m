@@ -1,432 +1,554 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2050.outbound.protection.outlook.com [40.107.237.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ABE15B98A;
-	Thu, 18 Apr 2024 17:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461536; cv=fail; b=f/3FrLRZWWj6uqc02ui9XOW5AwDz1Q4LqiAdCtIVeCB4i63J31QMz18w11DTDCxO16u1CZe8RugKSX8WUBcck++fAiYQB9HKkyM9eYbgHl3DhdOaMGsH1bRI/u9OuTx/T9ASeohMBYmAnuvIUrDmzbeqisOCzhrxL/3Cx7aPX2k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713461536; c=relaxed/simple;
-	bh=WF409Hwtj0Zh2cS3Nh2EDxZ669qRGgKpkBTzl5InTe0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DpiJq4DxJGSn8jW0FbrfI/Y7CUo3RNEBVLjpcQZ+JaKbBngqOzv1Z/zlg7JRcUBB2hb9OqLdteWKeWW6uY2+aAkGYYxDRwonjVKPFC2Wn1CKd65VYPkeB5ygm3Z14eFWUnfGJgK355Pf4hNVMcGTmYHq3EqCakC7fU11wcWFVeY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fUVIOiFA; arc=fail smtp.client-ip=40.107.237.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7931442F4
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713461611; cv=none; b=DdxwlZ2U44V5lZu6ZL+JpM8g0EF1PR0wqEi2phR2E+valv1phCkV7bisLoqd2Op6wAVt7FemmS962K72BCh5ygFOQ5GQTSqmLVAVvaY/4rEbEq8szWrtzG9jKTpxN4MHFtqYygcXeAR1z9OnH0TQGgvNUjBTWxB7KGDT+DlMMS4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713461611; c=relaxed/simple;
+	bh=vVoc5zq0qVRDbnyGYqUu5jY97W87uQbiK+3UuEoP9F8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RWZGvVkbfKBOGCUq8/uqobXTN56OBUFYZY+uLr6/M8hrgee1Hjv8G5vw4TBMdPEvZQDrOEi8Ly2VgSiJXper88URdPFUwqcemyBPLsfRxnNcapplyx0QSiIhrVpDKY10ovJCFrj4ZGYhqykaX6edS8Qax8U9Ke4Nt4b0uc9SmIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JMLBZWMe; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fUVIOiFA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g14S3e0luaGii00REkHwOVSjpzym/2DudJEFVUXlbBfYTBJ3HGLHYp0buqxK2H39Dr0i5tMFiVAcsUbW66/0YYtm4tM3XAt82cfUWFRtj7/61vAYI1btrSCu1fSof6RC2A4lNn70DFCNU+vtguCwGqBF3LrSPfmfy5K4VzGNCaJbjAzJl9HLTqE4N7SjlAWL0CymcShs/QguBvJ9zH3mbMp/YFPIjwVkB+dtOARNrW+LrenaxbZ53aPcYId4S16DSJx7kT6Cdaskv74mxxaY/B6XelRHc2A89+fJS6dTOfz5+QNUESrh2DIfYbcAj9lHAR0h06W+HvB7HuwKbbUDTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nyv9QiSqgvF2Da8Dg0dw3Y5STG5Bu1B6vj3x95DvfvM=;
- b=HC3aY5kOVtc2XYM8KgFiQwwqQoJ/LmaBGWUHmFlnuS8OXM2gAv+LHJDETPQ5fFaCX+io5559caQCMm21FfnBxTLWoLhb81gUsB6QyWv2oEW3eg1F/0C2+hoo6UsDw9abm5Nvsqvrlf5MGTJpLcTVmNlveTHxVk4jzhRmTN5qJVrevk4/C8qFEUFCds7EUr8x+DZSX39usZXzD3PZUkKhqzcgeuJpS5iS4pz/8gVLTOC4WegG2XLBPeSUqCyrWMNMrCtnlByy6o39sXdaDPnewqWoU1A7qrx3c1yyzU1Q4qTOMGm7pONdj49cixSvz8gWGmNepM+ISqCGsG4r2dShBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nyv9QiSqgvF2Da8Dg0dw3Y5STG5Bu1B6vj3x95DvfvM=;
- b=fUVIOiFAbZnMmQ8S+X2pvuuUNXHtdFaUapZWZT8A/SURQSx2vx5g8mhyEXPhooqFz0SNtnA4Dod+JcIIF3Pt07q1U6MTwFd2DzqS4Gn4kRf3VuafBubd4JFaAI1CpBfyHqhxAaF+HPvNUWBWlxFsbKP+SoBmiIVYK4Mbdkvgsh7mflupGtJIErIxZIN4Z7J+2Omzsk67zYT1yuUvSR9r3oLsz7fokZV437T6gym/zgGp9tmaOVnOIm2ZnVhnPTL+41olsMkNP7JsyqnF94ZzuaykjZXeT5pLj//Bu58t9g8O5d8xjgPLHHs3PmgTbuOsh06ab4mbxL3jkQL3Pgjhyg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
- by DS0PR12MB7704.namprd12.prod.outlook.com (2603:10b6:8:138::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
- 2024 17:32:07 +0000
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::780:77f6:e0af:5b5c]) by PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::780:77f6:e0af:5b5c%4]) with mapi id 15.20.7452.049; Thu, 18 Apr 2024
- 17:32:03 +0000
-Message-ID: <9e31d94e-5b5b-4711-a208-d344c340b597@nvidia.com>
-Date: Thu, 18 Apr 2024 23:01:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5] PCI: Add support for preserving boot configuration
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org, will@kernel.org,
- lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- frowand.list@gmail.com, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
- mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20240410205044.GA2152821@bhelgaas>
-Content-Language: en-US
-From: Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20240410205044.GA2152821@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0066.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ad::8) To PH8PR12MB6674.namprd12.prod.outlook.com
- (2603:10b6:510:1c1::18)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JMLBZWMe"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-238fd648224so520398fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713461608; x=1714066408; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Su/0jhVB60Wlg9G5Him3VvxG/87i2p2Lv2g9MqI6bUU=;
+        b=JMLBZWMeoJ3pn4AjTfN4NPROPvKxhG7zRayH4/JQoWirBjKQTbdwp8L5kuyP6meJZq
+         xF3Qe9AU9k01C8tIlKlvZZUt8rIgxWP8YJKZjNa+kiJoqpp41Ng9Q2MoElau9z+9Qj7j
+         LlygJe2LBcQocZo5FQMsOscxXv57A3G+8A0y0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713461608; x=1714066408;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Su/0jhVB60Wlg9G5Him3VvxG/87i2p2Lv2g9MqI6bUU=;
+        b=EwIm6xri2uV1Y+iZyYLlxl7e7tLuiDs61IKs1dAoQWMRmQ7S1mUsnWa6T4pLiomdsA
+         N4wVd6Zi+PfBHxU4ld4S2BXnOMuOE8V4UlK8TRZltE6DOkNQ1fZYdf2eiOgXBuV2bTum
+         DI2/EmCKseROXqP8um0zsph0tMMENIEyQGitsriM4Vi3AMGjTY2bSWfwx2g8kWFaoq9e
+         y1CQ+5xpNdCrZvJ8n8MreKNXQ7cST2NDKCt8Av3N3sb8IN2+nWjQ0bu18svmWXuBDAbt
+         gUHbnbr5PBSUNcaS3Gg2hmNA8gdfEOolRBem2IUrpPAXEl/X5C6tgUQ2+KEgKQpD/uHP
+         g3Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUG86x2FB33N1kAnUHcBNlyp1+/4sVVZdc+NpZJ4VqB/qwqssKkBuUaJZujt4nTbqxmx7zATtKMQct/WD671U4ATLwmMDpYoOst9jOS
+X-Gm-Message-State: AOJu0YzzFePLKrOK2R3wKsxobrbPVOL+8bQo4HAjbTb/NhLbvzRjCqNo
+	Is/GZ+BJ80fFUs9eFQBRfnqPl8XA02qabh1rslIIy5IuCjisaZ2kkwdDbLov1A==
+X-Google-Smtp-Source: AGHT+IGA2jtQNRvB9rGrp0xvC3LVrf3b0mrd0c1k+WW3TidBwOQ3bB57iP8v8X9wDFCdBcLCvEqCvQ==
+X-Received: by 2002:a05:6870:e8c5:b0:22e:959b:cf74 with SMTP id r5-20020a056870e8c500b0022e959bcf74mr4409603oan.40.1713461608313;
+        Thu, 18 Apr 2024 10:33:28 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s21-20020a632155000000b005cd8044c6fesm1689076pgm.23.2024.04.18.10.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 10:33:27 -0700 (PDT)
+Date: Thu, 18 Apr 2024 10:33:27 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: David Ahern <dsahern@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-hams@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, bridge@lists.linux.dev,
+	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2] sysctl: treewide: constify
+ ctl_table_header::ctl_table_arg
+Message-ID: <202404181026.1E2AA3457@keescook>
+References: <20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|DS0PR12MB7704:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5f26196-c102-4b2a-a1db-08dc5fcd762f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wWFuuk1pdHvOskp12dYpEMRH9+hziK709gXZUbKyY/sBV3Tz9XNPcZ5QYbkCL8FrtWB00OJ/RfwcJnQiBah/DfFTu5/3UI+cnYIyKYvHoZERZuLee6cLhsJ66tHLCFdzFhyI+/Rw2Bij5ILVZHB2C8MzSo1KIkKOUbeuTKwjfJN3qc84SCkn//2BQWOGGeEmzrIuPsypcUTBe4s9nzY7JDXlW1aUGn0ufbcNUCTr5E/sTKYe7zQvUwsb1XpjQk5qEuGVo116o/sU/+fcavG2hXKTpSfu4tjS8MfceLB/fWiBoVtwQeXNK92jIn5D/4KoYdsNNLAGAcjKiuQhffhWjknaGOXBIZz7Kh3z+usiOYN6qv9G5e7V9lP+xXmWY66p+300WDMv7yGPgU5Avdkhds5gw3CXPg2difJzIiEAJpVll5JnJo4Y2g2esJye8kMYjz/Ks8DC++TN2Iu27zdSFSvNo6GoZrfCNeJhL/xUEJ4KmwTHlwTkuxJIb2Z493SvLD1yV66SYSV9KJw4EFNCJYrQ/8bbk+s+WxVNJOCc9mLqI5JbNXjxyVvTEKOCcj1da4ztC1Rilim4IsV1WcFR/lKuXeRPOpnMexJ4KXl5ixIGfNfyv9qc/M60gXK7YrLU1prURZo4O08cqr37Mt9G+Qnc3sBQlUcjeGw6RVRIHPA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M1FrVzFKNXlIVVRFemhxSzMrVGtUUWVDTTAxbW1OcUpyRGxqdVV0clpXZ1hu?=
- =?utf-8?B?VlBtUmpFcnpoZVBMOW1PZEVmWUZRRWJGSEI3alpZZU41UU5XWVFCRlMrMXRr?=
- =?utf-8?B?dVFzd2d5RTAreVRaWTEzaC9uaXhUSnpDM3o2SlNqY1hETE15S01GUzJuWU9j?=
- =?utf-8?B?QjAweExCME9IbzhoUGRrSUIzbXBWVXI3dy9xNkdpamQya0tsUks2c3NLVU1P?=
- =?utf-8?B?a0lBUDBUcW9sdWJybDBteUFxUXhWS3o0cnZKeDkyQU1SYkpOakxYVkxacWhj?=
- =?utf-8?B?WmpUbDZDcGQ2Mi9qcGZrZDRKdVZCVzdMRzJraG9SQ1g0ME4yaDJUblpqTnBa?=
- =?utf-8?B?K1AzaEhvVFZTVjF4Tnh6cWZFdEVoaUU4cGNtT1hIekxIYWdkTXVRT1JCa1FO?=
- =?utf-8?B?a3N4RWJiY2tVK3o1QjRHRjZxZy9hKzQ2WUc0UFNZd3lCOGhBbzg0d2dtTXlV?=
- =?utf-8?B?L2EzVVdHVUdiQTJKUFE4MlI2VlZuQ0RteVY1U1MxMWMraE1BQktKd0tXSmlB?=
- =?utf-8?B?VGRGM0IrMUhpRG52ejVCQjVINEo2Uk52NGVJd0RnL09zTUVQdUlTRXE3MU1L?=
- =?utf-8?B?a0M3eVl1SUFRYjFqU1VNeEhWVFJZcXdvNGdUSmI2VFJRUUFlUC93eHk4UDZD?=
- =?utf-8?B?WnBmeU1CMnR6dUtMbm0vR3JodzdqeWxPaTRrTGgwSE5QUDMzRmc4eXRPeTUr?=
- =?utf-8?B?OGlwUGp5TjZLYzZIT0VLRVhPbVQrVE83YVkyZFBTUEVIaEFyY0ZKYXV1NEtE?=
- =?utf-8?B?QURQZ1gyTWFSM1Y5V1RRZGtVZzZ6NzMvYTJHckNwM0ErSks4OEFGcVhyL0k2?=
- =?utf-8?B?eE1uMFViMks2TjNrN1pqMGUxQ3pnekR5c2cxbmFCamh3eXRrdTg2UFhCeTdR?=
- =?utf-8?B?dDBvbEdFY0FaR2xwSExoWWtzRW1CYjBieUtmQnFyb1dtSER3aTlrOTU4NkJ1?=
- =?utf-8?B?eGJaM0FZUHBZZVZyQW5BbkFZbVZuK1hLOGU2K3FpZHd6b1U0bWxXOEVPRzUx?=
- =?utf-8?B?MU5aaXQwekJidXRucXdraHM4ZjhhSUNPczgxeHRTTkFkY21TU3VwOTUwNEFO?=
- =?utf-8?B?angzS2JUaVV2TjlMb0lSNlloQmRhNzVSMEk2T3hHbVNvUEpxVzZrSDlnM1pT?=
- =?utf-8?B?RFk1Nk1WazFMeWRyd3ByMVErSENiUmZCWThEenRUMUxIRS80V0FxVkJkSElR?=
- =?utf-8?B?UzVEWElFUDhhcDR5ZE5rT0lBRjJjcXlFck5KSXVRR1plVWtXSmdEVExyRzQ0?=
- =?utf-8?B?UE5lTjFPZytWZ0c3SjFidWpiWlRaTmpPRFBIekhqNzlEWUtlNFpGcGRmTkNr?=
- =?utf-8?B?Ukd6ZHVaQlhXMi83a1FZT0ZXY0RiMUZYeE5yR3BMMHhBODlZSTdhN1UrR1Zz?=
- =?utf-8?B?S0I5RGpVZlpEZXRJc3ZDdEY2eXVuRVBraEhnZmNQMzhmMGx6aklpL0lWS00y?=
- =?utf-8?B?WnZNQzE5SktZU2tPUEZhRVJXYVQvSVQzUzFFK0o5N1FMNUcvZmpkOVpQRWtY?=
- =?utf-8?B?d3JZTTArNEF0MGVFM283d0NNUWNIOXVVL3JJVjF5ODRTMGFldmFyS0tqeDdT?=
- =?utf-8?B?NHB5WThjUEs2UC83S1hJUGROeTJOaUZucS9nbW9YbG1kMzRneGJuWHVadUNO?=
- =?utf-8?B?OU9UTG11S0I5eXllVFd4bncwN05DQ1JsMkhQbDNLcWVGWko5RHpYWGxvcGxa?=
- =?utf-8?B?ZVFsWkdOM3NzYVVaUlBzYUFCekNOVXRYN2tQaEFhMUx5VzZ5MXZCRmgyTm1k?=
- =?utf-8?B?U21sYWlMT0RZRkhYL0lWcWdjajFZUWlGeWZvZlNUVEVzTktqbTlBSGUyOEJW?=
- =?utf-8?B?ZUlGL2twQW9JMTZaUDM5eEY2ZXNSVEVIeHlxVGFybHU2eExzaDRiUWVVcG0z?=
- =?utf-8?B?NEdEZVdOMXo3MnJTeFRmTE1CSWNQejloNGd2a3RsbCsxcFFlK1lkN3dtMHVR?=
- =?utf-8?B?TTV0RWxaeWNlNEl2Rys2dGFxWDFTZVIrdkZ0NGR0K2NVVElYRnlSVEZxRkZJ?=
- =?utf-8?B?NWxtNjVvNU1veTZYVHVFeGVRdkxOMmoyN3BaMU1RNU42WjFFWCtzNHlnN3dT?=
- =?utf-8?B?cDAyN3ZndHBxdnNoekgrL1QrLzRLdWJDazArWGl4UitQUFBVc2NKUGl3ZEYx?=
- =?utf-8?Q?tSxRn6TEEQUEZ9VwJNpyzuAbh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5f26196-c102-4b2a-a1db-08dc5fcd762f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 17:32:03.9064
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iiFvOot2qUeNNh8joWajaNtrWEQoVJynd6syAVEdk8/36o9BI5UnmGPmAh45vEMvvy6nb+aPvsOvmHndnPZ6bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7704
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net>
 
-Replied inline...
+On Thu, Apr 18, 2024 at 11:40:08AM +0200, Thomas Weiﬂschuh wrote:
+> To be able to constify instances of struct ctl_tables it is necessary to
+> remove ways through which non-const versions are exposed from the
+> sysctl core.
+> One of these is the ctl_table_arg member of struct ctl_table_header.
+> 
+> Constify this reference as a prerequisite for the full constification of
+> struct ctl_table instances.
+> No functional change.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+> Changes in v2:
+> - Add link to original monolithic series
+> - Send to all maintainers again
+> - Link to v1: https://lore.kernel.org/r/20240322-sysctl-const-table-arg-v1-1-88436d34961b@weissschuh.net
+> ---
+> This is a standalone version of PATCH 11 from my original const-sysctl
+> series at
+> https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> It is based upon the branch constfy of
+> https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/
+> 
+> This patch is meant to be applied through the sysctl tree.
+> 
+> It was implemented by manually searching for "ctl_table_arg"
+> throughout the tree and inspecing each found site.
+> 
+> If somebody comes up with a cocciscript for this, I'll be happy to use
+> that.
 
-On 11-04-2024 02:20, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Mon, Apr 01, 2024 at 01:20:31PM +0530, Vidya Sagar wrote:
->> Add support for preserving the boot configuration done by the
->> platform firmware per host bridge basis, based on the presence of
->> 'linux,pci-probe-only' property in the respective PCI host bridge
->> device-tree node. It also unifies the ACPI and DT based boot flows
->> in this regard.
->>   drivers/acpi/pci_root.c                  | 12 -----
->>   drivers/pci/controller/pci-host-common.c |  4 --
->>   drivers/pci/of.c                         | 57 +++++++++++++++++++-----
->>   drivers/pci/probe.c                      | 46 ++++++++++++++-----
->>   include/linux/of_pci.h                   |  6 +++
->>   5 files changed, 88 insertions(+), 37 deletions(-)
-> What does this apply to?  I tried v6.9-rc1:
->
->    $ git checkout -b wip/2404-vidya-preserve-boot-v5 v6.9-rc1
->    Switched to a new branch 'wip/2404-vidya-preserve-boot-v5'
->
->    $ git am m/v5_20240401_vidyas_pci_add_support_for_preserving_boot_configuration.mbx
->    Applying: PCI: Add support for preserving boot configuration
->    error: patch failed: drivers/acpi/pci_root.c:1050
->    error: drivers/acpi/pci_root.c: patch does not apply
->    Patch failed at 0001 PCI: Add support for preserving boot configuration
-I'm going to rebase this patch on top of linux-next and send.
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index 84030804a763..ddc2b3e89111 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -1008,7 +1008,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->>        int node = acpi_get_node(device->handle);
->>        struct pci_bus *bus;
->>        struct pci_host_bridge *host_bridge;
->> -     union acpi_object *obj;
->>
->>        info->root = root;
->>        info->bridge = device;
->> @@ -1050,17 +1049,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->>        if (!(root->osc_ext_control_set & OSC_CXL_ERROR_REPORTING_CONTROL))
->>                host_bridge->native_cxl_error = 0;
->>
->> -     /*
->> -      * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
->> -      * exists and returns 0, we must preserve any PCI resource
->> -      * assignments made by firmware for this host bridge.
->> -      */
->> -     obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
->> -                             DSM_PCI_PRESERVE_BOOT_CONFIG, NULL);
->> -     if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
->> -             host_bridge->preserve_config = 1;
->> -     ACPI_FREE(obj);
->> -
->>        acpi_dev_power_up_children_with_adr(device);
->>
->>        pci_scan_child_bus(bus);
->> diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
->> index 6be3266cd7b5..e2602e38ae45 100644
->> --- a/drivers/pci/controller/pci-host-common.c
->> +++ b/drivers/pci/controller/pci-host-common.c
->> @@ -73,10 +73,6 @@ int pci_host_common_probe(struct platform_device *pdev)
->>        if (IS_ERR(cfg))
->>                return PTR_ERR(cfg);
->>
->> -     /* Do not reassign resources if probe only */
->> -     if (!pci_has_flag(PCI_PROBE_ONLY))
->> -             pci_add_flags(PCI_REASSIGN_ALL_BUS);
->> -
->>        bridge->sysdata = cfg;
->>        bridge->ops = (struct pci_ops *)&ops->pci_ops;
->>        bridge->msi_domain = true;
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index 51e3dd0ea5ab..e6da3654f9ac 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -239,24 +239,61 @@ EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
->>    */
->>   void of_pci_check_probe_only(void)
->>   {
->> -     u32 val;
->> +     bool is_preserve_config = of_pci_bridge_preserve_resources(of_chosen);
-> No need for a bool here:
->
->    if (of_pci_bridge_preserve_resources(of_chosen))
->      pci_add_flags(PCI_PROBE_ONLY);
->
-> I think it would make more sense to add
-> of_pci_bridge_preserve_resources() *above* of_pci_check_probe_only()
-> since the usual order is to define functions earlier in the file than
-> the calls.
-I'll take care of it in the next patch.
->> +
->> +     if (is_preserve_config)
->> +             pci_add_flags(PCI_PROBE_ONLY);
->> +     else
->> +             pci_clear_flags(PCI_PROBE_ONLY);
-> Not related to *this* patch, but I see that of_pci_check_probe_only()
-> already clears PCI_PROBE_ONLY (added by f81c11af617c ("of/pci: Add
-> of_pci_check_probe_only to parse "linux,pci-probe-only"").
->
-> I'm concerned about clearing PCI_PROBE_ONLY because some platforms set
-> this unconditionally, and I don't think they necessarily have
-> "linux,pci-probe-only" in DT.
->
-> Apparently none of them currently calls of_pci_check_probe_only() so
-> PCI_PROBE_ONLY remains set, but clearing it here feels like a landmine
-> waiting for somebody to move this into a unified call path.
->
-> I guess if we were to drop pci_clear_flags(), that should be a
-> separate patch in case it breaks something.
-As far as the current patch is concerned, since it is not going to do anything
-different compared to what already exists, I'll leave it at it for now and
-ponder over moving pci_clear_flags() to a different patch later.
->
->> +     pr_info("PROBE_ONLY %s\n", is_preserve_config ? "enabled" : "disabled");
->> +}
->> +EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
->> +
->> +/**
->> + * of_pci_bridge_preserve_resources - Return true if the boot configuration
->> + *                                    needs to be preserved
->> + * @node: Device tree node.
->> + *
->> + * This function looks for "linux,pci-probe-only" property for a given
->> + * PCI controller's node and returns true if found. It will also look in the
->> + * chosen node if the property is not found in the given controller's node.
->> + * Having this property ensures that the kernel doesn't reconfigure the
->> + * BARs and bridge windows that are already done by the platform firmware.
->> + *
->> + * Return: true if the property exists false otherwise.
->> + */
->> +bool of_pci_bridge_preserve_resources(struct device_node *node)
->> +{
->> +     u32 val = 0;
->>        int ret;
->>
->> -     ret = of_property_read_u32(of_chosen, "linux,pci-probe-only", &val);
->> +     if (!node) {
->> +             pr_warn("device node is NULL, trying with of_chosen\n");
->> +             node = of_chosen;
->> +     }
->> +
->> +retry:
->> +     ret = of_property_read_u32(node, "linux,pci-probe-only", &val);
->>        if (ret) {
->> -             if (ret == -ENODATA || ret == -EOVERFLOW)
->> -                     pr_warn("linux,pci-probe-only without valid value, ignoring\n");
->> -             return;
->> +             if (ret == -ENODATA || ret == -EOVERFLOW) {
->> +                     pr_warn("Incorrect value for linux,pci-probe-only in %pOF, ignoring\n", node);
->> +                     return false;
->> +             }
->> +             if (ret == -EINVAL) {
->> +                     if (node == of_chosen)
->> +                             return false;
->> +
->> +                     node = of_chosen;
->> +                     goto retry;
->> +             }
->>        }
->>
->>        if (val)
->> -             pci_add_flags(PCI_PROBE_ONLY);
->> +             return true;
->>        else
->> -             pci_clear_flags(PCI_PROBE_ONLY);
->> -
->> -     pr_info("PROBE_ONLY %s\n", val ? "enabled" : "disabled");
->> +             return false;
->>   }
->> -EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
->>
->>   /**
->>    * devm_of_pci_get_host_bridge_resources() - Resource-managed parsing of PCI
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 795534589b98..b0e0226a8da8 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -15,6 +15,7 @@
->>   #include <linux/cpumask.h>
->>   #include <linux/aer.h>
->>   #include <linux/acpi.h>
->> +#include <linux/pci-acpi.h>
->>   #include <linux/hypervisor.h>
->>   #include <linux/irqdomain.h>
->>   #include <linux/pm_runtime.h>
->> @@ -877,6 +878,28 @@ static void pci_set_bus_msi_domain(struct pci_bus *bus)
->>        dev_set_msi_domain(&bus->dev, d);
->>   }
->>
->> +static void pci_check_config_preserve(struct pci_host_bridge *host_bridge)
->> +{
->> +     if (ACPI_HANDLE(&host_bridge->dev)) {
->> +             union acpi_object *obj;
->> +
->> +             /*
->> +              * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
->> +              * exists and returns 0, we must preserve any PCI resource
->> +              * assignments made by firmware for this host bridge.
->> +              */
->> +             obj = acpi_evaluate_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 1,
->> +                                     DSM_PCI_PRESERVE_BOOT_CONFIG, NULL);
->> +             if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
->> +                     host_bridge->preserve_config = 1;
->> +             ACPI_FREE(obj);
->> +     }
->> +
->> +     if (host_bridge->dev.parent && host_bridge->dev.parent->of_node)
->> +             host_bridge->preserve_config =
->> +                     of_pci_bridge_preserve_resources(host_bridge->dev.parent->of_node);
->> +}
->> +
->>   static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>   {
->>        struct device *parent = bridge->dev.parent;
->> @@ -971,6 +994,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>        if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
->>                dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
->>
->> +     /* Check if the boot configuration by FW needs to be preserved */
->> +     pci_check_config_preserve(bridge);
-> I really have an allergic reaction to functions named "..._check_..."
-> We can tell that the function has something to do with preserving
-> configuration, and it's void so obviously the side effects are the
-> important thing, but there's no clue in the caller about what the side
-> effects are.
->
-> I'd prefer something like:
->
->    bridge->preserve_config = pci_must_preserve_config(bridge);
->
-> where pci_must_preserve_config() has no side effects, returns bool,
-> and the action is at the caller.
-I'll take care of it in the next patch.
->>        /* Coalesce contiguous windows */
->>        resource_list_for_each_entry_safe(window, n, &resources) {
->>                if (list_is_last(&window->node, &resources))
->> @@ -3080,20 +3106,18 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->>
->>        bus = bridge->bus;
->>
->> +     /* If we must preserve the resource configuration, claim now */
->> +     if (bridge->preserve_config)
->> +             pci_bus_claim_resources(bus);
->> +
->>        /*
->> -      * We insert PCI resources into the iomem_resource and
->> -      * ioport_resource trees in either pci_bus_claim_resources()
->> -      * or pci_bus_assign_resources().
->> +      * Assign whatever was left unassigned. If we didn't claim above,
->> +      * this will reassign everything.
->>         */
->> -     if (pci_has_flag(PCI_PROBE_ONLY)) {
->> -             pci_bus_claim_resources(bus);
->> -     } else {
->> -             pci_bus_size_bridges(bus);
->> -             pci_bus_assign_resources(bus);
->> +     pci_assign_unassigned_root_bus_resources(bus);
->>
->> -             list_for_each_entry(child, &bus->children, node)
->> -                     pcie_bus_configure_settings(child);
->> -     }
->> +     list_for_each_entry(child, &bus->children, node)
->> +             pcie_bus_configure_settings(child);
->>
->>        pci_bus_add_devices(bus);
->>        return 0;
->> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
->> index 29658c0ee71f..3f3909a5d55d 100644
->> --- a/include/linux/of_pci.h
->> +++ b/include/linux/of_pci.h
->> @@ -13,6 +13,7 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->>                                             unsigned int devfn);
->>   int of_pci_get_devfn(struct device_node *np);
->>   void of_pci_check_probe_only(void);
->> +bool of_pci_bridge_preserve_resources(struct device_node *node);
-> This looks like it should be in drivers/pci/pci.h since it's not used
-> outside drivers/pci/.
-Agree. I'll take care of it in the next patch.
->>   #else
->>   static inline struct device_node *of_pci_find_child_device(struct device_node *parent,
->>                                             unsigned int devfn)
->> @@ -26,6 +27,11 @@ static inline int of_pci_get_devfn(struct device_node *np)
->>   }
->>
->>   static inline void of_pci_check_probe_only(void) { }
->> +
->> +static inline bool of_pci_bridge_preserve_resources(struct device_node *node)
->> +{
->> +     return false;
->> +}
->>   #endif
->>
->>   #if IS_ENABLED(CONFIG_OF_IRQ)
->> --
->> 2.25.1
->>
+My simple attempt doesn't find any additional instances:
 
+@constify@
+identifier VAR;
+expression EXP;
+@@
+
+-       struct ctl_table *VAR;
++       const struct ctl_table *VAR;
+        ...
+        VAR = (EXP)->ctl_table_arg
+
+it actually misses a few. :P
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+> ---
+>  drivers/net/vrf.c                       | 2 +-
+>  include/linux/sysctl.h                  | 2 +-
+>  ipc/ipc_sysctl.c                        | 2 +-
+>  ipc/mq_sysctl.c                         | 2 +-
+>  kernel/ucount.c                         | 2 +-
+>  net/ax25/sysctl_net_ax25.c              | 2 +-
+>  net/bridge/br_netfilter_hooks.c         | 2 +-
+>  net/core/sysctl_net_core.c              | 2 +-
+>  net/ieee802154/6lowpan/reassembly.c     | 2 +-
+>  net/ipv4/devinet.c                      | 2 +-
+>  net/ipv4/ip_fragment.c                  | 2 +-
+>  net/ipv4/route.c                        | 2 +-
+>  net/ipv4/sysctl_net_ipv4.c              | 2 +-
+>  net/ipv4/xfrm4_policy.c                 | 2 +-
+>  net/ipv6/addrconf.c                     | 2 +-
+>  net/ipv6/netfilter/nf_conntrack_reasm.c | 2 +-
+>  net/ipv6/reassembly.c                   | 2 +-
+>  net/ipv6/sysctl_net_ipv6.c              | 6 +++---
+>  net/ipv6/xfrm6_policy.c                 | 2 +-
+>  net/mpls/af_mpls.c                      | 4 ++--
+>  net/mptcp/ctrl.c                        | 2 +-
+>  net/netfilter/nf_conntrack_standalone.c | 2 +-
+>  net/netfilter/nf_log.c                  | 2 +-
+>  net/sctp/sysctl.c                       | 2 +-
+>  net/smc/smc_sysctl.c                    | 2 +-
+>  net/unix/sysctl_net_unix.c              | 2 +-
+>  net/xfrm/xfrm_sysctl.c                  | 2 +-
+>  27 files changed, 30 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+> index bb95ce43cd97..66f8542f3b18 100644
+> --- a/drivers/net/vrf.c
+> +++ b/drivers/net/vrf.c
+> @@ -1971,7 +1971,7 @@ static int vrf_netns_init_sysctl(struct net *net, struct netns_vrf *nn_vrf)
+>  static void vrf_netns_exit_sysctl(struct net *net)
+>  {
+>  	struct netns_vrf *nn_vrf = net_generic(net, vrf_net_id);
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = nn_vrf->ctl_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(nn_vrf->ctl_hdr);
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 47bd28ffa88f..09db2f2e6488 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -171,7 +171,7 @@ struct ctl_table_header {
+>  		struct rcu_head rcu;
+>  	};
+>  	struct completion *unregistering;
+> -	struct ctl_table *ctl_table_arg;
+> +	const struct ctl_table *ctl_table_arg;
+>  	struct ctl_table_root *root;
+>  	struct ctl_table_set *set;
+>  	struct ctl_dir *parent;
+> diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
+> index 19b2a67aef40..113452038303 100644
+> --- a/ipc/ipc_sysctl.c
+> +++ b/ipc/ipc_sysctl.c
+> @@ -305,7 +305,7 @@ bool setup_ipc_sysctls(struct ipc_namespace *ns)
+>  
+>  void retire_ipc_sysctls(struct ipc_namespace *ns)
+>  {
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = ns->ipc_sysctls->ctl_table_arg;
+>  	unregister_sysctl_table(ns->ipc_sysctls);
+> diff --git a/ipc/mq_sysctl.c b/ipc/mq_sysctl.c
+> index 43c0825da9e8..068e7d5aa42b 100644
+> --- a/ipc/mq_sysctl.c
+> +++ b/ipc/mq_sysctl.c
+> @@ -159,7 +159,7 @@ bool setup_mq_sysctls(struct ipc_namespace *ns)
+>  
+>  void retire_mq_sysctls(struct ipc_namespace *ns)
+>  {
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = ns->mq_sysctls->ctl_table_arg;
+>  	unregister_sysctl_table(ns->mq_sysctls);
+> diff --git a/kernel/ucount.c b/kernel/ucount.c
+> index 90300840256b..366a2c1971f5 100644
+> --- a/kernel/ucount.c
+> +++ b/kernel/ucount.c
+> @@ -119,7 +119,7 @@ bool setup_userns_sysctls(struct user_namespace *ns)
+>  void retire_userns_sysctls(struct user_namespace *ns)
+>  {
+>  #ifdef CONFIG_SYSCTL
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = ns->sysctls->ctl_table_arg;
+>  	unregister_sysctl_table(ns->sysctls);
+> diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
+> index db66e11e7fe8..e0128dc9def3 100644
+> --- a/net/ax25/sysctl_net_ax25.c
+> +++ b/net/ax25/sysctl_net_ax25.c
+> @@ -171,7 +171,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
+>  void ax25_unregister_dev_sysctl(ax25_dev *ax25_dev)
+>  {
+>  	struct ctl_table_header *header = ax25_dev->sysheader;
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	if (header) {
+>  		ax25_dev->sysheader = NULL;
+> diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+> index 35e10c5a766d..a09118c56c7d 100644
+> --- a/net/bridge/br_netfilter_hooks.c
+> +++ b/net/bridge/br_netfilter_hooks.c
+> @@ -1268,7 +1268,7 @@ static int br_netfilter_sysctl_init_net(struct net *net)
+>  static void br_netfilter_sysctl_exit_net(struct net *net,
+>  					 struct brnf_net *brnet)
+>  {
+> -	struct ctl_table *table = brnet->ctl_hdr->ctl_table_arg;
+> +	const struct ctl_table *table = brnet->ctl_hdr->ctl_table_arg;
+>  
+>  	unregister_net_sysctl_table(brnet->ctl_hdr);
+>  	if (!net_eq(net, &init_net))
+> diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
+> index 6973dda3abda..903ab4a51c17 100644
+> --- a/net/core/sysctl_net_core.c
+> +++ b/net/core/sysctl_net_core.c
+> @@ -743,7 +743,7 @@ static __net_init int sysctl_core_net_init(struct net *net)
+>  
+>  static __net_exit void sysctl_core_net_exit(struct net *net)
+>  {
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = net->core.sysctl_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->core.sysctl_hdr);
+> diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
+> index 6dd960ec558c..2a983cf450da 100644
+> --- a/net/ieee802154/6lowpan/reassembly.c
+> +++ b/net/ieee802154/6lowpan/reassembly.c
+> @@ -399,7 +399,7 @@ static int __net_init lowpan_frags_ns_sysctl_register(struct net *net)
+>  
+>  static void __net_exit lowpan_frags_ns_sysctl_unregister(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  	struct netns_ieee802154_lowpan *ieee802154_lowpan =
+>  		net_ieee802154_lowpan(net);
+>  
+> diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
+> index 7a437f0d4190..7592f242336b 100644
+> --- a/net/ipv4/devinet.c
+> +++ b/net/ipv4/devinet.c
+> @@ -2749,7 +2749,7 @@ static __net_init int devinet_init_net(struct net *net)
+>  static __net_exit void devinet_exit_net(struct net *net)
+>  {
+>  #ifdef CONFIG_SYSCTL
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = net->ipv4.forw_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->ipv4.forw_hdr);
+> diff --git a/net/ipv4/ip_fragment.c b/net/ipv4/ip_fragment.c
+> index a4941f53b523..6b9285fd6f06 100644
+> --- a/net/ipv4/ip_fragment.c
+> +++ b/net/ipv4/ip_fragment.c
+> @@ -632,7 +632,7 @@ static int __net_init ip4_frags_ns_ctl_register(struct net *net)
+>  
+>  static void __net_exit ip4_frags_ns_ctl_unregister(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->ipv4.frags_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->ipv4.frags_hdr);
+> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> index c8f76f56dc16..af30b5942ba4 100644
+> --- a/net/ipv4/route.c
+> +++ b/net/ipv4/route.c
+> @@ -3590,7 +3590,7 @@ static __net_init int sysctl_route_net_init(struct net *net)
+>  
+>  static __net_exit void sysctl_route_net_exit(struct net *net)
+>  {
+> -	struct ctl_table *tbl;
+> +	const struct ctl_table *tbl;
+>  
+>  	tbl = net->ipv4.route_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->ipv4.route_hdr);
+> diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
+> index 7e4f16a7dcc1..ce5d19978a26 100644
+> --- a/net/ipv4/sysctl_net_ipv4.c
+> +++ b/net/ipv4/sysctl_net_ipv4.c
+> @@ -1554,7 +1554,7 @@ static __net_init int ipv4_sysctl_init_net(struct net *net)
+>  
+>  static __net_exit void ipv4_sysctl_exit_net(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	kfree(net->ipv4.sysctl_local_reserved_ports);
+>  	table = net->ipv4.ipv4_hdr->ctl_table_arg;
+> diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
+> index c33bca2c3841..1dda59e0aeab 100644
+> --- a/net/ipv4/xfrm4_policy.c
+> +++ b/net/ipv4/xfrm4_policy.c
+> @@ -186,7 +186,7 @@ static __net_init int xfrm4_net_sysctl_init(struct net *net)
+>  
+>  static __net_exit void xfrm4_net_sysctl_exit(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	if (!net->ipv4.xfrm4_hdr)
+>  		return;
+> diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+> index 247bd4d8ee45..9c34a351f115 100644
+> --- a/net/ipv6/addrconf.c
+> +++ b/net/ipv6/addrconf.c
+> @@ -7235,7 +7235,7 @@ static int __addrconf_sysctl_register(struct net *net, char *dev_name,
+>  static void __addrconf_sysctl_unregister(struct net *net,
+>  					 struct ipv6_devconf *p, int ifindex)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	if (!p->sysctl_header)
+>  		return;
+> diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
+> index 1a51a44571c3..98809f846229 100644
+> --- a/net/ipv6/netfilter/nf_conntrack_reasm.c
+> +++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
+> @@ -105,7 +105,7 @@ static int nf_ct_frag6_sysctl_register(struct net *net)
+>  static void __net_exit nf_ct_frags6_sysctl_unregister(struct net *net)
+>  {
+>  	struct nft_ct_frag6_pernet *nf_frag = nf_frag_pernet(net);
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = nf_frag->nf_frag_frags_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(nf_frag->nf_frag_frags_hdr);
+> diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
+> index acb4f119e11f..ee95cdcc8747 100644
+> --- a/net/ipv6/reassembly.c
+> +++ b/net/ipv6/reassembly.c
+> @@ -487,7 +487,7 @@ static int __net_init ip6_frags_ns_sysctl_register(struct net *net)
+>  
+>  static void __net_exit ip6_frags_ns_sysctl_unregister(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->ipv6.sysctl.frags_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->ipv6.sysctl.frags_hdr);
+> diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c
+> index 888676163e90..75de55f907b0 100644
+> --- a/net/ipv6/sysctl_net_ipv6.c
+> +++ b/net/ipv6/sysctl_net_ipv6.c
+> @@ -313,9 +313,9 @@ static int __net_init ipv6_sysctl_net_init(struct net *net)
+>  
+>  static void __net_exit ipv6_sysctl_net_exit(struct net *net)
+>  {
+> -	struct ctl_table *ipv6_table;
+> -	struct ctl_table *ipv6_route_table;
+> -	struct ctl_table *ipv6_icmp_table;
+> +	const struct ctl_table *ipv6_table;
+> +	const struct ctl_table *ipv6_route_table;
+> +	const struct ctl_table *ipv6_icmp_table;
+>  
+>  	ipv6_table = net->ipv6.sysctl.hdr->ctl_table_arg;
+>  	ipv6_route_table = net->ipv6.sysctl.route_hdr->ctl_table_arg;
+> diff --git a/net/ipv6/xfrm6_policy.c b/net/ipv6/xfrm6_policy.c
+> index 42fb6996b077..4891012b692f 100644
+> --- a/net/ipv6/xfrm6_policy.c
+> +++ b/net/ipv6/xfrm6_policy.c
+> @@ -218,7 +218,7 @@ static int __net_init xfrm6_net_sysctl_init(struct net *net)
+>  
+>  static void __net_exit xfrm6_net_sysctl_exit(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	if (!net->ipv6.sysctl.xfrm6_hdr)
+>  		return;
+> diff --git a/net/mpls/af_mpls.c b/net/mpls/af_mpls.c
+> index 6dab883a08dd..973881b8faa3 100644
+> --- a/net/mpls/af_mpls.c
+> +++ b/net/mpls/af_mpls.c
+> @@ -1438,7 +1438,7 @@ static void mpls_dev_sysctl_unregister(struct net_device *dev,
+>  				       struct mpls_dev *mdev)
+>  {
+>  	struct net *net = dev_net(dev);
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	if (!mdev->sysctl)
+>  		return;
+> @@ -2706,7 +2706,7 @@ static void mpls_net_exit(struct net *net)
+>  {
+>  	struct mpls_route __rcu **platform_label;
+>  	size_t platform_labels;
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  	unsigned int index;
+>  
+>  	table = net->mpls.ctl->ctl_table_arg;
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index 13fe0748dde8..8d661156ab8c 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
+> @@ -198,7 +198,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+>  
+>  static void mptcp_pernet_del_table(struct mptcp_pernet *pernet)
+>  {
+> -	struct ctl_table *table = pernet->ctl_table_hdr->ctl_table_arg;
+> +	const struct ctl_table *table = pernet->ctl_table_hdr->ctl_table_arg;
+>  
+>  	unregister_net_sysctl_table(pernet->ctl_table_hdr);
+>  
+> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> index 0ee98ce5b816..bb9dea676ec1 100644
+> --- a/net/netfilter/nf_conntrack_standalone.c
+> +++ b/net/netfilter/nf_conntrack_standalone.c
+> @@ -1122,7 +1122,7 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+>  static void nf_conntrack_standalone_fini_sysctl(struct net *net)
+>  {
+>  	struct nf_conntrack_net *cnet = nf_ct_pernet(net);
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = cnet->sysctl_header->ctl_table_arg;
+>  	unregister_net_sysctl_table(cnet->sysctl_header);
+> diff --git a/net/netfilter/nf_log.c b/net/netfilter/nf_log.c
+> index 370f8231385c..efedd2f13ac7 100644
+> --- a/net/netfilter/nf_log.c
+> +++ b/net/netfilter/nf_log.c
+> @@ -514,7 +514,7 @@ static int netfilter_log_sysctl_init(struct net *net)
+>  
+>  static void netfilter_log_sysctl_exit(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->nf.nf_log_dir_header->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->nf.nf_log_dir_header);
+> diff --git a/net/sctp/sysctl.c b/net/sctp/sysctl.c
+> index f65d6f92afcb..25bdf17c7262 100644
+> --- a/net/sctp/sysctl.c
+> +++ b/net/sctp/sysctl.c
+> @@ -624,7 +624,7 @@ int sctp_sysctl_net_register(struct net *net)
+>  
+>  void sctp_sysctl_net_unregister(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->sctp.sysctl_header->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->sctp.sysctl_header);
+> diff --git a/net/smc/smc_sysctl.c b/net/smc/smc_sysctl.c
+> index a5946d1b9d60..4e8baa2e7ea4 100644
+> --- a/net/smc/smc_sysctl.c
+> +++ b/net/smc/smc_sysctl.c
+> @@ -133,7 +133,7 @@ int __net_init smc_sysctl_net_init(struct net *net)
+>  
+>  void __net_exit smc_sysctl_net_exit(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->smc.smc_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->smc.smc_hdr);
+> diff --git a/net/unix/sysctl_net_unix.c b/net/unix/sysctl_net_unix.c
+> index 3e84b31c355a..44996af61999 100644
+> --- a/net/unix/sysctl_net_unix.c
+> +++ b/net/unix/sysctl_net_unix.c
+> @@ -52,7 +52,7 @@ int __net_init unix_sysctl_register(struct net *net)
+>  
+>  void unix_sysctl_unregister(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->unx.ctl->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->unx.ctl);
+> diff --git a/net/xfrm/xfrm_sysctl.c b/net/xfrm/xfrm_sysctl.c
+> index 7fdeafc838a7..e972930c292b 100644
+> --- a/net/xfrm/xfrm_sysctl.c
+> +++ b/net/xfrm/xfrm_sysctl.c
+> @@ -76,7 +76,7 @@ int __net_init xfrm_sysctl_init(struct net *net)
+>  
+>  void __net_exit xfrm_sysctl_fini(struct net *net)
+>  {
+> -	struct ctl_table *table;
+> +	const struct ctl_table *table;
+>  
+>  	table = net->xfrm.sysctl_hdr->ctl_table_arg;
+>  	unregister_net_sysctl_table(net->xfrm.sysctl_hdr);
+> 
+> ---
+> base-commit: 48a8b5270db856be233021e47a5f1dc02d47ed0d
+> change-id: 20231226-sysctl-const-table-arg-2c828e0264dc
+> 
+> Best regards,
+> -- 
+> Thomas Weiﬂschuh <linux@weissschuh.net>
+> 
+
+-- 
+Kees Cook
