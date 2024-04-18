@@ -1,58 +1,57 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431A015FA94
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C45161321
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 12:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713444243; cv=none; b=twMq4HmBSS2x1hFf4mmUPmtOwurLtlSKB4syGrbgLFntmcXjcv6/soIylJK7BtswgrzqY6BG8wXgqetazESenDDk2oRK+VZ0zi9lK4dIoLVL/kOnpwMTYFaI/7EPvOd5FlS56XjsJ68DlZGgNC3bOc0s+xFMx928Zu70mNlRgmc=
+	t=1713444244; cv=none; b=k9suw1bKDX8NmFmRjuAiMBauI9Nmk7J1priPJsD8JFa7lb9aBe0iqMRuqZNVgf0aaIrwNGj1J29VlmFFH3+KSFUopVC/v3vZZFN+ZBjwp0BLZ2xwEY4AGjnVhbTfbSbb4QHyC9uCVde1rK38LyRKQB0kcVJ2Z7G4SWKnuqpyizI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713444243; c=relaxed/simple;
-	bh=I+l+JkVVH9yyH4nAg3oBjtzyRDSG/5kxRFfJnm0mGaU=;
+	s=arc-20240116; t=1713444244; c=relaxed/simple;
+	bh=2meeqYrGqS6N+9ES03sW/IZ0HWVimfJczOdorGfrJB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XvcEMb46T/MlxRPBsm3Hw8LEIqFLRfjWcSm7nfonj+ILnDNt+rtGokpTYkfCfl8tgjURyDyBBHkyA8PGdmBodpBmvex2qL/pCtBQMAvGfLiHuWRhBnCz4Qz45PN9t3T4WqlIn8BzB66Sg1te6nmQOYgNH27+pazCdtMphH3HnVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SFqAV6eu; arc=none smtp.client-ip=209.85.208.169
+	 MIME-Version:Content-Type; b=Gw3TbyUZ4lmgTJFa+SRwhEauAzmJIoD4RycWIX5MX4Zz5KAInUMRu9+QlEOaQFlr9d2ZCukUGbzdxqBSVMLrIlDRlnZCpJG5+D/BpZXEf9RnZoc4iJfwOJ9fzv+qMCp2PCa2jUXctuRu8/X+CfV4FxcMHNXo9/Y7MNWhz22ezHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=orXBAWIl; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SFqAV6eu"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d9f829d398so1957621fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 05:43:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="orXBAWIl"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2da4e54549fso228131fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 05:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713444237; x=1714049037; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713444241; x=1714049041; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VqinG7vx90NXqlB3cCAWzb6LZzjfwkXKYqGSSxQF2QU=;
-        b=SFqAV6euphnHbeuqYe1KEqDKSPsC1135ph1AH0o0FVXjt1EJJYyQsmpjhEK7D4Xbvg
-         RoNqIZarqw+FTLtg0itCZS0c2UyG0cYv86n5Mo8IR5Xmh06IHaVwiAe4gSUmBXC5fzJh
-         d6el6IuvBHDCJ8H+U1Y3IE53r+v0twX4+taSZKUGgA0Fe9xbY9B/MEA/maF4Wve5p9FP
-         HIiZJsHsfpHauOkLRpuM+3tL/gNiyihBtyOvdnFab0Q1ASLkF/t+Iv2UzY68BQA7Zvdm
-         +MnG+SuM735QaV3PkNN+U7n8Gb86Ow2yIPKKDnrtCOSFNNByNDR6b2cu85Bden/X+DNC
-         v92g==
+        bh=av0fCRvJ5d6BdL5At0wE/CNS0oRVP43ZLfrJceTJ89w=;
+        b=orXBAWIlCbFEPZnXQnevS9f95mR5781Pc2yepFZQDAFvlJNBdvAcLHH8vprt+kGonx
+         u/y21dbj5GkzC7GC9zD2/TDSztHegfMNMN2C/DhINA2H23Kk5mfXmCCyvY+gHjagQ+Hx
+         oaNLoRtTXs5HQDI1JZgqE/2mtGYT+M2IaaZRjHo1RF13bMsHsiJE5d1wYa2P4OdVwI/A
+         7BVKyu+mMSKhRKMcLyd/ObTNE0DshORErxAfHhUT+3WDt27HEN2cxYP1ZMIOX/m2Rzmg
+         m50MJceZivYeNEpP/zgsWdA0CNd/KAvsGenYKqMMettqNaLTycWsPrXjixBOhvkaLotl
+         ORBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713444237; x=1714049037;
+        d=1e100.net; s=20230601; t=1713444241; x=1714049041;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VqinG7vx90NXqlB3cCAWzb6LZzjfwkXKYqGSSxQF2QU=;
-        b=AoDzcs6cOts1I9cJaV2hxKeeTNfHHyaUNi7znx0IKoMfNQiE/9Apr2YebyPewNs7Wq
-         pMl2Ud2fieMIiPhEOsKv59qCXMqFEsUWiUzWs8+xegU2opHpjvOBuf4X2t+ngkVcNmxJ
-         I0bSgz7gq4daeYANJHp9KpG0RFULwLzeiHCApJa0e5cDEXG5ize2xKH9FPX9RuuRYRq0
-         ONZUWNNcY9n1M1iCsm3o8er7AqCRFPkDvQvRhTnpkZSr2HxX63K0WWJG/Cg8N0Hnu2RU
-         fgO5Ljc7vAc5y2ZvpRbn7ds73NNQqQI4v08zna+5VgqRzFaHtw1XZTJCdbNCULdxLZ9F
-         7zdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWG2+Ut6k+9O09ew9IOC5YHWuI3uQe61DuZDC+MW/j8YGoSDOEm0Ph6CuvF22fvJwA/69jOoiF8yQ0oyW5vGXXVdPu8czbGXPyMl4h7
-X-Gm-Message-State: AOJu0YyWQznSrD8fE31qrnryyySGHCKKJmkZ/SDPV5m4mtIAby4mr3MZ
-	gLAOG3KxNA+n91xfMKJ32+8+KEBIpkEVOZEQ7K54QQ+Mg1pvFixLU11dwojgu+XSPnS4cLioZd0
-	qDd8=
-X-Google-Smtp-Source: AGHT+IFXBu2QshCmevcqDNI9qC29EYmJ3ZQBbQK0N8BE6U3hHj6+0OsosVqzAbOLR3+7A5/jwaHB/w==
-X-Received: by 2002:a2e:8387:0:b0:2d6:c59e:37c0 with SMTP id x7-20020a2e8387000000b002d6c59e37c0mr1507578ljg.2.1713444237161;
-        Thu, 18 Apr 2024 05:43:57 -0700 (PDT)
+        bh=av0fCRvJ5d6BdL5At0wE/CNS0oRVP43ZLfrJceTJ89w=;
+        b=K+2la+8GfbsBcSfPThgbcCxDIpPYG0aiqnG444IMCT5ulAi82lpVuBSOZRYUr8ZMC8
+         fcJu66V0TFf+N6fA4OVDM0RuZGcBB0fXTTsCtMhtZRXm6PZpvMvMtB3GyzHEUzLR1b5h
+         tUV2S65WAivW9T5xiziLPBFUDXrW3Ngo1n1pae422x+/C5F4DXVX/mKSskjTVLgnUjWB
+         mC6IcTe2PMtjHZPwSE/VvBkkuwHAG1YSom8v9rxNDJGD08sY7xgAlA3eeWLg9kPOKcJj
+         7J5I53PmgFKHX/QbjCHn7XkIX9Ecez5wmrhfJDIYj8y1zQOvLTszWzuItlQ+AI4qrb+o
+         wBsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4j2wexB+/ms3F9HJrN7pLaIqtUU9NR1SZKMjXswEWL3sWObyRdjzWirHce+AVKGfJZLOpzLKdqn0iA9DPH8sn8WUpOvfGVyp9jG6S
+X-Gm-Message-State: AOJu0Yx4cd9lKWVrq+olz7fX5Zai+nsMn1dZQBebZksVgMor/hqAWWFm
+	EsGYbs1i+P7qiocYYMg0/Y4ocgOgkTCEJVPSNy4FbStxLcMGVUVyo66RV5HOjD8=
+X-Google-Smtp-Source: AGHT+IHdzMsUCMCexL1xcSXK55gyqNVYHzfsqQON0oQtcwPFlYxqOUNzTjfk86rgRUdr+Vw8mFv+bw==
+X-Received: by 2002:a2e:3a19:0:b0:2da:320a:6739 with SMTP id h25-20020a2e3a19000000b002da320a6739mr1487240lja.1.1713444241121;
+        Thu, 18 Apr 2024 05:44:01 -0700 (PDT)
 Received: from carbon-x1.. ([2a01:e0a:999:a3a0:7b64:4d1d:16d8:e38b])
-        by smtp.gmail.com with ESMTPSA id bi18-20020a05600c3d9200b00418d5b16fa2sm3373412wmb.30.2024.04.18.05.43.56
+        by smtp.gmail.com with ESMTPSA id bi18-20020a05600c3d9200b00418d5b16fa2sm3373412wmb.30.2024.04.18.05.43.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 05:43:56 -0700 (PDT)
+        Thu, 18 Apr 2024 05:44:00 -0700 (PDT)
 From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
@@ -72,9 +71,9 @@ Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
 	kvm@vger.kernel.org,
 	kvm-riscv@lists.infradead.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 03/12] dt-bindings: riscv: add Zc* extension rules implied by C extension
-Date: Thu, 18 Apr 2024 14:42:26 +0200
-Message-ID: <20240418124300.1387978-4-cleger@rivosinc.com>
+Subject: [PATCH v2 06/12] RISC-V: KVM: Allow Zca, Zcf, Zcd and Zcb extensions for Guest/VM
+Date: Thu, 18 Apr 2024 14:42:29 +0200
+Message-ID: <20240418124300.1387978-7-cleger@rivosinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240418124300.1387978-1-cleger@rivosinc.com>
 References: <20240418124300.1387978-1-cleger@rivosinc.com>
@@ -87,106 +86,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-As stated by Zc* spec:
-
-"As C defines the same instructions as Zca, Zcf and Zcd, the rule is that:
- - C always implies Zca
- - C+F implies Zcf (RV32 only)
- - C+D implies Zcd"
-
-Add additionnal validation rules to enforce this in dts.
+Extend the KVM ISA extension ONE_REG interface to allow KVM user space
+to detect and enable Zca, Zcf, Zcd and Zcb extensions for Guest/VM.
 
 Signed-off-by: Clément Léger <cleger@rivosinc.com>
 ---
- .../devicetree/bindings/riscv/cpus.yaml       |  8 +++--
- .../devicetree/bindings/riscv/extensions.yaml | 34 +++++++++++++++++++
- 2 files changed, 39 insertions(+), 3 deletions(-)
+ arch/riscv/include/uapi/asm/kvm.h | 4 ++++
+ arch/riscv/kvm/vcpu_onereg.c      | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index d87dd50f1a4b..c4e2c65437b1 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -168,7 +168,7 @@ examples:
-                 i-cache-size = <16384>;
-                 reg = <0>;
-                 riscv,isa-base = "rv64i";
--                riscv,isa-extensions = "i", "m", "a", "c";
-+                riscv,isa-extensions = "i", "m", "a", "c", "zca";
+diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+index 35a12aa1953e..57db3fea679f 100644
+--- a/arch/riscv/include/uapi/asm/kvm.h
++++ b/arch/riscv/include/uapi/asm/kvm.h
+@@ -168,6 +168,10 @@ enum KVM_RISCV_ISA_EXT_ID {
+ 	KVM_RISCV_ISA_EXT_ZTSO,
+ 	KVM_RISCV_ISA_EXT_ZACAS,
+ 	KVM_RISCV_ISA_EXT_ZIMOP,
++	KVM_RISCV_ISA_EXT_ZCA,
++	KVM_RISCV_ISA_EXT_ZCB,
++	KVM_RISCV_ISA_EXT_ZCD,
++	KVM_RISCV_ISA_EXT_ZCF,
+ 	KVM_RISCV_ISA_EXT_MAX,
+ };
  
-                 cpu_intc0: interrupt-controller {
-                         #interrupt-cells = <1>;
-@@ -194,7 +194,8 @@ examples:
-                 reg = <1>;
-                 tlb-split;
-                 riscv,isa-base = "rv64i";
--                riscv,isa-extensions = "i", "m", "a", "f", "d", "c";
-+                riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zca",
-+                                       "zcd";
- 
-                 cpu_intc1: interrupt-controller {
-                         #interrupt-cells = <1>;
-@@ -215,7 +216,8 @@ examples:
-                 compatible = "riscv";
-                 mmu-type = "riscv,sv48";
-                 riscv,isa-base = "rv64i";
--                riscv,isa-extensions = "i", "m", "a", "f", "d", "c";
-+                riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "zca",
-+                                       "zcd";
- 
-                 interrupt-controller {
-                         #interrupt-cells = <1>;
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index db7daf22b863..0172cbaa13ca 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -549,6 +549,23 @@ properties:
-                 const: zca
-             - contains:
-                 const: f
-+      # C extension implies Zca
-+      - if:
-+          contains:
-+            const: c
-+        then:
-+          contains:
-+            const: zca
-+      # C extension implies Zcd if d
-+      - if:
-+          allOf:
-+            - contains:
-+                const: c
-+            - contains:
-+                const: d
-+        then:
-+          contains:
-+            const: zcd
- 
- allOf:
-   # Zcf extension does not exists on rv64
-@@ -566,6 +583,23 @@ allOf:
-           not:
-             contains:
-               const: zcf
-+  # C extension implies Zcf if f on rv32 only
-+  - if:
-+      properties:
-+        riscv,isa-extensions:
-+          allOf:
-+            - contains:
-+                const: c
-+            - contains:
-+                const: f
-+        riscv,isa-base:
-+          contains:
-+            const: rv32i
-+    then:
-+      properties:
-+        riscv,isa-extensions:
-+          contains:
-+            const: zcf
- 
- additionalProperties: true
- ...
+diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
+index 12436f6f0d20..a2747a6dbdb6 100644
+--- a/arch/riscv/kvm/vcpu_onereg.c
++++ b/arch/riscv/kvm/vcpu_onereg.c
+@@ -48,6 +48,10 @@ static const unsigned long kvm_isa_ext_arr[] = {
+ 	KVM_ISA_EXT_ARR(ZBKC),
+ 	KVM_ISA_EXT_ARR(ZBKX),
+ 	KVM_ISA_EXT_ARR(ZBS),
++	KVM_ISA_EXT_ARR(ZCA),
++	KVM_ISA_EXT_ARR(ZCB),
++	KVM_ISA_EXT_ARR(ZCD),
++	KVM_ISA_EXT_ARR(ZCF),
+ 	KVM_ISA_EXT_ARR(ZFA),
+ 	KVM_ISA_EXT_ARR(ZFH),
+ 	KVM_ISA_EXT_ARR(ZFHMIN),
+@@ -128,6 +132,10 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
+ 	case KVM_RISCV_ISA_EXT_ZBKC:
+ 	case KVM_RISCV_ISA_EXT_ZBKX:
+ 	case KVM_RISCV_ISA_EXT_ZBS:
++	case KVM_RISCV_ISA_EXT_ZCA:
++	case KVM_RISCV_ISA_EXT_ZCB:
++	case KVM_RISCV_ISA_EXT_ZCD:
++	case KVM_RISCV_ISA_EXT_ZCF:
+ 	case KVM_RISCV_ISA_EXT_ZFA:
+ 	case KVM_RISCV_ISA_EXT_ZFH:
+ 	case KVM_RISCV_ISA_EXT_ZFHMIN:
 -- 
 2.43.0
 
