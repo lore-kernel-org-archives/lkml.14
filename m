@@ -1,245 +1,117 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE39433C7
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454438821;
+	Thu, 18 Apr 2024 10:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713436442; cv=none; b=crirzmOgd0Xt4cgNMdJyzPX0wYSGn+MzX4/CXsj8EbshRESW0nSUs5URzy2yqOTLc2u9RcRHVh099BpvIaCCx9bTg1x9zYUqVSKj54mbESaz/PLDphIlj+077jjhOSDhDtbCD1Ul9+fVzYH451BCSJEeq6LkeTCuG7Ua6UXjPy4=
+	t=1713436524; cv=none; b=CySIrsaz8QsT2PKCIW5ZxW43oMEBWgZMRUhbT/nbkZmOF+82bU0Avby+P7YOYGb0R37mJLHC14n8rkSZUxhLCHqSzRzBJnJZEYy9vDQ0FYCv79g0RHeV1pigAw0Phx/VK3rZONHbJkPnlZYWwbFY0vVgBJDeLTgGEx2CnjTNeSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713436442; c=relaxed/simple;
-	bh=SNcM7mu59GTQp31Vc554XWfB/6nwJpgSz7akQJF/QzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoIXA86P73F0L9rVELguK50wvvOY5lBBIy5CWVxJluyrcYsMlPXmsIo2VlCErg7x4arcU7RNdCFiDTZD0EMPytBZ36sZB4fl79W57v4fMvZwO0HGAMfTzNDRAkVUCBCz9x/mNlbAoaK6ctPUbsaQSiwhU+nRnKcQI0X78jbHhug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WI0ylXHy; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1713436524; c=relaxed/simple;
+	bh=elx7OKm1udJewvzUfuAa8NkG1AOgelvnmXs8xqzFUUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U2r9tNCAx9Mij5z4BMI5NJZpLhn5Oba6pi9LcrWhVEVbPD3EmBsmn5mio/lcvO5kNK1N16WQ9LyyG/RjFaZuBQxAJ5LI0CoHNzJvCx+fXcerxQSls0U10cRP3MaEzMJdcVEpkw716Kq9srtBNzuQeyN3CGQtnFCx/mL6NyawPBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rFoTg+5O; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OkgiFbzK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WI0ylXHy"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-343b92e54f5so504233f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 03:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1713436439; x=1714041239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8TqG/vX3kAJfrqS7HQAa54Wgm8mEhmbiwEFcC9upq5k=;
-        b=WI0ylXHyEURxWgBTavug8L3glbFz459uGVNM+IlK/rxtKl8HR2uztrpsp6uKM/qdy2
-         sIBw7ISyuuskiFEPOKEzSJLaj37fYmCRt6lyqrFFYCINyh5gn7U42TpRbxSVVJYiVLlM
-         Ds/fBSEpRF5Cg8Kq2RGq/kX8pipeQwSDl4zU6cgDWFDHz1gFABERcuwd3fsK7KOvvNV9
-         H/kQQUhmwy0vJgsBLgQk+Bqt0XV7nhKUHPqgMEVqRAj9RESyeUCVBAo6X7CtJ/Hzw0/t
-         f+nyZgf/AAyEe2PKlOxUjlvW5+W72ytXr2IafzNAyFF0gxhvso54CXjkfHweSjAjKfCi
-         pyBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713436439; x=1714041239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8TqG/vX3kAJfrqS7HQAa54Wgm8mEhmbiwEFcC9upq5k=;
-        b=hLqdbTkoU4MSBwrN1hZn0wehJGrNx7BynA5U/NOHib/1+5XUeUAK7FUOqnD2aQzNtB
-         3vv1g9iNIfuOKKK6TPbOb68scD/J6MuVBa/+yP6k/gSTCxdIYhAltw1mShlgWRU4y01t
-         cDpJg+k4kWOrpvxePKV9BaTbdC5QWrqeKxqzzihtPPQ6zOrbYbDhwMeD/MTcLV+kUcEl
-         6nJQV7FeGvuAX8Fy82efLwR7OVxsuex9QsY3Au9iQUhn2W/IsuwOLcdlPYcDUP6/7dLE
-         FEgLaMDpybEEZ/AaDEy+Z+0kNiG4yjrn2HBNZsaghu9P002PmoFsfCV7b1K7Eubqqeor
-         GjrA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2foGet6HKlpE7qboVumX5sHhZuIH6mfLXbW0NOCORgTdI3NgG9xZ0F/Fx5bJ3wo5qFQRLHYR/qdWXF6QlWsMAVUFBPUF6OGB3xPkF
-X-Gm-Message-State: AOJu0YwGaTWs2JD3Blhu2H7RvSCHVQpzu0IEIiDWoGabPGSZqkViSdnG
-	TrLB+lt5KX4vodxiMlnj7AQPqHBvY9B10+5sYhol22TQxnmnE33oPZZBNLe389Y=
-X-Google-Smtp-Source: AGHT+IHn0lfIQBhg0+Ainxzp9m4rh0VMSbwQpgI8vxIy2mZz2yTKXXr1YlFSWVrwoKju+BMYZpS/QA==
-X-Received: by 2002:adf:f405:0:b0:34a:cc3:806 with SMTP id g5-20020adff405000000b0034a0cc30806mr1133042wro.51.1713436438705;
-        Thu, 18 Apr 2024 03:33:58 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id y18-20020a5d4ad2000000b0034a0d3c0715sm1329748wrs.50.2024.04.18.03.33.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 03:33:58 -0700 (PDT)
-Date: Thu, 18 Apr 2024 12:33:56 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH printk v4 06/27] printk: nbcon: Add callbacks to
- synchronize with driver
-Message-ID: <ZiD3FNBZh_iMOVWY@pathway.suse.cz>
-References: <20240402221129.2613843-1-john.ogness@linutronix.de>
- <20240402221129.2613843-7-john.ogness@linutronix.de>
- <ZhUIatzxietD4F-m@localhost.localdomain>
- <87y19djqr0.fsf@jogness.linutronix.de>
- <Zh_IrB4MyHwU8OJE@pathway.suse.cz>
- <87bk68niod.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rFoTg+5O";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OkgiFbzK"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1713436521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9obvaWEEEdGVSr28CMv6Cu4kAaroOIyrSClUKb5FyOY=;
+	b=rFoTg+5OscplOaVXCHK/7cHWKm5qOdAWblkqZCJ4vMeOn8y66abd6BreT1dDnFVPIaJNVv
+	p/hp4pRcVCOw04EJpMLmY1szbPdhyMQ2HFjpRkmDBJOhtx4HHbYjvFcbpkPietVTHmQrrn
+	zxRRoVm4xJ5hzULwg9DSeqh0PYBILFnoFxNaWkgCjR0NXrpWoNDkAmoo2pj9tK/H1s6NAF
+	/sQxEmmMmTQyftLxWpmCSNAaJTp5D+XI8olwQ/8vYgbBa8WVWW/7tPDRO0RkCTx35M+wwd
+	N41gq0rbAGXQyGPUu+uOvXtM/Wqp9Cbq3A1/UijMAY80/oNXauN5duvfOZdTBw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1713436521;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9obvaWEEEdGVSr28CMv6Cu4kAaroOIyrSClUKb5FyOY=;
+	b=OkgiFbzKFvUFsoqftpSJySJo2U0wWkhDCM7WswDQsLc3kI9ofNu49Xa0uBH+A6iGWmTwFN
+	xHdX+y73q6HTaOAQ==
+To: Mike Rapoport <rppt@kernel.org>,
+	Andreas Dilger <adilger@dilger.ca>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"ndesaulniers @ google . com" <ndesaulniers@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Tejun Heo <tj@kernel.org>,
+	Krister Johansen <kjlx@templeofstupid.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] init: fix allocated page overlapping with PTR_ERR
+Date: Thu, 18 Apr 2024 12:29:43 +0200
+Message-Id: <20240418102943.180510-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bk68niod.fsf@jogness.linutronix.de>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 2024-04-17 17:00:42, John Ogness wrote:
-> On 2024-04-17, Petr Mladek <pmladek@suse.com> wrote:
-> >> We want to avoid using nbcon console ownership contention whenever
-> >> possible. In fact, there should _never_ be nbcon console owership
-> >> contention except for in emergency or panic situations.
-> >>
-> >> In the normal case, printk will use the driver-specific locking for
-> >> synchronization. Previously this was achieved by implementing the
-> >> lock/unlock within the write() callback. But with nbcon consoles that
-> >> is not possible because the nbcon ownership must be taken outside of
-> >> the write callback:
-> >> 
-> >> con->device_lock()
-> >> nbcon_acquire()
-> >> con->write_atomic() or con->write_thread()
-> >> nbcon_release()
-> >> con->device_unlock()
-> >
-> > This sounds like a strong requirement. So there should be a strong
-> > reason
-> 
-> There is: PREEMPT_RT
+There is nothing preventing kernel memory allocators from allocating a
+page that overlaps with PTR_ERR(), except for architecture-specific
+code that setup memblock.
 
-This explains it!
+It was discovered that RISCV architecture doesn't setup memblock
+corectly, leading to a page overlapping with PTR_ERR() being allocated,
+and subsequently crashing the kernel (link in Close: )
 
-I think that a lot of misunderstanding here is caused because
-your brain is trained primary in "RT mode" ;-) While I am not
-that familiar with the RT tricks and my brain is thinking
-in classic preemption mode :-)
+The reported crash has nothing to do with PTR_ERR(): the last page
+(at address 0xfffff000) being allocated leads to an unexpected
+arithmetic overflow in ext4; but still, this page shouldn't be
+allocated in the first place.
 
-I am not sure how it is done in other parts of kernel code where
-RT needed to introduce some tricks. But I think that we should
-really start mentioning RT behavior in the commit messages and
-and comments where the RT mode makes huge changes.
+Because PTR_ERR() is an architecture-independent thing, we shouldn't
+ask every single architecture to set this up. There may be other
+architectures beside RISCV that have the same problem.
 
+Fix this one and for all by reserving the physical memory page that
+may be mapped to the last virtual memory page as part of low memory.
 
-> > when nbcon_acquire() is safe enough in emergency context
-> > then it should be safe enough in the normal context either.
-> > Otherwise, we would have a problem.
-> 
-> Of course. That is not the issue.
-> 
-> > My understanding is that we want to take con->device_lock()
-> > in the normal context from two reasons:
-> >
-> >   1. This is historical, king of speculation, and probably
-> >      not the real reason.
-> 
-> Correct. Not a reason.
-> 
-> >   2. The con->device() defines the context in which nbcon_acquire()
-> >      will be taken and con->write_atomic() called to make it
-> >      safe against other operations with the device driver.
-> >
-> >      For example, con->device() from uart serial consoles would
-> >      disable interrupts to prevent deadlocks with the serial
-> >      port IRQ handlers.
-> >
-> >      Some other drivers might just need to disable preemption.
-> >      And some (future) drivers might even allow to keep
-> >      the preemption enabled.
-> 
-> (Side note: In PREEMPT_RT, all drivers keep preemption enabled.)
+Unfortunately, this means if there is actual memory at this reserved
+location, that memory will become inaccessible. However, if this page
+is not reserved, it can only be accessed as high memory, so this
+doesn't matter if high memory is not supported. Even if high memory is
+supported, it is still only one page.
 
-This explains everything. It is a huge game changer.
+Closes: https://lore.kernel.org/linux-riscv/878r1ibpdn.fsf@all.your.base.ar=
+e.belong.to.us
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: <stable@vger.kernel.org> # all versions
+---
+ init/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sigh, I remember that you told me this on Plumbers. But my
-non-RT-trained  brain forgot this "detail". Well, I hope that
-I am not the only one and we should mention this in the comments.
+diff --git a/init/main.c b/init/main.c
+index 881f6230ee59..f8d2793c4641 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -900,6 +900,7 @@ void start_kernel(void)
+ 	page_address_init();
+ 	pr_notice("%s", linux_banner);
+ 	early_security_init();
++	memblock_reserve(__pa(-PAGE_SIZE), PAGE_SIZE); /* reserve last page for E=
+RR_PTR */
+ 	setup_arch(&command_line);
+ 	setup_boot_config();
+ 	setup_command_line(command_line);
+--=20
+2.39.2
 
-> > I still have to shake my head around this. But I would first like
-> > to know whether:
-> >
-> >    + You agree that nbcon_try_acquire() always have to be called with
-> >      preemption disabled.
-> 
-> No, it must not. PREEMPT_RT requires preemption enabled. That has always
-> been the core of this whole rework.
-
-Got it! I have completely forgot that spin_lock() is a mutex in RT.
-
-> >    + What do you think about explicitly disabling preemption
-> >      in nbcon_try_acquire().
-> 
-> We cannot do it.
-> 
-> >    + If it is acceptable for the big picture. It should be fine for
-> >      serial consoles. But I think that graphics consoles wanted to
-> >      be preemptive when called in the printk kthread.
-> 
-> In PREEMPT_RT, all are preemptive.
-> 
-> > I am sure that it will be possible to make nbcon_try_acquire()
-> > preemption-safe but it will need some more magic.
-> 
-> I am still investigating why you think it is not safe (as an inner lock
-> for the normal case). Note that for emergency and panic situations,
-> preemption _is_ disabled.
-
-The race scenario has been mentioned in
-https://lore.kernel.org/r/Zhj5uQ-JJnlIGUXK@localhost.localdomain
-
-CPU0				CPU1
-
- [ task A ]
-
- nbcon_context_try_acquire()
-   # success with NORMAL prio
-   # .unsafe == false;  // safe for takeover
-
- [ schedule: task A -> B ]
-
-
-				WARN_ON()
-				  nbcon_atomic_flush_pending()
-				    nbcon_context_try_acquire()
-				      # success with EMERGENCY prio
-				      # .unsafe == false;  // safe for takeover
-
-				      # flushing
-				      nbcon_context_release()
-
-				      # HERE: con->nbcon_state is free
-				      #       to take by anyone !!!
-
-
- nbcon_context_try_acquire()
-   # success with NORMAL prio [ task B ]
-   # .unsafe == false;  // safe for takeover
-
- [ schedule: task B -> A ]
-
- nbcon_enter_unsafe()
-   nbcon_context_can_proceed()
-
-BUG: nbcon_context_can_proceed() returns "true" because
-     the console is owned by a context on CPU0 with
-     NBCON_PRIO_NORMAL.
-
-     But it should return "false". The console is owned
-     by a context from task B and we do the check
-     in a context from task A.
-
-
-OK, let's look at it with the new RT perspective. Here, the
-con->device_lock() plays important role.
-
-The race could NOT happen in:
-
-   + NBCON_PRIO_PANIC context because it does not schedule
-
-   + NBCON_PRIO_EMERGENCY context because we explicitly disable preemption there
-
-   + NBCON_NORMAL_PRIO context when we ALWAYS do nbcon_try_acquire() under
-     con->device() lock. Here the con->device_lock() serializes
-     nbcon_try_acquire() calls even between running tasks.
-
-
-Everything makes sense now. And we are probable safe.
-
-I have to double check that we really ALWAYS call nbcon_try_acquire()
-under con->device() lock. And I have to think how to describe this
-in the commit messages and comments.
-
-Best Regards,
-Petr
