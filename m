@@ -1,40 +1,60 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70523171085;
-	Thu, 18 Apr 2024 17:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ABD1EA8F
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 17:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461239; cv=none; b=SRYx8N0uPrOR8lteKce4gRG6VdjA7PHJfCL5P3ZCuw0MCcR6g41py/Bn4uIt+nPtBQPO+o2ZAH149CAvLYWPfFvuO7XigG9NtJGgJ7q5OzFTejZnpG+Y+7hSVWWynhEv+Ay/iPY8HEeZAwFQ6+vSwB2uNbAB8UbO5bREqvjzXIM=
+	t=1713461312; cv=none; b=CH0dMRKHK6eTe8Jj+PYLSRpIJVJgnU60sPWmaIPL51pwGvg1Bb3HEdCKhoSudMxckylM3Jr2CJ8X8NF9aptpD82TDHdTZZqueA7m3EdABC22WvuQWi6mvaWNQNA/ME4Em0816h8vRx64uCslitThWoDM1xwDKrNXtBrM8gJ5cVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713461239; c=relaxed/simple;
-	bh=HVXdP9+hdhPa8t0waMIBMqruj5ig5/COewl3jY0u/u0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=f13KDrMNLT5FtIrbt4Eq40I0Dn1ZsFcuyA0OQKn8lna5jPhcwL2O3QCoX7mokDMgHaqVR/KHqrd+gEDq3NXzcGon91BlIgexl5mMiOtkGZXDT7Fx6vjU+91CLnP76pw9CtI4x/Ckn3z6Es1aZiLiWxhsRIPKoPFCB+REUdoVo90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kRuaGJy0; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713461312; c=relaxed/simple;
+	bh=om2c0Q3P0gJ1fM7f8JAn8V/umE41rI1zASSBh+OoWw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YUI79BxFNDNEw6QI6xR/x7l7bphabP0qQhtc9x52QMevk5/UjxlqByIk+w/85QTk/W24w7f56F2MrukdXLw9QNfVaMq0PIQ9xuMnrWyU7YRdt+NnN4q3OfweSFPnlWuvIgvnb90cu9GGjiGlDfET2ngudRoOUkDvjzo5ehbxr28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mjI2MeVd; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kRuaGJy0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713461235;
-	bh=HVXdP9+hdhPa8t0waMIBMqruj5ig5/COewl3jY0u/u0=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=kRuaGJy0ZsiFIrzLhYIk20HwhjjEwqSqBNszu7ky4ue1t9t8soJjdiqtV2Mxwdfo3
-	 BwoWC4eps1qGzic59IBvclqfPbNmU1B32aZJAWibvncEQ378/7T+FIzEwqprvveVVz
-	 SAWW4N4ingLQTSa1/k40bzGBAZfXNmhl5FVeHNVszZhzxs3OpyFWANj5U/ycz53V+V
-	 S/R1MzbRU/QN/Bfr14rwVwhF2FPliE6MvN9NWThnXy3d6IU1RvVYqUV+hXhPZcCUB6
-	 YmPtUxZ/xNs24Bhg4m/VRaFx/oI3NURqTOHUNrJDL9J2IbWCc1sQfbqd9Z/NMPAwqe
-	 QvRtImGGjADzQ==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 981C037813E3;
-	Thu, 18 Apr 2024 17:27:10 +0000 (UTC)
-Message-ID: <bfe97309-f9d6-4ca8-8e68-da9fa584c5ef@collabora.com>
-Date: Thu, 18 Apr 2024 22:25:05 +0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mjI2MeVd"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f0aeee172dso252213b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 10:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713461310; x=1714066110; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=hL+JOaXU+MUWvyxBhQrwDTWAV3CBHippBakhtwFN0c4=;
+        b=mjI2MeVdKa2fzshTL5Ce0zt0kvFwLT+zJBtYsDT/gnRTeZYCz68trZdYa7ONaNb0zp
+         lGAWeWQkFxQNTgnokz00U16LaFvSVDS3MKUJiITlV8ruZ0tXPdWOAENR5RSpM750BwnK
+         nZF76D5pSBnFMQkCkzaAWVhERDlPnEKN9OqFmMbMSuzQkoM8vDeP+26+CUPMMson3pxB
+         2RLPuv8JWCRH5jLuZ8jvuYX9fpwe2JaU6Ttj7SHF4EtiKygIiRbLUamO44JPkLUS3OE1
+         /NCw2s8VCXFcsvqpIy7ZAvcszN+jeLUo49AtKfqBTDW4q3lKuFHUlOK9NRK5thkzMshY
+         7+rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713461310; x=1714066110;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hL+JOaXU+MUWvyxBhQrwDTWAV3CBHippBakhtwFN0c4=;
+        b=laMYaL9edlGsWUC7HLb5oFxD90NcAr/vSoays87yxtwJLb1cctO8Vy6m7Vta6qnCEj
+         pI7bkGGCyLFoi2AHYYNXc10S9tkH1zqZluURPOnXtEw1qCRSVOoMJkwAGwoTxUz80PER
+         L5oTQ6DH3JJYKD5KgHqb5/0+dQv3pXJq7oG3uIxMwRgXPaEE1k0xNmk6LQ2X+8bn721F
+         JRcCsiS7tKLvtJLrz68m5EBq6eLu0ko8QSeRmNmcZYahAY0wJT8OJ8FmUoxoBLS28IiN
+         3airhRKonDzWeHQPTWsfMWWOgsCIgKENKRRo4OZbckXtjl1PNwc4N4sFn3krTAg3n5rN
+         DUng==
+X-Forwarded-Encrypted: i=1; AJvYcCXIPe0ftLSv5SrrSKngoyLh/0INTYW4uIelaRU+mTNEy6gNKV7SkESayATyf5xKPEv0gwl1iWxWBX9EXL+DPBAhmVCnGurkI9Jj82wq
+X-Gm-Message-State: AOJu0Yz0qTmSG2HXgLecz6euTDQrZpWkFj084LhkW5orWFM5roVkF5vj
+	ZK6Gyjl8ykHNCydSoqLPB3N7v61IPTztQth0U0pQgQ+BzoIm/vHCcOUZCY0j+GQ=
+X-Google-Smtp-Source: AGHT+IHDuSFKB3hqyRo5MU71tFCeKqpU3qmpVgNP9oyRIdVPD6GADAmz/c8SFPqLzWOlauJ4gbyS/Q==
+X-Received: by 2002:a05:6a00:39a9:b0:6ed:4a97:10cc with SMTP id fi41-20020a056a0039a900b006ed4a9710ccmr4620877pfb.3.1713461310454;
+        Thu, 18 Apr 2024 10:28:30 -0700 (PDT)
+Received: from [10.36.51.174] ([24.75.208.151])
+        by smtp.gmail.com with ESMTPSA id g21-20020a056a000b9500b006e6b2ba1577sm1733617pfj.138.2024.04.18.10.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 10:28:30 -0700 (PDT)
+Message-ID: <675cd641-7322-43d5-a33a-7f0be48c380c@linaro.org>
+Date: Thu, 18 Apr 2024 19:28:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,79 +62,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- kernel@collabora.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: mm: restore settings from only parent process
-To: Joey Gouly <joey.gouly@arm.com>
-References: <20240314094045.157149-1-usama.anjum@collabora.com>
- <20240418125250.GA2941398@e124191.cambridge.arm.com>
+Subject: Re: [RFC PATCH v2 2/6] dt-bindings: mfd: bd96801 PMIC core
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ Fabio Aiuto <fabio.aiuto@engicam.com>
+References: <cover.1712920132.git.mazziesaccount@gmail.com>
+ <ea49494429528cf8e60fa984ae1f523ddacd850c.1712920132.git.mazziesaccount@gmail.com>
+ <b5eeaf10-e011-452b-840a-176c4f62cac4@linaro.org>
+ <7541fb24-894a-439e-8f9a-b18f04e06afe@gmail.com>
 Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240418125250.GA2941398@e124191.cambridge.arm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <7541fb24-894a-439e-8f9a-b18f04e06afe@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/18/24 5:52 PM, Joey Gouly wrote:> Hi again,
-> 
-> On Thu, Mar 14, 2024 at 02:40:45PM +0500, Muhammad Usama Anjum wrote:
->> The atexit() is called from parent process as well as forked processes.
->> Hence the child restores the settings at exit while the parent is still
->> executing. Fix this by checking pid of atexit() calling process and only
->> restore THP number from parent process.
+On 15/04/2024 10:28, Matti Vaittinen wrote:
 >>
->> Fixes: c23ea61726d5 ("selftests/mm: protection_keys: save/restore nr_hugepages settings")
->> Tested-by: Joey Gouly <joey.gouly@arm.com>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>  tools/testing/selftests/mm/protection_keys.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/testing/selftests/mm/protection_keys.c b/tools/testing/selftests/mm/protection_keys.c
->> index f822ae31af22e..374a308174d2b 100644
->> --- a/tools/testing/selftests/mm/protection_keys.c
->> +++ b/tools/testing/selftests/mm/protection_keys.c
->> @@ -1745,9 +1745,12 @@ void pkey_setup_shadow(void)
->>  	shadow_pkey_reg = __read_pkey_reg();
->>  }
->>  
->> +pid_t parent_pid;
->> +
->>  void restore_settings_atexit(void)
->>  {
->> -	cat_into_file(buf, "/proc/sys/vm/nr_hugepages");
->> +	if (parent_pid == getpid())
->> +		cat_into_file(buf, "/proc/sys/vm/nr_hugepages");
->>  }
->>  
->>  void save_settings(void)
->> @@ -1773,6 +1776,7 @@ void save_settings(void)
->>  		exit(__LINE__);
->>  	}
->>  
->> +	parent_pid = getpid();
->>  	atexit(restore_settings_atexit);
->>  	close(fd);
->>  }
+>> Missing allOf and $ref to watchdog.yaml
 > 
-> After more testing, this is not actually enough. It passes sometimes, which is
-> why I gave my Tested-by, but it can still fail the same way as I originally
-> said.
+> Huh. The watchdog.yaml contains:
 > 
-> assert() at protection_keys.c::812 test_nr: 19 iteration: 1
-> running abort_hooks()...
-> errno at assert: 12
+> select:
+>    properties:
+>      $nodename:
+>        pattern: "^watchdog(@.*|-([0-9]|[1-9][0-9]+))?$"
 > 
-> I think the parent process needs to wait for all it's child processes (recursively).
-> This is due to the test_pkey_alloc_exhaust() calling become_child(), where it
-> exits, and that exit may be from the original PID.
-Thanks for reporting. I'll have a look at it.
+> properties:
+>    $nodename:
+>      pattern: "^(timer|watchdog)(@.*|-([0-9]|[1-9][0-9]+))?$"
+> 
+> 
+> This means the watchdog _must_ have own sub-node inside the PMIC node, 
 
-> 
-> Thanks,
-> Joey
+Yes, that's a bit of a trouble. Then instead maybe just add timeout-sec
+with maxItems: 2.
 
--- 
-BR,
-Muhammad Usama Anjum
+Best regards,
+Krzysztof
+
