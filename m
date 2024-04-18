@@ -1,139 +1,175 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd14162.aruba.it (smtpcmd14162.aruba.it [62.149.156.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FC36A343
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF9F3D984
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 07:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713425431; cv=none; b=OyLSbWJlXLCLMPYL6y56ZoNW3S4ovYOF2dUoodqE7yuzxNhqXMFtrZ00YYZe0WdzSC+C3LNG2xHF5xG3IzOUvIQr28ux5cZDEsP8vcXriaDXPnl2POv55Ul5AgSen1Rb5aK8O65/c9kz547FSIaSGKsG0h3LmV/qnPOqPQ2a/OA=
+	t=1713425479; cv=none; b=KbBZzjPjLshLW66nB6aY4byeC1KwEOnp0u581FO0jwPNjbHHckbwlORFHP3CAQriVVNdqII+nftoAgZXs1uuxZnNpkB1cGX7uIKEUUQlkk8tnTZcL4xJ0BSpBiSTvU1g1znJH+yePrDhjGOQDhJRPPZxbGGzdNW4cwEhjTsipYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713425431; c=relaxed/simple;
-	bh=jo84Ctj+EJCX1GrpA4pW6fdXW7pDWtjFx80MeyJrxQo=;
+	s=arc-20240116; t=1713425479; c=relaxed/simple;
+	bh=/D7loSoJ8LTuZFSDTmGdK+mo8Ji5LnnuBOROJJyE4rY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9OdIu6LXLpO4dPAys4N+4WgOwm89ZQkXkXyjeat+8KMTyYEVQzt5wLQq8TgBvPCgOl8gRKGwkSmLY6UDHjDxHSyZvERc+2qsIjSrI6aXSgpzay9HjGcbUKEQ77NFgOxaPZzRuoKmhmYeIBeVxAWP0ZzUnJNyTOApmNwtkQAGG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BuNnMXTQ; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUgDDmOEhn6gcdvweQHM0wHY//Npt0deMAnK7o+PUzdU8N5y2NSmZpPO8CZVwtuDcrcfv+Gg+nrJG9jQG5rGretIni39BLe5U6ItQ1cYC+svaVp74lHR9gyv7gzOupfwPz47RfWJKRDMrcQxVlEFIsWpIa3nLYh7MRyC8JrLS84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=U1tzA1E4; arc=none smtp.client-ip=62.149.156.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BuNnMXTQ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e4266673bbso5356655ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 00:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713425429; x=1714030229; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9KH/0gX4nuEqY5M5Shgab8r86I8FtVQ44AsXqRTnb4U=;
-        b=BuNnMXTQIDEJKUWx/2aFeg9hs86yWeNWfbs9fWr3NUfPHz4ZZ6bsaUF0AwI6OSZdKW
-         F9glOIhvsv4vQJ07yZg9yCaGrqNkPqhqn/h9XqDhKRHTUUL+fKC4sITH+Lg9It1tW8l4
-         oJG7wbB9Yx+x9VFci1TsNejc+PCU5kI4LOLHFtXneaM5Ofuif9XgNPWbIXnvEM1d7vxU
-         rZCgh2An6ORg8y5C92Io7bsjGO+q5+Md0itODxUk1boEmMTwvs5+2H9dM3dq22v7l6AF
-         ccBpLM7YHwXqcqEf321Ml0GflvY6gqVnLkwWWIyZMZzzzlqCAVJCkuh+9g/iRvKT1XHj
-         cbjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713425429; x=1714030229;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9KH/0gX4nuEqY5M5Shgab8r86I8FtVQ44AsXqRTnb4U=;
-        b=LJEVuk3liIQeSTQPfvCWa+nCSlXJPKGKCaQbj2qm8FR3lbIgyCzhHW0VuQW6RxesR3
-         LCEJmAIUsQlr1XrCJ2p/+qQT0G8/5uckLtt28J/1b2/89tblIBuamBrj3lZIMYl+hc2T
-         +gRSPms6Hakb5GxCiON+SnjvlR4uz+5R3pTybpJQMlYCk/LT+8wHvnBAGUhvplPZ1wZ2
-         i/rY0H7QBVzdhFq0VqSoLJ5cqvr4rZyXkqjlJRsmu6hc0fedWGwL1lvDNjEfmHErGqa1
-         l6QNf7fEVWMKD4Tk94QjA54VK4yHQCOaCuddvtZIcpqhVTPkSpLMUVpR6RL8FUPqNQT+
-         RmUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmbVKle6xMzFzb3EhMe8EKlJyuZrk49Ok6btpWN5VDDv5oZCl9MJCVf53kVD03INzTk3xm9MEUX3KJ+fWOVoLN7SzjgoQKhLCodp6h
-X-Gm-Message-State: AOJu0YwqFicdLsRYB8AkDo3bCBL8wDmtkl4eFpDyMcRyVFg/fhD1qeB4
-	wRu6SF6R2AToHlW//jJ9q8BYAsZ7Dgm+D3FVY98AOUKvUdM2JHSI3XMgRaKLhA==
-X-Google-Smtp-Source: AGHT+IFWMS7B+eevMfCZ0tH7FwXVvT82Lh4Zn0V4gbiALK6EFJmnT/7oWMZI+ml4e2wBetkcVDGhUg==
-X-Received: by 2002:a17:902:da85:b0:1e1:6850:f823 with SMTP id j5-20020a170902da8500b001e16850f823mr2668391plx.13.1713425428965;
-        Thu, 18 Apr 2024 00:30:28 -0700 (PDT)
-Received: from thinkpad ([120.56.197.253])
-        by smtp.gmail.com with ESMTPSA id j23-20020a170902759700b001deecb4f897sm837286pll.100.2024.04.18.00.30.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 00:30:28 -0700 (PDT)
-Date: Thu, 18 Apr 2024 13:00:23 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Make use of cached
- 'epc_features' in pci_epf_test_core_init()
-Message-ID: <20240418073023.GA4331@thinkpad>
-References: <20240417-pci-epf-test-fix-v1-1-653c911d1faa@linaro.org>
- <ZiALuYlshLmwLhvu@ryzen>
- <20240418054319.GB2861@thinkpad>
- <ZiDB18w4bnUCSH7D@ryzen>
- <20240418065308.GG2861@thinkpad>
- <ZiDITzuUXsTZ7U4T@ryzen>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="U1tzA1E4"
+Received: from engicam ([146.241.28.123])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id xMBpr2JFzjEwexMBqrCMpp; Thu, 18 Apr 2024 09:28:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1713425295; bh=/D7loSoJ8LTuZFSDTmGdK+mo8Ji5LnnuBOROJJyE4rY=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=U1tzA1E4DcLAj/KgA3NwRvty/MP3y1sdyO95Qk+bPG7EtxNfh3K6HzmV7bfGip5w8
+	 pyr3GytQicCeaDLF1GqbqtVQyYYeXPesTUxazjbUbOMKLqFwIXx9C6x3wli2Le1rou
+	 NNZjSbgRvOMlSNYmp1LaAWJi2hcr5SGWtD8hGhRmY2JLyuSlhOOjqUzne7zgFZWqgb
+	 gxmzFgWsXwOp+GXU1+BfcmsXP+MXH5DGbbraQMCxVGK7RIeKbjbrO+C4b3D2uvVpSf
+	 0hDybEJidTM68sU7AuTEjicW7t/no38M3twffTYcjZVGef8uUenkQuiLWjZ6ZVieVt
+	 o5sv6+Ey1JrUw==
+Date: Thu, 18 Apr 2024 09:28:13 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: Re: [PATCH 4/4] arm64: dts: imx93: Add Engicam i.Core MX93 EDIMM 2.0
+ Starter Kit
+Message-ID: <ZiDLjT3wEeiiHjz9@engicam>
+References: <20240417153528.7838-1-fabio.aiuto@engicam.com>
+ <20240417153528.7838-5-fabio.aiuto@engicam.com>
+ <41a1ca01-384a-40ca-a5f6-6205bb43825b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZiDITzuUXsTZ7U4T@ryzen>
+In-Reply-To: <41a1ca01-384a-40ca-a5f6-6205bb43825b@kernel.org>
+X-CMAE-Envelope: MS4xfIqOolBh5THzUaCAYTNotxuYXn9r+bHpV5qiOjW+r+LG0RRPRAuuhMJP3GdpT68KtsTYjnbSJjA2+B/dCIdYpLrAFzxPmzu+hBEbVQxIZrOY7UQ30p+Q
+ gw3/qYokJYm74WgWpoTFvFE5IpQYBT0ZII3yTf1zNeDC9QX5Vd58gCB8+h7GJI5BabYj13u2HajQXqhCLHI336qT5/bOP8qzPAVl9lbsAfD0KTJkiNRiezuI
+ Rr1FQrl+wFvvZCqKSU8jqgBabiy6w0XdD2+Pp7aI/hFIfXQyYcTvE4vleTgKlPdueCT2HWmMqWMc3EO99Pz2kEtd5zcJM9srfj5H5/T7st5iDf11g1Pg+9SG
+ GNxeZpPrx5NGgOjSKqzjHD1cjMjzIqznEalKYS3ERV2jFuxqvhRkwv6PnBSg4Pef+jTTgLmV6RKShJoEtLcf7R6ZKDqwgdPWpKWhGIFGsOHMWO4HNDjE7+7p
+ MiPfX4EI1D6kkypVa+IDiLyFohlqBnWNwJ3J3hBCGoxuw9nc9p7LMpsOSVFBJEbHH8qZl01ld+JrbuzNH3ANce4ucFtVSIXqJ7wGCocJ8ELj1X3J+GiJC2v3
+ NGrFtucMcI9X89RnRSKp52cW
 
-On Thu, Apr 18, 2024 at 09:14:23AM +0200, Niklas Cassel wrote:
-> On Thu, Apr 18, 2024 at 12:23:08PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Apr 18, 2024 at 08:46:47AM +0200, Niklas Cassel wrote:
-> > > On Thu, Apr 18, 2024 at 11:13:19AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Wed, Apr 17, 2024 at 07:49:45PM +0200, Niklas Cassel wrote:
-> > > > > On Wed, Apr 17, 2024 at 10:47:25PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > Instead of getting the epc_features from pci_epc_get_features() API, use
-> > > > > > the cached pci_epf_test::epc_features value to avoid the NULL check. Since
-> > > > > > the NULL check is already performed in pci_epf_test_bind(), having one more
-> > > > > > check in pci_epf_test_core_init() is redundant and it is not possible to
-> > > > > > hit the NULL pointer dereference. This also leads to the following smatch
-> > > > > > warning:
-> > > > > > 
-> > > > > > drivers/pci/endpoint/functions/pci-epf-test.c:784 pci_epf_test_core_init()
-> > > > > > error: we previously assumed 'epc_features' could be null (see line 747)
-> > > > > > 
-> > > > > > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > > > > Closes: https://lore.kernel.org/linux-pci/024b5826-7180-4076-ae08-57d2584cca3f@moroto.mountain/
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > 
-> > > > > I think you forgot:
-> > > > > Fixes: a01e7214bef9 ("PCI: endpoint: Remove "core_init_notifier" flag")
-> > > > > 
-> > > > 
-> > > > No, that's not the correct fixes tag I suppose. This redudant check is
-> > > > introduced by commit, 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer
-> > > > core initialization") and this commit removes the redundant check (fixing smatch
-> > > > warning is a side effect). So if the fixes tag needs to be added, then this
-> > > > commit should be referenced.
-> > > 
-> > > Well, you have a Closes: tag that links to a bug report about a smatch
-> > > warning that was introduced with 5e50ee27d4a5 ("PCI: pci-epf-test: Add
-> > > support to defer core initialization").
-> > > 
-> > > So if you want to reference another commit, then you should probably
-> > > drop the Closes: tag.
-> > > 
+Dear Krzysztof,
+
+Il Wed, Apr 17, 2024 at 07:08:00PM +0200, Krzysztof Kozlowski ha scritto:
+> On 17/04/2024 17:35, Fabio Aiuto wrote:
+> > i.Core MX93 is a NXP i.MX93 based SoM by Enigcam which
+> > needs to be mounted on top of Engicam baseboards.
 > > 
-> > Then checkpatch will complain... But I think I can keep the two tags? One is for
-> > fixing the redudant check and another is for the smatch warning reported.
+> > Add support for EDIMM 2.0 Starter Kit hosting
+> > i.Core MX93.
+> > 
+> > Starter Kit main features:
+> > 
+> > 2x LVDS interfaces
+> > HDMI output
+> > Audio out
+> > Mic in
+> > Micro SD card slot
+> > USB 3.0 A port
+> > 3x USB 2.0 A port
+> > Gb Ethernet
+> > 2x CAN bus, 3x UART interfaces
+> > SIM card slot
+> > M.2 KEY_B slot
+> > 
+> > Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> > Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+> > Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+> >  .../dts/freescale/imx93-icore-mx93-edimm2.dts | 356 ++++++++++++++++++
+> >  2 files changed, 357 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> > index 045250d0a040..d26c0a458a44 100644
+> > --- a/arch/arm64/boot/dts/freescale/Makefile
+> > +++ b/arch/arm64/boot/dts/freescale/Makefile
+> > @@ -226,6 +226,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
+> > +dtb-$(CONFIG_ARCH_MXC) += imx93-icore-mx93-edimm2.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
+> >  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
+> > diff --git a/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+> > new file mode 100644
+> > index 000000000000..75cac97d919c
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/imx93-icore-mx93-edimm2.dts
+> > @@ -0,0 +1,356 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2022 NXP
+> > + * Copyright 2024 Engicam s.r.l.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/usb/pd.h>
+> > +#include "imx93-icore-mx93.dtsi"
+> > +
+> > +/ {
+> > +	model = "Engicam i.Core MX93 - EDIMM 2 Starterkit";
+> > +	compatible = "engicam,icore-mx93-edimm2", "engicam,icore-mx93",
+> > +		     "fsl,imx93";
+> > +
+> > +	aliases {
+> > +		rtc1= &bbnsm_rtc;
 > 
-> Yes, I think so too.
+> Missing pace before =
 > 
-> You can have Fixes: to the commit that introduced the redundant check,
+> > +	};
+> > +
+> > +	bt_reg_on: regulator-btregon {
+> > +		compatible = "regulator-gpio";
+> > +		regulator-name = "BT_REG_ON";
+> > +		pinctrl-names = "default";
+> > +		regulator-min-microvolt = <100000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		states = <3300000 0x1>,
+> > +				 <100000 0x0>;
+> 
+> Misaligned indentation
+> 
+> > +		gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = &lpuart1;
+> > +	};
+> > +
+> > +	reg_1v8_sgtl: reg_1v8_sgtl_regulator {
+> 
+> Do not use underscores in node names. I am pretty sure you got this
+> comment before.
+> 
+> Also, you have confusing naming scheme - sometimes prefix reg, sometimes
+> regulator. Keep nodes ordered.
 
-That is 5e50ee27d4a5.
+thanks, will submit a v2 patchset
 
-> since this was obviously not the correct thing to do, and then perhaps
-> just mention commit 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to
-> defer core initialization") somewhere in the commit log.
+kr,
 
-You mean a01e7214bef9 here?
+fabio
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
