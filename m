@@ -1,147 +1,75 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579EF15FA91
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 13:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D2615FA9F;
+	Thu, 18 Apr 2024 13:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713446907; cv=none; b=bl/FqG+aps3Tl8UA45aXmPSQkhO23wFyCsqELSaKKH+enc/3qqmePrs7ulRbDvC/8jqd8nydSbgKqttRGxldddswMcB/yzmuu0z4e4ji/LJZM9sRwQNvN6Dht40AZZ6bj1AzE4lIXhhb/DoCddnDPl8Wuq/0vpqC3LfmeKiRTHM=
+	t=1713446943; cv=none; b=f46uYa+B2xQAOIYIko6xk8l5lizhpmDVKfZEcIJxkgSydx9vkKYEfcsY1FEvlXRTSs+Fx6QsL83ZEN11PrcafHhdWFT5kI2e4YvHV0JgSYo/WCBslvFywk1arVjK8OnDxzUf923n+lqsc5ssRe4j6h8O//K/UznLxPAJ3hg1wvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713446907; c=relaxed/simple;
-	bh=xlB7rdi2o9xH7y6LdwhVg9RVEN+FAlcEKx+Jy8RyAyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qviX8cs63ILjd79RCa1SAROYHFT5Bi62l+FL4ePwthEUIAm1ORi5IZP0ii+bdxdy1kh8Ck865i49KfVghGYH2/d7jyeZAYCPOjjl+e8IEHxcy35kZbC6O+Iw0UvsgY07TLwBraQariDY054zA48vJyWXefmawtERn1vSdojLHI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=wh5BN/C6; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="wh5BN/C6"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36b045c17d5so6040755ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 06:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1713446905; x=1714051705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KMNMsgIxykHwVLRcqTZk25HnL0Z5DBPcc9H1w13fRk4=;
-        b=wh5BN/C6ovuEY6CE4JRdE/sqYVByicuEaAlCaOsUeUFhM3jcFfYTpsBhKDnaJW9Hho
-         GCXfvRTFXXW3/fzppewG3dxxUAq/2BJjcG86+ztbNUVUCUjaH9mV2XzXbvHvhYPXgift
-         qeZRuJm9bT0qK9TLbkDIKvyeWExVpsQOwCU4aT9Sryy9T5pacPvPJzBqZShV2Z0zE7JS
-         BaOVStRsA+OnbUWBBVR+LFOI+lwFc1A3ohFULOT1DWWmJALOBjBikLODStgJuJXbNtZK
-         ugOcQ+ZRGBvXDxFeyLgME52HSpE5lOxU43Tfj7QNj8JC1NzG1iRYgDrd/fbZSUBESxGL
-         ntcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713446905; x=1714051705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KMNMsgIxykHwVLRcqTZk25HnL0Z5DBPcc9H1w13fRk4=;
-        b=EP3RL44BUYCWXQWxjvCLJ4zKKHzrWPDY5kpBSlFTd3iS82gxJrhY+zv4fOiCrzh+sn
-         A7b6WhpeQt/9YVYIGv/nqfedirN0y5yY1G7iMlFhxbihC5/9splRw9dLnwx1HlzShHIB
-         UjcaHwo4vgvK77ZtKKizAx71fMCNOa1dW9t8wk9wje5XGoEzWJUhVtC//yMjysB+wbfI
-         DN6+QVEWohXevnTJp30UaoIYhcf02IBByqvX2i4f/5PfPTAC9915uet0nZfnEzoTnOr6
-         Cxs9SYfyb08+5H/Kzhq/GIQIG3Bup/tR1GZdk/3xN4VBBRRnx7brNAJfaubT8ZeeQ5RI
-         BvmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOO6V87AGQ7BjES3AQ0Wj7iohu9JPi3RskI9uaiQB4s4TyBUiOYFQv5m20jEPBwx/Va0WayilME8HOdlEz2XIJNfScCCb0/msBhdAA
-X-Gm-Message-State: AOJu0YyCE/kbhi7PPl862wMBWyAZ9XsCXjwR1nb/L2nKor7qj9GQEeX3
-	iynZvdYCnW2McdaNPNb0dyYWcOuIn9GYh+kb/iP1QUzSY9UE1dRMKwUWciwV+qTmjsU6/m5dD/Z
-	X0DHSGfpgjEc5KcGExbbH4LZQu27wqgQA6bKPKg==
-X-Google-Smtp-Source: AGHT+IFrWxljQUhM4BHCWc1rpwi1ngTEKRjguXPUXYX/AlzCjkEoKCfJFfKh82U9YYFX9h6A9SWk0YTxswpzIbsp85s=
-X-Received: by 2002:a05:6e02:1c8b:b0:368:920b:e211 with SMTP id
- w11-20020a056e021c8b00b00368920be211mr3604422ill.5.1713446905449; Thu, 18 Apr
- 2024 06:28:25 -0700 (PDT)
+	s=arc-20240116; t=1713446943; c=relaxed/simple;
+	bh=C3BIxOYSx6Edn78b6t4WlyI2Ut5N1AqMlgcYCcsxom4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OPB97QaFehb3Mpa25yRana94Fp4zjXPxcz2eaZsBAnL067+us8tnkH2RGXcViPif4NYeKRkXRk/sDJjJz6EDtPtsAyMjM+/NQSHxNNqZY4SqR2OOf2sAhOqdz9bL5r5OEznmPCuTl5VOuy5Wlye0e6tqjQjMFE8i5g7tAQYb08Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VKyqK5btzzJsf9;
+	Thu, 18 Apr 2024 21:12:13 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id A23681800C3;
+	Thu, 18 Apr 2024 21:13:15 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 18 Apr 2024 21:13:14 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
+ Du <changbin.du@huawei.com>
+Subject: [PATCH 1/4] perf trace beauty: Fix statx flags printing
+Date: Thu, 18 Apr 2024 21:13:01 +0800
+Message-ID: <20240418131304.3188385-2-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240418131304.3188385-1-changbin.du@huawei.com>
+References: <20240418131304.3188385-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418124300.1387978-1-cleger@rivosinc.com>
-In-Reply-To: <20240418124300.1387978-1-cleger@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Thu, 18 Apr 2024 18:58:13 +0530
-Message-ID: <CAAhSdy0RPOX7_rLQ8GcYzbWQ8wzKDxDKXUqNoNd2ZFkVx4sfMg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Add support for a few Zc* extensions as well as Zcmop
-To: Palmer Dabbelt <palmer@dabbelt.com>, Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Shuah Khan <shuah@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-Hi Palmer,
+Missed a string specifier '%s' in format string.
 
-On Thu, Apr 18, 2024 at 6:13=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@riv=
-osinc.com> wrote:
->
-> Add support for (yet again) more RVA23U64 missing extensions. Add
-> support for Zcmop, Zca, Zcf, Zcd and Zcb extensions isa string parsing,
-> hwprobe and kvm support. Zce, Zcmt and Zcmp extensions have been left
-> out since they target microcontrollers/embedded CPUs and are not needed
-> by RVA23U64
->
-> This series is based on the Zimop one [1].
->
-> Link: https://lore.kernel.org/linux-riscv/20240404103254.1752834-1-cleger=
-@rivosinc.com/ [1]
->
-> ---
-> v2:
->  - Add Zc* dependencies validation in dt-bindings
->  - v1: https://lore.kernel.org/lkml/20240410091106.749233-1-cleger@rivosi=
-nc.com/
->
-> Cl=C3=A9ment L=C3=A9ger (12):
->   dt-bindings: riscv: add Zca, Zcf, Zcd and Zcb ISA extension
->     description
->   riscv: dts: enable Zc* extensions when needed
->   dt-bindings: riscv: add Zc* extension rules implied by C extension
->   riscv: add ISA parsing for Zca, Zcf, Zcd and Zcb
->   riscv: hwprobe: export Zca, Zcf, Zcd and Zcb ISA extensions
->   RISC-V: KVM: Allow Zca, Zcf, Zcd and Zcb extensions for Guest/VM
->   KVM: riscv: selftests: Add some Zc* extensions to get-reg-list test
->   dt-bindings: riscv: add Zcmop ISA extension description
->   riscv: add ISA extension parsing for Zcmop
->   riscv: hwprobe: export Zcmop ISA extension
->   RISC-V: KVM: Allow Zcmop extension for Guest/VM
->   KVM: riscv: selftests: Add Zcmop extension to get-reg-list test
->
->  Documentation/arch/riscv/hwprobe.rst          |  24 ++
->  .../devicetree/bindings/riscv/cpus.yaml       |   8 +-
->  .../devicetree/bindings/riscv/extensions.yaml | 124 +++++++++
->  arch/riscv/boot/dts/allwinner/sun20i-d1s.dtsi |   4 +-
->  arch/riscv/boot/dts/microchip/mpfs.dtsi       |  20 +-
->  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi   |   4 +-
->  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  20 +-
->  arch/riscv/boot/dts/sifive/fu740-c000.dtsi    |  20 +-
->  arch/riscv/boot/dts/sophgo/cv18xx.dtsi        |   4 +-
->  arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi   | 256 +++++++++---------
->  arch/riscv/boot/dts/starfive/jh7100.dtsi      |   8 +-
->  arch/riscv/boot/dts/starfive/jh7110.dtsi      |  20 +-
->  arch/riscv/boot/dts/thead/th1520.dtsi         |  16 +-
->  arch/riscv/include/asm/hwcap.h                |   5 +
->  arch/riscv/include/uapi/asm/hwprobe.h         |   5 +
->  arch/riscv/include/uapi/asm/kvm.h             |   5 +
->  arch/riscv/kernel/cpufeature.c                |   5 +
->  arch/riscv/kernel/sys_hwprobe.c               |   5 +
->  arch/riscv/kvm/vcpu_onereg.c                  |  10 +
->  .../selftests/kvm/riscv/get-reg-list.c        |  20 ++
->  20 files changed, 394 insertions(+), 189 deletions(-)
->
-> --
-> 2.43.0
->
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/trace/beauty/statx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Most likely the KVM RISC-V related changes in this series
-will conflict with the KVM RISC-V repo.
+diff --git a/tools/perf/trace/beauty/statx.c b/tools/perf/trace/beauty/statx.c
+index dc5943a6352d..c61f2be53bda 100644
+--- a/tools/perf/trace/beauty/statx.c
++++ b/tools/perf/trace/beauty/statx.c
+@@ -21,7 +21,7 @@ size_t syscall_arg__scnprintf_statx_flags(char *bf, size_t size, struct syscall_
+ 		return scnprintf(bf, size, "%s%s", show_prefix ? "AT_STATX_" : "", "SYNC_AS_STAT");
+ #define	P_FLAG(n) \
+ 	if (flags & AT_##n) { \
+-		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
++		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+ 		flags &= ~AT_##n; \
+ 	}
+ 
+-- 
+2.34.1
 
-I will provide a shared tag based on 6.9-rc3 tomorrow or
-early next week.
-
-Regards,
-Anup
