@@ -1,120 +1,215 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0957416EBEA;
-	Thu, 18 Apr 2024 15:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA76D3B18D;
+	Thu, 18 Apr 2024 15:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713454752; cv=none; b=fKijyL+YYIiI+2sHng86TTZ55fJqZJEsIPnOrNa4VH5pEC0ALjUcIWO6jNfKcRswB+TWwcZ3gjiGeW69Z6Un9wnv2gaRXQHO0xp20ZZ+MfVJuSgbmwX8IoZRr1VGS9aId5sbF1pr2+O8Q6IroJUNnZtLzal/6hj31YzYzxNDBFE=
+	t=1713454799; cv=none; b=Qmjioeyurkww2TqgWZ++rZrqw7HpHWDoslUKmsecGcnGGFl5KMRNp+T5CUolXqpk4RDSCrMCsH+XdKQ0WZF3jsN7s4NCpQ+1DvDVgAgMCMpAgHL5rTPGbb/lAdMcXzMb7K7g+T3dtqQ5lxXmD83j3nexcAXZnQ50FgcVbeZcriY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713454752; c=relaxed/simple;
-	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
+	s=arc-20240116; t=1713454799; c=relaxed/simple;
+	bh=eZMo4P2E3CI3NQ6VH6HqGAvDmu58DfAbXNVuH3h7jwE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgUz23QpKjmd6XW7OENeB6X87D6AebhPYH9qWBnL7uAo2vMfbECw0MbCyKL/bAz6SZfNYydUEIia4+9G0e68sWR7lR9uZdZZ7t2yDDzxkdxpydxE/fi3zCEWwMLyyO25ow7PUeEIAXZKMJOH/b+5mEmgIoyjWss3DYxy82O3aqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dhagt/Ds; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPe3xYsaUgnn6Wktkp+DML8ssB4YDCCMOh6jGpXhOpwK3ob6nbw3DVDOxlrZkhP8jtKeBZjEBYv4WdL9rhaRoxUNEDzgxqI0R6fw30Scj2iRGVYLkkpnpJTqbOKAUmJMweLd9hb3euL9FpKPnGHa6lgQQZ53S4uvknxoU622TrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYdA9rPg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dhagt/Ds"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB10C113CC;
-	Thu, 18 Apr 2024 15:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYdA9rPg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353BCC113CC;
+	Thu, 18 Apr 2024 15:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713454751;
-	bh=poikjUesrlZvYhdkYUVTGKAXtyh6o27VwcY88bzAEGE=;
+	s=k20201202; t=1713454799;
+	bh=eZMo4P2E3CI3NQ6VH6HqGAvDmu58DfAbXNVuH3h7jwE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dhagt/DsCV508bBCSM8PQFh0KZ4ChVYVPTqwgApoowoaluDog1pdK/qIVJU1bAfJ1
-	 yTHdqpTqCwsTRyfpVzaQYmToVgTGF005G8P5bcBRn51+TfjO6upp0QzeXZdpRVmP9T
-	 DyDQSEZc+G77sXhvEvzJVgEwHd81+hiEegtvxJRrNRYHrUsgJx5AWmHmLJX+3OoPI9
-	 DgUEekwf3Gv6AvfsAJ1j1lmBPCAVlRdxF5BEqB76VwjdS5tGiPR4UhLWWIRbIEiDfd
-	 AIVB7M07XTdJ0VLvAnDkmSjg91AV2IlHsKb94RwxZ2UFTajWhnfg+q+QMNKv4wdsDX
-	 0LvSLkPCKaqng==
-Date: Thu, 18 Apr 2024 18:37:52 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Masami Hiramatsu <masami.hiramatsu@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 14/15] kprobes: remove dependency on CONFIG_MODULES
-Message-ID: <ZiE-UE27NalI-IeW@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
- <20240411160051.2093261-15-rppt@kernel.org>
- <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
+	b=BYdA9rPgLqH9mQrFMhFCJ0IxNEI1EPG1KW8IjdO8N34qYNd0IW7o+DhVI0Qvqo0/O
+	 nvZFc+kcsRtbdHHv3NpSVBq2Mbm3hBoEcVQoCOtxs8Feosp5VMtSHzD+ObJJDE+yVh
+	 GiQELdSH/N9ITBo1vWmCE2Kb3Yr+xPzzd5CFKaK3n0bAJYIVHLlDZmrX/WeQdtpbCy
+	 hAhQFdzzZJPdpNRUwKgew/X6ZJ/ImN2r2DmcfmTf9ztDXj7zVS9+yAtD/UWeex7Eru
+	 Mpb8W6ZEcLbI6mlxAiMFQRM2jJOxJc4BUNTw02oYt6d5ZV/cz3GkEtdwj9HIgFGGw3
+	 JgSE8/YIRYMMw==
+Date: Thu, 18 Apr 2024 16:39:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, saeedm@nvidia.com,
+	anthony.l.nguyen@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, andrew@lunn.ch, corbet@lwn.net,
+	linux-doc@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, horatiu.vultur@microchip.com,
+	ruanjinjie@huawei.com, steen.hegelund@microchip.com,
+	vladimir.oltean@nxp.com, UNGLinuxDriver@microchip.com,
+	Thorsten.Kummermehr@microchip.com, Pier.Beruto@onsemi.com,
+	Selvamani.Rajagopal@onsemi.com, Nicolas.Ferre@microchip.com,
+	benjamin.bigler@bernformulastudent.ch
+Subject: Re: [PATCH net-next v4 12/12] dt-bindings: net: add Microchip's
+ LAN865X 10BASE-T1S MACPHY
+Message-ID: <20240418-hypnosis-oblong-028c107e6c3f@spud>
+References: <20240418125648.372526-1-Parthiban.Veerasooran@microchip.com>
+ <20240418125648.372526-13-Parthiban.Veerasooran@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OMoF28WElBeQfUgK"
 Content-Disposition: inline
-In-Reply-To: <20240418061615.5fad23b954bf317c029acc4d@gmail.com>
+In-Reply-To: <20240418125648.372526-13-Parthiban.Veerasooran@microchip.com>
 
-Hi Masami,
 
-On Thu, Apr 18, 2024 at 06:16:15AM +0900, Masami Hiramatsu wrote:
-> Hi Mike,
-> 
-> On Thu, 11 Apr 2024 19:00:50 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> > 
-> > kprobes depended on CONFIG_MODULES because it has to allocate memory for
-> > code.
-> > 
-> > Since code allocations are now implemented with execmem, kprobes can be
-> > enabled in non-modular kernels.
-> > 
-> > Add #ifdef CONFIG_MODULE guards for the code dealing with kprobes inside
-> > modules, make CONFIG_KPROBES select CONFIG_EXECMEM and drop the
-> > dependency of CONFIG_KPROBES on CONFIG_MODULES.
-> 
-> Thanks for this work, but this conflicts with the latest fix in v6.9-rc4.
-> Also, can you use IS_ENABLED(CONFIG_MODULES) instead of #ifdefs in
-> function body? We have enough dummy functions for that, so it should
-> not make a problem.
+--OMoF28WElBeQfUgK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll rebase and will try to reduce ifdefery where possible.
+On Thu, Apr 18, 2024 at 06:26:48PM +0530, Parthiban Veerasooran wrote:
+> The LAN8650/1 combines a Media Access Controller (MAC) and an Ethernet
+> PHY to enable 10BASE-T1S networks. The Ethernet Media Access Controller
+> (MAC) module implements a 10 Mbps half duplex Ethernet MAC, compatible
+> with the IEEE 802.3 standard and a 10BASE-T1S physical layer transceiver
+> integrated into the LAN8650/1. The communication between the Host and the
+> MAC-PHY is specified in the OPEN Alliance 10BASE-T1x MACPHY Serial
+> Interface (TC6).
+>=20
+> Signed-off-by: Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>
+> ---
+>  .../bindings/net/microchip,lan865x.yaml       | 80 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/microchip,lan86=
+5x.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/microchip,lan865x.yaml=
+ b/Documentation/devicetree/bindings/net/microchip,lan865x.yaml
+> new file mode 100644
+> index 000000000000..4fdec0ba3532
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/microchip,lan865x.yaml
 
-> Thank you,
-> 
-> > 
-> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> > ---
-> >  arch/Kconfig                |  2 +-
-> >  kernel/kprobes.c            | 43 +++++++++++++++++++++----------------
-> >  kernel/trace/trace_kprobe.c | 11 ++++++++++
-> >  3 files changed, 37 insertions(+), 19 deletions(-)
-> > 
-> 
-> -- 
-> Masami Hiramatsu
+Filename matching a compatible please.
 
--- 
-Sincerely yours,
-Mike.
+
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/microchip,lan865x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip LAN8650/1 10BASE-T1S MACPHY Ethernet Controllers
+> +
+> +maintainers:
+> +  - Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
+> +
+> +description:
+> +  The LAN8650/1 combines a Media Access Controller (MAC) and an Ethernet
+> +  PHY to enable 10BASE=E2=80=91T1S networks. The Ethernet Media Access C=
+ontroller
+> +  (MAC) module implements a 10 Mbps half duplex Ethernet MAC, compatible
+> +  with the IEEE 802.3 standard and a 10BASE-T1S physical layer transceiv=
+er
+> +  integrated into the LAN8650/1. The communication between the Host and
+> +  the MAC-PHY is specified in the OPEN Alliance 10BASE-T1x MACPHY Serial
+> +  Interface (TC6).
+> +
+> +allOf:
+> +  - $ref: ethernet-controller.yaml#
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+
+Can you use the same referencing style for both elements here please?
+
+
+Otherwise, looks aight to me, so with those fixed:
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: microchip,lan8650
+> +      - items:
+> +          - const: microchip,lan8651
+> +          - const: microchip,lan8650
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt from MAC-PHY asserted in the event of Receive Chunks
+> +      Available, Transmit Chunk Credits Available and Extended Status
+> +      Event.
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    minimum: 15000000
+> +    maximum: 25000000
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - spi-max-frequency
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    spi {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      ethernet@0 {
+> +        compatible =3D "microchip,lan8651", "microchip,lan8650";
+> +        reg =3D <0>;
+> +        pinctrl-names =3D "default";
+> +        pinctrl-0 =3D <&eth0_pins>;
+> +        interrupt-parent =3D <&gpio>;
+> +        interrupts =3D <6 IRQ_TYPE_EDGE_FALLING>;
+> +        local-mac-address =3D [04 05 06 01 02 03];
+> +        spi-max-frequency =3D <15000000>;
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f41b7f2257d2..2172431a1935 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14378,6 +14378,7 @@ MICROCHIP LAN8650/1 10BASE-T1S MACPHY ETHERNET DR=
+IVER
+>  M:	Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
+>  L:	netdev@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/net/microchip,lan865x.yaml
+>  F:	drivers/net/ethernet/microchip/lan865x/lan865x.c
+> =20
+>  MICROCHIP LAN87xx/LAN937x T1 PHY DRIVER
+> --=20
+> 2.34.1
+>=20
+
+--OMoF28WElBeQfUgK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiE+yAAKCRB4tDGHoIJi
+0p0YAQCAdG43pmde0U/WZ/1qUZLp+G75xP7+MuDgEJBmYJK+ZQD+LbWbLS+rfHQD
+5Lbz0TgMasyOgD4o28CfPhXnnRx9hQc=
+=TRKB
+-----END PGP SIGNATURE-----
+
+--OMoF28WElBeQfUgK--
