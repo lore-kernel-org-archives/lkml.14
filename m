@@ -1,107 +1,63 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A405A17A93E
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 19:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5FB17A93E;
+	Thu, 18 Apr 2024 19:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713467623; cv=none; b=WCktE7czn6TQ1wFFI4z2fkCwKlsBy6rVGHw5MdrkI9IIPVg3MFbXMMbnRisjlN2V17mWCFAUhovf7Da/xdUlaLloCjJxNCGeyA44ipvFt37wv8f+pCSPkseTSAG68SeyjyytgWaPrzl5nDsyMGQA40RAJusFaE0u8PXfCgFCE4U=
+	t=1713467674; cv=none; b=Wg2ddcxVhi+fJi0AwZtJM9D/w7+LPxdgebtrDjJx9NBipEpc39kIMuL9WtGz8F/0S5rDZg8pnpaeWnt7nZzLbSwo3yFTJLzDnR9lQ2CK82Yp6TAZdrssSJ3e5aen64aKP1V9DGvivNDDdRDbRI6Gcv7V/J6YjJBN+RMwzYkPwxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713467623; c=relaxed/simple;
-	bh=Iz678KAmXfBm/mZt3v+X1aeipm5kBNZsPm3UhrqtPf4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zvn1Y0NQU+utlwnB1K2fGvoUqUKJpekW101jUC6AvnqEFPlvb31XpD0xPWjdYyknD574DA4GAWPf5+2TUNgbz+0UzFo3TgTqTVqeX3MB5oFsgUnJzf4JnytFpOVSGwUVNK8OyIVFR6drQSPV5h4z8Ye0e+cDfUpTmaTTfkcEtTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ffd2ya2d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=762nyUUU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1713467674; c=relaxed/simple;
+	bh=dGj0gJEA4iIpKJQAgppgHAuhoSOrW9+n427qFUKA9a8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Pn1EgQeokBUEXDP6OTYe/u7NlnqngyfGBFeME0I7/IL67X18qMZOxUYdtsViT3biOPfe6XZjR3LoqX0OBZgXPwST7dQi5MaYY2xWwp3vsbJSkKlr5C8atsR5ADa9bBTGBXEjsURe3UnXRBjuhNjhllo4fQ0Xz58FTGZUnopaTFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKocv0xq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ffd2ya2d";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="762nyUUU"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1713467619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j9rMqMzziPBG66zzSo6AyqknRc91sFEhQHJFsmE6nzg=;
-	b=Ffd2ya2doIEt7x3rnqzKbBOJK2Fz1s6IYUY7CduKWzuTopfZzIDlTe2xyeFpFjbKYPNsXb
-	VvBO/WNbKFb3xHW8MBlieiz4HX4Qx0LLbP/nkwNOFcAyucKy3cRe0uY14vLExD33Ssm51t
-	uKuEAn3M5XF5WRNSveCHiwspacH9Xu7RG5d24hDDaCCY93c+qDpOqWqyMzdOpmwG+uZYuv
-	pNHBXmCP2DGqsS5nbWAxFwXXXZf6Ba/lCORs56rpccQ3ZFTNcRB32VeoakHrqv5M8xmrXB
-	idoybO+j3Ic20KugPSoFeTG8qX9f8m3G9XzNepSs71mvq15m192pGSs6K2XNMw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1713467619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j9rMqMzziPBG66zzSo6AyqknRc91sFEhQHJFsmE6nzg=;
-	b=762nyUUUP9eTxaItKAik/TRrsj62zTb2lQlaflWMsqPAFYqhiNIc5NZ95f8t9VN9gj89Ln
-	B/RWEIasyvfYYdDw==
-To: Lyude Paul <lyude@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-In-Reply-To: <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
- <20240418082703.GCZiDZVyra7qOQbyqn@fat_crate.local>
- <fd040809d95b3e12b2fdc78a2409e187716bc66f.camel@redhat.com>
-Date: Thu, 18 Apr 2024 21:13:34 +0200
-Message-ID: <87plumxz4x.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKocv0xq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 58A2FC113CC;
+	Thu, 18 Apr 2024 19:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713467674;
+	bh=dGj0gJEA4iIpKJQAgppgHAuhoSOrW9+n427qFUKA9a8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=UKocv0xqH4cbNJa5Nrfehax2TiQRJWLIBCy5kAHQZwOfCAJtQHXM2/rWiVMo3Fxat
+	 mfNRSScm2cWfEtpQb8Oaxo8+6grprJl2zcfyujYFujvHPcwPyKnj3pEqkOYqv/d3II
+	 rYmatgz2KepYjrOCOW9+Zljb8RyX4Di5KawSIcWf/eLbE85E7fWmYz8DxTKlUIq6NB
+	 BY6ifjSPCzA44ArZgNv8hmKtF+xs0SZ5R+4MmJdmnYDw3CcQJtX0b7eqzBTigQ6Gqb
+	 mrQDsKexMGJr4h1W66F7z7NcWMEBEujPzC9mm1CelWgWacbvgSxZ+cqh0KUvUBBYNY
+	 pfK9NbwbAuX9g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 48D55C4361A;
+	Thu, 18 Apr 2024 19:14:34 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.9-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240418183142.3569793-1-kuba@kernel.org>
+References: <20240418183142.3569793-1-kuba@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240418183142.3569793-1-kuba@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.9-rc5
+X-PR-Tracked-Commit-Id: c24cd679b075b0e953ea167b0aa2b2d59e4eba7f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7586c8501d090609c6eb1af6ba05e3ed68806c83
+Message-Id: <171346767428.7721.10757428252894501018.pr-tracker-bot@kernel.org>
+Date: Thu, 18 Apr 2024 19:14:34 +0000
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Thu, Apr 18 2024 at 13:20, Lyude Paul wrote:
+The pull request you sent on Thu, 18 Apr 2024 11:31:42 -0700:
 
-> Just gave it a try, unfortunately I'm still seeing the same result on
-> that branch.
->
-> One more piece of information I apparently missed when reporting this
-> yesterday btw: I noticed one more kernel message that comes before the
-> panic that's probably relevant:
->
-> ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.9-rc5
 
-Can you please apply the debug patch below which should make it boot
-again.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7586c8501d090609c6eb1af6ba05e3ed68806c83
 
-Please also provide the output of the files underneath of
+Thank you!
 
-       /sys/kernel/debug/x86/topo/
-
-Thanks,
-
-        tglx
----
- arch/x86/kernel/cpu/topology.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -176,6 +176,8 @@ static __init void topo_register_apic(u3
- {
- 	int cpu, dom;
- 
-+	pr_info("APIC ID %x present %d\n", apic_id, present);
-+
- 	if (present) {
- 		set_bit(apic_id, phys_cpu_present_map);
- 
-@@ -201,10 +203,7 @@ static __init void topo_register_apic(u3
- 		 */
- 		if (hypervisor_is_type(X86_HYPER_NATIVE) &&
- 		    topo_unit_count(pkgid, TOPO_PKG_DOMAIN, phys_cpu_present_map)) {
--			pr_info_once("Ignoring hot-pluggable APIC ID %x in present package.\n",
--				     apic_id);
--			topo_info.nr_rejected_cpus++;
--			return;
-+			pr_info("Hot-pluggable APIC ID %x in present package.\n", apic_id);
- 		}
- 
- 		topo_info.nr_disabled_cpus++;
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
