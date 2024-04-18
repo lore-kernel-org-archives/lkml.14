@@ -1,49 +1,52 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DCE160796;
-	Thu, 18 Apr 2024 13:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DEB165FA1;
+	Thu, 18 Apr 2024 13:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448672; cv=none; b=rsfTsC5FUcskQhOiqUPdXt1YraFxyfm7i/vqCsAyIjzpVIRSjsDJ10ZW+JRQfieK83HPtFiLZ+39m3sbw8G49k0k5IV3Zb5C+11J1PfQPb5z4ZBDqSUtT7hZ9xelQIUNosktqNDK96qsbpWoaip1tOKOgR+UYK2wo5A23vJegvQ=
+	t=1713448678; cv=none; b=Hv+lVazpOCuob4l6gYFa3FTwMHoRzormEfr1Vj9NFVvyrtrUvqxNSMvpWBdfJGwmpK5hAM3QhpGaFIJU/fNwPGeJ9oRftvRfa2PL9ztqljxGJ3OKaqR/eQ8jIafKdEDmVBFM/en5Q688qU5Sd7q8cmkX4WO+9veompGBxwMXZ6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448672; c=relaxed/simple;
-	bh=Fg1Uw/EE5fB2oyPrQhHIjgnrktVY0yIzZa7BULUrzRw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WZL9nhYHlswaIJUVI5zMqZ3vbCnkL4pG5Hp9Yr0DuCitZ16eR/MzTHfAfzemKYK7ZiHHiDqFMt5CeT6EqztMAjci2ApVuQ/aXaD9Tv2gZHimmf2PzTX9cS79VoQx54HCcHTCv/ryZJ2oT/X9KeAADH+OEmFH2c8U6UNUHIkyWfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VKznZ1rkyz6D955;
-	Thu, 18 Apr 2024 21:55:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 147261406AC;
-	Thu, 18 Apr 2024 21:57:49 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 14:57:48 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
-	<x86@kernel.org>, Russell King <linux@armlinux.org.uk>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Miguel Luis <miguel.luis@oracle.com>, James Morse
-	<james.morse@arm.com>, Salil Mehta <salil.mehta@huawei.com>, Jean-Philippe
- Brucker <jean-philippe@linaro.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, <linuxarm@huawei.com>,
-	<justin.he@arm.com>, <jianyong.wu@arm.com>
-Subject: [PATCH v7 07/16] ACPI: scan: switch to flags for acpi_scan_check_and_detach()
-Date: Thu, 18 Apr 2024 14:54:03 +0100
-Message-ID: <20240418135412.14730-8-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
-References: <20240418135412.14730-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1713448678; c=relaxed/simple;
+	bh=ZhlL4tjht7GlG67GG9kDbL7UVrYgSu0/4n5O5L0wbUY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pQud/LlnLqW5j0rEMhkJinLPj4ifUuy8nYrT5WHTRO3nyEOp0YnuOamOOXUORufeIWckihNZ9wisT+0PpTUWCZfbHNnFCRI4dLDPilnbzukmHCY2UxpQ7w+NzWid0Ybf45yBZ8L2SgBaQ1fKKNuJgBtXQLXxfT96hmbdO65IvsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=eRoC1Yhv; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="eRoC1Yhv"
+Received: from mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:c8ad:0:640:7c75:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id F118261590;
+	Thu, 18 Apr 2024 16:57:52 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id gvF5FWNoJ8c0-d4s2iy88;
+	Thu, 18 Apr 2024 16:57:52 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
+	t=1713448672; bh=TvATYFolPsmsitecl5MtmkLtQMecqxUnnNMJDk5m6iw=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=eRoC1YhvKeUwU5setA+cJMFuZa34BpfFtcWC9Lp9PTV79tdENeELNGqZBbG9xahoD
+	 6h0BDbRbfBVk7hFGtdj58pwJatXxY1bOoke3ud7SpR5SPIvbhnvhDRZzzRz3Y1R2Ur
+	 BxMK4oW48lqrzi49G1BAVXRZc+j6LthJAmqx8L2Q=
+Authentication-Results: mail-nwsmtp-smtp-production-main-25.sas.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+From: Konstantin Pugin <rilian.la.te@ya.ru>
+To: 
+Cc: Konstantin Pugin <ria.freelander@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v2 1/3] serial: sc16is7xx: announce support of SER_RS485_RTS_ON_SEND
+Date: Thu, 18 Apr 2024 16:57:32 +0300
+Message-Id: <20240418135737.3659498-2-rilian.la.te@ya.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240418135737.3659498-1-rilian.la.te@ya.ru>
+References: <20240418135737.3659498-1-rilian.la.te@ya.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,71 +54,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Precursor patch adds the ability to pass a uintptr_t of flags into
-acpi_scan_check_and detach() so that additional flags can be
-added to indicate whether to defer portions of the eject flow.
-The new flag follows in the next patch.
+From: Konstantin Pugin <ria.freelander@gmail.com>
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Hardware supports both modes, but after
+commit 4afeced55baa ("serial: core: fix sanitizing check for RTS settings")
+we always end up with SER_RS485_RTS_AFTER_SEND and always write in
+register SC16IS7XX_EFCR_RTS_INVERT_BIT,
+which breaks some hardware using these chips,
 
+Fixes: 267913ecf737 ("serial: sc16is7xx: Fill in rs485_supported")
+Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
 ---
-v7: No change
-v6: Based on internal feedback switch to less invasive change
-    to using flags rather than a struct.
----
- drivers/acpi/scan.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/tty/serial/sc16is7xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index d1464324de95..1ec9677e6c2d 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -244,13 +244,16 @@ static int acpi_scan_try_to_offline(struct acpi_device *device)
- 	return 0;
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index 929206a9a6e1..a300eebf1401 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -1458,7 +1458,7 @@ static int sc16is7xx_setup_mctrl_ports(struct sc16is7xx_port *s,
  }
  
--static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
-+#define ACPI_SCAN_CHECK_FLAG_STATUS	BIT(0)
-+
-+static int acpi_scan_check_and_detach(struct acpi_device *adev, void *p)
- {
- 	struct acpi_scan_handler *handler = adev->handler;
-+	uintptr_t flags = (uintptr_t)p;
- 
--	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, check);
-+	acpi_dev_for_each_child_reverse(adev, acpi_scan_check_and_detach, p);
- 
--	if (check) {
-+	if (flags & ACPI_SCAN_CHECK_FLAG_STATUS) {
- 		acpi_bus_get_status(adev);
- 		/*
- 		 * Skip devices that are still there and take the enabled
-@@ -288,7 +291,9 @@ static int acpi_scan_check_and_detach(struct acpi_device *adev, void *check)
- 
- static void acpi_scan_check_subtree(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, (void *)true);
-+	uintptr_t flags = ACPI_SCAN_CHECK_FLAG_STATUS;
-+
-+	acpi_scan_check_and_detach(adev, (void *)flags);
- }
- 
- static int acpi_scan_hot_remove(struct acpi_device *device)
-@@ -2601,7 +2606,9 @@ EXPORT_SYMBOL(acpi_bus_scan);
-  */
- void acpi_bus_trim(struct acpi_device *adev)
- {
--	acpi_scan_check_and_detach(adev, NULL);
-+	uintptr_t flags = 0;
-+
-+	acpi_scan_check_and_detach(adev, (void *)flags);
- }
- EXPORT_SYMBOL_GPL(acpi_bus_trim);
- 
+ static const struct serial_rs485 sc16is7xx_rs485_supported = {
+-	.flags = SER_RS485_ENABLED | SER_RS485_RTS_AFTER_SEND,
++	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND | SER_RS485_RTS_AFTER_SEND,
+ 	.delay_rts_before_send = 1,
+ 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
+ };
 -- 
-2.39.2
+2.34.1
 
