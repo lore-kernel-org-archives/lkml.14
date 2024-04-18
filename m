@@ -1,128 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0F5174EC0;
-	Thu, 18 Apr 2024 17:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD77B15B98A;
+	Thu, 18 Apr 2024 17:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461486; cv=none; b=LVQWipSvGMGSeqM8g5yenyT+TZMSHs4TK8zICPSBA9/lzwVdSj+N11RdUanA38DtqzYuxNaE643LY2j6NyM88A/t040zV9hGl0Gk3vO9WTsRZUOo2PZpEK9/1ivUO6KSM4MUWUCdwv+ZMS7xapHMvubriguPxkuLB2SZDaKpxzk=
+	t=1713461526; cv=none; b=MFYwXpQhPpdeU9EooLClyfSSkBsRSiMn5a8j0JqAlnkwMul0bQT+Sje5XbQ0sq5wqhia46yR30hmHA5TgCQdC7nSlR/wsgEfUj78orei/6+HHJsGg1wzlbKHMxe85jAmNMEXCmtgvJJwtPKflO82fAM8SRpde/yyGbJNnPd/Et8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713461486; c=relaxed/simple;
-	bh=mFPrCvLrxIQNqZjqRYLBKfQaqDsb+b6XIi+X1/IuX4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kahSpW+RwymD4Sw2jZiBF6c1x0A4i44B/YUUwtPyUKyvSiBHqnZvjypx63w4v2/q3cn5uQu906BzfNWA4Tj/wc801DzcwnajAPZNdsoI4jkUXKF6cQE886a8PKqWpIXXCIO7VnZhwXw98I7O6SM+NP2/1uZCqvvBvaWZ/K+DAJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYbkzIfb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713461526; c=relaxed/simple;
+	bh=ackjtFhEwPS1DWwxwOO1J3VcSzyK+7bkMK70V249e+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRIL8OG13++xbFEbWnf4r2QdMw0ryjitzQuIjMyz4sUrWEE18qM8R27RJVoPCK+uG4UaXmZxnjN8f7SYsl/tWiCoY7/bd9ROksqN3I4dASKbbC+JunllOpRDcFLaI51UTo8xPnjKWibDRbVhv4fxGdabksWw2A2JBooq4cxqKWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgMkaLsZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYbkzIfb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C45C113CC;
-	Thu, 18 Apr 2024 17:31:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgMkaLsZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FF2C113CC;
+	Thu, 18 Apr 2024 17:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713461485;
-	bh=mFPrCvLrxIQNqZjqRYLBKfQaqDsb+b6XIi+X1/IuX4U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qYbkzIfbWVr3khBjHDqenfNvOnPfCGCwBBWvd+w5VQuHy0miIF/vJnPxf0FZAm53E
-	 FZMGUtDr4SNCyq6y8hpmKr/sEZOrfimXsaEgCRbjmll5zwC98a/9OUiOPqu3vz+1iu
-	 vgFTK0j64M6x4VlQgE4zHMZVk0h88jDuyXLenRIDgo0HFHBLQyCZA4zxpnFnYhsiAO
-	 oEQfvxcpw0Z4VEyaaGoHL0fPglvinh6cdVyxJryetbpYxS3mGm8LkSIl9SPlx1yLhP
-	 GyZ0lS5LX7EabElZMv+8a+DjUYG9c1X0DAXLBwzckfQGttyZMOR6zrQ186ofUwxoTu
-	 u6Jz03pC6PKTw==
-Message-ID: <702adf23-868b-4e0f-8565-9ca35850bb00@kernel.org>
-Date: Thu, 18 Apr 2024 19:31:20 +0200
+	s=k20201202; t=1713461526;
+	bh=ackjtFhEwPS1DWwxwOO1J3VcSzyK+7bkMK70V249e+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CgMkaLsZL6MDFoi5pOJZ9Uqc06yo9NSEFh/o7HjCO5s0W2kKW8/U8XwpEcOUYkfLR
+	 RuShVXQimLY85SYSdAYAGrsNvGnXS93Uc1J1h/iz1t1C0rXIsyT4PVPW+7qXgaB/3t
+	 Juw3kluI6GsEYo+wBLEAUHqdVfx4jtG9iLK5WLn2sAQJfO8LkAyTesefKFebGggfpT
+	 ZcwNGzTFBXyDliQUc3GCmxAlTaeGDadJB6/zE1C49B9xuJ4O2vgHuFfiiC9aiRqCSS
+	 AuIwkH53dn5sKGtUxzs8vuwWfGgpcuBk1DUz6E+3eX29bWLAiD2Y+mab6KB+Zjvrpj
+	 lHERzYdAahI+w==
+Date: Thu, 18 Apr 2024 10:32:03 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>,
+	Guo Ren <guoren@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	Vincent Chen <vincent.chen@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Joel Granados <j.granados@samsung.com>,
+	Jerry Shih <jerry.shih@sifive.com>
+Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
+ to ZVE32X
+Message-ID: <20240418173203.GA1081@sol.localdomain>
+References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
+ <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
+ <20240418-brook-chili-4d3e61d1a55c@wendy>
+ <20240418155256.GA2410@sol.localdomain>
+ <20240418-ultimatum-yam-11de4b063b83@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/17] arm64: dts: exynos: gs101: Add ufs, ufs-phy and ufs
- regulator dt nodes
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
- kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
- bvanassche@acm.org, s.nawrocki@samsung.com, cw00.choi@samsung.com,
- jejb@linux.ibm.com, martin.petersen@oracle.com, chanho61.park@samsung.com,
- ebiggers@kernel.org, linux-scsi@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com,
- willmcvicker@google.com
-References: <20240404122559.898930-1-peter.griffin@linaro.org>
- <20240404122559.898930-8-peter.griffin@linaro.org>
- <4ed72378-672e-46d6-9f29-fa118f598739@kernel.org>
- <CADrjBPpaR86R6FMwMqos7ojVfDpGxS=ygW50UBCy1DTsoXHJgQ@mail.gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CADrjBPpaR86R6FMwMqos7ojVfDpGxS=ygW50UBCy1DTsoXHJgQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418-ultimatum-yam-11de4b063b83@spud>
 
-On 18/04/2024 15:20, Peter Griffin wrote:
+On Thu, Apr 18, 2024 at 05:53:55PM +0100, Conor Dooley wrote:
+> > If it would be useful to do so, we should be able to enable some of the code
+> > with a smaller VLEN and/or EEW once it has been tested in those configurations.
+> > Some of it should work, but some of it won't be able to work.  (For example, the
+> > SHA512 instructions require EEW==64.)
+> > 
+> > Also note that currently all the RISC-V vector crypto code only supports riscv64
+> > (XLEN=64).  Similarly, that could be relaxed in the future if people really need
+> > the vector crypto acceleration on 32-bit CPUs...  But similarly, the code would
+> > need to be revised and tested in that configuration.
+> > 
+> > > Eric/Jerry (although read the previous paragraph too):
+> > > I noticed that the sha256 glue code calls crypto_simd_usable(), and in
+> > > turn may_use_simd() before kernel_vector_begin(). The chacha20 glue code
+> > > does not call either, which seems to violate the edict in
+> > > kernel_vector_begin()'s kerneldoc:
+> > > "Must not be called unless may_use_simd() returns true."
+> > 
+> > skcipher algorithms can only be invoked in process and softirq context.  This
+> > differs from shash algorithms which can be invoked in any context.
+> > 
+> > My understanding is that, like arm64, RISC-V always allows non-nested
+> > kernel-mode vector to be used in process and softirq context -- and in fact,
+> > this was intentionally done in order to support use cases like this.  So that's
+> > why the RISC-V skcipher algorithms don't check for may_use_simd() before calling
+> > kernel_vector_begin().
 > 
-> s_ldo8_reg: LDO8S {
->     regulator-name = "S2MPG11_LDO8";
->     regulator-min-microvolt = <1127800>;
->     regulator-max-microvolt = <1278600>;
->     regulator-always-on;
->     regulator-initial-mode = <SEC_OPMODE_SUSPEND>;
->     channel-mux-selection = <0x28>;
->     schematic-name = "L8S_UFS_VCCQ";
->     subsys-name = "UFS";
->  };
-> 
-> So I think you're correct this is a stub pending full pmic support. I
-> propose in v2 to add a comment similar to what we have in
-> exynos850-e850-96.dts today above the regulator-fixed node like /*
-> TODO: Remove this once PMIC is implemented  */?
-> 
+> I see, thanks for explaining that. I think you should probably check
+> somewhere if has_vector() returns true in that driver though before
+> using vector instructions. Only checking vlen seems to me like relying on
+> an implementation detail and if we set vlen for the T-Head/0.7.1 vector
+> it'd be fooled. That said, I don't think that any of the 0.7.1 vector
+> systems actually support Zvkb, but I hope you get my drift.
 
-Sounds good.
+All the algorithms check for at least one of the vector crypto extensions being
+supported, for example Zvkb.  'if (riscv_isa_extension_available(NULL, ZVKB))'
+should return whether the ratified version of Zvkb is supported, and likewise
+for the other vector crypto extensions.  The ratified version of the vector
+crypto extensions depends on the ratified version of the vector extension.  So
+there should be no issue.  If there is, the RISC-V core architecture code needs
+to be fixed to not declare that extensions are supported when they are actually
+incompatible non-standard versions of those extensions.  Incompatible
+non-standard extensions should be represented as separate extensions.
 
-Best regards,
-Krzysztof
-
+- Eric
