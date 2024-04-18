@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F91F171093;
-	Thu, 18 Apr 2024 17:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FE7171093;
+	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713461000; cv=none; b=Zk37EXqIPfRaYmJCwIKYuWYskdBjR1AZDKh1sQTyl0j6LCXH7c86mH0vvqlsXc5OoxqSwywOjxWB5JYwg48lL01+xYztSMSR26T2ZY4Tu6S1KJea197pk+vUK7bIFzKod86TtzsrmiQOde97wzPC6gWuAe/mbYbl9MPPXA4SAXs=
+	t=1713461005; cv=none; b=FgOXO5PskAzdkBGpkysFomPpcaB0F6gycHt+W+MoGex+hPsWvCtNt/RlyoOMSjpNnykpTFyhFmZp/506Gb+Kv49m6E1K4jioJrwp7K3n4qBhsiDqcD913FdsnW7dOWaTGGQbgaVWmONHeD8a8NU3gnNqBv01oxg+aUDuQURFYyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713461000; c=relaxed/simple;
-	bh=OVXt2ZfjXcfSpWwWJQdD/G2vmX+KAN5kUbLV0gX6uvo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hzvw58qqRLtl30el82eksV98bwjnS869ZApGKGqd9UJ4nss+6Ezd8UmdRYHMULALpysdRDJ1olyD+rktyXrnEtsCNLbM9MlBtkTmh566KO2p6H+rm+G4VI6xqpi/A+F7NkBtMI55mHnWbWP0whabdhQU/0ITl7/dnRCujr/IEBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lY8OEkRB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713461005; c=relaxed/simple;
+	bh=O+BlYr5B88IYB6tmQUGNTReB34mdgGymzzFo8OXKIo8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oPSkn7eol7zeVe8KvyJuU4h18kE5lFwmN4ud6hwCvGSv1DDBc8tOOw+VWyLtoAfKpiFQ7grU+SGWpCZeKj0hn+/9OoNj/QXKiDXSJb4cFNO6a+8FbNh6yx5LjvYvZmCuMcX6nr3ozEAmLyVnw07c1GLbxJ/JFTriRpnwFcoBRN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tm8Quevk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lY8OEkRB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E072C113CC;
-	Thu, 18 Apr 2024 17:23:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tm8Quevk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 855BAC116B1;
+	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713461000;
-	bh=OVXt2ZfjXcfSpWwWJQdD/G2vmX+KAN5kUbLV0gX6uvo=;
+	s=k20201202; t=1713461005;
+	bh=O+BlYr5B88IYB6tmQUGNTReB34mdgGymzzFo8OXKIo8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=lY8OEkRB0Mqy7iuJKGXcxHryRMlhzZYtS4p1UkqwrnYfTf7EQ1cKKUJqLcJgG+fhc
-	 HhNiQp6r7PRIMj/RA51mIJMIFyMJ7hp0GX3+MkpE1xu3IMs94/3FXRMQKAiWYl/lwL
-	 bvBo4/p1D7AgSpBz22VYubQlIVEGBzV2bHpgK7so10nSgHuDbuko5rD8caSf/cD25i
-	 R9qPZbrcvQc4WiNTLeH17Xs09btNOcpDq8DVQ4ezR5DEHdAjpscGZd7XJYNuI37OVb
-	 sMCKkR2yOf14SbCY3RlJ0knkDHQssfIVFUv9yjRyje7g1t9yAFgkBVytzhLKGicaDB
-	 EQJNhSWfvwtQg==
+	b=Tm8Quevk0VMpU27oNfPP46g1u29s7k9gVG38abIxQixUgNg8nahZt5yFFuo8Gmd+A
+	 /okaAF2p/jUzc8mR4bm7imU5ysTp0mHu7TVK5h9gfHzp0oGiX3jQ+R+rUXNRP3n4It
+	 SKEehRHo4oWT+LZMTRBPxiBoCryYWlWnIVRTbzx98aC0tgpAhBlcnGZHy87997PZWd
+	 Rbm8C9h/s74WCKGFe5Gx+PQLOioLTrchevC+I9szKTtTkwRihWOBt66my4bO2wNIcO
+	 N0E/8Uh5pNWfr6dQaO7A6fll+tUzNvAltZUdEhD7Te3G2rDVrmDcbTy6KlsRJTaA8F
+	 DcGzgpXDcuIqw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 33335C43619;
-	Thu, 18 Apr 2024 17:23:20 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v6.9-rc5
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 71930C43619;
+	Thu, 18 Apr 2024 17:23:25 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-3
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240418171329.6542-1-brgl@bgdev.pl>
-References: <20240418171329.6542-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240418171329.6542-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9-rc5
-X-PR-Tracked-Commit-Id: 69ffed4b62523bbc85511f150500329d28aba356
+In-Reply-To: <pdx86-pr-20240418120332-847319520@linux.intel.com>
+References: <pdx86-pr-20240418120332-847319520@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20240418120332-847319520@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-3
+X-PR-Tracked-Commit-Id: f609e7b1b49e4d15cf107d2069673ee63860c398
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 360a348fd7fe72ec42a80d025e6fc81cda19f48e
-Message-Id: <171346100018.11189.5133191676673891264.pr-tracker-bot@kernel.org>
-Date: Thu, 18 Apr 2024 17:23:20 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-PR-Merge-Commit-Id: c2d88559121ba4b6434493b4f8ed46657be6cc08
+Message-Id: <171346100545.11189.8214122422847991143.pr-tracker-bot@kernel.org>
+Date: Thu, 18 Apr 2024 17:23:25 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 18 Apr 2024 19:13:29 +0200:
+The pull request you sent on Thu, 18 Apr 2024 12:03:32 +0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9-rc5
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/360a348fd7fe72ec42a80d025e6fc81cda19f48e
+https://git.kernel.org/torvalds/c/c2d88559121ba4b6434493b4f8ed46657be6cc08
 
 Thank you!
 
