@@ -1,37 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBCE24C63A
-	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 15:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F300A15FA9F
+	for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 15:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713455755; cv=none; b=tCLL83lyHYEp4+0tg5vQKkDDH0QYaHzMHLKAH2T71bYktoNmp57eaedQ8C4TpnUe4IP4EFND1790EYi/RpkTvqKy5GHP+IS53wdc/9eSlD7xrPaurE3WhRcMphYEySWvvjzg2Fs4zZl6XJWlDfE5WbVbJa/eZ23lfIL1oHjRxes=
+	t=1713455779; cv=none; b=ayoHYOkCO2qLeB0OvQlrD8Ge0gLnxnmB76PSWDYZo6kdJaAC+qep1K+RESf+fzXLHbxiArHzznCYRqjQVYDEgQzK2B5GQdJiBN7EXTN4Nmvxp3yxXw475fzPdqYqqGmv/N2C1lRlhYUeZs7ElNzX+GkZaPXTCnqdZlutyyEUEQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713455755; c=relaxed/simple;
-	bh=IkFYKStb5vVjFfojXz2L6X80mSnRJF2jFkHrNp/7Oz8=;
+	s=arc-20240116; t=1713455779; c=relaxed/simple;
+	bh=mDRjfBiPjMWn261FMr3b8oWZieXKRIxWEC729h8K7sg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uW0HnbePcTTWBjAl861fQjHho3RbOtAH4nK5SojIcKUb0sgV7rNVNPWd86E5Njl99BxSPrBJpyeaiXc726Onup4YnYmyGEFzSZrYIZntTduXwgetgbCEyKqnFGP/OYMZyBvInt3gKPetxdnHqDz839+5G0MZjP6UUjH0IvbjROo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E935F2F;
-	Thu, 18 Apr 2024 08:56:20 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8A5D3F64C;
-	Thu, 18 Apr 2024 08:55:49 -0700 (PDT)
-Date: Thu, 18 Apr 2024 17:55:43 +0200
-From: Beata Michalska <beata.michalska@arm.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com,
-	will@kernel.org, catalin.marinas@arm.com,
-	vincent.guittot@linaro.org, sumitg@nvidia.com,
-	yang@os.amperecomputing.com, lihuisong@huawei.com,
-	viresh.kumar@linaro.org
-Subject: Re: [PATCH v5 2/5] arm64: amu: Rule out potential use after free
-Message-ID: <ZiFCfwEvdJxg6Hth@arm.com>
-References: <20240417093848.1555462-1-beata.michalska@arm.com>
- <20240417093848.1555462-3-beata.michalska@arm.com>
- <20240418105052.zvkomz5yeayie4ph@bogus>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DL9j9K7udsxTPWnrKRLK8gV67cTON8r/P7Vi1FCvKO3OXc1rkpP5U6RWXCaSs0KsCUzGVm97TEwJxdVhtYRkLe1iAKWuHCAbowhHKYz3Z/a9N6zL2YSz/xM8Wt7P/bbY0nKuF65KZm+QJGXJSph+sZCUlAFPYasI2tKVCSGxXvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTxcocgG; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTxcocgG"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed01c63657so988369b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 08:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713455777; x=1714060577; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GnRoVABkMpTwTwJRlnT/WRT83zNRcjsjqktPei1RqZc=;
+        b=OTxcocgG+gc/7Br+1KJeAFOHbYwSFqLV0joIJBS/GUX2vZVMYpSetfcLwnw3XGMsu2
+         lrxWZUV6tXbNTpig1y1H1ukh81KJxdiDYqbEfPttYwRamQ/295ZedcoLg60ukF83F8BZ
+         QQNlmS18OpWYDJE+tc0o9eNdEXLfHW8/7uAtlBuMZwduvhTOdIeHVGwzYA5/p1uq4529
+         R9vU9fiAt9eIVmqTFCrLMeOtS32rf2EM8i7+aaRqUQFHPyKVdWD6jPvAWdBH198uSr7Z
+         sfscgwcENVmsEFNgWYOcOOHUV4ZiN9mYXDy7AtY+J9xygdVzdLQAao1ReP6c4W+LYJHt
+         eyUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713455777; x=1714060577;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GnRoVABkMpTwTwJRlnT/WRT83zNRcjsjqktPei1RqZc=;
+        b=OjmuevfwkrVI+valAm7iiQEIBy/pQHt5oJi7o9oncRnprFtFLITCpMMo7WTYsVxmtK
+         cMEMLosYeHY7lM08ANRefgiCVLRZa8kahPEpC5hiVZuspJX8ylLTm7L0ShDGzu7xQj7j
+         GKoXhdPDtJ1CSAtBuUvLUdPZU17zy4nsXXSaQ8PQWiAlvSQIbBILPfSTWNHor0Uoddoi
+         atIZLMHeMFZhbJ8AHJoJB2UiLtjYg1rz3ikPX8x2zmHNnq4vXiRWbGPdKIvbd/T69khr
+         tNsHaeQaTb++QZK9XwphVmDThVbCggz3Za4l8lUwrqpVclgjot97L81mNC8dujf5zEH9
+         09Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWA+KooQbGnVF/BJXNE0QefDxU1z+7BZ+tzmh6t4qOlXV/8s3PsHVwDkvnjhSmN6EuTvNgaBNCiwLcq9kjTLSQLpFaHMilTMKMKu3D+
+X-Gm-Message-State: AOJu0YzE5uSCz0d6/94kKxvDvj+xgExEj1/hiEjpFNRHgCcWpLZX2wSH
+	G+a1gK8vsViesgzt41E0Fb2r75ntybUVUjhWgXZQw76hMJCVIXvG
+X-Google-Smtp-Source: AGHT+IGXisnKjI71uANED1CP/KTHgH+Gcr2xad6cRyLgWvCNRvdOFFUmfzdZFprOYudDsZZZcmmqGA==
+X-Received: by 2002:a05:6a00:3d07:b0:6ed:41f3:cd06 with SMTP id lo7-20020a056a003d0700b006ed41f3cd06mr3912520pfb.7.1713455777244;
+        Thu, 18 Apr 2024 08:56:17 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id x12-20020a056a000bcc00b006e580678dfbsm1639967pfu.193.2024.04.18.08.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 08:56:16 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 18 Apr 2024 05:56:15 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: fix selection of wake_cpu in kick_pool()
+Message-ID: <ZiFCn2RLWhk7i4oB@slm.duckdns.org>
+References: <20240415053550.538722-1-svens@linux.ibm.com>
+ <Zh8EfxdVdiIj_27H@slm.duckdns.org>
+ <yt9dpluogfw9.fsf@linux.ibm.com>
+ <ZiB9rYBu-0qjsCbF@slm.duckdns.org>
+ <yt9djzkvfc6a.fsf@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,70 +72,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418105052.zvkomz5yeayie4ph@bogus>
+In-Reply-To: <yt9djzkvfc6a.fsf@linux.ibm.com>
 
-On Thu, Apr 18, 2024 at 11:50:52AM +0100, Sudeep Holla wrote:
-> On Wed, Apr 17, 2024 at 10:38:45AM +0100, Beata Michalska wrote:
-> > For the time being, the amu_fie_cpus cpumask is being exclusively used
-> > by the AMU-related internals of FIE support and is guaranteed to be
-> > valid on every access currently made. Still the mask is not being
-> > invalidated on one of the error handling code paths, which leaves
-> > a soft spot with potential risk of uaf for CPUMASK_OFFSTACK cases.
-> > To make things sound, set the cpumaks pointer explicitly to NULL upon
-> > failing to register the cpufreq notifier.
-> > Note that, due to the quirks of CPUMASK_OFFSTACK, this change needs to
-> > be wrapped with grim ifdefing (it would be better served by
-> > incorporating this into free_cpumask_var ...)
+On Thu, Apr 18, 2024 at 07:54:37AM +0200, Sven Schnelle wrote:
+> Tejun Heo <tj@kernel.org> writes:
+> 
+> > Hello,
 > >
-> 
-> Yes it doesn't look neat.
-> 
-> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > ---
-> >  arch/arm64/kernel/topology.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > On Wed, Apr 17, 2024 at 05:36:38PM +0200, Sven Schnelle wrote:
+> >> > This generally seems like a good idea but isn't this still racy? The CPU may
+> >> > go down between setting p->wake_cpu and wake_up_process().
+> >> 
+> >> Don't know without reading the source, but how does this code normally
+> >> protect against that?
 > >
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index 1a2c72f3e7f8..3c814a278534 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -244,8 +244,12 @@ static int __init init_amu_fie(void)
-> >
-> >  	ret = cpufreq_register_notifier(&init_amu_fie_notifier,
-> >  					CPUFREQ_POLICY_NOTIFIER);
-> > -	if (ret)
-> > +	if (ret) {
-> >  		free_cpumask_var(amu_fie_cpus);
-> > +#ifdef CONFIG_CPUMASK_OFFSTACK
-> > +		amu_fie_cpus = NULL;
-> > +#endif
-> > +	}
+> > Probably by wrapping determining the wake_cpu and the wake_up inside
+> > cpu_read_lock() section.
 > 
-> Instead of this #ifdeffery, I was wondering if we can actually do the
-> allocation in init_amu_fie_callback() the first time it gets called
-> checking if amu_fie_cpus is NULL. init_amu_fie_callback() must get called
-> only if the cpufreq_register_notifier() succeeds right ?
-> 
-Delayed allocation ... I guess this will do the trick.
-> Also I don't see anyone calling amu_fie_setup(), so where do you think
-> the possible use after free could occur for amu_fie_cpus. Just thinking
-> out loud to check if I missed anything.
->
-You haven't missed anything. Currently the uaf is purely theoretical as the code
-that relies on that mask will only be executed if we have succeeded to register
-the amu fie support: so far so good.
-This change is required for following patches, where that mask is being used to
-determine if given CPU has been setup with AMU counters, and as such there needs
-to be a safe way to validate it (at any time) by arch_freq_get_on_cpu and
-arch_cpu_idle_enter (patches 3/5 & 4/5): both will be called from outside the
-FIE.  Without this change, if cpufreq_register_notifier fails in init_amu_fie,
-we will have amu_fie_cpus pointing to released memory.
+> Thanks. Should i send a v2 and incorporate your additional changes or do
+> you want to do that?
 
-Hope that makes things more clear.
+Yes, please send a v2.
 
----
-BR
-Beata
-> --
-> Regards,
-> Sudeep
+Thanks.
+
+-- 
+tejun
