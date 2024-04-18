@@ -1,147 +1,125 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CD7171E77;
-	Thu, 18 Apr 2024 17:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126151649D1;
+	Thu, 18 Apr 2024 17:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713460091; cv=none; b=tyE+BxEckIaW2Oz9qEHmTCwRefdDmzGoTFgOzcv19tsTwYahBAZe6o/Ttv8aNhoYjpqHnvGkrnaKCCiAkOR4Vjz+PJpRXdQi3CpGn6Rm+ZMHo+p0Dv+lyAX1uNc/Ojgf7dRpH6CD7taE2nNhqt1QSdzea2lJnzy1ZRa6EJohttg=
+	t=1713460106; cv=none; b=bwMdVeTCFkrURnTAMyhARcDTAUeIbR4qE7P1xP5HbSrMpmfiWVvgVxqCOHQLegk53FUMS0/NzX9g9uQWqih5Nbek4vp4RW9i1/vHRbKPu/4M5bmW+zrun6H1bxorKfN+1PDMQHLsMIOU4XH5YJcMvLaKHiYx3YojfqG0MA+bSzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713460091; c=relaxed/simple;
-	bh=eCtKOdVAQNp2A4st0BhHo8jBLBWUqc2tUDSRWCS566Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YrB7EU8ymJ2ZVG31vjTHtMBiQPpHasP9BrJ+/GA5G0ajMwkJOKIa044Q2nXcIe5wCSlnpa0Uf2gP9TxqYZnb/yFVL5BtsmPsoBSxA5WLU/+jYicmeXXmt2F3gSfgv1XMyWnho5tW/VLtPlle5tf3SclRrDNzch49hFGMpBVob/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YgKZmvCL; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713460106; c=relaxed/simple;
+	bh=C5vAcsAGNtZ+hO945sBELUO2UK1K4xQnnyEnkFZJ+qw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3GIgpzPa5KInYgdn9lGhAG2Yr2mc6cktuwD3TscZuRVtdlDRj9fwfLbw4xYcY6oQYMQ+Zf4SwEUYJxDVlfpfJmFwK7cwRDOQJyeoSa4qg62OYuHVSfgkyIcxF7GAen+7zndQUFNmDMUztmIaFp/yVrq8wrMyhoeWEm/NGPe5Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bz11xcHY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgKZmvCL"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e857e571f3so9499015ad.0;
-        Thu, 18 Apr 2024 10:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713460089; x=1714064889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XW7920DVCiComrNM1OgXootScUMXHBonTRbYMTBe4yg=;
-        b=YgKZmvCLUpCYzVoJMGPf0sL2Y+S9VAvIK/O4yRWZN1BfRcbh+L6pf5Fd+iNzJN+BPC
-         B2MOYPNnIzkOxVE8O6BQVR8qPVgr7FUV0t/29D4jtsTTLuw6jeEPWFU7Ey1jyFDYQ2pP
-         wu/t3T8iQmsMXOcss1cjOWSvXMaGiWlnpycaIZsXYX5mNRTpBe2Hk+B5K9xs8qdchnrg
-         7gOWJFzlvUynSwOofYfRs1P7q2/aGZGslxm1q5ekPdhDjJ+w5qqEdOjQbC+3ajw5Ydcu
-         zwf/pz1N1lqgXtQ1DeqG4S0Fi6TM88QC16dlOJO6IqREk5kRqU2k8YDrH9BofLAliLBc
-         C+bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713460089; x=1714064889;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XW7920DVCiComrNM1OgXootScUMXHBonTRbYMTBe4yg=;
-        b=D38BfC+U5+avOHGuzTyBNtWqtPl2HoPRJyhig5HpaR41165wop1DeNgUCMJFgL2QgZ
-         wSitPL/vkWkDcGPsEdR6MRsd1GWej6P3/4WN58wQi/89GgaRWL63rBnZyepxgF5PQIOD
-         bFr2TUj2iSHj+7nynrmCq4M6kKaIy980vu+NT5PbGyqmZIY1FJbSCsfJo/ti9HAN3Tbp
-         ujys4DFY0atmhnYiHZ1sT65LHoqYItetleH86fFVtflKyU6cT5WeTHTof7sxZAzYy/HG
-         LqSwDeFYrjPvX0w8jo2T917buM/PCztBv+WJACuktxUxKz4WxqEWJpHCe7tovEvKoA1Y
-         crWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVu88L9ff9nVZSI01FNuyJvNyCdl0rQfMwukD/DGiLAMLDzypuPmT3co9kRbb+Jb2v6ZoCwdKI6vZtn/mw2UgdBjrHJpdzvzlXvTtj3/u5CdXzwfL33sb7V3JelxoaLeJtaqK64
-X-Gm-Message-State: AOJu0YwLr4GfeNzT+EPIVKIPZ0jcPkzfYj2boTF5p5xGQAt4FZB57q1C
-	ajHZw8imEOJjOnKQWKAZcZPiYg3GEylK8OY29G4tVECra6+2phP7
-X-Google-Smtp-Source: AGHT+IEgHtnZeEa6Rp4iVj/4BdN3MtRwG1GFyaoa1NlmerqjZSjhv0ADYR/1SGH1QNvq3sx8qa32Sg==
-X-Received: by 2002:a17:902:cecc:b0:1e2:9c3b:df8d with SMTP id d12-20020a170902cecc00b001e29c3bdf8dmr4846362plg.20.1713460088935;
-        Thu, 18 Apr 2024 10:08:08 -0700 (PDT)
-Received: from localhost.localdomain ([67.198.131.126])
-        by smtp.gmail.com with ESMTPSA id m10-20020a170902f20a00b001e8a90b8ac7sm616677plc.303.2024.04.18.10.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 10:08:08 -0700 (PDT)
-From: Yick Xie <yick.xie@gmail.com>
-To: willemdebruijn.kernel@gmail.com,
-	willemb@google.com
-Cc: netdev@vger.kernel.org,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH net v3] udp: preserve the connected status if only UDP cmsg
-Date: Fri, 19 Apr 2024 01:06:10 +0800
-Message-Id: <20240418170610.867084-1-yick.xie@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <6621259d66d0f_ec9b929478@willemb.c.googlers.com.notmuch>
-References: <6621259d66d0f_ec9b929478@willemb.c.googlers.com.notmuch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bz11xcHY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D78C113CC;
+	Thu, 18 Apr 2024 17:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713460105;
+	bh=C5vAcsAGNtZ+hO945sBELUO2UK1K4xQnnyEnkFZJ+qw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bz11xcHYvH+GyJZ+vzvq+kO1dE8St09ccv01fai5Zq8gQymCwG/2Zh5QzdcwAqXPB
+	 tUuHC1tEEvNHPAtteFDi6zzPDY092spDxa55Qmrgutmzn2PHCuUQQURerlAwdS7cS7
+	 +PohBuDwVYx9hHX3brKCUmj21b0nz+oUPcRq/WGal73wnCtryHXgHZMoTTuGMup6+i
+	 79SLHgOn3NbRjRXcA5nMlmfJM09/4mEe747UTOcf6JiHdxsUUUpmgTipFVLsMo/u2s
+	 DLBz4UDI5PYhpE2RoDcDZKH5E+PGFMUYnXD5BkzZUZybyHdFsB5d0jnd0v84HhMcXP
+	 LEaue6XAlRnSw==
+Date: Thu, 18 Apr 2024 22:38:21 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nishad Saraf <nishads@amd.com>, nishad.saraf@amd.com,
+	sonal.santan@amd.com, max.zhen@amd.com
+Subject: Re: [PATCH V10 1/1] dmaengine: amd: qdma: Add AMD QDMA driver
+Message-ID: <ZiFTheOik-2jsfXP@matsya>
+References: <1709675352-19564-1-git-send-email-lizhi.hou@amd.com>
+ <1709675352-19564-2-git-send-email-lizhi.hou@amd.com>
+ <ZhKd7CHXHB7FadY0@matsya>
+ <aa6a63c0-7cce-1f49-4ae5-3e5d93f98fe5@amd.com>
+ <ZiAA3C4wXaAHcJ1E@matsya>
+ <14402251-5731-1e52-e787-734d3eb3c801@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <14402251-5731-1e52-e787-734d3eb3c801@amd.com>
 
-If "udp_cmsg_send()" returned 0 (i.e. only UDP cmsg),
-"connected" should not be set to 0. Otherwise it stops
-the connected socket from using the cached route.
+On 17-04-24, 10:53, Lizhi Hou wrote:
+> 
+> On 4/17/24 10:03, Vinod Koul wrote:
+> > On 08-04-24, 11:06, Lizhi Hou wrote:
+> > 
+> > > > > +static void *qdma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
+> > > > > +				   size_t *payload_len, size_t *max_len)
+> > > > > +{
+> > > > > +	struct qdma_mm_vdesc *vdesc;
+> > > > > +
+> > > > > +	vdesc = container_of(tx, typeof(*vdesc), vdesc.tx);
+> > > > > +	if (payload_len)
+> > > > > +		*payload_len = sizeof(vdesc->dev_addr);
+> > > > > +	if (max_len)
+> > > > > +		*max_len = sizeof(vdesc->dev_addr);
+> > > > > +
+> > > > > +	return &vdesc->dev_addr;
+> > > > Can you describe what metadata is being used here for?
+> > > The metadata is the device address the dma request will transfer
+> > > 
+> > > data to / from.  Please see the example usage here:
+> > > 
+> > > https://github.com/houlz0507/XRT-1/blob/qdma_v1_usage/src/runtime_src/core/pcie/driver/linux/xocl/subdev/qdma.c#L311
+> > > 
+> > > Before dmaengine_submit(), it specifies the device address.
+> > Hmmm, why is the vaddr passed like this, why not use slave_config for
+> > this
+> > 
+> This is because the hardware is capable to process multiple vdesc at one
+> kick off.
+> 
+> For example, there are two pending vdesc: vd1 and vd2. If there is enough
+> free
+> 
+> space in hardware queue, the vd1 and vd2 can be put in queue, and do one
+> kick off
+> 
+> to transfer both vd1 and vd2.
+> 
+> The destination device address of vd1 and vd2 could be any valid device
+> address.
+> 
+> desc_metadata_ptr seems helpful for the per vdesc destination device
+> address.
+> 
+> 
+> If using slave_config, it needs to call dmaengine_slave_config() and
 
-Fixes: 2e8de8576343 ("udp: add gso segment cmsg")
-Signed-off-by: Yick Xie <yick.xie@gmail.com>
-Cc: stable@vger.kernel.org
----
-v3: Fix the IPV6 counterpart and revise the subject
-v2: Add Fixes tag
-v1: https://lore.kernel.org/netdev/20240414195213.106209-1-yick.xie@gmail.com/
----
- net/ipv4/udp.c | 5 +++--
- net/ipv6/udp.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+That would be the right thing to do...
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index c02bf011d4a6..420905be5f30 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1123,16 +1123,17 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- 	if (msg->msg_controllen) {
- 		err = udp_cmsg_send(sk, msg, &ipc.gso_size);
--		if (err > 0)
-+		if (err > 0) {
- 			err = ip_cmsg_send(sk, msg, &ipc,
- 					   sk->sk_family == AF_INET6);
-+			connected = 0;
-+		}
- 		if (unlikely(err < 0)) {
- 			kfree(ipc.opt);
- 			return err;
- 		}
- 		if (ipc.opt)
- 			free = 1;
--		connected = 0;
- 	}
- 	if (!ipc.opt) {
- 		struct ip_options_rcu *inet_opt;
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 8b1dd7f51249..1a4cccdd40c9 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1474,9 +1474,11 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		ipc6.opt = opt;
- 
- 		err = udp_cmsg_send(sk, msg, &ipc6.gso_size);
--		if (err > 0)
-+		if (err > 0) {
- 			err = ip6_datagram_send_ctl(sock_net(sk), sk, msg, fl6,
- 						    &ipc6);
-+			connected = false;
-+		}
- 		if (err < 0) {
- 			fl6_sock_release(flowlabel);
- 			return err;
-@@ -1488,7 +1490,6 @@ int udpv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 		}
- 		if (!(opt->opt_nflen|opt->opt_flen))
- 			opt = NULL;
--		connected = false;
- 	}
- 	if (!opt) {
- 		opt = txopt_get(np);
+- set parameters and call dmaengine_slave_config()
+- prep transfer for vd1 dmaengine_prep_slave_sg()
+- set parameters and call dmaengine_slave_config()
+- prep transfer for vd2 dmaengine_prep_slave_sg()
+- submit vd1
+- submit vd2
+- issue_pending
+        - you see you can issue both as you have space, so do that
+
+This should be done always to maximize the dmaengine thoroughput
+
+> 
+> dmaengine_prep_slave_sg() with a lock protection. Is this what you would
+> recommend?
+> 
+> 
+> Thanks,
+> 
+> Lizhi
+
 -- 
-2.34.1
-
+~Vinod
