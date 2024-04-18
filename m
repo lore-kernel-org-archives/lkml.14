@@ -1,140 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD3916EBFB;
-	Thu, 18 Apr 2024 15:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED27B16EBE1;
+	Thu, 18 Apr 2024 15:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713455487; cv=none; b=mvNMQK5ZJEDSmfTVZZgtRMEnac2XM8Gt2+7VE+a0WTOBhuqGIn4Q64KpMuwsEmaGWMoKD+J751u4QgVpB4yrm2H0sJp/dY8+0vBAp1TUtk4Nnyr+nF3LfaEp8yggg3sdIxxnxf/wCQjnPuDE7mRqgbymCs1ImU02WoknCHOGlJg=
+	t=1713455530; cv=none; b=AZeq/3Q2kaOFQGqO6I8eKee60d3NaQwLEt88GWgICcRIvSA1Sl/BYnRjv7zh3RtsTy5iESyeYujaOzIuHKEr4cxGIUVSw7+rnQjBWHtEfbUnK3l0Au2XOuz+Opraw8Gz/oS3wBPi0IvTps41f2yAh8t3l40WLVHQ6f2jSCappyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713455487; c=relaxed/simple;
-	bh=2gdhwgFNM0LV5/DhpOw5l/Tz9tLKHivDA52KLsPKnfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oXdlT4dU4DTpvGkiSLZHwtt2/UaXjnY3Qa4C1miT3gzxgZNrKB5lUG/YRw4b7y30hLmhSMEvCxYoz0IHV+D+57eXuyWqI7IeXVYG1r33mkQjqqmqr7V/24PoWPRzkBVWmpWKyzRih7tuMnh6g19Ymrzx09rXvgBbD/qTgldnDsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lmBi38Yp; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713455530; c=relaxed/simple;
+	bh=wFnbcWy5gk5sXW+5zvt0NargWqewhsVtKQ7Weekss4g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L39thU4zx6BpflSR+bMJd+DaLAI6IYpSlDPaZMbsAfQpLek0Me+2fVZTYmTsKB56KxkHm/L4LJjdchtZ3CXwUADfxuJ57x0WNP/+FfB/bPh+BxrTJ0IFISe6UWAT6CKzhw+W/vYodpIAOTYwSBumjZRSi83HPCsBNKX0ZJ/AOjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQWwmmPH; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lmBi38Yp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713455486; x=1744991486;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2gdhwgFNM0LV5/DhpOw5l/Tz9tLKHivDA52KLsPKnfE=;
-  b=lmBi38YpskEIOXaUS2N3oUXcw+ifZ00wOZsyV11mjQgx0UxzaVgx9HcM
-   TtfF4nTp/h9rl5L+ggBA07hp+t6wfwx+FUDznjQgMCj9t/nUssNPj1ZPV
-   MH2Qo0RrWxEj3I+iuUAV6rzc/y8ESNMTx+CLahMpIih4Gs2COM1GSRarj
-   yTYjgVZKGVp2ix3X3Zn0oGGx/d640SzqtR8vVAfNGURWMEYLQ7fSZXtH/
-   3gAY3vkKt2eUKcYo1lJxs+DPRxLwebQmkpHMKOt9ojGPgzkPd6cBcx3sV
-   E58YA2atFDECPQXQOwurgkb/U2LrpSWXD7FC1fm11Mzg97NKeQevUZkVk
-   A==;
-X-CSE-ConnectionGUID: caaG8fpJQ+CKsopAC0AwQg==
-X-CSE-MsgGUID: fKRZ4x+ORjOzhIKgSMx/iQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12849198"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="12849198"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 08:51:26 -0700
-X-CSE-ConnectionGUID: kV+DTLX5TM2e1mcBMw+bfg==
-X-CSE-MsgGUID: lVQtMgJXRa2VAYNdoCWVFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="27606891"
-Received: from rswoodsx-mobl.amr.corp.intel.com (HELO [10.213.167.100]) ([10.213.167.100])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 08:51:24 -0700
-Message-ID: <848bcc94-3a31-4fb4-81bc-bd3f138e12f6@linux.intel.com>
-Date: Thu, 18 Apr 2024 08:24:10 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQWwmmPH"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-416a8ec0239so6408355e9.0;
+        Thu, 18 Apr 2024 08:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713455526; x=1714060326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPBZ9ExHuwu+bu/mp1K2y+evtVoXz/i7anIOf+mTPDM=;
+        b=gQWwmmPH1uWnTyO1OWY3UhpPR/xTuH864OmjPShFuK6zQ8OADlA4rvnDcQFTE2G4KD
+         nvno1Z/mCEDoYsiUlcBYJFfX+leELAcHUKEz/X4Cl1ezwPQ4NSKBINQYAdLow8IfjIaT
+         Rg0g0yzlp5U/VxpS0Xfox6sArLeNDvia/ft8dgLnZAcw/Jdmam/uWV+u0Ad45TjcpBwf
+         DsIOgDtxRvsYDy6bwWojPmZ1jM/YYOAFzvmDAMAaMRZuFHjnofh4livsJ+aWEg/0R7ZA
+         QwaZI9ImQebR4SCFYKVKZT8fHrabZZSe3uGuqi0S9GFgTokklFeOPn1SYXDwVl24AlUV
+         uhzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713455526; x=1714060326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WPBZ9ExHuwu+bu/mp1K2y+evtVoXz/i7anIOf+mTPDM=;
+        b=AK8FfJUe1wF2u/nBXruwVvqIVeeAptc41RmkBFktwFHU2pmYpgOU6PJkov7lJt4LlU
+         RcHrXxShinzqo034ReX9oFGWS6sGdzUu+zBMfqQ0eUdCcKY0fgwMtP2glHdMVHOtfh7q
+         4HiMah0PU0b/C3/KhVol+Yw1ohhx9WFE2Z8JoP8Mu/9o4bYC8GV5PFqt0K/4f3LuHfp9
+         Va4oRQUH/qbcOttmQW9apSul/btyuIrIIE3h2jJXWjhcpjQejhY3WEEyF6CXHbmS2PLK
+         42oYks0PAokfn74Jk3SD1XSNNKLO/t3WaGvvBMwLV1ET8XV+4ANrzPv5YK2EdsB0Iacr
+         kR+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWhkSiwWU4PbQRQR8ReMYy+7ckSoMUQYOyZr6E3Rc9DtDG10PLKhcbB4+ASZUpLkegEfSMOREXSHj1ysLlgXDco7Chb2EPCi8KvL6i0rmxiR0zK0qVUFj2j3T+i25zuxlsEs78EFJyOFcJpL1lzc3Url/vdQq6Z1k0gAi11aeY=
+X-Gm-Message-State: AOJu0Yy3dhayejxhNlOrk3be717OU14ZPUYw6bn87l4hYMa4SIZxILEe
+	xt4Ew5XvGBtSEaFr7dh4ag9S76pZmqFRS0TonLTb46sl6DA3NYuP
+X-Google-Smtp-Source: AGHT+IFSm2+nTTTBh/s5wnJ18wP/8/m9M0ecQsavX8QpbNXPEQlYhBTSMGaOPCVh/XJ7vaSK6GL7IQ==
+X-Received: by 2002:a05:600c:4e09:b0:418:f219:6e22 with SMTP id b9-20020a05600c4e0900b00418f2196e22mr1182984wmq.11.1713455526019;
+        Thu, 18 Apr 2024 08:52:06 -0700 (PDT)
+Received: from vitor-nb.. ([2001:8a0:e622:f700:cffe:40a8:31d4:2e61])
+        by smtp.gmail.com with ESMTPSA id o30-20020adfa11e000000b00341b7d5054bsm2168202wro.72.2024.04.18.08.52.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 08:52:05 -0700 (PDT)
+From: Vitor Soares <ivitro@gmail.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Vitor Soares <vitor.soares@toradex.com>,
+	linux-pm@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ivitro@gmail.com,
+	stable@vger.kernel.org,
+	Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v1] pmdomain: imx8m-blk-ctrl: fix suspend/resume order
+Date: Thu, 18 Apr 2024 16:51:51 +0100
+Message-Id: <20240418155151.355133-1-ivitro@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: hda: intel-dsp-config: Fix Huawei Matebook D14
- NBLB-WAX9N quirk detection
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Brady Norander <bradynorander@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Mark Brown <broonie@kernel.org>, Mark Hasemeyer <markhas@chromium.org>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
- stable@vger.kernel.org
-References: <5e6ba980c0738199589749b68b83f2d730512107.1713430105.git.mchehab@kernel.org>
- <20240418110453.10efcb60@sal.lan>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20240418110453.10efcb60@sal.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Vitor Soares <vitor.soares@toradex.com>
 
+During the probe, the genpd power_dev is added to the dpm_list after
+blk_ctrl due to its parent/child relationship. Making the blk_ctrl
+suspend after and resume before the genpd power_dev.
 
-On 4/18/24 05:04, Mauro Carvalho Chehab wrote:
-> Em Thu, 18 Apr 2024 09:48:27 +0100
-> Mauro Carvalho Chehab <mchehab@kernel.org> escreveu:
-> 
->> Newer Matebook D14 model comes with essx8336 and supports SOF,
->> but the initial models use the legacy driver, with a Realtek ALC 256
->> AC97 chip on it.
->>
->> The BIOS seems to be prepared to be used by both models, so
->> it contains an entry for ESSX8336 on its DSDT table.
->>
->> Add a quirk, as otherwise dspconfig driver will try to load
->> SOF, causing audio probe to fail.
->>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> 
-> Worth to mention that I opened an issue on Github about that:
-> 
-> https://github.com/thesofproject/linux/issues/4934
-> 
-> I added there the ACPI DSDT table as a reference.
+As a consequence, the system hangs when resuming the VPU due to the
+power domain dependency.
 
-This sounds like an 'easy enough' fix, but I don't have a burning desire
-to start adding quirks of this nature. To be clear, the entire support
-of the ES8336 is an absolute nightmare that I've stopped looking at
-completely given the lack of support of vendor/OEMs.
+To ensure the proper suspend/resume order, add a device link betweem
+blk_ctrl and genpd power_dev. It guarantees genpd power_dev is suspended
+after and resumed before blk-ctrl.
 
-In this case, the ACPI table is completely wrong, we should try to
-'mark' the ES8336 device as 'not present' or detect the presence of HDaudio.
+Cc: <stable@vger.kernel.org>
+Closes: https://lore.kernel.org/all/fccbb040330a706a4f7b34875db1d896a0bf81c8.camel@gmail.com/
+Link: https://lore.kernel.org/all/20240409085802.290439-1-ivitro@gmail.com/
+Fixes: 2684ac05a8c4 ("soc: imx: add i.MX8M blk-ctrl driver")
+Suggested-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
+---
 
-Andy, what do you think and what would be your recommendation?
+This is a new patch, but is a follow-up of:
+https://lore.kernel.org/all/20240409085802.290439-1-ivitro@gmail.com/
 
->> ---
->>  sound/hda/intel-dsp-config.c | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/sound/hda/intel-dsp-config.c b/sound/hda/intel-dsp-config.c
->> index 6a384b922e4f..8e728f0585dd 100644
->> --- a/sound/hda/intel-dsp-config.c
->> +++ b/sound/hda/intel-dsp-config.c
->> @@ -46,6 +46,22 @@ static const struct snd_soc_acpi_codecs __maybe_unused essx_83x6 = {
->>   * - the first successful match will win
->>   */
->>  static const struct config_entry config_table[] = {
->> +	/* Quirks */
->> +	{
->> +		.flags = 0,	/* Model uses AC97 with Realtek ALC 256 */
->> +		.device = PCI_DEVICE_ID_INTEL_HDA_CML_LP,
->> +		.dmi_table = (const struct dmi_system_id []) {
->> +			{
->> +				.ident = "Huawei NBLB-WAX9N",
->> +				.matches = {
->> +					DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
->> +					DMI_MATCH(DMI_PRODUCT_NAME, "NBLB-WAX9N"),
->> +				}
->> +			},
->> +			{}
->> +		}
->> +	},
->> +
->>  /* Merrifield */
->>  #if IS_ENABLED(CONFIG_SND_SOC_SOF_MERRIFIELD)
->>  	{
+As suggested by Lucas, we are addressing this PM issue in the imx8m-blk-ctrl
+driver instead of in the imx8mm.dtsi.
+
+ drivers/pmdomain/imx/imx8m-blk-ctrl.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/pmdomain/imx/imx8m-blk-ctrl.c b/drivers/pmdomain/imx/imx8m-blk-ctrl.c
+index ca942d7929c2..cd0d2296080d 100644
+--- a/drivers/pmdomain/imx/imx8m-blk-ctrl.c
++++ b/drivers/pmdomain/imx/imx8m-blk-ctrl.c
+@@ -283,6 +283,20 @@ static int imx8m_blk_ctrl_probe(struct platform_device *pdev)
+ 			goto cleanup_pds;
+ 		}
+ 
++		/*
++		 * Enforce suspend/resume ordering by making genpd power_dev a
++		 * provider of blk-ctrl. Genpd power_dev is suspended after and
++		 * resumed before blk-ctrl.
++		 */
++		if (!device_link_add(dev, domain->power_dev, DL_FLAG_STATELESS)) {
++			ret = -EINVAL;
++			dev_err_probe(dev, ret,
++				      "failed to link to %s\n", data->name);
++			pm_genpd_remove(&domain->genpd);
++			dev_pm_domain_detach(domain->power_dev, true);
++			goto cleanup_pds;
++		}
++
+ 		/*
+ 		 * We use runtime PM to trigger power on/off of the upstream GPC
+ 		 * domain, as a strict hierarchical parent/child power domain
+@@ -324,6 +338,7 @@ static int imx8m_blk_ctrl_probe(struct platform_device *pdev)
+ 	of_genpd_del_provider(dev->of_node);
+ cleanup_pds:
+ 	for (i--; i >= 0; i--) {
++		device_link_remove(dev, bc->domains[i].power_dev);
+ 		pm_genpd_remove(&bc->domains[i].genpd);
+ 		dev_pm_domain_detach(bc->domains[i].power_dev, true);
+ 	}
+@@ -343,6 +358,7 @@ static void imx8m_blk_ctrl_remove(struct platform_device *pdev)
+ 	for (i = 0; bc->onecell_data.num_domains; i++) {
+ 		struct imx8m_blk_ctrl_domain *domain = &bc->domains[i];
+ 
++		device_link_remove(&pdev->dev, domain->power_dev);
+ 		pm_genpd_remove(&domain->genpd);
+ 		dev_pm_domain_detach(domain->power_dev, true);
+ 	}
+-- 
+2.34.1
+
