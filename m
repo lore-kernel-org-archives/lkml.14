@@ -1,167 +1,117 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE1F64CE1;
-	Fri, 19 Apr 2024 08:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C86F4CE05;
+	Fri, 19 Apr 2024 08:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713516073; cv=none; b=eDK20UYlKF0tcG9FkUcadROW6rUlQr60DL1m6jU9vj3JNjhpPxYjyHb6fKEavxKEPV/5CXvPmW1V9zp2FsoIzeMoHtARx/yGGd0ZDfPaljemoDeSHZJou+duUT/MThe9TLXop8CDYR5Jc1q+wkOOl9fDChhBaLvWAlgO5ZoWoVw=
+	t=1713516152; cv=none; b=itYnxLGmEFqAQq0R1OTpC6VxpASnXIvfUlrnuoi3ZX0fBYujiQuIJ/27efGY698OPIZtwSJoETiXPD1KrE5Sx9CYLdHPocxAS0LkOAPdCraIhZITlWhW+72JHh+5nHkeFUK21YTemotTeIWhArwdHY1dYrrlr3/NytrLueNqX7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713516073; c=relaxed/simple;
-	bh=hK+zHThyGFcfWzPL3idL5aMhKZJVVEbhcpP3hC1vq/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C/SV5Kh9vmsIGZ78WC04Dn8DdTQtbwJX1jqjJLWb4iefwTtWP3lu4MdCncNjO/91CDf8onbWH18yRnHJA8XtWJL6sCUedH4FdLncebFQgpZ62Q3J6dSfnsYampuKdstSYWf22AZxM1EPGRldcBxFJhRsDvZnCK4Pd7NiJyLfXI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YV8yRRe3; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1713516152; c=relaxed/simple;
+	bh=UyrmLszsuXov/+2qgDCcmG8ktxC+PNXx0eC/GFzlhgA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fgJwaLp04A9vupL0T2ZfZk+OgLcZIisHTZq025mERgujQGcyr0o0lOyEQh5SdgYshGF8NP4iraO1etB9dqJrFJgATy0DTmBLHxdBKl1a9/GLFk8HXG4clGTBfd0Dxs6uXP1a+W49HekHHDdkovym07SKeR+PwR8MSedTRdN6Z4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=L9oiBrfW; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YV8yRRe3"
-Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id CEBACC1D73;
-	Fri, 19 Apr 2024 08:35:12 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2BFA61C0003;
-	Fri, 19 Apr 2024 08:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713515704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDcNBpZCn4u/klnUUSyHjUy9T5QmNnFvR9cDhj3/AZ0=;
-	b=YV8yRRe31MkSG24UF7TlYzv7vP576LYt8bu0rkgH/PkH73oh+xD9QtTIS1Rqk006jTLIq5
-	2RPGaJQfbaSUHpg/z6GP33vUunYxi8twVVxHyd3wBuGL2/pogFvlFVNBvlVefENWAABVlS
-	FurD7AjVAIZmYWFrAiQRE8XIWBCxWyO7RCSPgNluz8YSziINaF7IhPpRyZCXXo0fOmxAw1
-	QeSRtR/2QGR0gt8nq5aAQ7L0feJQ3ScyoTehy1sD5aDtV4GLDIXOmdEn1SIgstuH6sB7V2
-	T6p3b96kKpmDttwEfRHTPAROgd71j+PR5yTOGZICtwXVCj6cI6o0TiD1IdzLsw==
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Jeff LaBundy <jeff@labundy.com>
-Cc: catalin.popescu@leica-geosystems.com,
-	mark.satterthwaite@touchnetix.com,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	bsp-development.geo@leica-geosystems.com,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v10 2/3] dt-bindings: input: Add TouchNetix axiom touchscreen
-Date: Fri, 19 Apr 2024 10:33:40 +0200
-Message-ID: <20240419083342.61199-3-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240419083342.61199-1-kamel.bouhara@bootlin.com>
-References: <20240419083342.61199-1-kamel.bouhara@bootlin.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="L9oiBrfW"
+X-UUID: bf8052c4fe2811eeb8927bc1f75efef4-20240419
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=eAv7xsk4dMZg8O12CSjg7d5I237JEwcCQAw88TJ7XB8=;
+	b=L9oiBrfWmhDUFUxUvUlia7Ib0BRO3e68m05gBqsFlZC4kCKeRFhQqK5LSYvsgDYabp9uLMMNafYdb87c70clCWeFm3fOEd7dQAiEVpZCgMaiME/A6yMefDjFRLHEmk5bPYnDwW1+g/Ibu8I9CIbn+29CIAg7rpQ9fCu6jl2VI2s=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:feac5a27-ab46-4ab4-a8de-e708b384caf3,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:8ef71bfb-ed05-4274-9204-014369d201e8,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: bf8052c4fe2811eeb8927bc1f75efef4-20240419
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+	(envelope-from <olivia.wen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 58277498; Fri, 19 Apr 2024 16:42:26 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 19 Apr 2024 16:42:23 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 19 Apr 2024 16:42:23 +0800
+From: Olivia Wen <olivia.wen@mediatek.com>
+To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Tinghan Shen" <tinghan.shen@mediatek.com>,
+	<linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<jason-ch.chen@mediatek.com>, <yaya.chang@mediatek.com>,
+	<teddy.chen@mediatek.com>, <olivia.wen@mediatek.com>
+Subject: [PATCH v2 1/2] dt-bindings: remoteproc: mediatek: Support MT8188 dual-core SCP
+Date: Fri, 19 Apr 2024 16:42:10 +0800
+Message-ID: <20240419084211.31901-2-olivia.wen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240419084211.31901-1-olivia.wen@mediatek.com>
+References: <20240419084211.31901-1-olivia.wen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: kamel.bouhara@bootlin.com
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--1.679300-8.000000
+X-TMASE-MatchedRID: UHRyBqsVSvp0BEBFOTiHn1QQ0EgzIoPRmyiLZetSf8mfop0ytGwvXiq2
+	rl3dzGQ1Km7bFwpLlIgo10iBMPAt5xGQBR4wbgQDfi9EVwd+Ihh6foJpzBXqTqbAGcRZbBzXfVV
+	OfiWwENdvy5usIFo8Mc5bvLLRwMDNndCRkxk0cZt0BNB20+SxH7f8mJY57oZddJaBDYald1lvF9
+	+X2GEIHA==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--1.679300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: AA43DF781759B6C48867241917EB748AAE5CC2A08526FD2F677B4151BB1D102E2000:8
+X-MTK: N
 
-Add the TouchNetix axiom I2C touchscreen device tree bindings
-documentation.
+From: "olivia.wen" <olivia.wen@mediatek.com>
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Under different applications, the MT8188 SCP can be used as single-core
+or dual-core.
+
+Signed-off-by: olivia.wen <olivia.wen@mediatek.com>
 ---
- .../input/touchscreen/touchnetix,ax54a.yaml   | 62 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
+ Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-new file mode 100644
-index 000000000000..66229a4d6f15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/touchnetix,ax54a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TouchNetix Axiom series touchscreen controller
-+
-+maintainers:
-+  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-+
-+allOf:
-+  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-+  - $ref: /schemas/input/input.yaml#
-+
-+properties:
-+  compatible:
-+    const: touchnetix,ax54a
-+
-+  reg:
-+    const: 0x66
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  vdda-supply:
-+    description: Analog power supply regulator on VDDA pin
-+
-+  vddi-supply:
-+    description: I/O power supply regulator on VDDI pin
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdda-supply
-+  - vddi-supply
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      touchscreen@66 {
-+        compatible = "touchnetix,ax54a";
-+        reg = <0x66>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+        vdda-supply = <&vdda_reg>;
-+        vddi-supply = <&vddi_reg>;
-+        poll-interval = <20>;
-+      };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7c121493f43d..3c59cb760071 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22419,6 +22419,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/toshiba-wmi.c
- 
-+TOUCHNETIX AXIOM I2C TOUCHSCREEN DRIVER
-+M:	Kamel Bouhara <kamel.bouhara@bootlin.com>
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/input/touchscreen/touchnetix,ax54a.yaml
-+
- TPM DEVICE DRIVER
- M:	Peter Huewe <peterhuewe@gmx.de>
- M:	Jarkko Sakkinen <jarkko@kernel.org>
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+index 507f98f..c5dc3c2 100644
+--- a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+@@ -19,6 +19,7 @@ properties:
+       - mediatek,mt8183-scp
+       - mediatek,mt8186-scp
+       - mediatek,mt8188-scp
++      - mediatek,mt8188-scp-dual
+       - mediatek,mt8192-scp
+       - mediatek,mt8195-scp
+       - mediatek,mt8195-scp-dual
+@@ -194,6 +195,7 @@ allOf:
+       properties:
+         compatible:
+           enum:
++            - mediatek,mt8188-scp-dual
+             - mediatek,mt8195-scp-dual
+     then:
+       properties:
 -- 
-2.25.1
+2.6.4
 
