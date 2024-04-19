@@ -1,167 +1,277 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2074.outbound.protection.outlook.com [40.107.8.74])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BC3DF62;
-	Fri, 19 Apr 2024 03:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713497403; cv=fail; b=VAVO1IXIPSgK4Neu34aPQ38RMzk5jEdH9eY0lcbObX3E0Fs/Zi/HZXZqQBxJKk25V9TF2Vh2BKA1iIL27zkpqjMeonKg85qCKmQNU6vZmvow+XVRHddjJfu5z3Hzk0/tU+sw/Z1G5ulCVbNsOpc0/FUYaQbYkF23t/prEwXXWZU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713497403; c=relaxed/simple;
-	bh=XuzHMzG6XAn3GvDIZJ0vCGIZ6eLXQfvlrOXBMMAlHOs=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=pBXrtCDxhi8p8Ggk8DrItfFnbT3ovYvi6ejIV5S9luv2Towyohjy648NSrwLNL77+5ttNOKWJVy2E7ndAxv0RzTJnHTPRL7JUsbogo+SSEi7hRP02ZnT2gN5053Ge13IC/GJHJ8PVCQxLl1Uzln6Uiae3r5WupzG4qGEM8Gah/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=LrMBUJZK; arc=fail smtp.client-ip=40.107.8.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="LrMBUJZK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VZ4El+MJ+hLABJt6R2g+CcwgrTpylO/BqcvhEnGG3sqnO9z1I92BAuyTn6jf3dzfSnbPsjNL1Ph3IBrpxhbt/m7oNvbJWyY77fL/xSQnvfIlSfUXsNFGKyL9G9EXV3qyeNi//43vW6BtKVLd+iLCUD4UVaYNHtZg1qXytZbokPY5cNrWax0yOqVxAq0swFGxSmkX/12wihkCgq5qwf4Nfq36MkEz3pOdG0ByZ9ALjejgEZmrmJP2wMc59d/Q7n7/eqDSqpWD6VgetnRi+P+Eh7rz9ETHMcMSeDsV5y71vCcpt0RIkzD+DbY5DZqQvs9teW7CKcQYs9O1QTD/dtMWsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=40VyR+bbbDdzXJDNuAMSQzwuFFzejMNjxD9W5yvxzbs=;
- b=aNdAcqqXMMv7bQJvoqBrg294mKA2mxDNxtUwAvAdTvbsVdF5ehzVh/wmY8JnmhUUFVryTfGCOmixowyPHxC7B0X2ltbd0OgRoDhrauQX6dqRxK1XkhN0L3A2KSIzr2RGWuDrnKC8NQiXegRBpRROz+h4tIxStxhm96tnNadU9O9Fub/FUmC4uRpKqe+6bbp64hxNc0mIO8mXFk7NVHZRPM7aq3hDv7SOch0w9qqiEPh67K8E5FBB9b0ZHgRLcFg/+6z9XfHtHVihJOm/KJ6X8UFsehg+jMYiT1E6bEkRY6jZgjIj0b9hj6m0QGg0/skifr9toeb5w1j+Gx1Qc0CGLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=40VyR+bbbDdzXJDNuAMSQzwuFFzejMNjxD9W5yvxzbs=;
- b=LrMBUJZKn+BJ4SRQiaBBo2dhfqmT4HJu9dysWzc4WyFqlQGXsCxBIiGcXyUEvMkkbIYT98LfVFhVo3XBz9AzSrAngaDBTRnlrxN3ClKVStzvbFaIwikG8JJIe13O9fVRnaFilnlWvAJY1tseVd+TLDSIA4EQMsP/dQrpL5wMRGA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VE1PR04MB7358.eurprd04.prod.outlook.com (2603:10a6:800:1a5::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
- 2024 03:29:58 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7452.049; Fri, 19 Apr 2024
- 03:29:58 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Fri, 19 Apr 2024 11:37:07 +0800
-Subject: [PATCH v2 12/12] arm64: defconfig: build in OCOTP ELE
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240419-imx93-dts-4-13-v2-12-9076e1d7d399@nxp.com>
-References: <20240419-imx93-dts-4-13-v2-0-9076e1d7d399@nxp.com>
-In-Reply-To: <20240419-imx93-dts-4-13-v2-0-9076e1d7d399@nxp.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Peng Fan <peng.fan@nxp.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713497841; l=833;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=95/or8YNovtRYwaReL52ZgU1R6CLxV7qrF0J7lepSt8=;
- b=eCcGqBFC/eh9x3iqIH/GhNCtxuzA8ZkFSUyvEnfsKEnCUkwBziO/rlUI5+p7zbH85PdO02Shc
- N9Gto8uXpcmCYsn8gAon4P2+ml3nVusGY/Lh0gpDNLcuZwNNGYfL4rn
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SI2PR02CA0025.apcprd02.prod.outlook.com
- (2603:1096:4:195::21) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2514E6107
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 03:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713497574; cv=none; b=PVf9+JYduBsOjNLifmC3sYrzjEtededUzYX/b3f+MEdwVIjVgQEGP6li+0UtNeJQtcieplN4zXth+64YOc8s78AVMQrJlPvssufJNSbz/u2rpPxsU76eyrXgg439SE1nmKdPO29lTI4dVQOsZdVidLO+i0LYt6un4ctmdmagz24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713497574; c=relaxed/simple;
+	bh=j+w1JdCsgcolRrZvw5BmG6lB2lEdHyVr4MYijlN2HH4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F0Yx1NIBdP8HkU5RYYj4kVV3F6tZb42w5Zim2Lllr0oQ3VpH5ziLnGULl+20TSYVVa9ae0Xkpt5zepxv+jKs8hgTchfAw1DR9I8AH2Rr+zW3giskVKNo0/K1Nopnuo0/FTPCmPvN2cDhmXn12cmnvimHT0dsp8jk+zqr14x0x2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VLKsQ4HXDz1xv0l;
+	Fri, 19 Apr 2024 11:30:18 +0800 (CST)
+Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
+	by mail.maildlp.com (Postfix) with ESMTPS id BD084140136;
+	Fri, 19 Apr 2024 11:32:43 +0800 (CST)
+Received: from [10.174.179.160] (10.174.179.160) by
+ kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 11:32:42 +0800
+Message-ID: <c1c79eb5-4d48-40e5-6f17-f8bc42f2d274@huawei.com>
+Date: Fri, 19 Apr 2024 11:32:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|VE1PR04MB7358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c521ffa-4b8f-49f1-0ddb-08dc6020fd18
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	I84SQXUFQlcJmdGsV98LdTCUWoQJG0WSDP0oLH7vchohlWVuUpfCiGa5L1s8nLLCC5HW2lDwFB5yLrtmB/jYJuryPhtCIj5W17gwQAAp63d5lM0zwXRdre2ONOCMenUpEy3xBSt83NjUBSjCGYZxcOWubha+R97Pmhry7jwfGCfxhOyl9hrPW93wsLBwmsQH9uF8xr5oVhzm9c6n5uJAniLatkHq3QbPEd80mur/ICsG737BqUpbsCjWk2o4K431MtvLWkS01dIA8DDh5bfBul/jeECYmXwQuaH1rP4NHKebVIe4+kNPrBwbYoDWLtaVOfqKl5olj8//YcFmG0/pYriYncutjhHgsWK3315OJ4cJA9hx4oZkfCR8I74vTOLJliwmaGGnOLO1T1+5gtUJ3+r9kwVJe9X0UXXZ2Ak/OWWWEbPmSZwbnM/tP8oaCbsHB8ruTDPLR+RMLAkHM3hyM9ApmjqH5RZxhD1pz0GM57fs3NKZezsol8yfQhSnWFCHCEnTiB983WjI1DYBgGVcaXWLiVl90U1ZJQg99F8fUDK7/HmpMKZq6mQGfHjK9c5q/mzfY64FbFe4JIaAt+uCujSDdDlPoYHNj9C0PShxa26+KLDYYzigRBM8zOjZMvv3JT9EA15O7yPcSjxbvE+UMXn689UUHOvR+g324Xdh/uS0R63uihfxpZIt+bCNmhiXL1DreTuW3Uy5K6PXQJcBPnCL+AJDBMetcLeccUOYSiA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OFgyTENFWVdsVEJEcm1vb09ManJUeHprdDVjWVAzSFgxcjBvOHNzalBiTHp1?=
- =?utf-8?B?T0JYR0dCTVJBT21RcDJsVXZESFRzVjE5K1dwNnM0c2JBMXMzRml4UEJhb3RK?=
- =?utf-8?B?bHpwS08xeFNZYXBqTGJzYjNrUU5INDArb3FKemZoZHJKdU1LSWwzVGQrb2tD?=
- =?utf-8?B?MzQzRmpRSUJsSExzSjBPdG81Z1ViL3hWMWZzMzRlamFucGc3WFZaV0pwamxQ?=
- =?utf-8?B?bk1CTGlVNHhQSUhPWWdmQ3M0cUlPKzJkbVNiUTZSVThpS1pCd2dtV0NqNVpQ?=
- =?utf-8?B?TGZ4L0kvNVFNQkE4N0UzalBSTXJUeFR2WEROZWhwci9GR1dHSWxYYVdPbzhN?=
- =?utf-8?B?S0FTYjZCejZKaDdPLzBVSnh5RTZZUW5mdkhsU3puR3ZDZmxKTC9HSFlORkFw?=
- =?utf-8?B?SHdnTGdJVmJOQU5jL250TGlLSVlzblhxOUFkTEdiU3FsQ0tlRXJnYU9JdzdL?=
- =?utf-8?B?UXM1NC9udWxKUytXbHFVM1ZzbjVGYm9lQ2NwYTZoaUFkTjJ0VGxWWDBtcFZp?=
- =?utf-8?B?REQwUm1KOGRHWCtwMTFGeVRha3lPanIrRktzZWhuRWo2R0RmOUgwaEd6VDdB?=
- =?utf-8?B?RzYvM1FSQThoL0I0M3F2anlRUktxVTNYOUYvTGNaQkxReDJmSTN5ZkU0Wk1X?=
- =?utf-8?B?Uk04VGQxc1VuOFBhQ1B5cm5wQVJLK0RDZXd4NTNtZXJsaHQxb0FBOE1LYW43?=
- =?utf-8?B?S05VVGhUc3k5UmVjMVhwL2NYd0ZXc1Q5cDJOd2piR0NETXgvc1hFQ0NMemFt?=
- =?utf-8?B?TTFMdEhpd0l2eHJOa20vV1dMUTVPV3BleGlZTTNBN0ZqYk9VUFJtLzB2a3l5?=
- =?utf-8?B?MmxnSkJWenNLMGRwOHdJd0VGcDJKaGRHc2ZERXB4cU8xL3RVb2NEN1grU3pO?=
- =?utf-8?B?eTVDRGpWK0RYMDJ5bCtPcENVOXR6aE9YZGt4d2laeVNtcUljRmpNS0RwT05s?=
- =?utf-8?B?MjVXRTI5VGRoY0o1aWw3aGRIYkFEemNjWmdjQTNWMHZSTEd6bnd4bU5rdkc0?=
- =?utf-8?B?L3NhWjl2WUZGWnMvREhDbVBrRlRDQXpnbWRuZEZ0ZDUyZFRQdWZaVG55YVdU?=
- =?utf-8?B?NEtoQVNtcklqZ00vTmluK2xvN2hpOGUxd1Qrd0t3K2x4S3NhcDdyZGxLcFhy?=
- =?utf-8?B?OEZZMWFhUmVmVjlRVWZ1Mkwyc2NTVXFnM1NjN3k3ZWh3SzlET1pmV1FsVEsx?=
- =?utf-8?B?WGVhcE96K0ovdWN6YWNncFBscmZ4NHdRVEgycE9BZzJPcXZmQ2FZdmRPMGpz?=
- =?utf-8?B?TkRITkwxc3lIanpjQVdiWlVjclZlNnlWYitoTTZSMkVaZzVGcWVYc3ljU3dI?=
- =?utf-8?B?V3hrdHN6NGZlQm4rSWtOdG9uRXRDR3VXOGhLMHJ3MjU5NmtqYStuckdlejRI?=
- =?utf-8?B?ZFZCTWxCVE5TZUdiMnNNYk5NZ25kc3lQNGxFNVJ6YS9vUm90SXM3Z2FleWZC?=
- =?utf-8?B?WnFMNy9kVmc5VHBaRWUzQ20wYUFIYldscVhEMisrdkFybVNmS2ZUSGllUm5Y?=
- =?utf-8?B?RFJBcEpVQzFrRlpaWVhOV3J2NC82ZjlXYkVRQkxtTkFWMHlYc3dSaHVuSkxo?=
- =?utf-8?B?QnlWbmIvSlQwYnd6dVQxTHFEZy9nVHNyUjVjV1ZiRDJsdHFvSmlMVWpBdVQr?=
- =?utf-8?B?Tm8wbFN2SjFQb0FnRUxseUxUVUN2dVpKaElDVHB1b3JMS3NVWW5JT2Z6VGJk?=
- =?utf-8?B?cllBTHlYRHpDUkhEeWJKUWpNWThQTjJ4WEc1Q3FjMlRhZGU4ankzam5YY1hG?=
- =?utf-8?B?Z1lKazhXaHhMRnYvNGlINjRGZWJoSVo5UUFpVnBzQ09jcitSMkV0YW54d1Jl?=
- =?utf-8?B?bXB0ZEs0cEFFU1NXdXZXTFpId1BqczhHVU9WNlA2Q0cyOHF4SEIreEVmc3Bq?=
- =?utf-8?B?SUw3SnBCdTJwb3cxcit6aS9xOU9WU1k1MWpYeVBySnE1eGF3TVhXNlE5NTB6?=
- =?utf-8?B?TW5ZR2FLbi9NZGYzVHVTTkZEWU1mVlhOblBaRmxWUGlqL0Zhc3FmMHBiSkxs?=
- =?utf-8?B?czYrKzJPcll4MU5hRHNIb0taUUNFNndsZy81RlJoWU1xVGJRbHk3cnV1bTN0?=
- =?utf-8?B?VkdEb203ZmYzWG9Fcks4enZyN21JRGxvTkk0dTRrUGFiWGxiYnBycE1Vd0VO?=
- =?utf-8?Q?rd02nKf7pGHS25CKZc3RIsEMm?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c521ffa-4b8f-49f1-0ddb-08dc6020fd18
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 03:29:58.1997
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3a+JMvZjMKpMdhlxrDOWVQx9OR/DxCqtrLpMEBlY/9/zqrNyNT2Ke0Aqri8eTnfVHkGkyqpWorA+tTd+zGG+TA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7358
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RFC PATCH v2 2/2] mm: convert mm's rss stats to use atomic mode
+Content-Language: en-US
+To: Rongwei Wang <rongwei.wrw@gmail.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <akpm@linux-foundation.org>, <dennisszhou@gmail.com>,
+	<shakeelb@google.com>, <jack@suse.cz>, <surenb@google.com>,
+	<kent.overstreet@linux.dev>, <mhocko@suse.cz>, <vbabka@suse.cz>,
+	<yuzhao@google.com>, <yu.ma@intel.com>, <wangkefeng.wang@huawei.com>,
+	<sunnanyong@huawei.com>
+References: <20240418142008.2775308-1-zhangpeng362@huawei.com>
+ <20240418142008.2775308-3-zhangpeng362@huawei.com>
+ <ec2b110b-fb85-4af2-942b-645511a32297@gmail.com>
+From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
+In-Reply-To: <ec2b110b-fb85-4af2-942b-645511a32297@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600020.china.huawei.com (7.193.23.147)
 
-From: Peng Fan <peng.fan@nxp.com>
+On 2024/4/19 10:30, Rongwei Wang wrote:
 
-The FEC network driver is built in, with OCOTP ELE built as module,
-the FEC drive will defer probe because nvmem provider not ready and
-nfsboot not work. So build in OCOTP ELE driver.
+> On 2024/4/18 22:20, Peng Zhang wrote:
+>> From: ZhangPeng <zhangpeng362@huawei.com>
+>>
+>> Since commit f1a7941243c1 ("mm: convert mm's rss stats into
+>> percpu_counter"), the rss_stats have converted into percpu_counter,
+>> which convert the error margin from (nr_threads * 64) to approximately
+>> (nr_cpus ^ 2). However, the new percpu allocation in mm_init() causes a
+>> performance regression on fork/exec/shell. Even after commit 
+>> 14ef95be6f55
+>> ("kernel/fork: group allocation/free of per-cpu counters for mm 
+>> struct"),
+>> the performance of fork/exec/shell is still poor compared to previous
+>> kernel versions.
+>>
+>> To mitigate performance regression, we delay the allocation of percpu
+>> memory for rss_stats. Therefore, we convert mm's rss stats to use
+>> percpu_counter atomic mode. For single-thread processes, rss_stat is in
+>> atomic mode, which reduces the memory consumption and performance
+>> regression caused by using percpu. For multiple-thread processes,
+>> rss_stat is switched to the percpu mode to reduce the error margin.
+>> We convert rss_stats from atomic mode to percpu mode only when the
+>> second thread is created.
+> Hi, Zhang Peng
+>
+> This regression we also found it in lmbench these days. I have not 
+> test your patch, but it seems will solve a lot for it.
+> And I see this patch not fix the regression in multi-threads, that's 
+> because of the rss_stat switched to percpu mode?
+> (If I'm wrong, please correct me.) And It seems percpu_counter also 
+> has a bad effect in exit_mmap().
+>
+> If so, I'm wondering if we can further improving it on the exit_mmap() 
+> path in multi-threads scenario, e.g. to determine which CPUs the 
+> process has run on (mm_cpumask()? I'm not sure).
+>
+Hi, Rongwei,
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm64/configs/defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, this patch only fixes the regression in single-thread processes. How
+much bad effect does percpu_counter have in exit_mmap()? IMHO, the addition
+of mm counter is already in batch mode, maybe I miss something?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 9957e126e32d..b9f0805abeef 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1553,7 +1553,7 @@ CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m
- CONFIG_MESON_DDR_PMU=m
- CONFIG_NVMEM_LAYOUT_SL28_VPD=m
- CONFIG_NVMEM_IMX_OCOTP=y
--CONFIG_NVMEM_IMX_OCOTP_ELE=m
-+CONFIG_NVMEM_IMX_OCOTP_ELE=y
- CONFIG_NVMEM_IMX_OCOTP_SCU=y
- CONFIG_NVMEM_LAYERSCAPE_SFP=m
- CONFIG_NVMEM_MESON_EFUSE=m
+>>
+>> After lmbench test, we can get 2% ~ 4% performance improvement
+>> for lmbench fork_proc/exec_proc/shell_proc and 6.7% performance
+>> improvement for lmbench page_fault (before batch mode[1]).
+>>
+>> The test results are as follows:
+>>
+>>               base           base+revert        base+this patch
+>>
+>> fork_proc    416.3ms        400.0ms  (3.9%)    398.6ms  (4.2%)
+>> exec_proc    2095.9ms       2061.1ms (1.7%)    2047.7ms (2.3%)
+>> shell_proc   3028.2ms       2954.7ms (2.4%)    2961.2ms (2.2%)
+>> page_fault   0.3603ms       0.3358ms (6.8%)    0.3361ms (6.7%)
+> I think the regression will becomes more obvious if more cores. How 
+> about your test machine?
+>
+Maybe multi-core is not a factor in the performance of the lmbench test here.
+Both of my test machines have 96 cores.
 
+> Thanks,
+> -wrw
+>>
+>> [1] 
+>> https://lore.kernel.org/all/20240412064751.119015-1-wangkefeng.wang@huawei.com/
+>>
+>> Suggested-by: Jan Kara <jack@suse.cz>
+>> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>   include/linux/mm.h          | 50 +++++++++++++++++++++++++++++++------
+>>   include/trace/events/kmem.h |  4 +--
+>>   kernel/fork.c               | 18 +++++++------
+>>   3 files changed, 56 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index d261e45bb29b..8f1bfbd54697 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -2631,30 +2631,66 @@ static inline bool 
+>> get_user_page_fast_only(unsigned long addr,
+>>    */
+>>   static inline unsigned long get_mm_counter(struct mm_struct *mm, 
+>> int member)
+>>   {
+>> -    return percpu_counter_read_positive(&mm->rss_stat[member]);
+>> +    struct percpu_counter *fbc = &mm->rss_stat[member];
+>> +
+>> +    if (percpu_counter_initialized(fbc))
+>> +        return percpu_counter_read_positive(fbc);
+>> +
+>> +    return percpu_counter_atomic_read(fbc);
+>>   }
+>>     void mm_trace_rss_stat(struct mm_struct *mm, int member);
+>>     static inline void add_mm_counter(struct mm_struct *mm, int 
+>> member, long value)
+>>   {
+>> -    percpu_counter_add(&mm->rss_stat[member], value);
+>> +    struct percpu_counter *fbc = &mm->rss_stat[member];
+>> +
+>> +    if (percpu_counter_initialized(fbc))
+>> +        percpu_counter_add(fbc, value);
+>> +    else
+>> +        percpu_counter_atomic_add(fbc, value);
+>>         mm_trace_rss_stat(mm, member);
+>>   }
+>>     static inline void inc_mm_counter(struct mm_struct *mm, int member)
+>>   {
+>> -    percpu_counter_inc(&mm->rss_stat[member]);
+>> -
+>> -    mm_trace_rss_stat(mm, member);
+>> +    add_mm_counter(mm, member, 1);
+>>   }
+>>     static inline void dec_mm_counter(struct mm_struct *mm, int member)
+>>   {
+>> -    percpu_counter_dec(&mm->rss_stat[member]);
+>> +    add_mm_counter(mm, member, -1);
+>> +}
+>>   -    mm_trace_rss_stat(mm, member);
+>> +static inline s64 mm_counter_sum(struct mm_struct *mm, int member)
+>> +{
+>> +    struct percpu_counter *fbc = &mm->rss_stat[member];
+>> +
+>> +    if (percpu_counter_initialized(fbc))
+>> +        return percpu_counter_sum(fbc);
+>> +
+>> +    return percpu_counter_atomic_read(fbc);
+>> +}
+>> +
+>> +static inline s64 mm_counter_sum_positive(struct mm_struct *mm, int 
+>> member)
+>> +{
+>> +    struct percpu_counter *fbc = &mm->rss_stat[member];
+>> +
+>> +    if (percpu_counter_initialized(fbc))
+>> +        return percpu_counter_sum_positive(fbc);
+>> +
+>> +    return percpu_counter_atomic_read(fbc);
+>> +}
+>> +
+>> +static inline int mm_counter_switch_to_pcpu_many(struct mm_struct *mm)
+>> +{
+>> +    return percpu_counter_switch_to_pcpu_many(mm->rss_stat, 
+>> NR_MM_COUNTERS);
+>> +}
+>> +
+>> +static inline void mm_counter_destroy_many(struct mm_struct *mm)
+>> +{
+>> +    percpu_counter_destroy_many(mm->rss_stat, NR_MM_COUNTERS);
+>>   }
+>>     /* Optimized variant when folio is already known not to be anon */
+>> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+>> index 6e62cc64cd92..a4e40ae6a8c8 100644
+>> --- a/include/trace/events/kmem.h
+>> +++ b/include/trace/events/kmem.h
+>> @@ -399,8 +399,8 @@ TRACE_EVENT(rss_stat,
+>>           __entry->mm_id = mm_ptr_to_hash(mm);
+>>           __entry->curr = !!(current->mm == mm);
+>>           __entry->member = member;
+>> -        __entry->size = 
+>> (percpu_counter_sum_positive(&mm->rss_stat[member])
+>> -                                << PAGE_SHIFT);
+>> +        __entry->size = (mm_counter_sum_positive(mm, member)
+>> +                            << PAGE_SHIFT);
+>>       ),
+>>         TP_printk("mm_id=%u curr=%d type=%s size=%ldB",
+>> diff --git a/kernel/fork.c b/kernel/fork.c
+>> index 99076dbe27d8..0214273798c5 100644
+>> --- a/kernel/fork.c
+>> +++ b/kernel/fork.c
+>> @@ -823,7 +823,7 @@ static void check_mm(struct mm_struct *mm)
+>>                "Please make sure 'struct resident_page_types[]' is 
+>> updated as well");
+>>         for (i = 0; i < NR_MM_COUNTERS; i++) {
+>> -        long x = percpu_counter_sum(&mm->rss_stat[i]);
+>> +        long x = mm_counter_sum(mm, i);
+>>             if (unlikely(x))
+>>               pr_alert("BUG: Bad rss-counter state mm:%p type:%s 
+>> val:%ld\n",
+>> @@ -1301,16 +1301,10 @@ static struct mm_struct *mm_init(struct 
+>> mm_struct *mm, struct task_struct *p,
+>>       if (mm_alloc_cid(mm))
+>>           goto fail_cid;
+>>   -    if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
+>> -                     NR_MM_COUNTERS))
+>> -        goto fail_pcpu;
+>> -
+>>       mm->user_ns = get_user_ns(user_ns);
+>>       lru_gen_init_mm(mm);
+>>       return mm;
+>>   -fail_pcpu:
+>> -    mm_destroy_cid(mm);
+>>   fail_cid:
+>>       destroy_context(mm);
+>>   fail_nocontext:
+>> @@ -1730,6 +1724,16 @@ static int copy_mm(unsigned long clone_flags, 
+>> struct task_struct *tsk)
+>>       if (!oldmm)
+>>           return 0;
+>>   +    /*
+>> +     * For single-thread processes, rss_stat is in atomic mode, which
+>> +     * reduces the memory consumption and performance regression 
+>> caused by
+>> +     * using percpu. For multiple-thread processes, rss_stat is 
+>> switched to
+>> +     * the percpu mode to reduce the error margin.
+>> +     */
+>> +    if (clone_flags & CLONE_THREAD)
+>> +        if (mm_counter_switch_to_pcpu_many(oldmm))
+>> +            return -ENOMEM;
+>> +
+>>       if (clone_flags & CLONE_VM) {
+>>           mmget(oldmm);
+>>           mm = oldmm;
+>
+>
 -- 
-2.37.1
+Best Regards,
+Peng
 
