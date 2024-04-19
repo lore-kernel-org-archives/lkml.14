@@ -1,142 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB589131BC7
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A92130A5B;
+	Fri, 19 Apr 2024 16:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713543487; cv=none; b=mzOAKas2tLeTcAANwPSLU3A3xgNw/LpC1vrnX1Pw202zGF8RwO+FtDCtsHH1iGl73BJmu7y2SFPIoyWXaqFnmY82FndrVIoWYZiy3mMuCskM8bjlfl3eUxrdWCJZ3GrqJ+DM+zALjPogXyD0Ygz43T+7P4o35cbLVw+ZrbBwQkk=
+	t=1713543521; cv=none; b=SkkR65gDiN8aoBPTNwMGNevkyciu/ON5A4bTAVabxPcMtLxP7nMnLdQSMhqc4sb5VeBNiUj588YpBLHru0CFJiULYQttzEtQLsTQ7QleRUReYJVVdb95x/Vj5DXpF+ElLZzOAltPAWTVwY9B9jeIbbY5PoFFl9quFcSrFiEE7FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713543487; c=relaxed/simple;
-	bh=ltYnxkGmhFpcFrwY19hNp3Q7sHEjefSoiJDD3ImAFQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GXyWSyYtkZa3MLIvPmJlJCNT9KZrtpbziWol8uHsW+KLBOkcA1zbnmY0zwrt5TMr+eAP7PqBT/4K0YlxTqY7Od+TQoljaKU3qd/HKuvfdaBmb7wPx/0D7sQtcTJSkYUPRWoLU1ImqTlg3/2zoOFxJf9/6kUCbD7a4zKIf7iziSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QHG4xZkd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713543521; c=relaxed/simple;
+	bh=d5n73mg0TsW5GuosMrClZ4WiLXJso87FcN0NbBIHvS4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=bg+iT/TQzxNLGwDBbxRJFueC9gPb9GD938qV+m3MLjJL4KWG2IaHPUfZSufF6EqFIfWT1S+mt5XCHoQhCUvTRo55c6L3a8l23dmLR0hZ0WShc2PwfRp64U5VZcdmKh8TKo39/HuKzwr4fXOqH9Ij23tezOocX0JJ+zieKkNtRus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=O8L8D7FD; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QHG4xZkd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713543485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fCQBeSy7fxIc6enJRzf0fB8fa+25yMzZIh550xKv9hI=;
-	b=QHG4xZkd+55AEDXtRaK4CuVah1nQ/vYF5saC9rB2VkeJDaYbHnJ67dEi+tgQ8aLsXa31v4
-	VOkyBJ3BU8ZQTB6EEA9EM/Jv9OTM1M95sbEYLM+uvQdenbesf43aZqwqjcF0/F+XlX5IKm
-	cMlkcOXNTYvXU0Ajf05qTMYmMyRG/C4=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-xPpKhWRFNQeJiNTUUftGjw-1; Fri, 19 Apr 2024 12:17:59 -0400
-X-MC-Unique: xPpKhWRFNQeJiNTUUftGjw-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d871086a09so20659291fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:17:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713543478; x=1714148278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fCQBeSy7fxIc6enJRzf0fB8fa+25yMzZIh550xKv9hI=;
-        b=Uo9m0bzTxdO63Sb6kheer0lC+GMF28DPQxZm4Pe76OAO7O/PHMh5ql+gK96z4bE3Ym
-         ziP5nLXjlvYGGTwVKpgIy9K6kuGDdRQa60FGikbHB9TpYvGnZo1sU9xIEiHkDJeh+5UE
-         F9q1VZrl4DcIhXYVXYNBHKvt8Yxebo1Xe35bIpDQjOVJ199DKfYSTevITCvhQA1PFk3S
-         MiuJJnj4EXFVdB7aFUyRPfCCZit3yarqQIK9swHyN24QGOWUKuGC900dPBRiQEX7DhCy
-         qnzCfnZT36U/4EVXcce/IxQLB9BXQ7E5cnb/cF88v/KEGVB4hnoPOLamFNHcWQTugTkE
-         6n1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUFFBSuAZydUZBflTc+LFkiicMkYU5dOlS3Uas5Er5RtbiKLS/pudNXnQ1wuNuCPa5HUzPQVMTpxWyYoSqvuyQwqLUlopqlDPPxtoSu
-X-Gm-Message-State: AOJu0Yyj4eLfAreijwHGlPb+dfER5RqXWin9mmFISXe59r5pEGHH2BUf
-	4e4l6J7jc1212iAMGuwUZBe+F+hvtWtcCuB9ZeKLxk0v0i+nuU4oYaghN8Ywqwk3JVnWXg7dcap
-	LqYBKPzL+UxPLWL8v2uYwY0zjrxzHAiDoFgnud4N4OQSCJyDTroLMDrAU5EimgcrsObL6Wg8Q9h
-	oG/Yxs2Wy++3PMXwgswT8nl1brv2QdDUo9DpqZ
-X-Received: by 2002:a2e:2c1a:0:b0:2da:7af:e6a1 with SMTP id s26-20020a2e2c1a000000b002da07afe6a1mr1689596ljs.3.1713543478029;
-        Fri, 19 Apr 2024 09:17:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFs1jtdCXbIxqpwbuCS5xK85TAjnmuAZI/8TTHrvW2yG8L2y0KPYV6w7Jcu0HjZtCeFL5Vk1Cg+pcQRewqSow=
-X-Received: by 2002:a2e:2c1a:0:b0:2da:7af:e6a1 with SMTP id
- s26-20020a2e2c1a000000b002da07afe6a1mr1689551ljs.3.1713543477605; Fri, 19 Apr
- 2024 09:17:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="O8L8D7FD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1713543503; x=1714148303; i=markus.elfring@web.de;
+	bh=cp7wx4staeqTlQLIoJHFIJDuZ7q4wbooJhXwZ3E13aI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=O8L8D7FDvRzDbQx8Uv7WkfIulajzVOibFPeUxPDc6Xs2LXI4t1algojKdWOz2YHy
+	 1eTWEDvYcWXwM1UCsco8RPjsUsv+9tR2X/wu0s+7XQ1sd/ZMYmoNFh5hVNcCVqeyJ
+	 s/p9VaWAyXAetjaXLMfUB0YlS44SZHk8VBcEDQLfU6S0/FRWAsFarlIL3dXfPmN/1
+	 UT3CJAbBoNAio01TVgky9ssXyl2Dxv7iO8y2VFtXP0mCTHN03SDqrOsBzIIA7nJvS
+	 PRVUTPW2F3tQEgsO6XjetSf1hvsy7/YvFb2HvsbV/guLM+y7Igz37mZZAK1BPCDHx
+	 MBqAzwXwa6TCKaEqUg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MXGOI-1sDsxt1yZS-00YjnS; Fri, 19
+ Apr 2024 18:18:23 +0200
+Message-ID: <4dd9babe-1e4d-46d9-b3dc-cc8978e74e5f@web.de>
+Date: Fri, 19 Apr 2024 18:18:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240418194133.1452059-1-michael.roth@amd.com>
- <20240418194133.1452059-5-michael.roth@amd.com> <a6086ba5-6137-44a0-9e51-ce4df5eb6ce4@redhat.com>
- <20240419151109.bo6kz4s24jgrmaj4@amd.com>
-In-Reply-To: <20240419151109.bo6kz4s24jgrmaj4@amd.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 19 Apr 2024 18:17:46 +0200
-Message-ID: <CABgObfY4brEENatf_kVMcGv85M=ia01TStLGBwV4y9t=iOedAg@mail.gmail.com>
-Subject: Re: [PATCH v13 04/26] KVM: guest_memfd: Fix PTR_ERR() handling in __kvm_gmem_get_pfn()
-To: Michael Roth <michael.roth@amd.com>
-Cc: David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, 
-	seanjc@google.com, vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
-	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
-	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
-	pankaj.gupta@amd.com, liam.merwick@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Wander Lairson Costa <wander@redhat.com>, kunit-dev@googlegroups.com,
+ linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Brendan Higgins <brendan.higgins@linux.dev>, David Gow
+ <davidgow@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Maxime Ripard <mripard@kernel.org>, Rae Moar <rmoar@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240419132504.9488-1-wander@redhat.com>
+Subject: Re: [PATCH v4 0/2] kunit: fix minor error path mistakes
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240419132504.9488-1-wander@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dZ1kl0cheQ9TcwOAvAzY8L/APqrmRjRzbU5lO0gAxDHka065H8N
+ jaOTnJd72niJ6S/+s763D3sNhi3yfHXE2vALXIkKhaC6OW9GtLyA507HEEILJuDrQBnfPyH
+ WCdA25Y5nnpALcb3Xe8hxui96dWz3pqQ1xZroX+wjBQ+LDCfueLlq+gzfeSJm9RXc+n+33o
+ dFMuJ+/lPohZnkYYJq/xQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2XhgTCe4k7s=;H2Vad0xjTrY2+MTRzxpgG+Hi6Tt
+ RukFgRsyr5MMsS/DW9DZkbkG+glCdye7rzl2Bj9T2/jGLrmIOvBRqd+3DZDRb9DxsXDutwjG6
+ 4leCNG4FwnsPGKTnkcOK9fTkYZSl/cY18Kk6GAP/cHDoSYRU7NLz9+rrPshf3hE+ZlukL0A99
+ xRZRwH1Y2KrkI2U0BkPw7yox3ae7JBiKcpbFpefuTAt0ejo67SW7Gc5FZeurCpxa+7IY7ZuSA
+ 4xxcjs5n3hspeD4a1Dv04J8rMlriYpG778RcAknu661W5gHUAYFYhosi/vvp0kP5iiKjHJ7L/
+ P0MyGUcCb+ChAB759btrRTigx3vM9QWictiymqrDKAMQ3yXMpIsntjBE/7WcZki+45NWx0hZT
+ K6GeTi/uqPBPPAQTos9yf7VZrjP5biuhlL/4Ho59KzMNIU0iXhU8tV+q0mwPstZNA1+Xl2K0N
+ JpKRxPTaE3v1VOU+beg6Xb74fAd5ms20ehEMIO13AY5CLsyAJn5o9kd7OEaSXZaZU96Hfo/aZ
+ maOStfC0x7ljsgSI88HgbKSlRS9Ephv8CANBpTsqSTocXEELgNW8c8ptAmoFwWZnTWU6mH6RP
+ zJJurdqJX52FrdKRYh5MvhaKINIuvD2A4B7aX37P4k/H0DfXfpAvWmbYdO+N8caQbzTWz53ky
+ 7ysAfGFZ9jsyOTE6lhQxx7iL9aIe/Ya4JJ8BWvnfliMh6BdiC7cb9Q/RPOPyQvFgkJm7Ms93r
+ O4c0IA5HLELgzXCnFmxR4n7onhe6/wTmDVC/3x1l3o1p5ksPYanvsIYA1eb3oRduHBaognZa1
+ u/bB0lyz03QMtDvI98B2cPNx9BD2Sdo9kHOIldYI8O4Sc=
 
-On Fri, Apr 19, 2024 at 5:11=E2=80=AFPM Michael Roth <michael.roth@amd.com>=
- wrote:
->
-> On Fri, Apr 19, 2024 at 02:58:43PM +0200, David Hildenbrand wrote:
-> > On 18.04.24 21:41, Michael Roth wrote:
-> > > kvm_gmem_get_folio() may return a PTR_ERR() rather than just NULL. In
-> > > particular, for cases where EEXISTS is returned when FGP_CREAT_ONLY
-> > > flag is used. Handle this properly in __kvm_gmem_get_pfn().
-> > >
-> > > Signed-off-by: Michael Roth <michael.roth@amd.com>
-> > > ---
-> > >   virt/kvm/guest_memfd.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> > > index ccf22e44f387..9d7c6a70c547 100644
-> > > --- a/virt/kvm/guest_memfd.c
-> > > +++ b/virt/kvm/guest_memfd.c
-> > > @@ -580,8 +580,8 @@ static int __kvm_gmem_get_pfn(struct file *file, =
-struct kvm_memory_slot *slot,
-> > >     }
-> > >     folio =3D kvm_gmem_get_folio(file_inode(file), index, prepare);
-> > > -   if (!folio)
-> > > -           return -ENOMEM;
-> > > +   if (IS_ERR_OR_NULL(folio))
-> > > +           return folio ? PTR_ERR(folio) : -ENOMEM;
-> >
-> > Will it even return NULL?  Staring at other filemap_grab_folio() users,=
- they
-> > all check for IS_ERR().
->
-> Looks like the NULL case is handled with PTR_ERR(-ENOENT), so IS_ERR()
-> would be sufficient. I think in the past kvm_gmem_get_folio() itself
-> would return NULL in some cases, but as of commit 2b01b7e994e95 that's
-> no longer the case.
->
-> I'll fix this up to expect only PTR_ERR() when I re-spin v14, and also
-> address the other kvm_gmem_get_folio() / __filemap_get_folio() call
-> sites.
->
-> >
-> > >     if (folio_test_hwpoison(folio)) {
-> > >             r =3D -EHWPOISON;
-> >
-> > Do we have a Fixes: tag?
->
-> Fixes: 2b01b7e994e95 ("KVM: guest_memfd: pass error up from filemap_grab_=
-folio")
+=E2=80=A6
+> * Remove some changes requested by Marcus Elfring,
 
-I'll squash it so when you rebase on the new kvm-coco-queue it will go
-away. Thanks to both!
+I became curious how affected software components can evolve further.
 
-Paolo
 
+>   as I was alerted he is a known troll.
+
+I would appreciate if this interpretation will be reconsidered somehow.
+
+Regards,
+Markus
