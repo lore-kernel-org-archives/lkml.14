@@ -1,277 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3BE385948;
-	Fri, 19 Apr 2024 13:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF498614B;
+	Fri, 19 Apr 2024 13:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713531636; cv=none; b=H4bAiZxi5tdfRSq4Ps0ykoTRCsgdrUMi1kOaKeu62jR6HT2HhfZvH4hFI5JeP6QUYjTAGB1LnuxuSF5XQjrYthAfnAYfX1r++tZjFs1nWgZm2Ov4ffxbsM+tHrqR9MNYaSpNKk23J6NMExDlluQBQY3tRsflpF7pe2mi9rAvX1g=
+	t=1713531638; cv=none; b=YSh+na2zc+ORXW6yD3QAnyFvypM2ZaCytr1v6nimYEWXJIx4nOx5ji+xhTK9MhWpHL8z32/w3LTGmpA3GSheiDz/mK3hMU/CMu1Gb1kRuu08UZfu5uvZ/5NwK9MHSM6gy/RP17Pj5iJXflWwr2QqJvsybmPHC1ZLnrIyMmtjJDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713531636; c=relaxed/simple;
-	bh=aCwfyFsGqeYBypUL6ENw7wQt4VJhUg9101fZ8WXT9yI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLOSr0cHnyX8fdGzPWf/IzMfS9LLHtypHb9Hdh+tjT0/KYcsWloeDoce6QouC2AsNRBiqV1DWq7Th4MU8OMwr30tzTSzTs+BhiZvdhVul+whCgPi/HiNJoQRyHu+c6VIp4GDr7L+d/cPSWlX1PQafzq+UjQUnPLNcMfHucu4aJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41A292F;
-	Fri, 19 Apr 2024 06:01:02 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1D633F64C;
-	Fri, 19 Apr 2024 06:00:31 -0700 (PDT)
-Message-ID: <0606bda2-7f3f-4fe9-8d7d-70dc4720dcd1@arm.com>
-Date: Fri, 19 Apr 2024 14:00:30 +0100
+	s=arc-20240116; t=1713531638; c=relaxed/simple;
+	bh=DElho3Mb/w3HK6/xOXgygEqefvf9rPBbVa1vqoCNYT4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rouvS4Io2JITUG5C+LUPr72El0/6pEHZO5HF54Nq2lVfFFrDOj+9Ck+Y4lUPQ/lNqKRl9NuQuiadvngBO4LuXn+DTgyrtWS62K1HneKCrjznT5mw8ufjOt8JdMTv85OzbODj3wyF4wvZtZP74N1CosqC7M3Djeg2v8zZklGtTS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Gw+XRuSq; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Gw+XRuSq"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 1159D10000B;
+	Fri, 19 Apr 2024 16:00:28 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 1159D10000B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1713531628;
+	bh=KIuGAr064Uhr/J/wzqdUXxyIs1qnbRClXG3hlcnxZzs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Gw+XRuSqvKMjnf+7GtKvUJLYy8p23vmHiIZhAPW3gc5DUUg3NwXJlYvMGhaaQG3ug
+	 hDFEB3UGCPGeiNU7X/LEwGpGq/p3H5FKrcohaXgKKPI8phcACa7pafFAEWRd6MCI5R
+	 AoHeqfRPLnGOfgJgOGP6K41uQnPKZRGZs9Repo9FOqjb5KZzcEvTgHFneOmyKytik9
+	 7CLURLQ61RSVobjCE55L3soLmBLNs/YGhBQ7AJMqWxWHR3STwomfqWgH8ZSyKqHJSe
+	 shlTG0X5gWjDAVyZDYCFCNX9mE4UfDpzlEzArNbJk2EJynaI53uVnMZkw3pNfLRVMX
+	 87kPj3gLomS1A==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 19 Apr 2024 16:00:27 +0300 (MSK)
+Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 19 Apr 2024 16:00:27 +0300
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [RFC PATCH v3 3/6] clk: meson: axg: introduce AUD_MUX_TABLE() helper macro
+Date: Fri, 19 Apr 2024 15:58:09 +0300
+Message-ID: <20240419125812.983409-4-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
+References: <20240419125812.983409-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 18/43] arm64: RME: Handle realm enter/exit
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
- <20240412084309.1733783-19-steven.price@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240412084309.1733783-19-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184806 [Apr 19 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_smtp_not_equal_from}, sberdevices.ru:5.0.1,7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/18 23:49:00 #24865988
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Steven
+This macro takes into account ->table property of
+'struct clk_regmap_mux_data'.
 
-On 12/04/2024 09:42, Steven Price wrote:
-> Entering a realm is done using a SMC call to the RMM. On exit the
-> exit-codes need to be handled slightly differently to the normal KVM
-> path so define our own functions for realm enter/exit and hook them
-> in if the guest is a realm guest.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+---
+ drivers/clk/meson/meson-audio.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Please find a comment about RIPAS change exit handling below. Rest
-looks good to me.
+diff --git a/drivers/clk/meson/meson-audio.h b/drivers/clk/meson/meson-audio.h
+index cbcdbd487d4a..1947c6cbf233 100644
+--- a/drivers/clk/meson/meson-audio.h
++++ b/drivers/clk/meson/meson-audio.h
+@@ -17,9 +17,11 @@
+ 	},								\
+ }
+ 
+-#define AUD_MUX(_name, _reg, _mask, _shift, _dflags, _pdata, _iflags) {	\
++#define AUD_MUX_TABLE(_name, _reg, _table, _mask, _shift, _dflags,	\
++		      _pdata, _iflags) {				\
+ 	.data = &(struct clk_regmap_mux_data){				\
+ 		.offset = (_reg),					\
++		.table = (_table),					\
+ 		.mask = (_mask),					\
+ 		.shift = (_shift),					\
+ 		.flags = (_dflags),					\
+@@ -33,6 +35,10 @@
+ 	},								\
+ }
+ 
++#define AUD_MUX(_name, _reg, _mask, _shift, _dflags, _pdata, _iflags)	\
++	AUD_MUX_TABLE(_name, (_reg), NULL, (_mask), (_shift),		\
++		      (_dflags), (_pdata), (_iflags))
++
+ #define AUD_DIV(_name, _reg, _shift, _width, _dflags, _pname, _iflags) { \
+ 	.data = &(struct clk_regmap_div_data){				\
+ 		.offset = (_reg),					\
+-- 
+2.34.1
 
-
-> ---
->   arch/arm64/include/asm/kvm_rme.h |   3 +
->   arch/arm64/kvm/Makefile          |   2 +-
->   arch/arm64/kvm/arm.c             |  19 +++-
->   arch/arm64/kvm/rme-exit.c        | 180 +++++++++++++++++++++++++++++++
->   arch/arm64/kvm/rme.c             |  11 ++
->   5 files changed, 209 insertions(+), 6 deletions(-)
->   create mode 100644 arch/arm64/kvm/rme-exit.c
-> 
-...
-
->   
->   	/* Tell userspace about in-kernel device output levels */
-> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
-> new file mode 100644
-> index 000000000000..5bf58c9b42b7
-> --- /dev/null
-> +++ b/arch/arm64/kvm/rme-exit.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2023 ARM Ltd.
-> + */
-> +
-> +#include <linux/kvm_host.h>
-> +#include <kvm/arm_hypercalls.h>
-> +#include <kvm/arm_psci.h>
-> +
-> +#include <asm/rmi_smc.h>
-> +#include <asm/kvm_emulate.h>
-> +#include <asm/kvm_rme.h>
-> +#include <asm/kvm_mmu.h>
-> +
-> +typedef int (*exit_handler_fn)(struct kvm_vcpu *vcpu);
-> +
-> +static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	pr_err("[vcpu %d] Unhandled exit reason from realm (ESR: %#llx)\n",
-> +	       vcpu->vcpu_id, rec->run->exit.esr);
-> +	return -ENXIO;
-> +}
-> +
-> +static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
-> +{
-> +	return kvm_handle_guest_abort(vcpu);
-> +}
-> +
-> +static int rec_exit_sync_iabt(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	pr_err("[vcpu %d] Unhandled instruction abort (ESR: %#llx).\n",
-> +	       vcpu->vcpu_id, rec->run->exit.esr);
-> +	return -ENXIO;
-> +}
-> +
-> +static int rec_exit_sys_reg(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long esr = kvm_vcpu_get_esr(vcpu);
-> +	int rt = kvm_vcpu_sys_get_rt(vcpu);
-> +	bool is_write = !(esr & 1);
-> +	int ret;
-> +
-> +	if (is_write)
-> +		vcpu_set_reg(vcpu, rt, rec->run->exit.gprs[0]);
-> +
-> +	ret = kvm_handle_sys_reg(vcpu);
-> +
-> +	if (ret >= 0 && !is_write)
-> +		rec->run->entry.gprs[0] = vcpu_get_reg(vcpu, rt);
-> +
-> +	return ret;
-> +}
-> +
-> +static exit_handler_fn rec_exit_handlers[] = {
-> +	[0 ... ESR_ELx_EC_MAX]	= rec_exit_reason_notimpl,
-> +	[ESR_ELx_EC_SYS64]	= rec_exit_sys_reg,
-> +	[ESR_ELx_EC_DABT_LOW]	= rec_exit_sync_dabt,
-> +	[ESR_ELx_EC_IABT_LOW]	= rec_exit_sync_iabt
-> +};
-> +
-> +static int rec_exit_psci(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	int i;
-> +	int ret;
-> +
-> +	for (i = 0; i < REC_RUN_GPRS; i++)
-> +		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
-> +
-> +	ret = kvm_smccc_call_handler(vcpu);
-> +
-> +	for (i = 0; i < REC_RUN_GPRS; i++)
-> +		rec->run->entry.gprs[i] = vcpu_get_reg(vcpu, i);
-> +
-> +	return ret;
-> +}
-> +
-> +static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm *kvm = vcpu->kvm;
-> +	struct realm *realm = &kvm->arch.realm;
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	unsigned long base = rec->run->exit.ripas_base;
-> +	unsigned long top = rec->run->exit.ripas_top;
-> +	unsigned long ripas = rec->run->exit.ripas_value & 1;
-> +	int ret = -EINVAL;
-> +
-> +	if (realm_is_addr_protected(realm, base) &&
-> +	    realm_is_addr_protected(realm, top - 1)) {
-> +		kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
-> +					   kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
-> +		write_lock(&kvm->mmu_lock);
-> +		ret = realm_set_ipa_state(vcpu, base, top, ripas);
-> +		write_unlock(&kvm->mmu_lock);
-> +	}
-
-There are couple of issues here :
-
-1. We don't verify if the range is covered by a memslot, for ripas == 
-RIPAS_RAM conversions and reject the request if not backed by memory.
-
-2. The realm_set_ipa_state() might have partially completed the request
-before it ran out of pages in the cache. And as such we should only
-let the VMM know about what was completed, below. So, we need some
-feedback from realm_set_ipa_state() to indicate the completed range.
-
-Rest looks fine to me.
-
-Suzuki
-
-
-> +
-> +	WARN(ret && ret != -ENOMEM,
-> +	     "Unable to satisfy SET_IPAS for %#lx - %#lx, ripas: %#lx\n",
-> +	     base, top, ripas);
-> +
-> +	/* Exit to VMM to complete the change */
-> +	kvm_prepare_memory_fault_exit(vcpu, base, top - base, false, false,
-> +				      ripas == 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +
-> +	__vcpu_sys_reg(vcpu, CNTV_CTL_EL0) = rec->run->exit.cntv_ctl;
-> +	__vcpu_sys_reg(vcpu, CNTV_CVAL_EL0) = rec->run->exit.cntv_cval;
-> +	__vcpu_sys_reg(vcpu, CNTP_CTL_EL0) = rec->run->exit.cntp_ctl;
-> +	__vcpu_sys_reg(vcpu, CNTP_CVAL_EL0) = rec->run->exit.cntp_cval;
-> +
-> +	kvm_realm_timers_update(vcpu);
-> +}
-> +
-> +/*
-> + * Return > 0 to return to guest, < 0 on error, 0 (and set exit_reason) on
-> + * proper exit to userspace.
-> + */
-> +int handle_rme_exit(struct kvm_vcpu *vcpu, int rec_run_ret)
-> +{
-> +	struct realm_rec *rec = &vcpu->arch.rec;
-> +	u8 esr_ec = ESR_ELx_EC(rec->run->exit.esr);
-> +	unsigned long status, index;
-> +
-> +	status = RMI_RETURN_STATUS(rec_run_ret);
-> +	index = RMI_RETURN_INDEX(rec_run_ret);
-> +
-> +	/*
-> +	 * If a PSCI_SYSTEM_OFF request raced with a vcpu executing, we might
-> +	 * see the following status code and index indicating an attempt to run
-> +	 * a REC when the RD state is SYSTEM_OFF.  In this case, we just need to
-> +	 * return to user space which can deal with the system event or will try
-> +	 * to run the KVM VCPU again, at which point we will no longer attempt
-> +	 * to enter the Realm because we will have a sleep request pending on
-> +	 * the VCPU as a result of KVM's PSCI handling.
-> +	 */
-> +	if (status == RMI_ERROR_REALM && index == 1) {
-> +		vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
-> +		return 0;
-> +	}
-> +
-> +	if (rec_run_ret)
-> +		return -ENXIO;
-> +
-> +	vcpu->arch.fault.esr_el2 = rec->run->exit.esr;
-> +	vcpu->arch.fault.far_el2 = rec->run->exit.far;
-> +	vcpu->arch.fault.hpfar_el2 = rec->run->exit.hpfar;
-> +
-> +	update_arch_timer_irq_lines(vcpu);
-> +
-> +	/* Reset the emulation flags for the next run of the REC */
-> +	rec->run->entry.flags = 0;
-> +
-> +	switch (rec->run->exit.exit_reason) {
-> +	case RMI_EXIT_SYNC:
-> +		return rec_exit_handlers[esr_ec](vcpu);
-> +	case RMI_EXIT_IRQ:
-> +	case RMI_EXIT_FIQ:
-> +		return 1;
-> +	case RMI_EXIT_PSCI:
-> +		return rec_exit_psci(vcpu);
-> +	case RMI_EXIT_RIPAS_CHANGE:
-> +		return rec_exit_ripas_change(vcpu);
-> +	}
-
-I guess, the RMI_EXIT_HOST_CALL could be handled here similar to the 
-rec_exit_psci() ?
-
-Suzuki
