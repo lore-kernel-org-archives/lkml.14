@@ -1,35 +1,36 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFA1757F7;
-	Fri, 19 Apr 2024 08:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0FB65194
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517188; cv=none; b=iqb7oyhIMYo8ItjbERUbsGTMgP25xhp4lOsC09vljMSHNp1T10OU2ZvzRDg9fDH7DPqMzYBhunDe8UtvDu7T8I0uqsWMD8qCzGXvojKRkF0Vqb+TFx4/rc05/etCLoK03EYgyfHxmGE0pn5agxo0N9SwOaj3j9ND1jl3sFGqZxk=
+	t=1713517249; cv=none; b=jkF2le5WBB08/RbWivls+AkvznEETB3lJRdBBPP/6nInfPuReuELwe0sZ0BJK9hIoGO/7UrNg+V1l1D1phJR0Gib6anUePw/c0izNUhy4HHngJhThVIzT1kgbxcLPgjqNcjeyrlkrd6fuX0e9hi9+dI0pdi2aYK+JEhfVlTKi0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517188; c=relaxed/simple;
-	bh=nrVql+dhu47+Yo4J4ftWOub8YL90A762db0V4CFPkks=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M4LhrhbYIg3CmkELe/1g4ITPipIffJattVeoXIDuHNg6YfAe/Fci/4vctgAwGnLtBfHcCGwMw08MMTMqUDfjnWLTYOCD62Dl8jsCq14ZPkV+npxE10DOAKD+kPm8jqighNmLW+9X9MYa/bhM7GvHkYlJf08yIKxsIS6qts639E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	s=arc-20240116; t=1713517249; c=relaxed/simple;
+	bh=i1geZbCak49qB4pVeuHPvkwxHT5Il3XYMjAPZf7+NTs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BGxmItTj8Hq/A7xhCbGrRseJE+iuVBiWO0MfD2zwD6PMcujIKb0Z+XW2XBMNXjbd00/YBd9V/4k1zMm0H6bbcVWOMfBogKVug2ncgAyU7mk3ZFCDA26/AQKbKQ/PT0qoqGxO5tu+TA4YAGBQvlTiDE/zdQ93EBoL5BHUdvaWlB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VLT685D5cz1N8Q2;
-	Fri, 19 Apr 2024 16:56:48 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0259140124;
-	Fri, 19 Apr 2024 16:59:43 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 19 Apr 2024 16:59:43 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
-CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] cgroup: avoid invalid loop in cgroup_no_v1()
-Date: Fri, 19 Apr 2024 08:53:16 +0000
-Message-ID: <20240419085316.957277-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VLT7D5P3bz1RCg0;
+	Fri, 19 Apr 2024 16:57:44 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id D89341A016F;
+	Fri, 19 Apr 2024 17:00:44 +0800 (CST)
+Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
+ (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
+ 2024 17:00:44 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
+CC: <mike.kravetz@oracle.com>, <linmiaohe@huawei.com>, <osalvador@suse.de>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] mm/hugetlb: fix DEBUG_LOCKS_WARN_ON(1) when dissolve_free_hugetlb_folio()
+Date: Fri, 19 Apr 2024 16:58:19 +0800
+Message-ID: <20240419085819.1901645-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,29 +39,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-We should break the for_each_subsys loop after the token matches
-the name of subsys and cgroup_no_v1_mask is set.
+When I did memory failure tests recently, below warning occurs:
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 8 PID: 1011 at kernel/locking/lockdep.c:232 __lock_acquire+0xccb/0x1ca0
+Modules linked in: mce_inject hwpoison_inject
+CPU: 8 PID: 1011 Comm: bash Kdump: loaded Not tainted 6.9.0-rc3-next-20240410-00012-gdb69f219f4be #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+RIP: 0010:__lock_acquire+0xccb/0x1ca0
+RSP: 0018:ffffa7a1c7fe3bd0 EFLAGS: 00000082
+RAX: 0000000000000000 RBX: eb851eb853975fcf RCX: ffffa1ce5fc1c9c8
+RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI: ffffa1ce5fc1c9c0
+RBP: ffffa1c6865d3280 R08: ffffffffb0f570a8 R09: 0000000000009ffb
+R10: 0000000000000286 R11: ffffffffb0f2ad50 R12: ffffa1c6865d3d10
+R13: ffffa1c6865d3c70 R14: 0000000000000000 R15: 0000000000000004
+FS:  00007ff9f32aa740(0000) GS:ffffa1ce5fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff9f3134ba0 CR3: 00000008484e4000 CR4: 00000000000006f0
+Call Trace:
+ <TASK>
+ lock_acquire+0xbe/0x2d0
+ _raw_spin_lock_irqsave+0x3a/0x60
+ hugepage_subpool_put_pages.part.0+0xe/0xc0
+ free_huge_folio+0x253/0x3f0
+ dissolve_free_huge_page+0x147/0x210
+ __page_handle_poison+0x9/0x70
+ memory_failure+0x4e6/0x8c0
+ hard_offline_page_store+0x55/0xa0
+ kernfs_fop_write_iter+0x12c/0x1d0
+ vfs_write+0x380/0x540
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xbc/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff9f3114887
+RSP: 002b:00007ffecbacb458 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007ff9f3114887
+RDX: 000000000000000c RSI: 0000564494164e10 RDI: 0000000000000001
+RBP: 0000564494164e10 R08: 00007ff9f31d1460 R09: 000000007fffffff
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
+R13: 00007ff9f321b780 R14: 00007ff9f3217600 R15: 00007ff9f3216a00
+ </TASK>
+Kernel panic - not syncing: kernel: panic_on_warn set ...
+CPU: 8 PID: 1011 Comm: bash Kdump: loaded Not tainted 6.9.0-rc3-next-20240410-00012-gdb69f219f4be #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ panic+0x326/0x350
+ check_panic_on_warn+0x4f/0x50
+ __warn+0x98/0x190
+ report_bug+0x18e/0x1a0
+ handle_bug+0x3d/0x70
+ exc_invalid_op+0x18/0x70
+ asm_exc_invalid_op+0x1a/0x20
+RIP: 0010:__lock_acquire+0xccb/0x1ca0
+RSP: 0018:ffffa7a1c7fe3bd0 EFLAGS: 00000082
+RAX: 0000000000000000 RBX: eb851eb853975fcf RCX: ffffa1ce5fc1c9c8
+RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI: ffffa1ce5fc1c9c0
+RBP: ffffa1c6865d3280 R08: ffffffffb0f570a8 R09: 0000000000009ffb
+R10: 0000000000000286 R11: ffffffffb0f2ad50 R12: ffffa1c6865d3d10
+R13: ffffa1c6865d3c70 R14: 0000000000000000 R15: 0000000000000004
+ lock_acquire+0xbe/0x2d0
+ _raw_spin_lock_irqsave+0x3a/0x60
+ hugepage_subpool_put_pages.part.0+0xe/0xc0
+ free_huge_folio+0x253/0x3f0
+ dissolve_free_huge_page+0x147/0x210
+ __page_handle_poison+0x9/0x70
+ memory_failure+0x4e6/0x8c0
+ hard_offline_page_store+0x55/0xa0
+ kernfs_fop_write_iter+0x12c/0x1d0
+ vfs_write+0x380/0x540
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xbc/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff9f3114887
+RSP: 002b:00007ffecbacb458 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007ff9f3114887
+RDX: 000000000000000c RSI: 0000564494164e10 RDI: 0000000000000001
+RBP: 0000564494164e10 R08: 00007ff9f31d1460 R09: 000000007fffffff
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
+R13: 00007ff9f321b780 R14: 00007ff9f3217600 R15: 00007ff9f3216a00
+ </TASK>
+
+After git bisecting and digging into the code, I believe the root cause
+is that _deferred_list field of folio is unioned with _hugetlb_subpool
+field. In __update_and_free_hugetlb_folio(), folio->_deferred_list is
+initialized leading to corrupted folio->_hugetlb_subpool when folio
+is hugetlb. Later free_huge_folio() will use _hugetlb_subpool and
+above warning happens.
+
+But it is assumed hugetlb flag must have been cleared when calling
+folio_put() in update_and_free_hugetlb_folio(). This assumption is
+broken due to below race:
+
+CPU1					CPU2
+dissolve_free_huge_page			update_and_free_pages_bulk
+ update_and_free_hugetlb_folio		 hugetlb_vmemmap_restore_folios
+					  folio_clear_hugetlb_vmemmap_optimized
+  clear_flag = folio_test_hugetlb_vmemmap_optimized
+  if (clear_flag) <-- False, it's already cleared.
+   __folio_clear_hugetlb(folio) <-- Hugetlb is not cleared.
+  folio_put
+   free_huge_folio <-- free_the_page is expected.
+					 list_for_each_entry()
+					  __folio_clear_hugetlb <-- Too late.
+
+Fix this issue by checking whether folio is hugetlb directly instead
+of checking clear_flag to close the race window.
+
+Fixes: 32c877191e02 ("hugetlb: do not clear hugetlb dtor until allocating vmemmap")
+CC: stable@vger.kernel.org
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- kernel/cgroup/cgroup-v1.c | 1 +
- 1 file changed, 1 insertion(+)
+v2:
+ The root cause should be above race, so rework the fix.
+---
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 520a11cb12f4..b9dbf6bf2779 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -1335,6 +1335,7 @@ static int __init cgroup_no_v1(char *str)
- 				continue;
- 
- 			cgroup_no_v1_mask |= 1 << i;
-+			break;
- 		}
- 	}
- 	return 1;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index d748664bb2c9..3b7d5ddc32ad 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1773,7 +1773,7 @@ static void __update_and_free_hugetlb_folio(struct hstate *h,
+ 	 * If vmemmap pages were allocated above, then we need to clear the
+ 	 * hugetlb flag under the hugetlb lock.
+ 	 */
+-	if (clear_flag) {
++	if (folio_test_hugetlb(folio)) {
+ 		spin_lock_irq(&hugetlb_lock);
+ 		__folio_clear_hugetlb(folio);
+ 		spin_unlock_irq(&hugetlb_lock);
 -- 
-2.34.1
+2.33.0
 
