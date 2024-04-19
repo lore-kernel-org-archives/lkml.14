@@ -1,189 +1,170 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAC913A3E4;
-	Fri, 19 Apr 2024 17:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802378004E
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 17:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713547398; cv=none; b=obYFR40IEm+gotid+obEFIX58Pt+AdlW10VYwDp1+l3S0nz0ngqRHj0eXC5LK2xGMIYFWdf4O4XI9YRcwtDUH4YAG1+4zTS4WyHZHNhje5NucKp8SJqARzL8soWgu62XvKJ2vsu1uJ93VZW1Q1U0t6ezwhUBnopwkCMsfT2X7P4=
+	t=1713547435; cv=none; b=Jr8GvK46tbxQ7pRwYP/ZHzkOFGYdhBuFmX/0ZR2AtDobnrXP8YX/jKd4mSZJ/BJQ4Eypi+kh2DKbgPehqQAo/7o/L3gh2cZnkxLthcvc84W7+km+g46EYATzqzOnexKCIO1FfbF+L/tv58y/1tSeDi5aq10vcgOCor+FFHXHFD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713547398; c=relaxed/simple;
-	bh=puamuPI71baQimptO7zyeVOerLj1tr1Hqsuh2hoHvK0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EzKd7WT6dJ+ifU6/iOHsyrTwumvQxogH8QP+Fdet0fX6OWFDhU9QcuKwC4vLrTOc431q6PsINx/TXpKWzjJ813aOeNcbtJnlUQlDtRe/bLhXnTWR66xcZtzvFXuCapM08uYWlpI9vscU0EzYfogoAvYWk3MZOQQPgvF9TdUdYNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=CsLIaXhh; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1713547435; c=relaxed/simple;
+	bh=4zqi94Uc/R8iBsYBBImj/1Cm2SNGTxyyrkhMn0eenOY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DVM3ILNav3buwuL/aRRUOTJv7zrxh2Re5XlHeSH2HXsP22vXTX6+TYyIfqMJsmYdpUocBNZJD6xCvyp4ifLR3j5+BCFYyNPvme4vmotSV6sH3/z39qw2pVW0MHck7PZTg3XmX6fH/tznWC+9htfdvV1qCgvp9JIkwixURVieWQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I2wLMuhE; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="CsLIaXhh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2wLMuhE"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2a2c4a28e43so2531577a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 10:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1713547397; x=1745083397;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9q0M0X8NBVjwBl35ZnQ5GxeU28VDX1AEAvGVSY063dA=;
-  b=CsLIaXhh9lKLYc7Rdazm0odxdfySDTIVP8jRDLt5aZOoTraN0+JqB8vO
-   8dksAxT6S4PU1rKITyxZE5Y8NItJKrWjelTbdGYQLeIcdAdmI1rI4OOpt
-   kbvI9e6RAbX4pAiKaRGQETBZbvmCWCYrrMICs4fNp4ldyXzgjyVUWWGdb
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.07,214,1708387200"; 
-   d="scan'208";a="412998639"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 17:23:02 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:38399]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.190:2525] with esmtp (Farcaster)
- id c3c060b8-6c4d-4fa5-9eb4-01c1fe25df9a; Fri, 19 Apr 2024 17:23:01 +0000 (UTC)
-X-Farcaster-Flow-ID: c3c060b8-6c4d-4fa5-9eb4-01c1fe25df9a
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 19 Apr 2024 17:23:01 +0000
-Received: from 88665a182662.ant.amazon.com (10.119.231.92) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
- Fri, 19 Apr 2024 17:22:58 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <edumazet@google.com>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>
-Subject: Re: [syzbot] [net?] WARNING in gre_tap_xmit (2)
-Date: Fri, 19 Apr 2024 10:22:50 -0700
-Message-ID: <20240419172250.83685-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CANn89iKNcQOcRX1vGVXFBXn1Z2axGS+hWuhxKOAaq8BCo4W0bw@mail.gmail.com>
-References: <CANn89iKNcQOcRX1vGVXFBXn1Z2axGS+hWuhxKOAaq8BCo4W0bw@mail.gmail.com>
+        d=google.com; s=20230601; t=1713547434; x=1714152234; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5WPGtsMCwemSIr+JDp0r8nt/aMHu/Jjken9XpaKI2j4=;
+        b=I2wLMuhEPUQlJ/JAHQd9rpfMn/rWXxVBCSRNRSosBQRBgPfVNs4g1jYZbKF4IMMNJT
+         3j/U0j+RL13ceVq5SYdZGRRImSTZYybS6SFvd0ZtEERCoXiQdo2S++wgCpt8BSv7w0Pr
+         AZ9f/Y8l+J24Q00EL8nnxMVvrrQPKSb2dUU/TKIDc9Ynb/rJ6EirRpm8jDxJXihbs3zn
+         cEps/grfphrNm8UsWINftQ3E8BAUDjJZqb2ASHf8yxDQr2Z9E+GAZw0earqMDm4Mh5ep
+         CIxD5tl87957emeXdBO2WzLKh4hP19MZWAlX0Ssja9mbXchQuz2a6EZsC86DJTeDS36D
+         099w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713547434; x=1714152234;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5WPGtsMCwemSIr+JDp0r8nt/aMHu/Jjken9XpaKI2j4=;
+        b=f6IYlHogPkfGTqw2TUKLOjwFC/VQRLJKxApZNx6tqTVyBmbNVrdo6/tXMCGeGen8EF
+         LyFXdAysM6Z383lyQNgaVgYNOdpm5Iyv4xZ53fg0BDE42RFDFWkX9s+6iL7xrvLQWdTF
+         MmgpcXgV+nrM/IBJIWaP/RgYOy3PXpVAwc7YD21DCVBCEGIOiA7HBJcJc88ajotDwpfh
+         XQjAy2tpBUckBrCfkMMpuZJOpxmJRhi9IBjry3zB93Me+OXmrftNcxTJfa24yfrmkweD
+         6yGxyBoSBWKA3d1vFJXK42YILdG/gfbX3SWcSzdHJ+5sgevdvRBs1XzmpF1GawkqZDlu
+         uknA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6whz8idHMdQZWHvZD46NWFAPs1t9f3Hg5g1Rr/d4vecuf+XQiCZbizYyt19+0RwsFr4fNeyY0vq68xU15wUv1cWYHtV2vhlPKDw/o
+X-Gm-Message-State: AOJu0YyrbOfW4BSvOmzFMMLeW7m3RzTuxnTeZU2/+EinIG8uIe7MqBkc
+	sMQEGb27P/nswluzig3lK5HLfZWzsyVoOlEsjK5n4gyitcGTOOqXe812WJX434ottt4mbFlbEPM
+	wHA==
+X-Google-Smtp-Source: AGHT+IGGe/+C3TYWvB4s3TxxlXneQCY3I9SMxiecXVgkEzf3CZxByEf/KHHFm+qEb9Q+1OuEhyXw0yNn4Bg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:f411:b0:2ac:3c42:57ea with SMTP id
+ ch17-20020a17090af41100b002ac3c4257eamr8941pjb.5.1713547433583; Fri, 19 Apr
+ 2024 10:23:53 -0700 (PDT)
+Date: Fri, 19 Apr 2024 10:23:52 -0700
+In-Reply-To: <22b19d11-056c-402b-ac19-a389000d6339@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D045UWA004.ant.amazon.com (10.13.139.91) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Mime-Version: 1.0
+References: <Zhftbqo-0lW-uGGg@google.com> <6cd2a9ce-f46a-44d0-9f76-8e493b940dc4@intel.com>
+ <Zh7KrSwJXu-odQpN@google.com> <900fc6f75b3704780ac16c90ace23b2f465bb689.camel@intel.com>
+ <Zh_exbWc90khzmYm@google.com> <2383a1e9-ba2b-470f-8807-5f5f2528c7ad@intel.com>
+ <ZiBc13qU6P3OBn7w@google.com> <5ffd4052-4735-449a-9bee-f42563add778@intel.com>
+ <ZiEulnEr4TiYQxsB@google.com> <22b19d11-056c-402b-ac19-a389000d6339@intel.com>
+Message-ID: <ZiKoqMk-wZKdiar9@google.com>
+Subject: Re: [PATCH v19 023/130] KVM: TDX: Initialize the TDX module when
+ loading the KVM intel kernel module
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: Tina Zhang <tina.zhang@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	Bo2 Chen <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 19 Apr 2024 12:10:42 +0200
-> On Fri, Apr 19, 2024 at 11:39 AM syzbot
-> <syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
-> > git tree:       bpf
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=165886c3180000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c298c9f0e46a3c86332b
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/3f355021a085/disk-443574b0.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/44cf4de7472a/vmlinux-443574b0.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/a99a36c7ad65/bzImage-443574b0.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+c298c9f0e46a3c86332b@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 13407 at include/linux/skbuff.h:2740 pskb_may_pull_reason include/linux/skbuff.h:2740 [inline]
-> > WARNING: CPU: 0 PID: 13407 at include/linux/skbuff.h:2740 pskb_may_pull include/linux/skbuff.h:2756 [inline]
-> > WARNING: CPU: 0 PID: 13407 at include/linux/skbuff.h:2740 pskb_network_may_pull include/linux/skbuff.h:3077 [inline]
-> > WARNING: CPU: 0 PID: 13407 at include/linux/skbuff.h:2740 pskb_inet_may_pull include/net/ip_tunnels.h:361 [inline]
-> > WARNING: CPU: 0 PID: 13407 at include/linux/skbuff.h:2740 gre_tap_xmit+0x4ff/0x6e0 net/ipv4/ip_gre.c:734
-> > Modules linked in:
-> > CPU: 0 PID: 13407 Comm: syz-executor.1 Not tainted 6.8.0-syzkaller-05236-g443574b03387 #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> > RIP: 0010:pskb_may_pull_reason include/linux/skbuff.h:2740 [inline]
-> > RIP: 0010:pskb_may_pull include/linux/skbuff.h:2756 [inline]
-> > RIP: 0010:pskb_network_may_pull include/linux/skbuff.h:3077 [inline]
-> > RIP: 0010:pskb_inet_may_pull include/net/ip_tunnels.h:361 [inline]
-> > RIP: 0010:gre_tap_xmit+0x4ff/0x6e0 net/ipv4/ip_gre.c:734
-> > Code: 00 4c 89 ef 48 89 ee 48 89 da e8 7c 8f fb ff 31 c0 48 83 c4 38 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 62 55 9d f7 90 <0f> 0b 90 e9 09 fc ff ff 44 89 e7 89 ee e8 0f 57 9d f7 41 39 ec 0f
-> > RSP: 0018:ffffc90004b66e00 EFLAGS: 00010287
-> > RAX: ffffffff89f79b0e RBX: ffff888061667718 RCX: 0000000000040000
-> > RDX: ffffc9000c375000 RSI: 00000000000124e0 RDI: 00000000000124e1
-> > RBP: 00000000ffffffb6 R08: ffffffff89f79712 R09: 1ffffffff1f0d5cd
-> > R10: dffffc0000000000 R11: ffffffff89f79610 R12: 0000000000000000
-> > R13: ffff888061667640 R14: ffff888062b64000 R15: dffffc0000000000
-> > FS:  00007f08d29ff6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000020010000 CR3: 0000000061678000 CR4: 00000000003506f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-> > Call Trace:
-> >  <TASK>
-> >  __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
-> >  netdev_start_xmit include/linux/netdevice.h:4917 [inline]
-> >  xmit_one net/core/dev.c:3531 [inline]
-> >  dev_hard_start_xmit+0x26a/0x790 net/core/dev.c:3547
-> >  sch_direct_xmit+0x2b6/0x5f0 net/sched/sch_generic.c:343
-> >  __dev_xmit_skb net/core/dev.c:3760 [inline]
-> >  __dev_queue_xmit+0x1912/0x3b10 net/core/dev.c:4301
-> >  bond_start_xmit+0x1389/0x1c40 drivers/net/bonding/bond_main.c:5469
-> >  __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
-> >  netdev_start_xmit include/linux/netdevice.h:4917 [inline]
-> >  xmit_one net/core/dev.c:3531 [inline]
-> >  dev_hard_start_xmit+0x26a/0x790 net/core/dev.c:3547
-> >  __dev_queue_xmit+0x19f4/0x3b10 net/core/dev.c:4335
-> >  packet_snd net/packet/af_packet.c:3083 [inline]
-> >  packet_sendmsg+0x4932/0x63d0 net/packet/af_packet.c:3115
-> >  sock_sendmsg_nosec net/socket.c:730 [inline]
-> >  __sock_sendmsg+0x221/0x270 net/socket.c:745
-> >  ____sys_sendmsg+0x525/0x7d0 net/socket.c:2584
-> >  ___sys_sendmsg net/socket.c:2638 [inline]
-> >  __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2667
-> >  do_syscall_64+0xfb/0x240
-> >  entry_SYSCALL_64_after_hwframe+0x6d/0x75
-> > RIP: 0033:0x7f08d2e7dea9
-> > Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> > RSP: 002b:00007f08d29ff0c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> > RAX: ffffffffffffffda RBX: 00007f08d2fabf80 RCX: 00007f08d2e7dea9
-> > RDX: 00000000200400c4 RSI: 0000000020000180 RDI: 0000000000000006
-> > RBP: 00007f08d2eca4a4 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > R13: 000000000000000b R14: 00007f08d2fabf80 R15: 00007ffcba0da4f8
-> >  </TASK>
-> >
-> >
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > If the report is already addressed, let syzbot know by replying with:
-> > #syz fix: exact-commit-title
-> >
-> > If you want to overwrite report's subsystems, reply with:
-> > #syz set subsystems: new-subsystem
-> > (See the list of subsystem names on the web dashboard)
-> >
-> > If the report is a duplicate of another one, reply with:
-> > #syz dup: exact-subject-of-another-report
-> >
-> > If you want to undo deduplication, reply with:
-> > #syz undup
+On Fri, Apr 19, 2024, Kai Huang wrote:
+> On 19/04/2024 2:30 am, Sean Christopherson wrote:
+> > No, that will deadlock as cpuhp_setup_state() does cpus_read_lock().
 > 
-> Kuniyuki , this is another manifestation of NSH bug, thanks !
+> Right, but it takes cpus_read_lock()/unlock() internally.  I was talking
+> about:
+> 
+> 	if (enable_tdx) {
+> 		kvm_x86_virtualization_enable();
+> 
+> 		/*
+> 		 * Unfortunately currently tdx_enable() internally has
+> 		 * lockdep_assert_cpus_held().
+> 		 */
+> 		cpus_read_lock();
+> 		tdx_enable();
+> 		cpus_read_unlock();
+> 	}
 
-Thanks, will take a look at the repro !
+Ah.  Just have tdx_enable() do cpus_read_lock(), I suspect/assume the current
+implemention was purely done in anticipation of KVM "needing" to do tdx_enable()
+while holding cpu_hotplug_lock.
 
-I got a similar v6 gre splat yesterday with no repro, but
-this v4 one has, nice :)
+And tdx_enable() should also do its best to verify that the caller is post-VMXON:
 
-Call trace:
- pskb_may_pull_reason include/linux/skbuff.h:2740 [inline]
- pskb_may_pull include/linux/skbuff.h:2756 [inline]
- pskb_network_may_pull include/linux/skbuff.h:3077 [inline]
- pskb_inet_may_pull include/net/ip_tunnels.h:361 [inline]
- ip6gre_tunnel_xmit+0xea0/0x13b8 net/ipv6/ip6_gre.c:901
+	if (WARN_ON_ONCE(!(__read_cr4() & X86_CR4_VMXE)))
+		return -EINVAL;
+
+> > > Btw, why couldn't we do the 'system_state' check at the very beginning of
+> > > this function?
+> > 
+> > We could, but we'd still need to check after, and adding a small bit of extra
+> > complexity just to try to catch a very rare situation isn't worth it.
+> > 
+> > To prevent races, system_state needs to be check after register_syscore_ops(),
+> > because only once kvm_syscore_ops is registered is KVM guaranteed to get notified
+> > of a shutdown. >
+> > And because the kvm_syscore_ops hooks disable virtualization, they should be called
+> > after cpuhp_setup_state().  That's not strictly required, as the per-CPU
+> > hardware_enabled flag will prevent true problems if the system enter shutdown
+> > state before KVM reaches cpuhp_setup_state().
+> > 
+> > Hmm, but the same edge cases exists in the above flow.  If the system enters
+> > shutdown _just_ after register_syscore_ops(), KVM would see that in system_state
+> > and do cpuhp_remove_state(), i.e. invoke kvm_offline_cpu() and thus do a double
+> > disable (which again is benign because of hardware_enabled).
+> > 
+> > Ah, but registering syscore ops before doing cpuhp_setup_state() has another race,
+> > and one that could be fatal.  If the system does suspend+resume before the cpuhup
+> > hooks are registered, kvm_resume() would enable virtualization.  And then if
+> > cpuhp_setup_state() failed, virtualization would be left enabled.
+> > 
+> > So cpuhp_setup_state() *must* come before register_syscore_ops(), and
+> > register_syscore_ops() *must* come before the system_state check.
+> 
+> OK.  I guess I have to double check here to completely understand the races.
+> :-)
+> 
+> So I think we have consensus to go with the approach that shows in your
+> second diff -- that is to always enable virtualization during module loading
+> for all other ARCHs other than x86, for which we only always enables
+> virtualization during module loading for TDX.
+
+Assuming the other arch maintainers are ok with that approach.  If waiting until
+a VM is created is desirable for other architectures, then we'll need to figure
+out a plan b.  E.g. KVM arm64 doesn't support being built as a module, so enabling
+hardware during initialization would mean virtualization is enabled for any kernel
+that is built with CONFIG_KVM=y.
+
+Actually, duh.  There's absolutely no reason to force other architectures to
+choose when to enable virtualization.  As evidenced by the massaging to have x86
+keep enabling virtualization on-demand for !TDX, the cleanups don't come from
+enabling virtualization during module load, they come from registering cpuup and
+syscore ops when virtualization is enabled.
+
+I.e. we can keep kvm_usage_count in common code, and just do exactly what I
+proposed for kvm_x86_enable_virtualization().
+
+I have patches to do this, and initial testing suggests they aren't wildly
+broken.  I'll post them soon-ish, assuming nothing pops up in testing.  They are
+clean enough that they can land in advance of TDX, e.g. in kvm-coco-queue even
+before other architectures verify I didn't break them.
+
+> Then how about "do kvm_x86_virtualization_enable()  within
+> late_hardware_setup() in kvm_x86_vendor_init()"  vs "do
+> kvm_x86_virtualization_enable() in TDX-specific code after
+> kvm_x86_vendor_init()"?
+> 
+> Which do you prefer?
+
+The latter, assuming it doesn't make the TDX code more complex than it needs to
+be.  The fewer kvm_x86_ops hooks, the better.
