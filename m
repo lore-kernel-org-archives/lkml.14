@@ -1,78 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0B12FB34;
-	Fri, 19 Apr 2024 14:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B984712DDB8;
+	Fri, 19 Apr 2024 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535618; cv=none; b=b48lvArSZcs6koMufJQDFev5xAHNmMzphgjiPdaODnZiH7HIQLDlnrFAxgxib2B3U70hqzIaXvSIl+r3gBuzeam+O99SI7UX8AnM1pbnOd5fxxGsk+2E9Q+eQvs2T+axzAgpTQ4JHJCM4HCrs/uhW8ot4HVQ1QUzaTNb1MyDHLU=
+	t=1713535682; cv=none; b=dK5Tb56XpgxLO245k4ryebuCzB0kwTEDI3ziKRsQbDoKtbEmIHEMGgFNhaSrlFGPyzCWiVwD6L0TA5UccOKpFpsbVPkplwzRuxXfwXJNYMWkdadCCLRdZtI8ELmzFyYQ7N4IB814Dyyg9yvOqiayLOq5OlQ8qMd8tRRHh4EVoBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535618; c=relaxed/simple;
-	bh=8Dg2SETr6N4feoFsxjjd3WBN8QKCU3lGTMaIZTPgErk=;
+	s=arc-20240116; t=1713535682; c=relaxed/simple;
+	bh=rjZuH2RNoPHVFiJFLYwvZB1FBSLtOukO9uEvQlaCLC8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CN2KVRpF2+V+HGAehNy/7ubKrdfLtogHAXtRba7B2sq1oaNi6t6GPrNhTRpTck4Nqs/eZN27rqvyZ9PuWMZvZ6Mxf9+tA8WPvEPD9ol/AbCXCH1R1wG8Xayun4FMjdfzboT0bhQUHfxnYo+N26d1c/IxWerGlYnAkT4Q5sfIw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gh5Ysj92; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=az5KbzkTNGZSNxq9OYI1DXm0jAempLXHShJw1WOjdTjQvNqU+w+mWU/RLQv6NMYiv6syL+7e3mVYrfDrJ4oaTyQSXDK13lh9jdl6jHxdnfh71NW5eWRqWogyO4B7b0+Q5TVldIX+X7qsX7q9c1Pq135JDtHs5HBAeDzo3fChxm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7oQWewo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gh5Ysj92"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713535617; x=1745071617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8Dg2SETr6N4feoFsxjjd3WBN8QKCU3lGTMaIZTPgErk=;
-  b=gh5Ysj92TvMVKrNyWzwVyY9adJlURzidKC0xJYsfWzLA9dxg3aogAcWo
-   CGRGUN15zVH9nfCg3Cqm5PLRnatvObajxAnQu6HOP/4WGpZdf5V2RGFhb
-   /+1Y+GMWfE0kxUNw+XuGNQsh8PGcwFvm1Bt5HMx719NqpTx/oSgLOWcxm
-   /9cjAgztiGcst0q7btYZK8ve7M3MD8P79er33vTTg9unmTbmQzq4eO28A
-   knjQHxhxeiwYGBoTN7naSTWCWxZiQz87dFXI22Mc8q0WbCYgCVpHot58c
-   lO9l0myScQz0a0z5aeQuFH7TJOWRR3ujmU5H4gOzT/wvbEUUYuZJjcdEh
-   A==;
-X-CSE-ConnectionGUID: uCIuEdztQVKYI3X/804Cuw==
-X-CSE-MsgGUID: qicirMKZTiGc7sGVpL4QTA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="8997109"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="8997109"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 07:06:56 -0700
-X-CSE-ConnectionGUID: rIiZ5WraTSC/mutCZT/PVA==
-X-CSE-MsgGUID: 1i84BjcMQbybm+Askr/Drw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="28121420"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa005.jf.intel.com with ESMTP; 19 Apr 2024 07:06:54 -0700
-Date: Fri, 19 Apr 2024 22:01:39 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	isaku.yamahata@intel.com, xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com, seanjc@google.com,
-	rick.p.edgecombe@intel.com
-Subject: Re: [PATCH 2/7] KVM: Add KVM_MAP_MEMORY vcpu ioctl to pre-populate
- guest memory
-Message-ID: <ZiJ5Q3/ThsomR/Wa@yilunxu-OptiPlex-7050>
-References: <20240417153450.3608097-1-pbonzini@redhat.com>
- <20240417153450.3608097-3-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7oQWewo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25936C4AF68;
+	Fri, 19 Apr 2024 14:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713535682;
+	bh=rjZuH2RNoPHVFiJFLYwvZB1FBSLtOukO9uEvQlaCLC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q7oQWewoDaWdOgYxMQ2ukGY48LSdhEWx1Otl6NL/TTr+dfGVMzoDhU3xs8U+Vh03h
+	 h5b0vAwEUh0w5Y49GqRXTA3x6vXCtnvxjQ4gozeRKlb9SXka7NLec8p11CW/x98aJl
+	 h5Lb+91utT3HTnj0JuWh7Xi436hMqCY/QTT9qqXHmHFOk931dWFEtI8LLQsVwB7nz8
+	 LG5253uOY1du1nubU90M1bj7wt/5V/bTVlruSp8dRagHLqh2Bo5QGeuSWXlnz5Hipz
+	 /gecHLXUIG2MGhaiGur1A5yaQe4R7eEow4vtXUbWk7COMzVEaOYU8P2WPM54eleU2Z
+	 X9eUEDw0nTkew==
+Date: Fri, 19 Apr 2024 15:07:52 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Konstantin Pugin <rilian.la.te@ya.ru>
+Cc: Konstantin Pugin <ria.freelander@gmail.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lech Perczak <lech.perczak@camlingroup.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] dt-bindings: sc16is7xx: Add compatible line for
+ XR20M1172 UART
+Message-ID: <20240419-glue-pyramid-584728c0076a@spud>
+References: <20240419124506.1531035-1-rilian.la.te@ya.ru>
+ <20240419124506.1531035-3-rilian.la.te@ya.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ov99zUVbexXa5Um/"
+Content-Disposition: inline
+In-Reply-To: <20240419124506.1531035-3-rilian.la.te@ya.ru>
+
+
+--ov99zUVbexXa5Um/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240417153450.3608097-3-pbonzini@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 17, 2024 at 11:34:45AM -0400, Paolo Bonzini wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
-> 
-> Add a new ioctl KVM_MAP_MEMORY in the KVM common code. It iterates on the
-> memory range and calls the arch-specific function.  Add stub arch function
-> as a weak symbol.
+On Fri, Apr 19, 2024 at 03:45:02PM +0300, Konstantin Pugin wrote:
+> From: Konstantin Pugin <ria.freelander@gmail.com>
+>=20
+> Add EXAR XR20M1172 UART compatible line into devicetree documentation.
 
-The weak symbol is gone.
+What you're doing is obvious from the diff, why this exar device is
+related to the nxp devices is what should be mentioned here.
 
 Thanks,
-Yilun
+Conor.
+
+>=20
+> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+> Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml =
+b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> index 5dec15b7e7c3..c4bedf23368b 100644
+> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.yaml
+> @@ -12,6 +12,7 @@ maintainers:
+>  properties:
+>    compatible:
+>      enum:
+> +      - exar,xr20m1172
+>        - nxp,sc16is740
+>        - nxp,sc16is741
+>        - nxp,sc16is750
+> --=20
+> 2.34.1
+>=20
+
+--ov99zUVbexXa5Um/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiJ6uAAKCRB4tDGHoIJi
+0s5fAP9IKK3nOQ4Jai8TvAbCaITTWmCJhHo3WB/T9hOiaHVNVQD/cVSvMGYRW79m
+TbjX6eFGGbOtnYE3sPYmC7tlV8+2PAw=
+=EuDz
+-----END PGP SIGNATURE-----
+
+--ov99zUVbexXa5Um/--
