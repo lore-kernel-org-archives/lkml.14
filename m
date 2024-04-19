@@ -1,109 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BA612F378;
-	Fri, 19 Apr 2024 14:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7342D12DDB0;
+	Fri, 19 Apr 2024 14:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535754; cv=none; b=KrZ5O5CgFf9EuGXfMIfA5FRJdYI26a4yMLo4pM+Gp4IISdZABIQ+kHvsTs3/d6d6+jmOinKCe9P2qLAper4gT5+bH6o/6a//aXY4vloSDOYcsMRsM878ip2kvbDvDsZNbH5lHk/cHJHDZsI5qHvuRlo4sXTrjZ7hkC0TRC13KGQ=
+	t=1713535796; cv=none; b=aYrK+bqJE0xPLNtwlvMtfu01DAsmOd4rgT1d6+OMb51a9cWyqSCACzH2WUyHPVTvcqRQla5Mds7LVeeaAqGwT+FDJiTXdCsc0YpD8NCPiWXawSC2Ly1VFLF2xq03+jmYYiVL1GghojoEjQ+ahCR4m4P7+DNLANRefd7F9ekur9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535754; c=relaxed/simple;
-	bh=lykCOLKqJjRDe+8Set3BA8BLXqNMhZRHNwizcwwY1R8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ubsQzStFZtMGG3SdXh1jWiYmzLexQJSPJTU/NCxmwT4yEjW6MQ3vftUfvxNZm5BxuMyuiwg4cq6ykzOrz2uMkkC6XczYRGBvwgY7oJyMXWec8SYMVMlTM2NHvCkebFPjAoVkUG0OqQ4vZ60BlGDbVxrUTgItRJjlXu6H33UFqX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=BXrL+qy7; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1713535796; c=relaxed/simple;
+	bh=jehuRMphqfkmVPEQx6BP9BRLXAz3lpdh4pzkarHFts4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A0Bj+MZE2XcbWgB1b8Cmqow91WA31fGmRYYqxmQJ3rzLoYTYbSQVualwUny9tWGne4Jf6npUe+sjP2GL7aE+2N2ypugGQXSqXlmqaT0+ZK+MuJV0Zhi9urjg9UKeCyF9s4rCAfZtBbzNebuBuII6Ms9ce9u+TD2VqRQsAZR7Dp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOQT4gHK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="BXrL+qy7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1713535720; x=1714140520; i=markus.elfring@web.de;
-	bh=lAS9mTVpLnalSm5EePWLAsejXsUvIKNzzANCk7Zyh88=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=BXrL+qy7fKZKSy7vXMNGYc7EmhjKtAJ5OjAQginqikx1Pp94g+yz7C0WAZW9POva
-	 Phxn9z46+j3Trvz4xkZp/TchUKQBgINAmCUBTZB+BL6CUaMbReuXDBfAYww1gAvQi
-	 vikPRSBVxbCDVZ0Yo9nXMUkFSOQxukR69hLSZ1zsEzsJv6FPZKVuIs5xifpuhx1HJ
-	 8YMZ1EuE2YG1fzH0RtxH9ZAOxUW8w3MI6gy42wSOvh9a09uId+uKykhFOI2qelq65
-	 KucGTGQtZjtz/vvI6G7xgUMt/zpB1E0RvYkOoIHqnPUNmTGmFJG+xWTuUNyH6XXQl
-	 fQakCVTh9NuX0nmHNw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mo6O7-1sUcQV2IAN-00mvrD; Fri, 19
- Apr 2024 16:08:40 +0200
-Message-ID: <4cff158d-b5ac-4dca-9fbb-626237c1eafe@web.de>
-Date: Fri, 19 Apr 2024 16:08:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOQT4gHK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B89E3C072AA;
+	Fri, 19 Apr 2024 14:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713535796;
+	bh=jehuRMphqfkmVPEQx6BP9BRLXAz3lpdh4pzkarHFts4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AOQT4gHKpTFrLdSC660QQWrs1iLZu9MsQ/eKqaGaFCZaS/KrkNRNe9EGDi8hQC5VI
+	 6tc6DvjaIo9GW36WK3D+Irw+pFQwsLHBr85C+nZfRNNU82IEOUHIEH8nd1P7GlLsof
+	 Hv3oV83Fp09olkZB/fs8cdOppTQGHHvRKePG+k/FcXxTHp3WtllnP2ClZeMrrmkRo6
+	 QjWCOcVgjVFlOEeO+npXQzMD3TvBaHAH65SmWK9pMI0tcjGd7sgac6X+s6kT6Tq17k
+	 rMxM8Eb6Ve+Gg3ToKz+8JClr7RSvSqf8WQKZvhPua18y61uFyBAYdNcKnS+iJoN3VD
+	 mzv5vFbRxyb0w==
+Date: Fri, 19 Apr 2024 15:09:47 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-kernel@vger.kernel.org, amadeus@jmu.edu.cn,
+	FUKAUMI Naoki <naoki@radxa.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: rockchip: Correct the descriptions
+ for Radxa boards
+Message-ID: <20240419-triumph-cheddar-77fc2f6948b0@spud>
+References: <1e148d6cd4486b31b5e7f3824cf6bccf536b74c0.1713457260.git.dsimic@manjaro.org>
+ <1888572.CQOukoFCf9@diego>
+ <20240418-attach-tigress-bc2b9f844fc7@spud>
+ <c3c4a6ad48fbd62b44991c9bfd81570a@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
- kernel-janitors@vger.kernel.org, "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Haren Myneni <haren@linux.ibm.com>, Jakub Kicinski <kuba@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Nick Child <nnac123@linux.ibm.com>,
- Paolo Abeni <pabeni@redhat.com>, Rick Lindsley <ricklind@linux.ibm.com>,
- Thomas Falcon <tlfalcon@linux.ibm.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] ibmvnic: Use -EBUSY in __ibmvnic_reset()
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7FkaqVBXtYg+l891"
+Content-Disposition: inline
+In-Reply-To: <c3c4a6ad48fbd62b44991c9bfd81570a@manjaro.org>
+
+
+--7FkaqVBXtYg+l891
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wHaYprIvoklgpYvLAHaNj+zV2sUobvP/1+QGxB/jpFxwfLQ3/qn
- 32vCTsyWO3nPL2VCwhbpCMJR8j7UPW1FscxEpo8oGbSL/aAgV/PX6Vpr+VEtuUd39Fl9Wwi
- C04dNziBBise3+TfaEabuRF7AP8kexSpDRo+9sw4iZ7FlHoVp7pytc0thcBAO/GXLQfi2ot
- HsTWBbbb3UTXqwH16qzxw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:J02Z7QBpCOg=;z+trVArPa8/FGsp1KNJLJcillff
- hRcWIsH8BcyVEgycHUM44aOJtRmtzAwN6ouXaz79v3pTmbM9d7GSKWrRZ6wnWy6i+vKj0djKA
- mU+vnmEikbKvaQBqUWsRZzp1MQxOLxf9psQ01whhYma8tGSY7u92a50OvXBn1IlRsngOvttjY
- qBUZP7pjSVzwwhd3h5QEpCyYQjDC3yDZbs32q8+6WrY7LJcSy7MoDCugO+FpXK/445fvX0Wv5
- 2qc1FLNzJac7LHzXbyXOSf6AC54e03yo3XF6qf0YXl1xswPXZQ9D/tt/a8upC9tzNlGm30GxY
- zmJLGtljbL+2GCEzBazjBrhIMvYfEMhTMEury3fLz/7Cef/6VJaNEkTf1H7PfxNMwmxrCSWAN
- SKexmvUTmcZt233uMeQcGmc5S3BroHa9QxNTKot1ydzi6RdYzJxnuv/5DJN8UFa1T3IFXTyyX
- aksxT0fyEwkmLDaB0MRhIhhsYteo88NDd2hIJS9LER0OsRgK0J0HSy0lWELkQmF1NNmxNUSGS
- umUOZ7XUzok6jX+BtbH7DAVIHqgy/IyLQXqBcThg6uHSizSVvXWpbqbztrVByJ1mCyz0bYHWi
- AtAIYC8SQS5xVRj5E33RR/+BT3xkqVBZSvioSSa25LrG2MHLROt0CAPteRYW0nnZAZHDeZVzN
- 8WfcVE+jXneHVHX9SGaL5GEHcFNxv6jK1W5TUTD8uqrFnuyRMg81483evRi2wy48cRdUjrbh7
- NW6pVBHGE6UvKCOYRhyE6xE2mjRUg20S+N3bC0houl+NYlZy9c5Gv9/oRUIrvK/w3mR3+VXbs
- CyioRbpVKMsnV52g2zH3aKGPSwPO3629RXSYANKTwAWbE=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 19 Apr 2024 15:46:17 +0200
+On Thu, Apr 18, 2024 at 07:12:35PM +0200, Dragan Simic wrote:
+> On 2024-04-18 19:04, Conor Dooley wrote:
+> > On Thu, Apr 18, 2024 at 06:59:42PM +0200, Heiko St=FCbner wrote:
+> > > Am Donnerstag, 18. April 2024, 18:26:19 CEST schrieb Dragan Simic:
+> > > > Correct the descriptions of a few Radxa boards, according to the up=
+-to-date
+> > > > documentation from Radxa and the detailed explanation from Naoki. [=
+1]  To sum
+> > > > it up, the short naming, as specified by Radxa, is preferred.
+> > > >
+> > > > [1] https://lore.kernel.org/linux-rockchip/B26C732A4DCEA9B3+282b877=
+5-601b-4d4a-a513-4924b7940076@radxa.com/
+> > > >
+> > > > Suggested-by: FUKAUMI Naoki <naoki@radxa.com>
+> > > > Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/arm/rockchip.yaml | 8 ++++----
+> > > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/=
+Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > > index fcf7316ecd74..ae58e25c29ec 100644
+> > > > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > > > @@ -767,22 +767,22 @@ properties:
+> > > >            - const: radxa,rockpis
+> > > >            - const: rockchip,rk3308
+> > > >
+> > > > -      - description: Radxa Rock2 Square
+> > > > +      - description: Radxa Rock 2 Square
+> > >=20
+> > > I may be just blind, but what changed here?
+> >=20
+> > There's now a space before the 2.
+>=20
+> Exactly.  That's part of the Radxa's naming convention, which may be
+> seen as somewhat similar to the general rule of spacing out values and
+> their associated units, e.g. "2 MB" is in general preferred over "2MB"
+> in nearly any kind of a formally correct document.
 
-Add a minus sign before the error code =E2=80=9CEBUSY=E2=80=9D
-so that a negative value will be used as in other cases.
+> As a side note, there's even so-called "half space" as a typographical
+> convention for spacing out the values and the associated units.  That
+> makes formatted text with such spacing a bit nicer. :)
 
-This issue was transformed by using the Coccinelle software.
+Let's not introduce half spaces into the bindings though :)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--7FkaqVBXtYg+l891
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm=
-/ibmvnic.c
-index 5e9a93bdb518..737ae83a836a 100644
-=2D-- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -3212,7 +3212,7 @@ static void __ibmvnic_reset(struct work_struct *work=
-)
- 		    adapter->state =3D=3D VNIC_REMOVED) {
- 			spin_unlock_irqrestore(&adapter->state_lock, flags);
- 			kfree(rwi);
--			rc =3D EBUSY;
-+			rc =3D -EBUSY;
- 			break;
- 		}
+-----BEGIN PGP SIGNATURE-----
 
-=2D-
-2.44.0
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiJ7KwAKCRB4tDGHoIJi
+0vpdAP9ZWrts28eoF08Ze+LlZQlLraekiKILcD15q9SAIQAwTgD/VjVApPmxTA6L
+EaOwHykkUAq7LQocAUirg0/WgMc5pgM=
+=gUAd
+-----END PGP SIGNATURE-----
 
+--7FkaqVBXtYg+l891--
