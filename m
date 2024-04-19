@@ -1,62 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718C6537FC
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EF47C0AA;
+	Fri, 19 Apr 2024 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713524887; cv=none; b=SKFzlgYDlnEyX/nbYcz863hnR/X6QGgUy+VMNtTvwN3LPfuxmOuhwsxKuyUX6b5EbzIxq/Dvy6+W7tz96afRNXAkCxOqUn6k75ZKfVJqjcIuwHjDtHIhvaE7lEQGkWAmnSOKUabi/rXrZz/VRNZHzK+oC1cKtKy1/4HMi04Hurs=
+	t=1713524962; cv=none; b=Yw//DwZRwQorusYXHIZJ5a7xRL2k2oG+cH/MW7143m4geJZMz3UeCEbFxg8neTMu6oaGWSd+lUUD70QirRKu8iToqxfwKnZEGtWnNx7QVEwetIkQKq9hZ/SvRDWyBfj32CDTV3C/BhuAsYE/GZTRce/a8jfcsTbrqfHKCAdmC74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713524887; c=relaxed/simple;
-	bh=MnqdrpaGNSd52dE5XqkCFGUmfpXHMoqJ9jyRmyjAfdE=;
+	s=arc-20240116; t=1713524962; c=relaxed/simple;
+	bh=YI3P7Rva9xSglnlAVV6zSk/NWyRNlLlz//CcwKpcCTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9nzA5e48oV15jhl+jWIWilpEfyp0K2bv5AC9h8T+zJg73njy+1KUPpiJzU0YDOdLyoFFTY3yy04Fj1b2KydDSDWK278qJv5Trzh23P9raUtHA6sL4oQrFQFq1AQ/FU2zA3LqUwDdkKHcuatZEaEhWcWaxP3kWJ/cv94s1T6uQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P26DPXzM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OyYY+1qZ2C6epHKZZlfw5957gsbdbgovJwfVJM3hmuhn810/1zPRNg709QxEGfLPXz/Gp1W/tVR3KM/zGVSkyQHwO0+GMTHb7aNhzcfW9diGsckv+8cOXY8oKWR3zPRi90YcXb6H6PAV7dxTwdY1JrvB+FssUMfPD5jhuKTw8ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MCRo1+5w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P26DPXzM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713524884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AqgUdncdJ6Ey3LItq0FX5Kgv1YEnpg3rmJdx0umscNk=;
-	b=P26DPXzMFPMPrXr3FfQBJGqRzvULWmismidIe88Gabg/yT3YG22CCnWceuEpnsVVdBm1vM
-	rBHXXKPFDyQxAIZci3EBZB67X4fwj7SHDp8py34KcnyueUmXAZNTdFQQwPY96Llb4NiSfb
-	TJxWXuUuD3YyQ/QVKT/BVTtD8I3H93A=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-207-f2pDIKJSNUmhatKUsHYYCQ-1; Fri, 19 Apr 2024 07:08:00 -0400
-X-MC-Unique: f2pDIKJSNUmhatKUsHYYCQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 540FD80021A;
-	Fri, 19 Apr 2024 11:08:00 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.44])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 126AA1C060D1;
-	Fri, 19 Apr 2024 11:07:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 19 Apr 2024 13:06:35 +0200 (CEST)
-Date: Fri, 19 Apr 2024 13:06:32 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	John Stultz <jstultz@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [patch V2 26/50] signal: Get rid of resched_timer logic
-Message-ID: <20240419110632.GA3198@redhat.com>
-References: <20240410164558.316665885@linutronix.de>
- <20240410165552.572304080@linutronix.de>
- <20240418163811.GA23440@redhat.com>
- <20240418181821.GA26239@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MCRo1+5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C77AC072AA;
+	Fri, 19 Apr 2024 11:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713524962;
+	bh=YI3P7Rva9xSglnlAVV6zSk/NWyRNlLlz//CcwKpcCTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MCRo1+5wIIs/WfccSt8i6DyJQUPvAeWr2EZfcnhwoVTmbhYtoa/62LWc2fzZIvfwP
+	 +vKHTazBB8EomoJZqaiKlwhSdjFizANNVizJ0haWw+QJXlmKms4SQfZlGGEjBjJQir
+	 VO3MlMRlGksncnidd/u6GFpm/keHk/Ou6zhe2gP4=
+Date: Fri, 19 Apr 2024 13:09:10 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Edward Liaw <edliaw@google.com>
+Cc: stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org, kernel-team@android.com,
+	Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5.15.y v3 0/5] Backport bounds checks for bpf
+Message-ID: <2024041958-devourer-shanty-bdba@gregkh>
+References: <16430256912363@kroah.com>
+ <20240418232005.34244-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,68 +49,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418181821.GA26239@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+In-Reply-To: <20240418232005.34244-1-edliaw@google.com>
 
-On 04/18, Oleg Nesterov wrote:
->
-> On 04/18, Oleg Nesterov wrote:
-> >
-> > On 04/11, Thomas Gleixner wrote:
-> > >
-> > > There is no reason for handing the *resched pointer argument through
-> > > several functions just to check whether the signal is related to a self
-> > > rearming posix timer.
-> >
-> > Agreed, these changes looks good to me.
->
-> I meant the intent.
->
-> But this is not simple, collect_signal() checks SIGQUEUE_PREALLOC exactly
-> because (iiuc) we need to ensure that SI_TIMER didn't come from userspace.
->
-> perhaps we should disallow SI_TIMER with _sys_private != 0 from userspace,
-> I dunno...
->
-> And I don't really understand the "not to be passed to user" comment in
-> include/uapi/asm-generic/siginfo.h. copy_siginfo_to_user() just copies
-> the whole kernel_siginfo.
+On Thu, Apr 18, 2024 at 11:19:46PM +0000, Edward Liaw wrote:
+> These backports fix CVE-2021-4204, CVE-2022-23222 for 5.15.y.
+> 
+> This includes a conflict resolution with 45ce4b4f9009 ("bpf: Fix crash
+> due to out of bounds access into reg2btf_ids.") which was cherry-picked
+> previously.
+> Link: https://lore.kernel.org/all/20220428235751.103203-11-haoluo@google.com/
+> 
+> They were tested on 5.15.156 to pass LTP test bpf_prog06 with no
+> regressions in test_verifier in bpf selftests.
 
-OK, si_sys_private is cleared in dequeue_signal() (or in posixtimer_rearm()
-with this series).
+All now applied, thanks.
 
-In the past SI_TIMER was defined as __SI_CODE(__SI_TIMER,-2), it was > 0,
-so it could not come from userspace (see the info->si_code >= 0 check in
-do_rt_sigqueueinfo).
-
-Today SI_TIMER < 0. We could introduce SI_TIMER_KERNEL > 0 with the minimal
-changes, but this can't help because the commit 66dd34ad31e59 allows to send
-any siginfo to itself.
-
-Otoh, I have no idea how CRIU restores the posix timers. If a process has
-a pending blocked SI_TIMER signal, then I guess it actually needs to enqueue
-this signal at restore time, but resched_timer will be never true?
-
-I got lost... Sorry for the noise.
-
-> Confused.
->
-> > But,
-> >
-> > > SI_TIMER is only used by the posix timer code and cannot be queued from
-> > > user space.
-> >
-> > Why? I think sigqueueinfo() can certainly use si_code = SI_TIMER, so
-> >
-> > > @@ -1011,6 +1001,9 @@ static int __send_signal_locked(int sig,
-> > >
-> > >  	lockdep_assert_held(&t->sighand->siglock);
-> > >
-> > > +	if (WARN_ON_ONCE(!is_si_special(info) && info->si_code == SI_TIMER))
-> > > +		return 0;
-> >
-> > this can be easily triggered by userspace and thus looks wrong.
-> >
-> > Oleg.
-
+greg k-h
