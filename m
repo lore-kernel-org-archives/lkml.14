@@ -1,124 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC5D13C9C2;
-	Fri, 19 Apr 2024 18:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4937B13BC3A
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 18:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713551331; cv=none; b=bRmPswUlj0yCLNMGVsE7lE01LG1/vzinshcSPG+w+Hqn40PztzDh/m9Q3c5OCDXap7mjXzrtILJojgAUYHnv8xC/5ltAm12UaH5jAAMRWuPWpyQ8w826oxVW8uSHKlo9ObBKtDMOndb4nDk9elq0/MYA4Y61XZrg9BFzclGMYGg=
+	t=1713551352; cv=none; b=ns5lDv3ygl/oFDXXxyEk797Xvf5JxcawO57MSXb2Iujxc0u+/2kEjinIbQzrDzwtOAf5AgZs+E5x3Phcir4+RUmCql0413vlsCE8wAdQ7AmtEpN1HhErzENCFmFp03ifTAyhDlXqimjAzWOMce37HUN+gzc/Uut5Cw/Gm37jzlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713551331; c=relaxed/simple;
-	bh=M8YCz1l4+lVCy1G5QB3VTe1tQ3kMUzwdhw6ZeI71acc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHRvD7UMO+5O8VQR/LrqSjYBWlwiLKgpWqaJmVhCNXDHdgMaNx1nHonfN1yNc1yctgKc2MeiQdd3OmdwaO8ou2krV1dL8P/r6Yf4SHHeAo/XubJrx38JgoGx7DYXMaBbTzBqkMN+RJP6JEbA3byX1Ncz0X3LBb5/L6JFbLZF66g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjLIet3E; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713551352; c=relaxed/simple;
+	bh=6R+P+UeAxQGe+bDmE9m6x0YWHQzXSf7Vg9v8QpuqQ+E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ih1e/HCaEl67doJZ7QbJk8x3Meu7jlD31qWVcjxU3XvM5/KNRs6XYhrOQ8niqHaXvFfGs1J3dYPxB3+IoiMQVxBHCEpI4YBUZ8xflGSo3srtxa9R2Q10VhwSvzlMjopvIqarH6pDM3jPk+8/2fs/fQbzRyNzB+KFFi2Sh5TGy3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bsamz1Ub; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjLIet3E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713551329; x=1745087329;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M8YCz1l4+lVCy1G5QB3VTe1tQ3kMUzwdhw6ZeI71acc=;
-  b=SjLIet3E1mOab7oeGLM9ayRlURAwqpJEiBigVnybvwaXfRfkYOocItmH
-   HYaAIvHQvYsNwbZj4IS7jI8hxyj2Sq6sbujwgD8Su91M37nwE3UYFvueg
-   3FRoHrH5qCSgRqk9lGds7iUvfpf6DLP3iiQFXjHl6yNtmNQzvqPGUv02E
-   WEeOc8W31WHmJiy5kMXQUbDWvyECEip4PqAEtpDoF+O4P3pO48RDeVFGo
-   C+IzOVH/3n8fTRq1PVw5wXGaL4++bwVbflEoElu+Cgt2i725gti8XeSTl
-   YsejN8nV7MFkPdkm1tJeggrHlqC+sC0esb1BZU4czrNuQRw4J4N3Lx3sM
-   A==;
-X-CSE-ConnectionGUID: geSL8RDZTT6RU+cgtp7yJQ==
-X-CSE-MsgGUID: lVgkbk31QE6H2Bw2/XGzNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="9038286"
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="9038286"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 11:28:48 -0700
-X-CSE-ConnectionGUID: lZZYufypTZq1LxnkDtZSiA==
-X-CSE-MsgGUID: Y7ab4wxlRzyZ4YeiJDEcUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="27867809"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 11:28:48 -0700
-Date: Fri, 19 Apr 2024 11:28:48 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 010/130] KVM: x86: Pass is_private to gmem hook of
- gmem_max_level
-Message-ID: <20240419182848.GI3596705@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <8108cc2b8ff01ec22de68f0d0758ef0671db43fc.1708933498.git.isaku.yamahata@intel.com>
- <ZiHGoUUcGlZObQvx@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bsamz1Ub"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F87C072AA;
+	Fri, 19 Apr 2024 18:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713551351;
+	bh=6R+P+UeAxQGe+bDmE9m6x0YWHQzXSf7Vg9v8QpuqQ+E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Bsamz1Ub8tO84zmAm44w4K/bujDprj6GzORuCSBYFXsWdTR+DEwii8xQZ4wMvAOB5
+	 4IMNONXrgLiRdk1QSEnUi2dPfWFIWcWGmIer+qs9T+Ht4HOCDJx2/9gKCV4D0yY/MD
+	 f9WBP0ewmLDw8Tgy+5KVxaLqpcMhHm25tj44c+Ktntnpto2oRtIJOSAT+oFrMdJLOg
+	 F54tEdi4EWh8AwOsvax0n+yb9/CLNoRX6cq812xkw3gHr3oszB/Ix6+YTP7J0qKf9L
+	 2cJxO9PZ2p6xNkWSCHUMnprXDnXErM49AHin+orzYNH9JCPiHYxJVYeYzJGnTBBiHQ
+	 oPT1Kqp4azZJQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,
+  Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Ricardo Ribalda <ribalda@kernel.org>,
+  linux-kernel@vger.kernel.org,  linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 4/6] mtd: spi-nor: get rid of SPI_NOR_NO_FR
+In-Reply-To: <20240419141249.609534-5-mwalle@kernel.org> (Michael Walle's
+	message of "Fri, 19 Apr 2024 16:12:47 +0200")
+References: <20240419141249.609534-1-mwalle@kernel.org>
+	<20240419141249.609534-5-mwalle@kernel.org>
+Date: Fri, 19 Apr 2024 20:29:09 +0200
+Message-ID: <mafs0plul5hqi.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZiHGoUUcGlZObQvx@yzhao56-desk.sh.intel.com>
+Content-Type: text/plain
 
-On Fri, Apr 19, 2024 at 09:19:29AM +0800,
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Fri, Apr 19 2024, Michael Walle wrote:
 
-> On Mon, Feb 26, 2024 at 12:25:12AM -0800, isaku.yamahata@intel.com wrote:
-> > From: Isaku Yamahata <isaku.yamahata@intel.com>
-> > 
-> > TDX wants to know the faulting address is shared or private so that the max
-> > level is limited by Secure-EPT or not.  Because fault->gfn doesn't include
-> > shared bit, gfn doesn't tell if the faulting address is shared or not.
-> > Pass is_private for TDX case.
-> > 
-> > TDX logic will be if (!is_private) return 0; else return PG_LEVEL_4K.
-> > 
-> > Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h | 3 ++-
-> >  arch/x86/kvm/mmu/mmu.c          | 3 ++-
-> >  2 files changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index d15f5b4b1656..57ce89fc2740 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1797,7 +1797,8 @@ struct kvm_x86_ops {
-> >  
-> >  	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
-> >  
-> > -	int (*gmem_max_level)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, u8 *max_level);
-> > +	int (*gmem_max_level)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn,
-> > +			      bool is_private, u8 *max_level);
-> >  };
-> >  
-> >  struct kvm_x86_nested_ops {
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 1e5e12d2707d..22db1a9f528a 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -4324,7 +4324,8 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
-> >  
-> >  	max_level = kvm_max_level_for_order(max_order);
-> >  	r = static_call(kvm_x86_gmem_max_level)(vcpu->kvm, fault->pfn,
-> > -						fault->gfn, &max_level);
-> > +						fault->gfn, fault->is_private,
-> > +						&max_level);
-> fault->is_private is always true in kvm_faultin_pfn_private().
-> Besides, as shared page allocation will not go to kvm_faultin_pfn_private(),
-> why do we need to add the "is_private" parameter ?
+> The evervision FRAM devices are the only user of the NO_FR flag. Drop
+> the global flag and instead use a manufacturer fixup for the evervision
+> flashes to drop the fast read support.
+>
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 
-You're right, we don't need this patch.
-As Paolo picked the patch to add a hook, the discussion is happening at
-https://lore.kernel.org/all/20240409234632.fb5mly7mkgvzbtqo@amd.com/#t
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+
 -- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+Regards,
+Pratyush Yadav
