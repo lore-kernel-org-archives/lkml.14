@@ -1,203 +1,105 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10816152E1D
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 23:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD47813D88F;
+	Fri, 19 Apr 2024 23:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713570511; cv=none; b=oKyTPDjVfrlX4Hb728OrBEBgwQdymF/O44eLc/jL9xafwhUQrvTqGWAnuv5f90cP10zvXeHygKlXRrTHDaKb15T2jQWI4JpR03tuerI0wLneU395r9KSZUxOZq1QYAmFsYOyUJI3QSPJwLGPG+Irdkyq0gopeeMCLPCAqSFMfDk=
+	t=1713570815; cv=none; b=Yn71VvVt2pAKcO81EAtPSocnDCVS49OoIG1G/JvhNfYVK5+9Glrmg4dyJ/AYcKAeUzJKXlFhwMZ1NdqV/7D3A8nyFIFjNgnO2QIklbJ7beLv4eOk1k1Xzcw13QXR2YCo4I9jjVusA8mh8xcWiOibM62nU9wfRK5aqceU3CcKiko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713570511; c=relaxed/simple;
-	bh=4h0IzOtLBFbHmqIztYQtJnRQ5i+JxAIa21rlgcy6DFI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JEnA1teYOTL8ewjmuLxMStUUKmxNenfDQSYeDMwXKXtM+s5HRf7vG/OCH/dXkowG6vcaR1V2siY7EcgX1Vvs2Yy1hZzU9QG8Sh82MkQ1PHe3R6zYlGcukyMCH/AYqXcCGWlsZ0ktAeHlZzKl0KnwSMDiaFS06CYkw3WxJxkLgRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=S9lTXw39; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1713570815; c=relaxed/simple;
+	bh=3gbkhIO45mQhzKLsuGyPxbw/ZYuLJPO+82sN/qnNP8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bd7hBdbwo/UokWgIKe1k2F8loeu6HDwwkMV4cvNbQ4oC1Qk4CM61K2dWva9nWe+6WLIuMRH3MKCUgQxNCCRbX8+ThIMCuqmyTKzxj7UM7G7E1HIgD7FmsL4XZEfmjz/ApLNP/Y0gKclsEcv49KaFNk/RWDR23wvjdxKQpanWYmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GIIIQnKG; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="S9lTXw39"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e2c725e234so28949595ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1713570508; x=1714175308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k8dppvgVnh54sEjPJluz+VPGn0XVIgbI5aDFYcuHKMk=;
-        b=S9lTXw39LqEF6q16IzNx8R7TGXeFz2KodnuHcBXAzMzZclaSiFVpNmZT0akpKoNXOd
-         pbiLhQEzyY91u+DP/AMKmVuC5DyOD6HAN7SJK0wQ0KeyBbPNqz6VvSO2MN5FUDgc8RNS
-         kUsqyPq4EPqk+HrE84H5P7xY41dYb886gi7i3yXYZ2CrRyfQqNJWul+faTz1aaLsmce0
-         dnexzjx2xZVqrHA+FnFXwr2ldWm8iEgEILEFrCNmTabkVEvVd3SX8Sf5RTp4S/vtpzUh
-         c1oVy+/gZ+AmxhYZcc/u+y4YtmROB9JPB4jeBOENbJA5lEAJV2rcxSU309TcvCvj3Sq2
-         2aIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713570508; x=1714175308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k8dppvgVnh54sEjPJluz+VPGn0XVIgbI5aDFYcuHKMk=;
-        b=HcPeIVRl8swH6Fz8ylx+kk4YBt7QgZe0/CClUyRajBwS4c7XiKd1KxlpKHoEmT6Nqb
-         WtX69AVOL7dpYmjG8bvbc6kQu1bbGE67W+fF/YVunCN+a1uEUVVcSDhMr/S0xKV+2l+r
-         xdsRzjyqW4pSYTo+sJ98w0maF7IguhPm79hQwT3Jpkx1t8+aCFtcU/joD3HTgI4HEQbI
-         fe82C8PQTM/UsDdObEIi/3+IHMnazxZ6v/RKrjnvSHFkkEJeCGREECztjY3cc/RqW4Dh
-         XUZ46VJ9ZGh/pQrN1hjTQWBTl943mFaa1UHl9Pjt5v3i/GedtEqrzNutY4r1JXM4Qd+t
-         1ahw==
-X-Gm-Message-State: AOJu0YyiujFxeGgI5S79TIvyiz3Sh6VfGsNDbETJlhb5R637VQokX8k/
-	XZu0bLqojN00jLOPzi2m3i8kArzwo0zMoBBgE+BPthMZdGs2aTrZgwLWO4btS0vBJCaFFAbRbDo
-	K
-X-Google-Smtp-Source: AGHT+IHbjuIAogidEThPU7h7cHQTwDfEmDJ2h82WDXmnVpxSpsttceYeTWH4EZKWjzfHpnNFMkjLQg==
-X-Received: by 2002:a17:903:41ca:b0:1e0:9964:76f4 with SMTP id u10-20020a17090341ca00b001e0996476f4mr5588251ple.14.1713570508238;
-        Fri, 19 Apr 2024 16:48:28 -0700 (PDT)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id w17-20020a170902d11100b001e42f215f33sm3924017plw.85.2024.04.19.16.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 16:48:27 -0700 (PDT)
-From: Atish Patra <atishp@rivosinc.com>
-To: linux-kernel@vger.kernel.org
-Cc: Atish Patra <atishp@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>,
-	samuel.holland@sifive.com,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Juergen Gross <jgross@suse.com>,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Shuah Khan <shuah@kernel.org>,
-	virtualization@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	x86@kernel.org
-Subject: [PATCH v8 24/24] KVM: riscv: selftests: Add commandline option for SBI PMU test
-Date: Sat, 20 Apr 2024 08:17:40 -0700
-Message-Id: <20240420151741.962500-25-atishp@rivosinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240420151741.962500-1-atishp@rivosinc.com>
-References: <20240420151741.962500-1-atishp@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GIIIQnKG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713570814; x=1745106814;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3gbkhIO45mQhzKLsuGyPxbw/ZYuLJPO+82sN/qnNP8Y=;
+  b=GIIIQnKGbPDTOtSB+drjpBgnkEmAFUZFdBGwMfQpUkSNpBA/OlQOV/Bj
+   NaBXbVhJJIvUPSCfmbWA5VfcXh2r1y2EFewZedDMQyUH8dGTzE+sMVopU
+   vNYynFAZX6VvIBGjss1LL/QrnA6tcEiozTHc6vn0nYPBqiYz7xGGR3ewY
+   KggamjN3X+3/wl6b4yXNcGSWENMErqCq+TMDfsw4AqF5L80jGGYG80wD1
+   hIzd7jZK2emW2g+t9uJZfSoN7KGCSQdETAxOtf43k7359wQdiWsab2XWV
+   YYK+1TNThbsCS4eqTWQ6wqooKFvkAVDCcVT+PwP+ijFA+VV8FERfjafY6
+   g==;
+X-CSE-ConnectionGUID: +z7XL0cMT9+5Kzy26LgolQ==
+X-CSE-MsgGUID: 5X0FIlt9S1q1WE1BgtzIFg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="9051093"
+X-IronPort-AV: E=Sophos;i="6.07,215,1708416000"; 
+   d="scan'208";a="9051093"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 16:53:33 -0700
+X-CSE-ConnectionGUID: 9EGboRl0SPWKp4IZ7WJR4A==
+X-CSE-MsgGUID: jATii7gCRUWuBg06ojTolg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,215,1708416000"; 
+   d="scan'208";a="23504137"
+Received: from soc-cp83kr3.jf.intel.com (HELO [10.24.10.31]) ([10.24.10.31])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 16:53:34 -0700
+Message-ID: <2e908322-faa0-4db7-bc14-f87a9d71f577@intel.com>
+Date: Fri, 19 Apr 2024 16:53:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] KVM: selftests: Add KVM/PV clock selftest to prove
+ timer drift correction
+To: David Woodhouse <dwmw2@infradead.org>, Jack Allister
+ <jalliste@amazon.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Sean Christopherson <seanjc@google.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Shuah Khan <shuah@kernel.org>
+Cc: Paul Durrant <paul@xen.org>, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240408220705.7637-1-jalliste@amazon.com>
+ <20240408220705.7637-3-jalliste@amazon.com>
+ <3664e8ec-1fa1-48c0-a80d-546b7f6cd671@intel.com>
+ <FABCFBD0-4B76-4662-9F7B-7E1A856BBBB6@infradead.org>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <FABCFBD0-4B76-4662-9F7B-7E1A856BBBB6@infradead.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-SBI PMU test comprises of multiple tests and user may want to run
-only a subset depending on the platform. The most common case would
-be to run all to validate all the tests. However, some platform may
-not support all events or all ISA extensions.
 
-The commandline option allows user to disable any set of tests if
-they want to.
 
-Suggested-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- .../selftests/kvm/riscv/sbi_pmu_test.c        | 73 ++++++++++++++++---
- 1 file changed, 64 insertions(+), 9 deletions(-)
+On 4/19/2024 12:34 PM, David Woodhouse wrote:
+> On 19 April 2024 18:13:16 BST, "Chen, Zide" <zide.chen@intel.com> wrote:
+>> I'm wondering what's the underling theory that we definitely can achieve
+>> ±1ns accuracy? I tested it on a Sapphire Rapids @2100MHz TSC frequency,
+>> and I can see delta_corrected=2 in ~2% cases.
+> 
+> Hm. Thanks for testing!
+> 
+> So the KVM clock is based on the guest TSC. Given a delta between the guest TSC T and some reference point in time R, the KVM clock is expressed as a(T-R)+r, where little r is the value of the KVM clock when the guest TSC was R, and (a) is the rate of the guest TSC.
+> 
+> When set the clock with KVM_SET_CLOCK_GUEST, we are changing the values of R and r to a new point in time. Call the new ones Q and q respectively.
+> 
+> But we calculate precisely (within 1ns at least) what the KVM clock would have been with the *old* formula, and adjust our new offset (q) so that at our new reference TSC value Q, the formulae give exactly the same result.
+> 
+> And because the *rates* are the same, they should continue to give the same results, ±1ns.
+> 
+> Or such *was* my theory, at least. 
 
-diff --git a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-index 0fd9b76ae838..69bb94e6b227 100644
---- a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-+++ b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-@@ -33,6 +33,13 @@ static unsigned long counter_mask_available;
- 
- static bool illegal_handler_invoked;
- 
-+#define SBI_PMU_TEST_BASIC	BIT(0)
-+#define SBI_PMU_TEST_EVENTS	BIT(1)
-+#define SBI_PMU_TEST_SNAPSHOT	BIT(2)
-+#define SBI_PMU_TEST_OVERFLOW	BIT(3)
-+
-+static int disabled_tests;
-+
- unsigned long pmu_csr_read_num(int csr_num)
- {
- #define switchcase_csr_read(__csr_num, __val)		{\
-@@ -608,19 +615,67 @@ static void test_vm_events_overflow(void *guest_code)
- 	test_vm_destroy(vm);
- }
- 
--int main(void)
-+static void test_print_help(char *name)
-+{
-+	pr_info("Usage: %s [-h] [-d <test name>]\n", name);
-+	pr_info("\t-d: Test to disable. Available tests are 'basic', 'events', 'snapshot', 'overflow'\n");
-+	pr_info("\t-h: print this help screen\n");
-+}
-+
-+static bool parse_args(int argc, char *argv[])
-+{
-+	int opt;
-+
-+	while ((opt = getopt(argc, argv, "hd:")) != -1) {
-+		switch (opt) {
-+		case 'd':
-+			if (!strncmp("basic", optarg, 5))
-+				disabled_tests |= SBI_PMU_TEST_BASIC;
-+			else if (!strncmp("events", optarg, 6))
-+				disabled_tests |= SBI_PMU_TEST_EVENTS;
-+			else if (!strncmp("snapshot", optarg, 8))
-+				disabled_tests |= SBI_PMU_TEST_SNAPSHOT;
-+			else if (!strncmp("overflow", optarg, 8))
-+				disabled_tests |= SBI_PMU_TEST_OVERFLOW;
-+			else
-+				goto done;
-+			break;
-+		case 'h':
-+		default:
-+			goto done;
-+		}
-+	}
-+
-+	return true;
-+done:
-+	test_print_help(argv[0]);
-+	return false;
-+}
-+
-+int main(int argc, char *argv[])
- {
--	test_vm_basic_test(test_pmu_basic_sanity);
--	pr_info("SBI PMU basic test : PASS\n");
-+	if (!parse_args(argc, argv))
-+		exit(KSFT_SKIP);
-+
-+	if (!(disabled_tests & SBI_PMU_TEST_BASIC)) {
-+		test_vm_basic_test(test_pmu_basic_sanity);
-+		pr_info("SBI PMU basic test : PASS\n");
-+	}
- 
--	test_vm_events_test(test_pmu_events);
--	pr_info("SBI PMU event verification test : PASS\n");
-+	if (!(disabled_tests & SBI_PMU_TEST_EVENTS)) {
-+		test_vm_events_test(test_pmu_events);
-+		pr_info("SBI PMU event verification test : PASS\n");
-+	}
- 
--	test_vm_events_snapshot_test(test_pmu_events_snaphost);
--	pr_info("SBI PMU event verification with snapshot test : PASS\n");
-+	if (!(disabled_tests & SBI_PMU_TEST_SNAPSHOT)) {
-+		test_vm_events_snapshot_test(test_pmu_events_snaphost);
-+		pr_info("SBI PMU event verification with snapshot test : PASS\n");
-+	}
- 
--	test_vm_events_overflow(test_pmu_events_overflow);
--	pr_info("SBI PMU event verification with overflow test : PASS\n");
-+	if (!(disabled_tests & SBI_PMU_TEST_OVERFLOW)) {
-+		test_vm_events_overflow(test_pmu_events_overflow);
-+		pr_info("SBI PMU event verification with overflow test : PASS\n");
-+	}
- 
- 	return 0;
- }
--- 
-2.34.1
+Thanks for the explanation.
 
+> 
+> Would be interesting to see it disproven with actual numbers for the old+new pvclock structs, so I can understand where the logic goes wrong.
+> 
+> Were you using frequency scaling?
+
+I can see similar ~2% failure ratio w/ or w/o commenting out
+configure_scaled_tsc().
