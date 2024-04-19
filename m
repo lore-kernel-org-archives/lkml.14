@@ -1,141 +1,108 @@
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08F5812F;
-	Fri, 19 Apr 2024 12:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50AE823AF
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 12:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713530121; cv=none; b=P5qhuBfEj0/joa1GqqsHRrhxgV0vcrHO0M4zyxtgQLO04IcAPe95wJ9ncmoeNTQ+BUG9pW4BnN1pRF/vuJEAHXVP8juAgqvOV1Ldnij2T/VOyVu8mNSjjaAX/1LfHEWrVQb8Pgecks09PoMZR3QVsulllfh2ZHexkqIqj34ffgo=
+	t=1713530148; cv=none; b=UDlp8MKHyH0fBH+aN7jQcOHAeIslU2gphdYshQxKI3SKtSq/egkx68S66UZWw/vKmc5j5ZPnXDA3de3/YoKHbEQLyw9ebaPIGKCuHrAucXBliK3bOycd7TRP9BgJCmnDnTzEJQtVz7lLg8qGIIzE7n/u8P+6Vb2c75j4ci0mR2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713530121; c=relaxed/simple;
-	bh=dxcXW3Z5o69jrxta3xxO8E57aeJDmyUL46fXb1HiMZg=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cqbH3BrJBqww2Y5WWLW+TX2vZMOpkNGO3Pq95hH1h1pQNfq50gEjuLA+0h8hSRhP+D61IGNHGWr2E+T2rskWkjY5FIBv4PAoiyx8r293xuXZ9yRaUsS9uTbX6Lx82BQHWz3ciiZwjMuQPg0ML4zUunq1Ahr1YazbhFyzOcvoH8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from localhost.localdomain (unknown [82.64.135.138])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 29DC82003CC;
-	Fri, 19 Apr 2024 14:35:08 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 4D89840039; Fri, 19 Apr 2024 14:34:12 +0200 (CEST)
-Date: Fri, 19 Apr 2024 14:34:12 +0200
-From: Etienne Buira <etienne.buira@free.fr>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
-Subject: [PATCH v2] gpio-syscon: do not report bogus error
-Message-ID: <ZiJkxBU3bYNWOdbK@Z926fQmE5jqhFMgp6>
-Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+	s=arc-20240116; t=1713530148; c=relaxed/simple;
+	bh=GnFVX9OIGwg6H0/EoZIvZ3A0jnPTJa9SSJChzId3NUA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bbYz3uCdLISo0J41WfG74ngOhf4bdW+JxnjVdKPBON+klSS8/R36W3rni6pK0LCgMC1WgQ2gEO/EzXGWFperI1231C3+5llmZM+4ZCni3vg6I5L5M4LzjHPjQR/sUVt96OcRsWjNMl3olbmDnzQo4ixEn+sY1wrbHGW7v6wYKfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VLYv64GCmzwT1V;
+	Fri, 19 Apr 2024 20:32:34 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id F41A218007D;
+	Fri, 19 Apr 2024 20:35:39 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
+ 2024 20:35:39 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <linux-kernel@vger.kernel.org>, <yangerkun@huawei.com>,
+	<houtao1@huawei.com>, <libaokun1@huawei.com>
+Subject: [PATCH -next v3 2/2] erofs: reliably distinguish block based and fscache mode
+Date: Fri, 19 Apr 2024 20:36:11 +0800
+Message-ID: <20240419123611.947084-3-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240419123611.947084-1-libaokun1@huawei.com>
+References: <20240419123611.947084-1-libaokun1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Do not issue "can't read the data register offset!" when gpio,syscon-dev
-is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
-this iomem region is documented in
-Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-does not require gpio,syscon-dev setting.
+From: Christian Brauner <brauner@kernel.org>
 
-It has been suggested to automatically detect if node has a valid
-parent, but that would defeat the purpose of error message, for example
-arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi could then be used
-without gpio,syscon-dev, and lead to funny results without error
-message.
+When erofs_kill_sb() is called in block dev based mode, s_bdev may not
+have been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled,
+it will be mistaken for fscache mode, and then attempt to free an anon_dev
+that has never been allocated, triggering the following warning:
 
-It has been tried to mandate use of gpio,syscon-dev, but that raised
-objection.
+============================================
+ida_free called for id=0 which is not allocated.
+WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+Modules linked in:
+CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+RIP: 0010:ida_free+0x134/0x140
+Call Trace:
+ <TASK>
+ erofs_kill_sb+0x81/0x90
+ deactivate_locked_super+0x35/0x80
+ get_tree_bdev+0x136/0x1e0
+ vfs_get_tree+0x2c/0xf0
+ do_new_mount+0x190/0x2f0
+ [...]
+============================================
 
-So while this patch may be kludgy, it looks the less bad to address
-the spurious dev_err call.
+Now when erofs_kill_sb() is called, erofs_sb_info must have been
+initialised, so use sbi->fsid to distinguish between the two modes.
 
-v2:
-  - changed flag name
-
-Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- drivers/gpio/gpio-syscon.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ fs/erofs/super.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 6e1a2581e6ae..4f103ce26019 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -13,9 +13,10 @@
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 21faa49bc970..30b49b2eee53 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -789,17 +789,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
  
--#define GPIO_SYSCON_FEAT_IN	BIT(0)
--#define GPIO_SYSCON_FEAT_OUT	BIT(1)
--#define GPIO_SYSCON_FEAT_DIR	BIT(2)
-+#define GPIO_SYSCON_FEAT_IN		BIT(0)
-+#define GPIO_SYSCON_FEAT_OUT		BIT(1)
-+#define GPIO_SYSCON_FEAT_DIR		BIT(2)
-+#define GPIO_SYSCON_FEAT_USE_PARENT	BIT(3)
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
  
- /* SYSCON driver is designed to use 32-bit wide registers */
- #define SYSCON_REG_SIZE		(4)
-@@ -27,7 +28,9 @@
-  * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
-  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
-  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
-- *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
-+ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction,
-+ *			GPIO_SYSCON_FEAT_USE_PARENT:	gpio,syscon-dev do not
-+ *				have to be set, parent regspace will be used.
-  * @bit_count:		Number of bits used as GPIOs.
-  * @dat_bit_offset:	Offset (in bits) to the first GPIO bit.
-  * @dir_bit_offset:	Optional offset (in bits) to the first bit to switch
-@@ -149,7 +152,7 @@ static void rockchip_gpio_set(struct gpio_chip *chip, unsigned int offset,
+-	if (erofs_is_fscache_mode(sb))
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
  
- static const struct syscon_gpio_data rockchip_rk3328_gpio_mute = {
- 	/* RK3328 GPIO_MUTE is an output only pin at GRF_SOC_CON10[1] */
--	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.flags		= GPIO_SYSCON_FEAT_OUT | GPIO_SYSCON_FEAT_USE_PARENT,
- 	.bit_count	= 1,
- 	.dat_bit_offset = 0x0428 * 8 + 1,
- 	.set		= rockchip_gpio_set,
-@@ -221,19 +224,21 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->syscon))
- 		return PTR_ERR(priv->syscon);
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
--					 &priv->dreg_offset);
--	if (ret)
--		dev_err(dev, "can't read the data register offset!\n");
-+	if (!(priv->data->flags & GPIO_SYSCON_FEAT_USE_PARENT)) {
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+						 &priv->dreg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the data register offset!\n");
- 
--	priv->dreg_offset <<= 3;
-+		priv->dreg_offset <<= 3;
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
--					 &priv->dir_reg_offset);
--	if (ret)
--		dev_dbg(dev, "can't read the dir register offset!\n");
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+						 &priv->dir_reg_offset);
-+		if (ret)
-+			dev_dbg(dev, "can't read the dir register offset!\n");
- 
--	priv->dir_reg_offset <<= 3;
-+		priv->dir_reg_offset <<= 3;
-+	}
- 
- 	priv->chip.parent = dev;
- 	priv->chip.owner = THIS_MODULE;
-
-base-commit: 4cece764965020c22cff7665b18a012006359095
+-	sbi = EROFS_SB(sb);
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
 -- 
-2.43.0
+2.31.1
 
