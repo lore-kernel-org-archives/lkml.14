@@ -1,67 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437B7132800;
-	Fri, 19 Apr 2024 16:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F77E783;
+	Fri, 19 Apr 2024 16:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545054; cv=none; b=M2G9rsptJsNJ1Yh/LHa0jlmV6ZsDSNT25jWWDh2Sf/vRWTPE+ZggV1L2j3J2qVZJq6ZjlGwAnWHwZ3YSTJdAIgPJQAUgdHvdMnnGiE051M9FeakwAYpMJqmUVp36/QrYQSIE6o6+AX/wyvKFxdfOpIsrancGlGhXD1m3CnkqGWs=
+	t=1713545090; cv=none; b=adc/orT01JJtzbyxa3vaN6rF9CVTbKy3jsyWLMjkCoKYC+01xLeWxOgGbqXey5Yn5OV1G8gWyThFBPh8vKGJ3leytwMwsc/6oMrY0KBA3dZPsO1AHga+/k8isQi6mk7ZwYVb6kLRGJQnuPEENLZIwKI7xYugV0VHfi8uukBY/QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713545054; c=relaxed/simple;
-	bh=g6dfOkD7e/Rsui1E9vwCOjhb2lg0fOpMCgFt3OAgUNw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A6djVsazQpWQmEpTTwN5fz41S2HbPYD7Qb6Pz3MWmn4H4L+5RmrlMiw9g9MVH9bq47tMeOkYea+6JjJ8Zug/fxD2ft+7SJioK+TTxv0OYAsnkhijVgb4dJ0xduarjteapV/rsrXpjWdMTfTut3inP7ClyZOO1merMeV50M/Udjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3AEC2BD10;
-	Fri, 19 Apr 2024 16:44:10 +0000 (UTC)
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: will@kernel.org,
-	rppt@kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Cc: keescook@chromium.org,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	akpm@linux-foundation.org,
-	ryan.roberts@arm.com,
-	wangkefeng.wang@huawei.com,
-	ardb@kernel.org,
-	david@redhat.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	xiongxin <xiongxin@kylinos.cn>
-Subject: Re: [PATCH v3] arm64: hibernate: Fix level3 translation fault in swsusp_save()
-Date: Fri, 19 Apr 2024 17:44:08 +0100
-Message-Id: <171354500626.1387030.2608430533776260920.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
-References: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
+	s=arc-20240116; t=1713545090; c=relaxed/simple;
+	bh=PCIE9E7dp38ZmFyU9fzDU6AeNgGCE9sGYThG6+uMTPI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CknWSr4tX6d8MtabNE9oVjXpNj0bN0hiY1lzZ0gXAJMaL+tl8Fb6q1IH2sb0SOwJ4GKN1J6dKJ1V7MWE5/DHz0e2Ngl1UHc7Qhi02v6ETZhEmGaTuIC1zVYPgxL/5zv91ORCAFOqiVSHQKs8S4kKtkyiCAwuMlW66C8RNOgWo3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2uGRoL+o; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2uGRoL+o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1713545086;
+	bh=PCIE9E7dp38ZmFyU9fzDU6AeNgGCE9sGYThG6+uMTPI=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=2uGRoL+oaCqQx+I1zYr4zJbpi6171b65znHJ7yU8G0+g65eiLDC6oYcg1WzOH74se
+	 LHAVsVzG4IC1hOs3xnagO1m7zX3efznHpubw67O/IxoPj+dRvNlXcGeQD0vX48J7uT
+	 rggxjokKZKg13fk1YLgkuswI5Il4giYlu9Hg/J/kl58KRIimTXnIHQQO8XHUncYHTy
+	 a9SfZtUs1rePrB2APZ8hxbQVcmVIXKv5vq6+AT9xjcHIUz/+nwHVB+Z40DlKFss+tp
+	 p8eDTPZ5OTfRQpeMH7ixNBGVAA/IRfoLj/Nr5L2IzziNxzAij55ytZKUszQaaLG+JB
+	 FGBZwg6vstEGg==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6B0053782153;
+	Fri, 19 Apr 2024 16:44:41 +0000 (UTC)
+Message-ID: <4b66cfb8-5d42-4432-b930-e23482a48dc6@collabora.com>
+Date: Fri, 19 Apr 2024 21:45:06 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: Re: [PATCH] selftests: filesystems: add missing stddef header
+To: Amer Al Shanawany <amer.shanawany@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Miklos Szeredi <mszeredi@redhat.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240417161623.37166-1-amer.shanawany@gmail.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240417161623.37166-1-amer.shanawany@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 17 Apr 2024 10:52:48 +0800, Yaxiong Tian wrote:
-> On ARM64 machines using UEFI, if can_set_direct_map() return false by
-> setting some CONFIGS in kernel build or grub,such as
-> NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
-> NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
-> debug_pagealloc=off in grub and NO CONFIG_KFENCE.
-> swsusp_save() will fail due to can't finding the map table under the
-> nomap memory.such as:
+On 4/17/24 9:16 PM, Amer Al Shanawany wrote:
+> fix compiler warning and errors when compiling statmount test.
+The error description or the compiler with version is required to reproduce
+the error easily. I'm unable to reproduce the error by gcc 12 and clang 17.
+
 > 
-> [...]
-
-Applied to arm64 (for-next/fixes), thanks! I tidied up the commit log a
-bit.
-
-[1/1] arm64: hibernate: Fix level3 translation fault in swsusp_save()
-      https://git.kernel.org/arm64/c/50449ca66cc5
+> Signed-off-by: Amer Al Shanawany <amer.shanawany@gmail.com>
+> ---
+>  tools/testing/selftests/filesystems/statmount/statmount_test.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/testing/selftests/filesystems/statmount/statmount_test.c b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> index 3eafd7da58e2..e6d7c4f1c85b 100644
+> --- a/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> +++ b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> @@ -3,6 +3,7 @@
+>  #define _GNU_SOURCE
+>  
+>  #include <assert.h>
+> +#include <stddef.h>
+>  #include <stdint.h>
+>  #include <sched.h>
+>  #include <fcntl.h>
 
 -- 
-Catalin
-
+BR,
+Muhammad Usama Anjum
