@@ -1,71 +1,43 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1DF883D;
-	Fri, 19 Apr 2024 06:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36C8B666;
+	Fri, 19 Apr 2024 06:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713506715; cv=none; b=ZVxw8lD3eJq0Sf2UIX4010TQCwaAcFTPsJGG3VhSlHhTg11aGjTG2iwxBn5ml4f3GhX0mu/gQNhWo5yNaMbSsda6LWHOrTrO2VlP+SSadRh7pcxeqfOoMZYb7g4MsGhzJ+Eys06k50T4d06DRoB5+DzKTN1m/QtjSBwH7FI/E44=
+	t=1713506805; cv=none; b=ak6dOIv/cL8H1SUtkXI+Y0G/lTLhz0gzw418abTizLrvgh3+hqCjeEFlsIzt7Df29kn91ruS5XMH6CGqJAojSH3YdHMtBgPbKNKbGGUCS5jYzkklNFfo2X2PgXTNvhJx5L2qTsK92RXUsgrWwV22+mxaR5Rdv1WtprJ2wiz/7kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713506715; c=relaxed/simple;
-	bh=Xs4qN48j4cQd3Py06qFO9cZzzc7akLDHwk4EwSAaGw0=;
+	s=arc-20240116; t=1713506805; c=relaxed/simple;
+	bh=7tvuNUi++6C8Vch6H2igX6msqCQ6YI1Wy+cuKDRDr9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rCiKBJ45nFm9i6tKDdHf7EGlqcUlq5zqe6WRFp50HihOx/pzIMVPV2mjgaSMx1TQ0t1w9qZAQL2gxjWaCflZjOfBhR3VpPLIIkPgt2RizWuZvRXOHHo513gbAALW9Ikcx/HLExl7U3FNp7Ftd5CqJ6pPtbLaE3ilBXqkOiT6+ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7adLZnY; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Soowe5ay7kp7nzaS7w3AlVskr7XaFhV2yqqTFRQl+8nf/mCFHNx/LMIfsYmg895oZhqgUB1cn3GVaQsnPW2pt8/kVXSvXo3cP3t2aBBS4FRIUStWABAyprtcKvNa8m317H+PFyyu99tPxztH1sUAjThfVCLZQ0WaeL4EHpkhz5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z/smkLaD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7adLZnY"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e83a2a4f2cso10000675ad.1;
-        Thu, 18 Apr 2024 23:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713506713; x=1714111513; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H8omKplIPAi499atqXdwcLykhK2vn2gCUsgEUak78Ic=;
-        b=J7adLZnYiivT3B3v++PaihU0adXmUVwi4dyHLHCgnrExiriMFcz0ulr2RwgqLg2p0n
-         8iX3fApuGd3o7KTViL3IMN4gbv4RuajMrw80yvOCzUjuXvRUpO5rybmYSM4qAcPzfOYM
-         AZaMXcswldTVP2QkvNw8C48BNgeh9eoFhIB2AB/3VNhZGMa/73DrzCGuZpKs2r1LflU+
-         6+ncnip08KtM5bGGOBm0VJ/NvKPHeYa3Lw/jft6LMPCh6f3aceWnJIriaC70ZF04V+vl
-         wMx04bSJo0AcaX7K/2XRNpHZ1+z+hQYAf1U0qxTrTj6tlT8PrnBVF1g9GIAA1d/Pz4qn
-         8heQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713506713; x=1714111513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H8omKplIPAi499atqXdwcLykhK2vn2gCUsgEUak78Ic=;
-        b=Ey8X+QEQtPXBiPBjbQA3eDQpHDVIiwltVN9XKllaAs5/HrziL6HM/Cv2yD5kaftz3d
-         GGIt76eR+D8escVfcMEYDloKUiABX5O51ET6V/eF0opLt8wnYnSA2d05nZLzyTRoPpJ5
-         MN3PQLKJrJs3H2ddrSAkcYwR+NTlbjxDRTy6Gz4Ms3Lk+bsYkvcLYCrAGsv0/OnJGuQe
-         67e6BCOQEEO1lr5nTbnADXaiIEcTDCzawBgTxUTK1eqcKaZrv1QmFQtFQV486ICwLPgh
-         zeutVxDr3inqeZBi85SafrvO94nf+hJCObDeVTtz6J3gWQc0rZNqp5dh6Q/UynPk0Lia
-         TucQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwtxbzHbAveOh5FO4y8Bpt1ppuOdU8hqYxidaXDfoKJ7W9buPbcV9XU62hpvnWVUICQJR0bg9V5bEInSQSTcMHCgVQ7+1rGRbVNskkpOHNtjUjAbINXtPQAbMq9QtlGODeF+BxrfLeiImE/Fb6Qsiz/NdXBE62FnXBgTNT5H/8WIwA
-X-Gm-Message-State: AOJu0YwmDCeMrwDlAMJbMeSSFpSywvlEhBE6l3d7+xXp3j7DrUYAGqG7
-	vpKtj+V1oNQt1XMhImTwRY9mMDnM7llf3SpQ5ZwCne+4QnzXIug1dTPXCQ==
-X-Google-Smtp-Source: AGHT+IFIfVBfVza+5cuWpXb6ItwjPh2irMimhA5vYrc6K6X0+e0Mmr8f3XZMvdKNkb+BsERhPo0GeA==
-X-Received: by 2002:a17:903:11c9:b0:1e1:214:1b7d with SMTP id q9-20020a17090311c900b001e102141b7dmr1140762plh.61.1713506712987;
-        Thu, 18 Apr 2024 23:05:12 -0700 (PDT)
-Received: from macbook-pro-49.dhcp.thefacebook.com ([2620:10d:c090:400::5:fbcc])
-        by smtp.gmail.com with ESMTPSA id h10-20020a170902f54a00b001e61d87e4aasm2529638plf.185.2024.04.18.23.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 23:05:12 -0700 (PDT)
-Date: Thu, 18 Apr 2024 23:05:09 -0700
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next 09/18] bpf: allow struct bpf_wq to be embedded
- in arraymaps and hashmaps
-Message-ID: <4y3abjilpoamebie7gmgn7cvs2s6m2eq3asd3huuw2xenx5fgp@lwyzs3ghxevp>
-References: <20240416-bpf_wq-v1-0-c9e66092f842@kernel.org>
- <20240416-bpf_wq-v1-9-c9e66092f842@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z/smkLaD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F55C072AA;
+	Fri, 19 Apr 2024 06:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713506805;
+	bh=7tvuNUi++6C8Vch6H2igX6msqCQ6YI1Wy+cuKDRDr9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=z/smkLaDcQznvq3tn+/PNN/5ghdG+wSUfweoTSNE4CB6M4uWMIr3nAQ9Bch01gn5P
+	 87DyFHEZyTaq/cSkPwM9327vo1kYTp2ohKFDy1z6GHpYuLzTT/PFAwj4XuQmNQZncZ
+	 RXtp+q2gR3REq6MBYMMaPNLNSuFvLVh4nHi/+L4E=
+Date: Fri, 19 Apr 2024 08:06:42 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Liuye <liu.yeC@h3c.com>
+Cc: "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>,
+	"dianders@chromium.org" <dianders@chromium.org>,
+	"jason.wessel@windriver.com" <jason.wessel@windriver.com>,
+	"jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"kgdb-bugreport@lists.sourceforge.net" <kgdb-bugreport@lists.sourceforge.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+Subject: Re: Re: =?utf-8?B?UmXvvJpbUEFUQw==?= =?utf-8?Q?H?= V11] kdb: Fix the
+ deadlock issue in KDB debugging.
+Message-ID: <2024041915-flinch-cinema-9c22@gregkh>
+References: <ac27269989394d8dac859763bc7578d6@h3c.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,15 +46,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240416-bpf_wq-v1-9-c9e66092f842@kernel.org>
+In-Reply-To: <ac27269989394d8dac859763bc7578d6@h3c.com>
 
-On Tue, Apr 16, 2024 at 04:08:22PM +0200, Benjamin Tissoires wrote:
->  			WRITE_ONCE(*(u64 *)field_ptr, 0);
-> @@ -1119,6 +1127,8 @@ static int map_check_btf(struct bpf_map *map, struct bpf_token *token,
->  				}
->  				break;
->  			case BPF_TIMER:
-> +				fallthrough;
-> +			case BPF_WORKQUEUE:
+On Fri, Apr 19, 2024 at 05:54:58AM +0000, Liuye wrote:
+> @Greg KH
+> 
+> This issue still needs to be resolved, but I don't know how to do it. 
+> Please tell me an effective strategy. How should feedback be given to make it effective for you? 
+> There is already an approval process for external emails in the current company. 
+> And a review mechanism has been added within the team. And internal training is provided.
+> The previous mentioned has been completed. What else needs to be done?
 
-fallthrough is unnecessary when cases are back to back.
+What would you want to see if you were in my position here?
+
+Some sort of "proof" that this really is the case?  A discussion with
+your company legal group about this?  A discussion with your legal group
+and the open source legal community about how they have structured all
+of this so that it will not happen again and a discussion about how this
+did happen (i.e. a blameless post-mortum)?  A signed-off-by on your next
+patch from a lawyer in that group?
+
+In other words, what does your legal group think would be sufficient
+here?
+
+thanks,
+
+greg k-h
