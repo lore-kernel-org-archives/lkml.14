@@ -1,144 +1,111 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628212DD8F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827F812DD93
 	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 14:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535319; cv=none; b=mitljIthqSxB0HoE7Jo192bhjt0t9LqK3+lWGF8F4yyP6RgNGTn7Fv5WHENJarMs/J6vz+r0ZxA3J0LuY8buGJXyH2/3OYlMEwV9kJOBl4V6r7XDIFtOHLHQ99H3kYYwGNfc1O2SAlinCZpCpCEaPVnsBxchcJ6LWly+dc+fGIQ=
+	t=1713535319; cv=none; b=Qyq1b2eB5EhdHpRLpQFcOgp+Akx+sDVvXIFY9jn8kzSM9HMI6fITKMsmZ9TU9D4+8Na/3cUJDWH6HWL7n4t6Z+VdFnAIviZjK6tu0hPNIhKyuop8I4VcXQ6PZqeTIwxuVsOHBoCN8ol3+J2I5ELA9tG6EJmbMqa+7UZK1YtdKh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713535319; c=relaxed/simple;
-	bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iDG/8SdcPGyuN2jnwjU+CpvacybMWirKnUk6ZlRLJtjg4hGaeTBTBiCamwvN/q/6t+Tjpz32MzhTkzTMsVrvQB/IBdnwzd0cIo6wNvQaYuaB0GrAFgVtaxCiwu3qf79cZIQp0anvAJ24oXyfosdqfYfSQNUhdTgV+SY64yCQZ6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bgeDXqXf; arc=none smtp.client-ip=209.85.214.178
+	bh=GldqlCvmlruHkKQBpE0bNU0iavQG0JdnTn/3ZGPU5A8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q3tf5fzHM0FnNaOA0Xwjep52bDQe+wdOKwHBKhrDdtHQqqZmXWei/QCLYuu58S2yHZK8Kd5iuICzCe917T1DrbuZjsmNwkWH3hIWRomXavyoEM5zBV1R8PhTVitAgVnQ8OiKF3GivFggcDqcM7nfSkLKkpNNeHq4Dv/o8GOk9Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IdI+jK1q; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bgeDXqXf"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e40042c13eso16754505ad.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IdI+jK1q"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6edb76d83d0so1738223b3a.0
         for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713535317; x=1714140117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
-        b=bgeDXqXfN1uesqpIYgPTOCg9HwUKDMNUPjTcuVeYbshVLThDQb3rqo5EdeT4zH2has
-         0YQuvYzjuObhlAvYUCYq58pXYzoNJ9taFs7X4NuMtuziljM3KEHmMzA6yz0Lcq86seLO
-         VuX21HEcTE0FrBsx8osyoCksQEs7rySRpznzk=
+        d=chromium.org; s=google; t=1713535318; x=1714140118; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UPm6fkN1iYXlaDXVKllaNg4Nw5S8W2+SHSueAxLwIM8=;
+        b=IdI+jK1q4QtwWYm7v6U/KV1J5ZIBeSY+GAYHi5ziLqMmL2ZCutwcmmrvh3oXOEHgVe
+         4/M/83WN0go0qT/rt3NynhqSSsVx+W3IJKsCsD/a6EV+LfvDBUVloa3pym5mmBwMqVCI
+         v27vms+AiL4zliPMHOngA/sUyWu3eCHTmh4gQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713535317; x=1714140117;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
-        b=XzO3fGrgGxpbO2lGVyYUb1xQOuRp5zmTlkjWTyGz8LPZ0hldOeFRsJQbevhoTIm1gO
-         pzqIKuiDB1mbX2zchDR59yMlmVZu+6/URhvRbNLqdQtfF0xruJgb7z4PTnDQML0318sj
-         7WBUIehC6zvAHaJyEk5k5b8mcqg5vKNe4eHDYCASQ5ciwbO1B/3hJo3fAoyD/9W6PSvD
-         EDaxrdbIHVwGYYLkqXEoJs04uj8XkqvPcy7fLQkko2mwwmoHXSCGh2piZlov146erhk8
-         w0mWT8CXWYf3LtIv8N3aPnmiI5B8A+rfACvKRqM70Vv4wSXvJ/TKu0FK16a1kl+1PcEJ
-         2Aow==
-X-Forwarded-Encrypted: i=1; AJvYcCUTPjB8PL5ucqYNQeauVzfFraOTwDxD+t2Wtwl30VNx8+O1atz+rHqhBJliTKnymfRsKMbv+7YIwqrqJzGsdvbbJCRaemdPpVZAZYqD
-X-Gm-Message-State: AOJu0YwYa97saHjqLyVOm1Cl3JFi6tpT1vFexUQvSqIGX/RDRBggXIIP
-	tcRZtLcZO5w7HKBpQ9iWbqE3BkI2ZHGI+xt4ad3LlRbY/KSloQqqmGTYmMOohA==
-X-Google-Smtp-Source: AGHT+IFxKIaiTQQnHHvaeNar935ymXBnwNgd3CdnYSm3XwjOGr+DFuZ5d0WL0a9FfnSo5+zx+j7sMg==
-X-Received: by 2002:a17:902:b486:b0:1e2:718d:f290 with SMTP id y6-20020a170902b48600b001e2718df290mr2175867plr.67.1713535317611;
+        d=1e100.net; s=20230601; t=1713535318; x=1714140118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UPm6fkN1iYXlaDXVKllaNg4Nw5S8W2+SHSueAxLwIM8=;
+        b=byi6ywUexZIVb+H483xfDhiV3ThJLDK0BVz+mz8lodG7nmpvbcV6ph3luo82lY6otn
+         pk0Jg2V5rG6Fef/wHvHcJX9PiwtH/VDatG8zSqPSU1rSpYR2jGe+7fOAFnvt9PZo89Ng
+         gAfbp0BqYyAAg4hDXUlc9364BXD6ihE3P4heD7FfHsmXAXd9hykufsrFfp1vJQnqot9H
+         IGmyxTxD40szlsQkMMsD815B4s2UY6yi5WhgSbiUTkQTP6jj/xAOLvdX4czqXddQL/J0
+         Txnp2+Jz2mIUp805bK4Pcm3ovOU142NhdFYsehbcMowYXQWxGLcIOSYrm3+eBJF6VQaW
+         B95A==
+X-Forwarded-Encrypted: i=1; AJvYcCWIAPfNJTHZY8nfKfLP4H9gkzK0dBL4tLDV8yz7OKy0jia2P0VlL947ckwBcrcrML135+by0ehkhPNIwe8Dc3oZTRG3WGFdi7HZit1P
+X-Gm-Message-State: AOJu0Yxi9WyElYIHO2CzbyEf2cnkTsrqosKINqQQYBNH8xWAakFWe05W
+	HCG57X0ofcsTeS7HrX/3pUV3x0ZikOsmxeP1S5z2BgHosJc0D1i3+pD6KF9jEgQpqNIftCztwYk
+	=
+X-Google-Smtp-Source: AGHT+IGnyEc3GC14lA5NhGDHSR8a99lA00zYS+so28ole/wCpbuAENR8ABugbXYLOFjSA93NVniGqQ==
+X-Received: by 2002:a05:6a20:431d:b0:1a9:8d1f:df84 with SMTP id h29-20020a056a20431d00b001a98d1fdf84mr2900301pzk.57.1713535317889;
         Fri, 19 Apr 2024 07:01:57 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f12-20020a170902684c00b001e284b9b28asm3410545pln.129.2024.04.19.07.01.56
+        by smtp.gmail.com with ESMTPSA id fk24-20020a056a003a9800b006ed9d839c4csm3238088pfb.4.2024.04.19.07.01.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 19 Apr 2024 07:01:56 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Andy Shevchenko <andy@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
 	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] string: Prepare to merge strcat KUnit tests into string_kunit.c
-Date: Fri, 19 Apr 2024 07:01:52 -0700
-Message-Id: <20240419140155.3028912-3-keescook@chromium.org>
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/5] string: Merge separate tests into string_kunit.c
+Date: Fri, 19 Apr 2024 07:01:49 -0700
+Message-Id: <20240419140017.work.012-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240419140017.work.012-kees@kernel.org>
-References: <20240419140017.work.012-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1549; i=keescook@chromium.org;
- h=from:subject; bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmInlS+imGbP3YLDk5RSzjCVBlFhXpXtJzQQJGm
- h0NyeIBVWGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiJ5UgAKCRCJcvTf3G3A
- JkPcD/9hwNQiymaqHA9VWj14VNEZE4Km6N9feNZHjDYp+2MAxj8NUXO81sPxxv/w2XR7erfCHMP
- 4SbtoE+nGHXRDbSioIkyVAsSJDQlZbqngPnPLgUQ1a3NQh4BjcA05Tf8Z/nqFE+3VLydiEA3u+3
- nEnON5PZEO7MJa4g2DXBGhonjgRXeQDl5WNdcUfQpUFJw92KDfV485RnQfHHGwV9iDSmmdBo6GY
- QOzU2WbovxDaNTXHQ21Ssj7sQBDH9uHCfSU2p+50nPtyRV86sXi0DxVRAWxOZ1FhGFWRk57h0Js
- tPxMRojOAdzBhiP9uYcZY+C6dFXwOCyx9yfq1UQZx0h7gMAnVX31bzRq79eoEiUQ1aU3V7Wl5Ta
- a1bn/Wu28FsrUuNecO7kgJKb5C3aVkN0J7ibAd7outSSPcJmZoTLFPVh+pvOSJXxYlZK5gqZyjB
- Df5EzAsWhnqD8FTXVSGc4/8b+1MvTzFvDfRiBZz9T+eiM7esjtiTqDxTzUOxTRdZ1bAgkanAo0k
- 4jr5uy8WnrwVw+tDV0V7LvNr+VA8C8DopWurfl2UvPZg/qA8PpB1cssFyFAX0OyCI8engzk69mZ
- kzm1SjnJC/DDEs6jvqMk2HhyuSJQF1BUCfsWaJvZABj8yHZgozyTzOyyemz9lg5ZVMus2r+apiR Wrz7TD5G/7dJ8qA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=951; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=GldqlCvmlruHkKQBpE0bNU0iavQG0JdnTn/3ZGPU5A8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmInlRcBERwrPJam6TUpi+MUNTcOLEOk1vAHhFn
+ GrPyZN5CWyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiJ5UQAKCRCJcvTf3G3A
+ Js0rD/9LqSJcefGj/x8ivHbnZtQUT4ETomnU6kJE/YN7YsWgmL0gy90uKZXt38TlMqg5m90iZUc
+ 6n56CUUoCfYXsV+Il3A81p70aA1VO09mSbwTt62XgjpiaVhtuG2xzpCfH2uQIICuDrCaCoBbAyT
+ 4D/ooppsootEkqhPxxl/SxFgdMGYwRJh5foJtSVZ6QWn/q330kIZtQk1EpgkGpvUyy7siKM/KSD
+ tPaMl1Qs+7k8a6pQ98HbZfXS7k8cT/oGwVl6tbB5BHSKtFJYPjHxtJsSjazsX7/d83+0ADM2hmm
+ S2Ittey+7z8HFYhVCSz6wrOLSB03X+ETh5mSknEwxBR7HyarjdbPFEjWgyyMCfWbnbB2Ew8psLT
+ dMvEDHpifYFq7Rh8iaBYTj8I2M3LF7+nPcwK/wW5SUOoUbs9hu37xSVbwA15SwP8ax/G1HgK4EB
+ HLlZo2dZ1WeSfLLc7CPZVIxw7gG6NnVUXGH1/FYsF6r+1dY3zzS/oFNiWqJjsH0DolFdxiJsDxg
+ T8Jq3IRuzvnt0186j81iW0QQ+SqjO/OH218OF23fmIB5L7N3s8iJ1VdnykYKOYtFZcUuKNxjLn3
+ 2degp0+6NeJeEGwIPdHgfGKvKqWOklvk8OfP+6FO31xtYknFqEL+vC1hjjX0QQez+ZpTV4Q6Fes
+ +v7tIVUD PNINDug==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The test naming convention differs between string_kunit.c and
-strcat_kunit.c. Move "test" to the beginning of the function name.
+Hi,
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: Ivan Orlov <ivan.orlov0322@gmail.com>
-Cc: linux-hardening@vger.kernel.org
----
- lib/strcat_kunit.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+We have a few lone function tests (strscpy and strcat) that are better
+collected into the common string_kunit.c test suite. Perform various
+renamings, merge everything, and clean up after them.
 
-diff --git a/lib/strcat_kunit.c b/lib/strcat_kunit.c
-index e21be95514af..ca09f7f0e6a2 100644
---- a/lib/strcat_kunit.c
-+++ b/lib/strcat_kunit.c
-@@ -10,7 +10,7 @@
- 
- static volatile int unconst;
- 
--static void strcat_test(struct kunit *test)
-+static void test_strcat(struct kunit *test)
- {
- 	char dest[8];
- 
-@@ -29,7 +29,7 @@ static void strcat_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
- }
- 
--static void strncat_test(struct kunit *test)
-+static void test_strncat(struct kunit *test)
- {
- 	char dest[8];
- 
-@@ -56,7 +56,7 @@ static void strncat_test(struct kunit *test)
- 	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
- }
- 
--static void strlcat_test(struct kunit *test)
-+static void test_strlcat(struct kunit *test)
- {
- 	char dest[8] = "";
- 	int len = sizeof(dest) + unconst;
-@@ -88,9 +88,9 @@ static void strlcat_test(struct kunit *test)
- }
- 
- static struct kunit_case strcat_test_cases[] = {
--	KUNIT_CASE(strcat_test),
--	KUNIT_CASE(strncat_test),
--	KUNIT_CASE(strlcat_test),
-+	KUNIT_CASE(test_strcat),
-+	KUNIT_CASE(test_strncat),
-+	KUNIT_CASE(test_strlcat),
- 	{}
- };
- 
+-Kees
+
+Kees Cook (5):
+  string: Prepare to merge strscpy_kunit.c into string_kunit.c
+  string: Merge strscpy KUnit tests into string_kunit.c
+  string: Prepare to merge strcat KUnit tests into string_kunit.c
+  string: Merge strcat KUnit tests into string_kunit.c
+  string: Convert KUnit test names to standard convention
+
+ MAINTAINERS         |   2 -
+ lib/Kconfig.debug   |  10 --
+ lib/Makefile        |   2 -
+ lib/strcat_kunit.c  | 104 ------------------
+ lib/string_kunit.c  | 258 +++++++++++++++++++++++++++++++++++++++-----
+ lib/strscpy_kunit.c | 142 ------------------------
+ 6 files changed, 230 insertions(+), 288 deletions(-)
+ delete mode 100644 lib/strcat_kunit.c
+ delete mode 100644 lib/strscpy_kunit.c
+
 -- 
 2.34.1
 
