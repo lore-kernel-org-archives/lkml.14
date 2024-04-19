@@ -1,135 +1,124 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2F079F6
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 03:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD3A1FB4;
+	Fri, 19 Apr 2024 03:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713498274; cv=none; b=IWkuCe9hFlbMkm98DBOjel1wrKOi8YOFuRhAf8MivT8nWh6hjASENwmhY+uHgptKtqW2oTXln37638or5oepigUUgaIJrXfa5PlfpTUOXIJcX+n3yIcIF6lKVeat1lZwGnjJzNNcRuMQIbZeXL+tD3K4rKcpErmr4PAoqwznPoo=
+	t=1713498336; cv=none; b=uqf1j9jqoJXQKTzlIhLiWC+b/QJ1pbJmpcWlOk4pWYPH7CaJ6yxxzBuwgG74MzNvzTmWoJshkvboqEXRzCJaym8/3CGtPouLybzJIZYjZcqKMO1Gf1bilaAwpHJlmfa0kAACKnqN628IqmNw2UDsPZZFakXu/MElHVMo3KlHoeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713498274; c=relaxed/simple;
-	bh=C6EZh+baNJYYYswqfCxlPtbSynZ4kMsvgTtW3MPmXyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ph72oTC2xnLIoWozPZ+A2NHiiRCFJhJ/fVkkc+GPmC9O4VO5Y09OttBlmusr5/hy8slloDccrYlAQb3MXYiRvKnzgj373rRtOHzpqH+cK9LMtg6KRbzWt3crmJhoh9fxi4C4bFDQwleokXPCRCPQpEnouZb/gbl1ZJOX9tIkOfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ElDNLoUc; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1713498336; c=relaxed/simple;
+	bh=sXzM59yBbqpFokcZIBxyheUel0wZXEjiik4VkhNlXoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b77VuwWfhMu4Gy7PYaN9TD7B8bMuuwpwk3JGc5cV0Rl8/YBEMI/aaDwX5rPrFLgn/7F7mCU6Q0p6TGyYxDm1TWO3C3knic6Pe3vLq6EN33SD6VSBYmKu/mqkfiouFlGudyTq61Cbng1gsPhVxu9FnxbxgKmXEiG0UHG2JEMcEGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRCnWglV; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ElDNLoUc"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2da0b3f7ad2so22644371fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 20:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1713498271; x=1714103071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=59eYF0u+KHXci6ueGoBTWn76Rd/IwCXlgjf8EG+Fo2M=;
-        b=ElDNLoUcj1ekvwZtGHDwB2ByvhBpjVxNSWsDshvPKfu1Mwpjpd4REzk19r7YXKtDQm
-         PGk5OQToHiF4aFc+kBauroF1EmMT2RpN8ahfTm1CvJrGDtNL+IoO1N8i0HW7A/ForW+d
-         n7q1A7nN+gpZZJRUe3Sx/z7PRJWS0+tdSnddfG7Lbrw/qI+DMFKEOAJI2PYc1Yk11Bov
-         Ynt2XcjohbgeHWXy+lETcarCUM+ppiQ/q6M7VExtw/Fai1vUTxP2jhr0MvkZ/YzxKv+g
-         ruL0jQbCu7izTZngXTeYoZwynG/Znlp91x1IHYorX9fG2smQhhhxPdl16ItbU476HSrn
-         oZ2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713498271; x=1714103071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=59eYF0u+KHXci6ueGoBTWn76Rd/IwCXlgjf8EG+Fo2M=;
-        b=Eq7GoUc5uFrqkR76rmiaaZ2IRaj7wwQChN30BJMaT8VCbbw6UCQw1yLixNYjuz+g5v
-         998/kuFhqyJOTckttrE0t2diONNxtixHCVeDoX2SXgZ+POdFEG4qpeeQygjvPGe0Pb9j
-         jzsVkI/YXQtLKa9vBnA0q6W5CUJeQ98WIGoozuXzKzIXVO3pdOyKGT0Me69akmvU68eg
-         IUUZxfngg8VqQ2jKNCB8qkMUeDumXKI378JiQg8WDXqBhP0i7ZLaCf6MBZE5qU4yY2Vv
-         2LCJC75lVhz/TYICOCQ07L2bA6ipnEA0YFo4OKVcMeZoxzoPTvLEvpxC9f6Hwil33+9e
-         a7ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWi0lQKKJFSaAGtMD/1okpv12iujnA53gpr9OvatVx8OsAjb61hnNZdul7ZExxchErcUPXdhJbYsrK6vt3tIZPBnQFWV3oDVt7mbAMj
-X-Gm-Message-State: AOJu0YxOqUaj5hJnbEg5Y1LvuuueYO3kSHY8iag6KT9ffXZDbC9Zkm8Y
-	nqDVfEbnzzN5PYvBkf1wf9mIjxH81axEkBCemLMMSpwYCBUciyRXqFFaY9rKjoh1anjFVh0v8Ao
-	oekUeV6uvSQyKn57Fg9aWnPTARzbuTSWVAlV04X1gwZbaG/gnyvo=
-X-Google-Smtp-Source: AGHT+IEQ1nOTIaXbh09m8UHlh64BO9dHozTEjgG2j/nOYUiToab5kcFClQw0X6CWz9u70VD9qgte/ljjyg+KRIaCWds=
-X-Received: by 2002:a2e:9a99:0:b0:2d6:ff04:200f with SMTP id
- p25-20020a2e9a99000000b002d6ff04200fmr430328lji.33.1713498270564; Thu, 18 Apr
- 2024 20:44:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRCnWglV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713498335; x=1745034335;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sXzM59yBbqpFokcZIBxyheUel0wZXEjiik4VkhNlXoQ=;
+  b=kRCnWglVg3WyGHmIvMMTbFv8vTcZXQuV0g0zgTlddwqrJuVqAUOcHyiL
+   P+qFhMLqrX2yREwBKOE3N4uWjVEte0ylidhqvZctV3FD0uN7+eynNWT+V
+   GhrIIP+FlhRsWdUtblmA+tFwZyL0vRK0mYJprvniV5dZBHzlJENTDBD6p
+   GBrDL+WxbTBO3UKszHjwigCqLwXUURaAQvS1Q1U34bF6JKkwVmHn74LH5
+   c1WWfjNQU7n5fgyVEnJqWSsNB0Zi1j1H2g/otGKu0DoalSZ5YfEK1VNcA
+   DciaXnwo+A/66bZtq8l1sgug78w3x+Q4ivKRNLaHlUFLSkzBfIfOZ7lsp
+   Q==;
+X-CSE-ConnectionGUID: E3BX4x7XQ9qNbcDgr2Q6Ag==
+X-CSE-MsgGUID: kdDkkTPnSWiorn3xOIG/BQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="31565392"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="31565392"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 20:45:34 -0700
+X-CSE-ConnectionGUID: vZOzMT0BToqnS5GV7iXiVw==
+X-CSE-MsgGUID: yHvj+3F3QV+kqBmBMoSnLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="54410091"
+Received: from unknown (HELO dmi-pnp-i7.sh.intel.com) ([10.239.159.155])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Apr 2024 20:45:31 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Like Xu <like.xu.linux@gmail.com>,
+	Jinrong Liang <cloudliang@tencent.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [kvm-unit-tests Patch v4 00/17] pmu test bugs fix and improvements
+Date: Fri, 19 Apr 2024 11:52:16 +0800
+Message-Id: <20240419035233.3837621-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307140307.646078-1-apatel@ventanamicro.com>
- <20240307140307.646078-3-apatel@ventanamicro.com> <8738cb85-fac1-4a15-9666-eb05316f5368@gmail.com>
-In-Reply-To: <8738cb85-fac1-4a15-9666-eb05316f5368@gmail.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Fri, 19 Apr 2024 09:14:18 +0530
-Message-ID: <CAK9=C2X+Aovid=AFXP-EOj3-f6xDYiGsMMNOqknFr58nu5dgbw@mail.gmail.com>
-Subject: Re: [PATCH v16 2/9] irqchip: Add RISC-V incoming MSI controller early driver
-To: Eric Cheng <eric.cheng.linux@gmail.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>, 
-	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 19, 2024 at 8:53=E2=80=AFAM Eric Cheng <eric.cheng.linux@gmail.=
-com> wrote:
->
-> On 3/7/2024 10:03 PM, Anup Patel wrote:
->
-> > +static int __init imsic_parse_fwnode(struct fwnode_handle *fwnode,
-> > +                                  struct imsic_global_config *global,
-> > +                                  u32 *nr_parent_irqs,
-> > +                                  u32 *nr_mmios)
-> > +{
->
-> ...
->
-> > +     /*
-> > +      * Find first bit position of group index.
-> > +      * If not specified assumed the default APLIC-IMSIC configuration=
-.
-> > +      */
-> > +     rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,group-inde=
-x-shift",
-> > +                               &global->group_index_shift);
-> > +     if (rc)
-> > +             global->group_index_shift =3D IMSIC_MMIO_PAGE_SHIFT * 2;
-> > +
-> > +     /* Find number of interrupt identities */
-> > +     rc =3D of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
-> > +                               &global->nr_ids);
->
-> Will here check if the pass-in interrupt identity number is (multi-64 -1)=
- &&
-> between [63, 2047]?
-> Per spec AIA v1.0, Sec. 3.1 Interrupt files and interrupt identities:
-> "The number of interrupt identities supported by an interrupt file (and h=
-ence
-> the number of active
-> bits in each array) is one less than a multiple of 64, and may be a minim=
-um of
-> 63 and a maximum
-> of 2047."
+Changes:
+v3 -> v4:
+  * Fix the new found issue that pmu_counter_t.config crosses cache 
+    lines (patch 04)
+  * Fix the cycles event false positive by introducing a warm-up phase
+    instead of switching cycles events order in v3 (patch 07)
+  * Use macro to replace hard-coded events index (Mingwei)(patches 08~10)
+  * Simply the asm code to enable/disable GLOBAL_CTRL MSR in whole asm
+    blob (patch 11)
+  * Handle legacy CPUs without clflush/clflushopt/IBPB support 
+    (patches 14, 16)
+  * Optimize emulated instruction validation (patch 17)
 
-There is already a check on global->nr_ids to ensure the above is satisfied=
-.
-Please see further below in imsic_parse_fwnode() function.
+All changes pass validation on Intel Sapphire Rapids and Emerald Rapids
+platforms against latest kvm-x86/next code (2d181d84af38). No tests on
+AMD platforms since no AMD platform on hand. Any tests on AMD platform
+are appreciated.
 
->
-> > +     if (rc) {
-> > +             pr_err("%pfwP: number of interrupt identities not found\n=
-", fwnode);
-> > +             return rc;
-> > +     }
-> > +
-> ...
->
->
+History:
+  v3: https://lore.kernel.org/lkml/20240103031409.2504051-1-dapeng1.mi@linux.intel.com/ 
+  v2: https://lore.kernel.org/lkml/20231031092921.2885109-1-dapeng1.mi@linux.intel.com/
+  v1: https://lore.kernel.org/lkml/20231024075748.1675382-1-dapeng1.mi@linux.intel.com/
 
-Regards,
-Anup
+
+Dapeng Mi (16):
+  x86: pmu: Remove blank line and redundant space
+  x86: pmu: Refine fixed_events[] names
+  x86: pmu: Fix the issue that pmu_counter_t.config crosses cache line
+  x86: pmu: Enlarge cnt[] length to 48 in check_counters_many()
+  x86: pmu: Add asserts to warn inconsistent fixed events and counters
+  x86: pmu: Fix cycles event validation failure
+  x86: pmu: Use macro to replace hard-coded branches event index
+  x86: pmu: Use macro to replace hard-coded ref-cycles event index
+  x86: pmu: Use macro to replace hard-coded instructions event index
+  x86: pmu: Enable and disable PMCs in loop() asm blob
+  x86: pmu: Improve instruction and branches events verification
+  x86: pmu: Improve LLC misses event verification
+  x86: pmu: Adjust lower boundary of llc-misses event to 0 for legacy
+    CPUs
+  x86: pmu: Add IBPB indirect jump asm blob
+  x86: pmu: Adjust lower boundary of branch-misses event
+  x86: pmu: Optimize emulated instruction validation
+
+Xiong Zhang (1):
+  x86: pmu: Remove duplicate code in pmu_init()
+
+ lib/x86/pmu.c |   5 -
+ x86/pmu.c     | 386 ++++++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 308 insertions(+), 83 deletions(-)
+
+
+base-commit: e96011b32944b1ecca5967674ae243067588d1e7
+-- 
+2.34.1
+
