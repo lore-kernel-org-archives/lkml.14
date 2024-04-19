@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1008E7581A
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52378B49
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517176; cv=none; b=Nw6rivnWdv0uX6NvAMxVpXrW62/5/eONjm4XyF7YMBvvN16hZBfMa6jS/8cBqIIsybw7v3PCOCC1kUCGNM+FpHVGZroQ3MhFX92N5lyTGY61vDmL0sLVcxtA51JX+WzsjL8QFE8ksQZ4ELCxHolNOBR5NyaJ78PeCKLTnTP3/cM=
+	t=1713517177; cv=none; b=gIvRhikoXx8wOopmuAurPI6WV6Q8Pk3uyHvr7Pji2XWkEBwT5Z9xusu6OJCGUBMTd7MxYUuVwWhSD75s9+2TvoLf9bkuNixES4mK4dRpR892JbzDdzevfTenS/DesP48optBs7pQOxnP/f58mvdDI2NtzPOtYu15bV+dKx/o4ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517176; c=relaxed/simple;
-	bh=2gm7deFzurYTAyrCh7iT1lNdC3GO1PyHSZi0isL2Ru8=;
+	s=arc-20240116; t=1713517177; c=relaxed/simple;
+	bh=6QsTyro7o0g/mAgLz5I9OAAjavd5uhJCINBH9wpklts=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mJZssPkbrRVwHOxyLPktpiUQMs3OtqaXUrrHkwX5XjdFwv+VIidIIzeX6PJo616r7dPv/uYyj2GQiG0mUwbZzwn7vwm78Aa1i/6DVlKQtrwK2pIIwdJMQhyxQ4eqyqhr9yI9vejpJl6xEiW2ai/mZvypnQQ6MvESn09J5s5HTVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=URqXSyB4; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=ofMpfi4ZZK74z2kGCDJpbDVVKnMT3hHlNtMlKe64ma3lGknwq7sw3/LKr2Q2l2/hOfQxIKXDCry04WGLHUroGvl0KJ9SRVvo0nAq+LOFFsRcyNx2+hRHxdWo2nCl00AMdxKpN6q0flDS+ESzbTkk+k/2lyLumIm+5IGsIn12y5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/WYxaGC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="URqXSyB4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/WYxaGC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713517173;
+	s=mimecast20190719; t=1713517174;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=52y2schAwBprTYBvvMf3LjB6dQ9sxUly4DKTEx6UkQs=;
-	b=URqXSyB4XtjqrzB1tDhNl6FruSwRAQ0mWWVZK/xsa5lcFIcYrwq9+mw7PjuH029gnZVfO/
-	XRgc8wUIeKzif7++NL++qgx97Hp6N+nnWBIJvuIECoe33Peehec2yV+EmELLzLRU227gmE
-	RrcVhS1yQXTcwQf27BgSVGbGyAQLUN4=
+	bh=AbYCbT6M2EaJK1Q6vJ2IcYCS7NUptHbLc4XrSU4QEHw=;
+	b=d/WYxaGC+qfhl68HamfSmi8yCsI0Oo3MKfOxxtzn+RwrWz/4Zu5J6ywF7YF2joPfGki2Fs
+	IRu9BqDA9tQytPIj4uMMqM0ZVkRSezQ/I0BJqrkiZNlthXnycCQ/hI8NhRoos0U+Ebl6Iy
+	jkTfu+GCBvfIf/2BxO8lXe4lxQSbleo=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-wGI1dtL0P9GJaIuPnMU1Vg-1; Fri,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-PvhzoT8IPsW6Z41sicIZIw-1; Fri,
  19 Apr 2024 04:59:30 -0400
-X-MC-Unique: wGI1dtL0P9GJaIuPnMU1Vg-1
+X-MC-Unique: PvhzoT8IPsW6Z41sicIZIw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDADD3811717;
-	Fri, 19 Apr 2024 08:59:29 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EE12C1C294CE;
+	Fri, 19 Apr 2024 08:59:28 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id ACEB0203689B;
-	Fri, 19 Apr 2024 08:59:29 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BC7992033A7D;
+	Fri, 19 Apr 2024 08:59:28 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: isaku.yamahata@intel.com,
 	binbin.wu@linux.intel.com,
 	seanjc@google.com,
 	rick.p.edgecombe@intel.com
-Subject: [PATCH 6/6] KVM: selftests: x86: Add test for KVM_PRE_FAULT_MEMORY
-Date: Fri, 19 Apr 2024 04:59:27 -0400
-Message-ID: <20240419085927.3648704-7-pbonzini@redhat.com>
+Subject: [PATCH 2/6] KVM: Add KVM_PRE_FAULT_MEMORY vcpu ioctl to pre-populate guest memory
+Date: Fri, 19 Apr 2024 04:59:23 -0400
+Message-ID: <20240419085927.3648704-3-pbonzini@redhat.com>
 In-Reply-To: <20240419085927.3648704-1-pbonzini@redhat.com>
 References: <20240419085927.3648704-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -65,25 +65,49 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Add a test case to exercise KVM_PRE_FAULT_MEMORY and run the guest to access the
-pre-populated area.  It tests KVM_PRE_FAULT_MEMORY ioctl for KVM_X86_DEFAULT_VM
-and KVM_X86_SW_PROTECTED_VM.
+Add a new ioctl KVM_PRE_FAULT_MEMORY in the KVM common code. It iterates on the
+memory range and calls the arch-specific function.  Add stub arch function
+as a weak symbol.
 
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-ID: <32427791ef42e5efaafb05d2ac37fa4372715f47.1712785629.git.isaku.yamahata@intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Message-ID: <819322b8f25971f2b9933bfa4506e618508ad782.1712785629.git.isaku.yamahata@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h                |   8 +
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../selftests/kvm/pre_fault_memory_test.c     | 146 ++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/pre_fault_memory_test.c
+ include/linux/kvm_host.h |  5 ++++
+ include/uapi/linux/kvm.h | 10 +++++++
+ virt/kvm/Kconfig         |  3 ++
+ virt/kvm/kvm_main.c      | 63 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 81 insertions(+)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index c3308536482b..4d66d8afdcd1 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -2227,4 +2227,12 @@ struct kvm_create_guest_memfd {
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 8dea11701ab2..9e9943e5e37c 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2478,4 +2478,9 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages
+ void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
+ #endif
+ 
++#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
++long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
++				    struct kvm_pre_fault_memory *range);
++#endif
++
+ #endif
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2190adbe3002..917d2964947d 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -917,6 +917,7 @@ struct kvm_enable_cap {
+ #define KVM_CAP_MEMORY_ATTRIBUTES 233
+ #define KVM_CAP_GUEST_MEMFD 234
+ #define KVM_CAP_VM_TYPES 235
++#define KVM_CAP_PRE_FAULT_MEMORY 236
+ 
+ struct kvm_irq_routing_irqchip {
+ 	__u32 irqchip;
+@@ -1548,4 +1549,13 @@ struct kvm_create_guest_memfd {
  	__u64 reserved[6];
  };
  
@@ -93,173 +117,106 @@ index c3308536482b..4d66d8afdcd1 100644
 +	__u64 gpa;
 +	__u64 size;
 +	__u64 flags;
++	__u64 padding[5];
 +};
 +
  #endif /* __LINUX_KVM_H */
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 871e2de3eb05..61d581a4bab4 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -144,6 +144,7 @@ TEST_GEN_PROGS_x86_64 += set_memory_region_test
- TEST_GEN_PROGS_x86_64 += steal_time
- TEST_GEN_PROGS_x86_64 += kvm_binary_stats_test
- TEST_GEN_PROGS_x86_64 += system_counter_offset_test
-+TEST_GEN_PROGS_x86_64 += pre_fault_memory_test
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index 754c6c923427..b14e14cdbfb9 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -67,6 +67,9 @@ config HAVE_KVM_INVALID_WAKEUPS
+ config KVM_GENERIC_DIRTYLOG_READ_PROTECT
+        bool
  
- # Compiled outputs used by test targets
- TEST_GEN_PROGS_EXTENDED_x86_64 += x86_64/nx_huge_pages_test
-diff --git a/tools/testing/selftests/kvm/pre_fault_memory_test.c b/tools/testing/selftests/kvm/pre_fault_memory_test.c
-new file mode 100644
-index 000000000000..e56eed2c1f05
---- /dev/null
-+++ b/tools/testing/selftests/kvm/pre_fault_memory_test.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024, Intel, Inc
-+ *
-+ * Author:
-+ * Isaku Yamahata <isaku.yamahata at gmail.com>
-+ */
-+#include <linux/sizes.h>
++config KVM_GENERIC_PRE_FAULT_MEMORY
++       bool
 +
-+#include <test_util.h>
-+#include <kvm_util.h>
-+#include <processor.h>
-+
-+/* Arbitrarily chosen values */
-+#define TEST_SIZE		(SZ_2M + PAGE_SIZE)
-+#define TEST_NPAGES		(TEST_SIZE / PAGE_SIZE)
-+#define TEST_SLOT		10
-+
-+static void guest_code(uint64_t base_gpa)
+ config KVM_COMPAT
+        def_bool y
+        depends on KVM && COMPAT && !(S390 || ARM64 || RISCV)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 38b498669ef9..51d8dbe7e93b 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4379,6 +4379,55 @@ static int kvm_vcpu_ioctl_get_stats_fd(struct kvm_vcpu *vcpu)
+ 	return fd;
+ }
+ 
++#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
++static int kvm_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
++				     struct kvm_pre_fault_memory *range)
 +{
-+	volatile uint64_t val __used;
-+	int i;
++	int idx;
++	long r;
++	u64 full_size;
 +
-+	for (i = 0; i < TEST_NPAGES; i++) {
-+		uint64_t *src = (uint64_t *)(base_gpa + i * PAGE_SIZE);
++	if (range->flags)
++		return -EINVAL;
 +
-+		val = *src;
-+	}
++	if (!PAGE_ALIGNED(range->gpa) ||
++	    !PAGE_ALIGNED(range->size) ||
++	    range->gpa + range->size <= range->gpa)
++		return -EINVAL;
 +
-+	GUEST_DONE();
-+}
++	if (!range->size)
++		return 0;
 +
-+static void pre_fault_memory(struct kvm_vcpu *vcpu, u64 gpa, u64 size,
-+			     u64 left)
-+{
-+	struct kvm_pre_fault_memory range = {
-+		.gpa = gpa,
-+		.size = size,
-+		.flags = 0,
-+	};
-+	u64 prev;
-+	int ret, save_errno;
++	vcpu_load(vcpu);
++	idx = srcu_read_lock(&vcpu->kvm->srcu);
 +
++	full_size = range->size;
 +	do {
-+		prev = range.size;
-+		ret = __vcpu_ioctl(vcpu, KVM_PRE_FAULT_MEMORY, &range);
-+		save_errno = errno;
-+		TEST_ASSERT((range.size < prev) ^ (ret < 0),
-+			    "%sexpecting range.size to change on %s",
-+			    ret < 0 ? "not " : "",
-+			    ret < 0 ? "failure" : "success");
-+	} while (ret >= 0 ? range.size : save_errno == EINTR);
++		if (signal_pending(current)) {
++			r = -EINTR;
++			break;
++		}
 +
-+	TEST_ASSERT(range.size == left,
-+		    "Completed with %lld bytes left, expected %" PRId64,
-+		    range.size, left);
++		r = kvm_arch_vcpu_pre_fault_memory(vcpu, range);
++		if (r < 0)
++			break;
 +
-+	if (left == 0)
-+		__TEST_ASSERT_VM_VCPU_IOCTL(!ret, "KVM_PRE_FAULT_MEMORY", ret, vcpu->vm);
-+	else
-+		/* No memory slot causes RET_PF_EMULATE. it results in -ENOENT. */
-+		__TEST_ASSERT_VM_VCPU_IOCTL(ret && save_errno == ENOENT,
-+					    "KVM_PRE_FAULT_MEMORY", ret, vcpu->vm);
++		if (WARN_ON_ONCE(r == 0))
++			break;
++
++		range->size -= r;
++		range->gpa += r;
++		cond_resched();
++	} while (range->size);
++
++	srcu_read_unlock(&vcpu->kvm->srcu, idx);
++	vcpu_put(vcpu);
++
++	/* Return success if at least one page was mapped successfully.  */
++	return full_size == range->size ? r : 0;
 +}
-+
-+static void __test_pre_fault_memory(unsigned long vm_type, bool private)
-+{
-+	const struct vm_shape shape = {
-+		.mode = VM_MODE_DEFAULT,
-+		.type = vm_type,
-+	};
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_run *run;
-+	struct kvm_vm *vm;
-+	struct ucall uc;
-+
-+	uint64_t guest_test_phys_mem;
-+	uint64_t guest_test_virt_mem;
-+	uint64_t alignment, guest_page_size;
-+
-+	vm = vm_create_shape_with_one_vcpu(shape, &vcpu, guest_code);
-+
-+	alignment = guest_page_size = vm_guest_mode_params[VM_MODE_DEFAULT].page_size;
-+	guest_test_phys_mem = (vm->max_gfn - TEST_NPAGES) * guest_page_size;
-+#ifdef __s390x__
-+	alignment = max(0x100000UL, guest_page_size);
-+#else
-+	alignment = SZ_2M;
 +#endif
-+	guest_test_phys_mem = align_down(guest_test_phys_mem, alignment);
-+	guest_test_virt_mem = guest_test_phys_mem;
 +
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-+				    guest_test_phys_mem, TEST_SLOT, TEST_NPAGES,
-+				    private ? KVM_MEM_GUEST_MEMFD : 0);
-+	virt_map(vm, guest_test_virt_mem, guest_test_phys_mem, TEST_NPAGES);
+ static long kvm_vcpu_ioctl(struct file *filp,
+ 			   unsigned int ioctl, unsigned long arg)
+ {
+@@ -4580,6 +4629,20 @@ static long kvm_vcpu_ioctl(struct file *filp,
+ 		r = kvm_vcpu_ioctl_get_stats_fd(vcpu);
+ 		break;
+ 	}
++#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
++	case KVM_PRE_FAULT_MEMORY: {
++		struct kvm_pre_fault_memory range;
 +
-+	if (private)
-+		vm_mem_set_private(vm, guest_test_phys_mem, TEST_SIZE);
-+	pre_fault_memory(vcpu, guest_test_phys_mem, SZ_2M, 0);
-+	pre_fault_memory(vcpu, guest_test_phys_mem + SZ_2M, PAGE_SIZE * 2, PAGE_SIZE);
-+	pre_fault_memory(vcpu, guest_test_phys_mem + TEST_SIZE, PAGE_SIZE, PAGE_SIZE);
-+
-+	vcpu_args_set(vcpu, 1, guest_test_virt_mem);
-+	vcpu_run(vcpu);
-+
-+	run = vcpu->run;
-+	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-+		    "Wanted KVM_EXIT_IO, got exit reason: %u (%s)",
-+		    run->exit_reason, exit_reason_str(run->exit_reason));
-+
-+	switch (get_ucall(vcpu, &uc)) {
-+	case UCALL_ABORT:
-+		REPORT_GUEST_ASSERT(uc);
-+		break;
-+	case UCALL_DONE:
-+		break;
-+	default:
-+		TEST_FAIL("Unknown ucall 0x%lx.", uc.cmd);
++		r = -EFAULT;
++		if (copy_from_user(&range, argp, sizeof(range)))
++			break;
++		r = kvm_vcpu_pre_fault_memory(vcpu, &range);
++		/* Pass back leftover range. */
++		if (copy_to_user(argp, &range, sizeof(range)))
++			r = -EFAULT;
 +		break;
 +	}
-+
-+	kvm_vm_free(vm);
-+}
-+
-+static void test_pre_fault_memory(unsigned long vm_type, bool private)
-+{
-+	if (vm_type && !(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type))) {
-+		pr_info("Skipping tests for vm_type 0x%lx\n", vm_type);
-+		return;
-+	}
-+
-+	__test_pre_fault_memory(vm_type, private);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	TEST_REQUIRE(kvm_check_cap(KVM_CAP_PRE_FAULT_MEMORY));
-+
-+	test_pre_fault_memory(0, false);
-+#ifdef __x86_64__
-+	test_pre_fault_memory(KVM_X86_SW_PROTECTED_VM, false);
-+	test_pre_fault_memory(KVM_X86_SW_PROTECTED_VM, true);
 +#endif
-+	return 0;
-+}
+ 	default:
+ 		r = kvm_arch_vcpu_ioctl(filp, ioctl, arg);
+ 	}
 -- 
 2.43.0
+
 
