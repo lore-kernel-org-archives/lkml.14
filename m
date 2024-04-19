@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9579FC15D;
-	Fri, 19 Apr 2024 07:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4391C4CE12;
+	Fri, 19 Apr 2024 07:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713512646; cv=none; b=TyiGBcfXeD84R7GlaaTeVVYkW6m0upB9NwoadIRaNIufW5pYadC1X0WAH+37WHT030HitPyxtaG34LVNu5uk4C7QqODNWI8ja1cQyjm1XqoMDJZGTYneJ14qgVtNITJSiZ1KT1/JgAF038XasHdVEnTVDefskgmL7UnWPMT/Wv8=
+	t=1713512647; cv=none; b=RZwM6uDTi6m0453wQWE4QE9iVf/XRRt0udeyij66dEmrsHhAl+LwMFSrBtB7L0c7HwfRZmFkC0Yfx5JLAjrOZ+RWb8kr5/jEwL3VF0ZxIFm2QMEF5MsefigVScLoN2tbHdtCl9T9mp/A8LP6BvOG+xbnRJr4cvHNB/cfTR/lVBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713512646; c=relaxed/simple;
-	bh=hAY0+3UrRpRD+oKDHhysTAMhrmtmVoJ4mxOOyBbhG0g=;
+	s=arc-20240116; t=1713512647; c=relaxed/simple;
+	bh=nokdrwL4556IzeyiKU8jJaU6NofPKf4P+wYN5FKPACI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Iee6kPKZsVGbHzBKFX8rcW5yXww4IkEnYelJhEnb3w9teaJfww92ZGR7/ZXTvf45FYaDd/VyDQ0fGQCR26vjSGjyb9ppx1LiPagRSmf0NhTQ6hFg1JtOwxZdEA83FfEd/PxHxJo/wI3GLpTAHTGuuVXdYUJvp19oW4lNx5XK+NA=
+	 MIME-Version; b=VUyjUwcwxyQ3yNkH8Yv5DIARpNTuEwUDaDrBx3IIFRiudvs1CZV5slPnRK9ZgjBk/V3SHZzuj7WZ+n51Sej49Eo7MbtsgZiBntWqgYUBipeAUsV9yUMm5x+WO9y7ZV8RXTzYtiwI1EZZNXVYGs6zEZxaiEV5ioyE/HNhcY/ZG7I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C18F339;
-	Fri, 19 Apr 2024 00:44:26 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD9682F;
+	Fri, 19 Apr 2024 00:44:33 -0700 (PDT)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D9543F792;
-	Fri, 19 Apr 2024 00:43:55 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F6D43F792;
+	Fri, 19 Apr 2024 00:44:03 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v1 1/5] arm64/mm: Move PTE_PROT_NONE and PMD_PRESENT_INVALID
-Date: Fri, 19 Apr 2024 08:43:40 +0100
-Message-Id: <20240419074344.2643212-2-ryan.roberts@arm.com>
+Subject: [RFC PATCH v1 4/5] selftests/mm: Enable soft-dirty tests on arm64
+Date: Fri, 19 Apr 2024 08:43:43 +0100
+Message-Id: <20240419074344.2643212-5-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240419074344.2643212-1-ryan.roberts@arm.com>
 References: <20240419074344.2643212-1-ryan.roberts@arm.com>
@@ -48,93 +48,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously PTE_PROT_NONE was occupying bit 58, one of the bits reserved
-for SW use when the PTE is valid. This is a waste of those precious SW
-bits since PTE_PROT_NONE can only ever be set when valid is clear.
-Instead let's overlay it on what would be a HW bit if valid was set.
+Now that arm64 supports soft-dirty tracking lets enable the tests, which
+were previously disabled for arm64 to reduce noise.
 
-We need to be careful about which HW bit to choose since some of them
-must be preserved; when pte_present() is true (as it is for a
-PTE_PROT_NONE pte), it is legitimate for the core to call various
-accessors, e.g. pte_dirty(), pte_write() etc. There are also some
-accessors that are private to the arch which must continue to be
-honoured, e.g. pte_user(), pte_user_exec() etc.
-
-So we choose to overlay PTE_UXN; This effectively means that whenever a
-pte has PTE_PROT_NONE set, it will always report pte_user_exec() ==
-false, which is obviously always correct.
-
-As a result of this change, we must shuffle the layout of the
-arch-specific swap pte so that PTE_PROT_NONE is always zero and not
-overlapping with any other field. As a result of this, there is no way
-to keep the `type` field contiguous without conflicting with
-PMD_PRESENT_INVALID (bit 59), which must also be 0 for a swap pte. So
-let's move PMD_PRESENT_INVALID to bit 60.
-
-In the end, this frees up bit 58 for future use as a proper SW bit (e.g.
-soft-dirty or uffd-wp).
+This reverts commit f6dd4e223d87 ("selftests/mm: skip soft-dirty tests
+on arm64").
 
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- arch/arm64/include/asm/pgtable-prot.h |  4 ++--
- arch/arm64/include/asm/pgtable.h      | 16 +++++++++-------
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ tools/testing/selftests/mm/Makefile        |  5 +----
+ tools/testing/selftests/mm/madv_populate.c | 26 ++--------------------
+ tools/testing/selftests/mm/run_vmtests.sh  |  5 +----
+ 3 files changed, 4 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-index dd9ee67d1d87..ef952d69fd04 100644
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -18,14 +18,14 @@
- #define PTE_DIRTY		(_AT(pteval_t, 1) << 55)
- #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
- #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
--#define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
-+#define PTE_PROT_NONE		(PTE_UXN)		 /* Reuse PTE_UXN; only when !PTE_VALID */
+diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+index eb5f39a2668b..7f1a6ad09534 100644
+--- a/tools/testing/selftests/mm/Makefile
++++ b/tools/testing/selftests/mm/Makefile
+@@ -65,6 +65,7 @@ TEST_GEN_FILES += thuge-gen
+ TEST_GEN_FILES += transhuge-stress
+ TEST_GEN_FILES += uffd-stress
+ TEST_GEN_FILES += uffd-unit-tests
++TEST_GEN_FILES += soft-dirty
+ TEST_GEN_FILES += split_huge_page_test
+ TEST_GEN_FILES += ksm_tests
+ TEST_GEN_FILES += ksm_functional_tests
+@@ -72,10 +73,6 @@ TEST_GEN_FILES += mdwe_test
+ TEST_GEN_FILES += hugetlb_fault_after_madv
+ TEST_GEN_FILES += hugetlb_madv_vs_map
 
- /*
-  * This bit indicates that the entry is present i.e. pmd_page()
-  * still points to a valid huge page in memory even if the pmd
-  * has been invalidated.
-  */
--#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
-+#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 60) /* only when !PMD_SECT_VALID */
+-ifneq ($(ARCH),arm64)
+-TEST_GEN_FILES += soft-dirty
+-endif
+-
+ ifeq ($(ARCH),x86_64)
+ CAN_BUILD_I386 := $(shell ./../x86/check_cc.sh "$(CC)" ../x86/trivial_32bit_program.c -m32)
+ CAN_BUILD_X86_64 := $(shell ./../x86/check_cc.sh "$(CC)" ../x86/trivial_64bit_program.c)
+diff --git a/tools/testing/selftests/mm/madv_populate.c b/tools/testing/selftests/mm/madv_populate.c
+index 17bcb07f19f3..60547245e479 100644
+--- a/tools/testing/selftests/mm/madv_populate.c
++++ b/tools/testing/selftests/mm/madv_populate.c
+@@ -264,35 +264,14 @@ static void test_softdirty(void)
+ 	munmap(addr, SIZE);
+ }
 
- #define _PROT_DEFAULT		(PTE_TYPE_PAGE | PTE_AF | PTE_SHARED)
- #define _PROT_SECT_DEFAULT	(PMD_TYPE_SECT | PMD_SECT_AF | PMD_SECT_S)
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index afdd56d26ad7..23aabff4fa6f 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1248,20 +1248,22 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
-  * Encode and decode a swap entry:
-  *	bits 0-1:	present (must be zero)
-  *	bits 2:		remember PG_anon_exclusive
-- *	bits 3-7:	swap type
-- *	bits 8-57:	swap offset
-- *	bit  58:	PTE_PROT_NONE (must be zero)
-+ *	bits 4-53:	swap offset
-+ *	bit  54:	PTE_PROT_NONE (overlays PTE_UXN) (must be zero)
-+ *	bits 55-59:	swap type
-+ *	bit  60:	PMD_PRESENT_INVALID (must be zero)
-  */
--#define __SWP_TYPE_SHIFT	3
-+#define __SWP_TYPE_SHIFT	55
- #define __SWP_TYPE_BITS		5
--#define __SWP_OFFSET_BITS	50
- #define __SWP_TYPE_MASK		((1 << __SWP_TYPE_BITS) - 1)
--#define __SWP_OFFSET_SHIFT	(__SWP_TYPE_BITS + __SWP_TYPE_SHIFT)
-+#define __SWP_OFFSET_SHIFT	4
-+#define __SWP_OFFSET_BITS	50
- #define __SWP_OFFSET_MASK	((1UL << __SWP_OFFSET_BITS) - 1)
+-static int system_has_softdirty(void)
+-{
+-	/*
+-	 * There is no way to check if the kernel supports soft-dirty, other
+-	 * than by writing to a page and seeing if the bit was set. But the
+-	 * tests are intended to check that the bit gets set when it should, so
+-	 * doing that check would turn a potentially legitimate fail into a
+-	 * skip. Fortunately, we know for sure that arm64 does not support
+-	 * soft-dirty. So for now, let's just use the arch as a corse guide.
+-	 */
+-#if defined(__aarch64__)
+-	return 0;
+-#else
+-	return 1;
+-#endif
+-}
+-
+ int main(int argc, char **argv)
+ {
+-	int nr_tests = 16;
+ 	int err;
 
- #define __swp_type(x)		(((x).val >> __SWP_TYPE_SHIFT) & __SWP_TYPE_MASK)
- #define __swp_offset(x)		(((x).val >> __SWP_OFFSET_SHIFT) & __SWP_OFFSET_MASK)
--#define __swp_entry(type,offset) ((swp_entry_t) { ((type) << __SWP_TYPE_SHIFT) | ((offset) << __SWP_OFFSET_SHIFT) })
-+#define __swp_entry(type, offset) ((swp_entry_t) { ((unsigned long)(type) << __SWP_TYPE_SHIFT) | \
-+						   ((unsigned long)(offset) << __SWP_OFFSET_SHIFT) })
+ 	pagesize = getpagesize();
 
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
- #define __swp_entry_to_pte(swp)	((pte_t) { (swp).val })
+-	if (system_has_softdirty())
+-		nr_tests += 5;
+-
+ 	ksft_print_header();
+-	ksft_set_plan(nr_tests);
++	ksft_set_plan(21);
+
+ 	sense_support();
+ 	test_prot_read();
+@@ -300,8 +279,7 @@ int main(int argc, char **argv)
+ 	test_holes();
+ 	test_populate_read();
+ 	test_populate_write();
+-	if (system_has_softdirty())
+-		test_softdirty();
++	test_softdirty();
+
+ 	err = ksft_get_fail_cnt();
+ 	if (err)
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index c2c542fe7b17..29806d352c73 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -395,10 +395,7 @@ then
+ 	CATEGORY="pkey" run_test ./protection_keys_64
+ fi
+
+-if [ -x ./soft-dirty ]
+-then
+-	CATEGORY="soft_dirty" run_test ./soft-dirty
+-fi
++CATEGORY="soft_dirty" run_test ./soft-dirty
+
+ CATEGORY="pagemap" run_test ./pagemap_ioctl
+
 --
 2.25.1
 
