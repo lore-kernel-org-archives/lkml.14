@@ -1,330 +1,124 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC7442AAF;
-	Fri, 19 Apr 2024 09:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134F973518;
+	Fri, 19 Apr 2024 09:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713519681; cv=none; b=dmMlNaONNQkCYst7+Rh9vJFoaSbS+o8+1fxUOITdQJuPA+RiMEu0ltiOLRBSYuI3fmk9yBlKffmF666QSTZaJmNfeY4u4Zf8pLf/gNEHuhewTNRMNWQe8wGfj5aFFVBPg09kouOhDNaa8yedeyoGw3GRkmRdLObspkCJNVCS9SQ=
+	t=1713519731; cv=none; b=hpSKboYPx3uovijgJI8ycTyG+5YRmXtS73l1hQObzSFxFC8RuboDw+qL/qrdO43/hAtaxHP9WzAcPCCHNJHvQ4Hlo0QY3d2foE/akJHn45h9c1vtKlVcG164afno1KmHWq9BHCv5n0KbRP4z9tNeh6dQW8px1SnIMh8TPw/Ad0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713519681; c=relaxed/simple;
-	bh=BqLh51iZfzKjJwxshA2ena596WdsSjA7IqCowsvvULc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JT8janlFlRNlzW/Fs65/8uP7IzEcFxORw4Uj2nHfs+lKwdzv9M5XZ1HSaOk/vr+9iuF6TJnjQnNnKb31OB1I7ZEXAgZjKYZTMeB7v9bdp2ZIiD79o9CO2MKCMskGIpA08LcLudBnloX1+koXT/mAQIK0kOrqb+hq6ymxD4EUxxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NuWIeyog; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NuWIeyog"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43J9fAUb032127;
-	Fri, 19 Apr 2024 04:41:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1713519670;
-	bh=atVafkvYDqVFc5Tb4wCxnaZOhDv+uug6Mn9lQ8yUcEo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=NuWIeyogGfzqX38NefmDj+P+BAu1KP4kN4kUewfD18f+lq3Vrn9mb26khp4t5YDgV
-	 UnarsUVJi7vkCqLVB6sUAyCD+Fa50ulwYwTqZry10Akqd2YTiutVsGg4u805fYmvnZ
-	 i9HGN7ejptF2KZ62soYd3fOy1WtUt1Mhtb7YMLOw=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43J9fA0m015180
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 19 Apr 2024 04:41:10 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 19
- Apr 2024 04:41:10 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 19 Apr 2024 04:41:10 -0500
-Received: from [172.24.31.60] (lt5cd2489kgj.dhcp.ti.com [172.24.31.60])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43J9f6GE057654;
-	Fri, 19 Apr 2024 04:41:07 -0500
-Message-ID: <8ce03ffe-6440-432c-9bed-77e3a01ae150@ti.com>
-Date: Fri, 19 Apr 2024 15:11:05 +0530
+	s=arc-20240116; t=1713519731; c=relaxed/simple;
+	bh=PEwMW4CFu9H07YyRLwf9wZ/6wuK3fPveGR5w/PSbNug=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KlQBnTTIZ6/C0bgzzOZbhy1lL8B1RGCBCsadWTb4cYF+9u1bHIDo5c/lcHHtdW9IUkZvtzUyyc9uEdI/8SqYoe2a/dfVAxd/lcLvMat3qECT1KO8LAWESiDQsSHf5c4MqB82Us62U6XHQGBRrfOEu3qWZZfDh4dB1nDqDB2coxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VLV6F3FLlz4f3jJ9;
+	Fri, 19 Apr 2024 17:41:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B58ED1A0179;
+	Fri, 19 Apr 2024 17:42:04 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBFfPCJmFDWMKQ--.63826S4;
+	Fri, 19 Apr 2024 17:41:52 +0800 (CST)
+From: linan666@huaweicloud.com
+To: tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2] blk-iocost: do not WARNING if iocg has already offlined
+Date: Fri, 19 Apr 2024 17:32:57 +0800
+Message-Id: <20240419093257.3004211-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-j784s4-evm: Add support for multiple
- CAN instances
-To: Bhavya Kapoor <b-kapoor@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <vigneshr@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <conor+dt@kernel.org>,
-        <krzk+dt@kernel.org>, <robh@kernel.org>, <kristo@kernel.org>,
-        <nm@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>
-References: <20240411201747.18697-1-b-kapoor@ti.com>
- <85ea2b33-05ac-400f-8017-5539d21ebe32@ti.com>
- <8d9a6dc7-7590-412d-aa81-18a6cf5d09ca@ti.com>
- <9c7f0e3d-4558-4a73-bbb1-ceb7ebe02cd9@ti.com>
- <e9e3ac5d-a048-4058-a5a1-205ded24cb8d@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <e9e3ac5d-a048-4058-a5a1-205ded24cb8d@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-CM-TRANSID:cCh0CgBHGBFfPCJmFDWMKQ--.63826S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryxtrW3tF45tFykCFy5twb_yoW8uF13pr
+	45KwnruF1Utr12ka1Dt3Z2q3409a1rWws3J34xWrZ8Za43ur1Iq3Wv9w4FvFy0qF95CFZ5
+	ZF48trWSy3WUCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSApUUUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
+From: Li Nan <linan122@huawei.com>
 
-On 4/19/2024 2:49 PM, Bhavya Kapoor wrote:
-> On 16/04/24 15:24, Kumar, Udit wrote:
->> Hello Bhavya
->>
->> On 4/16/2024 2:52 PM, Bhavya Kapoor wrote:
->>> On 15/04/24 10:42, Kumar, Udit wrote:
->>>> Hello Bhavya,
->>>>
->>>> On 4/12/2024 1:47 AM, Bhavya Kapoor wrote:
->>>>> CAN instances 0 and 1 in the mcu domain and 16 in the main domain are
->>>>> brought on the evm through headers J42, J43 and J46 respectively. Thus,
->>>>> add their respective transceiver's 0, 1 and 2 dt nodes to add support
->>>>> for these CAN instances.
->>>> Looking at schematic and board data sheet, it appears, board has 6 CAN interfaces.
->>>>
->>>> [J41--J46],  but we are enabling only 4.
->>>>
->>>> I understand, other interfaces might be used for other purpose.
->>>>
->>>> Vignesh/Nishanth,
->>>>
->>>> Do you think, this make sense to code all available interfaces on board and
->>>>
->>>> mark as reserved, if used for other purpose , similar to what is done for wkup_uart for this board.
->>>>
->>> Hi Udit, there is a mux that is used between audio and the signal lines of other 2 cans.
->>>
->>> If we turn on the other 2 cans or even mark  them as reserved, we will still have to
->>>
->>> alter the mux sel lines which will impact the audio.
->>
->> How it will impact ?
->>
->> Audio and CAN lines goes to 1B port of mux .
->>
->> IMO, even CAN or Audio does mux select they are going to select same port no ?
->>
->> I refer U58 and U50 MUX of schematic, Hope we are on same page
->>
->>
-> Hi Udit, Thanks for the clarity on muxes number otherwise we would have been in a lot of confusion
-> I was referring to muxes U112 and U108.
-> After U58 and UU50 , the signal will pass to U112 and U108 and in these 2 Muxes,
->
-> we will either have to select _B1 or _B2 ie from audio or the can signals. And, we
->
-> are going for audio signals.
+In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
+is intended to confirm iocg is avitve when it has debt. However, warn
+can be triggered during a blkcg or disk is being removed, as
+iocg_waitq_timer_fn() is awakened at that time.
 
+  WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
+  Call trace:
+  iocg_pay_debt+0x14c/0x190
+  iocg_kick_waitq+0x438/0x4c0
+  iocg_waitq_timer_fn+0xd8/0x130
+  __run_hrtimer+0x144/0x45c
+  __hrtimer_run_queues+0x16c/0x244
+  hrtimer_interrupt+0x2cc/0x7b0
+ps: This issue was got in linux 5.10, but it also exists in the mainline.
 
-Then my suggestion will be to have this mux in your series and mark as 
-reserved.
+The warn in this situation is meaningless. Since this iocg is being
+removed, the state of the 'active_list' is irrelevant, and 'waitq_timer'
+is canceled after removing 'active_list' in ioc_pd_free(), which ensure
+iocg is freed after iocg_waitq_timer_fn() returns.
 
-When audio will come, audio can enable this mux as needed.
+Therefore, add the check if iocg has already offlined to avoid warn
+when removing a blkcg or disk.
 
->
-> Regards
->
->>> Thanks.
->>>
->>> ~B-Kapoor
->>>
->>>>> CAN instance 4 in the main domain is brought on the evm through header
->>>>> J45. The CAN High and Low lines from the SoC are routed through a mux
->>>>> on the evm. The select lines need to be set for the CAN signals to
->>>>> reach to its transceiver on the evm. Therefore, add transceiver 3
->>>>> dt node to add support for this CAN instance.
->>>>>
->>>>> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
->>>>> ---
->>>>>
->>>>> rebased to next-20240411
->>>>>
->>>>>     arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 107 +++++++++++++++++++++++
->>>>>     1 file changed, 107 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->>>>> index 81fd7afac8c5..e56901973895 100644
->>>>> --- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->>>>> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->>>>> @@ -272,6 +272,45 @@ dp0_connector_in: endpoint {
->>>>>                 };
->>>>>             };
->>>>>         };
->>>>> +
->>>>> +    transceiver0: can-phy0 {
->>>>> +        compatible = "ti,tcan1042";
->>>>> +        #phy-cells = <0>;
->>>>> +        max-bitrate = <5000000>;
->>>>> +        pinctrl-names = "default";
->>>>> +        pinctrl-0 = <&mcu_mcan0_gpio_pins_default>;
->>>>> +        standby-gpios = <&wkup_gpio0 69 GPIO_ACTIVE_HIGH>;
->>>>> +    };
->>>>> +
->>>>> +    transceiver1: can-phy1 {
->>>>> +        compatible = "ti,tcan1042";
->>>>> +        #phy-cells = <0>;
->>>>> +        max-bitrate = <5000000>;
->>>>> +        pinctrl-names = "default";
->>>>> +        pinctrl-0 = <&mcu_mcan1_gpio_pins_default>;
->>>>> +        standby-gpios = <&wkup_gpio0 2 GPIO_ACTIVE_HIGH>;
->>>>> +    };
->>>>> +
->>>>> +    transceiver2: can-phy2 {
->>>>> +        /* standby pin has been grounded by default */
->>>>> +        compatible = "ti,tcan1042";
->>>>> +        #phy-cells = <0>;
->>>>> +        max-bitrate = <5000000>;
->>>>> +    };
->>>>> +
->>>>> +    transceiver3: can-phy3 {
->>>>> +        compatible = "ti,tcan1042";
->>>>> +        #phy-cells = <0>;
->>>>> +        max-bitrate = <5000000>;
->>>>> +        standby-gpios = <&exp2 7 GPIO_ACTIVE_HIGH>;
->>>>> +        mux-states = <&mux1 1>;
->>>>> +    };
->>>>> +
->>>>> +    mux1: mux-controller {
->>>>> +        compatible = "gpio-mux";
->>>>> +        #mux-state-cells = <1>;
->>>>> +        mux-gpios = <&exp2 14 GPIO_ACTIVE_HIGH>;
->>>> Could you help here on logic to choose pin 14
->>>>
->>>> As I see for this mux
->>>>
->>>> S0 is CANUART_MUX_SEL0 [Pin 14, which you want to control as high]
->>>>
->>>> S1 is Pin 15 is "CANUART_MUX2_SEL1"
->>>>
->>>> S2 is high
->>>>
->>>> So in order to get CAN on mux output
->>>>
->>>> All, S0, S1 and S2 should be high.
->>>>
->>>> IMO, you should control both S0 and S1, or just S1 and S0 with dip switch
->>> Hi Udit, S0 comes at a default Active High State always. Thus, i have kept it the same.
->>>
->>> This was done in the same way as it was done for mux2 for  j721s2. mcan 5
->>>
->>> Thanks
->> May be i was not clear in my previous comment
->>
->> Looking at schematic
->>
->> S0 is CANUART_MUX_SEL0 , which is connected with DIP switch and IO expander U173
->>
->> S1 is CANUART_MUX2_SEL1, which is connected only IO with expander U173
->>
->> S2 is CANUART_MUX_SEL2 is pulled high by hardware itself .
->>
->> Here all lines high are needed to route CAN correctly out from mux.
->>
->> So this patch is controlling CANUART_MUX_SEL0 but not controlling CANUART_MUX2_SEL1.
->>
->> IMO, CANUART_MUX_SEL0 can be controlled by dip switch and CANUART_MUX2_SEL1 should be controlled by driver.
-> Hi Udit, thanks for conveying this in a much more explained way.
->
-> What i am trying to say that in the  default state as well we are getting s1 signal as high itself.
->
-> So, if you  want that we should specifically add gpio for that in dts, we can also go ahead with that.
+Signed-off-by: Li Nan <linan122@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+v2: 
+ - Indicate in the message that there is also an issue with deleting
+   the disk.
+ - add comment for check pd.online.
 
+ block/blk-iocost.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Just control (S1 which is CANUART_MUX2_SEL1) by your dts files
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index baa20c85799d..690ca99dfaca 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1439,8 +1439,11 @@ static void iocg_pay_debt(struct ioc_gq *iocg, u64 abs_vpay,
+ 	lockdep_assert_held(&iocg->ioc->lock);
+ 	lockdep_assert_held(&iocg->waitq.lock);
+ 
+-	/* make sure that nobody messed with @iocg */
+-	WARN_ON_ONCE(list_empty(&iocg->active_list));
++	/*
++	 * make sure that nobody messed with @iocg. Check iocg->pd.online
++	 * to avoid warn when removing blkcg or disk.
++	 */
++	WARN_ON_ONCE(list_empty(&iocg->active_list) && iocg->pd.online);
+ 	WARN_ON_ONCE(iocg->inuse > 1);
+ 
+ 	iocg->abs_vdebt -= min(abs_vpay, iocg->abs_vdebt);
+-- 
+2.39.2
 
->
-> Regards
->
-> ~B-Kapoor
->
->>
->>>>> +    };
->>>>>     };
->>>>>       &wkup_gpio0 {
->>>>> @@ -336,6 +375,20 @@ J784S4_IOPAD(0x014, PIN_INPUT_PULLUP, 8) /* (AG33) MCAN14_TX.I2C4_SCL */
->>>>>                 J784S4_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AH33) MCAN13_RX.I2C4_SDA */
->>>>>             >;
->>>>>         };
->>>>> +
->>>>> +    main_mcan4_pins_default: main-mcan4-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_IOPAD(0x088, PIN_INPUT, 0) /* (AF36) MCAN4_RX */
->>>>> +            J784S4_IOPAD(0x084, PIN_OUTPUT, 0) /* (AG38) MCAN4_TX */
->>>>> +        >;
->>>>> +    };
->>>>> +
->>>>> +    main_mcan16_pins_default: main-mcan16-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_IOPAD(0x028, PIN_INPUT, 0) /* (AE33) MCAN16_RX */
->>>>> +            J784S4_IOPAD(0x024, PIN_OUTPUT, 0) /* (AH34) MCAN16_TX */
->>>>> +        >;
->>>>> +    };
->>>>>     };
->>>>>       &wkup_pmx2 {
->>>>> @@ -415,6 +468,32 @@ J784S4_WKUP_IOPAD(0x104, PIN_INPUT, 0) /* (U33) MCU_ADC1_AIN6 */
->>>>>                 J784S4_WKUP_IOPAD(0x108, PIN_INPUT, 0) /* (Y36) MCU_ADC1_AIN7 */
->>>>>             >;
->>>>>         };
->>>>> +
->>>>> +    mcu_mcan0_pins_default: mcu-mcan0-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_WKUP_IOPAD(0x050, PIN_OUTPUT, 0) /* (K33) MCU_MCAN0_TX */
->>>>> +            J784S4_WKUP_IOPAD(0x054, PIN_INPUT, 0) /* (F38) MCU_MCAN0_RX */
->>>>> +        >;
->>>>> +    };
->>>>> +
->>>>> +    mcu_mcan1_pins_default: mcu-mcan1-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_WKUP_IOPAD(0x068, PIN_OUTPUT, 0) /* (H35) WKUP_GPIO0_4.MCU_MCAN1_TX */
->>>>> +            J784S4_WKUP_IOPAD(0x06c, PIN_INPUT, 0) /* (K36) WKUP_GPIO0_5.MCU_MCAN1_RX */
->>>>> +        >;
->>>>> +    };
->>>>> +
->>>>> +    mcu_mcan0_gpio_pins_default: mcu-mcan0-gpio-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_WKUP_IOPAD(0x040, PIN_INPUT, 7) /* (J38) MCU_SPI0_D1.WKUP_GPIO0_69 */
->>>>> +        >;
->>>>> +    };
->>>>> +
->>>>> +    mcu_mcan1_gpio_pins_default: mcu-mcan1-gpio-default-pins {
->>>>> +        pinctrl-single,pins = <
->>>>> +            J784S4_WKUP_IOPAD(0x060, PIN_INPUT, 7) /* (J35) WKUP_GPIO0_2 */
->>>>> +        >;
->>>>> +    };
->>>>>     };
->>>>>       &wkup_pmx1 {
->>>>> @@ -1105,3 +1184,31 @@ dp0_out: endpoint {
->>>>>             };
->>>>>         };
->>>>>     };
->>>>> +
->>>>> +&mcu_mcan0 {
->>>>> +    status = "okay";
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&mcu_mcan0_pins_default>;
->>>>> +    phys = <&transceiver0>;
->>>>> +};
->>>>> +
->>>>> +&mcu_mcan1 {
->>>>> +    status = "okay";
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&mcu_mcan1_pins_default>;
->>>>> +    phys = <&transceiver1>;
->>>>> +};
->>>>> +
->>>>> +&main_mcan16 {
->>>>> +    status = "okay";
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&main_mcan16_pins_default>;
->>>>> +    phys = <&transceiver2>;
->>>>> +};
->>>>> +
->>>>> +&main_mcan4 {
->>>>> +    status = "okay";
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&main_mcan4_pins_default>;
->>>>> +    phys = <&transceiver3>;
->>>>> +};
