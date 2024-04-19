@@ -1,165 +1,126 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D98729A2
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 05:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E547494
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 05:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713503168; cv=none; b=M9jTIegPS5bqfa+9tGJMUzjjOExYme+Ymzh1yn2u8lMR1iWSXQvqkhnzl90oB3pCy7sKvwkFSrXyEckzg1rVt7l2u6Ppdf7xIJzdJSNFffL/Nv7Hy+FCX8htYv0cCsIBg7qPeFF3U/8iSflZZe+3aXxyCWbCTQIsku1mtJi/UwY=
+	t=1713503592; cv=none; b=mJWw+8ISk6+/F7M4jFiifklCZfNnjHNAtYfra34BlnAZIvUttClcFiehputiq5MjLXxwspazD6TvOFDVuwnl0iMddeT+nQHb/gWS39BSHFITJhy0a2KrC+OYQWDwWxniCaDaw4bcdwunc+AhjzRltvv3PD1BdPYxpkZDCFJerOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713503168; c=relaxed/simple;
-	bh=pVtnrlHFYLhkjjNwsjfi+LPe4VoWZsXGoSRzI576SL0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aLHsr0XqHQKEgqV1DebM+Ld8eCMoigpn+CdOYZrRDHJKpH8kwEShhjApdE2PeldTFoHBYFF+Fwh+La8Vbq5DFt4iJRgBWN0pqarnUdMkVH0n4L0ST7F7kKFh+0DIwru8NIsrE1tYsBOlH7sds94KdUWOVBP1Zu1SRCOwel4Epks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7da4211c691so67035739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Apr 2024 22:06:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713503165; x=1714107965;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ckZrFnGviII5VQl8HOyjRGK+WvpUvhusO85nB51nl00=;
-        b=gcatsdEmnflCt8pEe+E1T+CPoHwu1Hwh92PPulPbAybg0ON3QsSCwDyguY3l3iuBl2
-         Wc3w3V6u+AnCfpDDFa/4/d6lZHwylXh3LTuXRuDuu7dW9Yv1o57GRDgHPNHRg6ltersj
-         FX3HlMfJer/9wPqKoHayasTt/l+5+pcuxUTfz09TCPqS3P8rP9+9Boslmr0TRTmkPxE4
-         ZwhfRex/Ci3UTOeca1qM5kUZlzuVY6uxXm46jofPbftafYAhSJRl2HSR1ks6mUYBZogL
-         097NK4D9jHwlVsKmp95KebdsMPcGm7lyXUAE/z1JS/G8e+FNO+ccFiekx+P0p98Z82c6
-         5Z3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWiK9ulmFuJPP62p1YDME7GS9T7LY+EKSi6VSrDeSrKvDBdkcakXY4JTAY8uW3v+qsvTCuqQfmz4sUX6MeYVELFAGOpRRkMe5Ve/kVO
-X-Gm-Message-State: AOJu0YxVT4BneX1N1lANnPqJTq2i3HgnB26vNBUF+INNekjl7YOmygCx
-	vP20jbsB72Bb1B3bLIfPlVNFi8cwr3NhaE8LEyfQvSNOmjq+tu4nw7Hni+wgM2TBaUgFqPuiCT7
-	Xx4M28hRcPquNyroMLGLneRdSvr1zAJI6zYapLDrXSCM0BZqxQJYMKP0=
-X-Google-Smtp-Source: AGHT+IHsUQ+6XaeCvgyy7v40kzkP2qo8HDWuyLZLStjhbSEASIBfiIhZ/J0R8fCsJ5hdkVH3PK7Je2OlHsPGUhlCoZ9ooSE/92L3
+	s=arc-20240116; t=1713503592; c=relaxed/simple;
+	bh=0uUaHshrb8NAIBnznpZKZX0Au6m6hxj9X/9tabmQHAc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mfFHcWKjRydxDbqDZpnDi5QjqO8gd5cm8zyfcN6n14klCaHwlmKkUQUnNt0a62CCJji6rS5d/D5dq6Bv6CLQ6W+UJ1HFz72LLRd31oFgMvtRQfdfmLPiGGIqFtTde1f6a1hN8tC11IattOdsZWWtBiA1JpSHILU+E6Lqj5ReQ7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=BuDsMaCr; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="BuDsMaCr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1713503582;
+	bh=kKJbHRkyLHBaxd0WzWWbPlJiRCeUkrJqnmVheMKFAs8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=BuDsMaCrIPoMUPy5N7wfOxpl9Q7/pGYp4Sl8j2DC2jVZ5CcGvulsbeS4mEdlPHaQj
+	 JxFVWgcvjAnVgg/68Ew8uK3o4C9UJgpkdWIF12waMjhr7fFcfoHNBZJuaadQLDjZCW
+	 xBPIQ30XChhLhDOsIQkiYGsU+f6iPH6bQ2ckBJbzRI+rGjD1NU5yOrCOTZdup7ba6/
+	 gYeoT4OUck4v4i3UKzsilII1+q+bOUbW43KKDWw86IHGM+jxbHTcghrrGHvrQmxsY6
+	 rYA0ZN5w5jAbdMJVRTkTZjovEXhlxtmSNfxIS8gqhuPxs9xNBkMCo5gR1UbcWYgCg/
+	 uI8piTbVvl/Qg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VLN7x53gbz4wnr;
+	Fri, 19 Apr 2024 15:13:01 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ linux-kernel@vger.kernel.org, linuxppc-dev
+ <linuxppc-dev@lists.ozlabs.org>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, Kees
+ Cook <keescook@chromium.org>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ clang-built-linux <llvm@lists.linux.dev>, Nick Desaulniers
+ <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, Jeff Xu
+ <jeffxu@chromium.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Baoquan He
+ <bhe@redhat.com>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH] powerpc: drop port I/O helpers for CONFIG_HAS_IOPORT=n
+In-Reply-To: <8734ribza2.fsf@mail.lhotse>
+References: <20240416153331.1617772-1-arnd@kernel.org>
+ <878r1bb2zj.fsf@mail.lhotse>
+ <59473eb6-1707-4bbf-85a3-ba4835f3ee7f@app.fastmail.com>
+ <8734ribza2.fsf@mail.lhotse>
+Date: Fri, 19 Apr 2024 15:12:58 +1000
+Message-ID: <87wmou9bqd.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:990d:0:b0:7d6:3ef7:a80c with SMTP id
- t13-20020a5e990d000000b007d63ef7a80cmr50560ioj.1.1713503165716; Thu, 18 Apr
- 2024 22:06:05 -0700 (PDT)
-Date: Thu, 18 Apr 2024 22:06:05 -0700
-In-Reply-To: <20240418230932.2689-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000083ac2306166c0b7e@google.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in __stack_map_get
-From: syzbot <syzbot+dddd99ae26c656485d89@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hello,
+Michael Ellerman <mpe@ellerman.id.au> writes:
+> "Arnd Bergmann" <arnd@arndb.de> writes:
+>> On Thu, Apr 18, 2024, at 08:26, Michael Ellerman wrote:
+>>> Arnd Bergmann <arnd@kernel.org> writes:
+>>
+>>> @@ -692,6 +692,7 @@ static inline void name at                          
+>>>         \
+>>>  #define writesw writesw
+>>>  #define writesl writesl
+>>>
+>>> +#ifdef CONFIG_HAS_IOPORT
+>>>  #define inb inb
+>>>  #define inw inw
+>>>  #define inl inl
+>>> @@ -704,6 +705,8 @@ static inline void name at                          
+>>>         \
+>>>  #define outsb outsb
+>>>  #define outsw outsw
+>>>  #define outsl outsl
+>>> +#endif // CONFIG_HAS_IOPORT
+>>> +
+>>>  #ifdef __powerpc64__
+>>>  #define readq  readq
+>>>  #define writeq writeq
+>>
+>> I had included this at first, but then I still ran into
+>> the same warnings because it ends up pulling in the
+>> generic outsb() etc from include/asm-generic/io.h
+>> that relies on setting a non-NULL PCI_IOBASE.
+>
+> Yes you're right. The above fixes the gcc build, but not clang.
+>
+> So I think I'll just cherry pick f0a816fb12da ("/dev/port: don't compile
+> file operations without CONFIG_DEVPORT") into my next and then apply
+> this. But will see if there's any other build failures over night.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in __stack_map_get
+That didn't work. Still lots of drivers in my tree (based on rc2) which
+use inb/outb etc, and barf on the empty #define inb.
 
-============================================
-WARNING: possible recursive locking detected
-6.8.0-syzkaller-05271-gf99c5f563c17-dirty #0 Not tainted
---------------------------------------------
-syz-executor.3/6102 is trying to acquire lock:
-ffff88806da7b1d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x286/0x6f0 kernel/bpf/queue_stack_maps.c:148
+So I think this patch needs to wait until all the CONFIG_HAS_IOPORT
+checks have been merged for various drivers.
 
-but task is already holding lock:
-ffff88807eace1d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x286/0x6f0 kernel/bpf/queue_stack_maps.c:148
+For now the below fixes the clang warning. AFAICS it's safe because any
+code using inb() etc. with CONFIG_PCI=n is currently just doing a plain
+load from virtual address ~zero which should fault anyway.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&qs->lock);
-  lock(&qs->lock);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-4 locks held by syz-executor.3/6102:
- #0: ffffffff8e17cf88 (tracepoints_mutex){+.+.}-{3:3}, at: tracepoint_probe_unregister+0x32/0x990 kernel/tracepoint.c:548
- #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
- #1: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
- #2: ffff88807eace1d8 (&qs->lock){-.-.}-{2:2}, at: __stack_map_get+0x286/0x6f0 kernel/bpf/queue_stack_maps.c:148
- #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
- #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
- #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2380 [inline]
- #3: ffffffff8e131920 (rcu_read_lock){....}-{1:2}, at: bpf_trace_run2+0x114/0x420 kernel/trace/bpf_trace.c:2420
-
-stack backtrace:
-CPU: 0 PID: 6102 Comm: syz-executor.3 Not tainted 6.8.0-syzkaller-05271-gf99c5f563c17-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- check_deadlock kernel/locking/lockdep.c:3062 [inline]
- validate_chain+0x15c1/0x58e0 kernel/locking/lockdep.c:3856
- __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
- lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
- __stack_map_get+0x286/0x6f0 kernel/bpf/queue_stack_maps.c:148
- bpf_prog_7a16b54e5ee857f9+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
- __bpf_prog_run include/linux/filter.h:657 [inline]
- bpf_prog_run include/linux/filter.h:664 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
- bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
- __traceiter_contention_end+0x7b/0xb0 include/trace/events/lock.h:122
- trace_contention_end+0xf6/0x120 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0x939/0xc60 kernel/locking/qspinlock.c:560
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:111 [inline]
- _raw_spin_lock_irqsave+0xe1/0x120 kernel/locking/spinlock.c:162
- __stack_map_get+0x286/0x6f0 kernel/bpf/queue_stack_maps.c:148
- bpf_prog_7a16b54e5ee857f9+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1234 [inline]
- __bpf_prog_run include/linux/filter.h:657 [inline]
- bpf_prog_run include/linux/filter.h:664 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2381 [inline]
- bpf_trace_run2+0x204/0x420 kernel/trace/bpf_trace.c:2420
- __traceiter_contention_end+0x7b/0xb0 include/trace/events/lock.h:122
- trace_contention_end+0xd7/0x100 include/trace/events/lock.h:122
- __mutex_lock_common kernel/locking/mutex.c:617 [inline]
- __mutex_lock+0x2e5/0xd70 kernel/locking/mutex.c:752
- tracepoint_probe_unregister+0x32/0x990 kernel/tracepoint.c:548
- bpf_raw_tp_link_release+0x63/0x90 kernel/bpf/syscall.c:3482
- bpf_link_free kernel/bpf/syscall.c:3033 [inline]
- bpf_link_put_direct+0x123/0x1b0 kernel/bpf/syscall.c:3064
- bpf_link_release+0x3b/0x50 kernel/bpf/syscall.c:3071
- __fput+0x429/0x8a0 fs/file_table.c:423
- __do_sys_close fs/open.c:1557 [inline]
- __se_sys_close fs/open.c:1542 [inline]
- __x64_sys_close+0x7f/0x110 fs/open.c:1542
- do_syscall_64+0xfb/0x240
- entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f7e74c7cd5a
-Code: 48 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48 83 ec 18 89 7c 24 0c e8 03 7f 02 00 8b 7c 24 0c 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 36 89 d7 89 44 24 0c e8 63 7f 02 00 8b 44 24
-RSP: 002b:00007ffc624e2df0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 00007f7e74c7cd5a
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 0000000000000226 R08: 0000001b2f460000 R09: 00007f7e74dabf8c
-R10: 00007ffc624e2f40 R11: 0000000000000293 R12: 00007f7e74801260
-R13: ffffffffffffffff R14: 00007f7e74800000 R15: 0000000000019ae9
- </TASK>
+cheers
 
 
-Tested on:
-
-commit:         f99c5f56 Merge tag 'nf-24-03-21' of git://git.kernel.o..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=124f9ae7180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
-dashboard link: https://syzkaller.appspot.com/bug?extid=dddd99ae26c656485d89
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10257bb3180000
-
+diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+index 08c550ed49be..1cd6eb6c8101 100644
+--- a/arch/powerpc/include/asm/io.h
++++ b/arch/powerpc/include/asm/io.h
+@@ -37,7 +37,7 @@ extern struct pci_dev *isa_bridge_pcidev;
+  * define properly based on the platform
+  */
+ #ifndef CONFIG_PCI
+-#define _IO_BASE       0
++#define _IO_BASE       POISON_POINTER_DELTA
+ #define _ISA_MEM_BASE  0
+ #define PCI_DRAM_OFFSET 0
+ #elif defined(CONFIG_PPC32)
