@@ -1,304 +1,131 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932FD34CDE;
-	Fri, 19 Apr 2024 14:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D1EB661;
+	Fri, 19 Apr 2024 14:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713537096; cv=none; b=Hiizjf63JQ9jgZeNhqSsdWrRG8EhTEu2VfEXPjkyrlE/LzxrBEEeN/XBEO7U9wJ7Sk5OWRE51zgHz7iew+Fs5a9EqBUnu2QuDfm/ScgAjMLesHhgGjSwDeUf8Ipu3vt52xqD3gfuHdO/1lo5Kk5aYaSdRF3PHWAyTI2nkumyA2o=
+	t=1713537160; cv=none; b=CYgmg1MGXtBL7Y89pOepa8XAfOeFtKUMW2e/djIceK0YQpRiZsTJpn73GFplaJ7IxpjllZVQte6mrL6+wWxzkX/tpt6mp1kng4+NtTrzVs28qYvKtLVB4OLXySmBNLJmtbH7FJs/96kwuMgATRfc5BIKVFI/Sa5iXOjIQt1FMAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713537096; c=relaxed/simple;
-	bh=7vHcTKnFa6TkP/fIXVlsUnNkXfU+9zD1hXAjQ08uRE4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UembratKEjUoel6vhYdoOk0s30KRyZ3xlA75Zf1Ox+USna4aqY+Dnsd7UZkzV3UONbxufTEwC2QU7eSmI+TMeveqSEV4/PWv2AdYGnmz0TjiRy3rnlvLq9PaNdsWz//d0Ik4K7yZAc4hysZr9vnd4T/N+Goiqt3HD2wz8ibf0OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i5e861917.versanet.de ([94.134.25.23] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rxpGd-0002D3-5t; Fri, 19 Apr 2024 16:31:07 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Alban Browaeys <alban.browaeys@gmail.com>, Conor Dooley <conor@kernel.org>
-Cc: dev@folker-schwesinger.de, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Chris Ruehl <chris.ruehl@gtsys.com.hk>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Christopher Obbard <chris.obbard@collabora.com>,
- Doug Anderson <dianders@chromium.org>,
- Brian Norris <briannorris@chromium.org>,
- Jensen Huang <jensenhuang@friendlyarm.com>, linux-phy@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe line
-Date: Fri, 19 Apr 2024 16:31:05 +0200
-Message-ID: <2192003.Icojqenx9y@diego>
-In-Reply-To: <20240411-mushily-pucker-732583c1d340@spud>
-References:
- <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
- <313d5a24b6cffa1a9160e624bb6855aa7f66589e.camel@gmail.com>
- <20240411-mushily-pucker-732583c1d340@spud>
+	s=arc-20240116; t=1713537160; c=relaxed/simple;
+	bh=wpubB5RGGs+N9oSpYbdeFOjJ3Vm/Rrf9Ev30ZPMU4sA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rKOjevaJe1tXiMI1I+2eMlG70RtsznmSc+hU6ju+EgIB9CZQmpglXEc5PlRev/ocbAbT2Ev3uK5uqOARFDhibYEcIG+7KNBMtZjxAeMaCfHO6CgSrSjEtGzpliwxUAC1QWqK9gpufoP9wzSnzRmxQJ24PYa7buLuNiAXZM3YsYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJYuwsrh; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJYuwsrh"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a519ac18b3so1615364a91.2;
+        Fri, 19 Apr 2024 07:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713537158; x=1714141958; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wpubB5RGGs+N9oSpYbdeFOjJ3Vm/Rrf9Ev30ZPMU4sA=;
+        b=mJYuwsrhumsgrR9fTeyWJbnBfOZhyqMgnpc5z+cWVpME/rMUgfSl1die1CkXgDmTGC
+         RStUXdkoUKlfxP1ENaZVBDPEePW8dPYVgmEXmjN12+S2aUtzrwNqH6VaRTCKp1L4MDVd
+         +e7UmTI61b440wjpE3svaEqxmEjtaot9qxksXBFOf3yAXhra2ys8F0ivWrCHjqUm+Du6
+         KDWKbBUk6qWZwEOcIwOnHNnD/mTHi8q190vumOMc95MsxzTHrDkqtqWZJCsNTzT8tp8M
+         0vIL2ALIjH/X8ZWEkqJAfifxc5qMp8XhO2sATMi5Xoy7sWvSRAtzIUbUud7Wr/4jYpxB
+         NjFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713537158; x=1714141958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wpubB5RGGs+N9oSpYbdeFOjJ3Vm/Rrf9Ev30ZPMU4sA=;
+        b=DjrCv0gyiqa0bQF8495ZAIUhzRIx5KZ9OBX8f/O74bwFERPaUJXhvSPDaGtHjGeTGD
+         A7jeqqiSpcR7lyT8kigggbVuvTFYpjnZ4NuXizKtiVrX7bofYpEwl82ZcAq1DG/HRxp1
+         xloR3mXEPw5iV5gMGPLXmra2/eVC33I/FwGWvdoLM9DZxxVhvs5awgjOf4CyoVYse33N
+         15peCrVqMPJMl/9taCQhRmHdBfeCXwPrxmA6XxjwWtg6ILFss/Y8T7vlVtOcAP2IPn3R
+         1+S8TIZSj9qj0iHnOp3g3+SA05okhYcLF7BG3hf/e7tQdhf4OgnOit88jcfuu3SD3BJg
+         M4ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW94sK8apuHqZzPxRsteK5nV/gnymRNPBHLGsWXuFQATTlOlUZXQ9Px43KzBqPopRtLuApdZTWpXloWo1MkZxIqyxj5NhMASysnjH1IW6slckTKD8IaCfkojsmd0I/MreH5j2foDIwATS6j48Vw4KCd14SJjC3ZuaJsBF0MudGUiy6SC6Lsvw==
+X-Gm-Message-State: AOJu0YwYhvARA5pUjYBcz7jkjij15qScGlX/e5SauMzdj2WcqZuXwz3n
+	YO3VQZrNHr3rQ8vvim8aSDTWeIXLiH5qnMpM/hxzL1kJXgTLjcFgP59zsjlCm/Q0yElwlgJHaJp
+	it0mMx2uCldCpfqoFEPwpJIoF1T4=
+X-Google-Smtp-Source: AGHT+IGx6hIS3g+ara6O42TicQaaFPwEmS+NsYEwehh6Rjx1ecg93nnhIbYtQVpE31PFXzePbkZG7q7XQx/qyxbn/Ao=
+X-Received: by 2002:a17:90b:1651:b0:2a5:99e6:45a with SMTP id
+ il17-20020a17090b165100b002a599e6045amr2284524pjb.29.1713537158490; Fri, 19
+ Apr 2024 07:32:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240419124506.1531035-1-rilian.la.te@ya.ru> <20240419124506.1531035-3-rilian.la.te@ya.ru>
+ <20240419-glue-pyramid-584728c0076a@spud> <CAF1WSuy4OJVTU5VJdn23BSw4aTAq7i8UQ416V7BxveuQ+5=-1w@mail.gmail.com>
+ <dc6573ba-37cb-4394-9a89-16b6f8caa7ad@kernel.org>
+In-Reply-To: <dc6573ba-37cb-4394-9a89-16b6f8caa7ad@kernel.org>
+From: "Konstantin P." <ria.freelander@gmail.com>
+Date: Fri, 19 Apr 2024 17:34:44 +0300
+Message-ID: <CAF1WSuzVLrsYt6+CyMHJuRbuXNEy2XnWhbHkcPHT3xXpB3Yh-Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: sc16is7xx: Add compatible line for
+ XR20M1172 UART
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Conor Dooley <conor@kernel.org>, Konstantin Pugin <rilian.la.te@ya.ru>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Lech Perczak <lech.perczak@camlingroup.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
 
-Am Donnerstag, 11. April 2024, 17:42:24 CEST schrieb Conor Dooley:
-> On Wed, Apr 10, 2024 at 08:28:57PM +0200, Alban Browaeys wrote:
-> > Le jeudi 28 mars 2024 =E0 18:01 +0000, Conor Dooley a =E9crit :
-> > > On Thu, Mar 28, 2024 at 06:00:03PM +0100, Alban Browaeys wrote:
-> > > > Le mardi 26 mars 2024 =E0 19:46 +0000, Conor Dooley a =E9crit :
-> > > > > On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via
-> > > > > B4
-> > > > > Relay wrote:
-> > > > > > From: Folker Schwesinger <dev@folker-schwesinger.de>
-> > > > > > -	if (of_property_read_bool(dev->of_node,
-> > > > > > "rockchip,enable-
-> > > > > > strobe-pulldown"))
-> > > > > > -		rk_phy->enable_strobe_pulldown =3D
-> > > > > > PHYCTRL_REN_STRB_ENABLE;
-> > > > > > +	if (of_property_read_bool(dev->of_node,
-> > > > > > "rockchip,disable-
-> > > > > > strobe-pulldown"))
-> > > > > > +		rk_phy->enable_strobe_pulldown =3D
-> > > > > > PHYCTRL_REN_STRB_DISABLE;
-> > > > >=20
-> > > > > Unfortunately you cannot do this.
-> > > > > Previously no property at all meant disabled and a property was
-> > > > > required
-> > > > > to enable it. With this change the absence of a property means
-> > > > > that
-> > > > > it
-> > > > > will be enabled.
-> > > > > An old devicetree is that wanted this to be disabled would have
-> > > > > no
-> > > > > property and will now end up with it enabled. This is an ABI
-> > > > > break
-> > > > > and is
-> > > > > clearly not backwards compatible, that's a NAK unless it is
-> > > > > demonstrable
-> > > > > that noone actually wants to disable it at all.
-> > > >=20
-> > > >=20
-> > > > But the patch that introduced the new default to disable the
-> > > > pulldown
-> > > > explicitely introduced a regression for at least 4 boards.
-> > > > It took time to sort out that the default to disable pulldown was
-> > > > the
-> > > > culprit but still.
-> > > > Will we carry this new behavor that breaks the default design for
-> > > > rk3399 because since the regression was introduced new board
-> > > > definition
-> > > > might have expceted this new behavior.
-> > > >=20
-> > > > Could the best option be to revert to =E9not set a default
-> > > > enable/disable
-> > > > pulldown" (as before the commit that introduced the regression) and
-> > > > allow one to force the pulldown via the enable/disable pulldown
-> > > > property?
-> > > > I mean the commit that introduced a default value for the pulldown
-> > > > did
-> > > > not seem to be about fixing anything. But it broke a lot. ANd it
-> > > > was
-> > > > really really hard to find the description of this commit to
-> > > > understand
-> > > > that one had to enable pulldown to restore hs400.
-> > > >=20
-> > > > In more than 3 years, only one board maintainer noticed that this
-> > > > property was required to get back HS400  and thanks to a user
-> > > > telling
-> > > > me that this board was working I found from this board that this
-> > > > property was "missing" from most board definitions (while it was
-> > > > not
-> > > > required before).
-> > > >=20
-> > > >=20
-> > > > I am all for not breaking ABI. But what about not reverting a patch
-> > > > that already broke ABI because this patch introduced a new ABI that
-> > > > we
-> > > > don't want to break?
-> > > > I mean shouldn't a new commit with a new ABI that regressed the
-> > > > kernel
-> > > > be reverted?
-> > >=20
-> > > I think I said it after OP replied to me yesterday, but this is a
-> > > pretty
-> > > shitty situation in that the original default picked for the property
-> > > was actually incorrect. Given it's been like this for four years
-> > > before
-> > > anyone noticed, and others probably depend on the current behaviour,
-> > > that's hard to justify.
-> > >=20
-> >=20
-> > A lot of people noticed fast that HS400 was broken in the 5.10 branch
-> > but due to another commit (more later, ie double regulator init that
-> > messed up emmc) this second breakage was not detected. But mostly
-> > downstream. And most if not all rk3399 boards in Armbian had HS400
-> > disabled.
-> >=20
-> >=20
-> > It took 3 years to detect that HS400 was broken on a few boards like
-> > Rock Pi4 in the upstream kernel. Any might still be broken.
-> > I would not count on the fact that keeping the current behavior equals
-> > no more broken boards.
-> >=20
-> > From the previous exchanges the boards that requires the pulldown to be
-> > disabled seems well known.
-> >=20
-> > Though I am fine with adding a property to set enable pulldown to any
-> > board definition file where that is required.
-> >=20
-> > Only I do not believe keeping the statu quo equal everything works
-> > because it has been 3 years.
->=20
-> FWIW, I didn't say this. Clearly if that was the case, this patch would
-> never have arrived.
->=20
-> > In fact this commit reached the downstream kernels way later. Any
-> > stayed with the 5.10 branch for years.
-> >=20
-> > But on the other side the disable pulldown by default is alraedy in
-> > stable/linux-rolling-lts .
-> >=20
-> > > > Mind fixing the initial regression 8b5c2b45b8f0 "phy: rockchip: set
-> > > > pulldown for strobe line in dts" does not necessarily mean changing
-> > > > the
-> > > > default to the opposite value but could also be reverting to not
-> > > > setting a default.
-> > >=20
-> > > That's also problematic, as the only way to do this is make setting
-> > > one of the enabled or disabled properties required, which is also an
-> > > ABI
-> > > break, since you'd then be rejecting probe if one is not present.
-> >=20
-> >=20
-> > I don't understand.
-> > How reverting to not set either pulldown enabled or disabled by default
-> > force all board to set either enabled or disabled.
-> > I was telling about making the pulldown set by kernel optional be it
-> > enabled or disabled to revert to the previous behavior.=20
-> >=20
-> > I mean before the patch to set a default pulldown value (to disabled)
-> > there were no forced value.
->=20
-> Ah, maybe I misunderstood what the code originally did. Did the original
-> code leave the bit however the bootloader or reset value had left it?
-> In that case, probe wouldn't be rejected and you'd not have the sort of
-> issue that I mentioned above.
->=20
-> > > > Though I don't know if there are pros to setting a default.
-> > >=20
-> > > What you probably have to weigh up is the cons of each side. If what
-> > > you
-> > > lose is HS400 mode with what's in the kernel right now but switching
-> > > to
-> > > what's been proposed would entirely break some boards, I know which
-> > > I think the lesser of two evils is.
-> >=20
-> > More boards (even if not the most wide spread it seems) are broken by
-> > the current behavior.
-> >=20
-> > I agree that only HS400 is broken by keeping the status quo. But as far
-> > as I understand only HS400 will be broken either way.
-> > Be that by keeping the current disable pulldown which break the boards
-> > based on the rockchip default design or the boards that are non-
-> > standard or have a broken design.
-> > Both case this lead to data corruption on boot to eMMC.
-> >=20
-> > The only pro of keeping the current value the default is that most
-> > board broken by the new default introduced in 2020 "might" already be
-> > fixed (but that is just a guess).
+On Fri, Apr 19, 2024 at 5:24=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 19/04/2024 16:17, Konstantin P. wrote:
+> > On Fri, Apr 19, 2024 at 5:08=E2=80=AFPM Conor Dooley <conor@kernel.org>=
+ wrote:
+> >>
+> >> On Fri, Apr 19, 2024 at 03:45:02PM +0300, Konstantin Pugin wrote:
+> >>> From: Konstantin Pugin <ria.freelander@gmail.com>
+> >>>
+> >>> Add EXAR XR20M1172 UART compatible line into devicetree documentation=
+.
+> >>
+> >> What you're doing is obvious from the diff, why this exar device is
+> >> related to the nxp devices is what should be mentioned here.
+> >>
+> >> Thanks,
+> >> Conor.
+> >
+> > It is already mentioned in cover letter and in previous patches in the
+> > series. Do I need to repeat it in DTS patch?
+> > If so, I will do it.
+> >
+> > Citation from my cover letter:
+> >
+> > EXAR XR20M1172 UART is mostly SC16IS762-compatible, but
+> > it has additional register which can change UART multiplier
+> > to 4x and 8x, similar to UPF_MAGIC_MULTIPLIER does. So, I used this
+> > flag to guard access to its specific DLD register. It seems than
+> > other EXAR SPI UART modules also have this register, but I tested
+> > only XR20M1172.
+> > Yes, in datasheet this register is called "DLD - Divisor Fractional"
+> > or "DLD - Divisor Fractional Register", calling depends on datasheet
+> > version.
+>
+> Commits must stand on their own. Cover letter is not merged. This is the
+> place where you add new hardware, so here you describe and explain the
+> hardware.
 
-which I guess are the least stale boards too.
+It is also described in patch 3 in the series. I need to repeat this
+description in patch 2 too?
 
-> > > It's probably up to the platform maintainer to weigh in at this
-> > > point.
-> >=20
-> > I am not knowledged into the delegation scope. You mean that from now
-> > on it is up to the rockchip maintainer?
-> > I am fine with it either way.
->=20
-> Yes, I meant the rockchip maintainer. I'm only a lowly bindings
-> maintainer, without any knowledge of rockchip specfics or the type of
-> boards we're talking about being broken here. Someone has to make a
-> judgement call about which "no property" behaviour is used going forward
-> and I don't want that to be me!
+Cite from patch 3:
 
-I'm somehow all for not changing defaults again.
+XR20M1172 register set is mostly compatible with SC16IS762, but it has
+a support for additional division rates of UART with special DLD register.
 
-I think in the past there was a similar example in some other kernel part,
-where some change broke the ABI, but meanwhile another ABI depended
-on the changed behaviour, so a revert was not possible.
-
-I think it's somewhat similar here. If the change has been in the kernel
-for 3-4 years now, I do think that ship has sailed somehow.
-
-As was said above, board introduced since 2020 might already be fixed
-and essentially for boards that weren't, it does look like these didn't run
-a mainline kernel for like 4 years now.
-
-So if it comes down to deciding who to keep working, I'm more in favor of
-those that did run on mainline in the years since.
-
-
-Though not sure if I understood all the details here yet.
-
-
-Heiko
-
->=20
-> > I just wanted to point out that maybe we don't have to set a pulldown
-> > value after all. And that then all boards will be fine as before
-> > setting the pulldown explicitly was introduced.
->=20
-> By "all boards will be fine" you mean "all boards that expected the
-> kernel didn't touch this bit will be fine". The boards that need the
-> kernel to set this bit because it {comes out of reset,is set by firmware}
-> incorrectly are going to need a property added if we revert the default
-> behaviour to not touching the bit.
->=20
-> > In fact I am more eager to get this fixed be it by adding a enable-
-> > pulldown property to the board definitions, than to change the current
-> > behavior.
-> > Just wanted to sort out if that was not the wrong way to fix this
-> > issue. (ie if adding a setting on most boards was wrong).
->=20
-> > During more than 2 years, I tried various patches and discussed on
-> > forums about the HS400 breakage. I had bisected the regulator init
-> > issue in the 5.10 branch. Sadly it took so much time for this issue to
-> > be understood that when the force pulldown to disable commit was
-> > introduced downstream before the first issue go fixed.
-> > This only made the matter worse because when one fixed the double
-> > regulator init issue HS400 was still broken, this time because the
-> > pulldown was forced to disable. But nobody noticed this commit that
-> > forced a default pulldown state (that was older than the regulator
-> > commit from 5.13 backported to the 5.10 stable branch commit, but that
-> > reached downstream later due to not having been backported to 5.10 from
-> > 5.11).
-> > Otherwise we would have emailed immeditaly.
-> > Bisecting was only able to catch the first breakage (as it was only
-> > fixed after the second breakage was introduced).
-> >=20
-> > Maybe the problem is that me and others did not complained to the
-> > kernel upstream ML because we were using heavily patched downstream
-> > kernels (like most if not all downstream ARM kernels). So sadly, the
-> > forums from back then are filled with complaints but nothing seemed to
-> > have reached the Linux ML.
->=20
-> Aye, and all I can really say there is to buy boards from a vendor that
-> doesn't use some horribly hacked downstream kernel, which I know is
-> clearly an unsatisfactory suggestion. That said, we probably should have
-> caught that the new default behaviour when the changes were made was not
-> the default before. There was only one DT maintainer then though, and
-> things just slip by :/
->=20
-
-
-
-
+> Best regards,
+> Krzysztof
+>
