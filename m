@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C01A6138483;
-	Fri, 19 Apr 2024 16:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9186513B59E;
+	Fri, 19 Apr 2024 16:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545783; cv=none; b=J+gk5/Itk7AF4HeYi+6HPikALHhpaTzj25lDLq1I+VCbfhBfaLsjA1fqUOvIYNovQoBg5eVccw/EucEo3+Ro4c2tre3woNuxr7fFqaHzYCLmEWalDbFuMB9WL0DQhsEbdBvMdeLIf6DxLXiP9uxY66ejvTiuRy6xoBj1+CUFZDE=
+	t=1713545788; cv=none; b=hhOb+/HB43Hfic5dIBssDzydp76dj5CBoidaoXsufh1vTSwcF6oTFAcprYlRXemamczlKGLdZjj+SCbuIbrHRmrG5KOUHOgoEs+6cjxple3SB9A007C0IZF+BaUaPOeRNuQzwftUENWo5mnnIwN+NutpLe47Y92pWX9+3XP9+HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713545783; c=relaxed/simple;
-	bh=6H9tNs5Z0RVvieO0Y7v9eYCru6tnL57CLmPNvVcHMu4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eAqdqIMSZAbPxxsP/45MjYq4fvwbLkvHs0U2FYxuVgBqeXC1xXHfXY3cJkDOh4JkdfBktMyy3z7DdUWJRuf9SsBYfp3ECRLiT6uGQ5eJWgWtqYCknhDfC5CGs0+FVNMScjK4kR59/JcFnM3ZJXd3ERenOV4hpQkxPI3dH06LwQs=
+	s=arc-20240116; t=1713545788; c=relaxed/simple;
+	bh=9vJmXub9OrgT6L5kb/8WNFjDJmz7ntnxuiLA629DI10=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VUdJffSERlkcIkNXu3VzMdg24nEY3igZyRj4QE4Fk76PcImJYJnK3QziY+zL5avPgBgXamqzmVI2ZHC3BKts+443mEE8OJ7fVEw9y22oNkbOIX3FL3NPdPKLgTG2hlf4b7Xzmny019AASLtiioMPmqXYiAyjcOWrh176uOoLCMQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D3F1339;
-	Fri, 19 Apr 2024 09:56:49 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F185106F;
+	Fri, 19 Apr 2024 09:56:54 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1EA7A3F792;
-	Fri, 19 Apr 2024 09:56:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EE49D3F792;
+	Fri, 19 Apr 2024 09:56:23 -0700 (PDT)
 From: Robin Murphy <robin.murphy@arm.com>
 To: Will Deacon <will@kernel.org>,
 	Joerg Roedel <joro@8bytes.org>
@@ -33,10 +34,12 @@ Cc: linux-acpi@vger.kernel.org,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Len Brown <lenb@kernel.org>,
 	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH 0/4] iommu: Remove iommu_fwspec ops
-Date: Fri, 19 Apr 2024 17:55:58 +0100
-Message-Id: <cover.1713523251.git.robin.murphy@arm.com>
+Subject: [PATCH 2/4] ACPI: Retire acpi_iommu_fwspec_ops()
+Date: Fri, 19 Apr 2024 17:56:00 +0100
+Message-Id: <3ae004dfc581fa12fc9432c5008f1225882d5464.1713523251.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
+In-Reply-To: <cover.1713523251.git.robin.murphy@arm.com>
+References: <cover.1713523251.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,39 +48,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi All,
+Now that iommu_fwspec_init() can signal for probe deferral directly,
+acpi_iommu_fwspec_ops() is unneeded and can be cleaned up.
 
-Building on top of the arch_setup_dma_ops() cleanup[1], the next step
-down the chain is {acpi,of}_dma_configure()... There's plenty to do
-here, but it may as well start with this fairly self-contained little
-cleanup, pruning yet more redundancy and exposed API surface.
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/acpi/scan.c | 30 ++++++------------------------
+ 1 file changed, 6 insertions(+), 24 deletions(-)
 
-Thanks,
-Robin.
-
-[1] https://lore.kernel.org/linux-iommu/cover.1713523152.git.robin.murphy@arm.com
-
-
-Robin Murphy (4):
-  iommu: Resolve fwspec ops automatically
-  ACPI: Retire acpi_iommu_fwspec_ops()
-  OF: Simplify of_iommu_configure()
-  iommu: Remove iommu_fwspec ops
-
- drivers/acpi/arm64/iort.c             | 19 +++-------
- drivers/acpi/scan.c                   | 38 +++++---------------
- drivers/acpi/viot.c                   | 11 ++----
- drivers/iommu/arm/arm-smmu/arm-smmu.c |  3 +-
- drivers/iommu/iommu-priv.h            |  7 ++++
- drivers/iommu/iommu.c                 | 20 +++++------
- drivers/iommu/mtk_iommu_v1.c          |  2 +-
- drivers/iommu/of_iommu.c              | 50 ++++++++++-----------------
- drivers/iommu/tegra-smmu.c            |  2 +-
- drivers/of/device.c                   | 30 ++++++----------
- include/acpi/acpi_bus.h               |  3 +-
- include/linux/iommu.h                 | 15 ++------
- 12 files changed, 66 insertions(+), 134 deletions(-)
-
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 9d36fc3dc5ac..d6b64dcbf9a6 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1588,26 +1588,14 @@ int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+ 	return ret;
+ }
+ 
+-static inline const struct iommu_ops *acpi_iommu_fwspec_ops(struct device *dev)
+-{
+-	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+-
+-	return fwspec ? fwspec->ops : NULL;
+-}
+-
+ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+ {
+ 	int err;
+-	const struct iommu_ops *ops;
+ 
+ 	/* Serialise to make dev->iommu stable under our potential fwspec */
+ 	mutex_lock(&iommu_probe_device_lock);
+-	/*
+-	 * If we already translated the fwspec there is nothing left to do,
+-	 * return the iommu_ops.
+-	 */
+-	ops = acpi_iommu_fwspec_ops(dev);
+-	if (ops) {
++	/* If we already translated the fwspec there is nothing left to do */
++	if (dev_iommu_fwspec_get(dev)) {
+ 		mutex_unlock(&iommu_probe_device_lock);
+ 		return 0;
+ 	}
+@@ -1624,16 +1612,7 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
+ 	if (!err && dev->bus)
+ 		err = iommu_probe_device(dev);
+ 
+-	/* Ignore all other errors apart from EPROBE_DEFER */
+-	if (err == -EPROBE_DEFER) {
+-		return err;
+-	} else if (err) {
+-		dev_dbg(dev, "Adding to IOMMU failed: %d\n", err);
+-		return -ENODEV;
+-	}
+-	if (!acpi_iommu_fwspec_ops(dev))
+-		return -ENODEV;
+-	return 0;
++	return err;
+ }
+ 
+ #else /* !CONFIG_IOMMU_API */
+@@ -1672,6 +1651,9 @@ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+ 	ret = acpi_iommu_configure_id(dev, input_id);
+ 	if (ret == -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
++	/* Ignore all other errors apart from EPROBE_DEFER */
++	if (ret)
++		dev_dbg(dev, "Adding to IOMMU failed: %d\n", ret);
+ 
+ 	arch_setup_dma_ops(dev, attr == DEV_DMA_COHERENT);
+ 
 -- 
 2.39.2.101.g768bb238c484.dirty
 
