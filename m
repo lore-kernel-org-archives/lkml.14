@@ -1,212 +1,123 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2060.outbound.protection.outlook.com [40.107.20.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F5C13C909;
-	Fri, 19 Apr 2024 18:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713551915; cv=fail; b=HEF3DUGRAFWt4/ODTnsRPblltxrYB/dot4t2clPYWMx3WHa+onoD14HwW5TqKMdnr8FLQEfrW7AgPLE1Mf5CS/TeDNb3wBrOa7FJJwEcjxlO8iX0IbPQXS2aNnJSBFCGrbUThu/bKWPGxsfnL6ZuSFyaZ0AkGLcfPHrZOw/DmiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713551915; c=relaxed/simple;
-	bh=HRjgMCDM4ga+ViVPQn7/kzgBs3O1Pc9TQtPgLvEhRp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PtOtVwlzefQnu49T8LzqxQMO7q/8sLwxfmTSuzEfAjQ7Hqxr8NyEGPMqqm4tsN8Bvvd91wL+DScHUnjHgP/0OTc6v4871Xbj8dq3PES/Pf6z53h2SU2EWDJobliK1SGJldCW66/D5Fq7TkWBa5k9ndUCVBC7mDOrXzx/vQ/fDRQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=g/ridY8u; arc=fail smtp.client-ip=40.107.20.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AA728F1
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 18:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713552005; cv=none; b=G8mU3eM3288uCvd+i+qmReXLDtaiBR6WJbyuLYTovM1T0nYC+rV+zOav1Hh0F8woDEo+PWb2zMC3+eFPLgJ4LC/jYL8yiPnRVLJiBlK9qVpcy9OXyNgLBlWj3OANwWx60nqmO8IBbSwIkbDyN/0my2YYqlkxkjs7DEBiTkCG3is=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713552005; c=relaxed/simple;
+	bh=84mRXH5nKKq7zATKWocjus7qLMMvkm5k5IIZ35P4EMw=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=QYmbMBYnVpZ83ORjd95bVeBZdaH4vag+W/0Z9oiMpDVxHJeYV1B96AfPUXyUP4Zo1DygWus6m8Gm8p0UW9SFUz/tHWbI9xlVGnI6tHalea7q0mKeqJyi7QeexT5kxtFF8sEu8PXGhC2SCT8wl+3nndegNQxh4VAeM28bIeYYKCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hw57Y5jz; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g/ridY8u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+oucWl/Ifl2MNAcKwtDajtlns+pXBDKJ29hate6lUk8bn9uaQS5hObrhR8fqaOryUP7TO8TauMwxH+FJOC/uod0iuzV9QEpZfvumqxZfkqHKCgu9u1Rjy1l6xqI3bg3ms3Qtdufgd2YxkjoGIBggcGxYvLhJlF/J/VfTdCMbfkeVay/OvMl2EzsyCOnCFVLxxiLNKLPfqf+/PdQDWWaKzkibbOYB6Wyl6k0gcbFGeYlnqfcihY02tukbuzCQMMQnttN8eXW+JRNYukphgoiA/QoAhKNwSiSmou82lee87YCdPTvqxiaPG473rRVoipsah8y0u7R+FHgUDRUj/UqHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4/2UhnmaK3y6QZh0QO8hueIS6EiXDjLHTN3CgRa62uA=;
- b=g8SF74B3gWcWtGKn5BI0gk7fVSvt8+q+LWmR7pQ3QRAiQiCyUF+gtKREZsuHKmCEL7mwQoh0gh0Z9lonOD9Ek2rH4D/fvmUprOmegkWj2xtU/JRVPusElv1MdDot2VwmmrXEBky+4tXjNiA9Zvlqmh0lCdjsQzzNp8rBS4Fhc2I0rumu4eet9DP0H+JVs6upivL4iMGod8VvinNBzQqHkppS5PXh+Jdif7IQxgzbvseS69LS6ZZWHMPcsNjxAZIcxZiNgdeAuuorvXjTfs4ttzEYfq5EQrZ7Tefkg+sPBAu6jDMkiF0dAQj5cPZZSbVKJwXKJWC/J7xSwjLYqsEFeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4/2UhnmaK3y6QZh0QO8hueIS6EiXDjLHTN3CgRa62uA=;
- b=g/ridY8u+VwtYFBn5qisM49VQ/MwLdtpuIeGtuOhf18vvCAvkjbYmuu4hYzUhSVh3ceQuM+DuvEuAZL+7YIA2UuAS11BD0+9VpJ3a+FGMp2Eg4sdqAduFREXW2F9wRxaduLxk+dlNDcXJCiBD8TU7D6CYZwRycn+lkv7NWCBDcI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM7PR04MB7127.eurprd04.prod.outlook.com (2603:10a6:20b:113::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 18:38:29 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7472.037; Fri, 19 Apr 2024
- 18:38:29 +0000
-Date: Fri, 19 Apr 2024 14:38:19 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Will Deacon <will@kernel.org>
-Cc: Xu Yang <xu.yang_2@nxp.com>, mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com, mike.leach@linaro.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v10 3/8] perf: imx_perf: let the driver manage the
- counter usage rather the user
-Message-ID: <ZiK6G3aM+K92lq0w@lizhi-Precision-Tower-5810>
-References: <20240415061320.3948707-1-xu.yang_2@nxp.com>
- <20240415061320.3948707-3-xu.yang_2@nxp.com>
- <20240419154913.GA3983@willie-the-truck>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240419154913.GA3983@willie-the-truck>
-X-ClientProxiedBy: SJ0PR13CA0063.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hw57Y5jz"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6ea26393116so1457345a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713552003; x=1714156803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=84mRXH5nKKq7zATKWocjus7qLMMvkm5k5IIZ35P4EMw=;
+        b=Hw57Y5jzqhGhrtcBalohevAwux7Trz431d+HWbZMz7e4YNrMoUgl1NL2kg9L8RYHI8
+         PlE+N3z2EjydK5Uq/NV76kY+0e5iYLdrp+Z0tcFLaZSoVfP4AX50CZn/AtPQnLcB96a6
+         qK/JUECbepzIh739W1hOO8vR1wIpb9l2MeOX4DytdbKzfD//s1R8R1NcYydCRdU8VYvL
+         vAD8roZVLt+wAwzzfgBo3QkZpFeUNNiJ7uD72KzN2c4vKBIeTzuGEpMPJLpUn3QvpYla
+         FOeIPwuzJmpP8ZaPvCdfMPcagyEX5paPzmhZyHUVdFy2lHnjRUVpXdr0+40QFjriAX64
+         Byww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713552003; x=1714156803;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=84mRXH5nKKq7zATKWocjus7qLMMvkm5k5IIZ35P4EMw=;
+        b=jy4Z+yC9zOmChje3tOv3iPov1tALY/J1KnbA8z8Ok1GBI1gaA/vq0ytgcnvem7T+XZ
+         VkDPdZe7vHrvjo4QJbM4K7PQQUhNn0lsAGE8Is3LQVlCWBCEgoqD6kySzDJsfIcvkG/t
+         RWMNM0xWYLCn8OLkSfYwMN/3xYXeskavCdTfxkMCSzJrJoF1iy2UfZFinYYMgH+SCBEk
+         dMxvCvTn/8rqFXO8Krdu3Ksuvhs5e2ziG7QAtW8aRjCvMTNS3rF7HMejp+luCQgivl68
+         yWArZwVFHVXEnewQIA/hUqmw6h3pLtAw7extf3pZwf10NN1NEPFvBf+zngnVl/zn/m3M
+         A+SA==
+X-Forwarded-Encrypted: i=1; AJvYcCU88HyKwMUkCGwj1a95ok7jiyTqaE2foW+qUkvluFcSvlCCVP3lM4ozjt5qx/ddrBpA8J3sNGHAmWl2OCUtyFFYyi7XWY8rhDga27ST
+X-Gm-Message-State: AOJu0YxpLOr11c0DrtiEnR6bcBm8Ys+ZA5o7vBxPCbpGRNxozqkAgrTP
+	hpKd1n31i6VhLdwQsiSJYOVzEfKS88/jSPZ+TMpU9bjQBoFsq2nG
+X-Google-Smtp-Source: AGHT+IG61CBGNpBR2TQY2OBRo2uoW+1B+2+D3/d94h4yz8WG2qoOxPMgfFalgVh5IE+Vx9XFHbSh5Q==
+X-Received: by 2002:a05:6830:2084:b0:6eb:8ccf:2a8e with SMTP id y4-20020a056830208400b006eb8ccf2a8emr3111953otq.38.1713552002968;
+        Fri, 19 Apr 2024 11:40:02 -0700 (PDT)
+Received: from [127.0.0.1] ([106.194.121.201])
+        by smtp.gmail.com with ESMTPSA id f4-20020a656284000000b005c6617b52e6sm3116408pgv.5.2024.04.19.11.39.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 11:40:02 -0700 (PDT)
+Date: Sat, 20 Apr 2024 00:09:56 +0530 (GMT+05:30)
+From: Shresth Prasad <shresthprasad7@gmail.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: vincenzo.mezzela@gmail.com, gregkh@linuxfoundation.org,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Julia Lawall <julia.lawall@inria.fr>, linux-kernel@vger.kernel.org,
+	rafael@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5128b428-c26e-46ea-8289-1e7580f4fbf8@gmail.com>
+In-Reply-To: <20240419182642.b7li4mlnvryephhg@bogus>
+References: <CAE8VWiLErhCkD9w+Rbh8mTnRQs-4iJDBrWdVXXFFFDQ3yeTaLg@mail.gmail.com> <20240419182642.b7li4mlnvryephhg@bogus>
+Subject: Re: [PATCH] drivers: use __free attribute instead of of_node_put()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7127:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d8e2442-e847-4381-72b4-08dc609fe854
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gZmbppELz9Zw/QQJuqpNlwiltLPKjdiuF6KdZCrb8PndNoq3OiU2SLiDcYaF?=
- =?us-ascii?Q?ajHuuVE+68NEAW/BnFlmHLsRcKH9fMCZyxeGzS4fe+cWsyHZgo6R/dfnthG5?=
- =?us-ascii?Q?U7NbmasIVP0A2VP/U2dy8BbLhEn9YI9ewjcEeFFgTgLSAdnaCOeXDscbo3Zg?=
- =?us-ascii?Q?2zRAm6Is3zJXc0xcWkwknMy1RAAahMZzlXnlUXyCYlufwKArMQ6sf2l0rndz?=
- =?us-ascii?Q?8o+0l7EaMcT7oAD1AtHT4okzmIeEHZP5xnP5s4JZ2SY2b96uerClnIH5bKHl?=
- =?us-ascii?Q?R8NAvd1fN8CIdUpDGzZYtIH7r/sfQ9Jbf9ttm2h+54w/kCxVSN0O4qgWMvfS?=
- =?us-ascii?Q?zmLZTnHGVmVCixbxX8w+6yYAL9cV/Y7btptEiSaWXiLcbDVpO3rq0Pg5DGz1?=
- =?us-ascii?Q?78GbScspkAbDkRXwyJgQGQjH6s3KmXXa0giQZ3SgU50tyYRdUxdH7OsqaebG?=
- =?us-ascii?Q?kT6dVaMEmhvduz9L9s6K27fTcyzhRsIqqNPztwJ+HyxaexA6qR7PVbH73RTt?=
- =?us-ascii?Q?m1Pj8lCqBW97UDDIDwn4Rd0QHGIaiTvig1I5QoUvgepbR/LaumCTibw+NRoP?=
- =?us-ascii?Q?k/NtPXKpG67yy4fyUE7h9V6K3GDhpSfk+3YmeqOKhxDW753+vDAd3Ne5GnBC?=
- =?us-ascii?Q?ItP7lhToRyrDY5bXfXeRDnVUcDeTyABhTLepA+yNWNdvzZ+jfs2+EyEfXfAX?=
- =?us-ascii?Q?M8sD4DYgvHkAnBEKeGA7TwcTw7RKg6VWk5cUg234P3Lmj7xXSyrApjVQd8jM?=
- =?us-ascii?Q?J23eRbH4N/Pz4Ljzj60no2JwxU6snShzTHXCoFadSOaUlBrpqwIA6llsloNX?=
- =?us-ascii?Q?tO4bzLmcsupV4vCAT6uSs4lm6rofKJop2usR41NcBurXslbk1B34kM/qNA4x?=
- =?us-ascii?Q?6Xr30WdU1n2avy3aHY+aa5zEWjHunGFLdHDMl7JItDwkyINHIpaH2Qq/dGhn?=
- =?us-ascii?Q?rV+KYpi5mFXhNb4t9kB577+nWjOdmTFImv/5f0ibg2z/ddvb+U6wHUruXAAw?=
- =?us-ascii?Q?r23eB2CxDkFKHxKB3PDznB667mXkes8NOERKpIlN35EKVSGq2/Oy+qFY9LCq?=
- =?us-ascii?Q?W/eUizWojd2Xwq3bTeIOyPsu62xDRE6RR0WQT5yK+LIrc7VAYtVnB398sRKX?=
- =?us-ascii?Q?M8QUVbp2LLStYWRlO1AKuc7kiLntNEVnn5eFyeKPmkWN2f0IFoCzQC/6RduV?=
- =?us-ascii?Q?hQqU5sfVRFOxWiLomQg/kJhpoisE9cnRb4/LKtB5P2Njx/G5yTpNDstO6jQV?=
- =?us-ascii?Q?tAuTANvHVWzvRT7xcVJLs5AG6jSQFpgPRZ4/qwfq/aNEmKgj5z38sK4xRuwV?=
- =?us-ascii?Q?/k8F85lDuxErscmCLRmgY2NRZZvb8O4eozLTax7DfiQafg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(7416005)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aeEilhOQ8um4mv1MsN5dEZk6rv+FsR1y7lrYi40FARa2If9nW858eZmDZdvK?=
- =?us-ascii?Q?2/X6gNcF+8S+XVviXsXh9bdzgm97Y0Xz98C4JpSo5PyEOIIhNgkOIFBqZyld?=
- =?us-ascii?Q?PizMaE1X3JFBcAd3p8oBy0caz+vW4lurgDUph+WDOyjdQDDweGlD1ipYcdMu?=
- =?us-ascii?Q?JbpdoHtHlBI5gCQ/ZTG6v0GIs8o0iBkg6yft3tHMVJe2Nl5GxDiYEpJLgL2k?=
- =?us-ascii?Q?RS5TuxWwBJmQOod5vRSlV8AB6mRbweSJ6FQ/Q9crBUmYjVwIFx+qSPuS9tT8?=
- =?us-ascii?Q?CzDb+e+H+Vs+XVRieAAR3bqXIm7ALceFtMCgLR8+oLgBZ4wfTpzAZZRLzvJn?=
- =?us-ascii?Q?hQYk0g7yPsjmdx/DLBKaxYwRG2CPxQ4tpD8QtDm+rGtuI1LV0FYIJ7It8vDD?=
- =?us-ascii?Q?ACR/hXQcHwqbsoYnsMVhiLQeuRFcVLDPQcisphqujP8YBLPui80xsJcJ4y7i?=
- =?us-ascii?Q?usN0Pe6kWSdqxdRbQr2eOfF9NoEuw5gvjFOUnAnSuWM/OkjR77sJ6SNTokz0?=
- =?us-ascii?Q?fo4j0H0F7qwvy2uHjtROaSBt23JHbemHq8C6EWoJNxCE9NNOODTeWI5Z49Cf?=
- =?us-ascii?Q?ImgeftpSnBep77T3C5Ga9FnPVEmcuzG72dMOYdDmC6pCk7kntmLTXekKaoNn?=
- =?us-ascii?Q?9d+dvE8ZiBWvIBNHZAPxXjc7UAj2ijnStel4AS97Kex8dJyR472/IWwvtxQQ?=
- =?us-ascii?Q?AlNcOTTuZk95BALs5Uj7CpuslUdEV+qnW0GG2KJgZhl8SUnfJHhs+J+Lkq2r?=
- =?us-ascii?Q?pEthvWSDYGeGKfmDkwK6zvgTlcaoFjuJAMZ5uesC+wNbyxAN7PwVu0RZ8Sny?=
- =?us-ascii?Q?mzLus8m//uNSFiWiuDb9SQcC1QTE4mkOpks9Vbw6cGX1AnW6dm4vRbi5qbP8?=
- =?us-ascii?Q?fuShjyBb00m3d5nWuRSyBesSGPomO7LBBNe9rtxxO/u3ut/Cs5G3nxF8+9yu?=
- =?us-ascii?Q?qwkVqKvGj3IB6WjL2bmUGqkaqAI6fPwYZ5MtGq7f7/nnp/YDMfzLkgCSgGit?=
- =?us-ascii?Q?9ojlQ+ZyyritiPVAMVSww44mApFFMuFiW1xdaa0FujhsIYekhNS89E2mxD66?=
- =?us-ascii?Q?bRu8kqKGcLPBYl+XlXK/Dam96xcnMqIY7M745i08S4KIYL4N3+nWmbeY7yrd?=
- =?us-ascii?Q?Bww6TnmP6R3V1gbzFehFHwnAQAhyV9u5OKVR9Bmxf6txCZBnkU5edNYkRwpT?=
- =?us-ascii?Q?YGDwk9nXeOHFQ2JUJ7Kbjx/YPcph84/T7ryNUx4Gp/N04CUvnjTZSZUZB0Az?=
- =?us-ascii?Q?8hBgU9L6UjI6Y+PtgaIr4DaMCw/MerqXUdL33qavmi9zDYq8pYpyXMUni4Es?=
- =?us-ascii?Q?YUiBJLHoGwxfKldL9t70XGqxSBtjgy5p67AReIoNydvMW9xLT1FeKTTy6e66?=
- =?us-ascii?Q?gOYsCxQtVSOtUypRFtSH02/oDGDrdZLw+xlNI2TeIjYyIMOY6nB6iIG+UuGr?=
- =?us-ascii?Q?Ii45fEgasd8Fb3viNzhIPzAqsMuMpsJAPtiQP2Ay63hP+rCGZGrjmmIqMdAt?=
- =?us-ascii?Q?KFFP1TahrPS4q/o3gWIjg058UXffzDZr5BHffWAFMS6fQwqbfMo83drr8mkU?=
- =?us-ascii?Q?NC3S0n6ysttMx//VrCxNmkxaX73s5HGo/3a2tcif?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d8e2442-e847-4381-72b4-08dc609fe854
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 18:38:29.5142
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MMi5nErwqjmukm+ZdiGYjvMyJKYB4ZuQn/8nersTKFyDZ32lASiBHecLWoeC13jj9bQxf8pVH7hPSIO+i6eEHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7127
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <5128b428-c26e-46ea-8289-1e7580f4fbf8@gmail.com>
 
-On Fri, Apr 19, 2024 at 04:49:13PM +0100, Will Deacon wrote:
-> On Mon, Apr 15, 2024 at 02:13:15PM +0800, Xu Yang wrote:
-> > In current design, the user of perf app needs to input counter ID to count
-> > events. However, this is not user-friendly since the user needs to lookup
-> > the map table to find the counter. Instead of letting the user to input
-> > the counter, let this driver to manage the counters in this patch.
-> > 
-> > This will be implemented by:
-> >  1. allocate counter 0 for cycle event.
-> >  2. find unused counter from 1-10 for reference events.
-> >  3. allocate specific counter for counter-specific events.
-> > 
-> > In this patch, counter attr will be kept for back-compatible but all the
-> > value passed down by counter=<n> will be ignored. To mark counter-specific
-> > events, counter ID will be encoded into perf_pmu_events_attr.id.
-> > 
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > 
-> > ---
-> > Changes in v6:
-> >  - new patch
-> > Changes in v7:
-> >  - no changes
-> > Changes in v8:
-> >  - add Rb tag
-> > Changes in v9:
-> >  - keep 'counter' attr for back-compatible
-> > Changes in v10:
-> >  - add some explanation about 'counter' attr in commit message
-> > ---
-> >  drivers/perf/fsl_imx9_ddr_perf.c | 168 ++++++++++++++++++-------------
-> >  1 file changed, 100 insertions(+), 68 deletions(-)
-> 
-> [...]
-> 
-> > @@ -245,8 +249,8 @@ static const struct attribute_group ddr_perf_events_attr_group = {
-> >  	.attrs = ddr_perf_events_attrs,
-> >  };
-> >  
-> > -PMU_FORMAT_ATTR(event, "config:0-7");
-> > -PMU_FORMAT_ATTR(counter, "config:8-15");
-> > +PMU_FORMAT_ATTR(event, "config:0-15");
-> > +PMU_FORMAT_ATTR(counter, "config:16-23");
-> 
-> Although these mappings are advertised in sysfs, I don't think we can
-> change them because userspace could be relying on them. I also can't
-> find any examples of other PMU drivers in the kernel changing these
-> mappings after being merged, so please keep tthem the same.
-> 
-> If you need to expand the properties to be 16-bit, then you'll need to
-> split them into 2x8-bit fields.
+19 Apr 2024 11:56:47 pm Sudeep Holla <sudeep.holla@arm.com>:
 
-I just see tools/perf/tests/pmu.c: { "krava01", "config:0-1,62-63\n", }
-So I supposed "config:" supported below format
+> On Fri, Apr 19, 2024 at 11:16:37PM +0530, Shresth Prasad wrote:
+>>> Please fix the subject line to be "backlight: <driver>: ...". I came
+>>> very close to deleting this patch without reading it ;-) .
+>>=20
+>> Really sorry about that, I'll fix it.
+>>=20
+>>> Do we need to get dev->of_node at all? The device, which we are
+>>> borrowing, already owns a reference to the node so I don't see
+>>> any point in this function taking an extra one.
+>>>=20
+>>> So why not simply make this:
+>>>=20
+>>> =C2=A0=C2=A0=C2=A0 struct device_node *np =3D dev->of_node;
+>>=20
+>> Looking at it again, I'm not sure why the call to of_node_put is there i=
+n
+>> the first place. I think removing it would be fine.
+>>=20
+>> I'll fix both of these issues and send a patch v2.
+>=20
+> I assume you are using lore "Reply using the --to, --cc, and..." option
+> or something similar.
+>=20
+> You seem to have mixed up 2 different message ID. I was not able to make
+> any sense of this email.
+>=20
+> You have wrongly used [1] but you really want [2]. I think both have
+> very similar $subject and hence the confusion. Another reason
+> why getting subject right is very important on the mailing list.
+>=20
+> --=20
+> Regards,
+> Sudeep
+>=20
+> [1] 20240419131956.665769-1-vincenzo.mezzela@gmail.com
+> (https://lore.kernel.org/all/20240419131956.665769-1-vincenzo.mezzela@gma=
+il.com/)
+> [2] 20240419111613.GA12884@aspen.lan
+> https://lore.kernel.org/all/20240419111613.GA12884@aspen.lan/
+I'm very new to using mailing lists, sorry for any confusion. I was indeed =
+using the reply option on lore. I'll be more careful next.
 
-PMU_FORMAT_ATTR(event, "config:0-7,16-19");
+Is there anyway to remove the incorrect reply from this thread?
 
-I just want to confim with you because I have not found other perf driver
-using such format yet.
-
-Frank
-
-> 
-> Will
+Regards,
+Shresth Prasad
