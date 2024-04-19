@@ -1,148 +1,94 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2055.outbound.protection.outlook.com [40.107.7.55])
+Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC258004B;
-	Fri, 19 Apr 2024 11:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713524585; cv=fail; b=GwLdrzZnPUWUJ5qwEn/Y9rhWR14HNe8tZD8ZP+MiuoFs7Ockgt9WnnJuFKniTzVgRmwBhLsIdmxFfdurQvp1ik5ZRDb/fzx6VWMD2ObhKRHAFtMu1Oe6kRwm1xoqpYdC2vTPPXsfeeuj9tvZmQh/UFUQeTsjyJDc2KbDCYP/Tmk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713524585; c=relaxed/simple;
-	bh=1/d4ajeHnpyub1f35GljZZB4tbyNXNHRkJDH3/RegVc=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=U6pJvr7SV+y9GHw9qs7Purg/42hXe8r+7O92ibM7Y+UCitOewmLW0etQh+hFC955ZQjoi0uKpv6thRZ4S3duausqnNa0lcIQTs62a4ptS0GLg+bvWf+V0B0L5YLDjWyZZRvZat1+sw2/p/RMWukqNzV9oNcNvAX+KpJHR8QNiEg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=cPN6Bvv6; arc=fail smtp.client-ip=40.107.7.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="cPN6Bvv6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e5rprDiNbQT+7PSfz99lve6mGnPzsyfFofsKVU3zPen8u69Lc7q/BbGvt/LX2gg/wxiRk3JSplf0GskDlPkmSVqjLOjz7KmTgNxIItGMIXnaG9yxUZPoHHhiPEj+fkVwAkfQBYuQTgYiPJdsmMyXFoXcBYUg084fk/IZeBFpgYIkL6OVUjtIz0rPVpNwdmnrKGIpNtpq31IT5HOVEdnHvtJBHdh7fqVQNUd5hk5uXWxTJwgUEde8b+CUBhg9QW4G9cntKvIQ6DbZu4Kcv+DIw31lLAB/NxfGQ228w5SdaN1RYfFY37ejLU7xaTUmKYg322TQ4OoBkuYeGdosLqPLFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PAMZVekFpfoYwUlZO4uuWRrSi2Qj6dwaFSiO9POZdSI=;
- b=DmCwv+QEFAFeBEi1uVDY0mDEKeyV9pN7hcuiI2kRr8+6XSqnUjLcLXyGzxh5otPdMT5M8f4V7EwtbSzQyJ+IIjUA6oSqBXq+rr5NDLOJVdtoGMBJc6mbiGsdCGlI0ZoSuEhY+vpBBydnwlZcPagOsskVohDTOyvZQzpg7voXCSfavhFmeDrLYcmn791dPKzM9+1aFbhTB58CwaPorZ/VCZu1zmy9957po4oKYsQyghM57B4pNhs5r3XqPqN4gF/KhFG38am530zp+g3+LOPCQvv/tQuyuHwZCZgydGYoxsRj2Sqq/LSypcqM3256Hy+fPIbobezdUehNzsA6nAy2Gg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PAMZVekFpfoYwUlZO4uuWRrSi2Qj6dwaFSiO9POZdSI=;
- b=cPN6Bvv68TdriBBCgP1Q19gUp21/VfZ8rmiRvYIRbPidZk0pkvZSIIfDYHj1y9ykibgUQbh6BJNyRK1BWkhd9okip1lOhTI1Zuv6K3DgDPtbp8u3eYHMTROPTtvyPXONvQ2VzZiFeWTnalxiDPDzowkpxrGnBM763VUYu3P440I=
-Received: from DU2P251CA0019.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::26)
- by GV2PR02MB8601.eurprd02.prod.outlook.com (2603:10a6:150:75::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Fri, 19 Apr
- 2024 11:02:58 +0000
-Received: from DB5PEPF00014B9E.eurprd02.prod.outlook.com
- (2603:10a6:10:230:cafe::aa) by DU2P251CA0019.outlook.office365.com
- (2603:10a6:10:230::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.30 via Frontend
- Transport; Fri, 19 Apr 2024 11:02:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB5PEPF00014B9E.mail.protection.outlook.com (10.167.8.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 11:02:56 +0000
-Received: from pc52311-2249 (10.0.5.60) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 19 Apr
- 2024 13:02:56 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: <alexandre.belloni@bootlin.com>
-CC: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] rtc: rx8111: demote warnings to debug level
-In-Reply-To: <20240417191937.33790-1-alexandre.belloni@bootlin.com> (alexandre
-	belloni's message of "Wed, 17 Apr 2024 21:19:35 +0200")
-References: <20240417191937.33790-1-alexandre.belloni@bootlin.com>
-User-Agent: a.out
-Date: Fri, 19 Apr 2024 13:02:55 +0200
-Message-ID: <pndsezhmx7k.fsf@axis.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5B680629
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 11:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713524593; cv=none; b=mRb23CCbeZmX/6Hseb0lDTMRzphZPcZyLy4WKjJdJfTH7Pvb7pUYYuVFLGtOn42rGfLviW166v40DdiiWRTcYKARkM4dkDS0YE/PBgXiR04Ei9ISgmfK46qid3x0GlyWM3JhHnk5xLExIdrnxqYOqEsiRK1oZjce/wRtcQWvU5E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713524593; c=relaxed/simple;
+	bh=EA2I8c3ppVC1x+EQitfhhfZDOkuv79dfnWWAKMXjulk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nglGBmmt7Tp8DW3vXwvLAM5NqsgZzIKxpvMmPuytkreMPbvCl7OzHhlkXSDiZpjV5UO6YzhPFo0EWh3aksY+3uxHqDc3fQH1RPPhxIHYpK3kW5dWzqBqWS/glQaI1AexjRyxogE0LxGs5gKRRboCFkrsw/FtrGvqkjS6LP65ELw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.64.253])
+	by sina.com (10.75.12.45) with ESMTP
+	id 66224F5F00000946; Fri, 19 Apr 2024 19:02:58 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 3018731457733
+X-SMAIL-UIID: 226EC22C9F59408E96BA531040139487-20240419-190258-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+dddd99ae26c656485d89@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] possible deadlock in __stack_map_get
+Date: Fri, 19 Apr 2024 18:44:38 +0800
+Message-Id: <20240419104438.2747-1-hdanton@sina.com>
+In-Reply-To: <0000000000003f81750616646cb8@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9E:EE_|GV2PR02MB8601:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d950649-ee1c-4bd8-3840-08dc606044c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ChbaShvPbfP2HcCQ6OZzfJ8nSiUUviHsX/IWcSJg/7ArWlzcaKpv1y3FoHxikyXB9QUVkUgDIBvvHlD3B2M+l0TdTPCexlioP6x858+uLBYr0oylh3KfUdHZszz+436RHvQ/0+LhT6dKyy+ZrQSM/reClIHC+8SGahsoT941bZiUq+QThQjqjBawWE/nN+2kcRrUMmIh2Xs1RBAzMWBfTwaCwNXrsfGJIj0bGtbU7q2YkpY2ack8UzR2E9geTz2A1UrH6aBzPUbtPp8WI3N7vIFZ6++RyuyXLXF77ueghou03Y4AARV9f0QE+BvKlcjfxNWpBlAzJpWfOmiIsMZdJRdhH2oIJq6coR8sP0/3TZCQJuvRzljfRVe1xZYPeSKtju5fQ7FoieT3af5QJvWeJB82Fya0iWmTNpvJunFpuIjqEcILiZscjO+5uWrPzoi4zTI7gPp8gixoOQHwAfSCEVLVs7HJiyWRoSStu/YgJjJGhHNkN2uHGgYrP5wWdfppo1N8Nerz1H5mt5f0Ykrg+aBjHFsLcq1fhQ2mzF6JufZZciCKMqgPnAJ0RbL13bDYmPQzs5lQycvFxDAz1ejyPNJufLPeXzZJvI7qF7ZglR5s1ljL61b3HRIc1/QlqvJzQFqPdmsFRuZeJJhqdZWAeBPiJgFg4Ii6o2+B+yKX2Q6c4bxpT3O7NeLBmGEdEnh/2ugcQnHVk4nTnUXn/plQ4UjghkEfalKOwwjkkMKQZNq+wAC9rlipqxlixtADmFwD
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 11:02:56.5626
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d950649-ee1c-4bd8-3840-08dc606044c1
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B9E.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR02MB8601
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 21:19 +0200 alexandre.belloni@bootlin.com wrote:
+On Thu, 18 Apr 2024 13:00:28 -0700
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f99c5f563c17 Merge tag 'nf-24-03-21' of git://git.kernel.o..
+> git tree:       net
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f1f7cb180000
 
-> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
->
-> The proper way for userspace to react on a read time error is to have a
-> look at the voltage low information. There is no point in cluttering dmesg
-> as it is often not even visible to the end user.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-rx8111.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-rx8111.c b/drivers/rtc/rtc-rx8111.c
-> index 62d2352de102..4a35bd921b33 100644
-> --- a/drivers/rtc/rtc-rx8111.c
-> +++ b/drivers/rtc/rtc-rx8111.c
-> @@ -170,14 +170,14 @@ static int rx8111_read_time(struct device *dev, struct rtc_time *tm)
->  	}
->  
->  	if (FIELD_GET(RX8111_FLAG_XST_BIT, regval)) {
-> -		dev_warn(data->dev,
-> -			 "Crystal oscillation stopped, time is not reliable\n");
-> +		dev_dbg(data->dev,
-> +			"Crystal oscillation stopped, time is not reliable\n");
->  		return -EINVAL;
->  	}
->  
->  	if (FIELD_GET(RX8111_FLAG_VLF_BIT, regval)) {
-> -		dev_warn(data->dev,
-> -			 "Low voltage detected, time is not reliable\n");
-> +		dev_dbg(data->dev,
-> +			"Low voltage detected, time is not reliable\n");
->  		return -EINVAL;
->  	}
->  
-> @@ -188,7 +188,7 @@ static int rx8111_read_time(struct device *dev, struct rtc_time *tm)
->  	}
->  
->  	if (regval) {
-> -		dev_warn(data->dev, "Clock stopped, time is not reliable\n");
-> +		dev_dbg(data->dev, "Clock stopped, time is not reliable\n");
->  		return -EINVAL;
->  	}
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git  f99c5f563c17
 
-There are several other drivers that uses `dev_warn()` in these cases,
-and it was just followed here as well. I agree with you here though!
-
-Reviewed-by: Waqar Hameed <waqar.hameed@axis.com>
+--- x/kernel/bpf/queue_stack_maps.c
++++ y/kernel/bpf/queue_stack_maps.c
+@@ -124,7 +124,7 @@ out:
+ 	return err;
+ }
+ 
+-
++static DEFINE_PER_CPU(int, map_depth);
+ static long __stack_map_get(struct bpf_map *map, void *value, bool delete)
+ {
+ 	struct bpf_queue_stack *qs = bpf_queue_stack(map);
+@@ -132,12 +132,18 @@ static long __stack_map_get(struct bpf_m
+ 	int err = 0;
+ 	void *ptr;
+ 	u32 index;
++	int dumy;
++	int *depth = &dumy;
+ 
+ 	if (in_nmi()) {
+ 		if (!raw_spin_trylock_irqsave(&qs->lock, flags))
+ 			return -EBUSY;
+ 	} else {
+-		raw_spin_lock_irqsave(&qs->lock, flags);
++		preempt_disable_notrace();
++		depth = this_cpu_ptr(&map_depth);
++		*depth += 1;
++		raw_spin_lock_irqsave_nested(&qs->lock, flags, *depth);
++		preempt_enable_notrace();
+ 	}
+ 
+ 	if (queue_stack_map_is_empty(qs)) {
+@@ -157,6 +163,7 @@ static long __stack_map_get(struct bpf_m
+ 		qs->head = index;
+ 
+ out:
++	*depth -= 1;
+ 	raw_spin_unlock_irqrestore(&qs->lock, flags);
+ 	return err;
+ }
+--
