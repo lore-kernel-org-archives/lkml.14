@@ -1,123 +1,259 @@
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB801BF3D;
-	Fri, 19 Apr 2024 20:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22DE2A1CF
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 20:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713559650; cv=none; b=nDYoTmJCEpr2ISye69KgV2/UUB2N3QVi+Gx2Vyk6KDuTTvvpjHXxL1IflYFsd3IhVwaQK7SGPkCgcmq35H989eojSlvpVMo9tr8KATJfOLCBOOaRw5/4gjlvxHHK88VcSt8SBSYSBIRFOYXsJtL+rFN/Wo73dB5wb8RWotMtL4c=
+	t=1713559711; cv=none; b=QkE4SDMPMibD0fkiSerUnZuY/s3i1scjc+r7BN4UIyJdb7XHDc46sTfpVBaqfAXT22erNQf5OulGBRk7MWt/Oedk+/A6/ZJA1fppPArpD7bEjfbdZ6sUke865nmI+I00CJqZnvPildMFvr28h6rU7ugYpFjBJRBUZKm9Y73yw0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713559650; c=relaxed/simple;
-	bh=RGWo5cAReV5vNXbHaLvoR0Q1CkQ78gT22HxOCR6MmFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U0en4P3f1FfOC2ojFHKCQPFV5N1QjjeXweiTqrqhm2cWo3+uDpNs6+CUGYSeGmPpLe6tgJ7XDXM8x2s4/noz+/8lUZfSFa5EJRih4C3anrt8kGI1AwivU34hjnQqFkOYyoDaptc5itO15KXNi1k8YsEuUPRlYzlCOdWFNwOJeJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sq8kL1Q0; arc=none smtp.client-ip=80.12.242.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1713559711; c=relaxed/simple;
+	bh=DvvQfQjHZvt3I094t8XIXjqIQhk2wrjAku9v1k9ONJQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HTGYdqvFa/xYGhi7SB04x3D7hg8/SxCWhRMGRdQcf1RJbCPLuRtjOWbsIIALj2PR6G4ZrNtDaz50xRg7sJTW15fJkS8zXCzrnM/K1c+sftBYmBNFCeh1FjcXp+/7JfreugMkhq0qMkgAgorfCizgJYp3+YwPdMo58HZG+8xOTfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GxjpTcA7; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sq8kL1Q0"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id xuzvrCCwxiGtUxuzvrtdg8; Fri, 19 Apr 2024 22:38:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713559096;
-	bh=nME8lOdkd1+x8VPwStcPPr6o4g/uIgFzm/OQJZC+ERg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=sq8kL1Q0xocF2YLzi8UH02TAqQB1HqTWQd7uRKq5s81YWxIEO4iUSP/QP3s0dlthk
-	 +2mzFZT4IBrhTBuW51X/VMW6qTZzo9oCFSOwYZ6ye8QjI8VNFihtslpZNaZFxuRmX/
-	 Jyxf+gzIrZ5bg+Lj/04ROJiJyWoBkqUp/0h5jBtl6ndVBgM7c2D6QTR05il9vskrJf
-	 wYeaT7vKj+OqqDINkDhhQQrlMDJs3PcqEidCVwvuPFvWXqiVaVsW53ZenkVpEpDIiu
-	 aBn+kMEzDf9bu0D+9cBzEiDkBL71YSURoGHUXZCzbrn2gGIgJ/6ld6mEYs+Hlmcrfz
-	 4OuooDveRulAA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 19 Apr 2024 22:38:16 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <5e5cde3e-f3ad-4a9b-bc02-1c473affdcb1@wanadoo.fr>
-Date: Fri, 19 Apr 2024 22:38:15 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GxjpTcA7"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-436ed871225so25621cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 13:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713559709; x=1714164509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jdwBN6tcT1rkPndt3s/q21EflrWzoZs9NJ2XL0c5/ME=;
+        b=GxjpTcA7+UbRRdnjfGsMs6aV1sdFnyRjrayiNO6R6u737NqFmpMHdsCYKUZfc1KUUE
+         Sf0PaJ6X2Vh4KvIwJhfXQnKwizT9BD3QwQeI6GkSZxP0yVhmxyAOA0ykxq9/Gl3XKVjF
+         aVZEBUohzw57DOMclt9+VfbT4CfUdxtcEQm265xrmoda2bkVsrVHVm12s517vullFr+g
+         0JUs0Vmi3SVyQ7nj3mxZvb6KpbQF6eZKR/SkozWer4KYL2f8MdKcIJONyXHNMjou2BFD
+         60dHMhkl7cf+QZj3v7izgW09a1gHPqBkm5kw0Ng9n+aHBoGHg1bQ8CtyF7WK9V0xEI3C
+         RS9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713559709; x=1714164509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jdwBN6tcT1rkPndt3s/q21EflrWzoZs9NJ2XL0c5/ME=;
+        b=rx6Gco5VSHKO/DDgrN4e8tRgNSbc/BBvPcrX2sLIHm2vuVVcsk9KsscxsamRaGHso4
+         szmJ8jDCG9Jk0T4aCts2z5Hl7ApQjGS4mpCpq/uRYwhVKJf73SCO5PeEnIyHnf1BUddb
+         vopVcdAOVzjnWr97vVm8/1ldZqp6ei4E9pazz2jzVr+tgvvuM1v5VKhfTZQZMMBPdiiW
+         6BUn/V4jjmsquvtmHqjBdIJpuu/pF6ArT+oi7Cc6z+TU7E1Qb5kgDE5hEAngHaIDm167
+         tJes8hEJdAsCL1Z6kdRiS8G/A764fAHwNupdWDg4YKAy88CxKnkSITJoWUI/4JYDpCFc
+         noFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAiu1U1uIWq+0tZzjWgsMwyCTpIy2eJGY3toDw7O+UaZLWdIsEed9Kqlt6BIEwRH0vnU7zfKT+k7Grpve9uiJh4NgkuIkdxMqBk7zc
+X-Gm-Message-State: AOJu0YyDr6gb/zL+KCiuv5b73FyBbMtHFPcQR38N/gNXaJTEBVeC88fS
+	ecQjLjUTgGNmtymKSFrwfBkNHWAek7fcRtdQ7MTw5pbSw0GmoSE3YioEAs2IPswJjAONUpFSFrt
+	MKbtNFLsfeWhTWkorJlUPYgo7ZY3GKWLDnT/H
+X-Google-Smtp-Source: AGHT+IHnP1X/uJdeFnAFt5SWKpANerf/z+ZZ3d5hKj8mNm8Ve8tSTI9oyLDn94kRt0shtjukZWu2UUMD2xkTzRuS724=
+X-Received: by 2002:ac8:5309:0:b0:437:b985:8523 with SMTP id
+ t9-20020ac85309000000b00437b9858523mr8583qtn.25.1713559708789; Fri, 19 Apr
+ 2024 13:48:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] seq_file: Optimize seq_puts()
-To: David Laight <David.Laight@ACULAB.COM>,
- 'Al Viro' <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <5c4f7ad7b88f5026940efa9c8be36a58755ec1b3.1704374916.git.christophe.jaillet@wanadoo.fr>
- <4b1a4cc5-e057-4944-be69-d25f28645256@wanadoo.fr>
- <20240415210035.GW2118490@ZenIV>
- <ba306b2a1b5743bab79b3ebb04ece4df@AcuMS.aculab.com>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <ba306b2a1b5743bab79b3ebb04ece4df@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240401232946.1837665-1-jthoughton@google.com>
+ <20240401232946.1837665-6-jthoughton@google.com> <ZhgZHJH3c5Lb5SBs@google.com>
+ <Zhgdw8mVNYZvzgWH@google.com>
+In-Reply-To: <Zhgdw8mVNYZvzgWH@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Fri, 19 Apr 2024 13:47:52 -0700
+Message-ID: <CADrL8HUpHQQbQCxd8JGVRr=eT6e4SYyfYZ7eTDsv8PK44FYV_A@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] KVM: x86: Participate in bitmap-based PTE aging
+To: David Matlack <dmatlack@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Yu Zhao <yuzhao@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shaoqin Huang <shahuang@redhat.com>, 
+	Gavin Shan <gshan@redhat.com>, Ricardo Koller <ricarkol@google.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	David Rientjes <rientjes@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 16/04/2024 à 22:56, David Laight a écrit :
-> From: Al Viro
->> Sent: 15 April 2024 22:01
-> ...
->> No need to make it a macro, actually.  And I would suggest going
->> a bit further:
->>
->> static inline void seq_puts(struct seq_file *m, const char *s)
-> 
-> That probably needs to be 'always_inline'.
-> 
->> {
->> 	if (!__builtin_constant_p(*s))
->> 		__seq_puts(m, s);
->> 	else if (s[0] && !s[1])
->> 		seq_putc(m, s[0]);
->> 	else
->> 		seq_write(m, s, __builtin_strlen(s));
->> }
-> 
-> You missed seq_puts(m, "");
-> 
-> I did wonder about checking sizeof(s) <= 2 in the #define version.
+On Thu, Apr 11, 2024 at 10:28=E2=80=AFAM David Matlack <dmatlack@google.com=
+> wrote:
+>
+> On 2024-04-11 10:08 AM, David Matlack wrote:
+> > On 2024-04-01 11:29 PM, James Houghton wrote:
+> > > Only handle the TDP MMU case for now. In other cases, if a bitmap was
+> > > not provided, fallback to the slowpath that takes mmu_lock, or, if a
+> > > bitmap was provided, inform the caller that the bitmap is unreliable.
+> > >
+> > > Suggested-by: Yu Zhao <yuzhao@google.com>
+> > > Signed-off-by: James Houghton <jthoughton@google.com>
+> > > ---
+> > >  arch/x86/include/asm/kvm_host.h | 14 ++++++++++++++
+> > >  arch/x86/kvm/mmu/mmu.c          | 16 ++++++++++++++--
+> > >  arch/x86/kvm/mmu/tdp_mmu.c      | 10 +++++++++-
+> > >  3 files changed, 37 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/k=
+vm_host.h
+> > > index 3b58e2306621..c30918d0887e 100644
+> > > --- a/arch/x86/include/asm/kvm_host.h
+> > > +++ b/arch/x86/include/asm/kvm_host.h
+> > > @@ -2324,4 +2324,18 @@ int memslot_rmap_alloc(struct kvm_memory_slot =
+*slot, unsigned long npages);
+> > >   */
+> > >  #define KVM_EXIT_HYPERCALL_MBZ             GENMASK_ULL(31, 1)
+> > >
+> > > +#define kvm_arch_prepare_bitmap_age kvm_arch_prepare_bitmap_age
+> > > +static inline bool kvm_arch_prepare_bitmap_age(struct mmu_notifier *=
+mn)
+> > > +{
+> > > +   /*
+> > > +    * Indicate that we support bitmap-based aging when using the TDP=
+ MMU
+> > > +    * and the accessed bit is available in the TDP page tables.
+> > > +    *
+> > > +    * We have no other preparatory work to do here, so we do not nee=
+d to
+> > > +    * redefine kvm_arch_finish_bitmap_age().
+> > > +    */
+> > > +   return IS_ENABLED(CONFIG_X86_64) && tdp_mmu_enabled
+> > > +                                    && shadow_accessed_mask;
+> > > +}
+> > > +
+> > >  #endif /* _ASM_X86_KVM_HOST_H */
+> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > index 992e651540e8..fae1a75750bb 100644
+> > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > @@ -1674,8 +1674,14 @@ bool kvm_age_gfn(struct kvm *kvm, struct kvm_g=
+fn_range *range)
+> > >  {
+> > >     bool young =3D false;
+> > >
+> > > -   if (kvm_memslots_have_rmaps(kvm))
+> > > +   if (kvm_memslots_have_rmaps(kvm)) {
+> > > +           if (range->lockless) {
+> > > +                   kvm_age_set_unreliable(range);
+> > > +                   return false;
+> > > +           }
+> >
+> > If a VM has TDP MMU enabled, supports A/D bits, and is using nested
+> > virtualization, MGLRU will effectively be blind to all accesses made by
+> > the VM.
+> >
+> > kvm_arch_prepare_bitmap_age() will return true indicating that the
+> > bitmap is supported. But then kvm_age_gfn() and kvm_test_age_gfn() will
+> > return false immediately and indicate the bitmap is unreliable because =
+a
+> > shadow root is allocate. The notfier will then return
+> > MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE.
+> >
+> > Looking at the callers, MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE is never
+> > consumed or used. So I think MGLRU will assume all memory is
+> > unaccessed?
+> >
+> > One way to improve the situation would be to re-order the TDP MMU
+> > function first and return young instead of false, so that way MGLRU at
+> > least has visibility into accesses made by L1 (and L2 if EPT is disable
+> > in L2). But that still means MGLRU is blind to accesses made by L2.
+> >
+> > What about grabbing the mmu_lock if there's a shadow root allocated and
+> > get rid of MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE altogether?
+> >
+> >       if (kvm_memslots_have_rmaps(kvm)) {
+> >               write_lock(&kvm->mmu_lock);
+> >               young |=3D kvm_handle_gfn_range(kvm, range, kvm_age_rmap)=
+;
+> >               write_unlock(&kvm->mmu_lock);
+> >       }
+> >
+> > The TDP MMU walk would still be lockless. KVM only has to take the
+> > mmu_lock to collect accesses made by L2.
+> >
+> > kvm_age_rmap() and kvm_test_age_rmap() will need to become bitmap-aware
+> > as well, but that seems relatively simple with the helper functions.
+>
+> Wait, even simpler, just check kvm_memslots_have_rmaps() in
+> kvm_arch_prepare_bitmap_age() and skip the shadow MMU when processing a
+> bitmap request.
+>
+> i.e.
+>
+> static inline bool kvm_arch_prepare_bitmap_age(struct kvm *kvm, struct mm=
+u_notifier *mn)
+> {
+>         /*
+>          * Indicate that we support bitmap-based aging when using the TDP=
+ MMU
+>          * and the accessed bit is available in the TDP page tables.
+>          *
+>          * We have no other preparatory work to do here, so we do not nee=
+d to
+>          * redefine kvm_arch_finish_bitmap_age().
+>          */
+>         return IS_ENABLED(CONFIG_X86_64)
+>                 && tdp_mmu_enabled
+>                 && shadow_accessed_mask
+>                 && !kvm_memslots_have_rmaps(kvm);
+> }
+>
+> bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> {
+>         bool young =3D false;
+>
+>         if (!range->arg.metadata->bitmap && kvm_memslots_have_rmaps(kvm))
+>                 young =3D kvm_handle_gfn_range(kvm, range, kvm_age_rmap);
+>
+>         if (tdp_mmu_enabled)
+>                 young |=3D kvm_tdp_mmu_age_gfn_range(kvm, range);
+>
+>         return young;
+> }
+>
+> bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> {
+>         bool young =3D false;
+>
+>         if (!range->arg.metadata->bitmap && kvm_memslots_have_rmaps(kvm))
+>                 young =3D kvm_handle_gfn_range(kvm, range, kvm_test_age_r=
+map);
+>
+>         if (tdp_mmu_enabled)
+>                 young |=3D kvm_tdp_mmu_test_age_gfn(kvm, range);
+>
+>         return young;
 
-git grep seq_puts.*\"[^\\].\" | wc -l
-77
 
-What would you do in this case?
-2 seq_putc() in order to save a memcpy(..., 2), that's it?
+Yeah I think this is the right thing to do. Given your other
+suggestions (on patch 3), I think this will look something like this
+-- let me know if I've misunderstood something:
 
-It would also slightly change the behaviour, as only the 1st char could 
-be added. Actually, it is all or nothing.
+bool check_rmap =3D !bitmap && kvm_memslot_have_rmaps(kvm);
 
-Don't know what is the best.
+if (check_rmap)
+  KVM_MMU_LOCK(kvm);
 
-Any thought?
+rcu_read_lock(); // perhaps only do this when we don't take the MMU lock?
 
-CJ
+if (check_rmap)
+  kvm_handle_gfn_range(/* ... */ kvm_test_age_rmap)
 
+if (tdp_mmu_enabled)
+  kvm_tdp_mmu_test_age_gfn() // modified to be RCU-safe
 
-> That would pick up the cases where a separator is changed/added
-> in a loop.
-> 
-> Could you do:
-> 	size_t len = __builtin_strlen(s);
-> 	if (!__builtin_constant_p(len))
-> 		__seq_puts(m, s);
-> 	else switch (len){
-> 	case 0: break;
-> 	case 1: seq_putc(m, s[0]);
-> 	default: seq_write(m, s, len);
-> 	}
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-> 
-> 
+rcu_read_unlock();
+if (check_rmap)
+  KVM_MMU_UNLOCK(kvm);
 
+> }
+>
+> Sure this could race with the creation of a shadow root but so can the
+> non-bitmap code.
