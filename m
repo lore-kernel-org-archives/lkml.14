@@ -1,214 +1,179 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A8510A25;
-	Fri, 19 Apr 2024 00:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713485474; cv=none; b=H+7n8dlyzZ1mYS/f7M4BsX1lJBM9NBYypD+AiB3XXGXKrUdweYzdRwLQBeD2CziFP8gdfTi4trBL7ufBUe1Rypn5xZv59ME4g4/ACKT+UgxKfIDaoDrBCKKR/6s2tMk7QF8ar3tanOhdvtpRgb4MmTvdtEjYqO92piAFmPUJIEk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713485474; c=relaxed/simple;
-	bh=qTRflK83hWPe8WMZaUDFvxeBpnPe3PBX9JmEeKHKz5g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOblJ+LTqjcKp44aV30szgX+1S9xgOIppjuJDBvrfIdMuUT6s2153J7Eeq5k4fkwu/RMlisbM2LF3ENMAMca5jRAzOe6cuWAaxn5Eo7/0M2qU7jItSsfl1VuDUPcbXMCOrQBEKX/whQgm0p4KRSGqfKzqaGMMFbFC5i7TkRjDu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKwJ4PPk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A377F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 00:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713485761; cv=fail; b=gihT3I4Sl0Eo56L6KfgTGnrTVI8wnrWAEbLj3CnYM0GgCGJ26jGpadK/1eKjRZ81LUjNCzCVLKioH+EVLDGaAUhGtlm7unrCR6TaOMJozsz4KMxB4PDEXgTd6mN65B5vC+anUjMj/SJgSBx8cQS+0YbJT3XSyfr7VnpWLIEFINs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713485761; c=relaxed/simple;
+	bh=9xmk5ugA4WJw4+9e9LaRE/2RwOiywQUPSe8D5BqnpP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=e5nY3e8n1KqrbqBXr5sG8upQcVpvKcG+4oaXBI6EZOoHZO/dS9ZJz+IwCUcZpHDbNlv74R30j6XWqvUU2zWscc/Ug6LVHy1jXj+y+gs9vQ7yLc6xDv0XcDA5tJH5/a4URa/Z2aTmRPm0BAAqPYzEUk5XCMwNPH2Fy4QU5cnywqk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Xry8L2Qk; arc=fail smtp.client-ip=40.107.237.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKwJ4PPk"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43IMserW000792;
-	Fri, 19 Apr 2024 00:10:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=QMLqYCG5YLp0bH+Im5zgY8BvC8QMj6jH3G/EsLQGnTk=; b=bK
-	wJ4PPkTweKhfPAuSEwzkO/epfybcwuFn6JOQRIzLaV1V+kW+BA7yNt+4B9uj9wT/
-	GTPyZQKXOzHk55RBTblHici9wb69fGexbBO+KrklLmBYi2DOvrVaLTGTfwR4z7+2
-	+be0vr4w9B2Ox4i9Q13Lc8vUBNXi0SAM12fAQaSHj5egP8KOy6Ds6q0d0aqPAN+T
-	RvCdWhvIbm4U1HaoJU9INY4BYHtVHnTFT9rDRBxveZPGv8sej3LDDIb6RoS1B11n
-	7BqzspI5ML2emdlImYaQRPk6of+1ojnNJzm3ZyThGN7M87YMyc9N8OgSJ+eQM0ZT
-	K0u/e4fMaCdOVTtHsU+g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xk4vm9a4r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Apr 2024 00:10:57 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43J0Aud6001710
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Apr 2024 00:10:56 GMT
-Received: from adas-linux5.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 18 Apr 2024 17:10:55 -0700
-From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-To: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mani@kernel.org>
-CC: <quic_msarkar@quicinc.com>, <quic_kraravin@quicinc.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel
-	<gustavo.pimentel@synopsys.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v3 3/3] PCI: qcom: Add rx margining settings for 16GT/s
-Date: Thu, 18 Apr 2024 17:09:36 -0700
-Message-ID: <20240419001013.28788-4-quic_schintav@quicinc.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240419001013.28788-1-quic_schintav@quicinc.com>
-References: <20240419001013.28788-1-quic_schintav@quicinc.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Xry8L2Qk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FDnSCX9j0T9CqYAFwswcWYMZJgfjvd1chkwZ0rSGUzPD1SqdMfb2jzZrU1eV8JYX2O/3KkuWglPdoqfJhR4n4N9Cl08hzSOFFoFBf+OxRRSOWfxBilSOxcjuCNK+Gva1p1noGyrw9zxReR2BqYbfb8G3Ddd/eZSmehE0PdJur3h/AgfvJUbF4wJ5lrqWNnZa6WzEbeUQibjLeBaBnC4MPruEmJC9CK+UvPZR8OTKjM7SirYx1wMZEAe2aW13MJ7aTH5YhBopG5m635itwSka2oLz4qBr3flDwRYTspm6xnwrT01R9VUplY7X7qMUvBU6lxleAvoBylOf1MhM1Eg+Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XKP4VwI59ScFsINIRtSMAH4h8kpgnF9fuqhaI+N6GxM=;
+ b=CzheLyB1aTWokg5RToMzLUlayODgM4MsTON0H3UNArqw1NxC/XntXBAlQf6DfA1Sy+f6Czyp3wOLkl0La8TVdddfNjJIaFockGX4PHvfEGWpnFUnzGrfPB4J7Z7yL5IEzf6MJB+tTX2ciZd++a7Ni6UobIYZWezdllpp+JTEgmhDR0pORQWBK4sqL8WO9dDWu1hcPEeD4OFwTR9jPmH/FLtzTBgC14Ge+IgKGxcjqafVj3TRJKj9r3blh1KFBBhuYr3mmFxDN8wqcYg2YhDNsy1AcQMMo1vhfm2xvCxFjZUI7EOxf7N7QqjEtzLRx8BJXEJzwxN3ZVyZegtgqGmf7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XKP4VwI59ScFsINIRtSMAH4h8kpgnF9fuqhaI+N6GxM=;
+ b=Xry8L2QkBMFivjcQ3Vt3PdSrNRXPKql1oYWasQachaTmlhfO5E3c695VhRAeBDkt8DYOIvjwAMiFmI5qOMOKlxORkR7ABXY/fCaFFR015lI4+X+dbt1Ot7nD9JtHAuA2QgQpm6A2MZIyaMC30XpZ5APKibMgozM6rI7jzK5kqAYoBFIGtfaMbAPLY5G7kvE4bZ7J7br+OqmxAPd0EAAb21e3xgq0erdsX7JB5xkkyQ9JGTqPMZ1SF+O+EDGUwm7aaHoHzghLF+9hatISGnhNhjjkjuiholE2VaajbemlS0lkPAEjeDoCaFczCxAHutNm5dA3wiH8H9x2mGEV6oVCmQ==
+Received: from BY5PR16CA0015.namprd16.prod.outlook.com (2603:10b6:a03:1a0::28)
+ by BL3PR12MB6379.namprd12.prod.outlook.com (2603:10b6:208:3b2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Fri, 19 Apr
+ 2024 00:15:56 +0000
+Received: from SJ5PEPF000001D0.namprd05.prod.outlook.com
+ (2603:10b6:a03:1a0:cafe::be) by BY5PR16CA0015.outlook.office365.com
+ (2603:10b6:a03:1a0::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.28 via Frontend
+ Transport; Fri, 19 Apr 2024 00:15:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001D0.mail.protection.outlook.com (10.167.242.52) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 00:15:55 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
+ 2024 17:15:44 -0700
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 18 Apr
+ 2024 17:15:43 -0700
+Message-ID: <18faa967-4fbc-4694-a7f7-02c3887ee6f3@nvidia.com>
+Date: Thu, 18 Apr 2024 17:15:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: a0jWp-cJVae7NLxedAhk-PU-PCefoKqu
-X-Proofpoint-GUID: a0jWp-cJVae7NLxedAhk-PU-PCefoKqu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-18_21,2024-04-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 impostorscore=0 bulkscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 mlxlogscore=859 mlxscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404190000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/huge_memory: improve
+ split_huge_page_to_list_to_order() return value documentation
+To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-mm@kvack.org>, Zi Yan <ziy@nvidia.com>, Matthew Wilcox
+	<willy@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+References: <20240418151834.216557-1-david@redhat.com>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <20240418151834.216557-1-david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D0:EE_|BL3PR12MB6379:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e956316-6653-446e-5a8d-08dc6005e1d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oY768hhXXP/8RdsEIfKt32LNUvS3UObEIUUoL3hq5h9vVIhRqItx/99E4K/3CXPY0iiwE5253Tgawm9qdE/7uv87MJbfO11sldTXntqA1H5hTcmfv1Ng9y5/wyGAqCYKNEkuNeq6FJJ1GOtR2QcKq2kT29x97Jj8FUA6k2xzJptTSGHYvAUygY/dR2Oi6sHNd6X7tvvOQjdUa/c2It0UAq6f4kXsQi945q19f1Al6lwT2zm3EiRbf1Mt3IJz34216apU3LNEg2UJYnFOIqjYryZia8ilj7mUYdE9B+71BSi88mrvuVLs7JoCQLjk5iYodIRHY3mByjrRiT//4RiDwB0+YZ+ZLbVcNUgGqTGBgbDpaS1FJNRGG8/9lCbRdFPTOl7LMYT/Bd5GD525YqwbfF4/+XaR7915FVADdeSHDdNPdyMiQFaD8q7ZSd0aLK4IT3O32lI1HNvvKvhcgplPmz/Iu9Rb6Sw1SVTfu281qCSjmH27TgJgBRlBB58lStHrYa8Kj+lVMew3RLmekNz8Rcv5gkbqrGJKx++RmT3xFzDUC2Ju7T6N8wx/3XvbjGPzvEUMmti2XyT2kQoAR07IElWGIbMqdx2qJh0vO9iVZbeSfxyOAu+eE0RDXm2BMajleOPrizZ/Jo3+JnFaXA8q5vtDCbDeIincFZJQd9SUfLNEOKnNPEdzQlm6TvbW9CNqxIHSUtxtQAIpQpkqTxaTCp7G26KBIpI+YtdRSmE2RaiEbtmBOzi/E+SjUKQsSiPN
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 00:15:55.9242
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e956316-6653-446e-5a8d-08dc6005e1d0
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6379
 
-Add rx lane margining settings for 16GT/s(GEN 4) data rate. These
-settings improve link stability while operating at high date rates
-and helps to improve signal quality.
+On 4/18/24 8:18 AM, David Hildenbrand wrote:
+> The documentation is wrong and relying on it almost resulted in BUGs
+> in new callers: we return -EAGAIN on unexpected folio references, not
+> -EBUSY.
+> 
+> Let's fix that and also document which other return values we can
+> currently see and why they could happen.
+> 
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   mm/huge_memory.c | 13 ++++++++++---
+>   1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index ee12726291f1b..824eff9211db8 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2956,7 +2956,7 @@ bool can_split_folio(struct folio *folio, int *pextra_pins)
+>    *
+>    * 3) The folio must not be pinned. Any unexpected folio references, including
+>    *    GUP pins, will result in the folio not getting split; instead, the caller
+> - *    will receive an -EBUSY.
+> + *    will receive an -EAGAIN.
+>    *
+>    * 4) @new_order > 1, usually. Splitting to order-1 anonymous folios is not
+>    *    supported for non-file-backed folios, because folio->_deferred_list, which
+> @@ -2975,8 +2975,15 @@ bool can_split_folio(struct folio *folio, int *pextra_pins)
 
-Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.c | 24 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
- drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
- 5 files changed, 49 insertions(+), 2 deletions(-)
+As an aside, the use of unconditional local_irq_disable() / local_irq_enable()
+calls in this routine almost makes me believe that we should have:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ad771bb52d29..e8c48855143f 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -203,6 +203,24 @@
- 
- #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
- 
-+/*
-+ * GEN4 lane margining register definitions
-+ */
-+#define GEN4_LANE_MARGINING_1_OFF		0xb80
-+#define MARGINING_MAX_VOLTAGE_OFFSET(n)		FIELD_PREP(GENMASK(29, 24), n)
-+#define MARGINING_NUM_VOLTAGE_STEPS(n)		FIELD_PREP(GENMASK(22, 16), n)
-+#define MARGINING_MAX_TIMING_OFFSET(n)		FIELD_PREP(GENMASK(13, 8), n)
-+#define MARGINING_NUM_TIMING_STEPS(n)		FIELD_PREP(GENMASK(5, 0), n)
-+
-+#define GEN4_LANE_MARGINING_2_OFF		0xb84
-+#define MARGINING_IND_ERROR_SAMPLER(n)		FIELD_PREP(BIT(28), n)
-+#define MARGINING_SAMPLE_REPORTING_METHOD(n)	FIELD_PREP(BIT(27), n)
-+#define MARGINING_IND_LEFT_RIGHT_TIMING(n)	FIELD_PREP(BIT(26), n)
-+#define MARGINING_IND_UP_DOWN_VOLTAGE(n)	FIELD_PREP(BIT(25), n)
-+#define MARGINING_VOLTAGE_SUPPORTED(n)		FIELD_PREP(BIT(24), n)
-+#define MARGINING_MAXLANES(n)			FIELD_PREP(GENMASK(20, 16), n)
-+#define MARGINING_SAMPLE_RATE_TIMING(n)		FIELD_PREP(GENMASK(13, 8), n)
-+#define MARGINING_SAMPLE_RATE_VOLTAGE(n)	FIELD_PREP(GENMASK(5, 0), n)
- /*
-  * iATU Unroll-specific register definitions
-  * From 4.80 core version the address translation will be made by unroll
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-index a6f3eb4c3ee6..3279314ae78c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-@@ -46,6 +46,30 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
- }
- EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
- 
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
-+{
-+	u32 reg;
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
-+	reg = MARGINING_MAX_VOLTAGE_OFFSET(0x24) |
-+		MARGINING_NUM_VOLTAGE_STEPS(0x78) |
-+		MARGINING_MAX_TIMING_OFFSET(0x32) |
-+		MARGINING_NUM_TIMING_STEPS(0x10);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_2_OFF);
-+	reg = MARGINING_IND_ERROR_SAMPLER(1) |
-+		MARGINING_SAMPLE_REPORTING_METHOD(1) |
-+		MARGINING_IND_LEFT_RIGHT_TIMING(1) |
-+		MARGINING_VOLTAGE_SUPPORTED(1) |
-+		MARGINING_IND_UP_DOWN_VOLTAGE(0) |
-+		MARGINING_MAXLANES(pci->num_lanes) |
-+		MARGINING_SAMPLE_RATE_TIMING(0x3f) |
-+		MARGINING_SAMPLE_RATE_VOLTAGE(0x3f);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_2_OFF, reg);
-+}
-+EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_rx_margining_settings);
-+
- int qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, struct icc_path **icc_mem_p)
- {
- 	*icc_mem_p = devm_of_icc_get(pci->dev, "pcie-mem");
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-index e72c651b0d28..b9eb78fcc766 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.h
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-@@ -11,3 +11,4 @@ int qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, struct icc_path **icc
- int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem);
- void qcom_pcie_common_icc_update(struct dw_pcie *pci, struct icc_path *icc_mem);
- void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci);
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index cb75a874f76c..3032dd91514c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -438,8 +438,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		goto err_disable_resources;
- 	}
- 
--	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/*
- 	 * The physical address of the MMIO region which is exposed as the BAR
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index acf66f974edc..f69364ecf2de 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -263,8 +263,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
- 
--	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/* Enable Link Training state machine */
- 	if (pcie->cfg->ops->ltssm_enable)
+5) Local IRQs should be enabled. Because this routine may enable them.
+
+...but I can't imagine a way to end up calling this with interrupts
+disabled, so it seems like documentation overkill. Just thought I'd mention
+it, though.
+
+
+>    *
+>    * Returns 0 if the huge page was split successfully.
+>    *
+> - * Returns -EBUSY if @page's folio is pinned, or if the anon_vma disappeared
+> - * from under us.
+> + * Returns -EAGAIN if the folio has unexpected reference (e.g., GUP).
+
+...or if the folio was removed from the page cache before this routine
+got a chance to lock it, right? (See the "fail:" path.)
+
+> + *
+> + * Returns -EBUSY when trying to split the huge zeropage, if the folio is
+> + * under writeback, if fs-specific folio metadata cannot currently be
+> + * released, or if some unexpected race happened (e.g., anon VMA disappeared,
+> + * truncation).
+> + *
+> + * Returns -EINVAL when trying to split to an order that is incompatible
+> + * with the folio. Splitting to order 0 is compatible with all folios.
+>    */
+>   int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
+>   				     unsigned int new_order)
+
+Otherwise, looks good.
+
+
+thanks,
 -- 
-2.43.2
+John Hubbard
+NVIDIA
 
