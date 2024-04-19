@@ -1,113 +1,155 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D8312FF6E
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 15:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D3612F599;
+	Fri, 19 Apr 2024 15:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713538916; cv=none; b=MPuo6TyFs4Mumk3wPvK9aijBsaAGJfko52m+vlpTza/bbOZbc7LIzN+f1KDyz0N++TtWzIzKkTzhAHcsw3UzV5VYtczyi43TOaGMD49DNtGgZXvFAT86F95AtF3ysYM9mGiECErGHh8yH86jf0352dyqnqrCrN4gH+igS7zChfk=
+	t=1713538944; cv=none; b=ICmycMjkoQkNdOT9GNHs8UDAkIVxhktusfvvYpT0KDMOhbAsMUl+ktN2nG6MKL7UWw0YuEJRag9XfZuSVV1GG9plhQTwEPxqvj5XB3/oTTjfOvsV4iJcjw4mZ/JorTl3MdUuIxEYak4h9H8FAIBkCTND/o/VAIYPCXX0nJuSHR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713538916; c=relaxed/simple;
-	bh=bPISGBwHKS65Ig8Nwyh0u0FEtW0ODA1tiQEsn9m1a78=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L6eioD2FZ9iPdqlEx9hdMl5XO45AjYQK9myPGspFgViWHybdt5VcOogDkHLtHqpWoz9I7ctYRGBOfDJJRDel7nlQiRfZZjsSY2YtY/PimOJYVQi1E4opKOc9XF7b9/hzBhD+tsX5H//apiOqYeEu+e2kAjVJAG9Q38MvvS3fXIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VJNf0ZoR; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1713538944; c=relaxed/simple;
+	bh=UA06SqKY53ZluOyFgnipAQL6i+7psWEVH9E0CMAEG4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dbxD6ziuFD0Ad612qzq/txBXQJeonvdT8tkYpQd6kyQlCjDG94qYiIhxRU/RwTz4SaJwVBfD7pVk0UKqFuvZVgxL/ZhbHGA51TtJj/seA1kQ1SU5nfQvHK8Epjx5aGMUdI4lBQkD0A3tdcaxXIMcrl05px4TKG/L4QGwdZCWzGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWTmSMIA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VJNf0ZoR"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2db101c11beso24801091fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713538913; x=1714143713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SKK2lHWVNTM0FrAdLX6Qzm6HKxic16xHNY/tlXN6dfw=;
-        b=VJNf0ZoRNPMRZCcUgdjTEny98dSZDa4h8selRGDK186X7kqB6Yi/0FCrwZ0rj1PPOX
-         g/w2l1owSUUs4mcqtNTRTDG5BBjue+er9T0JviEWjgVpP78ndgl7Mw9MS5/dC9BmZ8WX
-         dIgvZQ157vfycR3tp3KyqrOScF9jy4qVyAlyLCK8pikddg7CDHKSCtH0oo04MNo0DsTU
-         MTxID7G7zvf+/7KmhWAyj+oI5pjLY5r5T5J2zi78nn0HlFhBKclO7cRduk482Kt80T7V
-         wiHW10N0CzNiILJvB78H21Rwr5bhVVH1LeO2pBNhYT0OcHE7e2Gfm96HYMPmdibsl+7j
-         xpTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713538913; x=1714143713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SKK2lHWVNTM0FrAdLX6Qzm6HKxic16xHNY/tlXN6dfw=;
-        b=gdV70iMHTU32HIebyVCHSXEcuUXqVswOxQrg9PpRw63KMrgYyoidbMDtDxUCDPVRjz
-         AdDyk4lQlxiDFPFUr3TY7HFy8g82/nkwTeJZiirTHWarZW1USA39T6xNwgdOSAbEPdKX
-         cnD5bU7tFDNcEmYWcU7Lsx2GGgXyr1gF2zHktDw5OCC/2gPPxZME/zb5iYLGSeAefXZ9
-         mbRtF5G5VYGRP+zDqGggQWFReem4Qzch+tjkozn0q9WQ/f6trOo73Wt+TNL4uilvXDjN
-         NJEZthKjk4k0B8jLxYkta2pCBVF3sgCRW7heVSLQEZbHVCx1mRlpzWE9MekL+nGauHV/
-         z/cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTeD97JsVhhMfIMwgA2CSoMrUn3SyDk9bWqwxaCOPgLWSWk/Jh3ckSlKkH/uXh4Brl9CeMVaqvWi9z7RdG+6nHRr9/tH6nH1StZJiH
-X-Gm-Message-State: AOJu0Yyzn47UmZE/+P8DEsRPAaYye2wNUB7/bIsBqsfMtuCc8ukTqcOb
-	zJTSzwZp6kwohyMnYrEHK2GfLO5O4uZlouo+AsrP5Kthb+QHDwzFU0rH5rEquSM=
-X-Google-Smtp-Source: AGHT+IGGJookUTMXcDbddWvz5/sMR1qyz7+vIW0U7CPi5oZhv1EIeWy4UabCosCISYA4f+jbMedvEg==
-X-Received: by 2002:a05:651c:3cc:b0:2d8:59cb:89ef with SMTP id f12-20020a05651c03cc00b002d859cb89efmr1379263ljp.24.1713538912186;
-        Fri, 19 Apr 2024 08:01:52 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id f11-20020a05600c4e8b00b00417ee886977sm10660462wmq.4.2024.04.19.08.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 08:01:51 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: broonie@kernel.org
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	lgirdwood@gmail.com,
-	alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	steev@kali.org,
-	jenneron@postmarketos.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 4/4] ASoC: qcom: sm8250: fix a typo in function name
-Date: Fri, 19 Apr 2024 16:01:40 +0100
-Message-Id: <20240419150140.92527-5-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240419150140.92527-1-srinivas.kandagatla@linaro.org>
-References: <20240419150140.92527-1-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWTmSMIA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0A2C072AA;
+	Fri, 19 Apr 2024 15:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713538944;
+	bh=UA06SqKY53ZluOyFgnipAQL6i+7psWEVH9E0CMAEG4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KWTmSMIAyQ/fmJBt+lKvpMxwiAysYXpUJ3T6prpJhXUA2rwNICZUJUfFtaLtyvmWQ
+	 alxcY5Q/Sy24Cvv7KcvxIL+X3djnPGLhxZS9S6n5ymUWcsbT0uEKtMpe7Xib7kVtMF
+	 m8ptSs0i9EF2d2TAruySnOiKPgSIYDIeYeL/exIyUfjtNv3ATLcCXJ5N/e1V/VAFov
+	 A50/1kX02IU/CXZRcJshE5zuYNVvjMiTIFZCeuGY8RjQKSnF7+BgvNC9JB3HmxO7mW
+	 1+QMCfM/+ksH4uu9X/KDM10hW1LOtCv9cpApfOW5Psz21AaEEiTw1u9+tD+V46kfLU
+	 P8AT37Ym1VZ9w==
+Date: Fri, 19 Apr 2024 18:01:10 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yaxiong Tian <tianyaxiong@kylinos.cn>
+Cc: catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
+	tony.luck@intel.com, gpiccoli@igalia.com, akpm@linux-foundation.org,
+	ryan.roberts@arm.com, wangkefeng.wang@huawei.com, ardb@kernel.org,
+	david@redhat.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	xiongxin <xiongxin@kylinos.cn>
+Subject: Re: [PATCH v3] arm64: hibernate: Fix level3 translation fault in
+ swsusp_save()
+Message-ID: <ZiKHNh0hHIAFT80N@kernel.org>
+References: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240417025248.386622-1-tianyaxiong@kylinos.cn>
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Wed, Apr 17, 2024 at 10:52:48AM +0800, Yaxiong Tian wrote:
+> On ARM64 machines using UEFI, if can_set_direct_map() return false by
+> setting some CONFIGS in kernel build or grub,such as
+> NO CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT、NO CONFIG_KFENCE
+> NO CONFIG_RODATA_FULL_DEFAULT_ENABLED.Also with setting rodata=off、
+> debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+> swsusp_save() will fail due to can't finding the map table under the
+> nomap memory.such as:
+> 
+> [   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
+> [   48.532162] Mem abort info:
+> [   48.532162]   ESR = 0x0000000096000007
+> [   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   48.532162]   SET = 0, FnV = 0
+> [   48.532162]   EA = 0, S1PTW = 0
+> [   48.532162]   FSC = 0x07: level 3 translation fault
+> [   48.532162] Data abort info:
+> [   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+> [   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
+> [   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
+> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+> [   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
+> [   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
+> [   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
+> [   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
+> [   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   48.532162] pc : swsusp_save+0x280/0x538
+> [   48.532162] lr : swsusp_save+0x280/0x538
+> [   48.532162] sp : ffffffa034a3fa40
+> [   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
+> [   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
+> [   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
+> [   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
+> [   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
+> [   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
+> [   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
+> [   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
+> [   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
+> [   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
+> [   48.532162] Call trace:
+> [   48.532162]  swsusp_save+0x280/0x538
+> [   48.532162]  swsusp_arch_suspend+0x148/0x190
+> [   48.532162]  hibernation_snapshot+0x240/0x39c
+> [   48.532162]  hibernate+0xc4/0x378
+> [   48.532162]  state_store+0xf0/0x10c
+> [   48.532162]  kobj_attr_store+0x14/0x24
+> 
+> This issue can be reproduced in QEMU using UEFI when booting with
+> rodata=off、debug_pagealloc=off in grub and NO CONFIG_KFENCE.
+> 
+> This is because in swsusp_save()->copy_data_pages()->page_is_saveable(),
+> kernel_page_present() presumes that a page is present when can_set_direct_map()
+> returns false even for NOMAP ranges.So NOMAP pages will saved in after,and then
+> cause level3 translation fault in this pages.
+> 
+> Since the NOMAP regions are now marked as PageReserved(), pfn walkers
+> and the rest of core mm will treat them as unusable memory. So this
+> regions should not saved in hibernation.
+> 
+> This problem may cause by changes to pfn_valid() logic in commit
+> a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
+> 
+> Reference ohter arch architecture,drop the !can_set_direct_map() condition
+> in kernel_page_present().So in page_is_savable(),these page will skiped.
+> 
+> Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
+> 
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-Fix a small type in the function name as its confusing to see a SoC name
-that does not exist. 
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/sm8250.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> ---
+>  arch/arm64/mm/pageattr.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 0c4e3ecf989d..0e270a1c51e6 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -219,9 +219,6 @@ bool kernel_page_present(struct page *page)
+>  	pte_t *ptep;
+>  	unsigned long addr = (unsigned long)page_address(page);
+>  
+> -	if (!can_set_direct_map())
+> -		return true;
+> -
+>  	pgdp = pgd_offset_k(addr);
+>  	if (pgd_none(READ_ONCE(*pgdp)))
+>  		return false;
+> -- 
+> 2.34.1
+> 
 
-diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
-index d70df72c0160..9bd159b81d69 100644
---- a/sound/soc/qcom/sm8250.c
-+++ b/sound/soc/qcom/sm8250.c
-@@ -70,7 +70,7 @@ static int sm8250_snd_startup(struct snd_pcm_substream *substream)
- 	return qcom_snd_sdw_startup(substream);
- }
- 
--static void sm2450_snd_shutdown(struct snd_pcm_substream *substream)
-+static void sm8250_snd_shutdown(struct snd_pcm_substream *substream)
- {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
-@@ -115,7 +115,7 @@ static int sm8250_snd_hw_free(struct snd_pcm_substream *substream)
- 
- static const struct snd_soc_ops sm8250_be_ops = {
- 	.startup = sm8250_snd_startup,
--	.shutdown = sm2450_snd_shutdown,
-+	.shutdown = sm8250_snd_shutdown,
- 	.hw_params = sm8250_snd_hw_params,
- 	.hw_free = sm8250_snd_hw_free,
- 	.prepare = sm8250_snd_prepare,
 -- 
-2.43.0
-
+Sincerely yours,
+Mike.
