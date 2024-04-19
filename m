@@ -1,245 +1,219 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5027FA59;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C07BE66;
 	Fri, 19 Apr 2024 13:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713534469; cv=none; b=Mf9cHlVgTophYblGBhMjGMKxG7uPUZeEx3Y7iRFYsPK4k0ycXEEDCNvjXpM+Mp6MHSlrFSglbkxnp7zxADYvYmRW+jAbKk6jsXiLtIX5ZL46hvKDkStlm8a56dVjOcxHjHnlucpcXgio8QhOjvounS82BhtAOE1MUm9xFMjr76A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713534469; cv=fail; b=F5LhzAYFON6QDJfpQX9MOj53zVUEB69t/DjocPcn1X+Gbe0svyNCC4m+vkkNTS3UbwOlGC5e9TVX05TWK6Uha0R2I2iz8rjSVoMzf5UVXO6puvDF3tMqVs4wEiRADe6yIO3d9TXqq+dvH/eGmQsP5MdrbC6Hax3pAh/fRUXtgEA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713534469; c=relaxed/simple;
-	bh=7t/9G7xb4CIJYOZHsfANKwbLN6ZfLsMJCoRjLg+TNgM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ul2TEAq3o1E6QlT4GfBQCYMU3IU33e65YZzewY0ZuXQCnaauY443+/92aZ8N5pURsM8gZYeSkLo4RLL5t+mJT7v6jCU9HcYId5iGCNwZaxA/dZajNMBNOrBeXpcAo7jKHxfewtXtrm9BDjOMIFR+pHH1uFqQoIlk09rGLUHl6HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JuKAH9fo; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=Bn+g8RbWmto8aqbTTYM3QjT/t8xRB8bEzlUUSLiGpRE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=D7R9ocfpKqZW/M5HIWT6/jIeqIfs7rhqo/BgeHBtZVeJBVGCWbiV0Wm8kAiIuDZKzGX1C10RrA+ShFunUJVLX0sybaMSwNGB2j297/1HX2oYPtE0cHv9aZRiNsxTsuKAIp4j2YLs69e6G4S3S5Es/JR98oU22YA/MNDEwGrkipE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbUwI2Jj; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuKAH9fo"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a55323f2ef9so247929066b.1;
-        Fri, 19 Apr 2024 06:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713534465; x=1714139265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qw+LAbHXzENBty9Qv/cdMIi07xjBtDcGEnhBj5qMQZ0=;
-        b=JuKAH9foLW0Qeu8EQU1ArbZ4o+objD6VHHtGiwy3zPw/83bhyZk8paWnr8SScyd2Nd
-         hyTX6+q/nDmUhv1G2EydSzCpz9ZnUp8PRlzfc3esvYo9hQndRRGWBn63ztfVNSEhOfU+
-         xuoTztc5CFXIHNJPFTQd5WI2HNIy4iQXgQPPZrA1ZF5Kid+AjiCpa91V9N2/7SVyvUXP
-         fil92W2BuPkq2OBkZORcqvUF1RhHWh53hgmkuLwoYOkzgv9vzvZjVSIqXByJ6gW3Xdp4
-         Itq79U2NtfbkTBVLz131IGNV8aTN4aBqC7H9aPMTquE7ykx9B+4rc7KgCDfrb7EzDxc6
-         pvYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713534465; x=1714139265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qw+LAbHXzENBty9Qv/cdMIi07xjBtDcGEnhBj5qMQZ0=;
-        b=WcjhpuAYqPVeincgXtCGISCc9+NWHZANdbpeqvMPZ3LFBEYuRnYBlHlcdqhCttGUZA
-         om9chYmKmIvoSe5eM/7NRM486G3jAh6k4y1M8rJQjQKovXFU4IPnqcZywR0EvbRAlMWu
-         Ey6HfX7BSdpXIL7tyJcP4evBBQWOX9G5lnpbGiVHIrYscp6J7vPx0SbgcKJ3Gvn8ULjg
-         tIeNZwZ0a3G8D5MjYgeyz+xxoLT4xE8iiHGE3Jjld/BGamGVvx+q8OyfrWO2F05sjXbt
-         K0dxBOCN2jcE1/AAY0TufgRH5/56Rcgo6WM8gB8Qa6tKcevgoeToARPTvSo9WR0q4dWa
-         IQuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWixtyI0jZSTj9UBj6/IIOcVKSVr7EFXuCuuRpKbpaKe3bhTdR7yf5/VmpednEIxtewtMLR5qOEIODgSO6yNCayV4GhbdVCioQOmdGJTJdSwh4smqLUCcx0gU8qyH16moKXcw/yGmu15b3ZUWqgrGSnzLqye1j6k9mQlHUndQ6m+Q8sRLn6NQ==
-X-Gm-Message-State: AOJu0YwEgUwdqg5Od9gV2pRhb8o6rQLgR/JIlCRTkvB5TMExC6G5qSUR
-	lmlIjdifHwK7sHGv80pDYYoJGG7wtHEwgcYVPUG2AVs12dGRW3f1wPnz2b9OdXYzRpPaPoW2+T6
-	sxtjc8+YDzLoJXn2pAiIGFGJFJKg=
-X-Google-Smtp-Source: AGHT+IF4BaBHnNRPBwlqtjlPr2pi8ZujC09NvQVWslSb3woGPjhNvKFBX5YAr0MZ4IQsJo5Cq65T2/CkExfx+ICn38g=
-X-Received: by 2002:a17:907:3e1a:b0:a55:8c0b:bc00 with SMTP id
- hp26-20020a1709073e1a00b00a558c0bbc00mr1118441ejc.62.1713534465533; Fri, 19
- Apr 2024 06:47:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbUwI2Jj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713534467; x=1745070467;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Bn+g8RbWmto8aqbTTYM3QjT/t8xRB8bEzlUUSLiGpRE=;
+  b=GbUwI2JjWHemJVH80Q70K4Wqk63xC2CT+AsHVp9a1uYfMVX8D69Z7w0P
+   ZF4h4FSWvHfJ1OT9/GPc0RhwlHszAdzn6WPjGol9ccGGcu3pAwBTeQIM7
+   2t8nAXiLOfq++PLsa5oaULWKKKKOLWyD3ibWlEz517M2pJWCzDvtRJZKM
+   HrBA4Jmr6n0N/U+B8gOWTDHrktATJlB/Kbs0ESsVpspKcAe/bCgjGiWpq
+   wZ3SZJUiXbubwf1ekLWiy2k5sHYxzbhKcxB+rQjLmWVDdNYXqn0FrKqTy
+   wSKGAx/1+Mj9yN0ccZDbXVDutrmy13e0N0ik6Cl/lBBGBF4chT6mj5daE
+   Q==;
+X-CSE-ConnectionGUID: tzeKkEtVSyiAFi4MwMzSFw==
+X-CSE-MsgGUID: RXHMX6O0Qn6X9WA66JDAzg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="31617651"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="31617651"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:47:47 -0700
+X-CSE-ConnectionGUID: C5jaKtuEQoii+6nMaNlbVg==
+X-CSE-MsgGUID: V2Xqs5cxRJWxUL8f7hje2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="23393679"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Apr 2024 06:47:46 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:46 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:45 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 19 Apr 2024 06:47:45 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 06:47:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B14KeDolmdLo7JjZBMb5qz42jb8Qwt2jRXb4/Rd02/A7ShQyyqQEyTSIH1nQKq6keazbK3UaHImZes3rEmuLmoZYF/H+qhrmxmU/NvyPbE/+zLR32nMN7J25gk63NsDF4VydQH7/xHVpj49r5SenJPQRhnjDv9Etrld2ZZgjzIi8YbAdT8Zfuf9y44c8xigwr5t2LPWKuosBnB7+BFB7QWZkOIDLgcHRitIjfBMrQG8Ab3E4FuoqY4Iou9LNgZkWSBs335dDnFq9KPPMChWxp/eApJyMc+WUH7RmeJksrDYhRrFk7mQS0BLjTPOfTMDxxACZGVyJvK9Tqs/UDNaKsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7aUfhomKlQCqaPylFPObE8eG8DYwRwntHauFYQS+hLM=;
+ b=Q5rko2Skdgkcm06J907YZ7ksG4vpqDBut8BxlLeAl3VxWHzeE/L1UdBFdIFAb3SEdvzM9VZKF6HQAgY5FtfJ/D7tcnqqMbprNrLnJBCw/5YoJEkR0B+1WhOtW4Ipx02IllNEkop2Qr6JQr/JmIgK0I4Is5KyOUK14wniSefbdNL5dzujFwIZp7DAm3Jdlh/+UcbCuk5otiAlmE66Y7EyvPuolBBGTfUh6K8d3sAM71lze2TT2mwQ9Pesuxt9RZVGSvUErWXuBFiNIox5/C5vdgOn33M3FZoocOGW1J4q/4BWRUiB6HoXBzQa/OrtflzlfNxZOs36WLeGN0pnJF3GZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
+ by PH8PR11MB6707.namprd11.prod.outlook.com (2603:10b6:510:1c6::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Fri, 19 Apr
+ 2024 13:47:43 +0000
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::65ce:9835:2c02:b61b]) by CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::65ce:9835:2c02:b61b%7]) with mapi id 15.20.7472.025; Fri, 19 Apr 2024
+ 13:47:43 +0000
+Message-ID: <17c68728-9125-4597-9e3e-764b209edcd7@intel.com>
+Date: Fri, 19 Apr 2024 21:47:34 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/18] mm: improve folio_likely_mapped_shared() using
+ the mapcount of large folios
+To: David Hildenbrand <david@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+	<cgroups@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)"
+	<willy@infradead.org>, Peter Xu <peterx@redhat.com>, Ryan Roberts
+	<ryan.roberts@arm.com>, Yang Shi <shy828301@gmail.com>, Zi Yan
+	<ziy@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Hugh Dickins
+	<hughd@google.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
+	<dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, "Muchun
+ Song" <muchun.song@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>, "Naoya
+ Horiguchi" <naoya.horiguchi@nec.com>, Richard Chang <richardycc@google.com>
+References: <20240409192301.907377-1-david@redhat.com>
+ <20240409192301.907377-6-david@redhat.com>
+ <b05cdac2-84f2-4727-af6c-3b666e6add14@intel.com>
+ <7a8eb8c0-35e5-4f45-bdd5-11a775ae752d@redhat.com>
+Content-Language: en-US
+From: "Yin, Fengwei" <fengwei.yin@intel.com>
+In-Reply-To: <7a8eb8c0-35e5-4f45-bdd5-11a775ae752d@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYCP286CA0325.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3b7::8) To CO1PR11MB4820.namprd11.prod.outlook.com
+ (2603:10b6:303:6f::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240419124506.1531035-1-rilian.la.te@ya.ru> <20240419124506.1531035-3-rilian.la.te@ya.ru>
- <7fc1a557-205e-481c-a1c6-3e0a37f7a7bc@kernel.org>
-In-Reply-To: <7fc1a557-205e-481c-a1c6-3e0a37f7a7bc@kernel.org>
-From: "Konstantin P." <ria.freelander@gmail.com>
-Date: Fri, 19 Apr 2024 16:49:50 +0300
-Message-ID: <CAF1WSuxUZCQNMAdjWUyhG=RV2a8t48NSm9ryoSpd=NTZ3rEEmA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: sc16is7xx: Add compatible line for
- XR20M1172 UART
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Konstantin Pugin <rilian.la.te@ya.ru>, Vladimir Zapolskiy <vz@mleia.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Lech Perczak <lech.perczak@camlingroup.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB4820:EE_|PH8PR11MB6707:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ea7e921-2cc8-402d-4a35-08dc6077493a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: B095LejE0P1j7I/ha2MObppl9hghkYYrs5gfhdjD1wK4aOsiPvIBeQrLJ2OD9TnrCd+XZ+3sU3RLYJX2jed/DqmmTougFETP9FKCZg+upDBOX4Vnns4z8H+9G7vaRJlDi5nEboYXlJnQl6J3pffsrxwtp77GNSjHW1AzalGsbMQtt44UN3DcnRULNjPZSjphskf3fZNUfIj1QVg/3XpFO+0FPC0WGa6qYNJ8vXq09VEt2e5o5cDMALfSmto8uRXskm3/E1XJI83QYyLd9tqB6r8zESDqXFZw/FUXTGxG3C52SHuya0KcyaRD4N8EoU1feCMQwlm+mbYr5Nj6wO4b0NSjuoUHqgy8g166Wt69i9s5J1E0Owc0T79okLEwcZdM9E2bwomvTqt4Ws3q3z5D0mMqFituq/AeUhJ1l7aQttqG4y4ttnFihdcmxNdLUUYF469IstfPMmYZKpqen2aONOUIY+Z8aygrYRln2owLG4JmXd9DxdGAGUywbKUEnxr4Upj7QcShQ+ElDjP8+We53Uo+WFDhlqvHxFGllnmf0yM1Spynd+7dZjjIOjJYzn59NCAIN6RIc3IakHknhtaEzyaws4w9ZbU7Z3Pu8Jxn2vm7AcPmr+AhEdVCcQZJ0aLjqGJ5sChyrUyVZIJ5t+2pCOdfqVFtWKXD4zRNxX1i2dA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGlPdXFWMmoxYVlMMHM5cm9ocWFLQTFiQnlJcG1Na2tOY2Z0RGF6MFNCL0lq?=
+ =?utf-8?B?aHFjb3pUbVo3ZDQ3bW1SRUZ4SEdKbzVRUGtMQ0V4b09OVlVpeVJEWXdLNlBY?=
+ =?utf-8?B?T2xjckltcGN2bXJkNEpLWm5uWDZwUkNZRCtQME9LN0FHeTFwV04wUXpWeVRo?=
+ =?utf-8?B?UGtaWHlHRTcvQVdBNXphVEdKdHVvRXRiUVpnQ0hzOXB6MWlxRFpWcGxzSm1U?=
+ =?utf-8?B?UGFZSEx1WHhaYU9tWkxGbjVrenpHME9wclZxd3ppbll0VkhQWWdjanh3T0pW?=
+ =?utf-8?B?Nm9sSFRnRzV6SVYwTDl0OGpwdy84WHpGWTNSWXpPZzdlb1JTZm1ScGFWTXhY?=
+ =?utf-8?B?akVMWldMS08xM2h0TktUdFJGSEp1dDBTQkNOZ2QybjFJTVJZSkF3OUpoUzIy?=
+ =?utf-8?B?SXlKVTlKUTlLc3liSHZ6aHVmRU0rWnFoSjBiTnZwQkVTOGx5Y2w4ZnVEeSs3?=
+ =?utf-8?B?WjhkL2Z6V1FTWk85Uy9OWGlqOVN6akRsc0FQVFREZG9WTlI0RlhFR1ZoUGNj?=
+ =?utf-8?B?ajJmNDZ0VjlFSS82Mmg4SGwwQnJFVEhpMjlPY09NT2JqWDFMekpXR1l1R2hQ?=
+ =?utf-8?B?Zk9aTFhSU2EwTGY2eC8ybEd1L096ME9PdzdTNFRXU2lPNmJYeWlHd0lJdUlI?=
+ =?utf-8?B?enErMk42UjZOQ3NVZHNlSkdmZkM0dy85OWZ3UG9sVFRsYTlCbjJkYWl0cHBQ?=
+ =?utf-8?B?dEp4WFk3VDRkN1E5Wk9VYTRmUEMrRzJWajNReWJtdjJCSDFhemVMQ2Y5Mkhw?=
+ =?utf-8?B?bEZ5U1NhV0lUaHpqS3cxcTRzcndKVzBBWmk2bE8wVGpDZmNMQnkreEdsaUZy?=
+ =?utf-8?B?dmtFY0RVeVlyTnVCQi8reEVaQVhSTktpSVhWNWY1a0VkMHJFNWFMKzBuNHpP?=
+ =?utf-8?B?dFZGUzY5OGhpMEpRRGhVYU1Wa0k1RjhZUUJmLytvOW5JVlpQcjA5Z1R0NzZX?=
+ =?utf-8?B?VnNET0J3VDhUem4rRlRDMUFmMmpsUVlwbGVpdlhvQjVzSTlTaHFzdDBlMDlO?=
+ =?utf-8?B?UVY0WExGZ2Nra0xxMnlodlVkVW5SeGI1cy9NZXVVU0g1Yk1EOXJyRDJCSWJw?=
+ =?utf-8?B?Y0xpQmo5b2puLzViaHM1TXI1NU41ZHhJUDU2cTE1ei9Ld1YyOStzQzJTZVBp?=
+ =?utf-8?B?d3dkcXNiVjh5cWs1azVlbFh4Mkpaa2s0MXBmekRLRmRTRGp0LzdFcjZTSDFp?=
+ =?utf-8?B?MlM2K1N4WlNDSGNpZnVuSFRtMXlQNXVRdGo3ejFXQVJoSEIvZnk0NDlXUk82?=
+ =?utf-8?B?cThxT2VuWkQwVUFFVUJwUkpMNE9pek9aaFVGbkM2RjRDN3NUWTFZejBhUzRk?=
+ =?utf-8?B?S3d0aExwVTBmSGtOQ3RneXNlSDRqWGlPVDVZN1h0OW9ZSGlCRFlNSXhyRENp?=
+ =?utf-8?B?ZnR6cEg5VkRSRzU4dFVMZWtDUko5TlQ3VThPK3VSN05HYVNiYjkwK1FGeCti?=
+ =?utf-8?B?SFpjNFJVVGIxQmhselhpejN2WCtya2gxWTlHQ1N5OG9PakgyUUV0TFZjMzJ5?=
+ =?utf-8?B?c3dsbVlrWHhyRDRjSWs5d2hQb1lETzB3NXdKQk5zcHhHTy9wcnoxYXIwTEJ6?=
+ =?utf-8?B?Q1RxUWRCSWduQXVSQitOekNmRGdlTXpQT0FTaFBoYk9iV3JlQkl0MGNicUJ0?=
+ =?utf-8?B?NmxkeG8wVjVEWmttVHIzcXVtc2tVcTF6UVhCTWp3RTJGaDRKTE9hNkR6NGUv?=
+ =?utf-8?B?cGo3RWdEQU0wOUV4SzkzL3c0MHhOWjNOdUhkOElKVEQwcHQyZHVqbWZVcURL?=
+ =?utf-8?B?TkpIUFpJcTlPVUhHNmJBMmdodnZHZlNsSUZiRFR0MGpOVUpCNzVITk9JcjJi?=
+ =?utf-8?B?ei9JSEl2V2J3dTVlTHltNE1QMUZ5MWZ5RHB0RUR2cHU4YTdNTkd6clVCTHVv?=
+ =?utf-8?B?b1NGWFAvbXNWRzUrQ3hUY1lYRkxXT3M0ZWJKcUprVTNTTWpFUEhFT25NRTBZ?=
+ =?utf-8?B?T0VHcXJ4V3ZReDlWZlFHTTV3ZGM5M2xHTlorWjVSR0dMUTRoNk40SEF0RWd2?=
+ =?utf-8?B?QzFjVjU5OU5lNDR0azFXelJ2VUtIRzVWOHppTnFobFVoYVhXMnR2dkFsRDZr?=
+ =?utf-8?B?eFNCc1NzcEMzOHAxUTBkc1lRMTVuMDhSOGR5WEV5ZEVBa01sbjc2SVBHRW1U?=
+ =?utf-8?Q?A8DkF2WtxYVo3nfBV/31Y1/RX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ea7e921-2cc8-402d-4a35-08dc6077493a
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 13:47:43.2617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 31PNlTsF/DvDgVBO60eYNKKRMLIdFkH8JxkDtqzY7jp6zy3vBfznMnutp1BImUrEMmidVzgzLZeMAxZTwKCaPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6707
+X-OriginatorOrg: intel.com
 
-On Fri, Apr 19, 2024 at 4:32=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 19/04/2024 14:45, Konstantin Pugin wrote:
-> > From: Konstantin Pugin <ria.freelander@gmail.com>
-> >
-> > Add EXAR XR20M1172 UART compatible line into devicetree documentation.
-> >
-> > Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> > Signed-off-by: Konstantin Pugin <ria.freelander@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.ya
->
-> This is fourth change, no cover letter, no changelog. Patch is trivial
-> but you do not make it easier to understand what is happening here.
->
-> Please provide proper changelog under ---.
->
-> (If you wrote changelog somewhere else and then decided not to send it
-> to us, it is like there was no changelog. I literally do not have it in
-> my inbox).
->
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
->
-> ---
->
-> This is an automated instruction, just in case, because many review tags
-> are being ignored. If you know the process, you can skip it (please do
-> not feel offended by me posting it here - no bad intentions intended).
-> If you do not know the process, here is a short explanation:
->
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
->
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/su=
-bmitting-patches.rst#L577
->
-> Best regards,
-> Krzysztof
->
 
-I am sorry, I used git send-email, and send all 3 patches and cover
-letter. I do not know why it was not ended up in your mailbox.
-Link to all patches (version 4)
-https://lore.kernel.org/linux-serial/20240419124506.1531035-1-rilian.la.te@=
-ya.ru/.
 
-Here is a git send-email log for cover letter:
+On 4/19/2024 5:19 PM, David Hildenbrand wrote:
+> On 19.04.24 04:29, Yin, Fengwei wrote:
+>>
+>>
+>> On 4/10/2024 3:22 AM, David Hildenbrand wrote:
+>>> @@ -2200,7 +2200,22 @@ static inline size_t folio_size(struct folio 
+>>> *folio)
+>>>     */
+>>>    static inline bool folio_likely_mapped_shared(struct folio *folio)
+>>>    {
+>>> -    return page_mapcount(folio_page(folio, 0)) > 1;
+>>> +    int mapcount = folio_mapcount(folio);
+>>> +
+>>> +    /* Only partially-mappable folios require more care. */
+>>> +    if (!folio_test_large(folio) || 
+>>> unlikely(folio_test_hugetlb(folio)))
+>>> +        return mapcount > 1;
+>> My understanding is that mapcount > folio_nr_pages(folio) can cover
+>> order 0 folio. And also folio_entire_mapcount() can cover hugetlb (I am
+>> not 100% sure for this one).  I am wondering whether we can drop above
+>> two lines? Thanks.
+> 
+> folio_entire_mapcount() does not apply to small folios, so we must not 
+> call that for small folios.
+Right. I missed this part. Thanks for clarification.
 
-```
-$ git send-email v4*.patch --cc-cmd=3D'./scripts/get_maintainer.pl
---norolestats v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.pat=
-ch'
-v4-0000-cover-letter.patch
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch
-v4-0002-dt-bindings-sc16is7xx-Add-compatible-line-for-XR2.patch
-v4-0003-serial-sc16is7xx-add-support-for-EXAR-XR20M1172-U.patch
-To whom should the emails be sent (if anyone)?
-Message-ID to be used as In-Reply-To for the first email (if any)?
-(mbox) Adding cc: Konstantin Pugin <ria.freelander@gmail.com> from
-line 'From: Konstantin Pugin <ria.freelander@gmail.com>'
-./scripts/get_maintainer.pl: file 'v4-0000-cover-letter.patch' doesn't
-appear to be a patch.  Add -f to options?
-(cc-cmd) Adding cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-from: './scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: Jiri Slaby <jirislaby@kernel.org> from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: Hugo Villeneuve <hvilleneuve@dimonoff.com> from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> from: './scripts/get_maintainer.pl
---norolestats v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.pat=
-ch'
-(cc-cmd) Adding cc: Lech Perczak <lech.perczak@camlingroup.com> from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D
-<ilpo.jarvinen@linux.intel.com> from: './scripts/get_maintainer.pl
---norolestats v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.pat=
-ch'
-(cc-cmd) Adding cc: Thomas Gleixner <tglx@linutronix.de> from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: linux-kernel@vger.kernel.org from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
-(cc-cmd) Adding cc: linux-serial@vger.kernel.org from:
-'./scripts/get_maintainer.pl --norolestats
-v4-0001-serial-sc16is7xx-announce-support-of-SER_RS485_RT.patch'
 
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To:
-Cc: Konstantin Pugin <ria.freelander@gmail.com>,
-       Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-       Jiri Slaby <jirislaby@kernel.org>,
-       Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-       Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-       Lech Perczak <lech.perczak@camlingroup.com>,
-       =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.inte=
-l.com>,
-       Thomas Gleixner <tglx@linutronix.de>,
-       linux-kernel@vger.kernel.org,
-       linux-serial@vger.kernel.org
-Subject: [PATCH v4 0/3] add support for EXAR XR20M1172 UART
-Date: Fri, 19 Apr 2024 15:45:00 +0300
-Message-Id: <20240419124506.1531035-1-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Regards
+Yin, Fengwei
 
-   The Cc list above has been expanded by additional
-   addresses found in the patch commit message. By default
-   send-email prompts before sending whenever this occurs.
-   This behavior is controlled by the sendemail.confirm
-   configuration setting.
-
-   For additional information, run 'git send-email --help'.
-   To retain the current behavior, but squelch this message,
-   run 'git config --global sendemail.confirm auto'.
-
-Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll):
-OK. Log says:
-Server: smtp.yandex.ru
-MAIL FROM:<rilian.la.te@ya.ru>
-RCPT TO:<ria.freelander@gmail.com>
-RCPT TO:<gregkh@linuxfoundation.org>
-RCPT TO:<jirislaby@kernel.org>
-RCPT TO:<hvilleneuve@dimonoff.com>
-RCPT TO:<andriy.shevchenko@linux.intel.com>
-RCPT TO:<lech.perczak@camlingroup.com>
-RCPT TO:<ilpo.jarvinen@linux.intel.com>
-RCPT TO:<tglx@linutronix.de>
-RCPT TO:<linux-kernel@vger.kernel.org>
-RCPT TO:<linux-serial@vger.kernel.org>
-From: Konstantin Pugin <rilian.la.te@ya.ru>
-To:
-Cc: Konstantin Pugin <ria.freelander@gmail.com>,
-       Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-       Jiri Slaby <jirislaby@kernel.org>,
-       Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-       Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-       Lech Perczak <lech.perczak@camlingroup.com>,
-       =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.inte=
-l.com>,
-       Thomas Gleixner <tglx@linutronix.de>,
-       linux-kernel@vger.kernel.org,
-       linux-serial@vger.kernel.org
-Subject: [PATCH v4 0/3] add support for EXAR XR20M1172 UART
-Date: Fri, 19 Apr 2024 15:45:00 +0300
-Message-Id: <20240419124506.1531035-1-rilian.la.te@ya.ru>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Result: 250
-
-```
+> 
+> Regarding hugetlb, subpage mapcounts are completely unused, except 
+> subpage 0 mapcount, which is now *always* negative (storing a page type) 
+> -- so there is no trusting on that value at all.
+> 
+> So in the end, it all looked cleanest when only special-casing on 
+> partially-mappable folios where we know the entire mapcount exists and 
+> we know that subapge mapcount 0 actually stores something reasonable 
+> (not a type).
+> 
+> Thanks!
+> 
