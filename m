@@ -1,150 +1,124 @@
-Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F380128394;
-	Fri, 19 Apr 2024 13:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.241.18.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB579128366;
+	Fri, 19 Apr 2024 13:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713533757; cv=none; b=YDoVKv7EPzN7QGWuJlFNw3mx3EIEitoaQqdmgnE6un5iU/95L/D/qEsN9/f7hRGEEsg58JPvWuQTQEdlOilBeOxQ2ru/U5KciLKV5nWJH/5i62Sy2zqqI5GwGEgSTGg4sZw4wn+GfGgWeia4JgZ58ODZZMMJH40CCPIfvCJZ8Fo=
+	t=1713533810; cv=none; b=rl/f8fFf9Inrc5j7NNqIRbPLojR2WitFmEm6yHlFt8Pk4/GI/T7OE/pw/1I4tWFYFUlpInD5gHSC7yowBHymVRl0MB+ZOHa9iGGAGH5rChHu1XE8r3tzGys5tDI7wJkagSABLyWcjAr5eHd9skMIi11E5GLElVqJMmKPoUVds5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713533757; c=relaxed/simple;
-	bh=i4sIXMeaI36yZoWPvCFlp+5nI5srTw/kWQQmuEJhk0I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uHpH4ogKSGGBMvUQma2Rocmg6dXg1k28HVtnAPIJoJky509nq4uUwFAIIJptsY0KfcuKt0aqfyCvKbc3Kx2NRBKbmfTnumgBUBfFHzj2XerRLMd/4uiYpVwPJbrCZLhjwYBUqOjwsss4yPSC/A8JShWGxHJHVRpskLhG58MSCk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com; spf=pass smtp.mailfrom=de.adit-jv.com; arc=none smtp.client-ip=93.241.18.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
-Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
-	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 355365204D0;
-	Fri, 19 Apr 2024 15:35:45 +0200 (CEST)
-Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
- (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.37; Fri, 19 Apr
- 2024 15:35:45 +0200
-Date: Fri, 19 Apr 2024 15:35:40 +0200
-From: Hardik Gajjar <hgajjar@de.adit-jv.com>
-To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>,
-	<gregkh@linuxfoundation.org>
-CC: Hardik Gajjar <hgajjar@de.adit-jv.com>, <maze@google.com>,
-	<linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<guofeng.li@gm.com>, <hardik.gajjar@bosch.com>, <eugeniu.rosca@bosch.com>
-Subject: Re: [PATCH] usb: gadget: f_ncm: Fix Kernel Panic due to access of
- invalid gadget ptr
-Message-ID: <20240419133540.GA7264@vmlxhi-118.adit-jv.com>
-References: <20240307161849.9145-1-hgajjar@de.adit-jv.com>
- <8d116b78-9227-4e48-8d37-3a0cb0465dfd@quicinc.com>
- <20240308115506.GA5631@vmlxhi-118.adit-jv.com>
- <4816d981-3955-495c-8fc6-3b9b15ba1689@quicinc.com>
- <20240311120418.GB5631@vmlxhi-118.adit-jv.com>
+	s=arc-20240116; t=1713533810; c=relaxed/simple;
+	bh=U4aqqscz4hwYVD7/WUzWa+gb7dWeA61ua2/mMi8nDpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=h5zLn/Sk9Xfbmqj0Y94DY3K6b03H8BTqqIrvomxQAGj6dl1rZipqY4JzMDgnLeX6fSZz9JFIQp/ftNtjJYmSpztmMwWGZiX2ABhEq3zPFbF8z9KNzmx8XiJAGbnle9AtVok+qUM5pXrqcptnAK6C7O3rN0VhgRqK/vGgoKATQUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iabnmbkm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iabnmbkm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E26C072AA;
+	Fri, 19 Apr 2024 13:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713533810;
+	bh=U4aqqscz4hwYVD7/WUzWa+gb7dWeA61ua2/mMi8nDpM=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=iabnmbkmijCMIS27u2Zn7TNmeWwaeYDvgG1yGndZuHY1abEloEb0oOda1CPtCT9Oh
+	 IBGZRDtQHNQwU+2AMGQMdOEFb9fZgHRVFSwQSDGExUiWFVqLFiFhZRRAgVVnfdfnOO
+	 Hky/RAE7e5V6wb9hl18rLAC9UYBdfdqwgZ2cWeibY0SjHwZh2Gdh+rkrplBSlbUBMG
+	 ceAxvceynXchWT3oaooraaL4O2JwwBB8wEAxDOxMUkhdCX1Oz2QWCq2tQKzM1Ofn0R
+	 HWVzfJae+r7qqFNy6tijzRY+rakDPIrL1k0+JBu9CE8uEMc0Phj0NG5wH6/eP+mZrl
+	 VMVF/PmKcos9g==
+Message-ID: <46a9196a-aca2-413b-8f82-794c19861a51@kernel.org>
+Date: Fri, 19 Apr 2024 15:36:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240311120418.GB5631@vmlxhi-118.adit-jv.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
- hi2exch02.adit-jv.com (10.72.92.28)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/3] dt-bindings: rng: Add vmgenid support
+To: "Landge, Sudan" <sudanl@amazon.co.uk>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, tytso@mit.edu, robh@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sudanl@amazon.com, graf@amazon.com,
+ dwmw@amazon.co.uk, krzysztof.kozlowski@linaro.org, bchalios@amazon.es,
+ xmarcalx@amazon.co.uk
+References: <20240418121249.42380-1-Jason@zx2c4.com>
+ <20240418121249.42380-3-Jason@zx2c4.com>
+ <bf9b59ed-a739-4a06-93db-facb0c89dab6@amazon.co.uk>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <bf9b59ed-a739-4a06-93db-facb0c89dab6@amazon.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 11, 2024 at 01:04:18PM +0100, Hardik Gajjar wrote:
-> On Fri, Mar 08, 2024 at 05:47:37PM +0530, Krishna Kurapati PSSNV wrote:
-> > 
-> > 
-> > On 3/8/2024 5:25 PM, Hardik Gajjar wrote:
-> > > On Thu, Mar 07, 2024 at 11:12:07PM +0530, Krishna Kurapati PSSNV wrote:
-> > > > 
-> > 
-> > [...]
-> > 
-> > > 
-> > > I believe using gether_cleanup altogether may not be an optimal solution.
-> > > The creation and deletion of network interfaces should align with the behavior of each specific network driver.
-> > > 
-> > > For instance, in the case of NCM, the usb0 interface is created upon the creation of a directory
-> > > in config/usb_gadget/gX/functions/ncm.usb0, and it is removed when the corresponding directory
-> > > is deleted. This follows a standard flow observed in many network drivers, where interfaces are
-> > > created during driver loading/probing and deleted during removal.
-> > > 
-> > 
-> > Hi Hardik,
-> > 
-> >  Yeah. I observed this behavior.
-> > 
-> > > Typically, deleting the gadget on every disconnection is not considered a good practice, as it can
-> > > negatively impact the user experience when accessing the gadget.
-> > > 
-> > 
-> > Got it. I was suspecting issues might come up during fast Plug-In/ Plug-Out
-> > cases as setting and cleanup of network interface might take some time.
-> > 
-> > > In our specific scenario, retaining the usb0 network interface has proven to enhance performance
-> > > and stabilize connections. Previous attempts to remove it resulted in an observed increase in time of 300ms,
-> > > particularly at the start of Apple CarPlay sessions.
-> > > 
-> > 
-> > Thanks for this info. Makes sense to keep it in free_inst only. But my
-> > initial doubt only stemmed from the fact that actions taken during bind must
-> > be reversed during unbind.
-> > 
-> > > Furthermore, it's important to highlight that in Qualcomm products and msm kernels, the inclusion of gether_cleanup
-> > > in the unbind process was eventually reverted. While the specific reason for reverting the patch is unknown,
-> > > it suggests that the addition may not have yielded the intended or required results
-> > > 
-> > > Following is the revert patch details in msm-5.4 kernel, if you want check it.
-> > > 
-> > > Revert "usb: gadget: f_ncm: allocate/free net device upon driver bind/unbind"
-> > > 
-> > > This reverts commit 006d8adf555a8c6d34113f564ade312d68abd3b3.
-> > > 
-> > > Move back the allocation of netdevice to alloc_inst(), one-time
-> > > registration to bind(), deregistration and free to rm_inst(). The
-> > > UI update issue will be taken up with proper stakeholders.
-> > > 
-> > > Change-Id: I56448b08f6796a43ec5b0dfe0dd2d42cdc0eec14
-> > > 
-> > 
-> > Agree. This was merged first in 4.19 downstream (most probably for car play
-> > use case only) and then reverted in 5.4. But present 4.19 code in QC still
-> > keeps it in unbind path. The only reason I suspect it was reverted was to
-> > get back on to same page with upstream driver (atleast starting from 5.10,
-> > this was the reasoning to remove gether_cleanup in unbind path and put it
-> > back in free_inst).
-> > 
-> > Thanks,
-> > Krishna,
-> 
-> Thanks Krinshna for your comment
-> Come to the first comment from Greg. 
-> 
-> > What commit id does this fix?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> >Hi Greg,
-> 
-> >The network device parent is not being properly cleaned up during unbind since the \
-> >initial commit of the driver. In that case, should I mention the First commit ID of \
-> >the driver as broken commit or would you advice to say, For example "Clean up netdev \
-> >parent in unbind".
-> 
-> >Thanks,
-> >Hardik
-> 
-> @Greg, 
-> 
-> Can you please provide guidance on how to proceed? Should I update the commit message to exclude the term 'Fix' in the title?
-> 
-> Thanks,
-> Hardik
+On 19/04/2024 15:31, Landge, Sudan wrote:
+>> +...
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index aa3b947fb080..c84ac9258a48 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -18463,6 +18463,7 @@ M:      "Theodore Ts'o" <tytso@mit.edu>
+>>   M:     Jason A. Donenfeld <Jason@zx2c4.com>
+>>   S:     Maintained
+>>   T:     git https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git
+>> +F:     Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+>>   F:     drivers/char/random.c
+>>   F:     drivers/virt/vmgenid.c
+>>
+>> --
+>> 2.44.0
+>>
+> Since I am on leave, looping in Babis to review/verify the patches.
 
-Hi Greg,
+You can bounce emails to Babis. Or ask him to use lei/lore. No need to
+Cc all of us with such forward. This is just unnecessary noise in our
+mailboxes.
 
-Should we move forward if there are no further comments?
+Especially if you want to get some reviews...
 
-Thanks,
-Hardik
+Best regards,
+Krzysztof
+
