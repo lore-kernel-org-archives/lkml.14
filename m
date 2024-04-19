@@ -1,222 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52378B49
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 08:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFA1757F7;
+	Fri, 19 Apr 2024 08:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517177; cv=none; b=gIvRhikoXx8wOopmuAurPI6WV6Q8Pk3uyHvr7Pji2XWkEBwT5Z9xusu6OJCGUBMTd7MxYUuVwWhSD75s9+2TvoLf9bkuNixES4mK4dRpR892JbzDdzevfTenS/DesP48optBs7pQOxnP/f58mvdDI2NtzPOtYu15bV+dKx/o4ps=
+	t=1713517188; cv=none; b=iqb7oyhIMYo8ItjbERUbsGTMgP25xhp4lOsC09vljMSHNp1T10OU2ZvzRDg9fDH7DPqMzYBhunDe8UtvDu7T8I0uqsWMD8qCzGXvojKRkF0Vqb+TFx4/rc05/etCLoK03EYgyfHxmGE0pn5agxo0N9SwOaj3j9ND1jl3sFGqZxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517177; c=relaxed/simple;
-	bh=6QsTyro7o0g/mAgLz5I9OAAjavd5uhJCINBH9wpklts=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ofMpfi4ZZK74z2kGCDJpbDVVKnMT3hHlNtMlKe64ma3lGknwq7sw3/LKr2Q2l2/hOfQxIKXDCry04WGLHUroGvl0KJ9SRVvo0nAq+LOFFsRcyNx2+hRHxdWo2nCl00AMdxKpN6q0flDS+ESzbTkk+k/2lyLumIm+5IGsIn12y5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/WYxaGC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/WYxaGC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713517174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AbYCbT6M2EaJK1Q6vJ2IcYCS7NUptHbLc4XrSU4QEHw=;
-	b=d/WYxaGC+qfhl68HamfSmi8yCsI0Oo3MKfOxxtzn+RwrWz/4Zu5J6ywF7YF2joPfGki2Fs
-	IRu9BqDA9tQytPIj4uMMqM0ZVkRSezQ/I0BJqrkiZNlthXnycCQ/hI8NhRoos0U+Ebl6Iy
-	jkTfu+GCBvfIf/2BxO8lXe4lxQSbleo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-PvhzoT8IPsW6Z41sicIZIw-1; Fri,
- 19 Apr 2024 04:59:30 -0400
-X-MC-Unique: PvhzoT8IPsW6Z41sicIZIw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EE12C1C294CE;
-	Fri, 19 Apr 2024 08:59:28 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BC7992033A7D;
-	Fri, 19 Apr 2024 08:59:28 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	seanjc@google.com,
-	rick.p.edgecombe@intel.com
-Subject: [PATCH 2/6] KVM: Add KVM_PRE_FAULT_MEMORY vcpu ioctl to pre-populate guest memory
-Date: Fri, 19 Apr 2024 04:59:23 -0400
-Message-ID: <20240419085927.3648704-3-pbonzini@redhat.com>
-In-Reply-To: <20240419085927.3648704-1-pbonzini@redhat.com>
-References: <20240419085927.3648704-1-pbonzini@redhat.com>
+	s=arc-20240116; t=1713517188; c=relaxed/simple;
+	bh=nrVql+dhu47+Yo4J4ftWOub8YL90A762db0V4CFPkks=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M4LhrhbYIg3CmkELe/1g4ITPipIffJattVeoXIDuHNg6YfAe/Fci/4vctgAwGnLtBfHcCGwMw08MMTMqUDfjnWLTYOCD62Dl8jsCq14ZPkV+npxE10DOAKD+kPm8jqighNmLW+9X9MYa/bhM7GvHkYlJf08yIKxsIS6qts639E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VLT685D5cz1N8Q2;
+	Fri, 19 Apr 2024 16:56:48 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id A0259140124;
+	Fri, 19 Apr 2024 16:59:43 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 19 Apr 2024 16:59:43 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <tj@kernel.org>, <lizefan.x@bytedance.com>, <hannes@cmpxchg.org>
+CC: <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] cgroup: avoid invalid loop in cgroup_no_v1()
+Date: Fri, 19 Apr 2024 08:53:16 +0000
+Message-ID: <20240419085316.957277-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+We should break the for_each_subsys loop after the token matches
+the name of subsys and cgroup_no_v1_mask is set.
 
-Add a new ioctl KVM_PRE_FAULT_MEMORY in the KVM common code. It iterates on the
-memory range and calls the arch-specific function.  Add stub arch function
-as a weak symbol.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Message-ID: <819322b8f25971f2b9933bfa4506e618508ad782.1712785629.git.isaku.yamahata@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 ---
- include/linux/kvm_host.h |  5 ++++
- include/uapi/linux/kvm.h | 10 +++++++
- virt/kvm/Kconfig         |  3 ++
- virt/kvm/kvm_main.c      | 63 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 81 insertions(+)
+ kernel/cgroup/cgroup-v1.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 8dea11701ab2..9e9943e5e37c 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2478,4 +2478,9 @@ long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages
- void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
- #endif
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index 520a11cb12f4..b9dbf6bf2779 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -1335,6 +1335,7 @@ static int __init cgroup_no_v1(char *str)
+ 				continue;
  
-+#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
-+long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
-+				    struct kvm_pre_fault_memory *range);
-+#endif
-+
- #endif
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 2190adbe3002..917d2964947d 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -917,6 +917,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_MEMORY_ATTRIBUTES 233
- #define KVM_CAP_GUEST_MEMFD 234
- #define KVM_CAP_VM_TYPES 235
-+#define KVM_CAP_PRE_FAULT_MEMORY 236
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1548,4 +1549,13 @@ struct kvm_create_guest_memfd {
- 	__u64 reserved[6];
- };
- 
-+#define KVM_PRE_FAULT_MEMORY	_IOWR(KVMIO, 0xd5, struct kvm_pre_fault_memory)
-+
-+struct kvm_pre_fault_memory {
-+	__u64 gpa;
-+	__u64 size;
-+	__u64 flags;
-+	__u64 padding[5];
-+};
-+
- #endif /* __LINUX_KVM_H */
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index 754c6c923427..b14e14cdbfb9 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -67,6 +67,9 @@ config HAVE_KVM_INVALID_WAKEUPS
- config KVM_GENERIC_DIRTYLOG_READ_PROTECT
-        bool
- 
-+config KVM_GENERIC_PRE_FAULT_MEMORY
-+       bool
-+
- config KVM_COMPAT
-        def_bool y
-        depends on KVM && COMPAT && !(S390 || ARM64 || RISCV)
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 38b498669ef9..51d8dbe7e93b 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -4379,6 +4379,55 @@ static int kvm_vcpu_ioctl_get_stats_fd(struct kvm_vcpu *vcpu)
- 	return fd;
- }
- 
-+#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
-+static int kvm_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
-+				     struct kvm_pre_fault_memory *range)
-+{
-+	int idx;
-+	long r;
-+	u64 full_size;
-+
-+	if (range->flags)
-+		return -EINVAL;
-+
-+	if (!PAGE_ALIGNED(range->gpa) ||
-+	    !PAGE_ALIGNED(range->size) ||
-+	    range->gpa + range->size <= range->gpa)
-+		return -EINVAL;
-+
-+	if (!range->size)
-+		return 0;
-+
-+	vcpu_load(vcpu);
-+	idx = srcu_read_lock(&vcpu->kvm->srcu);
-+
-+	full_size = range->size;
-+	do {
-+		if (signal_pending(current)) {
-+			r = -EINTR;
+ 			cgroup_no_v1_mask |= 1 << i;
 +			break;
-+		}
-+
-+		r = kvm_arch_vcpu_pre_fault_memory(vcpu, range);
-+		if (r < 0)
-+			break;
-+
-+		if (WARN_ON_ONCE(r == 0))
-+			break;
-+
-+		range->size -= r;
-+		range->gpa += r;
-+		cond_resched();
-+	} while (range->size);
-+
-+	srcu_read_unlock(&vcpu->kvm->srcu, idx);
-+	vcpu_put(vcpu);
-+
-+	/* Return success if at least one page was mapped successfully.  */
-+	return full_size == range->size ? r : 0;
-+}
-+#endif
-+
- static long kvm_vcpu_ioctl(struct file *filp,
- 			   unsigned int ioctl, unsigned long arg)
- {
-@@ -4580,6 +4629,20 @@ static long kvm_vcpu_ioctl(struct file *filp,
- 		r = kvm_vcpu_ioctl_get_stats_fd(vcpu);
- 		break;
+ 		}
  	}
-+#ifdef CONFIG_KVM_GENERIC_PRE_FAULT_MEMORY
-+	case KVM_PRE_FAULT_MEMORY: {
-+		struct kvm_pre_fault_memory range;
-+
-+		r = -EFAULT;
-+		if (copy_from_user(&range, argp, sizeof(range)))
-+			break;
-+		r = kvm_vcpu_pre_fault_memory(vcpu, &range);
-+		/* Pass back leftover range. */
-+		if (copy_to_user(argp, &range, sizeof(range)))
-+			r = -EFAULT;
-+		break;
-+	}
-+#endif
- 	default:
- 		r = kvm_arch_vcpu_ioctl(filp, ioctl, arg);
- 	}
+ 	return 1;
 -- 
-2.43.0
-
+2.34.1
 
