@@ -1,124 +1,157 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134F973518;
-	Fri, 19 Apr 2024 09:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43DC38D;
+	Fri, 19 Apr 2024 09:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713519731; cv=none; b=hpSKboYPx3uovijgJI8ycTyG+5YRmXtS73l1hQObzSFxFC8RuboDw+qL/qrdO43/hAtaxHP9WzAcPCCHNJHvQ4Hlo0QY3d2foE/akJHn45h9c1vtKlVcG164afno1KmHWq9BHCv5n0KbRP4z9tNeh6dQW8px1SnIMh8TPw/Ad0o=
+	t=1713519767; cv=none; b=AZ9pQhGUGEqf9pD4fxJ6uG17M/9whRJVIyC1+P/Boy4hq7ZRNi1OgZXbfEVxUu5qcAiCCFPZYNHw1j3NO16P1OTzjOm0Bdohb4DtUbu081NuB7eM8AwUKMfjhGEHPz49ObVvNrrTOqPYUgrSDfv5s6n9t+j7jTRvwjSbc9zTkHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713519731; c=relaxed/simple;
-	bh=PEwMW4CFu9H07YyRLwf9wZ/6wuK3fPveGR5w/PSbNug=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KlQBnTTIZ6/C0bgzzOZbhy1lL8B1RGCBCsadWTb4cYF+9u1bHIDo5c/lcHHtdW9IUkZvtzUyyc9uEdI/8SqYoe2a/dfVAxd/lcLvMat3qECT1KO8LAWESiDQsSHf5c4MqB82Us62U6XHQGBRrfOEu3qWZZfDh4dB1nDqDB2coxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VLV6F3FLlz4f3jJ9;
-	Fri, 19 Apr 2024 17:41:57 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B58ED1A0179;
-	Fri, 19 Apr 2024 17:42:04 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHGBFfPCJmFDWMKQ--.63826S4;
-	Fri, 19 Apr 2024 17:41:52 +0800 (CST)
-From: linan666@huaweicloud.com
-To: tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2] blk-iocost: do not WARNING if iocg has already offlined
-Date: Fri, 19 Apr 2024 17:32:57 +0800
-Message-Id: <20240419093257.3004211-1-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1713519767; c=relaxed/simple;
+	bh=LYzTc/eaLc+xLzg4IoyEUHl2csluo0qUvLDBP6KWlOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WPx41pkY4nEFQQa6AXbtE8YOzsnn6YnFhRHLmSvyGbYtbz2jtueW3Ak0zkJAW0IjDLCYjcVmiiyFZPLuR/KVgldTNRZ4Bnd/hEcTwvaf6GNyLv6fhkiN/1vGscftK3fvGDufPJR55EaPqOMKJYvXaxgmZ39GJB/XbfBlheyauWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 578292F;
+	Fri, 19 Apr 2024 02:43:12 -0700 (PDT)
+Received: from [10.57.77.69] (unknown [10.57.77.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 280F53F792;
+	Fri, 19 Apr 2024 02:42:42 -0700 (PDT)
+Message-ID: <cd49b117-a1b2-4cd8-b58d-12baee8abac2@arm.com>
+Date: Fri, 19 Apr 2024 10:42:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHGBFfPCJmFDWMKQ--.63826S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7WryxtrW3tF45tFykCFy5twb_yoW8uF13pr
-	45KwnruF1Utr12ka1Dt3Z2q3409a1rWws3J34xWrZ8Za43ur1Iq3Wv9w4FvFy0qF95CFZ5
-	ZF48trWSy3WUCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
-	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSApUUUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 04/16] thermal: gov_bang_bang: Fold
+ thermal_zone_trip_update() into its caller
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+References: <13515747.uLZWGnKmhe@kreacher> <3827124.kQq0lBPeGt@kreacher>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <3827124.kQq0lBPeGt@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Li Nan <linan122@huawei.com>
 
-In iocg_pay_debt(), warn is triggered if 'active_list' is empty, which
-is intended to confirm iocg is avitve when it has debt. However, warn
-can be triggered during a blkcg or disk is being removed, as
-iocg_waitq_timer_fn() is awakened at that time.
 
-  WARNING: CPU: 0 PID: 2344971 at block/blk-iocost.c:1402 iocg_pay_debt+0x14c/0x190
-  Call trace:
-  iocg_pay_debt+0x14c/0x190
-  iocg_kick_waitq+0x438/0x4c0
-  iocg_waitq_timer_fn+0xd8/0x130
-  __run_hrtimer+0x144/0x45c
-  __hrtimer_run_queues+0x16c/0x244
-  hrtimer_interrupt+0x2cc/0x7b0
-ps: This issue was got in linux 5.10, but it also exists in the mainline.
+On 4/10/24 17:06, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Fold thermal_zone_trip_update() into bang_bang_control() which is the
+> only caller of it to reduce code size and make it easier to follow.
+> 
+> No functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/thermal/gov_bang_bang.c |   75 +++++++++++++++++-----------------------
+>   1 file changed, 33 insertions(+), 42 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/gov_bang_bang.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/gov_bang_bang.c
+> +++ linux-pm/drivers/thermal/gov_bang_bang.c
+> @@ -13,47 +13,6 @@
+>   
+>   #include "thermal_core.h"
+>   
+> -static void thermal_zone_trip_update(struct thermal_zone_device *tz,
+> -				     const struct thermal_trip *trip,
+> -				     bool crossed_up)
+> -{
+> -	struct thermal_instance *instance;
+> -
+> -	dev_dbg(&tz->device, "Trip%d[temp=%d]:temp=%d:hyst=%d\n",
+> -		thermal_zone_trip_id(tz, trip), trip->temperature,
+> -		tz->temperature, trip->hysteresis);
+> -
+> -	list_for_each_entry(instance, &tz->thermal_instances, tz_node) {
+> -		if (instance->trip != trip)
+> -			continue;
+> -
+> -		if (instance->target == THERMAL_NO_TARGET)
+> -			instance->target = 0;
+> -
+> -		if (instance->target != 0 && instance->target != 1) {
+> -			pr_debug("Unexpected state %ld of thermal instance %s in bang-bang\n",
+> -				 instance->target, instance->name);
+> -
+> -			instance->target = 1;
+> -		}
+> -
+> -		/*
+> -		 * Enable the fan when the trip is crossed on the way up and
+> -		 * disable it when the trip is crossed on the way down.
+> -		 */
+> -		if (instance->target == 0 && crossed_up)
+> -			instance->target = 1;
+> -		else if (instance->target == 1 && !crossed_up)
+> -			instance->target = 0;
+> -
+> -		dev_dbg(&instance->cdev->device, "target=%ld\n", instance->target);
+> -
+> -		mutex_lock(&instance->cdev->lock);
+> -		instance->cdev->updated = false; /* cdev needs update */
+> -		mutex_unlock(&instance->cdev->lock);
+> -	}
+> -}
+> -
+>   /**
+>    * bang_bang_control - controls devices associated with the given zone
+>    * @tz: thermal_zone_device
+> @@ -90,7 +49,39 @@ static void bang_bang_control(struct the
+>   
+>   	lockdep_assert_held(&tz->lock);
+>   
+> -	thermal_zone_trip_update(tz, trip, crossed_up);
+> +	dev_dbg(&tz->device, "Trip%d[temp=%d]:temp=%d:hyst=%d\n",
+> +		thermal_zone_trip_id(tz, trip), trip->temperature,
+> +		tz->temperature, trip->hysteresis);
+> +
+> +	list_for_each_entry(instance, &tz->thermal_instances, tz_node) {
+> +		if (instance->trip != trip)
+> +			continue;
+> +
+> +		if (instance->target == THERMAL_NO_TARGET)
+> +			instance->target = 0;
+> +
+> +		if (instance->target != 0 && instance->target != 1) {
+> +			pr_debug("Unexpected state %ld of thermal instance %s in bang-bang\n",
+> +				 instance->target, instance->name);
+> +
+> +			instance->target = 1;
+> +		}
+> +
+> +		/*
+> +		 * Enable the fan when the trip is crossed on the way up and
+> +		 * disable it when the trip is crossed on the way down.
+> +		 */
+> +		if (instance->target == 0 && crossed_up)
+> +			instance->target = 1;
+> +		else if (instance->target == 1 && !crossed_up)
+> +			instance->target = 0;
+> +
+> +		dev_dbg(&instance->cdev->device, "target=%ld\n", instance->target);
+> +
+> +		mutex_lock(&instance->cdev->lock);
+> +		instance->cdev->updated = false; /* cdev needs update */
+> +		mutex_unlock(&instance->cdev->lock);
+> +	}
+>   
+>   	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
+>   		thermal_cdev_update(instance->cdev);
+> 
+> 
+> 
 
-The warn in this situation is meaningless. Since this iocg is being
-removed, the state of the 'active_list' is irrelevant, and 'waitq_timer'
-is canceled after removing 'active_list' in ioc_pd_free(), which ensure
-iocg is freed after iocg_waitq_timer_fn() returns.
+LGTM
 
-Therefore, add the check if iocg has already offlined to avoid warn
-when removing a blkcg or disk.
-
-Signed-off-by: Li Nan <linan122@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
----
-v2: 
- - Indicate in the message that there is also an issue with deleting
-   the disk.
- - add comment for check pd.online.
-
- block/blk-iocost.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index baa20c85799d..690ca99dfaca 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1439,8 +1439,11 @@ static void iocg_pay_debt(struct ioc_gq *iocg, u64 abs_vpay,
- 	lockdep_assert_held(&iocg->ioc->lock);
- 	lockdep_assert_held(&iocg->waitq.lock);
- 
--	/* make sure that nobody messed with @iocg */
--	WARN_ON_ONCE(list_empty(&iocg->active_list));
-+	/*
-+	 * make sure that nobody messed with @iocg. Check iocg->pd.online
-+	 * to avoid warn when removing blkcg or disk.
-+	 */
-+	WARN_ON_ONCE(list_empty(&iocg->active_list) && iocg->pd.online);
- 	WARN_ON_ONCE(iocg->inuse > 1);
- 
- 	iocg->abs_vdebt -= min(abs_vpay, iocg->abs_vdebt);
--- 
-2.39.2
-
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
