@@ -1,128 +1,144 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2044.outbound.protection.outlook.com [40.107.236.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C3112E1D4;
-	Fri, 19 Apr 2024 14:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713535311; cv=fail; b=XYU/e3sn/nDDs5evJSCAP+C+QPjRke7fPrX2P21hBn/zYulcNHcVkz6H7n+BXZgNwDsAKFsh2hmPGSTqyq5XKSdHprBWkLN7UTjW675WlthE3Nfj2RFupedBms30UO9Bg1jM+iJ+nixNV70TosjYeaCjp2TLiPAbjg4i0YfwDRw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713535311; c=relaxed/simple;
-	bh=GNKA3A+W/mSEVPUWXNyyEyNjfSpyCV5NgwFYMjW1ceI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QrQVk11sCAatHx/faFa2Dnar9zoaTp0xL501KJgWIZ+Z1GJQGlCeCT9DG4NwuUr/YXCmKCa64w4rn1ayYBmRoStHGKS9/0qi+I8RheIOwgjEl3pdzO5aTN4y6zHa40lTymt3UErO0ir3ksBQmRMQSDxhpSbLfP9OhVawVCDIvCk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Y/l2iike; arc=fail smtp.client-ip=40.107.236.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628212DD8F
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 14:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713535319; cv=none; b=mitljIthqSxB0HoE7Jo192bhjt0t9LqK3+lWGF8F4yyP6RgNGTn7Fv5WHENJarMs/J6vz+r0ZxA3J0LuY8buGJXyH2/3OYlMEwV9kJOBl4V6r7XDIFtOHLHQ99H3kYYwGNfc1O2SAlinCZpCpCEaPVnsBxchcJ6LWly+dc+fGIQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713535319; c=relaxed/simple;
+	bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iDG/8SdcPGyuN2jnwjU+CpvacybMWirKnUk6ZlRLJtjg4hGaeTBTBiCamwvN/q/6t+Tjpz32MzhTkzTMsVrvQB/IBdnwzd0cIo6wNvQaYuaB0GrAFgVtaxCiwu3qf79cZIQp0anvAJ24oXyfosdqfYfSQNUhdTgV+SY64yCQZ6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bgeDXqXf; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Y/l2iike"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fK2ESJ9pz3McGaUVMEaFzxzfhKnbJj8ny6U7ILRoF5BY6Q2MPttm6WUhAjqL/1M6JvnwyaagQKiJ1wvCue+XsxUkq42aYFN+ywuxHcBRi29PvPaPpTx3TUdPFRR/AAII0+D0W9XFxQvhdrBWyUkcPSJcoC2RqHLwlW/qMKLMMeL9MyUhlfNDMmKuUFnx4o0eGnx+y79fqZUovD45NnEwgPMk/SdgCd4wuqSwKz2VT8vyZhjaKIuYhsp9vlIvpnvUaUTvNYZKact9spgnbF/qBh7254KQjBY2u9xhxmPdgwRSYh62Ve53HFCe7Nt1pV/ohR9MsGbTAHIBE5E06JPumQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xYVs89ZcQogWMm/vO01v6Pod+WSO+MwQ/DkhPWtiFzw=;
- b=gWZ2SZu2NrNhRGJJS1yCJM1jNp/+rYzam3LAqSX74TgNkWzibBGPtbHu+OHj6jTAUmZwiZizOgHNBQ0MTEYese7nrsIzDcH9plAhkv4zvNJbEj9oL801gQ9QkMveuRbjGcrrzG9MAcC0XtOokiSvvHP8lNObrswGtnbRE6bVsyBQ7m3KXZAP4+xZNu+gFgoJsOKcqdBtkphFK/r8AXzhTpTvVLDj6uFqZrXXBPfNR2ivqIq6opJzFaBwdsL+As+VeS/euWGOzmjIo2sA7NdPPPq19YVtCl9O/2/m+lb7YE4rZyan1p3/gfaYH9Q1Jl9VxSu3c+Tv2sT1/DLQbCAugA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xYVs89ZcQogWMm/vO01v6Pod+WSO+MwQ/DkhPWtiFzw=;
- b=Y/l2iike6OtFB1lUQJJvhdPVwBaXa5d4doMHfLkhbGmsNXDN2cRVDi/npfMGb77yiaPAq2PY3VpgOVMhQgDEN68oOqS35CwGFlcNt2oC07tcCJTJhT3mgUOoP8Is9mGHkjS2IVBnvCMaucpeh6VOYm3zKWWNJtMG5TXeDhCBRkY=
-Received: from CH5P220CA0022.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1ef::28)
- by BY5PR12MB4146.namprd12.prod.outlook.com (2603:10b6:a03:20d::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 14:01:45 +0000
-Received: from CH1PEPF0000A348.namprd04.prod.outlook.com
- (2603:10b6:610:1ef:cafe::51) by CH5P220CA0022.outlook.office365.com
- (2603:10b6:610:1ef::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.31 via Frontend
- Transport; Fri, 19 Apr 2024 14:01:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000A348.mail.protection.outlook.com (10.167.244.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 14:01:45 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 19 Apr
- 2024 09:01:40 -0500
-From: Robert Richter <rrichter@amd.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] cxl: Fix use of phys_to_target_node() for x86
-Date: Fri, 19 Apr 2024 16:01:09 +0200
-Message-ID: <20240419140109.1996590-1-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bgeDXqXf"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e40042c13eso16754505ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 07:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713535317; x=1714140117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
+        b=bgeDXqXfN1uesqpIYgPTOCg9HwUKDMNUPjTcuVeYbshVLThDQb3rqo5EdeT4zH2has
+         0YQuvYzjuObhlAvYUCYq58pXYzoNJ9taFs7X4NuMtuziljM3KEHmMzA6yz0Lcq86seLO
+         VuX21HEcTE0FrBsx8osyoCksQEs7rySRpznzk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713535317; x=1714140117;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60bj08fNOYkyzGjFmyldnZhisQMFjo0YMqTtaPxORRQ=;
+        b=XzO3fGrgGxpbO2lGVyYUb1xQOuRp5zmTlkjWTyGz8LPZ0hldOeFRsJQbevhoTIm1gO
+         pzqIKuiDB1mbX2zchDR59yMlmVZu+6/URhvRbNLqdQtfF0xruJgb7z4PTnDQML0318sj
+         7WBUIehC6zvAHaJyEk5k5b8mcqg5vKNe4eHDYCASQ5ciwbO1B/3hJo3fAoyD/9W6PSvD
+         EDaxrdbIHVwGYYLkqXEoJs04uj8XkqvPcy7fLQkko2mwwmoHXSCGh2piZlov146erhk8
+         w0mWT8CXWYf3LtIv8N3aPnmiI5B8A+rfACvKRqM70Vv4wSXvJ/TKu0FK16a1kl+1PcEJ
+         2Aow==
+X-Forwarded-Encrypted: i=1; AJvYcCUTPjB8PL5ucqYNQeauVzfFraOTwDxD+t2Wtwl30VNx8+O1atz+rHqhBJliTKnymfRsKMbv+7YIwqrqJzGsdvbbJCRaemdPpVZAZYqD
+X-Gm-Message-State: AOJu0YwYa97saHjqLyVOm1Cl3JFi6tpT1vFexUQvSqIGX/RDRBggXIIP
+	tcRZtLcZO5w7HKBpQ9iWbqE3BkI2ZHGI+xt4ad3LlRbY/KSloQqqmGTYmMOohA==
+X-Google-Smtp-Source: AGHT+IFxKIaiTQQnHHvaeNar935ymXBnwNgd3CdnYSm3XwjOGr+DFuZ5d0WL0a9FfnSo5+zx+j7sMg==
+X-Received: by 2002:a17:902:b486:b0:1e2:718d:f290 with SMTP id y6-20020a170902b48600b001e2718df290mr2175867plr.67.1713535317611;
+        Fri, 19 Apr 2024 07:01:57 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f12-20020a170902684c00b001e284b9b28asm3410545pln.129.2024.04.19.07.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 07:01:56 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/5] string: Prepare to merge strcat KUnit tests into string_kunit.c
+Date: Fri, 19 Apr 2024 07:01:52 -0700
+Message-Id: <20240419140155.3028912-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240419140017.work.012-kees@kernel.org>
+References: <20240419140017.work.012-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1549; i=keescook@chromium.org;
+ h=from:subject; bh=SOokn6hAfXRfXzM8wtwZF973hyHYm8001yb/KucN+yA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmInlS+imGbP3YLDk5RSzjCVBlFhXpXtJzQQJGm
+ h0NyeIBVWGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZiJ5UgAKCRCJcvTf3G3A
+ JkPcD/9hwNQiymaqHA9VWj14VNEZE4Km6N9feNZHjDYp+2MAxj8NUXO81sPxxv/w2XR7erfCHMP
+ 4SbtoE+nGHXRDbSioIkyVAsSJDQlZbqngPnPLgUQ1a3NQh4BjcA05Tf8Z/nqFE+3VLydiEA3u+3
+ nEnON5PZEO7MJa4g2DXBGhonjgRXeQDl5WNdcUfQpUFJw92KDfV485RnQfHHGwV9iDSmmdBo6GY
+ QOzU2WbovxDaNTXHQ21Ssj7sQBDH9uHCfSU2p+50nPtyRV86sXi0DxVRAWxOZ1FhGFWRk57h0Js
+ tPxMRojOAdzBhiP9uYcZY+C6dFXwOCyx9yfq1UQZx0h7gMAnVX31bzRq79eoEiUQ1aU3V7Wl5Ta
+ a1bn/Wu28FsrUuNecO7kgJKb5C3aVkN0J7ibAd7outSSPcJmZoTLFPVh+pvOSJXxYlZK5gqZyjB
+ Df5EzAsWhnqD8FTXVSGc4/8b+1MvTzFvDfRiBZz9T+eiM7esjtiTqDxTzUOxTRdZ1bAgkanAo0k
+ 4jr5uy8WnrwVw+tDV0V7LvNr+VA8C8DopWurfl2UvPZg/qA8PpB1cssFyFAX0OyCI8engzk69mZ
+ kzm1SjnJC/DDEs6jvqMk2HhyuSJQF1BUCfsWaJvZABj8yHZgozyTzOyyemz9lg5ZVMus2r+apiR Wrz7TD5G/7dJ8qA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A348:EE_|BY5PR12MB4146:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7fa1408-88e1-45e0-fcda-08dc60793f84
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	vmvPWxFNz67oOLswDzAJtrtn3EeS5aZYt5HcggBbxlKmIzzp57Pnb8ovUihv5tb7tQcCnvoIix+NHbWE4hcaomzuHP/8IIbdbpO2KQuGWWoRwS61IArgdC5+F1JuT2ijzDgGlQRmR9UvzzqcOoOwERav+UJMwlWlDebZsE1ScL4SSlzkfQ/0oDZrz26qjSpaJ/XIfxTqHIlBPAlVwak7ejs/fa6s905IPCbiYx9pC9bnF4IopHu8IWO1JOvqPFLT/U+lB6J7OkI4iPBaqCcZi3YSd+p4jgWsY6N8blkwzIrtG2iOO1e9ck2cLnU4zaW3ABuEWB+IS5+5iKgB+EgmCT+d2bWSutayhhaulKuoj5Lkz0QbCdNFK9UTb82S2v1AC1HfFIYqQhzo3Ycc6UB0XmfRblrrEgrXAYnq+1ZQSlEQKqSUCcf554qz/eTZ59ozzzFX9cZunD0gdKR7oJq2kv47iqopkIRp9GZ3LZj3BOgTg59BpV9DHXtm9RA1m2T9yBvGo9K7+hpxVsJvlxAGvao7Dk5gC9x9oAkdojOqoq5hBmZ8Nk2P/IDF3MWMcpepaVryISRVk2uAd/pPKjHoh1at/abeZuOSxPXiOynBw+4cXF7eJmR/nK/J5xcuN84ffLjdHFdej2m5LbKxwU+/G3uSTsdWfcrSgoZu2Cniyx/B5z4FwCIzAztlhNJqhduytheCm1EB72fxXKKjMSX+UXQfNoXPFxO845+/BR5r0NSvr/ORa3qP7EE6kWg+QbCv
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 14:01:45.1350
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7fa1408-88e1-45e0-fcda-08dc60793f84
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A348.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4146
 
-The CXL driver uses both functions phys_to_target_node() and
-memory_add_physaddr_to_nid(). The x86 architecture relies on the
-NUMA_KEEP_MEMINFO kernel option enabled for both functions to work
-correct. Update Kconfig to make sure the option is always enabled for
-the driver.
+The test naming convention differs between string_kunit.c and
+strcat_kunit.c. Move "test" to the beginning of the function name.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/cxl/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: linux-hardening@vger.kernel.org
+---
+ lib/strcat_kunit.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 67998dbd1d46..6140b3529a29 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -6,6 +6,7 @@ menuconfig CXL_BUS
- 	select FW_UPLOAD
- 	select PCI_DOE
- 	select FIRMWARE_TABLE
-+	select NUMA_KEEP_MEMINFO if (NUMA && X86)
- 	help
- 	  CXL is a bus that is electrically compatible with PCI Express, but
- 	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+diff --git a/lib/strcat_kunit.c b/lib/strcat_kunit.c
+index e21be95514af..ca09f7f0e6a2 100644
+--- a/lib/strcat_kunit.c
++++ b/lib/strcat_kunit.c
+@@ -10,7 +10,7 @@
+ 
+ static volatile int unconst;
+ 
+-static void strcat_test(struct kunit *test)
++static void test_strcat(struct kunit *test)
+ {
+ 	char dest[8];
+ 
+@@ -29,7 +29,7 @@ static void strcat_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
+ }
+ 
+-static void strncat_test(struct kunit *test)
++static void test_strncat(struct kunit *test)
+ {
+ 	char dest[8];
+ 
+@@ -56,7 +56,7 @@ static void strncat_test(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
+ }
+ 
+-static void strlcat_test(struct kunit *test)
++static void test_strlcat(struct kunit *test)
+ {
+ 	char dest[8] = "";
+ 	int len = sizeof(dest) + unconst;
+@@ -88,9 +88,9 @@ static void strlcat_test(struct kunit *test)
+ }
+ 
+ static struct kunit_case strcat_test_cases[] = {
+-	KUNIT_CASE(strcat_test),
+-	KUNIT_CASE(strncat_test),
+-	KUNIT_CASE(strlcat_test),
++	KUNIT_CASE(test_strcat),
++	KUNIT_CASE(test_strncat),
++	KUNIT_CASE(test_strlcat),
+ 	{}
+ };
+ 
 -- 
-2.39.2
+2.34.1
 
