@@ -1,168 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49141C66
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 13:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C3141C66;
+	Fri, 19 Apr 2024 13:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713532999; cv=none; b=N5sqQ3VSYJL14maMNG8rpt9deBoL201yLtCj+xqOUdFqZ5ss+O+Hp8/j86Y85OftytVyN52p4qnqSM11w9aVpCmmaZvcQWs2LdmHCLlV2yz2o82r1jxthqwOZ9MkesE/AHrJEu/jsUyPjjXJtyGbwBbFD08dZa3pUWkmJ0ogcPI=
+	t=1713533058; cv=none; b=VkaljOBUZ6JIA4Q8aFPZi2EP1EwVCzDPp7QPBdhupzr5qvOtI3BpURxR/ldhj4n2bvq9xPAMap5VCjhh3JtpV83219xe01pl2s1BNVKNLXGgKDmQfw9X8/meSr3Q5FECKNCWlXf0GU4x1GfUDYoE0caIDfvecTl4VbYzZbsVFus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713532999; c=relaxed/simple;
-	bh=Yh/VzI6bJ0PpqzxXSNXkZNBaUQhZGU3NC/Phch10SaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M39UUV/YYqRWn53lK9xHLQsQycO6lzDwm986x7pWmiti5zIsHGdwDdzwgWwq/0tuuQiOpNYswA5ha3P9R00nIQvb0zFxVSa2k6Cbe952uN7U1u4XR+vwlBNwgJZxEo1IPwO00x1lO/AOaVegkY44HjFSi2WhZy/tgvOyMh+pWoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RGXeBv0a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713533058; c=relaxed/simple;
+	bh=km0hypdLXwBb2Cs3HyM86DuFLSognrk/cCgNSgOGGAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqFmvZjEs0V9dllf4Gn644XQoDyJbCsVfe4PnIqXiiJcHqY6F6jpWGWJTZ8UsdAzIwuqUKG7745x0vpC17v+GehmkQ3q44CfFqU1zLbuSeq4sZuYfox5Zt3wYE3N2zFcG/FbaEA95DWG3uO9XK2rScKEd37JvLkM1Y8uOL1Pub8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dco3AVnY; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGXeBv0a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713532996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4w2okfnWt4A2mGL+WlGEy1UeRfHqnVgV2LwGrY3KH3E=;
-	b=RGXeBv0a1MYFnTOkYPEN6BiyR2Y8iQp5ojeNdERj/PtOVViz4Tx04JuwJfx31yknHAHexM
-	ciR4S3lnuwWu93ssn8INB0KMf6BQblpmzAIWGnT/84jt/QOQpnQG+eYy/A1npc6P6piGII
-	Zb66h7ocjTHFAo7rr+6+j/fXYUkp4Lc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-7cupQ4r_OkOp8N44e634KQ-1; Fri, 19 Apr 2024 09:23:13 -0400
-X-MC-Unique: 7cupQ4r_OkOp8N44e634KQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ED68D810602;
-	Fri, 19 Apr 2024 13:23:12 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.39.194.47])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EEF4A400059;
-	Fri, 19 Apr 2024 13:23:10 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: daniel@ffwll.ch,
-	tzimmermann@suse.de,
-	airlied@redhat.com,
-	deller@gmx.de,
-	geert@linux-m68k.org
-Cc: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH] lib/fonts: Allow to select fonts for drm_panic
-Date: Fri, 19 Apr 2024 15:20:19 +0200
-Message-ID: <20240419132243.154466-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dco3AVnY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713533057; x=1745069057;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=km0hypdLXwBb2Cs3HyM86DuFLSognrk/cCgNSgOGGAk=;
+  b=Dco3AVnYJfbdTybNpRdgjAm+SVQpzsIzN/jSOxf4LgWFG2+RZ2EVF6R+
+   Wni+QyNS6oaoDQWPXPifoDCz6XFG3ajkyTYAEguXVGk7mrq7z5Y5MKLdP
+   /Et6+jd88jA5tS3E4pUInemWvM8JzLnMAJCn4vSSad57PJMV0MdaEe1nu
+   9sx7RFntpkfAPV2PP2cNdTUoxAwoFYN8vGYQ4qhDxZAMoV1LNMHdfgWrJ
+   HM04TVYlpA30sR05tmsY+JAvzhWtJ6OzKYOWFRFWqJxcTrLqHWiiNN6i0
+   E23s7tC6shZ4DxYf7jt2FB75VsemC9yKVj7c3+tBgGEaVuiB2bgx0i6r7
+   w==;
+X-CSE-ConnectionGUID: X4RQQ0PaQ4q3GyMCq9VUzw==
+X-CSE-MsgGUID: z+JhTizxQrWQzYQwROHYPA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="19828830"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="19828830"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:24:16 -0700
+X-CSE-ConnectionGUID: IgoxUjZ5SsuDY6ybxc0Hag==
+X-CSE-MsgGUID: HD6Py7hGQIKPdZ/kHPL5lQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27954946"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:24:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rxoDr-00000000jCZ-1pBx;
+	Fri, 19 Apr 2024 16:24:11 +0300
+Date: Fri, 19 Apr 2024 16:24:11 +0300
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: "Colberg, Peter" <peter.colberg@intel.com>
+Cc: "yilun.xu@linux.intel.com" <yilun.xu@linux.intel.com>,
+	"Xu, Yilun" <yilun.xu@intel.com>,
+	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+	"mdf@kernel.org" <mdf@kernel.org>, "Wu, Hao" <hao.wu@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"russ.weight@linux.dev" <russ.weight@linux.dev>,
+	"Pagani, Marco" <marpagan@redhat.com>, "Rix, Tom" <trix@redhat.com>,
+	"matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH RESEND] fpga: dfl: omit unneeded casts of u64 values for
+ dev_dbg()
+Message-ID: <ZiJwe1hgizRkWcdo@smile.fi.intel.com>
+References: <20240329000429.7493-1-peter.colberg@intel.com>
+ <Zgt7fA/Jfks/iKYi@yilunxu-OptiPlex-7050>
+ <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-drm_panic has been introduced recently, and uses the same fonts as
-FRAMEBUFFER_CONSOLE.
+On Thu, Apr 18, 2024 at 09:30:48PM +0000, Colberg, Peter wrote:
+> On Tue, 2024-04-02 at 11:29 +0800, Xu Yilun wrote:
+> > On Thu, Mar 28, 2024 at 08:04:29PM -0400, Peter Colberg wrote:
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- lib/fonts/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+...
 
-diff --git a/lib/fonts/Kconfig b/lib/fonts/Kconfig
-index 7e945fdcbf11..befcb463f738 100644
---- a/lib/fonts/Kconfig
-+++ b/lib/fonts/Kconfig
-@@ -10,7 +10,7 @@ if FONT_SUPPORT
- 
- config FONTS
- 	bool "Select compiled-in fonts"
--	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
- 	help
- 	  Say Y here if you would like to use fonts other than the default
- 	  your frame buffer console usually use.
-@@ -23,7 +23,7 @@ config FONTS
- 
- config FONT_8x8
- 	bool "VGA 8x8 font" if FONTS
--	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
- 	default y if !SPARC && !FONTS
- 	help
- 	  This is the "high resolution" font for the VGA frame buffer (the one
-@@ -46,7 +46,7 @@ config FONT_8x16
- 
- config FONT_6x11
- 	bool "Mac console 6x11 font (not supported by all drivers)" if FONTS
--	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || STI_CONSOLE || DRM_PANIC
- 	default y if !SPARC && !FONTS && MAC
- 	help
- 	  Small console font with Macintosh-style high-half glyphs.  Some Mac
-@@ -54,7 +54,7 @@ config FONT_6x11
- 
- config FONT_7x14
- 	bool "console 7x14 font (not supported by all drivers)" if FONTS
--	depends on FRAMEBUFFER_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
- 	help
- 	  Console font with characters just a bit smaller than the default.
- 	  If the standard 8x16 font is a little too big for you, say Y.
-@@ -62,7 +62,7 @@ config FONT_7x14
- 
- config FONT_PEARL_8x8
- 	bool "Pearl (old m68k) console 8x8 font" if FONTS
--	depends on FRAMEBUFFER_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
- 	default y if !SPARC && !FONTS && AMIGA
- 	help
- 	  Small console font with PC-style control-character and high-half
-@@ -70,7 +70,7 @@ config FONT_PEARL_8x8
- 
- config FONT_ACORN_8x8
- 	bool "Acorn console 8x8 font" if FONTS
--	depends on FRAMEBUFFER_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
- 	default y if !SPARC && !FONTS && ARM && ARCH_ACORN
- 	help
- 	  Small console font with PC-style control characters and high-half
-@@ -90,7 +90,7 @@ config FONT_6x10
- 
- config FONT_10x18
- 	bool "console 10x18 font (not supported by all drivers)" if FONTS
--	depends on FRAMEBUFFER_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
- 	help
- 	  This is a high resolution console font for machines with very
- 	  big letters. It fits between the sun 12x22 and the normal 8x16 font.
-@@ -105,7 +105,7 @@ config FONT_SUN8x16
- 
- config FONT_SUN12x22
- 	bool "Sparc console 12x22 font (not supported by all drivers)"
--	depends on FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)
-+	depends on (FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)) || DRM_PANIC
- 	help
- 	  This is the high resolution console font for Sun machines with very
- 	  big letters (like the letters used in the SPARC PROM). If the
-@@ -113,7 +113,7 @@ config FONT_SUN12x22
- 
- config FONT_TER16x32
- 	bool "Terminus 16x32 font (not supported by all drivers)"
--	depends on FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)
-+	depends on (FRAMEBUFFER_CONSOLE && (!SPARC && FONTS || SPARC)) || DRM_PANIC
- 	help
- 	  Terminus Font is a clean, fixed width bitmap font, designed
- 	  for long (8 and more hours per day) work with computers.
-@@ -122,7 +122,7 @@ config FONT_TER16x32
- 
- config FONT_6x8
- 	bool "OLED 6x8 font" if FONTS
--	depends on FRAMEBUFFER_CONSOLE
-+	depends on FRAMEBUFFER_CONSOLE || DRM_PANIC
- 	help
- 	  This font is useful for small displays (OLED).
- 
+> $ rg --sort=path -c dev_dbg drivers/fpga/
 
-base-commit: a35e92ef04c07bd473404b9b73d489aea19a60a8
+Side Q: is 'rg' an alias to `git grep`?
+
 -- 
-2.44.0
+With Best Regards,
+Andy Shevchenko
+
 
