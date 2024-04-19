@@ -1,56 +1,66 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486CE1DFF0;
-	Fri, 19 Apr 2024 16:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971ED7F7C7
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 16:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713544382; cv=none; b=VSl1DV+9cvouIpZ81GdlSI+LCHnXasFNNYUc3R554WcIGRUIn1+9564W7MgVHt0z4PdCOw35YTqULaVfmmDZDQH4xkqDxOIwT4XjfjuXcaUu1ToyYUygyFBvFNLZv0I1zfV3Yv7KvDWcLuUZ9yZ1Nf8xiDK07whBeHIpn9XUwzs=
+	t=1713544435; cv=none; b=mx86JRcRNQVePhQUltIoJHerc8IqFYZzDH/kaCfwRtzoLL8428Cim1ClAHKGybCvtdH0XyrT2KpWM8FRNIFZqnQe2WAYwcBbD/XHK0b9HFers+RJwaPp30+NvKLU+RPuXMH46eKYKXUdIFMfSRo7gHc/XhymNubkpZetOIlZu0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713544382; c=relaxed/simple;
-	bh=lrsLAInGmmwlG8t8h9BjUv8G4ES4s20nILYak8Fi+Lk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iQjzsuHl5U8Y/Q5WyKRA1cF2iJT89ZS7GVVCCEYYGiFkk9evfWMUESSKsXGtacTgLyb48ePZ8hc5w0WamLBehQYeX9E0YdEJSeJxdjmpdtvMlQcXxstqv9+gwLN4i26ulLQ+HQ5osb0R5EaFUb+zjpucP8UvpEpfVZkufm1Aj7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
+	s=arc-20240116; t=1713544435; c=relaxed/simple;
+	bh=sgCSOUrC5ChzQ9bGbhGDj4Ib9Y4rYjst+19uVQIoYds=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Rxe6/G5ZjNj5O7PGipXhCPbi4iYUvhEkCwAtPYTOrtVED3KJVbtrg940MUY4NrK3ni0BMV9r/4W88o60GWj20X7b4MhH4tOQgUGzY1qB0KFvj0LC82f2yOXF2lC3aDCSR6L6fyCVRXxKMeJP7iE/VkqUTM7iumBQJcA9h1VzahI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUV+a5uJ; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4347cbdb952so9099521cf.3;
-        Fri, 19 Apr 2024 09:33:00 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUV+a5uJ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f00f24f761so1961884b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 09:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713544434; x=1714149234; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+f/kdiwp4iNmzHb7qOG4xqLdzvYd8qDHQhZ+IysrBv8=;
+        b=CUV+a5uJE+nEmJLzv1uRuRNcXXiQh/Kp9+MpDChlLY5oW20Bt8BbEhnLPpHhaNYtr3
+         yrnB93eLaJ1dHse/i6b02CRMqoWEfNNghhg9VUl/QX5/uV+nFmF5MVmyY8HdO6a7M2or
+         N3KtWUwkW4AIojj7KJnAkYoOKnPAe6Pj2rI8qtUso/swph/Qvbg27nM+oCudT8VwbHy+
+         htdxzDiZh4LCqkv+tp5w/SyWChPXCl4XN/v2fM/yRJ4oJQCunrCcMGOugNDdFWh6LnHc
+         mnEnnq99jdd9Pqf15GKBigSjzHQgcxm8iGF7NJhl2plxlP1V/VYF4/Tq7lmtS3DFSrPY
+         KopA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713544379; x=1714149179;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tZt0+bvbyo27WYKm1jClLea1EE0Wu1vF3OW+kTQvhOQ=;
-        b=pOQ6ruR3bMhxnpzj+lLDL012moR1Cl8raQZxxE54SwBS5wUxf/dhDgeMF1iQ9cO6wd
-         W8CfQDutAvgLnWxPE5NIGGwuvf42HFtwZ7O6pSUAGprT+nmtPEiEZEH+ecTzzPCu3ejL
-         ItYqsoS/l1jFWgVm75JLZWCj8IG44U6uE28mTwS2Iu85joSmXnUqn6+0sVFXAfw2z68r
-         wALBfBG751leNMqdSb8thhe/YQsMYF0tumtcyaBzLN7mV3dcoIn3NxxGBfoxlL2Z7avH
-         Ckkjtwfh9ogLTJSNnzM7Z+8R8gKi/JtgByD0RabcfJylRKE1ku4YxO8r87ZH2/F/8219
-         WqFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUT68sleQdlXjSz9C8pvXmjCfVZLx//BXAPoQYzXvqw1ky7u2IbXXLN+vdsjz/247fPyN+nnIMxr7+BsTIYbPCvaqsSl/1B
-X-Gm-Message-State: AOJu0YwhJI5ipG4gm1hPwNo2QAcAonjWYH/u6j43iAahr1VpO+Iuc5L1
-	NKYaUD+eJqSIVD1sPv8XrnoE6M2dV0j/7pYlHdSG27idAO08xJhD
-X-Google-Smtp-Source: AGHT+IHaukWucAcTRkaFJw/QkRj27FoPZb1ec89AIlkmvXdYGorNs9q6y9L3bto15pZ+DtfIPa4ChQ==
-X-Received: by 2002:a05:622a:1207:b0:437:bc0f:323a with SMTP id y7-20020a05622a120700b00437bc0f323amr2583923qtx.48.1713544379177;
-        Fri, 19 Apr 2024 09:32:59 -0700 (PDT)
-Received: from hemlock.fiveisland.rocks (hlfxns014qw-156-57-186-228.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.57.186.228])
-        by smtp.gmail.com with ESMTPSA id g23-20020ac84dd7000000b00436e0eb2346sm1718444qtw.55.2024.04.19.09.32.58
+        d=1e100.net; s=20230601; t=1713544434; x=1714149234;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+f/kdiwp4iNmzHb7qOG4xqLdzvYd8qDHQhZ+IysrBv8=;
+        b=u4oOWk1mni0wehT7vJ0+F2Z+SqDbdqX+fTuNivc2rhStZLx4OnH9own4O1qVuGH9fS
+         oWVaJyMFWMX77yc3E1Huqo940urfmRSlZJqAtcwPw4aGpRze1iLifLb/N/CaefgYGuDF
+         ZjLRdAaPcB3uvIt7jPgavQygW3vXPxfWcvUjmR19tFwfkRdCSEwYhPABP/d3prGuF1K7
+         TGuX74H9OFBJ9HPKWkw91k+EeZZ7Cip7IyIEAGa//mVK4yrd2WELdMc0ipteSQAG95mM
+         ZgDj0GnOgIbEAtvc182lMQm3B6hUCAD5VnwlOwj4C9l+m/iuXED2YEEeSSE1RF0ZnAub
+         6wbg==
+X-Gm-Message-State: AOJu0Yz6T08yX/4Ov71haqo3d4rKHkeG5mwBAWeWjHFi6z8SFzORFqpk
+	v4lpuJ9xqzG70qgeVftcoj20vFHKHp5L5id/N6Yar5VCdZrZJoPl
+X-Google-Smtp-Source: AGHT+IGlchinwQaHRtqz+GijWCiJDaHZtZvym4f0Q8uFUqz2oVlVsOznvySB0J4CRTervNCESw9bAg==
+X-Received: by 2002:a05:6a21:6d85:b0:1ac:dead:b221 with SMTP id wl5-20020a056a216d8500b001acdeadb221mr172296pzb.40.1713544433702;
+        Fri, 19 Apr 2024 09:33:53 -0700 (PDT)
+Received: from kernelexploit-virtual-machine.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id h5-20020a056a00000500b006ed4aa9d5c0sm3419410pfk.188.2024.04.19.09.33.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 09:32:58 -0700 (PDT)
-From: Marc Dionne <marc.dionne@auristor.com>
-To: David Howells <dhowells@redhat.com>,
-	netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jeffrey Altman <jaltman@auristor.com>
+        Fri, 19 Apr 2024 09:33:53 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: syzbot+d4c06e848a1c1f9f726f@syzkaller.appspotmail.com
 Cc: linux-kernel@vger.kernel.org,
-	linux-afs@lists.infradead.org
-Subject: [PATCH net v2] rxrpc: Clients must accept conn from any address
-Date: Fri, 19 Apr 2024 13:30:57 -0300
-Message-ID: <20240419163057.4141728-1-marc.dionne@auristor.com>
-X-Mailer: git-send-email 2.44.0
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] possible deadlock in input_event (2)
+Date: Sat, 20 Apr 2024 01:33:49 +0900
+Message-Id: <20240419163349.20540-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <0000000000006d6f4105d2fe05ed@google.com>
+References: <0000000000006d6f4105d2fe05ed@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,54 +69,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jeffrey Altman <jaltman@auristor.com>
 
-The find connection logic of Transarc's Rx was modified in the mid-1990s
-to support multi-homed servers which might send a response packet from
-an address other than the destination address in the received packet.
-The rules for accepting a packet by an Rx initiator (RX_CLIENT_CONNECTION)
-were altered to permit acceptance of a packet from any address provided
-that the port number was unchanged and all of the connection identifiers
-matched (Epoch, CID, SecurityClass, ...).
+please test deadlock in input_event
 
-This change applies the same rules to the Linux implementation which makes
-it consistent with IBM AFS 3.6, Arla, OpenAFS and AuriStorFS.
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Signed-off-by: Jeffrey Altman <jaltman@auristor.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
 ---
-v2: Added Fixes: tag
+ fs/fcntl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- net/rxrpc/conn_object.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 0af4642aeec4..1539d315afe7 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -119,18 +119,13 @@ struct rxrpc_connection *rxrpc_find_client_connection_rcu(struct rxrpc_local *lo
- 	switch (srx->transport.family) {
- 	case AF_INET:
- 		if (peer->srx.transport.sin.sin_port !=
--		    srx->transport.sin.sin_port ||
--		    peer->srx.transport.sin.sin_addr.s_addr !=
--		    srx->transport.sin.sin_addr.s_addr)
-+		    srx->transport.sin.sin_port)
- 			goto not_found;
- 		break;
- #ifdef CONFIG_AF_RXRPC_IPV6
- 	case AF_INET6:
- 		if (peer->srx.transport.sin6.sin6_port !=
--		    srx->transport.sin6.sin6_port ||
--		    memcmp(&peer->srx.transport.sin6.sin6_addr,
--			   &srx->transport.sin6.sin6_addr,
--			   sizeof(struct in6_addr)) != 0)
-+		    srx->transport.sin6.sin6_port)
- 			goto not_found;
- 		break;
- #endif
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 54cc85d3338e..30f4d75fdb03 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -829,7 +829,7 @@ int send_sigurg(struct fown_struct *fown)
+ 	struct task_struct *p;
+ 	enum pid_type type;
+ 	struct pid *pid;
+-	unsigned long flags;
++	unsigned long flags, read_flags;
+ 	int ret = 0;
+ 	
+ 	read_lock_irqsave(&fown->lock, flags);
+@@ -848,11 +848,11 @@ int send_sigurg(struct fown_struct *fown)
+ 			send_sigurg_to_task(p, fown, type);
+ 		rcu_read_unlock();
+ 	} else {
+-		read_lock(&tasklist_lock);
++		read_lock_irqsave(&tasklist_lock, read_flags);
+ 		do_each_pid_task(pid, type, p) {
+ 			send_sigurg_to_task(p, fown, type);
+ 		} while_each_pid_task(pid, type, p);
+-		read_unlock(&tasklist_lock);
++		read_unlock_irqrestore(&tasklist_lock, read_flags);
+ 	}
+  out_unlock_fown:
+ 	read_unlock_irqrestore(&fown->lock, flags);
 -- 
-2.44.0
-
+2.34.1
