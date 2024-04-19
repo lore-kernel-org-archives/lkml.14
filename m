@@ -1,38 +1,33 @@
-Received: from forwardcorp1c.mail.yandex.net (forwardcorp1c.mail.yandex.net [178.154.239.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ACC4D131
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 10:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4434745EF;
+	Fri, 19 Apr 2024 10:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713521774; cv=none; b=p27w6LIqJ6+EfBB4DU551iHaZUhRqx7yMSC0dtnN7dRyZIpbNHJbmd+Nx1t/Rc2ZgGuqzZGbxOzxw6DqlIVCgpHHOvSzHWQ5aq8+Xzwzx4n0nujGYIcjhV6/oWcuy0bhkC/pDubnbPZ5GtvzaVJEKaWReJ1VNSyMhJX1XZpxYDE=
+	t=1713521816; cv=none; b=PTQbxDatjWDJnmFsXDXcwBAE51EwuPyUbaHjru51lP60NPJ/ANR8K85buPaaeqG1/PEaXN24rdgrK94oAg0YOIoGw6c+RsWUgfkx78NyHAq9qjXNnCRdcZaNGgl7h7ogN4bJVwqTHSgqaZlifM74TfQgIsewAsaQFaG9LKkkBno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713521774; c=relaxed/simple;
-	bh=P1ol6MpU9FzJNRsmymRHOmpfUJwsLQ72yX6NlQXLbrs=;
+	s=arc-20240116; t=1713521816; c=relaxed/simple;
+	bh=aC+QA5rjhgsuTqn2kdyip+wg1YmdpSU1U1t0y/JyVB4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i5zPItTAUwiEWbXMsvLfprgnDAvEoPNoIceDba65WxLaTYsB6FJPKFWStQHuTo9uiGSAGgBBSD98F10VUR90IA0fg1zq00Ym8abbS1UVirgcvqfAwa2MZwwPFTljnb6GrmBt07Hm2OP7mx7pqOXUX4tTgeutsNqK1Bv56VOPWrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=ZPAUOomI; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	 In-Reply-To:Content-Type; b=BBEx+dtWFV8eTC2KaPcn+c36V/AZx7bQ2D9qhqkX5TMxEPRhevYPfZSQ1Chs2B/VD8qrbQLpf51NiJvHwCA8qeTxTNPNpM+0su3ow4F5i4WOkZFWJuss/9eUwAiQDZYfU4bi9z8rkV7qqxYKOAbl/SlGxQPGURg2kO/z/6g5zdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNIPxI5H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZPAUOomI"
-Received: from mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:220a:0:640:7faf:0])
-	by forwardcorp1c.mail.yandex.net (Yandex) with ESMTPS id 0A96760C1C;
-	Fri, 19 Apr 2024 13:16:01 +0300 (MSK)
-Received: from [IPV6:2a02:6b8:b081:b65b::1:3] (unknown [2a02:6b8:b081:b65b::1:3])
-	by mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id xFDZQe0GjGk0-vZnVcnce;
-	Fri, 19 Apr 2024 13:16:00 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1713521760;
-	bh=al9SDjDm+VqOfC7HhDkWckoSvh3JHkwfsnoQVdgJv4c=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=ZPAUOomI+6EjiMlG8gLZnOySS9i5BC/mWWry3LmONhfvGjQdjiaRw8nKSgF0cFZvi
-	 vrXkj3KXJJsSLg0TJuUqWNQ3ubNgy3PqZwbnTYyKdFz/eLoNGAEJCntYbOgA3SG63n
-	 BEG0w8c2mtqUNGoezP3VwCFAvbiOjGyyE7Yc8xag=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Message-ID: <4dce371e-8457-4e4b-a79b-5497f5ccef86@yandex-team.ru>
-Date: Fri, 19 Apr 2024 13:15:59 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNIPxI5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E1AC072AA;
+	Fri, 19 Apr 2024 10:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713521816;
+	bh=aC+QA5rjhgsuTqn2kdyip+wg1YmdpSU1U1t0y/JyVB4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tNIPxI5HOVILSTXuczGUDtJGoDhmBpJGSxMEqBFvHNc2zXK33PEiKk4HM+8mTjKo/
+	 bu1QPvghvyq31zosBe16/stXNcEqYWg5NdaCyQQ+0r0jpOYs1k0v8NDfk93oso4wyk
+	 3jIMkkHrA7DgSmPunJ14oE0XNCHPHd0btuepG1tf77WZG83xIcjHaeL1Gzdw/tFMp1
+	 Dau3NJVvA9W6sTlorR3yNNq/IyMUo29+AmiNyDXYRERCMv0FSe56YLuG2ErpFVxtuG
+	 o8+arByas5NQ5ha1eVk7zFPlQHUct8n2jtqpmfHIuwRBE2lZiVWcAn6bP2VSZQrscQ
+	 qR9DgG4w1BvVg==
+Message-ID: <33295077-e969-427a-badb-3e29698f5cfb@kernel.org>
+Date: Fri, 19 Apr 2024 12:16:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,151 +35,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/split_lock: fix delayed detection enabling
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: den-plotnikov@yandex-team.ru, x86@kernel.org,
- linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-References: <20240321195522.24830-1-davydov-max@yandex-team.ru>
- <7c8c6f7c-7476-d73d-4df1-9dea0aa4ecf2@igalia.com>
+Subject: Re: [PATCH v1 3/3] cgroup/rstat: introduce ratelimited rstat flushing
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, lizefan.x@bytedance.com,
+ cgroups@vger.kernel.org, longman@redhat.com, netdev@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, shakeel.butt@linux.dev,
+ kernel-team@cloudflare.com, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, mhocko@kernel.org,
+ Wei Xu <weixugc@google.com>
+References: <171328983017.3930751.9484082608778623495.stgit@firesoul>
+ <171328990014.3930751.10674097155895405137.stgit@firesoul>
+ <CAJD7tkbZAj3UQSHbu3kj1NG4QDowXWrohG4XM=7cX_a=QL-Shg@mail.gmail.com>
+ <72e4a55e-a246-4e28-9d2e-d4f1ef5637c2@kernel.org>
+ <CAJD7tkbNvo4nDek5HV7rpZRbARE7yc3y=ufVY5WMBkNH6oL4Mw@mail.gmail.com>
 Content-Language: en-US
-From: Maksim Davydov <davydov-max@yandex-team.ru>
-In-Reply-To: <7c8c6f7c-7476-d73d-4df1-9dea0aa4ecf2@igalia.com>
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <CAJD7tkbNvo4nDek5HV7rpZRbARE7yc3y=ufVY5WMBkNH6oL4Mw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-On 3/31/24 20:07, Guilherme G. Piccoli wrote:
-> On 21/03/2024 16:55, Maksim Davydov wrote:
->> If the warn mode with disabled mitigation mode is used, then on each cpu
->> where the split lock occurred detection will be disabled in order to make
->> progress and delayed work will be scheduled, which then will enable
->> detection back. Now it turns out that all CPUs use one global delayed
->> work structure. This leads to the fact that if a split lock occurs on
->> several CPUs at the same time (within 2 jiffies), only one cpu will
->> schedule delayed work, but the rest will not. The return value of
->> schedule_delayed_work_on() would have shown this, but it is not checked
->> in the code
->> In order to fix the warn mode with disabled mitigation mode, delayed work
->> has to be a per-cpu.
->>
->> Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
-> Thanks Maksim! I confess I (think I) understand the theory behind the
-> possible problem, but I'm not seeing how it happens - probably just me
-> being silly , but can you help me to understand it clearly?
->
-> Let's say we have 2 CPUs, CPU0 and CPU1 and we're running with
-> sld_mitigate = 0, meaning we don't have "the misery".
->
-> If the code running in CPU0 reaches split_lock_warn(), my understanding
-> is that it warns the user, schedule the sld reenable [via and
-> schedule_delayed_work_on()] and disables the feature with
-> sld_update_msr(false), correct? So, does this disabling happens only at
-> core level, or it disables for the whole CPU including all cores?
->
-> But back to our example, if CPU1 detects the split lock, it'll run the
-> same procedure as CPU0 did - so are you saying we have a race there if
-> CPU1 face a split lock before CPU0 disabled the MSR?
->
-> Maybe a more clear example of the issue would be even helpful in the
-> commit message, showing the path both CPUs would take and how the
-> problem happens exactly.
->
-> Thanks in advance,
->
->
-> Guilherme
+On 18/04/2024 23.00, Yosry Ahmed wrote:
+> On Thu, Apr 18, 2024 at 4:00 AM Jesper Dangaard Brouer<hawk@kernel.org>  wrote:
+>> On 18/04/2024 04.21, Yosry Ahmed wrote:
+>>> On Tue, Apr 16, 2024 at 10:51 AM Jesper Dangaard Brouer<hawk@kernel.org>  wrote:
+>>>> This patch aims to reduce userspace-triggered pressure on the global
+>>>> cgroup_rstat_lock by introducing a mechanism to limit how often reading
+>>>> stat files causes cgroup rstat flushing.
+>>>>
+[...]
 
-Sorry for a late reply.
+> Taking a step back, I think this series is trying to address two
+> issues in one go: interrupt handling latency and lock contention.
 
-I made a diagram to explain how this bug occurs. If it makes it clearer,
-then I will include the diagram in the commit description.
+Yes, patch 2 and 3 are essentially independent and address two different 
+aspects.
 
-Some information that should be taken into account:
-* sld_update_msr() enables/disables SLD on both CPUs on the same core
-* schedule_delayed_work_on() internally checks WORK_STRUCT_PENDING_BIT. If
-   a work has the 'pending' status, then schedule_delayed_work_on() will
-   return an error code and, most importantly, the work will not be placed
-   in the workqueue
+> While both are related because reducing flushing reduces irq
+> disablement, I think it would be better if we can fix that issue
+> separately with a more fundamental solution (e.g. using a mutex or
+> dropping the lock at each CPU boundary).
+> 
+> After that, we can more clearly evaluate the lock contention problem
+> with data purely about flushing latency, without taking into
+> consideration the irq handling problem.
+> 
+> Does this make sense to you?
 
-Let's say we have a multicore system on which split_lock_mitigate=0 and
-a multithreaded application is running that calls splitlock in multiple
-threads. Due to the fact that sld_update_msr() affects the entire core (both
-CPUs), we will consider 2 CPUs from different cores. Let the 2 threads of
-this application schedule to CPU0 (core 0) and to CPU 2 (core 1), then:
+Yes, make sense.
 
-| ||                                      |
-|             CPU 0 (core 0)          ||             CPU 2 (core 
-1)           |
-|_____________________________________||______________________________________|
-| ||                                      |
-| 1) SPLIT LOCK occured ||                                      |
-| ||                                      |
-| 2) split_lock_warn() ||                                      |
-| ||                                      |
-| 3) sysctl_sld_mitigate == 0 ||                                      |
-|    (work = &sl_reenable) ||                                      |
-| ||                                      |
-| 4) schedule_delayed_work_on() ||                                      |
-|    (reenable will be called after 
-||                                      |
-|     2 jiffies on CPU 0) ||                                      |
-| ||                                      |
-| 5) disable SLD for core 0 ||                                      |
-| ||                                      |
-|    ----------------------------- ||                                      |
-| ||                                      |
-|                                     || 6) SPLIT LOCK 
-occured                |
-| ||                                      |
-|                                     || 7) 
-split_lock_warn()                 |
-| ||                                      |
-|                                     || 8) sysctl_sld_mitigate == 
-0          |
-|                                     ||    (work = 
-&sl_reenable,             |
-|                                     ||     the same address as in 3) 
-)      |
-| ||                                      |
-|             2 jiffies               || 9) schedule_delayed_work_on() 
-fails  |
-|                                     ||    because the work is in 
-the        |
-|                                     ||    pending state since 4). The 
-work  |
-|                                     ||    wasn't placed to the 
-workqueue.   |
-|                                     ||    reenable won't be called on 
-CPU 2 |
-| ||                                      |
-|                                     || 10) disable SLD for core 
-0           |
-| ||                                      |
-|                                     ||     From now on, SLD 
-will            |
-|                                     ||     never be reenabled on core 
-1     |
-| ||                                      |
-|    ----------------------------- ||                                      |
-| ||                                      |
-|    11) enable SLD for core 0 by ||                                      |
-|        __split_lock_reenable ||                                      |
-| ||                                      |
+So, you are suggesting we start with the mutex change? (patch 2)
+(which still needs some adjustments/tuning)
 
+This make sense to me, as there are likely many solutions to reducing
+the pressure on the lock.
 
-If the application threads can be scheduled to all processor cores, then 
-over
-time there will be only one core left, on which SLD will be enabled and 
-split
-lock can be detected; and on all other cores SLD will be disabled all the
-time.
-Most likely, this bug has not been noticed for so long because
-sysctl_sld_mitigate default value is 1, and in this case a semaphore is used
-that does not allow 2 different cores to have SLD disabled at the same time,
-that is, strictly only one work is placed in the workqueue.
+With the tracepoint patch in-place, I/we can measure the pressure on the
+lock, and I plan to do this across our CF fleet.  Then we can slowly
+work on improving lock contention and evaluate this on our fleets.
 
--- 
-Best regards,
-Maksim Davydov
-
+--Jesper
+p.s.
+Setting expectations:
+  - Going on vacation today, so will resume work after 29th April.
