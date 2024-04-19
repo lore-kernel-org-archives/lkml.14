@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D22B7F7C7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAC17F7F1;
 	Fri, 19 Apr 2024 10:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713521378; cv=none; b=CsdvrPn24b12Wri4vAFz7lyHvH55gr4pFjfNP2CdamGNAbgGj/7eTbi547Nfw/5uT3ig8jA0EOufEv08VVivh1mHhS7iJrzVMVTTjyOkkslhbSngaig3ePYbp6tw1lIaRYDtJmL4vrCLMzvw0If4jmS5SLrXiq3+NC/6kmQ7O4Q=
+	t=1713521378; cv=none; b=cAgtN0P3N4M5DbWBggfNn3kn1mk4Q6JL6M6Kw+vcNAE9TeD+3oRGjuzZMKcOfHVuV9s7t31N9hFDpl2TrHGb0NKZdoDDeGQh1EQzB4xr2OFSPa6tX4amhAUBoi0zlF/BX+ZMPtXroc7tEc+5jtoPeLCjr7PhJ7JZur0l+ZkIrz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713521378; c=relaxed/simple;
-	bh=9aC2izf7pDmtSSitRHIY3XfQzKDzjBkTKbfmsq/v0JU=;
+	bh=ZNmSMiuq5wJcBo+EGlGmT/XTyYTDOnZPeAOljaVsq+M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ltIBmNzFnqy8+/BPlowPgBFFrdRvocp76eH4v/8TJViL/9HbZLyZR8dgbWSr9bqu4EZLOnSpROc9Ivls5wZuDphZkvAmU3NyDz+0k1HFjJZ4bKAOeQGKQ1axiZb3deaDH0YCKkxzEnDgN33sgpuorow2QZF64z75cvC5dDjoJJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8GDhT5i; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=s6vqrQt5PdQ4QE9CY2MdKUuznzaLGleriHb/+B/dJICoIf+u+/zGDk5/uTpUNwrvDxRUEpLOfrygS4AM7YcmZ/fk9kAvxlnR+iAX+ivxhSxiGH76ji6PQrUICCHaoYo9owAUdSlbr8woPpHa1QZMMUhPqa+sAVXMs6hhmbqWHdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahWAMSh/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8GDhT5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D40CEC4AF0A;
-	Fri, 19 Apr 2024 10:09:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahWAMSh/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E92EC4AF07;
+	Fri, 19 Apr 2024 10:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713521377;
-	bh=9aC2izf7pDmtSSitRHIY3XfQzKDzjBkTKbfmsq/v0JU=;
+	s=k20201202; t=1713521378;
+	bh=ZNmSMiuq5wJcBo+EGlGmT/XTyYTDOnZPeAOljaVsq+M=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=N8GDhT5iZg5kzgkwZtP3YEuxaF4E3iMqbumHLuCwvvdaxFO3mFuiIv7nUZxZV8450
-	 A176TPrVQ+o/y4bqNG0/MfSPrZ/z4Y5J1quHYVe0XpnhSD2j9IePAR5/Az91I9g1nI
-	 XvX8OGBlQx8gqZ0b8a//8M6WiOQAwzqjbYliszTe9ogD/SxtsQQxu+LYxQSVi+OOjE
-	 h02BX2fUO4StBf8exKaDJikOzZvm+dnnGLC6cKbHsafTmy9sGm6DfDxcTWpucaYPPJ
-	 gK9U+FoRGTYUj8SSaEo8XPaSGJghOqys+j2QmdewDhUlfWuvlUOn9ntpbXrlGyRhy7
-	 WFvzoA4QBVE9Q==
+	b=ahWAMSh/qjA1VIw8T6MFh+en9clMxEU4B3qAfiuR2mUjkKQfoMNKAeS4jvftgLEb5
+	 qSSqgstFp5gDWye9zhwtttDwbRBbFFCZTuMKcUN0XT1BcODl1O4Ms//4qlxOoknNkC
+	 YvF7aBqO6o8is/XYHxfDrrPn/rxFytIAZqoC34XtCwUFMjG4lIxdeGIEIDa15E9xY8
+	 c8RF8sN9XDL6XPF6GKvqK84TD4Mz5LR7X2k+rXSFlW3nrvv2WB/VsnABFnK5MMKv/q
+	 5p9fXZ2OPAziuJkCdUez0XshHVOOmb/8S+YTB+hlNC/CfQ6Pab8fXzMa3R3/Oathp9
+	 LQQ+RssYPl26Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC031C04FF6;
-	Fri, 19 Apr 2024 10:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4644AC04FF6;
+	Fri, 19 Apr 2024 10:09:38 +0000 (UTC)
 From: =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL_via_B4_Relay?= <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Fri, 19 Apr 2024 13:09:30 +0300
-Subject: [PATCH net-next 07/13] net: dsa: mt7530: move MT753X_MTRAP
- operations for MT7530
+Date: Fri, 19 Apr 2024 13:09:36 +0300
+Subject: [PATCH net-next 13/13] net: dsa: mt7530: use priv->ds->num_ports
+ instead of MT7530_NUM_PORTS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240419-for-netnext-mt7530-improvements-4-v1-7-6d852ca79b1d@arinc9.com>
+Message-Id: <20240419-for-netnext-mt7530-improvements-4-v1-13-6d852ca79b1d@arinc9.com>
 References: <20240419-for-netnext-mt7530-improvements-4-v1-0-6d852ca79b1d@arinc9.com>
 In-Reply-To: <20240419-for-netnext-mt7530-improvements-4-v1-0-6d852ca79b1d@arinc9.com>
 To: Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
@@ -59,11 +59,11 @@ Cc: Bartel Eerdekens <bartel.eerdekens@constell8.be>,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713521374; l=3575;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713521374; l=1820;
  i=arinc.unal@arinc9.com; s=arinc9-Xeront; h=from:subject:message-id;
- bh=00K+c7w7ciHtR3cg/Vn4V9kvHhcXqDMvGRmHgFwDD6g=;
- b=D1+kXUJAtGNwzmHs5kYKJ5HJ23tyiDDh8eH4aG2XtQ5JyJpgadsmiAogJdOjaNYwdoa082TZO
- JLYAWJ8lOJtDejMzAyJ6Er0pkW6F8erqc68SUXVo8HRZoztqYlwhvmT
+ bh=zwYuUUVIbXmvRXAn0iA1vobSjJIppJvvXAmZxGXeCM8=;
+ b=fe6mJg0I8EYeeDH1SRaOoku+kWHl7bJSQMptDTwIIsKsJjM2Ye2E/BZe2PgrQWFS3Q+DLWrY6
+ M/7B5bZqr4yBBq/kg9oZ6WE/NN10dRp5OB3IueAP5ByiUJ0dMCiYOS+
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=z49tLn29CyiL4uwBTrqH9HO1Wu3sZIuRp4DaLZvtP9M=
 X-Endpoint-Received: by B4 Relay for arinc.unal@arinc9.com/arinc9-Xeront
@@ -73,116 +73,51 @@ Reply-To: arinc.unal@arinc9.com
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-On MT7530, the media-independent interfaces of port 5 and 6 are controlled
-by the MT7530_P5_DIS and MT7530_P6_DIS bits of the hardware trap. Deal with
-these bits only when the relevant port is being enabled or disabled. This
-ensures that these ports will be disabled when they are not in use.
-
-Do not set MT7530_CHG_TRAP on mt7530_setup_port5() as that's already being
-done on mt7530_setup().
-
-Instead of globally setting MT7530_P5_MAC_SEL, clear it, then set it only
-on the appropriate case.
-
-If PHY muxing is detected, clear MT7530_P5_DIS before calling
-mt7530_setup_port5().
-
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 ---
- drivers/net/dsa/mt7530.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ drivers/net/dsa/mt7530.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 606516206fb9..83436723cb16 100644
+index 5e69ff0a4b24..55954a165a15 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -880,8 +880,7 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+@@ -1411,7 +1411,7 @@ mt7530_port_set_vlan_unaware(struct dsa_switch *ds, int port)
+ 	mt7530_rmw(priv, MT7530_PPBV1_P(port), G0_PORT_VID_MASK,
+ 		   G0_PORT_VID_DEF);
  
- 	val = mt7530_read(priv, MT753X_MTRAP);
+-	for (i = 0; i < MT7530_NUM_PORTS; i++) {
++	for (i = 0; i < priv->ds->num_ports; i++) {
+ 		if (dsa_is_user_port(ds, i) &&
+ 		    dsa_port_is_vlan_filtering(dsa_to_port(ds, i))) {
+ 			all_user_ports_removed = false;
+@@ -2428,7 +2428,7 @@ mt7530_setup(struct dsa_switch *ds)
+ 	/* Enable and reset MIB counters */
+ 	mt7530_mib_reset(ds);
  
--	val |= MT7530_CHG_TRAP | MT7530_P5_MAC_SEL | MT7530_P5_DIS;
--	val &= ~MT7530_P5_RGMII_MODE & ~MT7530_P5_PHY0_SEL;
-+	val &= ~MT7530_P5_PHY0_SEL & ~MT7530_P5_MAC_SEL & ~MT7530_P5_RGMII_MODE;
+-	for (i = 0; i < MT7530_NUM_PORTS; i++) {
++	for (i = 0; i < priv->ds->num_ports; i++) {
+ 		/* Clear link settings and enable force mode to force link down
+ 		 * on all ports until they're enabled later.
+ 		 */
+@@ -2539,7 +2539,7 @@ mt7531_setup_common(struct dsa_switch *ds)
+ 	mt7530_clear(priv, MT753X_MFC, BC_FFP_MASK | UNM_FFP_MASK |
+ 		     UNU_FFP_MASK);
  
- 	switch (priv->p5_mode) {
- 	/* MUX_PHY_P0: P0 -> P5 -> SoC MAC */
-@@ -891,15 +890,13 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+-	for (i = 0; i < MT7530_NUM_PORTS; i++) {
++	for (i = 0; i < priv->ds->num_ports; i++) {
+ 		/* Clear link settings and enable force mode to force link down
+ 		 * on all ports until they're enabled later.
+ 		 */
+@@ -2626,7 +2626,7 @@ mt7531_setup(struct dsa_switch *ds)
+ 	priv->p5_sgmii = !!(val & PAD_DUAL_SGMII_EN);
  
- 	/* MUX_PHY_P4: P4 -> P5 -> SoC MAC */
- 	case MUX_PHY_P4:
--		val &= ~MT7530_P5_MAC_SEL & ~MT7530_P5_DIS;
--
- 		/* Setup the MAC by default for the cpu port */
- 		mt7530_write(priv, MT753X_PMCR_P(5), 0x56300);
- 		break;
+ 	/* Force link down on all ports before internal reset */
+-	for (i = 0; i < MT7530_NUM_PORTS; i++)
++	for (i = 0; i < priv->ds->num_ports; i++)
+ 		mt7530_write(priv, MT753X_PMCR_P(i), MT7531_FORCE_MODE_LNK);
  
- 	/* GMAC5: P5 -> SoC MAC or external PHY */
- 	default:
--		val &= ~MT7530_P5_DIS;
-+		val |= MT7530_P5_MAC_SEL;
- 		break;
- 	}
- 
-@@ -1193,6 +1190,14 @@ mt7530_port_enable(struct dsa_switch *ds, int port,
- 
- 	mutex_unlock(&priv->reg_mutex);
- 
-+	if (priv->id != ID_MT7530 && priv->id != ID_MT7621)
-+		return 0;
-+
-+	if (port == 5)
-+		mt7530_clear(priv, MT753X_MTRAP, MT7530_P5_DIS);
-+	else if (port == 6)
-+		mt7530_clear(priv, MT753X_MTRAP, MT7530_P6_DIS);
-+
- 	return 0;
- }
- 
-@@ -1211,6 +1216,14 @@ mt7530_port_disable(struct dsa_switch *ds, int port)
- 		   PCR_MATRIX_CLR);
- 
- 	mutex_unlock(&priv->reg_mutex);
-+
-+	if (priv->id != ID_MT7530 && priv->id != ID_MT7621)
-+		return;
-+
-+	if (port == 5)
-+		mt7530_set(priv, MT753X_MTRAP, MT7530_P5_DIS);
-+	else if (port == 6)
-+		mt7530_set(priv, MT753X_MTRAP, MT7530_P6_DIS);
- }
- 
- static int
-@@ -2401,11 +2414,11 @@ mt7530_setup(struct dsa_switch *ds)
- 		mt7530_rmw(priv, MT7530_TRGMII_RD(i),
- 			   RD_TAP_MASK, RD_TAP(16));
- 
--	/* Enable port 6 */
--	val = mt7530_read(priv, MT753X_MTRAP);
--	val &= ~MT7530_P6_DIS & ~MT7530_PHY_INDIRECT_ACCESS;
--	val |= MT7530_CHG_TRAP;
--	mt7530_write(priv, MT753X_MTRAP, val);
-+	/* Allow modifying the trap and directly access PHY registers via the
-+	 * MDIO bus the switch is on.
-+	 */
-+	mt7530_rmw(priv, MT753X_MTRAP, MT7530_CHG_TRAP |
-+		   MT7530_PHY_INDIRECT_ACCESS, MT7530_CHG_TRAP);
- 
- 	if ((val & MT7530_XTAL_MASK) == MT7530_XTAL_40MHZ)
- 		mt7530_pll_setup(priv);
-@@ -2488,8 +2501,11 @@ mt7530_setup(struct dsa_switch *ds)
- 			break;
- 		}
- 
--		if (priv->p5_mode == MUX_PHY_P0 || priv->p5_mode == MUX_PHY_P4)
-+		if (priv->p5_mode == MUX_PHY_P0 ||
-+		    priv->p5_mode == MUX_PHY_P4) {
-+			mt7530_clear(priv, MT753X_MTRAP, MT7530_P5_DIS);
- 			mt7530_setup_port5(ds, interface);
-+		}
- 	}
- 
- #ifdef CONFIG_GPIOLIB
+ 	/* Reset the switch through internal reset */
 
 -- 
 2.40.1
