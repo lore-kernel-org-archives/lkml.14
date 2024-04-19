@@ -1,87 +1,116 @@
-Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5AF5FBB5;
-	Fri, 19 Apr 2024 09:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047AA78276;
+	Fri, 19 Apr 2024 09:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713517821; cv=none; b=Buez8dwfCMIRgevItCP3fkQgfr4UlkSoPr0QXQDlcqVsvFD5wzkhzPYXmU4Z001UqqJhp1ZZMwxuEEGGkzGSp/vjS9Ij0aCmhnE2+6hRUTNoP171YMPtaYoCPpB6EzBedgBAr47d95udnc49GUxSyPMOPtYgYojG/vdXOp1t5aQ=
+	t=1713517825; cv=none; b=Sl3fsseZhsucIGdqQjlry6HPdk5t6fr5sqaZizyl+x/erWHn3h57Dydrvi6gmVHH3QXfjhQ/1xZtYX6GxmbrtHFWSe6iI4JgyxRvX0OZwDtBRVgmb6ZyMB/Xn/AXwn4O9Kpj+g+uYoUOqcpRe0VtarOv65wtj28qatv4NotZE+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713517821; c=relaxed/simple;
-	bh=FUyrDkEoZkFe3j2Sa11pBqz9kStQx6lt90ArRaAHaYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q2wzrzmSXok0JDAfWe0UZgam09UwWFrJbsfRu3NPu7DTABwkEeEj+8RywoM0qjipdXa1Sl1aUPKzvXNWegt6eNSRfyAsM2ankhZjZf2XmHCClEDQ2EIAYznlpCySM+5BsMMjbwQc5WKV8VqhjB9QYIXgqAIkAvJkNoSM3oDgmTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=IyECAjlz; arc=none smtp.client-ip=51.81.211.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1713517825; c=relaxed/simple;
+	bh=LZkmvma4B22MpUpSB/Kxjj7wTeNAjYu4yV5s+TYTD2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OAsNk/432sc7QyW7IT5rWxWFkYVXRDTfnszXMUDAzOhnEZQQLSjVzCIg1VO3xcNl4EE1x1ktcwup+/qxL0rUSkz6q//nphROcVsnZnJNP09hCCxOF94w32aqn/0kSKJ1TqfA67vwf4ZnQOBgthFLjspBLWyFyLBpD5/qV3m9uLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgfJxwHz; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="IyECAjlz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1713517813;
-	bh=FUyrDkEoZkFe3j2Sa11pBqz9kStQx6lt90ArRaAHaYo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=IyECAjlzs3S9RlCI58V209dKzrihrBf2qjZXpTpVQA/pl8gcbkwlPhSZ+cD/Gl3/+
-	 MNP0IcdBK2bVd4vNtIPWmFL5JXmci5q+p/GjXQr9sSwnH5yBNJoqYOOInBvyNQOpOk
-	 oeBW46fJmUdwO3+wSdIK7lDrIyHk3VGp4BR5LjHof4A0KIhCFeTBDNH3hCqa+ih/vL
-	 4mvcZ7/nysID8rjWrtzpiGZK+JTAg5EAsaiz6z17XM9zYbxl4NRY4Ev29VZC+e4VjV
-	 yPS4DnOPVjiFzsNvDxtHgIpyows6BYdf3eMCcUBeOgNYwFl7e1f7oJ7PnFTO139JCj
-	 ElyuRYd0nXhtQ==
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	by gnuweeb.org (Postfix) with ESMTPSA id 616FC24AE8F;
-	Fri, 19 Apr 2024 16:10:13 +0700 (WIB)
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4347cb2bf76so3686681cf.0;
-        Fri, 19 Apr 2024 02:10:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUOGYho+A2nxpv0r8Eji6Ww2HtUn/Uvsg9Nrgi/55BsNF6BjZRJTiaq8AUj6exiaufe50HX9JgZySCU9ufoIlxhYGNUnmWFw2M=
-X-Gm-Message-State: AOJu0YwkR0mJpf0odweklFg+6UH+76pGD4XTCovmwMBvUiYIE+ySNttQ
-	gXU3byWMZ1bDV+Z/AeLmOrl7FY+KpmXgOr9aD6SnU+PayysxJhfKp3rsKHz4UHFSKtq+XVThoDQ
-	t4+LGK0p6UEnOawzaUChcfFI2BF8=
-X-Google-Smtp-Source: AGHT+IFj+cSkPdz2w+IhOOTokNmm/YCqjbL32GYxwRwPZRXBkNU3JOplf6dRnMwoK5oQU0GSmh//6qWnbFlYZLRnduQ=
-X-Received: by 2002:ac8:4e21:0:b0:438:d78f:66a7 with SMTP id
- d1-20020ac84e21000000b00438d78f66a7mr310205qtw.0.1713517812443; Fri, 19 Apr
- 2024 02:10:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgfJxwHz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713517824; x=1745053824;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LZkmvma4B22MpUpSB/Kxjj7wTeNAjYu4yV5s+TYTD2A=;
+  b=hgfJxwHzo06nvdMpusV51LNmlbqFIRXFMkWKhgsP4v45VH6EdCid1K0x
+   e2MiKbN5+Yv/R4vVzad2B7qFyR7ZTtIxzajfAlh86lDJ8ZkHlvXwucwqt
+   FX52W2b2Pf5iJZ66jcQfzZiyknyX4si0/hoWJWGbZIyrLCiWeMWYvzCi7
+   fHNdud8dd1DJPqj2oWDnCirzYnTKDx3QxFl8/TLL7/4oU0VS8tSVy46J0
+   SzFK7YBc4zLLqejgkz1q1J3OAaziz9ApPQvjGHT7GD8T/EPP1cvlkZwTI
+   v8ubnk0YsXzMKuVLOqk1wWjWnzM9X2X3dM+MXHNlAjSJc3ccMNqbDL1av
+   w==;
+X-CSE-ConnectionGUID: wBmgFU3tTpKlDp4iYxuCsg==
+X-CSE-MsgGUID: 6mIvrXiISg6n86kn62F/xw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="9268684"
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="9268684"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 02:10:24 -0700
+X-CSE-ConnectionGUID: ErvI0qQtSZeexIE1DwlAhg==
+X-CSE-MsgGUID: /hFhtf6bQGaJ3kynhS+r9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
+   d="scan'208";a="27930136"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa003.jf.intel.com with ESMTP; 19 Apr 2024 02:10:21 -0700
+Date: Fri, 19 Apr 2024 17:05:06 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Colberg, Peter" <peter.colberg@intel.com>
+Cc: "Xu, Yilun" <yilun.xu@intel.com>,
+	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+	"mdf@kernel.org" <mdf@kernel.org>,
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"Wu, Hao" <hao.wu@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"russ.weight@linux.dev" <russ.weight@linux.dev>,
+	"Pagani, Marco" <marpagan@redhat.com>, "Rix, Tom" <trix@redhat.com>,
+	"matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH RESEND] fpga: dfl: omit unneeded casts of u64 values for
+ dev_dbg()
+Message-ID: <ZiIzwjggxFmXvau8@yilunxu-OptiPlex-7050>
+References: <20240329000429.7493-1-peter.colberg@intel.com>
+ <Zgt7fA/Jfks/iKYi@yilunxu-OptiPlex-7050>
+ <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20240418093150epcas5p31dc20cc737c72009265593f247e48262@epcas5p3.samsung.com>
- <20240418093143.2188131-1-xue01.he@samsung.com>
-In-Reply-To: <20240418093143.2188131-1-xue01.he@samsung.com>
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Date: Fri, 19 Apr 2024 16:09:56 +0700
-X-Gmail-Original-Message-ID: <CAFBCWQJAjef4AGXmVDZ-dR02zqstpXuP_mWimsF5HQCMxxeCcg@mail.gmail.com>
-Message-ID: <CAFBCWQJAjef4AGXmVDZ-dR02zqstpXuP_mWimsF5HQCMxxeCcg@mail.gmail.com>
-Subject: Re: [PATCH v2] io_uring: releasing CPU resources when polling
-To: hexue <xue01.he@samsung.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	io-uring Mailing List <io-uring@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Kanchan Joshi <joshi.k@samsung.com>, 
-	Kundan Kumar <kundan.kumar@samsung.com>, Anuj Gupta <anuj20.g@samsung.com>, 
-	Wenwen Chen <wenwen.chen@samsung.com>, Ruyi Zhang <ruyi.zhang@samsung.com>, 
-	Xiaobing Li <xiaobing.li@samsung.com>, cliang01.li@samsung.com, peiwei.li@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61cf643fda9b983b8a78b9f66c46290becf4f537.camel@intel.com>
 
-On Fri, Apr 19, 2024 at 3:47=E2=80=AFPM hexue wrote:
-> +void init_hybrid_poll_info(struct io_ring_ctx *ctx, struct io_kiocb *req=
-)
-> +{
-> +       u32 index;
-> +
-> +       index =3D req->file->f_inode->i_rdev;
-> +       struct iopoll_info *entry =3D xa_load(&ctx->poll_array, index);
-> +
-> +       if (!entry) {
-> +               entry =3D kmalloc(sizeof(struct iopoll_info), GFP_KERNEL)=
-;
-> +               entry->last_runtime =3D 0;
-> +               entry->last_irqtime =3D 0;
-> +               xa_store(&ctx->poll_array, index, entry, GFP_KERNEL);
-> +       }
+On Thu, Apr 18, 2024 at 09:30:48PM +0000, Colberg, Peter wrote:
+> On Tue, 2024-04-02 at 11:29 +0800, Xu Yilun wrote:
+> > On Thu, Mar 28, 2024 at 08:04:29PM -0400, Peter Colberg wrote:
+> > > Omit unneeded casts of u64 values to unsigned long long for use with
+> > > printk() format specifier %llx. Unlike user space, the kernel defines
+> > > u64 as unsigned long long for all architectures; see commit 2a7930bd77fe
+> > > ("Documentation/printk-formats.txt: No casts needed for u64/s64").
+> > 
+> > The change is OK. But I suggest just delete the unnecessary dev_dbg()
+> > since now people normally don't want these "Hello, I'm here!" info.
+> 
+> How would you like me to proceed? Should I remove dev_dbg() in all DFL
 
-GFP_KERNEL may fail; you must check for failure. Otherwise, it could
-lead to NULL pointer dereference.
+I think do for all DFL would be enough. Usually you want something to
+follow up and do the related clean up in advance.
 
---=20
-Ammar Faizi
+Thanks,
+Yilun
+
+> modules? There are "Hello, I'm here!" in non-DFL FPGA modules, too.
+> 
+> $ rg --sort=path -c dev_dbg drivers/fpga/
+> drivers/fpga/altera-freeze-bridge.c:7
+> drivers/fpga/altera-pr-ip-core.c:1
+> drivers/fpga/dfl-afu-dma-region.c:7
+> drivers/fpga/dfl-afu-error.c:1
+> drivers/fpga/dfl-afu-main.c:8
+> drivers/fpga/dfl-fme-error.c:1
+> drivers/fpga/dfl-fme-main.c:3
+> drivers/fpga/dfl-fme-mgr.c:12
+> drivers/fpga/dfl-fme-perf.c:2
+> drivers/fpga/dfl-fme-pr.c:1
+> drivers/fpga/dfl-fme-region.c:1
+> drivers/fpga/dfl-n3000-nios.c:1
+> drivers/fpga/dfl-pci.c:3
+> drivers/fpga/dfl.c:4
+> drivers/fpga/fpga-bridge.c:4
+> drivers/fpga/fpga-region.c:3
+> drivers/fpga/socfpga-a10.c:2
+> drivers/fpga/stratix10-soc.c:4
+> 
+> Thanks,
+> Peter
