@@ -1,154 +1,138 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2041.outbound.protection.outlook.com [40.107.104.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A2581741;
-	Fri, 19 Apr 2024 11:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713524682; cv=fail; b=bjAK0mBJjeTv6Ymb0+UV8FB3bwW2lJzSZGO34IVkSka1G90bEvYoGQj/Ha1QyQev8dEDpWDfHI+ycRDj0Ze/Q16BZjg437VvyvjTmLtfEMQ6T4InMOcT8BWIM8A7QnVbz7rRTef9ioMNEiE6umPOmfmXW+CV2sxphNMZmDbKfAE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713524682; c=relaxed/simple;
-	bh=+NMzllU1Ih/P6Uo5cJB4oCGVUYQVX8mRsbLoPvbn+68=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rZ56d/7yWhmYknlXzjoAu74ht7s22yc/44+ULBWWHBHs/r8WmyAiexPrF7FreKHUzU9boWgy7XFwlqYAwWys4UzSwAvh2OXRBIT9gai69M9IPhbqnGZd5ssjv1vPNuHbSz4HUm6N78lcRcYYQx5Ft4N8oCieayU3pA7R7T2L76Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=glzH7MHu; arc=fail smtp.client-ip=40.107.104.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29537BAE5;
+	Fri, 19 Apr 2024 11:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713524717; cv=none; b=k/oF9Nk+Tn/bqJxNQe+WZ/Baf7vfFbIDxQf2uEMbp4ejpKkwHxplatoAQMTK0H05eMpB3AzP3M0wZjscnO3rNOGrQVH3s4pbn10wlnZpIFyxAu/xOllYAnU3NhWLSYQBGH7P8R9vQNDGng47DJZ45mUVxf7+xo8TI17jmjV9i08=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713524717; c=relaxed/simple;
+	bh=wOUo2++bYvOhHtA/1yKJ+lIawhgs+4qJQ+CoecAxzKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWFaukRC+ZBRG7w8t2FUff+6vbkwG7rh1pg05gzJrM06JNXWFTOwpQrKejAI+bOL9XVuHVVqbc7bf+Gb9UgnTu0pp9FvlcIAqDBNJuXfxtegveJ+toIyS6vOajCB6WVptlLpYbMneILatOUzuSspzHT0CWua49VgIRn+ZROBQBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tDY7u55w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="glzH7MHu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EYuJEs2WbKI8tyf1RIpK2ni4Wd1FIhN7fuayNpEWoIUPxiwbbX72TxGDz5VnBPghI5OIPPOuZXHPEybG8YApvTv0AnJdQdCrfKbzUCKixuKXdW+b9LCUAqKiEaBn29IDTMMlJYwEeaE0EKCes2+xHrqtWVdrPBFec+h8iGLG0kgnlDkLSvXOw0MR6lTRF5Gupi4NKrHBJVabmTDzvGCNbGEKZZPIcbRWfEW6QA6mXS80YymsXg+Lf6op6DZJ71PSNnHWwEROsfufRbZJXKxfNmn4YIJpEdomXuvk9XoJew5Mb6zmo7VsJpWlDcS62o9/R8XJ2h+kT77abKK5kcVfFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eWlXJkyHiagNZOaKtxq2/DnTaGvgp/A9NOXHSqOA910=;
- b=Mm2tob0hXovHJeHsppgNKrji+5zpdfP3SMw/VCTvRHAnaHrKWmUKt9wURpOusvYhLnpR+Fl7LswsjRBdPom5ycuxu09f6oLYTpA6De50ndgUD3aCA9TONxRhP4cL12cut7t+DGH7QEc1YTRDqqzRvN/5POuSA4vQN8SGhhiL3v+Ilrl1DHGeZSF41B5X7FGqc8kNXicuO1tIx9Bn3GZX4P4wL6fJ/6RlcTjvISlmc71wwBEeEN5L+kI7mqYsu3hFXd+dC2B+EHwZL3jds314rtxrMVov7hGAcvVoN2jVaTqOQ996hCstVufB7uz6rg4JBmnWXSZfxpcyOA0Ll7YYUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eWlXJkyHiagNZOaKtxq2/DnTaGvgp/A9NOXHSqOA910=;
- b=glzH7MHug1E9I0zpfkeDDJ/EOfCpn+0Q+5r/7BHn+5irNCYXU4oGVWlzkyBPLwSnmWTWafvWZaH1xZ14t6L4Y+NALEhUVnqzctmTgEkFbCYDE8oKbl3ayDBIeKBlrMbP17IzPebT/7TlE/ioXQuPc5lwffPWFwN2qalx0St4NtA=
-Received: from DB8PR03CA0016.eurprd03.prod.outlook.com (2603:10a6:10:be::29)
- by AS2PR02MB9143.eurprd02.prod.outlook.com (2603:10a6:20b:5fa::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
- 2024 11:04:36 +0000
-Received: from DB5PEPF00014B9B.eurprd02.prod.outlook.com
- (2603:10a6:10:be:cafe::f3) by DB8PR03CA0016.outlook.office365.com
- (2603:10a6:10:be::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.30 via Frontend
- Transport; Fri, 19 Apr 2024 11:04:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB5PEPF00014B9B.mail.protection.outlook.com (10.167.8.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 11:04:35 +0000
-Received: from pc52311-2249 (10.0.5.60) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 19 Apr
- 2024 13:04:35 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: <alexandre.belloni@bootlin.com>
-CC: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] rtc: rx8111: handle VLOW flag
-In-Reply-To: <20240417191937.33790-2-alexandre.belloni@bootlin.com> (alexandre
-	belloni's message of "Wed, 17 Apr 2024 21:19:36 +0200")
-References: <20240417191937.33790-1-alexandre.belloni@bootlin.com>
-	<20240417191937.33790-2-alexandre.belloni@bootlin.com>
-User-Agent: a.out
-Date: Fri, 19 Apr 2024 13:04:34 +0200
-Message-ID: <pndh6fxmx4t.fsf@axis.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tDY7u55w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E2AC072AA;
+	Fri, 19 Apr 2024 11:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1713524716;
+	bh=wOUo2++bYvOhHtA/1yKJ+lIawhgs+4qJQ+CoecAxzKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDY7u55wKa7tKq9U/6vZr38Np7ow1VOp99BWoLgocxm2uWiDfyEh9Dsk8vZXHzZkz
+	 Q0m24GX9jFlUdmh4oONI+68B20HmzlRA4Xsc0BlhOJxU1cjIRqXTin+etPgdMXKDMv
+	 K3GPdXbZApY6JvwNKf9mLSDW2aplgZgxJr5447fo=
+Date: Fri, 19 Apr 2024 13:05:03 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Mark Brown <broonie@kernel.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com, Yihuang Yu <yihyu@redhat.com>,
+	Gavin Shan <gshan@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Shaoqin Huang <shahuang@redhat.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 6.6 000/122] 6.6.28-rc1 review
+Message-ID: <2024041954-replica-deflation-73b5@gregkh>
+References: <20240415141953.365222063@linuxfoundation.org>
+ <Zh5UJh31PlBkpZWd@finisterre.sirena.org.uk>
+ <CA+G9fYu-AjRm-BBA=8fWS8oCbBJ5W443JHPh3uddD7ea7MY-YA@mail.gmail.com>
+ <86y19dqw74.wl-maz@kernel.org>
+ <Zh61KobDt_y1O46-@arm.com>
+ <86sezjq688.wl-maz@kernel.org>
+ <ZiECLaXHce05DSM6@arm.com>
+ <2024041921-drown-dizzy-7481@gregkh>
+ <86r0f1r5i1.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B9B:EE_|AS2PR02MB9143:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d138189-877c-4374-285d-08dc60607fc6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	xyRuidlXrGbkVY/HTnHxF0J1YXwJwjIY+/DLE7MPHuW1UKEJasNFPxyhFgEGwdTmCOZ5RkKTsZvVxKS8dMZJvSsUO0To1XtwBR6swvVzQQ3/N/7Yrpz3Imxx00mSvOKR06dOCM4GV+9xu7s1cCBIawkDgo5Ff69qYyhJnvOGVGJ5PCMp3brvf1nsPME3g+XKJVrMh7nPd4URpxBBTQVxBe7RX6dn6+r+zju5Lz7MZoAl/xqTTpWlnOoR2jsxUMk4RGJ9ATB3XhcQrasd4gfSkPxpwW1yitziiwEiEdlDpo2YulUfrK4ugR8EYY77+9hRYqkoVUJpkpH0Mclj5hWi7H7ex7Wj+aZU1HP5uKEXnRIz69LX0olzAFXQQzLRVvzE5goNNesYCmqeMbBvXFZtaUOT0M6Q+psVlS5lzGpqgULKg3mwf5XmJmoJwE/MOg0O9XhS/VdKaGcUCoikVTlbtzd7yxBRw7utPQf2D9ZDor23uQGrVFTBZmSPCDP19AVuIsvozquBBdBeO5Zzwhs9jZu2StzWQ/3vAR2TbXds+/yJDIb6W/6s2aRbuD3EZLYa5mq23WzhiK1MV++RKg+LrusXIrimVrgtKbX0UNJt3t+g8qkw9uYWfHmHa6V0D8r5G9yPwHnO3gLAqjYGZS0dIoBXvjpEoUu1fQGbM8wBgYUvDuooN49zV2XWdF41Tx9MvzeCxcq3nJ/XOTHlbVpcY0RKFkUZxkd3HLHJFJ3qZgspVSZeYO+7mVlVhOeAy9Fk
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 11:04:35.5806
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d138189-877c-4374-285d-08dc60607fc6
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B9B.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB9143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86r0f1r5i1.wl-maz@kernel.org>
 
-On Wed, Apr 17, 2024 at 21:19 +0200 alexandre.belloni@bootlin.com wrote:
+On Fri, Apr 19, 2024 at 11:50:14AM +0100, Marc Zyngier wrote:
+> On Fri, 19 Apr 2024 11:40:33 +0100,
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > 
+> > On Thu, Apr 18, 2024 at 12:21:17PM +0100, Catalin Marinas wrote:
+> > > On Thu, Apr 18, 2024 at 12:07:35PM +0100, Marc Zyngier wrote:
+> > > > On Tue, 16 Apr 2024 18:28:10 +0100,
+> > > > Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > > On Tue, Apr 16, 2024 at 02:22:07PM +0100, Marc Zyngier wrote:
+> > > > > > On Tue, 16 Apr 2024 14:07:30 +0100,
+> > > > > > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > > > > On Tue, 16 Apr 2024 at 16:04, Mark Brown <broonie@kernel.org> wrote:
+> > > > > > > > On Mon, Apr 15, 2024 at 04:19:25PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > > > > This is the start of the stable review cycle for the 6.6.28 release.
+> > > > > > > > > There are 122 patches in this series, all will be posted as a response
+> > > > > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > > > > let me know.
+> > > > > > > >
+> > > > > > > > The bisect of the boot issue that's affecting the FVP in v6.6 (only)
+> > > > > > > > landed on c9ad150ed8dd988 (arm64: tlb: Fix TLBI RANGE operand),
+> > > > > > > > e3ba51ab24fdd in mainline, as being the first bad commit - it's also in
+> > > > > > > > the -rc for v6.8 but that seems fine.  I've done no investigation beyond
+> > > > > > > > the bisect and looking at the commit log to pull out people to CC and
+> > > > > > > > note that the fix was explicitly targeted at v6.6.
+> > > > > > > 
+> > > > > > > Anders investigated this reported issues and bisected and also found
+> > > > > > > the missing commit for stable-rc 6.6 is
+> > > > > > > e2768b798a19 ("arm64/mm: Modify range-based tlbi to decrement scale")
+> > > > > > 
+> > > > > > Which is definitely *not* stable candidate. We need to understand why
+> > > > > > the invalidation goes south when the scale go up instead of down.
+> > > > > 
+> > > > > If you backport e3ba51ab24fd ("arm64: tlb: Fix TLBI RANGE operand")
+> > > > > which fixes 117940aa6e5f ("KVM: arm64: Define
+> > > > > kvm_tlb_flush_vmid_range()") but without the newer e2768b798a19
+> > > > > ("arm64/mm: Modify range-based tlbi to decrement scale"), it looks like
+> > > > > "scale" in __flush_tlb_range_op() goes out of range to 4. Tested on my
+> > > > > CBMC model, not on the actual kernel. It may be worth adding some
+> > > > > WARN_ONs in __flush_tlb_range_op() if scale is outside the 0..3 range or
+> > > > > num greater than 31.
+> > > > > 
+> > > > > I haven't investigated properly (and I'm off tomorrow, back on Thu) but
+> > > > > it's likely the original code was not very friendly to the maximum
+> > > > > range, never tested. Anyway, if one figures out why it goes out of
+> > > > > range, I think the solution is to also backport e2768b798a19 to stable.
+> > > > 
+> > > > I looked into this, and I came to the conclusion that this patch is
+> > > > pretty much incompatible with the increasing scale (even if you cap
+> > > > num to 30).
+> > > 
+> > > Thanks Marc for digging into this.
+> > > 
+> > > > So despite my earlier comment, it looks like picking e2768b798a19 is
+> > > > the right thing to do *if* we're taking e3ba51ab24fd into 6.6-stable.
+> > > > 
+> > > > Otherwise, we need a separate fix, which Ryan initially advocating for
+> > > > initially.
+> > > 
+> > > My preference would be to cherry-pick the two upstream commits than
+> > > coming up with an alternative fix for 6.6.
+> > 
+> > To be specific, which 2 commits, and what order?
+> 
+> That'd be:
+> 
+> e2768b798a19 ("arm64/mm: Modify range-based tlbi to decrement scale")
+> 
+> followed by:
+> 
+> e3ba51ab24fd ("arm64: tlb: Fix TLBI RANGE operand")
 
-> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
->
-> Allow userspace to get battery status information and be able to warn when
-> battery is low and has to be replaced.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-rx8111.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/rtc/rtc-rx8111.c b/drivers/rtc/rtc-rx8111.c
-> index 4a35bd921b33..8450d9f0b566 100644
-> --- a/drivers/rtc/rtc-rx8111.c
-> +++ b/drivers/rtc/rtc-rx8111.c
-> @@ -95,6 +95,9 @@ enum rx8111_regfield {
->  	RX8111_REGF_INIEN,
->  	RX8111_REGF_CHGEN,
->  
-> +	/* RX8111_REG_STATUS_MON. */
-> +	RX8111_REGF_VLOW,
-> +
->  	/* Sentinel value. */
->  	RX8111_REGF_MAX
->  };
-> @@ -129,6 +132,8 @@ static const struct reg_field rx8111_regfields[] = {
->  	[RX8111_REGF_SWSEL1] = REG_FIELD(RX8111_REG_PWR_SWITCH_CTRL, 3, 3),
->  	[RX8111_REGF_INIEN]  = REG_FIELD(RX8111_REG_PWR_SWITCH_CTRL, 6, 6),
->  	[RX8111_REGF_CHGEN]  = REG_FIELD(RX8111_REG_PWR_SWITCH_CTRL, 7, 7),
-> +
-> +	[RX8111_REGF_VLOW]  = REG_FIELD(RX8111_REG_STATUS_MON, 1, 1),
->  };
->  
->  static const struct regmap_config rx8111_regmap_config = {
-> @@ -276,6 +281,13 @@ static int rx8111_ioctl(struct device *dev, unsigned int cmd, unsigned long arg)
->  
->  		vlval = regval ? RTC_VL_DATA_INVALID : 0;
->  
-> +		ret = regmap_field_read(data->regfields[RX8111_REGF_VLOW],
-> +					&regval);
-> +		if (ret)
-> +			return ret;
-> +
-> +		vlval |= regval ? RTC_VL_BACKUP_LOW : 0;
-> +
->  		return put_user(vlval, (typeof(vlval) __user *)arg);
->  	default:
->  		return -ENOIOCTLCMD;
+Thanks, now queued up.
 
-Looks good to me!
-
-Tested-by: Waqar Hameed <waqar.hameed@axis.com>
-Reviewed-by: Waqar Hameed <waqar.hameed@axis.com>
+greg k-h
