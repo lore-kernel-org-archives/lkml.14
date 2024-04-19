@@ -1,319 +1,176 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F858529A
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 12:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A9A4D137
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 12:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713531394; cv=none; b=iPpKZ1Q/S6SydPzS39/zSCQNjcXNXAnvsIviXLzLnYaaYMhBSdioFNcn7c8nVRlVfGCAm/2rPLd3PBTM10spSZKpFNGRVoo23nW7H7L0iHBJFlnqmDVXxhxRm0+4wCWGBKK2+mNhgO3cx4g3whrvXkfQXJPlHPX0PxASsiLrPdk=
+	t=1713531531; cv=none; b=daFATKbbSg/4Gqxd2iCxh+9QpaTWOrw/HfmtJNwscrXdsreVb2ytv/Lgh3Dmkyu1vH2zIxAbxicVpaSwTiVZMV/nOc8mWt7ACI0uIL6In4wjDPS8GCayTpkC9QCvYlATxSAd+pEe/UZW5SLDN2WdggvUVhwIjNw4euBarzZlmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713531394; c=relaxed/simple;
-	bh=TMr4RZ19Bd7AjfjrbQ1usf3bz+QWBHzTOPk2Gqnrkm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rt86mOREiNkYv6emjXrWTfan7C49KENcOR0X4nd8UKC9GjOycYWQH1fEdoVlK2OgsADLyWb13qXR0nczvMMPRXOzXxauFnS4I7wHgSvfBPtzfbUJvPst5cHWpzMU7iVdX+EfeOf6lHgH5lt+sqgxTInnhruYGXGtcKAqhYtwv3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ntjFvqAm; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1713531531; c=relaxed/simple;
+	bh=6Zi4dffDXqoSeWakmnxczB43BLdpL7HhEoJrIZmU3LA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s3LzJw9oxYGI8NBdZhbqiCz9uGN8dUPwm+YPLSPhF+P6RrZr7sdmHDAzhasatCiclAETcjgEACE2fDTJJ/AjPI2g7gS/irCj4xh5ez401Z/EJJSkgt8QKgIsduik4/iLYfqo/sytoBveMONRfWipoRTrTE6YUWpMQC778I0XdRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fp1ku6qu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ntjFvqAm"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-238e171b118so1078503fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 05:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1713531390; x=1714136190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qAnQXOAIIj9oS1dVAkkGazDr3oWNNZyu5Ad+/xAUOSA=;
-        b=ntjFvqAmgQJAKfAGXMOtyQZvbezlAT8HXtIL5fYgBHKbggCEan/1WZ65sDMcjGjHNl
-         Q+6KqOqcmoTYV4qaEm4pKrkhqxG4pYFriOOXzCvpyoMxDI5mjn7VfPv2dfkcwouuc9IB
-         7N+g3HzlwhCX/uMKTlwnr41FVm5n72MHAAmLjHv0vZQJZq3MJ3TP8bUQAjSrp4LgNn1w
-         zcdKgNy5vnWgGJTubWsKyJEI1uH/9+WFQiJ2Puuu/03/e4jOvDZIdk6FujkKv9NYbEx9
-         P/eVBSMeMpb/U7pxKXS24H9SzscpHOjInIWRL1EanzluCmsJ3R6F5Zliwm7NjdPixKO5
-         ME/g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fp1ku6qu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713531528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z2d3iqx05Gqxh4rph9K0FnqpHu231qlz9mgP4t0RVZk=;
+	b=Fp1ku6quEJi9PR1lCeC0Ov9rh8l4aiqwaAKUaoI7ClYGQvW3c+X+kMH8Kwbg+bDy6g03M2
+	wX6sjTc9JxeemQBluWpPh+tDaEJ9u9dZvgYbcyBURC3pOEiHXnNiENjjp3UPVSXbVWMSkZ
+	GPHIwTgECrXOGTopAObLft+ESZDr0Ug=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-57-0QPxnGlKPDmbjrCNg_Ognw-1; Fri, 19 Apr 2024 08:58:47 -0400
+X-MC-Unique: 0QPxnGlKPDmbjrCNg_Ognw-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-343c6bb1f21so1231411f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Apr 2024 05:58:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713531390; x=1714136190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qAnQXOAIIj9oS1dVAkkGazDr3oWNNZyu5Ad+/xAUOSA=;
-        b=pWfWJB6K+6+0jouT8LgZsZ0TTm0H5COGZnFC2kbS+y44oFmQTmhXYe1l3bg7lp6qLs
-         XSrKfZJ6opMZ1C78w//GK7DJ9eGUY4+DOniNaWM4yoq4sP92rwERub1j8iq75ZsEKOvq
-         sX2M+VuamCsmMcqjhzUmNQnMeh6wqoP7aeleVGk0/WEUeWultJ77nod6SC9+K9ShkZPJ
-         NM/anQj71XjWUf3m7meGxHv+AfyiufcUDHAd7LplZb14HCE78o6QW683C2vqNy2HtyLF
-         56BGSu+AvShlw3DoM/64ufYN5JyHAcf7JNS2IqtOmMJEraal/hyjJ0h1fhm/f2nlTrCJ
-         FtOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWWRLbef+Nx9o+8M4j238kNI5idrd/lbQRrDKyZTcPjWWspvL2imJbH+18C+jFhzCJPkcZs40DVhuahmo+N02BfPeTY0J50Ieilsgt
-X-Gm-Message-State: AOJu0Yz4XaGWxYb11zLJdd/8swBDK8YSKnG6Z7DiuOekZ1uGM9U/pB5o
-	WhD9rAKqnChm4fn4s9xds1sKRI4toFgwn4uEHb/CIKALECkN+Cy3E87EJ0kZFMM=
-X-Google-Smtp-Source: AGHT+IHFfBcis79UcRir4VffHs5X6NLftoITO/91C4p4EpS7Z44Ysxagpcl0DozKM758wLJf4tJP1g==
-X-Received: by 2002:a05:6870:2d4:b0:22e:9901:ede4 with SMTP id r20-20020a05687002d400b0022e9901ede4mr2180580oaf.38.1713531389153;
-        Fri, 19 Apr 2024 05:56:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id t20-20020a05683014d400b006eb77e42ff5sm691060otq.26.2024.04.19.05.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 05:56:28 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rxnn1-00FPgO-MQ;
-	Fri, 19 Apr 2024 09:56:27 -0300
-Date: Fri, 19 Apr 2024 09:56:27 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Tomasz Jeznach <tjeznach@rivosinc.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	Sebastien Boeuf <seb@rivosinc.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux@rivosinc.com
-Subject: Re: [PATCH v2 7/7] iommu/riscv: Paging domain support
-Message-ID: <20240419125627.GD223006@ziepe.ca>
-References: <cover.1713456597.git.tjeznach@rivosinc.com>
- <301244bc3ff5da484b46d3fecc931cdad7d2806f.1713456598.git.tjeznach@rivosinc.com>
+        d=1e100.net; s=20230601; t=1713531526; x=1714136326;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z2d3iqx05Gqxh4rph9K0FnqpHu231qlz9mgP4t0RVZk=;
+        b=DT34suaPveEcsrgkW1ChQLaCDZLchFZ6mGzQSu+fLQDDBJGEFD+9vYQkUWJ7SWbYny
+         3rXYdseYvySEcosMcnBKtb9/yQJZNVJoeugzgqHgDcr+MnSh1hmuI6nCyQS42DBQ8Ts5
+         BXW4QM7SSHZttT0WhNAFwy8g/tLfAlPqXvU0PGAG1r41DcEUe+ShtwIfhGuxyvx6rjmt
+         UDv+BmZ3wyp4ng2Uksuak39/NBoLKZLm/jEf6BJXyLIFZRUUs3DupBCCczTbCUXdgBsk
+         ymmMLsURyZJG+tOm7ykebJ5e9IOR5MShD7HnbozY2WGMK+TSL2W3YY4xc4ZzrLd0mcmr
+         5Q/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWoT0iFP70gYPpUP1PMy18PckGfqK8xa5qf/RXYv55slSEc3Y7AvFMJVKAmSZTsmhVHVos9+7JxvMekTtGitWaWRPQG1ug0gxDvhxDG
+X-Gm-Message-State: AOJu0YyrV9dPiVUUq7I9bF2ZhfBZhUHS7RdV/CN2Y4U6BJdDhRTBwa52
+	HwVE4mal2Q51eqdoqqXPWvnX5YJuhwqYptEES9CRSr7Aghbw/N62yPvo30bK9+XqgfxVr0dVoUL
+	CoIpgrmYajI/S6lcdZhvg95kdtaM7dqIZ59rzJAJmh6NJ8Mlu5fXvU/ECEZw6Ig==
+X-Received: by 2002:a5d:6a46:0:b0:346:b581:ff57 with SMTP id t6-20020a5d6a46000000b00346b581ff57mr1650305wrw.68.1713531526318;
+        Fri, 19 Apr 2024 05:58:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7m8NTVqsbUldIBxMAx8E1NGImyAQjyh5UpwPAdGx0OoeBVIRTXxysKxRh8PdQ61Jjn+Ewpg==
+X-Received: by 2002:a5d:6a46:0:b0:346:b581:ff57 with SMTP id t6-20020a5d6a46000000b00346b581ff57mr1650273wrw.68.1713531525824;
+        Fri, 19 Apr 2024 05:58:45 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c716:f300:c9f0:f643:6aa2:16? (p200300cbc716f300c9f0f6436aa20016.dip0.t-ipconnect.de. [2003:cb:c716:f300:c9f0:f643:6aa2:16])
+        by smtp.gmail.com with ESMTPSA id w15-20020a5d544f000000b00349c63eb484sm4363099wrv.23.2024.04.19.05.58.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Apr 2024 05:58:45 -0700 (PDT)
+Message-ID: <a6086ba5-6137-44a0-9e51-ce4df5eb6ce4@redhat.com>
+Date: Fri, 19 Apr 2024 14:58:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <301244bc3ff5da484b46d3fecc931cdad7d2806f.1713456598.git.tjeznach@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 04/26] KVM: guest_memfd: Fix PTR_ERR() handling in
+ __kvm_gmem_get_pfn()
+To: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org
+Cc: linux-coco@lists.linux.dev, linux-mm@kvack.org,
+ linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
+ thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org,
+ pbonzini@redhat.com, seanjc@google.com, vkuznets@redhat.com,
+ jmattson@google.com, luto@kernel.org, dave.hansen@linux.intel.com,
+ slp@redhat.com, pgonda@google.com, peterz@infradead.org,
+ srinivas.pandruvada@linux.intel.com, rientjes@google.com,
+ dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, vbabka@suse.cz,
+ kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
+ jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
+ pankaj.gupta@amd.com, liam.merwick@oracle.com
+References: <20240418194133.1452059-1-michael.roth@amd.com>
+ <20240418194133.1452059-5-michael.roth@amd.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240418194133.1452059-5-michael.roth@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 18, 2024 at 09:32:25AM -0700, Tomasz Jeznach wrote:
+On 18.04.24 21:41, Michael Roth wrote:
+> kvm_gmem_get_folio() may return a PTR_ERR() rather than just NULL. In
+> particular, for cases where EEXISTS is returned when FGP_CREAT_ONLY
+> flag is used. Handle this properly in __kvm_gmem_get_pfn().
+> 
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> ---
+>   virt/kvm/guest_memfd.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index ccf22e44f387..9d7c6a70c547 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -580,8 +580,8 @@ static int __kvm_gmem_get_pfn(struct file *file, struct kvm_memory_slot *slot,
+>   	}
+>   
+>   	folio = kvm_gmem_get_folio(file_inode(file), index, prepare);
+> -	if (!folio)
+> -		return -ENOMEM;
+> +	if (IS_ERR_OR_NULL(folio))
+> +		return folio ? PTR_ERR(folio) : -ENOMEM;
 
-> diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
-> index a4f74588cdc2..32ddc372432d 100644
-> --- a/drivers/iommu/riscv/iommu.c
-> +++ b/drivers/iommu/riscv/iommu.c
-> @@ -46,6 +46,10 @@ MODULE_LICENSE("GPL");
->  #define dev_to_iommu(dev) \
->  	container_of((dev)->iommu->iommu_dev, struct riscv_iommu_device, iommu)
->  
-> +/* IOMMU PSCID allocation namespace. */
-> +static DEFINE_IDA(riscv_iommu_pscids);
-> +#define RISCV_IOMMU_MAX_PSCID		BIT(20)
-> +
+Will it even return NULL?  Staring at other filemap_grab_folio() users, 
+they all check for IS_ERR().
 
-You may consider putting this IDA in the riscv_iommu_device() and move
-the pscid from the domain to the bond?
+>   
+>   	if (folio_test_hwpoison(folio)) {
+>   		r = -EHWPOISON;
 
->  /* Device resource-managed allocations */
->  struct riscv_iommu_devres {
->  	unsigned long addr;
-> @@ -752,12 +756,77 @@ static int riscv_iommu_ddt_alloc(struct riscv_iommu_device *iommu)
->  	return 0;
->  }
->  
-> +struct riscv_iommu_bond {
-> +	struct list_head list;
-> +	struct rcu_head rcu;
-> +	struct device *dev;
-> +};
-> +
-> +/* This struct contains protection domain specific IOMMU driver data. */
-> +struct riscv_iommu_domain {
-> +	struct iommu_domain domain;
-> +	struct list_head bonds;
-> +	int pscid;
-> +	int numa_node;
-> +	int amo_enabled:1;
-> +	unsigned int pgd_mode;
-> +	/* paging domain */
-> +	unsigned long pgd_root;
-> +};
+Do we have a Fixes: tag?
 
-Glad to see there is no riscv_iommu_device pointer in the domain!
+-- 
+Cheers,
 
-> +static void riscv_iommu_iotlb_inval(struct riscv_iommu_domain *domain,
-> +				    unsigned long start, unsigned long end)
-> +{
-> +	struct riscv_iommu_bond *bond;
-> +	struct riscv_iommu_device *iommu;
-> +	struct riscv_iommu_command cmd;
-> +	unsigned long len = end - start + 1;
-> +	unsigned long iova;
-> +
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(bond, &domain->bonds, list) {
-> +		iommu = dev_to_iommu(bond->dev);
+David / dhildenb
 
-Pedantically this locking isn't locked right, there is technically
-nothing that prevents bond->dev and the iommu instance struct from
-being freed here. eg iommufd can hit races here if userspace can hot
-unplug devices.
-
-I suggest storing the iommu pointer itself in the bond instead of the
-device then add a synchronize_rcu() to the iommu unregister path.
-
-> +		riscv_iommu_cmd_inval_vma(&cmd);
-> +		riscv_iommu_cmd_inval_set_pscid(&cmd, domain->pscid);
-> +		if (len > 0 && len < RISCV_IOMMU_IOTLB_INVAL_LIMIT) {
-> +			for (iova = start; iova < end; iova += PAGE_SIZE) {
-> +				riscv_iommu_cmd_inval_set_addr(&cmd, iova);
-> +				riscv_iommu_cmd_send(iommu, &cmd, 0);
-> +			}
-> +		} else {
-> +			riscv_iommu_cmd_send(iommu, &cmd, 0);
-> +		}
-> +	}
-
-This seems suboptimal, you probably want to copy the new design that
-Intel is doing where you allocate "bonds" that are already
-de-duplicated. Ie if I have 10 devices on the same iommu sharing the
-domain the above will invalidate the PSCID 10 times. It should only be
-done once.
-
-ie add a "bond" for the (iommu,pscid) and refcount that based on how
-many devices are used. Then another "bond" for the ATS stuff eventually.
-
-> +
-> +	list_for_each_entry_rcu(bond, &domain->bonds, list) {
-> +		iommu = dev_to_iommu(bond->dev);
-> +
-> +		riscv_iommu_cmd_iofence(&cmd);
-> +		riscv_iommu_cmd_send(iommu, &cmd, RISCV_IOMMU_QUEUE_TIMEOUT);
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +
-
-> @@ -787,12 +870,390 @@ static int riscv_iommu_attach_domain(struct riscv_iommu_device *iommu,
->  		xchg64(&dc->ta, ta);
->  		xchg64(&dc->tc, tc);
->  
-> -		/* Device context invalidation will be required. Ignoring for now. */
-> +		if (!(tc & RISCV_IOMMU_DC_TC_V))
-> +			continue;
-
-No negative caching in HW?
-
-> +		/* Invalidate device context cache */
-> +		riscv_iommu_cmd_iodir_inval_ddt(&cmd);
-> +		riscv_iommu_cmd_iodir_set_did(&cmd, fwspec->ids[i]);
-> +		riscv_iommu_cmd_send(iommu, &cmd, 0);
-> +
-> +		if (FIELD_GET(RISCV_IOMMU_PC_FSC_MODE, fsc) == RISCV_IOMMU_DC_FSC_MODE_BARE)
-> +			continue;
-> +
-> +		/* Invalidate last valid PSCID */
-> +		riscv_iommu_cmd_inval_vma(&cmd);
-> +		riscv_iommu_cmd_inval_set_pscid(&cmd, FIELD_GET(RISCV_IOMMU_DC_TA_PSCID, ta));
-> +		riscv_iommu_cmd_send(iommu, &cmd, 0);
-> +	}
-> +
-> +	/* Synchronize directory update */
-> +	riscv_iommu_cmd_iofence(&cmd);
-> +	riscv_iommu_cmd_send(iommu, &cmd, RISCV_IOMMU_IOTINVAL_TIMEOUT);
-> +
-> +	/* Track domain to devices mapping. */
-> +	if (bond)
-> +		list_add_rcu(&bond->list, &domain->bonds);
-
-This is in the wrong order, the invalidation on the pscid needs to
-start before the pscid is loaded into HW in the first place otherwise
-concurrent invalidations may miss HW updates.
-
-> +
-> +	/* Remove tracking from previous domain, if needed. */
-> +	iommu_domain = iommu_get_domain_for_dev(dev);
-> +	if (iommu_domain && !!(iommu_domain->type & __IOMMU_DOMAIN_PAGING)) {
-
-No need for !!, && is already booleanizing
-
-> +		domain = iommu_domain_to_riscv(iommu_domain);
-> +		bond = NULL;
-> +		rcu_read_lock();
-> +		list_for_each_entry_rcu(b, &domain->bonds, list) {
-> +			if (b->dev == dev) {
-> +				bond = b;
-> +				break;
-> +			}
-> +		}
-> +		rcu_read_unlock();
-> +
-> +		if (bond) {
-> +			list_del_rcu(&bond->list);
-> +			kfree_rcu(bond, rcu);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +static inline size_t get_page_size(size_t size)
-> +{
-> +	if (size >= IOMMU_PAGE_SIZE_512G)
-> +		return IOMMU_PAGE_SIZE_512G;
-> +	if (size >= IOMMU_PAGE_SIZE_1G)
-> +		return IOMMU_PAGE_SIZE_1G;
-> +	if (size >= IOMMU_PAGE_SIZE_2M)
-> +		return IOMMU_PAGE_SIZE_2M;
-> +	return IOMMU_PAGE_SIZE_4K;
-> +}
-> +
-> +#define _io_pte_present(pte)	((pte) & (_PAGE_PRESENT | _PAGE_PROT_NONE))
-> +#define _io_pte_leaf(pte)	((pte) & _PAGE_LEAF)
-> +#define _io_pte_none(pte)	((pte) == 0)
-> +#define _io_pte_entry(pn, prot)	((_PAGE_PFN_MASK & ((pn) << _PAGE_PFN_SHIFT)) | (prot))
-> +
-> +static void riscv_iommu_pte_free(struct riscv_iommu_domain *domain,
-> +				 unsigned long pte, struct list_head *freelist)
-> +{
-> +	unsigned long *ptr;
-> +	int i;
-> +
-> +	if (!_io_pte_present(pte) || _io_pte_leaf(pte))
-> +		return;
-> +
-> +	ptr = (unsigned long *)pfn_to_virt(__page_val_to_pfn(pte));
-> +
-> +	/* Recursively free all sub page table pages */
-> +	for (i = 0; i < PTRS_PER_PTE; i++) {
-> +		pte = READ_ONCE(ptr[i]);
-> +		if (!_io_pte_none(pte) && cmpxchg_relaxed(ptr + i, pte, 0) == pte)
-> +			riscv_iommu_pte_free(domain, pte, freelist);
-> +	}
-> +
-> +	if (freelist)
-> +		list_add_tail(&virt_to_page(ptr)->lru, freelist);
-> +	else
-> +		free_page((unsigned long)ptr);
-> +}
-
-Consider putting the page table handling in its own file?
-
-> +static int riscv_iommu_attach_paging_domain(struct iommu_domain *iommu_domain,
-> +					    struct device *dev)
-> +{
-> +	struct riscv_iommu_device *iommu = dev_to_iommu(dev);
-> +	struct riscv_iommu_domain *domain = iommu_domain_to_riscv(iommu_domain);
-> +	struct page *page;
-> +
-> +	if (!riscv_iommu_pt_supported(iommu, domain->pgd_mode))
-> +		return -ENODEV;
-> +
-> +	domain->numa_node = dev_to_node(iommu->dev);
-> +	domain->amo_enabled = !!(iommu->caps & RISCV_IOMMU_CAP_AMO_HWAD);
-> +
-> +	if (!domain->pgd_root) {
-> +		page = alloc_pages_node(domain->numa_node,
-> +					GFP_KERNEL_ACCOUNT | __GFP_ZERO, 0);
-> +		if (!page)
-> +			return -ENOMEM;
-> +		domain->pgd_root = (unsigned long)page_to_virt(page);
-
-The pgd_root should be allocated by the alloc_paging function, not
-during attach. There is no locking here that will protect against
-concurrent attach and also map before attach should work.
-
-You can pick up the numa affinity from the alloc paging dev pointer
-(note it may be null still in some cases)
-
-Jason
